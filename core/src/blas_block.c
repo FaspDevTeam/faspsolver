@@ -1,0 +1,280 @@
+/*! \file blas_block.c
+ *  \brief BLAS operations for sparse matrices in block CSR format.
+ *
+ */
+
+#include <time.h>
+
+#include "fasp.h"
+#include "fasp_block.h"
+#include "fasp_functs.h"
+
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
+
+/**
+ * \fn void fasp_blas_bdcsr_aAxpy (const REAL alpha, block_dCSRmat *A, 
+ *                                 REAL *x, REAL *y)
+ *
+ * \brief Matrix-vector multiplication y = alpha*A*x + y
+ *
+ * \param alpha  real number
+ * \param *A     pointer to block_dCSR matrix
+ * \param *x     pointer to dvector
+ * \param *y     pointer to dvector
+ *
+ * \author Xiaozhe Hu
+ * \date 06/04/2010
+ */
+void fasp_blas_bdcsr_aAxpy (const REAL alpha, 
+                            block_dCSRmat *A, 
+                            REAL *x, 
+                            REAL *y)
+{
+	// information of A
+	INT brow = A->brow;
+	
+	// local variables
+	register dCSRmat *A11, *A12, *A21, *A22;
+	register dCSRmat *A13, *A23, *A31, *A32, *A33;
+	
+	unsigned INT row1, col1;
+	unsigned INT row2, col2;
+	
+	register REAL *x1, *x2, *y1, *y2;
+	register REAL *x3, *y3;
+	
+	switch (brow)
+	{
+			
+		case 2:
+			A11 = A->blocks[0];
+			A12 = A->blocks[1];
+			A21 = A->blocks[2];
+			A22 = A->blocks[3];
+			
+			row1 = A11->row;
+			col1 = A11->col;
+			
+			x1 = x;
+			x2 = &(x[col1]);
+			y1 = y;
+			y2 = &(y[row1]);
+			
+			// y1 = alpha*A11*x1 + alpha*A12*x2 + y1
+			fasp_blas_dcsr_aAxpy(alpha, A11, x1, y1);
+			fasp_blas_dcsr_aAxpy(alpha, A12, x2, y1); 
+			
+			// y2 = alpha*A21*x1 + alpha*A22*x2 + y2
+			fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2); 
+			fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2); 
+			break;
+			
+		case 3:
+			A11 = A->blocks[0];
+			A12 = A->blocks[1];
+			A13 = A->blocks[2];
+			A21 = A->blocks[3];
+			A22 = A->blocks[4];
+			A23 = A->blocks[5];
+			A31 = A->blocks[6];
+			A32 = A->blocks[7];
+			A33 = A->blocks[8];
+			
+			row1 = A11->row;
+			col1 = A11->col;
+			row2 = A22->row;
+			col2 = A22->col; 
+			
+			x1 = x;
+			x2 = &(x[col1]);
+			x3 = &(x[col1+col2]);
+			y1 = y;
+			y2 = &(y[row1]);
+			y3 = &(y[row1+row2]);
+			
+			// y1 = alpha*A11*x1 + alpha*A12*x2 + alpha*A13*x3 + y1
+			fasp_blas_dcsr_aAxpy(alpha, A11, x1, y1);
+			fasp_blas_dcsr_aAxpy(alpha, A12, x2, y1); 
+			fasp_blas_dcsr_aAxpy(alpha, A13, x3, y1);
+			
+			// y2 = alpha*A21*x1 + alpha*A22*x2 + alpha*A23*x3 + y2
+			fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2); 
+			fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2); 
+			fasp_blas_dcsr_aAxpy(alpha, A23, x3, y2);
+			
+			// y3 = alpha*A31*x1 + alpha*A32*x2 + alpha*A33*x3 + y2
+			fasp_blas_dcsr_aAxpy(alpha, A31, x1, y3); 
+			fasp_blas_dcsr_aAxpy(alpha, A32, x2, y3); 
+			fasp_blas_dcsr_aAxpy(alpha, A33, x3, y3); 
+			break;
+			
+	} // end of switch
+	
+}
+
+/**
+ * \fn void fasp_blas_bdbsr_aAxpy (const REAL alpha, block_BSR *A, REAL *x, REAL *y)
+ *
+ * \brief Matrix-vector multiplication y = alpha*A*x + y
+ *
+ * \param alpha real number
+ * \param *A pointer to block_BSR matrix
+ * \param *x pointer to dvector
+ * \param *y pointer to dvector
+ *
+ * \author Xiaozhe Hu
+ * \date 11/11/2010
+ */
+void fasp_blas_bdbsr_aAxpy (const REAL alpha, 
+                            block_BSR *A, 
+                            REAL *x, 
+                            REAL *y)
+{
+	register dBSRmat *Arr = &(A->ResRes);
+	register dCSRmat *Arw = &(A->ResWel);
+	register dCSRmat *Awr = &(A->WelRes);
+	register dCSRmat *Aww = &(A->WelWel);
+	
+	unsigned INT Nr = Arw->row;
+	
+	register REAL *xr = x;
+	register REAL *xw = &(x[Nr]);
+	register REAL *yr = y;
+	register REAL *yw = &(y[Nr]);
+	
+	// yr = alpha*Arr*xr + alpha*Arw*xw + yr
+	fasp_blas_dbsr_aAxpy(alpha, Arr, xr, yr);
+	fasp_blas_dcsr_aAxpy(alpha, Arw, xw, yr); 
+	
+	// yw = alpha*Awr*xr + alpha*Aww*xw + yw
+	fasp_blas_dcsr_aAxpy(alpha, Awr, xr, yw); 
+	fasp_blas_dcsr_aAxpy(alpha, Aww, xw, yw); 
+}
+
+/**
+ * \fn void fasp_blas_bdbsr_mxv (block_BSR *A, REAL *x, REAL *y) 
+ *
+ * \brief Matrix-vector multiplication y = A*x
+ * \param alpha real number
+ * \param *A pointer to block_BSR matrix
+ * \param *x pointer to dvector
+ * \param *y pointer to dvector
+ *
+ * \author Xiaozhe Hu
+ * \date 11/11/2010
+ */
+void fasp_blas_bdbsr_mxv (block_BSR *A, 
+                          REAL *x, 
+                          REAL *y)
+{
+	register dBSRmat *Arr = &(A->ResRes);
+	register dCSRmat *Arw = &(A->ResWel);
+	register dCSRmat *Awr = &(A->WelRes);
+	register dCSRmat *Aww = &(A->WelWel);
+	
+	unsigned INT Nr = Arw->row;
+	
+	register REAL *xr = x;
+	register REAL *xw = &(x[Nr]);
+	register REAL *yr = y;
+	register REAL *yw = &(y[Nr]);
+	
+	// yr = alpha*Arr*xr + alpha*Arw*xw + yr
+	fasp_blas_dbsr_mxv(Arr, xr, yr);
+	fasp_blas_dcsr_aAxpy(1.0, Arw, xw, yr); 
+	
+	// yw = alpha*Awr*xr + alpha*Aww*xw + yw
+	fasp_blas_dcsr_mxv(Awr, xr, yw); 
+	fasp_blas_dcsr_aAxpy(1.0, Aww, xw, yw); 
+}
+
+/*-----------------------------------omp--------------------------------------*/
+
+/**
+ * \fn void fasp_blas_bdbsr_aAxpy_omp (REAL alpha, block_BSR *A, REAL *x, REAL *y, INT nthreads, INT openmp_holds)
+ * \brief Matrix-vector multiplication y = alpha*A*x + y
+ * \param alpha real number
+ * \param *A pointer to block_BSR matrix
+ * \param *x pointer to dvector
+ * \param *y pointer to dvector
+ * \param nthreads number of threads
+ * \param openmp_holds threshold of parallelization
+ *
+ * \author Feng Chunsheng, Yue Xiaoqiang
+ * \date 03/01/2011
+ */
+void fasp_blas_bdbsr_aAxpy_omp (REAL alpha, 
+                                block_BSR *A, 
+                                REAL *x, 
+                                REAL *y, 
+                                INT nthreads, 
+                                INT openmp_holds)
+{
+#if FASP_USE_OPENMP
+	register dBSRmat *Arr = &(A->ResRes);
+	register dCSRmat *Arw = &(A->ResWel);
+	register dCSRmat *Awr = &(A->WelRes);
+	register dCSRmat *Aww = &(A->WelWel);
+	
+	unsigned INT Nr = Arw->row;
+	
+	register REAL *xr = x;
+	register REAL *xw = &(x[Nr]);
+	register REAL *yr = y;
+	register REAL *yw = &(y[Nr]);
+	
+	//! yr = alpha*Arr*xr + alpha*Arw*xw + yr
+	fasp_blas_dbsr_aAxpy_omp(alpha, Arr, xr, yr, nthreads, openmp_holds);
+	fasp_blas_dcsr_aAxpy_omp(alpha, Arw, xw, yr, nthreads, openmp_holds); 
+	
+	//! yw = alpha*Awr*xr + alpha*Aww*xw + yw
+	fasp_blas_dcsr_aAxpy_omp(alpha, Awr, xr, yw, nthreads, openmp_holds); 
+	fasp_blas_dcsr_aAxpy_omp(alpha, Aww, xw, yw, nthreads, openmp_holds); 
+#endif	
+}
+
+/**
+ * \fn void fasp_blas_bdbsr_mxv_omp (block_BSR *A, REAL *x, REAL *y, INT nthreads, INT openmp_holds)
+ * \brief Matrix-vector multiplication y = A*x
+ * \param alpha real number
+ * \param *A pointer to block_BSR matrix
+ * \param *x pointer to dvector
+ * \param *y pointer to dvector
+ *
+ * \author Feng Chunsheng, Yue Xiaoqiang
+ * \date 03/01/2011
+ */
+void fasp_blas_bdbsr_mxv_omp (block_BSR *A, 
+                              REAL *x, 
+                              REAL *y, 
+                              INT nthreads, 
+                              INT openmp_holds)
+{
+#if FASP_USE_OPENMP
+	register dBSRmat *Arr = &(A->ResRes);
+	register dCSRmat *Arw = &(A->ResWel);
+	register dCSRmat *Awr = &(A->WelRes);
+	register dCSRmat *Aww = &(A->WelWel);
+	
+	unsigned INT Nr = Arw->row;
+	
+	register REAL *xr = x;
+	register REAL *xw = &(x[Nr]);
+	register REAL *yr = y;
+	register REAL *yw = &(y[Nr]);
+	
+	//! yr = alpha*Arr*xr + alpha*Arw*xw + yr
+	fasp_blas_dbsr_mxv_omp(Arr, xr, yr, nthreads, openmp_holds);
+	fasp_blas_dcsr_aAxpy_omp(1.0, Arw, xw, yr, nthreads, openmp_holds);
+	
+	//! yw = alpha*Awr*xr + alpha*Aww*xw + yw
+	fasp_blas_dcsr_mxv_omp(Awr, xr, yw, nthreads, openmp_holds);
+	fasp_blas_dcsr_aAxpy_omp(1.0, Aww, xw, yw, nthreads, openmp_holds); 
+#endif	
+}
+
+/*---------------------------------*/
+/*--        End of File          --*/
+/*---------------------------------*/

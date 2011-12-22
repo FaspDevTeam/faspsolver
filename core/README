@@ -1,0 +1,81 @@
+Fast Auxiliary Space Preconditioning (FASP) Solver Package README
+
+--Core Functions Library
+
+last modified on 09/01/2011
+
+0. Introduction:
+
+The FASP package is built for developing and testing new efficient (multilevel) 
+solvers and preconditioners for discrete partial differential equations (PDEs) 
+or systems of PDEs. The main components of the package are standard Krylov 
+iterative methods, algebaric multigrid methods, and incomplete factorization 
+methods. Based on these standard components, we build efficient solvers for 
+several complicated applications, for example: Stokes equation, underground 
+water simulation, the (modified) black oil model in reservoir simulation, and 
+so on. 
+
+This software is free software distributed under the Lesser General Public 
+License or LGPL, version 3.0.  
+
+1. Build:
+
+To compile, you need a Fortran and a C compiler. By default, we use gfortan 
+and gcc, respectively; see Makefile for details. 
+
+This package has been tested with: 
+
+--Linux and Mac
+        gcc-4.2, gcc-4.4, gcc-4.5, gcc-4.6;
+        icc-11.0, icc-11.1; 
+        gfortran-4.4, gfortran-4.5; 
+        g95-0.92; 
+        ifort-11.0, ifort-11.1.
+
+--Windows XP and Windows Vista
+        VC++ 2005, VC++ 2008;
+        icc-11.1.x, icc-12.0.x;
+        ifort-11.1.x, ifort-12.0.x. 
+
+You can make the header file using (You can skip this step as the headers files 
+have already been generated for you initially): 
+
+    >> make headers
+
+Now you are ready to make the FASP library file: 
+
+    >> make lib
+
+or simply:
+
+    >> make
+
+To clean up the working directory, you may
+
+    >> make clean 
+
+which cleans up the directory by removing object files ONLY; Furthermore, 
+
+    >> make allclean 
+
+removes the executables also and obtains a completely clean directory. 
+
+If you need any help, you can type:
+
+    >> make help
+
+2. Tree Structure: 
+
+  - src: source codes
+  - doc: user documentation in HTML and TeX
+  - include: header files
+  - lib: libraries 
+
+3. Test Problems: 
+
+Now you are ready to use the library. If you need to see some test problems, go to 
+the "./test" directory for test problems and read the README file therein as well. 
+If you wish to see some practical problems where FASP has been applied, see
+"./fasp4*" directories. Each of these directories contains a particular application.
+Please be noted that the codes containing in some of the "./fasp4*" directories 
+might be proprietary (not freely available to general public). 

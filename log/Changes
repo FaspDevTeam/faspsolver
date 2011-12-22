@@ -1,0 +1,44 @@
+04/04/2010 FASP 0.1.1: Resturct abstract multigrid matching code. 
+
+04/07/2010 FASP 0.1.2: Change AMG_data and functions related to it. 
+
+04/22/2010 FASP 0.1.3: Make it work for VC++/IFC compilers in Windows. 
+
+05/08/2010 FASP 0.1.4: Major changes to sparse triple multiplication.
+
+05/12/2010 FASP 0.1.5: Code optimization for a few files. Setup is still not linear.
+
+05/19/2010 FASP 0.1.5.1: Add ILUtp and more optimization.
+
+05/19/2010 FASP 0.1.5.2: Add STR ILU(0) and ILU(1).
+
+06/05/2010 FASP 0.1.6: Add block iterative solvers and block preconditioners for the blackoil model.
+
+06/25/2010 FASP 0.1.7: Add UMFPACK option for coarse level solvers.
+
+08/13/2010 FASP 0.1.8: Add memory check and debug mode; add more test problems. 
+                       Modify the structure of interpolations. 
+
+09/06/2010 FASP 0.1.9: Optimize meory usage and allocations in AMG routines. 
+
+10/03/2010 FASP 0.1.10: Add non-recursive multigrid structure. Add names to different types of points: coarse, fine, isolated, etc.
+
+12/02/2010 FASP 0.1.11: Bug fixes. Did memory check for several important algorithms. 
+
+01/08/2011 FASP 0.1.12: Improve efficiency. Update documentation. 
+
+03/04/2011 FASP 0.2.0: Major interface and structure changes.  
+
+06/16/2011 FASP 0.2.3: Remove some error/warnings for g++ compiler.
+
+09/01/2011 FASP 0.3.0: Modify the README, Makefiles, as well as Doxygen documentation.
+
+09/12/2011 FASP 0.3.2: Minor bug fixes, add a test for P1 FEM assembling.
+
+09/20/2011 FASP 0.3.3: Bug fix: Makefile link problem in Ubuntu 11.04. Update Doxygen page. 
+
+11/09/2011 FASP 0.3.4: Bug fix: A bug in precond_monix_bsr.c for cases other than 3 and 5 was caught. New feature: Start to build in CUDA supports. 
+
+11/22/2011 FASP 0.3.5: Improve efficiency for 2 phase oil reservoir simulation. Fix a few warnings from VS2008. Add Debug mode to VS2008 solutions.
+
+12/14/2011 FASP 0.4.1: Start to restructure the code; start to add INT and REAL. Bug fix: a divide-by-zero in BiCGstab might occur -- add safe-net. Bug fix: coarse level solver could fail -- add safe-net. 
