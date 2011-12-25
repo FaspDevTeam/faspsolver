@@ -56,9 +56,6 @@ int main (int argc, const char * argv[])
     
     printf("Test Problem %d\n", problem_num);
     
-    // Print out solver parameters
-    if (print_level>PRINT_NONE) fasp_param_solver_print(&itparam);
-    
 	//! Step 1. Assemble stiffness matrix and right-hand side
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
@@ -76,9 +73,24 @@ int main (int argc, const char * argv[])
 		fasp_dvecind_read(filename2, &b);
 	}	
     
+    if (problem_num == 11) {
+		datafile1="cooA_1046529.dat";
+		strcat(filename1,datafile1);
+		fasp_dcoo_read(filename1, &A);
+        
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+        
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);     
+        
+        fasp_dvec_free(&sol);
+	}	
+    
 	// Assemble A and b -- P1 FE discretization for Poisson.
 	else if (problem_num == 19) {	
-        assemble(&A,&b,9);
+        assemble(&A,&b,10);
 	}
     
 	else {
@@ -94,6 +106,9 @@ int main (int argc, const char * argv[])
 	}
     
 	//! Step 2. Solve the system
+    
+    // Print out solver parameters
+    if (print_level>PRINT_NONE) fasp_param_solver_print(&itparam);
     
 	// Set initial guess
     fasp_dvec_alloc(A.row, &uh); 

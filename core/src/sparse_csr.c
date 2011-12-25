@@ -381,63 +381,75 @@ FINISHED:
 /*!
  * \fn INT fasp_dcsr_diagpref ( dCSRmat *A )
  *
- * \brief Reorder the column and data arrays of a square CSR matrix, 
- *        so that the first entry in each row is the diagonal one.
+ * \brief Re-order the column and data arrays of a CSR matrix, 
+ *        so that the first entry in each row is the diagonal
  *
- * \param *A   pointer to the matrix to be reordered
+ * \param *A   pointer to the matrix to be re-ordered
  *
  * \author Zhiyang Zhou
  * \date 2010/09/09
  *
  * \note Reordering is done in place. 
- * \note Modified by Chensong Zhang on Dec/21/2012
+ *
+ *  Modified by Chensong Zhang on Dec/21/2012
  */
 INT fasp_dcsr_diagpref (dCSRmat *A)
 {
+	const INT   num_rowsA = A -> row; 
 	REAL      * A_data    = A -> val;
 	INT       * A_i       = A -> IA;
 	INT       * A_j       = A -> JA;
-	const INT   num_rowsA = A -> row; 
-	const INT   num_colsA = A -> col; 
 	
     // Local variable
 	INT    i, j;
     INT    tempi, row_size;
 	REAL   tempd;
-	
-	// the matrix is NOT square
-	if (num_rowsA != num_colsA) return ERROR_INPUT_PAR;
+
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_dcsr_diagpref ...... [Start]\n");
+#endif
 	
 	for (i = 0; i < num_rowsA; i ++)
 	{
 		row_size = A_i[i+1] - A_i[i];
-		
-		for (j = 0; j < row_size; j ++)
-		{
-			if (A_j[j] == i)
-			{
-				if (j != 0)
-				{
-					tempi  = A_j[0];
-					A_j[0] = A_j[j];
-					A_j[j] = tempi;
-					
-					tempd     = A_data[0];
-					A_data[0] = A_data[j];
-					A_data[j] = tempd;
-				}
-				break;
-			}
-			
-			// diagonal element is missing
-			if (j == row_size-1) return ERROR_MISC;
-		}
-		
-		A_j    += row_size;
-		A_data += row_size;
-	}
-	
-	return SUCCESS;
+		        
+        // check whether the first entry is already diagonal        
+        if (A_j[0] != i) { 
+            
+            for (j = 1; j < row_size; j ++)
+            {
+                if (A_j[j] == i) {
+#if DEBUG_MODE
+                    printf("### DEBUG: Switch entry_%d with entry_0\n", j);
+#endif
+
+                    tempi  = A_j[0];
+                    A_j[0] = A_j[j];
+                    A_j[j] = tempi;
+                    
+                    tempd     = A_data[0];
+                    A_data[0] = A_data[j];
+                    A_data[j] = tempd;
+                    
+                    break;
+                }
+            }
+            
+            if (j == row_size) {
+                printf("### WARNING: Diagonal entry in row %d is either missing or zero!\n", i);
+                return ERROR_MISC; // Diagonal is zero    
+            }
+        }
+        
+        A_j    += row_size;
+        A_data += row_size;
+    }
+
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_dcsr_diagpref ...... [Finish]\n");
+#endif
+    
+    return SUCCESS;
 }
 
 /**

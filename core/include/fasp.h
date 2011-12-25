@@ -4,6 +4,7 @@
  *------------------------------------------------------
  *  Created by Chensong Zhang on 08/12/2010.
  *  Modified by Chensong Zhang on 12/13/2011.
+ *  Modified by Chensong Zhang on 12/25/2011.
  *------------------------------------------------------
  *
  */
@@ -27,22 +28,28 @@
 /*---  Macros definition  ---*/
 /*---------------------------*/
 
-#define FASP_USE_ILU     0
-#define FASP_USE_OPENMP  0
+/**
+ * \brief For internal use only
+ */
+#define DEBUG_MODE       OFF  /**< output DEBUG information */
+#define CHMEM_MODE       OFF  /**< output MEMORY usage information */
+#define DIAGONAL_PREF    OFF   /**< order each row such that diagonal appears first */
 
 /**
- * \brief For debug and memory management 
+ * \brief For external software support
  */
+#define FASP_USE_ILU     OFF  /**< enable ILU or not */
+#define FASP_USE_OPENMP  OFF  /**< enable OpenMP support or not */
 
-#define DLMALLOC   0  /**< use dlmalloc instead of standard malloc */
-#define NEDMALLOC  0  /**< use nedmalloc instead of standard malloc */
-#define DEBUG_MODE 0  /**< output DEBUG information */
-#define CHMEM_MODE 0  /**< output MEMORY usage information */
+/**
+ * \brief For external memory management 
+ */
+#define DLMALLOC         OFF  /**< use dlmalloc instead of standard malloc */
+#define NEDMALLOC        OFF  /**< use nedmalloc instead of standard malloc */
 
 /**
  * \brief For Fortran compatibilty 
  */
-
 #define INT    int
 #define REAL   double
 

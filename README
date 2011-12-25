@@ -20,7 +20,7 @@ Step 2. Compile the library:
      [fasp/core]>> make
 
 After you are done, you can run a few test problems:
-      [fasp/test]>> make
+     [fasp/test]>> make
 
 You may want to adjust the "make.inc" for your personal computer environement 
 or choose different compiling parameters, etc. For more details, read the README

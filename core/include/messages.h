@@ -1,8 +1,11 @@
 /*
  *  messages.h
  *  
+ *------------------------------------------------------
  *  Created by Chensong Zhang on 03/20/2010.
  *  Modified by Chensong Zhang on 12/06/2011.
+ *  Modified by Chensong Zhang on 12/25/2011.
+ *------------------------------------------------------
  *
  */
 
@@ -25,8 +28,8 @@
 /** 
  * \brief Definition of switch  
  */
-#define ON                      1    /**< turn on some parameter */
-#define OFF                     0    /**< turn off some parameter */
+#define ON                      1    /**< turn on certain parameter */
+#define OFF                     0    /**< turn off certain parameter */
 
 /** 
  * \brief Print level for all subroutines -- not including DEBUG output

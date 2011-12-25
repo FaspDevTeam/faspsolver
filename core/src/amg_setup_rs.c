@@ -49,12 +49,15 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_amg_setup_rs ...... [Start]\n");
+#endif
+
+	clock_t setup_start=clock();
+    
+#if DEBUG_MODE
 	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
 	
 	if (print_level>=PRINT_MOST) printf("fasp_amg_setup_rs: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
-	
-	clock_t setup_start=clock();
 	
 	param->tentative_smooth = 1.0; 
     // Xiaozhe 02/23/2011: make sure classical AMG will not call fasp_blas_dcsr_mxv_agg
@@ -77,6 +80,10 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 		iluparam.ILU_relax   = param->ILU_relax;
 		iluparam.ILU_type    = param->ILU_type;
 	}
+
+#if DIAGONAL_PREF
+    fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
+#endif
 	
     // main AMG setup loop
 	while ((mgl[level].A.row>MAX(50,param->coarse_dof)) && (level<max_levels-1))
@@ -115,6 +122,10 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 		
 		// TODO: Make a new ptap using (A,P) only. R is not needed as an input! --Chensong
 		
+#if DIAGONAL_PREF
+        fasp_dcsr_diagpref(&mgl[level+1].A); // reorder each row to make diagonal appear first
+#endif        
+        
 		++level;
 	}
 	
