@@ -73,7 +73,8 @@ int main (int argc, const char * argv[])
 		fasp_dvecind_read(filename2, &b);
 	}	
     
-    if (problem_num == 11) {
+	// Read A and b -- P1 FE discretization for Poisson, large    
+    else if (problem_num == 11) {
 		datafile1="cooA_1046529.dat";
 		strcat(filename1,datafile1);
 		fasp_dcoo_read(filename1, &A);
@@ -90,7 +91,7 @@ int main (int argc, const char * argv[])
     
 	// Assemble A and b -- P1 FE discretization for Poisson.
 	else if (problem_num == 19) {	
-        assemble(&A,&b,10);
+        assemble(&A,&b,9);
 	}
     
 	else {

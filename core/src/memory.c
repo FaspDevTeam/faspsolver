@@ -183,8 +183,8 @@ INT fasp_mem_check (void *ptr,
                     INT ERR)
 {	
 	if (ptr==NULL) {
-		if (message) printf("### ERROR: %s", message);
-        exit(ERR);
+		printf("### ERROR: %s", message);
+        return ERR;
 	}
 	
 	return SUCCESS;

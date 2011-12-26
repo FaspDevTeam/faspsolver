@@ -53,8 +53,8 @@ void fasp_dcoovec_read (char *filemat,
 	/* read the matrix from file */ 
 	fp = fopen(filemat,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("fasp_dcoovec_read: opening file %s failed!\n",filemat);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filemat);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -92,8 +92,8 @@ void fasp_dcoovec_read (char *filemat,
 	
 	fp = fopen(filerhs,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filerhs);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filerhs);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -152,7 +152,7 @@ void fasp_dcoovec2_read (char *filename,
 	FILE *fp=fopen(filename, "r");
 	
 	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("fasp_dcoovec_read: opening file %s failed!\n",filename);
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -227,8 +227,8 @@ void fasp_dcoo_read (char *filename,
     
 	FILE *fp=fopen(filename,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("fasp_dcoo_read: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -243,7 +243,7 @@ void fasp_dcoo_read (char *filename,
 			Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k]=value; 
 		}
 		else {
-			printf("### ERROR: wrong file format!\n"); exit(ERROR_WRONG_FILE);
+			printf("### ERROR: Wrong file format!\n"); exit(ERROR_WRONG_FILE);
 		}
 	}
 	
@@ -280,8 +280,8 @@ void fasp_dmtx_read (char *filename,
     
 	FILE *fp=fopen(filename,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -303,7 +303,7 @@ void fasp_dmtx_read (char *filename,
             
 		}
 		else {
-			printf("### ERROR: wrong file format!\n"); exit(ERROR_WRONG_FILE);
+			printf("### ERROR: Wrong file format!\n"); exit(ERROR_WRONG_FILE);
 		}
 	}
 	
@@ -341,8 +341,8 @@ void fasp_dmtxsym_read (char *filename,
     
 	FILE *fp=fopen(filename,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -374,7 +374,7 @@ void fasp_dmtxsym_read (char *filename,
             
 		}
 		else {
-			printf("### ERROR: wrong file format!\n"); exit(ERROR_WRONG_FILE);
+			printf("### ERROR: Wrong file format!\n"); exit(ERROR_WRONG_FILE);
 		}
 	}
 	
@@ -427,8 +427,8 @@ void fasp_dstr_read (char *filename,
     
 	FILE *fp=fopen(filename,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -519,8 +519,8 @@ void fasp_dbsr_read (char *filename, dBSRmat *A)
     
 	FILE *fp=fopen(filename,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -589,8 +589,8 @@ void fasp_dvecind_read (char *filename,
 	int wall;
 	FILE *fp=fopen(filename,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -639,8 +639,8 @@ void fasp_dvec_read (char *filename,
     
 	FILE *fp=fopen(filename,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("fasp_dvec_read: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -684,8 +684,8 @@ void fasp_ivecind_read (char *filename,
     
 	FILE *fp=fopen(filename,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -730,8 +730,8 @@ void fasp_ivec_read (char *filename,
     
 	FILE *fp=fopen(filename,"r");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -773,8 +773,8 @@ void fasp_dcsr_write (char *filename,
     
 	FILE *fp=fopen(filename, "w");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -815,8 +815,8 @@ void fasp_dstr_write (char *filename,
 	
 	FILE *fp=fopen(filename,"w");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -876,8 +876,8 @@ void fasp_dbsr_write (char *filename,
 	
 	FILE *fp=fopen(filename,"w");
 	
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -930,8 +930,9 @@ void fasp_dvec_write (char *filename,
 	int m = vec->row, i;
 	
 	FILE *fp=fopen(filename,"w");
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+    
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}	
 	
@@ -967,8 +968,9 @@ void fasp_ivec_write (char *filename,
 	int m = vec->row, i;
 	
 	FILE *fp=fopen(filename,"w");
-	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: opening file %s failed!\n",filename);
+    
+	if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s failed!\n",filename);
 		exit(ERROR_OPEN_FILE);
 	}	
 	
