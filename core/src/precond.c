@@ -217,6 +217,7 @@ void fasp_precond_amg (double *r,
 	unsigned int i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
+    amgparam.AMG_type = predata->AMG_type;
 	amgparam.cycle_type = predata->cycle_type;
 	amgparam.smoother   = predata->smoother;
 	amgparam.smooth_order = predata->smooth_order;
@@ -257,6 +258,7 @@ void fasp_precond_famg (double *r,
 	unsigned int i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
+    amgparam.AMG_type = predata->AMG_type;
 	amgparam.cycle_type = predata->cycle_type;
 	amgparam.smoother   = predata->smoother;
 	amgparam.smooth_order = predata->smooth_order;
@@ -273,7 +275,7 @@ void fasp_precond_famg (double *r,
 	
 	fasp_solver_fmgcycle(mgl, &amgparam); 
 	
-	for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam); //fasp_solver_mgrecurmgl,&amgparam,0); //
+	for (i=0;i<maxit;++i) fasp_solver_fmgcycle(mgl,&amgparam); //fasp_solver_mgrecurmgl,&amgparam,0);
 	
 	fasp_array_cp(m,mgl->x.val,z);	
 }
@@ -299,6 +301,7 @@ void fasp_precond_amli (double *r,
 	unsigned int i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
+    amgparam.AMG_type = predata->AMG_type;
 	amgparam.cycle_type = predata->cycle_type;
 	amgparam.smoother   = predata->smoother;
 	amgparam.presmooth_iter  = predata->presmooth_iter;

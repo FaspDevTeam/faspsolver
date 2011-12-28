@@ -67,6 +67,9 @@ INT fasp_solver_amg (dCSRmat *A,
         case SA_AMG: // Smoothed Aggregation AMG setup phase
             if ( (status=fasp_amg_setup_sa(mgl, param))<0 ) goto FINISHED;
             break;
+        case UA_AMG: // Unsmoothed Aggregation AMG setup phase
+            if ( (status=fasp_amg_setup_ua(mgl, param))<0 ) goto FINISHED;
+            break;
         default:
             printf("### ERROR: Unknown AMG type %d!\n", amg_type); goto FINISHED;
     }

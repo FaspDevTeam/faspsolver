@@ -116,6 +116,7 @@
 #define V_CYCLE	                1    /**< V-cycle */
 #define W_CYCLE                 2    /**< W-cycle */
 #define AMLI_CYCLE	            3    /**< AMLI-cycle */
+#define K_CYCLE                     4   /**< K-cycle */
 
 /** 
  * \brief Definition of smoother types

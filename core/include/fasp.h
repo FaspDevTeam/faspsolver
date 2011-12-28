@@ -503,6 +503,8 @@ typedef struct {
  */
 typedef struct {
 	
+    //! type of AMG method
+	INT AMG_type;
 	//! print level in AMG preconditioner
 	INT print_level;
 	//! max number of iterations of AMG preconditioner
@@ -556,6 +558,8 @@ typedef struct {
  */
 typedef struct {
 	
+    //! type of AMG method
+	INT AMG_type;
 	//! print level in AMG preconditioner
 	INT print_level;
 	//! max number of iterations of AMG preconditioner

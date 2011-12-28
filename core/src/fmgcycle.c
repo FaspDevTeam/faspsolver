@@ -28,6 +28,7 @@ extern "C" {void DIRECT_MUMPS(const int *n, const int *nnz, int *ia, int *ja, do
 void fasp_solver_fmgcycle (AMG_data *mgl, 
 													 AMG_param *param)
 {	
+    const INT amg_type=param->AMG_type;
 	const int nl = mgl[0].num_levels;
 	const int smoother = param->smoother;
 	const int smooth_order = param->smooth_order;
@@ -35,16 +36,17 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 	const int ndeg = 0;
 	
 	// local variables
-	int p_type = 1, l = 0, i, lvl, num_cycle;
+	//int p_type = 1, 
+    int l = 0, i, lvl, num_cycle;
 	double alpha = 1.0, relerr = BIGREAL;
 	
-	if (param->tentative_smooth < SMALLREAL) p_type = 0;
+	//if (param->tentative_smooth < SMALLREAL) p_type = 0;
 	
 	for ( l=0; l<nl-1; l++) { 
 		// restriction r1 = R*r0
-		switch (p_type)
+		switch (amg_type)
 		{		
-			case 0: 
+			case UA_AMG: 
 				fasp_blas_dcsr_mxv_agg(&mgl[l].R, mgl[l].b.val, mgl[l+1].b.val);
 				break;
 			default:
@@ -95,9 +97,9 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 			}
 			
 			// prolongation u = u + alpha*P*e1
-			switch (p_type)
+			switch (amg_type)
 			{
-				case 0:
+				case UA_AMG:
 					fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
 					break;
 				default:
@@ -179,9 +181,9 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 				fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
 				
 				// restriction r1 = R*r0
-				switch (p_type)
+				switch (amg_type)
 				{		
-					case 0: 
+					case UA_AMG: 
 						fasp_blas_dcsr_mxv_agg(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val);
 						break;
 					default:
@@ -229,9 +231,9 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 				}
 				
 				// prolongation u = u + alpha*P*e1
-				switch (p_type)
+				switch (amg_type)
 				{
-					case 0:
+					case UA_AMG:
 						fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
 						break;
 					default:

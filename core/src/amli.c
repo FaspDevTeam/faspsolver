@@ -30,6 +30,7 @@ void fasp_solver_amli (AMG_data *mgl,
                        AMG_param *param, 
                        INT level)
 {	
+    const INT amg_type=param->AMG_type;
 	const REAL relax = param->relaxation;
     const INT  print_level = param->print_level;
 	const INT  smoother = param->smoother;
@@ -37,7 +38,7 @@ void fasp_solver_amli (AMG_data *mgl,
 	const INT  ndeg = 3;
     
     // local variables
-	INT    p_type = 1;
+	//INT    p_type = 1;
 	REAL   alpha  = 1.0;
 	REAL * coef   = param->amli_coef;
 		
@@ -53,7 +54,7 @@ void fasp_solver_amli (AMG_data *mgl,
 	
 	if (print_level>=PRINT_MOST) printf("AMLI level %d, pre-smoother %d.\n", level, smoother);
 	
-    if (param->tentative_smooth < SMALLREAL) p_type = 0;
+    //if (param->tentative_smooth < SMALLREAL) p_type = 0;
 
 	if (level < mgl[level].num_levels-1) { 
 		
@@ -111,9 +112,9 @@ void fasp_solver_amli (AMG_data *mgl,
 		fasp_blas_dcsr_aAxpy(-1.0,A_level0,e0->val,r);
 		
 		// restriction r1 = R*r0
-		switch (p_type)
+		switch (amg_type)
 		{		
-			case 0: 
+			case UA_AMG: 
 				fasp_blas_dcsr_mxv_agg(&mgl[level].R, r, b1->val);
 				break;
 			default:
@@ -149,9 +150,9 @@ void fasp_solver_amli (AMG_data *mgl,
                   / fasp_blas_dcsr_vmv(A_level1, e1->val, e1->val);
 		}
 		
-		switch (p_type)
+		switch (amg_type)
 		{
-			case 0:
+			case UA_AMG:
 				fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[level].P, e1->val, e0->val);
 				break;
 			default:

@@ -210,6 +210,8 @@ void fasp_param_input (char *filenm, input_param *Input)
 				Input->AMG_type = CLASSIC_AMG;
 			else if ((strcmp(buffer,"SA")==0)||(strcmp(buffer,"sa")==0))
 				Input->AMG_type = SA_AMG;
+            else if ((strcmp(buffer,"UA")==0)||(strcmp(buffer,"ua")==0))
+				Input->AMG_type = UA_AMG;
 			else
 			{ ret = 0; break; }
 			wall = fgets(buffer,500,fp); // skip rest of line

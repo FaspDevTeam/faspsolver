@@ -58,6 +58,9 @@ int fasp_solver_famg (dCSRmat *A,
 		case SA_AMG:
 			if ( (status=fasp_amg_setup_sa(mgl, param))<0 ) goto FINISHED;
 			break;
+        case UA_AMG:
+			if ( (status=fasp_amg_setup_ua(mgl, param))<0 ) goto FINISHED;
+			break;
 		default:
 			printf("Error: Wrong AMG type %d!\n", amg_type); goto FINISHED;
 	}

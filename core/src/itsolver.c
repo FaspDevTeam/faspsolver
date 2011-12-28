@@ -256,6 +256,9 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 		case SA_AMG: // Smoothed Aggregation AMG
 			status = fasp_amg_setup_sa(mgl, amgparam);
 			break;
+        case UA_AMG: // Unsmoothed Aggregation AMG
+			status = fasp_amg_setup_ua(mgl, amgparam);
+			break;
 		default: // Classical AMG
 			status = fasp_amg_setup_rs(mgl, amgparam);   
 			break;
@@ -269,6 +272,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	
 	// solver part
 	precond_data precdata;
+    precdata.AMG_type = amgparam->AMG_type;
 	precdata.max_iter = amgparam->max_iter;
 	precdata.tol = amgparam->tol;
 	precdata.cycle_type = amgparam->cycle_type;

@@ -1,8 +1,7 @@
 /*! \file amg_setup_sa.c
  *  \brief Smoothed Aggregation AMG: SETUP phase
  *
- *  TODO: Make unsmoothed aggregation standard alone and controlled with input? --Chensong
- */
+*/
 
 #include <math.h>
 #include <time.h>
@@ -11,7 +10,6 @@
 #include "fasp_functs.h"
 
 static INT amg_setup_smoothP_smoothA(AMG_data *mgl, AMG_param *param);
-static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
 static INT amg_setup_smoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
 
 static void aggregation(dCSRmat *A, ivector *vertices, AMG_param *param, INT levelNum, dCSRmat *N, INT *num_aggregations);
@@ -67,19 +65,15 @@ INT fasp_amg_setup_sa (AMG_data *mgl,
 {
 	INT status=SUCCESS;
 	
-	INT type = 0; 
-	if (param->tentative_smooth > SMALLREAL) type = 1;
+	INT type = 0;  // only for test smoothed P and unsmoothed A, not used in general. 
 	
 	switch (type)
 	{
-		case 1: // Todo: Need to define types later -- Chensong
-			status = amg_setup_smoothP_smoothA(mgl, param);
-			break;
-		case 2:
+		case 1:
 			status = amg_setup_smoothP_unsmoothA(mgl, param);
 			break;
 		default:
-			status = amg_setup_unsmoothP_unsmoothA(mgl, param);
+			status = amg_setup_smoothP_smoothA(mgl, param);
 			break;	
 	}
 	
@@ -89,157 +83,6 @@ INT fasp_amg_setup_sa (AMG_data *mgl,
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
-
-/**
- * \fn static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
- * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
- * 
- * \param *mgl     pointer to AMG_data data
- * \param *param   pointer to AMG parameters
- *
- * Setup A, P, PT, levels using smoothed aggregation
- * concrete algorithm see paper
- * Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
- * 
- * \author Xiaozhe Hu
- * \date 02/21/2011 
- */
-static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
-{
-	const INT print_level=param->print_level;
-	const INT m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;
-	
-	INT max_levels=param->max_levels;
-	INT i, j, level=0, status=SUCCESS;
-	clock_t setup_start, setup_end;
-	REAL setupduration;
-	
-#if DEBUG_MODE
-	printf("fasp_amg_setup_sa ...... [Start]\n");
-	printf("fasp_amg_setup_sa: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
-#endif
-	
-	if (print_level>8)	printf("fasp_amg_setup_sa: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
-	
-	setup_start=clock();
-	
-	if (param->cycle_type == AMLI_CYCLE) 
-	{
-		param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
-		REAL lambda_max = 2.0;
-		REAL lambda_min = lambda_max/4;
-		fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
-	}
-	
-	//each elvel stores the information of the number of aggregations
-    INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(int));
-	
-	for (i=0; i<max_levels; ++i) num_aggregations[i] = 0;
-	
-	ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
-	
-	// each level stores the information of the strongly coupled neighborhoods
-    dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat)); 
-	
-	mgl[0].near_kernel_dim   = 1;
-	mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
-	
-	for (i=0; i<mgl->near_kernel_dim; ++i) {
-		mgl[0].near_kernel_basis[i] = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
-		for (j=0;j<m;++j) mgl[0].near_kernel_basis[i][j] = 1.0;
-	}
-	
-	// initialize ILU parameters
-	mgl->ILU_levels = param->ILU_levels;
-	ILU_param iluparam;
-	if (param->ILU_levels>0) {
-		iluparam.print_level = param->print_level;
-		iluparam.ILU_lfil    = param->ILU_lfil;
-		iluparam.ILU_droptol = param->ILU_droptol;
-		iluparam.ILU_relax   = param->ILU_relax;
-		iluparam.ILU_type    = param->ILU_type;
-	}
-	
-	while ((mgl[level].A.row>param->coarse_dof) && (level<max_levels-1))
-	{
-		/*-- setup ILU decomposition if necessary */
-		if (level<param->ILU_levels) fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
-		
-		/*-- Aggregation --*/
-		aggregation(&mgl[level].A, &vertices[level], param, level+1, &Neighbor[level], &num_aggregations[level]);
-		if (num_aggregations[level] * 4 > mgl[level].A.row) param->strong_coupled /=2.0; 
-		
-		/* -- Form Prolongation --*/	  
-		form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1, num_aggregations[level]);
-		
-		/*-- Form resitriction --*/		
-		fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
-		
-		/*-- Form coarse level stiffness matrix --*/		
-		fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
-		
-		fasp_dcsr_free(&Neighbor[level]);
-		fasp_ivec_free(&vertices[level]);
-		
-		++level;
-	}
-	
-	// setup total level number and current level
-	mgl[0].num_levels = max_levels = level+1;
-	mgl[0].w = fasp_dvec_create(m);	
-	
-	for (level=1; level<max_levels; ++level) {
-		int	m = mgl[level].A.row;
-		mgl[level].num_levels = max_levels; 		
-		mgl[level].b = fasp_dvec_create(m);
-		mgl[level].x = fasp_dvec_create(m);
-		mgl[level].w = fasp_dvec_create(2*m);	
-	}
-	
-#if With_UMFPACK	
-	// Need to sort the matrix A for UMFPACK format
-	dCSRmat Ac_tran;
-	fasp_dcsr_trans(&mgl[max_levels-1].A, &Ac_tran);
-	fasp_dcsr_sort(&Ac_tran);
-	fasp_dcsr_cp(&Ac_tran,&mgl[max_levels-1].A);
-	fasp_dcsr_free(&Ac_tran);
-#endif
-	
-	if (print_level>1) {
-		REAL gridcom=0.0, opcom=0.0;
-		
-		printf("-----------------------------------------------\n");
-		printf("  Level     Num of rows      Num of nonzeros\n");
-		printf("-----------------------------------------------\n");
-		for (level=0;level<max_levels;++level) {
-			printf("%5d  %14d  %16d\n",level,mgl[level].A.row,mgl[level].A.nnz);
-			gridcom += mgl[level].A.row;
-			opcom += mgl[level].A.nnz;
-		}
-		printf("-----------------------------------------------\n");
-		
-		gridcom /= mgl[0].A.row;
-		opcom /= mgl[0].A.nnz;
-		printf("Unsmoothed Aggregation AMG grid complexity = %f\n", gridcom);
-		printf("Unsmoothed Aggregation AMG operator complexity = %f\n", opcom);
-	}
-	
-	if (print_level>0) {
-		setup_end=clock();
-		setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-		printf("Unsmoothed Aggregation AMG setup costs %f seconds.\n", setupduration);	
-	}
-	
-	fasp_mem_free(vertices);
-	fasp_mem_free(num_aggregations);
-	fasp_mem_free(Neighbor);
-	
-#if DEBUG_MODE
-	printf("amg_setup_sa ...... [Finish]\n");
-#endif
-	
-	return status;
-}
 
 /**
  * \fn static INT amg_setup_smoothP_smoothA(AMG_data *mgl, AMG_param *param)

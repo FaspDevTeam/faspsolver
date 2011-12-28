@@ -23,6 +23,7 @@
  */
 void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, int level)
 {	
+
 	const int print_level = param->print_level;
 	const int smoother = param->smoother;
 	const int cycle_type = param->cycle_type;

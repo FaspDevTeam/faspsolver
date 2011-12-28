@@ -22,7 +22,7 @@ extern "C" {
 /**
  * \fn void fasp_solver_mgcycle (AMG_data *mgl, AMG_param *param)
  *
- * \brief Solve Ax=b with non-recursive multigrid k-cycle 
+ * \brief Solve Ax=b with non-recursive multigrid cycle 
  *
  * \param *mgl     pointer to AMG_data data
  * \param *param   pointer to AMG parameters
@@ -36,6 +36,7 @@ extern "C" {
 void fasp_solver_mgcycle (AMG_data *mgl, 
                           AMG_param *param)
 {	
+    const INT amg_type=param->AMG_type;
 	const REAL relax = param->relaxation;
 	const INT nl = mgl[0].num_levels;
 	const INT smoother = param->smoother;
@@ -46,8 +47,6 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 	
     // local variables
 	REAL alpha = 1.0;
-    INT p_type = 1; // TODO: Why assign p_type this way? Input? --Chensong
-	if (param->tentative_smooth < SMALLREAL) p_type = 0;
     
     if (print_level >= PRINT_MOST) {
         printf("AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
@@ -119,9 +118,9 @@ ForwardSweep:
 		fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
 		
 		// restriction r1 = R*r0
-		switch (p_type)
+		switch (amg_type)
 		{		
-			case 0: 
+			case UA_AMG: 
 				fasp_blas_dcsr_mxv_agg(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val);
 				break;
 			default:
@@ -176,9 +175,9 @@ ForwardSweep:
 		}
 		
 		// prolongation u = u + alpha*P*e1
-		switch (p_type)
+		switch (amg_type)
 		{
-			case 0:
+			case UA_AMG:
 				fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
 				break;
 			default:
