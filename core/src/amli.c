@@ -212,21 +212,30 @@ void fasp_solver_amli (AMG_data *mgl,
 	}
 	else // coarsest level solver
 	{
-#if With_UMFPACK
+#if With_DISOLVE 
+        /* use Direct.lib in Windows */
+		DIRECT_MUMPS(A_level0->row, A_level0->nnz, A_level0->IA, A_level0->JA, A_level0->val, 
+                     b0->val, e0->val);
+#elif With_UMFPACK
 		/* use UMFPACK direct solver on the coarsest level */
 		umfpack(A_level0, b0, e0, 0);
 #elif With_SuperLU
 		/* use SuperLU direct solver on the coarsest level */
 		superlu(A_level0, b0, e0, 0);
 #else	
-		/* use default iterative solver on the coarest level */
-		unsigned INT cmaxit = MIN(m0*m0, 1000); // coarse level iteration number
+		/* use iterative solver on the coarest level */
+		const INT csize = A_level0->row;
+		const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
 		REAL ctol = param->tol; // coarse level tolerance
-
-		INT flag = fasp_solver_dcsr_pbcgs(A_level0, b0, e0, cmaxit, ctol, NULL, 0, 1);
-		//INT flag = fasp_solver_dcsr_pcg(A_level0, b0, e0, cmaxit, ctol, NULL, 0, 1);
-		if (flag < 0) {
-			printf("### WARNING: coarsest solver does not converge %d!\n", flag);
+        
+		INT flag = fasp_solver_dcsr_pcg(A_level0, b0, e0, cmaxit, ctol, NULL, 0, 1);
+		
+        if (flag < 0) { // If PCG does not converge, use BiCGstab as a saft net.
+            flag = fasp_solver_dcsr_pvgmres (A_level0, b0, e0, cmaxit, ctol, NULL, 0, 1, 25);
+        }
+        
+		if ( flag < 0 && print_level > PRINT_MIN ) {
+			printf("### WARNING: coarse level solver does not converge in %d steps!\n", cmaxit);
 		}
 #endif 
 	}

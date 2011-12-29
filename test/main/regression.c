@@ -165,9 +165,9 @@ int main (int argc, const char * argv[])
         
         check_solu(&x, &sol,tolerance);
         
-        /* UA AMG V-cycle with GS smoother as a solver */			
+        /* SA AMG V-cycle with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
-        printf("UA AMG V-cycle with GS smoother as iterative solver ...\n");	
+        printf("SA AMG V-cycle with GS smoother as iterative solver ...\n");	
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
@@ -180,7 +180,23 @@ int main (int argc, const char * argv[])
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
         check_solu(&x, &sol,tolerance);
-		
+
+        /* UA AMG V-cycle with GS smoother as a solver */			
+        printf("------------------------------------------------------------------\n");
+        printf("UA AMG V-cycle with GS smoother as iterative solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_amg_init(&amgparam);
+        amgparam.max_iter    = 100;
+        amgparam.tol         = 1e-10;
+        amgparam.AMG_type    = UA_AMG;
+        amgparam.smoother    = GS;
+        amgparam.print_level = print_level;
+        
+        fasp_solver_amg(&A, &b, &x, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+
         /* CG */
         printf("------------------------------------------------------------------\n");
         printf("CG solver ...\n");	

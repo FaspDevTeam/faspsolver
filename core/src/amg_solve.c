@@ -45,37 +45,39 @@ INT fasp_amg_solve (AMG_data *mgl,
 	REAL relres1=BIGREAL, absres0=BIGREAL, absres, factor;		
 	clock_t solve_start=clock();
 	
-	if (print_level>=PRINT_MOST) printf("fasp_amg_solve: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);	
+	if (print_level>=PRINT_MOST) printf("fasp_amg_solve: nr=%d, nc=%d, nnz=%d\n",m,n,nnz);	
 	
 	while ((++iter <= MaxIt) & (sumb > SMALLREAL)) // MG solver here
 	{	
 		// Call one multigrid cycle
+		fasp_solver_mgcycle(mgl, param); 
         // This is the non-recursive MG cycle subroutine.
         // If you wish to call the recursive version instead, replace it with:
         //     fasp_solver_mgrecur(mgl, param, 0);         
-		fasp_solver_mgcycle(mgl, param); 
 		
-		// r = b-A*x		
+		// Form residual r = b-A*x		
 		fasp_dvec_cp(b,r); fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);		
 		
-        // compute norms of r and convergence factor
+        // Compute norms of r and convergence factor
 		absres  = fasp_blas_dvec_norm2(r); // residual ||r||
 		relres1 = absres/sumb;             // relative residual ||r||/||b||
 		factor  = absres/absres0;          // contraction factor
-		
-		// output iteration information if needed	
+        absres0 = absres;                  // prepare for next iteration
+
+		// Print iteration information if needed	
 		print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
 		
-		if (relres1<tol) break; // early exit condition
-		
-		absres0 = absres;
-	}
+        // Check convergence
+		if (relres1<tol) break;
+    }
 	
 	if (print_level>PRINT_NONE) {
 		if (iter>MaxIt)
-			printf("Maximal iteration %d exceeded with relative residual %e.\n", MaxIt, relres1);
+			printf("Maximal iteration %d exceeded with relative residual %e.\n", 
+                   MaxIt, relres1);
 		else
-			printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
+			printf("Number of iterations = %d with relative residual %e.\n", 
+                   iter, relres1);
 		
 		clock_t solve_end=clock();
 		REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
@@ -125,22 +127,22 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
 		// Call one multigrid cycle
 		fasp_solver_amli(mgl, param, 0); 
 		
-		// r = b-A*x		
+		// Form residual r = b-A*x		
 		fasp_dvec_cp(b,r); 
 		fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);		
 		
-        // compute norms of r and convergence factor
+        // Compute norms of r and convergence factor
 		absres  = fasp_blas_dvec_norm2(r); // residual ||r||
 		relres1 = absres/sumb;             // relative residual ||r||/||b||
 		factor  = absres/absres0;          // contraction factor
+        absres0 = absres;                  // prepare for next iteration
 		
-		// output iteration information if needed	
+		// Print iteration information if needed	
 		print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
 		
-		if (relres1<tol) break; // early exit condition
-		
-		absres0 = absres;
-	}
+        // Check convergence
+		if (relres1<tol) break;
+    }
 	
 	if (print_level>PRINT_NONE) {
 		if (iter>MaxIt)
