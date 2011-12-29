@@ -31,35 +31,35 @@
 /**
  * \brief For internal use only
  */
-#define DEBUG_MODE       OFF  /**< output DEBUG information */
-#define CHMEM_MODE       OFF  /**< output MEMORY usage information */
-#define DIAGONAL_PREF    OFF   /**< order each row such that diagonal appears first */
+#define DEBUG_MODE      OFF  /**< output DEBUG information */
+#define CHMEM_MODE      OFF  /**< output MEMORY usage information */
+#define DIAGONAL_PREF   OFF  /**< order each row such that diagonal appears first */
 
 /**
  * \brief For external software support
  */
-#define FASP_USE_ILU     OFF  /**< enable ILU or not */
-#define FASP_USE_OPENMP  OFF  /**< enable OpenMP support or not */
+#define FASP_USE_ILU    OFF  /**< enable ILU or not */
+#define FASP_USE_OPENMP OFF  /**< enable OpenMP support or not */
 
 /**
  * \brief For external memory management 
  */
-#define DLMALLOC         OFF  /**< use dlmalloc instead of standard malloc */
-#define NEDMALLOC        OFF  /**< use nedmalloc instead of standard malloc */
+#define DLMALLOC        OFF  /**< use dlmalloc instead of standard malloc */
+#define NEDMALLOC       OFF  /**< use nedmalloc instead of standard malloc */
 
 /**
- * \brief For Fortran compatibilty 
+ * \brief Define INT and REAL types for compatibilty 
  */
-#define INT    int
-#define REAL   double
+#define INT             int
+#define REAL            double
 
 /**
  * \brief Some global constants 
  */
-#define BIGREAL     1e+15 /**< A large real number */ 
-#define SMALLREAL   1e-15 /**< A small real number */ 
-#define MAX_REFINE_LVL 20 /**< Maximal refinement level */
-#define MAX_AMG_LVL    20 /**< Maximal AMG coarsening level */
+#define BIGREAL         1e+15 /**< A large real number */ 
+#define SMALLREAL       1e-15 /**< A small real number */ 
+#define MAX_REFINE_LVL  20    /**< Maximal refinement level */
+#define MAX_AMG_LVL     20    /**< Maximal AMG coarsening level */
 
 /** 
  * \brief Definition of max, min, abs
@@ -79,7 +79,6 @@
 /**
  * \brief Index starting point: C convention or Fortran convention
  */
-
 #define ISTART 0 /**< 0 if in Natural index, 1 if data is in C index */
 #define N2C(ind) ((ind)-ISTART) /**< map from Natural index 1,2,... to C index 0,1,... */
 #define C2N(ind) ((ind)+ISTART) /**< map from C index 0,1,... to Natural index 1,2,... */

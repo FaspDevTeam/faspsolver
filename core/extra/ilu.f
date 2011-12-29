@@ -7,10 +7,10 @@ c     Modified by Chensong Zhang on 05/25/10.
 c-----------------------------------------------------------------------
 
 !> \file ilu.f
-!> \brief ILU routines for preconditioning mainly adapted from SparseKit
+!> \brief ILU routines for preconditioning adapted from SparseKit
 !>
 !> Methods: ILUt, ILUtp, ILUk, ILUs
-      
+
 c-----------------------------------------------------------------------
       subroutine iluk(n,a,ja,ia,lfil,alu,jlu,iwk,ierr,nzlu)
 c-----------------------------------------------------------------------
@@ -3081,3 +3081,4 @@ c      write(*,*) 'nzlu ==',nzlu
 c======================== End of symbfac ==============================
 
       end
+      
