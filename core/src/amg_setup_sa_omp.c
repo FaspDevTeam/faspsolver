@@ -1,7 +1,6 @@
 /*! \file amg_setup_sa_omp.c
  *  \brief Smoothed Aggregation AMG: SETUP phase
- *
-*/
+ */
 
 #include <math.h>
 #include <time.h>
@@ -10,8 +9,35 @@
 #include "fasp_functs.h"
 
 
+#if FASP_USE_OPENMP
+static int amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
+                                             AMG_param *param,
+                                             int nthreads,
+                                             int openmp_holds);
+static void aggregation_omp(dCSRmat *A,
+                            ivector *vertices,
+                            AMG_param *param,
+                            int levelNum,
+                            dCSRmat *Neigh,
+                            int *num_aggregations,
+                            int nthreads,
+                            int openmp_holds);
+static void form_tentative_p_omp(ivector *vertices,
+                                 dCSRmat *tentp,
+                                 AMG_data *mgl,
+                                 int levelNum,
+                                 int num_aggregations,
+                                 int nthreads,
+                                 int openmp_holds);
+#endif // OMP
+
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
+/*---------------------------------omp----------------------------------------*/
+
 /**
- * \fn INT fasp_amg_setup_sa_omp(AMG_data *mgl, AMG_param *param, INT nthreads, INT openmp_holds)
+ * \fn int fasp_amg_setup_sa_omp(AMG_data *mgl, AMG_param *param, int nthreads, int openmp_holds)
  * \brief Set up phase of smoothed aggregation AMG
  * 
  * \param *mgl     pointer to AMG_data data
@@ -26,14 +52,11 @@
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/06/2011
  */
-INT fasp_amg_setup_sa_omp (AMG_data *mgl, 
-                           AMG_param *param, 
-                           INT nthreads, 
-                           INT openmp_holds)
+int fasp_amg_setup_sa_omp (AMG_data *mgl, AMG_param *param, int nthreads, int openmp_holds)
 {
-	INT status=SUCCESS;
+	int status=SUCCESS;
 #if FASP_USE_OPENMP
-	INT type = 0; 
+	int type = 0; 
 	if (param->tentative_smooth > SMALLREAL) type = 1;
 	
 	switch (type)
@@ -55,7 +78,7 @@ INT fasp_amg_setup_sa_omp (AMG_data *mgl,
 #if FASP_USE_OPENMP
 
 /**
- * \fn static INT amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl, AMG_param *param, INT nthreads, INT openmp_holds)
+ * \fn static int amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl, AMG_param *param, int nthreads, int openmp_holds)
  * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
  * 
  * \param *mgl     pointer to AMG_data data
@@ -70,21 +93,21 @@ INT fasp_amg_setup_sa_omp (AMG_data *mgl,
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/15/2011
  */
-static INT amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
+static int amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
                                              AMG_param *param,
-                                             INT nthreads,
-                                             INT openmp_holds)
+                                             int nthreads,
+                                             int openmp_holds)
 {
-	INT status=SUCCESS;
+	int status=SUCCESS;
 #if FASP_USE_OPENMP
-    
-	const INT print_level=param->print_level;
-	const INT m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;
+
+	const int print_level=param->print_level;
+	const int m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;
 	
-	INT max_levels=param->max_levels;
-	INT i, level=0;
-	REAL setup_start, setup_end;
-	REAL setupduration;
+	int max_levels=param->max_levels;
+	int i, level=0;
+	double setup_start, setup_end;
+	double setupduration;
 	
 #if DEBUG_MODE
 	printf("fasp_amg_setup_sa ...... [Start]\n");
@@ -97,13 +120,13 @@ static INT amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
 	
 	if (param->cycle_type == AMLI_CYCLE) 
 	{
-		param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
-		REAL lambda_max = 2.0;
-		REAL lambda_min = lambda_max/4;
+		param->amli_coef = (double *)fasp_mem_calloc(param->amli_degree+1,sizeof(double));
+		double lambda_max = 2.0;
+		double lambda_min = lambda_max/4;
 		fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
 	}
 	
-	INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(int)); //each elvel stores the information of the number of aggregations
+	int *num_aggregations = (int *)fasp_mem_calloc(max_levels,sizeof(int)); //each elvel stores the information of the number of aggregations
 	
 	for (i=0; i<max_levels; ++i) num_aggregations[i] = 0;
 	
@@ -112,10 +135,10 @@ static INT amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
 	dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat)); // each level stores the information of the strongly coupled neighborhoods
 	
 	mgl[0].near_kernel_dim   = 1;
-	mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
+	mgl[0].near_kernel_basis = (double **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(double*));
 	
 	for (i=0; i<mgl->near_kernel_dim; ++i) {
-		mgl[0].near_kernel_basis[i] = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
+		mgl[0].near_kernel_basis[i] = (double *)fasp_mem_calloc(m,sizeof(double));
 		fasp_array_set_omp (m, mgl[0].near_kernel_basis[i], 1.0, nthreads, openmp_holds);
 	}
 	
@@ -178,7 +201,7 @@ static INT amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
 #endif
 	
 	if (print_level>1) {
-		REAL gridcom=0.0, opcom=0.0;
+		double gridcom=0.0, opcom=0.0;
 		
 		printf("-----------------------------------------------\n");
 		printf("  Level     Num of rows      Num of nonzeros\n");
@@ -209,13 +232,13 @@ static INT amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
 #if DEBUG_MODE
 	printf("amg_setup_sa ...... [Finish]\n");
 #endif
-    
+
 #endif // OMP
 	return status;
 }
 
 /**
- * \fn static void aggregation_omp(dCSRmat *A, ivector *vertices, AMG_param *param, INT levelNum, dCSRmar *Neigh, INT *num_aggregations, INT nthreads, INT openmp_holds)
+ * \fn static void aggregation_omp(dCSRmat *A, ivector *vertices, AMG_param *param, int levelNum, dCSRmar *Neigh, int *num_aggregations, int nthreads, int openmp_holds)
  * \brief Form aggregation based on strong coupled neighborhoods 
  * \param *A pointer to the coefficient matrices
  * \param *vertices pointer to the aggregation of vertics
@@ -232,14 +255,14 @@ static INT amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
 static void aggregation_omp(dCSRmat *A,
                             ivector *vertices,
                             AMG_param *param,
-                            INT levelNum,
+                            int levelNum,
                             dCSRmat *Neigh,
-                            INT *num_aggregations,
-                            INT nthreads,
-                            INT openmp_holds)
+                            int *num_aggregations,
+                            int nthreads,
+                            int openmp_holds)
 {
 #if FASP_USE_OPENMP
-	REAL strongly_coupled;
+	double strongly_coupled;
 	
 	//strongly_coupled= param->strong_coupled * pow(0.5, levelNum-1);
 	
@@ -252,8 +275,8 @@ static void aggregation_omp(dCSRmat *A,
 		strongly_coupled= param->strong_coupled;
 	}
 	
-	INT i,j,index;
-	INT row = A->row, col = A->col, nnz = A->IA[row]-A->IA[0];
+	int i,j,index;
+	int row = A->row, col = A->col, nnz = A->IA[row]-A->IA[0];
 	
 	/* Form strongly coupled neighborhood */
 	dvector diag; fasp_dcsr_getdiag_omp(0, A, &diag, nthreads, openmp_holds);  // get the diagonal entries
@@ -284,7 +307,7 @@ static void aggregation_omp(dCSRmat *A,
 	Neigh->nnz = index;
 	
 	Neigh->JA = (int*)fasp_mem_realloc(Neigh->JA, (Neigh->IA[row])*sizeof(int));
-	Neigh->val = (REAL*)fasp_mem_realloc(Neigh->val, (Neigh->IA[row])*sizeof(REAL));
+	Neigh->val = (double*)fasp_mem_realloc(Neigh->val, (Neigh->IA[row])*sizeof(double));
 	
 	fasp_dvec_free(&diag);
 	
@@ -292,11 +315,11 @@ static void aggregation_omp(dCSRmat *A,
 	fasp_ivec_alloc(row, vertices);
 	fasp_iarray_set_omp(row, vertices->val, -2, nthreads, openmp_holds);
 	
-	INT num_left = row;
-	INT subset;
-	INT max_aggregation = param->max_aggregation;
-	INT *num_each_aggregation;
-	INT count;
+	int num_left = row;
+	int subset;
+	int max_aggregation = param->max_aggregation;
+	int *num_each_aggregation;
+	int count;
 	
 	*num_aggregations = 0;
 	
@@ -333,7 +356,7 @@ static void aggregation_omp(dCSRmat *A,
 	}
 	
 	/* Step 2. */
-	INT *temp_C = (int*)fasp_mem_calloc(row,sizeof(int));
+	int *temp_C = (int*)fasp_mem_calloc(row,sizeof(int));
 	
 	num_each_aggregation = (int*)fasp_mem_calloc(*num_aggregations,sizeof(int));
 	
@@ -380,11 +403,11 @@ static void aggregation_omp(dCSRmat *A,
 	fasp_mem_free(temp_C);
 	fasp_mem_free(num_each_aggregation);
 #endif // OMP
-    
+
 }
 
 /**
- * \fn static void form_tentative_p(ivectors *vertices, dCSRmat *tentp, AMG_data *mgl, INT levelNum, INT num_aggregations, INT nthreads, INT openmp_holds)
+ * \fn static void form_tentative_p(ivectors *vertices, dCSRmat *tentp, AMG_data *mgl, int levelNum, int num_aggregations, int nthreads, int openmp_holds)
  * \brief Form aggregation based on strong coupled neighborhoods 
  * \param *A pointer to the coefficient matrices
  * \param *vertices pointer to the aggregation of vertices
@@ -401,14 +424,14 @@ static void aggregation_omp(dCSRmat *A,
 static void form_tentative_p_omp(ivector *vertices,
                                  dCSRmat *tentp,
                                  AMG_data *mgl,
-                                 INT levelNum,
-                                 INT num_aggregations,
-                                 INT nthreads,
-                                 INT openmp_holds)
+                                 int levelNum,
+                                 int num_aggregations,
+                                 int nthreads,
+                                 int openmp_holds)
 {
 #if FASP_USE_OPENMP
-	INT i, myid, mybegin, myend, row_plus_one;
-	REAL **basis = mgl->near_kernel_basis;
+	int i, myid, mybegin, myend, row_plus_one;
+	double **basis = mgl->near_kernel_basis;
 	
 	/* Form tentative prolongation */
 	tentp->row = vertices->row;
@@ -418,7 +441,7 @@ static void form_tentative_p_omp(ivector *vertices,
 	
 	tentp->IA  = (int*)fasp_mem_calloc(row_plus_one,sizeof(int));
 	tentp->JA  = (int*)fasp_mem_calloc(tentp->nnz,sizeof(int));
-	tentp->val = (REAL*)fasp_mem_calloc(tentp->nnz,sizeof(REAL));
+	tentp->val = (double*)fasp_mem_calloc(tentp->nnz,sizeof(double));
 	
 	if (row_plus_one > openmp_holds) {
 #pragma omp parallel private(myid, mybegin, myend, i) ////num_threads(nthreads)
@@ -465,7 +488,7 @@ static void form_tentative_p_omp(ivector *vertices,
 			}
 		}
 	}
-    
+
 #endif
 }
 

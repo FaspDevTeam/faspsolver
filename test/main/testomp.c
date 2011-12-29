@@ -111,7 +111,7 @@ int main (int argc, const char * argv[])
 #if FASP_USE_OPENMP
     // OMP version AMG as the iterative solver
 	else if( itsolver_type == 110) {        
-        int nts = 8;
+        int nts = 1;
  		printf("omp test itsolver _ type = %d amgparam.max_iter = %d, amgparam.tol = %lf\n",
                 itsolver_type, amgparam.max_iter, amgparam.tol);
 		omp_set_num_threads(nts);

@@ -1,4 +1,4 @@
-/*! \file sparse_block.c
+/*! \file sparse_block_omp.c
  *  \brief Functions and operation for block sparse matrices. 
  *
  */
@@ -9,6 +9,9 @@
 #include "fasp_block.h"
 #include "fasp_functs.h"
 
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
 /*-----------------------------------omp--------------------------------------*/
 
 /**
@@ -40,7 +43,7 @@ int fasp_dcsr_getblk_omp (dCSRmat *A,
 #if FASP_USE_OPENMP
 	int i,j,k,nnz=0;
 	int *col_flag;
-	int myid, mybegin, myend;
+	int stride_i,mybegin,myend,myid;
 	
 	// create colum flags
 	col_flag=(int*)fasp_mem_calloc(A->col,sizeof(int)); 
@@ -50,10 +53,13 @@ int fasp_dcsr_getblk_omp (dCSRmat *A,
 	B->IA=(int*)fasp_mem_calloc(m+1,sizeof(int));
 	
 	if (n > openmp_holds) {
+		stride_i = n/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) ////num_threads(nthreads)
 		{
 			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+			mybegin = myid*stride_i;
+			if(myid < nthreads-1)  myend = mybegin+stride_i;
+			else myend = n;
 			for (i=mybegin; i < myend; ++i)
 			{
 				col_flag[N2C(Js[i])]=i+1;
@@ -131,7 +137,10 @@ int fasp_dbsr_getblk_omp (dBSRmat *A,
 	
 	const int nb = A->nb;
 	const int nb2=nb*nb;
-	int myid, mybegin, myend;
+	int myid;
+	int mybegin;
+	int stride_i;
+	int myend;
 	
 	// create colum flags
 	col_flag=(int*)fasp_mem_calloc(A->COL,sizeof(int)); 
@@ -141,10 +150,13 @@ int fasp_dbsr_getblk_omp (dBSRmat *A,
 	B->IA=(int*)fasp_mem_calloc(m+1,sizeof(int));
 	
 	if (n > openmp_holds) {
+		stride_i = n/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) ////num_threads(nthreads)
 		{
 			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+			mybegin = myid*stride_i;
+			if(myid < nthreads-1)  myend = mybegin+stride_i;
+			else myend = n;
 			for (i=mybegin; i < myend; ++i)
 			{
 				col_flag[N2C(Js[i])]=i+1;

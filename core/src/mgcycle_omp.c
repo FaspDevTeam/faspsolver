@@ -7,10 +7,18 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+
+#if With_DISOLVE
+extern "C" {void DIRECT_MUMPS(const int *n, const int *nnz, int *ia, int *ja, double *a, double *b, double *x);}
+#endif 
+
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
 /*-----------------------------------omp--------------------------------------*/
 
 /**
- * \fn void mgcycle_omp(AMG_data *mgl, AMG_param *param, INT nthreads, INT openmp_holds)
+ * \fn void mgcycle_omp(AMG_data *mgl, AMG_param *param, int nthreads, int openmp_holds)
  * \brief Solve Ax=b with non-recursive multigrid k-cycle 
  *
  * \param *mgl     pointer to AMG_data data
@@ -22,43 +30,42 @@
  * \date 03/01/2011
  */
 void fasp_solver_mgcycle_omp (AMG_data *mgl, 
-                              AMG_param *param, 
-                              INT nthreads, 
-                              INT openmp_holds)
+															AMG_param *param, 
+															int nthreads, 
+															int openmp_holds)
 {
 #if FASP_USE_OPENMP
-	const INT nl = mgl[0].num_levels;
-	const INT smoother = param->smoother;
-	const INT smooth_order = param->smooth_order;
-	const INT cycle_type = param->cycle_type;
-	const INT print_level = param->print_level;
-	const REAL relax = param->relaxation;
-	const INT ndeg = 3;
+	const int nl = mgl[0].num_levels;
+	const int smoother = param->smoother;
+	const int smooth_order = param->smooth_order;
+	const int cycle_type = param->cycle_type;
+	const double relax = param->relaxation;
+//	const int ndeg = 3;
 	
-	INT num_lvl[MAX_AMG_LVL] = {0}, l = 0;
-	REAL alpha = 1.0;
+	int nu_l[MAX_AMG_LVL] = {0}, l = 0;
+	double alpha = 1.0;
 	
 ForwardSweep:
 	while (l<nl-1) { 
-		num_lvl[l]++;
+		nu_l[l]++;
 		
 		// pre smoothing
 		if (l<param->ILU_levels) {
 			fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
 		}
 		else {
-			unsigned INT steps = param->presmooth_iter;
+			unsigned int steps = param->presmooth_iter;
 			switch (smoother) {
 				case GS:
 					if (smooth_order == NO_ORDER || mgl[l].cfmark.val == NULL)
-                        fasp_smoother_dcsr_gs(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
+					  fasp_smoother_dcsr_gs(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
 					else if (smooth_order == CF_ORDER)
 					{
 						fasp_smoother_dcsr_gs_cf_omp(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps, mgl[l].cfmark.val, 1, nthreads,openmp_holds);
 					}
 					break;
 				case POLY:
-					fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 
+				//	fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 
 					break;
 				case JACOBI:
 					fasp_smoother_dcsr_jacobi(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
@@ -107,7 +114,7 @@ ForwardSweep:
 	{
 #if With_DISOLVE /* use Direct.lib in Windows */
 		DIRECT_MUMPS(&mgl[nl-1].A.row, &mgl[nl-1].A.nnz, mgl[nl-1].A.IA, mgl[nl-1].A.JA, 
-                     mgl[nl-1].A.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
+								 mgl[nl-1].A.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
 #elif With_UMFPACK
 		/* use UMFPACK direct solver on the coarsest level */
 		umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
@@ -116,19 +123,11 @@ ForwardSweep:
 		superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else	
 		/* use default iterative solver on the coarest level */
-		const INT csize = mgl[nl-1].A.row;
-		const INT cmaxit = MAX(5,MIN(csize*csize, 10000)); // coarse level iteration number
-		REAL ctol = param->tol; // coarse level tolerance
-        
-		INT flag = fasp_solver_dcsr_pbcgs (&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
-		
-        if ( flag < 0 ) {
-            flag = fasp_solver_dcsr_pcg (&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
-		}
-        
-        if ( flag < 0 && print_level > 0 ) {
-            printf("### ERROR: coarse level solver failed!\n"); exit;
-        }
+		const int csize = mgl[nl-1].A.row;
+		unsigned int cmaxit = csize*csize; // coarse level iteration number
+		double ctol = param->tol; // coarse level tolerance		
+		fasp_solver_dcsr_pbcgs(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
+		//fasp_solver_dcsr_pcg(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
 #endif 
 	}
 	
@@ -151,18 +150,18 @@ ForwardSweep:
 			fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
 		}
 		else {
-			unsigned INT steps = param->presmooth_iter;
+			unsigned int steps = param->presmooth_iter;
 			switch (smoother) {
 				case GS:
 					if (smooth_order == NO_ORDER || mgl[l].cfmark.val == NULL)
-                        fasp_smoother_dcsr_gs(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
+					  fasp_smoother_dcsr_gs(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
 					else if (smooth_order == CF_ORDER)
 					{
 						fasp_smoother_dcsr_gs_cf_omp(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps, mgl[l].cfmark.val, -1, nthreads,openmp_holds);
 					}
 					break;
 				case POLY:
-					fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 
+				//	fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 
 					break;
 				case JACOBI:
 					fasp_smoother_dcsr_jacobi(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
@@ -195,8 +194,8 @@ ForwardSweep:
 			}
 		}
 		
-		if (num_lvl[l]<cycle_type) break;
-		else num_lvl[l] = 0;
+		if (nu_l[l]<cycle_type) break;
+		else nu_l[l] = 0;
 	}
 	
 	if (l>0) goto ForwardSweep;

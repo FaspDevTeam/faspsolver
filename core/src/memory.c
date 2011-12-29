@@ -32,6 +32,18 @@ extern "C" {
 unsigned INT total_alloc_mem   = 0; // Total allocated memory amount
 unsigned INT total_alloc_count = 0; // Total number of allocations
 
+double total_linear_time = 0.0; // Total used time of linear solution
+double total_start_time = 0.0; // Total used time
+double total_setup_time = 0.0;
+int    total_iter = 0;
+int    fasp_called_times = 0;
+int  nx_rb = 1;  // Red Black Gs Smoother
+int  ny_rb = 1;  // Red Black Gs Smoother
+int  nz_rb = 1;  // Red Black Gs Smoother
+int *IMAP=NULL;   // Red Black Gs Smoother
+    //! tmp map for the level 0 grid, geometry to algebre dofs.
+int MAXIMAP=1;  // Red Black Gs Smoother  max dofs of reservoir
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/

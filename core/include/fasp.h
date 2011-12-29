@@ -39,7 +39,7 @@
  * \brief For external software support
  */
 #define FASP_USE_ILU     OFF  /**< enable ILU or not */
-#define FASP_USE_OPENMP  OFF  /**< enable OpenMP support or not */
+#define FASP_USE_OPENMP  ON  /**< enable OpenMP support or not */
 
 /**
  * \brief For external memory management 
@@ -834,6 +834,18 @@ typedef ListElement *LinkList;
 extern INT THDs_AMG_GS;
 extern INT THDs_CPR_lGS;
 extern INT THDs_CPR_gGS;
+
+extern double total_linear_time; /**< total linear times */
+extern double total_setup_time;
+extern double total_start_time;
+extern int total_iter;
+extern int fasp_called_times;
+extern int  nx_rb ;  // Red Black Gs Smoother 
+extern int  ny_rb ;  // Red Black Gs Smoother
+extern int  nz_rb ;  // Red Black Gs Smoother
+extern  int *IMAP;   // Red Black Gs Smoother
+    //! tmp map for the level 0 grid, geometry to algebre dofs.
+extern  int MAXIMAP;  // Red Black Gs Smoother  max dofs of reservoir
 
 #define FASP_GET_START_END(procid,nprocs,n,start,end) \
 if((procid)<(n)%(nprocs)) \

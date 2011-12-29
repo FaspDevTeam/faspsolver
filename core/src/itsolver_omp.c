@@ -2,15 +2,20 @@
  *  \brief Iterative solvers (main file)
  */
 
+#include <math.h>
 #include <time.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
+
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
 /*---------------------------------omp----------------------------------------*/
 
 /**
- * \fn INT fasp_solver_dcsr_itsolver_omp(dCSRmat *A, dvector *b, dvector *x, 
- *                                   precond *prec, itsolver_param *itparam, INT nthreads, INT openmp_holds)
+ * \fn int fasp_solver_dcsr_itsolver_omp(dCSRmat *A, dvector *b, dvector *x, 
+ *                                   precond *prec, itsolver_param *itparam, int nthreads, int openmp_holds)
  * \brief Solve Ax=b by standard Krylov methods 
  *
  * \param *A        pointer to the dCSRmat matrix
@@ -25,24 +30,24 @@
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/06/2011
  */
-INT fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
-                                  dvector *b,
-                                  dvector *x,
-                                  precond *prec,
-                                  itsolver_param *itparam,
-                                  INT nthreads,
-                                  INT openmp_holds )
+int fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
+                                   dvector *b,
+                                   dvector *x,
+                                   precond *prec,
+                                   itsolver_param *itparam,
+                                   int nthreads,
+                                   int openmp_holds )
 {
-	INT iter = 0;
+	int iter = 0;
 #if FASP_USE_OPENMP
-	const INT print_level = itparam->print_level;	
-	const INT itsolver_type = itparam->itsolver_type;
-	const INT stop_type = itparam->stop_type;
-	const INT MaxIt = itparam->maxit;
-	const INT restart = itparam->restart;
-	const REAL tol = itparam->tol; 
+	const int print_level = itparam->print_level;	
+	const int itsolver_type = itparam->itsolver_type;
+	const int stop_type = itparam->stop_type;
+	const int MaxIt = itparam->maxit;
+	const int restart = itparam->restart;
+	const double tol = itparam->tol; 
 	
-	REAL solver_start=omp_get_wtime();
+	double solver_start=omp_get_wtime();
 	
 	switch (itsolver_type) {
 			
@@ -73,8 +78,8 @@ INT fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
 	} 
 	
 	if ((print_level>1) && (iter >= 0)) {
-		REAL solver_end=omp_get_wtime();	
-		REAL solver_duration = solver_end - solver_start;
+		double solver_end=omp_get_wtime();	
+		double solver_duration = solver_end - solver_start;
 		printf("Iterative solver costs %f seconds.\n", solver_duration);
 	}
 #endif
@@ -82,7 +87,7 @@ INT fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
 }
 
 /**
- * \fn INT fasp_solver_dcsr_krylov_amg_omp(dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, AMG_param *amgparam, INT nthreads, INT openmp_holds)
+ * \fn int fasp_solver_dcsr_krylov_amg_omp(dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, AMG_param *amgparam, int nthreads, int openmp_holds)
  * \brief Solve Ax=b by preconditioned Krylov methods with AMG as precondition
  *
  * \param *A        pointer to the dCSRmat matrix
@@ -97,21 +102,21 @@ INT fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/06/2011
  */
-INT fasp_solver_dcsr_krylov_amg_omp (dCSRmat *A,
+int fasp_solver_dcsr_krylov_amg_omp (dCSRmat *A,
                                      dvector *b,
                                      dvector *x,
                                      itsolver_param *itparam,
                                      AMG_param *amgparam,
-                                     INT nthreads,
-                                     INT openmp_holds)
+                                     int nthreads,
+                                     int openmp_holds)
 {
-	INT status = SUCCESS;
+	int status = SUCCESS;
 #if FASP_USE_OPENMP
-	const INT print_level = itparam->print_level;
-	const INT max_levels = amgparam->max_levels;
-	const INT nnz=A->nnz, m=A->row, n=A->col;	
-	REAL solver_start, solver_end;
-	REAL solver_duration;
+	const int print_level = itparam->print_level;
+	const int max_levels = amgparam->max_levels;
+	const int nnz=A->nnz, m=A->row, n=A->col;	
+	double solver_start, solver_end;
+	double solver_duration;
 	
 #if DEBUG_MODE
 	printf("krylov_amg ...... [Start]\n");
@@ -128,9 +133,6 @@ INT fasp_solver_dcsr_krylov_amg_omp (dCSRmat *A,
 	
 	// setup preconditioner  
 	switch (amgparam->AMG_type) {
-		case SA_AMG: // Smoothed Aggregation AMG
-			status = fasp_amg_setup_sa_omp(mgl, amgparam, nthreads, openmp_holds);
-			break;
 		default: // Classical AMG
 			status = fasp_amg_setup_rs_omp(mgl, amgparam, nthreads, openmp_holds);
 			break;
@@ -164,12 +166,12 @@ INT fasp_solver_dcsr_krylov_amg_omp (dCSRmat *A,
 	prec.data = &precdata; 
 	if (itparam->precond_type == PREC_FMG)
 	{
-		prec.fct = fasp_precond_famg;
+		//prec.fct = fasp_precond_famg;
 	}
 	else{
 		if (amgparam->cycle_type == AMLI_CYCLE)
 		{
-			prec.fct = fasp_precond_amli;
+//			prec.fct = fasp_precond_amli;
 		}
 		else
 		{

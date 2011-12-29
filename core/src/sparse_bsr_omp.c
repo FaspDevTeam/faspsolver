@@ -1,4 +1,4 @@
-/*! \file sparse_bsr.c
+/*! \file sparse_bsr_omp.c
  *  \brief Simple operations for BSR format
  *
  */
@@ -6,6 +6,9 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
 /*-----------------------------------omp--------------------------------------*/
 
 #if FASP_USE_OPENMP
@@ -17,8 +20,8 @@
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
- * \author Feng Chunsheng, Yue Xiaoqiang
- * \date 03/01/2011
+ * \author FENG Chunsheng, Yue Xiaoqiang
+ * \date Nov/28/2011
  */
 dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A, 
 																double *diaginv, 
@@ -43,7 +46,10 @@ dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A,
 	
 	int nb2  = nb*nb;
 	int i,j,k,m;
-	int myid, mybegin, myend;
+	int myid;
+	int mybegin;
+	int stride_i;
+	int myend;
 	
 	//! Create a dBSRmat 'B'
 	B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
@@ -57,13 +63,70 @@ dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A,
 	
 	switch (nb)
 	{
+		case 2:
+			//! main loop 
+			if (ROW > openmp_holds) {
+				stride_i = ROW/nthreads;
+#pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
+				{
+					myid = omp_get_thread_num();
+					mybegin = myid*stride_i;
+					if(myid < nthreads-1)  myend = mybegin+stride_i;
+					else myend = ROW;
+					for (i=mybegin; i < myend; ++i)
+					{
+						//! get the diagonal sub-blocks
+					
+						        k = IA[i];
+								m = k*4;
+								memcpy(diaginv+i*4, val+m, 4*sizeof(double));
+								fasp_smat_identity_nc2(valb+m);
+					
+						//! compute the inverses of the diagonal sub-blocks 
+						fasp_blas_smat_inv_nc2(diaginv+i*4);
+						//! compute D^{-1}*A
+						for (k = IA[i]+1; k < IA[i+1]; ++k)
+						{
+							m = k*4;
+							j = JA[k];
+					       fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
+						}
+					}// end of main loop
+				}
+			}
+			else {
+			//! main loop 
+			for (i = 0; i < ROW; ++i)
+			{
+				//! get the diagonal sub-blocks
+				        k = IA[i];
+						m = k*4;
+						memcpy(diaginv+i*4, val+m, 4*sizeof(double));
+						fasp_smat_identity_nc2(valb+m);
+					
+						//! compute the inverses of the diagonal sub-blocks 
+						fasp_blas_smat_inv_nc2(diaginv+i*4);
+						//! compute D^{-1}*A
+						for (k = IA[i]+1; k < IA[i+1]; ++k)
+						{
+							m = k*4;
+							j = JA[k];
+					       fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
+						}
+			}// end of main loop
+			}
+			
+			break;
 		case 3:
 			//! main loop 
 			if (ROW > openmp_holds) {
-#pragma omp parallel private(myid, mybegin, myend,i,k,m,j) ////num_threads(nthreads)
+				stride_i = ROW/nthreads;
+#pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
 				{
 					myid = omp_get_thread_num();
-					FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+					mybegin = myid*stride_i;
+					if(myid < nthreads-1)  myend = mybegin+stride_i;
+					else myend = ROW;
 					for (i=mybegin; i < myend; ++i)
 					{
 						//! get the diagonal sub-blocks
@@ -120,10 +183,13 @@ dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A,
 		case 5: 
 			//! main loop 
 			if (ROW > openmp_holds) {
-#pragma omp parallel private(myid, mybegin, myend,i,k,m,j) ////num_threads(nthreads)
+				stride_i = ROW/nthreads;
+#pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
 				{
 					myid = omp_get_thread_num();
-					FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+					mybegin = myid*stride_i;
+					if(myid < nthreads-1)  myend = mybegin+stride_i;
+					else myend = ROW;
 					for (i=mybegin; i < myend; ++i)
 					{
 						//! get the diagonal sub-blocks
@@ -182,10 +248,13 @@ dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A,
 		case 7:
 			//! main loop
 			if (ROW > openmp_holds) {
-#pragma omp parallel private(myid, mybegin, myend,i,k,m,j) ////num_threads(nthreads)
+				stride_i = ROW/nthreads;
+#pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
 				{
 					myid = omp_get_thread_num();
-					FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+					mybegin = myid*stride_i;
+					if(myid < nthreads-1)  myend = mybegin+stride_i;
+					else myend = ROW;
 					for (i=mybegin; i < myend; ++i)
 					{
 						//! get the diagonal sub-blocks
@@ -244,10 +313,13 @@ dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A,
 		default:
 			//! main loop
 			if (ROW > openmp_holds) {
-#pragma omp parallel private(myid, mybegin, myend,i,k,m,j) ////num_threads(nthreads)
+				stride_i = ROW/nthreads;
+#pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
 				{
 					myid = omp_get_thread_num();
-					FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+					mybegin = myid*stride_i;
+					if(myid < nthreads-1)  myend = mybegin+stride_i;
+					else myend = ROW;
 					for (i=mybegin; i < myend; ++i)
 					{
 						//! get the diagonal sub-blocks

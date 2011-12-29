@@ -5,14 +5,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-static void remove_point(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, int measure, int index, int *lists, int *where);
-static void enter_list(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, int measure, int index, int *lists, int *where); 
-static LinkList create_elt(int Item);
 
-static void generate_S(dCSRmat *A, iCSRmat *S, AMG_param *param);
-static void generate_S_rs(dCSRmat *A, iCSRmat *S, double epsilon_str, int coarsening_type);
-static void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int col);
-static int  form_coarse_level(dCSRmat *A, iCSRmat *S, ivector *vertices, int row);
 
 #if FASP_USE_OPENMP
 static void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int openmp_holds);
@@ -130,7 +123,7 @@ int fasp_amg_coarsening_rs (dCSRmat *A,
  *                pool.
  *
  **************************************************************/
-static void dispose_elt( LinkList element_ptr )
+void dispose_elt( LinkList element_ptr )
 {
 	if (element_ptr) fasp_mem_free( element_ptr );
 }
@@ -140,7 +133,7 @@ static void dispose_elt( LinkList element_ptr )
  * remove_point:   removes a point from the lists
  *
  ****************************************************************/
-static void remove_point(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
+void remove_point(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
 												 int measure, int index, int *lists, int *where)
 {
 	LinkList   LoL_head = *LoL_head_ptr;
@@ -231,7 +224,7 @@ static void remove_point(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
  * create_elt() : Create an element using Item for its data field
  *
  *****************************************************************/
-static LinkList create_elt( int Item )
+LinkList create_elt( int Item )
 {
 	LinkList new_elt_ptr;
 	
@@ -254,7 +247,7 @@ static LinkList create_elt( int Item )
  * enter_list   places point in new list
  *
  ****************************************************************/
-static void enter_list(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
+void enter_list(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
 											 int measure, int index, int *lists, int *where)
 {
 	LinkList   LoL_head = *LoL_head_ptr;
@@ -350,7 +343,7 @@ static void enter_list(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
  * \param *S pointer to the set of all strong couplings matrix
  * \param *param pointer to AMG parameters
  */
-static void generate_S(dCSRmat *A, iCSRmat *S, AMG_param *param)
+void generate_S(dCSRmat *A, iCSRmat *S, AMG_param *param)
 {
 	double max_row_sum=param->max_row_sum;
 	double epsilon_str=param->strong_threshold;
@@ -451,7 +444,7 @@ static void generate_S(dCSRmat *A, iCSRmat *S, AMG_param *param)
  * \param epsilon_str strong coupled ratio
  * \param coarsening_type coarsening type(2: strong negative couplings, 3: strong absolute couplings)
  */
-static void generate_S_rs(dCSRmat *A, iCSRmat *S, double epsilon_str, int coarsening_type)
+void generate_S_rs(dCSRmat *A, iCSRmat *S, double epsilon_str, int coarsening_type)
 {
 	int i,j;
 	double *amax=(double *)fasp_mem_calloc(A->row,sizeof(double));
@@ -570,7 +563,7 @@ static void generate_S_rs(dCSRmat *A, iCSRmat *S, double epsilon_str, int coarse
  * \param row integer number of rows of P
  * \return col integer number of cols of P
  */
-static int form_coarse_level(dCSRmat *A, iCSRmat *S, ivector *vertices, int row)
+int form_coarse_level(dCSRmat *A, iCSRmat *S, ivector *vertices, int row)
 {
 	int col = 0; // initialize col(P): returning output 
 	unsigned int maxlambda, maxnode, num_left=0;	
@@ -789,7 +782,7 @@ static int form_coarse_level(dCSRmat *A, iCSRmat *S, ivector *vertices, int row)
  * \param row integer number of rows of P
  * \param col integer number of cols of P
  */
-static void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int col)
+void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int col)
 {
 	int i,j,k,index=0;
 	int *vec=vertices->val;

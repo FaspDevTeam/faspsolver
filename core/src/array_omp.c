@@ -9,46 +9,45 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
 /*-----------------------------------omp--------------------------------------*/
 
 /**
- * \fn void fasp_array_set_omp (INT n, REAL *x, REAL val, INT nthreads, INT openmp_holds)
+ * \fn void fasp_array_set_omp (int n, double *x, double val, int nthreads, int openmp_holds)
  * \brief Set initial value for an array to be x=val
  * \param n number of variables
  * \param *x pointer to the vector
- * \param val initial value for the REAL array
+ * \param val initial value for the double array
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
  */
-void fasp_array_set_omp (INT n, 
-                         REAL *x, 
-                         REAL val, 
-                         INT nthreads, 
-                         INT openmp_holds)
+void fasp_array_set_omp (int n, 
+												 double *x, 
+												 double val, 
+												 int nthreads, 
+												 int openmp_holds)
 {
 #if FASP_USE_OPENMP
-	INT i;
+	unsigned int i;
 	if (val == 0.0) {
-		if (n > openmp_holds) {
-			INT myid, mybegin, myend;
-#pragma omp parallel private(myid, mybegin, myend) ////num_threads(nthreads)
-			{
-				myid = omp_get_thread_num();
-				FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-				memset(&x[mybegin], 0x0, sizeof(REAL)*(myend-mybegin));
-			}
-		}
-		else {
-			memset(x, 0x0, sizeof(REAL)*n);
-		}
+			memset(x, 0x0, sizeof(double)*n);
 	}
 	else {
-		if (n > openmp_holds) {
-#pragma omp parallel for private(i) schedule(static)
-			for (i=0; i<n; ++i) x[i]=val;
+ 	
+	   if (n > openmp_holds) {
+	   int mybegin,myend,myid;
+#pragma omp parallel for private(myid,mybegin,myend,i)
+	   for (myid = 0; myid < nthreads; myid ++)
+	   {
+		FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+		for (i=mybegin; i<myend; ++i) x[i]=val;
+	    }
 		}
 		else {
 			for (i=0; i<n; ++i) x[i]=val;
@@ -58,29 +57,36 @@ void fasp_array_set_omp (INT n,
 }
 
 /**
- * \fn void fasp_iarray_set_omp (INT n, REAL *x, REAL val, INT nthreads, INT openmp_holds)
+ * \fn void fasp_iarray_set_omp (int n, double *x, double val, int nthreads, int openmp_holds)
  * \brief Set initial value for an array to be x=val
  * \param n number of variables
  * \param *x pointer to the vector
- * \param val initial value for the REAL array
+ * \param val initial value for the double array
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
  */
-void fasp_iarray_set_omp (INT n, INT *x, INT val, INT nthreads, INT openmp_holds)
+void fasp_iarray_set_omp (int n, int *x, int val, int nthreads, int openmp_holds)
 {
 #if FASP_USE_OPENMP
-	INT i;
+	unsigned int i;
 	if (val == 0) {
 		if (n > openmp_holds) {
-			INT myid, mybegin, myend;
-#pragma omp parallel private(myid, mybegin, myend) ////num_threads(nthreads)
+			int myid;
+			int mybegin;
+			int stride_i = n/nthreads;
+#pragma omp parallel private(myid, mybegin) ////num_threads(nthreads)
 			{
 				myid = omp_get_thread_num();
-				FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-				memset(&x[mybegin], 0, sizeof(int)*(myend-mybegin));
+				mybegin = myid*stride_i;
+				if(myid < nthreads-1) {
+					memset(&x[mybegin], 0, sizeof(int)*stride_i);
+				}
+				else  {
+					memset(&x[mybegin], 0, sizeof(int)*(n-mybegin));
+				}
 			}
 		}
 		else {
@@ -89,8 +95,16 @@ void fasp_iarray_set_omp (INT n, INT *x, INT val, INT nthreads, INT openmp_holds
 	}
 	else {
 		if (n > openmp_holds) {
-#pragma omp parallel for private(i) schedule(static) ////num_threads(nthreads)
-			for (i=0; i<n; ++i) x[i]=val;
+			int stride_i,mybegin,myend,myid;
+			stride_i = n/nthreads;
+#pragma omp parallel private(myid,mybegin,myend,i) ////num_threads(nthreads)
+			{
+				myid = omp_get_thread_num();
+				mybegin = myid*stride_i;
+				if(myid < nthreads-1) myend = mybegin+stride_i;
+				else myend = n;
+				for (i=mybegin; i<myend; ++i) x[i]=val;
+			}
 		}
 		else {
 			for (i=0; i<n; ++i) x[i]=val;
@@ -100,7 +114,7 @@ void fasp_iarray_set_omp (INT n, INT *x, INT val, INT nthreads, INT openmp_holds
 }
 
 /**
- * \fn void fasp_array_cp_omp (INT n, REAL *x, REAL *y, INT nthreads, INT openmp_holds) 
+ * \fn void fasp_array_cp_omp (int n, double *x, double *y, int nthreads, int openmp_holds) 
  * \brief Copy an array to the other y=x
  * \param n number of variables
  * \param *x pointer to the original vector
@@ -111,30 +125,37 @@ void fasp_iarray_set_omp (INT n, INT *x, INT val, INT nthreads, INT openmp_holds
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
  */
-void fasp_array_cp_omp (INT n, 
-                        REAL *x, 
-                        REAL *y, 
-                        INT nthreads, 
-                        INT openmp_holds)
+void fasp_array_cp_omp (int n, 
+												double *x, 
+												double *y, 
+												int nthreads, 
+												int openmp_holds)
 {
 #if FASP_USE_OPENMP
 	if (n > openmp_holds) {
-		INT myid, mybegin, myend;
-#pragma omp parallel private(myid, mybegin, myend) ////num_threads(nthreads)
+		int myid;
+		int mybegin;
+		int stride_i = n/nthreads;
+#pragma omp parallel private(myid, mybegin) ////num_threads(nthreads)
 		{
 			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-			memcpy(&y[mybegin], &x[mybegin], sizeof(REAL)*(myend-mybegin));
+			mybegin = myid*stride_i;
+			if(myid < nthreads-1) {
+				memcpy(&y[mybegin],&x[mybegin], sizeof(double)*stride_i);
+			}
+			else {
+				memcpy(&y[mybegin],&x[mybegin], sizeof(double)*(n-mybegin));
+			}
 		}
 	}
 	else {
-		memcpy(y, x, n*sizeof(REAL));
+		memcpy(y,x,n*sizeof(double));
 	}
 #endif
 }
 
 /**
- * \fn void fasp_iarray_cp_omp (INT n, INT *x, INT *y, INT nthreads, INT openmp_holds) 
+ * \fn void fasp_iarray_cp_omp (int n, int *x, int *y, int nthreads, int openmp_holds) 
  * \brief Copy an array to the other y=x
  * \param n number of variables
  * \param *x pointer to the original vector
@@ -145,24 +166,31 @@ void fasp_array_cp_omp (INT n,
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
  */
-void fasp_iarray_cp_omp (INT n, 
-                         INT *x, 
-                         INT *y, 
-                         INT nthreads, 
-                         INT openmp_holds) 
+void fasp_iarray_cp_omp (int n, 
+												 int *x, 
+												 int *y, 
+												 int nthreads, 
+												 int openmp_holds) 
 {
 #if FASP_USE_OPENMP
 	if (n > openmp_holds) {
-		INT myid, mybegin, myend;
-#pragma omp parallel private(myid, mybegin, myend) ////num_threads(nthreads)
+		int myid;
+		int mybegin;
+		int stride_i = n/nthreads;
+#pragma omp parallel private(myid, mybegin) ////num_threads(nthreads)
 		{
 			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-			memcpy(&y[mybegin], &x[mybegin], sizeof(int)*(myend-mybegin));
+			mybegin = myid*stride_i;
+			if(myid < nthreads-1) {
+				memcpy(&y[mybegin],&x[mybegin], sizeof(int)*stride_i);
+			}
+			else {
+				memcpy(&y[mybegin],&x[mybegin], sizeof(int)*(n-mybegin));
+			}
 		}
 	}
 	else {
-		memcpy(y, x, n*sizeof(int));
+		memcpy(y,x,n*sizeof(int));
 	}
 #endif
 }

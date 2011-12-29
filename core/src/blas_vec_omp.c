@@ -6,6 +6,10 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
 /*-----------------------------------omp--------------------------------------*/
 
 /**
@@ -21,10 +25,10 @@
  * \date 03/01/2011
  */
 void fasp_blas_dvec_axpy_omp (const double a, 
-                              dvector *x, 
-                              dvector *y, 
-                              int nthreads, 
-                              int openmp_holds)
+												 dvector *x, 
+												 dvector *y, 
+												 int nthreads, 
+												 int openmp_holds)
 {
 #if FASP_USE_OPENMP
 	unsigned int i, m=x->row;
@@ -64,11 +68,11 @@ void fasp_blas_dvec_axpy_omp (const double a,
  * \date 03/01/2011
  */
 void fasp_blas_dvec_axpyz_omp (const double a, 
-                               dvector *x, 
-                               dvector *y, 
-                               dvector *z, 
-                               int nthreads, 
-                               int openmp_holds)
+													dvector *x, 
+													dvector *y, 
+													dvector *z, 
+													int nthreads, 
+													int openmp_holds)
 {
 #if FASP_USE_OPENMP
 	const int m=x->row;
@@ -98,9 +102,9 @@ void fasp_blas_dvec_axpyz_omp (const double a,
  * \date 03/01/2011
  */
 double fasp_blas_dvec_dotprod_omp (dvector *x, 
-                                   dvector *y, 
-                                   int nthreads, 
-                                   int openmp_holds)
+															dvector *y, 
+															int nthreads, 
+															int openmp_holds)
 {
 	double value=0;
 #if FASP_USE_OPENMP
@@ -132,9 +136,9 @@ double fasp_blas_dvec_dotprod_omp (dvector *x,
  * \date 03/01/2011
  */
 double fasp_blas_dvec_relerr_omp (dvector *x, 
-                                  dvector *y, 
-                                  int nthreads, 
-                                  int openmp_holds)
+														 dvector *y, 
+														 int nthreads, 
+														 int openmp_holds)
 {
 	double diff=0, temp=0;
 #if FASP_USE_OPENMP
@@ -176,8 +180,8 @@ double fasp_blas_dvec_relerr_omp (dvector *x,
  * \date 03/01/2011
  */
 double fasp_blas_dvec_norm1_omp (dvector *x, 
-                                 int nthreads, 
-                                 int openmp_holds)
+														int nthreads, 
+														int openmp_holds)
 {
 	double onenorm=0;
 #if FASP_USE_OPENMP
@@ -207,8 +211,8 @@ double fasp_blas_dvec_norm1_omp (dvector *x,
  * \date 03/01/2011
  */
 double fasp_blas_dvec_norm2_omp (dvector *x, 
-                                 int nthreads, 
-                                 int openmp_holds)
+														int nthreads, 
+														int openmp_holds)
 {
 	double twonorm=0;
 #if FASP_USE_OPENMP
@@ -225,7 +229,6 @@ double fasp_blas_dvec_norm2_omp (dvector *x,
 #endif
 	return sqrt(twonorm);
 }
-
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

@@ -20,7 +20,6 @@
 #include "fasp_functs.h"
 
 static void interp_RS(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param);
-static void interp_EM(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param);
 static int invden(int nn, double *mat, double *invmat);
 static int get_block(dCSRmat *A, int m, int n, int *rows, int *cols, double *Aloc, int *mask);
 static int gentisquare_nomass(dCSRmat *A, int mm, int *Ii, double *ima, int *mask);
@@ -955,7 +954,7 @@ static int getiteval(dCSRmat *A, dCSRmat *it)
  * \author Shuo Zhang, Xuehai Huang
  * \date 04/04/2010 
  */
-static void interp_EM(dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param)
+void interp_EM(dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param)
 {
 	int i, j, index;
 	int *vec=vertices->val;	

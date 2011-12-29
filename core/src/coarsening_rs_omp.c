@@ -1,11 +1,22 @@
-/*! \file coarsening_rs_omp.c
+/*! \file coarsening_rs.c
  *  \brief Coarsening with a modified Ruge-Stuben strategy.
  */
 
 #include "fasp.h"
 #include "fasp_functs.h"
-/*-----------------------------------omp--------------------------------------*/
- 
+
+#if FASP_USE_OPENMP
+
+static void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int openmp_holds);
+static void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int col, int nthreads, int openmp_holds);
+static int  form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, int row, int nthreads, int openmp_holds);
+#endif
+
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
+/*---------------------------------omp----------------------------------------*/
+
 #if FASP_USE_OPENMP
  
 /**
@@ -76,9 +87,6 @@ int fasp_amg_coarsening_rs_omp (dCSRmat *A,
 	
 	// Step 2: standard coarsening algorithm 
 	switch (coarsening_type){
-		case 3: // compatible relaxation (Need to be modified --Chensong)
-			col = fasp_amg_coarsening_cr(0,A->row-1, A, vertices, param);	
-			break;
 		default:
 			col = form_coarse_level_omp(A, &S, vertices, row, nthreads,openmp_holds);
 			break;
@@ -105,9 +113,7 @@ int fasp_amg_coarsening_rs_omp (dCSRmat *A,
 	return status;
 }
 
-#endif
 
-#if FASP_USE_OPENMP
 
 /**
  * \fn static void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads)
@@ -159,11 +165,16 @@ static void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthread
 	fasp_iarray_cp_omp(nnz, ja, S->JA, nthreads,openmp_holds);
 	
 	if (row > openmp_holds) {
-		int myid, mybegin, myend;
-#pragma omp parallel private(myid, mybegin, myend, i, row_scale, row_sum, begin_row, end_row, j) ////num_threads(nthreads)
+		int myid;
+		int mybegin;
+		int myend;
+		int stride_i = row/nthreads;
+#pragma omp parallel private(myid, mybegin, myend, i, row_scale,row_sum,begin_row,end_row,j) ////num_threads(nthreads)
 		{
 			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+			mybegin = myid*stride_i;
+			if(myid < nthreads-1) myend=mybegin+stride_i;
+			else myend=row;
 			for (i=mybegin; i<myend; i++)
 			{
 				/** compute scaling factor and row sum */
@@ -279,7 +290,10 @@ static int form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, int 
 	int ci_tilde = -1, ci_tilde_mark = -1;
 	int set_empty = 1, C_i_nonempty = 0;
 	int ji,jj,i,j,k,l,index;
-	int myid, mybegin, myend;
+	int myid;
+	int mybegin;
+	int myend;
+	int stride_i;
 	
 	int *work = (int*)fasp_mem_calloc(4*row,sizeof(int));
 	int *lists = work, *where = lists+row, *lambda = where+row, *graph_array = lambda+row;
@@ -294,10 +308,13 @@ static int form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, int 
 	
 	// 1. Initialize lambda
 	if (row > openmp_holds) {
+		stride_i = row/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) ////num_threads(nthreads)
 		{
 			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+			mybegin = myid*stride_i;
+			if(myid < nthreads-1) myend=mybegin+stride_i;
+			else myend=row;
 			for (i=mybegin; i<myend; i++) lambda[i]=ST.IA[i+1]-ST.IA[i];
 		}
 	}
@@ -308,10 +325,13 @@ static int form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, int 
 	// 2. Before the following algorithm starts, filter out the variables which
 	// have no connections at all and assign special F-variables.
 	if (row > openmp_holds) {
+		stride_i = row/nthreads;
 #pragma omp parallel reduction(+:num_left) private(myid, mybegin, myend, i) ////num_threads(nthreads)
 		{
 			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+			mybegin = myid*stride_i;
+			if(myid < nthreads-1) myend=mybegin+stride_i;
+			else myend=row;
 			for (i=mybegin; i<myend; i++)
 			{
 				if ( (ia[i+1]-ia[i])<=1 ) {
@@ -447,10 +467,13 @@ static int form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, int 
 	/* Coarsening Phase TWO: check fine points for coarse neighbors */
 	/****************************************************************/
 	if (row > openmp_holds) {
+		stride_i = row/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) ////num_threads(nthreads)
 		{
 			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+			mybegin = myid*stride_i;
+			if(myid < nthreads-1) myend=mybegin+stride_i;
+			else myend=row;
 			for (i=mybegin; i<myend; ++i) graph_array[i] = -1;
 		}
 	}
@@ -550,11 +573,16 @@ static void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, i
 	
 	// step 1: Find the structure IA of P first
 	if (row > openmp_holds) {
-		int myid, mybegin, myend;
-#pragma omp parallel private(myid, mybegin, myend, i, j, k) ////num_threads(nthreads)
+		int myid;
+		int mybegin;
+		int myend;
+		int stride_i = row/nthreads;
+#pragma omp parallel private(myid,mybegin,myend,i,j,k) ////num_threads(nthreads)
 		{
 			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+			mybegin = myid*stride_i;
+			if(myid < nthreads-1) myend = mybegin+stride_i;
+			else myend = row;
 			for (i=mybegin; i<myend; ++i)
 			{
 				if (vec[i]==FGPT) // if node i is on fine grid

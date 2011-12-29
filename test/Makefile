@@ -11,9 +11,13 @@
 # Compilers and dependences
 ########################################################################
 AR=ar ruc
-CC=gcc
+CC=gcc -fopenmp
 CPP=g++
-FC=gfortran
+FC=gfortran -fopenmp
+
+CC=icc -openmp
+CPP=icpc
+FC=ifort -openmp
 
 CSRCDIR=./src
 FSRCDIR=./src
@@ -34,7 +38,7 @@ CFLAGS=$(CDEFS) $(COPTS) $(CINCLUDES)
 FOPTS=$(BOPT)
 FDEFS=$(CDEFS)
 FINCLUDES=$(CINCLUDES)
-FFLAGS=$(FDEFS) $(FOPTS) $(FINCLUDES)
+FFLAGS=$(FDEFS) $(FOPTS) $(FINCLUDES) 
 
 ########################################################################
 # Set libraries
@@ -128,7 +132,7 @@ TESTMATPROG=$(TESTLIB) main/testmat.o
 all: $(ALLPROG)
 
 Default: 
-	test
+	test 
 
 $(TESTLIB): $(OBJSC) $(OBJSF)
 	ranlib $(TESTLIB)
@@ -166,7 +170,7 @@ testfem:
 
 testomp: 
 	$(CC) $(CFLAGS) -c main/testomp.c -o main/testomp.o
-	$(FC) -o testomp.ex main/testomp.o $(FLFLAGS)
+	$(FC) -nofor_main -o testomp.ex main/testomp.o $(FLFLAGS)
 
 testall:
 	make 

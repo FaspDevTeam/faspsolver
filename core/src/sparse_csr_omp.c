@@ -1,4 +1,4 @@
-/*! \file sparse_csr.c
+/*! \file sparse_csr_omp.c
  *  \brief Functions for CSR sparse matrices. 
  */
 
@@ -7,10 +7,14 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
 /*-----------------------------------omp--------------------------------------*/
 
 /**
- * \fn void fasp_dcsr_getdiag_omp (INT n, dCSRmat *A, dvector *diag, INT nthreads, INT openmp_holds) 
+ * \fn void fasp_dcsr_getdiag_omp (int n, dCSRmat *A, dvector *diag, int nthreads, int openmp_holds) 
  * \brief Get first n diagonal entries of a CSR matrix A
  *
  * \param  n     an interger (if n=0, then get all diagonal entries)
@@ -22,25 +26,30 @@
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
  */
-void fasp_dcsr_getdiag_omp (INT n, 
-                            dCSRmat *A, 
-                            dvector *diag, 
-                            INT nthreads, 
-                            INT openmp_holds) 
+void fasp_dcsr_getdiag_omp (int n, 
+														dCSRmat *A, 
+														dvector *diag, 
+														int nthreads, 
+														int openmp_holds) 
 {
 #if FASP_USE_OPENMP
-	INT i,k,j,ibegin,iend;	
+	int i,k,j,ibegin,iend;	
 	
 	if (n==0) n=MIN(A->row,A->col);
 	
 	fasp_dvec_alloc(n,diag);
 	
 	if (n > openmp_holds) {
-		INT myid, mybegin, myend;
+		int myid;
+		int mybegin;
+		int myend;
+		int stride_i = n/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i, ibegin, iend, k, j) //num_threads(nthreads)
 		{
 			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+			mybegin = myid*stride_i;
+			if(myid < nthreads-1) myend=mybegin+stride_i;
+			else myend=n;
 			for (i=mybegin; i<myend; i++)
 			{
 				ibegin=A->IA[i]; iend=A->IA[i+1];
@@ -68,7 +77,7 @@ void fasp_dcsr_getdiag_omp (INT n,
 }
 
 /**
- * \fn void fasp_dcsr_cp_omp (dCSRmat *A, dCSRmat *B, INT nthreads, INT openmp_holds)
+ * \fn void fasp_dcsr_cp_omp (dCSRmat *A, dCSRmat *B, int nthreads, int openmp_holds)
  * \brief copy a dCSRmat to a new one B=A
  *
  * \param *A   pointer to the dCSRmat matrix
@@ -80,9 +89,9 @@ void fasp_dcsr_getdiag_omp (INT n,
  * \date 03/01/2011
  */
 void fasp_dcsr_cp_omp (dCSRmat *A, 
-                       dCSRmat *B, 
-                       INT nthreads, 
-                       INT openmp_holds)
+											 dCSRmat *B, 
+											 int nthreads, 
+											 int openmp_holds)
 {
 #if FASP_USE_OPENMP
 	B->row=A->row;

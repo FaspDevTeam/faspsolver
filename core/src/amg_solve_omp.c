@@ -1,9 +1,16 @@
-#include <math.h>
+/*! \file amg_solve_omp.c
+ *  \brief Algebraic multigrid iterations: SOLVE phase. 
+ */
+
 #include <time.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
 
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
+/*---------------------------------omp----------------------------------------*/
 
 /**
  * \fn int fasp_amg_solve_omp(AMG_data *mgl, AMG_param *param, int nthreads, int openmp_holds)
@@ -22,14 +29,13 @@
  * \date 03/01/2011
  */
 int fasp_amg_solve_omp (AMG_data *mgl, 
-                        AMG_param *param, 
-                        int nthreads, 
-                        int openmp_holds)
+												AMG_param *param, 
+												int nthreads, 
+												int openmp_holds)
 {
 	unsigned int iter=0;
 	
 #if FASP_USE_OPENMP
-    param->max_iter= 100;
 	const int     MaxIt = param->max_iter; 
 	const int     print_level = param->print_level;
 	const double  tol = param->tol;
@@ -41,7 +47,7 @@ int fasp_amg_solve_omp (AMG_data *mgl,
 	
 	double relres1=BIGREAL, absres0=BIGREAL, absres, factor;		
 	
-	if (print_level>8) printf("fasp_amg_solve: nr=%d, nc=%d, nnz=%d  param->max_iter  %d MaxIt =%d \n", m, n, nnz, param->max_iter,MaxIt);
+	if (print_level>8) printf("fasp_amg_solve: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 	
 	double solve_start=omp_get_wtime();
 	
