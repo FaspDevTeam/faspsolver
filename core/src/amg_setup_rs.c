@@ -39,6 +39,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 {
 	const INT print_level=param->print_level;
 	const INT m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;	
+    const INT cycle_type = param->cycle_type;
 	
     // local variables
 	INT max_levels=param->max_levels;
@@ -63,7 +64,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     // Xiaozhe 02/23/2011: make sure classical AMG will not call fasp_blas_dcsr_mxv_agg
 	
     // setup AMLI coefficients
-	if (param->cycle_type == AMLI_CYCLE) {
+	if (cycle_type == AMLI_CYCLE) {
 		param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
 		REAL lambda_max = 2.0;
 		REAL lambda_min = lambda_max/4;
@@ -138,7 +139,9 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 		mgl[level].num_levels = max_levels; 		
 		mgl[level].b = fasp_dvec_create(mm);
 		mgl[level].x = fasp_dvec_create(mm);
-		mgl[level].w = fasp_dvec_create(2*mm);	
+		
+        if (cycle_type == NL_AMLI_CYCLE)  mgl[level].w = fasp_dvec_create(3*mm);	
+        else mgl[level].w = fasp_dvec_create(2*mm);
 	}
 	
 #if With_UMFPACK	

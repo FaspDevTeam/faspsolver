@@ -102,6 +102,7 @@ static INT amg_setup_smoothP_smoothA(AMG_data *mgl, AMG_param *param)
 {
 	const INT print_level=param->print_level;
 	const INT m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;
+    const INT cycle_type = param->cycle_type;
 	
 	INT max_levels=param->max_levels;
 	INT i, j, level=0, status=SUCCESS;
@@ -117,7 +118,7 @@ static INT amg_setup_smoothP_smoothA(AMG_data *mgl, AMG_param *param)
 	
 	setup_start=clock();
 	
-	if (param->cycle_type == AMLI_CYCLE) 
+	if (cycle_type == AMLI_CYCLE) 
 	{
 		param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
 		REAL lambda_max = 2.0;
@@ -189,7 +190,9 @@ static INT amg_setup_smoothP_smoothA(AMG_data *mgl, AMG_param *param)
 		mgl[level].num_levels = max_levels; 		
 		mgl[level].b = fasp_dvec_create(m);
 		mgl[level].x = fasp_dvec_create(m);
-		mgl[level].w = fasp_dvec_create(2*m);	
+		
+        if (cycle_type == NL_AMLI_CYCLE)  mgl[level].w = fasp_dvec_create(3*m);	
+        else mgl[level].w = fasp_dvec_create(2*m);
 	}
 	
 #if With_UMFPACK	
@@ -256,6 +259,7 @@ static INT amg_setup_smoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
 {
 	const INT print_level=param->print_level;
 	const INT m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;
+    const cycle_type = param->cycle_type;
 	
 	INT max_levels=param->max_levels;
 	INT i, j, level=0, status=SUCCESS;
@@ -271,7 +275,7 @@ static INT amg_setup_smoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
 	
 	setup_start=clock();
 	
-	if (param->cycle_type == AMLI_CYCLE) 
+	if (cycle_type == AMLI_CYCLE) 
 	{
 		param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
 		REAL lambda_max = 2.0;
@@ -345,7 +349,9 @@ static INT amg_setup_smoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
 		mgl[level].num_levels = max_levels; 		
 		mgl[level].b = fasp_dvec_create(m);
 		mgl[level].x = fasp_dvec_create(m);
-		mgl[level].w = fasp_dvec_create(2*m);	
+		
+        if (cycle_type == NL_AMLI_CYCLE)  mgl[level].w = fasp_dvec_create(3*m);	
+        else mgl[level].w = fasp_dvec_create(2*m);
 	}
 	
 #if With_UMFPACK	

@@ -81,6 +81,7 @@
 #define SOLVER_SUPERLU          6    /**< SuperLU Direct Solver */
 #define SOLVER_UMFPACK          7    /**< UMFPack Direct Solver */
 #define SOLVER_FMG		        8    /**< Full AMG as an iterative solver */
+#define SOLVER_GCG              9    /**< Generalized Conjugate Gradient */
 
 /** 
  * \brief Definition of iterative solver stopping criteria types
@@ -116,7 +117,7 @@
 #define V_CYCLE	                1    /**< V-cycle */
 #define W_CYCLE                 2    /**< W-cycle */
 #define AMLI_CYCLE	            3    /**< AMLI-cycle */
-#define K_CYCLE                 4    /**< K-cycle */
+#define NL_AMLI_CYCLE       4 /**< Nonlinear AMLI-cycle */
 
 /** 
  * \brief Definition of smoother types

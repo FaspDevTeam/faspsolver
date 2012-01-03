@@ -78,6 +78,11 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 			if (print_level>0) printf("Calling vGMRes solver ...\n");		
 			iter = fasp_solver_dcsr_pvgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	
             break;
+            
+        case SOLVER_GCG:
+			if (print_level>0) printf("Calling GCG solver ...\n");
+			iter = fasp_solver_dcsr_gcg(A, b, x, MaxIt, tol, prec, print_level, stop_type); 
+            break;
 			
 		default:
 			printf("### ERROR: Itertive solver type %d not supported!\n", itsolver_type);
@@ -297,6 +302,10 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	else {
 		if (amgparam->cycle_type == AMLI_CYCLE) { 
 			prec.fct = fasp_precond_amli; // AMLI AMG
+		}
+        else if (amgparam->cycle_type == NL_AMLI_CYCLE)
+		{
+			prec.fct = fasp_precond_nl_amli; // Nonlinear AMLI AMG
 		}
 		else {
 			prec.fct = fasp_precond_amg; // V,W-Cycle AMG

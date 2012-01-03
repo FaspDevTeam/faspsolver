@@ -360,6 +360,8 @@ void fasp_param_input (char *filenm, input_param *Input)
 				Input->AMG_cycle_type = W_CYCLE;
 			else if ((strcmp(buffer,"A")==0)||(strcmp(buffer,"a")==0))
 				Input->AMG_cycle_type = AMLI_CYCLE;
+            else if ((strcmp(buffer,"NA")==0)||(strcmp(buffer,"na")==0))
+				Input->AMG_cycle_type = NL_AMLI_CYCLE; 
 			else
 			{ ret = 0; break; }
 			wall = fgets(buffer,500,fp); // skip rest of line

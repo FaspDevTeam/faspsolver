@@ -91,7 +91,9 @@ int main (int argc, const char * argv[])
     
 	// Assemble A and b -- P1 FE discretization for Poisson.
 	else if (problem_num == 19) {	
-        assemble(&A,&b,9);
+        assemble(&A,&b, 10);
+        
+        fasp_dcsr_compress_inplace(&A, SMALLREAL);
 	}
     
 	else {
@@ -111,7 +113,7 @@ int main (int argc, const char * argv[])
     // Print out solver parameters
     if (print_level>PRINT_NONE) fasp_param_solver_print(&itparam);
     
-	// Set initial guess
+    // Set initial guess
     fasp_dvec_alloc(A.row, &uh); 
     fasp_dvec_set(A.row,&uh,0.0);
 	
@@ -120,11 +122,11 @@ int main (int argc, const char * argv[])
         
         if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
 		status = fasp_solver_amg(&A, &b, &uh, &amgparam); 
-        
+    
 	}
     
     // Preconditioned Krylov methods
-	else if (itsolver_type >= 1 && itsolver_type <= 5) {
+	else if ( (itsolver_type >= 1 && itsolver_type <= 5) || (itsolver_type == 9)) {
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {

@@ -39,7 +39,7 @@
  * \brief For external software support
  */
 #define FASP_USE_ILU     OFF  /**< enable ILU or not */
-#define FASP_USE_OPENMP  ON  /**< enable OpenMP support or not */
+#define FASP_USE_OPENMP  OFF  /**< enable OpenMP support or not */
 
 /**
  * \brief For external memory management 

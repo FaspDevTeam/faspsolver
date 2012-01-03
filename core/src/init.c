@@ -93,7 +93,7 @@ void fasp_amg_data_free (AMG_data *mgl)
 {		
 	const INT max_levels = mgl[0].max_levels;
 	unsigned INT i;
-	
+
 	for (i=0; i<max_levels; ++i) {
 		if (&mgl[i].A) { fasp_dcsr_free(&mgl[i].A); }
 		if (&mgl[i].P) { fasp_dcsr_free(&mgl[i].P); }

@@ -109,6 +109,9 @@ INT fasp_amg_solve (AMG_data *mgl,
 INT fasp_amg_solve_amli (AMG_data *mgl, 
                          AMG_param *param);
 
+int fasp_amg_solve_nl_amli (AMG_data *mgl, 
+                            AMG_param *param);
+
 
 /*-------- In file: amg_solve_omp.c --------*/
 
@@ -123,6 +126,8 @@ int fasp_amg_solve_omp (AMG_data *mgl,
 void fasp_solver_amli (AMG_data *mgl, 
                        AMG_param *param, 
                        INT level);
+
+void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_levels);
 
 void fasp_amg_amli_coef (REAL lambda_max, 
                          REAL lambda_min, 
@@ -430,13 +435,6 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
                           dCSRmat *Ac);
 
 
-/*-------- In file: blas_csrl.c --------*/
-
-INT fasp_blas_dcsrl_mxv (dCSRLmat *A, 
-                         REAL *x, 
-                         REAL *y);
-
-
 /*-------- In file: blas_csr_omp.c --------*/
 
 void fasp_blas_dcsr_mxv_omp (dCSRmat *A, 
@@ -505,6 +503,13 @@ void fasp_blas_dcsr_rap4_omp (dCSRmat *R,
 												 int *icor_ysk, 
 												 int nthreads, 
 												 int openmp_holds);
+
+
+/*-------- In file: blas_csrl.c --------*/
+
+INT fasp_blas_dcsrl_mxv (dCSRLmat *A, 
+                         REAL *x, 
+                         REAL *y);
 
 
 /*-------- In file: blas_smat.c --------*/
@@ -846,6 +851,18 @@ dCSRmat fasp_format_dbsr_dcsr_omp (dBSRmat *B,
 																	 int openmp_holds );
 
 
+/*-------- In file: gcg.c --------*/
+
+int fasp_solver_dcsr_gcg (dCSRmat *A, 
+													dvector *b, 
+													dvector *u, 
+													const int MaxIt, 
+													const double tol,
+													precond *pre, 
+													const int print_level,
+													const int stop_type);
+
+
 /*-------- In file: givens.c --------*/
 
 void fasp_aux_givens (double beta, 
@@ -865,17 +882,17 @@ void fasp_grid2d_plot (pgrid2d pg,
 											 int level);
 
 
-/*-------- In file: ilu_setup_bsr.c --------*/
-
-int fasp_ilu_dbsr_setup (dBSRmat *A, 
-                         ILU_data *iludata, 
-												 ILU_param *param);
-
-
 /*-------- In file: ilu_setup.c --------*/
 
 int fasp_ilu_dcsr_setup (dCSRmat *A, 
 												 ILU_data *iludata, 
+												 ILU_param *param);
+
+
+/*-------- In file: ilu_setup_bsr.c --------*/
+
+int fasp_ilu_dbsr_setup (dBSRmat *A, 
+                         ILU_data *iludata, 
 												 ILU_param *param);
 
 
@@ -1010,6 +1027,44 @@ void fasp_ivec_print (int n,
 void fasp_dcsr_print (dCSRmat *A);
 
 
+/*-------- In file: itsolver.c --------*/
+
+INT fasp_solver_dcsr_itsolver (dCSRmat *A, 
+                               dvector *b, 
+                               dvector *x, 
+                               precond *prec, 
+                               itsolver_param *itparam);
+
+INT fasp_solver_dcsr_krylov (dCSRmat *A, 
+                             dvector *b, 
+                             dvector *x, 
+                             itsolver_param *itparam);
+
+INT fasp_solver_dcsr_krylov_diag (dCSRmat *A, 
+                                  dvector *b, 
+                                  dvector *x, 
+                                  itsolver_param *itparam);
+
+INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, 
+                                 dvector *b, 
+                                 dvector *x, 
+                                 itsolver_param *itparam, 
+                                 AMG_param *amgparam);
+
+INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A, 
+                                 dvector *b, 
+                                 dvector *x, 
+                                 itsolver_param *itparam, 
+                                 ILU_param *iluparam);
+
+INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A, 
+                                   dvector *b, 
+                                   dvector *x, 
+                                   itsolver_param *itparam, 
+                                   ILU_param *iluparam, 
+                                   dCSRmat *M);
+
+
 /*-------- In file: itsolver_bcsr.c --------*/
 
 int fasp_solver_bdcsr_itsolver(block_dCSRmat *A, 
@@ -1022,17 +1077,6 @@ int fasp_solver_bdcsr_krylov (block_dCSRmat *A,
 															dvector *b, 
 															dvector *x, 
 															itsolver_param *itparam);
-
-
-/*-------- In file: itsolver_bsr_omp.c --------*/
-
-int fasp_solver_dbsr_itsolver_omp(dBSRmat *A,
-                                  dvector *b,
-                                  dvector *x,
-                                  precond *prec,
-                                  itsolver_param *itparam,
-                                  int nthreads,
-                                  int openmp_holds);
 
 
 /*-------- In file: itsolver_bsr.c --------*/
@@ -1071,44 +1115,6 @@ int fasp_solver_dbsr_itsolver_omp(dBSRmat *A,
                                   itsolver_param *itparam,
                                   int nthreads,
                                   int openmp_holds);
-
-
-/*-------- In file: itsolver.c --------*/
-
-INT fasp_solver_dcsr_itsolver (dCSRmat *A, 
-                               dvector *b, 
-                               dvector *x, 
-                               precond *prec, 
-                               itsolver_param *itparam);
-
-INT fasp_solver_dcsr_krylov (dCSRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
-                             itsolver_param *itparam);
-
-INT fasp_solver_dcsr_krylov_diag (dCSRmat *A, 
-                                  dvector *b, 
-                                  dvector *x, 
-                                  itsolver_param *itparam);
-
-INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, 
-                                 dvector *b, 
-                                 dvector *x, 
-                                 itsolver_param *itparam, 
-                                 AMG_param *amgparam);
-
-INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A, 
-                                 dvector *b, 
-                                 dvector *x, 
-                                 itsolver_param *itparam, 
-                                 ILU_param *iluparam);
-
-INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A, 
-                                   dvector *b, 
-                                   dvector *x, 
-                                   itsolver_param *itparam, 
-                                   ILU_param *iluparam, 
-                                   dCSRmat *M);
 
 
 /*-------- In file: itsolver_omp.c --------*/
@@ -1449,6 +1455,41 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 															 const int stop_type);
 
 
+/*-------- In file: precond.c --------*/
+
+void fasp_precond_diag (double *r, 
+												double *z, 
+												void *data);
+
+void fasp_precond_ilu (double *r, 
+											 double *z, 
+											 void *data);
+
+void fasp_precond_ilu_forward (double *r, 
+															 double *z, 
+															 void *data);
+
+void fasp_precond_ilu_backward (double *r, 
+																double *z, 
+																void *data);
+
+void fasp_precond_amg (double *r, 
+											 double *z, 
+											 void *data);
+
+void fasp_precond_famg (double *r, 
+												double *z, 
+												void *data);
+
+void fasp_precond_amli (double *r, 
+												double *z, 
+												void *data);
+
+void fasp_precond_nl_amli (double *r, 
+                           double *z, 
+                           void *data);
+
+
 /*-------- In file: precond_bsr.c --------*/
 
 void fasp_precond_dbsr_diag (double *r, 
@@ -1507,37 +1548,6 @@ void fasp_precond_dbsr_diag_nc7_omp (double *r,
 																		 void *data, 
 																		 int nthreads, 
 																		 int openmp_holds );
-
-
-/*-------- In file: precond.c --------*/
-
-void fasp_precond_diag (double *r, 
-												double *z, 
-												void *data);
-
-void fasp_precond_ilu (double *r, 
-											 double *z, 
-											 void *data);
-
-void fasp_precond_ilu_forward (double *r, 
-															 double *z, 
-															 void *data);
-
-void fasp_precond_ilu_backward (double *r, 
-																double *z, 
-																void *data);
-
-void fasp_precond_amg (double *r, 
-											 double *z, 
-											 void *data);
-
-void fasp_precond_famg (double *r, 
-												double *z, 
-												void *data);
-
-void fasp_precond_amli (double *r, 
-												double *z, 
-												void *data);
 
 
 /*-------- In file: precond_omp.c --------*/
@@ -1674,6 +1684,76 @@ void fasp_smat_identity (double *a,
 												 int n2);
 
 
+/*-------- In file: smoother.c --------*/
+
+void fasp_smoother_dcsr_jacobi (dvector *u, 
+                                int i_1, 
+                                int i_n, 
+                                int s, 
+                                dCSRmat *A, 
+                                dvector *b, 
+                                int L);
+
+void fasp_smoother_dcsr_gs (dvector *u, 
+                            int i_1, 
+                            int i_n, 
+                            int s, 
+                            dCSRmat *A, 
+                            dvector *b, 
+                            int L);
+
+void fasp_smoother_dcsr_gs_cf (dvector *u, 
+                               dCSRmat *A, 
+                               dvector *b, 
+                               int L, 
+                               int *mark, 
+                               int order );
+
+void fasp_smoother_dcsr_sgs (dvector *u, 
+                             dCSRmat *A, 
+                             dvector *b, 
+                             int L);
+
+void fasp_smoother_dcsr_sor (dvector *u, 
+                             int i_1, 
+                             int i_n, 
+                             int s, 
+                             dCSRmat *A, 
+                             dvector *b, 
+                             int L, 
+                             double w);
+
+void fasp_smoother_dcsr_sor_cf (dvector *u, 
+                                dCSRmat *A, 
+                                dvector *b, 
+                                int L, 
+                                double w, 
+                                int *mark, 
+                                int order );
+
+void fasp_smoother_dcsr_ilu (dCSRmat *A, 
+                             dvector *b, 
+                             dvector *x, 
+                             void *data);
+
+void fasp_smoother_dcsr_kaczmarz (dvector *u, 
+                                  int i_1, 
+                                  int i_n, 
+                                  int s, 
+                                  dCSRmat *A, 
+                                  dvector *b, 
+                                  int L, 
+                                  double w);
+
+void fasp_smoother_dcsr_L1diag (dvector *u, 
+                                int i_1, 
+                                int i_n, 
+                                int s, 
+                                dCSRmat *A, 
+                                dvector *b, 
+                                int L);
+
+
 /*-------- In file: smoother_bsr.c --------*/
 
 void fasp_smoother_dbsr_jacobi (dBSRmat *A, 
@@ -1758,87 +1838,6 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
 														 dvector *b, 
 														 dvector *x, 
 														 void *data);
-
-
-/*-------- In file: smoother_bsr_omp.c --------*/
-
-void fasp_smoother_dbsr_gs_order2_omp (dBSRmat *A, 
-																	 dvector *b, 
-																	 dvector *u, 
-																	 int *mark, 
-																	 double *work, 
-																	 int nthreads, 
-																	 int openmp_holds);
-
-
-/*-------- In file: smoother.c --------*/
-
-void fasp_smoother_dcsr_jacobi (dvector *u, 
-                                int i_1, 
-                                int i_n, 
-                                int s, 
-                                dCSRmat *A, 
-                                dvector *b, 
-                                int L);
-
-void fasp_smoother_dcsr_gs (dvector *u, 
-                            int i_1, 
-                            int i_n, 
-                            int s, 
-                            dCSRmat *A, 
-                            dvector *b, 
-                            int L);
-
-void fasp_smoother_dcsr_gs_cf (dvector *u, 
-                               dCSRmat *A, 
-                               dvector *b, 
-                               int L, 
-                               int *mark, 
-                               int order );
-
-void fasp_smoother_dcsr_sgs (dvector *u, 
-                             dCSRmat *A, 
-                             dvector *b, 
-                             int L);
-
-void fasp_smoother_dcsr_sor (dvector *u, 
-                             int i_1, 
-                             int i_n, 
-                             int s, 
-                             dCSRmat *A, 
-                             dvector *b, 
-                             int L, 
-                             double w);
-
-void fasp_smoother_dcsr_sor_cf (dvector *u, 
-                                dCSRmat *A, 
-                                dvector *b, 
-                                int L, 
-                                double w, 
-                                int *mark, 
-                                int order );
-
-void fasp_smoother_dcsr_ilu (dCSRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
-                             void *data);
-
-void fasp_smoother_dcsr_kaczmarz (dvector *u, 
-                                  int i_1, 
-                                  int i_n, 
-                                  int s, 
-                                  dCSRmat *A, 
-                                  dvector *b, 
-                                  int L, 
-                                  double w);
-
-void fasp_smoother_dcsr_L1diag (dvector *u, 
-                                int i_1, 
-                                int i_n, 
-                                int s, 
-                                dCSRmat *A, 
-                                dvector *b, 
-                                int L);
 
 
 /*-------- In file: smoother_cr.c --------*/
@@ -2168,15 +2167,6 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
                              dvector *diag);
 
 
-/*-------- In file: sparse_csrl.c --------*/
-
-dCSRLmat * fasp_dcsrl_create (int num_rows, 
-																	int num_cols, 
-																	int num_nonzeros);
-
-void fasp_dcsrl_free (dCSRLmat *A);
-
-
 /*-------- In file: sparse_csr_omp.c --------*/
 
 void fasp_dcsr_getdiag_omp (int n, 
@@ -2189,6 +2179,15 @@ void fasp_dcsr_cp_omp (dCSRmat *A,
 											 dCSRmat *B, 
 											 int nthreads, 
 											 int openmp_holds);
+
+
+/*-------- In file: sparse_csrl.c --------*/
+
+dCSRLmat * fasp_dcsrl_create (int num_rows, 
+																	int num_cols, 
+																	int num_nonzeros);
+
+void fasp_dcsrl_free (dCSRLmat *A);
 
 
 /*-------- In file: sparse_str.c --------*/

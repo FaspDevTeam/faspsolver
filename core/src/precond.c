@@ -322,6 +322,49 @@ void fasp_precond_amli (double *r,
 	fasp_array_cp(m,mgl->x.val,z);	
 }
 
+/**
+ * \fn void fasp_precond_nl_amli(double *r, double *z, void *data)
+ * \brief get z from r by nonliear AMLI-cycle
+ * \param *A pointer to the stiffness matrix
+ * \param *r pointer to residual
+ * \param *z pointer to preconditioned residual
+ * \param *data pointer to precondition data
+ *
+ * \author Xiaozhe Hu
+ * \date 04/25/2011
+ */
+void fasp_precond_nl_amli (double *r, 
+                           double *z, 
+                           void *data)
+{
+	
+	precond_data *predata=(precond_data *)data;
+	const INT m=predata->mgl_data[0].A.row;
+	const INT maxit=predata->max_iter;
+	const INT num_levels = predata->max_levels;
+	unsigned INT i;
+	
+	AMG_param amgparam; fasp_param_amg_init(&amgparam);
+	amgparam.cycle_type = predata->cycle_type;
+	amgparam.smoother   = predata->smoother;
+	amgparam.presmooth_iter  = predata->presmooth_iter;
+	amgparam.postsmooth_iter = predata->postsmooth_iter;
+	amgparam.relaxation = predata->relaxation;
+	amgparam.coarse_scaling = predata->coarse_scaling;
+	amgparam.amli_degree = predata->amli_degree;
+	amgparam.amli_coef = predata->amli_coef;
+	amgparam.tentative_smooth = predata->tentative_smooth;
+	amgparam.ILU_levels = predata->mgl_data->ILU_levels;
+	
+	AMG_data *mgl = predata->mgl_data;
+	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
+	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
+	
+	for (i=0;i<maxit;++i) fasp_solver_nl_amli(mgl,&amgparam,0, num_levels); 
+	
+	fasp_array_cp(m,mgl->x.val,z);	
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

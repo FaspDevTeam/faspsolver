@@ -30,7 +30,7 @@ void fasp_solver_amli (AMG_data *mgl,
                        AMG_param *param, 
                        INT level)
 {	
-    const INT amg_type=param->AMG_type;
+    const INT  amg_type=param->AMG_type;
 	const REAL relax = param->relaxation;
     const INT  print_level = param->print_level;
 	const INT  smoother = param->smoother;
@@ -122,6 +122,7 @@ void fasp_solver_amli (AMG_data *mgl,
 				break;
 		}
 		
+        // coarse grid correction
 		{ 
 			fasp_array_cp(m1,b1->val,r1);
 			
@@ -241,6 +242,231 @@ void fasp_solver_amli (AMG_data *mgl,
 	}
 	
 	if (print_level>=PRINT_MOST) printf("AMLI level %d, post-smoother %d.\n", level, smoother);
+}
+
+/**
+ * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param, int level, int num_levels)
+ * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
+ *
+ * \param *mgl pointer to AMG_data data
+ * \param *param pointer to AMG parameters
+ * \param level current level
+ * \param num_levels total numebr of levels
+ *
+ * \author Xiaozhe Hu
+ * \date 04/06/2010
+ */
+void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_levels)
+{	
+    const INT  amg_type=param->AMG_type;
+	const INT print_level = param->print_level;
+	const INT smoother = param->smoother;
+	const INT cycle_type = param->cycle_type;
+	const INT ndeg = 3;
+	const REAL relax = param->relaxation;
+	
+	dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x; // fine level b and x
+	dvector *b1 = &mgl[level+1].b, *e1 = &mgl[level+1].x; // coarse level b and x
+	
+	dCSRmat *A_level0 = &mgl[level].A; // fine level matrix
+	dCSRmat *A_level1 = &mgl[level+1].A; // coarse level matrix
+	const INT m0 = A_level0->row, m1 = A_level1->row;
+	
+	ILU_data *LU_level = &mgl[level].LU; // fine level ILU decomposition
+	REAL *r = mgl[level].w.val; 
+	dvector uH, bH;  // for coarse level correction
+	uH.row = m1; uH.val = mgl[level+1].w.val + m1;
+	bH.row = m1; bH.val = mgl[level+1].w.val + 2*m1;
+	
+	if (print_level>8) printf("MG level %d, pre-smoother %d.\n", level, smoother);
+	
+	if (level < num_levels-1) { 
+		
+		// pre smoothing
+		if (level<param->ILU_levels) {
+			fasp_smoother_dcsr_ilu(A_level0, b0, e0, LU_level);
+		}
+		else {
+			unsigned int steps = param->presmooth_iter;
+			switch (smoother) {
+				case GS:
+					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
+					break;
+				case POLY:
+					fasp_smoother_dcsr_poly(A_level0, b0, e0, m0, ndeg, steps); 
+					break;
+				case JACOBI:
+					fasp_smoother_dcsr_jacobi(e0, 0, m0-1, 1, A_level0, b0, steps);
+					break;
+				case SGS:
+					fasp_smoother_dcsr_sgs(e0, A_level0, b0, steps);
+					break;
+				case SOR:
+					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
+					break;
+				case SSOR:
+					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
+					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
+					break;
+				case GSOR:
+					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
+					fasp_smoother_dcsr_sor(e0, m0-1, 0, -1, A_level0, b0, steps, relax);
+					break;
+				case SGSOR:
+					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
+					fasp_smoother_dcsr_gs(e0, m0-1, 0,-1, A_level0, b0, steps);
+					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
+					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
+					break;
+				default:
+					printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+			}
+		}
+		
+		// form residual r = b - A x
+		fasp_array_cp(m0,b0->val,r); 
+		fasp_blas_dcsr_aAxpy(-1.0,A_level0,e0->val,r);
+		
+		// restriction r1 = R*r0
+        switch (amg_type)
+		{		
+			case UA_AMG: 
+				fasp_blas_dcsr_mxv_agg(&mgl[level].R, r, b1->val);
+				break;
+			default:
+				fasp_blas_dcsr_mxv(&mgl[level].R, r, b1->val);
+				break;
+		}
+		
+		// call nonlinear AMLI-cycle recursively
+		{ 
+			unsigned int i;		
+			fasp_dvec_set(m1,e1,0.0);	
+			
+			if (level == num_levels-2)
+			{
+				fasp_solver_nl_amli(&mgl[level+1], param, 0, num_levels-1);
+			}
+			else{
+				precond_data precdata;
+				precdata.max_iter = 1;
+				precdata.tol = param->tol;
+				precdata.cycle_type = param->cycle_type;
+				precdata.smoother = param->smoother;
+				precdata.smooth_order = param->smooth_order;
+				precdata.presmooth_iter  = param->presmooth_iter;
+				precdata.postsmooth_iter = param->postsmooth_iter;
+				precdata.coarsening_type = param->coarsening_type;
+				precdata.relaxation = param->relaxation;
+				precdata.coarse_scaling = param->coarse_scaling;
+				precdata.amli_degree = param->amli_degree;
+				precdata.amli_coef = param->amli_coef;
+				precdata.tentative_smooth = param->tentative_smooth;
+				precdata.max_levels = num_levels-1;
+				precdata.mgl_data = &mgl[level+1];
+                
+				precond prec;
+				prec.data = &precdata; 
+				prec.fct = fasp_precond_nl_amli;
+                
+				fasp_array_cp (m1, b1->val, bH.val);
+				fasp_array_cp (m1, e1->val, uH.val);
+                
+				const int maxit = param->amli_degree+1;
+				fasp_solver_dcsr_gcg(A_level1, &bH, &uH, maxit, 1e-12, &prec, 0, 1);
+				//fasp_solver_dcsr_pvgmres (A_level1, &bH, &uH, maxit, 1e-12, &prec, 0, 1, 30);
+                
+				fasp_array_cp (m1, bH.val, b1->val);
+				fasp_array_cp (m1, uH.val, e1->val);
+			}
+			
+		}
+		
+		// prolongation e0 = e0 + P*e1
+        switch (amg_type)
+		{
+			case UA_AMG:
+				fasp_blas_dcsr_aAxpy_agg(1.0, &mgl[level].P, e1->val, e0->val);
+				break;
+			default:
+				fasp_blas_dcsr_aAxpy(1.0, &mgl[level].P, e1->val, e0->val);
+				break;
+		}
+		
+		// post smoothing
+		if (level < param->ILU_levels) {
+			fasp_smoother_dcsr_ilu(A_level0, b0, e0, LU_level);
+		}
+		else {
+			unsigned int steps = param->postsmooth_iter;
+			switch (smoother) {
+				case GS:
+					fasp_smoother_dcsr_gs(e0, m0-1, 0, -1, A_level0, b0, steps); 
+					break;
+				case POLY:
+					fasp_smoother_dcsr_poly(A_level0, b0, e0, m0, ndeg, steps); 
+					break;
+				case JACOBI:
+					fasp_smoother_dcsr_jacobi(e0, m0-1, 0, -1, A_level0, b0, steps);
+					break;					
+				case SGS:
+					fasp_smoother_dcsr_sgs(e0, A_level0, b0, steps);
+					break;
+				case SOR:
+					fasp_smoother_dcsr_sor(e0, m0-1, 0, -1, A_level0, b0, steps, relax);
+					break;
+				case SSOR:
+					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
+					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
+					break;
+				case GSOR:
+					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
+					fasp_smoother_dcsr_gs(e0, m0-1, 0, -1, A_level0, b0, steps);
+					break;
+				case SGSOR:
+					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
+					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
+					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
+					fasp_smoother_dcsr_gs(e0, m0-1, 0,-1, A_level0, b0, steps);
+					break;
+				default:
+					printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+			}
+		}
+		
+	}
+    
+	else // coarsest level solver
+	{
+#if With_DISOLVE 
+        /* use Direct.lib in Windows */
+		DIRECT_MUMPS(A_level0->row, A_level0->nnz, A_level0->IA, A_level0->JA, A_level0->val, 
+                     b0->val, e0->val);
+#elif With_UMFPACK
+		/* use UMFPACK direct solver on the coarsest level */
+		umfpack(A_level0, b0, e0, 0);
+#elif With_SuperLU
+		/* use SuperLU direct solver on the coarsest level */
+		superlu(A_level0, b0, e0, 0);
+#else	
+		/* use iterative solver on the coarest level */
+		const INT csize = A_level0->row;
+		const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
+		REAL ctol = param->tol; // coarse level tolerance
+        
+		INT flag = fasp_solver_dcsr_pcg(A_level0, b0, e0, cmaxit, ctol, NULL, 0, 1);
+		
+        if (flag < 0) { // If PCG does not converge, use BiCGstab as a saft net.
+            flag = fasp_solver_dcsr_pvgmres (A_level0, b0, e0, cmaxit, ctol, NULL, 0, 1, 25);
+        }
+        
+		if ( flag < 0 && print_level > PRINT_MIN ) {
+			printf("### WARNING: coarse level solver does not converge in %d steps!\n", cmaxit);
+		}
+#endif 
+	}
+	
+	if (print_level>8) printf("MG level %d, post-smoother %d.\n", level, smoother);
 }
 
 /**

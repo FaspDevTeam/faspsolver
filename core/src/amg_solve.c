@@ -158,6 +158,72 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
 	return iter;
 }
 
+/**
+ * \fn int fasp_amg_solve_nl_amli(AMG_data *mgl, AMG_param *param)
+ * \brief nonlinear AMLI --- SOLVE phase
+ *
+ * \param *mgl    pointer to AMG_data data
+ * \param *param  pointer to AMG parameters
+ *
+ *  \note Solve Ax=b using nonlinear AMLI-cycle method.  Should be called after multigrid hierarchy has been setup!
+ *
+ * \author Xiaozhe Hu
+ * \date 04/30/2011
+ */
+int fasp_amg_solve_nl_amli (AMG_data *mgl, 
+                            AMG_param *param)
+{
+	const INT     MaxIt = param->max_iter; 
+	const INT     print_level = param->print_level;
+	const REAL   tol = param->tol;
+	
+	dCSRmat     *ptrA=&mgl[0].A;
+	dvector     *b=&mgl[0].b, *x=&mgl[0].x, *r=&mgl[0].w; 
+	const INT    m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
+	const REAL sumb = fasp_blas_dvec_norm2(b); // L2norm(b)	
+	
+	REAL relres1=BIGREAL, absres0=BIGREAL, absres, factor;		
+	unsigned INT iter=0;
+	
+	if (print_level>8) printf("fasp_amli_solve: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	
+	clock_t solve_start=clock();
+	
+	while ((++iter <= MaxIt) & (sumb > SMALLREAL)) // MG solver here
+	{	
+		// one multigrid cycle
+		fasp_solver_nl_amli(mgl, param, 0, mgl[0].num_levels); 
+		
+		// r = b-A*x		
+		fasp_dvec_cp(b,r); 
+		fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);		
+		
+		absres  = fasp_blas_dvec_norm2(r); // residual ||r||
+		relres1 = absres/sumb;       // relative residual ||r||/||b||
+		factor  = absres/absres0;    // contraction factor
+		
+		// output iteration information if needed	
+		print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
+		
+		if (relres1<tol) break; // early exit condition
+		
+		absres0 = absres;
+	}
+	
+	if (print_level>0) {
+		if (iter>MaxIt)
+			printf("Maximal iteration %d exceeded with relative residual %e.\n", MaxIt, relres1);
+		else
+			printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
+		
+		clock_t solve_end=clock();
+		double solveduration = (double)(solve_end - solve_start)/(double)(CLOCKS_PER_SEC);
+		printf("AMG solve costs %f seconds.\n", solveduration);
+	}
+	
+	return iter;
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

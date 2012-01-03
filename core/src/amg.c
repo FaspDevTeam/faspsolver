@@ -43,7 +43,7 @@ INT fasp_solver_amg (dCSRmat *A,
 	
     // local variables
     clock_t AMG_start, AMG_end;
-    double AMG_duration;
+    REAL AMG_duration;
     INT status = SUCCESS;
 	
 #if DEBUG_MODE
@@ -79,6 +79,9 @@ INT fasp_solver_amg (dCSRmat *A,
     {
         case AMLI_CYCLE: // call AMLI-cycle
             if ( (status=fasp_amg_solve_amli(mgl, param)) < 0 ) goto FINISHED;
+            break;
+        case NL_AMLI_CYCLE: // call Nonlinear AMLI-cycle
+            if ( (status=fasp_amg_solve_nl_amli(mgl, param)) < 0 ) goto FINISHED;
             break;
         default:
             if ( (status=fasp_amg_solve(mgl, param)) < 0 ) goto FINISHED;
