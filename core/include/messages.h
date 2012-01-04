@@ -82,6 +82,7 @@
 #define SOLVER_UMFPACK          7    /**< UMFPack Direct Solver */
 #define SOLVER_FMG		        8    /**< Full AMG as an iterative solver */
 #define SOLVER_GCG              9    /**< Generalized Conjugate Gradient */
+#define SOLVER_VFGMRES     10   /**< Variable Restarting Flexible GMRES */
 
 /** 
  * \brief Definition of iterative solver stopping criteria types

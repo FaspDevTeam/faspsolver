@@ -83,6 +83,11 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 			if (print_level>0) printf("Calling GCG solver ...\n");
 			iter = fasp_solver_dcsr_gcg(A, b, x, MaxIt, tol, prec, print_level, stop_type); 
             break;
+            
+        case SOLVER_VFGMRES: 
+			if (print_level>0) printf("Calling vFGMRes solver ...\n");		
+			iter = fasp_solver_dcsr_pvfgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	
+            break;
 			
 		default:
 			printf("### ERROR: Itertive solver type %d not supported!\n", itsolver_type);
@@ -290,6 +295,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	precdata.coarse_scaling = amgparam->coarse_scaling;
 	precdata.amli_degree = amgparam->amli_degree;
 	precdata.amli_coef = amgparam->amli_coef;
+    precdata.nl_amli_krylov_type = amgparam->nl_amli_krylov_type;
 	precdata.tentative_smooth = amgparam->tentative_smooth;
 	precdata.max_levels = mgl[0].num_levels;
 	precdata.mgl_data = mgl;

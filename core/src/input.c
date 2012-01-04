@@ -508,6 +508,18 @@ void fasp_param_input (char *filenm, input_param *Input)
 			Input->AMG_amli_degree = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
+        
+        else if (strcmp(buffer,"AMG_nl_amli_krylov_type")==0)
+		{
+			val = fscanf(fp,"%s",buffer);
+			if (val!=1 || strcmp(buffer,"=")!=0) {
+				ret = 0; break;
+			}
+			val = fscanf(fp,"%d",&ibuff);
+			if (val!=1) { ret = 0; break; }
+			Input->AMG_nl_amli_krylov_type = ibuff;
+			wall = fgets(buffer,500,fp); // skip rest of line
+		}
 		
 		else if (strcmp(buffer,"ILU_type")==0)
 		{

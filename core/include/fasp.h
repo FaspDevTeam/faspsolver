@@ -411,6 +411,8 @@ typedef struct {
 	INT amli_degree;
 	//! coefficients of the polynomial used by AMLI cycle
 	REAL *amli_coef;
+    //! type of krylov method used by Nonlinear AMLI cycle
+    INT nl_amli_krylov_type;
 	
 	//! coarsening type
 	INT coarsening_type;
@@ -533,6 +535,8 @@ typedef struct {
 	INT amli_degree;
 	//! coefficients of the polynomial used by AMLI cycle
 	REAL *amli_coef;
+    //! type of krylov method used by Nonlinear AMLI cycle
+    INT nl_amli_krylov_type;
 	//! smooth factor for smoothing the tentative prolongation
 	REAL tentative_smooth;
 	
@@ -723,6 +727,7 @@ typedef struct {
 	INT AMG_ILU_levels; /**< how many levels use ILU smoother */	
 	INT AMG_coarse_scaling; /**< switch of scaling of the coarse grid correction */
 	INT AMG_amli_degree; /**< degree of the polynomial used by AMLI cycle */
+    INT AMG_nl_amli_krylov_type; /** type of krylov method used by nonlinear AMLI cycle */
 	
 	// parameters for classical AMG
 	INT AMG_coarsening_type; /**< coarsening type */

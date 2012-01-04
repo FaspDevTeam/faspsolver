@@ -95,7 +95,9 @@ void fasp_param_input_init (input_param *Input)
 	Input->AMG_tol = 1e-4*Input->itsolver_tol;
 	Input->AMG_maxit = 1;
 	Input->AMG_ILU_levels = 0;
-	Input->AMG_coarse_scaling = OFF;	
+	Input->AMG_coarse_scaling = OFF;
+    Input->AMG_amli_degree = 0; 
+    Input->AMG_nl_amli_krylov_type = 2;
 	
 	Input->AMG_coarsening_type = 1;	
 	Input->AMG_interpolation_type = 1;			
@@ -137,6 +139,7 @@ void fasp_param_amg_init (AMG_param *param)
 	param->coarse_scaling = OFF;
 	param->amli_degree = 0;
 	param->amli_coef = NULL;
+    param->nl_amli_krylov_type = 2;
 	
 	param->coarsening_type = 1;
 	param->interpolation_type = 1;
@@ -237,6 +240,7 @@ void fasp_param_amg_set (AMG_param *param, input_param *Input)
 	param->coarse_scaling  = Input->AMG_coarse_scaling;
 	param->amli_degree     = Input->AMG_amli_degree;
 	param->amli_coef       = NULL;
+    param->nl_amli_krylov_type = Input->AMG_nl_amli_krylov_type;
 	
 	param->coarsening_type      = Input->AMG_coarsening_type;
 	param->interpolation_type   = Input->AMG_interpolation_type;
@@ -343,6 +347,10 @@ void fasp_param_amg_print (AMG_param *param)
         
 		if(param->cycle_type == AMLI_CYCLE) {
             printf("AMG AMLI degree of polynomial:     %d\n", param->amli_degree);
+		}
+        
+        if(param->cycle_type == NL_AMLI_CYCLE) {
+            printf("AMG Nonlinear AMLI Krylov type:    %d\n", param->nl_amli_krylov_type);
 		}
         
         switch (param->AMG_type) {

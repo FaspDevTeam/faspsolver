@@ -353,6 +353,7 @@ void fasp_precond_nl_amli (double *r,
 	amgparam.coarse_scaling = predata->coarse_scaling;
 	amgparam.amli_degree = predata->amli_degree;
 	amgparam.amli_coef = predata->amli_coef;
+    amgparam.nl_amli_krylov_type = predata->nl_amli_krylov_type;
 	amgparam.tentative_smooth = predata->tentative_smooth;
 	amgparam.ILU_levels = predata->mgl_data->ILU_levels;
 	

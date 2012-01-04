@@ -1597,6 +1597,19 @@ void fasp_precond_dstr_blockgs (double *r,
 																void *data);
 
 
+/*-------- In file: pvfgmres.c --------*/
+
+INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, 
+                              dvector *b, 
+                              dvector *x, 
+                              const INT max_iter,
+                              const REAL tol,
+                              precond *pre, 
+                              const INT print_level, 
+                              const INT stop_type, 
+                              const INT restart);
+
+
 /*-------- In file: pvgmres.c --------*/
 
 INT fasp_solver_dcsr_pvgmres (dCSRmat *A, 

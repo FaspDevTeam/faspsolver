@@ -340,14 +340,15 @@ void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_lev
 		
 		// call nonlinear AMLI-cycle recursively
 		{ 
-			unsigned int i;		
+			unsigned int i;	
+            
 			fasp_dvec_set(m1,e1,0.0);	
 			
-			if (level == num_levels-2)
+			if (level == num_levels-2)  // since the coarsest is solved exactly, no need to call krylov method on second coarest level
 			{
 				fasp_solver_nl_amli(&mgl[level+1], param, 0, num_levels-1);
 			}
-			else{
+			else{  // recursively call preconditioned Krylov method on coarse grid
 				precond_data precdata;
 				precdata.max_iter = 1;
 				precdata.tol = param->tol;
@@ -361,6 +362,7 @@ void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_lev
 				precdata.coarse_scaling = param->coarse_scaling;
 				precdata.amli_degree = param->amli_degree;
 				precdata.amli_coef = param->amli_coef;
+                precdata.nl_amli_krylov_type = param->nl_amli_krylov_type;
 				precdata.tentative_smooth = param->tentative_smooth;
 				precdata.max_levels = num_levels-1;
 				precdata.mgl_data = &mgl[level+1];
@@ -373,8 +375,16 @@ void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_lev
 				fasp_array_cp (m1, e1->val, uH.val);
                 
 				const int maxit = param->amli_degree+1;
-				fasp_solver_dcsr_gcg(A_level1, &bH, &uH, maxit, 1e-12, &prec, 0, 1);
-				//fasp_solver_dcsr_pvgmres (A_level1, &bH, &uH, maxit, 1e-12, &prec, 0, 1, 30);
+                
+                switch (param->nl_amli_krylov_type)
+                {
+                    case 1:   // Use GCG
+                        fasp_solver_dcsr_gcg(A_level1, &bH, &uH, maxit, 1e-12, &prec, 0, 1);
+                        break;
+                    default:  // Use FGMRES
+                        fasp_solver_dcsr_pvfgmres (A_level1, &bH, &uH, maxit, 1e-12, &prec, 0, 1, 30);
+                        break;
+                }
                 
 				fasp_array_cp (m1, bH.val, b1->val);
 				fasp_array_cp (m1, uH.val, e1->val);

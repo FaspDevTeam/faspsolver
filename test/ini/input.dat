@@ -14,7 +14,7 @@ print_level    = 2      % How much information to print out
 
 itsolver_type  = 1      % Solver type:   0 AMG | 1 CG | 2 BiCGstab | 3 MinRes 
                         %                4 GMRes | 5 vGMRes | 6 SuperLU | 7 UMFPACK
-			%		 8 FMG | 9 GCG
+			%		 8 FMG | 9 GCG | 10 vFGMRES 
 
 precond_type   = 2      % Precond type:  0 Null | 1 Diag | 2 AMG | 3 ILU  
                         %                4 FMG
@@ -52,6 +52,7 @@ AMG_tol                  = 1e-10 % tolerance for AMG
 AMG_maxit                = 1     % number of AMG iterations
 AMG_coarse_scaling	 = OFF	 % switch of scaling of the coarse grid correction
 AMG_amli_degree		 = 1	 % degree of the polynomial used by (nonlinear) AMLI cycle
+AMG_nl_amli_krylov_type  = 1	 % type of krylov method used by Nonlinear AMLI cycle: 1 GCG | 2 FGMRES
 
 %----------------------------------------------%
 % parameters for classical AMG method          %
@@ -68,7 +69,7 @@ AMG_max_row_sum          = 0.9   % max row sum
 %----------------------------------------------%
 
 AMG_strong_coupled	 = 0.08  % strong coupled threshold
-AMG_max_aggregation	 = 20     % max size of each aggregation 
+AMG_max_aggregation	 = 9     % max size of each aggregation 
 AMG_tentative_smooth	 = 0.67 % smooth factor for smoothing the tentative prolongation
 AMG_smooth_filter	 = OFF   % switch for filtered matrix for smoothing
 
@@ -76,4 +77,4 @@ AMG_smooth_filter	 = OFF   % switch for filtered matrix for smoothing
 % parameters for GMRES method                  %
 %----------------------------------------------%
 
-itsolver_restart         = 20     % Restart number for GMRES
+itsolver_restart         = 30     % Restart number for GMRES

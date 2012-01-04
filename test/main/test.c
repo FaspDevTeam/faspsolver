@@ -126,7 +126,7 @@ int main (int argc, const char * argv[])
 	}
     
     // Preconditioned Krylov methods
-	else if ( (itsolver_type >= 1 && itsolver_type <= 5) || (itsolver_type == 9)) {
+	else if ( (itsolver_type >= 1 && itsolver_type <= 5) || (itsolver_type == 9) || (itsolver_type == 10)) {
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
