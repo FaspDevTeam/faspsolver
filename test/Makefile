@@ -11,13 +11,9 @@
 # Compilers and dependences
 ########################################################################
 AR=ar ruc
-CC=gcc -fopenmp
+CC=gcc
 CPP=g++
-FC=gfortran -fopenmp
-
-CC=icc -openmp
-CPP=icpc
-FC=ifort -openmp
+FC=gfortran
 
 CSRCDIR=./src
 FSRCDIR=./src

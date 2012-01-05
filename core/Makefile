@@ -15,9 +15,6 @@ CC=gcc
 CPP=g++ 
 FC=gfortran 
 
-CC=icc -openmp
-CPP=icpc -openmp
-FC=ifort -openmp
 CSRCDIR=./src
 FSRCDIR=./src
 EXTRDIR= ./extra

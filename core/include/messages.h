@@ -35,8 +35,8 @@
  * \brief Print level for all subroutines -- not including DEBUG output
  */
 #define PRINT_NONE              0    /**< slient: no printout at all */
-#define PRINT_MIN               1    /**< quiet: a little printout, like convergence */
-#define PRINT_SOME              2    /**< some: print cpu time, iteration number etc */
+#define PRINT_MIN               1    /**< quiet: minimal print, like convergence */
+#define PRINT_SOME              2    /**< some: print cpu time, iteration number */
 #define PRINT_MORE              4    /**< more: print more useful information */
 #define PRINT_MOST              8    /**< most: maximal printouts, no disk files*/
 #define PRINT_ALL               10   /**< everything: all printouts allowed */
@@ -51,12 +51,12 @@
 #define ERROR_INPUT_PAR        -13   /**< wrong input argument */
 #define ERROR_REGRESS          -14   /**< regression test fail */
 #define ERROR_MISC             -19   /**< other error */
-
+//-----------------------------------------------------------------------------------
 #define ERROR_ALLOC_MEM        -20   /**< fail to allocate memory */
 #define ERROR_DATA_STRUCTURE   -21   /**< matrix or vector structures */
 #define ERROR_DATA_ZERODIAG    -22   /**< matrix has zero diagonal entries */
 #define ERROR_DUMMY_VAR        -23   /**< unexpected input data */
-
+//-----------------------------------------------------------------------------------
 #define ERROR_SOLVER_TYPE      -40   /**< unknown solver type */
 #define ERROR_SOLVER_PRECTYPE  -41   /**< unknow precond type */
 #define ERROR_SOLVER_STAG      -42   /**< solver stagnates */
@@ -66,23 +66,26 @@
 #define ERROR_SOLVER_MISC      -46   /**< misc solver error during run time */
 #define ERROR_SOLVER_MAXIT     -48   /**< solver maximal iteration number reached */
 #define ERROR_SOLVER_EXIT      -49   /**< solver does not quit successfully */
-
+//-----------------------------------------------------------------------------------
 #define RUN_FAIL               -100  /**< general fail to run, no specified reason */
 
 /** 
  * \brief Definition of iterative solver types
  */
-#define SOLVER_AMG              0    /**< AMG as an iterative solver */
 #define SOLVER_CG               1    /**< Conjugate Gradient */
 #define SOLVER_BiCGstab         2    /**< BiCG Stable */
 #define SOLVER_MinRes           3    /**< Minimal Residual */
 #define SOLVER_GMRES            4    /**< GMRES Method */
 #define SOLVER_VGMRES           5    /**< Variable Restarting GMRES */
-#define SOLVER_SUPERLU          6    /**< SuperLU Direct Solver */
-#define SOLVER_UMFPACK          7    /**< UMFPack Direct Solver */
-#define SOLVER_FMG		        8    /**< Full AMG as an iterative solver */
-#define SOLVER_GCG              9    /**< Generalized Conjugate Gradient */
-#define SOLVER_VFGMRES     10   /**< Variable Restarting Flexible GMRES */
+#define SOLVER_VFGMRES          6    /**< Variable Restarting Flexible GMRES */
+#define SOLVER_GCG              7    /**< Generalized Conjugate Gradient */
+//-----------------------------------------------------------------------------------
+#define SOLVER_AMG              21   /**< AMG as an iterative solver */
+#define SOLVER_FMG		        22   /**< Full AMG as an iterative solver */
+//-----------------------------------------------------------------------------------
+#define SOLVER_SUPERLU          31   /**< SuperLU Direct Solver */
+#define SOLVER_UMFPACK          32   /**< UMFPack Direct Solver */
+#define SOLVER_MUMPS            33   /**< MUMPS   Direct Solver */
 
 /** 
  * \brief Definition of iterative solver stopping criteria types
@@ -99,7 +102,7 @@
 #define PREC_AMG                2    /**< with AMG precond */
 #define PREC_ILU                3    /**< with ILU precond */
 #define PREC_FMG                4    /**< with full AMG precond */
-
+//-----------------------------------------------------------------------------------
 #define PREC_NULL_STRUCT        10   /**< with no precond for dSTRmat matrix */
 #define PREC_DIAG_STRUCT        11   /**< with diagonal precond for dSTRmat matrix */
 #define PREC_AMG_STRUCT         12   /**< with AMG precond for dSTRmat matrix */
@@ -118,7 +121,7 @@
 #define V_CYCLE	                1    /**< V-cycle */
 #define W_CYCLE                 2    /**< W-cycle */
 #define AMLI_CYCLE	            3    /**< AMLI-cycle */
-#define NL_AMLI_CYCLE       4 /**< Nonlinear AMLI-cycle */
+#define NL_AMLI_CYCLE           4    /**< Nonlinear AMLI-cycle */
 
 /** 
  * \brief Definition of smoother types
@@ -138,8 +141,8 @@
  * \brief Definition of interpolation types
  */
 #define INTERP_REG              1    /**< standard interpolation */
-#define INTERP_ENG_MIN_FOR      2    /**< energy minimization interpolation in Fortran */
-#define INTERP_ENG_MIN_C        3    /**< energy minimization interpolation in C */
+#define INTERP_ENG_MIN_FOR      2    /**< energy minimization interp in Fortran */
+#define INTERP_ENG_MIN_C        3    /**< energy minimization interp in C */
 
 /** 
  * \brief Type of vertices (dofs) for C/F splitting

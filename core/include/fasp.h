@@ -33,7 +33,7 @@
  */
 #define DEBUG_MODE       OFF  /**< output DEBUG information */
 #define CHMEM_MODE       OFF  /**< output MEMORY usage information */
-#define DIAGONAL_PREF    OFF   /**< order each row such that diagonal appears first */
+#define DIAGONAL_PREF    OFF  /**< order each row such that diagonal appears first */
 
 /**
  * \brief For external software support

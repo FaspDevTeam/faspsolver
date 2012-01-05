@@ -109,7 +109,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 	REAL *p=work, *z=work+m, *r=z+m, *t=r+m, *rho=t+m;
 	REAL *vec=rho+m, *pp=vec+m, *sp=pp+m, *rp=sp+m;
 	
-	INT  iter=1; // iteration counter
+	INT  iter = 0; // iteration counter
     
 #if DEBUG_MODE
 	printf("fasp_solver_dcsr_pbcgs ...... [Start]\n");

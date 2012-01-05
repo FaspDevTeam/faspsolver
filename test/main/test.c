@@ -91,7 +91,7 @@ int main (int argc, const char * argv[])
     
 	// Assemble A and b -- P1 FE discretization for Poisson.
 	else if (problem_num == 19) {	
-        assemble(&A,&b, 10);
+        assemble(&A,&b,9);
         
         fasp_dcsr_compress_inplace(&A, SMALLREAL);
 	}
@@ -117,16 +117,8 @@ int main (int argc, const char * argv[])
     fasp_dvec_alloc(A.row, &uh); 
     fasp_dvec_set(A.row,&uh,0.0);
 	
-    // AMG as the iterative solver
-	if (itsolver_type == 0) {
-        
-        if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-		status = fasp_solver_amg(&A, &b, &uh, &amgparam); 
-    
-	}
-    
     // Preconditioned Krylov methods
-	else if ( (itsolver_type >= 1 && itsolver_type <= 5) || (itsolver_type == 9) || (itsolver_type == 10)) {
+    if ( itsolver_type >= 1 && itsolver_type <= 20) {
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
@@ -157,23 +149,30 @@ int main (int argc, const char * argv[])
         
 	}
     
+    // AMG as the iterative solver
+	else if (itsolver_type == SOLVER_AMG) {
+        if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+		status = fasp_solver_amg(&A, &b, &uh, &amgparam); 
+        
+	}
+
+    // Full AMG as the iterative solver 
+    else if (itsolver_type == SOLVER_FMG) {
+        if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+        status = fasp_solver_famg(&A, &b, &uh, &amgparam);
+    }
+    
 #if With_SuperLU // use SuperLU directly
-	else if (itsolver_type == 6) {
+	else if (itsolver_type == SOLVER_SUPERLU) {
 		status = superlu(&A, &b, &uh, print_level);	 
 	}
 #endif	 
 	
 #if With_UMFPACK // use UMFPACK directly
-	else if (itsolver_type == 7) {
+	else if (itsolver_type == SOLVER_UMFPACK) {
 		status = umfpack(&A, &b, &uh, print_level);	 
 	}
 #endif	 
-    
-    // Full AMG as the iterative solver 
-    else if (itsolver_type == 8) {
-        if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-        status = fasp_solver_famg(&A, &b, &uh, &amgparam);
-    }
     
 	else {
 		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);		
@@ -186,7 +185,7 @@ int main (int argc, const char * argv[])
 		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
 	}
 	else {
-		printf("\nSolver finished!\n\n", status);
+		printf("\nSolver finished successfully!\n\n", status);
 	}
     
     if (output_type) fclose (stdout);

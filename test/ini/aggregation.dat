@@ -4,17 +4,19 @@
 % must have spaces around the equal sign "="   %
 %----------------------------------------------%
 
-workdir  = ../data/  % work directory, no more than 128 characters
+workdir  = ../../data/  % work directory, no more than 128 characters
 problem_num    = 10     % Problem number 
-print_level    = 4      % How much information to print out 
+print_level    = 2      % How much information to print out 
  
 %----------------------------------------------%
 % parameters for iterative solvers             %
 %----------------------------------------------%
 
-itsolver_type  = 1      % Solver type:   0 AMG | 1 CG | 2 BiCGstab | 3 MinRes 
-                        %                4 GMRes | 5 vGMRes | 6 SuperLU | 7 UMFPACK
-			%		 8 FMG | 9 GCG | 10 vFGMRES 
+itsolver_type  = 1      % Solver type:   1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes
+                        %                5 vGMRes | 6 vFGMRes | 7 GCG
+			%                --------------------------------------
+                        %                21 AMG Solver | 22 FMG Solver
+                        %                31 SuperLU | 32 UMFPACK
 
 precond_type   = 2      % Precond type:  0 Null | 1 Diag | 2 AMG | 3 ILU  
                         %                4 FMG
@@ -39,8 +41,8 @@ ILU_permtol    = 0.001  % permutation toleration for ILUtp
 % parameters for AMG preconditioners           %
 %----------------------------------------------%
 
-AMG_type		 = UA     % C classic AMG | SA smoothed aggregation AMG | UA unsmoothed aggregation 
-AMG_cycle_type		 = NA     % V V-cycle | W W-cycle | A AMLI-cycle | NA Nonlinear AMLI-cycle
+AMG_type		 = UA    % C classic AMG | SA smoothed aggregation | UA unsmoothed aggregation 
+AMG_cycle_type		 = NA    % V V-cycle | W W-cycle | A AMLI-cycle | NA Nonlinear AMLI-cycle
 AMG_smoother             = GS    % GS | JACOBI | SGS | SOR | SSOR | GSOR | SGSOR | POLY   
 AMG_levels               = 20    % max number of levels
 AMG_ILU_levels           = 0     % number of levels using ILU smoother
@@ -69,12 +71,12 @@ AMG_max_row_sum          = 0.9   % max row sum
 %----------------------------------------------%
 
 AMG_strong_coupled	 = 0.08  % strong coupled threshold
-AMG_max_aggregation	 = 20     % max size of each aggregation 
-AMG_tentative_smooth	 = 0.67 % smooth factor for smoothing the tentative prolongation
+AMG_max_aggregation	 = 20    % max size of each aggregation 
+AMG_tentative_smooth	 = 0.67  % smooth factor for smoothing the tentative prolongation
 AMG_smooth_filter	 = OFF   % switch for filtered matrix for smoothing
 
 %----------------------------------------------%
 % parameters for GMRES method                  %
 %----------------------------------------------%
 
-itsolver_restart         = 20     % Restart number for GMRES
+itsolver_restart         = 20    % Restart number for GMRES

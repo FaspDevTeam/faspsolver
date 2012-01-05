@@ -262,7 +262,46 @@ int main (int argc, const char * argv[])
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
         check_solu(&x, &sol,tolerance);
-		
+
+        /* Using classical AMG as preconditioner for vGMRes */
+        printf("------------------------------------------------------------------\n");
+        printf("AMG preconditioned vGMRes solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_solver_init(&itparam);
+        fasp_param_amg_init(&amgparam);
+        itparam.itsolver_type = SOLVER_VGMRES;
+        itparam.print_level   = print_level;
+        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+
+        /* Using classical AMG as preconditioner for vFGMRes */
+        printf("------------------------------------------------------------------\n");
+        printf("AMG preconditioned vFGMRes solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_solver_init(&itparam);
+        fasp_param_amg_init(&amgparam);
+        itparam.itsolver_type = SOLVER_VFGMRES;
+        itparam.print_level   = print_level;
+        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+
+        /* Using classical AMG as preconditioner for GCG */
+        printf("------------------------------------------------------------------\n");
+        printf("AMG preconditioned GCG solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_solver_init(&itparam);
+        fasp_param_amg_init(&amgparam);
+        itparam.itsolver_type = SOLVER_GCG;
+        itparam.print_level   = print_level;
+        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+
 #if FASP_USE_ILU
         /* Using ILUk as preconditioner for CG */
         ILU_param      iluparam;
