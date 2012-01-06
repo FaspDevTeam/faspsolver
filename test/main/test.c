@@ -69,6 +69,7 @@ int main (int argc, const char * argv[])
 		strcat(filename1,datafile1);
 		datafile2="rhsP1.dat";
 		strcat(filename2,datafile2);
+        
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvecind_read(filename2, &b);
 	}	
@@ -88,6 +89,15 @@ int main (int argc, const char * argv[])
         
         fasp_dvec_free(&sol);
 	}	
+    
+    else if (problem_num == 12) {
+		datafile1="csrA_1023X1023.dat";
+		strcat(filename1,datafile1);
+		datafile2="rhs_1023X1023.dat";
+		strcat(filename2,datafile2);
+        
+        fasp_dcsrvec_read(filename1, filename2, &A, &b);
+    }
     
 	// Assemble A and b -- P1 FE discretization for Poisson.
 	else if (problem_num == 19) {	

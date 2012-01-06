@@ -65,7 +65,7 @@ int main (int argc, const char * argv[])
                 printf("\n=====================================================\n");        
 
                 // Read A and b from two files in IJ format. 
-                fasp_dcoovec_read("data/matFD.dat", "data/rhsFD.dat", &A, &b);
+                fasp_dcsrvec_read("data/matFD.dat", "data/rhsFD.dat", &A, &b);
                 
                 // Read ref. sol. from a non-indexed vec file.
                 fasp_dvecind_read("data/solFD.dat", &sol);

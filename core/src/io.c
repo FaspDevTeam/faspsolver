@@ -13,7 +13,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_dcoovec_read ( char *filemat, char *filerhs, dCSRmat *A, dvector *b )
+ * \fn void fasp_dcsrvec_read (char *filemat, char *filerhs, dCSRmat *A, dvector *b)
+ *
  * \brief Read A and b from two disk files
  *
  * \param *filemat  char for the matrix file name
@@ -22,7 +23,7 @@
  * \param *b        pointer to the dvector
  *
  * \note 
- * File format:
+ * CSR matrix file format:
  *   This routine reads a dCSRmat matrix and a dvector vector from a single disk file
  *   in the following format:
  * \par   
@@ -33,37 +34,42 @@
  *   ja(j), j=0:nnz-1  % column index
  * \par    
  *   a(j), j=0:nnz-1   % entry value
+ *
+ * \note
+ * RHS file format:
  * \par   
  *   n                 % number of entries
  * \par   
  *   b(j), j=0:nrow-1  % entry value
  *
- * \author Zhiyang Zhou, modified by Chensong Zhang
+ * \author Zhiyang Zhou
  * \date 2010/08/06
+ *
+ * \note Modified by Chensong Zhang on 2011/03/01
+ * \note Modified by Chensong Zhang on 2012/01/05
  */ 
-void fasp_dcoovec_read (char *filemat, 
+void fasp_dcsrvec_read (char *filemat, 
                         char *filerhs, 
                         dCSRmat *A, 
                         dvector *b )
 {
-	FILE *fp = NULL;
-	int i,n,nz;
-    int wall;
+	INT i,n,nz;
+    INT wall;
 	
 	/* read the matrix from file */ 
-	fp = fopen(filemat,"r");
+	FILE *fp = fopen(filemat,"r");
 	
 	if ( fp==NULL ) {
         printf("### ERROR: Opening file %s failed!\n",filemat);
 		exit(ERROR_OPEN_FILE);
 	}
 	
-	printf("fasp_dcoovec_read: reading file %s...\n", filemat);
+	printf("fasp_dcsrvec_read: reading file %s...\n", filemat);
 	
 	wall = fscanf(fp,"%d\n",&n);
 	A->row = n;
 	A->col = n;
-	A->IA = (int *)fasp_mem_calloc(n+1, sizeof(int));
+	A->IA = (INT *)fasp_mem_calloc(n+1, sizeof(int));
 	
 	for(i=0; i<n+1; ++i)
 	{ 
@@ -73,8 +79,8 @@ void fasp_dcoovec_read (char *filemat,
 	
 	nz = A->IA[n];
 	A->nnz = nz;
-	A->JA = (int *)fasp_mem_calloc(nz, sizeof(int));
-	A->val = (double *)fasp_mem_calloc(nz, sizeof(double));
+	A->JA = (INT *)fasp_mem_calloc(nz, sizeof(int));
+	A->val = (REAL *)fasp_mem_calloc(nz, sizeof(REAL));
 	
 	for(i=0; i<nz; ++i)
 	{ 
@@ -88,7 +94,7 @@ void fasp_dcoovec_read (char *filemat,
 	
 	/* Read the rhs from file */
 	b->row = n;
-	b->val = (double *)fasp_mem_calloc(n, sizeof(double));
+	b->val = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
 	
 	fp = fopen(filerhs,"r");
 	
@@ -97,7 +103,7 @@ void fasp_dcoovec_read (char *filemat,
 		exit(ERROR_OPEN_FILE);
 	}
 	
-	printf("fasp_dcoovec_read: reading file %s...\n", filerhs);
+	printf("fasp_dcsrvec_read: reading file %s...\n", filerhs);
 	
 	wall = fscanf(fp,"%d\n",&n);
 	
@@ -109,11 +115,13 @@ void fasp_dcoovec_read (char *filemat,
 	for(i=0; i<n; ++i) {
 		wall = fscanf(fp,"%le\n", &(b->val[i]));
 	}
+    
 	fclose(fp);
 }
 
 /**
- * \fn void fasp_dcoovec2_read (char *filename, dCSRmat *A, dvector *b)
+ * \fn void fasp_dcsrvec2_read (char *filename, dCSRmat *A, dvector *b)
+ *
  * \brief Read A and b from a SINGLE disk file
  *
  * \param *filename  char for file name
@@ -121,7 +129,7 @@ void fasp_dcoovec_read (char *filemat,
  * \param *b         pointer to the dvector
  *
  * \note 
- * File format:
+ * CSR matrix file format:
  *   This routine reads a dCSRmat matrix and a dvector vector from a single disk file.
  *   The difference between this and fasp_dcoovec_read is that this routine support
  *   non-square matrices. The file should be in the following format:
@@ -141,13 +149,14 @@ void fasp_dcoovec_read (char *filemat,
  * \author Xuehai Huang
  * \date 03/29/2009 
  */ 
-void fasp_dcoovec2_read (char *filename,
+void fasp_dcsrvec2_read (char *filename,
                          dCSRmat *A,
                          dvector *b)
 {
-	int i,m,n,nnz,idata; 
-	double ddata;
-	int wall;
+	INT  i,m,n,nnz,idata; 
+	INT  wall;
+	REAL ddata;
+    
 	// Open input disk file
 	FILE *fp=fopen(filename, "r");
 	
@@ -156,7 +165,7 @@ void fasp_dcoovec2_read (char *filename,
 		exit(ERROR_OPEN_FILE);
 	}
 	
-	printf("fasp_dcoovec2_read: reading file %s...\n", filename);
+	printf("fasp_dcsrvec2_read: reading file %s...\n", filename);
 	
 	// Read CSR matrix
 	wall = fscanf(fp, "%d %d", &m, &n);
@@ -171,7 +180,7 @@ void fasp_dcoovec2_read (char *filename,
 	nnz=A->IA[m]-A->IA[0];	 A->nnz=nnz;
 	
 	A->JA=(int*)fasp_mem_calloc(nnz, sizeof(int));	
-	A->val=(double*)fasp_mem_calloc(nnz, sizeof(double));
+	A->val=(REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
 	
 	for (i=0;i<nnz;++i) {
 		wall = fscanf(fp, "%d", &idata);
@@ -183,11 +192,11 @@ void fasp_dcoovec2_read (char *filename,
 		A->val[i]=ddata;
 	}
 	
-	// Read vector
+	// Read RHS vector
 	wall = fscanf(fp, "%d", &m, &i);
 	b->row=m;
 	
-	b->val=(double*)fasp_mem_calloc(m, sizeof(double));
+	b->val=(REAL*)fasp_mem_calloc(m, sizeof(REAL));
 	
 	for (i=0;i<m;++i) {
 		wall = fscanf(fp, "%lf", &ddata);
@@ -199,6 +208,7 @@ void fasp_dcoovec2_read (char *filename,
 
 /**
  * \fn void fasp_dcoo_read(char *filename, dCSRmat *A)
+ *
  * \brief Read A from matrix disk file in IJ format -- indices starting from 0
  *
  * \param *filename  char for matrix file name
@@ -220,10 +230,9 @@ void fasp_dcoovec2_read (char *filename,
 void fasp_dcoo_read (char *filename, 
                      dCSRmat *A)
 {
-    
-	int i,j,k,m,n,nnz;
-	double value;	
-	int wall;
+	INT  i,j,k,m,n,nnz;
+	INT  wall;
+	REAL value;	
     
 	FILE *fp=fopen(filename,"r");
 	
@@ -251,11 +260,11 @@ void fasp_dcoo_read (char *filename,
 	
 	fasp_format_dcoo_dcsr(&Atmp,A); 
 	fasp_dcoo_free(&Atmp);
-	
 }
 
 /**
  * \fn void fasp_dmtx_read(char *filename, dCSRmat *A)
+ *
  * \brief Read A from matrix disk file in MatrixMarket general format
  *
  * \param *filename  char for matrix file name
@@ -273,10 +282,9 @@ void fasp_dcoo_read (char *filename,
 void fasp_dmtx_read (char *filename, 
                      dCSRmat *A)
 {
-    
-	int i,j,m,n,nnz;
-	double value;	
-    int innz; // index of nonzeros
+	INT  i,j,m,n,nnz;
+    INT  innz; // index of nonzeros
+	REAL value;	
     
 	FILE *fp=fopen(filename,"r");
 	
@@ -306,17 +314,16 @@ void fasp_dmtx_read (char *filename,
 			printf("### ERROR: Wrong file format!\n"); exit(ERROR_WRONG_FILE);
 		}
 	}
-	
-    
+	    
 	fclose(fp);
 	
 	fasp_format_dcoo_dcsr(&Atmp,A); 
 	fasp_dcoo_free(&Atmp);
-	
 }
 
 /**
  * \fn void fasp_dmtxsym_read(char *filename, dCSRmat *A)
+ *
  * \brief Read A from matrix disk file in MatrixMarket sym format
  *
  * \param *filename  char for matrix file name
@@ -334,10 +341,9 @@ void fasp_dmtx_read (char *filename,
 void fasp_dmtxsym_read (char *filename, 
                         dCSRmat *A)
 {
-    
-	int i,j,m,n,nnz;
-	double value;	
-    int innz; // index of nonzeros
+	INT  i,j,m,n,nnz;
+    INT  innz; // index of nonzeros
+	REAL value;	
     
 	FILE *fp=fopen(filename,"r");
 	
@@ -377,17 +383,16 @@ void fasp_dmtxsym_read (char *filename,
 			printf("### ERROR: Wrong file format!\n"); exit(ERROR_WRONG_FILE);
 		}
 	}
-	
     
 	fclose(fp);
 	
 	fasp_format_dcoo_dcsr(&Atmp,A); 
-	fasp_dcoo_free(&Atmp);
-	
+	fasp_dcoo_free(&Atmp);	
 }
 
 /**
  * \fn void fasp_dstr_read (char *filename, dSTRmat *A)
+ *
  * \brief Read A from a disk file in dSTRmat format
  *
  * \param *filename  char for vector file name
@@ -419,11 +424,9 @@ void fasp_dmtxsym_read (char *filename,
 void fasp_dstr_read (char *filename,
                      dSTRmat *A)
 {
-	
-	int nx, ny, nz, nxy, ngrid, nband, nc, offset;
-	double value;
-	int i, k, n;
-	int wall;
+	INT  nx, ny, nz, nxy, ngrid, nband, nc, offset;
+	INT  i, k, n, wall;
+	REAL value;
     
 	FILE *fp=fopen(filename,"r");
 	
@@ -450,7 +453,7 @@ void fasp_dstr_read (char *filename,
 	
 	// read diagonal	
 	wall = fscanf(fp, "%d", &n);
-	A->diag=(double *)fasp_mem_calloc(n, sizeof(double));
+	A->diag=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
 	for (i=0;i<n;++i) {
 		wall = fscanf(fp, "%le", &value);
 		A->diag[i]=value;
@@ -458,12 +461,12 @@ void fasp_dstr_read (char *filename,
 	
 	// read offdiags
 	k = nband;
-	A->offdiag=(double **)fasp_mem_calloc(nband, sizeof(double *));
+	A->offdiag=(REAL **)fasp_mem_calloc(nband, sizeof(REAL *));
 	while (k--){
 		wall = fscanf(fp,"%d %d",&offset,&n); // read number band k
 		A->offsets[nband-k-1]=offset;
 		
-		A->offdiag[nband-k-1]=(double *)fasp_mem_calloc(n, sizeof(double));
+		A->offdiag[nband-k-1]=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
 		for (i=0;i<n;++i) {
 			wall = fscanf(fp, "%le", &value);
 			A->offdiag[nband-k-1][i]=value;
@@ -475,6 +478,7 @@ void fasp_dstr_read (char *filename,
 
 /**
  * \fn void fasp_dbsr_read (char *filename, dBSRmat *A)
+ *
  * \brief Read A from a disk file in dBSRmat format
  *
  * \param *filename char for vector file name
@@ -509,13 +513,10 @@ void fasp_dstr_read (char *filename,
  */
 void fasp_dbsr_read (char *filename, dBSRmat *A)
 {
-	
-	int ROW, COL, NNZ, nb, storage_manner;
-	int i, n;
-	
-	int index;
-	double value;
-	int wall;
+	INT  ROW, COL, NNZ, nb, storage_manner;
+	INT  i, n;
+	INT  index, wall;
+	REAL value;
     
 	FILE *fp=fopen(filename,"r");
 	
@@ -564,6 +565,7 @@ void fasp_dbsr_read (char *filename, dBSRmat *A)
 
 /**
  * \fn void fasp_dvecind_read (char *filename, dvector *b)
+ *
  * \brief Read b from matrix disk file in IJ format
  *
  * \param *filename  char for vector file name
@@ -583,10 +585,8 @@ void fasp_dbsr_read (char *filename, dBSRmat *A)
 void fasp_dvecind_read (char *filename,
                         dvector *b)
 {
-	
-	int i, n, index;
-	double value;
-	int wall;
+	INT  i, n, index, wall;
+	REAL value;
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
@@ -612,6 +612,7 @@ void fasp_dvecind_read (char *filename,
 
 /**
  * \fn void fasp_dvec_read(char *filename, dvector *b)
+ *
  * \brief Read b from a disk file in array format
  *
  * \param *filename char for vector file name
@@ -632,11 +633,9 @@ void fasp_dvec_read (char *filename,
                      dvector *b)
 {
     
-	int i, n;
-	
-	double value;
-	int wall;
-    
+	INT  i, n, wall;
+    REAL value;
+
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
@@ -659,6 +658,7 @@ void fasp_dvec_read (char *filename,
 
 /**
  * \fn void fasp_ivecind_read (char *filename, ivector *b)
+ *
  * \brief Read b from matrix disk file in IJ format
  *
  * \param *filename char for vector file name
@@ -678,9 +678,8 @@ void fasp_dvec_read (char *filename,
 void fasp_ivecind_read (char *filename, 
                         ivector *b)
 {
-    
- 	int i, n, index, value;
-	int wall;
+ 	INT i, n, index, value;
+	INT wall;
     
 	FILE *fp=fopen(filename,"r");
 	
@@ -704,6 +703,7 @@ void fasp_ivecind_read (char *filename,
 
 /**
  * \fn void fasp_ivec_read (char *filename, ivector *b)
+ *
  * \brief Read b from a disk file in array format
  *
  * \param *filename char for vector file name
@@ -723,10 +723,7 @@ void fasp_ivecind_read (char *filename,
 void fasp_ivec_read (char *filename, 
                      ivector *b)
 {
-	
-	int i, n;
-	int value;
-	int wall;
+	INT i, n, value, wall;
     
 	FILE *fp=fopen(filename,"r");
 	
@@ -750,6 +747,7 @@ void fasp_ivec_read (char *filename,
 
 /**
  * \fn void fasp_dcsr_write (char *filename, dCSRmat *A)
+ *
  * \brief Write a matrix to disk file in IJ format (coordinate format)
  *
  * \param *A         pointer to the dCSRmat matrix
@@ -757,7 +755,7 @@ void fasp_ivec_read (char *filename,
  *
  * \note
  * File format: 
- *	 The routine writes the specified double vector in COO format. 
+ *	 The routine writes the specified REAL vector in COO format. 
  *   The first line of the file gives the number of rows and the 
  *   number of columns. And then gives nonzero values in i,j,a(i,j)
  *   order. Refer to the reading subroutine \ref fasp_dcoo_read.
@@ -768,8 +766,8 @@ void fasp_ivec_read (char *filename,
 void fasp_dcsr_write (char *filename, 
                       dCSRmat *A)
 {     
-    unsigned int m=A->row, n=A->col;
-    int i, j;
+    const INT m=A->row, n=A->col;
+    INT i, j;
     
 	FILE *fp=fopen(filename, "w");
 	
@@ -791,6 +789,7 @@ void fasp_dcsr_write (char *filename,
 
 /**
  * \fn void fasp_dstr_write (char *filename, dSTRmat *A)
+ *
  * \brief Write a dSTRmat to a disk file
  *
  * \param *filename  char for vector file name
@@ -798,7 +797,7 @@ void fasp_dcsr_write (char *filename,
  *
  * \note
  * File format: 
- *	 The routine writes the specified double vector in STR format. 
+ *	 The routine writes the specified REAL vector in STR format. 
  *   Refer to the reading subroutine \ref fasp_dstr_read.
  *
  * \author Shiquan Zhang
@@ -807,11 +806,12 @@ void fasp_dcsr_write (char *filename,
 void fasp_dstr_write (char *filename, 
                       dSTRmat *A)
 {
-	const int nx=A->nx, ny=A->ny, nz=A->nz;
-	const int ngrid=A->ngrid, nband=A->nband, nc=A->nc;
-	int *offsets=A->offsets;
+	const INT nx=A->nx, ny=A->ny, nz=A->nz;
+	const INT ngrid=A->ngrid, nband=A->nband, nc=A->nc;
 	
-	unsigned int i, k, n;
+    INT *offsets=A->offsets;
+	
+	unsigned INT i, k, n;
 	
 	FILE *fp=fopen(filename,"w");
 	
@@ -836,7 +836,7 @@ void fasp_dstr_write (char *filename,
 	// write offdiags
 	k = nband;
 	while (k--){
-		int offset=offsets[nband-k-1];
+		INT offset=offsets[nband-k-1];
 		n=(ngrid-ABS(offset))*nc*nc; // number of nonzeros in each band
 		fprintf(fp,"%d  %d\n",offset,n); // read number band k
 		for (i=0;i<n;++i) {
@@ -849,6 +849,7 @@ void fasp_dstr_write (char *filename,
 
 /**
  * \fn void fasp_dbsr_write (char *filename, dBSRmat *A)
+ *
  * \brief Write a dBSRmat to a disk file
  *
  * \param *filename char for vector file name
@@ -856,7 +857,7 @@ void fasp_dstr_write (char *filename,
  *
  * \note
  * File format: 
- *	 The routine writes the specified double vector in BSR format. 
+ *	 The routine writes the specified REAL vector in BSR format. 
  *   Refer to the reading subroutine \ref fasp_dbsr_read.
  *
  * \author Shiquan Zhang
@@ -865,14 +866,14 @@ void fasp_dstr_write (char *filename,
 void fasp_dbsr_write (char *filename, 
                       dBSRmat *A)
 {
-	const int ROW = A->ROW, COL = A->COL, NNZ = A->NNZ;
-	const int nb = A->nb, storage_manner = A->storage_manner;
+	const INT ROW = A->ROW, COL = A->COL, NNZ = A->NNZ;
+	const INT nb = A->nb, storage_manner = A->storage_manner;
 	
-	int *ia = A->IA;
-	int *ja = A->JA;
-	double *val = A->val;
+	INT  *ia  = A->IA;
+	INT  *ja  = A->JA;
+	REAL *val = A->val;
 	
-	unsigned int i, n;
+	unsigned INT i, n;
 	
 	FILE *fp=fopen(filename,"w");
 	
@@ -909,6 +910,7 @@ void fasp_dbsr_write (char *filename,
 
 /**
  * \fn void fasp_dvec_write (char *filename, dvector *vec)
+ *
  * \brief Write a dvector to disk file in IJ format (coordinate format)
  *
  * \param *vec       pointer to the dvector
@@ -917,7 +919,7 @@ void fasp_dbsr_write (char *filename,
  * \note
  * File format: 
  *
- *	 The routine writes the specified double vector in IJ format. 
+ *	 The routine writes the specified REAL vector in IJ format. 
  *   The first line of the file is the length of the vector;
  *   and after that, each line gives index and value of the entries.    
  *
@@ -927,7 +929,7 @@ void fasp_dbsr_write (char *filename,
 void fasp_dvec_write (char *filename,
                       dvector *vec)
 {
-	int m = vec->row, i;
+	INT m = vec->row, i;
 	
 	FILE *fp=fopen(filename,"w");
     
@@ -947,6 +949,7 @@ void fasp_dvec_write (char *filename,
 
 /**
  * \fn void fasp_ivec_write (char *filename, dvector *vec)
+ *
  * \brief Write a ivector to disk file in IJ format (coordinate format)
  *
  * \param *vec       pointer to the dvector
@@ -955,7 +958,7 @@ void fasp_dvec_write (char *filename,
  * \note
  * File format: 
  *
- *	 The routine writes the specified double vector in IJ format. 
+ *	 The routine writes the specified REAL vector in IJ format. 
  *   The first line of the file is the length of the vector;
  *   and after that, each line gives index and value of the entries.  
  *
@@ -965,7 +968,7 @@ void fasp_dvec_write (char *filename,
 void fasp_ivec_write (char *filename, 
                       ivector *vec)
 {
-	int m = vec->row, i;
+	INT m = vec->row, i;
 	
 	FILE *fp=fopen(filename,"w");
     
@@ -984,7 +987,8 @@ void fasp_ivec_write (char *filename,
 }
 
 /**
- * \fn void fasp_dvec_print (int n, dvector *u) 
+ * \fn void fasp_dvec_print (INT n, dvector *u) 
+ *
  * \brief Print first n entries of a dvector
  *
  * \param  n   an interger (if n=0, then print all entries)
@@ -992,33 +996,34 @@ void fasp_ivec_write (char *filename,
  *
  * \note
  * File format:
- *   The routine prints a dvector double vector type to the screen.
+ *   The routine prints a dvector REAL vector type to the screen.
  * 
  * \par
- *   [i  u_i], i = index, u_i = i-th entry in double
+ *   [i  u_i], i = index, u_i = i-th entry in REAL
  *
  * \author Chensong Zhang
  * \date 03/29/2009 
  */
-void fasp_dvec_print (int n, 
+void fasp_dvec_print (INT n, 
                       dvector *u) 
 {
-	unsigned int i;	
+	unsigned INT i;	
 	
 	if (n<=0) n=u->row;
 	for (i=0;i<n;++i) printf("vec_%d = %+.10E\n",i,u->val[N2C(i)]);
 }
 
 /**
- * \fn void fasp_ivec_print (int n, ivector *u) 
- * \brief Print first n entries of an ivector of int type
+ * \fn void fasp_ivec_print (INT n, ivector *u) 
+ *
+ * \brief Print first n entries of an ivector of INT type
  *
  * \param  n   an interger (if n=0, then print all entries)
  * \param *u   pointer to an ivector
  *
  * \note
  * File format:
- *   The routine prints an ivector double vector type to the screen.
+ *   The routine prints an ivector REAL vector type to the screen.
  *
  * \par
  *   [i  u_i], i = index, u_i = i-th entry in int
@@ -1026,10 +1031,10 @@ void fasp_dvec_print (int n,
  * \author Chensong Zhang
  * \date 03/29/2009 
  */
-void fasp_ivec_print (int n, 
+void fasp_ivec_print (INT n, 
                       ivector *u) 
 {
-	unsigned int i;	
+	unsigned INT i;	
 	
 	if (n<=0) n=u->row;
 	for (i=0;i<n;++i) printf("vec_%d = %d\n",i,u->val[N2C(i)]);
@@ -1037,13 +1042,14 @@ void fasp_ivec_print (int n,
 
 /**
  * \fn void fasp_dcsr_print (dCSRmat *A)
+ *
  * \brief Print out a dCSRmat matrix in IJ format (coordinate format)
  *
  * \param *A pointer to the dCSRmat matrix
  *
  * \note
  * File format: 
- *	 The routine prints the specified double vector in IJ format. 
+ *	 The routine prints the specified REAL vector in IJ format. 
  *   The first line of the file gives the number of rows and the number 
  *   of columns. And then gives nonzero values in i,j,a(i,j) order.
  *
@@ -1057,8 +1063,8 @@ void fasp_ivec_print (int n,
  */
 void fasp_dcsr_print (dCSRmat *A)
 {     
-    const int m=A->row, n=A->col;
-    int i, j;
+    const INT m=A->row, n=A->col;
+    INT i, j;
 	
 	printf("nrow = %d, ncol = %d, nnz = %d\n",m,n,A->nnz);	
     for (i = 0; i < m; ++i) {

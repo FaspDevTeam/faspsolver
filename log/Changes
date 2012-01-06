@@ -42,3 +42,5 @@
 11/22/2011 FASP 0.3.5: Improve efficiency for 2 phase oil reservoir simulation. Fix a few warnings from VS2008. Add Debug mode to VS2008 solutions.
 
 12/14/2011 FASP 0.4.1: Start to restructure the code; start to add INT and REAL. Bug fix: a divide-by-zero in BiCGstab might occur -- add safe-net. Bug fix: coarse level solver could fail -- add safe-net. 
+
+01/05/2012 FASP 0.4.2: Add nonlinear AMLI-cycle.

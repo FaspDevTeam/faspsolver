@@ -968,12 +968,12 @@ int fasp_BinarySearch(int *list, int value, int list_length);
 
 /*-------- In file: io.c --------*/
 
-void fasp_dcoovec_read (char *filemat, 
+void fasp_dcsrvec_read (char *filemat, 
                         char *filerhs, 
                         dCSRmat *A, 
                         dvector *b );
 
-void fasp_dcoovec2_read (char *filename,
+void fasp_dcsrvec2_read (char *filename,
                          dCSRmat *A,
                          dvector *b);
 
