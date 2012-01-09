@@ -130,7 +130,10 @@ void fasp_solver_amli (AMG_data *mgl,
                        AMG_param *param, 
                        INT level);
 
-void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_levels);
+void fasp_solver_nl_amli (AMG_data *mgl, 
+                          AMG_param *param, 
+                          INT level, 
+                          INT num_levels);
 
 void fasp_amg_amli_coef (REAL lambda_max, 
                          REAL lambda_min, 
@@ -1250,7 +1253,7 @@ void fasp_solver_mgcycle_omp (AMG_data *mgl,
 
 /*-------- In file: multigrid.c --------*/
 
-void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, int level);
+void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level);
 
 
 /*-------- In file: ordering.c --------*/

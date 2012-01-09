@@ -1,7 +1,7 @@
 /*! \file amli.c
  *  \brief Abstract Algebraic Multilevel Iteration (recursive version)
  *
- *  TODO: Need a non-recursive version too. --Chensong 
+ *  TODO: Need a non-recursive version. --Chensong 
  */
 
 #include <math.h>
@@ -9,6 +9,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "mg_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -30,18 +31,17 @@ void fasp_solver_amli (AMG_data *mgl,
                        AMG_param *param, 
                        INT level)
 {	
-    const INT  amg_type=param->AMG_type;
-	const REAL relax = param->relaxation;
-    const INT  print_level = param->print_level;
-	const INT  smoother = param->smoother;
-	const INT  degree= param->amli_degree;
-	const INT  ndeg = 3;
+    const SHORT  amg_type=param->AMG_type;
+    const SHORT  print_level = param->print_level;
+	const SHORT  smoother = param->smoother;
+	const SHORT  smooth_order = param->smooth_order;
+	const SHORT  degree= param->amli_degree;
+	const REAL   relax = param->relaxation;
     
     // local variables
-	//INT    p_type = 1;
 	REAL   alpha  = 1.0;
 	REAL * coef   = param->amli_coef;
-		
+    
 	dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x; // fine level b and x
 	dvector *b1 = &mgl[level+1].b, *e1 = &mgl[level+1].x; // coarse level b and x
 	
@@ -50,12 +50,16 @@ void fasp_solver_amli (AMG_data *mgl,
 	const INT m0 = A_level0->row, m1 = A_level1->row;
 	
 	ILU_data *LU_level = &mgl[level].LU; // fine level ILU decomposition
-	REAL *r = mgl[level].w.val, *r1 = mgl[level+1].w.val+m1;
+	REAL *r = mgl[level].w.val, *r1 = mgl[level+1].w.val+m1; // for residual
+    INT *ordering = mgl[level].cfmark.val; // for smoother ordering
 	
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_amli ...... [Start]\n");
+    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+#endif
+    
 	if (print_level>=PRINT_MOST) printf("AMLI level %d, pre-smoother %d.\n", level, smoother);
 	
-    //if (param->tentative_smooth < SMALLREAL) p_type = 0;
-
 	if (level < mgl[level].num_levels-1) { 
 		
 		// pre smoothing
@@ -63,48 +67,8 @@ void fasp_solver_amli (AMG_data *mgl,
 			fasp_smoother_dcsr_ilu(A_level0, b0, e0, LU_level);
 		}
 		else {
-			unsigned INT steps = param->presmooth_iter;
-			switch (smoother) {
-				case GS:
-					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
-					break;
-				case POLY:
-					fasp_smoother_dcsr_poly(A_level0, b0, e0, m0, ndeg, steps); 
-					break;
-				case JACOBI:
-					fasp_smoother_dcsr_jacobi(e0, 0, m0-1, 1, A_level0, b0, steps);
-					break;
-				case SGS:
-					fasp_smoother_dcsr_sgs(e0, A_level0, b0, steps);
-					break;
-				case SOR:
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					break;
-				case SSOR:
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
-					break;
-				case GSOR:
-					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
-					fasp_smoother_dcsr_sor(e0, m0-1, 0, -1, A_level0, b0, steps, relax);
-					break;
-				case SGSOR:
-					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
-					fasp_smoother_dcsr_gs(e0, m0-1, 0,-1, A_level0, b0, steps);
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
-					break;
-				case L1_DIAG:
-					fasp_smoother_dcsr_L1diag(e0, 0, m0-1, 1, A_level0, b0, steps);
-					break;
-				case CG:
-					//fasp_solver_dcsr_pcg(&mgl[l].A, &mgl[l].b, &mgl[l].x, pow(6,l), 1e-3, NULL, 0, 1);
-					fasp_solver_dcsr_pcg(A_level0, b0, e0, 1, 1e-3, NULL, 0, 1);
-					break;
-				default:
-					printf("### ERROR: Wrong smoother type %d!\n", smoother); 
-                    exit(ERROR_INPUT_PAR);
-			}
+            fasp_dcsr_presmoothing(smoother,A_level0,b0,e0,param->presmooth_iter,
+                                   0,m0-1,1,relax,smooth_order,ordering);
 		}
 		
 		// form residual r = b - A x
@@ -115,11 +79,9 @@ void fasp_solver_amli (AMG_data *mgl,
 		switch (amg_type)
 		{		
 			case UA_AMG: 
-				fasp_blas_dcsr_mxv_agg(&mgl[level].R, r, b1->val);
-				break;
+				fasp_blas_dcsr_mxv_agg(&mgl[level].R, r, b1->val); break;
 			default:
-				fasp_blas_dcsr_mxv(&mgl[level].R, r, b1->val);
-				break;
+				fasp_blas_dcsr_mxv(&mgl[level].R, r, b1->val); break;
 		}
 		
         // coarse grid correction
@@ -144,13 +106,14 @@ void fasp_solver_amli (AMG_data *mgl,
 			fasp_solver_amli(mgl, param, level+1);
 		}
 		
-		// prolongation e0 = e0 + coef(ncoef) * P * e1
+		// find the optimal scaling factor alpha
 		fasp_blas_array_ax(m1, coef[degree], e1->val);
 		if ( param->coarse_scaling == ON ) {
 			alpha = fasp_blas_array_dotprod(m1, e1->val, r1) 
-                  / fasp_blas_dcsr_vmv(A_level1, e1->val, e1->val);
+            / fasp_blas_dcsr_vmv(A_level1, e1->val, e1->val);
 		}
 		
+		// prolongation e0 = e0 + alpha * P * e1
 		switch (amg_type)
 		{
 			case UA_AMG:
@@ -166,52 +129,14 @@ void fasp_solver_amli (AMG_data *mgl,
 			fasp_smoother_dcsr_ilu(A_level0, b0, e0, LU_level);
 		}
 		else {
-			unsigned INT steps = param->postsmooth_iter;
-			switch (smoother) {
-				case GS:
-					fasp_smoother_dcsr_gs(e0, m0-1, 0, -1, A_level0, b0, steps); 
-					break;
-				case POLY:
-					fasp_smoother_dcsr_poly(A_level0, b0, e0, m0, ndeg, steps); 
-					break;
-				case JACOBI:
-					fasp_smoother_dcsr_jacobi(e0, m0-1, 0, -1, A_level0, b0, steps);
-					break;					
-				case SGS:
-					fasp_smoother_dcsr_sgs(e0, A_level0, b0, steps);
-					break;
-				case SOR:
-					fasp_smoother_dcsr_sor(e0, m0-1, 0, -1, A_level0, b0, steps, relax);
-					break;
-				case SSOR:
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
-					break;
-				case GSOR:
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_gs(e0, m0-1, 0, -1, A_level0, b0, steps);
-					break;
-				case SGSOR:
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
-					fasp_smoother_dcsr_gs(e0, m0-1, 0,-1, A_level0, b0, steps);
-					break;
-				case L1_DIAG:
-					fasp_smoother_dcsr_L1diag(e0, m0-1, 0, -1, A_level0, b0, steps);
-					break;
-				case CG:
-					//fasp_solver_dcsr_pcg(&mgl[l].A, &mgl[l].b, &mgl[l].x, pow(6,l), 1e-3, NULL, 0, 1);
-					fasp_solver_dcsr_pcg(A_level0, b0, e0, 1, 1e-3, NULL, 0, 1);
-					break;
-				default:
-					printf("### ERROR: Wrong smoother type %d!\n", smoother); 
-                    exit(ERROR_INPUT_PAR);
-			}
+            fasp_dcsr_postsmoothing(smoother,A_level0,b0,e0,param->postsmooth_iter,
+                                    m0-1,0,-1,relax,smooth_order,ordering);
 		}
 		
 	}
-	else // coarsest level solver
+    
+    // coarsest level solver
+	else 
 	{
 #if With_DISOLVE 
         /* use Direct.lib in Windows */
@@ -225,23 +150,15 @@ void fasp_solver_amli (AMG_data *mgl,
 		superlu(A_level0, b0, e0, 0);
 #else	
 		/* use iterative solver on the coarest level */
-		const INT csize = A_level0->row;
-		const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
-		REAL ctol = param->tol; // coarse level tolerance
-        
-		INT flag = fasp_solver_dcsr_pcg(A_level0, b0, e0, cmaxit, ctol, NULL, 0, 1);
-		
-        if (flag < 0) { // If PCG does not converge, use BiCGstab as a saft net.
-            flag = fasp_solver_dcsr_pvgmres (A_level0, b0, e0, cmaxit, ctol, NULL, 0, 1, 25);
-        }
-        
-		if ( flag < 0 && print_level > PRINT_MIN ) {
-			printf("### WARNING: coarse level solver does not converge in %d steps!\n", cmaxit);
-		}
+        fasp_coarse_itsolver(A_level0, b0, e0, param->tol, print_level);
 #endif 
 	}
 	
 	if (print_level>=PRINT_MOST) printf("AMLI level %d, post-smoother %d.\n", level, smoother);
+    
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_amli ...... [Finish]\n");
+#endif
 }
 
 /**
@@ -256,14 +173,17 @@ void fasp_solver_amli (AMG_data *mgl,
  * \author Xiaozhe Hu
  * \date 04/06/2010
  */
-void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_levels)
+void fasp_solver_nl_amli (AMG_data *mgl, 
+                          AMG_param *param, 
+                          INT level, 
+                          INT num_levels)
 {	
-    const INT  amg_type=param->AMG_type;
-	const INT print_level = param->print_level;
-	const INT smoother = param->smoother;
-	const INT cycle_type = param->cycle_type;
-	const INT ndeg = 3;
-	const REAL relax = param->relaxation;
+    const SHORT  amg_type=param->AMG_type;
+	const SHORT  print_level = param->print_level;
+	const SHORT  smoother = param->smoother;
+	const SHORT  smooth_order = param->smooth_order;
+	const SHORT  cycle_type = param->cycle_type;
+	const REAL   relax = param->relaxation;
 	
 	dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x; // fine level b and x
 	dvector *b1 = &mgl[level+1].b, *e1 = &mgl[level+1].x; // coarse level b and x
@@ -273,12 +193,19 @@ void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_lev
 	const INT m0 = A_level0->row, m1 = A_level1->row;
 	
 	ILU_data *LU_level = &mgl[level].LU; // fine level ILU decomposition
-	REAL *r = mgl[level].w.val; 
+	REAL *r = mgl[level].w.val; // for residual
+    INT *ordering = mgl[level].cfmark.val; // for smoother ordering
+    
 	dvector uH, bH;  // for coarse level correction
 	uH.row = m1; uH.val = mgl[level+1].w.val + m1;
 	bH.row = m1; bH.val = mgl[level+1].w.val + 2*m1;
 	
-	if (print_level>8) printf("MG level %d, pre-smoother %d.\n", level, smoother);
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_nl_amli ...... [Start]\n");
+    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+#endif
+	
+	if (print_level>=PRINT_MOST) printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
 	
 	if (level < num_levels-1) { 
 		
@@ -287,40 +214,8 @@ void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_lev
 			fasp_smoother_dcsr_ilu(A_level0, b0, e0, LU_level);
 		}
 		else {
-			unsigned int steps = param->presmooth_iter;
-			switch (smoother) {
-				case GS:
-					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
-					break;
-				case POLY:
-					fasp_smoother_dcsr_poly(A_level0, b0, e0, m0, ndeg, steps); 
-					break;
-				case JACOBI:
-					fasp_smoother_dcsr_jacobi(e0, 0, m0-1, 1, A_level0, b0, steps);
-					break;
-				case SGS:
-					fasp_smoother_dcsr_sgs(e0, A_level0, b0, steps);
-					break;
-				case SOR:
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					break;
-				case SSOR:
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
-					break;
-				case GSOR:
-					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
-					fasp_smoother_dcsr_sor(e0, m0-1, 0, -1, A_level0, b0, steps, relax);
-					break;
-				case SGSOR:
-					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
-					fasp_smoother_dcsr_gs(e0, m0-1, 0,-1, A_level0, b0, steps);
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
-					break;
-				default:
-					printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
-			}
+            fasp_dcsr_presmoothing(smoother,A_level0,b0,e0,param->presmooth_iter,
+                                   0,m0-1,1,relax,smooth_order,ordering);
 		}
 		
 		// form residual r = b - A x
@@ -408,40 +303,8 @@ void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_lev
 			fasp_smoother_dcsr_ilu(A_level0, b0, e0, LU_level);
 		}
 		else {
-			unsigned int steps = param->postsmooth_iter;
-			switch (smoother) {
-				case GS:
-					fasp_smoother_dcsr_gs(e0, m0-1, 0, -1, A_level0, b0, steps); 
-					break;
-				case POLY:
-					fasp_smoother_dcsr_poly(A_level0, b0, e0, m0, ndeg, steps); 
-					break;
-				case JACOBI:
-					fasp_smoother_dcsr_jacobi(e0, m0-1, 0, -1, A_level0, b0, steps);
-					break;					
-				case SGS:
-					fasp_smoother_dcsr_sgs(e0, A_level0, b0, steps);
-					break;
-				case SOR:
-					fasp_smoother_dcsr_sor(e0, m0-1, 0, -1, A_level0, b0, steps, relax);
-					break;
-				case SSOR:
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
-					break;
-				case GSOR:
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_gs(e0, m0-1, 0, -1, A_level0, b0, steps);
-					break;
-				case SGSOR:
-					fasp_smoother_dcsr_sor(e0, 0, m0-1, 1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_sor(e0, m0-1, 0,-1, A_level0, b0, steps, relax);
-					fasp_smoother_dcsr_gs(e0, 0, m0-1, 1, A_level0, b0, steps);
-					fasp_smoother_dcsr_gs(e0, m0-1, 0,-1, A_level0, b0, steps);
-					break;
-				default:
-					printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
-			}
+            fasp_dcsr_postsmoothing(smoother,A_level0,b0,e0,param->postsmooth_iter,
+                                    m0-1,0,-1,relax,smooth_order,ordering);
 		}
 		
 	}
@@ -460,23 +323,15 @@ void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_lev
 		superlu(A_level0, b0, e0, 0);
 #else	
 		/* use iterative solver on the coarest level */
-		const INT csize = A_level0->row;
-		const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
-		REAL ctol = param->tol; // coarse level tolerance
-        
-		INT flag = fasp_solver_dcsr_pcg(A_level0, b0, e0, cmaxit, ctol, NULL, 0, 1);
-		
-        if (flag < 0) { // If PCG does not converge, use BiCGstab as a saft net.
-            flag = fasp_solver_dcsr_pvgmres (A_level0, b0, e0, cmaxit, ctol, NULL, 0, 1, 25);
-        }
-        
-		if ( flag < 0 && print_level > PRINT_MIN ) {
-			printf("### WARNING: coarse level solver does not converge in %d steps!\n", cmaxit);
-		}
+        fasp_coarse_itsolver(A_level0, b0, e0, param->tol, print_level);
 #endif 
 	}
 	
-	if (print_level>8) printf("MG level %d, post-smoother %d.\n", level, smoother);
+	if (print_level>=PRINT_MOST) printf("Nonlinear AMLI level %d, post-smoother %d.\n", level, smoother);
+    
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_nl_amli ...... [Finish]\n");
+#endif
 }
 
 /**
@@ -490,8 +345,6 @@ void fasp_solver_nl_amli(AMG_data *mgl, AMG_param *param, INT level, INT num_lev
  * 
  * \author Xiaozhe Hu
  * \date 01/23/2011
- *
- * \note: This might be only a static function? --Chensong
  */
 void fasp_amg_amli_coef (REAL lambda_max, 
                          REAL lambda_min, 

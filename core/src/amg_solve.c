@@ -134,7 +134,7 @@ SHORT fasp_amg_solve_amli (AMG_data *mgl,
     
 	while ((++iter <= MaxIt) & (sumb > SMALLREAL)) // MG solver here
 	{	
-		// Call one multigrid cycle
+		// Call one AMLI cycle
 		fasp_solver_amli(mgl, param, 0); 
 		
 		// Form residual r = b-A*x		
@@ -156,9 +156,11 @@ SHORT fasp_amg_solve_amli (AMG_data *mgl,
 	
 	if (print_level>PRINT_NONE) {
 		if (iter>MaxIt)
-			printf("Maximal iteration %d exceeded with relative residual %e.\n", MaxIt, relres1);
+			printf("Maximal iteration %d exceeded with relative residual %e.\n",
+                   MaxIt, relres1);
 		else
-			printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
+			printf("Number of iterations = %d with relative residual %e.\n",
+                   iter, relres1);
 		
 		clock_t solve_end=clock();
 		REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);

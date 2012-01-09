@@ -7,16 +7,14 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "mg_util.inl"
 
-#if With_DISOLVE
-extern "C" {void DIRECT_MUMPS(const int *n, const int *nnz, int *ia, int *ja, double *a, double *b, double *x);}
-#endif 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn void fasp_solver_fmgcycle(AMG_data *mgl, AMG_param *param)
+ * \fn void fasp_solver_fmgcycle (AMG_data *mgl, AMG_param *param)
  * \brief Solve Ax=b with non-recursive full multigrid k-cycle 
  *
  * \param *mgl     pointer to AMG_data data
@@ -28,21 +26,25 @@ extern "C" {void DIRECT_MUMPS(const int *n, const int *nnz, int *ia, int *ja, do
 void fasp_solver_fmgcycle (AMG_data *mgl, 
                            AMG_param *param)
 {	
-    const INT amg_type=param->AMG_type;
-	const int nl = mgl[0].num_levels;
-	const int smoother = param->smoother;
-	const int smooth_order = param->smooth_order;
-	const double relax = param->relaxation;
-	const int ndeg = 0;
+    const SHORT  amg_type=param->AMG_type;
+	const SHORT  print_level = param->print_level;
+	const SHORT  nl = mgl[0].num_levels;
+	const SHORT  smoother = param->smoother;
+	const SHORT  smooth_order = param->smooth_order;
+	const REAL   relax = param->relaxation;
 	
 	// local variables
-	//int p_type = 1, 
-    int l = 0, i, lvl, num_cycle;
-	double alpha = 1.0, relerr = BIGREAL;
+    INT l = 0, i, lvl, num_cycle;
+	REAL alpha = 1.0, relerr = BIGREAL;
+    
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_fmgcycle ...... [Start]\n");
+    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+#endif
+    
+    if (print_level >= PRINT_MOST) printf("FMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
 	
-	//if (param->tentative_smooth < SMALLREAL) p_type = 0;
-	
-	for ( l=0; l<nl-1; l++) { 
+    for ( l=0; l<nl-1; l++) { 
 		// restriction r1 = R*r0
 		switch (amg_type)
 		{		
@@ -73,16 +75,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 			superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else	
 			/* use default iterative solver on the coarest level */
-			const int csize = mgl[nl-1].A.row;
-			unsigned int cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
-			double ctol = param->tol; // coarse level tolerance
-			int flag = 0;		
-			flag = fasp_solver_dcsr_pbcgs(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
-			if (flag < 0)
-			{
-				printf("Warning: coarse level iterative solver does not converge !! (error message = %d)\n", flag);
-			}
-			//fasp_solver_dcsr_pcg(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
+            fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, param->tol, print_level);
 #endif 
 		}
 		
@@ -128,53 +121,9 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 					fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
 				}
 				else {
-					unsigned int steps = param->presmooth_iter;
-					switch (smoother) {
-						case GS:
-							if (smooth_order == NO_ORDER || mgl[l].cfmark.val == NULL)
-								fasp_smoother_dcsr_gs(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
-							else if (smooth_order == CF_ORDER)
-								fasp_smoother_dcsr_gs_cf(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps, mgl[l].cfmark.val, 1);
-							break;
-						case POLY:
-							fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 
-							break;
-						case JACOBI:
-							fasp_smoother_dcsr_jacobi(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
-							break;
-						case SGS:
-							fasp_smoother_dcsr_sgs(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps);
-							break;
-						case SOR:
-							if (smooth_order == NO_ORDER || mgl[l].cfmark.val == NULL)				
-								fasp_smoother_dcsr_sor(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps, relax);
-							else if (smooth_order == CF_ORDER)
-								fasp_smoother_dcsr_sor_cf(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps, relax, mgl[l].cfmark.val, 1);
-							break;
-						case SSOR:
-							fasp_smoother_dcsr_sor(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps, relax);
-							fasp_smoother_dcsr_sor(&mgl[l].x, mgl[l].A.row-1, 0,-1, &mgl[l].A, &mgl[l].b, steps, relax);
-							break;
-						case GSOR:
-							fasp_smoother_dcsr_gs(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
-							fasp_smoother_dcsr_sor(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps, relax);
-							break;
-						case SGSOR:
-							fasp_smoother_dcsr_gs(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
-							fasp_smoother_dcsr_gs(&mgl[l].x, mgl[l].A.row-1, 0,-1, &mgl[l].A, &mgl[l].b, steps);
-							fasp_smoother_dcsr_sor(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps, relax);
-							fasp_smoother_dcsr_sor(&mgl[l].x, mgl[l].A.row-1, 0,-1, &mgl[l].A, &mgl[l].b, steps, relax);
-							break;
-						case L1_DIAG:
-							fasp_smoother_dcsr_L1diag(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
-							break;
-						case CG:
-							fasp_solver_dcsr_pcg(&mgl[l].A, &mgl[l].b, &mgl[l].x, steps, 1e-3, NULL, 0, 1);
-							break;
-						default:
-							printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
-					}
-				} // end of smoother
+                    fasp_dcsr_presmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->presmooth_iter,
+                                           0,mgl[l].A.row-1,1,relax,smooth_order,mgl[l].cfmark.val);
+				}
 				
 				// form residual r = b - A x
 				fasp_array_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val); 
@@ -211,11 +160,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 				superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else	
 				/* use default iterative solver on the coarest level */
-				const int csize = mgl[nl-1].A.row;
-				unsigned int cmaxit = csize*csize; // coarse level iteration number
-				double ctol = param->tol; // coarse level tolerance		
-				fasp_solver_dcsr_pbcgs(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
-				//fasp_solver_dcsr_pcg(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
+                fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, param->tol, print_level);
 #endif 
 			}
 			
@@ -246,61 +191,19 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 					fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
 				}
 				else {
-					unsigned int steps = param->presmooth_iter;
-					switch (smoother) {
-						case GS:
-							if (smooth_order == NO_ORDER || mgl[l].cfmark.val == NULL)
-								fasp_smoother_dcsr_gs(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
-							else if (smooth_order == CF_ORDER)
-								fasp_smoother_dcsr_gs_cf(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps, mgl[l].cfmark.val, -1);
-							break;
-						case POLY:
-							fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 
-							break;
-						case JACOBI:
-							fasp_smoother_dcsr_jacobi(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
-							break;					
-						case SGS:
-							fasp_smoother_dcsr_sgs(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps);
-							break;
-						case SOR:
-							if (smooth_order == NO_ORDER || mgl[l].cfmark.val == NULL)				
-								fasp_smoother_dcsr_sor(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps, relax);
-							else if (smooth_order == CF_ORDER)
-								fasp_smoother_dcsr_sor_cf(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps, relax, mgl[l].cfmark.val, -1);
-							break;
-						case SSOR:
-							fasp_smoother_dcsr_sor(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps, relax);
-							fasp_smoother_dcsr_sor(&mgl[l].x, mgl[l].A.row-1, 0,-1, &mgl[l].A, &mgl[l].b, steps, relax);
-							break;
-						case GSOR:
-							fasp_smoother_dcsr_sor(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps, relax);
-							fasp_smoother_dcsr_gs(&mgl[l].x, mgl[l].A.row-1, 0,-1, &mgl[l].A, &mgl[l].b, steps);
-							break;
-						case SGSOR:
-							fasp_smoother_dcsr_sor(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps, relax);
-							fasp_smoother_dcsr_sor(&mgl[l].x, mgl[l].A.row-1, 0,-1, &mgl[l].A, &mgl[l].b, steps, relax);
-							fasp_smoother_dcsr_gs(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
-							fasp_smoother_dcsr_gs(&mgl[l].x, mgl[l].A.row-1, 0,-1, &mgl[l].A, &mgl[l].b, steps);
-							break;
-						case L1_DIAG:
-							fasp_smoother_dcsr_L1diag(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
-							break;
-						case CG:
-							fasp_solver_dcsr_pcg(&mgl[l].A, &mgl[l].b, &mgl[l].x, steps, 1e-3, NULL, 0, 1);
-							break;
-						default:
-							printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
-					} // end of smoother
-					
-				} // end for lvl
+                    fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->presmooth_iter,
+                                            0,mgl[l].A.row-1,-1,relax,smooth_order,mgl[l].cfmark.val);					
+				}
 				
 			} // end while
 			
 		} //end while
 		
-	}	// end for
-	
+	} // end for
+
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_fmgcycle ...... [Finish]\n");
+#endif
 }
 
 /*---------------------------------*/
