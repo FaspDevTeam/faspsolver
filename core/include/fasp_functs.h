@@ -86,8 +86,8 @@ int fasp_amg_setup_rs3_omp (AMG_data *mgl,
 
 /*-------- In file: amg_setup_sa.c --------*/
 
-INT fasp_amg_setup_sa (AMG_data *mgl, 
-                       AMG_param *param);
+SHORT fasp_amg_setup_sa (AMG_data *mgl, 
+                         AMG_param *param);
 
 
 /*-------- In file: amg_setup_sa_omp.c --------*/
@@ -97,8 +97,8 @@ int fasp_amg_setup_sa_omp (AMG_data *mgl, AMG_param *param, int nthreads, int op
 
 /*-------- In file: amg_setup_ua.c --------*/
 
-INT fasp_amg_setup_ua (AMG_data *mgl, 
-                       AMG_param *param);
+SHORT fasp_amg_setup_ua (AMG_data *mgl, 
+                         AMG_param *param);
 
 
 /*-------- In file: amg_solve.c --------*/
@@ -1223,6 +1223,9 @@ void print_itinfo (const INT ptrlvl,
                    const REAL relres, 
                    const REAL absres, 
                    const REAL factor);
+
+void print_amgcomplexity (AMG_data *mgl, 
+                          const SHORT print_level);
 
 void print_message (const INT ptrlvl, 
                     const char *message);

@@ -9,60 +9,46 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
+static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
 
 static void aggregation(dCSRmat *A, ivector *vertices, AMG_param *param, INT levelNum, dCSRmat *N, INT *num_aggregations);
 static void form_tentative_p(ivector *vertices, dCSRmat *tentp, AMG_data *mgl, INT levelNum, INT num_aggregations);
-
-#if FASP_USE_OPENMP
-static INT amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
-                                             AMG_param *param,
-                                             INT nthreads,
-                                             INT openmp_holds);
-static void aggregation_omp(dCSRmat *A,
-                            ivector *vertices,
-                            AMG_param *param,
-                            INT levelNum,
-                            dCSRmat *Neigh,
-                            INT *num_aggregations,
-                            INT nthreads,
-                            INT openmp_holds);
-static void form_tentative_p_omp(ivector *vertices,
-                                 dCSRmat *tentp,
-                                 AMG_data *mgl,
-                                 INT levelNum,
-                                 INT num_aggregations,
-                                 INT nthreads,
-                                 INT openmp_holds);
-#endif // OMP
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_amg_setup_ua(AMG_data *mgl, AMG_param *param)
+ * \fn SHORT fasp_amg_setup_ua(AMG_data *mgl, AMG_param *param)
+ *
  * \brief Set up phase of unsmoothed aggregation AMG
  * 
  * \param *mgl     pointer to AMG_data data
  * \param *param   pointer to AMG parameters
  *
- * Setup A, P, PT, levels using unsmoothed aggregation
- * aggregation algorithm see paper
- * Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
+ * \note Setup A, P, PT, levels using unsmoothed aggregation aggregation algorithm;
+ *       Refer to Peter Vanek, Jan Madel and Marin Brezina
+ *       Algebraic Multigrid on Unstructured Meshes, 1994
  * 
  * \author Xiaozhe Hu
  * \date 12/28/2011 
  *
  */
-INT fasp_amg_setup_ua (AMG_data *mgl, 
-                       AMG_param *param)
+SHORT fasp_amg_setup_ua (AMG_data *mgl, 
+                         AMG_param *param)
 {
-	INT status=SUCCESS;
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_amg_setup_ua ...... [Start]\n");
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
+#endif
+    
+	SHORT status = amg_setup_unsmoothP_unsmoothA(mgl, param);
+    
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_amg_setup_ua ...... [Finish]\n");
+#endif
 	
-    status = amg_setup_unsmoothP_unsmoothA(mgl, param);
-	
-	return status;
+    return status;
 }
 
 /*---------------------------------*/
@@ -70,38 +56,30 @@ INT fasp_amg_setup_ua (AMG_data *mgl,
 /*---------------------------------*/
 
 /**
- * \fn static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
+ * \fn static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
+ *
  * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
  * 
  * \param *mgl     pointer to AMG_data data
  * \param *param   pointer to AMG parameters
- *
- * Setup A, P, PT, levels using smoothed aggregation
- * concrete algorithm see paper
- * Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
  * 
  * \author Xiaozhe Hu
  * \date 02/21/2011 
  */
-static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
+static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl, 
+                                            AMG_param *param)
 {
-	const INT print_level=param->print_level;
-	const INT m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;
-    const INT cycle_type = param->cycle_type;
+    const SHORT   cycle_type=param->cycle_type;
+	const SHORT   print_level=param->print_level;
+	const INT     m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;
 	
-	INT max_levels=param->max_levels;
-	INT i, j, level=0, status=SUCCESS;
-	clock_t setup_start, setup_end;
-	REAL setupduration;
-	
-#if DEBUG_MODE
-	printf("fasp_amg_setup_sa ...... [Start]\n");
-	printf("fasp_amg_setup_sa: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
-#endif
-	
-	if (print_level>8)	printf("fasp_amg_setup_sa: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
-	
-	setup_start=clock();
+    // local variables
+	clock_t       setup_start, setup_end;
+	REAL          setupduration;
+    SHORT         level=0, status=SUCCESS, max_levels=param->max_levels;
+	INT           i, j;
+    
+	setup_start = clock();
 	
 	if (cycle_type == AMLI_CYCLE) 
 	{
@@ -140,8 +118,16 @@ static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
 		iluparam.ILU_type    = param->ILU_type;
 	}
 	
+#if DIAGONAL_PREF
+    fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
+#endif
+    
 	while ((mgl[level].A.row>param->coarse_dof) && (level<max_levels-1))
 	{
+#if DEBUG_MODE
+		printf("### DEBUG: level = %5d  row = %14d  nnz = %16d\n",
+               level,mgl[level].A.row,mgl[level].A.nnz);
+#endif
 		/*-- setup ILU decomposition if necessary */
 		if (level<param->ILU_levels) fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
 		
@@ -161,7 +147,11 @@ static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
 		fasp_dcsr_free(&Neighbor[level]);
 		fasp_ivec_free(&vertices[level]);
 		
-		++level;
+        ++level;
+        
+#if DIAGONAL_PREF
+        fasp_dcsr_diagpref(&mgl[level].A); // reorder each row to make diagonal appear first
+#endif      
 	}
 	
 	// setup total level number and current level
@@ -187,46 +177,28 @@ static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
 	fasp_dcsr_cp(&Ac_tran,&mgl[max_levels-1].A);
 	fasp_dcsr_free(&Ac_tran);
 #endif
-	
-	if (print_level>1) {
-		REAL gridcom=0.0, opcom=0.0;
-		
-		printf("-----------------------------------------------\n");
-		printf("  Level     Num of rows      Num of nonzeros\n");
-		printf("-----------------------------------------------\n");
-		for (level=0;level<max_levels;++level) {
-			printf("%5d  %14d  %16d\n",level,mgl[level].A.row,mgl[level].A.nnz);
-			gridcom += mgl[level].A.row;
-			opcom += mgl[level].A.nnz;
-		}
-		printf("-----------------------------------------------\n");
-		
-		gridcom /= mgl[0].A.row;
-		opcom /= mgl[0].A.nnz;
-		printf("Unsmoothed Aggregation AMG grid complexity = %f\n", gridcom);
-		printf("Unsmoothed Aggregation AMG operator complexity = %f\n", opcom);
-	}
-	
-	if (print_level>0) {
+    
+	if (print_level>PRINT_NONE) {
 		setup_end=clock();
 		setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-		printf("Unsmoothed Aggregation AMG setup costs %f seconds.\n", setupduration);	
+        
+        print_amgcomplexity(mgl,print_level);
+        printf("Unsmoothed aggregation setup costs %f seconds.\n\n", setupduration);	
 	}
 	
 	fasp_mem_free(vertices);
 	fasp_mem_free(num_aggregations);
 	fasp_mem_free(Neighbor);
-	
-#if DEBUG_MODE
-	printf("amg_setup_sa ...... [Finish]\n");
-#endif
-	
+    
 	return status;
 }
 
 /**
- * \fn static void aggregation(dCSRmat *A, ivector *vertices, AMG_param *param, INT levelNum, dCSRmar *Neigh, INT *num_aggregations)
+ * \fn static void aggregation (dCSRmat *A, ivector *vertices, AMG_param *param, 
+ *                              INT levelNum, dCSRmar *Neigh, INT *num_aggregations)
+ *
  * \brief Form aggregation based on strong coupled neighborhoods 
+ *
  * \param *A pointer to the coefficient matrices
  * \param *vertices pointer to the aggregation of vertics
  * \param *param pointer to AMG parameters
@@ -237,17 +209,21 @@ static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
  * \author Xiaozhe Hu
  * \date 09/29/2009
  */
-static void aggregation(dCSRmat *A, ivector *vertices, AMG_param *param, INT levelNum, dCSRmat *Neigh, INT *num_aggregations)
+static void aggregation (dCSRmat *A, 
+                         ivector *vertices, 
+                         AMG_param *param, 
+                         INT levelNum, 
+                         dCSRmat *Neigh, 
+                         INT *num_aggregations)
 {
 	// member of A
 	INT row = A->row, col = A->col, nnz = A->IA[row]-A->IA[0];
-	INT *AIA =  A->IA;
+	INT *AIA = A->IA;
 	INT *AJA = A->JA;
 	REAL *Aval = A->val;
 	
 	// local variable
-	REAL strongly_coupled; 
-    strongly_coupled= param->strong_coupled;
+	REAL strongly_coupled  = param->strong_coupled;
 	REAL strongly_coupled2 = pow(strongly_coupled,2);
 	
 	INT i,j,index, row_start, row_end;
@@ -399,8 +375,11 @@ static void aggregation(dCSRmat *A, ivector *vertices, AMG_param *param, INT lev
 }
 
 /**
- * \fn static void form_tentative_p(ivectors *vertices, dCSRmat *tentp, AMG_data *mgl, INT levelNum, INT num_aggregations)
+ * \fn static void form_tentative_p (ivectors *vertices, dCSRmat *tentp, AMG_data *mgl, 
+ *                                   INT levelNum, INT num_aggregations)
+ *
  * \brief Form aggregation based on strong coupled neighborhoods 
+ *
  * \param *A pointer to the coefficient matrices
  * \param *vertices pointer to the aggregation of vertices
  * \param *P pointer to the prolongation operators 
@@ -411,7 +390,11 @@ static void aggregation(dCSRmat *A, ivector *vertices, AMG_param *param, INT lev
  * \author Xiaozhe Hu
  * \date 09/29/2009
  */
-static void form_tentative_p(ivector *vertices, dCSRmat *tentp, AMG_data *mgl, INT levelNum, INT num_aggregations)
+static void form_tentative_p (ivector *vertices, 
+                              dCSRmat *tentp, 
+                              AMG_data *mgl, 
+                              INT levelNum, 
+                              INT num_aggregations)
 {
 	INT i, j;
 	REAL **basis = mgl->near_kernel_basis;

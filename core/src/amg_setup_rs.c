@@ -42,24 +42,19 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     const INT cycle_type = param->cycle_type;
 	
     // local variables
-	INT max_levels=param->max_levels;
-	INT mm, level=0, status=SUCCESS;
-	INT size;	
+	INT     mm, size;
+    SHORT   level=0, status=SUCCESS;
+	SHORT   max_levels=param->max_levels;
     	
+	clock_t setup_start=clock();
+
     ivector vertices=fasp_ivec_create(m); // stores level info (fine: 0; coarse: 1)
 
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_amg_setup_rs ...... [Start]\n");
-#endif
-
-	clock_t setup_start=clock();
-    
-#if DEBUG_MODE
 	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
-	
-	if (print_level>=PRINT_MOST) printf("fasp_amg_setup_rs: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
-	
+    	
 	param->tentative_smooth = 1.0; 
     // Xiaozhe 02/23/2011: make sure classical AMG will not call fasp_blas_dcsr_mxv_agg
 	
@@ -122,12 +117,12 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         // fasp_blas_dcsr_ptap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
 		
 		// TODO: Make a new ptap using (A,P) only. R is not needed as an input! --Chensong
-		
+
+        ++level;
+
 #if DIAGONAL_PREF
-        fasp_dcsr_diagpref(&mgl[level+1].A); // reorder each row to make diagonal appear first
-#endif        
-        
-		++level;
+        fasp_dcsr_diagpref(&mgl[level].A); // reorder each row to make diagonal appear first
+#endif                
 	}
 	
 	// setup total level number and current level
@@ -153,29 +148,12 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 	fasp_dcsr_free(&Ac_tran);
 #endif
 	
-	if (print_level>PRINT_SOME) {
-		REAL gridcom=0.0, opcom=0.0;
-		
-		printf("-----------------------------------------------\n");
-		printf("  Level     Num of rows     Num of nonzeros\n");
-		printf("-----------------------------------------------\n");
-		for (level=0;level<max_levels;++level) {
-			printf("%5d  %14d  %16d\n",level,mgl[level].A.row,mgl[level].A.nnz);
-			gridcom += mgl[level].A.row;
-			opcom += mgl[level].A.nnz;
-		}
-		printf("-----------------------------------------------\n");
-		
-		gridcom /= mgl[0].A.row;
-		opcom /= mgl[0].A.nnz;
-		printf("Ruge-Stuben AMG grid complexity = %f\n", gridcom);
-		printf("Ruge-Stuben AMG operator complexity = %f\n", opcom);
-	}
-	
-	if (print_level>0) {
+	if (print_level>PRINT_NONE) {
 		clock_t setup_end=clock();
 		REAL setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-		printf("Ruge-Stuben AMG setup costs %f seconds.\n", setupduration);	
+
+        print_amgcomplexity(mgl,print_level);
+		printf("Ruge-Stuben AMG setup costs %f seconds.\n\n", setupduration);	
 	}
 	
 	status = SUCCESS;

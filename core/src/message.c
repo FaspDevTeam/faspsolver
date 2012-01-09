@@ -8,7 +8,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
- 
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -64,6 +64,31 @@ void print_itinfo (const INT ptrlvl,
 	} // end if ptrlvl
 }		
 
+void print_amgcomplexity (AMG_data *mgl, 
+                          const SHORT print_level)
+{
+	const SHORT   max_levels=mgl->num_levels;    
+    SHORT         level=0, status=SUCCESS;
+    REAL          gridcom=0.0, opcom=0.0;
+    
+    if (print_level>=PRINT_SOME) {
+        printf("-----------------------------------------------\n");
+        printf("  Level     Num of rows      Num of nonzeros\n");
+        printf("-----------------------------------------------\n");
+        for (level=0;level<max_levels;++level) {
+            printf("%5d  %14d  %16d\n",level,mgl[level].A.row,mgl[level].A.nnz);
+            gridcom += mgl[level].A.row;
+            opcom += mgl[level].A.nnz;
+        }
+        printf("-----------------------------------------------\n");
+        
+        gridcom /= mgl[0].A.row;
+        opcom /= mgl[0].A.nnz;
+        printf("AMG grid complexity     = %.3f\n", gridcom);
+        printf("AMG operator complexity = %.3f\n", opcom);
+    }
+}
+
 /**
  * \fn void print_message (const INT ptrlvl, const char *message)
  * \brief Print output information if necessary 
@@ -94,7 +119,7 @@ void fasp_chkerr (const SHORT status,
                   const char *fctname)
 {												
     if (status>=0) return;
-
+    
     switch (status) {
         case ERROR_OPEN_FILE:
             printf("### ERROR: %s -- Cannot open file!!!\n", fctname);
