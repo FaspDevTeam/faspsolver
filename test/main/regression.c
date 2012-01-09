@@ -151,7 +151,7 @@ int main (int argc, const char * argv[])
         
         check_solu(&x, &sol,tolerance);
         
-        /* AMG V-cycle with Jacobi smoother as a solver */			
+        /* AMG V-cycle with SGS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
         printf("Classical AMG V-cycle with SGS smoother as iterative solver ...\n");	
         
@@ -164,14 +164,42 @@ int main (int argc, const char * argv[])
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
         check_solu(&x, &sol,tolerance);
+
+        /* AMG V-cycle with L1_DIAG smoother as a solver */			
+        printf("------------------------------------------------------------------\n");
+        printf("Classical AMG V-cycle with L1_DIAG smoother as iterative solver ...\n");	
         
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_amg_init(&amgparam);
+        amgparam.max_iter    = 2000;
+        amgparam.tol         = 1e-10;
+        amgparam.smoother    = L1_DIAG;
+        amgparam.print_level = print_level;
+        fasp_solver_amg(&A, &b, &x, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+
+        /* AMG V-cycle with SOR smoother as a solver */			
+        printf("------------------------------------------------------------------\n");
+        printf("Classical AMG V-cycle with SOR smoother as iterative solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_amg_init(&amgparam);
+        amgparam.max_iter    = 20;
+        amgparam.tol         = 1e-10;
+        amgparam.smoother    = SOR;
+        amgparam.print_level = print_level;
+        fasp_solver_amg(&A, &b, &x, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+
         /* SA AMG V-cycle with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
         printf("SA AMG V-cycle with GS smoother as iterative solver ...\n");	
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 100;
+        amgparam.max_iter    = 500;
         amgparam.tol         = 1e-10;
         amgparam.AMG_type    = SA_AMG;
         amgparam.smoother    = GS;
@@ -187,7 +215,7 @@ int main (int argc, const char * argv[])
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 100;
+        amgparam.max_iter    = 500;
         amgparam.tol         = 1e-10;
         amgparam.AMG_type    = UA_AMG;
         amgparam.smoother    = GS;

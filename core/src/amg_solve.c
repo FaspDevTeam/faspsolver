@@ -51,13 +51,16 @@ SHORT fasp_amg_solve (AMG_data *mgl,
 #endif
     
 	while ((++iter <= MaxIt) & (sumb > SMALLREAL)) // MG solver here
-	{	
-		// Call one multigrid cycle
+	{
+        
+#if TRUE
+		// Call one multigrid cycle -- non recursive
 		fasp_solver_mgcycle(mgl, param); 
-        // This is the non-recursive MG cycle subroutine.
+#else
         // If you wish to call the recursive version instead, replace it with:
-        //     fasp_solver_mgrecur(mgl, param, 0);         
-		
+        fasp_solver_mgrecur(mgl, param, 0);         
+#endif
+        
 		// Form residual r = b-A*x		
 		fasp_dvec_cp(b,r); fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);		
 		
