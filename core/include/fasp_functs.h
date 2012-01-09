@@ -12,10 +12,10 @@
 
 /*-------- In file: amg.c --------*/
 
-INT fasp_solver_amg (dCSRmat *A, 
-                     dvector *b, 
-                     dvector *x, 
-                     AMG_param *param);
+void fasp_solver_amg (dCSRmat *A, 
+                      dvector *b, 
+                      dvector *x, 
+                      AMG_param *param);
 
 
 /*-------- In file: amg_omp.c --------*/
@@ -103,14 +103,17 @@ INT fasp_amg_setup_ua (AMG_data *mgl,
 
 /*-------- In file: amg_solve.c --------*/
 
-INT fasp_amg_solve (AMG_data *mgl, 
-                    AMG_param *param);
+SHORT fasp_amg_solve (AMG_data *mgl, 
+                      AMG_param *param);
 
-INT fasp_amg_solve_amli (AMG_data *mgl, 
-                         AMG_param *param);
+SHORT fasp_amg_solve_amli (AMG_data *mgl, 
+                           AMG_param *param);
 
-int fasp_amg_solve_nl_amli (AMG_data *mgl, 
-                            AMG_param *param);
+SHORT fasp_amg_solve_nl_amli (AMG_data *mgl, 
+                              AMG_param *param);
+
+SHORT fasp_famg_solve (AMG_data *mgl, 
+                       AMG_param *param);
 
 
 /*-------- In file: amg_solve_omp.c --------*/
@@ -810,16 +813,16 @@ double fasp_dcsr_eig (dCSRmat *A,
 
 /*-------- In file: famg.c --------*/
 
-int fasp_solver_famg (dCSRmat *A, 
-                      dvector *b, 
-											dvector *x, 
-											AMG_param *param);
+void fasp_solver_famg (dCSRmat *A, 
+                       dvector *b, 
+                       dvector *x, 
+                       AMG_param *param);
 
 
 /*-------- In file: fmgcycle.c --------*/
 
 void fasp_solver_fmgcycle (AMG_data *mgl, 
-													 AMG_param *param);
+                           AMG_param *param);
 
 
 /*-------- In file: formats.c --------*/
@@ -1018,10 +1021,10 @@ void fasp_dvec_write (char *filename,
 void fasp_ivec_write (char *filename, 
                       ivector *vec);
 
-void fasp_dvec_print (int n, 
+void fasp_dvec_print (INT n, 
                       dvector *u) ;
 
-void fasp_ivec_print (int n, 
+void fasp_ivec_print (INT n, 
                       ivector *u) ;
 
 void fasp_dcsr_print (dCSRmat *A);
@@ -1223,6 +1226,9 @@ void print_itinfo (const INT ptrlvl,
 
 void print_message (const INT ptrlvl, 
                     const char *message);
+
+void fasp_chkerr (const SHORT status, 
+                  const char *fctname);
 
 
 /*-------- In file: mgcycle.c --------*/

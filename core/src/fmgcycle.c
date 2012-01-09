@@ -26,7 +26,7 @@ extern "C" {void DIRECT_MUMPS(const int *n, const int *nnz, int *ia, int *ja, do
  * \date 02/27/2011
  */
 void fasp_solver_fmgcycle (AMG_data *mgl, 
-													 AMG_param *param)
+                           AMG_param *param)
 {	
     const INT amg_type=param->AMG_type;
 	const int nl = mgl[0].num_levels;
@@ -64,7 +64,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 		{
 #if With_DISOLVE /* use Direct.lib in Windows */
 			DIRECT_MUMPS(&mgl[nl-1].A.row, &mgl[nl-1].A.nnz, mgl[nl-1].A.IA, mgl[nl-1].A.JA, 
-									 mgl[nl-1].A.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
+                         mgl[nl-1].A.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
 #elif With_UMFPACK
 			/* use UMFPACK direct solver on the coarsest level */
 			umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
@@ -202,7 +202,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 			{
 #if With_DISOLVE /* use Direct.lib in Windows */
 				DIRECT_MUMPS(&mgl[nl-1].A.row, &mgl[nl-1].A.nnz, mgl[nl-1].A.IA, mgl[nl-1].A.JA, 
-										 mgl[nl-1].A.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
+                             mgl[nl-1].A.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
 #elif With_UMFPACK
 				/* use UMFPACK direct solver on the coarsest level */
 				umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);

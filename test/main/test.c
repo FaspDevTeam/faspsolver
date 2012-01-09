@@ -162,14 +162,14 @@ int main (int argc, const char * argv[])
     // AMG as the iterative solver
 	else if (itsolver_type == SOLVER_AMG) {
         if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-		status = fasp_solver_amg(&A, &b, &uh, &amgparam); 
+		fasp_solver_amg(&A, &b, &uh, &amgparam); 
         
 	}
 
     // Full AMG as the iterative solver 
     else if (itsolver_type == SOLVER_FMG) {
         if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-        status = fasp_solver_famg(&A, &b, &uh, &amgparam);
+        fasp_solver_famg(&A, &b, &uh, &amgparam);
     }
     
 #if With_SuperLU // use SuperLU directly

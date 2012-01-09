@@ -50,16 +50,18 @@
 /**
  * \brief For Fortran compatibilty 
  */
-#define INT    int
-#define REAL   double
+#define SHORT            short  /**< short integer type */
+#define INT              int    /**< regular integer type */
+#define LONG             long   /**< long integer type */ 
+#define REAL             double /**< float type */
 
 /**
  * \brief Some global constants 
  */
-#define BIGREAL     1e+15 /**< A large real number */ 
-#define SMALLREAL   1e-15 /**< A small real number */ 
-#define MAX_REFINE_LVL 20 /**< Maximal refinement level */
-#define MAX_AMG_LVL    20 /**< Maximal AMG coarsening level */
+#define BIGREAL          1e+15 /**< A large real number */ 
+#define SMALLREAL        1e-15 /**< A small real number */ 
+#define MAX_REFINE_LVL   20    /**< Maximal refinement level */
+#define MAX_AMG_LVL      20    /**< Maximal AMG coarsening level */
 
 /** 
  * \brief Definition of max, min, abs
@@ -233,8 +235,8 @@ typedef struct iCOOmat{
  * \struct dCSRLmat
  * \brief Sparse matrix of REAL type in CSRL format.
  */
-typedef struct
-{
+typedef struct dCSRLmat{
+    
 	//! number of rows	
 	INT num_rows;
 	//! number of cols
@@ -247,7 +249,7 @@ typedef struct
 	INT *nzdifnum;
 	//! row index of the matrix in length-grouped manner, i.e., the rows with same nnz are together
 	INT *rowindex;
-	//! if j\in V = {rowstart[i],...,rowstart[i+1]-1}, then there are nzdifnum[i] nnz in the rowindex[j]-th row	
+	//! if j\in V={rowstart[i],...,rowstart[i+1]-1}, there are nzdifnum[i] nnz in the rowindex[j]-th row	
 	INT *rowstart;
 	//! column indices of all the nonzeros
 	INT *ja;
@@ -292,7 +294,6 @@ typedef struct ivector{
  *		For 2D matrix, the recommended offsets is [-1,1,-nx,nx];
  *		For 3D matrix, the recommended offsets is [-1,1,-nx,nx,-nxy,nxy]; 
  */ 
-
 typedef struct dSTRmat{
 	
 	//! number of grids in x direction
@@ -330,10 +331,10 @@ typedef struct dSTRmat{
  */
 typedef struct {
 	
-	//! prINT leve
-	INT print_level;
+	//! print leve
+	SHORT print_level;
 	//! ILU type for decomposition
-	INT ILU_type;
+	SHORT ILU_type;
 	//! level of fill-in for ILUk
 	INT ILU_lfil;
 	//! drop tolerence for ILUt
@@ -361,7 +362,7 @@ typedef struct {
 	INT *ijlu;   
 	//! nonzero entries of LU
 	REAL *luval;
-	//! block size for bsr
+	//! block size for BSR type only
 	INT nb;
 	
 	//! work space size
@@ -381,43 +382,43 @@ typedef struct {
 typedef struct {
 	
 	//! type of AMG method
-	INT AMG_type;
+	SHORT AMG_type;
 	//! print level for AMG
-	INT print_level;
+	SHORT print_level;
 	//! max number of iterations of AMG
 	INT max_iter;
 	//! stopping tolerance for AMG solver
 	REAL tol;
 	
 	//! max number of levels of AMG	
-	INT max_levels;
+	SHORT max_levels;
 	//! max coarsest level dof
 	INT coarse_dof;	
 	//! type of AMG cycle
-	INT cycle_type;
+	SHORT cycle_type;
 	//! smoother type
-	INT smoother;
+	SHORT smoother;
 	//! Smoother order type
-	INT smooth_order;  // 1: nature order 2: C/F order (both are symmetric)
+	SHORT smooth_order;  // 1: nature order 2: C/F order (both are symmetric)
 	//! number of presmoothers
-	INT presmooth_iter;
+	SHORT presmooth_iter;
 	//! number of postsmoothers
-	INT postsmooth_iter;
+	SHORT postsmooth_iter;
 	//! relaxation parameter for SOR smoother
 	REAL relaxation;
 	//! switch of scaling of the coarse grid correction
-	INT coarse_scaling;
+	SHORT coarse_scaling;
 	//! degree of the polynomial used by AMLI cycle
-	INT amli_degree;
+	SHORT amli_degree;
 	//! coefficients of the polynomial used by AMLI cycle
 	REAL *amli_coef;
     //! type of krylov method used by Nonlinear AMLI cycle
-    INT nl_amli_krylov_type;
+    SHORT nl_amli_krylov_type;
 	
 	//! coarsening type
-	INT coarsening_type;
+	SHORT coarsening_type;
 	//! interpolation type
-	INT interpolation_type;
+	SHORT interpolation_type;
 	
 	//! strong connection threshold for coarsening
 	REAL strong_threshold;
@@ -433,12 +434,12 @@ typedef struct {
 	//! relaxation parameter for smoothing the tentative prolongation
 	REAL tentative_smooth;
 	//! switch for filtered matrix used for smoothing the tentative prolongation
-	INT smooth_filter;
+	SHORT smooth_filter;
 	
 	//! number of levels use ILU smoother
-	INT ILU_levels;
+	SHORT ILU_levels;
 	//! ILU type for smoothing
-	INT ILU_type;
+	SHORT ILU_type;
 	//! level of fill-in for ILUs and ILUk
 	INT ILU_lfil;
 	//! drop tolerence for ILUt
@@ -462,9 +463,9 @@ typedef struct {
 	/* Level information */
 	
 	//! max number of levels
-	INT max_levels;
+	SHORT max_levels;
 	//! number of levels in use <= max_levels
-	INT num_levels;
+	SHORT num_levels;
 	
 	/* Problem information */	
 	
@@ -506,37 +507,37 @@ typedef struct {
 typedef struct {
 	
     //! type of AMG method
-	INT AMG_type;
+	SHORT AMG_type;
 	//! print level in AMG preconditioner
-	INT print_level;
+	SHORT print_level;
 	//! max number of iterations of AMG preconditioner
 	INT max_iter;
 	//! max number of AMG levels
-	INT max_levels;
+	SHORT max_levels;
 	//! tolerance for AMG preconditioner
 	REAL tol;
 	//! AMG cycle type
-	INT cycle_type;
+	SHORT cycle_type;
 	//! AMG smoother type
-	INT smoother;
+	SHORT smoother;
 	//! AMG smoother ordering
-	INT smooth_order;
+	SHORT smooth_order;
 	//! number of presmoothing
-	INT presmooth_iter;
+	SHORT presmooth_iter;
 	//! number of postsmoothing
-	INT postsmooth_iter;
+	SHORT postsmooth_iter;
 	//! coarsening type
-	INT coarsening_type;
+	SHORT coarsening_type;
 	//! relaxation parameter for SOR smoother
 	REAL relaxation;
 	//! switch of scaling of the coarse grid correction
-	INT coarse_scaling;
+	SHORT coarse_scaling;
 	//! degree of the polynomial used by AMLI cycle
-	INT amli_degree;
+	SHORT amli_degree;
 	//! coefficients of the polynomial used by AMLI cycle
 	REAL *amli_coef;
     //! type of krylov method used by Nonlinear AMLI cycle
-    INT nl_amli_krylov_type;
+    SHORT nl_amli_krylov_type;
 	//! smooth factor for smoothing the tentative prolongation
 	REAL tentative_smooth;
 	
@@ -563,29 +564,29 @@ typedef struct {
 typedef struct {
 	
     //! type of AMG method
-	INT AMG_type;
+	SHORT AMG_type;
 	//! print level in AMG preconditioner
-	INT print_level;
+	SHORT print_level;
 	//! max number of iterations of AMG preconditioner
 	INT max_iter;
 	//! max number of AMG levels
-	INT max_levels;
+	SHORT max_levels;
 	//! tolerance for AMG preconditioner
 	REAL tol;
 	//! AMG cycle type
-	INT cycle_type;
+	SHORT cycle_type;
 	//! AMG smoother type
-	INT smoother;
+	SHORT smoother;
 	//! number of presmoothing
-	INT presmooth_iter;
+	SHORT presmooth_iter;
 	//! number of postsmoothing
-	INT postsmooth_iter;
+	SHORT postsmooth_iter;
 	//! coarsening type
-	INT coarsening_type;
+	SHORT coarsening_type;
 	//! relaxation parameter for SOR smoother
 	REAL relaxation;
 	//! switch of scaling of the coarse grid correction
-	INT coarse_scaling;
+	SHORT coarse_scaling;
 	
 	//! AMG preconditioner data
 	AMG_data *mgl_data;
@@ -596,7 +597,7 @@ typedef struct {
 	// Matrix data
     
     //! whether the matrx are scaled or not
-	INT scaled;
+	SHORT scaled;
     //! the orginal CSR matrix
 	dCSRmat *A;
     //! stor the whole reservoir block in STR format
@@ -640,7 +641,6 @@ typedef struct {
 	
 	//! number of components
 	INT nc;
-	
 	//! diagnal elements
 	dvector diag;
 	
@@ -657,7 +657,6 @@ typedef struct {
 	
 	//! dimension of each sub-block
 	INT nb;
-	
 	//! diagnal elements
 	dvector diag;
 	
@@ -691,47 +690,47 @@ typedef struct {
 typedef struct {
 	
 	// output flags
-	INT print_level; /**< print level */
-	INT output_type; /**< type of output stream */
+	SHORT print_level; /**< print level */
+	SHORT output_type; /**< type of output stream */
 	
 	// problem parameters
 	char workdir[256]; /**< working directory for data files */
 	INT  problem_num; /**< problem number to solve */
 	
 	// parameters for iterative solvers
-	INT itsolver_type; /**< type of iterative solvers */
-	INT precond_type; /**< type of preconditioner for iterative solvers */
-	INT stop_type; /**< type of stopping criteria for iterative solvers */
+	SHORT itsolver_type; /**< type of iterative solvers */
+	SHORT precond_type; /**< type of preconditioner for iterative solvers */
+	SHORT stop_type; /**< type of stopping criteria for iterative solvers */
 	REAL itsolver_tol; /**< tolerance for iterative linear solver */
 	INT itsolver_maxit; /**< maximal number of iterations for iterative solvers */
 	INT restart; /**< restart number used in GMRES */
 	
 	//pamameters for ILU
-	INT ILU_type; /**< ILU type for decomposition*/
+	SHORT ILU_type; /**< ILU type for decomposition*/
 	INT ILU_lfil; /**< level of fill-in */
 	REAL ILU_droptol; /**< drop tolerence */
 	REAL ILU_relax; /**< add the sum of dropped elements to diagnal element in proportion relax */
 	REAL ILU_permtol; /**< permutation tol */
 	
 	// parameters for AMG
-	INT AMG_type; /**< Type of AMG */
-	INT AMG_levels; /**< maximal number of levels */
-	INT AMG_cycle_type; /**< type of cycle*/
-	INT AMG_smoother; /**< type of smoother */
+	SHORT AMG_type; /**< Type of AMG */
+	SHORT AMG_levels; /**< maximal number of levels */
+	SHORT AMG_cycle_type; /**< type of cycle*/
+	SHORT AMG_smoother; /**< type of smoother */
 	REAL AMG_relaxation; /**< over-relaxation parameter for SOR */
-	INT AMG_presmooth_iter; /**< number of presmoothing */
-	INT AMG_postsmooth_iter; /**< number of postsmoothing */
+	SHORT AMG_presmooth_iter; /**< number of presmoothing */
+	SHORT AMG_postsmooth_iter; /**< number of postsmoothing */
 	INT AMG_coarse_dof;	/**< minimal coarsest level dof */
 	REAL AMG_tol; /**< tolerance for AMG if used as preconditioner */
 	INT AMG_maxit; /**< max number of iterations for AMG if used as preconditioner */
-	INT AMG_ILU_levels; /**< how many levels use ILU smoother */	
-	INT AMG_coarse_scaling; /**< switch of scaling of the coarse grid correction */
-	INT AMG_amli_degree; /**< degree of the polynomial used by AMLI cycle */
-    INT AMG_nl_amli_krylov_type; /** type of krylov method used by nonlinear AMLI cycle */
+	SHORT AMG_ILU_levels; /**< how many levels use ILU smoother */	
+	SHORT AMG_coarse_scaling; /**< switch of scaling of the coarse grid correction */
+	SHORT AMG_amli_degree; /**< degree of the polynomial used by AMLI cycle */
+    SHORT AMG_nl_amli_krylov_type; /** type of krylov method used by nonlinear AMLI cycle */
 	
 	// parameters for classical AMG
-	INT AMG_coarsening_type; /**< coarsening type */
-	INT AMG_interpolation_type; /**< interpolation type */
+	SHORT AMG_coarsening_type; /**< coarsening type */
+	SHORT AMG_interpolation_type; /**< interpolation type */
 	REAL AMG_strong_threshold; /**< strong threshold for coarsening */
 	REAL AMG_truncation_threshold; /**< truncation factor for interpolation */
 	REAL AMG_max_row_sum; /**< maximal row sum */
@@ -740,7 +739,7 @@ typedef struct {
 	REAL AMG_strong_coupled; /**< strong coupled threshold for aggregate */
 	INT AMG_max_aggregation; /**< max size of each aggregate */
 	REAL AMG_tentative_smooth; /**< relaxation parameter for smoothing the tentative prolongation */
-	INT AMG_smooth_filter; /**< switch for filtered matrix used for smoothing the tentative prolongation */
+	SHORT AMG_smooth_filter; /**< switch for filtered matrix for smoothing the tentative prolongation */
 	
 } input_param;
 
@@ -751,13 +750,13 @@ typedef struct {
  */
 typedef struct {
 	
-	INT print_level; /**< print level */	
-	INT itsolver_type; /**< solver type */
-	INT precond_type; /**< preconditioner type */
-	INT stop_type; /**< stopping criteria type */
+	SHORT print_level; /**< print level */	
+	SHORT itsolver_type; /**< solver type */
+	SHORT precond_type; /**< preconditioner type */
+	SHORT stop_type; /**< stopping criteria type */
 	INT maxit; /**< solve params, max number of iterations */
 	INT restart; /**< number of steps for restarting the solver */
-	REAL tol;	/**< solve params, tolerance for solver */
+	REAL tol; /**< solve params, tolerance for solver */
 	
 } itsolver_param; 
 
@@ -772,7 +771,7 @@ typedef struct {
  *		 vertex i has two coordinates p[i]
  */
 typedef struct grid2d {
-	REAL (*p)[2];	/**< Coordinates of vertices */
+	REAL (*p)[2]; /**< Coordinates of vertices */
 	INT (*e)[2]; /**< Vertices of edges */
 	INT (*t)[3]; /**< Vertices of triangles */
 	INT (*s)[3]; /**< Edges of triangles */
@@ -840,17 +839,17 @@ extern INT THDs_AMG_GS;
 extern INT THDs_CPR_lGS;
 extern INT THDs_CPR_gGS;
 
-extern double total_linear_time; /**< total linear times */
-extern double total_setup_time;
-extern double total_start_time;
-extern int total_iter;
-extern int fasp_called_times;
-extern int  nx_rb ;  // Red Black Gs Smoother 
-extern int  ny_rb ;  // Red Black Gs Smoother
-extern int  nz_rb ;  // Red Black Gs Smoother
-extern  int *IMAP;   // Red Black Gs Smoother
-    //! tmp map for the level 0 grid, geometry to algebre dofs.
-extern  int MAXIMAP;  // Red Black Gs Smoother  max dofs of reservoir
+extern REAL total_linear_time; /**< total linear times */
+extern REAL total_setup_time;
+extern REAL total_start_time;
+extern INT  total_iter;
+extern INT  fasp_called_times;
+extern INT  nx_rb ;  // Red Black Gs Smoother 
+extern INT  ny_rb ;  // Red Black Gs Smoother
+extern INT  nz_rb ;  // Red Black Gs Smoother
+//! tmp map for the level 0 grid, geometry to algebre dofs.
+extern INT *IMAP;    // Red Black Gs Smoother
+extern INT  MAXIMAP; // Red Black Gs Smoother  max dofs of reservoir
 
 #define FASP_GET_START_END(procid,nprocs,n,start,end) \
 if((procid)<(n)%(nprocs)) \
