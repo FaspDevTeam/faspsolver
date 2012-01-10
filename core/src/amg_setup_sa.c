@@ -47,7 +47,7 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
 	
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_amg_setup_sa ...... [Start]\n");
-	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
 	switch (type)

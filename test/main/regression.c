@@ -151,6 +151,36 @@ int main (int argc, const char * argv[])
         
         check_solu(&x, &sol,tolerance);
         
+        /* AMG AMLI-cycle with GS smoother as a solver */			
+        printf("------------------------------------------------------------------\n");
+        printf("Classical AMG AMLI-cycle as iterative solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_amg_init(&amgparam);
+        amgparam.max_iter    = 20;
+        amgparam.tol         = 1e-10;
+        amgparam.cycle_type  = AMLI_CYCLE;
+        amgparam.amli_degree = 3;
+        amgparam.print_level = print_level;
+        fasp_solver_amg(&A, &b, &x, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+        
+        /* AMG Nonlinear AMLI-cycle with GS smoother as a solver */			
+        printf("------------------------------------------------------------------\n");
+        printf("Classical AMG Nonlinear AMLI-cycle as iterative solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_amg_init(&amgparam);
+        amgparam.max_iter    = 20;
+        amgparam.tol         = 1e-10;
+        amgparam.cycle_type  = NL_AMLI_CYCLE;
+        amgparam.amli_degree = 3;
+        amgparam.print_level = print_level;
+        fasp_solver_amg(&A, &b, &x, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+        
         /* AMG V-cycle with SGS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
         printf("Classical AMG V-cycle with SGS smoother as iterative solver ...\n");	
@@ -252,14 +282,15 @@ int main (int argc, const char * argv[])
         fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
         
         check_solu(&x, &sol,tolerance);
-        
+      
         /* Using classical AMG as preconditioner for CG */
         printf("------------------------------------------------------------------\n");
         printf("AMG preconditioned CG solver ...\n");	
-        
         fasp_dvec_set(b.row,&x,0.0);
         fasp_param_solver_init(&itparam);
         fasp_param_amg_init(&amgparam);
+        itparam.maxit         = 500;
+        itparam.tol           = 1e-10;
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
@@ -273,6 +304,8 @@ int main (int argc, const char * argv[])
         fasp_param_solver_init(&itparam);
         fasp_param_amg_init(&amgparam);
         itparam.itsolver_type = SOLVER_BiCGstab;
+        itparam.maxit         = 500;
+        itparam.tol           = 1e-10;
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
@@ -286,6 +319,8 @@ int main (int argc, const char * argv[])
         fasp_param_solver_init(&itparam);
         fasp_param_amg_init(&amgparam);
         itparam.itsolver_type = SOLVER_GMRES;
+        itparam.maxit         = 500;
+        itparam.tol           = 1e-10;
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
@@ -299,6 +334,8 @@ int main (int argc, const char * argv[])
         fasp_param_solver_init(&itparam);
         fasp_param_amg_init(&amgparam);
         itparam.itsolver_type = SOLVER_VGMRES;
+        itparam.maxit         = 500;
+        itparam.tol           = 1e-10;
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
@@ -312,6 +349,8 @@ int main (int argc, const char * argv[])
         fasp_param_solver_init(&itparam);
         fasp_param_amg_init(&amgparam);
         itparam.itsolver_type = SOLVER_VFGMRES;
+        itparam.maxit         = 500;
+        itparam.tol           = 1e-10;
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
@@ -325,6 +364,8 @@ int main (int argc, const char * argv[])
         fasp_param_solver_init(&itparam);
         fasp_param_amg_init(&amgparam);
         itparam.itsolver_type = SOLVER_GCG;
+        itparam.maxit         = 500;
+        itparam.tol           = 1e-10;
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         

@@ -55,7 +55,7 @@ void fasp_solver_amli (AMG_data *mgl,
 	
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_amli ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
 	if (print_level>=PRINT_MOST) printf("AMLI level %d, pre-smoother %d.\n", level, smoother);
@@ -162,7 +162,7 @@ void fasp_solver_amli (AMG_data *mgl,
 }
 
 /**
- * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param, int level, int num_levels)
+ * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param, INT level, INT num_levels)
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
  *
  * \param *mgl pointer to AMG_data data
@@ -202,10 +202,11 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 	
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_nl_amli ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
 	
-	if (print_level>=PRINT_MOST) printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
+	if (print_level>=PRINT_MOST) 
+        printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
 	
 	if (level < num_levels-1) { 
 		
@@ -235,30 +236,21 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 		
 		// call nonlinear AMLI-cycle recursively
 		{ 
-			unsigned int i;	
+			unsigned INT i;	
             
 			fasp_dvec_set(m1,e1,0.0);	
 			
-			if (level == num_levels-2)  // since the coarsest is solved exactly, no need to call krylov method on second coarest level
+            // The coarsest problem is solved exactly.
+            // No need to call krylov method on second coarest level
+			if (level == num_levels-2)  
 			{
 				fasp_solver_nl_amli(&mgl[level+1], param, 0, num_levels-1);
 			}
 			else{  // recursively call preconditioned Krylov method on coarse grid
 				precond_data precdata;
+                
+                fasp_precond_data_set(&precdata, param);
 				precdata.max_iter = 1;
-				precdata.tol = param->tol;
-				precdata.cycle_type = param->cycle_type;
-				precdata.smoother = param->smoother;
-				precdata.smooth_order = param->smooth_order;
-				precdata.presmooth_iter  = param->presmooth_iter;
-				precdata.postsmooth_iter = param->postsmooth_iter;
-				precdata.coarsening_type = param->coarsening_type;
-				precdata.relaxation = param->relaxation;
-				precdata.coarse_scaling = param->coarse_scaling;
-				precdata.amli_degree = param->amli_degree;
-				precdata.amli_coef = param->amli_coef;
-                precdata.nl_amli_krylov_type = param->nl_amli_krylov_type;
-				precdata.tentative_smooth = param->tentative_smooth;
 				precdata.max_levels = num_levels-1;
 				precdata.mgl_data = &mgl[level+1];
                 
@@ -269,15 +261,16 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 				fasp_array_cp (m1, b1->val, bH.val);
 				fasp_array_cp (m1, e1->val, uH.val);
                 
-				const int maxit = param->amli_degree+1;
+				const INT maxit = param->amli_degree+1;
+                const REAL tol = 1e-12;
                 
                 switch (param->nl_amli_krylov_type)
                 {
-                    case 1:   // Use GCG
-                        fasp_solver_dcsr_gcg(A_level1, &bH, &uH, maxit, 1e-12, &prec, 0, 1);
+                    case SOLVER_GCG: // Use GCG
+                        fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&prec,0,1);
                         break;
-                    default:  // Use FGMRES
-                        fasp_solver_dcsr_pvfgmres (A_level1, &bH, &uH, maxit, 1e-12, &prec, 0, 1, 30);
+                    default: // Use FGMRES
+                        fasp_solver_dcsr_pvfgmres(A_level1,&bH,&uH,maxit,tol,&prec,0,1,30);
                         break;
                 }
                 
@@ -351,13 +344,13 @@ void fasp_amg_amli_coef (REAL lambda_max,
                          INT degree, 
                          REAL *coef)
 {
-	REAL mu0 = 1.0/lambda_max, mu1 = 1.0/lambda_min;
-	REAL c = (sqrt(mu0)+sqrt(mu1))*(sqrt(mu0)+sqrt(mu1));
-	REAL a = (4*mu0*mu1)/(c);
+	const REAL mu0 = 1.0/lambda_max, mu1 = 1.0/lambda_min;
+	const REAL c = (sqrt(mu0)+sqrt(mu1))*(sqrt(mu0)+sqrt(mu1));
+	const REAL a = (4*mu0*mu1)/(c);
 	
-	REAL kappa = lambda_max/lambda_min; // condition number
-	REAL delta = (sqrt(kappa) - 1.0)/(sqrt(kappa)+1.0);  
-	REAL b = delta*delta;
+	const REAL kappa = lambda_max/lambda_min; // condition number
+	const REAL delta = (sqrt(kappa) - 1.0)/(sqrt(kappa)+1.0);  
+	const REAL b = delta*delta;
 	
 	if (degree == 0)
 	{

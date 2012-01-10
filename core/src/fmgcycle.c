@@ -39,7 +39,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_fmgcycle ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
     if (print_level >= PRINT_MOST) printf("FMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);

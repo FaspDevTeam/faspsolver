@@ -81,7 +81,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
             
         case SOLVER_GCG:
 			if (print_level>0) printf("Calling GCG solver ...\n");
-			iter = fasp_solver_dcsr_gcg(A, b, x, MaxIt, tol, prec, print_level, stop_type); 
+			iter = fasp_solver_dcsr_pgcg(A, b, x, MaxIt, tol, prec, print_level, stop_type); 
             break;
             
         case SOLVER_VFGMRES: 
@@ -247,7 +247,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	clock_t  solver_start, solver_end;
 	INT      status = SUCCESS;
 	REAL     solver_duration;
-	
+	    
 #if DEBUG_MODE
 	printf("### DEBUG: krylov_amg ...... [Start]\n");
 	printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
@@ -264,14 +264,11 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	// setup preconditioner  
 	switch (amgparam->AMG_type) {
 		case SA_AMG: // Smoothed Aggregation AMG
-			status = fasp_amg_setup_sa(mgl, amgparam);
-			break;
+			status = fasp_amg_setup_sa(mgl, amgparam); break;
         case UA_AMG: // Unsmoothed Aggregation AMG
-			status = fasp_amg_setup_ua(mgl, amgparam);
-			break;
+			status = fasp_amg_setup_ua(mgl, amgparam); break;
 		default: // Classical AMG
-			status = fasp_amg_setup_rs(mgl, amgparam);   
-			break;
+			status = fasp_amg_setup_rs(mgl, amgparam); break;
 	}
 	
 #if CHMEM_MODE	
@@ -280,42 +277,26 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	
 	if (status < 0) goto FINISHED;
 	
-	// solver part
+	// setup preconditioner
 	precond_data precdata;
-    precdata.AMG_type = amgparam->AMG_type;
-	precdata.max_iter = amgparam->max_iter;
-	precdata.tol = amgparam->tol;
-	precdata.cycle_type = amgparam->cycle_type;
-	precdata.smoother = amgparam->smoother;
-	precdata.smooth_order = amgparam->smooth_order;
-	precdata.presmooth_iter  = amgparam->presmooth_iter;
-	precdata.postsmooth_iter = amgparam->postsmooth_iter;
-	precdata.coarsening_type = amgparam->coarsening_type;
-	precdata.relaxation = amgparam->relaxation;
-	precdata.coarse_scaling = amgparam->coarse_scaling;
-	precdata.amli_degree = amgparam->amli_degree;
-	precdata.amli_coef = amgparam->amli_coef;
-    precdata.nl_amli_krylov_type = amgparam->nl_amli_krylov_type;
-	precdata.tentative_smooth = amgparam->tentative_smooth;
+    fasp_precond_data_set(&precdata,amgparam);
 	precdata.max_levels = mgl[0].num_levels;
 	precdata.mgl_data = mgl;
 	
 	precond prec;
 	prec.data = &precdata; 
-	if (itparam->precond_type == PREC_FMG) { // Full AMG
-		prec.fct = fasp_precond_famg;
+	if (itparam->precond_type == PREC_FMG) {
+		prec.fct = fasp_precond_famg; // Full AMG
 	}
 	else {
-		if (amgparam->cycle_type == AMLI_CYCLE) { 
-			prec.fct = fasp_precond_amli; // AMLI AMG
-		}
-        else if (amgparam->cycle_type == NL_AMLI_CYCLE)
-		{
-			prec.fct = fasp_precond_nl_amli; // Nonlinear AMLI AMG
-		}
-		else {
-			prec.fct = fasp_precond_amg; // V,W-Cycle AMG
-		}
+        switch (amgparam->cycle_type) {
+            case AMLI_CYCLE: // AMLI cycle
+                prec.fct = fasp_precond_amli; break;
+            case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
+                prec.fct = fasp_precond_nl_amli; break;
+            default: // V,W-Cycle AMG
+                prec.fct = fasp_precond_amg; break;
+        }
 	}
 	
 	// call iterative solver

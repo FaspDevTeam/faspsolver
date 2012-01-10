@@ -1,5 +1,5 @@
-/*! \file multigrid.c
- *  \brief Abstract recursive multigrid cycle
+/*! \file mgrecur.c
+ *  \brief Abstract multigrid cycle -- recursive version
  */
 
 #include <time.h>
@@ -14,6 +14,7 @@
 
 /**
  * \fn void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level)
+ *
  * \brief Solve Ax=b with recursive multigrid k-cycle
  *
  * \param *mgl pointer to AMG_data data
@@ -21,6 +22,8 @@
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date 04/06/2010
+ *
+ * \note Modified by Chensong on 01/10/2012
  */
 void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level)
 {	
@@ -44,7 +47,7 @@ void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level)
 	
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_mgrecur ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
 	if (print_level>=PRINT_MOST) printf("AMG level %d, pre-smoother %d.\n", level, smoother);
@@ -107,7 +110,7 @@ void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level)
 	if (print_level>=PRINT_MOST) printf("AMG level %d, post-smoother %d.\n", level, smoother);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_mgrecur ...... [Finish]\n");}
+    printf("### DEBUG: fasp_solver_mgrecur ...... [Finish]\n");
 #endif
 }
 

@@ -1,4 +1,4 @@
-/*! \file gcg.c
+/*! \file pgcg.c
  *  \brief Krylov subspace methods -- Preconditioned Generalized Conjugate Gradient.
  *
  */  
@@ -13,48 +13,59 @@
 /*---------------------------------*/
 
 /**
- * \fn int fasp_solver_dcsr_gcg (dCSRmat *A, dvector *b, dvector *u, const int MaxIt, const double tol, \
- *             precond *pre, const int print_level)
+ * \fn INT fasp_solver_dcsr_pgcg (dCSRmat *A, dvector *b, dvector *u, const INT MaxIt, 
+ *                                const double tol, precond *pre, const SHORT print_level,
+ *                                const SHORT stop_type)
+ *
  *	 \brief Preconditioned generilzed conjugate gradient (CG) method for solving Au=b 
+ *
  *	 \param *A	 pointer to the coefficient matrix
  *	 \param *b	 pointer to the dvector of right hand side
  *	 \param *u	 pointer to the dvector of DOFs
  *	 \param MaxIt integer, maximal number of iterations
  *	 \param tol double float, the tolerance for stopage
  *	 \param *pre pointer to the structure of precondition (precond) 
- *     \param print_level how much information to print out
- *	 \return the number of iterations
+ *   \param print_level how much information to print out
+ *   \param stop_type stopping criteria
+ *	 
+ *   \return the number of iterations
+ *
+ *   \author Xiaozhe Hu
+ *   \date   01/01/2012
+ *
+ *   \note Not completely implemented yet! --Chensong
  */
-int fasp_solver_dcsr_gcg (dCSRmat *A, 
-													dvector *b, 
-													dvector *u, 
-													const int MaxIt, 
-													const double tol,
-													precond *pre, 
-													const int print_level,
-													const int stop_type)
+INT fasp_solver_dcsr_pgcg (dCSRmat *A, 
+                           dvector *b, 
+                           dvector *u, 
+                           const INT MaxIt, 
+                           const double tol,
+                           precond *pre, 
+                           const SHORT print_level,
+                           const SHORT stop_type)
 {
-	int iter=0, m=A->row, i;
+	INT iter=0, m=A->row, i;
 	double absres0=BIGREAL, absres, relres=BIGREAL, factor;
 	double alpha, normb=BIGREAL;
-	int status = SUCCESS;
-		
+	SHORT status = SUCCESS;
+    
 	// allocate temp memory 
-	double *work=(double *)fasp_mem_calloc(2*m+MaxIt+MaxIt*m,sizeof(double));	
-	double *r, *Br, *beta, *p;
-	r = work; Br = r+m; beta = Br + m; p = beta + MaxIt;
+	double *work = (double *)fasp_mem_calloc(2*m+MaxIt+MaxIt*m,sizeof(double));	
+	
+    double *r, *Br, *beta, *p;
+	r = work; Br = r + m; beta = Br + m; p = beta + MaxIt;
 	
 #if CHMEM_MODE		
 	total_alloc_mem += (2*m+MaxIt+MaxIt*m)*sizeof(double);
 #endif
 	
 #if DEBUG_MODE
-	printf("fasp_solver_dcsr_gcg ...... [Start]\n");
+	printf("### DEBUG: fasp_solver_dcsr_pgcg ...... [Start]\n");
 #endif	
-
+    
 	normb=fasp_blas_array_norm2(m,b->val);
 	
-	// ----------------------------------- --
+	// -------------------------------------
 	// 1st iteration (Steepest descent)
 	// -------------------------------------
 	// r = b-A*u
@@ -68,18 +79,19 @@ int fasp_solver_dcsr_gcg (dCSRmat *A,
 		fasp_array_cp(m,r,p); /* No preconditioner, B=I */
 	
 	// alpha = (p'r)/(p'Ap)
-	alpha = fasp_blas_array_dotprod(m,r,p)/fasp_blas_dcsr_vmv (A, p, p);
+	alpha = fasp_blas_array_dotprod (m,r,p) / fasp_blas_dcsr_vmv (A, p, p);
+    
 	// u = u + alpha *p
 	fasp_blas_array_axpy(m, alpha , p, u->val);
-	// r = r - alpha *Ap
+	
+    // r = r - alpha *Ap
 	fasp_blas_dcsr_aAxpy((-1.0*alpha),A,p,r);
     
     // norm(r), factor
-    absres=fasp_blas_array_norm2(m,r);
-    factor=absres/absres0;
+    absres = fasp_blas_array_norm2(m,r); factor = absres/absres0;
     
     // compute relative residual 
-    relres=absres/normb;	
+    relres = absres/normb;	
     
     // output iteration information if needed	
     print_itinfo(print_level,stop_type,iter+1,relres,absres,factor);
@@ -94,31 +106,37 @@ int fasp_solver_dcsr_gcg (dCSRmat *A,
 			pre->fct(r, Br ,pre->data); // Preconditioning 
 		else
 			fasp_array_cp(m,r, Br); // No preconditioner, B=I 
-			
+        
 		// form p
 		fasp_array_cp(m, Br, p+iter*m);
 		
 		for (i=0; i<iter; i++)
 		{
-			beta[i] = (-1.0) * ((fasp_blas_dcsr_vmv (A, Br, p+i*m))/(fasp_blas_dcsr_vmv (A, p+i*m, p+i*m)));
+			beta[i] = (-1.0) * ( fasp_blas_dcsr_vmv (A, Br, p+i*m)
+                                /fasp_blas_dcsr_vmv (A, p+i*m, p+i*m) );
 			
 			fasp_blas_array_axpy(m, beta[i], p+i*m, p+iter*m);
 		}
 		
-		// next iteration
-		// alpha = (p'r)/(p'Ap)
-		alpha = fasp_blas_array_dotprod(m,r,p+iter*m)/fasp_blas_dcsr_vmv (A, p+iter*m, p+iter*m);
-		// u = u + alpha *p
+        // -------------------------------------
+        // next iteration
+        // -------------------------------------
+
+        // alpha = (p'r)/(p'Ap)
+		alpha = fasp_blas_array_dotprod(m,r,p+iter*m)
+              / fasp_blas_dcsr_vmv (A, p+iter*m, p+iter*m);
+		
+        // u = u + alpha *p
 		fasp_blas_array_axpy(m, alpha , p+iter*m, u->val);
-		// r = r - alpha *Ap
+		
+        // r = r - alpha *Ap
 		fasp_blas_dcsr_aAxpy((-1.0*alpha),A,p+iter*m,r);
 		
 		// norm(r), factor
-		absres=fasp_blas_array_norm2(m,r);
-		factor=absres/absres0;
+		absres = fasp_blas_array_norm2(m,r); factor = absres/absres0;
 		
 		// compute relative residual 
-		relres=absres/normb;	
+		relres = absres/normb;	
 		
 		// output iteration information if needed	
 		print_itinfo(print_level,stop_type,iter+1,relres,absres,factor);
@@ -127,8 +145,7 @@ int fasp_solver_dcsr_gcg (dCSRmat *A,
 		
 		// update relative residual here
 		absres0 = absres;
-		
-	
+        
 	} // end of main GCG loop.
 	
 FINISHED:  // finish the iterative method
@@ -144,7 +161,7 @@ FINISHED:  // finish the iterative method
 	fasp_mem_free(work);
 	
 #if DEBUG_MODE
-	printf("fasp_solver_dcsr_gcg ...... [Finish]\n");
+	printf("### DEBUG: fasp_solver_dcsr_pgcg ...... [Finish]\n");
 #endif	
 	
 	if (iter>MaxIt) return ERROR_SOLVER_MAXIT;

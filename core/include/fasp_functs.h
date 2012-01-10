@@ -857,18 +857,6 @@ dCSRmat fasp_format_dbsr_dcsr_omp (dBSRmat *B,
 																	 int openmp_holds );
 
 
-/*-------- In file: gcg.c --------*/
-
-int fasp_solver_dcsr_gcg (dCSRmat *A, 
-													dvector *b, 
-													dvector *u, 
-													const int MaxIt, 
-													const double tol,
-													precond *pre, 
-													const int print_level,
-													const int stop_type);
-
-
 /*-------- In file: givens.c --------*/
 
 void fasp_aux_givens (double beta, 
@@ -926,8 +914,6 @@ void fasp_ilu_data_free(ILU_data *ILUdata);
 void fasp_ilu_data_init (ILU_data *ILUdata);
 
 void fasp_precond_init (precond *pdata);
-
-void fasp_precond_data_init (precond_data *pdata);
 
 
 /*-------- In file: input.c --------*/
@@ -1313,6 +1299,11 @@ void fasp_param_ilu_set (ILU_param *param, input_param *Input);
 
 void fasp_param_solver_set (itsolver_param *itparam, input_param *Input);
 
+void fasp_precond_data_init (precond_data *pdata);
+
+void fasp_precond_data_set (precond_data *precdata, 
+                            AMG_param *param);
+
 void fasp_param_amg_print (AMG_param *param);
 
 void fasp_param_ilu_print (ILU_param *param);
@@ -1401,6 +1392,18 @@ int fasp_solver_dcsr_pcg_omp (dCSRmat *A,
                               const int stop_type,
                               int nthreads,
                               int openmp_holds);
+
+
+/*-------- In file: pgcg.c --------*/
+
+INT fasp_solver_dcsr_pgcg (dCSRmat *A, 
+                           dvector *b, 
+                           dvector *u, 
+                           const INT MaxIt, 
+                           const double tol,
+                           precond *pre, 
+                           const SHORT print_level,
+                           const SHORT stop_type);
 
 
 /*-------- In file: pgmres.c --------*/

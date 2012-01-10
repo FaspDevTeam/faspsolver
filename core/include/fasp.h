@@ -527,20 +527,21 @@ typedef struct {
 	//! number of postsmoothing
 	SHORT postsmooth_iter;
 	//! coarsening type
-	SHORT coarsening_type;
-	//! relaxation parameter for SOR smoother
 	REAL relaxation;
 	//! switch of scaling of the coarse grid correction
+	SHORT coarsening_type;
+	//! relaxation parameter for SOR smoother
 	SHORT coarse_scaling;
 	//! degree of the polynomial used by AMLI cycle
 	SHORT amli_degree;
-	//! coefficients of the polynomial used by AMLI cycle
-	REAL *amli_coef;
     //! type of krylov method used by Nonlinear AMLI cycle
     SHORT nl_amli_krylov_type;
 	//! smooth factor for smoothing the tentative prolongation
 	REAL tentative_smooth;
 	
+	//! coefficients of the polynomial used by AMLI cycle
+	REAL *amli_coef;
+
 	//! AMG preconditioner data
 	AMG_data *mgl_data;
 	

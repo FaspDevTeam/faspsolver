@@ -1,13 +1,3 @@
-/*
- *		input.c 
- *
- *------------------------------------------------------
- *		Created by Chensong Zhang on 03/20/2010.
- *		Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
- *------------------------------------------------------
- *
- */
-
 /*! \file input.c
  *  \brief Read input parameters
  */
@@ -28,37 +18,39 @@
  *
  * \author Chensong Zhang
  * \date 03/20/2010 
+ *
+ * \note Modified by Xiaozhe on 01/23/2011: add AMLI cycle
+ * \note Modified by Chensong on 01/10/2012
  */
 void fasp_param_input (char *filenm, input_param *Input)
 {
-	int val, ret = 1;
-	char buffer[500]; // Note: max number of char for each line!
-	FILE *fp;
-    char * wall;
-	
+	char     buffer[500]; // Note: max number of char for each line!
+    char   * wall;
+	INT      val; 
+	SHORT    status = SUCCESS;
+    
 	// set default input parameters
 	fasp_param_input_init(Input);
 	
 	if (filenm==NULL) {
-		ret = 0;
+		status = ERROR_INPUT_PAR;
 		goto FINISH;
 	}
 	
-	fp = fopen(filenm,"r");
+	FILE *fp = fopen(filenm,"r");
 	if (fp==NULL) {
-		printf("Error: could not open file %s...\n", filenm);
+		printf("### ERROR: Could not open file %s...\n", filenm);
 		exit(ERROR_OPEN_FILE);
 	}
-	
-	while (ret) {
-		
-		int ibuff; 
-		double dbuff;
-		char sbuff[500];
+
+	while ( status == SUCCESS ) {
+		INT   ibuff; 
+		REAL  dbuff;
+		char  sbuff[500];
 		
 		val = fscanf(fp,"%s",buffer);
 		if (val==EOF) break;
-		if (val!=1){ ret=0; break; }
+		if (val!=1){ status = ERROR_INPUT_PAR; break; }
 		if (buffer[0]=='[' || buffer[0]=='%' || buffer[0]=='|') {
 			wall = fgets(buffer,500,fp); // skip rest of line
 			continue;
@@ -69,10 +61,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%s",sbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			strncpy(Input->workdir,sbuff,128);
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -81,10 +73,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->problem_num=ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -93,10 +85,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->print_level = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -105,10 +97,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->output_type = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -117,10 +109,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 1; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->itsolver_type = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -129,10 +121,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 1; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->stop_type = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -141,10 +133,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 1; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->precond_type = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -153,10 +145,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 1; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->itsolver_tol = dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -165,10 +157,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 1; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->itsolver_maxit = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -177,10 +169,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 1; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_ILU_levels = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -189,10 +181,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 1; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->restart = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -201,10 +193,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%s",buffer);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			
 			if ((strcmp(buffer,"C")==0)||(strcmp(buffer,"c")==0))
 				Input->AMG_type = CLASSIC_AMG;
@@ -213,7 +205,7 @@ void fasp_param_input (char *filenm, input_param *Input)
             else if ((strcmp(buffer,"UA")==0)||(strcmp(buffer,"ua")==0))
 				Input->AMG_type = UA_AMG;
 			else
-			{ ret = 0; break; }
+			{ status = ERROR_INPUT_PAR; break; }
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
 		
@@ -221,10 +213,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_strong_coupled = dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -233,10 +225,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_max_aggregation = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -245,10 +237,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_tentative_smooth = dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -257,21 +249,21 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%s",buffer);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			
 			if ((strcmp(buffer,"ON")==0)||(strcmp(buffer,"on")==0)||
-					(strcmp(buffer,"On")==0)||(strcmp(buffer,"oN")==0))
+                (strcmp(buffer,"On")==0)||(strcmp(buffer,"oN")==0))
 				Input->AMG_smooth_filter = ON;
 			else if ((strcmp(buffer,"OFF")==0)||(strcmp(buffer,"off")==0)||
-							 (strcmp(buffer,"ofF")==0)||(strcmp(buffer,"oFf")==0)||
-							 (strcmp(buffer,"Off")==0)||(strcmp(buffer,"oFF")==0)||
-							 (strcmp(buffer,"OfF")==0)||(strcmp(buffer,"OFf")==0))
+                     (strcmp(buffer,"ofF")==0)||(strcmp(buffer,"oFf")==0)||
+                     (strcmp(buffer,"Off")==0)||(strcmp(buffer,"oFF")==0)||
+                     (strcmp(buffer,"OfF")==0)||(strcmp(buffer,"OFf")==0))
 				Input->AMG_smooth_filter = OFF;
 			else
-			{ ret = 0; break; }
+			{ status = ERROR_INPUT_PAR; break; }
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
 		
@@ -279,21 +271,21 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%s",buffer);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			
 			if ((strcmp(buffer,"ON")==0)||(strcmp(buffer,"on")==0)||
-					(strcmp(buffer,"On")==0)||(strcmp(buffer,"oN")==0))
+                (strcmp(buffer,"On")==0)||(strcmp(buffer,"oN")==0))
 				Input->AMG_coarse_scaling = ON;
 			else if ((strcmp(buffer,"OFF")==0)||(strcmp(buffer,"off")==0)||
-							 (strcmp(buffer,"ofF")==0)||(strcmp(buffer,"oFf")==0)||
-							 (strcmp(buffer,"Off")==0)||(strcmp(buffer,"oFF")==0)||
-							 (strcmp(buffer,"OfF")==0)||(strcmp(buffer,"OFf")==0))
+                     (strcmp(buffer,"ofF")==0)||(strcmp(buffer,"oFf")==0)||
+                     (strcmp(buffer,"Off")==0)||(strcmp(buffer,"oFF")==0)||
+                     (strcmp(buffer,"OfF")==0)||(strcmp(buffer,"OFf")==0))
 				Input->AMG_coarse_scaling = OFF;
 			else
-			{ ret = 0; break; }
+			{ status = ERROR_INPUT_PAR; break; }
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
 		
@@ -301,10 +293,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_levels = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -313,10 +305,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_tol = dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -325,10 +317,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_maxit = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -337,10 +329,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_coarse_dof = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -349,10 +341,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%s",buffer);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			
 			if ((strcmp(buffer,"V")==0)||(strcmp(buffer,"v")==0))
 				Input->AMG_cycle_type = V_CYCLE;
@@ -363,7 +355,7 @@ void fasp_param_input (char *filenm, input_param *Input)
             else if ((strcmp(buffer,"NA")==0)||(strcmp(buffer,"na")==0))
 				Input->AMG_cycle_type = NL_AMLI_CYCLE; 
 			else
-			{ ret = 0; break; }
+			{ status = ERROR_INPUT_PAR; break; }
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
 		
@@ -371,10 +363,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%s",buffer);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			
 			if ((strcmp(buffer,"JACOBI")==0)||(strcmp(buffer,"jacobi")==0))
 				Input->AMG_smoother = JACOBI;
@@ -397,7 +389,7 @@ void fasp_param_input (char *filenm, input_param *Input)
 			else if ((strcmp(buffer,"L1_DIAG")==0)||(strcmp(buffer,"l1_diag")==0))
 				Input->AMG_smoother = L1_DIAG;
 			else
-			{ ret = 0; break; }
+			{ status = ERROR_INPUT_PAR; break; }
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
 		
@@ -405,10 +397,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_coarsening_type = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -417,10 +409,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_interpolation_type = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -429,10 +421,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_presmooth_iter = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -441,10 +433,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_postsmooth_iter = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -453,10 +445,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_relaxation=dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -465,10 +457,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_strong_threshold = dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -477,10 +469,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_truncation_threshold = dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -489,10 +481,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_max_row_sum = dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -501,10 +493,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_amli_degree = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -513,10 +505,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->AMG_nl_amli_krylov_type = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -525,10 +517,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->ILU_type = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -537,10 +529,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->ILU_lfil = ibuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -549,10 +541,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->ILU_droptol = dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -561,10 +553,10 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->ILU_relax = dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
@@ -573,66 +565,65 @@ void fasp_param_input (char *filenm, input_param *Input)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
-				ret = 0; break;
+				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%lf",&dbuff);
-			if (val!=1) { ret = 0; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			Input->ILU_permtol = dbuff;
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
 		
 		else
 		{
-			printf("Error: unknown Input keyword...\n");
-			ret = 0;
+			status = ERROR_INPUT_PAR;
 			break;
 		}		
 	}
 	
 	fclose(fp);
 	
-	// some sanity checks
+	// sanity checks
 	if ( Input->problem_num<0 
-			|| Input->print_level<0 
-			|| Input->itsolver_type<0
-			|| Input->precond_type<0 
-			|| Input->itsolver_tol<=0 
-			|| Input->itsolver_maxit<=0 
-			|| Input->ILU_type<=0
-			|| Input->ILU_lfil<0
-			|| Input->ILU_droptol<=0
-			|| Input->ILU_relax<0
-			|| Input->ILU_permtol<0
-			|| Input->AMG_type<=0 
-			|| Input->AMG_levels<0 
-			|| Input->AMG_ILU_levels<0
-			|| Input->AMG_tol<0 
-			|| Input->AMG_maxit<0 
-			|| Input->AMG_coarsening_type<0 
-			|| Input->AMG_smoother<0
-			|| Input->AMG_strong_threshold<0.0 
-			|| Input->AMG_strong_threshold>1.0 
-			|| Input->AMG_truncation_threshold<0.0 
-			|| Input->AMG_truncation_threshold>1.0 
-			|| Input->AMG_max_row_sum<0
-			|| Input->AMG_presmooth_iter<0 
-			|| Input->AMG_postsmooth_iter<0 
-			|| Input->AMG_strong_coupled<0 
-			|| Input->AMG_max_aggregation<=0 
-			|| Input->AMG_tentative_smooth<0 
-			|| Input->AMG_smooth_filter<0 
-			|| Input->stop_type<=0
-			|| Input->stop_type>3 
-			|| Input->restart<0
-			) ret = 0;
+        || Input->print_level<0 
+        || Input->itsolver_type<0
+        || Input->precond_type<0 
+        || Input->itsolver_tol<=0 
+        || Input->itsolver_maxit<=0 
+        || Input->ILU_type<=0
+        || Input->ILU_lfil<0
+        || Input->ILU_droptol<=0
+        || Input->ILU_relax<0
+        || Input->ILU_permtol<0
+        || Input->AMG_type<=0 
+        || Input->AMG_levels<0 
+        || Input->AMG_ILU_levels<0
+        || Input->AMG_tol<0 
+        || Input->AMG_maxit<0 
+        || Input->AMG_coarsening_type<0 
+        || Input->AMG_smoother<0
+        || Input->AMG_strong_threshold<0.0 
+        || Input->AMG_strong_threshold>1.0 
+        || Input->AMG_truncation_threshold<0.0 
+        || Input->AMG_truncation_threshold>1.0 
+        || Input->AMG_max_row_sum<0
+        || Input->AMG_presmooth_iter<0 
+        || Input->AMG_postsmooth_iter<0 
+        || Input->AMG_strong_coupled<0 
+        || Input->AMG_max_aggregation<=0 
+        || Input->AMG_tentative_smooth<0 
+        || Input->AMG_smooth_filter<0 
+        || Input->stop_type<=0
+        || Input->stop_type>3 
+        || Input->restart<0
+        ) status = ERROR_INPUT_PAR;
 	
-	// if meet unexpected input, stop the program
 FINISH:
-	if (ret!=1) {
-		printf("Error: wrong input file!\n");
-		exit(ERROR_INPUT_PAR);
-	}
-	
+#if DEBUG_MODE
+    printf("### DEBUG: Reading input status = %d\n", status);
+#endif
+    
+	// if meet unexpected input, stop the program
+    fasp_chkerr(status,"fasp_param_input");
 }
 
 /*---------------------------------*/

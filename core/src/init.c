@@ -167,31 +167,6 @@ void fasp_precond_init (precond *pdata)
 	pdata->fct  = NULL;
 }
 
-/**
- * \fn void fasp_precond_data_init (precond_data *pdata)
- *
- * \brief Initialize precond_data
- *
- * \param Input   pointer to precond_data
- *
- * \author Chensong Zhang
- * \date 2010/03/23 
- */
-void fasp_precond_data_init (precond_data *pdata)
-{
-	pdata->print_level     = 0;
-	pdata->max_iter        = 500;
-	pdata->max_levels      = 12;
-	pdata->tol             = 1e-8;
-	pdata->cycle_type      = V_CYCLE;
-	pdata->smoother        = GS;
-	pdata->coarse_scaling  = OFF;
-	pdata->presmooth_iter  = 2;
-	pdata->postsmooth_iter = 2;
-	pdata->coarsening_type = 1;
-	pdata->relaxation      = 0.9;
-}
-
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

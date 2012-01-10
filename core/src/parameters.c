@@ -132,10 +132,10 @@ void fasp_param_amg_init (AMG_param *param)
 	param->coarse_dof = 500;
 	param->cycle_type = V_CYCLE;	
 	param->smoother = GS;
-	param->smooth_order = NO_ORDER;
+	param->smooth_order = CF_ORDER;
 	param->presmooth_iter = 2;
 	param->postsmooth_iter = 2;
-	param->relaxation = 1.0;
+	param->relaxation = 1.1;
 	param->coarse_scaling = OFF;
 	param->amli_degree = 0;
 	param->amli_coef = NULL;
@@ -230,17 +230,17 @@ void fasp_param_amg_set (AMG_param *param, input_param *Input)
 		param->tol      = Input->AMG_tol; 
 	}
 	
-	param->max_levels      = Input->AMG_levels;	
-	param->cycle_type      = Input->AMG_cycle_type;	
-	param->smoother        = Input->AMG_smoother;
-	param->relaxation      = Input->AMG_relaxation;
-	param->presmooth_iter  = Input->AMG_presmooth_iter;
-	param->postsmooth_iter = Input->AMG_postsmooth_iter;
-	param->coarse_dof      = Input->AMG_coarse_dof;
-	param->coarse_scaling  = Input->AMG_coarse_scaling;
-	param->amli_degree     = Input->AMG_amli_degree;
-	param->amli_coef       = NULL;
-    param->nl_amli_krylov_type = Input->AMG_nl_amli_krylov_type;
+	param->max_levels           = Input->AMG_levels;	
+	param->cycle_type           = Input->AMG_cycle_type;	
+	param->smoother             = Input->AMG_smoother;
+	param->relaxation           = Input->AMG_relaxation;
+	param->presmooth_iter       = Input->AMG_presmooth_iter;
+	param->postsmooth_iter      = Input->AMG_postsmooth_iter;
+	param->coarse_dof           = Input->AMG_coarse_dof;
+	param->coarse_scaling       = Input->AMG_coarse_scaling;
+	param->amli_degree          = Input->AMG_amli_degree;
+	param->amli_coef            = NULL;
+    param->nl_amli_krylov_type  = Input->AMG_nl_amli_krylov_type;
 	
 	param->coarsening_type      = Input->AMG_coarsening_type;
 	param->interpolation_type   = Input->AMG_interpolation_type;
@@ -248,10 +248,10 @@ void fasp_param_amg_set (AMG_param *param, input_param *Input)
 	param->truncation_threshold = Input->AMG_truncation_threshold;
 	param->max_row_sum          = Input->AMG_max_row_sum;
 	
-	param->strong_coupled   = Input->AMG_strong_coupled;
-	param->max_aggregation  = Input->AMG_max_aggregation;
-	param->tentative_smooth = Input->AMG_tentative_smooth;
-	param->smooth_filter    = Input->AMG_smooth_filter;
+	param->strong_coupled       = Input->AMG_strong_coupled;
+	param->max_aggregation      = Input->AMG_max_aggregation;
+	param->tentative_smooth     = Input->AMG_tentative_smooth;
+	param->smooth_filter        = Input->AMG_smooth_filter;
 	
 	param->ILU_levels  = Input->AMG_ILU_levels;
 	param->ILU_type    = Input->ILU_type;
@@ -310,6 +310,68 @@ void fasp_param_solver_set (itsolver_param *itparam, input_param *Input)
 		itparam->maxit = Input->itsolver_maxit;
 	}
 }	
+
+/**
+ * \fn void fasp_precond_data_init (precond_data *pdata)
+ *
+ * \brief Initialize precond_data
+ *
+ * \param pdata   pointer to precond_data
+ *
+ * \author Chensong Zhang
+ * \date 2010/03/23 
+ */
+void fasp_precond_data_init (precond_data *pdata)
+{
+	pdata->AMG_type            = CLASSIC_AMG;
+    pdata->print_level         = 0;
+	pdata->max_iter            = 500;
+	pdata->max_levels          = 12;
+	pdata->tol                 = 1e-8;
+	pdata->cycle_type          = V_CYCLE;
+	pdata->smoother            = GS;
+    pdata->smooth_order        = CF_ORDER;
+	pdata->presmooth_iter      = 2;
+	pdata->postsmooth_iter     = 2;
+	pdata->relaxation          = 1.1;
+	pdata->coarsening_type     = 1;
+	pdata->coarse_scaling      = OFF;
+    pdata->amli_degree         = 1;
+    pdata->nl_amli_krylov_type = SOLVER_GCG;
+}
+
+/**
+ * \fn void fasp_precond_data_set (precond_data *precdata, AMG_param *param)
+ *
+ * \brief Set precond_data with AMG_param
+ *
+ * \param precdata    pointer to precond_data
+ * \param param       pointer to AMG_param
+ *
+ * \author Chensong Zhang
+ * \date 2011/01/10 
+ */
+void fasp_precond_data_set (precond_data *precdata, 
+                            AMG_param *param)
+{
+    precdata->AMG_type = param->AMG_type;
+    precdata->print_level = param->print_level;
+    precdata->max_iter = param->max_iter;
+    precdata->max_levels = param->max_levels;
+    precdata->tol = param->tol;
+    precdata->cycle_type = param->cycle_type;
+    precdata->smoother = param->smoother;
+    precdata->smooth_order = param->smooth_order;
+    precdata->presmooth_iter  = param->presmooth_iter;
+    precdata->postsmooth_iter = param->postsmooth_iter;
+    precdata->coarsening_type = param->coarsening_type;
+    precdata->relaxation = param->relaxation;
+    precdata->coarse_scaling = param->coarse_scaling;
+    precdata->amli_degree = param->amli_degree;
+    precdata->amli_coef = param->amli_coef;
+    precdata->nl_amli_krylov_type = param->nl_amli_krylov_type;
+    precdata->tentative_smooth = param->tentative_smooth;
+}
 
 /**
  * \fn void fasp_param_amg_print (AMG_param *param)
