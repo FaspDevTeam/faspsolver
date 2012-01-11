@@ -85,7 +85,7 @@ void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level)
 		}
 		else {
             fasp_dcsr_postsmoothing(smoother,A_level0,b0,e0,param->postsmooth_iter,
-                                    m0-1,0,-1,relax,smooth_order,ordering);
+                                    0,m0-1,-1,relax,smooth_order,ordering);
 		}
 		
 	}

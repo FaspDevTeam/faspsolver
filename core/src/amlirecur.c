@@ -1,7 +1,9 @@
-/*! \file amli.c
- *  \brief Abstract Algebraic Multilevel Iteration (recursive version)
+/*! \file amlirecur.c
+ *  \brief Abstract AMLI Multilevel Iteration (recursive version)
  *
- *  TODO: Need a non-recursive version. --Chensong 
+ *  \note Contains AMLI and nonlinear AMLI cycles
+ *
+ *  TODO: Need to add a non-recursive version. --Chensong 
  */
 
 #include <math.h>
@@ -94,12 +96,11 @@ void fasp_solver_amli (AMG_data *mgl,
 				fasp_dvec_set(m1,e1,0.0);
 				fasp_solver_amli(mgl, param, level+1);
 				
-				// b1.val = (coef[degree-i]/coef[degree])*r1 + A_level1*e1;
-                // First, compute b1.val = A_level1*e1
+				// b1 = (coef[degree-i]/coef[degree])*r1 + A_level1*e1;
+                // First, compute b1 = A_level1*e1
 				fasp_blas_dcsr_mxv(A_level1, e1->val, b1->val); 
-                // Then, compute b1.val = b1.val + (coef[degree-i]/coef[degree])*r1
+                // Then, compute b1 = b1 + (coef[degree-i]/coef[degree])*r1
 				fasp_blas_array_axpy(m1, coef[degree-i]/coef[degree], r1, b1->val); 
-				
 			}
 			
 			fasp_dvec_set(m1,e1,0.0);	
@@ -110,18 +111,16 @@ void fasp_solver_amli (AMG_data *mgl,
 		fasp_blas_array_ax(m1, coef[degree], e1->val);
 		if ( param->coarse_scaling == ON ) {
 			alpha = fasp_blas_array_dotprod(m1, e1->val, r1) 
-            / fasp_blas_dcsr_vmv(A_level1, e1->val, e1->val);
+                  / fasp_blas_dcsr_vmv(A_level1, e1->val, e1->val);
 		}
 		
 		// prolongation e0 = e0 + alpha * P * e1
 		switch (amg_type)
 		{
 			case UA_AMG:
-				fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[level].P, e1->val, e0->val);
-				break;
+				fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[level].P, e1->val, e0->val); break;
 			default:
-				fasp_blas_dcsr_aAxpy(alpha, &mgl[level].P, e1->val, e0->val);
-				break;
+				fasp_blas_dcsr_aAxpy(alpha, &mgl[level].P, e1->val, e0->val); break;
 		}	
 		
 		// post smoothing
@@ -130,7 +129,7 @@ void fasp_solver_amli (AMG_data *mgl,
 		}
 		else {
             fasp_dcsr_postsmoothing(smoother,A_level0,b0,e0,param->postsmooth_iter,
-                                    m0-1,0,-1,relax,smooth_order,ordering);
+                                    0,m0-1,-1,relax,smooth_order,ordering);
 		}
 		
 	}
@@ -297,7 +296,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 		}
 		else {
             fasp_dcsr_postsmoothing(smoother,A_level0,b0,e0,param->postsmooth_iter,
-                                    m0-1,0,-1,relax,smooth_order,ordering);
+                                    0,m0-1,-1,relax,smooth_order,ordering);
 		}
 		
 	}

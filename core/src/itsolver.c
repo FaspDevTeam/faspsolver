@@ -283,8 +283,8 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	precdata.max_levels = mgl[0].num_levels;
 	precdata.mgl_data = mgl;
 	
-	precond prec;
-	prec.data = &precdata; 
+	precond prec; prec.data = &precdata;
+    
 	if (itparam->precond_type == PREC_FMG) {
 		prec.fct = fasp_precond_famg; // Full AMG
 	}
@@ -301,7 +301,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	
 	// call iterative solver
 	status = fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);	
-	
+    
 	if (print_level>=PRINT_MIN) {
 		solver_end = clock();	
 		solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
@@ -315,6 +315,8 @@ FINISHED:
 	printf("### DEBUG: krylov_amg ...... [Finish]\n");
 #endif
 	
+    fasp_chkerr(status, "fasp_solver_dcsr_krylov_amg");
+
 	return status;
 }
 
