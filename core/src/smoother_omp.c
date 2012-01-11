@@ -327,7 +327,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
  * \param openmp_holds threshold of parallelization
  * \return      void
  *
- * \author Feng Chunsheng, Yue Xiaoqiang
+ * \author FENG Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
  */
 void fasp_smoother_dcsr_gs_cf_omp (dvector *u, 

@@ -33,8 +33,9 @@
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
- * \author Feng Chunsheng, Yue Xiaoqiang
+ * \author FENG Chunsheng, Yue Xiaoqiang
  * \date 03/14/2011
+ * \date Jan/11/2012 modified by  FENG Chunsheng
  */
 void fasp_blas_dcsr_mxv_omp (dCSRmat *A, 
 														 double *x, 
@@ -51,9 +52,9 @@ void fasp_blas_dcsr_mxv_omp (dCSRmat *A,
 	
 	if (m > openmp_holds) {
 		int myid, mybegin, myend;
-#pragma omp parallel private(myid, mybegin, myend, i, temp, begin_row, end_row, nnz_num_row, k) ////num_threads(nthreads)
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, nnz_num_row, k) 
+		for (myid = 0; myid < nthreads; myid++ )
 		{
-			myid = omp_get_thread_num();
 			FASP_GET_START_END(myid, nthreads, m, mybegin, myend);
 			for (i=mybegin; i<myend; ++i)
 			{
@@ -246,9 +247,9 @@ void fasp_blas_dcsr_aAxpy_omp (const double alpha,
 	if ( alpha == 1.0 ) {
 		if (m > openmp_holds) {
 			int myid, mybegin, myend;
-#pragma omp parallel private(myid, mybegin, myend, i, temp, begin_row, end_row, k) ////num_threads(nthreads)
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k) 
+			for (myid = 0; myid < nthreads; myid++ )
 			{
-				myid = omp_get_thread_num();
 				FASP_GET_START_END(myid, nthreads, m, mybegin, myend);
 				for (i=mybegin; i<myend; ++i)
 				{
@@ -272,9 +273,9 @@ void fasp_blas_dcsr_aAxpy_omp (const double alpha,
 	else if ( alpha == -1.0 ) {
 		if (m > openmp_holds) {
 			int myid, mybegin, myend;
-#pragma omp parallel private(myid, mybegin, myend, i, temp, begin_row, end_row, k) ////num_threads(nthreads)
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k) 
+			for (myid = 0; myid < nthreads; myid++ )
 			{
-				myid = omp_get_thread_num();
 				FASP_GET_START_END(myid, nthreads, m, mybegin, myend);
 				for (i=mybegin; i<myend; ++i)
 				{
@@ -298,9 +299,9 @@ void fasp_blas_dcsr_aAxpy_omp (const double alpha,
 	else {
 		if (m > openmp_holds) {
 			int myid, mybegin, myend;
-#pragma omp parallel private(myid, mybegin, myend, i, temp, begin_row, end_row, k) ////num_threads(nthreads)
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k) 
+			for (myid = 0; myid < nthreads; myid++ )
 			{
-				myid = omp_get_thread_num();
 				FASP_GET_START_END(myid, nthreads, m, mybegin, myend);
 				for (i=mybegin; i<myend; ++i)
 				{
@@ -351,7 +352,7 @@ double fasp_blas_dcsr_vmv_omp (dCSRmat *A,
 	register double temp;
 	
 	if (m > openmp_holds) {
-#pragma omp parallel for reduction(+:value) private(i,temp,begin_row,end_row,k) ////num_threads(nthreads)
+#pragma omp parallel for reduction(+:value) private(i,temp,begin_row,end_row,k) 
 		for (i=0;i<m;++i) {
 			temp=0.0;
 			begin_row=ia[i]; end_row=ia[i+1];

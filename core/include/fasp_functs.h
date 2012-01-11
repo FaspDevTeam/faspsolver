@@ -118,10 +118,10 @@ SHORT fasp_famg_solve (AMG_data *mgl,
 
 /*-------- In file: amg_solve_omp.c --------*/
 
-int fasp_amg_solve_omp (AMG_data *mgl, 
+INT fasp_amg_solve_omp (AMG_data *mgl, 
 												AMG_param *param, 
-												int nthreads, 
-												int openmp_holds);
+												INT nthreads, 
+												INT openmp_holds);
 
 
 /*-------- In file: amlirecur.c --------*/
@@ -806,6 +806,12 @@ int fasp_amg_coarsening_rs_omp (dCSRmat *A,
 																int nthreads, 
 																int openmp_holds);
 
+void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int openmp_holds);
+
+INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, INT nthreads, INT openmp_holds);
+
+void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col, INT nthreads, INT openmp_holds);
+
 
 /*-------- In file: eigen.c --------*/
 
@@ -1231,10 +1237,15 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 
 /*-------- In file: mgcycle_omp.c --------*/
 
-void fasp_solver_mgcycle_omp (AMG_data *mgl, 
+void fasp_solver_mgcycle_omp1 (AMG_data *mgl, 
 															AMG_param *param, 
 															int nthreads, 
 															int openmp_holds);
+
+void fasp_solver_mgcycle_omp (AMG_data *mgl, 
+															AMG_param *param, 
+															INT nthreads, 
+															INT openmp_holds);
 
 
 /*-------- In file: mgrecur.c --------*/
@@ -2197,11 +2208,11 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
 
 /*-------- In file: sparse_csr_omp.c --------*/
 
-void fasp_dcsr_getdiag_omp (int n, 
+void fasp_dcsr_getdiag_omp (INT n, 
 														dCSRmat *A, 
 														dvector *diag, 
-														int nthreads, 
-														int openmp_holds) ;
+														INT nthreads, 
+														INT openmp_holds) ;
 
 void fasp_dcsr_cp_omp (dCSRmat *A, 
 											 dCSRmat *B, 

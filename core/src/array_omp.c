@@ -36,6 +36,16 @@ void fasp_array_set_omp (int n,
 #if FASP_USE_OPENMP
 	unsigned int i;
 	if (val == 0.0) {
+		if (n > openmp_holds) {
+	   int mybegin,myend,myid;
+#pragma omp parallel for private(myid,mybegin,myend)
+	   for (myid = 0; myid < nthreads; myid ++)
+	   {
+		FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+		memset(&x[mybegin], 0x0, sizeof(double)*(myend-mybegin));
+		}
+		}
+		else 
 			memset(x, 0x0, sizeof(double)*n);
 	}
 	else {
@@ -74,35 +84,25 @@ void fasp_iarray_set_omp (int n, int *x, int val, int nthreads, int openmp_holds
 	unsigned int i;
 	if (val == 0) {
 		if (n > openmp_holds) {
-			int myid;
-			int mybegin;
-			int stride_i = n/nthreads;
-#pragma omp parallel private(myid, mybegin) ////num_threads(nthreads)
-			{
-				myid = omp_get_thread_num();
-				mybegin = myid*stride_i;
-				if(myid < nthreads-1) {
-					memset(&x[mybegin], 0, sizeof(int)*stride_i);
-				}
-				else  {
-					memset(&x[mybegin], 0, sizeof(int)*(n-mybegin));
-				}
-			}
+	   int mybegin,myend,myid;
+#pragma omp parallel for private(myid,mybegin,myend)
+	   for (myid = 0; myid < nthreads; myid ++)
+	   {
+		FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+		memset(&x[mybegin], 0, sizeof(int)*(myend-mybegin));
+		}
 		}
 		else {
 			memset(x, 0, sizeof(int)*n);
-		}
+	         }
 	}
 	else {
 		if (n > openmp_holds) {
-			int stride_i,mybegin,myend,myid;
-			stride_i = n/nthreads;
-#pragma omp parallel private(myid,mybegin,myend,i) ////num_threads(nthreads)
-			{
-				myid = omp_get_thread_num();
-				mybegin = myid*stride_i;
-				if(myid < nthreads-1) myend = mybegin+stride_i;
-				else myend = n;
+	   int mybegin,myend,myid;
+#pragma omp parallel for private(myid,mybegin,myend,i)
+	   for (myid = 0; myid < nthreads; myid ++)
+	   {
+		FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
 				for (i=mybegin; i<myend; ++i) x[i]=val;
 			}
 		}
@@ -122,8 +122,9 @@ void fasp_iarray_set_omp (int n, int *x, int val, int nthreads, int openmp_holds
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
- * \author Feng Chunsheng, Yue Xiaoqiang
+ * \author FENG Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
+ * \date Jan/11/2012  Modified by FENG Chunsheng
  */
 void fasp_array_cp_omp (int n, 
 												double *x, 
@@ -132,23 +133,19 @@ void fasp_array_cp_omp (int n,
 												int openmp_holds)
 {
 #if FASP_USE_OPENMP
-	if (n > openmp_holds) {
-		int myid;
-		int mybegin;
-		int stride_i = n/nthreads;
-#pragma omp parallel private(myid, mybegin) ////num_threads(nthreads)
-		{
-			myid = omp_get_thread_num();
-			mybegin = myid*stride_i;
-			if(myid < nthreads-1) {
-				memcpy(&y[mybegin],&x[mybegin], sizeof(double)*stride_i);
+#if 1 
+		if (n > openmp_holds) {
+			int mybegin,myend,myid;
+#pragma omp for parallel private(myid, mybegin,myend) 
+			for (myid = 0; myid < nthreads; myid++ )
+			{
+				FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+				memcpy(&y[mybegin],&x[mybegin], sizeof(double)*(myend-mybegin));
 			}
-			else {
-				memcpy(&y[mybegin],&x[mybegin], sizeof(double)*(n-mybegin));
-			}
-		}
 	}
-	else {
+	else
+#endif			
+   	{
 		memcpy(y,x,n*sizeof(double));
 	}
 #endif
@@ -163,8 +160,9 @@ void fasp_array_cp_omp (int n,
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
- * \author Feng Chunsheng, Yue Xiaoqiang
+ * \author FENG Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
+ * \date Jan/11/2012  Modified by FENG Chunsheng
  */
 void fasp_iarray_cp_omp (int n, 
 												 int *x, 
@@ -173,23 +171,19 @@ void fasp_iarray_cp_omp (int n,
 												 int openmp_holds) 
 {
 #if FASP_USE_OPENMP
-	if (n > openmp_holds) {
-		int myid;
-		int mybegin;
-		int stride_i = n/nthreads;
-#pragma omp parallel private(myid, mybegin) ////num_threads(nthreads)
-		{
-			myid = omp_get_thread_num();
-			mybegin = myid*stride_i;
-			if(myid < nthreads-1) {
-				memcpy(&y[mybegin],&x[mybegin], sizeof(int)*stride_i);
+#if 1 
+		if (n > openmp_holds) {
+			int mybegin,myend,myid;
+#pragma omp for parallel private(myid, mybegin,myend) 
+			for (myid = 0; myid < nthreads; myid++ )
+			{
+				FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+				memcpy(&y[mybegin],&x[mybegin], sizeof(int)*(myend-mybegin));
 			}
-			else {
-				memcpy(&y[mybegin],&x[mybegin], sizeof(int)*(n-mybegin));
-			}
-		}
 	}
-	else {
+	else
+#endif			
+   	{
 		memcpy(y,x,n*sizeof(int));
 	}
 #endif

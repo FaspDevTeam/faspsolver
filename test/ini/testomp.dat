@@ -6,7 +6,7 @@
 
 workdir  = data/        % work directory, no more than 128 characters
 problem_num    = 10     % Problem number 
-print_level    = 9      % How much information to print out 
+print_level    = 2      % How much information to print out 
  
 %----------------------------------------------%
 % parameters for iterative solvers             %

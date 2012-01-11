@@ -197,7 +197,7 @@ int fasp_amg_setup_rs1_omp (AMG_data *mgl,
 	
 	int max_levels=param->max_levels;
 	int mm, level=0;
-	int size; // Zhiyang Zhou 2010/11/12	
+	int size=0; // Zhiyang Zhou 2010/11/12	
 	ivector vertices=fasp_ivec_create(m); // stores level info (fine: 0; coarse: 1)
 	int *icor_ysk = (int *)fasp_mem_calloc(5*nthreads+2, sizeof(int));
 	
@@ -335,6 +335,7 @@ FINISHED:
  *
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
+ * \date Jan/11/2012   Modified by Feng Chunsheng
  */
 int fasp_amg_setup_rs_omp (AMG_data *mgl, 
 													 AMG_param *param, 
@@ -402,12 +403,13 @@ int fasp_amg_setup_rs_omp (AMG_data *mgl,
 		
 		/*-- Form interpolation --*/
 		status = fasp_amg_interp1_omp(&mgl[level].A, &vertices, &mgl[level].P, param, icor_ysk, nthreads, openmp_holds);
+//		status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, param); //, icor_ysk, nthreads, openmp_holds);
 		if (status < 0) goto FINISHED;
 		
 		/*-- Form coarse level stiffness matrix --*/
 		fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
 		/*-- Form coarse level stiffness matrix: There are two RAP routines available! --*/
-#if 0
+#if 1 
 		fasp_blas_dcsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);  //commented by Feng Chunsheng
 #else
 		fasp_blas_dcsr_rap4_omp(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A, icor_ysk, nthreads, openmp_holds);

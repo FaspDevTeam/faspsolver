@@ -11,9 +11,13 @@
 # Compilers and dependences
 ########################################################################
 AR=ar ruc
-CC=gcc
-CPP=g++
-FC=gfortran
+CC=gcc -fopenmp -g
+CPP=g++ -g
+FC=gfortran -fopenmp -g
+
+#CC=icc -openmp
+#CPP=icpc
+#FC=ifort -openmp
 
 CSRCDIR=./src
 FSRCDIR=./src
@@ -166,7 +170,8 @@ testfem:
 
 testomp: 
 	$(CC) $(CFLAGS) -c main/testomp.c -o main/testomp.o
-	$(FC) -nofor_main -o testomp.ex main/testomp.o $(FLFLAGS)
+	$(FC) -o testomp.ex main/testomp.o $(FLFLAGS)
+#	$(FC) -nofor_main -o testomp.ex main/testomp.o $(FLFLAGS)
 
 testall:
 	make 

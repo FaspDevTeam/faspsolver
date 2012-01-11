@@ -23,33 +23,29 @@
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
- * \author Feng Chunsheng, Yue Xiaoqiang
+ * \author FENG Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
+ * \date Jan/11/2012 Modified by FENG Chunsheng
  */
-void fasp_dcsr_getdiag_omp (int n, 
+void fasp_dcsr_getdiag_omp (INT n, 
 														dCSRmat *A, 
 														dvector *diag, 
-														int nthreads, 
-														int openmp_holds) 
+														INT nthreads, 
+														INT openmp_holds) 
 {
 #if FASP_USE_OPENMP
-	int i,k,j,ibegin,iend;	
+	INT i,k,j,ibegin,iend;	
 	
 	if (n==0) n=MIN(A->row,A->col);
 	
 	fasp_dvec_alloc(n,diag);
 	
 	if (n > openmp_holds) {
-		int myid;
-		int mybegin;
-		int myend;
-		int stride_i = n/nthreads;
-#pragma omp parallel private(myid, mybegin, myend, i, ibegin, iend, k, j) //num_threads(nthreads)
-		{
-			myid = omp_get_thread_num();
-			mybegin = myid*stride_i;
-			if(myid < nthreads-1) myend=mybegin+stride_i;
-			else myend=n;
+			INT mybegin,myend,myid;
+#pragma omp parallel for private(myid, mybegin, myend, i, ibegin, iend, k, j) 
+			for (myid = 0; myid < nthreads; myid++ )
+			{
+			FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
 			for (i=mybegin; i<myend; i++)
 			{
 				ibegin=A->IA[i]; iend=A->IA[i+1];

@@ -11,10 +11,13 @@
 # Compilers and dependences
 ########################################################################
 AR=ar ruc
-CC=gcc 
-CPP=g++ 
-FC=gfortran 
+CC=gcc -g 
+CPP=g++ -g
+FC=gfortran -g 
 
+#CC=icc -openmp
+#CPP=icpc -openmp
+#FC=ifort -openmp
 CSRCDIR=./src
 FSRCDIR=./src
 EXTRDIR= ./extra

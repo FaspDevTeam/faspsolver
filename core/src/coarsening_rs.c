@@ -5,14 +5,6 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-
-
-#if FASP_USE_OPENMP
-static void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int openmp_holds);
-static void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int col, int nthreads, int openmp_holds);
-static int  form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, int row, int nthreads, int openmp_holds);
-#endif
-
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -92,7 +84,7 @@ int fasp_amg_coarsening_rs (dCSRmat *A,
 #endif
 	
 	// Step 3: generate sparsity pattern of P
-	generate_sparsity_P(P, &S, vertices, row, col);
+	 generate_sparsity_P(P, &S, vertices, row, col);
 	
 #if DEBUG_MODE
 	printf("coarsening_rs ...... [Finish]\n");

@@ -806,8 +806,9 @@ static void fasp_get_icor_ysk_omp(int nrows, int ncols, int *CoarseIndex, int nb
  *	          Academic Press Inc., San Diego, CA, 2001. 
  *          With contributions by A. Brandt, P. Oswald and K. St¨uben.
  *
- * \author Feng Chunsheng, Yue Xiaoqiang
+ * \author FENG Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
+ * \date Jan/11/2012 Modified by FENG Chunsheng for omp gcc
  */
 static void interp_RS1_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param, int *icor_ysk, int nthreads, int openmp_holds)
 {
@@ -838,13 +839,10 @@ static void interp_RS1_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_para
 	
 	/** step 3: Fill the data of P */
 	if (A->row > openmp_holds) {
-		stride_i = A->row/nthreads;
-#pragma omp parallel private(myid,mybegin,myend,i,begin_row,end_row,diagindex,aii,amN,amP,apN,apP,countPplus,j,k,alpha,beta,l) ////num_threads(nthreads)
-		{
-			myid = omp_get_thread_num();
-			mybegin = myid*stride_i;
-			if(myid < nthreads-1) myend = mybegin+stride_i;
-			else myend = A->row;
+#pragma omp parallel for private(myid,mybegin,myend,i,begin_row,end_row,diagindex,aii,amN,amP,apN,apP,countPplus,j,k,alpha,beta,l)
+			for (myid = 0; myid < nthreads; myid++ )
+			{
+			FASP_GET_START_END(myid, nthreads, A->row, mybegin, myend);
 			for (i=mybegin; i<myend; ++i)
 			{
 				begin_row=A->IA[i]; end_row=A->IA[i+1]-1;	
@@ -997,13 +995,14 @@ static void interp_RS1_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_para
 			}
 		}
 	}
-	
 	fasp_mem_free(Ptr->IA);
-	fasp_mem_free(Ptr->JA);
+    fasp_mem_free(Ptr->JA);
 	fasp_mem_free(Ptr->val);
 	
-	int *CoarseIndex=(int*)fasp_mem_calloc(A->row, sizeof(int));
-	
+	int *CoarseIndex;
+
+	CoarseIndex=(int*)fasp_mem_calloc(A->row, sizeof(int));
+
 #if CHMEM_MODE
 	total_alloc_mem += (A->row)*sizeof(int);
 #endif
@@ -1011,7 +1010,10 @@ static void interp_RS1_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_para
 	// The following is one of OPTIMAL parts ...0802...
 	// Generate CoarseIndex in parallel
 	if (A->row > openmp_holds) {
+#pragma omp master
+	{	
 		indexs = (int *)fasp_mem_calloc(nthreads, sizeof(int));
+	}
 #pragma omp parallel for private(myid, mybegin, myend, index, i)
 		for (myid = 0; myid < nthreads; myid ++)
 		{
@@ -1058,13 +1060,10 @@ static void interp_RS1_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_para
 	}
 	
 	if (P.IA[P.row] > openmp_holds) {
-		stride_i = P.IA[P.row]/nthreads;
-#pragma omp parallel private(myid,mybegin,myend,i,j) ////num_threads(nthreads)
-		{
-			myid = omp_get_thread_num();
-			mybegin = myid*stride_i;
-			if(myid < nthreads-1) myend = mybegin+stride_i;
-			else myend = P.IA[P.row];
+#pragma omp for parallel private(myid, mybegin,myend,i,j) 
+			for (myid = 0; myid < nthreads; myid++ )
+			{
+				FASP_GET_START_END(myid, nthreads,P.IA[P.row], mybegin, myend);
 			for (i=mybegin; i<myend; ++i)
 			{
 				j=P.JA[i];
@@ -1096,7 +1095,9 @@ static void interp_RS1_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_para
 	int mTruncCount, pTruncCount;
 	int num_lost=0;
 	
+	
 	Ptr->val=(double*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(double));
+
 #if CHMEM_MODE
 	total_alloc_mem += (P.IA[Ptr->row])*sizeof(double);
 #endif

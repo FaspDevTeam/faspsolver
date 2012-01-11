@@ -207,8 +207,8 @@ double fasp_blas_dvec_norm1_omp (dvector *x,
  * \param openmp_holds threshold of parallelization
  * \return L2 norm of x
  *
- * \author Feng Chunsheng, Yue Xiaoqiang
- * \date 03/01/2011
+ * \author FENG Chunsheng, Yue Xiaoqiang
+ * \date Jan/11/2011
  */
 double fasp_blas_dvec_norm2_omp (dvector *x, 
 														int nthreads, 
@@ -220,7 +220,7 @@ double fasp_blas_dvec_norm2_omp (dvector *x,
 	const int length=x->row;
 	double *xpt=x->val;
 	if (length > openmp_holds) {
-#pragma omp parallel for reduction(+:twonorm) private(i) ////num_threads(nthreads)
+#pragma omp parallel for reduction(+:twonorm) private(i) 
 		for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];
 	}
 	else {

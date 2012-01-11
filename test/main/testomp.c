@@ -52,7 +52,7 @@ int main (int argc, const char * argv[])
 		printf("Redirecting outputs to file: %s ...\n", outputfile);
 		freopen(outputfile,"w",stdout); // open a file for stdout
 	}
-    
+    	
 	//! Step 1. Assemble or read matrix and right-hand side
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
@@ -61,7 +61,7 @@ int main (int argc, const char * argv[])
 	strncpy(filename2,inparam.workdir,128);
     
 	printf("Test Problem %d\n", problem_num);
-    
+
 	// Read A and b -- P1 FE discretization for Poisson.
 	if (problem_num == 10) {				
 		datafile1="matP1.dat";
@@ -71,12 +71,12 @@ int main (int argc, const char * argv[])
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvecind_read(filename2, &b);
 	}		
-    
+ 
 	// Assemble A and b -- P1 FE discretization for Poisson.
 	else if (problem_num == 19) {	
 	  	assemble(&A,&b,9);
 	}
-    
+
 	else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
@@ -87,38 +87,39 @@ int main (int argc, const char * argv[])
     // Print problem size
     printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
     printf("b: n = %d\n", b.row);
-    
+
 	//! Step 2. Solve the system
 	if (print_level>0) {
 		printf("Max it num = %d\n", inparam.itsolver_maxit);
 		printf("Tolerance  = %e\n", inparam.itsolver_tol);
 	}
-    
+	    
 	// initial guess
     fasp_dvec_alloc(A.row, &uh); 
     fasp_dvec_set(A.row,&uh,0.0);
 	
     // AMG as the iterative solver
 	if (itsolver_type == 0) { 	
-		status = fasp_solver_amg(&A, &b, &uh, &amgparam); 
+		 fasp_solver_amg(&A, &b, &uh, &amgparam); 
 	}
-    
+
     // Full AMG as the iterative solver 
 	else if (itsolver_type == 8) {
-		status = fasp_solver_famg(&A, &b, &uh, &amgparam);
+		 fasp_solver_famg(&A, &b, &uh, &amgparam);
 	}
 	
 #if FASP_USE_OPENMP
     // OMP version AMG as the iterative solver
 	else if( itsolver_type == 110) {        
-        int nts = 1;
- 		printf("omp test itsolver _ type = %d amgparam.maxit = %d, amgparam.tol = %lf\n",
-               itsolver_type, amgparam.maxit, amgparam.tol);
+        int nts = 2;
+ 		printf("omp test itsolver _ type = %d amgparam.max_iter = %d, amgparam.tol = %lf\n",
+                itsolver_type, amgparam.maxit, amgparam.tol);
 		omp_set_num_threads(nts);
 		status = fasp_solver_amg_omp(&A, &b, &uh, &amgparam, nts, 1000);
+		//status = fasp_solver_amg(&A, &b, &uh, &amgparam, nts, 1000);
 	}
 #endif	
-    
+
 	else if (itsolver_type >= 1 && itsolver_type <= 5) {
         
 		// Using no preconditioner for Krylov iterative methods
@@ -147,7 +148,7 @@ int main (int argc, const char * argv[])
 		}
 		
 	}
-    
+
 	else {
 		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);		
 		exit(ERROR_SOLVER_TYPE);
@@ -164,10 +165,10 @@ int main (int argc, const char * argv[])
 	}
     
     if (output_type) fclose (stdout);
-    
+
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);
 	fasp_dvec_free(&uh);
-    
+		
 	return SUCCESS;
 }
