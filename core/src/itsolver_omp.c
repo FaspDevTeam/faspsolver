@@ -146,7 +146,7 @@ int fasp_solver_dcsr_krylov_amg_omp (dCSRmat *A,
 	
 	// solver part
 	precond_data precdata;
-	precdata.max_iter = amgparam->max_iter;
+	precdata.maxit = amgparam->maxit;
 	precdata.tol = amgparam->tol;
 	precdata.cycle_type = amgparam->cycle_type;
 	precdata.smoother = amgparam->smoother;

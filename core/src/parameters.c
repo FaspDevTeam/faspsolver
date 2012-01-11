@@ -125,7 +125,7 @@ void fasp_param_amg_init (AMG_param *param)
 {
 	param->AMG_type = CLASSIC_AMG;
 	param->print_level = PRINT_NONE;
-	param->max_iter = 1;
+	param->maxit = 1;
 	param->tol = 1e-8;
 	
 	param->max_levels = 12;	
@@ -218,15 +218,15 @@ void fasp_param_amg_set (AMG_param *param, input_param *Input)
 	param->print_level = Input->print_level;
 	
 	if (Input->itsolver_type == SOLVER_AMG) {
-		param->max_iter = Input->itsolver_maxit;
+		param->maxit = Input->itsolver_maxit;
 		param->tol      = Input->itsolver_tol;
 	}
 	else if (Input->itsolver_type == SOLVER_FMG) {
-		param->max_iter = Input->itsolver_maxit;
+		param->maxit = Input->itsolver_maxit;
 		param->tol      = Input->itsolver_tol;
 	}
 	else {
-		param->max_iter = Input->AMG_maxit;
+		param->maxit = Input->AMG_maxit;
 		param->tol      = Input->AMG_tol; 
 	}
 	
@@ -325,7 +325,7 @@ void fasp_precond_data_init (precond_data *pdata)
 {
 	pdata->AMG_type            = CLASSIC_AMG;
     pdata->print_level         = 0;
-	pdata->max_iter            = 500;
+	pdata->maxit            = 500;
 	pdata->max_levels          = 12;
 	pdata->tol                 = 1e-8;
 	pdata->cycle_type          = V_CYCLE;
@@ -356,7 +356,7 @@ void fasp_precond_data_set (precond_data *precdata,
 {
     precdata->AMG_type = param->AMG_type;
     precdata->print_level = param->print_level;
-    precdata->max_iter = param->max_iter;
+    precdata->maxit = param->maxit;
     precdata->max_levels = param->max_levels;
     precdata->tol = param->tol;
     precdata->cycle_type = param->cycle_type;
@@ -392,7 +392,7 @@ void fasp_param_amg_print (AMG_param *param)
         printf("-----------------------------------------------\n");
         
 		printf("AMG print level:                   %d\n", param->print_level);
-		printf("AMG max num of iter:               %d\n", param->max_iter);
+		printf("AMG max num of iter:               %d\n", param->maxit);
 		printf("AMG type:                          %d\n", param->AMG_type);
 		printf("AMG tolerance:                     %.2e\n", param->tol);
 		printf("AMG max levels:                    %d\n", param->max_levels);	

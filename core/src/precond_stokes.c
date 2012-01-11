@@ -23,7 +23,7 @@ void fasp_precond_stokes_bdiag (double *r,
 	precond_Stokes_data *predata=(precond_Stokes_data *)data;
 	
 	const int col = predata->col, colA = predata->colA, colB = predata->colB;
-	const int maxit = predata->max_iter;
+	const int maxit = predata->maxit;
 	double *diagptr=predata->diag_M->val;
 	
 	// local variables

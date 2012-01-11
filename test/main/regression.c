@@ -20,7 +20,22 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-static void check_solu(dvector *x, dvector *sol, double tol);
+/**
+ * \fn static void check_solu(dvector *x, dvector *sol, double tol)
+ *
+ * This function compares x and sol to a given tolerance tol. 
+ */
+static void check_solu(dvector *x, dvector *sol, double tol)
+{
+	double diff_u = fasp_dvec_maxdiff(x, sol);
+    
+	if ( diff_u < tol ) {
+		printf("Max diff %.4e smaller than tolerance................. [PASS]\n", diff_u);
+	}
+	else {
+		printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [REQUIRES ATTENTION!!!]\n", diff_u);
+	}	
+}
 
 /**
  * \fn int main (int argc, const char * argv[])
@@ -130,7 +145,7 @@ int main (int argc, const char * argv[])
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_solver_init(&itparam);
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 20;
+        amgparam.maxit       = 20;
         amgparam.tol         = 1e-10;
         amgparam.print_level = print_level;
         fasp_solver_amg(&A, &b, &x, &amgparam);
@@ -143,7 +158,7 @@ int main (int argc, const char * argv[])
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 20;
+        amgparam.maxit       = 20;
         amgparam.tol         = 1e-10;
         amgparam.cycle_type  = W_CYCLE;
         amgparam.print_level = print_level;
@@ -157,7 +172,7 @@ int main (int argc, const char * argv[])
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 20;
+        amgparam.maxit       = 20;
         amgparam.tol         = 1e-10;
         amgparam.cycle_type  = AMLI_CYCLE;
         amgparam.amli_degree = 3;
@@ -172,7 +187,7 @@ int main (int argc, const char * argv[])
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 20;
+        amgparam.maxit       = 20;
         amgparam.tol         = 1e-10;
         amgparam.cycle_type  = NL_AMLI_CYCLE;
         amgparam.amli_degree = 3;
@@ -187,7 +202,7 @@ int main (int argc, const char * argv[])
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 20;
+        amgparam.maxit       = 20;
         amgparam.tol         = 1e-10;
         amgparam.smoother    = SGS;
         amgparam.print_level = print_level;
@@ -198,10 +213,9 @@ int main (int argc, const char * argv[])
         /* AMG V-cycle with L1_DIAG smoother as a solver */			
         printf("------------------------------------------------------------------\n");
         printf("Classical AMG V-cycle with L1_DIAG smoother as iterative solver ...\n");	
-        
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 2000;
+        amgparam.maxit       = 500;
         amgparam.tol         = 1e-10;
         amgparam.smoother    = L1_DIAG;
         amgparam.print_level = print_level;
@@ -215,7 +229,7 @@ int main (int argc, const char * argv[])
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 20;
+        amgparam.maxit       = 20;
         amgparam.tol         = 1e-10;
         amgparam.smoother    = SOR;
         amgparam.print_level = print_level;
@@ -229,7 +243,7 @@ int main (int argc, const char * argv[])
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 500;
+        amgparam.maxit       = 500;
         amgparam.tol         = 1e-10;
         amgparam.AMG_type    = SA_AMG;
         amgparam.smoother    = GS;
@@ -245,7 +259,7 @@ int main (int argc, const char * argv[])
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_amg_init(&amgparam);
-        amgparam.max_iter    = 500;
+        amgparam.maxit       = 500;
         amgparam.tol         = 1e-10;
         amgparam.AMG_type    = UA_AMG;
         amgparam.smoother    = GS;
@@ -401,23 +415,6 @@ int main (int argc, const char * argv[])
 	printf("------------------------------------------------------------------\n");
 	
 	return 0;
-}
-
-/**
- * \fn static void check_solu(dvector *x, dvector *sol, double tol)
- *
- * This function compares x and sol to a given tolerance tol. 
- */
-static void check_solu(dvector *x, dvector *sol, double tol)
-{
-	double diff_u = fasp_dvec_maxdiff(x, sol);
-    
-	if ( diff_u < tol ) {
-		printf("Max diff %.4e smaller than tolerance................. [PASS]\n", diff_u);
-	}
-	else {
-		printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [REQUIRES ATTENTION!!!]\n", diff_u);
-	}	
 }
 
 /*---------------------------------*/

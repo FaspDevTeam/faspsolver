@@ -12,12 +12,12 @@
 /*---------------------------------*/
 
 /**
- * \fn double fasp_dcsr_eig(dCSRmat *A, double tol, int max_iter) 
+ * \fn double fasp_dcsr_eig(dCSRmat *A, double tol, int maxit) 
  * \brief compute the largest eigenvalue of A;
  *
  * \param *A			pointer to the dCSRmat
  * \param tol			tolerance
- * \param max_iter	max number of iterations
+ * \param maxit	max number of iterations
  * \return        the  largest eigenvalue
  *
  * \author Xiaozhe Hu
@@ -25,7 +25,7 @@
  */
 double fasp_dcsr_eig (dCSRmat *A, 
 											double tol, 
-										  int max_iter)
+										  int maxit)
 {
 	double eigenvalue=0.0, temp=1.0;
 	
@@ -38,7 +38,7 @@ double fasp_dcsr_eig (dCSRmat *A,
 	double L2_norm_y;
 	unsigned int i;
 	
-	for (i=0; i<max_iter; i++)
+	for (i=0; i<maxit; i++)
 	{
 		// y = Ax;
 		fasp_blas_dcsr_mxv(A, x.val, y.val);

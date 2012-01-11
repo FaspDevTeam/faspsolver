@@ -128,7 +128,7 @@ ForwardSweep:
 			fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
 		}
 		else {
-            fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->presmooth_iter,
+            fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->postsmooth_iter,
                                     0,mgl[l].A.row-1,-1,relax,smooth_order,mgl[l].cfmark.val);
 		}
 		

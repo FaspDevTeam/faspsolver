@@ -386,7 +386,7 @@ typedef struct {
 	//! print level for AMG
 	SHORT print_level;
 	//! max number of iterations of AMG
-	INT max_iter;
+	INT maxit;
 	//! stopping tolerance for AMG solver
 	REAL tol;
 	
@@ -511,7 +511,7 @@ typedef struct {
 	//! print level in AMG preconditioner
 	SHORT print_level;
 	//! max number of iterations of AMG preconditioner
-	INT max_iter;
+	INT maxit;
 	//! max number of AMG levels
 	SHORT max_levels;
 	//! tolerance for AMG preconditioner
@@ -569,7 +569,7 @@ typedef struct {
 	//! print level in AMG preconditioner
 	SHORT print_level;
 	//! max number of iterations of AMG preconditioner
-	INT max_iter;
+	INT maxit;
 	//! max number of AMG levels
 	SHORT max_levels;
 	//! tolerance for AMG preconditioner

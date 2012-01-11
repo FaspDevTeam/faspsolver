@@ -20,8 +20,8 @@
  * \date 04/06/2010
  */
 void fasp_precond_diag (double *r, 
-												double *z, 
-												void *data)
+                        double *z, 
+                        void *data)
 {
 	dvector *diag=(dvector *)data;
 	double *diagptr=diag->val;
@@ -44,8 +44,8 @@ void fasp_precond_diag (double *r,
  * \date 04/06/2010
  */
 void fasp_precond_ilu (double *r, 
-											 double *z, 
-											 void *data)
+                       double *z, 
+                       void *data)
 {
 	ILU_data *iludata=(ILU_data *)data;
 	const int m=iludata->row, mm1=m-1, memneed=2*m;
@@ -85,7 +85,6 @@ void fasp_precond_ilu (double *r,
 			} 
 			z[i]=zz[i]*lu[i];
 		}
-		
 	}
 	
 	return;
@@ -106,8 +105,8 @@ MEMERR:
  * \date 04/06/2010
  */
 void fasp_precond_ilu_forward (double *r, 
-															 double *z, 
-															 void *data)
+                               double *z, 
+                               void *data)
 {
 	ILU_data *iludata=(ILU_data *)data;
 	const int m=iludata->row, mm1=m-1, memneed=2*m;
@@ -157,8 +156,8 @@ MEMERR:
  * \date 04/06/2010
  */
 void fasp_precond_ilu_backward (double *r, 
-																double *z, 
-																void *data)
+                                double *z, 
+                                void *data)
 {
 	ILU_data *iludata=(ILU_data *)data;
 	const int m=iludata->row, mm1=m-1, memneed=2*m;
@@ -208,12 +207,12 @@ MEMERR:
  * \date 04/06/2010
  */
 void fasp_precond_amg (double *r, 
-											 double *z, 
-											 void *data)
+                       double *z, 
+                       void *data)
 {
 	precond_data *predata=(precond_data *)data;
 	const int m=predata->mgl_data[0].A.row;
-	const int maxit=predata->max_iter;
+	const int maxit=predata->maxit;
 	unsigned int i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
@@ -232,7 +231,7 @@ void fasp_precond_amg (double *r,
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	
-	for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam); //fasp_solver_mgrecurmgl,&amgparam,0); //
+	for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam); //fasp_solver_mgrecur(mgl,&amgparam,0);
 	
 	fasp_array_cp(m,mgl->x.val,z);	
 }
@@ -249,12 +248,12 @@ void fasp_precond_amg (double *r,
  * \date 02/27/2011
  */
 void fasp_precond_famg (double *r, 
-												double *z, 
-												void *data)
+                        double *z, 
+                        void *data)
 {
 	precond_data *predata=(precond_data *)data;
 	const int m=predata->mgl_data[0].A.row;
-	const int maxit=predata->max_iter;
+	const int maxit=predata->maxit;
 	unsigned int i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
@@ -273,11 +272,9 @@ void fasp_precond_famg (double *r,
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	
-	fasp_solver_fmgcycle(mgl, &amgparam); 
+	for (i=0;i<maxit;++i) fasp_solver_fmgcycle(mgl,&amgparam);
 	
-	for (i=0;i<maxit;++i) fasp_solver_fmgcycle(mgl,&amgparam); //fasp_solver_mgrecurmgl,&amgparam,0);
-	
-	fasp_array_cp(m,mgl->x.val,z);	
+    fasp_array_cp(m,mgl->x.val,z);	
 }
 
 /**
@@ -292,12 +289,12 @@ void fasp_precond_famg (double *r,
  * \date 01/23/2011
  */
 void fasp_precond_amli (double *r, 
-												double *z, 
-												void *data)
+                        double *z, 
+                        void *data)
 {
 	precond_data *predata=(precond_data *)data;
 	const int m=predata->mgl_data[0].A.row;
-	const int maxit=predata->max_iter;
+	const int maxit=predata->maxit;
 	unsigned int i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
@@ -340,7 +337,7 @@ void fasp_precond_nl_amli (double *r,
 	
 	precond_data *predata=(precond_data *)data;
 	const INT m=predata->mgl_data[0].A.row;
-	const INT maxit=predata->max_iter;
+	const INT maxit=predata->maxit;
 	const INT num_levels = predata->max_levels;
 	unsigned INT i;
 	

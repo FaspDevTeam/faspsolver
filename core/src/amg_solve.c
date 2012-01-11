@@ -35,7 +35,7 @@ SHORT fasp_amg_solve (AMG_data *mgl,
 	dvector      *b=&mgl[0].b, *x=&mgl[0].x, *r=&mgl[0].w; 
     
 	const SHORT   print_level = param->print_level;
-	const INT     MaxIt = param->max_iter; 
+	const INT     MaxIt = param->maxit; 
 	const INT     m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
 	const REAL    tol = param->tol;
 	const REAL    sumb = fasp_blas_dvec_norm2(b); // L2norm(b)	
@@ -119,7 +119,7 @@ SHORT fasp_amg_solve_amli (AMG_data *mgl,
 	dCSRmat     *ptrA=&mgl[0].A;
 	dvector     *b=&mgl[0].b, *x=&mgl[0].x, *r=&mgl[0].w; 
     
-	const INT    MaxIt = param->max_iter; 
+	const INT    MaxIt = param->maxit; 
 	const SHORT  print_level = param->print_level;
 	const INT    m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
 	const REAL   tol = param->tol;
@@ -197,7 +197,7 @@ SHORT fasp_amg_solve_nl_amli (AMG_data *mgl,
 	dCSRmat      *ptrA=&mgl[0].A;
 	dvector      *b=&mgl[0].b, *x=&mgl[0].x, *r=&mgl[0].w; 
 	
-    const INT     MaxIt = param->max_iter; 
+    const INT     MaxIt = param->maxit; 
 	const SHORT   print_level = param->print_level;
 	const REAL    tol = param->tol;
     const INT     m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	

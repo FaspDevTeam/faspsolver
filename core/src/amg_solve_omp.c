@@ -36,7 +36,7 @@ int fasp_amg_solve_omp (AMG_data *mgl,
 	unsigned int iter=0;
 	
 #if FASP_USE_OPENMP
-	const int     MaxIt = param->max_iter; 
+	const int     MaxIt = param->maxit; 
 	const int     print_level = param->print_level;
 	const double  tol = param->tol;
 	

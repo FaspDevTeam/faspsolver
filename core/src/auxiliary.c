@@ -22,10 +22,10 @@
 #include "fasp_functs.h"
 
 void fasp_aux_sh00 (dCSRmat *X, 
-                    const int ish)
+                    const INT ish)
 {
-    int n=X->row, nnzX=X->nnz;
-    unsigned i;
+    INT n=X->row, nnzX=X->nnz;
+    unsigned INT i;
     // shift back
     for (i=0;i<=n;i++)   { X->IA[i] += ish; }
     for (i=0;i<nnzX;i++) { X->JA[i] += ish; }

@@ -249,7 +249,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 				precond_data precdata;
                 
                 fasp_precond_data_set(&precdata, param);
-				precdata.max_iter = 1;
+				precdata.maxit = 1;
 				precdata.max_levels = num_levels-1;
 				precdata.mgl_data = &mgl[level+1];
                 

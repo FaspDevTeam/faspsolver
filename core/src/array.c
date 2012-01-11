@@ -1,7 +1,7 @@
 /*! \file array.c
  *  \brief Array operations
  * 
- *  Some simple array operations ...
+ *  Simple array operations -- init, set, copy, etc
  *
  */
 

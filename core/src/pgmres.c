@@ -62,13 +62,13 @@
 /*---------------------------------*/
 
 /*!
- * \fn int fasp_solver_dcsr_pgmres ( dCSRmat *A, dvector *b, dvector *x, const int max_iter, const double tol,
+ * \fn int fasp_solver_dcsr_pgmres ( dCSRmat *A, dvector *b, dvector *x, const int maxit, const double tol,
  *                  precond *pre, const int print_level, const int stop_type, const int restart )
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method
  * \param *A the pointer to the coefficient matrix
  * \param *b the pointer to the right hand side vector
  * \param *x the pointer to the solution vector
- * \param max_iter the maximal iteration  
+ * \param maxit the maximal iteration  
  * \param tol the tolerance
  * \param *pre pointer to preconditioner data
  * \param print_level how much of the SOLVE-INFORMATION be output?
@@ -82,7 +82,7 @@
 int fasp_solver_dcsr_pgmres (dCSRmat *A, 
 														 dvector *b, 
 														 dvector *x, 
-														 const int max_iter, 
+														 const int maxit, 
 														 const double tol,
 														 precond *pre, 
 														 const int print_level, 
@@ -123,7 +123,7 @@ int fasp_solver_dcsr_pgmres (dCSRmat *A,
 		printf("pgmres2: Cannot allocate memory!\n"); exit(ERROR_ALLOC_MEM);
 	}
 	
-	if (print_level > 0) norms = (double *)fasp_mem_calloc(max_iter+1, sizeof(double)); 
+	if (print_level > 0) norms = (double *)fasp_mem_calloc(maxit+1, sizeof(double)); 
 	if (status < 0) {
 		printf("pgmres2: Cannot allocate memory!\n"); exit(ERROR_ALLOC_MEM);
 	}
@@ -157,7 +157,7 @@ int fasp_solver_dcsr_pgmres (dCSRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < max_iter)
+	while (iter < maxit)
 	{  
 		rs[0] = r_norm;
 		if (r_norm == 0.0)
@@ -191,7 +191,7 @@ int fasp_solver_dcsr_pgmres (dCSRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < restart && iter < max_iter)
+		while (i < restart && iter < maxit)
 		{
 			i ++;  iter ++;
 			
@@ -311,9 +311,9 @@ int fasp_solver_dcsr_pgmres (dCSRmat *A,
 		}        
 	} /* end of iteration while loop */
 	
-	if (print_level > 0 && iter >= max_iter && r_norm > epsilon) 
+	if (print_level > 0 && iter >= maxit && r_norm > epsilon) 
 	{
-		printf("Warning: Not reaching the given tolerance in %d iterations!!\n", max_iter);
+		printf("Warning: Not reaching the given tolerance in %d iterations!!\n", maxit);
 	}
 	
   /*-------------------------------------------
@@ -324,7 +324,7 @@ int fasp_solver_dcsr_pgmres (dCSRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=max_iter) return ERROR_SOLVER_MAXIT;
+	if (iter>=maxit) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 }
@@ -570,13 +570,13 @@ FINISHED:
 }
 
 /*!
- * \fn int fasp_solver_dbsr_pgmres ( dBSRmat *A, dvector *b, dvector *x, const int max_iter, const double tol,
+ * \fn int fasp_solver_dbsr_pgmres ( dBSRmat *A, dvector *b, dvector *x, const int maxit, const double tol,
  *                  precond *pre, const int print_level, const int stop_type, const int restart )
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method
  * \param *A the pointer to the coefficient matrix
  * \param *b the pointer to the right hand side vector
  * \param *x the pointer to the solution vector
- * \param max_iter the maximal iteration  
+ * \param maxit the maximal iteration  
  * \param tol the tolerance
  * \param *pre pointer to preconditioner data
  * \param print_level how much of the SOLVE-INFORMATION be output?
@@ -590,7 +590,7 @@ FINISHED:
 int fasp_solver_dbsr_pgmres (dBSRmat *A, 
 														 dvector *b, 
 														 dvector *x, 
-														 const int max_iter, 
+														 const int maxit, 
 														 const double tol,
 														 precond *pre, 
 														 const int print_level, 
@@ -631,7 +631,7 @@ int fasp_solver_dbsr_pgmres (dBSRmat *A,
 		printf("pgmres2_bsr: Cannot allocate memory!\n"); exit(ERROR_ALLOC_MEM);
 	}
 	
-	if (print_level > 0) norms = (double *)fasp_mem_calloc(max_iter+1, sizeof(double)); 
+	if (print_level > 0) norms = (double *)fasp_mem_calloc(maxit+1, sizeof(double)); 
 	if (status < 0) {
 		printf("pgmres2_bsr: Cannot allocate memory!\n"); exit(ERROR_ALLOC_MEM);
 	}
@@ -665,7 +665,7 @@ int fasp_solver_dbsr_pgmres (dBSRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < max_iter)
+	while (iter < maxit)
 	{  
 		rs[0] = r_norm;
 		if (r_norm == 0.0)
@@ -699,7 +699,7 @@ int fasp_solver_dbsr_pgmres (dBSRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < restart && iter < max_iter)
+		while (i < restart && iter < maxit)
 		{
 			++i;  ++iter;
 			
@@ -819,9 +819,9 @@ int fasp_solver_dbsr_pgmres (dBSRmat *A,
 		}        
 	} /* end of iteration while loop */
 	
-	if (print_level > 0 && iter >= max_iter && r_norm > epsilon) 
+	if (print_level > 0 && iter >= maxit && r_norm > epsilon) 
 	{
-		printf("Warning: Not reaching the given tolerance in %d iterations!!\n", max_iter);
+		printf("Warning: Not reaching the given tolerance in %d iterations!!\n", maxit);
 	}
 	
   /*-------------------------------------------
@@ -832,19 +832,19 @@ int fasp_solver_dbsr_pgmres (dBSRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=max_iter) return ERROR_SOLVER_MAXIT;
+	if (iter>=maxit) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 }
 
 /*!
- * \fn int fasp_solver_dstr_pgmres( dSTRmat *A, dvector *b, dvector *x, const int max_iter, const double tol,
+ * \fn int fasp_solver_dstr_pgmres( dSTRmat *A, dvector *b, dvector *x, const int maxit, const double tol,
  *                  precond *pre, const int print_level, const int stop_type, const int restart )
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method
  * \param *A the pointer to the coefficient matrix
  * \param *b the pointer to the right hand side vector
  * \param *x the pointer to the solution vector
- * \param max_iter the maximal iteration  
+ * \param maxit the maximal iteration  
  * \param tol the tolerance
  * \param *pre pointer to preconditioner data
  * \param print_level how much of the SOLVE-INFORMATION be output?
@@ -858,7 +858,7 @@ int fasp_solver_dbsr_pgmres (dBSRmat *A,
 int fasp_solver_dstr_pgmres (dSTRmat *A, 
 														 dvector *b, 
 														 dvector *x, 
-														 const int max_iter, 
+														 const int maxit, 
 														 const double tol,
 														 precond *pre, 
 														 const int print_level, 
@@ -899,7 +899,7 @@ int fasp_solver_dstr_pgmres (dSTRmat *A,
 		printf("pgmres2_str: Cannot allocate memory!\n"); exit(ERROR_ALLOC_MEM);
 	}
 	
-	if (print_level > 0) norms = (double *)fasp_mem_calloc(max_iter+1, sizeof(double)); 
+	if (print_level > 0) norms = (double *)fasp_mem_calloc(maxit+1, sizeof(double)); 
 	if (status < 0) {
 		printf("pgmres2_str: Cannot allocate memory!\n"); exit(ERROR_ALLOC_MEM);
 	}
@@ -933,7 +933,7 @@ int fasp_solver_dstr_pgmres (dSTRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < max_iter)
+	while (iter < maxit)
 	{  
 		rs[0] = r_norm;
 		if (r_norm == 0.0)
@@ -967,7 +967,7 @@ int fasp_solver_dstr_pgmres (dSTRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < restart && iter < max_iter)
+		while (i < restart && iter < maxit)
 		{
 			++i;  ++iter;
 			
@@ -1088,9 +1088,9 @@ int fasp_solver_dstr_pgmres (dSTRmat *A,
 		}        
 	} /* end of iteration while loop */
 	
-	if (print_level > 0 && iter >= max_iter && r_norm > epsilon) 
+	if (print_level > 0 && iter >= maxit && r_norm > epsilon) 
 	{
-		printf("Warning: Not reaching the given tolerance in %d iterations!!\n", max_iter);
+		printf("Warning: Not reaching the given tolerance in %d iterations!!\n", maxit);
 	}
 	
   /*-------------------------------------------
@@ -1101,7 +1101,7 @@ int fasp_solver_dstr_pgmres (dSTRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=max_iter) return ERROR_SOLVER_MAXIT;
+	if (iter>=maxit) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 }

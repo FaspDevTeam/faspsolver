@@ -27,7 +27,7 @@ void fasp_precond_amg_omp(double *r, double *z, void *data, int nthreads, int op
 #if FASP_USE_OPENMP
 	precond_data *predata=(precond_data *)data;
 	const int m=predata->mgl_data[0].A.row;
-	const int maxit=predata->max_iter;
+	const int maxit=predata->maxit;
 	unsigned int i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);

@@ -49,7 +49,7 @@ void fasp_fwrapper_amg_ (int *n,
 	fasp_param_amg_init(&amgparam);
 	amgparam.tol         = *tol;
 	amgparam.print_level = *ptrlvl;
-	amgparam.max_iter    = *maxit;
+	amgparam.maxit    = *maxit;
 	
 	mat.row = *n; mat.col = *n; mat.nnz = *nnz;
 	mat.IA = ia;  mat.JA  = ja; mat.val = a;

@@ -62,7 +62,7 @@
 /*---------------------------------*/
 
 /*!
- * \fn INT fasp_solver_dcsr_pvgmres ( dCSRmat *A, dvector *b, dvector *x, const INT max_iter, 
+ * \fn INT fasp_solver_dcsr_pvgmres ( dCSRmat *A, dvector *b, dvector *x, const INT maxit, 
  *                                    const REAL tol, precond *pre, const INT print_level, 
  *                                    const INT stop_type, const INT restart )
  *
@@ -72,7 +72,7 @@
  * \param *A           pointer to the coefficient matrix
  * \param *b           pointer to the right hand side vector
  * \param *x           pointer to the solution vector
- * \param max_iter     maximal iteration number allowed
+ * \param maxit     maximal iteration number allowed
  * \param tol          tolerance
  * \param *pre         pointer to preconditioner data
  * \param print_level  how much of the SOLVE-INFORMATION be printed
@@ -91,7 +91,7 @@
 INT fasp_solver_dcsr_pvgmres (dCSRmat *A, 
                               dvector *b, 
                               dvector *x, 
-                              const INT max_iter,
+                              const INT maxit,
                               const REAL tol,
                               precond *pre, 
                               const INT print_level, 
@@ -136,7 +136,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 	p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));	
 	hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
 	
-	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(max_iter+1, sizeof(REAL)); 
+	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(maxit+1, sizeof(REAL)); 
 	
 	r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;	
 	for (i = 0; i < restartplus1; i ++) p[i] = s + restart + i*n;
@@ -167,7 +167,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < max_iter)
+	while (iter < maxit)
 	{  
 		rs[0] = r_norm;
 		r_norm_old = r_norm;
@@ -226,7 +226,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < Restart && iter < max_iter)
+		while (i < Restart && iter < maxit)
 		{
 			i ++;  iter ++;
 			
@@ -356,9 +356,9 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 		
 	} /* end of iteration while loop */
 	
-	if (print_level > PRINT_NONE && iter >= max_iter && r_norm > epsilon) 
+	if (print_level > PRINT_NONE && iter >= maxit && r_norm > epsilon) 
 	{
-		printf("### WARNInG: Not reaching the given tolerance in %d iterations!!\n", max_iter);
+		printf("### WARNInG: Not reaching the given tolerance in %d iterations!!\n", maxit);
 	}
 	
     /*-------------------------------------------
@@ -369,13 +369,13 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=max_iter) return ERROR_SOLVER_MAXIT;
+	if (iter>=maxit) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 }
 
 /*!
- * \fn INT fasp_solver_dbsr_pvgmres( dBSRmat *A, dvector *b, dvector *x, const INT max_iter, 
+ * \fn INT fasp_solver_dbsr_pvgmres( dBSRmat *A, dvector *b, dvector *x, const INT maxit, 
  *                                   const REAL tol, precond *pre, const INT print_level, 
  *                                   const INT stop_type, const INT restart )
  *
@@ -385,7 +385,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
  * \param *A           pointer to the coefficient matrix
  * \param *b           pointer to the right hand side vector
  * \param *x           pointer to the solution vector
- * \param max_iter     maximal iteration  
+ * \param maxit     maximal iteration  
  * \param tol          tolerance
  * \param *pre         pointer to preconditioner data
  * \param print_level  how much of the SOLVE-INFORMATION be output
@@ -401,7 +401,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 INT fasp_solver_dbsr_pvgmres (dBSRmat *A, 
                               dvector *b, 
                               dvector *x, 
-                              const INT max_iter, 
+                              const INT maxit, 
                               const REAL tol,
                               precond *pre, 
                               const INT print_level, 
@@ -446,7 +446,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 	p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));	
 	hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
 	
-	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(max_iter+1, sizeof(REAL)); 
+	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(maxit+1, sizeof(REAL)); 
 	
 	r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;	
 	for (i = 0; i < restartplus1; ++i) p[i] = s + restart + i*n;
@@ -477,7 +477,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < max_iter)
+	while (iter < maxit)
 	{  
 		rs[0] = r_norm;
 		r_norm_old = r_norm;
@@ -536,7 +536,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < Restart && iter < max_iter)
+		while (i < Restart && iter < maxit)
 		{
 			++i;  ++iter;
 			
@@ -663,9 +663,9 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 		
 	} /* end of iteration while loop */
 	
-	if (print_level > PRINT_NONE && iter >= max_iter && r_norm > epsilon) 
+	if (print_level > PRINT_NONE && iter >= maxit && r_norm > epsilon) 
 	{
-		printf("### WARNING: Not reaching the given tolerance in %d iterations!!\n", max_iter);
+		printf("### WARNING: Not reaching the given tolerance in %d iterations!!\n", maxit);
 	}
 	
     /*-------------------------------------------
@@ -676,13 +676,13 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=max_iter) return ERROR_SOLVER_MAXIT;
+	if (iter>=maxit) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 }
 
 /*!
- * \fn INT fasp_solver_dstr_pvgmres( dSTRmat *A, dvector *b, dvector *x, const INT max_iter, 
+ * \fn INT fasp_solver_dstr_pvgmres( dSTRmat *A, dvector *b, dvector *x, const INT maxit, 
  *                                   const REAL tol, precond *pre, const INT print_level, 
  *                                   const INT stop_type, const INT restart )
  *
@@ -692,7 +692,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
  * \param *A the pointer to the coefficient matrix
  * \param *b the pointer to the right hand side vector
  * \param *x the pointer to the solution vector
- * \param max_iter the maximal iteration  
+ * \param maxit the maximal iteration  
  * \param tol the tolerance
  * \param *pre pointer to preconditioner data
  * \param print_level how much of the SOLVE-INFORMATION be output?
@@ -708,7 +708,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 INT fasp_solver_dstr_pvgmres (dSTRmat *A, 
                               dvector *b, 
                               dvector *x, 
-                              const INT max_iter, 
+                              const INT maxit, 
                               const REAL tol, 
                               precond *pre, 
                               const INT print_level, 
@@ -753,7 +753,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 	p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));	
 	hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
 	
-	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(max_iter+1, sizeof(REAL)); 
+	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(maxit+1, sizeof(REAL)); 
 	
 	r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;	
 	for (i = 0; i < restartplus1; ++i) p[i] = s + restart + i*n;
@@ -784,7 +784,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < max_iter)
+	while (iter < maxit)
 	{  
 		rs[0] = r_norm;
 		r_norm_old = r_norm;
@@ -843,7 +843,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < Restart && iter < max_iter)
+		while (i < Restart && iter < maxit)
 		{
 			++i;  ++iter;
 			
@@ -975,9 +975,9 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 		
 	} /* end of iteration while loop */
 	
-	if (print_level > PRINT_NONE && iter >= max_iter && r_norm > epsilon) 
+	if (print_level > PRINT_NONE && iter >= maxit && r_norm > epsilon) 
 	{
-		printf("### WARNING: Not reaching the given tolerance in %d iterations!!\n", max_iter);
+		printf("### WARNING: Not reaching the given tolerance in %d iterations!!\n", maxit);
 	}
 	
     /*-------------------------------------------
@@ -988,14 +988,14 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=max_iter) return ERROR_SOLVER_MAXIT;
+	if (iter>=maxit) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 }
 
 /*!
  * \fn INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A, dvector *b, dvector *x, 
- *                                       const INT max_iter, const REAL tol,
+ *                                       const INT maxit, const REAL tol,
  *                                       precond *pre, const INT print_level, 
  *                                       const INT stop_type, const INT restart, 
  *                                       INT nthreads, INT openmp_holds )
@@ -1004,7 +1004,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
  * \param *A the pointer to the coefficient matrix
  * \param *b the pointer to the right hand side vector
  * \param *x the pointer to the solution vector
- * \param max_iter the maximal iteration  
+ * \param maxit the maximal iteration  
  * \param tol the tolerance
  * \param *pre pointer to preconditioner data
  * \param print_level how much of the SOLVE-INFORMATION be output?
@@ -1021,7 +1021,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A, 
                                   dvector *b, 
                                   dvector *x, 
-                                  const INT max_iter, 
+                                  const INT maxit, 
                                   const REAL tol,
                                   precond *pre, 
                                   const INT print_level, 
@@ -1069,7 +1069,7 @@ INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A,
 	p    = (REAL **) fasp_mem_calloc(restartplus1, sizeof(REAL *));	
 	hh   = (REAL **) fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
 	
-	if (print_level > 0) norms = (REAL *)fasp_mem_calloc(max_iter+1, sizeof(REAL)); 
+	if (print_level > 0) norms = (REAL *)fasp_mem_calloc(maxit+1, sizeof(REAL)); 
 	
 	r = work; w = r + n; rs = w + n; c  = rs + restartplus1; s  = c + restart;	
 	for (i = 0; i < restartplus1; ++i) p[i] = s + restart + i*n;
@@ -1100,7 +1100,7 @@ INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < max_iter)
+	while (iter < maxit)
 	{  
 		rs[0] = r_norm;
 		r_norm_old = r_norm;
@@ -1159,7 +1159,7 @@ INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < Restart && iter < max_iter)
+		while (i < Restart && iter < maxit)
 		{
 			++i;  ++iter;
 			
@@ -1286,9 +1286,9 @@ INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A,
 		
 	} /* end of iteration while loop */
 	
-	if (print_level > 0 && iter >= max_iter && r_norm > epsilon) 
+	if (print_level > 0 && iter >= maxit && r_norm > epsilon) 
 	{
-		printf("Warning: Not reaching the given tolerance in %d iterations!!\n", max_iter);
+		printf("Warning: Not reaching the given tolerance in %d iterations!!\n", maxit);
 	}
 	
     /*-------------------------------------------
@@ -1299,7 +1299,7 @@ INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=max_iter) return ERROR_SOLVER_MAXIT;
+	if (iter>=maxit) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 #else

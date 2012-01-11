@@ -209,7 +209,7 @@ typedef struct precond_Stokes_data {
 	//! max number of AMG levels
 	int max_levels;
 	//! max number of iterations of AMG preconditioner
-	int max_iter;
+	int maxit;
 	//! tolerance for AMG preconditioner
 	double amg_tol;
 	//! AMG cycle type
@@ -260,7 +260,7 @@ typedef struct precond_block_reservoir_data {
 	//! print level in AMG preconditioner
 	int print_level;
 	//! max number of iterations of AMG preconditioner
-	int max_iter;
+	int maxit_AMG;
 	//! max number of AMG levels
 	int max_levels;
 	//! tolerance for AMG preconditioner
@@ -369,7 +369,7 @@ typedef struct precond_FASP_blkoil_data{
 	//! print level in AMG preconditioner
 	int print_level;
 	//! max number of iterations of AMG preconditioner
-	int max_iter;
+	int maxit_AMG;
 	//! max number of AMG levels
 	int max_levels;
 	//! tolerance for AMG preconditioner

@@ -124,7 +124,7 @@ int fasp_amg_solve_omp (AMG_data *mgl,
 												int openmp_holds);
 
 
-/*-------- In file: amli.c --------*/
+/*-------- In file: amlirecur.c --------*/
 
 void fasp_solver_amli (AMG_data *mgl, 
                        AMG_param *param, 
@@ -189,7 +189,7 @@ void fasp_iarray_cp_omp (int n,
 /*-------- In file: auxiliary.c --------*/
 
 void fasp_aux_sh00 (dCSRmat *X, 
-                    const int ish);
+                    const INT ish);
 
 void fasp_aux_ijvcrs (INT *nnzi, 
                       INT *ia, 
@@ -1237,7 +1237,7 @@ void fasp_solver_mgcycle_omp (AMG_data *mgl,
 															int openmp_holds);
 
 
-/*-------- In file: multigrid.c --------*/
+/*-------- In file: mgrecur.c --------*/
 
 void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level);
 
