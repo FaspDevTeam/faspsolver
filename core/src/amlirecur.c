@@ -248,7 +248,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 			else{  // recursively call preconditioned Krylov method on coarse grid
 				precond_data precdata;
                 
-                fasp_precond_data_set(&precdata, param);
+                fasp_param_amg_to_prec(&precdata, param);
 				precdata.maxit = 1;
 				precdata.max_levels = num_levels-1;
 				precdata.mgl_data = &mgl[level+1];

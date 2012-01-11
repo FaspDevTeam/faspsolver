@@ -62,46 +62,55 @@
 /*---------------------------------*/
 
 /**
- * \fn int fasp_solver_dcsr_pcg (dCSRmat *A, dvector *b, dvector *u, const int MaxIt, const double tol, \
- *             precond *pre, const int print_level, const int stop_type)
+ * \fn INT fasp_solver_dcsr_pcg (dCSRmat *A, dvector *b, dvector *u, const INT MaxIt, 
+ *                               const REAL tol, precond *pre, const INT print_level, 
+ *                               const INT stop_type)
+ *
  *	 \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
+ *
  *	 \param *A	 pointer to the coefficient matrix
  *	 \param *b	 pointer to the dvector of right hand side
  *	 \param *u	 pointer to the dvector of DOFs
  *	 \param MaxIt integer, maximal number of iterations
- *	 \param tol double float, the tolerance for stopage
+ *	 \param tol REAL float, the tolerance for stopage
  *	 \param *pre pointer to the structure of precondition (precond) 
- * \param print_level how much information to print out
+ *   \param print_level how much information to print out
+ *
  *	 \return the number of iterations
+ * 
+ *   \author Chensong Zhang, Xiaozhe Hu, Shiquan Zhang
+ *   \date 05/06/2010
  */
-int fasp_solver_dcsr_pcg (dCSRmat *A, 
-													dvector *b, 
-													dvector *u, 
-													const int MaxIt, 
-													const double tol,
-													precond *pre, 
-													const int print_level, 
-													const int stop_type)
+INT fasp_solver_dcsr_pcg (dCSRmat *A, 
+                          dvector *b, 
+                          dvector *u, 
+                          const INT MaxIt, 
+                          const REAL tol,
+                          precond *pre, 
+                          const SHORT print_level, 
+                          const SHORT stop_type)
 {
-	const int MaxStag=20, MaxRestartStep=20;
-	const double maxdiff = tol*1e-4; // staganation tolerance
-	const double sol_inf_tol = SMALLREAL; // infinity norm tolerance
-	int iter=0, m=A->row, stag, more_step, restart_step;
-	double absres0=BIGREAL, absres, relres=BIGREAL, reldiff, factor;
-	double alpha, beta, temp1, temp2, tempr, normb=BIGREAL, normu, infnormu;
-	int status = SUCCESS;
+	const SHORT  MaxStag=20, MaxRestartStep=20;
+	const REAL   maxdiff = tol*1e-4; // staganation tolerance
+	const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
+    
+    // local variables
+	INT          iter=0, m=A->row, stag, more_step, restart_step;
+	REAL         absres0=BIGREAL, absres, relres=BIGREAL, reldiff, factor;
+	REAL         alpha, beta, temp1, temp2, tempr, normb=BIGREAL, normu, infnormu;
+	INT          status = SUCCESS;
 	
-	// allocate temp memory (need 4*m double)
-	double *work=(double *)fasp_mem_calloc(4*m,sizeof(double));	
-	double *p=work, *z=work+m, *r=z+m, *t=r+m;
+	// allocate temp memory (need 4*m REAL)
+	REAL *work=(REAL *)fasp_mem_calloc(4*m,sizeof(REAL));	
+	REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
 	if (status<0) goto FINISHED;
 	
 #if CHMEM_MODE		
-	total_alloc_mem += 4*m*sizeof(double);
+	total_alloc_mem += 4*m*sizeof(REAL);
 #endif
 	
 #if DEBUG_MODE
-	printf("fasp_solver_dcsr_pcg ...... [Start]\n");
+	printf("### DEBUG: fasp_solver_dcsr_pcg ...... [Start]\n");
 #endif	
 	
 	// initialization counters
@@ -210,9 +219,9 @@ int fasp_solver_dcsr_pcg (dCSRmat *A,
 		// stagnation check
 		if ((stag<=MaxStag) & (reldiff<maxdiff)) {
 			
-			if (print_level>4) { 
-				printf("PCG: restart %d caused by stagnation.\n", restart_step);
-				printf("||u-u'||/||u|| = %e and computed rel. res. = %e.\n",reldiff,relres);
+			if (print_level>=PRINT_MORE) { 
+				printf("||u-u'||/||u|| = %e and comp. rel. res. = %e.\n",reldiff,relres);
+				printf("### WARNING: PCG restarted %d due to stagnation!\n", restart_step);
 			}
 			
 			fasp_array_cp(m,b->val,r);
@@ -238,13 +247,14 @@ int fasp_solver_dcsr_pcg (dCSRmat *A,
 					break;					
 			}
 			
-			if (print_level>4) printf("The actual relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) 
+                printf("### WARNING: The actual relative residual = %e!\n",relres);
 			
 			if (relres<tol) 
 				break;
 			else {
 				if (stag>=MaxStag) {
-					print_message(print_level,"CG does not converge: staggnation error!\n");
+					print_message(print_level,"### WARNING: PCG stopped due to staggnation!\n");
 					iter = ERROR_SOLVER_STAG;
 					break;
 				}							
@@ -257,7 +267,8 @@ int fasp_solver_dcsr_pcg (dCSRmat *A,
 		// safe-guard check
 		if (relres<tol) 
 		{
-			if (print_level>4) printf("The computed relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) 
+                printf("### WARNING: The computed relative residual = %e!\n",relres);
 			
 			fasp_array_cp(m,b->val,r);
 			fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
@@ -283,13 +294,14 @@ int fasp_solver_dcsr_pcg (dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>4) printf("The actual relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) 
+                printf("### WARNING: The actual relative residual = %e\n",relres);
 			
 			// check convergence
 			if (relres<tol) break;
 			
 			if (more_step>=MaxRestartStep) {
-				print_message(print_level,"Warning: the tolerence may be too small!\n");
+				print_message(print_level,"### WARNING: The tolerence is too small!\n");
 				iter = ERROR_SOLVER_TOLSMALL;
 				break;
 			}
@@ -323,7 +335,7 @@ int fasp_solver_dcsr_pcg (dCSRmat *A,
 	} // end of main PCG loop.
 	
 FINISHED:  // finish the iterative method
-	if (print_level>0) {
+	if (print_level>PRINT_NONE) {
 		if (iter>MaxIt){
 			printf("Maximal iteration %d reached with relative residual %e.\n", MaxIt, relres);
 		}
@@ -335,7 +347,7 @@ FINISHED:  // finish the iterative method
 	fasp_mem_free(work);
 	
 #if DEBUG_MODE
-	printf("fasp_solver_dcsr_pcg ...... [Finish]\n");
+	printf("### DEBUG: fasp_solver_dcsr_pcg ...... [Finish]\n");
 #endif	
 	
 	if (iter>MaxIt) return ERROR_SOLVER_MAXIT;
@@ -344,49 +356,60 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn int fasp_solver_bdcsr_pcg (block_sCSRmat *A, dvector *b, dvector *u, const int MaxIt, const double tol, \
- *                   precond *pre, const int print_level, const int stop_type)
+ * \fn INT fasp_solver_bdcsr_pcg (block_sCSRmat *A, dvector *b, dvector *u, const INT MaxIt,
+ *                                const REAL tol, precond *pre, const INT print_level, 
+ *                                const INT stop_type)
+ *
  *	 \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
+ *
  *	 \param *A pointer to the coefficient matrix
  *	 \param *b pointer to the dvector of right hand side
  *	 \param *u pointer to the dvector of DOFs
  *	 \param MaxIt integer, maximal number of iterations
- *	 \param tol double float, the tolerance for stopage
+ *	 \param tol REAL float, the tolerance for stopage
  *	 \param *pre pointer to the structure of precondition (precond) 
- * \param print_level how much information to print out
- *	 \return the number of iterations
+ *   \param print_level how much information to print out
  *
- * \author Xiaozhe Hu
- * \data 05/24/2010
+ *   \return the number of iterations
+ *
+ *   \author Xiaozhe Hu
+ *   \data 05/24/2010
  */
-int fasp_solver_bdcsr_pcg (block_dCSRmat *A, 
-													 dvector *b, 
-													 dvector *u, 
-													 const int MaxIt, 
-													 const double tol,
-													 precond *pre, 
-													 const int print_level, 
-													 const int stop_type)
+INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, 
+                           dvector *b, 
+                           dvector *u, 
+                           const INT MaxIt, 
+                           const REAL tol,
+                           precond *pre, 
+                           const SHORT print_level, 
+                           const SHORT stop_type)
 {
-	const int MaxStag=20, MaxRestartStep=20;
-	const double maxdiff = tol*1e-4; // staganation tolerance
-	const double sol_inf_tol = 1e-16; // infinity norm tolrance 
-	int iter=0, m=b->row, stag, more_step, restart_step;
-	double absres0=BIGREAL, absres, relres=BIGREAL, reldiff, factor;
-	double alpha, beta, temp1, temp2, tempr, normb=BIGREAL, normu, infnormu;
+	const SHORT  MaxStag=20, MaxRestartStep=20;
+	const REAL   maxdiff = tol*1e-4; // staganation tolerance
+	const REAL   sol_inf_tol = 1e-16; // infinity norm tolrance
+    
+    // local variables
+	INT          iter=0, m=b->row, stag, more_step, restart_step;
+	REAL         absres0=BIGREAL, absres, relres=BIGREAL, reldiff, factor;
+	REAL         alpha, beta, temp1, temp2, tempr, normb=BIGREAL, normu, infnormu;
 	
-	// allocate temp memory (need 4*m double)
-	double *work=(double *)fasp_mem_calloc(4*m,sizeof(double));		
-	double *p=work, *z=work+m, *r=z+m, *t=r+m;
+	// allocate temp memory (need 4*m REAL)
+	REAL *work=(REAL *)fasp_mem_calloc(4*m,sizeof(REAL));		
+	REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
+
+#if CHMEM_MODE		
+	total_alloc_mem += 4*m*sizeof(REAL);
+#endif
 	
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_bdcsr_pcg ...... [Start]\n");
+#endif	
+    
 	// initialization counters
 	stag=1; more_step=1; restart_step=1;
 	
 	// compute initial relative residual 
 	switch (stop_type) {
-		case STOP_REL_RES:
-			normb=fasp_blas_array_norm2(m,b->val); // norm(b)
-			break;
 		case STOP_REL_PRECRES:
 			if (pre != NULL) 
 				pre->fct(b->val,t,pre->data); /* Preconditioning */
@@ -396,10 +419,9 @@ int fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 			break;
 		case STOP_MOD_REL_RES:
 			break;
-		default:
-			printf("Error: Unknown stopping criteria!\n");
-			iter = ERROR_INPUT_PAR;
-			goto FINISHED;
+		default: // STOP_REL_RES
+			normb=fasp_blas_array_norm2(m,b->val); // norm(b)
+			break;
 	}
 	normb=MAX(SMALLREAL,normb);
 	normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
@@ -414,10 +436,6 @@ int fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 	
 	switch (stop_type) {
-		case STOP_REL_RES:
-			tempr=fasp_blas_array_norm2(m,r);
-			relres=tempr/normb; 
-			break;
 		case STOP_REL_PRECRES:
 			temp2=sqrt(fasp_blas_array_dotprod(m,r,z));
 			relres=temp2/normb; 
@@ -426,12 +444,14 @@ int fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 			tempr=fasp_blas_array_norm2(m,r);
 			relres=tempr/normu; 
 			break;
+		default: // STOP_REL_RES
+			tempr=fasp_blas_array_norm2(m,r);
+			relres=tempr/normb; 
+			break;
 	}
 	
-	if (iter < 0) goto FINISHED;
-	
-	if (relres<tol) goto FINISHED;
-	
+	if ( iter<0 || relres<tol ) goto FINISHED;
+		
 	fasp_array_cp(m,z,p);
 	
 	temp1=fasp_blas_array_dotprod(m,z,r);
@@ -460,8 +480,6 @@ int fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		
 		// compute relative residual 
 		switch (stop_type) {
-			case STOP_REL_RES:
-				relres=absres/normb;	break;
 			case STOP_REL_PRECRES:
 				// z = B*r
 				if (pre == NULL)
@@ -474,6 +492,9 @@ int fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 			case STOP_MOD_REL_RES:
 				relres=absres/normu;
 				break;
+			default: // STOP_REL_RES
+				relres=absres/normb;
+                break;
 		}
 		
 		// output iteration information if needed	
@@ -483,7 +504,7 @@ int fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		infnormu = fasp_blas_array_norminf(m, u->val); 
 		if (infnormu <= sol_inf_tol)
 		{
-			print_message(print_level, "PCG stops: infinity norm of the solution is too small!\n");
+			print_message(print_level, "### WARNING: PCG stopped due to staggnation!\n");
 			iter = ERROR_SOLVER_SOLSTAG;
 			break;
 		}
@@ -491,9 +512,9 @@ int fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		// stagnation check
 		if ((stag<=MaxStag) & (reldiff<maxdiff)) {
 			
-			if (print_level>4) { 
-				printf("PCG: restart %d caused by stagnation.\n", restart_step);
-				printf("||u-u'||/||u|| = %e and computed rel. res. = %e.\n",reldiff,relres);
+			if (print_level>=PRINT_MORE) { 
+				printf("||u-u'||/||u|| = %e and comp. rel. res. = %e.\n",reldiff,relres);
+				printf("### WARNING: PCG restarted %d caused by stagnation!\n", restart_step);
 			}
 			
 			fasp_array_cp(m,b->val,r);
@@ -518,7 +539,8 @@ int fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>4) printf("The actual relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) 
+                printf("### WARNING: The actual relative residual = %e!\n",relres);
 			
 			if (relres<tol) 
 				break;
@@ -537,7 +559,8 @@ int fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		// safe-guard check
 		if (relres<tol) 
 		{
-			if (print_level>1) printf("The computed relative residual = %e\n",relres);
+			if (print_level>PRINT_MIN) 
+                printf("### WARNING: The computed relative residual = %e!\n",relres);
 			
 			fasp_array_cp(m,b->val,r);
 			fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
@@ -562,13 +585,14 @@ int fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>1) printf("The actual relative residual = %e\n",relres);
+			if (print_level>PRINT_MIN) 
+                printf("### WARNING: The actual relative residual = %e!\n",relres);
 			
 			// check convergence
 			if (relres<tol) break;
 			
 			if (more_step>=MaxRestartStep) {
-				print_message(print_level,"Warning: the tolerence may be too small!\n");
+				print_message(print_level,"### WARNING: the tolerence may be too small!\n");
 				iter = ERROR_SOLVER_TOLSMALL;
 				break;
 			}
@@ -616,56 +640,65 @@ FINISHED:  // finish the iterative method
 	fasp_mem_free(r);
 	fasp_mem_free(z);
 	fasp_mem_free(t);
-	
+
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_bdcsr_pcg ...... [Finish]\n");
+#endif	
+    
 	return iter;
 }
 
 /**
- * \fn int fasp_solver_dstr_pcg (dSTRmat *A, dvector *b, dvector *u, int MaxIt, 
- *                    double tol, precond *pre, int print_level, int stop_type)
+ * \fn INT fasp_solver_dstr_pcg (dSTRmat *A, dvector *b, dvector *u, INT MaxIt, 
+ *                               REAL tol, precond *pre, INT print_level, 
+ *                               INT stop_type)
+ *
  * \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
+ *
  * \param *A pointer to the coefficient matrix
  * \param *b pointer to the dvector of right hand side
  * \param *u pointer to the dvector of DOFs
  * \param MaxIt integer, maximal number of iterations
- * \param tol double float, the tolerance for stopage
+ * \param tol REAL float, the tolerance for stopage
  * \param *pre pointer to the structure of precondition (precond) 
  * \param print_level how much information to print out
+ *
  * \return the number of iterations
  *
  * \author Zhiyang Zhou
  * \date 04/25/2010
  */
-int fasp_solver_dstr_pcg (dSTRmat *A, 
-													dvector *b, 
-													dvector *u, 
-													int MaxIt, 
-													double tol, 
-													precond *pre, 
-													int print_level, 
-													int stop_type)
+INT fasp_solver_dstr_pcg (dSTRmat *A, 
+                          dvector *b, 
+                          dvector *u, 
+                          INT MaxIt, 
+                          REAL tol, 
+                          precond *pre, 
+                          SHORT print_level, 
+                          SHORT stop_type)
 {
-	const int MaxStag=20, MaxRestartStep=20;
-	const double maxdiff = tol*1e-4; // staganation tolerance
-	const double sol_inf_tol = SMALLREAL; // infinity norm tolerance
-	const int ngrid = A->ngrid; // number of grids
-	const int nc = A->nc; // size of each block (number of components)	
+	const SHORT MaxStag=20, MaxRestartStep=20;
+	const REAL maxdiff = tol*1e-4; // staganation tolerance
+	const REAL sol_inf_tol = SMALLREAL; // infinity norm tolerance
+	const INT ngrid = A->ngrid; // number of grids
+	const INT nc = A->nc; // size of each block (number of components)	
 	
-	int iter=0, m=nc*ngrid, stag, morestep, restart_step;
-	int status = SUCCESS;
-	double absres0=BIGREAL, absres, relres=BIGREAL, reldiff, factor;
-	double alpha, beta, temp1, temp2, tempr, normb=BIGREAL, normu, infnormu;
+    // local variables
+	INT iter=0, m=nc*ngrid, stag, morestep, restart_step;
+	INT status = SUCCESS;
+	REAL absres0=BIGREAL, absres, relres=BIGREAL, reldiff, factor;
+	REAL alpha, beta, temp1, temp2, tempr, normb=BIGREAL, normu, infnormu;
 	
-	// allocate temp memory (need 4*m double)
-	double *work=(double *)fasp_mem_calloc(4*m,sizeof(double));	
-	double *p=work, *z=work+m, *r=z+m, *t=r+m;
+	// allocate temp memory (need 4*m REAL)
+	REAL *work=(REAL *)fasp_mem_calloc(4*m,sizeof(REAL));	
+	REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
 	
 #if CHMEM_MODE		
-	total_alloc_mem += 4*m*sizeof(double);
+	total_alloc_mem += 4*m*sizeof(REAL);
 #endif
 	
 #if DEBUG_MODE
-	printf("pcg_str ...... [Start]\n");
+	printf("### DEBUG: fasp_solver_dstr_pcg ...... [Start]\n");
 #endif	
 	
 	// initialization counters
@@ -723,7 +756,7 @@ int fasp_solver_dstr_pcg (dSTRmat *A,
 	{		
 		// t=A*p
 		fasp_array_set(m,t,0.0);
-	  fasp_blas_dstr_aAxpy(1.0,A,p,t);
+        fasp_blas_dstr_aAxpy(1.0,A,p,t);
 		// spmxv_str(A,p,t); This shall be added. --Chensong
 		
 		// comupte alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
@@ -768,7 +801,7 @@ int fasp_solver_dstr_pcg (dSTRmat *A,
 		infnormu = fasp_blas_array_norminf(m, u->val); 
 		if (infnormu <= sol_inf_tol)
 		{
-			print_message(print_level, "PCG stops: infinity norm of the solution is too small!\n");
+			print_message(print_level, "### WARNING: PCG stopped due to stagnation!\n");
 			iter = ERROR_SOLVER_SOLSTAG;
 			break;
 		}
@@ -776,9 +809,9 @@ int fasp_solver_dstr_pcg (dSTRmat *A,
 		// stagnation check
 		if ((stag<=MaxStag) & (reldiff<maxdiff)) {
 			
-			if (print_level>4) { 
-				printf("PCG: restart %d caused by stagnation.\n", restart_step);
-				printf("||u-u'||/||u|| = %e and computed rel. res. = %e.\n",reldiff,relres);
+			if (print_level>=PRINT_MORE) { 
+				printf("||u-u'||/||u|| = %e and comp. rel. res. = %e.\n",reldiff,relres);
+				printf("### WARNING: PCG restarted %d due to stagnation.\n", restart_step);
 			}
 			
 			fasp_array_cp(m,b->val,r);
@@ -804,13 +837,14 @@ int fasp_solver_dstr_pcg (dSTRmat *A,
 					break;					
 			}
 			
-			if (print_level>4) printf("The actual relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) 
+                printf("### WARNING: The actual relative residual = %e\n",relres);
 			
 			if (relres<tol) 
 				break;
 			else {
 				if (stag>=MaxStag) {
-					print_message(print_level,"CG does not converge: staggnation error!\n");
+					print_message(print_level,"### WARNING: PCG stopped due to staggnation!\n");
 					iter = ERROR_SOLVER_STAG;
 					break;
 				}							
@@ -823,7 +857,8 @@ int fasp_solver_dstr_pcg (dSTRmat *A,
 		// safe-guard check
 		if (relres<tol) 
 		{
-			if (print_level>4) printf("The computed relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) 
+                printf("### WARNING: The computed relative residual = %e\n",relres);
 			
 			fasp_array_cp(m,b->val,r);
 			fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
@@ -849,13 +884,14 @@ int fasp_solver_dstr_pcg (dSTRmat *A,
 					break;
 			}
 			
-			if (print_level>4) printf("The actual relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) 
+                printf("### WARNING: The actual relative residual = %e\n",relres);
 			
 			// check convergence
 			if (relres<tol) break;
 			
 			if (morestep>=MaxRestartStep) {
-				print_message(print_level,"Warning: the tolerence may be too small!\n");
+				print_message(print_level,"### WARNING: The tolerence is too small!\n");
 				iter = ERROR_SOLVER_TOLSMALL;
 				break;
 			}
@@ -901,7 +937,7 @@ FINISHED:  // finish the iterative method
 	fasp_mem_free(work);
 	
 #if DEBUG_MODE
-	printf("pcg ...... [Finish]\n");
+	printf("### DEBUG: fasp_solver_dstr_pcg ...... [Finish]\n");
 #endif	
 	
 	if (iter>MaxIt) return ERROR_SOLVER_MAXIT;

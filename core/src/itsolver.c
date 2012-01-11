@@ -279,7 +279,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	
 	// setup preconditioner
 	precond_data precdata;
-    fasp_precond_data_set(&precdata,amgparam);
+    fasp_param_amg_to_prec(&precdata,amgparam);
 	precdata.max_levels = mgl[0].num_levels;
 	precdata.mgl_data = mgl;
 	

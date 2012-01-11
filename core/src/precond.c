@@ -210,24 +210,15 @@ void fasp_precond_amg (double *r,
                        double *z, 
                        void *data)
 {
-	precond_data *predata=(precond_data *)data;
-	const int m=predata->mgl_data[0].A.row;
-	const int maxit=predata->maxit;
+	precond_data *precdata=(precond_data *)data;
+	const int m=precdata->mgl_data[0].A.row;
+	const int maxit=precdata->maxit;
 	unsigned int i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
-    amgparam.AMG_type = predata->AMG_type;
-	amgparam.cycle_type = predata->cycle_type;
-	amgparam.smoother   = predata->smoother;
-	amgparam.smooth_order = predata->smooth_order;
-	amgparam.presmooth_iter  = predata->presmooth_iter;
-	amgparam.postsmooth_iter = predata->postsmooth_iter;
-	amgparam.relaxation = predata->relaxation;
-	amgparam.coarse_scaling = predata->coarse_scaling;
-	amgparam.tentative_smooth = predata->tentative_smooth;
-	amgparam.ILU_levels = predata->mgl_data->ILU_levels;
+    fasp_param_prec_to_amg(&amgparam,precdata);
 	
-	AMG_data *mgl = predata->mgl_data;
+	AMG_data *mgl = precdata->mgl_data;
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	
@@ -251,24 +242,15 @@ void fasp_precond_famg (double *r,
                         double *z, 
                         void *data)
 {
-	precond_data *predata=(precond_data *)data;
-	const int m=predata->mgl_data[0].A.row;
-	const int maxit=predata->maxit;
+	precond_data *precdata=(precond_data *)data;
+	const int m=precdata->mgl_data[0].A.row;
+	const int maxit=precdata->maxit;
 	unsigned int i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
-    amgparam.AMG_type = predata->AMG_type;
-	amgparam.cycle_type = predata->cycle_type;
-	amgparam.smoother   = predata->smoother;
-	amgparam.smooth_order = predata->smooth_order;
-	amgparam.presmooth_iter  = predata->presmooth_iter;
-	amgparam.postsmooth_iter = predata->postsmooth_iter;
-	amgparam.relaxation = predata->relaxation;
-	amgparam.coarse_scaling = predata->coarse_scaling;
-	amgparam.tentative_smooth = predata->tentative_smooth;
-	amgparam.ILU_levels = predata->mgl_data->ILU_levels;
+    fasp_param_prec_to_amg(&amgparam,precdata);
 	
-	AMG_data *mgl = predata->mgl_data;
+	AMG_data *mgl = precdata->mgl_data;
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	
@@ -292,25 +274,15 @@ void fasp_precond_amli (double *r,
                         double *z, 
                         void *data)
 {
-	precond_data *predata=(precond_data *)data;
-	const int m=predata->mgl_data[0].A.row;
-	const int maxit=predata->maxit;
+	precond_data *precdata=(precond_data *)data;
+	const int m=precdata->mgl_data[0].A.row;
+	const int maxit=precdata->maxit;
 	unsigned int i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
-    amgparam.AMG_type = predata->AMG_type;
-	amgparam.cycle_type = predata->cycle_type;
-	amgparam.smoother   = predata->smoother;
-	amgparam.presmooth_iter  = predata->presmooth_iter;
-	amgparam.postsmooth_iter = predata->postsmooth_iter;
-	amgparam.relaxation = predata->relaxation;
-	amgparam.coarse_scaling = predata->coarse_scaling;
-	amgparam.amli_degree = predata->amli_degree;
-	amgparam.amli_coef = predata->amli_coef;
-	amgparam.tentative_smooth = predata->tentative_smooth;
-	amgparam.ILU_levels = predata->mgl_data->ILU_levels;
+    fasp_param_prec_to_amg(&amgparam,precdata);
 	
-	AMG_data *mgl = predata->mgl_data;
+	AMG_data *mgl = precdata->mgl_data;
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	
@@ -335,26 +307,26 @@ void fasp_precond_nl_amli (double *r,
                            void *data)
 {
 	
-	precond_data *predata=(precond_data *)data;
-	const INT m=predata->mgl_data[0].A.row;
-	const INT maxit=predata->maxit;
-	const INT num_levels = predata->max_levels;
+	precond_data *precdata=(precond_data *)data;
+	const INT m=precdata->mgl_data[0].A.row;
+	const INT maxit=precdata->maxit;
+	const INT num_levels = precdata->max_levels;
 	unsigned INT i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
-	amgparam.cycle_type = predata->cycle_type;
-	amgparam.smoother   = predata->smoother;
-	amgparam.presmooth_iter  = predata->presmooth_iter;
-	amgparam.postsmooth_iter = predata->postsmooth_iter;
-	amgparam.relaxation = predata->relaxation;
-	amgparam.coarse_scaling = predata->coarse_scaling;
-	amgparam.amli_degree = predata->amli_degree;
-	amgparam.amli_coef = predata->amli_coef;
-    amgparam.nl_amli_krylov_type = predata->nl_amli_krylov_type;
-	amgparam.tentative_smooth = predata->tentative_smooth;
-	amgparam.ILU_levels = predata->mgl_data->ILU_levels;
+	amgparam.cycle_type = precdata->cycle_type;
+	amgparam.smoother   = precdata->smoother;
+	amgparam.presmooth_iter  = precdata->presmooth_iter;
+	amgparam.postsmooth_iter = precdata->postsmooth_iter;
+	amgparam.relaxation = precdata->relaxation;
+	amgparam.coarse_scaling = precdata->coarse_scaling;
+	amgparam.amli_degree = precdata->amli_degree;
+	amgparam.amli_coef = precdata->amli_coef;
+    amgparam.nl_amli_krylov_type = precdata->nl_amli_krylov_type;
+	amgparam.tentative_smooth = precdata->tentative_smooth;
+	amgparam.ILU_levels = precdata->mgl_data->ILU_levels;
 	
-	AMG_data *mgl = predata->mgl_data;
+	AMG_data *mgl = precdata->mgl_data;
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	
