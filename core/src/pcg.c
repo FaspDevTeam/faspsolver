@@ -56,6 +56,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "its_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -209,10 +210,9 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 		
 		// solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
 		infnormu = fasp_blas_array_norminf(m, u->val); 
-		if (infnormu <= sol_inf_tol)
-		{
-			print_message(print_level, "PCG stops: infinity norm of the solution is too small!\n");
-			iter = ERROR_SOLVER_SOLSTAG;
+		if (infnormu <= sol_inf_tol) {
+            if (print_level>PRINT_MIN) ITS_ZEROSOL;
+            iter = ERROR_SOLVER_SOLSTAG;
 			break;
 		}
 		
@@ -221,7 +221,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 			
 			if (print_level>=PRINT_MORE) { 
 				printf("||u-u'||/||u|| = %e and comp. rel. res. = %e.\n",reldiff,relres);
-				printf("### WARNING: PCG restarted %d due to stagnation!\n", restart_step);
+                ITS_RESTART;
 			}
 			
 			fasp_array_cp(m,b->val,r);
@@ -247,14 +247,13 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 					break;					
 			}
 			
-			if (print_level>=PRINT_MORE) 
-                printf("### WARNING: The actual relative residual = %e!\n",relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			if (relres<tol) 
 				break;
 			else {
 				if (stag>=MaxStag) {
-					print_message(print_level,"### WARNING: PCG stopped due to staggnation!\n");
+                    if (print_level>PRINT_MIN) ITS_STAGGED;
 					iter = ERROR_SOLVER_STAG;
 					break;
 				}							
@@ -267,8 +266,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 		// safe-guard check
 		if (relres<tol) 
 		{
-			if (print_level>=PRINT_MORE) 
-                printf("### WARNING: The computed relative residual = %e!\n",relres);
+			if (print_level>=PRINT_MORE) ITS_COMPRES(relres);
 			
 			fasp_array_cp(m,b->val,r);
 			fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
@@ -294,15 +292,14 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_MORE) 
-                printf("### WARNING: The actual relative residual = %e\n",relres);
-			
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
+                        
 			// check convergence
 			if (relres<tol) break;
 			
 			if (more_step>=MaxRestartStep) {
-				print_message(print_level,"### WARNING: The tolerence is too small!\n");
-				iter = ERROR_SOLVER_TOLSMALL;
+                if (print_level>PRINT_MIN) ITS_ZEROTOL;
+                iter = ERROR_SOLVER_TOLSMALL;
 				break;
 			}
 			
@@ -335,13 +332,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 	} // end of main PCG loop.
 	
 FINISHED:  // finish the iterative method
-	if (print_level>PRINT_NONE) {
-		if (iter>MaxIt){
-			printf("Maximal iteration %d reached with relative residual %e.\n", MaxIt, relres);
-		}
-		else if (iter >= 0)
-			printf("Number of iterations = %d with relative residual %e.\n", iter, relres);
-	}
+	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
 	
 	// clean up temp memory
 	fasp_mem_free(work);
@@ -504,7 +495,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		infnormu = fasp_blas_array_norminf(m, u->val); 
 		if (infnormu <= sol_inf_tol)
 		{
-			print_message(print_level, "### WARNING: PCG stopped due to staggnation!\n");
+            if (print_level>PRINT_MIN) ITS_ZEROSOL;
 			iter = ERROR_SOLVER_SOLSTAG;
 			break;
 		}
@@ -514,7 +505,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 			
 			if (print_level>=PRINT_MORE) { 
 				printf("||u-u'||/||u|| = %e and comp. rel. res. = %e.\n",reldiff,relres);
-				printf("### WARNING: PCG restarted %d caused by stagnation!\n", restart_step);
+                ITS_RESTART;
 			}
 			
 			fasp_array_cp(m,b->val,r);
@@ -539,14 +530,13 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_MORE) 
-                printf("### WARNING: The actual relative residual = %e!\n",relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			if (relres<tol) 
 				break;
 			else {
 				if (stag>=MaxStag) {
-					print_message(print_level,"CG does not converge: staggnation error!\n");
+                    if (print_level>PRINT_MIN) ITS_STAGGED;
 					iter = ERROR_SOLVER_STAG;
 					break;
 				}							
@@ -559,8 +549,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		// safe-guard check
 		if (relres<tol) 
 		{
-			if (print_level>PRINT_MIN) 
-                printf("### WARNING: The computed relative residual = %e!\n",relres);
+			if (print_level>=PRINT_MORE) ITS_COMPRES(relres);
 			
 			fasp_array_cp(m,b->val,r);
 			fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
@@ -585,14 +574,13 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>PRINT_MIN) 
-                printf("### WARNING: The actual relative residual = %e!\n",relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			// check convergence
 			if (relres<tol) break;
 			
 			if (more_step>=MaxRestartStep) {
-				print_message(print_level,"### WARNING: the tolerence may be too small!\n");
+                if (print_level>PRINT_MIN) ITS_ZEROTOL;
 				iter = ERROR_SOLVER_TOLSMALL;
 				break;
 			}
@@ -626,14 +614,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 	} // end of main PCG loop.
 	
 FINISHED:  // finish the iterative method
-	if (print_level>0) {
-		if (iter>MaxIt){
-			printf("Maximal iteration %d reached with relative residual %e.\n", MaxIt, relres);
-			iter = ERROR_SOLVER_MAXIT;
-		}
-		else if (iter >= 0)
-			printf("Number of iterations = %d with relative residual %e.\n", iter, relres);
-	}
+	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
 	
 	// clean up temp memory
 	fasp_mem_free(p);
@@ -801,7 +782,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 		infnormu = fasp_blas_array_norminf(m, u->val); 
 		if (infnormu <= sol_inf_tol)
 		{
-			print_message(print_level, "### WARNING: PCG stopped due to stagnation!\n");
+            if (print_level>PRINT_MIN) ITS_ZEROSOL;
 			iter = ERROR_SOLVER_SOLSTAG;
 			break;
 		}
@@ -811,7 +792,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 			
 			if (print_level>=PRINT_MORE) { 
 				printf("||u-u'||/||u|| = %e and comp. rel. res. = %e.\n",reldiff,relres);
-				printf("### WARNING: PCG restarted %d due to stagnation.\n", restart_step);
+                ITS_RESTART;
 			}
 			
 			fasp_array_cp(m,b->val,r);
@@ -837,14 +818,13 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 					break;					
 			}
 			
-			if (print_level>=PRINT_MORE) 
-                printf("### WARNING: The actual relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			if (relres<tol) 
 				break;
 			else {
 				if (stag>=MaxStag) {
-					print_message(print_level,"### WARNING: PCG stopped due to staggnation!\n");
+                    if (print_level>PRINT_MIN) ITS_STAGGED;
 					iter = ERROR_SOLVER_STAG;
 					break;
 				}							
@@ -857,8 +837,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 		// safe-guard check
 		if (relres<tol) 
 		{
-			if (print_level>=PRINT_MORE) 
-                printf("### WARNING: The computed relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) ITS_COMPRES(relres);
 			
 			fasp_array_cp(m,b->val,r);
 			fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
@@ -884,14 +863,13 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_MORE) 
-                printf("### WARNING: The actual relative residual = %e\n",relres);
-			
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
+
 			// check convergence
 			if (relres<tol) break;
 			
 			if (morestep>=MaxRestartStep) {
-				print_message(print_level,"### WARNING: The tolerence is too small!\n");
+                if (print_level>PRINT_MIN) ITS_ZEROTOL;
 				iter = ERROR_SOLVER_TOLSMALL;
 				break;
 			}
@@ -925,13 +903,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 	} // end of main PCG loop.
 	
 FINISHED:  // finish the iterative method
-	if (print_level>0) {
-		if (iter>MaxIt){
-			printf("Maximal iteration %d reached with relative residual %e.\n", MaxIt, relres);
-		}
-		else if (iter >= 0)
-			printf("Number of iterations = %d with relative residual %e.\n", iter, relres);
-	}
+	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
 	
 	// clean up temp memory
 	fasp_mem_free(work);
