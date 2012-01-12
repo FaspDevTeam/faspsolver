@@ -56,6 +56,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "its_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -145,7 +146,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         alpha=fenzi/fenmu;
     }
     else {
-        if ( print_level > PRINT_NONE ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 1!\n");
+        if (print_level>=PRINT_SOME) ITS_DIVZERO;
         return ERROR_SOLVER_MISC;	        
     }
 	
@@ -166,7 +167,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         omega=fenzi/fenmu;
     }
     else {
-        if ( print_level >= PRINT_SOME ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 2!\n");
+        if (print_level>=PRINT_SOME) ITS_DIVZERO;
         omega=1.0; 
         // We use an approximate stepsize. Take the risky. --Chensong
         // For safety, we could just quit BiCGstab:
@@ -227,7 +228,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             beta=(fenzi*alpha)/(fenmu*omega);
         }
         else {
-            if ( print_level > PRINT_NONE ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 3!\n");
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             return ERROR_SOLVER_MISC;	        
         }
 		
@@ -250,7 +251,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             alpha=fenzi/fenmu;
         }
         else {
-            if ( print_level > PRINT_NONE ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 4!\n");
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             return ERROR_SOLVER_MISC;	        
         }
 		
@@ -274,7 +275,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             omega=fenzi/fenmu;
         }
         else {
-            if ( print_level > PRINT_NONE ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 5!\n");
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             return ERROR_SOLVER_MISC;	        
         }
 		
@@ -315,7 +316,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 		// solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
 		infnormu = fasp_blas_array_norminf(m, uval); 
 		if (infnormu <= sol_inf_tol) {
-			print_message(print_level, "### ERROR: infinity norm of the solution in BiCGstab is too small!\n");
+            if (print_level>PRINT_MIN) ITS_ZEROSOL;
 			iter = ERROR_SOLVER_SOLSTAG;
 			goto FINISHED;
 		}
@@ -324,8 +325,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 		if ( (stag<=MaxStag) && (reldiff<maxdiff) )
 		{				
 			if (print_level>=PRINT_MORE) {
-				printf("||u-u'|| = %e and the computed relative residual = %e\n",reldiff,relres);
-				printf("### WARNING: BiCGstab restart (%d) due to stagnation!\n", restart_step);
+                ITS_DIFFRES(reldiff,relres);
+                ITS_RESTART;
 			}	
 			
 			fasp_array_cp(m,bval,r);
@@ -352,13 +353,13 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_MORE) printf("The actual relative residual = %e\n", relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			if (relres<tol)
 				break;
 			else {
 				if (stag>=MaxStag) {
-					print_message(print_level,"### WARNING: BiCGstab does not converge--staggnation error!\n");
+                    if (print_level>PRINT_MIN) ITS_STAGGED;
 					iter = ERROR_SOLVER_STAG;
 					goto FINISHED;
 				}
@@ -370,7 +371,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 		
 		// safe guard
 		if (relres<tol) {
-			if (print_level>=PRINT_MORE) printf("The computed relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) ITS_COMPRES(relres);
 			
 			fasp_array_cp(m,bval,r);
 			fasp_blas_dcsr_aAxpy(-1.0,A,uval,r);
@@ -394,18 +395,18 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_MORE) printf("The actual relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			// check convergence
 			if (relres<tol) break;
 			
 			if (more_step>=MaxRestartStep) {
-				print_message(print_level,"### WARNING: the tolerence might be too small!\n");
+                if (print_level>PRINT_MIN) ITS_ZEROTOL;
 				iter = ERROR_SOLVER_TOLSMALL;
 				goto FINISHED;
 			}
 			else {
-				if (print_level>PRINT_NONE) printf("### WARNING: BiCGstab restart (%d) due to virtual residual\n", restart_step);
+				if (print_level>PRINT_NONE) ITS_RESTART;
 			}
 			
 			++more_step;
@@ -416,13 +417,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 	}
 	
 FINISHED:  // finish the iterative method
-	if (print_level>PRINT_NONE) {
-		if (iter>MaxIt){
-			printf("Maximal iteration %d reached with relative residual %e\n", MaxIt, relres);
-		}
-		else if (iter >= 0)
-			printf("Number of iterations = %d with relative residual %e\n", iter, relres);
-	}
+	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
 	
 	// clean up temp memory
 	fasp_mem_free(work);
@@ -522,7 +517,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         alpha=fenzi/fenmu;
     }
     else {
-        if ( print_level > PRINT_NONE ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 1!\n");
+        if (print_level>=PRINT_SOME) ITS_DIVZERO;
         return ERROR_SOLVER_MISC;	        
     }
 	
@@ -547,7 +542,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         omega=fenzi/fenmu; // (s,t)/(t,t)
     }
     else {
-        if ( print_level >= PRINT_SOME ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 2!\n");
+        if (print_level>=PRINT_SOME) ITS_DIVZERO;
         omega=1.0; 
         // We use an approximate stepsize. Take the risky. --Chensong
         // For safety, we could just quit BiCGstab:
@@ -614,7 +609,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             beta=fenzi/fenmu*alpha/omega;
         }
         else {
-            if ( print_level > PRINT_NONE ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 3!\n");
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             return ERROR_SOLVER_MISC;	        
         }
 		
@@ -640,7 +635,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             alpha=fenzi/fenmu;
         }
         else {
-            if ( print_level > PRINT_NONE ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 4!\n");
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             return ERROR_SOLVER_MISC;	        
         }
 		
@@ -665,7 +660,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             omega=fenzi/fenmu;
         }
         else {
-            if ( print_level > PRINT_NONE ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 5!\n");
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             return ERROR_SOLVER_MISC;	        
         }
 		
@@ -711,7 +706,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 		infnormu = fasp_blas_array_norminf(m, u->val); 
 		if (infnormu <= sol_inf_tol)
 		{
-			print_message(print_level, "### ERROR: infinity norm of the solution in BiCGstab is too small!\n");
+            if (print_level>PRINT_MIN) ITS_ZEROSOL;
 			iter = ERROR_SOLVER_SOLSTAG;
 			break;
 		}
@@ -721,8 +716,8 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 		{	
 			
 			if (print_level>=PRINT_MORE) {
-				printf("||u-u'|| = %e and the computed relative residual = %e\n",reldiff,relres);
-				printf("### WARNING: BiCGstab restart (%d) due to stagnation!\n", restart_step);
+                ITS_DIFFRES(reldiff,relres);
+                ITS_RESTART;
 			}	
 			
 			fasp_array_cp(m,b->val,r);
@@ -749,13 +744,13 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_MORE) printf("The actual relative residual = %e\n", relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			if (relres<tol)
 				break;
 			else {
 				if (stag>=MaxStag) {
-					print_message(print_level,"### WARNING: BiCGstab does not converge--staggnation error!\n");
+                    if (print_level>PRINT_MIN) ITS_STAGGED;
 					iter = ERROR_SOLVER_STAG;
 					break;
 				}
@@ -767,7 +762,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 		
 		// safe guard
 		if (relres<tol) {
-			if (print_level>=PRINT_SOME) printf("The computed relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) ITS_COMPRES(relres);
 			
 			fasp_array_cp(m,b->val,r);
 			fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
@@ -793,20 +788,20 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_SOME) printf("The actual relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			// check convergence
 			if (relres<tol) break;
 			
 			if (more_step>=MaxRestartStep) {
-				print_message(print_level,"### WARNING: the tolerence may be too small!\n");
+                if (print_level>PRINT_MIN) ITS_ZEROTOL;
 				iter = ERROR_SOLVER_TOLSMALL;
 				break;
 			}
 			
 			if (more_step<MaxRestartStep) {
-				if (print_level>PRINT_NONE) 
-                    printf("### WARNING: BiCGstab restart (%d) due to virtual residual\n", restart_step);
+				if (print_level>PRINT_NONE) ITS_RESTART;
+
 			}
 			
 			++more_step;
@@ -818,14 +813,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 	}
 	
 FINISHED: // finish the iterative method
-	if (print_level>PRINT_NONE) {
-		if (iter>MaxIt){
-			printf("Maximal iteration %d exceeded with relative residual %e\n", MaxIt, relres);
-			iter = ERROR_SOLVER_MAXIT;
-		}
-		else if (iter >= 0)
-			printf("Number of iterations = %d with relative residual %e\n", iter, relres);
-	}
+	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
 	
 	fasp_mem_free(r);
 	fasp_mem_free(z);
@@ -920,7 +908,15 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 	
 	// fenmu=(A*pp,rho)
 	fenmu=fasp_blas_array_dotprod(m,t,rho);
-	
+
+    if (ABS(fenmu)>1e-22) {
+        alpha=fenzi/fenmu;
+    }
+    else {
+        if (print_level>=PRINT_SOME) ITS_DIVZERO;
+        return ERROR_SOLVER_MISC;	        
+    }
+
 	// (r,rho)/(A*pp,rho)
 	alpha=fenzi/fenmu;
 	
@@ -941,7 +937,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
         omega=fenzi/fenmu; // (s,t)/(t,t)
     }
     else {
-        if ( print_level >= PRINT_SOME ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 2!\n");
+        if (print_level>=PRINT_SOME) ITS_DIVZERO;
         omega=1.0; 
         // We use an approximate stepsize. Take the risky. --Chensong
         // For safety, we could just quit BiCGstab:
@@ -1072,7 +1068,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 		infnormu = fasp_blas_array_norminf(m, uval); 
 		if (infnormu <= sol_inf_tol)
 		{
-			print_message(print_level, "### ERROR: infinity norm of the solution in BiCGstab is too small!\n");
+            if (print_level>PRINT_MIN) ITS_ZEROSOL;
 			iter = ERROR_SOLVER_SOLSTAG;
 			goto FINISHED;
 		}
@@ -1081,8 +1077,8 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 		if ( (stag<=MaxStag) && (reldiff<maxdiff) )
 		{				
 			if (print_level>=PRINT_MORE) {
-				printf("||u-u'|| = %e and the computed relative residual = %e.\n",reldiff,relres);
-				printf("### WARNING: BiCGstab restart (%d) due to stagnation!\n", restart_step);
+                ITS_DIFFRES(reldiff,relres);
+                ITS_RESTART;
 			}	
 			
 			fasp_array_cp(m,bval,r);
@@ -1109,13 +1105,13 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_MORE) printf("The actual relative residual = %e\n", relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			if (relres<tol)
 				break;
 			else {
-				if (stag>=MaxStag) { //
-					print_message(print_level,"### WARNING: BiCGstab does not converge--staggnation error!\n");
+				if (stag>=MaxStag) {
+                    if (print_level>PRINT_MIN) ITS_STAGGED;
 					iter = ERROR_SOLVER_STAG;
 					goto FINISHED;
 				}
@@ -1127,7 +1123,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 		
 		// safe guard
 		if (relres<tol) {
-			if (print_level>=PRINT_MORE) printf("The computed relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) ITS_COMPRES(relres);
 			
 			fasp_array_cp(m,bval,r);
 			fasp_blas_dbsr_aAxpy(-1.0,A,uval,r);
@@ -1157,13 +1153,12 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 			if (relres<tol) break;
 			
 			if (morestep>=MaxRestartStep) {
-				print_message(print_level,"### WARNING: the tolerence may be too small!\n");
+                if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 				iter = ERROR_SOLVER_TOLSMALL;
 				goto FINISHED;
 			}
 			else {
-				if (print_level>=PRINT_SOME) 
-                    printf("### WARNING: BiCGstab restart (%d) due to virtual residual\n", restart_step);
+				if (print_level>=PRINT_SOME) ITS_RESTART; 
 			}
 			
 			morestep++;
@@ -1174,13 +1169,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 	}
 	
 FINISHED:  // finish the iterative method
-	if (print_level>PRINT_NONE) {
-		if (iter>MaxIt){
-			printf("Maximal iteration %d reached with relative residual %e\n", MaxIt, relres);
-		}
-		else if (iter >= 0)
-			printf("Number of iterations = %d with relative residual %e\n", iter, relres);
-	}
+	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
 	
 	// clean up temp memory
 	fasp_mem_free(work);
@@ -1296,7 +1285,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         omega=fenzi/fenmu; // (s,t)/(t,t)
     }
     else {
-        if ( print_level >= PRINT_SOME ) printf("### WARNING: Divide-by-zero occurs in BiCGstab 2!\n");
+        if (print_level>=PRINT_SOME) ITS_DIVZERO;
         omega=1.0; 
         // We use an approximate stepsize. Take the risky. --Chensong
         // For safety, we could just quit BiCGstab:
@@ -1431,7 +1420,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 		infnormu = fasp_blas_array_norminf(m, uval); 
 		if (infnormu <= sol_inf_tol)
 		{
-			print_message(print_level, "### ERROR: infinity norm of the solution in BiCGstab is too small!\n");
+            if (print_level>PRINT_MIN) ITS_ZEROSOL;
 			iter = ERROR_SOLVER_SOLSTAG;
 			goto FINISHED;
 		}
@@ -1440,8 +1429,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 		if ( (stag<=MaxStag) && (reldiff<maxdiff) )
 		{				
 			if (print_level>=PRINT_MORE) {
-				printf("||u-u'|| = %e and the computed relative residual = %e.\n",reldiff,relres);
-				printf("### WARNING: BiCGstab restart (%d) due to stagnation!\n", restart_step);
+                ITS_DIFFRES(reldiff,relres);
+                ITS_RESTART;
 			}	
 			
 			fasp_array_cp(m,bval,r);
@@ -1468,13 +1457,13 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_MORE) printf("The actual relative residual = %e\n", relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			if (relres<tol)
 				break;
 			else {
 				if (stag>=MaxStag) {
-					print_message(print_level,"BiCGstab does not converge: staggnation error!\n");
+                    if (print_level>PRINT_MIN) ITS_STAGGED;
 					iter = ERROR_SOLVER_STAG;
 					goto FINISHED;
 				}
@@ -1486,7 +1475,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 		
 		// safe guard
 		if (relres<tol) {
-			if (print_level>=PRINT_MORE) printf("The computed relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) ITS_COMPRES(relres);
 			
 			fasp_array_cp(m,bval,r);
 			fasp_blas_dstr_aAxpy(-1.0,A,uval,r);
@@ -1510,18 +1499,18 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_MORE) printf("The actual relative residual = %e\n",relres);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			// check convergence
 			if (relres<tol) break;
 			
 			if (morestep>=MaxRestartStep) {
-				print_message(print_level,"### WARNING: the tolerence may be too small!\n");
+                if (print_level>PRINT_MIN) ITS_ZEROTOL;
 				iter = ERROR_SOLVER_TOLSMALL;
 				goto FINISHED;
 			}
 			else {
-				if (print_level>=PRINT_SOME) printf("### WARNING: restart %d caused by virtual residual\n", restart_step);
+				if (print_level>=PRINT_SOME) ITS_RESTART;
 			}
 			
 			morestep++;
@@ -1532,13 +1521,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 	}
 	
 FINISHED:  // finish the iterative method
-	if (print_level>PRINT_NONE) {
-		if (iter>MaxIt){
-			printf("Maximal iteration %d reached with relative residual %e\n", MaxIt, relres);
-		}
-		else if (iter >= 0)
-			printf("Number of iterations = %d with relative residual %e\n", iter, relres);
-	}
+	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
 	
 	// clean up temp memory
 	fasp_mem_free(work);

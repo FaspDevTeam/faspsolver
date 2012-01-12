@@ -56,6 +56,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "its_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -63,8 +64,8 @@
 
 /*!
  * \fn INT fasp_solver_dcsr_pvgmres ( dCSRmat *A, dvector *b, dvector *x, const INT maxit, 
- *                                    const REAL tol, precond *pre, const INT print_level, 
- *                                    const INT stop_type, const INT restart )
+ *                                    const REAL tol, precond *pre, const SHORT print_level, 
+ *                                    const SHORT stop_type, const SHORT restart )
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
@@ -72,7 +73,7 @@
  * \param *A           pointer to the coefficient matrix
  * \param *b           pointer to the right hand side vector
  * \param *x           pointer to the solution vector
- * \param maxit     maximal iteration number allowed
+ * \param maxit        maximal iteration number allowed
  * \param tol          tolerance
  * \param *pre         pointer to preconditioner data
  * \param print_level  how much of the SOLVE-INFORMATION be printed
@@ -94,9 +95,9 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
                               const INT maxit,
                               const REAL tol,
                               precond *pre, 
-                              const INT print_level, 
-                              const INT stop_type, 
-                              const INT restart)
+                              const SHORT print_level, 
+                              const SHORT stop_type, 
+                              const SHORT restart)
 {
 	const INT n                 = A->row;  
 	const INT min_iter          = 0;
@@ -109,7 +110,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 	const REAL cr_min      = 0.174;   // = cos(80^o) (experimental)
 	
     // local variables
-	INT    converged            = 0; 
+	SHORT  converged            = 0; 
 	INT    iter                 = 0;
 	INT    status               = SUCCESS;	
 	INT    restartplus1         = restart + 1;
@@ -155,9 +156,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 		norms[0] = r_norm;
 		if ( print_level >= PRINT_SOME)
 		{
-			printf("L2 norm of b: %e\n", b_norm);
-			if (b_norm == 0.0) printf("### WARNING: Rel_resid_norm actually contains the residual norm!\n");
-			printf("Initial L2 norm of residual: %e\n", r_norm);
+            ITS_PUTNORM("right-hand side", b_norm);
+            ITS_PUTNORM("residual", r_norm);
 		}
 	}
 	
@@ -212,7 +212,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 			
 			if (r_norm <= epsilon)
 			{
-				if (print_level > PRINT_NONE) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
+				if (print_level > PRINT_NONE) 
+                    printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
 				break;
 			}
 			else
@@ -358,7 +359,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 	
 	if (print_level > PRINT_NONE && iter >= maxit && r_norm > epsilon) 
 	{
-		printf("### WARNInG: Not reaching the given tolerance in %d iterations!!\n", maxit);
+		printf("### WARNING: Not reaching the given tolerance in %d iterations!!\n", maxit);
 	}
 	
     /*-------------------------------------------
@@ -376,8 +377,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 
 /*!
  * \fn INT fasp_solver_dbsr_pvgmres( dBSRmat *A, dvector *b, dvector *x, const INT maxit, 
- *                                   const REAL tol, precond *pre, const INT print_level, 
- *                                   const INT stop_type, const INT restart )
+ *                                   const REAL tol, precond *pre, const SHORT print_level, 
+ *                                   const SHORT stop_type, const SHORT restart )
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
@@ -385,7 +386,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
  * \param *A           pointer to the coefficient matrix
  * \param *b           pointer to the right hand side vector
  * \param *x           pointer to the solution vector
- * \param maxit     maximal iteration  
+ * \param maxit        maximal iteration  
  * \param tol          tolerance
  * \param *pre         pointer to preconditioner data
  * \param print_level  how much of the SOLVE-INFORMATION be output
@@ -404,9 +405,9 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
                               const INT maxit, 
                               const REAL tol,
                               precond *pre, 
-                              const INT print_level, 
-                              const INT stop_type, 
-                              const INT restart )
+                              const SHORT print_level, 
+                              const SHORT stop_type, 
+                              const SHORT restart )
 {
 	const INT n            = A->ROW*A->nb;  
 	const INT min_iter     = 0;
@@ -419,7 +420,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 	const REAL cr_min      = 0.174;   // = cos(80^o) (experimental)
 	
     // local variables
-	INT    converged       = 0; 
+	SHORT  converged       = 0; 
 	INT    iter            = 0;
 	INT    status          = SUCCESS;	
 	INT    restartplus1    = restart + 1;
@@ -465,9 +466,8 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 		norms[0] = r_norm;
 		if ( print_level >= PRINT_SOME)
 		{
-			printf("L2 norm of b: %e\n", b_norm);
-			if (b_norm == 0.0) printf("### WARNING: Rel_resid_norm actually contains the residual norm!\n");
-			printf("Initial L2 norm of residual: %e\n", r_norm);
+            ITS_PUTNORM("right-hand side", b_norm);
+            ITS_PUTNORM("residual", r_norm);
 		}
 	}
 	
@@ -683,8 +683,8 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 
 /*!
  * \fn INT fasp_solver_dstr_pvgmres( dSTRmat *A, dvector *b, dvector *x, const INT maxit, 
- *                                   const REAL tol, precond *pre, const INT print_level, 
- *                                   const INT stop_type, const INT restart )
+ *                                   const REAL tol, precond *pre, const SHORT print_level, 
+ *                                   const SHORT stop_type, const SHORT restart )
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
@@ -711,9 +711,9 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
                               const INT maxit, 
                               const REAL tol, 
                               precond *pre, 
-                              const INT print_level, 
-                              const INT stop_type, 
-                              const INT restart )
+                              const SHORT print_level, 
+                              const SHORT stop_type, 
+                              const SHORT restart )
 {
 	const INT n            = A->nc*A->ngrid;  
 	const INT min_iter     = 0;
@@ -726,7 +726,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 	const REAL cr_min      = 0.174;   // = cos(80^o) (experimental)
 	
     // local variables
-	INT    converged       = 0; 
+	SHORT  converged       = 0; 
 	INT    iter            = 0;
 	INT    status          = SUCCESS;	
 	INT    restartplus1    = restart + 1;
@@ -772,9 +772,8 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 		norms[0] = r_norm;
 		if ( print_level >= PRINT_SOME )
 		{
-			printf("L2 norm of b: %e\n", b_norm);
-			if (b_norm == 0.0) printf("### WARNING: Rel_resid_norm actually contains the residual norm!\n");
-			printf("Initial L2 norm of residual: %e\n", r_norm);
+            ITS_PUTNORM("right-hand side", b_norm);
+            ITS_PUTNORM("residual", r_norm);
 		}
 	}
 	

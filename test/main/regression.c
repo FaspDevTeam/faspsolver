@@ -325,6 +325,21 @@ int main (int argc, const char * argv[])
         
         check_solu(&x, &sol,tolerance);
         
+        /* Using classical AMG as preconditioner for MinRes */
+        printf("------------------------------------------------------------------\n");
+        printf("AMG preconditioned MinRes solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_solver_init(&itparam);
+        fasp_param_amg_init(&amgparam);
+        itparam.itsolver_type = SOLVER_MinRes;
+        itparam.maxit         = 5000;
+        itparam.tol           = 1e-10;
+        itparam.print_level   = print_level;
+        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+
         /* Using classical AMG as preconditioner for GMRes */
         printf("------------------------------------------------------------------\n");
         printf("AMG preconditioned GMRes solver ...\n");	

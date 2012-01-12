@@ -56,23 +56,25 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "its_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /*!
- * \fn INT fasp_solver_dcsr_pvfgmres ( dCSRmat *A, dvector *b, dvector *x, const INT max_iter, 
- *                                    const REAL tol, precond *pre, const INT print_level, 
- *                                    const INT stop_type, const INT restart )
+ * \fn INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, dvector *b, dvector *x, const INT MaxIt, 
+ *                                    const REAL tol, precond *pre, const SHORT print_level, 
+ *                                    const SHORT stop_type, const SHORT restart )
  *
  * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which the restart
- *        parameter can be adaptively modified during the iteration and flexible preconditioner can be used.
+ *        parameter can be adaptively modified during the iteration and flexible preconditioner 
+ *        can be used.
  *
  * \param *A           pointer to the coefficient matrix
  * \param *b           pointer to the right hand side vector
  * \param *x           pointer to the solution vector
- * \param max_iter     maximal iteration number allowed
+ * \param MaxIt        maximal iteration number allowed
  * \param tol          tolerance
  * \param *pre         pointer to preconditioner data
  * \param print_level  how much of the SOLVE-INFORMATION be printed
@@ -89,18 +91,18 @@
  *  based on Zhiyang Zhou's pvgmres.c
  */ 
 INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, 
-                              dvector *b, 
-                              dvector *x, 
-                              const INT max_iter,
-                              const REAL tol,
-                              precond *pre, 
-                              const INT print_level, 
-                              const INT stop_type, 
-                              const INT restart)
+                               dvector *b, 
+                               dvector *x, 
+                               const INT MaxIt,
+                               const REAL tol,
+                               precond *pre, 
+                               const SHORT print_level, 
+                               const SHORT stop_type, 
+                               const SHORT restart)
 {
 	const INT n                 = A->row;  
 	const INT min_iter          = 0;
-
+    
 	//--------------------------------------------//
 	//   Newly added parameters to monitor when   //
 	//   to change the restart parameter          //
@@ -137,7 +139,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
 	hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
     z=(REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
 	
-	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(max_iter+1, sizeof(REAL)); 
+	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL)); 
 	
     r = work; rs = r + n; c = rs + restartplus1; s = c + restart;	
 	for (i = 0; i < restartplus1; i ++) p[i] = s + restart + i*n;
@@ -157,9 +159,8 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
 		norms[0] = r_norm;
 		if ( print_level >= PRINT_SOME)
 		{
-			printf("L2 norm of b: %e\n", b_norm);
-			if (b_norm == 0.0) printf("### WARNING: Rel_resid_norm actually contains the residual norm!\n");
-			printf("Initial L2 norm of residual: %e\n", r_norm);
+            ITS_PUTNORM("right-hand side", b_norm);
+            ITS_PUTNORM("residual", r_norm);
 		}
 	}
 	
@@ -169,7 +170,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < max_iter)
+	while (iter < MaxIt)
 	{  
 		rs[0] = r_norm;
 		r_norm_old = r_norm;
@@ -215,7 +216,8 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
 			
 			if (r_norm <= epsilon)
 			{
-				if (print_level > PRINT_NONE) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
+				if (print_level > PRINT_NONE) 
+                    printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
 				break;
 			}
 			else
@@ -229,7 +231,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < Restart && iter < max_iter)
+		while (i < Restart && iter < MaxIt)
 		{
 			i ++;  iter ++;
 			
@@ -318,7 +320,8 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
 			
 			if (r_norm  <= epsilon)
 			{
-				if (print_level > PRINT_NONE) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
+				if (print_level > PRINT_NONE) 
+                    printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
 				converged = 1; break;
 			}
 			else
@@ -353,9 +356,9 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
 		
 	} /* end of iteration while loop */
 	
-	if (print_level > PRINT_NONE && iter >= max_iter && r_norm > epsilon) 
+	if (print_level > PRINT_NONE && iter >= MaxIt && r_norm > epsilon) 
 	{
-		printf("### WARNInG: Not reaching the given tolerance in %d iterations!!\n", max_iter);
+		printf("### WARNING: Not reaching the given tolerance in %d iterations!!\n", MaxIt);
 	}
 	
     /*-------------------------------------------
@@ -367,7 +370,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
 	fasp_mem_free(norms);
     fasp_mem_free(z);
 	
-	if (iter>=max_iter) return ERROR_SOLVER_MAXIT;
+	if (iter>=MaxIt) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 }

@@ -7,6 +7,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "its_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -149,13 +150,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
 	} // end of main GCG loop.
 	
 FINISHED:  // finish the iterative method
-	if (print_level>0) {
-		if (iter>MaxIt){
-			printf("Maximal iteration %d reached with relative residual %e.\n", MaxIt, relres);
-		}
-		else if (iter >= 0)
-			printf("Number of iterations = %d with relative residual %e.\n", iter, relres);
-	}
+	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
 	
 	// clean up temp memory
 	fasp_mem_free(work);

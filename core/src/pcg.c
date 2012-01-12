@@ -220,7 +220,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 		if ((stag<=MaxStag) & (reldiff<maxdiff)) {
 			
 			if (print_level>=PRINT_MORE) { 
-				printf("||u-u'||/||u|| = %e and comp. rel. res. = %e.\n",reldiff,relres);
+                ITS_DIFFRES(reldiff,relres);
                 ITS_RESTART;
 			}
 			
@@ -504,7 +504,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		if ((stag<=MaxStag) & (reldiff<maxdiff)) {
 			
 			if (print_level>=PRINT_MORE) { 
-				printf("||u-u'||/||u|| = %e and comp. rel. res. = %e.\n",reldiff,relres);
+                ITS_DIFFRES(reldiff,relres);
                 ITS_RESTART;
 			}
 			
@@ -791,7 +791,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 		if ((stag<=MaxStag) & (reldiff<maxdiff)) {
 			
 			if (print_level>=PRINT_MORE) { 
-				printf("||u-u'||/||u|| = %e and comp. rel. res. = %e.\n",reldiff,relres);
+                ITS_DIFFRES(reldiff,relres);
                 ITS_RESTART;
 			}
 			

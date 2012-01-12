@@ -56,52 +56,58 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "its_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn int fasp_solver_dcsr_pminres (dCSRmat *A, dvector *b, dvector *u, const int MaxIt, const double tol, \
- *	       				 precond *pre, const int print_level, const int stop_type)
+ * \fn INT fasp_solver_dcsr_pminres (dCSRmat *A, dvector *b, dvector *u, const INT MaxIt, 
+ *                                   const REAL tol, precond *pre, const SHORT print_level, 
+ *                                   const SHORT stop_type)
+ *
  *	 \brief A preconditioned minimal residual (Minres) method for solving Au=b 
+ *
  *	 \param *A	 pointer to the coefficient matrix
  *	 \param *b	 pointer to the dvector of right hand side
  *	 \param *u	 pointer to the dvector of DOFs
  *	 \param MaxIt integer, maximal number of iterations
- *	 \param tol double float, the tolerance for stopage
+ *	 \param tol REAL float, the tolerance for stopage
  *	 \param *pre pointer to the structure of precondition (precond) 
- * \param print_level how much information to print out
+ *   \param print_level how much information to print out
+ *
  *	 \return the number of iterations
  * 
- * \author Shiquan Zhang
+ *   \author Shiquan Zhang
+ *   \date 10/24/2010
  */
-int fasp_solver_dcsr_pminres (dCSRmat *A, 
-															dvector *b, 
-															dvector *u, 
-															const int MaxIt, 
-															const double tol,
-															precond *pre, 
-															const int print_level, 
-															const int stop_type)
+INT fasp_solver_dcsr_pminres (dCSRmat *A, 
+                              dvector *b, 
+                              dvector *u, 
+                              const INT MaxIt, 
+                              const REAL tol,
+                              precond *pre, 
+                              const SHORT print_level, 
+                              const SHORT stop_type)
 {
-	const int MaxStag=MIN(100, MaxIt), MaxRestartStep=MIN(5, MaxIt);
-	const double maxdiff = tol*1e-4; // staganation tolerance
-	const double sol_inf_tol = SMALLREAL; // infinity norm tolerance
-	int iter=0, m=A->row, stag, more_step, restart_step;
-	double absres0, absres, relres1, factor;
-	double alpha, alpha0, alpha1, temp2, normb2, normu2, normuu, normp, infnormu;
-	int status = SUCCESS;
+	const SHORT MaxStag=MIN(100, MaxIt), MaxRestartStep=MIN(5, MaxIt);
+	const REAL maxdiff = tol*1e-4; // staganation tolerance
+	const REAL sol_inf_tol = SMALLREAL; // infinity norm tolerance
+    
+    // local variables
+	INT iter=0, m=A->row, stag, more_step, restart_step;
+	REAL absres0, absres, relres1, factor;
+	REAL alpha, alpha0, alpha1, temp2, normb2, normu2, normuu, normp, infnormu;
+	INT status = SUCCESS;
 	
-	// allocate temp memory (need 11*m double)
-	double *work=(double *)fasp_mem_calloc(11*m,sizeof(double));		
-	double *p0=work, *p1=work+m, *p2=p1+m, *z0=p2+m, *z1=z0+m;
-	double *t0=z1+m, *t1=t0+m, *t=t1+m, *tp=t+m, *tz=tp+m, *r=tz+m;
-	
-	if (status<0) goto FINISHED;
-	
+	// allocate temp memory (need 11*m REAL)
+	REAL *work=(REAL *)fasp_mem_calloc(11*m,sizeof(REAL));		
+	REAL *p0=work, *p1=work+m, *p2=p1+m, *z0=p2+m, *z1=z0+m;
+	REAL *t0=z1+m, *t1=t0+m, *t=t1+m, *tp=t+m, *tz=tp+m, *r=tz+m;
+		
 #if DEBUG_MODE
-	printf("pminres ...... [Start]\n");
+	printf("### DEBUG: fasp_solver_dcsr_pminres ...... [Start]\n");
 #endif	
 	
 	// initialization counters
@@ -109,9 +115,6 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 	
 	// normb2 = (b,b)
 	switch (stop_type) {
-		case STOP_REL_RES:
-			normb2=fasp_blas_array_dotprod(m,b->val, b->val); // norm(b)
-			break;
 		case STOP_REL_PRECRES:
 			if (pre != NULL) 
 				pre->fct(b->val,t,pre->data); /* Preconditioning */
@@ -121,10 +124,9 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 			break;
 		case STOP_MOD_REL_RES:
 			break;
-		default:
-			printf("Error: Unknown stopping criteria!\n");
-			iter = ERROR_INPUT_PAR;
-			goto FINISHED;
+        default: // STOP_REL_RES
+			normb2=fasp_blas_array_dotprod(m,b->val, b->val); // norm(b)
+			break;
 	}
 	normb2=MAX(SMALLREAL,normb2);
 	normu2=MAX(SMALLREAL,fasp_blas_array_dotprod(m,u->val, u->val));
@@ -137,9 +139,6 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 	absres0=sqrt(temp2);
 	
 	switch (stop_type) {
-		case STOP_REL_RES:
-			relres1=sqrt(temp2/normb2); 
-			break;
 		case STOP_REL_PRECRES:
 			if (pre == NULL)
 				fasp_array_cp(m,r,t);
@@ -151,6 +150,9 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 		case STOP_MOD_REL_RES:
 			relres1=sqrt(temp2/normu2); 
 			break;
+        default: // STOP_REL_RES
+			relres1=sqrt(temp2/normb2); 
+            break;
 	}
 	
 	if (relres1<tol) goto FINISHED;
@@ -248,9 +250,6 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 		normu2=fasp_blas_dvec_dotprod(u,u);
 		
 		switch (stop_type) {
-			case STOP_REL_RES:
-				relres1=sqrt(temp2/normb2); 
-				break;
 			case STOP_REL_PRECRES:
 				if (pre == NULL)
 					fasp_array_cp(m,r,t);
@@ -261,6 +260,9 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 				break;
 			case STOP_MOD_REL_RES:
 				relres1=sqrt(temp2/normu2); 
+				break;
+			default: // STOP_REL_RES
+				relres1=sqrt(temp2/normb2); 
 				break;
 		}
 		
@@ -273,7 +275,7 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 		infnormu = fasp_blas_array_norminf(m, u->val); 
 		if (infnormu <= sol_inf_tol)
 		{
-			print_message(print_level, "MinRes stops: infinity norm of the solution is too small!\n");
+            if (print_level>PRINT_MIN) ITS_ZEROSOL;
 			iter = ERROR_SOLVER_SOLSTAG;
 			break;
 		}
@@ -285,10 +287,10 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 		if (normuu<maxdiff)
 		{
 			if (stag<MaxStag) {
-				if (print_level>4) {
-					printf("MinRes: restart %d caused by stagnation.\n", restart_step);
-					printf("||u-u'|| = %e and the computed relative residual = %e.\n",normuu,relres1);
-				}
+                if (print_level>=PRINT_MORE) { 
+                    ITS_DIFFRES(normuu,relres1);
+                    ITS_RESTART;
+                }
 			}
 			
 			fasp_array_cp(m,b->val,r); fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
@@ -312,16 +314,14 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>1) {
-				printf("The actual relative residual = %e\n",relres1);
-			}
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres1);
 			
 			if (relres1<tol)
 				break;
 			else
 			{
 				if (stag>=MaxStag) {
-					print_message(print_level,"MinRes does not converge: staggnation error!\n");
+                    if (print_level>PRINT_MIN) ITS_STAGGED;
 					iter = ERROR_SOLVER_STAG;
 					break;
 				}
@@ -366,7 +366,7 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 		// safe guard
 		if (relres1<tol) 
 		{
-			if (print_level>4) printf("The computed relative residual = %e\n",relres1);
+			if (print_level>=PRINT_MORE) ITS_COMPRES(relres1);
 			
 			fasp_array_cp(m,b->val,r); fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
 			
@@ -389,19 +389,19 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>4) printf("The actual relative residual = %e\n",relres1);
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres1);
 			
 			// check convergence
 			if (relres1<tol) break;
 			
 			if (more_step>=MaxRestartStep) {
-				print_message(print_level,"Warning: the tolerence may be too small!\n"); 
+                if (print_level>PRINT_MIN) ITS_ZEROTOL;
 				iter = ERROR_SOLVER_TOLSMALL;
 				break;
 			}
 			
-			if ((more_step<MaxRestartStep)&&(print_level>0)) {
-				printf("MinRes: restart %d caused by virtual residual.\n", restart_step);
+			if (more_step<MaxRestartStep) {
+				if (print_level>PRINT_NONE) ITS_RESTART;
 			}
 			
 			++more_step;
@@ -446,19 +446,13 @@ int fasp_solver_dcsr_pminres (dCSRmat *A,
 	}
 	
 FINISHED:  // finish the iterative method
-	if (print_level>0) {
-		if (iter>MaxIt){
-			printf("Maximal iteration %d reached with relative residual %e.\n", MaxIt, relres1);
-		}
-		else if (iter >= 0)
-			printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
-	}
+	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres1);
 	
 	// clean up temp memory
 	fasp_mem_free(work);
 	
 #if DEBUG_MODE
-	printf("pminres ...... [Finish]\n");
+	printf("### DEBUG: fasp_solver_dcsr_pminres ...... [Finish]\n");
 #endif
 	
 	if (iter>MaxIt) return ERROR_SOLVER_MAXIT;
@@ -467,67 +461,74 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn int fasp_solver_bdcsr_pminres (block_Reservoir *A, dvector *b, dvector *u, const int MaxIt, const double tol, \
- *	       				 precond *pre, const int print_level, const int stop_type)
+ * \fn INT fasp_solver_bdcsr_pminres (block_Reservoir *A, dvector *b, dvector *u, const INT MaxIt,
+ *                                    const REAL tol, precond *pre, const SHORT print_level, 
+ *                                    const SHORT stop_type)
+ *
  *	 \brief A preconditioned minimal residual (Minres) method for solving Au=b 
+ *
  *	 \param *A	 pointer to the coefficient matrix
  *	 \param *b	 pointer to the dvector of right hand side
  *	 \param *u	 pointer to the dvector of DOFs
  *	 \param MaxIt integer, maximal number of iterations
- *	 \param tol double float, the tolerance for stopage
+ *	 \param tol REAL float, the tolerance for stopage
  *	 \param *pre pointer to the structure of precondition (precond) 
- * \param print_level how much information to print out
+ *   \param print_level how much information to print out
+ *
  *	 \return the number of iterations
  *
- * \author Xiaozhe Hu
- * \data 05/24/2010
+ *   \author Xiaozhe Hu
+ *   \data 05/24/2010
  */
-int fasp_solver_bdcsr_pminres (block_dCSRmat *A, 
-															 dvector *b, 
-															 dvector *u, 
-															 const int MaxIt, 
-															 const double tol,
-															 precond *pre, 
-															 const int print_level, 
-															 const int stop_type)
+INT fasp_solver_bdcsr_pminres (block_dCSRmat *A, 
+                               dvector *b, 
+                               dvector *u, 
+                               const INT MaxIt, 
+                               const REAL tol,
+                               precond *pre, 
+                               const SHORT print_level, 
+                               const SHORT stop_type)
 {
-	const int MaxStag=100, MaxRestartStep=20;
-	const double maxdiff = tol*1e-4; // staganation tolerance
-	const double sol_inf_tol = 1e-16; // infinity norm tolerance 
-	int iter=0, m=b->row, stag, more_step, restart_step;
-	double absres0, absres, relres1, factor;
-	double alpha, alpha0, alpha1, temp2, normb2, normu2, normuu, normp, infnormu;
+	const SHORT MaxStag=100, MaxRestartStep=20;
+	const REAL maxdiff = tol*1e-4; // staganation tolerance
+	const REAL sol_inf_tol = 1e-16; // infinity norm tolerance 
+    
+    // local variables
+	INT iter=0, m=b->row, stag, more_step, restart_step;
+	REAL absres0, absres, relres1, factor;
+	REAL alpha, alpha0, alpha1, temp2, normb2, normu2, normuu, normp, infnormu;
 	
-	double *p0=(double *)fasp_mem_calloc(m,sizeof(double));
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_bdcsr_pminres ...... [Start]\n");
+#endif	
+
+	REAL *p0=(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
-	double *p1=(double *)fasp_mem_calloc(m,sizeof(double));
+	REAL *p1=(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
-	double *p2=(double *)fasp_mem_calloc(m,sizeof(double));
+	REAL *p2=(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
-	double *z0=(double *)fasp_mem_calloc(m,sizeof(double));
+	REAL *z0=(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
-	double *z1=(double *)fasp_mem_calloc(m,sizeof(double));
+	REAL *z1=(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
-	double *t0=(double *)fasp_mem_calloc(m,sizeof(double));
+	REAL *t0=(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
-	double *t1=(double *)fasp_mem_calloc(m,sizeof(double));
+	REAL *t1=(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
-	double *t =(double *)fasp_mem_calloc(m,sizeof(double));
+	REAL *t =(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
-	double *tp=(double *)fasp_mem_calloc(m,sizeof(double));
+	REAL *tp=(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
-	double *tz=(double *)fasp_mem_calloc(m,sizeof(double));
+	REAL *tz=(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
-	double *r=(double *)fasp_mem_calloc(m,sizeof(double));
+	REAL *r=(REAL *)fasp_mem_calloc(m,sizeof(REAL));
 	
 	// initialization counters
 	stag=1; more_step=1; restart_step=1;
 	
 	// normb2 = (b,b)
 	switch (stop_type) {
-		case STOP_REL_RES:
-			normb2=fasp_blas_array_dotprod(m,b->val, b->val); // norm(b)
-			break;
 		case STOP_REL_PRECRES:
 			if (pre != NULL) 
 				pre->fct(b->val,t,pre->data); /* Preconditioning */
@@ -537,10 +538,9 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 			break;
 		case STOP_MOD_REL_RES:
 			break;
-		default:
-			printf("Error: Unknown stopping criteria!\n");
-			iter = ERROR_INPUT_PAR;
-			goto FINISHED;
+		default: // STOP_REL_RES
+			normb2=fasp_blas_array_dotprod(m,b->val, b->val); // norm(b)
+			break;
 	}
 	normb2=MAX(SMALLREAL,normb2);
 	normu2=MAX(SMALLREAL,fasp_blas_array_dotprod(m,u->val, u->val));
@@ -553,9 +553,6 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 	absres0=sqrt(temp2);
 	
 	switch (stop_type) {
-		case STOP_REL_RES:
-			relres1=sqrt(temp2/normb2); 
-			break;
 		case STOP_REL_PRECRES:
 			if (pre == NULL)
 				fasp_array_cp(m,r,t);
@@ -566,6 +563,9 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 			break;
 		case STOP_MOD_REL_RES:
 			relres1=sqrt(temp2/normu2); 
+			break;
+		default: // STOP_REL_RES
+			relres1=sqrt(temp2/normb2); 
 			break;
 	}
 	
@@ -591,7 +591,6 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 		pre->fct(tp,tz,pre->data); /* Preconditioning */
 	
 	// p1=p1/normp
-	//normp=fasp_blas_array_dotprod(m,tz,tp);
 	normp=ABS(fasp_blas_array_dotprod(m,tz,tp));
 	normp=sqrt(normp);	
 	fasp_array_cp(m,p1,t);
@@ -697,7 +696,7 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 		infnormu = fasp_blas_array_norminf(m, u->val); 
 		if (infnormu <= sol_inf_tol)
 		{
-			print_message(print_level, "BiCGstab stops: infinity norm of the solution is too small!\n");
+            if (print_level>PRINT_MIN) ITS_ZEROSOL;
 			iter = ERROR_SOLVER_SOLSTAG;
 			break;
 		}
@@ -709,10 +708,10 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 		if (normuu<maxdiff)
 		{
 			if (stag<MaxStag) {
-				if (print_level>4) {
-					printf("MinRes: restart %d caused by stagnation.\n", restart_step);
-					printf("||u-u'|| = %e and the computed relative residual = %e.\n",normuu,relres1);
-				}
+                if (print_level>=PRINT_MORE) { 
+                    ITS_DIFFRES(normuu,relres1);
+                    ITS_RESTART;
+                }
 			}
 			
 			fasp_array_cp(m,b->val,r); fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
@@ -736,16 +735,14 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 					break;
 			}
 			
-			if (print_level>1) {
-				printf("The actual relative residual = %e\n",relres1);
-			}
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres1);
 			
 			if (relres1<tol)
 				break;
 			else
 			{
 				if (stag>=MaxStag) {
-					print_message(print_level,"MinRes does not converge: staggnation error!\n");
+                    if (print_level>PRINT_MIN) ITS_STAGGED;
 					iter = ERROR_SOLVER_STAG;
 					break;
 				}
@@ -790,18 +787,13 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 		// safe guard
 		if (relres1<tol) 
 		{
-			if (print_level>1) {
-				printf("The computed relative residual = %e\n",relres1);
-			}
+			if (print_level>=PRINT_MORE) ITS_COMPRES(relres1);
 			
 			fasp_array_cp(m,b->val,r); fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
 			
 			temp2=fasp_blas_array_dotprod(m,r,r);
 			absres=sqrt(temp2);
 			switch (stop_type) {
-				case STOP_REL_RES:
-					relres1=sqrt(temp2/normb2); 
-					break;
 				case STOP_REL_PRECRES:
 					if (pre == NULL)
 						fasp_array_cp(m,r,t);
@@ -813,23 +805,24 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 				case STOP_MOD_REL_RES:
 					relres1=sqrt(temp2/normu2); 
 					break;
+				default: // STOP_REL_RES
+					relres1=sqrt(temp2/normb2); 
+					break;
 			}
 			
-			if (print_level>1) {
-				printf("The actual relative residual = %e\n",relres1);
-			}
+			if (print_level>=PRINT_MORE) ITS_REALRES(relres1);
 			
 			// check convergence
 			if (relres1<tol) break;
 			
 			if (more_step>=MaxRestartStep) {
-				print_message(print_level,"Warning: the tolerence may be too small!\n"); 
+                if (print_level>PRINT_MIN) ITS_ZEROTOL;
 				iter = ERROR_SOLVER_TOLSMALL;
 				break;
 			}
 			
-			if ((more_step<MaxRestartStep)&&(print_level>0)) {
-				printf("MinRes: restart %d caused by virtual residual.\n", restart_step);
+			if (more_step<MaxRestartStep) {
+				if (print_level>PRINT_NONE) ITS_RESTART;
 			}
 			
 			++more_step;
@@ -875,14 +868,7 @@ int fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 	}
 	
 FINISHED: // finish the iterative method
-	if (print_level>0) {
-		if (iter>MaxIt){
-			printf("Maximal iteration %d exceeded with relative residual %e.\n", MaxIt, relres1);
-			iter = ERROR_SOLVER_MAXIT;
-		}
-		else if (iter >= 0)
-			printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
-	}
+	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres1);
 	
 	fasp_mem_free(p0);
 	fasp_mem_free(p1);
@@ -895,7 +881,11 @@ FINISHED: // finish the iterative method
 	fasp_mem_free(tz);
 	fasp_mem_free(r);
 	fasp_mem_free(t);
-	
+
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_bdcsr_pminres ...... [Finish]\n");
+#endif	
+    
 	return iter;
 }
 
