@@ -49,8 +49,10 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
 	INT count=0, added, countrow;
 	INT status = SUCCESS;
 	
-	if (A->row != B->row || A->col != B->col){
-		printf("fasp_blas_dcsr_add: The dimension of two matrices does not match!\n");
+	if (A->row != B->row || A->col != B->col) {
+#if DEBUG_MODE
+		printf("### DEBUG: The dim of two matrices does not match --fasp_blas_dcsr_add!\n");
+#endif
 		status = ERROR_DATA_STRUCTURE;
 		goto FINISHED;
 	}
@@ -144,8 +146,6 @@ FINISHED:
  * \param *A      pointer to CSR matrix
  * \param  alpha  a real number
  *
- * \return        1 if succees, 0 if fail
- *
  * \author Chensong Zhang
  * \date 07/01/209
  */
@@ -153,8 +153,8 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
                          const REAL alpha)
 {
 	const INT nnz=A->nnz;
-	INT i;
 	
+    INT i;
 	for (i=0; i<nnz; ++i) A->val[i] = A->val[i] * alpha;
 }
 
@@ -177,6 +177,7 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
 	const INT   m  = A->row;
 	const INT  *ia = A->IA, *ja = A->JA;
 	const REAL *aj = A->val;
+    
 	INT i, k, begin_row, end_row;		
 	register REAL temp;
 	
@@ -238,6 +239,7 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
 	const INT  m  = A->row;
 	const INT *ia = A->IA, *ja = A->JA;
 	const REAL *aj = A->val;
+    
 	INT i, k, begin_row, end_row;		
 	register REAL temp;
 	
@@ -290,6 +292,7 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
 {
 	const INT  m  = A->row;
 	const INT *ia = A->IA, *ja = A->JA;
+    
 	INT i, k, begin_row, end_row;		
 	register REAL temp;
 	
@@ -324,7 +327,9 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
 
 /**
  * \fn REAL fasp_blas_dcsr_vmv (dCSRmat *A, REAL *x, REAL *y) 
+ *
  * \brief vector-Matrix-vector multiplication alpha = y'*A*x
+ *
  * \param *A pointer to dCSRmat CSR matrix
  * \param *x pointer to dvector
  * \param *y pointer to dvector
@@ -338,9 +343,10 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
                          REAL *y)
 {
 	const INT m=A->row;
-	INT i, k, begin_row, end_row;		
 	INT *ia=A->IA, *ja=A->JA;
 	REAL *aj=A->val;
+    
+	INT i, k, begin_row, end_row;		
 	register REAL temp;
 	register REAL value=0.0;
 	
@@ -356,12 +362,12 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
 
 /**
  * \fn void fasp_blas_dcsr_mxm (dCSRmat *A, dCSRmat *B, dCSRmat *C)
+ *
  * \brief Sparse matrix multiplication C=A*B
  *
  * \param *A   pointer to the dCSRmat matrix
  * \param *B   pointer to the dCSRmat matrix
  * \param *C   pointer to dCSRmat matrix equal to A*B
- * \return void
  *
  * \author Xiaozhe Hu
  * \date 11/07/2009
@@ -468,16 +474,16 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
 
 /**
  * \fn void fasp_blas_dcsr_rap (dCSRmat *R, dCSRmat *A, dCSRmat *P, dCSRmat *B)
+ *
  * \brief Triple sparse matrix multiplication B=R*A*P
  *
  * \param *R   pointer to the dCSRmat matrix
  * \param *A   pointer to the dCSRmat matrix
  * \param *P   pointer to the dCSRmat matrix
  * \param *B   pointer to dCSRmat matrix equal to R*A*P
- * \return     void
  *
- * Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
- *      Advances in Computational Mathematics, 1 (1993), pp. 127-137.
+ * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
+ *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date 05/10/2010
@@ -669,16 +675,16 @@ void fasp_blas_dcsr_rap (dCSRmat *R,
 
 /**
  * \fn void fasp_blas_dcsr_rap_agg (dCSRmat *R, dCSRmat *A, dCSRmat *P, dCSRmat *B)
+ *
  * \brief Triple sparse matrix multiplication B=R*A*P, where the entries of R and P are all ones.
  *
  * \param *R   pointer to the dCSRmat matrix
  * \param *A   pointer to the dCSRmat matrix
  * \param *P   pointer to the dCSRmat matrix
  * \param *B   pointer to dCSRmat matrix equal to R*A*P
- * \return     void
  *
- * Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
- *      Advances in Computational Mathematics, 1 (1993), pp. 127-137.
+ * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
+ *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  *
  * \author Xiaozhe Hu
  * \date 02/21/2011
@@ -870,16 +876,18 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
 
 /**
  * \fn dCSRmat fasp_blas_dcsr_ptap (dCSRmat *A, dCSRmat *P)
+ *
  * \brief Triple sparse matrix multiplication B=P'*A*P
  *
- * \param *A   pointer to the dCSRmat matrix
- * \param *P   pointer to the dCSRmat matrix
- * \return *B  pointer to dCSRmat matrix equal to P'*A*P
+ * \param  *A   pointer to the dCSRmat matrix
+ * \param  *P   pointer to the dCSRmat matrix
  *
- * Driver to compute triple matrix product P'*A*P using ltz CSR format. 
- * In ltx format: ia[0]=1, ja[0] and a[0] are used as usual. When called 
- * from Fortran, ia[0], ja[0] and a[0] will be just ia(1),ja(1),a(1).
- * For the indices, 
+ * \return *B   pointer to dCSRmat matrix equal to P'*A*P
+ *
+ * \note Driver to compute triple matrix product P'*A*P using ltz CSR format. 
+ *       In ltx format: ia[0]=1, ja[0] and a[0] are used as usual. When called 
+ *       from Fortran, ia[0], ja[0] and a[0] will be just ia(1),ja(1),a(1).
+ *       For the indices, 
  *			ia_ltz[k] = ia_usual[k]+1, 
  *			ja_ltz[k] = ja_usual[k]+1,
  *			 a_ltz[k] =  a_usual[k].

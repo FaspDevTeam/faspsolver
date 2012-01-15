@@ -10,20 +10,21 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_blas_smat_mxv_nc2(double *a, double *b, double *c)
+ * \fn void fasp_blas_smat_mxv_nc2(REAL *a, REAL *b, REAL *c)
+ *
  * \brief compute the product of a 2*2 matrix a and a vector b, stored in c
  *
- * \param *a   pointer to the double vector which stands a 2*2 matrix
- * \param *b   pointer to the double vector with length 2
- * \param *c   pointer to the double vector with length 2
+ * \param *a   pointer to the REAL vector which stands a 2*2 matrix
+ * \param *b   pointer to the REAL vector with length 2
+ * \param *c   pointer to the REAL vector with length 2
  * 
  * \author Xiaozhe Hu
  * \date 18/11/2010
  */
-void fasp_blas_smat_mxv_nc2 (double *a, 
-                             double *b, 
-							 double *c)
-{	double b0,b1;
+void fasp_blas_smat_mxv_nc2 (REAL *a, 
+                             REAL *b, 
+							 REAL *c)
+{	REAL b0,b1;
 	b0=b[0];
 	b1=b[1];
 	c[0] = a[0]*b0 + a[1]*b1;
@@ -31,20 +32,21 @@ void fasp_blas_smat_mxv_nc2 (double *a,
 }
 
 /**
- * \fn void fasp_blas_smat_mxv_nc3(double *a, double *b, double *c)
+ * \fn void fasp_blas_smat_mxv_nc3(REAL *a, REAL *b, REAL *c)
+ *
  * \brief compute the product of a 3*3 matrix a and a vector b, stored in c
  *
- * \param *a   pointer to the double vector which stands a 3*3 matrix
- * \param *b   pointer to the double vector with length 3
- * \param *c   pointer to the double vector with length 3
+ * \param *a   pointer to the REAL vector which stands a 3*3 matrix
+ * \param *b   pointer to the REAL vector with length 3
+ * \param *c   pointer to the REAL vector with length 3
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_smat_mxv_nc3 (double *a, 
-                             double *b, 
-												     double *c)
-{	double b0,b1,b2;
+void fasp_blas_smat_mxv_nc3 (REAL *a, 
+                             REAL *b, 
+                             REAL *c)
+{	REAL b0,b1,b2;
 	b0=b[0];
 	b1=b[1];
 	b2=b[2];
@@ -54,21 +56,22 @@ void fasp_blas_smat_mxv_nc3 (double *a,
 }
 
 /**
- * \fn void fasp_blas_smat_mxv_nc5(double *a, double *b, double *c)
+ * \fn void fasp_blas_smat_mxv_nc5(REAL *a, REAL *b, REAL *c)
+ *
  * \brief compute the product of a 5*5 matrix a and a vector b, stored in c
  *
- * \param *a   pointer to the double vector which stands a 5*5 matrix
- * \param *b   pointer to the double vector with length 5
- * \param *c   pointer to the double vector with length 5
+ * \param *a   pointer to the REAL vector which stands a 5*5 matrix
+ * \param *b   pointer to the REAL vector with length 5
+ * \param *c   pointer to the REAL vector with length 5
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_smat_mxv_nc5 (double *a, 
-                             double *b, 
-														 double *c)
+void fasp_blas_smat_mxv_nc5 (REAL *a, 
+                             REAL *b, 
+                             REAL *c)
 {	
-	double b0,b1,b2,b3,b4;
+	REAL b0,b1,b2,b3,b4;
 	b0=b[0];
 	b1=b[1];
 	b2=b[2];
@@ -82,21 +85,22 @@ void fasp_blas_smat_mxv_nc5 (double *a,
 }
 
 /**
- * \fn void fasp_blas_smat_mxv_nc7(double *a, double *b, double *c)
+ * \fn void fasp_blas_smat_mxv_nc7(REAL *a, REAL *b, REAL *c)
+ *
  * \brief compute the product of a 7*7 matrix a and a vector b, stored in c
  *
- * \param *a   pointer to the double vector which stands a 7*7 matrix
- * \param *b   pointer to the double vector with length 7
- * \param *c   pointer to the double vector with length 7
+ * \param *a   pointer to the REAL vector which stands a 7*7 matrix
+ * \param *b   pointer to the REAL vector with length 7
+ * \param *c   pointer to the REAL vector with length 7
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_smat_mxv_nc7 (double *a, 
-                             double *b, 
-												     double *c)
+void fasp_blas_smat_mxv_nc7 (REAL *a, 
+                             REAL *b, 
+                             REAL *c)
 {	
-	double b0,b1,b2,b3,b4,b5,b6;
+	REAL b0,b1,b2,b3,b4,b5,b6;
 	b0=b[0];
 	b1=b[1];
 	b2=b[2];
@@ -114,21 +118,22 @@ void fasp_blas_smat_mxv_nc7 (double *a,
 }
 
 /**
- * \fn void fasp_blas_smat_mxv(double *a, double *b, double *c, int n)
+ * \fn void fasp_blas_smat_mxv(REAL *a, REAL *b, REAL *c, INT n)
+ *
  * \brief compute the product of a small full matrix a and a vector b, stored in c
  *
- * \param *a   pointer to the double vector which stands a n*n matrix
- * \param *b   pointer to the double vector with length n
- * \param *c   pointer to the double vector with length n
+ * \param *a   pointer to the REAL vector which stands a n*n matrix
+ * \param *b   pointer to the REAL vector with length n
+ * \param *c   pointer to the REAL vector with length n
  * \param  n   the dimension of the matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 04/21/2010  
  */
-void fasp_blas_smat_mxv (double *a, 
-                         double *b, 
-												 double *c,
-									    	 int n)
+void fasp_blas_smat_mxv (REAL *a, 
+                         REAL *b, 
+                         REAL *c,
+                         INT n)
 {	
 	switch (n)
 	{
@@ -150,8 +155,8 @@ void fasp_blas_smat_mxv (double *a,
 			
 		default:
 		{
-			int i,j,in=0;
-			double temp;
+			INT i,j,in=0;
+			REAL temp;
 			
 			for (i=0; i<n; ++i, in+=n){
 				temp = 0.0;
@@ -165,24 +170,25 @@ void fasp_blas_smat_mxv (double *a,
 }
 
 /**
- * \fn void fasp_blas_smat_inv_nc2(double *a)
+ * \fn void fasp_blas_smat_inv_nc2(REAL *a)
+ *
  * \brief Compute the inverse matrix of a 2*2 full matrix A (in place)
  *
- * \param *a pointer to the double vector which stands a 2*2 matrix 
+ * \param *a pointer to the REAL vector which stands a 2*2 matrix 
  * 
  * \author Xiaozhe Hu
  * \date 18/11/2011
  */
-void fasp_blas_smat_inv_nc2 (double *a)
+void fasp_blas_smat_inv_nc2 (REAL *a)
 { 
-	const double a0 = a[0], a1 = a[1];
-	const double a2 = a[2], a3 = a[3];
+	const REAL a0 = a[0], a1 = a[1];
+	const REAL a2 = a[2], a3 = a[3];
 	
-	const double det = a0*a3 - a1*a2;
-	double det_inv;
+	const REAL det = a0*a3 - a1*a2;
+	REAL det_inv;
 	
 	if (ABS(det)<1e-22) {
-		printf("## Warning: Matrix is nearly singular! det = %e\n", det);
+		printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
 		/*
 		 printf("##----------------------------------------------\n");
 		 printf("## %12.5e %12.5e \n", a0, a1);
@@ -201,28 +207,29 @@ void fasp_blas_smat_inv_nc2 (double *a)
 }
 
 /**
- * \fn void fasp_blas_smat_inv_nc3(double *a)
+ * \fn void fasp_blas_smat_inv_nc3(REAL *a)
+ *
  * \brief Compute the inverse matrix of a 3*3 full matrix A (in place)
  *
- * \param *a pointer to the double vector which stands a 3*3 matrix 
+ * \param *a pointer to the REAL vector which stands a 3*3 matrix 
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_smat_inv_nc3 (double *a)
+void fasp_blas_smat_inv_nc3 (REAL *a)
 { 
-	const double a0 = a[0], a1 = a[1], a2 = a[2];
-	const double a3 = a[3], a4 = a[4], a5 = a[5];
-	const double a6 = a[6], a7 = a[7], a8 = a[8];
+	const REAL a0 = a[0], a1 = a[1], a2 = a[2];
+	const REAL a3 = a[3], a4 = a[4], a5 = a[5];
+	const REAL a6 = a[6], a7 = a[7], a8 = a[8];
 	
-	const double M0 = a4*a8-a5*a7, M3 = a2*a7-a1*a8, M6 = a1*a5-a2*a4;
-	const double M1 = a5*a6-a3*a8, M4 = a0*a8-a2*a6, M7 = a2*a3-a0*a5;
-	const double M2 = a3*a7-a4*a6, M5 = a1*a6-a0*a7, M8 = a0*a4-a1*a3;
-	const double det = a0*M0+a3*M3+a6*M6;
-	double det_inv;
+	const REAL M0 = a4*a8-a5*a7, M3 = a2*a7-a1*a8, M6 = a1*a5-a2*a4;
+	const REAL M1 = a5*a6-a3*a8, M4 = a0*a8-a2*a6, M7 = a2*a3-a0*a5;
+	const REAL M2 = a3*a7-a4*a6, M5 = a1*a6-a0*a7, M8 = a0*a4-a1*a3;
+	const REAL det = a0*M0+a3*M3+a6*M6;
+	REAL det_inv;
 	
 	if (ABS(det)<1e-22) {
-		printf("## Warning: Matrix is nearly singular! det = %e\n", det);
+		printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
 		/*
 		 printf("##----------------------------------------------\n");
 		 printf("## %12.5e %12.5e %12.5e \n", a0, a1, a2);
@@ -243,23 +250,24 @@ void fasp_blas_smat_inv_nc3 (double *a)
 }
 
 /**
- * \fn void fasp_blas_smat_inv_nc5(double *a)
+ * \fn void fasp_blas_smat_inv_nc5(REAL *a)
+ *
  * \brief Compute the inverse matrix of a 5*5 full matrix A (in place)
  *
- * \param *a pointer to the double vector which stands a 5*5 matrix 
+ * \param *a pointer to the REAL vector which stands a 5*5 matrix 
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_smat_inv_nc5 (double *a)
+void fasp_blas_smat_inv_nc5 (REAL *a)
 { 
-	const double a0=a[0],   a1=a[1],   a2=a[2],   a3=a[3],   a4=a[4];
-	const double a5=a[5],   a6=a[6],   a7=a[7],   a8=a[8],   a9=a[9];
-	const double a10=a[10], a11=a[11], a12=a[12], a13=a[13], a14=a[14];
-	const double a15=a[15], a16=a[16], a17=a[17], a18=a[18], a19=a[19];
-	const double a20=a[20], a21=a[21], a22=a[22], a23=a[23], a24=a[24];
+	const REAL a0=a[0],   a1=a[1],   a2=a[2],   a3=a[3],   a4=a[4];
+	const REAL a5=a[5],   a6=a[6],   a7=a[7],   a8=a[8],   a9=a[9];
+	const REAL a10=a[10], a11=a[11], a12=a[12], a13=a[13], a14=a[14];
+	const REAL a15=a[15], a16=a[16], a17=a[17], a18=a[18], a19=a[19];
+	const REAL a20=a[20], a21=a[21], a22=a[22], a23=a[23], a24=a[24];
 	
-	double det0, det1, det2, det3, det4, det, det_inv;
+	REAL det0, det1, det2, det3, det4, det, det_inv;
 	
 	det0  =  a6  * ( a12 * (a18*a24-a19*a23) + a17 * (a14*a23-a13*a24) + a22 * (a13*a19 - a14*a18) );
 	det0 +=  a11 * ( a7  * (a19*a23-a18*a24) + a17 * (a8*a24 -a9*a23 ) + a22 * (a9*a18  - a8*a19)  );
@@ -289,7 +297,7 @@ void fasp_blas_smat_inv_nc5 (double *a)
 	det = det0*a0 + det1*a5+ det2*a10 + det3*a15 + det4*a20;
 	
 	if (ABS(det)<1e-22) {
-		printf("## Warning: Matrix is nearly singular! det = %e\n", det);
+		printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
 		/*
 		 printf("##----------------------------------------------\n");
 		 printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a0,  a1,  a2,  a3,  a4);
@@ -334,7 +342,7 @@ void fasp_blas_smat_inv_nc5 (double *a)
 	a[4] += a16 * (a2*a9*a13 -a2*a8*a14 +a7*a3*a14 -a7*a4*a13 -a12*a3*a9 +a12*a4*a8 );
 	a[4] *= det_inv;
 	
-  a[5]  = a5  * (a12*a19*a23-a12*a18*a24+a22*a14*a18-a22*a13*a19+a17*a13*a24-a17*a14*a23);
+    a[5]  = a5  * (a12*a19*a23-a12*a18*a24+a22*a14*a18-a22*a13*a19+a17*a13*a24-a17*a14*a23);
 	a[5] += a20 * (a12*a9*a18 -a12*a8*a19 +a7*a13*a19 -a18*a7*a14 +a17*a8*a14 -a9*a17*a13 );
 	a[5] += a15 * (a22*a9*a13 -a12*a9*a23 +a12*a24*a8 +a7*a14*a23 -a24*a7*a13 -a22*a14*a8 );
 	a[5] += a10 * (a18*a7*a24 -a18*a22*a9 -a17*a8*a24 +a17*a9*a23 +a22*a8*a19 -a19*a23*a7 );
@@ -372,7 +380,7 @@ void fasp_blas_smat_inv_nc5 (double *a)
 	
 	a[11] = a4  * (a21*a13*a15-a11*a23*a15+a16*a23*a10-a13*a16*a20+a18*a11*a20-a18*a21*a10);
 	a[11]+= a14 * (a18*a0*a21-a1*a18*a20+a16*a3*a20-a23*a0*a16+a1*a23*a15-a21*a3*a15);
-  a[11]+= a19 * (a1*a13*a20-a1*a23*a10+a23*a0*a11+a21*a3*a10-a11*a3*a20-a13*a0*a21);
+    a[11]+= a19 * (a1*a13*a20-a1*a23*a10+a23*a0*a11+a21*a3*a10-a11*a3*a20-a13*a0*a21);
 	a[11]+= a24 * (a13*a0*a16-a18*a0*a11+a11*a3*a15+a1*a18*a10-a1*a13*a15-a16*a3*a10);
 	a[11]*= det_inv;
 	
@@ -414,13 +422,13 @@ void fasp_blas_smat_inv_nc5 (double *a)
 	
 	a[18] = a0  * (a12*a24*a6 - a14*a22*a6 - a11*a24*a7 + a14*a21*a7 + a11*a22*a9 - a12*a21*a9);
 	a[18]+= a1  * (a14*a22*a5 - a12*a24*a5 + a10*a24*a7 - a14*a20*a7 - a10*a22*a9 + a12*a20*a9);
-  a[18]+= a2  * (a11*a24*a5 - a11*a20*a9 + a14*a20*a6 - a14*a21*a5 + a10*a21*a9  - a10*a24*a6);  
-  a[18]+= a4  * (a11*a20*a7 - a11*a22*a5 + a12*a21*a5 + a10*a22*a6 - a12*a20*a6 - a10*a21*a7);
+    a[18]+= a2  * (a11*a24*a5 - a11*a20*a9 + a14*a20*a6 - a14*a21*a5 + a10*a21*a9  - a10*a24*a6);  
+    a[18]+= a4  * (a11*a20*a7 - a11*a22*a5 + a12*a21*a5 + a10*a22*a6 - a12*a20*a6 - a10*a21*a7);
 	a[18]*= det_inv;	
 	
 	a[19] = a0  * (a12*a16*a9-a6*a12*a19+a6*a17*a14-a17*a11*a9+a11*a7*a19-a16*a7*a14);
 	a[19]+= a1  * (a5*a12*a19-a5*a17*a14-a12*a15*a9+a17*a10*a9+a15*a7*a14-a10*a7*a19);
-  a[19]+= a2  * (a11*a15*a9-a5*a11*a19+a5*a16*a14-a6*a15*a14+a6*a10*a19-a16*a10*a9);
+    a[19]+= a2  * (a11*a15*a9-a5*a11*a19+a5*a16*a14-a6*a15*a14+a6*a10*a19-a16*a10*a9);
 	a[19]+= a4  * (a5*a17*a11-a5*a12*a16+a12*a6*a15+a10*a7*a16-a17*a6*a10-a15*a7*a11);
 	a[19]*= det_inv;	
 	
@@ -456,32 +464,34 @@ void fasp_blas_smat_inv_nc5 (double *a)
 }
 
 /**
- * \fn void fasp_blas_smat_inv_nc7 (double *a)
+ * \fn void fasp_blas_smat_inv_nc7 (REAL *a)
+ *
  * \brief comput the inverse matrix of a 7*7 matrix a
  *
- * \param *a pointer to the double vector which stands a 7*7 matrix 
+ * \param *a pointer to the REAL vector which stands a 7*7 matrix 
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_smat_inv_nc7 (double *a)
+void fasp_blas_smat_inv_nc7 (REAL *a)
 {	
 	// Do nothing -- Chensong! Should never be called.
 	fasp_blas_smat_inv(a,7);
 }
 
 /**
- * \fn int fasp_blas_smat_inv(double *a, int n)
+ * \fn INT fasp_blas_smat_inv(REAL *a, INT n)
+ *
  * \brief compute the inverse matrix of a small full matrix a
  *
- * \param *a   pointer to the double vector which stands a n*n matrix
+ * \param *a   pointer to the REAL vector which stands a n*n matrix
  * \param  n   the dimension of the matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 04/21/2010  
  */
-int fasp_blas_smat_inv (double *a, 
-                        int n)
+INT fasp_blas_smat_inv (REAL *a, 
+                        INT n)
 { 
 	
 	switch (n)
@@ -489,7 +499,7 @@ int fasp_blas_smat_inv (double *a,
 		case 2:
 			fasp_blas_smat_inv_nc2(a);
 			break;
-		 
+            
 		case 3:
 			fasp_blas_smat_inv_nc3(a);
 			break;
@@ -497,8 +507,8 @@ int fasp_blas_smat_inv (double *a,
 			fasp_blas_smat_inv_nc5(a);
 			break;			
 		default:
-		{ int i,j,k,l,u,kn,in;
-			double alinv;
+		{ INT i,j,k,l,u,kn,in;
+			REAL alinv;
 			
 			for (k=0; k<n; ++k){
 				
@@ -506,7 +516,7 @@ int fasp_blas_smat_inv (double *a,
 				l  = kn+k;
 				
 				if (ABS(a[l]) < SMALLREAL){
-					printf("Warning: An diagonal entry of a dense matrix is close to 0!!  a[%d,%d] = %e \n", k,k,a[l]);
+					printf("### WARNING: Diagonal entry is close to zero! a[%d,%d] = %e\n", k,k,a[l]);
 					a[l] = SMALLREAL;
 				}
 				alinv = 1.0/a[l];
@@ -554,55 +564,57 @@ int fasp_blas_smat_inv (double *a,
 }
 
 /**
- * \fn void fasp_blas_smat_mul_nc2(double *a, double *b, double *c)
+ * \fn void fasp_blas_smat_mul_nc2(REAL *a, REAL *b, REAL *c)
+ *
  * \brief compute the matrix product of two 2* matrices a and b, stored in c
  *
- * \param *a pointer to the double vector which stands a n*n matrix
- * \param *b pointer to the double vector which stands a n*n matrix
- * \param *c pointer to the double vector which stands a n*n matrix
+ * \param *a pointer to the REAL vector which stands a n*n matrix
+ * \param *b pointer to the REAL vector which stands a n*n matrix
+ * \param *c pointer to the REAL vector which stands a n*n matrix
  * 
  * \author Xiaozhe Hu
  * \date 18/11/2011
  */
-void fasp_blas_smat_mul_nc2 (double *a, 
-							 double *b, 
-							 double *c)
+void fasp_blas_smat_mul_nc2 (REAL *a, 
+							 REAL *b, 
+							 REAL *c)
 { 
-	const double a0 = a[0], a1 = a[1];
-	const double a2 = a[2], a3 = a[3];
+	const REAL a0 = a[0], a1 = a[1];
+	const REAL a2 = a[2], a3 = a[3];
 	
-	const double b0 = b[0], b1 = b[1];
-	const double b2 = b[2], b3 = b[3];
+	const REAL b0 = b[0], b1 = b[1];
+	const REAL b2 = b[2], b3 = b[3];
 	
 	c[0] = a0*b0 + a1*b2;
 	c[1] = a0*b1 + a1*b3;
 	c[2] = a2*b0 + a3*b2;
 	c[3] = a2*b1 + a3*b3;
-
+    
 }
 
 /**
- * \fn void fasp_blas_smat_mul_nc3(double *a, double *b, double *c)
+ * \fn void fasp_blas_smat_mul_nc3(REAL *a, REAL *b, REAL *c)
+ *
  * \brief compute the matrix product of two 3*3 matrices a and b, stored in c
  *
- * \param *a pointer to the double vector which stands a n*n matrix
- * \param *b pointer to the double vector which stands a n*n matrix
- * \param *c pointer to the double vector which stands a n*n matrix
+ * \param *a pointer to the REAL vector which stands a n*n matrix
+ * \param *b pointer to the REAL vector which stands a n*n matrix
+ * \param *c pointer to the REAL vector which stands a n*n matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_smat_mul_nc3 (double *a, 
-														 double *b, 
-														 double *c)
+void fasp_blas_smat_mul_nc3 (REAL *a, 
+                             REAL *b, 
+                             REAL *c)
 { 
-	const double a0 = a[0], a1 = a[1], a2 = a[2];
-	const double a3 = a[3], a4 = a[4], a5 = a[5];
-	const double a6 = a[6], a7 = a[7], a8 = a[8];
+	const REAL a0 = a[0], a1 = a[1], a2 = a[2];
+	const REAL a3 = a[3], a4 = a[4], a5 = a[5];
+	const REAL a6 = a[6], a7 = a[7], a8 = a[8];
 	
-	const double b0 = b[0], b1 = b[1], b2 = b[2];
-	const double b3 = b[3], b4 = b[4], b5 = b[5];
-	const double b6 = b[6], b7 = b[7], b8 = b[8];
+	const REAL b0 = b[0], b1 = b[1], b2 = b[2];
+	const REAL b3 = b[3], b4 = b[4], b5 = b[5];
+	const REAL b6 = b[6], b7 = b[7], b8 = b[8];
 	
 	c[0] = a0*b0 + a1*b3 + a2*b6;
 	c[1] = a0*b1 + a1*b4 + a2*b7;
@@ -618,31 +630,32 @@ void fasp_blas_smat_mul_nc3 (double *a,
 }
 
 /**
- * \fn void fasp_blas_smat_mul_nc5(double *a, double *b, double *c)
+ * \fn void fasp_blas_smat_mul_nc5(REAL *a, REAL *b, REAL *c)
+ *
  * \breif compute the matrix product of two 5*5 matrices a and b, stored in c
  *
- * \param *a pointer to the double vector which stands a 5*5 matrix
- * \param *b pointer to the double vector which stands a 5*5 matrix
- * \param *c pointer to the double vector which stands a 5*5 matrix
+ * \param *a pointer to the REAL vector which stands a 5*5 matrix
+ * \param *b pointer to the REAL vector which stands a 5*5 matrix
+ * \param *c pointer to the REAL vector which stands a 5*5 matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_smat_mul_nc5 (double *a, 
-														 double *b, 
-														 double *c)
+void fasp_blas_smat_mul_nc5 (REAL *a, 
+                             REAL *b, 
+                             REAL *c)
 { 
-	const double a0  = a[0],  a1  = a[1],  a2  = a[2],  a3  = a[3],  a4  = a[4];
-	const double a5  = a[5],  a6  = a[6],  a7  = a[7],  a8  = a[8],  a9  = a[9];
-	const double a10 = a[10], a11 = a[11], a12 = a[12], a13 = a[13], a14 = a[14];
-	const double a15 = a[15], a16 = a[16], a17 = a[17], a18 = a[18], a19 = a[19];
-	const double a20 = a[20], a21 = a[21], a22 = a[22], a23 = a[23], a24 = a[24];
+	const REAL a0  = a[0],  a1  = a[1],  a2  = a[2],  a3  = a[3],  a4  = a[4];
+	const REAL a5  = a[5],  a6  = a[6],  a7  = a[7],  a8  = a[8],  a9  = a[9];
+	const REAL a10 = a[10], a11 = a[11], a12 = a[12], a13 = a[13], a14 = a[14];
+	const REAL a15 = a[15], a16 = a[16], a17 = a[17], a18 = a[18], a19 = a[19];
+	const REAL a20 = a[20], a21 = a[21], a22 = a[22], a23 = a[23], a24 = a[24];
 	
-	const double b0  = b[0],  b1  = b[1],  b2  = b[2],  b3  = b[3],  b4  = b[4];
-	const double b5  = b[5],  b6  = b[6],  b7  = b[7],  b8  = b[8],  b9  = b[9];
-	const double b10 = b[10], b11 = b[11], b12 = b[12], b13 = b[13], b14 = b[14];
-	const double b15 = b[15], b16 = b[16], b17 = b[17], b18 = b[18], b19 = b[19];
-	const double b20 = b[20], b21 = b[21], b22 = b[22], b23 = b[23], b24 = b[24];
+	const REAL b0  = b[0],  b1  = b[1],  b2  = b[2],  b3  = b[3],  b4  = b[4];
+	const REAL b5  = b[5],  b6  = b[6],  b7  = b[7],  b8  = b[8],  b9  = b[9];
+	const REAL b10 = b[10], b11 = b[11], b12 = b[12], b13 = b[13], b14 = b[14];
+	const REAL b15 = b[15], b16 = b[16], b17 = b[17], b18 = b[18], b19 = b[19];
+	const REAL b20 = b[20], b21 = b[21], b22 = b[22], b23 = b[23], b24 = b[24];
 	
 	c[0] = a0*b0 + a1*b5 + a2*b10 + a3*b15 + a4*b20;
 	c[1] = a0*b1 + a1*b6 + a2*b11 + a3*b16 + a4*b21;
@@ -676,35 +689,36 @@ void fasp_blas_smat_mul_nc5 (double *a,
 }
 
 /**
- * \fn void fasp_blas_smat_mul_nc7(double *a, double *b, double *c)
+ * \fn void fasp_blas_smat_mul_nc7(REAL *a, REAL *b, REAL *c)
+ *
  * \brief compute the matrix product of two 7*7 matrices a and b, stored in c
  *
- * \param *a pointer to the double vector which stands a 7*7 matrix
- * \param *b pointer to the double vector which stands a 7*7 matrix
- * \param *c pointer to the double vector which stands a 7*7 matrix
+ * \param *a pointer to the REAL vector which stands a 7*7 matrix
+ * \param *b pointer to the REAL vector which stands a 7*7 matrix
+ * \param *c pointer to the REAL vector which stands a 7*7 matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_smat_mul_nc7 (double *a, 
-														 double *b, 
-														 double *c)
+void fasp_blas_smat_mul_nc7 (REAL *a, 
+                             REAL *b, 
+                             REAL *c)
 { 
-	const double a0  = a[0],  a1  = a[1],  a2  = a[2],  a3  = a[3],  a4  = a[4],  a5  = a[5],  a6  = a[6];
-	const double a7  = a[7],  a8  = a[8],  a9  = a[9],  a10 = a[10], a11 = a[11], a12 = a[12], a13 = a[13];
-	const double a14 = a[14], a15 = a[15], a16 = a[16], a17 = a[17], a18 = a[18], a19 = a[19], a20 = a[20];
-	const double a21 = a[21], a22 = a[22], a23 = a[23], a24 = a[24], a25 = a[25], a26 = a[26], a27 = a[27];
-	const double a28 = a[28], a29 = a[29], a30 = a[30], a31 = a[31], a32 = a[32], a33 = a[33], a34 = a[34];
-	const double a35 = a[35], a36 = a[36], a37 = a[37], a38 = a[38], a39 = a[39], a40 = a[40], a41 = a[41];
-	const double a42 = a[42], a43 = a[43], a44 = a[44], a45 = a[45], a46 = a[46], a47 = a[47], a48 = a[48];
+	const REAL a0  = a[0],  a1  = a[1],  a2  = a[2],  a3  = a[3],  a4  = a[4],  a5  = a[5],  a6  = a[6];
+	const REAL a7  = a[7],  a8  = a[8],  a9  = a[9],  a10 = a[10], a11 = a[11], a12 = a[12], a13 = a[13];
+	const REAL a14 = a[14], a15 = a[15], a16 = a[16], a17 = a[17], a18 = a[18], a19 = a[19], a20 = a[20];
+	const REAL a21 = a[21], a22 = a[22], a23 = a[23], a24 = a[24], a25 = a[25], a26 = a[26], a27 = a[27];
+	const REAL a28 = a[28], a29 = a[29], a30 = a[30], a31 = a[31], a32 = a[32], a33 = a[33], a34 = a[34];
+	const REAL a35 = a[35], a36 = a[36], a37 = a[37], a38 = a[38], a39 = a[39], a40 = a[40], a41 = a[41];
+	const REAL a42 = a[42], a43 = a[43], a44 = a[44], a45 = a[45], a46 = a[46], a47 = a[47], a48 = a[48];
 	
-	const double b0  = b[0],  b1  = b[1],  b2  = b[2],  b3  = b[3],  b4  = b[4],  b5  = b[5],  b6  = b[6];
-	const double b7  = b[7],  b8  = b[8],  b9  = b[9],  b10 = b[10], b11 = b[11], b12 = b[12], b13 = b[13];
-	const double b14 = b[14], b15 = b[15], b16 = b[16], b17 = b[17], b18 = b[18], b19 = b[19], b20 = b[20];
-	const double b21 = b[21], b22 = b[22], b23 = b[23], b24 = b[24], b25 = b[25], b26 = b[26], b27 = b[27];
-	const double b28 = b[28], b29 = b[29], b30 = b[30], b31 = b[31], b32 = b[32], b33 = b[33], b34 = b[34];
-	const double b35 = b[35], b36 = b[36], b37 = b[37], b38 = b[38], b39 = b[39], b40 = b[40], b41 = b[41];
-	const double b42 = b[42], b43 = b[43], b44 = b[44], b45 = b[45], b46 = b[46], b47 = b[47], b48 = b[48];
+	const REAL b0  = b[0],  b1  = b[1],  b2  = b[2],  b3  = b[3],  b4  = b[4],  b5  = b[5],  b6  = b[6];
+	const REAL b7  = b[7],  b8  = b[8],  b9  = b[9],  b10 = b[10], b11 = b[11], b12 = b[12], b13 = b[13];
+	const REAL b14 = b[14], b15 = b[15], b16 = b[16], b17 = b[17], b18 = b[18], b19 = b[19], b20 = b[20];
+	const REAL b21 = b[21], b22 = b[22], b23 = b[23], b24 = b[24], b25 = b[25], b26 = b[26], b27 = b[27];
+	const REAL b28 = b[28], b29 = b[29], b30 = b[30], b31 = b[31], b32 = b[32], b33 = b[33], b34 = b[34];
+	const REAL b35 = b[35], b36 = b[36], b37 = b[37], b38 = b[38], b39 = b[39], b40 = b[40], b41 = b[41];
+	const REAL b42 = b[42], b43 = b[43], b44 = b[44], b45 = b[45], b46 = b[46], b47 = b[47], b48 = b[48];
 	
 	c[0] = a0*b0 + a1*b7 +  a2*b14 + a3*b21 + a4*b28 + a5*b35 + a6*b42;
 	c[1] = a0*b1 + a1*b8 +  a2*b15 + a3*b22 + a4*b29 + a5*b36 + a6*b43;
@@ -764,28 +778,29 @@ void fasp_blas_smat_mul_nc7 (double *a,
 }
 
 /**
- * \fn void fasp_blas_smat_mul(double *a, double *b, double *c, int n)
+ * \fn void fasp_blas_smat_mul(REAL *a, REAL *b, REAL *c, INT n)
+ *
  * \brief compute the matrix product of two small full matrices a and b, stored in c
  *
- * \param *a pointer to the double vector which stands a n*n matrix
- * \param *b pointer to the double vector which stands a n*n matrix
- * \param *c pointer to the double vector which stands a n*n matrix
+ * \param *a pointer to the REAL vector which stands a n*n matrix
+ * \param *b pointer to the REAL vector which stands a n*n matrix
+ * \param *c pointer to the REAL vector which stands a n*n matrix
  * \param  n the dimension of the matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 04/21/2010  
  */
-void fasp_blas_smat_mul (double *a, 
-												 double *b, 
-												 double *c, 
-												 int n)
+void fasp_blas_smat_mul (REAL *a, 
+                         REAL *b, 
+                         REAL *c, 
+                         INT n)
 { 
 	
 	switch (n)
 	{
 		case 2: 
 			fasp_blas_smat_mul_nc2(a, b, c); break;
-		
+            
 		case 3:
 			fasp_blas_smat_mul_nc3(a, b, c); break;
 			
@@ -796,9 +811,9 @@ void fasp_blas_smat_mul (double *a,
 			fasp_blas_smat_mul_nc7(a, b, c); break;
 			
 		default:
-		{ const int n2 = n*n;
-			int i,j,k;
-			double temp;
+		{ const INT n2 = n*n;
+			INT i,j,k;
+			REAL temp;
 			
 			for (i=0; i<n2; i+=n){
 				for (j=0; j<n; ++j){ 
@@ -814,7 +829,8 @@ void fasp_blas_smat_mul (double *a,
 }
 
 /**
- * \fn void fasp_blas_array_axpyz_nc2(double a, double *x, double *y, double *z)
+ * \fn void fasp_blas_array_axpyz_nc2(REAL a, REAL *x, REAL *y, REAL *z)
+ *
  * \brief z = a*x + y, z is the third vector and the length of x, y and z is 2
  *
  * \param  a   a real number
@@ -825,10 +841,10 @@ void fasp_blas_smat_mul (double *a,
  * \author Xiaozhe Hu
  * \date 18/11/2011
  */
-void fasp_blas_array_axpyz_nc2 (double a, 
-                                double *x, 
-								double *y, 
-								double *z) 
+void fasp_blas_array_axpyz_nc2 (REAL a, 
+                                REAL *x, 
+								REAL *y, 
+								REAL *z) 
 {
 	z[0] = a*x[0] + y[0];
 	z[1] = a*x[1] + y[1];
@@ -839,7 +855,8 @@ void fasp_blas_array_axpyz_nc2 (double a,
 }
 
 /**
- * \fn void fasp_blas_array_axpyz_nc3(double a, double *x, double *y, double *z)
+ * \fn void fasp_blas_array_axpyz_nc3(REAL a, REAL *x, REAL *y, REAL *z)
+ *
  * \brief z = a*x + y, z is the third vector and the length of x, y and z is 3
  *
  * \param  a   a real number
@@ -850,10 +867,10 @@ void fasp_blas_array_axpyz_nc2 (double a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_array_axpyz_nc3 (double a, 
-                                double *x, 
-																double *y, 
-																double *z) 
+void fasp_blas_array_axpyz_nc3 (REAL a, 
+                                REAL *x, 
+                                REAL *y, 
+                                REAL *z) 
 {
 	z[0] = a*x[0] + y[0];
 	z[1] = a*x[1] + y[1];
@@ -869,7 +886,8 @@ void fasp_blas_array_axpyz_nc3 (double a,
 }
 
 /**
- * \fn void fasp_blas_array_axpyz_nc5(double a, double *x, double *y, double *z)
+ * \fn void fasp_blas_array_axpyz_nc5(REAL a, REAL *x, REAL *y, REAL *z)
+ *
  * \brief z = a*x + y, z is the third vector and the length of x, y and z is 5
  *
  * \param  a   a real number
@@ -880,10 +898,10 @@ void fasp_blas_array_axpyz_nc3 (double a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_array_axpyz_nc5 (double a, 
-                                double *x, 
-																double *y, 
-																double *z) 
+void fasp_blas_array_axpyz_nc5 (REAL a, 
+                                REAL *x, 
+                                REAL *y, 
+                                REAL *z) 
 {
 	z[0] = a*x[0] + y[0];
 	z[1] = a*x[1] + y[1];
@@ -917,7 +935,8 @@ void fasp_blas_array_axpyz_nc5 (double a,
 }
 
 /**
- * \fn void fasp_blas_array_axpyz_nc7(double a, double *x, double *y, double *z)
+ * \fn void fasp_blas_array_axpyz_nc7(REAL a, REAL *x, REAL *y, REAL *z)
+ *
  * \brief z = a*x + y, z is the third vector and the length of x, y and z is 7
  *
  * \param  a   a real number
@@ -928,10 +947,10 @@ void fasp_blas_array_axpyz_nc5 (double a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_array_axpyz_nc7 (double a, 
-                                double *x, 
-																double *y, 
-																double *z) 
+void fasp_blas_array_axpyz_nc7 (REAL a, 
+                                REAL *x, 
+                                REAL *y, 
+                                REAL *z) 
 {
 	z[0] = a*x[0] + y[0];
 	z[1] = a*x[1] + y[1];
@@ -991,7 +1010,8 @@ void fasp_blas_array_axpyz_nc7 (double a,
 }
 
 /**
- * \fn void fasp_blas_array_axpy_nc2(double a, double *x, double *y)
+ * \fn void fasp_blas_array_axpy_nc2(REAL a, REAL *x, REAL *y)
+ *
  * \brief y = a*x + y, the length of x and y is 2
  *
  * \param  a   a real number
@@ -1001,9 +1021,9 @@ void fasp_blas_array_axpyz_nc7 (double a,
  * \author Xiaozhe Hu
  * \date 18/11/2011
  */
-void fasp_blas_array_axpy_nc2 (double a, 
-                               double *x, 
-							   double *y) 
+void fasp_blas_array_axpy_nc2 (REAL a, 
+                               REAL *x, 
+							   REAL *y) 
 {
 	y[0] += a*x[0];
 	y[1] += a*x[1];
@@ -1014,7 +1034,8 @@ void fasp_blas_array_axpy_nc2 (double a,
 }
 
 /**
- * \fn void fasp_blas_array_axpy_nc3(double a, double *x, double *y)
+ * \fn void fasp_blas_array_axpy_nc3(REAL a, REAL *x, REAL *y)
+ *
  * \brief y = a*x + y, the length of x and y is 3
  *
  * \param  a   a real number
@@ -1024,9 +1045,9 @@ void fasp_blas_array_axpy_nc2 (double a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_array_axpy_nc3 (double a, 
-                               double *x, 
-															 double *y) 
+void fasp_blas_array_axpy_nc3 (REAL a, 
+                               REAL *x, 
+                               REAL *y) 
 {
 	y[0] += a*x[0];
 	y[1] += a*x[1];
@@ -1042,7 +1063,8 @@ void fasp_blas_array_axpy_nc3 (double a,
 }
 
 /**
- * \fn void fasp_blas_array_axpy_nc5(double a, double *x, double *y)
+ * \fn void fasp_blas_array_axpy_nc5(REAL a, REAL *x, REAL *y)
+ *
  * \brief y = a*x + y, the length of x and y is 5
  *
  * \param  a   a real number
@@ -1052,9 +1074,9 @@ void fasp_blas_array_axpy_nc3 (double a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_array_axpy_nc5 (double a, 
-                               double *x, 
-															 double *y) 
+void fasp_blas_array_axpy_nc5 (REAL a, 
+                               REAL *x, 
+                               REAL *y) 
 {
 	y[0] += a*x[0];
 	y[1] += a*x[1];
@@ -1088,7 +1110,8 @@ void fasp_blas_array_axpy_nc5 (double a,
 }
 
 /**
- * \fn void fasp_blas_array_axpy_nc7(double a, double *x, double *y)
+ * \fn void fasp_blas_array_axpy_nc7(REAL a, REAL *x, REAL *y)
+ *
  * \brief y = a*x + y, the length of x and y is 7
  *
  * \param  a   a real number
@@ -1098,9 +1121,9 @@ void fasp_blas_array_axpy_nc5 (double a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
  */
-void fasp_blas_array_axpy_nc7 (double a, 
-                               double *x, 
-															 double *y) 
+void fasp_blas_array_axpy_nc7 (REAL a, 
+                               REAL *x, 
+                               REAL *y) 
 {
 	y[0] += a*x[0];
 	y[1] += a*x[1];
@@ -1160,20 +1183,21 @@ void fasp_blas_array_axpy_nc7 (double a,
 }
 
 /**
- * \fn void fasp_blas_smat_ypAx_nc2(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ypAx_nc2(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute y := y + Ax, where 'A' is a 2*2 dense matrix 
  *
  * \param *A   pointer to the 3*3 dense matrix
- * \param *x   pointer to the double vector with length 3
- * \param *y   pointer to the double vector with length 3
+ * \param *x   pointer to the REAL vector with length 3
+ * \param *y   pointer to the REAL vector with length 3
  *
  * \author Xiaozhe Hu
  * \date 2011/11/18
  */
-void fasp_blas_smat_ypAx_nc2 (double *A, 
-							  double *x, 
-							  double *y )
-{	double x0,x1;
+void fasp_blas_smat_ypAx_nc2 (REAL *A, 
+							  REAL *x, 
+							  REAL *y )
+{	REAL x0,x1;
 	x0=x[0];
 	x1=x[1];
 	
@@ -1184,20 +1208,21 @@ void fasp_blas_smat_ypAx_nc2 (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ypAx_nc3(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ypAx_nc3(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute y := y + Ax, where 'A' is a 3*3 dense matrix 
  *
  * \param *A   pointer to the 3*3 dense matrix
- * \param *x   pointer to the double vector with length 3
- * \param *y   pointer to the double vector with length 3
+ * \param *x   pointer to the REAL vector with length 3
+ * \param *y   pointer to the REAL vector with length 3
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date 2010/10/25
  */
-void fasp_blas_smat_ypAx_nc3 (double *A, 
-															double *x, 
-															double *y )
-{	double x0,x1,x2;
+void fasp_blas_smat_ypAx_nc3 (REAL *A, 
+                              REAL *x, 
+                              REAL *y )
+{	REAL x0,x1,x2;
 	x0=x[0];
 	x1=x[1];
 	x2=x[2];
@@ -1209,20 +1234,21 @@ void fasp_blas_smat_ypAx_nc3 (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ypAx_nc5(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ypAx_nc5(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute y := y + Ax, where 'A' is a 5*5 dense matrix 
  *
  * \param *A   pointer to the 5*5 dense matrix
- * \param *x   pointer to the double vector with length 5
- * \param *y   pointer to the double vector with length 5
+ * \param *x   pointer to the REAL vector with length 5
+ * \param *y   pointer to the REAL vector with length 5
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date 2010/10/25
  */
-void fasp_blas_smat_ypAx_nc5 (double *A, 
-															double *x,
-															double *y )
-{	double x0,x1,x2,x3,x4;
+void fasp_blas_smat_ypAx_nc5 (REAL *A, 
+                              REAL *x,
+                              REAL *y )
+{	REAL x0,x1,x2,x3,x4;
 	x0=x[0];
 	x1=x[1];
 	x2=x[2];
@@ -1238,21 +1264,22 @@ void fasp_blas_smat_ypAx_nc5 (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ypAx_nc7(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ypAx_nc7(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute y := y + Ax, where 'A' is a 7*7 dense matrix 
  *
  * \param *A   pointer to the 7*7 dense matrix
- * \param *x   pointer to the double vector with length 7
- * \param *y   pointer to the double vector with length 7
+ * \param *x   pointer to the REAL vector with length 7
+ * \param *y   pointer to the REAL vector with length 7
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date 2010/10/25
  */
-void fasp_blas_smat_ypAx_nc7 (double *A, 
-															double *x, 
-															double *y)
+void fasp_blas_smat_ypAx_nc7 (REAL *A, 
+                              REAL *x, 
+                              REAL *y)
 {	
-	double x0,x1,x2,x3,x4,x5,x6;
+	REAL x0,x1,x2,x3,x4,x5,x6;
 	x0=x[0];
 	x1=x[1];
 	x2=x[2];
@@ -1271,53 +1298,54 @@ void fasp_blas_smat_ypAx_nc7 (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ypAx(double *A, double *x, double *y, int n)
+ * \fn void fasp_blas_smat_ypAx(REAL *A, REAL *x, REAL *y, INT n)
+ *
  * \brief Compute y := y + Ax, where 'A' is a n*n dense matrix 
  *
  * \param *A   pointer to the n*n dense matrix
- * \param *x   pointer to the double vector with length n
- * \param *y   pointer to the double vector with length n
+ * \param *x   pointer to the REAL vector with length n
+ * \param *y   pointer to the REAL vector with length n
  * \param  n   the dimension of the dense matrix
  *
  * \author Zhiyang Zhou
  * \date 2010/10/25
  */
-void fasp_blas_smat_ypAx (double *A, 
-													double *x, 
-													double *y, 
-													int n)
+void fasp_blas_smat_ypAx (REAL *A, 
+                          REAL *x, 
+                          REAL *y, 
+                          INT n)
 {	
 	switch (n) {
 		case 2:
-			{
-			double x0,x1;
+        {
+			REAL x0,x1;
 			x0=x[0];x1=x[1];
 			y[0] += A[0]*x0 + A[1]*x1;
 			y[1] += A[2]*x0 + A[3]*x1;
 			break;
-			}
+        }
 		case 3:
-			{
-			double x0,x1,x2;
+        {
+			REAL x0,x1,x2;
 			x0=x[0];x1=x[1];x2=x[2];
 			y[0] += A[0]*x0 + A[1]*x1 + A[2]*x2;
 			y[1] += A[3]*x0 + A[4]*x1 + A[5]*x2;
 			y[2] += A[6]*x0 + A[7]*x1 + A[8]*x2;
 			break;
-			}
+        }
 		case 4:
-			{
-			double x0,x1,x2,x3;
+        {
+			REAL x0,x1,x2,x3;
 			x0=x[0];x1=x[1];x2=x[2];x3=x[3];
 			y[0] +=  A[0]*x0 + A[1]*x1 +  A[2]*x2 + A[3]*x3;
 			y[1] +=  A[4]*x0 + A[5]*x1 +  A[6]*x2 + A[7]*x3;
 			y[2] +=  A[8]*x0 + A[9]*x1 + A[10]*x2 + A[11]*x3;
 			y[3] += A[12]*x0 + A[13]*x1 +A[14]*x2 + A[15]*x3;
 			break;
-			}
+        }
 		case 5:
-			{
-			double x0,x1,x2,x3,x4;
+        {
+			REAL x0,x1,x2,x3,x4;
 			x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];
 			y[0] +=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4;
 			y[1] +=  A[5]*x0 +  A[6]*x1 +  A[7]*x2 +  A[8]*x3 +  A[9]*x4;
@@ -1325,10 +1353,10 @@ void fasp_blas_smat_ypAx (double *A,
 			y[3] += A[15]*x0 + A[16]*x1 + A[17]*x2 + A[18]*x3 + A[19]*x4;
 			y[4] += A[20]*x0 + A[21]*x1 + A[22]*x2 + A[23]*x3 + A[24]*x4;
 			break;
-			}	
+        }	
 		case 6:
-			{
-			double x0,x1,x2,x3,x4,x5;
+        {
+			REAL x0,x1,x2,x3,x4,x5;
 			x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];
 			y[0] +=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5;
 			y[1] +=  A[6]*x0 +  A[7]*x1 +  A[8]*x2 +  A[9]*x3 + A[10]*x4 + A[11]*x5;
@@ -1337,10 +1365,10 @@ void fasp_blas_smat_ypAx (double *A,
 			y[4] += A[24]*x0 + A[25]*x1 + A[26]*x2 + A[27]*x3 + A[28]*x4 + A[29]*x5;
 			y[5] += A[30]*x0 + A[31]*x1 + A[32]*x2 + A[33]*x3 + A[34]*x4 + A[35]*x5;
 			break;
-			}
+        }
 		case 7:
-			{
-			double x0,x1,x2,x3,x4,x5,x6;
+        {
+			REAL x0,x1,x2,x3,x4,x5,x6;
 			x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];x6=x[6];
 			y[0] +=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5 +  A[6]*x6;
 			y[1] +=  A[7]*x0 +  A[8]*x1 +  A[9]*x2 + A[10]*x3 + A[11]*x4 + A[12]*x5 + A[13]*x6;
@@ -1350,9 +1378,9 @@ void fasp_blas_smat_ypAx (double *A,
 			y[5] += A[35]*x0 + A[36]*x1 + A[37]*x2 + A[38]*x3 + A[39]*x4 + A[40]*x5 + A[41]*x6;
 			y[6] += A[42]*x0 + A[43]*x1 + A[44]*x2 + A[45]*x3 + A[46]*x4 + A[47]*x5 + A[48]*x6;
 			break;
-			}
+        }
 		default: {
-			int i,j,k;
+			INT i,j,k;
 			
 			for (i = 0; i < n; i ++) 
 			{
@@ -1370,22 +1398,23 @@ void fasp_blas_smat_ypAx (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ymAx_nc2(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ymAx_nc2(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute y := y - Ax, where 'A' is a n*n dense matrix 
  *
  * \param *A   pointer to the 2*2 dense matrix
- * \param *x   pointer to the double vector with length 3
- * \param *y   pointer to the double vector with length 3
+ * \param *x   pointer to the REAL vector with length 3
+ * \param *y   pointer to the REAL vector with length 3
  *
  * \author Xiaozhe Hu
  * \date 18/11/2011
  *
  * \note work for 2-component
  */
-void fasp_blas_smat_ymAx_nc2 (double *A, 
-							  double *x, 
-							  double *y)
-{	double x0,x1;
+void fasp_blas_smat_ymAx_nc2 (REAL *A, 
+							  REAL *x, 
+							  REAL *y)
+{	REAL x0,x1;
 	x0=x[0];
 	x1=x[1];
 	
@@ -1395,24 +1424,24 @@ void fasp_blas_smat_ymAx_nc2 (double *A,
 	return;
 } 
 
-
 /**
- * \fn void fasp_blas_smat_ymAx_nc3(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ymAx_nc3(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute y := y - Ax, where 'A' is a n*n dense matrix 
  *
  * \param *A   pointer to the 3*3 dense matrix
- * \param *x   pointer to the double vector with length 3
- * \param *y   pointer to the double vector with length 3
+ * \param *x   pointer to the REAL vector with length 3
+ * \param *y   pointer to the REAL vector with length 3
  *
  * \author Xiaozhe Hu, Zhiyang Zhou
  * \date 01/06/2011
  *
  * \note work for 3-component
  */
-void fasp_blas_smat_ymAx_nc3 (double *A, 
-															double *x, 
-															double *y)
-{	double x0,x1,x2;
+void fasp_blas_smat_ymAx_nc3 (REAL *A, 
+                              REAL *x, 
+                              REAL *y)
+{	REAL x0,x1,x2;
 	x0=x[0];
 	x1=x[1];
 	x2=x[2];
@@ -1426,22 +1455,23 @@ void fasp_blas_smat_ymAx_nc3 (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ymAx_nc5(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ymAx_nc5(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute y := y - Ax, where 'A' is a n*n dense matrix 
  *
  * \param *A   pointer to the 5*5 dense matrix
- * \param *x   pointer to the double vector with length 5
- * \param *y   pointer to the double vector with length 5
+ * \param *x   pointer to the REAL vector with length 5
+ * \param *y   pointer to the REAL vector with length 5
  *
  * \author Xiaozhe Hu, Zhiyang Zhou
  * \date 01/06/2011
  *
  * \note work for 5-component
  */
-void fasp_blas_smat_ymAx_nc5 (double *A, 
-															double *x, 
-															double *y)
-{	double x0,x1,x2,x3,x4;
+void fasp_blas_smat_ymAx_nc5 (REAL *A, 
+                              REAL *x, 
+                              REAL *y)
+{	REAL x0,x1,x2,x3,x4;
 	x0=x[0];
 	x1=x[1];
 	x2=x[2];
@@ -1458,22 +1488,23 @@ void fasp_blas_smat_ymAx_nc5 (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ymAx_nc7(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ymAx_nc7(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute y := y - Ax, where 'A' is a 7*7 dense matrix 
  *
  * \param *A   pointer to the 7*7 dense matrix
- * \param *x   pointer to the double vector with length 7
- * \param *y   pointer to the double vector with length 7
+ * \param *x   pointer to the REAL vector with length 7
+ * \param *y   pointer to the REAL vector with length 7
  *
  * \author Xiaozhe Hu, Zhiyang Zhou
  * \date 01/06/2011
  *
  * \note work for 7-component
  */
-void fasp_blas_smat_ymAx_nc7 (double *A, 
-															double *x, 
-															double *y)
-{	double x0,x1,x2,x3,x4,x5,x6;
+void fasp_blas_smat_ymAx_nc7 (REAL *A, 
+                              REAL *x, 
+                              REAL *y)
+{	REAL x0,x1,x2,x3,x4,x5,x6;
 	x0=x[0];
 	x1=x[1];
 	x2=x[2];
@@ -1494,53 +1525,54 @@ void fasp_blas_smat_ymAx_nc7 (double *A,
 }
 
 /**
- * \fn void fasp_blas_smat_ymAx(double *A, double *x, double *y, int n)
+ * \fn void fasp_blas_smat_ymAx(REAL *A, REAL *x, REAL *y, INT n)
+ *
  * \brief Compute y := y - Ax, where 'A' is a n*n dense matrix 
  *
  * \param *A   pointer to the n*n dense matrix
- * \param *x   pointer to the double vector with length n
- * \param *y   pointer to the double vector with length n
+ * \param *x   pointer to the REAL vector with length n
+ * \param *y   pointer to the REAL vector with length n
  * \param  n   the dimension of the dense matrix
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date 2010/10/25
  */
-void fasp_blas_smat_ymAx (double *A, 
-													double *x, 
-													double *y,
-													int n)
+void fasp_blas_smat_ymAx (REAL *A, 
+                          REAL *x, 
+                          REAL *y,
+                          INT n)
 {	
 	switch (n) {
 		case 2:
-			{
-			double x0,x1;
+        {
+			REAL x0,x1;
 			x0=x[0];x1=x[1];
 			y[0] -= A[0]*x0 + A[1]*x1;
 			y[1] -= A[2]*x0 + A[3]*x1;
 			break;
-			}
+        }
 		case 3:
-			{
-			double x0,x1,x2;
+        {
+			REAL x0,x1,x2;
 			x0=x[0];x1=x[1];x2=x[2];
 			y[0] -= A[0]*x0 + A[1]*x1 + A[2]*x2;
 			y[1] -= A[3]*x0 + A[4]*x1 + A[5]*x2;
 			y[2] -= A[6]*x0 + A[7]*x1 + A[8]*x2;
 			break;
-			}
+        }
 		case 4:
-			{
-			double x0,x1,x2,x3;
+        {
+			REAL x0,x1,x2,x3;
 			x0=x[0];x1=x[1];x2=x[2];x3=x[3];
 			y[0] -=  A[0]*x0 + A[1]*x1 +  A[2]*x2 + A[3]*x3;
 			y[1] -=  A[4]*x0 + A[5]*x1 +  A[6]*x2 + A[7]*x3;
 			y[2] -=  A[8]*x0 + A[9]*x1 + A[10]*x2 + A[11]*x3;
 			y[3] -= A[12]*x0 + A[13]*x1 +A[14]*x2 + A[15]*x3;
 			break;
-			}
+        }
 		case 5:
-			{
-			double x0,x1,x2,x3,x4;
+        {
+			REAL x0,x1,x2,x3,x4;
 			x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];
 			y[0] -=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4;
 			y[1] -=  A[5]*x0 +  A[6]*x1 +  A[7]*x2 +  A[8]*x3 +  A[9]*x4;
@@ -1548,10 +1580,10 @@ void fasp_blas_smat_ymAx (double *A,
 			y[3] -= A[15]*x0 + A[16]*x1 + A[17]*x2 + A[18]*x3 + A[19]*x4;
 			y[4] -= A[20]*x0 + A[21]*x1 + A[22]*x2 + A[23]*x3 + A[24]*x4;
 			break;
-			}
+        }
 		case 6:
-			{
-			double x0,x1,x2,x3,x4,x5;
+        {
+			REAL x0,x1,x2,x3,x4,x5;
 			x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];
 			y[0] -=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5;
 			y[1] -=  A[6]*x0 +  A[7]*x1 +  A[8]*x2 +  A[9]*x3 + A[10]*x4 + A[11]*x5;
@@ -1560,10 +1592,10 @@ void fasp_blas_smat_ymAx (double *A,
 			y[4] -= A[24]*x0 + A[25]*x1 + A[26]*x2 + A[27]*x3 + A[28]*x4 + A[29]*x5;
 			y[5] -= A[30]*x0 + A[31]*x1 + A[32]*x2 + A[33]*x3 + A[34]*x4 + A[35]*x5;
 			break;
-			}
+        }
 		case 7:	
-			{
-			double x0,x1,x2,x3,x4,x5,x6;
+        {
+			REAL x0,x1,x2,x3,x4,x5,x6;
 			x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];x6=x[6];
 			y[0] -=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5 +  A[6]*x6;
 			y[1] -=  A[7]*x0 +  A[8]*x1 +  A[9]*x2 + A[10]*x3 + A[11]*x4 + A[12]*x5 + A[13]*x6;
@@ -1573,9 +1605,9 @@ void fasp_blas_smat_ymAx (double *A,
 			y[5] -= A[35]*x0 + A[36]*x1 + A[37]*x2 + A[38]*x3 + A[39]*x4 + A[40]*x5 + A[41]*x6;
 			y[6] -= A[42]*x0 + A[43]*x1 + A[44]*x2 + A[45]*x3 + A[46]*x4 + A[47]*x5 + A[48]*x6;
 			break;
-			}
+        }
 		default: {
-			int i,j,k;
+			INT i,j,k;
 			
 			for (i = 0; i < n; i ++) 
 			{
@@ -1593,28 +1625,29 @@ void fasp_blas_smat_ymAx (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_aAxpby( double alpha, double *A, double *x, double beta, double *y, int n )
+ * \fn void fasp_blas_smat_aAxpby( REAL alpha, REAL *A, REAL *x, REAL beta, REAL *y, INT n )
+ *
  * \brief Compute y:=alpha*A*x + beta*y, here x,y are vectors, A is a n*n full matrix.   
  *
  * \param  alpha   a real number
- * \param *A       pointer to the double vector which stands for a n*n full matrix 
- * \param *x       pointer to the double vector with length n
+ * \param *A       pointer to the REAL vector which stands for a n*n full matrix 
+ * \param *x       pointer to the REAL vector with length n
  * \param  beta    a real number
- * \param *y       pointer to the double vector with length n
+ * \param *y       pointer to the REAL vector with length n
  * \param  n       the length of vector x and y
  *
  * \author Zhiyang Zhou
  * \date 2010/10/25
  */
-void fasp_blas_smat_aAxpby (double alpha, 
-                            double *A, 
-														double *x, 
-														double beta, 
-														double *y, 
-														int n )
+void fasp_blas_smat_aAxpby (REAL alpha, 
+                            REAL *A, 
+                            REAL *x, 
+                            REAL beta, 
+                            REAL *y, 
+                            INT n )
 {
-	int    i,j,k;
-	double tmp = 0.0;
+	INT    i,j,k;
+	REAL tmp = 0.0;
 	
 	if (alpha == 0)
 	{
@@ -1647,12 +1680,13 @@ void fasp_blas_smat_aAxpby (double alpha,
 }
 
 /**
- * \fn void fasp_blas_smat_ymAx_ns2(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ymAx_ns2(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute ys := ys - Ass*xs, where 'A' is a 2*2 dense matrix, Ass is its saturaton part 1*1.
  * 
  * \param *A   pointer to the 2*2 dense matrix
- * \param *x   pointer to the double vector with length 1
- * \param *y   pointer to the double vector with length 1
+ * \param *x   pointer to the REAL vector with length 1
+ * \param *y   pointer to the REAL vector with length 1
  *
  * \author Xiaozhe Hu
  * \date 2011/11/18
@@ -1660,9 +1694,9 @@ void fasp_blas_smat_aAxpby (double alpha,
  * \note only for block smoother for saturation block without explictly use saturation block!!
  * \note work for 2-component (Xiaozhe)
  */
-void fasp_blas_smat_ymAx_ns2 (double *A,
-							  double *x, 
-							  double *y)
+void fasp_blas_smat_ymAx_ns2 (REAL *A,
+							  REAL *x, 
+							  REAL *y)
 {	
 	y[0] -= A[3]*x[0];
 	
@@ -1670,12 +1704,13 @@ void fasp_blas_smat_ymAx_ns2 (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ymAx_ns3(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ymAx_ns3(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute ys := ys - Ass*xs, where 'A' is a 3*3 dense matrix, Ass is its saturaton part 2*2.
  * 
  * \param *A   pointer to the 3*3 dense matrix
- * \param *x   pointer to the double vector with length 2
- * \param *y   pointer to the double vector with length 2
+ * \param *x   pointer to the REAL vector with length 2
+ * \param *y   pointer to the REAL vector with length 2
  *
  * \author Xiaozhe Hu
  * \date 2010/10/25
@@ -1683,10 +1718,10 @@ void fasp_blas_smat_ymAx_ns2 (double *A,
  * \note only for block smoother for saturation block without explictly use saturation block!!
  * \note work for 3-component (Xiaozhe)
  */
-void fasp_blas_smat_ymAx_ns3 (double *A,
-															double *x, 
-															double *y)
-{	double x0,x1;
+void fasp_blas_smat_ymAx_ns3 (REAL *A,
+                              REAL *x, 
+                              REAL *y)
+{	REAL x0,x1;
 	x0=x[0];
 	x1=x[1];
 	y[0] -= A[4]*x0 + A[5]*x1;
@@ -1696,12 +1731,13 @@ void fasp_blas_smat_ymAx_ns3 (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ymAx_ns5(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ymAx_ns5(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute ys := ys - Ass*xs, where 'A' is a 5*5 dense matrix, Ass is its saturaton part 4*4.
  * 
  * \param *A   pointer to the 5*5 dense matrix
- * \param *x   pointer to the double vector with length 4
- * \param *y   pointer to the double vector with length 4
+ * \param *x   pointer to the REAL vector with length 4
+ * \param *y   pointer to the REAL vector with length 4
  *
  * \author Xiaozhe Hu
  * \date 2010/10/25
@@ -1709,10 +1745,10 @@ void fasp_blas_smat_ymAx_ns3 (double *A,
  * \note only for block smoother for saturation block without explictly use saturation block!!
  * \note work for 5-component (Xiaozhe)
  */
-void fasp_blas_smat_ymAx_ns5 (double *A, 
-															double *x, 
-															double *y)
-{	double x0,x1,x2,x3;
+void fasp_blas_smat_ymAx_ns5 (REAL *A, 
+                              REAL *x, 
+                              REAL *y)
+{	REAL x0,x1,x2,x3;
 	x0=x[0];
 	x1=x[1];
 	x2=x[2];
@@ -1727,12 +1763,13 @@ void fasp_blas_smat_ymAx_ns5 (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ymAx_ns7(double *A, double *x, double *y)
+ * \fn void fasp_blas_smat_ymAx_ns7(REAL *A, REAL *x, REAL *y)
+ *
  * \brief Compute ys := ys - Ass*xs, where 'A' is a 7*7 dense matrix, Ass is its saturaton part 6*6.
  * 
  * \param *A   pointer to the 7*7 dense matrix
- * \param *x   pointer to the double vector with length 6
- * \param *y   pointer to the double vector with length 6
+ * \param *x   pointer to the REAL vector with length 6
+ * \param *y   pointer to the REAL vector with length 6
  *
  * \author Xiaozhe Hu
  * \date 2010/10/25
@@ -1740,10 +1777,10 @@ void fasp_blas_smat_ymAx_ns5 (double *A,
  * \note only for block smoother for saturation block without explictly use saturation block!!
  * \note work for 7-component (Xiaozhe)
  */
-void fasp_blas_smat_ymAx_ns7 (double *A, 
-															double *x, 
-															double *y)
-{	double x0,x1,x2,x3,x4,x5;
+void fasp_blas_smat_ymAx_ns7 (REAL *A, 
+                              REAL *x, 
+                              REAL *y)
+{	REAL x0,x1,x2,x3,x4,x5;
 	x0=x[0];
 	x1=x[1];
 	x2=x[2];
@@ -1762,12 +1799,13 @@ void fasp_blas_smat_ymAx_ns7 (double *A,
 } 
 
 /**
- * \fn void fasp_blas_smat_ymAx_ns( double *A, double *x, double *y, int n )
+ * \fn void fasp_blas_smat_ymAx_ns( REAL *A, REAL *x, REAL *y, INT n )
+ *
  * \brief Compute ys := ys - Ass*xs, where 'A' is a n*n dense matrix, Ass is its saturaton part (n-1)*(n-1).
  * 
  * \param *A   pointer to the n*n dense matrix
- * \param *x   pointer to the double vector with length n-1
- * \param *y   pointer to the double vector with length n-1
+ * \param *x   pointer to the REAL vector with length n-1
+ * \param *y   pointer to the REAL vector with length n-1
  * \param  n   the dimension of the dense matrix
  * 
  * \note only for block smoother for saturation block without explictly use saturation block!!
@@ -1775,37 +1813,37 @@ void fasp_blas_smat_ymAx_ns7 (double *A,
  * \author Xiaozhe Hu
  * \date 2010/10/25
  */
-void fasp_blas_smat_ymAx_ns (double *A, 
-														 double *x, 
-														 double *y, 
-														 int n)
+void fasp_blas_smat_ymAx_ns (REAL *A, 
+                             REAL *x, 
+                             REAL *y, 
+                             INT n)
 {	
 	switch (n) {
 		case 2:
 			y[0] -= A[3]*x[0];
 			break;
-		 
+            
 		case 3: 
-			{
-			double x0,x1;
+        {
+			REAL x0,x1;
 			x0=x[0];x1=x[1];
 			y[0] -= A[4]*x0 + A[5]*x1;
 			y[1] -= A[7]*x0 + A[8]*x1;
 			break;
-			}
+        }
 		case 5:
-			{
-			double x0,x1,x2,x3;
+        {
+			REAL x0,x1,x2,x3;
 			x0=x[0];x1=x[1];x2=x[2];x3=x[3];
 			y[0] -=  A[6]*x0 +  A[7]*x1 +  A[8]*x2 +  A[9]*x3;
 			y[1] -= A[11]*x0 + A[12]*x1 + A[13]*x2 + A[14]*x3;
 			y[2] -= A[16]*x0 + A[17]*x1 + A[18]*x2 + A[19]*x3;
 			y[3] -= A[21]*x0 + A[22]*x1 + A[23]*x2 + A[24]*x3;
 			break;
-			}
+        }
 		case 7:
-			{
-			double x0,x1,x2,x3,x4,x5;
+        {
+			REAL x0,x1,x2,x3,x4,x5;
 			x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];
 			y[0] -=  A[8]*x0 +  A[9]*x1 + A[10]*x2 + A[11]*x3 + A[12]*x4 + A[13]*x5;
 			y[1] -= A[15]*x0 + A[16]*x1 + A[17]*x2 + A[18]*x3 + A[19]*x4 + A[20]*x5;
@@ -1814,9 +1852,9 @@ void fasp_blas_smat_ymAx_ns (double *A,
 			y[4] -= A[36]*x0 + A[37]*x1 + A[38]*x2 + A[39]*x3 + A[40]*x4 + A[41]*x5;
 			y[5] -= A[43]*x0 + A[44]*x1 + A[45]*x2 + A[46]*x3 + A[47]*x4 + A[48]*x5;
 			break;
-			}
+        }
 		default: {
-			int i,j,k;
+			INT i,j,k;
 			
 			for (i = 1; i < n; i ++) 
 			{

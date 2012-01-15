@@ -71,8 +71,8 @@ void fasp_blas_array_axpy (const INT n,
 }
 
 /**
- * \fn void fasp_blas_array_axpyz(const INT n, const REAL a, REAL *x, REAL *y, 
- *                                REAL *z)
+ * \fn void fasp_blas_array_axpyz(const INT n, const REAL a, REAL *x,
+ *                                REAL *y, REAL *z)
  *
  * \brief z = a*x + y, z is the third vector
  *

@@ -69,7 +69,8 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
 			// y2 = alpha*A21*x1 + alpha*A22*x2 + y2
 			fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2); 
 			fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2); 
-			break;
+			
+            break;
 			
 		case 3:
 			A11 = A->blocks[0];
@@ -108,7 +109,8 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
 			fasp_blas_dcsr_aAxpy(alpha, A31, x1, y3); 
 			fasp_blas_dcsr_aAxpy(alpha, A32, x2, y3); 
 			fasp_blas_dcsr_aAxpy(alpha, A33, x3, y3); 
-			break;
+			
+            break;
 			
 	} // end of switch
 	

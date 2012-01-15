@@ -254,7 +254,7 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 	
 	if (alpha != 1.0)
 	{
-		for (i = size; i-- ;) // modified by Xiaozhe, 03/11/2011
+		for (i = size; i--; ) // modified by Xiaozhe, 03/11/2011
 		{
 			y[i] *= alpha;
 		}
