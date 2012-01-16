@@ -12,7 +12,9 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_smoother_dcsr_jacobi (dvector *u, int i_1, int i_n, int s, dCSRmat *A, dvector *b, int L)
+ * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n, const INT s, 
+ *                                     dCSRmat *A, dvector *b, INT L)
+ *
  * \brief Jacobi method as the smoother in solving Au=b with multigrid method
  *
  * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
@@ -22,32 +24,36 @@
  * \param *A   pointer to stiffness matrix
  * \param *b   pointer to right hand side
  * \param L    number of iterations
+ *
  * \return     void
  *
  * \author     Xuehai Huang, Chensong Zhang
  * \date       09/26/2009
  */
 void fasp_smoother_dcsr_jacobi (dvector *u, 
-                                int i_1, 
-                                int i_n, 
-                                int s, 
+                                const INT i_1, 
+                                const INT i_n, 
+                                const INT s, 
                                 dCSRmat *A, 
                                 dvector *b, 
-                                int L)
+                                INT L)
 {
-	const int N = ABS(i_n - i_1)+1;
-	const int *ia=A->IA, *ja=A->JA;
-	const double *aj=A->val, *bval=b->val, *uval=u->val;
-	int i,j,k,begin_row,end_row;
+	const INT    N = ABS(i_n - i_1)+1;
+	const INT   *ia=A->IA, *ja=A->JA;
+    const REAL  *aj=A->val,*bval=b->val;
+    REAL        *uval=u->val;
+    
+    // local variables
+	INT i,j,k,begin_row,end_row;
 	
-	// Checks should be outside of for; t,d can be allocated before calling!!! --Chensong
-	double *t = (double *)fasp_mem_calloc(N,sizeof(double));	
+	REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));	
 #if CHMEM_MODE
-	total_alloc_mem += (N)*sizeof(double);
+	total_alloc_mem += (N)*sizeof(REAL);
 #endif	
-	double *d = (double *)fasp_mem_calloc(N,sizeof(double));
+    
+	REAL *d = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
 #if CHMEM_MODE
-	total_alloc_mem += (N)*sizeof(double);
+	total_alloc_mem += (N)*sizeof(REAL);
 #endif	
 	
 	while (L--) {
@@ -64,7 +70,7 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
 			}
 			
 			for (i=i_1;i<=i_n;i+=s) {	
-				if (ABS(d[i])>SMALLREAL) u->val[i]=t[i]/d[i];
+				if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
 			}			
 		} 
 		
@@ -82,7 +88,7 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
 			}
 			
 			for (i=i_1;i>=i_n;i+=s) {
-				if (ABS(d[i])>SMALLREAL) u->val[i]=t[i]/d[i];
+				if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
 			}
 		} 
 		
@@ -95,7 +101,9 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_gs(dvector *u, int i_1, int i_n, int s, dCSRmat *A, dvector *b, int L)
+ * \fn void fasp_smoother_dcsr_gs (dvector *u, const INT i_1, const INT i_n, const INT s, 
+ *                                 dCSRmat *A, dvector *b, INT L)
+ *
  * \brief Gauss-Seidel method  as the smoother in solving Au=b with multigrid method
  *
  * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
@@ -105,24 +113,27 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
  * \param *A   pointer to stiffness matrix
  * \param *b   pointer to right hand side
  * \param L    number of iterations
+ *
  * \return     void
  *
  * \author     Xuehai Huang, Chensong Zhang
  * \date       09/26/2009
  */
 void fasp_smoother_dcsr_gs (dvector *u, 
-                            int i_1, 
-                            int i_n, 
-                            int s, 
+                            const INT i_1, 
+                            const INT i_n, 
+                            const INT s, 
                             dCSRmat *A, 
                             dvector *b, 
-                            int L)
+                            INT L)
 {
-	const int *ia=A->IA,*ja=A->JA;
-	double *aj=A->val,*bval=b->val,*uval=u->val;
+	const INT   *ia=A->IA,*ja=A->JA;
+    const REAL  *aj=A->val,*bval=b->val;
+    REAL        *uval=u->val;
 	
-	int i,j,k,begin_row,end_row;
-	double t,d=0.0;
+    // local variables
+	INT   i,j,k,begin_row,end_row;
+	REAL  t,d=0.0;
 	
 	if (s > 0) {
 		
@@ -192,7 +203,8 @@ void fasp_smoother_dcsr_gs (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_gs_cf (dvector *u, dCSRmat *A, dvector *b, int L, int *mark, int order)
+ * \fn void fasp_smoother_dcsr_gs_cf (dvector *u, dCSRmat *A, dvector *b, INT L, INT *mark, const INT order)
+ *
  * \brief Gauss-Seidel smoother with C/F ordering for Au=b
  *
  * \param u     initial guess and the new approximation to the solution obtained after L GS steps
@@ -201,6 +213,7 @@ void fasp_smoother_dcsr_gs (dvector *u,
  * \param L     number of iterations
  * \param *mark C/F marker array
  * \param order C/F ordering: -1: F-first; 1: C-first
+ *
  * \return      void
  *
  * \author Zhiyang Zhou
@@ -209,17 +222,18 @@ void fasp_smoother_dcsr_gs (dvector *u,
 void fasp_smoother_dcsr_gs_cf (dvector *u, 
                                dCSRmat *A, 
                                dvector *b, 
-                               int L, 
-                               int *mark, 
-                               int order )
+                               INT L, 
+                               INT *mark, 
+                               const INT order )
 {
-    const int *ia=A->IA,*ja=A->JA;
+    const INT   *ia=A->IA,*ja=A->JA;
+    const REAL  *aj=A->val,*bval=b->val;
+    REAL        *uval=u->val;
     
-    int i,j,k,begin_row,end_row;
-    int size = b->row;
-    
-    double *aj=A->val,*bval=b->val,*uval=u->val;
-    double t,d=0.0;
+    // local variables
+    INT    i,j,k,begin_row,end_row;
+    INT    size = b->row;
+    REAL   t,d=0.0;
     
     if (order == -1) // F-point first
     {	
@@ -300,13 +314,15 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_sgs (dvector *u, dCSRmat *A, dvector *b, int L)
+ * \fn void fasp_smoother_dcsr_sgs (dvector *u, dCSRmat *A, dvector *b, INT L)
+ *
  * \brief Symmetric Gauss-Seidel method  as the smoother in solving Au=b with multigrid method
  *
  * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
  * \param *A   pointer to stiffness matrix
  * \param *b   pointer to right hand side
  * \param L    number of iterations
+ *
  * \return     void
  *
  * \author     Xiaozhe Hu
@@ -315,14 +331,16 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
 void fasp_smoother_dcsr_sgs (dvector *u, 
                              dCSRmat *A, 
                              dvector *b, 
-                             int L)
+                             INT L)
 {
-    const int *ia=A->IA,*ja=A->JA;
-    const int nm1=b->row-1;
+    const INT    nm1=b->row-1;
+    const INT   *ia=A->IA,*ja=A->JA;
+    const REAL  *aj=A->val,*bval=b->val;
+    REAL        *uval=u->val;
     
-    int     i,j,k,begin_row,end_row;
-    double *aj=A->val,*bval=b->val,*uval=u->val;
-    double  t,d;
+    // local variables
+    INT   i,j,k,begin_row,end_row;
+    REAL  t,d;
     
     while (L--) {
         
@@ -356,7 +374,9 @@ void fasp_smoother_dcsr_sgs (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_sor (dvector *u, int i_1, int i_n, int s, dCSRmat *A, dvector *b, int L, double w)
+ * \fn void fasp_smoother_dcsr_sor (dvector *u, const INT i_1, const INT i_n, const INT s, 
+ *                                  dCSRmat *A, dvector *b, INT L, const REAL w)
+ *
  * \brief Successive Overrelaxation method as the smoother in solving Au=b with multigrid method
  *
  * \param u     initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
@@ -367,24 +387,28 @@ void fasp_smoother_dcsr_sgs (dvector *u,
  * \param *b    pointer to right hand side
  * \param L     number of iterations
  * \param w     over-relaxation parameter
+ *
  * \return      void
  *
  * \author      Xiaozhe Hu
  * \date        10/26/2010
  */
 void fasp_smoother_dcsr_sor (dvector *u, 
-                             int i_1, 
-                             int i_n, 
-                             int s, 
+                             const INT i_1, 
+                             const INT i_n, 
+                             const INT s, 
                              dCSRmat *A, 
                              dvector *b, 
-                             int L, 
-                             double w)
+                             INT L, 
+                             const REAL w)
 {
-    const int *ia=A->IA,*ja=A->JA;
-    double *aj=A->val,*bval=b->val,*uval=u->val;
-    int i,j,k,begin_row,end_row;
-    double t, d;
+    const INT   *ia=A->IA,*ja=A->JA;
+    const REAL  *aj=A->val,*bval=b->val;
+    REAL        *uval=u->val;
+
+    // local variables
+    INT    i,j,k,begin_row,end_row;
+    REAL   t, d;
     
     while (L--) {
         if (s>0) {
@@ -425,7 +449,9 @@ void fasp_smoother_dcsr_sor (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_sor_cf ( dvector *u, dCSRmat *A, dvector *b, int L, double w, int *mark, int order )
+ * \fn void fasp_smoother_dcsr_sor_cf (dvector *u, dCSRmat *A, dvector *b, INT L, 
+ *                                     const REAL w, INT *mark, const INT order)
+ *
  * \brief SOR smoother with C/F ordering for Au=b
  *
  * \param u      initial guess and the new approximation to the solution obtained after L SOR steps
@@ -434,6 +460,7 @@ void fasp_smoother_dcsr_sor (dvector *u,
  * \param L      number of iterations
  * \param *mark  C/F marker array
  * \param order  C/F ordering: -1: F-first; 1: C-first
+ *
  * \return       void
  *
  * \author Zhiyang Zhou
@@ -442,17 +469,19 @@ void fasp_smoother_dcsr_sor (dvector *u,
 void fasp_smoother_dcsr_sor_cf (dvector *u, 
                                 dCSRmat *A, 
                                 dvector *b, 
-                                int L, 
-                                double w, 
-                                int *mark, 
-                                int order )
+                                INT L, 
+                                const REAL w, 
+                                INT *mark, 
+                                const INT order )
 {
-    const int *ia=A->IA,*ja=A->JA;
-    double *aj=A->val,*bval=b->val,*uval=u->val;
+    const INT   *ia=A->IA,*ja=A->JA;
+    const REAL  *aj=A->val,*bval=b->val;
+    REAL        *uval=u->val;
     
-    int i,j,k,begin_row,end_row;
-    int size = b->row;
-    double t,d=0.0;
+    // local variables
+    INT    i,j,k,begin_row,end_row;
+    INT    size = b->row;
+    REAL   t,d=0.0;
     
     if (order == -1) // F-point first
     {	
@@ -534,12 +563,14 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
 
 /**
  * \fn void fasp_smoother_dcsr_ilu (dCSRmat *A, dvector *b, dvector *x, void *data)
+ *
  * \brief ILU method as the smoother in solving Au=b with multigrid method
  *
  * \param *A    pointer to stiffness matrix
  * \param *b    pointer to right hand side
  * \param *x    pointer to current solution
  * \param *data pointer to user defined data
+ *
  * \return void
  *
  * \author Shiquan Zhang, Xiaozhe Hu
@@ -550,21 +581,20 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
                              dvector *x, 
                              void *data)
 {
-    ILU_data *iludata=(ILU_data *)data;
-    const unsigned int m=A->row, m2=2*m, memneed=3*m;
-    double *zz, *zr, *z;
+    const unsigned INT m=A->row, m2=2*m, memneed=3*m;
+    const ILU_data *iludata=(ILU_data *)data;    
+    
+    REAL *zz = iludata->work; 
+    REAL *zr = iludata->work+m;
+    REAL *z  = iludata->work+m2;
     
     if (iludata->nwork<memneed) goto MEMERR; 
-    
-    zz = iludata->work; 
-    zr = iludata->work+m;
-    z  = iludata->work+m2;
-    
+
     {
-        int i, j, jj, begin_row, end_row;
-        double *lu = iludata->luval;
-        int *ijlu = iludata->ijlu;
-        double *xval = x->val, *bval = b->val;
+        INT i, j, jj, begin_row, end_row;
+        REAL *lu = iludata->luval;
+        INT *ijlu = iludata->ijlu;
+        REAL *xval = x->val, *bval = b->val;
         
         /** form residual zr = b - A x */
         fasp_array_cp(m,bval,zr); fasp_blas_dcsr_aAxpy(-1.0,A,xval,zr);
@@ -599,12 +629,14 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
     return;
     
 MEMERR:
-    printf("Error: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
+    printf("### ERROR: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
     exit(ERROR_ALLOC_MEM);
 }
 
 /**
- * \fn void fasp_smoother_dcsr_kaczmarz (dvector *u, int i_1, int i_n, int s, dCSRmat *A, dvector *b, int L)
+ * \fn void fasp_smoother_dcsr_kaczmarz (dvector *u, const INT i_1, const INT i_n, const INT s, 
+ *                                       dCSRmat *A, dvector *b, INT L)
+ *
  * \brief kaczmarz method as the smoother for solving Au=b
  *
  * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
@@ -614,25 +646,28 @@ MEMERR:
  * \param *A   pointer to stiffness matrix
  * \param *b   pointer to right hand side
  * \param L    number of iterations
+ *
  * \return void
  *
  * \author Xiaozhe Hu
  * \date 2010/11/12 
  */
 void fasp_smoother_dcsr_kaczmarz (dvector *u, 
-                                  int i_1, 
-                                  int i_n, 
-                                  int s, 
+                                  const INT i_1, 
+                                  const INT i_n, 
+                                  const INT s, 
                                   dCSRmat *A, 
                                   dvector *b, 
-                                  int L, 
-                                  double w)
+                                  INT L, 
+                                  const REAL w)
 {
-    const int *ia=A->IA,*ja=A->JA;
-    double *aj=A->val,*bval=b->val,*uval=u->val;
+    const INT   *ia=A->IA,*ja=A->JA;
+    const REAL  *aj=A->val,*bval=b->val;
+    REAL        *uval=u->val;
     
-    int i,j,k,begin_row,end_row;
-    double temp1,temp2,alpha;
+    // local variables
+    INT   i,j,k,begin_row,end_row;
+    REAL  temp1,temp2,alpha;
     
     if (s > 0) {
         
@@ -686,7 +721,9 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_L1diag (dvector *u, int i_1, int i_n, int s, dCSRmat *A, dvector *b, int L)
+ * \fn void fasp_smoother_dcsr_L1diag (dvector *u, const INT i_1, const INT i_n, const INT s, 
+ *                                     dCSRmat *A, dvector *b, INT L)
+ *
  * \brief Diagonal scaling (using L1 norm) as the smoother in solving Au=b with multigrid method
  *
  * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
@@ -696,32 +733,36 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
  * \param *A   pointer to stiffness matrix
  * \param *b   pointer to right hand side
  * \param L    number of iterations
+ *
  * \return void
  *
  * \author Xiaozhe Hu, James Brannick
  * \date 01/26/2011
  */
 void fasp_smoother_dcsr_L1diag (dvector *u, 
-                                int i_1, 
-                                int i_n, 
-                                int s, 
+                                const INT i_1, 
+                                const INT i_n, 
+                                const INT s, 
                                 dCSRmat *A, 
                                 dvector *b, 
-                                int L)
+                                INT L)
 {
-    const int N = ABS(i_n - i_1)+1;
-    const int *ia=A->IA, *ja=A->JA;
-    const double *aj=A->val, *bval=b->val, *uval=u->val;
-    int i,j,k,begin_row,end_row;
+    const INT    N = ABS(i_n - i_1)+1;
+    const INT   *ia=A->IA, *ja=A->JA;
+    const REAL  *aj=A->val,*bval=b->val;
+    REAL        *uval=u->val;
+    
+    // local variables
+    INT   i,j,k,begin_row,end_row;
     
     // Checks should be outside of for; t,d can be allocated before calling!!! --Chensong
-    double *t = (double *)fasp_mem_calloc(N,sizeof(double));	
+    REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));	
 #if CHMEM_MODE
-    total_alloc_mem += (N)*sizeof(double);
+    total_alloc_mem += (N)*sizeof(REAL);
 #endif	
-    double *d = (double *)fasp_mem_calloc(N,sizeof(double));
+    REAL *d = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
 #if CHMEM_MODE
-    total_alloc_mem += (N)*sizeof(double);
+    total_alloc_mem += (N)*sizeof(REAL);
 #endif	
     
     while (L--) {
@@ -770,7 +811,9 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
 
 #if 0
 /**
- * \fn dCSRmat static form_contractor(dCSRmat *A, int smoother, int steps, int ndeg, double relax, double dtol)
+ * \fn dCSRmat static form_contractor(dCSRmat *A, const INT smoother, const INT steps, 
+ *                                    const INT ndeg, const REAL relax, const REAL dtol)
+ *
  * \brief form contractor I-BA
  *
  * \param A          pointer to the dCSRmat
@@ -779,37 +822,43 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  * \param ndeg       degree of the polynomial smoother
  * \param relax      relaxation parameter for SOR smoother
  * \param dtol       drop tplerance for droping small entries in matrix
- * \return dCSRmat 
+ *
+ * \return the contractor in dCSRmat format
  *
  * \author Xiaozhe Hu, James Brannick
  * \date   01/26/2011
  *
  * \note: not a O(N) algorithm, need to be modified!!!!
  */
-static dCSRmat form_contractor(dCSRmat *A, int smoother, int steps, int ndeg, double relax, double dtol)
+static dCSRmat form_contractor (dCSRmat *A, 
+                                const INT smoother, 
+                                const INT steps, 
+                                const INT ndeg, 
+                                const REAL relax, 
+                                const REAL dtol)
 {
-    const int n=A->row;
-    unsigned int i;
+    const INT    n=A->row;
+    unsigned INT i;
     
-    double *work= (double *)fasp_mem_calloc(2*n,sizeof(double));
+    REAL *work = (REAL *)fasp_mem_calloc(2*n,sizeof(REAL));
     
 #if CHMEM_MODE
-    total_alloc_mem += (2*n)*sizeof(double);
+    total_alloc_mem += (2*n)*sizeof(REAL);
 #endif	
     
     dvector b, x;
     b.row=x.row=n;
     b.val=work; x.val=work+n;
     
-    int *index=(int *)fasp_mem_calloc(n,sizeof(int));	
+    INT *index = (INT *)fasp_mem_calloc(n,sizeof(INT));	
     
 #if CHMEM_MODE
-    total_alloc_mem += (n)*sizeof(int);
+    total_alloc_mem += (n)*sizeof(INT);
 #endif
     
     for (i=0; i<n; ++i) index[i]=i;
     
-    dCSRmat B=fasp_dcsr_create(n, n, n*n); // too much memory required, need to change!!
+    dCSRmat B = fasp_dcsr_create(n, n, n*n); // too much memory required, need to change!!
     dCSRmat C, D;
     
     for (i=0; i<n; ++i){
@@ -852,13 +901,13 @@ static dCSRmat form_contractor(dCSRmat *A, int smoother, int steps, int ndeg, do
                 fasp_smoother_dcsr_sor(&x, n-1, 0,-1, A, &b, steps, relax);
                 break;
             default:
-                printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+                printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
         } 
         
         // store to B
         B.IA[i] = i*n;
-        memcpy(&(B.JA[i*n]), index, n*sizeof(int));
-        memcpy(&(B.val[i*n]), x.val, x.row*sizeof(double));
+        memcpy(&(B.JA[i*n]), index, n*sizeof(INT));
+        memcpy(&(B.val[i*n]), x.val, x.row*sizeof(REAL));
         
     }
     

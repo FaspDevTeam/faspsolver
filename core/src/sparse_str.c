@@ -14,6 +14,7 @@
 
 /**
  * \fn void fasp_dstr_init (dSTRmat *A)
+ *
  * \brief Initialize sparse matrix on structured grid
  *
  * \param *A pointer to the dSTRmat matrix
@@ -36,7 +37,8 @@ void fasp_dstr_init (dSTRmat *A)
 }
 
 /**
- * \fn dSTRmat fasp_dstr_create (int nx, int ny, int nz, int nc, int nband, int *offsets)
+ * \fn dSTRmat fasp_dstr_create (INT nx, INT ny, INT nz, INT nc, INT nband, INT *offsets)
+ *
  * \brief Create STR sparse matrix data memory space
  *
  * \param nx      integer, number of grids in x direction
@@ -49,16 +51,16 @@ void fasp_dstr_init (dSTRmat *A)
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date 05/17/2010 
  */
-dSTRmat fasp_dstr_create (int nx, 
-													int ny, 
-													int nz, 
-													int nc, 
-													int nband, 
-													int *offsets)
+dSTRmat fasp_dstr_create (INT nx, 
+                          INT ny, 
+                          INT nz, 
+                          INT nc, 
+                          INT nband, 
+                          INT *offsets)
 {	
 	dSTRmat A;
 	
-	unsigned int i;
+	unsigned INT i;
 	
 	A.nx=nx; A.ny=ny; A.nz=nz;
 	A.nc=nc;
@@ -66,16 +68,16 @@ dSTRmat fasp_dstr_create (int nx,
 	A.ngrid=A.nxy*A.nz;
 	A.nband=nband;
 	
-	A.offsets=(int*)fasp_mem_calloc(nband, sizeof(int));
+	A.offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
 	
 	for (i=0;i<nband;++i) A.offsets[i]=offsets[i];
 	
-	A.diag=(double*)fasp_mem_calloc(A.ngrid*A.nc*A.nc, sizeof(double));
+	A.diag=(REAL*)fasp_mem_calloc(A.ngrid*A.nc*A.nc, sizeof(REAL));
 	
-	A.offdiag=(double**)fasp_mem_calloc(nband, sizeof(double*));
+	A.offdiag=(REAL**)fasp_mem_calloc(nband, sizeof(REAL*));
 	
 	for(i=0;i<A.nband;++i) {
-		A.offdiag[i]=(double*)fasp_mem_calloc((A.ngrid-ABS(A.offsets[i]))*A.nc*A.nc, sizeof(double));
+		A.offdiag[i]=(REAL*)fasp_mem_calloc((A.ngrid-ABS(A.offsets[i]))*A.nc*A.nc, sizeof(REAL));
 	}
 	
 	return(A);
@@ -83,7 +85,9 @@ dSTRmat fasp_dstr_create (int nx,
 
 
 /**
- * \fn void fasp_dstr_alloc(int nx, int ny, int nz, int nxy, int ngrid, int nband, int nc, int *offsets, dSTRmat *A)
+ * \fn void fasp_dstr_alloc (INT nx, INT ny, INT nz, INT nxy, INT ngrid, INT nband, 
+ *                           INT nc, INT *offsets, dSTRmat *A)
+ *
  * \brief Allocate STR sparse matrix memory space
  *
  * \param nx     integer, number of grids in x direction
@@ -98,17 +102,17 @@ dSTRmat fasp_dstr_create (int nx,
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date 05/17/2010  
  */
-void fasp_dstr_alloc(int nx, 
-										 int ny, 
-										 int nz, 
-										 int nxy, 
-										 int ngrid, 
-										 int nband, 
-										 int nc,
-										 int *offsets, 
-										 dSTRmat *A)
+void fasp_dstr_alloc(INT nx, 
+                     INT ny, 
+                     INT nz, 
+                     INT nxy, 
+                     INT ngrid, 
+                     INT nband, 
+                     INT nc,
+                     INT *offsets, 
+                     dSTRmat *A)
 {	
-	int i;
+	INT i;
 	
 	A->nx=nx;
 	A->ny=ny;
@@ -118,21 +122,22 @@ void fasp_dstr_alloc(int nx,
 	A->nband=nband;
 	A->nc=nc;
 	
-	A->offsets=(int*)fasp_mem_calloc(nband, sizeof(int));
+	A->offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
 	
 	for (i=0;i<nband;++i) A->offsets[i]=offsets[i];
 	
-	A->diag=(double*)fasp_mem_calloc(ngrid*nc*nc, sizeof(double));
+	A->diag=(REAL*)fasp_mem_calloc(ngrid*nc*nc, sizeof(REAL));
 	
-	A->offdiag = (double **)fasp_mem_calloc(A->nband, sizeof(double*));
+	A->offdiag = (REAL **)fasp_mem_calloc(A->nband, sizeof(REAL*));
 	
 	for (i=0;i<nband;++i) {
-		A->offdiag[i]=(double*)fasp_mem_calloc((ngrid-ABS(offsets[i]))*nc*nc, sizeof(double));
+		A->offdiag[i]=(REAL*)fasp_mem_calloc((ngrid-ABS(offsets[i]))*nc*nc, sizeof(REAL));
 	}
 }
 
 /**
  * \fn void fasp_dstr_free (dSTRmat *A)
+ *
  * \brief Free STR sparse matrix data memeory space
  *
  * \param *A   pointer to the dSTRmat matrix
@@ -142,7 +147,7 @@ void fasp_dstr_alloc(int nx,
  */
 void fasp_dstr_free (dSTRmat *A)
 {		
-	unsigned int i;
+	unsigned INT i;
 	
 	fasp_mem_free(A->offsets);
 	fasp_mem_free(A->diag);
@@ -159,7 +164,9 @@ void fasp_dstr_free (dSTRmat *A)
 
 /**
  * \fn void fasp_dstr_cp (dSTRmat *A, dSTRmat *A1)
+ *
  * \brief copy a dSTRmat to a new one A1=A
+ *
  * \param *A pointer to the dSTRmat matrix
  * \param *A1 pointer to the dSTRmat matrix
  * 
@@ -167,9 +174,11 @@ void fasp_dstr_free (dSTRmat *A)
  * \date 04/21/2010  
  */
 void fasp_dstr_cp (dSTRmat *A, 
-									 dSTRmat *A1)
+                   dSTRmat *A1)
 {		
-	int i;
+    const INT nc2 = (A->nc)*(A->nc);
+
+    INT i;
 	A1->nx=A->nx;
 	A1->ny=A->ny;
 	A1->nz=A->nz;
@@ -177,13 +186,11 @@ void fasp_dstr_cp (dSTRmat *A,
 	A1->ngrid=A->ngrid;
 	A1->nc=A->nc;
 	A1->nband=A->nband;
-	
-	int nc2 = (A->nc)*(A->nc);
-	
-	memcpy(A1->offsets,A->offsets,(A->nband)*sizeof(int));
-	memcpy(A1->diag,A->diag,(A->ngrid*nc2)*sizeof(double));
+		
+	memcpy(A1->offsets,A->offsets,(A->nband)*sizeof(INT));
+	memcpy(A1->diag,A->diag,(A->ngrid*nc2)*sizeof(REAL));
 	for (i=0;i<A->nband;++i)
-		memcpy(A1->offdiag[i],A->offdiag[i],((A->ngrid - ABS(A->offsets[i]))*nc2)*sizeof(double)); 
+		memcpy(A1->offdiag[i],A->offdiag[i],((A->ngrid - ABS(A->offsets[i]))*nc2)*sizeof(REAL)); 
 	
 }
 

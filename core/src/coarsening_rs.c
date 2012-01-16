@@ -5,13 +5,26 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
+// Standard linked list functions mimicing hypre
+static void dispose_elt (LinkList element_ptr);
+static void remove_point (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, INT measure, INT index, INT *lists, INT *where);
+static LinkList create_elt (INT Item);
+static void enter_list (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, INT measure, INT index, INT *lists, INT *where);
+
+// private routines for RS coarsening
+static void generate_S (dCSRmat *A, iCSRmat *S, AMG_param *param);
+static void generate_S_rs (dCSRmat *A, iCSRmat *S, REAL epsilon_str, INT coarsening_type);
+static INT form_coarse_level (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row);
+static void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col);
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn int fasp_amg_coarsening_rs(dCSRmat *A, ivector *vertices, dCSRmat *P, 
- *                                AMG_param *param)
+ * \fn INT fasp_amg_coarsening_rs (dCSRmat *A, ivector *vertices, dCSRmat *P, 
+ *                                 AMG_param *param)
+ *
  * \brief RS coarsening
  *
  * \param *A          pointer to the coefficient matrix, the index starts from zero
@@ -23,27 +36,27 @@
  * \param *param      pointer to AMG parameters
  * \return            SUCCESS or Error message
  *
- * Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller 
+ * \note Ref Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller 
  *           Appendix P475 A.7 (by A. Brandt, P. Oswald and K. Stuben)
  *           Academic Press Inc., San Diego, CA, 2001. 
  * 
  * \author Xuehai Huang, Chensong Zhang, Xiaozhe Hu, Ludmil Zikatanov
  * \date 09/06/2010
  */
-int fasp_amg_coarsening_rs (dCSRmat *A, 
-														ivector *vertices, 
-														dCSRmat *P, 
-														AMG_param *param)
+INT fasp_amg_coarsening_rs (dCSRmat *A, 
+                            ivector *vertices, 
+                            dCSRmat *P, 
+                            AMG_param *param)
 {	
-	const int   coarsening_type = param->coarsening_type;
-	const int   row = A->row;
-	const double epsilon_str = param->strong_threshold;
+	const INT   coarsening_type = param->coarsening_type;
+	const INT   row = A->row;
+	const REAL epsilon_str = param->strong_threshold;
 	
-	int status = SUCCESS, col = 0;	
+	INT status = SUCCESS, col = 0;	
 	iCSRmat S; // strong n-couplings
 	
 #if DEBUG_MODE
-	printf("coarsening_rs ...... [Start]\n");
+	printf("### DEBUG: fasp_amg_coarsening_rs ...... [Start]\n");
 #endif
 	
 #if CHMEM_MODE
@@ -51,7 +64,7 @@ int fasp_amg_coarsening_rs (dCSRmat *A,
 #endif
 	
 #if DEBUG_MODE
-	printf("Step 1. form dependent sets ......\n");
+	printf("### DEBUG: Step 1. form dependent sets ......\n");
 #endif
 	
 	// Step 1: generate S and S transpose
@@ -66,7 +79,7 @@ int fasp_amg_coarsening_rs (dCSRmat *A,
 	if (S.nnz == 0) return RUN_FAIL;
 	
 #if DEBUG_MODE
-	printf("Step 2. choose C points ......\n");
+	printf("### DEBUG: Step 2. choose C points ......\n");
 #endif
 	
 	// Step 2: standard coarsening algorithm 
@@ -80,14 +93,14 @@ int fasp_amg_coarsening_rs (dCSRmat *A,
 	}
 	
 #if DEBUG_MODE
-	printf("Step 3. find support of C points ......\n");
+	printf("### DEBUG: Step 3. find support of C points ......\n");
 #endif
 	
 	// Step 3: generate sparsity pattern of P
-	 generate_sparsity_P(P, &S, vertices, row, col);
+    generate_sparsity_P(P, &S, vertices, row, col);
 	
 #if DEBUG_MODE
-	printf("coarsening_rs ...... [Finish]\n");
+	printf("### DEBUG: fasp_amg_coarsening_rs ...... [Finish]\n");
 #endif
 	
 	fasp_mem_free(S.IA);
@@ -107,38 +120,39 @@ int fasp_amg_coarsening_rs (dCSRmat *A,
 #define LIST_HEAD -1
 #define LIST_TAIL -2
 
-/**************************************************************
+/**
+ * \fn static void dispose_elt( LinkList element_ptr )
  *
- * dispose_elt(): dispose of memory space used by the element
- *                pointed to by element_ptr.  Use the 'free()'
- *                system call to return it to the free memory 
- *                pool.
+ * \brief free memory space used by element_ptr
  *
- **************************************************************/
-void dispose_elt( LinkList element_ptr )
+ * \param element_ptr   pointer to the elements
+ */
+static void dispose_elt (LinkList element_ptr)
 {
 	if (element_ptr) fasp_mem_free( element_ptr );
 }
 
-/*****************************************************************
- * 
- * remove_point:   removes a point from the lists
+/**
+ * \fn static void remove_point (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
+ *                               INT measure, INT index, INT *lists, INT *where)
  *
- ****************************************************************/
-void remove_point(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
-												 int measure, int index, int *lists, int *where)
+ * \brief removes a point from the lists
+ */
+static void remove_point (LinkList *LoL_head_ptr, 
+                          LinkList *LoL_tail_ptr,
+                          INT measure, 
+                          INT index, 
+                          INT *lists, 
+                          INT *where)
 {
-	LinkList   LoL_head = *LoL_head_ptr;
-	LinkList   LoL_tail = *LoL_tail_ptr;
-	LinkList   list_ptr;
-	
-	list_ptr = LoL_head;
+	LinkList LoL_head = *LoL_head_ptr;
+	LinkList LoL_tail = *LoL_tail_ptr;
+	LinkList list_ptr = LoL_head;
 	
 	do
 	{
 		if (measure == list_ptr->data)
 		{
-			
 			/* point to be removed is only point on list,
 			 which must be destroyed */
 			if (list_ptr->head == index && list_ptr->tail == index)
@@ -211,12 +225,12 @@ void remove_point(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
 	return;
 }
 
-/*****************************************************************
+/**
+ * \fn static LinkList create_elt (INT Item)
  *
- * create_elt() : Create an element using Item for its data field
- *
- *****************************************************************/
-LinkList create_elt( int Item )
+ * \brief Create an element using Item for its data field
+ */
+static LinkList create_elt (INT Item)
 {
 	LinkList new_elt_ptr;
 	
@@ -234,13 +248,18 @@ LinkList create_elt( int Item )
 	return (new_elt_ptr);
 }
 
-/*****************************************************************
- * 
- * enter_list   places point in new list
+/**
+ * \fn static void enter_list (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
+ *                             INT measure, INT index, INT *lists, INT *where)
  *
- ****************************************************************/
-void enter_list(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
-											 int measure, int index, int *lists, int *where)
+ * \brief places point in new list
+ */
+static void enter_list (LinkList *LoL_head_ptr, 
+                        LinkList *LoL_tail_ptr,
+                        INT measure, 
+                        INT index, 
+                        INT *lists, 
+                        INT *where)
 {
 	LinkList   LoL_head = *LoL_head_ptr;
 	LinkList   LoL_tail = *LoL_tail_ptr;
@@ -248,7 +267,7 @@ void enter_list(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
 	LinkList   list_ptr;
 	LinkList   new_ptr;
 	
-	int         old_tail;
+	INT         old_tail;
 	
 	list_ptr =  LoL_head;
 	
@@ -270,8 +289,8 @@ void enter_list(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
 	{
 		do
 		{
-      if (measure > list_ptr->data)
-      {
+            if (measure > list_ptr->data)
+            {
 				new_ptr = create_elt(measure);
 				
 				new_ptr->head = index;
@@ -298,18 +317,18 @@ void enter_list(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
 				*LoL_head_ptr = LoL_head;
 				*LoL_tail_ptr = LoL_tail; 
 				return;
-      }
-      else if (measure == list_ptr->data)
-      {
+            }
+            else if (measure == list_ptr->data)
+            {
 				old_tail = list_ptr->tail;
 				lists[old_tail] = index;
 				where[index] = old_tail;
 				lists[index] = LIST_TAIL;
 				list_ptr->tail = index;
 				return;
-      }
-      
-      list_ptr = list_ptr->next_elt;
+            }
+            
+            list_ptr = list_ptr->next_elt;
 		} while (list_ptr != NULL);
 		
 		new_ptr = create_elt(measure);   
@@ -329,46 +348,50 @@ void enter_list(LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
 }
 
 /**
- * \fn void generate_S(dCSRmat *A, iCSRmat *S, AMG_param *param)
+ * \fn static void generate_S (dCSRmat *A, iCSRmat *S, AMG_param *param)
+ *
  * \brief generate the set of all strong couplings S
+ *
  * \param *A pointer to the coefficient matrix
  * \param *S pointer to the set of all strong couplings matrix
  * \param *param pointer to AMG parameters
  */
-void generate_S(dCSRmat *A, iCSRmat *S, AMG_param *param)
+static void generate_S (dCSRmat *A, 
+                        iCSRmat *S, 
+                        AMG_param *param)
 {
-	double max_row_sum=param->max_row_sum;
-	double epsilon_str=param->strong_threshold;
-	const int row=A->row, col=A->col;
-	const int nnz=A->IA[row]-A->IA[0];
+	REAL max_row_sum=param->max_row_sum;
+	REAL epsilon_str=param->strong_threshold;
+	const INT row=A->row, col=A->col;
+	const INT nnz=A->IA[row]-A->IA[0];
 	
-	int index, i, j, begin_row, end_row;
-	int *ia=A->IA, *ja=A->JA;
-	double *aj=A->val;
+	INT index, i, j, begin_row, end_row;
+	INT *ia=A->IA, *ja=A->JA;
+	REAL *aj=A->val;
 	
 	// get the diagnal entry of A
 	dvector diag; fasp_dcsr_getdiag(0, A, &diag);
 	
 	/** Step 1: generate S */
-	double row_scale, row_sum;
+	REAL row_scale, row_sum;
 	
 	// copy the structure of A to S
 	S->row=row; S->col=col; S->nnz=nnz; S->val=NULL;
 	
-	S->IA=(int*)fasp_mem_calloc(row+1, sizeof(int));
+	S->IA=(int*)fasp_mem_calloc(row+1, sizeof(INT));
 	
 #if CHMEM_MODE
-	total_alloc_mem += (row+1)*sizeof(double);
+	total_alloc_mem += (row+1)*sizeof(REAL);
 #endif
 	
-	S->JA=(int*)fasp_mem_calloc(nnz, sizeof(int));
+	S->JA=(int*)fasp_mem_calloc(nnz, sizeof(INT));
 	
 #if CHMEM_MODE
-	total_alloc_mem += (nnz)*sizeof(int);
+	total_alloc_mem += (nnz)*sizeof(INT);
 #endif
 	
-	memcpy(S->IA,ia,(row+1)*sizeof(int));
-	memcpy(S->JA,ja,    nnz*sizeof(int));
+	memcpy(S->IA,ia,(row+1)*sizeof(INT));
+	memcpy(S->JA,ja,    nnz*sizeof(INT));
 	
 	for (i=0;i<row;++i) {
 		
@@ -418,7 +441,7 @@ void generate_S(dCSRmat *A, iCSRmat *S, AMG_param *param)
 	if (index > 0) {
 		S->IA[row]=index;
 		S->nnz=index;
-		S->JA=(int*)fasp_mem_realloc(S->JA,index*sizeof(int));
+		S->JA=(int*)fasp_mem_realloc(S->JA,index*sizeof(INT));
 	}
 	else {
 		S->nnz = 0;
@@ -429,17 +452,23 @@ void generate_S(dCSRmat *A, iCSRmat *S, AMG_param *param)
 }
 
 /**
- * \fn void generate_S_rs(dCSRmat *A, iCSRmat *S, double epsilon_str, int coarsening_type)
- * \brief generate the set of all strong negative couplings(coarsening_type=2) or strong absolute couplings(coarsening_type=3)
+ * \fn static void generate_S_rs (dCSRmat *A, iCSRmat *S, REAL epsilon_str, INT coarsening_type)
+ *
+ * \brief generate the set of all strong negative couplings(coarsening_type=2) or strong 
+ *        absolute couplings(coarsening_type=3)
+ *
  * \param *A pointer to the coefficient matrix
  * \param *S pointer to the set of all strong couplings matrix
  * \param epsilon_str strong coupled ratio
  * \param coarsening_type coarsening type(2: strong negative couplings, 3: strong absolute couplings)
  */
-void generate_S_rs(dCSRmat *A, iCSRmat *S, double epsilon_str, int coarsening_type)
+static void generate_S_rs (dCSRmat *A, 
+                           iCSRmat *S, 
+                           REAL epsilon_str, 
+                           INT coarsening_type)
 {
-	int i,j;
-	double *amax=(double *)fasp_mem_calloc(A->row,sizeof(double));
+	INT i,j;
+	REAL *amax=(REAL *)fasp_mem_calloc(A->row,sizeof(REAL));
 	
 	// get the maximum absolute negative value data in each row of A
 	if (coarsening_type==2) // original RS coarsening, just consider negative strong coupled
@@ -477,7 +506,7 @@ void generate_S_rs(dCSRmat *A, iCSRmat *S, double epsilon_str, int coarsening_ty
 	S->col=A->col;
 	S->val=NULL;
 	S->JA=NULL;
-	S->IA=(int*)fasp_mem_calloc(S->row+1, sizeof(int));
+	S->IA=(int*)fasp_mem_calloc(S->row+1, sizeof(INT));
 	
 	if (coarsening_type==2)
 	{
@@ -510,8 +539,8 @@ void generate_S_rs(dCSRmat *A, iCSRmat *S, double epsilon_str, int coarsening_ty
 	for (i=0;i<S->row;++i) S->IA[i+1]+=S->IA[i];
 	
 	// step 2: Find the structure JA of S
-	int index=0;
-	S->JA=(int*)fasp_mem_calloc(S->IA[S->row],sizeof(int));
+	INT index=0;
+	S->JA=(int*)fasp_mem_calloc(S->IA[S->row],sizeof(INT));
 	
 	if (coarsening_type==2)
 	{
@@ -547,27 +576,32 @@ void generate_S_rs(dCSRmat *A, iCSRmat *S, double epsilon_str, int coarsening_ty
 }
 
 /**
- * \fn static int form_coarse_level(dCSRmat *A, iCSRmat *S, ivector *vertices, int row)
+ * \fn static INT form_coarse_level (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row)
+ *
  * \brief find coarse level points
+ *
  * \param *A pointer to the coefficient matrix
  * \param *S pointer to the set of all strong couplings matrix
  * \param *vertices pointer to the type of vertices (points)
  * \param row integer number of rows of P
  * \return col integer number of cols of P
  */
-int form_coarse_level(dCSRmat *A, iCSRmat *S, ivector *vertices, int row)
+static INT form_coarse_level (dCSRmat *A, 
+                              iCSRmat *S, 
+                              ivector *vertices, 
+                              INT row)
 {
-	int col = 0; // initialize col(P): returning output 
-	unsigned int maxlambda, maxnode, num_left=0;	
-	double measure, new_meas;
+	INT col = 0; // initialize col(P): returning output 
+	unsigned INT maxlambda, maxnode, num_left=0;	
+	REAL measure, new_meas;
 	
-	int *ia=A->IA, *vec=vertices->val;
-	int ci_tilde = -1, ci_tilde_mark = -1;
-	int set_empty = 1, C_i_nonempty = 0;
-	int ji,jj,i,j,k,l,index;
+	INT *ia=A->IA, *vec=vertices->val;
+	INT ci_tilde = -1, ci_tilde_mark = -1;
+	INT set_empty = 1, C_i_nonempty = 0;
+	INT ji,jj,i,j,k,l,index;
 	
-	int *work = (int*)fasp_mem_calloc(4*row,sizeof(int));	
-	int *lists = work, *where = lists+row, *lambda = where+row, *graph_array = lambda+row;
+	INT *work = (int*)fasp_mem_calloc(4*row,sizeof(INT));	
+	INT *lists = work, *where = lists+row, *lambda = where+row, *graph_array = lambda+row;
 	
 	LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;	
 	
@@ -603,7 +637,7 @@ int form_coarse_level(dCSRmat *A, iCSRmat *S, ivector *vertices, int row)
 				enter_list(&LoL_head, &LoL_tail, lambda[i], i, lists, where);
 			}
 			else {
-				if (measure<0) printf("Warning: negative lambda!\n");
+				if (measure<0) printf("### WARNING: negative lambda!\n");
 				vec[i]=FGPT; // set i as fine node
 				for (k=S->IA[i];k<S->IA[i+1];++k) {
 					j=S->JA[k];
@@ -766,24 +800,30 @@ int form_coarse_level(dCSRmat *A, iCSRmat *S, ivector *vertices, int row)
 }
 
 /**
- * \fn static void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int col)
+ * \fn static void generate_sparsity_P (dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col)
+ *
  * \brief find coarse level points
+ *
  * \param *P pointer to the prolongation matrix
  * \param *S pointer to the set of all strong couplings matrix
  * \param *vertices pointer to the type of vertices (points)
  * \param row integer number of rows of P
  * \param col integer number of cols of P
  */
-void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int col)
+static void generate_sparsity_P (dCSRmat *P, 
+                                 iCSRmat *S, 
+                                 ivector *vertices, 
+                                 INT row, 
+                                 INT col)
 {
-	int i,j,k,index=0;
-	int *vec=vertices->val;
+	INT i,j,k,index=0;
+	INT *vec=vertices->val;
 	
 	P->row=row; P->col=col;	
-	P->IA=(int*)fasp_mem_calloc(row+1, sizeof(int));	
+	P->IA=(int*)fasp_mem_calloc(row+1, sizeof(INT));	
 	
 #if CHMEM_MODE
-	total_alloc_mem += (row+1)*sizeof(int);
+	total_alloc_mem += (row+1)*sizeof(INT);
 #endif
 	
 	// step 1: Find the structure IA of P first		
@@ -813,12 +853,12 @@ void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int
 	P->nnz=P->IA[P->row]-P->IA[0];
 	
 	// step 2: Find the structure JA of P
-	P->JA=(int*)fasp_mem_calloc(P->nnz,sizeof(int));	
-	P->val=(double*)fasp_mem_calloc(P->nnz,sizeof(double));
+	P->JA=(int*)fasp_mem_calloc(P->nnz,sizeof(INT));	
+	P->val=(REAL*)fasp_mem_calloc(P->nnz,sizeof(REAL));
 	
 #if CHMEM_MODE
-	total_alloc_mem += (P->nnz)*sizeof(int);
-	total_alloc_mem += (P->nnz)*sizeof(double);
+	total_alloc_mem += (P->nnz)*sizeof(INT);
+	total_alloc_mem += (P->nnz)*sizeof(REAL);
 #endif
 	
 	for (i=0;i<row;++i)

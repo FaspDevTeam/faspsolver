@@ -12,14 +12,17 @@
 /*---------------------------------*/
 
 /**
- * \fn int fasp_smat_lu_decomp (double *A, int pivot[], int n) 
+ * \fn SHORT fasp_smat_lu_decomp (REAL *A, INT pivot[], INT n)
+ *
  * \brief LU decomposition of A usind Doolittle's method
  *
  * \param *A      pointer to the full matrix
  * \param pivot   pivoting positions
  * \param n       size of matrix A
- * \return        1 if succeed, 0 if fail
  *
+ * \return        SUCCESS if succeed, RUN_FAIL if fail
+ *
+ * \note
  * Use Doolittle's method to decompose the n x n matrix A into a unit 
  * lower triangular matrix L and an upper triangular matrix U such that 
  * A = LU. The matrices L and U replace the matrix A. The diagonal elements 
@@ -38,13 +41,13 @@
  * \author Xuehai Huang
  * \date 04/02/2009 
  */
-int fasp_smat_lu_decomp (double *A, 
-												 int pivot[], 
-												 int n) 
+SHORT fasp_smat_lu_decomp (REAL *A, 
+                           INT pivot[], 
+                           INT n) 
 {
-	int i, j, k;
-	double *p_k=NULL, *p_row=NULL, *p_col=NULL;
-	double max;
+	INT i, j, k;
+	REAL *p_k=NULL, *p_row=NULL, *p_col=NULL;
+	REAL max;
 	
 	/* For each row and column, k = 0, ..., n-1, */
 	for (k = 0, p_k = A; k < n; p_k += n, k++) {
@@ -83,11 +86,12 @@ int fasp_smat_lu_decomp (double *A,
 		
 	}
 	
-	return 0;
+	return SUCCESS;
 }
 
 /**
- * \fn int fasp_smat_lu_solve (double *A, double b[], int pivot[], double x[], int n)
+ * \fn SHORT fasp_smat_lu_solve (REAL *A, REAL b[], INT pivot[], REAL x[], INT n)
+ *
  * \brief Solving Ax=b using LU decomposition
  *
  * \param *A    pointer to the full matrix
@@ -95,8 +99,10 @@ int fasp_smat_lu_decomp (double *A,
  * \param pivot pivoting positions
  * \param x     solution array 
  * \param n     size of matrix A
- * \return      0 if succeed, else if failed
  *
+ * \return      SHORT if succeed, RUN_FAIL if failed
+ *
+ * \note
  * This routine uses Doolittle's method to solve the linear equation Ax = b.
  * This routine is called after the matrix A has been decomposed into a product
  * of a unit lower triangular matrix L and an upper triangular matrix U with 
@@ -106,15 +112,15 @@ int fasp_smat_lu_decomp (double *A,
  * \author Xuehai Huang
  * \date 04/02/2009
  */   
-int fasp_smat_lu_solve (double *A, 
-												double b[], 
-												int pivot[], 
-												double x[], 
-												int n)
+SHORT fasp_smat_lu_solve (REAL *A, 
+                          REAL b[], 
+                          INT pivot[], 
+                          REAL x[], 
+                          INT n)
 {
-	int i, k;
-	double *p_k;
-	double dum;
+	INT i, k;
+	REAL *p_k;
+	REAL dum;
 	
 	/* solve Ly = b	*/
 	for (k = 0, p_k = A; k < n; p_k += n, k++) {
@@ -130,8 +136,8 @@ int fasp_smat_lu_solve (double *A,
 		if (*(p_k + k) == 0.0) return -1;
 		x[k] /= *(p_k + k);
 	}
-  
-	return 0;
+    
+	return SUCCESS;
 }
 
 /*---------------------------------*/
@@ -141,17 +147,17 @@ int fasp_smat_lu_solve (double *A,
 /** 
  //A simple test example can be written as the following
  
- int main (int argc, const char * argv[]) 
+ INT main (INT argc, const char * argv[]) 
  {
- double A[3][3] = {{0.0, 1.0, 4.0},
+ REAL A[3][3] = {{0.0, 1.0, 4.0},
  {4.0, 1.0, 0.0},
  {1.0, 4.0, 1.0}};  
  
- double b[3] = {1, 1, 1}, x[3];
+ REAL b[3] = {1, 1, 1}, x[3];
  
- int pivot[3];          
+ INT pivot[3];          
  
- int ret, i, j;
+ INT ret, i, j;
  
  ret = lu_decomp(&A[0][0], pivot, 3); // LU decomposition
  

@@ -12,22 +12,24 @@
 /*---------------------------------*/
 
 /**
- * \fn double fasp_dcsr_eig(dCSRmat *A, double tol, int maxit) 
- * \brief compute the largest eigenvalue of A;
+ * \fn REAL fasp_dcsr_eig (dCSRmat *A, const REAL tol, const INT maxit)
  *
- * \param *A			pointer to the dCSRmat
- * \param tol			tolerance
- * \param maxit	max number of iterations
- * \return        the  largest eigenvalue
+ * \brief Approximate the largest eigenvalue of A by the power method
+ *
+ * \param *A     pointer to the dCSRmat
+ * \param tol    tolerance
+ * \param maxit	 max number of iterations
+ *
+ * \return       the largest eigenvalue
  *
  * \author Xiaozhe Hu
  * \date 01/25/2011 
  */
-double fasp_dcsr_eig (dCSRmat *A, 
-											double tol, 
-										  int maxit)
+REAL fasp_dcsr_eig (dCSRmat *A, 
+                    const REAL tol, 
+                    const INT maxit)
 {
-	double eigenvalue=0.0, temp=1.0;
+	REAL eigenvalue=0.0, temp=1.0;
 	
 	dvector x, y;
 	fasp_dvec_alloc(A->row, &x); 
@@ -35,8 +37,8 @@ double fasp_dcsr_eig (dCSRmat *A,
 	fasp_blas_array_ax(A->row, 1.0/fasp_blas_dvec_norm2(&x), x.val);
 	fasp_dvec_alloc(A->row, &y);
 	
-	double L2_norm_y;
-	unsigned int i;
+	REAL L2_norm_y;
+	unsigned INT i;
 	
 	for (i=0; i<maxit; i++)
 	{
@@ -51,21 +53,20 @@ double fasp_dcsr_eig (dCSRmat *A,
 		eigenvalue = fasp_blas_dcsr_vmv(A, y.val, y.val);
 		
 		// convergence test
-		if ((ABS(eigenvalue - temp)/ABS(temp))<tol)
-		{
-			goto FINISHED;
-		}
+		if ((ABS(eigenvalue - temp)/ABS(temp))<tol) goto FINISHED;
 		
 		// 
 		fasp_dvec_cp(&y, &x);
 		temp = eigenvalue;
 	}
-
+    
 FINISHED:
 	fasp_dvec_free(&x);
 	fasp_dvec_free(&y);
+    
 	return eigenvalue;
- }
- 
- 
- 
+}
+
+/*---------------------------------*/
+/*--        End of File          --*/
+/*---------------------------------*/

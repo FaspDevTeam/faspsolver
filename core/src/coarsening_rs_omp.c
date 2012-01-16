@@ -1,4 +1,4 @@
-/*! \file coarsening_rs.c
+/*! \file coarsening_rs_omp.c
  *  \brief Coarsening with a modified Ruge-Stuben strategy.
  */
 
@@ -149,16 +149,16 @@ void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int 
 	// copy the structure of A to S
 	S->row=row; S->col=col; S->nnz=nnz; S->val=NULL;
 	
-	S->IA=(int*)fasp_mem_calloc(row_plus_one, sizeof(int));
+	S->IA=(int*)fasp_mem_calloc(row_plus_one, sizeof(INT));
 	
 #if CHMEM_MODE
 	total_alloc_mem += (row+1)*sizeof(double);
 #endif
 	
-	S->JA=(int*)fasp_mem_calloc(nnz, sizeof(int));
+	S->JA=(int*)fasp_mem_calloc(nnz, sizeof(INT));
 	
 #if CHMEM_MODE
-	total_alloc_mem += (nnz)*sizeof(int);
+	total_alloc_mem += (nnz)*sizeof(INT);
 #endif
 	
 	fasp_iarray_cp_omp(row_plus_one, ia, S->IA, nthreads,openmp_holds);
@@ -250,7 +250,7 @@ void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int 
 	if (index > 0) {
 		S->IA[row]=index;
 		S->nnz=index;
-		S->JA=(int*)fasp_mem_realloc(S->JA,index*sizeof(int));
+		S->JA=(int*)fasp_mem_realloc(S->JA,index*sizeof(INT));
 	}
 	else {
 		S->nnz = 0;
@@ -291,7 +291,7 @@ INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, IN
 	int myend;
 	int stride_i;
 	
-	int *work = (int*)fasp_mem_calloc(4*row,sizeof(int));
+	int *work = (int*)fasp_mem_calloc(4*row,sizeof(INT));
 	int *lists = work, *where = lists+row, *lambda = where+row, *graph_array = lambda+row;
 	
 	LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;	
@@ -553,10 +553,10 @@ void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row,
 	int *vec=vertices->val;
 	
 	P->row=row; P->col=col;	
-	P->IA=(int*)fasp_mem_calloc(row+1, sizeof(int));	
+	P->IA=(int*)fasp_mem_calloc(row+1, sizeof(INT));	
 	
 #if CHMEM_MODE
-	total_alloc_mem += (row+1)*sizeof(int);
+	total_alloc_mem += (row+1)*sizeof(INT);
 #endif
 	
 	// step 1: Find the structure IA of P first
@@ -616,11 +616,11 @@ void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row,
 	P->nnz=P->IA[P->row]-P->IA[0];
 	
 	// step 2: Find the structure JA of P
-	P->JA=(int*)fasp_mem_calloc(P->nnz,sizeof(int));	
+	P->JA=(int*)fasp_mem_calloc(P->nnz,sizeof(INT));	
 	P->val=(double*)fasp_mem_calloc(P->nnz,sizeof(double));
 	
 #if CHMEM_MODE
-	total_alloc_mem += (P->nnz)*sizeof(int);
+	total_alloc_mem += (P->nnz)*sizeof(INT);
 	total_alloc_mem += (P->nnz)*sizeof(double);
 #endif
 	

@@ -13,8 +13,9 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_fwrapper_amg_(int *n, int *nnz, int *ia, int *ja, double *a, double *b, double *u, 
- *     						  double *tol, int *maxit, int *ptrlvl)
+ * \fn void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, REAL *b, REAL *u, 
+ *                              REAL *tol, INT *maxit, INT *ptrlvl)
+ *
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG
  *
  * \param n      num of cols of A
@@ -31,16 +32,16 @@
  * \author Chensong Zhang
  * \date 09/16/2010
  */
-void fasp_fwrapper_amg_ (int *n, 
-												 int *nnz, 
-												 int *ia, 
-												 int *ja, 
-												 double *a, 
-												 double *b, 
-												 double *u, 
-												 double *tol, 
-												 int *maxit, 
-												 int *ptrlvl)
+void fasp_fwrapper_amg_ (INT *n, 
+                         INT *nnz, 
+                         INT *ia, 
+                         INT *ja, 
+                         REAL *a, 
+                         REAL *b, 
+                         REAL *u, 
+                         REAL *tol, 
+                         INT *maxit, 
+                         INT *ptrlvl)
 {
 	dCSRmat    mat;      // coefficient matrix
 	dvector    rhs, sol; // right-hand-side, solution
@@ -52,7 +53,7 @@ void fasp_fwrapper_amg_ (int *n,
 	amgparam.maxit    = *maxit;
 	
 	mat.row = *n; mat.col = *n; mat.nnz = *nnz;
-	mat.IA = ia;  mat.JA  = ja; mat.val = a;
+	mat.IA  = ia; mat.JA  = ja; mat.val = a;
 	
 	rhs.row = *n; rhs.val = b;
 	sol.row = *n; sol.val = u;
@@ -61,8 +62,8 @@ void fasp_fwrapper_amg_ (int *n,
 }
 
 /**
- * \fn void fasp_fwrapper_amg_(int *n, int *nnz, int *ia, int *ja, double *a, double *b, double *u, 
- *     						  double *tol, int *maxit, int *ptrlvl)
+ * \fn void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, REAL *b, REAL *u, 
+ *                              REAL *tol, INT *maxit, INT *ptrlvl)
  * \brief Solve Ax=b by Krylov method preconditioned by classic AMG
  *
  * \param n       num of cols of A
@@ -79,16 +80,16 @@ void fasp_fwrapper_amg_ (int *n,
  * \author Chensong Zhang
  * \date 09/16/2010
  */
-void fasp_fwrapper_krylov_amg_ (int *n, 
-																int *nnz, 
-																int *ia, 
-																int *ja, 
-																double *a, 
-																double *b, 
-																double *u, 
-																double *tol, 
-																int *maxit, 
-																int *ptrlvl)
+void fasp_fwrapper_krylov_amg_ (INT *n, 
+                                INT *nnz, 
+                                INT *ia, 
+                                INT *ja, 
+                                REAL *a, 
+                                REAL *b, 
+                                REAL *u, 
+                                REAL *tol, 
+                                INT *maxit, 
+                                INT *ptrlvl)
 {
 	dCSRmat    mat;      // coefficient matrix
 	dvector    rhs, sol; // right-hand-side, solution	
@@ -111,11 +112,12 @@ void fasp_fwrapper_krylov_amg_ (int *n,
 }
 
 /**
- * \fn void fasp_krylov_stokes_(int *nA, int *nnzA, int *ia, int *ja, double *aval, 
- * 												 int *nB, int *nnzB, int *ib, int *jb, double *bval,
- * 												 int *nM, int *nnzM, int *im, int *jm, double *mval,												 
- * 												 double *b, double *u, double *beta,
- * 												 double *tol, int *maxit, int *ptrlvl)
+ * \fn void fasp_krylov_stokes_ (INT *nA, INT *nnzA, INT *ia, INT *ja, REAL *aval, 
+ *                               INT *nB, INT *nnzB, INT *ib, INT *jb, REAL *bval,
+ *                               INT *nM, INT *nnzM, INT *im, INT *jm, REAL *mval,												 
+ *                               REAL *b, REAL *u, REAL *beta,
+ *                               REAL *tol, INT *maxit, INT *ptrlvl)
+ *
  * \brief Solve [A B;B' O]x=b by Krylov method with block diagonal preconditioner
  *
  * \param nA       num of cols of A
@@ -147,32 +149,32 @@ void fasp_fwrapper_krylov_amg_ (int *n,
  * \author Chensong Zhang
  * \date 11/16/2010
  */
-void fasp_fwrapper_krylov_stokes_ (int *nA, 
-																	 int *nnzA, 
-																	 int *ia,
-																	 int *ja,
-																	 double *aval, 
-																	 int *nB,
-																	 int *nnzB, 
-																	 int *ib,
-																	 int *jb,
-																	 double *bval,
-																	 int *nM, 
-																	 int *nnzM,
-																	 int *im, 
-																	 int *jm, 
-																	 double *mval,												 
-																	 int *nP, 
-																	 int *nnzP, 
-																	 int *ip, 
-																	 int *jp, 
-																	 double *pval,												 
-																	 double *b, 
-																	 double *u, 
-																	 double *beta,
-																	 double *tol, 
-																	 int *maxit, 
-																	 int *ptrlvl)
+void fasp_fwrapper_krylov_stokes_ (INT *nA, 
+                                   INT *nnzA, 
+                                   INT *ia,
+                                   INT *ja,
+                                   REAL *aval, 
+                                   INT *nB,
+                                   INT *nnzB, 
+                                   INT *ib,
+                                   INT *jb,
+                                   REAL *bval,
+                                   INT *nM, 
+                                   INT *nnzM,
+                                   INT *im, 
+                                   INT *jm, 
+                                   REAL *mval,												 
+                                   INT *nP, 
+                                   INT *nnzP, 
+                                   INT *ip, 
+                                   INT *jp, 
+                                   REAL *pval,												 
+                                   REAL *b, 
+                                   REAL *u, 
+                                   REAL *beta,
+                                   REAL *tol, 
+                                   INT *maxit, 
+                                   INT *ptrlvl)
 {
 	dCSRmat matA, matB, matBt, matM, matP, zero;      
 	block_dCSRmat mat; // coefficient matrix
@@ -184,21 +186,21 @@ void fasp_fwrapper_krylov_stokes_ (int *nA,
 	// initialize itsolver parameters
 	fasp_param_solver_init(&itparam);
 	itparam.itsolver_type = SOLVER_MinRes;
-	itparam.tol         = *tol;
-	itparam.print_level = *ptrlvl;
-	itparam.maxit       = *maxit;
+	itparam.tol           = *tol;
+	itparam.print_level   = *ptrlvl;
+	itparam.maxit         = *maxit;
 	
 	// initialize precond parameters
 	psparam.AMG_type = CLASSIC_AMG;
-	psparam.print_level = 1;
-	psparam.max_levels = 10;
+	psparam.print_level = *ptrlvl;
+	psparam.max_levels = 15;
 	
 	// initialize matrix	
 	matA.row = *nA; matA.col = *nA; matA.nnz = *nnzA;
-	matA.IA = ia;  matA.JA  = ja; matA.val = aval;
+	matA.IA  = ia;  matA.JA  = ja; matA.val = aval;
 	
 	matB.row = *nB; matB.col = *nB; matB.nnz = *nnzB;
-	matB.IA = ib;  matB.JA  = jb; matB.val = bval;
+	matB.IA  = ib;  matB.JA  = jb; matB.val = bval;
 	
 	fasp_dcsr_init(&zero); // zero matrix
 	
@@ -210,10 +212,10 @@ void fasp_fwrapper_krylov_stokes_ (int *nA,
 	mat.blocks[3] = &zero; 
 	
 	matM.row = *nB; matM.col = *nB; matM.nnz = *nnzB;
-	matM.IA = ib;  matM.JA  = jb; matM.val = bval;
+	matM.IA  = ib;  matM.JA  = jb;  matM.val = bval;
 	
 	matP.row = *nP; matP.col = *nP; matP.nnz = *nnzP;
-	matP.IA = ip;  matP.JA  = jp; matP.val = pval;
+	matP.IA  = ip;  matP.JA  = jp;  matP.val = pval;
 	
 	rhs.row = *nA+*nB; rhs.val = b;
 	sol.row = *nA+*nB; sol.val = u;

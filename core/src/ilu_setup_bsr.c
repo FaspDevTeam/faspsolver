@@ -15,43 +15,45 @@ extern "C" {void symbfactor_(const int *n,int *colind,int *rwptr,const int *levf
 extern void symbfactor_(const int *n,int *colind,int *rwptr,const int *levfill,const int *nzmax,int *nzlu,int *ijlu,int *uptr,int *ierr);
 #endif
 
-static int numfac_bsr(dBSRmat *A, double *luval, int *jlu, int *uptr);
+static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn int fasp_ilu_dbsr_setup(dBSRmat *A, ILU_data *iludata, ILU_param *param)
+ * \fn SHORT fasp_ilu_dbsr_setup (dBSRmat *A, ILU_data *iludata, ILU_param *param)
+ *
  * \brief Get ILU decoposition of a BSR matrix A
  *
- * \param *A pointer to bSR matrir of double type
+ * \param *A pointer to bSR matrir of REAL type
  * \param *iludata pointer to ILU_data
  * \param *param pointer to ILU parameters
  *
- * \note: works for general nb (Xiaozhe)
+ * \note Works for general nb (Xiaozhe)
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date 11/08/2010
  */
-int fasp_ilu_dbsr_setup (dBSRmat *A, 
-                         ILU_data *iludata, 
-												 ILU_param *param)
+SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
+                           ILU_data *iludata, 
+                           ILU_param *param)
 {
-	const int print_level=param->print_level;
-	const int m=A->ROW, n=A->COL, nnz=A->NNZ, nb=A->nb, nb2=nb*nb;
+	const SHORT  print_level=param->print_level;
+	const INT    m=A->ROW, n=A->COL, nnz=A->NNZ, nb=A->nb, nb2=nb*nb;
 	
-	int lfil=param->ILU_lfil;
-	int ierr, iwk, nzlu, nwork, *ijlu, *uptr;
+    // local variables
+	INT lfil=param->ILU_lfil;
+	INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
 	
 	clock_t setup_start, setup_end;
-	double setup_duration;
-	int status = SUCCESS;
+	REAL    setup_duration;
+	SHORT   status = SUCCESS;
 	
 #if DEBUG_MODE
-	printf("fasp_ilu_dbsr_setup ...... [Start]\n");
+	printf("### DEBUG: fasp_ilu_dbsr_setup ...... [Start]\n");
 #endif
 	
-	if (param->print_level>8) printf("fasp_ilu_dbsr_setup: m=%d, n=%d, nnz=%d\n",m,n,nnz);
+	if (param->print_level>PRINT_MORE) printf("fasp_ilu_dbsr_setup: m=%d, n=%d, nnz=%d\n",m,n,nnz);
 	
 	setup_start=clock();
 	
@@ -59,78 +61,70 @@ int fasp_ilu_dbsr_setup (dBSRmat *A,
 	iwk=(lfil+2)*nnz;
 	
 #if DEBUG_MODE
-	printf("[DEBUG] fasp_ilu_dbsr_setup: fill-in=%d, iwk=%d, nwork=%d\n", lfil, iwk, nwork);
+	printf("### DEBUG: fill-in=%d, iwk=%d, nwork=%d\n", lfil, iwk, nwork);
 #endif
 	
 	// setup preconditioner
 	iludata->row=iludata->col=n;	
 	iludata->nb=nb;
 	
-	ijlu=(int*)fasp_mem_calloc(iwk,sizeof(int));
-	uptr=(int*)fasp_mem_calloc(A->ROW,sizeof(int));
+	ijlu=(int*)fasp_mem_calloc(iwk,sizeof(INT));
+	uptr=(int*)fasp_mem_calloc(A->ROW,sizeof(INT));
 	
 #if CHMEM_MODE
-	printf("ilu_setup: memory usage after before_ILU_data: \n");
+	printf("### DEBUG: memory usage after before_ILU_data: \n");
 	fasp_mem_usage();
 #endif
-		
+    
 #if DEBUG_MODE
-	printf("[DEBUG] fasp_ilu_dbsr_setup: symbolic factorization ... ");
+	printf("### DEBUG: symbolic factorization ... \n ");
 #endif
-
+    
 	// ILU decomposition	
 	// (1) symbolic factoration
 	symbfactor_(&A->ROW,A->JA,A->IA,&lfil,&iwk,&nzlu,ijlu,uptr,&ierr);	
 	
-#if DEBUG_MODE
-	printf("Done!!!\n");
-#endif
-	
-	iludata->luval=(double*)fasp_mem_calloc(nzlu*nb2,sizeof(double));
+	iludata->luval=(REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
 	
 #if DEBUG_MODE
-	printf("[DEBUG] fasp_ilu_dbsr_setup: numerical factorization ... ");
+	printf("### DEBUG: numerical factorization ... \n ");
 #endif
 	
 	// (2) numerical factoration 
 	numfac_bsr(A, iludata->luval, ijlu, uptr);
 	
-#if DEBUG_MODE
-	printf("Done!!!\n");
-#endif
-	
 #if CHMEM_MODE
-	printf("fasp_ilu_dbsr_setup: memory usage after ILU setup: \n");
+	printf("### DEBUG: memory usage after ILU setup: \n");
 	fasp_mem_usage();
 #endif
 	
 	nwork=6*nzlu*nb;
 	iludata->nzlu=nzlu;
 	iludata->nwork=nwork;
-	iludata->ijlu=(int*)fasp_mem_calloc(nzlu,sizeof(int));
+	iludata->ijlu=(int*)fasp_mem_calloc(nzlu,sizeof(INT));
 	
-	memcpy(iludata->ijlu,ijlu,nzlu*sizeof(int));
-	iludata->work=(double*)fasp_mem_calloc(nwork, sizeof(double));  // Xiaozhe: Is the work space too large?
+	memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
+	iludata->work=(REAL*)fasp_mem_calloc(nwork, sizeof(REAL));  // Xiaozhe: Is the work space too large?
 	
 #if DEBUG_MODE
-	printf("[DEBUG] fasp_ilu_dbsr_setup: iwk=%d, nzlu=%d\n",iwk,nzlu);
+	printf("### DEBUG: iwk=%d, nzlu=%d\n",iwk,nzlu);
 #endif	
 	
 	if (ierr!=0) {
-		printf("Error: ILU setup failed (ierr=%d)!\n", ierr);
+		printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
 		status = ERROR_SOLVER_ILUSETUP;
 		goto FINISHED;
 	}
 	
 	if (iwk<nzlu) {
-		printf("Error: Need more memory for ILU %d!\n", iwk-nzlu);
+		printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
 		status = ERROR_SOLVER_ILUSETUP;
 		goto FINISHED;
 	}
 	
-	if (print_level>0) {
+	if (print_level>PRINT_NONE) {
 		setup_end=clock();
-		setup_duration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
+		setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
 		
 		printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);	
 	}
@@ -140,7 +134,7 @@ FINISHED:
 	fasp_mem_free(uptr);
 	
 #if DEBUG_MODE
-	printf("fasp_ilu_dbsr_setup ...... [Finish]\n");
+	printf("### DEBUG: fasp_ilu_dbsr_setup ...... [Finish]\n");
 #endif
 	
 	return status;
@@ -151,10 +145,10 @@ FINISHED:
 /*---------------------------------*/
 
 /**
- * \fn static int numfac_bsr(dBSRmat *A, double *luval, int *jlu, int *uptr)
+ * \fn static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
  * \brief Get numerical ILU decoposition of a BSR matrix A
  *
- * \param *A      pointer to BSR matrir of double type
+ * \param *A      pointer to BSR matrir of REAL type
  * \param *luval  pointer to numerical value of ILU
  * \param *jlu    pointer to the nonzero pattern of ILU
  * \param *uptr   pointer to the diagnal position of ILU
@@ -163,17 +157,17 @@ FINISHED:
  * \author Shiquan Zhang
  * \date 11/08/2010
  */
-static int numfac_bsr(dBSRmat *A, double *luval, int *jlu, int *uptr)
+static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
 {
-	int n=A->ROW,nb=A->nb, nb2=nb*nb, ib, ibstart,ibstart1; 
-	int k, indj, inds, indja,jluj, jlus, ijaj;
-	double  *mult,*mult1; 
-	int *colptrs;
-	int status=SUCCESS;
+	INT n=A->ROW,nb=A->nb, nb2=nb*nb, ib, ibstart,ibstart1; 
+	INT k, indj, inds, indja,jluj, jlus, ijaj;
+	REAL  *mult,*mult1; 
+	INT *colptrs;
+	INT status=SUCCESS;
 	
-	colptrs=(int*)fasp_mem_calloc(n,sizeof(int));
-	mult=(double*)fasp_mem_calloc(nb2,sizeof(double));
-	mult1=(double*)fasp_mem_calloc(nb2,sizeof(double));
+	colptrs=(int*)fasp_mem_calloc(n,sizeof(INT));
+	mult=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));
+	mult1=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));
 	
 	/**  
 	 *     colptrs is used to hold the indices of entries in LU of row k.  

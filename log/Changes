@@ -44,3 +44,5 @@
 12/14/2011 FASP 0.4.1: Start to restructure the code; start to add INT and REAL. Bug fix: a divide-by-zero in BiCGstab might occur -- add safe-net. Bug fix: coarse level solver could fail -- add safe-net. 
 
 01/05/2012 FASP 0.4.2: Add nonlinear AMLI-cycle.
+
+01/17/2012 FASP 0.4.5: Finish restructure serial version; fix bugs in BiCGstab; revise regression test.

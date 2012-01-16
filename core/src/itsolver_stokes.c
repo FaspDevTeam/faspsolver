@@ -14,34 +14,35 @@
 /*---------------------------------*/
 
 /**
- * \fn int fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, Stokes_param *precdata)
+ * \fn INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, Stokes_param *precdata)
  * \brief Solve Ax=b by standard Krylov methods 
  *
  * \param *A:	       pointer to the block_dCSRmat matrix
  * \param *b:	       pointer to the dvector of right hand side
  * \param *x:	       pointer to the dvector of dofs
- * \param *itparam:  pointer to parameters for iterative solvers
- * \param *precdata: pionter to preconditioner data for Stokes
- * \return           number of iterations
+ * \param *itparam:    pointer to parameters for iterative solvers
+ * \param *precdata:   pionter to preconditioner data for Stokes
+ *
+ * \return             number of iterations
  *
  * \author Chensong Zhang
  * \date 11/25/2010
  */
-int fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat, 
-																		 dvector *b, 
-																		 dvector *x, 
-																		 itsolver_param *itparam,
-																		 precond_Stokes_param *param, 
-																		 precond_Stokes_data *precdata)
+INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat, 
+                                     dvector *b, 
+                                     dvector *x, 
+                                     itsolver_param *itparam,
+                                     precond_Stokes_param *param, 
+                                     precond_Stokes_data *precdata)
 {
 	// parameters
-	const int print_level = itparam->print_level;
-	const int precond_type = itparam->precond_type;
+	const SHORT print_level  = itparam->print_level;
+	const SHORT precond_type = itparam->precond_type;
 	
 	// Stokes matrix 
 	dCSRmat *A = Mat->blocks[0];
 	dCSRmat *B = Mat->blocks[1];
-	const int n = A->row, nnzA = A->nnz, m = B->row;	
+	const INT n = A->row, nnzA = A->nnz, m = B->row;	
 	
 	// preconditioner data
 	dCSRmat *M = precdata->M;
@@ -51,8 +52,8 @@ int fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 	
 	// local variable
 	clock_t solver_start, solver_end, setup_start, setup_end;
-	double solver_duration, setup_duration;
-	int status=SUCCESS;
+	REAL solver_duration, setup_duration;
+	INT status=SUCCESS;
 	
 	// initialize preconditioner 
 	prec.data = &precdata; 
@@ -61,7 +62,7 @@ int fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 			prec.fct = fasp_precond_stokes_bdiag;
 			break;
 		default:
-			printf("Error: Unknown preconditioner type!\n");
+			printf("### ERROR: Unknown preconditioner type!\n");
 			exit(ERROR_SOLVER_PRECTYPE);
 	}
 	
@@ -78,11 +79,11 @@ int fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 	precdata->col  = n+m;	
 	
 	// setup work array space
-	precdata->w = (double *)fasp_mem_calloc(precdata->col,sizeof(double));
+	precdata->w = (REAL *)fasp_mem_calloc(precdata->col,sizeof(REAL));
 	
 	// initialize AMG for A
 	AMG_data *mgl=fasp_amg_data_create(amgparam.max_levels);
-  mgl[0].A=fasp_dcsr_create(n,n,nnzA); fasp_dcsr_cp(A,&mgl[0].A);
+    mgl[0].A=fasp_dcsr_create(n,n,nnzA); fasp_dcsr_cp(A,&mgl[0].A);
 	mgl[0].b=fasp_dvec_create(n); mgl[0].x=fasp_dvec_create(n);
 	
 	// setup AMG
@@ -94,7 +95,7 @@ int fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 			fasp_amg_setup_sa(mgl, &amgparam);
 			break;
 		default:
-			printf("Error: Wrong AMG type %d!\n",amgparam.AMG_type);
+			printf("### ERROR Wrong AMG type %d!\n",amgparam.AMG_type);
 			exit(ERROR_INPUT_PAR);
 	}	
 	precdata->max_levels = mgl[0].num_levels;
@@ -106,8 +107,8 @@ int fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 	
 	setup_end = clock();
 	
-	if (print_level>0) {
-		setup_duration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
+	if (print_level>PRINT_NONE) {
+		setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
 		printf("Setup costs %f.\n", setup_duration);
 	}
 	
@@ -116,8 +117,8 @@ int fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 	status=fasp_solver_bdcsr_itsolver(Mat,b,x,&prec,itparam);
 	solver_end=clock();
 	
-	if (print_level>0) {
-		solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+	if (print_level>PRINT_NONE) {
+		solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
 		printf("Solver costs %f seconds.\n", solver_duration);	
 		printf("Total costs %f seconds.\n", setup_duration + solver_duration);
 	}

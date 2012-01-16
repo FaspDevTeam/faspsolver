@@ -1,12 +1,3 @@
-/*
- *		graphics.c 
- *
- *------------------------------------------------------
- *		Created by Chensong Zhang on 03/29/2009.
- *------------------------------------------------------
- *
- */
-
 /*! \file graphics.c
  *  \brief Functions for graphical output
  */
@@ -26,16 +17,20 @@ static int  write_bmp16(const char *fname, int m, int n, const char map[]);
 /*---------------------------------*/
 
 /**
- * \fn void fasp_dcsr_plot (const dCSRmat *A, const char *filename, int size)
+ * \fn void fasp_dcsr_plot (const dCSRmat *A, const char *filename, INT size)
+ *
  * \brief Write sparse matrix pattern in BMP file format
  *
  * \param *A pointer to the dCSRmat matrix in CSR format
  * \param size integer size*size is the picture size for the picture
  * \param filename char for vector file name
  * 
- * The routine spm_show_mat writes pattern of the specified dCSRmat
- * matrix in uncompressed BMP file format (Windows bitmap) to a binary
- * file whose name is specified by the character string filename.
+ * \author Chensong Zhang
+ * \date 03/29/2009
+ *
+ * \note The routine spm_show_mat writes pattern of the specified dCSRmat
+ *       matrix in uncompressed BMP file format (Windows bitmap) to a binary
+ *       file whose name is specified by the character string filename.
  *
  * Each pixel corresponds to one matrix element. The pixel colors have
  * the following meaning:
@@ -44,22 +39,19 @@ static int  write_bmp16(const char *fname, int m, int n, const char map[]);
  *  Blue     positive element
  *  Red      negative element
  *  Brown    nearly zero element
- *
- * \author Chensong Zhang
- * \date 03/29/2009
  */
 void fasp_dcsr_plot (const dCSRmat *A, 
-										 const char *filename, 
-										 int size)
+                     const char *filename, 
+                     INT size)
 {     
-  int m = A->row;
-  int n = A->col;
-  int i, j, k, minmn=MIN(m,n);
-  char *map;
+    INT m = A->row;
+    INT n = A->col;
+    INT i, j, k, minmn=MIN(m,n);
+    char *map;
 	
 	if (size>minmn) size=minmn;
 	
-  printf("fasp_dcsr_plot: writing matrix pattern to `%s'...\n",filename);
+    printf("fasp_dcsr_plot: writing matrix pattern to `%s'...\n",filename);
 	
 	map = (char *)fasp_mem_calloc(size * size, sizeof(char));
 	
@@ -78,7 +70,7 @@ void fasp_dcsr_plot (const dCSRmat *A,
 					map[k] = 0x06; /* brown */
 			} // end if
 		} // end for j
-  } // end for i
+    } // end for i
 	
 	write_bmp16(filename, size, size, map);
 	
@@ -86,7 +78,8 @@ void fasp_dcsr_plot (const dCSRmat *A,
 }
 
 /*! 
- * \fn void fasp_grid2d_plot (pgrid2d pg, int level)
+ * \fn void fasp_grid2d_plot (pgrid2d pg, INT level)
+ *
  * \brief Output grid to a EPS file
  *
  * \param pg     pointer to grid in 2d
@@ -96,11 +89,11 @@ void fasp_dcsr_plot (const dCSRmat *A,
  * \date 03/29/2009
  */
 void fasp_grid2d_plot (pgrid2d pg, 
-											 int level)
+                       INT level)
 {
 	FILE *datei;
 	char buf[120];
-	int i;
+	INT i;
 	double xmid,ymid,xc,yc;
 	
 	sprintf(buf,"Grid_ref_level%d.eps",level);
@@ -178,7 +171,8 @@ void fasp_grid2d_plot (pgrid2d pg,
 /*---------------------------------*/
 
 static void put_byte(FILE *fp, int c)
-{ fputc(c, fp);
+{ 
+    fputc(c, fp);
 	return;
 }
 
@@ -266,11 +260,14 @@ static int write_bmp16(const char *fname, int m, int n, const char map[])
 {     
 	FILE *fp;
 	int offset, bmsize, i, j, b, ret = 1;
+    
 	if (!(1 <= m && m <= 32767))
 		printf("write_bmp16: m = %d; invalid height\n", m);
-	if (!(1 <= n && n <= 32767))
+	
+    if (!(1 <= n && n <= 32767))
 		printf("write_bmp16: n = %d; invalid width\n", n);
-	fp = fopen(fname, "wb");
+	
+    fp = fopen(fname, "wb");
 	if (fp == NULL)
 	{  printf("write_bmp16: unable to create `%s'\n", fname);
 		ret = 0;

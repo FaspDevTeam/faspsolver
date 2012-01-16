@@ -10,22 +10,25 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_precond_dbsr_diag (double *r, double *z, void *data)
+ * \fn void fasp_precond_dbsr_diag (REAL *r, REAL *z, void *data)
+ *
  * \brief Diagonal preconditioner z=inv(D)*r
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
- * \author Zhou Zhiyang, Xiaozhe Hu
  *
  * \note: works for general nb (Xiaozhe)
+ *
+ * \author Zhou Zhiyang, Xiaozhe Hu
  * \date 10/26/2010
  */
-void fasp_precond_dbsr_diag (double *r, 
-														 double *z, 
-														 void *data)
+void fasp_precond_dbsr_diag (REAL *r, 
+                             REAL *z, 
+                             void *data)
 {
-	precond_diagbsr *diag   = (precond_diagbsr *)data;
-	const int nb = diag->nb; 
+	precond_diagbsr *diag = (precond_diagbsr *)data;
+	const INT nb = diag->nb; 
 	
 	switch (nb)
 	{
@@ -47,11 +50,11 @@ void fasp_precond_dbsr_diag (double *r,
 			
 		default:
 		{
-			double *diagptr = diag->diag.val;
-			const int nb2 = nb*nb;
-			const int m = diag->diag.row/nb2;	
+			REAL *diagptr = diag->diag.val;
+			const INT nb2 = nb*nb;
+			const INT m = diag->diag.row/nb2;	
 			
-			unsigned int i;
+			unsigned INT i;
 			for (i = 0; i < m; ++i) 
 			{
 				fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
@@ -63,26 +66,29 @@ void fasp_precond_dbsr_diag (double *r,
 }
 
 /**
- * \fn void fasp_precond_dbsr_diag_nc2 (double *r, double *z, void *data)
+ * \fn void fasp_precond_dbsr_diag_nc2 (REAL *r, REAL *z, void *data)
+ *
  * \brief Diagonal preconditioner z=inv(D)*r.
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
- * \author Zhou Zhiyang, Xiaozhe Hu
  *
  * \note: works for 2-component (Xiaozhe)
+ *
+ * \author Zhou Zhiyang, Xiaozhe Hu
  * \date 11/18/2011
  */
-void fasp_precond_dbsr_diag_nc2 (double *r, 
-								 double *z, 
+void fasp_precond_dbsr_diag_nc2 (REAL *r, 
+								 REAL *z, 
 								 void *data )
 {
-	precond_diagbsr *diag   = (precond_diagbsr *)data;
-	double          *diagptr = diag->diag.val;
+	precond_diagbsr *diag    = (precond_diagbsr *)data;
+	REAL            *diagptr = diag->diag.val;
 	
-	const int m = diag->diag.row/4;	
+	const INT m = diag->diag.row/4;	
 	
-	unsigned int i;
+	unsigned INT i;
 	for (i = 0; i < m; ++i) 
 	{
 		fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
@@ -90,26 +96,29 @@ void fasp_precond_dbsr_diag_nc2 (double *r,
 }
 
 /**
- * \fn void fasp_precond_dbsr_diag_nc3 (double *r, double *z, void *data)
+ * \fn void fasp_precond_dbsr_diag_nc3 (REAL *r, REAL *z, void *data)
+ *
  * \brief Diagonal preconditioner z=inv(D)*r.
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
- * \author Zhou Zhiyang, Xiaozhe Hu
  *
  * \note: works for 3-component (Xiaozhe)
+ *
+ * \author Zhou Zhiyang, Xiaozhe Hu
  * \date 01/06/2011
  */
-void fasp_precond_dbsr_diag_nc3 (double *r, 
-																 double *z, 
-																 void *data )
+void fasp_precond_dbsr_diag_nc3 (REAL *r, 
+                                 REAL *z, 
+                                 void *data )
 {
-	precond_diagbsr *diag   = (precond_diagbsr *)data;
-	double          *diagptr = diag->diag.val;
+	precond_diagbsr *diag    = (precond_diagbsr *)data;
+	REAL            *diagptr = diag->diag.val;
 	
-	const int m = diag->diag.row/9;	
+	const INT m = diag->diag.row/9;	
 	
-	unsigned int i;
+	unsigned INT i;
 	for (i = 0; i < m; ++i) 
 	{
 		fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
@@ -117,26 +126,29 @@ void fasp_precond_dbsr_diag_nc3 (double *r,
 }
 
 /**
- * \fn void fasp_precond_dbsr_diag_nc5 (double *r, double *z, void *data)
+ * \fn void fasp_precond_dbsr_diag_nc5 (REAL *r, REAL *z, void *data)
+ *
  * \brief Diagonal preconditioner z=inv(D)*r.
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
- * \author Zhou Zhiyang, Xiaozhe Hu
  *
  * \note: works for 5-component (Xiaozhe)
+ *
+ * \author Zhou Zhiyang, Xiaozhe Hu
  * \date 01/06/2011
  */
-void fasp_precond_dbsr_diag_nc5 (double *r, 
-																 double *z, 
-																 void *data )
+void fasp_precond_dbsr_diag_nc5 (REAL *r, 
+                                 REAL *z, 
+                                 void *data )
 {
-	precond_diagbsr *diag   = (precond_diagbsr *)data;
-	double          *diagptr = diag->diag.val;
+	precond_diagbsr *diag    = (precond_diagbsr *)data;
+	REAL            *diagptr = diag->diag.val;
 	
-	const int m = diag->diag.row/25;	
+	const INT m = diag->diag.row/25;	
 	
-	unsigned int i;
+	unsigned INT i;
 	for (i = 0; i < m; ++i) 
 	{
 		fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
@@ -144,26 +156,29 @@ void fasp_precond_dbsr_diag_nc5 (double *r,
 }
 
 /**
- * \fn void fasp_precond_dbsr_diag_nc7 (double *r, double *z, void *data)
+ * \fn void fasp_precond_dbsr_diag_nc7 (REAL *r, REAL *z, void *data)
+ *
  * \brief Diagonal preconditioner z=inv(D)*r.
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
- * \author Zhou Zhiyang, Xiaozhe Hu
  *
  * \note: works for 7-component (Xiaozhe)
+ *
+ * \author Zhou Zhiyang, Xiaozhe Hu
  * \date 01/06/2011
  */
-void fasp_precond_dbsr_diag_nc7 (double *r, 
-																 double *z, 
-																 void *data )
+void fasp_precond_dbsr_diag_nc7 (REAL *r, 
+                                 REAL *z, 
+                                 void *data )
 {
 	precond_diagbsr *diag   = (precond_diagbsr *)data;
-	double          *diagptr = diag->diag.val;
+	REAL            *diagptr = diag->diag.val;
 	
-	const int m = diag->diag.row/49;	
+	const INT m = diag->diag.row/49;	
 	
-	unsigned int i;
+	unsigned INT i;
 	for (i = 0; i < m; ++i) 
 	{
 		fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
@@ -171,32 +186,36 @@ void fasp_precond_dbsr_diag_nc7 (double *r,
 }
 
 /**
- * \fn void fasp_precond_dbsr_ilu (double *r, double *z, void *data)
+ * \fn void fasp_precond_dbsr_ilu (REAL *r, REAL *z, void *data)
+ *
  * \brief preconditioning using ILU decomposition
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
- * \author Shiquan Zhang
  *
  * \note: works for general nb (Xiaozhe)
+ *
+ * \author Shiquan Zhang
  * \date 11/09/2010
  */
-void fasp_precond_dbsr_ilu (double *r, 
-														double *z, 
-														void *data)
+void fasp_precond_dbsr_ilu (REAL *r, 
+                            REAL *z, 
+                            const void *data)
 {
-	ILU_data    *iludata=(ILU_data *)data;
-	const int    m=iludata->row, mm1=m-1, mm2=m-2, memneed=2*m;
-	const int    nb=iludata->nb, nb2=nb*nb, size=m*nb;
-	int         *ijlu=iludata->ijlu;
-	double       *lu=iludata->luval;
+	const ILU_data  *iludata=(ILU_data *)data;
+	const INT        m=iludata->row, mm1=m-1, mm2=m-2, memneed=2*m;
+	const INT        nb=iludata->nb, nb2=nb*nb, size=m*nb;
 	
-	int         ib, ibstart,ibstart1;
-	int         i, j, jj, begin_row, end_row;
-	double      *zz, *zr, *mult;	   
+    INT        *ijlu=iludata->ijlu;
+	REAL       *lu=iludata->luval;
+    
+    INT         ib, ibstart,ibstart1;
+	INT         i, j, jj, begin_row, end_row;
+	REAL       *zz, *zr, *mult;	   
 	
 	if (iludata->nwork<memneed) {
-		printf("Error: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
+		printf("### ERROR: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
 		exit(ERROR_ALLOC_MEM);
 	}
 	
@@ -204,7 +223,7 @@ void fasp_precond_dbsr_ilu (double *r,
 	zr   = zz + size;
 	mult = zr + size;
 	
-	memcpy(zr, r, size*sizeof(double));
+	memcpy(zr, r, size*sizeof(REAL));
 	
 	switch (nb) {
 			

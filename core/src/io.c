@@ -69,7 +69,7 @@ void fasp_dcsrvec_read (char *filemat,
 	wall = fscanf(fp,"%d\n",&n);
 	A->row = n;
 	A->col = n;
-	A->IA = (INT *)fasp_mem_calloc(n+1, sizeof(int));
+	A->IA = (INT *)fasp_mem_calloc(n+1, sizeof(INT));
 	
 	for(i=0; i<n+1; ++i)
 	{ 
@@ -79,7 +79,7 @@ void fasp_dcsrvec_read (char *filemat,
 	
 	nz = A->IA[n];
 	A->nnz = nz;
-	A->JA = (INT *)fasp_mem_calloc(nz, sizeof(int));
+	A->JA = (INT *)fasp_mem_calloc(nz, sizeof(INT));
 	A->val = (REAL *)fasp_mem_calloc(nz, sizeof(REAL));
 	
 	for(i=0; i<nz; ++i)
@@ -171,7 +171,7 @@ void fasp_dcsrvec2_read (char *filename,
 	wall = fscanf(fp, "%d %d", &m, &n);
 	A->row=m; A->col=n;
 	
-	A->IA=(int*)fasp_mem_calloc(m+1, sizeof(int));	
+	A->IA=(int*)fasp_mem_calloc(m+1, sizeof(INT));	
 	for (i=0;i<=m;++i) {
 		wall = fscanf(fp, "%d", &idata);
 		A->IA[i]=idata;
@@ -179,7 +179,7 @@ void fasp_dcsrvec2_read (char *filename,
 	
 	nnz=A->IA[m]-A->IA[0];	 A->nnz=nnz;
 	
-	A->JA=(int*)fasp_mem_calloc(nnz, sizeof(int));	
+	A->JA=(int*)fasp_mem_calloc(nnz, sizeof(INT));	
 	A->val=(REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
 	
 	for (i=0;i<nnz;++i) {
@@ -449,7 +449,7 @@ void fasp_dstr_read (char *filename,
 	wall = fscanf(fp,"%d",&nband); // read number of bands
 	A->nband = nband;
 	
-	A->offsets=(int*)fasp_mem_calloc(nband, sizeof(int));
+	A->offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
 	
 	// read diagonal	
 	wall = fscanf(fp, "%d", &n);

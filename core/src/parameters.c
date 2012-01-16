@@ -212,7 +212,8 @@ void fasp_param_ilu_init (ILU_param *param)
  * \author Chensong Zhang
  * \date 2010/03/23 
  */
-void fasp_param_amg_set (AMG_param *param, input_param *Input)
+void fasp_param_amg_set (AMG_param *param, 
+                         input_param *Input)
 {	
 	param->AMG_type    = Input->AMG_type;
 	param->print_level = Input->print_level;
@@ -272,7 +273,8 @@ void fasp_param_amg_set (AMG_param *param, input_param *Input)
  * \author Chensong Zhang
  * \date 2010/04/03 
  */
-void fasp_param_ilu_set (ILU_param *param, input_param *Input)
+void fasp_param_ilu_set (ILU_param *param, 
+                         input_param *Input)
 {	
 	param->print_level = Input->print_level;
 	param->ILU_type    = Input->ILU_type;
@@ -293,7 +295,8 @@ void fasp_param_ilu_set (ILU_param *param, input_param *Input)
  * \author Chensong Zhang
  * \date 2010/03/23 
  */
-void fasp_param_solver_set (itsolver_param *itparam, input_param *Input)
+void fasp_param_solver_set (itsolver_param *itparam, 
+                            input_param *Input)
 {
 	itparam->print_level    = Input->print_level;
 	itparam->itsolver_type  = Input->itsolver_type;

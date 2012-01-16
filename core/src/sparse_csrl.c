@@ -1,9 +1,9 @@
 /*! \file sparse_csrl.c
  *  \brief Functions for sparse matrices in CSRL format
  *
- *  For details of CSRL format, refer to 
- *      Optimizaing sparse matrix vector product computations using unroll and jam
- *      by John Mellor-Crummey and John Garvin, Tech Report Rice Univ, Aug 2002.
+ *  \note For details of CSRL format, refer to 
+ *        Optimizaing sparse matrix vector product computations using unroll and jam
+ *        by John Mellor-Crummey and John Garvin, Tech Report Rice Univ, Aug 2002.
  *
  */
 
@@ -15,7 +15,7 @@
 /*---------------------------------*/
 
 /**
- * \fn dCSRLmat * fasp_mem_dcsrl_create(int num_rows,int num_cols,int num_nonzeros) 
+ * \fn dCSRLmat * fasp_mem_dcsrl_create (INT num_rows,INT num_cols,INT num_nonzeros) 
  * \brief Create a dCSRLmat object
  * \param num_rows number of rows
  * \param num_cols number of cols
@@ -23,9 +23,9 @@
  * \author Zhou Zhiyang
  * \date 2011/01/07
  */
-dCSRLmat * fasp_dcsrl_create (int num_rows, 
-																	int num_cols, 
-																	int num_nonzeros)
+dCSRLmat * fasp_dcsrl_create (INT num_rows, 
+                              INT num_cols, 
+                              INT num_nonzeros)
 {
 	dCSRLmat *A = NULL;
 	A = (dCSRLmat *)fasp_mem_calloc(1, sizeof(dCSRLmat));

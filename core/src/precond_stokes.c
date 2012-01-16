@@ -10,25 +10,25 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_precond_stokes_bdiag (double *r, double *z, void *data)
+ * \fn void fasp_precond_stokes_bdiag (REAL *r, REAL *z, void *data)
  * \brief block diagonal preconditioning for Stokes equation
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
  */
-void fasp_precond_stokes_bdiag (double *r, 
-															 double *z, 
-															 void *data)
+void fasp_precond_stokes_bdiag (REAL *r, 
+                                REAL *z, 
+                                void *data)
 {
 	precond_Stokes_data *predata=(precond_Stokes_data *)data;
 	
-	const int col = predata->col, colA = predata->colA, colB = predata->colB;
-	const int maxit = predata->maxit;
-	double *diagptr=predata->diag_M->val;
+	const INT col = predata->col, colA = predata->colA, colB = predata->colB;
+	const INT maxit = predata->maxit;
+	REAL *diagptr=predata->diag_M->val;
 	
 	// local variables
-	double	*tempr = predata->w;		
-	int i;
+	REAL	*tempr = predata->w;		
+	INT i;
 	
 	//! prepare	 AMG preconditioner 
 	AMG_data *mgl = predata->mgl_data;

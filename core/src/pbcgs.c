@@ -216,6 +216,11 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 	
 	absresp=absres;
 	
+    // output iteration information if needed	
+    print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+
+    iter++;
+    
 	if (iter<0 || relres<tol) goto FINISHED;
 	
 	while ( iter++ < MaxIt )
@@ -595,10 +600,13 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 	
 	absresp=absres;
 	
-	if (iter < 0) goto FINISHED;
-	
-	if (relres <= tol) goto FINISHED;
-	
+    // output iteration information if needed	
+    print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+    
+    iter++;
+
+	if (iter < 0 || relres <= tol) goto FINISHED;
+		
 	while ( iter++ < MaxIt )
 	{
 		
@@ -987,6 +995,11 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 	}
 	
 	absresp=absres;
+    
+    // output iteration information if needed	
+    print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+    
+    iter++;
 	
 	if (iter<0 || relres<tol) goto FINISHED;
 	
@@ -1147,7 +1160,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 					break;
 			}
 			
-			if (print_level>=PRINT_MORE) printf("The actual relative residual = %e\n",relres);
+            if (print_level>=PRINT_MORE) ITS_REALRES(relres);
 			
 			// check convergence
 			if (relres<tol) break;
@@ -1336,6 +1349,11 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 	
 	absresp=absres;
 	
+    // output iteration information if needed	
+    print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+    
+    iter++;
+
 	if (iter<0 || relres<tol) goto FINISHED;
 	
 	while ( iter++ < MaxIt )

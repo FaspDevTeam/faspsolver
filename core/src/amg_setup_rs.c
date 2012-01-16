@@ -101,7 +101,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 		/*-- Store the C/F marker: Zhiyang Zhou 2010/11/12 --*/
 		size = mgl[level].A.row;
 		mgl[level].cfmark = fasp_ivec_create(size);
-		memcpy(mgl[level].cfmark.val, vertices.val, size*sizeof(int));
+		memcpy(mgl[level].cfmark.val, vertices.val, size*sizeof(INT));
 		
 		if (mgl[level].P.col == 0) break;
 		if (status < 0) goto FINISHED;

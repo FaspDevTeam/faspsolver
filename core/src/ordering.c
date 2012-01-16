@@ -2,17 +2,18 @@
  *  \brief A collection of ordering, merging, removing duplicated integers functions
  */
 
-#include <math.h>
+#include "fasp.h"
 
-static void dSwapping(double *w, int i, int j);
-static void iSwapping(int *w, int i, int j);
+static void dSwapping(REAL *w, INT i, INT j);
+static void iSwapping(INT *w, INT i, INT j);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /*!
- * \fn int fasp_aux_unique (int numbers[], int size)
+ * \fn INT fasp_aux_unique (INT numbers[], INT size)
+ *
  * \brief remove duplicates in an sorted (ascending order) array 
  *
  * \param numbers   pointer to the array needed to be sorted
@@ -24,10 +25,10 @@ static void iSwapping(int *w, int i, int j);
  * \author Chensong Zhang
  * \date 11/21/2010
  */
-int fasp_aux_unique (int numbers[], 
-										 int size)
+INT fasp_aux_unique (INT numbers[], 
+                     INT size)
 {
-	int i, newsize; 
+	INT i, newsize; 
 	
 	if (size==0) return(0);
 	
@@ -42,7 +43,8 @@ int fasp_aux_unique (int numbers[],
 }
 
 /*!
- * \fn void fasp_aux_merge(int numbers[], int work[], int left, int mid, int right)
+ * \fn void fasp_aux_merge(INT numbers[], INT work[], INT left, INT mid, INT right)
+ *
  * \brief merge two sorted arraies
  *
  * \param numbers   pointer to the array needed to be sorted
@@ -56,13 +58,13 @@ int fasp_aux_unique (int numbers[],
  * \author Chensong Zhang
  * \date 11/21/2010
  */
-void fasp_aux_merge (int numbers[], 
-										 int work[], 
-										 int left, 
-										 int mid, 
-										 int right)
+void fasp_aux_merge (INT numbers[], 
+                     INT work[], 
+                     INT left, 
+                     INT mid, 
+                     INT right)
 {	
-	int i, left_end, num_elements, tmp_pos;
+	INT i, left_end, num_elements, tmp_pos;
 	
 	left_end = mid - 1;	
 	tmp_pos = left;	
@@ -104,8 +106,9 @@ void fasp_aux_merge (int numbers[],
 }
 
 /*!
- * \fn void fasp_aux_msort(int numbers[], int work[], int left, int right)
- * \brief sort the int array ascendingly with the merge sort algorithm
+ * \fn void fasp_aux_msort(INT numbers[], INT work[], INT left, INT right)
+ *
+ * \brief sort the INT array ascendingly with the merge sort algorithm
  *
  * \param numbers   pointer to the array needed to be sorted
  * \param work      pointer to the work array with same size as numbers
@@ -117,12 +120,12 @@ void fasp_aux_merge (int numbers[],
  * \author Chensong Zhang
  * \date 11/21/2010
  */
-void fasp_aux_msort (int numbers[], 
-										 int work[], 
-										 int left, 
-										 int right)
+void fasp_aux_msort (INT numbers[], 
+                     INT work[], 
+                     INT left, 
+                     INT right)
 {
-	int mid;
+	INT mid;
 	
 	if (right > left) {		
 		mid = (right + left) / 2;		
@@ -134,8 +137,9 @@ void fasp_aux_msort (int numbers[],
 }
 
 /*!
- * \fn void fasp_aux_iQuickSort(int *a, int left, int right)
- * \brief sort the array 'a'(int type) ascendingly with the quick sorting algorithm
+ * \fn void fasp_aux_iQuickSort(INT *a, INT left, INT right)
+ *
+ * \brief sort the array 'a'(INT type) ascendingly with the quick sorting algorithm
  *
  * \param *a     pointer to the array needed to be sorted
  * \param left   the starting index
@@ -143,14 +147,15 @@ void fasp_aux_msort (int numbers[],
  *
  * \note 'left' and 'right' are usually set to be 0 and n-1,respectively,where n is the 
  *        length of 'a'.  
+ *
  * \author Zhiyang Zhou
  * \date 2009/11/28 
  */
-void fasp_aux_iQuickSort(int *a, 
-												 int left, 
-												 int right)
+void fasp_aux_iQuickSort(INT *a, 
+                         INT left, 
+                         INT right)
 {
-	int i, last;
+	INT i, last;
 	
 	if (left >= right) return;
 	
@@ -170,8 +175,9 @@ void fasp_aux_iQuickSort(int *a,
 }
 
 /*!
- * \fn void fasp_aux_dQuickSort(double *a, int left, int right)
- * \brief sort the array 'a'(double type) ascendingly with the quick sorting algorithm
+ * \fn void fasp_aux_dQuickSort(REAL *a, INT left, INT right)
+ *
+ * \brief sort the array 'a'(REAL type) ascendingly with the quick sorting algorithm
  *
  * \param *a     pointer to the array needed to be sorted
  * \param left   the starting index
@@ -179,14 +185,15 @@ void fasp_aux_iQuickSort(int *a,
  *
  * \note 'left' and 'right' are usually set to be 0 and n-1,respectively,where n is the 
  *       length of 'a'.  
+ *
  * \author Zhiyang Zhou
  * \date 2009/11/28 
  */
-void fasp_aux_dQuickSort (double *a, 
-													int left, 
-													int right)
+void fasp_aux_dQuickSort (REAL *a, 
+                          INT left, 
+                          INT right)
 {
-	int i, last;
+	INT i, last;
 	
 	if (left >= right) return;
 	
@@ -206,8 +213,9 @@ void fasp_aux_dQuickSort (double *a,
 }
 
 /*!
- * \fn void fasp_aux_iQuickSortIndex(int *a, int left, int right, int *index)
- * \brief reorder the index of 'a'(int type) so that 'a' is in ascending order  
+ * \fn void fasp_aux_iQuickSortIndex(INT *a, INT left, INT right, INT *index)
+ *
+ * \brief reorder the index of 'a'(INT type) so that 'a' is in ascending order  
  *
  * \param *a      pointer to the array 
  * \param left    the starting index
@@ -215,17 +223,18 @@ void fasp_aux_dQuickSort (double *a,
  * \param *index  the index of 'a'
  *
  * \note 'left' and 'right' are usually set to be 0 and n-1,respectively,where n is the 
- * length of 'a'. 'index' should be initialized in the nature order and it has the
- * same length as 'a'.   
+ *       length of 'a'. 'index' should be initialized in the nature order and it has the
+ *       same length as 'a'.   
+ *
  * \author Zhiyang Zhou
  * \date 2009/12/02 
  */
-void fasp_aux_iQuickSortIndex (int *a, 
-															 int left, 
-															 int right, 
-															 int *index)
+void fasp_aux_iQuickSortIndex (INT *a, 
+                               INT left, 
+                               INT right, 
+                               INT *index)
 {
-	int i, last;
+	INT i, last;
 	
 	if (left >= right) return;
 	
@@ -245,8 +254,9 @@ void fasp_aux_iQuickSortIndex (int *a,
 }
 
 /*!
- * \fn void fasp_aux_dQuickSortIndex(double *a, int left, int right, int *index)
- * \brief reorder the index of 'a'(double type) so that 'a' is ascending in such order  
+ * \fn void fasp_aux_dQuickSortIndex(REAL *a, INT left, INT right, INT *index)
+ *
+ * \brief reorder the index of 'a'(REAL type) so that 'a' is ascending in such order  
  *
  * \param *a      pointer to the array 
  * \param left    the starting index
@@ -254,17 +264,18 @@ void fasp_aux_iQuickSortIndex (int *a,
  * \param *index  the index of 'a'
  *
  * \note 'left' and 'right' are usually set to be 0 and n-1,respectively,where n is the 
- * length of 'a'. 'index' should be initialized in the nature order and it has the
- * same length as 'a'.   
+ *       length of 'a'. 'index' should be initialized in the nature order and it has the
+ *       same length as 'a'. 
+ *
  * \author Zhiyang Zhou
  * \date 2009/12/02 
  */
-void fasp_aux_dQuickSortIndex (double *a, 
-															 int left, 
-															 int right, 
-															 int *index)
+void fasp_aux_dQuickSortIndex (REAL *a, 
+                               INT left, 
+                               INT right, 
+                               INT *index)
 {
-	int i, last;
+	INT i, last;
 	
 	if (left >= right) return;
 	
@@ -288,8 +299,9 @@ void fasp_aux_dQuickSortIndex (double *a,
 /*---------------------------------*/
 
 /**
- * \fn static void iSwapping(int *w, int i, int j)
- * \brief swap the i-th and j-th element in the array 'w'(int type)
+ * \fn static void iSwapping (INT *w, INT i, INT j)
+ *
+ * \brief swap the i-th and j-th element in the array 'w' (INT type)
  *
  * \param *w   pointer to the array
  * \param i    one position in w
@@ -298,16 +310,19 @@ void fasp_aux_dQuickSortIndex (double *a,
  * \author Zhiyang Zhou
  * \date 2009/11/28 
  */
-static void iSwapping(int *w, int i, int j)
+static void iSwapping (INT *w, 
+                       INT i, 
+                       INT j)
 {
-	int temp = w[i];
+	INT temp = w[i];
 	w[i] = w[j];
 	w[j] = temp;
 }
 
 /**
- * \fn static void dSwapping(double *w, int i, int j)
- * \brief swap the i-th and j-th element in the array 'w'(double type)
+ * \fn static void dSwapping (REAL *w, INT i, INT j)
+ *
+ * \brief swap the i-th and j-th element in the array 'w' (REAL type)
  *
  * \param *w   pointer to the array
  * \param i    one position in w
@@ -316,9 +331,11 @@ static void iSwapping(int *w, int i, int j)
  * \author Zhiyang Zhou 
  * \date 2009/11/28 
  */
-static void dSwapping(double *w, int i, int j)
+static void dSwapping (REAL *w, 
+                       INT i, 
+                       INT j)
 {
-	double temp = w[i];
+	REAL temp = w[i];
 	w[i] = w[j];
 	w[j] = temp;
 }

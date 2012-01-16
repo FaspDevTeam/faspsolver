@@ -1,8 +1,6 @@
 /*! \file rap.c
  *  \brief R*A*P driver 
  *
- *  \note It uses dCSRmat only. The functions called from here are in sparse_util.c
- *
  *------------------------------------------------------
  * C-version by Ludmil Zikatanov 2010-04-08
  *                        tested 2010-04-08
@@ -22,10 +20,15 @@
 /*!
  * \fn dCSRmat fasp_blas_dcsr_rap2 (INT *ir, INT *jr, REAL *r,	 \
  *		INT *ia, INT *ja, REAL *a, INT *ipt, INT *jpt, REAL *pt, \
- *		INT n, INT nc, INT *maxrpout,	INT *ipin, INT *jpin) 
+ *		INT n, INT nc, INT *maxrpout, INT *ipin, INT *jpin) 
+ *
+ *  \brief Compute R*A*P 
  *
  * \author Ludmil Zikatanov
  * \date 04/08/2010
+ *  
+ * \note It uses dCSRmat only. The functions called from here are in sparse_util.c
+ *
  */
 dCSRmat fasp_blas_dcsr_rap2 (INT *ir, 
                              INT *jr, 
@@ -69,8 +72,7 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
     /* tripple matrix product: R * A * transpose(P^T)=R*A*P.*/ 
     /*A is square n by n*/
     /* Note: to compute R*A* P the input are R, A and P^T */ 
-    /*  we need to transpose now the structure of P, because the input
-	 is P^T */
+    /*  we need to transpose now the structure of P, because the input is P^T */
     /* end of transpose of the boolean corresponding to P */
     /* ic are the addresses of the rows of the output */
     nc1 = nc+1;
@@ -96,7 +98,7 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
     fasp_sparse_rapcmp_(ir,jr,r,ia,ja,a,ipt,jpt,pt,&n,&nc,ac.IA,ac.JA,ac.val,&maxrp);
     ac.row=nc;
     ac.col=nc;
-    /* =========================================================*/
+    /*=========================================================*/
     *maxrpout=maxrp;
     return ac;
 }

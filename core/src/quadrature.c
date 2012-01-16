@@ -4,12 +4,15 @@
 
 #include <stdio.h>
 
+#include "fasp.h"
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn void fasp_init_quadrature(int num_qp, int ncoor, double (*gauss)[3])
+ * \fn void fasp_init_quadrature (int num_qp, int ncoor, double (*gauss)[3])
+ *
  * \brief Initialize piece Lagrange quadrature points and weights
  *
  * \param num_qp the number of quadrature points
@@ -21,19 +24,13 @@
  * \author Xuehai Huang, Chensong Zhang, Ludmil Zikatanov
  * \date 10/21/2008
  */
-void fasp_init_quadrature(int num_qp, int ncoor, double (*gauss)[3])
+void fasp_init_quadrature (int num_qp, 
+                           int ncoor, 
+                           double (*gauss)[3])
 {
-	if(num_qp<=0)
-	{
-		printf(" Number of quadrature points must be positive.\n");
-		return;
-	}
+	if (num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, "fasp_init_quadrature");
 	
-	if(ncoor!=2)
-	{
-		printf(" Only 2-d quadrature rule supported currently.\n");
-		return;
-	}
+	if (ncoor!=2) fasp_chkerr(ERROR_QUAD_DIM, "fasp_init_quadrature");
 	
 	switch (num_qp) {
 		case 1:  // 1-point Gauss rule
@@ -183,7 +180,7 @@ void fasp_init_quadrature(int num_qp, int ncoor, double (*gauss)[3])
 			gauss[14][2] = 1.0/16;
 			break;
 		default:
-			printf("%d-point Lagrange rule is not supported.\n",num_qp);
+            fasp_chkerr(ERROR_QUAD_TYPE, "fasp_init_quadrature");
 			break;
 	}
 	
@@ -191,7 +188,8 @@ void fasp_init_quadrature(int num_qp, int ncoor, double (*gauss)[3])
 }
 
 /**
- * \fn void fasp_init_Gauss(int num_qp, int ncoor, double (*gauss)[3])
+ * \fn void fasp_init_Gauss (int num_qp, int ncoor, double (*gauss)[3])
+ *
  * \brief Initialize Gauss quadrature points and weights
  *
  * \param num_qp the number of quadrature points
@@ -203,19 +201,13 @@ void fasp_init_quadrature(int num_qp, int ncoor, double (*gauss)[3])
  * \author Xuehai Huang, Chensong Zhang, Ludmil Zikatanov
  * \date 10/21/2008
  */
-void fasp_init_Gauss(int num_qp, int ncoor, double (*gauss)[3])
+void fasp_init_Gauss (int num_qp, 
+                      int ncoor, 
+                      double (*gauss)[3])
 {
-	if(num_qp<=0)
-	{
-		printf(" Number of quadrature points must be positive.\n");
-		return;
-	}
+	if(num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, "fasp_init_Gauss");
 	
-	if(ncoor!=2)
-	{
-		printf(" Only 2-d quadrature rule supported currently.\n");
-		return;
-	}
+	if(ncoor!=2) fasp_chkerr(ERROR_QUAD_DIM, "fasp_init_Gauss");
 	
 	switch (num_qp) {
 		case 1:  // 1-point Gauss rule
@@ -864,7 +856,7 @@ void fasp_init_Gauss(int num_qp, int ncoor, double (*gauss)[3])
 			gauss[48][2] = 0.3623466079725786927077026e-02;
 			break;
 		default:
-			printf("%d-point Lagrange rule is not supported.\n",num_qp);
+            fasp_chkerr(ERROR_QUAD_TYPE, "fasp_init_Gauss");
 			break;
 	}
 	

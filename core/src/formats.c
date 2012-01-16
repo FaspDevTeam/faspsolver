@@ -12,8 +12,9 @@
 /*---------------------------------*/
 
 /**
- * \fn int fasp_format_dcoo_dcsr(dCOOmat *A, dCSRmat *B)
- * \brief Transform a double matrix from its IJ format to its CSR format.
+ * \fn SHORT fasp_format_dcoo_dcsr(dCOOmat *A, dCSRmat *B)
+ *
+ * \brief Transform a REAL matrix from its IJ format to its CSR format.
  *
  * \param *A   pointer to IJ matrix
  * \param *B   pointer to CSR matrix
@@ -22,18 +23,21 @@
  * \author Xuehai Huang
  * \date 08/10/2009
  */
-int fasp_format_dcoo_dcsr (dCOOmat *A, 
-                           dCSRmat *B)
+SHORT fasp_format_dcoo_dcsr (dCOOmat *A, 
+                             dCSRmat *B)
 {
-	const int m=A->row, n=A->col, nnz=A->nnz;
-	fasp_dcsr_alloc(m,n,nnz,B);
+	const INT m=A->row, n=A->col, nnz=A->nnz;
+	
+    fasp_dcsr_alloc(m,n,nnz,B);
     
-	int* ia  = B->IA, i;
-    int  iind, jind;
-    int* ind = (int *) fasp_mem_calloc(m+1,sizeof(int));
+	INT * ia = B->IA, i;
+    INT   iind, jind;
+    
+    INT * ind = (INT *) fasp_mem_calloc(m+1,sizeof(INT));
 	
 	for (i=0; i<=m; ++i) ind[i]=0; // initialize    
-	for (i=0; i<nnz; ++i) ind[A->I[i]+1]++; // count nnz in each row
+	
+    for (i=0; i<nnz; ++i) ind[A->I[i]+1]++; // count nnz in each row
     
     ia[0] = 0; // first index starting from zero
     for (i=1; i<=m; ++i) {
@@ -54,8 +58,9 @@ int fasp_format_dcoo_dcsr (dCOOmat *A,
 
 
 /**
- * \fn int fasp_format_dcsr_dcoo(dCSRmat *A, dCOOmat *B)
- * \brief Transform a double matrix from its CSR format to its IJ format.
+ * \fn SHORT fasp_format_dcsr_dcoo (dCSRmat *A, dCOOmat *B)
+ *
+ * \brief Transform a REAL matrix from its CSR format to its IJ format.
  *
  * \param *A   pointer to CSR matrix
  * \param *B   pointer to IJ matrix
@@ -64,29 +69,30 @@ int fasp_format_dcoo_dcsr (dCOOmat *A,
  * \author Xuehai Huang
  * \date 08/10/2009
  */
-int fasp_format_dcsr_dcoo (dCSRmat *A, 
-                           dCOOmat *B)
+SHORT fasp_format_dcsr_dcoo (dCSRmat *A, 
+                             dCOOmat *B)
 {
-	const int m=A->row, nnz=A->nnz;
-	int i, j;
-	int status = SUCCESS;
+	const INT m=A->row, nnz=A->nnz;
+	INT i, j;
+	SHORT status = SUCCESS;
 	
-	B->I=(int *)fasp_mem_calloc(nnz,sizeof(int));	
-	B->J=(int *)fasp_mem_calloc(nnz,sizeof(int));	
-	B->val=(double *)fasp_mem_calloc(nnz,sizeof(double));
+	B->I=(INT *)fasp_mem_calloc(nnz,sizeof(INT));	
+	B->J=(INT *)fasp_mem_calloc(nnz,sizeof(INT));	
+	B->val=(REAL *)fasp_mem_calloc(nnz,sizeof(REAL));
 	
 	for (i=0;i<m;++i) {
 		for (j=A->IA[i];j<A->IA[i+1];++j) B->I[N2C(j)]=C2N(i);
 	}
 	
-	memcpy(B->J,  A->JA, nnz*sizeof(int));
-	memcpy(B->val,A->val,nnz*sizeof(double));
+	memcpy(B->J,  A->JA, nnz*sizeof(INT));
+	memcpy(B->val,A->val,nnz*sizeof(REAL));
 	
 	return status;
 }
 
 /**
- * \fn int fasp_format_dstr_dcsr(dSTRmat *A, dCSRmat *B_ptr)
+ * \fn SHORT fasp_format_dstr_dcsr(dSTRmat *A, dCSRmat *B_ptr)
+ *
  * \brief Transfer a 'dSTRmat' type matrix into a 'dCSRmat' type matrix.
  *
  * \param *A      pointer to a 'dSTRmat' type matrix
@@ -95,44 +101,44 @@ int fasp_format_dcsr_dcoo (dCSRmat *A,
  * \author Zhou Zhiyang
  * \date 2010/04/29
  */
-int fasp_format_dstr_dcsr (dSTRmat *A, 
-                           dCSRmat *B_ptr)
+SHORT fasp_format_dstr_dcsr (dSTRmat *A, 
+                             dCSRmat *B_ptr)
 {
 	//! some members of A
-	const int nc    = A->nc;   
-	const int ngrid = A->ngrid;
-	const int nband = A->nband;
-	const int *offsets = A->offsets;
+	const INT nc    = A->nc;   
+	const INT ngrid = A->ngrid;
+	const INT nband = A->nband;
+	const INT *offsets = A->offsets;
 	
-	double  *diag = A->diag;
-	double **offdiag = A->offdiag;
+	REAL  *diag = A->diag;
+	REAL **offdiag = A->offdiag;
 	
 	//! some members of B
-	const int glo_row = nc*ngrid;
-	int glo_nnz;
-	int *ia = NULL;
-	int *ja = NULL;
-	double *a = NULL;
+	const INT glo_row = nc*ngrid;
+	INT glo_nnz;
+	INT *ia = NULL;
+	INT *ja = NULL;
+	REAL *a = NULL;
 	
 	dCSRmat B;
 	
 	//! local variables
-	int width;
-	int nc2 = nc*nc;
-	int BAND,ROW,COL;
-	int ncb,nci;
-	int row_start,col_start;
-	int block; //! how many blocks in the current ROW
-	int i,j;
-	int pos;
-	int start;
-	int val_L_start,val_R_start;
-	int row;
-	int tmp_col;
-	double tmp_val;
+	INT width;
+	INT nc2 = nc*nc;
+	INT BAND,ROW,COL;
+	INT ncb,nci;
+	INT row_start,col_start;
+	INT block; //! how many blocks in the current ROW
+	INT i,j;
+	INT pos;
+	INT start;
+	INT val_L_start,val_R_start;
+	INT row;
+	INT tmp_col;
+	REAL tmp_val;
 	
 	//! allocate for 'ia' array
-	ia = (int *)fasp_mem_calloc(glo_row+1,sizeof(int));
+	ia = (INT *)fasp_mem_calloc(glo_row+1,sizeof(INT));
 	
 	//! Generate the 'ia' array
 	ia[0] = 0;
@@ -165,8 +171,8 @@ int fasp_format_dstr_dcsr (dSTRmat *A,
 	
 	//! allocate for 'ja' and 'a' arrays
 	glo_nnz = ia[glo_row];
-	ja = (int *)fasp_mem_calloc(glo_nnz,sizeof(int));
-	a = (double *)fasp_mem_calloc(glo_nnz,sizeof(double));
+	ja = (INT *)fasp_mem_calloc(glo_nnz,sizeof(INT));
+	a = (REAL *)fasp_mem_calloc(glo_nnz,sizeof(REAL));
 	
 	//! Generate the 'ja' and 'a' arrays at the same time 
 	for (ROW = 0; ROW < ngrid; ++ROW)
@@ -275,11 +281,12 @@ int fasp_format_dstr_dcsr (dSTRmat *A,
 	
 	*B_ptr = B;
 	
-	return (0);
+	return SUCCESS;
 }
 
 /**
  * \fn dCSRmat fasp_format_bdcsr_dcsr(block_dCSRmat *Ab)
+ *
  * \brief Form the whole dCSRmat A using blocks given in Ab
  *
  * \param *Ab   pointer to the blocks
@@ -290,15 +297,15 @@ int fasp_format_dstr_dcsr (dSTRmat *A,
  */
 dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
 {
-    int m=0,n=0,nnz=0;
-    const int mb=Ab->brow, nb=Ab->bcol, nbl=mb*nb;
+    INT m=0,n=0,nnz=0;
+    const INT mb=Ab->brow, nb=Ab->bcol, nbl=mb*nb;
     dCSRmat **blockptr=Ab->blocks, *blockptrij, A;
 	
-    int i,j,ij,ir,i1,length,ilength,start,irmrow,irmrow1;
-    int *row, *col;
+    INT i,j,ij,ir,i1,length,ilength,start,irmrow,irmrow1;
+    INT *row, *col;
 	
-    row = (int *)fasp_mem_calloc(mb+1,sizeof(int));
-    col = (int *)fasp_mem_calloc(nb+1,sizeof(int));
+    row = (INT *)fasp_mem_calloc(mb+1,sizeof(INT));
+    col = (INT *)fasp_mem_calloc(nb+1,sizeof(INT));
 	
     // count the size of A
     row[0]=0; col[0]=0;
@@ -322,8 +329,8 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
 					irmrow=ir-row[i]; irmrow1=irmrow+1;
 					ilength=blockptrij->IA[irmrow1]-blockptrij->IA[irmrow];
 					if (ilength>0) {
-						memcpy(&(A.val[start]),&(blockptrij->val[blockptrij->IA[irmrow]]),ilength*sizeof(double));
-						memcpy(&(A.JA[start]), &(blockptrij->JA[blockptrij->IA[irmrow]]), ilength*sizeof(int));
+						memcpy(&(A.val[start]),&(blockptrij->val[blockptrij->IA[irmrow]]),ilength*sizeof(REAL));
+						memcpy(&(A.JA[start]), &(blockptrij->JA[blockptrij->IA[irmrow]]), ilength*sizeof(INT));
 						for (i1=0;i1<ilength;i1++) A.JA[start+i1]+=col[j];
 						length+=ilength;     
 					}
@@ -343,36 +350,38 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
 
 /**
  * \fn dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
+ *
  * \brief Convert a dCSRmat into a dCSRLmat
+ *
  * \param *A pointer to the dCSRLmat type matrix
+ *
  * \author Zhou Zhiyang
  * \date 2011/01/07
  */
 dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
 {
-	double *DATA         = A -> val;
-	int    *IA           = A -> IA;
-	int    *JA           = A -> JA;
-	int     num_rows     = A -> row;
-	int     num_cols     = A -> col;
-	int     num_nonzeros = A -> nnz;
+	REAL   *DATA         = A -> val;
+	INT    *IA           = A -> IA;
+	INT    *JA           = A -> JA;
+	INT     num_rows     = A -> row;
+	INT     num_cols     = A -> col;
+	INT     num_nonzeros = A -> nnz;
 	
 	dCSRLmat *B        = NULL;
-	int       dif;
-	int      *nzdifnum = NULL;
-	int      *rowstart = NULL;
-	int      *rowindex = (int *)fasp_mem_calloc(num_rows, sizeof(int));
-	int      *ja       = (int *)fasp_mem_calloc(num_nonzeros, sizeof(int));
-	double   *data     = (double *)fasp_mem_calloc(num_nonzeros, sizeof(double));
+	INT       dif;
+	INT      *nzdifnum = NULL;
+	INT      *rowstart = NULL;
+	INT      *rowindex = (INT *)fasp_mem_calloc(num_rows, sizeof(INT));
+	INT      *ja       = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT));
+	REAL     *data     = (REAL *)fasp_mem_calloc(num_nonzeros, sizeof(REAL));
 	
 	/* auxiliary arrays */
-	int *nzrow    = (int *)fasp_mem_calloc(num_rows, sizeof(int));
-	int *counter  = NULL;
-	int *invnzdif = NULL;
+	INT *nzrow    = (INT *)fasp_mem_calloc(num_rows, sizeof(INT));
+	INT *counter  = NULL;
+	INT *invnzdif = NULL;
 	
-	int i,j,k,cnt,maxnzrow;
-	
-	
+	INT i,j,k,cnt,maxnzrow;
+    
 	//-----------------------------------------
 	//  Generate 'nzrow' and 'maxnzrow'
 	//-----------------------------------------
@@ -387,7 +396,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
 		}
 	}
 	/* generate 'counter' */
-	counter = (int *)fasp_mem_calloc(maxnzrow + 1, sizeof(int));
+	counter = (INT *)fasp_mem_calloc(maxnzrow + 1, sizeof(INT));
 	for (i = 0; i < num_rows; i ++)
 	{
 		counter[nzrow[i]] ++;
@@ -406,9 +415,9 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
 	//  Generate the 'nzdifnum' and 'rowstart'
 	//-------------------------------------------- 
 	
-	nzdifnum = (int *)fasp_mem_calloc(dif, sizeof(int));
-	invnzdif = (int *)fasp_mem_calloc(maxnzrow + 1, sizeof(int));
-	rowstart = (int *)fasp_mem_calloc(dif + 1, sizeof(int));
+	nzdifnum = (INT *)fasp_mem_calloc(dif, sizeof(INT));
+	invnzdif = (INT *)fasp_mem_calloc(maxnzrow + 1, sizeof(INT));
+	rowstart = (INT *)fasp_mem_calloc(dif + 1, sizeof(INT));
 	rowstart[0] = 0;
 	for (cnt = 0, i = 0; i < maxnzrow + 1; i ++)
 	{
@@ -478,42 +487,46 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
 
 /*!
  * \fn dCSRmat fasp_format_dbsr_dcsr ( dBSRmat *B )
+ *
  * \brief Transfer a 'dBSRmat' type matrix into a dCSRmat.
+ *
  * \param dBSRmat *B pointer to the 'dBSRmat' type matrix
+ *
  * \author Zhou Zhiyang
  * \date 2010/10/23 
  *
- * \note: works for general nb (Xiaozhe)
+ * \note Works for general nb (Xiaozhe)
  */
 dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
 {
 	/* members of B */
-	int     ROW = B->ROW;
-	int     COL = B->COL;
-	int     NNZ = B->NNZ;    
-	int     nb  = B->nb;
-	int    *IA  = B->IA;
-	int    *JA  = B->JA;
-	int     storage_manner = B->storage_manner;
-	double *val = B->val;
+	INT     ROW = B->ROW;
+	INT     COL = B->COL;
+	INT     NNZ = B->NNZ;    
+	INT     nb  = B->nb;
+	INT    *IA  = B->IA;
+	INT    *JA  = B->JA;
+	INT     storage_manner = B->storage_manner;
+	REAL   *val = B->val;
 	
-	int jump = nb*nb;
-	int rowA = ROW*nb;
-	int colA = COL*nb;
-	int nzA  = NNZ*jump;
+	INT jump = nb*nb;
+	INT rowA = ROW*nb;
+	INT colA = COL*nb;
+	INT nzA  = NNZ*jump;
 	
 	dCSRmat A;
-	int     *ia = NULL;
-	int     *ja = NULL;
-	double  *a  = NULL;
+	INT     *ia = NULL;
+	INT     *ja = NULL;
+	REAL    *a  = NULL;
 	
-	int i,j,k;
-	int mr,mc;
-	int rowstart0,rowstart,colstart0,colstart;
-	int colblock,nzperrow; 
-	double *vp = NULL;
-	double *ap = NULL;
-	int    *jap = NULL;
+	INT      i,j,k;
+	INT      mr,mc;
+	INT      rowstart0,rowstart,colstart0,colstart;
+	INT      colblock,nzperrow; 
+    
+	REAL    *vp = NULL;
+	REAL    *ap = NULL;
+	INT     *jap = NULL;
     
 	//--------------------------------------------------------
 	// Create a CSR Matrix 
@@ -625,32 +638,35 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
 
 /*!
  * \fn dBSRmat fasp_format_dstr_dbsr ( dSTRmat *B )
+ *
  * \brief Transfer a 'dSTRmat' type matrix to a 'dBSRmat' type matrix.
+ *
  * \param dSTRmat *B pointer to the 'dSTRmat' type matrix
+ *
  * \author Zhou Zhiyang
  * \date 2010/10/26 
  */
 dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
 {
 	// members of 'B'
-	int      nc      = B->nc;
-	int      ngrid   = B->ngrid;
-	double  *diag    = B->diag;
-	int      nband   = B->nband;
-	int     *offsets = B->offsets;
-	double **offdiag = B->offdiag;
+	INT      nc      = B->nc;
+	INT      ngrid   = B->ngrid;
+	REAL    *diag    = B->diag;
+	INT      nband   = B->nband;
+	INT     *offsets = B->offsets;
+	REAL   **offdiag = B->offdiag;
 	
 	// members of 'A'
-	dBSRmat A;
-	int      NNZ;
-	int     *IA  = NULL;
-	int     *JA  = NULL;
-	double  *val = NULL;
+	dBSRmat  A;
+	INT      NNZ;
+	INT     *IA  = NULL;
+	INT     *JA  = NULL;
+	REAL    *val = NULL;
 	
 	// local variables
-	int i,j,k,m;
-	int nc2 = nc*nc;
-	int ngridplus1 = ngrid + 1;
+	INT i,j,k,m;
+	INT nc2 = nc*nc;
+	INT ngridplus1 = ngrid + 1;
 	
 	// compute NNZ
 	NNZ = ngrid;
@@ -695,7 +711,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
 	// Generate 'JA' and 'val' at the same time
 	for (i = 0 ; i < ngrid; ++i)
 	{
-		memcpy(val + IA[i]*nc2, diag + i*nc2, nc2*sizeof(double));
+		memcpy(val + IA[i]*nc2, diag + i*nc2, nc2*sizeof(REAL));
 		JA[IA[i]] = i;
 		IA[i] ++;
 	}
@@ -708,7 +724,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
 			for (j = -k; j < ngrid; ++j)
 			{
 				m = j + k;
-				memcpy(val+IA[j]*nc2, offdiag[i]+m*nc2, nc2*sizeof(double));
+				memcpy(val+IA[j]*nc2, offdiag[i]+m*nc2, nc2*sizeof(REAL));
 				JA[IA[j]] = m;
 				IA[j] ++;
 			}
@@ -718,7 +734,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
 			m = ngrid - k;
 			for (j = 0; j < m; ++j)
 			{
-				memcpy(val + IA[j]*nc2, offdiag[i] + j*nc2, nc2*sizeof(double));
+				memcpy(val + IA[j]*nc2, offdiag[i] + j*nc2, nc2*sizeof(REAL));
 				JA[IA[j]] = k + j;
 				IA[j] ++;
 			}
@@ -738,42 +754,45 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
 
 /*!
  * \fn dCOOmat * fasp_format_dbsr_dcoo ( dBSRmat *B )
+ *
  * \brief Transfer a 'dBSRmat' type matrix to a 'dCOOmat' type matrix.
+ *
  * \param dSTRmat *B pointer to the 'dBSRmat' type matrix
+ *
  * \author Zhou Zhiyang
  * \date 2010/10/26 
  */
 dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
 {
 	/* members of B */
-	int     ROW = B->ROW;
-	int     COL = B->COL;
-	int     NNZ = B->NNZ;    
-	int     nb  = B->nb;
-	int    *IA  = B->IA;
-	int    *JA  = B->JA;
-	double *val = B->val;
+	INT     ROW = B->ROW;
+	INT     COL = B->COL;
+	INT     NNZ = B->NNZ;    
+	INT     nb  = B->nb;
+	INT    *IA  = B->IA;
+	INT    *JA  = B->JA;
+	REAL   *val = B->val;
 	
 	dCOOmat *A = NULL;
-	int nb2 = nb*nb;
-	int num_nonzeros = NNZ*nb2;
-	int *rowA = NULL;
-	int *colA = NULL;
-	double *valA = NULL;
+	INT      nb2 = nb*nb;
+	INT      num_nonzeros = NNZ*nb2;
+	INT     *rowA = NULL;
+	INT     *colA = NULL;
+	REAL    *valA = NULL;
 	
-	int i,j,k,inb;
-	int row_start, col_start;
-	int cnt,mr,mc;
-	double *pt = NULL;
+	INT      i,j,k,inb;
+	INT      row_start, col_start;
+	INT      cnt,mr,mc;
+	REAL    *pt = NULL;
 	
 	// Create and Initialize a dBSRmat 'A'
 	A = (dCOOmat *)fasp_mem_calloc(1, sizeof(dCOOmat));
 	A->row = ROW*nb;
 	A->col = COL*nb;
 	A->nnz = num_nonzeros;    
-	rowA   = (int *)fasp_mem_calloc(num_nonzeros, sizeof(int)); 
-	colA   = (int *)fasp_mem_calloc(num_nonzeros, sizeof(int));
-	valA   = (double *)fasp_mem_calloc(num_nonzeros, sizeof(double));
+	rowA   = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT)); 
+	colA   = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT));
+	valA   = (REAL *)fasp_mem_calloc(num_nonzeros, sizeof(REAL));
 	A->I   = rowA;
 	A->J   = colA;
 	A->val = valA;

@@ -26,39 +26,41 @@ extern void ilutp_(const int *n,double *a,int *ja,int *ia,int *lfil,const double
 /*---------------------------------*/
 
 /**
- * \fn int fasp_ilu_dcsr_setup(dCSRmat *A, ILU_data *iludata, ILU_param *param)
+ * \fn SHORT fasp_ilu_dcsr_setup (dCSRmat *A, ILU_data *iludata, ILU_param *param)
+ *
  * \brief Get ILU decoposition of a CSR matrix A
  *
- * \param *A         pointer to CSR matrir of double type
+ * \param *A         pointer to CSR matrir of REAL type
  * \param *iludata   pointer to ILU_data
  * \param *param     pointer to ILU parameters
  *
  * \author Shiquan Zhang
  * \date 12/27/2009
  */
-int fasp_ilu_dcsr_setup (dCSRmat *A, 
-												 ILU_data *iludata, 
-												 ILU_param *param)
+SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
+                         ILU_data *iludata, 
+                         ILU_param *param)
 {
 #if FASP_USE_ILU
-	const int type=param->ILU_type, print_level=param->print_level;
-	const int m=A->row, n=A->col, nnz=A->nnz, mbloc=n;
-	const double ILU_relax=param->ILU_relax, ILU_droptol=param->ILU_droptol;
-	const double permtol=param->ILU_permtol;
+	const INT   type=param->ILU_type, print_level=param->print_level;
+	const INT   m=A->row, n=A->col, nnz=A->nnz, mbloc=n;
+	const REAL  ILU_relax=param->ILU_relax, ILU_droptol=param->ILU_droptol;
+	const REAL  permtol=param->ILU_permtol;
 	
-	int lfil=param->ILU_lfil, lfilt=param->ILU_lfil;
-	int ierr, iwk, nzlu, nwork, maxstr, *ijlu;
-	double *luval;
+    // local variable
+	INT    lfil=param->ILU_lfil, lfilt=param->ILU_lfil;
+	INT    ierr, iwk, nzlu, nwork, maxstr, *ijlu;
+	REAL  *luval;
 	
-	clock_t setup_start, setup_end;
-	double setup_duration;
-	int status = SUCCESS;
+	clock_t  setup_start, setup_end;
+	REAL     setup_duration;
+	SHORT    status = SUCCESS;
 	
 #if DEBUG_MODE
-	printf("fasp_ilu_dcsr_setup ...... [Start]\n");
+	printf("### DEBUG: fasp_ilu_dcsr_setup ...... [Start]\n");
 #endif
 	
-	if (param->print_level>8) printf("fasp_ilu_dcsr_setup: m=%d, n=%d, nnz=%d\n",m,n,nnz);
+	if (param->print_level>PRINT_MORE) printf("fasp_ilu_dcsr_setup: m=%d, n=%d, nnz=%d\n",m,n,nnz);
 	
 	setup_start=clock();
 	
@@ -84,7 +86,7 @@ int fasp_ilu_dcsr_setup (dCSRmat *A,
 	maxstr = 3*(iwk+nwork);
 	
 #if DEBUG_MODE
-	printf("[DEBUG] fasp_ilu_dcsr_setup: fill-in=%d, iwk=%d, nwork=%d\n", lfil, iwk, nwork);
+	printf("### DEBUG: fill-in=%d, iwk=%d, nwork=%d\n", lfil, iwk, nwork);
 #endif
 	
 	// setup ILU preconditioner
@@ -92,7 +94,7 @@ int fasp_ilu_dcsr_setup (dCSRmat *A,
 	fasp_ilu_data_alloc(iwk, nwork, iludata);
 	
 #if CHMEM_MODE
-	printf("fasp_ilu_dcsr_setup: memory usage after fasp_ilu_data_alloc: \n");
+	printf("### DEBUG: memory usage after fasp_ilu_data_alloc: \n");
 	fasp_mem_usage();
 #endif
 	
@@ -109,7 +111,7 @@ int fasp_ilu_dcsr_setup (dCSRmat *A,
 			break;
 		case ILUtp:
 			ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol, \
-						 &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
+                   &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
 			break;
 		default: // ILUs
 			ilus_(&n,A->val,A->JA,A->IA,&lfil,&ILU_relax,&nzlu,luval,ijlu,&maxstr,&ierr);
@@ -119,7 +121,7 @@ int fasp_ilu_dcsr_setup (dCSRmat *A,
 	fasp_dcsr_shift(A, -1);
 	
 #if CHMEM_MODE
-	printf("fasp_ilu_dcsr_setup: memory usage after ILU setup: \n");
+	printf("### DEBUG: memory usage after ILU setup: \n");
 	fasp_mem_usage();
 #endif
 	
@@ -127,24 +129,24 @@ int fasp_ilu_dcsr_setup (dCSRmat *A,
 	iludata->nwork=nwork;
 	
 #if DEBUG_MODE
-	printf("[DEBUG] fasp_ilu_dcsr_setup: iwk=%d, nzlu=%d\n",iwk,nzlu);
+	printf("### DEBUG: iwk=%d, nzlu=%d\n",iwk,nzlu);
 #endif	
 	
 	if (ierr!=0) {
-		printf("Error: ILU setup failed (ierr=%d)!\n", ierr);
+		printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
 		status = ERROR_SOLVER_ILUSETUP;
 		goto FINISHED;
 	}
 	
 	if (iwk<nzlu) {
-		printf("Error: Need more memory for ILU %d!\n", iwk-nzlu);
+		printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
 		status = ERROR_SOLVER_ILUSETUP;
 		goto FINISHED;
 	}
 	
-	if (print_level>0) {
+	if (print_level>PRINT_NONE) {
 		setup_end=clock();
-		setup_duration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
+		setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
 		
 		switch (type) {
 			case ILUk:
@@ -165,14 +167,14 @@ int fasp_ilu_dcsr_setup (dCSRmat *A,
 FINISHED: 	
 	
 #if DEBUG_MODE
-	printf("fasp_ilu_dcsr_setup ...... [Finish]\n");
+	printf("### DEBUG: fasp_ilu_dcsr_setup ...... [Finish]\n");
 #endif
 	
 	return status;
 	
 #else // WITH_ILU
 	
-	printf("Error: ILU is not enabled!!!\n");
+	printf("### ERROR: ILU is not enabled!!!\n");
 	exit(ERROR_MISC);
 	
 #endif

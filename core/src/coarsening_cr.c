@@ -7,19 +7,22 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-static int GraphAdd(Link *list, int *head, int *tail, int index, int istack);
-static int GraphRemove(Link *list, int *head, int *tail, int index);
-static int indset(int cand, int cpt, int fpt, int *ia, int *ja, int n, int *cf, double *ma);
+static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack);
+static INT GraphRemove(Link *list, INT *head, INT *tail, INT index);
+static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, REAL *ma);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn void fasp_amg_coarsening_cr(int i_0, int i_n, dCSRmat *A, 
+ * \fn INT fasp_amg_coarsening_cr (INT i_0, INT i_n, dCSRmat *A, 
  *                                 ivector *vertices, AMG_param *param)
+ *
  * \brief CR coarsening
  *
+ * \param i_0        starting index
+ * \param i_n        ending index
  * \param *A         pointer to matrix, i_0 = 0 
  * \param *vertices  pointer to CF, 0: fpt (current level) or 1: cpt 
  * \param *param     pointer to AMG parameters
@@ -27,21 +30,25 @@ static int indset(int cand, int cpt, int fpt, int *ia, int *ja, int n, int *cf, 
  * \author James Brannick
  * \date 04/21/2010
  */
-int fasp_amg_coarsening_cr (int i_0, 
-														int i_n, 
-														dCSRmat *A, 
-														ivector *vertices, 
-														AMG_param *param)
+INT fasp_amg_coarsening_cr (INT i_0, 
+                            INT i_n, 
+                            dCSRmat *A, 
+                            ivector *vertices, 
+                            AMG_param *param)
 {	
-	int cand=0,cpt=-1,fpt=1;        // internal labeling
-	int nc,ns=1;                    // # cpts, # stages
-	int i,j,in1,nu=3,num1 = nu-1;   // nu is number of cr sweeps
-	int *cf=NULL,*ia=NULL,*ja=NULL;
-	double temp0=0.0e0,temp1=0.0e0,rho=0.0e0,tg=8.0e-01;
-	double *a=NULL;
+	const INT print_level = param->print_level;
+    
+    // local variables
+    INT   cand=0,cpt=-1,fpt=1;        // internal labeling
+	INT   nc,ns=1;                    // # cpts, # stages
+	INT   i,j,in1,nu=3,num1 = nu-1;   // nu is number of cr sweeps
+	INT  *cf=NULL,*ia=NULL,*ja=NULL;
+	
+    REAL  temp0=0.0e0,temp1=0.0e0,rho=0.0e0,tg=8.0e-01;
+	REAL *a=NULL;
 	
 	/* WORKING MEMORY -- b not needed, remove later */
-	double *b=NULL,*u=NULL,*ma=NULL;
+	REAL *b=NULL,*u=NULL,*ma=NULL;
 	
 	ia = A->IA;
 	ja = A->JA;
@@ -51,12 +58,13 @@ int fasp_amg_coarsening_cr (int i_0,
 		in1 = i_n+1;
 	} else {
 		in1 = i_n;
-	}	
+	}
+    
 	/* CF, RHS, INITIAL GUESS, and MEAS. ARRAY */
 	cf = (int*)fasp_mem_calloc(in1,sizeof(int));
-	b  = (double*)fasp_mem_calloc(in1,sizeof(double));   
-	u  = (double*)fasp_mem_calloc(in1,sizeof(double));   
-	ma = (double*)fasp_mem_calloc(in1,sizeof(double));   
+	b  = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
+	u  = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
+	ma = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
 	
 	for(i=i_0;i<=i_n;++i) {
 		b[i] = 0.0e0; // ZERO RHS
@@ -92,8 +100,10 @@ int fasp_amg_coarsening_cr (int i_0,
 		rho = sqrt(temp1)/sqrt(temp0);
 		temp0 = 0.0e0; 
 		temp1 = 0.0e0;
-		printf("rho=%2.13lf\n",rho);
-		if (rho > tg){
+        
+		if (print_level>PRINT_MIN) printf("rho=%2.13lf\n",rho);
+		
+        if (rho > tg){
 			/* FORM CAND. SET & COMPUTE IND SET */ 
 			temp0 = 0.0e0;
 			for (i = i_0; i<= i_n; ++i){
@@ -126,12 +136,13 @@ int fasp_amg_coarsening_cr (int i_0,
 				// printf("cf[%i] = %i\n",i,cf[i]);
 			}  
 			vertices->row=i_n;
-			printf("vertices = %i\n",vertices->row);
+			if (print_level>=PRINT_MORE) printf("vertices = %i\n",vertices->row);
 			vertices->val= cf;
-			printf("nc=%i\n",nc);
+			if (print_level>=PRINT_MORE) printf("nc=%i\n",nc);
 			break;
 		}
 	}
+    
 	fasp_mem_free(u);
 	fasp_mem_free(b);
 	fasp_mem_free(ma);
@@ -144,11 +155,11 @@ int fasp_amg_coarsening_cr (int i_0,
 /*---------------------------------*/
 
 /**
- * static int GraphAdd(Link *list, int *head, int *tail, int index, int istack)
+ * static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack)
  */
-static int GraphAdd(Link *list, int *head, int *tail, int index, int istack)
+static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack)
 {
-	int prev = tail[-istack];
+	INT prev = tail[-istack];
 	
 	list[index].prev = prev;
 	if (prev < 0)
@@ -162,12 +173,12 @@ static int GraphAdd(Link *list, int *head, int *tail, int index, int istack)
 }
 
 /**
- * static int GraphRemove(Link *list, int *head, int *tail, int index)
+ * static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
  */
-static int GraphRemove(Link *list, int *head, int *tail, int index)
+static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
 {
-	int prev = list[index].prev;
-	int next = list[index].next;
+	INT prev = list[index].prev;
+	INT next = list[index].next;
 	
 	if (prev < 0)
 		head[prev] = next;
@@ -182,21 +193,21 @@ static int GraphRemove(Link *list, int *head, int *tail, int index)
 }
 
 /**
- * static int indset(int cand, int cpt, int fpt, int *ia, int *ja, int n, int *cf, double *ma)
+ * static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, REAL *ma)
  * \brief finds independent set of the graph  
  * \param *cf contains CF list  
  * \param *ma contains candidate set info. 
  */
-static int indset(int cand, int cpt, int fpt, int *ia, int *ja, int n, int *cf, double *ma)
+static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, REAL *ma)
 {
 	/* ma: candidates >= 1, cpts = -1, otherwise = 0
 	 * Note: graph contains candidates only */
 	
 	Link *list;
-	int  *head, *head_mem;
-	int  *tail, *tail_mem;
+	INT  *head, *head_mem;
+	INT  *tail, *tail_mem;
 	
-	int i, ji, jj, jl, index, istack, stack_size;	
+	INT i, ji, jj, jl, index, istack, stack_size;	
 	
 	istack = 0;
 	for (i = 0; i < n; ++i){
@@ -269,7 +280,7 @@ static int indset(int cand, int cpt, int fpt, int *ia, int *ja, int n, int *cf, 
 						/* move index in graph */
 						GraphRemove(list, head, tail, index);
 						GraphAdd(list, head, tail, index,
-										 (int) ma[index]);
+                                 (int) ma[index]);
 						if (ma[index] > istack){
 							istack = (int) ma[index];
 						}
@@ -277,6 +288,7 @@ static int indset(int cand, int cpt, int fpt, int *ia, int *ja, int n, int *cf, 
 				}
 			}
 		}
+        
 		/* reset istack to point to the biggest non-empty stack */
 		for ( ; istack > 0; istack--){
 			/* if non-negative, break */

@@ -104,7 +104,7 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
 		fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
 	}
 	
-	INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(int)); //each elvel stores the information of the number of aggregations
+	INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT)); //each elvel stores the information of the number of aggregations
 	
 	for (i=0; i<max_levels; ++i) num_aggregations[i] = 0;
 	
@@ -252,7 +252,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
 		fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
 	}
 	
-	INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(int)); //each elvel stores the information of the number of aggregations
+	INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT)); //each elvel stores the information of the number of aggregations
 	
 	for (i=0; i<max_levels; ++i) num_aggregations[i] = 0;
 	
@@ -444,7 +444,7 @@ static void aggregation (dCSRmat *A,
 	NIA[row] = index;
 	Neigh->nnz = index;
 	
-	Neigh->JA = (int*)fasp_mem_realloc(Neigh->JA, (Neigh->IA[row])*sizeof(int));
+	Neigh->JA = (int*)fasp_mem_realloc(Neigh->JA, (Neigh->IA[row])*sizeof(INT));
 	Neigh->val = (REAL*)fasp_mem_realloc(Neigh->val, (Neigh->IA[row])*sizeof(REAL));
 	
 	NIA =  Neigh->IA;
@@ -506,9 +506,9 @@ static void aggregation (dCSRmat *A,
 	/*------------------------------------------*/
 	/* Step 2. */
 	/*------------------------------------------*/
-	INT *temp_C = (int*)fasp_mem_calloc(row,sizeof(int));
+	INT *temp_C = (int*)fasp_mem_calloc(row,sizeof(INT));
 	
-	num_each_aggregation = (int*)fasp_mem_calloc(*num_aggregations,sizeof(int));
+	num_each_aggregation = (int*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
 	
 	for (i=row;i--;){
 		temp_C[i] = vertices->val[i];  
@@ -588,7 +588,7 @@ static void form_tentative_p (ivector *vertices,
 	tentp->col = num_aggregations;
 	tentp->nnz = vertices->row;
 	
-	tentp->IA  = (int*)fasp_mem_calloc(tentp->row+1,sizeof(int));	
+	tentp->IA  = (int*)fasp_mem_calloc(tentp->row+1,sizeof(INT));	
 	
 	// local variables
 	INT * IA = tentp->IA;
@@ -611,7 +611,7 @@ static void form_tentative_p (ivector *vertices,
 	
 	// allocate
 	tentp->nnz = j;
-	tentp->JA = (int*)fasp_mem_calloc(tentp->nnz, sizeof(int));
+	tentp->JA = (int*)fasp_mem_calloc(tentp->nnz, sizeof(INT));
 	tentp->val = (REAL*)fasp_mem_calloc(tentp->nnz, sizeof(REAL));
 	
 	JA = tentp->JA;

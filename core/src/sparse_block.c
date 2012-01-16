@@ -14,7 +14,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_dcsr_getblk (dCSRmat *A, int *Is, int *Js, int m, int n, dCSRmat *B)
+ * \fn SHORT fasp_dcsr_getblk (dCSRmat *A, INT *Is, INT *Js, INT m, INT n, dCSRmat *B)
+ *
  * \brief get a sub CSR matrix of A with specified rows and colums
  *
  * \param *A   pointer to dCSRmat CSR matrix
@@ -27,23 +28,22 @@
  * \author Shiquan Zhang, Xiaozhe Hu
  * \data 12/25/2010
  */
-int fasp_dcsr_getblk (dCSRmat *A, 
-											int *Is, 
-											int *Js, 
-											int m, 
-											int n, 
-											dCSRmat *B)
+SHORT fasp_dcsr_getblk (dCSRmat *A, 
+                        INT *Is, 
+                        INT *Js, 
+                        INT m, 
+                        INT n, 
+                        dCSRmat *B)
 {
-	int i,j,k,nnz=0;
-	int status = SUCCESS;
-	int *col_flag;
+	INT    i,j,k,nnz=0;
+	SHORT  status = SUCCESS;
 	
 	// create colum flags
-	col_flag=(int*)fasp_mem_calloc(A->col,sizeof(int)); 
+	INT *col_flag=(int*)fasp_mem_calloc(A->col,sizeof(INT)); 
 	
 	B->row=m; B->col=n;
 	
-	B->IA=(int*)fasp_mem_calloc(m+1,sizeof(int));
+	B->IA=(int*)fasp_mem_calloc(m+1,sizeof(INT));
 	
 	for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
 	
@@ -59,9 +59,9 @@ int fasp_dcsr_getblk (dCSRmat *A,
 	B->nnz=nnz;
 	
 	// allocate 
-	B->JA=(int*)fasp_mem_calloc(nnz,sizeof(int)); 
+	B->JA=(int*)fasp_mem_calloc(nnz,sizeof(INT)); 
 	
-	B->val=(double*)fasp_mem_calloc(nnz,sizeof(double));
+	B->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
 	
 	// second pass: copy data to B
 	// no need to do the following loop, need to be modified!!  Xiaozhe 
@@ -83,7 +83,7 @@ int fasp_dcsr_getblk (dCSRmat *A,
 }
 
 /**
- * \fn void fasp_dbsr_getblk (dBSRmat *A, int *Is, int *Js, int m, int n, dBSRmat *B)
+ * \fn SHORT fasp_dbsr_getblk (dBSRmat *A, INT *Is, INT *Js, INT m, INT n, dBSRmat *B)
  * \brief get a sub BSR matrix of A with specified rows and columns. 
  *
  * \param *A   pointer to dBSRmat BSR matrix
@@ -96,26 +96,25 @@ int fasp_dcsr_getblk (dCSRmat *A,
  * \author Shiquan Zhang, Xiaozhe Hu
  * \data 12/25/2010
  */
-int fasp_dbsr_getblk (dBSRmat *A, 
-											int *Is, 
-											int *Js, 
-											int m, 
-											int n, 
-											dBSRmat *B)
+SHORT fasp_dbsr_getblk (dBSRmat *A, 
+                        INT *Is, 
+                        INT *Js, 
+                        INT m, 
+                        INT n, 
+                        dBSRmat *B)
 {
-	int i,j,k,nnz=0;
-	int status = SUCCESS;
-	int *col_flag;
+	const INT nb = A->nb;
+	const INT nb2=nb*nb;
 	
-	const int nb = A->nb;
-	const int nb2=nb*nb;
+	INT i,j,k,nnz=0;
+	SHORT status = SUCCESS;
 	
 	// create colum flags
-	col_flag=(int*)fasp_mem_calloc(A->COL,sizeof(int)); 
+	INT *col_flag=(int*)fasp_mem_calloc(A->COL,sizeof(INT)); 
 	
 	B->ROW=m; B->COL=n; B->nb=nb; B->storage_manner=A->storage_manner;  
 	
-	B->IA=(int*)fasp_mem_calloc(m+1,sizeof(int));
+	B->IA=(int*)fasp_mem_calloc(m+1,sizeof(INT));
 	
 	for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
 	
@@ -131,9 +130,9 @@ int fasp_dbsr_getblk (dBSRmat *A,
 	B->NNZ=nnz;
 	
 	// allocate 
-	B->JA=(int*)fasp_mem_calloc(nnz,sizeof(int)); 
+	B->JA=(int*)fasp_mem_calloc(nnz,sizeof(INT)); 
 	
-	B->val=(double*)fasp_mem_calloc(nnz*nb2,sizeof(double));
+	B->val=(REAL*)fasp_mem_calloc(nnz*nb2,sizeof(REAL));
 	
 	// second pass: copy data to B
 	// no need to do the following loop, need to be modified!!  Xiaozhe 
@@ -143,7 +142,7 @@ int fasp_dbsr_getblk (dBSRmat *A,
 			j=A->JA[N2C(k)];
 			if (col_flag[N2C(j)]>0) {
 				B->JA[nnz]=col_flag[j]-1;
-				memcpy(B->val+nnz*nb2, A->val+N2C(k)*nb2, nb2*sizeof(double));
+				memcpy(B->val+nnz*nb2, A->val+N2C(k)*nb2, nb2*sizeof(REAL));
 				nnz++;
 			}
 		} /* end for k */

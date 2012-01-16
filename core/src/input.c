@@ -11,6 +11,7 @@
 
 /**
  * \fn void fasp_param_input (char *filenm, input_param *Input)
+ *
  * \brief Read input parameters from disk file
  *
  * \param *filenm char filename for input file
@@ -22,7 +23,8 @@
  * \note Modified by Xiaozhe on 01/23/2011: add AMLI cycle
  * \note Modified by Chensong on 01/10/2012
  */
-void fasp_param_input (char *filenm, input_param *Input)
+void fasp_param_input (char *filenm, 
+                       input_param *Input)
 {
 	char     buffer[500]; // Note: max number of char for each line!
     char   * wall;
@@ -42,7 +44,7 @@ void fasp_param_input (char *filenm, input_param *Input)
 		printf("### ERROR: Could not open file %s...\n", filenm);
 		exit(ERROR_OPEN_FILE);
 	}
-
+    
 	while ( status == SUCCESS ) {
 		INT   ibuff; 
 		REAL  dbuff;

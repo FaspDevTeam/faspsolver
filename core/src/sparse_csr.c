@@ -200,8 +200,8 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
                         INT *P)
 {
 	const INT n=A->row,nnz=A->nnz;
-	INT *ia=A->IA, *ja=A->JA;
-	REAL *Aval=A->val;
+	const INT *ia=A->IA, *ja=A->JA;
+	const REAL *Aval=A->val;
 	INT i,j,k,jaj,i1,i2,start1,start2;
 	
 	dCSRmat Aperm = fasp_dcsr_create(n,n,nnz);
@@ -250,11 +250,10 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
  * \author Shiquan Zhang
  * \date 06/10/2010
  */
-INT fasp_dcsr_sort (dCSRmat *A)
+void fasp_dcsr_sort (dCSRmat *A)
 {
 	const INT n=A->col;
 	INT i,j,start,row_length;
-	INT status = SUCCESS;
 	
 	// temp memory for sorting rows of A
 	INT *index, *ja; 
@@ -288,8 +287,6 @@ INT fasp_dcsr_sort (dCSRmat *A)
 	fasp_mem_free(index);
 	fasp_mem_free(ja);
 	fasp_mem_free(a);
-	
-	return (status);
 }
 
 /**
@@ -327,7 +324,7 @@ void fasp_dcsr_getdiag (INT n,
 }
 
 /**
- * \fn INT fasp_dcsr_getcol (const INT n, dCSRmat *A, REAL *col)
+ * \fn void fasp_dcsr_getcol (const INT n, dCSRmat *A, REAL *col)
  *
  * \brief Get the n-th column of a CSR matrix A
  *
@@ -340,9 +337,9 @@ void fasp_dcsr_getdiag (INT n,
  * \author Xiaozhe Hu
  * \date 11/07/2009
  */
-INT fasp_dcsr_getcol (const INT n, 
-                      dCSRmat *A, 
-                      REAL *col) 
+void fasp_dcsr_getcol (const INT n, 
+                       dCSRmat *A, 
+                       REAL *col) 
 {
 	INT i,j, row_begin, row_end;
 	INT nrow = A->row, ncol = A->col;
@@ -351,8 +348,8 @@ INT fasp_dcsr_getcol (const INT n,
 	// check the column index n
 	if (n < 0 || n >= ncol) 
 	{
-		printf("getcol_dCSRmat: the column index n is illegal!!\n");
-		status = ERROR_MISC;
+		printf("### ERROR: the column index n is illegal!!\n");
+		status = ERROR_DUMMY_VAR;
 		goto FINISHED;
 	}
 	
@@ -374,12 +371,12 @@ INT fasp_dcsr_getcol (const INT n,
 		
 	} // end for (i=0; i<nrow; ++i)
 	
-FINISHED:	
-	return status;
+FINISHED:
+    fasp_chkerr(status,"fasp_dcsr_getcol");
 }
 
 /*!
- * \fn INT fasp_dcsr_diagpref ( dCSRmat *A )
+ * \fn void fasp_dcsr_diagpref ( dCSRmat *A )
  *
  * \brief Re-order the column and data arrays of a CSR matrix, 
  *        so that the first entry in each row is the diagonal
@@ -393,7 +390,7 @@ FINISHED:
  *
  *  Modified by Chensong Zhang on Dec/21/2012
  */
-INT fasp_dcsr_diagpref (dCSRmat *A)
+void fasp_dcsr_diagpref (dCSRmat *A)
 {
 	const INT   num_rowsA = A -> row; 
 	REAL      * A_data    = A -> val;
@@ -404,7 +401,7 @@ INT fasp_dcsr_diagpref (dCSRmat *A)
 	INT    i, j;
     INT    tempi, row_size;
 	REAL   tempd;
-
+    
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_dcsr_diagpref ...... [Start]\n");
 #endif
@@ -412,7 +409,7 @@ INT fasp_dcsr_diagpref (dCSRmat *A)
 	for (i = 0; i < num_rowsA; i ++)
 	{
 		row_size = A_i[i+1] - A_i[i];
-		        
+        
         // check whether the first entry is already diagonal        
         if (A_j[0] != i) { 
             
@@ -422,7 +419,7 @@ INT fasp_dcsr_diagpref (dCSRmat *A)
 #if DEBUG_MODE
                     printf("### DEBUG: Switch entry_%d with entry_0\n", j);
 #endif
-
+                    
                     tempi  = A_j[0];
                     A_j[0] = A_j[j];
                     A_j[j] = tempi;
@@ -444,16 +441,14 @@ INT fasp_dcsr_diagpref (dCSRmat *A)
         A_j    += row_size;
         A_data += row_size;
     }
-
+    
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_dcsr_diagpref ...... [Finish]\n");
 #endif
-    
-    return SUCCESS;
 }
 
 /**
- * \fn INT fasp_dcsr_regdiag (dCSRmat *A, REAL value)
+ * \fn SHORT fasp_dcsr_regdiag (dCSRmat *A, REAL value)
  *
  * \brief Regularize diagonal entries of a CSR sparse matrix
  *
@@ -465,8 +460,8 @@ INT fasp_dcsr_diagpref (dCSRmat *A)
  * \author Shiquan Zhang
  * \date 11/07/2009
  */
-INT fasp_dcsr_regdiag (dCSRmat *A, 
-                       REAL value)
+SHORT fasp_dcsr_regdiag (dCSRmat *A, 
+                         REAL value)
 {
 	const INT    m = A->row;
 	const INT * ia = A->IA, * ja = A->JA;
@@ -474,7 +469,7 @@ INT fasp_dcsr_regdiag (dCSRmat *A,
     
     // Local variables
 	INT i,j,k,begin_row,end_row;
-	INT status=RUN_FAIL;
+	SHORT status=RUN_FAIL;
 	
 	for (i=0;i<m;++i) {
 		begin_row=ia[i],end_row=ia[i+1];
@@ -538,7 +533,7 @@ void fasp_icsr_trans (iCSRmat *A,
 	INT ibegin, iend;
 	
 #if DEBUG_MODE
-	printf("m=%d, n=%d, nnz=%d\n",m,n,nnz);
+	printf("### DEBUG: m=%d, n=%d, nnz=%d\n",m,n,nnz);
 #endif
 	
 	AT->row=m; AT->col=n; AT->nnz=nnz;
@@ -605,14 +600,12 @@ void fasp_icsr_trans (iCSRmat *A,
 }	
 
 /**
- * \fn INT fasp_dcsr_trans (dCSRmat *A, dCSRmat *AT)
+ * \fn void fasp_dcsr_trans (dCSRmat *A, dCSRmat *AT)
  *
  * \brief Find tranpose of dCSRmat matrix A
  *
  * \param *A   pointer to the dCSRmat matrix
  * \param *AT  pointer to the transpose of dCSRmat matrix A (output)
- *
- * \return     SUCCESS if succeeded, ERROR message if failed
  *
  * \author Chensong Zhang
  * \date 04/06/2010   
@@ -621,7 +614,6 @@ INT fasp_dcsr_trans (dCSRmat *A,
                      dCSRmat *AT)
 {
 	const INT n=A->row, m=A->col, nnz=A->nnz;	
-	INT status = SUCCESS;
     
     // Local variables
 	INT i,j,k,p;
@@ -691,8 +683,7 @@ INT fasp_dcsr_trans (dCSRmat *A,
 		} // end of i
 		
 	} // end if 
-	
-	return (status);
+    
 }	
 
 /* 
@@ -746,7 +737,7 @@ void fasp_dcsr_transpose (INT *row[2],
 }
 
 /**
- * \fn INT fasp_dcsr_compress (dCSRmat *A, dCSRmat *B, REAL dtol)
+ * \fn void fasp_dcsr_compress (dCSRmat *A, dCSRmat *B, REAL dtol)
  *
  * \brief Compress a CSR matrix A and store in CSR matrix B by
  *        dropping small entries abs(aij)<=dtol
@@ -760,11 +751,10 @@ void fasp_dcsr_transpose (INT *row[2],
  * \author Shiquan Zhang
  * \date 03/10/2010
  */
-INT fasp_dcsr_compress (dCSRmat *A, 
-                        dCSRmat *B, 
-                        REAL dtol)
+void fasp_dcsr_compress (dCSRmat *A, 
+                         dCSRmat *B, 
+                         REAL dtol)
 {
-	INT status = SUCCESS;
 	INT i, j, k;
 	INT ibegin,iend1;	
 	
@@ -799,12 +789,10 @@ INT fasp_dcsr_compress (dCSRmat *A,
 	}  
 	
 	fasp_mem_free(index);
-	
-	return (status);
 }
 
 /**
- * \fn INT fasp_dcsr_compress_inplace (dCSRmat *A, REAL dtol)
+ * \fn SHORT fasp_dcsr_compress_inplace (dCSRmat *A, REAL dtol)
  *
  * \brief Compress a CSR matrix A IN PLACE by
  *        dropping small entries abs(aij)<=dtol
@@ -816,15 +804,15 @@ INT fasp_dcsr_compress (dCSRmat *A,
  * \data 12/25/2010
  * \note this can be modified for filtering!!!
  */
-INT fasp_dcsr_compress_inplace (dCSRmat *A, 
-                                REAL dtol)
+SHORT fasp_dcsr_compress_inplace (dCSRmat *A, 
+                                  REAL dtol)
 {
 	const INT row=A->row;
 	const INT nnz=A->nnz;
 	
 	INT i, j, k;
 	INT ibegin,iend=A->IA[0];	
-	INT status = SUCCESS;
+	SHORT status = SUCCESS;
 	
 	k=0;
 	for (i=0;i<row;++i) {
@@ -854,7 +842,7 @@ INT fasp_dcsr_compress_inplace (dCSRmat *A,
 }
 
 /**
- * \fn INT fasp_dcsr_shift (dCSRmat *A, INT offset)
+ * \fn void fasp_dcsr_shift (dCSRmat *A, INT offset)
  *
  * \brief Reindex a REAL matrix in CSR format to make the index starting from 0 or 1
  *
@@ -866,8 +854,8 @@ INT fasp_dcsr_compress_inplace (dCSRmat *A,
  * \author Chensong Zhang
  * \date 04/06/2010  
  */
-INT fasp_dcsr_shift (dCSRmat *A, 
-                     INT offset)
+void fasp_dcsr_shift (dCSRmat *A, 
+                      INT offset)
 {
 	const INT nnz=A->nnz;
 	const INT n=A->row;
@@ -878,8 +866,6 @@ INT fasp_dcsr_shift (dCSRmat *A,
 	for (i=0; i<=n; ++i) ai[i]+=offset;
 	
 	for (i=0;i<nnz;++i) aj[i]+=offset;
-	
-	return SUCCESS;
 }
 
 /**
@@ -887,9 +873,8 @@ INT fasp_dcsr_shift (dCSRmat *A,
  *
  * \brief Symmetric diagonal scaling D^{-1/2}AD^{-1/2}
  *
- * \param *A      pointer to the dCSRmat matrix
+ * \param *A     pointer to the dCSRmat matrix
  * \param *diag  pointer to the diagonal entries
- * \return void
  *
  * \author Xiaozhe Hu
  * \date 01/31/2011
@@ -932,8 +917,6 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
 	
 	// free work space
 	if (work) fasp_mem_free(work);
-	
-	return;
 }
 
 /*---------------------------------*/

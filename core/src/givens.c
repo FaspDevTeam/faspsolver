@@ -12,8 +12,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_aux_givens(double beta, dCSRmat *H, dvector *y, 
- *                          dvector *v, double *tmp)
+ * \fn void fasp_aux_givens(const REAL beta, dCSRmat *H, dvector *y, REAL *tmp)
+ *
  * \brief Perform Givens rotations to compute y |beta*e_1- H*y|
  *
  * \param beta   the norm of residual r_0
@@ -24,15 +24,14 @@
  * \author Xuehai Huang
  * \date 10/19/2008
  */
-void fasp_aux_givens (double beta, 
+void fasp_aux_givens (const REAL beta, 
                       dCSRmat *H, 
-											dvector *y, 
-											dvector *v, 
-											double *tmp)
+                      dvector *y, 
+                      REAL *tmp)
 {
-	int Hsize=H->row;
-	int i, j, istart, idiag, ip1start;
-	double h0,h1,r,c,s,tempi,tempip1,sum;
+	const INT  Hsize=H->row;
+	INT        i, j, istart, idiag, ip1start;
+	REAL       h0,h1,r,c,s,tempi,tempip1,sum;
 	
 	tmp[0]=beta;
 	for (i=1;i<Hsize;++i) tmp[i]=0.0; 

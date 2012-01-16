@@ -50,12 +50,16 @@
 #define ERROR_WRONG_FILE       -11   /**< input contains wrong format */
 #define ERROR_INPUT_PAR        -13   /**< wrong input argument */
 #define ERROR_REGRESS          -14   /**< regression test fail */
+#define ERROR_NUM_BLOCKS       -18   /**< wrong number of blocks */
 #define ERROR_MISC             -19   /**< other error */
 //-----------------------------------------------------------------------------------
 #define ERROR_ALLOC_MEM        -20   /**< fail to allocate memory */
 #define ERROR_DATA_STRUCTURE   -21   /**< matrix or vector structures */
 #define ERROR_DATA_ZERODIAG    -22   /**< matrix has zero diagonal entries */
 #define ERROR_DUMMY_VAR        -23   /**< unexpected input data */
+//-----------------------------------------------------------------------------------
+#define ERROR_AMG_INTERP_TYPE  -30   /**< unknown interpolation type */
+#define ERROR_AMG_SMOOTH_TYPE  -31   /**< unknown smoother type */
 //-----------------------------------------------------------------------------------
 #define ERROR_SOLVER_TYPE      -40   /**< unknown solver type */
 #define ERROR_SOLVER_PRECTYPE  -41   /**< unknow precond type */
@@ -66,6 +70,9 @@
 #define ERROR_SOLVER_MISC      -46   /**< misc solver error during run time */
 #define ERROR_SOLVER_MAXIT     -48   /**< solver maximal iteration number reached */
 #define ERROR_SOLVER_EXIT      -49   /**< solver does not quit successfully */
+//-----------------------------------------------------------------------------------
+#define ERROR_QUAD_TYPE        -60   /**< unknown quadrature type */
+#define ERROR_QUAD_DIM         -61   /**< unsupported dimension for quadrature rules */
 //-----------------------------------------------------------------------------------
 #define RUN_FAIL               -100  /**< general fail to run, no specified reason */
 

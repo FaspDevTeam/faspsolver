@@ -11,7 +11,8 @@
 /*---------------------------------*/
 
 /**
- * \fn dBSRmat fasp_dbsr_create (int ROW, int COL, int NNZ, int nb, int storage_manner)
+ * \fn dBSRmat fasp_dbsr_create (INT ROW, INT COL, INT NNZ, INT nb, INT storage_manner)
+ *
  * \brief Create BSR sparse matrix data memory space
  *
  * \param ROW             integer, number of rows of block
@@ -19,50 +20,51 @@
  * \param NNZ             integer, number of nonzero blocks
  * \param nb              integer, dimension of exch block
  * \param storage_manner  integer, storage manner for each sub-block 
+ *
  * \return A              the new dBSRmat matrix
  *
  * \author Xiaozhe Hu
  * \date 10/26/2010  
  */
-dBSRmat fasp_dbsr_create (int ROW, 
-													int COL, 
-													int NNZ, 
-													int nb, 
-													int storage_manner)
+dBSRmat fasp_dbsr_create (INT ROW, 
+                          INT COL, 
+                          INT NNZ, 
+                          INT nb, 
+                          INT storage_manner)
 {		
 	dBSRmat A;
 	
 	if ( ROW > 0 ) {
-		A.IA = (int*)fasp_mem_calloc(ROW+1, sizeof(int));
+		A.IA = (int*)fasp_mem_calloc(ROW+1, sizeof(INT));
 	}
 	else {
 		A.IA = NULL;
 	}
 	
 #if CHMEM_MODE	
-	total_alloc_mem += (2*ROW)*sizeof(int);
+	total_alloc_mem += (2*ROW)*sizeof(INT);
 #endif
 	
 	if ( NNZ > 0 ) {
-		A.JA = (int*)fasp_mem_calloc(NNZ ,sizeof(int));
+		A.JA = (int*)fasp_mem_calloc(NNZ ,sizeof(INT));
 	}
 	else {
 		A.JA = NULL;
 	}	
 	
 #if CHMEM_MODE		
-	total_alloc_mem += NNZ*sizeof(int);
+	total_alloc_mem += NNZ*sizeof(INT);
 #endif
 	
 	if ( nb > 0 && NNZ > 0) {
-		A.val = (double*)fasp_mem_calloc(NNZ*nb*nb, sizeof(double));
+		A.val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
 	}
 	else {
 		A.val = NULL;
 	}
 	
 #if CHMEM_MODE		
-	total_alloc_mem += (NNZ*nb*nb)*sizeof(double);
+	total_alloc_mem += (NNZ*nb*nb)*sizeof(REAL);
 #endif
 	
 	A.ROW = ROW; A.COL = COL; A.NNZ = NNZ; 
@@ -72,7 +74,8 @@ dBSRmat fasp_dbsr_create (int ROW,
 }
 
 /**
- * \fn void fasp_dbsr_alloc (int ROW, int COL, int NNZ, int nb, int storage_manner, dBSRmat *A)
+ * \fn void fasp_dbsr_alloc (INT ROW, INT COL, INT NNZ, INT nb, INT storage_manner, dBSRmat *A)
+ *
  * \brief Allocate memory space for BSR format sparse matrix
  *
  * \param ROW             integer, number of rows of block
@@ -85,44 +88,44 @@ dBSRmat fasp_dbsr_create (int ROW,
  * \author Xiaozhe Hu
  * \date 10/26/2010 
  */
-void fasp_dbsr_alloc (int ROW, 
-											int COL, 
-											int NNZ, 
-											int nb, 
-											int storage_manner, 
-											dBSRmat *A)
+void fasp_dbsr_alloc (INT ROW, 
+                      INT COL, 
+                      INT NNZ, 
+                      INT nb, 
+                      INT storage_manner, 
+                      dBSRmat *A)
 {		
 	if ( ROW > 0 ) {
-		A->IA = (int*)fasp_mem_calloc(ROW+1, sizeof(int));
+		A->IA = (int*)fasp_mem_calloc(ROW+1, sizeof(INT));
 	}
 	else {
 		A->IA = NULL;
 	}
 	
 #if CHMEM_MODE	
-	total_alloc_mem += (2*ROW)*sizeof(int);
+	total_alloc_mem += (2*ROW)*sizeof(INT);
 #endif
 	
 	if ( NNZ > 0 ) {
-		A->JA = (int*)fasp_mem_calloc(NNZ ,sizeof(int));
+		A->JA = (int*)fasp_mem_calloc(NNZ ,sizeof(INT));
 	}
 	else {
 		A->JA = NULL;
 	}	
 	
 #if CHMEM_MODE		
-	total_alloc_mem += NNZ*sizeof(int);
+	total_alloc_mem += NNZ*sizeof(INT);
 #endif
 	
 	if ( nb > 0 ) {
-		A->val = (double*)fasp_mem_calloc(NNZ*nb*nb, sizeof(double));
+		A->val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
 	}
 	else {
 		A->val = NULL;
 	}
 	
 #if CHMEM_MODE		
-	total_alloc_mem += (NNZ*nb*nb)*sizeof(double);
+	total_alloc_mem += (NNZ*nb*nb)*sizeof(REAL);
 #endif
 	
 	A->ROW = ROW; A->COL = COL; A->NNZ = NNZ; 
@@ -134,6 +137,7 @@ void fasp_dbsr_alloc (int ROW,
 
 /**
  * \fn void fasp_dbsr_free (dBSRmat *A)
+ *
  * \brief Free memeory space for BSR format sparse matrix
  *
  * \param *A   pointer to the dBSRmat matrix
@@ -158,6 +162,7 @@ void fasp_dbsr_free (dBSRmat *A)
 
 /**
  * \fn void fasp_dbsr_init (dBSRmat *A)
+ *
  * \brief Initialize sparse matrix on structured grid
  *
  * \param *A pointer to the dBSRmat matrix
@@ -178,7 +183,8 @@ void fasp_dbsr_init (dBSRmat *A)
 }
 
 /*!
- * \fn int fasp_dbsr_diagpref ( dBSRmat *A )
+ * \fn SHORT fasp_dbsr_diagpref ( dBSRmat *A )
+ *
  * \brief Reorder the column and data arrays of a square BSR matrix, 
  *        so that the first entry in each row is the diagonal one.
  *
@@ -190,22 +196,22 @@ void fasp_dbsr_init (dBSRmat *A)
  * \note Reordering is done in place. 
  *
  */
-int fasp_dbsr_diagpref (dBSRmat *A)
-{
-	int    i, j, tempi, row_size;
+SHORT fasp_dbsr_diagpref (dBSRmat *A)
+{	
+	const INT     num_rowsA = A -> ROW; 
+	const INT     num_colsA = A -> COL; 
+	const INT     nb = A->nb;
+	const INT	  nb2 = nb*nb;
+	const INT    *A_i    = A -> IA;
+    INT          *A_j    = A -> JA;
+    REAL         *A_data = A -> val;
 	
-	double *A_data = A -> val;
-	int    *A_i    = A -> IA;
-	int    *A_j    = A -> JA;
-	int     num_rowsA = A -> ROW; 
-	int     num_colsA = A -> COL; 
-	int     nb = A->nb;
-	int	   nb2 = nb*nb;
-	
+	INT   i, j, tempi, row_size;
+
 	/* the matrix should be square */
-	if (num_rowsA != num_colsA) return -1;
+	if (num_rowsA != num_colsA) return ERROR_INPUT_PAR;
 	
-	double *tempd = (double*)fasp_mem_calloc(nb2, sizeof(double));
+	REAL *tempd = (REAL*)fasp_mem_calloc(nb2, sizeof(REAL));
 	
 	for (i = 0; i < num_rowsA; i ++)
 	{
@@ -223,9 +229,9 @@ int fasp_dbsr_diagpref (dBSRmat *A)
 					A_j[j] = tempi;
 					
 					// swap block
-					memcpy(tempd, A_data, (nb2)*sizeof(double));
-					memcpy(A_data, A_data+j*nb2,  (nb2)*sizeof(double));
-					memcpy(A_data+j*nb2, tempd, (nb2)*sizeof(double));
+					memcpy(tempd, A_data, (nb2)*sizeof(REAL));
+					memcpy(A_data, A_data+j*nb2, (nb2)*sizeof(REAL));
+					memcpy(A_data+j*nb2, tempd, (nb2)*sizeof(REAL));
 				}
 				break;
 			}
@@ -238,67 +244,70 @@ int fasp_dbsr_diagpref (dBSRmat *A)
 		A_data += row_size*nb2;
 	}
 	
-	//! free tempd
+	// free tempd
 	fasp_mem_free(tempd);
 	
-	return 0;
+	return SUCCESS;
 }
 
 /**
  * \fn dBSRmat fasp_dbsr_diaginv ( dBSRmat *A )
+ *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
+ *
  * \param *A pointer to the dBSRmat matrix
+ *
  * \author Zhou Zhiyang
+ * \data 2010/10/26
  *
  * \note: works for general nb (Xiaozhe)
- * \data 2010/10/26
  */
 dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
 {
-	//! members of A 
-	int     ROW = A->ROW;
-	int     COL = A->COL;
-	int     NNZ = A->NNZ;
-	int     nb  = A->nb;
-	int    *IA  = A->IA;
-	int    *JA  = A->JA;   
-	double *val = A->val;
+	// members of A 
+	const INT     ROW = A->ROW;
+	const INT     COL = A->COL;
+	const INT     NNZ = A->NNZ;
+	const INT     nb  = A->nb;
+    const INT     nb2 = nb*nb;
+	const INT    size = ROW*nb2;
+	const INT    *IA  = A->IA;
+	const INT    *JA  = A->JA;   
+    REAL         *val = A->val;
 	
 	dBSRmat B;
-	int    *IAb  = NULL;
-	int    *JAb  = NULL;
-	double *valb = NULL;
+	INT    *IAb  = NULL;
+	INT    *JAb  = NULL;
+	REAL   *valb = NULL;
 	
-	//! Create a dBSRmat 'B'
+	// Create a dBSRmat 'B'
 	B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
 	
-	double *diaginv = NULL;
+	REAL *diaginv = NULL;
 	
-	int nb2  = nb*nb;
-	int size = ROW*nb2;
-	int i,j,k,m,l;        
+	INT i,j,k,m,l;        
 	
 	IAb  = B.IA;
 	JAb  = B.JA;
 	valb = B.val;        
 	
-	memcpy(IAb, IA, (ROW+1)*sizeof(int));
-	memcpy(JAb, JA, NNZ*sizeof(int));
+	memcpy(IAb, IA, (ROW+1)*sizeof(INT));
+	memcpy(JAb, JA, NNZ*sizeof(INT));
 	
-	//! allocate memory   
-	diaginv = (double *)fasp_mem_calloc(size, sizeof(double));         
+	// allocate memory   
+	diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));         
 	
-	//! get all the diagonal sub-blocks   
+	// get all the diagonal sub-blocks   
 	for (i = 0; i < ROW; ++i)
 	{
 		for (k = IA[i]; k < IA[i+1]; ++k)
 		{
 			if (JA[k] == i)
-				memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(double));
+				memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
 		}
 	}
 	
-	//! compute the inverses of all the diagonal sub-blocks   
+	// compute the inverses of all the diagonal sub-blocks   
 	if (nb > 1)
 	{
 		for (i = 0; i < ROW; ++i)
@@ -310,12 +319,12 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
 	{
 		for (i = 0; i < ROW; ++i)
 		{  
-			//! zero-diagonal should be tested previously
+			// zero-diagonal should be tested previously
 			diaginv[i] = 1.0 / diaginv[i];
 		}
 	}
 	
-	//! compute D^{-1}*A
+	// compute D^{-1}*A
 	for (i = 0; i < ROW; ++i)
 	{
 		for (k = IA[i]; k < IA[i+1]; ++k)
@@ -324,8 +333,8 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
 			j = JA[k];
 			if (j == i)
 			{  
-				//! Identity sub-block
-				memset(valb+m, 0X0, nb2*sizeof(double));
+				// Identity sub-block
+				memset(valb+m, 0X0, nb2*sizeof(REAL));
 				for (l = 0; l < nb; l ++) valb[m+l*nb+l] = 1.0;
 			}
 			else
@@ -341,46 +350,49 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_diaginv2 ( dBSRmat *A, double *diaginv )
+ * \fn dBSRmat fasp_dbsr_diaginv2 ( dBSRmat *A, REAL *diaginv )
+ *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
+ *
  * \param *A pointer to the dBSRmat matrix
  * \param *diaginv pointer to the inverses of all the diagonal blocks
+ *
  * \author Zhou Zhiyang
+ * \data 2010/11/07
  *
  * \note: works for general nb (Xiaozhe)
- * \data 2010/11/07
  */
 dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A, 
-														double *diaginv)
+                            REAL *diaginv)
 {
-	//! members of A 
-	const int ROW = A->ROW;
-	const int COL = A->COL;
-	const int NNZ = A->NNZ;
-	const int nb  = A->nb, nbp1 = nb+1; 
-	const int nb2 = nb*nb;
+	// members of A 
+	const INT ROW = A->ROW;
+	const INT COL = A->COL;
+	const INT NNZ = A->NNZ;
+	const INT nb  = A->nb, nbp1 = nb+1; 
+	const INT nb2 = nb*nb;
 	
-	int    *IA  = A->IA;
-	int    *JA  = A->JA;   
-	double *val = A->val;
+	INT    *IA  = A->IA;
+	INT    *JA  = A->JA;   
+	REAL   *val = A->val;
 	
 	dBSRmat B;
-	int    *IAb  = NULL;
-	int    *JAb  = NULL;
-	double *valb = NULL;
+	INT    *IAb  = NULL;
+	INT    *JAb  = NULL;
+	REAL   *valb = NULL;
 	
-	int i,k,m,l,ibegin,iend;
+	INT i,k,m,l,ibegin,iend;
 	
-	//! Create a dBSRmat 'B'
+	// Create a dBSRmat 'B'
 	B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
 	IAb  = B.IA;
 	JAb  = B.JA;
 	valb = B.val;        
 	
-	memcpy(IAb, IA, (ROW+1)*sizeof(int));
-	memcpy(JAb, JA, NNZ*sizeof(int));
+	memcpy(IAb, IA, (ROW+1)*sizeof(INT));
+	memcpy(JAb, JA, NNZ*sizeof(INT));
 	
-	//! compute D^{-1}*A
+	// compute D^{-1}*A
 	for (i = 0; i < ROW; ++i)
 	{
 		ibegin = IA[i]; iend = IA[i+1];
@@ -393,8 +405,8 @@ dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
 			}
 			else
 			{  
-				//! Identity sub-block
-				memset(valb+m, 0X0, nb2*sizeof(double));
+				// Identity sub-block
+				memset(valb+m, 0X0, nb2*sizeof(REAL));
 				for (l = 0; l < nb; l ++) valb[m+l*nbp1] = 1.0;
 			}
 		}
@@ -404,67 +416,69 @@ dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A, double *diaginv)
+ * \fn dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A, REAL *diaginv)
+ *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
+ *
  * \param *A pointer to the dBSRmat matrix
  * \param *diaginv pointer to the inverses of all the diagonal blocks
- * \author Xiaozhe Hu
  *
  * \note: works for general nb (Xiaozhe)
+ *
+ * \author Xiaozhe Hu
  * \date 12/25/2010
  */
 dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A, 
-														double *diaginv)
+                            REAL *diaginv)
 {
-	//! members of A 
-	int     ROW = A->ROW;
-	int     COL = A->COL;
-	int     NNZ = A->NNZ;
-	int     nb  = A->nb;
-	int    *IA  = A->IA;
-	int    *JA  = A->JA;   
-	double *val = A->val;
+	// members of A 
+	const INT     ROW = A->ROW;
+	const INT     COL = A->COL;
+	const INT     NNZ = A->NNZ;
+	const INT     nb  = A->nb;
+    const INT     nb2 = nb*nb;
+	const INT    *IA  = A->IA;
+	const INT    *JA  = A->JA;   
+    REAL         *val = A->val;
 	
 	dBSRmat B;
-	int    *IAb  = NULL;
-	int    *JAb  = NULL;
-	double *valb = NULL;
+	INT    *IAb  = NULL;
+	INT    *JAb  = NULL;
+	REAL   *valb = NULL;
 	
-	int nb2  = nb*nb;
-	int i,j,k,m;    
+	INT i,j,k,m;    
 	
-	//! Create a dBSRmat 'B'
+	// Create a dBSRmat 'B'
 	B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
 	
 	IAb  = B.IA;
 	JAb  = B.JA;
 	valb = B.val;        
 	
-	memcpy(IAb, IA, (ROW+1)*sizeof(int));
-	memcpy(JAb, JA, NNZ*sizeof(int));
-	
+	memcpy(IAb, IA, (ROW+1)*sizeof(INT));
+	memcpy(JAb, JA, NNZ*sizeof(INT));
 	
 	switch (nb)
 	{
 		case 2:
-			//! main loop 
+			// main loop 
 			for (i = 0; i < ROW; ++i)
 			{
-				//! get the diagonal sub-blocks
+				// get the diagonal sub-blocks
 				for (k = IA[i]; k < IA[i+1]; ++k)
 				{
 					if (JA[k] == i)
 					{
 						m = k*4;
-						memcpy(diaginv+i*4, val+m, 4*sizeof(double));
+						memcpy(diaginv+i*4, val+m, 4*sizeof(REAL));
 						fasp_smat_identity_nc2(valb+m);
 					}
 				}
 				
-				//! compute the inverses of the diagonal sub-blocks 
+				// compute the inverses of the diagonal sub-blocks 
 				fasp_blas_smat_inv_nc2(diaginv+i*4);
 				
-				//! compute D^{-1}*A
+				// compute D^{-1}*A
 				for (k = IA[i]; k < IA[i+1]; ++k)
 				{
 					m = k*4;
@@ -476,24 +490,24 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
 			break;	
 			
 		case 3:
-			//! main loop 
+			// main loop 
 			for (i = 0; i < ROW; ++i)
 			{
-				//! get the diagonal sub-blocks
+				// get the diagonal sub-blocks
 				for (k = IA[i]; k < IA[i+1]; ++k)
 				{
 					if (JA[k] == i)
 					{
 						m = k*9;
-						memcpy(diaginv+i*9, val+m, 9*sizeof(double));
+						memcpy(diaginv+i*9, val+m, 9*sizeof(REAL));
 						fasp_smat_identity_nc3(valb+m);
 					}
 				}
 				
-				//! compute the inverses of the diagonal sub-blocks 
+				// compute the inverses of the diagonal sub-blocks 
 				fasp_blas_smat_inv_nc3(diaginv+i*9);
 				
-				//! compute D^{-1}*A
+				// compute D^{-1}*A
 				for (k = IA[i]; k < IA[i+1]; ++k)
 				{
 					m = k*9;
@@ -505,24 +519,24 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
 			break;
 			
 		case 5: 
-			//! main loop 
+			// main loop 
 			for (i = 0; i < ROW; ++i)
 			{
-				//! get the diagonal sub-blocks
+				// get the diagonal sub-blocks
 				for (k = IA[i]; k < IA[i+1]; ++k)
 				{
 					if (JA[k] == i)
 					{
 						m = k*25;
-						memcpy(diaginv+i*25, val+m, 25*sizeof(double));
+						memcpy(diaginv+i*25, val+m, 25*sizeof(REAL));
 						fasp_smat_identity_nc5(valb+m);
 					}
 				}
 				
-				//! compute the inverses of the diagonal sub-blocks 
+				// compute the inverses of the diagonal sub-blocks 
 				fasp_blas_smat_inv_nc5(diaginv+i*25);
 				
-				//! compute D^{-1}*A
+				// compute D^{-1}*A
 				for (k = IA[i]; k < IA[i+1]; ++k)
 				{
 					m = k*25;
@@ -534,24 +548,24 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
 			break;
 			
 		case 7:
-			//! main loop 
+			// main loop 
 			for (i = 0; i < ROW; ++i)
 			{
-				//! get the diagonal sub-blocks
+				// get the diagonal sub-blocks
 				for (k = IA[i]; k < IA[i+1]; ++k)
 				{
 					if (JA[k] == i)
 					{
 						m = k*49;
-						memcpy(diaginv+i*49, val+m, 49*sizeof(double));
+						memcpy(diaginv+i*49, val+m, 49*sizeof(REAL));
 						fasp_smat_identity_nc7(valb+m);
 					}
 				}
 				
-				//! compute the inverses of the diagonal sub-blocks 
+				// compute the inverses of the diagonal sub-blocks 
 				fasp_blas_smat_inv_nc7(diaginv+i*49);
 				
-				//! compute D^{-1}*A
+				// compute D^{-1}*A
 				for (k = IA[i]; k < IA[i+1]; ++k)
 				{
 					m = k*49;
@@ -563,24 +577,24 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
 			break;
 			
 		default:
-			//! main loop 
+			// main loop 
 			for (i = 0; i < ROW; ++i)
 			{
-				//! get the diagonal sub-blocks
+				// get the diagonal sub-blocks
 				for (k = IA[i]; k < IA[i+1]; ++k)
 				{
 					if (JA[k] == i)
 					{
 						m = k*nb2;
-						memcpy(diaginv+i*nb2, val+m, nb2*sizeof(double));
+						memcpy(diaginv+i*nb2, val+m, nb2*sizeof(REAL));
 						fasp_smat_identity(valb+m, nb, nb2);
 					}
 				}
 				
-				//! compute the inverses of the diagonal sub-blocks 
+				// compute the inverses of the diagonal sub-blocks 
 				fasp_blas_smat_inv(diaginv+i*nb2, nb);
 				
-				//! compute D^{-1}*A
+				// compute D^{-1}*A
 				for (k = IA[i]; k < IA[i+1]; ++k)
 				{
 					m = k*nb2;
@@ -596,64 +610,66 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A, double *diaginv)
+ * \fn dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A, REAL *diaginv)
+ *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
+ *
  * \param *A pointer to the dBSRmat matrix (A is preordered that the first block of each row is the diagonal block!!)
  * \param *diaginv pointer to the inverses of all the diagonal blocks
+ *
  * \author Xiaozhe Hu
  * \date 03/12/2011
  *
- * \note: works for general nb (Xiaozhe)
+ * \note works for general nb (Xiaozhe)
  * \note A is preordered that the first block of each row is the diagonal block!!
  */
 dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A, 
-														double *diaginv)
+                            REAL *diaginv)
 {
-	//! members of A 
-	int     ROW = A->ROW;
-	int     COL = A->COL;
-	int     NNZ = A->NNZ;
-	int     nb  = A->nb;
-	int    *IA  = A->IA;
-	int    *JA  = A->JA;   
-	double *val = A->val;
+	// members of A 
+	const INT     ROW = A->ROW;
+	const INT     COL = A->COL;
+	const INT     NNZ = A->NNZ;
+	const INT     nb  = A->nb;
+    const INT     nb2 = nb*nb;
+	const INT    *IA  = A->IA;
+	const INT    *JA  = A->JA;   
+	REAL         *val = A->val;
 	
 	dBSRmat B;
-	int    *IAb  = NULL;
-	int    *JAb  = NULL;
-	double *valb = NULL;
+	INT    *IAb  = NULL;
+	INT    *JAb  = NULL;
+	REAL   *valb = NULL;
 	
-	int nb2  = nb*nb;
-	int i,j,k,m;  
-	int ibegin, iend;  
+	INT i,j,k,m;  
+	INT ibegin, iend;  
 	
-	//! Create a dBSRmat 'B'
+	// Create a dBSRmat 'B'
 	B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
 	
 	IAb  = B.IA;
 	JAb  = B.JA;
 	valb = B.val;        
 	
-	memcpy(IAb, IA, (ROW+1)*sizeof(int));
-	memcpy(JAb, JA, NNZ*sizeof(int));
-	
+	memcpy(IAb, IA, (ROW+1)*sizeof(INT));
+	memcpy(JAb, JA, NNZ*sizeof(INT));
 	
 	switch (nb)
 	{
 		case 2:
-			//! main loop 
+			// main loop 
 			for (i = 0; i < ROW; ++i)
 			{
 				ibegin = IA[i]; iend = IA[i+1];
-				//! get the diagonal sub-blocks (It is the first block of each row)
+				// get the diagonal sub-blocks (It is the first block of each row)
 				m = ibegin*4;
-				memcpy(diaginv+i*4, val+m, 4*sizeof(double));
+				memcpy(diaginv+i*4, val+m, 4*sizeof(REAL));
 				fasp_smat_identity_nc2(valb+m);
 				
-				//! compute the inverses of the diagonal sub-blocks 
+				// compute the inverses of the diagonal sub-blocks 
 				fasp_blas_smat_inv_nc2(diaginv+i*9);
 				
-				//! compute D^{-1}*A
+				// compute D^{-1}*A
 				for (k = ibegin+1; k < iend; ++k)
 				{
 					m = k*4;
@@ -665,19 +681,19 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
 			break;	
 			
 		case 3:
-			//! main loop 
+			// main loop 
 			for (i = 0; i < ROW; ++i)
 			{
 				ibegin = IA[i]; iend = IA[i+1];
-				//! get the diagonal sub-blocks (It is the first block of each row)
+				// get the diagonal sub-blocks (It is the first block of each row)
 				m = ibegin*9;
-				memcpy(diaginv+i*9, val+m, 9*sizeof(double));
+				memcpy(diaginv+i*9, val+m, 9*sizeof(REAL));
 				fasp_smat_identity_nc3(valb+m);
 				
-				//! compute the inverses of the diagonal sub-blocks 
+				// compute the inverses of the diagonal sub-blocks 
 				fasp_blas_smat_inv_nc3(diaginv+i*9);
 				
-				//! compute D^{-1}*A
+				// compute D^{-1}*A
 				for (k = ibegin+1; k < iend; ++k)
 				{
 					m = k*9;
@@ -689,19 +705,19 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
 			break;
 			
 		case 5: 
-			//! main loop 
+			// main loop 
 			for (i = 0; i < ROW; ++i)
 			{
-				//! get the diagonal sub-blocks
+				// get the diagonal sub-blocks
 				ibegin = IA[i]; iend = IA[i+1];
 				m = ibegin*25;
-				memcpy(diaginv+i*25, val+m, 25*sizeof(double));
+				memcpy(diaginv+i*25, val+m, 25*sizeof(REAL));
 				fasp_smat_identity_nc5(valb+m);
 				
-				//! compute the inverses of the diagonal sub-blocks 
+				// compute the inverses of the diagonal sub-blocks 
 				fasp_blas_smat_inv_nc5(diaginv+i*25);
 				
-				//! compute D^{-1}*A
+				// compute D^{-1}*A
 				for (k = ibegin+1; k < iend; ++k)
 				{
 					m = k*25;
@@ -713,19 +729,19 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
 			break;
 			
 		case 7:
-			//! main loop 
+			// main loop 
 			for (i = 0; i < ROW; ++i)
 			{
-				//! get the diagonal sub-blocks
+				// get the diagonal sub-blocks
 				ibegin = IA[i]; iend = IA[i+1];	
 				m = ibegin*49;
-				memcpy(diaginv+i*49, val+m, 49*sizeof(double));
+				memcpy(diaginv+i*49, val+m, 49*sizeof(REAL));
 				fasp_smat_identity_nc7(valb+m);
 				
-				//! compute the inverses of the diagonal sub-blocks 
+				// compute the inverses of the diagonal sub-blocks 
 				fasp_blas_smat_inv_nc7(diaginv+i*49);
 				
-				//! compute D^{-1}*A
+				// compute D^{-1}*A
 				for (k = ibegin+1; k < iend; ++k)
 				{
 					m = k*49;
@@ -737,26 +753,26 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
 			break;
 			
 		default:
-			//! main loop 
+			// main loop 
 			for (i = 0; i < ROW; ++i)
 			{
-				//! get the diagonal sub-blocks
+				// get the diagonal sub-blocks
 				ibegin = IA[i]; iend = IA[i+1];
 				m = ibegin*nb2;
-				memcpy(diaginv+i*nb2, val+m, nb2*sizeof(double));
+				memcpy(diaginv+i*nb2, val+m, nb2*sizeof(REAL));
 				fasp_smat_identity(valb+m, nb, nb2);
 				
-				//! compute the inverses of the diagonal sub-blocks 
+				// compute the inverses of the diagonal sub-blocks 
 				fasp_blas_smat_inv(diaginv+i*nb2, nb);
 				
-				//! compute D^{-1}*A
+				// compute D^{-1}*A
 				for (k = ibegin+1; k < iend; ++k)
 				{
 					m = k*nb2;
 					j = JA[k];
 					fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
 				}
-			}// end of main loop
+			} // end of main loop
 			
 			break;
 	}
@@ -766,29 +782,32 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
 
 
 /*!
- * \fn fasp_dbsr_getdiag ( int n, dBSRmat *A, double *diag )
+ * \fn fasp_dbsr_getdiag ( INT n, dBSRmat *A, REAL *diag )
+ *
  * \brief Abstract the diagonal blocks of a BSR matrix.
+ *
  * \param dSTRmat *B pointer to the 'dBSRmat' type matrix
  * \param *diag pointer to array which stores the diagonal blocks in row by row manner
- * \author Zhou Zhiyang
  *
  * \note: works for general nb (Xiaozhe)
+ *
+ * \author Zhou Zhiyang
  * \date 2010/10/26 
  */
-void fasp_dbsr_getdiag (int n, 
-												dBSRmat *A, 
-												double *diag )
+void fasp_dbsr_getdiag (INT n, 
+                        dBSRmat *A, 
+                        REAL *diag )
 {
-	int i,k;
-	
-	int nb2 = A->nb*A->nb;
-	
+    const INT nb2 = A->nb*A->nb;
+    
+    INT i,k;
+		
 	for (i = 0; i < n; ++i)
 	{
 		for (k = A->IA[i]; k < A->IA[i+1]; ++k)
 		{
 			if (A->JA[k] == i) {
-				memcpy(diag+i*nb2, A->val+k*nb2, nb2*sizeof(double));
+				memcpy(diag+i*nb2, A->val+k*nb2, nb2*sizeof(REAL));
 				break;
 			}
 		}

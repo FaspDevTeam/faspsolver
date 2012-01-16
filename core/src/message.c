@@ -123,19 +123,22 @@ void fasp_chkerr (const SHORT status,
     switch (status) {
         case ERROR_OPEN_FILE:
             printf("### ERROR: %s -- Cannot open file!!!\n", fctname);
-            break;            
+            break;
         case ERROR_WRONG_FILE:
             printf("### ERROR: %s -- Wrong input file!!!\n", fctname);
-            break;      
+            break;
         case ERROR_INPUT_PAR:
             printf("### ERROR: %s -- Wrong input arguments!!!\n", fctname);
-            break;      
+            break;
         case ERROR_REGRESS:
             printf("### ERROR: %s -- Regression test failed!!!\n", fctname);
-            break;         
+            break;   
         case ERROR_ALLOC_MEM:
             printf("### ERROR: %s -- Cannot allocate memory!!!\n", fctname);
             break;
+        case ERROR_NUM_BLOCKS:
+            printf("### ERROR: %s -- Wrong number of blocks!!!\n", fctname);
+            break;            
         case ERROR_DATA_STRUCTURE:
             printf("### ERROR: %s -- Data structure mismatch!!!\n", fctname);
             break;
@@ -145,39 +148,51 @@ void fasp_chkerr (const SHORT status,
         case ERROR_DUMMY_VAR:
             printf("### ERROR: %s -- Unexpected input argument!!!\n", fctname);
             break;
+        case ERROR_AMG_INTERP_TYPE:
+            printf("### ERROR: %s -- Unknown AMG interpolation type!!!\n", fctname);
+            break;
+        case ERROR_AMG_SMOOTH_TYPE:
+            printf("### ERROR: %s -- Unknown AMG smoother type!!!\n", fctname);
+            break;
         case ERROR_SOLVER_TYPE:
             printf("### ERROR: %s -- Unknown solver type!!!\n", fctname);
             break;
         case ERROR_SOLVER_PRECTYPE:
             printf("### ERROR: %s -- Unknown preconditioner type!!!\n", fctname);
-            break;    
+            break;
         case ERROR_SOLVER_STAG:
             printf("### ERROR: %s -- Solver stagnation error!!!\n", fctname);
-            break;    
+            break;
         case ERROR_SOLVER_SOLSTAG:
             printf("### ERROR: %s -- Solution is close to zero!!!\n", fctname);
-            break;    
+            break;
         case ERROR_SOLVER_TOLSMALL:
             printf("### ERROR: %s -- Tolerance is too small for the solver!!!\n", fctname);
-            break;    
+            break;
         case ERROR_SOLVER_ILUSETUP:
             printf("### ERROR: %s -- ILU setup failed!!!\n", fctname);
-            break;     
+            break;
         case ERROR_SOLVER_MAXIT:
             printf("### ERROR: %s -- Maximal iteration number reached!!!\n", fctname);
-            break;    
+            break;
         case ERROR_SOLVER_EXIT:
             printf("### ERROR: %s -- Solver exited unexpected!!!\n", fctname);
-            break;        
+            break;
         case ERROR_SOLVER_MISC:
             printf("### ERROR: %s -- Unknown solver runtime error occurred!!!\n", fctname);
-            break;   
+            break;
         case ERROR_MISC:
             printf("### ERROR: %s -- Unknown error occurred!!!\n", fctname);
-            break;   
+            break;
+        case ERROR_QUAD_TYPE:
+            printf("### ERROR: %s -- Unknown quadrature rules!!!\n", fctname);
+            break;
+        case ERROR_QUAD_DIM:
+            printf("### ERROR: %s -- Dimension for quadrature rules is not supported!!!\n", fctname);
+            break;
         case RUN_FAIL:
             printf("### ERROR: %s -- Function does not exit successfully!!!\n", fctname);
-            break;        
+            break;
         default:
             break;
     }

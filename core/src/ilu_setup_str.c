@@ -12,43 +12,43 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_ilu_dstr_setup0(dSTRmat *A, dSTRmat *LU)
+ * \fn void fasp_ilu_dstr_setup0 (dSTRmat *A, dSTRmat *LU)
+ *
  * \brief Get ILU(0) decomposition of a structured matrix A 
  *
- * \param *A   pointer to oringinal structured matrix of double type
- * \param *LU  pointer to ILU structured matrix of double type
+ * \param *A   pointer to oringinal structured matrix of REAL type
+ * \param *LU  pointer to ILU structured matrix of REAL type
  *
- * \note Only works for 5 bands 2D and 7 bands 3D matrix with default offsets (order can be arbitrary)!!
+ * \note Only works for 5 bands 2D and 7 bands 3D matrix with default offsets (order can be arbitrary)!
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date 11/08/2010
  */
 void fasp_ilu_dstr_setup0 (dSTRmat *A, 
-													 dSTRmat *LU)
+                           dSTRmat *LU)
 {
 	// local variables 
-	int i,i1,ix,ixy,ii;     
-	double *smat;
-	int *LUoffsets;
-	int nline, nplane;
+	INT i,i1,ix,ixy,ii;     
+	INT *LUoffsets;
+	INT nline, nplane;
 	
 	// information of A
-	int nc = A->nc;
-	int nc2 = nc*nc;
-	int nx = A->nx;
-	int ny = A->ny;
-	int nz = A->nz;
-	int nxy = A->nxy;
-	int ngrid = A->ngrid;
-	int nband = A->nband;
+	INT nc = A->nc;
+	INT nc2 = nc*nc;
+	INT nx = A->nx;
+	INT ny = A->ny;
+	INT nz = A->nz;
+	INT nxy = A->nxy;
+	INT ngrid = A->ngrid;
+	INT nband = A->nband;
 	
-	int *offsets = A->offsets;
-	double *diag = A->diag;
-	double *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL;
-	double *offdiag3=NULL, *offdiag4=NULL, *offdiag5=NULL;
+	INT  *offsets = A->offsets;
+	REAL *smat=(REAL *)fasp_mem_calloc(nc2,sizeof(REAL));
+	REAL *diag = A->diag;
+	REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL;
+	REAL *offdiag3=NULL, *offdiag4=NULL, *offdiag5=NULL;
 	
-	// initialize
-	smat=(double *)fasp_mem_calloc(nc2,sizeof(double));
-	
+	// initialize	
 	if (nx == 1)
 	{
 		nline = ny;
@@ -73,18 +73,18 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
 	// check number of bands
 	if (nband == 4) 
 	{
-		LUoffsets=(int *)fasp_mem_calloc(4,sizeof(int));
+		LUoffsets=(INT *)fasp_mem_calloc(4,sizeof(INT));
 		LUoffsets[0]=-1; LUoffsets[1]=1; LUoffsets[2]=-nline; LUoffsets[3]=nline; 
 	}
 	else if (nband == 6)
 	{
-		LUoffsets=(int *)fasp_mem_calloc(6,sizeof(int));
+		LUoffsets=(INT *)fasp_mem_calloc(6,sizeof(INT));
 		LUoffsets[0]=-1; LUoffsets[1]=1; LUoffsets[2]=-nline; 
 		LUoffsets[3]=nline; LUoffsets[4]=-nplane; LUoffsets[5]=nplane;
 	} 
 	else 
 	{
-		printf("fasp_ilu_dstr_setup: number of bands for structured ILU is illegal!\n");
+		printf("fasp_ilu_dstr_setup0: number of bands for structured ILU is illegal!\n");
 		return;
 	}
 	
@@ -92,7 +92,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
 	fasp_dstr_alloc(nx, ny, nz, nxy, ngrid, nband, nc, offsets, LU);
 	
 	// copy diagonal 
-	memcpy(LU->diag, diag, (ngrid*nc2)*sizeof(double));
+	memcpy(LU->diag, diag, (ngrid*nc2)*sizeof(REAL));
 	
 	// check offsets and copy off-diagonals
 	for (i=0; i<nband; ++i)
@@ -100,36 +100,36 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
 		if (offsets[i] == -1)
 		{
 			offdiag0 = A->offdiag[i];
-			memcpy(LU->offdiag[0],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(double));
+			memcpy(LU->offdiag[0],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
 		}
 		else if (offsets[i] == 1)
 		{
 			offdiag1 = A->offdiag[i];
-			memcpy(LU->offdiag[1],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(double));
+			memcpy(LU->offdiag[1],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
 		}	
 		else if (offsets[i] == -nline)
 		{
 			offdiag2 = A->offdiag[i];
-			memcpy(LU->offdiag[2],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(double));
+			memcpy(LU->offdiag[2],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
 		}		
 		else if (offsets[i] == nline)
 		{
 			offdiag3 = A->offdiag[i];
-			memcpy(LU->offdiag[3],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(double));
+			memcpy(LU->offdiag[3],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
 		}
 		else if (offsets[i] == -nplane)
 		{
 			offdiag4 = A->offdiag[i];
-			memcpy(LU->offdiag[4],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(double));
+			memcpy(LU->offdiag[4],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
 		}		
 		else if (offsets[i] == nplane)
 		{
 			offdiag5 = A->offdiag[i];
-			memcpy(LU->offdiag[5],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(double));
+			memcpy(LU->offdiag[5],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
 		}		
 		else
 		{
-			printf("fasp_ilu_dstr_setup: offsets for structured ILU is illegal!\n");
+			printf("fasp_ilu_dstr_setup0: offsets for structured ILU is illegal!\n");
 			return;
 		}
 	}
@@ -159,7 +159,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
 		} // end for (i=1; i<ngrid; ++i)
 		
 	} // end if (nc == 1)
-  
+    
 	else if (nc == 3)
 	{   	
 		
@@ -182,7 +182,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
 			fasp_blas_smat_mul_nc3(&(LU->offdiag[0][i1]),&(LU->offdiag[1][i1]),smat);
 			
 			fasp_blas_array_axpyz_nc3(-1,smat,&(diag[ii]),&(LU->diag[ii]));
-      
+            
 			if (i>=nline)
 			{
 				fasp_blas_smat_mul_nc3(&(LU->offdiag[2][ix]),&(LU->offdiag[3][ix]),smat);
@@ -223,7 +223,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
 			fasp_blas_smat_mul_nc5(&(LU->offdiag[0][i1]),&(LU->offdiag[1][i1]),smat);
 			
 			fasp_blas_array_axpyz_nc5(-1.0,smat,&(diag[ii]),&(LU->diag[ii]));
-      
+            
 			if (i>=nline)
 			{
 				fasp_blas_smat_mul_nc5(&(LU->offdiag[2][ix]),&(LU->offdiag[3][ix]),smat);
@@ -264,7 +264,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
 			fasp_blas_smat_mul_nc7(&(LU->offdiag[0][i1]),&(LU->offdiag[1][i1]),smat);
 			
 			fasp_blas_array_axpyz_nc7(-1.0,smat,&(diag[ii]),&(LU->diag[ii]));
-      
+            
 			if (i>=nline)
 			{
 				fasp_blas_smat_mul_nc7(&(LU->offdiag[2][ix]),&(LU->offdiag[3][ix]),smat);
@@ -305,7 +305,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
 			fasp_blas_smat_mul(&(LU->offdiag[0][i1]),&(LU->offdiag[1][i1]),smat,nc);
 			
 			fasp_blas_array_axpyz(nc2,-1,smat,&(diag[ii]),&(LU->diag[ii]));
-      
+            
 			if (i>=nline)
 			{
 				fasp_blas_smat_mul(&(LU->offdiag[2][ix]),&(LU->offdiag[3][ix]),smat,nc);
@@ -330,34 +330,37 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_ilu_dstr_setup1(dSTRmat *A, dSTRmat *LU)
+ * \fn void fasp_ilu_dstr_setup1 (dSTRmat *A, dSTRmat *LU)
+ *
  * \brief Get ILU(1) decoposition of a structured matrix A
  *
- * \param *A    pointer to oringinal structured matrix of double type
- * \param *LU   pointer to ILU structured matrix of double type
+ * \param *A    pointer to oringinal structured matrix of REAL type
+ * \param *LU   pointer to ILU structured matrix of REAL type
  *
  * \note put L and U in a STR matrix and it has the following structure:
  *	       the diag is d, the offdiag of L are alpha1 to alpha6, the offdiag of U are beta1 to beta6   
+ *
  * \note Only works for 5 bands 2D and 7 bands 3D matrix with default offsets
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date 11/08/2010
  */
 void fasp_ilu_dstr_setup1 (dSTRmat *A, 
-													 dSTRmat *LU)
+                           dSTRmat *LU)
 {
-	int LUnband=12;
+	INT LUnband=12;
 	
-	int i,j,i1,ix,ixy,ixyx,ix1,ixy1,ic,i1c,ixc,ix1c,ixyc,ixy1c,ixyxc;     
-	register double *smat,t,*tc;
+	INT i,j,i1,ix,ixy,ixyx,ix1,ixy1,ic,i1c,ixc,ix1c,ixyc,ixy1c,ixyxc;     
+	register REAL *smat,t,*tc;
 	
-	const int nc=A->nc, nc2=nc*nc;
-	const int nx=A->nx;
-	const int ny=A->ny;
-	const int nz=A->nz;
-	const int nxy=A->nxy;
-	const int nband=A->nband;
-	const int ngrid=A->ngrid;
-	int nline, nplane;
+	const INT nc=A->nc, nc2=nc*nc;
+	const INT nx=A->nx;
+	const INT ny=A->ny;
+	const INT nz=A->nz;
+	const INT nxy=A->nxy;
+	const INT nband=A->nband;
+	const INT ngrid=A->ngrid;
+	INT nline, nplane;
 	
 	if (nx == 1)
 	{
@@ -380,16 +383,16 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 		nplane = nxy;
 	}
 	
-	smat=(double *)fasp_mem_calloc(nc2,sizeof(double));
+	smat=(REAL *)fasp_mem_calloc(nc2,sizeof(REAL));
 	
-	tc=(double *)fasp_mem_calloc(nc2,sizeof(double));
+	tc=(REAL *)fasp_mem_calloc(nc2,sizeof(REAL));
 	
-	int LUoffsets[]={-1,1,1-nline,nline-1,-nline,nline,nline-nplane,nplane-nline,1-nplane,nplane-1,-nplane,nplane};
+	INT LUoffsets[]={-1,1,1-nline,nline-1,-nline,nline,nline-nplane,nplane-nline,1-nplane,nplane-1,-nplane,nplane};
 	
 	fasp_dstr_alloc(nx,A->ny,A->nz,nxy,ngrid,LUnband,nc,LUoffsets,LU);
 	
-	if (nband == 6) memcpy(LU->offdiag[11],A->offdiag[5],((ngrid-nxy)*nc2)*sizeof(double));
-	memcpy(LU->diag,A->diag,nc2*sizeof(double));
+	if (nband == 6) memcpy(LU->offdiag[11],A->offdiag[5],((ngrid-nxy)*nc2)*sizeof(REAL));
+	memcpy(LU->diag,A->diag,nc2*sizeof(REAL));
 	
 	if (nc == 1)
 	{    
@@ -434,7 +437,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			if (ix>=0)
 			{
 				t=A->offdiag[2][ix];
-        
+                
 				if (ixy>=0) t-=LU->offdiag[10][ixy]*LU->offdiag[7][ixy];
 				
 				LU->offdiag[4][ix]=t*(LU->diag[ix]);
@@ -519,13 +522,13 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 		} // end for (i=1; i<ngrid; ++i)
 		
 	}  // end if (nc == 1)
-  
+    
 	else if (nc == 3)
 	{
 		//comput the first row
 		fasp_blas_smat_inv_nc3(LU->diag);
-		memcpy(LU->offdiag[1],A->offdiag[1],9*sizeof(double));
-		memcpy(LU->offdiag[5],A->offdiag[3],9*sizeof(double));
+		memcpy(LU->offdiag[1],A->offdiag[1],9*sizeof(REAL));
+		memcpy(LU->offdiag[5],A->offdiag[3],9*sizeof(REAL));
 		
 		for(i=1;i<ngrid;++i)
 		{   
@@ -574,7 +577,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			if (ix>=0)
 			{
 				
-				memcpy(tc,&(A->offdiag[2][ixc]),9*sizeof(double));
+				memcpy(tc,&(A->offdiag[2][ixc]),9*sizeof(REAL));
 				
 				if (ixy>=0)
 				{
@@ -609,7 +612,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			
 			//comput alpha1[i-1]
 			
-			memcpy(tc,&(A->offdiag[0][i1c]),9*sizeof(double));
+			memcpy(tc,&(A->offdiag[0][i1c]),9*sizeof(REAL));
 			
 			if (ix>=0)
 			{
@@ -629,8 +632,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			if (i+1<ngrid)
 			{
 				
-				memcpy(&(LU->offdiag[1][ic]),&(A->offdiag[1][ic]),9*sizeof(double));
-        
+				memcpy(&(LU->offdiag[1][ic]),&(A->offdiag[1][ic]),9*sizeof(REAL));
+                
 				if (ix1>=0)
 				{
 					fasp_blas_smat_mul_nc3(&(LU->offdiag[2][ix1c]),&(LU->offdiag[5][ix1c]),smat);
@@ -665,8 +668,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			//comput beta3[i]
 			if (i+nline<ngrid)
 			{
-        
-				memcpy(&(LU->offdiag[5][ic]),&(A->offdiag[3][ic]),9*sizeof(double));
+                
+				memcpy(&(LU->offdiag[5][ic]),&(A->offdiag[3][ic]),9*sizeof(REAL));
 				
 				if (ixyx>=0)
 				{
@@ -750,8 +753,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 		//comput the first row
 		//fasp_blas_smat_inv_nc5(LU->diag);
 		fasp_blas_smat_inv(LU->diag,5);
-		memcpy(LU->offdiag[1],A->offdiag[1], 25*sizeof(double));
-		memcpy(LU->offdiag[5],A->offdiag[3], 25*sizeof(double));
+		memcpy(LU->offdiag[1],A->offdiag[1], 25*sizeof(REAL));
+		memcpy(LU->offdiag[5],A->offdiag[3], 25*sizeof(REAL));
 		
 		for(i=1;i<ngrid;++i)
 		{   
@@ -800,7 +803,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			if (ix>=0)
 			{
 				
-				memcpy(tc,&(A->offdiag[2][ixc]),25*sizeof(double));
+				memcpy(tc,&(A->offdiag[2][ixc]),25*sizeof(REAL));
 				
 				if (ixy>=0)
 				{
@@ -835,7 +838,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			
 			//comput alpha1[i-1]
 			
-			memcpy(tc,&(A->offdiag[0][i1c]), 25*sizeof(double));
+			memcpy(tc,&(A->offdiag[0][i1c]), 25*sizeof(REAL));
 			
 			if (ix>=0)
 			{
@@ -855,8 +858,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			if (i+1<ngrid)
 			{
 				
-				memcpy(&(LU->offdiag[1][ic]),&(A->offdiag[1][ic]), 25*sizeof(double));
-        
+				memcpy(&(LU->offdiag[1][ic]),&(A->offdiag[1][ic]), 25*sizeof(REAL));
+                
 				if (ix1>=0)
 				{
 					fasp_blas_smat_mul_nc5(&(LU->offdiag[2][ix1c]),&(LU->offdiag[5][ix1c]),smat);
@@ -891,8 +894,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			//comput beta3[i]
 			if (i+nline<ngrid)
 			{
-        
-				memcpy(&(LU->offdiag[5][ic]),&(A->offdiag[3][ic]), 25*sizeof(double));
+                
+				memcpy(&(LU->offdiag[5][ic]),&(A->offdiag[3][ic]), 25*sizeof(REAL));
 				
 				if (ixyx>=0)
 				{
@@ -976,8 +979,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 		//comput the first row
 		//fasp_blas_smat_inv_nc5(LU->diag);
 		fasp_blas_smat_inv(LU->diag,7);
-		memcpy(LU->offdiag[1],A->offdiag[1], 49*sizeof(double));
-		memcpy(LU->offdiag[5],A->offdiag[3], 49*sizeof(double));
+		memcpy(LU->offdiag[1],A->offdiag[1], 49*sizeof(REAL));
+		memcpy(LU->offdiag[5],A->offdiag[3], 49*sizeof(REAL));
 		
 		for(i=1;i<ngrid;++i)
 		{   
@@ -1026,7 +1029,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			if (ix>=0)
 			{
 				
-				memcpy(tc,&(A->offdiag[2][ixc]),49*sizeof(double));
+				memcpy(tc,&(A->offdiag[2][ixc]),49*sizeof(REAL));
 				
 				if (ixy>=0)
 				{
@@ -1061,7 +1064,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			
 			//comput alpha1[i-1]
 			
-			memcpy(tc,&(A->offdiag[0][i1c]), 49*sizeof(double));
+			memcpy(tc,&(A->offdiag[0][i1c]), 49*sizeof(REAL));
 			
 			if (ix>=0)
 			{
@@ -1081,8 +1084,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			if (i+1<ngrid)
 			{
 				
-				memcpy(&(LU->offdiag[1][ic]),&(A->offdiag[1][ic]), 49*sizeof(double));
-        
+				memcpy(&(LU->offdiag[1][ic]),&(A->offdiag[1][ic]), 49*sizeof(REAL));
+                
 				if (ix1>=0)
 				{
 					fasp_blas_smat_mul_nc7(&(LU->offdiag[2][ix1c]),&(LU->offdiag[5][ix1c]),smat);
@@ -1117,8 +1120,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			//comput beta3[i]
 			if (i+nline<ngrid)
 			{
-        
-				memcpy(&(LU->offdiag[5][ic]),&(A->offdiag[3][ic]), 49*sizeof(double));
+                
+				memcpy(&(LU->offdiag[5][ic]),&(A->offdiag[3][ic]), 49*sizeof(REAL));
 				
 				if (ixyx>=0)
 				{
@@ -1200,8 +1203,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 	{
 		//comput the first row
 		fasp_blas_smat_inv(LU->diag,nc);
-		memcpy(LU->offdiag[1],A->offdiag[1],nc2*sizeof(double));
-		memcpy(LU->offdiag[5],A->offdiag[3],nc2*sizeof(double));
+		memcpy(LU->offdiag[1],A->offdiag[1],nc2*sizeof(REAL));
+		memcpy(LU->offdiag[5],A->offdiag[3],nc2*sizeof(REAL));
 		
 		for(i=1;i<ngrid;++i)
 		{   
@@ -1247,7 +1250,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			if (ix>=0)
 			{
 				
-				memcpy(tc,&(A->offdiag[2][ixc]),nc2*sizeof(double));
+				memcpy(tc,&(A->offdiag[2][ixc]),nc2*sizeof(REAL));
 				if (ixy>=0)
 				{
 					fasp_blas_smat_mul(&(LU->offdiag[10][ixyc]),&(LU->offdiag[7][ixyc]),smat,nc);
@@ -1280,7 +1283,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			
 			//comput alpha1[i-1]
 			
-			memcpy(tc,&(A->offdiag[0][i1c]),nc2*sizeof(double));
+			memcpy(tc,&(A->offdiag[0][i1c]),nc2*sizeof(REAL));
 			if (ix>=0)
 			{
 				fasp_blas_smat_mul(&(LU->offdiag[4][ixc]),&(LU->offdiag[3][ixc]),smat,nc);
@@ -1299,7 +1302,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			if (i+1<ngrid)
 			{
 				
-				memcpy(&(LU->offdiag[1][ic]),&(A->offdiag[1][ic]),nc2*sizeof(double));
+				memcpy(&(LU->offdiag[1][ic]),&(A->offdiag[1][ic]),nc2*sizeof(REAL));
 				if (ix1>=0)
 				{
 					fasp_blas_smat_mul(&(LU->offdiag[2][ix1c]),&(LU->offdiag[5][ix1c]),smat,nc);
@@ -1333,8 +1336,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 			//comput beta3[i]
 			if (i+nline<ngrid)
 			{
-        
-				memcpy(&(LU->offdiag[5][ic]),&(A->offdiag[3][ic]),nc2*sizeof(double));
+                
+				memcpy(&(LU->offdiag[5][ic]),&(A->offdiag[3][ic]),nc2*sizeof(REAL));
 				if (ixyx>=0)
 				{
 					fasp_blas_smat_mul(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[11][ixyxc]),smat,nc);

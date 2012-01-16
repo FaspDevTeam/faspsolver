@@ -12,32 +12,41 @@
 /*---------------------------------*/
 
 /**
- * \fn int fasp_check_diagpos (dCSRmat *A)
+ * \fn INT fasp_check_diagpos (dCSRmat *A)
+ *
  * \brief Check positivity of diagonal entries of a CSR sparse matrix.
+ *
  * \param *A pointer to the dCSRmat matrix
+ *
  * \return number of negative entries 
  *
  * \author Shuo Zhang
  * \date 03/29/2009
  */
-int fasp_check_diagpos (dCSRmat *A)
+INT fasp_check_diagpos (dCSRmat *A)
 {
-	const int m=A->row, n=A->col;
-	dvector diag; fasp_dcsr_getdiag(m,A,&diag);
-	
-	unsigned int i, num_neg;
+	const INT    m=A->row, n=A->col;
+	unsigned INT i, num_neg;
+	dvector      diag; fasp_dcsr_getdiag(m,A,&diag);
+    
+#if DEBUG_MODE
+	printf("check_diagpos: nr = %d, nc = %d, nnz = %d\n", m,n,A->nnz);
+#endif
+    
 	for (num_neg=i=0;i<m;++i) if (diag.val[i]<0) num_neg++;
 	
-	printf("check_diagpos: nr = %d, nc = %d, nnz = %d\n", m,n,A->nnz);		
 	printf("check_diagpos: number of negative diagonal entries = %d\n", num_neg);
 	
 	fasp_dvec_free(&diag);
+    
 	return num_neg;
 }
 
 /**
- * \fn int fasp_check_diagzero(dCSRmat *A)
+ * \fn SHORT fasp_check_diagzero (dCSRmat *A)
+ *
  * \brief Check wether a CSR sparse matrix has diagonal entries that are very close to zero.
+ *
  * \param *A pointr to the dCSRmat matrix
  * 
  * \return SUCCESS (0) if no diagonal entry is clase to zero, else ERROR (negative value)
@@ -45,13 +54,13 @@ int fasp_check_diagpos (dCSRmat *A)
  * \author Shuo Zhang
  * \date 03/29/2009
  */
-int fasp_check_diagzero (dCSRmat *A)
+SHORT fasp_check_diagzero (dCSRmat *A)
 {
-	const int m = A->row;
-	const int *ia=A->IA, *ja=A->JA;
-	const double *aj=A->val;
-	int i,j,k,begin_row,end_row;
-	int status;
+	const INT    m = A->row;
+	const INT   *ia=A->IA, *ja=A->JA;
+	const REAL  *aj=A->val;
+	INT          i,j,k,begin_row,end_row;
+	SHORT        status;
 	
 	for (i=0;i<m;++i) {
 		begin_row=ia[i],end_row=ia[i+1];
@@ -74,29 +83,31 @@ FINISHED:
 }
 
 /**
- * int fasp_check_diagdom(dCSRmat *A)
- * \brief Check whether a matrix is diagonal dominant.
- * \param *A pointer to the dCSRmat matrix
- * \return print the percentage of the rows which are diagonal dominant and not
- * the number of the rows which are diagonal dominant
+ * INT fasp_check_diagdom (dCSRmat *A)
  *
- * The routine chechs whether the sparse matrix is diagonal dominant on every row.
- *	 It will print out the percentage of the rows which are diagonal dominant and 
- * which are not; the routine will return the number of the rows which are diagonal 
- * dominant.
+ * \brief Check whether a matrix is diagonal dominant.
+ *
+ * \param *A pointer to the dCSRmat matrix
+ *
+ * \return The percentage of the rows which are diagonal dominant and not
+ *         the number of the rows which are diagonal dominant
+ *
+ * \note The routine chechs whether the sparse matrix is diagonal dominant on every row.
+ *	     It will print out the percentage of the rows which are diagonal dominant and 
+ *       which are not; the routine will return the number of the rows which are diagonal 
+ *       dominant.
  *
  * \author Shuo Zhang
  * \date 03/29/2009
  */
-int fasp_check_diagdom (dCSRmat *A)
+INT fasp_check_diagdom (dCSRmat *A)
 {
-	const int nn  = A->row;
-	const int nnz = A->IA[nn]-A->IA[0];
-	int i,j,k=0;
-	double sum;
-	int *rowp;
+	const INT   nn  = A->row;
+	const INT   nnz = A->IA[nn]-A->IA[0];
+	INT         i,j,k=0;
+	REAL        sum;
 	
-	rowp=(int *)fasp_mem_calloc(nnz,sizeof(int));
+    INT *rowp = (INT *)fasp_mem_calloc(nnz,sizeof(INT));
 	
 	for (i=0;i<nn;++i) {
 		for (j=A->IA[i];j<A->IA[i+1];++j) rowp[j]=i;
@@ -112,7 +123,7 @@ int fasp_check_diagdom (dCSRmat *A)
 	}
 	
 	printf("check_diagdom: percentage of the diagonal-dominant rows is %3.2lf%s\n", 
-				 100.0*(double)(nn-k)/(double)nn,"%");
+           100.0*(REAL)(nn-k)/(REAL)nn,"%");
 	
 	fasp_mem_free(rowp);
 	
@@ -120,65 +131,67 @@ int fasp_check_diagdom (dCSRmat *A)
 }
 
 /**
- * \fn int fasp_check_symm(dCSRmat *A)
+ * \fn INT fasp_check_symm (dCSRmat *A)
+ *
  * \brief Check symmetry of a sparse matrix of CSR format.
+ *
  * \param *A pointer to the dCSRmat matrix
+ *
  * \return 1 and 2 if the structure of the matrix is not symmetric;
- * \return 0 if the structure of the matrix is symmetric,
+ *         0 if the structure of the matrix is symmetric,
  * 
  * \note Print the maximal relative difference between matrix and its transpose.
  *
  * \author Shuo Zhang
  * \date 03/29/2009
  */
-int fasp_check_symm (dCSRmat *A)
+INT fasp_check_symm (dCSRmat *A)
 {
-	const double symmetry_tol=1.0e-12;
+	const REAL symmetry_tol=1.0e-12;
 	
-	int i,j,mdi,mdj,nnz,nn;
-	int *rowp,*rows[2],*cols[2];
-	int nns[2],tnizs[2];
-	int type=0;
+	INT i,j,mdi,mdj,nnz,nn;
+	INT *rowp,*rows[2],*cols[2];
+	INT nns[2],tnizs[2];
+	INT type=0;
 	
-	double maxdif,dif;
-	double *vals[2];
+	REAL maxdif,dif;
+	REAL *vals[2];
 	
 	nn=A->row;
 	nnz=A->IA[nn]-A->IA[0];
 	
 	if (nnz!=A->nnz) {
-		printf("check_symm: nnz of the matrix is wrong!!!\n");
-		printf("nnz=%d, ia[n]-ia[0]=%d\n",A->nnz,nnz);
+		printf("### ERROR: nnz=%d, ia[n]-ia[0]=%d does NOT match!!!\n",A->nnz,nnz);
 		exit(ERROR_WRONG_FILE);
 	}
 	
-	rowp=(int *)fasp_mem_calloc(nnz,sizeof(int));
+	rowp=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
 	
 	for (i=0;i<nn;++i) {
 		for (j=A->IA[i];j<A->IA[i+1];++j) rowp[N2C(j)]=C2N(i);
 	}
 	
-	rows[0]=(int *)fasp_mem_calloc(nnz,sizeof(int));
-	cols[0]=(int *)fasp_mem_calloc(nnz,sizeof(int));
-	vals[0]=(double *)fasp_mem_calloc(nnz,sizeof(double));
+	rows[0]=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
+	cols[0]=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
+	vals[0]=(REAL *)fasp_mem_calloc(nnz,sizeof(REAL));
 	
-	memcpy(rows[0],rowp,nnz*sizeof(int));
-	memcpy(cols[0],A->JA,nnz*sizeof(int));
-	memcpy(vals[0],A->val,nnz*sizeof(double));
+	memcpy(rows[0],rowp,nnz*sizeof(INT));
+	memcpy(cols[0],A->JA,nnz*sizeof(INT));
+	memcpy(vals[0],A->val,nnz*sizeof(REAL));
 	
 	nns[0]=nn;
 	nns[1]=A->col;
 	tnizs[0]=nnz;	
 	
-	rows[1]=(int *)fasp_mem_calloc(nnz,sizeof(int));	
-	cols[1]=(int *)fasp_mem_calloc(nnz,sizeof(int));	
-	vals[1]=(double *)fasp_mem_calloc(nnz,sizeof(double));
+	rows[1]=(INT *)fasp_mem_calloc(nnz,sizeof(INT));	
+	cols[1]=(INT *)fasp_mem_calloc(nnz,sizeof(INT));	
+	vals[1]=(REAL *)fasp_mem_calloc(nnz,sizeof(REAL));
 	
 	fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
 	
-	memcpy(rows[0],rows[1],nnz*sizeof(int));
-	memcpy(cols[0],cols[1],nnz*sizeof(int));
-	memcpy(vals[0],vals[1],nnz*sizeof(double));
+	memcpy(rows[0],rows[1],nnz*sizeof(INT));
+	memcpy(cols[0],cols[1],nnz*sizeof(INT));
+	memcpy(vals[0],vals[1],nnz*sizeof(REAL));
 	nns[0]=A->col;
 	nns[1]=nn;
 	
@@ -215,11 +228,23 @@ int fasp_check_symm (dCSRmat *A)
 	
 	if (maxdif>symmetry_tol) type=-3;
 	
-	if (type==0) printf("check_symm: matrix is symmetric with max relative difference is %1.3le\n",maxdif);
-	if (type==-3) printf("check_symm: matrix is nonsymmetric with max relative difference is %1.3le\n",maxdif);
-	if (type==-1) printf("check_symm: matrix has nonsymmetric sp pattern, check the %d-th, %d-th and %d-th rows and cols\n",mdi-1,mdi,mdi+1);
-	if (type==-2) printf("check_symm: matrix has nonsymmetric sp pattern, check the %d-th, %d-th and %d-th cols and rows\n",mdj-1,mdj,mdj+1);
-	
+    switch (type) {
+        case 0:
+            printf("Matrix is symmetric with max relative difference is %1.3le\n",maxdif);
+            break;
+        case 3:
+            printf("Matrix is nonsymmetric with max relative difference is %1.3le\n",maxdif);
+            break;
+        case -1:
+            printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th rows and cols\n",mdi-1,mdi,mdi+1);
+            break;
+        case -2:
+            printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th cols and rows\n",mdj-1,mdj,mdj+1);
+            break;
+        default:
+            break;
+    }
+
 	fasp_mem_free(rowp);
 	fasp_mem_free(rows[1]);
 	fasp_mem_free(cols[1]);
@@ -232,30 +257,32 @@ int fasp_check_symm (dCSRmat *A)
 }
 
 /**
- * \fn int fasp_check_dCSRmat(dCSRmat *A)
+ * \fn SHORT fasp_check_dCSRmat (dCSRmat *A)
+ *
  * \brief check whether a dCSRmat is valid or not
+ *
  * \param *A pointer to the dCSRmat matrix
  *
  * \author Shuo Zhang
  * \date 03/29/2009
  */
-int fasp_check_dCSRmat (dCSRmat *A)
+SHORT fasp_check_dCSRmat (dCSRmat *A)
 {	
-	int i;	
+	INT i;	
 	
 	if (A->row != A->col) {
-		printf("Error: non-square CSR matrix!\n");
+		printf("### ERROR: non-square CSR matrix!\n");
 		exit(ERROR_DATA_STRUCTURE);		
 	}
 	
 	if ((A->nnz==0)|(A->row==0)|(A->col==0)) {
-		printf("Error: empty CSR matrix!\n");
+		printf("### ERROR: empty CSR matrix!\n");
 		exit(ERROR_DATA_STRUCTURE);
 	}
 	
 	for (i=0;i<A->nnz;++i) {
 		if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
-			printf("Error: wrong CSR matrix format!\n");
+			printf("### ERROR: wrong CSR matrix format!\n");
 			exit(ERROR_DATA_STRUCTURE);
 		}
 	}
@@ -264,30 +291,32 @@ int fasp_check_dCSRmat (dCSRmat *A)
 }
 
 /**
- * \fn int fasp_check_iCSRmat(iCSRmat *A)
+ * \fn SHORT fasp_check_iCSRmat (iCSRmat *A)
+ *
  * \brief check whether an iCSRmat is valid or not
+ *
  * \param *A pointer to the iCSRmat matrix
  *
  * \author Shuo Zhang
  * \date 03/29/2009
  */
-int fasp_check_iCSRmat (iCSRmat *A)
+SHORT fasp_check_iCSRmat (iCSRmat *A)
 {	
-	int i;	
+	INT i;	
 	
 	if (A->row != A->col) {
-		printf("Error: non-square CSR matrix!\n");
+		printf("### ERROR: non-square CSR matrix!\n");
 		exit(ERROR_DATA_STRUCTURE);		
 	}
 	
 	if ((A->nnz==0)|(A->row==0)|(A->col==0)) {
-		printf("Error: empty CSR matrix!\n");
+		printf("### ERROR: empty CSR matrix!\n");
 		exit(ERROR_DATA_STRUCTURE);
 	}
 	
 	for (i=0;i<A->nnz;++i) {
 		if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
-			printf("Error: wrong CSR matrix!\n");
+			printf("### ERROR: wrong CSR matrix!\n");
 			exit(ERROR_DATA_STRUCTURE);
 		}
 	}

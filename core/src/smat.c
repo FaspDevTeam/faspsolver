@@ -12,6 +12,7 @@
 
 /**
  * \fn void fasp_iden_free (idenmat *A)
+ *
  * \brief Free idenmat sparse matrix data memeory space
  *
  * \param *A   pointer to the idenmat matrix
@@ -21,7 +22,7 @@
  */
 void fasp_iden_free (idenmat *A)
 {			
-	unsigned int i;
+	unsigned INT i;
 	
 	if (A==NULL) return;
 	
@@ -30,86 +31,91 @@ void fasp_iden_free (idenmat *A)
 }
 
 /**
- * \fn void fasp_smat_identity_nc2 (double *a)
+ * \fn void fasp_smat_identity_nc2 (REAL *a)
+ *
  * \brief Set a 2*2 full matrix to be a identity   
  *
- * \param *a      pointer to the double vector which stands for a 2*2 full matrix 
+ * \param *a      pointer to the REAL vector which stands for a 2*2 full matrix 
  *
  * \author Xiaozhe Hu
  * \date 2011/11/18
  */
-void fasp_smat_identity_nc2 (double *a)
+void fasp_smat_identity_nc2 (REAL *a)
 {
-	memset(a, 0X0, 4*sizeof(double));
+	memset(a, 0X0, 4*sizeof(REAL));
 	
 	a[0] = 1.0; a[3] = 1.0; 
 }	
 
 /**
- * \fn void fasp_smat_identity_nc3 (double *a)
+ * \fn void fasp_smat_identity_nc3 (REAL *a)
+ *
  * \brief Set a 3*3 full matrix to be a identity   
  *
- * \param *a      pointer to the double vector which stands for a 3*3 full matrix 
+ * \param *a      pointer to the REAL vector which stands for a 3*3 full matrix 
  *
  * \author Xiaozhe Hu
  * \date 2010/12/25
  */
-void fasp_smat_identity_nc3 (double *a)
+void fasp_smat_identity_nc3 (REAL *a)
 {
-	memset(a, 0X0, 9*sizeof(double));
+	memset(a, 0X0, 9*sizeof(REAL));
 	
 	a[0] = 1.0; a[4] = 1.0; a[8] = 1.0;
 }	
 
 /**
- * \fn void fasp_smat_identity_nc5 (double *a)
+ * \fn void fasp_smat_identity_nc5 (REAL *a)
+ *
  * \brief Set a 5*5 full matrix to be a identity   
  *
- * \param *a      pointer to the double vector which stands for a 5*5 full matrix 
+ * \param *a      pointer to the REAL vector which stands for a 5*5 full matrix 
  *
  * \author Xiaozhe Hu
  * \date 2010/12/25
  */
-void fasp_smat_identity_nc5 (double *a)
+void fasp_smat_identity_nc5 (REAL *a)
 {
-	memset(a, 0X0, 25*sizeof(double));
+	memset(a, 0X0, 25*sizeof(REAL));
 	
 	a[0] = 1.0; a[6] = 1.0; a[12] = 1.0; a[18] = 1.0; a[24] = 1.0;
 }	
 
 /**
- * \fn void fasp_smat_identity_nc7 (double *a)
+ * \fn void fasp_smat_identity_nc7 (REAL *a)
+ *
  * \brief Set a 7*7 full matrix to be a identity   
  *
- * \param *a      pointer to the double vector which stands for a 7*7 full matrix 
+ * \param *a      pointer to the REAL vector which stands for a 7*7 full matrix 
  *
  * \author Xiaozhe Hu
  * \date 2010/12/25
  */
-void fasp_smat_identity_nc7 (double *a)
+void fasp_smat_identity_nc7 (REAL *a)
 {
-	memset(a, 0X0, 49*sizeof(double));
+	memset(a, 0X0, 49*sizeof(REAL));
 	
 	a[0] = 1.0; a[8] = 1.0; a[16] = 1.0; a[24] = 1.0;
 	a[32] = 1.0; a[40] = 1.0; a[48] = 1.0;
 }	
 
 /**
- * \fn void fasp_smat_identity (double *a, int n, int n2)
+ * \fn void fasp_smat_identity (REAL *a, INT n, INT n2)
+ *
  * \brief Set a n*n full matrix to be a identity   
  *
- * \param *a      pointer to the double vector which stands for a n*n full matrix 
+ * \param *a      pointer to the REAL vector which stands for a n*n full matrix 
  * \param n       size of full matrix
- * \param n2     length of the double vector which stores the n*n full matrix
+ * \param n2     length of the REAL vector which stores the n*n full matrix
  *
  * \author Xiaozhe Hu
  * \date 2010/12/25
  */
-void fasp_smat_identity (double *a, 
-												 int n, 
-												 int n2)
+void fasp_smat_identity (REAL *a, 
+                         INT n, 
+                         INT n2)
 {
-	memset(a, 0X0, n2*sizeof(double));
+	memset(a, 0X0, n2*sizeof(REAL));
 	
 	switch (n)
 	{
@@ -172,7 +178,7 @@ void fasp_smat_identity (double *a,
 			
 		default:
 		{
-			int l;
+			INT l;
 			for (l = 0; l < n; l ++) a[l*n+l] = 1.0;
 		}
 			break;

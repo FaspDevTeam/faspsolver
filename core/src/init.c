@@ -56,13 +56,13 @@ void fasp_ilu_data_alloc (INT iwk,
                           ILU_data *iludata)
 {	
 #if DEBUG_MODE
-	printf("[DEBUG] fasp_ilu_data_alloc: iwk=%d, nwork=%d\n", iwk, nwork);
+	printf("### DEBUG: iwk=%d, nwork=%d\n", iwk, nwork);
 #endif
 	
-	iludata->ijlu=(int*)fasp_mem_calloc(iwk, sizeof(int));
+	iludata->ijlu=(int*)fasp_mem_calloc(iwk, sizeof(INT));
 	
 #if CHMEM_MODE		
-	total_alloc_mem += iwk*sizeof(int);
+	total_alloc_mem += iwk*sizeof(INT);
 #endif
 	
 	iludata->luval=(REAL*)fasp_mem_calloc(iwk, sizeof(REAL)); 
@@ -82,6 +82,7 @@ void fasp_ilu_data_alloc (INT iwk,
 
 /**
  * \fn void fasp_amg_data_free (AMG_data *mgl)
+ *
  * \brief Free AMG_data data memeory space
  *
  * \param *mgl  pointer to the AMG_data data

@@ -492,7 +492,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
 			for (i=0;i<=nrow_1;++i) v[j1].val[i]=w[i]*hij;
 		}
 		
-		fasp_aux_givens(beta, &H, &y, v, tmp);
+		fasp_aux_givens(beta, &H, &y, tmp);
 		
 		// u_m=u_0 + V_m*y_m
 		for (i=0;i<m;++i) fasp_blas_array_axpy(nrow, y.val[i], v[i].val, u->val); // maybe we can check the residual for every iteration ?!

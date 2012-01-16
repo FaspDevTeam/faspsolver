@@ -10,8 +10,10 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_precond_diag(double *r, double *z, void *data)
+ * \fn void fasp_precond_diag (REAL *r, REAL *z, void *data)
+ *
  * \brief Diagonal preconditioner z=inv(D)*r
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -19,23 +21,25 @@
  * \author Chensong Zhang
  * \date 04/06/2010
  */
-void fasp_precond_diag (double *r, 
-                        double *z, 
+void fasp_precond_diag (REAL *r, 
+                        REAL *z, 
                         void *data)
 {
 	dvector *diag=(dvector *)data;
-	double *diagptr=diag->val;
-	unsigned int i, m=diag->row;	
+	REAL *diagptr=diag->val;
+	unsigned INT i, m=diag->row;	
 	
-	memcpy(z,r,m*sizeof(double));
+	memcpy(z,r,m*sizeof(REAL));
 	for (i=0;i<m;++i) {
 		if (ABS(diag->val[i])>SMALLREAL) z[i]/=diagptr[i];
 	}	
 }
 
 /**
- * \fn void fasp_precond_ilu(double *r, double *z, void *data)
+ * \fn void fasp_precond_ilu (REAL *r, REAL *z, void *data)
+ *
  * \brief preconditioning using ILU decomposition
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -43,13 +47,13 @@ void fasp_precond_diag (double *r,
  * \author Shiquan Zhang
  * \date 04/06/2010
  */
-void fasp_precond_ilu (double *r, 
-                       double *z, 
+void fasp_precond_ilu (REAL *r, 
+                       REAL *z, 
                        void *data)
 {
 	ILU_data *iludata=(ILU_data *)data;
-	const int m=iludata->row, mm1=m-1, memneed=2*m;
-	double *zz, *zr;
+	const INT m=iludata->row, mm1=m-1, memneed=2*m;
+	REAL *zz, *zr;
 	
 	if (iludata->nwork<memneed) goto MEMERR; // check this outside this subroutine!!
 	
@@ -58,9 +62,9 @@ void fasp_precond_ilu (double *r,
 	fasp_array_cp(m, r, zr); 	
 	
 	{
-		int i, j, jj, begin_row, end_row, mm2=m-2;
-		int *ijlu=iludata->ijlu;
-		double *lu=iludata->luval;
+		INT i, j, jj, begin_row, end_row, mm2=m-2;
+		INT *ijlu=iludata->ijlu;
+		REAL *lu=iludata->luval;
 		
 		// forward sweep: solve unit lower matrix equation L*zz=zr
 		zz[0]=zr[0];
@@ -90,13 +94,15 @@ void fasp_precond_ilu (double *r,
 	return;
 	
 MEMERR:
-	printf("Error: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
+	printf("### ERROR: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
 	exit(ERROR_ALLOC_MEM);
 }
 
 /**
- * \fn void fasp_precond_ilu_forward(double *r, double *z, void *data)
+ * \fn void fasp_precond_ilu_forward (REAL *r, REAL *z, void *data)
+ *
  * \brief preconditioning using ILU decomposition: only forwear sweep
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -104,13 +110,13 @@ MEMERR:
  * \author Xiaozhe Hu, Shiquang Zhang
  * \date 04/06/2010
  */
-void fasp_precond_ilu_forward (double *r, 
-                               double *z, 
+void fasp_precond_ilu_forward (REAL *r, 
+                               REAL *z, 
                                void *data)
 {
 	ILU_data *iludata=(ILU_data *)data;
-	const int m=iludata->row, mm1=m-1, memneed=2*m;
-	double *zz, *zr;
+	const INT m=iludata->row, mm1=m-1, memneed=2*m;
+	REAL *zz, *zr;
 	
 	if (iludata->nwork<memneed) goto MEMERR; 
 	
@@ -119,9 +125,9 @@ void fasp_precond_ilu_forward (double *r,
 	fasp_array_cp(m, r, zr); 	
 	
 	{
-		int i, j, jj, begin_row, end_row;
-		int *ijlu=iludata->ijlu;
-		double *lu=iludata->luval;
+		INT i, j, jj, begin_row, end_row;
+		INT *ijlu=iludata->ijlu;
+		REAL *lu=iludata->luval;
 		
 		// forward sweep: solve unit lower matrix equation L*z=r
 		zz[0]=zr[0];
@@ -141,13 +147,15 @@ void fasp_precond_ilu_forward (double *r,
 	return;
 	
 MEMERR:
-	printf("Error: Need %d memory, only %d available!!!", memneed, iludata->nwork);
+	printf("### ERROR: Need %d memory, only %d available!!!", memneed, iludata->nwork);
 	exit(ERROR_ALLOC_MEM);
 }
 
 /**
- * \fn void fasp_precond_ilu_backward (double *r, double *z, void *data)
+ * \fn void fasp_precond_ilu_backward (REAL *r, REAL *z, void *data)
+ *
  * \brief preconditioning using ILU decomposition: only backward sweep
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -155,13 +163,13 @@ MEMERR:
  * \author Xiaozhe Hu, Shiquan  Zhang
  * \date 04/06/2010
  */
-void fasp_precond_ilu_backward (double *r, 
-                                double *z, 
+void fasp_precond_ilu_backward (REAL *r, 
+                                REAL *z, 
                                 void *data)
 {
 	ILU_data *iludata=(ILU_data *)data;
-	const int m=iludata->row, mm1=m-1, memneed=2*m;
-	double *zz;//, *zr;
+	const INT m=iludata->row, mm1=m-1, memneed=2*m;
+	REAL *zz;//, *zr;
 	
 	if (iludata->nwork<memneed) goto MEMERR; 
 	
@@ -170,9 +178,9 @@ void fasp_precond_ilu_backward (double *r,
 	fasp_array_cp(m, r, zz); 	
 	
 	{
-		int i, j, jj, begin_row, end_row, mm2=m-2;
-		int *ijlu=iludata->ijlu;
-		double *lu=iludata->luval;
+		INT i, j, jj, begin_row, end_row, mm2=m-2;
+		INT *ijlu=iludata->ijlu;
+		REAL *lu=iludata->luval;
 		
 		// backward sweep: solve upper matrix equation U*z=zz
 		z[mm1]=zz[mm1]*lu[mm1];
@@ -191,14 +199,15 @@ void fasp_precond_ilu_backward (double *r,
 	return;
 	
 MEMERR:
-	printf("Error: Need %d memory, only %d available!!!", memneed, iludata->nwork);
+	printf("### ERROR: Need %d memory, only %d available!!!", memneed, iludata->nwork);
 	exit(ERROR_ALLOC_MEM);
 }
 
 /**
- * \fn void fasp_precond_amg(double *r, double *z, void *data)
+ * \fn void fasp_precond_amg (REAL *r, REAL *z, void *data)
+ *
  * \brief get z from r by classic AMG
- * \param *A pointer to the stiffness matrix
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -206,14 +215,14 @@ MEMERR:
  * \author Chensong Zhang
  * \date 04/06/2010
  */
-void fasp_precond_amg (double *r, 
-                       double *z, 
+void fasp_precond_amg (REAL *r, 
+                       REAL *z, 
                        void *data)
 {
 	precond_data *precdata=(precond_data *)data;
-	const int m=precdata->mgl_data[0].A.row;
-	const int maxit=precdata->maxit;
-	unsigned int i;
+	const INT m=precdata->mgl_data[0].A.row;
+	const INT maxit=precdata->maxit;
+	unsigned INT i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
     fasp_param_prec_to_amg(&amgparam,precdata);
@@ -228,9 +237,10 @@ void fasp_precond_amg (double *r,
 }
 
 /**
- * \fn void fasp_precond_famg(double *r, double *z, void *data)
+ * \fn void fasp_precond_famg (REAL *r, REAL *z, void *data)
+ *
  * \brief get z from r by Full AMG
- * \param *A pointer to the stiffness matrix
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -238,14 +248,14 @@ void fasp_precond_amg (double *r,
  * \author Xiaozhe Hu
  * \date 02/27/2011
  */
-void fasp_precond_famg (double *r, 
-                        double *z, 
+void fasp_precond_famg (REAL *r, 
+                        REAL *z, 
                         void *data)
 {
 	precond_data *precdata=(precond_data *)data;
-	const int m=precdata->mgl_data[0].A.row;
-	const int maxit=precdata->maxit;
-	unsigned int i;
+	const INT m=precdata->mgl_data[0].A.row;
+	const INT maxit=precdata->maxit;
+	unsigned INT i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
     fasp_param_prec_to_amg(&amgparam,precdata);
@@ -260,9 +270,10 @@ void fasp_precond_famg (double *r,
 }
 
 /**
- * \fn void fasp_precond_amli(double *r, double *z, void *data)
+ * \fn void fasp_precond_amli(REAL *r, REAL *z, void *data)
+ *
  * \brief get z from r by AMLI
- * \param *A pointer to the stiffness matrix
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -270,14 +281,14 @@ void fasp_precond_famg (double *r,
  * \author Xiaozhe Hu
  * \date 01/23/2011
  */
-void fasp_precond_amli (double *r, 
-                        double *z, 
+void fasp_precond_amli (REAL *r, 
+                        REAL *z, 
                         void *data)
 {
 	precond_data *precdata=(precond_data *)data;
-	const int m=precdata->mgl_data[0].A.row;
-	const int maxit=precdata->maxit;
-	unsigned int i;
+	const INT m=precdata->mgl_data[0].A.row;
+	const INT maxit=precdata->maxit;
+	unsigned INT i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
     fasp_param_prec_to_amg(&amgparam,precdata);
@@ -292,9 +303,10 @@ void fasp_precond_amli (double *r,
 }
 
 /**
- * \fn void fasp_precond_nl_amli(double *r, double *z, void *data)
+ * \fn void fasp_precond_nl_amli(REAL *r, REAL *z, void *data)
+ *
  * \brief get z from r by nonliear AMLI-cycle
- * \param *A pointer to the stiffness matrix
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -302,29 +314,19 @@ void fasp_precond_amli (double *r,
  * \author Xiaozhe Hu
  * \date 04/25/2011
  */
-void fasp_precond_nl_amli (double *r, 
-                           double *z, 
+void fasp_precond_nl_amli (REAL *r, 
+                           REAL *z, 
                            void *data)
 {
 	
 	precond_data *precdata=(precond_data *)data;
 	const INT m=precdata->mgl_data[0].A.row;
 	const INT maxit=precdata->maxit;
-	const INT num_levels = precdata->max_levels;
+	const SHORT num_levels = precdata->max_levels;
 	unsigned INT i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
-	amgparam.cycle_type = precdata->cycle_type;
-	amgparam.smoother   = precdata->smoother;
-	amgparam.presmooth_iter  = precdata->presmooth_iter;
-	amgparam.postsmooth_iter = precdata->postsmooth_iter;
-	amgparam.relaxation = precdata->relaxation;
-	amgparam.coarse_scaling = precdata->coarse_scaling;
-	amgparam.amli_degree = precdata->amli_degree;
-	amgparam.amli_coef = precdata->amli_coef;
-    amgparam.nl_amli_krylov_type = precdata->nl_amli_krylov_type;
-	amgparam.tentative_smooth = precdata->tentative_smooth;
-	amgparam.ILU_levels = precdata->mgl_data->ILU_levels;
+    fasp_param_prec_to_amg(&amgparam,precdata);
 	
 	AMG_data *mgl = precdata->mgl_data;
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
