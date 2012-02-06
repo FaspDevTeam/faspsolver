@@ -385,6 +385,224 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
 	}
 }
 
+/**
+ * \fn void fasp_blas_dbsr_rap (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
+ * \brief dBSRmat sparse matrix multiplication B=R*A*P
+ *
+ * \param *R   pointer to the dBSRmat matrix
+ * \param *A   pointer to the dBSRmat matrix
+ * \param *P   pointer to the dBSRmat matrix
+ * \param *B   pointer to dBSRmat matrix equal to R*A*P
+ * \return     void
+ *
+ * Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
+ *      Advances in Computational Mathematics, 1 (1993), pp. 127-137.
+ *
+ * \author Chunsheng FENG ,Xiaoqiang YUE, Xiaozhe Hu
+ * \date 08/08/2011
+ */
+void fasp_dbsr_rap (dBSRmat *R, 
+                    dBSRmat *A, 
+                    dBSRmat *P, 
+                    dBSRmat *B)
+{
+	const int row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
+	unsigned int nB=A->NNZ;
+	int i,i1,j,jj,k,length;	
+	int begin_row,end_row,begin_rowA,end_rowA,begin_rowR,end_rowR;
+	int istart,iistart,count;
+	
+	double *rj=R->val, *aj=A->val, *pj=P->val, *acj;
+	int *ir=R->IA, *ia=A->IA, *ip=P->IA, *iac;
+	int *jr=R->JA, *ja=A->JA, *jp=P->JA, *jac;
+	
+	int *index=(int *)fasp_mem_calloc(A->COL,sizeof(int));
+    
+	double *smat_tmp=(double *)fasp_mem_calloc(nb2,sizeof(double));
+	
+#if CHMEM_MODE
+	total_alloc_mem += (A->COL)*sizeof(int);
+#endif
+	
+	int *iindex=(int *)fasp_mem_calloc(col,sizeof(int));	
+	
+#if CHMEM_MODE
+	total_alloc_mem += (col)*sizeof(int);
+#endif
+	
+	for (i=0; i<A->COL; ++i)  index[i] = -2;
+	
+	memcpy(iindex,index,col*sizeof(int));
+	
+	jac=(int*)fasp_mem_calloc(nB,sizeof(int));	
+	
+#if CHMEM_MODE
+	total_alloc_mem += (nB)*sizeof(int);
+#endif
+	
+	iac=(int*)fasp_mem_calloc(row+1,sizeof(int));	
+#if CHMEM_MODE
+	total_alloc_mem += (row+1)*sizeof(int);
+#endif
+	
+	double *temp=(double*)fasp_mem_calloc(A->COL*nb2,sizeof(double));
+	
+#if CHMEM_MODE
+	total_alloc_mem += (A->COL)*sizeof(double);
+#endif
+	
+	iac[0] = 0;
+	
+	// First loop: form sparsity partern of R*A*P
+	for (i=0; i < row; ++i) {		
+		// reset istart and length at the begining of each loop
+		istart = -1; length = 0; i1 = i+1;
+		
+		// go across the rows in R
+		begin_rowR=ir[i]; end_rowR=ir[i1];
+		for (jj=begin_rowR; jj<end_rowR; ++jj){
+			j = jr[N2C(jj)];
+			// for each column in A
+			begin_rowA=ia[j]; end_rowA=ia[j+1];			
+			for (k=begin_rowA; k<end_rowA; ++k){
+				if (index[N2C(ja[N2C(k)])] == -2){
+					index[N2C(ja[N2C(k)])] = istart;
+					istart = ja[N2C(k)];
+					++length;
+				}
+			}
+		}    
+		
+		// book-keeping [reseting length and setting iistart]
+		count = length; iistart = -1; length = 0;
+		
+		// use each column that would have resulted from R*A
+		for (j=0; j < count; ++j){
+			jj = istart;
+			istart = index[istart];
+			index[N2C(jj)] = -2;
+			
+			// go across the row of P
+			begin_row=ip[jj]; end_row=ip[jj+1];
+			for (k=begin_row; k<end_row; ++k){
+				// pull out the appropriate columns of P
+				if (iindex[N2C(jp[N2C(k)])] == -2){
+					iindex[N2C(jp[N2C(k)])] = iistart;
+					iistart = jp[N2C(k)];
+					++length;
+				}
+			} // end for k
+		} // end for j
+		
+		// set B->IA
+		iac[i1]=iac[i]+length;
+		
+		if (iac[i1]>nB) {
+			nB=nB*2;
+			jac=(int*)fasp_mem_realloc(jac, nB*sizeof(int));
+		}
+		
+		// put the correct columns of p into the column list of the products
+		begin_row=iac[i]; end_row=iac[i1];
+		for (j=begin_row; j<end_row; ++j){
+			// put the value in B->JA
+			jac[N2C(j)] = iistart;
+			// set istart to the next value
+			iistart = iindex[N2C(iistart)];
+			// set the iindex spot to 0
+			iindex[N2C(jac[j])] = -2;
+		} // end j
+		
+	} // end i: First loop
+	
+	jac=(int*)fasp_mem_realloc(jac,(iac[row])*sizeof(int));
+	
+	acj=(double*)fasp_mem_calloc(iac[row]*nb2,sizeof(double));
+	
+#if CHMEM_MODE
+	total_alloc_mem += (iac[row]*nb2)*sizeof(double);
+#endif
+	
+	int *BTindex=(int*)fasp_mem_calloc(col,sizeof(int));
+	
+#if CHMEM_MODE
+	total_alloc_mem += (col)*sizeof(int);
+#endif
+	
+	// Second loop: compute entries of R*A*P
+	for (i=0; i<row; ++i) {
+		i1 = i+1;
+		
+		// each col of B
+		begin_row=iac[i]; end_row=iac[i1];		
+		for (j=begin_row; j<end_row; ++j) {
+			BTindex[N2C(jac[N2C(j)])]=j;
+		}
+		
+		// reset istart and length at the begining of each loop
+		istart = -1; length = 0;
+		
+		// go across the rows in R
+		begin_rowR=ir[i]; end_rowR=ir[i1];		
+		for ( jj=begin_rowR; jj<end_rowR; ++jj ){
+			j = jr[N2C(jj)];
+			
+			// for each column in A
+			begin_rowA=ia[j]; end_rowA=ia[j+1];					
+			for (k=begin_rowA; k<end_rowA; ++k){
+				if (index[N2C(ja[N2C(k)])] == -2){
+					index[N2C(ja[N2C(k)])] = istart;
+					istart = ja[N2C(k)];
+					++length;
+				}
+                
+				fasp_blas_smat_mul(&rj[N2C(jj)*nb2],&aj[N2C(k)*nb2],smat_tmp,nb);
+				//fasp_array_xpy(nb2,&temp[N2C(ja[N2C(k)])*nb2], smat_tmp );
+				fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &temp[N2C(ja[N2C(k)])*nb2]);
+                
+				//temp[N2C(ja[N2C(k)])]+=rj[N2C(jj)]*aj[N2C(k)];
+                // change to   X = X+Y*Z
+			}
+		} 
+		
+		// book-keeping [reseting length and setting iistart]
+		// use each column that would have resulted from R*A
+		for (j=0; j<length; ++j) {
+			jj = N2C(istart);
+			istart = index[N2C(istart)];
+			index[N2C(jj)] = -2;
+			
+			// go across the row of P
+			begin_row=ip[jj]; end_row=ip[jj+1];		
+			for (k=begin_row; k<end_row; ++k) {
+				// pull out the appropriate columns of P
+				//acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj]*pj[k];
+				fasp_blas_smat_mul(&temp[jj*nb2],&pj[k*nb2],smat_tmp,nb);
+				//fasp_array_xpy(nb2,&acj[BTindex[N2C(jp[N2C(k)])]*nb2], smat_tmp );
+				fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &acj[BTindex[N2C(jp[N2C(k)])]*nb2]);
+                
+				// change to   X = X+Y*Z
+			}
+			//temp[jj]=0.0; // change to   X[nb,nb] = 0;
+			fasp_array_set(nb2,&temp[jj*nb2],0.0);
+		}
+		
+	} // end for i: Second loop
+	
+	// setup coarse matrix B
+	B->ROW=row; B->COL=col;
+	B->IA=iac; B->JA=jac; B->val=acj;	
+	B->NNZ=B->IA[B->ROW]-B->IA[0];
+    
+	B->nb=A->nb;
+	B->storage_manner = A->storage_manner;
+	fasp_mem_free(temp);
+	fasp_mem_free(index);
+	fasp_mem_free(iindex);
+	fasp_mem_free(BTindex);
+	fasp_mem_free(smat_tmp);
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

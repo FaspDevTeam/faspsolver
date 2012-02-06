@@ -455,6 +455,85 @@ void fasp_precond_dbsr_ilu (REAL *r,
 	return;
 }
 
+/**
+ * \fn void fasp_precond_dbsr_FASP3(double *r, double *z, void *data)
+ * \brief get z from r by classic AMG
+ * \param *r pointer to residual
+ * \param *z pointer to preconditioned residual
+ * \param *data pointer to precondition data
+ *
+ * \author Xiaozhe Hu
+ * \date 08/07/2011
+ */
+void fasp_precond_dbsr_amg (double *r, 
+                              double *z, 
+                              void *data)
+{
+	precond_data_bsr *predata=(precond_data_bsr *)data;
+	const int row=predata->mgl_data[0].A.ROW;
+	const int nb = predata->mgl_data[0].A.nb;
+	const int maxit=predata->maxit;
+	unsigned int i;
+	const int m = row*nb;
+	
+	AMG_param amgparam; fasp_param_amg_init(&amgparam);
+	amgparam.cycle_type = predata->cycle_type;
+	amgparam.smoother   = predata->smoother;
+	amgparam.smooth_order = predata->smooth_order;
+	amgparam.presmooth_iter  = predata->presmooth_iter;
+	amgparam.postsmooth_iter = predata->postsmooth_iter;
+	amgparam.relaxation = predata->relaxation;
+	amgparam.coarse_scaling = predata->coarse_scaling;
+	amgparam.tentative_smooth = predata->tentative_smooth;
+	amgparam.ILU_levels = predata->mgl_data->ILU_levels;
+	
+	AMG_data_bsr *mgl = predata->mgl_data;
+	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
+	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
+	
+	for (i=0;i<maxit;++i) fasp_solver_mgcycle_bsr(mgl,&amgparam); //fasp_solver_mgrecurmgl,&amgparam,0); //
+	
+	fasp_array_cp(m,mgl->x.val,z);	
+}
+
+/**
+ * \fn void fasp_precond_dbsr_nl_amli(REAL *r, REAL *z, void *data)
+ *
+ * \brief get z from r by nonliear AMLI-cycle
+ *
+ * \param *r pointer to residual
+ * \param *z pointer to preconditioned residual
+ * \param *data pointer to precondition data
+ *
+ * \author Xiaozhe Hu
+ * \date 02/06/2012
+ */
+void fasp_precond_dbsr_nl_amli (REAL *r, 
+                           REAL *z, 
+                           void *data)
+{
+	
+	precond_data_bsr *precdata=(precond_data_bsr *)data;
+    const INT row=precdata->mgl_data[0].A.ROW;
+	const INT nb = precdata->mgl_data[0].A.nb;
+	const INT maxit=precdata->maxit;
+    const SHORT num_levels = precdata->max_levels;
+	unsigned INT i;
+	const INT m = row*nb;
+	
+	AMG_param amgparam; fasp_param_amg_init(&amgparam);
+    fasp_param_prec_to_amg_bsr(&amgparam,precdata);
+	
+	AMG_data_bsr *mgl = precdata->mgl_data;
+	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
+	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
+	
+	for (i=0;i<maxit;++i) fasp_solver_nl_amli_bsr(mgl,&amgparam,0, num_levels); 
+	
+	fasp_array_cp(m,mgl->x.val,z);	
+    
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

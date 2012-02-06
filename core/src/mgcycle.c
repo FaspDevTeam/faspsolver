@@ -143,6 +143,140 @@ ForwardSweep:
 #endif
 }
 
+/**
+ * \fn void fasp_solver_mgcycle_bsr(AMG_data_bsr *mgl, AMG_param *param)
+ * \brief Solve Ax=b with non-recursive multigrid cycle 
+ *
+ * \param *mgl     pointer to AMG_data_bsr data
+ * \param *param   pointer to AMG parameters
+ *
+ * \author Xiaozhe Hu 
+ * \date 08/07/2011
+ */
+void fasp_solver_mgcycle_bsr(AMG_data_bsr *mgl, AMG_param *param)
+{	
+	
+	const int nl = mgl[0].num_levels;
+	const int smoother = param->smoother;
+	//const int smooth_order = param->smooth_order;
+	const int cycle_type = param->cycle_type;
+	//const double relax = param->relaxation;
+	//const int ndeg = 0;
+	
+	//int p_type = 1; // TODO: Why assign p_type this way? Input? --Chensong
+	//if (param->tentative_smooth < SMALLREAL) p_type = 0;
+	
+	int nu_l[MAX_AMG_LVL] = {0}, l = 0;
+	double alpha = 1.0;
+	int i;
+	
+	dvector px, pb;
+	
+ForwardSweep:
+	while (l<nl-1) { 
+		nu_l[l]++;
+		// pre smoothing
+		if (l<param->ILU_levels) {
+			fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
+		}
+		else {
+			unsigned int steps = param->presmooth_iter;
+			
+			if (steps > 0){
+				switch (smoother) {
+                    case GS:
+                        for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
+                        break;
+                    default:
+                        printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+                }
+			}
+		}
+		
+		// form residual r = b - A x
+		fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val); 
+		fasp_blas_dbsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
+		
+		// restriction r1 = R*r0
+		fasp_blas_dbsr_mxv(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val);
+		
+		// prepare for the next level
+		++l; fasp_dvec_set(mgl[l].A.ROW*mgl[l].A.nb, &mgl[l].x, 0.0);	
+		
+	}	
+	
+	// CoarseSpaceSolver:	
+	{
+#if With_DISOLVE /* use Direct.lib in Windows */
+		DIRECT_MUMPS(&mgl[nl-1].Ac.row, &mgl[nl-1].Ac.nnz, mgl[nl-1].Ac.IA, mgl[nl-1].Ac.JA, 
+                     mgl[nl-1].Ac.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
+#elif With_UMFPACK
+		/* use UMFPACK direct solver on the coarsest level */
+		umfpack(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+#elif With_SuperLU
+		/* use SuperLU direct solver on the coarsest level */
+		superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+#else	
+		/* use default iterative solver on the coarest level */
+		const int csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
+		unsigned int cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
+		double ctol = param->tol; // coarse level tolerance
+		int flag = 0;		
+		flag = fasp_solver_dbsr_pvgmres(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 1, 1,100);
+		if (flag < 0)
+		{
+			printf("Warning: coarse level iterative solver does not converge !! (error message = %d)\n", flag);
+		}
+#endif 
+	}
+	
+	// BackwardSweep: 
+	while (l>0) { 
+		--l;
+		
+		// prolongation u = u + alpha*P*e1
+		if ( param->coarse_scaling == ON ) {
+			dvector PeH, Aeh;
+			PeH.row = Aeh.row = mgl[l].b.row; 
+			PeH.val = mgl[l].w.val + mgl[l].b.row;
+			Aeh.val = PeH.val + mgl[l].b.row;
+			
+			fasp_blas_dbsr_mxv (&mgl[l].P, mgl[l+1].x.val,  PeH.val);
+			fasp_blas_dbsr_mxv (&mgl[l].A, PeH.val, Aeh.val);
+			
+			alpha = (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, mgl[l].w.val))/(fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, Aeh.val));
+			fasp_blas_array_axpy (mgl[l].b.row, alpha, PeH.val, mgl[l].x.val);
+		}
+		else {
+			fasp_blas_dbsr_aAxpy(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
+		}	
+        
+		// post-smoothing
+		if (l<param->ILU_levels) {
+			fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
+		}
+		else {
+			unsigned int steps = param->presmooth_iter;
+			
+			if (steps > 0){
+				switch (smoother) {
+                    case GS:
+                        for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
+                        break;
+                    default:
+                        printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+				}
+			}
+		}
+		
+		if (nu_l[l]<cycle_type) break;
+		else nu_l[l] = 0;
+	}
+	
+	if (l>0) goto ForwardSweep;
+	
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

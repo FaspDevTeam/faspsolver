@@ -135,6 +135,11 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                           INT level, 
                           INT num_levels);
 
+void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, 
+                          AMG_param *param, 
+                          INT level, 
+                          INT num_levels);
+
 void fasp_amg_amli_coef (REAL lambda_max, 
                          REAL lambda_min, 
                          INT degree, 
@@ -370,6 +375,11 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 void fasp_blas_dbsr_mxv (dBSRmat *A, 
                          REAL *x, 
                          REAL *y);
+
+void fasp_dbsr_rap (dBSRmat *R, 
+                    dBSRmat *A, 
+                    dBSRmat *P, 
+                    dBSRmat *B);
 
 
 /*-------- In file: blas_bsr_omp.c --------*/
@@ -892,6 +902,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 
 AMG_data * fasp_amg_data_create (INT max_levels);
 
+AMG_data_bsr * fasp_amg_data_create_bsr(int max_levels);
+
 void fasp_ilu_data_alloc (INT iwk, 
                           INT nwork, 
                           ILU_data *iludata);
@@ -1216,6 +1228,8 @@ void fasp_chkerr (const SHORT status,
 void fasp_solver_mgcycle (AMG_data *mgl, 
                           AMG_param *param);
 
+void fasp_solver_mgcycle_bsr(AMG_data_bsr *mgl, AMG_param *param);
+
 
 /*-------- In file: mgcycle_omp.c --------*/
 
@@ -1300,8 +1314,14 @@ void fasp_precond_data_init (precond_data *pdata);
 void fasp_param_amg_to_prec (precond_data *precdata, 
                              AMG_param *amgparam);
 
+void fasp_param_amg_to_prec_bsr (precond_data_bsr *precdata, 
+                             AMG_param *amgparam);
+
 void fasp_param_prec_to_amg (AMG_param *amgparam,
                              precond_data *precdata);
+
+void fasp_param_prec_to_amg_bsr (AMG_param *amgparam,
+                             precond_data_bsr *precdata);
 
 void fasp_param_amg_print (AMG_param *param);
 
@@ -1530,6 +1550,14 @@ void fasp_precond_dbsr_ilu (REAL *r,
                             REAL *z, 
                             const void *data);
 
+void fasp_precond_dbsr_amg (double *r, 
+                              double *z, 
+                              void *data);
+
+void fasp_precond_dbsr_nl_amli (REAL *r, 
+                           REAL *z, 
+                           void *data);
+
 
 /*-------- In file: precond_bsr_omp.c --------*/
 
@@ -1614,6 +1642,16 @@ void fasp_precond_dstr_blockgs (REAL *r,
 /*-------- In file: pvfgmres.c --------*/
 
 INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, 
+                               dvector *b, 
+                               dvector *x, 
+                               const INT MaxIt,
+                               const REAL tol,
+                               precond *pre, 
+                               const SHORT print_level, 
+                               const SHORT stop_type, 
+                               const SHORT restart);
+
+INT fasp_solver_dbsr_pvfgmres (dBSRmat *A, 
                                dvector *b, 
                                dvector *x, 
                                const INT MaxIt,
@@ -2099,6 +2137,12 @@ void fasp_dbsr_alloc (INT ROW,
 void fasp_dbsr_free (dBSRmat *A);
 
 void fasp_dbsr_init (dBSRmat *A);
+
+void fasp_dbsr_cp (dBSRmat *A, 
+                   dBSRmat *B);
+
+int fasp_dbsr_trans (dBSRmat *A, 
+					 dBSRmat *AT);
 
 SHORT fasp_dbsr_diagpref (dBSRmat *A);
 

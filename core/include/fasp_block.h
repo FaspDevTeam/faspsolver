@@ -176,6 +176,115 @@ typedef struct block_BSR{
 /*--- Parameter structures --*/
 /*---------------------------*/ 
 
+/** 
+ * \struct AMG_data_bsr
+ * \brief Data for multigrid levels. (BSR format)
+ *
+ * This is needed for the AMG solver/preconditioner for BSR format
+ *
+ */
+typedef struct { 
+	
+	/* Level information */
+	
+	//! max number of levels
+	int max_levels;
+	//! number of levels in use <= max_levels
+	int num_levels;
+	
+	/* Problem information */	
+	
+	//! pointer to the matrix at level level_num
+	dBSRmat A;
+	//! restriction operator at level level_num
+	dBSRmat R;
+	//! prolongation operator at level level_num
+	dBSRmat P;
+	//! pointer to the right-hand side at level level_num
+	dvector b;
+	//! pointer to the iterative solution at level level_num
+	dvector x;
+	//! pointer to the matrix at level level_num (csr format)
+	dCSRmat Ac;
+	
+	/* Extra information */
+	
+	//! pointer to the pressure block (only for reservoir simulation)
+	dCSRmat PP;
+	//! pointer to the CF marker at level level_num
+	ivector cfmark; 	
+	//! number of levels use ILU smoother
+	int ILU_levels;
+	//! ILU matrix for ILU smoother 	
+	ILU_data LU;
+	//! dimension of the near kernel for SAMG
+	int near_kernel_dim;
+	//! basis of near kernel space for SAMG
+	double **near_kernel_basis;
+	// Smoother order information
+	
+	//! Temporary work space
+	dvector w;
+	
+} AMG_data_bsr;
+
+/** 
+ * \struct precond_data_bsr
+ * \brief Data passed to the preconditioners.
+ *
+ */
+typedef struct {
+	
+    //! type of AMG method
+	SHORT AMG_type;
+	//! print level in AMG preconditioner
+	int print_level;
+	//! max number of iterations of AMG preconditioner
+	int maxit;
+	//! max number of AMG levels
+	int max_levels;
+	//! tolerance for AMG preconditioner
+	double tol;
+	//! AMG cycle type
+	int cycle_type;
+	//! AMG smoother type
+	int smoother;
+	//! AMG smoother ordering
+	int smooth_order;
+	//! number of presmoothing
+	int presmooth_iter;
+	//! number of postsmoothing
+	int postsmooth_iter;
+	//! coarsening type
+	int coarsening_type;
+	//! relaxation parameter for SOR smoother
+	double relaxation;
+	//! switch of scaling of the coarse grid correction
+	int coarse_scaling;
+	//! degree of the polynomial used by AMLI cycle
+	int amli_degree;
+	//! coefficients of the polynomial used by AMLI cycle
+	double *amli_coef;
+	//! smooth factor for smoothing the tentative prolongation
+	double tentative_smooth;
+    //! type of krylov method used by Nonlinear AMLI cycle
+    SHORT nl_amli_krylov_type;
+	
+	//! AMG preconditioner data
+	AMG_data_bsr *mgl_data;
+	
+	//! ILU preconditioner data (needed for CPR type preconditioner)
+	ILU_data *LU;
+	
+	//! Matrix data
+	dBSRmat *A;
+	
+	//! temporary work space
+	dvector r; /*< temporary dvector used to store and restore the residual */
+	double *w; /*<  temporary work space for other usage */
+	
+} precond_data_bsr;
+
 /**
  * \brief Parameters passed to the preconditioner for generalized Stokes problems
  *

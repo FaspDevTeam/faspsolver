@@ -88,7 +88,7 @@
 #define SOLVER_GCG              7    /**< Generalized Conjugate Gradient */
 //-----------------------------------------------------------------------------------
 #define SOLVER_AMG              21   /**< AMG as an iterative solver */
-#define SOLVER_FMG		        22   /**< Full AMG as an iterative solver */
+#define SOLVER_FMG		22   /**< Full AMG as an iterative solver */
 //-----------------------------------------------------------------------------------
 #define SOLVER_SUPERLU          31   /**< SuperLU Direct Solver */
 #define SOLVER_UMFPACK          32   /**< UMFPack Direct Solver */
@@ -127,7 +127,7 @@
  */
 #define V_CYCLE	                1    /**< V-cycle */
 #define W_CYCLE                 2    /**< W-cycle */
-#define AMLI_CYCLE	            3    /**< AMLI-cycle */
+#define AMLI_CYCLE	        3    /**< AMLI-cycle */
 #define NL_AMLI_CYCLE           4    /**< Nonlinear AMLI-cycle */
 
 /** 

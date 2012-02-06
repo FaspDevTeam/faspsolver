@@ -377,6 +377,39 @@ void fasp_param_amg_to_prec (precond_data *precdata,
 }
 
 /**
+ * \fn void fasp_param_amg_to_prec_bsr (precond_data_bsr *precdata, AMG_param *amgparam)
+ *
+ * \brief Set precond_data_bsr with AMG_param
+ *
+ * \param precdata    pointer to precond_data_bsr
+ * \param amgparam    pointer to AMG_param
+ *
+ * \author Xiaozhe Hu
+ * \date 02/06/2012
+ */
+void fasp_param_amg_to_prec_bsr (precond_data_bsr *precdata, 
+                             AMG_param *amgparam)
+{
+    precdata->AMG_type = amgparam->AMG_type;
+    precdata->print_level = amgparam->print_level;
+    precdata->maxit = amgparam->maxit;
+    precdata->max_levels = amgparam->max_levels;
+    precdata->tol = amgparam->tol;
+    precdata->cycle_type = amgparam->cycle_type;
+    precdata->smoother = amgparam->smoother;
+    precdata->smooth_order = amgparam->smooth_order;
+    precdata->presmooth_iter  = amgparam->presmooth_iter;
+    precdata->postsmooth_iter = amgparam->postsmooth_iter;
+    precdata->coarsening_type = amgparam->coarsening_type;
+    precdata->relaxation = amgparam->relaxation;
+    precdata->coarse_scaling = amgparam->coarse_scaling;
+    precdata->amli_degree = amgparam->amli_degree;
+    precdata->amli_coef = amgparam->amli_coef;
+    precdata->nl_amli_krylov_type = amgparam->nl_amli_krylov_type;
+    precdata->tentative_smooth = amgparam->tentative_smooth;
+}
+
+/**
  * \fn void fasp_param_prec_to_amg (AMG_param *amgparam, precond_data *precdata)
  *
  * \brief Set AMG_param with precond_data 
@@ -403,6 +436,37 @@ void fasp_param_prec_to_amg (AMG_param *amgparam,
 	amgparam->amli_coef = precdata->amli_coef;
 	amgparam->tentative_smooth = precdata->tentative_smooth;
 	amgparam->ILU_levels = precdata->mgl_data->ILU_levels;
+    amgparam->nl_amli_krylov_type = precdata->nl_amli_krylov_type;
+}
+
+/**
+ * \fn void fasp_param_prec_to_amgbsr (AMG_param *amgparam, precond_data_bsr *precdata)
+ *
+ * \brief Set AMG_param with precond_data 
+ *
+ * \param amgparam    pointer to AMG_param
+ * \param precdata    pointer to precond_data
+ *
+ * \author Xiaozhe Hu
+ * \date 02/06/2012 
+ */
+void fasp_param_prec_to_amg_bsr (AMG_param *amgparam,
+                             precond_data_bsr *precdata)
+{
+    amgparam->AMG_type = precdata->AMG_type;
+    amgparam->print_level = precdata->print_level;
+	amgparam->cycle_type = precdata->cycle_type;
+	amgparam->smoother   = precdata->smoother;
+	amgparam->smooth_order = precdata->smooth_order;
+	amgparam->presmooth_iter  = precdata->presmooth_iter;
+	amgparam->postsmooth_iter = precdata->postsmooth_iter;
+	amgparam->relaxation = precdata->relaxation;
+	amgparam->coarse_scaling = precdata->coarse_scaling;
+	amgparam->amli_degree = precdata->amli_degree;
+	amgparam->amli_coef = precdata->amli_coef;
+	amgparam->tentative_smooth = precdata->tentative_smooth;
+	amgparam->ILU_levels = precdata->mgl_data->ILU_levels;
+    amgparam->nl_amli_krylov_type = precdata->nl_amli_krylov_type;
 }
 
 /**

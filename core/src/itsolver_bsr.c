@@ -55,6 +55,10 @@ int fasp_solver_dbsr_itsolver (dBSRmat *A,
 		case SOLVER_VGMRES:
 			if (print_level>0) printf("Calling vGMRES solver (BSR format) ...\n");
 			iter=fasp_solver_dbsr_pvgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart); break;	
+            
+        case SOLVER_VFGMRES: 
+			if (print_level>0) printf("Calling vFGMRes solver (BSR format) ...\n");		
+			iter = fasp_solver_dbsr_pvfgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	break;
 			
 		default:
 			printf("Error: wrong itertive solver type %d!\n", itsolver_type);

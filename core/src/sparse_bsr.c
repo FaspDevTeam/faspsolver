@@ -182,6 +182,122 @@ void fasp_dbsr_init (dBSRmat *A)
 	A->val=NULL;
 }
 
+/**
+ * \fn void fasp_dbsr_cp (dBSRmat *A, dBSRmat *B)
+ * \brief copy a dCSRmat to a new one B=A
+ *
+ * \param *A   pointer to the dBSRmat matrix
+ * \param *B   pointer to the dBSRmat matrix
+ *
+ * \author Xiaozhe Hu
+ * \date 08/07/2011  
+ */
+void fasp_dbsr_cp (dBSRmat *A, 
+                   dBSRmat *B)
+{		
+	B->ROW=A->ROW;
+	B->COL=A->COL;
+	B->NNZ=A->NNZ;
+	B->nb = A->nb;
+	B->storage_manner = A->storage_manner;
+	
+	memcpy(B->IA,A->IA,(A->ROW+1)*sizeof(int));
+	memcpy(B->JA,A->JA,(A->NNZ)*sizeof(int));
+	memcpy(B->val,A->val,(A->NNZ)*(A->nb)*(A->nb)*sizeof(double));
+}
+
+/**
+ * \fn int fasp_dcsr_trans (dBSRmat *A, dBSRmat *AT)
+ * \brief find A^T from given dBSRmat matrix A
+ *
+ * \param *A   pointer to the dBSRmat matrix
+ * \param *AT  pointer to the transpose of dBSRmat matrix A
+ * \author Chunsheng FENG 
+ * \date 2011/06/08
+ *
+ * \note: modified by Xiaozhe Hu (08/06/2011)
+ */
+int fasp_dbsr_trans (dBSRmat *A, 
+					 dBSRmat *AT)
+{
+	const int n=A->ROW, m=A->COL, nnz=A->NNZ, nb=A->nb;	
+	int i,j,k,p,inb,jnb,nb2;
+	int status = SUCCESS;
+	
+	AT->ROW=m;
+	AT->COL=n;
+	AT->NNZ=nnz;
+	AT->nb = nb;
+	AT->storage_manner = A->storage_manner;
+	AT->IA=(int*)fasp_mem_calloc(m+1,sizeof(int));
+	nb2 =  A->nb*A->nb;
+#if CHMEM_MODE
+	total_alloc_mem += (m+1)*sizeof(int);
+#endif
+	
+	AT->JA=(int*)fasp_mem_calloc(nnz,sizeof(int));
+	
+#if CHMEM_MODE
+	total_alloc_mem += (nnz)*sizeof(int);
+#endif
+	
+	if (A->val) { 
+		AT->val=(double*)fasp_mem_calloc(nnz*nb*nb,sizeof(double)); 
+		
+#if CHMEM_MODE
+		total_alloc_mem += (nnz*nb*nb)*sizeof(double);
+#endif
+		
+	}
+	else { AT->val=NULL; }
+	
+	// first pass: find the number of nonzeros in the first m-1 columns of A 
+	// Note: these numbers are stored in the array AT.IA from 1 to m-1
+	for (i=0;i<m;++i) AT->IA[i] = 0;
+	
+	for (j=0;j<nnz;++j) {
+		i=N2C(A->JA[j]); // column number of A = row number of A'
+		if (i<m-1) AT->IA[i+2]++;
+	}
+	
+	for (i=2;i<=m;++i) AT->IA[i]+=AT->IA[i-1];
+	
+	// second pass: form A'
+	if (A->val) {
+		for (i=0;i<n;++i) {
+			int ibegin=A->IA[i], iend1=A->IA[i+1];
+			
+			for(p=ibegin;p<iend1;p++) {
+				j=A->JA[N2C(p)]+1;
+				k=AT->IA[N2C(j)];
+				AT->JA[N2C(k)]=C2N(i);
+                
+				for(inb=0;inb<nb;inb++)
+					for (jnb=0;jnb<nb;jnb++)
+                        AT->val[ nb2*N2C(k) + inb*nb + jnb ] =A->val[nb2*N2C(p) + jnb*nb + inb ];
+                
+				AT->IA[j]=k+1;
+			} // end for p
+		} // end for i
+		
+	}
+	else {
+		for (i=0;i<n;++i) {
+			int ibegin=A->IA[i], iend1=A->IA[i+1];
+			
+			for(p=ibegin;p<iend1;p++) {
+				j=A->JA[N2C(p)]+1;
+				k=AT->IA[N2C(j)];
+				AT->JA[N2C(k)]=C2N(i);
+				AT->IA[j]=k+1;
+			} // end for p
+		} // end of i
+        
+	} // end if 
+	
+	return (status);
+}	
+
 /*!
  * \fn SHORT fasp_dbsr_diagpref ( dBSRmat *A )
  *

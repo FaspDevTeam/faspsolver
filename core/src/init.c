@@ -40,6 +40,34 @@ AMG_data * fasp_amg_data_create (INT max_levels)
 }
 
 /**
+ * \fn AMG_data_bsr * fasp_amg_data_create_nsr(int max_levels)
+ * \brief Create and initialize AMG_data data sturcture for AMG/SAMG (BSR format)
+ *
+ * \param   max_levels   max number of levels allowed
+ * \return *mgl          pointer to the AMG_data data structure
+ *
+ * \author Xiaozhe Hu
+ * \date 08/07/2011
+ *
+ * \note: Need to be put somewhere else
+ */
+AMG_data_bsr * fasp_amg_data_create_bsr(int max_levels)
+{		
+	int i;
+	
+	AMG_data_bsr *mgl = (AMG_data_bsr *)fasp_mem_calloc(max_levels,sizeof(AMG_data_bsr));
+	
+	for (i=0; i<max_levels; ++i) {
+		mgl[i].max_levels = max_levels;
+		mgl[i].num_levels = 0;
+		mgl[i].near_kernel_dim = 0;
+		mgl[i].near_kernel_basis = NULL;
+	}
+	
+	return(mgl);
+}
+
+/**
  * \fn void fasp_ilu_data_alloc (INT iwk, INT nwork, ILU_data *iludata)
  *
  * \brief Allocate workspace for ILU factorization

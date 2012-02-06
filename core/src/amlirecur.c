@@ -327,6 +327,190 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 }
 
 /**
+ * \fn void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, AMG_param *param, INT level, INT num_levels)
+ * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
+ *
+ * \param *mgl pointer to AMG_data_bsr data
+ * \param *param pointer to AMG parameters
+ * \param level current level
+ * \param num_levels total numebr of levels
+ *
+ * \author Xiaozhe Hu
+ * \date 04/06/2010
+ */
+void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, 
+                          AMG_param *param, 
+                          INT level, 
+                          INT num_levels)
+{	
+    const SHORT  amg_type=param->AMG_type;
+	const SHORT  print_level = param->print_level;
+	const SHORT  smoother = param->smoother;
+	const SHORT  smooth_order = param->smooth_order;
+	const SHORT  cycle_type = param->cycle_type;
+	const REAL   relax = param->relaxation;
+    INT i;
+	
+	dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x; // fine level b and x
+	dvector *b1 = &mgl[level+1].b, *e1 = &mgl[level+1].x; // coarse level b and x
+	
+	dBSRmat *A_level0 = &mgl[level].A; // fine level matrix
+	dBSRmat *A_level1 = &mgl[level+1].A; // coarse level matrix
+	const INT m0 = A_level0->ROW*A_level0->nb, m1 = A_level1->ROW*A_level1->nb;
+	
+	ILU_data *LU_level = &mgl[level].LU; // fine level ILU decomposition
+	REAL *r = mgl[level].w.val; // for residual
+    INT *ordering = mgl[level].cfmark.val; // for smoother ordering
+    
+	dvector uH, bH;  // for coarse level correction
+	uH.row = m1; uH.val = mgl[level+1].w.val + m1;
+	bH.row = m1; bH.val = mgl[level+1].w.val + 2*m1;
+	
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_nl_amli ...... [Start]\n");
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
+#endif
+	
+	//if (print_level>=PRINT_MOST) printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
+
+	if (level < num_levels-1) { 
+		
+		// pre smoothing
+		if (level<param->ILU_levels) {
+			fasp_smoother_dbsr_ilu(A_level0, b0, e0, LU_level);
+		}
+		else {
+            unsigned int steps = param->presmooth_iter;
+			
+			if (steps > 0){
+				switch (smoother) {
+                    case GS:
+                        for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
+                        break;
+                    default:
+                        printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+                }
+			}
+		}
+        
+		// form residual r = b - A x
+		fasp_array_cp(m0,b0->val,r); 
+		fasp_blas_dbsr_aAxpy(-1.0,A_level0,e0->val,r);
+		
+		// restriction r1 = R*r0
+        //switch (amg_type)
+		//{		
+		//	case UA_AMG: 
+		//		fasp_blas_dcsr_mxv_agg(&mgl[level].R, r, b1->val);
+		//		break;
+		//	default:
+				fasp_blas_dbsr_mxv(&mgl[level].R, r, b1->val);
+		//		break;
+		//}
+		
+		// call nonlinear AMLI-cycle recursively
+		{ 
+			unsigned INT i;	
+            
+			fasp_dvec_set(m1,e1,0.0);	
+			
+            // The coarsest problem is solved exactly.
+            // No need to call krylov method on second coarest level
+			if (level == num_levels-2)  
+			{
+				fasp_solver_nl_amli_bsr(&mgl[level+1], param, 0, num_levels-1);
+			}
+			else{  // recursively call preconditioned Krylov method on coarse grid
+				precond_data_bsr precdata;
+                
+                fasp_param_amg_to_prec_bsr (&precdata, param);
+				precdata.maxit = 1;
+				precdata.max_levels = num_levels-1;
+				precdata.mgl_data = &mgl[level+1];
+                
+				precond prec;
+				prec.data = &precdata; 
+				prec.fct = fasp_precond_dbsr_nl_amli;
+                
+				fasp_array_cp (m1, b1->val, bH.val);
+				fasp_array_cp (m1, e1->val, uH.val);
+                
+				const INT maxit = param->amli_degree+1;
+                const REAL tol = 1e-12;
+                
+               switch (param->nl_amli_krylov_type)
+                {
+                    //case SOLVER_GCG: // Use GCG
+                     //   fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&prec,0,1);
+                      //  break;
+                    default: // Use FGMRES
+                        fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH, maxit,tol,&prec,0,1, MIN(maxit,30));
+                        break;
+                }
+                
+				fasp_array_cp (m1, bH.val, b1->val);
+				fasp_array_cp (m1, uH.val, e1->val);
+			}
+			
+		}
+		
+		// prolongation e0 = e0 + P*e1
+      //  switch (amg_type)
+		//{
+		//	case UA_AMG:
+		//		fasp_blas_dbsr_aAxpy_agg(1.0, &mgl[level].P, e1->val, e0->val);
+		//		break;
+		//	default:
+				fasp_blas_dbsr_aAxpy(1.0, &mgl[level].P, e1->val, e0->val);
+		//		break;
+		//}
+		
+		// post smoothing
+		if (level < param->ILU_levels) {
+			fasp_smoother_dbsr_ilu(A_level0, b0, e0, LU_level);
+		}
+		else {
+            unsigned int steps = param->postsmooth_iter;
+			
+			if (steps > 0){
+				switch (smoother) {
+                    case GS:
+                        for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
+                        break;
+                    default:
+                        printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+                }
+			}
+		}
+		
+	}
+    
+	else // coarsest level solver
+	{
+#if With_DISOLVE 
+        /* use Direct.lib in Windows */
+		DIRECT_MUMPS((&mgl[level].Ac)->row, (&mgl[level].Ac)->nnz, (&mgl[level].Ac)->IA, (&mgl[level].Ac)->JA, (&mgl[level].Ac)->val, 
+                     b0->val, e0->val);
+#elif With_UMFPACK
+		/* use UMFPACK direct solver on the coarsest level */
+		umfpack(&mgl[level].Ac, b0, e0, 0);
+#elif With_SuperLU
+		/* use SuperLU direct solver on the coarsest level */
+		superlu(&mgl[level].Ac, b0, e0, 0);
+#else	
+		/* use iterative solver on the coarest level */
+        fasp_coarse_itsolver(&mgl[level].Ac, b0, e0, param->tol, print_level);  
+#endif 
+	}
+	
+	//if (print_level>=PRINT_MOST) printf("Nonlinear AMLI level %d, post-smoother %d.\n", level, smoother);
+    
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_nl_amli ...... [Finish]\n");
+#endif
+}
+
+/**
  * \fn void fasp_amg_amli_coef (REAL lambda_max, REAL lambda_min, 
  *                              INT degree, REAL *coef)
  *

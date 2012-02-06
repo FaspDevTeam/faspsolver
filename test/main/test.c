@@ -100,8 +100,11 @@ int main (int argc, const char * argv[])
     }
     
 	// Assemble A and b -- P1 FE discretization for Poisson.
-	else if (problem_num == 19) {	
-        assemble(&A,&b,9);
+	else if (problem_num == 19) {
+        printf("hello\n");
+        assemble(&A,&b, 6);
+        
+        int offsets[5][2] = {{0,0}, {-1,0}, {1,0}, {0,-1}, {0,1}};
         
         fasp_dcsr_compress_inplace(&A, SMALLREAL);
 	}
