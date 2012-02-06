@@ -70,6 +70,14 @@ double t,d;
 /*==========================================================================*/
 /* rb0b3d                                                                   */
 /*==========================================================================*/
+/**
+ * \fn rb0b3d(int *ia, int *ja, double *aa,double *u, double *f, int *mark, int nx, int ny, int nz, int nsweeps)
+ * \brief Colores Gauss-Seidel smoother  for Au=b
+ *  fix the bug ,let nx,ny,nz fit any even or odd.
+ * * \param *mark     maping from geometry number to algebraical dof number
+ * \author FENG Chunsheng
+ * \date 2012/Feb/06 
+ */
 void rb0b3d(int *ia, int *ja, double *aa,double *u, double *f, int *mark, int nx, int ny, int nz, int nsweeps)
 {
 /*
@@ -101,6 +109,7 @@ int ox,oy, oz;
 
   for (isweep = 1; isweep <= nsweeps; isweep++)
   {
+  if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==0)) {          //000
 /*...  e-e-e (and going backwards) */
     swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
 /*...  e-e-o */
@@ -117,6 +126,126 @@ int ox,oy, oz;
     swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
 /*...  o-o-o */
     swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+	} else if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==1)) {  //001
+/*...  e-e-o (and going backwards) */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+/*...  e-e-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+/*...  e-o-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+/*...  e-o-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+/*...  o-e-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+/*...  o-e-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+/*...  o-o-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+/*...  o-o-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+	}  else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==0)) {   //010
+/*...  e-o-e (and going backwards) */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+/*...  e-o-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+/*...  e-e-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+/*...  e-e-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+/*...  o-o-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+/*...  o-o-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+/*...  o-e-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+/*...  o-e-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);	
+	}  else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==1)) {   //011
+/*...  e-o-o (and going backwards) */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+/*...  e-o-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+/*...  e-e-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+/*...  e-e-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+/*...  o-o-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+/*...  o-o-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+/*...  o-e-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+/*...  o-e-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);	
+	}  else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==0)) {   //100
+/*...  o-e-e (and going backwards) */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+/*...  o-e-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+/*...  o-o-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+/*...  o-o-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+/*...  e-e-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+/*...  e-e-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+/*...  e-o-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+/*...  e-o-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);	
+	}  else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==1)) {   //101
+/*...  o-e-o (and going backwards) */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+/*...  o-e-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+/*...  o-o-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+/*...  o-o-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+/*...  e-e-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+/*...  e-e-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+/*...  e-o-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+/*...  e-o-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);	
+	}  else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==0)) {   //110
+/*...  o-o-e (and going backwards) */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+/*...  o-o-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+/*...  o-e-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+/*...  o-e-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+/*...  e-o-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+/*...  e-o-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+/*...  e-e-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+/*...  e-e-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);	
+	}  else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==1)) {   //111
+/*...  o-o-o (and going backwards) */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+/*...  o-o-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+/*...  o-e-o */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+/*...  o-e-e */
+    swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+/*...  e-o-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+/*...  e-o-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+/*...  e-e-o */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+/*...  e-e-e */
+    swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);	
+	}
   }
 }
 
