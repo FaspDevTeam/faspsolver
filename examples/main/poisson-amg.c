@@ -27,36 +27,34 @@
  */
 int main (int argc, const char * argv[]) 
 {
-	dCSRmat A;
-	dvector b, uh;
-	int status=SUCCESS;
-	
-	//! Step 0. Set parameters
-    //!     Here we read everything from a disk file "amg.dat"
-	input_param     inparam;  // parameters from input files
-	itsolver_param  itparam;  // parameters for itsolver
-	AMG_param       amgparam; // parameters for AMG
-	ILU_param       iluparam; // parameters for ILU
+    //! Step 0. Set parameters
+    //!         We read everything from a disk file "amg.dat"
+    input_param     inparam;  // parameters from input files
+    itsolver_param  itparam;  // parameters for itsolver
+    AMG_param       amgparam; // parameters for AMG
+    ILU_param       iluparam; // parameters for ILU
     
     // Read input parameters from a disk file
-	fasp_param_init("ini/amg.dat",&inparam,&itparam,&amgparam,&iluparam);
+    fasp_param_init("ini/amg.dat",&inparam,&itparam,&amgparam,&iluparam);
     
     // Set local parameters
-	const int print_level   = inparam.print_level;
-	const int problem_num   = inparam.problem_num;
-	const int itsolver_type = inparam.itsolver_type;
-	const int precond_type  = inparam.precond_type;
-	const int output_type   = inparam.output_type;
+    const int print_level   = inparam.print_level;
+    const int problem_num   = inparam.problem_num;
+    const int itsolver_type = inparam.itsolver_type;
+    const int precond_type  = inparam.precond_type;
+    const int output_type   = inparam.output_type;
     
-	//! Step 1. Get stiffness matrix and right-hand side
-	char filename1[512], *datafile1;
-	char filename2[512], *datafile2;
+    //! Step 1. Get stiffness matrix and right-hand side
+    //!         Both stiffness matrix and right-hand side are written on disk files
+    dCSRmat A;
+    dvector b, uh;
+    char filename1[512], *datafile1;
+    char filename2[512], *datafile2;
 	
-	strncpy(filename1,inparam.workdir,128);
-	strncpy(filename2,inparam.workdir,128);
+    strncpy(filename1,inparam.workdir,128);
+    strncpy(filename2,inparam.workdir,128);
     
-	//! Read A and b -- P1 FE discretization for Poisson.
-    //!     Both stiffness matrix and right-hand side are written on disk files
+    //! Read A and b -- P1 FE discretization for Poisson.
     datafile1="matP1.dat";
     strcat(filename1,datafile1);
     datafile2="rhsP1.dat";
@@ -65,35 +63,28 @@ int main (int argc, const char * argv[])
     fasp_dvecind_read(filename2, &b);    
     
     // Print problem size
-	if (print_level>PRINT_NONE) {
+    if (print_level>PRINT_NONE) {
         printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
         printf("b: n = %d\n", b.row);
         fasp_mem_usage();
-	}
+    }
     
-	//! Step 2. Solve the system with AMG
+    //! Step 2. Solve the system with AMG
     
-	// Set initial guess
+    // Set initial guess
     fasp_dvec_alloc(A.row, &uh); 
     fasp_dvec_set(A.row,&uh,0.0);
 	
     // Print out solver parameters
     if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-
-    // AMG as the iterative solver
-    status = fasp_solver_amg(&A, &b, &uh, &amgparam); 
     
-	if (status<0) {
-		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
-	}
-	else {
-		printf("\nSolver finished!\n\n", status);
-	}
+    // AMG as the iterative solver
+    fasp_solver_amg(&A, &b, &uh, &amgparam); 
     
     // Clean up memory
-	fasp_dcsr_free(&A);
-	fasp_dvec_free(&b);
-	fasp_dvec_free(&uh);
+    fasp_dcsr_free(&A);
+    fasp_dvec_free(&b);
+    fasp_dvec_free(&uh);
     
-	return SUCCESS;
+    return SUCCESS;
 }

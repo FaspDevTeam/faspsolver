@@ -192,6 +192,7 @@ static void put_dword(FILE *fp, int d)
 
 /*! 
  * \fn static int write_bmp16(const char *fname, int m, int n, const char map[])
+ *
  * \brief Write to BMP file
  *
  * \param fname  char for filename 
@@ -202,6 +203,8 @@ static void put_dword(FILE *fp, int d)
  *
  * \author Chensong Zhang
  * \date 03/29/2009
+ *
+ * \note
  *  write_bmp16 - write 16-color raster image in BMP file format
  *
  *  DESCRIPTION
@@ -239,8 +242,6 @@ static void put_dword(FILE *fp, int d)
  *  This code is modified from graphical output in 
  *         GLPK (GNU Linear Programming Kit).
  *
- *  Modified by Chensong Zhang
- *
  *  Note: 
  *
  *  GLPK is free software: you can redistribute it and/or modify it
@@ -262,14 +263,14 @@ static int write_bmp16(const char *fname, int m, int n, const char map[])
 	int offset, bmsize, i, j, b, ret = 1;
     
 	if (!(1 <= m && m <= 32767))
-		printf("write_bmp16: m = %d; invalid height\n", m);
+		printf("### ERROR: write_bmp16 invalid height %d\n", m);
 	
     if (!(1 <= n && n <= 32767))
-		printf("write_bmp16: n = %d; invalid width\n", n);
+		printf("### ERROR: write_bmp16 invalid width %d\n", n);
 	
     fp = fopen(fname, "wb");
 	if (fp == NULL)
-	{  printf("write_bmp16: unable to create `%s'\n", fname);
+	{  printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
 		ret = 0;
 		goto fini;
 	}
@@ -308,7 +309,7 @@ static int write_bmp16(const char *fname, int m, int n, const char map[])
 	/* 0x0A = bright green */  put_dword(fp, 0x00FF00);
 	/* 0x0B = bright cyan */   put_dword(fp, 0x00FFFF);
 	/* 0x0C = bright red */    put_dword(fp, 0xFF0000);
-	/* 0x0D = bright magenta */ put_dword(fp, 0xFF00FF);
+	/* 0x0D = bright magenta */put_dword(fp, 0xFF00FF);
 	/* 0x0E = yellow */        put_dword(fp, 0xFFFF00);
 	/* 0x0F = white */         put_dword(fp, 0xFFFFFF);
 	/* pixel data bits */
@@ -322,7 +323,7 @@ static int write_bmp16(const char *fname, int m, int n, const char map[])
 	}
 	fflush(fp);
 	if (ferror(fp)) {  
-		printf("write_bmp16: write error on `%s'\n",fname);
+		printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
 		ret = 0;
 	}
 fini: if (fp != NULL) fclose(fp);

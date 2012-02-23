@@ -38,7 +38,7 @@
 /**
  * \brief For external software support
  */
-#define FASP_USE_ILU     OFF  /**< enable ILU or not */
+#define FASP_USE_ILU     ON   /**< enable ILU or not */
 #define FASP_USE_OPENMP  OFF  /**< enable OpenMP support or not */
 
 /**

@@ -150,6 +150,7 @@ allclean:
 	rm -f $(CSRCDIR)/*~
 	rm -f $(FSRCDIR)/*~
 	rm -f $(EXTRDIR)/*~
+	rm -f main/*~
 
 help:
 	@echo "======================================================"
