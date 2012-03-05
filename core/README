@@ -4,8 +4,10 @@ Fast Auxiliary Space Preconditioning (FASP) Solver Package README
 
 last modified on 09/01/2011
 
-0. Introduction:
 
+================================
+0. Introduction
+================================
 The FASP package is built for developing and testing new efficient (multilevel) 
 solvers and preconditioners for discrete partial differential equations (PDEs) 
 or systems of PDEs. The main components of the package are standard Krylov 
@@ -18,64 +20,71 @@ so on.
 This software is free software distributed under the Lesser General Public 
 License or LGPL, version 3.0.  
 
-1. Build:
 
+================================
+1. Tree Structure
+================================
+    - src:     source codes
+    - doc:     user documentation in HTML and TeX
+    - include: header files
+    - lib:     libraries 
+    - extra:   external files optional for FASP
+
+
+================================
+2. Compiler
+================================
 To compile, you need a Fortran and a C compiler. By default, we use gfortan 
 and gcc, respectively; see Makefile for details. 
 
 This package has been tested with: 
 
 --Linux and Mac
-        gcc-4.2, gcc-4.4, gcc-4.5, gcc-4.6;
-        icc-11.0, icc-11.1; 
-        gfortran-4.4, gfortran-4.5; 
-        g95-0.92; 
-        ifort-11.0, ifort-11.1.
+    C/C++:   gcc-4.2, gcc-4.4, gcc-4.5, gcc-4.6, icc-11.x; 
+    Fortran: gfortran-4.4, gfortran-4.5, gfortran-4.6, g95-0.92, ifort-11.x.
 
 --Windows XP and Windows Vista
-        VC++ 2005, VC++ 2008;
-        icc-11.1.x, icc-12.0.x;
-        ifort-11.1.x, ifort-12.0.x. 
+    C/C++:   VC++ 2005, VC++ 2008, icc-11.1.x, icc-12.0.x;
+    Fortran: ifort-11.1.x, ifort-12.0.x. 
 
+
+================================
+3. Build
+================================
 You can make the header file using (You can skip this step as the headers files 
 have already been generated for you initially): 
 
-    >> make headers
+    $ make headers
 
 Now you are ready to make the FASP library file: 
 
-    >> make lib
+    $ make lib
 
-or simply:
+or just:
 
-    >> make
+    $ make
 
 To clean up the working directory, you may
 
-    >> make clean 
+    $ make clean 
 
-which cleans up the directory by removing object files ONLY; Furthermore, 
+which cleans up the directory by removing object files ONLY; To obtain a completely
+clean directory (removing all the executables also), you need to do
 
-    >> make allclean 
-
-removes the executables also and obtains a completely clean directory. 
+    $ make allclean 
 
 If you need any help, you can type:
 
-    >> make help
+    $ make help
 
-2. Tree Structure: 
 
-  - src: source codes
-  - doc: user documentation in HTML and TeX
-  - include: header files
-  - lib: libraries 
-
-3. Test Problems: 
-
+================================
+4. Test Problems
+================================
 Now you are ready to use the library. If you need to see some test problems, go to 
-the "./test" directory for test problems and read the README file therein as well. 
-If you wish to see some practical problems where FASP has been applied, see
-"./fasp4*" directories. Each of these directories contains a particular application.
-Please be noted that the codes containing in some of the "./fasp4*" directories 
+the "../test" directory for test problems and read the README file therein as well. 
+If you wish to see some practical problems where FASP has been applied, see 
+"../fasp4*" directories. Each of these directories contains a particular application.
+
+Please be noted that the codes containing in some of the "../fasp4*" directories 
 might be proprietary (not freely available to general public). 

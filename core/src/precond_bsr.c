@@ -201,7 +201,7 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
  */
 void fasp_precond_dbsr_ilu (REAL *r, 
                             REAL *z, 
-                            const void *data)
+                            void *data)
 {
 	const ILU_data  *iludata=(ILU_data *)data;
 	const INT        m=iludata->row, mm1=m-1, mm2=m-2, memneed=2*m;
@@ -466,8 +466,8 @@ void fasp_precond_dbsr_ilu (REAL *r,
  * \date 08/07/2011
  */
 void fasp_precond_dbsr_amg (double *r, 
-                              double *z, 
-                              void *data)
+                            double *z, 
+                            void *data)
 {
 	precond_data_bsr *predata=(precond_data_bsr *)data;
 	const int row=predata->mgl_data[0].A.ROW;
@@ -509,8 +509,8 @@ void fasp_precond_dbsr_amg (double *r,
  * \date 02/06/2012
  */
 void fasp_precond_dbsr_nl_amli (REAL *r, 
-                           REAL *z, 
-                           void *data)
+                                REAL *z, 
+                                void *data)
 {
 	
 	precond_data_bsr *precdata=(precond_data_bsr *)data;

@@ -11,16 +11,19 @@ several complicated applications, for example: Stokes equation, underground
 water simulation, the (modified) black oil model in reservoir simulation, and 
 so on. 
 
-To install, you need to do two simple steps: 
+To setup the environment, you need to do two simple steps: 
 
 Step 1. Setup directories for FASP:
-     [fasp]>> ./bin/setup.sh
+     
+     [faspsolver]$ ./bin/setup.sh
 
 Step 2. Compile the library: 
-     [fasp/core]>> make
+     
+     [faspsolver/core]$ make
 
-After you are done, you can run a few test problems:
-     [fasp/test]>> make
+Step 3. Now you can run a few test problems:
+     
+     [faspsolver/test]$ make
 
 You may want to adjust the "make.inc" for your personal computer environement 
 or choose different compiling parameters, etc. For more details, read the README

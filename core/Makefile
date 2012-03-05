@@ -2,22 +2,27 @@
 # Fast Auxiliary Space Preconditioners (FASP)
 # 
 # This is the Makefile for FASP core! 
-# Do NOT put your personal definitions in this general file. 
-# Use make.inc to define user settings instead.
 #
 ########################################################################
+
+# !!! IMPORTANT !!!
+# Do NOT modify this Makefile and put your personal definitions here.
+# Use make.inc to define user settings instead. If you really need to
+# revise this file, use "chmod u+w Makefiel" first.  
 
 ########################################################################
 # Compilers and dependences
 ########################################################################
 AR=ar ruc
-CC=gcc -g 
-CPP=g++ -g
-FC=gfortran -g 
 
-#CC=icc -openmp
-#CPP=icpc -openmp
-#FC=ifort -openmp
+CC=gcc 
+CPP=g++
+FC=gfortran
+
+#CC=icc
+#CPP=icpc
+#FC=ifort
+
 CSRCDIR=./src
 FSRCDIR=./src
 EXTRDIR= ./extra

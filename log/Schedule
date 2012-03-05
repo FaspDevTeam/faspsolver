@@ -121,15 +121,13 @@ James and Xiaozhe: Convert PIMS + distance-2 interpolation to C.
 
 Kai Yang: Modify the P1 assembling and optimize memory allocation. [Done!]
 
-Cao Fei: Add a new regression test. 
-
-Chensong: Add the matching code. 
+Chensong: Add a new regression test. [Done!]
 
 ----------------
 
 02/23/2011: ANSYS matrices
 
-Ludmil: Add nonrecurive AMLI cycle
+Ludmil: Add nonrecurive AMLI cycle.
 
 Zhiyang: Test ANSYS matrices using Hypre. [Done!]
 
@@ -154,6 +152,5 @@ Xiaozhe: Prepare subroutine that generates overlapping blocks.
 To do: 
 
 * amg_solve: need to add stop_type also
-* How to construct Ac as a 7-point stencil using A?
 * How to use structured grids for AMG? 
 

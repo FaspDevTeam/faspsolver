@@ -433,8 +433,8 @@ void fasp_dcsr_diagpref (dCSRmat *A)
             }
             
             if (j == row_size) {
-                printf("### WARNING: Diagonal entry in row %d is either missing or zero!\n", i);
-                return ERROR_MISC; // Diagonal is zero    
+                printf("### ERROR: Diagonal entry in row %d is either missing or zero!\n", i);
+                exit(ERROR_MISC); // Diagonal is zero    
             }
         }
         

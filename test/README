@@ -4,86 +4,80 @@ Fast Auxiliary Space Preconditioning (FASP) Solver Package README
 
 last modified on 09/02/2011
 
-0. Introduction: 
 
+================================
+0. Introduction
+================================
 This directory contains a set of problems for regression tests and tools for 
 developing the FASP package.
 
-1. Build:
 
+================================
+1. Build
+================================
 To compile, you need a Fortran and a C compiler. By default, we use gfortan 
 and gcc, respectively; see Makefile for details. 
 
-This package has been tested with: 
-
---Linux and Mac
-        gcc-4.2, gcc-4.4, gcc-4.5, gcc-4.6;
-        icc-11.0, icc-11.1; 
-        gfortran-4.4, gfortran-4.5; 
-        g95-0.92; 
-        ifort-11.0, ifort-11.1.
-
---Windows XP and Windows Vista
-        VC++ 2005, VC++ 2008;
-        icc-11.1.x, icc-12.0.x;
-        ifort-11.1.x, ifort-12.0.x. 
-
 And then you can make the header file using: 
 
-    >> make headers
+    $ make headers
 
 Now you are ready to make all executables and libraries: 
 
-    >> make
+    $ make
 
 which makes all test executables. And, you can use
 
-    >> make clean 
+    $ make clean 
 
 to clean up the directory by removing object files. Or, you can use
 
-    >> make allclean 
+    $ make allclean 
 
 to remove the executables also and gives a completely clean directory. 
 
 If you need any extra help, please 
 
-    >> make help
+    $ make help
 
 
-2. Test:
+================================
+2. Test
+================================
+By running the executable test.ex, we can get numerical results for different test 
+examples. The terminal command to invoke the test problems is
 
-By running the executable test.ex, we can get numerical results for different test examples. 
-The terminal command to invoke the test problems is
-
-    >> ./test.ex
+    $ ./test.ex
 
 There is another test function
 
-    >> ./regression.ex
+    $ ./regression.ex
 
-which tests a bunch of solvers at a single call and compares the outcome with the expected 
-results. 
+which tests a bunch of solvers at a single call and compares the outcome with the 
+expected results. 
 
 
-3. Input: 
-
+================================
+3. Input
+================================
 And test.ex reads parameters from ini/input.dat, where you can choose:
 
-* problem type ( 1--6 ): 1* are from P1-P3 FEM for Poisson equation;
-  	       	      	 3* are for matrices from Ruth;
-			 5*, 6* are from ExxonMobil.
+* solver type:   1  CG method
+                 2  BiCGstab method
+                 3  MinRes method
+                 4  GMRes method
+                 5  Variable restarting GMRes method
+                 6  Variable restarting FGMRes method
+                 7  GCG method
+                 21 AMG as solver
+                 22 FMG as solver
+                 31 SuperLU (external)
+                 32 UMFPACK (external)
 
-* solver type ( 0--4 ):  0 AMG as itertive solver;
-  	      	     	 1 CG method;
-			 2 BiCGstab method;
-			 3 MinRes method;
-			 4 GMRes method.
-
-* precond type ( 0--3 ): 0 No preconditioners;
-  	      	     	 1 Diagonal preconditioner;
-			 2 AMG preconditioner: classical AMG or smooth aggregation AMG;
-			 3 ILU preconditioner: ILUs, ILUk,  ILUt and ILUtp.
+* precond type:  0  No preconditioners
+                 1  Diagonal preconditioner
+                 2  AMG preconditioner
+                 3  ILU preconditioner (external)
 
 * solver parameters (which we do not discuss here, see details in the documentation 
   	 	     contained in doc directory).
@@ -98,13 +92,12 @@ Note: This is not a complete list of available parameters. For more details, ple
 refer to the user documentation.
 
 
-4. Tree Structure: 
-
-  - src: source codes
+================================
+4. Tree Structure
+================================
+  - src:     Source codes
   - include: Header files
-  - ini: Input files for parameters
-  - lib: Libraries 
-  - main: C test functions
-  - output: Output files
-
-
+  - ini:     Input files for parameters
+  - lib:     Libraries 
+  - main:    Test functions in C and Fortran
+  - output:  Output files

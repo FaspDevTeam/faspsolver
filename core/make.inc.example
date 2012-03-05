@@ -1,4 +1,5 @@
-######################################################################## # Fast Auxiliary Space Preconditioners (FASP)
+######################################################################## 
+# Fast Auxiliary Space Preconditioners (FASP)
 #
 # Included file for user defined compilers and libraries, etc!
 #

@@ -976,8 +976,8 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
                              dvector *x, 
                              void *data)
 {
-	const ILU_data *iludata=(ILU_data *)data;
-	const INT       nb=iludata->nb,m=A->ROW*nb, memneed=6*m;
+    ILU_data   *iludata=(ILU_data *)data;
+	const INT   nb=iludata->nb,m=A->ROW*nb, memneed=6*m;
 	
     REAL *xval = x->val, *bval = b->val;	
 	REAL *zz = iludata->work + 3*m;

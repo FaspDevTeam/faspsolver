@@ -1074,26 +1074,26 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
 /*-------- In file: itsolver_bsr.c --------*/
 
 int fasp_solver_dbsr_itsolver (dBSRmat *A, 
-															 dvector *b, 
-															 dvector *x, 
-															 precond *prec, 
-															 itsolver_param *itparam);
+                               dvector *b, 
+                               dvector *x, 
+                               precond *prec, 
+                               itsolver_param *itparam);
 
 int fasp_solver_dbsr_krylov (dBSRmat *A, 
-														 dvector *b, 
-														 dvector *x, 
-														 itsolver_param *itparam);
+                             dvector *b, 
+                             dvector *x, 
+                             itsolver_param *itparam);
 
 int fasp_solver_dbsr_krylov_diag (dBSRmat *A, 
-																	dvector *b, 
-																	dvector *x, 
-																	itsolver_param *itparam);
+                                  dvector *b, 
+                                  dvector *x, 
+                                  itsolver_param *itparam);
 
 int fasp_solver_dbsr_krylov_ilu (dBSRmat *A, 
-																 dvector *b, 
-																 dvector *x, 
-																 itsolver_param *itparam, 
-																 ILU_param *iluparam);
+                                 dvector *b, 
+                                 dvector *x, 
+                                 itsolver_param *itparam, 
+                                 ILU_param *iluparam);
 
 
 /*-------- In file: itsolver_bsr.c --------*/
@@ -1548,15 +1548,15 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
 
 void fasp_precond_dbsr_ilu (REAL *r, 
                             REAL *z, 
-                            const void *data);
+                            void *data);
 
 void fasp_precond_dbsr_amg (double *r, 
-                              double *z, 
-                              void *data);
+                            double *z, 
+                            void *data);
 
 void fasp_precond_dbsr_nl_amli (REAL *r, 
-                           REAL *z, 
-                           void *data);
+                                REAL *z, 
+                                void *data);
 
 
 /*-------- In file: precond_bsr_omp.c --------*/
