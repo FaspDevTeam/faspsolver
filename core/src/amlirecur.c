@@ -139,7 +139,7 @@ void fasp_solver_amli (AMG_data *mgl,
 	{
 #if With_DISOLVE 
         /* use Direct.lib in Windows */
-		DIRECT_MUMPS(A_level0->row, A_level0->nnz, A_level0->IA, A_level0->JA, A_level0->val, 
+		DIRECT_MUMPS(&A_level0->row, &A_level0->nnz, A_level0->IA, A_level0->JA, A_level0->val, 
                      b0->val, e0->val);
 #elif With_UMFPACK
 		/* use UMFPACK direct solver on the coarsest level */
@@ -181,7 +181,6 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 	const SHORT  print_level = param->print_level;
 	const SHORT  smoother = param->smoother;
 	const SHORT  smooth_order = param->smooth_order;
-	const SHORT  cycle_type = param->cycle_type;
 	const REAL   relax = param->relaxation;
 	
 	dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x; // fine level b and x
@@ -234,9 +233,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 		}
 		
 		// call nonlinear AMLI-cycle recursively
-		{ 
-			unsigned INT i;	
-            
+		{         
 			fasp_dvec_set(m1,e1,0.0);	
 			
             // The coarsest problem is solved exactly.
@@ -305,7 +302,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 	{
 #if With_DISOLVE 
         /* use Direct.lib in Windows */
-		DIRECT_MUMPS(A_level0->row, A_level0->nnz, A_level0->IA, A_level0->JA, A_level0->val, 
+		DIRECT_MUMPS(&A_level0->row, &A_level0->nnz, A_level0->IA, A_level0->JA, A_level0->val, 
                      b0->val, e0->val);
 #elif With_UMFPACK
 		/* use UMFPACK direct solver on the coarsest level */
@@ -343,12 +340,8 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                           INT level, 
                           INT num_levels)
 {	
-    const SHORT  amg_type=param->AMG_type;
-	const SHORT  print_level = param->print_level;
+    const SHORT  print_level = param->print_level;
 	const SHORT  smoother = param->smoother;
-	const SHORT  smooth_order = param->smooth_order;
-	const SHORT  cycle_type = param->cycle_type;
-	const REAL   relax = param->relaxation;
     INT i;
 	
 	dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x; // fine level b and x
@@ -360,7 +353,6 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 	
 	ILU_data *LU_level = &mgl[level].LU; // fine level ILU decomposition
 	REAL *r = mgl[level].w.val; // for residual
-    INT *ordering = mgl[level].cfmark.val; // for smoother ordering
     
 	dvector uH, bH;  // for coarse level correction
 	uH.row = m1; uH.val = mgl[level+1].w.val + m1;
@@ -371,7 +363,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
 	
-	//if (print_level>=PRINT_MOST) printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
+	if (print_level>=PRINT_MORE) printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
 
 	if (level < num_levels-1) { 
 		
@@ -388,7 +380,8 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                         for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
                         break;
                     default:
-                        printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+						printf("### ERROR: Unsupported smoother type %d!\n", smoother); 
+						exit(ERROR_INPUT_PAR);
                 }
 			}
 		}
@@ -410,8 +403,6 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 		
 		// call nonlinear AMLI-cycle recursively
 		{ 
-			unsigned INT i;	
-            
 			fasp_dvec_set(m1,e1,0.0);	
 			
             // The coarsest problem is solved exactly.
@@ -478,7 +469,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                         for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
                         break;
                     default:
-                        printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+                        printf("### ERROR: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
                 }
 			}
 		}
@@ -489,7 +480,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 	{
 #if With_DISOLVE 
         /* use Direct.lib in Windows */
-		DIRECT_MUMPS((&mgl[level].Ac)->row, (&mgl[level].Ac)->nnz, (&mgl[level].Ac)->IA, (&mgl[level].Ac)->JA, (&mgl[level].Ac)->val, 
+		DIRECT_MUMPS(&(mgl[level].Ac.row), &(mgl[level].Ac.nnz), mgl[level].Ac.IA, mgl[level].Ac.JA, mgl[level].Ac.val, 
                      b0->val, e0->val);
 #elif With_UMFPACK
 		/* use UMFPACK direct solver on the coarsest level */

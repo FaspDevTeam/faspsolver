@@ -102,7 +102,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 	INT  status = SUCCESS;
 	
     REAL alpha, beta, relres, normb, fenzi, fenmu, omega, reldiff;
-	REAL factor, absres,  absresp, normd, normu, temp2, infnormu;
+	REAL factor=0.0, absres,  absresp, normd, normu, temp2, infnormu;
 	REAL *uval=u->val, *bval=b->val;
     
 	// allocate temp memory (need 9*m double)
@@ -472,7 +472,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
     // local variables
 	INT  m=b->row, stag, more_step, restart_step;
 	REAL alpha, beta, relres, normb, fenzi, fenmu, omega, reldiff;
-	REAL factor,absres,absresp, normd, normu, temp2, infnormu;
+	REAL factor=0.0,absres,absresp, normd, normu, temp2, infnormu;
 	
     // allocate memory
 	REAL *p   = (REAL *)fasp_mem_calloc(m,sizeof(double));
@@ -876,7 +876,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
     
     // local variables
 	REAL alpha, beta, relres, normb,fenzi,fenmu,omega,reldiff;
-	REAL factor,absres,absresp, normd, normu, temp2, infnormu;
+	REAL factor=0.0,absres,absresp, normd, normu, temp2, infnormu;
 	REAL *uval=u->val, *bval=b->val;
 	INT  m=A->ROW*A->nb, stag, morestep, restart_step;
 	INT  status = SUCCESS;
@@ -1233,7 +1233,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
     
 	// local variables
 	REAL alpha, beta, relres, normb,fenzi,fenmu,omega,reldiff;
-	REAL factor,absres,absresp, normd, normu, temp2, infnormu;
+	REAL factor=0.0,absres,absresp, normd, normu, temp2, infnormu;
 	REAL *uval=u->val, *bval=b->val;
 	INT  m=nc*ngrid, stag, morestep, restart_step;
 	INT  status = SUCCESS;

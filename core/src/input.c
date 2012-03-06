@@ -33,11 +33,9 @@ void fasp_param_input (char *filenm,
     
 	// set default input parameters
 	fasp_param_input_init(Input);
-	
-	if (filenm==NULL) {
-		status = ERROR_INPUT_PAR;
-		goto FINISH;
-	}
+
+	// if input file is not specified, use the default values
+	if (filenm==NULL) return;
 	
 	FILE *fp = fopen(filenm,"r");
 	if (fp==NULL) {
@@ -619,7 +617,6 @@ void fasp_param_input (char *filenm,
         || Input->restart<0
         ) status = ERROR_INPUT_PAR;
 	
-FINISH:
 #if DEBUG_MODE
     printf("### DEBUG: Reading input status = %d\n", status);
 #endif

@@ -68,7 +68,7 @@ void print_amgcomplexity (AMG_data *mgl,
                           const SHORT print_level)
 {
 	const SHORT   max_levels=mgl->num_levels;    
-    SHORT         level=0, status=SUCCESS;
+    SHORT         level;
     REAL          gridcom=0.0, opcom=0.0;
     
     if (print_level>=PRINT_SOME) {

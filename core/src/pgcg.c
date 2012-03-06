@@ -149,7 +149,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
         
 	} // end of main GCG loop.
 	
-FINISHED:  // finish the iterative method
+    // finish the iterative method
 	if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
 	
 	// clean up temp memory

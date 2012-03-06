@@ -87,7 +87,7 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
 {
 	const SHORT print_level=param->print_level;
     const SHORT cycle_type = param->cycle_type;
-	const INT   m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;
+	const INT   m=mgl[0].A.row;
 	
     SHORT       max_levels=param->max_levels, level=0, status=SUCCESS;
 	INT         i, j;

@@ -36,7 +36,6 @@ SHORT fasp_amg_solve (AMG_data *mgl,
     
 	const SHORT   print_level = param->print_level;
 	const INT     MaxIt = param->maxit; 
-	const INT     m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
 	const REAL    tol = param->tol;
 	const REAL    sumb = fasp_blas_dvec_norm2(b); // L2norm(b)	
 	
@@ -46,6 +45,7 @@ SHORT fasp_amg_solve (AMG_data *mgl,
 	unsigned INT  iter=0;
 	
 #if DEBUG_MODE
+	const INT     m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
     printf("### DEBUG: fasp_amg_solve ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
@@ -121,7 +121,6 @@ SHORT fasp_amg_solve_amli (AMG_data *mgl,
     
 	const INT    MaxIt = param->maxit; 
 	const SHORT  print_level = param->print_level;
-	const INT    m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
 	const REAL   tol = param->tol;
 	const REAL   sumb = fasp_blas_dvec_norm2(b); // L2norm(b)	
 	
@@ -131,6 +130,7 @@ SHORT fasp_amg_solve_amli (AMG_data *mgl,
 	unsigned INT iter=0;
 	
 #if DEBUG_MODE
+	const INT    m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
     printf("### DEBUG: fasp_amg_solve_amli ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
@@ -200,7 +200,6 @@ SHORT fasp_amg_solve_nl_amli (AMG_data *mgl,
     const INT     MaxIt = param->maxit; 
 	const SHORT   print_level = param->print_level;
 	const REAL    tol = param->tol;
-    const INT     m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
 	const REAL    sumb = fasp_blas_dvec_norm2(b); // L2norm(b)	
 	
     // local variables
@@ -208,6 +207,7 @@ SHORT fasp_amg_solve_nl_amli (AMG_data *mgl,
 	unsigned INT  iter=0;
 	
 #if DEBUG_MODE
+    const INT     m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
     printf("### DEBUG: fasp_amg_solve_nl_amli ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
@@ -277,7 +277,6 @@ SHORT fasp_famg_solve (AMG_data *mgl,
 	dvector     *b=&mgl[0].b, *x=&mgl[0].x, *r=&mgl[0].w; 
     
 	const SHORT  print_level = param->print_level;
-	const INT    m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
 	const REAL   sumb = fasp_blas_dvec_norm2(b); // L2norm(b)	
 	
     // local variables
@@ -285,6 +284,7 @@ SHORT fasp_famg_solve (AMG_data *mgl,
 	REAL         relres1=BIGREAL, absres;		
 	
 #if DEBUG_MODE
+	const INT    m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
     printf("### DEBUG: fasp_famg_solve ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif

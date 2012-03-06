@@ -684,6 +684,7 @@ INT fasp_dcsr_trans (dCSRmat *A,
 		
 	} // end if 
     
+	return SUCCESS;
 }	
 
 /* 

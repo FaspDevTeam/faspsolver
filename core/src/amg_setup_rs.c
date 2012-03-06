@@ -38,7 +38,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
                        AMG_param *param)
 {
 	const INT print_level=param->print_level;
-	const INT m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;	
+	const INT m=mgl[0].A.row;	
     const INT cycle_type = param->cycle_type;
 	
     // local variables

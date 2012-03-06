@@ -71,7 +71,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 {
     const SHORT   cycle_type=param->cycle_type;
 	const SHORT   print_level=param->print_level;
-	const INT     m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;
+	const INT     m=mgl[0].A.row;
 	
     // local variables
 	clock_t       setup_start, setup_end;

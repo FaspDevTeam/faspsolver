@@ -93,7 +93,7 @@ void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level)
 	{
 #if With_DISOLVE 
         /* use Direct.lib in Windows */
-		DIRECT_MUMPS(A_level0->row, A_level0->nnz, A_level0->IA, A_level0->JA, A_level0->val, 
+		DIRECT_MUMPS(&A_level0->row, &A_level0->nnz, A_level0->IA, A_level0->JA, A_level0->val, 
                      b0->val, e0->val);
 #elif With_UMFPACK
 		/* use UMFPACK direct solver on the coarsest level */

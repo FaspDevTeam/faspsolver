@@ -231,8 +231,6 @@ INT fasp_mem_iludata_check (ILU_data *iludata)
  */
 INT fasp_mem_dcsr_check (dCSRmat *A)
 {
-	INT flag = 0;
-	
 	if ((A->IA == NULL) || (A->JA == NULL) || (A->val == NULL)) {
 		printf("### ERROR: dCSRmat has not sucessfully allocate memory!!!\n");
 		return ERROR_ALLOC_MEM;

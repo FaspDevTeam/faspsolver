@@ -25,9 +25,9 @@
  */
 INT fasp_check_diagpos (dCSRmat *A)
 {
-	const INT    m=A->row, n=A->col;
-	unsigned INT i, num_neg;
-	dvector      diag; fasp_dcsr_getdiag(m,A,&diag);
+	const INT      m=A->row;
+	unsigned INT   i, num_neg;
+	dvector        diag; fasp_dcsr_getdiag(m,A,&diag);
     
 #if DEBUG_MODE
 	printf("check_diagpos: nr = %d, nc = %d, nnz = %d\n", m,n,A->nnz);
