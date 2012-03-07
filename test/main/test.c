@@ -17,13 +17,14 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-// Declare P1 assembling function
-extern int assemble(dCSRmat *ptr_A, dvector *ptr_b, int levelNum);
-
 /**
  * \fn int main (int argc, const char * argv[])
  *
  * \brief This is the main function for a few simple tests.
+ *
+ * \author Chensong Zhang
+ * \date   03/31/2009
+ * \note   Modified by Chensong Zhang on 09/09/2011
  */
 int main (int argc, const char * argv[]) 
 {
@@ -56,7 +57,7 @@ int main (int argc, const char * argv[])
     
     printf("Test Problem %d\n", problem_num);
     
-	//! Step 1. Assemble stiffness matrix and right-hand side
+	//! Step 1. Input stiffness matrix and right-hand side
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
 	
@@ -90,6 +91,7 @@ int main (int argc, const char * argv[])
         fasp_dvec_free(&sol);
 	}	
     
+	// Read A and b -- FD discretization for Poisson, large    
     else if (problem_num == 12) {
 		datafile1="csrA_1023X1023.dat";
 		strcat(filename1,datafile1);
@@ -98,16 +100,6 @@ int main (int argc, const char * argv[])
         
         fasp_dcsrvec_read(filename1, filename2, &A, &b);
     }
-    
-	// Assemble A and b -- P1 FE discretization for Poisson.
-	else if (problem_num == 19) {
-        printf("hello\n");
-        assemble(&A,&b, 6);
-        
-        int offsets[5][2] = {{0,0}, {-1,0}, {1,0}, {0,-1}, {0,1}};
-        
-        fasp_dcsr_compress_inplace(&A, SMALLREAL);
-	}
     
 	else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
@@ -210,3 +202,7 @@ int main (int argc, const char * argv[])
     
 	return SUCCESS;
 }
+
+/*---------------------------------*/
+/*--        End of File          --*/
+/*---------------------------------*/

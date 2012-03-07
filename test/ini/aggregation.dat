@@ -23,7 +23,7 @@ precond_type   = 2      % Precond type:  0 Null | 1 Diag | 2 AMG | 3 ILU
 
 stop_type      = 1      % Stopping type: 1 ||r||/||b|| | 2 ||r||_M/||b||_M | 3 ||r||/||x||  
 
-itsolver_tol   = 1e-8   % Solver tolerance 
+itsolver_tol   = 1e-6   % Solver tolerance 
 
 itsolver_maxit = 100    % Maximal ieration number 
 
@@ -47,10 +47,10 @@ AMG_smoother             = GS    % GS | JACOBI | SGS | SOR | SSOR | GSOR | SGSOR
 AMG_levels               = 20    % max number of levels
 AMG_ILU_levels           = 0     % number of levels using ILU smoother
 AMG_relaxation	         = 1.1   % over relaxation parameter for SOR smoother 
-AMG_presmooth_iter       = 1     % number of presmoothing
-AMG_postsmooth_iter      = 1     % number of postsmoothing
+AMG_presmooth_iter       = 2     % number of presmoothing
+AMG_postsmooth_iter      = 2     % number of postsmoothing
 AMG_coarse_dof           = 500   % max number of coarse degrees of freedom
-AMG_tol                  = 1e-10 % tolerance for AMG
+AMG_tol                  = 1e-0 % tolerance for AMG
 AMG_maxit                = 1     % number of AMG iterations
 AMG_coarse_scaling	 = OFF	 % switch of scaling of the coarse grid correction
 AMG_amli_degree		 = 1	 % degree of the polynomial used by (nonlinear) AMLI cycle

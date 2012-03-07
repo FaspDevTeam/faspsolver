@@ -59,7 +59,7 @@ AMG_nl_amli_krylov_type  = 6	 % type of krylov method used by Nonlinear AMLI cyc
 
 AMG_coarsening_type      = 1     % coarsening type 1: modified RS | 3: Compatible Relaxation
 AMG_interpolation_type   = 1     % 1 standard | 3 energy min in C 
-AMG_strong_threshold     = 0.6  % strong threshold
+AMG_strong_threshold     = 0.6   % strong threshold
 AMG_truncation_threshold = 0.4   % truncation threshold
 AMG_max_row_sum          = 0.9   % max row sum
 
@@ -69,11 +69,11 @@ AMG_max_row_sum          = 0.9   % max row sum
 
 AMG_strong_coupled	 = 0.08  % strong coupled threshold
 AMG_max_aggregation	 = 9     % max size of each aggregation 
-AMG_tentative_smooth	 = 0.67 % smooth factor for smoothing the tentative prolongation
+AMG_tentative_smooth	 = 0.67  % smooth factor for smoothing the tentative prolongation
 AMG_smooth_filter	 = OFF   % switch for filtered matrix for smoothing
 
 %----------------------------------------------%
 % parameters for GMRES method                  %
 %----------------------------------------------%
 
-itsolver_restart         = 30     % Restart number for GMRES
+itsolver_restart         = 30    % Restart number for GMRES

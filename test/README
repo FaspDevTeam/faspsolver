@@ -18,15 +18,13 @@ developing the FASP package.
 To compile, you need a Fortran and a C compiler. By default, we use gfortan 
 and gcc, respectively; see Makefile for details. 
 
-And then you can make the header file using: 
-
-    $ make headers
-
-Now you are ready to make all executables and libraries: 
+Now you are ready to make library and the test problem(s) by 
 
     $ make
+or
+    $ make testall
 
-which makes all test executables. And, you can use
+You can use
 
     $ make clean 
 
@@ -36,7 +34,7 @@ to clean up the directory by removing object files. Or, you can use
 
 to remove the executables also and gives a completely clean directory. 
 
-If you need any extra help, please 
+There are other test problems included in this directory. To see more details, try 
 
     $ make help
 
@@ -49,12 +47,7 @@ examples. The terminal command to invoke the test problems is
 
     $ ./test.ex
 
-There is another test function
-
-    $ ./regression.ex
-
-which tests a bunch of solvers at a single call and compares the outcome with the 
-expected results. 
+which tests a bunch of solvers at a single call. 
 
 
 ================================

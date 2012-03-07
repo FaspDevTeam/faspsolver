@@ -1,6 +1,7 @@
 Fast Auxiliary Space Preconditioning (FASP) Solver Package README
 
-last modified on 09/12/2011
+Last modified on 09/12/2011 by Chensong Zhang
+===================================================
 
 The FASP package is built for developing and testing new efficient (multilevel) 
 solvers and preconditioners for discrete partial differential equations (PDEs) 

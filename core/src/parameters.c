@@ -26,10 +26,9 @@
  * \param *iluparam    ILU parameters
  *
  * \author Chensong Zhang
- * \date 2010/08/12 
+ * \date   2010/08/12 
  *
- * \modified by Xiaozhe Hu (01/23/2011): first initialize then set value, 
- *              make sure all the parameters are well-defined. 
+ * \note Modified by Xiaozhe Hu (01/23/2011): initialize, then set value
  */
 void fasp_param_init (char *inputfile, 
                       input_param *inparam, 
@@ -60,7 +59,7 @@ void fasp_param_init (char *inputfile,
  * \param Input: pointer to input_param
  *
  * \author Chensong Zhang
- * \date 2010/03/20 
+ * \date   2010/03/20 
  */
 void fasp_param_input_init (input_param *Input)
 {
@@ -220,15 +219,15 @@ void fasp_param_amg_set (AMG_param *param,
 	
 	if (Input->itsolver_type == SOLVER_AMG) {
 		param->maxit = Input->itsolver_maxit;
-		param->tol      = Input->itsolver_tol;
+		param->tol   = Input->itsolver_tol;
 	}
 	else if (Input->itsolver_type == SOLVER_FMG) {
 		param->maxit = Input->itsolver_maxit;
-		param->tol      = Input->itsolver_tol;
+		param->tol   = Input->itsolver_tol;
 	}
 	else {
 		param->maxit = Input->AMG_maxit;
-		param->tol      = Input->AMG_tol; 
+		param->tol   = Input->AMG_tol; 
 	}
 	
 	param->max_levels           = Input->AMG_levels;	
@@ -495,6 +494,7 @@ void fasp_param_amg_print (AMG_param *param)
 		printf("AMG cycle type:                    %d\n", param->cycle_type);	
 		printf("AMG scaling of coarse correction:  %d\n", param->coarse_scaling);
 		printf("AMG smoother type:                 %d\n", param->smoother);
+		printf("AMG smoother order:                %d\n", param->smooth_order);
 		printf("AMG num of presmoothing:           %d\n", param->presmooth_iter);
 		printf("AMG num of postsmoothing:          %d\n", param->postsmooth_iter);
 		

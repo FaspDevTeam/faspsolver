@@ -16,9 +16,6 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-// Declare P1 assembling function
-extern int assemble(dCSRmat *ptr_A, dvector *ptr_b, int levelNum);
-
 /**
  * \fn int main (int argc, const char * argv[])
  *
@@ -72,11 +69,6 @@ int main (int argc, const char * argv[])
 		fasp_dvecind_read(filename2, &b);
 	}		
  
-	// Assemble A and b -- P1 FE discretization for Poisson.
-	else if (problem_num == 19) {	
-	  	assemble(&A,&b,9);
-	}
-
 	else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
@@ -158,7 +150,7 @@ int main (int argc, const char * argv[])
 	
 	// output solution to a diskfile
 	if (status<0) {
-		printf("\n### WARNING Solver failed! Exit status = %d.\n\n", status);
+		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
 	}
 	else {
 		printf("\nSolver succeed! Exit status = %d.\n\n", status);

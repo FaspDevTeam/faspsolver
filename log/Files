@@ -8,7 +8,7 @@
      451 ./core/src/amg_setup_ua.c
      319 ./core/src/amg_solve.c
       96 ./core/src/amg_solve_omp.c
-     587 ./core/src/amlirecur.c
+     578 ./core/src/amlirecur.c
      143 ./core/src/array.c
      195 ./core/src/array_omp.c
      261 ./core/src/auxiliary.c
@@ -40,7 +40,7 @@
      440 ./core/src/ilu_setup_bsr.c
     1432 ./core/src/ilu_setup_str.c
      201 ./core/src/init.c
-     633 ./core/src/input.c
+     630 ./core/src/input.c
     1008 ./core/src/interpolation.c
     1687 ./core/src/interpolation_omp.c
     1078 ./core/src/io.c
@@ -52,9 +52,9 @@
      135 ./core/src/itsolver_stokes.c
      339 ./core/src/itsolver_str.c
      169 ./core/src/lu.c
-     247 ./core/src/memory.c
+     245 ./core/src/memory.c
      205 ./core/src/message.c
-     282 ./core/src/mgcycle.c
+     280 ./core/src/mgcycle.c
      423 ./core/src/mgcycle_omp.c
      119 ./core/src/mgrecur.c
      345 ./core/src/ordering.c
@@ -74,7 +74,7 @@
      693 ./core/src/pvfgmres.c
      997 ./core/src/pvgmres.c
      381 ./core/src/pvgmres_omp.c
-     868 ./core/src/quadrature.c
+     869 ./core/src/quadrature.c
      108 ./core/src/rap.c
      191 ./core/src/smat.c
      933 ./core/src/smoother.c
@@ -88,7 +88,7 @@
      936 ./core/src/sparse_bsr.c
      385 ./core/src/sparse_bsr_omp.c
       91 ./core/src/sparse_coo.c
-     924 ./core/src/sparse_csr.c
+     925 ./core/src/sparse_csr.c
      105 ./core/src/sparse_csr_omp.c
       66 ./core/src/sparse_csrl.c
      199 ./core/src/sparse_str.c
@@ -105,4 +105,4 @@
     5818 ./core/include/malloc.c.h
      189 ./core/include/messages.h
      291 ./core/include/nedmalloc.h
-   62279 total
+   62265 total

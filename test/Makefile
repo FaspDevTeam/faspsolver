@@ -12,17 +12,15 @@
 ########################################################################
 AR=ar ruc
 CC=gcc
-CPP=g++-mp-4.6
+CPP=g++
 FC=gfortran
 
-#CC=icc -openmp
-#CPP=icpc
-#FC=ifort -openmp
-
+FASPDIR=../../faspsolver
 CSRCDIR=./src
 FSRCDIR=./src
-INCLUDE=../core/include
-FASPLIB=../core/lib/libfasp.a
+
+INCLUDE=-I $(FASPDIR)/core/include -I ./include
+FASPLIB=$(FASPDIR)/core/lib/libfasp.a
 TESTLIB=lib/libfasptest.a
 
 ########################################################################      
@@ -32,7 +30,7 @@ BOPT=-g -pg -O0 -Wall
 
 COPTS=$(BOPT)
 CDEFS=
-CINCLUDES=-I$(INCLUDE)
+CINCLUDES=$(INCLUDE)
 CFLAGS=$(CDEFS) $(COPTS) $(CINCLUDES)
 
 FOPTS=$(BOPT)
@@ -168,6 +166,14 @@ testfem:
 	$(CC) $(CFLAGS) -c main/testfem.c -o main/testfem.o
 	$(FC) -o testfem.ex main/testfem.o $(FLFLAGS)
 
+testfdm2d :
+	${CPP} $(CFLAGS) -c main/testfdm2d.cpp -o main/testfdm2d.o
+	$(CPP) -o testfdm2d.ex main/testfdm2d.o $(FLFLAGS)
+
+testfdm3d :
+	${CPP} $(CFLAGS) -c main/testfdm3d.cpp -o main/testfdm3d.o
+	$(CPP) -o testfdm3d.ex main/testfdm3d.o $(FLFLAGS)
+
 testomp: 
 	$(CC) $(CFLAGS) -c main/testomp.c -o main/testomp.o
 	$(FC) -o testomp.ex main/testomp.o $(FLFLAGS)
@@ -180,6 +186,8 @@ testall:
 	make testmat
 	make testrap
 	make testfem
+	make testfdm2d
+	make testfdm3d
 	make testomp
 
 ########################################################################
@@ -211,6 +219,8 @@ help:
 	@echo " make regression : build the regression test"
 	@echo " make testf      : build the F90 interface test"
 	@echo " make testfem    : build the FEM assembling test"
+	@echo " make testfdm2d  : build the FDM 2D assembling test"
+	@echo " make testfdm3d  : build the FDM 3D assembling test"
 	@echo " make testmat    : build the simple matrix property test"
 	@echo " make testrap    : build the comparison of sparse RAP operations"
 	@echo " make testall    : build all test cases"

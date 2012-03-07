@@ -18,43 +18,10 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "poisson_fem.h"
 
-static void rap_setup(AMG_data *mgl, AMG_param *param);
-extern int assemble(dCSRmat *ptr_A, dvector *ptr_b, int levelNum);
-
-/**
- * \fn int main (int argc, const char * argv[])
- *
- * This is the main function for test purpose. It contains five steps:
- */
-int main(int argc, const char * argv[]) 
-{		
-	dCSRmat A;
-	dvector b;
-	
-	char *inputfile="ini/input.dat";
-	input_param Input;
-	fasp_param_input(inputfile,&Input);
-	
-	AMG_param amgparam; // parameters for AMG
-	fasp_param_amg_set(&amgparam,&Input);
-	
-	/** Step 1. Assemble matrix and right-hand side */ 
-    assemble(&A,&b,8);
-	
-	/** Step 2. Check sprap speed */
-	{	const int nnz=A.nnz, m=A.row, n=A.col;
-		
-		AMG_data *mgl=fasp_amg_data_create(amgparam.max_levels);
-		mgl[0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(&A,&mgl[0].A);
-		mgl[0].b=fasp_dvec_create(n); fasp_dvec_cp(&b,&mgl[0].b); 	
-		mgl[0].x=fasp_dvec_create(n);
-		
-		rap_setup(mgl, &amgparam);
-	}
-	
-	return 0;
-}
+/* Test functions f and u for the Poisson's equation */
+#include "testfct_poisson.inl"
 
 static void rap_setup(AMG_data *mgl, AMG_param *param)
 {
@@ -130,3 +97,41 @@ static void rap_setup(AMG_data *mgl, AMG_param *param)
 	
 	fasp_ivec_free(&vertices);
 }
+
+/**
+ * \fn int main (int argc, const char * argv[])
+ *
+ * This is the main function for test purpose. It contains five steps:
+ */
+int main(int argc, const char * argv[]) 
+{		
+	dCSRmat A;
+	dvector b;
+	
+	char *inputfile="ini/input.dat";
+	input_param Input;
+	fasp_param_input(inputfile,&Input);
+	
+	AMG_param amgparam; // parameters for AMG
+	fasp_param_amg_set(&amgparam,&Input);
+	
+	/** Step 1. Assemble matrix and right-hand side */ 
+    setup_poisson(&A, &b, 8, "./data/testmesh.dat", NULL, 0, "a&b", 3, 1);
+	
+	/** Step 2. Check sprap speed */
+	{	const int nnz=A.nnz, m=A.row, n=A.col;
+		
+		AMG_data *mgl=fasp_amg_data_create(amgparam.max_levels);
+		mgl[0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(&A,&mgl[0].A);
+		mgl[0].b=fasp_dvec_create(n); fasp_dvec_cp(&b,&mgl[0].b); 	
+		mgl[0].x=fasp_dvec_create(n);
+		
+		rap_setup(mgl, &amgparam);
+	}
+	
+	return SUCCESS;
+}
+
+/*---------------------------------*/
+/*--        End of File          --*/
+/*---------------------------------*/
