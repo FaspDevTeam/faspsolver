@@ -1,3 +1,7 @@
+/*! \file poisson_fdm.h
+ *  \brief Main header file for the 2D/3d Finite Difference Method
+ */
+
 #ifndef _FSLS_HEADER_
 #define _FSLS_HEADER_
 

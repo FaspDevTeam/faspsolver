@@ -1,6 +1,9 @@
 c     
 c     ilu.f
 c     
+c     These ILU subroutines are adapted from SparseKit and they are NOT
+c     part of the FASP package.
+c
 c-----------------------------------------------------------------------
 c     Created by Shiquan Zhang on 12/27/09.
 c     Modified by Chensong Zhang on 05/25/10.

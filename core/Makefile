@@ -23,20 +23,19 @@ FC=gfortran
 #CPP=icpc
 #FC=ifort
 
-CSRCDIR=./src
-FSRCDIR=./src
-EXTRDIR= ./extra
-INCLUDE=./include
+SRCDIR=./src
+EXTRDIR=./extra
+INCLUDE=-I./include
 AMGLIB=lib/libfasp.a
 
 ########################################################################      
 # Compiling options                                                             
 ########################################################################        
-BOPT=-g -pg -O0 -Wall
+BOPT=-g -O0 -Wall
 
 COPTS=$(BOPT)
 CDEFS=
-CINCLUDES=-I$(INCLUDE)
+CINCLUDES=$(INCLUDE)
 CFLAGS=$(CDEFS) $(COPTS) $(CINCLUDES)
 
 FOPTS=$(BOPT)
@@ -57,15 +56,15 @@ include make.inc
 ########################################################################
 # Rules for compiling the source files
 ########################################################################
-.SUFFIXES: .c .cc .cpp .for .f .f77 .f90 .f95
+.SUFFIXES: .for .f .f77 .f90 .f95 .c .cc .cpp
 #
-FSRC := $(foreach dir,$(FSRCDIR),$(wildcard $(FSRCDIR)/*.for))
-FSRC += $(foreach dir,$(FSRCDIR),$(wildcard $(FSRCDIR)/*.f))
-FSRC += $(foreach dir,$(FSRCDIR),$(wildcard $(FSRCDIR)/*.f77))
-FSRC += $(foreach dir,$(FSRCDIR),$(wildcard $(FSRCDIR)/*.f90))
-FSRC += $(foreach dir,$(FSRCDIR),$(wildcard $(FSRCDIR)/*.f95))
+FSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.for))
+FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f))
+FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f77))
+FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f90))
+FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f95))
 FSRC += $(foreach dir,$(EXTRDIR),$(wildcard $(EXTRDIR)/*.f))
-CSRC := $(foreach dir,$(CSRCDIR),$(wildcard $(CSRCDIR)/*.c))
+CSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.c))
 CSRC += $(foreach dir,$(EXTRDIR),$(wildcard $(EXTRDIR)/*.c))
 #
 OBJSF := $(patsubst %.for,%.o,$(FSRC))
@@ -74,6 +73,8 @@ OBJSF += $(patsubst %.f77,%.o,$(FSRC))
 OBJSF += $(patsubst %.f90,%.o,$(FSRC))
 OBJSF += $(patsubst %.f95,%.o,$(FSRC))
 OBJSC := $(patsubst %.c,%.o,$(CSRC))
+OBJSC += $(patsubst %.cc,%.o,$(CSRC))
+OBJSC += $(patsubst %.cpp,%.o,$(CSRC))
 #
 .for.o:
 	$(FC) -c $< -o $@ $(FFLAGS) 
@@ -124,7 +125,7 @@ Default:
 	lib
 
 headers: 
-	/bin/cat $(CSRCDIR)/*.c \
+	/bin/cat $(SRCDIR)/*.c \
 	| awk -v name="fasp_functs.h" -f ../bin/mkheaders.awk > $(INCLUDE)/fasp_functs.h
 
 $(AMGLIB): $(OBJSC) $(OBJSF)
@@ -137,11 +138,10 @@ lib: $(OBJSC) $(OBJSF)
 # Clean up
 ########################################################################
 
-.PHONY : clean allclean help
+.PHONY: clean allclean help
 
 clean:
-	rm -f $(CSRCDIR)/*.o
-	rm -f $(FSRCDIR)/*.o
+	rm -f $(SRCDIR)/*.o
 	rm -f $(EXTRDIR)/*.o
 
 libclean:
@@ -152,8 +152,7 @@ allclean:
 	make clean
 	rm -f lib/libfasp.a
 	rm -f *~ *.ex *.out
-	rm -f $(CSRCDIR)/*~
-	rm -f $(FSRCDIR)/*~
+	rm -f $(SRCDIR)/*~
 	rm -f $(EXTRDIR)/*~
 	rm -f main/*~
 
@@ -161,12 +160,12 @@ help:
 	@echo "======================================================"
 	@echo " Fast Auxiliary Space Preconditioners (FASP)"
 	@echo "======================================================"
-	@echo " "
-	@echo " make            : build all exe files "
+	@echo "                                                      "
+	@echo " make            : build all exe files                "
+	@echo " make lib        : build the library                  "
 	@echo " make headers    : build the header file automatically"
-	@echo " make lib        : build the library "
-	@echo " make clean      : clean all obj files "
-	@echo " make libclean   : clean all lib files "
+	@echo " make clean      : clean all obj files                "
+	@echo " make libclean   : clean all lib files                "
 	@echo " make allclean   : clean all obj, exe, bak, out files "
-	@echo " make help       : show this screen "
-	@echo " "
+	@echo " make help       : show this help screen              "
+	@echo "                                                      "

@@ -88,6 +88,7 @@ refer to the user documentation.
 ================================
 4. Tree Structure
 ================================
+  - data:    Test data files
   - src:     Source codes
   - include: Header files
   - ini:     Input files for parameters

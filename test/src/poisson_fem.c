@@ -2,7 +2,14 @@
  *  \brief Setup P1 FEM for the Poisson's equation
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#include "fasp.h"
+#include "fasp_functs.h"
 #include "poisson_fem.h"
+
 #include "basis.inl"
 #include "refinement2D.inl"
 

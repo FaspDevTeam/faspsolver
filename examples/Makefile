@@ -15,19 +15,19 @@ CC=gcc
 CPP=g++
 FC=gfortran
 
-CSRCDIR=./src
-FSRCDIR=./src
-INCLUDE=../core/include
-FASPLIB=../core/lib/libfasp.a
+FASPDIR=../../faspsolver
+SRCDIR=./src
+INCLUDE=-I${FASPDIR}/core/include
+FASPLIB=${FASPDIR}/core/lib/libfasp.a
 
 ########################################################################      
 # Compiling options                                                             
 ########################################################################        
-BOPT=-g -pg -O0 -Wall
+BOPT=-g -O0 -Wall
 
 COPTS=$(BOPT)
 CDEFS=
-CINCLUDES=-I$(INCLUDE)
+CINCLUDES=$(INCLUDE)
 CFLAGS=$(CDEFS) $(COPTS) $(CINCLUDES)
 
 FOPTS=$(BOPT)
@@ -43,7 +43,7 @@ LIBS=$(TESTLIB) $(FASPLIB)
 ########################################################################
 # Load user-defined parameters
 ########################################################################
-include ../core/make.inc
+include ${FASPDIR}/core/make.inc
 
 ########################################################################
 # Link options
@@ -57,13 +57,14 @@ FLFLAGS=-lm $(LINKOPTS) $(LIBS)
 ########################################################################
 .SUFFIXES: .c .cc .cpp .for .f .f77 .f90 .f95
 #
-FSRC := $(foreach dir,$(FSRCDIR),$(wildcard $(FSRCDIR)/*.for))
-FSRC += $(foreach dir,$(FSRCDIR),$(wildcard $(FSRCDIR)/*.f))
-FSRC += $(foreach dir,$(FSRCDIR),$(wildcard $(FSRCDIR)/*.f77))
-FSRC += $(foreach dir,$(FSRCDIR),$(wildcard $(FSRCDIR)/*.f90))
-FSRC += $(foreach dir,$(FSRCDIR),$(wildcard $(FSRCDIR)/*.f95))
-CSRC := $(foreach dir,$(CSRCDIR),$(wildcard $(CSRCDIR)/*.c))
-CSRC += $(foreach dir,$(EXTRDIR),$(wildcard $(EXTRDIR)/*.c))
+FSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.for))
+FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f))
+FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f77))
+FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f90))
+FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f95))
+CSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.c))
+CSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.cc))
+CSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.cpp))
 #
 OBJSF := $(patsubst %.for,%.o,$(FSRC))
 OBJSF += $(patsubst %.f,%.o,$(FSRC))
@@ -71,6 +72,8 @@ OBJSF += $(patsubst %.f77,%.o,$(FSRC))
 OBJSF += $(patsubst %.f90,%.o,$(FSRC))
 OBJSF += $(patsubst %.f95,%.o,$(FSRC))
 OBJSC := $(patsubst %.c,%.o,$(CSRC))
+OBJSC += $(patsubst %.cc,%.o,$(CSRC))
+OBJSC += $(patsubst %.cpp,%.o,$(CSRC))
 #
 .for.o:
 	$(FC) -c $< -o $@ $(FFLAGS) 
@@ -141,16 +144,14 @@ poisson-amg:
 .PHONY : clean allclean help
 
 clean:
-	rm -f $(CSRCDIR)/*.o
-	rm -f $(FSRCDIR)/*.o
+	rm -f $(SRCDIR)/*.o
 	rm -f main/*.o
 
 allclean:
 	make clean
 	rm -f lib/*.a
 	rm -f *~ *.ex *.out
-	rm -f $(CSRCDIR)/*~
-	rm -f $(FSRCDIR)/*~
+	rm -f $(SRCDIR)/*~
 	rm -f main/*~
 
 help:

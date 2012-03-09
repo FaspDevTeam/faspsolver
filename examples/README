@@ -1,15 +1,15 @@
 Fast Auxiliary Space Preconditioning (FASP) Solver Package README
 
--- Test Problems and Regression Test Suite
+-- Simple examples
 
-last modified on 09/02/2011
+last modified on 03/09/2012 by Chensong Zhang
+==================================================
 
 
 ================================
 0. Introduction
 ================================
-This directory contains a set of problems for regression tests and tools for 
-developing the FASP package.
+This directory contains a set of examples for the FASP package.
 
 
 ================================
@@ -18,11 +18,7 @@ developing the FASP package.
 To compile, you need a Fortran and a C compiler. By default, we use gfortan 
 and gcc, respectively; see Makefile for details. 
 
-And then you can make the header file using: 
-
-    $ make headers
-
-Now you are ready to make all executables and libraries: 
+Now you are ready to make all executables: 
 
     $ make
 
@@ -42,62 +38,10 @@ If you need any extra help, please
 
 
 ================================
-2. Test
+2. Tree Structure
 ================================
-By running the executable test.ex, we can get numerical results for different test 
-examples. The terminal command to invoke the test problems is
-
-    $ ./test.ex
-
-There is another test function
-
-    $ ./regression.ex
-
-which tests a bunch of solvers at a single call and compares the outcome with the 
-expected results. 
-
-
-================================
-3. Input
-================================
-And test.ex reads parameters from ini/input.dat, where you can choose:
-
-* solver type:   1  CG method
-                 2  BiCGstab method
-                 3  MinRes method
-                 4  GMRes method
-                 5  Variable restarting GMRes method
-                 6  Variable restarting FGMRes method
-                 7  GCG method
-                 21 AMG as solver
-                 22 FMG as solver
-                 31 SuperLU (external)
-                 32 UMFPACK (external)
-
-* precond type:  0  No preconditioners
-                 1  Diagonal preconditioner
-                 2  AMG preconditioner
-                 3  ILU preconditioner (external)
-
-* solver parameters (which we do not discuss here, see details in the documentation 
-  	 	     contained in doc directory).
-
-  - coarsening type ( 1--3 )
-  - interpolation type ( 1--3 ) 
-  - max_row_sum ( 0, 1 )
-  - strong_threshold ( 0, 1 )
-  - truncation_threshold ( 0, 1 )
-
-Note: This is not a complete list of available parameters. For more details, please 
-refer to the user documentation.
-
-
-================================
-4. Tree Structure
-================================
-  - src:     Source codes
-  - include: Header files
+  - data:    Test data
   - ini:     Input files for parameters
   - lib:     Libraries 
   - main:    Test functions in C and Fortran
-  - output:  Output files
+  - out:     Output files
