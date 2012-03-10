@@ -67,20 +67,21 @@
  *                                   const REAL tol, precond *pre, const SHORT print_level, 
  *                                   const SHORT stop_type)
  *
- *	 \brief A preconditioned minimal residual (Minres) method for solving Au=b 
+ * \brief A preconditioned minimal residual (Minres) method for solving Au=b 
  *
- *	 \param *A	 pointer to the coefficient matrix
- *	 \param *b	 pointer to the dvector of right hand side
- *	 \param *u	 pointer to the dvector of DOFs
- *	 \param MaxIt integer, maximal number of iterations
- *	 \param tol REAL float, the tolerance for stopage
- *	 \param *pre pointer to the structure of precondition (precond) 
- *   \param print_level how much information to print out
+ * \param A	 pointer to the coefficient matrix
+ * \param b	 pointer to the dvector of right hand side
+ * \param u	 pointer to the dvector of DOFs
+ * \param MaxIt integer, maximal number of iterations
+ * \param tol REAL float, the tolerance for stopage
+ * \param pre pointer to the structure of precondition (precond) 
+ * \param print_level how much information to print out
+ * \param stop_type stopping cretirea type 
  *
- *	 \return the number of iterations
+ * \return the number of iterations
  * 
- *   \author Shiquan Zhang
- *   \date 10/24/2010
+ * \author Shiquan Zhang
+ * \date 10/24/2010
  */
 INT fasp_solver_dcsr_pminres (dCSRmat *A, 
                               dvector *b, 
@@ -461,21 +462,24 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_pminres (block_Reservoir *A, dvector *b, dvector *u, const INT MaxIt,
+ * \fn INT fasp_solver_bdcsr_pminres (block_dCSRmat *A, dvector *b, dvector *u, const INT MaxIt,
  *                                    const REAL tol, precond *pre, const SHORT print_level, 
  *                                    const SHORT stop_type)
  *
- *	 \brief A preconditioned minimal residual (Minres) method for solving Au=b 
+ * \brief A preconditioned minimal residual (Minres) method for solving Au=b 
  *
- *	 \param *A	 pointer to the coefficient matrix
- *	 \param *b	 pointer to the dvector of right hand side
- *	 \param *u	 pointer to the dvector of DOFs
- *	 \param MaxIt integer, maximal number of iterations
- *	 \param tol REAL float, the tolerance for stopage
- *	 \param *pre pointer to the structure of precondition (precond) 
- *   \param print_level how much information to print out
+ * \param A	 pointer to the coefficient matrix
+ * \param b	 pointer to the dvector of right hand side
+ * \param u	 pointer to the dvector of DOFs
+ * \param MaxIt integer, maximal number of iterations
+ * \param tol REAL float, the tolerance for stopage
+ * \param pre pointer to the structure of precondition (precond) 
+ * \param print_level how much information to print out
+ * \param stop_type this parameter is not used in my function at present, 
+ *        the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. 
+ * \param restart number of restart
  *
- *	 \return the number of iterations
+ * \return the number of iterations
  *
  *   \author Xiaozhe Hu
  *   \data 05/24/2010

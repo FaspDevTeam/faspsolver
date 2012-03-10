@@ -14,14 +14,15 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, Stokes_param *precdata)
+ * \fn INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, precond_Stokes_param *param, precond_Stokes_data *precdata)
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param *A:	       pointer to the block_dCSRmat matrix
- * \param *b:	       pointer to the dvector of right hand side
- * \param *x:	       pointer to the dvector of dofs
- * \param *itparam:    pointer to parameters for iterative solvers
- * \param *precdata:   pionter to preconditioner data for Stokes
+ * \param A	       pointer to the block_dCSRmat matrix
+ * \param b	       pointer to the dvector of right hand side
+ * \param x	       pointer to the dvector of dofs
+ * \param itparam    pointer to parameters for iterative solvers
+ * \param param      parameters to Stokes problems
+ * \param precdata   pionter to preconditioner data for Stokes
  *
  * \return             number of iterations
  *

@@ -30,9 +30,9 @@ extern void ilutp_(const int *n,double *a,int *ja,int *ia,int *lfil,const double
  *
  * \brief Get ILU decoposition of a CSR matrix A
  *
- * \param *A         pointer to CSR matrir of REAL type
- * \param *iludata   pointer to ILU_data
- * \param *param     pointer to ILU parameters
+ * \param A         pointer to CSR matrir of REAL type
+ * \param iludata   pointer to ILU_data
+ * \param param     pointer to ILU parameters
  *
  * \author Shiquan Zhang
  * \date 12/27/2009

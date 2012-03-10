@@ -17,13 +17,13 @@ static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
 /*---------------------------------*/
 
 /**
- * \fn void fasp_smoother_poly (dCSRmat *Amat, dvector *brhs, dvector *usol, INT n, INT ndeg, INT L)
+ * \fn void fasp_smoother_dcsr_poly (dCSRmat *Amat, dvector *brhs, dvector *usol, INT n, INT ndeg, INT L)
  *
  * \brief poly approx to A^{-1} as MG smoother: JK&LTZ2010
  *
- * \param *Amat pointer to stiffness matrix
- * \param *brhs pointer to right hand side
- * \param *usol pointer to solution 
+ * \param Amat pointer to stiffness matrix
+ * \param brhs pointer to right hand side
+ * \param usol pointer to solution 
  * \param n problem size 
  * \param ndeg degree of poly 
  * \param L number of iterations
@@ -31,7 +31,6 @@ static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
  * \author James Brannick and Ludmil T Zikatanov
  * \date 06/28/2010
  */
-
 void fasp_smoother_dcsr_poly (dCSRmat *Amat, 
                               dvector *brhs, 
                               dvector *usol, 
@@ -155,6 +154,22 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
 /*--      Private Functions      --*/
 /*---------------------------------*/
 
+/**
+ * \fn static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
+ *
+ * \brief ???
+ *
+ * \param b ???
+ * \param ia ???
+ * \param ja ???
+ * \param a ???
+ * \param x ???
+ * \param nn ???
+ * \param res ???
+ *
+ * \author James Brannick and Ludmil T Zikatanov
+ * \date 06/28/2010
+ */
 static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
 {
     /* Computes b-A*x */

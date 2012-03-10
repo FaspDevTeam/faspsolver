@@ -23,9 +23,9 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
  *
  * \param i_0        starting index
  * \param i_n        ending index
- * \param *A         pointer to matrix, i_0 = 0 
- * \param *vertices  pointer to CF, 0: fpt (current level) or 1: cpt 
- * \param *param     pointer to AMG parameters
+ * \param A         pointer to matrix, i_0 = 0 
+ * \param vertices  pointer to CF, 0: fpt (current level) or 1: cpt 
+ * \param param     pointer to AMG parameters
  * 
  * \author James Brannick
  * \date 04/21/2010
@@ -155,7 +155,15 @@ INT fasp_amg_coarsening_cr (INT i_0,
 /*---------------------------------*/
 
 /**
- * static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack)
+ * \fn static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack)
+ * \brief graphadd
+ * 
+ * \param list
+ * \param head
+ * \param tail
+ * \param index
+ * \param istack
+ *
  */
 static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack)
 {
@@ -173,7 +181,14 @@ static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack)
 }
 
 /**
- * static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
+ * \fn static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
+ * \brief GraphRemove
+ * 
+ * \param list
+ * \param head
+ * \param tail
+ * \param index
+ *
  */
 static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
 {
@@ -193,10 +208,20 @@ static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
 }
 
 /**
- * static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, REAL *ma)
+ * \fn static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, REAL *ma)
  * \brief finds independent set of the graph  
- * \param *cf contains CF list  
- * \param *ma contains candidate set info. 
+ *
+ * \brief graphadd
+ * 
+ * \param cand
+ * \param cpt
+ * \param fpt
+ * \param ia
+ * \param ja
+ * \param n
+ * \param cf contains CF list  
+ * \param ma contains candidate set info. 
+ *
  */
 static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, REAL *ma)
 {

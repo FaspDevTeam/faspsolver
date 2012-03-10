@@ -17,10 +17,10 @@
  *
  * \brief Read A and b from two disk files
  *
- * \param *filemat  char for the matrix file name
- * \param *filerhs  char for the vector file name
- * \param *A        pointer to the dCSR matrix
- * \param *b        pointer to the dvector
+ * \param filemat  char for the matrix file name
+ * \param filerhs  char for the vector file name
+ * \param A        pointer to the dCSR matrix
+ * \param b        pointer to the dvector
  *
  * \note 
  * CSR matrix file format:
@@ -124,9 +124,9 @@ void fasp_dcsrvec_read (char *filemat,
  *
  * \brief Read A and b from a SINGLE disk file
  *
- * \param *filename  char for file name
- * \param *A         pointer to the CSR matrix
- * \param *b         pointer to the dvector
+ * \param filename  char for file name
+ * \param A         pointer to the CSR matrix
+ * \param b         pointer to the dvector
  *
  * \note 
  * CSR matrix file format:
@@ -211,8 +211,8 @@ void fasp_dcsrvec2_read (char *filename,
  *
  * \brief Read A from matrix disk file in IJ format -- indices starting from 0
  *
- * \param *filename  char for matrix file name
- * \param *A         pointer to the CSR matrix
+ * \param filename  char for matrix file name
+ * \param A         pointer to the CSR matrix
  *
  * \note 
  * File format:
@@ -267,8 +267,8 @@ void fasp_dcoo_read (char *filename,
  *
  * \brief Read A from matrix disk file in MatrixMarket general format
  *
- * \param *filename  char for matrix file name
- * \param *A         pointer to the CSR matrix
+ * \param filename  char for matrix file name
+ * \param A         pointer to the CSR matrix
  *
  * \note 
  * File format:
@@ -326,8 +326,8 @@ void fasp_dmtx_read (char *filename,
  *
  * \brief Read A from matrix disk file in MatrixMarket sym format
  *
- * \param *filename  char for matrix file name
- * \param *A         pointer to the CSR matrix
+ * \param filename  char for matrix file name
+ * \param A         pointer to the CSR matrix
  *
  * \note 
  * File format:
@@ -395,8 +395,8 @@ void fasp_dmtxsym_read (char *filename,
  *
  * \brief Read A from a disk file in dSTRmat format
  *
- * \param *filename  char for vector file name
- * \param *A         pointer to the dSTRmat
+ * \param filename  char for vector file name
+ * \param A         pointer to the dSTRmat
  *
  * \note 
  * File format:
@@ -481,8 +481,8 @@ void fasp_dstr_read (char *filename,
  *
  * \brief Read A from a disk file in dBSRmat format
  *
- * \param *filename char for vector file name
- * \param *A pointer to the dBSRmat
+ * \param filename char for vector file name
+ * \param A pointer to the dBSRmat
  *
  * \note 
  * File format:
@@ -568,8 +568,8 @@ void fasp_dbsr_read (char *filename, dBSRmat *A)
  *
  * \brief Read b from matrix disk file in IJ format
  *
- * \param *filename  char for vector file name
- * \param *b         pointer to the dvector
+ * \param filename  char for vector file name
+ * \param b         pointer to the dvector
  *
  * \note
  * File Format:
@@ -615,8 +615,8 @@ void fasp_dvecind_read (char *filename,
  *
  * \brief Read b from a disk file in array format
  *
- * \param *filename char for vector file name
- * \param *b pointer to the dvector
+ * \param filename char for vector file name
+ * \param b pointer to the dvector
  *
  * \note
  * File Format:
@@ -661,8 +661,8 @@ void fasp_dvec_read (char *filename,
  *
  * \brief Read b from matrix disk file in IJ format
  *
- * \param *filename char for vector file name
- * \param *b pointer to the ivector
+ * \param filename char for vector file name
+ * \param b pointer to the ivector
  *
  * \note
  * File Format:
@@ -706,8 +706,8 @@ void fasp_ivecind_read (char *filename,
  *
  * \brief Read b from a disk file in array format
  *
- * \param *filename char for vector file name
- * \param *b pointer to the ivector
+ * \param filename char for vector file name
+ * \param b pointer to the ivector
  *
  * \note
  * File Format:
@@ -750,8 +750,8 @@ void fasp_ivec_read (char *filename,
  *
  * \brief Write a matrix to disk file in IJ format (coordinate format)
  *
- * \param *A         pointer to the dCSRmat matrix
- * \param *filename  char for vector file name
+ * \param A         pointer to the dCSRmat matrix
+ * \param filename  char for vector file name
  *
  * \note
  * File format: 
@@ -792,8 +792,8 @@ void fasp_dcsr_write (char *filename,
  *
  * \brief Write a dSTRmat to a disk file
  *
- * \param *filename  char for vector file name
- * \param *A         pointer to the dSTRmat
+ * \param filename  char for vector file name
+ * \param A         pointer to the dSTRmat
  *
  * \note
  * File format: 
@@ -852,8 +852,8 @@ void fasp_dstr_write (char *filename,
  *
  * \brief Write a dBSRmat to a disk file
  *
- * \param *filename char for vector file name
- * \param *A pointer to the dBSRmat
+ * \param filename char for vector file name
+ * \param A pointer to the dBSRmat
  *
  * \note
  * File format: 
@@ -913,8 +913,8 @@ void fasp_dbsr_write (char *filename,
  *
  * \brief Write a dvector to disk file in IJ format (coordinate format)
  *
- * \param *vec       pointer to the dvector
- * \param *filename  char for vector file name
+ * \param vec       pointer to the dvector
+ * \param filename  char for vector file name
  *
  * \note
  * File format: 
@@ -948,12 +948,12 @@ void fasp_dvec_write (char *filename,
 }
 
 /**
- * \fn void fasp_ivec_write (char *filename, dvector *vec)
+ * \fn void fasp_ivec_write (char *filename, ivector *vec)
  *
  * \brief Write a ivector to disk file in IJ format (coordinate format)
  *
- * \param *vec       pointer to the dvector
- * \param *filename  char for vector file name
+ * \param vec       pointer to the ivector
+ * \param filename  char for vector file name
  *
  * \note
  * File format: 
@@ -992,7 +992,7 @@ void fasp_ivec_write (char *filename,
  * \brief Print first n entries of a dvector
  *
  * \param  n   an interger (if n=0, then print all entries)
- * \param *u   pointer to a dvector
+ * \param u   pointer to a dvector
  *
  * \note
  * File format:
@@ -1019,7 +1019,7 @@ void fasp_dvec_print (INT n,
  * \brief Print first n entries of an ivector of INT type
  *
  * \param  n   an interger (if n=0, then print all entries)
- * \param *u   pointer to an ivector
+ * \param u   pointer to an ivector
  *
  * \note
  * File format:
@@ -1045,7 +1045,7 @@ void fasp_ivec_print (INT n,
  *
  * \brief Print out a dCSRmat matrix in IJ format (coordinate format)
  *
- * \param *A pointer to the dCSRmat matrix
+ * \param A pointer to the dCSRmat matrix
  *
  * \note
  * File format: 

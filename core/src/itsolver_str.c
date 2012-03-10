@@ -18,11 +18,11 @@
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param *A        pointer to the dSTRmat matrix
- * \param *b        pointer to the dvector of right hand side
- * \param *x        pointer to the dvector of dofs
- * \param *prec     pointer to the preconditioner data
- * \param *itparam  pointer to parameters for iterative solvers
+ * \param A        pointer to the dSTRmat matrix
+ * \param b        pointer to the dvector of right hand side
+ * \param x        pointer to the dvector of dofs
+ * \param prec     pointer to the preconditioner data
+ * \param itparam  pointer to parameters for iterative solvers
  *
  * \return          the number of iterations
  *
@@ -88,15 +88,15 @@ INT fasp_solver_dstr_itsolver(dSTRmat *A,
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param *A:	pointer to the dCSRmat matrix
- * \param *b:	pointer to the dvector of right hand side
- * \param *x:	pointer to the dvector of dofs
- * \param *itparam: pointer to parameters for iterative solvers
+ * \param A	pointer to the dCSRmat matrix
+ * \param b	pointer to the dvector of right hand side
+ * \param x	pointer to the dvector of dofs
+ * \param itparam pointer to parameters for iterative solvers
  *
  * \return the number of iterations
  *
  * \author Zhiyang Zhou
- * \data 4/25/2010
+ * \date 4/25/2010
  */
 INT fasp_solver_dstr_krylov (dSTRmat *A, 
                              dvector *b, 
@@ -126,15 +126,15 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
- * \param *A:	pointer to the dSTRmat matrix
- * \param *b:	pointer to the dvector of right hand side
- * \param *x:	pointer to the dvector of dofs
- * \param *itparam: pointer to parameters for iterative solvers
+ * \param A:	pointer to the dSTRmat matrix
+ * \param b:	pointer to the dvector of right hand side
+ * \param x:	pointer to the dvector of dofs
+ * \param itparam: pointer to parameters for iterative solvers
  *
  * \return the number of iterations
  *
  * \author Zhiyang Zhou
- * \data 4/23/2010
+ * \date 4/23/2010
  */
 INT fasp_solver_dstr_krylov_diag (dSTRmat *A, 
                                   dvector *b, 
@@ -181,15 +181,16 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
  *
  * \brief Solve Ax=b by structured ILU preconditioned Krylov methods 
  *
- * \param *A:	pointer to the dSTRmat matrix
- * \param *b:	pointer to the dvector of right hand side
- * \param *x:	pointer to the dvector of dofs
- * \param *itparam: pointer to parameters for iterative solvers
+ * \param A	pointer to the dSTRmat matrix
+ * \param b	pointer to the dvector of right hand side
+ * \param x	pointer to the dvector of dofs
+ * \param itparam pointer to parameters for iterative solvers
+ * \param iluparam pointer to parameters for ILU
  *
  * \return the number of iterations
  *
  * \author Xiaozhe Hu
- * \data 05/01/2010
+ * \date 05/01/2010
  */
 INT fasp_solver_dstr_krylov_ilu (dSTRmat *A, 
                                  dvector *b, 
@@ -262,15 +263,15 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
- * \param *A:	pointer to the dSTRmat matrix
- * \param *b:	pointer to the dvector of right hand side
- * \param *x:	pointer to the dvector of dofs
- * \param *itparam: pointer to parameters for iterative solvers
+ * \param A:	pointer to the dSTRmat matrix
+ * \param b:	pointer to the dvector of right hand side
+ * \param x:	pointer to the dvector of dofs
+ * \param itparam: pointer to parameters for iterative solvers
  *
  * \return the number of iterations
  *
  * \author Xiaozhe Hu
- * \data 10/10/2010
+ * \date 10/10/2010
  */
 INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A, 
                                      dvector *b, 

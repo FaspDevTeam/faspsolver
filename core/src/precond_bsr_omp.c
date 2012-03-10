@@ -8,14 +8,13 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*---------------------------------omp----------------------------------------*/
 
 /**
  * \fn void fasp_precond_dbsr_diag_omp (double *r, double *z, void *data, int nthreads, int openmp_holds)
  * \brief Diagonal preconditioner z=inv(D)*r
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \note: works for general nb
@@ -23,10 +22,10 @@
  * \date Nov/28/2011
  */
 void fasp_precond_dbsr_diag_omp (double *r, 
-																 double *z, 
-																 void *data, 
-																 int nthreads, 
-																 int openmp_holds)
+                                 double *z, 
+                                 void *data, 
+                                 int nthreads, 
+                                 int openmp_holds)
 {
 #if FASP_USE_OPENMP
 	precond_diagbsr *diag   = (precond_diagbsr *)data;
@@ -88,9 +87,9 @@ void fasp_precond_dbsr_diag_omp (double *r,
 /**
  * \fn void fasp_precond_dbsr_diag_nc2_omp (double *r, double *z, void *data, int nthreads, int openmp_holds)
  * \brief Diagonal preconditioner z=inv(D)*r.
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \note: works for 2-component 
@@ -98,10 +97,10 @@ void fasp_precond_dbsr_diag_omp (double *r,
  * \date Nov/28/2011
  */
 void fasp_precond_dbsr_diag_nc2_omp (double *r, 
-																		 double *z, 
-																		 void *data, 
-																		 int nthreads, 
-																		 int openmp_holds )
+                                     double *z, 
+                                     void *data, 
+                                     int nthreads, 
+                                     int openmp_holds )
 {
 #if FASP_USE_OPENMP
 	precond_diagbsr *diag   = (precond_diagbsr *)data;
@@ -139,9 +138,9 @@ void fasp_precond_dbsr_diag_nc2_omp (double *r,
 /**
  * \fn void fasp_precond_dbsr_diag_nc3_omp (double *r, double *z, void *data, int nthreads, int openmp_holds)
  * \brief Diagonal preconditioner z=inv(D)*r.
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \note: works for 3-component 
@@ -149,10 +148,10 @@ void fasp_precond_dbsr_diag_nc2_omp (double *r,
  * \date Nov/28/2011
  */
 void fasp_precond_dbsr_diag_nc3_omp (double *r, 
-																		 double *z, 
-																		 void *data, 
-																		 int nthreads, 
-																		 int openmp_holds )
+                                     double *z, 
+                                     void *data, 
+                                     int nthreads, 
+                                     int openmp_holds )
 {
 #if FASP_USE_OPENMP
 	precond_diagbsr *diag   = (precond_diagbsr *)data;
@@ -190,9 +189,9 @@ void fasp_precond_dbsr_diag_nc3_omp (double *r,
 /**
  * \fn void fasp_precond_dbsr_diag_nc5_omp (double *r, double *z, void *data, int nthreads, int openmp_holds)
  * \brief Diagonal preconditioner z=inv(D)*r.
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -201,10 +200,10 @@ void fasp_precond_dbsr_diag_nc3_omp (double *r,
  * \date Nov/28/2011
  */
 void fasp_precond_dbsr_diag_nc5_omp (double *r, 
-																		 double *z, 
-																		 void *data, 
-																		 int nthreads, 
-																		 int openmp_holds)
+                                     double *z, 
+                                     void *data, 
+                                     int nthreads, 
+                                     int openmp_holds)
 {
 #if FASP_USE_OPENMP
 	precond_diagbsr *diag   = (precond_diagbsr *)data;
@@ -242,9 +241,9 @@ void fasp_precond_dbsr_diag_nc5_omp (double *r,
 /**
  * \fn void fasp_precond_dbsr_diag_nc7_omp ( double *r, double *z, void *data, int nthreads, int openmp_holds )
  * \brief Diagonal preconditioner z=inv(D)*r.
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -253,10 +252,10 @@ void fasp_precond_dbsr_diag_nc5_omp (double *r,
  * \date Nov/28/2011
  */
 void fasp_precond_dbsr_diag_nc7_omp (double *r, 
-																		 double *z, 
-																		 void *data, 
-																		 int nthreads, 
-																		 int openmp_holds )
+                                     double *z, 
+                                     void *data, 
+                                     int nthreads, 
+                                     int openmp_holds )
 {
 #if FASP_USE_OPENMP
 	precond_diagbsr *diag   = (precond_diagbsr *)data;

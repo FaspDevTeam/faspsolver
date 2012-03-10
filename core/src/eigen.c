@@ -16,7 +16,7 @@
  *
  * \brief Approximate the largest eigenvalue of A by the power method
  *
- * \param *A     pointer to the dCSRmat
+ * \param A     pointer to the dCSRmat
  * \param tol    tolerance
  * \param maxit	 max number of iterations
  *

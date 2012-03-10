@@ -15,11 +15,14 @@
 /*---------------------------------*/
 
 /**
- * \fn dCSRLmat * fasp_mem_dcsrl_create (INT num_rows,INT num_cols,INT num_nonzeros) 
+ * \fn dCSRLmat * fasp_dcsrl_create (INT num_rows,INT num_cols,INT num_nonzeros) 
+ *
  * \brief Create a dCSRLmat object
+ *
  * \param num_rows number of rows
  * \param num_cols number of cols
  * \param num_nonzeros number of nonzero entries
+ *
  * \author Zhou Zhiyang
  * \date 2011/01/07
  */
@@ -42,9 +45,12 @@ dCSRLmat * fasp_dcsrl_create (INT num_rows,
 }
 
 /**
- * \fn void fasp_mem_dcsrl_free( dCSRLmat *A )
+ * \fn void fasp_dcsrl_free ( dCSRLmat *A )
+ *
  * \brief Destroy a dCSRLmat object
- * \param *A pointer to the dCSRLmat type matrix
+ *
+ * \param A pointer to the dCSRLmat type matrix
+ *
  * \author Zhou Zhiyang
  * \date 2011/01/07
  */

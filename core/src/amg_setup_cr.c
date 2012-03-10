@@ -17,8 +17,8 @@
  *
  * \brief Set up phase of Brannick Falgout CR coarsening for classic AMG
  *
- * \param *mgl     pointer to AMG_data data
- * \param *param   pointer to AMG parameters
+ * \param mgl     pointer to AMG_data data
+ * \param param   pointer to AMG parameters
  *
  * \note Setup A, P, R, levels using CR coarsening for 
  *       classic AMG interpolation

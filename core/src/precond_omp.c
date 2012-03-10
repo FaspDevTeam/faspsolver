@@ -8,14 +8,13 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*---------------------------------omp----------------------------------------*/
 
 /**
  * \fn void fasp_precond_amg_omp(double *r, double *z, void *data, int nthreads, int openmp_holds)
  * \brief get z from r by classic AMG
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * 

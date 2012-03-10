@@ -16,10 +16,10 @@
  *
  * \brief Solve Ax=b by full AMG.
  *
- * \param *A      pointer to the coefficient matrix
- * \param *b      pointer to the dvector of right hand side
- * \param *x      pointer to the dvector of dofs
- * \param *param  pointer to AMG parameters
+ * \param A      pointer to the coefficient matrix
+ * \param b      pointer to the dvector of right hand side
+ * \param x      pointer to the dvector of dofs
+ * \param param  pointer to AMG parameters
  *
  * \author Xiaozhe Hu
  * \date 02/27/2011

@@ -78,7 +78,7 @@ dCSRmat fasp_dcsr_create (const INT m,
  * \param m    integer, number of rows
  * \param n    integer, number of columns
  * \param nnz  integer, number of nonzeros
- * \param *A   pointer to the dCSRmat matrix
+ * \param A   pointer to the dCSRmat matrix
  *
  * \author Chensong Zhang 
  * \date 2010/04/06
@@ -131,7 +131,7 @@ void fasp_dcsr_alloc (const INT m,
  *
  * \brief Free CSR sparse matrix data memeory space
  *
- * \param *A   pointer to the dCSRmat matrix
+ * \param A   pointer to the dCSRmat matrix
  *
  * \author Chensong Zhang
  * \date 2010/04/06 
@@ -150,7 +150,7 @@ void fasp_dcsr_free (dCSRmat *A)
  *
  * \brief Free CSR sparse matrix data memeory space
  *
- * \param *A   pointer to the iCSRmat matrix
+ * \param A   pointer to the iCSRmat matrix
  *
  * \author Chensong Zhang
  * \date 2010/04/06 
@@ -169,7 +169,7 @@ void fasp_icsr_free (iCSRmat *A)
  *
  * \brief Initialize CSR sparse matrix
  * 
- * \param *A   pointer to the dCSRmat matrix
+ * \param A   pointer to the dCSRmat matrix
  *
  * \author Chensong Zhang
  * \date 2010/04/03  
@@ -186,8 +186,8 @@ void fasp_dcsr_init (dCSRmat *A)
  *
  * \brief Apply permutation of A, i.e. Aperm=PAP' by the orders given in P
  *
- * \param *A  pointer to the oringinal dCSRmat matrix
- * \param *P  pointer to orders
+ * \param A  pointer to the oringinal dCSRmat matrix
+ * \param P  pointer to orders
  *
  * \return    the new ordered dCSRmat matrix if succeed, NULL if fail
  * 
@@ -245,7 +245,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
  *
  * \brief Sort each row of A in ascending order w.r.t. column indices.
  *
- * \param *A   pointer to the dCSRmat matrix
+ * \param A   pointer to the dCSRmat matrix
  *
  * \author Shiquan Zhang
  * \date 06/10/2010
@@ -295,8 +295,8 @@ void fasp_dcsr_sort (dCSRmat *A)
  * \brief Get first n diagonal entries of a CSR matrix A
  *
  * \param  n     an interger (if n=0, then get all diagonal entries)
- * \param *A     pointer to dCSRmat CSR matrix
- * \param *diag  pointer to the diagonal as a dvector
+ * \param A     pointer to dCSRmat CSR matrix
+ * \param diag  pointer to the diagonal as a dvector
  *
  * \author Chensong Zhang
  * \date 05/20/2009
@@ -329,8 +329,8 @@ void fasp_dcsr_getdiag (INT n,
  * \brief Get the n-th column of a CSR matrix A
  *
  * \param  n    the index of a column of A (0 <= n <= A.col-1) 
- * \param *A    pointer to dCSRmat CSR matrix
- * \param *col  pointer to the column
+ * \param A    pointer to dCSRmat CSR matrix
+ * \param col  pointer to the column
  *
  * \return      SUCCESS if succeed, else ERROR (negative value)
  *
@@ -381,7 +381,7 @@ FINISHED:
  * \brief Re-order the column and data arrays of a CSR matrix, 
  *        so that the first entry in each row is the diagonal
  *
- * \param *A   pointer to the matrix to be re-ordered
+ * \param A   pointer to the matrix to be re-ordered
  *
  * \author Zhiyang Zhou
  * \date 2010/09/09
@@ -452,7 +452,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
  *
  * \brief Regularize diagonal entries of a CSR sparse matrix
  *
- * \param *A     pointr to the dCSRmat matrix
+ * \param A     pointr to the dCSRmat matrix
  * \param value  set a value on diag(A) which is too close to zero to "value"
  * 
  * \return       SUCCESS if no diagonal entry is close to zero, else ERROR
@@ -493,8 +493,8 @@ FINISHED:
  *
  * \brief copy a dCSRmat to a new one B=A
  *
- * \param *A   pointer to the dCSRmat matrix
- * \param *B   pointer to the dCSRmat matrix
+ * \param A   pointer to the dCSRmat matrix
+ * \param B   pointer to the dCSRmat matrix
  *
  * \author Chensong Zhang
  * \date 04/06/2010  
@@ -512,11 +512,12 @@ void fasp_dcsr_cp (dCSRmat *A,
 }
 
 /**
- * \fn iCSRmat fasp_icsr_trans (iCSRmat *A)
+ * \fn void fasp_icsr_trans (iCSRmat *A, iCSRmat *AT)
  *
  * \brief Find transpose of iCSRmat matrix A
  *
- * \param *A   pointer to the iCSRmat matrix
+ * \param A   pointer to the iCSRmat matrix A
+ * \param AT  pointer to the iCSRmat matrix A'
  *
  * \return     the transpose of iCSRmat matrix A
  *
@@ -604,8 +605,8 @@ void fasp_icsr_trans (iCSRmat *A,
  *
  * \brief Find tranpose of dCSRmat matrix A
  *
- * \param *A   pointer to the dCSRmat matrix
- * \param *AT  pointer to the transpose of dCSRmat matrix A (output)
+ * \param A   pointer to the dCSRmat matrix
+ * \param AT  pointer to the transpose of dCSRmat matrix A (output)
  *
  * \author Chensong Zhang
  * \date 04/06/2010   
@@ -688,16 +689,15 @@ INT fasp_dcsr_trans (dCSRmat *A,
 }	
 
 /* 
- * \fn void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2], 
- *                               INT *nn, INT *tniz)
+ * \fn void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2], INT *nn, INT *tniz)
  *
  * \brief Transpose of an IJ matrix.
  *
- * \param *row[2]  pointers of the rows of the matrix and its transpose
- * \param *col[2]  pointers of the columns of the matrix and its transpose
- * \param *val[2]  pointers to the values of the matrix and its transpose
- * \param *nn      number of rows and columns of the matrix
- * \param *tniz    number of the nonzeros in the matrices A and A'
+ * \param row[2]  pointers of the rows of the matrix and its transpose
+ * \param col[2]  pointers of the columns of the matrix and its transpose
+ * \param val[2]  pointers to the values of the matrix and its transpose
+ * \param nn      number of rows and columns of the matrix
+ * \param tniz    number of the nonzeros in the matrices A and A'
  *
  * \note This subroutine transpose in IJ format IN ORDER. 
  */
@@ -743,8 +743,8 @@ void fasp_dcsr_transpose (INT *row[2],
  * \brief Compress a CSR matrix A and store in CSR matrix B by
  *        dropping small entries abs(aij)<=dtol
  *
- * \param *A    pointer to dCSRmat CSR matrix
- * \param *B    pointer to dCSRmat CSR matrix
+ * \param A    pointer to dCSRmat CSR matrix
+ * \param B    pointer to dCSRmat CSR matrix
  * \param dtol  drop tolerance
  *
  * \return      SUCCESS if succeeded, or ERROR message if failed
@@ -798,11 +798,11 @@ void fasp_dcsr_compress (dCSRmat *A,
  * \brief Compress a CSR matrix A IN PLACE by
  *        dropping small entries abs(aij)<=dtol
  *
- * \param *A    pointer to dCSRmat CSR matrix
+ * \param A    pointer to dCSRmat CSR matrix
  * \param dtol  drop tolerance
  *
  * \author Xiaozhe Hu
- * \data 12/25/2010
+ * \date 12/25/2010
  * \note this can be modified for filtering!!!
  */
 SHORT fasp_dcsr_compress_inplace (dCSRmat *A, 
@@ -847,7 +847,7 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
  *
  * \brief Reindex a REAL matrix in CSR format to make the index starting from 0 or 1
  *
- * \param *A        pointer to CSR matrix
+ * \param A        pointer to CSR matrix
  * \param  offset   size of offset (1 or -1)
  *
  * \return SUCCESS if succeed
@@ -874,8 +874,8 @@ void fasp_dcsr_shift (dCSRmat *A,
  *
  * \brief Symmetric diagonal scaling D^{-1/2}AD^{-1/2}
  *
- * \param *A     pointer to the dCSRmat matrix
- * \param *diag  pointer to the diagonal entries
+ * \param A     pointer to the dCSRmat matrix
+ * \param diag  pointer to the diagonal entries
  *
  * \author Xiaozhe Hu
  * \date 01/31/2011

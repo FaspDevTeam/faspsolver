@@ -21,7 +21,7 @@ static int  write_bmp16(const char *fname, int m, int n, const char map[]);
  *
  * \brief Write sparse matrix pattern in BMP file format
  *
- * \param *A pointer to the dCSRmat matrix in CSR format
+ * \param A pointer to the dCSRmat matrix in CSR format
  * \param size integer size*size is the picture size for the picture
  * \param filename char for vector file name
  * 
@@ -170,12 +170,30 @@ void fasp_grid2d_plot (pgrid2d pg,
 /*--      Private Functions      --*/
 /*---------------------------------*/
 
+/*! 
+ * \fn static void put_byte(FILE *fp, int c)
+ *
+ * \brief Write to byte to file
+ *
+ * \param fp pointer to file
+ * \param c  byte to write
+ *
+ */
 static void put_byte(FILE *fp, int c)
 { 
     fputc(c, fp);
 	return;
 }
 
+/*! 
+ * \fn static void put_word(FILE *fp, int w)
+ *
+ * \brief Write to word to file
+ *
+ * \param fp pointer to file
+ * \param w  word to write
+ *
+ */
 static void put_word(FILE *fp, int w)
 { /* big endian */
 	put_byte(fp, w);
@@ -183,6 +201,15 @@ static void put_word(FILE *fp, int w)
 	return;
 }
 
+/*! 
+ * \fn static void put_dword(FILE *fp, int d)
+ *
+ * \brief Write to double-word to file
+ *
+ * \param fp pointer to file
+ * \param d  double-word to write
+ *
+ */
 static void put_dword(FILE *fp, int d)
 { /* big endian */
 	put_word(fp, d);

@@ -12,9 +12,9 @@
 /**
  * \fn void fasp_precond_stokes_bdiag (REAL *r, REAL *z, void *data)
  * \brief block diagonal preconditioning for Stokes equation
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  */
 void fasp_precond_stokes_bdiag (REAL *r, 
                                 REAL *z, 

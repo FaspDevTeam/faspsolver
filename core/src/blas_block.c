@@ -20,9 +20,9 @@
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
  * \param alpha  real number
- * \param *A     pointer to block_dCSR matrix
- * \param *x     pointer to dvector
- * \param *y     pointer to dvector
+ * \param A     pointer to block_dCSR matrix
+ * \param x     pointer to dvector
+ * \param y     pointer to dvector
  *
  * \author Xiaozhe Hu
  * \date 06/04/2010
@@ -122,9 +122,9 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
  * \param alpha real number
- * \param *A pointer to block_BSR matrix
- * \param *x pointer to dvector
- * \param *y pointer to dvector
+ * \param A pointer to block_BSR matrix
+ * \param x pointer to dvector
+ * \param y pointer to dvector
  *
  * \author Xiaozhe Hu
  * \date 11/11/2010
@@ -159,10 +159,10 @@ void fasp_blas_bdbsr_aAxpy (const REAL alpha,
  * \fn void fasp_blas_bdbsr_mxv (block_BSR *A, REAL *x, REAL *y) 
  *
  * \brief Matrix-vector multiplication y = A*x
- * \param alpha real number
- * \param *A pointer to block_BSR matrix
- * \param *x pointer to dvector
- * \param *y pointer to dvector
+ *
+ * \param A pointer to block_BSR matrix
+ * \param x pointer to dvector
+ * \param y pointer to dvector
  *
  * \author Xiaozhe Hu
  * \date 11/11/2010

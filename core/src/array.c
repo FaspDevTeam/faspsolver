@@ -19,7 +19,7 @@
  *
  * \brief Initialize an array
  *
- * \param *x pointer to the vector
+ * \param x pointer to the vector
  *
  * \author Chensong Zhang
  * \date 2010/04/03  
@@ -35,7 +35,7 @@ void fasp_array_init (REAL *x)
  * \brief Set initial value for an array to be x=val
  *
  * \param n number of variables
- * \param *x pointer to the vector
+ * \param x pointer to the vector
  * \param val initial value for the REAL array
  *
  * \author Chensong Zhang
@@ -55,8 +55,8 @@ void fasp_array_set (const INT n,
  * \brief Copy an array to the other y=x
  *
  * \param n number of variables
- * \param *x pointer to the original vector
- * \param *y pointer to the destination vector
+ * \param x pointer to the original vector
+ * \param y pointer to the destination vector
  *
  * \author Chensong Zhang
  * \date 2010/04/03  
@@ -73,8 +73,8 @@ void fasp_array_cp (const INT n,
  *
  * \brief Copy an array to the other y=x, the length is 3
  *
- * \param *x   pointer to the original vector
- * \param *y   pointer to the destination vector
+ * \param x   pointer to the original vector
+ * \param y   pointer to the destination vector
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -94,8 +94,8 @@ void fasp_array_cp_nc3 (REAL *x,
  *
  * \brief Copy an array to the other y=x, the length is 5
  *
- * \param *x   pointer to the original vector
- * \param *y   pointer to the destination vector
+ * \param x   pointer to the original vector
+ * \param y   pointer to the destination vector
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -117,8 +117,8 @@ void fasp_array_cp_nc5 (REAL *x,
  *
  * \brief Copy an array to the other y=x, the length is 7
  *
- * \param *x   pointer to the original vector
- * \param *y   pointer to the destination vector
+ * \param x   pointer to the original vector
+ * \param y   pointer to the destination vector
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010

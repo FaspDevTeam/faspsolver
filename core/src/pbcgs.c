@@ -63,26 +63,26 @@
 /*---------------------------------*/
 
 /* \fn INT fasp_solver_dcsr_pbcgs (dCSRmat *A, dvector *b, dvector *u, const INT MaxIt, 
- *                                 const REAL tol, precond *pre, const INT print_level, 
- *                                 const INT stop_type)
+ *                                 const REAL tol, precond *pre,  const SHORT print_level, 
+ *                                 const SHORT stop_type)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b 
  *
- * \param *A	       pointer to the coefficient matrix
- * \param *b	       pointer to the dvector of right hand side
- * \param *u	       pointer to the dvector of DOFs
+ * \param A	       pointer to the coefficient matrix
+ * \param b	       pointer to the dvector of right hand side
+ * \param u	       pointer to the dvector of DOFs
  * \param MaxIt        integer, maximal number of iterations
  * \param tol          REAL float, the tolerance for stopage
- * \param *pre         pointer to the structure of precondition (precond) 
+ * \param pre         pointer to the structure of precondition (precond) 
  * \param print_level  how much information to print out
+ * \param stop_type stopping criteria type
  *
  * \return             number of iterations
  *
  * \author Shuo Zhang, Chensong Zhang
  * \data 09/24/2009
  *
- * \note
- *   Last modified by Chensong Zhang on 09/09/2011
+ * \note Modified by Chensong Zhang on 09/09/2011
  */
 INT fasp_solver_dcsr_pbcgs (dCSRmat *A, 
                             dvector *b, 
@@ -90,8 +90,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
                             const INT MaxIt, 
                             const REAL tol,
                             precond *pre, 
-                            const INT print_level, 
-                            const INT stop_type)
+                            const SHORT print_level, 
+                            const SHORT stop_type)
 {
 	const INT  MaxStag=MIN(100, MaxIt), MaxRestartStep=MIN(5, MaxIt);
 	const REAL maxdiff = tol*1e-4; // staganation tolerance
@@ -443,12 +443,12 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned BiCGstab method for solving Au=b 
  *
- * \param *A	       pointer to the coefficient matrix
- * \param *b	       pointer to the dvector of right hand side
- * \param *u	       pointer to the dvector of DOFs
+ * \param A	       pointer to the coefficient matrix
+ * \param b	       pointer to the dvector of right hand side
+ * \param u	       pointer to the dvector of DOFs
  * \param MaxIt        integer, maximal number of iterations
  * \param tol          REAL float, the tolerance for stopage
- * \param *pre         pointer to the structure of precondition (precond) 
+ * \param pre         pointer to the structure of precondition (precond) 
  * \param print_level  how much information to print out
  *
  * \return             number of iterations
@@ -848,12 +848,12 @@ FINISHED: // finish the iterative method
  *
  * \brief Preconditioned BiCGstab method for solving Au=b 
  *
- * \param *A           pointer to the coefficient matrix
- * \param *b           pointer to the dvector of right hand side
- * \param *u           pointer to the dvector of DOFs
+ * \param A           pointer to the coefficient matrix
+ * \param b           pointer to the dvector of right hand side
+ * \param u           pointer to the dvector of DOFs
  * \param MaxIt        integer, maximal number of iterations
  * \param tol          REAL float, the tolerance for stopage
- * \param *pre         pointer to the structure of preconditioner 
+ * \param pre         pointer to the structure of preconditioner 
  * \param print_level  how much information to print out
  *
  * \return the number of iterations
@@ -1203,12 +1203,12 @@ FINISHED:  // finish the iterative method
  * 
  * \brief Preconditioned BiCGstab method for solving Au=b 
  *
- * \param *A           pointer to the coefficient matrix
- * \param *b           pointer to the dvector of right hand side
- * \param *u           pointer to the dvector of DOFs
+ * \param A           pointer to the coefficient matrix
+ * \param b           pointer to the dvector of right hand side
+ * \param u           pointer to the dvector of DOFs
  * \param MaxIt        integer, maximal number of iterations
  * \param tol          REAL float, the tolerance for stopage
- * \param *pre         pointer to the structure of preconditioner 
+ * \param pre         pointer to the structure of preconditioner 
  * \param print_level  how much information to print out
  *
  * \return the number of iterations

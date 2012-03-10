@@ -17,11 +17,11 @@
  *
  * \brief Solve Ax=b by preconditioned Krylov methods -- this is an abstract interface
  *
- * \param *A        pointer to the coeff matrix in dCSRmat format
- * \param *b        pointer to the right hand side in dvector format
- * \param *x        pointer to the approx solution in dvector format
- * \param *prec     pointer to the preconditioning action
- * \param *itparam  pointer to parameters for iterative solvers
+ * \param A        pointer to the coeff matrix in dCSRmat format
+ * \param b        pointer to the right hand side in dvector format
+ * \param x        pointer to the approx solution in dvector format
+ * \param prec     pointer to the preconditioning action
+ * \param itparam  pointer to parameters for iterative solvers
  *
  * \return          return the number of iterations if succeed
  *
@@ -114,10 +114,10 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
  *
  * \brief Solve Ax=b by standard Krylov methods -- no preconditioning 
  *
- * \param *A        pointer to the coeff matrix in dCSRmat format
- * \param *b        pointer to the right hand side in dvector format
- * \param *x        pointer to the approx solution in dvector format
- * \param *itparam  pointer to parameters for iterative solvers
+ * \param A        pointer to the coeff matrix in dCSRmat format
+ * \param b        pointer to the right hand side in dvector format
+ * \param x        pointer to the approx solution in dvector format
+ * \param itparam  pointer to parameters for iterative solvers
  *
  * \return          return the number of iterations if succeed
  *
@@ -162,10 +162,10 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
  * \fn INT fasp_solver_dcsr_krylov_diag (dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam)
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  * 
- * \param *A        pointer to the coeff matrix in dCSRmat format
- * \param *b        pointer to the right hand side in dvector format
- * \param *x        pointer to the approx solution in dvector format
- * \param *itparam  pointer to parameters for iterative solvers
+ * \param A        pointer to the coeff matrix in dCSRmat format
+ * \param b        pointer to the right hand side in dvector format
+ * \param x        pointer to the approx solution in dvector format
+ * \param itparam  pointer to parameters for iterative solvers
  * \return          return the number of iterations if succeed
  *
  * \author Chensong Zhang, Shiquan Zhang
@@ -222,13 +222,13 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
  *
  * \brief Solve Ax=b by preconditioned Krylov methods with AMG as precondition
  *
- * \param *A        pointer to the coeff matrix in dCSRmat format
- * \param *b        pointer to the right hand side in dvector format
- * \param *x        pointer to the approx solution in dvector format
- * \param *prec     pointer to the preconditioning action
- * \param *itparam  pointer to parameters for iterative solvers
+ * \param A        pointer to the coeff matrix in dCSRmat format
+ * \param b        pointer to the right hand side in dvector format
+ * \param x        pointer to the approx solution in dvector format
+ * \param itparam  pointer to parameters for iterative solvers
+ * \param amgparam AMG parameters
  *
- * \return          return the number of iterations if succeed
+ * \return         the number of iterations if succeed
  *
  * \author Chensong Zhang
  * \date 09/25/2009  
@@ -326,11 +326,11 @@ FINISHED:
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods
  *
- * \param *A        pointer to the coeff matrix in dCSRmat format
- * \param *b        pointer to the right hand side in dvector format
- * \param *x        pointer to the approx solution in dvector format
- * \param *itparam  pointer to parameters for iterative solvers
- * \param *iluparam pointer to parameters for ILU
+ * \param A        pointer to the coeff matrix in dCSRmat format
+ * \param b        pointer to the right hand side in dvector format
+ * \param x        pointer to the approx solution in dvector format
+ * \param itparam  pointer to parameters for iterative solvers
+ * \param iluparam pointer to parameters for ILU
  *
  * \return          return the number of iterations if succeed
  *
@@ -409,13 +409,12 @@ FINISHED:
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods: ILU of M plays as preconditioner
  *
- * \param *A         pointer to the coeff matrix in dCSRmat format
- * \param *b         pointer to the right hand side in dvector format
- * \param *x         pointer to the approx solution in dvector format
- * \param *prec      pointer to the preconditioning action
- * \param *itparam   pointer to parameters for iterative solvers
- * \param *iluparam  pointer to parameters for ILU
- * \param *M	     pointer to the preconditioning matrix in dCSRmat format 
+ * \param A         pointer to the coeff matrix in dCSRmat format
+ * \param b         pointer to the right hand side in dvector format
+ * \param x         pointer to the approx solution in dvector format
+ * \param itparam   pointer to parameters for iterative solvers
+ * \param iluparam  pointer to parameters for ILU
+ * \param M	        pointer to the preconditioning matrix in dCSRmat format 
  *
  * \return           return the number of iterations if succeed
  *

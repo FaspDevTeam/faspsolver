@@ -21,8 +21,8 @@ extern "C" {void DIRECT_MUMPS(const int *n, const int *nnz, int *ia, int *ja, do
  * \fn void mgcycle_omp(AMG_data *mgl, AMG_param *param, int nthreads, int openmp_holds)
  * \brief Solve Ax=b with non-recursive multigrid k-cycle 
  *
- * \param *mgl     pointer to AMG_data data
- * \param *param   pointer to AMG parameters
+ * \param mgl     pointer to AMG_data data
+ * \param param   pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *

@@ -64,11 +64,11 @@ void fasp_set_GS_threads_omp(int mythreads, int its)
  *                                   precond *prec, itsolver_param *itparam, int nthreads, int openmp_holds)
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param *A        pointer to the dBSRmat matrix
- * \param *b        pointer to the dvector of right hand side
- * \param *x        pointer to the dvector of dofs
- * \param *prec     pointer to the preconditioner data
- * \param *itparam  pointer to parameters for iterative solvers
+ * \param A        pointer to the dBSRmat matrix
+ * \param b        pointer to the dvector of right hand side
+ * \param x        pointer to the dvector of dofs
+ * \param prec     pointer to the preconditioner data
+ * \param itparam  pointer to parameters for iterative solvers
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return          the number of iterations

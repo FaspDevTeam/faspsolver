@@ -22,11 +22,19 @@
 #include "messages.h"
 
 #ifndef __FASP_HEADER__		/*-- allow multiple inclusions --*/
-#define __FASP_HEADER__
+#define __FASP_HEADER__     /**< indicate fasp.h has been included before */
 
 /*---------------------------*/ 
 /*---  Macros definition  ---*/
 /*---------------------------*/
+
+/**
+ * \brief For external software package support
+ */
+#define FASP_USE_ILU     OFF  /**< enable ILU or not */
+#define FASP_USE_OPENMP  OFF  /**< enable OpenMP support or not */
+#define DLMALLOC         OFF  /**< use dlmalloc instead of standard malloc */
+#define NEDMALLOC        OFF  /**< use nedmalloc instead of standard malloc */
 
 /**
  * \brief For internal use only
@@ -34,18 +42,6 @@
 #define DEBUG_MODE       OFF  /**< output DEBUG information */
 #define CHMEM_MODE       OFF  /**< output MEMORY usage information */
 #define DIAGONAL_PREF    OFF  /**< order each row such that diagonal appears first */
-
-/**
- * \brief For external software support
- */
-#define FASP_USE_ILU     ON   /**< enable ILU or not */
-#define FASP_USE_OPENMP  OFF  /**< enable OpenMP support or not */
-
-/**
- * \brief For external memory management 
- */
-#define DLMALLOC         OFF  /**< use dlmalloc instead of standard malloc */
-#define NEDMALLOC        OFF  /**< use nedmalloc instead of standard malloc */
 
 /**
  * \brief For Fortran compatibilty 
@@ -82,7 +78,7 @@
  * \brief Index starting point: C convention or Fortran convention
  */
 
-#define ISTART 0 /**< 0 if in Natural index, 1 if data is in C index */
+#define ISTART 0                /**< 0 if in Natural index, 1 if data is in C index */
 #define N2C(ind) ((ind)-ISTART) /**< map from Natural index 1,2,... to C index 0,1,... */
 #define C2N(ind) ((ind)+ISTART) /**< map from C index 0,1,... to Natural index 1,2,... */
 
@@ -112,7 +108,7 @@ typedef struct ddenmat{
 	//! actual matrix entries
 	REAL **val;
 	
-} ddenmat;
+} ddenmat; /**< Dense matrix of REAL type */
 
 /** 
  * \struct idenmat
@@ -129,7 +125,7 @@ typedef struct idenmat{
 	//! actual matrix entries 
 	INT **val;
 	
-} idenmat;
+} idenmat; /**< Dense matrix of INT type */
 
 /** 
  * \struct dCSRmat
@@ -154,7 +150,7 @@ typedef struct dCSRmat{
 	//! nonzero entries of A
 	REAL *val;
 	
-} dCSRmat;
+} dCSRmat; /**< Sparse matrix of REAL type in CSR format */
 
 /** 
  * \struct iCSRmat
@@ -179,7 +175,7 @@ typedef struct iCSRmat{
 	//! nonzero entries of A
 	INT *val;
 	
-} iCSRmat;
+} iCSRmat; /**< Sparse matrix of INT type in CSR format */
 
 /** 
  * \struct dCOOmat
@@ -204,7 +200,7 @@ typedef struct dCOOmat{
 	//! nonzero entries of A
 	REAL *val;
 	
-} dCOOmat;
+} dCOOmat; /**< Sparse matrix of REAL type in COO format */
 
 /** 
  * \struct iCOOmat
@@ -229,7 +225,7 @@ typedef struct iCOOmat{
 	//! nonzero entries of A
 	INT *val;
 	
-} iCOOmat;
+} iCOOmat; /**< Sparse matrix of INT type in COO format */
 
 /*!
  * \struct dCSRLmat
@@ -249,14 +245,14 @@ typedef struct dCSRLmat{
 	INT *nzdifnum;
 	//! row index of the matrix in length-grouped manner, i.e., the rows with same nnz are together
 	INT *rowindex;
-	//! if j\in V={rowstart[i],...,rowstart[i+1]-1}, there are nzdifnum[i] nnz in the rowindex[j]-th row	
+	//! if j in V={rowstart[i],...,rowstart[i+1]-1}, there are nzdifnum[i] nnz in the rowindex[j]-th row	
 	INT *rowstart;
 	//! column indices of all the nonzeros
 	INT *ja;
 	//! values of all the nonzero entries
 	REAL *data;
     
-} dCSRLmat;
+} dCSRLmat; /**< Sparse matrix of REAL type in CSRL format */
 
 /** 
  * \struct dvector
@@ -269,7 +265,7 @@ typedef struct dvector{
     //! actual vector entries
 	REAL *val;
 	
-} dvector;
+} dvector; /**< Vector of REAL type */
 
 /** 
  * \struct ivector
@@ -282,7 +278,7 @@ typedef struct ivector{
     //! actual vector entries
 	INT *val;
 	
-} ivector;
+} ivector; /**< Vector of INT type */
 
 /** 
  * \struct dSTRmat
@@ -319,7 +315,7 @@ typedef struct dSTRmat{
 	//! Off-diagonal entries (dimension is nband * [(ngrid-|offsets|) * nc^2])
 	REAL **offdiag;
 	
-} dSTRmat;
+} dSTRmat; /**< Structured matrix of REAL type */
 
 /*---------------------------*/ 
 /*--- Parameter structures --*/
@@ -344,7 +340,7 @@ typedef struct {
 	//! permuted if permtol*|a(i,j)| > |a(i,i)|
 	REAL ILU_permtol;
 	
-} ILU_param;	
+} ILU_param; /**< Parameters for ILU */	
 
 /** 
  * \struct ILU_data
@@ -370,7 +366,7 @@ typedef struct {
 	//! work space
 	REAL *work;
 	
-} ILU_data;
+} ILU_data; /**< Data for ILU */
 
 /** 
  * \struct AMG_param
@@ -449,7 +445,7 @@ typedef struct {
 	//! permuted if permtol*|a(i,j)| > |a(i,i)|
 	REAL ILU_permtol;
 	
-} AMG_param;
+} AMG_param; /**< Parameters for AMG */
 
 /** 
  * \struct AMG_data
@@ -497,7 +493,7 @@ typedef struct {
 	//! Temporary work space
 	dvector w;
 	
-} AMG_data;
+} AMG_data; /**< Data for AMG */
 
 /** 
  * \struct precond_data
@@ -552,10 +548,10 @@ typedef struct {
 	dCSRmat *A;
 	
 	// temporary work space
-	dvector r; /*< temporary dvector used to store and restore the residual */
-	REAL *w; /*<  temporary work space for other usage */
+	dvector r; /**< temporary dvector used to store and restore the residual */
+	REAL *w; /**<  temporary work space for other usage */
 	
-} precond_data;
+} precond_data; /**< Data for general preconditioner */
 
 /** 
  * \struct precond_data_str
@@ -628,7 +624,7 @@ typedef struct {
     //! temporary work space for other usage
 	REAL *w; 
 	
-} precond_data_str;
+} precond_data_str; /**< Data for preconditioner of STR matrices */
 
 
 /** 
@@ -645,7 +641,7 @@ typedef struct {
 	//! diagnal elements
 	dvector diag;
 	
-} precond_diagstr;
+} precond_diagstr; /**< Data for diagonal preconditioner of STR matrices */
 
 /** 
  * \struct precond_diagbsr
@@ -661,7 +657,7 @@ typedef struct {
 	//! diagnal elements
 	dvector diag;
 	
-} precond_diagbsr;
+} precond_diagbsr; /**< Data for diagonal preconditioner of BSR matrices */
 
 /** 
  * \struct precond
@@ -680,7 +676,7 @@ typedef struct {
 	void (*fct_omp)(REAL *, REAL *, void *, INT, INT);
 #endif
 	
-} precond;
+} precond; /**<< Data for general preconditioner passed to iterative solvers */
 
 /**
  * \struct input_param
@@ -727,7 +723,7 @@ typedef struct {
 	SHORT AMG_ILU_levels; /**< how many levels use ILU smoother */	
 	SHORT AMG_coarse_scaling; /**< switch of scaling of the coarse grid correction */
 	SHORT AMG_amli_degree; /**< degree of the polynomial used by AMLI cycle */
-    SHORT AMG_nl_amli_krylov_type; /** type of krylov method used by nonlinear AMLI cycle */
+    SHORT AMG_nl_amli_krylov_type; /**< type of krylov method used by nonlinear AMLI cycle */
 	
 	// parameters for classical AMG
 	SHORT AMG_coarsening_type; /**< coarsening type */
@@ -742,7 +738,7 @@ typedef struct {
 	REAL AMG_tentative_smooth; /**< relaxation parameter for smoothing the tentative prolongation */
 	SHORT AMG_smooth_filter; /**< switch for filtered matrix for smoothing the tentative prolongation */
 	
-} input_param;
+} input_param; /**< Input parameters */
 
 /** 
  * \struct itsolver_param
@@ -759,7 +755,7 @@ typedef struct {
 	INT restart; /**< number of steps for restarting the solver */
 	REAL tol; /**< solve params, tolerance for solver */
 	
-} itsolver_param; 
+} itsolver_param; /**< Parameters for iterative solvers */ 
 
 /**
  * \struct grid2d
@@ -786,9 +782,9 @@ typedef struct grid2d {
 	INT vertices; /**< Number of grid points */
 	INT edges; /**< Number of edges */
 	INT triangles; /**< Number of triangles */
-} grid2d;
-typedef grid2d *pgrid2d;
-typedef const grid2d *pcgrid2d;
+} grid2d; /**< 2D grid type for plotting */
+typedef grid2d *pgrid2d; /**< Grid in 2d */
+typedef const grid2d *pcgrid2d; /**< Grid in 2d */
 
 /**
  * \struct Link
@@ -802,7 +798,7 @@ typedef struct
 	//! next node in the linklist
 	INT next;
 	
-} Link;
+} Link; /**< Links */
 
 /** 
  * \struct linked_list
@@ -822,12 +818,12 @@ typedef struct linked_list
 	//! ending of the list
 	INT tail;
 	
-} ListElement;
+} ListElement; /**< Linked element in list */
 
 /** 
  * List of links
  */
-typedef ListElement *LinkList;  
+typedef ListElement *LinkList; /**< linked list */
 
 /*
  * OpenMP definitions and decrorations
@@ -836,21 +832,20 @@ typedef ListElement *LinkList;
 
 #include "omp.h"
 
-extern INT THDs_AMG_GS;
-extern INT THDs_CPR_lGS;
-extern INT THDs_CPR_gGS;
+extern INT THDs_AMG_GS;  /**< ??? */
+extern INT THDs_CPR_lGS; /**< ??? */
+extern INT THDs_CPR_gGS; /**< ??? */
 
 extern REAL total_linear_time; /**< total linear times */
-extern REAL total_setup_time;
-extern REAL total_start_time;
-extern INT  total_iter;
-extern INT  fasp_called_times;
-extern INT  nx_rb ;  // Red Black Gs Smoother 
-extern INT  ny_rb ;  // Red Black Gs Smoother
-extern INT  nz_rb ;  // Red Black Gs Smoother
-//! tmp map for the level 0 grid, geometry to algebre dofs.
-extern INT *IMAP;    // Red Black Gs Smoother
-extern INT  MAXIMAP; // Red Black Gs Smoother  max dofs of reservoir
+extern REAL total_setup_time;  /**< ??? */
+extern REAL total_start_time;  /**< ??? */
+extern INT  total_iter;        /**< ??? */
+extern INT  fasp_called_times; /**< ??? */
+extern INT  nx_rb ;  /**< Red Black Gs Smoother Nx */
+extern INT  ny_rb ;  /**< Red Black Gs Smoother Ny */
+extern INT  nz_rb ;  /**< Red Black Gs Smoother Nz */
+extern INT *IMAP;    /**< Red Black Gs Smoother imap */
+extern INT  MAXIMAP; /**< Red Black Gs Smoother max dofs of reservoir */
 
 #define FASP_GET_START_END(procid,nprocs,n,start,end) \
 if((procid)<(n)%(nprocs)) \

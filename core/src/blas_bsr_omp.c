@@ -17,9 +17,9 @@
  *                                     double *y, int nthreads, int openmp_holds )
  * \brief Compute y := alpha*A*x + y
  * \param alpha a real number
- * \param *A pointer to the matrix
- * \param *x pointer to the vector x
- * \param *y pointer to the vector y
+ * \param A pointer to the matrix
+ * \param x pointer to the vector x
+ * \param y pointer to the vector y
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -301,9 +301,9 @@ void fasp_blas_dbsr_aAxpy_omp (double alpha,
 /*!
  * \fn void fasp_blas_dbsr_mxv_omp ( dBSRmat *A, double *x, double *y, int nthreads, int openmp_holds )
  * \brief Compute y := A*x
- * \param *A pointer to the matrix
- * \param *x pointer to the vector x
- * \param *y pointer to the vector y
+ * \param A pointer to the matrix
+ * \param x pointer to the vector x
+ * \param y pointer to the vector y
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *

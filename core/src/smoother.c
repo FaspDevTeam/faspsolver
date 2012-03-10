@@ -21,8 +21,8 @@
  * \param i_1  the index to begin with
  * \param i_n  the index to end
  * \param s    the step
- * \param *A   pointer to stiffness matrix
- * \param *b   pointer to right hand side
+ * \param A   pointer to stiffness matrix
+ * \param b   pointer to right hand side
  * \param L    number of iterations
  *
  * \return     void
@@ -110,8 +110,8 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
  * \param i_1  the index to begin with
  * \param i_n  the index to end
  * \param s    the step (s=1: forward, s=-1: backward)
- * \param *A   pointer to stiffness matrix
- * \param *b   pointer to right hand side
+ * \param A   pointer to stiffness matrix
+ * \param b   pointer to right hand side
  * \param L    number of iterations
  *
  * \return     void
@@ -208,10 +208,10 @@ void fasp_smoother_dcsr_gs (dvector *u,
  * \brief Gauss-Seidel smoother with C/F ordering for Au=b
  *
  * \param u     initial guess and the new approximation to the solution obtained after L GS steps
- * \param *A    pointer to stiffness matrix
- * \param *b    pointer to right hand side
+ * \param A    pointer to stiffness matrix
+ * \param b    pointer to right hand side
  * \param L     number of iterations
- * \param *mark C/F marker array
+ * \param mark C/F marker array
  * \param order C/F ordering: -1: F-first; 1: C-first
  *
  * \return      void
@@ -319,8 +319,8 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
  * \brief Symmetric Gauss-Seidel method  as the smoother in solving Au=b with multigrid method
  *
  * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
- * \param *A   pointer to stiffness matrix
- * \param *b   pointer to right hand side
+ * \param A   pointer to stiffness matrix
+ * \param b   pointer to right hand side
  * \param L    number of iterations
  *
  * \return     void
@@ -383,8 +383,8 @@ void fasp_smoother_dcsr_sgs (dvector *u,
  * \param i_1   the index to begin with
  * \param i_n   the index to end
  * \param s     the step
- * \param *A    pointer to stiffness matrix
- * \param *b    pointer to right hand side
+ * \param A    pointer to stiffness matrix
+ * \param b    pointer to right hand side
  * \param L     number of iterations
  * \param w     over-relaxation parameter
  *
@@ -455,10 +455,11 @@ void fasp_smoother_dcsr_sor (dvector *u,
  * \brief SOR smoother with C/F ordering for Au=b
  *
  * \param u      initial guess and the new approximation to the solution obtained after L SOR steps
- * \param *A     pointer to stiffness matrix
- * \param *b     pointer to right hand side
+ * \param A     pointer to stiffness matrix
+ * \param b     pointer to right hand side
  * \param L      number of iterations
- * \param *mark  C/F marker array
+ * \param w     relaxation parameter
+ * \param mark  C/F marker array
  * \param order  C/F ordering: -1: F-first; 1: C-first
  *
  * \return       void
@@ -566,10 +567,10 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
  *
  * \brief ILU method as the smoother in solving Au=b with multigrid method
  *
- * \param *A    pointer to stiffness matrix
- * \param *b    pointer to right hand side
- * \param *x    pointer to current solution
- * \param *data pointer to user defined data
+ * \param A    pointer to stiffness matrix
+ * \param b    pointer to right hand side
+ * \param x    pointer to current solution
+ * \param data pointer to user defined data
  *
  * \return void
  *
@@ -643,8 +644,8 @@ MEMERR:
  * \param i_1  the index to begin with
  * \param i_n  the index to end
  * \param s    the step (s=1: forward, s=-1: backward)
- * \param *A   pointer to stiffness matrix
- * \param *b   pointer to right hand side
+ * \param A   pointer to stiffness matrix
+ * \param b   pointer to right hand side
  * \param L    number of iterations
  *
  * \return void
@@ -730,8 +731,8 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
  * \param i_1  the index to begin with
  * \param i_n  the index to end
  * \param s    the step
- * \param *A   pointer to stiffness matrix
- * \param *b   pointer to right hand side
+ * \param A   pointer to stiffness matrix
+ * \param b   pointer to right hand side
  * \param L    number of iterations
  *
  * \return void

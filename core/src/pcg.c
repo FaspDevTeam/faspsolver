@@ -64,23 +64,24 @@
 
 /**
  * \fn INT fasp_solver_dcsr_pcg (dCSRmat *A, dvector *b, dvector *u, const INT MaxIt, 
- *                               const REAL tol, precond *pre, const INT print_level, 
- *                               const INT stop_type)
+ *                               const REAL tol, precond *pre, const SHORT print_level, 
+ *                               const SHORT stop_type)
  *
- *	 \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
+ * \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
  *
- *	 \param *A	 pointer to the coefficient matrix
- *	 \param *b	 pointer to the dvector of right hand side
- *	 \param *u	 pointer to the dvector of DOFs
- *	 \param MaxIt integer, maximal number of iterations
- *	 \param tol REAL float, the tolerance for stopage
- *	 \param *pre pointer to the structure of precondition (precond) 
- *   \param print_level how much information to print out
+ * \param A	 pointer to the coefficient matrix
+ * \param b	 pointer to the dvector of right hand side
+ * \param u	 pointer to the dvector of DOFs
+ * \param MaxIt integer, maximal number of iterations
+ * \param tol REAL float, the tolerance for stopage
+ * \param pre pointer to the structure of precondition (precond) 
+ * \param print_level how much information to print out
+ * \param stop_type stopping criteria type
  *
- *	 \return the number of iterations
+ * \return the number of iterations
  * 
- *   \author Chensong Zhang, Xiaozhe Hu, Shiquan Zhang
- *   \date 05/06/2010
+ * \author Chensong Zhang, Xiaozhe Hu, Shiquan Zhang
+ * \date 05/06/2010
  */
 INT fasp_solver_dcsr_pcg (dCSRmat *A, 
                           dvector *b, 
@@ -347,24 +348,25 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_pcg (block_sCSRmat *A, dvector *b, dvector *u, const INT MaxIt,
- *                                const REAL tol, precond *pre, const INT print_level, 
- *                                const INT stop_type)
+ * \fn INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, dvector *b, dvector *u, const INT MaxIt,
+ *                                const REAL tol, precond *pre, const SHORT print_level, 
+ *                                const SHORT stop_type)
  *
- *	 \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
+ * \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
  *
- *	 \param *A pointer to the coefficient matrix
- *	 \param *b pointer to the dvector of right hand side
- *	 \param *u pointer to the dvector of DOFs
- *	 \param MaxIt integer, maximal number of iterations
- *	 \param tol REAL float, the tolerance for stopage
- *	 \param *pre pointer to the structure of precondition (precond) 
- *   \param print_level how much information to print out
+ * \param A pointer to the coefficient matrix
+ * \param b pointer to the dvector of right hand side
+ * \param u pointer to the dvector of DOFs
+ * \param MaxIt integer, maximal number of iterations
+ * \param tol REAL float, the tolerance for stopage
+ * \param pre pointer to the structure of precondition (precond) 
+ * \param print_level how much information to print out
+ * \param stop_type stopping criteria type
  *
- *   \return the number of iterations
+ * \return the number of iterations
  *
- *   \author Xiaozhe Hu
- *   \data 05/24/2010
+ * \author Xiaozhe Hu
+ * \date 05/24/2010
  */
 INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, 
                            dvector *b, 
@@ -630,19 +632,20 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn INT fasp_solver_dstr_pcg (dSTRmat *A, dvector *b, dvector *u, INT MaxIt, 
- *                               REAL tol, precond *pre, INT print_level, 
- *                               INT stop_type)
+ * \fn INT fasp_solver_dstr_pcg (dSTRmat *A, dvector *b, dvector *u, const INT MaxIt, 
+ *                               const REAL tol, precond *pre, const SHORT print_level, 
+ *                               const SHORT stop_type)
  *
  * \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
  *
- * \param *A pointer to the coefficient matrix
- * \param *b pointer to the dvector of right hand side
- * \param *u pointer to the dvector of DOFs
+ * \param A pointer to the coefficient matrix
+ * \param b pointer to the dvector of right hand side
+ * \param u pointer to the dvector of DOFs
  * \param MaxIt integer, maximal number of iterations
  * \param tol REAL float, the tolerance for stopage
- * \param *pre pointer to the structure of precondition (precond) 
+ * \param pre pointer to the structure of precondition (precond) 
  * \param print_level how much information to print out
+ * \param stop_type stopping criteria type
  *
  * \return the number of iterations
  *
@@ -652,11 +655,11 @@ FINISHED:  // finish the iterative method
 INT fasp_solver_dstr_pcg (dSTRmat *A, 
                           dvector *b, 
                           dvector *u, 
-                          INT MaxIt, 
-                          REAL tol, 
+                          const INT MaxIt, 
+                          const REAL tol, 
                           precond *pre, 
-                          SHORT print_level, 
-                          SHORT stop_type)
+                          const SHORT print_level, 
+                          const SHORT stop_type)
 {
 	const SHORT MaxStag=20, MaxRestartStep=20;
 	const REAL maxdiff = tol*1e-4; // staganation tolerance

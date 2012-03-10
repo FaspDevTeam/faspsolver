@@ -66,12 +66,12 @@
  * \fn int fasp_solver_dcsr_pcg_omp (dCSRmat *A, dvector *b, dvector *u, const int MaxIt, const double tol, \
  *             precond *pre, const int print_level, const int stop_type, int nthreads, int openmp_holds)
  *	 \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
- *	 \param *A	 pointer to the coefficient matrix
- *	 \param *b	 pointer to the dvector of right hand side
- *	 \param *u	 pointer to the dvector of DOFs
+ *	 \param A	 pointer to the coefficient matrix
+ *	 \param b	 pointer to the dvector of right hand side
+ *	 \param u	 pointer to the dvector of DOFs
  *	 \param MaxIt integer, maximal number of iterations
  *	 \param tol double float, the tolerance for stopage
- *	 \param *pre pointer to the structure of precondition (precond) 
+ *	 \param pre pointer to the structure of precondition (precond) 
  * \param print_level how much information to print out
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization

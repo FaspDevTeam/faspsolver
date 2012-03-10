@@ -40,10 +40,12 @@ AMG_data * fasp_amg_data_create (INT max_levels)
 }
 
 /**
- * \fn AMG_data_bsr * fasp_amg_data_create_nsr(int max_levels)
+ * \fn AMG_data_bsr * fasp_amg_data_create_bsr(int max_levels)
+ *
  * \brief Create and initialize AMG_data data sturcture for AMG/SAMG (BSR format)
  *
  * \param   max_levels   max number of levels allowed
+ *
  * \return *mgl          pointer to the AMG_data data structure
  *
  * \author Xiaozhe Hu
@@ -74,7 +76,7 @@ AMG_data_bsr * fasp_amg_data_create_bsr(int max_levels)
  *
  * \param iwk       integer, length of the index array
  * \param nwork     integer, length of the work array
- * \param *iludata  pointer, the ILU facotrization
+ * \param iludata  pointer, the ILU facotrization
  *
  * \author Chensong Zhang 
  * \date 2010/04/06
@@ -113,7 +115,7 @@ void fasp_ilu_data_alloc (INT iwk,
  *
  * \brief Free AMG_data data memeory space
  *
- * \param *mgl  pointer to the AMG_data data
+ * \param mgl  pointer to the AMG_data data
  *
  * \author Chensong Zhang
  * \date 2010/04/06 
@@ -147,13 +149,12 @@ void fasp_amg_data_free (AMG_data *mgl)
  *
  * \brief Create ILU_data sturcture
  *
- * \param nnz       number of nonzeros
  * \param ILUdata   pointer to ILU_data
  *
  * \author Chensong Zhang
  * \date 2010/04/03  
  */
-void fasp_ilu_data_free(ILU_data *ILUdata)
+void fasp_ilu_data_free (ILU_data *ILUdata)
 {		
 	if (ILUdata==NULL) return;
 	
@@ -169,7 +170,7 @@ void fasp_ilu_data_free(ILU_data *ILUdata)
  *
  * \brief Initialize ILU data
  *
- * \param Input   pointer to ILU_data
+ * \param ILUdata   pointer to ILU_data
  *
  * \author Chensong Zhang
  * \date 2010/03/23 
@@ -185,7 +186,7 @@ void fasp_ilu_data_init (ILU_data *ILUdata)
  *
  * \brief Initialize precond data
  *
- * \param Input   pointer to precond
+ * \param pdata   pointer to precond
  *
  * \author Chensong Zhang
  * \date 2010/03/23 

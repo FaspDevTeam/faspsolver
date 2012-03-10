@@ -49,7 +49,7 @@ dCOOmat fasp_dcoo_create (INT m,
  *
  * \brief Free IJ sparse matrix data memeory space
  *
- * \param *A   pointer to the dCOOmat matrix
+ * \param A   pointer to the dCOOmat matrix
  *
  * \author Chensong Zhang
  * \date 2010/04/03  
@@ -68,7 +68,7 @@ void fasp_dcoo_free (dCOOmat *A)
  *
  * \brief Reindex a REAL matrix in IJ format to make the index starting from 0 or 1.
  *
- * \param *A       pointer to IJ matrix
+ * \param A       pointer to IJ matrix
  * \param  offset  size of offset (1 or -1)
  *
  * \author Chensong Zhang 

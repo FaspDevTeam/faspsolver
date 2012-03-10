@@ -70,12 +70,12 @@
  *                                       INT nthreads, INT openmp_holds )
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in 
  *        which the restart number can be adaptively chosen during the iteration.
- * \param *A the pointer to the coefficient matrix
- * \param *b the pointer to the right hand side vector
- * \param *x the pointer to the solution vector
+ * \param A the pointer to the coefficient matrix
+ * \param b the pointer to the right hand side vector
+ * \param x the pointer to the solution vector
  * \param maxit the maximal iteration  
  * \param tol the tolerance
- * \param *pre pointer to preconditioner data
+ * \param pre pointer to preconditioner data
  * \param print_level how much of the SOLVE-INFORMATION be output?
  * \param stop_type this parameter is not used in my function at present, 
  *        the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. 

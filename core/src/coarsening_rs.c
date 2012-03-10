@@ -27,13 +27,13 @@ static void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, INT r
  *
  * \brief RS coarsening
  *
- * \param *A          pointer to the coefficient matrix, the index starts from zero
- * \param *vertices   pointer to the indicator ivector of the CF splitting of the vertices
+ * \param A          pointer to the coefficient matrix, the index starts from zero
+ * \param vertices   pointer to the indicator ivector of the CF splitting of the vertices
  *                        0: fine gird points
  *                        1: coarse grid points
  *                        2: isolated grid points
- * \param *P          pointer to the resulted interpolation matrix (nonzero pattern only)
- * \param *param      pointer to AMG parameters
+ * \param P          pointer to the resulted interpolation matrix (nonzero pattern only)
+ * \param param      pointer to AMG parameters
  * \return            SUCCESS or Error message
  *
  * \note Ref Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller 
@@ -117,8 +117,8 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
 /*--      Private Functions      --*/
 /*---------------------------------*/
 
-#define LIST_HEAD -1
-#define LIST_TAIL -2
+#define LIST_HEAD -1 /**< head of the linked list */
+#define LIST_TAIL -2 /**< tail of the linked list */
 
 /**
  * \fn static void dispose_elt( LinkList element_ptr )
@@ -352,9 +352,9 @@ static void enter_list (LinkList *LoL_head_ptr,
  *
  * \brief generate the set of all strong couplings S
  *
- * \param *A pointer to the coefficient matrix
- * \param *S pointer to the set of all strong couplings matrix
- * \param *param pointer to AMG parameters
+ * \param A pointer to the coefficient matrix
+ * \param S pointer to the set of all strong couplings matrix
+ * \param param pointer to AMG parameters
  */
 static void generate_S (dCSRmat *A, 
                         iCSRmat *S, 
@@ -410,15 +410,15 @@ static void generate_S (dCSRmat *A,
 			if (ja[j]==i) {S->JA[j]=-1; break;}
 		}
 		
-		/** if $|\sum_{j=1}^n a_{ij}|> \theta_2 |a_{ii}|$ */
+		/* if $|\sum_{j=1}^n a_{ij}|> \theta_2 |a_{ii}|$ */
 		if ((row_sum>max_row_sum)&&(max_row_sum<1)) { 
 			/** make all dependencies weak */
 			for (j=begin_row;j<=end_row;j++) S->JA[j]=-1;
 		}
-		/** otherwise */
+		/* otherwise */
 		else {
 			for (j=begin_row;j<=end_row;j++) {
-				/** if $a_{ij}>=\epsilon_{str}*\min a_{ij}$, the connection $a_{ij}$ is set to be weak connection */
+				/* if $a_{ij}>=\epsilon_{str}*\min a_{ij}$, the connection $a_{ij}$ is set to be weak connection */
 				if (A->val[j]>=epsilon_str*row_scale) S->JA[j]=-1; 
 			}
 		}
@@ -457,8 +457,8 @@ static void generate_S (dCSRmat *A,
  * \brief generate the set of all strong negative couplings(coarsening_type=2) or strong 
  *        absolute couplings(coarsening_type=3)
  *
- * \param *A pointer to the coefficient matrix
- * \param *S pointer to the set of all strong couplings matrix
+ * \param A pointer to the coefficient matrix
+ * \param S pointer to the set of all strong couplings matrix
  * \param epsilon_str strong coupled ratio
  * \param coarsening_type coarsening type(2: strong negative couplings, 3: strong absolute couplings)
  */
@@ -580,9 +580,9 @@ static void generate_S_rs (dCSRmat *A,
  *
  * \brief find coarse level points
  *
- * \param *A pointer to the coefficient matrix
- * \param *S pointer to the set of all strong couplings matrix
- * \param *vertices pointer to the type of vertices (points)
+ * \param A pointer to the coefficient matrix
+ * \param S pointer to the set of all strong couplings matrix
+ * \param vertices pointer to the type of vertices (points)
  * \param row integer number of rows of P
  * \return col integer number of cols of P
  */
@@ -677,7 +677,7 @@ static INT form_coarse_level (dCSRmat *A,
 		for (i=ST.IA[maxnode];i<ST.IA[maxnode+1];++i) {
 			j=ST.JA[i];
 			
-			/** if j is unkown */
+			/* if j is unkown */
 			if (vec[j]==UNPT) {
 				vec[j]=FGPT;  // set j as fine node
 				remove_point(&LoL_head, &LoL_tail, lambda[j], j, lists, where);
@@ -804,9 +804,9 @@ static INT form_coarse_level (dCSRmat *A,
  *
  * \brief find coarse level points
  *
- * \param *P pointer to the prolongation matrix
- * \param *S pointer to the set of all strong couplings matrix
- * \param *vertices pointer to the type of vertices (points)
+ * \param P pointer to the prolongation matrix
+ * \param S pointer to the set of all strong couplings matrix
+ * \param vertices pointer to the type of vertices (points)
  * \param row integer number of rows of P
  * \param col integer number of cols of P
  */

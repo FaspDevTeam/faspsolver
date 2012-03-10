@@ -16,8 +16,8 @@
  *
  * \brief Get ILU(0) decomposition of a structured matrix A 
  *
- * \param *A   pointer to oringinal structured matrix of REAL type
- * \param *LU  pointer to ILU structured matrix of REAL type
+ * \param A   pointer to oringinal structured matrix of REAL type
+ * \param LU  pointer to ILU structured matrix of REAL type
  *
  * \note Only works for 5 bands 2D and 7 bands 3D matrix with default offsets (order can be arbitrary)!
  *
@@ -334,8 +334,8 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
  *
  * \brief Get ILU(1) decoposition of a structured matrix A
  *
- * \param *A    pointer to oringinal structured matrix of REAL type
- * \param *LU   pointer to ILU structured matrix of REAL type
+ * \param A    pointer to oringinal structured matrix of REAL type
+ * \param LU   pointer to ILU structured matrix of REAL type
  *
  * \note put L and U in a STR matrix and it has the following structure:
  *	       the diag is d, the offdiag of L are alpha1 to alpha6, the offdiag of U are beta1 to beta6   

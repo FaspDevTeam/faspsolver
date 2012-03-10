@@ -26,9 +26,9 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
  *
  * \brief Get ILU decoposition of a BSR matrix A
  *
- * \param *A pointer to bSR matrir of REAL type
- * \param *iludata pointer to ILU_data
- * \param *param pointer to ILU parameters
+ * \param A pointer to bSR matrir of REAL type
+ * \param iludata pointer to ILU_data
+ * \param param pointer to ILU parameters
  *
  * \note Works for general nb (Xiaozhe)
  * \author Shiquan Zhang, Xiaozhe Hu
@@ -148,10 +148,10 @@ FINISHED:
  * \fn static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
  * \brief Get numerical ILU decoposition of a BSR matrix A
  *
- * \param *A      pointer to BSR matrir of REAL type
- * \param *luval  pointer to numerical value of ILU
- * \param *jlu    pointer to the nonzero pattern of ILU
- * \param *uptr   pointer to the diagnal position of ILU
+ * \param A      pointer to BSR matrir of REAL type
+ * \param luval  pointer to numerical value of ILU
+ * \param jlu    pointer to the nonzero pattern of ILU
+ * \param uptr   pointer to the diagnal position of ILU
  *
  * \note: works for general nb (Xiaozhe)
  * \author Shiquan Zhang

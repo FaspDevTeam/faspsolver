@@ -14,9 +14,9 @@
  *
  * \brief Diagonal preconditioner z=inv(D)*r
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \note: works for general nb (Xiaozhe)
  *
@@ -70,9 +70,9 @@ void fasp_precond_dbsr_diag (REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \note: works for 2-component (Xiaozhe)
  *
@@ -100,9 +100,9 @@ void fasp_precond_dbsr_diag_nc2 (REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \note: works for 3-component (Xiaozhe)
  *
@@ -130,9 +130,9 @@ void fasp_precond_dbsr_diag_nc3 (REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \note: works for 5-component (Xiaozhe)
  *
@@ -160,9 +160,9 @@ void fasp_precond_dbsr_diag_nc5 (REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \note: works for 7-component (Xiaozhe)
  *
@@ -190,9 +190,9 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
  *
  * \brief preconditioning using ILU decomposition
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \note: works for general nb (Xiaozhe)
  *
@@ -458,9 +458,9 @@ void fasp_precond_dbsr_ilu (REAL *r,
 /**
  * \fn void fasp_precond_dbsr_FASP3(double *r, double *z, void *data)
  * \brief get z from r by classic AMG
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date 08/07/2011
@@ -501,9 +501,9 @@ void fasp_precond_dbsr_amg (double *r,
  *
  * \brief get z from r by nonliear AMLI-cycle
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date 02/06/2012

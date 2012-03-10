@@ -28,11 +28,11 @@
  *
  * \brief compute C = alpha*A + beta*B in CSR format 
  *
- * \param *A      pointer to CSR matrix
+ * \param A      pointer to CSR matrix
  * \param  alpha  real number 
- * \param *B      pointer to CSR matrix
+ * \param B      pointer to CSR matrix
  * \param  beta   real number 
- * \param *C      pointer to CSR matrix
+ * \param C      pointer to CSR matrix
  *
  * \return        SUCCESS if succees, RUN_FAIL if not
  *
@@ -143,7 +143,7 @@ FINISHED:
  *
  * \brief Multiply a sparse matrix A in CSR format by a scalar alpha.
  *
- * \param *A      pointer to CSR matrix
+ * \param A      pointer to CSR matrix
  * \param  alpha  a real number
  *
  * \author Chensong Zhang
@@ -163,9 +163,9 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
  *
  * \brief Matrix-vector multiplication y = A*x
  *
- * \param *A pointer to dCSRmat CSR matrix
- * \param *x pointer to dvector
- * \param *y pointer to dvector
+ * \param A pointer to dCSRmat CSR matrix
+ * \param x pointer to dvector
+ * \param y pointer to dvector
  *
  * \author Chensong Zhang
  * \date 07/01/209
@@ -194,9 +194,9 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
  *
  * \brief Matrix-vector multiplication y = A*x, where the entries of A are all ones.
  *
- * \param *A pointer to dCSRmat CSR matrix
- * \param *x pointer to dvector
- * \param *y pointer to dvector
+ * \param A pointer to dCSRmat CSR matrix
+ * \param x pointer to dvector
+ * \param y pointer to dvector
  *
  * \author: Xiaozhe Hu
  * \date: 02/22/2011
@@ -224,9 +224,9 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
  * \param alpha  real number
- * \param *A     pointer to dCSRmat CSR matrix
- * \param *x     pointer to dvector
- * \param *y     pointer to dvector
+ * \param A     pointer to dCSRmat CSR matrix
+ * \param x     pointer to dvector
+ * \param y     pointer to dvector
  *
  * \author Chensong Zhang
  * \date 07/01/209
@@ -278,9 +278,9 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where the entries of A are all ones
  *
  * \param alpha  a real number
- * \param *A     pointer to dCSRmat CSR matrix
- * \param *x     pointer to dvector
- * \param *y     pointer to dvector
+ * \param A     pointer to dCSRmat CSR matrix
+ * \param x     pointer to dvector
+ * \param y     pointer to dvector
  *
  * \author: Xiaozhe Hu
  * \date: 02/22/2011
@@ -330,10 +330,9 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
  *
  * \brief vector-Matrix-vector multiplication alpha = y'*A*x
  *
- * \param *A pointer to dCSRmat CSR matrix
- * \param *x pointer to dvector
- * \param *y pointer to dvector
- * \param alpha real number
+ * \param A pointer to dCSRmat CSR matrix
+ * \param x pointer to dvector
+ * \param y pointer to dvector
  *
  * \author Chensong Zhang
  * \date 07/01/209
@@ -365,9 +364,9 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
  *
  * \brief Sparse matrix multiplication C=A*B
  *
- * \param *A   pointer to the dCSRmat matrix
- * \param *B   pointer to the dCSRmat matrix
- * \param *C   pointer to dCSRmat matrix equal to A*B
+ * \param A   pointer to the dCSRmat matrix
+ * \param B   pointer to the dCSRmat matrix
+ * \param C   pointer to dCSRmat matrix equal to A*B
  *
  * \author Xiaozhe Hu
  * \date 11/07/2009
@@ -477,10 +476,10 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
  *
  * \brief Triple sparse matrix multiplication B=R*A*P
  *
- * \param *R   pointer to the dCSRmat matrix
- * \param *A   pointer to the dCSRmat matrix
- * \param *P   pointer to the dCSRmat matrix
- * \param *B   pointer to dCSRmat matrix equal to R*A*P
+ * \param R   pointer to the dCSRmat matrix
+ * \param A   pointer to the dCSRmat matrix
+ * \param P   pointer to the dCSRmat matrix
+ * \param B   pointer to dCSRmat matrix equal to R*A*P
  *
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
@@ -678,10 +677,10 @@ void fasp_blas_dcsr_rap (dCSRmat *R,
  *
  * \brief Triple sparse matrix multiplication B=R*A*P, where the entries of R and P are all ones.
  *
- * \param *R   pointer to the dCSRmat matrix
- * \param *A   pointer to the dCSRmat matrix
- * \param *P   pointer to the dCSRmat matrix
- * \param *B   pointer to dCSRmat matrix equal to R*A*P
+ * \param R   pointer to the dCSRmat matrix
+ * \param A   pointer to the dCSRmat matrix
+ * \param P   pointer to the dCSRmat matrix
+ * \param B   pointer to dCSRmat matrix equal to R*A*P
  *
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
@@ -875,14 +874,14 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
 }
 
 /**
- * \fn dCSRmat fasp_blas_dcsr_ptap (dCSRmat *A, dCSRmat *P)
+ * \fn void fasp_blas_dcsr_ptap (dCSRmat *Pt, dCSRmat *A, dCSRmat *P, dCSRmat *Ac)
  *
  * \brief Triple sparse matrix multiplication B=P'*A*P
  *
- * \param  *A   pointer to the dCSRmat matrix
- * \param  *P   pointer to the dCSRmat matrix
- *
- * \return *B   pointer to dCSRmat matrix equal to P'*A*P
+ * \param Pt  pointer to the restriction matrix
+ * \param A   pointer to the fine coefficient matrix
+ * \param P   pointer to the prolongation matrix
+ * \param Ac  pointer to the coarse coefficient matrix (output)
  *
  * \note Driver to compute triple matrix product P'*A*P using ltz CSR format. 
  *       In ltx format: ia[0]=1, ja[0] and a[0] are used as usual. When called 

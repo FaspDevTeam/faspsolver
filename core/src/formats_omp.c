@@ -10,14 +10,13 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*-----------------------------------omp--------------------------------------*/
 
 #if FASP_USE_OPENMP
 
 /*!
  * \fn dCSRmat dBSR2dCSRMatrix_omp( dBSRmat *B, int nthreads, int openmp_holds )
  * \brief Transfer a 'dBSRmat' type matrix into a dCSRmat.
- * \param dBSRmat *B pointer to the 'dBSRmat' type matrix
+ * \param B pointer to the 'dBSRmat' type matrix
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -25,11 +24,11 @@
  * \date 03/01/2011
  */
 dCSRmat fasp_format_dbsr_dcsr_omp (dBSRmat *B, 
-																	 int nthreads, 
-																	 int openmp_holds )
+                                   int nthreads, 
+                                   int openmp_holds )
 {
 	dCSRmat A;
-
+    
 	/* members of B */
 	int     ROW = B->ROW;
 	int     COL = B->COL;
@@ -57,7 +56,7 @@ dCSRmat fasp_format_dbsr_dcsr_omp (dBSRmat *B,
 	double *ap = NULL;
 	int    *jap = NULL;
 	int stride_i,mybegin,myend,myid;
-  
+    
 	//--------------------------------------------------------
 	// Create a CSR Matrix 
 	//--------------------------------------------------------
@@ -181,7 +180,7 @@ dCSRmat fasp_format_dbsr_dcsr_omp (dBSRmat *B,
 			}
 		}
 			break;
-      
+            
 		case 1: // each non-zero block elements are stored in column-major order
 		{
 			for (i = 0; i < ROW; ++i)
@@ -218,7 +217,7 @@ dCSRmat fasp_format_dbsr_dcsr_omp (dBSRmat *B,
 		ia[i] = ia[i-1];
 	}
 	ia[0] = 0; 
-
+    
 	return (A);   
 }
 #endif // OMP

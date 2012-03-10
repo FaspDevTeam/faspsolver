@@ -16,8 +16,8 @@
  *
  * \brief Setup phase of Ruge and Stuben's classic AMG
  *
- * \param *mgl    pointer to AMG_data data
- * \param *param  pointer to AMG parameters
+ * \param mgl    pointer to AMG_data data
+ * \param param  pointer to AMG parameters
  *
  * \note Setup A, P, R, levels using classic AMG!
  *       Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller. 

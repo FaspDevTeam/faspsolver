@@ -18,9 +18,9 @@
  *
  * \brief Compute y = A*x for a sparse matrix in CSRL format
  *
- * \param *A pointer to the dCSRLmat type matrix
- * \param *x pointer to the REAL array of vector x
- * \param *y pointer to the REAL array of vector y
+ * \param A pointer to the dCSRLmat type matrix
+ * \param x pointer to the REAL array of vector x
+ * \param y pointer to the REAL array of vector y
  *
  * \author Zhou Zhiyang
  * \date 2011/01/07

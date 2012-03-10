@@ -141,7 +141,7 @@ void fasp_aux_msort (INT numbers[],
  *
  * \brief sort the array 'a'(INT type) ascendingly with the quick sorting algorithm
  *
- * \param *a     pointer to the array needed to be sorted
+ * \param a     pointer to the array needed to be sorted
  * \param left   the starting index
  * \param right  the ending index
  *
@@ -179,7 +179,7 @@ void fasp_aux_iQuickSort(INT *a,
  *
  * \brief sort the array 'a'(REAL type) ascendingly with the quick sorting algorithm
  *
- * \param *a     pointer to the array needed to be sorted
+ * \param a     pointer to the array needed to be sorted
  * \param left   the starting index
  * \param right  the ending index
  *
@@ -217,10 +217,10 @@ void fasp_aux_dQuickSort (REAL *a,
  *
  * \brief reorder the index of 'a'(INT type) so that 'a' is in ascending order  
  *
- * \param *a      pointer to the array 
+ * \param a      pointer to the array 
  * \param left    the starting index
  * \param right   the ending index
- * \param *index  the index of 'a'
+ * \param index  the index of 'a'
  *
  * \note 'left' and 'right' are usually set to be 0 and n-1,respectively,where n is the 
  *       length of 'a'. 'index' should be initialized in the nature order and it has the
@@ -258,10 +258,10 @@ void fasp_aux_iQuickSortIndex (INT *a,
  *
  * \brief reorder the index of 'a'(REAL type) so that 'a' is ascending in such order  
  *
- * \param *a      pointer to the array 
+ * \param a      pointer to the array 
  * \param left    the starting index
  * \param right   the ending index
- * \param *index  the index of 'a'
+ * \param index  the index of 'a'
  *
  * \note 'left' and 'right' are usually set to be 0 and n-1,respectively,where n is the 
  *       length of 'a'. 'index' should be initialized in the nature order and it has the
@@ -303,7 +303,7 @@ void fasp_aux_dQuickSortIndex (REAL *a,
  *
  * \brief swap the i-th and j-th element in the array 'w' (INT type)
  *
- * \param *w   pointer to the array
+ * \param w   pointer to the array
  * \param i    one position in w
  * \param j    the other position in w  
  *
@@ -324,7 +324,7 @@ static void iSwapping (INT *w,
  *
  * \brief swap the i-th and j-th element in the array 'w' (REAL type)
  *
- * \param *w   pointer to the array
+ * \param w   pointer to the array
  * \param i    one position in w
  * \param j    the other position in w  
  *

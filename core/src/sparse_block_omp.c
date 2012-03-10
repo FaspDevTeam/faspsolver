@@ -12,16 +12,15 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*-----------------------------------omp--------------------------------------*/
 
 /**
  * \fn int fasp_dcsr_getblk_omp(dCSRmat *A, int *Is, int *Js, int m, int n, dCSRmat *B, int nthreads, int openmp_holds)
  * \brief get a sub CSR matrix of A with specified rows and colums
  *
- * \param *A   pointer to dCSRmat CSR matrix
- * \param *B   pointer to dCSRmat CSR matrix
- * \param *Is  pointer to selected rows
- * \param *Js  pointer to selected colums
+ * \param A   pointer to dCSRmat CSR matrix
+ * \param B   pointer to dCSRmat CSR matrix
+ * \param Is  pointer to selected rows
+ * \param Js  pointer to selected colums
  * \param m    the number of selected rows
  * \param n    the number of selected colums
  * \param nthreads number of threads
@@ -109,10 +108,10 @@ int fasp_dcsr_getblk_omp (dCSRmat *A,
  * \fn int fasp_dbsr_getblk_omp(dBSRmat *A, int *Is, int *Js, int m, int n, dBSRmat *B, int nthreads, int openmp_holds)
  * \brief get a sub BSR matrix of A with specified rows and columns. 
  *
- * \param *A   pointer to dBSRmat BSR matrix
- * \param *B   pointer to dBSRmat BSR matrix
- * \param *Is  pointer to selected rows
- * \param *Js  pointer to selected colums
+ * \param A   pointer to dBSRmat BSR matrix
+ * \param B   pointer to dBSRmat BSR matrix
+ * \param Is  pointer to selected rows
+ * \param Js  pointer to selected colums
  * \param m    the number of selected rows
  * \param n    the number of selected colums
  * \param nthreads number of threads

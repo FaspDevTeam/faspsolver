@@ -88,11 +88,11 @@ void * fasp_mem_calloc (INT size,
 }
 
 /**
- * \fn void * fasp_mem_realloc (INT size, INT type)
+ * \fn void * fasp_mem_realloc (void * oldmem, INT type)
  *
  * \brief Reallocate, initiate, and check memory
  *
- * \param size    number of memory blocks
+ * \param oldmem  previous allocated memory pointer
  * \param type    size of memory blocks
  *
  * \return        void pointer to the reallocated memory
@@ -124,7 +124,7 @@ void * fasp_mem_realloc (void * oldmem,
  *
  * \brief Free up previous allocated memory body
  *
- * \param *mem   pointer to the memory body need to be freed
+ * \param mem   pointer to the memory body need to be freed
  *
  * \return       NULL pointer
  *
@@ -191,7 +191,7 @@ INT fasp_mem_check (void *ptr,
 } 
 
 /**
- * \fn INT fasp_mem_check_iludata (ILU_data *iludata)
+ * \fn INT fasp_mem_iludata_check (ILU_data *iludata)
  *
  * \brief Check wether a ILU_data has enough work space
  *
@@ -215,7 +215,6 @@ INT fasp_mem_iludata_check (ILU_data *iludata)
         return ERROR_ALLOC_MEM;
 	}
 }
-
 
 /**
  * \fn INT fasp_mem_dcsr_check (dCSRmat *A)

@@ -16,7 +16,7 @@
  *
  * \brief Check positivity of diagonal entries of a CSR sparse matrix.
  *
- * \param *A pointer to the dCSRmat matrix
+ * \param A pointer to the dCSRmat matrix
  *
  * \return number of negative entries 
  *
@@ -47,7 +47,7 @@ INT fasp_check_diagpos (dCSRmat *A)
  *
  * \brief Check wether a CSR sparse matrix has diagonal entries that are very close to zero.
  *
- * \param *A pointr to the dCSRmat matrix
+ * \param A pointr to the dCSRmat matrix
  * 
  * \return SUCCESS (0) if no diagonal entry is clase to zero, else ERROR (negative value)
  *
@@ -87,7 +87,7 @@ FINISHED:
  *
  * \brief Check whether a matrix is diagonal dominant.
  *
- * \param *A pointer to the dCSRmat matrix
+ * \param A pointer to the dCSRmat matrix
  *
  * \return The percentage of the rows which are diagonal dominant and not
  *         the number of the rows which are diagonal dominant
@@ -135,7 +135,7 @@ INT fasp_check_diagdom (dCSRmat *A)
  *
  * \brief Check symmetry of a sparse matrix of CSR format.
  *
- * \param *A pointer to the dCSRmat matrix
+ * \param A pointer to the dCSRmat matrix
  *
  * \return 1 and 2 if the structure of the matrix is not symmetric;
  *         0 if the structure of the matrix is symmetric,
@@ -261,7 +261,7 @@ INT fasp_check_symm (dCSRmat *A)
  *
  * \brief check whether a dCSRmat is valid or not
  *
- * \param *A pointer to the dCSRmat matrix
+ * \param A pointer to the dCSRmat matrix
  *
  * \author Shuo Zhang
  * \date 03/29/2009
@@ -295,7 +295,7 @@ SHORT fasp_check_dCSRmat (dCSRmat *A)
  *
  * \brief check whether an iCSRmat is valid or not
  *
- * \param *A pointer to the iCSRmat matrix
+ * \param A pointer to the iCSRmat matrix
  *
  * \author Shuo Zhang
  * \date 03/29/2009

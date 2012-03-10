@@ -72,7 +72,7 @@ ivector fasp_ivec_create (INT m)
  * \brief Create dvector data space of REAL type
  *
  * \param m    integer, number of rows
- * \param *u   pointer to the REAL vector (OUTPUT)
+ * \param u   pointer to the REAL vector (OUTPUT)
  *
  * \author Chensong Zhang 
  * \date 2010/04/06
@@ -96,7 +96,7 @@ void fasp_dvec_alloc (INT m,
  * \brief Create vector data space of INT type
  *
  * \param m   integer, number of rows
- * \param *u  pointer to the integer vector (OUTPUT)
+ * \param u  pointer to the integer vector (OUTPUT)
  *
  * \author Chensong Zhang 
  * \date 2010/04/06
@@ -120,7 +120,7 @@ void fasp_ivec_alloc (INT m,
  *
  * \brief Free vector data space of REAL type
  *
- * \param *u  pointer to the vector which needs to be deallocated
+ * \param u  pointer to the vector which needs to be deallocated
  *
  * \author Chensong Zhang
  * \date 2010/04/03  
@@ -138,7 +138,7 @@ void fasp_dvec_free (dvector *u)
  *
  * \brief Free vector data space of INT type
  *
- * \param *u  pointer to the vector which needs to be deallocated
+ * \param u  pointer to the vector which needs to be deallocated
  *
  * \note This function is same as fasp_dvec_free except input pointer type.
  *
@@ -158,7 +158,7 @@ void fasp_ivec_free (ivector *u)
  *
  * \brief Initialize dvector
  *
- * \param *x  pointer to dvector which needs to be initialized
+ * \param x  pointer to dvector which needs to be initialized
  *
  * \author Chensong Zhang
  * \date 2010/04/03  
@@ -173,6 +173,7 @@ void fasp_dvec_init (dvector *x)
  *
  * \brief Generate random REAL vector in the range from 0 to 1
  *
+ * \param n   size of the vector
  * \param x   pointer to a dvector
  * 
  * \note
@@ -212,7 +213,7 @@ void fasp_dvec_rand (INT n,
  * \brief Initialize dvector x[i]=val for i=0:end-1
  *
  * \param   n    number of variables
- * \param * x    pointer to dvector
+ * \param  x    pointer to dvector
  * \param val    initial value for the dvector
  *
  * \author Chensong Zhang
@@ -241,7 +242,7 @@ void fasp_dvec_set (INT n,
  * \brief Set ivector value to be m
  *
  * \param   m   integer value of ivector
- * \param * u   pointer to the vector (MODIFIED)
+ * \param  u   pointer to the vector (MODIFIED)
  *
  * \author Chensong Zhang
  * \date 2010/04/03  
@@ -257,8 +258,8 @@ void fasp_ivec_set (INT m, ivector *u)
  *
  * \brief Copy dvector x to dvector y
  *
- * \param *x pointer to dvector
- * \param *y pointer to dvector (MODIFIED)
+ * \param x pointer to dvector
+ * \param y pointer to dvector (MODIFIED)
  *
  * \author Chensong Zhang
  * \date 11/16/2009
@@ -275,8 +276,8 @@ void fasp_dvec_cp (dvector *x,
  *
  * \brief Maximal difference of two dvector x and y
  *
- * \param * x   pointer to dvector
- * \param * y   pointer to dvector
+ * \param  x   pointer to dvector
+ * \param  y   pointer to dvector
  *
  * \return      maximal norm of x-y
  *
@@ -302,8 +303,8 @@ REAL fasp_dvec_maxdiff (dvector *x,
  *
  * \brief Symmetric diagonal scaling D^{-1/2}b
  *
- * \param *b      pointer to the dvector
- * \param *diag   pointer to the diagonal entries
+ * \param b      pointer to the dvector
+ * \param diag   pointer to the diagonal entries
  *
  * \author Xiaozhe Hu
  * \date 01/31/2011

@@ -10,14 +10,13 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*---------------------------------omp----------------------------------------*/
 
 /**
- * \fn int fasp_amg_solve_omp(AMG_data *mgl, AMG_param *param, int nthreads, int openmp_holds)
+ * \fn INT fasp_amg_solve_omp (AMG_data *mgl, AMG_param *param, INT nthreads, INT openmp_holds)
  * \brief AMG solve phase
  *
- * \param *mgl    pointer to AMG_data data
- * \param *param  pointer to AMG parameters
+ * \param mgl    pointer to AMG_data data
+ * \param param  pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -30,9 +29,9 @@
  * \date Jan/11/2012 modified by FENG Chunsheng
  */
 INT fasp_amg_solve_omp (AMG_data *mgl, 
-												AMG_param *param, 
-												INT nthreads, 
-												INT openmp_holds)
+                        AMG_param *param, 
+                        INT nthreads, 
+                        INT openmp_holds)
 {
 	dCSRmat  *ptrA=&mgl[0].A;
 	dvector  *b=&mgl[0].b, *x=&mgl[0].x, *r=&mgl[0].w; 
@@ -67,7 +66,7 @@ INT fasp_amg_solve_omp (AMG_data *mgl,
 		relres1 = absres/sumb;             // relative residual ||r||/||b||
 		factor  = absres/absres0;          // contraction factor
         absres0 = absres;                  // prepare for next iteration
-
+        
 		// Print iteration information if needed	
 		print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
 		

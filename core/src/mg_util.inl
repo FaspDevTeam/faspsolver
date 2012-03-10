@@ -19,9 +19,9 @@ extern "C" {
  *
  * \brief Iterative on the coarset level
  *
- * \param * A         pointer to matrix data
- * \param * b         pointer to rhs data
- * \param * x         pointer to sol data
+ * \param  A         pointer to matrix data
+ * \param  b         pointer to rhs data
+ * \param  x         pointer to sol data
  * \param   ctol      tolerance for the coarsest level
  * \param   prt_lvl   level of output
  *
@@ -51,19 +51,22 @@ static void fasp_coarse_itsolver (dCSRmat *A,
 /**
  * \fn static void fasp_dcsr_presmoothing (const SHORT smoother, dCSRmat *A, dvector *b, dvector *x,
  *                                         const INT nsweeps, const INT istart, const INT iend,
- *                                         const INT istep, const REAL relax)
+ *                                         const INT istep, const REAL relax, const SHORT order,
+ *                                         INT *ordering)
  *
  * \brief Multigrid presmoothing
  *
  * \param   smoother  type of smoother
- * \param * A         pointer to matrix data
- * \param * b         pointer to rhs data
- * \param * x         pointer to sol data
+ * \param  A         pointer to matrix data
+ * \param  b         pointer to rhs data
+ * \param  x         pointer to sol data
  * \param   nsweeps   number of smoothing sweeps
  * \param   istart    starting index
  * \param   iend      ending index
  * \param   istep     step size
  * \param   relax     relaxation parameter for SOR-type smoothers
+ * \param order  order for smoothing sweeps
+ * \param ordering user defined ordering
  *
  * \author Chensong Zhang
  * \date 01/10/2012
@@ -141,19 +144,22 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
 /**
  * \fn static void fasp_dcsr_postsmoothing (const SHORT smoother, dCSRmat *A, dvector *b, dvector *x,
  *                                          const INT nsweeps, const INT istart, const INT iend,
- *                                          const INT istep, const REAL relax)
+ *                                          const INT istep, const REAL relax, const SHORT order,
+ *                                          INT *ordering)
  *
  * \brief Multigrid presmoothing
  *
  * \param   smoother  type of smoother
- * \param * A         pointer to matrix data
- * \param * b         pointer to rhs data
- * \param * x         pointer to sol data
+ * \param  A         pointer to matrix data
+ * \param  b         pointer to rhs data
+ * \param  x         pointer to sol data
  * \param   nsweeps   number of smoothing sweeps
  * \param   istart    starting index
  * \param   iend      ending index
  * \param   istep     step size
  * \param   relax     relaxation parameter for SOR-type smoothers
+ * \param order  order for smoothing sweeps
+ * \param ordering user defined ordering
  *
  * \author Chensong Zhang
  * \date 01/10/2012

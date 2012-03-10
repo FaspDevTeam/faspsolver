@@ -21,7 +21,7 @@
  * \brief x = a*x
  * \param n number of variables
  * \param a  a real number
- * \param *x pointer to the vector
+ * \param x pointer to the vector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -56,8 +56,8 @@ void fasp_blas_array_scale_omp (int n,
  * \brief y = a*x + y
  * \param n number of variables
  * \param a a real number
- * \param *x pointer to the original vector
- * \param *y pointer to the destination vector
+ * \param x pointer to the original vector
+ * \param y pointer to the destination vector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -125,9 +125,9 @@ void fasp_blas_array_axpy_omp (int n,
  * \brief z = a*x + y, z is the third vector
  * \param n number of variables
  * \param a a real number
- * \param *x pointer to the original vector 1
- * \param *y pointer to the original vector 2
- * \param *z pointer to the destination vector
+ * \param x pointer to the original vector 1
+ * \param y pointer to the original vector 2
+ * \param z pointer to the destination vector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -166,8 +166,8 @@ void fasp_blas_array_axpyz_omp (int n,
  * \param n number of variables
  * \param a real number
  * \param b real number
- * \param *x pointer to the origianl vector
- * \param *y pointer to the destination vector
+ * \param x pointer to the origianl vector
+ * \param y pointer to the destination vector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -204,8 +204,8 @@ void fasp_blas_array_axpby_omp (int n,
  *                                         int nthreads, int openmp_holds) 
  * \brief Inner product of two arraies (x,y)
  * \param n number of variables
- * \param *x pointer to vector 1
- * \param *y pointer to vector 2
+ * \param x pointer to vector 1
+ * \param y pointer to vector 2
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return inner product
@@ -239,7 +239,7 @@ double fasp_blas_array_dotprod_omp (int n,
  *                                       int openmp_holds) 
  * \brief L1 norm of array x
  * \param n number of variables
- * \param *x pointer to the original vector
+ * \param x pointer to the original vector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return L1 norm of x
@@ -271,7 +271,7 @@ double fasp_blas_array_norm1_omp (int n,
  *                                       int openmp_holds)
  * \brief L2 norm of array x
  * \param n number of variables
- * \param *x pointer to the original vector
+ * \param x pointer to the original vector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return L2 norm of x

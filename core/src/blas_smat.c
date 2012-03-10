@@ -14,9 +14,9 @@
  *
  * \brief compute the product of a 2*2 matrix a and a vector b, stored in c
  *
- * \param *a   pointer to the REAL vector which stands a 2*2 matrix
- * \param *b   pointer to the REAL vector with length 2
- * \param *c   pointer to the REAL vector with length 2
+ * \param a   pointer to the REAL vector which stands a 2*2 matrix
+ * \param b   pointer to the REAL vector with length 2
+ * \param c   pointer to the REAL vector with length 2
  * 
  * \author Xiaozhe Hu
  * \date 18/11/2010
@@ -36,9 +36,9 @@ void fasp_blas_smat_mxv_nc2 (REAL *a,
  *
  * \brief compute the product of a 3*3 matrix a and a vector b, stored in c
  *
- * \param *a   pointer to the REAL vector which stands a 3*3 matrix
- * \param *b   pointer to the REAL vector with length 3
- * \param *c   pointer to the REAL vector with length 3
+ * \param a   pointer to the REAL vector which stands a 3*3 matrix
+ * \param b   pointer to the REAL vector with length 3
+ * \param c   pointer to the REAL vector with length 3
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -60,9 +60,9 @@ void fasp_blas_smat_mxv_nc3 (REAL *a,
  *
  * \brief compute the product of a 5*5 matrix a and a vector b, stored in c
  *
- * \param *a   pointer to the REAL vector which stands a 5*5 matrix
- * \param *b   pointer to the REAL vector with length 5
- * \param *c   pointer to the REAL vector with length 5
+ * \param a   pointer to the REAL vector which stands a 5*5 matrix
+ * \param b   pointer to the REAL vector with length 5
+ * \param c   pointer to the REAL vector with length 5
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -89,9 +89,9 @@ void fasp_blas_smat_mxv_nc5 (REAL *a,
  *
  * \brief compute the product of a 7*7 matrix a and a vector b, stored in c
  *
- * \param *a   pointer to the REAL vector which stands a 7*7 matrix
- * \param *b   pointer to the REAL vector with length 7
- * \param *c   pointer to the REAL vector with length 7
+ * \param a   pointer to the REAL vector which stands a 7*7 matrix
+ * \param b   pointer to the REAL vector with length 7
+ * \param c   pointer to the REAL vector with length 7
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -122,9 +122,9 @@ void fasp_blas_smat_mxv_nc7 (REAL *a,
  *
  * \brief compute the product of a small full matrix a and a vector b, stored in c
  *
- * \param *a   pointer to the REAL vector which stands a n*n matrix
- * \param *b   pointer to the REAL vector with length n
- * \param *c   pointer to the REAL vector with length n
+ * \param a   pointer to the REAL vector which stands a n*n matrix
+ * \param b   pointer to the REAL vector with length n
+ * \param c   pointer to the REAL vector with length n
  * \param  n   the dimension of the matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
@@ -174,7 +174,7 @@ void fasp_blas_smat_mxv (REAL *a,
  *
  * \brief Compute the inverse matrix of a 2*2 full matrix A (in place)
  *
- * \param *a pointer to the REAL vector which stands a 2*2 matrix 
+ * \param a pointer to the REAL vector which stands a 2*2 matrix 
  * 
  * \author Xiaozhe Hu
  * \date 18/11/2011
@@ -211,7 +211,7 @@ void fasp_blas_smat_inv_nc2 (REAL *a)
  *
  * \brief Compute the inverse matrix of a 3*3 full matrix A (in place)
  *
- * \param *a pointer to the REAL vector which stands a 3*3 matrix 
+ * \param a pointer to the REAL vector which stands a 3*3 matrix 
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -254,7 +254,7 @@ void fasp_blas_smat_inv_nc3 (REAL *a)
  *
  * \brief Compute the inverse matrix of a 5*5 full matrix A (in place)
  *
- * \param *a pointer to the REAL vector which stands a 5*5 matrix 
+ * \param a pointer to the REAL vector which stands a 5*5 matrix 
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -468,7 +468,7 @@ void fasp_blas_smat_inv_nc5 (REAL *a)
  *
  * \brief comput the inverse matrix of a 7*7 matrix a
  *
- * \param *a pointer to the REAL vector which stands a 7*7 matrix 
+ * \param a pointer to the REAL vector which stands a 7*7 matrix 
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -484,7 +484,7 @@ void fasp_blas_smat_inv_nc7 (REAL *a)
  *
  * \brief compute the inverse matrix of a small full matrix a
  *
- * \param *a   pointer to the REAL vector which stands a n*n matrix
+ * \param a   pointer to the REAL vector which stands a n*n matrix
  * \param  n   the dimension of the matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
@@ -568,9 +568,9 @@ INT fasp_blas_smat_inv (REAL *a,
  *
  * \brief compute the matrix product of two 2* matrices a and b, stored in c
  *
- * \param *a pointer to the REAL vector which stands a n*n matrix
- * \param *b pointer to the REAL vector which stands a n*n matrix
- * \param *c pointer to the REAL vector which stands a n*n matrix
+ * \param a pointer to the REAL vector which stands a n*n matrix
+ * \param b pointer to the REAL vector which stands a n*n matrix
+ * \param c pointer to the REAL vector which stands a n*n matrix
  * 
  * \author Xiaozhe Hu
  * \date 18/11/2011
@@ -597,9 +597,9 @@ void fasp_blas_smat_mul_nc2 (REAL *a,
  *
  * \brief compute the matrix product of two 3*3 matrices a and b, stored in c
  *
- * \param *a pointer to the REAL vector which stands a n*n matrix
- * \param *b pointer to the REAL vector which stands a n*n matrix
- * \param *c pointer to the REAL vector which stands a n*n matrix
+ * \param a pointer to the REAL vector which stands a n*n matrix
+ * \param b pointer to the REAL vector which stands a n*n matrix
+ * \param c pointer to the REAL vector which stands a n*n matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -632,11 +632,11 @@ void fasp_blas_smat_mul_nc3 (REAL *a,
 /**
  * \fn void fasp_blas_smat_mul_nc5(REAL *a, REAL *b, REAL *c)
  *
- * \breif compute the matrix product of two 5*5 matrices a and b, stored in c
+ * \brief compute the matrix product of two 5*5 matrices a and b, stored in c
  *
- * \param *a pointer to the REAL vector which stands a 5*5 matrix
- * \param *b pointer to the REAL vector which stands a 5*5 matrix
- * \param *c pointer to the REAL vector which stands a 5*5 matrix
+ * \param a pointer to the REAL vector which stands a 5*5 matrix
+ * \param b pointer to the REAL vector which stands a 5*5 matrix
+ * \param c pointer to the REAL vector which stands a 5*5 matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -693,9 +693,9 @@ void fasp_blas_smat_mul_nc5 (REAL *a,
  *
  * \brief compute the matrix product of two 7*7 matrices a and b, stored in c
  *
- * \param *a pointer to the REAL vector which stands a 7*7 matrix
- * \param *b pointer to the REAL vector which stands a 7*7 matrix
- * \param *c pointer to the REAL vector which stands a 7*7 matrix
+ * \param a pointer to the REAL vector which stands a 7*7 matrix
+ * \param b pointer to the REAL vector which stands a 7*7 matrix
+ * \param c pointer to the REAL vector which stands a 7*7 matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -782,9 +782,9 @@ void fasp_blas_smat_mul_nc7 (REAL *a,
  *
  * \brief compute the matrix product of two small full matrices a and b, stored in c
  *
- * \param *a pointer to the REAL vector which stands a n*n matrix
- * \param *b pointer to the REAL vector which stands a n*n matrix
- * \param *c pointer to the REAL vector which stands a n*n matrix
+ * \param a pointer to the REAL vector which stands a n*n matrix
+ * \param b pointer to the REAL vector which stands a n*n matrix
+ * \param c pointer to the REAL vector which stands a n*n matrix
  * \param  n the dimension of the matrix
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
@@ -834,9 +834,9 @@ void fasp_blas_smat_mul (REAL *a,
  * \brief z = a*x + y, z is the third vector and the length of x, y and z is 2
  *
  * \param  a   a real number
- * \param *x   pointer to the original vector 1
- * \param *y   pointer to the original vector 2
- * \param *z   pointer to the destination vector
+ * \param x   pointer to the original vector 1
+ * \param y   pointer to the original vector 2
+ * \param z   pointer to the destination vector
  * 
  * \author Xiaozhe Hu
  * \date 18/11/2011
@@ -860,9 +860,9 @@ void fasp_blas_array_axpyz_nc2 (REAL a,
  * \brief z = a*x + y, z is the third vector and the length of x, y and z is 3
  *
  * \param  a   a real number
- * \param *x   pointer to the original vector 1
- * \param *y   pointer to the original vector 2
- * \param *z   pointer to the destination vector
+ * \param x   pointer to the original vector 1
+ * \param y   pointer to the original vector 2
+ * \param z   pointer to the destination vector
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -891,9 +891,9 @@ void fasp_blas_array_axpyz_nc3 (const REAL a,
  * \brief z = a*x + y, z is the third vector and the length of x, y and z is 5
  *
  * \param  a   a real number
- * \param *x   pointer to the original vector 1
- * \param *y   pointer to the original vector 2
- * \param *z   pointer to the destination vector
+ * \param x   pointer to the original vector 1
+ * \param y   pointer to the original vector 2
+ * \param z   pointer to the destination vector
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -940,9 +940,9 @@ void fasp_blas_array_axpyz_nc5 (const REAL a,
  * \brief z = a*x + y, z is the third vector and the length of x, y and z is 7
  *
  * \param  a   a real number
- * \param *x   pointer to the original vector 1
- * \param *y   pointer to the original vector 2
- * \param *z   pointer to the destination vector
+ * \param x   pointer to the original vector 1
+ * \param y   pointer to the original vector 2
+ * \param z   pointer to the destination vector
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -1015,8 +1015,8 @@ void fasp_blas_array_axpyz_nc7 (const REAL a,
  * \brief y = a*x + y, the length of x and y is 2
  *
  * \param  a   a real number
- * \param *x   pointer to the original vector
- * \param *y   pointer to the destination vector
+ * \param x   pointer to the original vector
+ * \param y   pointer to the destination vector
  * 
  * \author Xiaozhe Hu
  * \date 18/11/2011
@@ -1039,8 +1039,8 @@ void fasp_blas_array_axpy_nc2 (const REAL a,
  * \brief y = a*x + y, the length of x and y is 3
  *
  * \param  a   a real number
- * \param *x   pointer to the original vector
- * \param *y   pointer to the destination vector
+ * \param x   pointer to the original vector
+ * \param y   pointer to the destination vector
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -1068,8 +1068,8 @@ void fasp_blas_array_axpy_nc3 (const REAL a,
  * \brief y = a*x + y, the length of x and y is 5
  *
  * \param  a   a real number
- * \param *x   pointer to the original vector
- * \param *y   pointer to the destination vector
+ * \param x   pointer to the original vector
+ * \param y   pointer to the destination vector
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -1115,8 +1115,8 @@ void fasp_blas_array_axpy_nc5 (const REAL a,
  * \brief y = a*x + y, the length of x and y is 7
  *
  * \param  a   a real number
- * \param *x   pointer to the original vector
- * \param *y   pointer to the destination vector
+ * \param x   pointer to the original vector
+ * \param y   pointer to the destination vector
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date 05/01/2010
@@ -1187,9 +1187,9 @@ void fasp_blas_array_axpy_nc7 (const REAL a,
  *
  * \brief Compute y := y + Ax, where 'A' is a 2*2 dense matrix 
  *
- * \param *A   pointer to the 3*3 dense matrix
- * \param *x   pointer to the REAL vector with length 3
- * \param *y   pointer to the REAL vector with length 3
+ * \param A   pointer to the 3*3 dense matrix
+ * \param x   pointer to the REAL vector with length 3
+ * \param y   pointer to the REAL vector with length 3
  *
  * \author Xiaozhe Hu
  * \date 2011/11/18
@@ -1212,9 +1212,9 @@ void fasp_blas_smat_ypAx_nc2 (REAL *A,
  *
  * \brief Compute y := y + Ax, where 'A' is a 3*3 dense matrix 
  *
- * \param *A   pointer to the 3*3 dense matrix
- * \param *x   pointer to the REAL vector with length 3
- * \param *y   pointer to the REAL vector with length 3
+ * \param A   pointer to the 3*3 dense matrix
+ * \param x   pointer to the REAL vector with length 3
+ * \param y   pointer to the REAL vector with length 3
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date 2010/10/25
@@ -1238,9 +1238,9 @@ void fasp_blas_smat_ypAx_nc3 (REAL *A,
  *
  * \brief Compute y := y + Ax, where 'A' is a 5*5 dense matrix 
  *
- * \param *A   pointer to the 5*5 dense matrix
- * \param *x   pointer to the REAL vector with length 5
- * \param *y   pointer to the REAL vector with length 5
+ * \param A   pointer to the 5*5 dense matrix
+ * \param x   pointer to the REAL vector with length 5
+ * \param y   pointer to the REAL vector with length 5
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date 2010/10/25
@@ -1268,9 +1268,9 @@ void fasp_blas_smat_ypAx_nc5 (REAL *A,
  *
  * \brief Compute y := y + Ax, where 'A' is a 7*7 dense matrix 
  *
- * \param *A   pointer to the 7*7 dense matrix
- * \param *x   pointer to the REAL vector with length 7
- * \param *y   pointer to the REAL vector with length 7
+ * \param A   pointer to the 7*7 dense matrix
+ * \param x   pointer to the REAL vector with length 7
+ * \param y   pointer to the REAL vector with length 7
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date 2010/10/25
@@ -1302,9 +1302,9 @@ void fasp_blas_smat_ypAx_nc7 (REAL *A,
  *
  * \brief Compute y := y + Ax, where 'A' is a n*n dense matrix 
  *
- * \param *A   pointer to the n*n dense matrix
- * \param *x   pointer to the REAL vector with length n
- * \param *y   pointer to the REAL vector with length n
+ * \param A   pointer to the n*n dense matrix
+ * \param x   pointer to the REAL vector with length n
+ * \param y   pointer to the REAL vector with length n
  * \param  n   the dimension of the dense matrix
  *
  * \author Zhiyang Zhou
@@ -1402,9 +1402,9 @@ void fasp_blas_smat_ypAx (REAL *A,
  *
  * \brief Compute y := y - Ax, where 'A' is a n*n dense matrix 
  *
- * \param *A   pointer to the 2*2 dense matrix
- * \param *x   pointer to the REAL vector with length 3
- * \param *y   pointer to the REAL vector with length 3
+ * \param A   pointer to the 2*2 dense matrix
+ * \param x   pointer to the REAL vector with length 3
+ * \param y   pointer to the REAL vector with length 3
  *
  * \author Xiaozhe Hu
  * \date 18/11/2011
@@ -1429,9 +1429,9 @@ void fasp_blas_smat_ymAx_nc2 (REAL *A,
  *
  * \brief Compute y := y - Ax, where 'A' is a n*n dense matrix 
  *
- * \param *A   pointer to the 3*3 dense matrix
- * \param *x   pointer to the REAL vector with length 3
- * \param *y   pointer to the REAL vector with length 3
+ * \param A   pointer to the 3*3 dense matrix
+ * \param x   pointer to the REAL vector with length 3
+ * \param y   pointer to the REAL vector with length 3
  *
  * \author Xiaozhe Hu, Zhiyang Zhou
  * \date 01/06/2011
@@ -1459,9 +1459,9 @@ void fasp_blas_smat_ymAx_nc3 (REAL *A,
  *
  * \brief Compute y := y - Ax, where 'A' is a n*n dense matrix 
  *
- * \param *A   pointer to the 5*5 dense matrix
- * \param *x   pointer to the REAL vector with length 5
- * \param *y   pointer to the REAL vector with length 5
+ * \param A   pointer to the 5*5 dense matrix
+ * \param x   pointer to the REAL vector with length 5
+ * \param y   pointer to the REAL vector with length 5
  *
  * \author Xiaozhe Hu, Zhiyang Zhou
  * \date 01/06/2011
@@ -1492,9 +1492,9 @@ void fasp_blas_smat_ymAx_nc5 (REAL *A,
  *
  * \brief Compute y := y - Ax, where 'A' is a 7*7 dense matrix 
  *
- * \param *A   pointer to the 7*7 dense matrix
- * \param *x   pointer to the REAL vector with length 7
- * \param *y   pointer to the REAL vector with length 7
+ * \param A   pointer to the 7*7 dense matrix
+ * \param x   pointer to the REAL vector with length 7
+ * \param y   pointer to the REAL vector with length 7
  *
  * \author Xiaozhe Hu, Zhiyang Zhou
  * \date 01/06/2011
@@ -1529,9 +1529,9 @@ void fasp_blas_smat_ymAx_nc7 (REAL *A,
  *
  * \brief Compute y := y - Ax, where 'A' is a n*n dense matrix 
  *
- * \param *A   pointer to the n*n dense matrix
- * \param *x   pointer to the REAL vector with length n
- * \param *y   pointer to the REAL vector with length n
+ * \param A   pointer to the n*n dense matrix
+ * \param x   pointer to the REAL vector with length n
+ * \param y   pointer to the REAL vector with length n
  * \param  n   the dimension of the dense matrix
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
@@ -1630,10 +1630,10 @@ void fasp_blas_smat_ymAx (REAL *A,
  * \brief Compute y:=alpha*A*x + beta*y, here x,y are vectors, A is a n*n full matrix.   
  *
  * \param  alpha   a real number
- * \param *A       pointer to the REAL vector which stands for a n*n full matrix 
- * \param *x       pointer to the REAL vector with length n
+ * \param A       pointer to the REAL vector which stands for a n*n full matrix 
+ * \param x       pointer to the REAL vector with length n
  * \param  beta    a real number
- * \param *y       pointer to the REAL vector with length n
+ * \param y       pointer to the REAL vector with length n
  * \param  n       the length of vector x and y
  *
  * \author Zhiyang Zhou
@@ -1684,9 +1684,9 @@ void fasp_blas_smat_aAxpby (const REAL alpha,
  *
  * \brief Compute ys := ys - Ass*xs, where 'A' is a 2*2 dense matrix, Ass is its saturaton part 1*1.
  * 
- * \param *A   pointer to the 2*2 dense matrix
- * \param *x   pointer to the REAL vector with length 1
- * \param *y   pointer to the REAL vector with length 1
+ * \param A   pointer to the 2*2 dense matrix
+ * \param x   pointer to the REAL vector with length 1
+ * \param y   pointer to the REAL vector with length 1
  *
  * \author Xiaozhe Hu
  * \date 2011/11/18
@@ -1708,9 +1708,9 @@ void fasp_blas_smat_ymAx_ns2 (REAL *A,
  *
  * \brief Compute ys := ys - Ass*xs, where 'A' is a 3*3 dense matrix, Ass is its saturaton part 2*2.
  * 
- * \param *A   pointer to the 3*3 dense matrix
- * \param *x   pointer to the REAL vector with length 2
- * \param *y   pointer to the REAL vector with length 2
+ * \param A   pointer to the 3*3 dense matrix
+ * \param x   pointer to the REAL vector with length 2
+ * \param y   pointer to the REAL vector with length 2
  *
  * \author Xiaozhe Hu
  * \date 2010/10/25
@@ -1735,9 +1735,9 @@ void fasp_blas_smat_ymAx_ns3 (REAL *A,
  *
  * \brief Compute ys := ys - Ass*xs, where 'A' is a 5*5 dense matrix, Ass is its saturaton part 4*4.
  * 
- * \param *A   pointer to the 5*5 dense matrix
- * \param *x   pointer to the REAL vector with length 4
- * \param *y   pointer to the REAL vector with length 4
+ * \param A   pointer to the 5*5 dense matrix
+ * \param x   pointer to the REAL vector with length 4
+ * \param y   pointer to the REAL vector with length 4
  *
  * \author Xiaozhe Hu
  * \date 2010/10/25
@@ -1767,9 +1767,9 @@ void fasp_blas_smat_ymAx_ns5 (REAL *A,
  *
  * \brief Compute ys := ys - Ass*xs, where 'A' is a 7*7 dense matrix, Ass is its saturaton part 6*6.
  * 
- * \param *A   pointer to the 7*7 dense matrix
- * \param *x   pointer to the REAL vector with length 6
- * \param *y   pointer to the REAL vector with length 6
+ * \param A   pointer to the 7*7 dense matrix
+ * \param x   pointer to the REAL vector with length 6
+ * \param y   pointer to the REAL vector with length 6
  *
  * \author Xiaozhe Hu
  * \date 2010/10/25
@@ -1803,9 +1803,9 @@ void fasp_blas_smat_ymAx_ns7 (REAL *A,
  *
  * \brief Compute ys := ys - Ass*xs, where 'A' is a n*n dense matrix, Ass is its saturaton part (n-1)*(n-1).
  * 
- * \param *A   pointer to the n*n dense matrix
- * \param *x   pointer to the REAL vector with length n-1
- * \param *y   pointer to the REAL vector with length n-1
+ * \param A   pointer to the n*n dense matrix
+ * \param x   pointer to the REAL vector with length n-1
+ * \param y   pointer to the REAL vector with length n-1
  * \param  n   the dimension of the dense matrix
  * 
  * \note only for block smoother for saturation block without explictly use saturation block!!

@@ -13,8 +13,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, REAL *b, REAL *u, 
- *                              REAL *tol, INT *maxit, INT *ptrlvl)
+ * \fn void void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, REAL *b, 
+ *                                   REAL *u, REAL *tol, INT *maxit, INT *ptrlvl)
  *
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG
  *
@@ -62,8 +62,9 @@ void fasp_fwrapper_amg_ (INT *n,
 }
 
 /**
- * \fn void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, REAL *b, REAL *u, 
- *                              REAL *tol, INT *maxit, INT *ptrlvl)
+ * \fn void fasp_fwrapper_krylov_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, REAL *b, REAL *u, 
+ *                                     REAL *tol, INT *maxit, INT *ptrlvl)
+ *
  * \brief Solve Ax=b by Krylov method preconditioned by classic AMG
  *
  * \param n       num of cols of A
@@ -112,13 +113,13 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
 }
 
 /**
- * \fn void fasp_krylov_stokes_ (INT *nA, INT *nnzA, INT *ia, INT *ja, REAL *aval, 
- *                               INT *nB, INT *nnzB, INT *ib, INT *jb, REAL *bval,
- *                               INT *nM, INT *nnzM, INT *im, INT *jm, REAL *mval,												 
- *                               REAL *b, REAL *u, REAL *beta,
- *                               REAL *tol, INT *maxit, INT *ptrlvl)
+ * \fn void fasp_fwrapper_krylov_stokes_ (INT *nA, INT *nnzA, INT *ia,INT *ja, REAL *aval, 
+ *                                        INT *nB, INT *nnzB, INT *ib, INT *jb, REAL *bval,
+ *                                        INT *nM, INT *nnzM, INT *im, INT *jm, REAL *mval,
+ *                                        INT *nP, INT *nnzP, INT *ip, INT *jp, REAL *pval,
+ *                                        REAL *b, REAL *u, REAL *beta, REAL *tol, INT *maxit, INT *ptrlvl)
  *
- * \brief Solve [A B;B' O]x=b by Krylov method with block diagonal preconditioner
+ * \brief Solve [A B; B' O]x=b by Krylov method with block diagonal preconditioner
  *
  * \param nA       num of cols of A
  * \param nnzA     num of nonzeros of A
@@ -142,6 +143,7 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
  * \param pval     VAL of P in CSR format 
  * \param b        rhs vector
  * \param u        solution vector
+ * \param beta     parametre for generalized Stokes
  * \param tol      tolerance for iterative solvers
  * \param maxit    max num of iterations
  * \param ptrlvl   print level for iterative solvers

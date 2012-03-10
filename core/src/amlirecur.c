@@ -22,9 +22,9 @@
  *
  * \brief Solve Ax=b with recursive AMLI-cycle
  *
- * \param * mgl      pointer to AMG_data data
- * \param * param    pointer to AMG parameters
- * \param   level    integer of level indicator
+ * \param  mgl       pointer to AMG_data data
+ * \param  param     pointer to AMG parameters
+ * \param  level     integer of level indicator
  *
  * \author Xiaozhe Hu
  * \date 01/23/2011
@@ -164,10 +164,10 @@ void fasp_solver_amli (AMG_data *mgl,
  * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param, INT level, INT num_levels)
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
  *
- * \param *mgl pointer to AMG_data data
- * \param *param pointer to AMG parameters
- * \param level current level
- * \param num_levels total numebr of levels
+ * \param mgl         pointer to AMG_data data
+ * \param param       pointer to AMG parameters
+ * \param level       current level
+ * \param num_levels  total numebr of levels
  *
  * \author Xiaozhe Hu
  * \date 04/06/2010
@@ -327,10 +327,10 @@ void fasp_solver_nl_amli (AMG_data *mgl,
  * \fn void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, AMG_param *param, INT level, INT num_levels)
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
  *
- * \param *mgl pointer to AMG_data_bsr data
- * \param *param pointer to AMG parameters
- * \param level current level
- * \param num_levels total numebr of levels
+ * \param mgl         pointer to AMG_data_bsr data
+ * \param param       pointer to AMG parameters
+ * \param level       current level
+ * \param num_levels  total numebr of levels
  *
  * \author Xiaozhe Hu
  * \date 04/06/2010
@@ -502,20 +502,22 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 }
 
 /**
- * \fn void fasp_amg_amli_coef (REAL lambda_max, REAL lambda_min, 
- *                              INT degree, REAL *coef)
+ * \fn void fasp_amg_amli_coef (const REAL lambda_max, const REAL lambda_min, 
+ *                              const INT degree, REAL *coef)
  *
  * \brief Compute the coefficients of the polynomial used by AMLI-cycle
  *
- * \param *A pointer to the coefficient matrices
- * \param degree degree of the polynomial
+ * \param lambda_max  maximal lambda
+ * \param lambda_min  minimal lambda
+ * \param degree      degree of polynomial approximation
+ * \param coef        coefficient of AMLI (output)
  * 
  * \author Xiaozhe Hu
  * \date 01/23/2011
  */
-void fasp_amg_amli_coef (REAL lambda_max, 
-                         REAL lambda_min, 
-                         INT degree, 
+void fasp_amg_amli_coef (const REAL lambda_max, 
+                         const REAL lambda_min, 
+                         const INT degree, 
                          REAL *coef)
 {
 	const REAL mu0 = 1.0/lambda_max, mu1 = 1.0/lambda_min;

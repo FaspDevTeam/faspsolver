@@ -27,7 +27,7 @@
 
 /** 
  * \struct dBSRmat
- * \brief Block sparse row storage matrix of double type.
+ * \brief Block sparse row storage matrix of REAL type.
  *
  * Note: This data structure is adapted from the Intel MKL library. 
  * Refer to http://software.intel.com/sites/products/documentation/hpc/mkl/lin/index.htm
@@ -36,16 +36,16 @@
 typedef struct dBSRmat{
 	
 	//! number of rows of sub-blocks in matrix A, M
-	int ROW; // use captialized words b/c 
+	INT ROW; // use captialized words b/c 
 	//! number of cols of block in matrix A, N
-	int COL;
+	INT COL;
 	//! number of nonzero sub-blocks in matrix A, NNZ
-	int NNZ;
+	INT NNZ;
 	//! dimension of each sub-block
-	int nb; // for the moment, allow nb*nb full block 
+	INT nb; // for the moment, allow nb*nb full block 
 	
 	//! storage manner for each sub-block           
-	int storage_manner; // 1: column-major order; 0: row-major order
+	INT storage_manner; // 1: column-major order; 0: row-major order
 	
 	//! A real array that contains the elements of the non-zero blocks of 
 	//! a sparse matrix. The elements are stored block-by-block in row major 
@@ -53,35 +53,35 @@ typedef struct dBSRmat{
 	//! element. All elements of non-zero blocks are stored, even if some of 
 	//! them is equal to zero. Within each nonzero block elements are stored 
 	//! in row-major order and the size is (NNZ*nb*nb). 
-	double *val;
+	REAL *val;
 	
 	//! integer array of row pointers, the size is ROW+1
-	int *IA;
+	INT *IA;
 	
 	//! Element i of the integer array columns is the number of the column in the
 	//! block matrix that contains the i-th non-zero block. The size is NNZ.
-	int *JA;
+	INT *JA;
 	
-} dBSRmat;
+} dBSRmat; /**< Matrix of REAL type in BSR format */
 
 /** 
  * \struct block_dCSRmat
- * \brief Block double CSR matrix structure.
+ * \brief Block REAL CSR matrix structure.
  *
- * Block CSR Format in double
+ * Block CSR Format in REAL
  *
  * Note: The starting index of A is 0, other data stuctures also take this convention.  
  */
 typedef struct block_dCSRmat{
 	
 	//! row number of blocks in A, m
-	int brow;   
+	INT brow;   
 	//! column number of blocks A, n
-	int bcol;   
+	INT bcol;   
 	//! blocks of dCSRmat, point to blocks[brow][bcol]
 	dCSRmat **blocks;
 	
-} block_dCSRmat;
+} block_dCSRmat; /**< Matrix of REAL type in Block BSR format */
 
 /** 
  * \struct block_iCSRmat
@@ -94,30 +94,30 @@ typedef struct block_dCSRmat{
 typedef struct block_iCSRmat{
 	
 	//! row number of blocks in A, m
-	int brow;   
+	INT brow;   
 	//! column number of blocks A, n
-	int bcol;   
+	INT bcol;   
 	//! blocks of iCSRmat, point to blocks[brow][bcol]
 	iCSRmat **blocks;
 	
-} block_iCSRmat;
+} block_iCSRmat; /**< Matrix of INT type in Block BSR format */
 
 /** 
  * \struct block_dvector
- * \brief Block double vector structure.
+ * \brief Block REAL vector structure.
  *
- * Block Vector Format in double
+ * Block Vector Format in REAL
  *
  * Note: The starting index of A is 0, other data stuctures also take this convention.  
  */
 typedef struct block_dvector{
 	
 	//! row number of blocks in A, m
-	int brow;   
+	INT brow;   
 	//! blocks of dvector, point to blocks[brow]
 	dvector **blocks;
 	
-} block_dvector;
+} block_dvector; /**< Vector of REAL type in Block format */
 
 /** 
  * \struct block_ivector
@@ -130,15 +130,15 @@ typedef struct block_dvector{
 typedef struct block_ivector{
 	
 	//! row number of blocks in A, m
-	int brow;   
+	INT brow;   
 	//! blocks of dvector, point to blocks[brow]
 	ivector **blocks;
 	
-} block_ivector;
+} block_ivector; /**< Vector of INT type in Block format */
 
 /** 
  * \struct block_Reservoir
- * \brief Block double matrix structure for reservoir simulation.
+ * \brief Block REAL matrix structure for reservoir simulation.
  *
  */
 typedef struct block_Reservoir{
@@ -152,11 +152,11 @@ typedef struct block_Reservoir{
 	//! well-well block
 	dCSRmat WelWel;
 	
-} block_Reservoir;
+} block_Reservoir; /**< Special bloack matrix for Reservoir Simulation */
 
 /** 
  * \struct block_BSR
- * \brief Block double matrix structure for reservoir simulation.
+ * \brief Block REAL matrix structure for reservoir simulation.
  *
  */
 typedef struct block_BSR{
@@ -170,7 +170,7 @@ typedef struct block_BSR{
 	//! well-well block
 	dCSRmat WelWel;
 	
-} block_BSR;
+} block_BSR; /**< Block of BSR matrices of REAL type */
 
 /*---------------------------*/ 
 /*--- Parameter structures --*/
@@ -188,9 +188,9 @@ typedef struct {
 	/* Level information */
 	
 	//! max number of levels
-	int max_levels;
+	INT max_levels;
 	//! number of levels in use <= max_levels
-	int num_levels;
+	INT num_levels;
 	
 	/* Problem information */	
 	
@@ -214,19 +214,19 @@ typedef struct {
 	//! pointer to the CF marker at level level_num
 	ivector cfmark; 	
 	//! number of levels use ILU smoother
-	int ILU_levels;
+	INT ILU_levels;
 	//! ILU matrix for ILU smoother 	
 	ILU_data LU;
 	//! dimension of the near kernel for SAMG
-	int near_kernel_dim;
+	INT near_kernel_dim;
 	//! basis of near kernel space for SAMG
-	double **near_kernel_basis;
+	REAL **near_kernel_basis;
 	// Smoother order information
 	
 	//! Temporary work space
 	dvector w;
 	
-} AMG_data_bsr;
+} AMG_data_bsr; /**< AMG data for BSR matrices */
 
 /** 
  * \struct precond_data_bsr
@@ -238,35 +238,35 @@ typedef struct {
     //! type of AMG method
 	SHORT AMG_type;
 	//! print level in AMG preconditioner
-	int print_level;
+	SHORT print_level;
 	//! max number of iterations of AMG preconditioner
-	int maxit;
+	INT maxit;
 	//! max number of AMG levels
-	int max_levels;
+	INT max_levels;
 	//! tolerance for AMG preconditioner
-	double tol;
+	REAL tol;
 	//! AMG cycle type
-	int cycle_type;
+	SHORT cycle_type;
 	//! AMG smoother type
-	int smoother;
+	SHORT smoother;
 	//! AMG smoother ordering
-	int smooth_order;
+	SHORT smooth_order;
 	//! number of presmoothing
-	int presmooth_iter;
+	SHORT presmooth_iter;
 	//! number of postsmoothing
-	int postsmooth_iter;
+	SHORT postsmooth_iter;
 	//! coarsening type
-	int coarsening_type;
+	SHORT coarsening_type;
 	//! relaxation parameter for SOR smoother
-	double relaxation;
+	REAL relaxation;
 	//! switch of scaling of the coarse grid correction
-	int coarse_scaling;
+	SHORT coarse_scaling;
 	//! degree of the polynomial used by AMLI cycle
-	int amli_degree;
+	SHORT amli_degree;
 	//! coefficients of the polynomial used by AMLI cycle
-	double *amli_coef;
+	REAL *amli_coef;
 	//! smooth factor for smoothing the tentative prolongation
-	double tentative_smooth;
+	REAL tentative_smooth;
     //! type of krylov method used by Nonlinear AMLI cycle
     SHORT nl_amli_krylov_type;
 	
@@ -280,10 +280,10 @@ typedef struct {
 	dBSRmat *A;
 	
 	//! temporary work space
-	dvector r; /*< temporary dvector used to store and restore the residual */
-	double *w; /*<  temporary work space for other usage */
+	dvector r; /**< temporary dvector used to store and restore the residual */
+	REAL *w; /**<  temporary work space for other usage */
 	
-} precond_data_bsr;
+} precond_data_bsr; /**< Preconditioner data for BSR matrices */
 
 /**
  * \brief Parameters passed to the preconditioner for generalized Stokes problems
@@ -292,13 +292,13 @@ typedef struct {
 typedef struct precond_Stokes_param {
 		
 	//! AMG type
-	int AMG_type;
+	SHORT AMG_type;
 	//! print level in AMG preconditioner
-	int print_level;
+	SHORT print_level;
 	//! max number of AMG levels
-	int max_levels;
+	SHORT max_levels;
 	
-} precond_Stokes_param;
+} precond_Stokes_param; /**< Parameters for Stokes preconditioners */
 	
 /**
  * \brief Data passed to the preconditioner for generalized Stokes problems
@@ -306,44 +306,45 @@ typedef struct precond_Stokes_param {
  */
 typedef struct precond_Stokes_data {
 
-	//! size of A, B, and whole matrix
-	int colA, colB, col;
+	INT colA; /**< Size of A */
+    INT colB; /**< Size of B */
+    INT col; /**< Size of whole system = colA+colB */
 	
-	double beta;
+	REAL beta; /**< parameter for generalized Stokes */
 	
 	AMG_data *mgl_data; /**< AMG data for presure-presure block */
 
 	//! print level in AMG preconditioner
-	int print_level;
+	SHORT print_level;
 	//! max number of AMG levels
-	int max_levels;
+	SHORT max_levels;
 	//! max number of iterations of AMG preconditioner
-	int maxit;
+	INT maxit;
 	//! tolerance for AMG preconditioner
-	double amg_tol;
+	REAL amg_tol;
 	//! AMG cycle type
-	int cycle_type;
+	SHORT cycle_type;
 	//! AMG smoother type
-	int smoother;
+	SHORT smoother;
 	//! number of presmoothing
-	int presmooth_iter;
+	SHORT presmooth_iter;
 	//! number of postsmoothing
-	int postsmooth_iter;
+	SHORT postsmooth_iter;
 	//! coarsening type
-	int coarsening_type;
+	SHORT coarsening_type;
 	//! relaxation parameter for SOR smoother
-	double relaxation;
+	REAL relaxation;
 	//! switch of scaling of coarse grid correction
-	int coarse_scaling;
+	SHORT coarse_scaling;
 		
 	dCSRmat *M; /**< mass matrix */
 	dvector *diag_M; /**< diagonal of mass matrix M */ 
 	dCSRmat *P; /**< Poisson matrix for pressure*/	
 	
 	//! temporary work space
-	double *w; /*<  temporary work space for other usage */
+	REAL *w; /**<  temporary work space for other usage */
 	
-} precond_Stokes_data;
+} precond_Stokes_data; /**< Preconditioner data for Stokes */
 
 /**
  * \brief Data passed to the preconditioner for preconditioning reservoir simulation problems
@@ -358,7 +359,7 @@ typedef struct precond_block_reservoir_data {
 	dCSRmat *Acsr; /**< problem data in CSR format */
 	
 	//! data of ILU decomposition
-	int ILU_lfil; /**< level of fill-in for structured ILU(k) */
+	INT ILU_lfil; /**< level of fill-in for structured ILU(k) */
 	dSTRmat *LU; /**< LU matrix for ResRes block */
 	ILU_data *LUcsr; /**< LU matrix for ResRes block */
 	
@@ -366,62 +367,61 @@ typedef struct precond_block_reservoir_data {
 	AMG_data *mgl_data; /**< AMG data for presure-presure block */
 	
 	//! parameters for AMG solver
-	//! print level in AMG preconditioner
-	int print_level;
+	//! prINT level in AMG preconditioner
+	SHORT print_level;
 	//! max number of iterations of AMG preconditioner
-	int maxit_AMG;
+	INT maxit_AMG;
 	//! max number of AMG levels
-	int max_levels;
+	SHORT max_levels;
 	//! tolerance for AMG preconditioner
-	double amg_tol;
+	REAL amg_tol;
 	//! AMG cycle type
-	int cycle_type;
+	SHORT cycle_type;
 	//! AMG smoother type
-	int smoother;
+	SHORT smoother;
 	//! number of presmoothing
-	int presmooth_iter;
+	SHORT presmooth_iter;
 	//! number of postsmoothing
-	int postsmooth_iter;
+	SHORT postsmooth_iter;
 	//! coarsening type
-	int coarsening_type;
+	SHORT coarsening_type;
 	//! relaxation parameter for SOR smoother
-	double relaxation;
+	REAL relaxation;
 	//! switch of scaling of coarse grid correction
-	int coarse_scaling;
+	SHORT coarse_scaling;
 	
 	//! parameters for krylov method used for blocks
-	int maxit; /*< max number of iterations */
-	int tol; /*< tolerance */ 
-	int restart; /* number of iterations for restart */
+	INT  maxit; /**< max number of iterations */
+	INT  restart; /**< number of iterations for restart */
+	REAL tol; /**< tolerance */ 
 	
 	//! inverse of the schur complement (-I - Awr*Arr^{-1}*Arw)^{-1}, Arr may be replaced by LU
-	double *invS;
+	REAL *invS;
 	
 	//! Diag(PS) * inv(Diag(SS)) 
 	dvector *DPSinvDSS;
 	
 	//! Data for FASP
-	int scaled;
-	ivector *perf_idx;
+	SHORT scaled; /**< whether the matirx is scaled */
+	ivector *perf_idx; /**< variable index for perf */
 	
-	dSTRmat *RR;  /*< Diagonal scaled reservoir block */
-	dCSRmat *WW; /*< Argumented well block */
-	dCSRmat *PP; /*< pressure block after diagonal scaling */
-	dSTRmat *SS; /*< saturation block after diaogonal scaling */
+	dSTRmat *RR;  /**< Diagonal scaled reservoir block */
+	dCSRmat *WW; /**< Argumented well block */
+	dCSRmat *PP; /**< pressure block after diagonal scaling */
+	dSTRmat *SS; /**< saturation block after diaogonal scaling */
 	
-	precond_diagstr *diag; /*< store the diagonal inverse for diagonal scaling */
-	
-	dvector *diaginv; /*< store the inverse of the diagonals for GS/block GS smoother (whole reservoir matrix) */
-	ivector *pivot; //! store the pivot for the GS/block GS smoother (whole reservoir matrix)
-	dvector *diaginvS; //! store the inverse of the diagonals for GS/block GS smoother (saturation block)
-	ivector *pivotS; //! store the pivot for the GS/block GS smoother (saturation block)
-	ivector *order;
+	precond_diagstr *diag; /**< the diagonal inverse for diagonal scaling */
+	dvector *diaginv; /**< the inverse of the diagonals for GS/block GS smoother (whole reservoir matrix) */
+	ivector *pivot; /**< the pivot for the GS/block GS smoother (whole reservoir matrix) */
+	dvector *diaginvS; /**< the inverse of the diagonals for GS/block GS smoother (saturation block) */
+	ivector *pivotS; /**< the pivot for the GS/block GS smoother (saturation block) */
+	ivector *order; /**< order for smoothing */
 	
 	//! temporary work space
-	dvector r; /*< temporary dvector used to store and restore the residual */
-	double *w; /*<  temporary work space for other usage */
+	dvector r; /**< temporary dvector used to store and restore the residual */
+	REAL *w; /**<  temporary work space for other usage */
 	
-} precond_block_reservoir_data;
+} precond_block_reservoir_data; /**< Precond data for Reservoir Simulation */
 
 /** 
  * \brief Data passed to the preconditioner for block diagonal preconditioning.
@@ -440,7 +440,7 @@ typedef struct {
 	AMG_param *amgparam; /**< parameters for AMG */
 	dCSRmat  **Aarray; /**< data generated in the setup phase */	
 	
-} precond_block_data;
+} precond_block_data; /**< Precond data for block matrices */
 
 /**
  * \brief Data passed to the preconditioner for preconditioning reservoir simulation problems
@@ -458,78 +458,78 @@ typedef struct precond_FASP_blkoil_data{
 	//! Part 2: Data for CPR-like preconditioner for reservoir block
 	//-------------------------------------------------------------------------------
 	//! diagonal scaling for reservoir block
-	int scaled; /*< scaled = 1 means the the following RR block is diagonal scaled */
-	dvector *diaginv_noscale; /*< inverse of diagonal blocks for diagonal scaling */
-	dBSRmat *RR;  /*< reservoir block */
+	SHORT scaled; /**< scaled = 1 means the the following RR block is diagonal scaled */
+	dvector *diaginv_noscale; /**< inverse of diagonal blocks for diagonal scaling */
+	dBSRmat *RR;  /**< reservoir block */
 	
 	//! neighborhood and reordering of reservoir block
-	ivector *neigh; /*< neighbor information of the reservoir block */
-	ivector *order; /*< ordering of the reservoir block */
+	ivector *neigh; /**< neighbor information of the reservoir block */
+	ivector *order; /**< ordering of the reservoir block */
 	
 	//! data for GS/bGS smoother for saturation block
-	dBSRmat *SS; /*< saturation block */
-	dvector *diaginv_S; /*< inverse of the diagonal blocks for GS/block GS smoother for saturation block */
-	ivector *pivot_S; /*< pivot for the GS/block GS smoother for saturation block */
+	dBSRmat *SS; /**< saturation block */
+	dvector *diaginv_S; /**< inverse of the diagonal blocks for GS/block GS smoother for saturation block */
+	ivector *pivot_S; /**< pivot for the GS/block GS smoother for saturation block */
 	
 	//! data of AMG for pressure block
-	//dCSRmat *PP; /*< pressure block */
+	//dCSRmat *PP; /**< pressure block */
 	AMG_data *mgl_data; /**< AMG data for presure-presure block */
 	//! parameters for AMG solver
 	//! print level in AMG preconditioner
-	int print_level;
+	SHORT print_level;
 	//! max number of iterations of AMG preconditioner
-	int maxit_AMG;
+	INT maxit_AMG;
 	//! max number of AMG levels
-	int max_levels;
+	SHORT max_levels;
 	//! tolerance for AMG preconditioner
-	double amg_tol;
+	REAL amg_tol;
 	//! AMG cycle type
-	int cycle_type;
+	SHORT cycle_type;
 	//! AMG smoother type
-	int smoother;
+	SHORT smoother;
 	//! number of presmoothing
-	int presmooth_iter;
+	SHORT presmooth_iter;
 	//! number of postsmoothing
-	int postsmooth_iter;
+	SHORT postsmooth_iter;
 	//! coarsening type
-	int coarsening_type;
+	SHORT coarsening_type;
 	//! relaxation parameter for SOR smoother
-	double relaxation;
+	REAL relaxation;
 	//! switch of scaling of coarse grid correction
-	int coarse_scaling;
+	SHORT coarse_scaling;
 	//! degree of the polynomial used by AMLI cycle
-	int amli_degree;
+	SHORT amli_degree;
 	//! coefficients of the polynomial used by AMLI cycle
-	double *amli_coef;
+	REAL *amli_coef;
 	//! relaxation parameter for smoothing the tentative prolongation
-	double tentative_smooth;
+	REAL tentative_smooth;
 	
 	//! data of GS/bGS smoother for reservoir block
-	dvector *diaginv; /*< inverse of the diagonal blocks for GS/bGS smoother for reservoir block */
-	ivector *pivot; /*< pivot for the GS/bGS smoother for the reservoir matrix */
+	dvector *diaginv; /**< inverse of the diagonal blocks for GS/bGS smoother for reservoir block */
+	ivector *pivot; /**< pivot for the GS/bGS smoother for the reservoir matrix */
 	//! data of ILU for reservoir block
 	ILU_data *LU;
 	
 	//! data for the argumented well block
-	ivector *perf_idx; /*< index of blocks which have perforation */
-	ivector *perf_neigh; /*< index of blocks which are neighbors of perforations (include perforations) */
-	dCSRmat *WW; /*< Argumented well block */
+	ivector *perf_idx; /**< index of blocks which have perforation */
+	ivector *perf_neigh; /**< index of blocks which are neighbors of perforations (include perforations) */
+	dCSRmat *WW; /**< Argumented well block */
 	//! data for direct solver for argumented well block
 	void *Numeric;
 	
 	//! inverse of the schur complement (-I - Awr*Arr^{-1}*Arw)^{-1}, Arr may be replaced by LU
-	double *invS;
+	REAL *invS;
 	
 	//! parameters for krylov method used for blocks
-	int maxit; /*< max number of iterations */
-	int tol; /*< tolerance */ 
-	int restart; /* number of iterations for restart */
+	INT  maxit; /**< max number of iterations */
+	INT  restart; /**< number of iterations for restart */
+	REAL tol; /**< tolerance */ 
 	
 	//! temporary work space
-	dvector r; /*< temporary dvector used to store and restore the residual */
-	double *w; /*<  temporary work space for other usage */
+	dvector r; /**< temporary dvector used to store and restore the residual */
+	REAL *w; /**<  temporary work space for other usage */
 	
-} precond_FASP_blkoil_data;
+} precond_FASP_blkoil_data; /**< FASP precond data for Reservoir Simulation */
 
 #endif /* end if for __FASPBLK_HEADER__ */
 

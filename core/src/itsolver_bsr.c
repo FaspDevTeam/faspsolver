@@ -16,11 +16,11 @@
  *                                   precond *prec, itsolver_param *itparam)
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param *A        pointer to the dBSRmat matrix
- * \param *b        pointer to the dvector of right hand side
- * \param *x        pointer to the dvector of dofs
- * \param *prec     pointer to the preconditioner data
- * \param *itparam  pointer to parameters for iterative solvers
+ * \param A        pointer to the dBSRmat matrix
+ * \param b        pointer to the dvector of right hand side
+ * \param x        pointer to the dvector of dofs
+ * \param prec     pointer to the preconditioner data
+ * \param itparam  pointer to parameters for iterative solvers
  * \return          the number of iterations
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
@@ -78,10 +78,10 @@ int fasp_solver_dbsr_itsolver (dBSRmat *A,
 /**
  * \fn int fasp_solver_dbsr_krylov (dBSRmat *A, dvector *b, dvector *x, itsolver_param *itparam)
  * \brief Solve Ax=b by standard Krylov methods 
- * \param *A:	pointer to the dCSRmat matrix
- * \param *b:	pointer to the dvector of right hand side
- * \param *x:	pointer to the dvector of dofs
- * \param *itparam: pointer to parameters for iterative solvers
+ * \param A:	pointer to the dCSRmat matrix
+ * \param b:	pointer to the dvector of right hand side
+ * \param x:	pointer to the dvector of dofs
+ * \param itparam: pointer to parameters for iterative solvers
  * \return the number of iterations
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
@@ -119,10 +119,10 @@ MEMORY_ERROR:
 /**
  * \fn int fasp_solver_dbsr_krylov_diag (dBSRmat *A, dvector *b, dvector *x, itsolver_param *itparam)
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
- * \param *A:	pointer to the dBSRmat matrix
- * \param *b:	pointer to the dvector of right hand side
- * \param *x:	pointer to the dvector of dofs
- * \param *itparam: pointer to parameters for iterative solvers
+ * \param A:	pointer to the dBSRmat matrix
+ * \param b:	pointer to the dvector of right hand side
+ * \param x:	pointer to the dvector of dofs
+ * \param itparam: pointer to parameters for iterative solvers
  * \return the number of iterations
  *
  *\author Zhiyang Zhou, Xiaozhe Hu
@@ -193,14 +193,15 @@ MEMORY_ERROR:
 /**
  * \fn int fasp_solver_dbsr_krylov_ilu(dBSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, ILU_param *iluparam)
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods
- * \param *A:	pointer to the dBSRmat matrix
- * \param *b:	pointer to the dvector of right hand side
- * \param *x:	pointer to the dvector of dofs
- * \param *itparam: pointer to parameters for iterative solvers
+ * \param A	pointer to the dBSRmat matrix
+ * \param b	pointer to the dvector of right hand side
+ * \param x	pointer to the dvector of dofs
+ * \param itparam pointer to parameters for iterative solvers
+ * \param iluparam pointer to parameters of ILU
  * \return the number of iterations
  *
  * \author Shiquang Zhang, Xiaozhe Hu
- * \data 10/26/2010
+ * \date 10/26/2010
  */
 int fasp_solver_dbsr_krylov_ilu (dBSRmat *A, 
                                  dvector *b, 

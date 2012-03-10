@@ -69,12 +69,12 @@
  *
  * \brief Solve "Ax=b" using PGMRES (right preconditioned) iterative method
  *
- * \param *A the pointer to the coefficient matrix
- * \param *b the pointer to the right hand side vector
- * \param *x the pointer to the solution vector
+ * \param A the pointer to the coefficient matrix
+ * \param b the pointer to the right hand side vector
+ * \param x the pointer to the solution vector
  * \param maxit the maximal iteration  
  * \param tol the tolerance
- * \param *pre pointer to preconditioner data
+ * \param pre pointer to preconditioner data
  * \param print_level how much of the SOLVE-INFORMATION be output?
  * \param stop_type this parameter is not used in my function at present, 
  *        the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. 
@@ -91,9 +91,9 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
                              const INT maxit, 
                              const REAL tol,
                              precond *pre, 
-                             const INT print_level, 
-                             const INT stop_type, 
-                             const INT restart)
+                             const SHORT print_level, 
+                             const SHORT stop_type, 
+                             const SHORT restart)
 {
 	const INT n                    = A->row;  
 	const INT min_iter             = 0;
@@ -326,24 +326,27 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
 }
 
 /**
- *	\fn INT fasp_solver_bdcsr_pgmres (block_Reservoir *A, dvector *b, dvector *u, const INT maxit, 
- *                                    const REAL tol, precond *pre, const SHORT print_level, 
- *                                    const SHORT stop_type, const SHORT restart)
+ * \fn INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A, dvector *b, dvector *u, const INT maxit, 
+ *                                   const REAL tol, precond *pre, const SHORT print_level, 
+ *                                   const SHORT stop_type, const SHORT restart)
  *
- *	\brief A preconditioned generalized minimum residual method (GMRES) method for solving Au=b 
+ * \brief A preconditioned generalized minimum residual method (GMRES) method for solving Au=b 
  *
- *	\param *A	 pointer to the coefficient matrix
- *	\param *b	 pointer to the dvector of right hand side
- *	\param *u	 pointer to the dvector of dofs
- *	\param maxit integer, maximal number of iterations
- *	\param tol   REAL, the tolerance for stopage
- *	\param *pre  pointer to the structure of precondition (precond) 
- *  \param print_level how much information to print out
+ * \param A	 pointer to the coefficient matrix
+ * \param b	 pointer to the dvector of right hand side
+ * \param u	 pointer to the dvector of dofs
+ * \param maxit integer, maximal number of iterations
+ * \param tol   REAL, the tolerance for stopage
+ * \param pre  pointer to the structure of precondition (precond) 
+ * \param print_level how much of the SOLVE-INFORMATION be output?
+ * \param stop_type this parameter is not used in my function at present, 
+ *        the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. 
+ * \param restart number of restart
  *
- *	\return the number of iterations
+ * \return the number of iterations
  *
- *  \author Xiaozhe Hu
- *  \data 05/24/2010
+ * \author Xiaozhe Hu
+ * \date 05/24/2010
  */
 INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A, 
                               dvector *b, 
@@ -564,12 +567,12 @@ FINISHED:
  *                                  const SHORT stop_type, const SHORT restart)
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method
- * \param *A the pointer to the coefficient matrix
- * \param *b the pointer to the right hand side vector
- * \param *x the pointer to the solution vector
+ * \param A the pointer to the coefficient matrix
+ * \param b the pointer to the right hand side vector
+ * \param x the pointer to the solution vector
  * \param maxit the maximal iteration  
  * \param tol the tolerance
- * \param *pre pointer to preconditioner data
+ * \param pre pointer to preconditioner data
  * \param print_level how much of the SOLVE-INFORMATION be output?
  * \param stop_type this parameter is not used in my function at present, 
  *        the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. 
@@ -825,12 +828,12 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method
  *
- * \param *A the pointer to the coefficient matrix
- * \param *b the pointer to the right hand side vector
- * \param *x the pointer to the solution vector
+ * \param A the pointer to the coefficient matrix
+ * \param b the pointer to the right hand side vector
+ * \param x the pointer to the solution vector
  * \param maxit the maximal iteration  
  * \param tol the tolerance
- * \param *pre pointer to preconditioner data
+ * \param pre pointer to preconditioner data
  * \param print_level how much of the SOLVE-INFORMATION be output?
  * \param stop_type this parameter is not used in my function at present, 
  *        the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. 

@@ -18,8 +18,8 @@
  *
  * \brief Solve Ax=b with non-recursive full multigrid k-cycle 
  *
- * \param *mgl     pointer to AMG_data data
- * \param *param   pointer to AMG parameters
+ * \param mgl     pointer to AMG_data data
+ * \param param   pointer to AMG parameters
  *
  * \author Chensong Zhang
  * \date 02/27/2011

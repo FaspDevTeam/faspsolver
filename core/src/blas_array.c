@@ -21,7 +21,7 @@
  *
  * \param n    number of variables
  * \param a    a real number
- * \param *x   pointer to the original vector
+ * \param x   pointer to the original vector
  *
  * \author Chensong Zhang
  * \date 07/01/209
@@ -46,8 +46,8 @@ void fasp_blas_array_ax (const INT n,
  *
  * \param n   number of variables
  * \param a   a real number
- * \param *x  pointer to the original vector
- * \param *y  pointer to the destination vector
+ * \param x  pointer to the original vector
+ * \param y  pointer to the destination vector
  *
  * \author Chensong Zhang
  * \date 07/01/209
@@ -78,9 +78,9 @@ void fasp_blas_array_axpy (const INT n,
  *
  * \param n   number of variables
  * \param a   a real number
- * \param *x  pointer to the original vector 1
- * \param *y  pointer to the original vector 2
- * \param *z  pointer to the destination vector
+ * \param x  pointer to the original vector 1
+ * \param y  pointer to the original vector 2
+ * \param z  pointer to the destination vector
  *
  * \author Chensong Zhang
  * \date 07/01/209
@@ -104,8 +104,8 @@ void fasp_blas_array_axpyz (const INT n,
  * \param n   number of variables
  * \param a   real number
  * \param b   real number
- * \param *x  pointer to the origianl vector
- * \param *y  pointer to the destination vector
+ * \param x  pointer to the origianl vector
+ * \param y  pointer to the destination vector
  *
  * \author Chensong Zhang
  * \date 07/01/209
@@ -126,8 +126,8 @@ void fasp_blas_array_axpby (const INT n,
  * \brief Inner product of two arraies (x,y)
  *
  * \param n   number of variables
- * \param *x  pointer to vector 1
- * \param *y  pointer to vector 2
+ * \param x  pointer to vector 1
+ * \param y  pointer to vector 2
  *
  * \return    inner product
  *
@@ -155,7 +155,7 @@ REAL fasp_blas_array_dotprod (const INT n,
  * \brief L1 norm of array x
  *
  * \param n   number of variables
- * \param *x  pointer to the original vector
+ * \param x  pointer to the original vector
  *
  * \return    L1 norm of x
  *
@@ -177,7 +177,7 @@ REAL fasp_blas_array_norm1 (const INT n,
  * \brief L2 norm of array x
  *
  * \param n   number of variables
- * \param *x  pointer to the original vector
+ * \param x  pointer to the original vector
  *
  * \return    L2 norm of x
  *
@@ -199,7 +199,7 @@ REAL fasp_blas_array_norm2 (const INT n,
  * \brief Linf norm of array x
  *
  * \param n   number of variables
- * \param *x  pointer to the original vector
+ * \param x  pointer to the original vector
  *
  * \return    Linf norm of x
  *

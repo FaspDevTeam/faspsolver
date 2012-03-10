@@ -40,8 +40,8 @@ static void form_tentative_p_omp(ivector *vertices,
  * \fn int fasp_amg_setup_sa_omp(AMG_data *mgl, AMG_param *param, int nthreads, int openmp_holds)
  * \brief Set up phase of smoothed aggregation AMG
  * 
- * \param *mgl     pointer to AMG_data data
- * \param *param   pointer to AMG parameters
+ * \param mgl     pointer to AMG_data data
+ * \param param   pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -81,8 +81,8 @@ int fasp_amg_setup_sa_omp (AMG_data *mgl, AMG_param *param, int nthreads, int op
  * \fn static int amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl, AMG_param *param, int nthreads, int openmp_holds)
  * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
  * 
- * \param *mgl     pointer to AMG_data data
- * \param *param   pointer to AMG parameters
+ * \param mgl     pointer to AMG_data data
+ * \param param   pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -240,12 +240,12 @@ static int amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
 /**
  * \fn static void aggregation_omp(dCSRmat *A, ivector *vertices, AMG_param *param, int levelNum, dCSRmar *Neigh, int *num_aggregations, int nthreads, int openmp_holds)
  * \brief Form aggregation based on strong coupled neighborhoods 
- * \param *A pointer to the coefficient matrices
- * \param *vertices pointer to the aggregation of vertics
- * \param *param pointer to AMG parameters
+ * \param A pointer to the coefficient matrices
+ * \param vertices pointer to the aggregation of vertics
+ * \param param pointer to AMG parameters
  * \param levelNum level number
- * \param *Neigh pointer to strongly coupled neighborhoods
- * \param *num_aggregations pointer to number of aggregations 
+ * \param Neigh pointer to strongly coupled neighborhoods
+ * \param num_aggregations pointer to number of aggregations 
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * 
@@ -409,10 +409,10 @@ static void aggregation_omp(dCSRmat *A,
 /**
  * \fn static void form_tentative_p(ivectors *vertices, dCSRmat *tentp, AMG_data *mgl, int levelNum, int num_aggregations, int nthreads, int openmp_holds)
  * \brief Form aggregation based on strong coupled neighborhoods 
- * \param *A pointer to the coefficient matrices
- * \param *vertices pointer to the aggregation of vertices
- * \param *P pointer to the prolongation operators 
- * \param *mgl pointer to AMG levele data
+ * \param A pointer to the coefficient matrices
+ * \param vertices pointer to the aggregation of vertices
+ * \param P pointer to the prolongation operators 
+ * \param mgl pointer to AMG levele data
  * \param levelNum level number
  * \param num_aggregations number of aggregations
  * \param nthreads number of threads

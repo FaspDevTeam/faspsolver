@@ -16,8 +16,8 @@
  *
  * \brief Transform a REAL matrix from its IJ format to its CSR format.
  *
- * \param *A   pointer to IJ matrix
- * \param *B   pointer to CSR matrix
+ * \param A   pointer to IJ matrix
+ * \param B   pointer to CSR matrix
  * \return     SUCCESS if succeed
  * 
  * \author Xuehai Huang
@@ -62,8 +62,8 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
  *
  * \brief Transform a REAL matrix from its CSR format to its IJ format.
  *
- * \param *A   pointer to CSR matrix
- * \param *B   pointer to IJ matrix
+ * \param A   pointer to CSR matrix
+ * \param B   pointer to IJ matrix
  * \return     SUCCESS if succeed 
  * 
  * \author Xuehai Huang
@@ -95,8 +95,8 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
  *
  * \brief Transfer a 'dSTRmat' type matrix into a 'dCSRmat' type matrix.
  *
- * \param *A      pointer to a 'dSTRmat' type matrix
- * \param *B_ptr  pointer to the 'dCSRmat' type matrix
+ * \param A      pointer to a 'dSTRmat' type matrix
+ * \param B_ptr  pointer to the 'dCSRmat' type matrix
  * 
  * \author Zhou Zhiyang
  * \date 2010/04/29
@@ -289,7 +289,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
  *
  * \brief Form the whole dCSRmat A using blocks given in Ab
  *
- * \param *Ab   pointer to the blocks
+ * \param Ab   pointer to the blocks
  * \return      the whole dCSRmat matrix if succeed, NULL if fail
  * 
  * \author Shiquan Zhang
@@ -353,7 +353,7 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
  *
  * \brief Convert a dCSRmat into a dCSRLmat
  *
- * \param *A pointer to the dCSRLmat type matrix
+ * \param A pointer to the dCSRLmat type matrix
  *
  * \author Zhou Zhiyang
  * \date 2011/01/07
@@ -490,7 +490,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
  *
  * \brief Transfer a 'dBSRmat' type matrix into a dCSRmat.
  *
- * \param dBSRmat *B pointer to the 'dBSRmat' type matrix
+ * \param B pointer to the 'dBSRmat' type matrix
  *
  * \author Zhou Zhiyang
  * \date 2010/10/23 
@@ -641,7 +641,7 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  *
  * \brief Transfer a 'dSTRmat' type matrix to a 'dBSRmat' type matrix.
  *
- * \param dSTRmat *B pointer to the 'dSTRmat' type matrix
+ * \param B pointer to the 'dSTRmat' type matrix
  *
  * \author Zhou Zhiyang
  * \date 2010/10/26 
@@ -757,7 +757,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
  *
  * \brief Transfer a 'dBSRmat' type matrix to a 'dCOOmat' type matrix.
  *
- * \param dSTRmat *B pointer to the 'dBSRmat' type matrix
+ * \param B pointer to the 'dBSRmat' type matrix
  *
  * \author Zhou Zhiyang
  * \date 2010/10/26 

@@ -16,11 +16,11 @@
  *                             int nthreads, int openmp_holds) 
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG. 
  * 
- * \param *A      pointer to the coefficient matrix 
- * \param *b      pointer to the dvector of right hand side 
- * \param *x      pointer to the dvector of dofs 
- * \param *param  pointer to AMG parameters 
- * \param nthreads number of threads 
+ * \param A            pointer to the coefficient matrix 
+ * \param b            pointer to the dvector of right hand side 
+ * \param x            pointer to the dvector of dofs 
+ * \param param        pointer to AMG parameters 
+ * \param nthreads     number of threads 
  * \param openmp_holds threshold of parallelization 
  * 
  * Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller  
@@ -115,11 +115,11 @@ FINISHED:
  *                             int nthreads, int openmp_holds) 
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG. 
  * 
- * \param *A      pointer to the coefficient matrix 
- * \param *b      pointer to the dvector of right hand side 
- * \param *x      pointer to the dvector of dofs 
- * \param *param  pointer to AMG parameters 
- * \param nthreads number of threads 
+ * \param A            pointer to the coefficient matrix 
+ * \param b            pointer to the dvector of right hand side 
+ * \param x            pointer to the dvector of dofs 
+ * \param param        pointer to AMG parameters 
+ * \param nthreads     number of threads 
  * \param openmp_holds threshold of parallelization 
  * 
  * Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller  
@@ -204,11 +204,11 @@ int fasp_solver_amg1_omp (dCSRmat *A,
  *                             int nthreads, int openmp_holds) 
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG. 
  * 
- * \param *A      pointer to the coefficient matrix 
- * \param *b      pointer to the dvector of right hand side 
- * \param *x      pointer to the dvector of dofs 
- * \param *param  pointer to AMG parameters 
- * \param nthreads number of threads 
+ * \param A            pointer to the coefficient matrix 
+ * \param b            pointer to the dvector of right hand side 
+ * \param x            pointer to the dvector of dofs 
+ * \param param        pointer to AMG parameters 
+ * \param nthreads     number of threads 
  * \param openmp_holds threshold of parallelization 
  * 
  * Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller  
@@ -293,11 +293,11 @@ int fasp_solver_amg2_omp (dCSRmat *A,
  *                             int nthreads, int openmp_holds) 
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG. 
  * 
- * \param *A      pointer to the coefficient matrix 
- * \param *b      pointer to the dvector of right hand side 
- * \param *x      pointer to the dvector of dofs 
- * \param *param  pointer to AMG parameters 
- * \param nthreads number of threads 
+ * \param A            pointer to the coefficient matrix 
+ * \param b            pointer to the dvector of right hand side 
+ * \param x            pointer to the dvector of dofs 
+ * \param param        pointer to AMG parameters 
+ * \param nthreads     number of threads 
  * \param openmp_holds threshold of parallelization 
  * 
  * Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller  

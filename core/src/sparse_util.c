@@ -22,21 +22,24 @@
 /*--      Public Functions       --*/
 /*---------------------------------*/
 /**
- * \fn void fasp_sparse_abybms_ (INT *ia,INT *ja,INT *ib,INT *jb,INT n,INT m,INT *ic,INT *jc,INT *ix)
+ * \fn void fasp_sparse_abybms_ (INT *ia,INT *ja,INT *ib,INT *jb, INT *nap, INT *map, INT *mbp,
+ *                               INT *ic,INT *jc)
  *
  * \brief Multiplication of two sparse matrices: calculating the nonzero structure of the result 
  *        if jc is not null. If jc is null only finds num of nonzeroes.
  *
- * \param *ia   array of row pointers 1st multiplicand
- * \param *ia   array of row pointers 1st multiplicand
- * \param *ja   array of column indices 1st multiplicand
- * \param *ib   array of row pointers 2nd multiplicand
- * \param *jb   array of column indices 2nd multiplicand
- * \param *ic   array of row pointers in the result (this is also computed here again, 
+ * \param ia   array of row pointers 1st multiplicand
+ * \param ia   array of row pointers 1st multiplicand
+ * \param ja   array of column indices 1st multiplicand
+ * \param ib   array of row pointers 2nd multiplicand
+ * \param jb   array of column indices 2nd multiplicand
+ * \param nap  number of rows
+ * \param map  number of cols ???
+ * \param mbp  number of cols ???
+ * \param ic   array of row pointers in the result (this is also computed here again, 
  *              so that we can have a stand alone call of this routine, if for some 
  *              reason the number of nonzeros in the result is known)
- * \param *jc   array of column indices in the result c=a*b 
- * \param *ix   a working array.
+ * \param jc   array of column indices in the result c=a*b 
  */
 void fasp_sparse_abybms_ (INT *ia,
                           INT *ja,
@@ -93,23 +96,23 @@ void fasp_sparse_abybms_ (INT *ia,
 }
 
 /**
- * \fn void abyb_(INT *ia,INT *ja, REAL *a, INT *ib, INT *jb, REAL *b,	
- *	              INT *nap, INT *map,INT *mbp,INT *ic, INT *jc, REAL *c)
+ * \fn void fasp_sparse_abyb_(INT *ia,INT *ja, REAL *a, INT *ib, INT *jb, REAL *b,	
+ *	                          INT *nap, INT *map,INT *mbp,INT *ic, INT *jc, REAL *c)
  *
  * \brief Multiplication of two sparse matrices: calculating the numerical values in the result.
  *
- * \param *ia   array of row pointers 1st multiplicand
- * \param *ja   array of column indices 1st multiplicand
- * \param *a    entries of the 1st multiplicand
- * \param *ib   array of row pointers 2nd multiplicand
- * \param *jb   array of column indices 2nd multiplicand
- * \param *b    entries of the 2nd multiplicand
- * \param *ic   array of row pointers in c=a*b
- * \param *jc   array of column indices in c=a*b
- * \param *c    entries of the result: c= a*b
- * \param *nap  number of rows in the 1st multiplicand
- * \param *map  number of columns in the 1st multiplicand
- * \param *mbp  number of columns in the 2nd multiplicand
+ * \param ia   array of row pointers 1st multiplicand
+ * \param ja   array of column indices 1st multiplicand
+ * \param a    entries of the 1st multiplicand
+ * \param ib   array of row pointers 2nd multiplicand
+ * \param jb   array of column indices 2nd multiplicand
+ * \param b    entries of the 2nd multiplicand
+ * \param ic   array of row pointers in c=a*b
+ * \param jc   array of column indices in c=a*b
+ * \param c    entries of the result: c= a*b
+ * \param nap  number of rows in the 1st multiplicand
+ * \param map  number of columns in the 1st multiplicand
+ * \param mbp  number of columns in the 2nd multiplicand
  */
 void fasp_sparse_abyb_ (INT *ia,
                         INT *ja, 
@@ -171,14 +174,16 @@ void fasp_sparse_abyb_ (INT *ia,
 }
 
 /**
- * \fn void fasp_sparse_iit_(INT *ia, INT *ja, INT n, INT m, INT *iat, INT *jat)
+ * \fn void fasp_sparse_iit_ (INT *ia, INT *ja, INT *na, INT *ma, INT *iat, INT *jat)
  *
  * \brief Transpose a boolean matrix (only given by ia, ja) 
  *
- * \param *ia   array of row pointers (as usual in CSR) 
- * \param *ja   array of column indices 
- * \param *iat  array of row pointers in the result 
- * \param *jat  array of column indices 
+ * \param ia   array of row pointers (as usual in CSR) 
+ * \param ja   array of column indices 
+ * \param na   number of rows
+ * \param ma   number of cols
+ * \param iat  array of row pointers in the result 
+ * \param jat  array of column indices 
  *
  * \note For the concrete algorithm, see:
  * 
@@ -249,12 +254,14 @@ void fasp_sparse_iit_ (INT *ia,
  *
  * \brief transpose a boolean matrix (only given by ia, ja) 
  *
- * \param *ia   array of row pointers (as usual in CSR) 
- * \param *ja   array of column indices 
- * \param *a    array of entries of teh input
- * \param *iat  array of row pointers in the result 
- * \param *jat  array of column indices 
- * \param *at   array of entries of the result
+ * \param ia   array of row pointers (as usual in CSR) 
+ * \param ja   array of column indices 
+ * \param a    array of entries of teh input
+ * \param na   number of rows of A
+ * \param ma   number of cols of A
+ * \param iat  array of row pointers in the result 
+ * \param jat  array of column indices 
+ * \param at   array of entries of the result
  */
 void fasp_sparse_aat_ (INT *ia, 
                        INT *ja,
@@ -325,21 +332,23 @@ void fasp_sparse_aat_ (INT *ia,
 }
 
 /**
- * \fn void fasp_sparse_aplbms_(INT *ia, INT *ja, INT *ib, INT *jb, INT n, INT m, INT *ic, INT *jc, INT *ix)
+ * \fn void void fasp_sparse_aplbms_ (INT *ia, INT *ja, INT *ib, INT *jb,
+ *                                    INT *nab, INT *mab, INT *ic, INT *jc)
  *
  * \brief Addition of two sparse matrices: calculating the nonzero structure of the result 
  *        if jc is not null. if jc is null only finds num of nonzeroes.
  *
- * \param *ia   array of row pointers 1st summand
- * \param *ia   array of row pointers 1st summand
- * \param *ja   array of column indices 1st summand
- * \param *ib   array of row pointers 2nd summand
- * \param *jb   array of column indices 2nd summand
- * \param *ic   array of row pointers in the result (this is also computed here again, 
+ * \param ia   array of row pointers 1st summand
+ * \param ia   array of row pointers 1st summand
+ * \param ja   array of column indices 1st summand
+ * \param ib   array of row pointers 2nd summand
+ * \param jb   array of column indices 2nd summand
+ * \param nab  number of rows
+ * \param mab  number of cols
+ * \param ic   array of row pointers in the result (this is also computed here again, 
  *              so that we can have a stand alone call of this routine, if for some 
  *              reason the number of nonzeros in the result is known)
- * \param *jc   array of column indices in the result c=a+b 
- * \param *ix   working array.
+ * \param jc   array of column indices in the result c=a+b 
  */
 void fasp_sparse_aplbms_ (INT *ia,
                           INT *ja, 
@@ -394,23 +403,24 @@ void fasp_sparse_aplbms_ (INT *ia,
 }
 
 /**
- * \fn void fasp_sparse_aplusb_(INT *ia,INT *ja, REAL *a,
- *	                            INT *ib,INT *jb, REAL *b,
- *	                            INT n, INT m,
- *	                            INT *ic,INT *jc,REAL *c, REAL *x)
+ * \fn void fasp_sparse_aplusb_ (INT *ia, INT *ja, REAL *a,
+ *                               INT *ib, INT *jb, REAL *b,
+ *                               INT *nab, INT *mab,
+ *                               INT *ic, INT *jc, REAL *c)
  *
  * \brief Addition of two sparse matrices: calculating the numerical values in the result.
  *
- * \param *ia   array of row pointers 1st summand
- * \param *ja   array of column indices 1st summand
- * \param *a    entries of the 1st summand
- * \param *ib   array of row pointers 2nd summand
- * \param *jb   array of column indices 2nd summand
- * \param *b    entries of the 2nd summand
- * \param *ic   array of row pointers in c=a+b
- * \param *jc   array of column indices in c=a+b
- * \param *c    entries of the result: c=a+b
- * \param *x    a working array.
+ * \param ia   array of row pointers 1st summand
+ * \param ja   array of column indices 1st summand
+ * \param a    entries of the 1st summand
+ * \param ib   array of row pointers 2nd summand
+ * \param jb   array of column indices 2nd summand
+ * \param b    entries of the 2nd summand
+ * \param nab  number of rows
+ * \param mab  number of cols
+ * \param ic   array of row pointers in c=a+b
+ * \param jc   array of column indices in c=a+b
+ * \param c    entries of the result: c=a+b
  */
 void fasp_sparse_aplusb_ (INT *ia,
                           INT *ja, 
@@ -476,18 +486,17 @@ void fasp_sparse_aplusb_ (INT *ia,
  *        If jac is null only finds num of nonzeroes.
  *
  * \note :I: is input :O: is output :IO: is both
- * \param *ir :I: array of row pointers for R
- * \param *jr :I: array of column indices for R
- * \param *ia :I: array of row pointers for A
- * \param *ja :I: array of column indices for A
- * \param *ip :I: array of row pointers for P
- * \param *jp :I: array of column indices for P
- * \param *pt :I: entries of P
- * \param *nin :I: number of rows in R        
- * \param *ncin :I: number of columns in R
- * \param *iac :O: array of row pointers for Ac
- * \param *jac :O: array of column indices for Ac
- * \param *maxrount :O: the maximum nonzeroes per row for R
+ * \param ir :I: array of row pointers for R
+ * \param jr :I: array of column indices for R
+ * \param ia :I: array of row pointers for A
+ * \param ja :I: array of column indices for A
+ * \param ip :I: array of row pointers for P
+ * \param jp :I: array of column indices for P
+ * \param nin :I: number of rows in R        
+ * \param ncin :I: number of columns in R
+ * \param iac :O: array of row pointers for Ac
+ * \param jac :O: array of column indices for Ac
+ * \param maxrout :O: the maximum nonzeroes per row for R
  *
  * \note Computes the sparsity pattern of R*A*P.  maxrout is output and is 
  *	     the maximum nonzeroes per row for r.  On output we also have is 
@@ -567,15 +576,14 @@ void fasp_sparse_rapms_ (INT *ir,
  *     result.  
  *
  * :I: is input :O: is output :IO: is both
- * \param *jw :I: indices such that w[jw] is nonzero
- * \param *ia :I: array of row pointers for A
- * \param *ja :I: array of column indices for A
- * \param *a :I: entries of A
- * \param *nwp :I: number of nonzeroes in w (the length of w)
- * \param *map :I: number of columns in A
- * \param *jv :O: indices such that v[jv] is nonzero
- * \param *nvp :I: number of nonzeroes in v 
- * \param *icp :IO: is a working array of length (*map) which on
+ * \param jw :I: indices such that w[jw] is nonzero
+ * \param ia :I: array of row pointers for A
+ * \param ja :I: array of column indices for A
+ * \param nwp :I: number of nonzeroes in w (the length of w)
+ * \param map :I: number of columns in A
+ * \param jv :O: indices such that v[jv] is nonzero
+ * \param nvp :I: number of nonzeroes in v 
+ * \param icp :IO: is a working array of length (*map) which on
  *                  output satisfies icp[jv[k]-1]=k; Values of icp[] at 
  *                  positions * other than (jv[k]-1) remain unchanged.
  */
@@ -622,16 +630,16 @@ void fasp_sparse_wtams_ (INT *jw,
  *
  * \note :I: is input :O: is output :IO: is both
  *
- * \param *jw :I: indices such that w[jw] is nonzero
- * \param *w :I: the values of w
- * \param *ia :I: array of row pointers for A
- * \param *ja :I: array of column indices for A
- * \param *a :I: entries of A
- * \param *nwp :I: number of nonzeroes in w (the length of w)
- * \param *map :I: number of columns in A
- * \param *jv :O: indices such that v[jv] is nonzero
- * \param *v :O: the result v^t=w^t A
- * \param *nvp :I: number of nonzeroes in v 
+ * \param jw :I: indices such that w[jw] is nonzero
+ * \param w :I: the values of w
+ * \param ia :I: array of row pointers for A
+ * \param ja :I: array of column indices for A
+ * \param a :I: entries of A
+ * \param nwp :I: number of nonzeroes in w (the length of w)
+ * \param map :I: number of columns in A
+ * \param jv :O: indices such that v[jv] is nonzero
+ * \param v :O: the result v^t=w^t A
+ * \param nvp :I: number of nonzeroes in v 
  */
 void fasp_sparse_wta_ (INT *jw, 
                        REAL *w,
@@ -680,9 +688,9 @@ void fasp_sparse_wta_ (INT *jw,
  *
  * \note :I: is input :O: is output :IO: is both
  *
- * \param *jy :I: indices such that y[jy] is nonzero
+ * \param jy :I: indices such that y[jy] is nonzero
  * \param y :I: is a sparse vector. 
- * \param *nyp :I: number of nonzeroes in v 
+ * \param nyp :I: number of nonzeroes in v 
  * \param x :I: also a vector assumed to have entry for any j=jy[i]-1;
  *              for i=1:nyp. This means that x here does not have to be
  *              sparse.
@@ -713,12 +721,13 @@ void fasp_sparse_ytxbig_ (INT *jy,
  *
  * note :I: is input :O: is output :IO: is both
  *
- * \param *jy :I: indices such that y[jy] is nonzero
+ * \param jy :I: indices such that y[jy] is nonzero
  * \param y :I: is a sparse vector. 
- * \param *nyp :I: number of nonzeroes in y 
- * \param *jx :I: indices such that x[jx] is nonzero
+ * \param nyp :I: number of nonzeroes in y 
+ * \param jx :I: indices such that x[jx] is nonzero
  * \param x :I: is a sparse vector. 
- * \param *nxp :I: number of nonzeroes in x 
+ * \param nxp :I: number of nonzeroes in x 
+ * \param icp ???
  * \param s :O: s = y^t x. 
  */
 void fasp_sparse_ytx_ (INT *jy, 
@@ -757,21 +766,21 @@ void fasp_sparse_ytx_ (INT *jy,
  *
  * \note :I: is input :O: is output :IO: is both
  *
- * \param *ir :I: array of row pointers for R
- * \param *jr :I: array of column indices for R
- * \param *r :I: entries of R
- * \param *ia :I: array of row pointers for A
- * \param *ja :I: array of column indices for A
- * \param *a :I: entries of A
- * \param *ipt :I: array of row pointers for P
- * \param *jpt :I: array of column indices for P
- * \param *pt :I: entries of P
+ * \param ir :I: array of row pointers for R
+ * \param jr :I: array of column indices for R
+ * \param r :I: entries of R
+ * \param ia :I: array of row pointers for A
+ * \param ja :I: array of column indices for A
+ * \param a :I: entries of A
+ * \param ipt :I: array of row pointers for P
+ * \param jpt :I: array of column indices for P
+ * \param pt :I: entries of P
  * \param nin :I: number of rows in R         
  * \param ncin :I: number of rows in          
- * \param *iac :O: array of row pointers for P
- * \param *jac :O: array of column indices for P
- * \param *ac :O: entries of P
- * \param *idummy not changed
+ * \param iac :O: array of row pointers for P
+ * \param jac :O: array of column indices for P
+ * \param ac :O: entries of P
+ * \param idummy not changed
  * 
  * \note compute R*A*P for known nonzero structure of the result
  * the result is stored in iac,jac,ac!

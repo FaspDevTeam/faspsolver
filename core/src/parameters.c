@@ -164,7 +164,7 @@ void fasp_param_amg_init (AMG_param *param)
  *
  * \brief Initialize itsolver_param
  *
- * \param Input: pointer to itsolver_param
+ * \param pdata pointer to itsolver_param
  *
  * \author Chensong Zhang
  * \date 2010/03/23 
@@ -387,7 +387,7 @@ void fasp_param_amg_to_prec (precond_data *precdata,
  * \date 02/06/2012
  */
 void fasp_param_amg_to_prec_bsr (precond_data_bsr *precdata, 
-                             AMG_param *amgparam)
+                                 AMG_param *amgparam)
 {
     precdata->AMG_type = amgparam->AMG_type;
     precdata->print_level = amgparam->print_level;
@@ -439,7 +439,7 @@ void fasp_param_prec_to_amg (AMG_param *amgparam,
 }
 
 /**
- * \fn void fasp_param_prec_to_amgbsr (AMG_param *amgparam, precond_data_bsr *precdata)
+ * \fn void fasp_param_prec_to_amg_bsr (AMG_param *amgparam, precond_data_bsr *precdata)
  *
  * \brief Set AMG_param with precond_data 
  *
@@ -450,7 +450,7 @@ void fasp_param_prec_to_amg (AMG_param *amgparam,
  * \date 02/06/2012 
  */
 void fasp_param_prec_to_amg_bsr (AMG_param *amgparam,
-                             precond_data_bsr *precdata)
+                                 precond_data_bsr *precdata)
 {
     amgparam->AMG_type = precdata->AMG_type;
     amgparam->print_level = precdata->print_level;

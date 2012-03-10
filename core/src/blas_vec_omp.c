@@ -10,14 +10,13 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*-----------------------------------omp--------------------------------------*/
 
 /**
  * \fn void fasp_blas_dvec_axpy_omp (const double a, dvector *x, dvector *y, int nthreads, int openmp_holds)
  * \brief y = a*x + y
  * \param a real number
- * \param *x pointer to dvector
- * \param *y pointer to dvector
+ * \param x pointer to dvector
+ * \param y pointer to dvector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -58,9 +57,9 @@ void fasp_blas_dvec_axpy_omp (const double a,
  * \fn void fasp_blas_dvec_axpyz_omp (const double a, dvector *x, dvector *y, dvector *z, int nthreads, int openmp_holds)
  * \brief z = a*x + y, z is a third vector (z is cleared)
  * \param a real number
- * \param *x pointer to dvector
- * \param *y pointer to dvector
- * \param *z pointer to dvector
+ * \param x pointer to dvector
+ * \param y pointer to dvector
+ * \param z pointer to dvector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -92,8 +91,8 @@ void fasp_blas_dvec_axpyz_omp (const double a,
 /**
  * \fn double fasp_blas_dvec_dotprod_omp (dvector *x, dvector *y, int nthreads, int openmp_holds)
  * \brief Inner product of two vectors (x,y)
- * \param *x pointer to dvector
- * \param *y pointer to dvector
+ * \param x pointer to dvector
+ * \param y pointer to dvector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return Inner product
@@ -126,8 +125,8 @@ double fasp_blas_dvec_dotprod_omp (dvector *x,
 /**
  * \fn double fasp_blas_dvec_relerr_omp (dvector *x, dvector *y, int nthreads, int openmp_holds)
  * \brief Relative error of two dvector x and y
- * \param *x pointer to dvector
- * \param *y pointer to dvector
+ * \param x pointer to dvector
+ * \param y pointer to dvector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return relative error ||x-y||/||x||
@@ -171,7 +170,7 @@ double fasp_blas_dvec_relerr_omp (dvector *x,
 /**
  * \fn double fasp_blas_dvec_norm1_omp (dvector *x, int nthreads, int openmp_holds)
  * \brief L1 norm of dvector x
- * \param *x pointer to dvector
+ * \param x pointer to dvector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return L1 norm of x
@@ -202,7 +201,7 @@ double fasp_blas_dvec_norm1_omp (dvector *x,
 /**
  * \fn double fasp_blas_dvec_norm2_omp (dvector *x, int nthreads, int openmp_holds)
  * \brief L2 norm of dvector x
- * \param *x pointer to dvector
+ * \param x pointer to dvector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return L2 norm of x

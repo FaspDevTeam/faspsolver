@@ -9,14 +9,13 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*-----------------------------------omp--------------------------------------*/
 
 #if FASP_USE_OPENMP
 /**
  * \fn dBSRmat fasp_dbsr_diaginv3_omp(dBSRmat *A, double *diaginv, int nthreads, int openmp_holds)
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
- * \param *A pointer to the dBSRmat matrix
- * \param *diaginv pointer to the inverses of all the diagonal blocks
+ * \param A pointer to the dBSRmat matrix
+ * \param diaginv pointer to the inverses of all the diagonal blocks
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -24,12 +23,12 @@
  * \date Nov/28/2011
  */
 dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A, 
-																double *diaginv, 
-																int nthreads, 
-																int openmp_holds)
+                                double *diaginv, 
+                                int nthreads, 
+                                int openmp_holds)
 {
 	dBSRmat B;
-
+    
 	//! members of A 
 	int     ROW = A->ROW;
 	int     ROW_plus_one = ROW+1;
@@ -76,12 +75,12 @@ dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A,
 					for (i=mybegin; i < myend; ++i)
 					{
 						//! get the diagonal sub-blocks
-					
-						        k = IA[i];
-								m = k*4;
-								memcpy(diaginv+i*4, val+m, 4*sizeof(double));
-								fasp_smat_identity_nc2(valb+m);
-					
+                        
+                        k = IA[i];
+                        m = k*4;
+                        memcpy(diaginv+i*4, val+m, 4*sizeof(double));
+                        fasp_smat_identity_nc2(valb+m);
+                        
 						//! compute the inverses of the diagonal sub-blocks 
 						fasp_blas_smat_inv_nc2(diaginv+i*4);
 						//! compute D^{-1}*A
@@ -89,31 +88,31 @@ dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A,
 						{
 							m = k*4;
 							j = JA[k];
-					       fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
+                            fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
 						}
 					}// end of main loop
 				}
 			}
 			else {
-			//! main loop 
-			for (i = 0; i < ROW; ++i)
-			{
-				//! get the diagonal sub-blocks
-				        k = IA[i];
-						m = k*4;
-						memcpy(diaginv+i*4, val+m, 4*sizeof(double));
-						fasp_smat_identity_nc2(valb+m);
+                //! main loop 
+                for (i = 0; i < ROW; ++i)
+                {
+                    //! get the diagonal sub-blocks
+                    k = IA[i];
+                    m = k*4;
+                    memcpy(diaginv+i*4, val+m, 4*sizeof(double));
+                    fasp_smat_identity_nc2(valb+m);
 					
-						//! compute the inverses of the diagonal sub-blocks 
-						fasp_blas_smat_inv_nc2(diaginv+i*4);
-						//! compute D^{-1}*A
-						for (k = IA[i]+1; k < IA[i+1]; ++k)
-						{
-							m = k*4;
-							j = JA[k];
-					       fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
-						}
-			}// end of main loop
+                    //! compute the inverses of the diagonal sub-blocks 
+                    fasp_blas_smat_inv_nc2(diaginv+i*4);
+                    //! compute D^{-1}*A
+                    for (k = IA[i]+1; k < IA[i+1]; ++k)
+                    {
+                        m = k*4;
+                        j = JA[k];
+                        fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
+                    }
+                }// end of main loop
 			}
 			
 			break;
@@ -375,7 +374,7 @@ dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A,
 			
 			break;
 	}
-
+    
 	return (B);
 }
 #endif // OMP

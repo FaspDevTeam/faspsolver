@@ -16,7 +16,7 @@
  *
  * \brief LU decomposition of A usind Doolittle's method
  *
- * \param *A      pointer to the full matrix
+ * \param A      pointer to the full matrix
  * \param pivot   pivoting positions
  * \param n       size of matrix A
  *
@@ -94,7 +94,7 @@ SHORT fasp_smat_lu_decomp (REAL *A,
  *
  * \brief Solving Ax=b using LU decomposition
  *
- * \param *A    pointer to the full matrix
+ * \param A    pointer to the full matrix
  * \param b     right hand side array 
  * \param pivot pivoting positions
  * \param x     solution array 

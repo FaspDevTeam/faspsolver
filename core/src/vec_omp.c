@@ -16,13 +16,12 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*-----------------------------------omp--------------------------------------*/
 
 /**
  * \fn void fasp_dvec_set_omp (int n, dvector *x, double val, int nthreads, int openmp_holds)
  * \brief Initialize dvector x=val
  * \param n number of variables
- * \param *x pointer to dvector
+ * \param x pointer to dvector
  * \param val initial value for the dvector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
@@ -79,8 +78,8 @@ void fasp_dvec_set_omp (int n,
 /**
  * \fn void fasp_dvec_cp_omp (dvector *x, dvector *y, int nthreads, int openmp_holds) 
  * \brief Copy dvector x to dvector y
- * \param *x pointer to dvector
- * \param *y pointer to dvector
+ * \param x pointer to dvector
+ * \param y pointer to dvector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *

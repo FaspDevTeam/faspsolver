@@ -18,9 +18,11 @@
  *
  * \param num_qp the number of quadrature points
  * \param ncoor the dimension of space
- * \param (*gauss)[3] gauss[*][0] -- quad point x in ref coor
- *					  gauss[*][1] -- quad point y in ref coor
- *					  gauss[*][2] -- quad weight
+ * \param gauss quadrature points and weight
+ * 
+ * \note gauss[*][0] -- quad point x in ref coor
+ *		 gauss[*][1] -- quad point y in ref coor
+ *       gauss[*][2] -- quad weight
  * 
  * \author Xuehai Huang, Chensong Zhang, Ludmil Zikatanov
  * \date 10/21/2008
@@ -195,9 +197,11 @@ void fasp_init_quadrature (int num_qp,
  *
  * \param num_qp the number of quadrature points
  * \param ncoor the dimension of space
- * \param (*gauss)[3] gauss[*][0] -- quad point x in ref coor
- *					  gauss[*][1] -- quad point y in ref coor
- *					  gauss[*][2] -- quad weight
+ * \param gauss quadrature points and weight
+ * 
+ * \note gauss[*][0] -- quad point x in ref coor
+ *		 gauss[*][1] -- quad point y in ref coor
+ *       gauss[*][2] -- quad weight
  * 
  * \author Xuehai Huang, Chensong Zhang, Ludmil Zikatanov
  * \date 10/21/2008

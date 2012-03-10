@@ -16,8 +16,8 @@
  * \fn int fasp_amg_setup_rs2_omp (AMG_data *mgl, AMG_param *param, 
  *                          int nthreads, int openmp_holds)
  * \brief Setup phase of Ruge and Stuben's classic AMG
- * \param *mgl    pointer to AMG_data data
- * \param *param  pointer to AMG parameters
+ * \param mgl    pointer to AMG_data data
+ * \param param  pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -171,8 +171,8 @@ FINISHED:
  * \fn int fasp_amg_setup_rs1_omp (AMG_data *mgl, AMG_param *param, 
  *                          int nthreads, int openmp_holds)
  * \brief Setup phase of Ruge and Stuben's classic AMG
- * \param *mgl    pointer to AMG_data data
- * \param *param  pointer to AMG parameters
+ * \param mgl    pointer to AMG_data data
+ * \param param  pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -323,8 +323,8 @@ FINISHED:
  * \fn int fasp_amg_setup_rs_omp (AMG_data *mgl, AMG_param *param, 
  *                          int nthreads, int openmp_holds)
  * \brief Setup phase of Ruge and Stuben's classic AMG
- * \param *mgl    pointer to AMG_data data
- * \param *param  pointer to AMG parameters
+ * \param mgl    pointer to AMG_data data
+ * \param param  pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -482,8 +482,8 @@ FINISHED:
  * \fn int fasp_amg_setup_rs3_omp (AMG_data *mgl, AMG_param *param, 
  *                          int nthreads, int openmp_holds)
  * \brief Setup phase of Ruge and Stuben's classic AMG
- * \param *mgl    pointer to AMG_data data
- * \param *param  pointer to AMG parameters
+ * \param mgl    pointer to AMG_data data
+ * \param param  pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *

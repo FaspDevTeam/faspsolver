@@ -19,9 +19,9 @@ static void saAxpby(REAL alpha, REAL beta, INT size, REAL *A, REAL *x, REAL *y);
  *
  * \brief Jacobi method as the smoother
  *
- * \param *A   pointer to stiffness matrix
- * \param *b   pointer to right hand side vector
- * \param *u   initial guess and new approximation to the solution obtained after one iteration 
+ * \param A   pointer to stiffness matrix
+ * \param b   pointer to right hand side vector
+ * \param u   initial guess and new approximation to the solution obtained after one iteration 
  */
 void fasp_smoother_dstr_jacobi (dSTRmat *A, 
                                 dvector *b, 
@@ -64,10 +64,10 @@ void fasp_smoother_dstr_jacobi (dSTRmat *A,
  *
  * \brief Jacobi method as the smoother with diag_inv given
  *
- * \param *A        pointer to stiffness matrix
- * \param *b        pointer to right hand side vector
- * \param *u        pointer to approximation solution 
- * \param *diaginv  all the inverse matrices for all the diagonal block of A when (A->nc)>1,
+ * \param A        pointer to stiffness matrix
+ * \param b        pointer to right hand side vector
+ * \param u        pointer to approximation solution 
+ * \param diaginv  all the inverse matrices for all the diagonal block of A when (A->nc)>1,
  *                                                                  and NULL when (A->nc)=1  
  */
 void fasp_smoother_dstr_jacobi1 (dSTRmat *A, 
@@ -193,9 +193,9 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
  *
  * \brief Gauss-Seidel method as the smoother
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
  * \param order a flag to indicate the order for smoothing
  *        when mark = NULL       
  *           ASCEND       12: in ascending manner
@@ -204,7 +204,7 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
  *           USERDEFINED  0 : in the user-defined manner
  *           CPFIRST      1 : C-points first and then F-points
  *           FPFIRST     -1 : F-points first and then C-points
- * \param *mark pointer to the user-defined ordering(when order=0) 
+ * \param mark pointer to the user-defined ordering(when order=0) 
  *        or CF_marker array(when order!=0)
  */
 void fasp_smoother_dstr_gs (dSTRmat *A, 
@@ -249,9 +249,9 @@ void fasp_smoother_dstr_gs (dSTRmat *A,
  *
  * \brief Gauss-Seidel method as the smoother with diag_inv given
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
  * \param order a flag to indicate the order for smoothing
  *        when mark = NULL       
  *           ASCEND       12: in ascending manner
@@ -260,8 +260,8 @@ void fasp_smoother_dstr_gs (dSTRmat *A,
  *           USERDEFINED  0 : in the user-defined manner
  *           CPFIRST      1 : C-points first and then F-points
  *           FPFIRST     -1 : F-points first and then C-points
- * \param *mark pointer to the user-defined ordering or CF_marker array
- * \param *diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
+ * \param mark pointer to the user-defined ordering or CF_marker array
+ * \param diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
  *        and NULL when (A->nc)=1  
  */
 void fasp_smoother_dstr_gs1 (dSTRmat *A, 
@@ -301,10 +301,10 @@ void fasp_smoother_dstr_gs1 (dSTRmat *A,
  *
  * \brief Gauss-Seidel method as the smoother in the ascending manner
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
  *        and NULL when (A->nc)=1 
  */
 void fasp_smoother_dstr_gs_ascend (dSTRmat *A, 
@@ -427,10 +427,10 @@ void fasp_smoother_dstr_gs_ascend (dSTRmat *A,
  *
  * \brief Gauss-Seidel method as the smoother in the descending manner
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
  *        and NULL when (A->nc)=1 
  */
 void fasp_smoother_dstr_gs_descend (dSTRmat *A, 
@@ -553,12 +553,12 @@ void fasp_smoother_dstr_gs_descend (dSTRmat *A,
  *
  * \brief Gauss method as the smoother in the user-defined order
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
  *        and NULL when (A->nc)=1
- * \param *mark pointer to the user-defined order array 
+ * \param mark pointer to the user-defined order array 
  */
 void fasp_smoother_dstr_gs_order (dSTRmat *A, 
                                   dvector *b, 
@@ -684,12 +684,12 @@ void fasp_smoother_dstr_gs_order (dSTRmat *A,
  *
  * \brief Gauss method as the smoother in the C-F manner
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
  *        and NULL when (A->nc)=1
- * \param *mark pointer to the user-defined order array 
+ * \param mark pointer to the user-defined order array 
  * \param order a flag to indicate the order for smoothing
  *           CPFIRST  1 : C-points first and then F-points
  *           FPFIRST -1 : F-points first and then C-points   
@@ -900,9 +900,9 @@ void fasp_smoother_dstr_gs_cf (dSTRmat *A,
  *
  * \brief SOR method as the smoother
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
  * \param order a flag to indicate the order for smoothing
  *        when mark = NULL       
  *           ASCEND       12: in ascending manner
@@ -911,7 +911,7 @@ void fasp_smoother_dstr_gs_cf (dSTRmat *A,
  *           USERDEFINED  0 : in the user-defined manner
  *           CPFIRST      1 : C-points first and then F-points
  *           FPFIRST     -1 : F-points first and then C-points
- * \param *mark pointer to the user-defined ordering(when order=0) 
+ * \param mark pointer to the user-defined ordering(when order=0) 
  *        or CF_marker array(when order!=0)
  * \param weight over-relaxation parameter
  */
@@ -959,9 +959,9 @@ void fasp_smoother_dstr_sor (dSTRmat *A,
  *
  * \brief SOR method as the smoother
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
  * \param order a flag to indicate the order for smoothing
  *        when mark = NULL       
  *           ASCEND       12: in ascending manner
@@ -970,8 +970,8 @@ void fasp_smoother_dstr_sor (dSTRmat *A,
  *           USERDEFINED  0 : in the user-defined manner
  *           CPFIRST      1 : C-points first and then F-points
  *           FPFIRST     -1 : F-points first and then C-points
- * \param *mark pointer to the user-defined ordering or CF_marker array
- * \param *diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
+ * \param mark pointer to the user-defined ordering or CF_marker array
+ * \param diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
  *        and NULL when (A->nc)=1
  * \param weight over-relaxation parameter   
  */
@@ -1012,10 +1012,10 @@ void fasp_smoother_dstr_sor1(dSTRmat *A,
  *
  * \brief SOR method as the smoother in the ascending manner
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
  *        and NULL when (A->nc)=1 
  * \param weight over-relaxation parameter  
  */
@@ -1143,10 +1143,10 @@ void fasp_smoother_dstr_sor_ascend(dSTRmat *A,
  *
  * \brief SOR method as the smoother in the descending manner
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
  *        and NULL when (A->nc)=1 
  * \param weight over-relaxation parameter  
  */
@@ -1275,12 +1275,12 @@ void fasp_smoother_dstr_sor_descend (dSTRmat *A,
  *
  * \brief SOR method as the smoother in the user-defined order
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
  *        and NULL when (A->nc)=1
- * \param *mark pointer to the user-defined order array   
+ * \param mark pointer to the user-defined order array   
  * \param weight over-relaxation parameter  
  */
 void fasp_smoother_dstr_sor_order (dSTRmat *A, 
@@ -1412,12 +1412,12 @@ void fasp_smoother_dstr_sor_order (dSTRmat *A,
  *
  * \brief SOR method as the smoother in the C-F manner
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv all the inverse matrices for all the diagonal block of A when (A->nc) > 1,
  *        and NULL when (A->nc)=1
- * \param *mark pointer to the user-defined order array 
+ * \param mark pointer to the user-defined order array 
  * \param order a flag to indicate the order for smoothing
  *           CPFIRST  1 : C-points first and then F-points
  *           FPFIRST -1 : F-points first and then C-points  
@@ -1630,13 +1630,14 @@ void fasp_smoother_dstr_sor_cf (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_generate_diaginv_block(dSTRmat *A, ivector *neigh, dvector *diaginv, divector *pivot)
+ * \fn void fasp_generate_diaginv_block(dSTRmat *A, ivector *neigh, dvector *diaginv, ivector *pivot)
  *
  * \brief generate inverse of diagonal block for block smoothers
  *
- * \param *A pointer to stiffness matrix
- * \param *neigh pointer to neighborhoods
- * \param *diaginv pointer to the inverse of the diagonals
+ * \param A pointer to stiffness matrix
+ * \param neigh pointer to neighborhoods
+ * \param diaginv pointer to the inverse of the diagonals
+ * \param pivot ???
  *
  * \author Xiaozhe Hu
  */
@@ -1759,17 +1760,17 @@ void fasp_generate_diaginv_block (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_schwarz(dSTRmat *A, dvector *b, dvector *u, dvector *diaginv, ivector *pivot, ivector *neigh, INT *order)
+ * \fn void fasp_smoother_dstr_schwarz(dSTRmat *A, dvector *b, dvector *u, dvector *diaginv, ivector *pivot, ivector *neigh, ivector *order)
  *
  * \brief Schwarz method as the smoother
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
- * \param *diaginv pointer to the inverse of diagonal blocks
- * \param *pivot pointer to the pivot of diagonal blocks
- * \param *neigh pointer to the neighbors
- * \param *order pointer to the smoothing order 
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
+ * \param diaginv pointer to the inverse of diagonal blocks
+ * \param pivot pointer to the pivot of diagonal blocks
+ * \param neigh pointer to the neighbors
+ * \param order pointer to the smoothing order 
  *
  * \author Xiaozhe Hu
  */
@@ -1956,9 +1957,9 @@ void fasp_smoother_dstr_schwarz (dSTRmat *A,
  * \param start_vecx   starting position in x
  * \param start_vecy   starting position in y
  * \param nc           the dimension of the submatrix
- * \param *data        pointer to matrix data
- * \param *x           pointer to the REAL vector with length nc
- * \param *y           pointer to the REAL vector with length nc
+ * \param data        pointer to matrix data
+ * \param x           pointer to the REAL vector with length nc
+ * \param y           pointer to the REAL vector with length nc
  *
  * \date 04/24/2010
  */
@@ -1999,9 +2000,9 @@ static void blkcontr2_str(INT start_data, INT start_vecx, INT start_vecy, INT nc
  * \param alpha   a real number
  * \param beta    a real number
  * \param size    length of vector x and y
- * \param *A      pointer to the REAL vector which stands for a size*size full matrix 
- * \param *x      pointer to the REAL vector with length size
- * \param *y      pointer to the REAL vector with length size
+ * \param A      pointer to the REAL vector which stands for a size*size full matrix 
+ * \param x      pointer to the REAL vector with length size
+ * \param y      pointer to the REAL vector with length size
  *
  * \date 04/27/2010
  */

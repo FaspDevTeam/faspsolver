@@ -16,8 +16,8 @@
  *
  * \brief AMG -- SOLVE phase
  *
- * \param *mgl    pointer to AMG_data data
- * \param *param  pointer to AMG parameters
+ * \param mgl     pointer to AMG_data data
+ * \param param   pointer to AMG parameters
  *
  * \return        iteration number if succeed
  *
@@ -102,8 +102,8 @@ SHORT fasp_amg_solve (AMG_data *mgl,
  *
  * \brief AMLI -- SOLVE phase
  *
- * \param *mgl    pointer to AMG_data data
- * \param *param  pointer to AMG parameters
+ * \param mgl     pointer to AMG_data data
+ * \param param   pointer to AMG parameters
  *
  * \return        iteration number if succeed
  *
@@ -182,8 +182,10 @@ SHORT fasp_amg_solve_amli (AMG_data *mgl,
  *
  * \brief nonlinear AMLI --- SOLVE phase
  *
- * \param *mgl    pointer to AMG_data data
- * \param *param  pointer to AMG parameters
+ * \param mgl     pointer to AMG_data data
+ * \param param   pointer to AMG parameters
+ *
+ * \return        iteration number if succeed
  *
  * \note Solve Ax=b using nonlinear AMLI-cycle method. Should be called after 
  *       multigrid hierarchy has been setup!
@@ -258,8 +260,8 @@ SHORT fasp_amg_solve_nl_amli (AMG_data *mgl,
  *
  * \brief FMG -- SOLVE phase
  *
- * \param *mgl    pointer to AMG_data data
- * \param *param  pointer to AMG parameters
+ * \param mgl     pointer to AMG_data data
+ * \param param   pointer to AMG parameters
  *
  * \return        iteration number if succeed
  *

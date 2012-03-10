@@ -24,13 +24,13 @@
  *                             AMG_param *param, int nthreads, int openmp_holds)
  * \brief RS coarsening
  *
- * \param *A          pointer to the coefficient matrix, the index starts from zero
- * \param *vertices   pointer to the indicator ivector of the CF splitting of the vertices
+ * \param A          pointer to the coefficient matrix, the index starts from zero
+ * \param vertices   pointer to the indicator ivector of the CF splitting of the vertices
  *                        0: fine gird points
  *                        1: coarse grid points
  *                        2: isolated grid points
- * \param *P          pointer to the resulted interpolation matrix (nonzero pattern only)
- * \param *param      pointer to AMG parameters
+ * \param P          pointer to the resulted interpolation matrix (nonzero pattern only)
+ * \param param      pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return            SUCCESS or Error message
@@ -118,9 +118,9 @@ int fasp_amg_coarsening_rs_omp (dCSRmat *A,
 /**
  * \fn static void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads)
  * \brief generate the set of all strong couplings S
- * \param *A pointer to the coefficient matrix
- * \param *S pointer to the set of all strong couplings matrix
- * \param *param pointer to AMG parameters
+ * \param A pointer to the coefficient matrix
+ * \param S pointer to the set of all strong couplings matrix
+ * \param param pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -264,9 +264,9 @@ void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int 
 /**
  * \fn static int form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, int row, int nthreads, int openmp_holds)
  * \brief find coarse level points
- * \param *A pointer to the coefficient matrix
- * \param *S pointer to the set of all strong couplings matrix
- * \param *vertices pointer to the type of vertices (points)
+ * \param A pointer to the coefficient matrix
+ * \param S pointer to the set of all strong couplings matrix
+ * \param vertices pointer to the type of vertices (points)
  * \param row integer number of rows of P
  * \param openmp_holds threshold of parallelization
  * \return col integer number of cols of P
@@ -534,9 +534,9 @@ INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, IN
 /**
  * \fn static void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int col, int nthreads, int openmp_holds)
  * \brief find coarse level points
- * \param *P pointer to the prolongation matrix
- * \param *S pointer to the set of all strong couplings matrix
- * \param *vertices pointer to the type of vertices (points)
+ * \param P pointer to the prolongation matrix
+ * \param S pointer to the set of all strong couplings matrix
+ * \param vertices pointer to the type of vertices (points)
  * \param row integer number of rows of P
  * \param col integer number of cols of P
  * \param nthreads number of threads

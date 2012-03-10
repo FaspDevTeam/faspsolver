@@ -17,8 +17,9 @@
  *
  * \brief Solve Ax=b with recursive multigrid k-cycle
  *
- * \param *mgl pointer to AMG_data data
- * \param *param pointer to AMG parameters
+ * \param mgl pointer to AMG_data data
+ * \param param pointer to AMG parameters
+ * \param level number of levels
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date 04/06/2010

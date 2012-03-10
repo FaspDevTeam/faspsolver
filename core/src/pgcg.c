@@ -18,23 +18,23 @@
  *                                const double tol, precond *pre, const SHORT print_level,
  *                                const SHORT stop_type)
  *
- *	 \brief Preconditioned generilzed conjugate gradient (CG) method for solving Au=b 
+ * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b 
  *
- *	 \param *A	 pointer to the coefficient matrix
- *	 \param *b	 pointer to the dvector of right hand side
- *	 \param *u	 pointer to the dvector of DOFs
- *	 \param MaxIt integer, maximal number of iterations
- *	 \param tol double float, the tolerance for stopage
- *	 \param *pre pointer to the structure of precondition (precond) 
- *   \param print_level how much information to print out
- *   \param stop_type stopping criteria
+ * \param A	 pointer to the coefficient matrix
+ * \param b	 pointer to the dvector of right hand side
+ * \param u	 pointer to the dvector of DOFs
+ * \param MaxIt integer, maximal number of iterations
+ * \param tol double float, the tolerance for stopage
+ * \param pre pointer to the structure of precondition (precond) 
+ * \param print_level how much information to print out
+ * \param stop_type stopping criteria
  *	 
- *   \return the number of iterations
+ * \return the number of iterations
  *
- *   \author Xiaozhe Hu
- *   \date   01/01/2012
+ * \author Xiaozhe Hu
+ * \date   01/01/2012
  *
- *   \note Not completely implemented yet! --Chensong
+ * \note Not completely implemented yet! --Chensong
  */
 INT fasp_solver_dcsr_pgcg (dCSRmat *A, 
                            dvector *b, 

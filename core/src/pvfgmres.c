@@ -71,12 +71,12 @@
  *        parameter can be adaptively modified during the iteration and flexible preconditioner 
  *        can be used.
  *
- * \param *A           pointer to the coefficient matrix
- * \param *b           pointer to the right hand side vector
- * \param *x           pointer to the solution vector
+ * \param A           pointer to the coefficient matrix
+ * \param b           pointer to the right hand side vector
+ * \param x           pointer to the solution vector
  * \param MaxIt        maximal iteration number allowed
  * \param tol          tolerance
- * \param *pre         pointer to preconditioner data
+ * \param pre         pointer to preconditioner data
  * \param print_level  how much of the SOLVE-INFORMATION be printed
  * \param stop_type    this parameter is not used in this function at present, 
  *                     the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. Need to change! 
@@ -384,12 +384,12 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
  *        parameter can be adaptively modified during the iteration and flexible preconditioner 
  *        can be used.
  *
- * \param *A           pointer to the coefficient matrix
- * \param *b           pointer to the right hand side vector
- * \param *x           pointer to the solution vector
+ * \param A           pointer to the coefficient matrix
+ * \param b           pointer to the right hand side vector
+ * \param x           pointer to the solution vector
  * \param MaxIt        maximal iteration number allowed
  * \param tol          tolerance
- * \param *pre         pointer to preconditioner data
+ * \param pre         pointer to preconditioner data
  * \param print_level  how much of the SOLVE-INFORMATION be printed
  * \param stop_type    this parameter is not used in this function at present, 
  *                     the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. Need to change! 

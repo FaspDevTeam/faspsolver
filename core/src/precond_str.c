@@ -16,9 +16,9 @@
  *
  * \brief Diagonal preconditioner z=inv(D)*r
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \date 04/06/2010
  */
@@ -44,9 +44,9 @@ void fasp_precond_dstr_diag (REAL *r,
  *
  * \brief preconditioning using STR_ILU(0) decomposition
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \date 04/21/2010
  */
@@ -359,9 +359,9 @@ void fasp_precond_dstr_ilu0 (REAL *r,
  * \fn void fasp_precond_dstr_ilu1 (REAL *r, REAL *z, void *data)
  *
  * \brief preconditioning using STR_ILU(1) decomposition
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \date 04/21/2010
  */
@@ -885,9 +885,9 @@ void fasp_precond_dstr_ilu1 (REAL *r,
  *
  * \brief preconditioning using STR_ILU(0) decomposition: Lz = r
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \date 06/07/2010
  */
@@ -1078,9 +1078,9 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
  *
  * \brief preconditioning using STR_ILU(0) decomposition: Uz = r
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \date 06/07/2010
  */
@@ -1279,9 +1279,9 @@ void fasp_precond_dstr_ilu0_backward (REAL *r,
  *
  * \brief preconditioning using STR_ILU(1) decomposition: Lz = r
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \date 04/21/2010
  */
@@ -1581,9 +1581,9 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
  *
  * \brief preconditioning using STR_ILU(1) decomposition: Uz = r
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \date 04/21/2010
  */
@@ -1891,9 +1891,9 @@ void fasp_precond_dstr_ilu1_backward (REAL *r,
  *
  * \brief get z from r by CPR type preconditioner (STR format)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \date 10/17/2010
  */

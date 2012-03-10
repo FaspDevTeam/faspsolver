@@ -18,11 +18,11 @@
  *                                   precond *prec, itsolver_param *itparam, int nthreads, int openmp_holds)
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param *A        pointer to the dCSRmat matrix
- * \param *b        pointer to the dvector of right hand side
- * \param *x        pointer to the dvector of dofs
- * \param *prec     pointer to the preconditioner data
- * \param *itparam  pointer to parameters for iterative solvers
+ * \param A        pointer to the dCSRmat matrix
+ * \param b        pointer to the dvector of right hand side
+ * \param x        pointer to the dvector of dofs
+ * \param prec     pointer to the preconditioner data
+ * \param itparam  pointer to parameters for iterative solvers
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return          number of iterations
@@ -90,11 +90,11 @@ int fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
  * \fn int fasp_solver_dcsr_krylov_amg_omp(dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, AMG_param *amgparam, int nthreads, int openmp_holds)
  * \brief Solve Ax=b by preconditioned Krylov methods with AMG as precondition
  *
- * \param *A        pointer to the dCSRmat matrix
- * \param *b        pointer to the dvector of right hand side
- * \param *x        pointer to the dvector of dofs
- * \param *itparam  pointer to parameters for iterative solvers
- * \param *amgparam pointer to AMG parameters
+ * \param A        pointer to the dCSRmat matrix
+ * \param b        pointer to the dvector of right hand side
+ * \param x        pointer to the dvector of dofs
+ * \param itparam  pointer to parameters for iterative solvers
+ * \param amgparam pointer to AMG parameters
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  * \return          number of iterations

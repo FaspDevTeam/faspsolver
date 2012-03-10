@@ -14,16 +14,16 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_dcsr_itsolver (dCSRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, dvector *b, dvector *x, 
  *                                    precond *prec, itsolver_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param *A        pointer to the block dCSRmat matrix
- * \param *b        pointer to the dvector of right hand side
- * \param *x        pointer to the dvector of dofs
- * \param *prec     pointer to the preconditioner data
- * \param *itparam  pointer to parameters for iterative solvers
+ * \param A        pointer to the block dCSRmat matrix
+ * \param b        pointer to the dvector of right hand side
+ * \param x        pointer to the dvector of dofs
+ * \param prec     pointer to the preconditioner data
+ * \param itparam  pointer to parameters for iterative solvers
  *
  * \return          the number of iterations
  *
@@ -79,10 +79,10 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
  * \fn INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods 
- * \param *A:	pointer to the block_dCSRmat matrix
- * \param *b:	pointer to the dvector of right hand side
- * \param *x:	pointer to the dvector of dofs
- * \param *itparam: pointer to parameters for iterative solvers
+ * \param A:	pointer to the block_dCSRmat matrix
+ * \param b:	pointer to the dvector of right hand side
+ * \param x:	pointer to the dvector of dofs
+ * \param itparam: pointer to parameters for iterative solvers
  *
  * \return the number of iterations
  *

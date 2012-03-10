@@ -12,15 +12,14 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*-----------------------------------omp--------------------------------------*/
 
 /**
  * \fn void fasp_blas_bdbsr_aAxpy_omp (double alpha, block_BSR *A, double *x, double *y, int nthreads, int openmp_holds)
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  * \param alpha real number
- * \param *A pointer to block_BSR matrix
- * \param *x pointer to dvector
- * \param *y pointer to dvector
+ * \param A pointer to block_BSR matrix
+ * \param x pointer to dvector
+ * \param y pointer to dvector
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -28,11 +27,11 @@
  * \date 03/01/2011
  */
 void fasp_blas_bdbsr_aAxpy_omp (double alpha, 
-																block_BSR *A, 
-																double *x, 
-																double *y, 
-																int nthreads, 
-																int openmp_holds)
+                                block_BSR *A, 
+                                double *x, 
+                                double *y, 
+                                int nthreads, 
+                                int openmp_holds)
 {
 #if FASP_USE_OPENMP
 	register dBSRmat *Arr = &(A->ResRes);
@@ -60,19 +59,21 @@ void fasp_blas_bdbsr_aAxpy_omp (double alpha,
 /**
  * \fn void fasp_blas_bdbsr_mxv_omp (block_BSR *A, double *x, double *y, int nthreads, int openmp_holds)
  * \brief Matrix-vector multiplication y = A*x
- * \param alpha real number
- * \param *A pointer to block_BSR matrix
- * \param *x pointer to dvector
- * \param *y pointer to dvector
+ *
+ * \param A pointer to block_BSR matrix
+ * \param x pointer to dvector
+ * \param y pointer to dvector
+ * \param nthreads number of threads
+ * \param openmp_holds threshold of parallelization
  *
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
  */
 void fasp_blas_bdbsr_mxv_omp (block_BSR *A, 
-															double *x, 
-															double *y, 
-															int nthreads, 
-															int openmp_holds)
+                              double *x, 
+                              double *y, 
+                              int nthreads, 
+                              int openmp_holds)
 {
 #if FASP_USE_OPENMP
 	register dBSRmat *Arr = &(A->ResRes);

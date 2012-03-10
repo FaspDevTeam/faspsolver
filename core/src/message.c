@@ -21,6 +21,7 @@
  *
  * \param ptrlvl     level for output
  * \param stop_type  type of stopping criteria
+ * \param iter       number of iterations
  * \param relres     relative residual of different kinds
  * \param absres     absolute residual of different kinds
  * \param factor     contraction factor
@@ -64,6 +65,17 @@ void print_itinfo (const INT ptrlvl,
 	} // end if ptrlvl
 }		
 
+/**
+ * \fn void void print_amgcomplexity (AMG_data *mgl, const SHORT print_level)
+ *
+ * \brief Print complexities of AMG method
+ *
+ * \param mgl    Multilevel hierachy for AMG
+ * \param print_level   how much information to print
+ *
+ * \author Chensong Zhang
+ * \date 11/16/2009
+ */
 void print_amgcomplexity (AMG_data *mgl, 
                           const SHORT print_level)
 {
@@ -91,6 +103,7 @@ void print_amgcomplexity (AMG_data *mgl,
 
 /**
  * \fn void print_message (const INT ptrlvl, const char *message)
+ *
  * \brief Print output information if necessary 
  *
  * \param ptrlvl   level for output
@@ -107,6 +120,7 @@ void print_message (const INT ptrlvl,
 
 /**
  * \fn void fasp_chkerr (const SHORT status, const char *fctname)
+ *
  * \brief Check error status and print out error messages before quit 
  *
  * \param status   error status

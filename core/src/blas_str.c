@@ -33,9 +33,9 @@ static inline void spaaxpy_str_general(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
  * \param alpha real number
- * \param *A pointer to dSTRmat matrix
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param A pointer to dSTRmat matrix
+ * \param x pointer to real array
+ * \param y pointer to real array
  *
  * \author Zhiyang Zhou, Xiaozhe Hu, Shiquan Zhang
  * \date 2010/10/15
@@ -105,8 +105,8 @@ void fasp_blas_dstr_aAxpy (REAL alpha,
  *
  * \brief B=D^{-1}A
  *
- * \param dSTRmat *A pointer to a 'dSTRmat' type matrix A
- * \param dCSRmat *B pointer to a 'dSTRmat' type matrix B
+ * \param A pointer to a 'dSTRmat' type matrix A
+ * \param B pointer to a 'dSTRmat' type matrix B
  * 
  * \author Shiquan Zhang
  * \date 2010/10/15
@@ -153,15 +153,14 @@ INT fasp_dstr_diagscale (dSTRmat *A,
 /*---------------------------------*/
 
 /**
- * \fn void smat_amxv_nc3 (REAL alpha REAL *a, REAL *b, REAL *c)
+ * \fn void smat_amxv_nc3 (REAL alpha, REAL *a, REAL *b, REAL *c)
  *
  * \brief Matrix-vector multiplication c = alpha*a*b + c where a is a 3*3 full matrix
  *
- * \param *alpha real number
- * \param *a pointer to the REAL vector which stands a 3*3 matrix
- * \param *b pointer to the REAL vector with length 3
- * \param *c pointer to the REAL vector with length 3
- * \param n the dimension of the matrix
+ * \param alpha real number
+ * \param a pointer to the REAL vector which stands a 3*3 matrix
+ * \param b pointer to the REAL vector with length 3
+ * \param c pointer to the REAL vector with length 3
  */
 static inline void smat_amxv_nc3 (REAL alpha, 
                                   REAL *a, 
@@ -178,11 +177,10 @@ static inline void smat_amxv_nc3 (REAL alpha,
  *
  * \brief  Matrix-vector multiplication c = alpha*a*b + c where a is a 5*5 full matrix
  *
- * \param *alpha real number
- * \param *a pointer to the REAL vector which stands a 5*5 matrix
- * \param *b pointer to the REAL vector with length 5
- * \param *c pointer to the REAL vector with length 5
- * \param n the dimension of the matrix
+ * \param alpha real number
+ * \param a pointer to the REAL vector which stands a 5*5 matrix
+ * \param b pointer to the REAL vector with length 5
+ * \param c pointer to the REAL vector with length 5
  */
 static inline void smat_amxv_nc5 (REAL alpha, 
                                   REAL *a, 
@@ -202,10 +200,10 @@ static inline void smat_amxv_nc5 (REAL alpha,
  *
  * \brief  Matrix-vector multiplication c = alpha*a*b + c where a is a n*n full matrix
  *
- * \param *alpha real number
- * \param *a pointer to the REAL vector which stands a n*n matrix
- * \param *b pointer to the REAL vector with length n
- * \param *c pointer to the REAL vector with length n
+ * \param alpha real number
+ * \param a pointer to the REAL vector which stands a n*n matrix
+ * \param b pointer to the REAL vector with length n
+ * \param c pointer to the REAL vector with length n
  * \param n the dimension of the matrix
  */
 static inline void smat_amxv (REAL alpha, 
@@ -239,9 +237,9 @@ static inline void smat_amxv (REAL alpha,
  * \param start_vecx start_data starting position
  * \param start_vecy start_data starting position
  * \param nc the dimension of the submatrix
- * \param *data pointer to matrix data
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param data pointer to matrix data
+ * \param x pointer to real array
+ * \param y pointer to real array
  * \date 04/24/2010
  */
 static inline void blkcontr_str (INT start_data, 
@@ -270,9 +268,9 @@ static inline void blkcontr_str (INT start_data,
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D structured matrix (nc = 1)
  *
  * \param alpha real number
- * \param *A pointer to dSTRmat matrix
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param A pointer to dSTRmat matrix
+ * \param x pointer to real array
+ * \param y pointer to real array
  *
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
  *       for nx = 1, but the order can be arbitrary. 
@@ -370,9 +368,9 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D structured matrix (nc = 3)
  *
  * \param alpha real number
- * \param *A pointer to dSTRmat matrix
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param A pointer to dSTRmat matrix
+ * \param x pointer to real array
+ * \param y pointer to real array
  *
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
  *       for nx = 1, but the order can be arbitrary. 
@@ -500,9 +498,9 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D structured matrix (nc = 5)
  *
  * \param alpha real number
- * \param *A pointer to dSTRmat matrix
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param A pointer to dSTRmat matrix
+ * \param x pointer to real array
+ * \param y pointer to real array
  *
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
  *       for nx = 1, but the order can be arbitrary. 
@@ -627,9 +625,9 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D structured matrix (nc != 1)
  *
  * \param alpha real number
- * \param *A pointer to dSTRmat matrix
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param A pointer to dSTRmat matrix
+ * \param x pointer to real array
+ * \param y pointer to real array
  *
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny)
  *       for nx = 1, but the order can be arbitrary. 
@@ -757,9 +755,9 @@ static inline void spaaxpy_str_2D_block (REAL alpha,
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded 3D structured matrix (nc = 1)
  *
  * \param alpha real number
- * \param *A pointer to dSTRmat matrix
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param A pointer to dSTRmat matrix
+ * \param x pointer to real array
+ * \param y pointer to real array
  *
  * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxy and +nxy, but the order 
  *       can be arbitrary. 
@@ -875,9 +873,9 @@ static inline void spaaxpy_str_3D_scalar (REAL alpha,
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded 3D structured matrix (nc = 3)
  *
  * \param alpha real number
- * \param *A pointer to dSTRmat matrix
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param A pointer to dSTRmat matrix
+ * \param x pointer to real array
+ * \param y pointer to real array
  *
  * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxyand +nxy, but the order 
  *       can be arbitrary. 
@@ -1050,9 +1048,9 @@ static inline void spaaxpy_str_3D_nc3 (REAL alpha,
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded 3D structured matrix (nc = 5)
  * 
  * \param alpha real number
- * \param *A pointer to dSTRmat matrix
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param A pointer to dSTRmat matrix
+ * \param x pointer to real array
+ * \param y pointer to real array
  *
  * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxyand +nxy, but the order 
  *       can be arbitrary. 
@@ -1225,9 +1223,9 @@ static inline void spaaxpy_str_3D_nc5 (REAL alpha,
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded 3D structured matrix (nc != 1)
  *
  * \param alpha real number
- * \param *A pointer to dSTRmat matrix
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param A pointer to dSTRmat matrix
+ * \param x pointer to real array
+ * \param y pointer to real array
  *
  * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxyand +nxy, but the order 
  *       can be arbitrary. 
@@ -1400,9 +1398,9 @@ static inline void spaaxpy_str_3D_block (REAL alpha,
  * \brief Matrix-vector multiplication y = alpha*A*x + y for general cases
  *
  * \param alpha real number
- * \param *A pointer to dSTRmat matrix
- * \param *x pointer to real array
- * \param *y pointer to real array
+ * \param A pointer to dSTRmat matrix
+ * \param x pointer to real array
+ * \param y pointer to real array
  *
  */
 static inline void spaaxpy_str_general (REAL alpha, 

@@ -27,10 +27,10 @@ static void interp_RS2_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_para
  * \fn int fasp_amg_interp_omp (dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param, int nthreads, int openmp_holds)
  * \brief Generate interpolation P 
  *
- * \param *A          pointer to the stiffness matrix
- * \param *vertices   pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
- * \param *P          pointer to the dCSRmat matrix of resulted interpolation
- * \param *param      pointer to AMG parameters
+ * \param A          pointer to the stiffness matrix
+ * \param vertices   pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
+ * \param P          pointer to the dCSRmat matrix of resulted interpolation
+ * \param param      pointer to AMG parameters
  * \param nthreads    number of threads
  * \param openmp_holds threshold of parallelization
  * \return            SUCCESS or error message
@@ -75,10 +75,10 @@ int fasp_amg_interp_omp (dCSRmat *A,
  * \fn int fasp_amg_interp1_omp (dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param, int nthreads, int openmp_holds)
  * \brief Generate interpolation P 
  *
- * \param *A          pointer to the stiffness matrix
- * \param *vertices   pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
- * \param *P          pointer to the dCSRmat matrix of resulted interpolation
- * \param *param      pointer to AMG parameters
+ * \param A          pointer to the stiffness matrix
+ * \param vertices   pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
+ * \param P          pointer to the dCSRmat matrix of resulted interpolation
+ * \param param      pointer to AMG parameters
  * \param nthreads    number of threads
  * \param openmp_holds threshold of parallelization
  * \return            SUCCESS or error message
@@ -124,10 +124,10 @@ int fasp_amg_interp1_omp (dCSRmat *A,
  * \fn int fasp_amg_interp2_omp (dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param, int nthreads, int openmp_holds)
  * \brief Generate interpolation P 
  *
- * \param *A          pointer to the stiffness matrix
- * \param *vertices   pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
- * \param *P          pointer to the dCSRmat matrix of resulted interpolation
- * \param *param      pointer to AMG parameters
+ * \param A          pointer to the stiffness matrix
+ * \param vertices   pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
+ * \param P          pointer to the dCSRmat matrix of resulted interpolation
+ * \param param      pointer to AMG parameters
  * \param nthreads    number of threads
  * \param openmp_holds threshold of parallelization
  * \return            SUCCESS or error message
@@ -173,10 +173,10 @@ int fasp_amg_interp2_omp (dCSRmat *A,
  * \fn static void interp_RS_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param, int nthreads,, int openmp_holds)
  * \brief Direct interpolation 
  *
- * \param *A         pointer to the stiffness matrix
- * \param *vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
- * \param *Ptr       pointer to the dCSRmat matrix of resulted interpolation
- * \param *param     pointer to AMG parameters
+ * \param A         pointer to the stiffness matrix
+ * \param vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
+ * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
+ * \param param     pointer to AMG parameters
  * \param  nthreads  number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -571,9 +571,9 @@ static void interp_RS_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param
  * \fn static void fasp_get_nbl_nbr_ysk(dCSRmat *A, int *nbl_ptr, int *nbr_ptr, int nthreads, int openmp_holds)
  * \brief Get the bandwidth of the matrix
  *
- * \param *A         pointer to the stiffness matrix
- * \param *nbl_ptr   the left bandwidth
- * \param *nbr_ptr   the right bandwidth
+ * \param A         pointer to the stiffness matrix
+ * \param nbl_ptr   the left bandwidth
+ * \param nbr_ptr   the right bandwidth
  * \param  nthreads  number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -621,7 +621,7 @@ static void fasp_get_nbl_nbr_ysk_omp(dCSRmat *A, int *nbl_ptr, int *nbr_ptr, int
  * \brief Modify CoarseIndex
  *
  * \param nrows         length of CoarseIndex
- * \param *CoarseIndex  pointer to index of coarse points
+ * \param CoarseIndex  pointer to index of coarse points
  * \param  nthreads     number of threads
  * \param openmp_holds  threshold of parallelization
  *
@@ -795,10 +795,10 @@ static void fasp_get_icor_ysk_omp(int nrows, int ncols, int *CoarseIndex, int nb
  * \fn static void interp_RS1_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param, int nthreads,, int openmp_holds)
  * \brief Direct interpolation 
  *
- * \param *A         pointer to the stiffness matrix
- * \param *vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
- * \param *Ptr       pointer to the dCSRmat matrix of resulted interpolation
- * \param *param     pointer to AMG parameters
+ * \param A         pointer to the stiffness matrix
+ * \param vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
+ * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
+ * \param param     pointer to AMG parameters
  * \param  nthreads  number of threads
  * \param openmp_holds threshold of parallelization
  *
@@ -1233,10 +1233,10 @@ static void interp_RS1_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_para
  * \fn static void interp_RS2_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param, int nthreads,, int openmp_holds)
  * \brief Direct interpolation 
  *
- * \param *A         pointer to the stiffness matrix
- * \param *vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
- * \param *Ptr       pointer to the dCSRmat matrix of resulted interpolation
- * \param *param     pointer to AMG parameters
+ * \param A         pointer to the stiffness matrix
+ * \param vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
+ * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
+ * \param param     pointer to AMG parameters
  * \param  nthreads  number of threads
  * \param openmp_holds threshold of parallelization
  *

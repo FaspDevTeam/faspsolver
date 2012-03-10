@@ -14,9 +14,9 @@
  *
  * \brief Diagonal preconditioner z=inv(D)*r
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \author Chensong Zhang
  * \date 04/06/2010
@@ -40,9 +40,9 @@ void fasp_precond_diag (REAL *r,
  *
  * \brief preconditioning using ILU decomposition
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \author Shiquan Zhang
  * \date 04/06/2010
@@ -103,9 +103,9 @@ MEMERR:
  *
  * \brief preconditioning using ILU decomposition: only forwear sweep
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \author Xiaozhe Hu, Shiquang Zhang
  * \date 04/06/2010
@@ -156,9 +156,9 @@ MEMERR:
  *
  * \brief preconditioning using ILU decomposition: only backward sweep
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \author Xiaozhe Hu, Shiquan  Zhang
  * \date 04/06/2010
@@ -208,9 +208,9 @@ MEMERR:
  *
  * \brief get z from r by classic AMG
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \author Chensong Zhang
  * \date 04/06/2010
@@ -241,9 +241,9 @@ void fasp_precond_amg (REAL *r,
  *
  * \brief get z from r by Full AMG
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date 02/27/2011
@@ -274,9 +274,9 @@ void fasp_precond_famg (REAL *r,
  *
  * \brief get z from r by AMLI
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date 01/23/2011
@@ -307,9 +307,9 @@ void fasp_precond_amli (REAL *r,
  *
  * \brief get z from r by nonliear AMLI-cycle
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r pointer to residual
+ * \param z pointer to preconditioned residual
+ * \param data pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date 04/25/2011

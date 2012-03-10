@@ -18,9 +18,9 @@
  *
  * \brief Jacobi relaxation
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
  *
  * \author Zhiyang Zhou
  * \date 2010/10/25
@@ -82,10 +82,10 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
  *
  * \brief Jacobi relaxation
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
- * \param *diaginv inverses for all the diagonal blocks of A
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
+ * \param diaginv inverses for all the diagonal blocks of A
  *
  * \author Zhiyang Zhou
  * \date 2010/10/25 
@@ -175,15 +175,15 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
  *
  * \brief Gauss-Seidel relaxation
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
  * \param order a flag to indicate the order for smoothing
  *        when mark = NULL       
  *           ASCEND       12: in ascending order
  *           DESCEND      21: in descending order
  *        when mark != NULL:  in the user-defined order
- * \param *mark pointer to NULL or to the user-defined ordering
+ * \param mark pointer to NULL or to the user-defined ordering
  *
  * \author Zhiyang Zhou
  * \date 2010/10/25 
@@ -247,16 +247,16 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
  *
  * \brief Gauss-Seidel relaxation
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
  * \param order a flag to indicate the order for smoothing
  *        when mark = NULL       
  *           ASCEND       12: in ascending order
  *           DESCEND      21: in descending order
  *        when mark != NULL:  in the user-defined order
- * \param *mark pointer to NULL or to the user-defined ordering
- * \param *diaginv inverses for all the diagonal blocks of A 
+ * \param mark pointer to NULL or to the user-defined ordering
+ * \param diaginv inverses for all the diagonal blocks of A 
  *
  * \return void
  *
@@ -292,10 +292,10 @@ void fasp_smoother_dbsr_gs1 (dBSRmat *A,
  *
  * \brief Gauss-Seidel relaxation in the ascending order
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv inverses for all the diagonal blocks of A 
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv inverses for all the diagonal blocks of A 
  *
  * \author Zhiyang Zhou
  * \date 2010/10/25 
@@ -368,10 +368,10 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
  *
  * \brief Gauss-Seidel relaxation in the descending order
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv inverses for all the diagonal blocks of A 
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv inverses for all the diagonal blocks of A 
  *
  * \author Zhiyang Zhou
  * \date 2010/10/25 
@@ -444,11 +444,11 @@ void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
  *
  * \brief Gauss-Seidel relaxation in the user-defined order
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv inverses for all the diagonal blocks of A
- * \param *mark pointer to the user-defined ordering  
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv inverses for all the diagonal blocks of A
+ * \param mark pointer to the user-defined ordering  
  *
  * \author Zhiyang Zhou
  * \date 2010/10/25 
@@ -523,10 +523,10 @@ void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
  *
  * \brief Gauss-Seidel relaxation in the user-defined order
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *mark pointer to the user-defined ordering  
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param mark pointer to the user-defined ordering  
  *
  * \note The only difference between the functions 'fasp_smoother_dbsr_gs_order2' 
  *       and 'fasp_smoother_dbsr_gs_order1' lies in that we don't have to multiply 
@@ -605,15 +605,15 @@ void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
  *
  * \brief SOR relaxation
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
  * \param order a flag to indicate the order for smoothing
  *        when mark = NULL       
  *           ASCEND       12: in ascending order
  *           DESCEND      21: in descending order
  *        when mark != NULL:  in the user-defined order
- * \param *mark pointer to NULL or to the user-defined ordering
+ * \param mark pointer to NULL or to the user-defined ordering
  * \param weight over-relaxation parameter 
  *
  * \author Zhiyang Zhou
@@ -679,16 +679,16 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
  *
  * \brief SOR relaxation
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration 
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration 
  * \param order a flag to indicate the order for smoothing
  *        when mark = NULL       
  *           ASCEND       12: in ascending order
  *           DESCEND      21: in descending order
  *        when mark != NULL:  in the user-defined order
- * \param *mark pointer to NULL or to the user-defined ordering
- * \param *diaginv inverses for all the diagonal blocks of A
+ * \param mark pointer to NULL or to the user-defined ordering
+ * \param diaginv inverses for all the diagonal blocks of A
  * \param weight over-relaxation parameter  
  *
  * \author Zhiyang Zhou
@@ -722,10 +722,10 @@ void fasp_smoother_dbsr_sor1 (dBSRmat *A,
 /**
  * \fn void fasp_smoother_dbsr_sor_ascend (dBSRmat *A, dvector *b, dvector *u, REAL *diaginv, REAL weight)
  * \brief SOR relaxation in the ascending order
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv inverses for all the diagonal blocks of A
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv inverses for all the diagonal blocks of A
  * \param weight over-relaxation parameter   
  * \return void
  *
@@ -801,10 +801,10 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
  *
  * \brief SOR relaxation in the descending order
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv inverses for all the diagonal blocks of A
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv inverses for all the diagonal blocks of A
  * \param weight over-relaxation parameter   
  *
  * \author Zhiyang Zhou
@@ -879,11 +879,11 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
  *
  * \brief SOR relaxation in the user-defined order
  *
- * \param *A pointer to coefficient matrix
- * \param *b pointer to right hand side vector
- * \param *u initial guess and new approximation to the solution obtained after one iteration
- * \param *diaginv inverses for all the diagonal blocks of A
- * \param *mark pointer to the user-defined ordering   
+ * \param A pointer to coefficient matrix
+ * \param b pointer to right hand side vector
+ * \param u initial guess and new approximation to the solution obtained after one iteration
+ * \param diaginv inverses for all the diagonal blocks of A
+ * \param mark pointer to the user-defined ordering   
  * \param weight over-relaxation parameter   
  *
  * \author Zhiyang Zhou
@@ -963,10 +963,10 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
  *
  * \brief ILU method as the smoother in solving Au=b with multigrid method
  *
- * \param *A pointer to stiffness matrix
- * \param *b pointer to right hand side
- * \param *x pointer to current solution
- * \param *data pointer to user defined data
+ * \param A pointer to stiffness matrix
+ * \param b pointer to right hand side
+ * \param x pointer to current solution
+ * \param data pointer to user defined data
  *
  * \author Zhiyang Zhou
  * \date 2010/10/25 

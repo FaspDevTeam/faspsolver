@@ -15,13 +15,18 @@
 
 /**
  * \fn void fasp_smoother_dcsr_gscr (INT pt, INT n, REAL *u, INT *ia, INT *ja, REAL *a, REAL *b, INT L, INT *CF)
+ *
  * \brief Gauss Seidel method restriced to a block 
+ *
  * \param pt gives relax type, e.g., cpt, fpt, etc.. 
+ * \param n number of variables
  * \param u iterated solution 
- * \param *ia, *ja, *a pointers to stiffness matrix in CSR format
- * \param *b pointer to right hand side -- remove later also as MG relaxation on error eqn
+ * \param ia row pointer
+ * \param ja column index
+ * \param a pointers to sparse matrix values in CSR format
+ * \param b pointer to right hand side -- remove later also as MG relaxation on error eqn
  * \param L number of iterations
- * \return void
+ * \param CF ??? 
  *
  * \author James Brannick
  * \date   09/07/2010

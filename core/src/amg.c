@@ -17,10 +17,10 @@
  *
  * \brief Solve Ax=b by Algebaric MultiGrid Method.
  *
- * \param * A      pointer to the coefficient matrix
- * \param * b      pointer to the dvector of right hand side
- * \param * x      pointer to the dvector of dofs
- * \param * param  pointer to AMG parameters
+ * \param A      pointer to the coefficient matrix
+ * \param b      pointer to the dvector of right hand side
+ * \param x      pointer to the dvector of dofs
+ * \param param  pointer to AMG parameters
  *
  * \note
  * Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller 

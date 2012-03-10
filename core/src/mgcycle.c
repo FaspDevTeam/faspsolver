@@ -18,8 +18,8 @@
  *
  * \brief Solve Ax=b with non-recursive multigrid cycle 
  *
- * \param *mgl     pointer to AMG_data data
- * \param *param   pointer to AMG parameters
+ * \param mgl     pointer to AMG_data data
+ * \param param   pointer to AMG parameters
  *
  * \author Chensong Zhang
  * \date 10/06/2010
@@ -147,8 +147,8 @@ ForwardSweep:
  * \fn void fasp_solver_mgcycle_bsr(AMG_data_bsr *mgl, AMG_param *param)
  * \brief Solve Ax=b with non-recursive multigrid cycle 
  *
- * \param *mgl     pointer to AMG_data_bsr data
- * \param *param   pointer to AMG parameters
+ * \param mgl     pointer to AMG_data_bsr data
+ * \param param   pointer to AMG parameters
  *
  * \author Xiaozhe Hu 
  * \date 08/07/2011

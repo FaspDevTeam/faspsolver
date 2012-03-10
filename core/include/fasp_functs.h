@@ -119,9 +119,9 @@ SHORT fasp_famg_solve (AMG_data *mgl,
 /*-------- In file: amg_solve_omp.c --------*/
 
 INT fasp_amg_solve_omp (AMG_data *mgl, 
-												AMG_param *param, 
-												INT nthreads, 
-												INT openmp_holds);
+                        AMG_param *param, 
+                        INT nthreads, 
+                        INT openmp_holds);
 
 
 /*-------- In file: amlirecur.c --------*/
@@ -140,9 +140,9 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                           INT level, 
                           INT num_levels);
 
-void fasp_amg_amli_coef (REAL lambda_max, 
-                         REAL lambda_min, 
-                         INT degree, 
+void fasp_amg_amli_coef (const REAL lambda_max, 
+                         const REAL lambda_min, 
+                         const INT degree, 
                          REAL *coef);
 
 
@@ -171,24 +171,24 @@ void fasp_array_cp_nc7 (REAL *x,
 /*-------- In file: array_omp.c --------*/
 
 void fasp_array_set_omp (int n, 
-												 double *x, 
-												 double val, 
-												 int nthreads, 
-												 int openmp_holds);
+                         double *x, 
+                         double val, 
+                         int nthreads, 
+                         int openmp_holds);
 
 void fasp_iarray_set_omp (int n, int *x, int val, int nthreads, int openmp_holds);
 
 void fasp_array_cp_omp (int n, 
-												double *x, 
-												double *y, 
-												int nthreads, 
-												int openmp_holds);
+                        double *x, 
+                        double *y, 
+                        int nthreads, 
+                        int openmp_holds);
 
 void fasp_iarray_cp_omp (int n, 
-												 int *x, 
-												 int *y, 
-												 int nthreads, 
-												 int openmp_holds) ;
+                         int *x, 
+                         int *y, 
+                         int nthreads, 
+                         int openmp_holds) ;
 
 
 /*-------- In file: auxiliary.c --------*/
@@ -346,17 +346,17 @@ void fasp_blas_bdbsr_mxv (block_BSR *A,
 /*-------- In file: blas_block_omp.c --------*/
 
 void fasp_blas_bdbsr_aAxpy_omp (double alpha, 
-																block_BSR *A, 
-																double *x, 
-																double *y, 
-																int nthreads, 
-																int openmp_holds);
+                                block_BSR *A, 
+                                double *x, 
+                                double *y, 
+                                int nthreads, 
+                                int openmp_holds);
 
 void fasp_blas_bdbsr_mxv_omp (block_BSR *A, 
-															double *x, 
-															double *y, 
-															int nthreads, 
-															int openmp_holds);
+                              double *x, 
+                              double *y, 
+                              int nthreads, 
+                              int openmp_holds);
 
 
 /*-------- In file: blas_bsr.c --------*/
@@ -376,10 +376,10 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                          REAL *x, 
                          REAL *y);
 
-void fasp_dbsr_rap (dBSRmat *R, 
-                    dBSRmat *A, 
-                    dBSRmat *P, 
-                    dBSRmat *B);
+void fasp_blas_dbsr_rap (dBSRmat *R, 
+                         dBSRmat *A, 
+                         dBSRmat *P, 
+                         dBSRmat *B);
 
 
 /*-------- In file: blas_bsr_omp.c --------*/
@@ -454,71 +454,71 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
 /*-------- In file: blas_csr_omp.c --------*/
 
 void fasp_blas_dcsr_mxv_omp (dCSRmat *A, 
-														 double *x, 
-														 double *y, 
-														 int nthreads, 
-														 int openmp_holds);
+                             double *x, 
+                             double *y, 
+                             int nthreads, 
+                             int openmp_holds);
 
 void fasp_blas_dcsr_aAxpy_omp (const double alpha, 
-															 dCSRmat *A, 
-															 double *x, 
-															 double *y, 
-															 int nthreads, 
-															 int openmp_holds);
+                               dCSRmat *A, 
+                               double *x, 
+                               double *y, 
+                               int nthreads, 
+                               int openmp_holds);
 
 double fasp_blas_dcsr_vmv_omp (dCSRmat *A, 
-															 double *x, 
-															 double *y, 
-															 int nthreads, 
-															 int openmp_holds);
+                               double *x, 
+                               double *y, 
+                               int nthreads, 
+                               int openmp_holds);
 
 void fasp_blas_dcsr_rap_omp( dCSRmat  *R,
-                             dCSRmat  *A,
-                             dCSRmat  *P,
-                             dCSRmat  *RAP,
-                             int       nthreads,
-                             int       openmp_holds );
+                            dCSRmat  *A,
+                            dCSRmat  *P,
+                            dCSRmat  *RAP,
+                            int       nthreads,
+                            int       openmp_holds );
 
 void fasp_blas_dcsr_rap_agg_omp( dCSRmat  *R,
-                                 dCSRmat  *A,
-                                 dCSRmat  *P,
-                                 dCSRmat  *RAP,
-                                 int       nthreads,
-                                 int       openmp_holds );
+                                dCSRmat  *A,
+                                dCSRmat  *P,
+                                dCSRmat  *RAP,
+                                int       nthreads,
+                                int       openmp_holds );
 
 void fasp_blas_dcsr_rap1_omp (dCSRmat *R, 
-												 dCSRmat *A, 
-												 dCSRmat *P, 
-												 dCSRmat *B,
-												 int nthreads,
-												 int openmp_holds);
+                              dCSRmat *A, 
+                              dCSRmat *P, 
+                              dCSRmat *B,
+                              int nthreads,
+                              int openmp_holds);
 
 void fasp_blas_dcsr_rap2_omp (dCSRmat *R, 
-												 dCSRmat *A, 
-												 dCSRmat *P, 
-												 dCSRmat *B,
-												 int nthreads,
-												 int openmp_holds,
-												 int *indexs,
-												 int *iindexs,
-												 int *BTindexs,
-												 double *temps);
+                              dCSRmat *A, 
+                              dCSRmat *P, 
+                              dCSRmat *B,
+                              int nthreads,
+                              int openmp_holds,
+                              int *indexs,
+                              int *iindexs,
+                              int *BTindexs,
+                              double *temps);
 
 void fasp_blas_dcsr_rap3_omp (dCSRmat *R, 
-												 dCSRmat *A, 
-												 dCSRmat *P, 
-												 dCSRmat *B,
-												 int *icor_ysk, 
-												 int nthreads, 
-												 int openmp_holds);
+                              dCSRmat *A, 
+                              dCSRmat *P, 
+                              dCSRmat *B,
+                              int *icor_ysk, 
+                              int nthreads, 
+                              int openmp_holds);
 
 void fasp_blas_dcsr_rap4_omp (dCSRmat *R, 
-												 dCSRmat *A, 
-												 dCSRmat *P, 
-												 dCSRmat *B,
-												 int *icor_ysk, 
-												 int nthreads, 
-												 int openmp_holds);
+                              dCSRmat *A, 
+                              dCSRmat *P, 
+                              dCSRmat *B,
+                              int *icor_ysk, 
+                              int nthreads, 
+                              int openmp_holds);
 
 
 /*-------- In file: blas_csrl.c --------*/
@@ -853,8 +853,8 @@ dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B);
 /*-------- In file: formats_omp.c --------*/
 
 dCSRmat fasp_format_dbsr_dcsr_omp (dBSRmat *B, 
-																	 int nthreads, 
-																	 int openmp_holds );
+                                   int nthreads, 
+                                   int openmp_holds );
 
 
 /*-------- In file: givens.c --------*/
@@ -910,7 +910,7 @@ void fasp_ilu_data_alloc (INT iwk,
 
 void fasp_amg_data_free (AMG_data *mgl);
 
-void fasp_ilu_data_free(ILU_data *ILUdata);
+void fasp_ilu_data_free (ILU_data *ILUdata);
 
 void fasp_ilu_data_init (ILU_data *ILUdata);
 
@@ -1315,13 +1315,13 @@ void fasp_param_amg_to_prec (precond_data *precdata,
                              AMG_param *amgparam);
 
 void fasp_param_amg_to_prec_bsr (precond_data_bsr *precdata, 
-                             AMG_param *amgparam);
+                                 AMG_param *amgparam);
 
 void fasp_param_prec_to_amg (AMG_param *amgparam,
                              precond_data *precdata);
 
 void fasp_param_prec_to_amg_bsr (AMG_param *amgparam,
-                             precond_data_bsr *precdata);
+                                 precond_data_bsr *precdata);
 
 void fasp_param_amg_print (AMG_param *param);
 
@@ -1338,8 +1338,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
                             const INT MaxIt, 
                             const REAL tol,
                             precond *pre, 
-                            const INT print_level, 
-                            const INT stop_type);
+                            const SHORT print_level, 
+                            const SHORT stop_type);
 
 INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, 
                              dvector *b, 
@@ -1392,11 +1392,11 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 INT fasp_solver_dstr_pcg (dSTRmat *A, 
                           dvector *b, 
                           dvector *u, 
-                          INT MaxIt, 
-                          REAL tol, 
+                          const INT MaxIt, 
+                          const REAL tol, 
                           precond *pre, 
-                          SHORT print_level, 
-                          SHORT stop_type);
+                          const SHORT print_level, 
+                          const SHORT stop_type);
 
 
 /*-------- In file: pcg_omp.c --------*/
@@ -1433,9 +1433,9 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
                              const INT maxit, 
                              const REAL tol,
                              precond *pre, 
-                             const INT print_level, 
-                             const INT stop_type, 
-                             const INT restart);
+                             const SHORT print_level, 
+                             const SHORT stop_type, 
+                             const SHORT restart);
 
 INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A, 
                               dvector *b, 
@@ -1562,34 +1562,34 @@ void fasp_precond_dbsr_nl_amli (REAL *r,
 /*-------- In file: precond_bsr_omp.c --------*/
 
 void fasp_precond_dbsr_diag_omp (double *r, 
-																 double *z, 
-																 void *data, 
-																 int nthreads, 
-																 int openmp_holds);
+                                 double *z, 
+                                 void *data, 
+                                 int nthreads, 
+                                 int openmp_holds);
 
 void fasp_precond_dbsr_diag_nc2_omp (double *r, 
-																		 double *z, 
-																		 void *data, 
-																		 int nthreads, 
-																		 int openmp_holds );
+                                     double *z, 
+                                     void *data, 
+                                     int nthreads, 
+                                     int openmp_holds );
 
 void fasp_precond_dbsr_diag_nc3_omp (double *r, 
-																		 double *z, 
-																		 void *data, 
-																		 int nthreads, 
-																		 int openmp_holds );
+                                     double *z, 
+                                     void *data, 
+                                     int nthreads, 
+                                     int openmp_holds );
 
 void fasp_precond_dbsr_diag_nc5_omp (double *r, 
-																		 double *z, 
-																		 void *data, 
-																		 int nthreads, 
-																		 int openmp_holds);
+                                     double *z, 
+                                     void *data, 
+                                     int nthreads, 
+                                     int openmp_holds);
 
 void fasp_precond_dbsr_diag_nc7_omp (double *r, 
-																		 double *z, 
-																		 void *data, 
-																		 int nthreads, 
-																		 int openmp_holds );
+                                     double *z, 
+                                     void *data, 
+                                     int nthreads, 
+                                     int openmp_holds );
 
 
 /*-------- In file: precond_omp.c --------*/
@@ -1927,45 +1927,51 @@ void fasp_smoother_dcsr_gscr (INT pt,
 
 /*-------- In file: smoother_omp.c --------*/
 
-void swep3db(int *ia, int *ja, double *aa,
-			double *u, double *f,
-            int nbegx,
-            int nbegy,
-            int nbegz,
-			int *mark,
-            int nx, int ny, int nz);
+void swep3db(int *ia, 
+             int *ja, 
+             double *aa,
+             double *u, 
+             double *f,
+             int nbegx,
+             int nbegy,
+             int nbegz,
+             int *mark,
+             int nx, int ny, int nz);
 
 void rb0b3d(int *ia, int *ja, double *aa,double *u, double *f, int *mark, int nx, int ny, int nz, int nsweeps);
 
-void swep3df(int *ia, int *ja, double *aa,
-			double *u, double *f,
-            int nbegx, 
-            int nbegy, 
-            int nbegz, 
-			int *mark,
-            int nx, int ny, int nz);
+void swep3df(int *ia, 
+             int *ja, 
+             double *aa,
+             double *u, 
+             double *f,
+             int nbegx, 
+             int nbegy, 
+             int nbegz, 
+             int *mark,
+             int nx, int ny, int nz);
 
 void rb0f3d(int *ia, int *ja, double *aa,double *u, double *f, int *mark, int nx, int ny, int nz, int nsweeps);
 
 void fasp_smoother_dcsr_gs_rb3d (dvector *u, 
-															 dCSRmat *A, 
-															 dvector *b, 
-															 int L, 
-															 int order,
-															 int *mark,
-															 int maximap,
-															 int nx,
-															 int ny,
-															 int nz );
+                                 dCSRmat *A, 
+                                 dvector *b, 
+                                 int L, 
+                                 int order,
+                                 int *mark,
+                                 int maximap,
+                                 int nx,
+                                 int ny,
+                                 int nz );
 
 void fasp_smoother_dcsr_gs_cf_omp (dvector *u, 
-																	 dCSRmat *A, 
-																	 dvector *b, 
-																	 int L, 
-																	 int *mark, 
-																	 int order, 
-																	 int nthreads, 
-																	 int openmp_holds);
+                                   dCSRmat *A, 
+                                   dvector *b, 
+                                   int L, 
+                                   int *mark, 
+                                   int order, 
+                                   int nthreads, 
+                                   int openmp_holds);
 
 
 /*-------- In file: smoother_poly.c --------*/
@@ -2165,9 +2171,9 @@ void fasp_dbsr_getdiag (INT n,
 /*-------- In file: sparse_bsr_omp.c --------*/
 
 dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A, 
-																double *diaginv, 
-																int nthreads, 
-																int openmp_holds);
+                                double *diaginv, 
+                                int nthreads, 
+                                int openmp_holds);
 
 
 /*-------- In file: sparse_coo.c --------*/
@@ -2248,15 +2254,15 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
 /*-------- In file: sparse_csr_omp.c --------*/
 
 void fasp_dcsr_getdiag_omp (INT n, 
-														dCSRmat *A, 
-														dvector *diag, 
-														INT nthreads, 
-														INT openmp_holds) ;
+                            dCSRmat *A, 
+                            dvector *diag, 
+                            INT nthreads, 
+                            INT openmp_holds) ;
 
 void fasp_dcsr_cp_omp (dCSRmat *A, 
-											 dCSRmat *B, 
-											 int nthreads, 
-											 int openmp_holds);
+                       dCSRmat *B, 
+                       int nthreads, 
+                       int openmp_holds);
 
 
 /*-------- In file: sparse_csrl.c --------*/

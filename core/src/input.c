@@ -14,8 +14,8 @@
  *
  * \brief Read input parameters from disk file
  *
- * \param *filenm char filename for input file
- * \param *Input input data structure
+ * \param filenm char filename for input file
+ * \param Input input data structure
  *
  * \author Chensong Zhang
  * \date 03/20/2010 

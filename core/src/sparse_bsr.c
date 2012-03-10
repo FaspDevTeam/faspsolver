@@ -83,7 +83,7 @@ dBSRmat fasp_dbsr_create (INT ROW,
  * \param NNZ             integer, number of nonzero blocks
  * \param nb              integer, dimension of exch block
  * \param storage_manner  integer, storage manner for each sub-block 
- * \param *A              pointer to the dBSRmat matrix
+ * \param A              pointer to the dBSRmat matrix
  *
  * \author Xiaozhe Hu
  * \date 10/26/2010 
@@ -140,7 +140,7 @@ void fasp_dbsr_alloc (INT ROW,
  *
  * \brief Free memeory space for BSR format sparse matrix
  *
- * \param *A   pointer to the dBSRmat matrix
+ * \param A   pointer to the dBSRmat matrix
  *
  * \author Xiaozhe Hu
  * \date 10/26/2010 
@@ -165,7 +165,7 @@ void fasp_dbsr_free (dBSRmat *A)
  *
  * \brief Initialize sparse matrix on structured grid
  *
- * \param *A pointer to the dBSRmat matrix
+ * \param A pointer to the dBSRmat matrix
  *
  * \author Xiaozhe Hu
  * \date 10/26/2010 
@@ -186,8 +186,8 @@ void fasp_dbsr_init (dBSRmat *A)
  * \fn void fasp_dbsr_cp (dBSRmat *A, dBSRmat *B)
  * \brief copy a dCSRmat to a new one B=A
  *
- * \param *A   pointer to the dBSRmat matrix
- * \param *B   pointer to the dBSRmat matrix
+ * \param A   pointer to the dBSRmat matrix
+ * \param B   pointer to the dBSRmat matrix
  *
  * \author Xiaozhe Hu
  * \date 08/07/2011  
@@ -207,11 +207,11 @@ void fasp_dbsr_cp (dBSRmat *A,
 }
 
 /**
- * \fn int fasp_dcsr_trans (dBSRmat *A, dBSRmat *AT)
+ * \fn int fasp_dbsr_trans (dBSRmat *A, dBSRmat *AT)
  * \brief find A^T from given dBSRmat matrix A
  *
- * \param *A   pointer to the dBSRmat matrix
- * \param *AT  pointer to the transpose of dBSRmat matrix A
+ * \param A   pointer to the dBSRmat matrix
+ * \param AT  pointer to the transpose of dBSRmat matrix A
  * \author Chunsheng FENG 
  * \date 2011/06/08
  *
@@ -304,7 +304,7 @@ int fasp_dbsr_trans (dBSRmat *A,
  * \brief Reorder the column and data arrays of a square BSR matrix, 
  *        so that the first entry in each row is the diagonal one.
  *
- * \param *A   pointer to the BSR matrix 
+ * \param A   pointer to the BSR matrix 
  *
  * \author Xiaozhe Hu
  * \date 03/10/2011
@@ -371,10 +371,10 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
  *
- * \param *A pointer to the dBSRmat matrix
+ * \param A pointer to the dBSRmat matrix
  *
  * \author Zhou Zhiyang
- * \data 2010/10/26
+ * \date 2010/10/26
  *
  * \note: works for general nb (Xiaozhe)
  */
@@ -470,11 +470,11 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
  *
- * \param *A pointer to the dBSRmat matrix
- * \param *diaginv pointer to the inverses of all the diagonal blocks
+ * \param A pointer to the dBSRmat matrix
+ * \param diaginv pointer to the inverses of all the diagonal blocks
  *
  * \author Zhou Zhiyang
- * \data 2010/11/07
+ * \date 2010/11/07
  *
  * \note: works for general nb (Xiaozhe)
  */
@@ -536,8 +536,8 @@ dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
  *
- * \param *A pointer to the dBSRmat matrix
- * \param *diaginv pointer to the inverses of all the diagonal blocks
+ * \param A pointer to the dBSRmat matrix
+ * \param diaginv pointer to the inverses of all the diagonal blocks
  *
  * \note: works for general nb (Xiaozhe)
  *
@@ -730,8 +730,8 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
  *
- * \param *A pointer to the dBSRmat matrix (A is preordered that the first block of each row is the diagonal block!!)
- * \param *diaginv pointer to the inverses of all the diagonal blocks
+ * \param A pointer to the dBSRmat matrix (A is preordered that the first block of each row is the diagonal block!!)
+ * \param diaginv pointer to the inverses of all the diagonal blocks
  *
  * \author Xiaozhe Hu
  * \date 03/12/2011
@@ -896,16 +896,16 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
 	return (B);
 }
 
-
 /*!
  * \fn fasp_dbsr_getdiag ( INT n, dBSRmat *A, REAL *diag )
  *
  * \brief Abstract the diagonal blocks of a BSR matrix.
  *
- * \param dSTRmat *B pointer to the 'dBSRmat' type matrix
- * \param *diag pointer to array which stores the diagonal blocks in row by row manner
+ * \param n number of blocks to get
+ * \param A pointer to the 'dBSRmat' type matrix
+ * \param diag pointer to array which stores the diagonal blocks in row by row manner
  *
- * \note: works for general nb (Xiaozhe)
+ * \note Works for general nb (Xiaozhe)
  *
  * \author Zhou Zhiyang
  * \date 2010/10/26 

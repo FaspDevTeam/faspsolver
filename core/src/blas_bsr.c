@@ -18,10 +18,10 @@
  * \brief Compute y := alpha*A*x + beta*y
  *
  * \param alpha   a real number
- * \param *A      pointer to the matrix
- * \param *x      pointer to the vector x
+ * \param A      pointer to the matrix
+ * \param x      pointer to the vector x
  * \param beta    a real number
- * \param *y      pointer to the vector y
+ * \param y      pointer to the vector y
  *
  * \author Zhou Zhiyang
  * \date 2010/10/25  
@@ -117,9 +117,9 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
  * \brief Compute y := alpha*A*x + y
  *
  * \param alpha a real number
- * \param *A pointer to the matrix
- * \param *x pointer to the vector x
- * \param *y pointer to the vector y
+ * \param A pointer to the matrix
+ * \param x pointer to the vector x
+ * \param y pointer to the vector y
  *
  * \author Zhou Zhiyang
  * \date 2010/10/25  
@@ -268,9 +268,9 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
  *
  * \brief Compute y := A*x
  *
- * \param *A pointer to the matrix
- * \param *x pointer to the vector x
- * \param *y pointer to the vector y
+ * \param A pointer to the matrix
+ * \param x pointer to the vector x
+ * \param y pointer to the vector y
  *
  * \author Zhou Zhiyang
  * \date 2010/10/25 
@@ -389,10 +389,10 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
  * \fn void fasp_blas_dbsr_rap (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
  * \brief dBSRmat sparse matrix multiplication B=R*A*P
  *
- * \param *R   pointer to the dBSRmat matrix
- * \param *A   pointer to the dBSRmat matrix
- * \param *P   pointer to the dBSRmat matrix
- * \param *B   pointer to dBSRmat matrix equal to R*A*P
+ * \param R   pointer to the dBSRmat matrix
+ * \param A   pointer to the dBSRmat matrix
+ * \param P   pointer to the dBSRmat matrix
+ * \param B   pointer to dBSRmat matrix equal to R*A*P
  * \return     void
  *
  * Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
@@ -401,10 +401,10 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
  * \author Chunsheng FENG ,Xiaoqiang YUE, Xiaozhe Hu
  * \date 08/08/2011
  */
-void fasp_dbsr_rap (dBSRmat *R, 
-                    dBSRmat *A, 
-                    dBSRmat *P, 
-                    dBSRmat *B)
+void fasp_blas_dbsr_rap (dBSRmat *R, 
+                         dBSRmat *A, 
+                         dBSRmat *P, 
+                         dBSRmat *B)
 {
 	const int row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
 	unsigned int nB=A->NNZ;

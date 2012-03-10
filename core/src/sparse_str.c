@@ -17,7 +17,7 @@
  *
  * \brief Initialize sparse matrix on structured grid
  *
- * \param *A pointer to the dSTRmat matrix
+ * \param A pointer to the dSTRmat matrix
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date 05/17/2010 
@@ -46,7 +46,9 @@ void fasp_dstr_init (dSTRmat *A)
  * \param nz      integer, number of grids in z direction
  * \param nc      integer, number of components 
  * \param nband   integer, number of off-diagonal bands 
- * \return A      the dSTRmat matrix
+ * \param offsets integer, shift from diagonal
+ *
+ * \return        the dSTRmat matrix
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date 05/17/2010 
@@ -97,7 +99,8 @@ dSTRmat fasp_dstr_create (INT nx,
  * \param ngrid  integer, number of grids
  * \param nband  integer, number of off-diagonal bands 
  * \param nc     integer, number of components 
- * \param *A     pointer to the dSTRmat matrix
+ * \param offsets integer, shift from diagonal
+ * \param A       pointer to the dSTRmat matrix
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date 05/17/2010  
@@ -140,7 +143,7 @@ void fasp_dstr_alloc(INT nx,
  *
  * \brief Free STR sparse matrix data memeory space
  *
- * \param *A   pointer to the dSTRmat matrix
+ * \param A   pointer to the dSTRmat matrix
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date 05/17/2010 
@@ -167,8 +170,8 @@ void fasp_dstr_free (dSTRmat *A)
  *
  * \brief copy a dSTRmat to a new one A1=A
  *
- * \param *A pointer to the dSTRmat matrix
- * \param *A1 pointer to the dSTRmat matrix
+ * \param A pointer to the dSTRmat matrix
+ * \param A1 pointer to the dSTRmat matrix
  * 
  * \author Zhiyang Zhou
  * \date 04/21/2010  
