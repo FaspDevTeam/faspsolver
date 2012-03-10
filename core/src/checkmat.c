@@ -18,10 +18,10 @@
  *
  * \param A pointer to the dCSRmat matrix
  *
- * \return number of negative entries 
+ * \return Number of negative diagonal entries 
  *
  * \author Shuo Zhang
- * \date 03/29/2009
+ * \date   03/29/2009
  */
 INT fasp_check_diagpos (dCSRmat *A)
 {
@@ -30,12 +30,12 @@ INT fasp_check_diagpos (dCSRmat *A)
 	dvector        diag; fasp_dcsr_getdiag(m,A,&diag);
     
 #if DEBUG_MODE
-	printf("check_diagpos: nr = %d, nc = %d, nnz = %d\n", m,n,A->nnz);
+	printf("### DEBUG: nr = %d, nc = %d, nnz = %d\n", A->row, A->col, A->nnz);
 #endif
     
 	for (num_neg=i=0;i<m;++i) if (diag.val[i]<0) num_neg++;
 	
-	printf("check_diagpos: number of negative diagonal entries = %d\n", num_neg);
+	printf("Number of negative diagonal entries = %d\n", num_neg);
 	
 	fasp_dvec_free(&diag);
     
@@ -49,10 +49,10 @@ INT fasp_check_diagpos (dCSRmat *A)
  *
  * \param A pointr to the dCSRmat matrix
  * 
- * \return SUCCESS (0) if no diagonal entry is clase to zero, else ERROR (negative value)
+ * \return SUCCESS if no diagonal entry is clase to zero, else ERROR (negative value)
  *
  * \author Shuo Zhang
- * \date 03/29/2009
+ * \date   03/29/2009
  */
 SHORT fasp_check_diagzero (dCSRmat *A)
 {
@@ -68,7 +68,7 @@ SHORT fasp_check_diagzero (dCSRmat *A)
 			j=ja[k];
 			if (i==j) {
 				if (ABS(aj[k]) < SMALLREAL) {
-					printf("Error: diagonal entry (%d,%e) is close to zero!\n",i,aj[k]);
+					printf("### ERROR: Diagonal entry (%d,%e) close to zero!\n", i, aj[k]);
 					status = ERROR_DATA_ZERODIAG; 
 					goto FINISHED;
 				}
@@ -89,8 +89,7 @@ FINISHED:
  *
  * \param A pointer to the dCSRmat matrix
  *
- * \return The percentage of the rows which are diagonal dominant and not
- *         the number of the rows which are diagonal dominant
+ * \return Number of the rows which are diagonal dominant
  *
  * \note The routine chechs whether the sparse matrix is diagonal dominant on every row.
  *	     It will print out the percentage of the rows which are diagonal dominant and 
@@ -98,7 +97,7 @@ FINISHED:
  *       dominant.
  *
  * \author Shuo Zhang
- * \date 03/29/2009
+ * \date   03/29/2009
  */
 INT fasp_check_diagdom (dCSRmat *A)
 {
@@ -122,7 +121,7 @@ INT fasp_check_diagdom (dCSRmat *A)
 		if (sum<-SMALLREAL) ++k;
 	}
 	
-	printf("check_diagdom: percentage of the diagonal-dominant rows is %3.2lf%s\n", 
+	printf("Percentage of the diagonal-dominant rows is %3.2lf%s\n", 
            100.0*(REAL)(nn-k)/(REAL)nn,"%");
 	
 	fasp_mem_free(rowp);
@@ -143,7 +142,7 @@ INT fasp_check_diagdom (dCSRmat *A)
  * \note Print the maximal relative difference between matrix and its transpose.
  *
  * \author Shuo Zhang
- * \date 03/29/2009
+ * \date   03/29/2009
  */
 INT fasp_check_symm (dCSRmat *A)
 {
@@ -259,30 +258,30 @@ INT fasp_check_symm (dCSRmat *A)
 /**
  * \fn SHORT fasp_check_dCSRmat (dCSRmat *A)
  *
- * \brief check whether a dCSRmat is valid or not
+ * \brief Check whether an dCSRmat matrix is valid or not
  *
- * \param A pointer to the dCSRmat matrix
+ * \param A pointer to the matrix in dCSRmat format
  *
  * \author Shuo Zhang
- * \date 03/29/2009
+ * \date   03/29/2009
  */
 SHORT fasp_check_dCSRmat (dCSRmat *A)
 {	
 	INT i;	
 	
 	if (A->row != A->col) {
-		printf("### ERROR: non-square CSR matrix!\n");
+		printf("### ERROR: Non-square CSR matrix!\n");
 		exit(ERROR_DATA_STRUCTURE);		
 	}
 	
 	if ((A->nnz==0)|(A->row==0)|(A->col==0)) {
-		printf("### ERROR: empty CSR matrix!\n");
+		printf("### ERROR: Empty CSR matrix!\n");
 		exit(ERROR_DATA_STRUCTURE);
 	}
 	
 	for (i=0;i<A->nnz;++i) {
 		if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
-			printf("### ERROR: wrong CSR matrix format!\n");
+			printf("### ERROR: Wrong CSR matrix format!\n");
 			exit(ERROR_DATA_STRUCTURE);
 		}
 	}
@@ -293,30 +292,30 @@ SHORT fasp_check_dCSRmat (dCSRmat *A)
 /**
  * \fn SHORT fasp_check_iCSRmat (iCSRmat *A)
  *
- * \brief check whether an iCSRmat is valid or not
+ * \brief Check whether an iCSRmat matrix is valid or not
  *
- * \param A pointer to the iCSRmat matrix
+ * \param A pointer to the matrix in iCSRmat format
  *
  * \author Shuo Zhang
- * \date 03/29/2009
+ * \date   03/29/2009
  */
 SHORT fasp_check_iCSRmat (iCSRmat *A)
 {	
 	INT i;	
 	
 	if (A->row != A->col) {
-		printf("### ERROR: non-square CSR matrix!\n");
+		printf("### ERROR: Non-square CSR matrix!\n");
 		exit(ERROR_DATA_STRUCTURE);		
 	}
 	
 	if ((A->nnz==0)|(A->row==0)|(A->col==0)) {
-		printf("### ERROR: empty CSR matrix!\n");
+		printf("### ERROR: Empty CSR matrix!\n");
 		exit(ERROR_DATA_STRUCTURE);
 	}
 	
 	for (i=0;i<A->nnz;++i) {
 		if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
-			printf("### ERROR: wrong CSR matrix!\n");
+			printf("### ERROR: Wrong CSR matrix!\n");
 			exit(ERROR_DATA_STRUCTURE);
 		}
 	}

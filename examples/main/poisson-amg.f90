@@ -1,3 +1,15 @@
+!
+!		First example for FASP: F90 version
+!
+!       Solving the Poisson equation (P1 FEM) with AMG
+! 
+!------------------------------------------------------
+!
+!		Created by Chensong Zhang on 12/21/2011.
+!
+!------------------------------------------------------
+!
+
 !> \file testf.f90
 !> \brief Test function for F90 interfaces
 
@@ -7,9 +19,9 @@ program test
 
   double precision, dimension(:), allocatable :: u,b
   double precision, dimension(:), allocatable :: a
-  integer,                dimension(:), allocatable :: ia,ja
+  integer,          dimension(:), allocatable :: ia,ja
 
-  integer                :: iufile, n, nnz, i, prt_lvl, maxit, stype
+  integer          :: iufile, n, nnz, i, prt_lvl, maxit, stype
   double precision :: tol
 
   ! Step 0: user defined variables
@@ -69,3 +81,7 @@ program test
   deallocate(b,u)
 
 end program test
+
+!/*---------------------------------*/
+!/*--        End of File          --*/
+!/*---------------------------------*/

@@ -17,8 +17,8 @@
  *
  * \brief Set up phase of Brannick Falgout CR coarsening for classic AMG
  *
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl     Pointer to AMG_data data
+ * \param param   Pointer to AMG parameters
  *
  * \note Setup A, P, R, levels using CR coarsening for 
  *       classic AMG interpolation
@@ -26,7 +26,7 @@
  *          "Compatible relaxation and coarsening in AMG"  
  *
  * \author James Brannick
- * \date 04/21/2010
+ * \date   04/21/2010
  */
 INT fasp_amg_setup_cr (AMG_data *mgl, 
                        AMG_param *param)

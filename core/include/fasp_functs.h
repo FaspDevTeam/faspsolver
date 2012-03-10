@@ -103,16 +103,16 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
 
 /*-------- In file: amg_solve.c --------*/
 
-SHORT fasp_amg_solve (AMG_data *mgl, 
-                      AMG_param *param);
+INT fasp_amg_solve (AMG_data *mgl, 
+                    AMG_param *param);
 
-SHORT fasp_amg_solve_amli (AMG_data *mgl, 
+INT fasp_amg_solve_amli (AMG_data *mgl, 
                            AMG_param *param);
 
-SHORT fasp_amg_solve_nl_amli (AMG_data *mgl, 
+INT fasp_amg_solve_nl_amli (AMG_data *mgl, 
                               AMG_param *param);
 
-SHORT fasp_famg_solve (AMG_data *mgl, 
+void fasp_famg_solve (AMG_data *mgl, 
                        AMG_param *param);
 
 
@@ -136,9 +136,9 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                           INT num_levels);
 
 void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, 
-                          AMG_param *param, 
-                          INT level, 
-                          INT num_levels);
+                              AMG_param *param, 
+                              INT level, 
+                              INT num_levels);
 
 void fasp_amg_amli_coef (const REAL lambda_max, 
                          const REAL lambda_min, 

@@ -16,13 +16,13 @@
 /**
  * \fn void fasp_solver_fmgcycle (AMG_data *mgl, AMG_param *param)
  *
- * \brief Solve Ax=b with non-recursive full multigrid k-cycle 
+ * \brief Solve Ax=b with non-recursive full multigrid K-cycle 
  *
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl     Pointer to AMG_data data
+ * \param param   Pointer to AMG parameters
  *
  * \author Chensong Zhang
- * \date 02/27/2011
+ * \date   02/27/2011
  */
 void fasp_solver_fmgcycle (AMG_data *mgl, 
                            AMG_param *param)
@@ -60,7 +60,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
             break;
     }		
 	
-	fasp_dvec_set(mgl[l].A.row, &mgl[l].x, 0.0); // starting point
+	fasp_dvec_set(mgl[l].A.row, &mgl[l].x, 0.0); // initial guess
 	
 	for ( i=1; i<nl; i++ ) {
 		

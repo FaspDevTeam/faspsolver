@@ -22,13 +22,13 @@
  * \param x      pointer to the dvector of dofs
  * \param param  pointer to AMG parameters
  *
- * \note
- * Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller 
- *           Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben)
- *           Academic Press Inc., San Diego, CA, 2001. 
+ * \note Refter to "Multigrid"
+ *       by U. Trottenberg, C. W. Oosterlee and A. Schuller 
+ *       Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben)
+ *       Academic Press Inc., San Diego, CA, 2001. 
  *
  * \author Chensong Zhang
- * \date 04/06/2010
+ * \date   04/06/2010
  *
  * \note Modified by Chensong Zhang on 01/10/2012
  */
@@ -53,7 +53,7 @@ void fasp_solver_amg (dCSRmat *A,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
 	
-    AMG_start = clock();
+    if (print_level>PRINT_NONE) AMG_start = clock();
 	
     // initialize mgl[0] with A, b, x	
     AMG_data *mgl=fasp_amg_data_create(max_levels);

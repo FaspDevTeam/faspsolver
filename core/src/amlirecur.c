@@ -22,12 +22,12 @@
  *
  * \brief Solve Ax=b with recursive AMLI-cycle
  *
- * \param  mgl       pointer to AMG_data data
- * \param  param     pointer to AMG parameters
- * \param  level     integer of level indicator
+ * \param  mgl       Pointer to AMG_data data
+ * \param  param     Pointer to AMG parameters
+ * \param  level     Current level
  *
  * \author Xiaozhe Hu
- * \date 01/23/2011
+ * \date   01/23/2011
  */
 void fasp_solver_amli (AMG_data *mgl, 
                        AMG_param *param, 
@@ -111,7 +111,7 @@ void fasp_solver_amli (AMG_data *mgl,
 		fasp_blas_array_ax(m1, coef[degree], e1->val);
 		if ( param->coarse_scaling == ON ) {
 			alpha = fasp_blas_array_dotprod(m1, e1->val, r1) 
-                  / fasp_blas_dcsr_vmv(A_level1, e1->val, e1->val);
+            / fasp_blas_dcsr_vmv(A_level1, e1->val, e1->val);
 		}
 		
 		// prolongation e0 = e0 + alpha * P * e1
@@ -162,15 +162,16 @@ void fasp_solver_amli (AMG_data *mgl,
 
 /**
  * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param, INT level, INT num_levels)
+ *
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
  *
- * \param mgl         pointer to AMG_data data
- * \param param       pointer to AMG parameters
- * \param level       current level
- * \param num_levels  total numebr of levels
+ * \param mgl         Pointer to AMG_data data
+ * \param param       Pointer to AMG parameters
+ * \param level       Current level
+ * \param num_levels  Total numebr of levels
  *
  * \author Xiaozhe Hu
- * \date 04/06/2010
+ * \date   04/06/2010
  */
 void fasp_solver_nl_amli (AMG_data *mgl, 
                           AMG_param *param, 
@@ -325,20 +326,21 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 
 /**
  * \fn void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, AMG_param *param, INT level, INT num_levels)
+ *
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
  *
- * \param mgl         pointer to AMG_data_bsr data
- * \param param       pointer to AMG parameters
- * \param level       current level
- * \param num_levels  total numebr of levels
+ * \param mgl         Pointer to AMG_data_bsr data
+ * \param param       Pointer to AMG parameters
+ * \param level       Current level
+ * \param num_levels  Total numebr of levels
  *
  * \author Xiaozhe Hu
  * \date 04/06/2010
  */
 void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, 
-                          AMG_param *param, 
-                          INT level, 
-                          INT num_levels)
+                              AMG_param *param, 
+                              INT level, 
+                              INT num_levels)
 {	
     const SHORT  print_level = param->print_level;
 	const SHORT  smoother = param->smoother;
@@ -360,11 +362,11 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 	
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_nl_amli ...... [Start]\n");
-	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.ROW, mgl[0].A.COL, mgl[0].A.NNZ);
 #endif
 	
 	if (print_level>=PRINT_MORE) printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
-
+    
 	if (level < num_levels-1) { 
 		
 		// pre smoothing
@@ -397,7 +399,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 		//		fasp_blas_dcsr_mxv_agg(&mgl[level].R, r, b1->val);
 		//		break;
 		//	default:
-				fasp_blas_dbsr_mxv(&mgl[level].R, r, b1->val);
+        fasp_blas_dbsr_mxv(&mgl[level].R, r, b1->val);
 		//		break;
 		//}
 		
@@ -429,11 +431,11 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 				const INT maxit = param->amli_degree+1;
                 const REAL tol = 1e-12;
                 
-               switch (param->nl_amli_krylov_type)
+                switch (param->nl_amli_krylov_type)
                 {
-                    //case SOLVER_GCG: // Use GCG
-                     //   fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&prec,0,1);
-                      //  break;
+                        //case SOLVER_GCG: // Use GCG
+                        //   fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&prec,0,1);
+                        //  break;
                     default: // Use FGMRES
                         fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH, maxit,tol,&prec,0,1, MIN(maxit,30));
                         break;
@@ -446,13 +448,13 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 		}
 		
 		// prolongation e0 = e0 + P*e1
-      //  switch (amg_type)
+        //  switch (amg_type)
 		//{
 		//	case UA_AMG:
 		//		fasp_blas_dbsr_aAxpy_agg(1.0, &mgl[level].P, e1->val, e0->val);
 		//		break;
 		//	default:
-				fasp_blas_dbsr_aAxpy(1.0, &mgl[level].P, e1->val, e0->val);
+        fasp_blas_dbsr_aAxpy(1.0, &mgl[level].P, e1->val, e0->val);
 		//		break;
 		//}
 		
@@ -469,7 +471,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                         for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
                         break;
                     default:
-                        printf("### ERROR: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+                        printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
                 }
 			}
 		}
@@ -507,13 +509,13 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
  *
  * \brief Compute the coefficients of the polynomial used by AMLI-cycle
  *
- * \param lambda_max  maximal lambda
- * \param lambda_min  minimal lambda
- * \param degree      degree of polynomial approximation
- * \param coef        coefficient of AMLI (output)
+ * \param lambda_max  Maximal lambda
+ * \param lambda_min  Minimal lambda
+ * \param degree      Degree of polynomial approximation
+ * \param coef        Coefficient of AMLI (output)
  * 
  * \author Xiaozhe Hu
- * \date 01/23/2011
+ * \date   01/23/2011
  */
 void fasp_amg_amli_coef (const REAL lambda_max, 
                          const REAL lambda_min, 

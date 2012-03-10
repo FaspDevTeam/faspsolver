@@ -18,7 +18,6 @@ AR=ar ruc
 CC=gcc 
 CPP=g++
 FC=gfortran
-
 #CC=icc
 #CPP=icpc
 #FC=ifort
@@ -65,6 +64,8 @@ FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f90))
 FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f95))
 FSRC += $(foreach dir,$(EXTRDIR),$(wildcard $(EXTRDIR)/*.f))
 CSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.c))
+CSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.cc))
+CSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.cpp))
 CSRC += $(foreach dir,$(EXTRDIR),$(wildcard $(EXTRDIR)/*.c))
 #
 OBJSF := $(patsubst %.for,%.o,$(FSRC))
@@ -158,7 +159,7 @@ allclean:
 
 help:
 	@echo "======================================================"
-	@echo " Fast Auxiliary Space Preconditioners (FASP)"
+	@echo "||   Fast Auxiliary Space Preconditioners (FASP)    ||"
 	@echo "======================================================"
 	@echo "                                                      "
 	@echo " make            : build all exe files                "

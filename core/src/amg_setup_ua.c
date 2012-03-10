@@ -21,15 +21,17 @@ static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
  *
  * \brief Set up phase of unsmoothed aggregation AMG
  * 
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl     Pointer to AMG_data data
+ * \param param   Pointer to AMG parameters
+ *
+ * \return        SUCCESS if succeed, error otherwise
  *
  * \note Setup A, P, PT, levels using unsmoothed aggregation aggregation algorithm;
  *       Refer to Peter Vanek, Jan Madel and Marin Brezina
- *       Algebraic Multigrid on Unstructured Meshes, 1994
+ *       "Algebraic Multigrid on Unstructured Meshes", 1994
  * 
  * \author Xiaozhe Hu
- * \date 12/28/2011 
+ * \date   12/28/2011 
  *
  */
 SHORT fasp_amg_setup_ua (AMG_data *mgl, 
@@ -58,11 +60,11 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
  *
  * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
  * 
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl     Pointer to AMG_data data
+ * \param param   Pointer to AMG parameters
  * 
  * \author Xiaozhe Hu
- * \date 02/21/2011 
+ * \date   02/21/2011 
  */
 static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl, 
                                             AMG_param *param)

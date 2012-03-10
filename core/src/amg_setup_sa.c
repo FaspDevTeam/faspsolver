@@ -23,15 +23,17 @@ static void smooth_agg(dCSRmat *A, dCSRmat *tentp, dCSRmat *P, AMG_param *param,
  *
  * \brief Set up phase of smoothed aggregation AMG
  * 
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl     Pointer to AMG_data data
+ * \param param   Pointer to AMG parameters
+ *
+ * \return        SUCCESS if succeed, error otherwise
  *
  * \note Setup A, P, PT, levels using smoothed aggregation concrete algorithm;
  *       Refer to Peter Vanek, Jan Madel and Marin Brezina, 
- *       Algebraic Multigrid on Unstructured Meshes, 1994
+ *       "Algebraic Multigrid on Unstructured Meshes", 1994
  * 
  * \author Xiaozhe Hu
- * \date 09/29/2009 
+ * \date   09/29/2009 
  *
  *  Modified by Chensong Zhang on 04/06/2010.
  *  Modified by Chensong Zhang on 05/09/2010.
@@ -74,11 +76,11 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
  *
  * \brief Set up phase of smoothed aggregation AMG, using smoothed P and smoothed A
  * 
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl     Pointer to AMG_data data
+ * \param param   Pointer to AMG parameters
  *
  * \author Xiaozhe Hu
- * \date 02/21/2011 
+ * \date   02/21/2011 
  */
 static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl, 
                                         AMG_param *param)
@@ -214,11 +216,11 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
  *
  * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
  * 
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl     Pointer to AMG_data data
+ * \param param   Pointer to AMG parameters
  *
  * \author Xiaozhe Hu
- * \date 02/21/2011 
+ * \date   02/21/2011 
  */
 static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
                                           AMG_param *param)
@@ -234,8 +236,8 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
 	REAL        setupduration;
 	
 #if DEBUG_MODE
-	printf("amg_setup_sa ...... [Start]\n");
-	printf("amg_setup_sa: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	printf("### DEBUG: amg_setup_sa ...... [Start]\n");
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
 	
 	if (print_level>8)	printf("amg_setup: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
@@ -330,7 +332,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
 	fasp_dcsr_free(&Ac_tran);
 #endif
 	
-	if (print_level>1) {
+	if (print_level>PRINT_MIN) {
 		REAL gridcom=0.0, opcom=0.0;
 		
 		printf("-----------------------------------------------\n");
@@ -349,7 +351,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
 		printf("Half smoothed Aggregation AMG operator complexity = %f\n", opcom);
 	}
 	
-	if (print_level>0) {
+	if (print_level>PRINT_NONE) {
 		setup_end=clock();
 		setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
 		printf("Half smoothed Aggregation AMG setup costs %f seconds.\n", setupduration);	
@@ -361,7 +363,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
 	fasp_mem_free(tentp);
 	
 #if DEBUG_MODE
-	printf("amg_setup_sa ...... [Finish]\n");
+	printf("### DEBUG: amg_setup_sa ...... [Finish]\n");
 #endif
 	
 	return status;

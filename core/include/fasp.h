@@ -633,7 +633,6 @@ typedef struct {
  *
  * This is needed for the diagnal preconditioner.
  */
-
 typedef struct {
 	
 	//! number of components
@@ -649,7 +648,6 @@ typedef struct {
  *
  * This is needed for the diagnal preconditioner.
  */
-
 typedef struct {
 	
 	//! dimension of each sub-block

@@ -70,7 +70,7 @@ void fasp_solver_famg (dCSRmat *A,
     }
     	
 	// FMG solve phase
-	if ( (status=fasp_famg_solve(mgl, param)) < 0 ) goto FINISHED;
+	fasp_famg_solve(mgl, param);
     
     // save solution vector
 	fasp_dvec_cp(&mgl[0].x, x);

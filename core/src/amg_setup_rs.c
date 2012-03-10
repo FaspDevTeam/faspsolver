@@ -12,20 +12,21 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_amg_setup_rs(AMG_data *mgl, AMG_param *param)
+ * \fn INT fasp_amg_setup_rs (AMG_data *mgl, AMG_param *param)
  *
  * \brief Setup phase of Ruge and Stuben's classic AMG
  *
- * \param mgl    pointer to AMG_data data
- * \param param  pointer to AMG parameters
+ * \param mgl    Pointer to AMG_data data
+ * \param param  Pointer to AMG parameters
  *
  * \note Setup A, P, R, levels using classic AMG!
- *       Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller. 
- *           Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben).
- *           Academic Press Inc., San Diego, CA, 2001. 
+ *       Refter to "Multigrid"
+ *       by U. Trottenberg, C. W. Oosterlee and A. Schuller. 
+ *       Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben).
+ *       Academic Press Inc., San Diego, CA, 2001. 
  *
  * \author Chensong Zhang
- * \date 05/09/2010 
+ * \date   05/09/2010 
  *
  *  Modified by Chensong Zhang on 04/04/2009.
  *  Modified by Chensong Zhang on 04/06/2010.
@@ -52,7 +53,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_amg_setup_rs ...... [Start]\n");
-	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     	
 	param->tentative_smooth = 1.0; 

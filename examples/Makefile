@@ -11,6 +11,7 @@
 # Compilers and dependences
 ########################################################################
 AR=ar ruc
+
 CC=gcc
 CPP=g++
 FC=gfortran
@@ -112,7 +113,7 @@ OBJSC += $(patsubst %.cpp,%.o,$(CSRC))
 ########################################################################
 
 # Everything
-ALLPROG=$(TESTLIB) poisson-amg
+ALLPROG=$(TESTLIB) poisson-amg.c poisson-amg.f90
 
 # Test for solvers
 TESTPROG=$(TESTLIB) main/poisson-amg.o 
@@ -124,18 +125,19 @@ TESTPROG=$(TESTLIB) main/poisson-amg.o
 all: $(ALLPROG)
 
 Default: 
-	poisson-amg
-
-#$(TESTLIB): $(OBJSC) $(OBJSF)
-#	ranlib $(TESTLIB)
+	poisson-amg.c
 
 ########################################################################
 # Some test problems
 ########################################################################
 
-poisson-amg: 
+poisson-amg.c: 
 	$(CC) $(CFLAGS) -c main/poisson-amg.c -o main/poisson-amg.o
-	$(FC) -o poisson-amg.ex main/poisson-amg.o $(FLFLAGS)
+	$(FC) -o poisson-amg-c.ex main/poisson-amg.o $(FLFLAGS)
+
+poisson-amg.f90: 
+	$(FC) $(FFLAGS) -c main/poisson-amg.f90 -o main/poisson-amg.o
+	$(FC) -o poisson-amg-f.ex main/poisson-amg.o $(FLFLAGS)
 
 ########################################################################
 # Clean up
@@ -155,13 +157,14 @@ allclean:
 	rm -f main/*~
 
 help:
-	@echo "======================================================"
-	@echo " Fast Auxiliary Space Preconditioners (FASP)"
-	@echo "======================================================"
-	@echo " "
-	@echo " make             : build all examples "
-	@echo " make poisson-amg : build the AMG solver for Poisson "
-	@echo " make clean       : clean all obj files "
-	@echo " make allclean    : clean all obj, exe, bak, out files "
-	@echo " make help        : show this screen "
-	@echo " "
+	@echo "========================================================="
+	@echo "||     Fast Auxiliary Space Preconditioners (FASP)     ||"
+	@echo "========================================================="
+	@echo "                                                         "
+	@echo " make                 : build all examples               "
+	@echo " make poisson-amg.c   : build the C version AMG example  "
+	@echo " make poisson-amg.f90 : build the F version AMG example  "
+	@echo " make clean           : clean all obj files              "
+	@echo " make allclean        : clean all obj, exe, out files    "
+	@echo " make help            : show this screen                 "
+	@echo "                                                         "

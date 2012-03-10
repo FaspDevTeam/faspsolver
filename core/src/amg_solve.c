@@ -12,14 +12,14 @@
 /*---------------------------------*/
 
 /**
- * \fn SHORT fasp_amg_solve (AMG_data *mgl, AMG_param *param)
+ * \fn INT fasp_amg_solve (AMG_data *mgl, AMG_param *param)
  *
  * \brief AMG -- SOLVE phase
  *
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl     Pointer to AMG_data data
+ * \param param   Pointer to AMG parameters
  *
- * \return        iteration number if succeed
+ * \return        Iteration number if succeed
  *
  * \note Solve Ax=b using multigrid method. This is SOLVE phase only and is 
  *       independent of SETUP method used! Should be called after multigrid 
@@ -28,8 +28,8 @@
  * \author Xuehai Huang, Chensong Zhang
  * \date 04/02/2010
  */
-SHORT fasp_amg_solve (AMG_data *mgl, 
-                      AMG_param *param)
+INT fasp_amg_solve (AMG_data *mgl, 
+                    AMG_param *param)
 {
 	dCSRmat      *ptrA=&mgl[0].A;
 	dvector      *b=&mgl[0].b, *x=&mgl[0].x, *r=&mgl[0].w; 
@@ -42,7 +42,7 @@ SHORT fasp_amg_solve (AMG_data *mgl,
     // local variables
 	clock_t       solve_start=clock();
 	REAL          relres1=BIGREAL, absres0=BIGREAL, absres, factor;		
-	unsigned INT  iter=0;
+    INT           iter=0;
 	
 #if DEBUG_MODE
 	const INT     m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
@@ -98,7 +98,7 @@ SHORT fasp_amg_solve (AMG_data *mgl,
 }
 
 /**
- * \fn SHORT fasp_amg_solve_amli(AMG_data *mgl, AMG_param *param)
+ * \fn INT fasp_amg_solve_amli (AMG_data *mgl, AMG_param *param)
  *
  * \brief AMLI -- SOLVE phase
  *
@@ -113,7 +113,7 @@ SHORT fasp_amg_solve (AMG_data *mgl,
  * \author Xiaozhe Hu
  * \date 01/23/2011
  */
-SHORT fasp_amg_solve_amli (AMG_data *mgl, 
+INT fasp_amg_solve_amli (AMG_data *mgl, 
                            AMG_param *param)
 {
 	dCSRmat     *ptrA=&mgl[0].A;
@@ -125,9 +125,9 @@ SHORT fasp_amg_solve_amli (AMG_data *mgl,
 	const REAL   sumb = fasp_blas_dvec_norm2(b); // L2norm(b)	
 	
     // local variables
-	clock_t solve_start=clock();
+	clock_t      solve_start=clock();
 	REAL         relres1=BIGREAL, absres0=BIGREAL, absres, factor;		
-	unsigned INT iter=0;
+    INT          iter=0;
 	
 #if DEBUG_MODE
 	const INT    m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
@@ -178,7 +178,7 @@ SHORT fasp_amg_solve_amli (AMG_data *mgl,
 }
 
 /**
- * \fn SHORT fasp_amg_solve_nl_amli(AMG_data *mgl, AMG_param *param)
+ * \fn INT fasp_amg_solve_nl_amli (AMG_data *mgl, AMG_param *param)
  *
  * \brief nonlinear AMLI --- SOLVE phase
  *
@@ -193,7 +193,7 @@ SHORT fasp_amg_solve_amli (AMG_data *mgl,
  * \author Xiaozhe Hu
  * \date 04/30/2011
  */
-SHORT fasp_amg_solve_nl_amli (AMG_data *mgl, 
+INT fasp_amg_solve_nl_amli (AMG_data *mgl, 
                               AMG_param *param)
 {
 	dCSRmat      *ptrA=&mgl[0].A;
@@ -206,7 +206,7 @@ SHORT fasp_amg_solve_nl_amli (AMG_data *mgl,
 	
     // local variables
 	REAL          relres1=BIGREAL, absres0=BIGREAL, absres, factor;		
-	unsigned INT  iter=0;
+    INT           iter=0;
 	
 #if DEBUG_MODE
     const INT     m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;	
@@ -256,14 +256,12 @@ SHORT fasp_amg_solve_nl_amli (AMG_data *mgl,
 }
 
 /**
- * \fn SHORT fasp_famg_solve (AMG_data *mgl, AMG_param *param)
+ * \fn void fasp_famg_solve (AMG_data *mgl, AMG_param *param)
  *
  * \brief FMG -- SOLVE phase
  *
  * \param mgl     pointer to AMG_data data
  * \param param   pointer to AMG parameters
- *
- * \return        iteration number if succeed
  *
  * \note Solve Ax=b using full multigrid method. This is SOLVE phase only and
  *       is independent of SETUP method used! Should be called after multigrid 
@@ -272,7 +270,7 @@ SHORT fasp_amg_solve_nl_amli (AMG_data *mgl,
  * \author Chensong Zhang
  * \date 01/10/2012
  */
-SHORT fasp_famg_solve (AMG_data *mgl, 
+void fasp_famg_solve (AMG_data *mgl, 
                        AMG_param *param)
 {
 	dCSRmat     *ptrA=&mgl[0].A;
@@ -313,7 +311,7 @@ SHORT fasp_famg_solve (AMG_data *mgl,
     printf("### DEBUG: fasp_famg_solve ...... [Finish]\n");
 #endif
     
-	return SUCCESS;
+	return;
 }
 
 /*---------------------------------*/

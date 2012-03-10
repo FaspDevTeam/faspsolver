@@ -11,13 +11,14 @@
 # Compilers and dependences
 ########################################################################
 AR=ar ruc
+
 CC=gcc
 CPP=g++
 FC=gfortran
 
 FASPDIR=../../faspsolver
 SRCDIR=./src
-INCLUDE=-I $(FASPDIR)/core/include -I ./include
+INCLUDE=-I$(FASPDIR)/core/include -I./include
 FASPLIB=$(FASPDIR)/core/lib/libfasp.a
 TESTLIB=lib/libfasptest.a
 
@@ -44,7 +45,7 @@ LIBS=$(TESTLIB) $(FASPLIB)
 ########################################################################
 # Load user-defined parameters
 ########################################################################
-include ../core/make.inc
+include ${FASPDIR}/core/make.inc
 
 ########################################################################
 # Link options
@@ -210,20 +211,20 @@ allclean:
 
 help:
 	@echo "======================================================"
-	@echo " Fast Auxiliary Space Preconditioners (FASP)"
+	@echo "||   Fast Auxiliary Space Preconditioners (FASP)    ||"
 	@echo "======================================================"
-	@echo " "
-	@echo " make            : build all exe files "
-	@echo " make test       : build the simple test"
-	@echo " make regression : build the regression test"
-	@echo " make testf      : build the F90 interface test"
-	@echo " make testfem    : build the FEM assembling test"
-	@echo " make testfdm2d  : build the FDM 2D assembling test"
-	@echo " make testfdm3d  : build the FDM 3D assembling test"
-	@echo " make testmat    : build the simple matrix property test"
-	@echo " make testrap    : build the comparison of sparse RAP operations"
-	@echo " make testall    : build all test cases"
-	@echo " make clean      : clean all obj files"
-	@echo " make allclean   : clean all obj, bak, output, and exectable files"
-	@echo " make help       : show this help"
-	@echo " "
+	@echo "                                                      "
+	@echo " make            : build the lib and simple test      "
+	@echo " make test       : build the simple test              "
+	@echo " make regression : build the regression test          "
+	@echo " make testf      : build the F90 interface test       "
+	@echo " make testfem    : build the FEM assembling test      "
+	@echo " make testfdm2d  : build the FDM 2D assembling test   "
+	@echo " make testfdm3d  : build the FDM 3D assembling test   "
+	@echo " make testmat    : build the matrix checking test     "
+	@echo " make testrap    : build the comparison of RAP        "
+	@echo " make testall    : build all test cases               "
+	@echo " make clean      : clean all obj files                "
+	@echo " make allclean   : clean all obj, bak, out, exe files "
+	@echo " make help       : show this help screen              "
+	@echo "                                                      "

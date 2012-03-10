@@ -181,7 +181,8 @@ int main (int argc, const char * argv[])
     
 	else {
 		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);		
-		exit(ERROR_SOLVER_TYPE);
+		status = ERROR_SOLVER_TYPE;
+        goto FINISHED;
 	}
 	
 	fasp_mem_usage();
@@ -195,12 +196,13 @@ int main (int argc, const char * argv[])
     
     if (output_type) fclose (stdout);
     
+FINISHED:
     // Clean up memory
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);
 	fasp_dvec_free(&uh);
     
-	return SUCCESS;
+	return status;
 }
 
 /*---------------------------------*/
