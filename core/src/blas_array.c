@@ -19,12 +19,14 @@
  *
  * \brief x = a*x
  *
- * \param n    number of variables
- * \param a    a real number
- * \param x   pointer to the original vector
+ * \param n    Number of variables
+ * \param a    Factor a
+ * \param x    Pointer to x
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
+ *
+ * \note x is reused to store the resulting array.
  */
 void fasp_blas_array_ax (const INT n, 
                          const REAL a, 
@@ -44,13 +46,15 @@ void fasp_blas_array_ax (const INT n,
  *
  * \brief y = a*x + y
  *
- * \param n   number of variables
- * \param a   a real number
- * \param x  pointer to the original vector
- * \param y  pointer to the destination vector
+ * \param n    Number of variables
+ * \param a    Factor a
+ * \param x    Pointer to x
+ * \param y    Pointer to y
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
+ *
+ * \note y is reused to store the resulting array.
  */
 void fasp_blas_array_axpy (const INT n, 
                            const REAL a, 
@@ -74,16 +78,16 @@ void fasp_blas_array_axpy (const INT n,
  * \fn void fasp_blas_array_axpyz(const INT n, const REAL a, REAL *x,
  *                                REAL *y, REAL *z)
  *
- * \brief z = a*x + y, z is the third vector
+ * \brief z = a*x + y
  *
- * \param n   number of variables
- * \param a   a real number
- * \param x  pointer to the original vector 1
- * \param y  pointer to the original vector 2
- * \param z  pointer to the destination vector
+ * \param n    Number of variables
+ * \param a    Factor a
+ * \param x    Pointer to x
+ * \param y    Pointer to y
+ * \param z    Pointer to z
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
  */
 void fasp_blas_array_axpyz (const INT n, 
                             const REAL a, 
@@ -101,14 +105,16 @@ void fasp_blas_array_axpyz (const INT n,
  *
  * \brief y = a*x + b*y
  *
- * \param n   number of variables
- * \param a   real number
- * \param b   real number
- * \param x  pointer to the origianl vector
- * \param y  pointer to the destination vector
+ * \param n    Number of variables
+ * \param a    Factor a
+ * \param x    Pointer to x
+ * \param b    Factor b
+ * \param y    Pointer to y
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
+ * 
+ * \note y is reused to store the resulting array.
  */
 void fasp_blas_array_axpby (const INT n, 
                             const REAL a, 
@@ -125,14 +131,14 @@ void fasp_blas_array_axpby (const INT n,
  *
  * \brief Inner product of two arraies (x,y)
  *
- * \param n   number of variables
- * \param x  pointer to vector 1
- * \param y  pointer to vector 2
+ * \param n    Number of variables
+ * \param x    Pointer to x
+ * \param y    Pointer to y
  *
- * \return    inner product
+ * \return     Inner product (x,y)
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
  */
 REAL fasp_blas_array_dotprod (const INT n, 
                               REAL *x, 
@@ -143,8 +149,8 @@ REAL fasp_blas_array_dotprod (const INT n,
 	
 	for (i=n;i--;) value+=x[i]*y[i];    // modified by Xiaozhe Hu, 03/11/2011
 	
-	//const INT one=1;
-	//value=ddot_(&n,x,&one,y,&one); /* requires common.h and cblas.h */
+	// const INT one=1;
+	// value=ddot_(&n,x,&one,y,&one); /* requires common.h and cblas.h */
 	
 	return value;
 }
@@ -154,13 +160,13 @@ REAL fasp_blas_array_dotprod (const INT n,
  *
  * \brief L1 norm of array x
  *
- * \param n   number of variables
- * \param x  pointer to the original vector
+ * \param n    Number of variables
+ * \param x    Pointer to x
  *
- * \return    L1 norm of x
+ * \return     L1 norm of x
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
  */
 REAL fasp_blas_array_norm1 (const INT n, 
                             REAL *x)
@@ -176,13 +182,13 @@ REAL fasp_blas_array_norm1 (const INT n,
  *
  * \brief L2 norm of array x
  *
- * \param n   number of variables
- * \param x  pointer to the original vector
+ * \param n    Number of variables
+ * \param x    Pointer to x
  *
- * \return    L2 norm of x
+ * \return     L2 norm of x
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
  */
 REAL fasp_blas_array_norm2 (const INT n, 
                             REAL *x)
@@ -198,19 +204,19 @@ REAL fasp_blas_array_norm2 (const INT n,
  *
  * \brief Linf norm of array x
  *
- * \param n   number of variables
- * \param x  pointer to the original vector
+ * \param n    Number of variables
+ * \param x    Pointer to x
  *
- * \return    Linf norm of x
+ * \return     L_inf norm of x
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
  */
 REAL fasp_blas_array_norminf (const INT n, 
                               REAL *x)
 {
 	unsigned INT i;
-	REAL infnorm=0;
+	REAL infnorm=0.0;
 	for (i=0;i<n;++i) infnorm=MAX(infnorm,ABS(x[i]));
 	return infnorm;
 }

@@ -145,7 +145,8 @@ int main (int argc, const char * argv[])
 	}
     
 	// Assemble A and b -- P1 FE discretization for Poisson.
-    setup_poisson(&A, &b, refine_lvl+1, meshIn, meshOut, oo, assemble_option, num_qp_rhs, num_qp_mat);
+    setup_poisson(&A, &b, refine_lvl+1, meshIn, meshOut, oo, assemble_option, 
+                  num_qp_rhs, num_qp_mat);
     
     // Write A and b
 	sprintf(filename, "%s_coo_%d.dat", matFile, refine_lvl+1);
@@ -157,6 +158,21 @@ int main (int argc, const char * argv[])
     // Print problem size
     printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
     printf("b: n = %d\n", b.row);
+    
+    // Solve A x = b with AMG
+    {
+        AMG_param       amgparam; // parameters for AMG
+        fasp_param_amg_init(&amgparam); // set AMG param with default values
+        amgparam.print_level = PRINT_SOME; // print some AMG message
+        amgparam.maxit = 20; // max iteration number = 20 
+        
+        dvector x;
+        fasp_dvec_alloc(A.row, &x); 
+        fasp_dvec_set(A.row,&x,0.0);
+        
+        fasp_solver_amg(&A, &b, &x, &amgparam); 
+        fasp_dvec_free(&x);
+    }
     
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);

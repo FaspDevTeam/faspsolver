@@ -16,13 +16,13 @@
  *
  * \brief Perform Givens rotations to compute y |beta*e_1- H*y|
  *
- * \param beta   the norm of residual r_0
+ * \param beta   Norm of residual r_0
  * \param H      (m+1)*m upper Hessenberg dCSRmat matrix 
- * \param y      minimizer of |beta*e_1- H*y|
- * \param tmp    temporary work array
+ * \param y      Minimizer of |beta*e_1- H*y|
+ * \param tmp    Temporary work array
  *
  * \author Xuehai Huang
- * \date 10/19/2008
+ * \date   10/19/2008
  */
 void fasp_aux_givens (const REAL beta, 
                       dCSRmat *H, 

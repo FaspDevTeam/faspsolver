@@ -13,14 +13,14 @@
 
 /**
  * \fn INT fasp_solver_dcsr_itsolver (dCSRmat *A, dvector *b, dvector *x, 
- *                                    precond *prec, itsolver_param *itparam)
+ *                                    precond *pc, itsolver_param *itparam)
  *
  * \brief Solve Ax=b by preconditioned Krylov methods -- this is an abstract interface
  *
  * \param A        pointer to the coeff matrix in dCSRmat format
  * \param b        pointer to the right hand side in dvector format
  * \param x        pointer to the approx solution in dvector format
- * \param prec     pointer to the preconditioning action
+ * \param pc     pointer to the preconditioning action
  * \param itparam  pointer to parameters for iterative solvers
  *
  * \return          return the number of iterations if succeed
@@ -31,7 +31,7 @@
 INT fasp_solver_dcsr_itsolver (dCSRmat *A, 
                                dvector *b, 
                                dvector *x, 
-                               precond *prec, 
+                               precond *pc, 
                                itsolver_param *itparam)
 {
 	const INT   print_level   = itparam->print_level;	
@@ -56,37 +56,37 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 			
 		case SOLVER_CG:
 			if (print_level>0) printf("Calling PCG solver ...\n");
-			iter = fasp_solver_dcsr_pcg(A, b, x, MaxIt, tol, prec, print_level, stop_type); 
+			iter = fasp_solver_dcsr_pcg(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
             break;
 			
 		case SOLVER_BiCGstab:
 			if (print_level>0) printf("Calling BiCGstab solver ...\n");
-			iter = fasp_solver_dcsr_pbcgs(A, b, x, MaxIt, tol, prec, print_level, stop_type); 
+			iter = fasp_solver_dcsr_pbcgs(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
             break;
 			
 		case SOLVER_MinRes:
 			if (print_level>0) printf("Calling MinRes solver ...\n");		
-			iter = fasp_solver_dcsr_pminres(A, b, x, MaxIt, tol, prec, print_level, stop_type); 
+			iter = fasp_solver_dcsr_pminres(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
             break;
 			
 		case SOLVER_GMRES:
 			if (print_level>0) printf("Calling GMRes solver ...\n");		
-			iter = fasp_solver_dcsr_pgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);
+			iter = fasp_solver_dcsr_pgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);
             break;
 			
 		case SOLVER_VGMRES: 
 			if (print_level>0) printf("Calling vGMRes solver ...\n");		
-			iter = fasp_solver_dcsr_pvgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	
+			iter = fasp_solver_dcsr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	
             break;
             
         case SOLVER_GCG:
 			if (print_level>0) printf("Calling GCG solver ...\n");
-			iter = fasp_solver_dcsr_pgcg(A, b, x, MaxIt, tol, prec, print_level, stop_type); 
+			iter = fasp_solver_dcsr_pgcg(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
             break;
             
         case SOLVER_VFGMRES: 
 			if (print_level>0) printf("Calling vFGMRes solver ...\n");		
-			iter = fasp_solver_dcsr_pvfgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	
+			iter = fasp_solver_dcsr_pvfgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	
             break;
 			
 		default:
@@ -194,12 +194,12 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 	// setup preconditioner
 	dvector diag; fasp_dcsr_getdiag(0,A,&diag);	
 	
-	precond prec; 
-    prec.data = &diag; 
-    prec.fct  = fasp_precond_diag;
+	precond pc; 
+    pc.data = &diag; 
+    pc.fct  = fasp_precond_diag;
 		
 	// call iterative solver
-	status = fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
+	status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
 	
 	if (print_level>=PRINT_MIN) {
 		solver_end = clock();	
@@ -278,29 +278,29 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	if (status < 0) goto FINISHED;
 	
 	// setup preconditioner
-	precond_data precdata;
-    fasp_param_amg_to_prec(&precdata,amgparam);
-	precdata.max_levels = mgl[0].num_levels;
-	precdata.mgl_data = mgl;
+	precond_data pcdata;
+    fasp_param_amg_to_prec(&pcdata,amgparam);
+	pcdata.max_levels = mgl[0].num_levels;
+	pcdata.mgl_data = mgl;
 	
-	precond prec; prec.data = &precdata;
+	precond pc; pc.data = &pcdata;
     
 	if (itparam->precond_type == PREC_FMG) {
-		prec.fct = fasp_precond_famg; // Full AMG
+		pc.fct = fasp_precond_famg; // Full AMG
 	}
 	else {
         switch (amgparam->cycle_type) {
             case AMLI_CYCLE: // AMLI cycle
-                prec.fct = fasp_precond_amli; break;
+                pc.fct = fasp_precond_amli; break;
             case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
-                prec.fct = fasp_precond_nl_amli; break;
+                pc.fct = fasp_precond_nl_amli; break;
             default: // V,W-Cycle AMG
-                prec.fct = fasp_precond_amg; break;
+                pc.fct = fasp_precond_amg; break;
         }
 	}
 	
 	// call iterative solver
-	status = fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);	
+	status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);	
     
 	if (print_level>=PRINT_MIN) {
 		solver_end = clock();	
@@ -366,12 +366,12 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
 	if ( (status = fasp_mem_iludata_check(&LU))<0 ) goto FINISHED;
 	
 	// set preconditioner 
-	precond prec; 
-	prec.data = &LU; 
-    prec.fct  = fasp_precond_ilu;
+	precond pc; 
+	pc.data = &LU; 
+    pc.fct  = fasp_precond_ilu;
 	
 	// call iterative solver
-	status = fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
+	status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
 	
 	if (print_level>=PRINT_MIN) {
 		solver_end = clock();	
@@ -454,12 +454,12 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
 	if ( (status = fasp_mem_iludata_check(&LU))<0 ) goto FINISHED;
 	
 	// set precondtioner
-	precond prec; 
-    prec.data = &LU; 
-    prec.fct  = fasp_precond_ilu;
+	precond pc; 
+    pc.data = &LU; 
+    pc.fct  = fasp_precond_ilu;
 	
     // call iterative solver
-	status = fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
+	status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
 	
 	if (print_level>=PRINT_MIN) {
 		solver_end=clock();	

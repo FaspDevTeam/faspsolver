@@ -27,21 +27,22 @@ static void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, INT r
  *
  * \brief RS coarsening
  *
- * \param A          pointer to the coefficient matrix, the index starts from zero
- * \param vertices   pointer to the indicator ivector of the CF splitting of the vertices
+ * \param A          Pointer to the coefficient matrix, the index starts from zero
+ * \param vertices   Pointer to the indicator ivector of the CF splitting of the vertices
  *                        0: fine gird points
  *                        1: coarse grid points
  *                        2: isolated grid points
- * \param P          pointer to the resulted interpolation matrix (nonzero pattern only)
- * \param param      pointer to AMG parameters
- * \return            SUCCESS or Error message
+ * \param P          Pointer to the resulted interpolation matrix (nonzero pattern only)
+ * \param param      Pointer to AMG parameters
+ *
+ * \return           SUCCESS or Error message
  *
  * \note Ref Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller 
  *           Appendix P475 A.7 (by A. Brandt, P. Oswald and K. Stuben)
  *           Academic Press Inc., San Diego, CA, 2001. 
  * 
  * \author Xuehai Huang, Chensong Zhang, Xiaozhe Hu, Ludmil Zikatanov
- * \date 09/06/2010
+ * \date   09/06/2010
  */
 INT fasp_amg_coarsening_rs (dCSRmat *A, 
                             ivector *vertices, 
@@ -123,9 +124,12 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
 /**
  * \fn static void dispose_elt( LinkList element_ptr )
  *
- * \brief free memory space used by element_ptr
+ * \brief Free memory space used by element_ptr
  *
- * \param element_ptr   pointer to the elements
+ * \param element_ptr   Pointer to the elements
+ * 
+ * \author Xuehai Huang
+ * \date   09/06/2009
  */
 static void dispose_elt (LinkList element_ptr)
 {
@@ -136,7 +140,10 @@ static void dispose_elt (LinkList element_ptr)
  * \fn static void remove_point (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
  *                               INT measure, INT index, INT *lists, INT *where)
  *
- * \brief removes a point from the lists
+ * \brief Removes a point from the lists
+ * 
+ * \author Xuehai Huang
+ * \date   09/06/2009
  */
 static void remove_point (LinkList *LoL_head_ptr, 
                           LinkList *LoL_tail_ptr,
@@ -229,6 +236,9 @@ static void remove_point (LinkList *LoL_head_ptr,
  * \fn static LinkList create_elt (INT Item)
  *
  * \brief Create an element using Item for its data field
+ * 
+ * \author Xuehai Huang
+ * \date   09/06/2009
  */
 static LinkList create_elt (INT Item)
 {
@@ -252,7 +262,10 @@ static LinkList create_elt (INT Item)
  * \fn static void enter_list (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
  *                             INT measure, INT index, INT *lists, INT *where)
  *
- * \brief places point in new list
+ * \brief Places point in new list
+ * 
+ * \author Xuehai Huang
+ * \date   09/06/2009
  */
 static void enter_list (LinkList *LoL_head_ptr, 
                         LinkList *LoL_tail_ptr,
@@ -350,11 +363,14 @@ static void enter_list (LinkList *LoL_head_ptr,
 /**
  * \fn static void generate_S (dCSRmat *A, iCSRmat *S, AMG_param *param)
  *
- * \brief generate the set of all strong couplings S
+ * \brief Generate the set of all strong couplings S
  *
- * \param A pointer to the coefficient matrix
- * \param S pointer to the set of all strong couplings matrix
- * \param param pointer to AMG parameters
+ * \param A      Pointer to the coefficient matrix
+ * \param S      Pointer to the set of all strong couplings matrix
+ * \param param  Pointer to AMG parameters
+ * 
+ * \author Xuehai Huang, Chensong Zhang
+ * \date   09/06/2010
  */
 static void generate_S (dCSRmat *A, 
                         iCSRmat *S, 
@@ -454,13 +470,15 @@ static void generate_S (dCSRmat *A,
 /**
  * \fn static void generate_S_rs (dCSRmat *A, iCSRmat *S, REAL epsilon_str, INT coarsening_type)
  *
- * \brief generate the set of all strong negative couplings(coarsening_type=2) or strong 
- *        absolute couplings(coarsening_type=3)
+ * \brief Generate the set of all strong negative or strong absolute couplings
  *
- * \param A pointer to the coefficient matrix
- * \param S pointer to the set of all strong couplings matrix
- * \param epsilon_str strong coupled ratio
- * \param coarsening_type coarsening type(2: strong negative couplings, 3: strong absolute couplings)
+ * \param A                Pointer to the coefficient matrix
+ * \param S                Pointer to the set of all strong couplings matrix
+ * \param epsilon_str      Strong coupled ratio
+ * \param coarsening_type  Coarsening type (2: strong negative couplings, 3: strong absolute couplings)
+ * 
+ * \author Xuehai Huang, Chensong Zhang
+ * \date   09/06/2010
  */
 static void generate_S_rs (dCSRmat *A, 
                            iCSRmat *S, 
@@ -578,13 +596,17 @@ static void generate_S_rs (dCSRmat *A,
 /**
  * \fn static INT form_coarse_level (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row)
  *
- * \brief find coarse level points
+ * \brief Find coarse level points
  *
- * \param A pointer to the coefficient matrix
- * \param S pointer to the set of all strong couplings matrix
- * \param vertices pointer to the type of vertices (points)
- * \param row integer number of rows of P
- * \return col integer number of cols of P
+ * \param A         Pointer to the coefficient matrix
+ * \param S         Pointer to the set of all strong couplings matrix
+ * \param vertices  Pointer to the type of variables
+ * \param row       Number of rows of P
+ *
+ * \return Number of cols of P
+ * 
+ * \author Xuehai Huang, Chensong Zhang
+ * \date   09/06/2010
  */
 static INT form_coarse_level (dCSRmat *A, 
                               iCSRmat *S, 
@@ -802,13 +824,16 @@ static INT form_coarse_level (dCSRmat *A,
 /**
  * \fn static void generate_sparsity_P (dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col)
  *
- * \brief find coarse level points
+ * \brief Find coarse level points
  *
- * \param P pointer to the prolongation matrix
- * \param S pointer to the set of all strong couplings matrix
- * \param vertices pointer to the type of vertices (points)
- * \param row integer number of rows of P
- * \param col integer number of cols of P
+ * \param P         Pointer to the prolongation matrix
+ * \param S         Pointer to the set of all strong couplings matrix
+ * \param vertices  Pointer to the type of variables
+ * \param row       Number of rows of P
+ * \param col       Number of cols of P
+ * 
+ * \author Xuehai Huang, Chensong Zhang
+ * \date   09/06/2010
  */
 static void generate_sparsity_P (dCSRmat *P, 
                                  iCSRmat *S, 

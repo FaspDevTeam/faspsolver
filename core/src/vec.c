@@ -154,7 +154,7 @@ void fasp_ivec_free (ivector *u)
 }
 
 /**
- * \fn void fasp_dvec_init (dvector *x) 
+ * \fn void fasp_dvec_null (dvector *x) 
  *
  * \brief Initialize dvector
  *
@@ -163,7 +163,7 @@ void fasp_ivec_free (ivector *u)
  * \author Chensong Zhang
  * \date 2010/04/03  
  */
-void fasp_dvec_init (dvector *x) 
+void fasp_dvec_null (dvector *x) 
 {
 	x->row = 0; x->val = NULL;
 }

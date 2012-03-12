@@ -165,7 +165,7 @@ void fasp_icsr_free (iCSRmat *A)
 }
 
 /**
- * \fn void fasp_dcsr_init (dCSRmat *A)
+ * \fn void fasp_dcsr_null (dCSRmat *A)
  *
  * \brief Initialize CSR sparse matrix
  * 
@@ -174,7 +174,7 @@ void fasp_icsr_free (iCSRmat *A)
  * \author Chensong Zhang
  * \date 2010/04/03  
  */
-void fasp_dcsr_init (dCSRmat *A)
+void fasp_dcsr_null (dCSRmat *A)
 {		
 	A->row = A->col = A->nnz = 0;
 	A->IA  = A->JA  = NULL;

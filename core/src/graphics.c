@@ -21,17 +21,17 @@ static int  write_bmp16(const char *fname, int m, int n, const char map[]);
  *
  * \brief Write sparse matrix pattern in BMP file format
  *
- * \param A pointer to the dCSRmat matrix in CSR format
- * \param size integer size*size is the picture size for the picture
- * \param filename char for vector file name
+ * \param A         Pointer to the dCSRmat matrix in CSR format
+ * \param filename  File name
+ * \param size      size*size is the picture size for the picture
  * 
  * \author Chensong Zhang
- * \date 03/29/2009
+ * \date   03/29/2009
  *
  * \note The routine spm_show_mat writes pattern of the specified dCSRmat
  *       matrix in uncompressed BMP file format (Windows bitmap) to a binary
  *       file whose name is specified by the character string filename.
- *
+ * 
  * Each pixel corresponds to one matrix element. The pixel colors have
  * the following meaning:
  *
@@ -51,7 +51,7 @@ void fasp_dcsr_plot (const dCSRmat *A,
 	
 	if (size>minmn) size=minmn;
 	
-    printf("fasp_dcsr_plot: writing matrix pattern to `%s'...\n",filename);
+    printf("Writing matrix pattern to `%s'...\n",filename);
 	
 	map = (char *)fasp_mem_calloc(size * size, sizeof(char));
 	
@@ -82,11 +82,11 @@ void fasp_dcsr_plot (const dCSRmat *A,
  *
  * \brief Output grid to a EPS file
  *
- * \param pg     pointer to grid in 2d
- * \param level  number of levels 
+ * \param pg     Pointer to grid in 2d
+ * \param level  Number of levels 
  *
  * \author Chensong Zhang
- * \date 03/29/2009
+ * \date   03/29/2009
  */
 void fasp_grid2d_plot (pgrid2d pg, 
                        INT level)
@@ -227,9 +227,6 @@ static void put_dword(FILE *fp, int d)
  * \param n      number of pixels for weight
  * \param map    picture for BMP  
  * \return       1 if succeed, 0 if fail
- *
- * \author Chensong Zhang
- * \date 03/29/2009
  *
  * \note
  *  write_bmp16 - write 16-color raster image in BMP file format

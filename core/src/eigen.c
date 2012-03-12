@@ -16,14 +16,14 @@
  *
  * \brief Approximate the largest eigenvalue of A by the power method
  *
- * \param A     pointer to the dCSRmat
- * \param tol    tolerance
- * \param maxit	 max number of iterations
+ * \param A      Pointer to the dCSRmat
+ * \param tol    Tolerance for stopping the power method
+ * \param maxit	 Max number of iterations
  *
- * \return       the largest eigenvalue
+ * \return       Largest eigenvalue
  *
  * \author Xiaozhe Hu
- * \date 01/25/2011 
+ * \date   01/25/2011 
  */
 REAL fasp_dcsr_eig (dCSRmat *A, 
                     const REAL tol, 

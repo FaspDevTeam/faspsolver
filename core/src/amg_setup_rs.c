@@ -12,12 +12,15 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_amg_setup_rs (AMG_data *mgl, AMG_param *param)
+ * \fn SHORT fasp_amg_setup_rs (AMG_data *mgl, AMG_param *param)
  *
  * \brief Setup phase of Ruge and Stuben's classic AMG
  *
  * \param mgl    Pointer to AMG_data data
  * \param param  Pointer to AMG parameters
+ *
+ * \author Chensong Zhang
+ * \date   05/09/2010 
  *
  * \note Setup A, P, R, levels using classic AMG!
  *       Refter to "Multigrid"
@@ -25,18 +28,15 @@
  *       Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben).
  *       Academic Press Inc., San Diego, CA, 2001. 
  *
- * \author Chensong Zhang
- * \date   05/09/2010 
- *
- *  Modified by Chensong Zhang on 04/04/2009.
- *  Modified by Chensong Zhang on 04/06/2010.
- *  Modified by Chensong Zhang on 05/09/2010. 
- *  Modified by Zhiyang Zhou on 11/17/2010.
- *  Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle.
- *  Modified by Chensong zhang on 09/09/2011: add min dof.
+ * Modified by Chensong Zhang on 04/04/2009.
+ * Modified by Chensong Zhang on 04/06/2010.
+ * Modified by Chensong Zhang on 05/09/2010. 
+ * Modified by Zhiyang Zhou on 11/17/2010.
+ * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle.
+ * Modified by Chensong zhang on 09/09/2011: add min dof.
  */
-INT fasp_amg_setup_rs (AMG_data *mgl, 
-                       AMG_param *param)
+SHORT fasp_amg_setup_rs (AMG_data *mgl, 
+                         AMG_param *param)
 {
 	const INT print_level=param->print_level;
 	const INT m=mgl[0].A.row;	
@@ -46,16 +46,16 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 	INT     mm, size;
     SHORT   level=0, status=SUCCESS;
 	SHORT   max_levels=param->max_levels;
-    	
+    
 	clock_t setup_start=clock();
-
+    
     ivector vertices=fasp_ivec_create(m); // stores level info (fine: 0; coarse: 1)
-
+    
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_amg_setup_rs ...... [Start]\n");
 	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
-    	
+    
 	param->tentative_smooth = 1.0; 
     // Xiaozhe 02/23/2011: make sure classical AMG will not call fasp_blas_dcsr_mxv_agg
 	
@@ -77,7 +77,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 		iluparam.ILU_relax   = param->ILU_relax;
 		iluparam.ILU_type    = param->ILU_type;
 	}
-
+    
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
@@ -118,9 +118,9 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         // fasp_blas_dcsr_ptap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
 		
 		// TODO: Make a new ptap using (A,P) only. R is not needed as an input! --Chensong
-
+        
         ++level;
-
+        
 #if DIAGONAL_PREF
         fasp_dcsr_diagpref(&mgl[level].A); // reorder each row to make diagonal appear first
 #endif                
@@ -152,7 +152,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 	if (print_level>PRINT_NONE) {
 		clock_t setup_end=clock();
 		REAL setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-
+        
         print_amgcomplexity(mgl,print_level);
 		printf("Ruge-Stuben AMG setup costs %f seconds.\n\n", setupduration);	
 	}
@@ -161,11 +161,11 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 	
 FINISHED:	
 	fasp_ivec_free(&vertices);
-
+    
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_amg_setup_rs ...... [Finish]\n");
 #endif
-
+    
 	return status;
 }
 

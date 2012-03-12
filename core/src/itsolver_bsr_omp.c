@@ -6,7 +6,6 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-/*-----------------------------------omp--------------------------------------*/
 
 #if FASP_USE_OPENMP
 
@@ -61,13 +60,13 @@ void fasp_set_GS_threads_omp(int mythreads, int its)
 
 /**
  * \fn int fasp_solver_dbsr_itsolver_omp(dBSRmat *A, dvector *b, dvector *x, 
- *                                   precond *prec, itsolver_param *itparam, int nthreads, int openmp_holds)
+ *                                   precond *pc, itsolver_param *itparam, int nthreads, int openmp_holds)
  * \brief Solve Ax=b by standard Krylov methods 
  *
  * \param A        pointer to the dBSRmat matrix
  * \param b        pointer to the dvector of right hand side
  * \param x        pointer to the dvector of dofs
- * \param prec     pointer to the preconditioner data
+ * \param pc     pointer to the preconditioner data
  * \param itparam  pointer to parameters for iterative solvers
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
@@ -79,7 +78,7 @@ void fasp_set_GS_threads_omp(int mythreads, int its)
 int fasp_solver_dbsr_itsolver_omp(dBSRmat *A,
                                   dvector *b,
                                   dvector *x,
-                                  precond *prec,
+                                  precond *pc,
                                   itsolver_param *itparam,
                                   int nthreads,
                                   int openmp_holds)
@@ -100,15 +99,15 @@ int fasp_solver_dbsr_itsolver_omp(dBSRmat *A,
 			
 		case SOLVER_BiCGstab:
 			if (print_level>0) printf("Calling BiCGstab solver (BSR format) ...\n");
-			iter=fasp_solver_dbsr_pbcgs(A, b, x, MaxIt, tol, prec, print_level, stop_type); break;
+			iter=fasp_solver_dbsr_pbcgs(A, b, x, MaxIt, tol, pc, print_level, stop_type); break;
 			
 		case SOLVER_GMRES:
 			if (print_level>0) printf("Calling GMRES solver (BSR format) ...\n");
-			iter=fasp_solver_dbsr_pgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	break;		
+			iter=fasp_solver_dbsr_pgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	break;		
 			
 		case SOLVER_VGMRES:
 			if (print_level>0) printf("Calling vGMRES solver (BSR format) ...\n");
-			iter=fasp_solver_dbsr_pvgmres_omp(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart, nthreads, openmp_holds); break;
+			iter=fasp_solver_dbsr_pvgmres_omp(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart, nthreads, openmp_holds); break;
 			
 		default:
 			printf("Error: wrong itertive solver type %d!\n", itsolver_type);

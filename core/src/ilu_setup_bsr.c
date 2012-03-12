@@ -22,27 +22,28 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
 /*---------------------------------*/
 
 /**
- * \fn SHORT fasp_ilu_dbsr_setup (dBSRmat *A, ILU_data *iludata, ILU_param *param)
+ * \fn SHORT fasp_ilu_dbsr_setup (dBSRmat *A, ILU_data *iludata, ILU_param *iluparam)
  *
  * \brief Get ILU decoposition of a BSR matrix A
  *
- * \param A pointer to bSR matrir of REAL type
- * \param iludata pointer to ILU_data
- * \param param pointer to ILU parameters
+ * \param A         Pointer to bSR matrir of REAL type
+ * \param iludata   Pointer to ILU_data
+ * \param iluparam  Pointer to ILU_param
+ *
+ * \author Shiquan Zhang, Xiaozhe Hu
+ * \date   11/08/2010
  *
  * \note Works for general nb (Xiaozhe)
- * \author Shiquan Zhang, Xiaozhe Hu
- * \date 11/08/2010
  */
 SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
                            ILU_data *iludata, 
-                           ILU_param *param)
+                           ILU_param *iluparam)
 {
-	const SHORT  print_level=param->print_level;
+	const SHORT  print_level=iluparam->print_level;
 	const INT    m=A->ROW, n=A->COL, nnz=A->NNZ, nb=A->nb, nb2=nb*nb;
 	
     // local variables
-	INT lfil=param->ILU_lfil;
+	INT lfil=iluparam->ILU_lfil;
 	INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
 	
 	clock_t setup_start, setup_end;
@@ -51,10 +52,9 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
 	
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_ilu_dbsr_setup ...... [Start]\n");
+    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",m,n,nnz);
 #endif
-	
-	if (param->print_level>PRINT_MORE) printf("fasp_ilu_dbsr_setup: m=%d, n=%d, nnz=%d\n",m,n,nnz);
-	
+		
 	setup_start=clock();
 	
 	// Expected amount of memory for ILU needed and allocate memory 
@@ -148,14 +148,15 @@ FINISHED:
  * \fn static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
  * \brief Get numerical ILU decoposition of a BSR matrix A
  *
- * \param A      pointer to BSR matrir of REAL type
- * \param luval  pointer to numerical value of ILU
- * \param jlu    pointer to the nonzero pattern of ILU
- * \param uptr   pointer to the diagnal position of ILU
+ * \param A        Pointer to BSR matrir of REAL type
+ * \param luval    Pointer to numerical value of ILU
+ * \param jlu      Pointer to the nonzero pattern of ILU
+ * \param uptr     Pointer to the diagnal position of ILU
  *
- * \note: works for general nb (Xiaozhe)
  * \author Shiquan Zhang
  * \date 11/08/2010
+ *
+ * \note Works for general nb (Xiaozhe)
  */
 static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
 {

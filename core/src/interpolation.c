@@ -27,12 +27,12 @@ static void interp_EM(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *pa
  *
  * \brief Generate interpolation P 
  *
- * \param A          pointer to the stiffness matrix
- * \param vertices   pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
- * \param P          pointer to the dCSRmat matrix of resulted interpolation
- * \param param      pointer to AMG parameters
+ * \param A          Pointer to the stiffness matrix
+ * \param vertices   Pointer to the indicator of CF split node is on fine (current) or coarse grid
+ * \param P          Pointer to the dCSRmat matrix of resulted interpolation
+ * \param param      Pointer to AMG parameters
  *
- * \return            SUCCESS or error message
+ * \return           SUCCESS or error message
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date 04/04/2010 
@@ -79,15 +79,16 @@ SHORT fasp_amg_interp (dCSRmat *A,
  *
  * \brief the routine is to find the inverse of a dense matrix
  *
- * \param nn      scale of the matrix
- * \param mat     the REAL pointer to the full matrix
- * \param invmat  the REAL pointer to the full inverse matrix
+ * \param nn      Size of the matrix
+ * \param mat     Pointer to the full matrix
+ * \param invmat  Pointer to the full inverse matrix
+ *
  * \return        SUCCESS or error message
  * 
  * \note this routine works for symmetric matrix.
  *
  * \author Xuehai Huang
- * \date 04/04/2009 
+ * \date   04/04/2009 
  */
 static SHORT invden (INT nn, 
                      REAL *mat, 
@@ -121,18 +122,18 @@ static SHORT invden (INT nn,
  *
  * \brief Get a local block from a CSR sparse matrix
  *
- * \param A    pointer to a sparse matrix
- * \param m     number of rows of the local block matrix
- * \param n     number of columns of the local block matrix
- * \param rows  indices to local rows
- * \param cols  indices to local columns
- * \param Aloc  local dense matrix saved as an array
- * \param mask working array, which should be a negative number initially
+ * \param A     Pointer to a sparse matrix
+ * \param m     Number of rows of the local block matrix
+ * \param n     Number of columns of the local block matrix
+ * \param rows  Indices to local rows
+ * \param cols  Indices to local columns
+ * \param Aloc  Local dense matrix saved as an array
+ * \param mask  Working array, which should be a negative number initially
  *
  * \return      SUCCESS or error message
  *
  * \author Xuehai Huang
- * \date 04/04/2009 
+ * \date   04/04/2009 
  */
 static SHORT get_block (dCSRmat *A, 
                         INT m, 
@@ -172,16 +173,16 @@ static SHORT get_block (dCSRmat *A,
  *
  * \brief given the row indices and col indices, to find a block submatrix and get its inverse
  *
- * \param A     pointer to the whole matrix
- * \param mm     integer of the scale of the submatrix
- * \param Ii     integer to an integer array, to record the indices of row (also col)
- * \param ima   pointer to the inverse of the full submatrix, the storage is row by row
- * \param mask  working interger array
+ * \param A     Pointer to the whole matrix
+ * \param mm    Size of the submatrix
+ * \param Ii    Integer array, to store the indices of row (also col)
+ * \param ima   Pointer to the inverse of the full submatrix, the storage is row by row
+ * \param mask  Working array
  *
- * \return       SUCCESS or error message
+ * \return      SUCCESS or error message
  *
  * \author Xuehai Huang
- * \date 04/04/2010 
+ * \date   04/04/2010 
  */
 static SHORT gentisquare_nomass (dCSRmat *A, 
                                  INT mm, 
@@ -203,19 +204,19 @@ static SHORT gentisquare_nomass (dCSRmat *A,
 /**
  * \fn static SHORT getinonefull (INT **mat, REAL **matval, INT *lengths, INT mm, INT *Ii, REAL *ima)
  *
- * \brief to add a small submatrix to a big matrix with respect to its row and cols in the big matrix
+ * \brief Add a small submatrix to a big matrix with respect to its row and cols in the big matrix
  *
- * \param mat      a REAL pointer pointing to the structure of the matrix
- * \param matval   a REAL pointer pointing to the values according to the structure
- * \param lengths  a 2d array, the second entry is the lengths of matval
- * \param mm       the number of the rows (also the columns) 
- * \param Ii       an integer pointer to the array to store the relative position of the rows and cols
- * \param ima      the pointer to the full submatrix, the sequence is row by row
+ * \param mat      Pointer pointing to the structure of the matrix
+ * \param matval   Pointer pointing to the values according to the structure
+ * \param lengths  2d array, the second entry is the lengths of matval
+ * \param mm       Number of the rows (also the columns) 
+ * \param Ii       Pointer to the array to store the relative position of the rows and cols
+ * \param ima      Pointer to the full submatrix, the sequence is row by row
  *
  * \return         SUCCESS or error message
  *
  * \author Xuehai Huang
- * \date 04/04/2009 
+ * \date   04/04/2009 
  */
 static SHORT getinonefull (INT **mat,
                            REAL **matval, 
@@ -244,14 +245,14 @@ static SHORT getinonefull (INT **mat,
  *
  * \brief Order a cluster of entries in a sequence
  *
- * \param *mat     a REAL pointer to the relative position of the entries
- * \param *matval  a REAL pointer to the values corresponding to the position
- * \param lengths   INT array, to record the number of rows, number of cols and number of nonzerow
+ * \param *mat      Pointer to the relative position of the entries
+ * \param *matval   Pointer to the values corresponding to the position
+ * \param lengths   INT array, to store the number of rows, number of cols and number of nonzerow
  *
  * \return          SUCCESS or error message
  *
  * \author Xuehai Huang
- * \date 04/04/2009 
+ * \date   04/04/2009 
  */
 static SHORT orderone (INT **mat, 
                        REAL **matval, 
@@ -384,16 +385,19 @@ static SHORT orderone (INT **mat,
  *
  * \brief Given the structure of the interpolation, to get the evaluation of the interpolation
  *
- * \param A         pointer to the dCSRmat matrix
- * \param itmat     a REAL integer pointer pointing to the structure of the interpolation
- * \param itmatval  a REAL REAL pointer to the evaluation of the interpolation
+ * \param A         Pointer to the dCSRmat matrix
+ * \param itmat     Pointer to the structure of the interpolation
+ * \param itmatval  Pointer to the evaluation of the interpolation
  * \param isol      ???
  * \param numiso    ???
- * \param ittniz    the length of interpolation
- * \param nf        the number of fine-level nodes
- * \param nc        the number of coarse-level nodes
+ * \param ittniz    Length of interpolation
+ * \param nf        Number of fine-level nodes
+ * \param nc        Number of coarse-level nodes
  *
  * \return          SUCCESS or error message
+ *
+ * \author Xuehai Huang
+ * \date   10/29/2010  
  *
  * \note 
  *  nf=number fine, nc= n coarse	
@@ -563,14 +567,14 @@ static SHORT genintval (dCSRmat *A,
 /**
  * \fn static SHORT getiteval (dCSRmat *A, dCSRmat *it)
  *
- * \brief given a coarsening (in the form of an interpolation operator), inherit the structure,
+ * \brief Given a coarsening (in the form of an interpolation operator), inherit the structure,
  *        get new evaluation
  *
- * \param A    ponter to the dCSRmat matrix
- * \param it   pointer to the interpolation matrix
+ * \param A    Pointer to the dCSRmat matrix
+ * \param it   Pointer to the interpolation matrix
  *
  * \author Xuehai Huang, Chensong Zhang
- * \date 10/29/2010  
+ * \date   10/29/2010  
  */
 static SHORT getiteval (dCSRmat *A, 
                         dCSRmat *it)
@@ -670,19 +674,20 @@ static SHORT getiteval (dCSRmat *A,
 
 /**
  * \fn static void interp_EM (dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param)
+ *
  * \brief Energy-min interpolation 
  *
- * \param A          pointer to the stiffness matrix
- * \param vertices   pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
- * \param P          pointer to the dCSRmat matrix of resulted interpolation
- * \param param      pointer to AMG parameters 
+ * \param A          Pointer to the stiffness matrix
+ * \param vertices   Pointer to the indicator of CF split node is on fine or coarse grid
+ * \param P          Pointer to the dCSRmat matrix of resulted interpolation
+ * \param param      Pointer to AMG parameters 
+ *
+ * \author Shuo Zhang, Xuehai Huang
+ * \date   04/04/2010 
  *
  * \note Ref J. Xu and L. Zikatanov
  *           On An Energy Minimazing Basis in Algebraic Multigrid Methods
  *           Computing and visualization in sciences, 2003
- *
- * \author Shuo Zhang, Xuehai Huang
- * \date 04/04/2010 
  */
 static void interp_EM (dCSRmat *A, 
                        ivector *vertices, 
@@ -715,21 +720,21 @@ static void interp_EM (dCSRmat *A,
 }
 
 /**
- * \fn static void interp_RS(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param)
+ * \fn static void interp_RS (dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param)
  *
  * \brief Direct interpolation 
  *
- * \param A         pointer to the stiffness matrix
- * \param vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
- * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
- * \param param     pointer to AMG parameters
+ * \param A         Pointer to the stiffness matrix
+ * \param vertices  Pointer to the indicator of CF split node is on fine or coarse grid
+ * \param Ptr       Pointer to the dCSRmat matrix of resulted interpolation
+ * \param param     Pointer to AMG parameters
+ *
+ * \author Xuehai Huang
+ * \date   01/31/2009  
  *
  * \note Ref P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid. 
  *	         Academic Press Inc., San Diego, CA, 2001. 
  *           With contributions by A. Brandt, P. Oswald and K. St¨uben.
- *
- * \author Xuehai Huang
- * \date 01/31/2009  
  */
 static void interp_RS (dCSRmat *A, 
                        ivector *vertices, 

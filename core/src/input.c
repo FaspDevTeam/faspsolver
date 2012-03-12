@@ -14,14 +14,14 @@
  *
  * \brief Read input parameters from disk file
  *
- * \param filenm char filename for input file
- * \param Input input data structure
+ * \param filenm    File name for input file
+ * \param Input     Input parameters
  *
  * \author Chensong Zhang
- * \date 03/20/2010 
+ * \date   03/20/2010 
  *
- * \note Modified by Xiaozhe on 01/23/2011: add AMLI cycle
- * \note Modified by Chensong on 01/10/2012
+ * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
+ * Modified by Chensong Zhang on 01/10/2012
  */
 void fasp_param_input (char *filenm, 
                        input_param *Input)

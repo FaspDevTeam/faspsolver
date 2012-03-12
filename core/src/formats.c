@@ -16,12 +16,13 @@
  *
  * \brief Transform a REAL matrix from its IJ format to its CSR format.
  *
- * \param A   pointer to IJ matrix
- * \param B   pointer to CSR matrix
- * \return     SUCCESS if succeed
+ * \param A   Pointer to IJ matrix
+ * \param B   Pointer to CSR matrix
+ *
+ * \return    SUCCESS if succeed
  * 
  * \author Xuehai Huang
- * \date 08/10/2009
+ * \date   08/10/2009
  */
 SHORT fasp_format_dcoo_dcsr (dCOOmat *A, 
                              dCSRmat *B)
@@ -62,12 +63,13 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
  *
  * \brief Transform a REAL matrix from its CSR format to its IJ format.
  *
- * \param A   pointer to CSR matrix
- * \param B   pointer to IJ matrix
- * \return     SUCCESS if succeed 
+ * \param A   Pointer to CSR matrix
+ * \param B   Pointer to IJ matrix
+ *
+ * \return    SUCCESS if succeed
  * 
  * \author Xuehai Huang
- * \date 08/10/2009
+ * \date   08/10/2009
  */
 SHORT fasp_format_dcsr_dcoo (dCSRmat *A, 
                              dCOOmat *B)
@@ -95,11 +97,13 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
  *
  * \brief Transfer a 'dSTRmat' type matrix into a 'dCSRmat' type matrix.
  *
- * \param A      pointer to a 'dSTRmat' type matrix
- * \param B_ptr  pointer to the 'dCSRmat' type matrix
+ * \param A      Pointer to a 'dSTRmat' type matrix
+ * \param B_ptr  Pointer to the 'dCSRmat' type matrix
+ *
+ * \return    SUCCESS if succeed
  * 
  * \author Zhou Zhiyang
- * \date 2010/04/29
+ * \date   2010/04/29
  */
 SHORT fasp_format_dstr_dcsr (dSTRmat *A, 
                              dCSRmat *B_ptr)
@@ -289,11 +293,12 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
  *
  * \brief Form the whole dCSRmat A using blocks given in Ab
  *
- * \param Ab   pointer to the blocks
- * \return      the whole dCSRmat matrix if succeed, NULL if fail
+ * \param Ab   Pointer to the blocks
+ *
+ * \return     dCSRmat matrix if succeed, NULL if fail
  * 
  * \author Shiquan Zhang
- * \date 08/10/2010
+ * \date   08/10/2010
  */
 dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
 {
@@ -353,10 +358,10 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
  *
  * \brief Convert a dCSRmat into a dCSRLmat
  *
- * \param A pointer to the dCSRLmat type matrix
+ * \param A   Pointer to the dCSRLmat type matrix
  *
  * \author Zhou Zhiyang
- * \date 2011/01/07
+ * \date   2011/01/07
  */
 dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
 {
@@ -490,10 +495,10 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
  *
  * \brief Transfer a 'dBSRmat' type matrix into a dCSRmat.
  *
- * \param B pointer to the 'dBSRmat' type matrix
+ * \param B   Pointer to the 'dBSRmat' type matrix
  *
  * \author Zhou Zhiyang
- * \date 2010/10/23 
+ * \date   2010/10/23 
  *
  * \note Works for general nb (Xiaozhe)
  */
@@ -641,10 +646,10 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  *
  * \brief Transfer a 'dSTRmat' type matrix to a 'dBSRmat' type matrix.
  *
- * \param B pointer to the 'dSTRmat' type matrix
+ * \param B   Pointer to the 'dSTRmat' type matrix
  *
  * \author Zhou Zhiyang
- * \date 2010/10/26 
+ * \date   2010/10/26 
  */
 dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
 {
@@ -757,10 +762,10 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
  *
  * \brief Transfer a 'dBSRmat' type matrix to a 'dCOOmat' type matrix.
  *
- * \param B pointer to the 'dBSRmat' type matrix
+ * \param B   Pointer to the 'dBSRmat' type matrix
  *
  * \author Zhou Zhiyang
- * \date 2010/10/26 
+ * \date   2010/10/26 
  */
 dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
 {

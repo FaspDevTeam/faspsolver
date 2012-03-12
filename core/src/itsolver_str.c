@@ -14,14 +14,14 @@
 
 /**
  * \fn INT fasp_solver_dstr_itsolver(dSTRmat *A, dvector *b, dvector *x, 
- *                                   precond *prec, itsolver_param *itparam)
+ *                                   precond *pc, itsolver_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
  * \param A        pointer to the dSTRmat matrix
  * \param b        pointer to the dvector of right hand side
  * \param x        pointer to the dvector of dofs
- * \param prec     pointer to the preconditioner data
+ * \param pc     pointer to the preconditioner data
  * \param itparam  pointer to parameters for iterative solvers
  *
  * \return          the number of iterations
@@ -32,7 +32,7 @@
 INT fasp_solver_dstr_itsolver(dSTRmat *A, 
                               dvector *b, 
                               dvector *x, 
-                              precond *prec, 
+                              precond *pc, 
                               itsolver_param *itparam)
 {
 	const INT print_level = itparam->print_level;
@@ -49,22 +49,22 @@ INT fasp_solver_dstr_itsolver(dSTRmat *A,
 			
 		case SOLVER_CG: 
 			if (print_level>PRINT_NONE) printf("Calling CG solver (STR format) ...\n");
-			iter=fasp_solver_dstr_pcg(A, b, x, MaxIt, tol, prec, print_level, stop_type); 
+			iter=fasp_solver_dstr_pcg(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
 			break;
 			
 		case SOLVER_BiCGstab:
 			if (print_level>PRINT_NONE) printf("Calling BiCGstab solver (STR format) ...\n");
-			iter=fasp_solver_dstr_pbcgs(A, b, x, MaxIt, tol, prec, print_level, stop_type); 
+			iter=fasp_solver_dstr_pbcgs(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
 			break;
 			
 		case SOLVER_GMRES:
 			if (print_level>PRINT_NONE) printf("Calling GMRES solver (STR format) ...\n");
-			iter=fasp_solver_dstr_pgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	
+			iter=fasp_solver_dstr_pgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	
 			break;		
 			
 		case SOLVER_VGMRES:
 			if (print_level>PRINT_NONE) printf("Calling vGMRES solver (STR format) ...\n");
-			iter=fasp_solver_dstr_pvgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	
+			iter=fasp_solver_dstr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	
 			break;	
 			
 		default:
@@ -158,14 +158,14 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
 	
 	for (i=0;i<ngrid;++i) fasp_blas_smat_inv(&(diag.diag.val[i*nc2]),nc);
 	
-	precond *prec = (precond *)fasp_mem_calloc(1,sizeof(precond));	
+	precond *pc = (precond *)fasp_mem_calloc(1,sizeof(precond));	
 	
-	prec->data = &diag;
-	prec->fct  = fasp_precond_dstr_diag;
+	pc->data = &diag;
+	pc->fct  = fasp_precond_dstr_diag;
 	
 	// solver part
 	solver_start=clock();
-	status=fasp_solver_dstr_itsolver(A,b,x,prec,itparam);
+	status=fasp_solver_dstr_itsolver(A,b,x,pc,itparam);
 	solver_end=clock();
 	
 	solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
@@ -227,14 +227,14 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
 	
 	if (print_level>PRINT_NONE) printf("structrued ILU(%d) setup costs %f seconds.\n", ILU_lfil, setup_duration);
 	
-	precond prec; prec.data=&LU;
+	precond pc; pc.data=&LU;
 	if (ILU_lfil == 0)
 	{
-		prec.fct = fasp_precond_dstr_ilu0;
+		pc.fct = fasp_precond_dstr_ilu0;
 	}
 	else if (ILU_lfil == 1)
 	{
-		prec.fct = fasp_precond_dstr_ilu1;
+		pc.fct = fasp_precond_dstr_ilu1;
 	}
 	else
 	{
@@ -244,7 +244,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
 	
 	// solver part
 	solver_start=clock();
-	status=fasp_solver_dstr_itsolver(A,b,x,&prec,itparam);
+	status=fasp_solver_dstr_itsolver(A,b,x,&pc,itparam);
 	solver_end=clock();
 	
 	solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
@@ -303,14 +303,14 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
 	pivot = (ivector *)fasp_mem_calloc(ngrid, sizeof(ivector));
 	fasp_generate_diaginv_block(A, neigh, diaginv, pivot);
 	
-	precond_data_str precdata;
-	precdata.A_str = A;
-	precdata.diaginv = diaginv;
-	precdata.pivot = pivot;
-	precdata.order = order;
-	precdata.neigh = neigh;
+	precond_data_str pcdata;
+	pcdata.A_str = A;
+	pcdata.diaginv = diaginv;
+	pcdata.pivot = pivot;
+	pcdata.order = order;
+	pcdata.neigh = neigh;
 	
-	precond prec; prec.data = &precdata; prec.fct  = fasp_precond_dstr_blockgs;
+	precond pc; pc.data = &pcdata; pc.fct  = fasp_precond_dstr_blockgs;
 	
 	setup_end=clock();
 	
@@ -321,7 +321,7 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
 	
 	// solver part
 	solver_start=clock();
-	status=fasp_solver_dstr_itsolver(A,b,x,&prec,itparam);
+	status=fasp_solver_dstr_itsolver(A,b,x,&pc,itparam);
 	solver_end=clock();
 	
 	

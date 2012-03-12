@@ -17,36 +17,32 @@
  *
  * \brief Read A and b from two disk files
  *
- * \param filemat  char for the matrix file name
- * \param filerhs  char for the vector file name
- * \param A        pointer to the dCSR matrix
- * \param b        pointer to the dvector
+ * \param filemat  File name for matrix
+ * \param filerhs  File name for right-hand side
+ * \param A        Pointer to the dCSR matrix
+ * \param b        Pointer to the dvector
+ *
+ * \note
+ *
+ *      This routine reads a dCSRmat matrix and a dvector vector from a disk file.
  *
  * \note 
  * CSR matrix file format:
- *   This routine reads a dCSRmat matrix and a dvector vector from a single disk file
- *   in the following format:
- * \par   
- *   nrow              % number of columns (rows)
- * \par   
- *   ia(j), j=0:nrow   % row index
- * \par   
- *   ja(j), j=0:nnz-1  % column index
- * \par    
- *   a(j), j=0:nnz-1   % entry value
+ *   - nrow              % number of columns (rows)
+ *   - ia(j), j=0:nrow   % row index
+ *   - ja(j), j=0:nnz-1  % column index
+ *   - a(j), j=0:nnz-1   % entry value
  *
  * \note
  * RHS file format:
- * \par   
- *   n                 % number of entries
- * \par   
- *   b(j), j=0:nrow-1  % entry value
+ *   - n                 % number of entries
+ *   - b(j), j=0:nrow-1  % entry value
  *
  * \author Zhiyang Zhou
- * \date 2010/08/06
+ * \date   2010/08/06
  *
- * \note Modified by Chensong Zhang on 2011/03/01
- * \note Modified by Chensong Zhang on 2012/01/05
+ * Modified by Chensong Zhang on 2011/03/01
+ * Modified by Chensong Zhang on 2012/01/05
  */ 
 void fasp_dcsrvec_read (char *filemat, 
                         char *filerhs, 
@@ -124,30 +120,26 @@ void fasp_dcsrvec_read (char *filemat,
  *
  * \brief Read A and b from a SINGLE disk file
  *
- * \param filename  char for file name
- * \param A         pointer to the CSR matrix
- * \param b         pointer to the dvector
+ * \param filename  File name
+ * \param A         Pointer to the CSR matrix
+ * \param b         Pointer to the dvector
  *
  * \note 
- * CSR matrix file format:
- *   This routine reads a dCSRmat matrix and a dvector vector from a single disk file.
- *   The difference between this and fasp_dcoovec_read is that this routine support
- *   non-square matrices. The file should be in the following format:
- * \par   
- *   nrow ncol         % number of rows and number of columns
- * \par   
- *   ia(j), j=0:nrow   % row index
- * \par   
- *   ja(j), j=0:nnz-1  % column index
- * \par    
- *   a(j), j=0:nnz-1   % entry value
- * \par   
- *   n                 % number of entries
- * \par   
- *   b(j), j=0:n-1     % entry value
+ *      This routine reads a dCSRmat matrix and a dvector vector from a single disk file.
+ *   
+ * \note File format:
+ *   - nrow ncol         % number of rows and number of columns
+ *   - ia(j), j=0:nrow   % row index
+ *   - ja(j), j=0:nnz-1  % column index
+ *   - a(j), j=0:nnz-1   % entry value
+ *   - n                 % number of entries
+ *   - b(j), j=0:n-1     % entry value
+ *
+ * \note
+ *      The difference between this and fasp_dcoovec_read is that this routine support non-square matrices.
  *
  * \author Xuehai Huang
- * \date 03/29/2009 
+ * \date   03/29/2009 
  */ 
 void fasp_dcsrvec2_read (char *filename,
                          dCSRmat *A,
@@ -211,21 +203,17 @@ void fasp_dcsrvec2_read (char *filename,
  *
  * \brief Read A from matrix disk file in IJ format -- indices starting from 0
  *
- * \param filename  char for matrix file name
- * \param A         pointer to the CSR matrix
+ * \param filename  File name for matrix
+ * \param A         Pointer to the CSR matrix
  *
- * \note 
- * File format:
- *   This routine reads a dCOOmat matrix from a disk file in the following format.
- * \par   
- *   nrow ncol nnz     % number of rows, number of columns, and nnz
- * \par   
- *   i  j  a_ij        % i, j a_ij in each line
- * \par
- *   And then it converts the matrix to dCSRmat format.
+ * \note File format:
+ *   - nrow ncol nnz     % number of rows, number of columns, and nnz
+ *   - i  j  a_ij        % i, j a_ij in each line
  *
- * \author Xuehai Huang, modified by Chensong
- * \date 03/29/2009 
+ * \note After reading, it converts the matrix to dCSRmat format.
+ *
+ * \author Xuehai Huang, Chensong
+ * \date   03/29/2009 
  */
 void fasp_dcoo_read (char *filename, 
                      dCSRmat *A)
@@ -267,17 +255,16 @@ void fasp_dcoo_read (char *filename,
  *
  * \brief Read A from matrix disk file in MatrixMarket general format
  *
- * \param filename  char for matrix file name
- * \param A         pointer to the CSR matrix
+ * \param filename  File name for matrix
+ * \param A         Pointer to the CSR matrix
  *
- * \note 
- * File format:
+ * \note File format:
  *   This routine reads a MatrixMarket general matrix from a mtx file.
  *   And it converts the matrix to dCSRmat format. For details of mtx format, 
  *   please refer to http://math.nist.gov/MatrixMarket/.
  *
  * \author Chensong Zhang
- * \date 09/05/2011 
+ * \date   09/05/2011 
  */
 void fasp_dmtx_read (char *filename, 
                      dCSRmat *A)
@@ -326,17 +313,16 @@ void fasp_dmtx_read (char *filename,
  *
  * \brief Read A from matrix disk file in MatrixMarket sym format
  *
- * \param filename  char for matrix file name
- * \param A         pointer to the CSR matrix
+ * \param filename  File name for matrix
+ * \param A         Pointer to the CSR matrix
  *
- * \note 
- * File format:
+ * \note File format:
  *   This routine reads a MatrixMarket symmetric matrix from a mtx file.
  *   And it converts the matrix to dCSRmat format. For details of mtx format, 
  *   please refer to http://math.nist.gov/MatrixMarket/.
  *
  * \author Chensong Zhang
- * \date 09/02/2011 
+ * \date   09/02/2011 
  */
 void fasp_dmtxsym_read (char *filename, 
                         dCSRmat *A)
@@ -395,31 +381,24 @@ void fasp_dmtxsym_read (char *filename,
  *
  * \brief Read A from a disk file in dSTRmat format
  *
- * \param filename  char for vector file name
- * \param A         pointer to the dSTRmat
+ * \param filename  File name for the matrix
+ * \param A         Pointer to the dSTRmat
  *
  * \note 
- * File format:
- *   This routine reads a dSTRmat matrix from a disk file in the following format:
- * \par
- * 	 nx, ny, nz
- * \par
- *   nc: number of components
- * \par
- *   nband: number of bands
- * \par
- *   n: size of diagonal, you must have diagonal
- * \par
- *   diag(j), j=0:n-1
- * \par
- *   offset, length: offset and length of off-diag1
- * \par
- *   offdiag(j), j=0:length-1
- * \par
- *   And it converts the matrix to dCSRmat format.
+ *      This routine reads a dSTRmat matrix from a disk file. After done, it converts 
+ *      the matrix to dCSRmat format.
+ * 
+ * \note File format:
+ *   - nx, ny, nz
+ *   - nc: number of components
+ *   - nband: number of bands
+ *   - n: size of diagonal, you must have diagonal
+ *   - diag(j), j=0:n-1
+ *   - offset, length: offset and length of off-diag1
+ *   - offdiag(j), j=0:length-1
  *
  * \author Xuehai Huang
- * \date 03/29/2009 
+ * \date   03/29/2009 
  */
 void fasp_dstr_read (char *filename,
                      dSTRmat *A)
@@ -481,35 +460,25 @@ void fasp_dstr_read (char *filename,
  *
  * \brief Read A from a disk file in dBSRmat format
  *
- * \param filename char for vector file name
- * \param A pointer to the dBSRmat
+ * \param filename   File name for matrix A
+ * \param A          Pointer to the dBSRmat A
  *
  * \note 
- * File format:
  *   This routine reads a dBSRmat matrix from a disk file in the following format:
- * \par
- *   ROW, COL, NNZ
- * \par
- *   nb: size of each block
- * \par
- *   storage_manner: storage manner of each block 
- * \par
- *   ROW+1: length of IA 
- * \par
- *   IA(i), i=0:ROW
- * \par
- *   NNZ: length of JA
- * \par
- *   JA(i), i=0:NNZ-1 
- * \par
- *   NNZ*nb*nb: length of val
- * \par
- *   val(i), i=0:NNZ*nb*nb-1  * \par
- * \par
- *   And it converts the matrix to dCSRmat format. 
+ *
+ * \note File format:
+ *   - ROW, COL, NNZ
+ *   - nb: size of each block
+ *   - storage_manner: storage manner of each block 
+ *   - ROW+1: length of IA 
+ *   - IA(i), i=0:ROW
+ *   - NNZ: length of JA
+ *   - JA(i), i=0:NNZ-1 
+ *   - NNZ*nb*nb: length of val
+ *   - val(i), i=0:NNZ*nb*nb-1  * \par
  *
  * \author Xiaozhe Hu
- * \date 10/29/2010 
+ * \date   10/29/2010 
  */
 void fasp_dbsr_read (char *filename, dBSRmat *A)
 {
@@ -566,21 +535,17 @@ void fasp_dbsr_read (char *filename, dBSRmat *A)
 /**
  * \fn void fasp_dvecind_read (char *filename, dvector *b)
  *
- * \brief Read b from matrix disk file in IJ format
+ * \brief Read b from matrix disk file
  *
- * \param filename  char for vector file name
- * \param b         pointer to the dvector
+ * \param filename  File name for vector b
+ * \param b         Pointer to the dvector b (output)
  *
- * \note
- * File Format:
- *   This routine reads a dvector in the following format:
- * \par
- *	 nrow
- * \par
- *   ind_j, val_j, j=0:nrow-1
+ * \note File Format:
+ *	 - nrow
+ *   - ind_j, val_j, j=0:nrow-1
  * 
  * \author Chensong Zhang
- * \date 03/29/2009 
+ * \date   03/29/2009 
  */
 void fasp_dvecind_read (char *filename,
                         dvector *b)
@@ -615,19 +580,15 @@ void fasp_dvecind_read (char *filename,
  *
  * \brief Read b from a disk file in array format
  *
- * \param filename char for vector file name
- * \param b pointer to the dvector
+ * \param filename  File name for vector b
+ * \param b         Pointer to the dvector b (output)
  *
- * \note
- * File Format:
- *   This routine reads a dvector in the following format:
- * \par
- *	 nrow
- * \par
- *   val_j ... j=0:nrow-1
+ * \note File Format:
+ *	 - nrow
+ *   - val_j, j=0:nrow-1
  * 
  * \author Chensong Zhang
- * \date 03/29/2009 
+ * \date   03/29/2009 
  */
 void fasp_dvec_read (char *filename, 
                      dvector *b)
@@ -659,21 +620,17 @@ void fasp_dvec_read (char *filename,
 /**
  * \fn void fasp_ivecind_read (char *filename, ivector *b)
  *
- * \brief Read b from matrix disk file in IJ format
+ * \brief Read b from matrix disk file
  *
- * \param filename char for vector file name
- * \param b pointer to the ivector
+ * \param filename  File name for vector b
+ * \param b         Pointer to the dvector b (output)
  *
- * \note
- * File Format:
- *   This routine reads a ivector in the following format:
- * \par
- *	 nrow
- * \par
- *   ind_j, val_j ... j=0:nrow-1
+ * \note File Format:
+ *	 - nrow
+ *   - ind_j, val_j ... j=0:nrow-1
  * 
  * \author Chensong Zhang
- * \date 03/29/2009 
+ * \date   03/29/2009 
  */
 void fasp_ivecind_read (char *filename, 
                         ivector *b)
@@ -706,19 +663,15 @@ void fasp_ivecind_read (char *filename,
  *
  * \brief Read b from a disk file in array format
  *
- * \param filename char for vector file name
- * \param b pointer to the ivector
+ * \param filename  File name for vector b
+ * \param b         Pointer to the dvector b (output)
  *
- * \note
- * File Format:
- *   This routine reads a ivector in the following format:
- * \par
- *	 nrow
- * \par
- *   val_j ... j=0:nrow-1
+ * \note File Format:
+ *	 - nrow
+ *   - val_j, j=0:nrow-1
  * 
  * \author Xuehai Huang
- * \date 03/29/2009 
+ * \date   03/29/2009 
  */
 void fasp_ivec_read (char *filename, 
                      ivector *b)
@@ -754,14 +707,17 @@ void fasp_ivec_read (char *filename,
  * \param filename  char for vector file name
  *
  * \note
- * File format: 
- *	 The routine writes the specified REAL vector in COO format. 
- *   The first line of the file gives the number of rows and the 
- *   number of columns. And then gives nonzero values in i,j,a(i,j)
- *   order. Refer to the reading subroutine \ref fasp_dcoo_read.
+ *
+ *      The routine writes the specified REAL vector in COO format. 
+ *      Refer to the reading subroutine \ref fasp_dcoo_read.
+ *
+ * \note File format: 
+ *   - The first line of the file gives the number of rows and the 
+ *   number of columns. 
+ *   - Then gives nonzero values in i,j,a(i,j) order. 
  *
  * \author Chensong Zhang
- * \date 03/29/2009       
+ * \date   03/29/2009       
  */
 void fasp_dcsr_write (char *filename, 
                       dCSRmat *A)
@@ -792,16 +748,16 @@ void fasp_dcsr_write (char *filename,
  *
  * \brief Write a dSTRmat to a disk file
  *
- * \param filename  char for vector file name
- * \param A         pointer to the dSTRmat
+ * \param filename  File name for A
+ * \param A         Pointer to the dSTRmat matrix A
  *
  * \note
- * File format: 
- *	 The routine writes the specified REAL vector in STR format. 
- *   Refer to the reading subroutine \ref fasp_dstr_read.
+ *
+ *      The routine writes the specified REAL vector in STR format. 
+ *      Refer to the reading subroutine \ref fasp_dstr_read.
  *
  * \author Shiquan Zhang
- * \date 03/29/2010  
+ * \date   03/29/2010  
  */
 void fasp_dstr_write (char *filename, 
                       dSTRmat *A)
@@ -852,16 +808,16 @@ void fasp_dstr_write (char *filename,
  *
  * \brief Write a dBSRmat to a disk file
  *
- * \param filename char for vector file name
- * \param A pointer to the dBSRmat
+ * \param filename  File name for A
+ * \param A         Pointer to the dBSRmat matrix A
  *
  * \note
- * File format: 
- *	 The routine writes the specified REAL vector in BSR format. 
- *   Refer to the reading subroutine \ref fasp_dbsr_read.
+ * 
+ *      The routine writes the specified REAL vector in BSR format. 
+ *      Refer to the reading subroutine \ref fasp_dbsr_read.
  *
  * \author Shiquan Zhang
- * \date 10/29/2010 
+ * \date   10/29/2010 
  */
 void fasp_dbsr_write (char *filename, 
                       dBSRmat *A)
@@ -911,20 +867,17 @@ void fasp_dbsr_write (char *filename,
 /**
  * \fn void fasp_dvec_write (char *filename, dvector *vec)
  *
- * \brief Write a dvector to disk file in IJ format (coordinate format)
+ * \brief Write a dvector to disk file in coordinate format
  *
- * \param vec       pointer to the dvector
- * \param filename  char for vector file name
+ * \param vec       Pointer to the dvector
+ * \param filename  File name
  *
- * \note
- * File format: 
- *
- *	 The routine writes the specified REAL vector in IJ format. 
- *   The first line of the file is the length of the vector;
- *   and after that, each line gives index and value of the entries.    
+ * \note The routine writes the specified REAL vector in IJ format. 
+ *   - The first line of the file is the length of the vector;
+ *   - After that, each line gives index and value of the entries.    
  *
  * \author Xuehai Huang
- * \date 03/29/2009  
+ * \date   03/29/2009  
  */
 void fasp_dvec_write (char *filename,
                       dvector *vec)
@@ -950,20 +903,17 @@ void fasp_dvec_write (char *filename,
 /**
  * \fn void fasp_ivec_write (char *filename, ivector *vec)
  *
- * \brief Write a ivector to disk file in IJ format (coordinate format)
+ * \brief Write a ivector to disk file in coordinate format
  *
- * \param vec       pointer to the ivector
- * \param filename  char for vector file name
+ * \param vec       Pointer to the dvector
+ * \param filename  File name
  *
- * \note
- * File format: 
- *
- *	 The routine writes the specified REAL vector in IJ format. 
- *   The first line of the file is the length of the vector;
- *   and after that, each line gives index and value of the entries.  
+ * \note The routine writes the specified INT vector in IJ format. 
+ *   - The first line of the file is the length of the vector;
+ *   - After that, each line gives index and value of the entries.  
  *
  * \author Xuehai Huang
- * \date 03/29/2009     
+ * \date   03/29/2009     
  */
 void fasp_ivec_write (char *filename, 
                       ivector *vec)
@@ -989,17 +939,10 @@ void fasp_ivec_write (char *filename,
 /**
  * \fn void fasp_dvec_print (INT n, dvector *u) 
  *
- * \brief Print first n entries of a dvector
+ * \brief Print first n entries of a vector of REAL type
  *
- * \param  n   an interger (if n=0, then print all entries)
- * \param u   pointer to a dvector
- *
- * \note
- * File format:
- *   The routine prints a dvector REAL vector type to the screen.
- * 
- * \par
- *   [i  u_i], i = index, u_i = i-th entry in REAL
+ * \param n   An interger (if n=0, then print all entries)
+ * \param u   Pointer to a dvector
  *
  * \author Chensong Zhang
  * \date 03/29/2009 
@@ -1016,17 +959,10 @@ void fasp_dvec_print (INT n,
 /**
  * \fn void fasp_ivec_print (INT n, ivector *u) 
  *
- * \brief Print first n entries of an ivector of INT type
+ * \brief Print first n entries of a vector of INT type
  *
- * \param  n   an interger (if n=0, then print all entries)
- * \param u   pointer to an ivector
- *
- * \note
- * File format:
- *   The routine prints an ivector REAL vector type to the screen.
- *
- * \par
- *   [i  u_i], i = index, u_i = i-th entry in int
+ * \param n   An interger (if n=0, then print all entries)
+ * \param u   Pointer to an ivector
  *
  * \author Chensong Zhang
  * \date 03/29/2009 
@@ -1043,23 +979,12 @@ void fasp_ivec_print (INT n,
 /**
  * \fn void fasp_dcsr_print (dCSRmat *A)
  *
- * \brief Print out a dCSRmat matrix in IJ format (coordinate format)
+ * \brief Print out a dCSRmat matrix in coordinate format
  *
- * \param A pointer to the dCSRmat matrix
- *
- * \note
- * File format: 
- *	 The routine prints the specified REAL vector in IJ format. 
- *   The first line of the file gives the number of rows and the number 
- *   of columns. And then gives nonzero values in i,j,a(i,j) order.
- *
- * \par
- *   [nrow  nnz]  % first line: number of rows, number of nonzeros
- * \par
- *   [i  j  a_ij], ...  % second to nnz+1 lines: i, j, a_ij
+ * \param A   Pointer to the dCSRmat matrix A
  *
  * \author Xuehai Huang
- * \date 03/29/2009     
+ * \date   03/29/2009     
  */
 void fasp_dcsr_print (dCSRmat *A)
 {     

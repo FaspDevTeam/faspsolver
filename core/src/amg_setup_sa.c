@@ -19,7 +19,7 @@ static void smooth_agg(dCSRmat *A, dCSRmat *tentp, dCSRmat *P, AMG_param *param,
 /*---------------------------------*/
 
 /**
- * \fn SHORT fasp_amg_setup_sa(AMG_data *mgl, AMG_param *param)
+ * \fn SHORT fasp_amg_setup_sa (AMG_data *mgl, AMG_param *param)
  *
  * \brief Set up phase of smoothed aggregation AMG
  * 
@@ -27,17 +27,17 @@ static void smooth_agg(dCSRmat *A, dCSRmat *tentp, dCSRmat *P, AMG_param *param,
  * \param param   Pointer to AMG parameters
  *
  * \return        SUCCESS if succeed, error otherwise
- *
- * \note Setup A, P, PT, levels using smoothed aggregation concrete algorithm;
- *       Refer to Peter Vanek, Jan Madel and Marin Brezina, 
- *       "Algebraic Multigrid on Unstructured Meshes", 1994
  * 
  * \author Xiaozhe Hu
  * \date   09/29/2009 
  *
- *  Modified by Chensong Zhang on 04/06/2010.
- *  Modified by Chensong Zhang on 05/09/2010.
- *  Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
+ * \note Setup A, P, PT, levels using smoothed aggregation concrete algorithm;
+ *       Refer to Peter Vanek, Jan Madel and Marin Brezina, 
+ *       "Algebraic Multigrid on Unstructured Meshes", 1994
+ *
+ * Modified by Chensong Zhang on 04/06/2010.
+ * Modified by Chensong Zhang on 05/09/2010.
+ * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
  */
 SHORT fasp_amg_setup_sa (AMG_data *mgl, 
                          AMG_param *param)
@@ -375,15 +375,15 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
  *
  * \brief Smooth the tentative prolongation
  *
- * \param A         pointer to the coefficient matrices
- * \param tentp     pointer to the tentative prolongation operators
- * \param P         pointer to the prolongation operators 
- * \param param     pointer to AMG parameters
- * \param levelNum  level number
- * \param N         pointer to strongly coupled neighborhoods
+ * \param A         Pointer to the coefficient matrices
+ * \param tentp     Pointer to the tentative prolongation operators
+ * \param P         Pointer to the prolongation operators 
+ * \param param     Pointer to AMG parameters
+ * \param levelNum  Current level number
+ * \param N         Pointer to strongly coupled neighborhoods
  *
  * \author Xiaozhe Hu
- * \date 09/29/2009
+ * \date   09/29/2009
  */
 static void smooth_agg (dCSRmat *A, 
                         dCSRmat *tentp, 
@@ -495,7 +495,6 @@ static void smooth_agg (dCSRmat *A,
 	P->nnz = P->IA[P->row];
 	
 	fasp_dcsr_free(&S);
-	
 }
 
 /*---------------------------------*/

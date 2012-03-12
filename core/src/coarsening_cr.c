@@ -21,11 +21,11 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
  *
  * \brief CR coarsening
  *
- * \param i_0        starting index
- * \param i_n        ending index
- * \param A         pointer to matrix, i_0 = 0 
- * \param vertices  pointer to CF, 0: fpt (current level) or 1: cpt 
- * \param param     pointer to AMG parameters
+ * \param i_0       Starting index
+ * \param i_n       Ending index
+ * \param A         Pointer to matrix, i_0 = 0 
+ * \param vertices  Pointer to CF, 0: fpt (current level) or 1: cpt 
+ * \param param     Pointer to AMG parameters
  * 
  * \author James Brannick
  * \date 04/21/2010

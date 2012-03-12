@@ -40,7 +40,7 @@ static void localb (double (*nodes)[2],
     double gauss[num_qp][3];
     int i;
     
-    fasp_init_Gauss(num_qp, 2, gauss); // gauss intergation initial	
+    fasp_gauss2d(num_qp, 2, gauss); // gauss intergation initial	
 	
     for (i=0;i<3;++i) b[i]=0;
 	
@@ -124,7 +124,7 @@ static void assemble_stiffmat (iCSRmat *elements,
     int k1,k2,i1,j1;
     double btemp[3];
 	
-    fasp_init_Gauss(num_qp_mat, 2, gauss); // Gauss intergation initial
+    fasp_gauss2d(num_qp_mat, 2, gauss); // Gauss intergation initial
 	
     A->row = A->col = nodenum;
 	

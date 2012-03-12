@@ -9,7 +9,6 @@
  *			- allocate space (memory) for jc and form this one; If you only care about a "boolean" result of the addition, you stop here. 
  *			- you call another routine, which uses ic and jc to perform the addition. 
  *
- *		We need to redo these routines later in this way!
  */
 
 #include <math.h>
@@ -28,16 +27,16 @@
  *
  * \brief compute C = alpha*A + beta*B in CSR format 
  *
- * \param A      pointer to CSR matrix
- * \param  alpha  real number 
- * \param B      pointer to CSR matrix
- * \param  beta   real number 
- * \param C      pointer to CSR matrix
+ * \param A      Pointer to CSR matrix
+ * \param alpha  REAL factor alpha 
+ * \param B      Pointer to CSR matrix
+ * \param beta   REAL factor beta 
+ * \param C      Pointer to CSR matrix
  *
- * \return        SUCCESS if succees, RUN_FAIL if not
+ * \return       SUCCESS if succees, RUN_FAIL if not
  *
  * \author Xiaozhe Hu
- * \date 11/07/2009
+ * \date   11/07/2009
  */
 INT fasp_blas_dcsr_add (dCSRmat *A, 
                         const REAL alpha, 
@@ -135,7 +134,6 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
 	
 FINISHED:
 	return status;
-	
 }
 
 /**
@@ -143,11 +141,11 @@ FINISHED:
  *
  * \brief Multiply a sparse matrix A in CSR format by a scalar alpha.
  *
- * \param A      pointer to CSR matrix
- * \param  alpha  a real number
+ * \param A      Pointer to CSR matrix A
+ * \param alpha  REAL factor alpha 
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
  */
 void fasp_blas_dcsr_axm (dCSRmat *A, 
                          const REAL alpha)
@@ -163,12 +161,12 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
  *
  * \brief Matrix-vector multiplication y = A*x
  *
- * \param A pointer to dCSRmat CSR matrix
- * \param x pointer to dvector
- * \param y pointer to dvector
+ * \param A   Pointer to dCSRmat matrix A
+ * \param x   Pointer to array x
+ * \param y   Pointer to array y
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
  */
 void fasp_blas_dcsr_mxv (dCSRmat *A, 
                          REAL *x, 
@@ -194,12 +192,12 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
  *
  * \brief Matrix-vector multiplication y = A*x, where the entries of A are all ones.
  *
- * \param A pointer to dCSRmat CSR matrix
- * \param x pointer to dvector
- * \param y pointer to dvector
+ * \param A   Pointer to dCSRmat matrix A
+ * \param x   Pointer to array x
+ * \param y   Pointer to array y
  *
- * \author: Xiaozhe Hu
- * \date: 02/22/2011
+ * \author Xiaozhe Hu
+ * \date   02/22/2011
  */
 void fasp_blas_dcsr_mxv_agg (dCSRmat *A, 
                              REAL *x, 
@@ -223,13 +221,13 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
- * \param alpha  real number
- * \param A     pointer to dCSRmat CSR matrix
- * \param x     pointer to dvector
- * \param y     pointer to dvector
+ * \param alpha  REAL factor alpha 
+ * \param A      Pointer to dCSRmat matrix A
+ * \param x      Pointer to array x
+ * \param y      Pointer to array y
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
  */
 void fasp_blas_dcsr_aAxpy (const REAL alpha, 
                            dCSRmat *A, 
@@ -277,13 +275,13 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where the entries of A are all ones
  *
- * \param alpha  a real number
- * \param A     pointer to dCSRmat CSR matrix
- * \param x     pointer to dvector
- * \param y     pointer to dvector
+ * \param alpha  REAL factor alpha 
+ * \param A      Pointer to dCSRmat matrix A
+ * \param x      Pointer to array x
+ * \param y      Pointer to array y
  *
- * \author: Xiaozhe Hu
- * \date: 02/22/2011
+ * \author Xiaozhe Hu
+ * \date   02/22/2011
  */
 void fasp_blas_dcsr_aAxpy_agg (const REAL alpha, 
                                dCSRmat *A, 
@@ -330,12 +328,12 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
  *
  * \brief vector-Matrix-vector multiplication alpha = y'*A*x
  *
- * \param A pointer to dCSRmat CSR matrix
- * \param x pointer to dvector
- * \param y pointer to dvector
+ * \param A   Pointer to dCSRmat matrix A
+ * \param x   Pointer to array x
+ * \param y   Pointer to array y
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \date   07/01/209
  */
 REAL fasp_blas_dcsr_vmv (dCSRmat *A, 
                          REAL *x, 
@@ -364,20 +362,19 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
  *
  * \brief Sparse matrix multiplication C=A*B
  *
- * \param A   pointer to the dCSRmat matrix
- * \param B   pointer to the dCSRmat matrix
- * \param C   pointer to dCSRmat matrix equal to A*B
+ * \param A   Pointer to the dCSRmat matrix A
+ * \param B   Pointer to the dCSRmat matrix B
+ * \param C   Pointer to dCSRmat matrix equal to A*B
  *
  * \author Xiaozhe Hu
- * \date 11/07/2009
+ * \date   11/07/2009
+ *
+ * \note This fct will be replaced! --Chensong
  */
 void fasp_blas_dcsr_mxm (dCSRmat *A, 
                          dCSRmat *B, 
                          dCSRmat *C)
-{
-	// this needs to be changed!!!
-	// this fct will be replaced!
-	
+{	
 	INT i,j,k,l,count;
 	INT *JD = (INT *)fasp_mem_calloc(B->col,sizeof(int));
 	
@@ -476,16 +473,16 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
  *
  * \brief Triple sparse matrix multiplication B=R*A*P
  *
- * \param R   pointer to the dCSRmat matrix
- * \param A   pointer to the dCSRmat matrix
- * \param P   pointer to the dCSRmat matrix
- * \param B   pointer to dCSRmat matrix equal to R*A*P
+ * \param R   Pointer to the dCSRmat matrix R
+ * \param A   Pointer to the dCSRmat matrix A
+ * \param P   Pointer to the dCSRmat matrix P
+ * \param B   Pointer to dCSRmat matrix equal to R*A*P
+ *
+ * \author Xuehai Huang, Chensong Zhang
+ * \date   05/10/2010
  *
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
- *
- * \author Xuehai Huang, Chensong Zhang
- * \date 05/10/2010
  */
 void fasp_blas_dcsr_rap (dCSRmat *R, 
                          dCSRmat *A, 
@@ -677,16 +674,16 @@ void fasp_blas_dcsr_rap (dCSRmat *R,
  *
  * \brief Triple sparse matrix multiplication B=R*A*P, where the entries of R and P are all ones.
  *
- * \param R   pointer to the dCSRmat matrix
- * \param A   pointer to the dCSRmat matrix
- * \param P   pointer to the dCSRmat matrix
- * \param B   pointer to dCSRmat matrix equal to R*A*P
+ * \param R   Pointer to the dCSRmat matrix R 
+ * \param A   Pointer to the dCSRmat matrix A
+ * \param P   Pointer to the dCSRmat matrix P
+ * \param B   Pointer to dCSRmat matrix equal to R*A*P
+ *
+ * \author Xiaozhe Hu
+ * \date   02/21/2011
  *
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
- *
- * \author Xiaozhe Hu
- * \date 02/21/2011
  */
 void fasp_blas_dcsr_rap_agg (dCSRmat *R, 
                              dCSRmat *A, 
@@ -878,10 +875,13 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
  *
  * \brief Triple sparse matrix multiplication B=P'*A*P
  *
- * \param Pt  pointer to the restriction matrix
- * \param A   pointer to the fine coefficient matrix
- * \param P   pointer to the prolongation matrix
- * \param Ac  pointer to the coarse coefficient matrix (output)
+ * \param Pt  Pointer to the restriction matrix
+ * \param A   Pointer to the fine coefficient matrix
+ * \param P   Pointer to the prolongation matrix
+ * \param Ac  Pointer to the coarse coefficient matrix (output)
+ *
+ * \author Ludmil Zikatanov, Chensong Zhang
+ * \date   05/10/2010
  *
  * \note Driver to compute triple matrix product P'*A*P using ltz CSR format. 
  *       In ltx format: ia[0]=1, ja[0] and a[0] are used as usual. When called 
@@ -890,17 +890,14 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
  *			ia_ltz[k] = ia_usual[k]+1, 
  *			ja_ltz[k] = ja_usual[k]+1,
  *			 a_ltz[k] =  a_usual[k].
- *
- * \author Ludmil Zikatanov, Chensong Zhang
- * \date 05/10/2010
  */
 void fasp_blas_dcsr_ptap (dCSRmat *Pt,
                           dCSRmat *A, 
                           dCSRmat *P, 
                           dCSRmat *Ac)
 {
-	INT nc=Pt->row, n=Pt->col, nnzP=P->nnz, nnzA=A->nnz, maxrpout;
-	INT i;
+	const INT nc=Pt->row, n=Pt->col, nnzP=P->nnz, nnzA=A->nnz;
+	INT i, maxrpout;
 	
 	// shift A from usual to ltz format
 	for (i=0;i<=n;++i)   { A->IA[i]++; P->IA[i]++; }
@@ -909,8 +906,8 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
 	for (i=0;i<nnzP;++i) { P->JA[i]++; Pt->JA[i]++; }
 	
 	// compute P' A P
-	dCSRmat PtAP = fasp_blas_dcsr_rap2(Pt->IA,Pt->JA,Pt->val,A->IA,A->JA,A->val, \
-                                       Pt->IA,Pt->JA,Pt->val,n,nc,&maxrpout,     \
+	dCSRmat PtAP = fasp_blas_dcsr_rap2(Pt->IA,Pt->JA,Pt->val,A->IA,A->JA,A->val,
+                                       Pt->IA,Pt->JA,Pt->val,n,nc,&maxrpout,
                                        P->IA,P->JA);
 	
 	Ac->row = PtAP.row;
@@ -923,10 +920,15 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
 	// shift A back from ltz format
 	for (i=0;i<=Ac->row;++i) Ac->IA[i]--;
 	for (i=0;i< Ac->nnz;++i) Ac->JA[i]--;
-	for (i=0;i<=n;++i)   { A->IA[i]--; P->IA[i]--; }
-	for (i=0;i<nnzA;++i) { A->JA[i]--; }
-	for (i=0;i<=nc;++i)  { Pt->IA[i]--; }
-	for (i=0;i<nnzP;++i) { P->JA[i]--; Pt->JA[i]--; }
+	
+    for (i=0;i<=n;++i)   A->IA[i]--;
+	for (i=0;i<nnzA;++i) A->JA[i]--;
+
+	for (i=0;i<=n;++i)   P->IA[i]--;
+	for (i=0;i<nnzP;++i) P->JA[i]--;
+	
+    for (i=0;i<=nc;++i)  Pt->IA[i]--;
+    for (i=0;i<nnzP;++i) Pt->JA[i]--;
 	
 	return;
 }

@@ -16,7 +16,7 @@
  *
  * \brief Check positivity of diagonal entries of a CSR sparse matrix.
  *
- * \param A pointer to the dCSRmat matrix
+ * \param A   Pointer to the dCSRmat matrix
  *
  * \return Number of negative diagonal entries 
  *
@@ -87,7 +87,7 @@ FINISHED:
  *
  * \brief Check whether a matrix is diagonal dominant.
  *
- * \param A pointer to the dCSRmat matrix
+ * \param A   Pointer to the dCSRmat matrix
  *
  * \return Number of the rows which are diagonal dominant
  *
@@ -134,7 +134,7 @@ INT fasp_check_diagdom (dCSRmat *A)
  *
  * \brief Check symmetry of a sparse matrix of CSR format.
  *
- * \param A pointer to the dCSRmat matrix
+ * \param A   Pointer to the dCSRmat matrix
  *
  * \return 1 and 2 if the structure of the matrix is not symmetric;
  *         0 if the structure of the matrix is symmetric,
@@ -235,10 +235,12 @@ INT fasp_check_symm (dCSRmat *A)
             printf("Matrix is nonsymmetric with max relative difference is %1.3le\n",maxdif);
             break;
         case -1:
-            printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th rows and cols\n",mdi-1,mdi,mdi+1);
+            printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th rows and cols\n",
+                   mdi-1,mdi,mdi+1);
             break;
         case -2:
-            printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th cols and rows\n",mdj-1,mdj,mdj+1);
+            printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th cols and rows\n",
+                   mdj-1,mdj,mdj+1);
             break;
         default:
             break;
@@ -260,7 +262,7 @@ INT fasp_check_symm (dCSRmat *A)
  *
  * \brief Check whether an dCSRmat matrix is valid or not
  *
- * \param A pointer to the matrix in dCSRmat format
+ * \param A   Pointer to the matrix in dCSRmat format
  *
  * \author Shuo Zhang
  * \date   03/29/2009
@@ -294,7 +296,7 @@ SHORT fasp_check_dCSRmat (dCSRmat *A)
  *
  * \brief Check whether an iCSRmat matrix is valid or not
  *
- * \param A pointer to the matrix in iCSRmat format
+ * \param A   Pointer to the matrix in iCSRmat format
  *
  * \author Shuo Zhang
  * \date   03/29/2009

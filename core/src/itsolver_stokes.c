@@ -14,27 +14,27 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, precond_Stokes_param *param, precond_Stokes_data *precdata)
+ * \fn INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, precond_Stokes_param *param, precond_Stokes_data *pcdata)
  * \brief Solve Ax=b by standard Krylov methods 
  *
  * \param A	       pointer to the block_dCSRmat matrix
  * \param b	       pointer to the dvector of right hand side
  * \param x	       pointer to the dvector of dofs
- * \param itparam    pointer to parameters for iterative solvers
- * \param param      parameters to Stokes problems
- * \param precdata   pionter to preconditioner data for Stokes
+ * \param itparam  pointer to parameters for iterative solvers
+ * \param param    parameters to Stokes problems
+ * \param pcdata   pionter to preconditioner data for Stokes
  *
- * \return             number of iterations
+ * \return         number of iterations
  *
  * \author Chensong Zhang
- * \date 11/25/2010
+ * \date   11/25/2010
  */
 INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat, 
                                      dvector *b, 
                                      dvector *x, 
                                      itsolver_param *itparam,
                                      precond_Stokes_param *param, 
-                                     precond_Stokes_data *precdata)
+                                     precond_Stokes_data *pcdata)
 {
 	// parameters
 	const SHORT print_level  = itparam->print_level;
@@ -46,8 +46,8 @@ INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 	const INT n = A->row, nnzA = A->nnz, m = B->row;	
 	
 	// preconditioner data
-	dCSRmat *M = precdata->M;
-	precond prec;
+	dCSRmat *M = pcdata->M;
+	precond pc;
 	AMG_param amgparam;
 	dvector diag_M;	
 	
@@ -57,10 +57,10 @@ INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 	INT status=SUCCESS;
 	
 	// initialize preconditioner 
-	prec.data = &precdata; 
+	pc.data = &pcdata; 
 	switch (precond_type) {
 		case 1:
-			prec.fct = fasp_precond_stokes_bdiag;
+			pc.fct = fasp_precond_stokes_bdiag;
 			break;
 		default:
 			printf("### ERROR: Unknown preconditioner type!\n");
@@ -75,12 +75,12 @@ INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 	//------ setup phase ------//
 	setup_start = clock();
 	
-	precdata->colA = n;
-	precdata->colB = m;
-	precdata->col  = n+m;	
+	pcdata->colA = n;
+	pcdata->colB = m;
+	pcdata->col  = n+m;	
 	
 	// setup work array space
-	precdata->w = (REAL *)fasp_mem_calloc(precdata->col,sizeof(REAL));
+	pcdata->w = (REAL *)fasp_mem_calloc(pcdata->col,sizeof(REAL));
 	
 	// initialize AMG for A
 	AMG_data *mgl=fasp_amg_data_create(amgparam.max_levels);
@@ -99,12 +99,12 @@ INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 			printf("### ERROR Wrong AMG type %d!\n",amgparam.AMG_type);
 			exit(ERROR_INPUT_PAR);
 	}	
-	precdata->max_levels = mgl[0].num_levels;
-	precdata->mgl_data = mgl;
+	pcdata->max_levels = mgl[0].num_levels;
+	pcdata->mgl_data = mgl;
 	
 	// setup diagonal for M
 	fasp_dcsr_getdiag(0,M,&diag_M);	
-	precdata->diag_M = &diag_M;
+	pcdata->diag_M = &diag_M;
 	
 	setup_end = clock();
 	
@@ -115,7 +115,7 @@ INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 	
 	//------ solver phase ------// 
 	solver_start=clock();
-	status=fasp_solver_bdcsr_itsolver(Mat,b,x,&prec,itparam);
+	status=fasp_solver_bdcsr_itsolver(Mat,b,x,&pc,itparam);
 	solver_end=clock();
 	
 	if (print_level>PRINT_NONE) {
@@ -126,7 +126,7 @@ INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 	
 	// clean up memory
 	if (mgl) fasp_amg_data_free(mgl);
-	fasp_mem_free(precdata->w);
+	fasp_mem_free(pcdata->w);
 	
 	return status;
 }

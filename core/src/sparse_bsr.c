@@ -161,7 +161,7 @@ void fasp_dbsr_free (dBSRmat *A)
 }
 
 /**
- * \fn void fasp_dbsr_init (dBSRmat *A)
+ * \fn void fasp_dbsr_null (dBSRmat *A)
  *
  * \brief Initialize sparse matrix on structured grid
  *
@@ -170,7 +170,7 @@ void fasp_dbsr_free (dBSRmat *A)
  * \author Xiaozhe Hu
  * \date 10/26/2010 
  */
-void fasp_dbsr_init (dBSRmat *A)
+void fasp_dbsr_null (dBSRmat *A)
 {		
 	A->ROW=0;
 	A->COL=0;

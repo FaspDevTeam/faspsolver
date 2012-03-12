@@ -16,12 +16,12 @@
  *
  * \brief y = a*x + y
  *
- * \param a real number
- * \param x pointer to dvector
- * \param y pointer to dvector
+ * \param a   REAL factor a
+ * \param x   Pointer to dvector x
+ * \param y   Pointer to dvector y
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \data   07/01/209
  */
 void fasp_blas_dvec_axpy (const REAL a, 
                           dvector *x, 
@@ -31,7 +31,7 @@ void fasp_blas_dvec_axpy (const REAL a,
 	REAL *xpt=x->val, *ypt=y->val;
 	
 	if ((y->row-m)!=0) {
-		printf("### ERROR: two vectors have different length!\n");
+		printf("### ERROR: Two vectors have different length!\n");
 		exit(ERROR_DATA_STRUCTURE);
 	}
 	
@@ -43,13 +43,13 @@ void fasp_blas_dvec_axpy (const REAL a,
  *
  * \brief z = a*x + y, z is a third vector (z is cleared)
  *
- * \param a real number
- * \param x pointer to dvector
- * \param y pointer to dvector
- * \param z pointer to dvector
+ * \param a   REAL factor a
+ * \param x   Pointer to dvector x
+ * \param y   Pointer to dvector y
+ * \param z   Pointer to dvector z
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \data   07/01/209
  */
 void fasp_blas_dvec_axpyz (const REAL a, 
                            dvector *x, 
@@ -61,7 +61,7 @@ void fasp_blas_dvec_axpyz (const REAL a,
 	REAL *xpt=x->val, *ypt=y->val, *zpt=z->val;
 	
 	if ((y->row-m)!=0) {
-		printf("### ERROR: two vectors have different length!\n");
+		printf("### ERROR: Two vectors have different length!\n");
 		exit(ERROR_DATA_STRUCTURE);
 	}
 	
@@ -75,13 +75,13 @@ void fasp_blas_dvec_axpyz (const REAL a,
  *
  * \brief Inner product of two vectors (x,y)
  *
- * \param x pointer to dvector
- * \param y pointer to dvector
+ * \param x   Pointer to dvector x
+ * \param y   Pointer to dvector y
  *
  * \return Inner product
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \data   07/01/209
  */
 REAL fasp_blas_dvec_dotprod (dvector *x, 
                              dvector *y)
@@ -101,13 +101,13 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
  *
  * \brief Relative error of two dvector x and y
  *
- * \param x pointer to dvector
- * \param y pointer to dvector
+ * \param x   Pointer to dvector x
+ * \param y   Pointer to dvector y
  *
  * \return relative error ||x-y||/||x||
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \data   07/01/209
  */
 REAL fasp_dvec_relerr (dvector *x, 
                        dvector *y)
@@ -118,7 +118,7 @@ REAL fasp_dvec_relerr (dvector *x,
 	REAL *xpt=x->val, *ypt=y->val;
 	
 	if (length!=y->row) {
-		printf("### ERROR: two vectors have different length!\n");
+		printf("### ERROR: Two vectors have different length!\n");
 		exit(ERROR_DUMMY_VAR);	
 	}
 	
@@ -135,12 +135,12 @@ REAL fasp_dvec_relerr (dvector *x,
  *
  * \brief L1 norm of dvector x
  *
- * \param x pointer to dvector
+ * \param x   Pointer to dvector x
  *
  * \return L1 norm of x
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \data   07/01/209
  */
 REAL fasp_blas_dvec_norm1 (dvector *x)
 {
@@ -158,12 +158,12 @@ REAL fasp_blas_dvec_norm1 (dvector *x)
  *
  * \brief L2 norm of dvector x
  *
- * \param x pointer to dvector
+ * \param x   Pointer to dvector x
  *
  * \return L2 norm of x
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \data   07/01/209
  */
 REAL fasp_blas_dvec_norm2 (dvector *x)
 {
@@ -181,12 +181,12 @@ REAL fasp_blas_dvec_norm2 (dvector *x)
  *
  * \brief Linf norm of dvector x
  *
- * \param x pointer to dvector
+ * \param x   Pointer to dvector x
  *
- * \return Linf norm of x
+ * \return L_inf norm of x
  *
  * \author Chensong Zhang
- * \date 07/01/209
+ * \data   07/01/209
  */
 REAL fasp_blas_dvec_norminf (dvector *x)
 {

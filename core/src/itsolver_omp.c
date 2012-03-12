@@ -11,17 +11,16 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*---------------------------------omp----------------------------------------*/
 
 /**
  * \fn int fasp_solver_dcsr_itsolver_omp(dCSRmat *A, dvector *b, dvector *x, 
- *                                   precond *prec, itsolver_param *itparam, int nthreads, int openmp_holds)
+ *                                   precond *pc, itsolver_param *itparam, int nthreads, int openmp_holds)
  * \brief Solve Ax=b by standard Krylov methods 
  *
  * \param A        pointer to the dCSRmat matrix
  * \param b        pointer to the dvector of right hand side
  * \param x        pointer to the dvector of dofs
- * \param prec     pointer to the preconditioner data
+ * \param pc     pointer to the preconditioner data
  * \param itparam  pointer to parameters for iterative solvers
  * \param nthreads number of threads
  * \param openmp_holds threshold of parallelization
@@ -33,7 +32,7 @@
 int fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
                                    dvector *b,
                                    dvector *x,
-                                   precond *prec,
+                                   precond *pc,
                                    itsolver_param *itparam,
                                    int nthreads,
                                    int openmp_holds )
@@ -53,23 +52,23 @@ int fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
 			
 		case SOLVER_CG:
 			if (print_level>0) printf("Calling PCG solver ...\n");
-			iter=fasp_solver_dcsr_pcg_omp(A, b, x, MaxIt, tol, prec, print_level, stop_type, nthreads, openmp_holds); break;
+			iter=fasp_solver_dcsr_pcg_omp(A, b, x, MaxIt, tol, pc, print_level, stop_type, nthreads, openmp_holds); break;
 			
 		case SOLVER_BiCGstab:
 			if (print_level>0) printf("Calling BiCGstab solver ...\n");
-			iter=fasp_solver_dcsr_pbcgs(A, b, x, MaxIt, tol, prec, print_level, stop_type); break;
+			iter=fasp_solver_dcsr_pbcgs(A, b, x, MaxIt, tol, pc, print_level, stop_type); break;
 			
 		case SOLVER_MinRes:
 			if (print_level>0) printf("Calling MinRes solver ...\n");		
-			iter=fasp_solver_dcsr_pminres(A, b, x, MaxIt, tol, prec, print_level, stop_type); break;
+			iter=fasp_solver_dcsr_pminres(A, b, x, MaxIt, tol, pc, print_level, stop_type); break;
 			
 		case SOLVER_GMRES:
 			if (print_level>0) printf("Calling GMRes solver ...\n");		
-			iter=fasp_solver_dcsr_pgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	break;
+			iter=fasp_solver_dcsr_pgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	break;
 			
 		case SOLVER_VGMRES: 
 			if (print_level>0) printf("Calling vGMRes solver ...\n");		
-			iter=fasp_solver_dcsr_pvgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	break;
+			iter=fasp_solver_dcsr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	break;
 			
 		default:
 			printf("Error: wrong itertive solver type %d!\n", itsolver_type);
@@ -145,41 +144,41 @@ int fasp_solver_dcsr_krylov_amg_omp (dCSRmat *A,
 	if (status < 0) goto FINISHED;
 	
 	// solver part
-	precond_data precdata;
-	precdata.maxit = amgparam->maxit;
-	precdata.tol = amgparam->tol;
-	precdata.cycle_type = amgparam->cycle_type;
-	precdata.smoother = amgparam->smoother;
-	precdata.smooth_order = amgparam->smooth_order;
-	precdata.presmooth_iter  = amgparam->presmooth_iter;
-	precdata.postsmooth_iter = amgparam->postsmooth_iter;
-	precdata.coarsening_type = amgparam->coarsening_type;
-	precdata.relaxation = amgparam->relaxation;
-	precdata.coarse_scaling = amgparam->coarse_scaling;
-	precdata.amli_degree = amgparam->amli_degree;
-	precdata.amli_coef = amgparam->amli_coef;
-	precdata.tentative_smooth = amgparam->tentative_smooth;
-	precdata.max_levels = mgl[0].num_levels;
-	precdata.mgl_data = mgl;
+	precond_data pcdata;
+	pcdata.maxit = amgparam->maxit;
+	pcdata.tol = amgparam->tol;
+	pcdata.cycle_type = amgparam->cycle_type;
+	pcdata.smoother = amgparam->smoother;
+	pcdata.smooth_order = amgparam->smooth_order;
+	pcdata.presmooth_iter  = amgparam->presmooth_iter;
+	pcdata.postsmooth_iter = amgparam->postsmooth_iter;
+	pcdata.coarsening_type = amgparam->coarsening_type;
+	pcdata.relaxation = amgparam->relaxation;
+	pcdata.coarse_scaling = amgparam->coarse_scaling;
+	pcdata.amli_degree = amgparam->amli_degree;
+	pcdata.amli_coef = amgparam->amli_coef;
+	pcdata.tentative_smooth = amgparam->tentative_smooth;
+	pcdata.max_levels = mgl[0].num_levels;
+	pcdata.mgl_data = mgl;
 	
-	precond prec;
-	prec.data = &precdata; 
+	precond pc;
+	pc.data = &pcdata; 
 	if (itparam->precond_type == PREC_FMG)
 	{
-		//prec.fct = fasp_precond_famg;
+		//pc.fct = fasp_precond_famg;
 	}
 	else{
 		if (amgparam->cycle_type == AMLI_CYCLE)
 		{
-//			prec.fct = fasp_precond_amli;
+//			pc.fct = fasp_precond_amli;
 		}
 		else
 		{
-			prec.fct_omp = fasp_precond_amg_omp;
+			pc.fct_omp = fasp_precond_amg_omp;
 		}
 	}
 	
-	status=fasp_solver_dcsr_itsolver_omp(A,b,x,&prec,itparam,nthreads,openmp_holds);
+	status=fasp_solver_dcsr_itsolver_omp(A,b,x,&pc,itparam,nthreads,openmp_holds);
 	
 	if (print_level>0) {
 		solver_end=omp_get_wtime();	

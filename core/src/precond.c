@@ -219,15 +219,15 @@ void fasp_precond_amg (REAL *r,
                        REAL *z, 
                        void *data)
 {
-	precond_data *precdata=(precond_data *)data;
-	const INT m=precdata->mgl_data[0].A.row;
-	const INT maxit=precdata->maxit;
+	precond_data *pcdata=(precond_data *)data;
+	const INT m=pcdata->mgl_data[0].A.row;
+	const INT maxit=pcdata->maxit;
 	unsigned INT i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
-    fasp_param_prec_to_amg(&amgparam,precdata);
+    fasp_param_prec_to_amg(&amgparam,pcdata);
 	
-	AMG_data *mgl = precdata->mgl_data;
+	AMG_data *mgl = pcdata->mgl_data;
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	
@@ -252,15 +252,15 @@ void fasp_precond_famg (REAL *r,
                         REAL *z, 
                         void *data)
 {
-	precond_data *precdata=(precond_data *)data;
-	const INT m=precdata->mgl_data[0].A.row;
-	const INT maxit=precdata->maxit;
+	precond_data *pcdata=(precond_data *)data;
+	const INT m=pcdata->mgl_data[0].A.row;
+	const INT maxit=pcdata->maxit;
 	unsigned INT i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
-    fasp_param_prec_to_amg(&amgparam,precdata);
+    fasp_param_prec_to_amg(&amgparam,pcdata);
 	
-	AMG_data *mgl = precdata->mgl_data;
+	AMG_data *mgl = pcdata->mgl_data;
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	
@@ -285,15 +285,15 @@ void fasp_precond_amli (REAL *r,
                         REAL *z, 
                         void *data)
 {
-	precond_data *precdata=(precond_data *)data;
-	const INT m=precdata->mgl_data[0].A.row;
-	const INT maxit=precdata->maxit;
+	precond_data *pcdata=(precond_data *)data;
+	const INT m=pcdata->mgl_data[0].A.row;
+	const INT maxit=pcdata->maxit;
 	unsigned INT i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
-    fasp_param_prec_to_amg(&amgparam,precdata);
+    fasp_param_prec_to_amg(&amgparam,pcdata);
 	
-	AMG_data *mgl = precdata->mgl_data;
+	AMG_data *mgl = pcdata->mgl_data;
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	
@@ -319,16 +319,16 @@ void fasp_precond_nl_amli (REAL *r,
                            void *data)
 {
 	
-	precond_data *precdata=(precond_data *)data;
-	const INT m=precdata->mgl_data[0].A.row;
-	const INT maxit=precdata->maxit;
-	const SHORT num_levels = precdata->max_levels;
+	precond_data *pcdata=(precond_data *)data;
+	const INT m=pcdata->mgl_data[0].A.row;
+	const INT maxit=pcdata->maxit;
+	const SHORT num_levels = pcdata->max_levels;
 	unsigned INT i;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
-    fasp_param_prec_to_amg(&amgparam,precdata);
+    fasp_param_prec_to_amg(&amgparam,pcdata);
 	
-	AMG_data *mgl = precdata->mgl_data;
+	AMG_data *mgl = pcdata->mgl_data;
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	

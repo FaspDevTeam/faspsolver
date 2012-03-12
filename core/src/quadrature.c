@@ -12,178 +12,178 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_init_quadrature (int num_qp, int ncoor, double (*gauss)[3])
+ * \fn void fasp_quad2d (INT num_qp, INT ncoor, REAL (*quad)[3])
  *
- * \brief Initialize piece Lagrange quadrature points and weights
+ * \brief Initialize Lagrange quadrature points and weights
  *
- * \param num_qp the number of quadrature points
- * \param ncoor the dimension of space
- * \param gauss quadrature points and weight
- * 
- * \note gauss[*][0] -- quad point x in ref coor
- *		 gauss[*][1] -- quad point y in ref coor
- *       gauss[*][2] -- quad weight
+ * \param num_qp    Number of quadrature points
+ * \param ncoor     Dimension of space
+ * \param quad      Quadrature points and weights
  * 
  * \author Xuehai Huang, Chensong Zhang, Ludmil Zikatanov
  * \date 10/21/2008
+ * 
+ * \note quad[*][0] -- quad point x in ref coor
+ *		 quad[*][1] -- quad point y in ref coor
+ *       quad[*][2] -- quad weight
  */
-void fasp_init_quadrature (int num_qp, 
-                           int ncoor, 
-                           double (*gauss)[3])
+void fasp_quad2d (INT num_qp, 
+                  INT ncoor, 
+                  REAL (*quad)[3])
 {
-	if (num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, "fasp_init_quadrature");
+	if (num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, "fasp_quad2d");
 	
-	if (ncoor!=2) fasp_chkerr(ERROR_QUAD_DIM, "fasp_init_quadrature");
+	if (ncoor!=2) fasp_chkerr(ERROR_QUAD_DIM, "fasp_quad2d");
 	
 	switch (num_qp) {
 		case 1:  // 1-point Gauss rule
-			gauss[0][0] = 1.0/3;
-			gauss[0][1] = 1.0/3;
-			gauss[0][2] = 0.5000000000000000000000000;
+			quad[0][0] = 1.0/3;
+			quad[0][1] = 1.0/3;
+			quad[0][2] = 0.5000000000000000000000000;
 			break;
 		case 0:  // 3-point mid-point rule
-			gauss[0][0] = 0.5000000000000000000000000;
-			gauss[0][1] = 0.5000000000000000000000000;
-			gauss[0][2] = 0.1666666666666666666666667;
+			quad[0][0] = 0.5000000000000000000000000;
+			quad[0][1] = 0.5000000000000000000000000;
+			quad[0][2] = 0.1666666666666666666666667;
 			
-			gauss[1][0] = 0.0000000000000000000000000;
-			gauss[1][1] = 0.5000000000000000000000000;
-			gauss[1][2] = 0.1666666666666666666666667;
+			quad[1][0] = 0.0000000000000000000000000;
+			quad[1][1] = 0.5000000000000000000000000;
+			quad[1][2] = 0.1666666666666666666666667;
 			
-			gauss[2][0] = 0.5000000000000000000000000;
-			gauss[2][1] = 0.0000000000000000000000000;
-			gauss[2][2] = 0.1666666666666666666666667;
+			quad[2][0] = 0.5000000000000000000000000;
+			quad[2][1] = 0.0000000000000000000000000;
+			quad[2][2] = 0.1666666666666666666666667;
 			break;
 		case 3:  // 3-point Lagrange rule
-			gauss[0][0] = 1.0000000000000000000000000;
-			gauss[0][1] = 0.0000000000000000000000000;
-			gauss[0][2] = 0.1666666666666666666666667;
+			quad[0][0] = 1.0000000000000000000000000;
+			quad[0][1] = 0.0000000000000000000000000;
+			quad[0][2] = 0.1666666666666666666666667;
 			
-			gauss[1][0] = 0.0000000000000000000000000;
-			gauss[1][1] = 1.0000000000000000000000000;
-			gauss[1][2] = 0.1666666666666666666666667;
+			quad[1][0] = 0.0000000000000000000000000;
+			quad[1][1] = 1.0000000000000000000000000;
+			quad[1][2] = 0.1666666666666666666666667;
 			
-			gauss[2][0] = 0.0000000000000000000000000;
-			gauss[2][1] = 0.0000000000000000000000000;
-			gauss[2][2] = 0.1666666666666666666666667;
+			quad[2][0] = 0.0000000000000000000000000;
+			quad[2][1] = 0.0000000000000000000000000;
+			quad[2][2] = 0.1666666666666666666666667;
 			break;
 		case 6:  // 6-point Newton-Cotes rule
-			gauss[0][0] = 1;
-			gauss[0][1] = 0;
-			gauss[0][2] = 1.0/24;
+			quad[0][0] = 1;
+			quad[0][1] = 0;
+			quad[0][2] = 1.0/24;
 			
-			gauss[1][0] = 0;
-			gauss[1][1] = 1;
-			gauss[1][2] = 1.0/24;
+			quad[1][0] = 0;
+			quad[1][1] = 1;
+			quad[1][2] = 1.0/24;
 			
-			gauss[2][0] = 0;
-			gauss[2][1] = 0;
-			gauss[2][2] = 1.0/24;
+			quad[2][0] = 0;
+			quad[2][1] = 0;
+			quad[2][2] = 1.0/24;
 			
-			gauss[3][0] = 0.5;
-			gauss[3][1] = 0.5;
-			gauss[3][2] = 0.125;
+			quad[3][0] = 0.5;
+			quad[3][1] = 0.5;
+			quad[3][2] = 0.125;
 			
-			gauss[4][0] = 0;
-			gauss[4][1] = 0.5;
-			gauss[4][2] = 0.125;
+			quad[4][0] = 0;
+			quad[4][1] = 0.5;
+			quad[4][2] = 0.125;
 			
-			gauss[5][0] = 0.5;
-			gauss[5][1] = 0;
-			gauss[5][2] = 0.125;
+			quad[5][0] = 0.5;
+			quad[5][1] = 0;
+			quad[5][2] = 0.125;
 			break;
 		case 7:  // 7-point Newton-Cotes rule
-			gauss[0][0] = 1;
-			gauss[0][1] = 0;
-			gauss[0][2] = 1.0/18;
+			quad[0][0] = 1;
+			quad[0][1] = 0;
+			quad[0][2] = 1.0/18;
 			
-			gauss[1][0] = 0;
-			gauss[1][1] = 1;
-			gauss[1][2] = 1.0/18;
+			quad[1][0] = 0;
+			quad[1][1] = 1;
+			quad[1][2] = 1.0/18;
 			
-			gauss[2][0] = 0;
-			gauss[2][1] = 0;
-			gauss[2][2] = 1.0/18;
+			quad[2][0] = 0;
+			quad[2][1] = 0;
+			quad[2][2] = 1.0/18;
 			
-			gauss[3][0] = 0.5;
-			gauss[3][1] = 0.5;
-			gauss[3][2] = 1.0/18;
+			quad[3][0] = 0.5;
+			quad[3][1] = 0.5;
+			quad[3][2] = 1.0/18;
 			
-			gauss[4][0] = 0;
-			gauss[4][1] = 0.5;
-			gauss[4][2] = 1.0/18;
+			quad[4][0] = 0;
+			quad[4][1] = 0.5;
+			quad[4][2] = 1.0/18;
 			
-			gauss[5][0] = 0.5;
-			gauss[5][1] = 0;
-			gauss[5][2] = 1.0/18;
+			quad[5][0] = 0.5;
+			quad[5][1] = 0;
+			quad[5][2] = 1.0/18;
 			
-			gauss[6][0] = 1.0/3;
-			gauss[6][1] = 1.0/3;
-			gauss[6][2] = 1.0/6;
+			quad[6][0] = 1.0/3;
+			quad[6][1] = 1.0/3;
+			quad[6][2] = 1.0/6;
 			break;
 		case 15:  // 15-point Lagrange rule
-			gauss[0][0] = 1;
-			gauss[0][1] = 0;
-			gauss[0][2] = 1.0/96;
+			quad[0][0] = 1;
+			quad[0][1] = 0;
+			quad[0][2] = 1.0/96;
 			
-			gauss[1][0] = 0;
-			gauss[1][1] = 1;
-			gauss[1][2] = 1.0/96;
+			quad[1][0] = 0;
+			quad[1][1] = 1;
+			quad[1][2] = 1.0/96;
 			
-			gauss[2][0] = 0;
-			gauss[2][1] = 0;
-			gauss[2][2] = 1.0/96;
+			quad[2][0] = 0;
+			quad[2][1] = 0;
+			quad[2][2] = 1.0/96;
 			
-			gauss[3][0] = 0.75;
-			gauss[3][1] = 0.25;
-			gauss[3][2] = 1.0/32;
+			quad[3][0] = 0.75;
+			quad[3][1] = 0.25;
+			quad[3][2] = 1.0/32;
 			
-			gauss[4][0] = 0.5;
-			gauss[4][1] = 0.5;
-			gauss[4][2] = 1.0/32;
+			quad[4][0] = 0.5;
+			quad[4][1] = 0.5;
+			quad[4][2] = 1.0/32;
 			
-			gauss[5][0] = 0.25;
-			gauss[5][1] = 0.75;
-			gauss[5][2] = 1.0/32;
+			quad[5][0] = 0.25;
+			quad[5][1] = 0.75;
+			quad[5][2] = 1.0/32;
 			
-			gauss[6][0] = 0;
-			gauss[6][1] = 0.75;
-			gauss[6][2] = 1.0/32;
+			quad[6][0] = 0;
+			quad[6][1] = 0.75;
+			quad[6][2] = 1.0/32;
 			
-			gauss[7][0] = 0;
-			gauss[7][1] = 0.5;
-			gauss[7][2] = 1.0/32;
+			quad[7][0] = 0;
+			quad[7][1] = 0.5;
+			quad[7][2] = 1.0/32;
 			
-			gauss[8][0] = 0;
-			gauss[8][1] = 0.25;
-			gauss[8][2] = 1.0/32;
+			quad[8][0] = 0;
+			quad[8][1] = 0.25;
+			quad[8][2] = 1.0/32;
 			
-			gauss[9][0] = 0.25;
-			gauss[9][1] = 0;
-			gauss[9][2] = 1.0/32;
+			quad[9][0] = 0.25;
+			quad[9][1] = 0;
+			quad[9][2] = 1.0/32;
 			
-			gauss[10][0] = 0.5;
-			gauss[10][1] = 0;
-			gauss[10][2] = 1.0/32;
+			quad[10][0] = 0.5;
+			quad[10][1] = 0;
+			quad[10][2] = 1.0/32;
 			
-			gauss[11][0] = 0.75;
-			gauss[11][1] = 0;
-			gauss[11][2] = 1.0/32;
+			quad[11][0] = 0.75;
+			quad[11][1] = 0;
+			quad[11][2] = 1.0/32;
 			
-			gauss[12][0] = 0.5;
-			gauss[12][1] = 0.25;
-			gauss[12][2] = 1.0/16;
+			quad[12][0] = 0.5;
+			quad[12][1] = 0.25;
+			quad[12][2] = 1.0/16;
 			
-			gauss[13][0] = 0.25;
-			gauss[13][1] = 0.5;
-			gauss[13][2] = 1.0/16;
+			quad[13][0] = 0.25;
+			quad[13][1] = 0.5;
+			quad[13][2] = 1.0/16;
 			
-			gauss[14][0] = 0.25;
-			gauss[14][1] = 0.25;
-			gauss[14][2] = 1.0/16;
+			quad[14][0] = 0.25;
+			quad[14][1] = 0.25;
+			quad[14][2] = 1.0/16;
 			break;
 		default:
-            fasp_chkerr(ERROR_QUAD_TYPE, "fasp_init_quadrature");
+            fasp_chkerr(ERROR_QUAD_TYPE, "fasp_quad2d");
 			break;
 	}
 	
@@ -191,28 +191,28 @@ void fasp_init_quadrature (int num_qp,
 }
 
 /**
- * \fn void fasp_init_Gauss (int num_qp, int ncoor, double (*gauss)[3])
+ * \fn void fasp_gauss2d (INT num_qp, INT ncoor,  REAL (*gauss)[3])
  *
  * \brief Initialize Gauss quadrature points and weights
  *
- * \param num_qp the number of quadrature points
- * \param ncoor the dimension of space
- * \param gauss quadrature points and weight
+ * \param num_qp   Number of quadrature points
+ * \param ncoor    Dimension of space
+ * \param gauss    Quadrature points and weight
+ * 
+ * \author Xuehai Huang, Chensong Zhang, Ludmil Zikatanov
+ * \date 10/21/2008
  * 
  * \note gauss[*][0] -- quad point x in ref coor
  *		 gauss[*][1] -- quad point y in ref coor
  *       gauss[*][2] -- quad weight
- * 
- * \author Xuehai Huang, Chensong Zhang, Ludmil Zikatanov
- * \date 10/21/2008
  */
-void fasp_init_Gauss (int num_qp, 
-                      int ncoor, 
-                      double (*gauss)[3])
+void fasp_gauss2d (INT num_qp, 
+                   INT ncoor, 
+                   REAL (*gauss)[3])
 {
-	if(num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, "fasp_init_Gauss");
+	if(num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, "fasp_gauss2d");
 	
-	if(ncoor!=2) fasp_chkerr(ERROR_QUAD_DIM, "fasp_init_Gauss");
+	if(ncoor!=2) fasp_chkerr(ERROR_QUAD_DIM, "fasp_gauss2d");
 	
 	switch (num_qp) {
 		case 1:  // 1-point Gauss rule
@@ -861,7 +861,7 @@ void fasp_init_Gauss (int num_qp,
 			gauss[48][2] = 0.3623466079725786927077026e-02;
 			break;
 		default:
-            fasp_chkerr(ERROR_QUAD_TYPE, "fasp_init_Gauss");
+            fasp_chkerr(ERROR_QUAD_TYPE, "fasp_gauss2d");
 			break;
 	}
 	

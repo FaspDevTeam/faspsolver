@@ -244,16 +244,16 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 				fasp_solver_nl_amli(&mgl[level+1], param, 0, num_levels-1);
 			}
 			else{  // recursively call preconditioned Krylov method on coarse grid
-				precond_data precdata;
+				precond_data pcdata;
                 
-                fasp_param_amg_to_prec(&precdata, param);
-				precdata.maxit = 1;
-				precdata.max_levels = num_levels-1;
-				precdata.mgl_data = &mgl[level+1];
+                fasp_param_amg_to_prec(&pcdata, param);
+				pcdata.maxit = 1;
+				pcdata.max_levels = num_levels-1;
+				pcdata.mgl_data = &mgl[level+1];
                 
-				precond prec;
-				prec.data = &precdata; 
-				prec.fct = fasp_precond_nl_amli;
+				precond pc;
+				pc.data = &pcdata; 
+				pc.fct = fasp_precond_nl_amli;
                 
 				fasp_array_cp (m1, b1->val, bH.val);
 				fasp_array_cp (m1, e1->val, uH.val);
@@ -264,10 +264,10 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                 switch (param->nl_amli_krylov_type)
                 {
                     case SOLVER_GCG: // Use GCG
-                        fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&prec,0,1);
+                        fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&pc,0,1);
                         break;
                     default: // Use FGMRES
-                        fasp_solver_dcsr_pvfgmres(A_level1,&bH,&uH,maxit,tol,&prec,0,1,30);
+                        fasp_solver_dcsr_pvfgmres(A_level1,&bH,&uH,maxit,tol,&pc,0,1,30);
                         break;
                 }
                 
@@ -325,7 +325,8 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 }
 
 /**
- * \fn void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, AMG_param *param, INT level, INT num_levels)
+ * \fn void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, AMG_param *param, 
+ *                                   INT level, INT num_levels)
  *
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
  *
@@ -414,16 +415,16 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 				fasp_solver_nl_amli_bsr(&mgl[level+1], param, 0, num_levels-1);
 			}
 			else{  // recursively call preconditioned Krylov method on coarse grid
-				precond_data_bsr precdata;
+				precond_data_bsr pcdata;
                 
-                fasp_param_amg_to_prec_bsr (&precdata, param);
-				precdata.maxit = 1;
-				precdata.max_levels = num_levels-1;
-				precdata.mgl_data = &mgl[level+1];
+                fasp_param_amg_to_prec_bsr (&pcdata, param);
+				pcdata.maxit = 1;
+				pcdata.max_levels = num_levels-1;
+				pcdata.mgl_data = &mgl[level+1];
                 
-				precond prec;
-				prec.data = &precdata; 
-				prec.fct = fasp_precond_dbsr_nl_amli;
+				precond pc;
+				pc.data = &pcdata; 
+				pc.fct = fasp_precond_dbsr_nl_amli;
                 
 				fasp_array_cp (m1, b1->val, bH.val);
 				fasp_array_cp (m1, e1->val, uH.val);
@@ -434,10 +435,10 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                 switch (param->nl_amli_krylov_type)
                 {
                         //case SOLVER_GCG: // Use GCG
-                        //   fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&prec,0,1);
+                        //   fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&pc,0,1);
                         //  break;
                     default: // Use FGMRES
-                        fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH, maxit,tol,&prec,0,1, MIN(maxit,30));
+                        fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH, maxit,tol,&pc,0,1, MIN(maxit,30));
                         break;
                 }
                 

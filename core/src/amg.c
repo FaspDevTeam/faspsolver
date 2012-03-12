@@ -17,20 +17,20 @@
  *
  * \brief Solve Ax=b by Algebaric MultiGrid Method.
  *
- * \param A      pointer to the coefficient matrix
- * \param b      pointer to the dvector of right hand side
- * \param x      pointer to the dvector of dofs
- * \param param  pointer to AMG parameters
+ * \param A      Pointer to the coefficient matrix
+ * \param b      Pointer to the dvector of right hand side
+ * \param x      Pointer to the dvector of dofs
+ * \param param  Pointer to AMG parameters
+ *
+ * \author Chensong Zhang
+ * \date   04/06/2010
  *
  * \note Refter to "Multigrid"
  *       by U. Trottenberg, C. W. Oosterlee and A. Schuller 
  *       Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben)
  *       Academic Press Inc., San Diego, CA, 2001. 
  *
- * \author Chensong Zhang
- * \date   04/06/2010
- *
- * \note Modified by Chensong Zhang on 01/10/2012
+ * Modified by Chensong Zhang on 01/10/2012
  */
 void fasp_solver_amg (dCSRmat *A, 
                       dvector *b, 
@@ -106,7 +106,7 @@ FINISHED:
     fasp_chkerr(status, "fasp_solver_amg");
     
 #if DEBUG_MODE
-    printf("fasp_solver_amg ...... [Finish]\n");
+    printf("### DEBUG: fasp_solver_amg ...... [Finish]\n");
 #endif
 	
     return;

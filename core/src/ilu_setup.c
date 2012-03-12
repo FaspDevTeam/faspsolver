@@ -26,29 +26,29 @@ extern void ilutp_(const int *n,double *a,int *ja,int *ia,int *lfil,const double
 /*---------------------------------*/
 
 /**
- * \fn SHORT fasp_ilu_dcsr_setup (dCSRmat *A, ILU_data *iludata, ILU_param *param)
+ * \fn SHORT fasp_ilu_dcsr_setup (dCSRmat *A, ILU_data *iludata, ILU_param *iluparam)
  *
  * \brief Get ILU decoposition of a CSR matrix A
  *
- * \param A         pointer to CSR matrir of REAL type
- * \param iludata   pointer to ILU_data
- * \param param     pointer to ILU parameters
+ * \param A         Pointer to dCSRmat matrix
+ * \param iludata   Pointer to ILU_data
+ * \param iluparam  Pointer to ILU_param
  *
  * \author Shiquan Zhang
- * \date 12/27/2009
+ * \date   12/27/2009
  */
 SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
                          ILU_data *iludata, 
-                         ILU_param *param)
+                         ILU_param *iluparam)
 {
 #if FASP_USE_ILU
-	const INT   type=param->ILU_type, print_level=param->print_level;
+	const INT   type=iluparam->ILU_type, print_level=iluparam->print_level;
 	const INT   m=A->row, n=A->col, nnz=A->nnz, mbloc=n;
-	const REAL  ILU_relax=param->ILU_relax, ILU_droptol=param->ILU_droptol;
-	const REAL  permtol=param->ILU_permtol;
+	const REAL  ILU_relax=iluparam->ILU_relax, ILU_droptol=iluparam->ILU_droptol;
+	const REAL  permtol=iluparam->ILU_permtol;
 	
     // local variable
-	INT    lfil=param->ILU_lfil, lfilt=param->ILU_lfil;
+	INT    lfil=iluparam->ILU_lfil, lfilt=iluparam->ILU_lfil;
 	INT    ierr, iwk, nzlu, nwork, maxstr, *ijlu;
 	REAL  *luval;
 	
@@ -58,10 +58,9 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
 	
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_ilu_dcsr_setup ...... [Start]\n");
+    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",m,n,nnz);
 #endif
-	
-	if (param->print_level>PRINT_MORE) printf("fasp_ilu_dcsr_setup: m=%d, n=%d, nnz=%d\n",m,n,nnz);
-	
+		
 	setup_start=clock();
 	
 	// Expected amount of memory for ILU needed and allocate memory 

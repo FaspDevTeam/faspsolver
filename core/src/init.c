@@ -13,18 +13,18 @@
 /*---------------------------------*/
 
 /**
- * \fn AMG_data * fasp_amg_data_create (INT max_levels)
+ * \fn AMG_data * fasp_amg_data_create (SHORT max_levels)
  *
  * \brief Create and initialize AMG_data for classical and SA AMG
  *
- * \param   max_levels   max number of levels allowed
+ * \param max_levels   Max number of levels allowed
  *
- * \return *mgl          pointer to the AMG_data data structure
+ * \return Pointer to the AMG_data data structure
  *
  * \author Chensong Zhang
- * \date 2010/04/06
+ * \date   2010/04/06
  */
-AMG_data * fasp_amg_data_create (INT max_levels)
+AMG_data * fasp_amg_data_create (SHORT max_levels)
 {			
 	AMG_data *mgl = (AMG_data *)fasp_mem_calloc(max_levels,sizeof(AMG_data));
 	
@@ -40,22 +40,20 @@ AMG_data * fasp_amg_data_create (INT max_levels)
 }
 
 /**
- * \fn AMG_data_bsr * fasp_amg_data_create_bsr(int max_levels)
+ * \fn AMG_data_bsr * fasp_amg_data_create_bsr (SHORT max_levels)
  *
  * \brief Create and initialize AMG_data data sturcture for AMG/SAMG (BSR format)
  *
- * \param   max_levels   max number of levels allowed
+ * \param max_levels   Max number of levels allowed
  *
- * \return *mgl          pointer to the AMG_data data structure
+ * \return Pointer to the AMG_data data structure
  *
  * \author Xiaozhe Hu
- * \date 08/07/2011
- *
- * \note: Need to be put somewhere else
+ * \date   08/07/2011
  */
-AMG_data_bsr * fasp_amg_data_create_bsr(int max_levels)
+AMG_data_bsr * fasp_amg_data_create_bsr (SHORT max_levels)
 {		
-	int i;
+	SHORT i;
 	
 	AMG_data_bsr *mgl = (AMG_data_bsr *)fasp_mem_calloc(max_levels,sizeof(AMG_data_bsr));
 	
@@ -74,12 +72,12 @@ AMG_data_bsr * fasp_amg_data_create_bsr(int max_levels)
  *
  * \brief Allocate workspace for ILU factorization
  *
- * \param iwk       integer, length of the index array
- * \param nwork     integer, length of the work array
- * \param iludata  pointer, the ILU facotrization
+ * \param iwk       Size of the index array
+ * \param nwork     Size of the work array
+ * \param iludata   Pointer to the ILU_data
  *
  * \author Chensong Zhang 
- * \date 2010/04/06
+ * \date   2010/04/06
  */
 void fasp_ilu_data_alloc (INT iwk, 
                           INT nwork, 
@@ -115,10 +113,10 @@ void fasp_ilu_data_alloc (INT iwk,
  *
  * \brief Free AMG_data data memeory space
  *
- * \param mgl  pointer to the AMG_data data
+ * \param mgl  Pointer to the AMG_data
  *
  * \author Chensong Zhang
- * \date 2010/04/06 
+ * \date   2010/04/06 
  */
 void fasp_amg_data_free (AMG_data *mgl)
 {		
@@ -149,10 +147,10 @@ void fasp_amg_data_free (AMG_data *mgl)
  *
  * \brief Create ILU_data sturcture
  *
- * \param ILUdata   pointer to ILU_data
+ * \param ILUdata   Pointer to ILU_data
  *
  * \author Chensong Zhang
- * \date 2010/04/03  
+ * \date   2010/04/03  
  */
 void fasp_ilu_data_free (ILU_data *ILUdata)
 {		
@@ -166,35 +164,35 @@ void fasp_ilu_data_free (ILU_data *ILUdata)
 }
 
 /**
- * \fn void fasp_ilu_data_init (ILU_data *ILUdata)
+ * \fn void fasp_ilu_data_null (ILU_data *ILUdata)
  *
  * \brief Initialize ILU data
  *
- * \param ILUdata   pointer to ILU_data
+ * \param ILUdata   Pointer to ILU_data
  *
  * \author Chensong Zhang
- * \date 2010/03/23 
+ * \date   2010/03/23 
  */
-void fasp_ilu_data_init (ILU_data *ILUdata)
+void fasp_ilu_data_null (ILU_data *ILUdata)
 {
 	ILUdata->row = ILUdata->col = ILUdata->nzlu = 0;
 	ILUdata->ijlu = NULL; ILUdata->luval = NULL;
 }
 
 /**
- * \fn void fasp_precond_init (precond *pdata)
+ * \fn void fasp_precond_null (precond *pcdata)
  *
  * \brief Initialize precond data
  *
- * \param pdata   pointer to precond
+ * \param pcdata   Pointer to precond
  *
  * \author Chensong Zhang
- * \date 2010/03/23 
+ * \date   2010/03/23 
  */
-void fasp_precond_init (precond *pdata)
+void fasp_precond_null (precond *pcdata)
 {
-	pdata->data = NULL;
-	pdata->fct  = NULL;
+	pcdata->data = NULL;
+	pcdata->fct  = NULL;
 }
 
 /*---------------------------------*/

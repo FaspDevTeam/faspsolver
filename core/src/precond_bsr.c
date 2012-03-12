@@ -513,18 +513,18 @@ void fasp_precond_dbsr_nl_amli (REAL *r,
                                 void *data)
 {
 	
-	precond_data_bsr *precdata=(precond_data_bsr *)data;
-    const INT row=precdata->mgl_data[0].A.ROW;
-	const INT nb = precdata->mgl_data[0].A.nb;
-	const INT maxit=precdata->maxit;
-    const SHORT num_levels = precdata->max_levels;
+	precond_data_bsr *pcdata=(precond_data_bsr *)data;
+    const INT row=pcdata->mgl_data[0].A.ROW;
+	const INT nb=pcdata->mgl_data[0].A.nb;
+	const INT maxit=pcdata->maxit;
+    const SHORT num_levels=pcdata->max_levels;
+	const INT m=row*nb;
 	unsigned INT i;
-	const INT m = row*nb;
 	
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
-    fasp_param_prec_to_amg_bsr(&amgparam,precdata);
+    fasp_param_prec_to_amg_bsr(&amgparam,pcdata);
 	
-	AMG_data_bsr *mgl = precdata->mgl_data;
+	AMG_data_bsr *mgl = pcdata->mgl_data;
 	mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
 	mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 	

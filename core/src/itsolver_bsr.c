@@ -13,13 +13,13 @@
 
 /**
  * \fn int fasp_solver_dbsr_itsolver(dBSRmat *A, dvector *b, dvector *x, 
- *                                   precond *prec, itsolver_param *itparam)
+ *                                   precond *pc, itsolver_param *itparam)
  * \brief Solve Ax=b by standard Krylov methods 
  *
  * \param A        pointer to the dBSRmat matrix
  * \param b        pointer to the dvector of right hand side
  * \param x        pointer to the dvector of dofs
- * \param prec     pointer to the preconditioner data
+ * \param pc     pointer to the preconditioner data
  * \param itparam  pointer to parameters for iterative solvers
  * \return          the number of iterations
  *
@@ -29,7 +29,7 @@
 int fasp_solver_dbsr_itsolver (dBSRmat *A, 
                                dvector *b, 
                                dvector *x, 
-                               precond *prec, 
+                               precond *pc, 
                                itsolver_param *itparam)
 {
 	const int print_level = itparam->print_level;	
@@ -46,19 +46,19 @@ int fasp_solver_dbsr_itsolver (dBSRmat *A,
 			
 		case SOLVER_BiCGstab:
 			if (print_level>0) printf("Calling BiCGstab solver (BSR format) ...\n");
-			iter=fasp_solver_dbsr_pbcgs(A, b, x, MaxIt, tol, prec, print_level, stop_type); break;
+			iter=fasp_solver_dbsr_pbcgs(A, b, x, MaxIt, tol, pc, print_level, stop_type); break;
 			
 		case SOLVER_GMRES:
 			if (print_level>0) printf("Calling GMRES solver (BSR format) ...\n");
-			iter=fasp_solver_dbsr_pgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	break;		
+			iter=fasp_solver_dbsr_pgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	break;		
 			
 		case SOLVER_VGMRES:
 			if (print_level>0) printf("Calling vGMRES solver (BSR format) ...\n");
-			iter=fasp_solver_dbsr_pvgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart); break;	
+			iter=fasp_solver_dbsr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart); break;	
             
         case SOLVER_VFGMRES: 
 			if (print_level>0) printf("Calling vFGMRes solver (BSR format) ...\n");		
-			iter = fasp_solver_dbsr_pvfgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart);	break;
+			iter = fasp_solver_dbsr_pvfgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	break;
 			
 		default:
 			printf("Error: wrong itertive solver type %d!\n", itsolver_type);
@@ -160,15 +160,15 @@ int fasp_solver_dbsr_krylov_diag (dBSRmat *A,
 	
 	for (i=0; i<ROW; ++i) fasp_blas_smat_inv(&(diag.diag.val[i*nb2]), nb);
 	
-	precond *prec = (precond *)fasp_mem_calloc(1,sizeof(precond));	
+	precond *pc = (precond *)fasp_mem_calloc(1,sizeof(precond));	
 	if (status<0) goto FINISHED;
 	
-	prec->data = &diag;
-	prec->fct  = fasp_precond_dbsr_diag;
+	pc->data = &diag;
+	pc->fct  = fasp_precond_dbsr_diag;
 	
 	// solver part
 	solver_start=clock();
-	status=fasp_solver_dbsr_itsolver(A,b,x,prec,itparam);
+	status=fasp_solver_dbsr_itsolver(A,b,x,pc,itparam);
 	solver_end=clock();
 	
 	if (print_level>0) {
@@ -215,7 +215,7 @@ int fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
 	int status = SUCCESS;
 	
 	ILU_data LU; 
-	precond prec; 
+	precond pc; 
 	
 #if DEBUG_MODE
 	printf("krylov_ilu ...... [Start]\n");
@@ -230,11 +230,11 @@ int fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
 	if ( (status = fasp_mem_iludata_check(&LU))<0 ) goto FINISHED;
 	
 	// set preconditioner 
-	prec.data = &LU; prec.fct = fasp_precond_dbsr_ilu;
+	pc.data = &LU; pc.fct = fasp_precond_dbsr_ilu;
 	
 	// solve
 	solver_start=clock();
-	status=fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
+	status=fasp_solver_dbsr_itsolver(A,b,x,&pc,itparam);
 	solver_end=clock();	
 	
 	if (print_level>0) {

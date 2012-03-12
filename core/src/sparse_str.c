@@ -13,7 +13,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_dstr_init (dSTRmat *A)
+ * \fn void fasp_dstr_null (dSTRmat *A)
  *
  * \brief Initialize sparse matrix on structured grid
  *
@@ -22,7 +22,7 @@
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date 05/17/2010 
  */
-void fasp_dstr_init (dSTRmat *A)
+void fasp_dstr_null (dSTRmat *A)
 {		
 	A->nx=0;
 	A->ny=0;

@@ -15,14 +15,14 @@
 
 /**
  * \fn INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, dvector *b, dvector *x, 
- *                                    precond *prec, itsolver_param *itparam)
+ *                                    precond *pc, itsolver_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
  * \param A        pointer to the block dCSRmat matrix
  * \param b        pointer to the dvector of right hand side
  * \param x        pointer to the dvector of dofs
- * \param prec     pointer to the preconditioner data
+ * \param pc     pointer to the preconditioner data
  * \param itparam  pointer to parameters for iterative solvers
  *
  * \return          the number of iterations
@@ -33,7 +33,7 @@
 INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, 
                                 dvector *b, 
                                 dvector *x, 
-                                precond *prec, 
+                                precond *pc, 
                                 itsolver_param *itparam)
 {
 	const INT print_level = itparam->print_level;
@@ -50,15 +50,15 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
             
         case SOLVER_BiCGstab:
             if (print_level>PRINT_NONE) printf("BiCGstab method (Block CSR format) ...\n");
-            iter=fasp_solver_bdcsr_pbcgs(A, b, x, MaxIt, tol, prec, print_level, stop_type);			
+            iter=fasp_solver_bdcsr_pbcgs(A, b, x, MaxIt, tol, pc, print_level, stop_type);			
             
 		case SOLVER_MinRes:
 			if (print_level>PRINT_NONE) printf("Calling MinRes solver (Block CSR format) ...\n");
-			iter=fasp_solver_bdcsr_pminres(A, b, x, MaxIt, tol, prec, print_level, stop_type); break;		
+			iter=fasp_solver_bdcsr_pminres(A, b, x, MaxIt, tol, pc, print_level, stop_type); break;		
             
 		case SOLVER_GMRES:
 			if (print_level>PRINT_NONE) printf("Calling GMRES solver (Block CSR format) ...\n");
-			iter=fasp_solver_bdcsr_pgmres(A, b, x, MaxIt, tol, prec, print_level, stop_type, restart); break;			
+			iter=fasp_solver_bdcsr_pgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart); break;			
             
 		default:
 			printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);

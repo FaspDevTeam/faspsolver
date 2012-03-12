@@ -13,23 +13,23 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_amg_setup_cr(AMG_data *mgl, AMG_param *param)
+ * \fn SHORT fasp_amg_setup_cr (AMG_data *mgl, AMG_param *param)
  *
  * \brief Set up phase of Brannick Falgout CR coarsening for classic AMG
  *
  * \param mgl     Pointer to AMG_data data
  * \param param   Pointer to AMG parameters
  *
+ * \author James Brannick
+ * \date   04/21/2010
+ *
  * \note Setup A, P, R, levels using CR coarsening for 
  *       classic AMG interpolation
  *       Concrete algorithm see Brannick and Falgout 
  *          "Compatible relaxation and coarsening in AMG"  
- *
- * \author James Brannick
- * \date   04/21/2010
  */
-INT fasp_amg_setup_cr (AMG_data *mgl, 
-                       AMG_param *param)
+SHORT fasp_amg_setup_cr (AMG_data *mgl, 
+                         AMG_param *param)
 {
 	dCSRmat   *A=&mgl[0].A;
 	const INT  m=A->row, n=A->col, nnz=A->nnz;
@@ -40,17 +40,17 @@ INT fasp_amg_setup_cr (AMG_data *mgl,
 	SHORT   max_levels=param->max_levels;
     
 	clock_t setup_start=clock();
-
+    
 	// The variable vertices stores level info (fine: 0; coarse: 1)
 	ivector vertices=fasp_ivec_create(m); // add by Fengchunsheng /Mar/10/2011
-		
+    
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_amg_setup_cr ...... [Start]\n");
 	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
     if (print_level>=PRINT_MOST) printf("fasp_amg_setup_cr: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
-    	
+    
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
@@ -104,7 +104,7 @@ INT fasp_amg_setup_cr (AMG_data *mgl,
 	}
 	
 	fasp_ivec_free(&vertices);	//add by Fengchunsheng /Mar/10/2011
-
+    
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_amg_setup_cr ...... [Finish]\n");
 #endif

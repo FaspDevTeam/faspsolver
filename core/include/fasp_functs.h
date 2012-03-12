@@ -51,14 +51,14 @@ int fasp_solver_amg3_omp (dCSRmat *A,
 
 /*-------- In file: amg_setup_cr.c --------*/
 
-INT fasp_amg_setup_cr (AMG_data *mgl, 
-                       AMG_param *param);
+SHORT fasp_amg_setup_cr (AMG_data *mgl, 
+                         AMG_param *param);
 
 
 /*-------- In file: amg_setup_rs.c --------*/
 
-INT fasp_amg_setup_rs (AMG_data *mgl, 
-                       AMG_param *param);
+SHORT fasp_amg_setup_rs (AMG_data *mgl, 
+                         AMG_param *param);
 
 
 /*-------- In file: amg_setup_rs_omp.c --------*/
@@ -148,7 +148,7 @@ void fasp_amg_amli_coef (const REAL lambda_max,
 
 /*-------- In file: array.c --------*/
 
-void fasp_array_init (REAL *x) ;
+void fasp_array_null (REAL *x) ;
 
 void fasp_array_set (const INT n, 
                      REAL *x, 
@@ -523,9 +523,9 @@ void fasp_blas_dcsr_rap4_omp (dCSRmat *R,
 
 /*-------- In file: blas_csrl.c --------*/
 
-INT fasp_blas_dcsrl_mxv (dCSRLmat *A, 
-                         REAL *x, 
-                         REAL *y);
+void fasp_blas_dcsrl_mxv (dCSRLmat *A, 
+                          REAL *x, 
+                          REAL *y);
 
 
 /*-------- In file: blas_smat.c --------*/
@@ -879,14 +879,14 @@ void fasp_grid2d_plot (pgrid2d pg,
 
 SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
                          ILU_data *iludata, 
-                         ILU_param *param);
+                         ILU_param *iluparam);
 
 
 /*-------- In file: ilu_setup_bsr.c --------*/
 
 SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
                            ILU_data *iludata, 
-                           ILU_param *param);
+                           ILU_param *iluparam);
 
 
 /*-------- In file: ilu_setup_str.c --------*/
@@ -900,9 +900,9 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 
 /*-------- In file: init.c --------*/
 
-AMG_data * fasp_amg_data_create (INT max_levels);
+AMG_data * fasp_amg_data_create (SHORT max_levels);
 
-AMG_data_bsr * fasp_amg_data_create_bsr(int max_levels);
+AMG_data_bsr * fasp_amg_data_create_bsr (SHORT max_levels);
 
 void fasp_ilu_data_alloc (INT iwk, 
                           INT nwork, 
@@ -912,9 +912,9 @@ void fasp_amg_data_free (AMG_data *mgl);
 
 void fasp_ilu_data_free (ILU_data *ILUdata);
 
-void fasp_ilu_data_init (ILU_data *ILUdata);
+void fasp_ilu_data_null (ILU_data *ILUdata);
 
-void fasp_precond_init (precond *pdata);
+void fasp_precond_null (precond *pcdata);
 
 
 /*-------- In file: input.c --------*/
@@ -1024,7 +1024,7 @@ void fasp_dcsr_print (dCSRmat *A);
 INT fasp_solver_dcsr_itsolver (dCSRmat *A, 
                                dvector *b, 
                                dvector *x, 
-                               precond *prec, 
+                               precond *pc, 
                                itsolver_param *itparam);
 
 INT fasp_solver_dcsr_krylov (dCSRmat *A, 
@@ -1062,7 +1062,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
 INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, 
                                 dvector *b, 
                                 dvector *x, 
-                                precond *prec, 
+                                precond *pc, 
                                 itsolver_param *itparam);
 
 INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, 
@@ -1076,7 +1076,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
 int fasp_solver_dbsr_itsolver (dBSRmat *A, 
                                dvector *b, 
                                dvector *x, 
-                               precond *prec, 
+                               precond *pc, 
                                itsolver_param *itparam);
 
 int fasp_solver_dbsr_krylov (dBSRmat *A, 
@@ -1103,7 +1103,7 @@ void fasp_set_GS_threads_omp(int mythreads, int its);
 int fasp_solver_dbsr_itsolver_omp(dBSRmat *A,
                                   dvector *b,
                                   dvector *x,
-                                  precond *prec,
+                                  precond *pc,
                                   itsolver_param *itparam,
                                   int nthreads,
                                   int openmp_holds);
@@ -1114,7 +1114,7 @@ int fasp_solver_dbsr_itsolver_omp(dBSRmat *A,
 int fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
                                    dvector *b,
                                    dvector *x,
-                                   precond *prec,
+                                   precond *pc,
                                    itsolver_param *itparam,
                                    int nthreads,
                                    int openmp_holds );
@@ -1135,7 +1135,7 @@ INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
                                      dvector *x, 
                                      itsolver_param *itparam,
                                      precond_Stokes_param *param, 
-                                     precond_Stokes_data *precdata);
+                                     precond_Stokes_data *pcdata);
 
 
 /*-------- In file: itsolver_str.c --------*/
@@ -1143,7 +1143,7 @@ INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 INT fasp_solver_dstr_itsolver(dSTRmat *A, 
                               dvector *b, 
                               dvector *x, 
-                              precond *prec, 
+                              precond *pc, 
                               itsolver_param *itparam);
 
 INT fasp_solver_dstr_krylov (dSTRmat *A, 
@@ -1292,36 +1292,36 @@ void fasp_param_init (char *inputfile,
                       AMG_param *amgparam, 
                       ILU_param *iluparam);
 
-void fasp_param_input_init (input_param *Input);
+void fasp_param_input_init (input_param *inparam);
 
-void fasp_param_amg_init (AMG_param *param);
+void fasp_param_amg_init (AMG_param *amgparam);
 
-void fasp_param_solver_init (itsolver_param *pdata);
+void fasp_param_solver_init (itsolver_param *itparam);
 
-void fasp_param_ilu_init (ILU_param *param);
+void fasp_param_ilu_init (ILU_param *iluparam);
 
 void fasp_param_amg_set (AMG_param *param, 
-                         input_param *Input);
+                         input_param *inparam);
 
-void fasp_param_ilu_set (ILU_param *param, 
-                         input_param *Input);
+void fasp_param_ilu_set (ILU_param *iluparam, 
+                         input_param *inparam);
 
 void fasp_param_solver_set (itsolver_param *itparam, 
-                            input_param *Input);
+                            input_param *inparam);
 
-void fasp_precond_data_init (precond_data *pdata);
+void fasp_precond_data_null (precond_data *pcdata);
 
-void fasp_param_amg_to_prec (precond_data *precdata, 
+void fasp_param_amg_to_prec (precond_data *pcdata, 
                              AMG_param *amgparam);
 
-void fasp_param_amg_to_prec_bsr (precond_data_bsr *precdata, 
+void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata, 
                                  AMG_param *amgparam);
 
 void fasp_param_prec_to_amg (AMG_param *amgparam,
-                             precond_data *precdata);
+                             precond_data *pcdata);
 
 void fasp_param_prec_to_amg_bsr (AMG_param *amgparam,
-                                 precond_data_bsr *precdata);
+                                 precond_data_bsr *pcdata);
 
 void fasp_param_amg_print (AMG_param *param);
 
@@ -1712,13 +1712,13 @@ INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A,
 
 /*-------- In file: quadrature.c --------*/
 
-void fasp_init_quadrature (int num_qp, 
-                           int ncoor, 
-                           double (*gauss)[3]);
+void fasp_quad2d (INT num_qp, 
+                  INT ncoor, 
+                  REAL (*quad)[3]);
 
-void fasp_init_Gauss (int num_qp, 
-                      int ncoor, 
-                      double (*gauss)[3]);
+void fasp_gauss2d (INT num_qp, 
+                   INT ncoor, 
+                   REAL (*gauss)[3]);
 
 
 /*-------- In file: rap.c --------*/
@@ -2142,7 +2142,7 @@ void fasp_dbsr_alloc (INT ROW,
 
 void fasp_dbsr_free (dBSRmat *A);
 
-void fasp_dbsr_init (dBSRmat *A);
+void fasp_dbsr_null (dBSRmat *A);
 
 void fasp_dbsr_cp (dBSRmat *A, 
                    dBSRmat *B);
@@ -2202,7 +2202,7 @@ void fasp_dcsr_free (dCSRmat *A);
 
 void fasp_icsr_free (iCSRmat *A);
 
-void fasp_dcsr_init (dCSRmat *A);
+void fasp_dcsr_null (dCSRmat *A);
 
 dCSRmat fasp_dcsr_perm (dCSRmat *A, 
                         INT *P);
@@ -2276,7 +2276,7 @@ void fasp_dcsrl_free (dCSRLmat *A);
 
 /*-------- In file: sparse_str.c --------*/
 
-void fasp_dstr_init (dSTRmat *A);
+void fasp_dstr_null (dSTRmat *A);
 
 dSTRmat fasp_dstr_create (INT nx, 
                           INT ny, 
@@ -2452,7 +2452,7 @@ void fasp_dvec_free (dvector *u);
 
 void fasp_ivec_free (ivector *u);
 
-void fasp_dvec_init (dvector *x) ;
+void fasp_dvec_null (dvector *x) ;
 
 void fasp_dvec_rand (INT n, 
                      dvector *x);

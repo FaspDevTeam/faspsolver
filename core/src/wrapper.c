@@ -204,7 +204,7 @@ void fasp_fwrapper_krylov_stokes_ (INT *nA,
 	matB.row = *nB; matB.col = *nB; matB.nnz = *nnzB;
 	matB.IA  = ib;  matB.JA  = jb; matB.val = bval;
 	
-	fasp_dcsr_init(&zero); // zero matrix
+	fasp_dcsr_null(&zero); // zero matrix
 	
 	fasp_dcsr_trans(&matB, &matBt);
 	mat.brow = mat.bcol = 2;

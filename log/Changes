@@ -1,3 +1,6 @@
+03/12/2012 FASP 0.5.6: Modify testfem and add AMG solver to solve the linear system.
+                       Fix more Doxygne format problems. Finish from amg.c to io.c, not including *_omp.c.
+
 03/10/2012 FASP 0.5.5: Fix hundreds of Doxygen warnings.
 
 03/09/2012 FASP 0.5.4: Revise tree structure, README and Makefile's. Revise Doxygen for a few files. 

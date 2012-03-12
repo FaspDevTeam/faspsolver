@@ -16,15 +16,15 @@
  *
  * \brief Solve Ax=b by full AMG.
  *
- * \param A      pointer to the coefficient matrix
- * \param b      pointer to the dvector of right hand side
- * \param x      pointer to the dvector of dofs
- * \param param  pointer to AMG parameters
+ * \param A      Pointer to the coefficient matrix
+ * \param b      Pointer to the dvector of right hand side
+ * \param x      Pointer to the dvector of dofs
+ * \param param  Pointer to AMG parameters
  *
  * \author Xiaozhe Hu
- * \date 02/27/2011
+ * \date   02/27/2011
  *
- * \note Modified by Chensong Zhang on 01/10/2012
+ * Modified by Chensong Zhang on 01/10/2012
  */
 void fasp_solver_famg (dCSRmat *A, 
                        dvector *b, 

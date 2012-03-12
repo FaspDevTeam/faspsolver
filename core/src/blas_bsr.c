@@ -17,16 +17,16 @@
  *
  * \brief Compute y := alpha*A*x + beta*y
  *
- * \param alpha   a real number
- * \param A      pointer to the matrix
- * \param x      pointer to the vector x
- * \param beta    a real number
- * \param y      pointer to the vector y
+ * \param alpha  REAL factor alpha
+ * \param A      Pointer to the dBSR matrix
+ * \param x      Pointer to the array x
+ * \param beta   REAL factor beta
+ * \param y      Pointer to the array y
  *
  * \author Zhou Zhiyang
- * \date 2010/10/25  
+ * \date   2010/10/25  
  *
- * \note: works for general nb (Xiaozhe)
+ * \note Works for general nb (Xiaozhe)
  */
 void fasp_blas_dbsr_aAxpby (const REAL alpha, 
                             dBSRmat *A, 
@@ -116,15 +116,15 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
  *
  * \brief Compute y := alpha*A*x + y
  *
- * \param alpha a real number
- * \param A pointer to the matrix
- * \param x pointer to the vector x
- * \param y pointer to the vector y
+ * \param alpha  REAL factor alpha
+ * \param A      Pointer to the dBSR matrix
+ * \param x      Pointer to the array x
+ * \param y      Pointer to the array y
  *
  * \author Zhou Zhiyang
- * \date 2010/10/25  
+ * \date   2010/10/25  
  *
- * \note: works for general nb (Xiaozhe)
+ * \note Works for general nb (Xiaozhe)
  */
 void fasp_blas_dbsr_aAxpy (const REAL alpha, 
                            dBSRmat *A, 
@@ -268,14 +268,14 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
  *
  * \brief Compute y := A*x
  *
- * \param A pointer to the matrix
- * \param x pointer to the vector x
- * \param y pointer to the vector y
+ * \param A      Pointer to the dBSR matrix
+ * \param x      Pointer to the array x
+ * \param y      Pointer to the array y
  *
  * \author Zhou Zhiyang
- * \date 2010/10/25 
+ * \date   2010/10/25 
  *
- * \note: works for general nb (Xiaozhe) 
+ * \note Works for general nb (Xiaozhe) 
  */
 void fasp_blas_dbsr_mxv (dBSRmat *A, 
                          REAL *x, 
@@ -387,19 +387,19 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
 
 /**
  * \fn void fasp_blas_dbsr_rap (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
+ *
  * \brief dBSRmat sparse matrix multiplication B=R*A*P
  *
- * \param R   pointer to the dBSRmat matrix
- * \param A   pointer to the dBSRmat matrix
- * \param P   pointer to the dBSRmat matrix
- * \param B   pointer to dBSRmat matrix equal to R*A*P
- * \return     void
- *
- * Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
- *      Advances in Computational Mathematics, 1 (1993), pp. 127-137.
+ * \param R   Pointer to the dBSRmat matrix
+ * \param A   Pointer to the dBSRmat matrix
+ * \param P   Pointer to the dBSRmat matrix
+ * \param B   Pointer to dBSRmat matrix equal to R*A*P (output)
  *
  * \author Chunsheng FENG ,Xiaoqiang YUE, Xiaozhe Hu
- * \date 08/08/2011
+ * \date   08/08/2011
+ *
+ * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
+ *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
 void fasp_blas_dbsr_rap (dBSRmat *R, 
                          dBSRmat *A, 

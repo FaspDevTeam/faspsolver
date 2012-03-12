@@ -32,7 +32,6 @@ static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
  * 
  * \author Xiaozhe Hu
  * \date   12/28/2011 
- *
  */
 SHORT fasp_amg_setup_ua (AMG_data *mgl, 
                          AMG_param *param)

@@ -19,14 +19,14 @@
  * \param mgl     Pointer to AMG_data data
  * \param param   Pointer to AMG parameters
  *
- * \return        Iteration number if succeed
+ * \return        Iteration number if succeed, ERROR otherwise
+ *
+ * \author Xuehai Huang, Chensong Zhang
+ * \date 04/02/2010
  *
  * \note Solve Ax=b using multigrid method. This is SOLVE phase only and is 
  *       independent of SETUP method used! Should be called after multigrid 
  *       hierarchy has been generated!
- *
- * \author Xuehai Huang, Chensong Zhang
- * \date 04/02/2010
  */
 INT fasp_amg_solve (AMG_data *mgl, 
                     AMG_param *param)
