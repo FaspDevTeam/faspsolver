@@ -21,8 +21,8 @@
 
 #include "messages.h"
 
-#ifndef __FASP_HEADER__		/*-- allow multiple inclusions --*/
-#define __FASP_HEADER__     /**< indicate fasp.h has been included before */
+#ifndef __FASP_HEADER__       /*-- allow multiple inclusions --*/
+#define __FASP_HEADER__       /**< indicate fasp.h has been included before */
 
 /*---------------------------*/ 
 /*---  Macros definition  ---*/
