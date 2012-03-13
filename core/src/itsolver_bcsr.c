@@ -15,20 +15,20 @@
 
 /**
  * \fn INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, dvector *b, dvector *x, 
- *                                    precond *pc, itsolver_param *itparam)
+ *                                     precond *pc, itsolver_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param A        pointer to the block dCSRmat matrix
- * \param b        pointer to the dvector of right hand side
- * \param x        pointer to the dvector of dofs
- * \param pc     pointer to the preconditioner data
- * \param itparam  pointer to parameters for iterative solvers
+ * \param A        Pointer to the block dCSRmat matrix
+ * \param b        Pointer to the dvector of right hand side
+ * \param x        Pointer to the dvector of dofs
+ * \param pc       Pointer to the preconditioner data
+ * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return          the number of iterations
+ * \return         Number of iterations if succeed
  *
  * \author Chensong Zhang
- * \date 11/25/2010
+ * \date   11/25/2010
  */
 INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, 
                                 dvector *b, 
@@ -76,18 +76,20 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
 }	
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam)
+ * \fn INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, dvector *b, dvector *x, 
+ *                                   itsolver_param *itparam)
  *
- * \brief Solve Ax=b by standard Krylov methods 
- * \param A:	pointer to the block_dCSRmat matrix
- * \param b:	pointer to the dvector of right hand side
- * \param x:	pointer to the dvector of dofs
- * \param itparam: pointer to parameters for iterative solvers
+ * \brief Solve Ax=b by standard Krylov methods
  *
- * \return the number of iterations
+ * \param A	        Pointer to the block_dCSRmat matrix
+ * \param b         Pointer to the dvector of right hand side
+ * \param x	        Pointer to the dvector of dofs
+ * \param itparam   Pointer to parameters for iterative solvers
+ *
+ * \return          Number of iterations if succeed
  *
  * \author Xiaozhe Hu
- * \date 07/18/2010
+ * \date   07/18/2010
  */
 INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, 
                               dvector *b, 

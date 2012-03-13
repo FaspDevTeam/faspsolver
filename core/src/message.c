@@ -19,15 +19,15 @@
  *
  * \brief Print out iteration information for iterative solvers 
  *
- * \param ptrlvl     level for output
- * \param stop_type  type of stopping criteria
- * \param iter       number of iterations
- * \param relres     relative residual of different kinds
- * \param absres     absolute residual of different kinds
- * \param factor     contraction factor
+ * \param ptrlvl     Level for output
+ * \param stop_type  Type of stopping criteria
+ * \param iter       Number of iterations
+ * \param relres     Relative residual of different kinds
+ * \param absres     Absolute residual of different kinds
+ * \param factor     Contraction factor
  *
  * \author Chensong Zhang
- * \date 11/16/2009
+ * \date   11/16/2009
  */
 void print_itinfo (const INT ptrlvl, 
                    const INT stop_type, 
@@ -66,24 +66,24 @@ void print_itinfo (const INT ptrlvl,
 }		
 
 /**
- * \fn void void print_amgcomplexity (AMG_data *mgl, const SHORT print_level)
+ * \fn void void print_amgcomplexity (AMG_data *mgl, const SHORT prtlvl)
  *
  * \brief Print complexities of AMG method
  *
- * \param mgl    Multilevel hierachy for AMG
- * \param print_level   how much information to print
+ * \param mgl      Multilevel hierachy for AMG
+ * \param prtlvl   How much information to print
  *
  * \author Chensong Zhang
- * \date 11/16/2009
+ * \date   11/16/2009
  */
 void print_amgcomplexity (AMG_data *mgl, 
-                          const SHORT print_level)
+                          const SHORT prtlvl)
 {
 	const SHORT   max_levels=mgl->num_levels;    
     SHORT         level;
     REAL          gridcom=0.0, opcom=0.0;
     
-    if (print_level>=PRINT_SOME) {
+    if (prtlvl>=PRINT_SOME) {
         printf("-----------------------------------------------\n");
         printf("  Level     Num of rows      Num of nonzeros\n");
         printf("-----------------------------------------------\n");
@@ -106,11 +106,11 @@ void print_amgcomplexity (AMG_data *mgl,
  *
  * \brief Print output information if necessary 
  *
- * \param ptrlvl   level for output
- * \param message  error message to print
+ * \param ptrlvl   Level for output
+ * \param message  Error message to print
  *
  * \author Chensong Zhang
- * \date 11/16/2009
+ * \date   11/16/2009
  */
 void print_message (const INT ptrlvl, 
                     const char *message)
@@ -123,16 +123,16 @@ void print_message (const INT ptrlvl,
  *
  * \brief Check error status and print out error messages before quit 
  *
- * \param status   error status
- * \param fctname  function name where this routine is called
+ * \param status   Error status
+ * \param fctname  Function name where this routine is called
  *
  * \author Chensong Zhang
- * \date 01/10/2012
+ * \date   01/10/2012
  */
 void fasp_chkerr (const SHORT status, 
                   const char *fctname)
 {												
-    if (status>=0) return;
+    if (status>=0) return; // No error at all
     
     switch (status) {
         case ERROR_OPEN_FILE:

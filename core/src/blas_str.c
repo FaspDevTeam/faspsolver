@@ -229,7 +229,7 @@ static inline void smat_amxv (REAL alpha,
 		in = i*n;
 		for (j=0;j<n;++j)
 			c[i] += alpha*a[in+j]*b[j];
-	}  //! end for (i=0;i<n;++i)
+	}  // end for (i=0;i<n;++i)
 	
 	return;
 }
@@ -299,9 +299,9 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
 	INT end1, end2;
 	INT nline;
 	
-	//! information of A
+	// information of A
 	INT nx = A->nx;
-	INT ngrid = A->ngrid;  //! number of grids
+	INT ngrid = A->ngrid;  // number of grids
 	INT nband = A->nband;
 	
 	REAL *diag = A->diag;
@@ -403,9 +403,9 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
 	INT end1, end2;
 	INT nline, nlinenc;
 	
-	//! information of A
+	// information of A
 	INT nx = A->nx;
-	INT ngrid = A->ngrid;  //! number of grids
+	INT ngrid = A->ngrid;  // number of grids
 	INT nc = A->nc;
 	INT nband = A->nband;
 	
@@ -533,9 +533,9 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
 	INT end1, end2;
 	INT nline, nlinenc;
 	
-	//! information of A
+	// information of A
 	INT nx = A->nx;
-	INT ngrid = A->ngrid;  //! number of grids
+	INT ngrid = A->ngrid;  // number of grids
 	INT nc = A->nc;
 	INT nband = A->nband;
 	
@@ -666,9 +666,9 @@ static inline void spaaxpy_str_2D_block (REAL alpha,
 	INT end1, end2;
 	INT nline, nlinenc;
 	
-	//! information of A
+	// information of A
 	INT nx = A->nx;
-	INT ngrid = A->ngrid;  //! number of grids
+	INT ngrid = A->ngrid;  // number of grids
 	INT nc = A->nc;
 	INT nband = A->nband;
 	
@@ -796,10 +796,10 @@ static inline void spaaxpy_str_3D_scalar (REAL alpha,
 	INT i;
 	INT idx1,idx2,idx3;
 	INT end1, end2, end3;
-	//! information of A
+	// information of A
 	INT nx = A->nx;
 	INT nxy = A->nxy;
-	INT ngrid = A->ngrid;  //! number of grids
+	INT ngrid = A->ngrid;  // number of grids
 	INT nband = A->nband;
 	
 	REAL *diag = A->diag;
@@ -918,10 +918,10 @@ static inline void spaaxpy_str_3D_nc3 (REAL alpha,
 	INT idx,idx1,idx2,idx3;
 	INT matidx, matidx1, matidx2, matidx3;
 	INT end1, end2, end3;
-	//! information of A
+	// information of A
 	INT nx = A->nx;
 	INT nxy = A->nxy;
-	INT ngrid = A->ngrid;  //! number of grids
+	INT ngrid = A->ngrid;  // number of grids
 	INT nc = A->nc;
 	INT nxnc = nx*nc;
 	INT nxync = nxy*nc;
@@ -1096,10 +1096,10 @@ static inline void spaaxpy_str_3D_nc5 (REAL alpha,
 	INT idx,idx1,idx2,idx3;
 	INT matidx, matidx1, matidx2, matidx3;
 	INT end1, end2, end3;
-	//! information of A
+	// information of A
 	INT nx = A->nx;
 	INT nxy = A->nxy;
-	INT ngrid = A->ngrid;  //! number of grids
+	INT ngrid = A->ngrid;  // number of grids
 	INT nc = A->nc;
 	INT nxnc = nx*nc;
 	INT nxync = nxy*nc;
@@ -1274,10 +1274,10 @@ static inline void spaaxpy_str_3D_block (REAL alpha,
 	INT idx,idx1,idx2,idx3;
 	INT matidx, matidx1, matidx2, matidx3;
 	INT end1, end2, end3;
-	//! information of A
+	// information of A
 	INT nx = A->nx;
 	INT nxy = A->nxy;
-	INT ngrid = A->ngrid;  //! number of grids
+	INT ngrid = A->ngrid;  // number of grids
 	INT nc = A->nc;
 	INT nxnc = nx*nc;
 	INT nxync = nxy*nc;
@@ -1446,15 +1446,15 @@ static inline void spaaxpy_str_general (REAL alpha,
                                         REAL *x, 
                                         REAL *y) 
 {
-	//! information of A
-	INT ngrid = A->ngrid;  //! number of grids
-	INT nc = A->nc;        //! size of each block (number of components)
-	INT nband = A->nband ; //! number of off-diag band
-	INT *offsets = A->offsets; //! offsets of the off-diagals
-	REAL  *diag = A->diag;       //! Diagonal entries
-	REAL **offdiag = A->offdiag; //! Off-diagonal entries
+	// information of A
+	INT ngrid = A->ngrid;  // number of grids
+	INT nc = A->nc;        // size of each block (number of components)
+	INT nband = A->nband ; // number of off-diag band
+	INT *offsets = A->offsets; // offsets of the off-diagals
+	REAL  *diag = A->diag;       // Diagonal entries
+	REAL **offdiag = A->offdiag; // Off-diagonal entries
 	
-	//! local variables
+	// local variables
 	INT k;
 	INT block = 0;
 	INT point = 0;
@@ -1471,21 +1471,21 @@ static inline void spaaxpy_str_general (REAL alpha,
 	
 	if (alpha == 0)
 	{
-		return; //! nothing should be done
+		return; // nothing should be done
 	}
 	
 	beta = 1.0/alpha;
 	
-	//! y: = beta*y
+	// y: = beta*y
 	for (k = 0; k < size; ++k)
 	{
 		y[k] *= beta;
 	}
 	
-	//! y: = y + A*x   
+	// y: = y + A*x   
 	if (nc > 1)
 	{	
-		//! Deal with the diagonal band
+		// Deal with the diagonal band
 		for (block = 0; block < ngrid; ++block)
 		{
 			start_data = nc2*block;
@@ -1493,7 +1493,7 @@ static inline void spaaxpy_str_general (REAL alpha,
 			blkcontr_str(start_data,start_vect,start_vect,nc,diag,x,y);
 		}
 		
-		//! Deal with the off-diagonal bands
+		// Deal with the off-diagonal bands
 		for (band = 0; band < nband; band ++)
 		{  
 			width = offsets[band];
@@ -1522,13 +1522,13 @@ static inline void spaaxpy_str_general (REAL alpha,
 	}
 	else if (nc == 1)
 	{
-		//! Deal with the diagonal band
+		// Deal with the diagonal band
 		for (point = 0; point < ngrid; point ++)
 		{
 			y[point] += diag[point]*x[point];
 		}
 		
-		//! Deal with the off-diagonal bands
+		// Deal with the off-diagonal bands
 		for (band = 0; band < nband; band ++)
 		{  
 			width = offsets[band];
@@ -1554,7 +1554,7 @@ static inline void spaaxpy_str_general (REAL alpha,
 		return;
 	}
 	
-	//! y: = alpha*y
+	// y: = alpha*y
 	for (k = 0; k < size; ++k)
 	{
 		y[k] *= alpha;

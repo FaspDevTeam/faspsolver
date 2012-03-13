@@ -162,7 +162,7 @@ void fasp_blas_smat_mxv (REAL *a,
 				temp = 0.0;
 				for (j=0; j<n; ++j) temp += a[in+j]*b[j];
 				c[i]=temp;
-			} //! end for i
+			} // end for i
 		}
 			break;
 	}
@@ -534,7 +534,7 @@ INT fasp_blas_smat_inv (REAL *a,
 					for (j=0; j<n; ++j)
 						if (j!=k) { 
 							u = in+j; a[u] -= a[in+k]*a[kn+j];
-						} //! end if (j!=k)
+						} // end if (j!=k)
 				}
 				
 				for (i=k+1; i<n; ++i) {
@@ -542,7 +542,7 @@ INT fasp_blas_smat_inv (REAL *a,
 					for (j=0; j<n; ++j)
 						if (j!=k) { 
 							u = in+j; a[u] -= a[in+k]*a[kn+j];
-						} //! end if (j!=k)
+						} // end if (j!=k)
 				}
 				
 				for (i=0; i<k; ++i) {
@@ -553,7 +553,7 @@ INT fasp_blas_smat_inv (REAL *a,
 					u=i*n+k; a[u] *= -alinv;
 				}				
 				
-			} //! end for (k=0; k<n; ++k)
+			} // end for (k=0; k<n; ++k)
 			break;
 		}
 			
@@ -819,8 +819,8 @@ void fasp_blas_smat_mul (REAL *a,
 					temp = 0.0; // Fixed by Cheosong. Feb/22/2011.
 					for (k=0; k<n; ++k) temp += a[i+k]*b[k*n+j];
 					c[i+j] = temp;
-				} //! end for j
-			} //! end for i
+				} // end for j
+			} // end for i
 		}
 			break;
 	}			
@@ -1663,14 +1663,14 @@ void fasp_blas_smat_aAxpby (const REAL alpha,
 		return;
 	}
 	
-	//! y := (beta/alpha)y
+	// y := (beta/alpha)y
 	tmp = beta / alpha;
 	if (tmp != 1.0)
 	{
 		for (i = 0; i < n; i ++) y[i] *= tmp;
 	}
 	
-	//! y := y + A*x
+	// y := y + A*x
 	for (i = 0; i < n; i ++)
 	{
 		k = i*n;
@@ -1680,7 +1680,7 @@ void fasp_blas_smat_aAxpby (const REAL alpha,
 		}
 	}     
 	
-	//! y := alpha*y
+	// y := alpha*y
 	if (alpha != 1.0)
 	{
 		for (i = 0; i < n; i ++) y[i] *= alpha;

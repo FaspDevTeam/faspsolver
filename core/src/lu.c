@@ -16,9 +16,9 @@
  *
  * \brief LU decomposition of A usind Doolittle's method
  *
- * \param A      pointer to the full matrix
- * \param pivot   pivoting positions
- * \param n       size of matrix A
+ * \param A       Pointer to the full matrix
+ * \param pivot   Pivoting positions
+ * \param n       Size of matrix A
  *
  * \return        SUCCESS if succeed, RUN_FAIL if fail
  *
@@ -28,6 +28,7 @@
  * A = LU. The matrices L and U replace the matrix A. The diagonal elements 
  * of L are 1 and are not stored. 
  * 
+ * \note
  * The Doolittle method with partial pivoting is:  Determine the pivot 
  * row and interchange the current row with the pivot row, then assuming 
  * that row k is the current row, k = 0, ..., n - 1 evaluate in order the
@@ -39,7 +40,7 @@
  *                                 for i = k+1, ... , n-1.              
  *
  * \author Xuehai Huang
- * \date 04/02/2009 
+ * \date   04/02/2009 
  */
 SHORT fasp_smat_lu_decomp (REAL *A, 
                            INT pivot[], 
@@ -94,13 +95,13 @@ SHORT fasp_smat_lu_decomp (REAL *A,
  *
  * \brief Solving Ax=b using LU decomposition
  *
- * \param A    pointer to the full matrix
- * \param b     right hand side array 
- * \param pivot pivoting positions
- * \param x     solution array 
- * \param n     size of matrix A
+ * \param A      Pointer to the full matrix
+ * \param b      Right hand side array 
+ * \param pivot  Pivoting positions
+ * \param x      Pointer to the solution array 
+ * \param n      Size of matrix A
  *
- * \return      SHORT if succeed, RUN_FAIL if failed
+ * \return       SUCCESS if succeed, RUN_FAIL if failed
  *
  * \note
  * This routine uses Doolittle's method to solve the linear equation Ax = b.
@@ -110,7 +111,7 @@ SHORT fasp_smat_lu_decomp (REAL *A,
  * and subsequently solving the linear equation Ux = y for x.
  *
  * \author Xuehai Huang
- * \date 04/02/2009
+ * \date   04/02/2009
  */   
 SHORT fasp_smat_lu_solve (REAL *A, 
                           REAL b[], 

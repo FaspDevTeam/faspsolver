@@ -1073,23 +1073,23 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
 
 /*-------- In file: itsolver_bsr.c --------*/
 
-int fasp_solver_dbsr_itsolver (dBSRmat *A, 
+INT fasp_solver_dbsr_itsolver (dBSRmat *A, 
                                dvector *b, 
                                dvector *x, 
                                precond *pc, 
                                itsolver_param *itparam);
 
-int fasp_solver_dbsr_krylov (dBSRmat *A, 
+INT fasp_solver_dbsr_krylov (dBSRmat *A, 
                              dvector *b, 
                              dvector *x, 
                              itsolver_param *itparam);
 
-int fasp_solver_dbsr_krylov_diag (dBSRmat *A, 
+INT fasp_solver_dbsr_krylov_diag (dBSRmat *A, 
                                   dvector *b, 
                                   dvector *x, 
                                   itsolver_param *itparam);
 
-int fasp_solver_dbsr_krylov_ilu (dBSRmat *A, 
+INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A, 
                                  dvector *b, 
                                  dvector *x, 
                                  itsolver_param *itparam, 
@@ -1214,7 +1214,7 @@ void print_itinfo (const INT ptrlvl,
                    const REAL factor);
 
 void print_amgcomplexity (AMG_data *mgl, 
-                          const SHORT print_level);
+                          const SHORT prtlvl);
 
 void print_message (const INT ptrlvl, 
                     const char *message);

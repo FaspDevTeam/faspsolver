@@ -15,18 +15,20 @@
  * \fn INT fasp_solver_dcsr_itsolver (dCSRmat *A, dvector *b, dvector *x, 
  *                                    precond *pc, itsolver_param *itparam)
  *
- * \brief Solve Ax=b by preconditioned Krylov methods -- this is an abstract interface
+ * \brief Solve Ax=b by preconditioned Krylov methods for CSR matrices
  *
- * \param A        pointer to the coeff matrix in dCSRmat format
- * \param b        pointer to the right hand side in dvector format
- * \param x        pointer to the approx solution in dvector format
- * \param pc     pointer to the preconditioning action
- * \param itparam  pointer to parameters for iterative solvers
+ * \param A        Pointer to the coeff matrix in dCSRmat format
+ * \param b        Pointer to the right hand side in dvector format
+ * \param x        Pointer to the approx solution in dvector format
+ * \param pc       Pointer to the preconditioning action
+ * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return          return the number of iterations if succeed
+ * \return         Number of iterations if succeed
  *
  * \author Chensong Zhang
- * \date 09/25/2009 
+ * \date   09/25/2009 
+ *
+ * \note This is an abstract interface for iterative methods.
  */
 INT fasp_solver_dcsr_itsolver (dCSRmat *A, 
                                dvector *b, 
@@ -46,7 +48,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 	clock_t solver_start = clock();
     
 #if DEBUG_MODE
-	printf("### DEBUG: itsolver ...... [Start]\n");
+	printf("### DEBUG: fasp_solver_dcsr_itsolver ...... [Start]\n");
 	printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
 	printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);		
 #endif
@@ -102,7 +104,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 	}
     
 #if DEBUG_MODE
-	printf("### DEBUG: itsolver ...... [Finish]\n");
+	printf("### DEBUG: fasp_solver_dcsr_itsolver ...... [Finish]\n");
 #endif
 	
 	return iter;
@@ -112,17 +114,17 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
  * \fn INT fasp_solver_dcsr_krylov (dCSRmat *A, dvector *b, dvector *x, 
  *                                  itsolver_param *itparam)
  *
- * \brief Solve Ax=b by standard Krylov methods -- no preconditioning 
+ * \brief Solve Ax=b by standard Krylov methods -- without preconditioner 
  *
- * \param A        pointer to the coeff matrix in dCSRmat format
- * \param b        pointer to the right hand side in dvector format
- * \param x        pointer to the approx solution in dvector format
- * \param itparam  pointer to parameters for iterative solvers
+ * \param A        Pointer to the coeff matrix in dCSRmat format
+ * \param b        Pointer to the right hand side in dvector format
+ * \param x        Pointer to the approx solution in dvector format
+ * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return          return the number of iterations if succeed
+ * \return         Number of iterations if succeed
  *
  * \author Chensong Zhang, Shiquan Zhang
- * \date 09/25/2009 
+ * \date   09/25/2009 
  */
 INT fasp_solver_dcsr_krylov (dCSRmat *A, 
                              dvector *b, 
@@ -137,7 +139,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
 	REAL     solver_duration;
 	
 #if DEBUG_MODE
-	printf("### DEBUG: krylov ...... [Start]\n");
+	printf("### DEBUG: fasp_solver_dcsr_krylov ...... [Start]\n");
 	printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
 	printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);		
 #endif
@@ -152,24 +154,27 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
 	}	
 	
 #if DEBUG_MODE
-	printf("### DEBUG: krylov ...... [Finish]\n");
+	printf("### DEBUG: fasp_solver_dcsr_krylov ...... [Finish]\n");
 #endif
 	
 	return status;
 }
 
 /**
- * \fn INT fasp_solver_dcsr_krylov_diag (dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam)
+ * \fn INT fasp_solver_dcsr_krylov_diag (dCSRmat *A, dvector *b, dvector *x, 
+ *                                       itsolver_param *itparam)
+ *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  * 
- * \param A        pointer to the coeff matrix in dCSRmat format
- * \param b        pointer to the right hand side in dvector format
- * \param x        pointer to the approx solution in dvector format
- * \param itparam  pointer to parameters for iterative solvers
- * \return          return the number of iterations if succeed
+ * \param A        Pointer to the coeff matrix in dCSRmat format
+ * \param b        Pointer to the right hand side in dvector format
+ * \param x        Pointer to the approx solution in dvector format
+ * \param itparam  Pointer to parameters for iterative solvers
+ *
+ * \return         Number of iterations if succeed
  *
  * \author Chensong Zhang, Shiquan Zhang
- * \date 09/25/2009 
+ * \date   09/25/2009 
  */
 INT fasp_solver_dcsr_krylov_diag (dCSRmat *A, 
                                   dvector *b, 
@@ -184,7 +189,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 	REAL      solver_duration;
 	
 #if DEBUG_MODE
-	printf("### DEBUG: krylov_diag ...... [Start]\n");
+	printf("### DEBUG: fasp_solver_dcsr_krylov_diag ...... [Start]\n");
 	printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
 	printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);		
 #endif
@@ -210,7 +215,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 	fasp_dvec_free(&diag);
 
 #if DEBUG_MODE
-	printf("### DEBUG: krylov_diag ...... [Finish]\n");
+	printf("### DEBUG: fasp_solver_dcsr_krylov_diag ...... [Finish]\n");
 #endif
 		
 	return status;
@@ -220,18 +225,18 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
  * \fn INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, dvector *b, dvector *x, 
  *                                      itsolver_param *itparam, AMG_param *amgparam)
  *
- * \brief Solve Ax=b by preconditioned Krylov methods with AMG as precondition
+ * \brief Solve Ax=b by AMG preconditioned Krylov methods
  *
- * \param A        pointer to the coeff matrix in dCSRmat format
- * \param b        pointer to the right hand side in dvector format
- * \param x        pointer to the approx solution in dvector format
- * \param itparam  pointer to parameters for iterative solvers
- * \param amgparam AMG parameters
+ * \param A         Pointer to the coeff matrix in dCSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
+ * \param itparam   Pointer to parameters for iterative solvers
+ * \param amgparam  AMG parameters
  *
- * \return         the number of iterations if succeed
+ * \return          Number of iterations if succeed
  *
  * \author Chensong Zhang
- * \date 09/25/2009  
+ * \date   09/25/2009  
  */
 INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, 
                                  dvector *b, 
@@ -249,7 +254,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	REAL     solver_duration;
 	    
 #if DEBUG_MODE
-	printf("### DEBUG: krylov_amg ...... [Start]\n");
+	printf("### DEBUG: fasp_solver_dcsr_krylov_amg ...... [Start]\n");
 	printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
 	printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);		
 #endif
@@ -312,7 +317,7 @@ FINISHED:
 	fasp_amg_data_free(mgl);
 	
 #if DEBUG_MODE
-	printf("### DEBUG: krylov_amg ...... [Finish]\n");
+	printf("### DEBUG: fasp_solver_dcsr_krylov_amg ...... [Finish]\n");
 #endif
 	
     fasp_chkerr(status, "fasp_solver_dcsr_krylov_amg");
@@ -326,16 +331,16 @@ FINISHED:
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods
  *
- * \param A        pointer to the coeff matrix in dCSRmat format
- * \param b        pointer to the right hand side in dvector format
- * \param x        pointer to the approx solution in dvector format
- * \param itparam  pointer to parameters for iterative solvers
- * \param iluparam pointer to parameters for ILU
+ * \param A         Pointer to the coeff matrix in dCSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
+ * \param itparam   Pointer to parameters for iterative solvers
+ * \param iluparam  Pointer to parameters for ILU
  *
- * \return          return the number of iterations if succeed
+ * \return          Number of iterations if succeed
  *
  * \author Chensong Zhang, Shiquan Zhang
- * \date 09/25/2009 
+ * \date   09/25/2009 
  */
 INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A, 
                                  dvector *b, 
@@ -351,7 +356,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
 	REAL     solver_duration;
 		
 #if DEBUG_MODE
-	printf("### DEBUG: krylov_ilu ...... [Start]\n");
+	printf("### DEBUG: fasp_solver_dcsr_krylov_ilu ...... [Start]\n");
 	printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
 	printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);		
 #endif
@@ -397,7 +402,7 @@ FINISHED:
 	fasp_ilu_data_free(&LU);
 	
 #if DEBUG_MODE
-	printf("### DEBUG: krylov_ilu ...... [Finish]\n");
+	printf("### DEBUG: fasp_solver_dcsr_krylov_ilu ...... [Finish]\n");
 #endif
 	
 	return status;
@@ -409,14 +414,14 @@ FINISHED:
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods: ILU of M plays as preconditioner
  *
- * \param A         pointer to the coeff matrix in dCSRmat format
- * \param b         pointer to the right hand side in dvector format
- * \param x         pointer to the approx solution in dvector format
- * \param itparam   pointer to parameters for iterative solvers
- * \param iluparam  pointer to parameters for ILU
- * \param M	        pointer to the preconditioning matrix in dCSRmat format 
+ * \param A         Pointer to the coeff matrix in dCSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
+ * \param itparam   Pointer to parameters for iterative solvers
+ * \param iluparam  Pointer to parameters for ILU
+ * \param M	        Pointer to the preconditioning matrix in dCSRmat format 
  *
- * \return           return the number of iterations if succeed
+ * \return          Number of iterations if succeed
  *
  * \author Xiaozhe Hu
  * \date 09/25/2009 
@@ -439,7 +444,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
 	INT status = SUCCESS;
 	
 #if DEBUG_MODE
-	printf("### DEBUG: krylov_ilu_M ...... [Start]\n");
+	printf("### DEBUG: fasp_solver_dcsr_krylov_ilu_M ...... [Start]\n");
 	printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
 	printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);		
 #endif
@@ -485,7 +490,7 @@ FINISHED:
 	fasp_ilu_data_free(&LU);
 	
 #if DEBUG_MODE
-	printf("### DEBUG: krylov_ilu_M ...... [Finish]\n");
+	printf("### DEBUG: fasp_solver_dcsr_krylov_ilu_M ...... [Finish]\n");
 #endif
 	
 	return status;

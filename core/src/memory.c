@@ -41,13 +41,13 @@ unsigned INT total_alloc_count = 0; // Total number of allocations
  *
  * \brief Allocate, initiate, and check memory
  *
- * \param size    number of memory blocks
- * \param type    size of memory blocks
+ * \param size    Number of memory blocks
+ * \param type    Size of memory blocks
  *
- * \return        void pointer to the reallocated memory
+ * \return        Void pointer to the allocated memory
  *
  * \author Chensong Zhang
- * \date 2010/08/12 
+ * \date   2010/08/12 
  */
 void * fasp_mem_calloc (INT size, 
                         INT type)
@@ -92,13 +92,13 @@ void * fasp_mem_calloc (INT size,
  *
  * \brief Reallocate, initiate, and check memory
  *
- * \param oldmem  previous allocated memory pointer
- * \param type    size of memory blocks
+ * \param oldmem  Pointer to the existing mem block
+ * \param type    Size of memory blocks
  *
- * \return        void pointer to the reallocated memory
+ * \return        Void pointer to the reallocated memory
  *
  * \author Chensong Zhang
- * \date 2010/08/12 
+ * \date   2010/08/12 
  */
 void * fasp_mem_realloc (void * oldmem, 
                          INT tsize)
@@ -124,12 +124,12 @@ void * fasp_mem_realloc (void * oldmem,
  *
  * \brief Free up previous allocated memory body
  *
- * \param mem   pointer to the memory body need to be freed
+ * \param mem   Pointer to the memory body need to be freed
  *
- * \return       NULL pointer
+ * \return      NULL pointer
  *
  * \author Chensong Zhang
- * \date 2010/12/24 
+ * \date   2010/12/24 
  */
 void fasp_mem_free (void * mem)
 {
@@ -154,7 +154,7 @@ void fasp_mem_free (void * mem)
  * \brief Show total allocated memory currently
  *
  * \author Chensong Zhang
- * \date 2010/08/12 
+ * \date   2010/08/12 
  */
 void fasp_mem_usage ()
 {	
@@ -169,14 +169,14 @@ void fasp_mem_usage ()
  *
  * \brief Check wether a point is null or not. 
  *
- * \param ptr       void * pointer to be checked
- * \param message   char * error message to print
- * \param ERR       integer error code
+ * \param ptr       Void pointer to be checked
+ * \param message   Error message to print
+ * \param ERR       Integer error code
  *
  * \return          SUCCESS or error code
  *
  * \author Chensong Zhang
- * \date 11/16/2009
+ * \date   11/16/2009
  */
 INT fasp_mem_check (void *ptr, 
                     char *message, 
@@ -195,12 +195,12 @@ INT fasp_mem_check (void *ptr,
  *
  * \brief Check wether a ILU_data has enough work space
  *
- * \param iludata    pointer to be cheked
+ * \param iludata    Pointer to be cheked
  *
  * \return           SUCCESS if success, else ERROR (negative value) 
  *
- * \author Xiaozhe Hu, Chensong
- * \date 11/27/09
+ * \author Xiaozhe Hu, Chensong Zhang
+ * \date   11/27/09
  */
 INT fasp_mem_iludata_check (ILU_data *iludata)
 {	
@@ -221,12 +221,12 @@ INT fasp_mem_iludata_check (ILU_data *iludata)
  *
  * \brief Check wether a dCSRmat A has sucessfully allocated memory 
  *
- * \param A   pointer to be cheked
+ * \param A   Pointer to be cheked
  *
  * \return    SUCCESS if success, else ERROR message (negative value) 
  *
  * \author Xiaozhe Hu
- * \date 11/27/09
+ * \date   11/27/09
  */
 INT fasp_mem_dcsr_check (dCSRmat *A)
 {

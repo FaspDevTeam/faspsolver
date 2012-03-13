@@ -108,7 +108,7 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
 SHORT fasp_format_dstr_dcsr (dSTRmat *A, 
                              dCSRmat *B_ptr)
 {
-	//! some members of A
+	// some members of A
 	const INT nc    = A->nc;   
 	const INT ngrid = A->ngrid;
 	const INT nband = A->nband;
@@ -117,7 +117,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
 	REAL  *diag = A->diag;
 	REAL **offdiag = A->offdiag;
 	
-	//! some members of B
+	// some members of B
 	const INT glo_row = nc*ngrid;
 	INT glo_nnz;
 	INT *ia = NULL;
@@ -126,13 +126,13 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
 	
 	dCSRmat B;
 	
-	//! local variables
+	// local variables
 	INT width;
 	INT nc2 = nc*nc;
 	INT BAND,ROW,COL;
 	INT ncb,nci;
 	INT row_start,col_start;
-	INT block; //! how many blocks in the current ROW
+	INT block; // how many blocks in the current ROW
 	INT i,j;
 	INT pos;
 	INT start;
@@ -141,10 +141,10 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
 	INT tmp_col;
 	REAL tmp_val;
 	
-	//! allocate for 'ia' array
+	// allocate for 'ia' array
 	ia = (INT *)fasp_mem_calloc(glo_row+1,sizeof(INT));
 	
-	//! Generate the 'ia' array
+	// Generate the 'ia' array
 	ia[0] = 0;
 	for (ROW = 0; ROW < ngrid; ++ROW)
 	{
@@ -161,7 +161,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
 			{
 				if (COL < ngrid) ++block;
 			}
-		} //! end for BAND
+		} // end for BAND
 		
 		ncb = nc*block;
 		row_start = ROW*nc;
@@ -171,20 +171,20 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
 			row = row_start + i; 
 			ia[row+1] = ia[row] + ncb;
 		}
-	} //! end for ROW
+	} // end for ROW
 	
-	//! allocate for 'ja' and 'a' arrays
+	// allocate for 'ja' and 'a' arrays
 	glo_nnz = ia[glo_row];
 	ja = (INT *)fasp_mem_calloc(glo_nnz,sizeof(INT));
 	a = (REAL *)fasp_mem_calloc(glo_nnz,sizeof(REAL));
 	
-	//! Generate the 'ja' and 'a' arrays at the same time 
+	// Generate the 'ja' and 'a' arrays at the same time 
 	for (ROW = 0; ROW < ngrid; ++ROW)
 	{
 		row_start = ROW*nc;    
 		val_L_start = ROW*nc2;
 		
-		//! deal with the diagonal band
+		// deal with the diagonal band
 		for (i = 0; i < nc; i ++)
 		{
 			nci   = nc*i;
@@ -199,7 +199,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
 		}
 		block = 1;
 		
-		//! deal with the off-diagonal bands
+		// deal with the off-diagonal bands
 		for (BAND = 0; BAND < nband; ++BAND)
 		{
 			width     = offsets[BAND];
@@ -249,8 +249,8 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
 		}
 	}
 	
-	//! Reordering in such manner that every diagonal element 
-	//! is firstly stored in the corresponding row
+	// Reordering in such manner that every diagonal element 
+	// is firstly stored in the corresponding row
 	if (nc > 1)
 	{
 		for (ROW = 0; ROW < ngrid; ++ROW)
@@ -262,12 +262,12 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
 				start = ia[row];
 				pos   = start + j;
 				
-				//! swap in 'ja'
+				// swap in 'ja'
 				tmp_col   = ja[start];
 				ja[start] = ja[pos];
 				ja[pos]   = tmp_col;
 				
-				//! swap in 'a'
+				// swap in 'a'
 				tmp_val  = a[start];
 				a[start] = a[pos];
 				a[pos]   = tmp_val;            

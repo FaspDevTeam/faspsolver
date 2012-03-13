@@ -18,16 +18,16 @@
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param A        pointer to the dSTRmat matrix
- * \param b        pointer to the dvector of right hand side
- * \param x        pointer to the dvector of dofs
- * \param pc     pointer to the preconditioner data
- * \param itparam  pointer to parameters for iterative solvers
+ * \param A        Pointer to the dSTRmat matrix
+ * \param b        Pointer to the dvector of right hand side
+ * \param x        Pointer to the dvector of dofs
+ * \param pc       Pointer to the preconditioner data
+ * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return          the number of iterations
+ * \return         Number of iterations if succeed
  *
  * \author Chensong Zhang
- * \date 09/25/2009 
+ * \date   09/25/2009 
  */
 INT fasp_solver_dstr_itsolver(dSTRmat *A, 
                               dvector *b, 
@@ -68,7 +68,7 @@ INT fasp_solver_dstr_itsolver(dSTRmat *A,
 			break;	
 			
 		default:
-			printf("Error: wrong itertive solver type %d!\n", itsolver_type);
+			printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
 			iter=ERROR_SOLVER_TYPE;
 			
 	}
@@ -88,15 +88,15 @@ INT fasp_solver_dstr_itsolver(dSTRmat *A,
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param A	pointer to the dCSRmat matrix
- * \param b	pointer to the dvector of right hand side
- * \param x	pointer to the dvector of dofs
- * \param itparam pointer to parameters for iterative solvers
+ * \param A	        Pointer to the dSTRmat matrix
+ * \param b	        Pointer to the dvector of right hand side
+ * \param x	        Pointer to the dvector of dofs
+ * \param itparam   Pointer to parameters for iterative solvers
  *
- * \return the number of iterations
+ * \return          Number of iterations if succeed
  *
  * \author Zhiyang Zhou
- * \date 4/25/2010
+ * \date   4/25/2010
  */
 INT fasp_solver_dstr_krylov (dSTRmat *A, 
                              dvector *b, 
@@ -126,15 +126,15 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
- * \param A:	pointer to the dSTRmat matrix
- * \param b:	pointer to the dvector of right hand side
- * \param x:	pointer to the dvector of dofs
- * \param itparam: pointer to parameters for iterative solvers
+ * \param A	        Pointer to the dSTRmat matrix
+ * \param b	        Pointer to the dvector of right hand side
+ * \param x	        Pointer to the dvector of dofs
+ * \param itparam   Pointer to parameters for iterative solvers
  *
- * \return the number of iterations
+ * \return          Number of iterations if succeed
  *
  * \author Zhiyang Zhou
- * \date 4/23/2010
+ * \date   4/23/2010
  */
 INT fasp_solver_dstr_krylov_diag (dSTRmat *A, 
                                   dvector *b, 
@@ -181,16 +181,16 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
  *
  * \brief Solve Ax=b by structured ILU preconditioned Krylov methods 
  *
- * \param A	pointer to the dSTRmat matrix
- * \param b	pointer to the dvector of right hand side
- * \param x	pointer to the dvector of dofs
- * \param itparam pointer to parameters for iterative solvers
- * \param iluparam pointer to parameters for ILU
+ * \param A	        Pointer to the dSTRmat matrix
+ * \param b	        Pointer to the dvector of right hand side
+ * \param x	        Pointer to the dvector of dofs
+ * \param itparam   Pointer to parameters for iterative solvers
+ * \param iluparam  Pointer to parameters for ILU
  *
- * \return the number of iterations
+ * \return          Number of iterations if succeed
  *
  * \author Xiaozhe Hu
- * \date 05/01/2010
+ * \date   05/01/2010
  */
 INT fasp_solver_dstr_krylov_ilu (dSTRmat *A, 
                                  dvector *b, 
@@ -218,7 +218,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
 	}
 	else 
 	{		
-		printf("krylov_ilu_str: illegal level of fill-in for structured ILU (lfil>=2)!!\n");
+		printf("### ERROR: Illegal level of fill-in for structured ILU (lfil>=2)!!\n");
 		return 0;
 	}
 	setup_end=clock();
@@ -238,7 +238,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
 	}
 	else
 	{
-		printf("krylov_ilu_str: illegal level of fill-in for structured ILU (lfil>=2)!!\n");
+		printf("### ERROR: Illegal level of fill-in for structured ILU (lfil>=2)!!\n");
 		return 0;
 	}
 	
@@ -251,7 +251,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
 	
 	if (print_level>PRINT_NONE) printf("Iterative solver costs %f seconds.\n", solver_duration);
 	
-	if (print_level>PRINT_NONE) printf("krylov_ilu_str method totally costs %f seconds.\n", setup_duration + solver_duration);
+	if (print_level>PRINT_NONE) printf("Solver costs %f seconds.\n", setup_duration + solver_duration);
 	
 	fasp_dstr_free(&LU);
 	
@@ -263,15 +263,15 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
- * \param A:	pointer to the dSTRmat matrix
- * \param b:	pointer to the dvector of right hand side
- * \param x:	pointer to the dvector of dofs
- * \param itparam: pointer to parameters for iterative solvers
+ * \param A         Pointer to the dSTRmat matrix
+ * \param b	        Pointer to the dvector of right hand side
+ * \param x	        Pointer to the dvector of dofs
+ * \param itparam   Pointer to parameters for iterative solvers
  *
- * \return the number of iterations
+ * \return          Number of iterations if succeed
  *
  * \author Xiaozhe Hu
- * \date 10/10/2010
+ * \date   10/10/2010
  */
 INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A, 
                                      dvector *b, 
@@ -280,16 +280,16 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
                                      ivector *neigh, 
                                      ivector *order)
 {
-	//! Parameter for iterative method
+	// Parameter for iterative method
 	const INT print_level = itparam->print_level;
 	
-	//! Information about matrices
+	// Information about matrices
 	INT ngrid=A->ngrid;
 	
-	//! return parameter
+	// return parameter
 	INT status = SUCCESS;
 	
-	//! local parameter
+	// local parameter
 	clock_t solver_start, solver_end, setup_start, setup_end;
 	REAL solver_duration, setup_duration;
 	
@@ -328,11 +328,10 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
 	if (print_level>PRINT_NONE) {
 		solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
 		printf("solve costs %f seconds.\n", solver_duration);
-		printf("krylov_blockGS_str costs %f seconds.\n", solver_duration+setup_duration);
+		printf("Solver costs %f seconds.\n", solver_duration+setup_duration);
 	}
 	
 	return status;
-	
 }
 
 /*---------------------------------*/

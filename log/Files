@@ -13,9 +13,9 @@
      194 ./core/src/array_omp.c
      261 ./core/src/auxiliary.c
      226 ./core/src/blas_array.c
-     303 ./core/src/blas_array_omp.c
+     302 ./core/src/blas_array_omp.c
      197 ./core/src/blas_block.c
-     104 ./core/src/blas_block_omp.c
+     105 ./core/src/blas_block_omp.c
      608 ./core/src/blas_bsr.c
     2037 ./core/src/blas_bsr_omp.c
      938 ./core/src/blas_csr.c
@@ -44,14 +44,14 @@
     1016 ./core/src/interpolation.c
     1687 ./core/src/interpolation_omp.c
     1003 ./core/src/io.c
-     496 ./core/src/itsolver.c
-     116 ./core/src/itsolver_bcsr.c
-     263 ./core/src/itsolver_bsr.c
+     501 ./core/src/itsolver.c
+     118 ./core/src/itsolver_bcsr.c
+     262 ./core/src/itsolver_bsr.c
      132 ./core/src/itsolver_bsr_omp.c
      202 ./core/src/itsolver_omp.c
-     136 ./core/src/itsolver_stokes.c
-     340 ./core/src/itsolver_str.c
-     169 ./core/src/lu.c
+     139 ./core/src/itsolver_stokes.c
+     339 ./core/src/itsolver_str.c
+     170 ./core/src/lu.c
      244 ./core/src/memory.c
      219 ./core/src/message.c
      280 ./core/src/mgcycle.c
@@ -105,4 +105,4 @@
     5818 ./core/include/malloc.c.h
      189 ./core/include/messages.h
      291 ./core/include/nedmalloc.h
-   61881 total
+   61890 total

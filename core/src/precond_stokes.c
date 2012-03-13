@@ -30,7 +30,7 @@ void fasp_precond_stokes_bdiag (REAL *r,
 	REAL	*tempr = predata->w;		
 	INT i;
 	
-	//! prepare	 AMG preconditioner 
+	// prepare	 AMG preconditioner 
 	AMG_data *mgl = predata->mgl_data;
 	AMG_param amgparam; fasp_param_amg_init(&amgparam);
 	amgparam.cycle_type = predata->cycle_type;
@@ -41,21 +41,21 @@ void fasp_precond_stokes_bdiag (REAL *r,
 	amgparam.coarse_scaling  = predata->coarse_scaling;
 	amgparam.ILU_levels      = predata->mgl_data->ILU_levels;		
 	
-	//! back up r, setup z;
+	// back up r, setup z;
 	fasp_array_cp(col, r, tempr);
 	fasp_array_set(col, z, 0.0);
 	
-	//! Solve A by AMG
+	// Solve A by AMG
 	mgl->b.row=colA; fasp_array_cp(colA,r,mgl->b.val); // residual is an input 
 	mgl->x.row=colA; fasp_dvec_set(colA,&mgl->x,0.0);	
 	for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam); //fasp_solver_mgrecur(mgl,&amgparam,0); //
 	
-	//! Solve M by PCG
+	// Solve M by PCG
 	for (i=0;i<colB;++i) {
 		if (ABS(diagptr[i])>SMALLREAL) z[colA+i]/=diagptr[i];
 	}		
 	
-	//! restore r
+	// restore r
 	fasp_array_cp(col, tempr, r);
 }
 

@@ -21,7 +21,7 @@
  * \param y   Pointer to dvector y
  *
  * \author Chensong Zhang
- * \data   07/01/209
+ * \date   07/01/209
  */
 void fasp_blas_dvec_axpy (const REAL a, 
                           dvector *x, 
@@ -49,7 +49,7 @@ void fasp_blas_dvec_axpy (const REAL a,
  * \param z   Pointer to dvector z
  *
  * \author Chensong Zhang
- * \data   07/01/209
+ * \date   07/01/209
  */
 void fasp_blas_dvec_axpyz (const REAL a, 
                            dvector *x, 
@@ -81,7 +81,7 @@ void fasp_blas_dvec_axpyz (const REAL a,
  * \return Inner product
  *
  * \author Chensong Zhang
- * \data   07/01/209
+ * \date   07/01/209
  */
 REAL fasp_blas_dvec_dotprod (dvector *x, 
                              dvector *y)
@@ -107,7 +107,7 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
  * \return relative error ||x-y||/||x||
  *
  * \author Chensong Zhang
- * \data   07/01/209
+ * \date   07/01/209
  */
 REAL fasp_dvec_relerr (dvector *x, 
                        dvector *y)
@@ -140,7 +140,7 @@ REAL fasp_dvec_relerr (dvector *x,
  * \return L1 norm of x
  *
  * \author Chensong Zhang
- * \data   07/01/209
+ * \date   07/01/209
  */
 REAL fasp_blas_dvec_norm1 (dvector *x)
 {
@@ -163,7 +163,7 @@ REAL fasp_blas_dvec_norm1 (dvector *x)
  * \return L2 norm of x
  *
  * \author Chensong Zhang
- * \data   07/01/209
+ * \date   07/01/209
  */
 REAL fasp_blas_dvec_norm2 (dvector *x)
 {
@@ -186,7 +186,7 @@ REAL fasp_blas_dvec_norm2 (dvector *x)
  * \return L_inf norm of x
  *
  * \author Chensong Zhang
- * \data   07/01/209
+ * \date   07/01/209
  */
 REAL fasp_blas_dvec_norminf (dvector *x)
 {

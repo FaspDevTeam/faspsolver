@@ -320,7 +320,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
 			
 			fasp_blas_smat_inv(&(LU->diag[ii]),nc);
 			
-		} //! end for(i=1;i<A->ngrid;++i)
+		} // end for(i=1;i<A->ngrid;++i)
 		
 	}
 	
