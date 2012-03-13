@@ -169,7 +169,10 @@ void fasp_solver_mgcycle_bsr(AMG_data_bsr *mgl, AMG_param *param)
 	int nu_l[MAX_AMG_LVL] = {0}, l = 0;
 	double alpha = 1.0;
 	int i;
-		
+	
+    // local variable
+	//dvector px, pb;
+    
 ForwardSweep:
 	while (l<nl-1) { 
 		nu_l[l]++;

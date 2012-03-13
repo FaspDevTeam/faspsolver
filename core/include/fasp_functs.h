@@ -845,6 +845,8 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A);
 
 dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B);
 
+INT fasp_format_dcsr_dbsr(dBSRmat *A, int nb, dCSRmat *B);
+
 dBSRmat fasp_format_dstr_dbsr (dSTRmat *B);
 
 dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B);

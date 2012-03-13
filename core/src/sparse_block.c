@@ -35,6 +35,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
                         INT n, 
                         dCSRmat *B)
 {
+    
 	INT    i,j,k,nnz=0;
 	SHORT  status = SUCCESS;
 	

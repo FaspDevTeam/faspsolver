@@ -40,7 +40,7 @@ void fasp_param_init (char *inputfile,
 {	
 	total_alloc_mem   = 0; // initialize total memeory amount
 	total_alloc_count = 0; // initialize alloc count
-	
+	 
 	if (itparam)  fasp_param_solver_init(itparam);
 	if (amgparam) fasp_param_amg_init(amgparam);
 	if (iluparam) fasp_param_ilu_init(iluparam);	

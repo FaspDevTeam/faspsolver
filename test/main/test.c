@@ -40,6 +40,7 @@ int main (int argc, const char * argv[])
     
     // Read input parameters from a disk file
 	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam);
+
     
     // Set local parameters
 	const int print_level   = inparam.print_level;
@@ -73,6 +74,7 @@ int main (int argc, const char * argv[])
         
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvecind_read(filename2, &b);
+        
 	}	
     
 	// Read A and b -- P1 FE discretization for Poisson, large    
@@ -101,7 +103,52 @@ int main (int argc, const char * argv[])
         fasp_dcsrvec_read(filename1, filename2, &A, &b);
     }
     
-	else {
+    /*
+	// Assemble A and b -- P1 FE discretization for Poisson.
+	else if (problem_num == 19) {
+        //printf("hello\n");
+        assemble(&A,&b, 10);
+        
+        int offsets[5][2] = {{0,0}, {-1,0}, {1,0}, {0,-1}, {0,1}};
+        
+        fasp_dcsr_compress_inplace(&A, SMALLREAL);
+	}
+    
+    else if (problem_num == 20) {
+		datafile1="NS/A.dat";
+		strcat(filename1,datafile1);
+        datafile2="NS/Arhs.dat";
+		strcat(filename2,datafile2);
+		fasp_dcoo_read(filename1, &A);
+        fasp_dvecind_read(filename2, &b);
+        
+        //dvector sol = fasp_dvec_create(A.row);
+        //fasp_dvec_rand(A.row, &sol);
+        
+        // Form the right-hand-side b = A*sol
+        //b = fasp_dvec_create(A.row);
+        //fasp_blas_dcsr_mxv(&A, sol.val, b.val);     
+        
+        //fasp_dvec_free(&sol);
+	}	
+    
+    else if (problem_num == 21) {
+		datafile1="NS/matrix2/A.dat";
+		strcat(filename1,datafile1);
+		fasp_dcoo_read(filename1, &A);
+        
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+        
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);     
+        
+        fasp_dvec_free(&sol);
+	}	
+     */
+    
+    else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
 	}
@@ -121,7 +168,7 @@ int main (int argc, const char * argv[])
     // Set initial guess
     fasp_dvec_alloc(A.row, &uh); 
     fasp_dvec_set(A.row,&uh,0.0);
-	
+
     // Preconditioned Krylov methods
     if ( itsolver_type >= 1 && itsolver_type <= 20) {
         
@@ -196,6 +243,7 @@ int main (int argc, const char * argv[])
     
     if (output_type) fclose (stdout);
     
+    //fasp_dvec_write("solu.dat", &uh);
 FINISHED:
     // Clean up memory
 	fasp_dcsr_free(&A);

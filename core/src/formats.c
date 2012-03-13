@@ -642,6 +642,84 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
 }
 
 /*!
+ * \fn dCSRmat fasp_format_dcsr_dbsr ( dBSRmat *A, int nb, dCSRmat *B )
+ *
+ * \brief Transfer a dCSRmat type matrix into a dBSRmat.
+ *
+ * \param A   Pointer to the dCSRmat type matrix
+ * \param nb  size of each block 
+ * \param B   Pointer to the 'dBSRmat' type matrix
+ *
+ * \author Chenghe Qiao
+ * \date   03/12/2012
+ *
+ * \note Modified by Xiaozhe Hu on 03/13/2012
+ */
+
+INT fasp_format_dcsr_dbsr(dBSRmat *A, int nb, dCSRmat *B)
+{
+	int *Is, *Js;
+	int i,j,num, k;
+	int nRow, nCol;
+	int status=SUCCESS;
+	dCSRmat tmpMat;
+	nRow=B->row/nb;//we must ensure this is a integer
+	nCol=B->col/nb;
+	Is=(int *)fasp_mem_calloc(nRow, sizeof(int));
+	Js=(int *)fasp_mem_calloc(nCol, sizeof(int));
+	for(i=0;i<nRow;i++){
+		Is[i]=i*nb;
+	}
+	for(i=0;i<nCol;i++){
+		Js[i]=i*nb;
+	}
+	status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+	//here we have tmpmat as the submatrix
+	A->ROW=nRow;
+	A->COL=nCol;
+	A->NNZ=tmpMat.nnz;
+	A->nb=nb;
+	A->storage_manner=1;//row majored
+	A->IA=(int*)fasp_mem_calloc(A->ROW+1, sizeof(int));
+	A->JA=(int*)fasp_mem_calloc(A->NNZ, sizeof(int));
+	A->val=(double*)fasp_mem_calloc(A->NNZ*nb*nb, sizeof(double));
+	for(i=0;i<tmpMat.row+1;i++){
+		A->IA[i]=tmpMat.IA[i];
+	}
+	for(i=0;i<tmpMat.nnz;i++){
+		A->JA[i]=tmpMat.JA[i];
+	}
+	for(i=0;i<tmpMat.nnz;i++){
+		A->val[i*nb*nb]=tmpMat.val[i];
+	}
+	fasp_mem_free(tmpMat.IA);
+	fasp_mem_free(tmpMat.JA);
+	fasp_mem_free(tmpMat.val);
+	for(j=0;j<nb;j++)
+		for(i=0;i<nb;i++){
+			num=j*nb+i;
+			if(i==0&&j==0){
+			}
+			else{
+				for(k=0;k<nRow;k++){
+					Is[k]=k*nb+i;
+				}
+				for(k=0;k<nCol;k++){
+					Js[k]=k*nb+j;
+				}
+				status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+				for(k=0;k<tmpMat.nnz;k++){
+					A->val[k*nb*nb+num]=tmpMat.val[k];
+				}			
+			}
+		}
+    
+	return status;
+    
+}
+
+
+/*!
  * \fn dBSRmat fasp_format_dstr_dbsr ( dSTRmat *B )
  *
  * \brief Transfer a 'dSTRmat' type matrix to a 'dBSRmat' type matrix.
