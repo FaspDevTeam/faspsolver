@@ -165,7 +165,7 @@ void fasp_mem_usage ()
 }		
 
 /**
- * \fn INT fasp_mem_check (void * ptr, char *message, const INT ERR)
+ * \fn SHORT fasp_mem_check (void * ptr, char *message, const INT ERR)
  *
  * \brief Check wether a point is null or not. 
  *
@@ -178,9 +178,9 @@ void fasp_mem_usage ()
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-INT fasp_mem_check (void *ptr, 
-                    char *message, 
-                    INT ERR)
+SHORT fasp_mem_check (void *ptr, 
+                      char *message, 
+                      INT ERR)
 {	
 	if (ptr==NULL) {
 		printf("### ERROR: %s", message);
@@ -191,7 +191,7 @@ INT fasp_mem_check (void *ptr,
 } 
 
 /**
- * \fn INT fasp_mem_iludata_check (ILU_data *iludata)
+ * \fn SHORT fasp_mem_iludata_check (ILU_data *iludata)
  *
  * \brief Check wether a ILU_data has enough work space
  *
@@ -202,7 +202,7 @@ INT fasp_mem_check (void *ptr,
  * \author Xiaozhe Hu, Chensong Zhang
  * \date   11/27/09
  */
-INT fasp_mem_iludata_check (ILU_data *iludata)
+SHORT fasp_mem_iludata_check (ILU_data *iludata)
 {	
 	const INT memneed = 2*iludata->row; // estimated memory usage
 	
@@ -210,14 +210,14 @@ INT fasp_mem_iludata_check (ILU_data *iludata)
 		return SUCCESS;
 	}
 	else {
-		printf("### ERROR: iludata need %d memory, only %d available!!!\n", 
+		printf("### ERROR: ILU needs %d memory, only %d available!!!\n", 
                memneed, iludata->nwork);
         return ERROR_ALLOC_MEM;
 	}
 }
 
 /**
- * \fn INT fasp_mem_dcsr_check (dCSRmat *A)
+ * \fn SHORT fasp_mem_dcsr_check (dCSRmat *A)
  *
  * \brief Check wether a dCSRmat A has sucessfully allocated memory 
  *
@@ -228,7 +228,7 @@ INT fasp_mem_iludata_check (ILU_data *iludata)
  * \author Xiaozhe Hu
  * \date   11/27/09
  */
-INT fasp_mem_dcsr_check (dCSRmat *A)
+SHORT fasp_mem_dcsr_check (dCSRmat *A)
 {
 	if ((A->IA == NULL) || (A->JA == NULL) || (A->val == NULL)) {
 		printf("### ERROR: dCSRmat has not sucessfully allocate memory!!!\n");

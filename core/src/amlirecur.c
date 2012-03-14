@@ -383,7 +383,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                         for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
                         break;
                     default:
-						printf("### ERROR: Unsupported smoother type %d!\n", smoother); 
+						printf("### ERROR: Wrong smoother type %d!\n", smoother); 
 						exit(ERROR_INPUT_PAR);
                 }
 			}

@@ -99,8 +99,8 @@ INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat,
 			fasp_amg_setup_sa(mgl, &amgparam);
 			break;
 		default:
-			printf("### ERROR Wrong AMG type %d!\n",amgparam.AMG_type);
-			exit(ERROR_INPUT_PAR);
+			printf("### ERROR: Wrong AMG type %d!\n",amgparam.AMG_type);
+			return ERROR_INPUT_PAR;
 	}	
 	pcdata->max_levels = mgl[0].num_levels;
 	pcdata->mgl_data = mgl;

@@ -18,14 +18,13 @@
  *
  * \brief Solve Ax=b with non-recursive multigrid cycle 
  *
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl     Pointer to AMG_data data
+ * \param param   Pointer to AMG parameters
  *
  * \author Chensong Zhang
- * \date 10/06/2010
+ * \date   10/06/2010
  *
- * \note
- *  Modified by Chensong Zhang on 12/13/2011
+ * Modified by Chensong Zhang on 12/13/2011
  */
 void fasp_solver_mgcycle (AMG_data *mgl, 
                           AMG_param *param)
@@ -46,7 +45,8 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    if (print_level >= PRINT_MOST) printf("AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
+    if (print_level >= PRINT_MOST) 
+        printf("AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
     
     INT num_lvl[MAX_AMG_LVL] = {0}, l = 0;
     
@@ -144,14 +144,15 @@ ForwardSweep:
 }
 
 /**
- * \fn void fasp_solver_mgcycle_bsr(AMG_data_bsr *mgl, AMG_param *param)
+ * \fn void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl, AMG_param *param)
+ *
  * \brief Solve Ax=b with non-recursive multigrid cycle 
  *
- * \param mgl     pointer to AMG_data_bsr data
- * \param param   pointer to AMG parameters
+ * \param mgl     Pointer to AMG_data_bsr data
+ * \param param   Pointer to AMG parameters
  *
  * \author Xiaozhe Hu 
- * \date 08/07/2011
+ * \date   08/07/2011
  */
 void fasp_solver_mgcycle_bsr(AMG_data_bsr *mgl, AMG_param *param)
 {	
@@ -186,10 +187,11 @@ ForwardSweep:
 			if (steps > 0){
 				switch (smoother) {
                     case GS:
-                        for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
                         break;
                     default:
-                        printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+                        printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
                 }
 			}
 		}
@@ -226,7 +228,7 @@ ForwardSweep:
 		flag = fasp_solver_dbsr_pvgmres(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 1, 1,100);
 		if (flag < 0)
 		{
-			printf("Warning: coarse level iterative solver does not converge !! (error message = %d)\n", flag);
+			printf("### WARNING: Coarse level solver does not converge!! (error message = %d)\n", flag);
 		}
 #endif 
 	}
@@ -265,7 +267,7 @@ ForwardSweep:
                         for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
                         break;
                     default:
-                        printf("Error: wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+                        printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
 				}
 			}
 		}

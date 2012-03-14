@@ -27,7 +27,7 @@ int main (int argc, const char * argv[])
 	dvector b, uh;
 	int status=SUCCESS;
 	
-	//! Step 0. Set parameters
+	// Step 0. Set parameters
 	input_param     inparam;  // parameters from input files
 	itsolver_param  itparam;  // parameters for itsolver
 	AMG_param       amgparam; // parameters for AMG
@@ -50,7 +50,7 @@ int main (int argc, const char * argv[])
 		freopen(outputfile,"w",stdout); // open a file for stdout
 	}
     	
-	//! Step 1. Assemble or read matrix and right-hand side
+	// Step 1. Assemble or read matrix and right-hand side
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
 	
@@ -80,7 +80,7 @@ int main (int argc, const char * argv[])
     printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
     printf("b: n = %d\n", b.row);
 
-	//! Step 2. Solve the system
+	// Step 2. Solve the system
 	if (print_level>0) {
 		printf("Max it num = %d\n", inparam.itsolver_maxit);
 		printf("Tolerance  = %e\n", inparam.itsolver_tol);

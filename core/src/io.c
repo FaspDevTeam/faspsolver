@@ -56,8 +56,8 @@ void fasp_dcsrvec_read (char *filemat,
 	FILE *fp = fopen(filemat,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filemat);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n",filemat);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
 	}
 	
 	printf("fasp_dcsrvec_read: reading file %s...\n", filemat);
@@ -95,8 +95,8 @@ void fasp_dcsrvec_read (char *filemat,
 	fp = fopen(filerhs,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filerhs);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n",filerhs);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
 	}
 	
 	printf("fasp_dcsrvec_read: reading file %s...\n", filerhs);
@@ -105,7 +105,7 @@ void fasp_dcsrvec_read (char *filemat,
 	
 	if (n!=b->row) {
 		printf("### ERROR: rhs size %d does not match matrix size %d!\n",n,b->row);
-		exit(ERROR_OPEN_FILE);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
 	}
 	
 	for(i=0; i<n; ++i) {
@@ -127,6 +127,11 @@ void fasp_dcsrvec_read (char *filemat,
  * \note 
  *      This routine reads a dCSRmat matrix and a dvector vector from a single disk file.
  *   
+ * \note
+ *      
+ *      The difference between this and fasp_dcoovec_read is that this 
+ *      routine support non-square matrices.
+ *
  * \note File format:
  *   - nrow ncol         % number of rows and number of columns
  *   - ia(j), j=0:nrow   % row index
@@ -135,11 +140,10 @@ void fasp_dcsrvec_read (char *filemat,
  *   - n                 % number of entries
  *   - b(j), j=0:n-1     % entry value
  *
- * \note
- *      The difference between this and fasp_dcoovec_read is that this routine support non-square matrices.
- *
  * \author Xuehai Huang
  * \date   03/29/2009 
+ *
+ * Modified by Chensong Zhang on 03/14/2012
  */ 
 void fasp_dcsrvec2_read (char *filename,
                          dCSRmat *A,
@@ -153,8 +157,8 @@ void fasp_dcsrvec2_read (char *filename,
 	FILE *fp=fopen(filename, "r");
 	
 	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_read");
 	}
 	
 	printf("fasp_dcsrvec2_read: reading file %s...\n", filename);
@@ -225,8 +229,8 @@ void fasp_dcoo_read (char *filename,
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcoo_read");
 	}
 	
 	printf("fasp_dcoo_read: reading file %s...\n", filename);
@@ -240,7 +244,7 @@ void fasp_dcoo_read (char *filename,
 			Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k]=value; 
 		}
 		else {
-			printf("### ERROR: Wrong file format!\n"); exit(ERROR_WRONG_FILE);
+            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_read");
 		}
 	}
 	
@@ -276,8 +280,8 @@ void fasp_dmtx_read (char *filename,
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dmtx_read");
 	}
 	
 	printf("fasp_dmtx_read: reading file %s...\n", filename);
@@ -298,7 +302,7 @@ void fasp_dmtx_read (char *filename,
             
 		}
 		else {
-			printf("### ERROR: Wrong file format!\n"); exit(ERROR_WRONG_FILE);
+            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtx_read");
 		}
 	}
 	    
@@ -334,8 +338,8 @@ void fasp_dmtxsym_read (char *filename,
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_read");
 	}
 	
 	printf("fasp_dmtxsym_read: reading file %s...\n", filename);
@@ -366,7 +370,7 @@ void fasp_dmtxsym_read (char *filename,
             
 		}
 		else {
-			printf("### ERROR: Wrong file format!\n"); exit(ERROR_WRONG_FILE);
+			fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtxsym_read");
 		}
 	}
     
@@ -410,7 +414,7 @@ void fasp_dstr_read (char *filename,
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
+        printf("### ERROR: Opening file %s failed!\n", filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -490,7 +494,7 @@ void fasp_dbsr_read (char *filename, dBSRmat *A)
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
+        printf("### ERROR: Opening file %s failed!\n", filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -555,7 +559,7 @@ void fasp_dvecind_read (char *filename,
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
+        printf("### ERROR: Opening file %s failed!\n", filename);
 		exit(ERROR_OPEN_FILE);
 	}
 	
@@ -600,8 +604,8 @@ void fasp_dvec_read (char *filename,
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dvec_read");
 	}
 	
 	printf("fasp_dvec_read: reading file %s...\n", filename);
@@ -641,8 +645,8 @@ void fasp_ivecind_read (char *filename,
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_ivecind_read");
 	}
 	
 	printf("fasp_ivecind_read: reading file %s...\n", filename);
@@ -681,8 +685,9 @@ void fasp_ivec_read (char *filename,
 	FILE *fp=fopen(filename,"r");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_ivec_read");
+
 	}
 	
 	printf("fasp_ivec_read: reading file %s...\n", filename);
@@ -728,8 +733,8 @@ void fasp_dcsr_write (char *filename,
 	FILE *fp=fopen(filename, "w");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsr_write");
 	}
 	
     printf("fasp_dcsr_write: writing matrix to `%s'...\n",filename);
@@ -772,8 +777,9 @@ void fasp_dstr_write (char *filename,
 	FILE *fp=fopen(filename,"w");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dstr_write");
+
 	}
 	
 	printf("fasp_dstr_write: writing matrix to `%s'...\n",filename);
@@ -834,8 +840,8 @@ void fasp_dbsr_write (char *filename,
 	FILE *fp=fopen(filename,"w");
 	
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dbsr_write");
 	}
 	
 	printf("fasp_dstr_write: writing matrix to `%s'...\n",filename);
@@ -887,8 +893,8 @@ void fasp_dvec_write (char *filename,
 	FILE *fp=fopen(filename,"w");
     
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dvec_write");
 	}	
 	
 	printf("fasp_dvec_write: writing vector to `%s'...\n",filename);
@@ -923,11 +929,11 @@ void fasp_ivec_write (char *filename,
 	FILE *fp=fopen(filename,"w");
     
 	if ( fp==NULL ) {
-        printf("### ERROR: Opening file %s failed!\n",filename);
-		exit(ERROR_OPEN_FILE);
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_ivec_write");
 	}	
-	
-	printf("fasp_ivec_write: writing vector to `%s'...\n",filename);
+
+	printf("fasp_ivec_write: writing vector to `%s'...\n", filename);
 	
 	fprintf(fp,"%d\n",m);
 	

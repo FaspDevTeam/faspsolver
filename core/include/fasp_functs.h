@@ -28,25 +28,25 @@ int fasp_solver_amg_omp (dCSRmat *A,
                          int openmp_holds) ;
 
 int fasp_solver_amg1_omp (dCSRmat *A,  
-                         dvector *b,  
-                         dvector *x,  
-                         AMG_param *param,  
-                         int nthreads,  
-                         int openmp_holds) ;
+                          dvector *b,  
+                          dvector *x,  
+                          AMG_param *param,  
+                          int nthreads,  
+                          int openmp_holds) ;
 
 int fasp_solver_amg2_omp (dCSRmat *A,  
-                         dvector *b,  
-                         dvector *x,  
-                         AMG_param *param,  
-                         int nthreads,  
-                         int openmp_holds) ;
+                          dvector *b,  
+                          dvector *x,  
+                          AMG_param *param,  
+                          int nthreads,  
+                          int openmp_holds) ;
 
 int fasp_solver_amg3_omp (dCSRmat *A,  
-                         dvector *b,  
-                         dvector *x,  
-                         AMG_param *param,  
-                         int nthreads,  
-                         int openmp_holds) ;
+                          dvector *b,  
+                          dvector *x,  
+                          AMG_param *param,  
+                          int nthreads,  
+                          int openmp_holds) ;
 
 
 /*-------- In file: amg_setup_cr.c --------*/
@@ -845,7 +845,9 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A);
 
 dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B);
 
-INT fasp_format_dcsr_dbsr(dBSRmat *A, int nb, dCSRmat *B);
+SHORT fasp_format_dcsr_dbsr (dBSRmat *A, 
+                             INT nb, 
+                             dCSRmat *B);
 
 dBSRmat fasp_format_dstr_dbsr (dSTRmat *B);
 
@@ -1197,13 +1199,13 @@ void fasp_mem_free (void * mem);
 
 void fasp_mem_usage ();
 
-INT fasp_mem_check (void *ptr, 
-                    char *message, 
-                    INT ERR);
+SHORT fasp_mem_check (void *ptr, 
+                      char *message, 
+                      INT ERR);
 
-INT fasp_mem_iludata_check (ILU_data *iludata);
+SHORT fasp_mem_iludata_check (ILU_data *iludata);
 
-INT fasp_mem_dcsr_check (dCSRmat *A);
+SHORT fasp_mem_dcsr_check (dCSRmat *A);
 
 
 /*-------- In file: message.c --------*/

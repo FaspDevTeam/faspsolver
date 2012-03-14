@@ -894,7 +894,7 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
 	
 	if (diag->row != n)
 	{
-		printf("### ERROR: size of diagonal %d and size of matrix %d do not match!!", 
+		printf("### ERROR: Size of diag = %d and size of matrix = %d mismatch!!", 
                diag->row, n);
 		exit(ERROR_MISC);
 	}

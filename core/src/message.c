@@ -139,7 +139,7 @@ void fasp_chkerr (const SHORT status,
             printf("### ERROR: %s -- Cannot open file!!!\n", fctname);
             break;
         case ERROR_WRONG_FILE:
-            printf("### ERROR: %s -- Wrong input file!!!\n", fctname);
+            printf("### ERROR: %s -- Wrong file format!!!\n", fctname);
             break;
         case ERROR_INPUT_PAR:
             printf("### ERROR: %s -- Wrong input arguments!!!\n", fctname);

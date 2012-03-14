@@ -40,7 +40,8 @@ void fasp_param_input (char *filenm,
 	FILE *fp = fopen(filenm,"r");
 	if (fp==NULL) {
 		printf("### ERROR: Could not open file %s...\n", filenm);
-		exit(ERROR_OPEN_FILE);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_param_input");
+
 	}
     
 	while ( status == SUCCESS ) {

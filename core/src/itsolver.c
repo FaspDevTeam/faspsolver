@@ -92,7 +92,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
             break;
 			
 		default:
-			printf("### ERROR: Itertive solver type %d not supported!\n", itsolver_type);
+			printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
 			return ERROR_SOLVER_TYPE;
 			
 	} 

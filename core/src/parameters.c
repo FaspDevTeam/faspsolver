@@ -30,7 +30,7 @@
  * \author Chensong Zhang
  * \date   2010/08/12 
  *
- * \note Modified by Xiaozhe Hu (01/23/2011): initialize, then set value
+ * Modified by Xiaozhe Hu (01/23/2011): initialize, then set value
  */
 void fasp_param_init (char *inputfile, 
                       input_param *inparam, 
@@ -211,7 +211,7 @@ void fasp_param_ilu_init (ILU_param *iluparam)
  * \param inparam   Input parameters
  *
  * \author Chensong Zhang
- * \date 2010/03/23 
+ * \date   2010/03/23 
  */
 void fasp_param_amg_set (AMG_param *param, 
                          input_param *inparam)
