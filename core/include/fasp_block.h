@@ -285,66 +285,6 @@ typedef struct {
 	
 } precond_data_bsr; /**< Preconditioner data for BSR matrices */
 
-/**
- * \brief Parameters passed to the preconditioner for generalized Stokes problems
- *
- */
-typedef struct precond_Stokes_param {
-		
-	//! AMG type
-	SHORT AMG_type;
-	//! print level in AMG preconditioner
-	SHORT print_level;
-	//! max number of AMG levels
-	SHORT max_levels;
-	
-} precond_Stokes_param; /**< Parameters for Stokes preconditioners */
-	
-/**
- * \brief Data passed to the preconditioner for generalized Stokes problems
- *
- */
-typedef struct precond_Stokes_data {
-
-	INT colA; /**< Size of A */
-    INT colB; /**< Size of B */
-    INT col; /**< Size of whole system = colA+colB */
-	
-	REAL beta; /**< parameter for generalized Stokes */
-	
-	AMG_data *mgl_data; /**< AMG data for presure-presure block */
-
-	//! print level in AMG preconditioner
-	SHORT print_level;
-	//! max number of AMG levels
-	SHORT max_levels;
-	//! max number of iterations of AMG preconditioner
-	INT maxit;
-	//! tolerance for AMG preconditioner
-	REAL amg_tol;
-	//! AMG cycle type
-	SHORT cycle_type;
-	//! AMG smoother type
-	SHORT smoother;
-	//! number of presmoothing
-	SHORT presmooth_iter;
-	//! number of postsmoothing
-	SHORT postsmooth_iter;
-	//! coarsening type
-	SHORT coarsening_type;
-	//! relaxation parameter for SOR smoother
-	REAL relaxation;
-	//! switch of scaling of coarse grid correction
-	SHORT coarse_scaling;
-		
-	dCSRmat *M; /**< mass matrix */
-	dvector *diag_M; /**< diagonal of mass matrix M */ 
-	dCSRmat *P; /**< Poisson matrix for pressure*/	
-	
-	//! temporary work space
-	REAL *w; /**<  temporary work space for other usage */
-	
-} precond_Stokes_data; /**< Preconditioner data for Stokes */
 
 /**
  * \brief Data passed to the preconditioner for preconditioning reservoir simulation problems

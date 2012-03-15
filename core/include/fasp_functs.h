@@ -1132,16 +1132,6 @@ int fasp_solver_dcsr_krylov_amg_omp (dCSRmat *A,
                                      int openmp_holds);
 
 
-/*-------- In file: itsolver_Stokes.c --------*/
-
-INT fasp_solver_bdcsr_krylov_stokes (block_dCSRmat *Mat, 
-                                     dvector *b, 
-                                     dvector *x, 
-                                     itsolver_param *itparam,
-                                     precond_Stokes_param *param, 
-                                     precond_Stokes_data *pcdata);
-
-
 /*-------- In file: itsolver_str.c --------*/
 
 INT fasp_solver_dstr_itsolver(dSTRmat *A, 
@@ -1599,13 +1589,6 @@ void fasp_precond_dbsr_diag_nc7_omp (double *r,
 /*-------- In file: precond_omp.c --------*/
 
 void fasp_precond_amg_omp(double *r, double *z, void *data, int nthreads, int openmp_holds);
-
-
-/*-------- In file: precond_stokes.c --------*/
-
-void fasp_precond_stokes_bdiag (REAL *r, 
-                                REAL *z, 
-                                void *data);
 
 
 /*-------- In file: precond_str.c --------*/
