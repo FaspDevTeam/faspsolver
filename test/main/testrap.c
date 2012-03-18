@@ -28,7 +28,7 @@ static void rap_setup(AMG_data *mgl, AMG_param *param)
 	const int print_level=param->print_level;
 	const int m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;	
 	int max_levels=param->max_levels;	
-	ivector vertices=fasp_ivec_create(m); // stores level info (fine: 0; coarse: 1)
+	ivector vertices=fasp_ivec_create(m); // stores level info
 	unsigned int level=0;	
 	
 	if (print_level>8) printf("rap_setup: %d, %d, %d\n",m,n,nnz);
@@ -101,7 +101,10 @@ static void rap_setup(AMG_data *mgl, AMG_param *param)
 /**
  * \fn int main (int argc, const char * argv[])
  *
- * This is the main function for test purpose. It contains five steps:
+ * \brief This is the main function for testing sparse RAP subroutines.
+ *
+ * \author Chensong Zhang
+ * \date   04/28/2010
  */
 int main(int argc, const char * argv[]) 
 {		
@@ -115,10 +118,10 @@ int main(int argc, const char * argv[])
 	AMG_param amgparam; // parameters for AMG
 	fasp_param_amg_set(&amgparam,&Input);
 	
-	/** Step 1. Assemble matrix and right-hand side */ 
-    setup_poisson(&A, &b, 8, "./data/testmesh.dat", NULL, 0, "a&b", 3, 1);
+	// Assemble matrix and right-hand side
+    setup_poisson(&A, &b, 8, "data/testmesh.dat", NULL, 0, "a&b", 3, 1);
 	
-	/** Step 2. Check sprap speed */
+	// Check sprap speed
 	{	const int nnz=A.nnz, m=A.row, n=A.col;
 		
 		AMG_data *mgl=fasp_amg_data_create(amgparam.max_levels);
@@ -129,7 +132,11 @@ int main(int argc, const char * argv[])
 		rap_setup(mgl, &amgparam);
 	}
 	
-	return SUCCESS;
+    // Clean up memory
+	fasp_dcsr_free(&A);
+	fasp_dvec_free(&b);
+	
+    return SUCCESS;
 }
 
 /*---------------------------------*/

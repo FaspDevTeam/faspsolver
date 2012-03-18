@@ -19,15 +19,18 @@
 /**
  * \fn int main (int argc, const char * argv[])
  *
- * \brief This is the main function for a few simple tests.
+ * \brief This is the main function for a few simple OMP tests.
+ *
+ * \author Chensong Zhang
+ * \date   10/06/2011
  */
 int main (int argc, const char * argv[]) 
 {
 	dCSRmat A;
-	dvector b, uh;
+	dvector b, x;
 	int status=SUCCESS;
 	
-	// Step 0. Set parameters
+	// Set parameters
 	input_param     inparam;  // parameters from input files
 	itsolver_param  itparam;  // parameters for itsolver
 	AMG_param       amgparam; // parameters for AMG
@@ -50,7 +53,7 @@ int main (int argc, const char * argv[])
 		freopen(outputfile,"w",stdout); // open a file for stdout
 	}
     	
-	// Step 1. Assemble or read matrix and right-hand side
+	// Assemble or read matrix and right-hand side
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
 	
@@ -80,24 +83,24 @@ int main (int argc, const char * argv[])
     printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
     printf("b: n = %d\n", b.row);
 
-	// Step 2. Solve the system
+	// Solve the system
 	if (print_level>0) {
 		printf("Max it num = %d\n", inparam.itsolver_maxit);
 		printf("Tolerance  = %e\n", inparam.itsolver_tol);
 	}
 	    
-	// initial guess
-    fasp_dvec_alloc(A.row, &uh); 
-    fasp_dvec_set(A.row,&uh,0.0);
+	// Initial guess
+    fasp_dvec_alloc(A.row, &x); 
+    fasp_dvec_set(A.row,&x,0.0);
 	
     // AMG as the iterative solver
 	if (itsolver_type == 0) { 	
-		 fasp_solver_amg(&A, &b, &uh, &amgparam); 
+		 fasp_solver_amg(&A, &b, &x, &amgparam); 
 	}
 
     // Full AMG as the iterative solver 
 	else if (itsolver_type == 8) {
-		 fasp_solver_famg(&A, &b, &uh, &amgparam);
+		 fasp_solver_famg(&A, &b, &x, &amgparam);
 	}
 	
 #if FASP_USE_OPENMP
@@ -107,8 +110,7 @@ int main (int argc, const char * argv[])
  		printf("omp test itsolver _ type = %d amgparam.max_iter = %d, amgparam.tol = %lf\n",
                 itsolver_type, amgparam.maxit, amgparam.tol);
 		omp_set_num_threads(nts);
-		status = fasp_solver_amg_omp(&A, &b, &uh, &amgparam, nts, 1000);
-		//status = fasp_solver_amg(&A, &b, &uh, &amgparam, nts, 1000);
+		status = fasp_solver_amg_omp(&A, &b, &x, &amgparam, nts, 1000);
 	}
 #endif	
 
@@ -116,22 +118,22 @@ int main (int argc, const char * argv[])
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
-			status = fasp_solver_dcsr_krylov(&A, &b, &uh, &itparam);
+			status = fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
 		}	
         
 		// Using diag(A) as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_DIAG) {
-			status = fasp_solver_dcsr_krylov_diag(&A, &b, &uh, &itparam);
+			status = fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
 		}
         
 		// Using AMG as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
-			status = fasp_solver_dcsr_krylov_amg(&A, &b, &uh, &itparam, &amgparam);
+			status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
 		}
         
 		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
 		else if (precond_type == PREC_ILU) {
-			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &uh, &itparam, &iluparam);
+			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
 		}
         
 		else {
@@ -148,7 +150,7 @@ int main (int argc, const char * argv[])
 	
 	fasp_mem_usage();
 	
-	// output solution to a diskfile
+	// Output solution to a diskfile
 	if (status<0) {
 		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
 	}
@@ -158,9 +160,10 @@ int main (int argc, const char * argv[])
     
     if (output_type) fclose (stdout);
 
+    // Clean up memory
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);
-	fasp_dvec_free(&uh);
+	fasp_dvec_free(&x);
 		
 	return SUCCESS;
 }

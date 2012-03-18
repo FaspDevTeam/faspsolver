@@ -11,8 +11,6 @@
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
-#if FASP_USE_OPENMP
-
 /*!
  * \fn dCSRmat dBSR2dCSRMatrix_omp( dBSRmat *B, int nthreads, int openmp_holds )
  * \brief Transfer a 'dBSRmat' type matrix into a dCSRmat.
@@ -28,7 +26,9 @@ dCSRmat fasp_format_dbsr_dcsr_omp (dBSRmat *B,
                                    int openmp_holds )
 {
 	dCSRmat A;
-    
+
+#if FASP_USE_OPENMP
+
 	/* members of B */
 	int     ROW = B->ROW;
 	int     COL = B->COL;
@@ -217,10 +217,11 @@ dCSRmat fasp_format_dbsr_dcsr_omp (dBSRmat *B,
 		ia[i] = ia[i-1];
 	}
 	ia[0] = 0; 
-    
+
+#endif // OMP
+
 	return (A);   
 }
-#endif // OMP
 
 /*---------------------------------*/
 /*--        End of File          --*/

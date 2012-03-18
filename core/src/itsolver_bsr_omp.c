@@ -7,8 +7,6 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-#if FASP_USE_OPENMP
-
 /**
  * \fn void fasp_set_GS_threads_omp(int threads,int its)
  * \brief set threads for CPR. Please add it at the begin of Krylov openmp method function and after iter++.
@@ -21,6 +19,8 @@
  */
 void fasp_set_GS_threads_omp(int mythreads, int its)
 {
+#if FASP_USE_OPENMP
+
 #if 1
 
 	if (its <=8) {
@@ -56,6 +56,8 @@ void fasp_set_GS_threads_omp(int mythreads, int its)
 	THDs_CPR_gGS = mythreads ;
 
 #endif
+    
+#endif // FASP_USE_OPENMP
 }
 
 /**
@@ -124,8 +126,6 @@ int fasp_solver_dbsr_itsolver_omp(dBSRmat *A,
 #endif
 	return iter;
 }
-
-#endif // FASP_USE_OPENMP
 
 /*---------------------------------*/
 /*--        End of File          --*/

@@ -28,9 +28,9 @@
 static void check_solu(dvector *x, dvector *sol, double tol)
 {
     double diff_u = fasp_dvec_maxdiff(x, sol);
-
+    
     if ( diff_u < tol ) {
-	printf("Max diff %.4e smaller than tolerance................. [PASS]\n", diff_u);
+        printf("Max diff %.4e smaller than tolerance................. [PASS]\n", diff_u);
     }
     else {
         printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [REQUIRES ATTENTION!!!]\n", diff_u);
@@ -41,6 +41,12 @@ static void check_solu(dvector *x, dvector *sol, double tol)
  * \fn int main (int argc, const char * argv[])
  * 
  * \brief This is the main function for regression test. 
+ *
+ * \author Chensong Zhang
+ * \date   03/20/2009
+ * 
+ * Modified by Chensong Zhang on 09/02/2011 
+ * Modified by Chensong Zhang on 12/03/2011
  *
  * \todo 
  *      - add a few more test problems
@@ -67,7 +73,7 @@ int main (int argc, const char * argv[])
     printf("------------------------------------------------------------------\n");
     
     /*******************************************/
-    /** Step 1. Get matrix and right-hand side */ 
+    /* Step 1. Get matrix and right-hand side  */ 
     /*******************************************/
     for ( indp = 1; indp <= num_prob; indp++ ) {        
         
@@ -122,17 +128,17 @@ int main (int argc, const char * argv[])
                 fasp_blas_dcsr_mxv(&A, sol.val, b.val);
                 
                 break;
-         }
+        }
         
         /************************************/
-        /** Step 2. Check matrix properties */
+        /* Step 2. Check matrix properties  */
         /************************************/
         fasp_check_symm(&A);     // check symmetry
         fasp_check_diagpos(&A);  // check sign of diagonal entries
         fasp_check_diagdom(&A);  // check diagonal dominance
         
         /*****************************/	
-        /** Step 3. Solve the system */ 
+        /* Step 3. Solve the system  */ 
         /*****************************/
         fasp_dvec_alloc(b.row, &x);  // allocate mem for numerical solution
         

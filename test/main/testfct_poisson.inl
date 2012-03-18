@@ -25,7 +25,7 @@
  */
 double f (double x, double y)
 {
-	return -2*cos(x)*sin(y);
+	return -2.0*cos(x)*sin(y);
 }
 
 /**

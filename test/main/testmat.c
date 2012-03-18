@@ -22,7 +22,12 @@
 /**
  * \fn int main (int argc, const char * argv[])
  *
- * This is the main function for test purpose. It contains five steps:
+ * \brief This is the main function for testing matrix propertities.
+ *
+ * \author Chensong Zhang
+ * \date   03/31/2009
+ * 
+ * Modified by Chensong Zhang on 03/19/2012 
  */
 int main(int argc, const char * argv[]) 
 {		
@@ -33,38 +38,31 @@ int main(int argc, const char * argv[])
 	char filename1[512], *datafile1;	
 	strncpy(filename1,Input.workdir,128);
 	
-	/** Step 1. Assemble matrix and right-hand side */ 
+	// Read matrix for testing
 	dCSRmat A;
 	datafile1="matP1.dat";
 	strcat(filename1,datafile1);
 	fasp_dcoo_read(filename1, &A);
-	
-	/** Step 2. Check matrix properties */
-	
-	/* check sparse pattern */
+		
+	// Check sparse pattern
 	char *bmpfile="out/matrix.bmp";	/* Output the matrix as BMP file */
 	fasp_dcsr_plot(&A, bmpfile, 200);
 	
-	/* get diagonal part */
-	fasp_check_diagpos(&A);
-	
-	/* check symmetry */
+	// Check symmetry
 	fasp_check_symm(&A);
 	
-	/* check diagnoal dominance */
+	// Check diagonal positivity
+	fasp_check_diagpos(&A);
+	
+	// Check diagnoal dominance
 	fasp_check_diagdom(&A);
 	
-	/* check max and min eigenvalues */
-	
-	
-	/** Step 3. Select a solver */
-	
-	/** Step 4. Solve the system */ 
-	
-	/** Step 5.	Post processing */	
+	// Output matrix in COO format	
 	char *matfile="out/matrix.out";	/* Output the matrix in coordinate format */	
 	fasp_dcsr_write(matfile, &A);
-	fasp_dcsr_free(&A);
 	
-	return 0;
+    // Clean up memory
+    fasp_dcsr_free(&A);
+	
+	return SUCCESS;
 }

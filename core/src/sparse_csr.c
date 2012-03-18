@@ -691,7 +691,7 @@ INT fasp_dcsr_trans (dCSRmat *A,
 /* 
  * \fn void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2], INT *nn, INT *tniz)
  *
- * \brief Transpose of an IJ matrix.
+ * \brief Transpose of an CSR matrix.
  *
  * \param row[2]  pointers of the rows of the matrix and its transpose
  * \param col[2]  pointers of the columns of the matrix and its transpose
@@ -699,7 +699,7 @@ INT fasp_dcsr_trans (dCSRmat *A,
  * \param nn      number of rows and columns of the matrix
  * \param tniz    number of the nonzeros in the matrices A and A'
  *
- * \note This subroutine transpose in IJ format IN ORDER. 
+ * \note This subroutine transpose in CSR format IN ORDER. 
  */
 void fasp_dcsr_transpose (INT *row[2], 
                           INT *col[2], 
@@ -743,8 +743,8 @@ void fasp_dcsr_transpose (INT *row[2],
  * \brief Compress a CSR matrix A and store in CSR matrix B by
  *        dropping small entries abs(aij)<=dtol
  *
- * \param A    pointer to dCSRmat CSR matrix
- * \param B    pointer to dCSRmat CSR matrix
+ * \param A     pointer to dCSRmat CSR matrix
+ * \param B     pointer to dCSRmat CSR matrix
  * \param dtol  drop tolerance
  *
  * \return      SUCCESS if succeeded, or ERROR message if failed

@@ -794,17 +794,11 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
 /*-------- In file: coarsening_rs_omp.c --------*/
 
 int fasp_amg_coarsening_rs_omp (dCSRmat *A, 
-																ivector *vertices, 
-																dCSRmat *P, 
-																AMG_param *param, 
-																int nthreads, 
-																int openmp_holds);
-
-void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int openmp_holds);
-
-INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, INT nthreads, INT openmp_holds);
-
-void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col, INT nthreads, INT openmp_holds);
+                                ivector *vertices, 
+                                dCSRmat *P, 
+                                AMG_param *param, 
+                                int nthreads, 
+                                int openmp_holds);
 
 
 /*-------- In file: eigen.c --------*/
@@ -2497,32 +2491,5 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
                                 REAL *tol, 
                                 INT *maxit, 
                                 INT *ptrlvl);
-
-void fasp_fwrapper_krylov_stokes_ (INT *nA, 
-                                   INT *nnzA, 
-                                   INT *ia,
-                                   INT *ja,
-                                   REAL *aval, 
-                                   INT *nB,
-                                   INT *nnzB, 
-                                   INT *ib,
-                                   INT *jb,
-                                   REAL *bval,
-                                   INT *nM, 
-                                   INT *nnzM,
-                                   INT *im, 
-                                   INT *jm, 
-                                   REAL *mval,												 
-                                   INT *nP, 
-                                   INT *nnzP, 
-                                   INT *ip, 
-                                   INT *jp, 
-                                   REAL *pval,												 
-                                   REAL *b, 
-                                   REAL *u, 
-                                   REAL *beta,
-                                   REAL *tol, 
-                                   INT *maxit, 
-                                   INT *ptrlvl);
 
 /* Ene of fasp_functs.h */

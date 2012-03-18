@@ -5,20 +5,14 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-#if FASP_USE_OPENMP
-
-//static void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int openmp_holds);
-//static void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int col, int nthreads, int openmp_holds);
-//static int  form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, int row, int nthreads, int openmp_holds);
-#endif
+static void generate_S_omp (dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int openmp_holds);
+static void generate_sparsity_P_omp (dCSRmat *P, iCSRmat *S, ivector *vertices, int row, int col, int nthreads, int openmp_holds);
+static int form_coarse_level_omp (dCSRmat *A, iCSRmat *S, ivector *vertices, int row, int nthreads, int openmp_holds);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-/*---------------------------------omp----------------------------------------*/
 
-#if FASP_USE_OPENMP
- 
 /**
  * \fn int fasp_amg_coarsening_rs_omp(dCSRmat *A, ivector *vertices, dCSRmat *P,
  *                             AMG_param *param, int nthreads, int openmp_holds)
@@ -43,14 +37,16 @@
  * \date 03/01/2011
  */
 int fasp_amg_coarsening_rs_omp (dCSRmat *A, 
-																ivector *vertices, 
-																dCSRmat *P, 
-																AMG_param *param, 
-																int nthreads, 
-																int openmp_holds)
+                                ivector *vertices, 
+                                dCSRmat *P, 
+                                AMG_param *param, 
+                                int nthreads, 
+                                int openmp_holds)
 {
 	int status = SUCCESS;
-
+    
+#if FASP_USE_OPENMP
+    
 	const int   coarsening_type = param->coarsening_type;
 	const int   row = A->row;
 	const double epsilon_str = param->strong_threshold;
@@ -109,11 +105,15 @@ int fasp_amg_coarsening_rs_omp (dCSRmat *A,
 #if CHMEM_MODE
 	fasp_mem_usage();
 #endif
-	
+    
+#endif
+    
 	return status;
 }
 
-
+/*---------------------------------*/
+/*--      Private Functions      --*/
+/*---------------------------------*/
 
 /**
  * \fn static void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads)
@@ -127,7 +127,7 @@ int fasp_amg_coarsening_rs_omp (dCSRmat *A,
  * \author FENG Chunsheng, Yue Xiaoqiang
  * \date 03/01/2011
  */
-void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int openmp_holds)
+static void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int openmp_holds)
 {
 #if FASP_USE_OPENMP
 	double max_row_sum=param->max_row_sum;
@@ -165,11 +165,11 @@ void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int 
 	fasp_iarray_cp_omp(nnz, ja, S->JA, nthreads,openmp_holds);
 	
 	if (row > openmp_holds) {
-			int mybegin,myend,myid;
+        int mybegin,myend,myid;
 #pragma omp parallel for private(myid, mybegin, myend, i, row_scale,row_sum,begin_row,end_row,j) ////num_threads(nthreads)
-			for (myid = 0; myid < nthreads; myid++ )
-			{
-				FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+        for (myid = 0; myid < nthreads; myid++ )
+        {
+            FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
 			for (i=mybegin; i<myend; i++)
 			{
 				/** compute scaling factor and row sum */
@@ -275,7 +275,7 @@ void generate_S_omp(dCSRmat *A, iCSRmat *S, AMG_param *param, int nthreads, int 
  * \date 03/01/2011
  * \date Jan/11/2012 Modified by  FENG Chunsheng
  */
-INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, INT nthreads, INT openmp_holds)
+static INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, INT nthreads, INT openmp_holds)
 {
 	int col = 0; 
 #if FASP_USE_OPENMP
@@ -305,9 +305,9 @@ INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, IN
 	// 1. Initialize lambda
 	if (row > openmp_holds) {
 #pragma omp for parallel private(myid, mybegin,myend,i) 
-			for (myid = 0; myid < nthreads; myid++ )
-			{
-				FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+        for (myid = 0; myid < nthreads; myid++ )
+        {
+            FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
 			for (i=mybegin; i<myend; i++) lambda[i]=ST.IA[i+1]-ST.IA[i];
 		}
 	}
@@ -319,8 +319,8 @@ INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, IN
 	// have no connections at all and assign special F-variables.
 	if (row > openmp_holds) {
 #pragma omp parallel for reduction(+:num_left) private(myid, mybegin, myend, i) 
-			for (myid = 0; myid < nthreads; myid++ )
-			{
+        for (myid = 0; myid < nthreads; myid++ )
+        {
 			FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
 			for (i=mybegin; i<myend; i++)
 			{
@@ -458,8 +458,8 @@ INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, IN
 	/****************************************************************/
 	if (row > openmp_holds) {
 #pragma omp for parallel private(myid, mybegin,myend,i) 
-			for (myid = 0; myid < nthreads; myid++ )
-			{
+        for (myid = 0; myid < nthreads; myid++ )
+        {
 			FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
 			for (i=mybegin; i<myend; ++i) graph_array[i] = -1;
 		}
@@ -546,7 +546,7 @@ INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, IN
  * \date 03/01/2011
  * \date Jan/11/2012 Modified by FENG Chunsheng
  */
-void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col, INT nthreads, INT openmp_holds)
+static void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col, INT nthreads, INT openmp_holds)
 {
 #if FASP_USE_OPENMP
 	int i,j,k,index=0;
@@ -561,11 +561,11 @@ void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row,
 	
 	// step 1: Find the structure IA of P first
 	if (row > openmp_holds) {
-			int mybegin,myend,myid;
+        int mybegin,myend,myid;
 #pragma omp for parallel private(myid, mybegin,myend,i,j,k) 
-			for (myid = 0; myid < nthreads; myid++ )
-			{
-		     FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+        for (myid = 0; myid < nthreads; myid++ )
+        {
+            FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
 			for (i=mybegin; i<myend; ++i)
 			{
 				if (vec[i]==FGPT) // if node i is on fine grid
@@ -648,8 +648,6 @@ void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row,
 	}
 #endif
 }
-
-#endif
 
 /*---------------------------------*/
 /*--        End of File          --*/

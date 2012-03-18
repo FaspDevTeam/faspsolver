@@ -30,10 +30,12 @@
 int main (int argc, const char * argv[]) 
 {
 	dCSRmat A;
-	dvector b, uh;
+	dvector b, x;
 	int status=SUCCESS;
 	
-	// Step 0. Set parameters
+    //------------------------//
+	// Step 0. Set parameters //
+    //------------------------//
 	input_param     inparam;  // parameters from input files
 	itsolver_param  itparam;  // parameters for itsolver
 	AMG_param       amgparam; // parameters for AMG
@@ -58,7 +60,9 @@ int main (int argc, const char * argv[])
     
     printf("Test Problem %d\n", problem_num);
     
-	// Step 1. Input stiffness matrix and right-hand side
+    //----------------------------------------------------//
+	// Step 1. Input stiffness matrix and right-hand side //
+    //----------------------------------------------------//
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
 	
@@ -115,38 +119,40 @@ int main (int argc, const char * argv[])
         fasp_mem_usage();
 	}
     
-	// Step 2. Solve the system
-    
     // Print out solver parameters
     if (print_level>PRINT_NONE) fasp_param_solver_print(&itparam);
     
+    //--------------------------//
+	// Step 2. Solve the system //
+    //--------------------------//
+    
     // Set initial guess
-    fasp_dvec_alloc(A.row, &uh); 
-    fasp_dvec_set(A.row,&uh,0.0);
+    fasp_dvec_alloc(A.row, &x); 
+    fasp_dvec_set(A.row,&x,0.0);
 
     // Preconditioned Krylov methods
     if ( itsolver_type >= 1 && itsolver_type <= 20) {
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
-			status = fasp_solver_dcsr_krylov(&A, &b, &uh, &itparam);
+			status = fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
 		}	
         
 		// Using diag(A) as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_DIAG) {
-			status = fasp_solver_dcsr_krylov_diag(&A, &b, &uh, &itparam);
+			status = fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
 		}
         
 		// Using AMG as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
             if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-			status = fasp_solver_dcsr_krylov_amg(&A, &b, &uh, &itparam, &amgparam);
+			status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
 		}
         
 		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
 		else if (precond_type == PREC_ILU) {
             if (print_level>PRINT_NONE) fasp_param_ilu_print(&iluparam);
-			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &uh, &itparam, &iluparam);
+			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
 		}
         
 		else {
@@ -159,25 +165,25 @@ int main (int argc, const char * argv[])
     // AMG as the iterative solver
 	else if (itsolver_type == SOLVER_AMG) {
         if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-		fasp_solver_amg(&A, &b, &uh, &amgparam); 
+		fasp_solver_amg(&A, &b, &x, &amgparam); 
         
 	}
 
     // Full AMG as the iterative solver 
     else if (itsolver_type == SOLVER_FMG) {
         if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-        fasp_solver_famg(&A, &b, &uh, &amgparam);
+        fasp_solver_famg(&A, &b, &x, &amgparam);
     }
     
 #if With_SuperLU // use SuperLU directly
 	else if (itsolver_type == SOLVER_SUPERLU) {
-		status = superlu(&A, &b, &uh, print_level);	 
+		status = superlu(&A, &b, &x, print_level);	 
 	}
 #endif	 
 	
 #if With_UMFPACK // use UMFPACK directly
 	else if (itsolver_type == SOLVER_UMFPACK) {
-		status = umfpack(&A, &b, &uh, print_level);	 
+		status = umfpack(&A, &b, &x, print_level);	 
 	}
 #endif	 
     
@@ -202,7 +208,7 @@ FINISHED:
     // Clean up memory
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);
-	fasp_dvec_free(&uh);
+	fasp_dvec_free(&x);
     
 	return status;
 }

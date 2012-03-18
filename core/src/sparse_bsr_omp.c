@@ -10,7 +10,6 @@
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
-#if FASP_USE_OPENMP
 /**
  * \fn dBSRmat fasp_dbsr_diaginv3_omp(dBSRmat *A, double *diaginv, int nthreads, int openmp_holds)
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
@@ -28,7 +27,9 @@ dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A,
                                 int openmp_holds)
 {
 	dBSRmat B;
-    
+
+#if FASP_USE_OPENMP
+
 	// members of A 
 	int     ROW = A->ROW;
 	int     ROW_plus_one = ROW+1;
@@ -375,9 +376,10 @@ dBSRmat fasp_dbsr_diaginv3_omp (dBSRmat *A,
 			break;
 	}
     
+#endif // OMP
+
 	return (B);
 }
-#endif // OMP
 
 /*---------------------------------*/
 /*--        End of File          --*/

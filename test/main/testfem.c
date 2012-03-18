@@ -23,23 +23,23 @@
  *
  * \author Chensong Zhang
  * \date   09/11/2011
- * \note   Modified by Chensong Zhang and Feiteng Huang on 03/07/2012
+ *
+ * Modified by Chensong Zhang and Feiteng Huang on 03/07/2012
  */
 int main (int argc, const char * argv[]) 
 {
     // Set default values
-    const char *assemble_option = "a&b";
     int status      = SUCCESS;
 	int arg_index   = 1;
 	int print_usage = 0;
 	int oo          = 0;
 	int refine_lvl  = 8;
 	int input_flag  = 1;
-	int num_qp_rhs  = 3; // enough for P1 smooth right-hand-side
-	int num_qp_mat  = 1;
+	int num_qp_rhs  = 3; // for P1 FEM, smooth right-hand-side
+	int num_qp_mat  = 1; // for P1 FEM
     
-    // Set default input/output mesh files
-	const char *meshIn  = "./data/testmesh.dat";
+    const char *option  = "a&b";
+    const char *meshIn  = "./data/testmesh.dat";
 	const char *meshOut = "./data/mesh_";
     
     // Local variables
@@ -83,7 +83,7 @@ int main (int argc, const char * argv[])
 		if ( strcmp(argv[arg_index], "-assemble") == 0 )
 		{
 			arg_index ++;
-			assemble_option = argv[arg_index++];
+			option = argv[arg_index++];
 			input_flag = 0;
 		}
 		if (arg_index >= argc) break;
@@ -145,7 +145,7 @@ int main (int argc, const char * argv[])
 	}
     
 	// Assemble A and b -- P1 FE discretization for Poisson.
-    setup_poisson(&A, &b, refine_lvl+1, meshIn, meshOut, oo, assemble_option, 
+    setup_poisson(&A, &b, refine_lvl+1, meshIn, meshOut, oo, option, 
                   num_qp_rhs, num_qp_mat);
     
     // Write A and b
@@ -161,16 +161,18 @@ int main (int argc, const char * argv[])
     
     // Solve A x = b with AMG
     {
-        AMG_param       amgparam; // parameters for AMG
+        AMG_param amgparam; // parameters for AMG
+        
         fasp_param_amg_init(&amgparam); // set AMG param with default values
         amgparam.print_level = PRINT_SOME; // print some AMG message
-        amgparam.maxit = 20; // max iteration number = 20 
+        amgparam.maxit = 100; // max iter number = 100 
         
         dvector x;
         fasp_dvec_alloc(A.row, &x); 
         fasp_dvec_set(A.row,&x,0.0);
         
-        fasp_solver_amg(&A, &b, &x, &amgparam); 
+        fasp_solver_amg(&A, &b, &x, &amgparam);
+        
         fasp_dvec_free(&x);
     }
     
