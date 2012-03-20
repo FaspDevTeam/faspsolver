@@ -1,3 +1,6 @@
+03/20/2012 FASP 0.6.0: Fix more Doxygen format problems. Finish all *.c file, except *_omp.c.
+                       Modify a few function names and variable names. Revise regression test and examples.
+
 03/18/2012 FASP 0.5.9: Get rid of annoying warning in some OMP routines on MAC. Some changes to the test functions as well.
 
 03/16/2012 FASP 0.5.8: Remove several functions specially designed for the Stokes problem.

@@ -63,38 +63,36 @@
 /*---------------------------------*/
 
 /*!
- * \fn INT fasp_solver_dcsr_pvgmres ( dCSRmat *A, dvector *b, dvector *x, const INT maxit, 
- *                                    const REAL tol, precond *pre, const SHORT print_level, 
+ * \fn INT fasp_solver_dcsr_pvgmres ( dCSRmat *A, dvector *b, dvector *x, const INT MaxIt, 
+ *                                    const REAL tol, precond *pc, const SHORT print_level, 
  *                                    const SHORT stop_type, const SHORT restart )
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
  *
- * \param A           pointer to the coefficient matrix
- * \param b           pointer to the right hand side vector
- * \param x           pointer to the solution vector
- * \param maxit        maximal iteration number allowed
- * \param tol          tolerance
- * \param pre         pointer to preconditioner data
- * \param print_level  how much of the SOLVE-INFORMATION be printed
- * \param stop_type    this parameter is not used in this function at present, 
- *                     the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. Need to change! 
- * \param restart      number of restart for GMRES
+ * \param A	           Pointer to the coefficient matrix
+ * \param b	           Pointer to the dvector of right hand side
+ * \param x	           Pointer to the dvector of DOFs
+ * \param MaxIt        Maximal number of iterations
+ * \param tol          Tolerance for stopping
+ * \param pc           Pointer to the structure of precondition (precond) 
+ * \param print_level  How much information to print out
+ * \param stop_type    Stopping criteria type
+ * \param restart      Restarting steps
  *
- * \return             number of iteration if succeed 
+ * \return             Number of iterations if converged, error message otherwise
  *
  * \author Zhiyang Zhou 
- * \date 2010/12/14
+ * \date   2010/12/14
  *
- * \note
- *   Modified by Chensong Zhang on 2011/12/13
+ * Modified by Chensong Zhang on 2011/12/13
  */ 
 INT fasp_solver_dcsr_pvgmres (dCSRmat *A, 
                               dvector *b, 
                               dvector *x, 
-                              const INT maxit,
+                              const INT MaxIt,
                               const REAL tol,
-                              precond *pre, 
+                              precond *pc, 
                               const SHORT print_level, 
                               const SHORT stop_type, 
                               const SHORT restart)
@@ -106,8 +104,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 	//   Newly added parameters to monitor when   //
 	//   to change the restart parameter          //
 	//--------------------------------------------//	
-	const REAL cr_max      = 0.99;    // = cos(8^o)  (experimental) 
-	const REAL cr_min      = 0.174;   // = cos(80^o) (experimental)
+	const REAL cr_max           = 0.99;    // = cos(8^o)  (experimental) 
+	const REAL cr_min           = 0.174;   // = cos(80^o) (experimental)
 	
     // local variables
 	SHORT  converged            = 0; 
@@ -137,7 +135,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 	p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));	
 	hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
 	
-	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(maxit+1, sizeof(REAL)); 
+	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL)); 
 	
 	r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;	
 	for (i = 0; i < restartplus1; i ++) p[i] = s + restart + i*n;
@@ -167,7 +165,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < maxit)
+	while (iter < MaxIt)
 	{  
 		rs[0] = r_norm;
 		r_norm_old = r_norm;
@@ -212,13 +210,11 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 			
 			if (r_norm <= epsilon)
 			{
-				if (print_level > PRINT_NONE) 
-                    printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
 				break;
 			}
 			else
 			{
-				if (print_level >= PRINT_SOME) printf("### WARNING: False convergence!\n");
+				if (print_level >= PRINT_SOME) ITS_FACONV;
 			}
 		}
 		
@@ -227,17 +223,17 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < Restart && iter < maxit)
+		while (i < Restart && iter < MaxIt)
 		{
 			i ++;  iter ++;
 			
 			fasp_array_set(n, r, 0.0);
 			
 			/* apply the preconditioner */
-			if (pre == NULL)
+			if (pc == NULL)
 				fasp_array_cp(n, p[i-1], r);
 			else
-				pre->fct(p[i-1], r, pre->data);          
+				pc->fct(p[i-1], r, pc->data);          
 			
 			fasp_blas_dcsr_mxv(A, r, p[i]);
 			
@@ -307,10 +303,10 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 		fasp_array_set(n, r, 0.0);
 		
 		/* apply the preconditioner */
-		if (pre == NULL)
+		if (pc == NULL)
 			fasp_array_cp(n, w, r);
 		else
-			pre->fct(w, r, pre->data);
+			pc->fct(w, r, pc->data);
 		
 		fasp_blas_array_axpy(n, 1.0, r, x->val);
 		
@@ -322,12 +318,11 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 			
 			if (r_norm  <= epsilon)
 			{
-				if (print_level > PRINT_NONE) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
 				converged = 1; break;
 			}
 			else
 			{
-				if (print_level >= PRINT_SOME) printf("### WARNING: False convergence!\n");
+				if (print_level >= PRINT_SOME) ITS_FACONV;
 				fasp_array_cp(n, r, p[0]); i = 0;
 			}
 		} /* end of convergence check */
@@ -357,10 +352,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 		
 	} /* end of iteration while loop */
 	
-	if (print_level > PRINT_NONE && iter >= maxit && r_norm > epsilon) 
-	{
-		printf("### WARNING: Not reaching the given tolerance in %d iterations!!\n", maxit);
-	}
+    if (print_level > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);
 	
     /*-------------------------------------------
      * Free some stuff
@@ -370,41 +362,40 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=maxit) return ERROR_SOLVER_MAXIT;
+	if (iter>=MaxIt) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 }
 
 /*!
- * \fn INT fasp_solver_dbsr_pvgmres( dBSRmat *A, dvector *b, dvector *x, const INT maxit, 
- *                                   const REAL tol, precond *pre, const SHORT print_level, 
+ * \fn INT fasp_solver_dbsr_pvgmres( dBSRmat *A, dvector *b, dvector *x, const INT MaxIt, 
+ *                                   const REAL tol, precond *pc, const SHORT print_level, 
  *                                   const SHORT stop_type, const SHORT restart )
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
  *
- * \param A           pointer to the coefficient matrix
- * \param b           pointer to the right hand side vector
- * \param x           pointer to the solution vector
- * \param maxit        maximal iteration  
- * \param tol          tolerance
- * \param pre         pointer to preconditioner data
- * \param print_level  how much of the SOLVE-INFORMATION be output
- * \param stop_type    this parameter is not used in this function at present, 
- *                     the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. 
- * \param restart      number of restart for GMRES
+ * \param A	           Pointer to the coefficient matrix
+ * \param b	           Pointer to the dvector of right hand side
+ * \param x	           Pointer to the dvector of DOFs
+ * \param MaxIt        Maximal number of iterations
+ * \param tol          Tolerance for stopping
+ * \param pc           Pointer to the structure of precondition (precond) 
+ * \param print_level  How much information to print out
+ * \param stop_type    Stopping criteria type
+ * \param restart      Restarting steps
  *
- * \return             total number of iteration 
+ * \return             Number of iterations if converged, error message otherwise
  *
  * \author Zhiyang Zhou 
- * \date 2010/12/21
+ * \date   2010/12/21
  */ 
 INT fasp_solver_dbsr_pvgmres (dBSRmat *A, 
                               dvector *b, 
                               dvector *x, 
-                              const INT maxit, 
+                              const INT MaxIt, 
                               const REAL tol,
-                              precond *pre, 
+                              precond *pc, 
                               const SHORT print_level, 
                               const SHORT stop_type, 
                               const SHORT restart )
@@ -447,7 +438,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 	p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));	
 	hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
 	
-	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(maxit+1, sizeof(REAL)); 
+	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL)); 
 	
 	r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;	
 	for (i = 0; i < restartplus1; ++i) p[i] = s + restart + i*n;
@@ -477,7 +468,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < maxit)
+	while (iter < MaxIt)
 	{  
 		rs[0] = r_norm;
 		r_norm_old = r_norm;
@@ -522,12 +513,11 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 			
 			if (r_norm <= epsilon)
 			{
-				if (print_level > PRINT_NONE) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
 				break;
 			}
 			else
 			{
-				if (print_level >= PRINT_SOME) printf("### WARNING: False convergence!\n");
+				if (print_level >= PRINT_SOME) ITS_FACONV;
 			}
 		}
 		
@@ -536,17 +526,17 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < Restart && iter < maxit)
+		while (i < Restart && iter < MaxIt)
 		{
 			++i;  ++iter;
 			
 			fasp_array_set(n, r, 0.0);
 			
 			/* apply the preconditioner */
-			if (pre == NULL)
+			if (pc == NULL)
 				fasp_array_cp(n, p[i-1], r);
 			else
-				pre->fct(p[i-1], r, pre->data);          
+				pc->fct(p[i-1], r, pc->data);          
 			
 			fasp_blas_dbsr_mxv(A, r, p[i]);
 			
@@ -614,10 +604,10 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 		fasp_array_set(n, r, 0.0);
 		
 		/* apply the preconditioner */
-		if (pre == NULL)
+		if (pc == NULL)
 			fasp_array_cp(n, w, r);
 		else
-			pre->fct(w, r, pre->data);
+			pc->fct(w, r, pc->data);
 		
 		fasp_blas_array_axpy(n, 1.0, r, x->val);
 		
@@ -629,12 +619,11 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 			
 			if (r_norm  <= epsilon)
 			{
-				if (print_level > PRINT_NONE) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
 				converged = 1; break;
 			}
 			else
 			{
-				if (print_level >= PRINT_SOME) printf("### WARNING: False convergence!\n");
+				if (print_level >= PRINT_SOME) ITS_FACONV;
 				fasp_array_cp(n, r, p[0]); i = 0;
 			}
 		} /* end of convergence check */
@@ -663,10 +652,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 		
 	} /* end of iteration while loop */
 	
-	if (print_level > PRINT_NONE && iter >= maxit && r_norm > epsilon) 
-	{
-		printf("### WARNING: Not reaching the given tolerance in %d iterations!!\n", maxit);
-	}
+    if (print_level > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);
 	
     /*-------------------------------------------
      * Free some stuff
@@ -676,41 +662,40 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=maxit) return ERROR_SOLVER_MAXIT;
+	if (iter>=MaxIt) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 }
 
 /*!
- * \fn INT fasp_solver_dstr_pvgmres( dSTRmat *A, dvector *b, dvector *x, const INT maxit, 
- *                                   const REAL tol, precond *pre, const SHORT print_level, 
+ * \fn INT fasp_solver_dstr_pvgmres( dSTRmat *A, dvector *b, dvector *x, const INT MaxIt, 
+ *                                   const REAL tol, precond *pc, const SHORT print_level, 
  *                                   const SHORT stop_type, const SHORT restart )
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
  *
- * \param A the pointer to the coefficient matrix
- * \param b the pointer to the right hand side vector
- * \param x the pointer to the solution vector
- * \param maxit the maximal iteration  
- * \param tol the tolerance
- * \param pre pointer to preconditioner data
- * \param print_level how much of the SOLVE-INFORMATION be output?
- * \param stop_type this parameter is not used in my function at present, 
- *        the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. 
- * \param restart number of restart
+ * \param A	           Pointer to the coefficient matrix
+ * \param b	           Pointer to the dvector of right hand side
+ * \param x	           Pointer to the dvector of DOFs
+ * \param MaxIt        Maximal number of iterations
+ * \param tol          Tolerance for stopping
+ * \param pc           Pointer to the structure of precondition (precond) 
+ * \param print_level  How much information to print out
+ * \param stop_type    Stopping criteria type
+ * \param restart      Restarting steps
  *
- * \return the total number of iteration 
+ * \return             Number of iterations if converged, error message otherwise
  *
  * \author Zhiyang Zhou 
- * \date 2010/12/14
+ * \date   2010/12/14
  */ 
 INT fasp_solver_dstr_pvgmres (dSTRmat *A, 
                               dvector *b, 
                               dvector *x, 
-                              const INT maxit, 
+                              const INT MaxIt, 
                               const REAL tol, 
-                              precond *pre, 
+                              precond *pc, 
                               const SHORT print_level, 
                               const SHORT stop_type, 
                               const SHORT restart )
@@ -753,7 +738,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 	p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));	
 	hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
 	
-	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(maxit+1, sizeof(REAL)); 
+	if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL)); 
 	
 	r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;	
 	for (i = 0; i < restartplus1; ++i) p[i] = s + restart + i*n;
@@ -783,7 +768,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 	epsilon = tol*den_norm;
 	
 	/* outer iteration cycle */
-	while (iter < maxit)
+	while (iter < MaxIt)
 	{  
 		rs[0] = r_norm;
 		r_norm_old = r_norm;
@@ -828,12 +813,11 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 			
 			if (r_norm <= epsilon)
 			{
-				if (print_level > PRINT_NONE) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
 				break;
 			}
 			else
 			{
-				if (print_level >= PRINT_SOME) printf("### WARNING: False convergence!\n");
+				if (print_level >= PRINT_SOME) ITS_FACONV;
 			}
 		}
 		
@@ -842,17 +826,17 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 		
 		/* RESTART CYCLE (right-preconditioning) */
 		i = 0;
-		while (i < Restart && iter < maxit)
+		while (i < Restart && iter < MaxIt)
 		{
 			++i;  ++iter;
 			
 			fasp_array_set(n, r, 0.0);
 			
 			/* apply the preconditioner */
-			if (pre == NULL)
+			if (pc == NULL)
 				fasp_array_cp(n, p[i-1], r);
 			else
-				pre->fct(p[i-1], r, pre->data);          
+				pc->fct(p[i-1], r, pc->data);          
 			
 			//fasp_blas_dbsr_mxv(A, r, p[i]);
 			fasp_blas_dstr_aAxpy(1.0, A, r, p[i]); // we need spmxv_str here. --Zhiyang Zhou
@@ -925,10 +909,10 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 		fasp_array_set(n, r, 0.0);
 		
 		/* apply the preconditioner */
-		if (pre == NULL)
+		if (pc == NULL)
 			fasp_array_cp(n, w, r);
 		else
-			pre->fct(w, r, pre->data);
+			pc->fct(w, r, pc->data);
 		
 		fasp_blas_array_axpy(n, 1.0, r, x->val);
 		
@@ -940,12 +924,11 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 			
 			if (r_norm  <= epsilon)
 			{
-				if (print_level > PRINT_NONE) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
 				converged = 1; break;
 			}
 			else
 			{
-				if (print_level > PRINT_SOME) printf("### WARNING: False convergence!\n");
+				if (print_level > PRINT_SOME) ITS_FACONV;
 				fasp_array_cp(n, r, p[0]); i = 0;
 			}
 		} /* end of convergence check */
@@ -974,10 +957,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 		
 	} /* end of iteration while loop */
 	
-	if (print_level > PRINT_NONE && iter >= maxit && r_norm > epsilon) 
-	{
-		printf("### WARNING: Not reaching the given tolerance in %d iterations!!\n", maxit);
-	}
+    if (print_level > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);
 	
     /*-------------------------------------------
      * Free some stuff
@@ -987,7 +967,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=maxit) return ERROR_SOLVER_MAXIT;
+	if (iter>=MaxIt) return ERROR_SOLVER_MAXIT;
 	else if (status<0) return status;
 	else return iter;
 }

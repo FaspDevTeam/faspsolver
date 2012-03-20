@@ -1,4 +1,4 @@
-/*! \file precond_omp.c
+/*! \file precond_csr_omp.c
  *  \brief Preconditioners
  */
 

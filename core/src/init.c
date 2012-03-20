@@ -40,7 +40,7 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
 }
 
 /**
- * \fn AMG_data_bsr * fasp_amg_data_create_bsr (SHORT max_levels)
+ * \fn AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
  *
  * \brief Create and initialize AMG_data data sturcture for AMG/SAMG (BSR format)
  *
@@ -51,7 +51,7 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
  * \author Xiaozhe Hu
  * \date   08/07/2011
  */
-AMG_data_bsr * fasp_amg_data_create_bsr (SHORT max_levels)
+AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
 {		
 	SHORT i;
 	

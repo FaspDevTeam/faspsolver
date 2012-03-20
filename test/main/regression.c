@@ -3,9 +3,10 @@
  *
  *------------------------------------------------------
  *
- *		Created by Chensong Zhang on 03/20/2010.
- *      Modified by Chensong Zhang on 09/02/2011.
- *      Modified by Chenosng Zhang on 12/03/2011.
+ *		Created  by Chensong Zhang on 03/20/2010
+ *      Modified by Chensong Zhang on 09/02/2011
+ *      Modified by Chenosng Zhang on 12/03/2011
+ *      Modified by Chensong Zhang on 03/20/2012
  *
  *------------------------------------------------------
  *
@@ -20,6 +21,9 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
+unsigned INT  ntest;    /**< number of tests all together */
+unsigned INT  nfail;    /**< number of failed tests */
+
 /**
  * \fn static void check_solu(dvector *x, dvector *sol, double tol)
  *
@@ -28,11 +32,13 @@
 static void check_solu(dvector *x, dvector *sol, double tol)
 {
     double diff_u = fasp_dvec_maxdiff(x, sol);
+    ntest++;
     
     if ( diff_u < tol ) {
         printf("Max diff %.4e smaller than tolerance................. [PASS]\n", diff_u);
     }
     else {
+        nfail++;
         printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [REQUIRES ATTENTION!!!]\n", diff_u);
     }	
 }
@@ -47,6 +53,7 @@ static void check_solu(dvector *x, dvector *sol, double tol)
  * 
  * Modified by Chensong Zhang on 09/02/2011 
  * Modified by Chensong Zhang on 12/03/2011
+ * Modified by Chensong Zhang on 03/20/2012
  *
  * \todo 
  *      - add a few more test problems
@@ -59,11 +66,11 @@ int main (int argc, const char * argv[])
     const REAL     tolerance   = 1e-4; // tolerance for accepting the solution
     
     /* Local Variables */
-    itsolver_param itparam;     // input parameters for iterative solvers
-    AMG_param      amgparam; 	// input parameters for AMG
-    dCSRmat        A;           // coefficient matrix
-    dvector        b, x, sol;   // rhs, numerical sol, exact sol 
-    INT            indp;        // index for test problems
+    itsolver_param itparam;      // input parameters for iterative solvers
+    AMG_param      amgparam; 	 // input parameters for AMG
+    dCSRmat        A;            // coefficient matrix
+    dvector        b, x, sol;    // rhs, numerical sol, exact sol 
+    INT            indp;         // index for test problems
     
     time_t         lt  = time(NULL);
     
@@ -71,6 +78,8 @@ int main (int argc, const char * argv[])
     printf("------------------------- Test starts at -------------------------\n");
     printf("%s",asctime(localtime(&lt))); // output starting local time
     printf("------------------------------------------------------------------\n");
+    
+    ntest = nfail = 0;
     
     /*******************************************/
     /* Step 1. Get matrix and right-hand side  */ 
@@ -430,6 +439,7 @@ int main (int argc, const char * argv[])
 	/* all done */
 	lt = time(NULL);    
 	printf("---------------------- All test finished at ----------------------\n");
+    printf("%d tests finished: %d failed, %d succeeded!\n", ntest, nfail, ntest-nfail);
 	printf("%s",asctime(localtime(&lt))); // output ending local time
 	printf("------------------------------------------------------------------\n");
 	

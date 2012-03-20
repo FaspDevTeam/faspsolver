@@ -1,4 +1,4 @@
-/*! \file itsolver.c
+/*! \file itsolver_csr.c
  *  \brief Iterative solvers (main file)
  */
 

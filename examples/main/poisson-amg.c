@@ -26,15 +26,13 @@
  */
 int main (int argc, const char * argv[]) 
 {
-    //! Step 0. Set parameters
-    //!         We read everything from a disk file "amg.dat"
+    // Step 0. Set parameters
+    //         We read everything from a disk file "amg.dat"
     input_param     inparam;  // parameters from input files
-    itsolver_param  itparam;  // parameters for itsolver
     AMG_param       amgparam; // parameters for AMG
-    ILU_param       iluparam; // parameters for ILU
     
-    // Read input parameters from a disk file
-    fasp_param_init("ini/amg.dat",&inparam,&itparam,&amgparam,&iluparam);
+    // Read input and AMG parameters from a disk file
+    fasp_param_init("ini/amg.dat",&inparam,NULL,&amgparam,NULL);
     
     // Set local parameters
     const int print_level   = inparam.print_level;
@@ -43,24 +41,24 @@ int main (int argc, const char * argv[])
     const int precond_type  = inparam.precond_type;
     const int output_type   = inparam.output_type;
     
-    // Step 0. Get stiffness matrix and right-hand side
+    // Step 1. Get stiffness matrix and right-hand side
     //         Read A and b -- P1 FE discretization for Poisson.
     dCSRmat A;
-    dvector b, uh;
+    dvector b, x;
     char filename1[512], *datafile1;
     char filename2[512], *datafile2;
 	
-    strncpy(filename1,inparam.workdir,128);
-    strncpy(filename2,inparam.workdir,128);
-    
-    datafile1="matP1.dat";
-    strcat(filename1,datafile1);
-    datafile2="rhsP1.dat";
-    strcat(filename2,datafile2);
+    // Stiffness matrix from matP1.dat
+    strncpy(filename1,inparam.workdir,128);    
+    datafile1="matP1.dat"; strcat(filename1,datafile1);
     fasp_dcoo_read(filename1, &A);
+
+    // RHS from rhsP1.dat
+    strncpy(filename2,inparam.workdir,128);
+    datafile2="rhsP1.dat"; strcat(filename2,datafile2);
     fasp_dvecind_read(filename2, &b);    
     
-    // Step 1. Print problem size and AMG parameters
+    // Step 2. Print problem size and AMG parameters
     if (print_level>PRINT_NONE) {
         printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
         printf("b: n = %d\n", b.row);
@@ -68,17 +66,15 @@ int main (int argc, const char * argv[])
         fasp_param_amg_print(&amgparam);
     }
     
-    // Step 2. Set initial guess
-    fasp_dvec_alloc(A.row, &uh); 
-    fasp_dvec_set(A.row,&uh,0.0);
-	
     // Step 3. Solve the system with AMG as an iterative solver
-    fasp_solver_amg(&A, &b, &uh, &amgparam); 
+    //         Set the initial guess to be zero
+    fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row,&x,0.0);
+    fasp_solver_amg(&A, &b, &x, &amgparam); 
     
     // Step 4. Clean up memory
     fasp_dcsr_free(&A);
     fasp_dvec_free(&b);
-    fasp_dvec_free(&uh);
+    fasp_dvec_free(&x);
     
     return SUCCESS;
 }

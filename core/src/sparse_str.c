@@ -17,10 +17,10 @@
  *
  * \brief Initialize sparse matrix on structured grid
  *
- * \param A pointer to the dSTRmat matrix
+ * \param A  Pointer to the dSTRmat matrix
  *
  * \author Shiquan Zhang, Xiaozhe Hu
- * \date 05/17/2010 
+ * \date   05/17/2010 
  */
 void fasp_dstr_null (dSTRmat *A)
 {		
@@ -41,17 +41,17 @@ void fasp_dstr_null (dSTRmat *A)
  *
  * \brief Create STR sparse matrix data memory space
  *
- * \param nx      integer, number of grids in x direction
- * \param ny      integer, number of grids in y direction
- * \param nz      integer, number of grids in z direction
- * \param nc      integer, number of components 
- * \param nband   integer, number of off-diagonal bands 
- * \param offsets integer, shift from diagonal
+ * \param nx        Number of grids in x direction
+ * \param ny        Number of grids in y direction
+ * \param nz        Number of grids in z direction
+ * \param nc        Number of components 
+ * \param nband     Number of off-diagonal bands 
+ * \param offsets   Shift from diagonal
  *
- * \return        the dSTRmat matrix
+ * \return          The dSTRmat matrix
  *
  * \author Shiquan Zhang, Xiaozhe Hu
- * \date 05/17/2010 
+ * \date   05/17/2010 
  */
 dSTRmat fasp_dstr_create (INT nx, 
                           INT ny, 
@@ -92,18 +92,18 @@ dSTRmat fasp_dstr_create (INT nx,
  *
  * \brief Allocate STR sparse matrix memory space
  *
- * \param nx     integer, number of grids in x direction
- * \param ny     integer, number of grids in y direction
- * \param nz     integer, number of grids in z direction
- * \param nxy    integer, number of grids in x-y plane
- * \param ngrid  integer, number of grids
- * \param nband  integer, number of off-diagonal bands 
- * \param nc     integer, number of components 
- * \param offsets integer, shift from diagonal
- * \param A       pointer to the dSTRmat matrix
+ * \param nx        Number of grids in x direction
+ * \param ny        Number of grids in y direction
+ * \param nz        Number of grids in z direction
+ * \param nxy       Number of grids in x-y plane
+ * \param ngrid     Number of grids
+ * \param nband     Number of off-diagonal bands 
+ * \param nc        Number of components 
+ * \param offsets   Shift from diagonal
+ * \param A         Pointer to the dSTRmat matrix
  *
  * \author Shiquan Zhang, Xiaozhe Hu
- * \date 05/17/2010  
+ * \date   05/17/2010  
  */
 void fasp_dstr_alloc(INT nx, 
                      INT ny, 
@@ -143,10 +143,10 @@ void fasp_dstr_alloc(INT nx,
  *
  * \brief Free STR sparse matrix data memeory space
  *
- * \param A   pointer to the dSTRmat matrix
+ * \param A   Pointer to the dSTRmat matrix
  *
  * \author Shiquan Zhang, Xiaozhe Hu
- * \date 05/17/2010 
+ * \date   05/17/2010 
  */
 void fasp_dstr_free (dSTRmat *A)
 {		
@@ -168,13 +168,13 @@ void fasp_dstr_free (dSTRmat *A)
 /**
  * \fn void fasp_dstr_cp (dSTRmat *A, dSTRmat *A1)
  *
- * \brief copy a dSTRmat to a new one A1=A
+ * \brief Copy a dSTRmat to a new one A1=A
  *
- * \param A pointer to the dSTRmat matrix
- * \param A1 pointer to the dSTRmat matrix
+ * \param A   Pointer to the dSTRmat matrix
+ * \param A1  Pointer to the dSTRmat matrix
  * 
  * \author Zhiyang Zhou
- * \date 04/21/2010  
+ * \date   04/21/2010  
  */
 void fasp_dstr_cp (dSTRmat *A, 
                    dSTRmat *A1)

@@ -22,10 +22,10 @@
  *		INT *ia, INT *ja, REAL *a, INT *ipt, INT *jpt, REAL *pt, \
  *		INT n, INT nc, INT *maxrpout, INT *ipin, INT *jpin) 
  *
- *  \brief Compute R*A*P 
+ * \brief Compute R*A*P 
  *
  * \author Ludmil Zikatanov
- * \date 04/08/2010
+ * \date   04/08/2010
  *  
  * \note It uses dCSRmat only. The functions called from here are in sparse_util.c
  *

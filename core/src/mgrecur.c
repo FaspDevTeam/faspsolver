@@ -15,16 +15,16 @@
 /**
  * \fn void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level)
  *
- * \brief Solve Ax=b with recursive multigrid k-cycle
+ * \brief Solve Ax=b with recursive multigrid K-cycle
  *
- * \param mgl pointer to AMG_data data
- * \param param pointer to AMG parameters
- * \param level number of levels
+ * \param mgl      Pointer to AMG_data data
+ * \param param    Pointer to AMG parameters
+ * \param level    Number of levels
  *
  * \author Xuehai Huang, Chensong Zhang
- * \date 04/06/2010
+ * \date   04/06/2010
  *
- * \note Modified by Chensong on 01/10/2012
+ * Modified by Chensong on 01/10/2012
  */
 void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level)
 {	

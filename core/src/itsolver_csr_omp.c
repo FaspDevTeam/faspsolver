@@ -1,4 +1,4 @@
-/*! \file itsolver_omp.c
+/*! \file itsolver_csr_omp.c
  *  \brief Iterative solvers (main file)
  */
 

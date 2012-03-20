@@ -64,31 +64,31 @@
 
 /**
  * \fn INT fasp_solver_dcsr_pcg (dCSRmat *A, dvector *b, dvector *u, const INT MaxIt, 
- *                               const REAL tol, precond *pre, const SHORT print_level, 
+ *                               const REAL tol, precond *pc, const SHORT print_level, 
  *                               const SHORT stop_type)
  *
  * \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
  *
- * \param A	 pointer to the coefficient matrix
- * \param b	 pointer to the dvector of right hand side
- * \param u	 pointer to the dvector of DOFs
- * \param MaxIt integer, maximal number of iterations
- * \param tol REAL float, the tolerance for stopage
- * \param pre pointer to the structure of precondition (precond) 
- * \param print_level how much information to print out
- * \param stop_type stopping criteria type
+ * \param A	           Pointer to the coefficient matrix
+ * \param b	           Pointer to the dvector of right hand side
+ * \param u	           Pointer to the dvector of DOFs
+ * \param MaxIt        Maximal number of iterations
+ * \param tol          Tolerance for stopping
+ * \param pc           Pointer to the structure of precondition (precond) 
+ * \param print_level  How much information to print out
+ * \param stop_type    Stopping criteria type
  *
- * \return the number of iterations
+ * \return             Number of iterations if converged, error message otherwise
  * 
  * \author Chensong Zhang, Xiaozhe Hu, Shiquan Zhang
- * \date 05/06/2010
+ * \date   05/06/2010
  */
 INT fasp_solver_dcsr_pcg (dCSRmat *A, 
                           dvector *b, 
                           dvector *u, 
                           const INT MaxIt, 
                           const REAL tol,
-                          precond *pre, 
+                          precond *pc, 
                           const SHORT print_level, 
                           const SHORT stop_type)
 {
@@ -121,8 +121,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pre != NULL) 
-				pre->fct(b->val,t,pre->data); /* Preconditioning */
+			if (pc != NULL) 
+				pc->fct(b->val,t,pc->data); /* Preconditioning */
 			else 
 				fasp_array_cp(m,b->val,t); /* No preconditioner, B=I */
 			normb=sqrt(ABS(fasp_blas_array_dotprod(m,b->val,t)));
@@ -140,8 +140,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 	fasp_array_cp(m,b->val,r);
 	fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
 	
-	if (pre != NULL)
-		pre->fct(r,z,pre->data); /* Preconditioning */
+	if (pc != NULL)
+		pc->fct(r,z,pc->data); /* Preconditioning */
 	else
 		fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 	
@@ -191,10 +191,10 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 		switch (stop_type) {
 			case STOP_REL_PRECRES:
 				// z = B*r
-				if (pre == NULL)
+				if (pc == NULL)
 					fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 				else
-					pre->fct(r,z,pre->data); /* Preconditioning */
+					pc->fct(r,z,pc->data); /* Preconditioning */
 				temp2=fasp_blas_array_dotprod(m,z,r);
 				relres=sqrt(ABS(temp2))/normb;
 				break;
@@ -233,10 +233,10 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 			switch (stop_type) {
 				case STOP_REL_PRECRES:
 					// z = B*r
-					if (pre == NULL)
+					if (pc == NULL)
 						fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 					else
-						pre->fct(r,z,pre->data); /* Preconditioning */
+						pc->fct(r,z,pc->data); /* Preconditioning */
 					temp2=fasp_blas_array_dotprod(m,z,r);
 					relres=sqrt(ABS(temp2))/normb;
 					break;
@@ -276,8 +276,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 			switch (stop_type) {
 				case STOP_REL_PRECRES:
 					// z = B*r
-					if (pre == NULL)
-						pre->fct(r,z,pre->data); /* Preconditioning */
+					if (pc == NULL)
+						pc->fct(r,z,pc->data); /* Preconditioning */
 					else
 						fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 					temp2=fasp_blas_array_dotprod(m,z,r);
@@ -316,8 +316,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 		
 		// compute z_k = B*r_k
 		if (stop_type!=STOP_REL_PRECRES) {
-			if (pre != NULL)
-				pre->fct(r,z,pre->data); /* preconditioning */
+			if (pc != NULL)
+				pc->fct(r,z,pc->data); /* preconditioning */
 			else
 				fasp_array_cp(m,r,z);	 /* No preconditioner, B=I */
 		}
@@ -349,31 +349,31 @@ FINISHED:  // finish the iterative method
 
 /**
  * \fn INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, dvector *b, dvector *u, const INT MaxIt,
- *                                const REAL tol, precond *pre, const SHORT print_level, 
+ *                                const REAL tol, precond *pc, const SHORT print_level, 
  *                                const SHORT stop_type)
  *
  * \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
  *
- * \param A pointer to the coefficient matrix
- * \param b pointer to the dvector of right hand side
- * \param u pointer to the dvector of DOFs
- * \param MaxIt integer, maximal number of iterations
- * \param tol REAL float, the tolerance for stopage
- * \param pre pointer to the structure of precondition (precond) 
- * \param print_level how much information to print out
- * \param stop_type stopping criteria type
+ * \param A	           Pointer to the coefficient matrix
+ * \param b	           Pointer to the dvector of right hand side
+ * \param u	           Pointer to the dvector of DOFs
+ * \param MaxIt        Maximal number of iterations
+ * \param tol          Tolerance for stopping
+ * \param pc           Pointer to the structure of precondition (precond) 
+ * \param print_level  How much information to print out
+ * \param stop_type    Stopping criteria type
  *
- * \return the number of iterations
+ * \return             Number of iterations if converged, error message otherwise
  *
  * \author Xiaozhe Hu
- * \date 05/24/2010
+ * \date   05/24/2010
  */
 INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, 
                            dvector *b, 
                            dvector *u, 
                            const INT MaxIt, 
                            const REAL tol,
-                           precond *pre, 
+                           precond *pc, 
                            const SHORT print_level, 
                            const SHORT stop_type)
 {
@@ -404,8 +404,8 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pre != NULL) 
-				pre->fct(b->val,t,pre->data); /* Preconditioning */
+			if (pc != NULL) 
+				pc->fct(b->val,t,pc->data); /* Preconditioning */
 			else 
 				fasp_array_cp(m,b->val,t); /* No preconditioner, B=I */
 			normb=sqrt(ABS(fasp_blas_array_dotprod(m,b->val,t)));
@@ -423,8 +423,8 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 	fasp_array_cp(m,b->val,r);
 	fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
 	
-	if (pre != NULL)
-		pre->fct(r,z,pre->data); /* Preconditioning */
+	if (pc != NULL)
+		pc->fct(r,z,pc->data); /* Preconditioning */
 	else
 		fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 	
@@ -475,10 +475,10 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		switch (stop_type) {
 			case STOP_REL_PRECRES:
 				// z = B*r
-				if (pre == NULL)
+				if (pc == NULL)
 					fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 				else
-					pre->fct(r,z,pre->data); /* Preconditioning */
+					pc->fct(r,z,pc->data); /* Preconditioning */
 				temp2=fasp_blas_array_dotprod(m,z,r);
 				relres=sqrt(ABS(temp2))/normb;
 				break;
@@ -520,10 +520,10 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 					relres=absres/normb;	break;
 				case STOP_REL_PRECRES:
 					// z = B*r
-					if (pre == NULL)
+					if (pc == NULL)
 						fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 					else
-						pre->fct(r,z,pre->data); /* Preconditioning */
+						pc->fct(r,z,pc->data); /* Preconditioning */
 					temp2=fasp_blas_array_dotprod(m,z,r);
 					relres=sqrt(ABS(temp2))/normb;
 					break;
@@ -563,8 +563,8 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 					relres=absres/normb;	break;
 				case STOP_REL_PRECRES:
 					// z = B*r
-					if (pre == NULL)
-						pre->fct(r,z,pre->data); /* Preconditioning */
+					if (pc == NULL)
+						pc->fct(r,z,pc->data); /* Preconditioning */
 					else
 						fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 					temp2=fasp_blas_array_dotprod(m,z,r);
@@ -599,8 +599,8 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		
 		// compute z_k = B*r_k
 		if (stop_type!=STOP_REL_PRECRES) {
-			if (pre != NULL)
-				pre->fct(r,z,pre->data); /* preconditioning */
+			if (pc != NULL)
+				pc->fct(r,z,pc->data); /* preconditioning */
 			else
 				fasp_array_cp(m,r,z);	 /* No preconditioner, B=I */
 		}
@@ -633,31 +633,31 @@ FINISHED:  // finish the iterative method
 
 /**
  * \fn INT fasp_solver_dstr_pcg (dSTRmat *A, dvector *b, dvector *u, const INT MaxIt, 
- *                               const REAL tol, precond *pre, const SHORT print_level, 
+ *                               const REAL tol, precond *pc, const SHORT print_level, 
  *                               const SHORT stop_type)
  *
  * \brief Preconditioned conjugate gradient (CG) method for solving Au=b 
  *
- * \param A pointer to the coefficient matrix
- * \param b pointer to the dvector of right hand side
- * \param u pointer to the dvector of DOFs
- * \param MaxIt integer, maximal number of iterations
- * \param tol REAL float, the tolerance for stopage
- * \param pre pointer to the structure of precondition (precond) 
- * \param print_level how much information to print out
- * \param stop_type stopping criteria type
+ * \param A	           Pointer to the coefficient matrix
+ * \param b	           Pointer to the dvector of right hand side
+ * \param u	           Pointer to the dvector of DOFs
+ * \param MaxIt        Maximal number of iterations
+ * \param tol          Tolerance for stopping
+ * \param pc           Pointer to the structure of precondition (precond) 
+ * \param print_level  How much information to print out
+ * \param stop_type    Stopping criteria type
  *
- * \return the number of iterations
+ * \return             Number of iterations if converged, error message otherwise
  *
  * \author Zhiyang Zhou
- * \date 04/25/2010
+ * \date   04/25/2010
  */
 INT fasp_solver_dstr_pcg (dSTRmat *A, 
                           dvector *b, 
                           dvector *u, 
                           const INT MaxIt, 
                           const REAL tol, 
-                          precond *pre, 
+                          precond *pc, 
                           const SHORT print_level, 
                           const SHORT stop_type)
 {
@@ -691,8 +691,8 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pre != NULL) 
-				pre->fct(b->val,t,pre->data); /* Preconditioning */
+			if (pc != NULL) 
+				pc->fct(b->val,t,pc->data); /* Preconditioning */
 			else 
 				fasp_array_cp(m,b->val,t); /* No preconditioner, B=I */
 			normb=sqrt(ABS(fasp_blas_array_dotprod(m,b->val,t)));
@@ -710,8 +710,8 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 	fasp_array_cp(m,b->val,r);
 	fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
 	
-	if (pre != NULL)
-		pre->fct(r,z,pre->data); /* Preconditioning */
+	if (pc != NULL)
+		pc->fct(r,z,pc->data); /* Preconditioning */
 	else
 		fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 	
@@ -763,10 +763,10 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 		switch (stop_type) {
 			case STOP_REL_PRECRES:
 				// z = B*r
-				if (pre == NULL)
+				if (pc == NULL)
 					fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 				else
-					pre->fct(r,z,pre->data); /* Preconditioning */
+					pc->fct(r,z,pc->data); /* Preconditioning */
 				temp2=fasp_blas_array_dotprod(m,z,r);
 				relres=sqrt(ABS(temp2))/normb;
 				break;
@@ -806,10 +806,10 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 			switch (stop_type) {
 				case STOP_REL_PRECRES:
 					// z = B*r
-					if (pre == NULL)
+					if (pc == NULL)
 						fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 					else
-						pre->fct(r,z,pre->data); /* Preconditioning */
+						pc->fct(r,z,pc->data); /* Preconditioning */
 					temp2=fasp_blas_array_dotprod(m,z,r);
 					relres=sqrt(ABS(temp2))/normb;
 					break;
@@ -849,8 +849,8 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 			switch (stop_type) {
 				case STOP_REL_PRECRES:
 					// z = B*r
-					if (pre == NULL)
-						pre->fct(r,z,pre->data); /* Preconditioning */
+					if (pc == NULL)
+						pc->fct(r,z,pc->data); /* Preconditioning */
 					else
 						fasp_array_cp(m,r,z); /* No preconditioner, B=I */
 					temp2=fasp_blas_array_dotprod(m,z,r);
@@ -889,8 +889,8 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 		
 		// compute z_k = B*r_k
 		if (stop_type!=STOP_REL_PRECRES) {
-			if (pre != NULL)
-				pre->fct(r,z,pre->data); /* preconditioning */
+			if (pc != NULL)
+				pc->fct(r,z,pc->data); /* preconditioning */
 			else
 				fasp_array_cp(m,r,z);	 /* No preconditioner, B=I */
 		}

@@ -17,13 +17,14 @@
  *
  * \brief Create IJ sparse matrix data memory space
  *
- * \param m    number of rows
- * \param n    number of columns
- * \param nnz  number of nonzeros
- * \return A   the new dCOOmat matrix
+ * \param m    Number of rows
+ * \param n    Number of columns
+ * \param nnz  Number of nonzeros
+ *
+ * \return A   The new dCOOmat matrix
  *
  * \author Chensong Zhang 
- * \date 2010/04/06
+ * \date   2010/04/06
  */
 dCOOmat fasp_dcoo_create (INT m, 
                           INT n, 
@@ -49,10 +50,10 @@ dCOOmat fasp_dcoo_create (INT m,
  *
  * \brief Free IJ sparse matrix data memeory space
  *
- * \param A   pointer to the dCOOmat matrix
+ * \param A   Pointer to the dCOOmat matrix
  *
  * \author Chensong Zhang
- * \date 2010/04/03  
+ * \date   2010/04/03  
  */
 void fasp_dcoo_free (dCOOmat *A)
 {			
@@ -68,11 +69,11 @@ void fasp_dcoo_free (dCOOmat *A)
  *
  * \brief Reindex a REAL matrix in IJ format to make the index starting from 0 or 1.
  *
- * \param A       pointer to IJ matrix
- * \param  offset  size of offset (1 or -1)
+ * \param A       Pointer to IJ matrix
+ * \param offset  Size of offset (1 or -1)
  *
  * \author Chensong Zhang 
- * \date 2010/04/06
+ * \date   2010/04/06
  */
 void fasp_dcoo_shift (dCOOmat *A, INT offset)
 {

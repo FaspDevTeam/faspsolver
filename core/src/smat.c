@@ -15,10 +15,10 @@
  *
  * \brief Free idenmat sparse matrix data memeory space
  *
- * \param A   pointer to the idenmat matrix
+ * \param A   Pointer to the idenmat matrix
  *
  * \author Chensong Zhang
- * \date 2010/04/03 
+ * \date   2010/04/03 
  */
 void fasp_iden_free (idenmat *A)
 {			
@@ -35,10 +35,10 @@ void fasp_iden_free (idenmat *A)
  *
  * \brief Set a 2*2 full matrix to be a identity   
  *
- * \param a      pointer to the REAL vector which stands for a 2*2 full matrix 
+ * \param a      Pointer to the REAL vector which stands for a 2*2 full matrix 
  *
  * \author Xiaozhe Hu
- * \date 2011/11/18
+ * \date   2011/11/18
  */
 void fasp_smat_identity_nc2 (REAL *a)
 {
@@ -52,10 +52,10 @@ void fasp_smat_identity_nc2 (REAL *a)
  *
  * \brief Set a 3*3 full matrix to be a identity   
  *
- * \param a      pointer to the REAL vector which stands for a 3*3 full matrix 
+ * \param a      Pointer to the REAL vector which stands for a 3*3 full matrix 
  *
  * \author Xiaozhe Hu
- * \date 2010/12/25
+ * \date   2010/12/25
  */
 void fasp_smat_identity_nc3 (REAL *a)
 {
@@ -69,10 +69,10 @@ void fasp_smat_identity_nc3 (REAL *a)
  *
  * \brief Set a 5*5 full matrix to be a identity   
  *
- * \param a      pointer to the REAL vector which stands for a 5*5 full matrix 
+ * \param a      Pointer to the REAL vector which stands for a 5*5 full matrix 
  *
  * \author Xiaozhe Hu
- * \date 2010/12/25
+ * \date   2010/12/25
  */
 void fasp_smat_identity_nc5 (REAL *a)
 {
@@ -86,10 +86,10 @@ void fasp_smat_identity_nc5 (REAL *a)
  *
  * \brief Set a 7*7 full matrix to be a identity   
  *
- * \param a      pointer to the REAL vector which stands for a 7*7 full matrix 
+ * \param a      Pointer to the REAL vector which stands for a 7*7 full matrix 
  *
  * \author Xiaozhe Hu
- * \date 2010/12/25
+ * \date   2010/12/25
  */
 void fasp_smat_identity_nc7 (REAL *a)
 {
@@ -104,12 +104,12 @@ void fasp_smat_identity_nc7 (REAL *a)
  *
  * \brief Set a n*n full matrix to be a identity   
  *
- * \param a      pointer to the REAL vector which stands for a n*n full matrix 
- * \param n       size of full matrix
- * \param n2     length of the REAL vector which stores the n*n full matrix
+ * \param a      Pointer to the REAL vector which stands for a n*n full matrix 
+ * \param n      Size of full matrix
+ * \param n2     Length of the REAL vector which stores the n*n full matrix
  *
  * \author Xiaozhe Hu
- * \date 2010/12/25
+ * \date   2010/12/25
  */
 void fasp_smat_identity (REAL *a, 
                          INT n, 

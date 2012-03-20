@@ -154,26 +154,19 @@ ForwardSweep:
  * \author Xiaozhe Hu 
  * \date   08/07/2011
  */
-void fasp_solver_mgcycle_bsr(AMG_data_bsr *mgl, AMG_param *param)
+void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl, 
+                              AMG_param *param)
 {	
+	const SHORT print_level = param->print_level;
+	const SHORT nl          = mgl[0].num_levels;
+	const SHORT smoother    = param->smoother;
+	const SHORT cycle_type  = param->cycle_type;
 	
-	const int nl = mgl[0].num_levels;
-	const int smoother = param->smoother;
-	//const int smooth_order = param->smooth_order;
-	const int cycle_type = param->cycle_type;
-	//const double relax = param->relaxation;
-	//const int ndeg = 0;
-	
-	//int p_type = 1; // TODO: Why assign p_type this way? Input? --Chensong
-	//if (param->tentative_smooth < SMALLREAL) p_type = 0;
-	
-	int nu_l[MAX_AMG_LVL] = {0}, l = 0;
-	double alpha = 1.0;
-	int i;
-	
-    // local variable
-	//dvector px, pb;
-    
+    // local variables
+	REAL alpha = 1.0;
+	INT  nu_l[MAX_AMG_LVL] = {0}, l = 0;
+	INT  i;
+	    
 ForwardSweep:
 	while (l<nl-1) { 
 		nu_l[l]++;
@@ -182,7 +175,7 @@ ForwardSweep:
 			fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
 		}
 		else {
-			unsigned int steps = param->presmooth_iter;
+			unsigned INT steps = param->presmooth_iter;
 			
 			if (steps > 0){
 				switch (smoother) {
@@ -221,15 +214,13 @@ ForwardSweep:
 		superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else	
 		/* use default iterative solver on the coarest level */
-		const int csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
-		unsigned int cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
-		double ctol = param->tol; // coarse level tolerance
-		int flag = 0;		
-		flag = fasp_solver_dbsr_pvgmres(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 1, 1,100);
-		if (flag < 0)
-		{
-			printf("### WARNING: Coarse level solver does not converge!! (error message = %d)\n", flag);
-		}
+        const INT  csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
+        const INT  cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
+        const REAL ctol = param->tol; // coarse level tolerance
+        if (fasp_solver_dbsr_pvgmres(&mgl[nl-1].A,&mgl[nl-1].b,&mgl[nl-1].x,cmaxit,ctol,NULL,1,1,100)<0)
+        {
+            printf("### WARNING: Coarse level solver does not converge!");
+        }
 #endif 
 	}
 	
@@ -247,7 +238,8 @@ ForwardSweep:
 			fasp_blas_dbsr_mxv (&mgl[l].P, mgl[l+1].x.val,  PeH.val);
 			fasp_blas_dbsr_mxv (&mgl[l].A, PeH.val, Aeh.val);
 			
-			alpha = (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, mgl[l].w.val))/(fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, Aeh.val));
+			alpha = (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, mgl[l].w.val))
+                  / (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, Aeh.val));
 			fasp_blas_array_axpy (mgl[l].b.row, alpha, PeH.val, mgl[l].x.val);
 		}
 		else {
@@ -259,12 +251,13 @@ ForwardSweep:
 			fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
 		}
 		else {
-			unsigned int steps = param->presmooth_iter;
+			unsigned INT steps = param->postsmooth_iter;
 			
 			if (steps > 0){
 				switch (smoother) {
                     case GS:
-                        for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
                         break;
                     default:
                         printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);

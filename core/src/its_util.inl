@@ -6,6 +6,9 @@
 /*--      Private Functions      --*/
 /*---------------------------------*/
 
+//! Warning for residual false convergence
+#define ITS_FACONV printf("### WARNING: False convergence!\n")
+
 //! Warning for solution close to zero
 #define ITS_ZEROSOL printf("### WARNING: Iteration stopped due to the solution is close to zero!\n")
 

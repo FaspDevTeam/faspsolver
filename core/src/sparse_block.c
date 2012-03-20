@@ -16,17 +16,17 @@
 /**
  * \fn SHORT fasp_dcsr_getblk (dCSRmat *A, INT *Is, INT *Js, INT m, INT n, dCSRmat *B)
  *
- * \brief get a sub CSR matrix of A with specified rows and colums
+ * \brief Get a sub CSR matrix of A with specified rows and colums
  *
- * \param A   pointer to dCSRmat CSR matrix
- * \param B   pointer to dCSRmat CSR matrix
- * \param Is  pointer to selected rows
- * \param Js  pointer to selected colums
- * \param m    the number of selected rows
- * \param n    the number of selected colums
+ * \param A     Pointer to dCSRmat CSR matrix
+ * \param B     Pointer to dCSRmat CSR matrix
+ * \param Is    Pointer to selected rows
+ * \param Js    Pointer to selected colums
+ * \param m     Number of selected rows
+ * \param n     Number of selected colums
  *
  * \author Shiquan Zhang, Xiaozhe Hu
- * \date 12/25/2010
+ * \date   12/25/2010
  */
 SHORT fasp_dcsr_getblk (dCSRmat *A, 
                         INT *Is, 
@@ -85,17 +85,18 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
 
 /**
  * \fn SHORT fasp_dbsr_getblk (dBSRmat *A, INT *Is, INT *Js, INT m, INT n, dBSRmat *B)
- * \brief get a sub BSR matrix of A with specified rows and columns. 
  *
- * \param A   pointer to dBSRmat BSR matrix
- * \param B   pointer to dBSRmat BSR matrix
- * \param Is  pointer to selected rows
- * \param Js  pointer to selected colums
- * \param m    the number of selected rows
- * \param n    the number of selected colums
+ * \brief Get a sub BSR matrix of A with specified rows and columns. 
+ *
+ * \param A     Pointer to dBSRmat BSR matrix
+ * \param B     Pointer to dBSRmat BSR matrix
+ * \param Is    Pointer to selected rows
+ * \param Js    Pointer to selected colums
+ * \param m     Number of selected rows
+ * \param n     Number of selected colums
  *
  * \author Shiquan Zhang, Xiaozhe Hu
- * \date 12/25/2010
+ * \date   12/25/2010
  */
 SHORT fasp_dbsr_getblk (dBSRmat *A, 
                         INT *Is, 

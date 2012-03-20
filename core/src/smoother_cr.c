@@ -18,20 +18,20 @@
  *
  * \brief Gauss Seidel method restriced to a block 
  *
- * \param pt gives relax type, e.g., cpt, fpt, etc.. 
- * \param n number of variables
- * \param u iterated solution 
- * \param ia row pointer
- * \param ja column index
- * \param a pointers to sparse matrix values in CSR format
- * \param b pointer to right hand side -- remove later also as MG relaxation on error eqn
- * \param L number of iterations
- * \param CF ??? 
+ * \param pt   Relax type, e.g., cpt, fpt, etc.. 
+ * \param n    Number of variables
+ * \param u    Iterated solution 
+ * \param ia   Row pointer
+ * \param ja   Column index
+ * \param a    Pointers to sparse matrix values in CSR format
+ * \param b    Pointer to right hand side -- remove later also as MG relaxation on error eqn
+ * \param L    Number of iterations
+ * \param CF   Marker for C, F points 
  *
  * \author James Brannick
  * \date   09/07/2010
  *
- * Gauss Seidel CR smoother (Smoother_Type = 99)
+ * \note Gauss Seidel CR smoother (Smoother_Type = 99)
  */
 void fasp_smoother_dcsr_gscr (INT pt, 
                               INT n,

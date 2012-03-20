@@ -1,4 +1,4 @@
-/*! \file precond.c
+/*! \file precond_csr.c
  *  \brief Preconditioners
  */
 
@@ -14,12 +14,12 @@
  *
  * \brief Diagonal preconditioner z=inv(D)*r
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Chensong Zhang
- * \date 04/06/2010
+ * \date   04/06/2010
  */
 void fasp_precond_diag (REAL *r, 
                         REAL *z, 
@@ -38,14 +38,14 @@ void fasp_precond_diag (REAL *r,
 /**
  * \fn void fasp_precond_ilu (REAL *r, REAL *z, void *data)
  *
- * \brief preconditioning using ILU decomposition
+ * \brief ILU preconditioner
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Shiquan Zhang
- * \date 04/06/2010
+ * \date   04/06/2010
  */
 void fasp_precond_ilu (REAL *r, 
                        REAL *z, 
@@ -101,14 +101,14 @@ MEMERR:
 /**
  * \fn void fasp_precond_ilu_forward (REAL *r, REAL *z, void *data)
  *
- * \brief preconditioning using ILU decomposition: only forwear sweep
+ * \brief ILU preconditioner: only forwear sweep
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu, Shiquang Zhang
- * \date 04/06/2010
+ * \date   04/06/2010
  */
 void fasp_precond_ilu_forward (REAL *r, 
                                REAL *z, 
@@ -154,14 +154,14 @@ MEMERR:
 /**
  * \fn void fasp_precond_ilu_backward (REAL *r, REAL *z, void *data)
  *
- * \brief preconditioning using ILU decomposition: only backward sweep
+ * \brief ILU preconditioner: only backward sweep
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu, Shiquan  Zhang
- * \date 04/06/2010
+ * \date   04/06/2010
  */
 void fasp_precond_ilu_backward (REAL *r, 
                                 REAL *z, 
@@ -206,14 +206,14 @@ MEMERR:
 /**
  * \fn void fasp_precond_amg (REAL *r, REAL *z, void *data)
  *
- * \brief get z from r by classic AMG
+ * \brief AMG preconditioner
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Chensong Zhang
- * \date 04/06/2010
+ * \date   04/06/2010
  */
 void fasp_precond_amg (REAL *r, 
                        REAL *z, 
@@ -239,14 +239,14 @@ void fasp_precond_amg (REAL *r,
 /**
  * \fn void fasp_precond_famg (REAL *r, REAL *z, void *data)
  *
- * \brief get z from r by Full AMG
+ * \brief Full AMG perconditioner
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
- * \date 02/27/2011
+ * \date   02/27/2011
  */
 void fasp_precond_famg (REAL *r, 
                         REAL *z, 
@@ -272,14 +272,14 @@ void fasp_precond_famg (REAL *r,
 /**
  * \fn void fasp_precond_amli(REAL *r, REAL *z, void *data)
  *
- * \brief get z from r by AMLI
+ * \brief AMLI AMG preconditioner
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
- * \date 01/23/2011
+ * \date   01/23/2011
  */
 void fasp_precond_amli (REAL *r, 
                         REAL *z, 
@@ -305,14 +305,14 @@ void fasp_precond_amli (REAL *r,
 /**
  * \fn void fasp_precond_nl_amli(REAL *r, REAL *z, void *data)
  *
- * \brief get z from r by nonliear AMLI-cycle
+ * \brief Nonliear AMLI AMG preconditioner
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
- * \date 04/25/2011
+ * \date   04/25/2011
  */
 void fasp_precond_nl_amli (REAL *r, 
                            REAL *z, 

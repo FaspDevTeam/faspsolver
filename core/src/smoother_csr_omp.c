@@ -1,4 +1,4 @@
-/*! \file smoother_omp.c
+/*! \file smoother_csr_omp.c
  *  \brief Smoothers for sparse matrix in CSR format
  */
 

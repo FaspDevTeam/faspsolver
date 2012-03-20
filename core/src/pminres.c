@@ -64,31 +64,31 @@
 
 /**
  * \fn INT fasp_solver_dcsr_pminres (dCSRmat *A, dvector *b, dvector *u, const INT MaxIt, 
- *                                   const REAL tol, precond *pre, const SHORT print_level, 
+ *                                   const REAL tol, precond *pc, const SHORT print_level, 
  *                                   const SHORT stop_type)
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b 
  *
- * \param A	 pointer to the coefficient matrix
- * \param b	 pointer to the dvector of right hand side
- * \param u	 pointer to the dvector of DOFs
- * \param MaxIt integer, maximal number of iterations
- * \param tol REAL float, the tolerance for stopage
- * \param pre pointer to the structure of precondition (precond) 
- * \param print_level how much information to print out
- * \param stop_type stopping cretirea type 
+ * \param A	           Pointer to the coefficient matrix
+ * \param b	           Pointer to the dvector of right hand side
+ * \param u	           Pointer to the dvector of DOFs
+ * \param MaxIt        Maximal number of iterations
+ * \param tol          Tolerance for stopping
+ * \param pc           Pointer to the structure of precondition (precond) 
+ * \param print_level  How much information to print out
+ * \param stop_type    Stopping criteria type
  *
- * \return the number of iterations
+ * \return             Number of iterations if converged, error message otherwise
  * 
  * \author Shiquan Zhang
- * \date 10/24/2010
+ * \date   10/24/2010
  */
 INT fasp_solver_dcsr_pminres (dCSRmat *A, 
                               dvector *b, 
                               dvector *u, 
                               const INT MaxIt, 
                               const REAL tol,
-                              precond *pre, 
+                              precond *pc, 
                               const SHORT print_level, 
                               const SHORT stop_type)
 {
@@ -117,8 +117,8 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
 	// normb2 = (b,b)
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pre != NULL) 
-				pre->fct(b->val,t,pre->data); /* Preconditioning */
+			if (pc != NULL) 
+				pc->fct(b->val,t,pc->data); /* Preconditioning */
 			else 
 				fasp_array_cp(m,b->val,t); /* No preconditioner, B=I */
 			normb2=ABS(fasp_blas_array_dotprod(m,b->val,t));
@@ -141,10 +141,10 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
 	
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pre == NULL)
+			if (pc == NULL)
 				fasp_array_cp(m,r,t);
 			else
-				pre->fct(r,t,pre->data);
+				pc->fct(r,t,pc->data);
 			temp2=ABS(fasp_blas_array_dotprod(m,r,t));
 			relres1=sqrt(temp2/normb2); 
 			break;
@@ -162,15 +162,15 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
 	fasp_array_set(m,p0,0.0);
 	
 	// p1 = B*r
-	if (pre == NULL) fasp_array_cp(m,r,p1); /* No preconditioner, B=I */
-	else pre->fct(r,p1,pre->data); /* Preconditioning */
+	if (pc == NULL) fasp_array_cp(m,r,p1); /* No preconditioner, B=I */
+	else pc->fct(r,p1,pc->data); /* Preconditioning */
 	
 	// tp=A*p1
 	fasp_blas_dcsr_mxv(A,p1,tp);
 	
 	// tz = B*tp
-	if (pre == NULL) fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
-	else pre->fct(tp,tz,pre->data); /* Preconditioning */
+	if (pc == NULL) fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
+	else pc->fct(tp,tz,pc->data); /* Preconditioning */
 	
 	// p1=p1/normp
 	//normp=fasp_blas_array_dotprod(m,tz,tp);
@@ -220,8 +220,8 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
 		fasp_blas_dcsr_mxv(A,p2,tp);
 		
 		// tz = B*tp
-		if (pre == NULL) fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
-		else pre->fct(tp,tz,pre->data); /* Preconditioning */
+		if (pc == NULL) fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
+		else pc->fct(tp,tz,pc->data); /* Preconditioning */
 		
 		// p2=p2/normp
 		//normp=fasp_blas_array_dotprod(m,tz,tp);
@@ -252,10 +252,10 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
 		
 		switch (stop_type) {
 			case STOP_REL_PRECRES:
-				if (pre == NULL)
+				if (pc == NULL)
 					fasp_array_cp(m,r,t);
 				else
-					pre->fct(r,t,pre->data);
+					pc->fct(r,t,pc->data);
 				temp2=ABS(fasp_blas_array_dotprod(m,r,t));
 				relres1=sqrt(temp2/normb2); 
 				break;
@@ -303,10 +303,10 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
 					relres1=sqrt(temp2/normb2); 
 					break;
 				case STOP_REL_PRECRES:
-					if (pre == NULL)
+					if (pc == NULL)
 						fasp_array_cp(m,r,t);
 					else
-						pre->fct(r,t,pre->data);
+						pc->fct(r,t,pc->data);
 					temp2=ABS(fasp_blas_array_dotprod(m,r,t));
 					relres1=sqrt(temp2/normb2); 
 					break;
@@ -332,17 +332,17 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
 				fasp_array_set(m,p0,0.0);
 				
 				// p1 = B*r
-				if (pre == NULL)
+				if (pc == NULL)
 					fasp_array_cp(m,r,p1); /* No preconditioner, B=I */
 				else
-					pre->fct(r,p1,pre->data); /* Preconditioning */
+					pc->fct(r,p1,pc->data); /* Preconditioning */
 				
 				// tp=A*p1
 				fasp_blas_dcsr_mxv(A,p1,tp);
 				
 				// tz = B*tp
-				if (pre == NULL) fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
-				else pre->fct(tp,tz,pre->data); /* Preconditioning */
+				if (pc == NULL) fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
+				else pc->fct(tp,tz,pc->data); /* Preconditioning */
 				
 				// p1=p1/normp
 				normp=fasp_blas_array_dotprod(m,tz,tp);
@@ -378,10 +378,10 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
 					relres1=sqrt(temp2/normb2); 
 					break;
 				case STOP_REL_PRECRES:
-					if (pre == NULL)
+					if (pc == NULL)
 						fasp_array_cp(m,r,t);
 					else
-						pre->fct(r,t,pre->data);
+						pc->fct(r,t,pc->data);
 					temp2=ABS(fasp_blas_array_dotprod(m,r,t));
 					relres1=sqrt(temp2/normb2); 
 					break;
@@ -411,17 +411,17 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
 			fasp_array_set(m,p0,0.0);
 			
 			// p1 = B*r
-			if (pre == NULL)
+			if (pc == NULL)
 				fasp_array_cp(m,r,p1); /* No preconditioner, B=I */
 			else
-				pre->fct(r,p1,pre->data); /* Preconditioning */
+				pc->fct(r,p1,pc->data); /* Preconditioning */
 			
 			// tp = A*p1
 			fasp_blas_dcsr_mxv(A,p1,tp);
 			
 			// tz = B*tp
-			if (pre == NULL) fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
-			else pre->fct(tp,tz,pre->data); /* Preconditioning */
+			if (pc == NULL) fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
+			else pc->fct(tp,tz,pc->data); /* Preconditioning */
 			
 			// p1 = p1/normp
 			normp=fasp_blas_array_dotprod(m,tz,tp);
@@ -463,33 +463,31 @@ FINISHED:  // finish the iterative method
 
 /**
  * \fn INT fasp_solver_bdcsr_pminres (block_dCSRmat *A, dvector *b, dvector *u, const INT MaxIt,
- *                                    const REAL tol, precond *pre, const SHORT print_level, 
+ *                                    const REAL tol, precond *pc, const SHORT print_level, 
  *                                    const SHORT stop_type)
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b 
  *
- * \param A	 pointer to the coefficient matrix
- * \param b	 pointer to the dvector of right hand side
- * \param u	 pointer to the dvector of DOFs
- * \param MaxIt integer, maximal number of iterations
- * \param tol REAL float, the tolerance for stopage
- * \param pre pointer to the structure of precondition (precond) 
- * \param print_level how much information to print out
- * \param stop_type this parameter is not used in my function at present, 
- *        the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. 
- * \param restart number of restart
+ * \param A	           Pointer to the coefficient matrix
+ * \param b	           Pointer to the dvector of right hand side
+ * \param u	           Pointer to the dvector of DOFs
+ * \param MaxIt        Maximal number of iterations
+ * \param tol          Tolerance for stopping
+ * \param pc           Pointer to the structure of precondition (precond) 
+ * \param print_level  How much information to print out
+ * \param stop_type    Stopping criteria type
  *
- * \return the number of iterations
+ * \return             Number of iterations if converged, error message otherwise
  *
- *   \author Xiaozhe Hu
- *   \data 05/24/2010
+ * \author Xiaozhe Hu
+ * \date   05/24/2010
  */
 INT fasp_solver_bdcsr_pminres (block_dCSRmat *A, 
                                dvector *b, 
                                dvector *u, 
                                const INT MaxIt, 
                                const REAL tol,
-                               precond *pre, 
+                               precond *pc, 
                                const SHORT print_level, 
                                const SHORT stop_type)
 {
@@ -534,8 +532,8 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 	// normb2 = (b,b)
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pre != NULL) 
-				pre->fct(b->val,t,pre->data); /* Preconditioning */
+			if (pc != NULL) 
+				pc->fct(b->val,t,pc->data); /* Preconditioning */
 			else 
 				fasp_array_cp(m,b->val,t); /* No preconditioner, B=I */
 			normb2=ABS(fasp_blas_array_dotprod(m,b->val,t));
@@ -558,10 +556,10 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 	
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pre == NULL)
+			if (pc == NULL)
 				fasp_array_cp(m,r,t);
 			else
-				pre->fct(r,t,pre->data);
+				pc->fct(r,t,pc->data);
 			temp2=ABS(fasp_blas_array_dotprod(m,r,t));
 			relres1=sqrt(temp2/normb2); 
 			break;
@@ -579,20 +577,20 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 	fasp_array_set(m,p0,0.0);
 	
 	// p1 = B*r
-	if (pre == NULL)
+	if (pc == NULL)
 		fasp_array_cp(m,r,p1); /* No preconditioner, B=I */
 	else
-		pre->fct(r,p1,pre->data); /* Preconditioning */
+		pc->fct(r,p1,pc->data); /* Preconditioning */
 	
 	// tp=A*p1
 	fasp_array_set(m,tp,0.0);
 	fasp_blas_bdcsr_aAxpy(1.0,A,p1,tp);
 	
 	// tz = B*tp
-	if (pre == NULL)
+	if (pc == NULL)
 		fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
 	else
-		pre->fct(tp,tz,pre->data); /* Preconditioning */
+		pc->fct(tp,tz,pc->data); /* Preconditioning */
 	
 	// p1=p1/normp
 	normp=ABS(fasp_blas_array_dotprod(m,tz,tp));
@@ -643,10 +641,10 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 		fasp_array_set(m,tp,0.0); fasp_blas_bdcsr_aAxpy(1.0,A,p2,tp);
 		
 		// tz = B*tp
-		if (pre == NULL)
+		if (pc == NULL)
 			fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
 		else
-			pre->fct(tp,tz,pre->data); /* Preconditioning */
+			pc->fct(tp,tz,pc->data); /* Preconditioning */
 		
 		// p2=p2/normp
 		//normp=fasp_blas_array_dotprod(m,tz,tp);
@@ -679,10 +677,10 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 				relres1=sqrt(temp2/normb2); 
 				break;
 			case STOP_REL_PRECRES:
-				if (pre == NULL)
+				if (pc == NULL)
 					fasp_array_cp(m,r,t);
 				else
-					pre->fct(r,t,pre->data);
+					pc->fct(r,t,pc->data);
 				temp2=ABS(fasp_blas_array_dotprod(m,r,t));
 				relres1=sqrt(temp2/normb2); 
 				break;
@@ -727,10 +725,10 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 					relres1=sqrt(temp2/normb2); 
 					break;
 				case STOP_REL_PRECRES:
-					if (pre == NULL)
+					if (pc == NULL)
 						fasp_array_cp(m,r,t);
 					else
-						pre->fct(r,t,pre->data);
+						pc->fct(r,t,pc->data);
 					temp2=ABS(fasp_blas_array_dotprod(m,r,t));
 					relres1=sqrt(temp2/normb2); 
 					break;
@@ -756,19 +754,19 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 				fasp_array_set(m,p0,0.0);
 				
 				// p1 = B*r
-				if (pre == NULL)
+				if (pc == NULL)
 					fasp_array_cp(m,r,p1); /* No preconditioner, B=I */
 				else
-					pre->fct(r,p1,pre->data); /* Preconditioning */
+					pc->fct(r,p1,pc->data); /* Preconditioning */
 				
 				// tp=A*p1
 				fasp_array_set(m,tp,0.0); fasp_blas_bdcsr_aAxpy(1.0,A,p1,tp);
 				
 				// tz = B*tp
-				if (pre == NULL)
+				if (pc == NULL)
 					fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
 				else
-					pre->fct(tp,tz,pre->data); /* Preconditioning */
+					pc->fct(tp,tz,pc->data); /* Preconditioning */
 				
 				// p1=p1/normp
 				normp=fasp_blas_array_dotprod(m,tz,tp);
@@ -799,10 +797,10 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 			absres=sqrt(temp2);
 			switch (stop_type) {
 				case STOP_REL_PRECRES:
-					if (pre == NULL)
+					if (pc == NULL)
 						fasp_array_cp(m,r,t);
 					else
-						pre->fct(r,t,pre->data);
+						pc->fct(r,t,pc->data);
 					temp2=ABS(fasp_blas_array_dotprod(m,r,t));
 					relres1=sqrt(temp2/normb2); 
 					break;
@@ -835,20 +833,20 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
 			fasp_array_set(m,p0,0.0);
 			
 			// p1 = B*r
-			if (pre == NULL)
+			if (pc == NULL)
 				fasp_array_cp(m,r,p1); /* No preconditioner, B=I */
 			else
-				pre->fct(r,p1,pre->data); /* Preconditioning */
+				pc->fct(r,p1,pc->data); /* Preconditioning */
 			
 			// tp = A*p1
 			fasp_array_set(m,tp,0.0);
 			fasp_blas_bdcsr_aAxpy(1.0,A,p1,tp);
 			
 			// tz = B*tp
-			if (pre == NULL)
+			if (pc == NULL)
 				fasp_array_cp(m,tp,tz); /* No preconditioner, B=I */
 			else
-				pre->fct(tp,tz,pre->data); /* Preconditioning */
+				pc->fct(tp,tz,pc->data); /* Preconditioning */
 			
 			// p1 = p1/normp
 			normp=fasp_blas_array_dotprod(m,tz,tp);

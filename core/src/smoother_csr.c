@@ -1,4 +1,4 @@
-/*! \file smoother.c
+/*! \file smoother_csr.c
  *  \brief Smoothers for sparse matrix in CSR format
  */
 
@@ -15,20 +15,18 @@
  * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n, const INT s, 
  *                                     dCSRmat *A, dvector *b, INT L)
  *
- * \brief Jacobi method as the smoother in solving Au=b with multigrid method
+ * \brief Jacobi method as a smoother
  *
- * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
- * \param i_1  the index to begin with
- * \param i_n  the index to end
- * \param s    the step
- * \param A   pointer to stiffness matrix
- * \param b   pointer to right hand side
- * \param L    number of iterations
+ * \param u    Initial guess (in) and the new approximation after smoothing
+ * \param i_1  Starting index
+ * \param i_n  Ending index
+ * \param s    Increasing step
+ * \param A    Pointer to stiffness matrix
+ * \param b    Pointer to right hand side
+ * \param L    Number of iterations
  *
- * \return     void
- *
- * \author     Xuehai Huang, Chensong Zhang
- * \date       09/26/2009
+ * \author Xuehai Huang, Chensong Zhang
+ * \date   09/26/2009
  */
 void fasp_smoother_dcsr_jacobi (dvector *u, 
                                 const INT i_1, 
@@ -104,20 +102,18 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
  * \fn void fasp_smoother_dcsr_gs (dvector *u, const INT i_1, const INT i_n, const INT s, 
  *                                 dCSRmat *A, dvector *b, INT L)
  *
- * \brief Gauss-Seidel method  as the smoother in solving Au=b with multigrid method
+ * \brief Gauss-Seidel method as a smoother
  *
- * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
- * \param i_1  the index to begin with
- * \param i_n  the index to end
- * \param s    the step (s=1: forward, s=-1: backward)
- * \param A   pointer to stiffness matrix
- * \param b   pointer to right hand side
- * \param L    number of iterations
+ * \param u    Initial guess (in) and the new approximation after smoothing
+ * \param i_1  Starting index
+ * \param i_n  Ending index
+ * \param s    Increasing step
+ * \param A    Pointer to stiffness matrix
+ * \param b    Pointer to right hand side
+ * \param L    Number of iterations
  *
- * \return     void
- *
- * \author     Xuehai Huang, Chensong Zhang
- * \date       09/26/2009
+ * \author Xuehai Huang, Chensong Zhang
+ * \date   09/26/2009
  */
 void fasp_smoother_dcsr_gs (dvector *u, 
                             const INT i_1, 
@@ -207,17 +203,15 @@ void fasp_smoother_dcsr_gs (dvector *u,
  *
  * \brief Gauss-Seidel smoother with C/F ordering for Au=b
  *
- * \param u     initial guess and the new approximation to the solution obtained after L GS steps
- * \param A    pointer to stiffness matrix
- * \param b    pointer to right hand side
- * \param L     number of iterations
- * \param mark C/F marker array
- * \param order C/F ordering: -1: F-first; 1: C-first
- *
- * \return      void
+ * \param u      Initial guess (in) and the new approximation after smoothing
+ * \param A      Pointer to stiffness matrix
+ * \param b      Pointer to right hand side
+ * \param L      Number of iterations
+ * \param mark   C/F marker array
+ * \param order  C/F ordering: -1: F-first; 1: C-first
  *
  * \author Zhiyang Zhou
- * \date 2010/11/12 
+ * \date   2010/11/12 
  */
 void fasp_smoother_dcsr_gs_cf (dvector *u, 
                                dCSRmat *A, 
@@ -316,17 +310,15 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
 /**
  * \fn void fasp_smoother_dcsr_sgs (dvector *u, dCSRmat *A, dvector *b, INT L)
  *
- * \brief Symmetric Gauss-Seidel method  as the smoother in solving Au=b with multigrid method
+ * \brief Symmetric Gauss-Seidel method as a smoother
  *
- * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
- * \param A   pointer to stiffness matrix
- * \param b   pointer to right hand side
- * \param L    number of iterations
+ * \param u    Initial guess (in) and the new approximation after smoothing
+ * \param A    Pointer to stiffness matrix
+ * \param b    Pointer to right hand side
+ * \param L    Number of iterations
  *
- * \return     void
- *
- * \author     Xiaozhe Hu
- * \date       10/26/2010
+ * \author Xiaozhe Hu
+ * \date   10/26/2010
  */
 void fasp_smoother_dcsr_sgs (dvector *u, 
                              dCSRmat *A, 
@@ -377,21 +369,19 @@ void fasp_smoother_dcsr_sgs (dvector *u,
  * \fn void fasp_smoother_dcsr_sor (dvector *u, const INT i_1, const INT i_n, const INT s, 
  *                                  dCSRmat *A, dvector *b, INT L, const REAL w)
  *
- * \brief Successive Overrelaxation method as the smoother in solving Au=b with multigrid method
+ * \brief SOR method as a smoother
  *
- * \param u     initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
- * \param i_1   the index to begin with
- * \param i_n   the index to end
- * \param s     the step
- * \param A    pointer to stiffness matrix
- * \param b    pointer to right hand side
- * \param L     number of iterations
- * \param w     over-relaxation parameter
+ * \param u    Initial guess (in) and the new approximation after smoothing
+ * \param i_1  Starting index
+ * \param i_n  Ending index
+ * \param s    Increasing step
+ * \param A    Pointer to stiffness matrix
+ * \param b    Pointer to right hand side
+ * \param L    Number of iterations
+ * \param w    Over-relaxation weight
  *
- * \return      void
- *
- * \author      Xiaozhe Hu
- * \date        10/26/2010
+ * \author Xiaozhe Hu
+ * \date   10/26/2010
  */
 void fasp_smoother_dcsr_sor (dvector *u, 
                              const INT i_1, 
@@ -454,18 +444,16 @@ void fasp_smoother_dcsr_sor (dvector *u,
  *
  * \brief SOR smoother with C/F ordering for Au=b
  *
- * \param u      initial guess and the new approximation to the solution obtained after L SOR steps
- * \param A     pointer to stiffness matrix
- * \param b     pointer to right hand side
- * \param L      number of iterations
- * \param w     relaxation parameter
- * \param mark  C/F marker array
+ * \param u      Initial guess (in) and the new approximation after smoothing
+ * \param A      Pointer to stiffness matrix
+ * \param b      Pointer to right hand side
+ * \param L      Number of iterations
+ * \param w      Over-relaxation weight
+ * \param mark   C/F marker array
  * \param order  C/F ordering: -1: F-first; 1: C-first
  *
- * \return       void
- *
  * \author Zhiyang Zhou
- * \date 2010/11/12 
+ * \date   2010/11/12 
  */
 void fasp_smoother_dcsr_sor_cf (dvector *u, 
                                 dCSRmat *A, 
@@ -565,17 +553,15 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
 /**
  * \fn void fasp_smoother_dcsr_ilu (dCSRmat *A, dvector *b, dvector *x, void *data)
  *
- * \brief ILU method as the smoother in solving Au=b with multigrid method
+ * \brief ILU method as a smoother
  *
- * \param A    pointer to stiffness matrix
- * \param b    pointer to right hand side
- * \param x    pointer to current solution
- * \param data pointer to user defined data
- *
- * \return void
+ * \param A     Pointer to stiffness matrix
+ * \param b     Pointer to right hand side
+ * \param x     Pointer to current solution
+ * \param data  Pointer to user defined data
  *
  * \author Shiquan Zhang, Xiaozhe Hu
- * \date 2010/11/12 
+ * \date   2010/11/12 
  */
 void fasp_smoother_dcsr_ilu (dCSRmat *A, 
                              dvector *b, 
@@ -636,22 +622,21 @@ MEMERR:
 
 /**
  * \fn void fasp_smoother_dcsr_kaczmarz (dvector *u, const INT i_1, const INT i_n, const INT s, 
- *                                       dCSRmat *A, dvector *b, INT L)
+ *                                       dCSRmat *A, dvector *b, INT L, const REAL w)
  *
- * \brief kaczmarz method as the smoother for solving Au=b
+ * \brief Kaczmarz method as a smoother
  *
- * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
- * \param i_1  the index to begin with
- * \param i_n  the index to end
- * \param s    the step (s=1: forward, s=-1: backward)
- * \param A   pointer to stiffness matrix
- * \param b   pointer to right hand side
- * \param L    number of iterations
- *
- * \return void
+ * \param u    Initial guess (in) and the new approximation after smoothing
+ * \param i_1  Starting index
+ * \param i_n  Ending index
+ * \param s    Increasing step
+ * \param A    Pointer to stiffness matrix
+ * \param b    Pointer to right hand side
+ * \param L    Number of iterations
+ * \param w    Relaxation weight
  *
  * \author Xiaozhe Hu
- * \date 2010/11/12 
+ * \date   2010/11/12 
  */
 void fasp_smoother_dcsr_kaczmarz (dvector *u, 
                                   const INT i_1, 
@@ -725,20 +710,18 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
  * \fn void fasp_smoother_dcsr_L1diag (dvector *u, const INT i_1, const INT i_n, const INT s, 
  *                                     dCSRmat *A, dvector *b, INT L)
  *
- * \brief Diagonal scaling (using L1 norm) as the smoother in solving Au=b with multigrid method
+ * \brief Diagonal scaling (using L1 norm) as a smoother
  *
- * \param u    initial guess and the new approximation to the solution obtained after L Gauss-Seidel steps
- * \param i_1  the index to begin with
- * \param i_n  the index to end
- * \param s    the step
- * \param A   pointer to stiffness matrix
- * \param b   pointer to right hand side
- * \param L    number of iterations
- *
- * \return void
+ * \param u    Initial guess (in) and the new approximation after smoothing
+ * \param i_1  Starting index
+ * \param i_n  Ending index
+ * \param s    Increasing step
+ * \param A    Pointer to stiffness matrix
+ * \param b    Pointer to right hand side
+ * \param L    Number of iterations
  *
  * \author Xiaozhe Hu, James Brannick
- * \date 01/26/2011
+ * \date   01/26/2011
  */
 void fasp_smoother_dcsr_L1diag (dvector *u, 
                                 const INT i_1, 
@@ -815,21 +798,21 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  * \fn dCSRmat static form_contractor(dCSRmat *A, const INT smoother, const INT steps, 
  *                                    const INT ndeg, const REAL relax, const REAL dtol)
  *
- * \brief form contractor I-BA
+ * \brief Form contractor I-BA
  *
- * \param A          pointer to the dCSRmat
- * \param smoother   the smoother type
- * \param steps      smoothing steps
- * \param ndeg       degree of the polynomial smoother
- * \param relax      relaxation parameter for SOR smoother
- * \param dtol       drop tplerance for droping small entries in matrix
+ * \param A          Pointer to the dCSRmat
+ * \param smoother   Smoother type
+ * \param steps      Smoothing steps
+ * \param ndeg       Degree of the polynomial smoother
+ * \param relax      Relaxation parameter for SOR smoother
+ * \param dtol       Drop tplerance for droping small entries in matrix
  *
- * \return the contractor in dCSRmat format
+ * \return The contractor in dCSRmat format
  *
  * \author Xiaozhe Hu, James Brannick
  * \date   01/26/2011
  *
- * \note: not a O(N) algorithm, need to be modified!!!!
+ * \note Not an O(N) algorithm, need to be modified!!!!
  */
 static dCSRmat form_contractor (dCSRmat *A, 
                                 const INT smoother, 

@@ -15,21 +15,19 @@
 
 /**
  * \fn INT fasp_solver_dcsr_pgcg (dCSRmat *A, dvector *b, dvector *u, const INT MaxIt, 
- *                                const double tol, precond *pre, const SHORT print_level,
+ *                                const double tol, precond *pc, const SHORT print_level,
  *                                const SHORT stop_type)
  *
  * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b 
  *
- * \param A	 pointer to the coefficient matrix
- * \param b	 pointer to the dvector of right hand side
- * \param u	 pointer to the dvector of DOFs
- * \param MaxIt integer, maximal number of iterations
- * \param tol double float, the tolerance for stopage
- * \param pre pointer to the structure of precondition (precond) 
- * \param print_level how much information to print out
- * \param stop_type stopping criteria
- *	 
- * \return the number of iterations
+ * \param A	           Pointer to the coefficient matrix
+ * \param b	           Pointer to the dvector of right hand side
+ * \param u	           Pointer to the dvector of DOFs
+ * \param MaxIt        Maximal number of iterations
+ * \param tol          Tolerance for stopping
+ * \param pc           Pointer to the structure of precondition (precond) 
+ * \param print_level  How much information to print out
+ * \param stop_type    Stopping criteria type
  *
  * \author Xiaozhe Hu
  * \date   01/01/2012
@@ -41,7 +39,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
                            dvector *u, 
                            const INT MaxIt, 
                            const double tol,
-                           precond *pre, 
+                           precond *pc, 
                            const SHORT print_level,
                            const SHORT stop_type)
 {
@@ -74,8 +72,8 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
 	fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
 	
 	//Br 
-	if (pre != NULL)
-		pre->fct(r,p,pre->data); /* Preconditioning */
+	if (pc != NULL)
+		pc->fct(r,p,pc->data); /* Preconditioning */
 	else
 		fasp_array_cp(m,r,p); /* No preconditioner, B=I */
 	
@@ -103,8 +101,8 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
 	for ( iter = 1; iter < MaxIt ; iter++)
 	{		
 		// Br
-		if (pre != NULL)
-			pre->fct(r, Br ,pre->data); // Preconditioning 
+		if (pc != NULL)
+			pc->fct(r, Br ,pc->data); // Preconditioning 
 		else
 			fasp_array_cp(m,r, Br); // No preconditioner, B=I 
         

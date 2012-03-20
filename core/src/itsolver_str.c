@@ -259,7 +259,8 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
 }
 
 /**
- * \fn INT fasp_solver_dstr_krylov_blockgs(dSTRmat *A, dvector *b, dvector *x, itsolver_param *itparam)
+ * \fn INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A, dvector *b, dvector *x, 
+ *                                          itsolver_param *itparam, ivector *neigh, ivector *order)
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
@@ -267,6 +268,8 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
  * \param b	        Pointer to the dvector of right hand side
  * \param x	        Pointer to the dvector of dofs
  * \param itparam   Pointer to parameters for iterative solvers
+ * \param neigh     Pointer to neighbor vector
+ * \param order     Pointer to solver ordering
  *
  * \return          Number of iterations if succeed
  *
@@ -323,7 +326,6 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
 	solver_start=clock();
 	status=fasp_solver_dstr_itsolver(A,b,x,&pc,itparam);
 	solver_end=clock();
-	
 	
 	if (print_level>PRINT_NONE) {
 		solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);

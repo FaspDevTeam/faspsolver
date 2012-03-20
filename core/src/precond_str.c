@@ -16,11 +16,12 @@
  *
  * \brief Diagonal preconditioner z=inv(D)*r
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
- * \date 04/06/2010
+ * \author Shiquan Zhang
+ * \date   04/06/2010
  */
 void fasp_precond_dstr_diag (REAL *r, 
                              REAL *z, 
@@ -32,7 +33,6 @@ void fasp_precond_dstr_diag (REAL *r,
 	INT nc2=nc*nc;
 	INT m=diag->diag.row/nc2;	
 	
-	//memcpy(z,r,m*nc*sizeof(REAL));
 	for (i=0;i<m;++i) {
 		fasp_blas_smat_mxv(&(diagptr[i*nc2]),&(r[i*nc]),&(z[i*nc]),nc);
 	}	
@@ -42,13 +42,14 @@ void fasp_precond_dstr_diag (REAL *r,
 /**
  * \fn void fasp_precond_dstr_ilu0 (REAL *r, REAL *z, void *data)
  *
- * \brief preconditioning using STR_ILU(0) decomposition
+ * \brief Preconditioning using STR_ILU(0) decomposition
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
- * \date 04/21/2010
+ * \author Shiquan Zhang
+ * \date   04/21/2010
  */
 void fasp_precond_dstr_ilu0 (REAL *r, 
                              REAL *z, 
@@ -358,12 +359,14 @@ void fasp_precond_dstr_ilu0 (REAL *r,
 /**
  * \fn void fasp_precond_dstr_ilu1 (REAL *r, REAL *z, void *data)
  *
- * \brief preconditioning using STR_ILU(1) decomposition
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \brief Preconditioning using STR_ILU(1) decomposition
  *
- * \date 04/21/2010
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
+ *
+ * \author Shiquan Zhang
+ * \date   04/21/2010
  */
 void fasp_precond_dstr_ilu1 (REAL *r, 
                              REAL *z, 
@@ -883,13 +886,14 @@ void fasp_precond_dstr_ilu1 (REAL *r,
 /**
  * \fn void fasp_precond_dstr_ilu0_forward (REAL *r, REAL *z, void *data)
  *
- * \brief preconditioning using STR_ILU(0) decomposition: Lz = r
+ * \brief Preconditioning using STR_ILU(0) decomposition: Lz = r
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
- * \date 06/07/2010
+ * \author Shiquan Zhang
+ * \date   06/07/2010
  */
 void fasp_precond_dstr_ilu0_forward (REAL *r, 
                                      REAL *z, 
@@ -1076,13 +1080,14 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
 /**
  * \fn void fasp_precond_dstr_ilu0_backward (REAL *r, REAL *z, void *data)
  *
- * \brief preconditioning using STR_ILU(0) decomposition: Uz = r
+ * \brief Preconditioning using STR_ILU(0) decomposition: Uz = r
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
- * \date 06/07/2010
+ * \author Shiquan Zhang
+ * \date   06/07/2010
  */
 void fasp_precond_dstr_ilu0_backward (REAL *r, 
                                       REAL *z, 
@@ -1277,13 +1282,14 @@ void fasp_precond_dstr_ilu0_backward (REAL *r,
 /**
  * \fn void fasp_precond_dstr_ilu1_forward (REAL *r, REAL *z, void *data)
  *
- * \brief preconditioning using STR_ILU(1) decomposition: Lz = r
+ * \brief Preconditioning using STR_ILU(1) decomposition: Lz = r
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
- * \date 04/21/2010
+ * \author Shiquan Zhang
+  * \date  04/21/2010
  */
 void fasp_precond_dstr_ilu1_forward (REAL *r, 
                                      REAL *z, 
@@ -1579,13 +1585,14 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
 /**
  * \fn void fasp_precond_dstr_ilu1_backward (REAL *r, REAL *z, void *data)
  *
- * \brief preconditioning using STR_ILU(1) decomposition: Uz = r
+ * \brief Preconditioning using STR_ILU(1) decomposition: Uz = r
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
- * \date 04/21/2010
+ * \author Shiquan Zhang
+ * \date   04/21/2010
  */
 void fasp_precond_dstr_ilu1_backward (REAL *r, 
                                       REAL *z, 
@@ -1889,13 +1896,14 @@ void fasp_precond_dstr_ilu1_backward (REAL *r,
 /**
  * \fn void fasp_precond_dstr_blockgs (REAL *r, REAL *z, void *data)
  *
- * \brief get z from r by CPR type preconditioner (STR format)
+ * \brief CPR-type preconditioner (STR format)
  *
- * \param r pointer to residual
- * \param z pointer to preconditioned residual
- * \param data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
- * \date 10/17/2010
+ * \author Shiquan Zhang
+ * \date   10/17/2010
  */
 void fasp_precond_dstr_blockgs (REAL *r, 
                                 REAL *z, 

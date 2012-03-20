@@ -14,16 +14,17 @@ static void iSwapping(INT *w, INT i, INT j);
 /*!
  * \fn INT fasp_aux_unique (INT numbers[], INT size)
  *
- * \brief remove duplicates in an sorted (ascending order) array 
+ * \brief Remove duplicates in an sorted (ascending order) array 
  *
- * \param numbers   pointer to the array needed to be sorted
- * \param size      length of the target array
- * \return          newsize after removing duplicates
+ * \param numbers   Pointer to the array needed to be sorted (in/out)
+ * \param size      Length of the target array
  *
- * \note Does not use any extra or temprary storage. Use the original array for returning!
+ * \return          New size after removing duplicates
  *
  * \author Chensong Zhang
- * \date 11/21/2010
+ * \date   11/21/2010
+ *
+ * \note Operation is in place. Does not use any extra or temprary storage.
  */
 INT fasp_aux_unique (INT numbers[], 
                      INT size)
@@ -43,20 +44,20 @@ INT fasp_aux_unique (INT numbers[],
 }
 
 /*!
- * \fn void fasp_aux_merge(INT numbers[], INT work[], INT left, INT mid, INT right)
+ * \fn void fasp_aux_merge (INT numbers[], INT work[], INT left, INT mid, INT right)
  *
- * \brief merge two sorted arraies
+ * \brief Merge two sorted arraies
  *
- * \param numbers   pointer to the array needed to be sorted
- * \param work      pointer to the work array with same size as numbers
- * \param left      the starting index of array 1
- * \param mid       the starting index of array 2
- * \param right     the ending index of array 1 and 2
- * 
- * \note Both arraies are stored in numbers! Arraies should be pre-sorted!
+ * \param numbers   Pointer to the array needed to be sorted
+ * \param work      Pointer to the work array with same size as numbers
+ * \param left      Starting index of array 1
+ * \param mid       Starting index of array 2
+ * \param right     Ending index of array 1 and 2
  *
  * \author Chensong Zhang
- * \date 11/21/2010
+ * \date   11/21/2010
+ * 
+ * \note Both arraies are stored in numbers! Arraies should be pre-sorted!
  */
 void fasp_aux_merge (INT numbers[], 
                      INT work[], 
@@ -106,19 +107,19 @@ void fasp_aux_merge (INT numbers[],
 }
 
 /*!
- * \fn void fasp_aux_msort(INT numbers[], INT work[], INT left, INT right)
+ * \fn void fasp_aux_msort (INT numbers[], INT work[], INT left, INT right)
  *
- * \brief sort the INT array ascendingly with the merge sort algorithm
+ * \brief Sort the INT array ascendingly with the merge sort algorithm
  *
- * \param numbers   pointer to the array needed to be sorted
- * \param work      pointer to the work array with same size as numbers
- * \param left      the starting index
- * \param right     the ending index
- *
- * \note 'left' and 'right' are usually set to be 0 and n-1, respectively
+ * \param numbers   Pointer to the array needed to be sorted
+ * \param work      Pointer to the work array with same size as numbers
+ * \param left      Starting index
+ * \param right     Ending index
  *
  * \author Chensong Zhang
- * \date 11/21/2010
+ * \date   11/21/2010
+ *
+ * \note 'left' and 'right' are usually set to be 0 and n-1, respectively
  */
 void fasp_aux_msort (INT numbers[], 
                      INT work[], 
@@ -137,23 +138,23 @@ void fasp_aux_msort (INT numbers[],
 }
 
 /*!
- * \fn void fasp_aux_iQuickSort(INT *a, INT left, INT right)
+ * \fn void fasp_aux_iQuickSort (INT *a, INT left, INT right)
  *
- * \brief sort the array 'a'(INT type) ascendingly with the quick sorting algorithm
+ * \brief Sort the array (INT type) ascendingly with the quick sorting algorithm
  *
- * \param a     pointer to the array needed to be sorted
- * \param left   the starting index
- * \param right  the ending index
- *
- * \note 'left' and 'right' are usually set to be 0 and n-1,respectively,where n is the 
- *        length of 'a'.  
+ * \param a      Pointer to the array needed to be sorted
+ * \param left   Starting index
+ * \param right  Ending index
  *
  * \author Zhiyang Zhou
- * \date 2009/11/28 
+ * \date   2009/11/28 
+ *
+ * \note 'left' and 'right' are usually set to be 0 and n-1, respectively
+ *        where n is the length of 'a'.  
  */
-void fasp_aux_iQuickSort(INT *a, 
-                         INT left, 
-                         INT right)
+void fasp_aux_iQuickSort (INT *a, 
+                          INT left, 
+                          INT right)
 {
 	INT i, last;
 	
@@ -175,19 +176,19 @@ void fasp_aux_iQuickSort(INT *a,
 }
 
 /*!
- * \fn void fasp_aux_dQuickSort(REAL *a, INT left, INT right)
+ * \fn void fasp_aux_dQuickSort (REAL *a, INT left, INT right)
  *
- * \brief sort the array 'a'(REAL type) ascendingly with the quick sorting algorithm
+ * \brief Sort the array (REAL type) ascendingly with the quick sorting algorithm
  *
- * \param a     pointer to the array needed to be sorted
- * \param left   the starting index
- * \param right  the ending index
- *
- * \note 'left' and 'right' are usually set to be 0 and n-1,respectively,where n is the 
- *       length of 'a'.  
+ * \param a      Pointer to the array needed to be sorted
+ * \param left   Starting index
+ * \param right  Ending index
  *
  * \author Zhiyang Zhou
- * \date 2009/11/28 
+ * \date   2009/11/28 
+ *
+ * \note 'left' and 'right' are usually set to be 0 and n-1, respectively
+ *        where n is the length of 'a'.  
  */
 void fasp_aux_dQuickSort (REAL *a, 
                           INT left, 
@@ -213,21 +214,21 @@ void fasp_aux_dQuickSort (REAL *a,
 }
 
 /*!
- * \fn void fasp_aux_iQuickSortIndex(INT *a, INT left, INT right, INT *index)
+ * \fn void fasp_aux_iQuickSortIndex (INT *a, INT left, INT right, INT *index)
  *
- * \brief reorder the index of 'a'(INT type) so that 'a' is in ascending order  
+ * \brief Reorder the index of (INT type) so that 'a' is in ascending order  
  *
- * \param a      pointer to the array 
- * \param left    the starting index
- * \param right   the ending index
- * \param index  the index of 'a'
+ * \param a       Pointer to the array 
+ * \param left    Starting index
+ * \param right   Ending index
+ * \param index   Index of 'a' (out)
+ *
+ * \author Zhiyang Zhou
+ * \date   2009/12/02 
  *
  * \note 'left' and 'right' are usually set to be 0 and n-1,respectively,where n is the 
  *       length of 'a'. 'index' should be initialized in the nature order and it has the
  *       same length as 'a'.   
- *
- * \author Zhiyang Zhou
- * \date 2009/12/02 
  */
 void fasp_aux_iQuickSortIndex (INT *a, 
                                INT left, 
@@ -256,19 +257,19 @@ void fasp_aux_iQuickSortIndex (INT *a,
 /*!
  * \fn void fasp_aux_dQuickSortIndex(REAL *a, INT left, INT right, INT *index)
  *
- * \brief reorder the index of 'a'(REAL type) so that 'a' is ascending in such order  
+ * \brief Reorder the index of (REAL type) so that 'a' is ascending in such order  
  *
- * \param a      pointer to the array 
- * \param left    the starting index
- * \param right   the ending index
- * \param index  the index of 'a'
+ * \param a       Pointer to the array 
+ * \param left    Starting index
+ * \param right   Ending index
+ * \param index   Index of 'a' (out)
+ *
+ * \author Zhiyang Zhou
+ * \date   2009/12/02 
  *
  * \note 'left' and 'right' are usually set to be 0 and n-1,respectively,where n is the 
  *       length of 'a'. 'index' should be initialized in the nature order and it has the
  *       same length as 'a'. 
- *
- * \author Zhiyang Zhou
- * \date 2009/12/02 
  */
 void fasp_aux_dQuickSortIndex (REAL *a, 
                                INT left, 
@@ -303,12 +304,12 @@ void fasp_aux_dQuickSortIndex (REAL *a,
  *
  * \brief swap the i-th and j-th element in the array 'w' (INT type)
  *
- * \param w   pointer to the array
- * \param i    one position in w
- * \param j    the other position in w  
+ * \param w    Pointer to the array
+ * \param i    One entry in w
+ * \param j    Another entry in w  
  *
  * \author Zhiyang Zhou
- * \date 2009/11/28 
+ * \date   2009/11/28 
  */
 static void iSwapping (INT *w, 
                        INT i, 
@@ -324,12 +325,12 @@ static void iSwapping (INT *w,
  *
  * \brief swap the i-th and j-th element in the array 'w' (REAL type)
  *
- * \param w   pointer to the array
- * \param i    one position in w
- * \param j    the other position in w  
+ * \param w    Pointer to the array
+ * \param i    One entry in w
+ * \param j    Another entry in w  
  *
  * \author Zhiyang Zhou 
- * \date 2009/11/28 
+ * \date   2009/11/28 
  */
 static void dSwapping (REAL *w, 
                        INT i, 

@@ -18,19 +18,19 @@
  *
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG
  *
- * \param n      num of cols of A
- * \param nnz    num of nonzeros of A
+ * \param n      Number of cols of A
+ * \param nnz    Number of nonzeros of A
  * \param ia     IA of A in CSR format
  * \param ja     JA of A in CSR format
  * \param a      VAL of A in CSR format
- * \param b      rhs vector
- * \param u      solution vector
- * \param tol    tolerance for iterative solvers
- * \param maxit  max num of iterations
- * \param ptrlvl print level for iterative solvers
+ * \param b      RHS vector
+ * \param u      Solution vector
+ * \param tol    Tolerance for iterative solvers
+ * \param maxit  Max num of iterations
+ * \param ptrlvl Print level for iterative solvers
  *
  * \author Chensong Zhang
- * \date 09/16/2010
+ * \date   09/16/2010
  */
 void fasp_fwrapper_amg_ (INT *n, 
                          INT *nnz, 
@@ -67,19 +67,19 @@ void fasp_fwrapper_amg_ (INT *n,
  *
  * \brief Solve Ax=b by Krylov method preconditioned by classic AMG
  *
- * \param n       num of cols of A
- * \param nnz     num of nonzeros of A
+ * \param n       Number of cols of A
+ * \param nnz     Number of nonzeros of A
  * \param ia      IA of A in CSR format
  * \param ja      JA of A in CSR format
  * \param a       VAL of A in CSR format
- * \param b       rhs vector
- * \param u       solution vector
- * \param tol     tolerance for iterative solvers
- * \param maxit   max num of iterations
- * \param ptrlvl  print level for iterative solvers
+ * \param b       RHS vector
+ * \param u       Solution vector
+ * \param tol     Tolerance for iterative solvers
+ * \param maxit   Max num of iterations
+ * \param ptrlvl  Print level for iterative solvers
  *
  * \author Chensong Zhang
- * \date 09/16/2010
+ * \date   09/16/2010
  */
 void fasp_fwrapper_krylov_amg_ (INT *n, 
                                 INT *nnz, 

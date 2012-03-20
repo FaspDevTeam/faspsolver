@@ -42,8 +42,10 @@ void fasp_param_init (char *inputfile,
 	total_alloc_count = 0; // initialize alloc count
 	 
 	if (itparam)  fasp_param_solver_init(itparam);
+    
 	if (amgparam) fasp_param_amg_init(amgparam);
-	if (iluparam) fasp_param_ilu_init(iluparam);	
+	
+    if (iluparam) fasp_param_ilu_init(iluparam);	
 	
 	if (inputfile) {
 		fasp_param_input(inputfile,inparam);
@@ -51,6 +53,10 @@ void fasp_param_init (char *inputfile,
 		if (amgparam) fasp_param_amg_set(amgparam,inparam);
 		if (iluparam) fasp_param_ilu_set(iluparam,inparam);	
 	}
+    else {
+        printf("### WARNING: No input specified. Use default values instead!\n");
+    }
+        
 }	
 
 /**
@@ -67,7 +73,7 @@ void fasp_param_input_init (input_param *inparam)
 {
 	strcpy(inparam->workdir,"data/");
 	
-	inparam->print_level = PRINT_NONE;
+	inparam->print_level = PRINT_MIN;
 	inparam->output_type = 0;
 	
 	inparam->problem_num = 10;	
@@ -86,7 +92,7 @@ void fasp_param_input_init (input_param *inparam)
 	inparam->ILU_permtol = 0.0;
 	
 	inparam->AMG_type = CLASSIC_AMG;
-	inparam->AMG_levels = 12;
+	inparam->AMG_levels = 20;
 	inparam->AMG_cycle_type = V_CYCLE;
 	inparam->AMG_smoother = GS;
 	inparam->AMG_presmooth_iter = 2;
@@ -129,7 +135,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
 	amgparam->maxit = 1;
 	amgparam->tol = 1e-8;
 	
-	amgparam->max_levels = 12;	
+	amgparam->max_levels = 20;	
 	amgparam->coarse_dof = 500;
 	amgparam->cycle_type = V_CYCLE;	
 	amgparam->smoother = GS;
@@ -145,13 +151,13 @@ void fasp_param_amg_init (AMG_param *amgparam)
 	amgparam->coarsening_type = 1;
 	amgparam->interpolation_type = 1;
 	
-	amgparam->strong_threshold = 0.3;
+	amgparam->strong_threshold = 0.6;
 	amgparam->truncation_threshold = 0.4;
 	amgparam->max_row_sum = 0.9;
 	
 	amgparam->strong_coupled = 0.08;
 	amgparam->max_aggregation = 9;
-	amgparam->tentative_smooth = 0.0; //0.67; edit by Fengchunsheng  2011/03/15
+	amgparam->tentative_smooth = 0.0; // edit by Fengchunsheng 2011/03/15
 	amgparam->smooth_filter = OFF;
 	
 	amgparam->ILU_type = ILUs; 
@@ -162,7 +168,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
 }
 
 /**
- * \fn void fasp_param_solver_null (itsolver_param *itparam)
+ * \fn void fasp_param_solver_init (itsolver_param *itparam)
  *
  * \brief Initialize itsolver_param
  *
@@ -328,9 +334,9 @@ void fasp_param_solver_set (itsolver_param *itparam,
 void fasp_precond_data_null (precond_data *pcdata)
 {
 	pcdata->AMG_type            = CLASSIC_AMG;
-    pcdata->print_level         = 0;
+    pcdata->print_level         = PRINT_MIN;
 	pcdata->maxit               = 500;
-	pcdata->max_levels          = 12;
+	pcdata->max_levels          = 20;
 	pcdata->tol                 = 1e-8;
 	pcdata->cycle_type          = V_CYCLE;
 	pcdata->smoother            = GS;

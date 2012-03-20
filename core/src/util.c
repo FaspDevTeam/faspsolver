@@ -14,12 +14,12 @@
  *
  * \brief Swap order for different endian systems
  *
- * \param x   a unsigned long integer
+ * \param x   An unsigned long integer
  *
- * \return    unsigend long ineger after swapping
+ * \return    Unsigend long ineger after swapping
  *
  * \author Chensong Zhang
- * \date 11/16/2009
+ * \date   11/16/2009
  */
 unsigned long fasp_aux_change_endian4(unsigned long x)
 {
@@ -32,12 +32,12 @@ unsigned long fasp_aux_change_endian4(unsigned long x)
  *
  * \brief Swap order for different endian systems
  *
- * \param x   a unsigned long integer
+ * \param x   A unsigned long integer
  *
- * \return    unsigend long ineger after swapping
+ * \return    Unsigend long ineger after swapping
  *
  * \author Chensong Zhang
- * \date 11/16/2009
+ * \date   11/16/2009
  */
 double fasp_aux_change_endian8(double x)
 {   
@@ -63,12 +63,12 @@ double fasp_aux_change_endian8(double x)
  *
  * \brief Swap order for different endian systems
  *
- * \param bytes  a unsigned char
+ * \param bytes  A unsigned char
  *
- * \return       unsigend long ineger after swapping
+ * \return       Unsigend long ineger after swapping
  *
  * \author Chensong Zhang
- * \date 11/16/2009
+ * \date   11/16/2009
  */
 double fasp_aux_bbyteToldouble(unsigned char bytes[])
 {   
