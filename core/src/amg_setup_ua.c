@@ -11,6 +11,8 @@
 #include "amg_setup_aggregation.inl"
 
 static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
+static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param * param);
+
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -48,6 +50,31 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
 #endif
 	
     return status;
+}
+
+/**
+ * \fn int fasp_amg_setup_ua_bsr(AMG_data_bsr *mgl, AMG_param *param)
+ * \brief Set up phase of unsmoothed aggregation AMG (BSR format) 
+ * 
+ * \param *mgl     pointer to AMG_data_bsr data
+ * \param *param   pointer to AMG parameters
+ *
+ * Setup A, P, PT, levels using smoothed aggregation
+ * concrete algorithm see paper
+ * Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
+ * 
+ * \author Xiaozhe Hu
+ * \date 03/16/2012 
+ *
+ */
+SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl, 
+                                    AMG_param *param)
+{
+	SHORT status=SUCCESS;
+    
+	status = amg_setup_unsmoothP_unsmoothA_bsr(mgl, param);
+	
+	return status;
 }
 
 /*---------------------------------*/
@@ -191,6 +218,147 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     
 	return status;
 }
+
+/**
+ * \fn static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *param)
+ * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A (BSR format)
+ * 
+ * \param *mgl     pointer to AMG_data_bsr data
+ * \param *param   pointer to AMG parameters
+ *
+ * Setup A, P, PT, levels using smoothed aggregation
+ * concrete algorithm see paper
+ * Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
+ * 
+ * \author Xiaozhe Hu
+ * \date 03/16/2012 
+ */
+static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *param)
+{
+	const SHORT print_level=param->print_level;
+	const INT m=mgl[0].A.ROW, n=mgl[0].A.COL, nnz=mgl[0].A.NNZ, nb = mgl[0].A.nb;
+	
+	SHORT max_levels=param->max_levels;
+	SHORT i, level=0, status=SUCCESS;
+	clock_t setup_start, setup_end;
+	REAL setupduration;
+	
+#if DEBUG_MODE
+	printf("fasp_amg_setup_sa_bsr ...... [Start]\n");
+	printf("fasp_amg_setup_sa_bsr: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+#endif
+	
+	if (print_level>8)	printf("fasp_amg_setup_sa_bsr: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	
+	setup_start=clock();
+	
+	INT *num_aggregations = (int *)fasp_mem_calloc(max_levels,sizeof(INT)); //each elvel stores the information of the number of aggregations
+	
+	for (i=0; i<max_levels; ++i) num_aggregations[i] = 0;
+	
+	ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
+	
+	dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat)); // each level stores the information of the strongly coupled neighborhoods
+	
+	mgl[0].near_kernel_dim   = 1;
+	//mgl[0].near_kernel_basis = (double **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(double*));
+	mgl[0].near_kernel_basis = NULL;
+    
+	// initialize ILU parameters
+	mgl->ILU_levels = param->ILU_levels;
+	ILU_param iluparam;
+	if (param->ILU_levels>0) {
+		iluparam.print_level = param->print_level;
+		iluparam.ILU_lfil    = param->ILU_lfil;
+		iluparam.ILU_droptol = param->ILU_droptol;
+		iluparam.ILU_relax   = param->ILU_relax;
+		iluparam.ILU_type    = param->ILU_type;
+	}
+	
+	while ((mgl[level].A.ROW>param->coarse_dof) && (level<max_levels-1))
+	{
+		/*-- setup ILU decomposition if necessary */
+		if (level<param->ILU_levels) fasp_ilu_dbsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
+		
+		/*-- Aggregation --*/
+		mgl[level].PP =  fasp_dbsr_getblk_dcsr(&mgl[level].A);  // use first block now, need to bechanged
+		aggregation(&mgl[level].PP, &vertices[level], param, level+1, &Neighbor[level], &num_aggregations[level]);
+		if (num_aggregations[level] * 4 > mgl[level].A.ROW) param->strong_coupled /=8.0; 
+		
+		/* -- Form Prolongation --*/	  
+		form_tentative_p_bsr(&vertices[level], &mgl[level].P, &mgl[0], level+1, num_aggregations[level]);
+		
+		/*-- Form resitriction --*/		
+		fasp_dbsr_trans(&mgl[level].P, &mgl[level].R);
+        
+		/*-- Form coarse level stiffness matrix --*/		
+		fasp_blas_dbsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
+		
+		fasp_dcsr_free(&Neighbor[level]);
+		fasp_ivec_free(&vertices[level]);
+		
+		++level;
+	}
+	
+	// setup total level number and current level
+	mgl[0].num_levels = max_levels = level+1;
+	mgl[0].w = fasp_dvec_create(3*m*nb);	
+	
+	for (level=1; level<max_levels; ++level) {
+		int	m = mgl[level].A.ROW;
+		mgl[level].num_levels = max_levels; 		
+		mgl[level].b = fasp_dvec_create(m*nb);
+		mgl[level].x = fasp_dvec_create(m*nb);
+		mgl[level].w = fasp_dvec_create(3*m*nb);	
+	}
+	
+	mgl[max_levels-1].Ac = fasp_format_dbsr_dcsr(&mgl[max_levels-1].A);
+	
+#if With_UMFPACK	
+	// Need to sort the matrix A for UMFPACK format
+	dCSRmat Ac_tran;
+	fasp_dcsr_trans(&mgl[max_levels-1].Ac, &Ac_tran);
+	fasp_dcsr_sort(&Ac_tran);
+	fasp_dcsr_cp(&Ac_tran, &mgl[max_levels-1].Ac);
+	fasp_dcsr_free(&Ac_tran);
+#endif
+	
+	if (print_level>1) {
+		double gridcom=0.0, opcom=0.0;
+		
+		printf("-----------------------------------------------\n");
+		printf("  Level     Num of rows      Num of nonzeros\n");
+		printf("-----------------------------------------------\n");
+		for (level=0;level<max_levels;++level) {
+			printf("%5d  %14d  %16d\n",level,mgl[level].A.ROW,mgl[level].A.NNZ);
+			gridcom += mgl[level].A.ROW;
+			opcom += mgl[level].A.NNZ;
+		}
+		printf("-----------------------------------------------\n");
+		
+		gridcom /= mgl[0].A.ROW;
+		opcom /= mgl[0].A.NNZ;
+		printf("(BSR format) Unsmoothed Aggregation AMG grid complexity = %f\n", gridcom);
+		printf("(BSR format) Unsmoothed Aggregation AMG operator complexity = %f\n", opcom);
+	}
+	
+	if (print_level>0) {
+		setup_end=clock();
+		setupduration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
+		printf("(BSR format) Unsmoothed Aggregation AMG setup costs %f seconds.\n", setupduration);	
+	}
+	
+	fasp_mem_free(vertices);
+	fasp_mem_free(num_aggregations);
+	fasp_mem_free(Neighbor);
+	
+#if DEBUG_MODE
+	printf("amg_setup_sa ...... [Finish]\n");
+#endif
+	
+	return status;
+}
+
 
 /*---------------------------------*/
 /*--        End of File          --*/

@@ -100,6 +100,9 @@ int fasp_amg_setup_sa_omp (AMG_data *mgl, AMG_param *param, int nthreads, int op
 SHORT fasp_amg_setup_ua (AMG_data *mgl, 
                          AMG_param *param);
 
+SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl, 
+                                    AMG_param *param);
+
 
 /*-------- In file: amg_solve.c --------*/
 
@@ -839,9 +842,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A);
 
 dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B);
 
-SHORT fasp_format_dcsr_dbsr (dBSRmat *A, 
-                             INT nb, 
-                             dCSRmat *B);
+SHORT fasp_format_dcsr_dbsr(dBSRmat *A, int nb, dCSRmat *B);
 
 dBSRmat fasp_format_dstr_dbsr (dSTRmat *B);
 
@@ -1054,6 +1055,13 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
                                  dvector *x, 
                                  itsolver_param *itparam, 
                                  ILU_param *iluparam);
+
+INT fasp_solver_dbsr_krylov_amg(dBSRmat *A, 
+                                  dvector *b, 
+                                  dvector *x, 
+                                  itsolver_param *itparam, 
+                                  AMG_param *amgparam 
+                                );
 
 
 /*-------- In file: itsolver_bsr.c --------*/
@@ -2084,6 +2092,8 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
                         INT m, 
                         INT n, 
                         dBSRmat *B);
+
+dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A);
 
 
 /*-------- In file: sparse_block_omp.c --------*/

@@ -160,13 +160,16 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
 	const SHORT print_level = param->print_level;
 	const SHORT nl          = mgl[0].num_levels;
 	const SHORT smoother    = param->smoother;
-	const SHORT cycle_type  = param->cycle_type;
+	const SHORT cycle_type  = param->cycle_type;	
+	//const int smooth_order = param->smooth_order;
+	const REAL relax = param->relaxation;
+	//const int ndeg = 0;
 	
     // local variables
+	INT nu_l[MAX_AMG_LVL] = {0}, l = 0;
 	REAL alpha = 1.0;
-	INT  nu_l[MAX_AMG_LVL] = {0}, l = 0;
-	INT  i;
-	    
+	INT i;
+
 ForwardSweep:
 	while (l<nl-1) { 
 		nu_l[l]++;
@@ -179,9 +182,17 @@ ForwardSweep:
 			
 			if (steps > 0){
 				switch (smoother) {
+                    case JACOBI:
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_jacobi (&mgl[l].A, &mgl[l].b, &mgl[l].x);
+                        break;
                     case GS:
                         for (i=0; i<steps; i++) 
                             fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
+                        break;
+                    case SOR:
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_sor (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL, relax);
                         break;
                     default:
                         printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
@@ -255,10 +266,18 @@ ForwardSweep:
 			
 			if (steps > 0){
 				switch (smoother) {
+                    case JACOBI:
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_jacobi(&mgl[l].A, &mgl[l].b, &mgl[l].x);
+                        break;
                     case GS:
                         for (i=0; i<steps; i++) 
-                            fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
+                            fasp_smoother_dbsr_gs(&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
                         break;
+                    case SOR:
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_sor(&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL, relax);
+                         break;
                     default:
                         printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
 				}

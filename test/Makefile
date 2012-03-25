@@ -148,6 +148,10 @@ test:
 	$(CC) $(CFLAGS) -c main/test.c -o main/test.o
 	$(FC) -o test.ex main/test.o $(FLFLAGS)
 
+testbsr:
+	$(CC) $(CFLAGS) -c main/testbsr.c -o main/testbsr.o
+	$(FC) -o testbsr.ex main/testbsr.o $(FLFLAGS)
+
 regression: 
 	$(CC) $(CFLAGS) -c main/regression.c -o main/regression.o
 	$(FC) -o regression.ex main/regression.o $(FLFLAGS)

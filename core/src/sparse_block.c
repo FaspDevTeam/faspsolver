@@ -155,6 +155,61 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
 	return(status);
 }
 
+/**
+ * \fn dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
+ * \brief get dCSRmat block from a dBSRmat matrix 
+ * 
+ * \param *A   pointer to the BSR format matrix
+ * \return     dCSRmat matrix if succeed, NULL if fail
+ *
+ * \author Xiaozhe Hu
+ * \data 03/16/2012 
+ *
+ */
+dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
+{
+	// information about A
+	const INT ROW = A->ROW;
+	const INT COL = A->COL;
+	const INT NNZ = A->NNZ;
+	const SHORT nc = A->nb;
+	const INT nc2 = nc*nc;
+	
+	REAL *val = A->val;
+	INT *IA = A->IA;
+	INT *JA = A->JA;
+	
+	// Pressure block
+	dCSRmat P_csr = fasp_dcsr_create(ROW, COL, NNZ);
+	REAL *Pval=P_csr.val;
+	
+	// local variable
+	INT i,j;
+	SHORT status = SUCCESS;
+	
+	// get pressure block
+	memcpy(P_csr.JA, JA, NNZ*sizeof(INT)); 
+	memcpy(P_csr.IA, IA, (ROW+1)*sizeof(INT));
+	
+	//for (i=NNZ, j=NNZ*nc2-nc2; i--; j-=nc2)
+    for (i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2)
+	{
+		Pval[i] = val[j];
+	}
+	
+	// compress CSR format 
+	status = fasp_dcsr_compress_inplace(&P_csr,1e-8);
+	if (status < 0) goto FINISH_ERROR;
+	
+	// return P 
+	return P_csr;
+	
+FINISH_ERROR:
+	printf("getPP_BSR: Cannot alloc memory! \n");
+	exit(ERROR_ALLOC_MEM);
+}
+
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

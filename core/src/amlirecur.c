@@ -345,6 +345,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 {	
     const SHORT  print_level = param->print_level;
 	const SHORT  smoother = param->smoother;
+    const REAL relax = param->relaxation;
     INT i;
 	
 	dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x; // fine level b and x
@@ -375,12 +376,21 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 			fasp_smoother_dbsr_ilu(A_level0, b0, e0, LU_level);
 		}
 		else {
-            unsigned int steps = param->presmooth_iter;
+            unsigned SHORT steps = param->presmooth_iter;
 			
 			if (steps > 0){
 				switch (smoother) {
+                    case JACOBI:
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_jacobi (A_level0, b0, e0);
+                        break;
                     case GS:
-                        for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
+                        break;
+                    case SOR:
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_sor (A_level0, b0, e0, ASCEND, NULL,relax);
                         break;
                     default:
 						printf("### ERROR: Wrong smoother type %d!\n", smoother); 
@@ -393,16 +403,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 		fasp_array_cp(m0,b0->val,r); 
 		fasp_blas_dbsr_aAxpy(-1.0,A_level0,e0->val,r);
 		
-		// restriction r1 = R*r0
-        //switch (amg_type)
-		//{		
-		//	case UA_AMG: 
-		//		fasp_blas_dcsr_mxv_agg(&mgl[level].R, r, b1->val);
-		//		break;
-		//	default:
         fasp_blas_dbsr_mxv(&mgl[level].R, r, b1->val);
-		//		break;
-		//}
 		
 		// call nonlinear AMLI-cycle recursively
 		{ 
@@ -434,9 +435,9 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                 
                 switch (param->nl_amli_krylov_type)
                 {
-                        //case SOLVER_GCG: // Use GCG
-                        //   fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&pc,0,1);
-                        //  break;
+                    //case SOLVER_GCG: // Use GCG
+                    //   fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&pc,0,1);
+                    //  break;
                     default: // Use FGMRES
                         fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH, maxit,tol,&pc,0,1, MIN(maxit,30));
                         break;
@@ -448,28 +449,28 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 			
 		}
 		
-		// prolongation e0 = e0 + P*e1
-        //  switch (amg_type)
-		//{
-		//	case UA_AMG:
-		//		fasp_blas_dbsr_aAxpy_agg(1.0, &mgl[level].P, e1->val, e0->val);
-		//		break;
-		//	default:
         fasp_blas_dbsr_aAxpy(1.0, &mgl[level].P, e1->val, e0->val);
-		//		break;
-		//}
 		
 		// post smoothing
 		if (level < param->ILU_levels) {
 			fasp_smoother_dbsr_ilu(A_level0, b0, e0, LU_level);
 		}
 		else {
-            unsigned int steps = param->postsmooth_iter;
+            unsigned SHORT steps = param->postsmooth_iter;
 			
 			if (steps > 0){
 				switch (smoother) {
+                    case JACOBI:
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_jacobi (A_level0, b0, e0);
+                        break;
                     case GS:
-                        for (i=0; i<steps; i++) fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_gs(A_level0, b0, e0, ASCEND, NULL);
+                        break;
+                    case SOR:
+                        for (i=0; i<steps; i++) 
+                            fasp_smoother_dbsr_sor(A_level0, b0, e0, ASCEND, NULL,relax);
                         break;
                     default:
                         printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
@@ -497,7 +498,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 #endif 
 	}
 	
-	//if (print_level>=PRINT_MOST) printf("Nonlinear AMLI level %d, post-smoother %d.\n", level, smoother);
+	if (print_level>=PRINT_MOST) printf("Nonlinear AMLI level %d, post-smoother %d.\n", level, smoother);
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_nl_amli ...... [Finish]\n");

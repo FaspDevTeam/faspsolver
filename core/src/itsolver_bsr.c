@@ -257,6 +257,119 @@ MEMORY_ERROR:
 	fasp_chkerr (status, "fasp_solver_dbsr_krylov_ilu");
 }
 
+/**
+ * \fn INT fasp_solver_dbsr_krylov_amg(dBSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, AMG_param *amgparam)
+ * \brief Solve Ax=b by AMG preconditioned Krylov methods 
+ * \param *A:	pointer to the dBSRmat matrix
+ * \param *b:	pointer to the dvector of right hand side
+ * \param *x:	pointer to the dvector of dofs
+ * \param *itparam: pointer to parameters for iterative solvers
+ * \param *iluparam: pointer to parameters for ILU preconditioners
+ * \param *amgparam: pointer to parameters for AMG 
+ * \param *neigh: pointer to the information of neighborhood
+ * \param *order: pointer to the ordering
+ * \return the number of iterations
+ *
+ * \author Xiaozhe Hu
+ * \data 03/16/2012
+ */
+INT fasp_solver_dbsr_krylov_amg(dBSRmat *A, 
+                                  dvector *b, 
+                                  dvector *x, 
+                                  itsolver_param *itparam, 
+                                  AMG_param *amgparam 
+                                )
+{
+	//--------------------------------------------------------------
+	// Part 1: prepare
+	// --------------------------------------------------------------
+	//! parameters of iterative method
+	const SHORT print_level = itparam->print_level;
+	const SHORT max_levels = amgparam->max_levels;
+	
+	//! return variable
+	INT status = SUCCESS;
+	
+	// data of AMG 
+	AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
+	
+	// timing
+	clock_t setup_start, setup_end, solver_start, solver_end;
+	REAL solver_duration, setup_duration;
+	
+	//--------------------------------------------------------------
+	//Part 2: set up the preconditioner
+	//--------------------------------------------------------------
+	setup_start=clock();
+	
+    
+	//initialize A, b, x for mgl[0]
+	mgl[0].A = fasp_dbsr_create(A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
+	fasp_dbsr_cp(A,  &(mgl[0].A));
+	mgl[0].b = fasp_dvec_create(mgl[0].A.ROW*mgl[0].A.nb); 
+	mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb); 
+	
+	status = fasp_amg_setup_ua_bsr(mgl, amgparam);
+	if (status < 0) goto FINISHED;
+	
+	setup_end=clock();
+	
+	setup_duration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
+	
+	precond_data_bsr precdata;
+	precdata.maxit = amgparam->maxit;
+	precdata.tol = amgparam->tol;
+	precdata.cycle_type = amgparam->cycle_type;
+	precdata.smoother = amgparam->smoother;
+	precdata.presmooth_iter = amgparam->presmooth_iter;
+	precdata.postsmooth_iter = amgparam->postsmooth_iter;
+	precdata.coarsening_type = amgparam->coarsening_type;
+	precdata.relaxation = amgparam->relaxation;
+	precdata.coarse_scaling = amgparam->coarse_scaling;
+	precdata.amli_degree = amgparam->amli_degree;
+	precdata.amli_coef = amgparam->amli_coef;
+	precdata.tentative_smooth = amgparam->tentative_smooth;
+	precdata.max_levels = mgl[0].num_levels;
+	precdata.mgl_data = mgl;
+	precdata.A = A;
+	
+	if (status < 0) goto FINISHED;
+	
+	precond prec; 
+	prec.data = &precdata; 
+    switch (amgparam->cycle_type) {
+        case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
+            prec.fct = fasp_precond_dbsr_nl_amli; break;
+        default: // V,W-Cycle AMG
+            prec.fct = fasp_precond_dbsr_amg; break;
+    }
+	
+	//--------------------------------------------------------------
+	// Part 3: solver
+	//--------------------------------------------------------------
+	solver_start=clock();
+	status=fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
+	solver_end=clock();
+	
+	solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+	
+	if (print_level>0) {
+		printf("Setup costs %f seconds.\n", setup_duration);
+		printf("Iterative solver costs %f seconds.\n", solver_duration);
+		printf ("BSR_CPR_krylov method totally costs %f seconds.\n", setup_duration + solver_duration);
+	}
+    
+FINISHED:
+	//fasp_amg_data_free(mgl);	// Xiaozhe: need to be added
+	if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
+	return status;
+	
+MEMORY_ERROR:
+	printf("krylov_CPR_bsr: Cannot allocate memory!\n");
+	exit(status);	
+}
+
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
