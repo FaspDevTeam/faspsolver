@@ -6,7 +6,7 @@
 
 workdir  = ./data/  % work directory, no more than 128 characters
 problem_num    = 10     % Problem number 
-print_level    = 5      % How much information to print out 
+print_level    = 2      % How much information to print out 
  
 %----------------------------------------------%
 % parameters for iterative solvers             %
@@ -24,7 +24,7 @@ stop_type      = 1      % Stopping type: 1 ||r||/||b|| | 2 ||r||_M/||b||_M | 3 |
 
 itsolver_tol   = 1e-8   % Solver tolerance 
 
-itsolver_maxit = 1000    % Maximal ieration number 
+itsolver_maxit = 1000   % Maximal ieration number 
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
@@ -69,7 +69,7 @@ AMG_max_row_sum          = 0.9   % max row sum
 % parameters for smoothed aggregation AMG      %
 %----------------------------------------------%
 
-AMG_strong_coupled	 = 0.0  % strong coupled threshold
+AMG_strong_coupled	 = 0.0   % strong coupled threshold
 AMG_max_aggregation	 = 9     % max size of each aggregation 
 AMG_tentative_smooth	 = 0.67  % smooth factor for smoothing the tentative prolongation
 AMG_smooth_filter	 = OFF   % switch for filtered matrix for smoothing

@@ -1,0 +1,70 @@
+# This is the included file for the main Makefile -- put your localization definitions here.
+# But do not check in your changes to the repository. :D
+
+#CC=icc
+CC=gcc-mp-4.6
+#FC=ifort -nofor-main
+#FC=g95 -fno-second-underscore -fendian=little
+FC=gfortran-mp-4.6
+
+########################################################################
+# External libraries for FASP package
+########################################################################
+
+# If you wish to use SuperLU as a direct solver, uncomment the following 
+# two lines and give the location of SuperLU head and lib:
+#
+#SUPERLUINCLUDE=-I/usr/include/SuperLU_4.0
+#SUPERLULIB=/usr/lib/libsuperlu_4.0.a
+
+# If you want to use UMFPACK as a direct solver, uncomment the following
+# three lines as well as the BLASLIB
+#
+#UMFPACKDIR=/Users/zhangcs/Packages/SparseSuite/UMFPACK
+#UMFPACKDIR=/home/Eitan/Umfpack/UMFPACK
+UMFPACKDIR=/Users/XiaozheHu/Research/Package/SuiteSparse/UMFPACK
+#UMFPACKDIR=/opt/umfpackgcc/UMFPACK
+UMFPACKINCLUDE=-I$(UMFPACKDIR)/Include -I$(UMFPACKDIR)/../AMD/Include \
+		-I$(UMFPACKDIR)/../UFconfig 
+#UMFPACKLIB=-L/home/Eitan/Umfpack/lib -lumfpack -lamd
+UMFPACKLIB=-L/Users/XiaozheHu/Research/Package/SuiteSparse/lib -lumfpack -lamd -lcholmod -lcolamd -lcamd -lmetis -lccolamd
+#UMFPACKLIB=-L/usr/lib -lumfpack -lamd -lcholmod -lcolamd -lcamd -lmetis -lccolamd
+#UMFPACKLIB=-L/opt/umfpackgcc/UMFPACK/lib -lumfpack -lamd
+
+# If you wish to call BLAS and LAPACK libs with Mac OSX, uncomment the following lines: 
+#
+BLASLIB=-framework Accelerate
+LAPACK=-framework Accelerate
+#BLASLIB=-lblas
+#LAPACK=-llapack
+
+# If you wish to call your own BLAS and LAPACK libs, uncomment the following lines: 
+#BLASDIR=/Users/zhangcs/Packages/GotoBLAS2
+#BLASLIB=-L/Users/zhangcs/Packages/GotoBLAS2 -lgoto2
+#LAPACK=-l/Users/zhangcs/Packages/GotoBLAS2/lapack/lapack_osx.a
+
+########################################################################      
+# Compiling options                                                             
+########################################################################        
+#BOPT=-g -O0
+#BOPT=-g -pg -Wall
+#BOPT=-O2
+#BOPT=-O3 -funroll-loops -ftree-vectorize -fopenmp
+#BOPT=-g -O3 -funroll-loops
+BOPT=-g -pg -O3 -funroll-loops -ftree-vectorize 
+#BOPT=-std=c99 -lm -O3 -ffast-math -march=native -mfpmath=sse
+#BOPT=-cc=icc -config=icc -O3
+#BOPT=-config=icc -O3
+
+CDEFS=-DWith_BLAS=1 -DWith_UMFPACK=1 -DWith_SuperLU=0
+CINCLUDES+=$(SUPERLUINCLUDE) $(UMFPACKINCLUDE)
+
+########################################################################
+# Link options
+########################################################################
+#LINKOPTS=-g -O0 
+#LINKOPTS=-g -pg -Wall
+LINKOPTS=-g -pg -O3
+#LINKOPTS=-O3
+
+LIBS+=$(SUPERLULIB) $(BLASLIB) $(UMFPACKLIB)
