@@ -5,17 +5,24 @@
 #ifndef _SETUP_POISSON_H_
 #define _SETUP_POISSON_H_
 
-extern double f(double x, double y);
-extern double u(double x, double y);
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+#include "misc.h"
+#include "mesh.h"
+#include "fasp.h"
+#include "fasp_functs.h"
 
-int setup_poisson (dCSRmat *ptr_A, 
-                   dvector *ptr_b, 
-                   int levelNum, 
-                   const char *meshIn, 
-                   const char *meshOut, 
-                   int mo, 
-                   const char *assemble_option, 
-                   int num_qp_rhs, 
-                   int num_qp_mat);
+extern double f(double *p);
+extern double u(double *p);
+
+int setup_poisson (dCSRmat *A, dvector *b, Mesh *mesh, Mesh_aux *mesh_aux, param_test *pt, dvector *ptr_uh, ivector *dof);
+
+double get_l2_error_poisson(ddenmat *node,
+														idenmat *elem,
+														dvector *uh,
+														int num_qp);
+
 
 #endif

@@ -172,6 +172,10 @@ testfem:
 	$(CC) $(CFLAGS) -c main/testfem.c -o main/testfem.o
 	$(FC) -o testfem.ex main/testfem.o $(FLFLAGS)
 
+testheat:
+	$(CC) $(CFLAGS) -c main/testheat.c -o main/testheat.o
+	$(FC) -o testheat.ex main/testheat.o $(FLFLAGS)
+
 testfdm2d :
 	${CPP} $(CFLAGS) -c main/testfdm2d.cpp -o main/testfdm2d.o
 	$(CPP) -o testfdm2d.ex main/testfdm2d.o $(FLFLAGS)
@@ -194,6 +198,7 @@ testall:
 	make testfem
 	make testfdm2d
 	make testfdm3d
+	make testheat
 	make testomp
 
 ########################################################################
@@ -212,6 +217,11 @@ allclean:
 	rm -f *~ *.ex *.out
 	rm -f $(SRCDIR)/*~
 	rm -f main/*~
+	rm -f out/mat_*
+	rm -f out/rhs_*
+	rm -f out/sol_*
+	rm -f out/sp_*
+	rm -f out/matrix.*
 
 help:
 	@echo "======================================================"
@@ -225,6 +235,7 @@ help:
 	@echo " make testfem    : build the FEM assembling test      "
 	@echo " make testfdm2d  : build the FDM 2D assembling test   "
 	@echo " make testfdm3d  : build the FDM 3D assembling test   "
+	@echo " make testheat   : build the FEM matrix for Heat eqn  "
 	@echo " make testmat    : build the matrix checking test     "
 	@echo " make testrap    : build the comparison of RAP        "
 	@echo " make testall    : build all test cases               "

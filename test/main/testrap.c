@@ -19,6 +19,8 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 #include "poisson_fem.h"
+#include "misc.h"
+#include "mesh.h"
 
 /* Test functions f and u for the Poisson's equation */
 #include "testfct_poisson.inl"
@@ -110,6 +112,10 @@ int main(int argc, const char * argv[])
 {		
 	dCSRmat A;
 	dvector b;
+	dvector uh;
+	ivector dof;
+	Mesh mesh;
+	Mesh_aux mesh_aux;
 	
 	char *inputfile="ini/input.dat";
 	input_param Input;
@@ -119,7 +125,16 @@ int main(int argc, const char * argv[])
 	fasp_param_amg_set(&amgparam,&Input);
 	
 	// Assemble matrix and right-hand side
-    setup_poisson(&A, &b, 8, "data/testmesh.dat", NULL, 0, "a&b", 3, 1);
+	int i;
+	param_test pt;// parameter for testfem
+	param_init(&pt);
+	mesh_init(&mesh, "./data/testmesh.dat");
+	mesh_aux_build(&mesh, &mesh_aux);
+	for (i=0;i<pt.refine_lvl;++i)
+	{
+		mesh_refine(&mesh, &mesh_aux);
+	}
+	setup_poisson(&A, &b, &mesh, &mesh_aux, &pt, &uh, &dof);
 	
 	// Check sprap speed
 	{	const int nnz=A.nnz, m=A.row, n=A.col;
@@ -135,6 +150,10 @@ int main(int argc, const char * argv[])
     // Clean up memory
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);
+	fasp_dvec_free(&uh);
+  fasp_ivec_free(&dof);
+	mesh_free(&mesh);
+	mesh_aux_free(&mesh_aux);
 	
     return SUCCESS;
 }

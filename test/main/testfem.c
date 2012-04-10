@@ -9,8 +9,11 @@
  *  \brief The main test function for FASP FEM assembling.
  */
 
+#include <time.h>
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "misc.h"
+#include "mesh.h"
 #include "poisson_fem.h"
 
 /* Test functions f and u for the Poisson's equation */
@@ -25,141 +28,75 @@
  * \date   09/11/2011
  *
  * Modified by Chensong Zhang and Feiteng Huang on 03/07/2012
+ * Modified by Feiteng Huang on 04/01/2012, for l2 error
+ * Modified by Feiteng Huang on 04/05/2012, for refine & assemble
  */
 int main (int argc, const char * argv[]) 
 {
     // Set default values
-    int status      = SUCCESS;
-	int arg_index   = 1;
-	int print_usage = 0;
-	int oo          = 0;
-	int refine_lvl  = 8;
-	int input_flag  = 1;
-	int num_qp_rhs  = 3; // for P1 FEM, smooth right-hand-side
-	int num_qp_mat  = 1; // for P1 FEM
-    
-    const char *option  = "a&b";
-    const char *meshIn  = "./data/testmesh.dat";
-	const char *meshOut = "./data/mesh_";
-    
-    // Local variables
-	char filename[128];
-	char *matFile = "./out/mat";
-	char *rhsFile = "./out/rhs";
-	dCSRmat A;
-	dvector b;
-    
-    // Read input from arguments
-	while (arg_index < argc)
-	{
-		if (argc%2 == 0)
-		{
-			print_usage = 1;
-			break;
-		}
-        
-		if ( strcmp(argv[arg_index], "-help") == 0 )
-		{
-			print_usage = 1;
-			break;
-		}
-        
-		if ( strcmp(argv[arg_index], "-meshin") == 0 )
-		{
-			arg_index ++;
-			meshIn = argv[arg_index++];
-			input_flag = 0;
-		}
-		if (arg_index >= argc) break;
-        
-		if ( strcmp(argv[arg_index], "-meshout") == 0 )
-		{
-			arg_index ++;
-			meshOut = argv[arg_index++];
-			input_flag = 0;
-		}
-		if (arg_index >= argc) break;
-        
-		if ( strcmp(argv[arg_index], "-assemble") == 0 )
-		{
-			arg_index ++;
-			option = argv[arg_index++];
-			input_flag = 0;
-		}
-		if (arg_index >= argc) break;
-        
-		if ( strcmp(argv[arg_index], "-refine") == 0 )
-		{
-			arg_index ++;
-			refine_lvl = atoi(argv[arg_index++]);
-			input_flag = 0;
-		}
-		if (arg_index >= argc) break;
-        
-		if ( strcmp(argv[arg_index], "-output") == 0 )
-		{
-			arg_index ++;
-			oo = atoi(argv[arg_index++]);
-			input_flag = 0;
-		}
-		if (arg_index >= argc) break;
-        
-		if ( strcmp(argv[arg_index], "-quad_rhs") == 0 )
-		{
-			arg_index ++;
-			num_qp_rhs = atoi(argv[arg_index++]);
-			input_flag = 0;
-		}
-		if (arg_index >= argc) break;
-        
-		if ( strcmp(argv[arg_index], "-quad_mat") == 0 )
-		{
-			arg_index ++;
-			num_qp_mat = atoi(argv[arg_index++]);
-			input_flag = 0;
-		}
-		if (arg_index >= argc) break;
-        
-		if (input_flag)
-		{
-			print_usage = 1;
-			break;
-		}
-	}
+    int status = SUCCESS;
+	int print_usage;
+	param_test pt;// parameter for testfem
+	param_init(&pt);
+	print_usage = param_set(argc, argv, &pt);
     
 	if (print_usage)
 	{
 		printf("\nUsage: %s [<options>]\n", argv[0]);
 		printf("  -meshin <val>    : input mesh file [default: ./data/testmesh.dat]\n");
 		printf("  -meshout <val>   : output mesh file [default: ./data/mesh_?.dat]\n");
-		printf("  -assemble <val>  : assemble option [default: a&b]\n");	
-        printf("                     a&b |  assemble the mat & rhs;\n");
+		printf("  -assemble <val>  : assemble option [default: ab]\n");	
+        printf("                     ab  |  assemble the mat & rhs;\n");
 		printf("                      a  |  assemble the mat;\n");
 		printf("                      b  |  assemble the rhs;\n");
 		printf("  -refine <val>    : refine level [default: 0]\n");
 		printf("  -output <val>    : mesh output option [default: 0]\n");
-		printf("  -quad_rhs <val>  : quad points for rhs [default: 16]\n");
+		printf("  -quad_rhs <val>  : quad points for rhs [default: 3]\n");
 		printf("  -quad_mat <val>  : quad points for mat [default: 1]\n");
 		printf("  -help            : print this help message\n\n");
 		exit(status);
 	}
     
-	// Assemble A and b -- P1 FE discretization for Poisson.
-    setup_poisson(&A, &b, refine_lvl+1, meshIn, meshOut, oo, option, 
-                  num_qp_rhs, num_qp_mat);
+    // Local variables
+	Mesh       mesh;       // Mesh info
+	Mesh_aux   mesh_aux;   // Auxiliary mesh info
+    dCSRmat    A;          // Stiffness matrix
+	dvector    b;          // Right-hand side
+	dvector    uh;         // Solution including boundary
+	ivector    dof;        // Degree of freedom
+	int        i;          // Loop index
     
-    // Write A and b
-	sprintf(filename, "%s_coo_%d.dat", matFile, refine_lvl+1);
-	fasp_dcsr_write (filename, &A);
+	// Step 1: reading mesh info
+	mesh_init (&mesh, "./data/testmesh.dat");
+
+    // If there is already mesh_aux data available, you can use the following fct to init it:    
+    //	  mesh_aux_init (&mesh, &mesh_aux, "dd.dat");
+    // otherwise, just build the auxiliary information for the mesh
+	mesh_aux_build(&mesh, &mesh_aux);
     
-	sprintf(filename, "%s_%d.dat", rhsFile, refine_lvl+1);
-	fasp_dvec_write (filename, &b);
+	// Step 2: refinement
+	clock_t mesh_refine_s = clock();
+	for (i=0; i<pt.refine_lvl; ++i) mesh_refine(&mesh, &mesh_aux);
+	clock_t mesh_refine_e = clock();
+    double mesh_refine_time = (double)(mesh_refine_e - mesh_refine_s)/(double)(CLOCKS_PER_SEC);
+    printf("Mesh refinement costs... %8.4f seconds\n", mesh_refine_time);
     
+	// Step 3: assembling the linear system and right-hand side
+    clock_t assemble_s = clock();
+    setup_poisson(&A, &b, &mesh, &mesh_aux, &pt, &uh, &dof);
+    clock_t assemble_e = clock();
+    double assemble_time = (double)(assemble_e - assemble_s)/(double)(CLOCKS_PER_SEC);
+    printf("Assembling costs........ %8.4f seconds\n", assemble_time);
+    
+	// Clean auxiliary mesh info
+	mesh_aux_free(&mesh_aux);
+	
     // Print problem size
     printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
     printf("b: n = %d\n", b.row);
-    
-    // Solve A x = b with AMG
+	
+	// Step 4: solve the linear system with AMG
+    dvector x; // just DOF, not including boundary
     {
         AMG_param amgparam; // parameters for AMG
         
@@ -167,17 +104,28 @@ int main (int argc, const char * argv[])
         amgparam.print_level = PRINT_SOME; // print some AMG message
         amgparam.maxit = 100; // max iter number = 100 
         
-        dvector x;
         fasp_dvec_alloc(A.row, &x); 
-        fasp_dvec_set(A.row,&x,0.0);
+        fasp_dvec_set(A.row, &x, 0.0);
         
         fasp_solver_amg(&A, &b, &x, &amgparam);
-        
-        fasp_dvec_free(&x);
     }
+	
+	// Step 5: estimate L2 error
+	for ( i=0; i<dof.row; ++i) uh.val[dof.val[i]] = x.val[i];
     
+	double l2error = get_l2_error_poisson(&(mesh.node), &(mesh.elem), &uh, pt.num_qp_rhs);
+	
+    printf("\n==============================================================\n");
+	printf("L2 error of FEM is %g\n", l2error);
+    printf("==============================================================\n\n");
+    
+	// clean 
+	mesh_free(&mesh);
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);
+	fasp_dvec_free(&uh);
+    fasp_ivec_free(&dof);
+    fasp_dvec_free(&x);
     
 	return SUCCESS;
 }

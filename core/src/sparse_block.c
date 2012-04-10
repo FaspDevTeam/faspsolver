@@ -163,7 +163,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
  * \return     dCSRmat matrix if succeed, NULL if fail
  *
  * \author Xiaozhe Hu
- * \data 03/16/2012 
+ * \date   03/16/2012 
  *
  */
 dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)

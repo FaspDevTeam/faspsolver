@@ -1,3 +1,7 @@
+04/09/2012 FASP 0.6.4: Fix some Doxygen format problems. 
+                       Restructure test direcotry. Restructure FEM method for Poisson. 
+                       Add FEM for Heat eqn. 
+
 03/20/2012 FASP 0.6.0: Fix more Doxygen format problems. Finish all *.c file, except *_omp.c.
                        Modify a few function names and variable names. Revise regression test and examples.
 
