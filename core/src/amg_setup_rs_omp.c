@@ -156,7 +156,7 @@ int fasp_amg_setup_rs2_omp (AMG_data *mgl,
 	if (print_level>0) {
 		double setup_end=omp_get_wtime();
 		double setupduration = setup_end - setup_start;
-		printf("Ruge-Stuben AMG setup costs %f seconds.\n", setupduration);	
+		print_cputime("Ruge-Stuben AMG setup",setupduration);
 	}
 	
 	status = SUCCESS;

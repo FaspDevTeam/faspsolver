@@ -87,7 +87,7 @@ INT fasp_amg_solve (AMG_data *mgl,
 		
 		clock_t solve_end=clock();
 		REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
-		printf("AMG solve costs %f seconds.\n", solveduration);
+		print_cputime("AMG solve",solveduration);
 	}
     
 #if DEBUG_MODE
@@ -167,7 +167,7 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
 		
 		clock_t solve_end=clock();
 		REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
-		printf("AMLI solve costs %f seconds.\n", solveduration);
+		print_cputime("AMLI solve",solveduration);
 	}
     
 #if DEBUG_MODE
@@ -180,7 +180,7 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
 /**
  * \fn INT fasp_amg_solve_nl_amli (AMG_data *mgl, AMG_param *param)
  *
- * \brief nonlinear AMLI --- SOLVE phase
+ * \brief Nonlinear AMLI --- SOLVE phase
  *
  * \param mgl     pointer to AMG_data data
  * \param param   pointer to AMG parameters
@@ -245,7 +245,7 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
 		
 		clock_t solve_end=clock();
 		double solveduration = (double)(solve_end - solve_start)/(double)(CLOCKS_PER_SEC);
-		printf("AMLI solve costs %f seconds.\n", solveduration);
+		print_cputime("Nonlinear AMLI solve",solveduration);
 	}
     
 #if DEBUG_MODE
@@ -304,7 +304,7 @@ void fasp_famg_solve (AMG_data *mgl,
 		
 		clock_t solve_end=clock();
 		REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
-		printf("FMG solve costs %f seconds.\n", solveduration);
+		print_cputime("FMG solve",solveduration);
 	}
     
 #if DEBUG_MODE

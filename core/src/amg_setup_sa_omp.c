@@ -222,7 +222,7 @@ static int amg_setup_unsmoothP_unsmoothA_omp(AMG_data *mgl,
 	if (print_level>0) {
 		setup_end=omp_get_wtime();
 		setupduration = setup_end - setup_start;
-		printf("Unsmoothed Aggregation AMG setup costs %f seconds.\n", setupduration);	
+		print_cputime("Unsmoothed Aggregation AMG setup",setupduration);
 	}
 	
 	fasp_mem_free(vertices);

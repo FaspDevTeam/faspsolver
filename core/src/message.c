@@ -102,6 +102,23 @@ void print_amgcomplexity (AMG_data *mgl,
 }
 
 /**
+ * \fn void void print_cputime (const char *message, const REAL cputime)
+ *
+ * \brief Print CPU walltime
+ *
+ * \param message   Some string to print out
+ * \param cputime   Walltime since start to end
+ *
+ * \author Chensong Zhang
+ * \date   04/10/2012
+ */
+void print_cputime (const char *message, 
+                    const REAL cputime)
+{
+    printf("%s costs %.4f seconds.\n", message, cputime);	
+}
+
+/**
  * \fn void print_message (const INT ptrlvl, const char *message)
  *
  * \brief Print output information if necessary 
@@ -115,7 +132,7 @@ void print_amgcomplexity (AMG_data *mgl,
 void print_message (const INT ptrlvl, 
                     const char *message)
 {												
-	if (ptrlvl>PRINT_NONE) printf("%s",message);
+	if (ptrlvl>PRINT_NONE) printf("%s", message);
 }		
 
 /**

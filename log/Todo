@@ -28,6 +28,7 @@ Structure Changes
 [ 0.4.1 ] use LOGIC type (TRUE and FALSE) for "if" statements
 [ 0.4.1 ] use INT and REAL for int and double -- allows more flexible data types later
 [       ] some constants are used in several functions -- define them in a header file
+[       ] format for plain text, replace TAB by SPACE
 [       ] add Automake and Autoconf support for installation
  
 ========================
@@ -44,6 +45,7 @@ AMG
 [       ] add preconditioners for Stokes
 [       ] add preconditioners for Maxwell
 [       ] estimation of extreme eigenvalues 
+[       ] replace the ILU routines from SparseKit
 
 [ 0.1.1 ] compare performance with hypre -- need to do it again for the new versions
 [ 0.1.1 ] compare performance with SAMG -- need to do it again for the new versions

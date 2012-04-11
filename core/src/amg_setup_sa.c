@@ -198,9 +198,8 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
 	if (print_level>PRINT_NONE) {
 		setup_end=clock();
 		setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-
         print_amgcomplexity(mgl,print_level);
-        printf("Smoothed aggregation setup costs %f seconds.\n\n", setupduration);	
+		print_cputime("Smoothed Aggregation AMG setup",setupduration);
 	}
 	
 	fasp_mem_free(vertices);
@@ -354,7 +353,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
 	if (print_level>PRINT_NONE) {
 		setup_end=clock();
 		setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-		printf("Half smoothed Aggregation AMG setup costs %f seconds.\n", setupduration);	
+		print_cputime("Half Smoothed Aggregation AMG setup",setupduration);
 	}
 	
 	fasp_mem_free(vertices);

@@ -100,7 +100,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 	if ((print_level>=PRINT_SOME) && (iter >= 0)) {
 		clock_t solver_end = clock();	
 		REAL solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-		printf("Iterative solver costs %f seconds.\n", solver_duration);
+		print_cputime("Iterative solver", solver_duration);
 	}
     
 #if DEBUG_MODE
@@ -150,7 +150,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
 	if (print_level>=PRINT_MIN) {
 		solver_end = clock();	
 		solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-		printf("Krylov method totally costs %f seconds.\n", solver_duration);
+		print_cputime("Krylov method totally", solver_duration);
 	}	
 	
 #if DEBUG_MODE
@@ -209,7 +209,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 	if (print_level>=PRINT_MIN) {
 		solver_end = clock();	
 		solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-		printf("Diag_Krylov method totally costs %f seconds.\n", solver_duration);
+		print_cputime("Diag_Krylov method totally", solver_duration);
 	}
 	
 	fasp_dvec_free(&diag);
@@ -310,7 +310,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 	if (print_level>=PRINT_MIN) {
 		solver_end = clock();	
 		solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-		printf("AMG_Krylov method totally costs %f seconds.\n", solver_duration);
+		print_cputime("AMG_Krylov method totally", solver_duration);
 	}
 	
 FINISHED:
@@ -384,16 +384,16 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
 		
 		switch (iluparam->ILU_type) {
 			case ILUk:
-				printf("ILUk_Krylov method totally costs %f seconds.\n", solver_duration);
+                print_cputime("ILUk_Krylov method totally", solver_duration);
 				break;
 			case ILUt:
-				printf("ILUt_Krylov method totally costs %f seconds.\n", solver_duration);
+                print_cputime("ILUt_Krylov method totally", solver_duration);
 				break;
 			case ILUtp:
-				printf("ILUtp_Krylov method totally costs %f seconds.\n", solver_duration);
+                print_cputime("ILUtp_Krylov method totally", solver_duration);
 				break;
 			default:
-				printf("ILUs_Krylov method totally costs %f seconds.\n", solver_duration);
+                print_cputime("ILUs_Krylov method totally", solver_duration);
 				break;
 		}
 	}
@@ -410,7 +410,8 @@ FINISHED:
 
 /**
  * \fn INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A, dvector *b, dvector *x, 
- *                                        itsolver_param *itparam, ILU_param *iluparam, dCSRmat *M)
+ *                                        itsolver_param *itparam, ILU_param *iluparam, 
+ *                                        dCSRmat *M)
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods: ILU of M plays as preconditioner
  *
@@ -471,18 +472,18 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
 		solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
 
         switch (iluparam->ILU_type) {
-            case ILUk:
-                printf("ILUk_Krylov method totally costs %f seconds.\n", solver_duration);
-                break;
-            case ILUt:
-                printf("ILUt_Krylov method totally costs %f seconds.\n", solver_duration);
-                break;
-            case ILUtp:
-                printf("ILUtp_Krylov method totally costs %f seconds.\n", solver_duration);
-                break;
-            default:
-                printf("ILUs_Krylov method totally costs %f seconds.\n", solver_duration);
-                break;		
+			case ILUk:
+                print_cputime("ILUk_Krylov method totally", solver_duration);
+				break;
+			case ILUt:
+                print_cputime("ILUt_Krylov method totally", solver_duration);
+				break;
+			case ILUtp:
+                print_cputime("ILUtp_Krylov method totally", solver_duration);
+				break;
+			default:
+                print_cputime("ILUs_Krylov method totally", solver_duration);
+				break;
         }
 	}	
     	

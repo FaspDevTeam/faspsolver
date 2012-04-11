@@ -97,7 +97,7 @@ void fasp_solver_amg (dCSRmat *A,
     if (print_level>PRINT_NONE) {
         AMG_end = clock();		
         AMG_duration = (double)(AMG_end - AMG_start)/(double)(CLOCKS_PER_SEC);		
-        printf("AMG totally costs %f seconds.\n", AMG_duration);
+		print_cputime("AMG totally",AMG_duration);
     }	
 	
 FINISHED:	

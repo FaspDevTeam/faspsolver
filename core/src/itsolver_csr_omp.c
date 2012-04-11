@@ -79,9 +79,10 @@ int fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
 	if ((print_level>1) && (iter >= 0)) {
 		double solver_end=omp_get_wtime();	
 		double solver_duration = solver_end - solver_start;
-		printf("Iterative solver costs %f seconds.\n", solver_duration);
+        print_cputime("Iterative solver", solver_duration);
 	}
 #endif
+    
 	return iter;
 }
 
@@ -183,7 +184,7 @@ int fasp_solver_dcsr_krylov_amg_omp (dCSRmat *A,
 	if (print_level>0) {
 		solver_end=omp_get_wtime();	
 		solver_duration = solver_end - solver_start;
-		printf("AMG_Krylov method totally costs %f seconds.\n", solver_duration);
+        print_cputime("AMG_Krylov method totally", solver_duration);
 	}
 	
 FINISHED:

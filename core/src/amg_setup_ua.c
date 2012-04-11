@@ -207,9 +207,8 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 	if (print_level>PRINT_NONE) {
 		setup_end=clock();
 		setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-        
         print_amgcomplexity(mgl,print_level);
-        printf("Unsmoothed aggregation setup costs %f seconds.\n\n", setupduration);	
+		print_cputime("Unsmoothed Aggregation AMG setup",setupduration);
 	}
 	
 	fasp_mem_free(vertices);
@@ -244,21 +243,23 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
 	REAL setupduration;
 	
 #if DEBUG_MODE
-	printf("fasp_amg_setup_sa_bsr ...... [Start]\n");
-	printf("fasp_amg_setup_sa_bsr: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	printf("### DEBUG: amg_setup_unsmoothP_unsmoothA_bsr ...... [Start]\n");
+	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
 	
-	if (print_level>8)	printf("fasp_amg_setup_sa_bsr: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+	if (print_level>PRINT_MOST)	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 	
 	setup_start=clock();
 	
-	INT *num_aggregations = (int *)fasp_mem_calloc(max_levels,sizeof(INT)); //each elvel stores the information of the number of aggregations
+    //each elvel stores the information of the number of aggregations
+    INT *num_aggregations = (int *)fasp_mem_calloc(max_levels,sizeof(INT));
 	
 	for (i=0; i<max_levels; ++i) num_aggregations[i] = 0;
 	
 	ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
 	
-	dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat)); // each level stores the information of the strongly coupled neighborhoods
+	// each level stores the information of the strongly coupled neighborhoods
+    dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat)); 
 	
 	mgl[0].near_kernel_dim   = 1;
 	//mgl[0].near_kernel_basis = (double **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(double*));
@@ -338,14 +339,14 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
 		
 		gridcom /= mgl[0].A.ROW;
 		opcom /= mgl[0].A.NNZ;
-		printf("(BSR format) Unsmoothed Aggregation AMG grid complexity = %f\n", gridcom);
-		printf("(BSR format) Unsmoothed Aggregation AMG operator complexity = %f\n", opcom);
+		printf("(BSR) Unsmoothed Aggregation AMG grid complexity = %f\n", gridcom);
+		printf("(BSR) Unsmoothed Aggregation AMG operator complexity = %f\n", opcom);
 	}
 	
-	if (print_level>0) {
+	if (print_level>PRINT_NONE) {
 		setup_end=clock();
 		setupduration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
-		printf("(BSR format) Unsmoothed Aggregation AMG setup costs %f seconds.\n", setupduration);	
+		print_cputime("(BSR) Unsmoothed Aggregation AMG setup",setupduration);
 	}
 	
 	fasp_mem_free(vertices);
@@ -353,7 +354,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
 	fasp_mem_free(Neighbor);
 	
 #if DEBUG_MODE
-	printf("amg_setup_sa ...... [Finish]\n");
+	printf("### DEBUG: amg_setup_unsmoothP_unsmoothA_bsr ...... [Finish]\n");
 #endif
 	
 	return status;

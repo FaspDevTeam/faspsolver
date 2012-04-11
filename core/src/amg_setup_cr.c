@@ -98,9 +98,8 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
 	if (print_level>PRINT_NONE) {
 		clock_t setup_end=clock();
 		REAL setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-        
         print_amgcomplexity(mgl,print_level);
-		printf("Compatible relaxation AMG setup costs %f seconds.\n\n", setupduration);	
+		print_cputime("Compatible Relaxation AMG setup",setupduration);
 	}
 	
 	fasp_ivec_free(&vertices);	//add by Fengchunsheng /Mar/10/2011
