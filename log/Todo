@@ -1,0 +1,111 @@
+File Name: Todo
+
+========================
+Goal and important dates
+========================
+
+* Release an alpha version by May 31 2012 -- tested extensively inside our group
+
+* Release a stable beta version by the end of 2012
+
+========================
+Documentation
+========================
+
+[       ] start to make a user’s manual
+[ 0.5.5 ] make Doxygen comments more uniform
+[ 0.5.7 ] fix missing functions and files in Doxygen
+[       ] add more details for Doxygen
+[       ] generate reference manual using Doxygen
+
+========================
+Structure Changes
+========================
+	
+[ 0.4.1 ] distinguish main branch and developing branch, make hg web server ready for release
+[ 0.4.1 ] use INT and REAL for int and double -- allows more flexible data types later
+[ 0.4.1 ] define LOGIC type (TRUE and FALSE)
+[       ] many functions break down or become obsolete -- remove them!
+[       ] some constants are used in several functions -- define them in a header file
+
+========================
+AMG	
+========================
+
+[ 0.1.1 ] compare with hypre
+[ 0.1.1 ] compare with SAMG
+[       ] compare with AGMG
+
+[ 0.3.9 ] separate SA and UA code
+[ 0.5.0 ] profile and optimize a few core functions: RS, EM
+[       ] profile and optimize a few core functions: SA, UA
+
+[       ] aggressive coarsening, long distance interpolation for classical AMG
+[       ] non-overlapping/overlapping schwarz smoother, polynomial smoother
+[       ] estimation of extreme eigenvalues 
+[       ] add preconditioners for Stokes
+[       ] add preconditioners for Maxwell
+
+========================
+Iterative Methods
+========================
+
+[       ] options to replace the standard BLAS and SpBLAS functions
+[       ] make sparse operations cOMPatible with the SpBLAS
+[       ] test SpBLAS implementations in standard libraries
+[       ] right preconditioners 
+
+[       ] unify different data format: CSR, BSR, block CSR, STR, etc
+[       ] different options for stopping criteria: rel res, abs res, etc
+[       ] solve several problems simultaneously Ax=b --> AX=B
+
+========================
+Test Suite
+========================
+
+[ 0.4.1 ] start to build the debug environment
+[       ] finish the debug environment
+[ 0.6.0 ] build upon regression.c to make a regression test suite
+[       ] add a new unit test tool for FASP, like CHECK
+	
+========================
+Test Examples
+========================
+
+[ 0.6.0 ] modularize the Poisson equation code -- get rid of Xuehai's P1-FEM code
+[ 0.6.4 ] optimize refine code and assembling code -- get rid of realloc from the loops
+
+[ 0.6.0 ] add Zhiyang's 5pt 7pt FDM code for Poisson
+[ 0.6.4 ] add Heat equation as a test example
+[       ] add the Stokes test problem 
+[       ] add the Maxwell test problem 
+
+[ 0.4.1 ] build a new “tutorial” directory with a few simple examples
+[       ] add a set of examples in “tutorial” and do user’s manual accordingly
+
+========================
+OpenMP version
+========================
+
+[ 0.4.1 ] OMP functions should be separated from the sequential ones
+[       ] OMP functions and serial functions use same interface -- preprocessing
+[       ] make a uniform OpenMP version
+[       ] add black-red ordering to OMP version
+[       ] profile and optimize OMP code
+
+========================
+GPU version
+========================
+
+[ 0.3.4 ] AMG based on aggregation
+[       ] GMG on GPU
+[       ] sparse basic linear algebra subroutines
+[       ] testing some routines using OpenACC
+
+========================
+Bug Fixes
+========================
+	
+[ 0.4.1 ] fix a critical bug in BiCGstab: 9X9 diagonal matrix (one DoF, eight bdy) gives NaN
+[       ] fix iteration count bug in BiCGstab
+

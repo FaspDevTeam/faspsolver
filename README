@@ -30,5 +30,8 @@ You may want to adjust the "make.inc" for your personal computer environement
 or choose different compiling parameters, etc. For more details, read the README
 files in "core" and "test" directories.  
 
+Some simple examples can be found in "tutorial" directory and step-by-step 
+instructions are included in the examples therein.
+
 This software is free software distributed under the Lesser General Public 
 License or LGPL, version 3.0.  

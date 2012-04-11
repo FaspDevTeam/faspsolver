@@ -1,11 +1,17 @@
+File Name: Changes
+
+04/10/2012 FASP 0.6.5: Rename "examples" as "tutorial". Add the new "Todo" list.
+
 04/09/2012 FASP 0.6.4: Fix some Doxygen format problems. 
-                       Restructure test direcotry. Restructure FEM method for Poisson. 
-                       Add FEM for Heat eqn. 
+                       Restructure test directory. Optimize FEM method for the Poisson. 
+                       Add FEM for the Heat equation. 
 
 03/20/2012 FASP 0.6.0: Fix more Doxygen format problems. Finish all *.c file, except *_omp.c.
-                       Modify a few function names and variable names. Revise regression test and examples.
+                       Modify a few function names and variable names. 
+                       Revise regression test and examples.
 
-03/18/2012 FASP 0.5.9: Get rid of annoying warning in some OMP routines on MAC. Some changes to the test functions as well.
+03/18/2012 FASP 0.5.9: Get rid of annoying warning in some OMP routines on MAC. 
+                       Some changes to the test functions as well.
 
 03/16/2012 FASP 0.5.8: Remove several functions specially designed for the Stokes problem.
 
@@ -54,9 +60,10 @@
 
 12/02/2010 FASP 0.1.11: Bug fixes: Add memory check for several important algorithms. 
 
-10/03/2010 FASP 0.1.10: Add non-recursive multigrid structure. Add names to different types of points: coarse, fine, isolated, etc.
+10/03/2010 FASP 0.1.10: Add non-recursive multigrid structure. 
+                        Add names to different types of points: coarse, fine, isolated, etc.
 
-09/06/2010 FASP 0.1.9: Optimize meory usage and allocations in AMG routines. 
+09/06/2010 FASP 0.1.9: Optimize memory usage and allocations in AMG routines. 
 
 08/13/2010 FASP 0.1.8: Add memory check and debug mode; add several more test problems. 
                        Modify the structure of interpolations. 
@@ -65,11 +72,8 @@
 
 06/05/2010 FASP 0.1.6: Add block iterative solvers and block preconditioners.
 
-05/19/2010 FASP 0.1.5.2: Add STR ILU(0) and ILU(1).
-
-05/19/2010 FASP 0.1.5.1: Add ILUtp and more optimization.
-
 05/12/2010 FASP 0.1.5: Code optimization for a few files. Setup is still not linear.
+                       Add ILUtp and more optimization. Add STR ILU(0) and ILU(1).
 
 05/08/2010 FASP 0.1.4: Major changes to sparse triple multiplication.
 
@@ -77,6 +81,6 @@
 
 04/07/2010 FASP 0.1.2: Change AMG_data and functions related to it. 
 
-04/04/2010 FASP 0.1.1: Re-sturct abstract multigrid matching code. 
+04/04/2010 FASP 0.1.1: Remodel abstract multigrid matching code. 
 
 04/01/2010 FASP 0.1.0: Starting the FASP project based on MSC code
