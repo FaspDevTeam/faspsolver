@@ -31,7 +31,7 @@
 /**
  * \brief For external software package support
  */
-#define FASP_USE_ILU     ON  /**< enable ILU or not */
+#define FASP_USE_ILU     ON   /**< enable ILU or not */
 #define FASP_USE_OPENMP  OFF  /**< enable OpenMP support or not */
 #define DLMALLOC         OFF  /**< use dlmalloc instead of standard malloc */
 #define NEDMALLOC        OFF  /**< use nedmalloc instead of standard malloc */

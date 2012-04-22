@@ -1,5 +1,7 @@
 File Name: Changes
 
+04/21/2012 FASP 0.6.7: Remove the non-GPL ILU from ilu.f and make changes for "core" accordingly.
+
 04/10/2012 FASP 0.6.5: Rename "examples" as "tutorial". Add the new "Todo" list.
 
 04/09/2012 FASP 0.6.4: Fix some Doxygen format problems. 

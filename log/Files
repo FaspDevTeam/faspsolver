@@ -1,11 +1,11 @@
      117 ./core/src/amg.c
      383 ./core/src/amg_omp.c
-     117 ./core/src/amg_setup_cr.c
-     174 ./core/src/amg_setup_rs.c
+     116 ./core/src/amg_setup_cr.c
+     173 ./core/src/amg_setup_rs.c
      665 ./core/src/amg_setup_rs_omp.c
-     502 ./core/src/amg_setup_sa.c
+     501 ./core/src/amg_setup_sa.c
      499 ./core/src/amg_setup_sa_omp.c
-     365 ./core/src/amg_setup_ua.c
+     366 ./core/src/amg_setup_ua.c
      319 ./core/src/amg_solve.c
       95 ./core/src/amg_solve_omp.c
      584 ./core/src/amlirecur.c
@@ -36,7 +36,7 @@
      228 ./core/src/formats_omp.c
       78 ./core/src/givens.c
      359 ./core/src/graphics.c
-     184 ./core/src/ilu_setup.c
+     179 ./core/src/ilu_setup.c
      441 ./core/src/ilu_setup_bsr.c
     1432 ./core/src/ilu_setup_str.c
      200 ./core/src/init.c
@@ -47,12 +47,12 @@
      118 ./core/src/itsolver_bcsr.c
      375 ./core/src/itsolver_bsr.c
      132 ./core/src/itsolver_bsr_omp.c
-     501 ./core/src/itsolver_csr.c
-     202 ./core/src/itsolver_csr_omp.c
+     502 ./core/src/itsolver_csr.c
+     203 ./core/src/itsolver_csr_omp.c
      341 ./core/src/itsolver_str.c
      170 ./core/src/lu.c
      244 ./core/src/memory.c
-     219 ./core/src/message.c
+     236 ./core/src/message.c
      297 ./core/src/mgcycle.c
      423 ./core/src/mgcycle_omp.c
      120 ./core/src/mgrecur.c
@@ -101,6 +101,6 @@
      478 ./core/include/fasp_block.h
     2506 ./core/include/fasp_functs.h
     5818 ./core/include/malloc.c.h
-     189 ./core/include/messages.h
+     184 ./core/include/messages.h
      291 ./core/include/nedmalloc.h
-   61905 total
+   61912 total

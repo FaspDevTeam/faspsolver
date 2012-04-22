@@ -27,7 +27,7 @@ itsolver_maxit = 1000    % Maximal ieration number
 % parameters for ILU preconditioners           %
 %----------------------------------------------%
 
-ILU_type       = 3      % 1 ILUs | 2 ILUt | 3 ILUk | 4 ILUtp 
+ILU_type       = 1      % 1 ILUk | 2 ILUt | 3 ILUtp
 ILU_lfil       = 0      % the level of fill-in for ILU 
 ILU_relax      = 0.9    % add the dropped entries to diagnal by this relax parameter
 ILU_droptol    = 0.1    % the drop tolerence for ILU 

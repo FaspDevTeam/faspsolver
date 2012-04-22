@@ -10,12 +10,10 @@
 
 /* ilu.for */
 #ifdef __cplusplus 
-extern "C" {void ilus_(const int *n,double *a,int *ja,int *ia,int *lfil,const double *relax,int *nzlu,double *luval,int *ijlu,int *maxstr,int *icode);}
 extern "C" {void iluk_(const int *n,double *a,int *ja,int *ia,int *lfil,double *alu,int *jlu,int *iwk,int *ierr,int *nzlu);}
 extern "C" {void ilut_(const int *n,double *a,int *ja,int *ia,int *lfil,const double *droptol,double *alu,int *jlu,int *iwk,int *ierr,int *nz);}
 extern "C" {void ilutp_(const int *n,double *a,int *ja,int *ia,int *lfil,const double *droptol,const double *permtol,const int *mbloc,double *alu,int *jlu,int *iwk,int *ierr,int *nz);}
 #else
-extern void ilus_(const int *n,double *a,int *ja,int *ia,int *lfil,const double *relax,int *nzlu,double *luval,int *ijlu,int *maxstr,int *icode);
 extern void iluk_(const int *n,double *a,int *ja,int *ia,int *lfil,double *alu,int *jlu,int *iwk,int *ierr,int *nzlu);
 extern void ilut_(const int *n,double *a,int *ja,int *ia,int *lfil,const double *droptol,double *alu,int *jlu,int *iwk,int *ierr,int *nz);
 extern void ilutp_(const int *n,double *a,int *ja,int *ia,int *lfil,const double *droptol,const double *permtol,const int *mbloc,double *alu,int *jlu,int *iwk,int *ierr,int *nz);
@@ -112,8 +110,8 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
 			ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol, \
                    &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
 			break;
-		default: // ILUs
-			ilus_(&n,A->val,A->JA,A->IA,&lfil,&ILU_relax,&nzlu,luval,ijlu,&maxstr,&ierr);
+		default:
+            printf("### ERROR: Wrong ILU type %d!\n", type);
 			break;	
 	} 
 	
@@ -157,9 +155,6 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
 			case ILUtp:
 				printf("ILUtp setup costs %f seconds.\n", setup_duration);	
 				break;
-			case ILUs:
-				printf("ILUs setup costs %f seconds.\n", setup_duration);	
-				break;	
 		} 		
 	}
 	

@@ -85,7 +85,7 @@ void fasp_param_input_init (input_param *inparam)
 	inparam->itsolver_maxit = 500;
 	inparam->restart = 25;
 	
-	inparam->ILU_type = ILUs;
+	inparam->ILU_type = ILUk;
 	inparam->ILU_lfil = 0;
 	inparam->ILU_droptol = 0.001;
 	inparam->ILU_relax = 0;
@@ -160,7 +160,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
 	amgparam->tentative_smooth = 0.0; // edit by Fengchunsheng 2011/03/15
 	amgparam->smooth_filter = OFF;
 	
-	amgparam->ILU_type = ILUs; 
+	amgparam->ILU_type = ILUk; 
 	amgparam->ILU_levels = 0;
 	amgparam->ILU_lfil = 0;
 	amgparam->ILU_droptol = 0.001;
@@ -201,7 +201,7 @@ void fasp_param_solver_init (itsolver_param *itparam)
 void fasp_param_ilu_init (ILU_param *iluparam)
 {
 	iluparam->print_level  = 0;
-	iluparam->ILU_type     = ILUs;
+	iluparam->ILU_type     = ILUk;
 	iluparam->ILU_lfil     = 2;
 	iluparam->ILU_droptol  = 0.001;
 	iluparam->ILU_relax    = 0;
@@ -570,9 +570,9 @@ void fasp_param_ilu_print (ILU_param *param)
         
         printf("\n       Parameters in ILU_param\n");
         printf("-----------------------------------------------\n");
-		printf("ILU print level:                   %d\n", param->print_level);
-		printf("ILU type:                          %d\n", param->ILU_type);
-		printf("ILU level of fill-in:              %d\n", param->ILU_lfil);
+		printf("ILU print level:                   %d\n",   param->print_level);
+		printf("ILU type:                          %d\n",   param->ILU_type);
+		printf("ILU level of fill-in:              %d\n",   param->ILU_lfil);
 		printf("ILU relaxation factor:             %.4f\n", param->ILU_relax);	        
 		printf("ILU drop tolerance:                %.2e\n", param->ILU_droptol);	
 		printf("ILU permutation tolerance:         %.2e\n", param->ILU_permtol);	

@@ -24,13 +24,13 @@ stop_type      = 1      % Stopping type: 1 ||r||/||b|| | 2 ||r||_M/||b||_M | 3 |
 
 itsolver_tol   = 1e-8   % Solver tolerance 
 
-itsolver_maxit = 1000    % Maximal ieration number 
+itsolver_maxit = 1000   % Maximal ieration number 
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
 %----------------------------------------------%
 
-ILU_type       = 3      % 1 ILUs | 2 ILUt | 3 ILUk | 4 ILUtp 
+ILU_type       = 1      % 1 ILUk | 2 ILUt | 3 ILUtp 
 ILU_lfil       = 0      % the level of fill-in for ILU 
 ILU_relax      = 0.9    % add the dropped entries to diagnal by this relax parameter
 ILU_droptol    = 0.1    % the drop tolerence for ILU 
@@ -69,7 +69,7 @@ AMG_max_row_sum          = 0.9   % max row sum
 % parameters for smoothed aggregation AMG      %
 %----------------------------------------------%
 
-AMG_strong_coupled	 = 0.0  % strong coupled threshold
+AMG_strong_coupled	 = 0.0   % strong coupled threshold
 AMG_max_aggregation	 = 9     % max size of each aggregation 
 AMG_tentative_smooth	 = 0.67  % smooth factor for smoothing the tentative prolongation
 AMG_smooth_filter	 = OFF   % switch for filtered matrix for smoothing
@@ -78,5 +78,5 @@ AMG_smooth_filter	 = OFF   % switch for filtered matrix for smoothing
 % parameters for GMRES method                  %
 %----------------------------------------------%
 
-itsolver_restart         = 30    % Restart number for GMRES
+itsolver_restart         = 20    % Restart number for GMRES
 

@@ -2,9 +2,10 @@
  *  messages.h
  *  
  *------------------------------------------------------
- *  Created by Chensong Zhang on 03/20/2010.
+ *  Created  by Chensong Zhang on 03/20/2010.
  *  Modified by Chensong Zhang on 12/06/2011.
  *  Modified by Chensong Zhang on 12/25/2011.
+ *  Modified by Chensong Zhang on 04/22/2012.
  *------------------------------------------------------
  *
  */
@@ -45,7 +46,7 @@
  * \brief Definition of return status and error messages
  */
 #define SUCCESS                 0    /**< exit the funtion successfully */
-
+//-----------------------------------------------------------------------------------
 #define ERROR_OPEN_FILE        -10   /**< fail to open a file */
 #define ERROR_WRONG_FILE       -11   /**< input contains wrong format */
 #define ERROR_INPUT_PAR        -13   /**< wrong input argument */
@@ -72,7 +73,7 @@
 #define ERROR_SOLVER_EXIT      -49   /**< solver does not quit successfully */
 //-----------------------------------------------------------------------------------
 #define ERROR_QUAD_TYPE        -60   /**< unknown quadrature type */
-#define ERROR_QUAD_DIM         -61   /**< unsupported dimension for quadrature rules */
+#define ERROR_QUAD_DIM         -61   /**< unsupported quadrature dim */
 //-----------------------------------------------------------------------------------
 #define RUN_FAIL               -100  /**< general fail to run, no specified reason */
 
@@ -88,7 +89,7 @@
 #define SOLVER_GCG              7    /**< Generalized Conjugate Gradient */
 //-----------------------------------------------------------------------------------
 #define SOLVER_AMG              21   /**< AMG as an iterative solver */
-#define SOLVER_FMG		22   /**< Full AMG as an iterative solver */
+#define SOLVER_FMG		        22   /**< Full AMG as an iterative solver */
 //-----------------------------------------------------------------------------------
 #define SOLVER_SUPERLU          31   /**< SuperLU Direct Solver */
 #define SOLVER_UMFPACK          32   /**< UMFPack Direct Solver */
@@ -109,11 +110,6 @@
 #define PREC_AMG                2    /**< with AMG precond */
 #define PREC_ILU                3    /**< with ILU precond */
 #define PREC_FMG                4    /**< with full AMG precond */
-//-----------------------------------------------------------------------------------
-#define PREC_NULL_STRUCT        10   /**< with no precond for dSTRmat matrix */
-#define PREC_DIAG_STRUCT        11   /**< with diagonal precond for dSTRmat matrix */
-#define PREC_AMG_STRUCT         12   /**< with AMG precond for dSTRmat matrix */
-#define PREC_ILU_STRUCT         13   /**< with AMG precond for dSTRmat matrix */
 
 /**
  * \brief Definition of AMG types
@@ -127,7 +123,7 @@
  */
 #define V_CYCLE	                1    /**< V-cycle */
 #define W_CYCLE                 2    /**< W-cycle */
-#define AMLI_CYCLE	        3    /**< AMLI-cycle */
+#define AMLI_CYCLE	            3    /**< AMLI-cycle */
 #define NL_AMLI_CYCLE           4    /**< Nonlinear AMLI-cycle */
 
 /** 
@@ -177,12 +173,11 @@
 /** 
  * \brief Type of ILU methods
  */
-#define ILUs                    1    /**< ILUs */
+#define ILUk                    1    /**< ILUk */
 #define ILUt                    2    /**< ILUt */
-#define ILUk                    3    /**< ILUk */
-#define ILUtp                   4    /**< ILUtp */
+#define ILUtp                   3    /**< ILUtp */
 
-#endif			/* end if for __FASP_MESSAGES__ */
+#endif			                /* end if for __FASP_MESSAGES__ */
 
 /*---------------------------------*/
 /*--        End of File          --*/
