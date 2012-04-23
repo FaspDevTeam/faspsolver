@@ -44,34 +44,34 @@ AMG
 
 [ 0.3.9 ] separate SA and UA code
 [ 0.5.0 ] profile and optimize a few core functions: RS, EM
-[       ] profile and optimize a few core functions: SA, UA
+[       ] profile and optimize a few core functions: SA, UA (Xiaozhe)
 
-[       ] strength matrix based on (polynomial) smoothers 
-[       ] Maximal Independent Set 
-[       ] non-overlapping/overlapping schwarz smoother
-[       ] polynomial smoother (1/x and Chevbshev)
-[       ] Tarjan algorithm and other orderings
+[       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
+[       ] Maximal Independent Set (Ludmil)
+[       ] non-overlapping/overlapping schwarz smoother (Xiaozhe)
+[       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
+[       ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
 
-[       ] aggressive coarsening strategies
-[       ] cleanup the compatible coarsening
-[       ] aggregation based on MIS
-[       ] Notay's aggregation scheme
-[       ] LAMG's aggregation scheme
+[       ] aggressive coarsening strategies (Xiaozhe)
+[       ] cleanup the compatible coarsening (Xiaozhe)
+[       ] aggregation based on MIS (Xiaozhe)
+[       ] Notay's aggregation scheme (Xiaozhe)
+[       ] LAMG's aggregation scheme (Xiaozhe)
 
-[       ] standard interpolation
-[       ] polynomial interpolation (vector preserve)
+[       ] standard interpolation (Xiaozhe)
+[       ] polynomial interpolation -- vector preserve (Xiaozhe)
 [       ] multipass interpolation
 [       ] long-distance interpolation
 [       ] bootstrap interpolation
 
-[       ] estimation of extreme eigenvalues
-[       ] smoothing interpolation by polynomial smoothers
-[       ] interpolation can preserve more kernel vectors 
+[       ] estimation of extreme eigenvalues (Xiaozhe)
+[       ] smoothing interpolation by polynomial smoothers (Xiaozhe)
+[       ] interpolation can preserve more kernel vectors (Xiaozhe)
 
-[       ] add block preconditioners for Stokes
+[       ] add block preconditioners for Stokes (Xiaozhe)
 [       ] add preconditioners for Maxwell
-[ 0.6.7 ] remove the non-GPL ILU method
-[       ] replace the ILU smoothers from SPARSEKIT ver2.0
+[ 0.6.7 ] remove the non-GPL ILU routines
+[       ] replace the ILU smoothers from SPARSEKIT ver2.0 (Chensong)
 
 ========================
 Iterative Methods
