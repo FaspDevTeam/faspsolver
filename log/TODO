@@ -14,10 +14,10 @@ Documentation
 
 [ 0.5.5 ] make Doxygen comments uniform
 [ 0.5.7 ] fix missing functions and files in Doxygen
-[       ] add more details for Doxygen (Chensong)
-[       ] write a short user's manual -- keep it simple (Chensong)
-[       ] generate reference manual using Doxygen (Chensong)
-[       ] make the FASP webpage ready (Chensong)
+[ 06/02 ] add more details for Doxygen (Chensong)
+[ 06/14 ] write a short user's manual -- keep it simple (Chensong)
+[ 06/14 ] generate reference manual using Doxygen (Chensong)
+[ 06/20 ] make the FASP webpage ready (Chensong)
 
 ========================
 Structure Changes
@@ -26,15 +26,15 @@ Structure Changes
 [ 0.4.1 ] prepare a new HG web server for release
 [ 0.4.1 ] use LOGIC type (TRUE and FALSE) for "if" statements
 [ 0.4.1 ] use INT and REAL for int and double -- allows more flexible data types later
-[       ] some constants are used in several functions -- define them in header (Chensong)
-[       ] auto format for plain text, replace TAB by 4 SPACE (Ludmil)
-[       ] add Automake and Autoconf support for installation (Ludmil)
+[ 05/16 ] some constants are used in several functions -- define them in header (Chensong)
+[ 05/30 ] auto format for plain text, replace TAB by 4 SPACE (Ludmil)
+[ 06/03 ] add Automake and Autoconf support for installation (Ludmil)
 
 ========================
 GMG 	
 ========================
 
-[       ] add matrix-free Poisson GMG solver -- n = 2^L (Ludmil)
+[ 06/12 ] add matrix-free Poisson GMG solver -- n = 2^L (Ludmil)
 [       ] add support for general n (Ludmil)
 [       ] tabulate convergence rate of V-cycle (Ludmil)
  
@@ -44,31 +44,31 @@ AMG
 
 [ 0.3.9 ] separate SA and UA code
 [ 0.5.0 ] profile and optimize a few core functions: RS, EM
-[       ] profile and optimize a few core functions: SA, UA (Xiaozhe)
+[ 06/15 ] profile and optimize a few core functions: SA, UA (Xiaozhe)
 
-[       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
+[ 06/01 ] strength matrix based on (polynomial) smoothers (Xiaozhe)
 [       ] Maximal Independent Set (Ludmil)
-[       ] non-overlapping/overlapping schwarz smoother (Xiaozhe)
-[       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
-[       ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
+[ 05/20 ] non-overlapping/overlapping schwarz smoother (Xiaozhe)
+[ 05/20 ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
+[ 06/01 ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
 
-[       ] aggressive coarsening strategies (Xiaozhe)
+[ 05/20 ] aggressive coarsening strategies (Xiaozhe)
 [       ] cleanup the compatible coarsening (Xiaozhe)
-[       ] aggregation based on MIS (Xiaozhe)
+[ 06/01 ] aggregation based on MIS (Xiaozhe)
 [       ] Notay's aggregation scheme (Xiaozhe)
 [       ] LAMG's aggregation scheme (Xiaozhe)
 
-[       ] standard interpolation (Xiaozhe)
-[       ] polynomial interpolation -- vector preserve (Xiaozhe)
+[ 05/20 ] standard interpolation (Xiaozhe)
+[ 06/01 ] polynomial interpolation -- vector preserve (Xiaozhe)
 [       ] multipass interpolation
 [       ] long-distance interpolation
 [       ] bootstrap interpolation
 
-[       ] estimation of extreme eigenvalues (Xiaozhe)
-[       ] smoothing interpolation by polynomial smoothers (Xiaozhe)
-[       ] interpolation can preserve more kernel vectors (Xiaozhe)
+[ 06/15 ] estimation of extreme eigenvalues (Xiaozhe)
+[ 06/15 ] smoothing interpolation by polynomial smoothers (Xiaozhe)
+[ 06/15 ] interpolation can preserve more kernel vectors (Xiaozhe)
 
-[       ] add block preconditioners for Stokes (Xiaozhe)
+[ 05/20 ] add block preconditioners for Stokes (Xiaozhe)
 [       ] add preconditioners for Maxwell
 [ 0.6.7 ] remove the non-GPL ILU routines
 [       ] replace the ILU smoothers from SPARSEKIT ver2.0 (Chensong)
@@ -77,13 +77,13 @@ AMG
 Iterative Methods
 ========================
 
-[       ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
-[       ] test SpBLAS implementations in standard libraries (Chunsheng)
+[ 06/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
+[ 06/15 ] test SpBLAS implementations in standard libraries (Chunsheng)
 [       ] right preconditioning (Chensong)
 
-[       ] different options for stopping criteria: rel res, abs res, etc (Chensong)
-[       ] reduced duplications in iterative methods (Chensong)
-[       ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc (Chensong)
+[ 05/16 ] different options for stopping criteria: rel res, abs res, etc (Chensong)
+[ 05/11 ] reduced duplications in iterative methods (Chensong)
+[ 05/11 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
 ========================
@@ -122,18 +122,18 @@ Test Examples
 [       ] make a GUI for test problems (Ludmil)
 
 [ 0.4.1 ] build "tutorial" dir for simple examples (Chensong)
-[       ] add a set of examples in "tutorial" and modify user's manual accordingly (Chensong)
-[       ] make online help pages for several tutorial examples (Chensong)
+[ 05/26 ] add a set of examples in "tutorial" and modify user's manual accordingly (Chensong)
+[ 05/30 ] make online help pages for several tutorial examples (Chensong)
 
 ========================
 OpenMP Support
 ========================
 
 [ 0.4.1 ] OMP functions should be separated from the sequential ones
-[       ] OMP functions and serial functions use same interface -- preprocessing (Chunsheng)
-[       ] make a uniform OpenMP version (Chunsheng)
+[ 05/15 ] OMP functions and serial functions use same interface -- preprocessing (Chunsheng)
+[ 05/15 ] make a uniform OpenMP version (Chunsheng)
 [       ] add black-red smoothing to OMP version (Chunsheng)
-[       ] profile and optimize OMP code (Chunsheng)
+[ 05/30 ] profile and optimize OMP code (Chunsheng)
 
 ========================
 GPU Support
@@ -149,7 +149,7 @@ Bug Fixes
 ========================
 	
 [ 0.4.1 ] fix a bug in BiCGstab: 9X9 diagonal matrix (one DoF, eight bdy) gives NaN
-[       ] fix an iteration counting bug in BiCGstab (Chensong)
-[       ] check other iterative solvers for similar bugs (Chensong)
-[       ] remove obsolete functions (Chensong)
-[       ] remove preconditioners that have been tested and not good (Chensong)
+[ 05/30 ] fix an iteration counting bug in BiCGstab (Chensong)
+[ 05/30 ] check other iterative solvers for similar bugs (Chensong)
+[ 05/30 ] remove obsolete functions (Chensong)
+[ 05/30 ] remove preconditioners that have been tested and not good (Chensong)

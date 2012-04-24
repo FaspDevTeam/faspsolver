@@ -1,0 +1,147 @@
+\documentclass[11pt]{memoir}
+
+\usepackage[top=1in, bottom=1.5in, left=1in, right=1in]{geometry}
+
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+\usepackage{amssymb}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+\definecolor{listinggray}{gray}{0.95}
+\definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
+\lstset{
+        numbers=left, 
+        numberstyle=\footnotesize,
+        stepnumber=1,
+        	backgroundcolor=\color{listinggray},
+	tabsize=4,
+	rulecolor=,
+	language=C,
+        basicstyle=\scriptsize,
+        upquote=true,
+        aboveskip={1.5\baselineskip},
+        columns=fixed,
+        showstringspaces=false,
+        extendedchars=true,
+        breaklines=true,
+        prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+        frame=single,
+        showtabs=false,
+        showspaces=false,
+        showstringspaces=false,
+        identifierstyle=\ttfamily,
+        keywordstyle=\bfseries\ttfamily\color[rgb]{0,0,1},
+        commentstyle=\ttfamily\color[rgb]{0.2,0.7,0.1},
+        stringstyle=\ttfamily\color[rgb]{1,0.1,0.3},
+}
+
+
+\title{A Simple User's Guide for FASP}
+
+\author{FASP Developer Team}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+
+\maketitle
+
+\newpage
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction}\label{ch:intro}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{What can you expect in this package}
+
+\begin{lstlisting}
+#include <stdio.h>
+
+int main()
+{
+	printf{"Hello, World!\n"}; /* Print "Hello, World!" to the screen. */
+}
+\end{lstlisting}
+
+\section{How to use this guide}
+
+\section{Installation and external libraries}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Basic Usage}\label{ch:basic}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Sparse matrices}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Vectors and arraies}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Classical AMG}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Aggregation-based AMG}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Iterative methods}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Examples}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{OpenMP Version}\label{ch:omp}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Basic usage}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Examples}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{CUDA Version}\label{ch:cuda}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Basic usage}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Examples}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Appendix}\label{ch:append}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{List of Data Structures}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{List of Functions}
+%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\bibliographystyle{abbrv}
+\bibliography{fasp}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}  
