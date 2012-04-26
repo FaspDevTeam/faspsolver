@@ -22,7 +22,7 @@ c-----------------------------------------------------------------------
 !> \file ilu.f
 !> \brief ILU routines for preconditioning adapted from SPARSEKIT
 !>
-!> Methods: ILUk, ILUt, ILUtp
+!> \note Incomplete Factorization Methods: ILUk, ILUt, ILUtp
 
 c-----------------------------------------------------------------------
       subroutine iluk(n,a,ja,ia,lfil,alu,jlu,iwk,ierr,nzlu)

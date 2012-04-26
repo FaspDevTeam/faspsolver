@@ -1,3 +1,8 @@
+!> \file factor.f
+!> \brief LU factoraization for CSR matrix
+!> \author Ludmil Zikatanov
+!> \date   01/01/2002
+
 C=====================================================================
       subroutine sfactr(ia,ja,n,iu,ju,ip,nwku)
 C=====================================================================
