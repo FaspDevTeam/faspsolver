@@ -1,5 +1,7 @@
 File Name: CHANGES
 
+04/25/2012 FASP 0.7.0: Put external packages into different directories. 
+
 04/21/2012 FASP 0.6.7: Remove the non-GPL ILU from ilu.f and make changes for "core" accordingly.
 
 04/10/2012 FASP 0.6.5: Rename "examples" as "tutorial". Add the new "Todo" list.

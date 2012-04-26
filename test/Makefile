@@ -59,14 +59,14 @@ FLFLAGS=-lm $(LINKOPTS) $(LIBS)
 ########################################################################
 .SUFFIXES: .c .cc .cpp .for .f .f77 .f90 .f95
 #
-FSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.for))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f77))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f90))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f95))
-CSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.c))
-CSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.cc))
-CSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.cpp))
+FSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.for))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f77))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f90))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f95))
+CSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.c))
+CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cc))
+CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cpp))
 #
 OBJSF := $(patsubst %.for,%.o,$(FSRC))
 OBJSF += $(patsubst %.f,%.o,$(FSRC))

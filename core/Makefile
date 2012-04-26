@@ -23,7 +23,7 @@ FC=gfortran
 #FC=ifort
 
 SRCDIR=./src
-EXTRDIR=./extra
+EXTDIR=./extra ./extra/interface ./extra/sparsekit ./extra/dlmalloc ./extra/nedmalloc
 INCLUDE=-I./include
 AMGLIB=lib/libfasp.a
 
@@ -57,16 +57,16 @@ include make.inc
 ########################################################################
 .SUFFIXES: .for .f .f77 .f90 .f95 .c .cc .cpp
 #
-FSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.for))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f77))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f90))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f95))
-FSRC += $(foreach dir,$(EXTRDIR),$(wildcard $(EXTRDIR)/*.f))
-CSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.c))
-CSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.cc))
-CSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.cpp))
-CSRC += $(foreach dir,$(EXTRDIR),$(wildcard $(EXTRDIR)/*.c))
+FSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.for))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f77))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f90))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f95))
+FSRC += $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*.f))
+CSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.c))
+CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cc))
+CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cpp))
+CSRC += $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*.c))
 #
 OBJSF := $(patsubst %.for,%.o,$(FSRC))
 OBJSF += $(patsubst %.f,%.o,$(FSRC))
@@ -142,8 +142,8 @@ lib: $(OBJSC) $(OBJSF)
 .PHONY: clean allclean help
 
 clean:
-	rm -f $(SRCDIR)/*.o
-	rm -f $(EXTRDIR)/*.o
+	@-rm -f $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.o))
+	@-rm -f $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*.o))
 
 libclean:
 	rm -f include/fasp_functs.h
@@ -151,11 +151,10 @@ libclean:
 
 allclean:
 	make clean
+	@-rm -f $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*~))
+	@-rm -f $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*~))
 	rm -f lib/libfasp.a
 	rm -f *~ *.ex *.out
-	rm -f $(SRCDIR)/*~
-	rm -f $(EXTRDIR)/*~
-	rm -f main/*~
 
 help:
 	@echo "======================================================"
