@@ -22,8 +22,8 @@ extern "C" {
  * \param  A         pointer to matrix data
  * \param  b         pointer to rhs data
  * \param  x         pointer to sol data
- * \param   ctol      tolerance for the coarsest level
- * \param   prt_lvl   level of output
+ * \param  ctol      tolerance for the coarsest level
+ * \param  prt_lvl   level of output
  *
  * \author Chensong Zhang
  * \date 01/10/2012
@@ -37,10 +37,10 @@ static void fasp_coarse_itsolver (dCSRmat *A,
     const INT csize  = A->row;
     const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
     
-    INT status = fasp_solver_dcsr_pcg (A, b, x, cmaxit, ctol, NULL, 0, 1);
+    INT status = fasp_solver_dcsr_pcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);
     
     if (status < 0) { // If PCG does not converge, use BiCGstab as a saft net.
-        status = fasp_solver_dcsr_pvgmres (A, b, x, cmaxit, ctol, NULL, 0, 1, 25);
+        status = fasp_solver_dcsr_pvgmres (A, b, x, cmaxit, ctol, NULL, PRINT_NONE, 1, 25);
     }
     
     if ( status < 0 && prt_lvl > PRINT_MIN ) {
@@ -132,7 +132,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
             break;
         
         case CG:
-            fasp_solver_dcsr_pcg(A, b, x, nsweeps, 1e-3, NULL, 0, 1);
+            fasp_solver_dcsr_pcg(A, b, x, NULL, 1e-3, nsweeps, 1, PRINT_NONE);
             break;
         
         default:
@@ -225,7 +225,7 @@ static void fasp_dcsr_postsmoothing (const SHORT smoother,
             break;
         
         case CG:
-            fasp_solver_dcsr_pcg(A, b, x, nsweeps, 1e-3, NULL, 0, 1);
+            fasp_solver_dcsr_pcg(A, b, x, NULL, 1e-3, nsweeps, 1, PRINT_NONE);
             break;
         
         default:

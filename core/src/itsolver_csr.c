@@ -58,7 +58,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 			
 		case SOLVER_CG:
 			if (print_level>0) printf("Calling PCG solver ...\n");
-			iter = fasp_solver_dcsr_pcg(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
+			iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
 			
 		case SOLVER_BiCGstab:
@@ -427,8 +427,8 @@ FINISHED:
  * \author Xiaozhe Hu
  * \date 09/25/2009 
  *
- * \note  This function is specially designed for reservoir simulation.
- *        Have not been tested in any other places. 
+ * \note This function is specially designed for reservoir simulation.
+ *       Have not been tested in any other places. 
  */
 INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A, 
                                    dvector *b, 

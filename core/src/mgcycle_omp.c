@@ -128,7 +128,6 @@ ForwardSweep:
 		unsigned int cmaxit = csize*csize; // coarse level iteration number
 		double ctol = param->tol; // coarse level tolerance		
 		fasp_solver_dcsr_pbcgs(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
-		//fasp_solver_dcsr_pcg(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
 #endif 
 	}
 	
@@ -274,8 +273,7 @@ ForwardSweep:
 					fasp_smoother_dcsr_L1diag(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
 					break;
 				case CG:
-					//fasp_solver_dcsr_pcg(&mgl[l].A, &mgl[l].b, &mgl[l].x, pow(6,l), 1e-3, NULL, 0, 1);
-					fasp_solver_dcsr_pcg(&mgl[l].A, &mgl[l].b, &mgl[l].x, 1, 1e-3, NULL, 0, 1);
+					fasp_solver_dcsr_pcg(&mgl[l].A, &mgl[l].b, &mgl[l].x, NULL, 1e-3, 1, 1, 0);
 					break;
 				default:
 					printf("### ERROR: Wrong smoother type %d!\n", smoother); 
@@ -321,7 +319,7 @@ ForwardSweep:
 		const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
 		REAL ctol = param->tol; // coarse level tolerance
         
-		INT flag = fasp_solver_dcsr_pcg (&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1);
+		INT flag = fasp_solver_dcsr_pcg (&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, NULL, ctol, cmaxit, 1, 0);
 		
         if (flag < 0) { // If PCG does not converge, use BiCGstab as a saft net.
             flag = fasp_solver_dcsr_pvgmres (&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1, 25);
@@ -401,8 +399,7 @@ ForwardSweep:
 					fasp_smoother_dcsr_L1diag(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
 					break;
 				case CG:
-					//fasp_solver_dcsr_pcg(&mgl[l].A, &mgl[l].b, &mgl[l].x, pow(6,l), 1e-3, NULL, 0, 1);
-					fasp_solver_dcsr_pcg(&mgl[l].A, &mgl[l].b, &mgl[l].x, 1, 1e-3, NULL, 0, 1);
+					fasp_solver_dcsr_pcg(&mgl[l].A, &mgl[l].b, &mgl[l].x, NULL, 1e-3, 1, 1, 0);
 					break;
 				default:
 					printf("### ERROR: Wrong smoother type %d!\n", smoother); 

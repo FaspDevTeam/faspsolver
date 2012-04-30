@@ -49,7 +49,7 @@ INT fasp_solver_dstr_itsolver(dSTRmat *A,
 			
 		case SOLVER_CG: 
 			if (print_level>PRINT_NONE) printf("Calling CG solver (STR format) ...\n");
-			iter=fasp_solver_dstr_pcg(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
+			iter=fasp_solver_dstr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
 			break;
 			
 		case SOLVER_BiCGstab:

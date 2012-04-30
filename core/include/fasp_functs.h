@@ -1212,6 +1212,9 @@ void print_itinfo (const INT ptrlvl,
 void print_amgcomplexity (AMG_data *mgl, 
                           const SHORT prtlvl);
 
+void print_cputime (const char *message, 
+                    const REAL cputime);
+
 void print_message (const INT ptrlvl, 
                     const char *message);
 
@@ -1371,29 +1374,29 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 INT fasp_solver_dcsr_pcg (dCSRmat *A, 
                           dvector *b, 
                           dvector *u, 
-                          const INT MaxIt, 
-                          const REAL tol,
                           precond *pc, 
-                          const SHORT print_level, 
-                          const SHORT stop_type);
+                          const REAL tol,
+                          const INT MaxIt, 
+                          const SHORT stop_type,
+                          const SHORT print_level);
 
 INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, 
                            dvector *b, 
                            dvector *u, 
-                           const INT MaxIt, 
-                           const REAL tol,
                            precond *pc, 
-                           const SHORT print_level, 
-                           const SHORT stop_type);
+                           const REAL tol,
+                           const INT MaxIt, 
+                           const SHORT stop_type,
+                           const SHORT print_level);
 
 INT fasp_solver_dstr_pcg (dSTRmat *A, 
                           dvector *b, 
                           dvector *u, 
-                          const INT MaxIt, 
-                          const REAL tol, 
                           precond *pc, 
-                          const SHORT print_level, 
-                          const SHORT stop_type);
+                          const REAL tol, 
+                          const INT MaxIt, 
+                          const SHORT stop_type,
+                          const SHORT print_level);
 
 
 /*-------- In file: pcg_omp.c --------*/

@@ -59,6 +59,10 @@
 #define MAX_REFINE_LVL   20    /**< Maximal refinement level */
 #define MAX_AMG_LVL      20    /**< Maximal AMG coarsening level */
 
+#define STAG_RATIO       1e-4  /**< Staganation tolerance = tol*STAGRATIO */
+#define MAX_STAG         20    /**< Maximal number of staganation times */
+#define MAX_RESTART      20    /**< Maximal number of restarting */
+
 /** 
  * \brief Definition of max, min, abs
  */
