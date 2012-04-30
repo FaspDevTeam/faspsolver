@@ -1335,20 +1335,11 @@ void fasp_param_solver_print (itsolver_param *param);
 INT fasp_solver_dcsr_pbcgs (dCSRmat *A, 
                             dvector *b, 
                             dvector *u, 
-                            const INT MaxIt, 
-                            const REAL tol,
                             precond *pc, 
-                            const SHORT print_level, 
-                            const SHORT stop_type);
-
-INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, 
-                             dvector *b, 
-                             dvector *u, 
-                             const INT MaxIt, 
-                             const REAL tol,
-                             precond *pc, 
-                             const INT print_level, 
-                             const INT stop_type);
+                            const REAL tol,
+                            const INT MaxIt, 
+                            const SHORT stop_type,
+                            const SHORT print_level);
 
 INT fasp_solver_dbsr_pbcgs(dBSRmat *A, 
                            dvector *b, 
@@ -1358,6 +1349,15 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
                            precond *pc, 
                            const INT print_level, 
                            const INT stop_type);
+
+INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, 
+                             dvector *b, 
+                             dvector *u, 
+                             precond *pc, 
+                             const REAL tol,
+                             const INT MaxIt, 
+                             const INT stop_type,
+                             const INT print_level) ;
 
 INT fasp_solver_dstr_pbcgs (dSTRmat *A, 
                             dvector *b, 

@@ -54,8 +54,8 @@
 /**
  * \brief Some global constants 
  */
-#define BIGREAL          1e+15 /**< A large real number */ 
-#define SMALLREAL        1e-15 /**< A small real number */ 
+#define BIGREAL          1e+20 /**< A large real number */ 
+#define SMALLREAL        1e-20 /**< A small real number */ 
 #define MAX_REFINE_LVL   20    /**< Maximal refinement level */
 #define MAX_AMG_LVL      20    /**< Maximal AMG coarsening level */
 

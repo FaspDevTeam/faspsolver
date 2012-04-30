@@ -63,7 +63,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 			
 		case SOLVER_BiCGstab:
 			if (print_level>0) printf("Calling BiCGstab solver ...\n");
-			iter = fasp_solver_dcsr_pbcgs(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
+			iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
 			
 		case SOLVER_MinRes:

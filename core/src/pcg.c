@@ -83,7 +83,7 @@
  * \author Chensong Zhang, Xiaozhe Hu, Shiquan Zhang
  * \date   05/06/2010
  * 
- * Modified by Chensong Zhang 04/30/2012
+ * Modified by Chensong Zhang on 04/30/2012
  */
 INT fasp_solver_dcsr_pcg (dCSRmat *A, 
                           dvector *b, 
@@ -357,7 +357,7 @@ FINISHED:  // finish the iterative method
  * \author Xiaozhe Hu
  * \date   05/24/2010
  * 
- * Modified by Chensong Zhang 04/30/2012
+ * Modified by Chensong Zhang on 04/30/2012
  */
 INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, 
                            dvector *b, 
@@ -633,7 +633,7 @@ FINISHED:  // finish the iterative method
  * \author Zhiyang Zhou
  * \date   04/25/2010
  * 
- * Modified by Chensong Zhang 04/30/2012
+ * Modified by Chensong Zhang on 04/30/2012
  */
 INT fasp_solver_dstr_pcg (dSTRmat *A, 
                           dvector *b, 
