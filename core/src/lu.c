@@ -46,48 +46,48 @@ SHORT fasp_smat_lu_decomp (REAL *A,
                            INT pivot[], 
                            INT n) 
 {
-	INT i, j, k;
-	REAL *p_k=NULL, *p_row=NULL, *p_col=NULL;
-	REAL max;
-	
-	/* For each row and column, k = 0, ..., n-1, */
-	for (k = 0, p_k = A; k < n; p_k += n, k++) {
-		
-		// find the pivot row
-		pivot[k] = k;
-		max = fabs( *(p_k + k) );
-		for (j = k + 1, p_row = p_k + n; j < n; ++j, p_row += n) {
-			if ( max < fabs(*(p_row + k)) ) {
-				max = fabs(*(p_row + k));
-				pivot[k] = j;
-				p_col = p_row;
-			}
-		}
-		
-		// if the pivot row differs from the current row, interchange the two rows.		
-		if (pivot[k] != k)
-			for (j = 0; j < n; ++j) {
-				max = *(p_k + j);
-				*(p_k + j) = *(p_col + j);
-				*(p_col + j) = max;
-			}
-		
-		// if the matrix is singular, return error
-		if ( fabs( *(p_k + k) ) < SMALLREAL ) return -1;
-		
-		// otherwise find the lower triangular matrix elements for column k. 		
-		for (i = k+1, p_row = p_k + n; i < n; p_row += n, ++i) {
-			*(p_row + k) /= *(p_k + k);
-		}  
-		
-		// update remaining matrix		
-		for (i = k+1, p_row = p_k + n; i < n; p_row += n, ++i)
-			for (j = k+1; j < n; ++j)
-				*(p_row + j) -= *(p_row + k) * *(p_k + j);
-		
-	}
-	
-	return SUCCESS;
+    INT i, j, k;
+    REAL *p_k=NULL, *p_row=NULL, *p_col=NULL;
+    REAL max;
+    
+    /* For each row and column, k = 0, ..., n-1, */
+    for (k = 0, p_k = A; k < n; p_k += n, k++) {
+    
+    // find the pivot row
+    pivot[k] = k;
+    max = fabs( *(p_k + k) );
+    for (j = k + 1, p_row = p_k + n; j < n; ++j, p_row += n) {
+    if ( max < fabs(*(p_row + k)) ) {
+    max = fabs(*(p_row + k));
+    pivot[k] = j;
+    p_col = p_row;
+    }
+    }
+    
+    // if the pivot row differs from the current row, interchange the two rows.    
+    if (pivot[k] != k)
+    for (j = 0; j < n; ++j) {
+    max = *(p_k + j);
+    *(p_k + j) = *(p_col + j);
+    *(p_col + j) = max;
+    }
+    
+    // if the matrix is singular, return error
+    if ( fabs( *(p_k + k) ) < SMALLREAL ) return -1;
+    
+    // otherwise find the lower triangular matrix elements for column k.     
+    for (i = k+1, p_row = p_k + n; i < n; p_row += n, ++i) {
+    *(p_row + k) /= *(p_k + k);
+    }  
+    
+    // update remaining matrix    
+    for (i = k+1, p_row = p_k + n; i < n; p_row += n, ++i)
+    for (j = k+1; j < n; ++j)
+    *(p_row + j) -= *(p_row + k) * *(p_k + j);
+    
+    }
+    
+    return SUCCESS;
 }
 
 /**
@@ -119,26 +119,26 @@ SHORT fasp_smat_lu_solve (REAL *A,
                           REAL x[], 
                           INT n)
 {
-	INT i, k;
-	REAL *p_k;
-	REAL dum;
-	
-	/* solve Ly = b	*/
-	for (k = 0, p_k = A; k < n; p_k += n, k++) {
-		if (pivot[k] != k) {dum = b[k]; b[k] = b[pivot[k]]; b[pivot[k]] = dum; }
-		x[k] = b[k];
-		for (i = 0; i < k; ++i) x[k] -= x[i] * *(p_k + i);
-	}
-	
-	/* solve Ux = y */
-	for (k = n-1, p_k = A + n*(n-1); k >= 0; k--, p_k -= n) {
-		if (pivot[k] != k) {dum = b[k]; b[k] = b[pivot[k]]; b[pivot[k]] = dum; }
-		for (i = k + 1; i < n; ++i) x[k] -= x[i] * *(p_k + i);
-		if (*(p_k + k) == 0.0) return -1;
-		x[k] /= *(p_k + k);
-	}
+    INT i, k;
+    REAL *p_k;
+    REAL dum;
     
-	return SUCCESS;
+    /* solve Ly = b    */
+    for (k = 0, p_k = A; k < n; p_k += n, k++) {
+    if (pivot[k] != k) {dum = b[k]; b[k] = b[pivot[k]]; b[pivot[k]] = dum; }
+    x[k] = b[k];
+    for (i = 0; i < k; ++i) x[k] -= x[i] * *(p_k + i);
+    }
+    
+    /* solve Ux = y */
+    for (k = n-1, p_k = A + n*(n-1); k >= 0; k--, p_k -= n) {
+    if (pivot[k] != k) {dum = b[k]; b[k] = b[pivot[k]]; b[pivot[k]] = dum; }
+    for (i = k + 1; i < n; ++i) x[k] -= x[i] * *(p_k + i);
+    if (*(p_k + k) == 0.0) return -1;
+    x[k] /= *(p_k + k);
+    }
+    
+    return SUCCESS;
 }
 
 /*---------------------------------*/

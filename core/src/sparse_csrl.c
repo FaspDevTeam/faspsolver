@@ -30,18 +30,18 @@ dCSRLmat * fasp_dcsrl_create (INT num_rows,
                               INT num_cols, 
                               INT num_nonzeros)
 {
-	dCSRLmat *A = NULL;
-	A = (dCSRLmat *)fasp_mem_calloc(1, sizeof(dCSRLmat));
-	A -> num_rows     = num_rows;
-	A -> num_cols     = num_cols;
-	A -> num_nonzeros = num_nonzeros;
-	A -> nzdifnum     = NULL;
-	A -> rowindex     = NULL;
-	A -> rowstart     = NULL;
-	A -> ja           = NULL;
-	A -> data         = NULL;
-	
-	return A;
+    dCSRLmat *A = NULL;
+    A = (dCSRLmat *)fasp_mem_calloc(1, sizeof(dCSRLmat));
+    A -> num_rows     = num_rows;
+    A -> num_cols     = num_cols;
+    A -> num_nonzeros = num_nonzeros;
+    A -> nzdifnum     = NULL;
+    A -> rowindex     = NULL;
+    A -> rowstart     = NULL;
+    A -> ja           = NULL;
+    A -> data         = NULL;
+    
+    return A;
 }
 
 /**
@@ -56,15 +56,15 @@ dCSRLmat * fasp_dcsrl_create (INT num_rows,
  */
 void fasp_dcsrl_free (dCSRLmat *A)
 {
-	if (A)
-	{  
-		if (A -> nzdifnum) free(A -> nzdifnum);
-		if (A -> rowindex) free(A -> rowindex);
-		if (A -> rowstart) free(A -> rowstart);
-		if (A -> ja)       free(A -> ja);
-		if (A -> data)     free(A -> data);
-		free(A);
-	}
+    if (A)
+    {  
+    if (A -> nzdifnum) free(A -> nzdifnum);
+    if (A -> rowindex) free(A -> rowindex);
+    if (A -> rowstart) free(A -> rowstart);
+    if (A -> ja)       free(A -> ja);
+    if (A -> data)     free(A -> data);
+    free(A);
+    }
 }
 
 /*---------------------------------*/

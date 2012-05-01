@@ -26,7 +26,7 @@
  */
 void fasp_array_null (REAL *x) 
 {
-	x=NULL;
+    x=NULL;
 }
 
 /**
@@ -45,8 +45,8 @@ void fasp_array_set (const INT n,
                      REAL *x, 
                      const REAL val)
 {
-	unsigned INT i;
-	for (i=0; i<n; ++i) x[i]=val;
+    unsigned INT i;
+    for (i=0; i<n; ++i) x[i]=val;
 }
 
 /**
@@ -65,7 +65,7 @@ void fasp_array_cp (const INT n,
                     REAL *x, 
                     REAL *y)
 {
-	memcpy(y,x,n*sizeof(REAL));
+    memcpy(y,x,n*sizeof(REAL));
 }
 
 /**
@@ -84,9 +84,9 @@ void fasp_array_cp (const INT n,
 void fasp_array_cp_nc3 (REAL *x, 
                         REAL *y) 
 {
-	y[0] = x[0];
-	y[1] = x[1];
-	y[2] = x[2];
+    y[0] = x[0];
+    y[1] = x[1];
+    y[2] = x[2];
 }
 
 /**
@@ -105,11 +105,11 @@ void fasp_array_cp_nc3 (REAL *x,
 void fasp_array_cp_nc5 (REAL *x, 
                         REAL *y) 
 {
-	y[0] = x[0];
-	y[1] = x[1];
-	y[2] = x[2];
-	y[3] = x[3];
-	y[4] = x[4];
+    y[0] = x[0];
+    y[1] = x[1];
+    y[2] = x[2];
+    y[3] = x[3];
+    y[4] = x[4];
 }
 
 /**
@@ -128,13 +128,13 @@ void fasp_array_cp_nc5 (REAL *x,
 void fasp_array_cp_nc7 (REAL *x, 
                         REAL *y) 
 {
-	y[0] = x[0];
-	y[1] = x[1];
-	y[2] = x[2];
-	y[3] = x[3];
-	y[4] = x[4];
-	y[5] = x[5];
-	y[6] = x[6];
+    y[0] = x[0];
+    y[1] = x[1];
+    y[2] = x[2];
+    y[3] = x[3];
+    y[4] = x[4];
+    y[5] = x[5];
+    y[6] = x[6];
 }
 
 /*---------------------------------*/

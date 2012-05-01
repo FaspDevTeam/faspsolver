@@ -45,26 +45,26 @@ void fasp_smoother_dcsr_gscr (INT pt,
 { 
     INT i,j,k,l;
     REAL t, d;
-	
+    
     for (l=0;l<L;++l){
         for (i=0;i<n;++i){
             if (CF[i] == pt) { 
                 t=b[i];
                 for (k=ia[i];k<ia[i+1];++k){
-					j=ja[k];
-					if (CF[j] == pt){
-						if (i!=j){
-							t-=a[k]*u[j]; 
-						}else{ 
-							d=a[k];
-						}
-						if (ABS(d)>SMALLREAL){ 
-							u[i]=t/d;
-						} else{
-							printf("### ERROR: Diagonal entry (%d,%e) is zero!\n",i,d);
-							exit(ERROR_MISC);
-						}
-					}
+    j=ja[k];
+    if (CF[j] == pt){
+    if (i!=j){
+    t-=a[k]*u[j]; 
+    }else{ 
+    d=a[k];
+    }
+    if (ABS(d)>SMALLREAL){ 
+    u[i]=t/d;
+    } else{
+    printf("### ERROR: Diagonal entry (%d,%e) is zero!\n",i,d);
+    exit(ERROR_MISC);
+    }
+    }
                 }
             }else{
                 u[i]=0.e0;

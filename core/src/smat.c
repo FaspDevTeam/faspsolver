@@ -21,13 +21,13 @@
  * \date   2010/04/03 
  */
 void fasp_iden_free (idenmat *A)
-{			
-	unsigned INT i;
-	
-	if (A==NULL) return;
-	
-	for (i=0;i<A->row;++i) fasp_mem_free(A->val[i]);
-	fasp_mem_free(A->val); A->val = NULL; A->row = 0;
+{    
+    unsigned INT i;
+    
+    if (A==NULL) return;
+    
+    for (i=0;i<A->row;++i) fasp_mem_free(A->val[i]);
+    fasp_mem_free(A->val); A->val = NULL; A->row = 0;
 }
 
 /**
@@ -42,10 +42,10 @@ void fasp_iden_free (idenmat *A)
  */
 void fasp_smat_identity_nc2 (REAL *a)
 {
-	memset(a, 0X0, 4*sizeof(REAL));
-	
-	a[0] = 1.0; a[3] = 1.0; 
-}	
+    memset(a, 0X0, 4*sizeof(REAL));
+    
+    a[0] = 1.0; a[3] = 1.0; 
+}    
 
 /**
  * \fn void fasp_smat_identity_nc3 (REAL *a)
@@ -59,10 +59,10 @@ void fasp_smat_identity_nc2 (REAL *a)
  */
 void fasp_smat_identity_nc3 (REAL *a)
 {
-	memset(a, 0X0, 9*sizeof(REAL));
-	
-	a[0] = 1.0; a[4] = 1.0; a[8] = 1.0;
-}	
+    memset(a, 0X0, 9*sizeof(REAL));
+    
+    a[0] = 1.0; a[4] = 1.0; a[8] = 1.0;
+}    
 
 /**
  * \fn void fasp_smat_identity_nc5 (REAL *a)
@@ -76,10 +76,10 @@ void fasp_smat_identity_nc3 (REAL *a)
  */
 void fasp_smat_identity_nc5 (REAL *a)
 {
-	memset(a, 0X0, 25*sizeof(REAL));
-	
-	a[0] = 1.0; a[6] = 1.0; a[12] = 1.0; a[18] = 1.0; a[24] = 1.0;
-}	
+    memset(a, 0X0, 25*sizeof(REAL));
+    
+    a[0] = 1.0; a[6] = 1.0; a[12] = 1.0; a[18] = 1.0; a[24] = 1.0;
+}    
 
 /**
  * \fn void fasp_smat_identity_nc7 (REAL *a)
@@ -93,11 +93,11 @@ void fasp_smat_identity_nc5 (REAL *a)
  */
 void fasp_smat_identity_nc7 (REAL *a)
 {
-	memset(a, 0X0, 49*sizeof(REAL));
-	
-	a[0] = 1.0; a[8] = 1.0; a[16] = 1.0; a[24] = 1.0;
-	a[32] = 1.0; a[40] = 1.0; a[48] = 1.0;
-}	
+    memset(a, 0X0, 49*sizeof(REAL));
+    
+    a[0] = 1.0; a[8] = 1.0; a[16] = 1.0; a[24] = 1.0;
+    a[32] = 1.0; a[40] = 1.0; a[48] = 1.0;
+}    
 
 /**
  * \fn void fasp_smat_identity (REAL *a, INT n, INT n2)
@@ -115,76 +115,76 @@ void fasp_smat_identity (REAL *a,
                          INT n, 
                          INT n2)
 {
-	memset(a, 0X0, n2*sizeof(REAL));
-	
-	switch (n)
-	{
-		case 2:
-		{
-			a[0] = 1.0;
-			a[3] = 1.0;
-		}
-			break;
-			
-		case 3:
-		{
-			a[0] = 1.0;
-			a[4] = 1.0;
-			a[8] = 1.0;
-		}
-			break;
-			
-		case 4:
-		{
-			a[0] = 1.0;
-			a[5] = 1.0;
-			a[10] = 1.0;
-			a[15] = 1.0;
-		}
-			break;
-			
-		case 5:
-		{
-			a[0] = 1.0;
-			a[6] = 1.0;
-			a[12] = 1.0;
-			a[18] = 1.0;
-			a[24] = 1.0;
-		}
-			break;
-			
-		case 6:
-		{
-			a[0] = 1.0;
-			a[7] = 1.0;
-			a[14] = 1.0;
-			a[21] = 1.0;
-			a[28] = 1.0;
-			a[35] = 1.0;
-		}
-			break;
-			
-		case 7:
-		{
-			a[0] = 1.0;
-			a[8] = 1.0;
-			a[16] = 1.0;
-			a[24] = 1.0;
-			a[32] = 1.0;
-			a[40] = 1.0;
-			a[48] = 1.0;
-		}
-			break;
-			
-		default:
-		{
-			INT l;
-			for (l = 0; l < n; l ++) a[l*n+l] = 1.0;
-		}
-			break;
-	}
-	
-}	
+    memset(a, 0X0, n2*sizeof(REAL));
+    
+    switch (n)
+    {
+    case 2:
+    {
+    a[0] = 1.0;
+    a[3] = 1.0;
+    }
+    break;
+    
+    case 3:
+    {
+    a[0] = 1.0;
+    a[4] = 1.0;
+    a[8] = 1.0;
+    }
+    break;
+    
+    case 4:
+    {
+    a[0] = 1.0;
+    a[5] = 1.0;
+    a[10] = 1.0;
+    a[15] = 1.0;
+    }
+    break;
+    
+    case 5:
+    {
+    a[0] = 1.0;
+    a[6] = 1.0;
+    a[12] = 1.0;
+    a[18] = 1.0;
+    a[24] = 1.0;
+    }
+    break;
+    
+    case 6:
+    {
+    a[0] = 1.0;
+    a[7] = 1.0;
+    a[14] = 1.0;
+    a[21] = 1.0;
+    a[28] = 1.0;
+    a[35] = 1.0;
+    }
+    break;
+    
+    case 7:
+    {
+    a[0] = 1.0;
+    a[8] = 1.0;
+    a[16] = 1.0;
+    a[24] = 1.0;
+    a[32] = 1.0;
+    a[40] = 1.0;
+    a[48] = 1.0;
+    }
+    break;
+    
+    default:
+    {
+    INT l;
+    for (l = 0; l < n; l ++) a[l*n+l] = 1.0;
+    }
+    break;
+    }
+    
+}    
 
 /*---------------------------------*/
 /*--        End of File          --*/

@@ -43,22 +43,22 @@ void fasp_fwrapper_amg_ (INT *n,
                          INT *maxit, 
                          INT *ptrlvl)
 {
-	dCSRmat    mat;      // coefficient matrix
-	dvector    rhs, sol; // right-hand-side, solution
-	AMG_param  amgparam; // parameters for AMG
-	
-	fasp_param_amg_init(&amgparam);
-	amgparam.tol         = *tol;
-	amgparam.print_level = *ptrlvl;
-	amgparam.maxit    = *maxit;
-	
-	mat.row = *n; mat.col = *n; mat.nnz = *nnz;
-	mat.IA  = ia; mat.JA  = ja; mat.val = a;
-	
-	rhs.row = *n; rhs.val = b;
-	sol.row = *n; sol.val = u;
-	
-	fasp_solver_amg(&mat, &rhs, &sol, &amgparam);
+    dCSRmat    mat;      // coefficient matrix
+    dvector    rhs, sol; // right-hand-side, solution
+    AMG_param  amgparam; // parameters for AMG
+    
+    fasp_param_amg_init(&amgparam);
+    amgparam.tol         = *tol;
+    amgparam.print_level = *ptrlvl;
+    amgparam.maxit    = *maxit;
+    
+    mat.row = *n; mat.col = *n; mat.nnz = *nnz;
+    mat.IA  = ia; mat.JA  = ja; mat.val = a;
+    
+    rhs.row = *n; rhs.val = b;
+    sol.row = *n; sol.val = u;
+    
+    fasp_solver_amg(&mat, &rhs, &sol, &amgparam);
 }
 
 /**
@@ -92,24 +92,24 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
                                 INT *maxit, 
                                 INT *ptrlvl)
 {
-	dCSRmat    mat;      // coefficient matrix
-	dvector    rhs, sol; // right-hand-side, solution	
-	AMG_param  amgparam; // parameters for AMG
-	itsolver_param  itparam;  // parameters for itsolver
-	
-	fasp_param_amg_init(&amgparam);	
-	fasp_param_solver_init(&itparam);
-	itparam.tol         = *tol;
-	itparam.print_level = *ptrlvl;
-	itparam.maxit       = *maxit;
-	
-	mat.row = *n; mat.col = *n; mat.nnz = *nnz;
-	mat.IA = ia;  mat.JA  = ja; mat.val = a;
-	
-	rhs.row = *n; rhs.val = b;
-	sol.row = *n; sol.val = u;
-	
-	fasp_solver_dcsr_krylov_amg(&mat, &rhs, &sol, &itparam, &amgparam);
+    dCSRmat    mat;      // coefficient matrix
+    dvector    rhs, sol; // right-hand-side, solution    
+    AMG_param  amgparam; // parameters for AMG
+    itsolver_param  itparam;  // parameters for itsolver
+    
+    fasp_param_amg_init(&amgparam);    
+    fasp_param_solver_init(&itparam);
+    itparam.tol         = *tol;
+    itparam.print_level = *ptrlvl;
+    itparam.maxit       = *maxit;
+    
+    mat.row = *n; mat.col = *n; mat.nnz = *nnz;
+    mat.IA = ia;  mat.JA  = ja; mat.val = a;
+    
+    rhs.row = *n; rhs.val = b;
+    sol.row = *n; sol.val = u;
+    
+    fasp_solver_dcsr_krylov_amg(&mat, &rhs, &sol, &itparam, &amgparam);
 }
 
 

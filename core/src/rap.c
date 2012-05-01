@@ -18,9 +18,9 @@
 /*---------------------------------*/
 
 /*!
- * \fn dCSRmat fasp_blas_dcsr_rap2 (INT *ir, INT *jr, REAL *r,	 \
- *		INT *ia, INT *ja, REAL *a, INT *ipt, INT *jpt, REAL *pt, \
- *		INT n, INT nc, INT *maxrpout, INT *ipin, INT *jpin) 
+ * \fn dCSRmat fasp_blas_dcsr_rap2 (INT *ir, INT *jr, REAL *r,     \
+ *    INT *ia, INT *ja, REAL *a, INT *ipt, INT *jpt, REAL *pt, \
+ *    INT n, INT nc, INT *maxrpout, INT *ipin, INT *jpin) 
  *
  * \brief Compute R*A*P 
  *
@@ -35,10 +35,10 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
                              REAL *r,
                              INT *ia, 
                              INT *ja, 
-                             REAL *a,	    
+                             REAL *a,        
                              INT *ipt, 
                              INT *jpt, 
-                             REAL *pt,	
+                             REAL *pt,    
                              INT n, 
                              INT nc,
                              INT *maxrpout,
@@ -50,10 +50,10 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
     INT *ip=NULL,*jp=NULL;
     /*=========================================================*/
     /* 
-	 if ipin is null, this
-	 means that we need to do the transpose of p here; otherwise,
-	 these are considered to be input
-	 */
+     if ipin is null, this
+     means that we need to do the transpose of p here; otherwise,
+     these are considered to be input
+     */
     maxrp=0;
     nnzp=ipt[nc]-1;
     n1=n+1;
@@ -61,9 +61,9 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
         ip = (INT *)calloc(n1,sizeof(INT));
         jp = (INT *)calloc(nnzp,sizeof(INT));
         /* these must be null anyway, so no need to assign null
-		 ipin=NULL;
-		 jpin=NULL;
-		 */
+     ipin=NULL;
+     jpin=NULL;
+     */
     } else {
         ip=ipin;
         jp=jpin;
@@ -78,16 +78,16 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
     nc1 = nc+1;
     ac.IA = (INT *)calloc(nc1,sizeof(INT));
     /* 
-	 First call is with jc=null so that we find the number of
-	 nonzeroes in the result 
-	 */
+     First call is with jc=null so that we find the number of
+     nonzeroes in the result 
+     */
     ac.JA=NULL;
     fasp_sparse_rapms_(ir,jr,ia,ja,ip,jp,&n,&nc,ac.IA,ac.JA,&maxrp);
     ac.nnz = ac.IA[nc]-1;
     ac.JA = (INT *)calloc(ac.nnz,sizeof(INT));
     /* 
-	 second call is to fill the column indexes array jc. 
-	 */
+     second call is to fill the column indexes array jc. 
+     */
     fasp_sparse_rapms_(ir,jr,ia,ja,ip,jp,&n,&nc,ac.IA,ac.JA,&maxrp);
     if(!ipin){
         if(ip) free(ip);

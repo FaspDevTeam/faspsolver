@@ -48,33 +48,33 @@ void fasp_dcsr_plot (const dCSRmat *A,
     INT n = A->col;
     INT i, j, k, minmn=MIN(m,n);
     char *map;
-	
-	if (size>minmn) size=minmn;
-	
+    
+    if (size>minmn) size=minmn;
+    
     printf("Writing matrix pattern to `%s'...\n",filename);
-	
-	map = (char *)fasp_mem_calloc(size * size, sizeof(char));
-	
-	memset(map, 0x0F, size * size);
-	for (i = 0; i < size; ++i) {
-		for (j = A->IA[i]; j < A->IA[i+1]; ++j) {
-			if (A->JA[j]<size) {
-				k = size*i + A->JA[j];
-				if (map[k] != 0x0F)
-					map[k] = 0x0F;
-				else if (A->val[j] > 1e-20)
-					map[k] = 0x09; /* bright blue */
-				else if (A->val[j] < -1e-20)
-					map[k] = 0x0C; /* bright red */
-				else
-					map[k] = 0x06; /* brown */
-			} // end if
-		} // end for j
+    
+    map = (char *)fasp_mem_calloc(size * size, sizeof(char));
+    
+    memset(map, 0x0F, size * size);
+    for (i = 0; i < size; ++i) {
+    for (j = A->IA[i]; j < A->IA[i+1]; ++j) {
+    if (A->JA[j]<size) {
+    k = size*i + A->JA[j];
+    if (map[k] != 0x0F)
+    map[k] = 0x0F;
+    else if (A->val[j] > 1e-20)
+    map[k] = 0x09; /* bright blue */
+    else if (A->val[j] < -1e-20)
+    map[k] = 0x0C; /* bright red */
+    else
+    map[k] = 0x06; /* brown */
+    } // end if
+    } // end for j
     } // end for i
-	
-	write_bmp16(filename, size, size, map);
-	
-	fasp_mem_free(map);
+    
+    write_bmp16(filename, size, size, map);
+    
+    fasp_mem_free(map);
 }
 
 /*! 
@@ -91,79 +91,79 @@ void fasp_dcsr_plot (const dCSRmat *A,
 void fasp_grid2d_plot (pgrid2d pg, 
                        INT level)
 {
-	FILE *datei;
-	char buf[120];
-	INT i;
-	double xmid,ymid,xc,yc;
-	
-	sprintf(buf,"Grid_ref_level%d.eps",level);
-	datei = fopen(buf,"w");
-	if(datei==NULL)
-	{
-		printf("Opening file %s fails!\n", buf);
-		return;
-	}
-	
-	fprintf(datei, "%%!PS-Adobe-2.0-2.0 EPSF-2.0\n");
-	fprintf(datei, "%%%%BoundingBox: 0 0 550 550\n");
-	fprintf(datei, "25 dup translate\n");
-	fprintf(datei, "%f setlinewidth\n",0.2);
-	fprintf(datei, "/Helvetica findfont %f scalefont setfont\n",64.0*pow(0.5,level));
-	fprintf(datei, "/b{0 setgray} def\n");
-	fprintf(datei, "/r{1.0 0.6 0.6  setrgbcolor} def\n");
-	fprintf(datei, "/u{0.1 0.7 0.1  setrgbcolor} def\n");
-	fprintf(datei, "/d{0.1 0.1 1.0  setrgbcolor} def\n");
-	fprintf(datei, "/cs{closepath stroke} def\n");
-	fprintf(datei, "/m{moveto} def\n");
-	fprintf(datei, "/l{lineto} def\n");
-	
-	fprintf(datei,"b\n");
-	for(i=0; i<pg->triangles; ++i){
-		xc = (pg->p[pg->t[i][0]][0]+pg->p[pg->t[i][1]][0]+pg->p[pg->t[i][2]][0])*150.0;
-		yc = (pg->p[pg->t[i][0]][1]+pg->p[pg->t[i][1]][1]+pg->p[pg->t[i][2]][1])*150.0;
-		
-		xmid = pg->p[pg->t[i][0]][0]*450.0;
-		ymid = pg->p[pg->t[i][0]][1]*450.0;
-		fprintf(datei,"%.1f %.1f m ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
-		xmid = pg->p[pg->t[i][1]][0]*450.0;
-		ymid = pg->p[pg->t[i][1]][1]*450.0;
-		fprintf(datei,"%.1f %.1f l ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
-		xmid = pg->p[pg->t[i][2]][0]*450.0;
-		ymid = pg->p[pg->t[i][2]][1]*450.0;
-		fprintf(datei,"%.1f %.1f l ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
-		fprintf(datei,"cs\n");
-	}
-	fprintf(datei,"r\n");
-	for(i=0; i<pg->vertices; ++i){
-		xmid = pg->p[i][0]*450.0;
-		ymid = pg->p[i][1]*450.0;
-		fprintf(datei,"%.1f %.1f m ",xmid,ymid);
-		fprintf(datei,"(%d) show\n ",i);
-	}
-	fprintf(datei,"u\n");
-	for(i=0; i<pg->edges; ++i){
-		xmid = 0.5*(pg->p[pg->e[i][0]][0]+pg->p[pg->e[i][1]][0])*450.0;
-		ymid = 0.5*(pg->p[pg->e[i][0]][1]+pg->p[pg->e[i][1]][1])*450.0;
-		fprintf(datei,"%.1f %.1f m ",xmid,ymid);
-		fprintf(datei,"(%d) show\n ",i);
-		
-		xmid = pg->p[pg->e[i][0]][0]*450.0;
-		ymid = pg->p[pg->e[i][0]][1]*450.0;
-		fprintf(datei,"%.1f %.1f m ",xmid,ymid);
-		xmid = pg->p[pg->e[i][1]][0]*450.0;
-		ymid = pg->p[pg->e[i][1]][1]*450.0;
-		fprintf(datei,"%.1f %.1f l ",xmid,ymid);
-		fprintf(datei,"cs\n");
-	}
-	fprintf(datei,"d\n");
-	for(i=0; i<pg->triangles; ++i){
-		xmid = (pg->p[pg->t[i][0]][0]+pg->p[pg->t[i][1]][0]+pg->p[pg->t[i][2]][0])*150.0;
-		ymid = (pg->p[pg->t[i][0]][1]+pg->p[pg->t[i][1]][1]+pg->p[pg->t[i][2]][1])*150.0;
-		fprintf(datei,"%.1f %.1f m ",xmid,ymid);
-		fprintf(datei,"(%d) show\n ",i);
-	}
-	fprintf(datei, "showpage\n");
-	fclose(datei);	
+    FILE *datei;
+    char buf[120];
+    INT i;
+    double xmid,ymid,xc,yc;
+    
+    sprintf(buf,"Grid_ref_level%d.eps",level);
+    datei = fopen(buf,"w");
+    if(datei==NULL)
+    {
+    printf("Opening file %s fails!\n", buf);
+    return;
+    }
+    
+    fprintf(datei, "%%!PS-Adobe-2.0-2.0 EPSF-2.0\n");
+    fprintf(datei, "%%%%BoundingBox: 0 0 550 550\n");
+    fprintf(datei, "25 dup translate\n");
+    fprintf(datei, "%f setlinewidth\n",0.2);
+    fprintf(datei, "/Helvetica findfont %f scalefont setfont\n",64.0*pow(0.5,level));
+    fprintf(datei, "/b{0 setgray} def\n");
+    fprintf(datei, "/r{1.0 0.6 0.6  setrgbcolor} def\n");
+    fprintf(datei, "/u{0.1 0.7 0.1  setrgbcolor} def\n");
+    fprintf(datei, "/d{0.1 0.1 1.0  setrgbcolor} def\n");
+    fprintf(datei, "/cs{closepath stroke} def\n");
+    fprintf(datei, "/m{moveto} def\n");
+    fprintf(datei, "/l{lineto} def\n");
+    
+    fprintf(datei,"b\n");
+    for(i=0; i<pg->triangles; ++i){
+    xc = (pg->p[pg->t[i][0]][0]+pg->p[pg->t[i][1]][0]+pg->p[pg->t[i][2]][0])*150.0;
+    yc = (pg->p[pg->t[i][0]][1]+pg->p[pg->t[i][1]][1]+pg->p[pg->t[i][2]][1])*150.0;
+    
+    xmid = pg->p[pg->t[i][0]][0]*450.0;
+    ymid = pg->p[pg->t[i][0]][1]*450.0;
+    fprintf(datei,"%.1f %.1f m ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
+    xmid = pg->p[pg->t[i][1]][0]*450.0;
+    ymid = pg->p[pg->t[i][1]][1]*450.0;
+    fprintf(datei,"%.1f %.1f l ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
+    xmid = pg->p[pg->t[i][2]][0]*450.0;
+    ymid = pg->p[pg->t[i][2]][1]*450.0;
+    fprintf(datei,"%.1f %.1f l ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
+    fprintf(datei,"cs\n");
+    }
+    fprintf(datei,"r\n");
+    for(i=0; i<pg->vertices; ++i){
+    xmid = pg->p[i][0]*450.0;
+    ymid = pg->p[i][1]*450.0;
+    fprintf(datei,"%.1f %.1f m ",xmid,ymid);
+    fprintf(datei,"(%d) show\n ",i);
+    }
+    fprintf(datei,"u\n");
+    for(i=0; i<pg->edges; ++i){
+    xmid = 0.5*(pg->p[pg->e[i][0]][0]+pg->p[pg->e[i][1]][0])*450.0;
+    ymid = 0.5*(pg->p[pg->e[i][0]][1]+pg->p[pg->e[i][1]][1])*450.0;
+    fprintf(datei,"%.1f %.1f m ",xmid,ymid);
+    fprintf(datei,"(%d) show\n ",i);
+    
+    xmid = pg->p[pg->e[i][0]][0]*450.0;
+    ymid = pg->p[pg->e[i][0]][1]*450.0;
+    fprintf(datei,"%.1f %.1f m ",xmid,ymid);
+    xmid = pg->p[pg->e[i][1]][0]*450.0;
+    ymid = pg->p[pg->e[i][1]][1]*450.0;
+    fprintf(datei,"%.1f %.1f l ",xmid,ymid);
+    fprintf(datei,"cs\n");
+    }
+    fprintf(datei,"d\n");
+    for(i=0; i<pg->triangles; ++i){
+    xmid = (pg->p[pg->t[i][0]][0]+pg->p[pg->t[i][1]][0]+pg->p[pg->t[i][2]][0])*150.0;
+    ymid = (pg->p[pg->t[i][0]][1]+pg->p[pg->t[i][1]][1]+pg->p[pg->t[i][2]][1])*150.0;
+    fprintf(datei,"%.1f %.1f m ",xmid,ymid);
+    fprintf(datei,"(%d) show\n ",i);
+    }
+    fprintf(datei, "showpage\n");
+    fclose(datei);    
 }
 
 /*---------------------------------*/
@@ -182,7 +182,7 @@ void fasp_grid2d_plot (pgrid2d pg,
 static void put_byte(FILE *fp, int c)
 { 
     fputc(c, fp);
-	return;
+    return;
 }
 
 /*! 
@@ -196,9 +196,9 @@ static void put_byte(FILE *fp, int c)
  */
 static void put_word(FILE *fp, int w)
 { /* big endian */
-	put_byte(fp, w);
-	put_byte(fp, w >> 8);
-	return;
+    put_byte(fp, w);
+    put_byte(fp, w >> 8);
+    return;
 }
 
 /*! 
@@ -212,9 +212,9 @@ static void put_word(FILE *fp, int w)
  */
 static void put_dword(FILE *fp, int d)
 { /* big endian */
-	put_word(fp, d);
-	put_word(fp, d >> 16);
-	return;
+    put_word(fp, d);
+    put_word(fp, d >> 16);
+    return;
 }
 
 /*! 
@@ -283,75 +283,75 @@ static void put_dword(FILE *fp, int d)
  */
 static int write_bmp16(const char *fname, int m, int n, const char map[])
 {     
-	FILE *fp;
-	int offset, bmsize, i, j, b, ret = 1;
+    FILE *fp;
+    int offset, bmsize, i, j, b, ret = 1;
     
-	if (!(1 <= m && m <= 32767))
-		printf("### ERROR: write_bmp16 invalid height %d\n", m);
-	
+    if (!(1 <= m && m <= 32767))
+    printf("### ERROR: write_bmp16 invalid height %d\n", m);
+    
     if (!(1 <= n && n <= 32767))
-		printf("### ERROR: write_bmp16 invalid width %d\n", n);
-	
+    printf("### ERROR: write_bmp16 invalid width %d\n", n);
+    
     fp = fopen(fname, "wb");
-	if (fp == NULL)
-	{  printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
-		ret = 0;
-		goto fini;
-	}
-	offset = 14 + 40 + 16 * 4;
-	bmsize = (4 * n + 31) / 32;
-	/* struct BMPFILEHEADER (14 bytes) */
-	/* UINT bfType */          put_byte(fp, 'B'), put_byte(fp, 'M');
-	/* DWORD bfSize */         put_dword(fp, offset + bmsize * 4);
-	/* UINT bfReserved1 */     put_word(fp, 0);
-	/* UNIT bfReserved2 */     put_word(fp, 0);
-	/* DWORD bfOffBits */      put_dword(fp, offset);
-	/* struct BMPINFOHEADER (40 bytes) */
-	/* DWORD biSize */         put_dword(fp, 40);
-	/* LONG biWidth */         put_dword(fp, n);
-	/* LONG biHeight */        put_dword(fp, m);
-	/* WORD biPlanes */        put_word(fp, 1);
-	/* WORD biBitCount */      put_word(fp, 4);
-	/* DWORD biCompression */  put_dword(fp, 0 /* BI_RGB */);
-	/* DWORD biSizeImage */    put_dword(fp, 0);
-	/* LONG biXPelsPerMeter */ put_dword(fp, 2953 /* 75 dpi */);
-	/* LONG biYPelsPerMeter */ put_dword(fp, 2953 /* 75 dpi */);
-	/* DWORD biClrUsed */      put_dword(fp, 0);
-	/* DWORD biClrImportant */ put_dword(fp, 0);
-	/* struct RGBQUAD (16 * 4 = 64 bytes) */
-	/* CGA-compatible colors: */
-	/* 0x00 = black */         put_dword(fp, 0x000000);
-	/* 0x01 = blue */          put_dword(fp, 0x000080);
-	/* 0x02 = green */         put_dword(fp, 0x008000);
-	/* 0x03 = cyan */          put_dword(fp, 0x008080);
-	/* 0x04 = red */           put_dword(fp, 0x800000);
-	/* 0x05 = magenta */       put_dword(fp, 0x800080);
-	/* 0x06 = brown */         put_dword(fp, 0x808000);
-	/* 0x07 = light gray */    put_dword(fp, 0xC0C0C0);
-	/* 0x08 = dark gray */     put_dword(fp, 0x808080);
-	/* 0x09 = bright blue */   put_dword(fp, 0x0000FF);
-	/* 0x0A = bright green */  put_dword(fp, 0x00FF00);
-	/* 0x0B = bright cyan */   put_dword(fp, 0x00FFFF);
-	/* 0x0C = bright red */    put_dword(fp, 0xFF0000);
-	/* 0x0D = bright magenta */put_dword(fp, 0xFF00FF);
-	/* 0x0E = yellow */        put_dword(fp, 0xFFFF00);
-	/* 0x0F = white */         put_dword(fp, 0xFFFFFF);
-	/* pixel data bits */
-	b = 0;
-	for (i = m - 1; i >= 0; i--) {  
-		for (j = 0; j < ((n + 7) / 8) * 8; ++j) {  
-			b <<= 4;
-			b |= (j < n ? map[i * n + j] & 15 : 0);
-			if (j & 1) put_byte(fp, b);
-		}
-	}
-	fflush(fp);
-	if (ferror(fp)) {  
-		printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
-		ret = 0;
-	}
+    if (fp == NULL)
+    {  printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
+    ret = 0;
+    goto fini;
+    }
+    offset = 14 + 40 + 16 * 4;
+    bmsize = (4 * n + 31) / 32;
+    /* struct BMPFILEHEADER (14 bytes) */
+    /* UINT bfType */          put_byte(fp, 'B'), put_byte(fp, 'M');
+    /* DWORD bfSize */         put_dword(fp, offset + bmsize * 4);
+    /* UINT bfReserved1 */     put_word(fp, 0);
+    /* UNIT bfReserved2 */     put_word(fp, 0);
+    /* DWORD bfOffBits */      put_dword(fp, offset);
+    /* struct BMPINFOHEADER (40 bytes) */
+    /* DWORD biSize */         put_dword(fp, 40);
+    /* LONG biWidth */         put_dword(fp, n);
+    /* LONG biHeight */        put_dword(fp, m);
+    /* WORD biPlanes */        put_word(fp, 1);
+    /* WORD biBitCount */      put_word(fp, 4);
+    /* DWORD biCompression */  put_dword(fp, 0 /* BI_RGB */);
+    /* DWORD biSizeImage */    put_dword(fp, 0);
+    /* LONG biXPelsPerMeter */ put_dword(fp, 2953 /* 75 dpi */);
+    /* LONG biYPelsPerMeter */ put_dword(fp, 2953 /* 75 dpi */);
+    /* DWORD biClrUsed */      put_dword(fp, 0);
+    /* DWORD biClrImportant */ put_dword(fp, 0);
+    /* struct RGBQUAD (16 * 4 = 64 bytes) */
+    /* CGA-compatible colors: */
+    /* 0x00 = black */         put_dword(fp, 0x000000);
+    /* 0x01 = blue */          put_dword(fp, 0x000080);
+    /* 0x02 = green */         put_dword(fp, 0x008000);
+    /* 0x03 = cyan */          put_dword(fp, 0x008080);
+    /* 0x04 = red */           put_dword(fp, 0x800000);
+    /* 0x05 = magenta */       put_dword(fp, 0x800080);
+    /* 0x06 = brown */         put_dword(fp, 0x808000);
+    /* 0x07 = light gray */    put_dword(fp, 0xC0C0C0);
+    /* 0x08 = dark gray */     put_dword(fp, 0x808080);
+    /* 0x09 = bright blue */   put_dword(fp, 0x0000FF);
+    /* 0x0A = bright green */  put_dword(fp, 0x00FF00);
+    /* 0x0B = bright cyan */   put_dword(fp, 0x00FFFF);
+    /* 0x0C = bright red */    put_dword(fp, 0xFF0000);
+    /* 0x0D = bright magenta */put_dword(fp, 0xFF00FF);
+    /* 0x0E = yellow */        put_dword(fp, 0xFFFF00);
+    /* 0x0F = white */         put_dword(fp, 0xFFFFFF);
+    /* pixel data bits */
+    b = 0;
+    for (i = m - 1; i >= 0; i--) {  
+    for (j = 0; j < ((n + 7) / 8) * 8; ++j) {  
+    b <<= 4;
+    b |= (j < n ? map[i * n + j] & 15 : 0);
+    if (j & 1) put_byte(fp, b);
+    }
+    }
+    fflush(fp);
+    if (ferror(fp)) {  
+    printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
+    ret = 0;
+    }
 fini: if (fp != NULL) fclose(fp);
-	return ret;
+    return ret;
 }
 
 /*---------------------------------*/

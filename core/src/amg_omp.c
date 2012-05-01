@@ -43,26 +43,26 @@ int fasp_solver_amg_omp (dCSRmat *A,
     const INT print_level=param->print_level;
     const INT amg_type=param->AMG_type;
     const INT cycle_type=param->cycle_type;
-	
+    
     // local variables
     double AMG_start, AMG_end; 
     double AMG_duration;
     INT status = SUCCESS;
-	
+    
 #if DEBUG_MODE
     printf("### DEBUG: amg ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
-	
+    
     AMG_start=omp_get_wtime(); 
-	
-    // initialize mgl[0] with A, b, x	
+    
+    // initialize mgl[0] with A, b, x    
     AMG_data *mgl=fasp_amg_data_create(max_levels);
     mgl[0].A = fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp_omp(A,&mgl[0].A, nthreads, openmp_holds); 
     mgl[0].b = fasp_dvec_create(n);       fasp_dvec_cp_omp(b,&mgl[0].b, nthreads, openmp_holds); 
     mgl[0].x = fasp_dvec_create(n);       fasp_dvec_cp_omp(x,&mgl[0].x, nthreads, openmp_holds);  
-	
-    // AMG setup	
+    
+    // AMG setup    
     switch (amg_type) {
         case CLASSIC_AMG: // Classical AMG setup phase
             if ( (status=fasp_amg_setup_rs_omp(mgl, param, nthreads, openmp_holds))<0 ) goto FINISHED; 
@@ -76,7 +76,7 @@ int fasp_solver_amg_omp (dCSRmat *A,
         default:
             status=ERROR_SOLVER_TYPE; goto FINISHED;
     }
-	
+    
     // AMG solve
     switch (cycle_type)
     {
@@ -87,24 +87,24 @@ int fasp_solver_amg_omp (dCSRmat *A,
             if ( (status=fasp_amg_solve_omp(mgl, param, nthreads, openmp_holds)) < 0 ) goto FINISHED; 
             break;
     }
-	
+    
     fasp_dvec_cp_omp(&mgl[0].x, x, nthreads, openmp_holds); // save solution vector 
-	
+    
     if (print_level>PRINT_NONE) {
-        AMG_end=omp_get_wtime();		 
+        AMG_end=omp_get_wtime();     
         AMG_duration = AMG_end - AMG_start; 
         printf("AMG totally costs %f seconds.\n", AMG_duration);
-    }	
-	
-FINISHED:	
-    fasp_amg_data_free(mgl); // clean-up memory	
+    }    
+    
+FINISHED:    
+    fasp_amg_data_free(mgl); // clean-up memory    
     
     fasp_chkerr(status, "fasp_solver_amg_omp");
     
 #if DEBUG_MODE
     printf("amg ...... [Finish]\n");
 #endif
-	
+    
     return status;
 }
 
@@ -153,13 +153,13 @@ int fasp_solver_amg1_omp (dCSRmat *A,
     
     AMG_start=omp_get_wtime(); 
     
-    // initialize A, b, x for mgl[0]		 
+    // initialize A, b, x for mgl[0]     
     AMG_data *mgl=fasp_amg_data_create(max_levels); 
     mgl[0].A = fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp_omp(A,&mgl[0].A, nthreads, openmp_holds); 
     mgl[0].b = fasp_dvec_create(n);       fasp_dvec_cp_omp(b,&mgl[0].b, nthreads, openmp_holds); 
     mgl[0].x = fasp_dvec_create(n);       fasp_dvec_cp_omp(x,&mgl[0].x, nthreads, openmp_holds);  
     
-    // AMG setup	 
+    // AMG setup     
     switch (amg_type) { 
         case CLASSIC_AMG: 
             if ( (status=fasp_amg_setup_rs1_omp(mgl, param, nthreads, openmp_holds))<0 ) goto FINISHED; 
@@ -179,13 +179,13 @@ int fasp_solver_amg1_omp (dCSRmat *A,
     fasp_dvec_cp_omp(&mgl[0].x, x, nthreads, openmp_holds); // save solution vector 
     
     if (print_level>0) { 
-        AMG_end=omp_get_wtime();		 
+        AMG_end=omp_get_wtime();     
         AMG_duration = AMG_end - AMG_start; 
         printf("AMG totally costs %f seconds.\n", AMG_duration); 
-    }	 
+    }     
     
-FINISHED:	 
-    fasp_amg_data_free(mgl);	// clean-up memory	 
+FINISHED:     
+    fasp_amg_data_free(mgl);    // clean-up memory     
 
     fasp_chkerr(status, "fasp_solver_amg_omp1");
     
@@ -243,13 +243,13 @@ int fasp_solver_amg2_omp (dCSRmat *A,
     
     AMG_start=omp_get_wtime(); 
     
-    // initialize A, b, x for mgl[0]		 
+    // initialize A, b, x for mgl[0]     
     AMG_data *mgl=fasp_amg_data_create(max_levels); 
     mgl[0].A = fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp_omp(A,&mgl[0].A, nthreads, openmp_holds); 
     mgl[0].b = fasp_dvec_create(n);       fasp_dvec_cp_omp(b,&mgl[0].b, nthreads, openmp_holds); 
     mgl[0].x = fasp_dvec_create(n);       fasp_dvec_cp_omp(x,&mgl[0].x, nthreads, openmp_holds);  
     
-    // AMG setup	 
+    // AMG setup     
     switch (amg_type) { 
         case CLASSIC_AMG: 
             if ( (status=fasp_amg_setup_rs2_omp(mgl, param, nthreads, openmp_holds))<0 ) goto FINISHED; 
@@ -269,13 +269,13 @@ int fasp_solver_amg2_omp (dCSRmat *A,
     fasp_dvec_cp_omp(&mgl[0].x, x, nthreads, openmp_holds); // save solution vector 
     
     if (print_level>0) { 
-        AMG_end=omp_get_wtime();		 
+        AMG_end=omp_get_wtime();     
         AMG_duration = AMG_end - AMG_start; 
         printf("AMG totally costs %f seconds.\n", AMG_duration); 
-    }	 
+    }     
     
-FINISHED:	 
-    fasp_amg_data_free(mgl);	// clean-up memory	 
+FINISHED:     
+    fasp_amg_data_free(mgl);    // clean-up memory     
 
     fasp_chkerr(status, "fasp_solver_amg_omp2");
     
@@ -333,13 +333,13 @@ int fasp_solver_amg3_omp (dCSRmat *A,
     
     AMG_start=omp_get_wtime(); 
     
-    // initialize A, b, x for mgl[0]		 
+    // initialize A, b, x for mgl[0]     
     AMG_data *mgl=fasp_amg_data_create(max_levels); 
     mgl[0].A = fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp_omp(A,&mgl[0].A, nthreads, openmp_holds); 
     mgl[0].b = fasp_dvec_create(n);       fasp_dvec_cp_omp(b,&mgl[0].b, nthreads, openmp_holds); 
     mgl[0].x = fasp_dvec_create(n);       fasp_dvec_cp_omp(x,&mgl[0].x, nthreads, openmp_holds);  
     
-    // AMG setup	 
+    // AMG setup     
     switch (amg_type) { 
         case CLASSIC_AMG: 
             if ( (status=fasp_amg_setup_rs3_omp(mgl, param, nthreads, openmp_holds))<0 ) goto FINISHED; 
@@ -359,13 +359,13 @@ int fasp_solver_amg3_omp (dCSRmat *A,
     fasp_dvec_cp_omp(&mgl[0].x, x, nthreads, openmp_holds); // save solution vector 
     
     if (print_level>0) { 
-        AMG_end=omp_get_wtime();		 
+        AMG_end=omp_get_wtime();     
         AMG_duration = AMG_end - AMG_start; 
         printf("AMG totally costs %f seconds.\n", AMG_duration); 
-    }	 
+    }     
     
-FINISHED:	 
-    fasp_amg_data_free(mgl);	// clean-up memory	 
+FINISHED:     
+    fasp_amg_data_free(mgl);    // clean-up memory     
 
     fasp_chkerr(status, "fasp_solver_amg_omp3");
 

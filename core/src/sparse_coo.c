@@ -29,20 +29,20 @@
 dCOOmat fasp_dcoo_create (INT m, 
                           INT n, 
                           INT nnz)
-{			
-	dCOOmat A;
-	
-	A.I   = (INT *)fasp_mem_calloc(nnz, sizeof(INT)); 	
-	A.J   = (INT *)fasp_mem_calloc(nnz, sizeof(INT)); 	
-	A.val = (REAL *)fasp_mem_calloc(nnz, sizeof(REAL)); 
-	
-#if CHMEM_MODE	
-	total_alloc_mem += nnz*(sizeof(REAL)+sizeof(INT)*2);
+{    
+    dCOOmat A;
+    
+    A.I   = (INT *)fasp_mem_calloc(nnz, sizeof(INT));     
+    A.J   = (INT *)fasp_mem_calloc(nnz, sizeof(INT));     
+    A.val = (REAL *)fasp_mem_calloc(nnz, sizeof(REAL)); 
+    
+#if CHMEM_MODE    
+    total_alloc_mem += nnz*(sizeof(REAL)+sizeof(INT)*2);
 #endif
-	
-	A.row=m; A.col=n; A.nnz=nnz;
-	
-	return A;
+    
+    A.row=m; A.col=n; A.nnz=nnz;
+    
+    return A;
 }
 
 /**
@@ -56,12 +56,12 @@ dCOOmat fasp_dcoo_create (INT m,
  * \date   2010/04/03  
  */
 void fasp_dcoo_free (dCOOmat *A)
-{			
-	if (A==NULL) return;
-	
-	fasp_mem_free(A->I);   A->I   = NULL;
-	fasp_mem_free(A->J);   A->J   = NULL;
-	fasp_mem_free(A->val); A->val = NULL;
+{    
+    if (A==NULL) return;
+    
+    fasp_mem_free(A->I);   A->I   = NULL;
+    fasp_mem_free(A->J);   A->J   = NULL;
+    fasp_mem_free(A->val); A->val = NULL;
 }
 
 /**
@@ -77,14 +77,14 @@ void fasp_dcoo_free (dCOOmat *A)
  */
 void fasp_dcoo_shift (dCOOmat *A, INT offset)
 {
-	const INT nnz=A->nnz;
-	INT i, *ai=A->I, *aj=A->J;
-	
-	if (offset == 0) offset = ISTART;
-	
-	for (i=0;i<nnz;++i) {	
-		ai[i]+=offset; aj[i]+=offset;
-	}
+    const INT nnz=A->nnz;
+    INT i, *ai=A->I, *aj=A->J;
+    
+    if (offset == 0) offset = ISTART;
+    
+    for (i=0;i<nnz;++i) {    
+    ai[i]+=offset; aj[i]+=offset;
+    }
 }
 
 /*---------------------------------*/

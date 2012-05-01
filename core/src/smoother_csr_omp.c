@@ -47,7 +47,7 @@ void swep3db(int *ia,
         {
             j0= j*nx;
             
-            for (i = nbegx; i >=0; i-=2)			
+            for (i = nbegx; i >=0; i-=2)    
             {
                 i0 = i   +  j0    + k0;
                 i0 = mark[i0]-1;  //Fortran to C
@@ -58,7 +58,7 @@ void swep3db(int *ia,
                     {
                         jj = ja[ii];
                         if (i0!=jj) t -= aa[ii]*u[jj]; 
-                        else d = aa[ii];					
+                        else d = aa[ii];    
                     } // end for ii
                     
                     if (ABS(d) > SMALLREAL) u[i0] = t/d;
@@ -157,7 +157,7 @@ void rb0b3d(int *ia, int *ja, double *aa,double *u, double *f, int *mark, int nx
             /*...  o-e-e */
             swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
             /*...  o-e-o */
-            swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);	
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);    
         }  else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==1)) {     //011
             /*...  e-o-o (and going backwards) */
             swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
@@ -174,7 +174,7 @@ void rb0b3d(int *ia, int *ja, double *aa,double *u, double *f, int *mark, int nx
             /*...  o-e-o */
             swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
             /*...  o-e-e */
-            swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);	
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);    
         }  else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==0)) {     //100
             /*...  o-e-e (and going backwards) */
             swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
@@ -191,7 +191,7 @@ void rb0b3d(int *ia, int *ja, double *aa,double *u, double *f, int *mark, int nx
             /*...  e-o-e */
             swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
             /*...  e-o-o */
-            swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);	
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);    
         }  else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==1)) {   //101
             /*...  o-e-o (and going backwards) */
             swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
@@ -208,7 +208,7 @@ void rb0b3d(int *ia, int *ja, double *aa,double *u, double *f, int *mark, int nx
             /*...  e-o-o */
             swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
             /*...  e-o-e */
-            swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);	
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);    
         }  else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==0)) {     //110
             /*...  o-o-e (and going backwards) */
             swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
@@ -225,7 +225,7 @@ void rb0b3d(int *ia, int *ja, double *aa,double *u, double *f, int *mark, int nx
             /*...  e-e-e */
             swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
             /*...  e-e-o */
-            swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);	
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);    
         }  else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==1)) {   //111
             /*...  o-o-o (and going backwards) */
             swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
@@ -242,7 +242,7 @@ void rb0b3d(int *ia, int *ja, double *aa,double *u, double *f, int *mark, int nx
             /*...  e-e-o */
             swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
             /*...  e-e-e */
-            swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);	
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);    
         }
     }
 }
@@ -274,12 +274,12 @@ void swep3df(int *ia,
         {
             j0= j*nx;
             
-            for (i = nbegx; i < nx; i+=2)			/*!*/
+            for (i = nbegx; i < nx; i+=2)    /*!*/
             {
                 i0 = i   +  j0    + k0;
                 i0 = mark[i0]-1; //Fortran to C
                 
-                //		printf("%d %d %d %d\n",i,j0,k0,i0);
+                //    printf("%d %d %d %d\n",i,j0,k0,i0);
                 if (i0>=0 ) {
                     
                     t = f[i0];
@@ -288,11 +288,11 @@ void swep3df(int *ia,
                     {
                         jj = ja[ii];
                         if (i0!=jj) t -= aa[ii]*u[jj]; 
-                        else d = aa[ii];					
+                        else d = aa[ii];    
                     } // end for ii
                     
                     if (ABS(d) > SMALLREAL) u[i0] = t/d;
-                } //	if (i0>=0 ) 
+                } //    if (i0>=0 ) 
             }
         }
     }
@@ -386,58 +386,58 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
                                  int ny,
                                  int nz )
 {
-	int *ia=A->IA,*ja=A->JA;
-	double *aa=A->val, *bval=b->val, *uval=u->val;
+    int *ia=A->IA,*ja=A->JA;
+    double *aa=A->val, *bval=b->val, *uval=u->val;
     
-	int i,ii,j,k,begin_row,end_row;
-	int size = b->row;
+    int i,ii,j,k,begin_row,end_row;
+    int size = b->row;
     double t,d=0.0;
     // L =10;
-	if (order == 1) // forward
-	{
-		while (L--) 
-		{ 
-		    rb0f3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);	
+    if (order == 1) // forward
+    {
+    while (L--) 
+    { 
+        rb0f3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);    
 #if 1
-			for (ii =0;ii <10;ii++)
+    for (ii =0;ii <10;ii++)
                 for (i = maximap; i < size; i ++) 
                 {
-					t = bval[i];
-					begin_row = ia[i], end_row = ia[i+1];
-					for (k = begin_row; k < end_row; k ++) 
-					{
-						j = ja[k];
-						if (i!=j) t -= aa[k]*uval[j]; 
-						else d = aa[k];					
-					} // end for k
-					if (ABS(d) > SMALLREAL) uval[i] = t/d;
+    t = bval[i];
+    begin_row = ia[i], end_row = ia[i+1];
+    for (k = begin_row; k < end_row; k ++) 
+    {
+    j = ja[k];
+    if (i!=j) t -= aa[k]*uval[j]; 
+    else d = aa[k];    
+    } // end for k
+    if (ABS(d) > SMALLREAL) uval[i] = t/d;
                 } // end for i
 #endif 
-		} // end while		
-	}
-	else    // backward
-	{
+    } // end while    
+    }
+    else    // backward
+    {
         while (L--) 
-		{
-#if 1		
-			for (ii =0;ii <10;ii++)
+    {
+#if 1    
+    for (ii =0;ii <10;ii++)
                 for (i = size-1; i >= maximap; i --) 
                 {
-					t = bval[i];
-					begin_row = ia[i],end_row = ia[i+1];
-					for (k = begin_row; k < end_row; k ++) 
-					{
-						j = ja[k];
-						if (i!=j) t -= aa[k]*uval[j]; 
-						else d = aa[k];					
-					} // end for k
-					if (ABS(d) > SMALLREAL) uval[i] = t/d;
+    t = bval[i];
+    begin_row = ia[i],end_row = ia[i+1];
+    for (k = begin_row; k < end_row; k ++) 
+    {
+    j = ja[k];
+    if (i!=j) t -= aa[k]*uval[j]; 
+    else d = aa[k];    
+    } // end for k
+    if (ABS(d) > SMALLREAL) uval[i] = t/d;
                 } // end for i
 #endif 
-	        rb0b3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);	
-		} // end while	
-	}
-	return;
+            rb0b3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);    
+    } // end while    
+    }
+    return;
 }
 
 
@@ -468,189 +468,189 @@ void fasp_smoother_dcsr_gs_cf_omp (dvector *u,
                                    int openmp_holds)
 {
 #if FASP_USE_OPENMP
-	const int *ia=A->IA,*ja=A->JA;
-	
-	int i,j,k,begin_row,end_row;
-	int size = b->row;
-	
-	double *aj=A->val,*bval=b->val,*uval=u->val;
-	double t,d=0.0;
-	int myid,mybegin,myend;
+    const int *ia=A->IA,*ja=A->JA;
     
-	
-	if (order == -1) // F-point first
-	{	
-		while (L--) 
-		{
-			if (size > openmp_holds) {
+    int i,j,k,begin_row,end_row;
+    int size = b->row;
+    
+    double *aj=A->val,*bval=b->val,*uval=u->val;
+    double t,d=0.0;
+    int myid,mybegin,myend;
+    
+    
+    if (order == -1) // F-point first
+    {    
+    while (L--) 
+    {
+    if (size > openmp_holds) {
                 
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++)
                 {
                     FASP_GET_START_END(myid, nthreads, size, mybegin, myend);
-					for (i=mybegin; i<myend; i++)
-					{
-						if (mark[i] != 1)
-						{
-							t = bval[i];
-							begin_row = ia[i], end_row = ia[i+1];
-							for (k = begin_row; k < end_row; k ++) 
-							{
-								j = ja[k];
-								if (i!=j) t -= aj[k]*uval[j]; 
-								else d = aj[k];
-							} // end for k
-							if (ABS(d) > SMALLREAL) uval[i] = t/d;
-						}
-					} // end for i
-				}
-			}
-			else {
-				for (i = 0; i < size; i ++) 
-				{
-					if (mark[i] != 1)
-					{
-						t = bval[i];
-						begin_row = ia[i], end_row = ia[i+1];
-						for (k = begin_row; k < end_row; k ++) 
-						{
-							j = ja[k];
-							if (i!=j) t -= aj[k]*uval[j]; 
-							else d = aj[k];					
-						} // end for k
-						if (ABS(d) > SMALLREAL) uval[i] = t/d;
-					}
-				} // end for i
-			}
-			
-			if (size > openmp_holds) {
+    for (i=mybegin; i<myend; i++)
+    {
+    if (mark[i] != 1)
+    {
+    t = bval[i];
+    begin_row = ia[i], end_row = ia[i+1];
+    for (k = begin_row; k < end_row; k ++) 
+    {
+    j = ja[k];
+    if (i!=j) t -= aj[k]*uval[j]; 
+    else d = aj[k];
+    } // end for k
+    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+    }
+    } // end for i
+    }
+    }
+    else {
+    for (i = 0; i < size; i ++) 
+    {
+    if (mark[i] != 1)
+    {
+    t = bval[i];
+    begin_row = ia[i], end_row = ia[i+1];
+    for (k = begin_row; k < end_row; k ++) 
+    {
+    j = ja[k];
+    if (i!=j) t -= aj[k]*uval[j]; 
+    else d = aj[k];    
+    } // end for k
+    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+    }
+    } // end for i
+    }
+    
+    if (size > openmp_holds) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++)
                 {
                     FASP_GET_START_END(myid, nthreads, size, mybegin, myend);
-					for (i=mybegin; i<myend; i++)
-					{
-						if (mark[i] == 1)
-						{
-							t = bval[i];
-							begin_row = ia[i], end_row = ia[i+1];
-							for (k = begin_row; k < end_row; k ++) 
-							{
-								j = ja[k];
-								if (i!=j) t -= aj[k]*uval[j]; 
-								else d = aj[k];					
-							} // end for k
-							if (ABS(d) > SMALLREAL) uval[i] = t/d;
-						}
-					} // end for i
-				}
-			}
-			else {
-				for (i = 0; i < size; i ++) 
-				{
-					if (mark[i] == 1)
-					{
-						t = bval[i];
-						begin_row = ia[i], end_row = ia[i+1];
-						for (k = begin_row; k < end_row; k ++) 
-						{
-							j = ja[k];
-							if (i!=j) t -= aj[k]*uval[j]; 
-							else d = aj[k];					
-						} // end for k
-						if (ABS(d) > SMALLREAL) uval[i] = t/d;
-					}
-				} // end for i
-			}
-		} // end while		
-	}
-	else
-	{
-		while (L--) 
-		{
-			if (size > openmp_holds) {
+    for (i=mybegin; i<myend; i++)
+    {
+    if (mark[i] == 1)
+    {
+    t = bval[i];
+    begin_row = ia[i], end_row = ia[i+1];
+    for (k = begin_row; k < end_row; k ++) 
+    {
+    j = ja[k];
+    if (i!=j) t -= aj[k]*uval[j]; 
+    else d = aj[k];    
+    } // end for k
+    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+    }
+    } // end for i
+    }
+    }
+    else {
+    for (i = 0; i < size; i ++) 
+    {
+    if (mark[i] == 1)
+    {
+    t = bval[i];
+    begin_row = ia[i], end_row = ia[i+1];
+    for (k = begin_row; k < end_row; k ++) 
+    {
+    j = ja[k];
+    if (i!=j) t -= aj[k]*uval[j]; 
+    else d = aj[k];    
+    } // end for k
+    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+    }
+    } // end for i
+    }
+    } // end while    
+    }
+    else
+    {
+    while (L--) 
+    {
+    if (size > openmp_holds) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++)
                 {
                     FASP_GET_START_END(myid, nthreads, size, mybegin, myend);
-					for (i=mybegin; i<myend; i++)
-					{
-						if (mark[i] == 1)
-						{
-							t = bval[i];
-							begin_row = ia[i],end_row = ia[i+1];
-							for (k = begin_row; k < end_row; k ++) 
-							{
-								j = ja[k];
-								if (i!=j) t -= aj[k]*uval[j]; 
-								else d = aj[k];
-							} // end for k
-							if (ABS(d) > SMALLREAL) uval[i] = t/d;
-						}
-					} // end for i
-				}
-			}
-			else {
-				for (i = 0; i < size; i ++) 
-				{
-					if (mark[i] == 1)
-					{
-						t = bval[i];
-						begin_row = ia[i],end_row = ia[i+1];
-						for (k = begin_row; k < end_row; k ++) 
-						{
-							j = ja[k];
-							if (i!=j) t -= aj[k]*uval[j]; 
-							else d = aj[k];					
-						} // end for k
-						if (ABS(d) > SMALLREAL) uval[i] = t/d;
-					}
-				} // end for i
-			}
-			
-			if (size > openmp_holds) {
+    for (i=mybegin; i<myend; i++)
+    {
+    if (mark[i] == 1)
+    {
+    t = bval[i];
+    begin_row = ia[i],end_row = ia[i+1];
+    for (k = begin_row; k < end_row; k ++) 
+    {
+    j = ja[k];
+    if (i!=j) t -= aj[k]*uval[j]; 
+    else d = aj[k];
+    } // end for k
+    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+    }
+    } // end for i
+    }
+    }
+    else {
+    for (i = 0; i < size; i ++) 
+    {
+    if (mark[i] == 1)
+    {
+    t = bval[i];
+    begin_row = ia[i],end_row = ia[i+1];
+    for (k = begin_row; k < end_row; k ++) 
+    {
+    j = ja[k];
+    if (i!=j) t -= aj[k]*uval[j]; 
+    else d = aj[k];    
+    } // end for k
+    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+    }
+    } // end for i
+    }
+    
+    if (size > openmp_holds) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++)
                 {
                     FASP_GET_START_END(myid, nthreads, size, mybegin, myend);
-					for (i=mybegin; i<myend; i++)
-					{
-						if (mark[i] != 1)
-						{
-							t = bval[i];
-							begin_row = ia[i],end_row = ia[i+1];
-							for (k = begin_row; k < end_row; k ++) 
-							{
-								j = ja[k];
-								if (i!=j) t -= aj[k]*uval[j]; 
-								else d = aj[k];
-							} // end for k
-							if (ABS(d) > SMALLREAL) uval[i] = t/d;
-						}
-					} // end for i
-				}
-			}
-			else {
-				for (i = 0; i < size; i ++) 
-				{
-					if (mark[i] != 1)
-					{
-						t = bval[i];
-						begin_row = ia[i],end_row = ia[i+1];
-						for (k = begin_row; k < end_row; k ++) 
-						{
-							j = ja[k];
-							if (i!=j) t -= aj[k]*uval[j]; 
-							else d = aj[k];					
-						} // end for k
-						if (ABS(d) > SMALLREAL) uval[i] = t/d;
-					}
-				} // end for i
-			}
-		} // end while	
-	}		
+    for (i=mybegin; i<myend; i++)
+    {
+    if (mark[i] != 1)
+    {
+    t = bval[i];
+    begin_row = ia[i],end_row = ia[i+1];
+    for (k = begin_row; k < end_row; k ++) 
+    {
+    j = ja[k];
+    if (i!=j) t -= aj[k]*uval[j]; 
+    else d = aj[k];
+    } // end for k
+    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+    }
+    } // end for i
+    }
+    }
+    else {
+    for (i = 0; i < size; i ++) 
+    {
+    if (mark[i] != 1)
+    {
+    t = bval[i];
+    begin_row = ia[i],end_row = ia[i+1];
+    for (k = begin_row; k < end_row; k ++) 
+    {
+    j = ja[k];
+    if (i!=j) t -= aj[k]*uval[j]; 
+    else d = aj[k];    
+    } // end for k
+    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+    }
+    } // end for i
+    }
+    } // end while    
+    }    
 #endif
-	return;
+    return;
 }
 
 /*---------------------------------*/

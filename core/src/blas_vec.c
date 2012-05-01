@@ -27,15 +27,15 @@ void fasp_blas_dvec_axpy (const REAL a,
                           dvector *x, 
                           dvector *y)
 {
-	unsigned INT i, m=x->row;
-	REAL *xpt=x->val, *ypt=y->val;
-	
-	if ((y->row-m)!=0) {
-		printf("### ERROR: Two vectors have different length!\n");
-		exit(ERROR_DATA_STRUCTURE);
-	}
-	
-	for (i=0; i<m; ++i) ypt[i] += a*xpt[i];
+    unsigned INT i, m=x->row;
+    REAL *xpt=x->val, *ypt=y->val;
+    
+    if ((y->row-m)!=0) {
+    printf("### ERROR: Two vectors have different length!\n");
+    exit(ERROR_DATA_STRUCTURE);
+    }
+    
+    for (i=0; i<m; ++i) ypt[i] += a*xpt[i];
 }
 
 /**
@@ -56,18 +56,18 @@ void fasp_blas_dvec_axpyz (const REAL a,
                            dvector *y, 
                            dvector *z)
 {
-	unsigned INT i;
-	const INT m=x->row;
-	REAL *xpt=x->val, *ypt=y->val, *zpt=z->val;
-	
-	if ((y->row-m)!=0) {
-		printf("### ERROR: Two vectors have different length!\n");
-		exit(ERROR_DATA_STRUCTURE);
-	}
-	
-	z->row = m;
-	memcpy(zpt,ypt,m*sizeof(REAL));
-	for (i=0; i<m; ++i) zpt[i] += a*xpt[i];
+    unsigned INT i;
+    const INT m=x->row;
+    REAL *xpt=x->val, *ypt=y->val, *zpt=z->val;
+    
+    if ((y->row-m)!=0) {
+    printf("### ERROR: Two vectors have different length!\n");
+    exit(ERROR_DATA_STRUCTURE);
+    }
+    
+    z->row = m;
+    memcpy(zpt,ypt,m*sizeof(REAL));
+    for (i=0; i<m; ++i) zpt[i] += a*xpt[i];
 }
 
 /**
@@ -86,13 +86,13 @@ void fasp_blas_dvec_axpyz (const REAL a,
 REAL fasp_blas_dvec_dotprod (dvector *x, 
                              dvector *y)
 {
-	unsigned INT i;
-	const INT length=x->row;
-	REAL *xpt=x->val, *ypt=y->val;	
-	
+    unsigned INT i;
+    const INT length=x->row;
+    REAL *xpt=x->val, *ypt=y->val;    
+    
     register REAL value=0;
-	for (i=0; i<length; ++i) value+=xpt[i]*ypt[i];
-	return value;
+    for (i=0; i<length; ++i) value+=xpt[i]*ypt[i];
+    return value;
 }
 
 
@@ -112,22 +112,22 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
 REAL fasp_dvec_relerr (dvector *x, 
                        dvector *y)
 {
-	unsigned INT i;
-	const INT length=x->row;
-	REAL diff=0, temp=0;
-	REAL *xpt=x->val, *ypt=y->val;
-	
-	if (length!=y->row) {
-		printf("### ERROR: Two vectors have different length!\n");
-		exit(ERROR_DUMMY_VAR);	
-	}
-	
-	for (i=0;i<length;++i) {
-		temp += xpt[i]*xpt[i];
-		diff += pow(xpt[i]-ypt[i],2);
-	}
-	
-	return sqrt(diff/temp);
+    unsigned INT i;
+    const INT length=x->row;
+    REAL diff=0, temp=0;
+    REAL *xpt=x->val, *ypt=y->val;
+    
+    if (length!=y->row) {
+    printf("### ERROR: Two vectors have different length!\n");
+    exit(ERROR_DUMMY_VAR);    
+    }
+    
+    for (i=0;i<length;++i) {
+    temp += xpt[i]*xpt[i];
+    diff += pow(xpt[i]-ypt[i],2);
+    }
+    
+    return sqrt(diff/temp);
 }
 
 /**
@@ -144,13 +144,13 @@ REAL fasp_dvec_relerr (dvector *x,
  */
 REAL fasp_blas_dvec_norm1 (dvector *x)
 {
-	unsigned INT i;
-	const INT length=x->row;
-	REAL *xpt=x->val;	
-	
+    unsigned INT i;
+    const INT length=x->row;
+    REAL *xpt=x->val;    
+    
     register REAL onenorm=0;
-	for (i=0;i<length;++i) onenorm+=ABS(xpt[i]);
-	return onenorm;
+    for (i=0;i<length;++i) onenorm+=ABS(xpt[i]);
+    return onenorm;
 }
 
 /**
@@ -167,13 +167,13 @@ REAL fasp_blas_dvec_norm1 (dvector *x)
  */
 REAL fasp_blas_dvec_norm2 (dvector *x)
 {
-	unsigned INT i;
-	const INT length=x->row;
-	REAL *xpt=x->val;	
-	
+    unsigned INT i;
+    const INT length=x->row;
+    REAL *xpt=x->val;    
+    
     register REAL twonorm=0;
-	for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];
-	return sqrt(twonorm);
+    for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];
+    return sqrt(twonorm);
 }
 
 /**
@@ -190,13 +190,13 @@ REAL fasp_blas_dvec_norm2 (dvector *x)
  */
 REAL fasp_blas_dvec_norminf (dvector *x)
 {
-	unsigned INT i;
-	const INT length=x->row;
-	REAL *xpt=x->val;
+    unsigned INT i;
+    const INT length=x->row;
+    REAL *xpt=x->val;
     
-	register REAL infnorm=0;
-	for (i=0;i<length;++i) infnorm=MAX(infnorm,ABS(xpt[i]));
-	return infnorm;
+    register REAL infnorm=0;
+    for (i=0;i<length;++i) infnorm=MAX(infnorm,ABS(xpt[i]));
+    return infnorm;
 }
 
 /*---------------------------------*/

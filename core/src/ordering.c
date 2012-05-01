@@ -29,18 +29,18 @@ static void iSwapping(INT *w, INT i, INT j);
 INT fasp_aux_unique (INT numbers[], 
                      INT size)
 {
-	INT i, newsize; 
-	
-	if (size==0) return(0);
-	
-	for (newsize=0, i=1; i<size; ++i) {
-		if (numbers[newsize] < numbers[i]) {
-			newsize++;
-			numbers[newsize] = numbers[i];
-		}
-	}
-	
-	return(newsize+1);
+    INT i, newsize; 
+    
+    if (size==0) return(0);
+    
+    for (newsize=0, i=1; i<size; ++i) {
+    if (numbers[newsize] < numbers[i]) {
+    newsize++;
+    numbers[newsize] = numbers[i];
+    }
+    }
+    
+    return(newsize+1);
 }
 
 /*!
@@ -64,46 +64,46 @@ void fasp_aux_merge (INT numbers[],
                      INT left, 
                      INT mid, 
                      INT right)
-{	
-	INT i, left_end, num_elements, tmp_pos;
-	
-	left_end = mid - 1;	
-	tmp_pos = left;	
-	num_elements = right - left + 1;	
-	
-	while ((left <= left_end) && (mid <= right)) {		
-		
-		if (numbers[left] <= numbers[mid]) // first branch <=
-		{			
-			work[tmp_pos] = numbers[left];
-			tmp_pos = tmp_pos + 1;
-			left = left +1;
-		}
-		else // second branch >
-		{			
-			work[tmp_pos] = numbers[mid];			
-			tmp_pos = tmp_pos + 1;			
-			mid = mid + 1;			
-		}		
-	}		
-	
-	while (left <= left_end) {		
-		work[tmp_pos] = numbers[left];		
-		left = left + 1;		
-		tmp_pos = tmp_pos + 1;		
-	}
-	
-	while (mid <= right) {		
-		work[tmp_pos] = numbers[mid];		
-		mid = mid + 1;
-		tmp_pos = tmp_pos + 1;		
-	}
-	
-	for (i = 0; i < num_elements; ++i) {		
-		numbers[right] = work[right];		
-		right = right - 1;		
-	}
-	
+{    
+    INT i, left_end, num_elements, tmp_pos;
+    
+    left_end = mid - 1;    
+    tmp_pos = left;    
+    num_elements = right - left + 1;    
+    
+    while ((left <= left_end) && (mid <= right)) {    
+    
+    if (numbers[left] <= numbers[mid]) // first branch <=
+    {    
+    work[tmp_pos] = numbers[left];
+    tmp_pos = tmp_pos + 1;
+    left = left +1;
+    }
+    else // second branch >
+    {    
+    work[tmp_pos] = numbers[mid];    
+    tmp_pos = tmp_pos + 1;    
+    mid = mid + 1;    
+    }    
+    }    
+    
+    while (left <= left_end) {    
+    work[tmp_pos] = numbers[left];    
+    left = left + 1;    
+    tmp_pos = tmp_pos + 1;    
+    }
+    
+    while (mid <= right) {    
+    work[tmp_pos] = numbers[mid];    
+    mid = mid + 1;
+    tmp_pos = tmp_pos + 1;    
+    }
+    
+    for (i = 0; i < num_elements; ++i) {    
+    numbers[right] = work[right];    
+    right = right - 1;    
+    }
+    
 }
 
 /*!
@@ -126,15 +126,15 @@ void fasp_aux_msort (INT numbers[],
                      INT left, 
                      INT right)
 {
-	INT mid;
-	
-	if (right > left) {		
-		mid = (right + left) / 2;		
-		fasp_aux_msort(numbers, work, left, mid);
-		fasp_aux_msort(numbers, work, mid+1, right);				
-		fasp_aux_merge(numbers, work, left, mid+1, right);		
-	}
-	
+    INT mid;
+    
+    if (right > left) {    
+    mid = (right + left) / 2;    
+    fasp_aux_msort(numbers, work, left, mid);
+    fasp_aux_msort(numbers, work, mid+1, right);    
+    fasp_aux_merge(numbers, work, left, mid+1, right);    
+    }
+    
 }
 
 /*!
@@ -156,23 +156,23 @@ void fasp_aux_iQuickSort (INT *a,
                           INT left, 
                           INT right)
 {
-	INT i, last;
-	
-	if (left >= right) return;
-	
-	iSwapping(a, left, (left+right)/2);
-	
-	last = left;
-	for (i = left+1; i <= right; ++i) {
-		if (a[i] < a[left]) {
-			iSwapping(a, ++last, i);
-		}
-	}
-	
-	iSwapping(a, left, last);
-	
-	fasp_aux_iQuickSort(a, left, last-1);
-	fasp_aux_iQuickSort(a, last+1, right);
+    INT i, last;
+    
+    if (left >= right) return;
+    
+    iSwapping(a, left, (left+right)/2);
+    
+    last = left;
+    for (i = left+1; i <= right; ++i) {
+    if (a[i] < a[left]) {
+    iSwapping(a, ++last, i);
+    }
+    }
+    
+    iSwapping(a, left, last);
+    
+    fasp_aux_iQuickSort(a, left, last-1);
+    fasp_aux_iQuickSort(a, last+1, right);
 }
 
 /*!
@@ -194,23 +194,23 @@ void fasp_aux_dQuickSort (REAL *a,
                           INT left, 
                           INT right)
 {
-	INT i, last;
-	
-	if (left >= right) return;
-	
-	dSwapping(a, left, (left+right)/2);
-	
-	last = left;
-	for (i = left+1; i <= right; ++i) {
-		if (a[i] < a[left]) {
-			dSwapping(a, ++last, i);
-		}
-	}
-	
-	dSwapping(a, left, last);
-	
-	fasp_aux_dQuickSort(a, left, last-1);
-	fasp_aux_dQuickSort(a, last+1, right);
+    INT i, last;
+    
+    if (left >= right) return;
+    
+    dSwapping(a, left, (left+right)/2);
+    
+    last = left;
+    for (i = left+1; i <= right; ++i) {
+    if (a[i] < a[left]) {
+    dSwapping(a, ++last, i);
+    }
+    }
+    
+    dSwapping(a, left, last);
+    
+    fasp_aux_dQuickSort(a, left, last-1);
+    fasp_aux_dQuickSort(a, last+1, right);
 }
 
 /*!
@@ -235,23 +235,23 @@ void fasp_aux_iQuickSortIndex (INT *a,
                                INT right, 
                                INT *index)
 {
-	INT i, last;
-	
-	if (left >= right) return;
-	
-	iSwapping(index, left, (left+right)/2);
-	
-	last = left;
-	for (i = left+1; i <= right; ++i) {
-		if (a[index[i]] < a[index[left]]) {
-			iSwapping(index, ++last, i);
-		}
-	}
-	
-	iSwapping(index, left, last);
-	
-	fasp_aux_iQuickSortIndex(a, left, last-1, index);
-	fasp_aux_iQuickSortIndex(a, last+1, right, index);
+    INT i, last;
+    
+    if (left >= right) return;
+    
+    iSwapping(index, left, (left+right)/2);
+    
+    last = left;
+    for (i = left+1; i <= right; ++i) {
+    if (a[index[i]] < a[index[left]]) {
+    iSwapping(index, ++last, i);
+    }
+    }
+    
+    iSwapping(index, left, last);
+    
+    fasp_aux_iQuickSortIndex(a, left, last-1, index);
+    fasp_aux_iQuickSortIndex(a, last+1, right, index);
 }
 
 /*!
@@ -276,23 +276,23 @@ void fasp_aux_dQuickSortIndex (REAL *a,
                                INT right, 
                                INT *index)
 {
-	INT i, last;
-	
-	if (left >= right) return;
-	
-	iSwapping(index, left, (left+right)/2);
-	
-	last = left;
-	for (i = left+1; i <= right; ++i) {
-		if (a[index[i]] < a[index[left]]) {
-			iSwapping(index, ++last, i);
-		}
-	}
-	
-	iSwapping(index, left, last);
-	
-	fasp_aux_dQuickSortIndex(a, left, last-1, index);
-	fasp_aux_dQuickSortIndex(a, last+1, right, index);
+    INT i, last;
+    
+    if (left >= right) return;
+    
+    iSwapping(index, left, (left+right)/2);
+    
+    last = left;
+    for (i = left+1; i <= right; ++i) {
+    if (a[index[i]] < a[index[left]]) {
+    iSwapping(index, ++last, i);
+    }
+    }
+    
+    iSwapping(index, left, last);
+    
+    fasp_aux_dQuickSortIndex(a, left, last-1, index);
+    fasp_aux_dQuickSortIndex(a, last+1, right, index);
 }
 
 /*---------------------------------*/
@@ -315,9 +315,9 @@ static void iSwapping (INT *w,
                        INT i, 
                        INT j)
 {
-	INT temp = w[i];
-	w[i] = w[j];
-	w[j] = temp;
+    INT temp = w[i];
+    w[i] = w[j];
+    w[j] = temp;
 }
 
 /**
@@ -336,9 +336,9 @@ static void dSwapping (REAL *w,
                        INT i, 
                        INT j)
 {
-	REAL temp = w[i];
-	w[i] = w[j];
-	w[j] = temp;
+    REAL temp = w[i];
+    w[i] = w[j];
+    w[j] = temp;
 }
 
 /*---------------------------------*/

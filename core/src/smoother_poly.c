@@ -40,22 +40,22 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
 {
     INT  *ia=Amat->IA,*ja=Amat->JA;
     REAL *a=Amat->val, *b=brhs->val, *u=usol->val;
-	
+    
     INT   i,j,k,it,jk,iaa,iab,ndeg0;  // id and ij for scaling of A
     REAL *v,*v0,*r,*vsave;  // one can get away without r as well;
     REAL  smaxa,smina,delinv,s,smu0,smu1,skappa,th,th1,sq; 
     REAL  ri,ari,vj,ravj,snj,sm,sm01,smsqrt,delta,delta2,chi;
-	
+    
 #if DEBUG_MODE
     printf("### DEBUG: fasp_smoother_dcsr_poly ...... [Start]\n");
-#endif	
-	
+#endif    
+    
     /* WORKING MEM */
     v     = (REAL *) fasp_mem_calloc(n,sizeof(REAL));  
     v0    = (REAL *) fasp_mem_calloc(n,sizeof(REAL));  
     vsave = (REAL *) fasp_mem_calloc(n,sizeof(REAL));  
     r     = (REAL *) fasp_mem_calloc(n,sizeof(REAL));  
-	
+    
     /* COMPUTE PARAMS*/
     // min INT for approx -- could be done upfront 
     // i.e., only once per level... only norm1 ...
@@ -80,13 +80,13 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     chi=4e+00*smu0*smu1/s;
     sm=0.5e+00*(smu0+smu1);
     sm01=smu0*smu1;
-	
+    
 #if DEBUG_MODE
     printf("### DEBUG: the degrees of polysmoothing are: %d %d\n",ndeg0,ndeg);
-#endif		
-	
+#endif    
+    
     /* BEGIN POLY ITS */
-	
+    
     /* auv_(ia,ja,a,u,u,&n,&err0); NA: u = 0 */
     //bminax(b,ia,ja,a,u,&n,r);
     //for (i=0; i < n ; ++i){res0 += r[i]*r[i];}
@@ -100,8 +100,8 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
             ari=0e+00; /* ari is (A*r)[i] */ 
             if(iab > iaa) {
                 for (jk = iaa; jk < iab; jk++) {
-					j=ja[jk];
-					ari += a[jk] * r[j];
+    j=ja[jk];
+    ari += a[jk] * r[j];
                 } 
             }
             ri=r[i];
@@ -117,9 +117,9 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
                 iab = ia[j+1];
                 if(iab > iaa) {
                     for (jk = iaa; jk < iab; jk++) {
-						k=ja[jk];
-						ravj -= a[jk] * vsave[k];
-					}
+    k=ja[jk];
+    ravj -= a[jk] * vsave[k];
+    }
                 }
                 vj=v[j];
                 snj = chi*ravj+delta2*(vj-v0[j]);
@@ -137,16 +137,16 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
         //res0=resk;
         //resk=0.0e0;
     }
-	
+    
     fasp_mem_free(v);
     fasp_mem_free(v0);
     fasp_mem_free(r);
     fasp_mem_free(vsave);
-	
+    
 #if DEBUG_MODE
     printf("### DEBUG: fasp_smoother_dcsr_poly ...... [FINISH]\n");
-#endif	
-	
+#endif    
+    
     return; 
 }
 
@@ -173,7 +173,7 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
 static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
 {
     /* Computes b-A*x */
-	
+    
     INT i,j,jk,iaa,iab;
     INT n;
     REAL u;
@@ -184,9 +184,9 @@ static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
         u = b[i];
         if(iab > iaa) 
             for (jk = iaa; jk < iab; jk++) {
-				j=ja[jk];
-				//	u = u - a[jk] * x[j];
-				u -= a[jk] * x[j];
+    j=ja[jk];
+    //    u = u - a[jk] * x[j];
+    u -= a[jk] * x[j];
             }
         res[i] = u;
     }

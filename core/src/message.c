@@ -35,35 +35,35 @@ void print_itinfo (const INT ptrlvl,
                    const REAL relres, 
                    const REAL absres, 
                    const REAL factor)
-{												
-	if (ptrlvl>PRINT_MIN) {
+{    
+    if (ptrlvl>PRINT_MIN) {
         
-		if (iter>1) {
-			printf("%6d | %15.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);
-		}
-		else { 
+    if (iter>1) {
+    printf("%6d | %15.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);
+    }
+    else { 
             // iter = 0 means initial guess, iter = 1 is the first iteration
-			printf("---------------------------------------------------------------\n");
-			switch (stop_type) {
-				case STOP_REL_RES:
-					printf("It Num |    ||r||/||b||    |     ||r||      |  Conv. Factor\n");
-					break;
-				case STOP_REL_PRECRES:
-					printf("It Num |  ||r||_B/||b||_B  |     ||r||      |  Conv. Factor\n");
-					break;
-				case STOP_MOD_REL_RES:
-					printf("It Num |    ||r||/||x||    |     ||r||      |  Conv. Factor\n");
-					break;
-				default:
-					printf("Error: wrong stopping criteria!\n");
-					exit(ERROR_INPUT_PAR);
-			}
-			printf("---------------------------------------------------------------\n");
-			printf("%6d | %15.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);
-		} // end if iter
+    printf("---------------------------------------------------------------\n");
+    switch (stop_type) {
+    case STOP_REL_RES:
+    printf("It Num |    ||r||/||b||    |     ||r||      |  Conv. Factor\n");
+    break;
+    case STOP_REL_PRECRES:
+    printf("It Num |  ||r||_B/||b||_B  |     ||r||      |  Conv. Factor\n");
+    break;
+    case STOP_MOD_REL_RES:
+    printf("It Num |    ||r||/||x||    |     ||r||      |  Conv. Factor\n");
+    break;
+    default:
+    printf("Error: wrong stopping criteria!\n");
+    exit(ERROR_INPUT_PAR);
+    }
+    printf("---------------------------------------------------------------\n");
+    printf("%6d | %15.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);
+    } // end if iter
         
-	} // end if ptrlvl
-}		
+    } // end if ptrlvl
+}    
 
 /**
  * \fn void void print_amgcomplexity (AMG_data *mgl, const SHORT prtlvl)
@@ -79,7 +79,7 @@ void print_itinfo (const INT ptrlvl,
 void print_amgcomplexity (AMG_data *mgl, 
                           const SHORT prtlvl)
 {
-	const SHORT   max_levels=mgl->num_levels;    
+    const SHORT   max_levels=mgl->num_levels;    
     SHORT         level;
     REAL          gridcom=0.0, opcom=0.0;
     
@@ -115,7 +115,7 @@ void print_amgcomplexity (AMG_data *mgl,
 void print_cputime (const char *message, 
                     const REAL cputime)
 {
-    printf("%s costs %.4f seconds.\n", message, cputime);	
+    printf("%s costs %.4f seconds.\n", message, cputime);    
 }
 
 /**
@@ -131,9 +131,9 @@ void print_cputime (const char *message,
  */
 void print_message (const INT ptrlvl, 
                     const char *message)
-{												
-	if (ptrlvl>PRINT_NONE) printf("%s", message);
-}		
+{    
+    if (ptrlvl>PRINT_NONE) printf("%s", message);
+}    
 
 /**
  * \fn void fasp_chkerr (const SHORT status, const char *fctname)
@@ -148,7 +148,7 @@ void print_message (const INT ptrlvl,
  */
 void fasp_chkerr (const SHORT status, 
                   const char *fctname)
-{												
+{    
     if (status>=0) return; // No error at all
     
     switch (status) {
@@ -229,7 +229,7 @@ void fasp_chkerr (const SHORT status,
     }
     
     exit(status);
-}		
+}    
 
 /*---------------------------------*/
 /*--        End of File          --*/

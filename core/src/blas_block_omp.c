@@ -35,26 +35,26 @@ void fasp_blas_bdbsr_aAxpy_omp (double alpha,
                                 int openmp_holds)
 {
 #if FASP_USE_OPENMP
-	register dBSRmat *Arr = &(A->ResRes);
-	register dCSRmat *Arw = &(A->ResWel);
-	register dCSRmat *Awr = &(A->WelRes);
-	register dCSRmat *Aww = &(A->WelWel);
-	
-	unsigned int Nr = Arw->row;
-	
-	register double *xr = x;
-	register double *xw = &(x[Nr]);
-	register double *yr = y;
-	register double *yw = &(y[Nr]);
-	
-	// yr = alpha*Arr*xr + alpha*Arw*xw + yr
-	fasp_blas_dbsr_aAxpy_omp(alpha, Arr, xr, yr, nthreads, openmp_holds);
-	fasp_blas_dcsr_aAxpy_omp(alpha, Arw, xw, yr, nthreads, openmp_holds); 
-	
-	// yw = alpha*Awr*xr + alpha*Aww*xw + yw
-	fasp_blas_dcsr_aAxpy_omp(alpha, Awr, xr, yw, nthreads, openmp_holds); 
-	fasp_blas_dcsr_aAxpy_omp(alpha, Aww, xw, yw, nthreads, openmp_holds); 
-#endif	
+    register dBSRmat *Arr = &(A->ResRes);
+    register dCSRmat *Arw = &(A->ResWel);
+    register dCSRmat *Awr = &(A->WelRes);
+    register dCSRmat *Aww = &(A->WelWel);
+    
+    unsigned int Nr = Arw->row;
+    
+    register double *xr = x;
+    register double *xw = &(x[Nr]);
+    register double *yr = y;
+    register double *yw = &(y[Nr]);
+    
+    // yr = alpha*Arr*xr + alpha*Arw*xw + yr
+    fasp_blas_dbsr_aAxpy_omp(alpha, Arr, xr, yr, nthreads, openmp_holds);
+    fasp_blas_dcsr_aAxpy_omp(alpha, Arw, xw, yr, nthreads, openmp_holds); 
+    
+    // yw = alpha*Awr*xr + alpha*Aww*xw + yw
+    fasp_blas_dcsr_aAxpy_omp(alpha, Awr, xr, yw, nthreads, openmp_holds); 
+    fasp_blas_dcsr_aAxpy_omp(alpha, Aww, xw, yw, nthreads, openmp_holds); 
+#endif    
 }
 
 /**
@@ -77,26 +77,26 @@ void fasp_blas_bdbsr_mxv_omp (block_BSR *A,
                               int openmp_holds)
 {
 #if FASP_USE_OPENMP
-	register dBSRmat *Arr = &(A->ResRes);
-	register dCSRmat *Arw = &(A->ResWel);
-	register dCSRmat *Awr = &(A->WelRes);
-	register dCSRmat *Aww = &(A->WelWel);
-	
-	unsigned int Nr = Arw->row;
-	
-	register double *xr = x;
-	register double *xw = &(x[Nr]);
-	register double *yr = y;
-	register double *yw = &(y[Nr]);
-	
-	// yr = alpha*Arr*xr + alpha*Arw*xw + yr
-	fasp_blas_dbsr_mxv_omp(Arr, xr, yr, nthreads, openmp_holds);
-	fasp_blas_dcsr_aAxpy_omp(1.0, Arw, xw, yr, nthreads, openmp_holds);
-	
-	// yw = alpha*Awr*xr + alpha*Aww*xw + yw
-	fasp_blas_dcsr_mxv_omp(Awr, xr, yw, nthreads, openmp_holds);
-	fasp_blas_dcsr_aAxpy_omp(1.0, Aww, xw, yw, nthreads, openmp_holds); 
-#endif	
+    register dBSRmat *Arr = &(A->ResRes);
+    register dCSRmat *Arw = &(A->ResWel);
+    register dCSRmat *Awr = &(A->WelRes);
+    register dCSRmat *Aww = &(A->WelWel);
+    
+    unsigned int Nr = Arw->row;
+    
+    register double *xr = x;
+    register double *xw = &(x[Nr]);
+    register double *yr = y;
+    register double *yw = &(y[Nr]);
+    
+    // yr = alpha*Arr*xr + alpha*Arw*xw + yr
+    fasp_blas_dbsr_mxv_omp(Arr, xr, yr, nthreads, openmp_holds);
+    fasp_blas_dcsr_aAxpy_omp(1.0, Arw, xw, yr, nthreads, openmp_holds);
+    
+    // yw = alpha*Awr*xr + alpha*Aww*xw + yw
+    fasp_blas_dcsr_mxv_omp(Awr, xr, yw, nthreads, openmp_holds);
+    fasp_blas_dcsr_aAxpy_omp(1.0, Aww, xw, yw, nthreads, openmp_holds); 
+#endif    
 }
 
 

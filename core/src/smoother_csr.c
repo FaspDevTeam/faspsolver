@@ -36,66 +36,66 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
                                 dvector *b, 
                                 INT L)
 {
-	const INT    N = ABS(i_n - i_1)+1;
-	const INT   *ia=A->IA, *ja=A->JA;
+    const INT    N = ABS(i_n - i_1)+1;
+    const INT   *ia=A->IA, *ja=A->JA;
     const REAL  *aj=A->val,*bval=b->val;
     REAL        *uval=u->val;
     
     // local variables
-	INT i,j,k,begin_row,end_row;
-	
-	REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));	
-#if CHMEM_MODE
-	total_alloc_mem += (N)*sizeof(REAL);
-#endif	
+    INT i,j,k,begin_row,end_row;
     
-	REAL *d = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
+    REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));    
 #if CHMEM_MODE
-	total_alloc_mem += (N)*sizeof(REAL);
-#endif	
-	
-	while (L--) {
-		
-		if (s>0) {
-			for (i=i_1;i<=i_n;i+=s) {
-				t[i]=bval[i];
-				begin_row=ia[i],end_row=ia[i+1];
-				for (k=begin_row;k<end_row;++k) {
-					j=ja[k];
-					if (i!=j) t[i]-=aj[k]*uval[j];
-					else d[i]=aj[k];
-				}				
-			}
-			
-			for (i=i_1;i<=i_n;i+=s) {	
-				if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
-			}			
-		} 
-		
-		else {
-			
-			for (i=i_1;i>=i_n;i+=s) {
-				t[i]=bval[i];
-				begin_row=ia[i],end_row=ia[i+1];
-				for (k=begin_row;k<end_row;++k) {
-					j=ja[k];
-					if (i!=j) t[i]-=aj[k]*uval[j];
-					else d[i]=aj[k];
-				}
-				
-			}
-			
-			for (i=i_1;i>=i_n;i+=s) {
-				if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
-			}
-		} 
-		
-	} // end while
-	
-	fasp_mem_free(t);
-	fasp_mem_free(d);
-	
-	return;	
+    total_alloc_mem += (N)*sizeof(REAL);
+#endif    
+    
+    REAL *d = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
+#if CHMEM_MODE
+    total_alloc_mem += (N)*sizeof(REAL);
+#endif    
+    
+    while (L--) {
+    
+    if (s>0) {
+    for (i=i_1;i<=i_n;i+=s) {
+    t[i]=bval[i];
+    begin_row=ia[i],end_row=ia[i+1];
+    for (k=begin_row;k<end_row;++k) {
+    j=ja[k];
+    if (i!=j) t[i]-=aj[k]*uval[j];
+    else d[i]=aj[k];
+    }    
+    }
+    
+    for (i=i_1;i<=i_n;i+=s) {    
+    if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
+    }    
+    } 
+    
+    else {
+    
+    for (i=i_1;i>=i_n;i+=s) {
+    t[i]=bval[i];
+    begin_row=ia[i],end_row=ia[i+1];
+    for (k=begin_row;k<end_row;++k) {
+    j=ja[k];
+    if (i!=j) t[i]-=aj[k]*uval[j];
+    else d[i]=aj[k];
+    }
+    
+    }
+    
+    for (i=i_1;i>=i_n;i+=s) {
+    if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
+    }
+    } 
+    
+    } // end while
+    
+    fasp_mem_free(t);
+    fasp_mem_free(d);
+    
+    return;    
 }
 
 /**
@@ -123,22 +123,22 @@ void fasp_smoother_dcsr_gs (dvector *u,
                             dvector *b, 
                             INT L)
 {
-	const INT   *ia=A->IA,*ja=A->JA;
+    const INT   *ia=A->IA,*ja=A->JA;
     const REAL  *aj=A->val,*bval=b->val;
     REAL        *uval=u->val;
-	
+    
     // local variables
-	INT   i,j,k,begin_row,end_row;
-	REAL  t,d=0.0;
-	
-	if (s > 0) {
-		
-		while (L--) {
+    INT   i,j,k,begin_row,end_row;
+    REAL  t,d=0.0;
+    
+    if (s > 0) {
+    
+    while (L--) {
             
-			for (i=i_1;i<=i_n;i+=s) {
-			
+    for (i=i_1;i<=i_n;i+=s) {
+    
                 t = bval[i];
-				begin_row=ia[i],end_row=ia[i+1];
+    begin_row=ia[i],end_row=ia[i+1];
                 
 #if DIAGONAL_PREF // diagonal first
                 d=aj[begin_row];
@@ -148,22 +148,22 @@ void fasp_smoother_dcsr_gs (dvector *u,
                         t-=aj[k]*uval[j]; 
                     }
                     uval[i]=t/d;
-                }	                
+                }                    
 #else // general order
                 for (k=begin_row;k<end_row;++k) {
-					j=ja[k];
-					if (i!=j) 
-						t-=aj[k]*uval[j]; 
-					else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];					
-				}
+    j=ja[k];
+    if (i!=j) 
+    t-=aj[k]*uval[j]; 
+    else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];    
+    }
                 uval[i]=t*d;
 #endif
                 
             } // end for i
-        } // end while		
+        } // end while    
         
     } // if s
-    else {		
+    else {    
         
         while (L--) {
 
@@ -180,19 +180,19 @@ void fasp_smoother_dcsr_gs (dvector *u,
                         t-=aj[k]*uval[j]; 
                     }
                     uval[i]=t/d;
-                }	                
+                }                    
 #else // general order
                 for (k=begin_row;k<end_row;++k) {
-					j=ja[k];
-					if (i!=j) 
-						t-=aj[k]*uval[j]; 
-					else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];					
-				}
+    j=ja[k];
+    if (i!=j) 
+    t-=aj[k]*uval[j]; 
+    else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];    
+    }
                 uval[i]=t*d;
 #endif
 
             } // end for i
-        } // end while		
+        } // end while    
         
     } // end if
     return;
@@ -230,7 +230,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
     REAL   t,d=0.0;
     
     if (order == -1) // F-point first
-    {	
+    {    
         while (L--) 
         {
             for (i = 0; i < size; i ++) 
@@ -243,7 +243,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                     {
                         j = ja[k];
                         if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];					
+                        else d = aj[k];    
                     } // end for k
                     if (ABS(d) > SMALLREAL) uval[i] = t/d;
                 }
@@ -259,12 +259,12 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                     {
                         j = ja[k];
                         if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];					
+                        else d = aj[k];    
                     } // end for k
                     if (ABS(d) > SMALLREAL) uval[i] = t/d;
                 }
             } // end for i
-        } // end while		
+        } // end while    
     }
     else
     {
@@ -280,7 +280,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                     {
                         j = ja[k];
                         if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];					
+                        else d = aj[k];    
                     } // end for k
                     if (ABS(d) > SMALLREAL) uval[i] = t/d;
                 }
@@ -296,13 +296,13 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                     {
                         j = ja[k];
                         if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];					
+                        else d = aj[k];    
                     } // end for k
                     if (ABS(d) > SMALLREAL) uval[i] = t/d;
                 }
             } // end for i
-        } // end while	
-    }		
+        } // end while    
+    }    
     
     return;
 }
@@ -360,7 +360,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
             if (ABS(d)>SMALLREAL) uval[i]=t/d;
         } // end for i
         
-    } // end while		
+    } // end while    
     
     return;
 }
@@ -473,7 +473,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
     REAL   t,d=0.0;
     
     if (order == -1) // F-point first
-    {	
+    {    
         while (L--) 
         {
             for (i = 0; i < size; i ++) 
@@ -486,7 +486,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                     {
                         j = ja[k];
                         if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];					
+                        else d = aj[k];    
                     } // end for k
                     if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                 }
@@ -502,12 +502,12 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                     {
                         j = ja[k];
                         if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];					
+                        else d = aj[k];    
                     } // end for k
                     if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                 }
             } // end for i
-        } // end while		
+        } // end while    
     }
     else
     {
@@ -523,7 +523,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                     {
                         j = ja[k];
                         if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];					
+                        else d = aj[k];    
                     } // end for k
                     if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                 }
@@ -539,13 +539,13 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                     {
                         j = ja[k];
                         if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];					
+                        else d = aj[k];    
                     } // end for k
                     if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                 }
             } // end for i
-        } // end while	
-    }		
+        } // end while    
+    }    
     
     return;
 }
@@ -610,7 +610,7 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
             z[i]=zz[i]*lu[i];
         }
         
-        fasp_blas_array_axpy(m,1,z,xval);		
+        fasp_blas_array_axpy(m,1,z,xval);    
     }
     
     return;
@@ -675,11 +675,11 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
                     uval[j] += w*alpha*aj[k];
                 }// end for k
             } // end for i
-        } // end while	
+        } // end while    
         
     } // if s
     
-    else {		
+    else {    
         
         while (L--) {
             for (i=i_1;i>=i_n;i+=s) {
@@ -699,7 +699,7 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
                     uval[j] += w*alpha*aj[k];
                 }// end for k
             } // end for i
-        } // end while		
+        } // end while    
         
     } // end if
     
@@ -740,14 +740,14 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
     INT   i,j,k,begin_row,end_row;
     
     // Checks should be outside of for; t,d can be allocated before calling!!! --Chensong
-    REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));	
+    REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));    
 #if CHMEM_MODE
     total_alloc_mem += (N)*sizeof(REAL);
-#endif	
+#endif    
     REAL *d = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
 #if CHMEM_MODE
     total_alloc_mem += (N)*sizeof(REAL);
-#endif	
+#endif    
     
     while (L--) {
         
@@ -759,12 +759,12 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
                     j=ja[k];
                     t[i]-=aj[k]*uval[j];
                     d[i]+=ABS(aj[k]);
-                }				
+                }    
             }
             
-            for (i=i_1;i<=i_n;i+=s) {	
+            for (i=i_1;i<=i_n;i+=s) {    
                 if (ABS(d[i])>SMALLREAL) u->val[i]+=t[i]/d[i];
-            }			
+            }    
         } 
         
         else {
@@ -790,7 +790,7 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
     fasp_mem_free(t);
     fasp_mem_free(d);
     
-    return;	
+    return;    
 }
 
 #if 0
@@ -828,13 +828,13 @@ static dCSRmat form_contractor (dCSRmat *A,
     
 #if CHMEM_MODE
     total_alloc_mem += (2*n)*sizeof(REAL);
-#endif	
+#endif    
     
     dvector b, x;
     b.row=x.row=n;
     b.val=work; x.val=work+n;
     
-    INT *index = (INT *)fasp_mem_calloc(n,sizeof(INT));	
+    INT *index = (INT *)fasp_mem_calloc(n,sizeof(INT));    
     
 #if CHMEM_MODE
     total_alloc_mem += (n)*sizeof(INT);

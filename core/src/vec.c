@@ -27,17 +27,17 @@
  * \date   2010/04/06
  */
 dvector fasp_dvec_create (INT m)
-{		
-	dvector u;
-	
-	u.row = m;
-	u.val = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
-	
-#if CHMEM_MODE		
-	total_alloc_mem += m*sizeof(REAL);
+{    
+    dvector u;
+    
+    u.row = m;
+    u.val = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
+    
+#if CHMEM_MODE    
+    total_alloc_mem += m*sizeof(REAL);
 #endif
-	
-	return u;
+    
+    return u;
 }
 
 /**
@@ -53,17 +53,17 @@ dvector fasp_dvec_create (INT m)
  * \date   2010/04/06
  */
 ivector fasp_ivec_create (INT m)
-{		
-	ivector u;
-	
-	u.row = m;
-	u.val = (INT *)fasp_mem_calloc(m,sizeof(INT)); 
-	
-#if CHMEM_MODE		
-	total_alloc_mem += m*sizeof(REAL);
+{    
+    ivector u;
+    
+    u.row = m;
+    u.val = (INT *)fasp_mem_calloc(m,sizeof(INT)); 
+    
+#if CHMEM_MODE    
+    total_alloc_mem += m*sizeof(REAL);
 #endif
-	
-	return u;
+    
+    return u;
 }
 
 /**
@@ -79,15 +79,15 @@ ivector fasp_ivec_create (INT m)
  */
 void fasp_dvec_alloc (INT m, 
                       dvector *u)
-{			
-	u->row = m;
-	u->val = (REAL*)fasp_mem_calloc(m,sizeof(REAL)); 
-	
-#if CHMEM_MODE		
-	total_alloc_mem += m*sizeof(REAL);
+{    
+    u->row = m;
+    u->val = (REAL*)fasp_mem_calloc(m,sizeof(REAL)); 
+    
+#if CHMEM_MODE    
+    total_alloc_mem += m*sizeof(REAL);
 #endif
-	
-	return;
+    
+    return;
 }
 
 /**
@@ -103,16 +103,16 @@ void fasp_dvec_alloc (INT m,
  */
 void fasp_ivec_alloc (INT m, 
                       ivector *u)
-{		
-	
-	u->row = m;
-	u->val = (INT*)fasp_mem_calloc(m,sizeof(INT));
-	
-#if CHMEM_MODE		
-	total_alloc_mem += m*sizeof(INT);
+{    
+    
+    u->row = m;
+    u->val = (INT*)fasp_mem_calloc(m,sizeof(INT));
+    
+#if CHMEM_MODE    
+    total_alloc_mem += m*sizeof(INT);
 #endif
-	
-	return;
+    
+    return;
 }
 
 /**
@@ -126,11 +126,11 @@ void fasp_ivec_alloc (INT m,
  * \date   2010/04/03  
  */
 void fasp_dvec_free (dvector *u)
-{		
-	if (u==NULL) return;
+{    
+    if (u==NULL) return;
     
-	fasp_mem_free(u->val);
-	u->row = 0; u->val = NULL; 
+    fasp_mem_free(u->val);
+    u->row = 0; u->val = NULL; 
 }
 
 /**
@@ -146,11 +146,11 @@ void fasp_dvec_free (dvector *u)
  * \note This function is same as fasp_dvec_free except input type.
  */
 void fasp_ivec_free (ivector *u)
-{		
-	if (u==NULL) return;
+{    
+    if (u==NULL) return;
     
-	fasp_mem_free(u->val);
-	u->row = 0; u->val = NULL; 
+    fasp_mem_free(u->val);
+    u->row = 0; u->val = NULL; 
 }
 
 /**
@@ -165,7 +165,7 @@ void fasp_ivec_free (ivector *u)
  */
 void fasp_dvec_null (dvector *x) 
 {
-	x->row = 0; x->val = NULL;
+    x->row = 0; x->val = NULL;
 }
 
 /**
@@ -197,10 +197,10 @@ void fasp_dvec_rand (INT n,
     const INT vb=(REAL) n;
     
     unsigned int s=1; srand(s);
-	
+    
     INT i,j;
 
-	x->row = n;
+    x->row = n;
     for (i=0; i<n; ++i){
         j = 1 + (INT) (((REAL)n)*rand()/(RAND_MAX+1.0));
         x->val[i] = (((REAL)j)-va)/(vb-va);
@@ -223,17 +223,17 @@ void fasp_dvec_set (INT n,
                     dvector *x, 
                     REAL val)
 {
-	unsigned INT i;
-	REAL *xpt=x->val;
-	
-	if (n>0) {
+    unsigned INT i;
+    REAL *xpt=x->val;
+    
+    if (n>0) {
         x->row=n; 
     }
-	else {
-        n=x->row;	   
+    else {
+        n=x->row;       
     }
     
-	for (i=0; i<n; ++i) xpt[i]=val;
+    for (i=0; i<n; ++i) xpt[i]=val;
 }
 
 /**
@@ -248,9 +248,9 @@ void fasp_dvec_set (INT n,
  * \date   2010/04/03  
  */
 void fasp_ivec_set (INT m, ivector *u)
-{		
-	unsigned INT i;
-	for (i=0; i<u->row; ++i) u->val[i] = m;
+{    
+    unsigned INT i;
+    for (i=0; i<u->row; ++i) u->val[i] = m;
 }
 
 /**
@@ -267,8 +267,8 @@ void fasp_ivec_set (INT m, ivector *u)
 void fasp_dvec_cp (dvector *x, 
                    dvector *y)
 {
-	y->row=x->row;
-	memcpy(y->val,x->val,x->row*sizeof(REAL));
+    y->row=x->row;
+    memcpy(y->val,x->val,x->row*sizeof(REAL));
 }
 
 /**
@@ -287,15 +287,15 @@ void fasp_dvec_cp (dvector *x,
 REAL fasp_dvec_maxdiff (dvector *x, 
                         dvector *y)
 {
-	const INT length=x->row;
-	REAL Linf=0, diffi=0;
-	REAL *xpt=x->val, *ypt=y->val;
-	
-	unsigned INT i;
-	for (i=0; i<length; ++i) {
-		if ((diffi = ABS(xpt[i]-ypt[i])) > Linf) Linf = diffi;
-	}
-	return Linf;
+    const INT length=x->row;
+    REAL Linf=0, diffi=0;
+    REAL *xpt=x->val, *ypt=y->val;
+    
+    unsigned INT i;
+    for (i=0; i<length; ++i) {
+    if ((diffi = ABS(xpt[i]-ypt[i])) > Linf) Linf = diffi;
+    }
+    return Linf;
 }
 
 /**
@@ -312,24 +312,24 @@ REAL fasp_dvec_maxdiff (dvector *x,
 void fasp_dvec_symdiagscale (dvector *b, 
                              dvector *diag)
 {
-	// information about dvector
-	const INT n = b->row;
-	REAL *val = b->val;
-	
-	// local variables
-	unsigned INT i;
-	
-	if (diag->row != n)
-	{
-		printf("### ERROR: Size of diag = %d and size of dvector = %d mismatch!!", 
+    // information about dvector
+    const INT n = b->row;
+    REAL *val = b->val;
+    
+    // local variables
+    unsigned INT i;
+    
+    if (diag->row != n)
+    {
+    printf("### ERROR: Size of diag = %d and size of dvector = %d mismatch!!", 
                diag->row, n);
-		exit(ERROR_MISC);
-	}
-	
-	// main loop
-	for (i=0; i<n; i++) val[i] = val[i]/sqrt(diag->val[i]);
-	
-	return;
+    exit(ERROR_MISC);
+    }
+    
+    // main loop
+    for (i=0; i<n; i++) val[i] = val[i]/sqrt(diag->val[i]);
+    
+    return;
 }
 
 /*---------------------------------*/

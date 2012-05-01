@@ -23,17 +23,17 @@
  * \date   05/17/2010 
  */
 void fasp_dstr_null (dSTRmat *A)
-{		
-	A->nx=0;
-	A->ny=0;
-	A->nz=0;
-	A->nxy=0;
-	A->ngrid=0;
-	A->nband=0;
-	A->nc=0;	
-	A->offsets=NULL;
-	A->diag=NULL;
-	A->offdiag=NULL;
+{    
+    A->nx=0;
+    A->ny=0;
+    A->nz=0;
+    A->nxy=0;
+    A->ngrid=0;
+    A->nband=0;
+    A->nc=0;    
+    A->offsets=NULL;
+    A->diag=NULL;
+    A->offdiag=NULL;
 }
 
 /**
@@ -59,30 +59,30 @@ dSTRmat fasp_dstr_create (INT nx,
                           INT nc, 
                           INT nband, 
                           INT *offsets)
-{	
-	dSTRmat A;
-	
-	unsigned INT i;
-	
-	A.nx=nx; A.ny=ny; A.nz=nz;
-	A.nc=nc;
-	A.nxy=A.nx*A.ny;
-	A.ngrid=A.nxy*A.nz;
-	A.nband=nband;
-	
-	A.offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
-	
-	for (i=0;i<nband;++i) A.offsets[i]=offsets[i];
-	
-	A.diag=(REAL*)fasp_mem_calloc(A.ngrid*A.nc*A.nc, sizeof(REAL));
-	
-	A.offdiag=(REAL**)fasp_mem_calloc(nband, sizeof(REAL*));
-	
-	for(i=0;i<A.nband;++i) {
-		A.offdiag[i]=(REAL*)fasp_mem_calloc((A.ngrid-ABS(A.offsets[i]))*A.nc*A.nc, sizeof(REAL));
-	}
-	
-	return(A);
+{    
+    dSTRmat A;
+    
+    unsigned INT i;
+    
+    A.nx=nx; A.ny=ny; A.nz=nz;
+    A.nc=nc;
+    A.nxy=A.nx*A.ny;
+    A.ngrid=A.nxy*A.nz;
+    A.nband=nband;
+    
+    A.offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
+    
+    for (i=0;i<nband;++i) A.offsets[i]=offsets[i];
+    
+    A.diag=(REAL*)fasp_mem_calloc(A.ngrid*A.nc*A.nc, sizeof(REAL));
+    
+    A.offdiag=(REAL**)fasp_mem_calloc(nband, sizeof(REAL*));
+    
+    for(i=0;i<A.nband;++i) {
+    A.offdiag[i]=(REAL*)fasp_mem_calloc((A.ngrid-ABS(A.offsets[i]))*A.nc*A.nc, sizeof(REAL));
+    }
+    
+    return(A);
 }
 
 
@@ -114,28 +114,28 @@ void fasp_dstr_alloc(INT nx,
                      INT nc,
                      INT *offsets, 
                      dSTRmat *A)
-{	
-	INT i;
-	
-	A->nx=nx;
-	A->ny=ny;
-	A->nz=nz;
-	A->nxy=nxy;
-	A->ngrid=ngrid;
-	A->nband=nband;
-	A->nc=nc;
-	
-	A->offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
-	
-	for (i=0;i<nband;++i) A->offsets[i]=offsets[i];
-	
-	A->diag=(REAL*)fasp_mem_calloc(ngrid*nc*nc, sizeof(REAL));
-	
-	A->offdiag = (REAL **)fasp_mem_calloc(A->nband, sizeof(REAL*));
-	
-	for (i=0;i<nband;++i) {
-		A->offdiag[i]=(REAL*)fasp_mem_calloc((ngrid-ABS(offsets[i]))*nc*nc, sizeof(REAL));
-	}
+{    
+    INT i;
+    
+    A->nx=nx;
+    A->ny=ny;
+    A->nz=nz;
+    A->nxy=nxy;
+    A->ngrid=ngrid;
+    A->nband=nband;
+    A->nc=nc;
+    
+    A->offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
+    
+    for (i=0;i<nband;++i) A->offsets[i]=offsets[i];
+    
+    A->diag=(REAL*)fasp_mem_calloc(ngrid*nc*nc, sizeof(REAL));
+    
+    A->offdiag = (REAL **)fasp_mem_calloc(A->nband, sizeof(REAL*));
+    
+    for (i=0;i<nband;++i) {
+    A->offdiag[i]=(REAL*)fasp_mem_calloc((ngrid-ABS(offsets[i]))*nc*nc, sizeof(REAL));
+    }
 }
 
 /**
@@ -149,20 +149,20 @@ void fasp_dstr_alloc(INT nx,
  * \date   05/17/2010 
  */
 void fasp_dstr_free (dSTRmat *A)
-{		
-	unsigned INT i;
-	
-	fasp_mem_free(A->offsets);
-	fasp_mem_free(A->diag);
-	for (i=0;i<A->nband;++i) fasp_mem_free(A->offdiag[i]);
-	
-	A->nx=0;
-	A->ny=0;
-	A->nz=0;
-	A->nxy=0;
-	A->ngrid=0;
-	A->nband=0;
-	A->nc=0;	
+{    
+    unsigned INT i;
+    
+    fasp_mem_free(A->offsets);
+    fasp_mem_free(A->diag);
+    for (i=0;i<A->nband;++i) fasp_mem_free(A->offdiag[i]);
+    
+    A->nx=0;
+    A->ny=0;
+    A->nz=0;
+    A->nxy=0;
+    A->ngrid=0;
+    A->nband=0;
+    A->nc=0;    
 }
 
 /**
@@ -178,23 +178,23 @@ void fasp_dstr_free (dSTRmat *A)
  */
 void fasp_dstr_cp (dSTRmat *A, 
                    dSTRmat *A1)
-{		
+{    
     const INT nc2 = (A->nc)*(A->nc);
 
     INT i;
-	A1->nx=A->nx;
-	A1->ny=A->ny;
-	A1->nz=A->nz;
-	A1->nxy=A->nxy;
-	A1->ngrid=A->ngrid;
-	A1->nc=A->nc;
-	A1->nband=A->nband;
-		
-	memcpy(A1->offsets,A->offsets,(A->nband)*sizeof(INT));
-	memcpy(A1->diag,A->diag,(A->ngrid*nc2)*sizeof(REAL));
-	for (i=0;i<A->nband;++i)
-		memcpy(A1->offdiag[i],A->offdiag[i],((A->ngrid - ABS(A->offsets[i]))*nc2)*sizeof(REAL)); 
-	
+    A1->nx=A->nx;
+    A1->ny=A->ny;
+    A1->nz=A->nz;
+    A1->nxy=A->nxy;
+    A1->ngrid=A->ngrid;
+    A1->nc=A->nc;
+    A1->nband=A->nband;
+    
+    memcpy(A1->offsets,A->offsets,(A->nband)*sizeof(INT));
+    memcpy(A1->diag,A->diag,(A->ngrid*nc2)*sizeof(REAL));
+    for (i=0;i<A->nband;++i)
+    memcpy(A1->offdiag[i],A->offdiag[i],((A->ngrid - ABS(A->offsets[i]))*nc2)*sizeof(REAL)); 
+    
 }
 
 /*---------------------------------*/

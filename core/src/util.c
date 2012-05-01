@@ -41,21 +41,21 @@ unsigned long fasp_aux_change_endian4(unsigned long x)
  */
 double fasp_aux_change_endian8(double x)
 {   
-	double dbl;   
-	unsigned char *bytes, *buffer;   
-	
-	buffer=(unsigned char *)&dbl;
-	bytes=(unsigned char *)&x;
-	
-	buffer[0]=bytes[7];   
-	buffer[1]=bytes[6];   
-	buffer[2]=bytes[5];   
-	buffer[3]=bytes[4];   
-	buffer[4]=bytes[3];   
-	buffer[5]=bytes[2];   
-	buffer[6]=bytes[1];   
-	buffer[7]=bytes[0];   
-	return dbl;   
+    double dbl;   
+    unsigned char *bytes, *buffer;   
+    
+    buffer=(unsigned char *)&dbl;
+    bytes=(unsigned char *)&x;
+    
+    buffer[0]=bytes[7];   
+    buffer[1]=bytes[6];   
+    buffer[2]=bytes[5];   
+    buffer[3]=bytes[4];   
+    buffer[4]=bytes[3];   
+    buffer[5]=bytes[2];   
+    buffer[6]=bytes[1];   
+    buffer[7]=bytes[0];   
+    return dbl;   
 }
 
 /**
@@ -72,18 +72,18 @@ double fasp_aux_change_endian8(double x)
  */
 double fasp_aux_bbyteToldouble(unsigned char bytes[])
 {   
-	double dbl;   
-	unsigned char *buffer;   
-	buffer=(unsigned char *)&dbl;   
-	buffer[0]=bytes[7];   
-	buffer[1]=bytes[6];   
-	buffer[2]=bytes[5];   
-	buffer[3]=bytes[4];   
-	buffer[4]=bytes[3];   
-	buffer[5]=bytes[2];   
-	buffer[6]=bytes[1];   
-	buffer[7]=bytes[0];   
-	return dbl;   
+    double dbl;   
+    unsigned char *buffer;   
+    buffer=(unsigned char *)&dbl;   
+    buffer[0]=bytes[7];   
+    buffer[1]=bytes[6];   
+    buffer[2]=bytes[5];   
+    buffer[3]=bytes[4];   
+    buffer[4]=bytes[3];   
+    buffer[5]=bytes[2];   
+    buffer[6]=bytes[1];   
+    buffer[7]=bytes[0];   
+    return dbl;   
 }
 
 /*---------------------------------*/
