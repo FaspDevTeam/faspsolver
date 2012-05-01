@@ -132,22 +132,21 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
-            normr0=MAX(SMALLREAL,tempr);
-            relres=tempr/normr0; 
+			absres0=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
+            normr0=MAX(SMALLREAL,absres0);
+            relres=absres0/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
-			tempr=fasp_blas_array_norm2(m,r);
+			absres0=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,uval));
-            relres=tempr/normu; 
+            relres=absres0/normu; 
 			break;
 		default:
-			tempr=fasp_blas_array_norm2(m,r);
-            normr0=MAX(SMALLREAL,tempr);
-            relres=tempr/normr0; 
+			absres0=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,absres0);
+            relres=absres0/normr0; 
 			break;
 	}
-	absres0=tempr;
     
 	if (relres<tol) goto FINISHED;
 	
@@ -228,6 +227,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         else 
             fasp_array_cp(m,p,pp); /* No preconditioner */
 		
+        // compute reducation factor of residual ||r||
 		absres=fasp_blas_array_norm2(m,r);
 		factor=absres/absres0;
 		
@@ -446,22 +446,21 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
-            normr0=MAX(SMALLREAL,tempr);
-            relres=tempr/normr0; 
+			absres0=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
+            normr0=MAX(SMALLREAL,absres0);
+            relres=absres0/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
-			tempr=fasp_blas_array_norm2(m,r);
+			absres0=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,uval));
-            relres=tempr/normu; 
+            relres=absres0/normu; 
 			break;
 		default:
-			tempr=fasp_blas_array_norm2(m,r);
-            normr0=MAX(SMALLREAL,tempr);
-            relres=tempr/normr0; 
+			absres0=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,absres0);
+            relres=absres0/normr0; 
 			break;
 	}
-	absres0=tempr;
     
 	if (relres<tol) goto FINISHED;
 	
@@ -542,6 +541,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
         else 
             fasp_array_cp(m,p,pp); /* No preconditioner */
 		
+        // compute reducation factor of residual ||r||
 		absres=fasp_blas_array_norm2(m,r);
 		factor=absres/absres0;
 		
@@ -760,22 +760,21 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
-            normr0=MAX(SMALLREAL,tempr);
-            relres=tempr/normr0; 
+			absres0=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
+            normr0=MAX(SMALLREAL,absres0);
+            relres=absres0/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
-			tempr=fasp_blas_array_norm2(m,r);
+			absres0=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,uval));
-            relres=tempr/normu; 
+            relres=absres0/normu; 
 			break;
 		default:
-			tempr=fasp_blas_array_norm2(m,r);
-            normr0=MAX(SMALLREAL,tempr);
-            relres=tempr/normr0; 
+			absres0=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,absres0);
+            relres=absres0/normr0; 
 			break;
 	}
-	absres0=tempr;
     
 	if (relres<tol) goto FINISHED;
 	
@@ -858,6 +857,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         else 
             fasp_array_cp(m,p,pp); /* No preconditioner */
 		
+        // compute reducation factor of residual ||r||
 		absres=fasp_blas_array_norm2(m,r);
 		factor=absres/absres0;
 		
@@ -1076,22 +1076,21 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
-            normr0=MAX(SMALLREAL,tempr);
-            relres=tempr/normr0; 
+			absres0=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
+            normr0=MAX(SMALLREAL,absres0);
+            relres=absres0/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
-			tempr=fasp_blas_array_norm2(m,r);
+			absres0=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,uval));
-            relres=tempr/normu; 
+            relres=absres0/normu; 
 			break;
 		default:
-			tempr=fasp_blas_array_norm2(m,r);
-            normr0=MAX(SMALLREAL,tempr);
-            relres=tempr/normr0; 
+			absres0=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,absres0);
+            relres=absres0/normr0; 
 			break;
 	}
-	absres0=tempr;
     
 	if (relres<tol) goto FINISHED;
 	
@@ -1174,6 +1173,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         else 
             fasp_array_cp(m,p,pp); /* No preconditioner */
 		
+        // compute reducation factor of residual ||r||
 		absres=fasp_blas_array_norm2(m,r);
 		factor=absres/absres0;
 		

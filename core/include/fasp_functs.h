@@ -1473,20 +1473,20 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
 INT fasp_solver_dcsr_pminres (dCSRmat *A, 
                               dvector *b, 
                               dvector *u, 
-                              const INT MaxIt, 
-                              const REAL tol,
                               precond *pc, 
-                              const SHORT print_level, 
-                              const SHORT stop_type);
+                              const REAL tol,
+                              const INT MaxIt, 
+                              const SHORT stop_type,
+                              const SHORT print_level) ;
 
 INT fasp_solver_bdcsr_pminres (block_dCSRmat *A, 
                                dvector *b, 
                                dvector *u, 
-                               const INT MaxIt, 
-                               const REAL tol,
                                precond *pc, 
-                               const SHORT print_level, 
-                               const SHORT stop_type);
+                               const REAL tol,
+                               const INT MaxIt, 
+                               const SHORT stop_type,
+                               const SHORT print_level) ;
 
 
 /*-------- In file: precond_bsr.c --------*/

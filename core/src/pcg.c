@@ -109,10 +109,6 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 	REAL *work=(REAL *)fasp_mem_calloc(4*m,sizeof(REAL));	
 	REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
 	
-#if CHMEM_MODE		
-	total_alloc_mem += 4*m*sizeof(REAL);
-#endif
-	
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_solver_dcsr_pcg ...... [Start]\n");
 #endif	
@@ -132,22 +128,21 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			tempr=sqrt(fasp_blas_array_dotprod(m,r,z));
-            normr0=MAX(SMALLREAL,tempr);
-			relres=tempr/normr0; 
+			absres0=sqrt(fasp_blas_array_dotprod(m,r,z));
+            normr0=MAX(SMALLREAL,absres0);
+			relres=absres0/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
-			tempr=fasp_blas_array_norm2(m,r);
+			absres0=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
-			relres=tempr/normu; 
+			relres=absres0/normu; 
 			break;
 		default:
-			tempr=fasp_blas_array_norm2(m,r);
-            normr0=MAX(SMALLREAL,tempr);
-			relres=tempr/normr0; 
+			absres0=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,absres0);
+			relres=absres0/normr0; 
 			break;
 	}
-	absres0=tempr;
 	
 	if (relres<tol) goto FINISHED;
 	
@@ -169,6 +164,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 		// r_k=r_{k-1} - alpha_k*A*p_{k-1}
 		fasp_blas_array_axpy(m,-alpha,t,r);
 		absres=fasp_blas_array_norm2(m,r);
+        
+        // compute reducation factor of residual ||r||
 		factor=absres/absres0;
 		
 		// compute relative residual 
@@ -383,13 +380,13 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 	REAL *work=(REAL *)fasp_mem_calloc(4*m,sizeof(REAL));	
 	REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
 	
-#if CHMEM_MODE		
-	total_alloc_mem += 4*m*sizeof(REAL);
-#endif
-	
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_solver_bdcsr_pcg ...... [Start]\n");
 #endif	
+	
+#if CHMEM_MODE		
+	total_alloc_mem += 4*m*sizeof(REAL);
+#endif
 	
 	// initialize counters
 	stag=1; more_step=1; restart_step=1;
@@ -406,22 +403,21 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			tempr=sqrt(fasp_blas_array_dotprod(m,r,z));
-            normr0=MAX(SMALLREAL,tempr);
-			relres=tempr/normr0; 
+			absres0=sqrt(fasp_blas_array_dotprod(m,r,z));
+            normr0=MAX(SMALLREAL,absres0);
+			relres=absres0/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
-			tempr=fasp_blas_array_norm2(m,r);
+			absres0=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
-			relres=tempr/normu; 
+			relres=absres0/normu; 
 			break;
 		default:
-			tempr=fasp_blas_array_norm2(m,r);
-            normr0=MAX(SMALLREAL,tempr);
-			relres=tempr/normr0; 
+			absres0=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,absres0);
+			relres=absres0/normr0; 
 			break;
 	}
-	absres0=tempr;
 	
 	if (relres<tol) goto FINISHED;
 	
@@ -446,7 +442,9 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 		// r_k=r_{k-1} - alpha_k*A*p_{k-1}
 		fasp_blas_array_axpy(m,-alpha,t,r);
 		absres=fasp_blas_array_norm2(m,r);
-		factor=absres/absres0;
+
+        // compute reducation factor of residual ||r||
+        factor=absres/absres0;
 		
 		// compute relative residual 
 		switch (stop_type) {
@@ -660,10 +658,6 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 	REAL *work=(REAL *)fasp_mem_calloc(4*m,sizeof(REAL));	
 	REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
 	
-#if CHMEM_MODE		
-	total_alloc_mem += 4*m*sizeof(REAL);
-#endif
-	
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_solver_dstr_pcg ...... [Start]\n");
 #endif	
@@ -683,22 +677,21 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			tempr=sqrt(fasp_blas_array_dotprod(m,r,z));
-            normr0=MAX(SMALLREAL,tempr);
-			relres=tempr/normr0; 
+			absres0=sqrt(fasp_blas_array_dotprod(m,r,z));
+            normr0=MAX(SMALLREAL,absres0);
+			relres=absres0/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
-			tempr=fasp_blas_array_norm2(m,r);
+			absres0=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
-			relres=tempr/normu; 
+			relres=absres0/normu; 
 			break;
 		default:
-			tempr=fasp_blas_array_norm2(m,r);
-            normr0=MAX(SMALLREAL,tempr);
-			relres=tempr/normr0; 
+			absres0=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,absres0);
+			relres=absres0/normr0; 
 			break;
 	}
-	absres0=tempr;
 	
 	if (relres<tol) goto FINISHED;
 	
@@ -723,7 +716,9 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 		// r_k=r_{k-1} - alpha_k*A*p_{k-1}
 		fasp_blas_array_axpy(m,-alpha,t,r);
 		absres=fasp_blas_array_norm2(m,r);
-		factor=absres/absres0;
+
+        // compute reducation factor of residual ||r||
+        factor=absres/absres0;
 		
 		// compute relative residual 
 		switch (stop_type) {

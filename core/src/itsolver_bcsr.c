@@ -50,11 +50,11 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
             
         case SOLVER_BiCGstab:
             if (print_level>PRINT_NONE) printf("BiCGstab method (Block CSR format) ...\n");
-            iter=fasp_solver_bdcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level);			
+            iter=fasp_solver_bdcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); break;		
             
 		case SOLVER_MinRes:
 			if (print_level>PRINT_NONE) printf("Calling MinRes solver (Block CSR format) ...\n");
-			iter=fasp_solver_bdcsr_pminres(A, b, x, MaxIt, tol, pc, print_level, stop_type); break;		
+			iter=fasp_solver_bdcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); break;		
             
 		case SOLVER_GMRES:
 			if (print_level>PRINT_NONE) printf("Calling GMRES solver (Block CSR format) ...\n");

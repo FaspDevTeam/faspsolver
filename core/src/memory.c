@@ -73,7 +73,10 @@ void * fasp_mem_calloc (INT size,
 			printf("### ERROR: Fail to allocate %.3fKB RAM!\n", tsize/1024.0);	
 			exit(ERROR_ALLOC_MEM);
 		}
-		
+
+#if CHMEM_MODE		
+        total_alloc_mem += size*type;
+#endif
 	}
 	
 	else {
@@ -115,7 +118,11 @@ void * fasp_mem_realloc (void * oldmem,
 		printf("### ERROR: Fail to allocate %.3fKB RAM!\n", tsize/1024.0);	
 		exit(ERROR_ALLOC_MEM);
 	}
-	
+
+#if CHMEM_MODE		
+    total_alloc_mem += tsize;
+#endif
+
 	return mem;
 }
 
