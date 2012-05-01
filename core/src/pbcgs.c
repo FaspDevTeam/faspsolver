@@ -402,11 +402,11 @@ FINISHED:  // finish the iterative method
 INT fasp_solver_dbsr_pbcgs(dBSRmat *A, 
                            dvector *b, 
                            dvector *u, 
-                           const INT MaxIt, 
-                           const REAL tol, 
                            precond *pc, 
-                           const INT print_level, 
-                           const INT stop_type)
+                           const REAL tol,
+                           const INT MaxIt, 
+                           const INT stop_type,
+                           const INT print_level) 
 {
 	const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;
@@ -1032,11 +1032,11 @@ FINISHED:  // finish the iterative method
 INT fasp_solver_dstr_pbcgs (dSTRmat *A, 
                             dvector *b, 
                             dvector *u, 
-                            const INT MaxIt, 
-                            const REAL tol, 
                             precond *pc, 
-                            const INT print_level, 
-                            const INT stop_type)
+                            const REAL tol,
+                            const INT MaxIt, 
+                            const INT stop_type,
+                            const INT print_level) 
 {
 	const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;

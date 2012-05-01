@@ -30,9 +30,9 @@ extern "C" {void DIRECT_MUMPS(const int *n, const int *nnz, int *ia, int *ja, do
  * \date 03/01/2011
  */
 void fasp_solver_mgcycle_omp1 (AMG_data *mgl, 
-															AMG_param *param, 
-															int nthreads, 
-															int openmp_holds)
+                               AMG_param *param, 
+                               int nthreads, 
+                               int openmp_holds)
 {
 #if FASP_USE_OPENMP
 	const int nl = mgl[0].num_levels;
@@ -41,7 +41,7 @@ void fasp_solver_mgcycle_omp1 (AMG_data *mgl,
 	const int smooth_order = NO_ORDER; // param->smooth_order;
 	const int cycle_type = param->cycle_type;
 	const double relax = param->relaxation;
-//	const int ndeg = 3;
+    //	const int ndeg = 3;
 	
 	int nu_l[MAX_AMG_LVL] = {0}, l = 0;
 	double alpha = 1.0;
@@ -59,14 +59,14 @@ ForwardSweep:
 			switch (smoother) {
 				case GS:
 					if (smooth_order == NO_ORDER || mgl[l].cfmark.val == NULL)
-					  fasp_smoother_dcsr_gs(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
+                        fasp_smoother_dcsr_gs(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
 					else if (smooth_order == CF_ORDER)
 					{
 						fasp_smoother_dcsr_gs_cf_omp(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps, mgl[l].cfmark.val, 1, nthreads,openmp_holds);
 					}
 					break;
 				case POLY:
-				//	fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 
+                    //	fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 
 					break;
 				case JACOBI:
 					fasp_smoother_dcsr_jacobi(&mgl[l].x, 0, mgl[l].A.row-1, 1, &mgl[l].A, &mgl[l].b, steps);
@@ -115,7 +115,7 @@ ForwardSweep:
 	{
 #if With_DISOLVE /* use Direct.lib in Windows */
 		DIRECT_MUMPS(&mgl[nl-1].A.row, &mgl[nl-1].A.nnz, mgl[nl-1].A.IA, mgl[nl-1].A.JA, 
-								 mgl[nl-1].A.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
+                     mgl[nl-1].A.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
 #elif With_UMFPACK
 		/* use UMFPACK direct solver on the coarsest level */
 		umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
@@ -154,14 +154,14 @@ ForwardSweep:
 			switch (smoother) {
 				case GS:
 					if (smooth_order == NO_ORDER || mgl[l].cfmark.val == NULL)
-					  fasp_smoother_dcsr_gs(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
+                        fasp_smoother_dcsr_gs(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
 					else if (smooth_order == CF_ORDER)
 					{
 						fasp_smoother_dcsr_gs_cf_omp(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps, mgl[l].cfmark.val, -1, nthreads,openmp_holds);
 					}
 					break;
 				case POLY:
-				//	fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 
+                    //	fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 
 					break;
 				case JACOBI:
 					fasp_smoother_dcsr_jacobi(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
@@ -203,9 +203,9 @@ ForwardSweep:
 }
 
 void fasp_solver_mgcycle_omp (AMG_data *mgl, 
-															AMG_param *param, 
-															INT nthreads, 
-															INT openmp_holds)
+                              AMG_param *param, 
+                              INT nthreads, 
+                              INT openmp_holds)
 {	
     const INT amg_type=param->AMG_type;
 	const REAL relax = param->relaxation;
@@ -292,7 +292,7 @@ ForwardSweep:
 				fasp_blas_dcsr_mxv_agg(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val);
 				break;
 			default:
-		fasp_blas_dcsr_mxv_omp(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val, nthreads,openmp_holds);
+                fasp_blas_dcsr_mxv_omp(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val, nthreads,openmp_holds);
 				break;
 		}
 		
@@ -306,7 +306,7 @@ ForwardSweep:
 #if With_DISOLVE 
         /* use Direct.lib in Windows */
 		DIRECT_MUMPS(&mgl[nl-1].A.row, &mgl[nl-1].A.nnz, mgl[nl-1].A.IA, mgl[nl-1].A.JA, 
-                      mgl[nl-1].A.val,  mgl[nl-1].b.val, mgl[nl-1].x.val);
+                     mgl[nl-1].A.val,  mgl[nl-1].b.val, mgl[nl-1].x.val);
 #elif With_UMFPACK
 		/* use UMFPACK direct solver on the coarsest level */
 		umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
@@ -322,7 +322,7 @@ ForwardSweep:
 		INT flag = fasp_solver_dcsr_pcg (&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, NULL, ctol, cmaxit, 1, 0);
 		
         if (flag < 0) { // If PCG does not converge, use BiCGstab as a saft net.
-            flag = fasp_solver_dcsr_pvgmres (&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, cmaxit, ctol, NULL, 0, 1, 25);
+            flag = fasp_solver_dcsr_pvgmres (&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, NULL, ctol, cmaxit, 25, 1, 0);
         }
         
 		if ( flag < 0 && print_level > PRINT_MIN ) {
@@ -364,7 +364,7 @@ ForwardSweep:
 					if (smooth_order == NO_ORDER || mgl[l].cfmark.val == NULL)
                         fasp_smoother_dcsr_gs(&mgl[l].x, mgl[l].A.row-1, 0, -1, &mgl[l].A, &mgl[l].b, steps);
 					else if (smooth_order == CF_ORDER)
-					fasp_smoother_dcsr_gs_cf_omp(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps, mgl[l].cfmark.val, -1, nthreads,openmp_holds);
+                        fasp_smoother_dcsr_gs_cf_omp(&mgl[l].x, &mgl[l].A, &mgl[l].b, steps, mgl[l].cfmark.val, -1, nthreads,openmp_holds);
 					break;
 				case POLY:
 					fasp_smoother_dcsr_poly(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].A.row, ndeg, steps); 

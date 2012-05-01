@@ -48,17 +48,17 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
 			
 		case SOLVER_BiCGstab:
 			if (print_level>0) printf("Calling BiCGstab solver (BSR format) ...\n");
-			iter=fasp_solver_dbsr_pbcgs(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
+			iter=fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
 			
 		case SOLVER_GMRES:
 			if (print_level>0) printf("Calling GMRES solver (BSR format) ...\n");
-			iter=fasp_solver_dbsr_pgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	
+			iter=fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);	
             break;		
 			
 		case SOLVER_VGMRES:
 			if (print_level>0) printf("Calling vGMRES solver (BSR format) ...\n");
-			iter=fasp_solver_dbsr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart); 
+			iter=fasp_solver_dbsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;	
             
         case SOLVER_VFGMRES: 

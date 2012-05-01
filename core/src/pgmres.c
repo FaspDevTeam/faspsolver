@@ -47,8 +47,8 @@
  *          -# IF ( not converged & restart_number < Max_Res_Check ) restart;
  *      - END IF 
  *
- *  Ref: Iterative methods for sparse linear systems (2nd Edition) 
- *  By Y. Saad, SIAM, 2003.
+ *  \note Refer to Y. Saad 2003
+ *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
  */  
 
@@ -63,43 +63,44 @@
 /*---------------------------------*/
 
 /*!
- * \fn INT fasp_solver_dcsr_pgmres (dCSRmat *A, dvector *b, dvector *x, const INT MaxIt, 
- *                                  const REAL tol, precond *pc, const SHORT print_level, 
- *                                  const SHORT stop_type, const SHORT restart )
+ * \fn INT fasp_solver_dcsr_pgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc, 
+ *                                 const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                 const SHORT stop_type, const SHORT print_level)
  *
  * \brief Solve "Ax=b" using PGMRES (right preconditioned) iterative method
  *
  * \param A	           Pointer to the coefficient matrix
  * \param b	           Pointer to the dvector of right hand side
  * \param x	           Pointer to the dvector of DOFs
- * \param MaxIt        Maximal number of iterations
- * \param tol          Tolerance for stopping
  * \param pc           Pointer to the structure of precondition (precond) 
- * \param print_level  How much information to print out
- * \param stop_type    Stopping criteria type
+ * \param tol          Tolerance for stopping
+ * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
+ * \param stop_type    Stopping criteria type -- DOES not support this parameter
+ * \param print_level  How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Zhiyang Zhou 
  * \date   2010/11/28
+ *
+ * Modified by Chensong Zhang on 05/01/2012
  */ 
 INT fasp_solver_dcsr_pgmres (dCSRmat *A, 
                              dvector *b, 
                              dvector *x, 
-                             const INT MaxIt, 
-                             const REAL tol,
                              precond *pc, 
-                             const SHORT print_level, 
+                             const REAL tol,
+                             const INT MaxIt, 
+                             const SHORT restart,
                              const SHORT stop_type, 
-                             const SHORT restart)
+                             const SHORT print_level)
 {
 	const INT n         = A->row;  
 	const INT min_iter  = 0;
 	
     // local variables
 	SHORT    converged = FALSE; 
-	INT      status = SUCCESS;
 	INT      iter = 0;
 	INT      restartplus1 = restart + 1;
 	INT      i, j, k;
@@ -113,12 +114,16 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
 	REAL   **p = NULL, **hh = NULL;
 	REAL    *work = NULL;
 	
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_dcsr_pgmres ...... [Start]\n");
+#endif	
+
 	/* allocate memory */
 	work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
 	
-	p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+	p    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
 	
-	hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
+	hh   = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
 	
 	if (print_level>PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL)); 
 	
@@ -314,52 +319,61 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=MaxIt) return ERROR_SOLVER_MAXIT;
-	else if (status<0) return status;
-	else return iter;
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_dcsr_pgmres ...... [Finish]\n");
+#endif	
+
+	if (iter>=MaxIt) 
+        return ERROR_SOLVER_MAXIT;
+	else 
+        return iter;
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A, dvector *b, dvector *u, const INT MaxIt, 
- *                                   const REAL tol, precond *pc, const SHORT print_level, 
- *                                   const SHORT stop_type, const SHORT restart)
- *
- * \brief A preconditioned generalized minimum residual method (GMRES) method for solving Au=b 
+ * \fn INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A, dvector *b, dvector *u, precond *pc, 
+ *                                   const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                   const SHORT stop_type, const SHORT print_level)
  *
  * \param A	           Pointer to the coefficient matrix
  * \param b	           Pointer to the dvector of right hand side
  * \param u	           Pointer to the dvector of DOFs
- * \param MaxIt        Maximal number of iterations
- * \param tol          Tolerance for stopping
  * \param pc           Pointer to the structure of precondition (precond) 
- * \param print_level  How much information to print out
- * \param stop_type    Stopping criteria type
+ * \param tol          Tolerance for stopping
+ * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
+ * \param stop_type    Stopping criteria type -- DOES not support this parameter
+ * \param print_level  How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Xiaozhe Hu
  * \date   05/24/2010
+ *
+ * Modified by Chensong Zhang on 05/01/2012
  */
 INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A, 
                               dvector *b, 
                               dvector *u, 
-                              const INT MaxIt, 
-                              const REAL tol,
                               precond *pc, 
-                              const SHORT print_level, 
+                              const REAL tol,
+                              const INT MaxIt, 
+                              const SHORT restart,
                               const SHORT stop_type, 
-                              const SHORT restart)
+                              const SHORT print_level)
 {
-	const INT nrow=b->row, nrow_1=nrow-1;
-	const REAL sol_inf_tol = 1e-16; // infinity norm tolrance
+	const INT   nrow=b->row, nrow_1=nrow-1;
+	const REAL  sol_inf_tol = SMALLREAL; // infinity norm tolrance
 
     // local variables
-	INT i, j, j1, index, iter=0, m=restart;
-	REAL beta, betai, tempe, tempb, tempu, hij, temp2;
-	REAL absres0=BIGREAL, absres, relres1, infnormu, factor;
+	INT         i, j, j1, index, iter=0, m=restart;
+	REAL        beta, betai, tempe, tempb, tempu, hij, temp2;
+	REAL        absres0=BIGREAL, absres, relres1, infnormu, factor;
 	
-	if ((m<1)||(m>nrow)||(m>150)) m=10; // default restart level
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_bdcsr_pgmres ...... [Start]\n");
+#endif	
+
+	if ((m<1)||(m>nrow)||(m>150)) m=20; // default restart level
 	
 	REAL *tmp=(REAL *)fasp_mem_calloc(m+1,sizeof(REAL));
 	
@@ -551,45 +565,50 @@ FINISHED:
 	for (i=0;i<=m;++i) fasp_mem_free(v[i].val);
 	fasp_mem_free(v);
 	
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_bdcsr_pgmres ...... [Finish]\n");
+#endif	
+    
 	return iter;
 }
 
 /*!
- * \fn INT fasp_solver_dbsr_pgmres (dBSRmat *A, dvector *b, dvector *x, const INT MaxIt, 
- *                                  const REAL tol, precond *pc, const SHORT print_level, 
- *                                  const SHORT stop_type, const SHORT restart)
+ * \fn INT fasp_solver_dbsr_pgmres (dBSRmat *A, dvector *b, dvector *x, precond *pc, 
+ *                                  const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                  const SHORT stop_type, const SHORT print_level)
  *
  * \param A	           Pointer to the coefficient matrix
  * \param b	           Pointer to the dvector of right hand side
  * \param x	           Pointer to the dvector of DOFs
- * \param MaxIt        Maximal number of iterations
- * \param tol          Tolerance for stopping
  * \param pc           Pointer to the structure of precondition (precond) 
- * \param print_level  How much information to print out
- * \param stop_type    Stopping criteria type
+ * \param tol          Tolerance for stopping
+ * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
+ * \param stop_type    Stopping criteria type -- DOES not support this parameter
+ * \param print_level  How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Zhiyang Zhou 
  * \date   2010/12/21
+ *
+ * Modified by Chensong Zhang on 05/01/2012
  */ 
 INT fasp_solver_dbsr_pgmres (dBSRmat *A, 
                              dvector *b, 
                              dvector *x, 
-                             const INT MaxIt, 
-                             const REAL tol,
                              precond *pc, 
-                             const SHORT print_level, 
+                             const REAL tol,
+                             const INT MaxIt, 
+                             const SHORT restart,
                              const SHORT stop_type, 
-                             const SHORT restart)
+                             const SHORT print_level)
 {
 	const INT n = A->ROW*A->nb;;  
 	const INT min_iter = 0;
 	
     // local variables
 	SHORT     converged = 0; 
-	INT       status = SUCCESS;
 	INT       iter = 0;
 	INT       restartplus1 = restart + 1;
 	INT       i, j, k;
@@ -603,6 +622,10 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
 	REAL    **p = NULL, **hh = NULL;
 	REAL     *work = NULL;
 	
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_dbsr_pgmres ...... [Start]\n");
+#endif	
+    
 	/* allocate memory */
 	work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
 	
@@ -802,42 +825,47 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
 	
-	if (iter>=MaxIt) return ERROR_SOLVER_MAXIT;
-	else if (status<0) return status;
-	else return iter;
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_dbsr_pgmres ...... [Finish]\n");
+#endif	
+    
+	if (iter>=MaxIt) 
+        return ERROR_SOLVER_MAXIT;
+	else 
+        return iter;
 }
 
 /*!
- * \fn INT fasp_solver_dstr_pgmres (dSTRmat *A, dvector *b, dvector *x, const INT MaxIt, 
- *                                  const REAL tol, precond *pc, const SHORT print_level, 
- *                                  const SHORT stop_type, const SHORT restart)
- *
- * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method
+ * \fn INT fasp_solver_dstr_pgmres (dSTRmat *A, dvector *b, dvector *x, precond *pc, 
+ *                                  const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                  const SHORT stop_type, const SHORT print_level)
  *
  * \param A	           Pointer to the coefficient matrix
  * \param b	           Pointer to the dvector of right hand side
  * \param x	           Pointer to the dvector of DOFs
- * \param MaxIt        Maximal number of iterations
- * \param tol          Tolerance for stopping
  * \param pc           Pointer to the structure of precondition (precond) 
- * \param print_level  How much information to print out
- * \param stop_type    Stopping criteria type
+ * \param tol          Tolerance for stopping
+ * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
+ * \param stop_type    Stopping criteria type -- DOES not support this parameter
+ * \param print_level  How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Zhiyang Zhou 
  * \date   2010/11/28
+ *
+ * Modified by Chensong Zhang on 05/01/2012
  */ 
 INT fasp_solver_dstr_pgmres (dSTRmat *A, 
                              dvector *b, 
                              dvector *x, 
-                             const INT MaxIt, 
-                             const REAL tol,
                              precond *pc, 
-                             const SHORT print_level, 
+                             const REAL tol,
+                             const INT MaxIt, 
+                             const SHORT restart,
                              const SHORT stop_type, 
-                             const SHORT restart )
+                             const SHORT print_level)
 {
 	const INT n = A->nc*A->ngrid;  
 	const INT min_iter = 0;
@@ -845,7 +873,6 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     // local varialbes
 	SHORT     converged = 0; 
 	INT       iter = 0;
-	INT       status = SUCCESS;
 	INT       restartplus1 = restart + 1;
 	INT       i, j, k;
 	
@@ -858,7 +885,11 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
 	REAL    **p = NULL, **hh = NULL;
 	REAL     *work = NULL;
 	
-	/* allocate memory */
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_dstr_pgmres ...... [Start]\n");
+#endif	
+	
+    /* allocate memory */
 	work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
 	
 	p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
@@ -1057,10 +1088,15 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
 	fasp_mem_free(p); 
 	fasp_mem_free(hh);
 	fasp_mem_free(norms);
-	
-	if (iter>=MaxIt) return ERROR_SOLVER_MAXIT;
-	else if (status<0) return status;
-	else return iter;
+
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_dstr_pgmres ...... [Finish]\n");
+#endif	
+    
+	if (iter>=MaxIt) 
+        return ERROR_SOLVER_MAXIT;
+	else 
+        return iter;
 }
 
 /*---------------------------------*/

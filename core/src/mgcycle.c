@@ -228,7 +228,7 @@ ForwardSweep:
         const INT  csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
         const INT  cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
         const REAL ctol = param->tol; // coarse level tolerance
-        if (fasp_solver_dbsr_pvgmres(&mgl[nl-1].A,&mgl[nl-1].b,&mgl[nl-1].x,cmaxit,ctol,NULL,1,1,100)<0)
+        if ( fasp_solver_dbsr_pvgmres(&mgl[nl-1].A,&mgl[nl-1].b,&mgl[nl-1].x,NULL,ctol,cmaxit,25,1,0)<0 )
         {
             printf("### WARNING: Coarse level solver does not converge!");
         }

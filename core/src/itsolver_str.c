@@ -54,17 +54,17 @@ INT fasp_solver_dstr_itsolver(dSTRmat *A,
 			
 		case SOLVER_BiCGstab:
 			if (print_level>PRINT_NONE) printf("Calling BiCGstab solver (STR format) ...\n");
-			iter=fasp_solver_dstr_pbcgs(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
+			iter=fasp_solver_dstr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
 			break;
 			
 		case SOLVER_GMRES:
 			if (print_level>PRINT_NONE) printf("Calling GMRES solver (STR format) ...\n");
-			iter=fasp_solver_dstr_pgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	
+			iter=fasp_solver_dstr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);	
 			break;		
 			
 		case SOLVER_VGMRES:
 			if (print_level>PRINT_NONE) printf("Calling vGMRES solver (STR format) ...\n");
-			iter=fasp_solver_dstr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	
+			iter=fasp_solver_dstr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);	
 			break;	
 			
 		default:

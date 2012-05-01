@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+05/01/2012 FASP 0.7.7: Clean up and update interfaces for vGMRES.
+
+05/01/2012 FASP 0.7.6: Clean up and update interfaces for PGMRES.
+
 05/01/2012 FASP 0.7.5: Rewrite part of PMINRES.
 
 05/01/2012 FASP 0.7.4: Rewrite PBCGS for optimizing memory and CPU usage.

@@ -52,26 +52,31 @@ int fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
 			
 		case SOLVER_CG:
 			if (print_level>0) printf("Calling PCG solver ...\n");
-			iter=fasp_solver_dcsr_pcg_omp(A, b, x, MaxIt, tol, pc, print_level, stop_type, nthreads, openmp_holds); break;
+			iter=fasp_solver_dcsr_pcg_omp(A, b, x, MaxIt, tol, pc, print_level, stop_type, nthreads, openmp_holds); 
+            break;
 			
 		case SOLVER_BiCGstab:
 			if (print_level>0) printf("Calling BiCGstab solver ...\n");
-			iter=fasp_solver_dcsr_pbcgs(A, b, x, MaxIt, tol, pc, print_level, stop_type); break;
+			iter=fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+            break;
 			
 		case SOLVER_MinRes:
 			if (print_level>0) printf("Calling MinRes solver ...\n");		
-			iter=fasp_solver_dcsr_pminres(A, b, x, MaxIt, tol, pc, print_level, stop_type); break;
+			iter=fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+            break;
 			
 		case SOLVER_GMRES:
 			if (print_level>0) printf("Calling GMRes solver ...\n");		
-			iter=fasp_solver_dcsr_pgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	break;
+			iter=fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level); 
+            break;
 			
 		case SOLVER_VGMRES: 
 			if (print_level>0) printf("Calling vGMRes solver ...\n");		
-			iter=fasp_solver_dcsr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	break;
+			iter=fasp_solver_dcsr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);
+            break;
 			
 		default:
-			printf("Error: wrong itertive solver type %d!\n", itsolver_type);
+			printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
 			return ERROR_SOLVER_TYPE;
 			
 	} 

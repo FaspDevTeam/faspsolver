@@ -40,7 +40,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
     INT status = fasp_solver_dcsr_pcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);
     
     if (status < 0) { // If PCG does not converge, use BiCGstab as a saft net.
-        status = fasp_solver_dcsr_pvgmres (A, b, x, cmaxit, ctol, NULL, PRINT_NONE, 1, 25);
+        status = fasp_solver_dcsr_pvgmres (A, b, x, NULL, ctol, cmaxit, 25, 1, PRINT_NONE);
     }
     
     if ( status < 0 && prt_lvl > PRINT_MIN ) {

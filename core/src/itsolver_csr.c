@@ -73,12 +73,12 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 			
 		case SOLVER_GMRES:
 			if (print_level>0) printf("Calling GMRes solver ...\n");		
-			iter = fasp_solver_dcsr_pgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);
+			iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
 			
 		case SOLVER_VGMRES: 
 			if (print_level>0) printf("Calling vGMRes solver ...\n");		
-			iter = fasp_solver_dcsr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	
+			iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);	
             break;
             
         case SOLVER_GCG:
