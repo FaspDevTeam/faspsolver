@@ -101,7 +101,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     
     // local variables
 	INT          iter = 0, stag, more_step, restart_step;
-	REAL         absres0 = BIGREAL, absres, relres = BIGREAL, reldiff, factor;
+	REAL         absres0, absres, relres, reldiff, factor;
     REAL         normr0 = BIGREAL, normu, infnormu;
 	REAL         alpha, beta, temp1, temp2, tempr; 
 	
@@ -147,11 +147,11 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 			relres=tempr/normr0; 
 			break;
 	}
+	absres0=tempr;
 	
 	if (relres<tol) goto FINISHED;
 	
 	fasp_array_cp(m,z,p);
-	
 	temp1=fasp_blas_array_dotprod(m,z,r);
 	
 	while ( iter++ < MaxIt )
@@ -421,6 +421,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 			relres=tempr/normr0; 
 			break;
 	}
+	absres0=tempr;
 	
 	if (relres<tol) goto FINISHED;
 	
@@ -697,6 +698,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 			relres=tempr/normr0; 
 			break;
 	}
+	absres0=tempr;
 	
 	if (relres<tol) goto FINISHED;
 	

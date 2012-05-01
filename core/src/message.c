@@ -39,7 +39,7 @@ void print_itinfo (const INT ptrlvl,
 	if (ptrlvl>PRINT_MIN) {
         
 		if (iter>1) {
-			printf("%6d | %15.6e   | %13.6e  | %10.3f\n",iter,relres,absres,factor);
+			printf("%6d | %15.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);
 		}
 		else { 
             // iter = 0 means initial guess, iter = 1 is the first iteration
@@ -59,7 +59,7 @@ void print_itinfo (const INT ptrlvl,
 					exit(ERROR_INPUT_PAR);
 			}
 			printf("---------------------------------------------------------------\n");
-			printf("%6d | %15.6e   | %13.6e  | \n",iter,relres,absres);
+			printf("%6d | %15.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);
 		} // end if iter
         
 	} // end if ptrlvl

@@ -1,5 +1,7 @@
 File Name: CHANGES
 
+05/01/2012 FASP 0.7.4: Rewrite PBCGS for optimizing memory and CPU usage.
+
 04/30/2012 FASP 0.7.3: Clean up and update interfaces of PBCGS.
 
 04/30/2012 FASP 0.7.2: Clean up and update interfaces of PCG.

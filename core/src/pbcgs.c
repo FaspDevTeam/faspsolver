@@ -80,11 +80,10 @@
  *
  * \return             Number of iterations if converged, error message otherwise
  *
- * \author Shuo Zhang, Chensong Zhang
- * \date   09/24/2009
+ * \author Chensong Zhang
+ * \date   09/09/2009
  *
- * Modified by Chensong Zhang on 09/09/2011
- * Modified by Chensong Zhang on 04/30/2012
+ * Rewritten by Chensong Zhang on 04/30/2012
  */
 INT fasp_solver_dcsr_pbcgs (dCSRmat *A, 
                             dvector *b, 
@@ -102,14 +101,15 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
     
     // local variables
 	INT          iter = 0, stag, more_step, restart_step;	
-    REAL         alpha, beta, relres, normr0, fenzi, fenmu, omega, reldiff;
-	REAL         factor=0.0, absres,  absresp, normd, normu, temp2, infnormu;
+    REAL         alpha, beta, omega, temp1, temp2;
+    REAL         relres, normr0, reldiff;
+	REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
 	REAL         *uval=u->val, *bval=b->val;
     
-	// allocate temp memory (need 9*m double)
-	REAL *work=(REAL *)fasp_mem_calloc(9*m,sizeof(double));	
-	REAL *p=work, *z=work+m, *r=z+m, *t=r+m, *rho=t+m;
-	REAL *vec=rho+m, *pp=vec+m, *sp=pp+m, *rp=sp+m;
+	// allocate temp memory (need 8*m double)
+	REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(double));	
+	REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
+	REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
 	    
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_solver_dcsr_pbcgs ...... [Start]\n");
@@ -122,13 +122,6 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 	fasp_array_cp(m,bval,r);
 	fasp_blas_dcsr_aAxpy(-1.0,A,uval,r);
 	
-	// save the previous step
-	fasp_array_cp(m,r,rp);
-	
-	// fenzi=(r,rho)
-	fasp_array_cp(m,r,rho);	
-	fenzi=fasp_blas_array_dotprod(m,r,rho);
-	
 	// pp=precond(p)
 	fasp_array_cp(m,r,p);
 	if (pc != NULL) 
@@ -136,114 +129,97 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 	else 
         fasp_array_cp(m,p,pp); /* No preconditioner */
 	
-	// t=A*pp;
-	fasp_blas_dcsr_mxv(A,pp,t);
-	
-	// fenmu=(A*pp,rho)
-	fenmu=fasp_blas_array_dotprod(m,t,rho);
-    
-	// (r,rho)/(A*pp,rho)
-    if (ABS(fenmu)>SMALLREAL) {
-        alpha=fenzi/fenmu;
-    }
-    else {
-        if (print_level>=PRINT_SOME) ITS_DIVZERO;
-        return ERROR_SOLVER_MISC;	        
-    }
-	
-	// s=r-alpha t
-	fasp_blas_array_axpy(m,-alpha,t,r);
-	
-	// sp=precond(s)
-	if (pc != NULL) 
-        pc->fct(r,sp,pc->data); /* Apply preconditioner */
-	else 
-        fasp_array_cp(m,r,sp); /* No preconditioner */
-	
-	// t=A*sp;
-	fasp_blas_dcsr_mxv(A,sp,t);
-    
-	fenzi=fasp_blas_array_dotprod(m,r,t);
-	fenmu=fasp_blas_array_dotprod(m,t,t);
-    
-    if (ABS(fenmu)>SMALLREAL) {
-        omega=fenzi/fenmu;
-    }
-    else {
-        if (print_level>=PRINT_SOME) ITS_DIVZERO;
-        omega=1.0; 
-        // We use an approximate stepsize. Take the risky. --Chensong
-        // For safety, we could just quit BiCGstab:
-        //     return ERROR_SOLVER_MISC;	        
-    }
-    
-	//sol=sol+alpha pp+omega sp
-	fasp_blas_array_axpy(m,alpha,pp,uval);
-	fasp_blas_array_axpy(m,omega,sp,uval);	
-    iter++;
-	
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pc != NULL) pc->fct(bval,t,pc->data); /* Preconditioning */
-			else fasp_array_cp(m,bval,t); /* No preconditioner, B=I */
-			normr0=sqrt(ABS(fasp_blas_array_dotprod(m,bval,t)));
-            normr0=MAX(SMALLREAL,normr0);
+			tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
+            normr0=MAX(SMALLREAL,tempr);
+            relres=tempr/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
+			tempr=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,uval));
+            relres=tempr/normu; 
 			break;
 		default:
-			normr0=fasp_blas_array_norm2(m,bval);
-            normr0=MAX(SMALLREAL,normr0);
+			tempr=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,tempr);
+            relres=tempr/normr0; 
 			break;
 	}
-	
-	// r=s-omega t
-	fasp_blas_array_axpy(m,-omega,t,r);
-	
-	absres=fasp_blas_array_norm2(m,r);
-	
-	switch (stop_type) {
-		case STOP_REL_PRECRES:
-			if (pc != NULL) pc->fct(r,z,pc->data);
-			else fasp_array_cp(m,r,z);
-			temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-			relres=temp2/normr0; 
-			break;
-		case STOP_MOD_REL_RES:
-			relres=absres/normu; 
-			break;
-		default:
-			relres=absres/normr0; 
-			break;
-	}
-	
-	absresp=absres;
-	
-    // output iteration information if needed	
-    print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+	absres0=tempr;
     
 	if (relres<tol) goto FINISHED;
 	
+    // rho = r* := r
+	fasp_array_cp(m,r,rho);	
+    temp1=fasp_blas_array_dotprod(m,r,rho);
+    
 	while ( iter++ < MaxIt )
 	{
-		// beta = (r,rho)/(rp,rho)
-		fenzi=fasp_blas_array_dotprod(m,r,rho);
-		fenmu=fasp_blas_array_dotprod(m,rp,rho);
+		// z = A*pp
+		fasp_blas_dcsr_mxv(A,pp,z);
+
+		// alpha = (r,rho)/(A*p,rho)
+		temp2=fasp_blas_array_dotprod(m,z,rho);	
+        if (ABS(temp2)>SMALLREAL) {
+            alpha=temp1/temp2;
+        }
+        else {
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            return ERROR_SOLVER_MISC;	        
+        }
+				
+		// s = r - alpha z
+		fasp_array_cp(m,r,s);
+		fasp_blas_array_axpy(m,-alpha,z,s);
 		
-        if (ABS(fenmu)>SMALLREAL) {
-            beta=(fenzi*alpha)/(fenmu*omega);
+		// sp = precond(s)
+		if (pc != NULL) 
+            pc->fct(s,sp,pc->data); /* Apply preconditioner */
+		else 
+            fasp_array_cp(m,s,sp); /* No preconditioner */
+        
+		// t = A*sp;
+		fasp_blas_dcsr_mxv(A,sp,t);
+		
+        // omega = (t,s)/(t,t)
+		tempr=fasp_blas_array_dotprod(m,t,t);
+      
+        if (ABS(tempr)>SMALLREAL) {
+            omega=fasp_blas_array_dotprod(m,s,t)/tempr;
+        }
+        else {
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            omega=0.0;
+        }
+		
+		// delu = alpha pp + omega sp
+		fasp_blas_array_axpby(m,alpha,pp,omega,sp);
+        
+        // u = u + delu
+		fasp_blas_array_axpy(m,1.0,sp,uval);
+		
+		// r = s - omega t
+		fasp_blas_array_axpy(m,-omega,t,s);
+		fasp_array_cp(m,s,r);
+		
+        // beta = (r,rho)/(rp,rho)
+        temp2=temp1;
+		temp1=fasp_blas_array_dotprod(m,r,rho);
+		
+        if (ABS(temp2)>SMALLREAL) {
+            beta=(temp1*alpha)/(temp2*omega);
         }
         else {
             if (print_level>=PRINT_SOME) ITS_DIVZERO;
             return ERROR_SOLVER_MISC;	        
         }
 		
-		// p - omega A*pp
-		fasp_blas_dcsr_aAxpy(-omega,A,pp,p);
+		// p = p - omega z
+		fasp_blas_array_axpy(m,-omega,z,p);
 		
-		// r + beta p
+		// p = r + beta p
 		fasp_blas_array_axpby(m,1.0,r,beta,p);
 		
 		// pp=precond(p)
@@ -252,54 +228,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         else 
             fasp_array_cp(m,p,pp); /* No preconditioner */
 		
-		// t = A*pp
-		fasp_blas_dcsr_mxv(A,pp,t);
-		
-		fenmu=fasp_blas_array_dotprod(m,t,rho);	
-        
-        if (ABS(fenmu)>SMALLREAL) {
-            alpha=fenzi/fenmu;
-        }
-        else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;	        
-        }
-		
-		// save previous r
-		fasp_array_cp(m,r,rp);
-		
-		// s = r - alpha t (still use r-space)
-		fasp_blas_array_axpy(m,-alpha,t,r);
-		
-		// sp = precond(s)
-		if (pc != NULL) 
-            pc->fct(r,sp,pc->data); /* Apply preconditioner */
-		else 
-            fasp_array_cp(m,r,sp); /* No preconditioner */
-	
-		// t = A sp;
-		fasp_blas_dcsr_mxv(A,sp,t);
-		
-		fenzi=fasp_blas_array_dotprod(m,r,t);
-		fenmu=fasp_blas_array_dotprod(m,t,t);
-        
-        if (ABS(fenmu)>SMALLREAL) {
-            omega=fenzi/fenmu;
-        }
-        else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;	        
-        }
-		
-		// sol = sol + alpha pp + omega sp
-		fasp_blas_array_axpby(m,alpha,pp,omega,sp);
-		fasp_blas_array_axpy(m,1.0,sp,uval);
-		
-		// r = s - omega t
-		fasp_blas_array_axpy(m,-omega,t,r);
-		
 		absres=fasp_blas_array_norm2(m,r);
-		factor=absres/absresp;
+		factor=absres/absres0;
 		
 		// relative difference
 		normd = fasp_blas_array_norm2(m,sp);
@@ -311,8 +241,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 			case STOP_REL_PRECRES:
 				if (pc == NULL) fasp_array_cp(m,r,z);
 				else pc->fct(r,z,pc->data);
-				temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-				relres=temp2/normr0; 
+				tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+				relres=tempr/normr0; 
 				break;
 			case STOP_MOD_REL_RES:
 				relres=absres/normu; 
@@ -333,7 +263,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 			goto FINISHED;
 		}
 		
-		// stagnation check, if restarted too many times, return -2.
+		// stagnation check
 		if ( (stag<=MaxStag) && (reldiff<maxdiff) )
 		{				
 			if (print_level>=PRINT_MORE) {
@@ -354,8 +284,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 						pc->fct(r,z,pc->data);
 					else
 						fasp_array_cp(m,r,z);
-					temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-					relres=temp2/normr0; 
+					tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+					relres=tempr/normr0; 
 					break;
 				case STOP_MOD_REL_RES:
 					relres=absres/normu; 
@@ -398,8 +328,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
                         pc->fct(r,z,pc->data);
 					else 
                         fasp_array_cp(m,r,z);
-					temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-					relres=temp2/normr0; 
+					tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+					relres=tempr/normr0; 
 					break;
 				case STOP_MOD_REL_RES:
 					relres=absres/normu; 
@@ -427,7 +357,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
 			++restart_step;
 		} // end if safe guard
 		
-		absresp=absres;		
+		absres0=absres;		
 	}
 	
 FINISHED:  // finish the iterative method
@@ -464,8 +394,10 @@ FINISHED:  // finish the iterative method
  *
  * \return             Number of iterations if converged, error message otherwise
  *
- * \author Zhiyang Zhou
- * \date   2010/10/26
+ * \author Chensong Zhang
+ * \date   09/09/2009
+ *
+ * Rewritten by Chensong Zhang on 04/30/2012
  */
 INT fasp_solver_dbsr_pbcgs(dBSRmat *A, 
                            dvector *b, 
@@ -483,14 +415,15 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
     
     // local variables
 	INT          iter = 0, stag, more_step, restart_step;	
-    REAL         alpha, beta, relres, normr0, fenzi, fenmu, omega, reldiff;
-	REAL         factor=0.0, absres,  absresp, normd, normu, temp2, infnormu;
+    REAL         alpha, beta, omega, temp1, temp2;
+    REAL         relres, normr0, reldiff;
+	REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
 	REAL         *uval=u->val, *bval=b->val;
     
-	// allocate temp memory (need 9*m double)
-	REAL *work=(REAL *)fasp_mem_calloc(9*m,sizeof(double));	
-	REAL *p=work, *z=work+m, *r=z+m, *t=r+m, *rho=t+m;
-	REAL *vec=rho+m, *pp=vec+m, *sp=pp+m, *rp=sp+m;
+	// allocate temp memory (need 8*m double)
+	REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(double));	
+	REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
+	REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
     
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_solver_dbsr_pbcgs ...... [Start]\n");
@@ -503,13 +436,6 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 	fasp_array_cp(m,bval,r);
 	fasp_blas_dbsr_aAxpy(-1.0,A,uval,r);
 	
-	// save the previous step
-	fasp_array_cp(m,r,rp);
-	
-	// fenzi=(r,rho)
-	fasp_array_cp(m,r,rho);	
-	fenzi=fasp_blas_array_dotprod(m,r,rho);
-	
 	// pp=precond(p)
 	fasp_array_cp(m,r,p);
 	if (pc != NULL) 
@@ -517,114 +443,97 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 	else 
         fasp_array_cp(m,p,pp); /* No preconditioner */
 	
-	// t=A*pp;
-	fasp_blas_dbsr_mxv(A,pp,t);
-	
-	// fenmu=(A*pp,rho)
-	fenmu=fasp_blas_array_dotprod(m,t,rho);
-    
-	// (r,rho)/(A*pp,rho)
-    if (ABS(fenmu)>SMALLREAL) {
-        alpha=fenzi/fenmu;
-    }
-    else {
-        if (print_level>=PRINT_SOME) ITS_DIVZERO;
-        return ERROR_SOLVER_MISC;	        
-    }
-	
-	// s=r-alpha t
-	fasp_blas_array_axpy(m,-alpha,t,r);
-	
-	// sp=precond(s)
-	if (pc != NULL) 
-        pc->fct(r,sp,pc->data); /* Apply preconditioner */
-	else 
-        fasp_array_cp(m,r,sp); /* No preconditioner */
-	
-	// t=A*sp;
-	fasp_blas_dbsr_mxv(A,sp,t);
-    
-	fenzi=fasp_blas_array_dotprod(m,r,t);
-	fenmu=fasp_blas_array_dotprod(m,t,t);
-    
-    if (ABS(fenmu)>SMALLREAL) {
-        omega=fenzi/fenmu;
-    }
-    else {
-        if (print_level>=PRINT_SOME) ITS_DIVZERO;
-        omega=1.0; 
-        // We use an approximate stepsize. Take the risky. --Chensong
-        // For safety, we could just quit BiCGstab:
-        //     return ERROR_SOLVER_MISC;	        
-    }
-    
-	//sol=sol+alpha pp+omega sp
-	fasp_blas_array_axpy(m,alpha,pp,uval);
-	fasp_blas_array_axpy(m,omega,sp,uval);	
-    iter++;
-	
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pc != NULL) pc->fct(bval,t,pc->data); /* Preconditioning */
-			else fasp_array_cp(m,bval,t); /* No preconditioner, B=I */
-			normr0=sqrt(ABS(fasp_blas_array_dotprod(m,bval,t)));
-            normr0=MAX(SMALLREAL,normr0);
+			tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
+            normr0=MAX(SMALLREAL,tempr);
+            relres=tempr/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
+			tempr=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,uval));
+            relres=tempr/normu; 
 			break;
 		default:
-			normr0=fasp_blas_array_norm2(m,bval);
-            normr0=MAX(SMALLREAL,normr0);
+			tempr=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,tempr);
+            relres=tempr/normr0; 
 			break;
 	}
-	
-	// r=s-omega t
-	fasp_blas_array_axpy(m,-omega,t,r);
-	
-	absres=fasp_blas_array_norm2(m,r);
-	
-	switch (stop_type) {
-		case STOP_REL_PRECRES:
-			if (pc != NULL) pc->fct(r,z,pc->data);
-			else fasp_array_cp(m,r,z);
-			temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-			relres=temp2/normr0; 
-			break;
-		case STOP_MOD_REL_RES:
-			relres=absres/normu; 
-			break;
-		default:
-			relres=absres/normr0; 
-			break;
-	}
-	
-	absresp=absres;
-	
-    // output iteration information if needed	
-    print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+	absres0=tempr;
     
 	if (relres<tol) goto FINISHED;
 	
+    // rho = r* := r
+	fasp_array_cp(m,r,rho);	
+    temp1=fasp_blas_array_dotprod(m,r,rho);
+    
 	while ( iter++ < MaxIt )
 	{
-		// beta = (r,rho)/(rp,rho)
-		fenzi=fasp_blas_array_dotprod(m,r,rho);
-		fenmu=fasp_blas_array_dotprod(m,rp,rho);
+		// z = A*pp
+		fasp_blas_dbsr_mxv(A,pp,z);
+        
+		// alpha = (r,rho)/(A*p,rho)
+		temp2=fasp_blas_array_dotprod(m,z,rho);	
+        if (ABS(temp2)>SMALLREAL) {
+            alpha=temp1/temp2;
+        }
+        else {
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            return ERROR_SOLVER_MISC;	        
+        }
+        
+		// s = r - alpha z
+		fasp_array_cp(m,r,s);
+		fasp_blas_array_axpy(m,-alpha,z,s);
 		
-        if (ABS(fenmu)>SMALLREAL) {
-            beta=(fenzi*alpha)/(fenmu*omega);
+		// sp = precond(s)
+		if (pc != NULL) 
+            pc->fct(s,sp,pc->data); /* Apply preconditioner */
+		else 
+            fasp_array_cp(m,s,sp); /* No preconditioner */
+        
+		// t = A*sp;
+		fasp_blas_dbsr_mxv(A,sp,t);
+		
+        // omega = (t,s)/(t,t)
+		tempr=fasp_blas_array_dotprod(m,t,t);
+        
+        if (ABS(tempr)>SMALLREAL) {
+            omega=fasp_blas_array_dotprod(m,s,t)/tempr;
+        }
+        else {
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            omega=0.0;
+        }
+		
+		// delu = alpha pp + omega sp
+		fasp_blas_array_axpby(m,alpha,pp,omega,sp);
+        
+        // u = u + delu
+		fasp_blas_array_axpy(m,1.0,sp,uval);
+		
+		// r = s - omega t
+		fasp_blas_array_axpy(m,-omega,t,s);
+		fasp_array_cp(m,s,r);
+		
+        // beta = (r,rho)/(rp,rho)
+        temp2=temp1;
+		temp1=fasp_blas_array_dotprod(m,r,rho);
+		
+        if (ABS(temp2)>SMALLREAL) {
+            beta=(temp1*alpha)/(temp2*omega);
         }
         else {
             if (print_level>=PRINT_SOME) ITS_DIVZERO;
             return ERROR_SOLVER_MISC;	        
         }
 		
-		// p - omega A*pp
-		fasp_blas_dbsr_aAxpy(-omega,A,pp,p);
+		// p = p - omega z
+		fasp_blas_array_axpy(m,-omega,z,p);
 		
-		// r + beta p
+		// p = r + beta p
 		fasp_blas_array_axpby(m,1.0,r,beta,p);
 		
 		// pp=precond(p)
@@ -633,54 +542,8 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
         else 
             fasp_array_cp(m,p,pp); /* No preconditioner */
 		
-		// t = A*pp
-		fasp_blas_dbsr_mxv(A,pp,t);
-		
-		fenmu=fasp_blas_array_dotprod(m,t,rho);	
-        
-        if (ABS(fenmu)>SMALLREAL) {
-            alpha=fenzi/fenmu;
-        }
-        else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;	        
-        }
-		
-		// save previous r
-		fasp_array_cp(m,r,rp);
-		
-		// s = r - alpha t (still use r-space)
-		fasp_blas_array_axpy(m,-alpha,t,r);
-		
-		// sp = precond(s)
-		if (pc != NULL) 
-            pc->fct(r,sp,pc->data); /* Apply preconditioner */
-		else 
-            fasp_array_cp(m,r,sp); /* No preconditioner */
-        
-		// t = A sp;
-		fasp_blas_dbsr_mxv(A,sp,t);
-		
-		fenzi=fasp_blas_array_dotprod(m,r,t);
-		fenmu=fasp_blas_array_dotprod(m,t,t);
-        
-        if (ABS(fenmu)>SMALLREAL) {
-            omega=fenzi/fenmu;
-        }
-        else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;	        
-        }
-		
-		// sol = sol + alpha pp + omega sp
-		fasp_blas_array_axpby(m,alpha,pp,omega,sp);
-		fasp_blas_array_axpy(m,1.0,sp,uval);
-		
-		// r = s - omega t
-		fasp_blas_array_axpy(m,-omega,t,r);
-		
 		absres=fasp_blas_array_norm2(m,r);
-		factor=absres/absresp;
+		factor=absres/absres0;
 		
 		// relative difference
 		normd = fasp_blas_array_norm2(m,sp);
@@ -692,8 +555,8 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 			case STOP_REL_PRECRES:
 				if (pc == NULL) fasp_array_cp(m,r,z);
 				else pc->fct(r,z,pc->data);
-				temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-				relres=temp2/normr0; 
+				tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+				relres=tempr/normr0; 
 				break;
 			case STOP_MOD_REL_RES:
 				relres=absres/normu; 
@@ -714,7 +577,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 			goto FINISHED;
 		}
 		
-		// stagnation check, if restarted too many times, return -2.
+		// stagnation check
 		if ( (stag<=MaxStag) && (reldiff<maxdiff) )
 		{				
 			if (print_level>=PRINT_MORE) {
@@ -735,8 +598,8 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 						pc->fct(r,z,pc->data);
 					else
 						fasp_array_cp(m,r,z);
-					temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-					relres=temp2/normr0; 
+					tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+					relres=tempr/normr0; 
 					break;
 				case STOP_MOD_REL_RES:
 					relres=absres/normu; 
@@ -779,8 +642,8 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
                         pc->fct(r,z,pc->data);
 					else 
                         fasp_array_cp(m,r,z);
-					temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-					relres=temp2/normr0; 
+					tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+					relres=tempr/normr0; 
 					break;
 				case STOP_MOD_REL_RES:
 					relres=absres/normu; 
@@ -808,7 +671,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
 			++restart_step;
 		} // end if safe guard
 		
-		absresp=absres;		
+		absres0=absres;		
 	}
 	
 FINISHED:  // finish the iterative method
@@ -848,7 +711,7 @@ FINISHED:  // finish the iterative method
  * \author Xiaozhe Hu
  * \date   05/24/2010
  *
- * Modified by Chensong Zhang on 04/30/2012
+ * Rewritten by Chensong Zhang on 04/30/2012
  */
 INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, 
                              dvector *b, 
@@ -866,14 +729,15 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
     
     // local variables
 	INT          iter = 0, stag, more_step, restart_step;	
-    REAL         alpha, beta, relres, normr0, fenzi, fenmu, omega, reldiff;
-	REAL         factor=0.0, absres,  absresp, normd, normu, temp2, infnormu;
+    REAL         alpha, beta, omega, temp1, temp2;
+    REAL         relres, normr0, reldiff;
+	REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
 	REAL         *uval=u->val, *bval=b->val;
     
-	// allocate temp memory (need 9*m double)
-	REAL *work=(REAL *)fasp_mem_calloc(9*m,sizeof(double));	
-	REAL *p=work, *z=work+m, *r=z+m, *t=r+m, *rho=t+m;
-	REAL *vec=rho+m, *pp=vec+m, *sp=pp+m, *rp=sp+m;
+	// allocate temp memory (need 8*m double)
+	REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(double));	
+	REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
+	REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
     
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_solver_bdcsr_pbcgs ...... [Start]\n");
@@ -886,13 +750,6 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 	fasp_array_cp(m,bval,r);
 	fasp_blas_bdcsr_aAxpy(-1.0,A,uval,r);
 	
-	// save the previous step
-	fasp_array_cp(m,r,rp);
-	
-	// fenzi=(r,rho)
-	fasp_array_cp(m,r,rho);	
-	fenzi=fasp_blas_array_dotprod(m,r,rho);
-	
 	// pp=precond(p)
 	fasp_array_cp(m,r,p);
 	if (pc != NULL) 
@@ -900,116 +757,99 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 	else 
         fasp_array_cp(m,p,pp); /* No preconditioner */
 	
-	// t=A*pp;
-	fasp_array_set(m,t,0.0);
-	fasp_blas_bdcsr_aAxpy(1.0,A,pp,t);
-	
-	// fenmu=(A*pp,rho)
-	fenmu=fasp_blas_array_dotprod(m,t,rho);
-    
-	// (r,rho)/(A*pp,rho)
-    if (ABS(fenmu)>SMALLREAL) {
-        alpha=fenzi/fenmu;
-    }
-    else {
-        if (print_level>=PRINT_SOME) ITS_DIVZERO;
-        return ERROR_SOLVER_MISC;	        
-    }
-	
-	// s=r-alpha t
-	fasp_blas_array_axpy(m,-alpha,t,r);
-	
-	// sp=precond(s)
-	if (pc != NULL) 
-        pc->fct(r,sp,pc->data); /* Apply preconditioner */
-	else 
-        fasp_array_cp(m,r,sp); /* No preconditioner */
-	
-	// t=A*sp;
-	fasp_array_set(m,t,0.0);
-	fasp_blas_bdcsr_aAxpy(1.0,A,sp,t);
-    
-	fenzi=fasp_blas_array_dotprod(m,r,t);
-	fenmu=fasp_blas_array_dotprod(m,t,t);
-    
-    if (ABS(fenmu)>SMALLREAL) {
-        omega=fenzi/fenmu;
-    }
-    else {
-        if (print_level>=PRINT_SOME) ITS_DIVZERO;
-        omega=1.0; 
-        // We use an approximate stepsize. Take the risky. --Chensong
-        // For safety, we could just quit BiCGstab:
-        //     return ERROR_SOLVER_MISC;	        
-    }
-    
-	//sol=sol+alpha pp+omega sp
-	fasp_blas_array_axpy(m,alpha,pp,uval);
-	fasp_blas_array_axpy(m,omega,sp,uval);	
-    iter++;
-	
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pc != NULL) pc->fct(bval,t,pc->data); /* Preconditioning */
-			else fasp_array_cp(m,bval,t); /* No preconditioner, B=I */
-			normr0=sqrt(ABS(fasp_blas_array_dotprod(m,bval,t)));
-            normr0=MAX(SMALLREAL,normr0);
+			tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
+            normr0=MAX(SMALLREAL,tempr);
+            relres=tempr/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
+			tempr=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,uval));
+            relres=tempr/normu; 
 			break;
 		default:
-			normr0=fasp_blas_array_norm2(m,bval);
-            normr0=MAX(SMALLREAL,normr0);
+			tempr=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,tempr);
+            relres=tempr/normr0; 
 			break;
 	}
-	
-	// r=s-omega t
-	fasp_blas_array_axpy(m,-omega,t,r);
-	
-	absres=fasp_blas_array_norm2(m,r);
-	
-	switch (stop_type) {
-		case STOP_REL_PRECRES:
-			if (pc != NULL) pc->fct(r,z,pc->data);
-			else fasp_array_cp(m,r,z);
-			temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-			relres=temp2/normr0; 
-			break;
-		case STOP_MOD_REL_RES:
-			relres=absres/normu; 
-			break;
-		default:
-			relres=absres/normr0; 
-			break;
-	}
-	
-	absresp=absres;
-	
-    // output iteration information if needed	
-    print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+	absres0=tempr;
     
 	if (relres<tol) goto FINISHED;
 	
+    // rho = r* := r
+	fasp_array_cp(m,r,rho);	
+    temp1=fasp_blas_array_dotprod(m,r,rho);
+    
 	while ( iter++ < MaxIt )
 	{
-		// beta = (r,rho)/(rp,rho)
-		fenzi=fasp_blas_array_dotprod(m,r,rho);
-		fenmu=fasp_blas_array_dotprod(m,rp,rho);
+		// z = A*pp
+        fasp_array_set(m,z,0.0);
+        fasp_blas_bdcsr_aAxpy(1.0,A,pp,z);
+        
+		// alpha = (r,rho)/(A*p,rho)
+		temp2=fasp_blas_array_dotprod(m,z,rho);	
+        if (ABS(temp2)>SMALLREAL) {
+            alpha=temp1/temp2;
+        }
+        else {
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            return ERROR_SOLVER_MISC;	        
+        }
+        
+		// s = r - alpha z
+		fasp_array_cp(m,r,s);
+		fasp_blas_array_axpy(m,-alpha,z,s);
 		
-        if (ABS(fenmu)>SMALLREAL) {
-            beta=(fenzi*alpha)/(fenmu*omega);
+		// sp = precond(s)
+		if (pc != NULL) 
+            pc->fct(s,sp,pc->data); /* Apply preconditioner */
+		else 
+            fasp_array_cp(m,s,sp); /* No preconditioner */
+        
+		// t = A*sp;
+        fasp_array_set(m,t,0.0);
+        fasp_blas_bdcsr_aAxpy(1.0,A,sp,t);
+		
+        // omega = (t,s)/(t,t)
+		tempr=fasp_blas_array_dotprod(m,t,t);
+        
+        if (ABS(tempr)>SMALLREAL) {
+            omega=fasp_blas_array_dotprod(m,s,t)/tempr;
+        }
+        else {
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            omega=0.0;
+        }
+		
+		// delu = alpha pp + omega sp
+		fasp_blas_array_axpby(m,alpha,pp,omega,sp);
+        
+        // u = u + delu
+		fasp_blas_array_axpy(m,1.0,sp,uval);
+		
+		// r = s - omega t
+		fasp_blas_array_axpy(m,-omega,t,s);
+		fasp_array_cp(m,s,r);
+		
+        // beta = (r,rho)/(rp,rho)
+        temp2=temp1;
+		temp1=fasp_blas_array_dotprod(m,r,rho);
+		
+        if (ABS(temp2)>SMALLREAL) {
+            beta=(temp1*alpha)/(temp2*omega);
         }
         else {
             if (print_level>=PRINT_SOME) ITS_DIVZERO;
             return ERROR_SOLVER_MISC;	        
         }
 		
-		// p - omega A*pp
-		fasp_blas_bdcsr_aAxpy(-omega,A,pp,p);
+		// p = p - omega z
+		fasp_blas_array_axpy(m,-omega,z,p);
 		
-		// r + beta p
+		// p = r + beta p
 		fasp_blas_array_axpby(m,1.0,r,beta,p);
 		
 		// pp=precond(p)
@@ -1018,56 +858,8 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         else 
             fasp_array_cp(m,p,pp); /* No preconditioner */
 		
-		// t = A*pp
-        fasp_array_set(m,t,0.0);
-		fasp_blas_bdcsr_aAxpy(1.0,A,pp,t);
-		
-		fenmu=fasp_blas_array_dotprod(m,t,rho);	
-        
-        if (ABS(fenmu)>SMALLREAL) {
-            alpha=fenzi/fenmu;
-        }
-        else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;	        
-        }
-		
-		// save previous r
-		fasp_array_cp(m,r,rp);
-		
-		// s = r - alpha t (still use r-space)
-		fasp_blas_array_axpy(m,-alpha,t,r);
-		
-		// sp = precond(s)
-		if (pc != NULL) 
-            pc->fct(r,sp,pc->data); /* Apply preconditioner */
-		else 
-            fasp_array_cp(m,r,sp); /* No preconditioner */
-        
-		// t = A sp;
-		fasp_array_set(m,t,0.0);
-		fasp_blas_bdcsr_aAxpy(1.0,A,sp,t);
-		
-		fenzi=fasp_blas_array_dotprod(m,r,t);
-		fenmu=fasp_blas_array_dotprod(m,t,t);
-        
-        if (ABS(fenmu)>SMALLREAL) {
-            omega=fenzi/fenmu;
-        }
-        else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;	        
-        }
-		
-		// sol = sol + alpha pp + omega sp
-		fasp_blas_array_axpby(m,alpha,pp,omega,sp);
-		fasp_blas_array_axpy(m,1.0,sp,uval);
-		
-		// r = s - omega t
-		fasp_blas_array_axpy(m,-omega,t,r);
-		
 		absres=fasp_blas_array_norm2(m,r);
-		factor=absres/absresp;
+		factor=absres/absres0;
 		
 		// relative difference
 		normd = fasp_blas_array_norm2(m,sp);
@@ -1079,8 +871,8 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 			case STOP_REL_PRECRES:
 				if (pc == NULL) fasp_array_cp(m,r,z);
 				else pc->fct(r,z,pc->data);
-				temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-				relres=temp2/normr0; 
+				tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+				relres=tempr/normr0; 
 				break;
 			case STOP_MOD_REL_RES:
 				relres=absres/normu; 
@@ -1101,7 +893,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 			goto FINISHED;
 		}
 		
-		// stagnation check, if restarted too many times, return -2.
+		// stagnation check
 		if ( (stag<=MaxStag) && (reldiff<maxdiff) )
 		{				
 			if (print_level>=PRINT_MORE) {
@@ -1122,8 +914,8 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 						pc->fct(r,z,pc->data);
 					else
 						fasp_array_cp(m,r,z);
-					temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-					relres=temp2/normr0; 
+					tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+					relres=tempr/normr0; 
 					break;
 				case STOP_MOD_REL_RES:
 					relres=absres/normu; 
@@ -1166,8 +958,8 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
                         pc->fct(r,z,pc->data);
 					else 
                         fasp_array_cp(m,r,z);
-					temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-					relres=temp2/normr0; 
+					tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+					relres=tempr/normr0; 
 					break;
 				case STOP_MOD_REL_RES:
 					relres=absres/normu; 
@@ -1195,7 +987,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
 			++restart_step;
 		} // end if safe guard
 		
-		absresp=absres;		
+		absres0=absres;		
 	}
 	
 FINISHED:  // finish the iterative method
@@ -1234,6 +1026,8 @@ FINISHED:  // finish the iterative method
  *
  * \author Zhiyang Zhou
  * \date   04/25/2010
+ *
+ * Rewritten by Chensong Zhang on 04/30/2012
  */
 INT fasp_solver_dstr_pbcgs (dSTRmat *A, 
                             dvector *b, 
@@ -1251,14 +1045,15 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
     
     // local variables
 	INT          iter = 0, stag, more_step, restart_step;	
-    REAL         alpha, beta, relres, normr0, fenzi, fenmu, omega, reldiff;
-	REAL         factor=0.0, absres,  absresp, normd, normu, temp2, infnormu;
+    REAL         alpha, beta, omega, temp1, temp2;
+    REAL         relres, normr0, reldiff;
+	REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
 	REAL         *uval=u->val, *bval=b->val;
     
-	// allocate temp memory (need 9*m double)
-	REAL *work=(REAL *)fasp_mem_calloc(9*m,sizeof(double));	
-	REAL *p=work, *z=work+m, *r=z+m, *t=r+m, *rho=t+m;
-	REAL *vec=rho+m, *pp=vec+m, *sp=pp+m, *rp=sp+m;
+	// allocate temp memory (need 8*m double)
+	REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(double));	
+	REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
+	REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
     
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_solver_dstr_pbcgs ...... [Start]\n");
@@ -1271,13 +1066,6 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 	fasp_array_cp(m,bval,r);
 	fasp_blas_dstr_aAxpy(-1.0,A,uval,r);
 	
-	// save the previous step
-	fasp_array_cp(m,r,rp);
-	
-	// fenzi=(r,rho)
-	fasp_array_cp(m,r,rho);	
-	fenzi=fasp_blas_array_dotprod(m,r,rho);
-	
 	// pp=precond(p)
 	fasp_array_cp(m,r,p);
 	if (pc != NULL) 
@@ -1285,116 +1073,99 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 	else 
         fasp_array_cp(m,p,pp); /* No preconditioner */
 	
-	// t=A*pp;
-	fasp_array_set(m,t,0.0);
-	fasp_blas_dstr_aAxpy(1.0,A,pp,t);
-	
-	// fenmu=(A*pp,rho)
-	fenmu=fasp_blas_array_dotprod(m,t,rho);
-    
-	// (r,rho)/(A*pp,rho)
-    if (ABS(fenmu)>SMALLREAL) {
-        alpha=fenzi/fenmu;
-    }
-    else {
-        if (print_level>=PRINT_SOME) ITS_DIVZERO;
-        return ERROR_SOLVER_MISC;	        
-    }
-	
-	// s=r-alpha t
-	fasp_blas_array_axpy(m,-alpha,t,r);
-	
-	// sp=precond(s)
-	if (pc != NULL) 
-        pc->fct(r,sp,pc->data); /* Apply preconditioner */
-	else 
-        fasp_array_cp(m,r,sp); /* No preconditioner */
-	
-	// t=A*sp;
-	fasp_array_set(m,t,0.0);
-	fasp_blas_dstr_aAxpy(1.0,A,sp,t);
-    
-	fenzi=fasp_blas_array_dotprod(m,r,t);
-	fenmu=fasp_blas_array_dotprod(m,t,t);
-    
-    if (ABS(fenmu)>SMALLREAL) {
-        omega=fenzi/fenmu;
-    }
-    else {
-        if (print_level>=PRINT_SOME) ITS_DIVZERO;
-        omega=1.0; 
-        // We use an approximate stepsize. Take the risky. --Chensong
-        // For safety, we could just quit BiCGstab:
-        //     return ERROR_SOLVER_MISC;	        
-    }
-    
-	//sol=sol+alpha pp+omega sp
-	fasp_blas_array_axpy(m,alpha,pp,uval);
-	fasp_blas_array_axpy(m,omega,sp,uval);	
-    iter++;
-	
 	// compute initial relative residual 
 	switch (stop_type) {
 		case STOP_REL_PRECRES:
-			if (pc != NULL) pc->fct(bval,t,pc->data); /* Preconditioning */
-			else fasp_array_cp(m,bval,t); /* No preconditioner, B=I */
-			normr0=sqrt(ABS(fasp_blas_array_dotprod(m,bval,t)));
-            normr0=MAX(SMALLREAL,normr0);
+			tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
+            normr0=MAX(SMALLREAL,tempr);
+            relres=tempr/normr0; 
 			break;
 		case STOP_MOD_REL_RES:
+			tempr=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,uval));
+            relres=tempr/normu; 
 			break;
 		default:
-			normr0=fasp_blas_array_norm2(m,bval);
-            normr0=MAX(SMALLREAL,normr0);
+			tempr=fasp_blas_array_norm2(m,r);
+            normr0=MAX(SMALLREAL,tempr);
+            relres=tempr/normr0; 
 			break;
 	}
-	
-	// r=s-omega t
-	fasp_blas_array_axpy(m,-omega,t,r);
-	
-	absres=fasp_blas_array_norm2(m,r);
-	
-	switch (stop_type) {
-		case STOP_REL_PRECRES:
-			if (pc != NULL) pc->fct(r,z,pc->data);
-			else fasp_array_cp(m,r,z);
-			temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-			relres=temp2/normr0; 
-			break;
-		case STOP_MOD_REL_RES:
-			relres=absres/normu; 
-			break;
-		default:
-			relres=absres/normr0; 
-			break;
-	}
-	
-	absresp=absres;
-	
-    // output iteration information if needed	
-    print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+	absres0=tempr;
     
 	if (relres<tol) goto FINISHED;
 	
+    // rho = r* := r
+	fasp_array_cp(m,r,rho);	
+    temp1=fasp_blas_array_dotprod(m,r,rho);
+    
 	while ( iter++ < MaxIt )
 	{
-		// beta = (r,rho)/(rp,rho)
-		fenzi=fasp_blas_array_dotprod(m,r,rho);
-		fenmu=fasp_blas_array_dotprod(m,rp,rho);
+		// z = A*pp
+        fasp_array_set(m,z,0.0);
+        fasp_blas_dstr_aAxpy(1.0,A,pp,z);
+        
+		// alpha = (r,rho)/(A*p,rho)
+		temp2=fasp_blas_array_dotprod(m,z,rho);	
+        if (ABS(temp2)>SMALLREAL) {
+            alpha=temp1/temp2;
+        }
+        else {
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            return ERROR_SOLVER_MISC;	        
+        }
+        
+		// s = r - alpha z
+		fasp_array_cp(m,r,s);
+		fasp_blas_array_axpy(m,-alpha,z,s);
 		
-        if (ABS(fenmu)>SMALLREAL) {
-            beta=(fenzi*alpha)/(fenmu*omega);
+		// sp = precond(s)
+		if (pc != NULL) 
+            pc->fct(s,sp,pc->data); /* Apply preconditioner */
+		else 
+            fasp_array_cp(m,s,sp); /* No preconditioner */
+        
+		// t = A*sp;
+        fasp_array_set(m,t,0.0);
+        fasp_blas_dstr_aAxpy(1.0,A,sp,t);
+		
+        // omega = (t,s)/(t,t)
+		tempr=fasp_blas_array_dotprod(m,t,t);
+        
+        if (ABS(tempr)>SMALLREAL) {
+            omega=fasp_blas_array_dotprod(m,s,t)/tempr;
+        }
+        else {
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            omega=0.0;
+        }
+		
+		// delu = alpha pp + omega sp
+		fasp_blas_array_axpby(m,alpha,pp,omega,sp);
+        
+        // u = u + delu
+		fasp_blas_array_axpy(m,1.0,sp,uval);
+		
+		// r = s - omega t
+		fasp_blas_array_axpy(m,-omega,t,s);
+		fasp_array_cp(m,s,r);
+		
+        // beta = (r,rho)/(rp,rho)
+        temp2=temp1;
+		temp1=fasp_blas_array_dotprod(m,r,rho);
+		
+        if (ABS(temp2)>SMALLREAL) {
+            beta=(temp1*alpha)/(temp2*omega);
         }
         else {
             if (print_level>=PRINT_SOME) ITS_DIVZERO;
             return ERROR_SOLVER_MISC;	        
         }
 		
-		// p - omega A*pp
-		fasp_blas_dstr_aAxpy(-omega,A,pp,p);
+		// p = p - omega z
+		fasp_blas_array_axpy(m,-omega,z,p);
 		
-		// r + beta p
+		// p = r + beta p
 		fasp_blas_array_axpby(m,1.0,r,beta,p);
 		
 		// pp=precond(p)
@@ -1403,56 +1174,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         else 
             fasp_array_cp(m,p,pp); /* No preconditioner */
 		
-		// t = A*pp
-        fasp_array_set(m,t,0.0);
-		fasp_blas_dstr_aAxpy(1.0,A,pp,t);
-		
-		fenmu=fasp_blas_array_dotprod(m,t,rho);	
-        
-        if (ABS(fenmu)>SMALLREAL) {
-            alpha=fenzi/fenmu;
-        }
-        else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;	        
-        }
-		
-		// save previous r
-		fasp_array_cp(m,r,rp);
-		
-		// s = r - alpha t (still use r-space)
-		fasp_blas_array_axpy(m,-alpha,t,r);
-		
-		// sp = precond(s)
-		if (pc != NULL) 
-            pc->fct(r,sp,pc->data); /* Apply preconditioner */
-		else 
-            fasp_array_cp(m,r,sp); /* No preconditioner */
-        
-		// t = A sp;
-		fasp_array_set(m,t,0.0);
-		fasp_blas_dstr_aAxpy(1.0,A,sp,t);
-		
-		fenzi=fasp_blas_array_dotprod(m,r,t);
-		fenmu=fasp_blas_array_dotprod(m,t,t);
-        
-        if (ABS(fenmu)>SMALLREAL) {
-            omega=fenzi/fenmu;
-        }
-        else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;	        
-        }
-		
-		// sol = sol + alpha pp + omega sp
-		fasp_blas_array_axpby(m,alpha,pp,omega,sp);
-		fasp_blas_array_axpy(m,1.0,sp,uval);
-		
-		// r = s - omega t
-		fasp_blas_array_axpy(m,-omega,t,r);
-		
 		absres=fasp_blas_array_norm2(m,r);
-		factor=absres/absresp;
+		factor=absres/absres0;
 		
 		// relative difference
 		normd = fasp_blas_array_norm2(m,sp);
@@ -1464,8 +1187,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 			case STOP_REL_PRECRES:
 				if (pc == NULL) fasp_array_cp(m,r,z);
 				else pc->fct(r,z,pc->data);
-				temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-				relres=temp2/normr0; 
+				tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+				relres=tempr/normr0; 
 				break;
 			case STOP_MOD_REL_RES:
 				relres=absres/normu; 
@@ -1486,7 +1209,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 			goto FINISHED;
 		}
 		
-		// stagnation check, if restarted too many times, return -2.
+		// stagnation check
 		if ( (stag<=MaxStag) && (reldiff<maxdiff) )
 		{				
 			if (print_level>=PRINT_MORE) {
@@ -1507,8 +1230,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 						pc->fct(r,z,pc->data);
 					else
 						fasp_array_cp(m,r,z);
-					temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-					relres=temp2/normr0; 
+					tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+					relres=tempr/normr0; 
 					break;
 				case STOP_MOD_REL_RES:
 					relres=absres/normu; 
@@ -1551,8 +1274,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
                         pc->fct(r,z,pc->data);
 					else 
                         fasp_array_cp(m,r,z);
-					temp2=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-					relres=temp2/normr0; 
+					tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
+					relres=tempr/normr0; 
 					break;
 				case STOP_MOD_REL_RES:
 					relres=absres/normu; 
@@ -1580,7 +1303,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
 			++restart_step;
 		} // end if safe guard
 		
-		absresp=absres;		
+		absres0=absres;		
 	}
 	
 FINISHED:  // finish the iterative method

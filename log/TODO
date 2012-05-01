@@ -152,7 +152,7 @@ Bug Fixes
 ========================
 	
 [ 0.4.1 ] fix a bug in BiCGstab: 9X9 diagonal matrix (one DoF, eight bdy) gives NaN
-[ 05/30 ] fix an iteration counting bug in BiCGstab (Chensong)
+[ 0.7.4 ] fix an iteration counting bug in BiCGstab
 [ 05/30 ] check other iterative solvers for similar bugs (Chensong)
 [ 05/30 ] remove obsolete functions (Chensong)
 [ 05/30 ] remove preconditioners that have been tested and not good (Chensong)
