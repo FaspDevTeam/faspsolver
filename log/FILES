@@ -8,7 +8,7 @@
      366 ./core/src/amg_setup_ua.c
      319 ./core/src/amg_solve.c
       95 ./core/src/amg_solve_omp.c
-     584 ./core/src/amlirecur.c
+     581 ./core/src/amlirecur.c
      143 ./core/src/array.c
      194 ./core/src/array_omp.c
      261 ./core/src/auxiliary.c
@@ -44,33 +44,33 @@
     1016 ./core/src/interpolation.c
     1687 ./core/src/interpolation_omp.c
     1009 ./core/src/io.c
-     118 ./core/src/itsolver_bcsr.c
-     375 ./core/src/itsolver_bsr.c
+     121 ./core/src/itsolver_bcsr.c
+     376 ./core/src/itsolver_bsr.c
      132 ./core/src/itsolver_bsr_omp.c
      502 ./core/src/itsolver_csr.c
-     203 ./core/src/itsolver_csr_omp.c
+     208 ./core/src/itsolver_csr_omp.c
      341 ./core/src/itsolver_str.c
      170 ./core/src/lu.c
-     244 ./core/src/memory.c
+     251 ./core/src/memory.c
      236 ./core/src/message.c
      297 ./core/src/mgcycle.c
-     423 ./core/src/mgcycle_omp.c
+     420 ./core/src/mgcycle_omp.c
      120 ./core/src/mgrecur.c
      346 ./core/src/ordering.c
      626 ./core/src/parameters.c
-    1561 ./core/src/pbcgs.c
-     925 ./core/src/pcg.c
+    1327 ./core/src/pbcgs.c
+     889 ./core/src/pcg.c
      360 ./core/src/pcg_omp.c
-     167 ./core/src/pgcg.c
-    1068 ./core/src/pgmres.c
-     896 ./core/src/pminres.c
+     175 ./core/src/pgcg.c
+    1062 ./core/src/pgmres.c
+     859 ./core/src/pminres.c
      541 ./core/src/precond_bsr.c
      295 ./core/src/precond_bsr_omp.c
      342 ./core/src/precond_csr.c
       56 ./core/src/precond_csr_omp.c
     1933 ./core/src/precond_str.c
-     675 ./core/src/pvfgmres.c
-     977 ./core/src/pvgmres.c
+     652 ./core/src/pvfgmres.c
+     960 ./core/src/pvgmres.c
      381 ./core/src/pvgmres_omp.c
      873 ./core/src/quadrature.c
      108 ./core/src/rap.c
@@ -86,7 +86,7 @@
      939 ./core/src/sparse_bsr.c
      386 ./core/src/sparse_bsr_omp.c
       92 ./core/src/sparse_coo.c
-     923 ./core/src/sparse_csr.c
+     874 ./core/src/sparse_csr.c
      105 ./core/src/sparse_csr_omp.c
       72 ./core/src/sparse_csrl.c
      202 ./core/src/sparse_str.c
@@ -97,10 +97,10 @@
      118 ./core/src/wrapper.c
      560 ./core/include/dlmalloc.h
      296 ./core/include/doxygen.h
-     867 ./core/include/fasp.h
+     871 ./core/include/fasp.h
      478 ./core/include/fasp_block.h
-    2506 ./core/include/fasp_functs.h
+    2509 ./core/include/fasp_functs.h
     5818 ./core/include/malloc.c.h
      184 ./core/include/messages.h
      291 ./core/include/nedmalloc.h
-   61912 total
+   61535 total

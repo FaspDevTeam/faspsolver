@@ -63,7 +63,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
             
         case SOLVER_VFGMRES: 
 			if (print_level>0) printf("Calling vFGMRes solver (BSR format) ...\n");		
-			iter = fasp_solver_dbsr_pvfgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	
+			iter = fasp_solver_dbsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
 			
 		default:
@@ -193,9 +193,9 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods
  *
- * \param A	        Pointer to the dBSRmat matrix
- * \param b	        Pointer to the dvector of right hand side
- * \param x	        Pointer to the dvector of dofs
+ * \param A	        Pointer to dBSRmat matrix
+ * \param b	        Pointer to dvector of right hand side
+ * \param x	        Pointer to dvector of dofs
  * \param itparam   Pointer to parameters for iterative solvers
  * \param iluparam  Pointer to parameters of ILU
  *
@@ -258,20 +258,21 @@ MEMORY_ERROR:
 }
 
 /**
- * \fn INT fasp_solver_dbsr_krylov_amg(dBSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, AMG_param *amgparam)
+ * \fn INT fasp_solver_dbsr_krylov_amg (dBSRmat *A, dvector *b, dvector *x, 
+ *                                      itsolver_param *itparam, AMG_param *amgparam)
+ *
  * \brief Solve Ax=b by AMG preconditioned Krylov methods 
- * \param *A:	pointer to the dBSRmat matrix
- * \param *b:	pointer to the dvector of right hand side
- * \param *x:	pointer to the dvector of dofs
- * \param *itparam: pointer to parameters for iterative solvers
- * \param *iluparam: pointer to parameters for ILU preconditioners
- * \param *amgparam: pointer to parameters for AMG 
- * \param *neigh: pointer to the information of neighborhood
- * \param *order: pointer to the ordering
- * \return the number of iterations
+ *
+ * \param A	        Pointer to dBSRmat matrix
+ * \param b	        Pointer to dvector of right hand side
+ * \param x	        Pointer to dvector of dofs
+ * \param itparam   Pointer to parameters for iterative solvers
+ * \param amgparam  Pointer to parameters of AMG
+ *
+ * \return          Number of iterations if succeed
  *
  * \author Xiaozhe Hu
- * \data 03/16/2012
+ * \date   03/16/2012
  */
 INT fasp_solver_dbsr_krylov_amg(dBSRmat *A, 
                                   dvector *b, 

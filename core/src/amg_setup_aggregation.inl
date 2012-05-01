@@ -201,11 +201,11 @@ static void aggregation (dCSRmat *A,
  *
  * \brief Form aggregation based on strong coupled neighborhoods 
  *
- * \param vertices          pointer to the aggregation of vertices
- * \param tentp             pointer to the prolongation operators 
- * \param mgl               pointer to AMG levele data
- * \param levelNum          level number
- * \param num_aggregations  number of aggregations
+ * \param vertices           Pointer to the aggregation of vertices
+ * \param tentp              Pointer to the prolongation operators 
+ * \param mgl                Pointer to AMG levele data
+ * \param levelNum           Level number
+ * \param num_aggregations   Number of aggregations
  *
  * \author Xiaozhe Hu
  * \date 09/29/2009
@@ -224,7 +224,7 @@ static void form_tentative_p (ivector *vertices,
 	tentp->col = num_aggregations;
 	tentp->nnz = vertices->row;
 	
-	tentp->IA  = (int*)fasp_mem_calloc(tentp->row+1,sizeof(INT));	
+	tentp->IA  = (INT *)fasp_mem_calloc(tentp->row+1,sizeof(INT));	
 	
 	// local variables
 	INT * IA = tentp->IA;
@@ -247,8 +247,8 @@ static void form_tentative_p (ivector *vertices,
 	
 	// allocate
 	tentp->nnz = j;
-	tentp->JA = (int*)fasp_mem_calloc(tentp->nnz, sizeof(INT));
-	tentp->val = (REAL*)fasp_mem_calloc(tentp->nnz, sizeof(REAL));
+	tentp->JA = (INT *)fasp_mem_calloc(tentp->nnz, sizeof(INT));
+	tentp->val = (REAL *)fasp_mem_calloc(tentp->nnz, sizeof(REAL));
 	
 	JA = tentp->JA;
 	val = tentp->val;
@@ -267,22 +267,27 @@ static void form_tentative_p (ivector *vertices,
 }
 
 /**
- * \fn static void form_tentative_p_bsr(ivectors *vertices, dBSRmat *tentp, AMG_data_bsr *mgl, int levelNum, int num_aggregations)
+ * \fn static void form_tentative_p_bsr (ivector *vertices, dBSRmat *tentp, AMG_data_bsr *mgl, 
+ *                                       INT levelNum, INT num_aggregations)
+ *
  * \brief Form aggregation based on strong coupled neighborhoods 
- * \param *A pointer to the coefficient matrices
- * \param *vertices pointer to the aggregation of vertices
- * \param *P pointer to the prolongation operators 
- * \param *mgl pointer to AMG levele data
- * \param levelNum level number
- * \param num_aggregations number of aggregations
+ *
+ * \param *vertices          Pointer to the aggregation of vertices
+ * \param *tentp             Pointer to the prolongation operators 
+ * \param *mgl               Pointer to AMG levele data
+ * \param levelNum           Level number
+ * \param num_aggregations   Number of aggregations
  *
  * \author Xiaozhe Hu
  * \date 11/25/201
  */
-static void form_tentative_p_bsr(ivector *vertices, dBSRmat *tentp, AMG_data_bsr *mgl, int levelNum, int num_aggregations)
+static void form_tentative_p_bsr (ivector *vertices, 
+                                  dBSRmat *tentp, 
+                                  AMG_data_bsr *mgl, 
+                                  INT levelNum, 
+                                  INT num_aggregations)
 {
 	INT i, j;
-	//REAL **basis = mgl->near_kernel_basis;
 	
 	/* Form tentative prolongation */
 	tentp->ROW = vertices->row;

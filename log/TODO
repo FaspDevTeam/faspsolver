@@ -84,8 +84,8 @@ Iterative Methods
 [ 06/15 ] test SpBLAS implementations in standard libraries (Chunsheng)
 [       ] right preconditioning (Chensong)
 
-[ 05/11 ] reduced duplications in iterative methods (Chensong)
-[ 05/11 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc (Chensong)
+[ 0.7.8 ] reduced duplications in iterative methods
+[ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
 [ 05/16 ] different options for stopping criteria: rel res, abs res, etc (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
@@ -153,6 +153,6 @@ Bug Fixes
 	
 [ 0.4.1 ] fix a bug in BiCGstab: 9X9 diagonal matrix (one DoF, eight bdy) gives NaN
 [ 0.7.4 ] fix an iteration counting bug in BiCGstab
-[ 05/30 ] check other iterative solvers for similar bugs (Chensong)
+[ 0.7.8 ] check other iterative solvers for similar bugs
 [ 05/30 ] remove obsolete functions (Chensong)
 [ 05/30 ] remove preconditioners that have been tested and not good (Chensong)

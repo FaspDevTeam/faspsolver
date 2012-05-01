@@ -1,6 +1,10 @@
 /*! \file pgcg.c
  *  \brief Krylov subspace methods -- Preconditioned Generalized Conjugate Gradient.
  *
+ *  \note Refer to Concus, P. and Golub, G.H. and O'Leary, D.P.
+ *        A Generalized Conjugate Gradient Method for the Numerical: 
+ *        Solution of Elliptic Partial Differential Equations,
+ *        Computer Science Department, Stanford University, 1976
  */  
 
 #include <math.h>
@@ -14,48 +18,51 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_dcsr_pgcg (dCSRmat *A, dvector *b, dvector *u, const INT MaxIt, 
- *                                const double tol, precond *pc, const SHORT print_level,
- *                                const SHORT stop_type)
+ * \fn INT fasp_solver_dcsr_pgcg (dCSRmat *A, dvector *b, dvector *u, precond *pc, 
+ *                                const REAL tol, const INT MaxIt, 
+ *                                const SHORT stop_type, const SHORT print_level)
  *
  * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b 
  *
  * \param A	           Pointer to the coefficient matrix
  * \param b	           Pointer to the dvector of right hand side
  * \param u	           Pointer to the dvector of DOFs
- * \param MaxIt        Maximal number of iterations
- * \param tol          Tolerance for stopping
  * \param pc           Pointer to the structure of precondition (precond) 
+ * \param tol          Tolerance for stopping
+ * \param MaxIt        Maximal number of iterations
+ * \param stop_type    Stopping criteria type -- Not implemented
  * \param print_level  How much information to print out
- * \param stop_type    Stopping criteria type
+ *
+ * \return             Number of iterations if converged, error message otherwise
  *
  * \author Xiaozhe Hu
  * \date   01/01/2012
  *
  * \note Not completely implemented yet! --Chensong
+ *
+ * Modified by Chensong Zhang on 05/01/2012
  */
 INT fasp_solver_dcsr_pgcg (dCSRmat *A, 
                            dvector *b, 
                            dvector *u, 
-                           const INT MaxIt, 
-                           const double tol,
                            precond *pc, 
-                           const SHORT print_level,
-                           const SHORT stop_type)
+                           const REAL tol,
+                           const INT MaxIt, 
+                           const SHORT stop_type,
+                           const SHORT print_level)
 {
-	INT iter=0, m=A->row, i;
-	double absres0=BIGREAL, absres, relres=BIGREAL, factor;
-	double alpha, normb=BIGREAL;
-	SHORT status = SUCCESS;
+	INT    iter=0, m=A->row, i;
+	REAL   absres0=BIGREAL, absres, relres=BIGREAL, factor;
+	REAL   alpha, normb=BIGREAL;
     
 	// allocate temp memory 
-	double *work = (double *)fasp_mem_calloc(2*m+MaxIt+MaxIt*m,sizeof(double));	
+	REAL *work = (REAL *)fasp_mem_calloc(2*m+MaxIt+MaxIt*m,sizeof(REAL));	
 	
-    double *r, *Br, *beta, *p;
+    REAL *r, *Br, *beta, *p;
 	r = work; Br = r + m; beta = Br + m; p = beta + MaxIt;
 	
 #if CHMEM_MODE		
-	total_alloc_mem += (2*m+MaxIt+MaxIt*m)*sizeof(double);
+	total_alloc_mem += (2*m+MaxIt+MaxIt*m)*sizeof(REAL);
 #endif
 	
 #if DEBUG_MODE
@@ -71,7 +78,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
 	fasp_array_cp(m,b->val,r);
 	fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
 	
-	//Br 
+	// Br 
 	if (pc != NULL)
 		pc->fct(r,p,pc->data); /* Preconditioning */
 	else
@@ -157,9 +164,10 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
 	printf("### DEBUG: fasp_solver_dcsr_pgcg ...... [Finish]\n");
 #endif	
 	
-	if (iter>MaxIt) return ERROR_SOLVER_MAXIT;
-	else if (status<0) return status;
-	else return iter;
+	if (iter>MaxIt) 
+        return ERROR_SOLVER_MAXIT;
+	else 
+        return iter;
 }
 
 /*---------------------------------*/

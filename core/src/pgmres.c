@@ -1,54 +1,13 @@
 /*! \file pgmres.c
  *  \brief Krylov subspace methods -- Preconditioned GMRes.
  *
- *  Abstract algorithm of Krylov method    
- *
- *  Krylov method to solve A*x=b is to generate {x_k} to approximate x, 
- *  where x_k is the optimal solution in Krylov space 
- *
- *     V_k=span{r_0,A*r_0,A^2*r_0,...,A^{k-1}*r_0}, 
- *
- *  under some inner product. 
- *
- *  For the implementation, we generate a series of {p_k} such that V_k=span{p_1,...,p_k}. Details: 
- *
- *  Step 0. Given A, b, x_0, M  
- *  
- *  Step 1. Compute residual r_0 = b-A*x_0 and convergence check;  
- *  
- *  Step 2. Initialization z_0 = M^{-1}*r_0, p_0=z_0;  
- *  
- *  Step 3. Main loop ...
- *
- *  FOR k = 0:MaxIt  	
- *      - get step size alpha = f(r_k,z_k,p_k);  	
- *      - update solution: x_{k+1} = x_k + alpha*p_k;  	
- *      - perform stagnation check;  	
- *      - update residual: r_{k+1} = r_k - alpha*(A*p_k);    	
- *      - perform residual check;  	
- *      - obtain p_{k+1} using {p_0, p_1, ... , p_k};  	
- *      - prepare for next iteration;  	
- *      - prINT the result of k-th iteration; 
- *  END FOR
- * 
- *  Convergence check is: norm(r)/norm(b) < tol  
- *  
- *  Stagnation check is like following:    
- *      - IF norm(alpha*p_k)/norm(x_{k+1}) < tol_stag 
- *          -# compute r=b-A*x_{k+1}; 
- *          -# convergence check; 
- *          -# IF ( not converged & restart_number < Max_Stag_Check ) restart;
- *      - END IF  
- *  
- *  Residual check is like following:     
- *      - IF norm(r_{k+1})/norm(b) < tol             
- *          -# compute the real residual r = b-A*x_{k+1}; 
- *          -# convergence check; 
- *          -# IF ( not converged & restart_number < Max_Res_Check ) restart;
- *      - END IF 
- *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *
+ *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
+ *        A Simple Strategy for Varying the Restart Parameter in GMRES(m)
+ *        Journal of Computational and Applied Mathematics, 230 (2009)
+ *        pp. 751-761. UCRL-JRNL-235266.
  *
  */  
 

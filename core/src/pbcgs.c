@@ -379,7 +379,7 @@ FINISHED:  // finish the iterative method
 /**
  * \fn INT fasp_solver_dbsr_pbcgs (dBSRmat *A, dvector *b, dvector *u, precond *pc, 
  *                                 const REAL tol, const INT MaxIt, 
- *                                 const SHORT stop_type, const SHORT print_level)
+ *                                 const SHORT stop_type, const SHORT print_level) 
  *
  * \brief Preconditioned BiCGstab method for solving Au=b 
  *
@@ -405,8 +405,8 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
                            precond *pc, 
                            const REAL tol,
                            const INT MaxIt, 
-                           const INT stop_type,
-                           const INT print_level) 
+                           const SHORT stop_type,
+                           const SHORT print_level) 
 {
 	const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;
@@ -719,8 +719,8 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
                              precond *pc, 
                              const REAL tol,
                              const INT MaxIt, 
-                             const INT stop_type,
-                             const INT print_level) 
+                             const SHORT stop_type,
+                             const SHORT print_level) 
 {
 	const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;
@@ -1035,8 +1035,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
                             precond *pc, 
                             const REAL tol,
                             const INT MaxIt, 
-                            const INT stop_type,
-                            const INT print_level) 
+                            const SHORT stop_type,
+                            const SHORT print_level) 
 {
 	const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;

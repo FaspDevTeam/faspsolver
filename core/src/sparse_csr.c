@@ -39,10 +39,6 @@ dCSRmat fasp_dcsr_create (const INT m,
 		A.IA = NULL;
 	}
 	
-#if CHMEM_MODE	
-	total_alloc_mem += (m+1)*sizeof(INT);
-#endif
-	
 	if ( n > 0 ) {
 		A.JA = (INT*)fasp_mem_calloc(nnz,sizeof(INT));
 	}
@@ -50,20 +46,12 @@ dCSRmat fasp_dcsr_create (const INT m,
 		A.JA = NULL;
 	}	
 	
-#if CHMEM_MODE		
-	total_alloc_mem += nnz*sizeof(INT);
-#endif
-	
 	if ( nnz > 0 ) {
 		A.val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
 	}
 	else {
 		A.val = NULL;
 	}
-	
-#if CHMEM_MODE		
-	total_alloc_mem += nnz*sizeof(REAL);
-#endif
 	
 	A.row=m; A.col=n; A.nnz=nnz;
 	
@@ -95,10 +83,6 @@ void fasp_dcsr_alloc (const INT m,
 		A->IA = NULL;
 	}
 	
-#if CHMEM_MODE		
-	total_alloc_mem += (m+1)*sizeof(INT);
-#endif
-	
 	if ( n > 0 ) {
 		A->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
 	}
@@ -106,20 +90,12 @@ void fasp_dcsr_alloc (const INT m,
 		A->JA = NULL;
 	}	
 	
-#if CHMEM_MODE		
-	total_alloc_mem += nnz*sizeof(INT);
-#endif
-	
 	if ( nnz > 0 ) {
 		A->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
 	}
 	else {
 		A->val = NULL;
 	}
-	
-#if CHMEM_MODE		
-	total_alloc_mem += nnz*sizeof(REAL);
-#endif
 	
 	A->row=m; A->col=n; A->nnz=nnz;
 	
@@ -539,24 +515,11 @@ void fasp_icsr_trans (iCSRmat *A,
 	
 	AT->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
 	
-#if CHMEM_MODE
-	total_alloc_mem += (m+1)*sizeof(INT);
-#endif
-	
 	AT->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
-	
-#if CHMEM_MODE
-	total_alloc_mem += (nnz)*sizeof(REAL);
-#endif
 	
 	if (A->val) { 
 		AT->val=(INT*)fasp_mem_calloc(nnz,sizeof(INT)); 
-		
-#if CHMEM_MODE
-		total_alloc_mem += (nnz)*sizeof(INT);
-#endif
-		
-	}
+    }
 	else { 
         AT->val=NULL; 
     }	
@@ -623,22 +586,10 @@ INT fasp_dcsr_trans (dCSRmat *A,
 	
 	AT->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
 	
-#if CHMEM_MODE
-	total_alloc_mem += (m+1)*sizeof(INT);
-#endif
-	
 	AT->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
-	
-#if CHMEM_MODE
-	total_alloc_mem += (nnz)*sizeof(INT);
-#endif
 	
 	if (A->val) { 
 		AT->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL)); 
-		
-#if CHMEM_MODE
-		total_alloc_mem += (nnz)*sizeof(REAL);
-#endif
 		
 	}
 	else { AT->val=NULL; }
@@ -691,9 +642,9 @@ INT fasp_dcsr_trans (dCSRmat *A,
  *
  * \brief Transpose of an CSR matrix.
  *
- * \param row[2]  Pointers of the rows of the matrix and its transpose
- * \param col[2]  Pointers of the columns of the matrix and its transpose
- * \param val[2]  Pointers to the values of the matrix and its transpose
+ * \param row     Pointers of the rows of the matrix and its transpose
+ * \param col     Pointers of the columns of the matrix and its transpose
+ * \param val     Pointers to the values of the matrix and its transpose
  * \param nn      Number of rows and columns of the matrix
  * \param tniz    Number of the nonzeros in the matrices A and A'
  *

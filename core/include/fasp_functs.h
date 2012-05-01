@@ -1234,14 +1234,14 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
 /*-------- In file: mgcycle_omp.c --------*/
 
 void fasp_solver_mgcycle_omp1 (AMG_data *mgl, 
-															AMG_param *param, 
-															int nthreads, 
-															int openmp_holds);
+                               AMG_param *param, 
+                               int nthreads, 
+                               int openmp_holds);
 
 void fasp_solver_mgcycle_omp (AMG_data *mgl, 
-															AMG_param *param, 
-															INT nthreads, 
-															INT openmp_holds);
+                              AMG_param *param, 
+                              INT nthreads, 
+                              INT openmp_holds);
 
 
 /*-------- In file: mgrecur.c --------*/
@@ -1347,8 +1347,8 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
                            precond *pc, 
                            const REAL tol,
                            const INT MaxIt, 
-                           const INT stop_type,
-                           const INT print_level) ;
+                           const SHORT stop_type,
+                           const SHORT print_level) ;
 
 INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, 
                              dvector *b, 
@@ -1356,8 +1356,8 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
                              precond *pc, 
                              const REAL tol,
                              const INT MaxIt, 
-                             const INT stop_type,
-                             const INT print_level) ;
+                             const SHORT stop_type,
+                             const SHORT print_level) ;
 
 INT fasp_solver_dstr_pbcgs (dSTRmat *A, 
                             dvector *b, 
@@ -1365,8 +1365,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
                             precond *pc, 
                             const REAL tol,
                             const INT MaxIt, 
-                            const INT stop_type,
-                            const INT print_level) ;
+                            const SHORT stop_type,
+                            const SHORT print_level) ;
 
 
 /*-------- In file: pcg.c --------*/
@@ -1418,11 +1418,11 @@ int fasp_solver_dcsr_pcg_omp (dCSRmat *A,
 INT fasp_solver_dcsr_pgcg (dCSRmat *A, 
                            dvector *b, 
                            dvector *u, 
-                           const INT MaxIt, 
-                           const double tol,
                            precond *pc, 
-                           const SHORT print_level,
-                           const SHORT stop_type);
+                           const REAL tol,
+                           const INT MaxIt, 
+                           const SHORT stop_type,
+                           const SHORT print_level);
 
 
 /*-------- In file: pgmres.c --------*/
@@ -1637,22 +1637,22 @@ void fasp_precond_dstr_blockgs (REAL *r,
 INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, 
                                dvector *b, 
                                dvector *x, 
-                               const INT MaxIt,
-                               const REAL tol,
                                precond *pc, 
-                               const SHORT print_level, 
+                               const REAL tol,
+                               const INT MaxIt, 
+                               const SHORT restart,
                                const SHORT stop_type, 
-                               const SHORT restart);
+                               const SHORT print_level);
 
 INT fasp_solver_dbsr_pvfgmres (dBSRmat *A, 
                                dvector *b, 
                                dvector *x, 
-                               const INT MaxIt,
-                               const REAL tol,
                                precond *pc, 
-                               const SHORT print_level, 
+                               const REAL tol,
+                               const INT MaxIt, 
+                               const SHORT restart,
                                const SHORT stop_type, 
-                               const SHORT restart);
+                               const SHORT print_level);
 
 
 /*-------- In file: pvgmres.c --------*/

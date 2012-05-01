@@ -264,10 +264,10 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                 switch (param->nl_amli_krylov_type)
                 {
                     case SOLVER_GCG: // Use GCG
-                        fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&pc,0,1);
+                        fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,&pc,tol,maxit,1,PRINT_NONE);
                         break;
                     default: // Use FGMRES
-                        fasp_solver_dcsr_pvfgmres(A_level1,&bH,&uH,maxit,tol,&pc,0,1,30);
+                        fasp_solver_dcsr_pvfgmres(A_level1,&bH,&uH,&pc,tol,maxit,30,1,PRINT_NONE);
                         break;
                 }
                 
@@ -435,11 +435,8 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                 
                 switch (param->nl_amli_krylov_type)
                 {
-                    //case SOLVER_GCG: // Use GCG
-                    //   fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,maxit,tol,&pc,0,1);
-                    //  break;
                     default: // Use FGMRES
-                        fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH, maxit,tol,&pc,0,1, MIN(maxit,30));
+                        fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH,&pc,tol,maxit,MIN(maxit,30),1,PRINT_NONE);
                         break;
                 }
                 

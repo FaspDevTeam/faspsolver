@@ -1,10 +1,10 @@
 /*! \file pvgmres.c
  *  \brief Krylov subspace methods -- Preconditioned Variable-Restarting GMRes.
  *
- * \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
- *       A Simple Strategy for Varying the Restart Parameter in GMRES(m)
- *       Journal of Computational and Applied Mathematics, 230 (2009)
- *       pp. 751-761. UCRL-JRNL-235266.
+ *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
+ *        A Simple Strategy for Varying the Restart Parameter in GMRES(m)
+ *        Journal of Computational and Applied Mathematics, 230 (2009)
+ *        pp. 751-761. UCRL-JRNL-235266.
  */  
 
 #include <math.h>
@@ -18,9 +18,9 @@
 /*---------------------------------*/
 
 /*!
- * \fn INT fasp_solver_dcsr_pgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc, 
- *                                  const REAL tol, const INT MaxIt, const SHORT restart,
- *                                  const SHORT stop_type, const SHORT print_level)
+ * \fn INT fasp_solver_dcsr_pvgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc, 
+ *                                   const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                   const SHORT stop_type, const SHORT print_level)
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.

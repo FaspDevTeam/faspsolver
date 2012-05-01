@@ -81,16 +81,16 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 			iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);	
             break;
             
-        case SOLVER_GCG:
-			if (print_level>0) printf("Calling GCG solver ...\n");
-			iter = fasp_solver_dcsr_pgcg(A, b, x, MaxIt, tol, pc, print_level, stop_type); 
-            break;
-            
         case SOLVER_VFGMRES: 
 			if (print_level>0) printf("Calling vFGMRes solver ...\n");		
-			iter = fasp_solver_dcsr_pvfgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);	
+			iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
 			
+        case SOLVER_GCG:
+			if (print_level>0) printf("Calling GCG solver ...\n");
+			iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+            break;
+            
 		default:
 			printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
 			return ERROR_SOLVER_TYPE;

@@ -1,54 +1,15 @@
 /*! \file pvfgmres.c
  *  \brief Krylov subspace methods -- Preconditioned Variable-Restarting Flexible GMRes.
  *
- *  Abstract algorithm of Krylov method    
+ *  \note Refer to Y. Saad 2003
+ *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
- *  Krylov method to solve A*x=b is to generate {x_k} to approximate x, 
- *  where x_k is the optimal solution in Krylov space 
+ *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
+ *        A Simple Strategy for Varying the Restart Parameter in GMRES(m)
+ *        Journal of Computational and Applied Mathematics, 230 (2009)
+ *        pp. 751-761. UCRL-JRNL-235266.
  *
- *     V_k=span{r_0,A*r_0,A^2*r_0,...,A^{k-1}*r_0}, 
- *
- *  under some inner product. 
- *
- *  For the implementation, we generate a series of {p_k} such that V_k=span{p_1,...,p_k}. Details: 
- *
- *  Step 0. Given A, b, x_0, M  
- *  
- *  Step 1. Compute residual r_0 = b-A*x_0 and convergence check;  
- *  
- *  Step 2. Initialization z_0 = M^{-1}*r_0, p_0=z_0;  
- *  
- *  Step 3. Main loop ...
- *
- *  FOR k = 0:MaxIt  	
- *      - get step size alpha = f(r_k,z_k,p_k);  	
- *      - update solution: x_{k+1} = x_k + alpha*p_k;  	
- *      - perform stagnation check;  	
- *      - update residual: r_{k+1} = r_k - alpha*(A*p_k);    	
- *      - perform residual check;  	
- *      - obtain p_{k+1} using {p_0, p_1, ... , p_k};  	
- *      - prepare for next iteration;  	
- *      - prINT the result of k-th iteration; 
- *  END FOR
- * 
- *  Convergence check is: norm(r)/norm(b) < tol  
- *  
- *  Stagnation check is like following:    
- *      - IF norm(alpha*p_k)/norm(x_{k+1}) < tol_stag 
- *          -# compute r=b-A*x_{k+1}; 
- *          -# convergence check; 
- *          -# IF ( not converged & restart_number < Max_Stag_Check ) restart;
- *      - END IF  
- *  
- *  Residual check is like following:     
- *      - IF norm(r_{k+1})/norm(b) < tol             
- *          -# compute the real residual r = b-A*x_{k+1}; 
- *          -# convergence check; 
- *          -# IF ( not converged & restart_number < Max_Res_Check ) restart;
- *      - END IF 
- *
- *  Ref: Iterative methods for sparse linear systems (2nd Edition) 
- *  By Y. Saad, SIAM, 2003.
+ *  \note This file is modifed from pvgmres.c
  *
  */  
 
@@ -63,9 +24,9 @@
 /*---------------------------------*/
 
 /*!
- * \fn INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, dvector *b, dvector *x, const INT MaxIt, 
- *                                    const REAL tol, precond *pc, const SHORT print_level, 
- *                                    const SHORT stop_type, const SHORT restart )
+ * \fn INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc, 
+ *                                    const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                    const SHORT stop_type, const SHORT print_level)
  *
  * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration and flexible preconditioner 
@@ -74,29 +35,29 @@
  * \param A	           Pointer to the coefficient matrix
  * \param b	           Pointer to the dvector of right hand side
  * \param x	           Pointer to the dvector of DOFs
- * \param MaxIt        Maximal number of iterations
- * \param tol          Tolerance for stopping
  * \param pc           Pointer to the structure of precondition (precond) 
- * \param print_level  How much information to print out
- * \param stop_type    Stopping criteria type
+ * \param tol          Tolerance for stopping
+ * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
+ * \param stop_type    Stopping criteria type -- DOES not support this parameter
+ * \param print_level  How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Xiaozhe Hu 
  * \date   01/04/2012
  *
- * \note This routine is based on Zhiyang Zhou's pvgmres.c
+ * Modified by Chensong Zhang on 05/01/2012
  */ 
 INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, 
                                dvector *b, 
                                dvector *x, 
-                               const INT MaxIt,
-                               const REAL tol,
                                precond *pc, 
-                               const SHORT print_level, 
+                               const REAL tol,
+                               const INT MaxIt, 
+                               const SHORT restart,
                                const SHORT stop_type, 
-                               const SHORT restart)
+                               const SHORT print_level)
 {
 	const INT n                 = A->row;  
 	const INT min_iter          = 0;
@@ -111,7 +72,6 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     // local variables
 	INT    converged            = 0; 
 	INT    iter                 = 0;
-	INT    status               = SUCCESS;	
 	INT    restartplus1         = restart + 1;
 	INT    i,j,k;
 	
@@ -131,6 +91,10 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
 	INT    restart_min = 3;	      // lower bound for restart in each restart cycle (should be small)
 	INT    Restart;               // the real restart in some fixed restarted cycle
 	
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_dcsr_pvfgmres ...... [Start]\n");
+#endif	
+    
 	/* allocate memory */
 	work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n+ (restartplus1*n)-n, sizeof(REAL));	
 	p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));	
@@ -361,15 +325,20 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
 	fasp_mem_free(norms);
     fasp_mem_free(z);
 	
-	if (iter>=MaxIt) return ERROR_SOLVER_MAXIT;
-	else if (status<0) return status;
-	else return iter;
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_dcsr_pvfgmres ...... [Finish]\n");
+#endif	
+	
+    if (iter>=MaxIt) 
+        return ERROR_SOLVER_MAXIT;
+	else 
+        return iter;
 }
 
 /*!
- * \fn INT fasp_solver_dbsr_pvfgmres (dBSRmat *A, dvector *b, dvector *x, const INT MaxIt, 
- *                                    const REAL tol, precond *pc, const SHORT print_level, 
- *                                    const SHORT stop_type, const SHORT restart )
+ * \fn INT fasp_solver_dbsr_pvfgmres (dBSRmat *A, dvector *b, dvector *x, precond *pc, 
+ *                                    const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                    const SHORT stop_type, const SHORT print_level) 
  *
  * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration and flexible preconditioner 
@@ -378,29 +347,29 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
  * \param A	           Pointer to the coefficient matrix
  * \param b	           Pointer to the dvector of right hand side
  * \param x	           Pointer to the dvector of DOFs
- * \param MaxIt        Maximal number of iterations
- * \param tol          Tolerance for stopping
  * \param pc           Pointer to the structure of precondition (precond) 
- * \param print_level  How much information to print out
- * \param stop_type    Stopping criteria type
+ * \param tol          Tolerance for stopping
+ * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
+ * \param stop_type    Stopping criteria type -- DOES not support this parameter
+ * \param print_level  How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Xiaozhe Hu 
  * \date   02/05/2012
  *
- * \note This routine is based on Zhiyang Zhou's pvgmres.c
+ * Modified by Chensong Zhang on 05/01/2012
  */ 
 INT fasp_solver_dbsr_pvfgmres (dBSRmat *A, 
                                dvector *b, 
                                dvector *x, 
-                               const INT MaxIt,
-                               const REAL tol,
                                precond *pc, 
-                               const SHORT print_level, 
+                               const REAL tol,
+                               const INT MaxIt, 
+                               const SHORT restart,
                                const SHORT stop_type, 
-                               const SHORT restart)
+                               const SHORT print_level)
 {
 	const INT n                 = A->ROW*A->nb;  
 	const INT min_iter          = 0;
@@ -415,7 +384,6 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
     // local variables
 	INT    converged            = 0; 
 	INT    iter                 = 0;
-	INT    status               = SUCCESS;	
 	INT    restartplus1         = restart + 1;
 	INT    i,j,k;
 	
@@ -435,7 +403,11 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
 	INT    restart_min = 3;	      // lower bound for restart in each restart cycle (should be small)
 	INT    Restart;               // the real restart in some fixed restarted cycle
 	
-	/* allocate memory */
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_dbsr_pvfgmres ...... [Start]\n");
+#endif	
+	
+    /* allocate memory */
 	work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n+ (restartplus1*n)-n, sizeof(REAL));	
 	p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));	
 	hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
@@ -665,9 +637,14 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
 	fasp_mem_free(norms);
     fasp_mem_free(z);
 	
-	if (iter>=MaxIt) return ERROR_SOLVER_MAXIT;
-	else if (status<0) return status;
-	else return iter;
+#if DEBUG_MODE
+	printf("### DEBUG: fasp_solver_dbsr_pvfgmres ...... [Finish]\n");
+#endif	
+
+	if (iter>=MaxIt) 
+        return ERROR_SOLVER_MAXIT;
+	else 
+        return iter;
 }
 
 /*---------------------------------*/
