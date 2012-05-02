@@ -50,38 +50,38 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     
     if (A->row != B->row || A->col != B->col) {
 #if DEBUG_MODE
-    printf("### DEBUG: The dim of two matrices does not match --fasp_blas_dcsr_add!\n");
+        printf("### DEBUG: The dim of two matrices does not match --fasp_blas_dcsr_add!\n");
 #endif
-    status = ERROR_DATA_STRUCTURE;
-    goto FINISHED;
+        status = ERROR_DATA_STRUCTURE;
+        goto FINISHED;
     }
     
     if (A == NULL && B == NULL) {
-    C->row=0; C->col=0; C->nnz=0;
-    status=SUCCESS; goto FINISHED;
+        C->row=0; C->col=0; C->nnz=0;
+        status=SUCCESS; goto FINISHED;
     }
     
     if (A->nnz == 0 && B->nnz == 0) {
-    C->row=A->row; C->col=A->col; C->nnz=A->nnz;
-    status=SUCCESS; goto FINISHED;
+        C->row=A->row; C->col=A->col; C->nnz=A->nnz;
+        status=SUCCESS; goto FINISHED;
     }
     
     // empty matrix A
     if (A->nnz == 0 || A == NULL) {
-    fasp_dcsr_alloc(B->row,B->col,B->nnz,C);
-    memcpy(C->IA,B->IA,(B->row+1)*sizeof(int));
-    memcpy(C->JA,B->JA,(B->nnz)*sizeof(int));
-    for (i=0;i<A->nnz;++i) C->val[i]=B->val[i]*beta;
-    status=SUCCESS; goto FINISHED;
+        fasp_dcsr_alloc(B->row,B->col,B->nnz,C);
+        memcpy(C->IA,B->IA,(B->row+1)*sizeof(int));
+        memcpy(C->JA,B->JA,(B->nnz)*sizeof(int));
+        for (i=0;i<A->nnz;++i) C->val[i]=B->val[i]*beta;
+        status=SUCCESS; goto FINISHED;
     }
     
     // empty matrix B
     if (B->nnz == 0 || B == NULL) {
-    fasp_dcsr_alloc(A->row,A->col,A->nnz,C);
-    memcpy(C->IA,A->IA,(A->row+1)*sizeof(int));
-    memcpy(C->JA,A->JA,(A->nnz)*sizeof(int));
-    for (i=0;i<A->nnz;++i) C->val[i]=A->val[i]*alpha;
-    status=SUCCESS; goto FINISHED;
+        fasp_dcsr_alloc(A->row,A->col,A->nnz,C);
+        memcpy(C->IA,A->IA,(A->row+1)*sizeof(int));
+        memcpy(C->JA,A->JA,(A->nnz)*sizeof(int));
+        for (i=0;i<A->nnz;++i) C->val[i]=A->val[i]*alpha;
+        status=SUCCESS; goto FINISHED;
     }
     
     C->row=A->row; C->col=A->col;
@@ -93,38 +93,38 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     
     C->val=(REAL *)fasp_mem_calloc(A->nnz+B->nnz,sizeof(REAL));
     
-    for (i=0; i<A->row; ++i){
+    for (i=0; i<A->row; ++i) {
     
-    countrow = 0;
-    for (j=A->IA[i]; j<A->IA[i+1]; ++j){
-    C->val[count] = alpha * A->val[N2C(j)];
-    C->JA[count] = A->JA[N2C(j)];
-    C->IA[i+1]++;
-    count++;
-    countrow++;
-    } // end for j
+        countrow = 0;
+        for (j=A->IA[i]; j<A->IA[i+1]; ++j) {
+            C->val[count] = alpha * A->val[N2C(j)];
+            C->JA[count] = A->JA[N2C(j)];
+            C->IA[i+1]++;
+            count++;
+            countrow++;
+        } // end for j
     
-    for (k=B->IA[i]; k<B->IA[i+1]; ++k){
-    added = 0;
+        for (k=B->IA[i]; k<B->IA[i+1]; ++k) {
+            added = 0;
     
-    for (l=C->IA[i]; l<C->IA[i]+countrow+1; l++){
-    if (B->JA[N2C(k)] == C->JA[N2C(l)]){
-    C->val[N2C(l)] = C->val[N2C(l)] + beta * B->val[N2C(k)];
-    added = 1;
-    break;
-    }
-    } // end for l
+            for (l=C->IA[i]; l<C->IA[i]+countrow+1; l++) {
+                if (B->JA[N2C(k)] == C->JA[N2C(l)]) {
+                    C->val[N2C(l)] = C->val[N2C(l)] + beta * B->val[N2C(k)];
+                    added = 1;
+                    break;
+                }
+            } // end for l
     
-    if (added == 0){
-    C->val[count] = beta * B->val[N2C(k)];
-    C->JA[count] = B->JA[N2C(k)];
-    C->IA[i+1]++;
-    count++;
-    }    
+            if (added == 0) {
+                C->val[count] = beta * B->val[N2C(k)];
+                C->JA[count] = B->JA[N2C(k)];
+                C->IA[i+1]++;
+                count++;
+            }    
     
-    } // end for k
+        } // end for k
     
-    C->IA[i+1] += C->IA[i];
+        C->IA[i+1] += C->IA[i];
     
     }
     
@@ -132,7 +132,7 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     C->JA  = (INT *)fasp_mem_realloc(C->JA, (count)*sizeof(int));
     C->val = (REAL *)fasp_mem_realloc(C->val, (count)*sizeof(REAL));
     
-FINISHED:
+ FINISHED:
     return status;
 }
 
@@ -180,10 +180,10 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
     register REAL temp;
     
     for (i=0;i<m;++i) {
-    temp=0.0; 
-    begin_row=ia[i]; end_row=ia[i+1]; 
-    for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-    y[i]=temp;
+        temp=0.0; 
+        begin_row=ia[i]; end_row=ia[i+1]; 
+        for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+        y[i]=temp;
     }
 }
 
@@ -209,10 +209,10 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
     register REAL temp;
     
     for (i=0;i<m;++i) {
-    temp=0.0; 
-    begin_row=ia[i]; end_row=ia[i+1]; 
-    for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
-    y[i]=temp;
+        temp=0.0; 
+        begin_row=ia[i]; end_row=ia[i+1]; 
+        for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
+        y[i]=temp;
     }
 }
 
@@ -242,30 +242,30 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
     register REAL temp;
     
     if ( alpha == 1.0 ) {
-    for (i=0;i<m;++i) {
-    temp=0.0; 
-    begin_row=ia[i]; end_row=ia[i+1]; 
-    for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-    y[i]+=temp;    
-    }
+        for (i=0;i<m;++i) {
+            temp=0.0; 
+            begin_row=ia[i]; end_row=ia[i+1]; 
+            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+            y[i]+=temp;    
+        }
     }
     
     else if ( alpha == -1.0 ) {
-    for (i=0;i<m;++i) {
-    temp=0.0; 
-    begin_row=ia[i]; end_row=ia[i+1]; 
-    for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-    y[i]-=temp;
-    }    
+        for (i=0;i<m;++i) {
+            temp=0.0; 
+            begin_row=ia[i]; end_row=ia[i+1]; 
+            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+            y[i]-=temp;
+        }    
     }
     
     else {
-    for (i=0;i<m;++i) {
-    temp=0.0; 
-    begin_row=ia[i]; end_row=ia[i+1]; 
-    for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-    y[i]+=temp*alpha;
-    }
+        for (i=0;i<m;++i) {
+            temp=0.0; 
+            begin_row=ia[i]; end_row=ia[i+1]; 
+            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+            y[i]+=temp*alpha;
+        }
     }
     
 }
@@ -295,30 +295,30 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
     register REAL temp;
     
     if ( alpha == 1.0 ) {
-    for (i=0;i<m;++i) {
-    temp=0.0; 
-    begin_row=ia[i]; end_row=ia[i+1]; 
-    for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
-    y[i]+=temp;    
-    }
+        for (i=0;i<m;++i) {
+            temp=0.0; 
+            begin_row=ia[i]; end_row=ia[i+1]; 
+            for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
+            y[i]+=temp;    
+        }
     }
     
     else if ( alpha == -1.0 ) {
-    for (i=0;i<m;++i) {
-    temp=0.0; 
-    begin_row=ia[i]; end_row=ia[i+1]; 
-    for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
-    y[i]-=temp;
-    }    
+        for (i=0;i<m;++i) {
+            temp=0.0; 
+            begin_row=ia[i]; end_row=ia[i+1]; 
+            for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
+            y[i]-=temp;
+        }    
     }
     
     else {
-    for (i=0;i<m;++i) {
-    temp=0.0; 
-    begin_row=ia[i]; end_row=ia[i+1]; 
-    for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
-    y[i]+=temp*alpha;
-    }
+        for (i=0;i<m;++i) {
+            temp=0.0; 
+            begin_row=ia[i]; end_row=ia[i+1]; 
+            for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
+            y[i]+=temp*alpha;
+        }
     }
     
 }
@@ -348,10 +348,10 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
     register REAL value=0.0;
     
     for (i=0;i<m;++i) {
-    temp=0.0; 
-    begin_row=ia[i]; end_row=ia[i+1];
-    for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-    value+=y[i]*temp;
+        temp=0.0; 
+        begin_row=ia[i]; end_row=ia[i+1];
+        for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+        value+=y[i]*temp;
     }
     
     return value;
@@ -388,58 +388,53 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
     for (i=0;i<B->col;++i) JD[i]=-1;
     
     // step 1: Find first the structure IA of C
-    for(i=0;i<C->row;++i)
-    {
-    count=0;
+    for(i=0;i<C->row;++i) {
+        count=0;
     
-    for(k=A->IA[i];k<A->IA[i+1];++k)
-    {
-    for(j=B->IA[A->JA[k]];j<B->IA[A->JA[k]+1];++j) {
-    for(l=0;l<count;l++) {
-    if(JD[l]==B->JA[j]) break;
-    }
+        for (k=A->IA[i];k<A->IA[i+1];++k) {
+            for (j=B->IA[A->JA[k]];j<B->IA[A->JA[k]+1];++j) {
+                for (l=0;l<count;l++) {
+                    if(JD[l]==B->JA[j]) break;
+                }
     
-    if(l==count) {
-    JD[count]=B->JA[j];
-    count++;
-    }
-    }
-    }
-    C->IA[i+1]=count;
-    for(j=0;j<count;++j) {
-    JD[j]=-1;
-    }    
+                if (l==count) {
+                    JD[count]=B->JA[j];
+                    count++;
+                }
+            }
+        }
+        C->IA[i+1]=count;
+        for (j=0;j<count;++j) {
+            JD[j]=-1;
+        }    
     }    
     
-    for(i=0;i<C->row;++i) C->IA[i+1]+=C->IA[i];
+    for (i=0;i<C->row;++i) C->IA[i+1]+=C->IA[i];
     
     // step 2: Find the structure JA of C
     INT countJD;
     
     C->JA=(int*)fasp_mem_calloc(C->IA[C->row],sizeof(int));
     
-    for(i=0;i<C->row;++i)
-    {
-    countJD=0;
-    count=C->IA[i];
-    for(k=A->IA[i];k<A->IA[i+1];++k)
-    {
-    for(j=B->IA[A->JA[k]];j<B->IA[A->JA[k]+1];++j)
-    {
-    for(l=0;l<countJD;l++) {
-    if(JD[l]==B->JA[j]) break;
-    }
+    for (i=0;i<C->row;++i) {
+        countJD=0;
+        count=C->IA[i];
+        for (k=A->IA[i];k<A->IA[i+1];++k) {
+            for (j=B->IA[A->JA[k]];j<B->IA[A->JA[k]+1];++j) {
+                for (l=0;l<countJD;l++) {
+                    if(JD[l]==B->JA[j]) break;
+                }
     
-    if(l==countJD) {
-    C->JA[count]=B->JA[j];
-    JD[countJD]=B->JA[j];
-    count++;
-    countJD++;
-    }
-    }
-    }
+                if(l==countJD) {
+                    C->JA[count]=B->JA[j];
+                    JD[countJD]=B->JA[j];
+                    count++;
+                    countJD++;
+                }
+            }
+        }
     
-    for(j=0;j<countJD;++j) JD[j]=-1;
+        for (j=0;j<countJD;++j) JD[j]=-1;
     }    
     
     fasp_mem_free(JD);
@@ -447,21 +442,17 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
     // step 3: Find the structure A of C
     C->val=(REAL*)fasp_mem_calloc(C->IA[C->row],sizeof(REAL));
     
-    for(i=0;i<C->row;++i)
-    {
-    for(j=C->IA[i];j<C->IA[i+1];++j)
-    {
-    C->val[j]=0;
-    for(k=A->IA[i];k<A->IA[i+1];++k)
-    {
-    for(l=B->IA[A->JA[k]];l<B->IA[A->JA[k]+1];l++)
-    {
-    if(B->JA[l]==C->JA[j]) {
-    C->val[j]+=A->val[k]*B->val[l];
-    } // end if
-    } // end for l
-    } // end for k
-    } // end for j
+    for (i=0;i<C->row;++i) {
+        for (j=C->IA[i];j<C->IA[i+1];++j) {
+            C->val[j]=0;
+            for (k=A->IA[i];k<A->IA[i+1];++k) {
+                for (l=B->IA[A->JA[k]];l<B->IA[A->JA[k]+1];l++) {
+                    if(B->JA[l]==C->JA[j]) {
+                        C->val[j]+=A->val[k]*B->val[l];
+                    } // end if
+                } // end for l
+            } // end for k
+        } // end for j
     }    // end for i
     
     C->nnz = C->IA[C->row]-C->IA[0];
@@ -501,98 +492,79 @@ void fasp_blas_dcsr_rap (dCSRmat *R,
     
     INT *index=(INT *)fasp_mem_calloc(A->col,sizeof(int));
     
-#if CHMEM_MODE
-    total_alloc_mem += (A->col)*sizeof(int);
-#endif
-    
     INT *iindex=(INT *)fasp_mem_calloc(col,sizeof(int));    
     
-#if CHMEM_MODE
-    total_alloc_mem += (col)*sizeof(int);
-#endif
-    
-    for (i=0; i<A->col; ++i)  index[i] = -2;
+    for (i=0; i<A->col; ++i) index[i] = -2;
     
     memcpy(iindex,index,col*sizeof(int));
     
     jac=(int*)fasp_mem_calloc(nB,sizeof(int));    
     
-#if CHMEM_MODE
-    total_alloc_mem += (nB)*sizeof(int);
-#endif
-    
     iac=(int*)fasp_mem_calloc(row+1,sizeof(int));    
-#if CHMEM_MODE
-    total_alloc_mem += (row+1)*sizeof(int);
-#endif
-    
+
     REAL *temp=(REAL*)fasp_mem_calloc(A->col,sizeof(REAL));
-    
-#if CHMEM_MODE
-    total_alloc_mem += (A->col)*sizeof(REAL);
-#endif
     
     iac[0] = 0;
     
     // First loop: form sparsity partern of R*A*P
     for (i=0; i < row; ++i) {    
-    // reset istart and length at the begining of each loop
-    istart = -1; length = 0; i1 = i+1;
+        // reset istart and length at the begining of each loop
+        istart = -1; length = 0; i1 = i+1;
     
-    // go across the rows in R
-    begin_rowR=ir[i]; end_rowR=ir[i1];
-    for (jj=begin_rowR; jj<end_rowR; ++jj){
-    j = jr[N2C(jj)];
-    // for each column in A
-    begin_rowA=ia[j]; end_rowA=ia[j+1];    
-    for (k=begin_rowA; k<end_rowA; ++k){
-    if (index[N2C(ja[N2C(k)])] == -2){
-    index[N2C(ja[N2C(k)])] = istart;
-    istart = ja[N2C(k)];
-    ++length;
-    }
-    }
-    }    
+        // go across the rows in R
+        begin_rowR=ir[i]; end_rowR=ir[i1];
+        for (jj=begin_rowR; jj<end_rowR; ++jj) {
+            j = jr[N2C(jj)];
+            // for each column in A
+            begin_rowA=ia[j]; end_rowA=ia[j+1];    
+            for (k=begin_rowA; k<end_rowA; ++k) {
+                if (index[N2C(ja[N2C(k)])] == -2) {
+                    index[N2C(ja[N2C(k)])] = istart;
+                    istart = ja[N2C(k)];
+                    ++length;
+                }
+            }
+        }    
     
-    // book-keeping [reseting length and setting iistart]
-    count = length; iistart = -1; length = 0;
+        // book-keeping [reseting length and setting iistart]
+        count = length; iistart = -1; length = 0;
     
-    // use each column that would have resulted from R*A
-    for (j=0; j < count; ++j){
-    jj = istart;
-    istart = index[istart];
-    index[N2C(jj)] = -2;
+        // use each column that would have resulted from R*A
+        for (j=0; j < count; ++j) {
+            jj = istart;
+            istart = index[istart];
+            index[N2C(jj)] = -2;
     
-    // go across the row of P
-    begin_row=ip[jj]; end_row=ip[jj+1];
-    for (k=begin_row; k<end_row; ++k){
-    // pull out the appropriate columns of P
-    if (iindex[N2C(jp[N2C(k)])] == -2){
-    iindex[N2C(jp[N2C(k)])] = iistart;
-    iistart = jp[N2C(k)];
-    ++length;
-    }
-    } // end for k
-    } // end for j
+            // go across the row of P
+            begin_row=ip[jj]; end_row=ip[jj+1];
+            for (k=begin_row; k<end_row; ++k) {
+                // pull out the appropriate columns of P
+                if (iindex[N2C(jp[N2C(k)])] == -2) {
+                    iindex[N2C(jp[N2C(k)])] = iistart;
+                    iistart = jp[N2C(k)];
+                    ++length;
+                }
+            } // end for k
+        } // end for j
     
-    // set B->IA
-    iac[i1]=iac[i]+length;
+        // set B->IA
+        iac[i1]=iac[i]+length;
     
-    if (iac[i1]>nB) {
-    nB=nB*2;
-    jac=(int*)fasp_mem_realloc(jac, nB*sizeof(int));
-    }
+        if (iac[i1]>nB) {
+            nB=nB*2;
+            jac=(int*)fasp_mem_realloc(jac, nB*sizeof(int));
+        }
     
-    // put the correct columns of p into the column list of the products
-    begin_row=iac[i]; end_row=iac[i1];
-    for (j=begin_row; j<end_row; ++j){
-    // put the value in B->JA
-    jac[N2C(j)] = iistart;
-    // set istart to the next value
-    iistart = iindex[N2C(iistart)];
-    // set the iindex spot to 0
-    iindex[N2C(jac[j])] = -2;
-    } // end j
+        // put the correct columns of p into the column list of the products
+        begin_row=iac[i]; end_row=iac[i1];
+        for (j=begin_row; j<end_row; ++j) {
+            // put the value in B->JA
+            jac[N2C(j)] = iistart;
+            // set istart to the next value
+            iistart = iindex[N2C(iistart)];
+            // set the iindex spot to 0
+            iindex[N2C(jac[j])] = -2;
+        } // end j
     
     } // end i: First loop
     
@@ -612,49 +584,49 @@ void fasp_blas_dcsr_rap (dCSRmat *R,
     
     // Second loop: compute entries of R*A*P
     for (i=0; i<row; ++i) {
-    i1 = i+1;
+        i1 = i+1;
     
-    // each col of B
-    begin_row=iac[i]; end_row=iac[i1];    
-    for (j=begin_row; j<end_row; ++j) {
-    BTindex[N2C(jac[N2C(j)])]=j;
-    }
+        // each col of B
+        begin_row=iac[i]; end_row=iac[i1];    
+        for (j=begin_row; j<end_row; ++j) {
+            BTindex[N2C(jac[N2C(j)])]=j;
+        }
     
-    // reset istart and length at the begining of each loop
-    istart = -1; length = 0;
+        // reset istart and length at the begining of each loop
+        istart = -1; length = 0;
     
-    // go across the rows in R
-    begin_rowR=ir[i]; end_rowR=ir[i1];    
-    for ( jj=begin_rowR; jj<end_rowR; ++jj ){
-    j = jr[N2C(jj)];
+        // go across the rows in R
+        begin_rowR=ir[i]; end_rowR=ir[i1];    
+        for ( jj=begin_rowR; jj<end_rowR; ++jj ) {
+            j = jr[N2C(jj)];
     
-    // for each column in A
-    begin_rowA=ia[j]; end_rowA=ia[j+1];    
-    for (k=begin_rowA; k<end_rowA; ++k){
-    if (index[N2C(ja[N2C(k)])] == -2){
-    index[N2C(ja[N2C(k)])] = istart;
-    istart = ja[N2C(k)];
-    ++length;
-    }
-    temp[N2C(ja[N2C(k)])]+=rj[N2C(jj)]*aj[N2C(k)];
-    }
-    } 
+            // for each column in A
+            begin_rowA=ia[j]; end_rowA=ia[j+1];    
+            for (k=begin_rowA; k<end_rowA; ++k) {
+                if (index[N2C(ja[N2C(k)])] == -2) {
+                    index[N2C(ja[N2C(k)])] = istart;
+                    istart = ja[N2C(k)];
+                    ++length;
+                }
+                temp[N2C(ja[N2C(k)])]+=rj[N2C(jj)]*aj[N2C(k)];
+            }
+        } 
     
-    // book-keeping [reseting length and setting iistart]
-    // use each column that would have resulted from R*A
-    for (j=0; j<length; ++j) {
-    jj = N2C(istart);
-    istart = index[N2C(istart)];
-    index[N2C(jj)] = -2;
+        // book-keeping [reseting length and setting iistart]
+        // use each column that would have resulted from R*A
+        for (j=0; j<length; ++j) {
+            jj = N2C(istart);
+            istart = index[N2C(istart)];
+            index[N2C(jj)] = -2;
     
-    // go across the row of P
-    begin_row=ip[jj]; end_row=ip[jj+1];    
-    for (k=begin_row; k<end_row; ++k) {
-    // pull out the appropriate columns of P
-    acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj]*pj[k];
-    }
-    temp[jj]=0.0;
-    }
+            // go across the row of P
+            begin_row=ip[jj]; end_row=ip[jj+1];    
+            for (k=begin_row; k<end_row; ++k) {
+                // pull out the appropriate columns of P
+                acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj]*pj[k];
+            }
+            temp[jj]=0.0;
+        }
     
     } // end for i: Second loop
     
@@ -702,15 +674,7 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
     
     INT *index=(INT *)fasp_mem_calloc(A->col,sizeof(int));
     
-#if CHMEM_MODE
-    total_alloc_mem += (A->col)*sizeof(int);
-#endif
-    
     INT *iindex=(INT *)fasp_mem_calloc(col,sizeof(int));    
-    
-#if CHMEM_MODE
-    total_alloc_mem += (col)*sizeof(int);
-#endif
     
     for (i=0; i<A->col; ++i)  index[i] = -2;
     
@@ -718,144 +682,125 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
     
     jac=(int*)fasp_mem_calloc(nB,sizeof(int));    
     
-#if CHMEM_MODE
-    total_alloc_mem += (nB)*sizeof(int);
-#endif
-    
     iac=(int*)fasp_mem_calloc(row+1,sizeof(int));    
-#if CHMEM_MODE
-    total_alloc_mem += (row+1)*sizeof(int);
-#endif
     
     REAL *temp=(REAL*)fasp_mem_calloc(A->col,sizeof(REAL));
-    
-#if CHMEM_MODE
-    total_alloc_mem += (A->col)*sizeof(REAL);
-#endif
     
     iac[0] = 0;
     
     // First loop: form sparsity partern of R*A*P
     for (i=0; i < row; ++i) {    
-    // reset istart and length at the begining of each loop
-    istart = -1; length = 0; i1 = i+1;
+        // reset istart and length at the begining of each loop
+        istart = -1; length = 0; i1 = i+1;
     
-    // go across the rows in R
-    begin_rowR=ir[i]; end_rowR=ir[i1];
-    for (jj=begin_rowR; jj<end_rowR; ++jj){
-    j = jr[N2C(jj)];
-    // for each column in A
-    begin_rowA=ia[j]; end_rowA=ia[j+1];    
-    for (k=begin_rowA; k<end_rowA; ++k){
-    if (index[N2C(ja[N2C(k)])] == -2){
-    index[N2C(ja[N2C(k)])] = istart;
-    istart = ja[N2C(k)];
-    ++length;
-    }
-    }
-    }    
+        // go across the rows in R
+        begin_rowR=ir[i]; end_rowR=ir[i1];
+        for (jj=begin_rowR; jj<end_rowR; ++jj) {
+            j = jr[N2C(jj)];
+            // for each column in A
+            begin_rowA=ia[j]; end_rowA=ia[j+1];    
+            for (k=begin_rowA; k<end_rowA; ++k) {
+                if (index[N2C(ja[N2C(k)])] == -2) {
+                    index[N2C(ja[N2C(k)])] = istart;
+                    istart = ja[N2C(k)];
+                    ++length;
+                }
+            }
+        }    
     
-    // book-keeping [reseting length and setting iistart]
-    count = length; iistart = -1; length = 0;
+        // book-keeping [reseting length and setting iistart]
+        count = length; iistart = -1; length = 0;
     
-    // use each column that would have resulted from R*A
-    for (j=0; j < count; ++j){
-    jj = istart;
-    istart = index[istart];
-    index[N2C(jj)] = -2;
+        // use each column that would have resulted from R*A
+        for (j=0; j < count; ++j) {
+            jj = istart;
+            istart = index[istart];
+            index[N2C(jj)] = -2;
     
-    // go across the row of P
-    begin_row=ip[jj]; end_row=ip[jj+1];
-    for (k=begin_row; k<end_row; ++k){
-    // pull out the appropriate columns of P
-    if (iindex[N2C(jp[N2C(k)])] == -2){
-    iindex[N2C(jp[N2C(k)])] = iistart;
-    iistart = jp[N2C(k)];
-    ++length;
-    }
-    } // end for k
-    } // end for j
+            // go across the row of P
+            begin_row=ip[jj]; end_row=ip[jj+1];
+            for (k=begin_row; k<end_row; ++k) {
+                // pull out the appropriate columns of P
+                if (iindex[N2C(jp[N2C(k)])] == -2) {
+                    iindex[N2C(jp[N2C(k)])] = iistart;
+                    iistart = jp[N2C(k)];
+                    ++length;
+                }
+            } // end for k
+        } // end for j
     
-    // set B->IA
-    iac[i1]=iac[i]+length;
+        // set B->IA
+        iac[i1]=iac[i]+length;
     
-    if (iac[i1]>nB) {
-    nB=nB*2;
-    jac=(int*)fasp_mem_realloc(jac, nB*sizeof(int));
-    }
+        if (iac[i1]>nB) {
+            nB=nB*2;
+            jac=(int*)fasp_mem_realloc(jac, nB*sizeof(int));
+        }
     
-    // put the correct columns of p into the column list of the products
-    begin_row=iac[i]; end_row=iac[i1];
-    for (j=begin_row; j<end_row; ++j){
-    // put the value in B->JA
-    jac[N2C(j)] = iistart;
-    // set istart to the next value
-    iistart = iindex[N2C(iistart)];
-    // set the iindex spot to 0
-    iindex[N2C(jac[j])] = -2;
-    } // end j
+        // put the correct columns of p into the column list of the products
+        begin_row=iac[i]; end_row=iac[i1];
+        for (j=begin_row; j<end_row; ++j) {
+            // put the value in B->JA
+            jac[N2C(j)] = iistart;
+            // set istart to the next value
+            iistart = iindex[N2C(iistart)];
+            // set the iindex spot to 0
+            iindex[N2C(jac[j])] = -2;
+        } // end j
     
     } // end i: First loop
     
     jac=(int*)fasp_mem_realloc(jac,(iac[row])*sizeof(int));
     
     acj=(REAL*)fasp_mem_calloc(iac[row],sizeof(REAL));
-    
-#if CHMEM_MODE
-    total_alloc_mem += (iac[row])*sizeof(REAL);
-#endif
-    
+
     INT *BTindex=(int*)fasp_mem_calloc(col,sizeof(int));
-    
-#if CHMEM_MODE
-    total_alloc_mem += (col)*sizeof(int);
-#endif
     
     // Second loop: compute entries of R*A*P
     for (i=0; i<row; ++i) {
-    i1 = i+1;
+        i1 = i+1;
     
-    // each col of B
-    begin_row=iac[i]; end_row=iac[i1];    
-    for (j=begin_row; j<end_row; ++j) {
-    BTindex[N2C(jac[N2C(j)])]=j;
-    }
+        // each col of B
+        begin_row=iac[i]; end_row=iac[i1];    
+        for (j=begin_row; j<end_row; ++j) {
+            BTindex[N2C(jac[N2C(j)])]=j;
+        }
     
-    // reset istart and length at the begining of each loop
-    istart = -1; length = 0;
+        // reset istart and length at the begining of each loop
+        istart = -1; length = 0;
     
-    // go across the rows in R
-    begin_rowR=ir[i]; end_rowR=ir[i1];    
-    for ( jj=begin_rowR; jj<end_rowR; ++jj ){
-    j = jr[N2C(jj)];
+        // go across the rows in R
+        begin_rowR=ir[i]; end_rowR=ir[i1];    
+        for ( jj=begin_rowR; jj<end_rowR; ++jj ) {
+            j = jr[N2C(jj)];
     
-    // for each column in A
-    begin_rowA=ia[j]; end_rowA=ia[j+1];    
-    for (k=begin_rowA; k<end_rowA; ++k){
-    if (index[N2C(ja[N2C(k)])] == -2){
-    index[N2C(ja[N2C(k)])] = istart;
-    istart = ja[N2C(k)];
-    ++length;
-    }
-    temp[N2C(ja[N2C(k)])]+=aj[N2C(k)];
-    }
-    } 
+            // for each column in A
+            begin_rowA=ia[j]; end_rowA=ia[j+1];    
+            for (k=begin_rowA; k<end_rowA; ++k) {
+                if (index[N2C(ja[N2C(k)])] == -2) {
+                    index[N2C(ja[N2C(k)])] = istart;
+                    istart = ja[N2C(k)];
+                    ++length;
+                }
+                temp[N2C(ja[N2C(k)])]+=aj[N2C(k)];
+            }
+        } 
     
-    // book-keeping [reseting length and setting iistart]
-    // use each column that would have resulted from R*A
-    for (j=0; j<length; ++j) {
-    jj = N2C(istart);
-    istart = index[N2C(istart)];
-    index[N2C(jj)] = -2;
+        // book-keeping [reseting length and setting iistart]
+        // use each column that would have resulted from R*A
+        for (j=0; j<length; ++j) {
+            jj = N2C(istart);
+            istart = index[N2C(istart)];
+            index[N2C(jj)] = -2;
     
-    // go across the row of P
-    begin_row=ip[jj]; end_row=ip[jj+1];    
-    for (k=begin_row; k<end_row; ++k) {
-    // pull out the appropriate columns of P
-    acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj];
-    }
-    temp[jj]=0.0;
-    }
+            // go across the row of P
+            begin_row=ip[jj]; end_row=ip[jj+1];    
+            for (k=begin_row; k<end_row; ++k) {
+                // pull out the appropriate columns of P
+                acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj];
+            }
+            temp[jj]=0.0;
+        }
     
     } // end for i: Second loop
     

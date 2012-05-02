@@ -45,72 +45,71 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
     register REAL *x1, *x2, *y1, *y2;
     register REAL *x3, *y3;
     
-    switch (brow)
-    {
+    switch (brow) {
     
     case 2:
-    A11 = A->blocks[0];
-    A12 = A->blocks[1];
-    A21 = A->blocks[2];
-    A22 = A->blocks[3];
+        A11 = A->blocks[0];
+        A12 = A->blocks[1];
+        A21 = A->blocks[2];
+        A22 = A->blocks[3];
     
-    row1 = A11->row;
-    col1 = A11->col;
+        row1 = A11->row;
+        col1 = A11->col;
     
-    x1 = x;
-    x2 = &(x[col1]);
-    y1 = y;
-    y2 = &(y[row1]);
+        x1 = x;
+        x2 = &(x[col1]);
+        y1 = y;
+        y2 = &(y[row1]);
     
-    // y1 = alpha*A11*x1 + alpha*A12*x2 + y1
-    fasp_blas_dcsr_aAxpy(alpha, A11, x1, y1);
-    fasp_blas_dcsr_aAxpy(alpha, A12, x2, y1); 
+        // y1 = alpha*A11*x1 + alpha*A12*x2 + y1
+        fasp_blas_dcsr_aAxpy(alpha, A11, x1, y1);
+        fasp_blas_dcsr_aAxpy(alpha, A12, x2, y1); 
     
-    // y2 = alpha*A21*x1 + alpha*A22*x2 + y2
-    fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2); 
-    fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2); 
+        // y2 = alpha*A21*x1 + alpha*A22*x2 + y2
+        fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2); 
+        fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2); 
     
-            break;
+        break;
     
     case 3:
-    A11 = A->blocks[0];
-    A12 = A->blocks[1];
-    A13 = A->blocks[2];
-    A21 = A->blocks[3];
-    A22 = A->blocks[4];
-    A23 = A->blocks[5];
-    A31 = A->blocks[6];
-    A32 = A->blocks[7];
-    A33 = A->blocks[8];
+        A11 = A->blocks[0];
+        A12 = A->blocks[1];
+        A13 = A->blocks[2];
+        A21 = A->blocks[3];
+        A22 = A->blocks[4];
+        A23 = A->blocks[5];
+        A31 = A->blocks[6];
+        A32 = A->blocks[7];
+        A33 = A->blocks[8];
     
-    row1 = A11->row;
-    col1 = A11->col;
-    row2 = A22->row;
-    col2 = A22->col; 
+        row1 = A11->row;
+        col1 = A11->col;
+        row2 = A22->row;
+        col2 = A22->col; 
     
-    x1 = x;
-    x2 = &(x[col1]);
-    x3 = &(x[col1+col2]);
-    y1 = y;
-    y2 = &(y[row1]);
-    y3 = &(y[row1+row2]);
+        x1 = x;
+        x2 = &(x[col1]);
+        x3 = &(x[col1+col2]);
+        y1 = y;
+        y2 = &(y[row1]);
+        y3 = &(y[row1+row2]);
     
-    // y1 = alpha*A11*x1 + alpha*A12*x2 + alpha*A13*x3 + y1
-    fasp_blas_dcsr_aAxpy(alpha, A11, x1, y1);
-    fasp_blas_dcsr_aAxpy(alpha, A12, x2, y1); 
-    fasp_blas_dcsr_aAxpy(alpha, A13, x3, y1);
+        // y1 = alpha*A11*x1 + alpha*A12*x2 + alpha*A13*x3 + y1
+        fasp_blas_dcsr_aAxpy(alpha, A11, x1, y1);
+        fasp_blas_dcsr_aAxpy(alpha, A12, x2, y1); 
+        fasp_blas_dcsr_aAxpy(alpha, A13, x3, y1);
     
-    // y2 = alpha*A21*x1 + alpha*A22*x2 + alpha*A23*x3 + y2
-    fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2); 
-    fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2); 
-    fasp_blas_dcsr_aAxpy(alpha, A23, x3, y2);
+        // y2 = alpha*A21*x1 + alpha*A22*x2 + alpha*A23*x3 + y2
+        fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2); 
+        fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2); 
+        fasp_blas_dcsr_aAxpy(alpha, A23, x3, y2);
     
-    // y3 = alpha*A31*x1 + alpha*A32*x2 + alpha*A33*x3 + y2
-    fasp_blas_dcsr_aAxpy(alpha, A31, x1, y3); 
-    fasp_blas_dcsr_aAxpy(alpha, A32, x2, y3); 
-    fasp_blas_dcsr_aAxpy(alpha, A33, x3, y3); 
+        // y3 = alpha*A31*x1 + alpha*A32*x2 + alpha*A33*x3 + y2
+        fasp_blas_dcsr_aAxpy(alpha, A31, x1, y3); 
+        fasp_blas_dcsr_aAxpy(alpha, A32, x2, y3); 
+        fasp_blas_dcsr_aAxpy(alpha, A33, x3, y3); 
     
-            break;
+        break;
     
     } // end of switch
     

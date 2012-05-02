@@ -50,44 +50,44 @@ INT fasp_amg_solve (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
-    while ((++iter <= MaxIt) & (sumb > SMALLREAL)) // MG solver here
-    {
+    // MG solver here
+    while ((++iter <= MaxIt) & (sumb > SMALLREAL)) {
         
 #if TRUE
-    // Call one multigrid cycle -- non recursive
-    fasp_solver_mgcycle(mgl, param); 
+        // Call one multigrid cycle -- non recursive
+        fasp_solver_mgcycle(mgl, param); 
 #else
         // If you wish to call the recursive version instead, replace it with:
         fasp_solver_mgrecur(mgl, param, 0);         
 #endif
         
-    // Form residual r = b-A*x    
-    fasp_dvec_cp(b,r); fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);    
+        // Form residual r = b-A*x    
+        fasp_dvec_cp(b,r); fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);    
     
         // Compute norms of r and convergence factor
-    absres  = fasp_blas_dvec_norm2(r); // residual ||r||
-    relres1 = absres/sumb;             // relative residual ||r||/||b||
-    factor  = absres/absres0;          // contraction factor
+        absres  = fasp_blas_dvec_norm2(r); // residual ||r||
+        relres1 = absres/sumb;             // relative residual ||r||/||b||
+        factor  = absres/absres0;          // contraction factor
         absres0 = absres;                  // prepare for next iteration
         
-    // Print iteration information if needed    
-    print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
+        // Print iteration information if needed    
+        print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
     
         // Check convergence
-    if (relres1<tol) break;
+        if (relres1<tol) break;
     }
     
     if (print_level>PRINT_NONE) {
-    if (iter>MaxIt)
-    printf("Maximal iteration %d exceeded with relative residual %e.\n", 
+        if (iter>MaxIt)
+            printf("Maximal iteration %d exceeded with relative residual %e.\n", 
                    MaxIt, relres1);
-    else
-    printf("Number of iterations = %d with relative residual %e.\n", 
+        else
+            printf("Number of iterations = %d with relative residual %e.\n", 
                    iter, relres1);
     
-    clock_t solve_end=clock();
-    REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
-    print_cputime("AMG solve",solveduration);
+        clock_t solve_end=clock();
+        REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
+        print_cputime("AMG solve",solveduration);
     }
     
 #if DEBUG_MODE
@@ -114,7 +114,7 @@ INT fasp_amg_solve (AMG_data *mgl,
  * \date 01/23/2011
  */
 INT fasp_amg_solve_amli (AMG_data *mgl, 
-                           AMG_param *param)
+                         AMG_param *param)
 {
     dCSRmat     *ptrA=&mgl[0].A;
     dvector     *b=&mgl[0].b, *x=&mgl[0].x, *r=&mgl[0].w; 
@@ -135,39 +135,40 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
-    while ((++iter <= MaxIt) & (sumb > SMALLREAL)) // MG solver here
-    {    
-    // Call one AMLI cycle
-    fasp_solver_amli(mgl, param, 0); 
+    // MG solver here
+    while ((++iter <= MaxIt) & (sumb > SMALLREAL)) {
+
+        // Call one AMLI cycle
+        fasp_solver_amli(mgl, param, 0); 
     
-    // Form residual r = b-A*x    
-    fasp_dvec_cp(b,r); 
-    fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);    
+        // Form residual r = b-A*x    
+        fasp_dvec_cp(b,r); 
+        fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);    
     
         // Compute norms of r and convergence factor
-    absres  = fasp_blas_dvec_norm2(r); // residual ||r||
-    relres1 = absres/sumb;             // relative residual ||r||/||b||
-    factor  = absres/absres0;          // contraction factor
+        absres  = fasp_blas_dvec_norm2(r); // residual ||r||
+        relres1 = absres/sumb;             // relative residual ||r||/||b||
+        factor  = absres/absres0;          // contraction factor
         absres0 = absres;                  // prepare for next iteration
     
-    // Print iteration information if needed    
-    print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
+        // Print iteration information if needed    
+        print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
     
         // Check convergence
-    if (relres1<tol) break;
+        if (relres1<tol) break;
     }
     
     if (print_level>PRINT_NONE) {
-    if (iter>MaxIt)
-    printf("Maximal iteration %d exceeded with relative residual %e.\n",
+        if (iter>MaxIt)
+            printf("Maximal iteration %d exceeded with relative residual %e.\n",
                    MaxIt, relres1);
-    else
-    printf("Number of iterations = %d with relative residual %e.\n",
+        else
+            printf("Number of iterations = %d with relative residual %e.\n",
                    iter, relres1);
     
-    clock_t solve_end=clock();
-    REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
-    print_cputime("AMLI solve",solveduration);
+        clock_t solve_end=clock();
+        REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
+        print_cputime("AMLI solve",solveduration);
     }
     
 #if DEBUG_MODE
@@ -194,7 +195,7 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
  * \date 04/30/2011
  */
 INT fasp_amg_solve_nl_amli (AMG_data *mgl, 
-                              AMG_param *param)
+                            AMG_param *param)
 {
     dCSRmat      *ptrA=&mgl[0].A;
     dvector      *b=&mgl[0].b, *x=&mgl[0].x, *r=&mgl[0].w; 
@@ -217,35 +218,35 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
     clock_t solve_start=clock();
     
     while ((++iter <= MaxIt) & (sumb > SMALLREAL)) // MG solver here
-    {    
-    // one multigrid cycle
-    fasp_solver_nl_amli(mgl, param, 0, mgl[0].num_levels); 
+        {    
+            // one multigrid cycle
+            fasp_solver_nl_amli(mgl, param, 0, mgl[0].num_levels); 
     
-    // r = b-A*x    
-    fasp_dvec_cp(b,r); 
-    fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);    
+            // r = b-A*x    
+            fasp_dvec_cp(b,r); 
+            fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);    
     
-    absres  = fasp_blas_dvec_norm2(r); // residual ||r||
-    relres1 = absres/sumb;       // relative residual ||r||/||b||
-    factor  = absres/absres0;    // contraction factor
+            absres  = fasp_blas_dvec_norm2(r); // residual ||r||
+            relres1 = absres/sumb;       // relative residual ||r||/||b||
+            factor  = absres/absres0;    // contraction factor
     
-    // output iteration information if needed    
-    print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
+            // output iteration information if needed    
+            print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
     
-    if (relres1<tol) break; // early exit condition
+            if (relres1<tol) break; // early exit condition
     
-    absres0 = absres;
-    }
+            absres0 = absres;
+        }
     
     if (print_level>0) {
-    if (iter>MaxIt)
-    printf("Maximal iteration %d exceeded with relative residual %e.\n", MaxIt, relres1);
-    else
-    printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
+        if (iter>MaxIt)
+            printf("Maximal iteration %d exceeded with relative residual %e.\n", MaxIt, relres1);
+        else
+            printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
     
-    clock_t solve_end=clock();
-    double solveduration = (double)(solve_end - solve_start)/(double)(CLOCKS_PER_SEC);
-    print_cputime("Nonlinear AMLI solve",solveduration);
+        clock_t solve_end=clock();
+        double solveduration = (double)(solve_end - solve_start)/(double)(CLOCKS_PER_SEC);
+        print_cputime("Nonlinear AMLI solve",solveduration);
     }
     
 #if DEBUG_MODE
@@ -271,7 +272,7 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
  * \date 01/10/2012
  */
 void fasp_famg_solve (AMG_data *mgl, 
-                       AMG_param *param)
+                      AMG_param *param)
 {
     dCSRmat     *ptrA=&mgl[0].A;
     dvector     *b=&mgl[0].b, *x=&mgl[0].x, *r=&mgl[0].w; 
@@ -302,9 +303,9 @@ void fasp_famg_solve (AMG_data *mgl,
     if (print_level>PRINT_NONE) {
         printf("FMG finishes with relative residual %e.\n", relres1);
     
-    clock_t solve_end=clock();
-    REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
-    print_cputime("FMG solve",solveduration);
+        clock_t solve_end=clock();
+        REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
+        print_cputime("FMG solve",solveduration);
     }
     
 #if DEBUG_MODE

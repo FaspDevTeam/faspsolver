@@ -36,8 +36,8 @@ extern void ilutp_(const int *n,double *a,int *ja,int *ia,int *lfil,const double
  * \date   12/27/2009
  */
 SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
-                         ILU_data *iludata, 
-                         ILU_param *iluparam)
+                           ILU_data *iludata, 
+                           ILU_param *iluparam)
 {
 #if FASP_USE_ILU
     const INT   type=iluparam->ILU_type, print_level=iluparam->print_level;
@@ -64,19 +64,19 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     // Expected amount of memory for ILU needed and allocate memory 
     switch (type) {
     case ILUk:
-    if (lfil == 0) iwk=nnz+500;
-    else iwk=(lfil+2)*nnz;
-    break;
+        if (lfil == 0) iwk=nnz+500;
+        else iwk=(lfil+2)*nnz;
+        break;
     case ILUt:
-    iwk=2*nnz;     // iwk is the maxim possible nnz for ILU    
-    lfilt=floor(n*0.5)+1;
-    break;
+        iwk=2*nnz;     // iwk is the maxim possible nnz for ILU    
+        lfilt=floor(n*0.5)+1;
+        break;
     case ILUtp:
-    iwk=2*nnz;     // iwk is the maxim possible nnz for ILU    
-    lfilt=floor(n*0.5)+1;
-    break;
+        iwk=2*nnz;     // iwk is the maxim possible nnz for ILU    
+        lfilt=floor(n*0.5)+1;
+        break;
     default: // ILUs
-    iwk=(lfil+10)*nnz;    
+        iwk=(lfil+10)*nnz;    
     } 
     
     nwork  = 4*n;
@@ -101,18 +101,18 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     
     switch (type) {
     case ILUk:
-    iluk_(&n,A->val,A->JA,A->IA,&lfil,luval,ijlu,&iwk,&ierr,&nzlu);
-    break;
+        iluk_(&n,A->val,A->JA,A->IA,&lfil,luval,ijlu,&iwk,&ierr,&nzlu);
+        break;
     case ILUt:
-    ilut_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,luval,ijlu,&iwk,&ierr,&nzlu);
-    break;
+        ilut_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,luval,ijlu,&iwk,&ierr,&nzlu);
+        break;
     case ILUtp:
-    ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol, \
-                   &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
-    break;
+        ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol, \
+               &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
+        break;
     default:
-            printf("### ERROR: Wrong ILU type %d!\n", type);
-    break;    
+        printf("### ERROR: Wrong ILU type %d!\n", type);
+        break;    
     } 
     
     fasp_dcsr_shift(A, -1);
@@ -130,35 +130,35 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
 #endif    
     
     if (ierr!=0) {
-    printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
-    status = ERROR_SOLVER_ILUSETUP;
-    goto FINISHED;
+        printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
     }
     
     if (iwk<nzlu) {
-    printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
-    status = ERROR_SOLVER_ILUSETUP;
-    goto FINISHED;
+        printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
     }
     
     if (print_level>PRINT_NONE) {
-    setup_end=clock();
-    setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
+        setup_end=clock();
+        setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
     
-    switch (type) {
-    case ILUk:
-    printf("ILUk setup costs %f seconds.\n", setup_duration);    
-    break;
-    case ILUt:
-    printf("ILUt setup costs %f seconds.\n", setup_duration);    
-    break;
-    case ILUtp:
-    printf("ILUtp setup costs %f seconds.\n", setup_duration);    
-    break;
-    }     
+        switch (type) {
+        case ILUk:
+            printf("ILUk setup costs %f seconds.\n", setup_duration);    
+            break;
+        case ILUt:
+            printf("ILUt setup costs %f seconds.\n", setup_duration);    
+            break;
+        case ILUtp:
+            printf("ILUtp setup costs %f seconds.\n", setup_duration);    
+            break;
+        }     
     }
     
-FINISHED:     
+ FINISHED:     
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_ilu_dcsr_setup ...... [Finish]\n");

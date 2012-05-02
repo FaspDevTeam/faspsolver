@@ -67,10 +67,10 @@ void fasp_aux_ijvcrs (INT *nnzi,
     }
     /* no need of such warning */
     /*    if (ni != nj) 
-     fprintf(stderr,    \
-     "**Warning: num of rows and columns do not match:%i .neq. %i\n",    \
-     ni, nj);
-     */
+          fprintf(stderr,    \
+          "**Warning: num of rows and columns do not match:%i .neq. %i\n",    \
+          ni, nj);
+    */
     n1=ni+1;
     for (k = 0; k< n1; k++) {
         ia[k] = 0;
@@ -127,8 +127,8 @@ void fasp_aux_uuplv0_ (REAL *u,
                        INT *n)
 {
     /*  
-     This computes y = y + x.
-     */
+        This computes y = y + x.
+    */
     INT i;
     for (i=0; i < *n ; i++) {
         u[i]=u[i]+v[i];
@@ -212,7 +212,7 @@ void fasp_aux_norm1_ (INT *ia,
     INT n,i,jk,iaa,iab;
     REAL sum,s;
     /* computes one norm of a matrix a and stores it in the variable
-     pointed to by *a1norm*/
+       pointed to by *a1norm*/
     n=*nn;
     s = 0e+00;
     for (i=0; i < n ; i++) {
@@ -221,8 +221,8 @@ void fasp_aux_norm1_ (INT *ia,
         iab = ia[i+1];
         sum = 0e+00;
         for (jk = iaa; jk < iab; jk++) {
-    //   fprintf(stdout,"\nja[%d] = %d",jk,ja[jk]);
-    //   fprintf(stdout,"a[%d] = %e",jk,a[jk]);
+            //   fprintf(stdout,"\nja[%d] = %d",jk,ja[jk]);
+            //   fprintf(stdout,"a[%d] = %e",jk,a[jk]);
             sum += fabs(a[jk]);
         }
         if ( sum > s) s = sum; 

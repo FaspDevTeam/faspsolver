@@ -63,22 +63,22 @@ SHORT fasp_check_diagzero (dCSRmat *A)
     SHORT        status;
     
     for (i=0;i<m;++i) {
-    begin_row=ia[i],end_row=ia[i+1];
-    for (k=begin_row;k<end_row;++k) {
-    j=ja[k];
-    if (i==j) {
-    if (ABS(aj[k]) < SMALLREAL) {
-    printf("### ERROR: Diagonal entry (%d,%e) close to zero!\n", i, aj[k]);
-    status = ERROR_DATA_ZERODIAG; 
-    goto FINISHED;
-    }
-    }    
-    } // end for k
+        begin_row=ia[i],end_row=ia[i+1];
+        for (k=begin_row;k<end_row;++k) {
+            j=ja[k];
+            if (i==j) {
+                if (ABS(aj[k]) < SMALLREAL) {
+                    printf("### ERROR: Diagonal entry (%d,%e) close to zero!\n", i, aj[k]);
+                    status = ERROR_DATA_ZERODIAG; 
+                    goto FINISHED;
+                }
+            }    
+        } // end for k
     } // end for i
     
     status = SUCCESS;
     
-FINISHED:    
+ FINISHED:    
     return status;
 }
 
@@ -109,16 +109,16 @@ INT fasp_check_diagdom (dCSRmat *A)
     INT *rowp = (INT *)fasp_mem_calloc(nnz,sizeof(INT));
     
     for (i=0;i<nn;++i) {
-    for (j=A->IA[i];j<A->IA[i+1];++j) rowp[j]=i;
+        for (j=A->IA[i];j<A->IA[i+1];++j) rowp[j]=i;
     }
     
     for (i=0;i<nn;++i) {
-    sum=0.0;
-    for (j=A->IA[i];j<A->IA[i+1];++j) {
-    if (A->JA[j]==i) sum=sum+A->val[j];
-    if (A->JA[j]!=i) sum=sum-fabs(A->val[j]);
-    }
-    if (sum<-SMALLREAL) ++k;
+        sum=0.0;
+        for (j=A->IA[i];j<A->IA[i+1];++j) {
+            if (A->JA[j]==i) sum=sum+A->val[j];
+            if (A->JA[j]!=i) sum=sum-fabs(A->val[j]);
+        }
+        if (sum<-SMALLREAL) ++k;
     }
     
     printf("Percentage of the diagonal-dominant rows is %3.2lf%s\n", 
@@ -160,14 +160,14 @@ INT fasp_check_symm (dCSRmat *A)
     nnz=A->IA[nn]-A->IA[0];
     
     if (nnz!=A->nnz) {
-    printf("### ERROR: nnz=%d, ia[n]-ia[0]=%d does NOT match!!!\n",A->nnz,nnz);
-    exit(ERROR_WRONG_FILE);
+        printf("### ERROR: nnz=%d, ia[n]-ia[0]=%d does NOT match!!!\n",A->nnz,nnz);
+        exit(ERROR_WRONG_FILE);
     }
     
     rowp=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
     
     for (i=0;i<nn;++i) {
-    for (j=A->IA[i];j<A->IA[i+1];++j) rowp[N2C(j)]=C2N(i);
+        for (j=A->IA[i];j<A->IA[i+1];++j) rowp[N2C(j)]=C2N(i);
     }
     
     rows[0]=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
@@ -199,51 +199,50 @@ INT fasp_check_symm (dCSRmat *A)
     maxdif=0.;
     mdi=0;
     mdj=0;
-    for (i=0;i<nnz;++i)
-    {
-    rows[0][i]=rows[1][i]-rows[0][i];
-    if (rows[0][i]!=0) {
-    type=-1;
-    mdi=rows[1][i];
-    break;
-    }
+    for (i=0;i<nnz;++i) {
+        rows[0][i]=rows[1][i]-rows[0][i];
+        if (rows[0][i]!=0) {
+            type=-1;
+            mdi=rows[1][i];
+            break;
+        }
     
-    cols[0][i]=cols[1][i]-cols[0][i];
-    if (cols[0][i]!=0) {
-    type=-2;
-    mdj=cols[1][i];
-    break;
-    }
+        cols[0][i]=cols[1][i]-cols[0][i];
+        if (cols[0][i]!=0) {
+            type=-2;
+            mdj=cols[1][i];
+            break;
+        }
     
-    if (fabs(vals[0][i])>SMALLREAL||fabs(vals[1][i])>SMALLREAL) {
-    dif=fabs(vals[1][i]-vals[0][i])/(fabs(vals[0][i])+fabs(vals[1][i]));
-    if (dif>maxdif) {
-    maxdif=dif;
-    mdi=rows[0][i];
-    mdj=cols[0][i];
-    }
-    }
+        if (fabs(vals[0][i])>SMALLREAL||fabs(vals[1][i])>SMALLREAL) {
+            dif=fabs(vals[1][i]-vals[0][i])/(fabs(vals[0][i])+fabs(vals[1][i]));
+            if (dif>maxdif) {
+                maxdif=dif;
+                mdi=rows[0][i];
+                mdj=cols[0][i];
+            }
+        }
     }
     
     if (maxdif>symmetry_tol) type=-3;
     
     switch (type) {
-        case 0:
-            printf("Matrix is symmetric with max relative difference is %1.3le\n",maxdif);
-            break;
-        case 3:
-            printf("Matrix is nonsymmetric with max relative difference is %1.3le\n",maxdif);
-            break;
-        case -1:
-            printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th rows and cols\n",
-                   mdi-1,mdi,mdi+1);
-            break;
-        case -2:
-            printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th cols and rows\n",
-                   mdj-1,mdj,mdj+1);
-            break;
-        default:
-            break;
+    case 0:
+        printf("Matrix is symmetric with max relative difference is %1.3le\n",maxdif);
+        break;
+    case 3:
+        printf("Matrix is nonsymmetric with max relative difference is %1.3le\n",maxdif);
+        break;
+    case -1:
+        printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th rows and cols\n",
+               mdi-1,mdi,mdi+1);
+        break;
+    case -2:
+        printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th cols and rows\n",
+               mdj-1,mdj,mdj+1);
+        break;
+    default:
+        break;
     }
 
     fasp_mem_free(rowp);
@@ -272,20 +271,20 @@ SHORT fasp_check_dCSRmat (dCSRmat *A)
     INT i;    
     
     if (A->row != A->col) {
-    printf("### ERROR: Non-square CSR matrix!\n");
-    exit(ERROR_DATA_STRUCTURE);    
+        printf("### ERROR: Non-square CSR matrix!\n");
+        exit(ERROR_DATA_STRUCTURE);    
     }
     
     if ((A->nnz==0)|(A->row==0)|(A->col==0)) {
-    printf("### ERROR: Empty CSR matrix!\n");
-    exit(ERROR_DATA_STRUCTURE);
+        printf("### ERROR: Empty CSR matrix!\n");
+        exit(ERROR_DATA_STRUCTURE);
     }
     
     for (i=0;i<A->nnz;++i) {
-    if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
-    printf("### ERROR: Wrong CSR matrix format!\n");
-    exit(ERROR_DATA_STRUCTURE);
-    }
+        if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
+            printf("### ERROR: Wrong CSR matrix format!\n");
+            exit(ERROR_DATA_STRUCTURE);
+        }
     }
     
     return SUCCESS;
@@ -306,20 +305,20 @@ SHORT fasp_check_iCSRmat (iCSRmat *A)
     INT i;    
     
     if (A->row != A->col) {
-    printf("### ERROR: Non-square CSR matrix!\n");
-    exit(ERROR_DATA_STRUCTURE);    
+        printf("### ERROR: Non-square CSR matrix!\n");
+        exit(ERROR_DATA_STRUCTURE);    
     }
     
     if ((A->nnz==0)|(A->row==0)|(A->col==0)) {
-    printf("### ERROR: Empty CSR matrix!\n");
-    exit(ERROR_DATA_STRUCTURE);
+        printf("### ERROR: Empty CSR matrix!\n");
+        exit(ERROR_DATA_STRUCTURE);
     }
     
     for (i=0;i<A->nnz;++i) {
-    if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
-    printf("### ERROR: Wrong CSR matrix!\n");
-    exit(ERROR_DATA_STRUCTURE);
-    }
+        if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
+            printf("### ERROR: Wrong CSR matrix!\n");
+            exit(ERROR_DATA_STRUCTURE);
+        }
     }
     
     return SUCCESS;

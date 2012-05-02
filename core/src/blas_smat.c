@@ -23,8 +23,9 @@
  */
 void fasp_blas_smat_mxv_nc2 (REAL *a, 
                              REAL *b, 
-     REAL *c)
-{    REAL b0,b1;
+                             REAL *c)
+{    
+    REAL b0,b1;
     b0=b[0];
     b1=b[1];
     c[0] = a[0]*b0 + a[1]*b1;
@@ -46,7 +47,8 @@ void fasp_blas_smat_mxv_nc2 (REAL *a,
 void fasp_blas_smat_mxv_nc3 (REAL *a, 
                              REAL *b, 
                              REAL *c)
-{    REAL b0,b1,b2;
+{    
+    REAL b0,b1,b2;
     b0=b[0];
     b1=b[1];
     b2=b[2];
@@ -135,36 +137,35 @@ void fasp_blas_smat_mxv (REAL *a,
                          REAL *c,
                          const INT n)
 {    
-    switch (n)
-    {
+    switch (n) {
     case 2:
-    fasp_blas_smat_mxv_nc2(a, b, c);
-    break;
+        fasp_blas_smat_mxv_nc2(a, b, c);
+        break;
     
     case 3: 
-    fasp_blas_smat_mxv_nc3(a, b, c);
-    break;
+        fasp_blas_smat_mxv_nc3(a, b, c);
+        break;
     
     case 5:
-    fasp_blas_smat_mxv_nc5(a, b, c);
-    break;
+        fasp_blas_smat_mxv_nc5(a, b, c);
+        break;
     
     case 7:
-    fasp_blas_smat_mxv_nc7(a, b, c);
-    break;
+        fasp_blas_smat_mxv_nc7(a, b, c);
+        break;
     
     default:
-    {
-    INT i,j,in=0;
-    REAL temp;
+        {
+            INT i,j,in=0;
+            REAL temp;
     
-    for (i=0; i<n; ++i, in+=n){
-    temp = 0.0;
-    for (j=0; j<n; ++j) temp += a[in+j]*b[j];
-    c[i]=temp;
-    } // end for i
-    }
-    break;
+            for (i=0; i<n; ++i, in+=n) {
+                temp = 0.0;
+                for (j=0; j<n; ++j) temp += a[in+j]*b[j];
+                c[i]=temp;
+            } // end for i
+        }
+        break;
     }
     return;
 }
@@ -188,14 +189,14 @@ void fasp_blas_smat_inv_nc2 (REAL *a)
     REAL det_inv;
     
     if (ABS(det)<1e-22) {
-    printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
-    /*
-     printf("##----------------------------------------------\n");
-     printf("## %12.5e %12.5e \n", a0, a1);
-     printf("## %12.5e %12.5e \n", a2, a3);
-     printf("##----------------------------------------------\n");
-     getchar(); 
-     */
+        printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
+        /*
+          printf("##----------------------------------------------\n");
+          printf("## %12.5e %12.5e \n", a0, a1);
+          printf("## %12.5e %12.5e \n", a2, a3);
+          printf("##----------------------------------------------\n");
+          getchar(); 
+        */
     }
     
     det_inv = 1.0/det;
@@ -229,15 +230,15 @@ void fasp_blas_smat_inv_nc3 (REAL *a)
     REAL det_inv;
     
     if (ABS(det)<1e-22) {
-    printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
-    /*
-     printf("##----------------------------------------------\n");
-     printf("## %12.5e %12.5e %12.5e \n", a0, a1, a2);
-     printf("## %12.5e %12.5e %12.5e \n", a3, a4, a5);
-     printf("## %12.5e %12.5e %12.5e \n", a5, a6, a7);
-     printf("##----------------------------------------------\n");
-     getchar(); 
-     */
+        printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
+        /*
+          printf("##----------------------------------------------\n");
+          printf("## %12.5e %12.5e %12.5e \n", a0, a1, a2);
+          printf("## %12.5e %12.5e %12.5e \n", a3, a4, a5);
+          printf("## %12.5e %12.5e %12.5e \n", a5, a6, a7);
+          printf("##----------------------------------------------\n");
+          getchar(); 
+        */
     }
     
     det_inv = 1.0/det;
@@ -297,17 +298,17 @@ void fasp_blas_smat_inv_nc5 (REAL *a)
     det = det0*a0 + det1*a5+ det2*a10 + det3*a15 + det4*a20;
     
     if (ABS(det)<1e-22) {
-    printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
-    /*
-     printf("##----------------------------------------------\n");
-     printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a0,  a1,  a2,  a3,  a4);
-     printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a5,  a6,  a7,  a8,  a9);
-     printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a10, a11, a12, a13, a14);
-     printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a15, a16, a17, a18, a19);
-     printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a20, a21, a22, a23, a24);
-     printf("##----------------------------------------------\n");
-     getchar(); 
-     */
+        printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
+        /*
+          printf("##----------------------------------------------\n");
+          printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a0,  a1,  a2,  a3,  a4);
+          printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a5,  a6,  a7,  a8,  a9);
+          printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a10, a11, a12, a13, a14);
+          printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a15, a16, a17, a18, a19);
+          printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n", a20, a21, a22, a23, a24);
+          printf("##----------------------------------------------\n");
+          getchar(); 
+        */
     }
     
     det_inv = 1/det;
@@ -494,70 +495,70 @@ INT fasp_blas_smat_inv (REAL *a,
 { 
     
     switch (n)
-    {
-    case 2:
-    fasp_blas_smat_inv_nc2(a);
-    break;
+        {
+        case 2:
+            fasp_blas_smat_inv_nc2(a);
+            break;
             
-    case 3:
-    fasp_blas_smat_inv_nc3(a);
-    break;
-    case 5: 
-    fasp_blas_smat_inv_nc5(a);
-    break;    
-    default:
-    { INT i,j,k,l,u,kn,in;
-    REAL alinv;
+        case 3:
+            fasp_blas_smat_inv_nc3(a);
+            break;
+        case 5: 
+            fasp_blas_smat_inv_nc5(a);
+            break;    
+        default:
+            { INT i,j,k,l,u,kn,in;
+                REAL alinv;
     
-    for (k=0; k<n; ++k){
+                for (k=0; k<n; ++k) {
     
-    kn = k*n;
-    l  = kn+k;
+                    kn = k*n;
+                    l  = kn+k;
     
-    if (ABS(a[l]) < SMALLREAL){
-    printf("### WARNING: Diagonal entry is close to zero! a[%d,%d] = %e\n", k,k,a[l]);
-    a[l] = SMALLREAL;
-    }
-    alinv = 1.0/a[l];
-    a[l] = alinv;
+                    if (ABS(a[l]) < SMALLREAL) {
+                        printf("### WARNING: Diagonal entry is close to zero! a[%d,%d] = %e\n", k,k,a[l]);
+                        a[l] = SMALLREAL;
+                    }
+                    alinv = 1.0/a[l];
+                    a[l] = alinv;
     
-    for (j=0; j<k; ++j) {
-    u = kn+j; a[u] *= alinv;
-    }
+                    for (j=0; j<k; ++j) {
+                        u = kn+j; a[u] *= alinv;
+                    }
     
-    for (j=k+1; j<n; ++j) {
-    u = kn+j; a[u] *= alinv;
-    }
+                    for (j=k+1; j<n; ++j) {
+                        u = kn+j; a[u] *= alinv;
+                    }
     
-    for (i=0; i<k; ++i) {
-    in = i*n;
-    for (j=0; j<n; ++j)
-    if (j!=k) { 
-    u = in+j; a[u] -= a[in+k]*a[kn+j];
-    } // end if (j!=k)
-    }
+                    for (i=0; i<k; ++i) {
+                        in = i*n;
+                        for (j=0; j<n; ++j)
+                            if (j!=k) { 
+                                u = in+j; a[u] -= a[in+k]*a[kn+j];
+                            } // end if (j!=k)
+                    }
     
-    for (i=k+1; i<n; ++i) {
-    in = i*n;
-    for (j=0; j<n; ++j)
-    if (j!=k) { 
-    u = in+j; a[u] -= a[in+k]*a[kn+j];
-    } // end if (j!=k)
-    }
+                    for (i=k+1; i<n; ++i) {
+                        in = i*n;
+                        for (j=0; j<n; ++j)
+                            if (j!=k) { 
+                                u = in+j; a[u] -= a[in+k]*a[kn+j];
+                            } // end if (j!=k)
+                    }
     
-    for (i=0; i<k; ++i) {
-    u=i*n+k; a[u] *= -alinv;
-    }
+                    for (i=0; i<k; ++i) {
+                        u=i*n+k; a[u] *= -alinv;
+                    }
     
-    for (i=k+1; i<n; ++i) {
-    u=i*n+k; a[u] *= -alinv;
-    }    
+                    for (i=k+1; i<n; ++i) {
+                        u=i*n+k; a[u] *= -alinv;
+                    }    
     
-    } // end for (k=0; k<n; ++k)
-    break;
-    }
+                } // end for (k=0; k<n; ++k)
+                break;
+            }
     
-    }
+        }
     
     return SUCCESS;
 }
@@ -575,8 +576,8 @@ INT fasp_blas_smat_inv (REAL *a,
  * \date   18/11/2011
  */
 void fasp_blas_smat_mul_nc2 (REAL *a, 
-     REAL *b, 
-     REAL *c)
+                             REAL *b, 
+                             REAL *c)
 { 
     const REAL a0 = a[0], a1 = a[1];
     const REAL a2 = a[2], a3 = a[3];
@@ -796,34 +797,34 @@ void fasp_blas_smat_mul (REAL *a,
 { 
     
     switch (n)
-    {
-    case 2: 
-    fasp_blas_smat_mul_nc2(a, b, c); break;
+        {
+        case 2: 
+            fasp_blas_smat_mul_nc2(a, b, c); break;
             
-    case 3:
-    fasp_blas_smat_mul_nc3(a, b, c); break;
+        case 3:
+            fasp_blas_smat_mul_nc3(a, b, c); break;
     
-    case 5: 
-    fasp_blas_smat_mul_nc5(a, b, c); break;
+        case 5: 
+            fasp_blas_smat_mul_nc5(a, b, c); break;
     
-    case 7:
-    fasp_blas_smat_mul_nc7(a, b, c); break;
+        case 7:
+            fasp_blas_smat_mul_nc7(a, b, c); break;
     
-    default:
-    { const INT n2 = n*n;
-    INT i,j,k;
-    REAL temp;
+        default:
+            { const INT n2 = n*n;
+                INT i,j,k;
+                REAL temp;
     
-    for (i=0; i<n2; i+=n){
-    for (j=0; j<n; ++j){ 
-    temp = 0.0; // Fixed by Cheosong. Feb/22/2011.
-    for (k=0; k<n; ++k) temp += a[i+k]*b[k*n+j];
-    c[i+j] = temp;
-    } // end for j
-    } // end for i
-    }
-    break;
-    }    
+                for (i=0; i<n2; i+=n) {
+                    for (j=0; j<n; ++j) { 
+                        temp = 0.0; // Fixed by Cheosong. Feb/22/2011.
+                        for (k=0; k<n; ++k) temp += a[i+k]*b[k*n+j];
+                        c[i+j] = temp;
+                    } // end for j
+                } // end for i
+            }
+            break;
+        }    
     return;
 }
 
@@ -844,15 +845,14 @@ void fasp_blas_smat_mul (REAL *a,
  */
 void fasp_blas_array_axpyz_nc2 (REAL a, 
                                 REAL *x, 
-    REAL *y, 
-    REAL *z) 
+                                REAL *y, 
+                                REAL *z) 
 {
     z[0] = a*x[0] + y[0];
     z[1] = a*x[1] + y[1];
     
     z[2] = a*x[2] + y[2];
-    z[3] = a*x[3] + y[3];
-    
+    z[3] = a*x[3] + y[3];    
 }
 
 /**
@@ -1030,14 +1030,13 @@ void fasp_blas_array_axpyz_nc7 (const REAL a,
  */
 void fasp_blas_array_axpy_nc2 (const REAL a, 
                                REAL *x, 
-       REAL *y) 
+                               REAL *y) 
 {
     y[0] += a*x[0];
     y[1] += a*x[1];
     
     y[2] += a*x[2];
-    y[3] += a*x[3];
-    
+    y[3] += a*x[3];    
 }
 
 /**
@@ -1202,9 +1201,10 @@ void fasp_blas_array_axpy_nc7 (const REAL a,
  * \date   2011/11/18
  */
 void fasp_blas_smat_ypAx_nc2 (REAL *A, 
-      REAL *x, 
-      REAL *y )
-{    REAL x0,x1;
+                              REAL *x, 
+                              REAL *y )
+{
+    REAL x0,x1;
     x0=x[0];
     x1=x[1];
     
@@ -1229,7 +1229,8 @@ void fasp_blas_smat_ypAx_nc2 (REAL *A,
 void fasp_blas_smat_ypAx_nc3 (REAL *A, 
                               REAL *x, 
                               REAL *y )
-{    REAL x0,x1,x2;
+{
+    REAL x0,x1,x2;
     x0=x[0];
     x1=x[1];
     x2=x[2];
@@ -1255,7 +1256,8 @@ void fasp_blas_smat_ypAx_nc3 (REAL *A,
 void fasp_blas_smat_ypAx_nc5 (REAL *A, 
                               REAL *x,
                               REAL *y )
-{    REAL x0,x1,x2,x3,x4;
+{
+    REAL x0,x1,x2,x3,x4;
     x0=x[0];
     x1=x[1];
     x2=x[2];
@@ -1325,79 +1327,79 @@ void fasp_blas_smat_ypAx (REAL *A,
     switch (n) {
     case 2:
         {
-    REAL x0,x1;
-    x0=x[0];x1=x[1];
-    y[0] += A[0]*x0 + A[1]*x1;
-    y[1] += A[2]*x0 + A[3]*x1;
-    break;
+            REAL x0,x1;
+            x0=x[0];x1=x[1];
+            y[0] += A[0]*x0 + A[1]*x1;
+            y[1] += A[2]*x0 + A[3]*x1;
+            break;
         }
     case 3:
         {
-    REAL x0,x1,x2;
-    x0=x[0];x1=x[1];x2=x[2];
-    y[0] += A[0]*x0 + A[1]*x1 + A[2]*x2;
-    y[1] += A[3]*x0 + A[4]*x1 + A[5]*x2;
-    y[2] += A[6]*x0 + A[7]*x1 + A[8]*x2;
-    break;
+            REAL x0,x1,x2;
+            x0=x[0];x1=x[1];x2=x[2];
+            y[0] += A[0]*x0 + A[1]*x1 + A[2]*x2;
+            y[1] += A[3]*x0 + A[4]*x1 + A[5]*x2;
+            y[2] += A[6]*x0 + A[7]*x1 + A[8]*x2;
+            break;
         }
     case 4:
         {
-    REAL x0,x1,x2,x3;
-    x0=x[0];x1=x[1];x2=x[2];x3=x[3];
-    y[0] +=  A[0]*x0 + A[1]*x1 +  A[2]*x2 + A[3]*x3;
-    y[1] +=  A[4]*x0 + A[5]*x1 +  A[6]*x2 + A[7]*x3;
-    y[2] +=  A[8]*x0 + A[9]*x1 + A[10]*x2 + A[11]*x3;
-    y[3] += A[12]*x0 + A[13]*x1 +A[14]*x2 + A[15]*x3;
-    break;
+            REAL x0,x1,x2,x3;
+            x0=x[0];x1=x[1];x2=x[2];x3=x[3];
+            y[0] +=  A[0]*x0 + A[1]*x1 +  A[2]*x2 + A[3]*x3;
+            y[1] +=  A[4]*x0 + A[5]*x1 +  A[6]*x2 + A[7]*x3;
+            y[2] +=  A[8]*x0 + A[9]*x1 + A[10]*x2 + A[11]*x3;
+            y[3] += A[12]*x0 + A[13]*x1 +A[14]*x2 + A[15]*x3;
+            break;
         }
     case 5:
         {
-    REAL x0,x1,x2,x3,x4;
-    x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];
-    y[0] +=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4;
-    y[1] +=  A[5]*x0 +  A[6]*x1 +  A[7]*x2 +  A[8]*x3 +  A[9]*x4;
-    y[2] += A[10]*x0 + A[11]*x1 + A[12]*x2 + A[13]*x3 + A[14]*x4;
-    y[3] += A[15]*x0 + A[16]*x1 + A[17]*x2 + A[18]*x3 + A[19]*x4;
-    y[4] += A[20]*x0 + A[21]*x1 + A[22]*x2 + A[23]*x3 + A[24]*x4;
-    break;
+            REAL x0,x1,x2,x3,x4;
+            x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];
+            y[0] +=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4;
+            y[1] +=  A[5]*x0 +  A[6]*x1 +  A[7]*x2 +  A[8]*x3 +  A[9]*x4;
+            y[2] += A[10]*x0 + A[11]*x1 + A[12]*x2 + A[13]*x3 + A[14]*x4;
+            y[3] += A[15]*x0 + A[16]*x1 + A[17]*x2 + A[18]*x3 + A[19]*x4;
+            y[4] += A[20]*x0 + A[21]*x1 + A[22]*x2 + A[23]*x3 + A[24]*x4;
+            break;
         }    
     case 6:
         {
-    REAL x0,x1,x2,x3,x4,x5;
-    x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];
-    y[0] +=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5;
-    y[1] +=  A[6]*x0 +  A[7]*x1 +  A[8]*x2 +  A[9]*x3 + A[10]*x4 + A[11]*x5;
-    y[2] += A[12]*x0 + A[13]*x1 + A[14]*x2 + A[15]*x3 + A[16]*x4 + A[17]*x5;
-    y[3] += A[18]*x0 + A[19]*x1 + A[20]*x2 + A[21]*x3 + A[22]*x4 + A[23]*x5;
-    y[4] += A[24]*x0 + A[25]*x1 + A[26]*x2 + A[27]*x3 + A[28]*x4 + A[29]*x5;
-    y[5] += A[30]*x0 + A[31]*x1 + A[32]*x2 + A[33]*x3 + A[34]*x4 + A[35]*x5;
-    break;
+            REAL x0,x1,x2,x3,x4,x5;
+            x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];
+            y[0] +=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5;
+            y[1] +=  A[6]*x0 +  A[7]*x1 +  A[8]*x2 +  A[9]*x3 + A[10]*x4 + A[11]*x5;
+            y[2] += A[12]*x0 + A[13]*x1 + A[14]*x2 + A[15]*x3 + A[16]*x4 + A[17]*x5;
+            y[3] += A[18]*x0 + A[19]*x1 + A[20]*x2 + A[21]*x3 + A[22]*x4 + A[23]*x5;
+            y[4] += A[24]*x0 + A[25]*x1 + A[26]*x2 + A[27]*x3 + A[28]*x4 + A[29]*x5;
+            y[5] += A[30]*x0 + A[31]*x1 + A[32]*x2 + A[33]*x3 + A[34]*x4 + A[35]*x5;
+            break;
         }
     case 7:
         {
-    REAL x0,x1,x2,x3,x4,x5,x6;
-    x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];x6=x[6];
-    y[0] +=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5 +  A[6]*x6;
-    y[1] +=  A[7]*x0 +  A[8]*x1 +  A[9]*x2 + A[10]*x3 + A[11]*x4 + A[12]*x5 + A[13]*x6;
-    y[2] += A[14]*x0 + A[15]*x1 + A[16]*x2 + A[17]*x3 + A[18]*x4 + A[19]*x5 + A[20]*x6;
-    y[3] += A[21]*x0 + A[22]*x1 + A[23]*x2 + A[24]*x3 + A[25]*x4 + A[26]*x5 + A[27]*x6;
-    y[4] += A[28]*x0 + A[29]*x1 + A[30]*x2 + A[31]*x3 + A[32]*x4 + A[33]*x5 + A[34]*x6;
-    y[5] += A[35]*x0 + A[36]*x1 + A[37]*x2 + A[38]*x3 + A[39]*x4 + A[40]*x5 + A[41]*x6;
-    y[6] += A[42]*x0 + A[43]*x1 + A[44]*x2 + A[45]*x3 + A[46]*x4 + A[47]*x5 + A[48]*x6;
-    break;
+            REAL x0,x1,x2,x3,x4,x5,x6;
+            x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];x6=x[6];
+            y[0] +=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5 +  A[6]*x6;
+            y[1] +=  A[7]*x0 +  A[8]*x1 +  A[9]*x2 + A[10]*x3 + A[11]*x4 + A[12]*x5 + A[13]*x6;
+            y[2] += A[14]*x0 + A[15]*x1 + A[16]*x2 + A[17]*x3 + A[18]*x4 + A[19]*x5 + A[20]*x6;
+            y[3] += A[21]*x0 + A[22]*x1 + A[23]*x2 + A[24]*x3 + A[25]*x4 + A[26]*x5 + A[27]*x6;
+            y[4] += A[28]*x0 + A[29]*x1 + A[30]*x2 + A[31]*x3 + A[32]*x4 + A[33]*x5 + A[34]*x6;
+            y[5] += A[35]*x0 + A[36]*x1 + A[37]*x2 + A[38]*x3 + A[39]*x4 + A[40]*x5 + A[41]*x6;
+            y[6] += A[42]*x0 + A[43]*x1 + A[44]*x2 + A[45]*x3 + A[46]*x4 + A[47]*x5 + A[48]*x6;
+            break;
         }
     default: {
-    INT i,j,k;
+        INT i,j,k;
     
-    for (i = 0; i < n; i ++) 
-    {
-    k = i*n;
-    for (j = 0; j < n; j ++) 
-    {
-    y[i] += A[k+j]*x[j];
-    }
-    }
-    break;
+        for (i = 0; i < n; i ++) 
+            {
+                k = i*n;
+                for (j = 0; j < n; j ++) 
+                    {
+                        y[i] += A[k+j]*x[j];
+                    }
+            }
+        break;
     }
     }
     
@@ -1419,9 +1421,10 @@ void fasp_blas_smat_ypAx (REAL *A,
  * \note Works for 2-component
  */
 void fasp_blas_smat_ymAx_nc2 (REAL *A, 
-      REAL *x, 
-      REAL *y)
-{    REAL x0,x1;
+                              REAL *x, 
+                              REAL *y)
+{ 
+    REAL x0,x1;
     x0=x[0];
     x1=x[1];
     
@@ -1448,7 +1451,8 @@ void fasp_blas_smat_ymAx_nc2 (REAL *A,
 void fasp_blas_smat_ymAx_nc3 (REAL *A, 
                               REAL *x, 
                               REAL *y)
-{    REAL x0,x1,x2;
+{   
+    REAL x0,x1,x2;
     x0=x[0];
     x1=x[1];
     x2=x[2];
@@ -1456,7 +1460,6 @@ void fasp_blas_smat_ymAx_nc3 (REAL *A,
     y[0] -= A[0]*x0 + A[1]*x1 + A[2]*x2;
     y[1] -= A[3]*x0 + A[4]*x1 + A[5]*x2;
     y[2] -= A[6]*x0 + A[7]*x1 + A[8]*x2;
-    
     
     return;
 } 
@@ -1478,7 +1481,8 @@ void fasp_blas_smat_ymAx_nc3 (REAL *A,
 void fasp_blas_smat_ymAx_nc5 (REAL *A, 
                               REAL *x, 
                               REAL *y)
-{    REAL x0,x1,x2,x3,x4;
+{    
+    REAL x0,x1,x2,x3,x4;
     x0=x[0];
     x1=x[1];
     x2=x[2];
@@ -1511,7 +1515,9 @@ void fasp_blas_smat_ymAx_nc5 (REAL *A,
 void fasp_blas_smat_ymAx_nc7 (REAL *A, 
                               REAL *x, 
                               REAL *y)
-{    REAL x0,x1,x2,x3,x4,x5,x6;
+{    
+    REAL x0,x1,x2,x3,x4,x5,x6;
+    
     x0=x[0];
     x1=x[1];
     x2=x[2];
@@ -1519,6 +1525,7 @@ void fasp_blas_smat_ymAx_nc7 (REAL *A,
     x4=x[4];
     x5=x[5];
     x6=x[6];
+    
     y[0] -= A[0]*x0 + A[1]*x1 +    A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5 +  A[6]*x6;
     y[1] -= A[7]*x0 + A[8]*x1 +    A[9]*x2 + A[10]*x3 + A[11]*x4 + A[12]*x5 + A[13]*x6;
     y[2] -= A[14]*x0 + A[15]*x1 + A[16]*x2 + A[17]*x3 + A[18]*x4 + A[19]*x5 + A[20]*x6;
@@ -1526,7 +1533,6 @@ void fasp_blas_smat_ymAx_nc7 (REAL *A,
     y[4] -= A[28]*x0 + A[29]*x1 + A[30]*x2 + A[31]*x3 + A[32]*x4 + A[33]*x5 + A[34]*x6;
     y[5] -= A[35]*x0 + A[36]*x1 + A[37]*x2 + A[38]*x3 + A[39]*x4 + A[40]*x5 + A[41]*x6;
     y[6] -= A[42]*x0 + A[43]*x1 + A[44]*x2 + A[45]*x3 + A[46]*x4 + A[47]*x5 + A[48]*x6;
-    
     
     return;
 }
@@ -1552,79 +1558,79 @@ void fasp_blas_smat_ymAx (REAL *A,
     switch (n) {
     case 2:
         {
-    REAL x0,x1;
-    x0=x[0];x1=x[1];
-    y[0] -= A[0]*x0 + A[1]*x1;
-    y[1] -= A[2]*x0 + A[3]*x1;
-    break;
+            REAL x0,x1;
+            x0=x[0];x1=x[1];
+            y[0] -= A[0]*x0 + A[1]*x1;
+            y[1] -= A[2]*x0 + A[3]*x1;
+            break;
         }
     case 3:
         {
-    REAL x0,x1,x2;
-    x0=x[0];x1=x[1];x2=x[2];
-    y[0] -= A[0]*x0 + A[1]*x1 + A[2]*x2;
-    y[1] -= A[3]*x0 + A[4]*x1 + A[5]*x2;
-    y[2] -= A[6]*x0 + A[7]*x1 + A[8]*x2;
-    break;
+            REAL x0,x1,x2;
+            x0=x[0];x1=x[1];x2=x[2];
+            y[0] -= A[0]*x0 + A[1]*x1 + A[2]*x2;
+            y[1] -= A[3]*x0 + A[4]*x1 + A[5]*x2;
+            y[2] -= A[6]*x0 + A[7]*x1 + A[8]*x2;
+            break;
         }
     case 4:
         {
-    REAL x0,x1,x2,x3;
-    x0=x[0];x1=x[1];x2=x[2];x3=x[3];
-    y[0] -=  A[0]*x0 + A[1]*x1 +  A[2]*x2 + A[3]*x3;
-    y[1] -=  A[4]*x0 + A[5]*x1 +  A[6]*x2 + A[7]*x3;
-    y[2] -=  A[8]*x0 + A[9]*x1 + A[10]*x2 + A[11]*x3;
-    y[3] -= A[12]*x0 + A[13]*x1 +A[14]*x2 + A[15]*x3;
-    break;
+            REAL x0,x1,x2,x3;
+            x0=x[0];x1=x[1];x2=x[2];x3=x[3];
+            y[0] -=  A[0]*x0 + A[1]*x1 +  A[2]*x2 + A[3]*x3;
+            y[1] -=  A[4]*x0 + A[5]*x1 +  A[6]*x2 + A[7]*x3;
+            y[2] -=  A[8]*x0 + A[9]*x1 + A[10]*x2 + A[11]*x3;
+            y[3] -= A[12]*x0 + A[13]*x1 +A[14]*x2 + A[15]*x3;
+            break;
         }
     case 5:
         {
-    REAL x0,x1,x2,x3,x4;
-    x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];
-    y[0] -=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4;
-    y[1] -=  A[5]*x0 +  A[6]*x1 +  A[7]*x2 +  A[8]*x3 +  A[9]*x4;
-    y[2] -= A[10]*x0 + A[11]*x1 + A[12]*x2 + A[13]*x3 + A[14]*x4;
-    y[3] -= A[15]*x0 + A[16]*x1 + A[17]*x2 + A[18]*x3 + A[19]*x4;
-    y[4] -= A[20]*x0 + A[21]*x1 + A[22]*x2 + A[23]*x3 + A[24]*x4;
-    break;
+            REAL x0,x1,x2,x3,x4;
+            x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];
+            y[0] -=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4;
+            y[1] -=  A[5]*x0 +  A[6]*x1 +  A[7]*x2 +  A[8]*x3 +  A[9]*x4;
+            y[2] -= A[10]*x0 + A[11]*x1 + A[12]*x2 + A[13]*x3 + A[14]*x4;
+            y[3] -= A[15]*x0 + A[16]*x1 + A[17]*x2 + A[18]*x3 + A[19]*x4;
+            y[4] -= A[20]*x0 + A[21]*x1 + A[22]*x2 + A[23]*x3 + A[24]*x4;
+            break;
         }
     case 6:
         {
-    REAL x0,x1,x2,x3,x4,x5;
-    x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];
-    y[0] -=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5;
-    y[1] -=  A[6]*x0 +  A[7]*x1 +  A[8]*x2 +  A[9]*x3 + A[10]*x4 + A[11]*x5;
-    y[2] -= A[12]*x0 + A[13]*x1 + A[14]*x2 + A[15]*x3 + A[16]*x4 + A[17]*x5;
-    y[3] -= A[18]*x0 + A[19]*x1 + A[20]*x2 + A[21]*x3 + A[22]*x4 + A[23]*x5;
-    y[4] -= A[24]*x0 + A[25]*x1 + A[26]*x2 + A[27]*x3 + A[28]*x4 + A[29]*x5;
-    y[5] -= A[30]*x0 + A[31]*x1 + A[32]*x2 + A[33]*x3 + A[34]*x4 + A[35]*x5;
-    break;
+            REAL x0,x1,x2,x3,x4,x5;
+            x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];
+            y[0] -=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5;
+            y[1] -=  A[6]*x0 +  A[7]*x1 +  A[8]*x2 +  A[9]*x3 + A[10]*x4 + A[11]*x5;
+            y[2] -= A[12]*x0 + A[13]*x1 + A[14]*x2 + A[15]*x3 + A[16]*x4 + A[17]*x5;
+            y[3] -= A[18]*x0 + A[19]*x1 + A[20]*x2 + A[21]*x3 + A[22]*x4 + A[23]*x5;
+            y[4] -= A[24]*x0 + A[25]*x1 + A[26]*x2 + A[27]*x3 + A[28]*x4 + A[29]*x5;
+            y[5] -= A[30]*x0 + A[31]*x1 + A[32]*x2 + A[33]*x3 + A[34]*x4 + A[35]*x5;
+            break;
         }
     case 7:    
         {
-    REAL x0,x1,x2,x3,x4,x5,x6;
-    x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];x6=x[6];
-    y[0] -=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5 +  A[6]*x6;
-    y[1] -=  A[7]*x0 +  A[8]*x1 +  A[9]*x2 + A[10]*x3 + A[11]*x4 + A[12]*x5 + A[13]*x6;
-    y[2] -= A[14]*x0 + A[15]*x1 + A[16]*x2 + A[17]*x3 + A[18]*x4 + A[19]*x5 + A[20]*x6;
-    y[3] -= A[21]*x0 + A[22]*x1 + A[23]*x2 + A[24]*x3 + A[25]*x4 + A[26]*x5 + A[27]*x6;
-    y[4] -= A[28]*x0 + A[29]*x1 + A[30]*x2 + A[31]*x3 + A[32]*x4 + A[33]*x5 + A[34]*x6;
-    y[5] -= A[35]*x0 + A[36]*x1 + A[37]*x2 + A[38]*x3 + A[39]*x4 + A[40]*x5 + A[41]*x6;
-    y[6] -= A[42]*x0 + A[43]*x1 + A[44]*x2 + A[45]*x3 + A[46]*x4 + A[47]*x5 + A[48]*x6;
-    break;
+            REAL x0,x1,x2,x3,x4,x5,x6;
+            x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];x6=x[6];
+            y[0] -=  A[0]*x0 +  A[1]*x1 +  A[2]*x2 +  A[3]*x3 +  A[4]*x4 +  A[5]*x5 +  A[6]*x6;
+            y[1] -=  A[7]*x0 +  A[8]*x1 +  A[9]*x2 + A[10]*x3 + A[11]*x4 + A[12]*x5 + A[13]*x6;
+            y[2] -= A[14]*x0 + A[15]*x1 + A[16]*x2 + A[17]*x3 + A[18]*x4 + A[19]*x5 + A[20]*x6;
+            y[3] -= A[21]*x0 + A[22]*x1 + A[23]*x2 + A[24]*x3 + A[25]*x4 + A[26]*x5 + A[27]*x6;
+            y[4] -= A[28]*x0 + A[29]*x1 + A[30]*x2 + A[31]*x3 + A[32]*x4 + A[33]*x5 + A[34]*x6;
+            y[5] -= A[35]*x0 + A[36]*x1 + A[37]*x2 + A[38]*x3 + A[39]*x4 + A[40]*x5 + A[41]*x6;
+            y[6] -= A[42]*x0 + A[43]*x1 + A[44]*x2 + A[45]*x3 + A[46]*x4 + A[47]*x5 + A[48]*x6;
+            break;
         }
     default: {
-    INT i,j,k;
+        INT i,j,k;
     
-    for (i = 0; i < n; i ++) 
-    {
-    k = i*n;
-    for (j = 0; j < n; j ++) 
-    {
-    y[i] -= A[k+j]*x[j];
-    }
-    }
-    break;
+        for (i = 0; i < n; i ++) 
+            {
+                k = i*n;
+                for (j = 0; j < n; j ++) 
+                    {
+                        y[i] -= A[k+j]*x[j];
+                    }
+            }
+        break;
     }
     }
     
@@ -1657,33 +1663,28 @@ void fasp_blas_smat_aAxpby (const REAL alpha,
     INT    i,j,k;
     REAL tmp = 0.0;
     
-    if (alpha == 0)
-    {
-    for (i = 0; i < n; i ++) y[i] *= beta;
-    return;
+    if (alpha == 0) {
+        for (i = 0; i < n; i ++) y[i] *= beta;
+        return;
     }
     
     // y := (beta/alpha)y
     tmp = beta / alpha;
-    if (tmp != 1.0)
-    {
-    for (i = 0; i < n; i ++) y[i] *= tmp;
+    if (tmp != 1.0) {
+        for (i = 0; i < n; i ++) y[i] *= tmp;
     }
     
     // y := y + A*x
-    for (i = 0; i < n; i ++)
-    {
-    k = i*n;
-    for (j = 0; j < n; j ++)
-    {
-    y[i] += A[k+j]*x[j];
-    }
+    for (i = 0; i < n; i ++) {
+        k = i*n;
+        for (j = 0; j < n; j ++) {
+            y[i] += A[k+j]*x[j];
+        }
     }     
     
     // y := alpha*y
-    if (alpha != 1.0)
-    {
-    for (i = 0; i < n; i ++) y[i] *= alpha;
+    if (alpha != 1.0) {
+        for (i = 0; i < n; i ++) y[i] *= alpha;
     }
 }
 
@@ -1703,8 +1704,8 @@ void fasp_blas_smat_aAxpby (const REAL alpha,
  *       Only for block smoother for saturation block without explictly use saturation block!!
  */
 void fasp_blas_smat_ymAx_ns2 (REAL *A,
-      REAL *x, 
-      REAL *y)
+                              REAL *x, 
+                              REAL *y)
 {    
     y[0] -= A[3]*x[0];
     
@@ -1729,7 +1730,8 @@ void fasp_blas_smat_ymAx_ns2 (REAL *A,
 void fasp_blas_smat_ymAx_ns3 (REAL *A,
                               REAL *x, 
                               REAL *y)
-{    REAL x0,x1;
+{    
+    REAL x0,x1;
     x0=x[0];
     x1=x[1];
     y[0] -= A[4]*x0 + A[5]*x1;
@@ -1756,7 +1758,9 @@ void fasp_blas_smat_ymAx_ns3 (REAL *A,
 void fasp_blas_smat_ymAx_ns5 (REAL *A, 
                               REAL *x, 
                               REAL *y)
-{    REAL x0,x1,x2,x3;
+{    
+    REAL x0,x1,x2,x3;
+    
     x0=x[0];
     x1=x[1];
     x2=x[2];
@@ -1788,7 +1792,9 @@ void fasp_blas_smat_ymAx_ns5 (REAL *A,
 void fasp_blas_smat_ymAx_ns7 (REAL *A, 
                               REAL *x, 
                               REAL *y)
-{    REAL x0,x1,x2,x3,x4,x5;
+{
+    REAL x0,x1,x2,x3,x4,x5;
+
     x0=x[0];
     x1=x[1];
     x2=x[2];
@@ -1828,51 +1834,51 @@ void fasp_blas_smat_ymAx_ns (REAL *A,
 {    
     switch (n) {
     case 2:
-    y[0] -= A[3]*x[0];
-    break;
+        y[0] -= A[3]*x[0];
+        break;
             
     case 3: 
         {
-    REAL x0,x1;
-    x0=x[0];x1=x[1];
-    y[0] -= A[4]*x0 + A[5]*x1;
-    y[1] -= A[7]*x0 + A[8]*x1;
-    break;
+            REAL x0,x1;
+            x0=x[0];x1=x[1];
+            y[0] -= A[4]*x0 + A[5]*x1;
+            y[1] -= A[7]*x0 + A[8]*x1;
+            break;
         }
     case 5:
         {
-    REAL x0,x1,x2,x3;
-    x0=x[0];x1=x[1];x2=x[2];x3=x[3];
-    y[0] -=  A[6]*x0 +  A[7]*x1 +  A[8]*x2 +  A[9]*x3;
-    y[1] -= A[11]*x0 + A[12]*x1 + A[13]*x2 + A[14]*x3;
-    y[2] -= A[16]*x0 + A[17]*x1 + A[18]*x2 + A[19]*x3;
-    y[3] -= A[21]*x0 + A[22]*x1 + A[23]*x2 + A[24]*x3;
-    break;
+            REAL x0,x1,x2,x3;
+            x0=x[0];x1=x[1];x2=x[2];x3=x[3];
+            y[0] -=  A[6]*x0 +  A[7]*x1 +  A[8]*x2 +  A[9]*x3;
+            y[1] -= A[11]*x0 + A[12]*x1 + A[13]*x2 + A[14]*x3;
+            y[2] -= A[16]*x0 + A[17]*x1 + A[18]*x2 + A[19]*x3;
+            y[3] -= A[21]*x0 + A[22]*x1 + A[23]*x2 + A[24]*x3;
+            break;
         }
     case 7:
         {
-    REAL x0,x1,x2,x3,x4,x5;
-    x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];
-    y[0] -=  A[8]*x0 +  A[9]*x1 + A[10]*x2 + A[11]*x3 + A[12]*x4 + A[13]*x5;
-    y[1] -= A[15]*x0 + A[16]*x1 + A[17]*x2 + A[18]*x3 + A[19]*x4 + A[20]*x5;
-    y[2] -= A[22]*x0 + A[23]*x1 + A[24]*x2 + A[25]*x3 + A[26]*x4 + A[27]*x5;
-    y[3] -= A[29]*x0 + A[30]*x1 + A[31]*x2 + A[32]*x3 + A[33]*x4 + A[34]*x5;
-    y[4] -= A[36]*x0 + A[37]*x1 + A[38]*x2 + A[39]*x3 + A[40]*x4 + A[41]*x5;
-    y[5] -= A[43]*x0 + A[44]*x1 + A[45]*x2 + A[46]*x3 + A[47]*x4 + A[48]*x5;
-    break;
+            REAL x0,x1,x2,x3,x4,x5;
+            x0=x[0];x1=x[1];x2=x[2];x3=x[3];x4=x[4];x5=x[5];
+            y[0] -=  A[8]*x0 +  A[9]*x1 + A[10]*x2 + A[11]*x3 + A[12]*x4 + A[13]*x5;
+            y[1] -= A[15]*x0 + A[16]*x1 + A[17]*x2 + A[18]*x3 + A[19]*x4 + A[20]*x5;
+            y[2] -= A[22]*x0 + A[23]*x1 + A[24]*x2 + A[25]*x3 + A[26]*x4 + A[27]*x5;
+            y[3] -= A[29]*x0 + A[30]*x1 + A[31]*x2 + A[32]*x3 + A[33]*x4 + A[34]*x5;
+            y[4] -= A[36]*x0 + A[37]*x1 + A[38]*x2 + A[39]*x3 + A[40]*x4 + A[41]*x5;
+            y[5] -= A[43]*x0 + A[44]*x1 + A[45]*x2 + A[46]*x3 + A[47]*x4 + A[48]*x5;
+            break;
         }
     default: {
-    INT i,j,k;
+        INT i,j,k;
     
-    for (i = 1; i < n; i ++) 
-    {
-    k = i*n;
-    for (j = 1; j < n; j ++) 
-    {
-    y[i-1] -= A[k+j]*x[j-1];
-    }
-    }
-    break;
+        for (i = 1; i < n; i ++) 
+            {
+                k = i*n;
+                for (j = 1; j < n; j ++) 
+                    {
+                        y[i-1] -= A[k+j]*x[j-1];
+                    }
+            }
+        break;
     }
     }
     

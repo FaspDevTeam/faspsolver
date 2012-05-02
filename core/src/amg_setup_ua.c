@@ -13,7 +13,6 @@
 static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
 static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param * param);
 
-
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -68,7 +67,7 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
  *
  */
 SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl, 
-                                    AMG_param *param)
+                             AMG_param *param)
 {
     SHORT status=SUCCESS;
     
@@ -107,12 +106,11 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     
     setup_start = clock();
     
-    if (cycle_type == AMLI_CYCLE) 
-    {
-    param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
-    REAL lambda_max = 2.0;
-    REAL lambda_min = lambda_max/8;
-    fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
+    if (cycle_type == AMLI_CYCLE) {
+        param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
+        REAL lambda_max = 2.0;
+        REAL lambda_min = lambda_max/8;
+        fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
     }
     
     //each elvel stores the information of the number of aggregations
@@ -129,49 +127,49 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
     
     for (i=0; i<mgl->near_kernel_dim; ++i) {
-    mgl[0].near_kernel_basis[i] = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
-    for (j=0;j<m;++j) mgl[0].near_kernel_basis[i][j] = 1.0;
+        mgl[0].near_kernel_basis[i] = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
+        for (j=0;j<m;++j) mgl[0].near_kernel_basis[i][j] = 1.0;
     }
     
     // initialize ILU parameters
     mgl->ILU_levels = param->ILU_levels;
     ILU_param iluparam;
     if (param->ILU_levels>0) {
-    iluparam.print_level = param->print_level;
-    iluparam.ILU_lfil    = param->ILU_lfil;
-    iluparam.ILU_droptol = param->ILU_droptol;
-    iluparam.ILU_relax   = param->ILU_relax;
-    iluparam.ILU_type    = param->ILU_type;
+        iluparam.print_level = param->print_level;
+        iluparam.ILU_lfil    = param->ILU_lfil;
+        iluparam.ILU_droptol = param->ILU_droptol;
+        iluparam.ILU_relax   = param->ILU_relax;
+        iluparam.ILU_type    = param->ILU_type;
     }
     
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
     
-    while ((mgl[level].A.row>param->coarse_dof) && (level<max_levels-1))
-    {
+    while ((mgl[level].A.row>param->coarse_dof) && (level<max_levels-1)) {
+
 #if DEBUG_MODE
-    printf("### DEBUG: level = %5d  row = %14d  nnz = %16d\n",
+        printf("### DEBUG: level = %5d  row = %14d  nnz = %16d\n",
                level,mgl[level].A.row,mgl[level].A.nnz);
 #endif
-    /*-- setup ILU decomposition if necessary */
-    if (level<param->ILU_levels) fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
+        /*-- setup ILU decomposition if necessary */
+        if (level<param->ILU_levels) fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
     
-    /*-- Aggregation --*/
-    aggregation(&mgl[level].A, &vertices[level], param, level+1, &Neighbor[level], &num_aggregations[level]);
-    if (num_aggregations[level] * 4 > mgl[level].A.row) param->strong_coupled /=2.0; 
+        /*-- Aggregation --*/
+        aggregation(&mgl[level].A, &vertices[level], param, level+1, &Neighbor[level], &num_aggregations[level]);
+        if (num_aggregations[level] * 4 > mgl[level].A.row) param->strong_coupled /=2.0; 
     
-    /* -- Form Prolongation --*/      
-    form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1, num_aggregations[level]);
+        /* -- Form Prolongation --*/      
+        form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1, num_aggregations[level]);
     
-    /*-- Form resitriction --*/    
-    fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
+        /*-- Form resitriction --*/    
+        fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
     
-    /*-- Form coarse level stiffness matrix --*/    
-    fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
+        /*-- Form coarse level stiffness matrix --*/    
+        fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
     
-    fasp_dcsr_free(&Neighbor[level]);
-    fasp_ivec_free(&vertices[level]);
+        fasp_dcsr_free(&Neighbor[level]);
+        fasp_ivec_free(&vertices[level]);
     
         ++level;
         
@@ -185,10 +183,10 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     mgl[0].w = fasp_dvec_create(m);    
     
     for (level=1; level<max_levels; ++level) {
-    int    m = mgl[level].A.row;
-    mgl[level].num_levels = max_levels;     
-    mgl[level].b = fasp_dvec_create(m);
-    mgl[level].x = fasp_dvec_create(m);
+        int    m = mgl[level].A.row;
+        mgl[level].num_levels = max_levels;     
+        mgl[level].b = fasp_dvec_create(m);
+        mgl[level].x = fasp_dvec_create(m);
         
         if (cycle_type == NL_AMLI_CYCLE)  mgl[level].w = fasp_dvec_create(3*m);    
         else mgl[level].w = fasp_dvec_create(2*m);
@@ -205,10 +203,10 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 #endif
     
     if (print_level>PRINT_NONE) {
-    setup_end=clock();
-    setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
+        setup_end=clock();
+        setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
         print_amgcomplexity(mgl,print_level);
-    print_cputime("Unsmoothed Aggregation AMG setup",setupduration);
+        print_cputime("Unsmoothed Aggregation AMG setup",setupduration);
     }
     
     fasp_mem_free(vertices);
@@ -269,36 +267,36 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     mgl->ILU_levels = param->ILU_levels;
     ILU_param iluparam;
     if (param->ILU_levels>0) {
-    iluparam.print_level = param->print_level;
-    iluparam.ILU_lfil    = param->ILU_lfil;
-    iluparam.ILU_droptol = param->ILU_droptol;
-    iluparam.ILU_relax   = param->ILU_relax;
-    iluparam.ILU_type    = param->ILU_type;
+        iluparam.print_level = param->print_level;
+        iluparam.ILU_lfil    = param->ILU_lfil;
+        iluparam.ILU_droptol = param->ILU_droptol;
+        iluparam.ILU_relax   = param->ILU_relax;
+        iluparam.ILU_type    = param->ILU_type;
     }
     
-    while ((mgl[level].A.ROW>param->coarse_dof) && (level<max_levels-1))
-    {
-    /*-- setup ILU decomposition if necessary */
-    if (level<param->ILU_levels) fasp_ilu_dbsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
+    while ((mgl[level].A.ROW>param->coarse_dof) && (level<max_levels-1)) {
+
+        /*-- setup ILU decomposition if necessary */
+        if (level<param->ILU_levels) fasp_ilu_dbsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
     
-    /*-- Aggregation --*/
-    mgl[level].PP =  fasp_dbsr_getblk_dcsr(&mgl[level].A);  // use first block now, need to bechanged
-    aggregation(&mgl[level].PP, &vertices[level], param, level+1, &Neighbor[level], &num_aggregations[level]);
-    if (num_aggregations[level] * 4 > mgl[level].A.ROW) param->strong_coupled /=8.0; 
+        /*-- Aggregation --*/
+        mgl[level].PP =  fasp_dbsr_getblk_dcsr(&mgl[level].A);  // use first block now, need to bechanged
+        aggregation(&mgl[level].PP, &vertices[level], param, level+1, &Neighbor[level], &num_aggregations[level]);
+        if (num_aggregations[level] * 4 > mgl[level].A.ROW) param->strong_coupled /=8.0; 
     
-    /* -- Form Prolongation --*/      
-    form_tentative_p_bsr(&vertices[level], &mgl[level].P, &mgl[0], level+1, num_aggregations[level]);
+        /* -- Form Prolongation --*/      
+        form_tentative_p_bsr(&vertices[level], &mgl[level].P, &mgl[0], level+1, num_aggregations[level]);
     
-    /*-- Form resitriction --*/    
-    fasp_dbsr_trans(&mgl[level].P, &mgl[level].R);
+        /*-- Form resitriction --*/    
+        fasp_dbsr_trans(&mgl[level].P, &mgl[level].R);
         
-    /*-- Form coarse level stiffness matrix --*/    
-    fasp_blas_dbsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
+        /*-- Form coarse level stiffness matrix --*/    
+        fasp_blas_dbsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
     
-    fasp_dcsr_free(&Neighbor[level]);
-    fasp_ivec_free(&vertices[level]);
+        fasp_dcsr_free(&Neighbor[level]);
+        fasp_ivec_free(&vertices[level]);
     
-    ++level;
+        ++level;
     }
     
     // setup total level number and current level
@@ -306,11 +304,11 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     mgl[0].w = fasp_dvec_create(3*m*nb);    
     
     for (level=1; level<max_levels; ++level) {
-    int    m = mgl[level].A.ROW;
-    mgl[level].num_levels = max_levels;     
-    mgl[level].b = fasp_dvec_create(m*nb);
-    mgl[level].x = fasp_dvec_create(m*nb);
-    mgl[level].w = fasp_dvec_create(3*m*nb);    
+        int    m = mgl[level].A.ROW;
+        mgl[level].num_levels = max_levels;     
+        mgl[level].b = fasp_dvec_create(m*nb);
+        mgl[level].x = fasp_dvec_create(m*nb);
+        mgl[level].w = fasp_dvec_create(3*m*nb);    
     }
     
     mgl[max_levels-1].Ac = fasp_format_dbsr_dcsr(&mgl[max_levels-1].A);
@@ -325,28 +323,28 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
 #endif
     
     if (print_level>1) {
-    double gridcom=0.0, opcom=0.0;
+        double gridcom=0.0, opcom=0.0;
     
-    printf("-----------------------------------------------\n");
-    printf("  Level     Num of rows      Num of nonzeros\n");
-    printf("-----------------------------------------------\n");
-    for (level=0;level<max_levels;++level) {
-    printf("%5d  %14d  %16d\n",level,mgl[level].A.ROW,mgl[level].A.NNZ);
-    gridcom += mgl[level].A.ROW;
-    opcom += mgl[level].A.NNZ;
-    }
-    printf("-----------------------------------------------\n");
+        printf("-----------------------------------------------\n");
+        printf("  Level     Num of rows      Num of nonzeros\n");
+        printf("-----------------------------------------------\n");
+        for (level=0;level<max_levels;++level) {
+            printf("%5d  %14d  %16d\n",level,mgl[level].A.ROW,mgl[level].A.NNZ);
+            gridcom += mgl[level].A.ROW;
+            opcom += mgl[level].A.NNZ;
+        }
+        printf("-----------------------------------------------\n");
     
-    gridcom /= mgl[0].A.ROW;
-    opcom /= mgl[0].A.NNZ;
-    printf("(BSR) Unsmoothed Aggregation AMG grid complexity = %f\n", gridcom);
-    printf("(BSR) Unsmoothed Aggregation AMG operator complexity = %f\n", opcom);
+        gridcom /= mgl[0].A.ROW;
+        opcom /= mgl[0].A.NNZ;
+        printf("(BSR) Unsmoothed Aggregation AMG grid complexity = %f\n", gridcom);
+        printf("(BSR) Unsmoothed Aggregation AMG operator complexity = %f\n", opcom);
     }
     
     if (print_level>PRINT_NONE) {
-    setup_end=clock();
-    setupduration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
-    print_cputime("(BSR) Unsmoothed Aggregation AMG setup",setupduration);
+        setup_end=clock();
+        setupduration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
+        print_cputime("(BSR) Unsmoothed Aggregation AMG setup",setupduration);
     }
     
     fasp_mem_free(vertices);

@@ -57,19 +57,19 @@ void fasp_dcsr_plot (const dCSRmat *A,
     
     memset(map, 0x0F, size * size);
     for (i = 0; i < size; ++i) {
-    for (j = A->IA[i]; j < A->IA[i+1]; ++j) {
-    if (A->JA[j]<size) {
-    k = size*i + A->JA[j];
-    if (map[k] != 0x0F)
-    map[k] = 0x0F;
-    else if (A->val[j] > 1e-20)
-    map[k] = 0x09; /* bright blue */
-    else if (A->val[j] < -1e-20)
-    map[k] = 0x0C; /* bright red */
-    else
-    map[k] = 0x06; /* brown */
-    } // end if
-    } // end for j
+        for (j = A->IA[i]; j < A->IA[i+1]; ++j) {
+            if (A->JA[j]<size) {
+                k = size*i + A->JA[j];
+                if (map[k] != 0x0F)
+                    map[k] = 0x0F;
+                else if (A->val[j] > 1e-20)
+                    map[k] = 0x09; /* bright blue */
+                else if (A->val[j] < -1e-20)
+                    map[k] = 0x0C; /* bright red */
+                else
+                    map[k] = 0x06; /* brown */
+            } // end if
+        } // end for j
     } // end for i
     
     write_bmp16(filename, size, size, map);
@@ -98,10 +98,9 @@ void fasp_grid2d_plot (pgrid2d pg,
     
     sprintf(buf,"Grid_ref_level%d.eps",level);
     datei = fopen(buf,"w");
-    if(datei==NULL)
-    {
-    printf("Opening file %s fails!\n", buf);
-    return;
+    if(datei==NULL) {
+        printf("Opening file %s fails!\n", buf);
+        return;
     }
     
     fprintf(datei, "%%!PS-Adobe-2.0-2.0 EPSF-2.0\n");
@@ -118,49 +117,49 @@ void fasp_grid2d_plot (pgrid2d pg,
     fprintf(datei, "/l{lineto} def\n");
     
     fprintf(datei,"b\n");
-    for(i=0; i<pg->triangles; ++i){
-    xc = (pg->p[pg->t[i][0]][0]+pg->p[pg->t[i][1]][0]+pg->p[pg->t[i][2]][0])*150.0;
-    yc = (pg->p[pg->t[i][0]][1]+pg->p[pg->t[i][1]][1]+pg->p[pg->t[i][2]][1])*150.0;
+    for(i=0; i<pg->triangles; ++i) {
+        xc = (pg->p[pg->t[i][0]][0]+pg->p[pg->t[i][1]][0]+pg->p[pg->t[i][2]][0])*150.0;
+        yc = (pg->p[pg->t[i][0]][1]+pg->p[pg->t[i][1]][1]+pg->p[pg->t[i][2]][1])*150.0;
     
-    xmid = pg->p[pg->t[i][0]][0]*450.0;
-    ymid = pg->p[pg->t[i][0]][1]*450.0;
-    fprintf(datei,"%.1f %.1f m ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
-    xmid = pg->p[pg->t[i][1]][0]*450.0;
-    ymid = pg->p[pg->t[i][1]][1]*450.0;
-    fprintf(datei,"%.1f %.1f l ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
-    xmid = pg->p[pg->t[i][2]][0]*450.0;
-    ymid = pg->p[pg->t[i][2]][1]*450.0;
-    fprintf(datei,"%.1f %.1f l ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
-    fprintf(datei,"cs\n");
+        xmid = pg->p[pg->t[i][0]][0]*450.0;
+        ymid = pg->p[pg->t[i][0]][1]*450.0;
+        fprintf(datei,"%.1f %.1f m ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
+        xmid = pg->p[pg->t[i][1]][0]*450.0;
+        ymid = pg->p[pg->t[i][1]][1]*450.0;
+        fprintf(datei,"%.1f %.1f l ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
+        xmid = pg->p[pg->t[i][2]][0]*450.0;
+        ymid = pg->p[pg->t[i][2]][1]*450.0;
+        fprintf(datei,"%.1f %.1f l ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
+        fprintf(datei,"cs\n");
     }
     fprintf(datei,"r\n");
-    for(i=0; i<pg->vertices; ++i){
-    xmid = pg->p[i][0]*450.0;
-    ymid = pg->p[i][1]*450.0;
-    fprintf(datei,"%.1f %.1f m ",xmid,ymid);
-    fprintf(datei,"(%d) show\n ",i);
+    for(i=0; i<pg->vertices; ++i) {
+        xmid = pg->p[i][0]*450.0;
+        ymid = pg->p[i][1]*450.0;
+        fprintf(datei,"%.1f %.1f m ",xmid,ymid);
+        fprintf(datei,"(%d) show\n ",i);
     }
     fprintf(datei,"u\n");
-    for(i=0; i<pg->edges; ++i){
-    xmid = 0.5*(pg->p[pg->e[i][0]][0]+pg->p[pg->e[i][1]][0])*450.0;
-    ymid = 0.5*(pg->p[pg->e[i][0]][1]+pg->p[pg->e[i][1]][1])*450.0;
-    fprintf(datei,"%.1f %.1f m ",xmid,ymid);
-    fprintf(datei,"(%d) show\n ",i);
+    for(i=0; i<pg->edges; ++i) {
+        xmid = 0.5*(pg->p[pg->e[i][0]][0]+pg->p[pg->e[i][1]][0])*450.0;
+        ymid = 0.5*(pg->p[pg->e[i][0]][1]+pg->p[pg->e[i][1]][1])*450.0;
+        fprintf(datei,"%.1f %.1f m ",xmid,ymid);
+        fprintf(datei,"(%d) show\n ",i);
     
-    xmid = pg->p[pg->e[i][0]][0]*450.0;
-    ymid = pg->p[pg->e[i][0]][1]*450.0;
-    fprintf(datei,"%.1f %.1f m ",xmid,ymid);
-    xmid = pg->p[pg->e[i][1]][0]*450.0;
-    ymid = pg->p[pg->e[i][1]][1]*450.0;
-    fprintf(datei,"%.1f %.1f l ",xmid,ymid);
-    fprintf(datei,"cs\n");
+        xmid = pg->p[pg->e[i][0]][0]*450.0;
+        ymid = pg->p[pg->e[i][0]][1]*450.0;
+        fprintf(datei,"%.1f %.1f m ",xmid,ymid);
+        xmid = pg->p[pg->e[i][1]][0]*450.0;
+        ymid = pg->p[pg->e[i][1]][1]*450.0;
+        fprintf(datei,"%.1f %.1f l ",xmid,ymid);
+        fprintf(datei,"cs\n");
     }
     fprintf(datei,"d\n");
-    for(i=0; i<pg->triangles; ++i){
-    xmid = (pg->p[pg->t[i][0]][0]+pg->p[pg->t[i][1]][0]+pg->p[pg->t[i][2]][0])*150.0;
-    ymid = (pg->p[pg->t[i][0]][1]+pg->p[pg->t[i][1]][1]+pg->p[pg->t[i][2]][1])*150.0;
-    fprintf(datei,"%.1f %.1f m ",xmid,ymid);
-    fprintf(datei,"(%d) show\n ",i);
+    for(i=0; i<pg->triangles; ++i) {
+        xmid = (pg->p[pg->t[i][0]][0]+pg->p[pg->t[i][1]][0]+pg->p[pg->t[i][2]][0])*150.0;
+        ymid = (pg->p[pg->t[i][0]][1]+pg->p[pg->t[i][1]][1]+pg->p[pg->t[i][2]][1])*150.0;
+        fprintf(datei,"%.1f %.1f m ",xmid,ymid);
+        fprintf(datei,"(%d) show\n ",i);
     }
     fprintf(datei, "showpage\n");
     fclose(datei);    
@@ -287,16 +286,16 @@ static int write_bmp16(const char *fname, int m, int n, const char map[])
     int offset, bmsize, i, j, b, ret = 1;
     
     if (!(1 <= m && m <= 32767))
-    printf("### ERROR: write_bmp16 invalid height %d\n", m);
+        printf("### ERROR: write_bmp16 invalid height %d\n", m);
     
     if (!(1 <= n && n <= 32767))
-    printf("### ERROR: write_bmp16 invalid width %d\n", n);
+        printf("### ERROR: write_bmp16 invalid width %d\n", n);
     
     fp = fopen(fname, "wb");
-    if (fp == NULL)
-    {  printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
-    ret = 0;
-    goto fini;
+    if (fp == NULL) {  
+        printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
+        ret = 0;
+        goto fini;
     }
     offset = 14 + 40 + 16 * 4;
     bmsize = (4 * n + 31) / 32;
@@ -339,18 +338,18 @@ static int write_bmp16(const char *fname, int m, int n, const char map[])
     /* pixel data bits */
     b = 0;
     for (i = m - 1; i >= 0; i--) {  
-    for (j = 0; j < ((n + 7) / 8) * 8; ++j) {  
-    b <<= 4;
-    b |= (j < n ? map[i * n + j] & 15 : 0);
-    if (j & 1) put_byte(fp, b);
-    }
+        for (j = 0; j < ((n + 7) / 8) * 8; ++j) {  
+            b <<= 4;
+            b |= (j < n ? map[i * n + j] & 15 : 0);
+            if (j & 1) put_byte(fp, b);
+        }
     }
     fflush(fp);
     if (ferror(fp)) {  
-    printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
-    ret = 0;
+        printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
+        ret = 0;
     }
-fini: if (fp != NULL) fclose(fp);
+ fini: if (fp != NULL) fclose(fp);
     return ret;
 }
 

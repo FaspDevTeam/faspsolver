@@ -56,17 +56,17 @@ void fasp_solver_famg (dCSRmat *A,
     
     // AMG setup phase
     switch (amg_type) {
-        case CLASSIC_AMG: // Classical AMG setup phase
-            if ( (status=fasp_amg_setup_rs(mgl, param))<0 ) goto FINISHED;
-            break;
-        case SA_AMG: // Smoothed Aggregation AMG setup phase
-            if ( (status=fasp_amg_setup_sa(mgl, param))<0 ) goto FINISHED;
-            break;
-        case UA_AMG: // Unsmoothed Aggregation AMG setup phase
-            if ( (status=fasp_amg_setup_ua(mgl, param))<0 ) goto FINISHED;
-            break;
-        default: // Unknown setup type
-            status=ERROR_SOLVER_TYPE; goto FINISHED;
+    case CLASSIC_AMG: // Classical AMG setup phase
+        if ( (status=fasp_amg_setup_rs(mgl, param))<0 ) goto FINISHED;
+        break;
+    case SA_AMG: // Smoothed Aggregation AMG setup phase
+        if ( (status=fasp_amg_setup_sa(mgl, param))<0 ) goto FINISHED;
+        break;
+    case UA_AMG: // Unsmoothed Aggregation AMG setup phase
+        if ( (status=fasp_amg_setup_ua(mgl, param))<0 ) goto FINISHED;
+        break;
+    default: // Unknown setup type
+        status=ERROR_SOLVER_TYPE; goto FINISHED;
     }
         
     // FMG solve phase
@@ -77,12 +77,12 @@ void fasp_solver_famg (dCSRmat *A,
     
     // print out CPU time when needed
     if (print_level>PRINT_NONE) {
-    FMG_end=clock();    
-    FMG_duration = (double)(FMG_end - FMG_start)/(double)(CLOCKS_PER_SEC);    
-    printf("FMG totally costs %f seconds.\n", FMG_duration);
+        FMG_end=clock();    
+        FMG_duration = (double)(FMG_end - FMG_start)/(double)(CLOCKS_PER_SEC);    
+        printf("FMG totally costs %f seconds.\n", FMG_duration);
     }    
     
-FINISHED:    
+ FINISHED:    
     fasp_amg_data_free(mgl);    // clean-up memory    
     
     fasp_chkerr(status, "fasp_solver_famg");

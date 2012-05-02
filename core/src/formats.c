@@ -83,7 +83,7 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
     B->val=(REAL *)fasp_mem_calloc(nnz,sizeof(REAL));
     
     for (i=0;i<m;++i) {
-    for (j=A->IA[i];j<A->IA[i+1];++j) B->I[N2C(j)]=C2N(i);
+        for (j=A->IA[i];j<A->IA[i+1];++j) B->I[N2C(j)]=C2N(i);
     }
     
     memcpy(B->J,  A->JA, nnz*sizeof(INT));
@@ -146,31 +146,26 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
     
     // Generate the 'ia' array
     ia[0] = 0;
-    for (ROW = 0; ROW < ngrid; ++ROW)
-    {
-    block = 1; // diagonal block
-    for (BAND = 0; BAND < nband; ++BAND)
-    {
-    width = offsets[BAND];
-    COL   = ROW + width;
-    if (width < 0)
-    {
-    if (COL >= 0) ++block;
-    }
-    else
-    {
-    if (COL < ngrid) ++block;
-    }
-    } // end for BAND
+    for (ROW = 0; ROW < ngrid; ++ROW) {
+        block = 1; // diagonal block
+        for (BAND = 0; BAND < nband; ++BAND) {
+            width = offsets[BAND];
+            COL   = ROW + width;
+            if (width < 0) {
+                if (COL >= 0) ++block;
+            }
+            else {
+                if (COL < ngrid) ++block;
+            }
+        } // end for BAND
     
-    ncb = nc*block;
-    row_start = ROW*nc;
+        ncb = nc*block;
+        row_start = ROW*nc;
     
-    for (i = 0; i < nc; i ++)
-    {
-    row = row_start + i; 
-    ia[row+1] = ia[row] + ncb;
-    }
+        for (i = 0; i < nc; i ++) {
+            row = row_start + i; 
+            ia[row+1] = ia[row] + ncb;
+        }
     } // end for ROW
     
     // allocate for 'ja' and 'a' arrays
@@ -179,100 +174,85 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
     a = (REAL *)fasp_mem_calloc(glo_nnz,sizeof(REAL));
     
     // Generate the 'ja' and 'a' arrays at the same time 
-    for (ROW = 0; ROW < ngrid; ++ROW)
-    {
-    row_start = ROW*nc;    
-    val_L_start = ROW*nc2;
+    for (ROW = 0; ROW < ngrid; ++ROW) {
+        row_start = ROW*nc;    
+        val_L_start = ROW*nc2;
     
-    // deal with the diagonal band
-    for (i = 0; i < nc; i ++)
-    {
-    nci   = nc*i;
-    row   = row_start + i;
-    start = ia[row];
-    for (j = 0; j < nc; j ++)
-    {
-    pos     = start + j;
-    ja[pos] = row_start + j;
-    a[pos]  = diag[val_L_start+nci+j];
-    }
-    }
-    block = 1;
+        // deal with the diagonal band
+        for (i = 0; i < nc; i ++) {
+            nci   = nc*i;
+            row   = row_start + i;
+            start = ia[row];
+            for (j = 0; j < nc; j ++) {
+                pos     = start + j;
+                ja[pos] = row_start + j;
+                a[pos]  = diag[val_L_start+nci+j];
+            }
+        }
+        block = 1;
     
-    // deal with the off-diagonal bands
-    for (BAND = 0; BAND < nband; ++BAND)
-    {
-    width     = offsets[BAND];
-    COL       = ROW + width;
-    ncb       = nc*block;
-    col_start = COL*nc;
+        // deal with the off-diagonal bands
+        for (BAND = 0; BAND < nband; ++BAND) {
+            width     = offsets[BAND];
+            COL       = ROW + width;
+            ncb       = nc*block;
+            col_start = COL*nc;
     
-    if (width < 0)
-    {
-    if (COL >= 0)
-    {
-    val_R_start = COL*nc2;
-    for (i = 0; i < nc; i ++)
-    {
-    nci = nc*i;
-    row = row_start + i;
-    start = ia[row];
-    for (j = 0 ; j < nc; j ++)
-    {
-    pos     = start + ncb + j;
-    ja[pos] = col_start + j;
-    a[pos]  = offdiag[BAND][val_R_start+nci+j];
-    }
-    }
-    ++block;
-    }
-    }
-    else
-    {
-    if (COL < ngrid)
-    {
-    for (i = 0; i < nc; i ++)
-    {
-    nci = nc*i;
-    row = row_start + i;
-    start = ia[row];
-    for (j = 0; j < nc; j ++)
-    {
-    pos = start + ncb + j;
-    ja[pos] = col_start + j;
-    a[pos]  = offdiag[BAND][val_L_start+nci+j];
-    }
-    }
-    ++block;
-    }
-    }
-    }
+            if (width < 0) {
+                if (COL >= 0) {
+                    val_R_start = COL*nc2;
+                    for (i = 0; i < nc; i ++) {
+                        nci = nc*i;
+                        row = row_start + i;
+                        start = ia[row];
+                        for (j = 0 ; j < nc; j ++) {
+                            pos     = start + ncb + j;
+                            ja[pos] = col_start + j;
+                            a[pos]  = offdiag[BAND][val_R_start+nci+j];
+                        }
+                    }
+                    ++block;
+                }
+            }
+            else {
+                if (COL < ngrid) {
+                    for (i = 0; i < nc; i ++) {
+                        nci = nc*i;
+                        row = row_start + i;
+                        start = ia[row];
+                        for (j = 0; j < nc; j ++) {
+                            pos = start + ncb + j;
+                            ja[pos] = col_start + j;
+                            a[pos]  = offdiag[BAND][val_L_start+nci+j];
+                        }
+                    }
+                    ++block;
+                }
+            }
+        }
     }
     
     // Reordering in such manner that every diagonal element 
     // is firstly stored in the corresponding row
-    if (nc > 1)
-    {
-    for (ROW = 0; ROW < ngrid; ++ROW)
-    {
-    row_start = ROW*nc;
-    for (j = 1; j < nc; j ++)
-    {
-    row   = row_start + j;
-    start = ia[row];
-    pos   = start + j;
+    if (nc > 1) {
+        for (ROW = 0; ROW < ngrid; ++ROW) {
+            row_start = ROW*nc;
+            for (j = 1; j < nc; j ++) {
+                row   = row_start + j;
+                start = ia[row];
+                pos   = start + j;
     
-    // swap in 'ja'
-    tmp_col   = ja[start];
-    ja[start] = ja[pos];
-    ja[pos]   = tmp_col;
+                // swap in 'ja'
+                tmp_col   = ja[start];
+                ja[start] = ja[pos];
+                ja[pos]   = tmp_col;
     
-    // swap in 'a'
-    tmp_val  = a[start];
-    a[start] = a[pos];
-    a[pos]   = tmp_val;            
-    }
-    }
+                // swap in 'a'
+                tmp_val  = a[start];
+                a[start] = a[pos];
+                a[pos]   = tmp_val;            
+            }
+        }
     } 
     
     /* fill all the members of B */   
@@ -325,25 +305,25 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
     A.IA[0]=0;
     for (i=0;i<mb;++i) {
     
-    for (ir=row[i];ir<row[i+1];ir++) {
+        for (ir=row[i];ir<row[i+1];ir++) {
     
-    for (length=j=0;j<nb;++j) {
-    ij=i*nb+j; blockptrij=blockptr[ij];
-    if (blockptrij->nnz>0) {
-    start=A.IA[ir]+length;
-    irmrow=ir-row[i]; irmrow1=irmrow+1;
-    ilength=blockptrij->IA[irmrow1]-blockptrij->IA[irmrow];
-    if (ilength>0) {
-    memcpy(&(A.val[start]),&(blockptrij->val[blockptrij->IA[irmrow]]),ilength*sizeof(REAL));
-    memcpy(&(A.JA[start]), &(blockptrij->JA[blockptrij->IA[irmrow]]), ilength*sizeof(INT));
-    for (i1=0;i1<ilength;i1++) A.JA[start+i1]+=col[j];
-    length+=ilength;     
-    }
-    }
-    } // end for j
+            for (length=j=0;j<nb;++j) {
+                ij=i*nb+j; blockptrij=blockptr[ij];
+                if (blockptrij->nnz>0) {
+                    start=A.IA[ir]+length;
+                    irmrow=ir-row[i]; irmrow1=irmrow+1;
+                    ilength=blockptrij->IA[irmrow1]-blockptrij->IA[irmrow];
+                    if (ilength>0) {
+                        memcpy(&(A.val[start]),&(blockptrij->val[blockptrij->IA[irmrow]]),ilength*sizeof(REAL));
+                        memcpy(&(A.JA[start]), &(blockptrij->JA[blockptrij->IA[irmrow]]), ilength*sizeof(INT));
+                        for (i1=0;i1<ilength;i1++) A.JA[start+i1]+=col[j];
+                        length+=ilength;     
+                    }
+                }
+            } // end for j
     
-    A.IA[ir+1]=A.IA[ir]+length;        
-    } // end for ir
+            A.IA[ir+1]=A.IA[ir]+length;        
+        } // end for ir
     
     } // end for i
     
@@ -392,28 +372,24 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
     //-----------------------------------------
     
     maxnzrow = 0;
-    for (i = 0; i < num_rows; i ++)
-    {
-    nzrow[i] = IA[i+1] - IA[i];
-    if (nzrow[i] > maxnzrow) 
-    {
-    maxnzrow = nzrow[i];
-    }
+    for (i = 0; i < num_rows; i ++) {
+        nzrow[i] = IA[i+1] - IA[i];
+        if (nzrow[i] > maxnzrow) {
+            maxnzrow = nzrow[i];
+        }
     }
     /* generate 'counter' */
     counter = (INT *)fasp_mem_calloc(maxnzrow + 1, sizeof(INT));
-    for (i = 0; i < num_rows; i ++)
-    {
-    counter[nzrow[i]] ++;
+    for (i = 0; i < num_rows; i ++) {
+        counter[nzrow[i]] ++;
     }
     
     //--------------------------------------------
     //  Determine 'dif'
     //-------------------------------------------- 
     
-    for (dif = 0, i = 0; i < maxnzrow + 1; i ++)
-    {
-    if (counter[i] > 0) dif ++;
+    for (dif = 0, i = 0; i < maxnzrow + 1; i ++) {
+        if (counter[i] > 0) dif ++;
     }
     
     //--------------------------------------------
@@ -424,31 +400,27 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
     invnzdif = (INT *)fasp_mem_calloc(maxnzrow + 1, sizeof(INT));
     rowstart = (INT *)fasp_mem_calloc(dif + 1, sizeof(INT));
     rowstart[0] = 0;
-    for (cnt = 0, i = 0; i < maxnzrow + 1; i ++)
-    {
-    if (counter[i] > 0) 
-    {
-    nzdifnum[cnt] = i;
-    invnzdif[i] = cnt;
-    rowstart[cnt+1] = rowstart[cnt] + counter[i];
-    cnt ++;
-    }
+    for (cnt = 0, i = 0; i < maxnzrow + 1; i ++) {
+        if (counter[i] > 0) {
+            nzdifnum[cnt] = i;
+            invnzdif[i] = cnt;
+            rowstart[cnt+1] = rowstart[cnt] + counter[i];
+            cnt ++;
+        }
     }
     
     //--------------------------------------------
     //  Generate the 'rowindex'
     //-------------------------------------------- 
     
-    for (i = 0; i < num_rows; i ++)
-    {
-    j = invnzdif[nzrow[i]];
-    rowindex[rowstart[j]] = i;
-    rowstart[j] ++;
+    for (i = 0; i < num_rows; i ++) {
+        j = invnzdif[nzrow[i]];
+        rowindex[rowstart[j]] = i;
+        rowstart[j] ++;
     }
     /* recover 'rowstart' */
-    for (i = dif; i > 0; i --)
-    {
-    rowstart[i] = rowstart[i-1];
+    for (i = dif; i > 0; i --) {
+        rowstart[i] = rowstart[i-1];
     }
     rowstart[0] = 0;
     
@@ -456,15 +428,13 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
     //  Generate the 'data' and 'ja'
     //-------------------------------------------- 
     
-    for (cnt = 0, i = 0; i < num_rows; i ++)
-    {
-    k = rowindex[i];
-    for (j = IA[k]; j < IA[k+1]; j ++)
-    {
-    data[cnt] = DATA[j];
-    ja[cnt] = JA[j];
-    cnt ++;
-    }
+    for (cnt = 0, i = 0; i < num_rows; i ++) {
+        k = rowindex[i];
+        for (j = IA[k]; j < IA[k+1]; j ++) {
+            data[cnt] = DATA[j];
+            ja[cnt] = JA[j];
+            cnt ++;
+        }
     }
     
     //------------------------------------------------------------
@@ -546,15 +516,13 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     // ia[i],i=1:rowA, will be the number of nonzeros of the (i-1)-th row.
     //--------------------------------------------------------------------------
     
-    for (i = 0; i < ROW; ++i)
-    {
-    rowstart = i*nb + 1;
-    colblock = IA[i+1] - IA[i];
-    nzperrow = colblock*nb;
-    for (j = 0; j < nb; ++j)
-    {
-    ia[rowstart+j] = nzperrow;
-    }
+    for (i = 0; i < ROW; ++i) {
+        rowstart = i*nb + 1;
+        colblock = IA[i+1] - IA[i];
+        nzperrow = colblock*nb;
+        for (j = 0; j < nb; ++j) {
+            ia[rowstart+j] = nzperrow;
+        }
     }
     
     //-----------------------------------------------------
@@ -562,79 +530,73 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     //-----------------------------------------------------
     
     ia[0] = 0;
-    for (i = 1; i <= rowA; ++i)
-    {
-    ia[i] += ia[i-1];
+    for (i = 1; i <= rowA; ++i) {
+        ia[i] += ia[i-1];
     }
     
     //-----------------------------------------------------
     // Generate 'ja' and 'a' for CSR of A
     //-----------------------------------------------------
     
-    switch (storage_manner)
-    {
+    switch (storage_manner) {
+
     case 0: // each non-zero block elements are stored in row-major order
-    {
-    for (i = 0; i < ROW; ++i)
-    {
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    j = JA[k];
-    rowstart = i*nb;
-    colstart = j*nb;
-    vp = &val[k*jump];
-    for (mr = 0; mr < nb; mr ++)
-    {
-    ap  = &a[ia[rowstart]];
-    jap = &ja[ia[rowstart]];
-    for (mc = 0; mc < nb; mc ++)
-    {
-    *ap = *vp;
-    *jap = colstart + mc;
-    vp ++; ap ++; jap ++;
-    }
-    ia[rowstart] += nb;
-    rowstart ++;
-    }
-    }
-    }
-    }
-    break;
+        {
+            for (i = 0; i < ROW; ++i)
+                {
+                    for (k = IA[i]; k < IA[i+1]; ++k)
+                        {
+                            j = JA[k];
+                            rowstart = i*nb;
+                            colstart = j*nb;
+                            vp = &val[k*jump];
+                            for (mr = 0; mr < nb; mr ++)
+                                {
+                                    ap  = &a[ia[rowstart]];
+                                    jap = &ja[ia[rowstart]];
+                                    for (mc = 0; mc < nb; mc ++)
+                                        {
+                                            *ap = *vp;
+                                            *jap = colstart + mc;
+                                            vp ++; ap ++; jap ++;
+                                        }
+                                    ia[rowstart] += nb;
+                                    rowstart ++;
+                                }
+                        }
+                }
+        }
+        break;
             
     case 1: // each non-zero block elements are stored in column-major order
-    {
-    for (i = 0; i < ROW; ++i)
-    {
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    j = JA[k];
-    rowstart0 = i*nb;
-    colstart0 = j*nb;
-    vp = &val[k*jump];
-    for (mc = 0; mc < nb; mc ++)
-    {
-    rowstart = rowstart0;
-    colstart = colstart0 + mc;
-    for (mr = 0; mr < nb; mr ++)
-    {
-    a[ia[rowstart]] = *vp; 
-    ja[ia[rowstart]] = colstart; 
-    vp ++; ia[rowstart]++; rowstart++;
-    }
-    }
-    }
-    }
-    }
-    break;
+        {
+            for (i = 0; i < ROW; ++i) {
+                for (k = IA[i]; k < IA[i+1]; ++k) {
+                    j = JA[k];
+                    rowstart0 = i*nb;
+                    colstart0 = j*nb;
+                    vp = &val[k*jump];
+                    for (mc = 0; mc < nb; mc ++) {
+                        rowstart = rowstart0;
+                        colstart = colstart0 + mc;
+                        for (mr = 0; mr < nb; mr ++) {
+                            a[ia[rowstart]] = *vp; 
+                            ja[ia[rowstart]] = colstart; 
+                            vp ++; ia[rowstart]++; rowstart++;
+                        }
+                    }
+                }
+            }
+        }
+        break;
     }
     
     //-----------------------------------------------------
     // Map back the real 'ia' for CSR of A
     //-----------------------------------------------------
     
-    for (i = rowA; i > 0; i --)
-    {
-    ia[i] = ia[i-1];
+    for (i = rowA; i > 0; i --) {
+        ia[i] = ia[i-1];
     }
     ia[0] = 0; 
     
@@ -667,11 +629,11 @@ SHORT fasp_format_dcsr_dbsr(dBSRmat *A, int nb, dCSRmat *B)
     nCol=B->col/nb;
     Is=(INT *)fasp_mem_calloc(nRow, sizeof(INT));
     Js=(INT *)fasp_mem_calloc(nCol, sizeof(INT));
-    for(i=0;i<nRow;i++){
-    Is[i]=i*nb;
+    for(i=0;i<nRow;i++) {
+        Is[i]=i*nb;
     }
-    for(i=0;i<nCol;i++){
-    Js[i]=i*nb;
+    for(i=0;i<nCol;i++) {
+        Js[i]=i*nb;
     }
     status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
     
@@ -684,40 +646,39 @@ SHORT fasp_format_dcsr_dbsr(dBSRmat *A, int nb, dCSRmat *B)
     A->IA=(INT*)fasp_mem_calloc(A->ROW+1, sizeof(INT));
     A->JA=(INT*)fasp_mem_calloc(A->NNZ, sizeof(INT));
     A->val=(REAL*)fasp_mem_calloc(A->NNZ*nb*nb, sizeof(REAL));
-    for(i=0;i<tmpMat.row+1;i++){
-    A->IA[i]=tmpMat.IA[i];
+    for(i=0;i<tmpMat.row+1;i++) {
+        A->IA[i]=tmpMat.IA[i];
     }
-    for(i=0;i<tmpMat.nnz;i++){
-    A->JA[i]=tmpMat.JA[i];
+    for(i=0;i<tmpMat.nnz;i++) {
+        A->JA[i]=tmpMat.JA[i];
     }
-    for(i=0;i<tmpMat.nnz;i++){
-    A->val[i*nb*nb]=tmpMat.val[i];
+    for(i=0;i<tmpMat.nnz;i++) {
+        A->val[i*nb*nb]=tmpMat.val[i];
     }
     fasp_mem_free(tmpMat.IA);
     fasp_mem_free(tmpMat.JA);
     fasp_mem_free(tmpMat.val);
         
     for(i=0;i<nb;i++)
-    for(j=0;j<nb;j++){
-    num=i*nb+j;
-    if(i==0&&j==0){
-    }
-    else{
-    for(k=0;k<nRow;k++){
-    Is[k]=k*nb+i;
-    }
-    for(k=0;k<nCol;k++){
-    Js[k]=k*nb+j;
-    }
-    status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
-    for(k=0;k<tmpMat.nnz;k++){
-    A->val[k*nb*nb+num]=tmpMat.val[k];
-    }    
-    }
-    }
+        for(j=0;j<nb;j++) {
+            num=i*nb+j;
+            if(i==0&&j==0) {
+            }
+            else {
+                for(k=0;k<nRow;k++) {
+                    Is[k]=k*nb+i;
+                }
+                for(k=0;k<nCol;k++) {
+                    Js[k]=k*nb+j;
+                }
+                status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+                for(k=0;k<tmpMat.nnz;k++) {
+                    A->val[k*nb*nb+num]=tmpMat.val[k];
+                }    
+            }
+        }
     
     return status;
-    
 }
 
 
@@ -755,9 +716,8 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
     
     // compute NNZ
     NNZ = ngrid;
-    for (i = 0; i < nband; ++i)
-    {
-    NNZ += (ngrid - abs(offsets[i]));
+    for (i = 0; i < nband; ++i) {
+        NNZ += (ngrid - abs(offsets[i]));
     } 
     
     // Create and Initialize a dBSRmat 'A'
@@ -768,68 +728,56 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
     
     // Generate 'IA'
     for (i = 1; i < ngridplus1; ++i) IA[i] = 1; // take the diagonal blocks into account
-    for (i = 0; i < nband; ++i)
-    {
-    k = offsets[i];
-    if (k < 0)
-    {
-    for (j = -k+1; j < ngridplus1; ++j)
-    {
-    IA[j] ++;
-    }
-    }
-    else
-    {
-    m = ngridplus1 - k;
-    for (j = 1; j < m; ++j)
-    {
-    IA[j] ++;
-    }
-    }
+    for (i = 0; i < nband; ++i) {
+        k = offsets[i];
+        if (k < 0) {
+            for (j = -k+1; j < ngridplus1; ++j) {
+                IA[j] ++;
+            }
+        }
+        else {
+            m = ngridplus1 - k;
+            for (j = 1; j < m; ++j)
+                {
+                    IA[j] ++;
+                }
+        }
     }
     IA[0] = 0;
-    for (i = 1; i < ngridplus1; ++i)
-    {
-    IA[i] += IA[i-1];
+    for (i = 1; i < ngridplus1; ++i) {
+        IA[i] += IA[i-1];
     }
     
     // Generate 'JA' and 'val' at the same time
-    for (i = 0 ; i < ngrid; ++i)
-    {
-    memcpy(val + IA[i]*nc2, diag + i*nc2, nc2*sizeof(REAL));
-    JA[IA[i]] = i;
-    IA[i] ++;
+    for (i = 0 ; i < ngrid; ++i) {
+        memcpy(val + IA[i]*nc2, diag + i*nc2, nc2*sizeof(REAL));
+        JA[IA[i]] = i;
+        IA[i] ++;
     }
     
-    for (i = 0; i < nband; ++i)
-    {
-    k = offsets[i];
-    if (k < 0)
-    {
-    for (j = -k; j < ngrid; ++j)
-    {
-    m = j + k;
-    memcpy(val+IA[j]*nc2, offdiag[i]+m*nc2, nc2*sizeof(REAL));
-    JA[IA[j]] = m;
-    IA[j] ++;
-    }
-    }
-    else
-    {
-    m = ngrid - k;
-    for (j = 0; j < m; ++j)
-    {
-    memcpy(val + IA[j]*nc2, offdiag[i] + j*nc2, nc2*sizeof(REAL));
-    JA[IA[j]] = k + j;
-    IA[j] ++;
-    }
-    }
+    for (i = 0; i < nband; ++i) {
+        k = offsets[i];
+        if (k < 0) {
+            for (j = -k; j < ngrid; ++j) {
+                m = j + k;
+                memcpy(val+IA[j]*nc2, offdiag[i]+m*nc2, nc2*sizeof(REAL));
+                JA[IA[j]] = m;
+                IA[j] ++;
+            }
+        }
+        else {
+            m = ngrid - k;
+            for (j = 0; j < m; ++j) {
+                memcpy(val + IA[j]*nc2, offdiag[i] + j*nc2, nc2*sizeof(REAL));
+                JA[IA[j]] = k + j;
+                IA[j] ++;
+            }
+        }
     }
     
     // Map back the real 'IA' for BSR of A
-    for (i = ngrid; i > 0; i --)
-    {
-    IA[i] = IA[i-1];
+    for (i = ngrid; i > 0; i --) {
+        IA[i] = IA[i-1];
     }
     IA[0] = 0; 
     
@@ -883,28 +831,24 @@ dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
     A->val = valA;
     
     cnt = 0;
-    for (i = 0; i < ROW; ++i)
-    {
-    inb = i*nb;
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    j  = JA[k];
-    pt = &val[k*nb2];
-    row_start = inb; 
-    col_start = j*nb;
-    for (mr = 0; mr < nb; mr ++)
-    {
-    for (mc = 0; mc < nb; mc ++)
-    {
-    rowA[cnt] = row_start;
-    colA[cnt] = col_start + mc;
-    valA[cnt] = (*pt);
-    pt ++;
-    cnt ++;
-    }
-    row_start ++;
-    }
-    }
+    for (i = 0; i < ROW; ++i) {
+        inb = i*nb;
+        for (k = IA[i]; k < IA[i+1]; ++k) {
+            j  = JA[k];
+            pt = &val[k*nb2];
+            row_start = inb; 
+            col_start = j*nb;
+            for (mr = 0; mr < nb; mr ++) {
+                for (mc = 0; mc < nb; mc ++) {
+                    rowA[cnt] = row_start;
+                    colA[cnt] = col_start + mc;
+                    valA[cnt] = (*pt);
+                    pt ++;
+                    cnt ++;
+                }
+                row_start ++;
+            }
+        }
     }
     
     return (A);

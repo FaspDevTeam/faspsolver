@@ -111,25 +111,25 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
 #endif    
     
     if (ierr!=0) {
-    printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
-    status = ERROR_SOLVER_ILUSETUP;
-    goto FINISHED;
+        printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
     }
     
     if (iwk<nzlu) {
-    printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
-    status = ERROR_SOLVER_ILUSETUP;
-    goto FINISHED;
+        printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
     }
     
     if (print_level>PRINT_NONE) {
-    setup_end=clock();
-    setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
+        setup_end=clock();
+        setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
     
-    printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);    
+        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);    
     }
     
-FINISHED:     
+ FINISHED:     
     fasp_mem_free(ijlu);
     fasp_mem_free(uptr);
     
@@ -191,249 +191,229 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
     
     case 1:
     
-    for (k = 0; k < n; ++k)
-    {
+        for (k = 0; k < n; ++k) {
     
-    for (indj = jlu[k]; indj < jlu[k+1]; ++indj){
-    colptrs[jlu[indj]] = indj;
-    ibstart=indj*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
-    }
+            for (indj = jlu[k]; indj < jlu[k+1]; ++indj) {
+                colptrs[jlu[indj]] = indj;
+                ibstart=indj*nb2;
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
+            }
     
-    colptrs[k] =  k;
+            colptrs[k] =  k;
     
-    for (indja = A->IA[k]; indja < A->IA[k+1]; ++indja){
-    ijaj = A->JA[indja];
-    ibstart=colptrs[ijaj]*nb2;
-    ibstart1=indja*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
-    }
+            for (indja = A->IA[k]; indja < A->IA[k+1]; ++indja) {
+                ijaj = A->JA[indja];
+                ibstart=colptrs[ijaj]*nb2;
+                ibstart1=indja*nb2;
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
+            }
     
-    for (indj = jlu[k]; indj < uptr[k]; ++indj)
-    {
+            for (indj = jlu[k]; indj < uptr[k]; ++indj) {
     
-    jluj = jlu[indj];
+                jluj = jlu[indj];
     
-    luval[indj] = luval[indj]*luval[jluj];
-    mult[0] = luval[indj];
+                luval[indj] = luval[indj]*luval[jluj];
+                mult[0] = luval[indj];
     
-    for (inds = uptr[jluj]; inds < jlu[jluj+1]; ++inds)
-    {
-    jlus = jlu[inds];
-    if (colptrs[jlus] != 0)
-    luval[colptrs[jlus]] = luval[colptrs[jlus]] - mult[0]*luval[inds];
-    }
+                for (inds = uptr[jluj]; inds < jlu[jluj+1]; ++inds) {
+                    jlus = jlu[inds];
+                    if (colptrs[jlus] != 0)
+                        luval[colptrs[jlus]] = luval[colptrs[jlus]] - mult[0]*luval[inds];
+                }
     
-    }
-    for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
+            }
+            for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
     
-    colptrs[k] =  0;
-    luval[k] = 1.0/luval[k];
-    } 
-    break;
+            colptrs[k] =  0;
+            luval[k] = 1.0/luval[k];
+        } 
+        break;
     
     case 3:
     
-    for (k = 0; k < n; ++k)
-    {
+        for (k = 0; k < n; ++k) {
     
-    for (indj = jlu[k]; indj < jlu[k+1]; ++indj){
-    colptrs[jlu[indj]] = indj;
-    ibstart=indj*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
-    }
+            for (indj = jlu[k]; indj < jlu[k+1]; ++indj) {
+                colptrs[jlu[indj]] = indj;
+                ibstart=indj*nb2;
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
+            }
     
-    colptrs[k] =  k;
+            colptrs[k] =  k;
     
-    for (indja = A->IA[k]; indja < A->IA[k+1]; ++indja){
-    ijaj = A->JA[indja];
-    ibstart=colptrs[ijaj]*nb2;
-    ibstart1=indja*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
-    }
+            for (indja = A->IA[k]; indja < A->IA[k+1]; ++indja) {
+                ijaj = A->JA[indja];
+                ibstart=colptrs[ijaj]*nb2;
+                ibstart1=indja*nb2;
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
+            }
     
-    for (indj = jlu[k]; indj < uptr[k]; ++indj)
-    {
-    jluj = jlu[indj];
+            for (indj = jlu[k]; indj < uptr[k]; ++indj) {
+                jluj = jlu[indj];
     
-    ibstart=indj*nb2;
-    fasp_blas_smat_mul_nc3(&(luval[ibstart]),&(luval[jluj*nb2]),mult);
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib]=mult[ib];
+                ibstart=indj*nb2;
+                fasp_blas_smat_mul_nc3(&(luval[ibstart]),&(luval[jluj*nb2]),mult);
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib]=mult[ib];
     
-    for (inds = uptr[jluj]; inds < jlu[jluj+1]; ++inds)
-    {
-    jlus = jlu[inds];
-    if (colptrs[jlus] != 0)
-    {
-    fasp_blas_smat_mul_nc3(mult,&(luval[inds*nb2]),mult1);
-    ibstart=colptrs[jlus]*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib]-=mult1[ib];
-    }
-    }
+                for (inds = uptr[jluj]; inds < jlu[jluj+1]; ++inds) {
+                    jlus = jlu[inds];
+                    if (colptrs[jlus] != 0) {
+                        fasp_blas_smat_mul_nc3(mult,&(luval[inds*nb2]),mult1);
+                        ibstart=colptrs[jlus]*nb2;
+                        for (ib=0;ib<nb2;++ib) luval[ibstart+ib]-=mult1[ib];
+                    }
+                }
     
-    }
-    for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
+            }
+            for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
     
-    colptrs[k] =  0;
+            colptrs[k] =  0;
     
-    fasp_blas_smat_inv_nc3(&(luval[k*nb2]));
+            fasp_blas_smat_inv_nc3(&(luval[k*nb2]));
     
-    }
-    break;
+        }
+        break;
     
     case 5:
     
-    for (k = 0; k < n; ++k)
-    {
+        for (k = 0; k < n; ++k) {
     
-    for (indj = jlu[k]; indj < jlu[k+1]; ++indj){
-    colptrs[jlu[indj]] = indj;
-    ibstart=indj*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
-    }
+            for (indj = jlu[k]; indj < jlu[k+1]; ++indj) {
+                colptrs[jlu[indj]] = indj;
+                ibstart=indj*nb2;
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
+            }
     
-    colptrs[k] =  k;
+            colptrs[k] =  k;
     
-    for (indja = A->IA[k]; indja < A->IA[k+1]; ++indja){
-    ijaj = A->JA[indja];
-    ibstart=colptrs[ijaj]*nb2;
-    ibstart1=indja*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
-    }
+            for (indja = A->IA[k]; indja < A->IA[k+1]; ++indja) {
+                ijaj = A->JA[indja];
+                ibstart=colptrs[ijaj]*nb2;
+                ibstart1=indja*nb2;
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
+            }
     
-    for (indj = jlu[k]; indj < uptr[k]; ++indj)
-    {
-    jluj = jlu[indj];
+            for (indj = jlu[k]; indj < uptr[k]; ++indj) {
+                jluj = jlu[indj];
     
-    ibstart=indj*nb2;
-    fasp_blas_smat_mul_nc5(&(luval[ibstart]),&(luval[jluj*nb2]),mult);
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib]=mult[ib];
+                ibstart=indj*nb2;
+                fasp_blas_smat_mul_nc5(&(luval[ibstart]),&(luval[jluj*nb2]),mult);
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib]=mult[ib];
     
-    for (inds = uptr[jluj]; inds < jlu[jluj+1]; ++inds)
-    {
-    jlus = jlu[inds];
-    if (colptrs[jlus] != 0)
-    {
-    fasp_blas_smat_mul_nc5(mult,&(luval[inds*nb2]),mult1);
-    ibstart=colptrs[jlus]*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib]-=mult1[ib];
-    }
-    }
+                for (inds = uptr[jluj]; inds < jlu[jluj+1]; ++inds) {
+                    jlus = jlu[inds];
+                    if (colptrs[jlus] != 0) {
+                        fasp_blas_smat_mul_nc5(mult,&(luval[inds*nb2]),mult1);
+                        ibstart=colptrs[jlus]*nb2;
+                        for (ib=0;ib<nb2;++ib) luval[ibstart+ib]-=mult1[ib];
+                    }
+                }
     
-    }
-    for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
+            }
+            for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
     
-    colptrs[k] =  0;
+            colptrs[k] =  0;
     
-    fasp_blas_smat_inv_nc5(&(luval[k*nb2]));
-    }
-    break;
+            fasp_blas_smat_inv_nc5(&(luval[k*nb2]));
+        }
+        break;
     
     case 7:
     
-    for (k = 0; k < n; ++k)
-    {
+        for (k = 0; k < n; ++k) {
     
-    for (indj = jlu[k]; indj < jlu[k+1]; ++indj){
-    colptrs[jlu[indj]] = indj;
-    ibstart=indj*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
-    }
+            for (indj = jlu[k]; indj < jlu[k+1]; ++indj) {
+                colptrs[jlu[indj]] = indj;
+                ibstart=indj*nb2;
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
+            }
     
-    colptrs[k] =  k;
+            colptrs[k] =  k;
     
-    for (indja = A->IA[k]; indja < A->IA[k+1]; ++indja){
-    ijaj = A->JA[indja];
-    ibstart=colptrs[ijaj]*nb2;
-    ibstart1=indja*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
-    }
+            for (indja = A->IA[k]; indja < A->IA[k+1]; ++indja) {
+                ijaj = A->JA[indja];
+                ibstart=colptrs[ijaj]*nb2;
+                ibstart1=indja*nb2;
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
+            }
     
-    for (indj = jlu[k]; indj < uptr[k]; ++indj)
-    {
-    jluj = jlu[indj];
+            for (indj = jlu[k]; indj < uptr[k]; ++indj) {
+                jluj = jlu[indj];
     
-    ibstart=indj*nb2;
-    fasp_blas_smat_mul_nc7(&(luval[ibstart]),&(luval[jluj*nb2]),mult);
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib]=mult[ib];
+                ibstart=indj*nb2;
+                fasp_blas_smat_mul_nc7(&(luval[ibstart]),&(luval[jluj*nb2]),mult);
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib]=mult[ib];
     
-    for (inds = uptr[jluj]; inds < jlu[jluj+1]; ++inds)
-    {
-    jlus = jlu[inds];
-    if (colptrs[jlus] != 0)
-    {
-    fasp_blas_smat_mul_nc7(mult,&(luval[inds*nb2]),mult1);
-    ibstart=colptrs[jlus]*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib]-=mult1[ib];
-    }
-    }
+                for (inds = uptr[jluj]; inds < jlu[jluj+1]; ++inds) {
+                    jlus = jlu[inds];
+                    if (colptrs[jlus] != 0) {
+                        fasp_blas_smat_mul_nc7(mult,&(luval[inds*nb2]),mult1);
+                        ibstart=colptrs[jlus]*nb2;
+                        for (ib=0;ib<nb2;++ib) luval[ibstart+ib]-=mult1[ib];
+                    }
+                }
     
-    }
-    for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
+            }
+            for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
     
-    colptrs[k] =  0;
+            colptrs[k] =  0;
     
-    fasp_blas_smat_inv(&(luval[k*nb2]),nb);
-    }
-    break;
+            fasp_blas_smat_inv(&(luval[k*nb2]),nb);
+        }
+        break;
     
     default:
     
-    for (k=0;k<n;k++)
-    {
+        for (k=0;k<n;k++) {
     
-    for (indj = jlu[k];indj<jlu[k+1];++indj){
-    colptrs[jlu[indj]] = indj;
-    ibstart=indj*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
-    }
+            for (indj = jlu[k];indj<jlu[k+1];++indj) {
+                colptrs[jlu[indj]] = indj;
+                ibstart=indj*nb2;
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
+            }
     
-    colptrs[k] =  k;
+            colptrs[k] =  k;
     
-    for (indja = A->IA[k]; indja < A->IA[k+1];indja++){
-    ijaj = A->JA[indja];
-    ibstart=colptrs[ijaj]*nb2;
-    ibstart1=indja*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
-    }
+            for (indja = A->IA[k]; indja < A->IA[k+1];indja++) {
+                ijaj = A->JA[indja];
+                ibstart=colptrs[ijaj]*nb2;
+                ibstart1=indja*nb2;
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
+            }
     
-    for (indj = jlu[k]; indj < uptr[k]; ++indj)
-    {
-    jluj = jlu[indj];
+            for (indj = jlu[k]; indj < uptr[k]; ++indj) {
+                jluj = jlu[indj];
     
-    ibstart=indj*nb2;
-    fasp_blas_smat_mul(&(luval[ibstart]),&(luval[jluj*nb2]),mult,nb);
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib]=mult[ib];
+                ibstart=indj*nb2;
+                fasp_blas_smat_mul(&(luval[ibstart]),&(luval[jluj*nb2]),mult,nb);
+                for (ib=0;ib<nb2;++ib) luval[ibstart+ib]=mult[ib];
     
-    for (inds = uptr[jluj]; inds < jlu[jluj+1]; inds++)
-    {
-    jlus = jlu[inds];
-    if (colptrs[jlus] != 0)
-    {
-    fasp_blas_smat_mul(mult,&(luval[inds*nb2]),mult1,nb);
-    ibstart=colptrs[jlus]*nb2;
-    for (ib=0;ib<nb2;++ib) luval[ibstart+ib]-=mult1[ib];
-    }
-    }
+                for (inds = uptr[jluj]; inds < jlu[jluj+1]; inds++) {
+                    jlus = jlu[inds];
+                    if (colptrs[jlus] != 0) {
+                        fasp_blas_smat_mul(mult,&(luval[inds*nb2]),mult1,nb);
+                        ibstart=colptrs[jlus]*nb2;
+                        for (ib=0;ib<nb2;++ib) luval[ibstart+ib]-=mult1[ib];
+                    }
+                }
     
-    }
+            }
     
-    for (indj = jlu[k];indj<jlu[k+1];++indj)
-    colptrs[jlu[indj]] = 0;
+            for (indj = jlu[k];indj<jlu[k+1];++indj)
+                colptrs[jlu[indj]] = 0;
     
-    colptrs[k] =  0;
+            colptrs[k] =  0;
     
-    fasp_blas_smat_inv(&(luval[k*nb2]),nb);
+            fasp_blas_smat_inv(&(luval[k*nb2]),nb);
     
-    }
+        }
     }
     
     fasp_mem_free(colptrs);
     fasp_mem_free(mult);
     fasp_mem_free(mult1);
     
-    return status;
-    
+    return status;    
 }
 
 /*---------------------------------*/

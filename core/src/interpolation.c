@@ -51,15 +51,15 @@ SHORT fasp_amg_interp (dCSRmat *A,
     
     /*-- Standard interpolation operator --*/
     switch (interp_type) {
-        case INTERP_REG: // Standard interpolation
-    interp_RS(A, vertices, P, param); 
-            break;            
+    case INTERP_REG: // Standard interpolation
+        interp_RS(A, vertices, P, param); 
+        break;            
     case INTERP_ENG_MIN_C: // Energy min interpolation in C
-    interp_EM(A, vertices, P, param);
-    break;
+        interp_EM(A, vertices, P, param);
+        break;
     default:
-            fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
-            break;
+        fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
+        break;
     }
     
 #if DEBUG_MODE
@@ -104,10 +104,10 @@ static SHORT invden (INT nn,
     indic=fasp_smat_lu_decomp(mat,pivot,nn);
     
     for (i=0;i<nn;++i) {
-    for (j=0;j<nn;++j) rhs[j]=0.;
-    rhs[i]=1.;
-    fasp_smat_lu_solve(mat,rhs,pivot,sol,nn);
-    for (j=0;j<nn;++j) invmat[i*nn+j]=sol[j];
+        for (j=0;j<nn;++j) rhs[j]=0.;
+        rhs[i]=1.;
+        fasp_smat_lu_solve(mat,rhs,pivot,sol,nn);
+        for (j=0;j<nn;++j) invmat[i*nn+j]=sol[j];
     }
     
     fasp_mem_free(pivot);
@@ -146,21 +146,21 @@ static SHORT get_block (dCSRmat *A,
     unsigned INT i, j, k, iloc;
     
     for ( i=0; i<m; ++i ) {
-    for ( j=0; j<n; ++j ) {
-    Aloc[i*n+j] = 0.0; // initialize Aloc
-    }    
+        for ( j=0; j<n; ++j ) {
+            Aloc[i*n+j] = 0.0; // initialize Aloc
+        }    
     }
     
     for ( j=0; j<n; ++j ) {
-    mask[N2C(cols[j])] = j; // initialize mask, mask stores C indices 0,1,... 
+        mask[N2C(cols[j])] = j; // initialize mask, mask stores C indices 0,1,... 
     }    
     
     for ( i=0; i<m; ++i ) {
-    iloc=N2C(rows[i]);
-    for ( k=A->IA[iloc]; k<A->IA[iloc+1]; ++k ) {
-    j = N2C(A->JA[N2C(k)]);
-    if (mask[j]>=0) Aloc[i*n+mask[j]]=A->val[k];
-    } /* end for k */
+        iloc=N2C(rows[i]);
+        for ( k=A->IA[iloc]; k<A->IA[iloc+1]; ++k ) {
+            j = N2C(A->JA[N2C(k)]);
+            if (mask[j]>=0) Aloc[i*n+mask[j]]=A->val[k];
+        } /* end for k */
     } /* enf for i */
     
     for ( j=0; j<n; ++j ) mask[N2C(cols[j])] = -1; // re-initialize mask
@@ -229,11 +229,11 @@ static SHORT getinonefull (INT **mat,
     
     tniz=lengths[1];
     for (i=0;i<mm;++i) {
-    for (j=0;j<mm;++j) {    
-    mat[0][tniz+i*mm+j]=Ii[i];
-    mat[1][tniz+i*mm+j]=Ii[j];
-    matval[0][tniz+i*mm+j]=ima[i*mm+j];
-    }
+        for (j=0;j<mm;++j) {    
+            mat[0][tniz+i*mm+j]=Ii[i];
+            mat[1][tniz+i*mm+j]=Ii[j];
+            matval[0][tniz+i*mm+j]=ima[i*mm+j];
+        }
     }
     lengths[1]=tniz+mm*mm;
     
@@ -275,11 +275,10 @@ static SHORT orderone (INT **mat,
     cols[0]=(INT *)fasp_mem_calloc(tniz,sizeof(INT));    
     vals[0]=(REAL *)fasp_mem_calloc(tniz,sizeof(REAL));
     
-    for (i=0;i<tniz;++i) 
-    {
-    rows[0][i]=mat[0][i];
-    cols[0][i]=mat[1][i];
-    vals[0][i]=matval[0][i];
+    for (i=0;i<tniz;++i) {
+        rows[0][i]=mat[0][i];
+        cols[0][i]=mat[1][i];
+        vals[0][i]=matval[0][i];
     }
     
     rows[1]=(INT *)fasp_mem_calloc(tniz,sizeof(INT));    
@@ -288,13 +287,12 @@ static SHORT orderone (INT **mat,
     
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
-    //    all the nonzeros with same col are gathering together
+    // all the nonzeros with same col are gathering together
     
-    for (i=0;i<tniz;++i)
-    {
-    rows[0][i]=rows[1][i];
-    cols[0][i]=cols[1][i];
-    vals[0][i]=vals[1][i];
+    for (i=0;i<tniz;++i) {
+        rows[0][i]=rows[1][i];
+        cols[0][i]=cols[1][i];
+        vals[0][i]=vals[1][i];
     }
     tnizs[1]=nns[0];
     nns[0]=nns[1];
@@ -302,13 +300,12 @@ static SHORT orderone (INT **mat,
     tnizs[1]=tnizs[0];
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
-    //    all the nozeros with same col and row are gathering togheter    
+    // all the nozeros with same col and row are gathering togheter    
     
-    for (i=0;i<tniz;++i)
-    {
-    rows[0][i]=rows[1][i];
-    cols[0][i]=cols[1][i];
-    vals[0][i]=vals[1][i];
+    for (i=0;i<tniz;++i) {
+        rows[0][i]=rows[1][i];
+        cols[0][i]=cols[1][i];
+        vals[0][i]=vals[1][i];
     }
     tnizs[1]=nns[0];
     nns[0]=nns[1];
@@ -317,22 +314,21 @@ static SHORT orderone (INT **mat,
     
     tniz=tnizs[0];
     for (i=0;i<tniz-1;++i) {
-    if (rows[0][i]==rows[0][i+1]&&cols[0][i]==cols[0][i+1]) {
-    vals[0][i+1]+=vals[0][i];
-    rows[0][i]=nns[0];
-    cols[0][i]=nns[1];
-    }
+        if (rows[0][i]==rows[0][i+1]&&cols[0][i]==cols[0][i+1]) {
+            vals[0][i+1]+=vals[0][i];
+            rows[0][i]=nns[0];
+            cols[0][i]=nns[1];
+        }
     }
     nns[0]=nns[0]+1;
     nns[1]=nns[1]+1;
     
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
-    for (i=0;i<tniz;++i)
-    {
-    rows[0][i]=rows[1][i];
-    cols[0][i]=cols[1][i];
-    vals[0][i]=vals[1][i];
+    for (i=0;i<tniz;++i) {
+        rows[0][i]=rows[1][i];
+        cols[0][i]=cols[1][i];
+        vals[0][i]=vals[1][i];
     }
     tnizs[1]=nns[0];
     nns[0]=nns[1];
@@ -341,11 +337,10 @@ static SHORT orderone (INT **mat,
     
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
-    for (i=0;i<tniz;++i)
-    {
-    rows[0][i]=rows[1][i];
-    cols[0][i]=cols[1][i];
-    vals[0][i]=vals[1][i];
+    for (i=0;i<tniz;++i) {
+        rows[0][i]=rows[1][i];
+        cols[0][i]=cols[1][i];
+        vals[0][i]=vals[1][i];
     }
     tnizs[1]=nns[0];
     nns[0]=nns[1];
@@ -354,13 +349,12 @@ static SHORT orderone (INT **mat,
     
     tniz=0;
     for (i=0;i<tnizs[0];++i)
-    if (rows[0][i]<nns[0]-1) tniz++;
+        if (rows[0][i]<nns[0]-1) tniz++;
     
-    for (i=0;i<tniz;++i)
-    {
-    mat[0][i]=rows[0][i];
-    mat[1][i]=cols[0][i];
-    matval[0][i]=vals[0][i];
+    for (i=0;i<tniz;++i) {
+        mat[0][i]=rows[0][i];
+        mat[1][i]=cols[0][i];
+        matval[0][i]=vals[0][i];
     }
     nns[0]=nns[0]-1;
     nns[1]=nns[1]-1;
@@ -458,7 +452,7 @@ static SHORT genintval (dCSRmat *A,
     imas=(REAL **)fasp_mem_calloc(nc,sizeof(REAL *));
     
     for (i=0;i<nc;++i) {
-    imas[i]=(REAL *)fasp_mem_calloc(iz[i]*iz[i],sizeof(REAL));
+        imas[i]=(REAL *)fasp_mem_calloc(iz[i]*iz[i],sizeof(REAL));
     }
     
     mat=(INT **)fasp_mem_calloc(2,sizeof(INT *));
@@ -471,24 +465,24 @@ static SHORT genintval (dCSRmat *A,
     
     for (i=0;i<nc;++i) {    
     
-    mm=iz[i]; 
-    Ii=(INT *)fasp_mem_realloc(Ii,mm*sizeof(INT));
+        mm=iz[i]; 
+        Ii=(INT *)fasp_mem_realloc(Ii,mm*sizeof(INT));
     
-    for (j=0;j<mm;++j) Ii[j]=itmat[1][izs[i]+j];
+        for (j=0;j<mm;++j) Ii[j]=itmat[1][izs[i]+j];
     
-    ima=(REAL *)fasp_mem_realloc(ima,mm*mm*sizeof(REAL));
+        ima=(REAL *)fasp_mem_realloc(ima,mm*mm*sizeof(REAL));
     
-    gentisquare_nomass(A,mm,Ii,ima,mask);
+        gentisquare_nomass(A,mm,Ii,ima,mask);
     
-    getinonefull(mat,matval,lengths,mm,Ii,ima);
+        getinonefull(mat,matval,lengths,mm,Ii,ima);
     
-    for (j=0;j<mm*mm;++j) imas[i][j]=ima[j];
+        for (j=0;j<mm*mm;++j) imas[i][j]=ima[j];
     }
     
     for (i=0;i<numiso;++i) {
-    mat[0][sum+i]=isol[i];
-    mat[1][sum+i]=isol[i];
-    matval[0][sum+i]=1.0;
+        mat[0][sum+i]=isol[i];
+        mat[1][sum+i]=isol[i];
+        matval[0][sum+i]=1.0;
     }
     
     lengths[0]=nf;
@@ -527,25 +521,23 @@ static SHORT genintval (dCSRmat *A,
     
     fasp_solver_dcsr_krylov_diag(&T,&rhs,&sol,&itparam);
     
-    for (i=0;i<nc;++i)
-    {
-    mm=iz[i];
+    for (i=0;i<nc;++i) {
+        mm=iz[i];
     
-    ima=(REAL *)fasp_mem_realloc(ima,mm*mm*sizeof(REAL));
+        ima=(REAL *)fasp_mem_realloc(ima,mm*mm*sizeof(REAL));
     
-    pex=(REAL *)fasp_mem_realloc(pex,mm*sizeof(REAL));
+        pex=(REAL *)fasp_mem_realloc(pex,mm*sizeof(REAL));
     
-    Ii=(INT *)fasp_mem_realloc(Ii,mm*sizeof(INT));
+        Ii=(INT *)fasp_mem_realloc(Ii,mm*sizeof(INT));
     
-    for (j=0;j<mm;++j) Ii[j]=itmat[1][izs[i]+j];
+        for (j=0;j<mm;++j) Ii[j]=itmat[1][izs[i]+j];
     
-    for (j=0;j<mm*mm;++j) ima[j]=imas[i][j];
+        for (j=0;j<mm*mm;++j) ima[j]=imas[i][j];
     
-    for (k=0;k<mm;++k)
-    {
-    for(pex[k]=j=0;j<mm;++j) pex[k]+=ima[k*mm+j]*sol.val[Ii[j]];
-    }
-    for (j=0;j<mm;++j) itmatval[0][izs[i]+j]=pex[j];
+        for (k=0;k<mm;++k) {
+            for (pex[k]=j=0;j<mm;++j) pex[k]+=ima[k*mm+j]*sol.val[Ii[j]];
+        }
+        for (j=0;j<mm;++j) itmatval[0][izs[i]+j]=pex[j];
     
     }
     
@@ -601,14 +593,14 @@ static SHORT getiteval (dCSRmat *A,
     
     numiso=0;
     for (i=0;i<nf;++i) {
-    if (it->IA[i]==it->IA[i+1]) {
-    isol[numiso]=i;
-    numiso++;
-    }
+        if (it->IA[i]==it->IA[i+1]) {
+            isol[numiso]=i;
+            numiso++;
+        }
     }
     
     for (i=0;i<nf;++i) {
-    for (j=it->IA[i];j<it->IA[i+1];++j) itmat[0][j]=i;
+        for (j=it->IA[i];j<it->IA[i+1];++j) itmat[0][j]=i;
     }
     
     for (j=0;j<ittniz;++j) itmat[1][j]=it->JA[j];
@@ -619,11 +611,10 @@ static SHORT getiteval (dCSRmat *A,
     cols[0]=(INT *)fasp_mem_calloc(ittniz,sizeof(INT));    
     vals[0]=(REAL *)fasp_mem_calloc(ittniz,sizeof(REAL));
     
-    for (i=0;i<ittniz;++i)
-    {
-    rows[0][i]=itmat[0][i];
-    cols[0][i]=itmat[1][i];
-    vals[0][i]=itmat[0][i];
+    for (i=0;i<ittniz;++i) {
+        rows[0][i]=itmat[0][i];
+        cols[0][i]=itmat[1][i];
+        vals[0][i]=itmat[0][i];
     }
     
     nns[0]=nf;
@@ -635,19 +626,17 @@ static SHORT getiteval (dCSRmat *A,
     vals[1]=(REAL *)fasp_mem_calloc(ittniz,sizeof(REAL));
     
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
-    for (i=0;i<ittniz;++i)
-    {
-    itmat[0][i]=rows[1][i];
-    itmat[1][i]=cols[1][i];
-    itmatval[0][i]=vals[1][i];
+    for (i=0;i<ittniz;++i) {
+        itmat[0][i]=rows[1][i];
+        itmat[1][i]=cols[1][i];
+        itmatval[0][i]=vals[1][i];
     }
     indic=genintval(A,itmat,itmatval,ittniz,isol,numiso,nf,nc);
     
-    for (i=0;i<ittniz;++i)
-    {
-    rows[0][i]=itmat[0][i];
-    cols[0][i]=itmat[1][i];
-    vals[0][i]=itmatval[0][i];
+    for (i=0;i<ittniz;++i) {
+        rows[0][i]=itmat[0][i];
+        cols[0][i]=itmat[1][i];
+        vals[0][i]=itmatval[0][i];
     }
     nns[0]=nc;
     nns[1]=nf;
@@ -699,15 +688,15 @@ static void interp_EM (dCSRmat *A,
     INT *CoarseIndex=(INT*)fasp_mem_calloc(vertices->row,sizeof(INT));
     
     for (index=i=0;i<vertices->row;++i) {
-    if (vec[i]==1) {
-    CoarseIndex[i]=index;
-    index++;
-    }
+        if (vec[i]==1) {
+            CoarseIndex[i]=index;
+            index++;
+        }
     }
     
     for (i=0;i<P->nnz;++i) {
-    j=P->JA[i];
-    P->JA[i]=CoarseIndex[j];
+        j=P->JA[i];
+        P->JA[i]=CoarseIndex[j];
     }
     
     // clean up memory
@@ -754,121 +743,101 @@ static void interp_RS (dCSRmat *A,
     dCSRmat P=fasp_dcsr_create(Ptr->row,Ptr->col,Ptr->nnz);
     
     /** step 1: Find first the structure IA of P */
-    memcpy(P.IA,Ptr->IA,(P.row+1)*sizeof(INT));     //for(i=0;i<=P.row;++i) P.IA[i]=Ptr->IA[i];
+    memcpy(P.IA,Ptr->IA,(P.row+1)*sizeof(INT));     //for (i=0;i<=P.row;++i) P.IA[i]=Ptr->IA[i];
     
     /** step 2: Find the structure JA of P */
-    memcpy(P.JA,Ptr->JA,P.nnz*sizeof(INT));     //for(i=0;i<P.nnz;++i) P.JA[i]=Ptr->JA[i];
+    memcpy(P.JA,Ptr->JA,P.nnz*sizeof(INT));     //for (i=0;i<P.nnz;++i) P.JA[i]=Ptr->JA[i];
     
     /** step 3: Fill the data of P */
-    for(i=0;i<A->row;++i)
-    {
-    begin_row=A->IA[i]; end_row=A->IA[i+1]-1;    
+    for (i=0;i<A->row;++i) {
+        begin_row=A->IA[i]; end_row=A->IA[i+1]-1;    
     
-    for(diagindex=begin_row;diagindex<=end_row;diagindex++) {
-    if (A->JA[diagindex]==i) {
-    aii=A->val[diagindex];
-    break;
-    }
-    }
+        for (diagindex=begin_row;diagindex<=end_row;diagindex++) {
+            if (A->JA[diagindex]==i) {
+                aii=A->val[diagindex];
+                break;
+            }
+        }
     
-    if(vec[i]==0)  // if node i is on fine grid 
-    {
-    amN=0, amP=0, apN=0, apP=0,  countPplus=0;
+        if (vec[i]==0) { // if node i is on fine grid 
+
+            amN=0, amP=0, apN=0, apP=0, countPplus=0;
     
-    for(j=begin_row;j<=end_row;++j)
-    {
-    if(j==diagindex) continue;
+            for (j=begin_row;j<=end_row;++j) {
+                if (j==diagindex) continue;
     
-    for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
-    if(Ptr->JA[k]==A->JA[j]) break;
-    }
+                for (k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
+                    if (Ptr->JA[k]==A->JA[j]) break;
+                }
     
-    if(A->val[j]>0) {
-    apN+=A->val[j];
-    if(k<Ptr->IA[i+1]) {
-    apP+=A->val[j];
-    countPplus++;
-    }
-    }
-    else
-    {
-    amN+=A->val[j];
-    if(k<Ptr->IA[i+1]) {
-    amP+=A->val[j];
-    }
-    }
-    } // j
+                if (A->val[j]>0) {
+                    apN+=A->val[j];
+                    if (k<Ptr->IA[i+1]) {
+                        apP+=A->val[j];
+                        countPplus++;
+                    }
+                }
+                else {
+                    amN+=A->val[j];
+                    if (k<Ptr->IA[i+1]) {
+                        amP+=A->val[j];
+                    }
+                }
+            } // j
     
-    alpha=amN/amP;
-    if(countPplus>0) {
-    beta=apN/apP;
-    }
-    else {
-    beta=0;
-    aii+=apN;
-    }
+            alpha=amN/amP;
+            if (countPplus>0) {
+                beta=apN/apP;
+            }
+            else {
+                beta=0;
+                aii+=apN;
+            }
     
-    for(j=P.IA[i];j<P.IA[i+1];++j)
-    {
-    k=P.JA[j];
-    for(l=A->IA[i];l<A->IA[i+1];l++)
-    {
-    if(A->JA[l]==k) break;
-    }
+            for (j=P.IA[i];j<P.IA[i+1];++j) {
+                k=P.JA[j];
+                for (l=A->IA[i];l<A->IA[i+1];l++) {
+                    if (A->JA[l]==k) break;
+                }
     
-    if(A->val[l]>0)
-    {
-    P.val[j]=-beta*A->val[l]/aii;
-    }
-    else
-    {
-    P.val[j]=-alpha*A->val[l]/aii;
-    }
-    }
-    }
-    else if(vec[i]==2)  // if node i is a special fine node
-    {
-    }
-    else // if node i is on coarse grid 
-    {
-    P.val[P.IA[i]]=1;
-    }
+                if (A->val[l]>0) {
+                    P.val[j]=-beta*A->val[l]/aii;
+                }
+                else {
+                    P.val[j]=-alpha*A->val[l]/aii;
+                }
+            }
+        }
+        else if (vec[i]==2) { // if node i is a special fine node
+        }
+        else { // if node i is on coarse grid 
+            P.val[P.IA[i]]=1;
+        }
     }    
     
     fasp_mem_free(Ptr->IA);
     fasp_mem_free(Ptr->JA);
     fasp_mem_free(Ptr->val);    
     
-#if 0    // Changed vertices->row to A->row, Edited by Feng Chunsheng 2011/04/11    
+#if 0 // Changed vertices->row to A->row, Edited by Feng Chunsheng 2011/04/11    
     INT *CoarseIndex=(INT*)fasp_mem_calloc(vertices->row, sizeof(INT));
-    
-#if CHMEM_MODE
-    total_alloc_mem += (vertices->row)*sizeof(INT);
-#endif
-    
     index=0;
-    for(i=0;i<vertices->row;++i)
+    for (i=0;i<vertices->row;++i)
 #else    
-        INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));
-    
-#if CHMEM_MODE
-    total_alloc_mem += (A->row)*sizeof(INT);
-#endif
-    
+    INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));    
     index=0;
-    for(i=0;i< A->row;++i)    
+    for (i=0;i< A->row;++i)    
 #endif  // Changed vertices->row to A->row, Edited by Feng Chunsheng 2011/04/11
-    {
-    if(vec[i]==1)
-    {
-    CoarseIndex[i]=index;
-    index++;
-    }
-    }
-    for(i=0;i<P.IA[P.row];++i)
-    {
-    j=P.JA[i];
-    P.JA[i]=CoarseIndex[j];
+        {
+            if (vec[i]==1) {
+                CoarseIndex[i]=index;
+                index++;
+            }
+        }
+    
+    for (i=0;i<P.IA[P.row];++i) {
+        j=P.JA[i];
+        P.JA[i]=CoarseIndex[j];
     }
     fasp_mem_free(CoarseIndex);
     
@@ -880,125 +849,93 @@ static void interp_RS (dCSRmat *A,
     INT num_lost=0;
     
     Ptr->val=(REAL*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(REAL));
-#if CHMEM_MODE
-    total_alloc_mem += (P.IA[Ptr->row])*sizeof(REAL);
-#endif
     Ptr->JA=(INT*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(INT));    
-#if CHMEM_MODE
-    total_alloc_mem += (P.IA[Ptr->row])*sizeof(INT);
-#endif
     Ptr->IA=(INT*)fasp_mem_calloc(Ptr->row+1, sizeof(INT));
-#if CHMEM_MODE
-    total_alloc_mem += (Ptr->row+1)*sizeof(INT);
-#endif
     
     INT index1=0, index2=0;
-    for(i=0;i<P.row;++i)
-    {
-    mMin=0;
-    pMax=0;
-    mSum=0;
-    pSum=0;
-    mTruncedSum=0;
-    pTruncedSum=0;
-    mTruncCount=0;
-    pTruncCount=0;
+    for (i=0;i<P.row;++i) {
+        mMin=0;
+        pMax=0;
+        mSum=0;
+        pSum=0;
+        mTruncedSum=0;
+        pTruncedSum=0;
+        mTruncCount=0;
+        pTruncCount=0;
+        
+        Ptr->IA[i]-=num_lost;
+        
+        for (j=P.IA[i];j<P.IA[i+1];++j) {
+            if (P.val[j]<0) {
+                mSum+=P.val[j];
+                if (P.val[j]<mMin) {
+                    mMin=P.val[j];
+                }
+            }
+            
+            if (P.val[j]>0) {
+                pSum+=P.val[j];
+                if (P.val[j]>pMax) {
+                    pMax=P.val[j];
+                }
+            }
+        }
+        
+        for (j=P.IA[i];j<P.IA[i+1];++j) {
+            if (P.val[j]<0) {
+                if (P.val[j]>mMin*epsilon_tr) {
+                    mTruncCount++;
+                }
+                else {
+                    num_lost--;
+                }
+            }
+            
+            if (P.val[j]>0) {
+                if (P.val[j]<pMax*epsilon_tr) {
+                    pTruncCount++;
+                }
+                else {
+                    num_lost--;
+                }
+            }
+        }
+        
+        // step 2: Find the structure JA and fill the data A of Ptr
+        for (j=P.IA[i];j<P.IA[i+1];++j) {
+            if (P.val[j]<0) {
+                if (!(P.val[j]>mMin*epsilon_tr)) {
+                    Ptr->JA[index1]=P.JA[j];
+                    mTruncedSum+=P.val[j];
+                    index1++;
+                }
+            }
     
-    Ptr->IA[i]-=num_lost;
+            if (P.val[j]>0) {
+                if (!(P.val[j]<pMax*epsilon_tr)) {
+                    Ptr->JA[index1]=P.JA[j];
+                    pTruncedSum+=P.val[j];
+                    index1++;
+                }
+            }
+        }
     
-    for(j=P.IA[i];j<P.IA[i+1];++j)
-    {
-    if(P.val[j]<0)
-    {
-    mSum+=P.val[j];
-    if(P.val[j]<mMin)
-    {
-    mMin=P.val[j];
-    }
-    }
-    
-    if(P.val[j]>0)
-    {
-    pSum+=P.val[j];
-    if(P.val[j]>pMax)
-    {
-    pMax=P.val[j];
-    }
-    }
-    }
-    
-    for(j=P.IA[i];j<P.IA[i+1];++j)
-    {
-    if(P.val[j]<0)
-    {
-    if(P.val[j]>mMin*epsilon_tr)
-    {
-    mTruncCount++;
-    }
-    else
-    {
-    num_lost--;
-    }
-    }
-    
-    if(P.val[j]>0)
-    {
-    if(P.val[j]<pMax*epsilon_tr)
-    {
-    pTruncCount++;
-    }
-    else
-    {
-    num_lost--;
-    }
-    }
-    }
-    
-    // step 2: Find the structure JA and fill the data A of Ptr
-    for(j=P.IA[i];j<P.IA[i+1];++j)
-    {
-    if(P.val[j]<0)
-    {
-    if(!(P.val[j]>mMin*epsilon_tr))
-    {
-    Ptr->JA[index1]=P.JA[j];
-    mTruncedSum+=P.val[j];
-    index1++;
-    }
-    }
-    
-    if(P.val[j]>0)
-    {
-    if(!(P.val[j]<pMax*epsilon_tr))
-    {
-    Ptr->JA[index1]=P.JA[j];
-    pTruncedSum+=P.val[j];
-    index1++;
-    }
-    }
-    }
-    
-    // step 3: Fill the data A of Ptr
-    for(j=P.IA[i];j<P.IA[i+1];++j)
-    {
-    if(P.val[j]<0)
-    {
-    if(!(P.val[j]>mMin*epsilon_tr))
-    {
-    Ptr->val[index2]=P.val[j]/mTruncedSum*mSum;
-    index2++;
-    }
-    }
-    
-    if(P.val[j]>0)
-    {
-    if(!(P.val[j]<pMax*epsilon_tr))
-    {
-    Ptr->val[index2]=P.val[j]/pTruncedSum*pSum;
-    index2++;
-    }
-    }
-    }
+        // step 3: Fill the data A of Ptr
+        for (j=P.IA[i];j<P.IA[i+1];++j) {
+            if (P.val[j]<0) {
+                if (!(P.val[j]>mMin*epsilon_tr)) {
+                    Ptr->val[index2]=P.val[j]/mTruncedSum*mSum;
+                    index2++;
+                }
+            }
+            
+            if (P.val[j]>0) {
+                if (!(P.val[j]<pMax*epsilon_tr)) {
+                    Ptr->val[index2]=P.val[j]/pTruncedSum*pSum;
+                    index2++;
+                }
+            }
+        }
     }
     Ptr->IA[P.row]-=num_lost;
     Ptr->nnz=Ptr->IA[Ptr->row];

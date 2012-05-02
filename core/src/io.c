@@ -67,10 +67,9 @@ void fasp_dcsrvec_read (char *filemat,
     A->col = n;
     A->IA = (INT *)fasp_mem_calloc(n+1, sizeof(INT));
     
-    for(i=0; i<n+1; ++i)
-    { 
-    wall = fscanf(fp,"%d\n",&(A->IA[i])); 
-    A->IA[i]--; 
+    for(i=0; i<n+1; ++i) { 
+        wall = fscanf(fp,"%d\n",&(A->IA[i])); 
+        A->IA[i]--; 
     }
     
     nz = A->IA[n];
@@ -78,10 +77,9 @@ void fasp_dcsrvec_read (char *filemat,
     A->JA = (INT *)fasp_mem_calloc(nz, sizeof(INT));
     A->val = (REAL *)fasp_mem_calloc(nz, sizeof(REAL));
     
-    for(i=0; i<nz; ++i)
-    { 
-    wall = fscanf(fp,"%d\n",&(A->JA[i])); 
-    A->JA[i]--; 
+    for(i=0; i<nz; ++i) { 
+        wall = fscanf(fp,"%d\n",&(A->JA[i])); 
+        A->JA[i]--; 
     }
     
     for(i=0; i<nz; ++i) wall = fscanf(fp,"%le\n",&(A->val[i]));
@@ -104,12 +102,12 @@ void fasp_dcsrvec_read (char *filemat,
     wall = fscanf(fp,"%d\n",&n);
     
     if (n!=b->row) {
-    printf("### ERROR: rhs size %d does not match matrix size %d!\n",n,b->row);
+        printf("### ERROR: rhs size %d does not match matrix size %d!\n",n,b->row);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
     }
     
     for(i=0; i<n; ++i) {
-    wall = fscanf(fp,"%le\n", &(b->val[i]));
+        wall = fscanf(fp,"%le\n", &(b->val[i]));
     }
     
     fclose(fp);
@@ -169,8 +167,8 @@ void fasp_dcsrvec2_read (char *filename,
     
     A->IA=(int*)fasp_mem_calloc(m+1, sizeof(INT));    
     for (i=0;i<=m;++i) {
-    wall = fscanf(fp, "%d", &idata);
-    A->IA[i]=idata;
+        wall = fscanf(fp, "%d", &idata);
+        A->IA[i]=idata;
     }
     
     nnz=A->IA[m]-A->IA[0];     A->nnz=nnz;
@@ -179,13 +177,13 @@ void fasp_dcsrvec2_read (char *filename,
     A->val=(REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     
     for (i=0;i<nnz;++i) {
-    wall = fscanf(fp, "%d", &idata);
-    A->JA[i]=idata;
+        wall = fscanf(fp, "%d", &idata);
+        A->JA[i]=idata;
     }
     
     for (i=0;i<nnz;++i) {
-    wall = fscanf(fp, "%lf", &ddata);
-    A->val[i]=ddata;
+        wall = fscanf(fp, "%lf", &ddata);
+        A->val[i]=ddata;
     }
     
     // Read RHS vector
@@ -195,8 +193,8 @@ void fasp_dcsrvec2_read (char *filename,
     b->val=(REAL*)fasp_mem_calloc(m, sizeof(REAL));
     
     for (i=0;i<m;++i) {
-    wall = fscanf(fp, "%lf", &ddata);
-    b->val[i]=ddata;
+        wall = fscanf(fp, "%lf", &ddata);
+        b->val[i]=ddata;
     }
     
     fclose(fp);    
@@ -240,12 +238,12 @@ void fasp_dcoo_read (char *filename,
     dCOOmat Atmp=fasp_dcoo_create(m,n,nnz); 
     
     for (k=0;k<nnz;k++) {
-    if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-    Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k]=value; 
-    }
-    else {
+        if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
+            Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k]=value; 
+        }
+        else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_read");
-    }
+        }
     }
     
     fclose(fp);
@@ -293,17 +291,17 @@ void fasp_dmtx_read (char *filename,
     innz = 0;
     
     while (innz < nnz) {
-    if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
+        if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
             
             Atmp.I[innz]=i-1; 
             Atmp.J[innz]=j-1; 
             Atmp.val[innz]=value; 
             innz = innz + 1;
             
-    }
-    else {
+        }
+        else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtx_read");
-    }
+        }
     }
         
     fclose(fp);
@@ -353,7 +351,7 @@ void fasp_dmtxsym_read (char *filename,
     innz = 0;
     
     while (innz < nnz) {
-    if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
+        if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
             
             if (i==j) {
                 Atmp.I[innz]=i-1; 
@@ -368,10 +366,10 @@ void fasp_dmtxsym_read (char *filename,
                 innz = innz + 2;                
             }
             
-    }
-    else {
-    fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtxsym_read");
-    }
+        }
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtxsym_read");
+        }
     }
     
     fclose(fp);
@@ -415,7 +413,7 @@ void fasp_dstr_read (char *filename,
     
     if ( fp==NULL ) {
         printf("### ERROR: Opening file %s failed!\n", filename);
-    exit(ERROR_OPEN_FILE);
+        exit(ERROR_OPEN_FILE);
     }
     
     printf("fasp_dstr_read: reading file %s...\n", filename);
@@ -438,22 +436,22 @@ void fasp_dstr_read (char *filename,
     wall = fscanf(fp, "%d", &n);
     A->diag=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
     for (i=0;i<n;++i) {
-    wall = fscanf(fp, "%le", &value);
-    A->diag[i]=value;
+        wall = fscanf(fp, "%le", &value);
+        A->diag[i]=value;
     }
     
     // read offdiags
     k = nband;
     A->offdiag=(REAL **)fasp_mem_calloc(nband, sizeof(REAL *));
-    while (k--){
-    wall = fscanf(fp,"%d %d",&offset,&n); // read number band k
-    A->offsets[nband-k-1]=offset;
+    while (k--) {
+        wall = fscanf(fp,"%d %d",&offset,&n); // read number band k
+        A->offsets[nband-k-1]=offset;
     
-    A->offdiag[nband-k-1]=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
-    for (i=0;i<n;++i) {
-    wall = fscanf(fp, "%le", &value);
-    A->offdiag[nband-k-1][i]=value;
-    }
+        A->offdiag[nband-k-1]=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
+        for (i=0;i<n;++i) {
+            wall = fscanf(fp, "%le", &value);
+            A->offdiag[nband-k-1][i]=value;
+        }
     }
     
     fclose(fp);
@@ -495,7 +493,7 @@ void fasp_dbsr_read (char *filename, dBSRmat *A)
     
     if ( fp==NULL ) {
         printf("### ERROR: Opening file %s failed!\n", filename);
-    exit(ERROR_OPEN_FILE);
+        exit(ERROR_OPEN_FILE);
     }
     
     printf("fasp_dbsr_read: reading file %s...\n", filename);
@@ -515,22 +513,22 @@ void fasp_dbsr_read (char *filename, dBSRmat *A)
     // read IA
     wall = fscanf(fp, "%d", &n);
     for (i=0;i<n;++i) {
-    wall = fscanf(fp, "%d", &index);
-    A->IA[i] = index;
+        wall = fscanf(fp, "%d", &index);
+        A->IA[i] = index;
     }
     
     // read JA
     wall = fscanf(fp, "%d", &n);
     for (i=0; i<n; ++i){
-    wall = fscanf(fp, "%d", &index);
-    A->JA[i] = index;
+        wall = fscanf(fp, "%d", &index);
+        A->JA[i] = index;
     }
     
     // read val
     wall = fscanf(fp, "%d", &n);
-    for (i=0; i<n; ++i){
-    wall = fscanf(fp, "%le", &value);
-    A->val[i] = value;
+    for (i=0; i<n; ++i) {
+        wall = fscanf(fp, "%le", &value);
+        A->val[i] = value;
     }
     
     fclose(fp);
@@ -560,7 +558,7 @@ void fasp_dvecind_read (char *filename,
     
     if ( fp==NULL ) {
         printf("### ERROR: Opening file %s failed!\n", filename);
-    exit(ERROR_OPEN_FILE);
+        exit(ERROR_OPEN_FILE);
     }
     
     printf("fasp_dvecind_read: reading file %s...\n", filename);
@@ -569,11 +567,11 @@ void fasp_dvecind_read (char *filename,
     fasp_dvec_alloc(n,b);
     
     for (i=0;i<n;++i) {
-    wall = fscanf(fp, "%d %le", &index, &value);
+        wall = fscanf(fp, "%d %le", &index, &value);
         if (value>BIGREAL || index>=n) {
             printf("### WARNING: index = %d, value = %lf\n", index, value);
         }
-    b->val[index]=value;
+        b->val[index]=value;
     }
     
     fclose(fp);
@@ -614,8 +612,8 @@ void fasp_dvec_read (char *filename,
     fasp_dvec_alloc(n,b);
     
     for (i=0;i<n;++i) {
-    wall = fscanf(fp, "%le", &value);
-    b->val[i]=value;
+        wall = fscanf(fp, "%le", &value);
+        b->val[i]=value;
     }
     
     fclose(fp);
@@ -639,7 +637,7 @@ void fasp_dvec_read (char *filename,
 void fasp_ivecind_read (char *filename, 
                         ivector *b)
 {
-     INT i, n, index, value;
+    INT i, n, index, value;
     INT wall;
     
     FILE *fp=fopen(filename,"r");
@@ -656,7 +654,7 @@ void fasp_ivecind_read (char *filename,
     
     for (i=0;i<n;++i) {
         wall = fscanf(fp, "%d %d", &index, &value);
-    b->val[index]=value;
+        b->val[index]=value;
     }
     
     fclose(fp);
@@ -696,8 +694,8 @@ void fasp_ivec_read (char *filename,
     fasp_ivec_alloc(n,b);
     
     for (i=0;i<n;++i) {
-    wall = fscanf(fp, "%d", &value);
-    b->val[i]=value;
+        wall = fscanf(fp, "%d", &value);
+        b->val[i]=value;
     }
     
     fclose(fp);
@@ -741,7 +739,7 @@ void fasp_dcsr_write (char *filename,
     
     fprintf(fp,"%d  %d  %d\n",m,n,A->nnz);    
     for (i = 0; i < m; ++i) {
-    for (j = A->IA[N2C(i)]; j < A->IA[N2C(i+1)]; j++)
+        for (j = A->IA[N2C(i)]; j < A->IA[N2C(i+1)]; j++)
             fprintf(fp,"%d  %d  %le\n",i,A->JA[j],A->val[j]);
     }
     
@@ -797,13 +795,13 @@ void fasp_dstr_write (char *filename,
     
     // write offdiags
     k = nband;
-    while (k--){
-    INT offset=offsets[nband-k-1];
-    n=(ngrid-ABS(offset))*nc*nc; // number of nonzeros in each band
-    fprintf(fp,"%d  %d\n",offset,n); // read number band k
-    for (i=0;i<n;++i) {
-    fprintf(fp, "%le\n", A->offdiag[nband-k-1][i]);
-    }
+    while (k--) {
+        INT offset=offsets[nband-k-1];
+        n=(ngrid-ABS(offset))*nc*nc; // number of nonzeros in each band
+        fprintf(fp,"%d  %d\n",offset,n); // read number band k
+        for (i=0;i<n;++i) {
+            fprintf(fp, "%le\n", A->offdiag[nband-k-1][i]);
+        }
     }
     
     fclose(fp);
@@ -999,7 +997,7 @@ void fasp_dcsr_print (dCSRmat *A)
     
     printf("nrow = %d, ncol = %d, nnz = %d\n",m,n,A->nnz);    
     for (i = 0; i < m; ++i) {
-    for (j=A->IA[N2C(i)]; j<A->IA[N2C(i+1)]; j++)
+        for (j=A->IA[N2C(i)]; j<A->IA[N2C(i+1)]; j++)
             printf("A_(%d,%d) = %+.10E\n",i,A->JA[j],A->val[j]);
     }
 }

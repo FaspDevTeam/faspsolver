@@ -57,50 +57,50 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     switch (itsolver_type) {
     
     case SOLVER_CG:
-    if (print_level>0) printf("Calling PCG solver ...\n");
-    iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-            break;
+        if (print_level>0) printf("Calling PCG solver ...\n");
+        iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
     
     case SOLVER_BiCGstab:
-    if (print_level>0) printf("Calling BiCGstab solver ...\n");
-    iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-            break;
+        if (print_level>0) printf("Calling BiCGstab solver ...\n");
+        iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
     
     case SOLVER_MinRes:
-    if (print_level>0) printf("Calling MinRes solver ...\n");    
-    iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-            break;
+        if (print_level>0) printf("Calling MinRes solver ...\n");    
+        iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
     
     case SOLVER_GMRES:
-    if (print_level>0) printf("Calling GMRes solver ...\n");    
-    iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
-            break;
+        if (print_level>0) printf("Calling GMRes solver ...\n");    
+        iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+        break;
     
     case SOLVER_VGMRES: 
-    if (print_level>0) printf("Calling vGMRes solver ...\n");    
-    iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
-            break;
+        if (print_level>0) printf("Calling vGMRes solver ...\n");    
+        iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
+        break;
             
-        case SOLVER_VFGMRES: 
-    if (print_level>0) printf("Calling vFGMRes solver ...\n");    
-    iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
-            break;
+    case SOLVER_VFGMRES: 
+        if (print_level>0) printf("Calling vFGMRes solver ...\n");    
+        iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+        break;
     
-        case SOLVER_GCG:
-    if (print_level>0) printf("Calling GCG solver ...\n");
-    iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-            break;
+    case SOLVER_GCG:
+        if (print_level>0) printf("Calling GCG solver ...\n");
+        iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
             
     default:
-    printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
-    return ERROR_SOLVER_TYPE;
+        printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
+        return ERROR_SOLVER_TYPE;
     
     } 
     
     if ((print_level>=PRINT_SOME) && (iter >= 0)) {
-    clock_t solver_end = clock();    
-    REAL solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-    print_cputime("Iterative solver", solver_duration);
+        clock_t solver_end = clock();    
+        REAL solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        print_cputime("Iterative solver", solver_duration);
     }
     
 #if DEBUG_MODE
@@ -148,9 +148,9 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,NULL,itparam);
     
     if (print_level>=PRINT_MIN) {
-    solver_end = clock();    
-    solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-    print_cputime("Krylov method totally", solver_duration);
+        solver_end = clock();    
+        solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        print_cputime("Krylov method totally", solver_duration);
     }    
     
 #if DEBUG_MODE
@@ -207,9 +207,9 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
     if (print_level>=PRINT_MIN) {
-    solver_end = clock();    
-    solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-    print_cputime("Diag_Krylov method totally", solver_duration);
+        solver_end = clock();    
+        solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        print_cputime("Diag_Krylov method totally", solver_duration);
     }
     
     fasp_dvec_free(&diag);
@@ -269,11 +269,11 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     // setup preconditioner  
     switch (amgparam->AMG_type) {
     case SA_AMG: // Smoothed Aggregation AMG
-    status = fasp_amg_setup_sa(mgl, amgparam); break;
-        case UA_AMG: // Unsmoothed Aggregation AMG
-    status = fasp_amg_setup_ua(mgl, amgparam); break;
+        status = fasp_amg_setup_sa(mgl, amgparam); break;
+    case UA_AMG: // Unsmoothed Aggregation AMG
+        status = fasp_amg_setup_ua(mgl, amgparam); break;
     default: // Classical AMG
-    status = fasp_amg_setup_rs(mgl, amgparam); break;
+        status = fasp_amg_setup_rs(mgl, amgparam); break;
     }
     
 #if CHMEM_MODE    
@@ -291,16 +291,16 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     precond pc; pc.data = &pcdata;
     
     if (itparam->precond_type == PREC_FMG) {
-    pc.fct = fasp_precond_famg; // Full AMG
+        pc.fct = fasp_precond_famg; // Full AMG
     }
     else {
         switch (amgparam->cycle_type) {
-            case AMLI_CYCLE: // AMLI cycle
-                pc.fct = fasp_precond_amli; break;
-            case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
-                pc.fct = fasp_precond_nl_amli; break;
-            default: // V,W-Cycle AMG
-                pc.fct = fasp_precond_amg; break;
+        case AMLI_CYCLE: // AMLI cycle
+            pc.fct = fasp_precond_amli; break;
+        case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
+            pc.fct = fasp_precond_nl_amli; break;
+        default: // V,W-Cycle AMG
+            pc.fct = fasp_precond_amg; break;
         }
     }
     
@@ -308,12 +308,12 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);    
     
     if (print_level>=PRINT_MIN) {
-    solver_end = clock();    
-    solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-    print_cputime("AMG_Krylov method totally", solver_duration);
+        solver_end = clock();    
+        solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        print_cputime("AMG_Krylov method totally", solver_duration);
     }
     
-FINISHED:
+ FINISHED:
     fasp_amg_data_free(mgl);
     
 #if DEBUG_MODE
@@ -379,26 +379,26 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
     if (print_level>=PRINT_MIN) {
-    solver_end = clock();    
-    solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        solver_end = clock();    
+        solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
     
-    switch (iluparam->ILU_type) {
-    case ILUk:
-                print_cputime("ILUk_Krylov method totally", solver_duration);
-    break;
-    case ILUt:
-                print_cputime("ILUt_Krylov method totally", solver_duration);
-    break;
-    case ILUtp:
-                print_cputime("ILUtp_Krylov method totally", solver_duration);
-    break;
-    default:
-                print_cputime("ILUs_Krylov method totally", solver_duration);
-    break;
-    }
+        switch (iluparam->ILU_type) {
+        case ILUk:
+            print_cputime("ILUk_Krylov method totally", solver_duration);
+            break;
+        case ILUt:
+            print_cputime("ILUt_Krylov method totally", solver_duration);
+            break;
+        case ILUtp:
+            print_cputime("ILUtp_Krylov method totally", solver_duration);
+            break;
+        default:
+            print_cputime("ILUs_Krylov method totally", solver_duration);
+            break;
+        }
     }
     
-FINISHED: 
+ FINISHED: 
     fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE
@@ -468,26 +468,26 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
     if (print_level>=PRINT_MIN) {
-    solver_end=clock();    
-    solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        solver_end=clock();    
+        solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
 
         switch (iluparam->ILU_type) {
-    case ILUk:
-                print_cputime("ILUk_Krylov method totally", solver_duration);
-    break;
-    case ILUt:
-                print_cputime("ILUt_Krylov method totally", solver_duration);
-    break;
-    case ILUtp:
-                print_cputime("ILUtp_Krylov method totally", solver_duration);
-    break;
-    default:
-                print_cputime("ILUs_Krylov method totally", solver_duration);
-    break;
+        case ILUk:
+            print_cputime("ILUk_Krylov method totally", solver_duration);
+            break;
+        case ILUt:
+            print_cputime("ILUt_Krylov method totally", solver_duration);
+            break;
+        case ILUtp:
+            print_cputime("ILUtp_Krylov method totally", solver_duration);
+            break;
+        default:
+            print_cputime("ILUs_Krylov method totally", solver_duration);
+            break;
         }
     }    
         
-FINISHED:    
+ FINISHED:    
     fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE

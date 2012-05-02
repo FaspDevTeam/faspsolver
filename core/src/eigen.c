@@ -40,27 +40,26 @@ REAL fasp_dcsr_eig (dCSRmat *A,
     REAL L2_norm_y;
     unsigned INT i;
     
-    for (i=0; i<maxit; i++)
-    {
-    // y = Ax;
-    fasp_blas_dcsr_mxv(A, x.val, y.val);
+    for (i=0; i<maxit; i++) {
+        // y = Ax;
+        fasp_blas_dcsr_mxv(A, x.val, y.val);
     
-    // y/||y||
-    L2_norm_y = fasp_blas_dvec_norm2(&y);
-    fasp_blas_array_ax(A->row, 1.0/L2_norm_y, y.val);
+        // y/||y||
+        L2_norm_y = fasp_blas_dvec_norm2(&y);
+        fasp_blas_array_ax(A->row, 1.0/L2_norm_y, y.val);
     
-    // eigenvalue = y'Ay;
-    eigenvalue = fasp_blas_dcsr_vmv(A, y.val, y.val);
+        // eigenvalue = y'Ay;
+        eigenvalue = fasp_blas_dcsr_vmv(A, y.val, y.val);
     
-    // convergence test
-    if ((ABS(eigenvalue - temp)/ABS(temp))<tol) goto FINISHED;
+        // convergence test
+        if ((ABS(eigenvalue - temp)/ABS(temp))<tol) goto FINISHED;
     
-    // 
-    fasp_dvec_cp(&y, &x);
-    temp = eigenvalue;
+        // 
+        fasp_dvec_cp(&y, &x);
+        temp = eigenvalue;
     }
     
-FINISHED:
+ FINISHED:
     fasp_dvec_free(&x);
     fasp_dvec_free(&y);
     

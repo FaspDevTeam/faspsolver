@@ -63,31 +63,30 @@ void fasp_solver_amg (dCSRmat *A,
     
     // AMG setup phase
     switch (amg_type) {
-        case CLASSIC_AMG: // Classical AMG setup phase
-            if ( (status=fasp_amg_setup_rs(mgl, param))<0 ) goto FINISHED;
-            break;
-        case SA_AMG: // Smoothed Aggregation AMG setup phase
-            if ( (status=fasp_amg_setup_sa(mgl, param))<0 ) goto FINISHED;
-            break;
-        case UA_AMG: // Unsmoothed Aggregation AMG setup phase
-            if ( (status=fasp_amg_setup_ua(mgl, param))<0 ) goto FINISHED;
-            break;
-        default: // Unknown setup type
-            status=ERROR_SOLVER_TYPE; goto FINISHED;
+    case CLASSIC_AMG: // Classical AMG setup phase
+        if ( (status=fasp_amg_setup_rs(mgl, param))<0 ) goto FINISHED;
+        break;
+    case SA_AMG: // Smoothed Aggregation AMG setup phase
+        if ( (status=fasp_amg_setup_sa(mgl, param))<0 ) goto FINISHED;
+        break;
+    case UA_AMG: // Unsmoothed Aggregation AMG setup phase
+        if ( (status=fasp_amg_setup_ua(mgl, param))<0 ) goto FINISHED;
+        break;
+    default: // Unknown setup type
+        status=ERROR_SOLVER_TYPE; goto FINISHED;
     }
     
     // AMG solve phase
-    switch (cycle_type)
-    {
-        case AMLI_CYCLE: // call AMLI-cycle
-            if ( (status=fasp_amg_solve_amli(mgl, param)) < 0 ) goto FINISHED;
-            break;
-        case NL_AMLI_CYCLE: // call Nonlinear AMLI-cycle
-            if ( (status=fasp_amg_solve_nl_amli(mgl, param)) < 0 ) goto FINISHED;
-            break;
-        default: // call classical V,W-cycles
-            if ( (status=fasp_amg_solve(mgl, param)) < 0 ) goto FINISHED;
-            break;
+    switch (cycle_type) {
+    case AMLI_CYCLE: // call AMLI-cycle
+        if ( (status=fasp_amg_solve_amli(mgl, param)) < 0 ) goto FINISHED;
+        break;
+    case NL_AMLI_CYCLE: // call Nonlinear AMLI-cycle
+        if ( (status=fasp_amg_solve_nl_amli(mgl, param)) < 0 ) goto FINISHED;
+        break;
+    default: // call classical V,W-cycles
+        if ( (status=fasp_amg_solve(mgl, param)) < 0 ) goto FINISHED;
+        break;
     }
     
     // save solution vector
@@ -97,10 +96,10 @@ void fasp_solver_amg (dCSRmat *A,
     if (print_level>PRINT_NONE) {
         AMG_end = clock();    
         AMG_duration = (double)(AMG_end - AMG_start)/(double)(CLOCKS_PER_SEC);    
-    print_cputime("AMG totally",AMG_duration);
+        print_cputime("AMG totally",AMG_duration);
     }    
     
-FINISHED:    
+ FINISHED:    
     fasp_amg_data_free(mgl); // clean-up memory    
     
     fasp_chkerr(status, "fasp_solver_amg");

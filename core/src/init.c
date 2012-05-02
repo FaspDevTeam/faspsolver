@@ -30,10 +30,10 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
     
     INT i;
     for (i=0; i<max_levels; ++i) {
-    mgl[i].max_levels = max_levels;
-    mgl[i].num_levels = 0;
-    mgl[i].near_kernel_dim = 0;
-    mgl[i].near_kernel_basis = NULL;
+        mgl[i].max_levels = max_levels;
+        mgl[i].num_levels = 0;
+        mgl[i].near_kernel_dim = 0;
+        mgl[i].near_kernel_basis = NULL;
     }
     
     return(mgl);
@@ -58,10 +58,10 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
     AMG_data_bsr *mgl = (AMG_data_bsr *)fasp_mem_calloc(max_levels,sizeof(AMG_data_bsr));
     
     for (i=0; i<max_levels; ++i) {
-    mgl[i].max_levels = max_levels;
-    mgl[i].num_levels = 0;
-    mgl[i].near_kernel_dim = 0;
-    mgl[i].near_kernel_basis = NULL;
+        mgl[i].max_levels = max_levels;
+        mgl[i].num_levels = 0;
+        mgl[i].near_kernel_dim = 0;
+        mgl[i].near_kernel_basis = NULL;
     }
     
     return(mgl);
@@ -89,21 +89,9 @@ void fasp_ilu_data_alloc (INT iwk,
     
     iludata->ijlu=(int*)fasp_mem_calloc(iwk, sizeof(INT));
     
-#if CHMEM_MODE    
-    total_alloc_mem += iwk*sizeof(INT);
-#endif
-    
     iludata->luval=(REAL*)fasp_mem_calloc(iwk, sizeof(REAL)); 
     
-#if CHMEM_MODE    
-    total_alloc_mem += iwk*sizeof(REAL);
-#endif
-    
     iludata->work=(REAL*)fasp_mem_calloc(nwork, sizeof(REAL)); 
-    
-#if CHMEM_MODE    
-    total_alloc_mem += nwork*sizeof(REAL);
-#endif
     
     return;
 }
@@ -124,19 +112,19 @@ void fasp_amg_data_free (AMG_data *mgl)
     unsigned INT i;
 
     for (i=0; i<max_levels; ++i) {
-    if (&mgl[i].A) { fasp_dcsr_free(&mgl[i].A); }
-    if (&mgl[i].P) { fasp_dcsr_free(&mgl[i].P); }
-    if (&mgl[i].R) { fasp_dcsr_free(&mgl[i].R); }
-    if (&mgl[i].b) { fasp_dvec_free(&mgl[i].b); }
-    if (&mgl[i].x) { fasp_dvec_free(&mgl[i].x); }
-    if (&mgl[i].w) { fasp_dvec_free(&mgl[i].w); }
-    if (&mgl[i].cfmark) { fasp_ivec_free(&mgl[i].cfmark); }
-    if (&mgl[i].LU) { fasp_ilu_data_free(&mgl[i].LU); }
+        if (&mgl[i].A) { fasp_dcsr_free(&mgl[i].A); }
+        if (&mgl[i].P) { fasp_dcsr_free(&mgl[i].P); }
+        if (&mgl[i].R) { fasp_dcsr_free(&mgl[i].R); }
+        if (&mgl[i].b) { fasp_dvec_free(&mgl[i].b); }
+        if (&mgl[i].x) { fasp_dvec_free(&mgl[i].x); }
+        if (&mgl[i].w) { fasp_dvec_free(&mgl[i].w); }
+        if (&mgl[i].cfmark) { fasp_ivec_free(&mgl[i].cfmark); }
+        if (&mgl[i].LU) { fasp_ilu_data_free(&mgl[i].LU); }
     }
     
     for (i=0; i<mgl->near_kernel_dim; ++i) {
-    fasp_mem_free(mgl->near_kernel_basis[i]); 
-    mgl->near_kernel_basis[i]=NULL;
+        fasp_mem_free(mgl->near_kernel_basis[i]); 
+        mgl->near_kernel_basis[i]=NULL;
     }
     fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
     fasp_mem_free(mgl); mgl = NULL;

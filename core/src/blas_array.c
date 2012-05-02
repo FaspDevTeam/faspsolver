@@ -37,7 +37,7 @@ void fasp_blas_array_ax (const INT n,
     if (a==1.0) {
     }
     else {
-    for (i=0; i<n; ++i) x[i] = a*x[i];
+        for (i=0; i<n; ++i) x[i] = a*x[i];
     }
 }
 
@@ -64,13 +64,13 @@ void fasp_blas_array_axpy (const INT n,
     unsigned INT i;
     
     if (a==1.0) {
-    for (i=0; i<n; ++i) y[i] += x[i];
+        for (i=0; i<n; ++i) y[i] += x[i];
     }
     else if (a==-1.0) {
-    for (i=0; i<n; ++i) y[i] -= x[i];
+        for (i=0; i<n; ++i) y[i] -= x[i];
     }
     else {
-    for (i=0; i<n; ++i) y[i] += a*x[i];
+        for (i=0; i<n; ++i) y[i] += a*x[i];
     }
 }
 

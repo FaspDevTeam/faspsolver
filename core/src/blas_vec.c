@@ -31,8 +31,8 @@ void fasp_blas_dvec_axpy (const REAL a,
     REAL *xpt=x->val, *ypt=y->val;
     
     if ((y->row-m)!=0) {
-    printf("### ERROR: Two vectors have different length!\n");
-    exit(ERROR_DATA_STRUCTURE);
+        printf("### ERROR: Two vectors have different length!\n");
+        exit(ERROR_DATA_STRUCTURE);
     }
     
     for (i=0; i<m; ++i) ypt[i] += a*xpt[i];
@@ -61,8 +61,8 @@ void fasp_blas_dvec_axpyz (const REAL a,
     REAL *xpt=x->val, *ypt=y->val, *zpt=z->val;
     
     if ((y->row-m)!=0) {
-    printf("### ERROR: Two vectors have different length!\n");
-    exit(ERROR_DATA_STRUCTURE);
+        printf("### ERROR: Two vectors have different length!\n");
+        exit(ERROR_DATA_STRUCTURE);
     }
     
     z->row = m;
@@ -118,13 +118,13 @@ REAL fasp_dvec_relerr (dvector *x,
     REAL *xpt=x->val, *ypt=y->val;
     
     if (length!=y->row) {
-    printf("### ERROR: Two vectors have different length!\n");
-    exit(ERROR_DUMMY_VAR);    
+        printf("### ERROR: Two vectors have different length!\n");
+        exit(ERROR_DUMMY_VAR);    
     }
     
     for (i=0;i<length;++i) {
-    temp += xpt[i]*xpt[i];
-    diff += pow(xpt[i]-ypt[i],2);
+        temp += xpt[i]*xpt[i];
+        diff += pow(xpt[i]-ypt[i],2);
     }
     
     return sqrt(diff/temp);

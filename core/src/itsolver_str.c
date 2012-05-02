@@ -13,8 +13,8 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_dstr_itsolver(dSTRmat *A, dvector *b, dvector *x, 
- *                                   precond *pc, itsolver_param *itparam)
+ * \fn INT fasp_solver_dstr_itsolver (dSTRmat *A, dvector *b, dvector *x, 
+ *                                    precond *pc, itsolver_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
@@ -29,11 +29,11 @@
  * \author Chensong Zhang
  * \date   09/25/2009 
  */
-INT fasp_solver_dstr_itsolver(dSTRmat *A, 
-                              dvector *b, 
-                              dvector *x, 
-                              precond *pc, 
-                              itsolver_param *itparam)
+INT fasp_solver_dstr_itsolver (dSTRmat *A, 
+                               dvector *b, 
+                               dvector *x, 
+                               precond *pc, 
+                               itsolver_param *itparam)
 {
     const INT print_level = itparam->print_level;
     const INT itsolver_type = itparam->itsolver_type;
@@ -48,35 +48,35 @@ INT fasp_solver_dstr_itsolver(dSTRmat *A,
     switch (itsolver_type) {
     
     case SOLVER_CG: 
-    if (print_level>PRINT_NONE) printf("Calling CG solver (STR format) ...\n");
-    iter=fasp_solver_dstr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-    break;
+        if (print_level>PRINT_NONE) printf("Calling CG solver (STR format) ...\n");
+        iter=fasp_solver_dstr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
     
     case SOLVER_BiCGstab:
-    if (print_level>PRINT_NONE) printf("Calling BiCGstab solver (STR format) ...\n");
-    iter=fasp_solver_dstr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-    break;
+        if (print_level>PRINT_NONE) printf("Calling BiCGstab solver (STR format) ...\n");
+        iter=fasp_solver_dstr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
     
     case SOLVER_GMRES:
-    if (print_level>PRINT_NONE) printf("Calling GMRES solver (STR format) ...\n");
-    iter=fasp_solver_dstr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
-    break;    
+        if (print_level>PRINT_NONE) printf("Calling GMRES solver (STR format) ...\n");
+        iter=fasp_solver_dstr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
+        break;    
     
     case SOLVER_VGMRES:
-    if (print_level>PRINT_NONE) printf("Calling vGMRES solver (STR format) ...\n");
-    iter=fasp_solver_dstr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
-    break;    
+        if (print_level>PRINT_NONE) printf("Calling vGMRES solver (STR format) ...\n");
+        iter=fasp_solver_dstr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
+        break;    
     
     default:
-    printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
-    iter=ERROR_SOLVER_TYPE;
+        printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
+        iter=ERROR_SOLVER_TYPE;
     
     }
     
     if ((print_level>PRINT_MIN) && (iter >= 0)) {
-    clock_t solver_end=clock();    
-    REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-    printf("Iterative solver costs %f seconds.\n", solver_duration);
+        clock_t solver_end=clock();    
+        REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+        printf("Iterative solver costs %f seconds.\n", solver_duration);
     }
     
     return iter;
@@ -208,18 +208,15 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
     dSTRmat LU;
     
     setup_start=clock();
-    if (ILU_lfil == 0) 
-    {
-    fasp_ilu_dstr_setup0(A,&LU);
+    if (ILU_lfil == 0) {
+        fasp_ilu_dstr_setup0(A,&LU);
     }
-    else if (ILU_lfil == 1)    
-    {
-    fasp_ilu_dstr_setup1(A,&LU);
+    else if (ILU_lfil == 1) {
+        fasp_ilu_dstr_setup1(A,&LU);
     }
-    else 
-    {    
-    printf("### ERROR: Illegal level of fill-in for structured ILU (lfil>=2)!!\n");
-    return 0;
+    else  {    
+        printf("### ERROR: Illegal level of fill-in for structured ILU (lfil>=2)!!\n");
+        return 0;
     }
     setup_end=clock();
     
@@ -228,18 +225,15 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
     if (print_level>PRINT_NONE) printf("structrued ILU(%d) setup costs %f seconds.\n", ILU_lfil, setup_duration);
     
     precond pc; pc.data=&LU;
-    if (ILU_lfil == 0)
-    {
-    pc.fct = fasp_precond_dstr_ilu0;
+    if (ILU_lfil == 0) {
+        pc.fct = fasp_precond_dstr_ilu0;
     }
-    else if (ILU_lfil == 1)
-    {
-    pc.fct = fasp_precond_dstr_ilu1;
+    else if (ILU_lfil == 1) {
+        pc.fct = fasp_precond_dstr_ilu1;
     }
-    else
-    {
-    printf("### ERROR: Illegal level of fill-in for structured ILU (lfil>=2)!!\n");
-    return 0;
+    else {
+        printf("### ERROR: Illegal level of fill-in for structured ILU (lfil>=2)!!\n");
+        return 0;
     }
     
     // solver part
@@ -318,8 +312,8 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
     setup_end=clock();
     
     if (print_level>PRINT_NONE) {
-    setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);      
-    printf("setup costs %f seconds.\n", setup_duration);
+        setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);      
+        printf("setup costs %f seconds.\n", setup_duration);
     }
     
     // solver part
@@ -328,9 +322,9 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
     solver_end=clock();
     
     if (print_level>PRINT_NONE) {
-    solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-    printf("solve costs %f seconds.\n", solver_duration);
-    printf("Solver costs %f seconds.\n", solver_duration+setup_duration);
+        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+        printf("solve costs %f seconds.\n", solver_duration);
+        printf("Solver costs %f seconds.\n", solver_duration+setup_duration);
     }
     
     return status;
