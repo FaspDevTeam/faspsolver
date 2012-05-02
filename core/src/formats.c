@@ -12,7 +12,7 @@
 /*---------------------------------*/
 
 /**
- * \fn SHORT fasp_format_dcoo_dcsr(dCOOmat *A, dCSRmat *B)
+ * \fn SHORT fasp_format_dcoo_dcsr (dCOOmat *A, dCSRmat *B)
  *
  * \brief Transform a REAL matrix from its IJ format to its CSR format.
  *
@@ -269,7 +269,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
 }
 
 /**
- * \fn dCSRmat fasp_format_bdcsr_dcsr(block_dCSRmat *Ab)
+ * \fn dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
  *
  * \brief Form the whole dCSRmat A using blocks given in Ab
  *
@@ -461,7 +461,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
 }
 
 /*!
- * \fn dCSRmat fasp_format_dbsr_dcsr ( dBSRmat *B )
+ * \fn dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  *
  * \brief Transfer a 'dBSRmat' type matrix into a dCSRmat.
  *
@@ -618,12 +618,15 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  * \note Modified by Xiaozhe Hu on 03/13/2012
  */
 
-SHORT fasp_format_dcsr_dbsr(dBSRmat *A, int nb, dCSRmat *B)
+SHORT fasp_format_dcsr_dbsr (dBSRmat *A, 
+                             const INT nb, 
+                             dCSRmat *B)
 {
     INT *Is, *Js;
     INT i,j,num, k;
     INT nRow, nCol;
     SHORT status=SUCCESS;
+
     dCSRmat tmpMat;
     nRow=B->row/nb;//we must ensure this is a integer
     nCol=B->col/nb;
@@ -783,7 +786,6 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
     
     return (A);
 }
-
 
 /*!
  * \fn dCOOmat * fasp_format_dbsr_dcoo ( dBSRmat *B )

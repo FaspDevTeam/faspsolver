@@ -24,31 +24,31 @@
  * \date 03/01/2011
  */
 void fasp_blas_dvec_axpy_omp (const double a, 
-     dvector *x, 
-     dvector *y, 
-     int nthreads, 
-     int openmp_holds)
+                              dvector *x, 
+                              dvector *y, 
+                              int nthreads, 
+                              int openmp_holds)
 {
 #if FASP_USE_OPENMP
     unsigned int i, m=x->row;
     double *xpt=x->val, *ypt=y->val;
     
     if ((y->row-m)!=0) {
-    printf("Error: two vectors have different length!\n");
-    exit(ERROR_DATA_STRUCTURE);
+        printf("Error: two vectors have different length!\n");
+        exit(ERROR_DATA_STRUCTURE);
     }
     
     if (m > openmp_holds) {
-    int myid, mybegin, myend;
+        int myid, mybegin, myend;
 #pragma omp parallel private(myid,mybegin,myend,i) ////num_threads(nthreads)
-    {
-    myid = omp_get_thread_num();
-    FASP_GET_START_END(myid, nthreads, m, mybegin, myend);
-    for (i=mybegin; i<myend; ++i) ypt[i] += a*xpt[i];
-    }
+        {
+            myid = omp_get_thread_num();
+            FASP_GET_START_END(myid, nthreads, m, mybegin, myend);
+            for (i=mybegin; i<myend; ++i) ypt[i] += a*xpt[i];
+        }
     }
     else {
-    for (i=0; i<m; ++i) ypt[i] += a*xpt[i];
+        for (i=0; i<m; ++i) ypt[i] += a*xpt[i];
     }
 #endif
 }
@@ -67,19 +67,19 @@ void fasp_blas_dvec_axpy_omp (const double a,
  * \date 03/01/2011
  */
 void fasp_blas_dvec_axpyz_omp (const double a, 
-    dvector *x, 
-    dvector *y, 
-    dvector *z, 
-    int nthreads, 
-    int openmp_holds)
+                               dvector *x, 
+                               dvector *y, 
+                               dvector *z, 
+                               int nthreads, 
+                               int openmp_holds)
 {
 #if FASP_USE_OPENMP
     const int m=x->row;
     double *xpt=x->val, *ypt=y->val, *zpt=z->val;
     
     if ((y->row-m)!=0) {
-    printf("Error: two vectors have different length!\n");
-    exit(ERROR_DATA_STRUCTURE);
+        printf("Error: two vectors have different length!\n");
+        exit(ERROR_DATA_STRUCTURE);
     }
     
     z->row = m;
@@ -101,9 +101,9 @@ void fasp_blas_dvec_axpyz_omp (const double a,
  * \date 03/01/2011
  */
 double fasp_blas_dvec_dotprod_omp (dvector *x, 
-    dvector *y, 
-    int nthreads, 
-    int openmp_holds)
+                                   dvector *y, 
+                                   int nthreads, 
+                                   int openmp_holds)
 {
     double value=0;
 #if FASP_USE_OPENMP
@@ -113,10 +113,10 @@ double fasp_blas_dvec_dotprod_omp (dvector *x,
     
     if (length > openmp_holds) {
 #pragma omp parallel for reduction(+:value) private(i) ////num_threads(nthreads)
-    for (i=0; i<length; ++i) value+=xpt[i]*ypt[i];
+        for (i=0; i<length; ++i) value+=xpt[i]*ypt[i];
     }
     else {
-    for (i=0; i<length; ++i) value+=xpt[i]*ypt[i];
+        for (i=0; i<length; ++i) value+=xpt[i]*ypt[i];
     }
 #endif
     return value;
@@ -135,9 +135,9 @@ double fasp_blas_dvec_dotprod_omp (dvector *x,
  * \date 03/01/2011
  */
 double fasp_blas_dvec_relerr_omp (dvector *x, 
-     dvector *y, 
-     int nthreads, 
-     int openmp_holds)
+                                  dvector *y, 
+                                  int nthreads, 
+                                  int openmp_holds)
 {
     double diff=0, temp=0;
 #if FASP_USE_OPENMP
@@ -146,22 +146,22 @@ double fasp_blas_dvec_relerr_omp (dvector *x,
     double *xpt=x->val, *ypt=y->val;
     
     if (length!=y->row) {
-    printf("Error: The lengths of vectors do not match! \n");
-    exit(ERROR_DUMMY_VAR);    
+        printf("Error: The lengths of vectors do not match! \n");
+        exit(ERROR_DUMMY_VAR);    
     }
     
     if (length > openmp_holds) {
 #pragma omp parallel for reduction(+:temp,diff) private(i) ////num_threads(nthreads)
-    for (i=0;i<length;++i) {
-    temp += xpt[i]*xpt[i];
-    diff += pow(xpt[i]-ypt[i],2);
-    }
+        for (i=0;i<length;++i) {
+            temp += xpt[i]*xpt[i];
+            diff += pow(xpt[i]-ypt[i],2);
+        }
     }
     else {
-    for (i=0;i<length;++i) {
-    temp += xpt[i]*xpt[i];
-    diff += pow(xpt[i]-ypt[i],2);
-    }
+        for (i=0;i<length;++i) {
+            temp += xpt[i]*xpt[i];
+            diff += pow(xpt[i]-ypt[i],2);
+        }
     }
 #endif    
     return sqrt(diff/temp);
@@ -179,8 +179,8 @@ double fasp_blas_dvec_relerr_omp (dvector *x,
  * \date 03/01/2011
  */
 double fasp_blas_dvec_norm1_omp (dvector *x, 
-    int nthreads, 
-    int openmp_holds)
+                                 int nthreads, 
+                                 int openmp_holds)
 {
     double onenorm=0;
 #if FASP_USE_OPENMP
@@ -189,10 +189,10 @@ double fasp_blas_dvec_norm1_omp (dvector *x,
     double *xpt=x->val;
     if (length > openmp_holds) {
 #pragma omp parallel for reduction(+:onenorm) private(i) ////num_threads(nthreads)
-    for (i=0;i<length;++i) onenorm+=ABS(xpt[i]);
+        for (i=0;i<length;++i) onenorm+=ABS(xpt[i]);
     }
     else {
-    for (i=0;i<length;++i) onenorm+=ABS(xpt[i]);
+        for (i=0;i<length;++i) onenorm+=ABS(xpt[i]);
     }
 #endif
     return onenorm;
@@ -210,8 +210,8 @@ double fasp_blas_dvec_norm1_omp (dvector *x,
  * \date Jan/11/2011
  */
 double fasp_blas_dvec_norm2_omp (dvector *x, 
-    int nthreads, 
-    int openmp_holds)
+                                 int nthreads, 
+                                 int openmp_holds)
 {
     double twonorm=0;
 #if FASP_USE_OPENMP
@@ -220,10 +220,10 @@ double fasp_blas_dvec_norm2_omp (dvector *x,
     double *xpt=x->val;
     if (length > openmp_holds) {
 #pragma omp parallel for reduction(+:twonorm) private(i) 
-    for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];
+        for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];
     }
     else {
-    for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];
+        for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];
     }
 #endif
     return sqrt(twonorm);

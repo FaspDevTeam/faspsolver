@@ -89,37 +89,37 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     
     /* auv_(ia,ja,a,u,u,&n,&err0); NA: u = 0 */
     //bminax(b,ia,ja,a,u,&n,r);
-    //for (i=0; i < n ; ++i){res0 += r[i]*r[i];}
+    //for (i=0; i < n ; ++i) {res0 += r[i]*r[i];}
     //res0=sqrt(res0);
     
-    for (it = 0 ; it < L; it++){ 
+    for (it = 0 ; it < L; it++) { 
         bminax(b,ia,ja,a,u,&n,r);
-        for (i=0; i < n ; ++i){
+        for (i=0; i < n ; ++i) {
             iaa = ia[i];
             iab = ia[i+1];
             ari=0e+00; /* ari is (A*r)[i] */ 
             if(iab > iaa) {
                 for (jk = iaa; jk < iab; jk++) {
-    j=ja[jk];
-    ari += a[jk] * r[j];
+                    j=ja[jk];
+                    ari += a[jk] * r[j];
                 } 
             }
             ri=r[i];
             v0[i]=sm*ri; 
             v[i]=smsqrt*ri-sm01*ari; 
         }
-        for (i=1; i < ndeg0; ++i){
+        for (i=1; i < ndeg0; ++i) {
             for (j=0; j < n ; ++j) vsave[j]=v[j];
-            for (j=0; j < n ; ++j){
+            for (j=0; j < n ; ++j) {
                 /* ravj = (r- A*v)[j] */
                 ravj= r[j];
                 iaa = ia[j];
                 iab = ia[j+1];
                 if(iab > iaa) {
                     for (jk = iaa; jk < iab; jk++) {
-    k=ja[jk];
-    ravj -= a[jk] * vsave[k];
-    }
+                        k=ja[jk];
+                        ravj -= a[jk] * vsave[k];
+                    }
                 }
                 vj=v[j];
                 snj = chi*ravj+delta2*(vj-v0[j]);
@@ -184,9 +184,9 @@ static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
         u = b[i];
         if(iab > iaa) 
             for (jk = iaa; jk < iab; jk++) {
-    j=ja[jk];
-    //    u = u - a[jk] * x[j];
-    u -= a[jk] * x[j];
+                j=ja[jk];
+                //    u = u - a[jk] * x[j];
+                u -= a[jk] * x[j];
             }
         res[i] = u;
     }
@@ -194,30 +194,30 @@ static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
 }
 
 /*
- sqdinv= (REAL *)fasp_mem_calloc(n,sizeof(REAL));
+sqdinv= (REAL *)fasp_mem_calloc(n,sizeof(REAL));
  
- // find the diagonals: note f numbering assumption
- for (i=0; i < n; ++i) {
- iaa=ia[i]-1;
- iab=ia[i+1]-1;
- id=-1;
- for(ij=iaa; ij<iab; ++ij){
- j=ja[ij]-1;
- id=ij;
- if(j == i) break;
+// find the diagonals: note f numbering assumption
+for (i=0; i < n; ++i) {
+    iaa=ia[i]-1;
+    iab=ia[i+1]-1;
+    id=-1;
+    for(ij=iaa; ij<iab; ++ij) {
+        j=ja[ij]-1;
+        id=ij;
+        if(j == i) break;
+    }
+    sqdinv[i]=1e+00/sqrt(a[id]);
  }
- sqdinv[i]=1e+00/sqrt(a[id]);
+for (i=0; i < n; ++i) {
+    iaa=ia[i]-1;
+    iab=ia[i+1]-1;
+    for(ij=iaa; ij<iab; ++ij) {
+        j=ja[ij]-1;
+        a[ij]=sqdinv[i]*sqdinv[j]*a[ij];
+        //fprintf(stdout,"\na[%d,%d]=%25.16lg",i+1,j+1,a[ij]);
+    }
  }
- for (i=0; i < n; ++i) {
- iaa=ia[i]-1;
- iab=ia[i+1]-1;
- for(ij=iaa; ij<iab; ++ij){
- j=ja[ij]-1;
- a[ij]=sqdinv[i]*sqdinv[j]*a[ij];
- //fprintf(stdout,"\na[%d,%d]=%25.16lg",i+1,j+1,a[ij]);
- }
- }
- */
+*/
 
 /*---------------------------------*/
 /*--        End of File          --*/

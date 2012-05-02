@@ -33,24 +33,24 @@ dCSRmat fasp_dcsr_create (const INT m,
     dCSRmat A;
     
     if ( m > 0 ) {
-    A.IA = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
+        A.IA = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
     }
     else {
-    A.IA = NULL;
+        A.IA = NULL;
     }
     
     if ( n > 0 ) {
-    A.JA = (INT*)fasp_mem_calloc(nnz,sizeof(INT));
+        A.JA = (INT*)fasp_mem_calloc(nnz,sizeof(INT));
     }
     else {
-    A.JA = NULL;
+        A.JA = NULL;
     }    
     
     if ( nnz > 0 ) {
-    A.val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
+        A.val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
     }
     else {
-    A.val = NULL;
+        A.val = NULL;
     }
     
     A.row=m; A.col=n; A.nnz=nnz;
@@ -77,24 +77,24 @@ void fasp_dcsr_alloc (const INT m,
                       dCSRmat *A)
 {    
     if ( m > 0 ) {
-    A->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
+        A->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
     }
     else {
-    A->IA = NULL;
+        A->IA = NULL;
     }
     
     if ( n > 0 ) {
-    A->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
+        A->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
     }
     else {
-    A->JA = NULL;
+        A->JA = NULL;
     }    
     
     if ( nnz > 0 ) {
-    A->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
+        A->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
     }
     else {
-    A->val = NULL;
+        A->val = NULL;
     }
     
     A->row=m; A->col=n; A->nnz=nnz;
@@ -189,26 +189,26 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     // compute IA of P*A (row permutation)
     Aperm.IA[0] = 0;
     for (i=0; i<n; ++i) {
-    k = P[i];
-    Aperm.IA[i+1] = Aperm.IA[i]+(ia[k+1]-ia[k]);
+        k = P[i];
+        Aperm.IA[i+1] = Aperm.IA[i]+(ia[k+1]-ia[k]);
     }
     
     // perform actual P*A
     for (i=0; i<n; ++i) {
-    i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1; 
-    k = P[i];
-    start1 = ia[k]; start2 = ia[k+1]-1;
-    for (j=i1; j<=i2; ++j) {
-    jaj = start1+j-i1;
-    Aperm.JA[j] = ja[jaj];
-    Aperm.val[j] = Aval[jaj];
-    }    
+        i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1; 
+        k = P[i];
+        start1 = ia[k]; start2 = ia[k+1]-1;
+        for (j=i1; j<=i2; ++j) {
+            jaj = start1+j-i1;
+            Aperm.JA[j] = ja[jaj];
+            Aperm.val[j] = Aval[jaj];
+        }    
     }
     
     // perform P*A*P' (column permutation)
     for (k=0; k<nnz; ++k) {
-    j = Aperm.JA[k];
-    Aperm.JA[k] = Pt[j];
+        j = Aperm.JA[k];
+        Aperm.JA[k] = Pt[j];
     }
     
     fasp_mem_free(Pt);
@@ -239,24 +239,23 @@ void fasp_dcsr_sort (dCSRmat *A)
     ja    = (INT*)fasp_mem_calloc(n,sizeof(INT));     
     a     = (REAL*)fasp_mem_calloc(n,sizeof(REAL));     
     
-    for (i=0;i<n;++i)
-    {
-    start=A->IA[i];
-    row_length=A->IA[i+1]-start;
+    for (i=0;i<n;++i) {
+        start=A->IA[i];
+        row_length=A->IA[i+1]-start;
     
-    for (j=0;j<row_length;++j) index[j]=j;
+        for (j=0;j<row_length;++j) index[j]=j;
     
-    fasp_aux_iQuickSortIndex(&(A->JA[start]), 0, row_length-1, index);
+        fasp_aux_iQuickSortIndex(&(A->JA[start]), 0, row_length-1, index);
     
-    for (j=0;j<row_length;++j) {
-    ja[j]=A->JA[start+index[j]];
-    a[j]=A->val[start+index[j]];
-    }
+        for (j=0;j<row_length;++j) {
+            ja[j]=A->JA[start+index[j]];
+            a[j]=A->val[start+index[j]];
+        }
     
-    for (j=0;j<row_length;++j) {
-    A->JA[start+j]=ja[j];
-    A->val[start+j]=a[j];
-    }
+        for (j=0;j<row_length;++j) {
+            A->JA[start+j]=ja[j];
+            A->val[start+j]=a[j];
+        }
     }
     
     // clean up memory
@@ -288,13 +287,13 @@ void fasp_dcsr_getdiag (INT n,
     fasp_dvec_alloc(n,diag);
     
     for (i=0;i<n;++i) {
-    ibegin=A->IA[i]; iend=A->IA[i+1];
-    for (k=ibegin;k<iend;++k) {
-    j=N2C(A->JA[N2C(k)]);
-    if ((j-i)==0) {
-    diag->val[i] = A->val[N2C(k)]; break;
-    }
-    } // end for k
+        ibegin=A->IA[i]; iend=A->IA[i+1];
+        for (k=ibegin;k<iend;++k) {
+            j=N2C(A->JA[N2C(k)]);
+            if ((j-i)==0) {
+                diag->val[i] = A->val[N2C(k)]; break;
+            }
+        } // end for k
     } // end for i
     
 }
@@ -320,32 +319,28 @@ void fasp_dcsr_getcol (const INT n,
     INT status = SUCCESS;
     
     // check the column index n
-    if (n < 0 || n >= ncol) 
-    {
-    printf("### ERROR: the column index n is illegal!!\n");
-    status = ERROR_DUMMY_VAR;
-    goto FINISHED;
+    if (n < 0 || n >= ncol) {
+        printf("### ERROR: the column index n is illegal!!\n");
+        status = ERROR_DUMMY_VAR;
+        goto FINISHED;
     }
     
     // get the column
-    for (i=0; i<nrow; ++i) 
-    {
-    // set the entry to zero
-    col[i] = 0.0;
+    for (i=0; i<nrow; ++i) {
+        // set the entry to zero
+        col[i] = 0.0;
     
-    row_begin = A->IA[i]; row_end = A->IA[i+1];
+        row_begin = A->IA[i]; row_end = A->IA[i+1];
     
-    for (j=row_begin; j<row_end; ++j)
-    {
-    if (A->JA[j] == n)
-    {
-    col[i] = A->val[j];
-    }
-    } // end for (j=row_begin; j<row_end; ++j)
+        for (j=row_begin; j<row_end; ++j) {
+            if (A->JA[j] == n) {
+                col[i] = A->val[j];
+            }
+        } // end for (j=row_begin; j<row_end; ++j)
     
     } // end for (i=0; i<nrow; ++i)
     
-FINISHED:
+ FINISHED:
     fasp_chkerr(status,"fasp_dcsr_getcol");
 }
 
@@ -380,15 +375,13 @@ void fasp_dcsr_diagpref (dCSRmat *A)
     printf("### DEBUG: fasp_dcsr_diagpref ...... [Start]\n");
 #endif
     
-    for (i = 0; i < num_rowsA; i ++)
-    {
-    row_size = A_i[i+1] - A_i[i];
+    for (i = 0; i < num_rowsA; i ++) {
+        row_size = A_i[i+1] - A_i[i];
         
         // check whether the first entry is already diagonal        
         if (A_j[0] != i) { 
             
-            for (j = 1; j < row_size; j ++)
-            {
+            for (j = 1; j < row_size; j ++) {
                 if (A_j[j] == i) {
 #if DEBUG_MODE
                     printf("### DEBUG: Switch entry_%d with entry_0\n", j);
@@ -446,19 +439,19 @@ SHORT fasp_dcsr_regdiag (dCSRmat *A,
     SHORT status=RUN_FAIL;
     
     for (i=0;i<m;++i) {
-    begin_row=ia[i],end_row=ia[i+1];
-    for (k=begin_row;k<end_row;++k) {
-    j=ja[k];
-    if (i==j) {
-    if (aj[k] < 0.0) goto FINISHED;
-    else if (aj[k] < SMALLREAL) aj[k]=value;    
-    }
-    } // end for k
+        begin_row=ia[i],end_row=ia[i+1];
+        for (k=begin_row;k<end_row;++k) {
+            j=ja[k];
+            if (i==j) {
+                if (aj[k] < 0.0) goto FINISHED;
+                else if (aj[k] < SMALLREAL) aj[k]=value;    
+            }
+        } // end for k
     } // end for i
     
     status = SUCCESS;
     
-FINISHED:    
+ FINISHED:    
     return status;
 }
 
@@ -518,7 +511,7 @@ void fasp_icsr_trans (iCSRmat *A,
     AT->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
     
     if (A->val) { 
-    AT->val=(INT*)fasp_mem_calloc(nnz,sizeof(INT)); 
+        AT->val=(INT*)fasp_mem_calloc(nnz,sizeof(INT)); 
     }
     else { 
         AT->val=NULL; 
@@ -529,35 +522,35 @@ void fasp_icsr_trans (iCSRmat *A,
     for (i=0;i<m;++i) AT->IA[i] = 0;
     
     for (j=0;j<nnz;++j) {
-    i=N2C(A->JA[j]); // column Number of A = row Number of A'
-    if (i<m1) AT->IA[i+2]++;
+        i=N2C(A->JA[j]); // column Number of A = row Number of A'
+        if (i<m1) AT->IA[i+2]++;
     }
     
     for (i=2;i<=m;++i) AT->IA[i]+=AT->IA[i-1];
     
     // second pass: form A'
     if (A->val != NULL) {
-    for (i=0;i<n;++i) {
-    ibegin=A->IA[i], iend=A->IA[i+1];    
-    for(p=ibegin;p<iend;p++) {
-    j=A->JA[N2C(p)]+1;
-    k=AT->IA[N2C(j)];
-    AT->JA[N2C(k)]=C2N(i);
-    AT->val[N2C(k)]=A->val[N2C(p)];
-    AT->IA[j]=k+1;
-    } // end for p
-    } // end for i
+        for (i=0;i<n;++i) {
+            ibegin=A->IA[i], iend=A->IA[i+1];    
+            for(p=ibegin;p<iend;p++) {
+                j=A->JA[N2C(p)]+1;
+                k=AT->IA[N2C(j)];
+                AT->JA[N2C(k)]=C2N(i);
+                AT->val[N2C(k)]=A->val[N2C(p)];
+                AT->IA[j]=k+1;
+            } // end for p
+        } // end for i
     }
     else {
-    for (i=0;i<n;++i) {
-    ibegin=A->IA[i], iend=A->IA[i+1];    
-    for(p=ibegin;p<iend;p++) {
-    j=A->JA[N2C(p)]+1;
-    k=AT->IA[N2C(j)];
-    AT->JA[N2C(k)]=C2N(i);
-    AT->IA[j]=k+1;
-    } // end for p
-    } // end for i    
+        for (i=0;i<n;++i) {
+            ibegin=A->IA[i], iend=A->IA[i+1];    
+            for(p=ibegin;p<iend;p++) {
+                j=A->JA[N2C(p)]+1;
+                k=AT->IA[N2C(j)];
+                AT->JA[N2C(k)]=C2N(i);
+                AT->IA[j]=k+1;
+            } // end for p
+        } // end for i    
     } // end if
 }    
 
@@ -589,7 +582,7 @@ INT fasp_dcsr_trans (dCSRmat *A,
     AT->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
     
     if (A->val) { 
-    AT->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL)); 
+        AT->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL)); 
     
     }
     else { AT->val=NULL; }
@@ -599,38 +592,38 @@ INT fasp_dcsr_trans (dCSRmat *A,
     for (i=0;i<m;++i) AT->IA[i] = 0;
     
     for (j=0;j<nnz;++j) {
-    i=N2C(A->JA[j]); // column Number of A = row Number of A'
-    if (i<m-1) AT->IA[i+2]++;
+        i=N2C(A->JA[j]); // column Number of A = row Number of A'
+        if (i<m-1) AT->IA[i+2]++;
     }
     
     for (i=2;i<=m;++i) AT->IA[i]+=AT->IA[i-1];
     
     // second pass: form A'
     if (A->val) {
-    for (i=0;i<n;++i) {
-    INT ibegin=A->IA[i], iend1=A->IA[i+1];
+        for (i=0;i<n;++i) {
+            INT ibegin=A->IA[i], iend1=A->IA[i+1];
     
-    for(p=ibegin;p<iend1;p++) {
-    j=A->JA[N2C(p)]+1;
-    k=AT->IA[N2C(j)];
-    AT->JA[N2C(k)]=C2N(i);
-    AT->val[N2C(k)]=A->val[N2C(p)];
-    AT->IA[j]=k+1;
-    } // end for p
-    } // end for i
+            for(p=ibegin;p<iend1;p++) {
+                j=A->JA[N2C(p)]+1;
+                k=AT->IA[N2C(j)];
+                AT->JA[N2C(k)]=C2N(i);
+                AT->val[N2C(k)]=A->val[N2C(p)];
+                AT->IA[j]=k+1;
+            } // end for p
+        } // end for i
     
     }
     else {
-    for (i=0;i<n;++i) {
-    INT ibegin=A->IA[i], iend1=A->IA[i+1];
+        for (i=0;i<n;++i) {
+            INT ibegin=A->IA[i], iend1=A->IA[i+1];
     
-    for(p=ibegin;p<iend1;p++) {
-    j=A->JA[N2C(p)]+1;
-    k=AT->IA[N2C(j)];
-    AT->JA[N2C(k)]=C2N(i);
-    AT->IA[j]=k+1;
-    } // end for p
-    } // end of i
+            for(p=ibegin;p<iend1;p++) {
+                j=A->JA[N2C(p)]+1;
+                k=AT->IA[N2C(j)];
+                AT->JA[N2C(k)]=C2N(i);
+                AT->IA[j]=k+1;
+            } // end for p
+        } // end of i
     
     } // end if 
     
@@ -677,12 +670,12 @@ void fasp_dcsr_transpose (INT *row[2],
     memset(izc,0,nca*sizeof(INT));
     
     for (i=0;i<tniz[0];++i) {
-    m=col[0][i]; 
-    itmp=izcaux[m]+izc[m];
-    row[1][itmp]=m;
-    col[1][itmp]=row[0][i];
-    val[1][itmp]=val[0][i];
-    izc[m]++;
+        m=col[0][i]; 
+        itmp=izcaux[m]+izc[m];
+        row[1][itmp]=m;
+        col[1][itmp]=row[0][i];
+        val[1][itmp]=val[0][i];
+        izc[m]++;
     }
     
     fasp_mem_free(izc);
@@ -720,13 +713,13 @@ void fasp_dcsr_compress (dCSRmat *A,
     // first pass: determine the size of B
     k=0;
     for (i=0;i<A->row;++i) {
-    ibegin=A->IA[i]; iend1=A->IA[i+1];    
-    for (j=ibegin;j<iend1;++j)
-    if (ABS(A->val[N2C(j)])>dtol) {
-    index[k]=N2C(j);
-    ++k;
-    } /* end of j */
-    B->IA[i+1]=C2N(k);
+        ibegin=A->IA[i]; iend1=A->IA[i+1];    
+        for (j=ibegin;j<iend1;++j)
+            if (ABS(A->val[N2C(j)])>dtol) {
+                index[k]=N2C(j);
+                ++k;
+            } /* end of j */
+        B->IA[i+1]=C2N(k);
     } /* end of i */
     B->nnz=k;
     
@@ -735,8 +728,8 @@ void fasp_dcsr_compress (dCSRmat *A,
     
     // second pass: generate the index and element to B
     for (i=0;i<B->nnz;++i) {
-    B->JA[i]=A->JA[index[i]];
-    B->val[i]=A->val[index[i]]; 
+        B->JA[i]=A->JA[index[i]];
+        B->val[i]=A->val[index[i]]; 
     }  
     
     fasp_mem_free(index);
@@ -768,27 +761,27 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
     
     k=0;
     for (i=0;i<row;++i) {
-    ibegin=iend; iend=A->IA[i+1];    
-    for (j=ibegin;j<iend;++j)
-    if (ABS(A->val[N2C(j)])>dtol) {
-    A->JA[N2C(k)] = A->JA[N2C(j)];
-    A->val[N2C(k)] = A->val[N2C(j)];
-    ++k;
-    } /* end of j */
-    A->IA[i+1]=C2N(k);
+        ibegin=iend; iend=A->IA[i+1];    
+        for (j=ibegin;j<iend;++j)
+            if (ABS(A->val[N2C(j)])>dtol) {
+                A->JA[N2C(k)] = A->JA[N2C(j)];
+                A->val[N2C(k)] = A->val[N2C(j)];
+                ++k;
+            } /* end of j */
+        A->IA[i+1]=C2N(k);
     } /* end of i */
     
     if (k<=nnz) 
-    {
-    A->nnz=k;
-    A->JA = (INT*)fasp_mem_realloc(A->JA, k*sizeof(INT));
-    A->val = (REAL *)fasp_mem_realloc(A->val, k*sizeof(REAL));
-    }
+        {
+            A->nnz=k;
+            A->JA = (INT*)fasp_mem_realloc(A->JA, k*sizeof(INT));
+            A->val = (REAL *)fasp_mem_realloc(A->val, k*sizeof(REAL));
+        }
     else 
-    {
-    status = RUN_FAIL;
-    printf("### ERROR: Size of compressed matrix is larger than the original!!\n");
-    }
+        {
+            status = RUN_FAIL;
+            printf("### ERROR: Size of compressed matrix is larger than the original!!\n");
+        }
     
     return (status);
 }
@@ -841,11 +834,10 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     // local variables
     unsigned INT i, j, k, row_start, row_end;
     
-    if (diag->row != n)
-    {
-    printf("### ERROR: Size of diag = %d and size of matrix = %d mismatch!!", 
+    if (diag->row != n) {
+        printf("### ERROR: Size of diag = %d and size of matrix = %d mismatch!!", 
                diag->row, n);
-    exit(ERROR_MISC);
+        exit(ERROR_MISC);
     }
     
     // work space
@@ -855,14 +847,12 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     for (i=0; i<n; i++) work[i] = sqrt(diag->val[i]);
     
     // main loop
-    for (i=0; i<n; i++)
-    {
-    row_start = IA[i]; row_end = IA[i+1];
-    for (j=row_start; j<row_end; j++)
-    {
-    k = JA[j];
-    val[j] = val[j]/(work[i]*work[k]);
-    }
+    for (i=0; i<n; i++) {
+        row_start = IA[i]; row_end = IA[i+1];
+        for (j=row_start; j<row_end; j++) {
+            k = JA[j];
+            val[j] = val[j]/(work[i]*work[k]);
+        }
     }
     
     // free work space

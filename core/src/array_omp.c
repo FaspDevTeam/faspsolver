@@ -35,17 +35,17 @@ void fasp_array_set_omp (int n,
 #if FASP_USE_OPENMP
     unsigned int i;
     if (val == 0.0) {
-    if (n > openmp_holds) {
+        if (n > openmp_holds) {
             int mybegin,myend,myid;
 #pragma omp parallel for private(myid,mybegin,myend)
             for (myid = 0; myid < nthreads; myid ++)
-            {
-                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-                memset(&x[mybegin], 0x0, sizeof(double)*(myend-mybegin));
-            }
-    }
-    else 
-    memset(x, 0x0, sizeof(double)*n);
+                {
+                    FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                    memset(&x[mybegin], 0x0, sizeof(double)*(myend-mybegin));
+                }
+        }
+        else 
+            memset(x, 0x0, sizeof(double)*n);
     }
     else {
         
@@ -53,14 +53,14 @@ void fasp_array_set_omp (int n,
             int mybegin,myend,myid;
 #pragma omp parallel for private(myid,mybegin,myend,i)
             for (myid = 0; myid < nthreads; myid ++)
-            {
-                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-                for (i=mybegin; i<myend; ++i) x[i]=val;
-            }
-    }
-    else {
-    for (i=0; i<n; ++i) x[i]=val;
-    }
+                {
+                    FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                    for (i=mybegin; i<myend; ++i) x[i]=val;
+                }
+        }
+        else {
+            for (i=0; i<n; ++i) x[i]=val;
+        }
     }
 #endif
 }
@@ -82,32 +82,32 @@ void fasp_iarray_set_omp (int n, int *x, int val, int nthreads, int openmp_holds
 #if FASP_USE_OPENMP
     unsigned int i;
     if (val == 0) {
-    if (n > openmp_holds) {
+        if (n > openmp_holds) {
             int mybegin,myend,myid;
 #pragma omp parallel for private(myid,mybegin,myend)
             for (myid = 0; myid < nthreads; myid ++)
-            {
-                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-                memset(&x[mybegin], 0, sizeof(int)*(myend-mybegin));
-            }
-    }
-    else {
-    memset(x, 0, sizeof(int)*n);
+                {
+                    FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                    memset(&x[mybegin], 0, sizeof(int)*(myend-mybegin));
+                }
+        }
+        else {
+            memset(x, 0, sizeof(int)*n);
         }
     }
     else {
-    if (n > openmp_holds) {
+        if (n > openmp_holds) {
             int mybegin,myend,myid;
 #pragma omp parallel for private(myid,mybegin,myend,i)
             for (myid = 0; myid < nthreads; myid ++)
-            {
-                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-    for (i=mybegin; i<myend; ++i) x[i]=val;
-    }
-    }
-    else {
-    for (i=0; i<n; ++i) x[i]=val;
-    }
+                {
+                    FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                    for (i=mybegin; i<myend; ++i) x[i]=val;
+                }
+        }
+        else {
+            for (i=0; i<n; ++i) x[i]=val;
+        }
     }
 #endif
 }
@@ -137,16 +137,16 @@ void fasp_array_cp_omp (int n,
         int mybegin,myend,myid;
 #pragma omp for parallel private(myid, mybegin,myend) 
         for (myid = 0; myid < nthreads; myid++ )
-        {
-            FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-            memcpy(&y[mybegin],&x[mybegin], sizeof(double)*(myend-mybegin));
-        }
+            {
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                memcpy(&y[mybegin],&x[mybegin], sizeof(double)*(myend-mybegin));
+            }
     }
     else
 #endif    
-       {
-    memcpy(y,x,n*sizeof(double));
-    }
+        {
+            memcpy(y,x,n*sizeof(double));
+        }
 #endif
 }
 
@@ -175,16 +175,16 @@ void fasp_iarray_cp_omp (int n,
         int mybegin,myend,myid;
 #pragma omp for parallel private(myid, mybegin,myend) 
         for (myid = 0; myid < nthreads; myid++ )
-        {
-            FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-            memcpy(&y[mybegin],&x[mybegin], sizeof(int)*(myend-mybegin));
-        }
+            {
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                memcpy(&y[mybegin],&x[mybegin], sizeof(int)*(myend-mybegin));
+            }
     }
     else
 #endif    
-       {
-    memcpy(y,x,n*sizeof(int));
-    }
+        {
+            memcpy(y,x,n*sizeof(int));
+        }
 #endif
 }
 

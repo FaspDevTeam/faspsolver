@@ -31,7 +31,7 @@ void fasp_precond_diag (REAL *r,
     
     memcpy(z,r,m*sizeof(REAL));
     for (i=0;i<m;++i) {
-    if (ABS(diag->val[i])>SMALLREAL) z[i]/=diagptr[i];
+        if (ABS(diag->val[i])>SMALLREAL) z[i]/=diagptr[i];
     }    
 }
 
@@ -62,38 +62,38 @@ void fasp_precond_ilu (REAL *r,
     fasp_array_cp(m, r, zr);     
     
     {
-    INT i, j, jj, begin_row, end_row, mm2=m-2;
-    INT *ijlu=iludata->ijlu;
-    REAL *lu=iludata->luval;
+        INT i, j, jj, begin_row, end_row, mm2=m-2;
+        INT *ijlu=iludata->ijlu;
+        REAL *lu=iludata->luval;
     
-    // forward sweep: solve unit lower matrix equation L*zz=zr
-    zz[0]=zr[0];
-    for (i=1;i<=mm1;++i) {
-    begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-    for (j=begin_row;j<=end_row;++j) {
-    jj=ijlu[j];
-    if (jj<i) zr[i]-=lu[j]*zz[jj];
-    else break;
-    }
-    zz[i]=zr[i];
-    }
+        // forward sweep: solve unit lower matrix equation L*zz=zr
+        zz[0]=zr[0];
+        for (i=1;i<=mm1;++i) {
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            for (j=begin_row;j<=end_row;++j) {
+                jj=ijlu[j];
+                if (jj<i) zr[i]-=lu[j]*zz[jj];
+                else break;
+            }
+            zz[i]=zr[i];
+        }
     
-    // backward sweep: solve upper matrix equation U*z=zz
-    z[mm1]=zz[mm1]*lu[mm1];
-    for (i=mm2;i>=0;i--) {
-    begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-    for (j=end_row;j>=begin_row;j--) {
-    jj=ijlu[j];
-    if (jj>i) zz[i]-=lu[j]*z[jj];
-    else break;
-    } 
-    z[i]=zz[i]*lu[i];
-    }
+        // backward sweep: solve upper matrix equation U*z=zz
+        z[mm1]=zz[mm1]*lu[mm1];
+        for (i=mm2;i>=0;i--) {
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            for (j=end_row;j>=begin_row;j--) {
+                jj=ijlu[j];
+                if (jj>i) zz[i]-=lu[j]*z[jj];
+                else break;
+            } 
+            z[i]=zz[i]*lu[i];
+        }
     }
     
     return;
     
-MEMERR:
+ MEMERR:
     printf("### ERROR: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
     exit(ERROR_ALLOC_MEM);
 }
@@ -125,28 +125,28 @@ void fasp_precond_ilu_forward (REAL *r,
     fasp_array_cp(m, r, zr);     
     
     {
-    INT i, j, jj, begin_row, end_row;
-    INT *ijlu=iludata->ijlu;
-    REAL *lu=iludata->luval;
+        INT i, j, jj, begin_row, end_row;
+        INT *ijlu=iludata->ijlu;
+        REAL *lu=iludata->luval;
     
-    // forward sweep: solve unit lower matrix equation L*z=r
-    zz[0]=zr[0];
-    for (i=1;i<=mm1;++i) {
-    begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-    for (j=begin_row;j<=end_row;++j) {
-    jj=ijlu[j];
-    if (jj<i) zr[i]-=lu[j]*zz[jj];
-    else break;
-    }
-    zz[i]=zr[i];
-    }
+        // forward sweep: solve unit lower matrix equation L*z=r
+        zz[0]=zr[0];
+        for (i=1;i<=mm1;++i) {
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            for (j=begin_row;j<=end_row;++j) {
+                jj=ijlu[j];
+                if (jj<i) zr[i]-=lu[j]*zz[jj];
+                else break;
+            }
+            zz[i]=zr[i];
+        }
     }
     
     fasp_array_cp(m, zz, z); 
     
     return;
     
-MEMERR:
+ MEMERR:
     printf("### ERROR: Need %d memory, only %d available!!!", memneed, iludata->nwork);
     exit(ERROR_ALLOC_MEM);
 }
@@ -178,27 +178,27 @@ void fasp_precond_ilu_backward (REAL *r,
     fasp_array_cp(m, r, zz);     
     
     {
-    INT i, j, jj, begin_row, end_row, mm2=m-2;
-    INT *ijlu=iludata->ijlu;
-    REAL *lu=iludata->luval;
+        INT i, j, jj, begin_row, end_row, mm2=m-2;
+        INT *ijlu=iludata->ijlu;
+        REAL *lu=iludata->luval;
     
-    // backward sweep: solve upper matrix equation U*z=zz
-    z[mm1]=zz[mm1]*lu[mm1];
-    for (i=mm2;i>=0;i--) {
-    begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-    for (j=end_row;j>=begin_row;j--) {
-    jj=ijlu[j];
-    if (jj>i) zz[i]-=lu[j]*z[jj];
-    else break;
-    } 
-    z[i]=zz[i]*lu[i];
-    }
+        // backward sweep: solve upper matrix equation U*z=zz
+        z[mm1]=zz[mm1]*lu[mm1];
+        for (i=mm2;i>=0;i--) {
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            for (j=end_row;j>=begin_row;j--) {
+                jj=ijlu[j];
+                if (jj>i) zz[i]-=lu[j]*z[jj];
+                else break;
+            } 
+            z[i]=zz[i]*lu[i];
+        }
     
     }
     
     return;
     
-MEMERR:
+ MEMERR:
     printf("### ERROR: Need %d memory, only %d available!!!", memneed, iludata->nwork);
     exit(ERROR_ALLOC_MEM);
 }

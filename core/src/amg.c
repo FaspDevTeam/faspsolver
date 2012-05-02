@@ -37,11 +37,11 @@ void fasp_solver_amg (dCSRmat *A,
                       dvector *x, 
                       AMG_param *param)
 {
-    const SHORT   max_levels=param->max_levels;
-    const SHORT   print_level=param->print_level;
-    const SHORT   amg_type=param->AMG_type;
-    const SHORT   cycle_type=param->cycle_type;    
-    const INT     nnz=A->nnz, m=A->row, n=A->col;
+    const SHORT   max_levels  = param->max_levels;
+    const SHORT   print_level = param->print_level;
+    const SHORT   amg_type    = param->AMG_type;
+    const SHORT   cycle_type  = param->cycle_type;    
+    const INT     nnz = A->nnz, m = A->row, n = A->col;
     
     // local variables
     clock_t       AMG_start, AMG_end;
@@ -53,47 +53,53 @@ void fasp_solver_amg (dCSRmat *A,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
-    if (print_level>PRINT_NONE) AMG_start = clock();
+    if ( print_level > PRINT_NONE ) AMG_start = clock();
     
     // initialize mgl[0] with A, b, x    
-    AMG_data *mgl=fasp_amg_data_create(max_levels);
+    AMG_data *mgl = fasp_amg_data_create(max_levels);
     mgl[0].A = fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
     mgl[0].b = fasp_dvec_create(n);       fasp_dvec_cp(b,&mgl[0].b);     
     mgl[0].x = fasp_dvec_create(n);       fasp_dvec_cp(x,&mgl[0].x); 
     
     // AMG setup phase
     switch (amg_type) {
-    case CLASSIC_AMG: // Classical AMG setup phase
-        if ( (status=fasp_amg_setup_rs(mgl, param))<0 ) goto FINISHED;
-        break;
+
     case SA_AMG: // Smoothed Aggregation AMG setup phase
-        if ( (status=fasp_amg_setup_sa(mgl, param))<0 ) goto FINISHED;
+        if ( (status=fasp_amg_setup_sa(mgl, param)) < 0 ) goto FINISHED;
         break;
+
     case UA_AMG: // Unsmoothed Aggregation AMG setup phase
-        if ( (status=fasp_amg_setup_ua(mgl, param))<0 ) goto FINISHED;
+        if ( (status=fasp_amg_setup_ua(mgl, param)) < 0 ) goto FINISHED;
         break;
-    default: // Unknown setup type
-        status=ERROR_SOLVER_TYPE; goto FINISHED;
+
+    default: // Classical AMG setup phase
+        if ( (status=fasp_amg_setup_rs(mgl, param)) < 0 ) goto FINISHED;
+        break;
+
     }
     
     // AMG solve phase
     switch (cycle_type) {
+
     case AMLI_CYCLE: // call AMLI-cycle
         if ( (status=fasp_amg_solve_amli(mgl, param)) < 0 ) goto FINISHED;
         break;
+
     case NL_AMLI_CYCLE: // call Nonlinear AMLI-cycle
         if ( (status=fasp_amg_solve_nl_amli(mgl, param)) < 0 ) goto FINISHED;
         break;
+
     default: // call classical V,W-cycles
         if ( (status=fasp_amg_solve(mgl, param)) < 0 ) goto FINISHED;
         break;
+
     }
     
     // save solution vector
     fasp_dvec_cp(&mgl[0].x, x); 
     
     // print out CPU time when needed
-    if (print_level>PRINT_NONE) {
+    if ( print_level > PRINT_NONE ) {
         AMG_end = clock();    
         AMG_duration = (double)(AMG_end - AMG_start)/(double)(CLOCKS_PER_SEC);    
         print_cputime("AMG totally",AMG_duration);

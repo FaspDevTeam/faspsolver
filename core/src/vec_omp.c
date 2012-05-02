@@ -30,10 +30,10 @@
  * \date Jan/11/2012
  */
 void fasp_dvec_set_omp (int n, 
-    dvector *x, 
-    double val, 
-    int nthreads, 
-    int openmp_holds)
+                        dvector *x, 
+                        double val, 
+                        int nthreads, 
+                        int openmp_holds)
 {
 #if FASP_USE_OPENMP
     unsigned int i;
@@ -43,34 +43,30 @@ void fasp_dvec_set_omp (int n,
     else n=x->row;
     
     if (val == 0.0) {
-    if (n > openmp_holds) {
-    int mybegin,myend,myid;
+        if (n > openmp_holds) {
+            int mybegin,myend,myid;
 #pragma omp for parallel private(myid, mybegin,myend) 
-    for (myid = 0; myid < nthreads; myid++ )
-    {
-    FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-    memset(&xpt[mybegin],0x0, sizeof(double)*(myend-mybegin));
-    }
+            for (myid = 0; myid < nthreads; myid++ ) {
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                memset(&xpt[mybegin],0x0, sizeof(double)*(myend-mybegin));
+            }
+        }
+        else {
+            memset(xpt, 0x0, sizeof(double)*n);
+        }
     }
     else {
-    memset(xpt, 0x0, sizeof(double)*n);
-    }
-    }
-    else {
-    if (n > openmp_holds)
-    {
-    int mybegin,myend,myid;
+        if (n > openmp_holds) {
+            int mybegin,myend,myid;
 #pragma omp for parallel private(myid, mybegin,myend) 
-    for (myid = 0; myid < nthreads; myid++ )
-    {
-    FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-    for (i=mybegin; i<myend; ++i) xpt[i]=val;
-    }
-    }
-    else
-    {
-    for (i=0; i<n; ++i) xpt[i]=val;
-    }
+            for (myid = 0; myid < nthreads; myid++ ) {
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                for (i=mybegin; i<myend; ++i) xpt[i]=val;
+            }
+        }
+        else {
+            for (i=0; i<n; ++i) xpt[i]=val;
+        }
     }
 #endif
 }
@@ -87,9 +83,9 @@ void fasp_dvec_set_omp (int n,
  * \date Jan/11/2012
  */
 void fasp_dvec_cp_omp (dvector *x, 
-     dvector *y, 
-     int nthreads, 
-     int openmp_holds) 
+                       dvector *y, 
+                       int nthreads, 
+                       int openmp_holds) 
 {
 #if FASP_USE_OPENMP
     int row=x->row;
@@ -97,19 +93,18 @@ void fasp_dvec_cp_omp (dvector *x,
 #if 1    
     y->row=row;
     if (row > openmp_holds) {
-    int mybegin,myend,myid;
+        int mybegin,myend,myid;
 #pragma omp for parallel private(myid, mybegin,myend) 
-    for (myid = 0; myid < nthreads; myid++ )
-    {
-    FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
-    memcpy(&y_data[mybegin],&x_data[mybegin], sizeof(double)*(myend-mybegin));
-    }
+        for (myid = 0; myid < nthreads; myid++ ) {
+            FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+            memcpy(&y_data[mybegin],&x_data[mybegin], sizeof(double)*(myend-mybegin));
+        }
     }
     else 
 #endif    
-    {
-    memcpy(y_data,x_data,row*sizeof(double));
-    }
+        {
+            memcpy(y_data,x_data,row*sizeof(double));
+        }
 #endif
 }
 

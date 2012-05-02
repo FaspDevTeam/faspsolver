@@ -51,11 +51,11 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     // first pass: count nonzeros for sub matrix
     B->IA[0]=0;
     for (i=0;i<m;++i){    
-    for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
-    j=A->JA[N2C(k)];
-    if (col_flag[N2C(j)]>0) nnz++;
-    } /* end for k */
-    B->IA[i+1]=nnz;
+        for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
+            j=A->JA[N2C(k)];
+            if (col_flag[N2C(j)]>0) nnz++;
+        } /* end for k */
+        B->IA[i+1]=nnz;
     } /* end for i */
     B->nnz=nnz;
     
@@ -68,14 +68,14 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     // no need to do the following loop, need to be modified!!  Xiaozhe 
     nnz = 0;
     for (i=0;i<m;++i){    
-    for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
-    j=A->JA[N2C(k)];
-    if (col_flag[N2C(j)]>0) {
-    B->JA[nnz]=col_flag[j]-1;
-    B->val[nnz]=A->val[N2C(k)];
-    nnz++;
-    }
-    } /* end for k */
+        for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
+            j=A->JA[N2C(k)];
+            if (col_flag[N2C(j)]>0) {
+                B->JA[nnz]=col_flag[j]-1;
+                B->val[nnz]=A->val[N2C(k)];
+                nnz++;
+            }
+        } /* end for k */
     } /* end for i */
     
     fasp_mem_free(col_flag);   
@@ -123,11 +123,11 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     // first pass: count nonzeros for sub matrix
     B->IA[0]=0;
     for (i=0;i<m;++i){    
-    for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
-    j=A->JA[N2C(k)];
-    if (col_flag[N2C(j)]>0) nnz++;
-    } /* end for k */
-    B->IA[i+1]=nnz;
+        for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
+            j=A->JA[N2C(k)];
+            if (col_flag[N2C(j)]>0) nnz++;
+        } /* end for k */
+        B->IA[i+1]=nnz;
     } /* end for i */
     B->NNZ=nnz;
     
@@ -140,14 +140,14 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     // no need to do the following loop, need to be modified!!  Xiaozhe 
     nnz = 0;
     for (i=0;i<m;++i){    
-    for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
-    j=A->JA[N2C(k)];
-    if (col_flag[N2C(j)]>0) {
-    B->JA[nnz]=col_flag[j]-1;
-    memcpy(B->val+nnz*nb2, A->val+N2C(k)*nb2, nb2*sizeof(REAL));
-    nnz++;
-    }
-    } /* end for k */
+        for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
+            j=A->JA[N2C(k)];
+            if (col_flag[N2C(j)]>0) {
+                B->JA[nnz]=col_flag[j]-1;
+                memcpy(B->val+nnz*nb2, A->val+N2C(k)*nb2, nb2*sizeof(REAL));
+                nnz++;
+            }
+        } /* end for k */
     } /* end for i */
     
     fasp_mem_free(col_flag);   
@@ -192,23 +192,16 @@ dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
     memcpy(P_csr.IA, IA, (ROW+1)*sizeof(INT));
     
     //for (i=NNZ, j=NNZ*nc2-nc2; i--; j-=nc2)
-    for (i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2)
-    {
-    Pval[i] = val[j];
-    }
+    for (i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2) {
+            Pval[i] = val[j];
+        }
     
     // compress CSR format 
     status = fasp_dcsr_compress_inplace(&P_csr,1e-8);
-    if (status < 0) goto FINISH_ERROR;
     
     // return P 
     return P_csr;
-    
-FINISH_ERROR:
-    printf("getPP_BSR: Cannot alloc memory! \n");
-    exit(ERROR_ALLOC_MEM);
 }
-
 
 /*---------------------------------*/
 /*--        End of File          --*/

@@ -23,8 +23,8 @@
  */
 unsigned long fasp_aux_change_endian4(unsigned long x)
 {
-  unsigned char *ptr = (unsigned char *)&x;
-  return (ptr[0] << 24) | (ptr[1] << 16) | (ptr[2] << 8) | ptr[3];
+    unsigned char *ptr = (unsigned char *)&x;
+    return (ptr[0] << 24) | (ptr[1] << 16) | (ptr[2] << 8) | ptr[3];
 }
 
 /**

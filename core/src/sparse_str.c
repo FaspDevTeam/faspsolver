@@ -79,7 +79,7 @@ dSTRmat fasp_dstr_create (INT nx,
     A.offdiag=(REAL**)fasp_mem_calloc(nband, sizeof(REAL*));
     
     for(i=0;i<A.nband;++i) {
-    A.offdiag[i]=(REAL*)fasp_mem_calloc((A.ngrid-ABS(A.offsets[i]))*A.nc*A.nc, sizeof(REAL));
+        A.offdiag[i]=(REAL*)fasp_mem_calloc((A.ngrid-ABS(A.offsets[i]))*A.nc*A.nc, sizeof(REAL));
     }
     
     return(A);
@@ -134,7 +134,7 @@ void fasp_dstr_alloc(INT nx,
     A->offdiag = (REAL **)fasp_mem_calloc(A->nband, sizeof(REAL*));
     
     for (i=0;i<nband;++i) {
-    A->offdiag[i]=(REAL*)fasp_mem_calloc((ngrid-ABS(offsets[i]))*nc*nc, sizeof(REAL));
+        A->offdiag[i]=(REAL*)fasp_mem_calloc((ngrid-ABS(offsets[i]))*nc*nc, sizeof(REAL));
     }
 }
 
@@ -193,7 +193,7 @@ void fasp_dstr_cp (dSTRmat *A,
     memcpy(A1->offsets,A->offsets,(A->nband)*sizeof(INT));
     memcpy(A1->diag,A->diag,(A->ngrid*nc2)*sizeof(REAL));
     for (i=0;i<A->nband;++i)
-    memcpy(A1->offdiag[i],A->offdiag[i],((A->ngrid - ABS(A->offsets[i]))*nc2)*sizeof(REAL)); 
+        memcpy(A1->offdiag[i],A->offdiag[i],((A->ngrid - ABS(A->offsets[i]))*nc2)*sizeof(REAL)); 
     
 }
 

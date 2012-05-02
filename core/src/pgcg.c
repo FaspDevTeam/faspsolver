@@ -24,9 +24,9 @@
  *
  * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b 
  *
- * \param A               Pointer to the coefficient matrix
- * \param b               Pointer to the dvector of right hand side
- * \param u               Pointer to the dvector of DOFs
+ * \param A            Pointer to the coefficient matrix
+ * \param b            Pointer to the dvector of right hand side
+ * \param u            Pointer to the dvector of DOFs
  * \param pc           Pointer to the structure of precondition (precond) 
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
@@ -60,11 +60,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
     
     REAL *r, *Br, *beta, *p;
     r = work; Br = r + m; beta = Br + m; p = beta + MaxIt;
-    
-#if CHMEM_MODE    
-    total_alloc_mem += (2*m+MaxIt+MaxIt*m)*sizeof(REAL);
-#endif
-    
+        
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_pgcg ...... [Start]\n");
 #endif    
@@ -80,9 +76,9 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
     
     // Br 
     if (pc != NULL)
-    pc->fct(r,p,pc->data); /* Preconditioning */
+        pc->fct(r,p,pc->data); /* Preconditioning */
     else
-    fasp_array_cp(m,r,p); /* No preconditioner, B=I */
+        fasp_array_cp(m,r,p); /* No preconditioner, B=I */
     
     // alpha = (p'r)/(p'Ap)
     alpha = fasp_blas_array_dotprod (m,r,p) / fasp_blas_dcsr_vmv (A, p, p);
@@ -105,52 +101,51 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
     // update relative residual here
     absres0 = absres;
     
-    for ( iter = 1; iter < MaxIt ; iter++)
-    {    
-    // Br
-    if (pc != NULL)
-    pc->fct(r, Br ,pc->data); // Preconditioning 
-    else
-    fasp_array_cp(m,r, Br); // No preconditioner, B=I 
+    for ( iter = 1; iter < MaxIt ; iter++) {
+    
+        // Br
+        if (pc != NULL)
+            pc->fct(r, Br ,pc->data); // Preconditioning 
+        else
+            fasp_array_cp(m,r, Br); // No preconditioner, B=I 
         
-    // form p
-    fasp_array_cp(m, Br, p+iter*m);
+        // form p
+        fasp_array_cp(m, Br, p+iter*m);
     
-    for (i=0; i<iter; i++)
-    {
-    beta[i] = (-1.0) * ( fasp_blas_dcsr_vmv (A, Br, p+i*m)
-                                /fasp_blas_dcsr_vmv (A, p+i*m, p+i*m) );
+        for (i=0; i<iter; i++) {
+            beta[i] = (-1.0) * ( fasp_blas_dcsr_vmv (A, Br, p+i*m)
+                                 /fasp_blas_dcsr_vmv (A, p+i*m, p+i*m) );
     
-    fasp_blas_array_axpy(m, beta[i], p+i*m, p+iter*m);
-    }
+            fasp_blas_array_axpy(m, beta[i], p+i*m, p+iter*m);
+        }
     
         // -------------------------------------
         // next iteration
         // -------------------------------------
 
         // alpha = (p'r)/(p'Ap)
-    alpha = fasp_blas_array_dotprod(m,r,p+iter*m)
-              / fasp_blas_dcsr_vmv (A, p+iter*m, p+iter*m);
+        alpha = fasp_blas_array_dotprod(m,r,p+iter*m)
+            / fasp_blas_dcsr_vmv (A, p+iter*m, p+iter*m);
     
         // u = u + alpha *p
-    fasp_blas_array_axpy(m, alpha , p+iter*m, u->val);
+        fasp_blas_array_axpy(m, alpha , p+iter*m, u->val);
     
         // r = r - alpha *Ap
-    fasp_blas_dcsr_aAxpy((-1.0*alpha),A,p+iter*m,r);
+        fasp_blas_dcsr_aAxpy((-1.0*alpha),A,p+iter*m,r);
     
-    // norm(r), factor
-    absres = fasp_blas_array_norm2(m,r); factor = absres/absres0;
+        // norm(r), factor
+        absres = fasp_blas_array_norm2(m,r); factor = absres/absres0;
     
-    // compute relative residual 
-    relres = absres/normb;    
+        // compute relative residual 
+        relres = absres/normb;    
     
-    // output iteration information if needed    
-    print_itinfo(print_level,stop_type,iter+1,relres,absres,factor);
+        // output iteration information if needed    
+        print_itinfo(print_level,stop_type,iter+1,relres,absres,factor);
     
-    if (relres < tol) break;
+        if (relres < tol) break;
     
-    // update relative residual here
-    absres0 = absres;
+        // update relative residual here
+        absres0 = absres;
         
     } // end of main GCG loop.
     

@@ -31,55 +31,53 @@ void fasp_precond_dbsr_diag_omp (double *r,
     precond_diagbsr *diag   = (precond_diagbsr *)data;
     const int nb = diag->nb; 
     
-    switch (nb)
-    {
+    switch (nb) {
+
     case 2:
-    fasp_precond_dbsr_diag_nc2_omp( r, z, diag, nthreads, openmp_holds );
-    break;
+        fasp_precond_dbsr_diag_nc2_omp( r, z, diag, nthreads, openmp_holds );
+        break;
     case 3:
-    fasp_precond_dbsr_diag_nc3_omp( r, z, diag, nthreads, openmp_holds );
-    break;
+        fasp_precond_dbsr_diag_nc3_omp( r, z, diag, nthreads, openmp_holds );
+        break;
     
     case 5:
-    fasp_precond_dbsr_diag_nc5_omp( r, z, diag, nthreads, openmp_holds );
-    break;
+        fasp_precond_dbsr_diag_nc5_omp( r, z, diag, nthreads, openmp_holds );
+        break;
     
     case 7:
-    fasp_precond_dbsr_diag_nc7_omp( r, z, diag, nthreads, openmp_holds );
-    break;
+        fasp_precond_dbsr_diag_nc7_omp( r, z, diag, nthreads, openmp_holds );
+        break;
     
     default:
-    {
-    double *diagptr = diag->diag.val;
-    const int nb2 = nb*nb;
-    const int m = diag->diag.row/nb2;    
+        {
+            double *diagptr = diag->diag.val;
+            const int nb2 = nb*nb;
+            const int m = diag->diag.row/nb2;    
     
-    unsigned int i;
-    if (m > openmp_holds) {
-    int myid;
-    int mybegin;
-    int myend;
-    int stride_i = m/nthreads;
+            unsigned int i;
+            if (m > openmp_holds) {
+                int myid;
+                int mybegin;
+                int myend;
+                int stride_i = m/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i) num_threads(nthreads)
-    {
-    myid = omp_get_thread_num();
-    mybegin = myid*stride_i;
-    if(myid < nthreads-1)  myend = mybegin+stride_i;
-    else myend = m;
-    for (i=mybegin; i < myend; ++i)
-    {
-    fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
-    }
-    }
-    }
-    else {
-    for (i = 0; i < m; ++i) 
-    {
-    fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
-    }
-    }
-    }
-    break;
+                {
+                    myid = omp_get_thread_num();
+                    mybegin = myid*stride_i;
+                    if(myid < nthreads-1)  myend = mybegin+stride_i;
+                    else myend = m;
+                    for (i=mybegin; i < myend; ++i) {
+                        fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
+                    }
+                }
+            }
+            else {
+                for (i = 0; i < m; ++i) {
+                    fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
+                }
+            }
+        }
+        break;
     }
 #endif
 }
@@ -110,27 +108,25 @@ void fasp_precond_dbsr_diag_nc2_omp (double *r,
     
     unsigned int i;
     if (m > openmp_holds) {
-    int myid;
-    int mybegin;
-    int myend;
-    int stride_i = m/nthreads;
+        int myid;
+        int mybegin;
+        int myend;
+        int stride_i = m/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) ///num_threads(nthreads)
-    {
-    myid = omp_get_thread_num();
-    mybegin = myid*stride_i;
-    if(myid < nthreads-1)  myend = mybegin+stride_i;
-    else myend = m;
-    for (i=mybegin; i < myend; ++i)
-    {
-    fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
-    }
-    }
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            else myend = m;
+            for (i=mybegin; i < myend; ++i) {
+                fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
+            }
+        }
     }
     else {
-    for (i = 0; i < m; ++i) 
-    {
-    fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
-    }
+        for (i = 0; i < m; ++i) {
+            fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
+        }
     }
 #endif
 }
@@ -161,27 +157,25 @@ void fasp_precond_dbsr_diag_nc3_omp (double *r,
     
     unsigned int i;
     if (m > openmp_holds) {
-    int myid;
-    int mybegin;
-    int myend;
-    int stride_i = m/nthreads;
+        int myid;
+        int mybegin;
+        int myend;
+        int stride_i = m/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) ////num_threads(nthreads)
-    {
-    myid = omp_get_thread_num();
-    mybegin = myid*stride_i;
-    if(myid < nthreads-1)  myend = mybegin+stride_i;
-    else myend = m;
-    for (i=mybegin; i < myend; ++i)
-    {
-    fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
-    }
-    }
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            else myend = m;
+            for (i=mybegin; i < myend; ++i) {
+                fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
+            }
+        }
     }
     else {
-    for (i = 0; i < m; ++i) 
-    {
-    fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
-    }
+        for (i = 0; i < m; ++i) {
+            fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
+        }
     }
 #endif
 }
@@ -213,27 +207,25 @@ void fasp_precond_dbsr_diag_nc5_omp (double *r,
     
     unsigned int i;
     if (m > openmp_holds) {
-    int myid;
-    int mybegin;
-    int myend;
-    int stride_i = m/nthreads;
+        int myid;
+        int mybegin;
+        int myend;
+        int stride_i = m/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) ////num_threads(nthreads)
-    {
-    myid = omp_get_thread_num();
-    mybegin = myid*stride_i;
-    if(myid < nthreads-1)  myend = mybegin+stride_i;
-    else myend = m;
-    for (i=mybegin; i < myend; ++i)
-    {
-    fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
-    }
-    }
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            else myend = m;
+            for (i=mybegin; i < myend; ++i) {
+                fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
+            }
+        }
     }
     else {
-    for (i = 0; i < m; ++i) 
-    {
-    fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
-    }
+        for (i = 0; i < m; ++i) {
+            fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
+        }
     }
 #endif
 }
@@ -265,27 +257,25 @@ void fasp_precond_dbsr_diag_nc7_omp (double *r,
     
     unsigned int i;
     if (m > openmp_holds) {
-    int myid;
-    int mybegin;
-    int myend;
-    int stride_i = m/nthreads;
+        int myid;
+        int mybegin;
+        int myend;
+        int stride_i = m/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) ////num_threads(nthreads)
-    {
-    myid = omp_get_thread_num();
-    mybegin = myid*stride_i;
-    if(myid < nthreads-1)  myend = mybegin+stride_i;
-    else myend = m;
-    for (i=mybegin; i < myend; ++i)
-    {
-    fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
-    }
-    }
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            else myend = m;
+            for (i=mybegin; i < myend; ++i) {
+                fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
+            }
+        }
     }
     else {
-    for (i = 0; i < m; ++i) 
-    {
-    fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
-    }
+        for (i = 0; i < m; ++i) {
+            fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
+        }
     }
 #endif
 }

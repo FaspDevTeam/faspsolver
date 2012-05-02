@@ -34,10 +34,10 @@ INT fasp_aux_unique (INT numbers[],
     if (size==0) return(0);
     
     for (newsize=0, i=1; i<size; ++i) {
-    if (numbers[newsize] < numbers[i]) {
-    newsize++;
-    numbers[newsize] = numbers[i];
-    }
+        if (numbers[newsize] < numbers[i]) {
+            newsize++;
+            numbers[newsize] = numbers[i];
+        }
     }
     
     return(newsize+1);
@@ -73,35 +73,35 @@ void fasp_aux_merge (INT numbers[],
     
     while ((left <= left_end) && (mid <= right)) {    
     
-    if (numbers[left] <= numbers[mid]) // first branch <=
-    {    
-    work[tmp_pos] = numbers[left];
-    tmp_pos = tmp_pos + 1;
-    left = left +1;
-    }
-    else // second branch >
-    {    
-    work[tmp_pos] = numbers[mid];    
-    tmp_pos = tmp_pos + 1;    
-    mid = mid + 1;    
-    }    
+        if (numbers[left] <= numbers[mid]) // first branch <=
+            {    
+                work[tmp_pos] = numbers[left];
+                tmp_pos = tmp_pos + 1;
+                left = left +1;
+            }
+        else // second branch >
+            {    
+                work[tmp_pos] = numbers[mid];    
+                tmp_pos = tmp_pos + 1;    
+                mid = mid + 1;    
+            }    
     }    
     
     while (left <= left_end) {    
-    work[tmp_pos] = numbers[left];    
-    left = left + 1;    
-    tmp_pos = tmp_pos + 1;    
+        work[tmp_pos] = numbers[left];    
+        left = left + 1;    
+        tmp_pos = tmp_pos + 1;    
     }
     
     while (mid <= right) {    
-    work[tmp_pos] = numbers[mid];    
-    mid = mid + 1;
-    tmp_pos = tmp_pos + 1;    
+        work[tmp_pos] = numbers[mid];    
+        mid = mid + 1;
+        tmp_pos = tmp_pos + 1;    
     }
     
     for (i = 0; i < num_elements; ++i) {    
-    numbers[right] = work[right];    
-    right = right - 1;    
+        numbers[right] = work[right];    
+        right = right - 1;    
     }
     
 }
@@ -129,10 +129,10 @@ void fasp_aux_msort (INT numbers[],
     INT mid;
     
     if (right > left) {    
-    mid = (right + left) / 2;    
-    fasp_aux_msort(numbers, work, left, mid);
-    fasp_aux_msort(numbers, work, mid+1, right);    
-    fasp_aux_merge(numbers, work, left, mid+1, right);    
+        mid = (right + left) / 2;    
+        fasp_aux_msort(numbers, work, left, mid);
+        fasp_aux_msort(numbers, work, mid+1, right);    
+        fasp_aux_merge(numbers, work, left, mid+1, right);    
     }
     
 }
@@ -164,9 +164,9 @@ void fasp_aux_iQuickSort (INT *a,
     
     last = left;
     for (i = left+1; i <= right; ++i) {
-    if (a[i] < a[left]) {
-    iSwapping(a, ++last, i);
-    }
+        if (a[i] < a[left]) {
+            iSwapping(a, ++last, i);
+        }
     }
     
     iSwapping(a, left, last);
@@ -202,9 +202,9 @@ void fasp_aux_dQuickSort (REAL *a,
     
     last = left;
     for (i = left+1; i <= right; ++i) {
-    if (a[i] < a[left]) {
-    dSwapping(a, ++last, i);
-    }
+        if (a[i] < a[left]) {
+            dSwapping(a, ++last, i);
+        }
     }
     
     dSwapping(a, left, last);
@@ -243,9 +243,9 @@ void fasp_aux_iQuickSortIndex (INT *a,
     
     last = left;
     for (i = left+1; i <= right; ++i) {
-    if (a[index[i]] < a[index[left]]) {
-    iSwapping(index, ++last, i);
-    }
+        if (a[index[i]] < a[index[left]]) {
+            iSwapping(index, ++last, i);
+        }
     }
     
     iSwapping(index, left, last);
@@ -284,9 +284,9 @@ void fasp_aux_dQuickSortIndex (REAL *a,
     
     last = left;
     for (i = left+1; i <= right; ++i) {
-    if (a[index[i]] < a[index[left]]) {
-    iSwapping(index, ++last, i);
-    }
+        if (a[index[i]] < a[index[left]]) {
+            iSwapping(index, ++last, i);
+        }
     }
     
     iSwapping(index, left, last);

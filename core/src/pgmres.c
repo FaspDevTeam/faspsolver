@@ -28,9 +28,9 @@
  *
  * \brief Solve "Ax=b" using PGMRES (right preconditioned) iterative method
  *
- * \param A               Pointer to the coefficient matrix
- * \param b               Pointer to the dvector of right hand side
- * \param x               Pointer to the dvector of DOFs
+ * \param A            Pointer to the coefficient matrix
+ * \param b            Pointer to the dvector of right hand side
+ * \param x            Pointer to the dvector of DOFs
  * \param pc           Pointer to the structure of precondition (precond) 
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
@@ -100,14 +100,12 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     r_norm = fasp_blas_array_norm2(n, p[0]);
     r_norm_0 = r_norm;
     
-    if ( print_level > PRINT_NONE)
-    {
-    norms[0] = r_norm;
-    if ( print_level >= PRINT_SOME )
-    {
+    if ( print_level > PRINT_NONE) {
+        norms[0] = r_norm;
+        if ( print_level >= PRINT_SOME ) {
             ITS_PUTNORM("right-hand side", b_norm);
             ITS_PUTNORM("residual", r_norm);
-    }
+        }
     }
     
     if (b_norm > 0.0)  den_norm = b_norm;
@@ -116,156 +114,142 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     epsilon = tol*den_norm;
     
     /* outer iteration cycle */
-    while (iter < MaxIt)
-    {  
-    rs[0] = r_norm;
-    if (r_norm == 0.0)
-    {
-    fasp_mem_free(work); 
-    fasp_mem_free(p); 
-    fasp_mem_free(hh);
-    fasp_mem_free(norms);
-    return iter; 
-    }
+    while (iter < MaxIt) {
+  
+        rs[0] = r_norm;
+        if (r_norm == 0.0) {
+            fasp_mem_free(work); 
+            fasp_mem_free(p); 
+            fasp_mem_free(hh);
+            fasp_mem_free(norms);
+            return iter; 
+        }
     
-    if (r_norm <= epsilon && iter >= min_iter) 
-    {
-    fasp_array_cp(n, b->val, r);
-    fasp_blas_dcsr_aAxpy(-1.0, A, x->val, r);
-    r_norm = fasp_blas_array_norm2(n, r);
+        if (r_norm <= epsilon && iter >= min_iter) {
+            fasp_array_cp(n, b->val, r);
+            fasp_blas_dcsr_aAxpy(-1.0, A, x->val, r);
+            r_norm = fasp_blas_array_norm2(n, r);
     
-    if (r_norm <= epsilon)
-    {
-    break;
-    }
-    else
-    {
-    if (print_level >= PRINT_SOME) ITS_FACONV;
-    }
-    }
+            if (r_norm <= epsilon) {
+                break;
+            }
+            else {
+                if (print_level >= PRINT_SOME) ITS_FACONV;
+            }
+        }
     
-    t = 1.0 / r_norm;
-    for (j = 0; j < n; j ++) p[0][j] *= t;
+        t = 1.0 / r_norm;
+        for (j = 0; j < n; j ++) p[0][j] *= t;
     
-    /* RESTART CYCLE (right-preconditioning) */
-    i = 0;
-    while (i < restart && iter < MaxIt)
-    {
-    i ++;  iter ++;
+        /* RESTART CYCLE (right-preconditioning) */
+        i = 0;
+        while (i < restart && iter < MaxIt) {
+
+            i ++;  iter ++;
     
-    fasp_array_set(n, r, 0.0);
+            fasp_array_set(n, r, 0.0);
     
-    /* apply the preconditioner */
-    if (pc == NULL)
-    fasp_array_cp(n, p[i-1], r);
-    else
-    pc->fct(p[i-1], r, pc->data);          
+            /* apply the preconditioner */
+            if (pc == NULL)
+                fasp_array_cp(n, p[i-1], r);
+            else
+                pc->fct(p[i-1], r, pc->data);          
     
-    fasp_blas_dcsr_mxv(A, r, p[i]);
+            fasp_blas_dcsr_mxv(A, r, p[i]);
     
-    /* modified Gram_Schmidt */
-    for (j = 0; j < i; j ++)
-    {
-    hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
-    fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
-    }
-    t = fasp_blas_array_norm2(n, p[i]);
-    hh[i][i-1] = t;    
-    if (t != 0.0)
-    {
-    t = 1.0/t;
-    for (j = 0; j < n; j ++) p[i][j] *= t;
-    }
+            /* modified Gram_Schmidt */
+            for (j = 0; j < i; j ++) {
+                hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
+                fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
+            }
+            t = fasp_blas_array_norm2(n, p[i]);
+            hh[i][i-1] = t;    
+            if (t != 0.0) {
+                t = 1.0/t;
+                for (j = 0; j < n; j ++) p[i][j] *= t;
+            }
     
-    for (j = 1; j < i; ++j)
-    {
-    t = hh[j-1][i-1];
-    hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
-    hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
-    }
-    t= hh[i][i-1]*hh[i][i-1];
-    t+= hh[i-1][i-1]*hh[i-1][i-1];
-    gamma = sqrt(t);
-    if (gamma == 0.0) gamma = epsmac;
-    c[i-1]  = hh[i-1][i-1] / gamma;
-    s[i-1]  = hh[i][i-1] / gamma;
-    rs[i]   = -s[i-1]*rs[i-1];
-    rs[i-1] = c[i-1]*rs[i-1];
-    hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
-    r_norm = fabs(rs[i]);
+            for (j = 1; j < i; ++j) {
+                t = hh[j-1][i-1];
+                hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
+                hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
+            }
+            t= hh[i][i-1]*hh[i][i-1];
+            t+= hh[i-1][i-1]*hh[i-1][i-1];
+            gamma = sqrt(t);
+            if (gamma == 0.0) gamma = epsmac;
+            c[i-1]  = hh[i-1][i-1] / gamma;
+            s[i-1]  = hh[i][i-1] / gamma;
+            rs[i]   = -s[i-1]*rs[i-1];
+            rs[i-1] = c[i-1]*rs[i-1];
+            hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
+            r_norm = fabs(rs[i]);
     
-    if (print_level > PRINT_NONE) norms[iter] = r_norm;
+            if (print_level > PRINT_NONE) norms[iter] = r_norm;
     
-    if (b_norm > 0 ) {
-    if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,norms[iter],norms[iter]/norms[iter-1]);
-    }
-    else {
-    if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],norms[iter]/norms[iter-1]);
-    }
+            if (b_norm > 0 ) {
+                if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,norms[iter],norms[iter]/norms[iter-1]);
+            }
+            else {
+                if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],norms[iter]/norms[iter-1]);
+            }
     
-    /* should we exit the restart cycle? */
-    if (r_norm <= epsilon && iter >= min_iter)
-    {
-    break;
-    }         
-    } /* end of restart cycle */
+            /* should we exit the restart cycle? */
+            if (r_norm <= epsilon && iter >= min_iter) {
+                break;
+            }         
+        } /* end of restart cycle */
     
-    /* now compute solution, first solve upper triangular system */    
-    rs[i-1] = rs[i-1] / hh[i-1][i-1];
-    for (k = i-2; k >= 0; k --)
-    {
-    t = 0.0;
-    for (j = k+1; j < i; j ++)  t -= hh[k][j]*rs[j];
+        /* now compute solution, first solve upper triangular system */    
+        rs[i-1] = rs[i-1] / hh[i-1][i-1];
+        for (k = i-2; k >= 0; k --) {
+            t = 0.0;
+            for (j = k+1; j < i; j ++)  t -= hh[k][j]*rs[j];
     
-    t += rs[k];
-    rs[k] = t / hh[k][k];
-    }
-    fasp_array_cp(n, p[i-1], w);
-    for (j = 0; j < n; j ++) w[j] *= rs[i-1];
-    for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], p[j], w);
-    fasp_array_set(n, r, 0.0);
+            t += rs[k];
+            rs[k] = t / hh[k][k];
+        }
+        fasp_array_cp(n, p[i-1], w);
+        for (j = 0; j < n; j ++) w[j] *= rs[i-1];
+        for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], p[j], w);
+        fasp_array_set(n, r, 0.0);
     
-    /* apply the preconditioner */
-    if (pc == NULL)
-    fasp_array_cp(n, w, r);
-    else
-    pc->fct(w, r, pc->data);
+        /* apply the preconditioner */
+        if (pc == NULL)
+            fasp_array_cp(n, w, r);
+        else
+            pc->fct(w, r, pc->data);
     
-    fasp_blas_array_axpy(n, 1.0, r, x->val);
+        fasp_blas_array_axpy(n, 1.0, r, x->val);
     
-    if (r_norm  <= epsilon && iter >= min_iter) 
-    {
-    fasp_array_cp(n, b->val, r);
-    fasp_blas_dcsr_aAxpy(-1.0, A, x->val, r);
-    r_norm = fasp_blas_array_norm2(n, r);
+        if (r_norm  <= epsilon && iter >= min_iter) {
+            fasp_array_cp(n, b->val, r);
+            fasp_blas_dcsr_aAxpy(-1.0, A, x->val, r);
+            r_norm = fasp_blas_array_norm2(n, r);
     
-    if (r_norm  <= epsilon)
-    {
-    converged = 1; break;
-    }
-    else
-    {
-    if (print_level >= PRINT_SOME) ITS_FACONV;
-    fasp_array_cp(n, r, p[0]); i = 0;
-    }
-    } /* end of convergence check */
+            if (r_norm  <= epsilon) {
+                converged = TRUE; break;
+            }
+            else {
+                if (print_level >= PRINT_SOME) ITS_FACONV;
+                fasp_array_cp(n, r, p[0]); i = 0;
+            }
+        } /* end of convergence check */
     
-    /* compute residual vector and continue loop */
-    for (j = i; j > 0; j--)
-    {
-    rs[j-1] = -s[j-1]*rs[j];
-    rs[j] = c[j-1]*rs[j];
-    }
+        /* compute residual vector and continue loop */
+        for (j = i; j > 0; j--) {
+            rs[j-1] = -s[j-1]*rs[j];
+            rs[j] = c[j-1]*rs[j];
+        }
     
-    if (i) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
+        if (i) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
     
-    for (j = i-1 ; j > 0; j --) fasp_blas_array_axpy(n, rs[j], p[j], p[i]);
+        for (j = i-1 ; j > 0; j --) fasp_blas_array_axpy(n, rs[j], p[j], p[i]);
     
-    if (i)
-    {
-    fasp_blas_array_axpy(n, rs[0]-1.0, p[0], p[0]);
-    fasp_blas_array_axpy(n, 1.0, p[i], p[0]);
-    }        
+        if (i) {
+            fasp_blas_array_axpy(n, rs[0]-1.0, p[0], p[0]);
+            fasp_blas_array_axpy(n, 1.0, p[i], p[0]);
+        }        
     } /* end of iteration while loop */
     
     if (print_level > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);
@@ -293,9 +277,9 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
  *                                   const REAL tol, const INT MaxIt, const SHORT restart,
  *                                   const SHORT stop_type, const SHORT print_level)
  *
- * \param A               Pointer to the coefficient matrix
- * \param b               Pointer to the dvector of right hand side
- * \param u               Pointer to the dvector of DOFs
+ * \param A            Pointer to the coefficient matrix
+ * \param b            Pointer to the dvector of right hand side
+ * \param u            Pointer to the dvector of DOFs
  * \param pc           Pointer to the structure of precondition (precond) 
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
@@ -339,8 +323,8 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     dvector *v=(dvector *)fasp_mem_calloc(m+1,sizeof(dvector));
     
     for (i=0;i<=m;++i) {
-    v[i].row=nrow;
-    v[i].val=(REAL*)fasp_mem_calloc(nrow,sizeof(REAL));
+        v[i].row=nrow;
+        v[i].val=(REAL*)fasp_mem_calloc(nrow,sizeof(REAL));
     }
     
     dvector y = fasp_dvec_create(m);
@@ -358,32 +342,32 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     for (i=2;i<=H.row;++i) H.IA[i]=H.IA[i-1]+m+2-i;
     
     for (i=0;i<H.row;++i) {
-    if (i==0)
-    index=0;
-    else
-    index=i-1;
+        if (i==0)
+            index=0;
+        else
+            index=i-1;
     
-    unsigned INT begin_row=H.IA[i], end_row1=H.IA[i+1];    
-    for(j=begin_row;j<end_row1;++j) {
-    H.JA[j]=index;
-    index++;
-    }
+        unsigned INT begin_row=H.IA[i], end_row1=H.IA[i+1];    
+        for(j=begin_row;j<end_row1;++j) {
+            H.JA[j]=index;
+            index++;
+        }
     }
     
     // compute norm for right hand side
     switch (stop_type) {
     case STOP_REL_PRECRES:
-    if (pc != NULL) 
-    pc->fct(b->val,z,pc->data); /* Preconditioning */
-    else 
-    fasp_array_cp(nrow,b->val,z); /* No preconditioner, B=I */
-    tempb=sqrt(ABS(fasp_blas_array_dotprod(nrow,b->val,z)));
-    break;
+        if (pc != NULL) 
+            pc->fct(b->val,z,pc->data); /* Preconditioning */
+        else 
+            fasp_array_cp(nrow,b->val,z); /* No preconditioner, B=I */
+        tempb=sqrt(ABS(fasp_blas_array_dotprod(nrow,b->val,z)));
+        break;
     case STOP_MOD_REL_RES:
-    break;
+        break;
     default: // STOP_REL_RES
-    tempb=fasp_blas_array_norm2(nrow,b->val); // norm(b)
-    break;
+        tempb=fasp_blas_array_norm2(nrow,b->val); // norm(b)
+        break;
     }
     tempb=MAX(SMALLREAL,tempb);
     tempu=MAX(SMALLREAL,fasp_blas_array_norm2(nrow,u->val));
@@ -395,124 +379,121 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     
     switch (stop_type) {
     case STOP_REL_PRECRES:
-    if (pc == NULL)
-    fasp_array_cp(nrow,r,z);
-    else
-    pc->fct(r,z,pc->data);
-    temp2=sqrt(ABS(fasp_blas_array_dotprod(nrow,r,z)));
-    relres1=temp2/tempb; 
-    break;
+        if (pc == NULL)
+            fasp_array_cp(nrow,r,z);
+        else
+            pc->fct(r,z,pc->data);
+        temp2=sqrt(ABS(fasp_blas_array_dotprod(nrow,r,z)));
+        relres1=temp2/tempb; 
+        break;
     case STOP_MOD_REL_RES:
-    relres1=tempe/tempu; 
-    break;
-        default: // STOP_REL_RES
-    relres1=tempe/tempb; 
-    break;
+        relres1=tempe/tempu; 
+        break;
+    default: // STOP_REL_RES
+        relres1=tempe/tempb; 
+        break;
     }
     
     if (relres1<tol) { fasp_mem_free(r); goto FINISHED; }
     
     if  (iter < 0) goto FINISHED;
     
-    while (iter++<MaxIt)
-    {
-    // z = B*r
-    if (pc == NULL) {
-    fasp_array_cp(nrow,r,z);  /* No preconditioner, B=I */
-    }
-    else {
-    pc->fct(r,z,pc->data); /* Preconditioning */
-    }
+    while (iter++<MaxIt) {
+
+        // z = B*r
+        if (pc == NULL) {
+            fasp_array_cp(nrow,r,z);  /* No preconditioner, B=I */
+        }
+        else {
+            pc->fct(r,z,pc->data); /* Preconditioning */
+        }
     
-    beta=fasp_blas_array_norm2(nrow,z); betai=1.0/beta;
+        beta=fasp_blas_array_norm2(nrow,z); betai=1.0/beta;
     
-    // v_0 = z/beta
-    for (i=0;i<=nrow_1;++i) v[0].val[i]=betai*z[i];
+        // v_0 = z/beta
+        for (i=0;i<=nrow_1;++i) v[0].val[i]=betai*z[i];
     
-    for (j=0;j<m;++j)
-    {
-    // r = Av_j
-    fasp_array_set(nrow, r, 0.0); 
-    fasp_blas_bdcsr_aAxpy(1.0,A,v[j].val,r);
+        for (j=0;j<m;++j) {
+            // r = Av_j
+            fasp_array_set(nrow, r, 0.0); 
+            fasp_blas_bdcsr_aAxpy(1.0,A,v[j].val,r);
     
-    // w = B*r
-    if (pc == NULL) {
-    fasp_array_cp(nrow,r,w);  /* No preconditioner, B=I */
-    }
-    else {
-    pc->fct(r,w,pc->data); /* Preconditioning */
-    }
+            // w = B*r
+            if (pc == NULL) {
+                fasp_array_cp(nrow,r,w);  /* No preconditioner, B=I */
+            }
+            else {
+                pc->fct(r,w,pc->data); /* Preconditioning */
+            }
     
-    for (i=0;i<=j;++i)
-    {
-    if (i==0) index=0;
-    else index=i-1;
-    hij=fasp_blas_array_dotprod(nrow,w,v[i].val);
-    H.val[H.IA[i]+j-index]=hij;
-    fasp_blas_array_axpy(nrow, -hij, v[i].val, w);
-    }
+            for (i=0;i<=j;++i) {
+                if (i==0) index=0;
+                else index=i-1;
+                hij=fasp_blas_array_dotprod(nrow,w,v[i].val);
+                H.val[H.IA[i]+j-index]=hij;
+                fasp_blas_array_axpy(nrow, -hij, v[i].val, w);
+            }
     
-    j1=j+1;
-    hij=fasp_blas_array_norm2(nrow,w);  // h_{j+1,j}=\|w\|_2
-    H.val[H.IA[j1]]=hij;
+            j1=j+1;
+            hij=fasp_blas_array_norm2(nrow,w);  // h_{j+1,j}=\|w\|_2
+            H.val[H.IA[j1]]=hij;
     
-    // v_{j+1}=w/h_{j+1,j}
-    hij=1.0/hij;
-    for (i=0;i<=nrow_1;++i) v[j1].val[i]=w[i]*hij;
-    }
+            // v_{j+1}=w/h_{j+1,j}
+            hij=1.0/hij;
+            for (i=0;i<=nrow_1;++i) v[j1].val[i]=w[i]*hij;
+        }
     
-    fasp_aux_givens(beta, &H, &y, tmp);
+        fasp_aux_givens(beta, &H, &y, tmp);
     
-    // u_m=u_0 + V_m*y_m
-    for (i=0;i<m;++i) fasp_blas_array_axpy(nrow, y.val[i], v[i].val, u->val); // maybe we can check the residual for every iteration ?!
+        // u_m=u_0 + V_m*y_m
+        for (i=0;i<m;++i) fasp_blas_array_axpy(nrow, y.val[i], v[i].val, u->val); // maybe we can check the residual for every iteration ?!
     
-    // r = b-A*u
-    fasp_array_cp(nrow,b->val,r); 
-    fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
+        // r = b-A*u
+        fasp_array_cp(nrow,b->val,r); 
+        fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
     
-    // absolute and relative residuals
-    absres=sqrt(fasp_blas_array_dotprod(nrow,r,r));
+        // absolute and relative residuals
+        absres=sqrt(fasp_blas_array_dotprod(nrow,r,r));
     
-    tempu=sqrt(fasp_blas_dvec_dotprod(u,u));    
+        tempu=sqrt(fasp_blas_dvec_dotprod(u,u));    
     
-    switch (stop_type) {
-    case STOP_REL_PRECRES:
-    if (pc == NULL)
-    fasp_array_cp(nrow,r,z);
-    else
-    pc->fct(r,z,pc->data);
-    temp2=sqrt(ABS(fasp_blas_array_dotprod(nrow,r,z)));
-    relres1=temp2/tempb; 
-    break;
-    case STOP_MOD_REL_RES:
-    relres1=absres/tempu; 
-    break;
-    default: // STOP_REL_RES
-    relres1=absres/tempb; 
-    break;
-    }
+        switch (stop_type) {
+        case STOP_REL_PRECRES:
+            if (pc == NULL)
+                fasp_array_cp(nrow,r,z);
+            else
+                pc->fct(r,z,pc->data);
+            temp2=sqrt(ABS(fasp_blas_array_dotprod(nrow,r,z)));
+            relres1=temp2/tempb; 
+            break;
+        case STOP_MOD_REL_RES:
+            relres1=absres/tempu; 
+            break;
+        default: // STOP_REL_RES
+            relres1=absres/tempb; 
+            break;
+        }
     
-    // contraction factor
-    factor=absres/absres0;
+        // contraction factor
+        factor=absres/absres0;
     
-    // output iteration information if needed    
-    print_itinfo(print_level,stop_type,iter,relres1,absres,factor);
+        // output iteration information if needed    
+        print_itinfo(print_level,stop_type,iter,relres1,absres,factor);
     
-    absres0=absres;
+        absres0=absres;
     
-    // solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
-    infnormu = fasp_blas_array_norminf(nrow, u->val); 
-    if (infnormu <= sol_inf_tol)
-    {
+        // solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
+        infnormu = fasp_blas_array_norminf(nrow, u->val); 
+        if (infnormu <= sol_inf_tol) {
             if (print_level>PRINT_MIN) ITS_ZEROSOL;
-    iter = ERROR_SOLVER_SOLSTAG;
-    break;
+            iter = ERROR_SOLVER_SOLSTAG;
+            break;
+        }
+    
+        if (relres1<tol) break;
     }
     
-    if (relres1<tol) break;
-    }
-    
-FINISHED:
+ FINISHED:
     if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres1);
     
     fasp_dvec_free(&y);
@@ -536,9 +517,9 @@ FINISHED:
  *                                  const REAL tol, const INT MaxIt, const SHORT restart,
  *                                  const SHORT stop_type, const SHORT print_level)
  *
- * \param A               Pointer to the coefficient matrix
- * \param b               Pointer to the dvector of right hand side
- * \param x               Pointer to the dvector of DOFs
+ * \param A            Pointer to the coefficient matrix
+ * \param b            Pointer to the dvector of right hand side
+ * \param x            Pointer to the dvector of DOFs
  * \param pc           Pointer to the structure of precondition (precond) 
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
@@ -567,7 +548,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     const INT min_iter = 0;
     
     // local variables
-    SHORT     converged = 0; 
+    SHORT     converged = FALSE; 
     INT       iter = 0;
     INT       restartplus1 = restart + 1;
     INT       i, j, k;
@@ -606,14 +587,12 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     r_norm = fasp_blas_array_norm2(n, p[0]);
     r_norm_0 = r_norm;
     
-    if ( print_level > PRINT_NONE)
-    {
-    norms[0] = r_norm;
-    if ( print_level >= PRINT_SOME )
-    {
+    if ( print_level > PRINT_NONE) {
+        norms[0] = r_norm;
+        if ( print_level >= PRINT_SOME ) {
             ITS_PUTNORM("right-hand side", b_norm);
             ITS_PUTNORM("residual", r_norm);
-    }
+        }
     }
     
     if (b_norm > 0.0)  den_norm = b_norm;
@@ -622,156 +601,141 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     epsilon = tol*den_norm;
     
     /* outer iteration cycle */
-    while (iter < MaxIt)
-    {  
-    rs[0] = r_norm;
-    if (r_norm == 0.0)
-    {
-    fasp_mem_free(work); 
-    fasp_mem_free(p); 
-    fasp_mem_free(hh);
-    fasp_mem_free(norms);
-    return iter; 
-    }
+    while (iter < MaxIt) {
+  
+        rs[0] = r_norm;
+        if (r_norm == 0.0) {
+            fasp_mem_free(work); 
+            fasp_mem_free(p); 
+            fasp_mem_free(hh);
+            fasp_mem_free(norms);
+            return iter; 
+        }
     
-    if (r_norm <= epsilon && iter >= min_iter) 
-    {
-    fasp_array_cp(n, b->val, r);
-    fasp_blas_dbsr_aAxpy(-1.0, A, x->val, r);
-    r_norm = fasp_blas_array_norm2(n, r);
+        if (r_norm <= epsilon && iter >= min_iter) {
+            fasp_array_cp(n, b->val, r);
+            fasp_blas_dbsr_aAxpy(-1.0, A, x->val, r);
+            r_norm = fasp_blas_array_norm2(n, r);
     
-    if (r_norm <= epsilon)
-    {
-    break;
-    }
-    else
-    {
-    if (print_level >= PRINT_SOME) ITS_FACONV;
-    }
-    }
+            if (r_norm <= epsilon) {
+                break;
+            }
+            else {
+                if (print_level >= PRINT_SOME) ITS_FACONV;
+            }
+        }
     
-    t = 1.0 / r_norm;
-    for (j = 0; j < n; ++j) p[0][j] *= t;
+        t = 1.0 / r_norm;
+        for (j = 0; j < n; ++j) p[0][j] *= t;
     
-    /* RESTART CYCLE (right-preconditioning) */
-    i = 0;
-    while (i < restart && iter < MaxIt)
-    {
-    ++i;  ++iter;
+        /* RESTART CYCLE (right-preconditioning) */
+        i = 0;
+        while (i < restart && iter < MaxIt) {
+            ++i;  ++iter;
     
-    fasp_array_set(n, r, 0.0);
+            fasp_array_set(n, r, 0.0);
     
-    /* apply the preconditioner */
-    if (pc == NULL)
-    fasp_array_cp(n, p[i-1], r);
-    else
-    pc->fct(p[i-1], r, pc->data);          
+            /* apply the preconditioner */
+            if (pc == NULL)
+                fasp_array_cp(n, p[i-1], r);
+            else
+                pc->fct(p[i-1], r, pc->data);          
     
-    fasp_blas_dbsr_mxv(A, r, p[i]);
+            fasp_blas_dbsr_mxv(A, r, p[i]);
     
-    /* modified Gram_Schmidt */
-    for (j = 0; j < i; ++j)
-    {
-    hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
-    fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
-    }
-    t = fasp_blas_array_norm2(n, p[i]);
-    hh[i][i-1] = t;    
-    if (t != 0.0)
-    {
-    t = 1.0/t;
-    for (j = 0; j < n; ++j) p[i][j] *= t;
-    }
+            /* modified Gram_Schmidt */
+            for (j = 0; j < i; ++j) {
+                hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
+                fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
+            }
+            t = fasp_blas_array_norm2(n, p[i]);
+            hh[i][i-1] = t;    
+            if (t != 0.0) {
+                t = 1.0/t;
+                for (j = 0; j < n; ++j) p[i][j] *= t;
+            }
     
-    for (j = 1; j < i; j++)
-    {
-    t = hh[j-1][i-1];
-    hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
-    hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
-    }
-    t= hh[i][i-1]*hh[i][i-1];
-    t+= hh[i-1][i-1]*hh[i-1][i-1];
-    gamma = sqrt(t);
-    if (gamma == 0.0) gamma = epsmac;
-    c[i-1]  = hh[i-1][i-1] / gamma;
-    s[i-1]  = hh[i][i-1] / gamma;
-    rs[i]   = -s[i-1]*rs[i-1];
-    rs[i-1] = c[i-1]*rs[i-1];
-    hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
-    r_norm = fabs(rs[i]);
+            for (j = 1; j < i; j++) {
+                t = hh[j-1][i-1];
+                hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
+                hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
+            }
+            t= hh[i][i-1]*hh[i][i-1];
+            t+= hh[i-1][i-1]*hh[i-1][i-1];
+            gamma = sqrt(t);
+            if (gamma == 0.0) gamma = epsmac;
+            c[i-1]  = hh[i-1][i-1] / gamma;
+            s[i-1]  = hh[i][i-1] / gamma;
+            rs[i]   = -s[i-1]*rs[i-1];
+            rs[i-1] = c[i-1]*rs[i-1];
+            hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
+            r_norm = fabs(rs[i]);
     
-    if (print_level > PRINT_NONE) norms[iter] = r_norm;
+            if (print_level > PRINT_NONE) norms[iter] = r_norm;
     
-    if (b_norm > 0 ) {
-    if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,norms[iter],norms[iter]/norms[iter-1]);
-    }
-    else {
-    if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],norms[iter]/norms[iter-1]);
-    }
+            if (b_norm > 0 ) {
+                if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,norms[iter],norms[iter]/norms[iter-1]);
+            }
+            else {
+                if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],norms[iter]/norms[iter-1]);
+            }
     
-    /* should we exit the restart cycle? */
-    if (r_norm <= epsilon && iter >= min_iter)
-    {
-    break;
-    }         
-    } /* end of restart cycle */
+            /* should we exit the restart cycle? */
+            if (r_norm <= epsilon && iter >= min_iter) {
+                break;
+            }         
+        } /* end of restart cycle */
     
-    /* now compute solution, first solve upper triangular system */    
-    rs[i-1] = rs[i-1] / hh[i-1][i-1];
-    for (k = i-2; k >= 0; --k)
-    {
-    t = 0.0;
-    for (j = k+1; j < i; ++j)  t -= hh[k][j]*rs[j];
+        /* now compute solution, first solve upper triangular system */    
+        rs[i-1] = rs[i-1] / hh[i-1][i-1];
+        for (k = i-2; k >= 0; --k) {
+            t = 0.0;
+            for (j = k+1; j < i; ++j)  t -= hh[k][j]*rs[j];
     
-    t += rs[k];
-    rs[k] = t / hh[k][k];
-    }
-    fasp_array_cp(n, p[i-1], w);
-    for (j = 0; j < n; ++j) w[j] *= rs[i-1];
-    for (j = i-2; j >= 0; --j)  fasp_blas_array_axpy(n, rs[j], p[j], w);
-    fasp_array_set(n, r, 0.0);
+            t += rs[k];
+            rs[k] = t / hh[k][k];
+        }
+        fasp_array_cp(n, p[i-1], w);
+        for (j = 0; j < n; ++j) w[j] *= rs[i-1];
+        for (j = i-2; j >= 0; --j)  fasp_blas_array_axpy(n, rs[j], p[j], w);
+        fasp_array_set(n, r, 0.0);
     
-    /* apply the preconditioner */
-    if (pc == NULL)
-    fasp_array_cp(n, w, r);
-    else
-    pc->fct(w, r, pc->data);
+        /* apply the preconditioner */
+        if (pc == NULL)
+            fasp_array_cp(n, w, r);
+        else
+            pc->fct(w, r, pc->data);
     
-    fasp_blas_array_axpy(n, 1.0, r, x->val);
+        fasp_blas_array_axpy(n, 1.0, r, x->val);
     
-    if (r_norm  <= epsilon && iter >= min_iter) 
-    {
-    fasp_array_cp(n, b->val, r);
-    fasp_blas_dbsr_aAxpy(-1.0, A, x->val, r);
-    r_norm = fasp_blas_array_norm2(n, r);
+        if (r_norm  <= epsilon && iter >= min_iter) {
+            fasp_array_cp(n, b->val, r);
+            fasp_blas_dbsr_aAxpy(-1.0, A, x->val, r);
+            r_norm = fasp_blas_array_norm2(n, r);
     
-    if (r_norm  <= epsilon)
-    {
-    converged = 1; break;
-    }
-    else
-    {
-    if ( print_level >= PRINT_SOME ) ITS_FACONV;
-    fasp_array_cp(n, r, p[0]); i = 0;
-    }
-    } /* end of convergence check */
+            if (r_norm  <= epsilon) {
+                converged = TRUE; break;
+            }
+            else {
+                if ( print_level >= PRINT_SOME ) ITS_FACONV;
+                fasp_array_cp(n, r, p[0]); i = 0;
+            }
+        } /* end of convergence check */
     
-    /* compute residual vector and continue loop */
-    for (j = i; j > 0; j--)
-    {
-    rs[j-1] = -s[j-1]*rs[j];
-    rs[j] = c[j-1]*rs[j];
-    }
+        /* compute residual vector and continue loop */
+        for (j = i; j > 0; j--) {
+            rs[j-1] = -s[j-1]*rs[j];
+            rs[j] = c[j-1]*rs[j];
+        }
     
-    if (i) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
+        if (i) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
     
-    for (j = i-1 ; j > 0; --j) fasp_blas_array_axpy(n, rs[j], p[j], p[i]);
+        for (j = i-1 ; j > 0; --j) fasp_blas_array_axpy(n, rs[j], p[j], p[i]);
     
-    if (i)
-    {
-    fasp_blas_array_axpy(n, rs[0]-1.0, p[0], p[0]);
-    fasp_blas_array_axpy(n, 1.0, p[i], p[0]);
-    }        
+        if (i) {
+            fasp_blas_array_axpy(n, rs[0]-1.0, p[0], p[0]);
+            fasp_blas_array_axpy(n, 1.0, p[i], p[0]);
+        }        
     } /* end of iteration while loop */
     
     if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);
@@ -799,9 +763,9 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
  *                                  const REAL tol, const INT MaxIt, const SHORT restart,
  *                                  const SHORT stop_type, const SHORT print_level)
  *
- * \param A               Pointer to the coefficient matrix
- * \param b               Pointer to the dvector of right hand side
- * \param x               Pointer to the dvector of DOFs
+ * \param A            Pointer to the coefficient matrix
+ * \param b            Pointer to the dvector of right hand side
+ * \param x            Pointer to the dvector of DOFs
  * \param pc           Pointer to the structure of precondition (precond) 
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
@@ -830,7 +794,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     const INT min_iter = 0;
     
     // local varialbes
-    SHORT     converged = 0; 
+    SHORT     converged = FALSE; 
     INT       iter = 0;
     INT       restartplus1 = restart + 1;
     INT       i, j, k;
@@ -869,14 +833,12 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     r_norm = fasp_blas_array_norm2(n, p[0]);
     r_norm_0 = r_norm;
     
-    if ( print_level > PRINT_NONE)
-    {
-    norms[0] = r_norm;
-    if ( print_level >= PRINT_SOME )
-    {
+    if ( print_level > PRINT_NONE) {
+        norms[0] = r_norm;
+        if ( print_level >= PRINT_SOME ) {
             ITS_PUTNORM("right-hand side", b_norm);
             ITS_PUTNORM("residual", r_norm);
-    }
+        }
     }
     
     if (b_norm > 0.0)  den_norm = b_norm;
@@ -885,157 +847,143 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     epsilon = tol*den_norm;
     
     /* outer iteration cycle */
-    while (iter < MaxIt)
-    {  
-    rs[0] = r_norm;
-    if (r_norm == 0.0)
-    {
-    fasp_mem_free(work); 
-    fasp_mem_free(p); 
-    fasp_mem_free(hh);
-    fasp_mem_free(norms);
-    return iter; 
-    }
+    while (iter < MaxIt) {
+  
+        rs[0] = r_norm;
+        if (r_norm == 0.0) {
+            fasp_mem_free(work); 
+            fasp_mem_free(p); 
+            fasp_mem_free(hh);
+            fasp_mem_free(norms);
+            return iter; 
+        }
     
-    if (r_norm <= epsilon && iter >= min_iter) 
-    {
-    fasp_array_cp(n, b->val, r);
-    fasp_blas_dstr_aAxpy(-1.0, A, x->val, r);
-    r_norm = fasp_blas_array_norm2(n, r);
+        if (r_norm <= epsilon && iter >= min_iter) {
+            fasp_array_cp(n, b->val, r);
+            fasp_blas_dstr_aAxpy(-1.0, A, x->val, r);
+            r_norm = fasp_blas_array_norm2(n, r);
     
-    if (r_norm <= epsilon)
-    {
-    break;
-    }
-    else
-    {
-    if (print_level >= PRINT_SOME) ITS_FACONV;
-    }
-    }
+            if (r_norm <= epsilon) {
+                break;
+            }
+            else {
+                if (print_level >= PRINT_SOME) ITS_FACONV;
+            }
+        }
     
-    t = 1.0 / r_norm;
-    for (j = 0; j < n; ++j) p[0][j] *= t;
+        t = 1.0 / r_norm;
+        for (j = 0; j < n; ++j) p[0][j] *= t;
     
-    /* RESTART CYCLE (right-preconditioning) */
-    i = 0;
-    while (i < restart && iter < MaxIt)
-    {
-    ++i;  ++iter;
+        /* RESTART CYCLE (right-preconditioning) */
+        i = 0;
+        while (i < restart && iter < MaxIt) {
+            ++i;  ++iter;
     
-    fasp_array_set(n, r, 0.0);
+            fasp_array_set(n, r, 0.0);
     
-    /* apply the preconditioner */
-    if (pc == NULL)
-    fasp_array_cp(n, p[i-1], r);
-    else
-    pc->fct(p[i-1], r, pc->data);          
+            /* apply the preconditioner */
+            if (pc == NULL)
+                fasp_array_cp(n, p[i-1], r);
+            else
+                pc->fct(p[i-1], r, pc->data);          
     
-    //fasp_blas_dbsr_mxv(A, r, p[i]);
-    fasp_blas_dstr_aAxpy(1.0, A, r, p[i]); // we need spmxv_str here. --Zhiyang Zhou
+            //fasp_blas_dbsr_mxv(A, r, p[i]);
+            fasp_blas_dstr_aAxpy(1.0, A, r, p[i]); // we need spmxv_str here. --Zhiyang Zhou
     
-    /* modified Gram_Schmidt */
-    for (j = 0; j < i; ++j)
-    {
-    hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
-    fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
-    }
-    t = fasp_blas_array_norm2(n, p[i]);
-    hh[i][i-1] = t;    
-    if (t != 0.0)
-    {
-    t = 1.0/t;
-    for (j = 0; j < n; ++j) p[i][j] *= t;
-    }
+            /* modified Gram_Schmidt */
+            for (j = 0; j < i; ++j) {
+                hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
+                fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
+            }
+            t = fasp_blas_array_norm2(n, p[i]);
+            hh[i][i-1] = t;    
+            if (t != 0.0) {
+                t = 1.0/t;
+                for (j = 0; j < n; ++j) p[i][j] *= t;
+            }
     
-    for (j = 1; j < i; ++j)
-    {
-    t = hh[j-1][i-1];
-    hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
-    hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
-    }
-    t= hh[i][i-1]*hh[i][i-1];
-    t+= hh[i-1][i-1]*hh[i-1][i-1];
-    gamma = sqrt(t);
-    if (gamma == 0.0) gamma = epsmac;
-    c[i-1]  = hh[i-1][i-1] / gamma;
-    s[i-1]  = hh[i][i-1] / gamma;
-    rs[i]   = -s[i-1]*rs[i-1];
-    rs[i-1] = c[i-1]*rs[i-1];
-    hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
-    r_norm = fabs(rs[i]);
+            for (j = 1; j < i; ++j) {
+                t = hh[j-1][i-1];
+                hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
+                hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
+            }
+            t= hh[i][i-1]*hh[i][i-1];
+            t+= hh[i-1][i-1]*hh[i-1][i-1];
+            gamma = sqrt(t);
+            if (gamma == 0.0) gamma = epsmac;
+            c[i-1]  = hh[i-1][i-1] / gamma;
+            s[i-1]  = hh[i][i-1] / gamma;
+            rs[i]   = -s[i-1]*rs[i-1];
+            rs[i-1] = c[i-1]*rs[i-1];
+            hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
+            r_norm = fabs(rs[i]);
     
-    if (print_level > PRINT_NONE) norms[iter] = r_norm;
+            if (print_level > PRINT_NONE) norms[iter] = r_norm;
     
-    if (b_norm > 0 ) {
-    if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,norms[iter],norms[iter]/norms[iter-1]);
-    }
-    else {
-    if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],norms[iter]/norms[iter-1]);
-    }
+            if (b_norm > 0 ) {
+                if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,norms[iter],norms[iter]/norms[iter-1]);
+            }
+            else {
+                if (print_level > PRINT_NONE) print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],norms[iter]/norms[iter-1]);
+            }
     
-    /* should we exit the restart cycle? */
-    if (r_norm <= epsilon && iter >= min_iter)
-    {
-    break;
-    }         
-    } /* end of restart cycle */
+            /* should we exit the restart cycle? */
+            if (r_norm <= epsilon && iter >= min_iter) {
+                break;
+            }         
+        } /* end of restart cycle */
     
-    /* now compute solution, first solve upper triangular system */    
-    rs[i-1] = rs[i-1] / hh[i-1][i-1];
-    for (k = i-2; k >= 0; k --)
-    {
-    t = 0.0;
-    for (j = k+1; j < i; ++j)  t -= hh[k][j]*rs[j];
+        /* now compute solution, first solve upper triangular system */    
+        rs[i-1] = rs[i-1] / hh[i-1][i-1];
+        for (k = i-2; k >= 0; k --)
+            {
+                t = 0.0;
+                for (j = k+1; j < i; ++j)  t -= hh[k][j]*rs[j];
     
-    t += rs[k];
-    rs[k] = t / hh[k][k];
-    }
-    fasp_array_cp(n, p[i-1], w);
-    for (j = 0; j < n; ++j) w[j] *= rs[i-1];
-    for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], p[j], w);
-    fasp_array_set(n, r, 0.0);
+                t += rs[k];
+                rs[k] = t / hh[k][k];
+            }
+        fasp_array_cp(n, p[i-1], w);
+        for (j = 0; j < n; ++j) w[j] *= rs[i-1];
+        for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], p[j], w);
+        fasp_array_set(n, r, 0.0);
     
-    /* apply the preconditioner */
-    if (pc == NULL)
-    fasp_array_cp(n, w, r);
-    else
-    pc->fct(w, r, pc->data);
+        /* apply the preconditioner */
+        if (pc == NULL)
+            fasp_array_cp(n, w, r);
+        else
+            pc->fct(w, r, pc->data);
     
-    fasp_blas_array_axpy(n, 1.0, r, x->val);
+        fasp_blas_array_axpy(n, 1.0, r, x->val);
     
-    if (r_norm  <= epsilon && iter >= min_iter) 
-    {
-    fasp_array_cp(n, b->val, r);
-    fasp_blas_dstr_aAxpy(-1.0, A, x->val, r);
-    r_norm = fasp_blas_array_norm2(n, r);
+        if (r_norm  <= epsilon && iter >= min_iter) {
+            fasp_array_cp(n, b->val, r);
+            fasp_blas_dstr_aAxpy(-1.0, A, x->val, r);
+            r_norm = fasp_blas_array_norm2(n, r);
     
-    if (r_norm  <= epsilon)
-    {
-    converged = 1; break;
-    }
-    else
-    {
-    if (print_level >= PRINT_SOME) ITS_FACONV;
-    fasp_array_cp(n, r, p[0]); i = 0;
-    }
-    } /* end of convergence check */
+            if (r_norm  <= epsilon) {
+                converged = TRUE; break;
+            }
+            else {
+                if (print_level >= PRINT_SOME) ITS_FACONV;
+                fasp_array_cp(n, r, p[0]); i = 0;
+            }
+        } /* end of convergence check */
     
-    /* compute residual vector and continue loop */
-    for (j = i; j > 0; j--)
-    {
-    rs[j-1] = -s[j-1]*rs[j];
-    rs[j] = c[j-1]*rs[j];
-    }
+        /* compute residual vector and continue loop */
+        for (j = i; j > 0; j--) {
+            rs[j-1] = -s[j-1]*rs[j];
+            rs[j] = c[j-1]*rs[j];
+        }
     
-    if (i) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
+        if (i) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
     
-    for (j = i-1 ; j > 0; j --) fasp_blas_array_axpy(n, rs[j], p[j], p[i]);
+        for (j = i-1 ; j > 0; j --) fasp_blas_array_axpy(n, rs[j], p[j], p[i]);
     
-    if (i)
-    {
-    fasp_blas_array_axpy(n, rs[0]-1.0, p[0], p[0]);
-    fasp_blas_array_axpy(n, 1.0, p[i], p[0]);
-    }        
+        if (i) {
+            fasp_blas_array_axpy(n, rs[0]-1.0, p[0], p[0]);
+            fasp_blas_array_axpy(n, 1.0, p[i], p[0]);
+        }        
     } /* end of iteration while loop */
     
     if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);

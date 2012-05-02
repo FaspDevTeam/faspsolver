@@ -824,7 +824,7 @@ static void interp_RS (dCSRmat *A,
     index=0;
     for (i=0;i<vertices->row;++i)
 #else    
-    INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));    
+        INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));    
     index=0;
     for (i=0;i< A->row;++i)    
 #endif  // Changed vertices->row to A->row, Edited by Feng Chunsheng 2011/04/11

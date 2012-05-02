@@ -36,10 +36,6 @@ dCOOmat fasp_dcoo_create (INT m,
     A.J   = (INT *)fasp_mem_calloc(nnz, sizeof(INT));     
     A.val = (REAL *)fasp_mem_calloc(nnz, sizeof(REAL)); 
     
-#if CHMEM_MODE    
-    total_alloc_mem += nnz*(sizeof(REAL)+sizeof(INT)*2);
-#endif
-    
     A.row=m; A.col=n; A.nnz=nnz;
     
     return A;
@@ -83,7 +79,7 @@ void fasp_dcoo_shift (dCOOmat *A, INT offset)
     if (offset == 0) offset = ISTART;
     
     for (i=0;i<nnz;++i) {    
-    ai[i]+=offset; aj[i]+=offset;
+        ai[i]+=offset; aj[i]+=offset;
     }
 }
 

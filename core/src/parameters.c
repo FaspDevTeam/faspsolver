@@ -48,10 +48,10 @@ void fasp_param_init (char *inputfile,
     if (iluparam) fasp_param_ilu_init(iluparam);    
     
     if (inputfile) {
-    fasp_param_input(inputfile,inparam);
-    if (itparam)  fasp_param_solver_set(itparam,inparam);
-    if (amgparam) fasp_param_amg_set(amgparam,inparam);
-    if (iluparam) fasp_param_ilu_set(iluparam,inparam);    
+        fasp_param_input(inputfile,inparam);
+        if (itparam)  fasp_param_solver_set(itparam,inparam);
+        if (amgparam) fasp_param_amg_set(amgparam,inparam);
+        if (iluparam) fasp_param_ilu_set(iluparam,inparam);    
     }
     else {
         printf("### WARNING: No input specified. Use default values instead!\n");
@@ -226,16 +226,16 @@ void fasp_param_amg_set (AMG_param *param,
     param->print_level = inparam->print_level;
     
     if (inparam->itsolver_type == SOLVER_AMG) {
-    param->maxit = inparam->itsolver_maxit;
-    param->tol   = inparam->itsolver_tol;
+        param->maxit = inparam->itsolver_maxit;
+        param->tol   = inparam->itsolver_tol;
     }
     else if (inparam->itsolver_type == SOLVER_FMG) {
-    param->maxit = inparam->itsolver_maxit;
-    param->tol   = inparam->itsolver_tol;
+        param->maxit = inparam->itsolver_maxit;
+        param->tol   = inparam->itsolver_tol;
     }
     else {
-    param->maxit = inparam->AMG_maxit;
-    param->tol   = inparam->AMG_tol; 
+        param->maxit = inparam->AMG_maxit;
+        param->tol   = inparam->AMG_tol; 
     }
     
     param->max_levels           = inparam->AMG_levels;    
@@ -312,12 +312,12 @@ void fasp_param_solver_set (itsolver_param *itparam,
     itparam->restart        = inparam->restart;
     
     if (itparam->itsolver_type == SOLVER_AMG) {
-    itparam->tol   = inparam->AMG_tol; 
-    itparam->maxit = inparam->AMG_maxit;    
+        itparam->tol   = inparam->AMG_tol; 
+        itparam->maxit = inparam->AMG_maxit;    
     }
     else {
-    itparam->tol   = inparam->itsolver_tol; 
-    itparam->maxit = inparam->itsolver_maxit;
+        itparam->tol   = inparam->itsolver_tol; 
+        itparam->maxit = inparam->itsolver_maxit;
     }
 }    
 
@@ -494,47 +494,47 @@ void fasp_param_amg_print (AMG_param *param)
         printf("\n       Parameters in AMG_param\n");
         printf("-----------------------------------------------\n");
         
-    printf("AMG print level:                   %d\n", param->print_level);
-    printf("AMG max num of iter:               %d\n", param->maxit);
-    printf("AMG type:                          %d\n", param->AMG_type);
-    printf("AMG tolerance:                     %.2e\n", param->tol);
-    printf("AMG max levels:                    %d\n", param->max_levels);    
-    printf("AMG cycle type:                    %d\n", param->cycle_type);    
-    printf("AMG scaling of coarse correction:  %d\n", param->coarse_scaling);
-    printf("AMG smoother type:                 %d\n", param->smoother);
-    printf("AMG smoother order:                %d\n", param->smooth_order);
-    printf("AMG num of presmoothing:           %d\n", param->presmooth_iter);
-    printf("AMG num of postsmoothing:          %d\n", param->postsmooth_iter);
+        printf("AMG print level:                   %d\n", param->print_level);
+        printf("AMG max num of iter:               %d\n", param->maxit);
+        printf("AMG type:                          %d\n", param->AMG_type);
+        printf("AMG tolerance:                     %.2e\n", param->tol);
+        printf("AMG max levels:                    %d\n", param->max_levels);    
+        printf("AMG cycle type:                    %d\n", param->cycle_type);    
+        printf("AMG scaling of coarse correction:  %d\n", param->coarse_scaling);
+        printf("AMG smoother type:                 %d\n", param->smoother);
+        printf("AMG smoother order:                %d\n", param->smooth_order);
+        printf("AMG num of presmoothing:           %d\n", param->presmooth_iter);
+        printf("AMG num of postsmoothing:          %d\n", param->postsmooth_iter);
     
         if (param->smoother==SOR  || param->smoother==SSOR ||
             param->smoother==GSOR || param->smoother==SGSOR) {
             printf("AMG relax factor:                  %.4f\n", param->relaxation);            
         }
         
-    if(param->cycle_type == AMLI_CYCLE) {
+        if(param->cycle_type == AMLI_CYCLE) {
             printf("AMG AMLI degree of polynomial:     %d\n", param->amli_degree);
-    }
+        }
         
         if(param->cycle_type == NL_AMLI_CYCLE) {
             printf("AMG Nonlinear AMLI Krylov type:    %d\n", param->nl_amli_krylov_type);
-    }
+        }
         
         switch (param->AMG_type) {
-            case CLASSIC_AMG:
-                printf("AMG coarsening type:               %d\n", param->coarsening_type);
-                printf("AMG interpolation type:            %d\n", param->interpolation_type);
-                printf("AMG dof on coarsest grid:          %d\n", param->coarse_dof);
-                printf("AMG strong threshold:              %.4f\n", param->strong_threshold);
-                printf("AMG truncation threshold:          %.4f\n", param->truncation_threshold);
-                printf("AMG max row sum:                   %.4f\n", param->max_row_sum);
-                break;
+        case CLASSIC_AMG:
+            printf("AMG coarsening type:               %d\n", param->coarsening_type);
+            printf("AMG interpolation type:            %d\n", param->interpolation_type);
+            printf("AMG dof on coarsest grid:          %d\n", param->coarse_dof);
+            printf("AMG strong threshold:              %.4f\n", param->strong_threshold);
+            printf("AMG truncation threshold:          %.4f\n", param->truncation_threshold);
+            printf("AMG max row sum:                   %.4f\n", param->max_row_sum);
+            break;
                 
-            default: // SA_AMG or UA_AMG
-                printf("Aggregation AMG strong coupling:   %.4f\n", param->strong_coupled);
-                printf("Aggregation AMG max aggregation:   %d\n", param->max_aggregation);
-                printf("Aggregation AMG tentative smooth:  %.4f\n", param->tentative_smooth);
-                printf("Aggregation AMG smooth filter:     %d\n", param->smooth_filter);
-                break;
+        default: // SA_AMG or UA_AMG
+            printf("Aggregation AMG strong coupling:   %.4f\n", param->strong_coupled);
+            printf("Aggregation AMG max aggregation:   %d\n", param->max_aggregation);
+            printf("Aggregation AMG tentative smooth:  %.4f\n", param->tentative_smooth);
+            printf("Aggregation AMG smooth filter:     %d\n", param->smooth_filter);
+            break;
         }
     
         if (param->ILU_levels>0) {
@@ -549,7 +549,7 @@ void fasp_param_amg_print (AMG_param *param)
         
     }
     else {
-    printf("### WARNING: param has not been set!\n");
+        printf("### WARNING: param has not been set!\n");
     } // end if (param)
     
 }
@@ -570,17 +570,17 @@ void fasp_param_ilu_print (ILU_param *param)
         
         printf("\n       Parameters in ILU_param\n");
         printf("-----------------------------------------------\n");
-    printf("ILU print level:                   %d\n",   param->print_level);
-    printf("ILU type:                          %d\n",   param->ILU_type);
-    printf("ILU level of fill-in:              %d\n",   param->ILU_lfil);
-    printf("ILU relaxation factor:             %.4f\n", param->ILU_relax);            
-    printf("ILU drop tolerance:                %.2e\n", param->ILU_droptol);    
-    printf("ILU permutation tolerance:         %.2e\n", param->ILU_permtol);    
+        printf("ILU print level:                   %d\n",   param->print_level);
+        printf("ILU type:                          %d\n",   param->ILU_type);
+        printf("ILU level of fill-in:              %d\n",   param->ILU_lfil);
+        printf("ILU relaxation factor:             %.4f\n", param->ILU_relax);            
+        printf("ILU drop tolerance:                %.2e\n", param->ILU_droptol);    
+        printf("ILU permutation tolerance:         %.2e\n", param->ILU_permtol);    
         printf("-----------------------------------------------\n\n");
         
     }
     else {
-    printf("### WARNING: param has not been set!\n");
+        printf("### WARNING: param has not been set!\n");
     }
 }
 
@@ -601,12 +601,12 @@ void fasp_param_solver_print (itsolver_param *param)
         printf("\n       Parameters in itsolver_param\n");
         printf("-----------------------------------------------\n");
         
-    printf("Solver print level:                %d\n", param->print_level);
-    printf("Solver type:                       %d\n", param->itsolver_type);
-    printf("Solver precond type:               %d\n", param->precond_type);
-    printf("Solver max num of iter:            %d\n", param->maxit);    
-    printf("Solver tolerance:                  %.2e\n", param->tol);            
-    printf("Solver stopping type:              %d\n", param->stop_type);
+        printf("Solver print level:                %d\n", param->print_level);
+        printf("Solver type:                       %d\n", param->itsolver_type);
+        printf("Solver precond type:               %d\n", param->precond_type);
+        printf("Solver max num of iter:            %d\n", param->maxit);    
+        printf("Solver tolerance:                  %.2e\n", param->tol);            
+        printf("Solver stopping type:              %d\n", param->stop_type);
         
         if (param->itsolver_type==SOLVER_GMRES || 
             param->itsolver_type==SOLVER_VGMRES) {
@@ -617,7 +617,7 @@ void fasp_param_solver_print (itsolver_param *param)
         
     }
     else {
-    printf("### WARNING: param has not been set!\n");
+        printf("### WARNING: param has not been set!\n");
     }    
 }
 

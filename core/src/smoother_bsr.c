@@ -46,30 +46,24 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks   
-    for (i = 0; i < ROW; ++i)
-    {
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    if (JA[k] == i)
-    memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
-    }
+    for (i = 0; i < ROW; ++i) {
+        for (k = IA[i]; k < IA[i+1]; ++k) {
+            if (JA[k] == i)
+                memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+        }
     }
     
     // compute the inverses of all the diagonal sub-blocks   
-    if (nb > 1)
-    {
-    for (i = 0; i < ROW; ++i)
-    {
-    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+    if (nb > 1) {
+        for (i = 0; i < ROW; ++i) {
+            fasp_blas_smat_inv(diaginv+i*nb2, nb);
+        }
     }
-    }
-    else
-    {
-    for (i = 0; i < ROW; ++i)
-    {  
-    // zero-diagonal should be tested previously
-    diaginv[i] = 1.0 / diaginv[i];
-    }
+    else {
+        for (i = 0; i < ROW; ++i) {  
+            // zero-diagonal should be tested previously
+            diaginv[i] = 1.0 / diaginv[i];
+        }
     }
     
     fasp_smoother_dbsr_jacobi1(A, b, u, diaginv);
@@ -120,50 +114,41 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     memcpy(b_tmp, b_val, size*sizeof(REAL));
     
     // It's not necessary to assign the smoothing order since the result doesn't depend on it
-    if (nb == 1)
-    {
-    for (i = 0; i < ROW; ++i)
-    {
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    { 
-    j = JA[k];
-    if (j != i)
-    b_tmp[i] -= val[k]*u_val[j];
-    }
-    }
+    if (nb == 1) {
+        for (i = 0; i < ROW; ++i) {
+            for (k = IA[i]; k < IA[i+1]; ++k) { 
+                j = JA[k];
+                if (j != i)
+                    b_tmp[i] -= val[k]*u_val[j];
+            }
+        }
     
-    for (i = 0; i < ROW; ++i)
-    {
-    u_val[i] = b_tmp[i]*diaginv[i]; 
-    }      
+        for (i = 0; i < ROW; ++i) {
+            u_val[i] = b_tmp[i]*diaginv[i]; 
+        }      
 
         fasp_mem_free(b_tmp);   
     }
-    else if (nb > 1)
-    {
-    for (i = 0; i < ROW; ++i)
-    {
-    pb = i*nb;
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    { 
-    j = JA[k];
-    if (j != i)
-    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+pb, nb);
-    }
-    }
+    else if (nb > 1) {
+        for (i = 0; i < ROW; ++i) {
+            pb = i*nb;
+            for (k = IA[i]; k < IA[i+1]; ++k) { 
+                j = JA[k];
+                if (j != i)
+                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+pb, nb);
+            }
+        }
     
-    for (i = 0; i < ROW; ++i)
-    {
-    pb = i*nb;
-    fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp+pb, u_val+pb, nb);
-    }     
+        for (i = 0; i < ROW; ++i) {
+            pb = i*nb;
+            fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp+pb, u_val+pb, nb);
+        }     
 
         fasp_mem_free(b_tmp);   
     }
-    else
-    {
-    printf("### ERROR: nb is illegal!\n");
-    exit(RUN_FAIL);
+    else {
+        printf("### ERROR: nb is illegal!\n");
+        exit(RUN_FAIL);
     }
     
 }
@@ -210,36 +195,29 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     REAL *diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks   
-    for (i = 0; i < ROW; ++i)
-    {
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    if (JA[k] == i)
-    memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
-    }
+    for (i = 0; i < ROW; ++i) {
+        for (k = IA[i]; k < IA[i+1]; ++k) {
+            if (JA[k] == i)
+                memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+        }
     }
     
     // compute the inverses of all the diagonal sub-blocks   
-    if (nb > 1)
-    {
-    for (i = 0; i < ROW; ++i)
-    {
-    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+    if (nb > 1) {
+        for (i = 0; i < ROW; ++i) {
+            fasp_blas_smat_inv(diaginv+i*nb2, nb);
+        }
     }
-    }
-    else
-    {
-    for (i = 0; i < ROW; ++i)
-    {  
-    // zero-diagonal should be tested previously
-    diaginv[i] = 1.0 / diaginv[i];
-    }
+    else {
+        for (i = 0; i < ROW; ++i) {  
+            // zero-diagonal should be tested previously
+            diaginv[i] = 1.0 / diaginv[i];
+        }
     }
     
     fasp_smoother_dbsr_gs1(A, b, u, order, mark, diaginv);
     fasp_mem_free(diaginv);
 }
-
 
 /**
  * \fn void fasp_smoother_dbsr_gs1 (dBSRmat *A, dvector *b, dvector *u, INT order, INT *mark, REAL *diaginv)
@@ -267,20 +245,19 @@ void fasp_smoother_dbsr_gs1 (dBSRmat *A,
                              INT *mark, 
                              REAL *diaginv )    
 {    
-    if (!mark)
-    {
-    if (order == ASCEND) // smooth ascendingly
-    {
-    fasp_smoother_dbsr_gs_ascend(A, b, u, diaginv);
+    if (!mark) {
+        if (order == ASCEND) // smooth ascendingly
+            {
+                fasp_smoother_dbsr_gs_ascend(A, b, u, diaginv);
+            }
+        else if (order == DESCEND) // smooth descendingly
+            {
+                fasp_smoother_dbsr_gs_descend(A, b, u, diaginv);
+            }
     }
-    else if (order == DESCEND) // smooth descendingly
-    {
-    fasp_smoother_dbsr_gs_descend(A, b, u, diaginv);
-    }
-    }
-    else // smooth according to the order 'mark' defined by user
-    {
-    fasp_smoother_dbsr_gs_order1(A, b, u, diaginv, mark);
+    // smooth according to the order 'mark' defined by user
+    else {
+        fasp_smoother_dbsr_gs_order1(A, b, u, diaginv, mark);
     }
 }
 
@@ -319,43 +296,36 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
     INT   pb;
     REAL  rhs = 0.0;
     
-    if (nb == 1)
-    {
-    for (i = 0; i < ROW; ++i)
-    {
-    rhs = b_val[i];
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {  
-    j = JA[k];
-    if (j != i)
-    rhs -= val[k]*u_val[j];
+    if (nb == 1) {
+        for (i = 0; i < ROW; ++i) {
+            rhs = b_val[i];
+            for (k = IA[i]; k < IA[i+1]; ++k) {  
+                j = JA[k];
+                if (j != i)
+                    rhs -= val[k]*u_val[j];
+            }
+            u_val[i] = rhs*diaginv[i];
+        }  
     }
-    u_val[i] = rhs*diaginv[i];
-    }  
-    }
-    else if (nb > 1)
-    {
-    REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+    else if (nb > 1) {
+        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 
-    for (i = 0; i < ROW; ++i)
-    {
-    pb = i*nb;
-    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    { 
-    j = JA[k];
-    if (j != i)
-    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
-    }
-    fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
-    }
+        for (i = 0; i < ROW; ++i) {
+            pb = i*nb;
+            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+            for (k = IA[i]; k < IA[i+1]; ++k) { 
+                j = JA[k];
+                if (j != i)
+                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+            }
+            fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
+        }
 
         fasp_mem_free(b_tmp);
     }
-    else
-    {
-    printf("### ERROR: nb is illegal!\n");
-    exit(RUN_FAIL);
+    else {
+        printf("### ERROR: nb is illegal!\n");
+        exit(RUN_FAIL);
     }
 
 }
@@ -395,43 +365,36 @@ void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
     INT pb;
     REAL rhs = 0.0;
     
-    if (nb == 1)
-    {
-    for (i = ROW-1; i >= 0; i--)
-    {
-    rhs = b_val[i];
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {  
-    j = JA[k];
-    if (j != i)
-    rhs -= val[k]*u_val[j];
+    if (nb == 1) {
+        for (i = ROW-1; i >= 0; i--) {
+            rhs = b_val[i];
+            for (k = IA[i]; k < IA[i+1]; ++k) {  
+                j = JA[k];
+                if (j != i)
+                    rhs -= val[k]*u_val[j];
+            }
+            u_val[i] = rhs*diaginv[i];
+        }  
     }
-    u_val[i] = rhs*diaginv[i];
-    }  
-    }
-    else if (nb > 1)
-    {
-    REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+    else if (nb > 1) {
+        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 
-    for (i = ROW-1; i >= 0; i--)
-    {
-    pb = i*nb;
-    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    { 
-    j = JA[k];
-    if (j != i)
-    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
-    }
-    fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
-    }
+        for (i = ROW-1; i >= 0; i--) {
+            pb = i*nb;
+            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+            for (k = IA[i]; k < IA[i+1]; ++k) { 
+                j = JA[k];
+                if (j != i)
+                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+            }
+            fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
+        }
 
         fasp_mem_free(b_tmp);
     }
-    else
-    {
-    printf("### ERROR: nb is illegal!\n");
-    exit(RUN_FAIL);
+    else {
+        printf("### ERROR: nb is illegal!\n");
+        exit(RUN_FAIL);
     }
     
 }
@@ -473,43 +436,36 @@ void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
     INT I,pb;
     REAL rhs = 0.0;
     
-    if (nb == 1)
-    {
-    for (I = 0; I < ROW; ++I)
-    {
-    i = mark[I];
-    rhs = b_val[i];
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {  
-    j = JA[k];
-    if (j != i)
-    rhs -= val[k]*u_val[j];
+    if (nb == 1) {
+        for (I = 0; I < ROW; ++I) {
+            i = mark[I];
+            rhs = b_val[i];
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                j = JA[k];
+                if (j != i)
+                    rhs -= val[k]*u_val[j];
+            }
+            u_val[i] = rhs*diaginv[i];
+        }  
     }
-    u_val[i] = rhs*diaginv[i];
-    }  
-    }
-    else if (nb > 1)
-    {
-    REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+    else if (nb > 1) {
+        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 
-    for (I = 0; I < ROW; ++I)
-    {
-    i = mark[I];
-    pb = i*nb;
-    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    { 
-    j = JA[k];
-    if (j != i)
-    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
-    }
-    fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
-    }
+        for (I = 0; I < ROW; ++I) {
+            i = mark[I];
+            pb = i*nb;
+            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+            for (k = IA[i]; k < IA[i+1]; ++k) { 
+                j = JA[k];
+                if (j != i)
+                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+            }
+            fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
+        }
 
         fasp_mem_free(b_tmp);
     }
-    else
-    {
+    else {
         fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_gs_order1");
     }
     
@@ -559,39 +515,32 @@ void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
     INT i,j,k,I,pb;
     REAL rhs = 0.0;
     
-    if (nb == 1)
-    {
-    for (I = 0; I < ROW; ++I)
-    {
-    i = mark[I];
-    rhs = b_val[i];
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {  
-    j = JA[k];
-    if (j != i)
-    rhs -= val[k]*u_val[j];
+    if (nb == 1) {
+        for (I = 0; I < ROW; ++I) {
+            i = mark[I];
+            rhs = b_val[i];
+            for (k = IA[i]; k < IA[i+1]; ++k) {  
+                j = JA[k];
+                if (j != i)
+                    rhs -= val[k]*u_val[j];
+            }
+            u_val[i] = rhs;
+        }  
     }
-    u_val[i] = rhs;
-    }  
+    else if (nb > 1) {
+        for (I = 0; I < ROW; ++I) {
+            i = mark[I];
+            pb = i*nb;
+            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+            for (k = IA[i]; k < IA[i+1]; ++k) { 
+                j = JA[k];
+                if (j != i)
+                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+            }
+            memcpy(u_val+pb, b_tmp, nb*sizeof(REAL));
+        }
     }
-    else if (nb > 1)
-    {
-    for (I = 0; I < ROW; ++I)
-    {
-    i = mark[I];
-    pb = i*nb;
-    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    { 
-    j = JA[k];
-    if (j != i)
-    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
-    }
-    memcpy(u_val+pb, b_tmp, nb*sizeof(REAL));
-    }
-    }
-    else
-    {
+    else {
         fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_gs_order2");
     }
 }
@@ -641,30 +590,24 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks   
-    for (i = 0; i < ROW; ++i)
-    {
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    if (JA[k] == i)
-    memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
-    }
+    for (i = 0; i < ROW; ++i) {
+        for (k = IA[i]; k < IA[i+1]; ++k) {
+            if (JA[k] == i)
+                memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+        }
     }
     
     // compute the inverses of all the diagonal sub-blocks   
-    if (nb > 1)
-    {
-    for (i = 0; i < ROW; ++i)
-    {
-    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+    if (nb > 1) {
+        for (i = 0; i < ROW; ++i) {
+            fasp_blas_smat_inv(diaginv+i*nb2, nb);
+        }
     }
-    }
-    else
-    {
-    for (i = 0; i < ROW; ++i)
-    {  
-    // zero-diagonal should be tested previously
-    diaginv[i] = 1.0 / diaginv[i];
-    }
+    else {
+        for (i = 0; i < ROW; ++i) {  
+            // zero-diagonal should be tested previously
+            diaginv[i] = 1.0 / diaginv[i];
+        }
     }
     
     fasp_smoother_dbsr_sor1(A, b, u, order, mark, diaginv, weight);
@@ -700,20 +643,19 @@ void fasp_smoother_dbsr_sor1 (dBSRmat *A,
                               REAL *diaginv, 
                               REAL weight)    
 {    
-    if (!mark)
-    {
-    if (order == ASCEND)       // smooth ascendingly
-    {
-    fasp_smoother_dbsr_sor_ascend(A, b, u, diaginv, weight);
+    if (!mark) {
+        if (order == ASCEND)       // smooth ascendingly
+            {
+                fasp_smoother_dbsr_sor_ascend(A, b, u, diaginv, weight);
+            }
+        else if (order == DESCEND) // smooth descendingly
+            {
+                fasp_smoother_dbsr_sor_descend(A, b, u, diaginv, weight);
+            }
     }
-    else if (order == DESCEND) // smooth descendingly
-    {
-    fasp_smoother_dbsr_sor_descend(A, b, u, diaginv, weight);
-    }
-    }
-    else // smooth according to the order 'mark' defined by user
-    {
-    fasp_smoother_dbsr_sor_order(A, b, u, diaginv, mark, weight);
+    // smooth according to the order 'mark' defined by user
+    else {
+        fasp_smoother_dbsr_sor_order(A, b, u, diaginv, mark, weight);
     }
 }
 
@@ -755,41 +697,34 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
     REAL rhs = 0.0;
     REAL one_minus_weight = 1.0 - weight;
     
-    if (nb == 1)
-    {
-    for (i = 0; i < ROW; ++i)
-    {
-    rhs = b_val[i];
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {  
-    j = JA[k];
-    if (j != i)
-    rhs -= val[k]*u_val[j];
+    if (nb == 1) {
+        for (i = 0; i < ROW; ++i) {
+            rhs = b_val[i];
+            for (k = IA[i]; k < IA[i+1]; ++k) {  
+                j = JA[k];
+                if (j != i)
+                    rhs -= val[k]*u_val[j];
+            }
+            u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
+        }  
     }
-    u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
-    }  
-    }
-    else if (nb > 1)
-    {
-    REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+    else if (nb > 1) {
+        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 
-    for (i = 0; i < ROW; ++i)
-    {
-    pb = i*nb;
-    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    { 
-    j = JA[k];
-    if (j != i)
-    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
-    }
-    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
-    }
+        for (i = 0; i < ROW; ++i) {
+            pb = i*nb;
+            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+            for (k = IA[i]; k < IA[i+1]; ++k) { 
+                j = JA[k];
+                if (j != i)
+                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+            }
+            fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+        }
 
         fasp_mem_free(b_tmp);
     }
-    else
-    {
+    else {
         fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_sor_ascend");
     }
     
@@ -833,41 +768,34 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
     INT pb;
     REAL rhs = 0.0;
     
-    if (nb == 1)
-    {
-    for (i = ROW-1; i >= 0; i--)
-    {
-    rhs = b_val[i];
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {  
-    j = JA[k];
-    if (j != i)
-    rhs -= val[k]*u_val[j];
+    if (nb == 1) {
+        for (i = ROW-1; i >= 0; i--) {
+            rhs = b_val[i];
+            for (k = IA[i]; k < IA[i+1]; ++k) {  
+                j = JA[k];
+                if (j != i)
+                    rhs -= val[k]*u_val[j];
+            }
+            u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
+        }  
     }
-    u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
-    }  
-    }
-    else if (nb > 1)
-    {
-    REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+    else if (nb > 1) {
+        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 
-    for (i = ROW-1; i >= 0; i--)
-    {
-    pb = i*nb;
-    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    { 
-    j = JA[k];
-    if (j != i)
-    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
-    }
-    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
-    }
+        for (i = ROW-1; i >= 0; i--) {
+            pb = i*nb;
+            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+            for (k = IA[i]; k < IA[i+1]; ++k) { 
+                j = JA[k];
+                if (j != i)
+                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+            }
+            fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+        }
 
         fasp_mem_free(b_tmp);
     }
-    else
-    {
+    else {
         fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_sor_descend");
     }
     
@@ -914,43 +842,36 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
     INT I,pb;
     REAL rhs = 0.0;
     
-    if (nb == 1)
-    {
-    for (I = 0; I < ROW; ++I)
-    {
-    i = mark[I];
-    rhs = b_val[i];
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {  
-    j = JA[k];
-    if (j != i)
-    rhs -= val[k]*u_val[j];
+    if (nb == 1) {
+        for (I = 0; I < ROW; ++I) {
+            i = mark[I];
+            rhs = b_val[i];
+            for (k = IA[i]; k < IA[i+1]; ++k) {  
+                j = JA[k];
+                if (j != i)
+                    rhs -= val[k]*u_val[j];
+            }
+            u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
+        }  
     }
-    u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
-    }  
-    }
-    else if (nb > 1)
-    {
-    REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+    else if (nb > 1) {
+        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 
-    for (I = 0; I < ROW; ++I)
-    {
-    i = mark[I];
-    pb = i*nb;
-    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    { 
-    j = JA[k];
-    if (j != i)
-    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
-    }
-    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
-    }
+        for (I = 0; I < ROW; ++I) {
+            i = mark[I];
+            pb = i*nb;
+            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+            for (k = IA[i]; k < IA[i+1]; ++k) { 
+                j = JA[k];
+                if (j != i)
+                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+            }
+            fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+        }
         
         fasp_mem_free(b_tmp);
     }
-    else
-    {
+    else {
         fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_sor_order");
     }
     
@@ -997,7 +918,7 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     
     return;
     
-MEMERR:
+ MEMERR:
     printf("### ERROR: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
     exit(ERROR_ALLOC_MEM);
 }

@@ -24,29 +24,29 @@ void fasp_set_GS_threads_omp(int mythreads, int its)
 #if 1
 
     if (its <=8) {
-    THDs_AMG_GS =  mythreads;
-    THDs_CPR_lGS = mythreads ;
-    THDs_CPR_gGS = mythreads ;
+        THDs_AMG_GS =  mythreads;
+        THDs_CPR_lGS = mythreads ;
+        THDs_CPR_gGS = mythreads ;
     }
     else if (its <=12) {
-    THDs_AMG_GS =  mythreads;
-    THDs_CPR_lGS = (6 < mythreads) ? 6 : mythreads;
-    THDs_CPR_gGS = (4 < mythreads) ? 4 : mythreads;
+        THDs_AMG_GS =  mythreads;
+        THDs_CPR_lGS = (6 < mythreads) ? 6 : mythreads;
+        THDs_CPR_gGS = (4 < mythreads) ? 4 : mythreads;
     }
     else if (its <=15) {
-    THDs_AMG_GS =  (4 < mythreads) ? 4 : mythreads;
-    THDs_CPR_lGS = (4 < mythreads) ? 4 : mythreads;
-    THDs_CPR_gGS = (2 < mythreads) ? 2 : mythreads;
-     }
+        THDs_AMG_GS =  (4 < mythreads) ? 4 : mythreads;
+        THDs_CPR_lGS = (4 < mythreads) ? 4 : mythreads;
+        THDs_CPR_gGS = (2 < mythreads) ? 2 : mythreads;
+    }
     else if (its <=18) {
-    THDs_AMG_GS =  (2 < mythreads) ? 2 : mythreads;
-    THDs_CPR_lGS = (2 < mythreads) ? 2 : mythreads;
-    THDs_CPR_gGS = (1 < mythreads) ? 1 : mythreads;
+        THDs_AMG_GS =  (2 < mythreads) ? 2 : mythreads;
+        THDs_CPR_lGS = (2 < mythreads) ? 2 : mythreads;
+        THDs_CPR_gGS = (1 < mythreads) ? 1 : mythreads;
     }
     else {
-    THDs_AMG_GS =  1;
-    THDs_CPR_lGS = 1;
-    THDs_CPR_gGS = 1;
+        THDs_AMG_GS =  1;
+        THDs_CPR_lGS = 1;
+        THDs_CPR_gGS = 1;
     }
 
 #else
@@ -100,27 +100,27 @@ int fasp_solver_dbsr_itsolver_omp(dBSRmat *A,
     switch (itsolver_type) {
     
     case SOLVER_BiCGstab:
-    if (print_level>0) printf("Calling BiCGstab solver (BSR format) ...\n");
-    iter=fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); break;
+        if (print_level>0) printf("Calling BiCGstab solver (BSR format) ...\n");
+        iter=fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); break;
     
     case SOLVER_GMRES:
-    if (print_level>0) printf("Calling GMRES solver (BSR format) ...\n");
-    iter=fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    break;    
+        if (print_level>0) printf("Calling GMRES solver (BSR format) ...\n");
+        iter=fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    break;    
     
     case SOLVER_VGMRES:
-    if (print_level>0) printf("Calling vGMRES solver (BSR format) ...\n");
-    iter=fasp_solver_dbsr_pvgmres_omp(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart, nthreads, openmp_holds); break;
+        if (print_level>0) printf("Calling vGMRES solver (BSR format) ...\n");
+        iter=fasp_solver_dbsr_pvgmres_omp(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart, nthreads, openmp_holds); break;
     
     default:
-    printf("Error: wrong itertive solver type %d!\n", itsolver_type);
-    iter = ERROR_SOLVER_TYPE;
+        printf("Error: wrong itertive solver type %d!\n", itsolver_type);
+        iter = ERROR_SOLVER_TYPE;
     
     }
     
     if ((print_level>1) && (iter >= 0)) {
-    double solver_end=omp_get_wtime();    
-    double solver_duration = solver_end - solver_start;
-    printf("Iterative solver costs %f seconds.\n", solver_duration);
+        double solver_end=omp_get_wtime();    
+        double solver_duration = solver_end - solver_start;
+        printf("Iterative solver costs %f seconds.\n", solver_duration);
     }
     
 #endif

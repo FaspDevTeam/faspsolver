@@ -33,10 +33,6 @@ dvector fasp_dvec_create (INT m)
     u.row = m;
     u.val = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
     
-#if CHMEM_MODE    
-    total_alloc_mem += m*sizeof(REAL);
-#endif
-    
     return u;
 }
 
@@ -59,10 +55,6 @@ ivector fasp_ivec_create (INT m)
     u.row = m;
     u.val = (INT *)fasp_mem_calloc(m,sizeof(INT)); 
     
-#if CHMEM_MODE    
-    total_alloc_mem += m*sizeof(REAL);
-#endif
-    
     return u;
 }
 
@@ -82,10 +74,6 @@ void fasp_dvec_alloc (INT m,
 {    
     u->row = m;
     u->val = (REAL*)fasp_mem_calloc(m,sizeof(REAL)); 
-    
-#if CHMEM_MODE    
-    total_alloc_mem += m*sizeof(REAL);
-#endif
     
     return;
 }
@@ -107,10 +95,6 @@ void fasp_ivec_alloc (INT m,
     
     u->row = m;
     u->val = (INT*)fasp_mem_calloc(m,sizeof(INT));
-    
-#if CHMEM_MODE    
-    total_alloc_mem += m*sizeof(INT);
-#endif
     
     return;
 }
@@ -293,7 +277,7 @@ REAL fasp_dvec_maxdiff (dvector *x,
     
     unsigned INT i;
     for (i=0; i<length; ++i) {
-    if ((diffi = ABS(xpt[i]-ypt[i])) > Linf) Linf = diffi;
+        if ((diffi = ABS(xpt[i]-ypt[i])) > Linf) Linf = diffi;
     }
     return Linf;
 }
@@ -319,11 +303,10 @@ void fasp_dvec_symdiagscale (dvector *b,
     // local variables
     unsigned INT i;
     
-    if (diag->row != n)
-    {
-    printf("### ERROR: Size of diag = %d and size of dvector = %d mismatch!!", 
+    if (diag->row != n) {
+        printf("### ERROR: Size of diag = %d and size of dvector = %d mismatch!!", 
                diag->row, n);
-    exit(ERROR_MISC);
+        exit(ERROR_MISC);
     }
     
     // main loop

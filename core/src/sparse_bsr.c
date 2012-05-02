@@ -35,37 +35,25 @@ dBSRmat fasp_dbsr_create (INT ROW,
     dBSRmat A;
     
     if ( ROW > 0 ) {
-    A.IA = (int*)fasp_mem_calloc(ROW+1, sizeof(INT));
+        A.IA = (int*)fasp_mem_calloc(ROW+1, sizeof(INT));
     }
     else {
-    A.IA = NULL;
+        A.IA = NULL;
     }
-    
-#if CHMEM_MODE    
-    total_alloc_mem += (2*ROW)*sizeof(INT);
-#endif
     
     if ( NNZ > 0 ) {
-    A.JA = (int*)fasp_mem_calloc(NNZ ,sizeof(INT));
+        A.JA = (int*)fasp_mem_calloc(NNZ ,sizeof(INT));
     }
     else {
-    A.JA = NULL;
+        A.JA = NULL;
     }    
     
-#if CHMEM_MODE    
-    total_alloc_mem += NNZ*sizeof(INT);
-#endif
-    
     if ( nb > 0 && NNZ > 0) {
-    A.val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
+        A.val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
     }
     else {
-    A.val = NULL;
+        A.val = NULL;
     }
-    
-#if CHMEM_MODE    
-    total_alloc_mem += (NNZ*nb*nb)*sizeof(REAL);
-#endif
     
     A.ROW = ROW; A.COL = COL; A.NNZ = NNZ; 
     A.nb = nb; A.storage_manner = storage_manner;
@@ -96,37 +84,25 @@ void fasp_dbsr_alloc (INT ROW,
                       dBSRmat *A)
 {    
     if ( ROW > 0 ) {
-    A->IA = (int*)fasp_mem_calloc(ROW+1, sizeof(INT));
+        A->IA = (int*)fasp_mem_calloc(ROW+1, sizeof(INT));
     }
     else {
-    A->IA = NULL;
+        A->IA = NULL;
     }
-    
-#if CHMEM_MODE    
-    total_alloc_mem += (2*ROW)*sizeof(INT);
-#endif
     
     if ( NNZ > 0 ) {
-    A->JA = (int*)fasp_mem_calloc(NNZ ,sizeof(INT));
+        A->JA = (int*)fasp_mem_calloc(NNZ ,sizeof(INT));
     }
     else {
-    A->JA = NULL;
+        A->JA = NULL;
     }    
     
-#if CHMEM_MODE    
-    total_alloc_mem += NNZ*sizeof(INT);
-#endif
-    
     if ( nb > 0 ) {
-    A->val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
+        A->val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
     }
     else {
-    A->val = NULL;
+        A->val = NULL;
     }
-    
-#if CHMEM_MODE    
-    total_alloc_mem += (NNZ*nb*nb)*sizeof(REAL);
-#endif
     
     A->ROW = ROW; A->COL = COL; A->NNZ = NNZ; 
     A->nb = nb; A->storage_manner = storage_manner;
@@ -221,7 +197,7 @@ void fasp_dbsr_cp (dBSRmat *A,
  * Modified by Xiaozhe Hu (08/06/2011)
  */
 int fasp_dbsr_trans (dBSRmat *A, 
-     dBSRmat *AT)
+                     dBSRmat *AT)
 {
     const int n=A->ROW, m=A->COL, nnz=A->NNZ, nb=A->nb;    
     int i,j,k,p,inb,jnb,nb2;
@@ -234,67 +210,57 @@ int fasp_dbsr_trans (dBSRmat *A,
     AT->storage_manner = A->storage_manner;
     AT->IA=(int*)fasp_mem_calloc(m+1,sizeof(int));
     nb2 =  A->nb*A->nb;
-#if CHMEM_MODE
-    total_alloc_mem += (m+1)*sizeof(int);
-#endif
-    
+
     AT->JA=(int*)fasp_mem_calloc(nnz,sizeof(int));
     
-#if CHMEM_MODE
-    total_alloc_mem += (nnz)*sizeof(int);
-#endif
-    
     if (A->val) { 
-    AT->val=(double*)fasp_mem_calloc(nnz*nb*nb,sizeof(double)); 
-    
-#if CHMEM_MODE
-    total_alloc_mem += (nnz*nb*nb)*sizeof(double);
-#endif
-    
+        AT->val=(double*)fasp_mem_calloc(nnz*nb*nb,sizeof(double));     
     }
-    else { AT->val=NULL; }
+    else { 
+        AT->val=NULL; 
+    }
     
     // first pass: find the number of nonzeros in the first m-1 columns of A 
     // Note: these numbers are stored in the array AT.IA from 1 to m-1
     for (i=0;i<m;++i) AT->IA[i] = 0;
     
     for (j=0;j<nnz;++j) {
-    i=N2C(A->JA[j]); // column number of A = row number of A'
-    if (i<m-1) AT->IA[i+2]++;
+        i=N2C(A->JA[j]); // column number of A = row number of A'
+        if (i<m-1) AT->IA[i+2]++;
     }
     
     for (i=2;i<=m;++i) AT->IA[i]+=AT->IA[i-1];
     
     // second pass: form A'
     if (A->val) {
-    for (i=0;i<n;++i) {
-    int ibegin=A->IA[i], iend1=A->IA[i+1];
+        for (i=0;i<n;++i) {
+            int ibegin=A->IA[i], iend1=A->IA[i+1];
     
-    for(p=ibegin;p<iend1;p++) {
-    j=A->JA[N2C(p)]+1;
-    k=AT->IA[N2C(j)];
-    AT->JA[N2C(k)]=C2N(i);
+            for(p=ibegin;p<iend1;p++) {
+                j=A->JA[N2C(p)]+1;
+                k=AT->IA[N2C(j)];
+                AT->JA[N2C(k)]=C2N(i);
                 
-    for(inb=0;inb<nb;inb++)
-    for (jnb=0;jnb<nb;jnb++)
+                for(inb=0;inb<nb;inb++)
+                    for (jnb=0;jnb<nb;jnb++)
                         AT->val[ nb2*N2C(k) + inb*nb + jnb ] =A->val[nb2*N2C(p) + jnb*nb + inb ];
                 
-    AT->IA[j]=k+1;
-    } // end for p
-    } // end for i
+                AT->IA[j]=k+1;
+            } // end for p
+        } // end for i
     
     }
     else {
-    for (i=0;i<n;++i) {
-    int ibegin=A->IA[i], iend1=A->IA[i+1];
+        for (i=0;i<n;++i) {
+            int ibegin=A->IA[i], iend1=A->IA[i+1];
     
-    for(p=ibegin;p<iend1;p++) {
-    j=A->JA[N2C(p)]+1;
-    k=AT->IA[N2C(j)];
-    AT->JA[N2C(k)]=C2N(i);
-    AT->IA[j]=k+1;
-    } // end for p
-    } // end of i
+            for(p=ibegin;p<iend1;p++) {
+                j=A->JA[N2C(p)]+1;
+                k=AT->IA[N2C(j)];
+                AT->JA[N2C(k)]=C2N(i);
+                AT->IA[j]=k+1;
+            } // end for p
+        } // end of i
         
     } // end if 
     
@@ -332,35 +298,31 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
     
     REAL *tempd = (REAL*)fasp_mem_calloc(nb2, sizeof(REAL));
     
-    for (i = 0; i < num_rowsA; i ++)
-    {
-    row_size = A_i[i+1] - A_i[i];
+    for (i = 0; i < num_rowsA; i ++) {
+        row_size = A_i[i+1] - A_i[i];
     
-    for (j = 0; j < row_size; j ++)
-    {
-    if (A_j[j] == i)
-    {
-    if (j != 0)
-    {
-    // swap index
-    tempi  = A_j[0];
-    A_j[0] = A_j[j];
-    A_j[j] = tempi;
+        for (j = 0; j < row_size; j ++) {
+            if (A_j[j] == i) {
+                if (j != 0) {
+                    // swap index
+                    tempi  = A_j[0];
+                    A_j[0] = A_j[j];
+                    A_j[j] = tempi;
     
-    // swap block
-    memcpy(tempd, A_data, (nb2)*sizeof(REAL));
-    memcpy(A_data, A_data+j*nb2, (nb2)*sizeof(REAL));
-    memcpy(A_data+j*nb2, tempd, (nb2)*sizeof(REAL));
-    }
-    break;
-    }
+                    // swap block
+                    memcpy(tempd, A_data, (nb2)*sizeof(REAL));
+                    memcpy(A_data, A_data+j*nb2, (nb2)*sizeof(REAL));
+                    memcpy(A_data+j*nb2, tempd, (nb2)*sizeof(REAL));
+                }
+                break;
+            }
     
-    /* diagonal element is missing */
-    if (j == row_size-1) return -2;
-    }
+            /* diagonal element is missing */
+            if (j == row_size-1) return -2;
+        }
     
-    A_j    += row_size;
-    A_data += row_size*nb2;
+        A_j    += row_size;
+        A_data += row_size*nb2;
     }
     
     // free tempd
@@ -417,50 +379,40 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));         
     
     // get all the diagonal sub-blocks   
-    for (i = 0; i < ROW; ++i)
-    {
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    if (JA[k] == i)
-    memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
-    }
+    for (i = 0; i < ROW; ++i) {
+        for (k = IA[i]; k < IA[i+1]; ++k) {
+            if (JA[k] == i)
+                memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+        }
     }
     
     // compute the inverses of all the diagonal sub-blocks   
-    if (nb > 1)
-    {
-    for (i = 0; i < ROW; ++i)
-    {
-    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+    if (nb > 1) {
+        for (i = 0; i < ROW; ++i) {
+            fasp_blas_smat_inv(diaginv+i*nb2, nb);
+        }
     }
-    }
-    else
-    {
-    for (i = 0; i < ROW; ++i)
-    {  
-    // zero-diagonal should be tested previously
-    diaginv[i] = 1.0 / diaginv[i];
-    }
+    else {
+        for (i = 0; i < ROW; ++i) {  
+            // zero-diagonal should be tested previously
+            diaginv[i] = 1.0 / diaginv[i];
+        }
     }
     
     // compute D^{-1}*A
-    for (i = 0; i < ROW; ++i)
-    {
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    m = k*nb2;
-    j = JA[k];
-    if (j == i)
-    {  
-    // Identity sub-block
-    memset(valb+m, 0X0, nb2*sizeof(REAL));
-    for (l = 0; l < nb; l ++) valb[m+l*nb+l] = 1.0;
-    }
-    else
-    {  
-    fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
-    }
-    }
+    for (i = 0; i < ROW; ++i) {
+        for (k = IA[i]; k < IA[i+1]; ++k) {
+            m = k*nb2;
+            j = JA[k];
+            if (j == i) {  
+                // Identity sub-block
+                memset(valb+m, 0X0, nb2*sizeof(REAL));
+                for (l = 0; l < nb; l ++) valb[m+l*nb+l] = 1.0;
+            }
+            else {  
+                fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
+            }
+        }
     }
     
     fasp_mem_free(diaginv);
@@ -512,23 +464,19 @@ dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
     memcpy(JAb, JA, NNZ*sizeof(INT));
     
     // compute D^{-1}*A
-    for (i = 0; i < ROW; ++i)
-    {
-    ibegin = IA[i]; iend = IA[i+1];
-    for (k = ibegin; k < iend; ++k)
-    {
-    m = k*nb2;
-    if (JA[k] != i)
-    {  
-    fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
-    }
-    else
-    {  
-    // Identity sub-block
-    memset(valb+m, 0X0, nb2*sizeof(REAL));
-    for (l = 0; l < nb; l ++) valb[m+l*nbp1] = 1.0;
-    }
-    }
+    for (i = 0; i < ROW; ++i) {
+        ibegin = IA[i]; iend = IA[i+1];
+        for (k = ibegin; k < iend; ++k) {
+            m = k*nb2;
+            if (JA[k] != i) {  
+                fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
+            }
+            else {
+                // Identity sub-block
+                memset(valb+m, 0X0, nb2*sizeof(REAL));
+                for (l = 0; l < nb; l ++) valb[m+l*nbp1] = 1.0;
+            }
+        }
     }
     
     return (B);
@@ -577,152 +525,132 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     memcpy(IAb, IA, (ROW+1)*sizeof(INT));
     memcpy(JAb, JA, NNZ*sizeof(INT));
     
-    switch (nb)
-    {
+    switch (nb) {
+
     case 2:
-    // main loop 
-    for (i = 0; i < ROW; ++i)
-    {
-    // get the diagonal sub-blocks
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    if (JA[k] == i)
-    {
-    m = k*4;
-    memcpy(diaginv+i*4, val+m, 4*sizeof(REAL));
-    fasp_smat_identity_nc2(valb+m);
-    }
-    }
+        // main loop 
+        for (i = 0; i < ROW; ++i) {
+            // get the diagonal sub-blocks
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                if (JA[k] == i) {
+                    m = k*4;
+                    memcpy(diaginv+i*4, val+m, 4*sizeof(REAL));
+                    fasp_smat_identity_nc2(valb+m);
+                }
+            }
     
-    // compute the inverses of the diagonal sub-blocks 
-    fasp_blas_smat_inv_nc2(diaginv+i*4);
+            // compute the inverses of the diagonal sub-blocks 
+            fasp_blas_smat_inv_nc2(diaginv+i*4);
     
-    // compute D^{-1}*A
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    m = k*4;
-    j = JA[k];
-    if (j != i) fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
-    }
-    }// end of main loop
+            // compute D^{-1}*A
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                m = k*4;
+                j = JA[k];
+                if (j != i) fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
+            }
+        }// end of main loop
     
-    break;    
+        break;    
     
     case 3:
-    // main loop 
-    for (i = 0; i < ROW; ++i)
-    {
-    // get the diagonal sub-blocks
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    if (JA[k] == i)
-    {
-    m = k*9;
-    memcpy(diaginv+i*9, val+m, 9*sizeof(REAL));
-    fasp_smat_identity_nc3(valb+m);
-    }
-    }
+        // main loop 
+        for (i = 0; i < ROW; ++i) {
+            // get the diagonal sub-blocks
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                if (JA[k] == i) {
+                    m = k*9;
+                    memcpy(diaginv+i*9, val+m, 9*sizeof(REAL));
+                    fasp_smat_identity_nc3(valb+m);
+                }
+            }
     
-    // compute the inverses of the diagonal sub-blocks 
-    fasp_blas_smat_inv_nc3(diaginv+i*9);
+            // compute the inverses of the diagonal sub-blocks 
+            fasp_blas_smat_inv_nc3(diaginv+i*9);
     
-    // compute D^{-1}*A
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    m = k*9;
-    j = JA[k];
-    if (j != i) fasp_blas_smat_mul_nc3(diaginv+i*9, val+m, valb+m);
-    }
-    }// end of main loop
+            // compute D^{-1}*A
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                m = k*9;
+                j = JA[k];
+                if (j != i) fasp_blas_smat_mul_nc3(diaginv+i*9, val+m, valb+m);
+            }
+        }// end of main loop
     
-    break;
+        break;
     
     case 5: 
-    // main loop 
-    for (i = 0; i < ROW; ++i)
-    {
-    // get the diagonal sub-blocks
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    if (JA[k] == i)
-    {
-    m = k*25;
-    memcpy(diaginv+i*25, val+m, 25*sizeof(REAL));
-    fasp_smat_identity_nc5(valb+m);
-    }
-    }
+        // main loop 
+        for (i = 0; i < ROW; ++i) {
+            // get the diagonal sub-blocks
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                if (JA[k] == i) {
+                    m = k*25;
+                    memcpy(diaginv+i*25, val+m, 25*sizeof(REAL));
+                    fasp_smat_identity_nc5(valb+m);
+                }
+            }
     
-    // compute the inverses of the diagonal sub-blocks 
-    fasp_blas_smat_inv_nc5(diaginv+i*25);
+            // compute the inverses of the diagonal sub-blocks 
+            fasp_blas_smat_inv_nc5(diaginv+i*25);
     
-    // compute D^{-1}*A
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    m = k*25;
-    j = JA[k];
-    if (j != i) fasp_blas_smat_mul_nc5(diaginv+i*25, val+m, valb+m);
-    }
-    }// end of main loop
+            // compute D^{-1}*A
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                m = k*25;
+                j = JA[k];
+                if (j != i) fasp_blas_smat_mul_nc5(diaginv+i*25, val+m, valb+m);
+            }
+        }// end of main loop
     
-    break;
+        break;
     
     case 7:
-    // main loop 
-    for (i = 0; i < ROW; ++i)
-    {
-    // get the diagonal sub-blocks
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    if (JA[k] == i)
-    {
-    m = k*49;
-    memcpy(diaginv+i*49, val+m, 49*sizeof(REAL));
-    fasp_smat_identity_nc7(valb+m);
-    }
-    }
+        // main loop 
+        for (i = 0; i < ROW; ++i) {
+            // get the diagonal sub-blocks
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                if (JA[k] == i) {
+                    m = k*49;
+                    memcpy(diaginv+i*49, val+m, 49*sizeof(REAL));
+                    fasp_smat_identity_nc7(valb+m);
+                }
+            }
     
-    // compute the inverses of the diagonal sub-blocks 
-    fasp_blas_smat_inv_nc7(diaginv+i*49);
+            // compute the inverses of the diagonal sub-blocks 
+            fasp_blas_smat_inv_nc7(diaginv+i*49);
     
-    // compute D^{-1}*A
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    m = k*49;
-    j = JA[k];
-    if (j != i) fasp_blas_smat_mul_nc7(diaginv+i*49, val+m, valb+m);
-    }
-    }// end of main loop
+            // compute D^{-1}*A
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                m = k*49;
+                j = JA[k];
+                if (j != i) fasp_blas_smat_mul_nc7(diaginv+i*49, val+m, valb+m);
+            }
+        }// end of main loop
     
-    break;
+        break;
     
     default:
-    // main loop 
-    for (i = 0; i < ROW; ++i)
-    {
-    // get the diagonal sub-blocks
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    if (JA[k] == i)
-    {
-    m = k*nb2;
-    memcpy(diaginv+i*nb2, val+m, nb2*sizeof(REAL));
-    fasp_smat_identity(valb+m, nb, nb2);
-    }
-    }
+        // main loop 
+        for (i = 0; i < ROW; ++i) {
+            // get the diagonal sub-blocks
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                if (JA[k] == i) {
+                    m = k*nb2;
+                    memcpy(diaginv+i*nb2, val+m, nb2*sizeof(REAL));
+                    fasp_smat_identity(valb+m, nb, nb2);
+                }
+            }
     
-    // compute the inverses of the diagonal sub-blocks 
-    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+            // compute the inverses of the diagonal sub-blocks 
+            fasp_blas_smat_inv(diaginv+i*nb2, nb);
     
-    // compute D^{-1}*A
-    for (k = IA[i]; k < IA[i+1]; ++k)
-    {
-    m = k*nb2;
-    j = JA[k];
-    if (j != i) fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
-    }
-    }// end of main loop
+            // compute D^{-1}*A
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                m = k*nb2;
+                j = JA[k];
+                if (j != i) fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
+            }
+        }// end of main loop
     
-    break;
+        break;
     }
     
     return (B);
@@ -773,127 +701,117 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
     memcpy(IAb, IA, (ROW+1)*sizeof(INT));
     memcpy(JAb, JA, NNZ*sizeof(INT));
     
-    switch (nb)
-    {
+    switch (nb) {
+
     case 2:
-    // main loop 
-    for (i = 0; i < ROW; ++i)
-    {
-    ibegin = IA[i]; iend = IA[i+1];
-    // get the diagonal sub-blocks (It is the first block of each row)
-    m = ibegin*4;
-    memcpy(diaginv+i*4, val+m, 4*sizeof(REAL));
-    fasp_smat_identity_nc2(valb+m);
+        // main loop 
+        for (i = 0; i < ROW; ++i) {
+            ibegin = IA[i]; iend = IA[i+1];
+            // get the diagonal sub-blocks (It is the first block of each row)
+            m = ibegin*4;
+            memcpy(diaginv+i*4, val+m, 4*sizeof(REAL));
+            fasp_smat_identity_nc2(valb+m);
     
-    // compute the inverses of the diagonal sub-blocks 
-    fasp_blas_smat_inv_nc2(diaginv+i*9);
+            // compute the inverses of the diagonal sub-blocks 
+            fasp_blas_smat_inv_nc2(diaginv+i*9);
     
-    // compute D^{-1}*A
-    for (k = ibegin+1; k < iend; ++k)
-    {
-    m = k*4;
-    j = JA[k];
-    fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
-    }
-    }// end of main loop
+            // compute D^{-1}*A
+            for (k = ibegin+1; k < iend; ++k) {
+                m = k*4;
+                j = JA[k];
+                fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
+            }
+        }// end of main loop
     
-    break;    
+        break;    
     
     case 3:
-    // main loop 
-    for (i = 0; i < ROW; ++i)
-    {
-    ibegin = IA[i]; iend = IA[i+1];
-    // get the diagonal sub-blocks (It is the first block of each row)
-    m = ibegin*9;
-    memcpy(diaginv+i*9, val+m, 9*sizeof(REAL));
-    fasp_smat_identity_nc3(valb+m);
+        // main loop 
+        for (i = 0; i < ROW; ++i) {
+            ibegin = IA[i]; iend = IA[i+1];
+            // get the diagonal sub-blocks (It is the first block of each row)
+            m = ibegin*9;
+            memcpy(diaginv+i*9, val+m, 9*sizeof(REAL));
+            fasp_smat_identity_nc3(valb+m);
     
-    // compute the inverses of the diagonal sub-blocks 
-    fasp_blas_smat_inv_nc3(diaginv+i*9);
+            // compute the inverses of the diagonal sub-blocks 
+            fasp_blas_smat_inv_nc3(diaginv+i*9);
     
-    // compute D^{-1}*A
-    for (k = ibegin+1; k < iend; ++k)
-    {
-    m = k*9;
-    j = JA[k];
-    fasp_blas_smat_mul_nc3(diaginv+i*9, val+m, valb+m);
-    }
-    }// end of main loop
+            // compute D^{-1}*A
+            for (k = ibegin+1; k < iend; ++k) {
+                m = k*9;
+                j = JA[k];
+                fasp_blas_smat_mul_nc3(diaginv+i*9, val+m, valb+m);
+            }
+        }// end of main loop
     
-    break;
+        break;
     
     case 5: 
-    // main loop 
-    for (i = 0; i < ROW; ++i)
-    {
-    // get the diagonal sub-blocks
-    ibegin = IA[i]; iend = IA[i+1];
-    m = ibegin*25;
-    memcpy(diaginv+i*25, val+m, 25*sizeof(REAL));
-    fasp_smat_identity_nc5(valb+m);
+        // main loop 
+        for (i = 0; i < ROW; ++i) {
+            // get the diagonal sub-blocks
+            ibegin = IA[i]; iend = IA[i+1];
+            m = ibegin*25;
+            memcpy(diaginv+i*25, val+m, 25*sizeof(REAL));
+            fasp_smat_identity_nc5(valb+m);
     
-    // compute the inverses of the diagonal sub-blocks 
-    fasp_blas_smat_inv_nc5(diaginv+i*25);
+            // compute the inverses of the diagonal sub-blocks 
+            fasp_blas_smat_inv_nc5(diaginv+i*25);
     
-    // compute D^{-1}*A
-    for (k = ibegin+1; k < iend; ++k)
-    {
-    m = k*25;
-    j = JA[k];
-    fasp_blas_smat_mul_nc5(diaginv+i*25, val+m, valb+m);
-    }
-    }// end of main loop
+            // compute D^{-1}*A
+            for (k = ibegin+1; k < iend; ++k) {
+                m = k*25;
+                j = JA[k];
+                fasp_blas_smat_mul_nc5(diaginv+i*25, val+m, valb+m);
+            }
+        }// end of main loop
     
-    break;
+        break;
     
     case 7:
-    // main loop 
-    for (i = 0; i < ROW; ++i)
-    {
-    // get the diagonal sub-blocks
-    ibegin = IA[i]; iend = IA[i+1];    
-    m = ibegin*49;
-    memcpy(diaginv+i*49, val+m, 49*sizeof(REAL));
-    fasp_smat_identity_nc7(valb+m);
+        // main loop 
+        for (i = 0; i < ROW; ++i) {
+            // get the diagonal sub-blocks
+            ibegin = IA[i]; iend = IA[i+1];    
+            m = ibegin*49;
+            memcpy(diaginv+i*49, val+m, 49*sizeof(REAL));
+            fasp_smat_identity_nc7(valb+m);
     
-    // compute the inverses of the diagonal sub-blocks 
-    fasp_blas_smat_inv_nc7(diaginv+i*49);
+            // compute the inverses of the diagonal sub-blocks 
+            fasp_blas_smat_inv_nc7(diaginv+i*49);
     
-    // compute D^{-1}*A
-    for (k = ibegin+1; k < iend; ++k)
-    {
-    m = k*49;
-    j = JA[k];
-    fasp_blas_smat_mul_nc7(diaginv+i*49, val+m, valb+m);
-    }
-    }// end of main loop
+            // compute D^{-1}*A
+            for (k = ibegin+1; k < iend; ++k) {
+                m = k*49;
+                j = JA[k];
+                fasp_blas_smat_mul_nc7(diaginv+i*49, val+m, valb+m);
+            }
+        }// end of main loop
     
-    break;
+        break;
     
     default:
-    // main loop 
-    for (i = 0; i < ROW; ++i)
-    {
-    // get the diagonal sub-blocks
-    ibegin = IA[i]; iend = IA[i+1];
-    m = ibegin*nb2;
-    memcpy(diaginv+i*nb2, val+m, nb2*sizeof(REAL));
-    fasp_smat_identity(valb+m, nb, nb2);
+        // main loop 
+        for (i = 0; i < ROW; ++i) {
+            // get the diagonal sub-blocks
+            ibegin = IA[i]; iend = IA[i+1];
+            m = ibegin*nb2;
+            memcpy(diaginv+i*nb2, val+m, nb2*sizeof(REAL));
+            fasp_smat_identity(valb+m, nb, nb2);
     
-    // compute the inverses of the diagonal sub-blocks 
-    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+            // compute the inverses of the diagonal sub-blocks 
+            fasp_blas_smat_inv(diaginv+i*nb2, nb);
     
-    // compute D^{-1}*A
-    for (k = ibegin+1; k < iend; ++k)
-    {
-    m = k*nb2;
-    j = JA[k];
-    fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
-    }
-    } // end of main loop
+            // compute D^{-1}*A
+            for (k = ibegin+1; k < iend; ++k) {
+                m = k*nb2;
+                j = JA[k];
+                fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
+            }
+        } // end of main loop
     
-    break;
+        break;
     }
     
     return (B);
@@ -921,15 +839,13 @@ void fasp_dbsr_getdiag (INT n,
     
     INT i,k;
     
-    for (i = 0; i < n; ++i)
-    {
-    for (k = A->IA[i]; k < A->IA[i+1]; ++k)
-    {
-    if (A->JA[k] == i) {
-    memcpy(diag+i*nb2, A->val+k*nb2, nb2*sizeof(REAL));
-    break;
-    }
-    }
+    for (i = 0; i < n; ++i) {
+        for (k = A->IA[i]; k < A->IA[i+1]; ++k) {
+            if (A->JA[k] == i) {
+                memcpy(diag+i*nb2, A->val+k*nb2, nb2*sizeof(REAL));
+                break;
+            }
+        }
     }
     
 }

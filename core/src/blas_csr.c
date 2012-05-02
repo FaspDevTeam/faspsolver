@@ -571,17 +571,9 @@ void fasp_blas_dcsr_rap (dCSRmat *R,
     jac=(int*)fasp_mem_realloc(jac,(iac[row])*sizeof(int));
     
     acj=(REAL*)fasp_mem_calloc(iac[row],sizeof(REAL));
-    
-#if CHMEM_MODE
-    total_alloc_mem += (iac[row])*sizeof(REAL);
-#endif
-    
+        
     INT *BTindex=(int*)fasp_mem_calloc(col,sizeof(int));
-    
-#if CHMEM_MODE
-    total_alloc_mem += (col)*sizeof(int);
-#endif
-    
+        
     // Second loop: compute entries of R*A*P
     for (i=0; i<row; ++i) {
         i1 = i+1;

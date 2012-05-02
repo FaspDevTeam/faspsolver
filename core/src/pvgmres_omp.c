@@ -101,22 +101,22 @@ INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A,
 {
     INT status = SUCCESS;
 #if FASP_USE_OPENMP
-    const INT n                    = A->ROW*A->nb;  
-    const INT min_iter             = 0;
+    const INT n                   = A->ROW*A->nb;  
+    const INT min_iter            = 0;
     
-    INT      converged            = 0; 
+    SHORT    converged            = TRUE; 
     INT      iter                 = 0;    
     INT      restartplus1         = restart + 1;
     INT      i,j,k;
     
-    REAL   epsmac               = SMALLREAL; 
-    REAL   r_norm, b_norm, den_norm;
-    REAL   epsilon, gamma, t, r_norm_0;   
+    REAL     epsmac               = SMALLREAL; 
+    REAL     r_norm, b_norm, den_norm;
+    REAL     epsilon, gamma, t, r_norm_0;   
     
-    REAL  *c = NULL, *s = NULL, *rs = NULL; 
-    REAL  *norms = NULL, *r = NULL, *w = NULL;
-    REAL **p = NULL, **hh = NULL;
-    REAL  *work = NULL;
+    REAL    *c = NULL, *s = NULL, *rs = NULL; 
+    REAL    *norms = NULL, *r = NULL, *w = NULL;
+    REAL   **p = NULL, **hh = NULL;
+    REAL    *work = NULL;
     
     //--------------------------------------------//
     //   Newly added parameters to monitor when   //
@@ -153,15 +153,15 @@ INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A,
     r_norm_0 = r_norm;
     
     if ( print_level > 0)
-    {
-    norms[0] = r_norm;
-    if ( print_level > 2 )
-    {
-    printf("L2 norm of b: %e\n", b_norm);
-    if (b_norm == 0.0) printf("Warning: Rel_resid_norm actually contains the residual norm!\n");
-    printf("Initial L2 norm of residual: %e\n", r_norm);
-    }
-    }
+        {
+            norms[0] = r_norm;
+            if ( print_level > 2 )
+                {
+                    printf("L2 norm of b: %e\n", b_norm);
+                    if (b_norm == 0.0) printf("Warning: Rel_resid_norm actually contains the residual norm!\n");
+                    printf("Initial L2 norm of residual: %e\n", r_norm);
+                }
+        }
     
     if (b_norm > 0.0)  den_norm = b_norm;
     else               den_norm = r_norm;
@@ -169,195 +169,173 @@ INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A,
     epsilon = tol*den_norm;
     
     /* outer iteration cycle */
-    while (iter < maxit)
-    {  
-    rs[0] = r_norm;
-    r_norm_old = r_norm;
-    if (r_norm == 0.0)
-    {
-    fasp_mem_free(work); 
-    fasp_mem_free(p); 
-    fasp_mem_free(hh);
-    fasp_mem_free(norms);
-    return iter; 
-    }
+    while (iter < maxit) {  
+        rs[0] = r_norm;
+        r_norm_old = r_norm;
+        if (r_norm == 0.0) {
+            fasp_mem_free(work); 
+            fasp_mem_free(p); 
+            fasp_mem_free(hh);
+            fasp_mem_free(norms);
+            return iter; 
+        }
     
-    //-----------------------------------//
-    //   adjust the restart parameter    //
-    //-----------------------------------//
+        //-----------------------------------//
+        //   adjust the restart parameter    //
+        //-----------------------------------//
     
-    if (cr > cr_max || iter == 0)
-    {
-    Restart = restart_max;
-    }
-    else if (cr < cr_min)
-    {
-    Restart = Restart;
-    }
-    else
-    {
-    if (Restart - d > restart_min)
-    {
-    Restart -= d;
-    }
-    else
-    {
-    Restart = restart_max;
-    }
-    }
+        if (cr > cr_max || iter == 0) {
+            Restart = restart_max;
+        }
+        else if (cr < cr_min) {
+            Restart = Restart;
+        }
+        else {
+            if (Restart - d > restart_min) {
+                Restart -= d;
+            }
+            else {
+                Restart = restart_max;
+            }
+        }
     
-    if (r_norm <= epsilon && iter >= min_iter) 
-    {
-    fasp_array_cp_omp(n, b->val, r, nthreads,openmp_holds);
-    fasp_blas_dbsr_aAxpy_omp(-1.0, A, x->val, r, nthreads,openmp_holds);
-    r_norm = fasp_blas_array_norm2_omp(n, r, nthreads,openmp_holds);
+        if (r_norm <= epsilon && iter >= min_iter) {
+            fasp_array_cp_omp(n, b->val, r, nthreads,openmp_holds);
+            fasp_blas_dbsr_aAxpy_omp(-1.0, A, x->val, r, nthreads,openmp_holds);
+            r_norm = fasp_blas_array_norm2_omp(n, r, nthreads,openmp_holds);
     
-    if (r_norm <= epsilon)
-    {
-    if (print_level > 0) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
-    break;
-    }
-    else
-    {
-    if (print_level > 2) printf("Warning: False convergence!\n");
-    }
-    }
+            if (r_norm <= epsilon) {
+                if (print_level > 0) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
+                break;
+            }
+            else {
+                if (print_level > 2) printf("Warning: False convergence!\n");
+            }
+        }
     
-    t = 1.0 / r_norm;
-    fasp_blas_array_scale_omp(n, t, p[0], nthreads,openmp_holds);
+        t = 1.0 / r_norm;
+        fasp_blas_array_scale_omp(n, t, p[0], nthreads,openmp_holds);
     
-    /* RESTART CYCLE (right-preconditioning) */
-    i = 0;
-    while (i < Restart && iter < maxit)
-    {
-    ++i;  ++iter;
+        /* RESTART CYCLE (right-preconditioning) */
+        i = 0;
+        while (i < Restart && iter < maxit) {
+            ++i;  ++iter;
     
-    fasp_array_set_omp(n, r, 0.0, nthreads,openmp_holds);
+            fasp_array_set_omp(n, r, 0.0, nthreads,openmp_holds);
     
-    /* apply the preconditioner */
-    if (pre == NULL)
-    fasp_array_cp_omp(n, p[i-1], r, nthreads,openmp_holds);
-    else
-    pre->fct_omp(p[i-1], r, pre->data, nthreads,openmp_holds);
+            /* apply the preconditioner */
+            if (pre == NULL)
+                fasp_array_cp_omp(n, p[i-1], r, nthreads,openmp_holds);
+            else
+                pre->fct_omp(p[i-1], r, pre->data, nthreads,openmp_holds);
     
-    fasp_blas_dbsr_mxv_omp(A, r, p[i], nthreads,openmp_holds);
+            fasp_blas_dbsr_mxv_omp(A, r, p[i], nthreads,openmp_holds);
     
-    /* modified Gram_Schmidt */
-    for (j = 0; j < i; ++j)
-    {
-    hh[j][i-1] = fasp_blas_array_dotprod_omp(n, p[j], p[i], nthreads,openmp_holds);
-    fasp_blas_array_axpy_omp(n, -hh[j][i-1], p[j], p[i], nthreads,openmp_holds);
-    }
-    t = fasp_blas_array_norm2_omp(n, p[i], nthreads,openmp_holds);
-    hh[i][i-1] = t;
-    if (t != 0.0)
-    {
-    t = 1.0/t;
-    fasp_blas_array_scale_omp(n, t, p[i], nthreads,openmp_holds);
-    }
+            /* modified Gram_Schmidt */
+            for (j = 0; j < i; ++j) {
+                hh[j][i-1] = fasp_blas_array_dotprod_omp(n, p[j], p[i], nthreads,openmp_holds);
+                fasp_blas_array_axpy_omp(n, -hh[j][i-1], p[j], p[i], nthreads,openmp_holds);
+            }
+            t = fasp_blas_array_norm2_omp(n, p[i], nthreads,openmp_holds);
+            hh[i][i-1] = t;
+            if (t != 0.0) {
+                t = 1.0/t;
+                fasp_blas_array_scale_omp(n, t, p[i], nthreads,openmp_holds);
+            }
     
-    for (j = 1; j < i; j++)
-    {
-    t = hh[j-1][i-1];
-    hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
-    hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
-    }
-    t= hh[i][i-1]*hh[i][i-1];
-    t+= hh[i-1][i-1]*hh[i-1][i-1];
-    gamma = sqrt(t);
-    if (gamma == 0.0) gamma = epsmac;
-    c[i-1]  = hh[i-1][i-1] / gamma;
-    s[i-1]  = hh[i][i-1] / gamma;
-    rs[i]   = -s[i-1]*rs[i-1];
-    rs[i-1] = c[i-1]*rs[i-1];
-    hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
-    r_norm = fabs(rs[i]);
+            for (j = 1; j < i; j++) {
+                t = hh[j-1][i-1];
+                hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
+                hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
+            }
+            t= hh[i][i-1]*hh[i][i-1];
+            t+= hh[i-1][i-1]*hh[i-1][i-1];
+            gamma = sqrt(t);
+            if (gamma == 0.0) gamma = epsmac;
+            c[i-1]  = hh[i-1][i-1] / gamma;
+            s[i-1]  = hh[i][i-1] / gamma;
+            rs[i]   = -s[i-1]*rs[i-1];
+            rs[i-1] = c[i-1]*rs[i-1];
+            hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
+            r_norm = fabs(rs[i]);
     
-    if (print_level > 0) norms[iter] = r_norm;
+            if (print_level > 0) norms[iter] = r_norm;
     
-    if (b_norm > 0 ) {
-    if (print_level > 0) print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,norms[iter],norms[iter]/norms[iter-1]);
-    }
-    else {
-    if (print_level > 0) print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],norms[iter]/norms[iter-1]);
-    }
+            if (b_norm > 0 ) {
+                if (print_level > 0) print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,norms[iter],norms[iter]/norms[iter-1]);
+            }
+            else {
+                if (print_level > 0) print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],norms[iter]/norms[iter-1]);
+            }
     
-    /* should we exit the restart cycle? */
-    if (r_norm <= epsilon && iter >= min_iter)
-    {
-    break;
-    }         
-    } /* end of restart cycle */
+            /* should we exit the restart cycle? */
+            if (r_norm <= epsilon && iter >= min_iter) {
+                break;
+            }         
+        } /* end of restart cycle */
     
-    /* now compute solution, first solve upper triangular system */
+        /* now compute solution, first solve upper triangular system */
     
-    rs[i-1] = rs[i-1] / hh[i-1][i-1];
-    for (k = i-2; k >= 0; --k)
-    {
-    t = 0.0;
-    for (j = k+1; j < i; ++j)  t -= hh[k][j]*rs[j];
+        rs[i-1] = rs[i-1] / hh[i-1][i-1];
+        for (k = i-2; k >= 0; --k) {
+            t = 0.0;
+            for (j = k+1; j < i; ++j)  t -= hh[k][j]*rs[j];
     
-    t += rs[k];
-    rs[k] = t / hh[k][k];
-    }
-    fasp_array_cp_omp(n, p[i-1], w, nthreads,openmp_holds);
-    fasp_blas_array_scale_omp(n, rs[i-1], w, nthreads,openmp_holds);
-    for (j = i-2; j >= 0; --j)  fasp_blas_array_axpy_omp(n, rs[j], p[j], w, nthreads,openmp_holds);
-    fasp_array_set_omp(n, r, 0.0, nthreads,openmp_holds);
+            t += rs[k];
+            rs[k] = t / hh[k][k];
+        }
+        fasp_array_cp_omp(n, p[i-1], w, nthreads,openmp_holds);
+        fasp_blas_array_scale_omp(n, rs[i-1], w, nthreads,openmp_holds);
+        for (j = i-2; j >= 0; --j)  fasp_blas_array_axpy_omp(n, rs[j], p[j], w, nthreads,openmp_holds);
+        fasp_array_set_omp(n, r, 0.0, nthreads,openmp_holds);
     
-    /* apply the preconditioner */
-    if (pre == NULL)
-    fasp_array_cp_omp(n, w, r, nthreads,openmp_holds);
-    else
-    pre->fct_omp(w, r, pre->data, nthreads,openmp_holds);
+        /* apply the preconditioner */
+        if (pre == NULL)
+            fasp_array_cp_omp(n, w, r, nthreads,openmp_holds);
+        else
+            pre->fct_omp(w, r, pre->data, nthreads,openmp_holds);
     
-    fasp_blas_array_axpy_omp(n, 1.0, r, x->val, nthreads,openmp_holds);
+        fasp_blas_array_axpy_omp(n, 1.0, r, x->val, nthreads,openmp_holds);
     
-    if (r_norm  <= epsilon && iter >= min_iter) 
-    {
-    fasp_array_cp_omp(n, b->val, r, nthreads,openmp_holds);
-    fasp_blas_dbsr_aAxpy_omp(-1.0, A, x->val, r, nthreads,openmp_holds);
-    r_norm = fasp_blas_array_norm2_omp(n, r, nthreads,openmp_holds);
+        if (r_norm  <= epsilon && iter >= min_iter) {
+            fasp_array_cp_omp(n, b->val, r, nthreads,openmp_holds);
+            fasp_blas_dbsr_aAxpy_omp(-1.0, A, x->val, r, nthreads,openmp_holds);
+            r_norm = fasp_blas_array_norm2_omp(n, r, nthreads,openmp_holds);
     
-    if (r_norm  <= epsilon)
-    {
-    if (print_level > 0) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
-    converged = 1; break;
-    }
-    else
-    {
-    if (print_level > 2) printf("Warning: False convergence!\n");
-    fasp_array_cp_omp(n, r, p[0], nthreads,openmp_holds); i = 0;
-    }
-    } /* end of convergence check */
+            if (r_norm  <= epsilon) {
+                if (print_level > 0) printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
+                converged = TRUE; break;
+            }
+            else {
+                if (print_level > 2) printf("Warning: False convergence!\n");
+                fasp_array_cp_omp(n, r, p[0], nthreads,openmp_holds); i = 0;
+            }
+        } /* end of convergence check */
     
-    /* compute residual vector and continue loop */
-    for (j = i; j > 0; j--)
-    {
-    rs[j-1] = -s[j-1]*rs[j];
-    rs[j] = c[j-1]*rs[j];
-    }
+        /* compute residual vector and continue loop */
+        for (j = i; j > 0; j--) {
+            rs[j-1] = -s[j-1]*rs[j];
+            rs[j] = c[j-1]*rs[j];
+        }
     
-    if (i) fasp_blas_array_axpy_omp(n, rs[i]-1.0, p[i], p[i], nthreads,openmp_holds);
+        if (i) fasp_blas_array_axpy_omp(n, rs[i]-1.0, p[i], p[i], nthreads,openmp_holds);
     
-    for (j = i-1 ; j > 0; --j) fasp_blas_array_axpy_omp(n, rs[j], p[j], p[i], nthreads,openmp_holds);
+        for (j = i-1 ; j > 0; --j) fasp_blas_array_axpy_omp(n, rs[j], p[j], p[i], nthreads,openmp_holds);
     
-    if (i)
-    {
-    fasp_blas_array_axpy_omp(n, rs[0]-1.0, p[0], p[0], nthreads,openmp_holds);
-    fasp_blas_array_axpy_omp(n, 1.0, p[i], p[0], nthreads,openmp_holds);
-    }  
+        if (i) {
+            fasp_blas_array_axpy_omp(n, rs[0]-1.0, p[0], p[0], nthreads,openmp_holds);
+            fasp_blas_array_axpy_omp(n, 1.0, p[i], p[0], nthreads,openmp_holds);
+        }  
     
-    //-----------------------------------//
-    //   compute the convergence rate    //
-    //-----------------------------------//    
-    cr = r_norm / r_norm_old;
+        //-----------------------------------//
+        //   compute the convergence rate    //
+        //-----------------------------------//    
+        cr = r_norm / r_norm_old;
     
     } /* end of iteration while loop */
     
-    if (print_level > 0 && iter >= maxit && r_norm > epsilon) 
-    {
-    printf("Warning: Not reaching the given tolerance in %d iterations!!\n", maxit);
+    if (print_level > 0 && iter >= maxit && r_norm > epsilon) {
+        printf("Warning: Not reaching the given tolerance in %d iterations!!\n", maxit);
     }
     
     /*-------------------------------------------
@@ -371,8 +349,11 @@ INT fasp_solver_dbsr_pvgmres_omp (dBSRmat *A,
     if (iter>=maxit) return ERROR_SOLVER_MAXIT;
     else if (status<0) return status;
     else return iter;
+
 #else
+
     return status;
+
 #endif
 }
 

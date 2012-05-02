@@ -119,17 +119,17 @@ int fasp_solver_dcsr_pcg_omp (dCSRmat *A,
     // compute initial relative residual 
     switch (stop_type) {
     case STOP_REL_PRECRES:
-    if (pre != NULL) 
-    pre->fct_omp(b->val,t,pre->data,nthreads,openmp_holds); /* Preconditioning */
-    else 
-    fasp_array_cp_omp(m,b->val,t,nthreads,openmp_holds); /* No preconditioner, B=I */
-    normb=sqrt(ABS(fasp_blas_array_dotprod_omp(m,b->val,t,nthreads,openmp_holds)));
-    break;
+        if (pre != NULL) 
+            pre->fct_omp(b->val,t,pre->data,nthreads,openmp_holds); /* Preconditioning */
+        else 
+            fasp_array_cp_omp(m,b->val,t,nthreads,openmp_holds); /* No preconditioner, B=I */
+        normb=sqrt(ABS(fasp_blas_array_dotprod_omp(m,b->val,t,nthreads,openmp_holds)));
+        break;
     case STOP_MOD_REL_RES:
-    break;
+        break;
     default:
-    normb=fasp_blas_array_norm2_omp(m,b->val,nthreads,openmp_holds); // norm(b)
-    break;
+        normb=fasp_blas_array_norm2_omp(m,b->val,nthreads,openmp_holds); // norm(b)
+        break;
     }
     normb=MAX(SMALLREAL,normb);
     normu=MAX(SMALLREAL,fasp_blas_array_norm2_omp(m,u->val,nthreads,openmp_holds));
@@ -139,23 +139,23 @@ int fasp_solver_dcsr_pcg_omp (dCSRmat *A,
     fasp_blas_dcsr_aAxpy_omp(-1.0,A,u->val,r,nthreads,openmp_holds);
     
     if (pre != NULL)
-    pre->fct_omp(r,z,pre->data,nthreads,openmp_holds); /* Preconditioning */
+        pre->fct_omp(r,z,pre->data,nthreads,openmp_holds); /* Preconditioning */
     else
-    fasp_array_cp_omp(m,r,z,nthreads,openmp_holds); /* No preconditioner, B=I */
+        fasp_array_cp_omp(m,r,z,nthreads,openmp_holds); /* No preconditioner, B=I */
     
     switch (stop_type) {
     case STOP_REL_PRECRES:
-    temp2=sqrt(fasp_blas_array_dotprod_omp(m,r,z,nthreads,openmp_holds));
-    relres=temp2/normb; 
-    break;
+        temp2=sqrt(fasp_blas_array_dotprod_omp(m,r,z,nthreads,openmp_holds));
+        relres=temp2/normb; 
+        break;
     case STOP_MOD_REL_RES:
-    tempr=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
-    relres=tempr/normu; 
-    break;
+        tempr=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
+        relres=tempr/normu; 
+        break;
     default:
-    tempr=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
-    relres=tempr/normb; 
-    break;
+        tempr=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
+        relres=tempr/normb; 
+        break;
     }
     
     if (iter<0 || relres<tol) goto FINISHED;
@@ -165,179 +165,179 @@ int fasp_solver_dcsr_pcg_omp (dCSRmat *A,
     temp1=fasp_blas_array_dotprod_omp(m,z,r,nthreads,openmp_holds);
     
     while ( iter++ < MaxIt )
-    {    
-    // t=A*p
-    fasp_blas_dcsr_mxv_omp(A,p,t,nthreads,openmp_holds);
+        {    
+            // t=A*p
+            fasp_blas_dcsr_mxv_omp(A,p,t,nthreads,openmp_holds);
     
-    // comupte alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
-    temp2=fasp_blas_array_dotprod_omp(m,t,p,nthreads,openmp_holds);
-    alpha=temp1/temp2;
+            // comupte alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
+            temp2=fasp_blas_array_dotprod_omp(m,t,p,nthreads,openmp_holds);
+            alpha=temp1/temp2;
     
-    // compute u_k=u_{k-1} + alpha_k*p_{k-1}
-    fasp_blas_array_axpy_omp(m,alpha,p,u->val,nthreads,openmp_holds);
+            // compute u_k=u_{k-1} + alpha_k*p_{k-1}
+            fasp_blas_array_axpy_omp(m,alpha,p,u->val,nthreads,openmp_holds);
     
-    // compute r_k=r_{k-1} - alpha_k*A*p_{k-1}
-    fasp_blas_array_axpy_omp(m,-alpha,t,r,nthreads,openmp_holds);
-    absres=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
-    factor=absres/absres0;
+            // compute r_k=r_{k-1} - alpha_k*A*p_{k-1}
+            fasp_blas_array_axpy_omp(m,-alpha,t,r,nthreads,openmp_holds);
+            absres=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
+            factor=absres/absres0;
     
-    // compute relative difference
-    normu=fasp_blas_dvec_norm2_omp(u,nthreads,openmp_holds);
-    reldiff=ABS(alpha)*fasp_blas_array_norm2_omp(m,p,nthreads,openmp_holds)/normu;
+            // compute relative difference
+            normu=fasp_blas_dvec_norm2_omp(u,nthreads,openmp_holds);
+            reldiff=ABS(alpha)*fasp_blas_array_norm2_omp(m,p,nthreads,openmp_holds)/normu;
     
-    // compute relative residual 
-    switch (stop_type) {
-    case STOP_REL_PRECRES:
-    // z = B*r
-    if (pre == NULL)
-    fasp_array_cp_omp(m,r,z,nthreads,openmp_holds); /* No preconditioner, B=I */
-    else
-    pre->fct_omp(r,z,pre->data,nthreads,openmp_holds); /* Preconditioning */
-    temp2=fasp_blas_array_dotprod_omp(m,z,r,nthreads,openmp_holds);
-    relres=sqrt(ABS(temp2))/normb;
-    break;
-    case STOP_MOD_REL_RES:
-    relres=absres/normu;
-    break;
-    default:
-    relres=absres/normb;
-    break;
-    }
+            // compute relative residual 
+            switch (stop_type) {
+            case STOP_REL_PRECRES:
+                // z = B*r
+                if (pre == NULL)
+                    fasp_array_cp_omp(m,r,z,nthreads,openmp_holds); /* No preconditioner, B=I */
+                else
+                    pre->fct_omp(r,z,pre->data,nthreads,openmp_holds); /* Preconditioning */
+                temp2=fasp_blas_array_dotprod_omp(m,z,r,nthreads,openmp_holds);
+                relres=sqrt(ABS(temp2))/normb;
+                break;
+            case STOP_MOD_REL_RES:
+                relres=absres/normu;
+                break;
+            default:
+                relres=absres/normb;
+                break;
+            }
     
-    // output iteration information if needed
-    print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+            // output iteration information if needed
+            print_itinfo(print_level,stop_type,iter,relres,absres,factor);
     
-    // solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
-    infnormu = fasp_blas_array_norminf(m, u->val);
-    if (infnormu <= sol_inf_tol)
-    {
-    print_message(print_level, "PCG stops: infinity norm of the solution is too small!\n");
-    iter = ERROR_SOLVER_SOLSTAG;
-    break;
-    }
+            // solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
+            infnormu = fasp_blas_array_norminf(m, u->val);
+            if (infnormu <= sol_inf_tol)
+                {
+                    print_message(print_level, "PCG stops: infinity norm of the solution is too small!\n");
+                    iter = ERROR_SOLVER_SOLSTAG;
+                    break;
+                }
     
-    // stagnation check
-    if ((stag<=MaxStag) & (reldiff<maxdiff)) {
+            // stagnation check
+            if ((stag<=MaxStag) & (reldiff<maxdiff)) {
     
-    if (print_level>4) { 
-    printf("PCG: restart %d caused by stagnation.\n", restart_step);
-    printf("||u-u'||/||u|| = %e and computed rel. res. = %e.\n",reldiff,relres);
-    }
+                if (print_level>4) { 
+                    printf("PCG: restart %d caused by stagnation.\n", restart_step);
+                    printf("||u-u'||/||u|| = %e and computed rel. res. = %e.\n",reldiff,relres);
+                }
     
-    fasp_array_cp_omp(m,b->val,r,nthreads,openmp_holds);
-    fasp_blas_dcsr_aAxpy_omp(-1.0,A,u->val,r,nthreads,openmp_holds);
-    absres=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
+                fasp_array_cp_omp(m,b->val,r,nthreads,openmp_holds);
+                fasp_blas_dcsr_aAxpy_omp(-1.0,A,u->val,r,nthreads,openmp_holds);
+                absres=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
     
-    // relative residual 
-    switch (stop_type) {
-    case STOP_REL_PRECRES:
-    // z = B*r
-    if (pre == NULL)
-    fasp_array_cp_omp(m,r,z,nthreads,openmp_holds); /* No preconditioner, B=I */
-    else
-    pre->fct_omp(r,z,pre->data,nthreads,openmp_holds); /* Preconditioning */
-    temp2=fasp_blas_array_dotprod_omp(m,z,r,nthreads,openmp_holds);
-    relres=sqrt(ABS(temp2))/normb;
-    break;
-    case STOP_MOD_REL_RES:
-    relres=absres/normu;
-    break;
-    default:
-    relres=absres/normb;    
-    break;    
-    }
+                // relative residual 
+                switch (stop_type) {
+                case STOP_REL_PRECRES:
+                    // z = B*r
+                    if (pre == NULL)
+                        fasp_array_cp_omp(m,r,z,nthreads,openmp_holds); /* No preconditioner, B=I */
+                    else
+                        pre->fct_omp(r,z,pre->data,nthreads,openmp_holds); /* Preconditioning */
+                    temp2=fasp_blas_array_dotprod_omp(m,z,r,nthreads,openmp_holds);
+                    relres=sqrt(ABS(temp2))/normb;
+                    break;
+                case STOP_MOD_REL_RES:
+                    relres=absres/normu;
+                    break;
+                default:
+                    relres=absres/normb;    
+                    break;    
+                }
     
-    if (print_level>4) printf("The actual relative residual = %e\n",relres);
+                if (print_level>4) printf("The actual relative residual = %e\n",relres);
     
-    if (relres<tol) 
-    break;
-    else {
-    if (stag>=MaxStag) {
-    print_message(print_level,"CG does not converge: staggnation error!\n");
-    iter = ERROR_SOLVER_STAG;
-    break;
-    }    
-    fasp_array_set_omp(m,p,0.0,nthreads,openmp_holds);
-    ++stag;
-    ++restart_step;
-    }
-    } // end of staggnation check!
+                if (relres<tol) 
+                    break;
+                else {
+                    if (stag>=MaxStag) {
+                        print_message(print_level,"CG does not converge: staggnation error!\n");
+                        iter = ERROR_SOLVER_STAG;
+                        break;
+                    }    
+                    fasp_array_set_omp(m,p,0.0,nthreads,openmp_holds);
+                    ++stag;
+                    ++restart_step;
+                }
+            } // end of staggnation check!
     
-    // safe-guard check
-    if (relres<tol) 
-    {
-    if (print_level>4) printf("The computed relative residual = %e\n",relres);
+            // safe-guard check
+            if (relres<tol) 
+                {
+                    if (print_level>4) printf("The computed relative residual = %e\n",relres);
     
-    fasp_array_cp_omp(m,b->val,r,nthreads,openmp_holds);
-    fasp_blas_dcsr_aAxpy_omp(-1.0,A,u->val,r,nthreads,openmp_holds);
+                    fasp_array_cp_omp(m,b->val,r,nthreads,openmp_holds);
+                    fasp_blas_dcsr_aAxpy_omp(-1.0,A,u->val,r,nthreads,openmp_holds);
     
-    // relative residual 
-    switch (stop_type) {
-    case STOP_REL_PRECRES:
-    // z = B*r
-    if (pre == NULL)
-    pre->fct_omp(r,z,pre->data,nthreads,openmp_holds); /* Preconditioning */
-    else
-    fasp_array_cp_omp(m,r,z,nthreads,openmp_holds); /* No preconditioner, B=I */
-    temp2=fasp_blas_array_dotprod_omp(m,z,r,nthreads,openmp_holds);
-    relres=sqrt(ABS(temp2))/normb;
-    break;
-    case STOP_MOD_REL_RES:
-    absres=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
-    relres=absres/normu;
-    break;
-    default:
-    absres=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
-    relres=absres/normb;    
-    break;
-    }
+                    // relative residual 
+                    switch (stop_type) {
+                    case STOP_REL_PRECRES:
+                        // z = B*r
+                        if (pre == NULL)
+                            pre->fct_omp(r,z,pre->data,nthreads,openmp_holds); /* Preconditioning */
+                        else
+                            fasp_array_cp_omp(m,r,z,nthreads,openmp_holds); /* No preconditioner, B=I */
+                        temp2=fasp_blas_array_dotprod_omp(m,z,r,nthreads,openmp_holds);
+                        relres=sqrt(ABS(temp2))/normb;
+                        break;
+                    case STOP_MOD_REL_RES:
+                        absres=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
+                        relres=absres/normu;
+                        break;
+                    default:
+                        absres=fasp_blas_array_norm2_omp(m,r,nthreads,openmp_holds);
+                        relres=absres/normb;    
+                        break;
+                    }
     
-    if (print_level>4) printf("The actual relative residual = %e\n",relres);
+                    if (print_level>4) printf("The actual relative residual = %e\n",relres);
     
-    // check convergence
-    if (relres<tol) break;
+                    // check convergence
+                    if (relres<tol) break;
     
-    if (more_step>=MaxRestartStep) {
-    print_message(print_level,"Warning: the tolerence may be too small!\n");
-    iter = ERROR_SOLVER_TOLSMALL;
-    break;
-    }
+                    if (more_step>=MaxRestartStep) {
+                        print_message(print_level,"Warning: the tolerence may be too small!\n");
+                        iter = ERROR_SOLVER_TOLSMALL;
+                        break;
+                    }
     
-    // prepare for restarting the method
-    fasp_array_set_omp(m,p,0.0,nthreads,openmp_holds);
-    ++more_step;
-    ++restart_step;
+                    // prepare for restarting the method
+                    fasp_array_set_omp(m,p,0.0,nthreads,openmp_holds);
+                    ++more_step;
+                    ++restart_step;
     
-    } // end of safe-guard check!
+                } // end of safe-guard check!
     
-    // update relative residual here
-    absres0 = absres;
+            // update relative residual here
+            absres0 = absres;
     
-    // compute z_k = B*r_k
-    if (stop_type!=STOP_REL_PRECRES) {
-    if (pre != NULL)
-    pre->fct_omp(r,z,pre->data,nthreads,openmp_holds); /* preconditioning */
-    else
-    fasp_array_cp_omp(m,r,z,nthreads,openmp_holds);     /* No preconditioner, B=I */
-    }
+            // compute z_k = B*r_k
+            if (stop_type!=STOP_REL_PRECRES) {
+                if (pre != NULL)
+                    pre->fct_omp(r,z,pre->data,nthreads,openmp_holds); /* preconditioning */
+                else
+                    fasp_array_cp_omp(m,r,z,nthreads,openmp_holds);     /* No preconditioner, B=I */
+            }
     
-    // compute beta_k = (z_k, r_k)/(z_{k-1}, r_{k-1})
-    temp2=fasp_blas_array_dotprod_omp(m,z,r,nthreads,openmp_holds);
-    beta=temp2/temp1;
-    temp1=temp2;
+            // compute beta_k = (z_k, r_k)/(z_{k-1}, r_{k-1})
+            temp2=fasp_blas_array_dotprod_omp(m,z,r,nthreads,openmp_holds);
+            beta=temp2/temp1;
+            temp1=temp2;
     
-    // compute p_k = z_k + beta_k*p_{k-1}
-    fasp_blas_array_axpby_omp(m,1.0,z,beta,p,nthreads,openmp_holds);
+            // compute p_k = z_k + beta_k*p_{k-1}
+            fasp_blas_array_axpby_omp(m,1.0,z,beta,p,nthreads,openmp_holds);
     
-    } // end of main PCG loop.
+        } // end of main PCG loop.
     
-FINISHED:  // finish the iterative method
+ FINISHED:  // finish the iterative method
     if (print_level>0) {
-    if (iter>MaxIt){
-    printf("Maximal iteration %d reached with relative residual %e.\n", MaxIt, relres);
-    }
-    else if (iter >= 0)
-    printf("Number of iterations = %d with relative residual %e.\n", iter, relres);
+        if (iter>MaxIt){
+            printf("Maximal iteration %d reached with relative residual %e.\n", MaxIt, relres);
+        }
+        else if (iter >= 0)
+            printf("Number of iterations = %d with relative residual %e.\n", iter, relres);
     }
     
     // clean up temp memory

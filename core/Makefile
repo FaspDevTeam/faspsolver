@@ -127,7 +127,7 @@ Default:
 
 headers: 
 	/bin/cat $(SRCDIR)/*.c \
-	| awk -v name="fasp_functs.h" -f ../bin/mkheaders.awk > include/fasp_functs.h
+	| awk -v name="fasp_functs.h" -f ../util/mkheaders.awk > include/fasp_functs.h
 
 $(AMGLIB): $(OBJSC) $(OBJSF)
 	ranlib $(AMGLIB)

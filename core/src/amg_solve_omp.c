@@ -50,41 +50,41 @@ INT fasp_amg_solve_omp (AMG_data *mgl,
     if (print_level>=PRINT_MOST) printf("fasp_amg_solve: nr=%d, nc=%d, nnz=%d\n",m,n,nnz);    
     
     while ((++iter <= MaxIt) & (sumb > SMALLREAL)) // MG solver here
-    {    
-    // Call one multigrid cycle
-    fasp_solver_mgcycle_omp(mgl, param,nthreads,openmp_holds); 
-        // This is the non-recursive MG cycle subroutine.
-        // If you wish to call the recursive version instead, replace it with:
-        //     fasp_solver_mgrecur(mgl, param, 0);         
+        {    
+            // Call one multigrid cycle
+            fasp_solver_mgcycle_omp(mgl, param,nthreads,openmp_holds); 
+            // This is the non-recursive MG cycle subroutine.
+            // If you wish to call the recursive version instead, replace it with:
+            //     fasp_solver_mgrecur(mgl, param, 0);         
     
-    // Form residual r = b-A*x    
-        fasp_dvec_cp_omp(b,r,nthreads,openmp_holds);
-    fasp_blas_dcsr_aAxpy_omp(-1.0,ptrA,x->val,r->val,nthreads,openmp_holds);
+            // Form residual r = b-A*x    
+            fasp_dvec_cp_omp(b,r,nthreads,openmp_holds);
+            fasp_blas_dcsr_aAxpy_omp(-1.0,ptrA,x->val,r->val,nthreads,openmp_holds);
     
-        // Compute norms of r and convergence factor
-    absres  = fasp_blas_dvec_norm2_omp(r,nthreads,openmp_holds); // residual ||r||
-    relres1 = absres/sumb;             // relative residual ||r||/||b||
-    factor  = absres/absres0;          // contraction factor
-        absres0 = absres;                  // prepare for next iteration
+            // Compute norms of r and convergence factor
+            absres  = fasp_blas_dvec_norm2_omp(r,nthreads,openmp_holds); // residual ||r||
+            relres1 = absres/sumb;             // relative residual ||r||/||b||
+            factor  = absres/absres0;          // contraction factor
+            absres0 = absres;                  // prepare for next iteration
         
-    // Print iteration information if needed    
-    print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
+            // Print iteration information if needed    
+            print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
     
-        // Check convergence
-    if (relres1<tol) break;
-    }
+            // Check convergence
+            if (relres1<tol) break;
+        }
     
     if (print_level>PRINT_NONE) {
-    if (iter>MaxIt)
-    printf("Maximal iteration %d exceeded with relative residual %e.\n", 
+        if (iter>MaxIt)
+            printf("Maximal iteration %d exceeded with relative residual %e.\n", 
                    MaxIt, relres1);
-    else
-    printf("Number of iterations = %d with relative residual %e.\n", 
+        else
+            printf("Number of iterations = %d with relative residual %e.\n", 
                    iter, relres1);
     
-    REAL solve_end=omp_get_wtime();
-    REAL solveduration = solve_end - solve_start;
-    printf("AMG solve costs %f seconds.\n", solveduration);
+        REAL solve_end=omp_get_wtime();
+        REAL solveduration = solve_end - solve_start;
+        printf("AMG solve costs %f seconds.\n", solveduration);
     }
     
     return iter;

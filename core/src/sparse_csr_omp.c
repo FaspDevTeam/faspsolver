@@ -43,31 +43,29 @@ void fasp_dcsr_getdiag_omp (INT n,
     if (n > openmp_holds) {
         INT mybegin,myend,myid;
 #pragma omp parallel for private(myid, mybegin, myend, i, ibegin, iend, k, j) 
-        for (myid = 0; myid < nthreads; myid++ )
-        {
-    FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
-    for (i=mybegin; i<myend; i++)
-    {
-    ibegin=A->IA[i]; iend=A->IA[i+1];
-    for (k=ibegin;k<iend;++k) {
-    j=N2C(A->JA[N2C(k)]);
-    if ((j-i)==0) {
-    diag->val[i] = A->val[N2C(k)]; break;
-    } // end if
-    } // end for k
-    } // end for i
-    }
+        for (myid = 0; myid < nthreads; myid++ ) {
+            FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+            for (i=mybegin; i<myend; i++) {
+                ibegin=A->IA[i]; iend=A->IA[i+1];
+                for (k=ibegin;k<iend;++k) {
+                    j=N2C(A->JA[N2C(k)]);
+                    if ((j-i)==0) {
+                        diag->val[i] = A->val[N2C(k)]; break;
+                    } // end if
+                } // end for k
+            } // end for i
+        }
     }
     else {
-    for (i=0;i<n;++i) {
-    ibegin=A->IA[i]; iend=A->IA[i+1];
-    for (k=ibegin;k<iend;++k) {
-    j=N2C(A->JA[N2C(k)]);
-    if ((j-i)==0) {
-    diag->val[i] = A->val[N2C(k)]; break;
-    } // end if
-    } // end for k
-    } // end for i
+        for (i=0;i<n;++i) {
+            ibegin=A->IA[i]; iend=A->IA[i+1];
+            for (k=ibegin;k<iend;++k) {
+                j=N2C(A->JA[N2C(k)]);
+                if ((j-i)==0) {
+                    diag->val[i] = A->val[N2C(k)]; break;
+                } // end if
+            } // end for k
+        } // end for i
     }
 #endif
 }

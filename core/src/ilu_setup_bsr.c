@@ -70,12 +70,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     
     ijlu=(int*)fasp_mem_calloc(iwk,sizeof(INT));
     uptr=(int*)fasp_mem_calloc(A->ROW,sizeof(INT));
-    
-#if CHMEM_MODE
-    printf("### DEBUG: memory usage after before_ILU_data: \n");
-    fasp_mem_usage();
-#endif
-    
+        
 #if DEBUG_MODE
     printf("### DEBUG: symbolic factorization ... \n ");
 #endif
@@ -92,12 +87,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     
     // (2) numerical factoration 
     numfac_bsr(A, iludata->luval, ijlu, uptr);
-    
-#if CHMEM_MODE
-    printf("### DEBUG: memory usage after ILU setup: \n");
-    fasp_mem_usage();
-#endif
-    
+        
     nwork=6*nzlu*nb;
     iludata->nzlu=nzlu;
     iludata->nwork=nwork;

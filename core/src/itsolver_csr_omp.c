@@ -51,39 +51,39 @@ int fasp_solver_dcsr_itsolver_omp( dCSRmat *A,
     switch (itsolver_type) {
     
     case SOLVER_CG:
-    if (print_level>0) printf("Calling PCG solver ...\n");
-    iter=fasp_solver_dcsr_pcg_omp(A, b, x, MaxIt, tol, pc, print_level, stop_type, nthreads, openmp_holds); 
-            break;
+        if (print_level>0) printf("Calling PCG solver ...\n");
+        iter=fasp_solver_dcsr_pcg_omp(A, b, x, MaxIt, tol, pc, print_level, stop_type, nthreads, openmp_holds); 
+        break;
     
     case SOLVER_BiCGstab:
-    if (print_level>0) printf("Calling BiCGstab solver ...\n");
-    iter=fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-            break;
+        if (print_level>0) printf("Calling BiCGstab solver ...\n");
+        iter=fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
     
     case SOLVER_MinRes:
-    if (print_level>0) printf("Calling MinRes solver ...\n");    
-    iter=fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-            break;
+        if (print_level>0) printf("Calling MinRes solver ...\n");    
+        iter=fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
     
     case SOLVER_GMRES:
-    if (print_level>0) printf("Calling GMRes solver ...\n");    
-    iter=fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level); 
-            break;
+        if (print_level>0) printf("Calling GMRes solver ...\n");    
+        iter=fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level); 
+        break;
     
     case SOLVER_VGMRES: 
-    if (print_level>0) printf("Calling vGMRes solver ...\n");    
-    iter=fasp_solver_dcsr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);
-            break;
+        if (print_level>0) printf("Calling vGMRes solver ...\n");    
+        iter=fasp_solver_dcsr_pvgmres(A, b, x, MaxIt, tol, pc, print_level, stop_type, restart);
+        break;
     
     default:
-    printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
-    return ERROR_SOLVER_TYPE;
+        printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
+        return ERROR_SOLVER_TYPE;
     
     } 
     
     if ((print_level>1) && (iter >= 0)) {
-    double solver_end=omp_get_wtime();    
-    double solver_duration = solver_end - solver_start;
+        double solver_end=omp_get_wtime();    
+        double solver_duration = solver_end - solver_start;
         print_cputime("Iterative solver", solver_duration);
     }
 #endif
@@ -139,8 +139,8 @@ int fasp_solver_dcsr_krylov_amg_omp (dCSRmat *A,
     // setup preconditioner  
     switch (amgparam->AMG_type) {
     default: // Classical AMG
-    status = fasp_amg_setup_rs_omp(mgl, amgparam, nthreads, openmp_holds);
-    break;
+        status = fasp_amg_setup_rs_omp(mgl, amgparam, nthreads, openmp_holds);
+        break;
     }
     
 #if CHMEM_MODE    
@@ -170,29 +170,29 @@ int fasp_solver_dcsr_krylov_amg_omp (dCSRmat *A,
     precond pc;
     pc.data = &pcdata; 
     if (itparam->precond_type == PREC_FMG)
-    {
-    //pc.fct = fasp_precond_famg;
-    }
+        {
+            //pc.fct = fasp_precond_famg;
+        }
     else{
-    if (amgparam->cycle_type == AMLI_CYCLE)
-    {
-//    pc.fct = fasp_precond_amli;
-    }
-    else
-    {
-    pc.fct_omp = fasp_precond_amg_omp;
-    }
+        if (amgparam->cycle_type == AMLI_CYCLE)
+            {
+                //    pc.fct = fasp_precond_amli;
+            }
+        else
+            {
+                pc.fct_omp = fasp_precond_amg_omp;
+            }
     }
     
     status=fasp_solver_dcsr_itsolver_omp(A,b,x,&pc,itparam,nthreads,openmp_holds);
     
     if (print_level>0) {
-    solver_end=omp_get_wtime();    
-    solver_duration = solver_end - solver_start;
+        solver_end=omp_get_wtime();    
+        solver_duration = solver_end - solver_start;
         print_cputime("AMG_Krylov method totally", solver_duration);
     }
     
-FINISHED:
+ FINISHED:
     fasp_amg_data_free(mgl);
     
 #if DEBUG_MODE

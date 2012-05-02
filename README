@@ -27,7 +27,7 @@ To setup the environment, you need to do two simple steps:
 
 Step 1. Setup directories for FASP:
      
-     [faspsolver]$ ./bin/setup.sh
+     [faspsolver]$ ./util/setup.sh
 
 Step 2. Compile the library: 
      

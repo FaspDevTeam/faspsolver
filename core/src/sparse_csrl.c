@@ -56,14 +56,13 @@ dCSRLmat * fasp_dcsrl_create (INT num_rows,
  */
 void fasp_dcsrl_free (dCSRLmat *A)
 {
-    if (A)
-    {  
-    if (A -> nzdifnum) free(A -> nzdifnum);
-    if (A -> rowindex) free(A -> rowindex);
-    if (A -> rowstart) free(A -> rowstart);
-    if (A -> ja)       free(A -> ja);
-    if (A -> data)     free(A -> data);
-    free(A);
+    if (A) {  
+        if (A -> nzdifnum) free(A -> nzdifnum);
+        if (A -> rowindex) free(A -> rowindex);
+        if (A -> rowstart) free(A -> rowstart);
+        if (A -> ja)       free(A -> ja);
+        if (A -> data)     free(A -> data);
+        free(A);
     }
 }
 
