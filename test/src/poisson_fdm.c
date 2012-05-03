@@ -2,7 +2,6 @@
  *  \brief Setup FDM for the Poisson's equation
  */
 
-
 #include "poisson_fdm.h"
 
 /*!
@@ -121,8 +120,7 @@ fsls_BuildLinearSystem_5pt2d (int               nt,
     
 	/* Generate matrix without BC processing */
     
-	if (nt == 0)
-	{
+	if (nt == 0) {
 		ngridxt = ngrid;
 		nt = 1;
 		nt_flag = 0;
@@ -137,8 +135,7 @@ fsls_BuildLinearSystem_5pt2d (int               nt,
 	factory = 1.0 / hy2;
 	dd = 2*(factorx + factory);
     
-	for (i = 0; i < ngrid; i ++)
-	{
+	for (i = 0; i < ngrid; i ++) {
 		diag[i] = dd;
 		offdiag[0][i] = -factorx;
 		offdiag[1][i] = -factorx;
@@ -156,28 +153,23 @@ fsls_BuildLinearSystem_5pt2d (int               nt,
 	offdiag[1][ngridminus1] = 0.0;
 	offdiag[3][ngridminus1] = 0.0;/* the four vtx */
     
-	for (i = 1; i < nxminus1; i ++)
-	{
+	for (i = 1; i < nxminus1; i ++) {
 		offdiag[2][i] = 0.0;
 	}
     
-	for (i = ngrid-nxminus1; i < ngridminus1; i ++)
-	{
+	for (i = ngrid-nxminus1; i < ngridminus1; i ++) {
 		offdiag[3][i] = 0.0;
 	}
     
-	for (i = nx; i < ngridminusnx; i += nx)
-	{
+	for (i = nx; i < ngridminusnx; i += nx) {
 		offdiag[0][i] = 0.0;
 	}
     
-	for (i = 2*nx-1; i < ngridminus1; i += nx)
-	{
+	for (i = 2*nx-1; i < ngridminus1; i += nx) {
 		offdiag[1][i] = 0.0;
 	}/* the four lines */
     
-    
-	// generate the rhs and sol vector
+    // generate the rhs and sol vector
 	f = fsls_XVectorCreate(ngridxt);
 	fsls_XVectorInitialize(f);
 	u = fsls_XVectorCreate(ngridxt);
@@ -187,15 +179,12 @@ fsls_BuildLinearSystem_5pt2d (int               nt,
     
 	k = 0;
 	double tmp;
-	for (m = 0; m < nt; m ++)
-	{
+	for (m = 0; m < nt; m ++) {
 		t = ht*(m + 1);
-		for (j = 0; j < ny; j ++)
-		{
+		for (j = 0; j < ny; j ++) {
 			y = hy*(j + 1);
 			s = sin(PI*y);
-			for (i = 0; i < nx; i ++)
-			{
+			for (i = 0; i < nx; i ++) {
 				x = hx*(i + 1);
 				tmp = s*sin(PI*x);
 				u_data[k] = tmp*t;
@@ -273,8 +262,7 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
     
 	/* Generate matrix without BC processing */
     
-	if (nt == 0)
-	{
+	if (nt == 0) {
 		ngridxt = ngrid;
 		nt = 1;
 		nt_flag = 0;
@@ -289,16 +277,15 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
 	factory = 1.0 / hy2;
 	dd = 2*(factorx + factory);
     
-	for (i = 0; i < n_red; i++)
-	{
+	for (i = 0; i < n_red; i++) {
 		diag[i] = dd;
 		offdiag[0][i] = -factorx;
 		offdiag[1][i] = -factorx;
 		offdiag[2][i] = -factory;
 		offdiag[3][i] = -factory;
 	}
-	for (i = n_red; i < n_red+n_black; i++)
-	{
+
+	for (i = n_red; i < n_red+n_black; i++) {
 		diag[i] = dd;
 		offdiag[4][i] = -factorx;
 		offdiag[5][i] = -factorx;
@@ -316,39 +303,35 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
 	offdiag[1][n_red-1] = 0.0;
 	offdiag[3][n_red-1] = 0.0;/* the four vtx */
     
-	for (i = 1; i < n_red_odd-1; i ++)
-	{
+	for (i = 1; i < n_red_odd-1; i ++) {
 		offdiag[2][i] = 0.0;
 	}
-	for (i = n_red; i < n_red+n_black_odd; i ++)
-	{
+
+	for (i = n_red; i < n_red+n_black_odd; i ++) {
 		offdiag[6][i] = 0.0;
 	}
     
-	for (i = n_red-n_red_odd+1; i < n_red-1; i ++)
-	{
+	for (i = n_red-n_red_odd+1; i < n_red-1; i ++) {
 		offdiag[3][i] = 0.0;
 	}
-	for (i = n_red+n_black-n_black_odd; i < n_red+n_black; i ++)
-	{
+
+	for (i = n_red+n_black-n_black_odd; i < n_red+n_black; i ++) {
 		offdiag[7][i] = 0.0;
 	}
     
-	for (i = n_red_even+n_red_odd; i < n_red-n_red_odd; i += n_red_even+n_red_odd)
-	{
+	for (i = n_red_even+n_red_odd; i < n_red-n_red_odd; i += n_red_even+n_red_odd) {
 		offdiag[0][i] = 0.0;
 	}
-	for (i = n_red+n_black_odd; i < n_red+n_black-n_black_odd-n_black_even+1; i += n_black_even+n_black_odd)
-	{
+
+	for (i = n_red+n_black_odd; i < n_red+n_black-n_black_odd-n_black_even+1; i += n_black_even+n_black_odd) {
 		offdiag[4][i] = 0.0;
 	}
     
-	for (i = 2*n_red_odd+n_red_even-1; i < n_red-1; i += n_red_even+n_red_odd)
-	{
+	for (i = 2*n_red_odd+n_red_even-1; i < n_red-1; i += n_red_even+n_red_odd) {
 		offdiag[1][i] = 0.0;
 	}
-	for (i = n_red+n_black_odd+n_black_even-1; i < n_red+n_black-n_black_odd+1; i += n_black_even+n_black_odd)
-	{
+
+	for (i = n_red+n_black_odd+n_black_even-1; i < n_red+n_black-n_black_odd+1; i += n_black_even+n_black_odd) {
 		offdiag[5][i] = 0.0;
 	}/* the four lines */
     
@@ -361,41 +344,34 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
 	u_data = fsls_XVectorData(u);
     
 	double tmp;
-	for (m = 0; m < nt; m ++)
-	{
+	for (m = 0; m < nt; m ++) {
 		t = ht*(m + 1);
-		for (j = 0; j < n_odd; j++)
-		{
+		for (j = 0; j < n_odd; j++) {
 			y = 2*hy*j + hy;
 			s = sin(PI*y);
-			for (i = 0; i < n_red_odd; i++)
-			{
+			for (i = 0; i < n_red_odd; i++) {
 				x = 2*hx*i + hx;
 				tmp = s*sin(PI*x);
 				u_data[i+j*(n_red_odd+n_red_even)+m*ngrid] = tmp*t;
 				f_data[i+j*(n_red_odd+n_red_even)+m*ngrid] = tmp*nt_flag + constant*tmp*t;
 			}
-			for (i = 0; i < n_black_odd; i++)
-			{
+			for (i = 0; i < n_black_odd; i++) {
 				x = 2*hx*(i + 1);
 				tmp = s*sin(PI*x);
 				u_data[n_red+i+j*(n_black_odd+n_black_even)+m*ngrid] = tmp*t;
 				f_data[n_red+i+j*(n_black_odd+n_black_even)+m*ngrid] = tmp*nt_flag + constant*tmp*t;
 			}
 		}
-		for (j = 0; j < n_even; j++)
-		{
+		for (j = 0; j < n_even; j++) {
 			y = 2*hy*(j + 1);
 			s = sin(PI*y);
-			for (i = 0; i < n_red_even; i++)
-			{
+			for (i = 0; i < n_red_even; i++) {
 				x = 2*hx*(i + 1);
 				tmp = s*sin(PI*x);
 				u_data[n_red_odd+i+j*(n_red_odd+n_red_even)+m*ngrid] = tmp*t;
 				f_data[n_red_odd+i+j*(n_red_odd+n_red_even)+m*ngrid] = tmp*nt_flag + constant*tmp*t;
 			}
-			for (i = 0; i < n_black_even; i++)
-			{
+			for (i = 0; i < n_black_even; i++) {
 				x = 2*hx*i + hx;
 				tmp = s*sin(PI*x);
 				u_data[n_red+n_black_odd+i+j*(n_black_odd+n_black_even)+m*ngrid] = tmp*t;
@@ -511,8 +487,7 @@ fsls_BuildLinearSystem_7pt3d (int               nt,
 	 * Generate matrix without BC processing
 	 *--------------------------------------------------*/
     
-	if (nt == 0)
-	{
+	if (nt == 0) {
 		ngridxt = ngrid;
 		nt = 1;
 		nt_flag = 0;
@@ -533,8 +508,7 @@ fsls_BuildLinearSystem_7pt3d (int               nt,
     
 	dd = 2.0*(factorx + factory + factorz);
     
-	for (i = 0; i < ngrid; i ++)
-	{
+	for (i = 0; i < ngrid; i ++) {
 		diag[i]       = dd;
 		offdiag[0][i] = -factorx;
 		offdiag[1][i] = -factorx;
@@ -584,74 +558,62 @@ fsls_BuildLinearSystem_7pt3d (int               nt,
     
 	/* 12 edges */
     
-	for (i = corner1+1; i < corner2; i ++)
-	{
+	for (i = corner1+1; i < corner2; i ++) {
 		offdiag[2][i] = 0.0;
 		offdiag[4][i] = 0.0;
 	}
     
-	for (i = corner3+1; i < corner4; i ++)
-	{
+	for (i = corner3+1; i < corner4; i ++) {
 		offdiag[3][i] = 0.0;
 		offdiag[4][i] = 0.0;
 	}
     
-	for (i = corner5+1; i < corner6; i ++)
-	{
+	for (i = corner5+1; i < corner6; i ++) {
 		offdiag[2][i] = 0.0;
 		offdiag[5][i] = 0.0;
 	}
     
-	for (i = corner7+1; i < corner8; i ++)
-	{
+	for (i = corner7+1; i < corner8; i ++) {
 		offdiag[3][i] = 0.0;
 		offdiag[5][i] = 0.0;
 	}
     
-	for (i = corner1+nx; i < corner3; i += nx)
-	{
+	for (i = corner1+nx; i < corner3; i += nx) {
 		offdiag[0][i] = 0.0;
 		offdiag[4][i] = 0.0;
 	}
     
-	for (i = corner2+nx; i < corner4; i += nx)
-	{
+	for (i = corner2+nx; i < corner4; i += nx) {
 		offdiag[1][i] = 0.0;
 		offdiag[4][i] = 0.0;
 	}
     
-	for (i = corner5+nx; i < corner7; i += nx)
-	{
+	for (i = corner5+nx; i < corner7; i += nx) {
 		offdiag[0][i] = 0.0;
 		offdiag[5][i] = 0.0;
 	}
     
-	for (i = corner6+nx; i < corner8; i += nx)
-	{
+	for (i = corner6+nx; i < corner8; i += nx) {
 		offdiag[1][i] = 0.0;
 		offdiag[5][i] = 0.0;
 	}
     
-	for (i = corner1+nplane; i < corner5; i += nplane)
-	{
+	for (i = corner1+nplane; i < corner5; i += nplane) {
 		offdiag[0][i] = 0.0;
 		offdiag[2][i] = 0.0;
 	}
     
-	for (i = corner2+nplane; i < corner6; i += nplane)
-	{
+	for (i = corner2+nplane; i < corner6; i += nplane) {
 		offdiag[1][i] = 0.0;
 		offdiag[2][i] = 0.0;
 	}
     
-	for (i = corner3+nplane; i < corner7; i += nplane)
-	{
+	for (i = corner3+nplane; i < corner7; i += nplane) {
 		offdiag[0][i] = 0.0;
 		offdiag[3][i] = 0.0;
 	}
     
-	for (i = corner4+nplane; i < corner8; i += nplane)
-	{
+	for (i = corner4+nplane; i < corner8; i += nplane) {
 		offdiag[1][i] = 0.0;
 		offdiag[3][i] = 0.0;
 	}
@@ -659,61 +621,49 @@ fsls_BuildLinearSystem_7pt3d (int               nt,
 	/* 6 planes */
     
 	// Left
-	for (i = corner1+nplane; i < corner5; i += nplane)
-	{
+	for (i = corner1+nplane; i < corner5; i += nplane) {
 		k = corner3 + i;
-		for (j = i+nx; j < k; j += nx)
-		{
+		for (j = i+nx; j < k; j += nx) {
 			offdiag[0][j] = 0.0;
 		}
 	}
     
 	// Right
-	for (i = corner2+nplane; i < corner6; i += nplane)
-	{
+	for (i = corner2+nplane; i < corner6; i += nplane) {
 		k = corner3 + i;
-		for (j = i+nx; j < k; j += nx)
-		{
+		for (j = i+nx; j < k; j += nx) {
 			offdiag[1][j] = 0.0;
 		}
 	}
     
 	// Front
-	for (i = corner1+nplane; i < corner5; i += nplane)
-	{
+	for (i = corner1+nplane; i < corner5; i += nplane) {
 		k = corner2 + i;
-		for (j = i+1; j < k; j ++)
-		{
+		for (j = i+1; j < k; j ++) {
 			offdiag[2][j] = 0.0;
 		}
 	}
     
 	// Back
-	for (i = corner3+nplane; i < corner7; i += nplane)
-	{
+	for (i = corner3+nplane; i < corner7; i += nplane) {
 		k = corner2 + i;
-		for (j = i+1; j < k; j ++)
-		{
+		for (j = i+1; j < k; j ++) {
 			offdiag[3][j] = 0.0;
 		}
 	}
     
 	//Down
-	for (i = corner1+nx; i < corner3; i += nx)
-	{
+	for (i = corner1+nx; i < corner3; i += nx) {
 		k = corner2 + i;
-		for (j = i+1; j < k; j ++)
-		{
+		for (j = i+1; j < k; j ++) {
 			offdiag[4][j] = 0.0;
 		}
 	}
     
 	// Up
-	for (i = corner5+nx; i < corner7; i += nx)
-	{
+	for (i = corner5+nx; i < corner7; i += nx) {
 		k = corner2 + i;
-		for (j = i+1; j < k; j ++)
-		{
+		for (j = i+1; j < k; j ++) {
 			offdiag[5][j] = 0.0;
 		}
 	}
@@ -731,19 +681,15 @@ fsls_BuildLinearSystem_7pt3d (int               nt,
     
 	cnt = 0;
 	double tmp;
-	for (m = 0; m < nt; m ++)
-	{
+	for (m = 0; m < nt; m ++) {
 		t = ht*(m + 1);
-		for (k = 0; k < nz; k ++)
-		{
+		for (k = 0; k < nz; k ++) {
 			z = hz*(k + 1);
 			ss = sin(PI*z);
-			for (j = 0; j < ny; j ++)
-			{
+			for (j = 0; j < ny; j ++) {
 				y = hy*(j + 1);
 				s = ss*sin(PI*y);
-				for (i = 0; i < nx; i ++)
-				{
+				for (i = 0; i < nx; i ++) {
 					x = hx*(i + 1);
 					tmp = s*sin(PI*x);
 					u_data[cnt] = tmp*t;
@@ -793,16 +739,14 @@ fsls_Band2CSRMatrix (fsls_BandMatrix *B,
 	/*---------------------------------------------
 	 * Generate the 'ia' array
 	 *--------------------------------------------*/
-	for (i = 0; i < nplus1; i ++)
-	{
+	for (i = 0; i < nplus1; i ++) {
 		ia[i] = i*nzpr;
 	}
     
 	/*---------------------------------------------
 	 * fill the diagonal entries
 	 *--------------------------------------------*/
-	for (i = 0; i < n; i ++)
-	{
+	for (i = 0; i < n; i ++) {
 		a[ia[i]]  = diag[i];
 		ja[ia[i]] = i;
 		ia[i] ++;
@@ -811,24 +755,19 @@ fsls_Band2CSRMatrix (fsls_BandMatrix *B,
 	/*---------------------------------------------
 	 * fill the offdiagonal entries
 	 *--------------------------------------------*/
-	for (band = 0; band < nband; band ++)
-	{
+	for (band = 0; band < nband; band ++) {
 		offset = offsets[band];
-		if (offset < 0)
-		{
+		if (offset < 0) {
 			begin = abs(offset);
-			for (i = begin,col = 0; i < n; i++, col++)
-			{
+			for (i = begin,col = 0; i < n; i++, col++) {
 				a[ia[i]]  = offdiag[band][i];
 				ja[ia[i]] = col;
 				ia[i] ++;
 			}
 		}
-		else
-		{
+		else {
 			end = n - offset;
-			for (i = 0,col = offset; i < end; i++, col++)
-			{
+			for (i = 0,col = offset; i < end; i++, col++) {
 				a[ia[i]]  = offdiag[band][i];
 				ja[ia[i]] = col;
 				ia[i] ++;
@@ -839,8 +778,7 @@ fsls_Band2CSRMatrix (fsls_BandMatrix *B,
 	/*---------------------------------------------
 	 * regenerate the 'ia' array
 	 *--------------------------------------------*/
-	for (i = 0; i < nplus1; i ++)
-	{
+	for (i = 0; i < nplus1; i ++) {
 		ia[i] = i*nzpr;
 	}
     
@@ -884,25 +822,20 @@ fsls_CSRMatrixPrint (fsls_CSRMatrix *matrix,
     
 	fprintf(fp, "%d\n", num_rows);
     
-	for (j = 0; j <= num_rows; j++)
-	{
+	for (j = 0; j <= num_rows; j++) {
 		fprintf(fp, "%d\n", matrix_i[j] + file_base);
 	}
     
-	for (j = 0; j < matrix_i[num_rows]; j++)
-	{
+	for (j = 0; j < matrix_i[num_rows]; j++) {
 		fprintf(fp, "%d\n", matrix_j[j] + file_base);
 	}
     
-	if (matrix_data)
-	{
-		for (j = 0; j < matrix_i[num_rows]; j++)
-		{
+	if (matrix_data) {
+		for (j = 0; j < matrix_i[num_rows]; j++) {
 			fprintf(fp, "%.15le\n", matrix_data[j]); // we always use "%.15le\n"
 		}
 	}
-	else
-	{
+	else {
 		fprintf(fp, "Warning: No matrix data!\n");
 	}
     
@@ -915,15 +848,12 @@ int
 fsls_CSRMatrixDestroy ( fsls_CSRMatrix *matrix )
 {
 	int  ierr=0;
-	if (matrix)
-	{
+	if (matrix) {
 		fsls_TFree(fsls_CSRMatrixI(matrix));
-		if (fsls_CSRMatrixRownnz(matrix))
-		{
+		if (fsls_CSRMatrixRownnz(matrix)) {
 			fsls_TFree(fsls_CSRMatrixRownnz(matrix));
 		}
-		if ( fsls_CSRMatrixOwnsData(matrix) )
-		{
+		if ( fsls_CSRMatrixOwnsData(matrix) ) {
 			fsls_TFree(fsls_CSRMatrixData(matrix));
 			fsls_TFree(fsls_CSRMatrixJ(matrix));
 		}
@@ -996,14 +926,12 @@ fsls_CSRMatrixDeleteZeros (fsls_CSRMatrix *A,
     
 	/* get the total number of zeros in matrix A */
 	zeros = 0;
-	for (i = 0; i < num_nonzeros; i++)
-	{
+	for (i = 0; i < num_nonzeros; i++) {
 		if (fabs(A_data[i]) <= tol) zeros++;
 	}
     
 	/* there exists zeros in the matrix A */
-	if (zeros)
-	{
+	if (zeros) {
 		B = fsls_CSRMatrixCreate(nrows_A,ncols_A,num_nonzeros-zeros);
 		fsls_CSRMatrixInitialize(B);
 		B_i = fsls_CSRMatrixI(B);
@@ -1011,12 +939,10 @@ fsls_CSRMatrixDeleteZeros (fsls_CSRMatrix *A,
 		B_data = fsls_CSRMatrixData(B);
 		B_i[0] = 0;
 		nzB = 0;
-		for (i=0; i < nrows_A; i++)
-		{
-			for (j = A_i[i]; j < A_i[i+1]; j++)
-			{  /* modified by peghoty 2009/12/06 */
-				if (fabs(A_data[j]) > tol)
-				{
+		for (i=0; i < nrows_A; i++) {
+			for (j = A_i[i]; j < A_i[i+1]; j++) {  
+                /* modified by peghoty 2009/12/06 */
+				if (fabs(A_data[j]) > tol) {
 					B_data[nzB] = A_data[j];
 					B_j[nzB] = A_j[j];
 					nzB++;
@@ -1028,8 +954,8 @@ fsls_CSRMatrixDeleteZeros (fsls_CSRMatrix *A,
 		A = NULL;
 		return B;
 	}
-	else /* there doesn't exist zeros in the matrix A */
-	{
+	else {
+        /* there doesn't exist zeros in the matrix A */
 		return A; /* modified by peghoty 2009/12/06 */
 	}
 }
@@ -1046,16 +972,13 @@ fsls_CAlloc ( size_t count, size_t elt_size )
 	char *ptr;
 	int   size = count*elt_size;
     
-	if (size > 0)
-	{
+	if (size > 0) {
 		ptr = calloc(count, elt_size);
-		if (ptr == NULL)
-		{
+		if (ptr == NULL) {
 			fsls_OutOfMemory(size);
 		}
 	}
-	else
-	{
+	else {
 		ptr = NULL;
 	}
     
@@ -1108,8 +1031,7 @@ fsls_BandMatrixInitialize ( fsls_BandMatrix *matrix )
 	diag[-1] = 1.0;
 	diag[n]  = 1.0;
     
-	for (i = 0; i < nband; i ++)
-	{
+	for (i = 0; i < nband; i ++) {
 		offdiag[i] = &data_ext[(i+1)*(n+2)+1];
 	}
     
@@ -1137,8 +1059,7 @@ fsls_XVectorPrint (fsls_XVector *vector,
     
 	fprintf(fp, "%d\n", size);
     
-	for (i = 0; i < size; i ++)
-	{
+	for (i = 0; i < size; i ++) {
 		fprintf(fp, "%.15le\n", data[i]);
 	}
     
@@ -1168,8 +1089,7 @@ fsls_XVectorInitialize (fsls_XVector *vector)
 	double *data     = NULL;
 	double *data_ext = NULL;
     
-	if ( ! data_ext )
-	{
+	if ( ! data_ext ) {
 		data_ext = fsls_CTAlloc(double, size+2);
 	}
     
@@ -1184,10 +1104,8 @@ fsls_XVectorInitialize (fsls_XVector *vector)
 int
 fsls_XVectorDestroy (fsls_XVector *vector)
 {
-	if (vector)
-	{
-		if (fsls_XVectorDataExt(vector))
-		{
+	if (vector) {
+		if (fsls_XVectorDataExt(vector)) {
 			fsls_TFree(fsls_XVectorDataExt(vector));
 		}
 		fsls_TFree(vector);
@@ -1199,8 +1117,7 @@ fsls_XVectorDestroy (fsls_XVector *vector)
 void
 fsls_BandMatrixDestroy (fsls_BandMatrix *matrix)
 {
-	if (matrix)
-	{
+	if (matrix) {
 		if (fsls_BandMatrixOffsets(matrix))
             fsls_TFree(fsls_BandMatrixOffsets(matrix));
 		if (fsls_BandMatrixOffdiag(matrix))
@@ -1255,39 +1172,32 @@ fsls_WriteSAMGData (fsls_CSRMatrix *A,
     
 	/* write the .amg file */
 	fp = fopen(file_name02, "w");
-	for (j = 0; j <= num_rows; j++)
-	{
+	for (j = 0; j <= num_rows; j++) {
 		fprintf(fp, "%d\n", matrix_i[j] + file_base);
 	}
-	for (j = 0; j < num_nonzeros; j++)
-	{
+	for (j = 0; j < num_nonzeros; j++) {
 		fprintf(fp, "%d\n", matrix_j[j] + file_base);
 	}
-	if (matrix_data)
-	{
-		for (j = 0; j < num_nonzeros; j++)
-		{
+	if (matrix_data) {
+		for (j = 0; j < num_nonzeros; j++) {
 			fprintf(fp, "%.15le\n", matrix_data[j]); // we always use "%.15le\n"
 		}
 	}
-	else
-	{
+	else {
 		fprintf(fp, "Warning: No matrix data!\n");
 	}
 	fclose(fp);
     
 	/* write the .rhs file */
 	fp = fopen(file_name03, "w");
-	for (j = 0; j < num_rows; j++)
-	{
+	for (j = 0; j < num_rows; j++) {
 		fprintf(fp, "%.15le\n", b_data[j]);
 	}
 	fclose(fp);
     
 	/* write the .sol file */
 	fp = fopen(file_name04, "w");
-	for (j = 0; j < num_rows; j++)
-	{
+	for (j = 0; j < num_rows; j++) {
 		fprintf(fp, "%.15le\n", u_data[j]);
 	}
 	fclose(fp);
@@ -1308,8 +1218,8 @@ fsls_CSR2FullMatrix (fsls_CSRMatrix *A,
 	int nnz = fsls_CSRMatrixNumNonzeros(A);
 	double *full_A = fsls_CTAlloc(double, num_rows*num_cols);
 	memset(full_A, 0X0, num_rows*num_cols*sizeof(double));
-	for (i = 0; i < nnz; ++i)
-	{
+	
+    for (i = 0; i < nnz; ++i) {
 		if (i==matrix_i[row+1])
 			row = row+1;
 		col = matrix_j[i];
@@ -1326,18 +1236,16 @@ fsls_dtMatrix (double dt,
                double *A_full)
 {
 	int ierr = 0;
-	if(n_rows != n_cols)
-        printf("...\n");
 	int i,j;
-	for( i = 0; i < n_rows; ++i )
-	{
-		for( j = 0; j < n_cols; ++j )
-		{
+
+	if(n_rows != n_cols) printf("...\n");
+
+	for( i = 0; i < n_rows; ++i ) {
+		for( j = 0; j < n_cols; ++j ) {
 			A_full[i+n_cols*j] *= dt;
 		}
 	}
-	for( i = 0; i < n_rows; ++i )
-	{
+	for( i = 0; i < n_rows; ++i ) {
 		A_full[i+n_cols*i] += 1;
 	}
 	return ierr;
@@ -1376,8 +1284,7 @@ fsls_COOMatrixPrint (fsls_CSRMatrix *matrix,
 	fprintf(fp, "%d          ", num_cols);
 	fprintf(fp, "%d\n", nnz);
     
-	for (i = 0; i < nnz; ++i)
-	{
+	for (i = 0; i < nnz; ++i) {
 		if (i==matrix_i[row+1])
 			row = row+1;
 		col = matrix_j[i];
@@ -1411,8 +1318,7 @@ fsls_MatrixSPGnuplot (fsls_CSRMatrix *matrix,
     
 	fp = fopen(file_name, "w");
     
-	for (i = 0; i < nnz; ++i)
-	{
+	for (i = 0; i < nnz; ++i) {
 		if (i==matrix_i[row+1])
 			row = row+1;
 		col = matrix_j[i];

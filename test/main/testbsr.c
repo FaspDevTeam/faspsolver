@@ -80,8 +80,7 @@ int main (int argc, const char * argv[])
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvec_read(filename2, &b);
         
-        fasp_format_dcsr_dbsr(&Absr, 6, &A);
-        
+        fasp_format_dcsr_dbsr(&Absr, 6, &A);        
     }	
     
     else if (problem_num == 12) {				
@@ -104,7 +103,6 @@ int main (int argc, const char * argv[])
         //fasp_blas_dcsr_mxv(&A, sol.val, b.val);     
         
         //fasp_dvec_free(&sol);
-        
     }
     
     else if (problem_num == 13) {				
@@ -117,11 +115,9 @@ int main (int argc, const char * argv[])
 		fasp_dvec_read(filename2, &b);
         
         fasp_format_dcsr_dbsr(&Absr, 6, &A);
-        
     }	
     
     else if (problem_num == 20) {
-        
 		datafile1="Melanie/A.dat";
 		strcat(filename1,datafile1);
 		fasp_dcoo_read(filename1, &A);
@@ -134,24 +130,24 @@ int main (int argc, const char * argv[])
         fasp_blas_dcsr_mxv(&A, sol.val, b.val);     
         
         /*
-        int *Is, *Js;
-        int nRow=A.row/5;//we must ensure this is a integer
-        //printf("nRow = %d\n", nRow);
-        int nCol=A.col/5;
-        //printf("nCol = %d\n", nCol);
-        Is=(int *)fasp_mem_calloc(nRow, sizeof(int));
-        Js=(int *)fasp_mem_calloc(nCol, sizeof(int));
+          int *Is, *Js;
+          int nRow=A.row/5;//we must ensure this is a integer
+          //printf("nRow = %d\n", nRow);
+          int nCol=A.col/5;
+          //printf("nCol = %d\n", nCol);
+          Is=(int *)fasp_mem_calloc(nRow, sizeof(int));
+          Js=(int *)fasp_mem_calloc(nCol, sizeof(int));
         
-        int k;
-        for(k=0;k<nRow;k++){
-            Is[k]=k*5;
-            Js[k]=k*5;
-        }
-        dCSRmat tmpMat;
-        status=fasp_dcsr_getblk(&A,Is,Js,nRow,nCol,&tmpMat);
-        fasp_dcsr_write("./A11.dat", &tmpMat);
-        //printf("nnz = %d\n", tmpMat.nnz);
-        */
+          int k;
+          for(k=0;k<nRow;k++){
+          Is[k]=k*5;
+          Js[k]=k*5;
+          }
+          dCSRmat tmpMat;
+          status=fasp_dcsr_getblk(&A,Is,Js,nRow,nCol,&tmpMat);
+          fasp_dcsr_write("./A11.dat", &tmpMat);
+          //printf("nnz = %d\n", tmpMat.nnz);
+          */
         
         //fasp_dcsr_write("Amelane.dat", &A);
         //fasp_format_dcsr_dbsr(&Absr, 5, &A);
@@ -218,12 +214,12 @@ int main (int argc, const char * argv[])
     
     // AMG as the iterative solver
     /*
-	else if (itsolver_type == SOLVER_AMG) {
-        if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-		fasp_solver_amg(&A, &b, &uh, &amgparam); 
+      else if (itsolver_type == SOLVER_AMG) {
+      if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+      fasp_solver_amg(&A, &b, &uh, &amgparam); 
         
-	}
-     */
+      }
+    */
 
 	else {
 		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);		
@@ -242,7 +238,7 @@ int main (int argc, const char * argv[])
     
     if (output_type) fclose (stdout);
         
-FINISHED:
+ FINISHED:
     // Clean up memory
 	fasp_dcsr_free(&A);
     //fasp_dbsr_free(&Absr);

@@ -20,26 +20,29 @@
  */ 
 typedef struct Bd_apply_info
 {
-	ivector dof, bd, idx;//dof = interiori node, bd = boundary node, idx = mapping from node_index to dof_idx/bd_idx, node_flag = 0, if is a interiori node, node_flag = -1, if else
+	ivector dof, bd, idx;
+    // dof = interiori node
+    // bd = boundary node
+    // idx = mapping from node_index to dof_idx/bd_idx, node_flag = 0, if is a interiori node, node_flag = -1, if else
 } Bd_apply_info;
 
 extern double f(double *p);
 extern double u(double *p);
 
-int setup_heat(dCSRmat *A_heat,
-							 dCSRmat *Mass,
-							 dvector *b_heat,
-							 Mesh *mesh,
-							 Mesh_aux *mesh_aux,
-							 param_test *pt,
-							 dvector *uh_heat,
-							 Bd_apply_info *bdinfo,
-							 double dt);
+int setup_heat (dCSRmat *A_heat,
+                dCSRmat *Mass,
+                dvector *b_heat,
+                Mesh *mesh,
+                Mesh_aux *mesh_aux,
+                FEM_param *pt,
+                dvector *uh_heat,
+                Bd_apply_info *bdinfo,
+                double dt);
 
+double get_l2_error_heat (ddenmat *node,
+                          idenmat *elem,
+                          dvector *uh,
+                          int num_qp,
+                          double t);
 
-double get_l2_error_heat(ddenmat *node,
-												 idenmat *elem,
-												 dvector *uh,
-												 int num_qp,
-												 double t);
 #endif

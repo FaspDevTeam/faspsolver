@@ -2,62 +2,78 @@
  *  \brief Setup P1 FEM for the Poisson's equation
  */
 
-#define DIM 2
+#include <math.h>
 
 #include "poisson_fem.h"
 #include "basis.inl"
+
+#define DIM 2          // dimenision of space
+#define MAX_QUAD 49    // max num of quadrature points allowed
 
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
 
 /** 
- * \fn static void localb (double (*node)[2],double *b, int num_qp)
+ * \fn static void localb (double (*node)[DIM],double *b, int num_qp)
  *
  * \brief Form local right-hand side b from triangle node
  *
- * \param (*node)[2]   Vertice of the triangule
- * \param *b           Local right-hand side
- * \param num_qp       Number of quad points 
+ * \param (*node)[DIM]   Vertice of the triangule
+ * \param *b             Local right-hand side
+ * \param num_qp         Number of quad points 
  *
  * \author Xuehai Huang and Feiteng Huang
  * \date   03/29/2009
  * 
- * Modify by Feiteng Huang 02/23/2012: User specified number of quadrature points
+ * Modified by Feiteng Huang 02/23/2012: User specified number of quadrature points
+ * Modified by Chensong on 05/03/2012
  */
-static void localb (double (*node)[2],
+static void localb (double (*node)[DIM],
                     double *b,
                     int num_qp)
 {
+    double gauss[num_qp][DIM+1];
+    double a,p[DIM];
+    int i,j;
+
+#if DIM==2 // 2D case
+
     const double s=2.0*areaT(node[0][0],node[1][0],node[2][0],
                              node[0][1],node[1][1],node[2][1]);
-    double a,p[DIM];
-    double gauss[num_qp][3];
-    int i,j;
     
     fasp_gauss2d(num_qp, 2, gauss); // gauss intergation initial	
 	
-    for (i=0;i<3;++i) b[i]=0;
+    for (i=0;i<=DIM;++i) b[i]=0; // initialize b
 	
     for (i=0;i<num_qp;++i)
-    {
-        for (j=0;j<DIM;++j)
-            p[j]=node[0][j]*gauss[i][0]
-            +node[1][j]*gauss[i][1]
-            +node[2][j]*(1-gauss[i][0]-gauss[i][1]);
+        {
+            for (j=0;j<DIM;++j)
+                p[j]=node[0][j]*gauss[i][0]
+                    +node[1][j]*gauss[i][1]
+                    +node[2][j]*(1-gauss[i][0]-gauss[i][1]);
         
-        a=f(p);
-        b[0]+=a*gauss[i][2]*gauss[i][0];
-        b[1]+=a*gauss[i][2]*gauss[i][1];
-        b[2]+=a*gauss[i][2]*(1-gauss[i][0]-gauss[i][1]);		
-    }
+            a=f(p);
+            b[0]+=a*gauss[i][2]*gauss[i][0];
+            b[1]+=a*gauss[i][2]*gauss[i][1];
+            b[2]+=a*gauss[i][2]*(1-gauss[i][0]-gauss[i][1]);		
+        }
 	
     b[0]*=s; b[1]*=s; b[2]*=s;
+
+#else
+
+    printf("### ERROR: DIM=%d is not supported currently!\n", DIM);
+    exit(RUN_FAIL);
+
+#endif
+
+    return;
 }
 
 /**
  * \fn static void assemble_stiffmat (dCSRmat *A, dvector *b, Mesh *mesh, 
- *                                    Mesh_aux *mesh_aux, param_test *pt )
+ *                                    Mesh_aux *mesh_aux, FEM_param *pt )
  *
  * \brief Assemble stiffness matrix and right-hand side
  *
@@ -74,7 +90,11 @@ static void localb (double (*node)[2],
  *   
  * Modified by Feiteng Huang on 04/06/2012: restructure assmebling
  */
-static void assemble_stiffmat (dCSRmat *A, dvector *b, Mesh *mesh, Mesh_aux *mesh_aux, param_test *pt)
+static void assemble_stiffmat (dCSRmat *A, 
+                               dvector *b, 
+                               Mesh *mesh, 
+                               Mesh_aux *mesh_aux, 
+                               FEM_param *pt)
 {
     /* yangkai: use the information of edgesTran to get the CSR structure of A directly, 
      * because, for triangle elements, A_ij is nonzero if and only if node i and j are 
@@ -85,11 +105,7 @@ static void assemble_stiffmat (dCSRmat *A, dvector *b, Mesh *mesh, Mesh_aux *mes
     
     // assemble option
     int mat = 0, rhs = 0;
-    if ( strcmp(pt->option,"ab") == 0 )
-    {
-        mat = 1;
-        rhs = 1;
-    }
+    if ( strcmp(pt->option,"ab") == 0 ) { mat = 1; rhs = 1; }
     if ( strcmp(pt->option,"a") == 0 ) mat = 1;
     if ( strcmp(pt->option,"b") == 0 ) rhs = 1;
     
@@ -99,12 +115,13 @@ static void assemble_stiffmat (dCSRmat *A, dvector *b, Mesh *mesh, Mesh_aux *mes
     const double epsilon=1;
 	
     double T[3][2],phi1[2],phi2[2];
-    double gauss[49][3]; // Need to make max number of Gauss a const!!! --Chensong
+    double gauss[MAX_QUAD][DIM+1];
     double s;
 	
     int i,j,k;
     int k1,k2,n1,n2,i1,j1;
-    double btmp[3];
+    double btmp[3], tmp_a;
+    int tmp, edge_c;
 	
     fasp_gauss2d(pt->num_qp_mat, 2, gauss); // Gauss intergation initial
     
@@ -121,72 +138,82 @@ static void assemble_stiffmat (dCSRmat *A, dvector *b, Mesh *mesh, Mesh_aux *mes
     total_alloc_mem += nnz*sizeof(double);
     total_alloc_mem += num_node*sizeof(double);
     int *count = (int*)fasp_mem_calloc(num_node, sizeof(int));
+    int *edge2idx_g1 = (int*)fasp_mem_calloc(num_edge, sizeof(int));
+    int *edge2idx_g2 = (int*)fasp_mem_calloc(num_edge, sizeof(int));//edge to global idx of A->val
     
     // get IA
-    for (i=0;i<num_edge;++i)
-    {
+    for (i=0;i<num_edge;++i) {
         n1 = mesh_aux->edge.val[i][0];
         n2 = mesh_aux->edge.val[i][1];
         A->IA[n1+1] += 1;
         A->IA[n2+1] += 1;
     }
-    for (i=0;i<num_node;++i)
-    {
+    for (i=0;i<num_node;++i) {
         A->IA[i+1] += A->IA[i] + 1;
         A->JA[A->IA[i]] = i;
     }
     
     // get JA 
-    for (i=0;i<num_edge;++i)
-    {
+    for (i=0;i<num_edge;++i) {
         n1 = mesh_aux->edge.val[i][0];
         n2 = mesh_aux->edge.val[i][1];
         count[n1]++;
         count[n2]++;
         A->JA[A->IA[n1]+count[n1]] = n2;
         A->JA[A->IA[n2]+count[n2]] = n1;
+        edge2idx_g1[i] = A->IA[n1]+count[n1];
+        edge2idx_g2[i] = A->IA[n2]+count[n2];
     }
     fasp_mem_free(count);
     
     // Loop element by element and compute the actual entries storing them in A
-    int tmp;
-    for (k=0;k<mesh->elem.row;++k)
-    { 
-        for (i=0;i<mesh->elem.col;++i)
-        {
+    for (k=0;k<mesh->elem.row;++k) { 
+
+        for (i=0;i<mesh->elem.col;++i) {
             j=mesh->elem.val[k][i];
             T[i][0]=mesh->node.val[j][0];
             T[i][1]=mesh->node.val[j][1];
         } // end for i
+
         s=areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
         if (rhs) localb(T,btmp,pt->num_qp_rhs);
         tmp=0;
-        for (k1=0;k1<mesh->elem.col;++k1)
-        {
+            
+        // mesh->elem.col == mesh_aux->elem2edge.col
+        // "if" should be out of "for" --Chensong
+        for (k1=0;k1<mesh->elem.col;++k1) {
+
+            edge_c = mesh_aux->elem2edge.val[k][k1];
             i=mesh->elem.val[k][k1];
+
             if (rhs) b->val[i]+=btmp[tmp++];
-            if (mat)
-            {
-                for (k2=0;k2<mesh->elem.col;k2++)
-                {
-                    j=mesh->elem.val[k][k2];
-                    for (j1=A->IA[i];j1<A->IA[i+1];j1++)
-                    {
-                        if (A->JA[j1]==j)
-                        {
-                            for (i1=0;i1<pt->num_qp_mat;i1++)
-                            {
-                                gradBasisP1(T, s, k1, phi1);
-                                gradBasisP1(T, s, k2, phi2);
-                                A->val[j1]+=2*s*gauss[i1][2]*(phi1[0]*phi2[0]+phi1[1]*phi2[1]*epsilon);
-                            } // end for i1
-                            break;
-                        } // end if
-                    } // end for j1 
-                } // end for k2
-            }
+
+            if (mat) {
+                // for the diag entry
+                gradBasisP1(T, s, k1, phi1);
+                tmp_a = 2*s*(phi1[0]*phi1[0]+phi1[1]*phi1[1]*epsilon);
+                for (i1=0;i1<pt->num_qp_mat;i1++) {
+                    A->val[A->IA[i]] += gauss[i1][2]*tmp_a;
+                } // end for i1
+
+                // for the off-diag entry
+                i = edge2idx_g1[edge_c];
+                j = edge2idx_g2[edge_c];
+                n1 = (k1+1)%3;//local node index in the elem
+                n2 = (k1+2)%3;
+                gradBasisP1(T, s, n1, phi1);
+                gradBasisP1(T, s, n2, phi2);
+                tmp_a = 2*s*(phi1[0]*phi2[0]+phi1[1]*phi2[1]*epsilon);
+                for (i1=0;i1<pt->num_qp_mat;i1++) {
+                    A->val[i] += gauss[i1][2]*tmp_a;
+                    A->val[j] += gauss[i1][2]*tmp_a; 
+                } // end for i1
+            }// end if(mat)
         } // end for k1
     } // end for k
+
+    fasp_mem_free(edge2idx_g1);
+    fasp_mem_free(edge2idx_g2);
 }
 
 /*---------------------------------*/
@@ -195,7 +222,7 @@ static void assemble_stiffmat (dCSRmat *A, dvector *b, Mesh *mesh, Mesh_aux *mes
 
 /**
  * \fn int setup_poisson (dCSRmat *A, dvector *b, Mesh *mesh, Mesh_aux *mesh_aux, 
- *                        param_test *pt, dvector *ptr_uh, ivector *dof)
+ *                        FEM_param *pt, dvector *ptr_uh, ivector *dof)
  *
  * \brief Setup P1 FEM for the Poisson's equation
  *
@@ -220,22 +247,21 @@ int setup_poisson (dCSRmat *A,
                    dvector *b, 
                    Mesh *mesh, 
                    Mesh_aux *mesh_aux, 
-                   param_test *pt, 
+                   FEM_param *pt, 
                    dvector *ptr_uh, 
                    ivector *dof)
 {
-    // assemble A and b
     dCSRmat Stiff;
     dvector rhs;
-    
-    assemble_stiffmat(&Stiff, &rhs, mesh, mesh_aux, pt);
-    
-    // get information to deal with Dirichlet boundary condition
     ivector dirichlet,nondirichlet,index;
     int i,j,k;
     int dirichlet_count = 0;
-    for (i=0;i<mesh->node_bd.row;++i)
-    {
+
+    // assemble A and b
+    assemble_stiffmat(&Stiff, &rhs, mesh, mesh_aux, pt);    
+    
+    // get information to deal with Dirichlet boundary condition
+    for (i=0;i<mesh->node_bd.row;++i) {
         if (mesh->node_bd.val[i] == DIRICHLET) dirichlet_count++;
     }
 	
@@ -244,16 +270,13 @@ int setup_poisson (dCSRmat *A,
     index = fasp_ivec_create(mesh->node.row);
 	
     j = k = 0;
-    for (i=0;i<mesh->node_bd.row;++i)
-    {
-        if(mesh->node_bd.val[i]==DIRICHLET) //  Dirichlet boundary node
-        {
+    for (i=0;i<mesh->node_bd.row;++i) {
+        if(mesh->node_bd.val[i]==DIRICHLET) { //  Dirichlet boundary node
             dirichlet.val[k]=i;
             index.val[i]=k;
             ++k;
         }
-        else // free variable
-        {
+        else { // degree of freedom
             nondirichlet.val[j]=i;
             index.val[i]=j;
             ++j;
@@ -263,10 +286,8 @@ int setup_poisson (dCSRmat *A,
     // set initial boundary value
     dvector uh = fasp_dvec_create(Stiff.row);
     double p[DIM];
-    for (i=0;i<uh.row;++i)
-    {
-        if(mesh->node_bd.val[i]==DIRICHLET) // the node is on the boundary
-        { 
+    for (i=0;i<uh.row;++i) {
+        if(mesh->node_bd.val[i]==DIRICHLET) { // the node is on the boundary
             for (j=0;j<DIM;++j)
                 p[j] = mesh->node.val[i][j];
             uh.val[i]=u(p);
@@ -275,11 +296,10 @@ int setup_poisson (dCSRmat *A,
 	
     extractNondirichletMatrix(&Stiff, &rhs, A, b, &(mesh->node_bd), 
                               &dirichlet, &nondirichlet, &index, &uh);
-	
-    
+	    
     // output info for l2 error
-    ivec_output( dof, &nondirichlet);
-    dvec_output( ptr_uh, &uh);
+    ivec_output( dof, &nondirichlet );
+    dvec_output( ptr_uh, &uh );
     
     // clean up memory
     fasp_dcsr_free(&Stiff);
@@ -313,35 +333,37 @@ double get_l2_error_poisson (ddenmat *node,
 {
     double l2error = 0.0;
     double T[3][2];
-    double gauss[49][3]; // Need to make max number of Gauss a const!!! --Chensong
+    double gauss[MAX_QUAD][DIM+1]; 
     double s, uh_local[3], l2, a, p[DIM];
 	
     int i,j,k;
     
     fasp_gauss2d(num_qp, 2, gauss); // Gauss intergation initial
 	
-    for (k=0;k<elem->row;++k)
-    { 
-        for (i=0;i<elem->col;++i)
-        {
+    for (k=0;k<elem->row;++k) { 
+
+        for (i=0;i<elem->col;++i) {
             j=elem->val[k][i];
             T[i][0]=node->val[j][0];
             T[i][1]=node->val[j][1];
             uh_local[i] = uh->val[j];
         } // end for i
+
         s=2.0*areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
-        for (i=0;i<num_qp;++i)
-        {
+
+        for (i=0;i<num_qp;++i) {
             l2 = 1 - gauss[i][0] - gauss[i][1];
             for (j=0;j<DIM;++j)
                 p[j]=T[0][j]*gauss[i][0]+T[1][j]*gauss[i][1]+T[2][j]*l2;
             a=u(p);
             
+            // Improve readability, revise this line --Chensong
             l2error+=s*gauss[i][2]*((a - uh_local[0]*gauss[i][0] - uh_local[1]*gauss[i][1] 
-                                       - uh_local[2]*l2)*(a - uh_local[0]*gauss[i][0] 
-                                       - uh_local[1]*gauss[i][1] - uh_local[2]*l2));
-        }
-    }
+                                     - uh_local[2]*l2)*(a - uh_local[0]*gauss[i][0] 
+                                                        - uh_local[1]*gauss[i][1] - uh_local[2]*l2));
+        } // end for i
+
+    } // end for k
 	
     l2error = sqrt(l2error);
     

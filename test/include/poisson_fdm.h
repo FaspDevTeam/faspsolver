@@ -133,26 +133,26 @@ int fsls_XVectorDestroy( fsls_XVector *vector );
 
 void 
 fsls_BuildLinearSystem_5pt2d( int               nt,
-			int               nx,
-			int               ny,
-			fsls_BandMatrix **A_ptr, 
-			fsls_XVector    **f_ptr,
-			fsls_XVector    **u_ptr );
+                              int               nx,
+                              int               ny,
+                              fsls_BandMatrix **A_ptr, 
+                              fsls_XVector    **f_ptr,
+                              fsls_XVector    **u_ptr );
 void 
 fsls_BuildLinearSystem_5pt2d_rb( int               nt,
-			int               nx,
-			int               ny,
-			fsls_BandMatrix **A_ptr, 
-			fsls_XVector    **f_ptr,
-			fsls_XVector    **u_ptr );
+                                 int               nx,
+                                 int               ny,
+                                 fsls_BandMatrix **A_ptr, 
+                                 fsls_XVector    **f_ptr,
+                                 fsls_XVector    **u_ptr );
 void 
 fsls_BuildLinearSystem_7pt3d( int               nt,
-			int               nx,
-			int               ny,
-			int               nz,
-			fsls_BandMatrix **A_ptr, 
-			fsls_XVector    **f_ptr,
-			fsls_XVector    **u_ptr );
+                              int               nx,
+                              int               ny,
+                              int               nz,
+                              fsls_BandMatrix **A_ptr, 
+                              fsls_XVector    **f_ptr,
+                              fsls_XVector    **u_ptr );
 
 
 

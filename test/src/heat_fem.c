@@ -43,13 +43,11 @@ static void localb (double (*node)[2],
     
     fasp_gauss2d(num_qp, 2, gauss); // gauss intergation initial	
 	
-    for (i=0;i<num_qp;++i)
-    {
+    for (i=0;i<num_qp;++i) {
         g = 1-gauss[i][0]-gauss[i][1];
         for (j=0;j<DIM;++j)
             p[j]=node[0][j]*gauss[i][0]+node[1][j]*gauss[i][1]+node[2][j]*g;
-        for (j=0;j<nt;++j)
-        {
+        for (j=0;j<nt;++j) {
             p[DIM]=dt*(j+1);
             a=f(p);
             b[0+3*j]+=s*a*gauss[i][2]*gauss[i][0];
@@ -61,7 +59,7 @@ static void localb (double (*node)[2],
 
 /**
  * \fn static void assemble_stiffmat (dCSRmat *A, dCSRmat *M, dvector *b, Mesh *mesh, 
- *                                    Mesh_aux *mesh_aux, param_test *pt, double dt)
+ *                                    Mesh_aux *mesh_aux, FEM_param *pt, double dt)
  *
  * \brief Assemble stiffness matrix and right-hand side
  *
@@ -85,16 +83,12 @@ static void assemble_stiffmat (dCSRmat *A,
                                dvector *b, 
                                Mesh *mesh, 
                                Mesh_aux *mesh_aux, 
-                               param_test *pt, 
+                               FEM_param *pt, 
                                double dt)
 {
     // assemble option
     int mat = 0, rhs = 0;
-    if ( strcmp(pt->option,"ab") == 0 )
-    {
-        mat = 1;
-        rhs = 1;
-    }
+    if ( strcmp(pt->option,"ab") == 0 ) { mat = 1; rhs = 1; }
     if ( strcmp(pt->option,"a") == 0 ) mat = 1;
     if ( strcmp(pt->option,"b") == 0 ) rhs = 1;
     
@@ -109,7 +103,8 @@ static void assemble_stiffmat (dCSRmat *A,
 	
     int i,j,k,it;
     int k1,k2,n1,n2,i1,j1;
-    double btmp[3*pt->nt];
+    double btmp[3*pt->nt], tmp_a;
+    int tmp, edge_c;
 	
     fasp_gauss2d(pt->num_qp_mat, 2, gauss); // Gauss intergation initial
     
@@ -130,10 +125,11 @@ static void assemble_stiffmat (dCSRmat *A,
     total_alloc_mem += 2*nnz*sizeof(double);
     total_alloc_mem += b->row*sizeof(double);
     int *count = (int*)fasp_mem_calloc(num_node, sizeof(int));
+    int *edge2idx_g1 = (int*)fasp_mem_calloc(num_edge, sizeof(int));
+    int *edge2idx_g2 = (int*)fasp_mem_calloc(num_edge, sizeof(int));//edge to global idx of A->val
     
     // get IA
-    for (i=0;i<num_edge;++i)
-    {
+    for (i=0;i<num_edge;++i) {
         n1 = mesh_aux->edge.val[i][0];
         n2 = mesh_aux->edge.val[i][1];
         A->IA[n1+1] += 1;
@@ -141,8 +137,8 @@ static void assemble_stiffmat (dCSRmat *A,
         A->IA[n2+1] += 1;
         M->IA[n2+1] += 1;
     }
-    for (i=0;i<num_node;++i)
-    {
+
+    for (i=0;i<num_node;++i) {
         A->IA[i+1] += A->IA[i] + 1;
         M->IA[i+1] += A->IA[i] + 1;
         A->JA[A->IA[i]] = i;
@@ -150,8 +146,7 @@ static void assemble_stiffmat (dCSRmat *A,
     }
     
     // get JA 
-    for (i=0;i<num_edge;++i)
-    {
+    for (i=0;i<num_edge;++i) {
         n1 = mesh_aux->edge.val[i][0];
         n2 = mesh_aux->edge.val[i][1];
         count[n1]++;
@@ -160,56 +155,67 @@ static void assemble_stiffmat (dCSRmat *A,
         M->JA[A->IA[n1]+count[n1]] = n2;
         A->JA[A->IA[n2]+count[n2]] = n1;
         M->JA[A->IA[n2]+count[n2]] = n1;
+        edge2idx_g1[i] = A->IA[n1]+count[n1];
+        edge2idx_g2[i] = A->IA[n2]+count[n2];
     }
     fasp_mem_free(count);
     
     // Loop element by element and compute the actual entries storing them in A
-    int tmp;
-    for (k=0;k<mesh->elem.row;++k)
-    { 
-        for (i=0;i<mesh->elem.col;++i)
-        {
+    for (k=0;k<mesh->elem.row;++k) { 
+
+        for (i=0;i<mesh->elem.col;++i) {
             j=mesh->elem.val[k][i];
             T[i][0]=mesh->node.val[j][0];
             T[i][1]=mesh->node.val[j][1];
         } // end for i
         s=areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
+
         if (rhs) localb(T,btmp,pt->num_qp_rhs,pt->nt,dt);
+
         tmp=0;
-        for (k1=0;k1<mesh->elem.col;++k1)
-        {
+        for (k1=0;k1<mesh->elem.col;++k1) {
+            //mesh->elem.col == mesh_aux->elem2edge.col
+            edge_c = mesh_aux->elem2edge.val[k][k1];
             i=mesh->elem.val[k][k1];
-            if (rhs) 
-            {
+
+            if (rhs) {
                 for (it=0;it<pt->nt;it++)
                     b->val[i+it*num_node]+=btmp[it*3+tmp];
                 tmp++;
             }
-            if (mat)
-            {
-                for (k2=0;k2<mesh->elem.col;k2++)
-                {
-                    j=mesh->elem.val[k][k2];
-                    for (j1=A->IA[i];j1<A->IA[i+1];j1++)
-                    {
-                        if (A->JA[j1]==j)
-                        {
-                            for (i1=0;i1<pt->num_qp_mat;i1++)
-                            {
-                                gradBasisP1(T, s, k1, phi1);
-                                gradBasisP1(T, s, k2, phi2);
-                                A->val[j1]+=2*s*gauss[i1][2]*(phi1[0]*phi2[0]+phi1[1]*phi2[1]*epsilon);
-                                phi_1 = basisP1(k1, gauss[i1]);
-                                phi_2 = basisP1(k2, gauss[i1]);
-                                M->val[j1]+=2*s*gauss[i1][2]*(phi_1*phi_2);
-                            } // end for i1
-                            break;
-                        } // end if
-                    } // end for j1 
-                } // end for k2
+
+            if (mat) {
+                // for the diag entry
+                gradBasisP1(T, s, k1, phi1);
+                tmp_a = 2*s*(phi1[0]*phi1[0]+phi1[1]*phi1[1]*epsilon);
+                for (i1=0;i1<pt->num_qp_mat;i1++) {
+                    A->val[A->IA[i]] += gauss[i1][2]*tmp_a;
+                    phi_1 = basisP1(k1, gauss[i1]);
+                    M->val[A->IA[i]] += 2*s*gauss[i1][2]*(phi_1*phi_1);
+                } // end for i1
+
+                // for the off-diag entry
+                i = edge2idx_g1[edge_c];
+                j = edge2idx_g2[edge_c];
+                n1 = (k1+1)%3;//local node index in the elem
+                n2 = (k1+2)%3;
+                gradBasisP1(T, s, n1, phi1);
+                gradBasisP1(T, s, n2, phi2);
+                tmp_a = 2*s*(phi1[0]*phi2[0]+phi1[1]*phi2[1]*epsilon);
+                for (i1=0;i1<pt->num_qp_mat;i1++) {
+                    A->val[i] += gauss[i1][2]*tmp_a;
+                    A->val[j] += gauss[i1][2]*tmp_a;
+                    phi_1 = basisP1(n1, gauss[i1]);
+                    phi_2 = basisP1(n2, gauss[i1]);
+                    M->val[i] += 2*s*gauss[i1][2]*(phi_1*phi_2);
+                    M->val[j] += 2*s*gauss[i1][2]*(phi_1*phi_2);
+                } // end for i1
             }
         } // end for k1
     } // end for k
+
+    fasp_mem_free(edge2idx_g1);
+    fasp_mem_free(edge2idx_g2);
 }
 
 /*---------------------------------*/
@@ -222,7 +228,7 @@ static void assemble_stiffmat (dCSRmat *A,
  *                     dvector *b_heat,
  *                     Mesh *mesh,
  *                     Mesh_aux *mesh_aux,
- *                     param_test *pt,
+ *                     FEM_param *pt,
  *                     dvector *uh_heat,
  *                     Bd_apply_info *bdinfo,
  *                     double dt)
@@ -252,7 +258,7 @@ int setup_heat (dCSRmat *A_heat,
                 dvector *b_heat,
                 Mesh *mesh,
                 Mesh_aux *mesh_aux,
-                param_test *pt,
+                FEM_param *pt,
                 dvector *uh_heat,
                 Bd_apply_info *bdinfo,
                 double dt)
@@ -268,8 +274,7 @@ int setup_heat (dCSRmat *A_heat,
     ivector dirichlet,nondirichlet,index;
     int i,j,k,it;
     int dirichlet_count = 0;
-    for (i=0;i<mesh->node_bd.row;++i)
-    {
+    for (i=0;i<mesh->node_bd.row;++i) {
         if (mesh->node_bd.val[i] == DIRICHLET)
             dirichlet_count++;
     }
@@ -279,16 +284,13 @@ int setup_heat (dCSRmat *A_heat,
     index = fasp_ivec_create(mesh->node.row);
 	
     j = k = 0;
-    for (i=0;i<mesh->node_bd.row;++i)
-    {
-        if(mesh->node_bd.val[i]==DIRICHLET) //  Dirichlet boundary node
-        {
+    for (i=0;i<mesh->node_bd.row;++i) {
+        if (mesh->node_bd.val[i]==DIRICHLET) { //  Dirichlet boundary node
             dirichlet.val[k]=i;
             index.val[i]=k;
             ++k;
         }
-        else // free variable
-        {
+        else { // free variable
             nondirichlet.val[j]=i;
             index.val[i]=j;
             ++j;
@@ -298,14 +300,11 @@ int setup_heat (dCSRmat *A_heat,
     // set initial boundary value
     dvector uh = fasp_dvec_create(Stiff.row*pt->nt);
     double p[DIM+1];
-    for (i=0;i<Stiff.row;++i)
-    {
-        if(mesh->node_bd.val[i]==DIRICHLET) // the node is on the boundary
-        { 
+    for (i=0;i<Stiff.row;++i) {
+        if(mesh->node_bd.val[i]==DIRICHLET) { // the node is on the boundary
             for (j=0;j<DIM;++j)
                 p[j] = mesh->node.val[i][j];
-            for (it=0;it<pt->nt;++it)
-            {
+            for (it=0;it<pt->nt;++it) {
                 p[DIM] = dt*(it+1);
                 uh.val[i+it*Stiff.row]=u(p);
             }
@@ -360,24 +359,25 @@ double get_l2_error_heat (ddenmat *node,
     
     fasp_gauss2d(num_qp, 2, gauss); // Gauss intergation initial
 	
-    for (k=0;k<elem->row;++k)
-    { 
-        for (i=0;i<elem->col;++i)
-        {
+    for (k=0;k<elem->row;++k) { 
+
+        for (i=0;i<elem->col;++i) {
             j=elem->val[k][i];
             T[i][0]=node->val[j][0];
             T[i][1]=node->val[j][1];
             uh_local[i] = uh->val[j];
         } // end for i
         s=2.0*areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
-        for (i=0;i<num_qp;++i)
-        {
+
+        for (i=0;i<num_qp;++i) {
             l2 = 1 - gauss[i][0] - gauss[i][1];
             for (j=0;j<DIM;++j)
                 p[j]=T[0][j]*gauss[i][0]+T[1][j]*gauss[i][1]+T[2][j]*l2;
             a=u(p);
             
-            l2error+=s*gauss[i][2]*((a - uh_local[0]*gauss[i][0] - uh_local[1]*gauss[i][1] - uh_local[2]*l2)*(a - uh_local[0]*gauss[i][0] - uh_local[1]*gauss[i][1] - uh_local[2]*l2));
+            // better readability please --Chensong
+            l2error+=s*gauss[i][2]*((a - uh_local[0]*gauss[i][0] - uh_local[1]*gauss[i][1] - uh_local[2]*l2)
+                                    *(a - uh_local[0]*gauss[i][0] - uh_local[1]*gauss[i][1] - uh_local[2]*l2));
         }
     }
     

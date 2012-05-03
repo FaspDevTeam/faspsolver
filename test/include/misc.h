@@ -8,14 +8,14 @@
 #include <string.h>
 
 /** 
- * \struct param_test
- * \brief param for test
+ * \struct FEM_param
+ * \brief param for FEM test problems
  */ 
-typedef struct param_test{
+typedef struct FEM_param{
 	
-  char meshIn[128];
+    char meshIn[128];
 	char meshOut[128];
-  char option[128];
+    char option[128];
 
 	int refine_lvl;
 	int nt;
@@ -24,11 +24,10 @@ typedef struct param_test{
 	int num_qp_rhs;
 	int num_qp_mat;
 	
-} param_test;
+} FEM_param;
 
+void FEM_param_init (FEM_param *pt);
 
-void param_init(param_test *pt);
-
-int param_set(int argc, const char *argv [], param_test * pt);
+int FEM_param_set (int argc, const char *argv [], FEM_param * pt);
 
 #endif

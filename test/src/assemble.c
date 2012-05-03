@@ -152,11 +152,9 @@ void extractNondirichletMatrix (dCSRmat *A,
     b1->val=(double*)fasp_mem_calloc(b1->row, sizeof(double));
 	
     // form A11->IA
-    for (i=0;i<A11->row;++i)
-    {
+    for (i=0;i<A11->row;++i) {
         l=nondirichlet->val[i];
-        for (k=A->IA[l];k<A->IA[l+1];++k)
-        {
+        for (k=A->IA[l];k<A->IA[l+1];++k) {
             j=A->JA[k];
             if (isInNode->val[j]==INTERIORI) A11->IA[i+1]++;
         }
@@ -168,14 +166,11 @@ void extractNondirichletMatrix (dCSRmat *A,
     A11->JA=(int*)fasp_mem_calloc(A11->IA[A11->row]+1, sizeof(int));
 	
     count=0;
-    for (i=0;i<A11->row;++i)
-    {
+    for (i=0;i<A11->row;++i) {
         l=nondirichlet->val[i];
-        for (k=A->IA[l];k<A->IA[l+1];++k)
-        {
+        for (k=A->IA[l];k<A->IA[l+1];++k) {
             j=A->JA[k];
-            if (isInNode->val[j]==INTERIORI)
-            {
+            if (isInNode->val[j]==INTERIORI) {
                 A11->JA[count]=index->val[j];
                 ++count;
             }
@@ -185,18 +180,14 @@ void extractNondirichletMatrix (dCSRmat *A,
     // form A11->val
     A11->val=(double*)fasp_mem_calloc(A11->IA[A11->row]+1, sizeof(double));
 	
-    for (i1=0;i1<A11->row;++i1)
-    {
+    for (i1=0;i1<A11->row;++i1) {
         i=nondirichlet->val[i1];
-        for (k=A11->IA[i1];k<A11->IA[i1+1];++k)
-        {
+        for (k=A11->IA[i1];k<A11->IA[i1+1];++k) {
             j1=A11->JA[k];
             j=nondirichlet->val[j1];
 			
-            for (l=A->IA[i];l<A->IA[i+1];l++)
-            {
-                if (A->JA[l]==j)
-                {
+            for (l=A->IA[i];l<A->IA[i+1];l++) {
+                if (A->JA[l]==j) {
                     A11->val[k]=A->val[l];
                     break;
                 }

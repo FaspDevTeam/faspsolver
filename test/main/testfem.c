@@ -10,6 +10,7 @@
  */
 
 #include <time.h>
+
 #include "fasp.h"
 #include "fasp_functs.h"
 #include "misc.h"
@@ -36,26 +37,26 @@ int main (int argc, const char * argv[])
     // Set default values
     int status = SUCCESS;
 	int print_usage;
-	param_test pt;// parameter for testfem
-	param_init(&pt);
-	print_usage = param_set(argc, argv, &pt);
+	
+    FEM_param fempar;// parameter for testfem
+	FEM_param_init(&fempar);
+	print_usage = FEM_param_set(argc, argv, &fempar);
     
-	if (print_usage)
-	{
-		printf("\nUsage: %s [<options>]\n", argv[0]);
-		printf("  -meshin <val>    : input mesh file [default: ./data/testmesh.dat]\n");
-		printf("  -meshout <val>   : output mesh file [default: ./data/mesh_?.dat]\n");
-		printf("  -assemble <val>  : assemble option [default: ab]\n");	
+	if (print_usage) {
+        printf("\nUsage: %s [<ofemparions>]\n", argv[0]);
+        printf("  -meshin <val>    : input mesh file  [default: ./data/mesh.dat]\n");
+        printf("  -meshout <val>   : output mesh file [default: ./data/mesh_?.dat]\n");
+        printf("  -assemble <val>  : assemble ofemparion [default: ab]\n");	
         printf("                     ab  |  assemble the mat & rhs;\n");
-		printf("                      a  |  assemble the mat;\n");
-		printf("                      b  |  assemble the rhs;\n");
-		printf("  -refine <val>    : refine level [default: 0]\n");
-		printf("  -output <val>    : mesh output option [default: 0]\n");
-		printf("  -quad_rhs <val>  : quad points for rhs [default: 3]\n");
-		printf("  -quad_mat <val>  : quad points for mat [default: 1]\n");
-		printf("  -help            : print this help message\n\n");
-		exit(status);
-	}
+        printf("                      a  |  assemble the mat;\n");
+        printf("                      b  |  assemble the rhs;\n");
+        printf("  -refine <val>    : refine level [default: 8]\n");
+        printf("  -output <val>    : mesh output ofemparion [default: 0]\n");
+        printf("  -quad_rhs <val>  : quad points for rhs [default: 3]\n");
+        printf("  -quad_mat <val>  : quad points for mat [default: 1]\n");
+        printf("  -help            : print this help message\n\n");
+        exit(status);
+    }
     
     // Local variables
 	Mesh       mesh;       // Mesh info
@@ -66,66 +67,67 @@ int main (int argc, const char * argv[])
 	ivector    dof;        // Degree of freedom
 	int        i;          // Loop index
     
-	// Step 1: reading mesh info
-	mesh_init (&mesh, "./data/testmesh.dat");
+	// Step 1: read initial mesh info
+	mesh_init (&mesh, "./data/mesh.dat");
 
+	// Step 1.5: read or build auxiliary mesh info
     // If there is already mesh_aux data available, you can use the following fct to init it:    
-    //	  mesh_aux_init (&mesh, &mesh_aux, "dd.dat");
+    //	  mesh_aux_init (&mesh, &mesh_aux, "mesh.aux");
     // otherwise, just build the auxiliary information for the mesh
 	mesh_aux_build(&mesh, &mesh_aux);
     
-	// Step 2: refinement
+	// Step 2: refine mesh
 	clock_t mesh_refine_s = clock();
-	for (i=0; i<pt.refine_lvl; ++i) mesh_refine(&mesh, &mesh_aux);
+	for (i=0; i<fempar.refine_lvl; ++i) mesh_refine(&mesh, &mesh_aux);
 	clock_t mesh_refine_e = clock();
     double mesh_refine_time = (double)(mesh_refine_e - mesh_refine_s)/(double)(CLOCKS_PER_SEC);
     printf("Mesh refinement costs... %8.4f seconds\n", mesh_refine_time);
     
-	// Step 3: assembling the linear system and right-hand side
+	// Step 3: assemble the linear system and right-hand side
     clock_t assemble_s = clock();
-    setup_poisson(&A, &b, &mesh, &mesh_aux, &pt, &uh, &dof);
+    setup_poisson(&A, &b, &mesh, &mesh_aux, &fempar, &uh, &dof);
     clock_t assemble_e = clock();
     double assemble_time = (double)(assemble_e - assemble_s)/(double)(CLOCKS_PER_SEC);
     printf("Assembling costs........ %8.4f seconds\n", assemble_time);
     
-	// Clean auxiliary mesh info
+	// Step 3.5: clean up auxiliary mesh info
 	mesh_aux_free(&mesh_aux);
 	
-    // Print problem size
-    printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
-    printf("b: n = %d\n", b.row);
-	
 	// Step 4: solve the linear system with AMG
-    dvector x; // just DOF, not including boundary
     {
         AMG_param amgparam; // parameters for AMG
+        dvector x; // just on DOF, not including boundary
         
-        fasp_param_amg_init(&amgparam); // set AMG param with default values
+        // Print problem size
+        printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
+        printf("b: n = %d\n", b.row);
+	
+        fasp_param_amg_init(&amgparam);    // set AMG param with default values
         amgparam.print_level = PRINT_SOME; // print some AMG message
-        amgparam.maxit = 100; // max iter number = 100 
+        amgparam.maxit       = 25;         // max number of iterations
         
-        fasp_dvec_alloc(A.row, &x); 
-        fasp_dvec_set(A.row, &x, 0.0);
+        fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row, &x, 0.0); // initial guess
         
-        fasp_solver_amg(&A, &b, &x, &amgparam);
+        fasp_solver_amg(&A, &b, &x, &amgparam); // solve Ax = b with AMG
+
+        for ( i=0; i<dof.row; ++i) uh.val[dof.val[i]] = x.val[i]; // save x to uh
+
+        fasp_dvec_free(&x);
     }
 	
 	// Step 5: estimate L2 error
-	for ( i=0; i<dof.row; ++i) uh.val[dof.val[i]] = x.val[i];
-    
-	double l2error = get_l2_error_poisson(&(mesh.node), &(mesh.elem), &uh, pt.num_qp_rhs);
+	double l2error = get_l2_error_poisson(&(mesh.node), &(mesh.elem), &uh, fempar.num_qp_rhs);
 	
     printf("\n==============================================================\n");
 	printf("L2 error of FEM is %g\n", l2error);
     printf("==============================================================\n\n");
     
-	// clean 
+	// clean up memory
 	mesh_free(&mesh);
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);
 	fasp_dvec_free(&uh);
     fasp_ivec_free(&dof);
-    fasp_dvec_free(&x);
     
 	return SUCCESS;
 }

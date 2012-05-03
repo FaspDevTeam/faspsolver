@@ -91,52 +91,52 @@ int main (int argc, const char * argv[])
         
         switch (indp) {
                 
-            case 1: //     - Problem 1. 10X10 5pt FD for Poisson
+        case 1: //     - Problem 1. 10X10 5pt FD for Poisson
                 
-                printf("10X10 5-point finite difference for Poisson");	
-                printf("\n=====================================================\n");        
+            printf("10X10 5-point finite difference for Poisson");	
+            printf("\n=====================================================\n");        
                 
-                // Read A and b from two files in IJ format. 
-                fasp_dcsrvec_read("data/matFD.dat", "data/rhsFD.dat", &A, &b);
+            // Read A and b from two files in IJ format. 
+            fasp_dcsrvec_read("data/matFD.dat", "data/rhsFD.dat", &A, &b);
                 
-                // Read ref. sol. from a non-indexed vec file.
-                fasp_dvecind_read("data/solFD.dat", &sol);
+            // Read ref. sol. from a non-indexed vec file.
+            fasp_dvecind_read("data/solFD.dat", &sol);
                 
-                break;
+            break;
                 
-            case 2: //     - Problem 2. P1 FE for Poisson.
+        case 2: //     - Problem 2. P1 FE for Poisson.
                 
-                printf("P1 finite element for Poisson");	
-                printf("\n=====================================================\n");        
+            printf("P1 finite element for Poisson");	
+            printf("\n=====================================================\n");        
                 
-                // Read A and b from two files in IJ format. 
-                fasp_dcoo_read("data/matP1.dat", &A);
-                fasp_dvecind_read("data/rhsP1.dat", &b);
+            // Read A and b from two files in IJ format. 
+            fasp_dcoo_read("data/matP1.dat", &A);
+            fasp_dvecind_read("data/rhsP1.dat", &b);
                 
-                // Read ref. sol. from an indexed vec file.
-                fasp_dvecind_read("data/solP1.dat", &sol);
+            // Read ref. sol. from an indexed vec file.
+            fasp_dvecind_read("data/solP1.dat", &sol);
                 
-                break;
+            break;
                 
-            case 3: //     - Problem 3. MatrixMarket finite element analysis NOS7.
+        case 3: //     - Problem 3. MatrixMarket finite element analysis NOS7.
                 // Finite difference approximation to diffusion equation with varying
                 // diffusivity in a 3D unit cube with Dirichlet boundary conditions.
                 
-                printf("MatrixMarket finite element analysis NOS7");	
-                printf("\n=====================================================\n");        
+            printf("MatrixMarket finite element analysis NOS7");	
+            printf("\n=====================================================\n");        
                 
-                // Read A in MatrixMarket SYM COO format. 
-                fasp_dmtxsym_read("data/nos7.mtx", &A);
+            // Read A in MatrixMarket SYM COO format. 
+            fasp_dmtxsym_read("data/nos7.mtx", &A);
                 
-                // Generate an exact solution randomly
-                sol = fasp_dvec_create(A.row);
-                fasp_dvec_rand(A.row, &sol);
+            // Generate an exact solution randomly
+            sol = fasp_dvec_create(A.row);
+            fasp_dvec_rand(A.row, &sol);
                 
-                // Form the right-hand-side b = A*sol
-                b = fasp_dvec_create(A.row);
-                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+            // Form the right-hand-side b = A*sol
+            b = fasp_dvec_create(A.row);
+            fasp_blas_dcsr_mxv(&A, sol.val, b.val);
                 
-                break;
+            break;
         }
         
         /************************************/

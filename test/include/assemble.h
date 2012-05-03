@@ -1,5 +1,5 @@
 /*! \file assemble.h
- *  \brief auxiliary func for assemble
+ *  \brief auxiliary func for assembling
  */
 
 #ifndef _MESH_H_

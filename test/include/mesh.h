@@ -37,7 +37,6 @@ typedef struct Mesh_aux{
 
 } Mesh_aux;
 
-
 int mesh_init (Mesh *mesh, const char *filename);
 int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename);
 int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux);
@@ -49,6 +48,5 @@ int mesh_free (Mesh *mesh);
 int mesh_aux_free (Mesh_aux *mesh_aux);
 
 int mesh_refine(Mesh *mesh, Mesh_aux *mesh_aux);
-
 
 #endif
