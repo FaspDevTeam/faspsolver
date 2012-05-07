@@ -167,28 +167,27 @@ static void assemble_stiffmat (dCSRmat *A,
     fasp_mem_free(count);
     
     // Loop element by element and compute the actual entries storing them in A
-    for (k=0;k<mesh->elem.row;++k) { 
+    if (rhs && mat) {
+        for (k=0;k<mesh->elem.row;++k) { 
 
-        for (i=0;i<mesh->elem.col;++i) {
-            j=mesh->elem.val[k][i];
-            T[i][0]=mesh->node.val[j][0];
-            T[i][1]=mesh->node.val[j][1];
-        } // end for i
+            for (i=0;i<mesh->elem.col;++i) {
+                j=mesh->elem.val[k][i];
+                T[i][0]=mesh->node.val[j][0];
+                T[i][1]=mesh->node.val[j][1];
+            } // end for i
 
-        s=areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
-        if (rhs) localb(T,btmp,pt->num_qp_rhs);
-        tmp=0;
+            s=areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
+            localb(T,btmp,pt->num_qp_rhs);
+            tmp=0;
             
-        // mesh->elem.col == mesh_aux->elem2edge.col
-        // "if" should be out of "for" --Chensong
-        for (k1=0;k1<mesh->elem.col;++k1) {
+            // mesh->elem.col == mesh_aux->elem2edge.col
+            for (k1=0;k1<mesh->elem.col;++k1) {
 
-            edge_c = mesh_aux->elem2edge.val[k][k1];
-            i=mesh->elem.val[k][k1];
+                edge_c = mesh_aux->elem2edge.val[k][k1];
+                i=mesh->elem.val[k][k1];
 
-            if (rhs) b->val[i]+=btmp[tmp++];
+                b->val[i]+=btmp[tmp++];
 
-            if (mat) {
                 // for the diag entry
                 gradBasisP1(T, s, k1, phi1);
                 tmp_a = 2*s*(phi1[0]*phi1[0]+phi1[1]*phi1[1]*epsilon);
@@ -208,9 +207,73 @@ static void assemble_stiffmat (dCSRmat *A,
                     A->val[i] += gauss[i1][2]*tmp_a;
                     A->val[j] += gauss[i1][2]*tmp_a; 
                 } // end for i1
-            }// end if(mat)
-        } // end for k1
-    } // end for k
+            } // end for k1
+        } // end for k
+    }
+    else if (rhs) {
+        for (k=0;k<mesh->elem.row;++k) { 
+
+            for (i=0;i<mesh->elem.col;++i) {
+                j=mesh->elem.val[k][i];
+                T[i][0]=mesh->node.val[j][0];
+                T[i][1]=mesh->node.val[j][1];
+            } // end for i
+
+            s=areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
+            localb(T,btmp,pt->num_qp_rhs);
+            tmp=0;
+            
+            // mesh->elem.col == mesh_aux->elem2edge.col
+            for (k1=0;k1<mesh->elem.col;++k1) {
+
+                edge_c = mesh_aux->elem2edge.val[k][k1];
+                i=mesh->elem.val[k][k1];
+
+                b->val[i]+=btmp[tmp++];
+            } // end for k1
+        } // end for k
+    }
+    else if (mat) {
+        for (k=0;k<mesh->elem.row;++k) { 
+
+            for (i=0;i<mesh->elem.col;++i) {
+                j=mesh->elem.val[k][i];
+                T[i][0]=mesh->node.val[j][0];
+                T[i][1]=mesh->node.val[j][1];
+            } // end for i
+
+            s=areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
+            
+            for (k1=0;k1<mesh->elem.col;++k1) {
+
+                edge_c = mesh_aux->elem2edge.val[k][k1];
+                i=mesh->elem.val[k][k1];
+
+                // for the diag entry
+                gradBasisP1(T, s, k1, phi1);
+                tmp_a = 2*s*(phi1[0]*phi1[0]+phi1[1]*phi1[1]*epsilon);
+                for (i1=0;i1<pt->num_qp_mat;i1++) {
+                    A->val[A->IA[i]] += gauss[i1][2]*tmp_a;
+                } // end for i1
+
+                // for the off-diag entry
+                i = edge2idx_g1[edge_c];
+                j = edge2idx_g2[edge_c];
+                n1 = (k1+1)%3;//local node index in the elem
+                n2 = (k1+2)%3;
+                gradBasisP1(T, s, n1, phi1);
+                gradBasisP1(T, s, n2, phi2);
+                tmp_a = 2*s*(phi1[0]*phi2[0]+phi1[1]*phi2[1]*epsilon);
+                for (i1=0;i1<pt->num_qp_mat;i1++) {
+                    A->val[i] += gauss[i1][2]*tmp_a;
+                    A->val[j] += gauss[i1][2]*tmp_a; 
+                } // end for i1
+            } // end for k1
+        } // end for k
+    }
+    else {
+        printf(" ###You are not supposed to see this message ...\n");
+    }
 
     fasp_mem_free(edge2idx_g1);
     fasp_mem_free(edge2idx_g2);
@@ -312,16 +375,16 @@ int setup_poisson (dCSRmat *A,
 
 /** 
  * \fn double get_l2_error_poisson (ddenmat *node,
- *									iCSRmat *elem,
- *									dvector *uh,
- *									int num_qp)
+ *                                  iCSRmat *elem,
+ *                                  dvector *uh,
+ *                                  int num_qp)
  *
  * \brief get l2 error of fem.
  *
- * \param *node			Node info
- * \param *elem			Elem info
- * \param *ptr_uh		Discrete solution
- * \param num_qp        Number of quad points
+ * \param *node                 Node info
+ * \param *elem                 Elem info
+ * \param *ptr_uh               Discrete solution
+ * \param num_qp                Number of quad points
  *
  * \author Feiteng Huang
  * \date   03/30/2012
@@ -334,7 +397,7 @@ double get_l2_error_poisson (ddenmat *node,
     double l2error = 0.0;
     double T[3][2];
     double gauss[MAX_QUAD][DIM+1]; 
-    double s, uh_local[3], l2, a, p[DIM];
+    double s, uh_local[3], l2, a, p[DIM], uh_p;
 	
     int i,j,k;
     
@@ -357,10 +420,8 @@ double get_l2_error_poisson (ddenmat *node,
                 p[j]=T[0][j]*gauss[i][0]+T[1][j]*gauss[i][1]+T[2][j]*l2;
             a=u(p);
             
-            // Improve readability, revise this line --Chensong
-            l2error+=s*gauss[i][2]*((a - uh_local[0]*gauss[i][0] - uh_local[1]*gauss[i][1] 
-                                     - uh_local[2]*l2)*(a - uh_local[0]*gauss[i][0] 
-                                                        - uh_local[1]*gauss[i][1] - uh_local[2]*l2));
+            uh_p = uh_local[0]*gauss[i][0] + uh_local[1]*gauss[i][1] + uh_local[2]*l2;
+            l2error+=s*gauss[i][2]*((a - uh_p)*(a - uh_p));
         } // end for i
 
     } // end for k

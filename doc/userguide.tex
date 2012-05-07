@@ -42,10 +42,12 @@
 }
 
 
-\title{A Simple User's Guide for FASP}
+\title{User's Guide for FASP}
 
 \author{FASP Developer Team}
 %\date{}                                           % Activate to display a given date or no date
+
+%\preface{a}
 
 \begin{document}
 
@@ -58,7 +60,9 @@
 \chapter{Introduction}\label{ch:intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{What can you expect in this package}
+\section{Why FASP}
+
+\section{What can you expect in FASP}
 
 \begin{lstlisting}
 #include <stdio.h>
@@ -66,6 +70,9 @@
 int main()
 {
 	printf{"Hello, World!\n"}; /* Print "Hello, World!" to the screen. */
+/*
+012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+*/
 }
 \end{lstlisting}
 
@@ -73,16 +80,26 @@ int main()
 
 \section{Installation and external libraries}
 
+\section{Get started}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Basic Usage}\label{ch:basic}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Vectors and arraies}
+%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%
 \section{Sparse matrices}
 %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%
-\section{Vectors and arraies}
+\section{Iterative methods}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Geometric multigrid}
 %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%
@@ -93,36 +110,50 @@ int main()
 \section{Aggregation-based AMG}
 %%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%
-\section{Iterative methods}
-%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%
-\section{Examples}
-%%%%%%%%%%%%%%%%%%
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{OpenMP Version}\label{ch:omp}
+\chapter{A Tutorial}\label{ch:tutor}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%
-\section{Basic usage}
+\section{The first example}
 %%%%%%%%%%%%%%%%%%
 
+\subsection{Read a matrix}
+
+\subsection{Solve it using AMG}
+
+\subsection{Solve it using AMG-preconditioned CG}
+
+\subsection{Solve it using FMG}
+
+\subsection{Set parameters}
+
 %%%%%%%%%%%%%%%%%%
-\section{Examples}
+\section{Solving the Poisson's equation}
 %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{CUDA Version}\label{ch:cuda}
+\section{An OpenMP example}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{A CUDA example}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%
-\section{Basic usage}
+\section{The debug environment}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Auxiliary Space Preconditioning}\label{ch:asp}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{Combined preconditioner}
 %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%
-\section{Examples}
+\section{Block preconditioners for the Stokes equation}
 %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

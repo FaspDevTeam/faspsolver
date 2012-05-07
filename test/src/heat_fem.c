@@ -3,6 +3,7 @@
  */
 
 #define DIM 2
+#define MAX_QUAD 49    // max num of quadrature points allowed
 
 #include "heat_fem.h"
 #include "basis.inl"
@@ -98,7 +99,7 @@ static void assemble_stiffmat (dCSRmat *A,
     const double epsilon=1;
 	
     double T[3][2],phi1[2],phi2[2],phi_1,phi_2;
-    double gauss[49][3]; // Need to make max number of Gauss a const!!! --Chensong
+    double gauss[MAX_QUAD][DIM+1];
     double s;
 	
     int i,j,k,it;
@@ -161,30 +162,28 @@ static void assemble_stiffmat (dCSRmat *A,
     fasp_mem_free(count);
     
     // Loop element by element and compute the actual entries storing them in A
-    for (k=0;k<mesh->elem.row;++k) { 
+    if (rhs && mat) {
+        for (k=0;k<mesh->elem.row;++k) { 
 
-        for (i=0;i<mesh->elem.col;++i) {
-            j=mesh->elem.val[k][i];
-            T[i][0]=mesh->node.val[j][0];
-            T[i][1]=mesh->node.val[j][1];
-        } // end for i
-        s=areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
+            for (i=0;i<mesh->elem.col;++i) {
+                j=mesh->elem.val[k][i];
+                T[i][0]=mesh->node.val[j][0];
+                T[i][1]=mesh->node.val[j][1];
+            } // end for i
+            s=areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
 
-        if (rhs) localb(T,btmp,pt->num_qp_rhs,pt->nt,dt);
+            localb(T,btmp,pt->num_qp_rhs,pt->nt,dt);
 
-        tmp=0;
-        for (k1=0;k1<mesh->elem.col;++k1) {
-            //mesh->elem.col == mesh_aux->elem2edge.col
-            edge_c = mesh_aux->elem2edge.val[k][k1];
-            i=mesh->elem.val[k][k1];
+            tmp=0;
+            for (k1=0;k1<mesh->elem.col;++k1) {
+                //mesh->elem.col == mesh_aux->elem2edge.col
+                edge_c = mesh_aux->elem2edge.val[k][k1];
+                i=mesh->elem.val[k][k1];
 
-            if (rhs) {
                 for (it=0;it<pt->nt;it++)
                     b->val[i+it*num_node]+=btmp[it*3+tmp];
                 tmp++;
-            }
 
-            if (mat) {
                 // for the diag entry
                 gradBasisP1(T, s, k1, phi1);
                 tmp_a = 2*s*(phi1[0]*phi1[0]+phi1[1]*phi1[1]*epsilon);
@@ -210,9 +209,78 @@ static void assemble_stiffmat (dCSRmat *A,
                     M->val[i] += 2*s*gauss[i1][2]*(phi_1*phi_2);
                     M->val[j] += 2*s*gauss[i1][2]*(phi_1*phi_2);
                 } // end for i1
-            }
-        } // end for k1
-    } // end for k
+            } // end for k1
+        } // end for k
+    }// end if
+    else if (rhs) {
+        for (k=0;k<mesh->elem.row;++k) { 
+
+            for (i=0;i<mesh->elem.col;++i) {
+                j=mesh->elem.val[k][i];
+                T[i][0]=mesh->node.val[j][0];
+                T[i][1]=mesh->node.val[j][1];
+            } // end for i
+            s=areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
+
+            localb(T,btmp,pt->num_qp_rhs,pt->nt,dt);
+
+            tmp=0;
+            for (k1=0;k1<mesh->elem.col;++k1) {
+                //mesh->elem.col == mesh_aux->elem2edge.col
+                edge_c = mesh_aux->elem2edge.val[k][k1];
+                i=mesh->elem.val[k][k1];
+
+                for (it=0;it<pt->nt;it++)
+                    b->val[i+it*num_node]+=btmp[it*3+tmp];
+                tmp++;
+            } // end for k1
+        } // end for k
+    }
+    else if (mat) {
+        for (k=0;k<mesh->elem.row;++k) { 
+
+            for (i=0;i<mesh->elem.col;++i) {
+                j=mesh->elem.val[k][i];
+                T[i][0]=mesh->node.val[j][0];
+                T[i][1]=mesh->node.val[j][1];
+            } // end for i
+            s=areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
+
+            for (k1=0;k1<mesh->elem.col;++k1) {
+                edge_c = mesh_aux->elem2edge.val[k][k1];
+                i=mesh->elem.val[k][k1];
+
+                // for the diag entry
+                gradBasisP1(T, s, k1, phi1);
+                tmp_a = 2*s*(phi1[0]*phi1[0]+phi1[1]*phi1[1]*epsilon);
+                for (i1=0;i1<pt->num_qp_mat;i1++) {
+                    A->val[A->IA[i]] += gauss[i1][2]*tmp_a;
+                    phi_1 = basisP1(k1, gauss[i1]);
+                    M->val[A->IA[i]] += 2*s*gauss[i1][2]*(phi_1*phi_1);
+                } // end for i1
+
+                // for the off-diag entry
+                i = edge2idx_g1[edge_c];
+                j = edge2idx_g2[edge_c];
+                n1 = (k1+1)%3;//local node index in the elem
+                n2 = (k1+2)%3;
+                gradBasisP1(T, s, n1, phi1);
+                gradBasisP1(T, s, n2, phi2);
+                tmp_a = 2*s*(phi1[0]*phi2[0]+phi1[1]*phi2[1]*epsilon);
+                for (i1=0;i1<pt->num_qp_mat;i1++) {
+                    A->val[i] += gauss[i1][2]*tmp_a;
+                    A->val[j] += gauss[i1][2]*tmp_a;
+                    phi_1 = basisP1(n1, gauss[i1]);
+                    phi_2 = basisP1(n2, gauss[i1]);
+                    M->val[i] += 2*s*gauss[i1][2]*(phi_1*phi_2);
+                    M->val[j] += 2*s*gauss[i1][2]*(phi_1*phi_2);
+                } // end for i1
+            } // end for k1
+        } // end for k
+    }
+    else {
+        printf(" ###You are not supposed to see this message ...\n");
+    }
 
     fasp_mem_free(edge2idx_g1);
     fasp_mem_free(edge2idx_g2);
@@ -326,16 +394,16 @@ int setup_heat (dCSRmat *A_heat,
 
 /** 
  * \fn double get_l2_error_heat (ddenmat *node,
- *								 idenmat *elem,
- *								 dvector *uh,
- *								 int num_qp,
- *								 double t)
+ *                               idenmat *elem,
+ *                               dvector *uh,
+ *                               int num_qp,
+ *                               double t)
  *
  * \brief get l2 error of fem.
  *
- * \param *node					 node info
- * \param *elem					 elem info
- * \param *ptr_uh				 discrete solution
+ * \param *node                  node info
+ * \param *elem                  elem info
+ * \param *ptr_uh                discrete solution
  * \param num_qp                 number of quad point
  * \param t                      time 
  *
@@ -351,8 +419,8 @@ double get_l2_error_heat (ddenmat *node,
     double l2error = 0.0;
     
     double T[3][2];
-    double gauss[49][3]; // Need to make max number of Gauss a const!!! --Chensong
-    double s, uh_local[3], l2, a, p[DIM+1];
+    double gauss[MAX_QUAD][DIM+1];
+    double s, uh_local[3], l2, a, p[DIM+1], uh_p;
     p[DIM] = t;
 	
     int i,j,k;
@@ -375,9 +443,8 @@ double get_l2_error_heat (ddenmat *node,
                 p[j]=T[0][j]*gauss[i][0]+T[1][j]*gauss[i][1]+T[2][j]*l2;
             a=u(p);
             
-            // better readability please --Chensong
-            l2error+=s*gauss[i][2]*((a - uh_local[0]*gauss[i][0] - uh_local[1]*gauss[i][1] - uh_local[2]*l2)
-                                    *(a - uh_local[0]*gauss[i][0] - uh_local[1]*gauss[i][1] - uh_local[2]*l2));
+            uh_p = uh_local[0]*gauss[i][0] + uh_local[1]*gauss[i][1] + uh_local[2]*l2;
+            l2error+=s*gauss[i][2]*((a - uh_p)*(a - uh_p));
         }
     }
     

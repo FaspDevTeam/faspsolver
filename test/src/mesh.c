@@ -209,7 +209,10 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
 	}
 
 	int *edge_aux;
-	if (num_node < 1e3) { // Why having such a constraint? --Chensong
+
+    // To avoid the shortage of memory, we restrict the max number of nodes; 
+    // see edge_aux following. Need to be improved.
+	if (num_node < 1e3) { 
 		edge_aux = (int *)fasp_mem_calloc(num_node*num_node, sizeof(int));
 		for (i=0;i<num_elem;++i) {
 			for (j=0;j<dim_elem;++j) {
