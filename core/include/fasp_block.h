@@ -35,17 +35,19 @@
  */
 typedef struct dBSRmat{
 	
+    // Note: Some of the following entries are captialized to stress they are for blocks!
+
 	//! number of rows of sub-blocks in matrix A, M
-	INT ROW; // use captialized words b/c 
-	//! number of cols of block in matrix A, N
+	INT ROW;
+	//! number of cols of sub-blocks in matrix A, N
 	INT COL;
 	//! number of nonzero sub-blocks in matrix A, NNZ
 	INT NNZ;
-	//! dimension of each sub-block
-	INT nb; // for the moment, allow nb*nb full block 
 	
+    //! dimension of each sub-block
+	INT nb; // for the moment, allow nb*nb full block 
 	//! storage manner for each sub-block           
-	INT storage_manner; // 1: column-major order; 0: row-major order
+	INT storage_manner; // 0: row-major order, 1: column-major order
 	
 	//! A real array that contains the elements of the non-zero blocks of 
 	//! a sparse matrix. The elements are stored block-by-block in row major 

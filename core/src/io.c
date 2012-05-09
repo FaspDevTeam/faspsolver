@@ -842,7 +842,7 @@ void fasp_dbsr_write (char *filename,
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dbsr_write");
     }
     
-    printf("fasp_dstr_write: writing matrix to `%s'...\n",filename);
+    printf("fasp_dbsr_write: writing matrix to `%s'...\n",filename);
     
     fprintf(fp,"%d  %d  %d\n",ROW,COL,NNZ); // write dimension of the block matrix
     
