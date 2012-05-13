@@ -554,17 +554,6 @@ void fasp_blas_smat_mxv (REAL *a,
                          REAL *c,
                          const INT n);
 
-void fasp_blas_smat_inv_nc2 (REAL *a);
-
-void fasp_blas_smat_inv_nc3 (REAL *a);
-
-void fasp_blas_smat_inv_nc5 (REAL *a);
-
-void fasp_blas_smat_inv_nc7 (REAL *a);
-
-INT fasp_blas_smat_inv (REAL *a, 
-                        const INT n);
-
 void fasp_blas_smat_mul_nc2 (REAL *a, 
                              REAL *b, 
                              REAL *c);
@@ -1058,12 +1047,12 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
                                  itsolver_param *itparam, 
                                  ILU_param *iluparam);
 
-INT fasp_solver_dbsr_krylov_amg(dBSRmat *A, 
-                                dvector *b, 
-                                dvector *x, 
-                                itsolver_param *itparam, 
-                                AMG_param *amgparam 
-                                );
+INT fasp_solver_dbsr_krylov_amg (dBSRmat *A, 
+                                 dvector *b, 
+                                 dvector *x, 
+                                 itsolver_param *itparam, 
+                                 AMG_param *amgparam 
+                                 );
 
 
 /*-------- In file: itsolver_bsr.c --------*/
@@ -1735,6 +1724,17 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
 
 
 /*-------- In file: smat.c --------*/
+
+void fasp_blas_smat_inv_nc2 (REAL *a);
+
+void fasp_blas_smat_inv_nc3 (REAL *a);
+
+void fasp_blas_smat_inv_nc5 (REAL *a);
+
+void fasp_blas_smat_inv_nc7 (REAL *a);
+
+INT fasp_blas_smat_inv (REAL *a, 
+                        const INT n);
 
 void fasp_iden_free (idenmat *A);
 

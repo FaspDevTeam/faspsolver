@@ -1,8 +1,9 @@
 File Name: CHANGES
 
-05/03/2012 FASP 0.8.1: Further optimizations on P1 FEM; more coming.
+05/13/2012 FASP 0.8.1: Further optimizations on P1 FEM; more coming.
                        Format source code in "test"; and some minor format and code changes.
                        Fix a bug in src/io.c for BSR output.
+                       Clean up several BSR rouitnes, including their Doxygen. 
 
 05/02/2012 FASP 0.8.0: Auto indentation of sources, mostly.
 

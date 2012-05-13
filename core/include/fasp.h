@@ -1,18 +1,16 @@
-/*
- *  fasp.h
+/*! \file fasp.h
+ *  \brief Main header file for the FASP package
+ *  
+ *  This header file contains general constants and data structures used in FASP.
+ * 
+ *  \note Only define macros and data structures, no function decorations. 
  *
  *------------------------------------------------------
  *  Created by Chensong Zhang on 08/12/2010.
  *  Modified by Chensong Zhang on 12/13/2011.
  *  Modified by Chensong Zhang on 12/25/2011.
  *------------------------------------------------------
- *
- */
-
-/*! \file fasp.h
- *  \brief Main header file for the FASP package
- *  
- *  Note: Only define macros and data structures, no function decorations. 
+ * 
  */
 
 #include <stdio.h>

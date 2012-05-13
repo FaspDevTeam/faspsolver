@@ -1,5 +1,5 @@
 /*! \file ilu_setup_bsr.c
- *  \brief Setup incomplete LU decomposition.
+ *  \brief Setup Incomplete LU decomposition for BSR matrices.
  */
 
 #include <math.h>
@@ -8,7 +8,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-/* ilu.for */
+/* The following functions are defined in ilu.for */
 #ifdef __cplusplus 
 extern "C" {void symbfactor_(const int *n,int *colind,int *rwptr,const int *levfill,const int *nzmax,int *nzlu,int *ijlu,int *uptr,int *ierr);}
 #else
@@ -135,7 +135,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
 /*---------------------------------*/
 
 /**
- * \fn static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
+ * \fn static INT numfac_bsr (dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
  * \brief Get numerical ILU decoposition of a BSR matrix A
  *
  * \param A        Pointer to BSR matrir of REAL type
@@ -148,7 +148,10 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
  *
  * \note Works for general nb (Xiaozhe)
  */
-static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
+static INT numfac_bsr (dBSRmat *A, 
+                       REAL *luval, 
+                       INT *jlu, 
+                       INT *uptr)
 {
     INT n=A->ROW,nb=A->nb, nb2=nb*nb, ib, ibstart,ibstart1; 
     INT k, indj, inds, indja,jluj, jlus, ijaj;
@@ -162,17 +165,16 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
     
     /**  
      *     colptrs is used to hold the indices of entries in LU of row k.  
-     *     It is initialized to zero here, and then reset after each row's work.
-     *     The first segment of the loop on indj effectively solves
+     *     It is initialized to zero here, and then reset after each row's
+     *     work. The first segment of the loop on indj effectively solves
      *     the transposed upper triangular system
-     *     U(1:k-1, 1:k-1)'L(k,1:k-1)' = A(k,1:k-1)'
+     *            U(1:k-1, 1:k-1)'L(k,1:k-1)' = A(k,1:k-1)'
      *     via sparse saxpy operations, throwing away disallowed fill.
-     *     When the loop index indj reaches the k-th column (i.e., the
-     *     diagonal entry), then the innermost sparse saxpy operation 
-     *     effectively is applying the previous updates to the corresponding 
-     *     part of U via sparse vector*matrix, discarding disallowed fill-in
-     *     entries.  That operation is 
-     *     U(k,k:n) = A(k,k:n) - U(1:k-1,k:n)*L(k,1:k-1)
+     *     When the loop index indj reaches the k-th column (i.e., the diag
+     *     entry), then the innermost sparse saxpy operation effectively is 
+     *     applying the previous updates to the corresponding part of U via
+     *     sparse vec*mat, discarding disallowed fill-in entries, i.e.
+     *            U(k,k:n) = A(k,k:n) - U(1:k-1,k:n)*L(k,1:k-1)
      */    
     
     for (k=0;k<n;k++) colptrs[k]=0;
@@ -212,11 +214,13 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
                 }
     
             }
+
             for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
     
             colptrs[k] =  0;
             luval[k] = 1.0/luval[k];
         } 
+
         break;
     
     case 3:
@@ -255,6 +259,7 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
                 }
     
             }
+
             for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
     
             colptrs[k] =  0;
@@ -262,6 +267,7 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
             fasp_blas_smat_inv_nc3(&(luval[k*nb2]));
     
         }
+
         break;
     
     case 5:
@@ -300,12 +306,14 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
                 }
     
             }
+
             for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
     
             colptrs[k] =  0;
     
             fasp_blas_smat_inv_nc5(&(luval[k*nb2]));
         }
+
         break;
     
     case 7:
@@ -344,12 +352,14 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
                 }
     
             }
+
             for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
     
             colptrs[k] =  0;
     
             fasp_blas_smat_inv(&(luval[k*nb2]),nb);
         }
+
         break;
     
     default:

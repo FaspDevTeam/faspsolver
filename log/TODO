@@ -86,7 +86,7 @@ Iterative Methods
 
 [ 0.7.8 ] reduced duplications in iterative methods
 [ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
-[ 05/16 ] different options for stopping criteria: rel res, abs res, etc (Chensong)
+[ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
 ========================
