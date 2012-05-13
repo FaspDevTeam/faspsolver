@@ -17,14 +17,14 @@
  */
 double basisP1(int index, double lambda[2])
 {
-	double phi;
+    double phi;
     
-	if (index == 2)
-		phi = 1 - lambda[0] - lambda[1];
-	else
-		phi = lambda[index];
+    if (index == 2)
+        phi = 1 - lambda[0] - lambda[1];
+    else
+        phi = lambda[index];
 
-	return phi;
+    return phi;
 }
 
 /** 

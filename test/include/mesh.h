@@ -18,10 +18,10 @@ extern int bd_flag(double *p);
  * \brief mesh data with node, elem, and node_bd
  */ 
 typedef struct Mesh{
-	
-	idenmat elem;
-	ddenmat node;
-	ivector node_bd;
+    
+    idenmat elem;
+    ddenmat node;
+    ivector node_bd;
 
 } Mesh;
 
@@ -30,10 +30,10 @@ typedef struct Mesh{
  * \brief auxiliary mesh data with edge, elem2edge, edge_bd
  */ 
 typedef struct Mesh_aux{
-	
-	idenmat edge;
-	idenmat elem2edge;
-	ivector edge_bd;
+    
+    idenmat edge;
+    idenmat elem2edge;
+    ivector edge_bd;
 
 } Mesh_aux;
 

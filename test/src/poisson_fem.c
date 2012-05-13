@@ -42,10 +42,10 @@ static void localb (double (*node)[DIM],
     const double s=2.0*areaT(node[0][0],node[1][0],node[2][0],
                              node[0][1],node[1][1],node[2][1]);
     
-    fasp_gauss2d(num_qp, 2, gauss); // gauss intergation initial	
-	
+    fasp_gauss2d(num_qp, 2, gauss); // gauss intergation initial    
+    
     for (i=0;i<=DIM;++i) b[i]=0; // initialize b
-	
+    
     for (i=0;i<num_qp;++i)
         {
             for (j=0;j<DIM;++j)
@@ -56,9 +56,9 @@ static void localb (double (*node)[DIM],
             a=f(p);
             b[0]+=a*gauss[i][2]*gauss[i][0];
             b[1]+=a*gauss[i][2]*gauss[i][1];
-            b[2]+=a*gauss[i][2]*(1-gauss[i][0]-gauss[i][1]);		
+            b[2]+=a*gauss[i][2]*(1-gauss[i][0]-gauss[i][1]);        
         }
-	
+    
     b[0]*=s; b[1]*=s; b[2]*=s;
 
 #else
@@ -113,16 +113,16 @@ static void assemble_stiffmat (dCSRmat *A,
     const int num_edge = mesh_aux->edge.row;
     const int nnz = num_node + 2*num_edge;
     const double epsilon=1;
-	
+    
     double T[3][2],phi1[2],phi2[2];
     double gauss[MAX_QUAD][DIM+1];
     double s;
-	
+    
     int i,j,k;
     int k1,k2,n1,n2,i1,j1;
     double btmp[3], tmp_a;
     int tmp, edge_c;
-	
+    
     fasp_gauss2d(pt->num_qp_mat, 2, gauss); // Gauss intergation initial
     
     // alloc mem for A & b
@@ -181,6 +181,8 @@ static void assemble_stiffmat (dCSRmat *A,
             tmp=0;
             
             // mesh->elem.col == mesh_aux->elem2edge.col
+            // "if" should be out of "for" --Chensong
+        // fixed? --Feiteng
             for (k1=0;k1<mesh->elem.col;++k1) {
 
                 edge_c = mesh_aux->elem2edge.val[k][k1];
@@ -272,7 +274,7 @@ static void assemble_stiffmat (dCSRmat *A,
         } // end for k
     }
     else {
-        printf(" ###You are not supposed to see this message ...\n");
+    printf(" ###You are not supposed to see this message ...\n");
     }
 
     fasp_mem_free(edge2idx_g1);
@@ -294,8 +296,8 @@ static void assemble_stiffmat (dCSRmat *A,
  * \param *mesh                  Pointer to mesh info 
  * \param *mesh_aux              Pointer to auxiliary mesh info 
  * \param *pt                    Pointer to parameter 
- * \param *ptr_uh				 Discrete solution
- * \param *ptr_dof				 DOF index
+ * \param *ptr_uh                 Discrete solution
+ * \param *ptr_dof                 DOF index
  *
  * \return                       SUCCESS if succeed
  *
@@ -327,11 +329,11 @@ int setup_poisson (dCSRmat *A,
     for (i=0;i<mesh->node_bd.row;++i) {
         if (mesh->node_bd.val[i] == DIRICHLET) dirichlet_count++;
     }
-	
+    
     dirichlet = fasp_ivec_create(dirichlet_count); 
     nondirichlet = fasp_ivec_create(mesh->node.row-dirichlet_count); 
     index = fasp_ivec_create(mesh->node.row);
-	
+    
     j = k = 0;
     for (i=0;i<mesh->node_bd.row;++i) {
         if(mesh->node_bd.val[i]==DIRICHLET) { //  Dirichlet boundary node
@@ -345,7 +347,7 @@ int setup_poisson (dCSRmat *A,
             ++j;
         }
     }
-	
+    
     // set initial boundary value
     dvector uh = fasp_dvec_create(Stiff.row);
     double p[DIM];
@@ -356,10 +358,10 @@ int setup_poisson (dCSRmat *A,
             uh.val[i]=u(p);
         }
     }
-	
+    
     extractNondirichletMatrix(&Stiff, &rhs, A, b, &(mesh->node_bd), 
                               &dirichlet, &nondirichlet, &index, &uh);
-	    
+        
     // output info for l2 error
     ivec_output( dof, &nondirichlet );
     dvec_output( ptr_uh, &uh );
@@ -398,11 +400,11 @@ double get_l2_error_poisson (ddenmat *node,
     double T[3][2];
     double gauss[MAX_QUAD][DIM+1]; 
     double s, uh_local[3], l2, a, p[DIM], uh_p;
-	
+    
     int i,j,k;
     
     fasp_gauss2d(num_qp, 2, gauss); // Gauss intergation initial
-	
+    
     for (k=0;k<elem->row;++k) { 
 
         for (i=0;i<elem->col;++i) {
@@ -420,12 +422,14 @@ double get_l2_error_poisson (ddenmat *node,
                 p[j]=T[0][j]*gauss[i][0]+T[1][j]*gauss[i][1]+T[2][j]*l2;
             a=u(p);
             
-            uh_p = uh_local[0]*gauss[i][0] + uh_local[1]*gauss[i][1] + uh_local[2]*l2;
+            // Improve readability, revise this line --Chensong
+        // fixed? --Feiteng
+        uh_p = uh_local[0]*gauss[i][0] + uh_local[1]*gauss[i][1] + uh_local[2]*l2;
             l2error+=s*gauss[i][2]*((a - uh_p)*(a - uh_p));
         } // end for i
 
     } // end for k
-	
+    
     l2error = sqrt(l2error);
     
     return l2error;

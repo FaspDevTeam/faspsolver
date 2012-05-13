@@ -42,8 +42,8 @@ static void localb (double (*node)[2],
     for (i=0;i<3*nt;++i)
         b[i] = 0;
     
-    fasp_gauss2d(num_qp, 2, gauss); // gauss intergation initial	
-	
+    fasp_gauss2d(num_qp, 2, gauss); // gauss intergation initial    
+    
     for (i=0;i<num_qp;++i) {
         g = 1-gauss[i][0]-gauss[i][1];
         for (j=0;j<DIM;++j)
@@ -97,16 +97,16 @@ static void assemble_stiffmat (dCSRmat *A,
     const int num_edge = mesh_aux->edge.row;
     const int nnz = num_node + 2*num_edge;
     const double epsilon=1;
-	
+    
     double T[3][2],phi1[2],phi2[2],phi_1,phi_2;
     double gauss[MAX_QUAD][DIM+1];
     double s;
-	
+    
     int i,j,k,it;
     int k1,k2,n1,n2,i1,j1;
     double btmp[3*pt->nt], tmp_a;
     int tmp, edge_c;
-	
+    
     fasp_gauss2d(pt->num_qp_mat, 2, gauss); // Gauss intergation initial
     
     // alloc mem for A & b
@@ -279,7 +279,7 @@ static void assemble_stiffmat (dCSRmat *A,
         } // end for k
     }
     else {
-        printf(" ###You are not supposed to see this message ...\n");
+    printf(" ###You are not supposed to see this message ...\n");
     }
 
     fasp_mem_free(edge2idx_g1);
@@ -309,8 +309,8 @@ static void assemble_stiffmat (dCSRmat *A,
  * \param *mesh                  pointer to mesh info 
  * \param *mesh_aux              pointer to auxiliary mesh info 
  * \param *pt                    pointer to parameter 
- * \param *uh_heat							 discrete solution
- * \param *bdinfo							   info to apply boundary condition 
+ * \param *uh_heat                             discrete solution
+ * \param *bdinfo                               info to apply boundary condition 
  * \param dt                     size of time step
  *
  * \return                       SUCCESS if succeed
@@ -350,7 +350,7 @@ int setup_heat (dCSRmat *A_heat,
     dirichlet = fasp_ivec_create(dirichlet_count); 
     nondirichlet = fasp_ivec_create(mesh->node.row-dirichlet_count); 
     index = fasp_ivec_create(mesh->node.row);
-	
+    
     j = k = 0;
     for (i=0;i<mesh->node_bd.row;++i) {
         if (mesh->node_bd.val[i]==DIRICHLET) { //  Dirichlet boundary node
@@ -364,7 +364,7 @@ int setup_heat (dCSRmat *A_heat,
             ++j;
         }
     }
-	
+    
     // set initial boundary value
     dvector uh = fasp_dvec_create(Stiff.row*pt->nt);
     double p[DIM+1];
@@ -378,7 +378,7 @@ int setup_heat (dCSRmat *A_heat,
             }
         }
     }
-	
+    
     // output info for l2 error
     ivec_output( &(bdinfo->dof), &nondirichlet);
     ivec_output( &(bdinfo->bd), &dirichlet);
@@ -422,11 +422,11 @@ double get_l2_error_heat (ddenmat *node,
     double gauss[MAX_QUAD][DIM+1];
     double s, uh_local[3], l2, a, p[DIM+1], uh_p;
     p[DIM] = t;
-	
+    
     int i,j,k;
     
     fasp_gauss2d(num_qp, 2, gauss); // Gauss intergation initial
-	
+    
     for (k=0;k<elem->row;++k) { 
 
         for (i=0;i<elem->col;++i) {
@@ -443,7 +443,9 @@ double get_l2_error_heat (ddenmat *node,
                 p[j]=T[0][j]*gauss[i][0]+T[1][j]*gauss[i][1]+T[2][j]*l2;
             a=u(p);
             
-            uh_p = uh_local[0]*gauss[i][0] + uh_local[1]*gauss[i][1] + uh_local[2]*l2;
+            // better readability please --Chensong
+        // fixed? --Feiteng
+        uh_p = uh_local[0]*gauss[i][0] + uh_local[1]*gauss[i][1] + uh_local[2]*l2;
             l2error+=s*gauss[i][2]*((a - uh_p)*(a - uh_p));
         }
     }

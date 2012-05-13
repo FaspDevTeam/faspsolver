@@ -20,7 +20,7 @@
  */ 
 typedef struct Bd_apply_info
 {
-	ivector dof, bd, idx;
+    ivector dof, bd, idx;
     // dof = interiori node
     // bd = boundary node
     // idx = mapping from node_index to dof_idx/bd_idx, node_flag = 0, if is a interiori node, node_flag = -1, if else
