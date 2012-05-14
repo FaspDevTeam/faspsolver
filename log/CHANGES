@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+05/14/2012 FASP 0.8.2: Fix a bug in refinement. Make generation of mesh_aux data structure work
+                       for any number of elements. Add a few examples in "tutorial".
+
 05/13/2012 FASP 0.8.1: Further optimizations on P1 FEM; more coming.
                        Format source code in "test"; and some minor format and code changes.
                        Fix a bug in src/io.c for BSR output.

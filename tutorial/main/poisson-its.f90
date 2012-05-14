@@ -1,9 +1,10 @@
-!> \file poisson-amg.f90
-!> \brief AMG test example with F90 interfaces
+!> \file poisson-its.f90
+!> \brief Iterative methods test example with F90 interfaces
 !>
 !> AMG example for FASP: F90 version
 !>
-!> Solving the Poisson equation (P1 FEM) with AMG
+!> Solving the Poisson equation (P1 FEM) with AMG preconditioned
+!> iterative methods. 
 !>
 !> \author Chensong Zhang
 !> \date   12/21/2011
@@ -59,7 +60,7 @@ program test
   !===> Initial guess
   allocate(u(1:n))
   u=0.0d0 
-  call fasp_fwrapper_amg(n,nnz,ia,ja,a,b,u,tol,maxit,prt_lvl);
+  call fasp_fwrapper_krylov_amg(n,nnz,ia,ja,a,b,u,tol,maxit,prt_lvl);
  
   ! Step 3: Clean up memory
   deallocate(ia,ja,a)

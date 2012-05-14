@@ -58,14 +58,16 @@ FLFLAGS=-lm $(LINKOPTS) $(LIBS)
 ########################################################################
 .SUFFIXES: .c .cc .cpp .for .f .f77 .f90 .f95
 #
-FSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.for))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f77))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f90))
-FSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.f95))
-CSRC := $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.c))
-CSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.cc))
-CSRC += $(foreach dir,$(SRCDIR),$(wildcard $(SRCDIR)/*.cpp))
+FSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.for))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f77))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f90))
+FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f95))
+CSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.c))
+CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cc))
+CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cpp))
+FSRC += $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*.f))
+CSRC += $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*.c))
 #
 OBJSF := $(patsubst %.for,%.o,$(FSRC))
 OBJSF += $(patsubst %.f,%.o,$(FSRC))
@@ -113,7 +115,9 @@ OBJSC += $(patsubst %.cpp,%.o,$(CSRC))
 ########################################################################
 
 # Everything
-ALLPROG=$(TESTLIB) poisson-amg.c poisson-amg.f90
+ALLPROG=$(TESTLIB)
+ALLPROG+=poisson-amg.c poisson-amg.f90
+ALLPROG+=poisson-its.c poisson-its.f90
 
 # Test for solvers
 TESTPROG=$(TESTLIB) main/poisson-amg.o 
@@ -138,6 +142,14 @@ poisson-amg.c:
 poisson-amg.f90: 
 	$(FC) $(FFLAGS) -c main/poisson-amg.f90 -o main/poisson-amg.o
 	$(FC) -o poisson-amg-f.ex main/poisson-amg.o $(FLFLAGS)
+
+poisson-its.c:
+	$(CC) $(CFLAGS) -c main/poisson-its.c -o main/poisson-its.o
+	$(FC) -o poisson-its-c.ex main/poisson-its.o $(FLFLAGS)
+
+poisson-its.f90:
+	$(FC) $(FFLAGS) -c main/poisson-its.f90 -o main/poisson-its.o
+	$(FC) -o poisson-its-f.ex main/poisson-its.o $(FLFLAGS)
 
 ########################################################################
 # Clean up

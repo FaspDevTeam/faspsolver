@@ -475,9 +475,9 @@ void fasp_dstr_read (char *filename,
  *   - ROW+1: length of IA 
  *   - IA(i), i=0:ROW
  *   - NNZ: length of JA
- *   - JA(i), i=0:NNZ-1 
+ *   - JA(i), i=0:NNZ-1
  *   - NNZ*nb*nb: length of val
- *   - val(i), i=0:NNZ*nb*nb-1  * \par
+ *   - val(i), i=0:NNZ*nb*nb-1
  *
  * \author Xiaozhe Hu
  * \date   10/29/2010 

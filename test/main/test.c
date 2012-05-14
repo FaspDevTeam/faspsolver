@@ -78,7 +78,6 @@ int main (int argc, const char * argv[])
         
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvecind_read(filename2, &b);
-        
 	}	
     
 	// Read A and b -- P1 FE discretization for Poisson, large    
@@ -92,8 +91,7 @@ int main (int argc, const char * argv[])
         
         // Form the right-hand-side b = A*sol
         b = fasp_dvec_create(A.row);
-        fasp_blas_dcsr_mxv(&A, sol.val, b.val);     
-        
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
         fasp_dvec_free(&sol);
 	}	
     
