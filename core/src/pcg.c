@@ -1,16 +1,9 @@
 /*! \file pcg.c
- *  \brief Krylov subspace methods -- Preconditioned Conjugate Gradient.
+ *  \brief Preconditioned Conjugate Gradient method
  *
- *  Abstract algorithm of Krylov method    
+ *  Abstract algorithm
  *
- *  Krylov method to solve A*x=b is to generate {x_k} to approximate x, 
- *  where x_k is the optimal solution in Krylov space 
- *
- *     V_k=span{r_0,A*r_0,A^2*r_0,...,A^{k-1}*r_0}, 
- *
- *  under some inner product. 
- *
- *  For the implementation, we generate a series of {p_k} such that V_k=span{p_1,...,p_k}. Details: 
+ *  PCG method to solve A*x=b is to generate {x_k} to approximate x
  *
  *  Step 0. Given A, b, x_0, M  
  *  

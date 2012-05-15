@@ -1,7 +1,8 @@
 !> \file poisson-its.f90
-!> \brief Iterative methods test example with F90 interfaces
+!> \brief The second test example for FASP: using ITS to solve 
+!>        the discrete Poisson equation from P1 finite element
 !>
-!> AMG example for FASP: F90 version
+!> \note  ITS example for FASP: F90 version
 !>
 !> Solving the Poisson equation (P1 FEM) with AMG preconditioned
 !> iterative methods. 
@@ -19,6 +20,11 @@ program test
 
   integer          :: iufile, n, nnz, i, prt_lvl, maxit
   double precision :: tol
+
+  write (*,*) "=========================================="
+  write (*,*) "||   FASP: ITS example -- F90 version   ||"
+  write (*,*) "=========================================="
+  write (*,*) ""
 
   ! Step 0: user defined variables
   prt_lvl = 2

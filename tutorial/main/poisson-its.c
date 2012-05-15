@@ -1,8 +1,8 @@
 /*! \file poisson-its.c
  *  \brief The second test example for FASP: using ITS to solve 
- *         the discrete Poisson equation from P1 finite element.
+ *         the discrete Poisson equation from P1 finite element
  *
- *  ITS example for FASP: C version
+ *  \note  ITS example for FASP: C version
  *
  *  Solving the Poisson equation (P1 FEM) with iterative methods
  */
@@ -20,10 +20,14 @@
  */
 int main (int argc, const char * argv[]) 
 {
-    // Step 0. Set parameters
     input_param          inparam;  // parameters from input files
     itsolver_param       itparam;  // parameters for itsolver
+
+    printf("\n========================================");
+    printf("\n||   FASP: ITS example -- C version   ||");
+    printf("\n========================================\n\n");
     
+    // Step 0. Set parameters
     // Read input and AMG parameters from a disk file
     // In this example, we read everything from a disk file:
     //          "./ini/its.dat"
@@ -34,8 +38,8 @@ int main (int argc, const char * argv[])
     const int print_level   = inparam.print_level;
     
     // Step 1. Get stiffness matrix and right-hand side
-    //         Read A and b -- P1 FE discretization for Poisson.
-    //         The location of the data files are given in "its.dat".
+    // Read A and b -- P1 FE discretization for Poisson.
+    // The location of the data files are given in "its.dat".
     dCSRmat A;
     dvector b, x;
     char filename1[512], *datafile1;
@@ -59,11 +63,12 @@ int main (int argc, const char * argv[])
     }
     
     // Step 3. Solve the system with ITS as an iterative solver
-    //         Set the initial guess to be zero
+    // Set the initial guess to be zero and then solve it using standard
+    // iterative methods, without applying any preconditioners
     fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row,&x,0.0);
     fasp_solver_dcsr_itsolver(&A, &b, &x, NULL, &itparam);
     
-    // Step 5. Clean up memory
+    // Step 4. Clean up memory
     fasp_dcsr_free(&A);
     fasp_dvec_free(&b);
     fasp_dvec_free(&x);

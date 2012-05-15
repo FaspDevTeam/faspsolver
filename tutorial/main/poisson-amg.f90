@@ -1,7 +1,8 @@
 !> \file poisson-amg.f90
-!> \brief AMG test example with F90 interfaces
+!> \brief The first test example for FASP: using AMG to solve
+!>        the discrete Poisson equation from P1 finite element
 !>
-!> AMG example for FASP: F90 version
+!> \note  AMG example for FASP: F90 version
 !>
 !> Solving the Poisson equation (P1 FEM) with AMG
 !>
@@ -12,12 +13,16 @@ program test
 
   implicit none
 
-  double precision, dimension(:), allocatable :: u,b
-  double precision, dimension(:), allocatable :: a
-  integer,          dimension(:), allocatable :: ia,ja
+  double precision, dimension(:), allocatable :: u, b, a
+  integer,          dimension(:), allocatable :: ia, ja
 
   integer          :: iufile, n, nnz, i, prt_lvl, maxit
   double precision :: tol
+
+  write (*,*) "=========================================="
+  write (*,*) "||   FASP: AMG example -- F90 version   ||"
+  write (*,*) "=========================================="
+  write (*,*) ""
 
   ! Step 0: user defined variables
   prt_lvl = 2

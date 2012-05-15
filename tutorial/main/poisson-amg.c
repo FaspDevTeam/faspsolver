@@ -1,8 +1,8 @@
 /*! \file poisson-amg.c
  *  \brief The first test example for FASP: using AMG to solve 
- *         the discrete Poisson equation from P1 finite element.
+ *         the discrete Poisson equation from P1 finite element
  *
- *	AMG example for FASP: C version
+ *	\note  AMG example for FASP: C version
  *
  *  Solving the Poisson equation (P1 FEM) with AMG
  */
@@ -20,10 +20,14 @@
  */
 int main (int argc, const char * argv[]) 
 {
-    // Step 0. Set parameters
     input_param     inparam;  // parameters from input files
     AMG_param       amgparam; // parameters for AMG
     
+    printf("\n========================================");
+    printf("\n||   FASP: AMG example -- C version   ||");
+    printf("\n========================================\n\n");
+
+    // Step 0. Set parameters
     // Read input and AMG parameters from a disk file
     // In this example, we read everything from a disk file:
     //          "./ini/amg.dat"
@@ -38,8 +42,8 @@ int main (int argc, const char * argv[])
     const int output_type   = inparam.output_type;
     
     // Step 1. Get stiffness matrix and right-hand side
-    //         Read A and b -- P1 FE discretization for Poisson.
-    //         The location of the data files are given in "amg.dat".
+    // Read A and b -- P1 FE discretization for Poisson.
+    // The location of the data files are given in "amg.dat".
     dCSRmat A;
     dvector b, x;
     char filename1[512], *datafile1;
@@ -63,9 +67,10 @@ int main (int argc, const char * argv[])
     }
     
     // Step 3. Solve the system with AMG as an iterative solver
-    //         Set the initial guess to be zero
+    // Set the initial guess to be zero and then solve it
+    // with AMG method as an iterative procedure
     fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row,&x,0.0);
-    fasp_solver_amg(&A, &b, &x, &amgparam); 
+    fasp_solver_amg(&A, &b, &x, &amgparam);
     
     // Step 4. Clean up memory
     fasp_dcsr_free(&A);

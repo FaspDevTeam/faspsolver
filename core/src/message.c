@@ -36,7 +36,7 @@ void print_itinfo (const INT ptrlvl,
                    const REAL absres, 
                    const REAL factor)
 {    
-    if (ptrlvl>PRINT_MIN) {
+    if (ptrlvl>PRINT_SOME) {
         
         if (iter>1) {
             printf("%6d | %15.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);

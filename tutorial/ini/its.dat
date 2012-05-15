@@ -5,7 +5,7 @@
 %----------------------------------------------%
 
 workdir  = ./data/      % work directory, no more than 128 characters
-print_level = 1         % How much information to print out 
+print_level = 2         % How much information to print out 
  
 %----------------------------------------------%
 % parameters for ITSOLVER                      %
