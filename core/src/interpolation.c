@@ -425,9 +425,9 @@ static SHORT genintval (dCSRmat *A,
     SHORT status=SUCCESS;
     
     itsolver_param itparam;
-    itparam.print_level    = 0;
-    itparam.itsolver_type  = 1;
-    itparam.stop_type      = 1;
+    itparam.print_level    = PRINT_NONE;
+    itparam.itsolver_type  = SOLVER_CG;
+    itparam.stop_type      = STOP_REL_RES;
     itparam.tol            = 1e-3; 
     itparam.maxit          = 100;
     itparam.restart        = 100;

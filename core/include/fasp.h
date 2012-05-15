@@ -695,7 +695,7 @@ typedef struct {
 	INT  problem_num; /**< problem number to solve */
 	
 	// parameters for iterative solvers
-	SHORT itsolver_type; /**< type of iterative solvers */
+	SHORT solver_type; /**< type of iterative solvers */
 	SHORT precond_type; /**< type of preconditioner for iterative solvers */
 	SHORT stop_type; /**< type of stopping criteria for iterative solvers */
 	REAL itsolver_tol; /**< tolerance for iterative linear solver */

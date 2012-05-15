@@ -47,7 +47,7 @@ int main (int argc, const char * argv[])
     // Set local parameters
 	const int print_level   = inparam.print_level;
 	const int problem_num   = inparam.problem_num;
-	const int itsolver_type = inparam.itsolver_type;
+	const int solver_type   = inparam.solver_type;
 	const int precond_type  = inparam.precond_type;
 	const int output_type   = inparam.output_type;
     
@@ -129,7 +129,7 @@ int main (int argc, const char * argv[])
     fasp_dvec_set(A.row,&x,0.0);
 
     // Preconditioned Krylov methods
-    if ( itsolver_type >= 1 && itsolver_type <= 20) {
+    if ( solver_type >= 1 && solver_type <= 20) {
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
@@ -161,32 +161,32 @@ int main (int argc, const char * argv[])
 	}
     
     // AMG as the iterative solver
-	else if (itsolver_type == SOLVER_AMG) {
+	else if (solver_type == SOLVER_AMG) {
         if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
 		fasp_solver_amg(&A, &b, &x, &amgparam); 
         
 	}
 
     // Full AMG as the iterative solver 
-    else if (itsolver_type == SOLVER_FMG) {
+    else if (solver_type == SOLVER_FMG) {
         if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
         fasp_solver_famg(&A, &b, &x, &amgparam);
     }
     
 #if With_SuperLU // use SuperLU directly
-	else if (itsolver_type == SOLVER_SUPERLU) {
+	else if (solver_type == SOLVER_SUPERLU) {
 		status = superlu(&A, &b, &x, print_level);	 
 	}
 #endif	 
 	
 #if With_UMFPACK // use UMFPACK directly
-	else if (itsolver_type == SOLVER_UMFPACK) {
+	else if (solver_type == SOLVER_UMFPACK) {
 		status = umfpack(&A, &b, &x, print_level);	 
 	}
 #endif	 
     
 	else {
-		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);		
+		printf("### ERROR: Wrong solver type %d!!!\n", solver_type);		
 		status = ERROR_SOLVER_TYPE;
         goto FINISHED;
 	}

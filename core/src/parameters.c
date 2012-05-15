@@ -77,7 +77,7 @@ void fasp_param_input_init (input_param *inparam)
     inparam->output_type = 0;
     
     inparam->problem_num = 10;    
-    inparam->itsolver_type = SOLVER_CG;
+    inparam->solver_type = SOLVER_CG;
     inparam->precond_type = PREC_AMG;
     inparam->stop_type = STOP_REL_RES;
     
@@ -225,11 +225,11 @@ void fasp_param_amg_set (AMG_param *param,
     param->AMG_type    = inparam->AMG_type;
     param->print_level = inparam->print_level;
     
-    if (inparam->itsolver_type == SOLVER_AMG) {
+    if (inparam->solver_type == SOLVER_AMG) {
         param->maxit = inparam->itsolver_maxit;
         param->tol   = inparam->itsolver_tol;
     }
-    else if (inparam->itsolver_type == SOLVER_FMG) {
+    else if (inparam->solver_type == SOLVER_FMG) {
         param->maxit = inparam->itsolver_maxit;
         param->tol   = inparam->itsolver_tol;
     }
@@ -306,7 +306,7 @@ void fasp_param_solver_set (itsolver_param *itparam,
                             input_param *inparam)
 {
     itparam->print_level    = inparam->print_level;
-    itparam->itsolver_type  = inparam->itsolver_type;
+    itparam->itsolver_type  = inparam->solver_type;
     itparam->precond_type   = inparam->precond_type;
     itparam->stop_type      = inparam->stop_type;
     itparam->restart        = inparam->restart;

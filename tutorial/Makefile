@@ -136,19 +136,19 @@ Default:
 ########################################################################
 
 poisson-amg.c: 
-	$(CC) $(CFLAGS) -c main/poisson-amg.c -o main/poisson-amg.o
+	$(CC) -c main/poisson-amg.c -o main/poisson-amg.o $(CFLAGS)
 	$(FC) -o poisson-amg-c.ex main/poisson-amg.o $(FLFLAGS)
 
-poisson-amg.f90: 
-	$(FC) $(FFLAGS) -c main/poisson-amg.f90 -o main/poisson-amg.o
+poisson-amg.f90:
+	$(FC) -c main/poisson-amg.f90 -o main/poisson-amg.o $(FFLAGS)
 	$(FC) -o poisson-amg-f.ex main/poisson-amg.o $(FLFLAGS)
 
 poisson-its.c:
-	$(CC) $(CFLAGS) -c main/poisson-its.c -o main/poisson-its.o
+	$(CC) -c main/poisson-its.c -o main/poisson-its.o $(CFLAGS)
 	$(FC) -o poisson-its-c.ex main/poisson-its.o $(FLFLAGS)
 
 poisson-its.f90:
-	$(FC) $(FFLAGS) -c main/poisson-its.f90 -o main/poisson-its.o
+	$(FC) -c main/poisson-its.f90 -o main/poisson-its.o $(FFLAGS)
 	$(FC) -o poisson-its-f.ex main/poisson-its.o $(FLFLAGS)
 
 ########################################################################

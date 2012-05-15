@@ -43,7 +43,7 @@ int main (int argc, const char * argv[])
     // Set local parameters
 	const int print_level   = inparam.print_level;
 	const int problem_num   = inparam.problem_num;
-	const int itsolver_type = inparam.itsolver_type;
+	const int solver_type   = inparam.solver_type;
 	const int precond_type  = inparam.precond_type;
 	const int output_type   = inparam.output_type;
 	
@@ -94,27 +94,27 @@ int main (int argc, const char * argv[])
     fasp_dvec_set(A.row,&x,0.0);
 	
     // AMG as the iterative solver
-	if (itsolver_type == 0) { 	
+	if (solver_type == 0) { 	
 		 fasp_solver_amg(&A, &b, &x, &amgparam); 
 	}
 
     // Full AMG as the iterative solver 
-	else if (itsolver_type == 8) {
+	else if (solver_type == 8) {
 		 fasp_solver_famg(&A, &b, &x, &amgparam);
 	}
 	
 #if FASP_USE_OPENMP
     // OMP version AMG as the iterative solver
-	else if( itsolver_type == 110) {        
+	else if( solver_type == 110) {        
         int nts = 2;
  		printf("omp test itsolver _ type = %d amgparam.max_iter = %d, amgparam.tol = %lf\n",
-                itsolver_type, amgparam.maxit, amgparam.tol);
+                solver_type, amgparam.maxit, amgparam.tol);
 		omp_set_num_threads(nts);
 		status = fasp_solver_amg_omp(&A, &b, &x, &amgparam, nts, 1000);
 	}
 #endif	
 
-	else if (itsolver_type >= 1 && itsolver_type <= 5) {
+	else if (solver_type >= 1 && solver_type <= 5) {
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
@@ -144,7 +144,7 @@ int main (int argc, const char * argv[])
 	}
 
 	else {
-		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);		
+		printf("### ERROR: Wrong solver type %d!!!\n", solver_type);		
 		exit(ERROR_SOLVER_TYPE);
 	}
 	

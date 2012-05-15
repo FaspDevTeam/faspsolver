@@ -102,14 +102,14 @@ void fasp_param_input (char *filenm,
             wall = fgets(buffer,500,fp); // skip rest of line
         }
     
-        else if (strcmp(buffer,"itsolver_type")==0) {
+        else if (strcmp(buffer,"solver_type")==0) {
             val = fscanf(fp,"%s",buffer);
             if (val!=1 || strcmp(buffer,"=")!=0) {
                 status = ERROR_INPUT_PAR; break;
             }
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
-            Input->itsolver_type = ibuff;
+            Input->solver_type = ibuff;
             wall = fgets(buffer,500,fp); // skip rest of line
         }
     
@@ -547,7 +547,7 @@ void fasp_param_input (char *filenm,
     // sanity checks
     if ( Input->problem_num<0 
          || Input->print_level<0 
-         || Input->itsolver_type<0
+         || Input->solver_type<0
          || Input->precond_type<0 
          || Input->itsolver_tol<=0 
          || Input->itsolver_maxit<=0 

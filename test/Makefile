@@ -144,50 +144,49 @@ lib: $(OBJSC) $(OBJSF)
 # Some test problems
 ########################################################################
 
-test: 
-	$(CC) $(CFLAGS) -c main/test.c -o main/test.o
+test:
+	$(CC) -c main/test.c -o main/test.o $(CFLAGS)
 	$(FC) -o test.ex main/test.o $(FLFLAGS)
 
 testbsr:
-	$(CC) $(CFLAGS) -c main/testbsr.c -o main/testbsr.o
+	$(CC) -c main/testbsr.c -o main/testbsr.o $(CFLAGS)
 	$(FC) -o testbsr.ex main/testbsr.o $(FLFLAGS)
 
 regression: 
-	$(CC) $(CFLAGS) -c main/regression.c -o main/regression.o
+	$(CC) -c main/regression.c -o main/regression.o $(CFLAGS)
 	$(FC) -o regression.ex main/regression.o $(FLFLAGS)
 
 testf: 
-	$(FC) $(CFLAGS) -c main/testf.f90 -o main/testf.o
+	$(FC) -c main/testf.f90 -o main/testf.o $(CFLAGS)
 	$(FC) -o testf.ex main/testf.o $(FLFLAGS)
 
 testmat: 
-	$(CC) $(CFLAGS) -c main/testmat.c -o main/testmat.o
+	$(CC) -c main/testmat.c -o main/testmat.o $(CFLAGS)
 	$(FC) -o testmat.ex main/testmat.o $(FLFLAGS)
 
 testrap: 
-	$(CC) $(CFLAGS) -c main/testrap.c -o main/testrap.o
+	$(CC) -c main/testrap.c -o main/testrap.o $(CFLAGS)
 	$(FC) -o testrap.ex main/testrap.o $(FLFLAGS)
 
 testfem:
-	$(CC) $(CFLAGS) -c main/testfem.c -o main/testfem.o
+	$(CC) -c main/testfem.c -o main/testfem.o $(CFLAGS)
 	$(FC) -o testfem.ex main/testfem.o $(FLFLAGS)
 
 testheat:
-	$(CC) $(CFLAGS) -c main/testheat.c -o main/testheat.o
+	$(CC) -c main/testheat.c -o main/testheat.o $(CFLAGS)
 	$(FC) -o testheat.ex main/testheat.o $(FLFLAGS)
 
 testfdm2d :
-	${CPP} $(CFLAGS) -c main/testfdm2d.cpp -o main/testfdm2d.o
+	${CPP} -c main/testfdm2d.cpp -o main/testfdm2d.o $(CFLAGS)
 	$(CPP) -o testfdm2d.ex main/testfdm2d.o $(FLFLAGS)
 
 testfdm3d :
-	${CPP} $(CFLAGS) -c main/testfdm3d.cpp -o main/testfdm3d.o
+	${CPP} -c main/testfdm3d.cpp -o main/testfdm3d.o $(CFLAGS)
 	$(CPP) -o testfdm3d.ex main/testfdm3d.o $(FLFLAGS)
 
 testomp: 
-	$(CC) $(CFLAGS) -c main/testomp.c -o main/testomp.o
+	$(CC) -c main/testomp.c -o main/testomp.o $(CFLAGS)
 	$(FC) -o testomp.ex main/testomp.o $(FLFLAGS)
-#	$(FC) -nofor_main -o testomp.ex main/testomp.o $(FLFLAGS)
 
 testall:
 	make 
