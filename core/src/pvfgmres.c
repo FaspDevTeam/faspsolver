@@ -93,6 +93,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_pvfgmres ...... [Start]\n");
+    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
 #endif    
     
     /* allocate memory */

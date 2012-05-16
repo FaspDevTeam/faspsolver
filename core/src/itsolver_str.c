@@ -7,6 +7,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "its_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -35,15 +36,19 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
                                precond *pc, 
                                itsolver_param *itparam)
 {
-    const INT print_level = itparam->print_level;
-    const INT itsolver_type = itparam->itsolver_type;
-    const INT stop_type = itparam->stop_type;
-    const REAL tol = itparam->tol; 
-    const INT MaxIt = itparam->maxit;
-    const INT restart = itparam->restart;
-    INT iter;
-    
+    const SHORT  print_level = itparam->print_level;
+    const SHORT  itsolver_type = itparam->itsolver_type;
+    const SHORT  stop_type = itparam->stop_type;
+    const SHORT  restart = itparam->restart;
+    const INT    MaxIt = itparam->maxit;
+    const REAL   tol = itparam->tol; 
+
+    // local variables
+    INT iter;    
     clock_t solver_start=clock();
+
+    /* Safe-guard checks on parameters */
+    ITS_CHECK ( MaxIt, tol );
     
     switch (itsolver_type) {
     

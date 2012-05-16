@@ -33,9 +33,13 @@ Step 2. Compile the library:
      
      [faspsolver/core]$ make
 
-Step 3. Now you can run a few test problems:
+Step 3. Now you can build a few test problems:
      
      [faspsolver/test]$ make
+
+     or, for help, use:
+     
+     [faspsolver/test]$ make help 
 
 You may want to adjust the "make.inc" for your personal computer environement 
 or choose different compiling parameters, etc. For more details, read the README

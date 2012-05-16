@@ -6,6 +6,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "its_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -36,12 +37,12 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
                                precond *pc, 
                                itsolver_param *itparam)
 {
-    const INT   print_level   = itparam->print_level;    
-    const INT   itsolver_type = itparam->itsolver_type;
-    const INT   stop_type     = itparam->stop_type;
-    const INT   MaxIt         = itparam->maxit;
-    const INT   restart       = itparam->restart;
-    const REAL  tol           = itparam->tol; 
+    const SHORT  print_level   = itparam->print_level;    
+    const SHORT  itsolver_type = itparam->itsolver_type;
+    const SHORT  stop_type     = itparam->stop_type;
+    const SHORT  restart       = itparam->restart;
+    const INT    MaxIt         = itparam->maxit;
+    const REAL   tol           = itparam->tol; 
     
     /* Local Variables */
     INT iter;
@@ -52,9 +53,12 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
-    
+
+    /* Safe-guard checks on parameters */
+    ITS_CHECK ( MaxIt, tol );
+
     /* Choose a desirable Krylov iterative solver */
-    switch (itsolver_type) {
+    switch ( itsolver_type ) {
     
     case SOLVER_CG:
         if (print_level>0) printf("Calling PCG solver ...\n");

@@ -150,11 +150,11 @@ libclean:
 	rm -f lib/libfasp.a
 
 allclean:
-	make clean
+	@-rm -f $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.o))
 	@-rm -f $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*~))
+	@-rm -f $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*.o))
 	@-rm -f $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*~))
-	rm -f lib/libfasp.a
-	rm -f *~ *.ex *.out
+	rm -f lib/libfasp.a *~
 
 help:
 	@echo "======================================================"

@@ -6,6 +6,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "its_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -44,6 +45,9 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     INT iter;
     clock_t solver_start=clock();
     
+    /* Safe-guard checks on parameters */
+    ITS_CHECK ( MaxIt, tol );
+
     switch (itsolver_type) {
     
     case SOLVER_BiCGstab:

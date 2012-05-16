@@ -27,19 +27,19 @@
 /*---------------------------*/
 
 /**
- * \brief For external software package support
+ * \brief For developers only
  */
-#define FASP_USE_ILU     ON   /**< enable ILU or not */
-#define FASP_USE_OPENMP  OFF  /**< enable OpenMP support or not */
-#define DLMALLOC         OFF  /**< use dlmalloc instead of standard malloc */
-#define NEDMALLOC        OFF  /**< use nedmalloc instead of standard malloc */
+#define DEBUG_MODE       OFF /**< output DEBUG information */
+#define CHMEM_MODE       OFF /**< output MEMORY usage information */
+#define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
 
 /**
- * \brief For internal use only
+ * \brief For external software package support
  */
-#define DEBUG_MODE       OFF  /**< output DEBUG information */
-#define CHMEM_MODE       OFF  /**< output MEMORY usage information */
-#define DIAGONAL_PREF    OFF  /**< order each row such that diagonal appears first */
+#define FASP_USE_ILU     ON  /**< enable ILU or not */
+#define FASP_USE_OPENMP  OFF /**< enable OpenMP support or not */
+#define DLMALLOC         OFF /**< use dlmalloc instead of standard malloc */
+#define NEDMALLOC        OFF /**< use nedmalloc instead of standard malloc */
 
 /**
  * \brief For Fortran compatibilty 
