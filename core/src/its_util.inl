@@ -7,7 +7,7 @@
 /*---------------------------------*/
 
 //! Warning for residual false convergence
-#define ITS_FACONV printf("### WARNING: False convergence!\n")
+#define ITS_FACONV  printf("### WARNING: False convergence!\n")
 
 //! Warning for solution close to zero
 #define ITS_ZEROSOL printf("### WARNING: Iteration stopped due to the solution is close to zero!\n")
@@ -49,10 +49,10 @@
 inline static void ITS_CHECK (const INT MaxIt, const REAL tol) 
 {    
     if ( tol < SMALLREAL ) {
-        printf("### WARNING: Tolerance for iterative solver is too small. Please enlarge it!\n");
+        printf("### WARNING: Convergence tolerance for iterative solver is too small!\n");
     }
     if ( MaxIt <= 0 ) {
-        printf("### WARNING: Maximal of number of iterations should be a POSITIVE integer!\n");
+        printf("### WARNING: Max number of iterations should be a POSITIVE integer!\n");
     }
 }
 
@@ -69,11 +69,12 @@ inline static void ITS_CHECK (const INT MaxIt, const REAL tol)
  */
 inline static void ITS_FINAL (const INT iter, const INT MaxIt, const REAL relres) 
 {
-    if (iter>MaxIt){
+    if ( iter > MaxIt ) {
         printf("Maximal iteration %d reached with relative residual %e.\n", MaxIt, relres);
     }
-    else if (iter >= 0)
+    else if ( iter >= 0 ) {
         printf("Number of iterations = %d with relative residual %e.\n", iter, relres);
+    }
 }
 
 /*---------------------------------*/

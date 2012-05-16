@@ -3,6 +3,7 @@ File Name: CHANGES
 05/17/2012 FASP 0.8.3:
 - Add safe-guard check for MaxIt and tol to prevent unexpected error in iterative methods.
 - Change the format the input files in "test/ini" slightly.
+- Make output of iterative methods more uniform.
 
 05/16/2012 FASP 0.8.2: 
 - Fix a bug in refinement. Make generation of mesh_aux data structure work for any number of elements. 

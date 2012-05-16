@@ -61,37 +61,37 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     switch ( itsolver_type ) {
     
     case SOLVER_CG:
-        if (print_level>0) printf("Calling PCG solver ...\n");
+        if ( print_level>PRINT_NONE ) printf("Calling PCG solver ...\n");
         iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
     
     case SOLVER_BiCGstab:
-        if (print_level>0) printf("Calling BiCGstab solver ...\n");
+        if ( print_level>PRINT_NONE ) printf("Calling BiCGstab solver ...\n");
         iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
     
     case SOLVER_MinRes:
-        if (print_level>0) printf("Calling MinRes solver ...\n");    
+        if ( print_level>PRINT_NONE ) printf("Calling MinRes solver ...\n");    
         iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
     
     case SOLVER_GMRES:
-        if (print_level>0) printf("Calling GMRes solver ...\n");    
+        if ( print_level>PRINT_NONE ) printf("Calling GMRes solver ...\n");    
         iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
         break;
     
     case SOLVER_VGMRES: 
-        if (print_level>0) printf("Calling vGMRes solver ...\n");    
+        if ( print_level>PRINT_NONE ) printf("Calling vGMRes solver ...\n");    
         iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
         break;
             
     case SOLVER_VFGMRES: 
-        if (print_level>0) printf("Calling vFGMRes solver ...\n");    
+        if ( print_level>PRINT_NONE ) printf("Calling vFGMRes solver ...\n");    
         iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
         break;
     
     case SOLVER_GCG:
-        if (print_level>0) printf("Calling GCG solver ...\n");
+        if ( print_level>PRINT_NONE ) printf("Calling GCG solver ...\n");
         iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
             
@@ -101,10 +101,10 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     
     } 
     
-    if ((print_level>=PRINT_SOME) && (iter >= 0)) {
+    if ( (print_level>=PRINT_SOME) && (iter >= 0) ) {
         clock_t solver_end = clock();    
         REAL solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-        print_cputime("Iterative solver", solver_duration);
+        print_cputime("Iterative method", solver_duration);
     }
     
 #if DEBUG_MODE
@@ -151,7 +151,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
     solver_start = clock();
     status = fasp_solver_dcsr_itsolver(A,b,x,NULL,itparam);
     
-    if (print_level>=PRINT_MIN) {
+    if ( print_level>=PRINT_MIN ) {
         solver_end = clock();    
         solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
         print_cputime("Krylov method totally", solver_duration);
@@ -210,7 +210,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
     // call iterative solver
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
-    if (print_level>=PRINT_MIN) {
+    if ( print_level>=PRINT_MIN ) {
         solver_end = clock();    
         solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
         print_cputime("Diag_Krylov method totally", solver_duration);
@@ -311,7 +311,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     // call iterative solver
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);    
     
-    if (print_level>=PRINT_MIN) {
+    if ( print_level>=PRINT_MIN ) {
         solver_end = clock();    
         solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
         print_cputime("AMG_Krylov method totally", solver_duration);
@@ -424,7 +424,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  * \param iluparam  Pointer to parameters for ILU
- * \param M            Pointer to the preconditioning matrix in dCSRmat format 
+ * \param M         Pointer to the preconditioning matrix in dCSRmat format 
  *
  * \return          Number of iterations if succeed
  *
@@ -476,9 +476,6 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
         solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
 
         switch (iluparam->ILU_type) {
-        case ILUk:
-            print_cputime("ILUk_Krylov method totally", solver_duration);
-            break;
         case ILUt:
             print_cputime("ILUt_Krylov method totally", solver_duration);
             break;
@@ -486,7 +483,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
             print_cputime("ILUtp_Krylov method totally", solver_duration);
             break;
         default:
-            print_cputime("ILUs_Krylov method totally", solver_duration);
+            print_cputime("ILUk_Krylov method totally", solver_duration);
             break;
         }
     }    

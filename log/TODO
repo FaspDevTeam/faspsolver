@@ -15,7 +15,7 @@ Documentation
 [ 0.5.5 ] make Doxygen comments uniform
 [ 0.5.7 ] fix missing functions and files in Doxygen
 [ 06/02 ] add more details for Doxygen (Chensong)
-[ 06/14 ] write a short user's manual -- keep it simple (Chensong)
+[ 06/14 ] write a short user's guide -- keep it simple (Chensong)
 [ 06/14 ] generate reference manual using Doxygen (Chensong)
 [ 06/20 ] make the FASP webpage ready (Chensong)
 
@@ -24,13 +24,12 @@ Structure Changes
 ========================
 	
 [ 0.4.1 ] prepare a new HG web server for release
-[       ] prepare a SVN server at PSU (Xiaozhe)
 [ 0.4.1 ] use LOGIC type (TRUE and FALSE) for "if" statements
 [ 0.4.1 ] use INT and REAL for int and double -- allows more flexible data types later
 [ 0.7.0 ] separate external packages
 [ 0.8.0 ] define repeated constants in header
-[ 05/30 ] generate shared lib's for external packages (Ludmil)
 [ 0.8.0 ] auto format for plain text, replace TAB by 4 SPACE
+[ 05/30 ] generate shared lib's for external packages (Ludmil)
 [ 06/03 ] add Automake and Autoconf support for installation (Ludmil)
 
 ========================
@@ -71,23 +70,23 @@ AMG
 [ 06/15 ] smoothing interpolation by polynomial smoothers (Xiaozhe)
 [ 06/15 ] interpolation can preserve more kernel vectors (Xiaozhe)
 
-[ 05/20 ] add block preconditioners for Stokes (Xiaozhe)
-[       ] add preconditioners for Maxwell
-[ 0.6.7 ] remove the non-GPL ILU routines
-[       ] replace the ILU smoothers from SPARSEKIT ver2.0 (Chensong)
-
 ========================
 Iterative Methods
 ========================
 
-[ 06/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
-[ 06/15 ] test SpBLAS implementations in standard libraries (Chunsheng)
-[       ] right preconditioning (Chensong)
-
 [ 0.7.8 ] reduced duplications in iterative methods
 [ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
+
+[ 06/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
+[ 06/15 ] test SpBLAS implementations in standard libraries (Chunsheng)
+[       ] right preconditioning (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
+
+[ 0.6.7 ] remove the non-GPL ILU routines
+[ 05/20 ] add block preconditioners for Stokes (Xiaozhe)
+[       ] add preconditioners for Maxwell
+[       ] replace the ILU smoothers from SPARSEKIT ver2.0 (Chensong)
 
 ========================
 Performance Test
@@ -103,8 +102,8 @@ Test and Debug
 ========================
 
 [ 0.4.1 ] start to build the debug environment
-[       ] finish the debug environment (Chensong)
 [ 0.6.0 ] build upon regression.c to make a regression test suite
+[       ] finish the debug environment (Chensong)
 [       ] add a new unit test tool for FASP, e.g. CHECK (Chensong)
 
 ========================
@@ -114,8 +113,8 @@ Test Examples
 [ 0.6.0 ] add 5pt and 7pt FDM codes for Poisson 
 [ 0.6.0 ] modularize the Poisson equation code
 [ 0.6.4 ] optimize refine code and assembling code
-[       ] add hierachical basis for Poisson (Chensong)
 [ 0.6.4 ] add Heat equation as a test example
+[       ] add hierachical basis for Poisson (Chensong)
 [       ] add P2-P0 for Stokes (Xiaozhe)
 [       ] add MAC for Stokes (Xiaozhe)
 [       ] add FEM for Stokes from Adler and Ludmil (Ludmil)
@@ -125,7 +124,7 @@ Test Examples
 [       ] make a GUI for test problems (Ludmil)
 
 [ 0.4.1 ] build "tutorial" dir for simple examples (Chensong)
-[ 05/26 ] add examples in "tutorial" and modify user's manual accordingly (Chensong)
+[ 0.8.2 ] add examples in "tutorial" and modify user's guide accordingly
 [ 05/30 ] make online help pages for several tutorial examples (Chensong)
 
 ========================

@@ -1,6 +1,6 @@
 Fast Auxiliary Space Preconditioning (FASP) Solver Package README
 
-Last modified on 04/24/2012 by Chensong Zhang
+Last modified on 05/16/2012 by Chensong Zhang
 ================================================================================
 
 The FASP package is designed for developing and testing new efficient solvers 
@@ -23,6 +23,21 @@ along with FASP. If not, see <http://www.gnu.org/licenses/>.
 
 ================================================================================
 
+To compile, you need a Fortran and a C compiler. By default, we use gfortan 
+and gcc, respectively; see Makefile for details. 
+
+This package has been tested with: 
+
+--Linux and Mac
+    C/C++:   gcc-4.2, gcc-4.4, gcc-4.5, gcc-4.6, icc-11.x; 
+    Fortran: gfortran-4.4, gfortran-4.5, gfortran-4.6, g95-0.92, ifort-11.x.
+
+--Windows XP and Windows Vista
+    C/C++:   VC++ 2005, VC++ 2008, icc-11.1.x, icc-12.0.x;
+    Fortran: ifort-11.1.x, ifort-12.0.x. 
+
+================================================================================
+
 To setup the environment, you need to do two simple steps: 
 
 Step 1. Setup directories for FASP:
@@ -37,7 +52,7 @@ Step 3. Now you can build a few test problems:
      
      [faspsolver/test]$ make
 
-     or, for help, use:
+     For helps on building, use:
      
      [faspsolver/test]$ make help 
 

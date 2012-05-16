@@ -53,22 +53,22 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
     switch (itsolver_type) {
     
     case SOLVER_CG: 
-        if (print_level>PRINT_NONE) printf("Calling CG solver (STR format) ...\n");
+        if ( print_level>PRINT_NONE ) printf("Calling CG solver (STR) ...\n");
         iter=fasp_solver_dstr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
     
     case SOLVER_BiCGstab:
-        if (print_level>PRINT_NONE) printf("Calling BiCGstab solver (STR format) ...\n");
+        if ( print_level>PRINT_NONE ) printf("Calling BiCGstab solver (STR) ...\n");
         iter=fasp_solver_dstr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
     
     case SOLVER_GMRES:
-        if (print_level>PRINT_NONE) printf("Calling GMRES solver (STR format) ...\n");
+        if ( print_level>PRINT_NONE ) printf("Calling GMRES solver (STR) ...\n");
         iter=fasp_solver_dstr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
         break;    
     
     case SOLVER_VGMRES:
-        if (print_level>PRINT_NONE) printf("Calling vGMRES solver (STR format) ...\n");
+        if ( print_level>PRINT_NONE ) printf("Calling vGMRES solver (STR) ...\n");
         iter=fasp_solver_dstr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
         break;    
     
@@ -78,10 +78,10 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
     
     }
     
-    if ((print_level>PRINT_MIN) && (iter >= 0)) {
+    if ( (print_level>PRINT_MIN) && (iter >= 0) ) {
         clock_t solver_end=clock();    
         REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-        printf("Iterative solver costs %f seconds.\n", solver_duration);
+        print_cputime("Iterative method", solver_duration);
     }
     
     return iter;
@@ -93,9 +93,9 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param A            Pointer to the dSTRmat matrix
- * \param b            Pointer to the dvector of right hand side
- * \param x            Pointer to the dvector of dofs
+ * \param A         Pointer to the dSTRmat matrix
+ * \param b         Pointer to the dvector of right hand side
+ * \param x         Pointer to the dvector of dofs
  * \param itparam   Pointer to parameters for iterative solvers
  *
  * \return          Number of iterations if succeed
@@ -111,16 +111,16 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
     const INT print_level = itparam->print_level;
     INT status = SUCCESS;
     clock_t solver_start, solver_end;
-    REAL solver_duration;
     
     // solver part
     solver_start=clock();
     status=fasp_solver_dstr_itsolver(A,b,x,NULL,itparam);
     solver_end=clock();
     
-    solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-    
-    if (print_level>PRINT_NONE) printf("Solver costs %f seconds.\n", solver_duration);
+    if (print_level>=PRINT_MIN) {
+        REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+        print_cputime("Krylov method totally", solver_duration);
+    }
     
     return status;
 }
@@ -131,9 +131,9 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
- * \param A            Pointer to the dSTRmat matrix
- * \param b            Pointer to the dvector of right hand side
- * \param x            Pointer to the dvector of dofs
+ * \param A         Pointer to the dSTRmat matrix
+ * \param b         Pointer to the dvector of right hand side
+ * \param x         Pointer to the dvector of dofs
  * \param itparam   Pointer to parameters for iterative solvers
  *
  * \return          Number of iterations if succeed
@@ -175,7 +175,8 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
     
     solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
     
-    if (print_level>PRINT_NONE) printf("Solver costs %f seconds.\n", solver_duration);
+    if (print_level>=PRINT_MIN) 
+        print_cputime("Diag_Krylov method totally", solver_duration);
     
     return status;
 }
@@ -186,9 +187,9 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
  *
  * \brief Solve Ax=b by structured ILU preconditioned Krylov methods 
  *
- * \param A            Pointer to the dSTRmat matrix
- * \param b            Pointer to the dvector of right hand side
- * \param x            Pointer to the dvector of dofs
+ * \param A         Pointer to the dSTRmat matrix
+ * \param b         Pointer to the dvector of right hand side
+ * \param x         Pointer to the dvector of dofs
  * \param itparam   Pointer to parameters for iterative solvers
  * \param iluparam  Pointer to parameters for ILU
  *
@@ -227,7 +228,8 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
     
     setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
     
-    if (print_level>PRINT_NONE) printf("structrued ILU(%d) setup costs %f seconds.\n", ILU_lfil, setup_duration);
+    if (print_level>PRINT_NONE) 
+        printf("structrued ILU(%d) setup costs %f seconds.\n", ILU_lfil, setup_duration);
     
     precond pc; pc.data=&LU;
     if (ILU_lfil == 0) {
@@ -245,12 +247,12 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
     solver_start=clock();
     status=fasp_solver_dstr_itsolver(A,b,x,&pc,itparam);
     solver_end=clock();
-    
-    solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-    
-    if (print_level>PRINT_NONE) printf("Iterative solver costs %f seconds.\n", solver_duration);
-    
-    if (print_level>PRINT_NONE) printf("Solver costs %f seconds.\n", setup_duration + solver_duration);
+        
+    if (print_level>=PRINT_MIN) {
+        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+        printf("Iterative solver costs %f seconds.\n", solver_duration);
+        print_cputime("ILU_Krylov method totally", setup_duration+solver_duration);
+    }
     
     fasp_dstr_free(&LU);
     
@@ -259,13 +261,14 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
 
 /**
  * \fn INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A, dvector *b, dvector *x, 
- *                                          itsolver_param *itparam, ivector *neigh, ivector *order)
+ *                                          itsolver_param *itparam, ivector *neigh,
+ *                                          ivector *order)
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
  * \param A         Pointer to the dSTRmat matrix
- * \param b            Pointer to the dvector of right hand side
- * \param x            Pointer to the dvector of dofs
+ * \param b         Pointer to the dvector of right hand side
+ * \param x         Pointer to the dvector of dofs
  * \param itparam   Pointer to parameters for iterative solvers
  * \param neigh     Pointer to neighbor vector
  * \param order     Pointer to solver ordering
@@ -312,13 +315,13 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
     pcdata.order = order;
     pcdata.neigh = neigh;
     
-    precond pc; pc.data = &pcdata; pc.fct  = fasp_precond_dstr_blockgs;
+    precond pc; pc.data = &pcdata; pc.fct = fasp_precond_dstr_blockgs;
     
     setup_end=clock();
     
     if (print_level>PRINT_NONE) {
         setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);      
-        printf("setup costs %f seconds.\n", setup_duration);
+        printf("Preconditioner setup costs %f seconds.\n", setup_duration);
     }
     
     // solver part
@@ -326,10 +329,10 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
     status=fasp_solver_dstr_itsolver(A,b,x,&pc,itparam);
     solver_end=clock();
     
-    if (print_level>PRINT_NONE) {
+    if (print_level>=PRINT_MIN) {
         solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-        printf("solve costs %f seconds.\n", solver_duration);
-        printf("Solver costs %f seconds.\n", solver_duration+setup_duration);
+        printf("Iterative solver costs %f seconds.\n", solver_duration);
+        print_cputime("BlockGS_Krylov method totally", setup_duration+solver_duration);
     }
     
     return status;

@@ -6,7 +6,7 @@ last modified on 04/25/2012
 
 
 ================================
-0. Introduction
+1. Introduction
 ================================
 This directory contains a set of problems for regression tests and tools for 
 developing the FASP package.
@@ -31,7 +31,7 @@ along with FASP. If not, see <http://www.gnu.org/licenses/>.
 
 
 ================================
-1. Build
+2. Build
 ================================
 To compile, you need a Fortran and a C compiler. By default, we use gfortan 
 and gcc, respectively; see Makefile for details. 
@@ -58,7 +58,7 @@ There are other test problems included in this directory. To see more details, t
 
 
 ================================
-2. Test
+3. Test
 ================================
 By running the executable test.ex, we can get numerical results for different test 
 examples. The terminal command to invoke the test problems is
@@ -69,7 +69,7 @@ which tests a bunch of solvers at a single call.
 
 
 ================================
-3. Input
+4. Input
 ================================
 And test.ex reads parameters from ini/input.dat, where you can choose:
 
@@ -104,12 +104,12 @@ refer to the user documentation.
 
 
 ================================
-4. Tree Structure
+5. Tree Structure
 ================================
   - data:    Test data files
-  - src:     Source codes
   - include: Header files
   - ini:     Input files for parameters
   - lib:     Libraries 
   - main:    Test functions in C and Fortran
-  - output:  Output files
+  - out:     Output files
+  - src:     Source codes

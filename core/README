@@ -32,31 +32,13 @@ along with FASP. If not, see <http://www.gnu.org/licenses/>.
 1. Tree Structure
 ================================
     - src:     source codes
-    - doc:     user documentation in HTML and TeX
     - include: header files
     - lib:     libraries 
     - extra:   external files optional for FASP
 
 
 ================================
-2. Compiler
-================================
-To compile, you need a Fortran and a C compiler. By default, we use gfortan 
-and gcc, respectively; see Makefile for details. 
-
-This package has been tested with: 
-
---Linux and Mac
-    C/C++:   gcc-4.2, gcc-4.4, gcc-4.5, gcc-4.6, icc-11.x; 
-    Fortran: gfortran-4.4, gfortran-4.5, gfortran-4.6, g95-0.92, ifort-11.x.
-
---Windows XP and Windows Vista
-    C/C++:   VC++ 2005, VC++ 2008, icc-11.1.x, icc-12.0.x;
-    Fortran: ifort-11.1.x, ifort-12.0.x. 
-
-
-================================
-3. Build
+2. Build
 ================================
 You can make the header file using (You can skip this step as the headers files 
 have already been generated for you initially): 
@@ -86,7 +68,7 @@ If you need any help, you can type:
 
 
 ================================
-4. Test Problems
+3. Test Problems
 ================================
 Now you are ready to use the library. If you need to see some test problems, go to 
 the "../test" directory for test problems and read the README file therein as well. 

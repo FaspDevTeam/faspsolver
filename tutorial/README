@@ -1,13 +1,13 @@
 Fast Auxiliary Space Preconditioning (FASP) Solver Package README
 
--- Simple examples
+-- Tutorial examples
 
 last modified on 04/25/2012 by Chensong Zhang
 ==================================================
 
 
 ================================
-0. Introduction
+1. Introduction
 ================================
 This directory contains a set of examples for the FASP package.
 
@@ -31,7 +31,7 @@ along with FASP. If not, see <http://www.gnu.org/licenses/>.
 
 
 ================================
-1. Build
+2. Build
 ================================
 To compile, you need a Fortran and a C compiler. By default, we use gfortan 
 and gcc, respectively; see Makefile for details. 
@@ -56,10 +56,9 @@ If you need any extra help, please
 
 
 ================================
-2. Tree Structure
+3. Tree Structure
 ================================
   - data:    Test data
   - ini:     Input files for parameters
-  - lib:     Libraries 
   - main:    Test functions in C and Fortran
   - out:     Output files

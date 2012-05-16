@@ -51,22 +51,22 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     switch (itsolver_type) {
     
     case SOLVER_BiCGstab:
-        if (print_level>0) printf("Calling BiCGstab solver (BSR format) ...\n");
+        if ( print_level>PRINT_NONE ) printf("Calling BiCGstab solver (BSR format) ...\n");
         iter=fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
     
     case SOLVER_GMRES:
-        if (print_level>0) printf("Calling GMRES solver (BSR format) ...\n");
+        if ( print_level>PRINT_NONE ) printf("Calling GMRES solver (BSR format) ...\n");
         iter=fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
         break;    
     
     case SOLVER_VGMRES:
-        if (print_level>0) printf("Calling vGMRES solver (BSR format) ...\n");
+        if ( print_level>PRINT_NONE ) printf("Calling vGMRES solver (BSR format) ...\n");
         iter=fasp_solver_dbsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
         break;    
             
     case SOLVER_VFGMRES: 
-        if (print_level>0) printf("Calling vFGMRes solver (BSR format) ...\n");    
+        if ( print_level>PRINT_NONE ) printf("Calling vFGMRes solver (BSR format) ...\n");    
         iter = fasp_solver_dbsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
         break;
     
@@ -76,10 +76,10 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     
     }
     
-    if ((print_level>PRINT_MIN) && (iter >= 0)) {
+    if ( (print_level>PRINT_MIN) && (iter >= 0) ) {
         clock_t solver_end=clock();    
         REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-        printf("Iterative solver costs %f seconds.\n", solver_duration);
+        print_cputime("Iterative method", solver_duration);
     }
     
     return iter;
@@ -109,16 +109,15 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
     const SHORT print_level = itparam->print_level;
     INT status = SUCCESS;
     clock_t solver_start, solver_end;
-    REAL solver_duration;
     
     // solver part
     solver_start=clock();
     status=fasp_solver_dbsr_itsolver(A,b,x,NULL,itparam);
     solver_end=clock();
     
-    if (print_level>PRINT_NONE) {
-        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-        printf("Solver costs %f seconds.\n", solver_duration);
+    if ( print_level>PRINT_NONE ) {
+        REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+        print_cputime("Krylov method totally", solver_duration);
     }
     
     return status;
@@ -148,7 +147,6 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
     const SHORT print_level = itparam->print_level;
     INT status = SUCCESS;
     clock_t solver_start, solver_end;
-    REAL solver_duration;
     
     INT nb=A->nb,i,k;
     INT nb2=nb*nb;
@@ -179,9 +177,9 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
     status=fasp_solver_dbsr_itsolver(A,b,x,pc,itparam);
     solver_end=clock();
     
-    if (print_level>0) {
-        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-        printf("Solver costs %f seconds.\n", solver_duration);
+    if ( print_level>PRINT_NONE ) {
+        REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+        print_cputime("Diag_Krylov method totally", solver_duration);
     }    
     
     // clean up
@@ -215,7 +213,6 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
 {
     const SHORT print_level = itparam->print_level;    
     clock_t solver_start, solver_end;
-    REAL solver_duration;
     INT status = SUCCESS;
     
     ILU_data LU; 
@@ -241,9 +238,9 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
     status=fasp_solver_dbsr_itsolver(A,b,x,&pc,itparam);
     solver_end=clock();    
     
-    if (print_level>PRINT_NONE) {
-        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-        printf("ILU(%d)_Krylov solver costs %f seconds.\n", iluparam->ILU_lfil,solver_duration);
+    if ( print_level>PRINT_NONE ) {
+        REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+        print_cputime("ILUk_Krylov method totally", solver_duration);
     }
     
  FINISHED: 
@@ -281,8 +278,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
                                  dvector *b, 
                                  dvector *x, 
                                  itsolver_param *itparam, 
-                                 AMG_param *amgparam 
-                                 )
+                                 AMG_param *amgparam)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
@@ -347,6 +343,10 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
         prec.fct = fasp_precond_dbsr_amg; break;
     }
     
+    if ( print_level>=PRINT_MIN ) {
+        print_cputime("CPR setup", setup_duration);
+    }
+
     //--------------------------------------------------------------
     // Part 3: solver
     //--------------------------------------------------------------
@@ -356,10 +356,8 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     
     solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
     
-    if (print_level>0) {
-        printf("Setup costs %f seconds.\n", setup_duration);
-        printf("Iterative solver costs %f seconds.\n", solver_duration);
-        printf ("BSR_CPR_krylov method totally costs %f seconds.\n", setup_duration + solver_duration);
+    if ( print_level>=PRINT_MIN ) {
+        print_cputime("CPR_Krylov method totally", setup_duration+solver_duration);
     }
     
  FINISHED:
