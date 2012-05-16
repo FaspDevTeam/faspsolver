@@ -105,15 +105,15 @@ dSTRmat fasp_dstr_create (INT nx,
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   05/17/2010  
  */
-void fasp_dstr_alloc(INT nx, 
-                     INT ny, 
-                     INT nz, 
-                     INT nxy, 
-                     INT ngrid, 
-                     INT nband, 
-                     INT nc,
-                     INT *offsets, 
-                     dSTRmat *A)
+void fasp_dstr_alloc (INT nx, 
+                      INT ny, 
+                      INT nz, 
+                      INT nxy, 
+                      INT ngrid, 
+                      INT nband, 
+                      INT nc,
+                      INT *offsets, 
+                      dSTRmat *A)
 {    
     INT i;
     

@@ -5,16 +5,16 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-// Standard linked list functions mimicing hypre
-static void dispose_elt (LinkList element_ptr);
-static void remove_point (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, INT measure, INT index, INT *lists, INT *where);
-static LinkList create_elt (INT Item);
+// These linked list operations are adapted from hypre 2.0
+static LinkList create_node (INT Item);
+static void dispose_node (LinkList node_ptr);
 static void enter_list (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, INT measure, INT index, INT *lists, INT *where);
+static void remove_node (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, INT measure, INT index, INT *lists, INT *where);
 
-// private routines for RS coarsening
+// Private routines for RS coarsening
+static INT form_coarse_level (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row);
 static void generate_S (dCSRmat *A, iCSRmat *S, AMG_param *param);
 static void generate_S_rs (dCSRmat *A, iCSRmat *S, REAL epsilon_str, INT coarsening_type);
-static INT form_coarse_level (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row);
 static void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col);
 
 /*---------------------------------*/
@@ -118,35 +118,35 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
 #define LIST_TAIL -2 /**< tail of the linked list */
 
 /**
- * \fn static void dispose_elt( LinkList element_ptr )
+ * \fn static void dispose_node( LinkList node_ptr )
  *
- * \brief Free memory space used by element_ptr
+ * \brief Free memory space used by node_ptr
  *
- * \param element_ptr   Pointer to the elements
+ * \param node_ptr   Pointer to the node in linked list
  * 
  * \author Xuehai Huang
  * \date   09/06/2009
  */
-static void dispose_elt (LinkList element_ptr)
+static void dispose_node (LinkList node_ptr)
 {
-    if (element_ptr) fasp_mem_free( element_ptr );
+    if (node_ptr) fasp_mem_free( node_ptr );
 }
 
 /**
- * \fn static void remove_point (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
- *                               INT measure, INT index, INT *lists, INT *where)
+ * \fn static void remove_node (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
+ *                              INT measure, INT index, INT *lists, INT *where)
  *
  * \brief Removes a point from the lists
  * 
  * \author Xuehai Huang
  * \date   09/06/2009
  */
-static void remove_point (LinkList *LoL_head_ptr, 
-                          LinkList *LoL_tail_ptr,
-                          INT measure, 
-                          INT index, 
-                          INT *lists, 
-                          INT *where)
+static void remove_node (LinkList *LoL_head_ptr, 
+                         LinkList *LoL_tail_ptr,
+                         INT measure, 
+                         INT index, 
+                         INT *lists, 
+                         INT *where)
 {
     LinkList LoL_head = *LoL_head_ptr;
     LinkList LoL_tail = *LoL_tail_ptr;
@@ -161,34 +161,34 @@ static void remove_point (LinkList *LoL_head_ptr,
                 if (list_ptr == LoL_head && list_ptr == LoL_tail) {
                     LoL_head = NULL;
                     LoL_tail = NULL;
-                    dispose_elt(list_ptr);
+                    dispose_node(list_ptr);
     
                     *LoL_head_ptr = LoL_head;
                     *LoL_tail_ptr = LoL_tail;
                     return;
                 }
                 else if (LoL_head == list_ptr) { /*removing 1st (max_measure) list */
-                    list_ptr -> next_elt -> prev_elt = NULL;
-                    LoL_head = list_ptr->next_elt;
-                    dispose_elt(list_ptr);
+                    list_ptr -> next_node -> prev_node = NULL;
+                    LoL_head = list_ptr->next_node;
+                    dispose_node(list_ptr);
     
                     *LoL_head_ptr = LoL_head;
                     *LoL_tail_ptr = LoL_tail;
                     return;
                 }
                 else if (LoL_tail == list_ptr) { /* removing last list */
-                    list_ptr -> prev_elt -> next_elt = NULL;
-                    LoL_tail = list_ptr->prev_elt;
-                    dispose_elt(list_ptr);
+                    list_ptr -> prev_node -> next_node = NULL;
+                    LoL_tail = list_ptr->prev_node;
+                    dispose_node(list_ptr);
     
                     *LoL_head_ptr = LoL_head;
                     *LoL_tail_ptr = LoL_tail;
                     return;
                 }
                 else {
-                    list_ptr -> next_elt -> prev_elt = list_ptr -> prev_elt;
-                    list_ptr -> prev_elt -> next_elt = list_ptr -> next_elt;
-                    dispose_elt(list_ptr);
+                    list_ptr -> next_node -> prev_node = list_ptr -> prev_node;
+                    list_ptr -> prev_node -> next_node = list_ptr -> next_node;
+                    dispose_node(list_ptr);
     
                     *LoL_head_ptr = LoL_head;
                     *LoL_tail_ptr = LoL_tail;
@@ -211,7 +211,7 @@ static void remove_point (LinkList *LoL_head_ptr,
                 return;
             }
         }
-        list_ptr = list_ptr -> next_elt;
+        list_ptr = list_ptr -> next_node;
     } while (list_ptr != NULL);
     
     printf("No such list!\n");
@@ -219,29 +219,29 @@ static void remove_point (LinkList *LoL_head_ptr,
 }
 
 /**
- * \fn static LinkList create_elt (INT Item)
+ * \fn static LinkList create_node (INT Item)
  *
- * \brief Create an element using Item for its data field
+ * \brief Create an node using Item for its data field
  * 
  * \author Xuehai Huang
  * \date   09/06/2009
  */
-static LinkList create_elt (INT Item)
+static LinkList create_node (INT Item)
 {
-    LinkList new_elt_ptr;
+    LinkList new_node_ptr;
     
     /* Allocate memory space for the new node. 
      * return with error if no space available
      */    
-    new_elt_ptr = (LinkList) fasp_mem_calloc(1,sizeof(ListElement));
+    new_node_ptr = (LinkList) fasp_mem_calloc(1,sizeof(ListElement));
     
-    new_elt_ptr -> data = Item;
-    new_elt_ptr -> next_elt = NULL;
-    new_elt_ptr -> prev_elt = NULL;
-    new_elt_ptr -> head = LIST_TAIL;
-    new_elt_ptr -> tail = LIST_HEAD;
+    new_node_ptr -> data = Item;
+    new_node_ptr -> next_node = NULL;
+    new_node_ptr -> prev_node = NULL;
+    new_node_ptr -> head = LIST_TAIL;
+    new_node_ptr -> tail = LIST_HEAD;
     
-    return (new_elt_ptr);
+    return (new_node_ptr);
 }
 
 /**
@@ -261,17 +261,16 @@ static void enter_list (LinkList *LoL_head_ptr,
                         INT *where)
 {
     LinkList   LoL_head = *LoL_head_ptr;
-    LinkList   LoL_tail = *LoL_tail_ptr;
-    
+    LinkList   LoL_tail = *LoL_tail_ptr;    
     LinkList   list_ptr;
     LinkList   new_ptr;
     
-    INT         old_tail;
+    INT        old_tail;
     
     list_ptr =  LoL_head;
     
     if (LoL_head == NULL) { /* no lists exist yet */
-        new_ptr = create_elt(measure);
+        new_ptr = create_node(measure);
         new_ptr->head = index;
         new_ptr->tail = index;
         lists[index] = LIST_TAIL;
@@ -286,7 +285,7 @@ static void enter_list (LinkList *LoL_head_ptr,
     else {
         do {
             if (measure > list_ptr->data) {
-                new_ptr = create_elt(measure);
+                new_ptr = create_node(measure);
     
                 new_ptr->head = index;
                 new_ptr->tail = index;
@@ -294,16 +293,16 @@ static void enter_list (LinkList *LoL_head_ptr,
                 lists[index] = LIST_TAIL;
                 where[index] = LIST_HEAD;
     
-                if ( list_ptr->prev_elt != NULL) { 
-                    new_ptr->prev_elt            = list_ptr->prev_elt;
-                    list_ptr->prev_elt->next_elt = new_ptr;   
-                    list_ptr->prev_elt           = new_ptr;
-                    new_ptr->next_elt            = list_ptr;
+                if ( list_ptr->prev_node != NULL) { 
+                    new_ptr->prev_node            = list_ptr->prev_node;
+                    list_ptr->prev_node->next_node = new_ptr;   
+                    list_ptr->prev_node           = new_ptr;
+                    new_ptr->next_node            = list_ptr;
                 }
                 else {
-                    new_ptr->next_elt  = list_ptr;
-                    list_ptr->prev_elt = new_ptr;
-                    new_ptr->prev_elt  = NULL;
+                    new_ptr->next_node  = list_ptr;
+                    list_ptr->prev_node = new_ptr;
+                    new_ptr->prev_node  = NULL;
                     LoL_head = new_ptr;
                 }
     
@@ -320,17 +319,17 @@ static void enter_list (LinkList *LoL_head_ptr,
                 return;
             }
             
-            list_ptr = list_ptr->next_elt;
+            list_ptr = list_ptr->next_node;
         } while (list_ptr != NULL);
     
-        new_ptr = create_elt(measure);   
+        new_ptr = create_node(measure);   
         new_ptr->head = index;
         new_ptr->tail = index;
         lists[index] = LIST_TAIL;
         where[index] = LIST_HEAD;
-        LoL_tail->next_elt = new_ptr;
-        new_ptr->prev_elt = LoL_tail;
-        new_ptr->next_elt = NULL;
+        LoL_tail->next_node = new_ptr;
+        new_ptr->prev_node = LoL_tail;
+        new_ptr->next_node = NULL;
         LoL_tail = new_ptr;
     
         *LoL_head_ptr = LoL_head;
@@ -614,7 +613,7 @@ static INT form_coarse_level (dCSRmat *A,
                         if (j<i) {
                             new_meas=lambda[j];
                             if (new_meas>0) {
-                                remove_point(&LoL_head, &LoL_tail, new_meas, j, lists, where);
+                                remove_node(&LoL_head, &LoL_tail, new_meas, j, lists, where);
                             }
                             new_meas= ++(lambda[j]);
                             enter_list(&LoL_head, &LoL_tail,  new_meas, j, lists, where);
@@ -639,7 +638,7 @@ static INT form_coarse_level (dCSRmat *A,
         vec[maxnode]=CGPT; // set maxnode as coarse node
         lambda[maxnode]=0;
         --num_left;
-        remove_point(&LoL_head, &LoL_tail, maxlambda, maxnode, lists, where);
+        remove_node(&LoL_head, &LoL_tail, maxlambda, maxnode, lists, where);
         col++;
     
         // for all $j\in S_i^T\cap U: F:=F\cup\{j\}, U:=U\backslash\{j\}$
@@ -649,14 +648,14 @@ static INT form_coarse_level (dCSRmat *A,
             /* if j is unkown */
             if (vec[j]==UNPT) {
                 vec[j]=FGPT;  // set j as fine node
-                remove_point(&LoL_head, &LoL_tail, lambda[j], j, lists, where);
+                remove_node(&LoL_head, &LoL_tail, lambda[j], j, lists, where);
                 --num_left;
     
                 for (l=S->IA[j];l<S->IA[j+1];l++) {
                     k=S->JA[l];
                     if (vec[k]==UNPT) // k is unkown
                         {
-                            remove_point(&LoL_head, &LoL_tail, lambda[k], k, lists, where);
+                            remove_node(&LoL_head, &LoL_tail, lambda[k], k, lists, where);
                             new_meas= ++(lambda[k]);
                             enter_list(&LoL_head, &LoL_tail,new_meas, k, lists, where);
                         }
@@ -669,7 +668,7 @@ static INT form_coarse_level (dCSRmat *A,
             j=S->JA[i];
             if (vec[j]==UNPT) { // j is unkown
                 measure=lambda[j];
-                remove_point(&LoL_head, &LoL_tail,measure, j, lists, where);
+                remove_node(&LoL_head, &LoL_tail,measure, j, lists, where);
                 lambda[j]=--measure;
                 if (measure>0) {
                     enter_list(&LoL_head, &LoL_tail,measure, j, lists, where);
@@ -681,7 +680,7 @@ static INT form_coarse_level (dCSRmat *A,
                     for (l=S->IA[j];l<S->IA[j+1];l++) {
                         k=S->JA[l];
                         if (vec[k]==UNPT) { // k is unkown
-                            remove_point(&LoL_head, &LoL_tail, lambda[k], k, lists, where);
+                            remove_node(&LoL_head, &LoL_tail, lambda[k], k, lists, where);
                             new_meas= ++(lambda[k]);
                             enter_list(&LoL_head, &LoL_tail,new_meas, k, lists, where);
                         }
@@ -693,9 +692,9 @@ static INT form_coarse_level (dCSRmat *A,
     
     if (LoL_head) {
         list_ptr=LoL_head;
-        LoL_head->prev_elt=NULL;
-        LoL_head->next_elt=NULL;
-        LoL_head = list_ptr->next_elt;
+        LoL_head->prev_node=NULL;
+        LoL_head->next_node=NULL;
+        LoL_head = list_ptr->next_node;
         fasp_mem_free(list_ptr);
     }
     
@@ -765,7 +764,8 @@ static INT form_coarse_level (dCSRmat *A,
 }
 
 /**
- * \fn static void generate_sparsity_P (dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col)
+ * \fn static void generate_sparsity_P (dCSRmat *P, iCSRmat *S, ivector *vertices, 
+ *                                      INT row, INT col)
  *
  * \brief Find coarse level points
  *

@@ -482,7 +482,8 @@ void fasp_dstr_read (char *filename,
  * \author Xiaozhe Hu
  * \date   10/29/2010 
  */
-void fasp_dbsr_read (char *filename, dBSRmat *A)
+void fasp_dbsr_read (char *filename, 
+                     dBSRmat *A)
 {
     INT  ROW, COL, NNZ, nb, storage_manner;
     INT  i, n;

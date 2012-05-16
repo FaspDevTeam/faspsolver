@@ -19,14 +19,16 @@
  *
  * \param mgl      Pointer to AMG_data data
  * \param param    Pointer to AMG parameters
- * \param level    Number of levels
+ * \param level    Index of the current level
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   04/06/2010
  *
  * Modified by Chensong on 01/10/2012
  */
-void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level)
+void fasp_solver_mgrecur (AMG_data *mgl, 
+                          AMG_param *param, 
+                          INT level)
 {    
 
     const SHORT  print_level = param->print_level;

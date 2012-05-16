@@ -35,11 +35,7 @@ int main (int argc, const char * argv[])
     fasp_param_init("ini/amg.dat",&inparam,NULL,&amgparam,NULL);
     
     // Set local parameters using the input values
-    const int print_level   = inparam.print_level;
-    const int problem_num   = inparam.problem_num;
-    const int itsolver_type = inparam.itsolver_type;
-    const int precond_type  = inparam.precond_type;
-    const int output_type   = inparam.output_type;
+    const int print_level = inparam.print_level;
     
     // Step 1. Get stiffness matrix and right-hand side
     // Read A and b -- P1 FE discretization for Poisson.

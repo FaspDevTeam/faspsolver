@@ -92,7 +92,7 @@ extern unsigned INT total_alloc_mem;   /**< total allocated memory */
 extern unsigned INT total_alloc_count; /**< total allocation times */
 
 /*---------------------------*/ 
-/*---   Data structures   ---*/
+/*---  Matrix and vector  ---*/
 /*---------------------------*/ 
 
 /** 
@@ -257,32 +257,6 @@ typedef struct dCSRLmat{
 } dCSRLmat; /**< Sparse matrix of REAL type in CSRL format */
 
 /** 
- * \struct dvector
- * \brief Vector with n entries of REAL type.
- */
-typedef struct dvector{
-	
-    //! number of rows
-	INT row;
-    //! actual vector entries
-	REAL *val;
-	
-} dvector; /**< Vector of REAL type */
-
-/** 
- * \struct ivector
- * \brief Vector with n entries of INT type.
- */
-typedef struct ivector{
-	
-    //! number of rows
-	INT row;
-    //! actual vector entries
-	INT *val;
-	
-} ivector; /**< Vector of INT type */
-
-/** 
  * \struct dSTRmat
  * \brief Structure matrix of REAL type.
  *
@@ -318,6 +292,32 @@ typedef struct dSTRmat{
 	REAL **offdiag;
 	
 } dSTRmat; /**< Structured matrix of REAL type */
+
+/** 
+ * \struct dvector
+ * \brief Vector with n entries of REAL type.
+ */
+typedef struct dvector{
+	
+    //! number of rows
+	INT row;
+    //! actual vector entries
+	REAL *val;
+	
+} dvector; /**< Vector of REAL type */
+
+/** 
+ * \struct ivector
+ * \brief Vector with n entries of INT type.
+ */
+typedef struct ivector{
+	
+    //! number of rows
+	INT row;
+    //! actual vector entries
+	INT *val;
+	
+} ivector; /**< Vector of INT type */
 
 /*---------------------------*/ 
 /*--- Parameter structures --*/
@@ -592,9 +592,7 @@ typedef struct {
 	
 	//! ILU preconditioner data (needed for CPR type preconditioner)
 	ILU_data *LU;
-	
-	// Matrix data
-    
+	    
     //! whether the matrx are scaled or not
 	SHORT scaled;
     //! the orginal CSR matrix
@@ -768,6 +766,7 @@ typedef struct {
  *		 vertex i has two coordinates p[i]
  */
 typedef struct grid2d {
+
 	REAL (*p)[2]; /**< Coordinates of vertices */
 	INT (*e)[2]; /**< Vertices of edges */
 	INT (*t)[3]; /**< Vertices of triangles */
@@ -782,42 +781,47 @@ typedef struct grid2d {
 	INT vertices; /**< Number of grid points */
 	INT edges; /**< Number of edges */
 	INT triangles; /**< Number of triangles */
+
 } grid2d; /**< 2D grid type for plotting */
+
 typedef grid2d *pgrid2d; /**< Grid in 2d */
+
 typedef const grid2d *pcgrid2d; /**< Grid in 2d */
 
 /**
  * \struct Link
- * \brief Struct for linked lists.
- *
+ * \brief Struct for Links
  */
 typedef struct
 {
+
 	//! previous node in the linklist
 	INT prev;
 	//! next node in the linklist
 	INT next;
 	
-} Link; /**< Links */
+} Link; /**< General data structure for Links */
 
 /** 
  * \struct linked_list
- * \brief Standard linked list element, adapted from hypre2.0
+ * \brief A linked list node
+ * \note This definition is adapted from hypre 2.0.
  */
 typedef struct linked_list
 {
-	
+    
     //! data
 	INT data;
-	//! next element
-	struct linked_list *next_elt;
-	//! previous element
-	struct linked_list *prev_elt;
-	//! starting of the list
+    //! starting of the list
 	INT head;
 	//! ending of the list
 	INT tail;
-	
+
+    //! next node
+	struct linked_list *next_node;
+	//! previous node
+	struct linked_list *prev_node;
+        
 } ListElement; /**< Linked element in list */
 
 /** 
@@ -841,6 +845,7 @@ extern REAL total_setup_time;  /**< ??? */
 extern REAL total_start_time;  /**< ??? */
 extern INT  total_iter;        /**< ??? */
 extern INT  fasp_called_times; /**< ??? */
+
 extern INT  nx_rb ;  /**< Red Black Gs Smoother Nx */
 extern INT  ny_rb ;  /**< Red Black Gs Smoother Ny */
 extern INT  nz_rb ;  /**< Red Black Gs Smoother Nz */
@@ -860,7 +865,7 @@ else \
 } \
 (end)=(end)+(start);
 
-#endif
+#endif /* end if for FASP_USE_OPENMP */
 
 #endif /* end if for __FASP_HEADER__ */
 

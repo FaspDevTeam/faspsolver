@@ -71,7 +71,8 @@ void fasp_dcoo_free (dCOOmat *A)
  * \author Chensong Zhang 
  * \date   2010/04/06
  */
-void fasp_dcoo_shift (dCOOmat *A, INT offset)
+void fasp_dcoo_shift (dCOOmat *A,
+                      INT offset)
 {
     const INT nnz=A->nnz;
     INT i, *ai=A->I, *aj=A->J;

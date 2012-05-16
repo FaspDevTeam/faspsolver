@@ -35,7 +35,7 @@ int main (int argc, const char * argv[])
     fasp_param_init("ini/its.dat",&inparam,&itparam,NULL,NULL);
 
     // Set local parameters
-    const int print_level   = inparam.print_level;
+    const int print_level = inparam.print_level;
     
     // Step 1. Get stiffness matrix and right-hand side
     // Read A and b -- P1 FE discretization for Poisson.

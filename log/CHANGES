@@ -1,10 +1,12 @@
 File Name: CHANGES
 
-05/14/2012 FASP 0.8.2: 
+05/16/2012 FASP 0.8.2: 
 - Fix a bug in refinement. Make generation of mesh_aux data structure work for any number of elements. 
 - Add a few examples in "tutorial".
 - Change inparam.itsolver_type to inparam.solver_type to make the name more logical.
-- Change input file in "test/ini" for the new setting.  
+- Change input file in "test/ini" for the new setting.
+- Revise a few functions arguments which should be "const" but did not assigned as "const".
+- Modify linked list data structure slightly.
 
 05/13/2012 FASP 0.8.1: 
 - Further optimizations on P1 FEM; more coming.
@@ -18,8 +20,6 @@ File Name: CHANGES
 05/01/2012 FASP 0.7.8: 
 - Update Doxygen: Fix a few bugs in Doxygen.
 - Update interface of GCG. 
-
-05/01/2012 FASP 0.7.7: 
 - Clean up and update interfaces for vGMRES and vFGMRES.
 - Clean up and update interfaces for PGMRES.
 - Rewrite part of PMINRES.

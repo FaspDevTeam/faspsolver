@@ -971,7 +971,8 @@ void fasp_dmtxsym_read (char *filename,
 void fasp_dstr_read (char *filename,
                      dSTRmat *A);
 
-void fasp_dbsr_read (char *filename, dBSRmat *A);
+void fasp_dbsr_read (char *filename, 
+                     dBSRmat *A);
 
 void fasp_dvecind_read (char *filename,
                         dvector *b);
@@ -1237,7 +1238,9 @@ void fasp_solver_mgcycle_omp (AMG_data *mgl,
 
 /*-------- In file: mgrecur.c --------*/
 
-void fasp_solver_mgrecur (AMG_data *mgl, AMG_param *param, INT level);
+void fasp_solver_mgrecur (AMG_data *mgl, 
+                          AMG_param *param, 
+                          INT level);
 
 
 /*-------- In file: ordering.c --------*/
@@ -2181,7 +2184,8 @@ dCOOmat fasp_dcoo_create (INT m,
 
 void fasp_dcoo_free (dCOOmat *A);
 
-void fasp_dcoo_shift (dCOOmat *A, INT offset);
+void fasp_dcoo_shift (dCOOmat *A,
+                      INT offset);
 
 
 /*-------- In file: sparse_csr.c --------*/
@@ -2282,15 +2286,15 @@ dSTRmat fasp_dstr_create (INT nx,
                           INT nband, 
                           INT *offsets);
 
-void fasp_dstr_alloc(INT nx, 
-                     INT ny, 
-                     INT nz, 
-                     INT nxy, 
-                     INT ngrid, 
-                     INT nband, 
-                     INT nc,
-                     INT *offsets, 
-                     dSTRmat *A);
+void fasp_dstr_alloc (INT nx, 
+                      INT ny, 
+                      INT nz, 
+                      INT nxy, 
+                      INT ngrid, 
+                      INT nband, 
+                      INT nc,
+                      INT *offsets, 
+                      dSTRmat *A);
 
 void fasp_dstr_free (dSTRmat *A);
 
@@ -2435,14 +2439,14 @@ double fasp_aux_bbyteToldouble(unsigned char bytes[]);
 
 /*-------- In file: vec.c --------*/
 
-dvector fasp_dvec_create (INT m);
+dvector fasp_dvec_create (const INT m);
 
-ivector fasp_ivec_create (INT m);
+ivector fasp_ivec_create (const INT m);
 
-void fasp_dvec_alloc (INT m, 
+void fasp_dvec_alloc (const INT m, 
                       dvector *u);
 
-void fasp_ivec_alloc (INT m, 
+void fasp_ivec_alloc (const INT m, 
                       ivector *u);
 
 void fasp_dvec_free (dvector *u);
@@ -2451,14 +2455,15 @@ void fasp_ivec_free (ivector *u);
 
 void fasp_dvec_null (dvector *x) ;
 
-void fasp_dvec_rand (INT n, 
+void fasp_dvec_rand (const INT n, 
                      dvector *x);
 
-void fasp_dvec_set (INT n, 
+void fasp_dvec_set (const INT n, 
                     dvector *x, 
                     REAL val);
 
-void fasp_ivec_set (INT m, ivector *u);
+void fasp_ivec_set (const INT m, 
+                    ivector *u);
 
 void fasp_dvec_cp (dvector *x, 
                    dvector *y);
