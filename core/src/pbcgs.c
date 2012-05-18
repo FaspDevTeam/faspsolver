@@ -116,6 +116,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
     printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
 #endif    
     
+    if ( print_level>PRINT_NONE ) printf("Calling BiCGstab solver ...\n");
+
     // initialize counters
     stag=more_step=restart_step=1;
     

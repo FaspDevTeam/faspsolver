@@ -4,8 +4,8 @@ File Name: CHANGES
 - Add safe-guard check for MaxIt and tol to prevent unexpected error in iterative methods.
 - Change the format the input files in "test/ini" slightly.
 - Make output of iterative methods more uniform.
-- Add a precond_setup interface for setting up preconditioners. 
-- Add a PCG tutorial example. 
+- Add a precond_setup interface for setting up preconditioners; Revise iterative methods accordingly.
+- Add a PCG tutorial example.
 
 05/16/2012 FASP 0.8.2: 
 - Fix a bug in refinement. Make generation of mesh_aux data structure work for any number of elements. 

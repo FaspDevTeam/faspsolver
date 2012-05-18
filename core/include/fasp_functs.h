@@ -1553,9 +1553,9 @@ void fasp_precond_dbsr_diag_nc7_omp (double *r,
 /*-------- In file: precond_csr.c --------*/
 
 precond *fasp_precond_setup (SHORT precond_type, 
-                       AMG_param *amgparam, 
-                       ILU_param *iluparam, 
-                       dCSRmat *A);
+                             AMG_param *amgparam, 
+                             ILU_param *iluparam, 
+                             dCSRmat *A);
 
 void fasp_precond_diag (REAL *r, 
                         REAL *z, 

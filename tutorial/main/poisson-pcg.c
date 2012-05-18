@@ -37,7 +37,7 @@ int main (int argc, const char * argv[])
     fasp_param_init("ini/pcg.dat",&inparam,&itparam,&amgparam,&iluparam);
 
     // Set local parameters
-    const SHORT print_level = inparam.print_level;
+    const SHORT print_level = itparam->print_level;    
     const SHORT pc_type     = inparam.precond_type;
     const SHORT stop_type   = itparam.stop_type;
     const INT   maxit       = itparam.maxit;
@@ -73,7 +73,10 @@ int main (int argc, const char * argv[])
     precond *pc = fasp_precond_setup(pc_type, &amgparam, &iluparam, &A);
 
     // Step 4. Solve the system with PCG as an iterative solver
-    // Set the initial guess to be zero and then solve it using pcg solver 
+    // Set the initial guess to be zero and then solve it using pcg solver
+    // Note that we call PCG interface directly. There is another way which
+    // calls the abstract iterative method interface; see possion-its.c for
+    // more details. 
     fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row, &x, 0.0);
     fasp_solver_dcsr_pcg(&A, &b, &x, pc, tol, maxit, stop_type, print_level);
     

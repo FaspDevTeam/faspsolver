@@ -115,6 +115,8 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
     printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
 #endif    
     
+    if ( print_level>PRINT_NONE ) printf("Calling MinRes solver ...\n");    
+
     // initialization counters
     stag=1; more_step=1; restart_step=1;
     
