@@ -309,7 +309,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     }
     
     // call iterative solver
-    status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);    
+    status = fasp_solver_dcsr_itsolver(A, b, x, &pc, itparam);    
     
     if ( print_level>=PRINT_MIN ) {
         solver_end = clock();    

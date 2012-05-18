@@ -10,6 +10,136 @@
 /*---------------------------------*/
 
 /**
+ * \fn precond *fasp_precond_setup (SHORT precond_type, AMG_param *amgparam, 
+ *                                  ILU_param *iluparam, dCSRmat *A)
+ *
+ * \brief set preconditioner from the input parameter & precondition type
+ *
+ * \param precond_type   Preconditioner type
+ * \param *amgparam      AMG parameters
+ * \param *iluparam      ILU parameters
+ * \param *A             Pointer to coefficient matrix
+ *
+ * \return               Pointer to preconditioner
+ *
+ * \author Feiteng Huang
+ * \date   05/18/2009
+ */
+precond *fasp_precond_setup (SHORT precond_type, 
+                       AMG_param *amgparam, 
+                       ILU_param *iluparam, 
+                       dCSRmat *A)
+{
+    precond           *pc = NULL;
+    
+    INT max_levels, nnz, m, n;
+    AMG_data         *mgl = NULL;
+    precond_data  *pcdata = NULL;
+    ILU_data         *ILU = NULL;
+    dvector         *diag = NULL;
+    
+    switch (precond_type) {
+            
+        case PREC_AMG: // AMG preconditioner
+            
+            pc = (precond *)fasp_mem_calloc(1, sizeof(precond));
+            max_levels = amgparam->max_levels;
+            nnz=A->nnz, m=A->row, n=A->col;    
+            
+            // initialize A, b, x for mgl[0]    
+            mgl=fasp_amg_data_create(max_levels);
+            mgl[0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
+            mgl[0].b=fasp_dvec_create(n); mgl[0].x=fasp_dvec_create(n); 
+            
+            // setup preconditioner  
+            switch (amgparam->AMG_type) {
+                case SA_AMG: // Smoothed Aggregation AMG
+                    fasp_amg_setup_sa(mgl, amgparam); break;
+                case UA_AMG: // Unsmoothed Aggregation AMG
+                    fasp_amg_setup_ua(mgl, amgparam); break;
+                default: // Classical AMG
+                    fasp_amg_setup_rs(mgl, amgparam); break;
+            }
+            
+            pcdata = (precond_data *)fasp_mem_calloc(1, sizeof(precond_data));
+            fasp_param_amg_to_prec(pcdata, amgparam);
+            pcdata->max_levels = mgl[0].num_levels;
+            pcdata->mgl_data = mgl;
+            
+            pc->data = pcdata;
+            
+            switch (amgparam->cycle_type) {
+                case AMLI_CYCLE: // AMLI cycle
+                    pc->fct = fasp_precond_amli; break;
+                case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
+                    pc->fct = fasp_precond_nl_amli; break;
+                default: // V,W-Cycle AMG
+                    pc->fct = fasp_precond_amg; break;
+            }
+            
+            break;
+            
+        case PREC_FMG: // FMG preconditioner
+            
+            pc = (precond *)fasp_mem_calloc(1, sizeof(precond));
+            max_levels = amgparam->max_levels;
+            nnz=A->nnz, m=A->row, n=A->col;    
+            
+            // initialize A, b, x for mgl[0]    
+            mgl=fasp_amg_data_create(max_levels);
+            mgl[0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
+            mgl[0].b=fasp_dvec_create(n); mgl[0].x=fasp_dvec_create(n); 
+            
+            // setup preconditioner  
+            switch (amgparam->AMG_type) {
+                case SA_AMG: // Smoothed Aggregation AMG
+                    fasp_amg_setup_sa(mgl, amgparam); break;
+                case UA_AMG: // Unsmoothed Aggregation AMG
+                    fasp_amg_setup_ua(mgl, amgparam); break;
+                default: // Classical AMG
+                    fasp_amg_setup_rs(mgl, amgparam); break;
+            }
+            
+            pcdata = (precond_data *)fasp_mem_calloc(1, sizeof(precond_data));
+            fasp_param_amg_to_prec(pcdata, amgparam);
+            pcdata->max_levels = mgl[0].num_levels;
+            pcdata->mgl_data = mgl;
+            
+            pc->data = pcdata; pc->fct = fasp_precond_famg;
+            
+            break;
+            
+        case PREC_ILU: // ILU preconditioner
+            
+            pc = (precond *)fasp_mem_calloc(1, sizeof(precond));
+            ILU = (ILU_data *)fasp_mem_calloc(1, sizeof(ILU_data));
+            fasp_ilu_dcsr_setup(A, ILU, iluparam);
+            pc->data = ILU;
+            pc->fct = fasp_precond_ilu;
+            
+            break;
+            
+        case PREC_DIAG: // Diagonal preconditioner
+            
+            pc = (precond *)fasp_mem_calloc(1, sizeof(precond));
+            diag = (dvector *)fasp_mem_calloc(1, sizeof(dvector));
+            fasp_dcsr_getdiag(0, A, diag);    
+            
+            pc->data = diag; 
+            pc->fct  = fasp_precond_diag;
+            
+            break;
+            
+        default: // No preconditioner
+            
+            break;
+            
+    }
+    
+    return pc;
+}
+
+/**
  * \fn void fasp_precond_diag (REAL *r, REAL *z, void *data)
  *
  * \brief Diagonal preconditioner z=inv(D)*r

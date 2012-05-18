@@ -1052,8 +1052,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
                                  dvector *b, 
                                  dvector *x, 
                                  itsolver_param *itparam, 
-                                 AMG_param *amgparam 
-                                 );
+                                 AMG_param *amgparam);
 
 
 /*-------- In file: itsolver_bsr.c --------*/
@@ -1552,6 +1551,11 @@ void fasp_precond_dbsr_diag_nc7_omp (double *r,
 
 
 /*-------- In file: precond_csr.c --------*/
+
+precond *fasp_precond_setup (SHORT precond_type, 
+                       AMG_param *amgparam, 
+                       ILU_param *iluparam, 
+                       dCSRmat *A);
 
 void fasp_precond_diag (REAL *r, 
                         REAL *z, 

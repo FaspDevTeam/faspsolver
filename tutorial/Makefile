@@ -118,6 +118,7 @@ OBJSC += $(patsubst %.cpp,%.o,$(CSRC))
 ALLPROG=$(TESTLIB)
 ALLPROG+=poisson-amg.c poisson-amg.f90
 ALLPROG+=poisson-its.c poisson-its.f90
+ALLPROG+=poisson-pcg.c
 
 # Test for solvers
 TESTPROG=$(TESTLIB) main/poisson-amg.o 
@@ -150,6 +151,10 @@ poisson-its.c:
 poisson-its.f90:
 	$(FC) -c main/poisson-its.f90 -o main/poisson-its.o $(FFLAGS)
 	$(FC) -o poisson-its-f.ex main/poisson-its.o $(FLFLAGS)
+
+poisson-pcg.c:
+	$(CC) -c main/poisson-pcg.c -o main/poisson-pcg.o $(CFLAGS)
+	$(FC) -o poisson-pcg-c.ex main/poisson-pcg.o $(FLFLAGS)
 
 ########################################################################
 # Clean up
