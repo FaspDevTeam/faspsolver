@@ -304,7 +304,7 @@ static INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT 
     
     // 1. Initialize lambda
     if (row > openmp_holds) {
-#pragma omp for parallel private(myid, mybegin,myend,i) 
+#pragma omp parallel for private(myid, mybegin,myend,i) 
         for (myid = 0; myid < nthreads; myid++ )
             {
                 FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
@@ -447,9 +447,10 @@ static INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT 
     
     if (LoL_head) {
         list_ptr=LoL_head;
-        LoL_head->prev_elt=NULL;
-        LoL_head->next_elt=NULL;
-        LoL_head = list_ptr->next_elt;
+        LoL_head->prev_node=NULL;
+        LoL_head->next_node=NULL;
+        LoL_head = list_ptr->next_node;
+	
         fasp_mem_free(list_ptr);
     }
     
@@ -457,7 +458,7 @@ static INT form_coarse_level_omp(dCSRmat *A, iCSRmat *S, ivector *vertices, INT 
     /* Coarsening Phase TWO: check fine points for coarse neighbors */
     /****************************************************************/
     if (row > openmp_holds) {
-#pragma omp for parallel private(myid, mybegin,myend,i) 
+#pragma omp parallel for private(myid, mybegin,myend,i) 
         for (myid = 0; myid < nthreads; myid++ )
             {
                 FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
@@ -562,7 +563,7 @@ static void generate_sparsity_P_omp(dCSRmat *P, iCSRmat *S, ivector *vertices, I
     // step 1: Find the structure IA of P first
     if (row > openmp_holds) {
         int mybegin,myend,myid;
-#pragma omp for parallel private(myid, mybegin,myend,i,j,k) 
+#pragma omp parallel for private(myid, mybegin,myend,i,j,k) 
         for (myid = 0; myid < nthreads; myid++ )
             {
                 FASP_GET_START_END(myid, nthreads, row, mybegin, myend);

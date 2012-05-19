@@ -12,7 +12,7 @@ print_level    = 2      % How much information to print out
 % parameters for iterative solvers             %
 %----------------------------------------------%
 
-itsolver_type  = 110    % Solver type:   0 AMG | 1 CG | 2 BiCGstab | 3 MinRes 
+itsolver_type  = 0    % Solver type:   0 AMG | 1 CG | 2 BiCGstab | 3 MinRes 
                         %                4 GMRes | 5 vGMRes | 6 SuperLU | 7 UMFPACK
                         %                8 FAMG
 

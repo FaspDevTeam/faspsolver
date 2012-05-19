@@ -45,7 +45,7 @@ void fasp_dvec_set_omp (int n,
     if (val == 0.0) {
         if (n > openmp_holds) {
             int mybegin,myend,myid;
-#pragma omp for parallel private(myid, mybegin,myend) 
+#pragma omp parallel for private(myid, mybegin,myend) 
             for (myid = 0; myid < nthreads; myid++ ) {
                 FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
                 memset(&xpt[mybegin],0x0, sizeof(double)*(myend-mybegin));
@@ -58,7 +58,7 @@ void fasp_dvec_set_omp (int n,
     else {
         if (n > openmp_holds) {
             int mybegin,myend,myid;
-#pragma omp for parallel private(myid, mybegin,myend) 
+#pragma omp parallel for private(myid, mybegin,myend) 
             for (myid = 0; myid < nthreads; myid++ ) {
                 FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
                 for (i=mybegin; i<myend; ++i) xpt[i]=val;
@@ -94,7 +94,7 @@ void fasp_dvec_cp_omp (dvector *x,
     y->row=row;
     if (row > openmp_holds) {
         int mybegin,myend,myid;
-#pragma omp for parallel private(myid, mybegin,myend) 
+#pragma omp parallel for private(myid, mybegin,myend) 
         for (myid = 0; myid < nthreads; myid++ ) {
             FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
             memcpy(&y_data[mybegin],&x_data[mybegin], sizeof(double)*(myend-mybegin));

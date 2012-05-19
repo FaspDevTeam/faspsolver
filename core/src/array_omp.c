@@ -135,7 +135,7 @@ void fasp_array_cp_omp (int n,
 #if 1 
     if (n > openmp_holds) {
         int mybegin,myend,myid;
-#pragma omp for parallel private(myid, mybegin,myend) 
+#pragma omp parallel for private(myid, mybegin,myend) 
         for (myid = 0; myid < nthreads; myid++ )
             {
                 FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
@@ -173,7 +173,7 @@ void fasp_iarray_cp_omp (int n,
 #if 1 
     if (n > openmp_holds) {
         int mybegin,myend,myid;
-#pragma omp for parallel private(myid, mybegin,myend) 
+#pragma omp parallel for private(myid, mybegin,myend) 
         for (myid = 0; myid < nthreads; myid++ )
             {
                 FASP_GET_START_END(myid, nthreads, n, mybegin, myend);

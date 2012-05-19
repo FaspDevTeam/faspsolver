@@ -34,8 +34,11 @@ void fasp_blas_dvec_axpy (const REAL a,
         printf("### ERROR: Two vectors have different length!\n");
         exit(ERROR_DATA_STRUCTURE);
     }
-    
-    for (i=0; i<m; ++i) ypt[i] += a*xpt[i];
+   
+#if FASP_USE_OPENMP
+    #pragma omp parallel for shared (xpt, ypt) private (i) schedule(static)
+#endif
+		for (i=0; i<m; ++i) ypt[i] += a*xpt[i];
 }
 
 /**
@@ -66,7 +69,11 @@ void fasp_blas_dvec_axpyz (const REAL a,
     }
     
     z->row = m;
-    memcpy(zpt,ypt,m*sizeof(REAL));
+   	memcpy(zpt,ypt,m*sizeof(REAL));
+
+#if FASP_USE_OPENMP
+    #pragma omp parallel for shared (xpt, zpt) private (i) schedule(static)
+#endif
     for (i=0; i<m; ++i) zpt[i] += a*xpt[i];
 }
 
@@ -91,7 +98,12 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
     REAL *xpt=x->val, *ypt=y->val;    
     
     register REAL value=0;
+
+#if FASP_USE_OPENMP
+    #pragma omp parallel for reduction(+:value) private(i)
+#endif
     for (i=0; i<length; ++i) value+=xpt[i]*ypt[i];
+
     return value;
 }
 
@@ -122,11 +134,14 @@ REAL fasp_dvec_relerr (dvector *x,
         exit(ERROR_DUMMY_VAR);    
     }
     
+#if FASP_USE_OPENMP
+    #pragma omp parallel for reduction(+:temp, diff) private(i)
+#endif
     for (i=0;i<length;++i) {
         temp += xpt[i]*xpt[i];
         diff += pow(xpt[i]-ypt[i],2);
     }
-    
+
     return sqrt(diff/temp);
 }
 
@@ -149,7 +164,12 @@ REAL fasp_blas_dvec_norm1 (dvector *x)
     REAL *xpt=x->val;    
     
     register REAL onenorm=0;
+
+#if FASP_USE_OPENMP
+    #pragma omp parallel for reduction(+:onenorm) private(i)
+#endif
     for (i=0;i<length;++i) onenorm+=ABS(xpt[i]);
+
     return onenorm;
 }
 
@@ -172,7 +192,12 @@ REAL fasp_blas_dvec_norm2 (dvector *x)
     REAL *xpt=x->val;    
     
     register REAL twonorm=0;
+
+#if FASP_USE_OPENMP
+    #pragma omp parallel for reduction(+:twonorm) private(i)
+#endif
     for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];
+
     return sqrt(twonorm);
 }
 
@@ -195,7 +220,9 @@ REAL fasp_blas_dvec_norminf (dvector *x)
     REAL *xpt=x->val;
     
     register REAL infnorm=0;
+
     for (i=0;i<length;++i) infnorm=MAX(infnorm,ABS(xpt[i]));
+
     return infnorm;
 }
 

@@ -37,7 +37,7 @@ int main (int argc, const char * argv[])
 	ILU_param       iluparam; // parameters for ILU
     
     // Read input parameters from a disk file
-	char *inputfile = "ini/testomp.dat";
+	char *inputfile = "ini/openmp.dat";
 	fasp_param_init(inputfile,&inparam,&itparam,&amgparam,&iluparam);
 	
     // Set local parameters

@@ -1060,7 +1060,7 @@ static void interp_RS1_omp(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_para
     }
     
     if (P.IA[P.row] > openmp_holds) {
-#pragma omp for parallel private(myid, mybegin,myend,i,j) 
+#pragma omp parallel for private(myid, mybegin,myend,i,j) 
         for (myid = 0; myid < nthreads; myid++ )
             {
                 FASP_GET_START_END(myid, nthreads,P.IA[P.row], mybegin, myend);
