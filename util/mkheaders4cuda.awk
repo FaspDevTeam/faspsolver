@@ -46,7 +46,7 @@ BEGIN {
   next;
 }
 
-!/^INT|^REAL|^FILE|^OFF_T|^size_t|^off_t|^pid_t|^unsigned|^mode_t|^DIR|^user|^int|^char|^uint|^struct|^BOOL|^void|^double|^time|^dCSRmat|^dCOOmat|^dvector|^iCSRmat|^ivector|^AMG_data|^ILU_data|^dSTRmat|^dBSRmat|^dCSRLmat|^cudvector|^cuivector|^cudCSRmat/ {
+!/^INT|^REAL|^FILE|^OFF_T|^size_t|^off_t|^pid_t|^unsigned|^mode_t|^DIR|^user|^int|^char|^uint|^struct|^BOOL|^void|^double|^time|^dCSRmat|^dCOOmat|^dvector|^iCSRmat|^ivector|^AMG_data|^ILU_data|^dSTRmat|^dBSRmat|^dCSRLmat|^precond|^cudvector|^cuivector|^cudCSRmat/ {
   next;
 }
 
@@ -65,5 +65,5 @@ END {
   print "#ifdef __cplusplus"
   print "} "
   print "#endif"
-  print "/* Ene of " name " */"
+  print "/* End of " name " */"
 }

@@ -1,6 +1,9 @@
 File Name: CHANGES
 
-05/21/2012 FASP 0.8.4:
+05/22/2012 FASP 0.8.5:
+- Fix a small bug in mkheaders*
+
+05/20/2012 FASP 0.8.4:
 - Revise matrix and rhs read/write routines.
 - Create P1 FEM in dcsrvec2 format. Replace the old test problem with the new one. 
 - Add more "write" routines for different formats in "core/src/io.c".

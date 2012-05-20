@@ -2529,4 +2529,4 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
                                 INT *maxit, 
                                 INT *ptrlvl);
 
-/* Ene of fasp_functs.h */
+/* End of fasp_functs.h */

@@ -65,5 +65,5 @@ END {
   #print "#ifdef __cplusplus"
   #print "} "
   #print "#endif"
-  print "/* Ene of " name " */"
+  print "/* End of " name " */"
 }
