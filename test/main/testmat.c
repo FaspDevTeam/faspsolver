@@ -38,11 +38,18 @@ int main(int argc, const char * argv[])
 	char filename1[512], *datafile1;	
 	strncpy(filename1,Input.workdir,128);
 	
+	char filename2[512], *datafile2;	
+	strncpy(filename2,Input.workdir,128);
+
 	// Read matrix for testing
 	dCSRmat A;
-	datafile1="matP1.dat";
-	strcat(filename1,datafile1);
-	fasp_dcoo_read(filename1, &A);
+    dvector b;
+    
+    datafile1="csrmat_FE.dat";
+    strcat(filename1,datafile1);
+    datafile2="rhs_FE.dat";
+    strcat(filename2,datafile2);        
+    fasp_dcsrvec2_read(filename1, filename2, &A, &b);
 		
 	// Check sparse pattern
 	char *bmpfile="out/matrix.bmp";	/* Output the matrix as BMP file */
@@ -63,6 +70,7 @@ int main(int argc, const char * argv[])
 	
     // Clean up memory
     fasp_dcsr_free(&A);
+    fasp_dvec_free(&b);
 	
 	return SUCCESS;
 }

@@ -64,12 +64,11 @@ int main (int argc, const char * argv[])
 
 	// Read A and b -- P1 FE discretization for Poisson.
 	if (problem_num == 10) {				
-		datafile1="matP1.dat";
+		datafile1="csrmat_FE.dat";
 		strcat(filename1,datafile1);
-		datafile2="rhsP1.dat";
-		strcat(filename2,datafile2);
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvecind_read(filename2, &b);
+		datafile2="rhs_FE.dat";
+		strcat(filename2,datafile2);        
+		fasp_dcsrvec2_read(filename1, filename2, &A, &b);
 	}		
  
 	else {

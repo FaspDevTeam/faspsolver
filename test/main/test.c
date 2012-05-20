@@ -71,24 +71,22 @@ int main (int argc, const char * argv[])
     
 	// Read A and b -- P1 FE discretization for Poisson.
 	if (problem_num == 10) {				
-		datafile1="matP1.dat";
+		datafile1="csrmat_FE.dat";
 		strcat(filename1,datafile1);
-		datafile2="rhsP1.dat";
-		strcat(filename2,datafile2);
-        
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvecind_read(filename2, &b);
+		datafile2="rhs_FE.dat";
+		strcat(filename2,datafile2);        
+		fasp_dcsrvec2_read(filename1, filename2, &A, &b);
 	}	
     
 	// Read A and b -- P1 FE discretization for Poisson, large    
     else if (problem_num == 11) {
-		datafile1="cooA_1046529.dat";
+		datafile1="coomat_1046529.dat";
 		strcat(filename1,datafile1);
 		fasp_dcoo_read(filename1, &A);
         
         dvector sol = fasp_dvec_create(A.row);
         fasp_dvec_rand(A.row, &sol);
-        
+         
         // Form the right-hand-side b = A*sol
         b = fasp_dvec_create(A.row);
         fasp_blas_dcsr_mxv(&A, sol.val, b.val);
@@ -97,12 +95,12 @@ int main (int argc, const char * argv[])
     
 	// Read A and b -- FD discretization for Poisson, large    
     else if (problem_num == 12) {
-		datafile1="csrA_1023X1023.dat";
+		datafile1="csrmat_1023X1023.dat";
 		strcat(filename1,datafile1);
 		datafile2="rhs_1023X1023.dat";
 		strcat(filename2,datafile2);
         
-        fasp_dcsrvec_read(filename1, filename2, &A, &b);
+        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
     }
     
     else {

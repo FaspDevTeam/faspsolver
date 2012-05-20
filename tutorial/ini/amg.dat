@@ -14,12 +14,12 @@ print_level = 3       % How much information to print out
 AMG_type                 = C     % C classic AMG | SA smoothed aggregation AMG
 AMG_cycle_type           = V     % V V-cycle | W W-cycle	 
 AMG_smoother             = GS    % GS | JACOBI | SGS | SOR | SSOR | GSOR | SGSOR | POLY   
-AMG_levels               = 10    % max number of levels
+AMG_levels               = 15    % max number of levels
 AMG_ILU_levels           = 0     % number of levels using ILU smoother
 AMG_relaxation	         = 1.0   % over relaxation parameter for SOR smoother 
 AMG_presmooth_iter       = 2     % number of presmoothing
 AMG_postsmooth_iter      = 2     % number of postsmoothing
-AMG_coarse_dof           = 250   % max number of coarse degrees of freedom
+AMG_coarse_dof           = 500   % max number of coarse degrees of freedom
 AMG_tol                  = 1e-8  % tolerance for AMG
 AMG_maxit                = 100   % number of AMG iterations
 AMG_coarse_scaling       = OFF	 % switch of scaling of the coarse grid correction
@@ -30,7 +30,7 @@ AMG_coarse_scaling       = OFF	 % switch of scaling of the coarse grid correctio
 
 AMG_coarsening_type      = 1     % coarsening type 1: modified RS | 3: Compatible Relaxation
 AMG_interpolation_type   = 1     % 1 standard | 3 energy min in C 
-AMG_strong_threshold     = 0.25  % strong threshold
+AMG_strong_threshold     = 0.6   % strong threshold
 AMG_truncation_threshold = 0.4   % truncation threshold
 AMG_max_row_sum          = 0.9   % max row sum
 

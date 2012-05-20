@@ -44,14 +44,14 @@ int main (int argc, const char * argv[])
     
 	if (print_usage) {
         printf("\nUsage: %s [<ofemparions>]\n", argv[0]);
-        printf("  -meshin <val>    : input mesh file  [default: ./data/mesh.dat]\n");
+        printf("  -output <val>    : mesh output switch [default: 0]\n");
         printf("  -meshout <val>   : output mesh file [default: ./data/mesh_?.dat]\n");
+        printf("  -meshin <val>    : input mesh file  [default: ./data/mesh.dat]\n");
+        printf("  -refine <val>    : refine level [default: 8]\n");
         printf("  -assemble <val>  : assemble ofemparion [default: ab]\n");	
         printf("                     ab  |  assemble the mat & rhs;\n");
         printf("                      a  |  assemble the mat;\n");
         printf("                      b  |  assemble the rhs;\n");
-        printf("  -refine <val>    : refine level [default: 8]\n");
-        printf("  -output <val>    : mesh output ofemparion [default: 0]\n");
         printf("  -quad_rhs <val>  : quad points for rhs [default: 3]\n");
         printf("  -quad_mat <val>  : quad points for mat [default: 1]\n");
         printf("  -help            : print this help message\n\n");
@@ -72,7 +72,7 @@ int main (int argc, const char * argv[])
 
 	// Step 1.5: read or build auxiliary mesh info
     // If there is already mesh_aux data available, you can use the following fct to init it:    
-    //	  mesh_aux_init (&mesh, &mesh_aux, "mesh.aux");
+    //	   mesh_aux_init (&mesh, &mesh_aux, "mesh.aux");
     // otherwise, just build the auxiliary information for the mesh
 	mesh_aux_build(&mesh, &mesh_aux);
     
@@ -105,7 +105,7 @@ int main (int argc, const char * argv[])
         fasp_param_amg_init(&amgparam);    // set AMG param with default values
         amgparam.print_level = PRINT_SOME; // print some AMG message
         amgparam.maxit       = 25;         // max number of iterations
-        
+
         fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row, &x, 0.0); // initial guess
         
         fasp_solver_amg(&A, &b, &x, &amgparam); // solve Ax = b with AMG
@@ -117,11 +117,11 @@ int main (int argc, const char * argv[])
 	
 	// Step 5: estimate L2 error
 	double l2error = get_l2_error_poisson(&(mesh.node), &(mesh.elem), &uh, fempar.num_qp_rhs);
-	
+
     printf("\n==============================================================\n");
 	printf("L2 error of FEM is %g\n", l2error);
     printf("==============================================================\n\n");
-    
+
 	// clean up memory
 	mesh_free(&mesh);
 	fasp_dcsr_free(&A);

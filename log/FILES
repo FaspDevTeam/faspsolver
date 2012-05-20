@@ -23,12 +23,12 @@
      125 ./core/src/blas_csrl.c
     1481 ./core/src/blas_smat.c
     1537 ./core/src/blas_str.c
-     204 ./core/src/blas_vec.c
+     231 ./core/src/blas_vec.c
      233 ./core/src/blas_vec_omp.c
      329 ./core/src/checkmat.c
      334 ./core/src/coarsening_cr.c
      842 ./core/src/coarsening_rs.c
-     654 ./core/src/coarsening_rs_omp.c
+     655 ./core/src/coarsening_rs_omp.c
       71 ./core/src/eigen.c
       99 ./core/src/famg.c
      208 ./core/src/fmgcycle.c
@@ -43,13 +43,13 @@
      592 ./core/src/input.c
      953 ./core/src/interpolation.c
     1687 ./core/src/interpolation_omp.c
-    1008 ./core/src/io.c
-     125 ./core/src/itsolver_bcsr.c
-     377 ./core/src/itsolver_bsr.c
+    1198 ./core/src/io.c
+     126 ./core/src/itsolver_bcsr.c
+     375 ./core/src/itsolver_bsr.c
      132 ./core/src/itsolver_bsr_omp.c
-     506 ./core/src/itsolver_csr.c
+     497 ./core/src/itsolver_csr.c
      208 ./core/src/itsolver_csr_omp.c
-     340 ./core/src/itsolver_str.c
+     343 ./core/src/itsolver_str.c
      170 ./core/src/lu.c
      251 ./core/src/memory.c
      236 ./core/src/message.c
@@ -57,20 +57,20 @@
      420 ./core/src/mgcycle_omp.c
      122 ./core/src/mgrecur.c
      346 ./core/src/ordering.c
-     626 ./core/src/parameters.c
-    1328 ./core/src/pbcgs.c
-     878 ./core/src/pcg.c
+     625 ./core/src/parameters.c
+    1330 ./core/src/pbcgs.c
+     880 ./core/src/pcg.c
      360 ./core/src/pcg_omp.c
-     171 ./core/src/pgcg.c
-    1012 ./core/src/pgmres.c
-     852 ./core/src/pminres.c
+     173 ./core/src/pgcg.c
+    1014 ./core/src/pgmres.c
+     854 ./core/src/pminres.c
      523 ./core/src/precond_bsr.c
      285 ./core/src/precond_bsr_omp.c
-     342 ./core/src/precond_csr.c
+     473 ./core/src/precond_csr.c
       56 ./core/src/precond_csr_omp.c
     1746 ./core/src/precond_str.c
-     609 ./core/src/pvfgmres.c
-     894 ./core/src/pvgmres.c
+     611 ./core/src/pvfgmres.c
+     896 ./core/src/pvgmres.c
      362 ./core/src/pvgmres_omp.c
      873 ./core/src/quadrature.c
      108 ./core/src/rap.c
@@ -99,8 +99,8 @@
      296 ./core/include/doxygen.h
      874 ./core/include/fasp.h
      479 ./core/include/fasp_block.h
-    2516 ./core/include/fasp_functs.h
+    2532 ./core/include/fasp_functs.h
     5818 ./core/include/malloc.c.h
      184 ./core/include/messages.h
      291 ./core/include/nedmalloc.h
-   59970 total
+   60341 total

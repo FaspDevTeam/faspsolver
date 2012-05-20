@@ -950,12 +950,12 @@ int fasp_BinarySearch(int *list, int value, int list_length);
 
 /*-------- In file: io.c --------*/
 
-void fasp_dcsrvec_read (char *filemat, 
-                        char *filerhs, 
-                        dCSRmat *A, 
-                        dvector *b );
+void fasp_dcsrvec2_read (char *filemat, 
+                         char *filerhs, 
+                         dCSRmat *A, 
+                         dvector *b );
 
-void fasp_dcsrvec2_read (char *filename,
+void fasp_dcsrvec1_read (char *filename,
                          dCSRmat *A,
                          dvector *b);
 
@@ -986,6 +986,15 @@ void fasp_ivecind_read (char *filename,
 void fasp_ivec_read (char *filename, 
                      ivector *b);
 
+void fasp_dcsrvec2_write (char *filemat, 
+                          char *filerhs, 
+                          dCSRmat *A, 
+                          dvector *b );
+
+void fasp_dcsrvec1_write (char *filename,
+                          dCSRmat *A,
+                          dvector *b);
+
 void fasp_dcsr_write (char *filename, 
                       dCSRmat *A);
 
@@ -997,6 +1006,9 @@ void fasp_dbsr_write (char *filename,
 
 void fasp_dvec_write (char *filename,
                       dvector *vec);
+
+void fasp_dvecind_write (char *filename,
+                         dvector *vec);
 
 void fasp_ivec_write (char *filename, 
                       ivector *vec);

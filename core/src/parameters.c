@@ -55,8 +55,7 @@ void fasp_param_init (char *inputfile,
     }
     else {
         printf("### WARNING: No input specified. Use default values instead!\n");
-    }
-        
+    }        
 }    
 
 /**

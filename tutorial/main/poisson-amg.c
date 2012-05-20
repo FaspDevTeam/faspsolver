@@ -45,15 +45,15 @@ int main (int argc, const char * argv[])
     char filename1[512], *datafile1;
     char filename2[512], *datafile2;
 	
-    // Read the stiffness matrix from matP1.dat
+    // Read the stiffness matrix from matFE.dat
     strncpy(filename1,inparam.workdir,128);    
-    datafile1="matP1.dat"; strcat(filename1,datafile1);
-    fasp_dcoo_read(filename1, &A);
-
-    // Read the RHS from rhsP1.dat
+    datafile1="csrmat_FE.dat"; strcat(filename1,datafile1);
+    
+    // Read the RHS from rhsFE.dat
     strncpy(filename2,inparam.workdir,128);
-    datafile2="rhsP1.dat"; strcat(filename2,datafile2);
-    fasp_dvecind_read(filename2, &b);    
+    datafile2="rhs_FE.dat"; strcat(filename2,datafile2);
+    
+    fasp_dcsrvec2_read(filename1,filename2,&A,&b);
     
     // Step 2. Print problem size and AMG parameters
     if (print_level>PRINT_NONE) {

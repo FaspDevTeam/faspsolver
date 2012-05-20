@@ -36,8 +36,8 @@ AMG_smoother             = GS    % GS | JACOBI | SGS | SOR | SSOR | GSOR | SGSOR
 AMG_levels               = 20    % max number of levels
 AMG_ILU_levels           = 0     % number of levels using ILU smoother
 AMG_relaxation           = 1.1   % over relaxation parameter for SOR smoother 
-AMG_presmooth_iter       = 1     % number of presmoothing
-AMG_postsmooth_iter      = 1     % number of postsmoothing
+AMG_presmooth_iter       = 2     % number of presmoothing
+AMG_postsmooth_iter      = 2     % number of postsmoothing
 AMG_coarse_dof           = 500   % max number of coarse degrees of freedom
 AMG_tol                  = 1e-10 % tolerance for AMG
 AMG_maxit                = 1     % number of AMG iterations
@@ -51,7 +51,7 @@ AMG_nl_amli_krylov_type  = 6     % type of krylov method used by Nonlinear AMLI 
 
 AMG_coarsening_type      = 1     % coarsening type 1: modified RS | 3: Compatible Relaxation
 AMG_interpolation_type   = 1     % 1 standard | 3 energy min in C 
-AMG_strong_threshold     = 0.25  % strong threshold
+AMG_strong_threshold     = 0.6   % strong threshold
 AMG_truncation_threshold = 0.4   % truncation threshold
 AMG_max_row_sum          = 0.9   % max row sum
 

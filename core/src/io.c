@@ -13,7 +13,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_dcsrvec_read (char *filemat, char *filerhs, dCSRmat *A, dvector *b)
+ * \fn void fasp_dcsrvec2_read (char *filemat, char *filerhs, dCSRmat *A, dvector *b)
  *
  * \brief Read A and b from two disk files
  *
@@ -38,16 +38,18 @@
  *   - n                 % number of entries
  *   - b(j), j=0:nrow-1  % entry value
  *
+ * \note Indices start from 1, NOT 0!!!
+ *
  * \author Zhiyang Zhou
  * \date   2010/08/06
  *
  * Modified by Chensong Zhang on 2011/03/01
  * Modified by Chensong Zhang on 2012/01/05
  */ 
-void fasp_dcsrvec_read (char *filemat, 
-                        char *filerhs, 
-                        dCSRmat *A, 
-                        dvector *b )
+void fasp_dcsrvec2_read (char *filemat, 
+                         char *filerhs, 
+                         dCSRmat *A, 
+                         dvector *b )
 {
     INT i,n,nz;
     INT wall;
@@ -60,7 +62,7 @@ void fasp_dcsrvec_read (char *filemat,
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
     }
     
-    printf("fasp_dcsrvec_read: reading file %s...\n", filemat);
+    printf("fasp_dcsrvec2_read: reading file %s...\n", filemat);
     
     wall = fscanf(fp,"%d\n",&n);
     A->row = n;
@@ -97,7 +99,7 @@ void fasp_dcsrvec_read (char *filemat,
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
     }
     
-    printf("fasp_dcsrvec_read: reading file %s...\n", filerhs);
+    printf("fasp_dcsrvec2_read: reading file %s...\n", filerhs);
     
     wall = fscanf(fp,"%d\n",&n);
     
@@ -114,7 +116,7 @@ void fasp_dcsrvec_read (char *filemat,
 }
 
 /**
- * \fn void fasp_dcsrvec2_read (char *filename, dCSRmat *A, dvector *b)
+ * \fn void fasp_dcsrvec1_read (char *filename, dCSRmat *A, dvector *b)
  *
  * \brief Read A and b from a SINGLE disk file
  *
@@ -143,7 +145,7 @@ void fasp_dcsrvec_read (char *filemat,
  *
  * Modified by Chensong Zhang on 03/14/2012
  */ 
-void fasp_dcsrvec2_read (char *filename,
+void fasp_dcsrvec1_read (char *filename,
                          dCSRmat *A,
                          dvector *b)
 {
@@ -159,7 +161,7 @@ void fasp_dcsrvec2_read (char *filename,
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_read");
     }
     
-    printf("fasp_dcsrvec2_read: reading file %s...\n", filename);
+    printf("fasp_dcsrvec1_read: reading file %s...\n", filename);
     
     // Read CSR matrix
     wall = fscanf(fp, "%d %d", &m, &n);
@@ -171,7 +173,7 @@ void fasp_dcsrvec2_read (char *filename,
         A->IA[i]=idata;
     }
     
-    nnz=A->IA[m]-A->IA[0];     A->nnz=nnz;
+    nnz=A->IA[m]-A->IA[0]; A->nnz=nnz;
     
     A->JA=(int*)fasp_mem_calloc(nnz, sizeof(INT));    
     A->val=(REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
@@ -187,7 +189,7 @@ void fasp_dcsrvec2_read (char *filename,
     }
     
     // Read RHS vector
-    wall = fscanf(fp, "%d", &m, &i);
+    wall = fscanf(fp, "%d", &m);
     b->row=m;
     
     b->val=(REAL*)fasp_mem_calloc(m, sizeof(REAL));
@@ -265,6 +267,8 @@ void fasp_dcoo_read (char *filename,
  *   And it converts the matrix to dCSRmat format. For details of mtx format, 
  *   please refer to http://math.nist.gov/MatrixMarket/.
  *
+ * \note Indices start from 1, NOT 0!!!
+ *
  * \author Chensong Zhang
  * \date   09/05/2011 
  */
@@ -322,6 +326,8 @@ void fasp_dmtx_read (char *filename,
  *   This routine reads a MatrixMarket symmetric matrix from a mtx file.
  *   And it converts the matrix to dCSRmat format. For details of mtx format, 
  *   please refer to http://math.nist.gov/MatrixMarket/.
+ *
+ * \note Indices start from 1, NOT 0!!!
  *
  * \author Chensong Zhang
  * \date   09/02/2011 
@@ -545,7 +551,9 @@ void fasp_dbsr_read (char *filename,
  *
  * \note File Format:
  *     - nrow
- *   - ind_j, val_j, j=0:nrow-1
+ *     - ind_j, val_j, j=0:nrow-1
+ *
+ * \note Because the index is given, order is NOT important!
  * 
  * \author Chensong Zhang
  * \date   03/29/2009 
@@ -703,6 +711,156 @@ void fasp_ivec_read (char *filename,
 }
 
 /**
+ * \fn void fasp_dcsrvec2_write (char *filemat, char *filerhs, dCSRmat *A, dvector *b)
+ *
+ * \brief Write A and b to two disk files
+ *
+ * \param filemat  File name for matrix
+ * \param filerhs  File name for right-hand side
+ * \param A        Pointer to the dCSR matrix
+ * \param b        Pointer to the dvector
+ *
+ * \note
+ *
+ *      This routine writes a dCSRmat matrix and a dvector vector to two disk files.
+ *
+ * \note 
+ * CSR matrix file format:
+ *   - nrow              % number of columns (rows)
+ *   - ia(j), j=0:nrow   % row index
+ *   - ja(j), j=0:nnz-1  % column index
+ *   - a(j),  j=0:nnz-1  % entry value
+ *
+ * \note
+ * RHS file format:
+ *   - n                 % number of entries
+ *   - b(j), j=0:nrow-1  % entry value
+ *
+ * \note Indices start from 1, NOT 0!!!
+ *
+ * \author Feiteng Huang
+ * \date   05/19/2012
+ *
+ */ 
+void fasp_dcsrvec2_write (char *filemat, 
+                          char *filerhs, 
+                          dCSRmat *A, 
+                          dvector *b )
+{
+    INT m=A->row, n=A->col, nnz=A->nnz;
+    INT i, j;
+    
+    FILE *fp=fopen(filemat, "w");
+    
+    /* write the matrix to file */ 
+    if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s ...\n", filemat);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_write");
+    }
+    
+    printf("fasp_dcsrvec2_write: writing matrix to `%s'...\n", filemat);
+    
+    fprintf(fp,"%d\n",m);    
+    for (i = 0; i < m+1; ++i) {
+        fprintf(fp, "%d\n", A->IA[i]+1);
+    }
+    for (i = 0; i < nnz; ++i) {
+        fprintf(fp, "%d\n", A->JA[i]+1);
+    }
+    for (i = 0; i < nnz; ++i) {
+        fprintf(fp, "%le\n", A->val[i]);
+    }
+    
+    fclose(fp);
+    
+    m = b->row;
+    
+    fp=fopen(filerhs,"w");
+    
+    /* write the rhs to file */
+    if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s ...\n", filerhs);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_write");
+    }    
+    
+    printf("fasp_dcsrvec2_write: writing vector to `%s'...\n", filerhs);
+    
+    fprintf(fp,"%d\n",m);
+    
+    for (i=0;i<m;++i) fprintf(fp,"%le\n",b->val[i]);
+    
+    fclose(fp);
+}
+
+/**
+ * \fn void fasp_dcsrvec1_write (char *filename, dCSRmat *A, dvector *b)
+ *
+ * \brief Write A and b to a SINGLE disk file
+ *
+ * \param filename  File name
+ * \param A         Pointer to the CSR matrix
+ * \param b         Pointer to the dvector
+ *
+ * \note 
+ *      This routine writes a dCSRmat matrix and a dvector vector to a single disk file.
+ *
+ * \note File format:
+ *   - nrow ncol         % number of rows and number of columns
+ *   - ia(j), j=0:nrow   % row index
+ *   - ja(j), j=0:nnz-1  % column index
+ *   - a(j), j=0:nnz-1   % entry value
+ *   - n                 % number of entries
+ *   - b(j), j=0:n-1     % entry value
+ *
+ * \author Feiteng Huang
+ * \date   05/19/2012
+ */ 
+void fasp_dcsrvec1_write (char *filename,
+                          dCSRmat *A,
+                          dvector *b)
+{
+    INT m=A->row, n=A->col, nnz=A->nnz;
+    INT i, j;
+    
+    FILE *fp=fopen(filename, "w");
+    
+    /* write the matrix to file */ 
+    if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_write");
+    }
+    
+    printf("fasp_dcsrvec1_write: writing matrix to `%s'...\n", filename);
+    
+    fprintf(fp,"%d %d\n",m,n);    
+    for (i = 0; i < m+1; ++i) {
+        fprintf(fp, "%d\n", A->IA[i]);
+    }
+    for (i = 0; i < nnz; ++i) {
+        fprintf(fp, "%d\n", A->JA[i]);
+    }
+    for (i = 0; i < nnz; ++i) {
+        fprintf(fp, "%le\n", A->val[i]);
+    }
+    
+    m = b->row;
+    
+    /* write the rhs to file */
+    if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_write");
+    }    
+    
+    printf("fasp_dcsrvec1_write: writing vector to `%s'...\n", filename);
+    
+    fprintf(fp,"%d\n",m);
+    
+    for (i=0;i<m;++i) fprintf(fp,"%le\n",b->val[i]);
+    
+    fclose(fp);
+}
+
+/**
  * \fn void fasp_dcsr_write (char *filename, dCSRmat *A)
  *
  * \brief Write a matrix to disk file in IJ format (coordinate format)
@@ -716,9 +874,9 @@ void fasp_ivec_read (char *filename,
  *      Refer to the reading subroutine \ref fasp_dcoo_read.
  *
  * \note File format: 
- *   - The first line of the file gives the number of rows and the 
- *   number of columns. 
- *   - Then gives nonzero values in i,j,a(i,j) order. 
+ *   - The first line of the file gives the number of rows, the 
+ *   number of columns, and the number of nonzeros.
+ *   - Then gives nonzero values in i j a(i,j) format.
  *
  * \author Chensong Zhang
  * \date   03/29/2009       
@@ -872,6 +1030,38 @@ void fasp_dbsr_write (char *filename,
 /**
  * \fn void fasp_dvec_write (char *filename, dvector *vec)
  *
+ * \brief Write a dvector to disk file
+ *
+ * \param vec       Pointer to the dvector
+ * \param filename  File name
+ *
+ * \author Xuehai Huang
+ * \date   03/29/2009  
+ */
+void fasp_dvec_write (char *filename,
+                      dvector *vec)
+{
+    INT m = vec->row, i;
+    
+    FILE *fp=fopen(filename,"w");
+    
+    if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dvec_write");
+    }    
+    
+    printf("fasp_dvec_write: writing vector to `%s'...\n",filename);
+    
+    fprintf(fp,"%d\n",m);
+    
+    for (i=0;i<m;++i) fprintf(fp,"%le\n",vec->val[i]);
+    
+    fclose(fp);
+}
+
+/**
+ * \fn void fasp_dvecind_write (char *filename, dvector *vec)
+ *
  * \brief Write a dvector to disk file in coordinate format
  *
  * \param vec       Pointer to the dvector
@@ -884,8 +1074,8 @@ void fasp_dbsr_write (char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009  
  */
-void fasp_dvec_write (char *filename,
-                      dvector *vec)
+void fasp_dvecind_write (char *filename,
+                         dvector *vec)
 {
     INT m = vec->row, i;
     

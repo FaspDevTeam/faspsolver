@@ -142,6 +142,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
 #endif
     
     solver_start = clock();
+    
     status = fasp_solver_dcsr_itsolver(A,b,x,NULL,itparam);
     
     if ( print_level>=PRINT_MIN ) {
@@ -447,7 +448,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
     
-    solver_start=clock();
+    solver_start = clock();
     
     // ILU setup for M
     ILU_data LU; 
@@ -465,7 +466,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
     if (print_level>=PRINT_MIN) {
-        solver_end=clock();    
+        solver_end = clock();    
         solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
 
         switch (iluparam->ILU_type) {

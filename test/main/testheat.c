@@ -45,16 +45,16 @@ int main (int argc, const char * argv[])
     
 	if (print_usage) {
 		printf("\nUsage: %s [<options>]\n", argv[0]);
-		printf("  -meshin <val>    : input mesh file  [default: ./data/mesh.dat]\n");
+		printf("  -output <val>    : mesh output option [default: 0]\n");
 		printf("  -meshout <val>   : output mesh file [default: ./data/mesh_?.dat]\n");
+		printf("  -meshin <val>    : input mesh file  [default: ./data/mesh.dat]\n");
+		printf("  -refine <val>    : refine level [default: 8]\n");
 		printf("  -assemble <val>  : assemble option [default: ab]\n");	
         printf("                     ab  |  assemble the stiff matrix & mass matrix & rhs;\n");
 		printf("                      a  |  assemble the stiff matrix & mass matrix;\n");
 		printf("                      b  |  assemble the rhs;\n");
-		printf("  -refine <val>    : refine level [default: 8]\n");
 		printf("  -nt     <val>    : time steps [default: 0]\n");
 		printf("  -T      <val>    : T_end [default: 1.0]\n");
-		printf("  -output <val>    : mesh output option [default: 0]\n");
 		printf("  -quad_rhs <val>  : quad points for rhs [default: 3]\n");
 		printf("  -quad_mat <val>  : quad points for mat [default: 1]\n");
 		printf("  -help            : print this help message\n\n");

@@ -4,7 +4,7 @@
  *
  *  \note  PCG example for FASP: C version
  *
- *  Solving the Poisson equation (P1 FEM) with preconditioned CG methods
+ *  Solving the Poisson equation (P1 FEM) with PCG methods
  */
 
 #include "fasp.h"
@@ -37,8 +37,8 @@ int main (int argc, const char * argv[])
     fasp_param_init("ini/pcg.dat",&inparam,&itparam,&amgparam,&iluparam);
 
     // Set local parameters
-    const SHORT print_level = itparam->print_level;    
-    const SHORT pc_type     = inparam.precond_type;
+    const SHORT print_level = itparam.print_level;    
+    const SHORT pc_type     = itparam.precond_type;
     const SHORT stop_type   = itparam.stop_type;
     const INT   maxit       = itparam.maxit;
     const REAL  tol         = itparam.tol;
@@ -51,15 +51,15 @@ int main (int argc, const char * argv[])
     char filename1[512], *datafile1;
     char filename2[512], *datafile2;
 
-    // Stiffness matrix from matP1.dat
+    // Read the stiffness matrix from matFE.dat
     strncpy(filename1,inparam.workdir,128);    
-    datafile1="matP1.dat"; strcat(filename1,datafile1);
-    fasp_dcoo_read(filename1, &A);
-
-    // RHS from rhsP1.dat
+    datafile1="csrmat_FE.dat"; strcat(filename1,datafile1);
+    
+    // Read the RHS from rhsFE.dat
     strncpy(filename2,inparam.workdir,128);
-    datafile2="rhsP1.dat"; strcat(filename2,datafile2);
-    fasp_dvecind_read(filename2, &b);    
+    datafile2="rhs_FE.dat"; strcat(filename2,datafile2);
+    
+    fasp_dcsrvec2_read(filename1,filename2,&A,&b);
     
     // Step 2. Print problem size and PCG parameters
     if (print_level>PRINT_NONE) {
