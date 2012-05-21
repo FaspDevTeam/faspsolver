@@ -203,6 +203,58 @@ void fasp_dcsrvec1_read (char *filename,
 }
 
 /**
+ * \fn void fasp_dcsr_read(char *filename, dCSRmat *A)
+ * \brief Read A from matrix disk file in IJ format
+ *
+ * \param *filename  char for matrix file name
+ * \param *A         pointer to the CSR matrix
+ *
+ * \author Xuehai Huang
+ * \date 03/29/2009 
+ */
+void fasp_dcsr_read (char *filename, 
+                     dCSRmat *A)
+{
+	/** 
+	 * File format:
+	 *	    nrow ncol nnz
+	 *    i, j, a_ij 
+	 */
+	
+	int i,j,k,m,n,nnz;
+	double value;	
+	int wall;
+    
+	FILE *fp=fopen(filename,"r");
+	
+	if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
+        printf("fasp_dcsr_read: opening file %s failed!\n",filename);
+		exit(ERROR_OPEN_FILE);
+	}
+	
+	printf("fasp_dcsr_read: reading file %s...\n", filename);
+	
+	wall = fscanf(fp,"%d %d %d",&m,&n,&nnz); 
+	
+	dCOOmat Atmp=fasp_dcoo_create(m,n,nnz); 
+	
+	for (k=0;k<nnz;k++) {
+		if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
+			Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k]=value; 
+		}
+		else {
+			printf("Error: wrong file format!\n"); exit(ERROR_WRONG_FILE);
+		}
+	}
+	
+	fclose(fp);
+	
+	fasp_format_dcoo_dcsr(&Atmp,A); 
+	fasp_dcoo_free(&Atmp);
+	
+}
+
+/**
  * \fn void fasp_dcoo_read(char *filename, dCSRmat *A)
  *
  * \brief Read A from matrix disk file in IJ format -- indices starting from 0

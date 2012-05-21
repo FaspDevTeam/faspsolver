@@ -335,6 +335,59 @@ void fasp_precond_ilu_backward (REAL *r,
 }
 
 /**
+ * \fn void fasp_precond_schwarz(double *r, double *z, void *data)
+ * \brief get z from r by schwarz
+ * \param *r pointer to residual
+ * \param *z pointer to preconditioned residual
+ * \param *data pointer to precondition data
+ *
+ * \author Xiaozhe Hu
+ * \date 03/22/2010
+ */
+void fasp_precond_schwarz(double *r, 
+                          double *z, 
+                          void *data)
+{
+	Schwarz_data *schwarz_data=(Schwarz_data *)data;
+	
+	int n = schwarz_data->A.row;
+	int *ia = schwarz_data->A.IA;
+	int *ja = schwarz_data->A.JA;
+	double *a = schwarz_data->A.val;
+	
+	int nblk = schwarz_data->nblk;
+	int *iblock = schwarz_data->iblock;
+	int *jblock = schwarz_data->jblock;
+	double *rhsloc = schwarz_data->rhsloc;
+	double *au = schwarz_data->au;
+	double *al = schwarz_data->al;
+	
+	int schwarz_type = schwarz_data->schwarz_type;
+	
+	int memt = schwarz_data->memt;
+	int *mask = schwarz_data->mask;
+	int *maxa = schwarz_data->maxa;
+	
+	fasp_array_set(n, z, 0.0);
+	
+	switch (schwarz_type)
+	{
+		case 2:
+			bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,	mask,maxa,au,al,rhsloc,&memt);
+			break;
+		case 3:
+			fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,	mask,maxa,au,al,rhsloc,&memt);
+			bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,	mask,maxa,au,al,rhsloc,&memt);
+			break;
+		default:
+			fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,	mask,maxa,au,al,rhsloc,&memt);
+			break;
+	}
+    
+}
+
+
+/**
  * \fn void fasp_precond_amg (REAL *r, REAL *z, void *data)
  *
  * \brief AMG preconditioner

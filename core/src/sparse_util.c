@@ -18,6 +18,7 @@
 #include <time.h>
 
 #include "fasp.h"
+#include "fasp_functs.h"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -898,6 +899,81 @@ void fasp_sparse_rapcmp_ (INT *ir,
     
     return;
 }
+
+/**
+ * \fn ivector fasp_sparse_MIS(dCSRmat *A)
+ *	  
+ * \brief get the maximal independet set of a CSR matrix
+ *
+ * \param A pointer to the matrix
+ * 
+ * \note: only use the sparsity of A, index starts from 1 (fortran)!!
+ */
+ivector fasp_sparse_MIS(dCSRmat *A)
+{
+    
+	//! information of A
+	int n = A->row;
+	int *IA = A->IA;
+	int *JA = A->JA;
+	
+	// local variables
+	int i,j;
+	int row_begin, row_end;
+	int count=0;
+	INT *flag; 
+	flag = (INT *)fasp_mem_calloc(n, sizeof(INT));
+	for (i=0;i<n;i++) flag[i]=0;
+	
+	//! work space
+	//int *work = (int *)fasp_mem_calloc (n, sizeof(int));
+    INT *work = (int*)fasp_mem_calloc(n,sizeof(INT));    
+	
+	//! return
+	ivector MIS;
+	
+	//main loop
+	for (i=0;i<n;i++)
+	{
+		
+		if (flag[i] == 0)
+		{
+			flag[i] = 1;
+			row_begin = IA[i] - 1; row_end = IA[i+1] - 1;
+			for (j = row_begin; j<row_end; j++)
+			{
+				if (flag[JA[j]-1] > 0)
+				{
+					flag[i] = -1;
+					break;
+				}
+			}
+			
+			if (flag[i])
+			{
+				work[count] = i; count++;
+				for (j = row_begin; j<row_end; j++)
+				{
+					flag[JA[j]-1] = -1;
+				}
+			}
+			
+		} // end if
+		
+	}// end for
+    
+	// form MIS
+	MIS.row = count;
+	work = (int *)fasp_mem_realloc(work, count*sizeof(int));
+	MIS.val = work;
+	
+	// clean
+	fasp_mem_free (flag);
+	
+	//return
+	return MIS;
+}
+
 
 /*---------------------------------*/
 /*--        End of File          --*/

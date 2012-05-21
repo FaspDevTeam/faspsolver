@@ -78,6 +78,12 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         iluparam.ILU_type    = param->ILU_type;
     }
     
+    // initialize Schwarz parameters
+	mgl->schwarz_levels = param->schwarz_levels;
+	INT schwarz_mmsize  = param->schwarz_mmsize;
+	INT schwarz_maxlvl  = param->schwarz_maxlvl;
+	INT schwarz_type    = param->schwarz_type;
+
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
@@ -95,6 +101,14 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
             status = fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
             if (status < 0) goto FINISHED;
         }
+        
+        /* -- setup Schwarz smoother if necessary */
+		if (level<param->schwarz_levels){
+			mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
+			fasp_dcsr_shift (&(mgl[level].schwarz.A), 1);
+			fasp_schwarz_setup(&mgl[level].schwarz, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
+		}
+
     
         /*-- Coarseing and form the structure of interpolation --*/
         status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, param);

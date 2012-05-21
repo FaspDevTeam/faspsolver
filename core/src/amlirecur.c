@@ -68,6 +68,27 @@ void fasp_solver_amli (AMG_data *mgl,
         if (level<param->ILU_levels) {
             fasp_smoother_dcsr_ilu(A_level0, b0, e0, LU_level);
         }
+        else if (level<mgl->schwarz_levels){
+			switch (mgl[level].schwarz.schwarz_type){
+				case 3:
+					fbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al, \
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+					bbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al, \
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+					break;
+				default:
+					fbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al, \
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+					break;
+			}
+		}
+
         else {
             fasp_dcsr_presmoothing(smoother,A_level0,b0,e0,param->presmooth_iter,
                                    0,m0-1,1,relax,smooth_order,ordering);
@@ -124,6 +145,27 @@ void fasp_solver_amli (AMG_data *mgl,
         if (level < param->ILU_levels) {
             fasp_smoother_dcsr_ilu(A_level0, b0, e0, LU_level);
         }
+        else if (level<mgl->schwarz_levels){
+			switch (mgl[level].schwarz.schwarz_type){
+                case 3:
+                    bbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al,\
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+                    fbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al,\
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+                    break;
+                default:
+                    bbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al,\
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+                    break;
+			}
+		}
+
         else {
             fasp_dcsr_postsmoothing(smoother,A_level0,b0,e0,param->postsmooth_iter,
                                     0,m0-1,-1,relax,smooth_order,ordering);
@@ -209,6 +251,27 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         if (level<param->ILU_levels) {
             fasp_smoother_dcsr_ilu(A_level0, b0, e0, LU_level);
         }
+        else if (level<mgl->schwarz_levels){
+			switch (mgl[level].schwarz.schwarz_type){
+				case 3:
+					fbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al, \
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+					bbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al, \
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+					break;
+				default:
+					fbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al, \
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+					break;
+			}
+		}
+
         else {
             fasp_dcsr_presmoothing(smoother,A_level0,b0,e0,param->presmooth_iter,
                                    0,m0-1,1,relax,smooth_order,ordering);
@@ -284,6 +347,27 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         if (level < param->ILU_levels) {
             fasp_smoother_dcsr_ilu(A_level0, b0, e0, LU_level);
         }
+        else if (level<mgl->schwarz_levels){
+			switch (mgl[level].schwarz.schwarz_type){
+				case 3:
+					bbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al, \
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+					fbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al, \
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+					break;
+				default:
+					bbgs2ns_(&(mgl[level].schwarz.A.row),mgl[level].schwarz.A.IA,mgl[level].schwarz.A.JA,mgl[level].schwarz.A.val, \
+                             mgl[level].x.val, mgl[level].b.val,&(mgl[level].schwarz.nblk),mgl[level].schwarz.iblock,mgl[level].schwarz.jblock,	\
+                             mgl[level].schwarz.mask,mgl[level].schwarz.maxa,mgl[level].schwarz.au,mgl[level].schwarz.al, \
+                             mgl[level].schwarz.rhsloc,&(mgl[level].schwarz.memt));
+					break;
+			}
+		}
+
         else {
             fasp_dcsr_postsmoothing(smoother,A_level0,b0,e0,param->postsmooth_iter,
                                     0,m0-1,-1,relax,smooth_order,ordering);

@@ -167,6 +167,18 @@ void fasp_param_input (char *filenm,
             Input->AMG_ILU_levels = ibuff;
             wall = fgets(buffer,500,fp); // skip rest of line
         }
+        
+        else if (strcmp(buffer,"AMG_schwarz_levels")==0)
+		{
+			val = fscanf(fp,"%s",buffer);
+			if (val!=1 || strcmp(buffer,"=")!=0) {
+				status = ERROR_INPUT_PAR; break;
+			}
+			val = fscanf(fp,"%d",&ibuff);
+			if (val!=1) { status = SUCCESS; break; }
+			Input->AMG_schwarz_levels = ibuff;
+			wall = fgets(buffer,500,fp); // skip rest of line
+		}
     
         else if (strcmp(buffer,"itsolver_restart")==0) {
             val = fscanf(fp,"%s",buffer);
@@ -535,6 +547,43 @@ void fasp_param_input (char *filenm,
             Input->ILU_permtol = dbuff;
             wall = fgets(buffer,500,fp); // skip rest of line
         }
+        
+        else if (strcmp(buffer,"Schwarz_mmsize")==0)
+		{
+			val = fscanf(fp,"%s",buffer);
+			if (val!=1 || strcmp(buffer,"=")!=0) {
+				status = ERROR_INPUT_PAR; break;
+			}
+			val = fscanf(fp,"%d",&ibuff);
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
+			Input->Schwarz_mmsize = ibuff;
+			wall = fgets(buffer,500,fp); // skip rest of line
+		}
+		
+		else if (strcmp(buffer,"Schwarz_maxlvl")==0)
+		{
+			val = fscanf(fp,"%s",buffer);
+			if (val!=1 || strcmp(buffer,"=")!=0) {
+				status = ERROR_INPUT_PAR; break;
+			}
+			val = fscanf(fp,"%d",&ibuff);
+			if (val!=1) {status = ERROR_INPUT_PAR; break; }
+			Input->Schwarz_maxlvl = ibuff;
+			wall = fgets(buffer,500,fp); // skip rest of line
+		}
+		
+		else if (strcmp(buffer,"Schwarz_type")==0)
+		{
+			val = fscanf(fp,"%s",buffer);
+			if (val!=1 || strcmp(buffer,"=")!=0) {
+				status = ERROR_INPUT_PAR; break;
+			}
+			val = fscanf(fp,"%d",&ibuff);
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
+			Input->Schwarz_type = ibuff;
+			wall = fgets(buffer,500,fp); // skip rest of line
+		}
+
     
         else {
             status = ERROR_INPUT_PAR;

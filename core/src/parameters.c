@@ -90,6 +90,10 @@ void fasp_param_input_init (input_param *inparam)
     inparam->ILU_relax = 0;
     inparam->ILU_permtol = 0.0;
     
+    inparam->Schwarz_mmsize = 200;
+	inparam->Schwarz_maxlvl = 2;
+	inparam->Schwarz_type = 1;
+    
     inparam->AMG_type = CLASSIC_AMG;
     inparam->AMG_levels = 20;
     inparam->AMG_cycle_type = V_CYCLE;
@@ -101,6 +105,7 @@ void fasp_param_input_init (input_param *inparam)
     inparam->AMG_tol = 1e-4*inparam->itsolver_tol;
     inparam->AMG_maxit = 1;
     inparam->AMG_ILU_levels = 0;
+    inparam->AMG_schwarz_levels = 0;
     inparam->AMG_coarse_scaling = OFF;
     inparam->AMG_amli_degree = 0; 
     inparam->AMG_nl_amli_krylov_type = 2;
@@ -141,7 +146,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->smooth_order = CF_ORDER;
     amgparam->presmooth_iter = 2;
     amgparam->postsmooth_iter = 2;
-    amgparam->relaxation = 1.1;
+    amgparam->relaxation = 1.0;
     amgparam->coarse_scaling = OFF;
     amgparam->amli_degree = 0;
     amgparam->amli_coef = NULL;
@@ -164,6 +169,12 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->ILU_lfil = 0;
     amgparam->ILU_droptol = 0.001;
     amgparam->ILU_relax = 0;
+    
+    amgparam->schwarz_levels = 0;
+	amgparam->schwarz_mmsize = 200;
+	amgparam->schwarz_maxlvl = 2;
+	amgparam->schwarz_type = 1;
+
 }
 
 /**
@@ -266,6 +277,11 @@ void fasp_param_amg_set (AMG_param *param,
     param->ILU_droptol          = inparam->ILU_droptol;
     param->ILU_relax            = inparam->ILU_relax;
     param->ILU_permtol          = inparam->ILU_permtol;
+    
+    param->schwarz_levels       = inparam->AMG_schwarz_levels;
+	param->schwarz_mmsize       = inparam->Schwarz_mmsize;
+	param->schwarz_maxlvl       = inparam->Schwarz_maxlvl;
+	param->schwarz_type         = inparam->Schwarz_type;
 }
 
 /**

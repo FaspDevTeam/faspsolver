@@ -150,6 +150,12 @@ int main (int argc, const char * argv[])
             if (print_level>PRINT_NONE) fasp_param_ilu_print(&iluparam);
 			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
 		}
+        // Using Schwarz as preconditioner for Krylov iterative methods
+        else if (precond_type == PREC_SCHWARZ){
+			status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, amgparam.schwarz_mmsize, \
+                                                     amgparam.schwarz_maxlvl, amgparam.schwarz_type);
+		}
+
         
 		else {
 			printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);		

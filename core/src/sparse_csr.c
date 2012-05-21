@@ -859,6 +859,40 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     if (work) fasp_mem_free(work);
 }
 
+/**
+ * \fn dCSRmat fasp_dcsr_sympat(dCSRmat *A)
+ * \brief Symmetrize the parttarn of a dCSRmat matrix
+ *
+ * \param *A      pointer to the dCSRmat matrix
+ *
+ * \return symmetrized the dCSRmat matrix
+ *
+ * \author Xiaozhe Hu
+ * \date 03/21/2011
+ */
+dCSRmat fasp_dcsr_sympat(dCSRmat *A)
+{
+	//local variable
+	dCSRmat AT;
+	
+	//return variable
+	dCSRmat SA;
+	
+	// get the transpose of A
+	fasp_dcsr_trans (A,  &AT);
+	
+	// get symmetrized A
+	fasp_blas_dcsr_add (A, 1.0, &AT, 0.0, &SA);
+	
+	// clean 
+	fasp_dcsr_free(&AT);
+	
+	// return 
+	return SA;
+	
+}
+
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

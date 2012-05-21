@@ -898,6 +898,8 @@ void fasp_ilu_data_alloc (INT iwk,
                           INT nwork, 
                           ILU_data *iludata);
 
+void fasp_schwarz_data_free (Schwarz_data *schwarz);
+
 void fasp_amg_data_free (AMG_data *mgl);
 
 void fasp_ilu_data_free (ILU_data *ILUdata);
@@ -958,6 +960,9 @@ void fasp_dcsrvec2_read (char *filemat,
 void fasp_dcsrvec1_read (char *filename,
                          dCSRmat *A,
                          dvector *b);
+
+void fasp_dcsr_read (char *filename, 
+                     dCSRmat *A);
 
 void fasp_dcoo_read (char *filename, 
                      dCSRmat *A);
@@ -1097,6 +1102,14 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
                                   dvector *b, 
                                   dvector *x, 
                                   itsolver_param *itparam);
+
+INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, 
+                                     dvector *b, 
+                                     dvector *x, 
+                                     itsolver_param *itparam, 
+                                     INT schwarz_mmsize,
+                                     INT schwarz_maxlvl,
+                                     INT schwarz_type);
 
 INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, 
                                  dvector *b, 
@@ -1585,6 +1598,10 @@ void fasp_precond_ilu_backward (REAL *r,
                                 REAL *z, 
                                 void *data);
 
+void fasp_precond_schwarz(double *r, 
+                          double *z, 
+                          void *data);
+
 void fasp_precond_amg (REAL *r, 
                        REAL *z, 
                        void *data);
@@ -1740,6 +1757,11 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
                              INT *maxrpout,
                              INT *ipin, 
                              INT *jpin) ;
+
+INT fasp_schwarz_setup(Schwarz_data *schwarz, 
+					    INT mmsize,
+					    INT maxlev,
+					    INT schwarz_type);
 
 
 /*-------- In file: smat.c --------*/
@@ -2267,6 +2289,8 @@ void fasp_dcsr_shift (dCSRmat *A,
 void fasp_dcsr_symdiagscale (dCSRmat *A, 
                              dvector *diag);
 
+dCSRmat fasp_dcsr_sympat(dCSRmat *A);
+
 
 /*-------- In file: sparse_csr_omp.c --------*/
 
@@ -2442,6 +2466,8 @@ void fasp_sparse_rapcmp_ (INT *ir,
                           INT *jac, 
                           REAL *ac, 
                           INT *idummy);
+
+ivector fasp_sparse_MIS(dCSRmat *A);
 
 
 /*-------- In file: util.c --------*/

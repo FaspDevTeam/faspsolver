@@ -220,6 +220,81 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 }
 
 /**
+ * \fn INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, dvector *b, dvector *x, itsolver_param *itparam, INT schwarz_mmsize, INT schwarz_maxlvl, INT schwarz_type)
+ * \brief Solve Ax=b by overlapping schwarz Krylov methods 
+ * 
+ * \param *A        pointer to the dCSRmat matrix
+ * \param *b        pointer to the dvector of right hand side
+ * \param *x        pointer to the dvector of dofs
+ * \param *itparam  pointer to parameters for iterative solvers
+ * \return          number of iterations
+ *
+ * \author Xiaozhe Hu
+ * \date 03/21/2011
+ */
+INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, 
+                                     dvector *b, 
+                                     dvector *x, 
+                                     itsolver_param *itparam, 
+                                     INT schwarz_mmsize,
+                                     INT schwarz_maxlvl,
+                                     INT schwarz_type)
+{
+	const INT print_level = itparam->print_level;	
+	clock_t solver_start, solver_end;
+	clock_t setup_start, setup_end;
+	REAL solver_duration, setup_duration;
+	INT status = SUCCESS;
+	
+#if DEBUG_MODE
+	printf("krylov_schwarz ...... [Start]\n");
+	printf("krylov_schwarz: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
+	printf("krylov_schwarz: rhs/sol size: %d %d\n", b->row, x->row);		
+#endif
+	
+	setup_start = clock();
+	
+	// setup preconditioner
+	Schwarz_data schwarz_data;
+	
+	// symmetrize the matrix (for now, we have to do this. We will get rid of this later)
+	schwarz_data.A=fasp_dcsr_sympat(A);
+	
+	// construct schwarz precondtioner
+	fasp_dcsr_shift (&schwarz_data.A, 1);
+	fasp_schwarz_setup(&schwarz_data, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
+	
+	setup_end = clock();
+	setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
+	printf("Schwarz_Krylov method setup costs %f seconds.\n", setup_duration);
+	
+	precond prec;
+	prec.data = &schwarz_data; 
+	prec.fct = fasp_precond_schwarz;
+	
+	solver_start=clock();
+	
+	// solver part
+	status=fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
+	
+	if (print_level>0) {
+		solver_end=clock();	
+		solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+		printf("Schwarz_Krylov method totally costs %f seconds.\n", solver_duration);
+	}
+	
+#if DEBUG_MODE
+	printf("krylov_schwarz ...... [Finish]\n");
+#endif
+	
+	fasp_schwarz_data_free(&schwarz_data);
+	
+	return status;
+}
+
+
+
+/**
  * \fn INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, dvector *b, dvector *x, 
  *                                      itsolver_param *itparam, AMG_param *amgparam)
  *

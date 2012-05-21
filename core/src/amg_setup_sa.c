@@ -133,6 +133,13 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
         iluparam.ILU_type    = param->ILU_type;
     }
     
+    // initialize Schwarz parameters
+	mgl->schwarz_levels = param->schwarz_levels;
+	INT schwarz_mmsize = param->schwarz_mmsize;
+	INT schwarz_maxlvl = param->schwarz_maxlvl;
+	INT schwarz_type = param->schwarz_type;
+
+    
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
@@ -146,6 +153,14 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
     
         /*-- setup ILU decomposition if necessary */
         if (level<param->ILU_levels) fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
+        
+        /* -- setup Schwarz smoother if necessary */
+		if (level<param->schwarz_levels){
+			mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
+			fasp_dcsr_shift (&(mgl[level].schwarz.A), 1);
+			fasp_schwarz_setup(&mgl[level].schwarz, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
+		}
+
     
         /*-- Aggregation --*/
         aggregation(&mgl[level].A, &vertices[level], param, level+1, &Neighbor[level], &num_aggregations[level]);
@@ -178,7 +193,7 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
     mgl[0].w = fasp_dvec_create(m);    
     
     for (level=1; level<max_levels; ++level) {
-        int    m = mgl[level].A.row;
+        INT    m = mgl[level].A.row;
         mgl[level].num_levels = max_levels;     
         mgl[level].b = fasp_dvec_create(m);
         mgl[level].x = fasp_dvec_create(m);
@@ -284,9 +299,24 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
         iluparam.ILU_type    = param->ILU_type;
     }
     
+    // initialize Schwarz parameters
+	mgl->schwarz_levels = param->schwarz_levels;
+	INT schwarz_mmsize = param->schwarz_mmsize;
+	INT schwarz_maxlvl = param->schwarz_maxlvl;
+	INT schwarz_type = param->schwarz_type;
+
+    
     while ((mgl[level].A.row>param->coarse_dof) && (level<max_levels-1)) {
         /*-- setup ILU decomposition if necessary */
         if (level<param->ILU_levels) fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
+        
+        /* -- setup Schwarz smoother if necessary */
+		if (level<param->schwarz_levels){
+			mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
+			fasp_dcsr_shift (&(mgl[level].schwarz.A), 1);
+			fasp_schwarz_setup(&mgl[level].schwarz, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
+		}
+
     
         /*-- Aggregation --*/
         aggregation(&mgl[level].A, &vertices[level], param, level+1, &Neighbor[level], &num_aggregations[level]);
@@ -316,7 +346,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
     mgl[0].w = fasp_dvec_create(m);    
     
     for (level=1; level<max_levels; ++level) {
-        int    m = mgl[level].A.row;
+        INT    m = mgl[level].A.row;
         mgl[level].num_levels = max_levels;     
         mgl[level].b = fasp_dvec_create(m);
         mgl[level].x = fasp_dvec_create(m);

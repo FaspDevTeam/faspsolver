@@ -108,8 +108,11 @@
 #define PREC_NULL               0    /**< with no precond */
 #define PREC_DIAG               1    /**< with diagonal precond */
 #define PREC_AMG                2    /**< with AMG precond */
+
 #define PREC_FMG                3    /**< with full AMG precond */
 #define PREC_ILU                4    /**< with ILU precond */
+#define PREC_SCHWARZ            5    /**< with Schwarz preconditioner */
+
 
 /**
  * \brief Definition of AMG types

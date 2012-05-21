@@ -370,6 +370,56 @@ typedef struct {
 	
 } ILU_data; /**< Data for ILU */
 
+
+
+
+//////////////////////////////////////////////////////////modified on 05/14/2012
+
+/** 
+ * \struct Schwarz_data
+ * \brief Data for Schwarz methods.
+ *
+ * This is needed for the schwarz solver, preconditioner/smoother.
+ *
+ */
+typedef struct { 
+    
+	/* matrix information */
+	
+	//! pointer to the matrix
+	dCSRmat A;  // note: has to be start from 1!! Change later
+	
+	/* blocks information */	
+	//! number of blocks
+	INT nblk;
+	//! row index of blocks
+	INT *iblock;
+	// column index of blocks
+	INT *jblock;
+	// local right hand side
+	REAL *rhsloc;
+	// LU decomposition of the blocks
+	REAL *au;
+	REAL *al;
+	
+	// Schwarz type
+	INT schwarz_type;
+	
+	//! working space
+	INT memt;
+	INT *mask;
+	INT *maxa;
+	
+} Schwarz_data;
+
+
+
+
+
+
+
+
+
 /** 
  * \struct AMG_param
  * \brief Parameters for AMG solver.
@@ -446,6 +496,16 @@ typedef struct {
 	REAL ILU_relax;
 	//! permuted if permtol*|a(i,j)| > |a(i,i)|
 	REAL ILU_permtol;
+    
+	//! number of levels use schwarz smoother
+	INT schwarz_levels;
+	//! maximal block size
+	INT schwarz_mmsize;
+	//! maximal levels
+	INT schwarz_maxlvl;
+	//! type of schwarz method
+	INT schwarz_type;
+
 	
 } AMG_param; /**< Parameters for AMG */
 
@@ -491,6 +551,12 @@ typedef struct {
 	//! basis of near kernel space for SAMG
 	REAL **near_kernel_basis;
 	// Smoother order information
+    
+    //! number of levels use schwarz smoother
+	INT schwarz_levels;
+	//! data of Schwarz smoother 
+	Schwarz_data schwarz;
+
 	
 	//! Temporary work space
 	dvector w;
@@ -706,6 +772,11 @@ typedef struct {
 	REAL ILU_droptol; /**< drop tolerence */
 	REAL ILU_relax; /**< add the sum of dropped elements to diagnal element in proportion relax */
 	REAL ILU_permtol; /**< permutation tol */
+    
+    // parameter for Schwarz
+	INT Schwarz_mmsize; /**< maximal block size */
+	INT Schwarz_maxlvl; /**< maximal levels */
+	INT Schwarz_type; /** type of schwarz method */
 	
 	// parameters for AMG
 	SHORT AMG_type; /**< Type of AMG */
@@ -722,6 +793,7 @@ typedef struct {
 	SHORT AMG_coarse_scaling; /**< switch of scaling of the coarse grid correction */
 	SHORT AMG_amli_degree; /**< degree of the polynomial used by AMLI cycle */
     SHORT AMG_nl_amli_krylov_type; /**< type of krylov method used by nonlinear AMLI cycle */
+    INT AMG_schwarz_levels; /**< number of levels use schwarz smoother */
 	
 	// parameters for classical AMG
 	SHORT AMG_coarsening_type; /**< coarsening type */

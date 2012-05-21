@@ -87,13 +87,38 @@ void fasp_ilu_data_alloc (INT iwk,
     printf("### DEBUG: iwk=%d, nwork=%d\n", iwk, nwork);
 #endif
     
-    iludata->ijlu=(int*)fasp_mem_calloc(iwk, sizeof(INT));
+    iludata->ijlu=(INT*)fasp_mem_calloc(iwk, sizeof(INT));
     
     iludata->luval=(REAL*)fasp_mem_calloc(iwk, sizeof(REAL)); 
     
     iludata->work=(REAL*)fasp_mem_calloc(nwork, sizeof(REAL)); 
     
     return;
+}
+
+/**
+ * \fn void fasp_schwarz_data_free (Schwarz_data *schwarz)
+ * \brief Free Schwarz_data data memeory space
+ *
+ * \param *schwarz  pointer to the AMG_data data
+ *
+ * \author Xiaozhe Hu
+ * \date 2010/04/06 
+ */
+void fasp_schwarz_data_free (Schwarz_data *schwarz)
+{
+	fasp_dcsr_free(&schwarz->A);
+	
+	schwarz->nblk = 0;
+	fasp_mem_free (schwarz->iblock);
+	fasp_mem_free (schwarz->jblock);
+	fasp_mem_free (schwarz->rhsloc);
+	fasp_mem_free (schwarz->au);
+	fasp_mem_free (schwarz->al);
+	
+	schwarz->memt = 0;
+	fasp_mem_free (schwarz->mask);
+	fasp_mem_free (schwarz->maxa);
 }
 
 /**
@@ -120,6 +145,7 @@ void fasp_amg_data_free (AMG_data *mgl)
         if (&mgl[i].w) { fasp_dvec_free(&mgl[i].w); }
         if (&mgl[i].cfmark) { fasp_ivec_free(&mgl[i].cfmark); }
         if (&mgl[i].LU) { fasp_ilu_data_free(&mgl[i].LU); }
+        if (&mgl[i].schwarz) {fasp_schwarz_data_free (&mgl[i].schwarz);}
     }
     
     for (i=0; i<mgl->near_kernel_dim; ++i) {
