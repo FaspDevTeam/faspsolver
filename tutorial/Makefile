@@ -119,6 +119,7 @@ ALLPROG=$(TESTLIB)
 ALLPROG+=poisson-amg.c poisson-amg.f90
 ALLPROG+=poisson-its.c
 ALLPROG+=poisson-pcg.c poisson-pcg.f90
+ALLPROG+=spe01-its.c
 
 # Test for solvers
 TESTPROG=$(TESTLIB) main/poisson-amg.o 
@@ -155,6 +156,10 @@ poisson-pcg.c:
 poisson-pcg.f90:
 	$(FC) -c main/poisson-pcg.f90 -o main/poisson-pcg.o $(FFLAGS)
 	$(FC) -o poisson-pcg-f.ex main/poisson-pcg.o $(FLFLAGS)
+
+spe01-its.c:
+	$(CC) -c main/spe01-its.c -o main/spe01-its.o $(CFLAGS)
+	$(FC) -o spe01-its-c.ex main/spe01-its.o $(FLFLAGS)
 
 ########################################################################
 # Clean up

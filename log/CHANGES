@@ -1,7 +1,9 @@
 File Name: CHANGES
 
 05/22/2012 FASP 0.8.5:
-- Fix a small bug in mkheaders*
+- Fix a small bug in mkheaders*.
+- Add Schwartz smoother.
+- Add a tutorial example for BSR matrices. There is a bug in BSR ILU. Need to fix it!
 
 05/20/2012 FASP 0.8.4:
 - Revise matrix and rhs read/write routines.
