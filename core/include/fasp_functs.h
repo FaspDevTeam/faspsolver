@@ -1106,10 +1106,8 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, 
                                      dvector *b, 
                                      dvector *x, 
-                                     itsolver_param *itparam, 
-                                     INT schwarz_mmsize,
-                                     INT schwarz_maxlvl,
-                                     INT schwarz_type);
+                                     itsolver_param *itparam,
+                                     Schwarz_param *schwarzparam);
 
 INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, 
                                  dvector *b, 
@@ -1308,7 +1306,8 @@ void fasp_param_init (char *inputfile,
                       input_param *inparam, 
                       itsolver_param *itparam, 
                       AMG_param *amgparam, 
-                      ILU_param *iluparam);
+                      ILU_param *iluparam,
+                      Schwarz_param *schwarzparam);
 
 void fasp_param_input_init (input_param *inparam);
 
@@ -1318,10 +1317,15 @@ void fasp_param_solver_init (itsolver_param *itparam);
 
 void fasp_param_ilu_init (ILU_param *iluparam);
 
+void fasp_param_schwarz_init (Schwarz_param *schwarzparam);
+
 void fasp_param_amg_set (AMG_param *param, 
                          input_param *inparam);
 
 void fasp_param_ilu_set (ILU_param *iluparam, 
+                         input_param *inparam);
+
+void fasp_param_schwarz_set (Schwarz_param *schwarzparam, 
                          input_param *inparam);
 
 void fasp_param_solver_set (itsolver_param *itparam, 
@@ -1344,6 +1348,8 @@ void fasp_param_prec_to_amg_bsr (AMG_param *amgparam,
 void fasp_param_amg_print (AMG_param *param);
 
 void fasp_param_ilu_print (ILU_param *param);
+
+void fasp_param_schwarz_print (Schwarz_param *param);
 
 void fasp_param_solver_print (itsolver_param *param);
 

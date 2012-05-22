@@ -226,7 +226,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
  * \param *A        pointer to the dCSRmat matrix
  * \param *b        pointer to the dvector of right hand side
  * \param *x        pointer to the dvector of dofs
- * \param *itparam  pointer to parameters for iterative solvers
+ * \param *schwarzparam  pointer to parameters for iterative solvers
  * \return          number of iterations
  *
  * \author Xiaozhe Hu
@@ -235,16 +235,17 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, 
                                      dvector *b, 
                                      dvector *x, 
-                                     itsolver_param *itparam, 
-                                     INT schwarz_mmsize,
-                                     INT schwarz_maxlvl,
-                                     INT schwarz_type)
+                                     itsolver_param *itparam,
+                                     Schwarz_param *schwarzparam)
 {
 	const INT print_level = itparam->print_level;	
 	clock_t solver_start, solver_end;
 	clock_t setup_start, setup_end;
 	REAL solver_duration, setup_duration;
 	INT status = SUCCESS;
+    INT schwarz_maxlvl = schwarzparam->schwarz_maxlvl;
+    INT schwarz_mmsize = schwarzparam->schwarz_mmsize;
+    INT schwarz_type = schwarzparam->schwarz_type;
 	
 #if DEBUG_MODE
 	printf("krylov_schwarz ...... [Start]\n");
@@ -261,7 +262,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	schwarz_data.A=fasp_dcsr_sympat(A);
 	
 	// construct schwarz precondtioner
-	fasp_dcsr_shift (&schwarz_data.A, 1);
+	fasp_dcsr_shift(&schwarz_data.A, 1);
 	fasp_schwarz_setup(&schwarz_data, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
 	
 	setup_end = clock();

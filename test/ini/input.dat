@@ -44,8 +44,8 @@ ILU_permtol              = 0.001  % permutation toleration for ILUtp
 %----------------------------------------------%
 
 Schwarz_mmsize = 200	% max block size
-Schwarz_maxlvl = 3      % level used to form blocks
-Schwarz_type = 1        % 1: forward 2: backward 3: symmetric
+Schwarz_maxlvl = 2      % level used to form blocks
+Schwarz_type = 3        % 1: forward 2: backward 3: symmetric
 
 
 %----------------------------------------------%
@@ -57,7 +57,7 @@ AMG_cycle_type           = V      % V V-cycle | W W-cycle | A AMLI-cycle | NA No
 AMG_smoother             = GS     % GS | JACOBI | SGS | SOR | SSOR | GSOR | SGSOR | POLY
 AMG_levels               = 20     % max number of levels
 AMG_ILU_levels           = 0      % number of levels using ILU smoother
-AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
+AMG_schwarz_levels       = 1	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.1    % over relaxation parameter for SOR smoother 
 AMG_presmooth_iter       = 1      % number of presmoothing
 AMG_postsmooth_iter      = 1      % number of postsmoothing

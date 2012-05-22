@@ -36,13 +36,14 @@ int main (int argc, const char * argv[])
     //------------------------//
 	// Step 0. Set parameters //
     //------------------------//
-	input_param     inparam;  // parameters from input files
-	itsolver_param  itparam;  // parameters for itsolver
-	AMG_param       amgparam; // parameters for AMG
-	ILU_param       iluparam; // parameters for ILU
+	input_param     inparam;      // parameters from input files
+	itsolver_param  itparam;      // parameters for itsolver
+	AMG_param       amgparam;     // parameters for AMG
+	ILU_param       iluparam;     // parameters for ILU
+    Schwarz_param   schwarzparam; // parameters for Shcwarz method
     
     // Read input parameters from a disk file
-	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam);
+	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam, &schwarzparam);
     
     // Set local parameters
 	const int print_level   = inparam.print_level;
@@ -152,8 +153,8 @@ int main (int argc, const char * argv[])
 		}
         // Using Schwarz as preconditioner for Krylov iterative methods
         else if (precond_type == PREC_SCHWARZ){
-			status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, amgparam.schwarz_mmsize, \
-                                                     amgparam.schwarz_maxlvl, amgparam.schwarz_type);
+            if (print_level>PRINT_NONE) fasp_param_schwarz_print(&schwarzparam);
+			status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, &schwarzparam);
 		}
 
         

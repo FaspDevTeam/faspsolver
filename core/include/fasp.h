@@ -371,9 +371,24 @@ typedef struct {
 } ILU_data; /**< Data for ILU */
 
 
-
-
 //////////////////////////////////////////////////////////modified on 05/14/2012
+/**
+ * \struct Schwarz_param
+ * \brief Parameters for Schwarz method
+ */
+typedef struct {
+	
+	//! print leve
+	SHORT print_level;
+	//! type for Schwarz method
+	SHORT schwarz_type;
+	//! maximal level for constructing the blocks
+	INT schwarz_maxlvl;
+    //! maxiaml size of blocks
+    INT schwarz_mmsize;
+	
+} Schwarz_param; /**< Parameters for ILU */	
+
 
 /** 
  * \struct Schwarz_data
@@ -411,11 +426,6 @@ typedef struct {
 	INT *maxa;
 	
 } Schwarz_data;
-
-
-
-
-
 
 
 
