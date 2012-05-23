@@ -51,6 +51,8 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     
     ivector vertices=fasp_ivec_create(m); // stores level info (fine: 0; coarse: 1)
     
+    iCSRmat S; // strong n-couplings
+    
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_rs ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
@@ -111,7 +113,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 
     
         /*-- Coarseing and form the structure of interpolation --*/
-        status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, param);
+        status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
     
         /*-- Store the C/F marker: Zhiyang Zhou 2010/11/12 --*/
         size = mgl[level].A.row;
@@ -122,7 +124,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         if (status < 0) goto FINISHED;
     
         /*-- Form interpolation --*/
-        status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, param);
+        status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
         if (status < 0) goto FINISHED;
         
         /*-- Form coarse level stiffness matrix: There are two RAP routines available! --*/    
@@ -132,6 +134,10 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         // fasp_blas_dcsr_ptap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
     
         // TODO: Make a new ptap using (A,P) only. R is not needed as an input! --Chensong
+        
+        /*-- clean up! --*/
+        fasp_mem_free(S.IA);
+        fasp_mem_free(S.JA);
         
         ++level;
         

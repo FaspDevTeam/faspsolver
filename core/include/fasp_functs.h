@@ -780,6 +780,7 @@ INT fasp_amg_coarsening_cr (INT i_0,
 INT fasp_amg_coarsening_rs (dCSRmat *A, 
                             ivector *vertices, 
                             dCSRmat *P, 
+                            iCSRmat *S,
                             AMG_param *param);
 
 
@@ -920,6 +921,7 @@ void fasp_param_input (char *filenm,
 SHORT fasp_amg_interp (dCSRmat *A, 
                        ivector *vertices, 
                        dCSRmat *P, 
+                       iCSRmat *S,
                        AMG_param *param);
 
 

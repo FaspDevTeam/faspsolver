@@ -146,9 +146,10 @@
 /** 
  * \brief Definition of interpolation types
  */
-#define INTERP_REG              1    /**< standard interpolation */
+#define INTERP_REG              1    /**< Direct interpolation */
 #define INTERP_ENG_MIN_FOR      2    /**< energy minimization interp in Fortran */
 #define INTERP_ENG_MIN_C        3    /**< energy minimization interp in C */
+#define INTERP_STD              4    /**< Standard interpolation */
 
 /** 
  * \brief Type of vertices (dofs) for C/F splitting
