@@ -38,7 +38,7 @@ int main (int argc, const char * argv[])
     
     // Read input parameters from a disk file
 	char *inputfile = "ini/openmp.dat";
-	fasp_param_init(inputfile,&inparam,&itparam,&amgparam,&iluparam);
+	fasp_param_init(inputfile,&inparam,&itparam,&amgparam,&iluparam,NULL);
 	
     // Set local parameters
 	const int print_level   = inparam.print_level;

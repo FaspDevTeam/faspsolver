@@ -32,7 +32,7 @@ int main (int argc, const char * argv[])
     // In this example, we read everything from a disk file:
     //          "./ini/amg.dat"
     // See the reference manual for details of the parameters. 
-    fasp_param_init("ini/amg.dat",&inparam,NULL,&amgparam,NULL);
+    fasp_param_init("ini/amg.dat",&inparam,NULL,&amgparam,NULL,NULL);
     
     // Set local parameters using the input values
     const int print_level = inparam.print_level;

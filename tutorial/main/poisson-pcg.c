@@ -34,7 +34,7 @@ int main (int argc, const char * argv[])
     // In this example, we read everything from a disk file:
     //          "./ini/pcg.dat"
     // See the reference manual for details of the parameters. 
-    fasp_param_init("ini/pcg.dat",&inparam,&itparam,&amgparam,&iluparam);
+    fasp_param_init("ini/pcg.dat",&inparam,&itparam,&amgparam,&iluparam,NULL);
 
     // Set local parameters
     const SHORT print_level = itparam.print_level;    

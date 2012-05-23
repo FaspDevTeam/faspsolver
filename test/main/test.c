@@ -43,7 +43,7 @@ int main (int argc, const char * argv[])
     Schwarz_param   schwarzparam; // parameters for Shcwarz method
     
     // Read input parameters from a disk file
-	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam, &schwarzparam);
+	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam,&schwarzparam);
     
     // Set local parameters
 	const int print_level   = inparam.print_level;
