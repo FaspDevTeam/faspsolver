@@ -108,11 +108,9 @@
 #define PREC_NULL               0    /**< with no precond */
 #define PREC_DIAG               1    /**< with diagonal precond */
 #define PREC_AMG                2    /**< with AMG precond */
-
 #define PREC_FMG                3    /**< with full AMG precond */
 #define PREC_ILU                4    /**< with ILU precond */
 #define PREC_SCHWARZ            5    /**< with Schwarz preconditioner */
-
 
 /**
  * \brief Definition of AMG types
@@ -147,9 +145,8 @@
  * \brief Definition of interpolation types
  */
 #define INTERP_REG              1    /**< Direct interpolation */
-#define INTERP_ENG_MIN_FOR      2    /**< energy minimization interp in Fortran */
+#define INTERP_STD              2    /**< Standard interpolation */
 #define INTERP_ENG_MIN_C        3    /**< energy minimization interp in C */
-#define INTERP_STD              4    /**< Standard interpolation */
 
 /** 
  * \brief Type of vertices (dofs) for C/F splitting

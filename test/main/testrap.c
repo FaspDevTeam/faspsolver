@@ -32,7 +32,8 @@ static void rap_setup(AMG_data *mgl, AMG_param *param)
 	int max_levels=param->max_levels;	
 	ivector vertices=fasp_ivec_create(m); // stores level info
 	unsigned int level=0;	
-	
+	iCSRmat S;
+    
 	if (print_level>8) printf("rap_setup: %d, %d, %d\n",m,n,nnz);
 	
 	clock_t setup_start, setup_end;
@@ -56,10 +57,10 @@ static void rap_setup(AMG_data *mgl, AMG_param *param)
         if (level<param->ILU_levels) fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
 		
         /*-- Coarseing and form the structure of interpolation --*/
-        fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, param);
+        fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
 		
         /*-- Form interpolation --*/
-        fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, param);
+        fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
 		
         /*-- Form coarse level stiffness matrix --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);

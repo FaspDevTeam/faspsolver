@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+05/25/2012 FASP 0.8.6:
+- Add standard interpolation.
+- Remove Fortran version of Energy-min interpolation.
+- Fix a new bug introduced after interface changes in coarsening_rs().
+
 05/22/2012 FASP 0.8.5:
 - Fix a small bug in mkheaders*.
 - Add Schwarz smoothers.

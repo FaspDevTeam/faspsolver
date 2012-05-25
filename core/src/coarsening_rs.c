@@ -46,7 +46,7 @@ static void generate_sparsity_P_standard (dCSRmat *P, iCSRmat *S, ivector *verti
  * \author Xuehai Huang, Chensong Zhang, Xiaozhe Hu, Ludmil Zikatanov
  * \date   09/06/2010
  *
- * \note: modified by Xiaozhe Hu: make strongth matrix as an input and output. -- 05/23/2012
+ * Modified by Xiaozhe Hu: add strength matrix as an input/output. -- 05/23/2012
  */
 INT fasp_amg_coarsening_rs (dCSRmat *A, 
                             ivector *vertices, 

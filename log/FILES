@@ -1,14 +1,14 @@
      122 ./core/src/amg.c
      383 ./core/src/amg_omp.c
      116 ./core/src/amg_setup_cr.c
-     173 ./core/src/amg_setup_rs.c
+     193 ./core/src/amg_setup_rs.c
      665 ./core/src/amg_setup_rs_omp.c
-     504 ./core/src/amg_setup_sa.c
+     534 ./core/src/amg_setup_sa.c
      499 ./core/src/amg_setup_sa_omp.c
-     364 ./core/src/amg_setup_ua.c
+     379 ./core/src/amg_setup_ua.c
      320 ./core/src/amg_solve.c
       95 ./core/src/amg_solve_omp.c
-     570 ./core/src/amlirecur.c
+     654 ./core/src/amlirecur.c
      143 ./core/src/array.c
      194 ./core/src/array_omp.c
      261 ./core/src/auxiliary.c
@@ -27,11 +27,11 @@
      233 ./core/src/blas_vec_omp.c
      329 ./core/src/checkmat.c
      334 ./core/src/coarsening_cr.c
-     842 ./core/src/coarsening_rs.c
+    1033 ./core/src/coarsening_rs.c
      655 ./core/src/coarsening_rs_omp.c
       71 ./core/src/eigen.c
       99 ./core/src/famg.c
-     208 ./core/src/fmgcycle.c
+     250 ./core/src/fmgcycle.c
      861 ./core/src/formats.c
      228 ./core/src/formats_omp.c
       78 ./core/src/givens.c
@@ -39,25 +39,25 @@
      179 ./core/src/ilu_setup.c
      421 ./core/src/ilu_setup_bsr.c
     1257 ./core/src/ilu_setup_str.c
-     188 ./core/src/init.c
-     592 ./core/src/input.c
-     953 ./core/src/interpolation.c
+     214 ./core/src/init.c
+     641 ./core/src/input.c
+    1297 ./core/src/interpolation.c
     1687 ./core/src/interpolation_omp.c
-    1198 ./core/src/io.c
+    1250 ./core/src/io.c
      126 ./core/src/itsolver_bcsr.c
      375 ./core/src/itsolver_bsr.c
      132 ./core/src/itsolver_bsr_omp.c
-     497 ./core/src/itsolver_csr.c
+     573 ./core/src/itsolver_csr.c
      208 ./core/src/itsolver_csr_omp.c
      343 ./core/src/itsolver_str.c
      170 ./core/src/lu.c
      251 ./core/src/memory.c
      236 ./core/src/message.c
-     294 ./core/src/mgcycle.c
+     336 ./core/src/mgcycle.c
      420 ./core/src/mgcycle_omp.c
      122 ./core/src/mgrecur.c
      346 ./core/src/ordering.c
-     625 ./core/src/parameters.c
+     719 ./core/src/parameters.c
     1330 ./core/src/pbcgs.c
      880 ./core/src/pcg.c
      360 ./core/src/pcg_omp.c
@@ -66,7 +66,7 @@
      854 ./core/src/pminres.c
      523 ./core/src/precond_bsr.c
      285 ./core/src/precond_bsr_omp.c
-     473 ./core/src/precond_csr.c
+     526 ./core/src/precond_csr.c
       56 ./core/src/precond_csr_omp.c
     1746 ./core/src/precond_str.c
      611 ./core/src/pvfgmres.c
@@ -74,6 +74,7 @@
      362 ./core/src/pvgmres_omp.c
      873 ./core/src/quadrature.c
      108 ./core/src/rap.c
+     171 ./core/src/schwarz_setup.c
      589 ./core/src/smat.c
      928 ./core/src/smoother_bsr.c
       81 ./core/src/smoother_cr.c
@@ -86,21 +87,22 @@
      855 ./core/src/sparse_bsr.c
      356 ./core/src/sparse_bsr_omp.c
       89 ./core/src/sparse_coo.c
-     864 ./core/src/sparse_csr.c
+     898 ./core/src/sparse_csr.c
      103 ./core/src/sparse_csr_omp.c
       71 ./core/src/sparse_csrl.c
      202 ./core/src/sparse_str.c
-     904 ./core/src/sparse_util.c
+     980 ./core/src/sparse_util.c
       91 ./core/src/util.c
      316 ./core/src/vec.c
      113 ./core/src/vec_omp.c
      118 ./core/src/wrapper.c
      560 ./core/include/dlmalloc.h
      296 ./core/include/doxygen.h
-     874 ./core/include/fasp.h
+     956 ./core/include/fasp.h
      479 ./core/include/fasp_block.h
-    2532 ./core/include/fasp_functs.h
+    2566 ./core/include/fasp_functs.h
+      20 ./core/include/forts_ns.h
     5818 ./core/include/malloc.c.h
-     184 ./core/include/messages.h
+     185 ./core/include/messages.h
      291 ./core/include/nedmalloc.h
-   60341 total
+   61877 total

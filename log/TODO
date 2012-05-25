@@ -48,7 +48,7 @@ AMG
 [ 0.5.0 ] profile and optimize a few core functions: RS, EM
 [ 06/15 ] profile and optimize a few core functions: SA, UA (Xiaozhe)
 
-[ 05/20 ] non-overlapping/overlapping schwarz smoother (Xiaozhe)
+[ 0.8.5 ] non-overlapping/overlapping schwarz smoother
 [ 05/20 ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
 [ 06/01 ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
 [ 06/01 ] strength matrix based on (polynomial) smoothers (Xiaozhe)
@@ -60,7 +60,7 @@ AMG
 [       ] Notay's aggregation scheme (Xiaozhe)
 [       ] LAMG's aggregation scheme (Xiaozhe)
 
-[ 05/20 ] standard interpolation (Xiaozhe)
+[ 0.8.6 ] standard interpolation
 [ 06/01 ] polynomial interpolation -- vector preserve (Xiaozhe)
 [       ] multipass interpolation
 [       ] long-distance interpolation
