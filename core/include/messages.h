@@ -146,7 +146,7 @@
  */
 #define INTERP_REG              1    /**< Direct interpolation */
 #define INTERP_STD              2    /**< Standard interpolation */
-#define INTERP_ENG_MIN_C        3    /**< energy minimization interp in C */
+#define INTERP_ENG_MIN          3    /**< energy minimization interp in C */
 
 /** 
  * \brief Type of vertices (dofs) for C/F splitting

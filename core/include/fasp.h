@@ -427,9 +427,6 @@ typedef struct {
 	
 } Schwarz_data;
 
-
-
-
 /** 
  * \struct AMG_param
  * \brief Parameters for AMG solver.

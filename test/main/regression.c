@@ -150,9 +150,9 @@ int main (int argc, const char * argv[])
         /*****************************/
         fasp_dvec_alloc(b.row, &x);  // allocate mem for numerical solution
         
-        /* AMG V-cycle with GS smoother as a solver */			
+        /* AMG V-cycle (Direct interpolation) with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
-        printf("Classical AMG V-cycle as iterative solver ...\n");	
+        printf("Classical AMG (direct interp) V-cycle as iterative solver ...\n");	
         
         fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
         fasp_param_solver_init(&itparam);
@@ -164,6 +164,36 @@ int main (int argc, const char * argv[])
         
         check_solu(&x, &sol,tolerance);
         
+        /* AMG V-cycle (Standard interpolation) with GS smoother as a solver */			
+        printf("------------------------------------------------------------------\n");
+        printf("Classical AMG (standard interp) V-cycle as iterative solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_solver_init(&itparam);
+        fasp_param_amg_init(&amgparam);
+        amgparam.interpolation_type = INTERP_STD;
+        amgparam.maxit       = 20;
+        amgparam.tol         = 1e-10;
+        amgparam.print_level = print_level;
+        fasp_solver_amg(&A, &b, &x, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+
+        /* AMG V-cycle (EM interpolation) with GS smoother as a solver */			
+        printf("------------------------------------------------------------------\n");
+        printf("Classical AMG (energy-min interp) V-cycle as iterative solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_solver_init(&itparam);
+        fasp_param_amg_init(&amgparam);
+        amgparam.interpolation_type = INTERP_ENG_MIN;
+        amgparam.maxit       = 20;
+        amgparam.tol         = 1e-12;
+        amgparam.print_level = print_level;
+        fasp_solver_amg(&A, &b, &x, &amgparam);
+        
+        check_solu(&x, &sol,tolerance);
+
         /* AMG W-cycle with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
         printf("Classical AMG W-cycle as iterative solver ...\n");	

@@ -60,7 +60,7 @@ SHORT fasp_amg_interp (dCSRmat *A,
     case INTERP_REG: // Direct interpolation
         interp_RS(A, vertices, P, param); 
         break;            
-    case INTERP_ENG_MIN_C: // Energy min interpolation in C
+    case INTERP_ENG_MIN: // Energy min interpolation
         interp_EM(A, vertices, P, param);
         break;
     case INTERP_STD: // standard interpolation
