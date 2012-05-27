@@ -11,21 +11,21 @@
 # revise this file, use "chmod u+w Makefiel" first.  
 
 ########################################################################
+# Location of sources and libraries 
+########################################################################
+SRCDIR=./src
+EXTDIR=./extra ./extra/interface 
+EXTDIR+=./extra/sparsekit ./extra/dlmalloc ./extra/nedmalloc
+INCLUDE=-I./include
+AMGLIB=lib/libfasp.a
+
+########################################################################
 # Compilers and dependences
 ########################################################################
 AR=ar ruc
-
-CC=gcc 
+CC=gcc
 CPP=g++
 FC=gfortran
-#CC=icc
-#CPP=icpc
-#FC=ifort
-
-SRCDIR=./src
-EXTDIR=./extra ./extra/interface ./extra/sparsekit ./extra/dlmalloc ./extra/nedmalloc
-INCLUDE=-I./include
-AMGLIB=lib/libfasp.a
 
 ########################################################################      
 # Compiling options                                                             
@@ -35,12 +35,12 @@ BOPT=-g -O0 -Wall
 COPTS=$(BOPT)
 CDEFS=
 CINCLUDES=$(INCLUDE)
-CFLAGS=$(CDEFS) $(COPTS) $(CINCLUDES)
+CFLAGS=$(COPTS) $(CINCLUDES) $(CDEFS)
 
 FOPTS=$(BOPT)
-FDEFS=$(CDEFS)
+FDEFS=
 FINCLUDES=$(CINCLUDES)
-FFLAGS=$(FDEFS) $(FOPTS) $(FINCLUDES)
+FFLAGS=$(FOPTS) $(FINCLUDES) $(FDEFS)
 
 ########################################################################
 # Set libraries

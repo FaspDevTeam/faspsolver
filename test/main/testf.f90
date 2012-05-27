@@ -13,8 +13,8 @@ program test
   double precision :: tol
 
   ! Step 0: user defined variables
-  stype = 2  
-  prt_lvl = 2
+  stype = 1  
+  prt_lvl = 3
   maxit = 100
   tol = 1.0d-8
   iufile = 1

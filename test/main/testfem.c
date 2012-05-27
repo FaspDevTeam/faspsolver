@@ -104,7 +104,8 @@ int main (int argc, const char * argv[])
 	
         fasp_param_amg_init(&amgparam);    // set AMG param with default values
         amgparam.print_level = PRINT_SOME; // print some AMG message
-        amgparam.maxit       = 25;         // max number of iterations
+        amgparam.maxit       = 100;        // max number of iterations
+        amgparam.tol         = 1e-12;      // convergence tol: 1e-12 is sufficent for 1M DOF 
 
         fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row, &x, 0.0); // initial guess
         

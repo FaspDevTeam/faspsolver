@@ -19,10 +19,11 @@ program test
   integer          :: iufile, n, nnz, i, prt_lvl, maxit
   double precision :: tol
 
-  write (*,*) "=========================================="
-  write (*,*) "||   FASP: AMG example -- F90 version   ||"
-  write (*,*) "=========================================="
-  write (*,*) ""
+  print*, ""
+  write(*,"(A)") "=========================================="
+  write(*,"(A)") "||   FASP: AMG example -- F90 version   ||"
+  write(*,"(A)") "=========================================="
+  print*, ""
 
   ! Step 0: user defined variables
   prt_lvl = 3

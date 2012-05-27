@@ -103,7 +103,7 @@ Test and Debug
 
 [ 0.4.1 ] start to build the debug environment
 [ 0.6.0 ] build upon regression.c to make a regression test suite
-[       ] finish the debug environment (Chensong)
+[       ] finish the debug environment (Xiaoqiang)
 [       ] add a new unit test tool for FASP, e.g. CHECK (Chensong)
 
 ========================
@@ -153,5 +153,5 @@ Bug Fixes
 [ 0.4.1 ] fix a bug in BiCGstab: 9X9 diagonal matrix (one DoF, eight bdy) gives NaN
 [ 0.7.4 ] fix an iteration counting bug in BiCGstab
 [ 0.7.8 ] check other iterative solvers for similar bugs
-[ 05/30 ] remove obsolete functions (Chensong)
+[ 05/30 ] remove sevearl obsolete functions (Chensong)
 [ 05/30 ] remove preconditioners that have been tested and not good (Chensong)
