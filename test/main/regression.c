@@ -162,7 +162,7 @@ int main (int argc, const char * argv[])
         amgparam.print_level = print_level;
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* AMG V-cycle (Standard interpolation) with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
@@ -177,7 +177,7 @@ int main (int argc, const char * argv[])
         amgparam.print_level = print_level;
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
 
         /* AMG V-cycle (EM interpolation) with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
@@ -192,7 +192,7 @@ int main (int argc, const char * argv[])
         amgparam.print_level = print_level;
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
 
         /* AMG W-cycle with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
@@ -206,7 +206,7 @@ int main (int argc, const char * argv[])
         amgparam.print_level = print_level;
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* AMG AMLI-cycle with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
@@ -221,7 +221,7 @@ int main (int argc, const char * argv[])
         amgparam.print_level = print_level;
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* AMG Nonlinear AMLI-cycle with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
@@ -236,7 +236,7 @@ int main (int argc, const char * argv[])
         amgparam.print_level = print_level;
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* AMG V-cycle with SGS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
@@ -250,7 +250,7 @@ int main (int argc, const char * argv[])
         amgparam.print_level = print_level;
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* AMG V-cycle with L1_DIAG smoother as a solver */			
         printf("------------------------------------------------------------------\n");
@@ -263,7 +263,7 @@ int main (int argc, const char * argv[])
         amgparam.print_level = print_level;
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* AMG V-cycle with SOR smoother as a solver */			
         printf("------------------------------------------------------------------\n");
@@ -277,7 +277,7 @@ int main (int argc, const char * argv[])
         amgparam.print_level = print_level;
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* SA AMG V-cycle with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
@@ -293,7 +293,7 @@ int main (int argc, const char * argv[])
         
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* UA AMG V-cycle with GS smoother as a solver */			
         printf("------------------------------------------------------------------\n");
@@ -309,7 +309,7 @@ int main (int argc, const char * argv[])
         
         fasp_solver_amg(&A, &b, &x, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* CG */
         printf("------------------------------------------------------------------\n");
@@ -323,7 +323,43 @@ int main (int argc, const char * argv[])
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
+        
+        /* BiCGstab */
+        printf("------------------------------------------------------------------\n");
+        printf("BiCGstab solver ...\n");	
+        
+        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+        fasp_param_solver_init(&itparam);
+        itparam.precond_type  = PREC_NULL;	
+        itparam.itsolver_type = SOLVER_BiCGstab;
+        itparam.maxit         = 5000;
+        itparam.tol           = 1e-12;
+        itparam.print_level   = print_level;
+        fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
+        
+        check_solu(&x, &sol, tolerance);
+
+        /* BiCGstab in BSR */
+        {
+            dBSRmat A_bsr = fasp_format_dcsr_dbsr (&A, 1);
+            
+            printf("------------------------------------------------------------------\n");
+            printf("BiCGstab solver in BSR format ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.precond_type  = PREC_NULL;	
+            itparam.itsolver_type = SOLVER_BiCGstab;
+            itparam.maxit         = 5000;
+            itparam.tol           = 1e-12;
+            itparam.print_level   = print_level;
+            fasp_solver_dbsr_krylov(&A_bsr, &b, &x, &itparam);
+            
+            check_solu(&x, &sol, tolerance);
+            
+            fasp_dbsr_free(&A_bsr);
+        }
         
         /* Using diag(A) as preconditioner for CG */
         printf("------------------------------------------------------------------\n");
@@ -337,7 +373,7 @@ int main (int argc, const char * argv[])
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* Using classical AMG as preconditioner for CG */
         printf("------------------------------------------------------------------\n");
@@ -350,7 +386,7 @@ int main (int argc, const char * argv[])
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* Using classical AMG as preconditioner for BiCGstab */
         printf("------------------------------------------------------------------\n");
@@ -365,7 +401,7 @@ int main (int argc, const char * argv[])
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* Using classical AMG as preconditioner for MinRes */
         printf("------------------------------------------------------------------\n");
@@ -380,7 +416,7 @@ int main (int argc, const char * argv[])
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* Using classical AMG as preconditioner for GMRes */
         printf("------------------------------------------------------------------\n");
@@ -395,7 +431,7 @@ int main (int argc, const char * argv[])
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* Using classical AMG as preconditioner for vGMRes */
         printf("------------------------------------------------------------------\n");
@@ -410,7 +446,7 @@ int main (int argc, const char * argv[])
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* Using classical AMG as preconditioner for vFGMRes */
         printf("------------------------------------------------------------------\n");
@@ -425,7 +461,7 @@ int main (int argc, const char * argv[])
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
         /* Using classical AMG as preconditioner for GCG */
         printf("------------------------------------------------------------------\n");
@@ -440,7 +476,7 @@ int main (int argc, const char * argv[])
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
         
 #if FASP_USE_ILU
         /* Using ILUk as preconditioner for CG */
@@ -454,7 +490,7 @@ int main (int argc, const char * argv[])
         itparam.print_level   = print_level;
         fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
         
-        check_solu(&x, &sol,tolerance);
+        check_solu(&x, &sol, tolerance);
 #endif	
         
         /* clean up memory */

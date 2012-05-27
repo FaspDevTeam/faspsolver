@@ -2,6 +2,8 @@ File Name: CHANGES
 
 05/27/2012 FASP 0.8.7:
 - Bug fixes for conversion routines from the BSR format.
+- Revise the interface of the routine from CSR to BSR.
+- Add tests in the BSR format to regression.c.
 
 05/26/2012 FASP 0.8.6:
 - Add standard interpolation.

@@ -606,23 +606,23 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
 }
 
 /*!
- * \fn void fasp_format_dcsr_dbsr ( dBSRmat *A, int nb, dCSRmat *B )
+ * \fn dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B, const INT nb)
  *
  * \brief Convert a dCSRmat type matrix into a dBSRmat.
  *
- * \param A   Pointer to the dCSRmat type matrix
+ * \param B   Pointer to the dCSRmat type matrix
  * \param nb  Size of each block 
- * \param B   Pointer to the 'dBSRmat' type matrix
+ * 
+ * \return    Matrix in the 'dBSRmat' format
  *
  * \author Changhe Qiao
  * \date   03/12/2012
  *
- * \note Modified by Xiaozhe Hu on 03/13/2012
+ * Modified by Xiaozhe Hu on 03/13/2012
  */
 
-void fasp_format_dcsr_dbsr (dBSRmat *A, 
-                            const INT nb, 
-                            dCSRmat *B)
+dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B, 
+                               const INT nb)
 {
     INT *Is, *Js;
     INT i,j,num, k;
@@ -630,6 +630,7 @@ void fasp_format_dcsr_dbsr (dBSRmat *A,
     SHORT status=SUCCESS;
     
     dCSRmat tmpMat;
+    dBSRmat A;
     
     // Safe-guard check --Chensong 05/27/2012
     if (B->row%nb!=0) {
@@ -656,28 +657,28 @@ void fasp_format_dcsr_dbsr (dBSRmat *A,
     status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
     
     //here we have tmpmat as the submatrix
-    A->ROW=nRow;
-    A->COL=nCol;
-    A->NNZ=tmpMat.nnz;
-    A->nb=nb;
-    A->storage_manner=0;//row majored
-    A->IA=(INT*)fasp_mem_calloc(A->ROW+1, sizeof(INT));
-    A->JA=(INT*)fasp_mem_calloc(A->NNZ, sizeof(INT));
-    A->val=(REAL*)fasp_mem_calloc(A->NNZ*nb*nb, sizeof(REAL));
+    A.ROW=nRow;
+    A.COL=nCol;
+    A.NNZ=tmpMat.nnz;
+    A.nb=nb;
+    A.storage_manner=0;//row majored
+    A.IA=(INT*)fasp_mem_calloc(A.ROW+1, sizeof(INT));
+    A.JA=(INT*)fasp_mem_calloc(A.NNZ, sizeof(INT));
+    A.val=(REAL*)fasp_mem_calloc(A.NNZ*nb*nb, sizeof(REAL));
     for(i=0;i<tmpMat.row+1;i++) {
-        A->IA[i]=tmpMat.IA[i];
+        A.IA[i]=tmpMat.IA[i];
     }
     for(i=0;i<tmpMat.nnz;i++) {
-        A->JA[i]=tmpMat.JA[i];
+        A.JA[i]=tmpMat.JA[i];
     }
     for(i=0;i<tmpMat.nnz;i++) {
-        A->val[i*nb*nb]=tmpMat.val[i];
+        A.val[i*nb*nb]=tmpMat.val[i];
     }
     fasp_mem_free(tmpMat.IA);
     fasp_mem_free(tmpMat.JA);
     fasp_mem_free(tmpMat.val);
     
-    for(i=0;i<nb;i++)
+    for(i=0;i<nb;i++) {
         for(j=0;j<nb;j++) {
             num=i*nb+j;
             if (i==0 && j==0) {
@@ -691,14 +692,16 @@ void fasp_format_dcsr_dbsr (dBSRmat *A,
                 }
                 status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
                 for(k=0;k<tmpMat.nnz;k++) {
-                    A->val[k*nb*nb+num]=tmpMat.val[k];
+                    A.val[k*nb*nb+num]=tmpMat.val[k];
                 }    
                 fasp_mem_free(tmpMat.IA);
                 fasp_mem_free(tmpMat.JA);
                 fasp_mem_free(tmpMat.val);
             }
         }
+    }
     
+    return A;
 }
 
 
