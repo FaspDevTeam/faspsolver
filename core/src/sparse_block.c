@@ -27,6 +27,8 @@
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010
+ *
+ * Modified by Feiteng Huang on 5/25/2012: remove unnecessary loop
  */
 SHORT fasp_dcsr_getblk (dCSRmat *A, 
                         INT *Is, 
@@ -40,34 +42,19 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     SHORT  status = SUCCESS;
     
     // create colum flags
-    INT *col_flag=(int*)fasp_mem_calloc(A->col,sizeof(INT)); 
+    INT *col_flag = (INT*)fasp_mem_calloc(A->col,sizeof(INT)); 
     
     B->row=m; B->col=n;
     
-    B->IA=(int*)fasp_mem_calloc(m+1,sizeof(INT));
+    // allocate memory
+    B->IA  = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
+    B->JA  = (INT*)fasp_mem_calloc(A->nnz,sizeof(INT)); 
+    B->val = (REAL*)fasp_mem_calloc(A->nnz,sizeof(REAL));
     
     for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
     
-    // first pass: count nonzeros for sub matrix
     B->IA[0]=0;
-    for (i=0;i<m;++i){    
-        for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
-            j=A->JA[N2C(k)];
-            if (col_flag[N2C(j)]>0) nnz++;
-        } /* end for k */
-        B->IA[i+1]=nnz;
-    } /* end for i */
-    B->nnz=nnz;
-    
-    // allocate 
-    B->JA=(int*)fasp_mem_calloc(nnz,sizeof(INT)); 
-    
-    B->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
-    
-    // second pass: copy data to B
-    // no need to do the following loop, need to be modified!!  Xiaozhe 
-    nnz = 0;
-    for (i=0;i<m;++i){    
+    for (i=0;i<m;++i) {    
         for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
             j=A->JA[N2C(k)];
             if (col_flag[N2C(j)]>0) {
@@ -76,7 +63,12 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
                 nnz++;
             }
         } /* end for k */
+        B->IA[i+1]=nnz;
     } /* end for i */
+    
+    B->nnz=nnz;
+    B->JA=(INT*)fasp_mem_realloc(B->JA, sizeof(int)*nnz);
+    B->val=(REAL*)fasp_mem_realloc(B->val, sizeof(REAL)*nnz);
     
     fasp_mem_free(col_flag);   
     
@@ -112,11 +104,11 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     SHORT status = SUCCESS;
     
     // create colum flags
-    INT *col_flag=(int*)fasp_mem_calloc(A->COL,sizeof(INT)); 
+    INT *col_flag=(INT*)fasp_mem_calloc(A->COL,sizeof(INT)); 
     
     B->ROW=m; B->COL=n; B->nb=nb; B->storage_manner=A->storage_manner;  
     
-    B->IA=(int*)fasp_mem_calloc(m+1,sizeof(INT));
+    B->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
     
     for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
     
@@ -132,7 +124,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     B->NNZ=nnz;
     
     // allocate 
-    B->JA=(int*)fasp_mem_calloc(nnz,sizeof(INT)); 
+    B->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT)); 
     
     B->val=(REAL*)fasp_mem_calloc(nnz*nb2,sizeof(REAL));
     
@@ -156,17 +148,21 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
 }
 
 /**
- * \fn dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
+ * \fn dCSRmat fasp_dbsr_getblk_dcsr (dBSRmat *A)
+ *
  * \brief get dCSRmat block from a dBSRmat matrix 
  * 
  * \param *A   pointer to the BSR format matrix
+ *
  * \return     dCSRmat matrix if succeed, NULL if fail
  *
  * \author Xiaozhe Hu
  * \date   03/16/2012 
  *
+ * \note Required by the reservoir simulation package fasp4monix!
+ *
  */
-dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
+dCSRmat fasp_dbsr_getblk_dcsr (dBSRmat *A)
 {
     // information about A
     const INT ROW = A->ROW;

@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+05/27/2012 FASP 0.8.7:
+- Bug fixes for conversion routines from the BSR format.
+
 05/26/2012 FASP 0.8.6:
 - Add standard interpolation.
 - Remove Fortran version of Energy-min interpolation.
