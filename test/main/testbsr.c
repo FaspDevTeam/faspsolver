@@ -29,13 +29,10 @@
  */
 int main (int argc, const char * argv[]) 
 {
-	dCSRmat A;
+	dCSRmat A, A11;    
+    dBSRmat Absr;
 	dvector b, uh;
     
-    dBSRmat Absr;
-    
-    dCSRmat A11;
-
 	int status=SUCCESS;
 	
 	// Step 0. Set parameters
@@ -43,14 +40,15 @@ int main (int argc, const char * argv[])
 	itsolver_param  itparam;  // parameters for itsolver
 	AMG_param       amgparam; // parameters for AMG
 	ILU_param       iluparam; // parameters for ILU
+    Schwarz_param   schwarzparam; // parameters for Shcwarz method
     
     // Read input parameters from a disk file
-	fasp_param_init("ini/bsr.dat",&inparam,&itparam,&amgparam,&iluparam);
+	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam,&schwarzparam);
     
     // Set local parameters
 	const int print_level   = inparam.print_level;
 	const int problem_num   = inparam.problem_num;
-	const int itsolver_type = inparam.itsolver_type;
+	const int itsolver_type = inparam.solver_type;
 	const int precond_type  = inparam.precond_type;
 	const int output_type   = inparam.output_type;
     
@@ -80,7 +78,7 @@ int main (int argc, const char * argv[])
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvec_read(filename2, &b);
         
-        fasp_format_dcsr_dbsr(&Absr, 6, &A);        
+        Absr = fasp_format_dcsr_dbsr(&A, 6);        
     }	
     
     else if (problem_num == 12) {				
@@ -92,7 +90,7 @@ int main (int argc, const char * argv[])
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvec_read(filename2, &b);
         
-        fasp_format_dcsr_dbsr(&Absr, 6, &A);
+        Absr = fasp_format_dcsr_dbsr(&A, 6);        
         
         // Form the right-hand-side b = A*sol
         //dvector sol = fasp_dvec_create(A.row);
@@ -114,7 +112,7 @@ int main (int argc, const char * argv[])
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvec_read(filename2, &b);
         
-        fasp_format_dcsr_dbsr(&Absr, 6, &A);
+        Absr = fasp_format_dcsr_dbsr(&A, 6);        
     }	
     
     else if (problem_num == 20) {

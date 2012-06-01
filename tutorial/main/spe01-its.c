@@ -26,7 +26,7 @@ int main (int argc, const char * argv[])
     ILU_param            iluparam; // parameters for ILU
     
     printf("\n========================================");
-    printf("\n||   FASP: ITS example -- C version   ||");
+    printf("\n||   FASP: SPE01 -- ITS BSR version   ||");
     printf("\n========================================\n\n");
     
     // Step 0. Set parameters

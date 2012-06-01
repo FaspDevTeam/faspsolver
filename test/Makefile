@@ -198,6 +198,7 @@ testall:
 	make testfdm2d
 	make testfdm3d
 	make testheat
+	make testbsr
 	make testomp
 
 ########################################################################

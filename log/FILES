@@ -32,7 +32,7 @@
       71 ./core/src/eigen.c
       99 ./core/src/famg.c
      250 ./core/src/fmgcycle.c
-     861 ./core/src/formats.c
+     885 ./core/src/formats.c
      228 ./core/src/formats_omp.c
       78 ./core/src/givens.c
      358 ./core/src/graphics.c
@@ -58,7 +58,7 @@
      122 ./core/src/mgrecur.c
      346 ./core/src/ordering.c
      719 ./core/src/parameters.c
-    1330 ./core/src/pbcgs.c
+    1432 ./core/src/pbcgs.c
      880 ./core/src/pcg.c
      360 ./core/src/pcg_omp.c
      173 ./core/src/pgcg.c
@@ -82,7 +82,7 @@
      614 ./core/src/smoother_csr_omp.c
      224 ./core/src/smoother_poly.c
     1859 ./core/src/smoother_str.c
-     208 ./core/src/sparse_block.c
+     204 ./core/src/sparse_block.c
      205 ./core/src/sparse_block_omp.c
      855 ./core/src/sparse_bsr.c
      356 ./core/src/sparse_bsr_omp.c
@@ -100,9 +100,9 @@
      296 ./core/include/doxygen.h
      953 ./core/include/fasp.h
      479 ./core/include/fasp_block.h
-    2566 ./core/include/fasp_functs.h
+    2565 ./core/include/fasp_functs.h
       20 ./core/include/forts_ns.h
     5818 ./core/include/malloc.c.h
      185 ./core/include/messages.h
      291 ./core/include/nedmalloc.h
-   61874 total
+   61995 total
