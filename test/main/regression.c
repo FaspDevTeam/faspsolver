@@ -91,51 +91,51 @@ int main (int argc, const char * argv[])
         
         switch (indp) {
                 
-        case 1: //     - Problem 1. 10X10 5pt FD for Poisson
+            case 1: //     - Problem 1. 10X10 5pt FD for Poisson
                 
-            printf("10X10 5-point finite difference for Poisson");	
-            printf("\n=====================================================\n");        
+                printf("10X10 5-point finite difference for Poisson");	
+                printf("\n=====================================================\n");        
                 
-            // Read A and b from two files in IJ format. 
-            fasp_dcsrvec2_read("data/csrmat_FD.dat", "data/rhs_FD.dat", &A, &b);
+                // Read A and b from two files in IJ format. 
+                fasp_dcsrvec2_read("data/csrmat_FD.dat", "data/rhs_FD.dat", &A, &b);
                 
-            // Read ref. sol. from a non-indexed vec file.
-            fasp_dvecind_read("data/sol_FD.dat", &sol);
+                // Read ref. sol. from a non-indexed vec file.
+                fasp_dvecind_read("data/sol_FD.dat", &sol);
                 
-            break;
+                break;
                 
-        case 2: //     - Problem 2. P1 FE for Poisson.
+            case 2: //     - Problem 2. P1 FE for Poisson.
                 
-            printf("P1 finite element for Poisson");	
-            printf("\n=====================================================\n");        
+                printf("P1 finite element for Poisson");	
+                printf("\n=====================================================\n");        
                 
-            // Read A and b from two files in IJ format. 
-            fasp_dcsrvec2_read("data/csrmat_FE.dat", "data/rhs_FE.dat", &A, &b);
+                // Read A and b from two files in IJ format. 
+                fasp_dcsrvec2_read("data/csrmat_FE.dat", "data/rhs_FE.dat", &A, &b);
                 
-            // Read ref. sol. from an indexed vec file.
-            fasp_dvecind_read("data/sol_FE.dat", &sol);
+                // Read ref. sol. from an indexed vec file.
+                fasp_dvecind_read("data/sol_FE.dat", &sol);
                 
-            break;
+                break;
                 
-        case 3: //     - Problem 3. MatrixMarket finite element analysis NOS7.
+            case 3: //     - Problem 3. MatrixMarket finite element analysis NOS7.
                 // Finite difference approximation to diffusion equation with varying
                 // diffusivity in a 3D unit cube with Dirichlet boundary conditions.
                 
-            printf("MatrixMarket finite element analysis NOS7");	
-            printf("\n=====================================================\n");        
+                printf("MatrixMarket finite element analysis NOS7");	
+                printf("\n=====================================================\n");        
                 
-            // Read A in MatrixMarket SYM COO format. 
-            fasp_dmtxsym_read("data/nos7.mtx", &A);
+                // Read A in MatrixMarket SYM COO format. 
+                fasp_dmtxsym_read("data/nos7.mtx", &A);
                 
-            // Generate an exact solution randomly
-            sol = fasp_dvec_create(A.row);
-            fasp_dvec_rand(A.row, &sol);
+                // Generate an exact solution randomly
+                sol = fasp_dvec_create(A.row);
+                fasp_dvec_rand(A.row, &sol);
                 
-            // Form the right-hand-side b = A*sol
-            b = fasp_dvec_create(A.row);
-            fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+                // Form the right-hand-side b = A*sol
+                b = fasp_dvec_create(A.row);
+                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
                 
-            break;
+                break;
         }
         
         /************************************/
@@ -150,198 +150,238 @@ int main (int argc, const char * argv[])
         /*****************************/
         fasp_dvec_alloc(b.row, &x);  // allocate mem for numerical solution
         
-        /* AMG V-cycle (Direct interpolation) with GS smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("Classical AMG (direct interp) V-cycle as iterative solver ...\n");	
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* AMG V-cycle (Direct interpolation) with GS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("Classical AMG (direct interp) V-cycle as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 20;
+            amgparam.tol         = 1e-10;
+            amgparam.print_level = print_level;
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        fasp_param_amg_init(&amgparam);
-        amgparam.maxit       = 20;
-        amgparam.tol         = 1e-10;
-        amgparam.print_level = print_level;
-        fasp_solver_amg(&A, &b, &x, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* AMG V-cycle (Standard interpolation) with GS smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("Classical AMG (standard interp) V-cycle as iterative solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        fasp_param_amg_init(&amgparam);
-        amgparam.interpolation_type = INTERP_STD;
-        amgparam.maxit       = 20;
-        amgparam.tol         = 1e-10;
-        amgparam.print_level = print_level;
-        fasp_solver_amg(&A, &b, &x, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* FMG V-cycle (Direct interpolation) with GS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("FMG (direct interp) V-cycle as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 20;
+            amgparam.tol         = 1e-10;
+            amgparam.print_level = print_level;
+            fasp_solver_famg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
 
-        /* AMG V-cycle (EM interpolation) with GS smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("Classical AMG (energy-min interp) V-cycle as iterative solver ...\n");	
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* AMG V-cycle (Standard interpolation) with GS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("Classical AMG (standard interp) V-cycle as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            amgparam.interpolation_type = INTERP_STD;
+            amgparam.maxit       = 20;
+            amgparam.tol         = 1e-10;
+            amgparam.print_level = print_level;
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        fasp_param_amg_init(&amgparam);
-        amgparam.interpolation_type = INTERP_ENG_MIN;
-        amgparam.maxit       = 20;
-        amgparam.tol         = 1e-12;
-        amgparam.print_level = print_level;
-        fasp_solver_amg(&A, &b, &x, &amgparam);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* AMG V-cycle (EM interpolation) with GS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("Classical AMG (energy-min interp) V-cycle as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            amgparam.interpolation_type = INTERP_ENG_MIN;
+            amgparam.maxit       = 20;
+            amgparam.tol         = 1e-12;
+            amgparam.print_level = print_level;
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        check_solu(&x, &sol, tolerance);
-
-        /* AMG W-cycle with GS smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("Classical AMG W-cycle as iterative solver ...\n");	
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* AMG W-cycle with GS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("Classical AMG W-cycle as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 20;
+            amgparam.tol         = 1e-10;
+            amgparam.cycle_type  = W_CYCLE;
+            amgparam.print_level = print_level;
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_amg_init(&amgparam);
-        amgparam.maxit       = 20;
-        amgparam.tol         = 1e-10;
-        amgparam.cycle_type  = W_CYCLE;
-        amgparam.print_level = print_level;
-        fasp_solver_amg(&A, &b, &x, &amgparam);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* AMG AMLI-cycle with GS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("Classical AMG AMLI-cycle as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 20;
+            amgparam.tol         = 1e-10;
+            amgparam.cycle_type  = AMLI_CYCLE;
+            amgparam.amli_degree = 3;
+            amgparam.print_level = print_level;
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        check_solu(&x, &sol, tolerance);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* AMG Nonlinear AMLI-cycle with GS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("Classical AMG Nonlinear AMLI-cycle as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 20;
+            amgparam.tol         = 1e-10;
+            amgparam.cycle_type  = NL_AMLI_CYCLE;
+            amgparam.amli_degree = 3;
+            amgparam.print_level = print_level;
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        /* AMG AMLI-cycle with GS smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("Classical AMG AMLI-cycle as iterative solver ...\n");	
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* AMG V-cycle with SGS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("Classical AMG V-cycle with SGS smoother as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 20;
+            amgparam.tol         = 1e-10;
+            amgparam.smoother    = SGS;
+            amgparam.print_level = print_level;
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_amg_init(&amgparam);
-        amgparam.maxit       = 20;
-        amgparam.tol         = 1e-10;
-        amgparam.cycle_type  = AMLI_CYCLE;
-        amgparam.amli_degree = 3;
-        amgparam.print_level = print_level;
-        fasp_solver_amg(&A, &b, &x, &amgparam);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* AMG V-cycle with L1_DIAG smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("Classical AMG V-cycle with L1_DIAG smoother as iterative solver ...\n");	
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 500;
+            amgparam.tol         = 1e-10;
+            amgparam.smoother    = L1_DIAG;
+            amgparam.print_level = print_level;
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        check_solu(&x, &sol, tolerance);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* AMG V-cycle with SOR smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("Classical AMG V-cycle with SOR smoother as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 20;
+            amgparam.tol         = 1e-10;
+            amgparam.smoother    = SOR;
+            amgparam.print_level = print_level;
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        /* AMG Nonlinear AMLI-cycle with GS smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("Classical AMG Nonlinear AMLI-cycle as iterative solver ...\n");	
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* SA AMG V-cycle with GS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("SA AMG V-cycle with GS smoother as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 500;
+            amgparam.tol         = 1e-10;
+            amgparam.AMG_type    = SA_AMG;
+            amgparam.smoother    = GS;
+            amgparam.print_level = print_level;
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_amg_init(&amgparam);
-        amgparam.maxit       = 20;
-        amgparam.tol         = 1e-10;
-        amgparam.cycle_type  = NL_AMLI_CYCLE;
-        amgparam.amli_degree = 3;
-        amgparam.print_level = print_level;
-        fasp_solver_amg(&A, &b, &x, &amgparam);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* UA AMG V-cycle with GS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("UA AMG V-cycle with GS smoother as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 500;
+            amgparam.tol         = 1e-10;
+            amgparam.AMG_type    = UA_AMG;
+            amgparam.smoother    = GS;
+            amgparam.print_level = print_level;        
+            fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        check_solu(&x, &sol, tolerance);
+        if ( indp==1 || indp==2 ) {
+            /* CG */
+            printf("------------------------------------------------------------------\n");
+            printf("CG solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.precond_type  = PREC_NULL;	
+            itparam.maxit         = 5000;
+            itparam.tol           = 1e-12;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        /* AMG V-cycle with SGS smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("Classical AMG V-cycle with SGS smoother as iterative solver ...\n");	
+        if ( indp==1 || indp==2 ) {
+            /* BiCGstab */
+            printf("------------------------------------------------------------------\n");
+            printf("BiCGstab solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.precond_type  = PREC_NULL;	
+            itparam.itsolver_type = SOLVER_BiCGstab;
+            itparam.maxit         = 5000;
+            itparam.tol           = 1e-12;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_amg_init(&amgparam);
-        amgparam.maxit       = 20;
-        amgparam.tol         = 1e-10;
-        amgparam.smoother    = SGS;
-        amgparam.print_level = print_level;
-        fasp_solver_amg(&A, &b, &x, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* AMG V-cycle with L1_DIAG smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("Classical AMG V-cycle with L1_DIAG smoother as iterative solver ...\n");	
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_amg_init(&amgparam);
-        amgparam.maxit       = 500;
-        amgparam.tol         = 1e-10;
-        amgparam.smoother    = L1_DIAG;
-        amgparam.print_level = print_level;
-        fasp_solver_amg(&A, &b, &x, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* AMG V-cycle with SOR smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("Classical AMG V-cycle with SOR smoother as iterative solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_amg_init(&amgparam);
-        amgparam.maxit       = 20;
-        amgparam.tol         = 1e-10;
-        amgparam.smoother    = SOR;
-        amgparam.print_level = print_level;
-        fasp_solver_amg(&A, &b, &x, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* SA AMG V-cycle with GS smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("SA AMG V-cycle with GS smoother as iterative solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_amg_init(&amgparam);
-        amgparam.maxit       = 500;
-        amgparam.tol         = 1e-10;
-        amgparam.AMG_type    = SA_AMG;
-        amgparam.smoother    = GS;
-        amgparam.print_level = print_level;
-        
-        fasp_solver_amg(&A, &b, &x, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* UA AMG V-cycle with GS smoother as a solver */			
-        printf("------------------------------------------------------------------\n");
-        printf("UA AMG V-cycle with GS smoother as iterative solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_amg_init(&amgparam);
-        amgparam.maxit       = 500;
-        amgparam.tol         = 1e-10;
-        amgparam.AMG_type    = UA_AMG;
-        amgparam.smoother    = GS;
-        amgparam.print_level = print_level;
-        
-        fasp_solver_amg(&A, &b, &x, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* CG */
-        printf("------------------------------------------------------------------\n");
-        printf("CG solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        itparam.precond_type  = PREC_NULL;	
-        itparam.maxit         = 5000;
-        itparam.tol           = 1e-12;
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* BiCGstab */
-        printf("------------------------------------------------------------------\n");
-        printf("BiCGstab solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        itparam.precond_type  = PREC_NULL;	
-        itparam.itsolver_type = SOLVER_BiCGstab;
-        itparam.maxit         = 5000;
-        itparam.tol           = 1e-12;
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
-        
-        check_solu(&x, &sol, tolerance);
-
-        /* BiCGstab in BSR */
-        {
+        if ( indp==1 || indp==2 ) {
+            /* BiCGstab in BSR */
             dBSRmat A_bsr = fasp_format_dcsr_dbsr (&A, 1);
             
             printf("------------------------------------------------------------------\n");
@@ -355,142 +395,159 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             fasp_solver_dbsr_krylov(&A_bsr, &b, &x, &itparam);
-            
-            check_solu(&x, &sol, tolerance);
-            
             fasp_dbsr_free(&A_bsr);
+
+            check_solu(&x, &sol, tolerance);            
         }
         
-        /* Using diag(A) as preconditioner for CG */
-        printf("------------------------------------------------------------------\n");
-        printf("Diagonal preconditioned CG solver ...\n");	
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using diag(A) as preconditioner for CG */
+            printf("------------------------------------------------------------------\n");
+            printf("Diagonal preconditioned CG solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.precond_type  = PREC_DIAG;
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-10;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        itparam.precond_type  = PREC_DIAG;
-        itparam.maxit         = 500;
-        itparam.tol           = 1e-10;
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using classical AMG as preconditioner for CG */
+            printf("------------------------------------------------------------------\n");
+            printf("AMG preconditioned CG solver ...\n");	
+            fasp_dvec_set(b.row,&x,0.0);
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-10;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        check_solu(&x, &sol, tolerance);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using classical AMG as preconditioner for BiCGstab */
+            printf("------------------------------------------------------------------\n");
+            printf("AMG preconditioned BiCGstab solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.itsolver_type = SOLVER_BiCGstab;
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-10;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        /* Using classical AMG as preconditioner for CG */
-        printf("------------------------------------------------------------------\n");
-        printf("AMG preconditioned CG solver ...\n");	
-        fasp_dvec_set(b.row,&x,0.0);
-        fasp_param_solver_init(&itparam);
-        fasp_param_amg_init(&amgparam);
-        itparam.maxit         = 500;
-        itparam.tol           = 1e-10;
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using classical AMG as preconditioner for MinRes */
+            printf("------------------------------------------------------------------\n");
+            printf("AMG preconditioned MinRes solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.itsolver_type = SOLVER_MinRes;
+            itparam.maxit         = 5000;
+            itparam.tol           = 1e-10;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        check_solu(&x, &sol, tolerance);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using classical AMG as preconditioner for GMRes */
+            printf("------------------------------------------------------------------\n");
+            printf("AMG preconditioned GMRes solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.itsolver_type = SOLVER_GMRES;
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-10;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        /* Using classical AMG as preconditioner for BiCGstab */
-        printf("------------------------------------------------------------------\n");
-        printf("AMG preconditioned BiCGstab solver ...\n");	
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using classical AMG as preconditioner for vGMRes */
+            printf("------------------------------------------------------------------\n");
+            printf("AMG preconditioned vGMRes solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.itsolver_type = SOLVER_VGMRES;
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-10;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        fasp_param_amg_init(&amgparam);
-        itparam.itsolver_type = SOLVER_BiCGstab;
-        itparam.maxit         = 500;
-        itparam.tol           = 1e-10;
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using classical AMG as preconditioner for vFGMRes */
+            printf("------------------------------------------------------------------\n");
+            printf("AMG preconditioned vFGMRes solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.itsolver_type = SOLVER_VFGMRES;
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-10;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
-        check_solu(&x, &sol, tolerance);
-        
-        /* Using classical AMG as preconditioner for MinRes */
-        printf("------------------------------------------------------------------\n");
-        printf("AMG preconditioned MinRes solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        fasp_param_amg_init(&amgparam);
-        itparam.itsolver_type = SOLVER_MinRes;
-        itparam.maxit         = 5000;
-        itparam.tol           = 1e-10;
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* Using classical AMG as preconditioner for GMRes */
-        printf("------------------------------------------------------------------\n");
-        printf("AMG preconditioned GMRes solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        fasp_param_amg_init(&amgparam);
-        itparam.itsolver_type = SOLVER_GMRES;
-        itparam.maxit         = 500;
-        itparam.tol           = 1e-10;
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* Using classical AMG as preconditioner for vGMRes */
-        printf("------------------------------------------------------------------\n");
-        printf("AMG preconditioned vGMRes solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        fasp_param_amg_init(&amgparam);
-        itparam.itsolver_type = SOLVER_VGMRES;
-        itparam.maxit         = 500;
-        itparam.tol           = 1e-10;
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* Using classical AMG as preconditioner for vFGMRes */
-        printf("------------------------------------------------------------------\n");
-        printf("AMG preconditioned vFGMRes solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        fasp_param_amg_init(&amgparam);
-        itparam.itsolver_type = SOLVER_VFGMRES;
-        itparam.maxit         = 500;
-        itparam.tol           = 1e-10;
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
-        
-        /* Using classical AMG as preconditioner for GCG */
-        printf("------------------------------------------------------------------\n");
-        printf("AMG preconditioned GCG solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        fasp_param_amg_init(&amgparam);
-        itparam.itsolver_type = SOLVER_GCG;
-        itparam.maxit         = 500;
-        itparam.tol           = 1e-10;
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
-        
-        check_solu(&x, &sol, tolerance);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using classical AMG as preconditioner for GCG */
+            printf("------------------------------------------------------------------\n");
+            printf("AMG preconditioned GCG solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.itsolver_type = SOLVER_GCG;
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-10;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
 #if FASP_USE_ILU
-        /* Using ILUk as preconditioner for CG */
-        ILU_param      iluparam;
-        printf("------------------------------------------------------------------\n");
-        printf("ILUk preconditioned CG solver ...\n");	
-        
-        fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-        fasp_param_solver_init(&itparam);
-        fasp_param_ilu_init(&iluparam);
-        itparam.print_level   = print_level;
-        fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
-        
-        check_solu(&x, &sol, tolerance);
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using ILUk as preconditioner for CG */
+            ILU_param      iluparam;
+            printf("------------------------------------------------------------------\n");
+            printf("ILUk preconditioned CG solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_ilu_init(&iluparam);
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
 #endif	
         
         /* clean up memory */
@@ -508,7 +565,7 @@ int main (int argc, const char * argv[])
 	printf("%s",asctime(localtime(&lt))); // output ending local time
 	printf("------------------------------------------------------------------\n");
 	
-	return 0;
+	return SUCCESS;
 }
 
 /*---------------------------------*/
