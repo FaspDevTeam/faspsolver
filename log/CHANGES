@@ -4,6 +4,7 @@ File Name: CHANGES
 - Fix "small s" and "restarting" bugs in BiCGstab.
 - Fix a bug in FMG when there is only one level.
 - Add FMG tests in regression.c.
+- Fix the Doxygen problem in schwarz_setup.c.
 
 05/27/2012 FASP 0.8.7:
 - Bug fixes for conversion routines from the BSR format.
