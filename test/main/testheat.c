@@ -46,8 +46,8 @@ int main (int argc, const char * argv[])
 	if (print_usage) {
 		printf("\nUsage: %s [<options>]\n", argv[0]);
 		printf("  -output <val>    : mesh output option [default: 0]\n");
-		printf("  -meshout <val>   : output mesh file [default: ./data/mesh_?.dat]\n");
-		printf("  -meshin <val>    : input mesh file  [default: ./data/mesh.dat]\n");
+		printf("  -meshin <val>    : input mesh [default: ../data/mesh.dat]\n");
+		printf("  -meshout <val>   : output mesh [default: ../data/mesh_?.dat]\n");
 		printf("  -refine <val>    : refine level [default: 8]\n");
 		printf("  -assemble <val>  : assemble option [default: ab]\n");	
         printf("                     ab  |  assemble the stiff matrix & mass matrix & rhs;\n");
@@ -83,7 +83,7 @@ int main (int argc, const char * argv[])
     dvector x; //solution of the system
     
 	// Step 1: reading mesh info
-	mesh_init (&mesh, "./data/mesh.dat");
+	mesh_init (&mesh, "../data/mesh.dat");
 
     // If there is already mesh_aux data available, you can use the following fct to init it:    
     //	  mesh_aux_init (&mesh, &mesh_aux, "mesh.aux");

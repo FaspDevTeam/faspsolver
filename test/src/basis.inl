@@ -3,19 +3,20 @@
  */
  
 /** 
- * \fn double basisP1(int index, double lambda[2])
+ * \fn double basisP1 (int index, double lambda[2])
  *
  * \brief Basis functions of P1 finite element
  *
  * \param index         Index of the basis function
- * \param lambda[2]     Reference coordinates
+ * \param lambda        Reference coordinates
  *
  * \return phi
  *
  * \author Feiteng Huang
  * \date   04/01/2012
  */
-double basisP1(int index, double lambda[2])
+double basisP1 (int index, 
+                double lambda[2])
 {
     double phi;
     
@@ -28,21 +29,24 @@ double basisP1(int index, double lambda[2])
 }
 
 /** 
- * \fn void gradBasisP1(double nodes[3][2], double s, int index, double phi[2])
+ * \fn void gradBasisP1 (double nodes[3][2], double s, int index, double phi[2])
  *
  * \brief Gradient of basis functions of P1 finite element
  *
- * \param nodes[3][2]   Vertice of the triangule
+ * \param nodes         Vertice of the triangule
  * \param s             Area of the triangule
  * \param index         Index of the basis function
- * \param phi[2]        Gradient of basis function (OUT)
+ * \param phi           Gradient of basis function (OUT)
  *
  * \author Xuehai Huang
  * \date   03/29/2009
  * 
  * Modified by Feiteng Huang 04/01/2012, also change the name of function
  */
-void gradBasisP1(double nodes[3][2], double s, int index, double phi[2])
+void gradBasisP1 (double nodes[3][2], 
+                  double s, 
+                  int index, 
+                  double phi[2])
 {
   const int node1 = (index+1)%3, node2 = (index+2)%3;
   phi[0]=(nodes[node1][1]-nodes[node2][1])/(2.0*s);
@@ -50,7 +54,7 @@ void gradBasisP1(double nodes[3][2], double s, int index, double phi[2])
 }
 
 /**
- * \fn double areaT(double x1,double x2,double x3,double y1,double y2,double y3)
+ * \fn double areaT (double x1,double x2,double x3,double y1,double y2,double y3)
  *
  * \brief Get area for triangle p1(x1,y1),p2(x2,y2),p3(x3,y3)
  *
@@ -60,12 +64,18 @@ void gradBasisP1(double nodes[3][2], double s, int index, double phi[2])
  * \param y1    y-axis value of the point p1
  * \param y2    y-axis value of the point p2
  * \param y3    y-axis value of the point p3
+ *
  * \return      Area of the trianle
  *
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-double areaT(double x1,double x2,double x3,double y1,double y2,double y3)
+double areaT (double x1,
+              double x2,
+              double x3,
+              double y1,
+              double y2,
+              double y3)
 {
   return ((x2-x1)*(y3-y1)-(y2-y1)*(x3-x1))/2;
 }

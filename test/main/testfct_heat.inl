@@ -16,7 +16,7 @@
 /**
  * \fn double f (double *p)
  *
- * \brief Load f of 2D heat transfer's equation: \frac{du}{dt}- u_xx - u_yy = f
+ * \brief Load f of 2D heat transfer's equation: du/dt - u_xx - u_yy = f
  *
  * \param *p   the x-y-t-axis value of the point
  * \return    function value

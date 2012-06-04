@@ -23,7 +23,7 @@ static void generate_sparsity_P_standard (dCSRmat *P, iCSRmat *S, ivector *verti
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_amg_coarsening_rs (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S 
+ * \fn INT fasp_amg_coarsening_rs (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S,
  *                                 AMG_param *param)
  *
  * \brief RS coarsening

@@ -4,7 +4,7 @@
 % must have spaces around the equal sign "="   %
 %----------------------------------------------%
 
-workdir = ./data/   % work directory, no more than 128 characters
+workdir = ../data/  % work directory, no more than 128 characters
 print_level = 3     % How much information to print out 
  
 %----------------------------------------------%

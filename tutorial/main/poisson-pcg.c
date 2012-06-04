@@ -1,6 +1,7 @@
 /*! \file poisson-pcg.c
  *  \brief The third test example for FASP: using PCG to solve 
- *         the discrete Poisson equation from P1 finite element
+ *         the discrete Poisson equation from P1 finite element.
+ *         C version.
  *
  *  \note  PCG example for FASP: C version
  *

@@ -97,10 +97,10 @@ int main (int argc, const char * argv[])
                 printf("\n=====================================================\n");        
                 
                 // Read A and b from two files in IJ format. 
-                fasp_dcsrvec2_read("data/csrmat_FD.dat", "data/rhs_FD.dat", &A, &b);
+                fasp_dcsrvec2_read("../data/csrmat_FD.dat", "../data/rhs_FD.dat", &A, &b);
                 
                 // Read ref. sol. from a non-indexed vec file.
-                fasp_dvecind_read("data/sol_FD.dat", &sol);
+                fasp_dvecind_read("../data/sol_FD.dat", &sol);
                 
                 break;
                 
@@ -110,10 +110,10 @@ int main (int argc, const char * argv[])
                 printf("\n=====================================================\n");        
                 
                 // Read A and b from two files in IJ format. 
-                fasp_dcsrvec2_read("data/csrmat_FE.dat", "data/rhs_FE.dat", &A, &b);
+                fasp_dcsrvec2_read("../data/csrmat_FE.dat", "../data/rhs_FE.dat", &A, &b);
                 
                 // Read ref. sol. from an indexed vec file.
-                fasp_dvecind_read("data/sol_FE.dat", &sol);
+                fasp_dvecind_read("../data/sol_FE.dat", &sol);
                 
                 break;
                 
@@ -125,7 +125,7 @@ int main (int argc, const char * argv[])
                 printf("\n=====================================================\n");        
                 
                 // Read A in MatrixMarket SYM COO format. 
-                fasp_dmtxsym_read("data/nos7.mtx", &A);
+                fasp_dmtxsym_read("../data/nos7.mtx", &A);
                 
                 // Generate an exact solution randomly
                 sol = fasp_dvec_create(A.row);

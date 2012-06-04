@@ -1,5 +1,5 @@
-/*! \file misc.h
- *  \brief miscellaneous function for test.
+/*! \file misc.c
+ *  \brief Miscellaneous functions for test.
  */
 
 #include "misc.h"
@@ -11,7 +11,7 @@
  *
  * \param argc       Number of arg input
  * \param argv       Input arguments
- * \param *pt        Parameters to be set
+ * \param pt         Parameters to be set
  *
  * \author Feiteng Huang
  * \date   04/05/2009
@@ -112,7 +112,7 @@ int FEM_param_set(int argc, const char *argv [], FEM_param * pt)
  *
  * \brief Init input arguments
  *
- * \param *pt    Parameters to be set
+ * \param pt     Parameters to be set
  *
  * \author Feiteng Huang
  * \date   04/05/2009

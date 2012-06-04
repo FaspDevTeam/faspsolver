@@ -58,7 +58,6 @@ If you need any extra help, please
 ================================
 3. Tree Structure
 ================================
-  - data:    Test data
   - ini:     Input files for parameters
   - main:    Test functions in C and Fortran
   - out:     Output files

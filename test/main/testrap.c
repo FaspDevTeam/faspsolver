@@ -130,7 +130,7 @@ int main(int argc, const char * argv[])
 	// Assemble matrix and right-hand side
 	FEM_param pt;// parameter for testfem
 	FEM_param_init(&pt);
-	mesh_init(&mesh, "./data/mesh.dat");
+	mesh_init(&mesh, "../data/mesh.dat");
 	mesh_aux_build(&mesh, &mesh_aux);
 
 	for (i=0;i<pt.refine_lvl;++i) mesh_refine(&mesh, &mesh_aux);

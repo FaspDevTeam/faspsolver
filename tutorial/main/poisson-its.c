@@ -1,6 +1,6 @@
 /*! \file poisson-its.c
  *  \brief The second test example for FASP: using ITS to solve 
- *         the discrete Poisson equation from P1 finite element
+ *         the discrete Poisson equation from P1 finite element.
  *
  *  \note  ITS example for FASP: C version
  *

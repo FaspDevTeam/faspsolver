@@ -4,14 +4,14 @@
  *------------------------------------------------------
  *
  *		Created by Chensong Zhang on 03/31/2009.
- *      Modified by Chensong Zhang on 09/09/2011.
+ *      Modified by Chensong Zhang on 06/04/2012.
  *
  *------------------------------------------------------
  *
  */
 
 /*! \file test.c
- *  \brief The main test function for FASP solvers
+ *  \brief The main test function for FASP solvers -- BSR format
  */
 
 #include "fasp.h"
@@ -29,7 +29,6 @@
  */
 int main (int argc, const char * argv[]) 
 {
-	dCSRmat A, A11;    
     dBSRmat Absr;
 	dvector b, uh;
     
@@ -40,10 +39,10 @@ int main (int argc, const char * argv[])
 	itsolver_param  itparam;  // parameters for itsolver
 	AMG_param       amgparam; // parameters for AMG
 	ILU_param       iluparam; // parameters for ILU
-    Schwarz_param   schwarzparam; // parameters for Shcwarz method
+    Schwarz_param   schparam; // parameters for Shcwarz method
     
     // Read input parameters from a disk file
-	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam,&schwarzparam);
+	fasp_param_init("ini/bsr.dat",&inparam,&itparam,&amgparam,&iluparam,&schparam);
     
     // Set local parameters
 	const int print_level   = inparam.print_level;
@@ -68,8 +67,23 @@ int main (int argc, const char * argv[])
 	strncpy(filename1,inparam.workdir,128);
 	strncpy(filename2,inparam.workdir,128);
     
-	// Read A and b -- P1 FE discretization for Poisson.
-	if (problem_num == 11) {				
+    // Default test problem from black-oil benchmark: SPE01
+	if (problem_num == 10) {				
+        // Read the stiffness matrix from bsrmat_SPE01.dat
+        strncpy(filename1,inparam.workdir,128);    
+        datafile1="bsrmat_SPE01.dat"; strcat(filename1,datafile1);
+        fasp_dbsr_read(filename1, &Absr);
+        
+        // Read the RHS from rhs_SPE01.dat
+        strncpy(filename2,inparam.workdir,128);
+        datafile2="rhs_SPE01.dat"; strcat(filename2,datafile2);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+	// Test problem 1
+	else if (problem_num == 11) {				
+        dCSRmat A;
+
 		datafile1="PNNL/test1/A.dat";
 		strcat(filename1,datafile1);
 		datafile2="PNNL/test1/b.dat";
@@ -79,9 +93,14 @@ int main (int argc, const char * argv[])
 		fasp_dvec_read(filename2, &b);
         
         Absr = fasp_format_dcsr_dbsr(&A, 6);        
+
+        fasp_dcsr_free(&A);
     }	
     
-    else if (problem_num == 12) {				
+	// Test problem 2
+    else if (problem_num == 12) {
+        dCSRmat A;
+        
 		datafile1="PNNL/test2/A.dat";
 		strcat(filename1,datafile1);
 		datafile2="PNNL/test3/b.dat";
@@ -96,14 +115,17 @@ int main (int argc, const char * argv[])
         //dvector sol = fasp_dvec_create(A.row);
         //fasp_dvec_set(A.row,&sol,1);
         //fasp_dvec_rand(A.row, &sol);
-        
         //b = fasp_dvec_create(A.row);
         //fasp_blas_dcsr_mxv(&A, sol.val, b.val);     
         
         //fasp_dvec_free(&sol);
+        fasp_dcsr_free(&A);
     }
     
+	// Test problem 3
     else if (problem_num == 13) {				
+        dCSRmat A;
+
 		datafile1="PNNL/test3/A.dat";
 		strcat(filename1,datafile1);
 		datafile2="PNNL/test3/b.dat";
@@ -112,47 +134,11 @@ int main (int argc, const char * argv[])
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvec_read(filename2, &b);
         
-        Absr = fasp_format_dcsr_dbsr(&A, 6);        
+        Absr = fasp_format_dcsr_dbsr(&A, 6);
+        
+        fasp_dcsr_free(&A);
     }	
     
-    else if (problem_num == 20) {
-		datafile1="Melanie/A.dat";
-		strcat(filename1,datafile1);
-		fasp_dcoo_read(filename1, &A);
-        
-        dvector sol = fasp_dvec_create(A.row);
-        fasp_dvec_rand(A.row, &sol);
-        
-        // Form the right-hand-side b = A*sol
-        b = fasp_dvec_create(A.row);
-        fasp_blas_dcsr_mxv(&A, sol.val, b.val);     
-        
-        /*
-          int *Is, *Js;
-          int nRow=A.row/5;//we must ensure this is a integer
-          //printf("nRow = %d\n", nRow);
-          int nCol=A.col/5;
-          //printf("nCol = %d\n", nCol);
-          Is=(int *)fasp_mem_calloc(nRow, sizeof(int));
-          Js=(int *)fasp_mem_calloc(nCol, sizeof(int));
-        
-          int k;
-          for(k=0;k<nRow;k++){
-          Is[k]=k*5;
-          Js[k]=k*5;
-          }
-          dCSRmat tmpMat;
-          status=fasp_dcsr_getblk(&A,Is,Js,nRow,nCol,&tmpMat);
-          fasp_dcsr_write("./A11.dat", &tmpMat);
-          //printf("nnz = %d\n", tmpMat.nnz);
-          */
-        
-        //fasp_dcsr_write("Amelane.dat", &A);
-        //fasp_format_dcsr_dbsr(&Absr, 5, &A);
-        
-        fasp_dvec_free(&sol);
-	}	
-        
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
@@ -160,7 +146,7 @@ int main (int argc, const char * argv[])
     
     // Print problem size
 	if (print_level>PRINT_NONE) {
-        printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
+        printf("A: m = %d, n = %d, nnz = %d\n", Absr.ROW, Absr.COL, Absr.NNZ);
         printf("b: n = %d\n", b.row);
         fasp_mem_usage();
 	}
@@ -171,17 +157,15 @@ int main (int argc, const char * argv[])
     if (print_level>PRINT_NONE) fasp_param_solver_print(&itparam);
     
     // Set initial guess
-    fasp_dvec_alloc(A.row, &uh); 
-    fasp_dvec_set(A.row,&uh,0.0);
-
+    fasp_dvec_alloc(b.row, &uh); 
+    fasp_dvec_set(b.row, &uh, 0.0);
+    
     // Preconditioned Krylov methods
-    if ( itsolver_type >= 1 && itsolver_type <= 20) {
+    if ( itsolver_type >= 1 && itsolver_type <= 20 ) {
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
-            //status = fasp_solver_dbsr_krylov(&Absr, &b, &uh, &itparam);
-            status = fasp_solver_dcsr_krylov(&A, &b, &uh, &itparam);
-
+            status = fasp_solver_dbsr_krylov(&Absr, &b, &uh, &itparam);
 		}	
         
 		// Using diag(A) as preconditioner for Krylov iterative methods
@@ -192,15 +176,13 @@ int main (int argc, const char * argv[])
 		// Using AMG as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
             if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-			//status = fasp_solver_dcsr_krylov_amg(&A11, &b, &uh, &itparam, &amgparam);
-            status = fasp_solver_dbsr_krylov_amg(&Absr, &b, &uh, &itparam,&amgparam); 
+            status = fasp_solver_dbsr_krylov_amg(&Absr, &b, &uh, &itparam, &amgparam); 
 		}
         
 		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
 		else if (precond_type == PREC_ILU) {
             if (print_level>PRINT_NONE) fasp_param_ilu_print(&iluparam);
-            status = fasp_solver_dbsr_krylov_ilu(&Absr, &b, &uh, &itparam,&iluparam);
-
+            status = fasp_solver_dbsr_krylov_ilu(&Absr, &b, &uh, &itparam, &iluparam);
 		}
         
 		else {
@@ -210,15 +192,6 @@ int main (int argc, const char * argv[])
         
 	}
     
-    // AMG as the iterative solver
-    /*
-      else if (itsolver_type == SOLVER_AMG) {
-      if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-      fasp_solver_amg(&A, &b, &uh, &amgparam); 
-        
-      }
-    */
-
 	else {
 		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);		
 		status = ERROR_SOLVER_TYPE;
@@ -235,11 +208,10 @@ int main (int argc, const char * argv[])
 	}
     
     if (output_type) fclose (stdout);
-        
- FINISHED:
+    
+FINISHED:
     // Clean up memory
-	fasp_dcsr_free(&A);
-    //fasp_dbsr_free(&Absr);
+    fasp_dbsr_free(&Absr);
 	fasp_dvec_free(&b);
 	fasp_dvec_free(&uh);
     

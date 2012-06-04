@@ -1,6 +1,7 @@
 !> \file poisson-amg.f90
 !> \brief The first test example for FASP: using AMG to solve
-!>        the discrete Poisson equation from P1 finite element
+!>        the discrete Poisson equation from P1 finite element.
+!>        F90 version.
 !>
 !> \note  AMG example for FASP: F90 version
 !>

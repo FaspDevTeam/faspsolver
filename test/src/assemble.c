@@ -5,51 +5,51 @@
 #include "assemble.h"
 
 /** 
- * \fn void ivec_output ( ivector *t, ivector *s)
+ * \fn void ivec_output ( ivector *t, ivector *s )
  *
  * \brief output ivector *t from *s.
  *
- * \param *t           ivector pointer for output 
- * \param *s           source pointer
+ * \param t           ivector pointer for output 
+ * \param s           source pointer
  *
  * \author Feiteng Huang
  * \date   03/30/2012
  */
-void ivec_output ( ivector *t, ivector *s)
+void ivec_output ( ivector *t, ivector *s )
 {
     t->row = s->row;
     t->val = s->val;
 }
 
 /** 
- * \fn void dvec_output ( dvector *t, dvector *s)
+ * \fn void dvec_output ( dvector *t, dvector *s )
  *
  * \brief output dvector *t from *s.
  *
- * \param *t           dvector pointer for output 
- * \param *s           source pointer
+ * \param t           dvector pointer for output 
+ * \param s           source pointer
  *
  * \author Feiteng Huang
  * \date   03/30/2012
  */
-void dvec_output ( dvector *t, dvector *s)
+void dvec_output ( dvector *t, dvector *s )
 {
     t->row = s->row;
     t->val = s->val;
 }
 
 /** 
- * \fn void icsr_output ( icsrmat *t, icsrmat *s)
+ * \fn void icsr_output ( iCSRmat *t, iCSRmat *s )
  *
  * \brief output iCSRmat *t from *s.
  *
- * \param *t           iCSRmat pointer for output 
- * \param *s           source pointer
+ * \param t           iCSRmat pointer for output 
+ * \param s           source pointer
  *
  * \author Feiteng Huang
  * \date   03/30/2012
  */
-void icsr_output ( iCSRmat *t, iCSRmat *s)
+void icsr_output ( iCSRmat *t, iCSRmat *s )
 {
     t->row = s->row;
     t->col = s->col;
@@ -60,17 +60,17 @@ void icsr_output ( iCSRmat *t, iCSRmat *s)
 }
 
 /** 
- * \fn void dcsr_output ( dcsrmat *t, dcsrmat *s)
+ * \fn void dcsr_output ( dCSRmat *t, dCSRmat *s )
  *
  * \brief output dCSRmat *t from *s.
  *
- * \param *t           dCSRmat pointer for output 
- * \param *s           source pointer
+ * \param t           dCSRmat pointer for output 
+ * \param s           source pointer
  *
  * \author Feiteng Huang
  * \date   03/30/2012
  */
-void dcsr_output ( dCSRmat *t, dCSRmat *s)
+void dcsr_output ( dCSRmat *t, dCSRmat *s )
 {
     t->row = s->row;
     t->col = s->col;
@@ -81,17 +81,17 @@ void dcsr_output ( dCSRmat *t, dCSRmat *s)
 }
 
 /** 
- * \fn void dden_output ( ddenmat *t, ddenmat *s)
+ * \fn void dden_output ( ddenmat *t, ddenmat *s )
  *
  * \brief output ddenmat *t from *s.
  *
- * \param *t           ddenmat pointer for output 
- * \param *s           source pointer
+ * \param t           ddenmat pointer for output 
+ * \param s           source pointer
  *
  * \author Feiteng Huang
  * \date   03/30/2012
  */
-void dden_output ( ddenmat *t, ddenmat *s)
+void dden_output ( ddenmat *t, ddenmat *s )
 {
     t->row = s->row;
     t->col = s->col;
@@ -112,17 +112,17 @@ void dden_output ( ddenmat *t, ddenmat *s)
  *
  * \brief Extract stiffness matrix by removing the corresponding dirichlet boundary condition  
  *
- * \param *A            pointer to the stiffness matrix with dirichelt boundary condition(without removed)
- * \param *b            pointer to the right hand side with dirichelt boundary condition(without removed)
- * \param *A11          pointer to the stiffness matrix without dirichelt boundary condition(removed)
- * \param *b1           pointer to the right hand side without dirichelt boundary condition(removed)
- * \param *isInNode     if the node is interior node, it will be 0
- *                      if the node is on the boundary, it will be -1
- *                      if it is dirichlet boundary it will be 1
- * \param *dirichlet    pointer to the indicator of the dirichlet boundary
- * \param *nondirichlet pointer to the indicator of the node which is not in the dirichlet boundary
- * \param *index        pointer to the transpose of *dirichlet and *nondirichlet
- * \param *uh           pointer to the dirichlet boundary value
+ * \param A            pointer to the stiffness matrix with dirichelt boundary condition(without removed)
+ * \param b            pointer to the right hand side with dirichelt boundary condition(without removed)
+ * \param A11          pointer to the stiffness matrix without dirichelt boundary condition(removed)
+ * \param b1           pointer to the right hand side without dirichelt boundary condition(removed)
+ * \param isInNode     if the node is interior node, it will be 0
+ *                     if the node is on the boundary, it will be -1
+ *                     if it is dirichlet boundary it will be 1
+ * \param dirichlet    pointer to the indicator of the dirichlet boundary
+ * \param nondirichlet pointer to the indicator of the node which is not in the dirichlet boundary
+ * \param index        pointer to the transpose of *dirichlet and *nondirichlet
+ * \param uh           pointer to the dirichlet boundary value
  *
  * \author Xuehai Huang, Kai Yang, and Feiteng Huang
  * \date   03/29/2009

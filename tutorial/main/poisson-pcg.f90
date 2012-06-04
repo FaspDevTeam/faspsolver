@@ -1,6 +1,7 @@
 !> \file poisson-pcg.f90
 !> \brief The third test example for FASP: using PCG to solve 
-!>        the discrete Poisson equation from P1 finite element
+!>        the discrete Poisson equation from P1 finite element.
+!>        F90 version.
 !>
 !> \note  PCG example for FASP: F90 version
 !>

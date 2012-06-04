@@ -1,7 +1,7 @@
 /*! \file spe01-its.c
  *  \brief The fourth test example for FASP: using ITS_BSR to solve 
  *         the Jacobian equation from reservoir simulation benchmark
- *         problem SPE01
+ *         problem SPE01.
  *
  *  \note  ITS_BSR example for FASP: C version
  *

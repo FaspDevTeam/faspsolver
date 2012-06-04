@@ -45,8 +45,8 @@ int main (int argc, const char * argv[])
 	if (print_usage) {
         printf("\nUsage: %s [<ofemparions>]\n", argv[0]);
         printf("  -output <val>    : mesh output switch [default: 0]\n");
-        printf("  -meshout <val>   : output mesh file [default: ./data/mesh_?.dat]\n");
-        printf("  -meshin <val>    : input mesh file  [default: ./data/mesh.dat]\n");
+        printf("  -meshin <val>    : input mesh  [default: ../data/mesh.dat]\n");
+        printf("  -meshout <val>   : output mesh [default: ../data/mesh_?.dat]\n");
         printf("  -refine <val>    : refine level [default: 8]\n");
         printf("  -assemble <val>  : assemble ofemparion [default: ab]\n");	
         printf("                     ab  |  assemble the mat & rhs;\n");
@@ -68,7 +68,7 @@ int main (int argc, const char * argv[])
 	int        i;          // Loop index
     
 	// Step 1: read initial mesh info
-	mesh_init (&mesh, "./data/mesh.dat");
+	mesh_init (&mesh, "../data/mesh.dat");
 
 	// Step 1.5: read or build auxiliary mesh info
     // If there is already mesh_aux data available, you can use the following fct to init it:    

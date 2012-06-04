@@ -31,7 +31,7 @@
      655 ./core/src/coarsening_rs_omp.c
       71 ./core/src/eigen.c
       99 ./core/src/famg.c
-     250 ./core/src/fmgcycle.c
+     281 ./core/src/fmgcycle.c
      885 ./core/src/formats.c
      228 ./core/src/formats_omp.c
       78 ./core/src/givens.c
@@ -74,7 +74,7 @@
      362 ./core/src/pvgmres_omp.c
      873 ./core/src/quadrature.c
      108 ./core/src/rap.c
-     171 ./core/src/schwarz_setup.c
+     178 ./core/src/schwarz_setup.c
      589 ./core/src/smat.c
      928 ./core/src/smoother_bsr.c
       81 ./core/src/smoother_cr.c
@@ -105,4 +105,4 @@
     5818 ./core/include/malloc.c.h
      185 ./core/include/messages.h
      291 ./core/include/nedmalloc.h
-   61995 total
+   62033 total

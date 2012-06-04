@@ -106,7 +106,6 @@ refer to the user documentation.
 ================================
 5. Tree Structure
 ================================
-  - data:    Test data files
   - include: Header files
   - ini:     Input files for parameters
   - lib:     Libraries 
