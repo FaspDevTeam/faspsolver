@@ -59,9 +59,10 @@ AMG_levels               = 20     % max number of levels
 AMG_ILU_levels           = 0      % number of levels using ILU smoother
 AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.1    % over relaxation parameter for SOR smoother 
+AMG_polynomial_degree	 = 3      % degree of the polynomial smoother
 AMG_presmooth_iter       = 1      % number of presmoothing
 AMG_postsmooth_iter      = 1      % number of postsmoothing
-AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
+AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
 AMG_tol                  = 1e-10  % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
@@ -72,8 +73,8 @@ AMG_nl_amli_krylov_type  = 6	  % Krylov method used by Nonlinear AMLI cycle: 6 F
 % parameters for classical AMG method          %
 %----------------------------------------------%
 
-AMG_coarsening_type      = 1      % 1 modified RS | 3 Compatible Relaxation
-AMG_interpolation_type   = 2      % 1 direct | 2 standard | 3 energy-min
+AMG_coarsening_type      = 1      % 1 modified RS | 3 Compatible Relaxation | 4 aggressive 
+AMG_interpolation_type   = 1      % 1 direct | 2 standard | 3 energy-min
 AMG_strong_threshold     = 0.25   % strong threshold
 AMG_truncation_threshold = 0.4    % truncation threshold
 AMG_max_row_sum          = 0.9    % max row sum

@@ -437,6 +437,17 @@ void fasp_param_input (char *filenm,
             Input->AMG_relaxation=dbuff;
             wall = fgets(buffer,500,fp); // skip rest of line
         }
+        
+        else if (strcmp(buffer,"AMG_polynomial_degree")==0) {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%d",&ibuff);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+            Input->AMG_polynomial_degree = ibuff;
+            wall = fgets(buffer,500,fp); // skip rest of line
+        }
     
         else if (strcmp(buffer,"AMG_strong_threshold")==0) {
             val = fscanf(fp,"%s",buffer);

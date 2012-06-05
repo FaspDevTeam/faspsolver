@@ -151,6 +151,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->presmooth_iter = 2;
     amgparam->postsmooth_iter = 2;
     amgparam->relaxation = 1.0;
+    amgparam->polynomial_degree = 3;
     amgparam->coarse_scaling = OFF;
     amgparam->amli_degree = 0;
     amgparam->amli_coef = NULL;
@@ -274,6 +275,7 @@ void fasp_param_amg_set (AMG_param *param,
     param->cycle_type           = inparam->AMG_cycle_type;    
     param->smoother             = inparam->AMG_smoother;
     param->relaxation           = inparam->AMG_relaxation;
+    param->polynomial_degree    = inparam->AMG_polynomial_degree;
     param->presmooth_iter       = inparam->AMG_presmooth_iter;
     param->postsmooth_iter      = inparam->AMG_postsmooth_iter;
     param->coarse_dof           = inparam->AMG_coarse_dof;
@@ -433,6 +435,7 @@ void fasp_param_amg_to_prec (precond_data *pcdata,
     pcdata->postsmooth_iter = amgparam->postsmooth_iter;
     pcdata->coarsening_type = amgparam->coarsening_type;
     pcdata->relaxation = amgparam->relaxation;
+    pcdata->polynomial_degree = amgparam->polynomial_degree;
     pcdata->coarse_scaling = amgparam->coarse_scaling;
     pcdata->amli_degree = amgparam->amli_degree;
     pcdata->amli_coef = amgparam->amli_coef;
@@ -495,6 +498,7 @@ void fasp_param_prec_to_amg (AMG_param *amgparam,
     amgparam->presmooth_iter  = pcdata->presmooth_iter;
     amgparam->postsmooth_iter = pcdata->postsmooth_iter;
     amgparam->relaxation = pcdata->relaxation;
+    amgparam->polynomial_degree = pcdata->polynomial_degree;
     amgparam->coarse_scaling = pcdata->coarse_scaling;
     amgparam->amli_degree = pcdata->amli_degree;
     amgparam->amli_coef = pcdata->amli_coef;
@@ -566,6 +570,10 @@ void fasp_param_amg_print (AMG_param *param)
         if (param->smoother==SOR  || param->smoother==SSOR ||
             param->smoother==GSOR || param->smoother==SGSOR) {
             printf("AMG relax factor:                  %.4f\n", param->relaxation);            
+        }
+        
+        if (param->smoother==POLY){
+            printf("AMG polynomial smoother degree:    %d\n", param->polynomial_degree);
         }
         
         if(param->cycle_type == AMLI_CYCLE) {

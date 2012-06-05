@@ -1765,7 +1765,7 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
                              INT *ipin, 
                              INT *jpin) ;
 
-INT fasp_schwarz_setup(Schwarz_data *schwarz, 
+INT fasp_schwarz_setup (Schwarz_data *schwarz, 
 					    INT mmsize,
 					    INT maxlev,
 					    INT schwarz_type);
@@ -2020,6 +2020,13 @@ void fasp_smoother_dcsr_gs_cf_omp (dvector *u,
 /*-------- In file: smoother_poly.c --------*/
 
 void fasp_smoother_dcsr_poly (dCSRmat *Amat, 
+                              dvector *brhs, 
+                              dvector *usol, 
+                              INT n, 
+                              INT ndeg, 
+                              INT L);
+
+void fasp_smoother_dcsr_poly_old (dCSRmat *Amat, 
                               dvector *brhs, 
                               dvector *usol, 
                               INT n, 

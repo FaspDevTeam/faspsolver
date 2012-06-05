@@ -39,6 +39,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
     const SHORT  smooth_order = param->smooth_order;
     
     const REAL   relax = param->relaxation;
+    const SHORT  ndeg = param->polynomial_degree;
     const REAL   tol = param->tol;
     
     // local variables
@@ -167,7 +168,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
                 
                 else {
                     fasp_dcsr_presmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->presmooth_iter,
-                                           0,mgl[l].A.row-1,1,relax,smooth_order,mgl[l].cfmark.val);
+                                           0,mgl[l].A.row-1,1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
                 }
                 
                 // form residual r = b - A x
@@ -260,7 +261,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
                 
                 else {
                     fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->postsmooth_iter,
-                                            0,mgl[l].A.row-1,-1,relax,smooth_order,mgl[l].cfmark.val);    
+                                            0,mgl[l].A.row-1,-1,relax,ndeg,smooth_order,mgl[l].cfmark.val);    
                 }
                 
             } // end while

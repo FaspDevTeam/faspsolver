@@ -83,9 +83,10 @@ int main (int argc, const char * argv[])
     
 	// Read A and b -- P1 FE discretization for Poisson, large    
     else if (problem_num == 11) {
-		datafile1="coomat_1046529.dat";
-		strcat(filename1,datafile1);
-		fasp_dcoo_read(filename1, &A);
+	datafile1="coomat_1046529.dat";
+        //datafile1="coomat_26k.dat";
+	strcat(filename1,datafile1);
+	fasp_dcoo_read(filename1, &A);
         
         dvector sol = fasp_dvec_create(A.row);
         fasp_dvec_rand(A.row, &sol);

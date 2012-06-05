@@ -39,6 +39,7 @@ void fasp_solver_amli (AMG_data *mgl,
     const SHORT  smooth_order = param->smooth_order;
     const SHORT  degree= param->amli_degree;
     const REAL   relax = param->relaxation;
+    const SHORT  ndeg = param->polynomial_degree;
     
     // local variables
     REAL   alpha  = 1.0;
@@ -91,7 +92,7 @@ void fasp_solver_amli (AMG_data *mgl,
 
         else {
             fasp_dcsr_presmoothing(smoother,A_level0,b0,e0,param->presmooth_iter,
-                                   0,m0-1,1,relax,smooth_order,ordering);
+                                   0,m0-1,1,relax,ndeg,smooth_order,ordering);
         }
     
         // form residual r = b - A x
@@ -168,7 +169,7 @@ void fasp_solver_amli (AMG_data *mgl,
 
         else {
             fasp_dcsr_postsmoothing(smoother,A_level0,b0,e0,param->postsmooth_iter,
-                                    0,m0-1,-1,relax,smooth_order,ordering);
+                                    0,m0-1,-1,relax,ndeg,smooth_order,ordering);
         }
     
     }
@@ -221,6 +222,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
     const SHORT  smoother = param->smoother;
     const SHORT  smooth_order = param->smooth_order;
     const REAL   relax = param->relaxation;
+    const SHORT  ndeg = param->polynomial_degree;
     
     dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x; // fine level b and x
     dvector *b1 = &mgl[level+1].b, *e1 = &mgl[level+1].x; // coarse level b and x
@@ -274,7 +276,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 
         else {
             fasp_dcsr_presmoothing(smoother,A_level0,b0,e0,param->presmooth_iter,
-                                   0,m0-1,1,relax,smooth_order,ordering);
+                                   0,m0-1,1,relax,ndeg,smooth_order,ordering);
         }
     
         // form residual r = b - A x
@@ -370,7 +372,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 
         else {
             fasp_dcsr_postsmoothing(smoother,A_level0,b0,e0,param->postsmooth_iter,
-                                    0,m0-1,-1,relax,smooth_order,ordering);
+                                    0,m0-1,-1,relax,ndeg,smooth_order,ordering);
         }
     
     }

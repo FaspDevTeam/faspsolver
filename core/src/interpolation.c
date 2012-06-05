@@ -48,12 +48,16 @@ SHORT fasp_amg_interp (dCSRmat *A,
                        iCSRmat *S,
                        AMG_param *param)
 {
-    const INT interp_type=param->interpolation_type;
+    INT interp_type=param->interpolation_type;
+    const INT coarsening_type = param->coarsening_type;
     INT status = SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_interp ...... [Start]\n");
 #endif
+    
+    // make sure standard interpolaiton is used for aggressive coarsening
+    if (coarsening_type == 4) interp_type = INTERP_STD;
     
     /*-- Standard interpolation operator --*/
     switch (interp_type) {

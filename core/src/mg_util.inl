@@ -51,8 +51,8 @@ static void fasp_coarse_itsolver (dCSRmat *A,
 /**
  * \fn static void fasp_dcsr_presmoothing (const SHORT smoother, dCSRmat *A, dvector *b, dvector *x,
  *                                         const INT nsweeps, const INT istart, const INT iend,
- *                                         const INT istep, const REAL relax, const SHORT order,
- *                                         INT *ordering)
+ *                                         const INT istep, const REAL relax, const SHORT ndeg, 
+ *                                         const SHORT order, INT *ordering)
  *
  * \brief Multigrid presmoothing
  *
@@ -60,16 +60,19 @@ static void fasp_coarse_itsolver (dCSRmat *A,
  * \param  A         pointer to matrix data
  * \param  b         pointer to rhs data
  * \param  x         pointer to sol data
- * \param   nsweeps   number of smoothing sweeps
- * \param   istart    starting index
- * \param   iend      ending index
- * \param   istep     step size
- * \param   relax     relaxation parameter for SOR-type smoothers
+ * \param  nsweeps   number of smoothing sweeps
+ * \param  istart    starting index
+ * \param  iend      ending index
+ * \param  istep     step size
+ * \param  relax     relaxation parameter for SOR-type smoothers
+ * \param  ndeg      degree of the polynomial smoother
  * \param order  order for smoothing sweeps
  * \param ordering user defined ordering
  *
  * \author Chensong Zhang
  * \date 01/10/2012
+ *
+ * \note Modified by Xiaozhe on 06/04/2012: add ndeg as input
  */
 static void fasp_dcsr_presmoothing (const SHORT smoother,
                                     dCSRmat *A,
@@ -80,10 +83,11 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
                                     const INT iend,
                                     const INT istep,
                                     const REAL relax,
+                                    const SHORT ndeg,
                                     const SHORT order,
                                     INT *ordering)
 {
-    const SHORT ndeg = 3; // for polynomial smoothers
+    //const SHORT ndeg = 6; // for polynomial smoothers
     
     switch (smoother) {
 
@@ -144,8 +148,8 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
 /**
  * \fn static void fasp_dcsr_postsmoothing (const SHORT smoother, dCSRmat *A, dvector *b, dvector *x,
  *                                          const INT nsweeps, const INT istart, const INT iend,
- *                                          const INT istep, const REAL relax, const SHORT order,
- *                                          INT *ordering)
+ *                                          const INT istep, const REAL relax, const SHORT ndeg,
+ *                                          const SHORT order, INT *ordering)
  *
  * \brief Multigrid presmoothing
  *
@@ -153,16 +157,19 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
  * \param  A         pointer to matrix data
  * \param  b         pointer to rhs data
  * \param  x         pointer to sol data
- * \param   nsweeps   number of smoothing sweeps
- * \param   istart    starting index
- * \param   iend      ending index
- * \param   istep     step size
- * \param   relax     relaxation parameter for SOR-type smoothers
+ * \param  nsweeps   number of smoothing sweeps
+ * \param  istart    starting index
+ * \param  iend      ending index
+ * \param  istep     step size
+ * \param  relax     relaxation parameter for SOR-type smoothers
+ * \param  ndeg      degree of the polynomial smoother 
  * \param order  order for smoothing sweeps
  * \param ordering user defined ordering
  *
  * \author Chensong Zhang
  * \date 01/10/2012
+ *
+ * \note: modified by Xiaozhe Hu on 06/04/2012: add ndeg as input
  */
 static void fasp_dcsr_postsmoothing (const SHORT smoother,
                                      dCSRmat *A,
@@ -173,10 +180,11 @@ static void fasp_dcsr_postsmoothing (const SHORT smoother,
                                      const INT iend,
                                      const INT istep,
                                      const REAL relax,
+                                     const SHORT ndeg,
                                      const SHORT order,
                                      INT *ordering)
 {
-    const SHORT ndeg = 3; // for polynomial smoothers
+    //const SHORT ndeg = 6; // for polynomial smoothers
 
     switch (smoother) {
         

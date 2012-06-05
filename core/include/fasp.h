@@ -461,6 +461,8 @@ typedef struct {
 	SHORT postsmooth_iter;
 	//! relaxation parameter for SOR smoother
 	REAL relaxation;
+    //! degree of the polynomial smoother
+    SHORT polynomial_degree;
 	//! switch of scaling of the coarse grid correction
 	SHORT coarse_scaling;
 	//! degree of the polynomial used by AMLI cycle
@@ -599,6 +601,8 @@ typedef struct {
 	SHORT postsmooth_iter;
 	//! coarsening type
 	REAL relaxation;
+    //! degree of the polynomial smoother
+    SHORT polynomial_degree;
 	//! switch of scaling of the coarse grid correction
 	SHORT coarsening_type;
 	//! relaxation parameter for SOR smoother
@@ -791,6 +795,7 @@ typedef struct {
 	SHORT AMG_cycle_type; /**< type of cycle*/
 	SHORT AMG_smoother; /**< type of smoother */
 	REAL AMG_relaxation; /**< over-relaxation parameter for SOR */
+    SHORT AMG_polynomial_degree; /**< degree of the polynomial smoother */
 	SHORT AMG_presmooth_iter; /**< number of presmoothing */
 	SHORT AMG_postsmooth_iter; /**< number of postsmoothing */
 	INT AMG_coarse_dof;	/**< minimal coarsest level dof */
