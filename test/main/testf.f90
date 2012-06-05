@@ -7,10 +7,10 @@ program test
 
   double precision, dimension(:), allocatable :: u,b
   double precision, dimension(:), allocatable :: a
-  integer,                dimension(:), allocatable :: ia,ja
+  integer,          dimension(:), allocatable :: ia,ja
 
-  integer                :: iufile, n, nnz, i, prt_lvl, maxit, stype
   double precision :: tol
+  integer          :: iufile, n, nnz, i, prt_lvl, maxit, stype
 
   ! Step 0: user defined variables
   stype = 1  
@@ -61,7 +61,7 @@ program test
   else if (stype == 2) then 
      call fasp_fwrapper_krylov_amg(n,nnz,ia,ja,a,b,u,tol,maxit,prt_lvl);
   else
-     write(*,*) 'Wrong solver type!'
+     write(*,*) '### ERROR: Wrong solver type!'
   end if
 
   ! Step 3: Clean up memory

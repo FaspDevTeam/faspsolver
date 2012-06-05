@@ -38,8 +38,8 @@ AMG_max_row_sum          = 0.9   % max row sum
 % parameters for smoothed aggregation AMG      %
 %----------------------------------------------%
 
-AMG_strong_coupled	     = 0.08  % strong coupled threshold
-AMG_max_aggregation	     = 20    % max size of each aggregation 
+AMG_strong_coupled       = 0.08  % strong coupled threshold
+AMG_max_aggregation      = 20    % max size of each aggregation 
 AMG_tentative_smooth     = 0.67  % smooth factor for smoothing the tentative prolongation
-AMG_smooth_filter	     = ON    % switch for filtered matrix for smoothing
+AMG_smooth_filter        = ON    % switch for filtered matrix for smoothing
 

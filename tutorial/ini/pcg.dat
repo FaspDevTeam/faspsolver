@@ -14,7 +14,7 @@ print_level    = 3      % How much information to print out
 precond_type   = 2      % Precond type:  0 NULL | 1 Diag | 2 AMG | 3 ILU | 4 FMG
 stop_type      = 1      % Stopping type: 1 ||r||/||b|| | 2 ||r||_M/||b||_M | 3 ||r||/||x||  
 itsolver_tol   = 1e-8   % Solver tolerance 
-itsolver_maxit = 1000   % Maximal ieration number 
+itsolver_maxit = 1000   % Maximal iteration number 
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
@@ -22,8 +22,8 @@ itsolver_maxit = 1000   % Maximal ieration number
 
 ILU_type       = 1      % 1 ILUk | 2 ILUt | 3 ILUtp 
 ILU_lfil       = 2      % the level of fill-in for ILU 
-ILU_relax      = 0.9    % add the dropped entries to diagnal by this relax parameter
-ILU_droptol    = 0.1    % the drop tolerence for ILU 
+ILU_relax      = 0.9    % add the dropped entries to diagonal by this relax parameter
+ILU_droptol    = 0.1    % the drop tolerance for ILU 
 ILU_permtol    = 0.001  % permutation toleration for ILUtp
 
 %----------------------------------------------%

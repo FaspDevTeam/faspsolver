@@ -108,18 +108,19 @@ int main (int argc, const char * argv[])
         
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvec_read(filename2, &b);
-        
         Absr = fasp_format_dcsr_dbsr(&A, 6);        
         
+#if 0
         // Form the right-hand-side b = A*sol
-        //dvector sol = fasp_dvec_create(A.row);
-        //fasp_dvec_set(A.row,&sol,1);
-        //fasp_dvec_rand(A.row, &sol);
-        //b = fasp_dvec_create(A.row);
-        //fasp_blas_dcsr_mxv(&A, sol.val, b.val);     
-        
-        //fasp_dvec_free(&sol);
-        fasp_dcsr_free(&A);
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_set(A.row,&sol,1);
+        fasp_dvec_rand(A.row, &sol);
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);             
+        fasp_dvec_free(&sol);
+#endif 
+
+        fasp_dcsr_free(&A); // free up temp matrix
     }
     
 	// Test problem 3
@@ -133,10 +134,9 @@ int main (int argc, const char * argv[])
         
 		fasp_dcoo_read(filename1, &A);
 		fasp_dvec_read(filename2, &b);
-        
         Absr = fasp_format_dcsr_dbsr(&A, 6);
         
-        fasp_dcsr_free(&A);
+        fasp_dcsr_free(&A); // free up temp matrix
     }	
     
     else {
@@ -148,7 +148,6 @@ int main (int argc, const char * argv[])
 	if (print_level>PRINT_NONE) {
         printf("A: m = %d, n = %d, nnz = %d\n", Absr.ROW, Absr.COL, Absr.NNZ);
         printf("b: n = %d\n", b.row);
-        fasp_mem_usage();
 	}
     
 	// Step 2. Solve the system
@@ -161,7 +160,7 @@ int main (int argc, const char * argv[])
     fasp_dvec_set(b.row, &uh, 0.0);
     
     // Preconditioned Krylov methods
-    if ( itsolver_type >= 1 && itsolver_type <= 20 ) {
+    if ( itsolver_type > 0 && itsolver_type < 20 ) {
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
@@ -198,8 +197,6 @@ int main (int argc, const char * argv[])
         goto FINISHED;
 	}
 	
-	fasp_mem_usage();
-	
 	if (status<0) {
 		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
 	}
@@ -209,7 +206,7 @@ int main (int argc, const char * argv[])
     
     if (output_type) fclose (stdout);
     
-FINISHED:
+ FINISHED:
     // Clean up memory
     fasp_dbsr_free(&Absr);
 	fasp_dvec_free(&b);
