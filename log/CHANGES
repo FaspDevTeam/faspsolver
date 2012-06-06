@@ -2,6 +2,7 @@ File Name: CHANGES
 
 06/08/2012 FASP 0.9.0:
 - Modify the polynomial smoother and add aggressive coarsening.
+- Modify input parameters and more for better formatting in the user's guide.
 
 06/04/2012 FASP 0.8.9:
 - Remove duplicated test data and move test matrices to faspsolver/data.

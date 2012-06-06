@@ -2,17 +2,17 @@
 
 \usepackage[top=1in, bottom=1.5in, left=1in, right=1in]{geometry}
 
-\usepackage{graphicx}
-\usepackage{amssymb}
-\usepackage{epstopdf}
-\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\usepackage[pdftex,colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
 \usepackage{amsfonts}
 \usepackage{latexsym}
 \usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\usepackage{color}
 \usepackage{url}
 
 \usepackage{listings}
-\usepackage{color}
 \usepackage{textcomp}
 \definecolor{listinggray}{gray}{0.95}
 \definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
@@ -26,7 +26,7 @@
 	language=C,
         basicstyle=\scriptsize,
         upquote=true,
-        aboveskip={1.5\baselineskip},
+        aboveskip={1.1\baselineskip},
         columns=fixed,
         showstringspaces=false,
         extendedchars=true,
@@ -40,6 +40,8 @@
         keywordstyle=\bfseries\ttfamily\color[rgb]{0,0,1},
         commentstyle=\ttfamily\color[rgb]{0.2,0.7,0.1},
         stringstyle=\ttfamily\color[rgb]{1,0.1,0.3},
+        linewidth=0.96\linewidth,
+        xleftmargin=18pt,
 }
 
 
@@ -62,7 +64,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%
-\section{Why FASP}
+\section{What is FASP}
 %%%%%%%%%%%%%%%%%%%%%
 
 Over the last few decades, researchers have expended significant effort on developing efficient iterative methods for solving discretized partial differential equations (PDEs). Though these efforts have yielded many mathematically optimal solvers such as the multigrid method, the unfortunate reality is that multigrid methods have not been much used in practical applications. This marked gap between theory and practice is mainly due to the fragility of traditional multigrid (MG) methodology and the complexity of its implementation. We aim to develop techniques and the corresponding software that will narrow this gap, specifically by developing mathematically optimal solvers that are robust and easy to use in practice. 
@@ -81,9 +83,8 @@ in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License \url{http://www.gnu.org/licenses/} for more details.
 
 
-
 %%%%%%%%%%%%%%%%%%%%%
-\section{What can you expect in FASP}
+\section{What you can expect}
 %%%%%%%%%%%%%%%%%%%%%
 
 We think of the development of FASP package in a \emph{Multigrid} or \emph{Capitalism} point of view.
@@ -103,13 +104,13 @@ We think of the development of FASP package in a \emph{Multigrid} or \emph{Capit
 \begin{enumerate}
 \item[(1)] As FASP evolves, we might see, at certain time, that the market is out-of-control. This basically means the ``fine grid solver'' or the ``free market'' is very successful and we should start to give more strict standard or regulation.
 %
-\item[(2)] Write a professional-level package for a set of chosen algorithms for particular problems.
+\item[(2)] Write a professional-level software package for a set of chosen algorithms for particular problems.
 \end{enumerate}
 \end{itemize}
 %
 We are currently interested in solving the following PDEs and PDE systems (this is not a complete list and it is still expanding):
 \begin{itemize}
-\item Poisson's equation
+\item Poisson equation
 \item Reaction-diffusion equation
 \item Linear elasticity
 \item Brinkman equation
@@ -129,12 +130,12 @@ We are currently interested in solving the following PDEs and PDE systems (this 
 We intend to design solution algorithms and their implementation for all these problems with different discretizations. We have done a few of them but not all of them are publicly available at this moment. 
 
 
-
 %%%%%%%%%%%%%%%%%%%%%
 \section{How to use this guide}
 %%%%%%%%%%%%%%%%%%%%%
 
 In this user's guide, we mainly describe how to use the existing solvers in FASP via a couple of simple tutorial problems. This user's guide is self-contained but do not provide details of the algorithms nor the implementation. Along this guide, we provide a reference manual for technical details of the implementation. For the algorithms implemented, we will provide the references and we recommend the users to read them for better understanding of the code. 
+
 
 %%%%%%%%%%%%%%%%%%%%%
 \section{Installation}
@@ -156,14 +157,15 @@ $ make
 In order to make sure everything is OK, you can go to the ``test'' directory and type:
 %
 \begin{lstlisting}[numbers=none]
-make testall
+$ make testall
 \end{lstlisting}
 %
 Then you should obtain a set of test problems. If you need more help, you can use
 %
 \begin{lstlisting}[numbers=none]
-make help
+$ make help
 \end{lstlisting}
+
 
 %%%%%%%%%%%%%%%%%%%%%
 \section{External libraries}
@@ -176,7 +178,16 @@ There are a few \emph{optional} external libraries that you might want to use, i
 \chapter{A Tutorial}\label{ch:tutor}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we use a couple simple examples to demonstrate how to use the FASP package for solving existing linear systems which have been saved as disk files. All the examples can be found in ``faspsolver/tutorial/''. 
+In this chapter, we use a couple simple examples to demonstrate how to use the FASP package for solving existing linear systems which have been saved as disk files. All the examples can be found in ``faspsolver/tutorial/''. Here we only discuss the C version of these examples; interested users can read the F90 version of some of the examples.
+
+To build the tutorial examples, just go to this directory and type:
+%
+\begin{lstlisting}[numbers=none]
+$ make
+\end{lstlisting}
+%
+This command will build all the examples inside tutorial. You can use ``make help'' to get more details. 
+
 
 %%%%%%%%%%%%%%%%%%%%%
 \section{Get started -- The first example}
@@ -252,57 +263,366 @@ int main (int argc, const char * argv[])
     return SUCCESS;
 }
 \end{lstlisting}
-
-Since this is the first example, we will explain it in some detail. 
+%
+Since this is the first example, we will explain it in some detail:
 \begin{itemize}
 %
-\item Line 1 tells the Doxygen documentation system that the filename is ``poisson-amg.c''. 
+\item Line 1 tells the Doxygen documentation system that the filename is ``poisson-amg.c''. Line 2--4 tells the Doxygen what is this function for. 
 %
-\item Line 2--4 tells the Doxygen what is the function for. 
+\item Line 7--8 includes the main FASP header file ``fasp.h'' and FASP function decoration header ``fasp\_functs.h''. These two headers shall be included in all the examples in this section. Please be noted that the function decorations in ``fasp\_functs.h'' is automatically generated from the source files. 
 %
-\item Line 7--8 includes the main FASP header file ``fasp.h'' and FASP function decoration header ``fasp\_functs.h''. These two headers shall be included in all the examples in this section.
+\item Line 24 reads solver parameters from ``tutorial/ini/amg.dat''. In this files, we can set the location of the data files, type of solvers, maximal number of iteration numbers, convergence tolerance, and many other parameters for iterative solvers. 
 %
-\item Line 24 reads solver parameters from ``tutorial/ini/amg.dat''.
+\item Line 32 defines a sparse matrix $A$ in the compressed sparse row (CSR) format. Line 33 defines two vectors: the right-hand side $b$ and the numerical solution $x$.
 %
-\item Line 32 defines a CSR sparse matrix $A$.
+\item Line 45 reads the matrix and the right-hand side from two disk files. Line 38--43 defines the filenames of them.
 %
-\item Line 33 defines two vectors: the right-hand side $b$ and the numerical solution $x$.
-%
-\item Line 45 reads the matrix and the right-hand side from two disk files.
+\item Line 48--52 prints the information of the matrix and solver parameters. 
 %
 \item Line 57 allocates memory for the solution vector $x$ and set its initial value to be all zero. 
 %
-\item Line 58 solves $Ax=b$ using the AMG method.
+\item Line 58 solves $Ax=b$ using the AMG method. Type the AMG method and other parameters have been given in ``amgparam'' at Line 24. 
 %
 \item Line 61--63 frees up memory allocated for $A$, $b$, and $x$.
 \end{itemize}
+%
+To run this example, we can simply type (the default parameters have been in ``tutorial/ini/amg.dat'').
+%
+\begin{lstlisting}[numbers=none]
+$ ./poisson-amg-c.ex
+\end{lstlisting}
+%
+A sample output is given as follows (note that the actual output depends on the solver parameters and might be different than what you see here):
+\begin{lstlisting}[numbers=none]
+========================================
+||   FASP: AMG example -- C version   ||
+========================================
+
+fasp_dcsrvec2_read: reading file ../data/csrmat_FE.dat...
+fasp_dcsrvec2_read: reading file ../data/rhs_FE.dat...
+A: m = 3969, n = 3969, nnz = 27281
+b: n = 3969
+
+       Parameters in AMG_param
+-----------------------------------------------
+AMG print level:                   3
+AMG max num of iter:               100
+AMG type:                          1
+AMG tolerance:                     1.00e-08
+AMG max levels:                    15
+AMG cycle type:                    1
+AMG scaling of coarse correction:  0
+AMG smoother type:                 2
+AMG smoother order:                1
+AMG num of presmoothing:           2
+AMG num of postsmoothing:          2
+AMG coarsening type:               1
+AMG interpolation type:            1
+AMG dof on coarsest grid:          500
+AMG strong threshold:              0.6000
+AMG truncation threshold:          0.4000
+AMG max row sum:                   0.9000
+-----------------------------------------------
+
+-----------------------------------------------
+  Level     Num of rows      Num of nonzeros
+-----------------------------------------------
+    0            3969             27281
+    1            1985             28523
+    2             961             20519
+    3             481             13153
+-----------------------------------------------
+AMG grid complexity     = 1.863
+AMG operator complexity = 3.280
+Ruge-Stuben AMG setup costs 0.0087 seconds.
+---------------------------------------------------------------
+It Num |    ||r||/||b||    |     ||r||      |  Conv. Factor
+---------------------------------------------------------------
+     1 |    5.160015e-04   |  3.877420e-03  |     0.0000
+     2 |    1.895524e-06   |  1.424365e-05  |     0.0037
+     3 |    7.554832e-09   |  5.676972e-08  |     0.0040
+Number of iterations = 3 with relative residual 7.554832e-09.
+AMG solve costs 0.0080 seconds.
+AMG totally costs 0.0173 seconds.
+\end{lstlisting}
 
 
-
-\subsection{Solve it using AMG}
-
-\subsection{Solve it using AMG-preconditioned CG}
-
-\subsection{Solve it using FMG}
-
-\subsection{Set parameters}
 
 %%%%%%%%%%%%%%%%%%
-\section{Solving the Poisson's equation}
+\section{The second example}
 %%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{An OpenMP example}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In the second example, we modify the previous example slightly and solve the Poisson equation using iterative methods. 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A CUDA example}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{lstlisting}[stepnumber=1,firstnumber=1]
+/*! \file poisson-its.c
+ *  \brief The second test example for FASP: using ITS to solve 
+ *         the discrete Poisson equation from P1 finite element.
+ */
+
+#include "fasp.h"
+#include "fasp_functs.h"
+
+int main (int argc, const char * argv[]) 
+{
+    input_param          inparam;  // parameters from input files
+    itsolver_param       itparam;  // parameters for itsolver
+
+    printf("\n========================================");
+    printf("\n||   FASP: ITS example -- C version   ||");
+    printf("\n========================================\n\n");
+    
+    // Step 0. Set parameters
+    // Read input and AMG parameters from a disk file
+    // In this example, we read everything from a disk file:
+    //          "./ini/its.dat"
+    // See the reference manual for details of the parameters. 
+    fasp_param_init("ini/its.dat",&inparam,&itparam,NULL,NULL,NULL);
+
+    // Set local parameters
+    const int print_level = inparam.print_level;
+    
+    // Step 1. Get stiffness matrix and right-hand side
+    // Read A and b -- P1 FE discretization for Poisson.
+    // The location of the data files are given in "its.dat".
+    dCSRmat A;
+    dvector b, x;
+    char filename1[512], *datafile1;
+    char filename2[512], *datafile2;
+
+    // Read the stiffness matrix from matFE.dat
+    strncpy(filename1,inparam.workdir,128);    
+    datafile1="csrmat_FE.dat"; strcat(filename1,datafile1);
+    
+    // Read the RHS from rhsFE.dat
+    strncpy(filename2,inparam.workdir,128);
+    datafile2="rhs_FE.dat"; strcat(filename2,datafile2);
+    
+    fasp_dcsrvec2_read(filename1,filename2,&A,&b);
+    
+    // Step 2. Print problem size and ITS parameters
+    if (print_level>PRINT_NONE) {
+        printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
+        printf("b: n = %d\n", b.row);
+        fasp_param_solver_print(&itparam);
+    }
+    
+    // Step 3. Solve the system with ITS as an iterative solver
+    // Set the initial guess to be zero and then solve it using standard
+    // iterative methods, without applying any preconditioners
+    fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row,&x,0.0);
+    fasp_solver_dcsr_itsolver(&A, &b, &x, NULL, &itparam);
+    
+    // Step 4. Clean up memory
+    fasp_dcsr_free(&A);
+    fasp_dvec_free(&b);
+    fasp_dvec_free(&x);
+    
+    return SUCCESS;
+}
+\end{lstlisting}
+%
+This example is very similar to the first example and we now briefly explain it:
+\begin{itemize}
+%
+\item Line 23 is slightly different than Line 24 in the previous example. This is because we are calling general interface of Krylov subspace methods and the parameters are recorded in ``itparam''.
+%
+\item Line 56 allocates memory for the solution vector $x$ and set its initial value to be all zero. 
+%
+\item Line 57 solves $Ax=b$ using the AMG method. Type the AMG method and other parameters have been given in ``itparam''. 
+%
+\end{itemize}
+%
+To run this example, we can simply type (the default parameters have been in ``tutorial/ini/its.dat'').
+%
+\begin{lstlisting}[numbers=none]
+$ ./poisson-its-c.ex
+\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%
+\section{The third example}
+%%%%%%%%%%%%%%%%%%
+
+This example is slightly longer and is a modification of the previous one. In this example,  we want to demonstrate how to setup a preconditioner for the conjugate gradient (CG) method. 
+
+\begin{lstlisting}[stepnumber=1,firstnumber=1]
+/*! \file poisson-pcg.c
+ *  \brief The third test example for FASP: using PCG to solve 
+ *         the discrete Poisson equation from P1 finite element.
+ *         C version.
+ */
+
+#include "fasp.h"
+#include "fasp_functs.h"
+
+int main (int argc, const char * argv[]) 
+{
+    input_param          inparam;  // parameters from input files
+    itsolver_param       itparam;  // parameters for itsolver
+    AMG_param            amgparam; // parameters for AMG
+    ILU_param            iluparam; // parameters for ILU
+
+    printf("\n========================================");
+    printf("\n||   FASP: PCG example -- C version   ||");
+    printf("\n========================================\n\n");
+    
+    // Step 0. Set parameters
+    // Read input and precondition parameters from a disk file
+    // In this example, we read everything from a disk file:
+    //          "./ini/pcg.dat"
+    // See the reference manual for details of the parameters. 
+    fasp_param_init("ini/pcg.dat",&inparam,&itparam,&amgparam,&iluparam,NULL);
+
+    // Set local parameters
+    const SHORT print_level = itparam.print_level;    
+    const SHORT pc_type     = itparam.precond_type;
+    const SHORT stop_type   = itparam.stop_type;
+    const INT   maxit       = itparam.maxit;
+    const REAL  tol         = itparam.tol;
+    
+    // Step 1. Get stiffness matrix and right-hand side
+    // Read A and b -- P1 FE discretization for Poisson.
+    // The location of the data files are given in "pcg.dat".
+    dCSRmat A;
+    dvector b, x;
+    char filename1[512], *datafile1;
+    char filename2[512], *datafile2;
+
+    // Read the stiffness matrix from matFE.dat
+    strncpy(filename1,inparam.workdir,128);    
+    datafile1="csrmat_FE.dat"; strcat(filename1,datafile1);
+    
+    // Read the RHS from rhsFE.dat
+    strncpy(filename2,inparam.workdir,128);
+    datafile2="rhs_FE.dat"; strcat(filename2,datafile2);
+    
+    fasp_dcsrvec2_read(filename1,filename2,&A,&b);
+    
+    // Step 2. Print problem size and PCG parameters
+    if (print_level>PRINT_NONE) {
+        printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
+        printf("b: n = %d\n", b.row);
+        fasp_param_solver_print(&itparam);
+    }
+    
+    // Setp 3. Setup preconditioner
+    // Preconditioiner type is determined by pc_type
+    precond *pc = fasp_precond_setup(pc_type, &amgparam, &iluparam, &A);
+
+    // Step 4. Solve the system with PCG as an iterative solver
+    // Set the initial guess to be zero and then solve it using pcg solver
+    // Note that we call PCG interface directly. There is another way which
+    // calls the abstract iterative method interface; see possion-its.c for
+    // more details. 
+    fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row, &x, 0.0);
+    fasp_solver_dcsr_pcg(&A, &b, &x, pc, tol, maxit, stop_type, print_level);
+    
+    // Step 5. Clean up memory
+    if (pc_type!=PREC_NULL) fasp_mem_free(pc->data);
+    fasp_dcsr_free(&A);
+    fasp_dvec_free(&b);
+    fasp_dvec_free(&x);
+    
+    return SUCCESS;
+}
+\end{lstlisting}
+%
+This example is very similar to the first example and we now briefly explain it:
+\begin{itemize}
+%
+\item Line 26 reads parameters from ``tutorial/ini/pcg.dat''. In this example, we need parameters for iterative methods, AMG preconditioner, and ILU method. The type of the preconditioner is set in ``pcg.dat'' and recorded in ``pc\_type''; see Line 30.
+%
+\item Line 62 sets up the desired preconditioner and prepare it for the preconditioned iterative methods. 
+%
+\item Line 70 calls PCG to solve $Ax=b$. One can also call the general iterative method interface in the previous example.
+%
+\end{itemize}
+%
+To run this example, we can simply type (the default parameters have been in ``tutorial/ini/pcg.dat'').
+%
+\begin{lstlisting}[numbers=none]
+$ ./poisson-pcg-c.ex
+\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Set parameters}\label{sec:parameters}
+%%%%%%%%%%%%%%%%%%
+
+In the previous examples, we have seen how to read input parameters from disk files. Now we take a brief look inside those files and we take ``tutorial/ini/amg.dat'' as an example:
+%
+\begin{lstlisting}
+%----------------------------------------------%
+% input parameters                             %
+% lines starting with % are comments           %
+% must have spaces around the equal sign "="   %
+%----------------------------------------------%
+
+workdir = ../data/    % work directory, no more than 128 characters
+print_level = 3       % How much information to print out 
+ 
+%----------------------------------------------%
+% parameters for AMG preconditioners           %
+%----------------------------------------------%
+
+AMG_type                 = C     % C classic AMG | SA smoothed aggregation AMG
+AMG_cycle_type           = V     % V V-cycle | W W-cycle         
+AMG_smoother             = GS    % GS | JACOBI | SGS | SOR | SSOR | GSOR | SGSOR
+AMG_levels               = 15    % max number of levels
+AMG_ILU_levels           = 0     % number of levels using ILU smoother
+AMG_relaxation           = 1.0   % over relaxation parameter for SOR smoother
+AMG_presmooth_iter       = 2     % number of presmoothing
+AMG_postsmooth_iter      = 2     % number of postsmoothing
+AMG_coarse_dof           = 500   % max number of coarse degrees of freedom
+AMG_tol                  = 1e-8  % tolerance for AMG
+AMG_maxit                = 100   % number of AMG iterations
+AMG_coarse_scaling       = OFF   % switch of scaling of the coarse grid correction
+
+%----------------------------------------------%
+% parameters for classical AMG method          %
+%----------------------------------------------%
+
+AMG_coarsening_type      = 1     % coarsening type 1: RS | 3: CR
+AMG_interpolation_type   = 1     % 1 standard | 3 energy min in C 
+AMG_strong_threshold     = 0.6   % strong threshold
+AMG_truncation_threshold = 0.4   % truncation threshold
+AMG_max_row_sum          = 0.9   % max row sum
+
+%----------------------------------------------%
+% parameters for smoothed aggregation AMG      %
+%----------------------------------------------%
+
+AMG_strong_coupled       = 0.08  % strong coupled threshold
+AMG_max_aggregation      = 20    % max size of each aggregation 
+AMG_tentative_smooth     = 0.67  % smooth factor for the tentative prolongation
+AMG_smooth_filter        = ON    % switch for filtered matrix for smoothing
+\end{lstlisting}
+%
+We now briefly discuss the parameters appeared in this file:
+%
+This example is very similar to the first example and we now briefly explain it:
+\begin{itemize}
+%
+\item Line 7 sets the working directory, which contains the data files for matrices and right-hand side vectors. 
+%
+\item Line 8 sets the level of output for FASP routines. It should range from 0 to 10 with 0 means no output and 10 means output everything possible. 
+%
+\item Line 14--25 gives the basic AMG parameters. For example, type of AMG, type of multilevel cycles, type of smoothers, number of maximal levels, etc. 
+%
+\item Line 31--35 gives the parameters for the setup phase of classical AMG methods.
+%
+\item Line 41--44 gives the parameters for the setup phase of aggregation-base AMG methods. 
+%
+\end{itemize}
+%
+Note that the input parameters allowed in FASP are not limited to the ones used in this example. For more parameters and their ranges, we refer to the Reference Manual. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Basic Usage}\label{ch:basic}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In this chapter, we discuss the basic data structures and a few important building blocks for constructing auxiliary space preconditioners for complicated PDE problems. 
 
 %%%%%%%%%%%%%%%%%%
 \section{Vectors and arraies}
@@ -328,32 +648,43 @@ Since this is the first example, we will explain it in some detail.
 \section{Aggregation-based AMG}
 %%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%
-\section{The debug environment}
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{More advanced usage}\label{ch:advance}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Auxiliary Space Preconditioning}\label{ch:asp}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In this chapter, we discuss a few topics for more advanced users. 
 
 %%%%%%%%%%%%%%%%%%
 \section{Combined preconditioner}
 %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%
-\section{Block preconditioners for the Stokes equation}
+\section{Block preconditioners}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%
+\section{The debug environment}
 %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Appendix}\label{ch:append}
+\section{An OpenMP example}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{A CUDA example}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Appendix}\label{ch:append}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%
-\section{List of Data Structures}
+\section*{List of Data Structures}
 %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%
-\section{List of Functions}
+\section*{List of Functions}
 %%%%%%%%%%%%%%%%%%
 
 

@@ -13,10 +13,10 @@ print_level = 3       % How much information to print out
 
 AMG_type                 = C     % C classic AMG | SA smoothed aggregation AMG
 AMG_cycle_type           = V     % V V-cycle | W W-cycle	 
-AMG_smoother             = GS    % GS | JACOBI | SGS | SOR | SSOR | GSOR | SGSOR | POLY   
+AMG_smoother             = GS    % GS | JACOBI | SGS | SOR | SSOR | GSOR | SGSOR
 AMG_levels               = 15    % max number of levels
 AMG_ILU_levels           = 0     % number of levels using ILU smoother
-AMG_relaxation	         = 1.0   % over relaxation parameter for SOR smoother 
+AMG_relaxation	         = 1.0   % over relaxation parameter for SOR smoother
 AMG_presmooth_iter       = 2     % number of presmoothing
 AMG_postsmooth_iter      = 2     % number of postsmoothing
 AMG_coarse_dof           = 500   % max number of coarse degrees of freedom
@@ -28,7 +28,7 @@ AMG_coarse_scaling       = OFF	 % switch of scaling of the coarse grid correctio
 % parameters for classical AMG method          %
 %----------------------------------------------%
 
-AMG_coarsening_type      = 1     % coarsening type 1: modified RS | 3: Compatible Relaxation
+AMG_coarsening_type      = 1     % coarsening type 1: RS | 3: CR
 AMG_interpolation_type   = 1     % 1 standard | 3 energy min in C 
 AMG_strong_threshold     = 0.6   % strong threshold
 AMG_truncation_threshold = 0.4   % truncation threshold
@@ -40,6 +40,6 @@ AMG_max_row_sum          = 0.9   % max row sum
 
 AMG_strong_coupled       = 0.08  % strong coupled threshold
 AMG_max_aggregation      = 20    % max size of each aggregation 
-AMG_tentative_smooth     = 0.67  % smooth factor for smoothing the tentative prolongation
+AMG_tentative_smooth     = 0.67  % smooth factor for the tentative prolongation
 AMG_smooth_filter        = ON    % switch for filtered matrix for smoothing
 
