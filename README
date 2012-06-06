@@ -6,7 +6,7 @@ Last modified on 05/16/2012 by Chensong Zhang
 The FASP package is designed for developing and testing new efficient solvers 
 and preconditioners for discrete partial differential equations (PDEs) or 
 systems of PDEs. The main components of the package are standard Krylov methods, 
-algebaric multigrid methods, and incomplete factorization methods. Based on 
+algebraic multigrid methods, and incomplete factorization methods. Based on 
 these standard techniques, we build efficient solvers, based on the framework 
 of Auxiliary Space Preconditioning, for several complicated applications. 
 Current examples include the fluid dynamics, underground water simulation, 
@@ -40,15 +40,11 @@ This package has been tested with:
 
 To setup the environment, you need to do two simple steps: 
 
-Step 1. Setup directories for FASP:
-     
-     [faspsolver]$ ./util/setup.sh
-
-Step 2. Compile the library: 
+Step 1. Compile the library: 
      
      [faspsolver/core]$ make
 
-Step 3. Now you can build a few test problems:
+Step 2. Now you can build a few test problems:
      
      [faspsolver/test]$ make
 

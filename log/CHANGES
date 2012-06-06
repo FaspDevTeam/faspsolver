@@ -1,7 +1,10 @@
 File Name: CHANGES
 
+06/08/2012 FASP 0.9.0:
+- Modify the polynomial smoother and add aggressive coarsening.
+
 06/04/2012 FASP 0.8.9:
-- Removed duplicated test data and move test matrices to faspsolver/data.
+- Remove duplicated test data and move test matrices to faspsolver/data.
 - Modify test and tutorial according to the change to "data". 
 - Modify testbsr.c and add testbsr to Makefile. 
 - Fix most of Doxygen problems; still a few functions not documented.

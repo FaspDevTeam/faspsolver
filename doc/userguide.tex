@@ -9,6 +9,7 @@
 \usepackage{amsfonts}
 \usepackage{latexsym}
 \usepackage{amssymb}
+\usepackage{url}
 
 \usepackage{listings}
 \usepackage{color}
@@ -17,7 +18,7 @@
 \definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
 \lstset{
         numbers=left, 
-        numberstyle=\footnotesize,
+        numberstyle=\tiny,
         stepnumber=1,
         	backgroundcolor=\color{listinggray},
 	tabsize=4,
@@ -60,27 +61,244 @@
 \chapter{Introduction}\label{ch:intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%
 \section{Why FASP}
+%%%%%%%%%%%%%%%%%%%%%
 
+Over the last few decades, researchers have expended significant effort on developing efficient iterative methods for solving discretized partial differential equations (PDEs). Though these efforts have yielded many mathematically optimal solvers such as the multigrid method, the unfortunate reality is that multigrid methods have not been much used in practical applications. This marked gap between theory and practice is mainly due to the fragility of traditional multigrid (MG) methodology and the complexity of its implementation. We aim to develop techniques and the corresponding software that will narrow this gap, specifically by developing mathematically optimal solvers that are robust and easy to use in practice. 
+
+We believe that there is no one-size-for-all solution method for discrete linear systems from different applications. And, efficient iterative solvers can be constructed by taking the properties of PDEs and discretizations into account. In this project, we plan to construct a pool of discrete problems arising from partial differential equations (PDEs) or PDE systems and efficient linear solvers for these problems. We mainly utilize the methodology of Auxiliary Space Preconditioning (ASP) to construct efficient linear solvers. Due to this reason, this software package is called ``Fast Auxiliary Space Preconditioning'' or FASP for short. 
+
+\subsection{Our goal}
+
+The FASP project is not a traditional software project; instead, it is designed to support our effort to identify efficient algorithms and to build fast solvers for a set of PDE problems---FASP is designed for developing and testing new efficient solvers and preconditioners for discrete partial differential equations (PDEs) or systems of PDEs. The main components of the package are basic linear iterative methods, standard Krylov methods, geometric and algebraic multigrid methods, and incomplete factorization methods. Based on these standard techniques, we build efficient solvers, based on the framework of Auxiliary Space Preconditioning, for several complicated applications. Current examples include the fluid dynamics, underground water simulation, the black oil model in reservoir simulation, and so on. 
+
+\subsection{Licensing}
+
+This software is free software distributed under the Lesser General Public 
+License or LGPL, version~3.0 or any later versions. This software distributed 
+in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even 
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License \url{http://www.gnu.org/licenses/} for more details.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%
 \section{What can you expect in FASP}
+%%%%%%%%%%%%%%%%%%%%%
 
-\begin{lstlisting}
-#include <stdio.h>
+We think of the development of FASP package in a \emph{Multigrid} or \emph{Capitalism} point of view.
 
-int main()
+\begin{itemize}
+
+\item Fine grid stage (or free market stage)
+
+\begin{enumerate}
+\item[(1)] Collect problems and solvers. Allow similarities or even duplications, for example same solution algorithm, but different implementation. Keep all the record: problem description, solver code, test results, etc. 
+%
+\item[(2)] Try to find a minimal set of standard or rules. And then we let the market to evolve freely. The idea is to allow the market to be FREE. 
+\end{enumerate}
+
+\item Coarse grid stage (or state capitalism stage)
+
+\begin{enumerate}
+\item[(1)] As FASP evolves, we might see, at certain time, that the market is out-of-control. This basically means the ``fine grid solver'' or the ``free market'' is very successful and we should start to give more strict standard or regulation.
+%
+\item[(2)] Write a professional-level package for a set of chosen algorithms for particular problems.
+\end{enumerate}
+\end{itemize}
+%
+We are currently interested in solving the following PDEs and PDE systems (this is not a complete list and it is still expanding):
+\begin{itemize}
+\item Poisson's equation
+\item Reaction-diffusion equation
+\item Linear elasticity
+\item Brinkman equation
+\item Biharmonic equation
+\item Stokes and Navier-Stokes equations
+\item Fluid-structure interaction
+\item Oldryod-B and Johnson-Seglman equations
+\item Darcy's flow
+\item Black oil model and its modifications
+\item H(curl)/H(div) systems
+\item Maxwell equation
+\item MHD equation
+\item QCD problem
+\end{itemize}
+%
+
+We intend to design solution algorithms and their implementation for all these problems with different discretizations. We have done a few of them but not all of them are publicly available at this moment. 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{How to use this guide}
+%%%%%%%%%%%%%%%%%%%%%
+
+In this user's guide, we mainly describe how to use the existing solvers in FASP via a couple of simple tutorial problems. This user's guide is self-contained but do not provide details of the algorithms nor the implementation. Along this guide, we provide a reference manual for technical details of the implementation. For the algorithms implemented, we will provide the references and we recommend the users to read them for better understanding of the code. 
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Installation}
+%%%%%%%%%%%%%%%%%%%%%
+
+First, you may get a free copy of FASP kernel functions from \emph{BitBucket.org}:
+%
+\begin{lstlisting}[numbers=none]
+$ hg clone ssh://hg@bitbucket.org/fasp/faspsolver
+\end{lstlisting}
+%
+Now you should obtain ``faspsolver'' in your current directory. To build the FASP library, just go to the ``core'' directory and type:
+%
+\begin{lstlisting}[numbers=none]
+$ ./configure
+$ make
+\end{lstlisting}
+%
+In order to make sure everything is OK, you can go to the ``test'' directory and type:
+%
+\begin{lstlisting}[numbers=none]
+make testall
+\end{lstlisting}
+%
+Then you should obtain a set of test problems. If you need more help, you can use
+%
+\begin{lstlisting}[numbers=none]
+make help
+\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{External libraries}
+%%%%%%%%%%%%%%%%%%%%%
+
+There are a few \emph{optional} external libraries that you might want to use, including memory allocation routines, direct solvers, ILU methods, discretization packages, etc. FASP has interfaces to a couple of them which we often use, for example, SuperLU, MUMPS, dlmalloc, SparseKit. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{A Tutorial}\label{ch:tutor}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In this chapter, we use a couple simple examples to demonstrate how to use the FASP package for solving existing linear systems which have been saved as disk files. All the examples can be found in ``faspsolver/tutorial/''. 
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Get started -- The first example}
+%%%%%%%%%%%%%%%%%%%%%
+
+The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method. $A$ is symmetric positive definite (SPD), arising from continuous piecewise linear finite element discretization of the Poisson equation $-\Delta u = f$ (with Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$. 
+ 
+\begin{lstlisting}[stepnumber=1,firstnumber=1]
+/*! \file poisson-amg.c
+ *  \brief The first test example for FASP: using AMG to solve 
+ *         the discrete Poisson equation from P1 finite element.
+ *         C version.
+ */
+
+#include "fasp.h"
+#include "fasp_functs.h"
+
+int main (int argc, const char * argv[]) 
 {
-	printf{"Hello, World!\n"}; /* Print "Hello, World!" to the screen. */
-/*
-012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-*/
+    input_param     inparam;  // parameters from input files
+    AMG_param       amgparam; // parameters for AMG
+    
+    printf("\n========================================");
+    printf("\n||   FASP: AMG example -- C version   ||");
+    printf("\n========================================\n\n");
+
+    // Step 0. Set parameters
+    // Read input and AMG parameters from a disk file
+    // In this example, we read everything from a disk file:
+    //          "./ini/amg.dat"
+    // See the reference manual for details of the parameters. 
+    fasp_param_init("ini/amg.dat",&inparam,NULL,&amgparam,NULL,NULL);
+    
+    // Set local parameters using the input values
+    const int print_level = inparam.print_level;
+    
+    // Step 1. Get stiffness matrix and right-hand side
+    // Read A and b -- P1 FE discretization for Poisson.
+    // The location of the data files are given in "amg.dat".
+    dCSRmat A;
+    dvector b, x;
+    char filename1[512], *datafile1;
+    char filename2[512], *datafile2;
+	
+    // Read the stiffness matrix from matFE.dat
+    strncpy(filename1,inparam.workdir,128);    
+    datafile1="csrmat_FE.dat"; strcat(filename1,datafile1);
+    
+    // Read the RHS from rhsFE.dat
+    strncpy(filename2,inparam.workdir,128);
+    datafile2="rhs_FE.dat"; strcat(filename2,datafile2);
+    
+    fasp_dcsrvec2_read(filename1,filename2,&A,&b);
+    
+    // Step 2. Print problem size and AMG parameters
+    if (print_level>PRINT_NONE) {
+        printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
+        printf("b: n = %d\n", b.row);
+        fasp_param_amg_print(&amgparam);
+    }
+    
+    // Step 3. Solve the system with AMG as an iterative solver
+    // Set the initial guess to be zero and then solve it
+    // with AMG method as an iterative procedure
+    fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row,&x,0.0);
+    fasp_solver_amg(&A, &b, &x, &amgparam);
+    
+    // Step 4. Clean up memory
+    fasp_dcsr_free(&A);
+    fasp_dvec_free(&b);
+    fasp_dvec_free(&x);
+    
+    return SUCCESS;
 }
 \end{lstlisting}
 
-\section{How to use this guide}
+Since this is the first example, we will explain it in some detail. 
+\begin{itemize}
+%
+\item Line 1 tells the Doxygen documentation system that the filename is ``poisson-amg.c''. 
+%
+\item Line 2--4 tells the Doxygen what is the function for. 
+%
+\item Line 7--8 includes the main FASP header file ``fasp.h'' and FASP function decoration header ``fasp\_functs.h''. These two headers shall be included in all the examples in this section.
+%
+\item Line 24 reads solver parameters from ``tutorial/ini/amg.dat''.
+%
+\item Line 32 defines a CSR sparse matrix $A$.
+%
+\item Line 33 defines two vectors: the right-hand side $b$ and the numerical solution $x$.
+%
+\item Line 45 reads the matrix and the right-hand side from two disk files.
+%
+\item Line 57 allocates memory for the solution vector $x$ and set its initial value to be all zero. 
+%
+\item Line 58 solves $Ax=b$ using the AMG method.
+%
+\item Line 61--63 frees up memory allocated for $A$, $b$, and $x$.
+\end{itemize}
 
-\section{Installation and external libraries}
 
-\section{Get started}
+
+\subsection{Solve it using AMG}
+
+\subsection{Solve it using AMG-preconditioned CG}
+
+\subsection{Solve it using FMG}
+
+\subsection{Set parameters}
+
+%%%%%%%%%%%%%%%%%%
+\section{Solving the Poisson's equation}
+%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{An OpenMP example}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{A CUDA example}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Basic Usage}\label{ch:basic}
@@ -109,36 +327,6 @@ int main()
 %%%%%%%%%%%%%%%%%%
 \section{Aggregation-based AMG}
 %%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{A Tutorial}\label{ch:tutor}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%
-\section{The first example}
-%%%%%%%%%%%%%%%%%%
-
-\subsection{Read a matrix}
-
-\subsection{Solve it using AMG}
-
-\subsection{Solve it using AMG-preconditioned CG}
-
-\subsection{Solve it using FMG}
-
-\subsection{Set parameters}
-
-%%%%%%%%%%%%%%%%%%
-\section{Solving the Poisson's equation}
-%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{An OpenMP example}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A CUDA example}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%
 \section{The debug environment}
