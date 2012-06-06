@@ -35,7 +35,7 @@ program test
   ! Step 1: read A and b 
 
   !===> Read data A from file
-  open(unit=iufile,file='data/csrmat_FE.dat')
+  open(unit=iufile,file='../data/csrmat_FE.dat')
 
   read(iufile,*) n
   allocate(ia(1:n+1))   
@@ -49,7 +49,7 @@ program test
   close(iufile)
 
   !===> Read data b from file
-  open(unit=iufile,file='data/rhs_FE.dat')
+  open(unit=iufile,file='../data/rhs_FE.dat')
 
   read(iufile,*) n
   allocate(b(1:n))
