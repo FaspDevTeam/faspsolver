@@ -778,7 +778,7 @@ $$
 NOTE: In FASP, the indices are starting from 0, instead of 1. This is usually the source of problems related to vectors and matrices. 
 \end{snugshade}
 
-\subsubsection*{1. COO format}
+\subsubsection*{(i) COO format}
 
 The coordinate (COO) format or IJ format is the simplest sparse matrix format. 
 \begin{lstlisting}
@@ -829,7 +829,7 @@ nnz = 11
 %
 Although the COO format is easy to understand or use, it wastes some storage and has no advantages in sparse BLAS operations.
 
-\subsubsection*{2. CSR format}
+\subsubsection*{(ii) CSR format}
 The most commonly used data structure for sparse matrices nowadays is probably the so-called {\em compressed sparse row}  (CSR) format, according to Saad~\cite{Saad}. The compressed row storage format of a matrix $A\in \mathbb{R}^{n\times m}$ ($n$ rows and $m$ columns) consists of three arrays, as follows:
 %
 \begin{enumerate}
@@ -906,7 +906,7 @@ NOTE: The indexes in $JA$ need not be ordered as seen in this example.
 
 The CSR format presents challenges to sparse matrix-vector product mainly because of the high cache missing rate due to indirect memory access and irregular access pattern. In order to reduce the cache missing rate, we introduce an improved data format, CSRL.
 
-\subsubsection*{3. CSRL format}
+\subsubsection*{(iii) CSRL format}
 
 CSRL matrix format groups rows with same number of nonzeros together and improves cache hitting rate. 
 \begin{lstlisting}
@@ -938,7 +938,7 @@ typedef struct dCSRLmat{
 } dCSRLmat; /**< Sparse matrix of REAL type in CSRL format */
 \end{lstlisting}
 
-\subsubsection*{4. Block sparse matrix formats}
+\subsubsection*{(iv) Block sparse matrix formats}
 
 For PDE applications, we often need to solve systems of partial differential equations. Many iterative methods and preconditioners could take advantages of fact and improve efficiency. So we often need to use block matrices to store the coefficient matrix arising from PDE systems. Depending on different applications and different solving algorithms, we can use two types of block matrices: BSR (or Block Compressed Sparse Row) and CSR Block (Block of CSR matrices). The definitions of these types of block matrices are given as follows:
 
@@ -1086,16 +1086,35 @@ This is only a simple example for sparse matrix-vector multiplication (SpMV) ker
 \section{Iterative methods}\label{sec:iter}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+There are a couple of standard preconditioned iterative methods implemented in FASP. In this section, we use the CSR matrix as example to introduce how to use these iterative methods. To learn more details, we refer to the Reference Manual.
+
+\subsection{Conjugate Gradient}
+
+To call the preconditioned conjugate gradient (PCG) method, you can simply use the function
+\begin{lstlisting}[numbers=none]
+INT fasp_solver_dcsr_pcg (dCSRmat *A, 
+                          dvector *b, 
+                          dvector *u, 
+                          precond *pc, 
+                          const REAL tol,
+                          const INT MaxIt, 
+                          const SHORT stop_type,
+                          const SHORT print_level)
+\end{lstlisting}
+%
+The names of the input arguments explain themselves mostly and they are explained in the Reference Manual in detail. Here we briefly discuss how to call this function because once we understand PCG, we can easily call other iterative methods.   
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Geometric multigrid}\label{sec:gmg}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Classical AMG}\label{sec:camg}
+\section{Classical algebraic multigrid}\label{sec:camg}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Aggregation-based AMG}\label{sec:samg}
+\section{Aggregation-based algebraic multigrid}\label{sec:samg}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

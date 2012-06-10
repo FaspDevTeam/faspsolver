@@ -76,45 +76,49 @@
  *
  * FASP Project Leader: 
  *
- *      -Xu, Jinchao (Penn State University, USA)
+ * - Xu, Jinchao (Penn State University, USA)
  *
  * Coordinator:
  * 
- *      -Zhang, Chensong (Chinese Academy of Sciences, China)
+ * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
  * Main developers (in alphabetic order):
  *
- *		-Feng, Chunsheng (Xiangtan University, China)
+ * - Feng, Chunsheng (Xiangtan University, China)
  *
- *      -Hu, Xiaozhe (Peking University, China)
+ * - Hu, Xiaozhe (Peking University, China)
  * 
- *      -Zhang, Chensong (Chinese Academy of Sciences, China)
+ * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
- *      -Zikatanov, Ludmil (Penn State Univeristy, USA)
+ * - Zikatanov, Ludmil (Penn State Univeristy, USA)
  *
  * With contributions from (in alphabetic order):
  *
- *      -Brannick, James (Penn State University, USA)
+ * - Brannick, James (Penn State University, USA)
  * 
- *      -Cao, Fei (Penn State University, USA)
+ * - Cao, Fei (Penn State University, USA)
  *
- *      -Huang, Feiteng (Sichuang University, China)
+ * - Huang, Feiteng (Sichuang University, China)
  *
- *      -Huang, Xuehai (Shanghai Jiaotong University, China)
+ * - Huang, Xuehai (Shanghai Jiaotong University, China)
  *
- *      -Shu, Shi (Xiangtan University, China)
+ * - Li, Zheng (Xiangtan University, China)
  *
- *      -Wang, Ziteng (Beijing University, China)
+ * - Shu, Shi (Xiangtan University, China)
  *
- *      -Yang, Kai (Penn State University, USA)
+ * - Wang, Ziteng (Beijing University, China)
+ *
+ * - Yang, Kai (Penn State University, USA)
  *      
- *      -Zhang, Shiquan (Sichuan University, China)
+ * - Yue, Xiaoqiang (Xiangtan University, China)
  *
- *      -Zhang, Shuo (Chinese Academy of Sciences, China)
+ * - Zhang, Shiquan (Sichuan University, China)
  *
- *      -Zhang, Weifeng (Kunming University of Science and Technology, China)
+ * - Zhang, Shuo (Chinese Academy of Sciences, China)
  *
- *      -Zhou, Zhiyang (Xiangtan University, China)
+ * - Zhang, Weifeng (Kunming University of Science and Technology, China)
+ *
+ * - Zhou, Zhiyang (Xiangtan University, China)
  *
  */
    
