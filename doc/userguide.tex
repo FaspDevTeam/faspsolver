@@ -6,12 +6,14 @@
 \usepackage{amsfonts}
 \usepackage{latexsym}
 \usepackage{amssymb}
+\usepackage{color}
+\usepackage{url}
+\usepackage[notcite,notref,color]{showkeys}
 \usepackage{graphicx}
 \usepackage{epstopdf}
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
-\usepackage{color}
-\usepackage{url}
 
+% Define the listings environment
 \usepackage{listings}
 \usepackage{textcomp}
 \definecolor{listinggray}{gray}{0.95}
@@ -40,9 +42,13 @@
         keywordstyle=\bfseries\ttfamily\color[rgb]{0,0,1},
         commentstyle=\ttfamily\color[rgb]{0.2,0.7,0.1},
         stringstyle=\ttfamily\color[rgb]{1,0.1,0.3},
-        linewidth=0.96\linewidth,
+        linewidth=0.97\linewidth,
         xleftmargin=18pt,
 }
+
+% Define the frame environment
+\usepackage{frame}
+\definecolor{shadecolor}{rgb}{1,0.9,0.1}
 
 
 \title{User's Guide for FASP}
@@ -63,9 +69,9 @@
 \chapter{Introduction}\label{ch:intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%
-\section{What is FASP}
-%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{What is FASP}\label{sec:goal}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Over the last few decades, researchers have expended significant effort on developing efficient iterative methods for solving discretized partial differential equations (PDEs). Though these efforts have yielded many mathematically optimal solvers such as the multigrid method, the unfortunate reality is that multigrid methods have not been much used in practical applications. This marked gap between theory and practice is mainly due to the fragility of traditional multigrid (MG) methodology and the complexity of its implementation. We aim to develop techniques and the corresponding software that will narrow this gap, specifically by developing mathematically optimal solvers that are robust and easy to use in practice. 
 
@@ -75,17 +81,18 @@ We believe that there is no one-size-for-all solution method for discrete linear
 
 The FASP project is not a traditional software project; instead, it is designed to support our effort to identify efficient algorithms and to build fast solvers for a set of PDE problems---FASP is designed for developing and testing new efficient solvers and preconditioners for discrete partial differential equations (PDEs) or systems of PDEs. The main components of the package are basic linear iterative methods, standard Krylov methods, geometric and algebraic multigrid methods, and incomplete factorization methods. Based on these standard techniques, we build efficient solvers, based on the framework of Auxiliary Space Preconditioning, for several complicated applications. Current examples include the fluid dynamics, underground water simulation, the black oil model in reservoir simulation, and so on. 
 
-\subsection{Licensing}
+FASP contains the kernel part and several applications (ranging from fluid dynamics to reservoir simulation). The kernel part is open-source and licensed under GNU LPGL. Some of the applications contain contributions from and owned partially by other parties. We wish to keep as many parts open to public as possible. We only discuss the kernel functions in this user's guide.
 
-This software is free software distributed under the Lesser General Public 
+\begin{snugshade}\noindent
+LICENSE: This software is free software distributed under the Lesser General Public 
 License or LGPL, version~3.0 or any later versions. This software distributed 
 in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even 
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License \url{http://www.gnu.org/licenses/} for more details.
+\end{snugshade}
 
-
-%%%%%%%%%%%%%%%%%%%%%
-\section{What you can expect}
-%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{What you can expect}\label{sec:idea}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We think of the development of FASP package in a \emph{Multigrid} or \emph{Capitalism} point of view.
 
@@ -130,23 +137,30 @@ We are currently interested in solving the following PDEs and PDE systems (this 
 We intend to design solution algorithms and their implementation for all these problems with different discretizations. We have done a few of them but not all of them are publicly available at this moment. 
 
 
-%%%%%%%%%%%%%%%%%%%%%
-\section{How to use this guide}
-%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{How to use this guide}\label{sec:how}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this user's guide, we mainly describe how to use the existing solvers in FASP via a couple of simple tutorial problems. This user's guide is self-contained but do not provide details of the algorithms nor the implementation. Along this guide, we provide a reference manual for technical details of the implementation. For the algorithms implemented, we will provide the references and we recommend the users to read them for better understanding of the code. 
 
 
-%%%%%%%%%%%%%%%%%%%%%
-\section{Installation}
-%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Installation}\label{sec:install}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-First, you may get a free copy of FASP kernel functions from \emph{BitBucket.org}:
+First, you need to obtain a free copy of FASP kernel functions from \emph{BitBucket.org} via HTTPS or SSH or SourceTree:
 %
 \begin{lstlisting}[numbers=none]
+"Download FASP using HTTPS"
+$ hg clone https://faspusers@bitbucket.org/fasp/faspsolver
+"Download FASP using SSH"
 $ hg clone ssh://hg@bitbucket.org/fasp/faspsolver
+"Download FASP using SourceTree"
+$ sourcetree://cloneRepo/https://faspusers@bitbucket.org/fasp/faspsolver
 \end{lstlisting}
 %
+For the moment, it still requires a password to access the repository and the password is ``multigrid''. Very soon it will be open to public completely. 
+
 Now you should obtain ``faspsolver'' in your current directory. To build the FASP library, just go to the ``core'' directory and type:
 %
 \begin{lstlisting}[numbers=none]
@@ -167,9 +181,9 @@ $ make help
 \end{lstlisting}
 
 
-%%%%%%%%%%%%%%%%%%%%%
-\section{External libraries}
-%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{External libraries}\label{sec:lib}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 There are a few \emph{optional} external libraries that you might want to use, including memory allocation routines, direct solvers, ILU methods, discretization packages, etc. FASP has interfaces to a couple of them which we often use, for example, SuperLU, MUMPS, dlmalloc, SparseKit. 
 
@@ -189,11 +203,11 @@ $ make
 This command will build all the examples inside tutorial. You can use ``make help'' to get more details. 
 
 
-%%%%%%%%%%%%%%%%%%%%%
-\section{Get started -- The first example}
-%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The first example}\label{sec:ex1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method. $A$ is symmetric positive definite (SPD), arising from continuous piecewise linear finite element discretization of the Poisson equation $-\Delta u = f$ (with Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$. 
+The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method; see \S\ref{sec:camg}. The stiffness matrix $A$ is symmetric positive definite (SPD), arising from the continuous piecewise linear finite element discretization of the Poisson equation $-\Delta u = f$ (with Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$. 
  
 \begin{lstlisting}[stepnumber=1,firstnumber=1]
 /*! \file poisson-amg.c
@@ -271,9 +285,9 @@ Since this is the first example, we will explain it in some detail:
 %
 \item Line 7--8 includes the main FASP header file ``fasp.h'' and FASP function decoration header ``fasp\_functs.h''. These two headers shall be included in all the examples in this section. Please be noted that the function decorations in ``fasp\_functs.h'' is automatically generated from the source files. 
 %
-\item Line 24 reads solver parameters from ``tutorial/ini/amg.dat''. In this files, we can set the location of the data files, type of solvers, maximal number of iteration numbers, convergence tolerance, and many other parameters for iterative solvers. 
+\item Line 24 reads solver parameters from ``tutorial/ini/amg.dat''; see more discussions in \S\ref{sec:parameters}. In this files, we can set the location of the data files, type of solvers, maximal number of iteration numbers, convergence tolerance, and many other parameters for iterative solvers. 
 %
-\item Line 32 defines a sparse matrix $A$ in the compressed sparse row (CSR) format. Line 33 defines two vectors: the right-hand side $b$ and the numerical solution $x$.
+\item Line 32 defines a sparse matrix $A$ in the compressed sparse row (CSR) format. Line 33 defines two vectors: the right-hand side $b$ and the numerical solution $x$. We refer to~\S\ref{sec:blas} for definitions of vectors and sparse matrices.
 %
 \item Line 45 reads the matrix and the right-hand side from two disk files. Line 38--43 defines the filenames of them.
 %
@@ -281,7 +295,7 @@ Since this is the first example, we will explain it in some detail:
 %
 \item Line 57 allocates memory for the solution vector $x$ and set its initial value to be all zero. 
 %
-\item Line 58 solves $Ax=b$ using the AMG method. Type the AMG method and other parameters have been given in ``amgparam'' at Line 24. 
+\item Line 58 solves $Ax=b$ using the AMG method. Type the AMG method and other parameters have been given in ``amgparam'' at Line 24; see \S\ref{sec:camg} and \S\ref{sec:samg}.
 %
 \item Line 61--63 frees up memory allocated for $A$, $b$, and $x$.
 \end{itemize}
@@ -348,9 +362,9 @@ AMG totally costs 0.0173 seconds.
 
 
 
-%%%%%%%%%%%%%%%%%%
-\section{The second example}
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The second example}\label{sec:ex2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In the second example, we modify the previous example slightly and solve the Poisson equation using iterative methods. 
 
@@ -425,11 +439,11 @@ int main (int argc, const char * argv[])
 This example is very similar to the first example and we now briefly explain it:
 \begin{itemize}
 %
-\item Line 23 is slightly different than Line 24 in the previous example. This is because we are calling general interface of Krylov subspace methods and the parameters are recorded in ``itparam''.
+\item Line 23 is slightly different than Line 24 in the previous example. This is because we are calling general interface of Krylov subspace methods and the parameters are recorded in ``itparam''. 
 %
 \item Line 56 allocates memory for the solution vector $x$ and set its initial value to be all zero. 
 %
-\item Line 57 solves $Ax=b$ using the AMG method. Type the AMG method and other parameters have been given in ``itparam''. 
+\item Line 57 solves $Ax=b$ using the general interface for Krylov subspace methods. Type the iterative method and other parameters have been given in ``itparam''; see \S\ref{sec:iter} for details. 
 %
 \end{itemize}
 %
@@ -439,9 +453,9 @@ To run this example, we can simply type (the default parameters have been in ``t
 $ ./poisson-its-c.ex
 \end{lstlisting}
 
-%%%%%%%%%%%%%%%%%%
-\section{The third example}
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The third example}\label{sec:ex3}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This example is slightly longer and is a modification of the previous one. In this example,  we want to demonstrate how to setup a preconditioner for the conjugate gradient (CG) method. 
 
@@ -545,9 +559,9 @@ $ ./poisson-pcg-c.ex
 \end{lstlisting}
 
 
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Set parameters}\label{sec:parameters}
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In the previous examples, we have seen how to read input parameters from disk files. Now we take a brief look inside those files and we take ``tutorial/ini/amg.dat'' as an example:
 %
@@ -603,75 +617,167 @@ We now briefly discuss the parameters appeared in this file:
 This example is very similar to the first example and we now briefly explain it:
 \begin{itemize}
 %
-\item Line 7 sets the working directory, which contains the data files for matrices and right-hand side vectors. 
+\item Line 7 sets the working directory, which stores the matrices and right-hand side vectors. 
 %
 \item Line 8 sets the level of output for FASP routines. It should range from 0 to 10 with 0 means no output and 10 means output everything possible. 
 %
-\item Line 14--25 gives the basic AMG parameters. For example, type of AMG, type of multilevel cycles, type of smoothers, number of maximal levels, etc. 
+\item Line 14--25 sets the basic parameters for algebraic multigrid methods. For example, type of AMG, type of multilevel cycles, type of smoothers, number of maximal levels, etc. 
 %
-\item Line 31--35 gives the parameters for the setup phase of classical AMG methods.
+\item Line 31--35 sets the parameters for the setup phase of the classical AMG method (\S\ref{sec:camg}).
 %
-\item Line 41--44 gives the parameters for the setup phase of aggregation-base AMG methods. 
+\item Line 41--44 gives the parameters for the setup phase of the aggregation-base AMG methods (\S\ref{sec:samg}). 
 %
 \end{itemize}
 %
-Note that the input parameters allowed in FASP are not limited to the ones used in this example. For more parameters and their ranges, we refer to the Reference Manual. 
 
+You can do a very simple experiment and change the AMG type from the classical AMG to smoothed aggregation AMG by revise Line 14 to 
+%
+\begin{lstlisting}[numbers=none]
+AMG_type                 = SA
+\end{lstlisting}
+%
+Then you run ``poisson-amg-c.ex'' one more time and will get 
+%
+\begin{lstlisting}[numbers=none]
+========================================
+||   FASP: AMG example -- C version   ||
+========================================
+
+fasp_dcsrvec2_read: reading file ../data/csrmat_FE.dat...
+fasp_dcsrvec2_read: reading file ../data/rhs_FE.dat...
+A: m = 3969, n = 3969, nnz = 27281
+b: n = 3969
+
+       Parameters in AMG_param
+-----------------------------------------------
+AMG print level:                   3
+AMG max num of iter:               100
+AMG type:                          2
+AMG tolerance:                     1.00e-08
+AMG max levels:                    15
+AMG cycle type:                    1
+AMG scaling of coarse correction:  0
+AMG smoother type:                 2
+AMG smoother order:                1
+AMG num of presmoothing:           2
+AMG num of postsmoothing:          2
+Aggregation AMG strong coupling:   0.0800
+Aggregation AMG max aggregation:   20
+Aggregation AMG tentative smooth:  0.6700
+Aggregation AMG smooth filter:     1
+-----------------------------------------------
+
+-----------------------------------------------
+  Level     Num of rows      Num of nonzeros
+-----------------------------------------------
+    0            3969             27281
+    1             541              5121
+    2              41               391
+-----------------------------------------------
+AMG grid complexity     = 1.147
+AMG operator complexity = 1.202
+Smoothed Aggregation AMG setup costs 0.0038 seconds.
+---------------------------------------------------------------
+It Num |    ||r||/||b||    |     ||r||      |  Conv. Factor
+---------------------------------------------------------------
+     1 |    4.274024e-02   |  3.211655e-01  |     0.0000
+     2 |    7.681829e-03   |  5.772402e-02  |     0.1797
+     3 |    3.769909e-03   |  2.832845e-02  |     0.4908
+     4 |    1.908833e-03   |  1.434365e-02  |     0.5063
+     5 |    9.544638e-04   |  7.172183e-03  |     0.5000
+     6 |    4.811769e-04   |  3.615735e-03  |     0.5041
+     7 |    2.454538e-04   |  1.844428e-03  |     0.5101
+     8 |    1.264489e-04   |  9.501825e-04  |     0.5152
+     9 |    6.560382e-05   |  4.929706e-04  |     0.5188
+    10 |    3.419782e-05   |  2.569747e-04  |     0.5213
+    11 |    1.788119e-05   |  1.343657e-04  |     0.5229
+    12 |    9.367771e-06   |  7.039279e-05  |     0.5239
+    13 |    4.913626e-06   |  3.692274e-05  |     0.5245
+    14 |    2.579247e-06   |  1.938138e-05  |     0.5249
+    15 |    1.354509e-06   |  1.017827e-05  |     0.5252
+    16 |    7.115253e-07   |  5.346656e-06  |     0.5253
+    17 |    3.738252e-07   |  2.809056e-06  |     0.5254
+    18 |    1.964204e-07   |  1.475973e-06  |     0.5254
+    19 |    1.032110e-07   |  7.755642e-07  |     0.5255
+    20 |    5.423451e-08   |  4.075375e-07  |     0.5255
+    21 |    2.849901e-08   |  2.141518e-07  |     0.5255
+    22 |    1.497562e-08   |  1.125322e-07  |     0.5255
+    23 |    7.869358e-09   |  5.913318e-08  |     0.5255
+Number of iterations = 23 with relative residual 7.869358e-09.
+AMG solve costs 0.0140 seconds.
+AMG totally costs 0.0184 seconds.
+\end{lstlisting}
+%
+You can compare this with the sample results in \S\ref{sec:ex1}.
+
+\begin{snugshade}\noindent
+NOTE: The input parameters allowed in FASP are not limited to the ones used in this example. For more parameters and their ranges, we refer to the Reference Manual. 
+\end{snugshade}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Basic Usage}\label{ch:basic}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we discuss the basic data structures and a few important building blocks for constructing auxiliary space preconditioners for complicated PDE problems. 
-
-%%%%%%%%%%%%%%%%%%
-\section{Vectors and arraies}
-%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%
-\section{Sparse matrices}
-%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%
-\section{Iterative methods}
-%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%
-\section{Geometric multigrid}
-%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%
-\section{Classical AMG}
-%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%
-\section{Aggregation-based AMG}
-%%%%%%%%%%%%%%%%%%
+In this chapter, we discuss the basic data structures and some important building blocks which will be useful for constructing auxiliary space preconditioners for systems of PDEs in Chapter~\ref{ch:advanced}. In particular, we will discuss vectors, sparse matrices, iterative methods, and multigrid methods. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{More advanced usage}\label{ch:advance}
+\section{Vectors and sparse matrices}\label{sec:blas}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Vector}
+
+\begin{lstlisting}
+/** 
+ * \struct dvector
+ * \brief Vector with n entries of REAL type.
+ */
+typedef struct dvector{
+	
+    //! number of rows
+	INT row;
+    //! actual vector entries
+	REAL *val;
+	
+} dvector; /**< Vector of REAL type */
+\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Iterative methods}\label{sec:iter}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Geometric multigrid}\label{sec:gmg}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Classical AMG}\label{sec:camg}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Aggregation-based AMG}\label{sec:samg}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{More Advanced Usage}\label{ch:advanced}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this chapter, we discuss a few topics for more advanced users. 
 
-%%%%%%%%%%%%%%%%%%
-\section{Combined preconditioner}
-%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%
-\section{Block preconditioners}
-%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%
-\section{The debug environment}
-%%%%%%%%%%%%%%%%%%
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{An OpenMP example}
+\section{Block preconditioners}\label{sec:block}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A CUDA example}
+\section{An OpenMP example}\label{sec:mop}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{A CUDA example}\label{sec:cuda}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The debug environment}\label{sec:debug}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 

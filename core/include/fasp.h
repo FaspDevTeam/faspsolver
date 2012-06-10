@@ -56,7 +56,6 @@
 #define SMALLREAL        1e-20 /**< A small real number */ 
 #define MAX_REFINE_LVL   20    /**< Maximal refinement level */
 #define MAX_AMG_LVL      20    /**< Maximal AMG coarsening level */
-
 #define STAG_RATIO       1e-4  /**< Staganation tolerance = tol*STAGRATIO */
 #define MAX_STAG         20    /**< Maximal number of staganation times */
 #define MAX_RESTART      20    /**< Maximal number of restarting */
@@ -79,7 +78,6 @@
 /**
  * \brief Index starting point: C convention or Fortran convention
  */
-
 #define ISTART 0                /**< 0 if in Natural index, 1 if data is in C index */
 #define N2C(ind) ((ind)-ISTART) /**< map from Natural index 1,2,... to C index 0,1,... */
 #define C2N(ind) ((ind)+ISTART) /**< map from C index 0,1,... to Natural index 1,2,... */
@@ -135,7 +133,7 @@ typedef struct idenmat{
  *
  * CSR Format (IA,JA,A) in REAL
  *
- * Note: The starting index of A is 0, other data stuctures also take this convention.  
+ * \note The starting index of A is 0, other data stuctures also take this convention.  
  */
 typedef struct dCSRmat{
 	
@@ -160,7 +158,7 @@ typedef struct dCSRmat{
  *
  * CSR Format (IA,JA,A) in integer
  *
- * Note: The starting index of A is 0, other data stuctures also take this convention.  
+ * \note The starting index of A is 0, other data stuctures also take this convention.  
  */
 typedef struct iCSRmat{
 	
@@ -185,7 +183,7 @@ typedef struct iCSRmat{
  *
  * Coordinate Format (I,J,A)
  *
- * Note: The starting index of A is 0, other data stuctures also take this convention.   
+ * \note The starting index of A is 0, other data stuctures also take this convention.   
  */
 typedef struct dCOOmat{
 	
@@ -210,7 +208,7 @@ typedef struct dCOOmat{
  *
  * Coordinate Format (I,J,A)
  *
- * Note: The starting index of A is 0, other data stuctures also take this convention.   
+ * \note The starting index of A is 0, other data stuctures also take this convention.   
  */
 typedef struct iCOOmat{
 	
@@ -262,9 +260,9 @@ typedef struct dCSRLmat{
  *
  * A structure REAL matrix
  *
- * Note: Every nc^2 entries of the array diag and off-diag[i] store one block.
- *		For 2D matrix, the recommended offsets is [-1,1,-nx,nx];
- *		For 3D matrix, the recommended offsets is [-1,1,-nx,nx,-nxy,nxy]; 
+ * \note Every nc^2 entries of the array diag and off-diag[i] store one block:
+ *		 For 2D matrix, the recommended offsets is [-1,1,-nx,nx];
+ *		 For 3D matrix, the recommended offsets is [-1,1,-nx,nx,-nxy,nxy].
  */ 
 typedef struct dSTRmat{
 	
@@ -417,12 +415,14 @@ typedef struct {
 	REAL *au;
 	REAL *al;
 	
-	// Schwarz type
+	//! Schwarz type
 	INT schwarz_type;
 	
-	//! working space
+	//! working space size
 	INT memt;
+    //! mask
 	INT *mask;
+    //! maxa
 	INT *maxa;
 	
 } Schwarz_data;
@@ -431,8 +431,7 @@ typedef struct {
  * \struct AMG_param
  * \brief Parameters for AMG solver.
  *
- * This is needed for the AMG solver/preconditioner.
- *
+ * \note This is needed for the AMG solver/preconditioner.
  */
 typedef struct {
 	
@@ -522,8 +521,7 @@ typedef struct {
  * \struct AMG_data
  * \brief Data for multigrid levels.
  *
- * This is needed for the AMG solver/preconditioner.
- *
+ * \note This is needed for the AMG solver/preconditioner.
  */
 typedef struct { 
 	
@@ -565,7 +563,6 @@ typedef struct {
 	INT schwarz_levels;
 	//! data of Schwarz smoother 
 	Schwarz_data schwarz;
-
 	
 	//! Temporary work space
 	dvector w;
@@ -708,7 +705,7 @@ typedef struct {
  * \struct precond_diagstr
  * \brief Data passed to diagnal preconditioner for STR.
  *
- * This is needed for the diagnal preconditioner.
+ * \note This is needed for the diagnal preconditioner.
  */
 typedef struct {
 	
@@ -723,7 +720,7 @@ typedef struct {
  * \struct precond_diagbsr
  * \brief Data passed to diagnal preconditioner for BSR.
  *
- * This is needed for the diagnal preconditioner.
+ * \note This is needed for the diagnal preconditioner.
  */
 typedef struct {
 	
@@ -738,7 +735,7 @@ typedef struct {
  * \struct precond
  * \brief Preconditioner data and action.
  *
- * This is the preconditioner structure for preconditioned Krylov methods.
+ * \note This is the preconditioner structure for preconditioned iterative methods.
  */ 
 typedef struct {
 	
@@ -751,7 +748,7 @@ typedef struct {
 	void (*fct_omp)(REAL *, REAL *, void *, INT, INT);
 #endif
 	
-} precond; /**<< Data for general preconditioner passed to iterative solvers */
+} precond; /**< Data for general preconditioner passed to iterative solvers */
 
 /**
  * \struct input_param
@@ -780,9 +777,9 @@ typedef struct {
 	//pamameters for ILU
 	SHORT ILU_type; /**< ILU type for decomposition*/
 	INT ILU_lfil; /**< level of fill-in */
-	REAL ILU_droptol; /**< drop tolerence */
-	REAL ILU_relax; /**< add the sum of dropped elements to diagnal element in proportion relax */
-	REAL ILU_permtol; /**< permutation tol */
+	REAL ILU_droptol; /**< drop tolerance */
+	REAL ILU_relax; /**< scaling factor: add the sum of dropped entries to diagnal */
+	REAL ILU_permtol; /**< permutation tolerance */
     
     // parameter for Schwarz
 	INT Schwarz_mmsize; /**< maximal block size */
@@ -889,6 +886,7 @@ typedef struct
 /** 
  * \struct linked_list
  * \brief A linked list node
+ *
  * \note This definition is adapted from hypre 2.0.
  */
 typedef struct linked_list
