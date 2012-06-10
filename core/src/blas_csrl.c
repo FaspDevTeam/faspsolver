@@ -30,11 +30,11 @@ void fasp_blas_dcsrl_mxv (dCSRLmat *A,
                           REAL *y)
 {
     INT     dif      = A -> dif;
-    INT    *nzdifnum = A -> nzdifnum;
-    INT    *rowindex = A -> rowindex;
-    INT    *rowstart = A -> rowstart;
+    INT    *nz_diff  = A -> nz_diff;
+    INT    *rowindex = A -> index;
+    INT    *rowstart = A -> start;
     INT    *ja       = A -> ja;
-    REAL   *a        = A -> data;
+    REAL   *a        = A -> val;
     
     INT i;
     INT row, col=0;
@@ -46,7 +46,7 @@ void fasp_blas_dcsrl_mxv (dCSRLmat *A,
     for (len = 0; len < dif; len ++) {
         firstrow = rowstart[len];
         lastrow  = rowstart[len+1] - 1;
-        rowlen   = nzdifnum[len];
+        rowlen   = nz_diff[len];
     
         if (lastrow > firstrow ) {
             //----------------------------------------------------------

@@ -54,7 +54,7 @@ AMG
 [ 06/01 ] strength matrix based on (polynomial) smoothers (Xiaozhe)
 [       ] Maximal Independent Set (Ludmil)
 
-[ 05/20 ] aggressive coarsening strategies (Xiaozhe)
+[ 0.9.0 ] aggressive coarsening strategies (Xiaozhe)
 [ 06/01 ] aggregation based on MIS (Xiaozhe)
 [       ] cleanup the compatible coarsening (Xiaozhe)
 [       ] Notay's aggregation scheme (Xiaozhe)

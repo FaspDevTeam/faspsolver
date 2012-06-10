@@ -28,22 +28,24 @@
  * \struct dBSRmat
  * \brief Block sparse row storage matrix of REAL type.
  *
- * Note: This data structure is adapted from the Intel MKL library. 
- * Refer to http://software.intel.com/sites/products/documentation/hpc/mkl/lin/index.htm
+ * \note This data structure is adapted from the Intel MKL library. 
+ * Refer to 
+ * http://software.intel.com/sites/products/documentation/hpc/mkl/lin/index.htm
+ *
+ * \note Some of the following entries are capitalized to stress that they are 
+ *       for blocks!
  *
  */
 typedef struct dBSRmat{
 	
-    // Note: Some of the following entries are captialized to stress they are for blocks!
-
+    
 	//! number of rows of sub-blocks in matrix A, M
 	INT ROW;
 	//! number of cols of sub-blocks in matrix A, N
 	INT COL;
 	//! number of nonzero sub-blocks in matrix A, NNZ
 	INT NNZ;
-	
-    //! dimension of each sub-block
+	//! dimension of each sub-block
 	INT nb; // for the moment, allow nb*nb full block 
 	//! storage manner for each sub-block           
 	INT storage_manner; // 0: row-major order, 1: column-major order
@@ -67,11 +69,11 @@ typedef struct dBSRmat{
 
 /** 
  * \struct block_dCSRmat
- * \brief Block REAL CSR matrix structure.
+ * \brief Block REAL CSR matrix format.
  *
- * Block CSR Format in REAL
+ * CSR Block Format in REAL
  *
- * Note: The starting index of A is 0, other data stuctures also take this convention.  
+ * \note The starting index of A is 0.  
  */
 typedef struct block_dCSRmat{
 	
@@ -86,11 +88,11 @@ typedef struct block_dCSRmat{
 
 /** 
  * \struct block_iCSRmat
- * \brief Block integer CSR matrix structure.
+ * \brief Block integer CSR matrix format.
  *
  * Block CSR Format in integer
  *
- * Note: The starting index of A is 0, other data stuctures also take this convention.  
+ * \note The starting index of A is 0.  
  */
 typedef struct block_iCSRmat{
 	
@@ -109,7 +111,7 @@ typedef struct block_iCSRmat{
  *
  * Block Vector Format in REAL
  *
- * Note: The starting index of A is 0, other data stuctures also take this convention.  
+ * \note The starting index of A is 0.  
  */
 typedef struct block_dvector{
 	
@@ -126,7 +128,7 @@ typedef struct block_dvector{
  *
  * Block Vector Format in integer
  *
- * Note: The starting index of A is 0, other data stuctures also take this convention.  
+ * \note The starting index of A is 0.  
  */
 typedef struct block_ivector{
 	
@@ -139,7 +141,7 @@ typedef struct block_ivector{
 
 /** 
  * \struct block_Reservoir
- * \brief Block REAL matrix structure for reservoir simulation.
+ * \brief Block REAL matrix format for reservoir simulation.
  *
  */
 typedef struct block_Reservoir{
@@ -157,7 +159,7 @@ typedef struct block_Reservoir{
 
 /** 
  * \struct block_BSR
- * \brief Block REAL matrix structure for reservoir simulation.
+ * \brief Block REAL matrix format for reservoir simulation.
  *
  */
 typedef struct block_BSR{

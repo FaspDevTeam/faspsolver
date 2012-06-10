@@ -50,6 +50,14 @@
 \usepackage{frame}
 \definecolor{shadecolor}{rgb}{1,0.9,0.1}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \title{User's Guide for FASP}
 
@@ -728,7 +736,11 @@ In this chapter, we discuss the basic data structures and some important buildin
 \section{Vectors and sparse matrices}\label{sec:blas}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Vector}
+The most important data structures for iterative methods are probably vectors and sparse matrices. In this section, we first discuss the data structures for vectors and matrices in FASP; and then we discuss BLAS for sparse matrices. 
+
+\subsection{Vectors}
+
+The data structure for vectors is very simple. It only contains the length of the vector and an array which contains the entries of this vector. 
 
 \begin{lstlisting}
 /** 
@@ -745,6 +757,330 @@ typedef struct dvector{
 } dvector; /**< Vector of REAL type */
 \end{lstlisting}
 
+\subsection{Sparse matrices}
+
+On the other hand, sparse matrices for PDE applications are very complicated. It depends on the particular applications, discretization methods, as well as solution algorithms. In FASP, there are several types of sparse matrices, COO, CSR, CSRL, BSR, and CSR Block. The presentation closely follows ideas from Pissanetzky~\cite{Pissanetzky}. We will use the following sparse matrix as an example for different formats:
+
+\begin{example}\label{ex:sparse}
+Consider the following $4\times 5$ matrix 
+$$
+\left(\begin{array}{ccccc}
+1 & 1.5 & 0 & 0 & 12\\
+0 & 1    & 6 & 7 & 1\\
+3 & 0    & 6 & 0 & 0\\
+1 & 0    & 2 & 0 & 5
+\end{array}
+\right)
+$$
+\end{example}
+
+\begin{snugshade}\noindent
+NOTE: In FASP, the indices are starting from 0, instead of 1. This is usually the source of problems related to vectors and matrices. 
+\end{snugshade}
+
+\subsubsection*{1. COO format}
+
+The coordinate (COO) format or IJ format is the simplest sparse matrix format. 
+\begin{lstlisting}
+/** 
+ * \struct dCOOmat
+ * \brief Sparse matrix of REAL type in COO (or IJ) format.
+ *
+ * Coordinate Format (I,J,A)
+ *
+ * \note The starting index of A is 0.
+ */
+typedef struct dCOOmat{
+	
+	//! row number of matrix A, m
+	INT row;   
+	//! column of matrix A, n
+	INT col;   
+	//! number of nonzero entries
+	INT nnz;
+	//! integer array of row indices, the size is nnz
+	INT *I;   
+	//! integer array of column indices, the size is nnz
+	INT *J;    
+	//! nonzero entries of A
+	REAL *val;
+	
+} dCOOmat; /**< Sparse matrix of REAL type in COO format */
+\end{lstlisting}
+%
+So it clear that the sparse matrix in Example~\ref{ex:sparse} in COO format is stored as:
+%
+\begin{lstlisting}[numbers=none]
+row = 4
+col = 5
+nnz = 11
+
+ I J  val 
+-----------
+ 0 0  1.0
+ 0 1  1.5
+ 0 4 12.0
+ 1 1  1.0
+ 1 2  6.0
+ 1 3  7.0
+ 1 4  1.0
+ .......
+\end{lstlisting}
+%
+Although the COO format is easy to understand or use, it wastes some storage and has no advantages in sparse BLAS operations.
+
+\subsubsection*{2. CSR format}
+The most commonly used data structure for sparse matrices nowadays is probably the so-called {\em compressed sparse row}  (CSR) format, according to Saad~\cite{Saad}. The compressed row storage format of a matrix $A\in \mathbb{R}^{n\times m}$ ($n$ rows and $m$ columns) consists of three arrays, as follows:
+%
+\begin{enumerate}
+\item An integer array of row pointers of size n+1;
+\item An integer array of column indexes of size nnz;
+\item An array of actual matrix entries. 
+\end{enumerate}
+%
+In FASP, we define:
+\begin{lstlisting}
+/** 
+ * \struct dCSRmat
+ * \brief Sparse matrix of REAL type in CSR format.
+ *
+ * CSR Format (IA,JA,A) in REAL
+ *
+ * \note The starting index of A is 0.
+ */
+typedef struct dCSRmat{
+	
+	//! row number of matrix A, m
+	INT row;   
+	//! column of matrix A, n
+	INT col;   
+	//! number of nonzero entries
+	INT nnz;
+	//! integer array of row pointers, the size is m+1
+	INT *IA;   
+	//! integer array of column indexes, the size is nnz
+	INT *JA;    
+	//! nonzero entries of A
+	REAL *val;
+	
+} dCSRmat; /**< Sparse matrix of REAL type in CSR format */
+\end{lstlisting}
+%
+The matrix ({only nonzero elements}) is stored in the array $val$
+row after row, in a way that $i$-th row begins at $val(IA(i))$ and ends
+at $val(IA(i+1)-1)$. In the same way, $JA(IA(i)$ to $JA(IA(i+1)-1)$ will
+contain the column indexes of the non-zeros in row $i$. Thus $IA$ is of
+size $n+1$ (number of rows in $val$ plus one), $JA$ and $val$ are of size
+equal to the number of non-zeroes. The total number of non-zeroes is
+equal to $IA(n+1)-1$.
+
+\begin{snugshade}\noindent
+NOTE: When the sparse matrix $A$ is a boolean (i.e. all entries are either $0$ or
+$1$), the actual non-zeroes are not stored because it is understood that, if it is 
+nonzero, it could only be $1$ and there is no need to store it.
+\end{snugshade}
+
+The matrix in Example~\ref{ex:sparse} in CSR format is represented in the following way:
+\begin{itemize}
+\item $IA$ is of size $5$ and 
+$$IA = 
+\begin{array}{||c|c|c|c|c||}1&4&8&10&13\end{array}
+$$
+\item $JA$ is of size $IA(5)-1=12$  
+$$JA = 
+\begin{array}{||c|c|c||c|c|c|c||c|c||c|c|c||}
+1&2&5&2&4&3&5&1&3&3&5&1
+\end{array}
+$$
+\item $A$ is of the same size as $JA$ and   
+$$A = 
+\begin{array}{||c|c|c||c|c|c|c||c|c||c|c|c||}
+1.&1.5&12.&1.&7.&6.&1.&3.&6.&2.&5.&1.
+\end{array}
+$$
+\end{itemize}
+
+\begin{snugshade}\noindent
+NOTE: The indexes in $JA$ need not be ordered as seen in this example.
+\end{snugshade}
+
+The CSR format presents challenges to sparse matrix-vector product mainly because of the high cache missing rate due to indirect memory access and irregular access pattern. In order to reduce the cache missing rate, we introduce an improved data format, CSRL.
+
+\subsubsection*{3. CSRL format}
+
+CSRL matrix format groups rows with same number of nonzeros together and improves cache hitting rate. 
+\begin{lstlisting}
+/*!
+ * \struct dCSRLmat
+ * \brief Sparse matrix of REAL type in CSRL format.
+ */
+typedef struct dCSRLmat{
+    
+	//! number of rows	
+	INT row;
+	//! number of cols
+	INT col;
+	//! number of nonzero entries
+	INT nnz;
+	//! number of different values in i-th row, i=0:nrows-1
+	INT dif;
+	//! nz_diff[i]: the i-th different value in 'nzrow'
+	INT *nz_diff;
+	//! row index of the matrix (length-grouped): rows with same nnz are together
+	INT *index;
+	//! j in {start[i],...,start[i+1]-1} means nz_diff[i] nnz in index[j]-row	
+	INT *start;
+	//! column indices of all the nonzeros
+	INT *ja;
+	//! values of all the nonzero entries
+	REAL *val;
+    
+} dCSRLmat; /**< Sparse matrix of REAL type in CSRL format */
+\end{lstlisting}
+
+\subsubsection*{4. Block sparse matrix formats}
+
+For PDE applications, we often need to solve systems of partial differential equations. Many iterative methods and preconditioners could take advantages of fact and improve efficiency. So we often need to use block matrices to store the coefficient matrix arising from PDE systems. Depending on different applications and different solving algorithms, we can use two types of block matrices: BSR (or Block Compressed Sparse Row) and CSR Block (Block of CSR matrices). The definitions of these types of block matrices are given as follows:
+
+\begin{lstlisting}
+/** 
+ * \struct dBSRmat
+ * \brief Block sparse row storage matrix of REAL type.
+ *
+ * \note This data structure is adapted from the Intel MKL library. 
+ * Refer to 
+ * http://software.intel.com/sites/products/documentation/hpc/mkl/lin/index.htm
+ *
+ * \note Some of the following entries are capitalized to stress that they are 
+ *       for blocks!
+ *
+ */
+typedef struct dBSRmat{
+	
+    
+	//! number of rows of sub-blocks in matrix A, M
+	INT ROW;
+	//! number of cols of sub-blocks in matrix A, N
+	INT COL;
+	//! number of nonzero sub-blocks in matrix A, NNZ
+	INT NNZ;
+	//! dimension of each sub-block
+	INT nb; // for the moment, allow nb*nb full block 
+	//! storage manner for each sub-block           
+	INT storage_manner; // 0: row-major order, 1: column-major order
+	
+	//! A real array that contains the elements of the non-zero blocks of 
+	//! a sparse matrix. The elements are stored block-by-block in row major 
+	//! order. A non-zero block is the block that contains at least one non-zero 
+	//! element. All elements of non-zero blocks are stored, even if some of 
+	//! them is equal to zero. Within each nonzero block elements are stored 
+	//! in row-major order and the size is (NNZ*nb*nb). 
+	REAL *val;
+	
+	//! integer array of row pointers, the size is ROW+1
+	INT *IA;
+	
+	//! Element i of the integer array columns is the number of the column in the
+	//! block matrix that contains the i-th non-zero block. The size is NNZ.
+	INT *JA;
+	
+} dBSRmat; /**< Matrix of REAL type in BSR format */
+\end{lstlisting}
+%
+\begin{lstlisting}
+/** 
+ * \struct block_dCSRmat
+ * \brief Block of REAL CSR matrix structure.
+ *
+ * CSR Block Format in REAL
+ *
+ * \note The starting index of A is 0.  
+ */
+typedef struct block_dCSRmat{
+	
+	//! row number of blocks in A, m
+	INT brow;   
+	//! column number of blocks A, n
+	INT bcol;   
+	//! blocks of dCSRmat, point to blocks[brow][bcol]
+	dCSRmat **blocks;
+	
+} block_dCSRmat; /**< Matrix of REAL type in Block BSR format */
+\end{lstlisting}
+%
+
+\begin{snugshade}\noindent
+NOTE: For more details as well as other specialized block matrices, we refer to ``core/include/fasp\_block.h''.
+\end{snugshade}
+
+
+\subsection{Sparse BLAS}
+
+I hope after this numeric example the CSR format is clear. Below is
+another ``non-numeric'' example, that also includes a simple pseudo-code for
+matrix vector multiply.
+
+\begin{example} Consider the following sparse matrix:
+$$
+\left(
+\begin{array}{cccc}
+a_{11} & 0 & a_{13} & 0 \\
+0 & a_{22} & a_{23} & a_{24} \\
+0 & a_{32} & 0 & a_{34} \\
+a_{41}& a_{42} & a_{43} & 0 \\
+\end{array}
+\right)
+$$
+For this matrix, we have that the number of non-zeros $nnz=10$. Furthermore, the three arrays of CSR are:
+$$
+IA = [ 1\quad 3 \quad 6 \quad 8 \quad 11], 
+$$
+$$
+JA = [ 1\; 3 \;|\; 2 \; 3\; 4 \;|\; 2 \; 4 \;|\; 1 \; 2 \; 3],
+$$
+and 
+$$
+val = [a_{11} \; a_{13}\;|\; a_{22} \; a_{23} \; a_{24}\;|\; a_{32} \; a_{34}\;|\; a_{41}\; a_{42}\; a_{43}].
+$$
+\end{example}
+%
+The matrix-vector multiplication: $y=Ax$ can be performed in the
+following simple way:
+
+\begin{lstlisting}
+/**
+ * \fn void fasp_blas_dcsr_mxv (dCSRmat *A, REAL *x, REAL *y) 
+ *
+ * \brief Matrix-vector multiplication y = A*x
+ *
+ * \param A   Pointer to dCSRmat matrix A
+ * \param x   Pointer to array x
+ * \param y   Pointer to array y
+ *
+ * \author Chensong Zhang
+ * \date   07/01/2009
+ */
+void fasp_blas_dcsr_mxv (dCSRmat *A, 
+                         REAL *x, 
+                         REAL *y)
+{
+    const INT   m  = A->row;
+    const INT  *ia = A->IA, *ja = A->JA;
+    const REAL *aj = A->val;
+    
+    INT i, k, beg, end;    
+    register REAL tmp;
+    
+    for ( i=0; i<m; ++i ) {
+        tmp = 0.0; 
+        beg = ia[i]; end = ia[i+1]; 
+        for ( k=beg; k<end; ++k ) tmp += aj[k]*x[ja[k]];
+        y[i] = tmp;
+    }
+}
+\end{lstlisting}
+
+This is only a simple example for sparse matrix-vector multiplication (SpMV) kernel. Since we need many types of sparse matrices, there are various of versions of SpMV for different data structures. See the Reference Manual for more details. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Iterative methods}\label{sec:iter}

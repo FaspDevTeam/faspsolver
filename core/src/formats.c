@@ -356,11 +356,11 @@ dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
     
     dCSRLmat *B        = NULL;
     INT       dif;
-    INT      *nzdifnum = NULL;
+    INT      *nz_diff  = NULL;
     INT      *rowstart = NULL;
     INT      *rowindex = (INT *)fasp_mem_calloc(num_rows, sizeof(INT));
     INT      *ja       = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT));
-    REAL     *data     = (REAL *)fasp_mem_calloc(num_nonzeros, sizeof(REAL));
+    REAL     *val      = (REAL *)fasp_mem_calloc(num_nonzeros, sizeof(REAL));
     
     /* auxiliary arrays */
     INT *nzrow    = (INT *)fasp_mem_calloc(num_rows, sizeof(INT));
@@ -395,16 +395,16 @@ dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
     }
     
     //--------------------------------------------
-    //  Generate the 'nzdifnum' and 'rowstart'
+    //  Generate the 'nz_diff' and 'rowstart'
     //-------------------------------------------- 
     
-    nzdifnum = (INT *)fasp_mem_calloc(dif, sizeof(INT));
+    nz_diff  = (INT *)fasp_mem_calloc(dif, sizeof(INT));
     invnzdif = (INT *)fasp_mem_calloc(maxnzrow + 1, sizeof(INT));
     rowstart = (INT *)fasp_mem_calloc(dif + 1, sizeof(INT));
     rowstart[0] = 0;
     for (cnt = 0, i = 0; i < maxnzrow + 1; i ++) {
         if (counter[i] > 0) {
-            nzdifnum[cnt] = i;
+            nz_diff[cnt] = i;
             invnzdif[i] = cnt;
             rowstart[cnt+1] = rowstart[cnt] + counter[i];
             cnt ++;
@@ -427,13 +427,13 @@ dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
     rowstart[0] = 0;
     
     //--------------------------------------------
-    //  Generate the 'data' and 'ja'
+    //  Generate the 'val' and 'ja'
     //-------------------------------------------- 
     
     for (cnt = 0, i = 0; i < num_rows; i ++) {
         k = rowindex[i];
         for (j = IA[k]; j < IA[k+1]; j ++) {
-            data[cnt] = DATA[j];
+            val[cnt] = DATA[j];
             ja[cnt] = JA[j];
             cnt ++;
         }
@@ -444,12 +444,12 @@ dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
     //------------------------------------------------------------ 
     
     B = fasp_dcsrl_create(num_rows, num_cols, num_nonzeros);
-    B -> dif      = dif;
-    B -> nzdifnum = nzdifnum;
-    B -> rowindex = rowindex;
-    B -> rowstart = rowstart;
-    B -> ja       = ja;
-    B -> data     = data;   
+    B -> dif     = dif;
+    B -> nz_diff = nz_diff;
+    B -> index   = rowindex;
+    B -> start   = rowstart;
+    B -> ja      = ja;
+    B -> val     = val;   
     
     //----------------------------
     //  Free the auxiliary arrays

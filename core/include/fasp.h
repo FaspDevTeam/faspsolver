@@ -133,7 +133,7 @@ typedef struct idenmat{
  *
  * CSR Format (IA,JA,A) in REAL
  *
- * \note The starting index of A is 0, other data stuctures also take this convention.  
+ * \note The starting index of A is 0.
  */
 typedef struct dCSRmat{
 	
@@ -158,7 +158,7 @@ typedef struct dCSRmat{
  *
  * CSR Format (IA,JA,A) in integer
  *
- * \note The starting index of A is 0, other data stuctures also take this convention.  
+ * \note The starting index of A is 0.
  */
 typedef struct iCSRmat{
 	
@@ -183,7 +183,7 @@ typedef struct iCSRmat{
  *
  * Coordinate Format (I,J,A)
  *
- * \note The starting index of A is 0, other data stuctures also take this convention.   
+ * \note The starting index of A is 0.
  */
 typedef struct dCOOmat{
 	
@@ -208,7 +208,7 @@ typedef struct dCOOmat{
  *
  * Coordinate Format (I,J,A)
  *
- * \note The starting index of A is 0, other data stuctures also take this convention.   
+ * \note The starting index of A is 0.
  */
 typedef struct iCOOmat{
 	
@@ -234,23 +234,23 @@ typedef struct iCOOmat{
 typedef struct dCSRLmat{
     
 	//! number of rows	
-	INT num_rows;
+	INT row;
 	//! number of cols
-	INT num_cols;
+	INT col;
 	//! number of nonzero entries
-	INT num_nonzeros;
-	//! number of different values in nzrow[i], i=0:nrows-1, i.e. number of nonzeros in the i-th row
+	INT nnz;
+	//! number of different values in i-th row, i=0:nrows-1
 	INT dif;
-	//! nzdifnum[i]: the i-th different value in 'nzrow'
-	INT *nzdifnum;
-	//! row index of the matrix in length-grouped manner, i.e., the rows with same nnz are together
-	INT *rowindex;
-	//! if j in V={rowstart[i],...,rowstart[i+1]-1}, there are nzdifnum[i] nnz in the rowindex[j]-th row	
-	INT *rowstart;
+	//! nz_diff[i]: the i-th different value in 'nzrow'
+	INT *nz_diff;
+	//! row index of the matrix (length-grouped): rows with same nnz are together
+	INT *index;
+	//! j in {start[i],...,start[i+1]-1} means nz_diff[i] nnz in index[j]-row	
+	INT *start;
 	//! column indices of all the nonzeros
 	INT *ja;
 	//! values of all the nonzero entries
-	REAL *data;
+	REAL *val;
     
 } dCSRLmat; /**< Sparse matrix of REAL type in CSRL format */
 

@@ -1,13 +1,15 @@
 /*! \file blas_csr.c
  *  \brief BLAS operations for sparse matrices in CSR format.
  *
- *  \note Sparse functions usually contain three runs. The three runs are all the 
- *        same but thy serve different purpose. 
+ *  \note 
+ *  Sparse functions usually contain three runs. The three runs are all the same but
+ *  they serve different purpose. 
  * 
- *  Example: If you do c=a+b: 
- *    - first do a dry run to find the number of non-zeroes in the result and form ic; 
- *    - allocate space (memory) for jc and form this one; If you only care about a "boolean" result of the addition, you stop here. 
- *    - you call another routine, which uses ic and jc to perform the addition. 
+ *  Example: If you do c = a + b: 
+ *    - First do a dry run to find the number of non-zeroes in the result and form ic; 
+ *    - Allocate space (memory) for jc and form this one; 
+ *    - If you only care about a "boolean" result of the addition, you stop here; 
+ *    - Call another routine, which uses ic and jc to perform the addition. 
  *
  */
 
@@ -166,7 +168,7 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
  * \param y   Pointer to array y
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  */
 void fasp_blas_dcsr_mxv (dCSRmat *A, 
                          REAL *x, 
@@ -176,14 +178,14 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
     const INT  *ia = A->IA, *ja = A->JA;
     const REAL *aj = A->val;
     
-    INT i, k, begin_row, end_row;    
-    register REAL temp;
+    INT i, k, beg, end;    
+    register REAL tmp;
     
-    for (i=0;i<m;++i) {
-        temp=0.0; 
-        begin_row=ia[i]; end_row=ia[i+1]; 
-        for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-        y[i]=temp;
+    for ( i=0; i<m; ++i ) {
+        tmp = 0.0; 
+        beg = ia[i]; end = ia[i+1]; 
+        for ( k=beg; k<end; ++k ) tmp += aj[k]*x[ja[k]];
+        y[i] = tmp;
     }
 }
 
