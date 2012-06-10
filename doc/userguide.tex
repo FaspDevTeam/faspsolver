@@ -148,23 +148,27 @@ In this user's guide, we mainly describe how to use the existing solvers in FASP
 \section{Installation}\label{sec:install}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-First, you need to obtain a free copy of FASP kernel functions from \emph{BitBucket.org} via HTTPS or SSH or SourceTree:
+All the FASP packages are hosted on \emph{BitBucket.org} using Mercurial (HG). As a DVCS (Distributed Version Control System) source-control software, HG is a relatively new comer. But compared with other tools like Git, Hg is considered \emph{friendlier} with a lower learning curve. This is despite the fact that Hg uses two distinct sets of commands and two distinct vocabularies for operations depending upon whether the repository is local or remote.
+Documentation for Hg is substantially better, including a book (the hgbook, \url{http://hgbook.red-bean.com/}). They've also had the advantage of trying the documentation on a fairly savvy group of developers (Mozilla) who gave them lots of feedback that helped polish the rough edges.
+
+First, you need to obtain a free copy of FASP kernel functions from \emph{BitBucket.org}:
 %
 \begin{lstlisting}[numbers=none]
-"Download FASP using HTTPS"
+"Download FASP core subroutines via HTTPS"
 $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver
-"Download FASP using SSH"
-$ hg clone ssh://hg@bitbucket.org/fasp/faspsolver
-"Download FASP using SourceTree"
-$ sourcetree://cloneRepo/https://faspusers@bitbucket.org/fasp/faspsolver
 \end{lstlisting}
 %
-For the moment, it still requires a password to access the repository and the password is ``multigrid''. Very soon it will be open to public completely. 
+Now you should have obtained ``faspsolver'' in your current directory successfully. 
 
-Now you should obtain ``faspsolver'' in your current directory. To build the FASP library, just go to the ``core'' directory and type:
+\begin{snugshade}\noindent
+For the moment, it still requires a password to access the repository and the password is ``multigrid''. Very soon it will be open to public completely. 
+\end{snugshade}
+
+FASP has been tested on Linux (Cent OS, Debian, RedHat, Ubuntu), OS X (Leopard, Snow Leopard, Lion) and Windows (XP, Win 7) with a couple of compliers including GCC, G++, ICC, VC++, GFORTRAN, G95, IFORT. Here we will only give a simple instruction on how to compile FASP on Linux:
+
+To build the FASP library, just go to the ``core'' directory and type:
 %
 \begin{lstlisting}[numbers=none]
-$ ./configure
 $ make
 \end{lstlisting}
 %
