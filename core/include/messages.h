@@ -78,19 +78,21 @@
 #define RUN_FAIL               -100  /**< general fail to run, no specified reason */
 
 /** 
- * \brief Definition of iterative solver types
+ * \brief Definition of solver types for iterative methods
  */
 #define SOLVER_CG               1    /**< Conjugate Gradient */
-#define SOLVER_BiCGstab         2    /**< BiCG Stable */
+#define SOLVER_BiCGstab         2    /**< Biconjugate Gradient Stabilized */
 #define SOLVER_MinRes           3    /**< Minimal Residual */
-#define SOLVER_GMRES            4    /**< GMRES Method */
+#define SOLVER_GMRES            4    /**< Generalized Minimal Residual */
 #define SOLVER_VGMRES           5    /**< Variable Restarting GMRES */
 #define SOLVER_VFGMRES          6    /**< Variable Restarting Flexible GMRES */
 #define SOLVER_GCG              7    /**< Generalized Conjugate Gradient */
-//-----------------------------------------------------------------------------------
 #define SOLVER_AMG              21   /**< AMG as an iterative solver */
-#define SOLVER_FMG		        22   /**< Full AMG as an iterative solver */
-//-----------------------------------------------------------------------------------
+#define SOLVER_FMG		        22   /**< Full AMG as an solver */
+
+/** 
+ * \brief Definition of solver types for direct methods (requires external libs)
+ */
 #define SOLVER_SUPERLU          31   /**< SuperLU Direct Solver */
 #define SOLVER_UMFPACK          32   /**< UMFPack Direct Solver */
 #define SOLVER_MUMPS            33   /**< MUMPS   Direct Solver */
@@ -103,7 +105,7 @@
 #define STOP_MOD_REL_RES        3    /**< modified relative residual ||r||/||x|| */
 
 /** 
- * \brief Definition of preconditioner types
+ * \brief Definition of preconditioner type for iterative methods
  */
 #define PREC_NULL               0    /**< with no precond */
 #define PREC_DIAG               1    /**< with diagonal precond */

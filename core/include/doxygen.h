@@ -78,11 +78,7 @@
  *
  * - Xu, Jinchao (Penn State University, USA)
  *
- * Coordinator:
- * 
- * - Zhang, Chensong (Chinese Academy of Sciences, China)
- *
- * Main developers (in alphabetic order):
+ * Regular developers (in alphabetic order):
  *
  * - Feng, Chunsheng (Xiangtan University, China)
  *
@@ -119,6 +115,10 @@
  * - Zhang, Weifeng (Kunming University of Science and Technology, China)
  *
  * - Zhou, Zhiyang (Xiangtan University, China)
+ *
+ * Project Coordinator:
+ * 
+ * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
  */
    

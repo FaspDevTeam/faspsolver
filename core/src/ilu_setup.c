@@ -63,20 +63,18 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     
     // Expected amount of memory for ILU needed and allocate memory 
     switch (type) {
-    case ILUk:
-        if (lfil == 0) iwk=nnz+500;
-        else iwk=(lfil+2)*nnz;
-        break;
-    case ILUt:
-        iwk=2*nnz;     // iwk is the maxim possible nnz for ILU    
-        lfilt=floor(n*0.5)+1;
-        break;
-    case ILUtp:
-        iwk=2*nnz;     // iwk is the maxim possible nnz for ILU    
-        lfilt=floor(n*0.5)+1;
-        break;
-    default: // ILUs
-        iwk=(lfil+10)*nnz;    
+        case ILUt:
+            iwk=2*nnz;     // iwk is the maxim possible nnz for ILU    
+            lfilt=floor(n*0.5)+1;
+            break;
+        case ILUtp:
+            iwk=2*nnz;     // iwk is the maxim possible nnz for ILU    
+            lfilt=floor(n*0.5)+1;
+            break;
+        default: // ILUk
+            if (lfil == 0) iwk=nnz+500;
+            else iwk=(lfil+2)*nnz;
+            break;
     } 
     
     nwork  = 4*n;
@@ -100,19 +98,16 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     luval=iludata->luval;
     
     switch (type) {
-    case ILUk:
-        iluk_(&n,A->val,A->JA,A->IA,&lfil,luval,ijlu,&iwk,&ierr,&nzlu);
-        break;
-    case ILUt:
-        ilut_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,luval,ijlu,&iwk,&ierr,&nzlu);
-        break;
-    case ILUtp:
-        ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol, \
-               &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
-        break;
-    default:
-        printf("### ERROR: Wrong ILU type %d!\n", type);
-        break;    
+        case ILUt:
+            ilut_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,luval,ijlu,&iwk,&ierr,&nzlu);
+            break;
+        case ILUtp:
+            ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol,
+                   &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
+            break;
+        default: // ILUk
+            iluk_(&n,A->val,A->JA,A->IA,&lfil,luval,ijlu,&iwk,&ierr,&nzlu);
+            break;
     } 
     
     fasp_dcsr_shift(A, -1);
@@ -144,21 +139,21 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     if (print_level>PRINT_NONE) {
         setup_end=clock();
         setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-    
+        
         switch (type) {
-        case ILUk:
-            printf("ILUk setup costs %f seconds.\n", setup_duration);    
-            break;
-        case ILUt:
-            printf("ILUt setup costs %f seconds.\n", setup_duration);    
-            break;
-        case ILUtp:
-            printf("ILUtp setup costs %f seconds.\n", setup_duration);    
-            break;
+            case ILUt:
+                printf("ILUt setup costs %f seconds.\n", setup_duration);    
+                break;
+            case ILUtp:
+                printf("ILUtp setup costs %f seconds.\n", setup_duration);    
+                break;
+            default: // ILUk
+                printf("ILUk setup costs %f seconds.\n", setup_duration);    
+                break;
         }     
     }
     
- FINISHED:     
+FINISHED:     
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_ilu_dcsr_setup ...... [Finish]\n");

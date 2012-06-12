@@ -369,10 +369,11 @@ typedef struct {
 } ILU_data; /**< Data for ILU */
 
 
-//////////////////////////////////////////////////////////modified on 05/14/2012
 /**
  * \struct Schwarz_param
  * \brief Parameters for Schwarz method
+ *
+ * Added on 05/14/2012
  */
 typedef struct {
 	
@@ -407,15 +408,16 @@ typedef struct {
 	INT nblk;
 	//! row index of blocks
 	INT *iblock;
-	// column index of blocks
+	//! column index of blocks
 	INT *jblock;
-	// local right hand side
+	//! local right hand side
 	REAL *rhsloc;
-	// LU decomposition of the blocks
+	//! LU decomposition: the U block
 	REAL *au;
+	//! LU decomposition: the L block
 	REAL *al;
 	
-	//! Schwarz type
+	//! Schwarz method type
 	INT schwarz_type;
 	
 	//! working space size
@@ -784,7 +786,7 @@ typedef struct {
     // parameter for Schwarz
 	INT Schwarz_mmsize; /**< maximal block size */
 	INT Schwarz_maxlvl; /**< maximal levels */
-	INT Schwarz_type; /** type of schwarz method */
+	INT Schwarz_type; /**< type of schwarz method */
 	
 	// parameters for AMG
 	SHORT AMG_type; /**< Type of AMG */
@@ -821,18 +823,18 @@ typedef struct {
 
 /** 
  * \struct itsolver_param
- * \brief Data passed to iterative solvers.
+ * \brief Parameters passed to iterative solvers.
  *
  */
 typedef struct {
 	
-	SHORT print_level; /**< print level */	
-	SHORT itsolver_type; /**< solver type */
-	SHORT precond_type; /**< preconditioner type */
-	SHORT stop_type; /**< stopping criteria type */
-	INT maxit; /**< solve params, max number of iterations */
-	INT restart; /**< number of steps for restarting the solver */
-	REAL tol; /**< solve params, tolerance for solver */
+	SHORT itsolver_type; /**< solver type: see message.h */
+	SHORT precond_type;  /**< preconditioner type: see message.h */
+	SHORT stop_type;     /**< stopping criteria type */
+	INT   maxit;         /**< max number of iterations */
+	REAL  tol;           /**< convergence tolerance */
+	INT   restart;       /**< number of steps for restarting: for GMRES etc */
+	SHORT print_level;   /**< print level: 0--10 */	
 	
 } itsolver_param; /**< Parameters for iterative solvers */ 
 

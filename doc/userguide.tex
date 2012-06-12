@@ -40,7 +40,7 @@
         showstringspaces=false,
         identifierstyle=\ttfamily,
         keywordstyle=\bfseries\ttfamily\color[rgb]{0,0,1},
-        commentstyle=\ttfamily\color[rgb]{0.2,0.7,0.1},
+        commentstyle=\ttfamily\color[rgb]{0.1,0.6,0.2},
         stringstyle=\ttfamily\color[rgb]{1,0.1,0.3},
         linewidth=0.97\linewidth,
         xleftmargin=18pt,
@@ -98,15 +98,13 @@ in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License \url{http://www.gnu.org/licenses/} for more details.
 \end{snugshade}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{What you can expect}\label{sec:idea}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Our strategy}
 
-We think of the development of FASP package in a \emph{Multigrid} or \emph{Capitalism} point of view.
+We organize the development of FASP package in a \emph{``Multigrid''} or \emph{``Capitalism''} way:
 
 \begin{itemize}
 
-\item Fine grid stage (or free market stage)
+\item Stage 1. Fine grid stage (or free market stage)
 
 \begin{enumerate}
 \item[(1)] Collect problems and solvers. Allow similarities or even duplications, for example same solution algorithm, but different implementation. Keep all the record: problem description, solver code, test results, etc. 
@@ -114,7 +112,7 @@ We think of the development of FASP package in a \emph{Multigrid} or \emph{Capit
 \item[(2)] Try to find a minimal set of standard or rules. And then we let the market to evolve freely. The idea is to allow the market to be FREE. 
 \end{enumerate}
 
-\item Coarse grid stage (or state capitalism stage)
+\item Stage 2. Coarse grid stage (or state capitalism stage)
 
 \begin{enumerate}
 \item[(1)] As FASP evolves, we might see, at certain time, that the market is out-of-control. This basically means the ``fine grid solver'' or the ``free market'' is very successful and we should start to give more strict standard or regulation.
@@ -122,8 +120,12 @@ We think of the development of FASP package in a \emph{Multigrid} or \emph{Capit
 \item[(2)] Write a professional-level software package for a set of chosen algorithms for particular problems.
 \end{enumerate}
 \end{itemize}
-%
-We are currently interested in solving the following PDEs and PDE systems (this is not a complete list and it is still expanding):
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{What you can expect}\label{sec:idea}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We are currently interested in the theory and numerical solution of many PDE problems. Currently, we are mainly working on solving the following PDEs and PDE systems (this is not a complete list and it is still expanding):
 \begin{itemize}
 \item Poisson equation
 \item Reaction-diffusion equation
@@ -141,7 +143,6 @@ We are currently interested in solving the following PDEs and PDE systems (this 
 \item QCD problem
 \end{itemize}
 %
-
 We intend to design solution algorithms and their implementation for all these problems with different discretizations. We have done a few of them but not all of them are publicly available at this moment. 
 
 
@@ -156,7 +157,7 @@ In this user's guide, we mainly describe how to use the existing solvers in FASP
 \section{Installation}\label{sec:install}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-All the FASP packages are hosted on \emph{BitBucket.org} using Mercurial (HG). As a DVCS (Distributed Version Control System) source-control software, HG is a relatively new comer. But compared with other tools like Git, Hg is considered \emph{friendlier} with a lower learning curve. This is despite the fact that Hg uses two distinct sets of commands and two distinct vocabularies for operations depending upon whether the repository is local or remote.
+All the FASP packages are hosted on \emph{BitBucket.org}\footnote{Official website: \url{https://bitbucket.org/}} using Mercurial (HG)\footnote{Official website: \url{http://mercurial.selenic.com/}}. As a DVCS (Distributed Version Control System) source-control software, HG is relatively new. But compared with other tools like Git, Hg is considered \emph{friendlier} with a lower learning curve. This is despite the fact that Hg uses two distinct sets of commands and two distinct vocabularies for operations depending upon whether the repository is local or remote.
 Documentation for Hg is substantially better, including a book (the hgbook, \url{http://hgbook.red-bean.com/}). They've also had the advantage of trying the documentation on a fairly savvy group of developers (Mozilla) who gave them lots of feedback that helped polish the rough edges.
 
 First, you need to obtain a free copy of FASP kernel functions from \emph{BitBucket.org}:
@@ -219,7 +220,7 @@ This command will build all the examples inside tutorial. You can use ``make hel
 \section{The first example}\label{sec:ex1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method; see \S\ref{sec:camg}. The stiffness matrix $A$ is symmetric positive definite (SPD), arising from the continuous piecewise linear finite element discretization of the Poisson equation $-\Delta u = f$ (with Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$. 
+The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method; see \S\ref{sec:amg}. The stiffness matrix $A$ is symmetric positive definite (SPD), arising from the continuous piecewise linear finite element discretization of the Poisson equation $-\Delta u = f$ (with Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$. 
  
 \begin{lstlisting}[stepnumber=1,firstnumber=1]
 /*! \file poisson-amg.c
@@ -307,7 +308,7 @@ Since this is the first example, we will explain it in some detail:
 %
 \item Line 57 allocates memory for the solution vector $x$ and set its initial value to be all zero. 
 %
-\item Line 58 solves $Ax=b$ using the AMG method. Type the AMG method and other parameters have been given in ``amgparam'' at Line 24; see \S\ref{sec:camg} and \S\ref{sec:samg}.
+\item Line 58 solves $Ax=b$ using the AMG method. Type the AMG method and other parameters have been given in ``amgparam'' at Line 24; see \S\ref{sec:amg}.
 %
 \item Line 61--63 frees up memory allocated for $A$, $b$, and $x$.
 \end{itemize}
@@ -635,9 +636,9 @@ This example is very similar to the first example and we now briefly explain it:
 %
 \item Line 14--25 sets the basic parameters for algebraic multigrid methods. For example, type of AMG, type of multilevel cycles, type of smoothers, number of maximal levels, etc. 
 %
-\item Line 31--35 sets the parameters for the setup phase of the classical AMG method (\S\ref{sec:camg}).
+\item Line 31--35 sets the parameters for the setup phase of the classical AMG method (\S\ref{sec:amg}).
 %
-\item Line 41--44 gives the parameters for the setup phase of the aggregation-base AMG methods (\S\ref{sec:samg}). 
+\item Line 41--44 gives the parameters for the setup phase of the aggregation-base AMG methods (\S\ref{sec:amg}). 
 %
 \end{itemize}
 %
@@ -759,11 +760,13 @@ typedef struct dvector{
 
 \subsection{Sparse matrices}
 
-On the other hand, sparse matrices for PDE applications are very complicated. It depends on the particular applications, discretization methods, as well as solution algorithms. In FASP, there are several types of sparse matrices, COO, CSR, CSRL, BSR, and CSR Block. The presentation closely follows ideas from Pissanetzky~\cite{Pissanetzky}. We will use the following sparse matrix as an example for different formats:
+On the other hand, sparse matrices for PDE applications are very complicated. It depends on the particular applications, discretization methods, as well as solution algorithms. In FASP, there are several types of sparse matrices, COO, CSR, CSRL, BSR, and CSR Block, etc. The presentation closely follows ideas from Pissanetzky~\cite{Pissanetzky}. 
 
+In this section, we use the following sparse matrix as an example to explain different formats for sparse matrices:
+%
 \begin{example}\label{ex:sparse}
-Consider the following $4\times 5$ matrix 
-$$
+Consider the following $4\times 5$ matrix with 12 non-zero entries
+$$ 
 \left(\begin{array}{ccccc}
 1 & 1.5 & 0 & 0 & 12\\
 0 & 1    & 6 & 7 & 1\\
@@ -773,10 +776,6 @@ $$
 \right)
 $$
 \end{example}
-
-\begin{snugshade}\noindent
-NOTE: In FASP, the indices are starting from 0, instead of 1. This is usually the source of problems related to vectors and matrices. 
-\end{snugshade}
 
 \subsubsection*{(i) COO format}
 
@@ -813,7 +812,7 @@ So it clear that the sparse matrix in Example~\ref{ex:sparse} in COO format is s
 \begin{lstlisting}[numbers=none]
 row = 4
 col = 5
-nnz = 11
+nnz = 12
 
  I J  val 
 -----------
@@ -828,6 +827,10 @@ nnz = 11
 \end{lstlisting}
 %
 Although the COO format is easy to understand or use, it wastes some storage and has no advantages in sparse BLAS operations.
+
+\begin{snugshade}\noindent
+NOTE: In FASP, the indices always start from 0, instead of from 1. This is often the source of problems related to vectors and matrices. 
+\end{snugshade}
 
 \subsubsection*{(ii) CSR format}
 The most commonly used data structure for sparse matrices nowadays is probably the so-called {\em compressed sparse row}  (CSR) format, according to Saad~\cite{Saad}. The compressed row storage format of a matrix $A\in \mathbb{R}^{n\times m}$ ($n$ rows and $m$ columns) consists of three arrays, as follows:
@@ -884,16 +887,16 @@ The matrix in Example~\ref{ex:sparse} in CSR format is represented in the follow
 \begin{itemize}
 \item $IA$ is of size $5$ and 
 $$IA = 
-\begin{array}{||c|c|c|c|c||}1&4&8&10&13\end{array}
+\begin{array}{||c|c|c|c|c||}0&3&7&9&12\end{array}
 $$
 \item $JA$ is of size $IA(5)-1=12$  
 $$JA = 
 \begin{array}{||c|c|c||c|c|c|c||c|c||c|c|c||}
-1&2&5&2&4&3&5&1&3&3&5&1
+0&1&4&1&3&2&4&0&2&2&4&0
 \end{array}
 $$
-\item $A$ is of the same size as $JA$ and   
-$$A = 
+\item $val$ is of the same size as $JA$ and   
+$$val = 
 \begin{array}{||c|c|c||c|c|c|c||c|c||c|c|c||}
 1.&1.5&12.&1.&7.&6.&1.&3.&6.&2.&5.&1.
 \end{array}
@@ -901,10 +904,46 @@ $$
 \end{itemize}
 
 \begin{snugshade}\noindent
-NOTE: The indexes in $JA$ need not be ordered as seen in this example.
+NOTE: The indexes in $JA$ and entries of $val$ need not be ordered as seen in this example. Sometimes, they are sorted in ascending order in each row. More often, the diagonal entries are stored in the first position in each row and the rest are sorted in ascending order. 
 \end{snugshade}
 
-The CSR format presents challenges to sparse matrix-vector product mainly because of the high cache missing rate due to indirect memory access and irregular access pattern. In order to reduce the cache missing rate, we introduce an improved data format, CSRL.
+Below is another ``non-numeric'' example.
+%
+\begin{example} Consider the following sparse matrix:
+$$
+\left(
+\begin{array}{cccc}
+a_{11} & 0 & a_{13} & 0 \\
+0 & a_{22} & a_{23} & a_{24} \\
+0 & a_{32} & 0 & a_{34} \\
+a_{41}& a_{42} & a_{43} & 0 \\
+\end{array}
+\right)
+$$
+For this matrix, we have that the number of non-zeros $nnz=10$. Furthermore, the three arrays of in the CSR format are:
+$$
+IA = 
+\begin{array}{||c|c|c|c||}0&2&5&7\end{array}\, ,
+%[ 0 \quad 2 \quad 5 \quad 7 \quad 10], 
+$$
+$$
+JA = 
+\begin{array}{||c|c||c|c|c||c|c||c|c|c||}
+0&2&1&2&3&1&3&0&1&2\end{array}\, ,
+%[ 0 \; 2 \;|\; 1 \; 2 \; 3 \;|\; 1 \; 3 \;|\; 0 \; 1 \; 2],
+$$
+and 
+$$
+val = 
+\begin{array}{||c|c||c|c|c||c|c||c|c|c||}
+a_{11} & a_{13} & a_{22} & a_{23} & a_{24} & a_{32} & a_{34} & a_{41} & a_{42} & a_{43}\end{array}\,.
+%[a_{11} \; a_{13}\;|\; a_{22} \; a_{23} \; a_{24}\;|\; a_{32} \; a_{34}\;|\; a_{41}\; a_{42}\; a_{43}].
+$$
+\end{example}
+
+\begin{snugshade}\noindent
+NOTE: The CSR format presents challenges to sparse matrix-vector product mainly because of the high cache missing rate due to indirect memory access and irregular access pattern. In order to reduce the cache missing rate, we introduce an improved data format, CSRL.
+\end{snugshade}
 
 \subsubsection*{(iii) CSRL format}
 
@@ -1016,34 +1055,6 @@ NOTE: For more details as well as other specialized block matrices, we refer to 
 
 \subsection{Sparse BLAS}
 
-I hope after this numeric example the CSR format is clear. Below is
-another ``non-numeric'' example, that also includes a simple pseudo-code for
-matrix vector multiply.
-
-\begin{example} Consider the following sparse matrix:
-$$
-\left(
-\begin{array}{cccc}
-a_{11} & 0 & a_{13} & 0 \\
-0 & a_{22} & a_{23} & a_{24} \\
-0 & a_{32} & 0 & a_{34} \\
-a_{41}& a_{42} & a_{43} & 0 \\
-\end{array}
-\right)
-$$
-For this matrix, we have that the number of non-zeros $nnz=10$. Furthermore, the three arrays of CSR are:
-$$
-IA = [ 1\quad 3 \quad 6 \quad 8 \quad 11], 
-$$
-$$
-JA = [ 1\; 3 \;|\; 2 \; 3\; 4 \;|\; 2 \; 4 \;|\; 1 \; 2 \; 3],
-$$
-and 
-$$
-val = [a_{11} \; a_{13}\;|\; a_{22} \; a_{23} \; a_{24}\;|\; a_{32} \; a_{34}\;|\; a_{41}\; a_{42}\; a_{43}].
-$$
-\end{example}
-%
 The matrix-vector multiplication: $y=Ax$ can be performed in the
 following simple way:
 
@@ -1086,36 +1097,184 @@ This is only a simple example for sparse matrix-vector multiplication (SpMV) ker
 \section{Iterative methods}\label{sec:iter}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-There are a couple of standard preconditioned iterative methods implemented in FASP. In this section, we use the CSR matrix as example to introduce how to use these iterative methods. To learn more details, we refer to the Reference Manual.
+In FASP, there are a couple of standard preconditioned iterative methods implemented, including preconditioned CG, BiCGstab, GMRES, Variable Restarting GMRES, Flexible GMRES, etc. In this section, we use the CSR matrix format as example to introduce how to call these iterative methods. To learn more details, we refer to the Reference Manual.
 
-\subsection{Conjugate Gradient}
-
-To call the preconditioned conjugate gradient (PCG) method, you can simply use the function
+We first notice the abstract interface for the iterative methods is:
+%
 \begin{lstlisting}[numbers=none]
-INT fasp_solver_dcsr_pcg (dCSRmat *A, 
-                          dvector *b, 
-                          dvector *u, 
-                          precond *pc, 
-                          const REAL tol,
-                          const INT MaxIt, 
-                          const SHORT stop_type,
-                          const SHORT print_level)
+/**
+ * \fn INT fasp_solver_dcsr_itsolver (dCSRmat *A, dvector *b, dvector *x, 
+ *                                    precond *pc, itsolver_param *itparam)
+ *
+ * \brief Solve Ax=b by preconditioned Krylov methods for CSR matrices
+ *
+ * \param A        Pointer to the coeff matrix in dCSRmat format
+ * \param b        Pointer to the right hand side in dvector format
+ * \param x        Pointer to the approx solution in dvector format
+ * \param pc       Pointer to the preconditioning action
+ * \param itparam  Pointer to parameters for iterative solvers
+ *
+ * \return         Number of iterations if succeed
+ *
+ * \author Chensong Zhang
+ * \date   09/25/2009 
+ *
+ * \note This is an abstract interface for iterative methods.
+ */
+INT fasp_solver_dcsr_itsolver (dCSRmat *A, 
+                               dvector *b, 
+                               dvector *x, 
+                               precond *pc, 
+                               itsolver_param *itparam)
 \end{lstlisting}
 %
-The names of the input arguments explain themselves mostly and they are explained in the Reference Manual in detail. Here we briefly discuss how to call this function because once we understand PCG, we can easily call other iterative methods.   
+The names of the input arguments explain themselves mostly and they are explained in the Reference Manual in detail. 
+
+We briefly discuss how to call this function; and, once you understand PCG, you can easily call other iterative methods. The following code segment is taken from ``core/src/itsolver\_csr.c'':
+%
+\begin{lstlisting}
+... ...
+
+    // ILU setup for whole matrix
+    ILU_data LU; 
+    if ( (status = fasp_ilu_dcsr_setup(A,&LU,iluparam))<0 ) goto FINISHED;
+    
+    // check iludata
+    if ( (status = fasp_mem_iludata_check(&LU))<0 ) goto FINISHED;
+    
+    // set preconditioner 
+    precond pc; 
+    pc.data = &LU; 
+    pc.fct  = fasp_precond_ilu;
+    
+    // call iterative solver
+    status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
+    
+... ...
+\end{lstlisting}
+%
+Now we explain this code segment a little bit:
+\begin{itemize}
+\item Line 3--4 performs the setup phase for ILU method. The particular type of ILU method is determined by ``iluparam''; see \S\ref{sec:parameters}. Line 7 performs a simple memory check for ILU.
+\item Line 10--12 defines the preconditioner data structure ``pc'', which contains two parts: one is the actual preconditioning action ``pc.fct'', the other is the auxiliary data which is needed to perform the preconditioning action ``pc.data''.
+\item Line 15 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``itparam''. 
+\end{itemize}
+
+Apparently, we now left with no choice but introducing ``itparam''. 
+\begin{lstlisting}[numbers=none]
+/** 
+ * \struct itsolver_param
+ * \brief Parameters passed to iterative solvers.
+ *
+ */
+typedef struct {
+	
+	SHORT itsolver_type; /**< solver type: see message.h */
+	SHORT precond_type;  /**< preconditioner type: see message.h */
+	SHORT stop_type;     /**< stopping criteria type */
+	INT   maxit;         /**< max number of iterations */
+	REAL  tol;           /**< convergence tolerance */
+	INT   restart;       /**< number of steps for restarting: for GMRES etc */
+	SHORT print_level;   /**< print level: 0--10 */	
+	
+} itsolver_param; /**< Parameters for iterative solvers */ 
+\end{lstlisting}
+%
+Possible ``itsolver\_type'' includes:
+\begin{lstlisting}[numbers=none]
+/** 
+ * \brief Definition of solver types for iterative methods
+ */
+#define SOLVER_CG               1    /**< Conjugate Gradient */
+#define SOLVER_BiCGstab         2    /**< Biconjugate Gradient Stabilized */
+#define SOLVER_MinRes           3    /**< Minimal Residual */
+#define SOLVER_GMRES            4    /**< Generalized Minimal Residual */
+#define SOLVER_VGMRES           5    /**< Variable Restarting GMRES */
+#define SOLVER_VFGMRES          6    /**< Variable Restarting Flexible GMRES */
+#define SOLVER_GCG              7    /**< Generalized Conjugate Gradient */
+#define SOLVER_AMG              21   /**< AMG as an iterative solver */
+#define SOLVER_FMG		        22   /**< Full AMG as an solver */
+\end{lstlisting}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Geometric multigrid}\label{sec:gmg}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Classical algebraic multigrid}\label{sec:camg}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+To be added.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Aggregation-based algebraic multigrid}\label{sec:samg}
+\section{Algebraic multigrid}\label{sec:amg}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The classical algebraic multigrid method is an important component in many auxiliary space preconditioners. Because of its user-friendly and scalability, AMG becomes increasingly popular in scientific and engineering computing, especially when GMG is difficult or not possible to be applied. 
+
+The following code segment is part of ``core/src/amg.c'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, etc). 
+%
+\begin{lstlisting}
+... ...
+
+    // param is a pointer to AMG_param
+    const SHORT   max_levels  = param->max_levels;
+    const SHORT   amg_type    = param->AMG_type;
+    const SHORT   cycle_type  = param->cycle_type;    
+
+    // initialize mgl[0] with A, b, x    
+    AMG_data *mgl = fasp_amg_data_create(max_levels);
+    mgl[0].A = fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
+    mgl[0].b = fasp_dvec_create(n);       fasp_dvec_cp(b,&mgl[0].b);     
+    mgl[0].x = fasp_dvec_create(n);       fasp_dvec_cp(x,&mgl[0].x); 
+    
+    // AMG setup phase
+    switch (amg_type) {
+
+    case SA_AMG: // Smoothed Aggregation AMG setup phase
+        if ( (status=fasp_amg_setup_sa(mgl, param)) < 0 ) goto FINISHED;
+        break;
+
+    case UA_AMG: // Unsmoothed Aggregation AMG setup phase
+        if ( (status=fasp_amg_setup_ua(mgl, param)) < 0 ) goto FINISHED;
+        break;
+
+    default: // Classical AMG setup phase
+        if ( (status=fasp_amg_setup_rs(mgl, param)) < 0 ) goto FINISHED;
+        break;
+
+    }
+    
+    // AMG solve phase
+    switch (cycle_type) {
+
+    case AMLI_CYCLE: // call AMLI-cycle
+        if ( (status=fasp_amg_solve_amli(mgl, param)) < 0 ) goto FINISHED;
+        break;
+
+    case NL_AMLI_CYCLE: // call Nonlinear AMLI-cycle
+        if ( (status=fasp_amg_solve_nl_amli(mgl, param)) < 0 ) goto FINISHED;
+        break;
+
+    default: // call classical V,W-cycles
+        if ( (status=fasp_amg_solve(mgl, param)) < 0 ) goto FINISHED;
+        break;
+
+    }
+    
+... ...
+\end{lstlisting}
+%
+The code above is very simple and we only wish to point out that:
+%
+\begin{itemize}
+\item Line 4--6 reads some of the parameters from ``AMG\_param'', which can be defined from a input file; see \S\ref{sec:parameters}.
+\item Line 9--12 initializes the ``AMG\_data'' with a copy of the coefficient matrix, the right-hand side, and the initial solution (it will store the final solution eventually).
+\item Line 17--27 calls three different AMG methods, determined by ``amg\_type''.
+\item Line 34--44 calls three different multilevel iterative methods, determined by ``cycle\_type''.
+\end{itemize}
+
+\subsection{Parameters for AMG}
+
+To be added.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{More Advanced Usage}\label{ch:advanced}
@@ -1127,18 +1286,25 @@ In this chapter, we discuss a few topics for more advanced users.
 \section{Block preconditioners}\label{sec:block}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+To be added.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{An OpenMP example}\label{sec:mop}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+To be added.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A CUDA example}\label{sec:cuda}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+To be added.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The debug environment}\label{sec:debug}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+To be added.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter*{Appendix}\label{ch:append}
