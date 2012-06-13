@@ -83,11 +83,11 @@
 
 Over the last few decades, researchers have expended significant effort on developing efficient iterative methods for solving discretized partial differential equations (PDEs). Though these efforts have yielded many mathematically optimal solvers such as the multigrid method, the unfortunate reality is that multigrid methods have not been much used in practical applications. This marked gap between theory and practice is mainly due to the fragility of traditional multigrid (MG) methodology and the complexity of its implementation. We aim to develop techniques and the corresponding software that will narrow this gap, specifically by developing mathematically optimal solvers that are robust and easy to use in practice. 
 
-We believe that there is no one-size-for-all solution method for discrete linear systems from different applications. And, efficient iterative solvers can be constructed by taking the properties of PDEs and discretizations into account. In this project, we plan to construct a pool of discrete problems arising from partial differential equations (PDEs) or PDE systems and efficient linear solvers for these problems. We mainly utilize the methodology of Auxiliary Space Preconditioning (ASP) to construct efficient linear solvers. Due to this reason, this software package is called ``Fast Auxiliary Space Preconditioning'' or FASP for short. 
+We believe that there is no one-size-for-all solution method for discrete linear systems from different applications. And, efficient iterative solvers can be constructed by taking the properties of PDEs and discretizations into account. In this project, we plan to construct a pool of discrete problems arising from partial differential equations (PDEs) or PDE systems and efficient linear solvers for these problems. We mainly utilize the methodology of Auxiliary Space Preconditioning (ASP)~\cite{Xu.Xu.2010ff} to construct efficient linear solvers. Due to this reason, this software package is called ``Fast Auxiliary Space Preconditioning'' or FASP for short. 
 
 \subsection{Our goal}
 
-The FASP project is not a traditional software project; instead, it is designed to support our effort to identify efficient algorithms and to build fast solvers for a set of PDE problems---FASP is designed for developing and testing new efficient solvers and preconditioners for discrete partial differential equations (PDEs) or systems of PDEs. The main components of the package are basic linear iterative methods, standard Krylov methods, geometric and algebraic multigrid methods, and incomplete factorization methods. Based on these standard techniques, we build efficient solvers, based on the framework of Auxiliary Space Preconditioning, for several complicated applications. Current examples include the fluid dynamics, underground water simulation, the black oil model in reservoir simulation, and so on. 
+The FASP project is not a traditional software project; instead, it is designed to support our effort to identify efficient algorithms and to build fast solvers for a set of PDE problems---FASP is designed for developing and testing new efficient solvers and preconditioners for discrete partial differential equations (PDEs) or systems of PDEs. The main components of the package are basic linear iterative methods, standard Krylov methods, geometric and algebraic multigrid methods, and incomplete factorization methods. Based on these standard techniques, we build efficient solvers, based on the framework of Auxiliary Space Preconditioning, for several complicated applications. For the moment, we have a few examples include the fluid dynamics, underground water simulation, the black oil model in reservoir simulation, and so on. 
 
 FASP contains the kernel part and several applications (ranging from fluid dynamics to reservoir simulation). The kernel part is open-source and licensed under GNU LPGL. Some of the applications contain contributions from and owned partially by other parties. We wish to keep as many parts open to public as possible. We only discuss the kernel functions in this user's guide.
 
@@ -157,27 +157,28 @@ In this user's guide, we mainly describe how to use the existing solvers in FASP
 \section{How to obtain FASP}\label{sec:install}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-All the FASP packages are hosted on \emph{BitBucket.org}\footnote{Official website: \url{https://bitbucket.org/}} using Mercurial (HG)\footnote{Official website: \url{http://mercurial.selenic.com/}}. As a DVCS (Distributed Version Control System) source-control software, HG is relatively new. But compared with other tools like Git, Hg is considered \emph{friendlier} with a lower learning curve. This is despite the fact that Hg uses two distinct sets of commands and two distinct vocabularies for operations depending upon whether the repository is local or remote.
-Documentation for Hg is substantially better, including a book (the hgbook, \url{http://hgbook.red-bean.com/}). They've also had the advantage of trying the documentation on a fairly savvy group of developers (Mozilla) who gave them lots of feedback that helped polish the rough edges.
+All the FASP packages are hosted on \emph{BitBucket.org}\footnote{Official website: \url{https://bitbucket.org/}} using Mercurial (Hg)\footnote{Official website: \url{http://mercurial.selenic.com/}}. As a DVCS (Distributed Version Control System) source-control software, Hg is relatively new. But compared with other tools like Git, Hg is considered \emph{friendlier} with a lower learning curve. This is despite the fact that Hg uses two distinct sets of commands and two distinct vocabularies for operations depending upon whether the repository is local or remote.
+Documentation for Hg is substantially better, including a book\footnote{The hgbook, \url{http://hgbook.red-bean.com/}}. They've also had the advantage of trying the documentation on a fairly savvy group of developers (Mozilla) who gave them lots of feedback that helped polish the rough edges.
 
 First, you need to obtain a free copy of FASP kernel functions from \emph{BitBucket.org}:
 %
 \begin{lstlisting}[numbers=none]
 "Download FASP core subroutines via HTTPS"
+
 $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver
 \end{lstlisting}
 %
 \begin{snugshade}\noindent
-For the moment, it requires a password to access the HG repository and the password is ``multigrid''. Very soon it will be open to public completely. 
+For the moment, it requires a password to access the Hg repository and the password is ``multigrid''. Very soon it will be open to public completely. 
 \end{snugshade}
 
-After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 125MB in total. Depending on the speed of your network, it could take 30 minutes to one hour.}, you should have obtained ``faspsolver'' in your current directory successfully. 
+After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 125MB in total. Depending on the speed of your network, it could take 15 minutes to one hour.}, you should have obtained ``faspsolver'' in your current directory successfully. 
 
 \subsection{Compilation}\label{ssec:lib}
 
-FASP has been tested on Linux (Cent OS, Debian, RedHat, Ubuntu), OS X (Leopard, Snow Leopard, Lion) and Windows (XP, Win 7) with a couple of compliers including GCC, G++, ICC, VC++, GFORTRAN, G95, IFORT. Here we will only give a simple instruction on how to compile FASP on Linux:
+FASP has been tested on Linux (Cent OS, Debian, Fedora, RedHat, Ubuntu), OS X (Leopard, Snow Leopard, Lion) and Windows (XP, Win 7) with a couple of compliers including GCC, G++, ICC, VC++, GFORTRAN, G95, IFORT. 
 
-To build the FASP library, just go to the ``core'' directory and type:
+Now we give a simple instruction on how to compile FASP on Linux: To build the FASP library, just go to the ``core'' directory and type:
 %
 \begin{lstlisting}[numbers=none]
 $ make
@@ -220,7 +221,7 @@ This command will build all the examples inside tutorial. You can use ``make hel
 \section{The first example}\label{sec:ex1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method; see \S\ref{sec:amg}. The stiffness matrix $A$ is symmetric positive definite (SPD), arising from the continuous piecewise linear finite element discretization of the Poisson equation $-\Delta u = f$ (with Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$. 
+The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method~\cite{Brandt.BrandtMcCormick.1982uq,Ruge.RugeStuben.1985ij,Ruge.RugeStuben.1987bs}; see \S\ref{sec:amg}. The stiffness matrix $A$ is symmetric positive definite (SPD), arising from the continuous piecewise linear finite element discretization of the Poisson equation $-\Delta u = f$ (with Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$. 
  
 \begin{lstlisting}[stepnumber=1,firstnumber=1]
 /*! \file poisson-amg.c
@@ -452,7 +453,7 @@ int main (int argc, const char * argv[])
 This example is very similar to the first example and we now briefly explain it:
 \begin{itemize}
 %
-\item Line 23 is slightly different than Line 24 in the previous example. This is because we are calling general interface of Krylov subspace methods and the parameters are recorded in ``itparam''. 
+\item Line 23 is slightly different than Line 24 in the previous example. This is because we are calling general interface of Krylov subspace methods~\cite{Saad.Saad.2003fv} and the parameters are recorded in ``itparam''. 
 %
 \item Line 56 allocates memory for the solution vector $x$ and set its initial value to be all zero. 
 %
@@ -589,43 +590,57 @@ workdir = ../data/    % work directory, no more than 128 characters
 print_level = 3       % How much information to print out 
  
 %----------------------------------------------%
-% parameters for AMG preconditioners           %
+% parameters for multilevel iteration          %
 %----------------------------------------------%
 
-AMG_type                 = C     % C classic AMG | SA smoothed aggregation AMG
-AMG_cycle_type           = V     % V V-cycle | W W-cycle         
-AMG_smoother             = GS    % GS | JACOBI | SGS | SOR | SSOR | GSOR | SGSOR
-AMG_levels               = 15    % max number of levels
-AMG_ILU_levels           = 0     % number of levels using ILU smoother
-AMG_relaxation           = 1.0   % over relaxation parameter for SOR smoother
-AMG_presmooth_iter       = 2     % number of presmoothing
-AMG_postsmooth_iter      = 2     % number of postsmoothing
-AMG_coarse_dof           = 500   % max number of coarse degrees of freedom
-AMG_tol                  = 1e-8  % tolerance for AMG
-AMG_maxit                = 100   % number of AMG iterations
-AMG_coarse_scaling       = OFF   % switch of scaling of the coarse grid correction
+AMG_type                 = C      % C classic AMG
+                                  % SA smoothed aggregation
+                                  % UA unsmoothed aggregation
+AMG_cycle_type           = V      % V V-cycle | W W-cycle
+                                  % A AMLI-cycle | NA Nonlinear AMLI-cycleA
+AMG_tol                  = 1e-8   % tolerance for AMG
+AMG_maxit                = 100    % number of AMG iterations
+AMG_levels               = 20     % max number of levels
+AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
+AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
+AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
+AMG_nl_amli_krylov_type  = 6      % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
 
 %----------------------------------------------%
-% parameters for classical AMG method          %
+% parameters for AMG smoothing                 %
 %----------------------------------------------%
 
-AMG_coarsening_type      = 1     % coarsening type 1: RS | 3: CR
-AMG_interpolation_type   = 1     % 1 standard | 3 energy min in C 
-AMG_strong_threshold     = 0.6   % strong threshold
-AMG_truncation_threshold = 0.4   % truncation threshold
-AMG_max_row_sum          = 0.9   % max row sum
+AMG_smoother             = GS     % GS | JACOBI | SGS 
+                                  % SOR | SSOR | GSOR | SGSOR | POLY
+AMG_ILU_levels           = 0      % number of levels using ILU smoother
+AMG_schwarz_levels       = 0      % number of levels using Schwarz smoother
+AMG_relaxation           = 1.1    % relaxation parameter for SOR smoother 
+AMG_polynomial_degree    = 3      % degree of the polynomial smoother
+AMG_presmooth_iter       = 2      % number of presmoothing sweeps
+AMG_postsmooth_iter      = 2      % number of postsmoothing sweeps
 
 %----------------------------------------------%
-% parameters for smoothed aggregation AMG      %
+% parameters for classical AMG SETUP           %
 %----------------------------------------------%
 
-AMG_strong_coupled       = 0.08  % strong coupled threshold
-AMG_max_aggregation      = 20    % max size of each aggregation 
-AMG_tentative_smooth     = 0.67  % smooth factor for the tentative prolongation
-AMG_smooth_filter        = ON    % switch for filtered matrix for smoothing
-\end{lstlisting}
+AMG_coarsening_type      = 1      % 1 Modified RS
+                                  % 3 Compatible Relaxation
+                                  % 4 Aggressive 
+AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
+AMG_strong_threshold     = 0.6    % Strong threshold
+AMG_truncation_threshold = 0.4    % Truncation threshold
+AMG_max_row_sum          = 0.9    % Max row sum
+
+%----------------------------------------------%
+% parameters for aggregation-type AMG SETUP    %
+%----------------------------------------------%
+
+AMG_strong_coupled       = 0.08   % Strong coupled threshold
+AMG_max_aggregation      = 20     % Max size of aggregations
+AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
+AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing\end{lstlisting}
 %
-We now briefly discuss the parameters appeared in this file:
+We now briefly discuss the parameters above:
 %
 This example is very similar to the first example and we now briefly explain it:
 \begin{itemize}
@@ -634,11 +649,13 @@ This example is very similar to the first example and we now briefly explain it:
 %
 \item Line 8 sets the level of output for FASP routines. It should range from 0 to 10 with 0 means no output and 10 means output everything possible. 
 %
-\item Line 14--25 sets the basic parameters for algebraic multigrid methods. For example, type of AMG, type of multilevel cycles, type of smoothers, number of maximal levels, etc. 
+\item Line 14--25 sets the basic parameters for multilevel iterations. For example, type of AMG, type of multilevel cycles, number of maximal levels, etc. 
 %
-\item Line 31--35 sets the parameters for the setup phase of the classical AMG method (\S\ref{sec:amg}).
+\item Line 31--38 sets the type of smoothers, number of smoothing sweeps, etc. 
 %
-\item Line 41--44 gives the parameters for the setup phase of the aggregation-base AMG methods (\S\ref{sec:amg}). 
+\item Line 44--50 sets the parameters for the setup phase of the classical AMG method (\S\ref{sec:amg}).
+%
+\item Line 56--59 gives the parameters for the setup phase of the aggregation-base AMG methods (\S\ref{sec:amg}). 
 %
 \end{itemize}
 %
@@ -760,7 +777,7 @@ typedef struct dvector{
 
 \subsection{Sparse matrices}
 
-On the other hand, sparse matrices for PDE applications are very complicated. It depends on the particular applications, discretization methods, as well as solution algorithms. In FASP, there are several types of sparse matrices, COO, CSR, CSRL, BSR, and CSR Block, etc. The presentation closely follows ideas from Pissanetzky~\cite{Pissanetzky}. 
+On the other hand, sparse matrices for PDE applications are very complicated. It depends on the particular applications, discretization methods, as well as solution algorithms. In FASP, there are several types of sparse matrices, COO, CSR, CSRL, BSR, and CSR Block, etc. The presentation closely follows ideas from Pissanetzky~\cite{Pissanetzky.Pissanetzky.1984hc}. 
 
 In this section, we use the following sparse matrix as an example to explain different formats for sparse matrices:
 %
@@ -833,7 +850,7 @@ NOTE: In FASP, the indices always start from 0, instead of from 1. This is often
 \end{snugshade}
 
 \subsubsection*{(ii) CSR format}
-The most commonly used data structure for sparse matrices nowadays is probably the so-called {\em compressed sparse row}  (CSR) format, according to Saad~\cite{Saad}. The compressed row storage format of a matrix $A\in \mathbb{R}^{n\times m}$ ($n$ rows and $m$ columns) consists of three arrays, as follows:
+The most commonly used data structure for sparse matrices nowadays is probably the so-called {\em compressed sparse row}  (CSR) format, according to Saad~\cite{Saad.Saad.2003fv}. The compressed row storage format of a matrix $A\in \mathbb{R}^{n\times m}$ ($n$ rows and $m$ columns) consists of three arrays, as follows:
 %
 \begin{enumerate}
 \item An integer array of row pointers of size n+1;
@@ -947,7 +964,7 @@ NOTE: The CSR format presents challenges to sparse matrix-vector product mainly 
 
 \subsubsection*{(iii) CSRL format}
 
-CSRL matrix format groups rows with same number of nonzeros together and improves cache hitting rate. 
+CSRL matrix format~\cite{Mellor-crummey2004} groups rows with same number of nonzeros together and improves cache hitting rate. 
 \begin{lstlisting}
 /*!
  * \struct dCSRLmat
@@ -1097,7 +1114,8 @@ This is only a simple example for sparse matrix-vector multiplication (SpMV) ker
 \section{Iterative methods}\label{sec:iter}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In FASP, there are a couple of standard preconditioned iterative methods implemented, including preconditioned CG, BiCGstab, GMRES, Variable Restarting GMRES, Flexible GMRES, etc. In this section, we use the CSR matrix format as example to introduce how to call these iterative methods. To learn more details, we refer to the Reference Manual.
+In FASP, there are a couple of standard preconditioned iterative methods
+~\cite{Saad.Saad.2003fv} implemented, including preconditioned CG, BiCGstab, GMRES, Variable Restarting GMRES, Flexible GMRES, etc. In this section, we use the CSR matrix format as example to introduce how to call these iterative methods. To learn more details, we refer to the Reference Manual.
 
 We first notice the abstract interface for the iterative methods is:
 %
@@ -1207,7 +1225,7 @@ To be added.
 \section{Algebraic multigrid}\label{sec:amg}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The classical algebraic multigrid method is an important component in many auxiliary space preconditioners. Because of its user-friendly and scalability, AMG becomes increasingly popular in scientific and engineering computing, especially when GMG is difficult or not possible to be applied. 
+The classical algebraic multigrid method~\cite{Ruge.RugeStuben.1987bs} is an important component in many of our auxiliary space preconditioners. Because of its user-friendly and scalability, AMG becomes increasingly popular in scientific and engineering computing, especially when GMG is difficult or not possible to be applied. Various of new AMG techniques~\cite{Vanek.VanekMandel.1996kl,Wan.WanChan.2000qa,Brezina.BrezinaCleary.2000ly,Henson.HensonVassilevski.2001cr,Chartier.ChartierFalgout.2003ve,Livne.Livne.2004kl,Falgout.FalgoutVassilevski.2004bh,Xu.XuZikatanov.2004pi,Brannick.BrannickZikatanov.2007zr,Muresan.MuresanNotay.2008tg} have emerged in recent years. 
 
 The following code segment is part of ``core/src/amg.c'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, etc). 
 %
@@ -1273,8 +1291,64 @@ The code above is very simple and we only wish to point out that:
 
 \subsection{Parameters for AMG}
 
-To be added.
+There are a couple of controlling parameters for algebraic multigrid methods in FASP. Basically, there are four types of parameters for AMG---They control multilevel iterations, smoothing, classical AMG setup, and aggregation AMG setup. The following is a sample from ``test/ini/input.dat'' and a brief explanation of each parameter is given. 
 
+\begin{lstlisting}
+%----------------------------------------------%
+% parameters for multilevel iteration          %
+%----------------------------------------------%
+
+AMG_type                 = C      % C classic AMG
+                                  % SA smoothed aggregation
+                                  % UA unsmoothed aggregation
+AMG_cycle_type           = V      % V V-cycle | W W-cycle
+                                  % A AMLI-cycle | NA Nonlinear AMLI-cycleA
+AMG_tol                  = 1e-8   % tolerance for AMG
+AMG_maxit                = 1      % number of AMG iterations
+AMG_levels               = 20     % max number of levels
+AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
+AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
+AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
+AMG_nl_amli_krylov_type  = 6      % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
+
+%----------------------------------------------%
+% parameters for AMG smoothing                 %
+%----------------------------------------------%
+
+AMG_smoother             = GS     % GS | JACOBI | SGS 
+                                  % SOR | SSOR | GSOR | SGSOR | POLY
+AMG_ILU_levels           = 0      % number of levels using ILU smoother
+AMG_schwarz_levels       = 0      % number of levels using Schwarz smoother
+AMG_relaxation           = 1.1    % relaxation parameter for SOR smoother 
+AMG_polynomial_degree    = 3      % degree of the polynomial smoother
+AMG_presmooth_iter       = 1      % number of presmoothing sweeps
+AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
+
+%----------------------------------------------%
+% parameters for classical AMG SETUP           %
+%----------------------------------------------%
+
+AMG_coarsening_type      = 1      % 1 Modified RS
+                                  % 3 Compatible Relaxation
+                                  % 4 Aggressive 
+AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
+AMG_strong_threshold     = 0.25   % Strong threshold
+AMG_truncation_threshold = 0.4    % Truncation threshold
+AMG_max_row_sum          = 0.9    % Max row sum
+
+%----------------------------------------------%
+% parameters for aggregation-type AMG SETUP    %
+%----------------------------------------------%
+
+AMG_strong_coupled       = 0.08   % Strong coupled threshold
+AMG_max_aggregation      = 20     % Max size of aggregations
+AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
+AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing
+\end{lstlisting}
+
+\begin{snugshade}\noindent
+NOTE: Here we can not discuss the details of these parameters as a full discussion requires more understand of the underlying algorithms which we have completely omitted. So to learn more about, we refer to the Reference Manual. 
+\end{snugshade}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{More Advanced Usage}\label{ch:advanced}
@@ -1321,8 +1395,10 @@ To be added.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
+\begin{footnotesize}
 \bibliographystyle{abbrv}
 \bibliography{fasp}
+\end{footnotesize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}  

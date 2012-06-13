@@ -2,7 +2,7 @@
  *  \brief Functions for sparse matrices in CSRL format
  *
  *  \note For details of CSRL format, refer to 
- *        Optimizaing sparse matrix vector product computations using unroll and jam
+ *        Optimizing sparse matrix vector product computations using unroll and jam
  *        by John Mellor-Crummey and John Garvin, Tech Report Rice Univ, Aug 2002.
  *
  */

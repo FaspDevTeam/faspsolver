@@ -1,8 +1,9 @@
 File Name: CHANGES
 
 06/12/2012 FASP 0.9.1:
-- Formating some more routines for printing.
+- Formatting some more routines for printing.
 - Modify doxygen.h a little, add developers pages.
+- Modify formatting of input parameters.
 - Almost finish the first version of user's guide.
 
 06/10/2012 FASP 0.9.0:
