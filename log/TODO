@@ -29,14 +29,14 @@ Structure Changes
 [ 0.7.0 ] separate external packages
 [ 0.8.0 ] define repeated constants in header
 [ 0.8.0 ] auto format for plain text, replace TAB by 4 SPACE
-[ 05/30 ] generate shared lib's for external packages (Ludmil)
-[ 06/03 ] add Automake and Autoconf support for installation (Ludmil)
+[ 07/12 ] generate shared lib's for external packages (Ludmil)
+[ 07/12 ] add Automake and Autoconf support for installation (Ludmil)
 
 ========================
 GMG 	
 ========================
 
-[ 06/12 ] add matrix-free Poisson GMG solver -- n = 2^L (Ludmil)
+[ 07/12 ] add matrix-free Poisson GMG solver -- n = 2^L (Ludmil)
 [       ] add support for general n (Ludmil)
 [       ] tabulate convergence rate of V-cycle (Ludmil)
  
@@ -50,7 +50,7 @@ AMG
 
 [ 0.8.5 ] non-overlapping/overlapping schwarz smoother
 [ 05/20 ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
-[ 06/01 ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
+[ 07/12 ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
 [ 06/01 ] strength matrix based on (polynomial) smoothers (Xiaozhe)
 [       ] Maximal Independent Set (Ludmil)
 [       ] AMG with mesh information
@@ -124,9 +124,9 @@ Test Examples
 [       ] add Maxwell equation
 [       ] make a GUI for test problems (Ludmil)
 
-[ 0.4.1 ] build "tutorial" dir for simple examples (Chensong)
+[ 0.4.1 ] build "tutorial" dir for simple examples
 [ 0.8.2 ] add examples in "tutorial" and modify user's guide accordingly
-[ 05/30 ] make online help pages for several tutorial examples (Chensong)
+[ 0.9.0 ] make online help pages for several tutorial examples
 
 ========================
 OpenMP Support

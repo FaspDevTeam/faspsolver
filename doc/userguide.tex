@@ -154,7 +154,7 @@ In this user's guide, we mainly describe how to use the existing solvers in FASP
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Installation}\label{sec:install}
+\section{How to obtain FASP}\label{sec:install}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 All the FASP packages are hosted on \emph{BitBucket.org}\footnote{Official website: \url{https://bitbucket.org/}} using Mercurial (HG)\footnote{Official website: \url{http://mercurial.selenic.com/}}. As a DVCS (Distributed Version Control System) source-control software, HG is relatively new. But compared with other tools like Git, Hg is considered \emph{friendlier} with a lower learning curve. This is despite the fact that Hg uses two distinct sets of commands and two distinct vocabularies for operations depending upon whether the repository is local or remote.
@@ -167,11 +167,13 @@ First, you need to obtain a free copy of FASP kernel functions from \emph{BitBuc
 $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver
 \end{lstlisting}
 %
-Now you should have obtained ``faspsolver'' in your current directory successfully. 
-
 \begin{snugshade}\noindent
-For the moment, it still requires a password to access the repository and the password is ``multigrid''. Very soon it will be open to public completely. 
+For the moment, it requires a password to access the HG repository and the password is ``multigrid''. Very soon it will be open to public completely. 
 \end{snugshade}
+
+After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 125MB in total. Depending on the speed of your network, it could take 30 minutes to one hour.}, you should have obtained ``faspsolver'' in your current directory successfully. 
+
+\subsection{Compilation}\label{ssec:lib}
 
 FASP has been tested on Linux (Cent OS, Debian, RedHat, Ubuntu), OS X (Leopard, Snow Leopard, Lion) and Windows (XP, Win 7) with a couple of compliers including GCC, G++, ICC, VC++, GFORTRAN, G95, IFORT. Here we will only give a simple instruction on how to compile FASP on Linux:
 
@@ -194,9 +196,7 @@ $ make help
 \end{lstlisting}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{External libraries}\label{sec:lib}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{External libraries}\label{ssec:lib}
 
 There are a few \emph{optional} external libraries that you might want to use, including memory allocation routines, direct solvers, ILU methods, discretization packages, etc. FASP has interfaces to a couple of them which we often use, for example, SuperLU, MUMPS, dlmalloc, SparseKit. 
 

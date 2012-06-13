@@ -8,7 +8,7 @@
      379 ./core/src/amg_setup_ua.c
      320 ./core/src/amg_solve.c
       95 ./core/src/amg_solve_omp.c
-     654 ./core/src/amlirecur.c
+     797 ./core/src/amlirecur.c
      143 ./core/src/array.c
      194 ./core/src/array_omp.c
      261 ./core/src/auxiliary.c
@@ -18,7 +18,7 @@
      105 ./core/src/blas_block_omp.c
      562 ./core/src/blas_bsr.c
     2037 ./core/src/blas_bsr_omp.c
-     875 ./core/src/blas_csr.c
+     877 ./core/src/blas_csr.c
     2109 ./core/src/blas_csr_omp.c
      125 ./core/src/blas_csrl.c
     1481 ./core/src/blas_smat.c
@@ -27,37 +27,37 @@
      233 ./core/src/blas_vec_omp.c
      329 ./core/src/checkmat.c
      334 ./core/src/coarsening_cr.c
-    1033 ./core/src/coarsening_rs.c
+    1487 ./core/src/coarsening_rs.c
      655 ./core/src/coarsening_rs_omp.c
       71 ./core/src/eigen.c
       99 ./core/src/famg.c
-     281 ./core/src/fmgcycle.c
+     282 ./core/src/fmgcycle.c
      885 ./core/src/formats.c
      228 ./core/src/formats_omp.c
       78 ./core/src/givens.c
      358 ./core/src/graphics.c
-     179 ./core/src/ilu_setup.c
+     174 ./core/src/ilu_setup.c
      421 ./core/src/ilu_setup_bsr.c
     1257 ./core/src/ilu_setup_str.c
      214 ./core/src/init.c
-     641 ./core/src/input.c
-    1297 ./core/src/interpolation.c
+     652 ./core/src/input.c
+    1301 ./core/src/interpolation.c
     1687 ./core/src/interpolation_omp.c
     1250 ./core/src/io.c
      126 ./core/src/itsolver_bcsr.c
      375 ./core/src/itsolver_bsr.c
      132 ./core/src/itsolver_bsr_omp.c
-     573 ./core/src/itsolver_csr.c
+     570 ./core/src/itsolver_csr.c
      208 ./core/src/itsolver_csr_omp.c
      343 ./core/src/itsolver_str.c
      170 ./core/src/lu.c
      251 ./core/src/memory.c
      236 ./core/src/message.c
-     336 ./core/src/mgcycle.c
+     337 ./core/src/mgcycle.c
      420 ./core/src/mgcycle_omp.c
-     122 ./core/src/mgrecur.c
+     123 ./core/src/mgrecur.c
      346 ./core/src/ordering.c
-     719 ./core/src/parameters.c
+     727 ./core/src/parameters.c
     1432 ./core/src/pbcgs.c
      880 ./core/src/pcg.c
      360 ./core/src/pcg_omp.c
@@ -80,7 +80,7 @@
       81 ./core/src/smoother_cr.c
      862 ./core/src/smoother_csr.c
      614 ./core/src/smoother_csr_omp.c
-     224 ./core/src/smoother_poly.c
+     442 ./core/src/smoother_poly.c
     1859 ./core/src/smoother_str.c
      204 ./core/src/sparse_block.c
      205 ./core/src/sparse_block_omp.c
@@ -97,12 +97,12 @@
      113 ./core/src/vec_omp.c
      118 ./core/src/wrapper.c
      560 ./core/include/dlmalloc.h
-     296 ./core/include/doxygen.h
-     953 ./core/include/fasp.h
-     479 ./core/include/fasp_block.h
-    2565 ./core/include/fasp_functs.h
+     142 ./core/include/doxygen.h
+     958 ./core/include/fasp.h
+     481 ./core/include/fasp_block.h
+    2572 ./core/include/fasp_functs.h
       20 ./core/include/forts_ns.h
     5818 ./core/include/malloc.c.h
-     185 ./core/include/messages.h
+     187 ./core/include/messages.h
      291 ./core/include/nedmalloc.h
-   62033 total
+   62730 total
