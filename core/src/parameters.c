@@ -166,7 +166,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     
     amgparam->strong_coupled = 0.08;
     amgparam->max_aggregation = 9;
-    amgparam->tentative_smooth = 0.0; // edit by Fengchunsheng 2011/03/15
+    amgparam->tentative_smooth = 0.0; 
     amgparam->smooth_filter = OFF;
     
     amgparam->ILU_type = ILUk; 

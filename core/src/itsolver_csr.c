@@ -3,6 +3,7 @@
  */
 
 #include <time.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -46,57 +47,71 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     
     /* Local Variables */
     INT iter;
+#if FASP_USE_OPENMP
+    double solver_start = omp_get_wtime();
+#else
     clock_t solver_start = clock();
+#endif
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_itsolver ...... [Start]\n");
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
-    
+
     /* Safe-guard checks on parameters */
     ITS_CHECK ( MaxIt, tol );
-    
+
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
+    
+    case SOLVER_CG:
+		if (print_level>0) printf("Calling PCG solver ...\n");
+        iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
+    
+    case SOLVER_BiCGstab:
+		if (print_level>0) printf("Calling BiCGstab solver ...\n");
+        iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
+    
+    case SOLVER_MinRes:
+		if (print_level>0) printf("Calling MinRes solver ...\n");
+        iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
+    
+    case SOLVER_GMRES:
+		if (print_level>0) printf("Calling GMRes solver ...\n");
+        iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+        break;
+    
+    case SOLVER_VGMRES: 
+		if (print_level>0) printf("Calling vGMRes solver ...\n");
+        iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
+        break;
             
-        case SOLVER_CG:
-            iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-            break;
+    case SOLVER_VFGMRES: 
+        iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+        break;
+    
+    case SOLVER_GCG:
+        iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+        break;
             
-        case SOLVER_BiCGstab:
-            iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-            break;
-            
-        case SOLVER_MinRes:
-            iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-            break;
-            
-        case SOLVER_GMRES:
-            iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
-            break;
-            
-        case SOLVER_VGMRES: 
-            iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
-            break;
-            
-        case SOLVER_VFGMRES: 
-            iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
-            break;
-            
-        case SOLVER_GCG:
-            iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-            break;
-            
-        default:
-            printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
-            return ERROR_SOLVER_TYPE;
-            
+    default:
+        printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
+        return ERROR_SOLVER_TYPE;
+    
     } 
     
     if ( (print_level>=PRINT_SOME) && (iter >= 0) ) {
-        clock_t solver_end = clock();    
-        REAL solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+#if FASP_USE_OPENMP
+    double solver_end = omp_get_wtime();
+	REAL solver_duration = (double)(solver_end - solver_start);
+#else
+    clock_t solver_end = clock();
+	REAL solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+#endif
         print_cputime("Iterative method", solver_duration);
     }
     
@@ -129,9 +144,10 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
                              itsolver_param *itparam)
 {
     const INT print_level = itparam->print_level;    
-    
+
     /* Local Variables */
-    clock_t  solver_start, solver_end;
+//    clock_t  solver_start, solver_end;
+//    double   solver_start, solver_end;
     INT      status = SUCCESS;
     REAL     solver_duration;
     
@@ -141,13 +157,22 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
     
-    solver_start = clock();
-    
+#if FASP_USE_OPENMP
+	double solver_start = omp_get_wtime();
+#else
+    clock_t solver_start = clock();
+#endif
+
     status = fasp_solver_dcsr_itsolver(A,b,x,NULL,itparam);
     
     if ( print_level>=PRINT_MIN ) {
-        solver_end = clock();    
+#if FASP_USE_OPENMP
+	double solver_end = omp_get_wtime();
+        solver_duration = (double)(solver_end - solver_start);
+#else
+    clock_t solver_end = clock();
         solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+#endif
         print_cputime("Krylov method totally", solver_duration);
     }    
     
@@ -180,9 +205,9 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
                                   itsolver_param *itparam)
 {
     const INT print_level = itparam->print_level;    
-    
+
     /* Local Variables */
-    clock_t   solver_start, solver_end;
+//    clock_t   solver_start, solver_end;
     INT       status = SUCCESS;
     REAL      solver_duration;
     
@@ -191,9 +216,12 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
-    
-    solver_start = clock();
-    
+
+#if FASP_USE_OPENMP
+    double solver_start = omp_get_wtime();
+#else
+    clock_t solver_start = clock();
+#endif
     // setup preconditioner
     dvector diag; fasp_dcsr_getdiag(0,A,&diag);    
     
@@ -205,13 +233,18 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
     if ( print_level>=PRINT_MIN ) {
-        solver_end = clock();    
+#if FASP_USE_OPENMP
+    double solver_end = omp_get_wtime();
+        solver_duration = (double)(solver_end - solver_start);
+#else
+    clock_t solver_end = clock();
         solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+#endif
         print_cputime("Diag_Krylov method totally", solver_duration);
     }
     
     fasp_dvec_free(&diag);
-    
+
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_krylov_diag ...... [Finish]\n");
 #endif
@@ -226,7 +259,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
  * \param *A        pointer to the dCSRmat matrix
  * \param *b        pointer to the dvector of right hand side
  * \param *x        pointer to the dvector of dofs
- * \param *schwarzparam  pointer to parameters for iterative solvers
+ * \param *itparam  pointer to parameters for iterative solvers
  * \return          number of iterations
  *
  * \author Xiaozhe Hu
@@ -235,26 +268,26 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, 
                                      dvector *b, 
                                      dvector *x, 
-                                     itsolver_param *itparam,
-                                     Schwarz_param *schwarzparam)
+                                     itsolver_param *itparam, 
+                                     INT schwarz_mmsize,
+                                     INT schwarz_maxlvl,
+                                     INT schwarz_type)
 {
 	const INT print_level = itparam->print_level;	
-	clock_t solver_start, solver_end;
-	clock_t setup_start, setup_end;
 	REAL solver_duration, setup_duration;
 	INT status = SUCCESS;
-    INT schwarz_maxlvl = schwarzparam->schwarz_maxlvl;
-    INT schwarz_mmsize = schwarzparam->schwarz_mmsize;
-    INT schwarz_type = schwarzparam->schwarz_type;
 	
 #if DEBUG_MODE
 	printf("krylov_schwarz ...... [Start]\n");
 	printf("krylov_schwarz: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
 	printf("krylov_schwarz: rhs/sol size: %d %d\n", b->row, x->row);		
 #endif
-	
-	setup_start = clock();
-	
+
+#if FASP_USE_OPENMP
+	double setup_start = omp_get_wtime();
+#else
+	clock_t setup_start = clock();
+#endif
 	// setup preconditioner
 	Schwarz_data schwarz_data;
 	
@@ -262,25 +295,39 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	schwarz_data.A=fasp_dcsr_sympat(A);
 	
 	// construct schwarz precondtioner
-	fasp_dcsr_shift(&schwarz_data.A, 1);
+	fasp_dcsr_shift (&schwarz_data.A, 1);
 	fasp_schwarz_setup(&schwarz_data, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
 	
-	setup_end = clock();
+#if FASP_USE_OPENMP
+	double setup_end = omp_get_wtime();
+	setup_duration = (REAL)(setup_end - setup_start);
+#else
+	clock_t setup_end = clock();
 	setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
+#endif
 	printf("Schwarz_Krylov method setup costs %f seconds.\n", setup_duration);
 	
 	precond prec;
 	prec.data = &schwarz_data; 
 	prec.fct = fasp_precond_schwarz;
 	
-	solver_start=clock();
+#if FASP_USE_OPENMP
+	double solver_start = omp_get_wtime();
+#else
+	clock_t solver_start = clock();
+#endif
 	
 	// solver part
 	status=fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
 	
 	if (print_level>0) {
-		solver_end=clock();	
-		solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+#if FASP_USE_OPENMP
+	    double solver_end = omp_get_wtime();
+        solver_duration = (REAL)(solver_end - solver_start);
+#else
+	    clock_t solver_end = clock();
+        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+#endif
 		printf("Schwarz_Krylov method totally costs %f seconds.\n", solver_duration);
 	}
 	
@@ -312,6 +359,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
  * \author Chensong Zhang
  * \date   09/25/2009  
  */
+
 INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, 
                                  dvector *b, 
                                  dvector *x, 
@@ -323,18 +371,20 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     const INT nnz=A->nnz, m=A->row, n=A->col;    
     
     /* Local Variables */
-    clock_t  solver_start, solver_end;
     INT      status = SUCCESS;
     REAL     solver_duration;
-    
+        
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_krylov_amg ...... [Start]\n");
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
-    
-    solver_start = clock();
-    
+   
+#if FASP_USE_OPENMP
+    double solver_start = omp_get_wtime();
+#else
+    clock_t solver_start = clock();
+#endif
     // initialize A, b, x for mgl[0]    
     AMG_data *mgl=fasp_amg_data_create(max_levels);
     mgl[0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
@@ -342,12 +392,12 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     
     // setup preconditioner  
     switch (amgparam->AMG_type) {
-        case SA_AMG: // Smoothed Aggregation AMG
-            status = fasp_amg_setup_sa(mgl, amgparam); break;
-        case UA_AMG: // Unsmoothed Aggregation AMG
-            status = fasp_amg_setup_ua(mgl, amgparam); break;
-        default: // Classical AMG
-            status = fasp_amg_setup_rs(mgl, amgparam); break;
+    case SA_AMG: // Smoothed Aggregation AMG
+        status = fasp_amg_setup_sa(mgl, amgparam); break;
+    case UA_AMG: // Unsmoothed Aggregation AMG
+        status = fasp_amg_setup_ua(mgl, amgparam); break;
+    default: // Classical AMG
+        status = fasp_amg_setup_rs(mgl, amgparam); break;
     }
     
 #if CHMEM_MODE    
@@ -369,12 +419,12 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     }
     else {
         switch (amgparam->cycle_type) {
-            case AMLI_CYCLE: // AMLI cycle
-                pc.fct = fasp_precond_amli; break;
-            case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
-                pc.fct = fasp_precond_nl_amli; break;
-            default: // V,W-Cycle AMG
-                pc.fct = fasp_precond_amg; break;
+        case AMLI_CYCLE: // AMLI cycle
+            pc.fct = fasp_precond_amli; break;
+        case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
+            pc.fct = fasp_precond_nl_amli; break;
+        default: // V,W-Cycle AMG
+            pc.fct = fasp_precond_amg; break;
         }
     }
     
@@ -382,18 +432,23 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A, b, x, &pc, itparam);    
     
     if ( print_level>=PRINT_MIN ) {
-        solver_end = clock();    
+
+#if FASP_USE_OPENMP
+    double solver_end = omp_get_wtime();
+        solver_duration = (double)(solver_end - solver_start);
+#else
+    clock_t solver_end = clock();
         solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+#endif
         print_cputime("AMG_Krylov method totally", solver_duration);
     }
     
-FINISHED:
+ FINISHED:
     fasp_amg_data_free(mgl);
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_krylov_amg ...... [Finish]\n");
 #endif
-        
     return status;
 }
 
@@ -421,9 +476,8 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
                                  ILU_param *iluparam)
 {
     const INT print_level = itparam->print_level;
-    
+
     /* Local Variables */
-    clock_t  solver_start, solver_end;
     INT      status = SUCCESS;
     REAL     solver_duration;
     
@@ -432,8 +486,12 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
-    
-    solver_start = clock();
+   
+#if FASP_USE_OPENMP
+    double solver_start = omp_get_wtime();
+#else
+    clock_t solver_start = clock();
+#endif
     
     // ILU setup for whole matrix
     ILU_data LU; 
@@ -451,23 +509,31 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
     if (print_level>=PRINT_MIN) {
-        solver_end = clock();    
+#if FASP_USE_OPENMP
+    double solver_end = omp_get_wtime();
+        solver_duration = (double)(solver_end - solver_start);
+#else
+    clock_t solver_end = clock();
         solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-        
+#endif
+    
         switch (iluparam->ILU_type) {
-            case ILUt:
-                print_cputime("ILUt_Krylov method totally", solver_duration);
-                break;
-            case ILUtp:
-                print_cputime("ILUtp_Krylov method totally", solver_duration);
-                break;
-            default:
-                print_cputime("ILUk_Krylov method totally", solver_duration);
-                break;
+        case ILUk:
+            print_cputime("ILUk_Krylov method totally", solver_duration);
+            break;
+        case ILUt:
+            print_cputime("ILUt_Krylov method totally", solver_duration);
+            break;
+        case ILUtp:
+            print_cputime("ILUtp_Krylov method totally", solver_duration);
+            break;
+        default:
+            print_cputime("ILUs_Krylov method totally", solver_duration);
+            break;
         }
     }
     
-FINISHED: 
+ FINISHED: 
     fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE
@@ -509,7 +575,6 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     const INT print_level = itparam->print_level;
     
     /* Local Variables */
-    clock_t solver_start, solver_end;
     REAL solver_duration;
     INT status = SUCCESS;
     
@@ -519,8 +584,11 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
     
-    solver_start = clock();
-    
+#if FASP_USE_OPENMP
+    double solver_start = omp_get_wtime();
+#else
+    clock_t solver_start = clock();
+#endif
     // ILU setup for M
     ILU_data LU; 
     if ( (status = fasp_ilu_dcsr_setup(M,&LU,iluparam))<0 ) goto FINISHED;
@@ -537,23 +605,28 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
     if (print_level>=PRINT_MIN) {
-        solver_end = clock();    
+#if FASP_USE_OPENMP
+        double solver_end = omp_get_wtime();
+        solver_duration = (double)(solver_end - solver_start);
+#else
+        clock_t solver_end = clock();
         solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
-        
+#endif
+
         switch (iluparam->ILU_type) {
-            case ILUt:
-                print_cputime("ILUt_Krylov method totally", solver_duration);
-                break;
-            case ILUtp:
-                print_cputime("ILUtp_Krylov method totally", solver_duration);
-                break;
-            default:
-                print_cputime("ILUk_Krylov method totally", solver_duration);
-                break;
+        case ILUt:
+            print_cputime("ILUt_Krylov method totally", solver_duration);
+            break;
+        case ILUtp:
+            print_cputime("ILUtp_Krylov method totally", solver_duration);
+            break;
+        default:
+            print_cputime("ILUk_Krylov method totally", solver_duration);
+            break;
         }
     }    
-    
-FINISHED:    
+        
+ FINISHED:    
     fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE

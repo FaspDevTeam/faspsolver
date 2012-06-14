@@ -192,6 +192,14 @@ testomp:
 	$(CC) -c main/testomp.c -o main/testomp.o $(CFLAGS)
 	$(FC) -o testomp.ex main/testomp.o $(FLFLAGS)
 
+test_rsamg_omp: 
+	$(CC) -c main/test_rsamg_omp.c -o main/test_rsamg_omp.o $(CFLAGS)
+	$(FC) -o test_rsamg_omp.ex main/test_rsamg_omp.o $(FLFLAGS)
+
+fasp: 
+	$(CC) -c main/fasp.c -o main/fasp.o $(CFLAGS)
+	$(FC) -o fasp.ex main/fasp.o $(FLFLAGS)
+
 testall:
 	make 
 	make regression
@@ -205,6 +213,8 @@ testall:
 	make testfdm3d
 	make testheat
 	make testomp
+	make test_rsamg_omp
+	nake fasp
 
 ########################################################################
 # Clean up

@@ -95,12 +95,12 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
 /**
  * \fn SHORT fasp_format_dstr_dcsr(dSTRmat *A, dCSRmat *B_ptr)
  *
- * \brief Convert a 'dSTRmat' type matrix into a 'dCSRmat' type matrix.
+ * \brief Transfer a 'dSTRmat' type matrix INTo a 'dCSRmat' type matrix.
  *
  * \param A      Pointer to a 'dSTRmat' type matrix
  * \param B_ptr  Pointer to the 'dCSRmat' type matrix
  *
- * \return       SUCCESS if succeed
+ * \return    SUCCESS if succeed
  * 
  * \author Zhou Zhiyang
  * \date   2010/04/29
@@ -158,10 +158,10 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
                 if (COL < ngrid) ++block;
             }
         } // end for BAND
-        
+    
         ncb = nc*block;
         row_start = ROW*nc;
-        
+    
         for (i = 0; i < nc; i ++) {
             row = row_start + i; 
             ia[row+1] = ia[row] + ncb;
@@ -170,14 +170,14 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
     
     // allocate for 'ja' and 'a' arrays
     glo_nnz = ia[glo_row];
-    ja = (INT  *)fasp_mem_calloc(glo_nnz,sizeof(INT));
-    a  = (REAL *)fasp_mem_calloc(glo_nnz,sizeof(REAL));
+    ja = (INT *)fasp_mem_calloc(glo_nnz,sizeof(INT));
+    a = (REAL *)fasp_mem_calloc(glo_nnz,sizeof(REAL));
     
     // Generate the 'ja' and 'a' arrays at the same time 
     for (ROW = 0; ROW < ngrid; ++ROW) {
         row_start = ROW*nc;    
         val_L_start = ROW*nc2;
-        
+    
         // deal with the diagonal band
         for (i = 0; i < nc; i ++) {
             nci   = nc*i;
@@ -190,14 +190,14 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
             }
         }
         block = 1;
-        
+    
         // deal with the off-diagonal bands
         for (BAND = 0; BAND < nband; ++BAND) {
             width     = offsets[BAND];
             COL       = ROW + width;
             ncb       = nc*block;
             col_start = COL*nc;
-            
+    
             if (width < 0) {
                 if (COL >= 0) {
                     val_R_start = COL*nc2;
@@ -241,12 +241,12 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
                 row   = row_start + j;
                 start = ia[row];
                 pos   = start + j;
-                
+    
                 // swap in 'ja'
                 tmp_col   = ja[start];
                 ja[start] = ja[pos];
                 ja[pos]   = tmp_col;
-                
+    
                 // swap in 'a'
                 tmp_val  = a[start];
                 a[start] = a[pos];
@@ -275,7 +275,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
  *
  * \param Ab   Pointer to the blocks
  *
- * \return     The matrix in dCSRmat format
+ * \return     dCSRmat matrix if succeed, NULL if fail
  * 
  * \author Shiquan Zhang
  * \date   08/10/2010
@@ -304,9 +304,9 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
     // set dCSRmat for A
     A.IA[0]=0;
     for (i=0;i<mb;++i) {
-        
+    
         for (ir=row[i];ir<row[i+1];ir++) {
-            
+    
             for (length=j=0;j<nb;++j) {
                 ij=i*nb+j; blockptrij=blockptr[ij];
                 if (blockptrij->nnz>0) {
@@ -321,10 +321,10 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
                     }
                 }
             } // end for j
-            
+    
             A.IA[ir+1]=A.IA[ir]+length;        
         } // end for ir
-        
+    
     } // end for i
     
     fasp_mem_free(row);
@@ -334,18 +334,16 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
 }
 
 /**
- * \fn dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
+ * \fn dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
  *
- * \brief Convert a dCSRmat into a dCSRLmat
+ * \brief Convert a dCSRmat INTo a dCSRLmat
  *
  * \param A   Pointer to the dCSRLmat type matrix
- *
- * \return    Pointer to dCSRLmat matrix if succeed, NULL if fail
  *
  * \author Zhou Zhiyang
  * \date   2011/01/07
  */
-dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
+dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
 {
     REAL   *DATA         = A -> val;
     INT    *IA           = A -> IA;
@@ -356,11 +354,11 @@ dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
     
     dCSRLmat *B        = NULL;
     INT       dif;
-    INT      *nz_diff  = NULL;
+    INT      *nzdifnum = NULL;
     INT      *rowstart = NULL;
     INT      *rowindex = (INT *)fasp_mem_calloc(num_rows, sizeof(INT));
     INT      *ja       = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT));
-    REAL     *val      = (REAL *)fasp_mem_calloc(num_nonzeros, sizeof(REAL));
+    REAL     *data     = (REAL *)fasp_mem_calloc(num_nonzeros, sizeof(REAL));
     
     /* auxiliary arrays */
     INT *nzrow    = (INT *)fasp_mem_calloc(num_rows, sizeof(INT));
@@ -395,16 +393,16 @@ dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
     }
     
     //--------------------------------------------
-    //  Generate the 'nz_diff' and 'rowstart'
+    //  Generate the 'nzdifnum' and 'rowstart'
     //-------------------------------------------- 
     
-    nz_diff  = (INT *)fasp_mem_calloc(dif, sizeof(INT));
+    nzdifnum = (INT *)fasp_mem_calloc(dif, sizeof(INT));
     invnzdif = (INT *)fasp_mem_calloc(maxnzrow + 1, sizeof(INT));
     rowstart = (INT *)fasp_mem_calloc(dif + 1, sizeof(INT));
     rowstart[0] = 0;
     for (cnt = 0, i = 0; i < maxnzrow + 1; i ++) {
         if (counter[i] > 0) {
-            nz_diff[cnt] = i;
+            nzdifnum[cnt] = i;
             invnzdif[i] = cnt;
             rowstart[cnt+1] = rowstart[cnt] + counter[i];
             cnt ++;
@@ -427,13 +425,13 @@ dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
     rowstart[0] = 0;
     
     //--------------------------------------------
-    //  Generate the 'val' and 'ja'
+    //  Generate the 'data' and 'ja'
     //-------------------------------------------- 
     
     for (cnt = 0, i = 0; i < num_rows; i ++) {
         k = rowindex[i];
         for (j = IA[k]; j < IA[k+1]; j ++) {
-            val[cnt] = DATA[j];
+            data[cnt] = DATA[j];
             ja[cnt] = JA[j];
             cnt ++;
         }
@@ -444,12 +442,12 @@ dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
     //------------------------------------------------------------ 
     
     B = fasp_dcsrl_create(num_rows, num_cols, num_nonzeros);
-    B -> dif     = dif;
-    B -> nz_diff = nz_diff;
-    B -> index   = rowindex;
-    B -> start   = rowstart;
-    B -> ja      = ja;
-    B -> val     = val;   
+    B -> dif      = dif;
+    B -> nz_diff  = nzdifnum;
+    B -> index    = rowindex;
+    B -> start    = rowstart;
+    B -> ja       = ja;
+    B -> val      = data;   
     
     //----------------------------
     //  Free the auxiliary arrays
@@ -465,45 +463,59 @@ dCSRLmat * fasp_format_dcsr_dcsrl (dCSRmat *A)
 /*!
  * \fn dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  *
- * \brief Convert a 'dBSRmat' type matrix into a dCSRmat.
+ * \brief Transfer a 'dBSRmat' type matrix INTo a dCSRmat.
  *
  * \param B   Pointer to the 'dBSRmat' type matrix
  *
  * \author Zhou Zhiyang
  * \date   2010/10/23 
+ * \date   2012/05/24    Modified by Chunsheng Feng Xiaoqiang Yue 
  *
  * \note Works for general nb (Xiaozhe)
  */
-dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
+
+dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
 {
+    dCSRmat A;
+
     /* members of B */
-    INT     storage_manner = B->storage_manner;
     INT     ROW = B->ROW;
     INT     COL = B->COL;
     INT     NNZ = B->NNZ;    
     INT     nb  = B->nb;
     INT    *IA  = B->IA;
     INT    *JA  = B->JA;
-    REAL   *val = B->val;
+    INT     storage_manner = B->storage_manner;
+    REAL *val = B->val;
     
     INT jump = nb*nb;
     INT rowA = ROW*nb;
     INT colA = COL*nb;
     INT nzA  = NNZ*jump;
     
-    dCSRmat  A;
     INT     *ia = NULL;
     INT     *ja = NULL;
-    REAL    *a  = NULL;
+    REAL  *a  = NULL;
     
-    INT      i,j,k;
-    INT      mr,mc;
-    INT      rowstart0,rowstart,colstart0,colstart;
-    INT      colblock,nzperrow; 
+    INT i,j,k;
+    INT mr,mc;
+    INT rowstart0,rowstart,colstart0,colstart;
+    INT colblock,nzperrow; 
+    REAL *vp = NULL;
+    REAL *ap = NULL;
+    INT    *jap = NULL;
+    INT stride_i,mybegin,myend,myid;
     
-    REAL    *vp  = NULL;
-    REAL    *ap  = NULL;
-    INT     *jap = NULL;
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP ||  ROW <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        #pragma omp parallel
+		nthreads = omp_get_num_threads();
+	}
     
     //--------------------------------------------------------
     // Create a CSR Matrix 
@@ -518,13 +530,37 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     // ia[i],i=1:rowA, will be the number of nonzeros of the (i-1)-th row.
     //--------------------------------------------------------------------------
     
-    for (i = 0; i < ROW; ++i) {
-        rowstart = i*nb + 1;
-        colblock = IA[i+1] - IA[i];
-        nzperrow = colblock*nb;
-        for (j = 0; j < nb; ++j) {
-            ia[rowstart+j] = nzperrow;
+    if (use_openmp) {
+        stride_i = ROW/nthreads;
+#pragma omp parallel private(myid, mybegin, myend, i, rowstart, colblock, nzperrow, j) ////num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1) myend = mybegin+stride_i;
+            else myend = ROW;
+            for (i=mybegin; i<myend; ++i)
+                {
+                    rowstart = i*nb + 1;
+                    colblock = IA[i+1] - IA[i];
+                    nzperrow = colblock*nb;
+                    for (j = 0; j < nb; ++j)
+                        {
+                            ia[rowstart+j] = nzperrow;
+                        }
+                }
         }
+    }
+    else {
+        for (i = 0; i < ROW; ++i)
+            {
+                rowstart = i*nb + 1;
+                colblock = IA[i+1] - IA[i];
+                nzperrow = colblock*nb;
+                for (j = 0; j < nb; ++j)
+                    {
+                        ia[rowstart+j] = nzperrow;
+                    }
+            }
     }
     
     //-----------------------------------------------------
@@ -532,94 +568,135 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     //-----------------------------------------------------
     
     ia[0] = 0;
-    for (i = 1; i <= rowA; ++i) {
-        ia[i] += ia[i-1];
-    }
+    for (i = 1; i <= rowA; ++i)
+        {
+            ia[i] += ia[i-1];
+        }
     
     //-----------------------------------------------------
     // Generate 'ja' and 'a' for CSR of A
     //-----------------------------------------------------
     
-    switch (storage_manner) {
-            
-        case 0: // each non-zero block elements are stored in row-major order
+    switch (storage_manner)
         {
-            for (i = 0; i < ROW; ++i)
+        case 0: // each non-zero block elements are stored in row-major order
             {
-                for (k = IA[i]; k < IA[i+1]; ++k)
-                {
-                    j = JA[k];
-                    rowstart = i*nb;
-                    colstart = j*nb;
-                    vp = &val[k*jump];
-                    for (mr = 0; mr < nb; mr ++)
+                if (use_openmp) {
+#pragma omp parallel private(myid, mybegin, myend, i, k, j, rowstart, colstart, vp, mr, ap, jap, mc) ////num_threads(nthreads)
                     {
-                        ap  = &a[ia[rowstart]];
-                        jap = &ja[ia[rowstart]];
-                        for (mc = 0; mc < nb; mc ++)
-                        {
-                            *ap = *vp;
-                            *jap = colstart + mc;
-                            vp ++; ap ++; jap ++;
-                        }
-                        ia[rowstart] += nb;
-                        rowstart ++;
+                        myid = omp_get_thread_num();
+                        mybegin = myid*stride_i;
+                        if(myid < nthreads-1) myend = mybegin+stride_i;
+                        else myend = ROW;
+                        for (i=mybegin; i<myend; ++i)
+                            {
+                                for (k = IA[i]; k < IA[i+1]; ++k)
+                                    {
+                                        j = JA[k];
+                                        rowstart = i*nb;
+                                        colstart = j*nb;
+                                        vp = &val[k*jump];
+                                        for (mr = 0; mr < nb; mr ++)
+                                            {
+                                                ap  = &a[ia[rowstart]];
+                                                jap = &ja[ia[rowstart]];
+                                                for (mc = 0; mc < nb; mc ++)
+                                                    {
+                                                        *ap = *vp;
+                                                        *jap = colstart + mc;
+                                                        vp ++; ap ++; jap ++;
+                                                    }
+                                                ia[rowstart] += nb;
+                                                rowstart ++;
+                                            }
+                                    }
+                            }
                     }
                 }
+                else {
+                    for (i = 0; i < ROW; ++i)
+                        {
+                            for (k = IA[i]; k < IA[i+1]; ++k)
+                                {
+                                    j = JA[k];
+                                    rowstart = i*nb;
+                                    colstart = j*nb;
+                                    vp = &val[k*jump];
+                                    for (mr = 0; mr < nb; mr ++)
+                                        {
+                                            ap  = &a[ia[rowstart]];
+                                            jap = &ja[ia[rowstart]];
+                                            for (mc = 0; mc < nb; mc ++)
+                                                {
+                                                    *ap = *vp;
+                                                    *jap = colstart + mc;
+                                                    vp ++; ap ++; jap ++;
+                                                }
+                                            ia[rowstart] += nb;
+                                            rowstart ++;
+                                        }
+                                }
+                        }
+                }
             }
-        }
             break;
             
         case 1: // each non-zero block elements are stored in column-major order
-        {
-            for (i = 0; i < ROW; ++i) {
-                for (k = IA[i]; k < IA[i+1]; ++k) {
-                    j = JA[k];
-                    rowstart0 = i*nb;
-                    colstart0 = j*nb;
-                    vp = &val[k*jump];
-                    for (mc = 0; mc < nb; mc ++) {
-                        rowstart = rowstart0;
-                        colstart = colstart0 + mc;
-                        for (mr = 0; mr < nb; mr ++) {
-                            a[ia[rowstart]] = *vp; 
-                            ja[ia[rowstart]] = colstart; 
-                            vp ++; ia[rowstart]++; rowstart++;
-                        }
+            {
+                for (i = 0; i < ROW; ++i)
+                    {
+                        for (k = IA[i]; k < IA[i+1]; ++k)
+                            {
+                                j = JA[k];
+                                rowstart0 = i*nb;
+                                colstart0 = j*nb;
+                                vp = &val[k*jump];
+                                for (mc = 0; mc < nb; mc ++)
+                                    {
+                                        rowstart = rowstart0;
+                                        colstart = colstart0 + mc;
+                                        for (mr = 0; mr < nb; mr ++)
+                                            {
+                                                a[ia[rowstart]] = *vp; 
+                                                ja[ia[rowstart]] = colstart; 
+                                                vp ++; ia[rowstart]++; rowstart++;
+                                            }
+                                    }
+                            }
                     }
-                }
             }
-        }
             break;
-    }
+        }
     
     //-----------------------------------------------------
     // Map back the real 'ia' for CSR of A
     //-----------------------------------------------------
     
-    for (i = rowA; i > 0; i --) {
-        ia[i] = ia[i-1];
-    }
+    for (i = rowA; i > 0; i --)
+        {
+            ia[i] = ia[i-1];
+        }
     ia[0] = 0; 
-    
+
+
     return (A);   
 }
 
 /*!
- * \fn dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B, const INT nb)
+ * \fn SHORT fasp_format_dcsr_dbsr ( dBSRmat *A, INT nb, dCSRmat *B )
  *
- * \brief Convert a dCSRmat type matrix into a dBSRmat.
+ * \brief Transfer a dCSRmat type matrix INTo a dBSRmat.
  *
- * \param B   Pointer to the dCSRmat type matrix
- * \param nb  Size of each block 
- * 
- * \return    Matrix in the 'dBSRmat' format
+ * \param A   Pointer to the dCSRmat type matrix
+ * \param nb  size of each block 
+ * \param B   Pointer to the 'dBSRmat' type matrix
  *
  * \author Changhe Qiao
  * \date   03/12/2012
  *
- * Modified by Xiaozhe Hu on 03/13/2012
+ * \note Modified by Xiaozhe Hu on 03/13/2012
  */
+
 
 dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B, 
                                const INT nb)
@@ -627,17 +704,20 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     INT *Is, *Js;
     INT i,j,num, k;
     INT nRow, nCol;
+    SHORT status=SUCCESS;
     
     dCSRmat tmpMat;
     dBSRmat A;
     
     // Safe-guard check --Chensong 05/27/2012
-    if ( B->row%nb != 0 ) {
-        printf("### WARNING: B.row=%d is NOT a multiplication of nb=%d!\n", B->row, nb);
+    if (B->row%nb!=0) {
+        printf("### ERROR: B.row=%d is not a multiplication of nb=%d!!!\n", B->row, nb);
+        exit;
     }
     
-    if ( B->col%nb != 0 ) {
-        printf("### WARNING: B.col=%d is NOT a multiplication of nb=%d!\n", B->col, nb);
+    if (B->col%nb!=0) {
+        printf("### ERROR: B.col=%d is not a multiplication of nb=%d!!!\n", B->col, nb);
+        exit;
     }
     
     nRow=B->row/nb; //we must ensure this is a integer
@@ -651,7 +731,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     for(i=0;i<nCol;i++) {
         Js[i]=i*nb;
     }
-    fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+    status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
     
     //here we have tmpmat as the submatrix
     A.ROW=nRow;
@@ -662,7 +742,6 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     A.IA=(INT*)fasp_mem_calloc(A.ROW+1, sizeof(INT));
     A.JA=(INT*)fasp_mem_calloc(A.NNZ, sizeof(INT));
     A.val=(REAL*)fasp_mem_calloc(A.NNZ*nb*nb, sizeof(REAL));
-
     for(i=0;i<tmpMat.row+1;i++) {
         A.IA[i]=tmpMat.IA[i];
     }
@@ -672,7 +751,6 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     for(i=0;i<tmpMat.nnz;i++) {
         A.val[i*nb*nb]=tmpMat.val[i];
     }
-
     fasp_mem_free(tmpMat.IA);
     fasp_mem_free(tmpMat.JA);
     fasp_mem_free(tmpMat.val);
@@ -689,7 +767,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
                 for(k=0;k<nCol;k++) {
                     Js[k]=k*nb+j;
                 }
-                fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+                status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
                 for(k=0;k<tmpMat.nnz;k++) {
                     A.val[k*nb*nb+num]=tmpMat.val[k];
                 }    
@@ -703,15 +781,12 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     return A;
 }
 
-
 /*!
  * \fn dBSRmat fasp_format_dstr_dbsr ( dSTRmat *B )
  *
- * \brief Convert a 'dSTRmat' type matrix to a 'dBSRmat' type matrix.
+ * \brief Transfer a 'dSTRmat' type matrix to a 'dBSRmat' type matrix.
  *
  * \param B   Pointer to the 'dSTRmat' type matrix
- *
- * \return    The matrix in dBSRmat format
  *
  * \author Zhou Zhiyang
  * \date   2010/10/26 
@@ -751,7 +826,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
     val = A.val;
     
     // Generate 'IA'
-    for (i = 1; i < ngridplus1; ++i) IA[i] = 1; // take the diagonal blocks into account
+    for (i = 1; i < ngridplus1; ++i) IA[i] = 1; // take the diagonal blocks INTo account
     for (i = 0; i < nband; ++i) {
         k = offsets[i];
         if (k < 0) {
@@ -762,9 +837,9 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
         else {
             m = ngridplus1 - k;
             for (j = 1; j < m; ++j)
-            {
-                IA[j] ++;
-            }
+                {
+                    IA[j] ++;
+                }
         }
     }
     IA[0] = 0;
@@ -811,11 +886,9 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
 /*!
  * \fn dCOOmat * fasp_format_dbsr_dcoo ( dBSRmat *B )
  *
- * \brief Convert a 'dBSRmat' type matrix to a 'dCOOmat' type matrix.
+ * \brief Transfer a 'dBSRmat' type matrix to a 'dCOOmat' type matrix.
  *
  * \param B   Pointer to the 'dBSRmat' type matrix
- *
- * \return    The matrix in dCOOmat format
  *
  * \author Zhou Zhiyang
  * \date   2010/10/26 

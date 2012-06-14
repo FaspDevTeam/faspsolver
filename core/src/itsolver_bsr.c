@@ -13,6 +13,59 @@
 /*---------------------------------*/
 
 /**
+ * \fn void fasp_set_GS_threads(int threads,int its)
+ * \brief set threads for CPR. Please add it at the begin of Krylov openmp method function and after iter++.
+ *
+ * \param threads       total threads of sovler
+ * \param its           curent its of the Krylov methods
+ *
+ * \author Feng Chunsheng, Yue Xiaoqiang
+ * \date 03/20/2011
+ */
+void fasp_set_GS_threads(int mythreads, int its)
+{
+#if FASP_USE_OPENMP
+
+#if 1
+
+    if (its <=8) {
+        THDs_AMG_GS =  mythreads;
+        THDs_CPR_lGS = mythreads ;
+        THDs_CPR_gGS = mythreads ;
+    }
+    else if (its <=12) {
+        THDs_AMG_GS =  mythreads;
+        THDs_CPR_lGS = (6 < mythreads) ? 6 : mythreads;
+        THDs_CPR_gGS = (4 < mythreads) ? 4 : mythreads;
+    }
+    else if (its <=15) {
+        THDs_AMG_GS =  (4 < mythreads) ? 4 : mythreads;
+        THDs_CPR_lGS = (4 < mythreads) ? 4 : mythreads;
+        THDs_CPR_gGS = (2 < mythreads) ? 2 : mythreads;
+    }
+    else if (its <=18) {
+        THDs_AMG_GS =  (2 < mythreads) ? 2 : mythreads;
+        THDs_CPR_lGS = (2 < mythreads) ? 2 : mythreads;
+        THDs_CPR_gGS = (1 < mythreads) ? 1 : mythreads;
+    }
+    else {
+        THDs_AMG_GS =  1;
+        THDs_CPR_lGS = 1;
+        THDs_CPR_gGS = 1;
+    }
+
+#else
+
+    THDs_AMG_GS =  mythreads;
+    THDs_CPR_lGS = mythreads ;
+    THDs_CPR_gGS = mythreads ;
+
+#endif
+    
+#endif // FASP_USE_OPENMP
+}
+
+/**
  * \fn INT fasp_solver_dbsr_itsolver (dBSRmat *A, dvector *b, dvector *x, 
  *                                    precond *pc, itsolver_param *itparam)
  *
@@ -43,8 +96,13 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     const REAL  tol = itparam->tol; 
     
     INT iter;
+
+#if FASP_USE_OPENMP
+    double solver_start=omp_get_wtime();
+#else
     clock_t solver_start=clock();
-    
+#endif
+
     /* Safe-guard checks on parameters */
     ITS_CHECK ( MaxIt, tol );
 
@@ -77,8 +135,13 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     }
     
     if ( (print_level>PRINT_MIN) && (iter >= 0) ) {
+#if FASP_USE_OPENMP
+        double solver_end=omp_get_wtime();
+        REAL solver_duration = (REAL)(solver_end - solver_start);
+#else
         clock_t solver_end=clock();    
         REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+#endif
         print_cputime("Iterative method", solver_duration);
     }
     

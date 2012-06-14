@@ -6,6 +6,7 @@
  */
 
 #include <math.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -25,19 +26,35 @@
  *
  * \author Chensong Zhang
  * \date   07/01/209
+ * \date   05/23/2012    Modified by Chunsheng Feng && Xiaoqiang Yue
  *
  * \note x is reused to store the resulting array.
  */
-void fasp_blas_array_ax (const INT n, 
-                         const REAL a, 
-                         REAL *x)
+void fasp_blas_array_ax(const INT n, 
+                        const REAL a, 
+                        REAL *x)
 {
-    unsigned INT i;
-    
-    if (a==1.0) {
+	unsigned INT i;
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+	    use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+
+    if (a == 1.0) {
     }
     else {
-        for (i=0; i<n; ++i) x[i] = a*x[i];
+        if (use_openmp) {
+#pragma omp parallel for private(i) schedule(static)  
+            for (i=0; i<n; ++i) x[i] *= a;
+        }
+        else {
+            for (i=0; i<n; ++i) x[i] *= a;
+        }
     }
 }
 
@@ -53,6 +70,7 @@ void fasp_blas_array_ax (const INT n,
  *
  * \author Chensong Zhang
  * \date   07/01/209
+ * \date   05/23/2012    Modified by Chunsheng Feng && Xiaoqiang Yue
  *
  * \note y is reused to store the resulting array.
  */
@@ -61,16 +79,57 @@ void fasp_blas_array_axpy (const INT n,
                            REAL *x, 
                            REAL *y)
 {
-    unsigned INT i;
+	INT i, nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
     
     if (a==1.0) {
-        for (i=0; i<n; ++i) y[i] += x[i];
+        if (use_openmp) {
+            INT myid, mybegin, myend;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+            {
+                myid = omp_get_thread_num();
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                for (i=mybegin; i<myend; ++i) y[i] += x[i];
+            }
+        }
+        else {
+            for (i=0; i<n; ++i) y[i] += x[i];
+        }
     }
     else if (a==-1.0) {
-        for (i=0; i<n; ++i) y[i] -= x[i];
+        if (use_openmp) {
+            INT myid, mybegin, myend;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+            {
+                myid = omp_get_thread_num();
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                for (i=mybegin; i<myend; ++i) y[i] -= x[i];
+            }
+        }
+        else {
+            for (i=0; i<n; ++i) y[i] -= x[i];
+        }
     }
     else {
-        for (i=0; i<n; ++i) y[i] += a*x[i];
+        if (use_openmp) {
+            INT myid, mybegin, myend;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+            {
+                myid = omp_get_thread_num();
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                for (i=mybegin; i<myend; ++i) y[i] += a*x[i];
+            }
+        }
+        else {
+            for (i=0; i<n; ++i) y[i] += a*x[i];
+        }
     }
 }
 
@@ -88,15 +147,38 @@ void fasp_blas_array_axpy (const INT n,
  *
  * \author Chensong Zhang
  * \date   07/01/209
+ * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  */
+
 void fasp_blas_array_axpyz (const INT n, 
                             const REAL a, 
                             REAL *x, 
                             REAL *y, 
                             REAL *z)
 {
-    unsigned INT i;
-    for (i=0; i<n; ++i) z[i] = a*x[i]+y[i];
+	unsigned INT i;
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+
+    if (use_openmp) {
+        INT myid, mybegin, myend;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+            for (i=mybegin; i<myend; ++i) z[i] = a*x[i]+y[i];
+        }
+    }
+    else {
+        for (i=0; i<n; ++i) z[i] = a*x[i]+y[i];
+    }
 }
 
 /**
@@ -113,17 +195,40 @@ void fasp_blas_array_axpyz (const INT n,
  *
  * \author Chensong Zhang
  * \date   07/01/209
+ * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  * 
  * \note y is reused to store the resulting array.
  */
-void fasp_blas_array_axpby (const INT n, 
-                            const REAL a, 
-                            REAL *x, 
-                            const REAL b, 
-                            REAL *y)
+void fasp_blas_array_axpby(const INT n, 
+                           const REAL a, 
+                           REAL *x, 
+                           const REAL b, 
+                           REAL *y) 
 {
-    unsigned INT i;
-    for (i=0; i<n; ++i) y[i] = a*x[i]+b*y[i];
+	unsigned INT i;
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+
+    if (use_openmp) {
+        INT myid, mybegin, myend;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+            for (i=mybegin; i<myend; ++i) y[i] = a*x[i]+b*y[i];
+        }
+    }
+    else {
+        for (i=0; i<n; ++i) y[i] = a*x[i]+b*y[i];
+    }
+
 }
 
 /**
@@ -139,19 +244,31 @@ void fasp_blas_array_axpby (const INT n,
  *
  * \author Chensong Zhang
  * \date   07/01/209
+ * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  */
-REAL fasp_blas_array_dotprod (const INT n, 
-                              REAL *x, 
-                              REAL *y)
+REAL fasp_blas_array_dotprod(const INT n, 
+                             REAL *x, 
+                             REAL *y)
 {
-    unsigned INT i; 
-    REAL value = 0.0;
+	unsigned INT i;
+    REAL value=0.0;
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
     
-    for (i=n;i--;) value+=x[i]*y[i];    // modified by Xiaozhe Hu, 03/11/2011
-    
-    // const INT one=1;
-    // value=ddot_(&n,x,&one,y,&one); /* requires common.h and cblas.h */
-    
+    if (use_openmp) {
+#pragma omp parallel for reduction(+:value) private(i)
+        for (i=0;i<n;++i) value+=x[i]*y[i];
+    }
+    else {
+        for (i=0;i<n;++i) value+=x[i]*y[i];
+    }
     return value;
 }
 
@@ -167,13 +284,31 @@ REAL fasp_blas_array_dotprod (const INT n,
  *
  * \author Chensong Zhang
  * \date   07/01/209
+ * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  */
+
 REAL fasp_blas_array_norm1 (const INT n, 
                             REAL *x)
 {
-    unsigned INT i;
-    REAL onenorm=0;
-    for (i=0;i<n;++i) onenorm+=ABS(x[i]);
+	unsigned INT i;
+    REAL onenorm = 0.;
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+
+    if (use_openmp) {
+#pragma omp parallel for reduction(+:onenorm) private(i)
+        for (i=0;i<n;++i) onenorm+=ABS(x[i]);
+    }
+    else {
+        for (i=0;i<n;++i) onenorm+=ABS(x[i]);
+    }
     return onenorm;
 }
 
@@ -189,13 +324,31 @@ REAL fasp_blas_array_norm1 (const INT n,
  *
  * \author Chensong Zhang
  * \date   07/01/209
+ * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  */
+
 REAL fasp_blas_array_norm2 (const INT n, 
-                            REAL *x)
+                            REAL *x) 
 {
-    unsigned INT i;
-    REAL twonorm=0;
-    for (i=n;i--;) twonorm+=x[i]*x[i];
+	unsigned INT i;
+    REAL twonorm = 0.;
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+
+    if (use_openmp) {
+#pragma omp parallel for reduction(+:twonorm) private(i)
+        for (i=0;i<n;++i) twonorm+=x[i]*x[i];
+    }
+    else {
+        for (i=0;i<n;++i) twonorm+=x[i]*x[i];
+    }
     return sqrt(twonorm);
 }
 

@@ -4,6 +4,7 @@
  */
 
 #include <time.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_block.h"
@@ -18,60 +19,84 @@
  *
  * \brief Get a sub CSR matrix of A with specified rows and colums
  *
- * \param A     Pointer to dCSRmat CSR matrix
- * \param B     Pointer to dCSRmat CSR matrix
- * \param Is    Pointer to selected rows
- * \param Js    Pointer to selected colums
+ * \param A     PoINTer to dCSRmat CSR matrix
+ * \param B     PoINTer to dCSRmat CSR matrix
+ * \param Is    PoINTer to selected rows
+ * \param Js    PoINTer to selected colums
  * \param m     Number of selected rows
  * \param n     Number of selected colums
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010
- *
- * Modified by Feiteng Huang on 5/25/2012: remove unnecessary loop
+ * \date   05/23/2012  Modified by Chunsheng Feng Xiaoqiang Yue
  */
+
 SHORT fasp_dcsr_getblk (dCSRmat *A, 
                         INT *Is, 
                         INT *Js, 
                         INT m, 
                         INT n, 
-                        dCSRmat *B)
+                        dCSRmat *B) 
 {
-    
-    INT    i,j,k,nnz=0;
-    SHORT  status = SUCCESS;
+    INT status = SUCCESS;
+
+    INT i,j,k,nnz=0;
+    INT *col_flag;
+    INT stride_i,mybegin,myend,myid;
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
     
     // create colum flags
-    INT *col_flag = (INT*)fasp_mem_calloc(A->col,sizeof(INT)); 
+    col_flag=(INT*)fasp_mem_calloc(A->col,sizeof(INT)); 
     
     B->row=m; B->col=n;
     
-    // allocate memory
-    B->IA  = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
-    B->JA  = (INT*)fasp_mem_calloc(A->nnz,sizeof(INT)); 
-    B->val = (REAL*)fasp_mem_calloc(A->nnz,sizeof(REAL));
+    B->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
     
-    for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
+    if (use_openmp) {
+        stride_i = n/nthreads;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            else myend = n;
+            for (i=mybegin; i < myend; ++i) {
+                col_flag[N2C(Js[i])]=i+1;
+            }
+        }
+    }
+    else {
+        for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
+    }
     
+    // first pass: count nonzeros for sub matrix
     B->IA[0]=0;
     for (i=0;i<m;++i) {    
         for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
             j=A->JA[N2C(k)];
             if (col_flag[N2C(j)]>0) {
-                B->JA[nnz]=col_flag[j]-1;
-                B->val[nnz]=A->val[N2C(k)];
-                nnz++;
-            }
+				B->JA[nnz]=col_flag[j]-1;
+				B->val[nnz]=A->val[N2C(k)];
+				nnz++;
+			}
         } /* end for k */
         B->IA[i+1]=nnz;
     } /* end for i */
-    
     B->nnz=nnz;
-    B->JA=(INT*)fasp_mem_realloc(B->JA, sizeof(int)*nnz);
-    B->val=(REAL*)fasp_mem_realloc(B->val, sizeof(REAL)*nnz);
     
+    // allocate 
+	B->JA=(INT*)fasp_mem_realloc(B->JA, sizeof(INT)*nnz);
+	B->val=(REAL*)fasp_mem_realloc(B->val, sizeof(REAL)*nnz);
+
     fasp_mem_free(col_flag);   
-    
     return(status);
 }
 
@@ -80,41 +105,71 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
  *
  * \brief Get a sub BSR matrix of A with specified rows and columns. 
  *
- * \param A     Pointer to dBSRmat BSR matrix
- * \param B     Pointer to dBSRmat BSR matrix
- * \param Is    Pointer to selected rows
- * \param Js    Pointer to selected colums
+ * \param A     PoINTer to dBSRmat BSR matrix
+ * \param B     PoINTer to dBSRmat BSR matrix
+ * \param Is    PoINTer to selected rows
+ * \param Js    PoINTer to selected colums
  * \param m     Number of selected rows
  * \param n     Number of selected colums
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010
+ * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  */
+
 SHORT fasp_dbsr_getblk (dBSRmat *A, 
                         INT *Is, 
                         INT *Js, 
                         INT m, 
                         INT n, 
-                        dBSRmat *B)
+                        dBSRmat *B) 
 {
+    INT status = SUCCESS;
+    INT i,j,k,nnz=0;
+    INT *col_flag;
+    
     const INT nb = A->nb;
     const INT nb2=nb*nb;
-    
-    INT i,j,k,nnz=0;
-    SHORT status = SUCCESS;
-    
+    INT myid;
+    INT mybegin;
+    INT stride_i;
+    INT myend;
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
     // create colum flags
-    INT *col_flag=(INT*)fasp_mem_calloc(A->COL,sizeof(INT)); 
+    col_flag=(INT*)fasp_mem_calloc(A->COL,sizeof(INT)); 
     
     B->ROW=m; B->COL=n; B->nb=nb; B->storage_manner=A->storage_manner;  
     
     B->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
     
-    for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
+    if (use_openmp) {
+        stride_i = n/nthreads;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            else myend = n;
+            for (i=mybegin; i < myend; ++i) {
+                col_flag[N2C(Js[i])]=i+1;
+            }
+        }
+    }
+    else {
+        for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
+    }
     
     // first pass: count nonzeros for sub matrix
     B->IA[0]=0;
-    for (i=0;i<m;++i){    
+    for (i=0;i<m;++i) {    
         for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
             j=A->JA[N2C(k)];
             if (col_flag[N2C(j)]>0) nnz++;
@@ -126,43 +181,38 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     // allocate 
     B->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT)); 
     
-    B->val=(REAL*)fasp_mem_calloc(nnz*nb2,sizeof(REAL));
+    B->val=(double*)fasp_mem_calloc(nnz*nb2,sizeof(double));
     
     // second pass: copy data to B
     // no need to do the following loop, need to be modified!!  Xiaozhe 
     nnz = 0;
-    for (i=0;i<m;++i){    
+    for (i=0;i<m;++i) {    
         for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
             j=A->JA[N2C(k)];
             if (col_flag[N2C(j)]>0) {
                 B->JA[nnz]=col_flag[j]-1;
-                memcpy(B->val+nnz*nb2, A->val+N2C(k)*nb2, nb2*sizeof(REAL));
+                memcpy(B->val+nnz*nb2, A->val+N2C(k)*nb2, nb2*sizeof(double));
                 nnz++;
             }
         } /* end for k */
     } /* end for i */
     
     fasp_mem_free(col_flag);   
-    
     return(status);
 }
 
 /**
- * \fn dCSRmat fasp_dbsr_getblk_dcsr (dBSRmat *A)
- *
+ * \fn dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
  * \brief get dCSRmat block from a dBSRmat matrix 
  * 
- * \param *A   pointer to the BSR format matrix
- *
+ * \param *A   poINTer to the BSR format matrix
  * \return     dCSRmat matrix if succeed, NULL if fail
  *
  * \author Xiaozhe Hu
  * \date   03/16/2012 
  *
- * \note Required by the reservoir simulation package fasp4monix!
- *
  */
-dCSRmat fasp_dbsr_getblk_dcsr (dBSRmat *A)
+dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
 {
     // information about A
     const INT ROW = A->ROW;

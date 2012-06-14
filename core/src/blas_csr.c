@@ -1,15 +1,13 @@
 /*! \file blas_csr.c
  *  \brief BLAS operations for sparse matrices in CSR format.
  *
- *  \note 
- *  Sparse functions usually contain three runs. The three runs are all the same but
- *  they serve different purpose. 
+ *  \note Sparse functions usually contain three runs. The three runs are all the 
+ *        same but thy serve different purpose. 
  * 
- *  Example: If you do c = a + b: 
- *    - First do a dry run to find the number of non-zeroes in the result and form ic; 
- *    - Allocate space (memory) for jc and form this one; 
- *    - If you only care about a "boolean" result of the addition, you stop here; 
- *    - Call another routine, which uses ic and jc to perform the addition. 
+ *  Example: If you do c=a+b: 
+ *    - first do a dry run to find the number of non-zeroes in the result and form ic; 
+ *    - allocate space (memory) for jc and form this one; If you only care about a "boolean" result of the addition, you stop here. 
+ *    - you call another routine, which uses ic and jc to perform the addition. 
  *
  */
 
@@ -168,26 +166,194 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
  * \param y   Pointer to array y
  *
  * \author Chensong Zhang
- * \date   07/01/2009
+ * \date   07/01/209
+ * \date   05/26/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
  */
 void fasp_blas_dcsr_mxv (dCSRmat *A, 
-                         REAL *x, 
-                         REAL *y)
+                         double *x, 
+                         double *y) 
 {
-    const INT   m  = A->row;
-    const INT  *ia = A->IA, *ja = A->JA;
-    const REAL *aj = A->val;
-    
-    INT i, k, beg, end;    
-    register REAL tmp;
-    
-    for ( i=0; i<m; ++i ) {
-        tmp = 0.0; 
-        beg = ia[i]; end = ia[i+1]; 
-        for ( k=beg; k<end; ++k ) tmp += aj[k]*x[ja[k]];
-        y[i] = tmp;
+    const int m=A->row;
+    const int *ia=A->IA, *ja=A->JA;
+    const double *aj=A->val;
+    int i, k, begin_row, end_row, nnz_num_row;
+    register double temp;
+	int nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+
+    if (use_openmp) {
+        int myid, mybegin, myend;
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, nnz_num_row, k) 
+        for (myid = 0; myid < nthreads; myid++ )
+            {
+                FASP_GET_START_END(myid, nthreads, m, mybegin, myend);
+                for (i=mybegin; i<myend; ++i)
+                    {
+                        temp=0.0; 
+                        begin_row = ia[i];
+                        end_row = ia[i+1];
+                        nnz_num_row = end_row - begin_row;
+                        switch(nnz_num_row)
+                            {
+                            case 3:
+                                k = begin_row;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                break;
+                            case 4:
+                                k = begin_row;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                break;
+                            case 5:
+                                k = begin_row;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                break;
+                            case 6:
+                                k = begin_row;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                break;
+                            case 7:
+                                k = begin_row;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                k ++;
+                                temp += aj[k]*x[ja[k]];
+                                break;
+                            default:
+                                for (k=begin_row; k<end_row; ++k)
+                                    {
+                                        temp += aj[k]*x[ja[k]];
+                                    }
+                                break;
+                            }
+                        y[i]=temp;
+                    }
+            }
+    }
+    else {
+        for (i=0;i<m;++i) {
+            temp=0.0;
+            begin_row=ia[i];
+            end_row=ia[i+1];
+            nnz_num_row = end_row - begin_row;
+            switch(nnz_num_row)
+                {
+                case 3:
+                    k=begin_row;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    break;
+                case 4:
+                    k=begin_row;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    break;
+                case 5:
+                    k=begin_row;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    break;
+                case 6:
+                    k=begin_row;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    break;
+                case 7:
+                    k=begin_row;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    break;
+                default:
+                    for (k=begin_row; k<end_row; ++k)
+                        {
+                            temp+=aj[k]*x[ja[k]];
+                        }
+                    break;
+                }
+            y[i]=temp;
+        }
     }
 }
+
 
 /**
  * \fn void fasp_blas_dcsr_mxv_agg (dCSRmat *A, REAL *x, REAL *y) 
@@ -230,7 +396,9 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   07/01/209
+ * \date   05/26/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  */
+
 void fasp_blas_dcsr_aAxpy (const REAL alpha, 
                            dCSRmat *A, 
                            REAL *x,
@@ -239,37 +407,94 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
     const INT  m  = A->row;
     const INT *ia = A->IA, *ja = A->JA;
     const REAL *aj = A->val;
-    
-    INT i, k, begin_row, end_row;    
+    INT i, k, begin_row, end_row, nthreads, use_openmp;
     register REAL temp;
-    
+
+	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+
     if ( alpha == 1.0 ) {
-        for (i=0;i<m;++i) {
-            temp=0.0; 
-            begin_row=ia[i]; end_row=ia[i+1]; 
-            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-            y[i]+=temp;    
+        if (use_openmp) {
+            INT myid, mybegin, myend;
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k)
+            for (myid = 0; myid < nthreads; myid++ )
+                {
+                    FASP_GET_START_END(myid, nthreads, m, mybegin, myend);
+                    for (i=mybegin; i<myend; ++i)
+                        {
+                            temp=0.0; 
+                            begin_row=ia[i]; end_row=ia[i+1]; 
+                            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                            y[i]+=temp;
+                        }
+                }
+        }
+        else {
+            for (i=0;i<m;++i) {
+                temp=0.0; 
+                begin_row=ia[i]; end_row=ia[i+1]; 
+                for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                y[i]+=temp;    
+            }
         }
     }
     
     else if ( alpha == -1.0 ) {
-        for (i=0;i<m;++i) {
-            temp=0.0; 
-            begin_row=ia[i]; end_row=ia[i+1]; 
-            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-            y[i]-=temp;
-        }    
-    }
-    
-    else {
-        for (i=0;i<m;++i) {
-            temp=0.0; 
-            begin_row=ia[i]; end_row=ia[i+1]; 
-            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-            y[i]+=temp*alpha;
+        if (use_openmp) {
+            INT myid, mybegin, myend;
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k) 
+            for (myid = 0; myid < nthreads; myid++ )
+                {
+                    FASP_GET_START_END(myid, nthreads, m, mybegin, myend);
+                    for (i=mybegin; i<myend; ++i)
+                        {
+                            temp=0.0; 
+                            begin_row=ia[i]; end_row=ia[i+1]; 
+                            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                            y[i]-=temp;
+                        }
+                }
+        }
+        else {
+            for (i=0;i<m;++i) {
+                temp=0.0; 
+                begin_row=ia[i]; end_row=ia[i+1]; 
+                for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                y[i]-=temp;
+            }
         }
     }
     
+    else {
+        if (use_openmp) {
+            INT myid, mybegin, myend;
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k) 
+            for (myid = 0; myid < nthreads; myid++ )
+                {
+                    FASP_GET_START_END(myid, nthreads, m, mybegin, myend);
+                    for (i=mybegin; i<myend; ++i)
+                        {
+                            temp=0.0;
+                            begin_row=ia[i]; end_row=ia[i+1];
+                            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                            y[i]+=temp*alpha;
+                        }
+                }
+        }
+        else {
+            for (i=0;i<m;++i) {
+                temp=0.0; 
+                begin_row=ia[i]; end_row=ia[i+1]; 
+                for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                y[i]+=temp*alpha;
+            }
+        }
+    }
 }
 
 /**
@@ -341,21 +566,38 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
                          REAL *x, 
                          REAL *y)
 {
-    const INT m=A->row;
-    INT *ia=A->IA, *ja=A->JA;
-    REAL *aj=A->val;
+    register double value=0.0;
+    const int m=A->row;
+    const int *ia=A->IA, *ja=A->JA;
+    const double *aj=A->val;
+    int i, k, begin_row, end_row, nthreads, use_openmp;
+    register double temp;
+
+	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
     
-    INT i, k, begin_row, end_row;    
-    register REAL temp;
-    register REAL value=0.0;
-    
-    for (i=0;i<m;++i) {
-        temp=0.0; 
-        begin_row=ia[i]; end_row=ia[i+1];
-        for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-        value+=y[i]*temp;
+    if (use_openmp) {
+#pragma omp parallel for reduction(+:value) private(i,temp,begin_row,end_row,k) 
+        for (i=0;i<m;++i) {
+            temp=0.0;
+            begin_row=ia[i]; end_row=ia[i+1];
+            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+            value+=y[i]*temp;
+        }
     }
-    
+    else {
+        for (i=0;i<m;++i) {
+            temp=0.0;
+            begin_row=ia[i]; end_row=ia[i+1];
+            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+            value+=y[i]*temp;
+        }
+    }
     return value;
 }
 
@@ -462,7 +704,7 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
 }
 
 /**
- * \fn void fasp_blas_dcsr_rap (dCSRmat *R, dCSRmat *A, dCSRmat *P, dCSRmat *B)
+ * \fn void fasp_blas_dcsr_rap (dCSRmat *R, dCSRmat *A, dCSRmat *P, dCSRmat *RAP)
  *
  * \brief Triple sparse matrix multiplication B=R*A*P
  *
@@ -473,166 +715,310 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   05/10/2010
+ * \date   05/26/2012 Modified by Chunsheng Feng Xiaoqiang Yue
  *
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap (dCSRmat *R, 
-                         dCSRmat *A, 
-                         dCSRmat *P, 
-                         dCSRmat *B)
+void fasp_blas_dcsr_rap( dCSRmat  *R,
+                         dCSRmat  *A,
+                         dCSRmat  *P,
+                         dCSRmat  *RAP)
 {
-    const INT row=R->row, col=P->col;
-    unsigned INT nB=A->nnz;
-    INT i,i1,j,jj,k,length;    
-    INT begin_row,end_row,begin_rowA,end_rowA,begin_rowR,end_rowR;
-    INT istart,iistart,count;
+    int n_coarse = R->row;
+    int *R_i = R->IA;
+    int *R_j = R->JA;
+    double *R_data = R->val;
     
-    REAL *rj=R->val, *aj=A->val, *pj=P->val, *acj;
-    INT *ir=R->IA, *ia=A->IA, *ip=P->IA, *iac;
-    INT *jr=R->JA, *ja=A->JA, *jp=P->JA, *jac;
+    int n_fine = A->row;
+    int *A_i = A->IA;
+    int *A_j = A->JA;
+    double *A_data = A->val;
     
-    INT *index=(INT *)fasp_mem_calloc(A->col,sizeof(int));
+    int *P_i = P->IA;
+    int *P_j = P->JA;
+    double *P_data = P->val;
     
-    INT *iindex=(INT *)fasp_mem_calloc(col,sizeof(int));    
+    int RAP_size;
+    int *RAP_i = NULL;
+    int *RAP_j = NULL;
+    double *RAP_data = NULL;
     
-    for (i=0; i<A->col; ++i) index[i] = -2;
+    int *P_marker = NULL;
+    int *A_marker = NULL;
     
-    memcpy(iindex,index,col*sizeof(int));
+    int *Ps_marker = NULL;
+    int *As_marker = NULL;
+    int *RAP_temp = NULL;
+    int *part_end = NULL;
     
-    jac=(int*)fasp_mem_calloc(nB,sizeof(int));    
+    int ic, i1, i2, i3, jj1, jj2, jj3;
+    int jj_counter, jj_row_begining;
+    double r_entry, r_a_product, r_a_p_product;
     
-    iac=(int*)fasp_mem_calloc(row+1,sizeof(int));    
+	int nthreads, use_openmp;
 
-    REAL *temp=(REAL*)fasp_mem_calloc(A->col,sizeof(REAL));
+	if(!FASP_USE_OPENMP || n_coarse <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+		nthreads = 1;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
     
-    iac[0] = 0;
+//    // Save the memory
+//    if (n_coarse <= openmp_holds) {
+//		nthreads = 1;
+//	}
     
-    // First loop: form sparsity partern of R*A*P
-    for (i=0; i < row; ++i) {    
-        // reset istart and length at the begining of each loop
-        istart = -1; length = 0; i1 = i+1;
+    int coarse_mul_nthreads = n_coarse * nthreads;
+    int fine_mul_nthreads = n_fine * nthreads;
+    int coarse_add_nthreads = n_coarse + nthreads;
+    int minus_one_length = coarse_mul_nthreads + fine_mul_nthreads;
+    int total_calloc = minus_one_length + coarse_add_nthreads + nthreads;
     
-        // go across the rows in R
-        begin_rowR=ir[i]; end_rowR=ir[i1];
-        for (jj=begin_rowR; jj<end_rowR; ++jj) {
-            j = jr[N2C(jj)];
-            // for each column in A
-            begin_rowA=ia[j]; end_rowA=ia[j+1];    
-            for (k=begin_rowA; k<end_rowA; ++k) {
-                if (index[N2C(ja[N2C(k)])] == -2) {
-                    index[N2C(ja[N2C(k)])] = istart;
-                    istart = ja[N2C(k)];
-                    ++length;
-                }
+    Ps_marker = (int *)fasp_mem_calloc(total_calloc, sizeof(int));
+    As_marker = Ps_marker + coarse_mul_nthreads;
+    RAP_temp = As_marker + fine_mul_nthreads;
+    part_end = RAP_temp + coarse_add_nthreads;
+    
+    /*------------------------------------------------------*
+     *  First Pass: Determine size of RAP and set up RAP_i  *
+     *------------------------------------------------------*/
+    RAP_i = (int *)fasp_mem_calloc(n_coarse+1, sizeof(int));
+    
+    fasp_iarray_set(minus_one_length, Ps_marker, -1);
+    
+    if (use_openmp)
+        {
+            int myid, mybegin, myend, Ctemp;
+#pragma omp parallel private(myid, mybegin, myend, P_marker, A_marker, jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
+            {
+                myid = omp_get_thread_num();
+                FASP_GET_START_END(myid, nthreads, n_coarse, mybegin, myend);
+                P_marker = Ps_marker + myid * n_coarse;
+                A_marker = As_marker + myid * n_fine;
+                jj_counter = 0;
+                for (ic = mybegin; ic < myend; ic ++)
+                    {
+                        P_marker[ic] = jj_counter;
+                        jj_row_begining = jj_counter;
+                        jj_counter ++;
+                
+                        for (jj1 = R_i[ic]; jj1 < R_i[ic+1]; jj1 ++)
+                            {
+                                i1 = R_j[jj1];
+                                for (jj2 = A_i[i1]; jj2 < A_i[i1+1]; jj2 ++)
+                                    {
+                                        i2 = A_j[jj2];
+                                        if (A_marker[i2] != ic)
+                                            {
+                                                A_marker[i2] = ic;
+                                                for (jj3 = P_i[i2]; jj3 < P_i[i2+1]; jj3 ++)
+                                                    {
+                                                        i3 = P_j[jj3];
+                                                        if (P_marker[i3] < jj_row_begining)
+                                                            {
+                                                                P_marker[i3] = jj_counter;
+                                                                jj_counter ++;
+                                                            }
+                                                    }
+                                            }
+                                    }
+                            }
+                
+                        RAP_temp[ic+myid] = jj_row_begining;
+                    }
+                RAP_temp[myend+myid] = jj_counter;
+            
+                part_end[myid] = myend + myid + 1;
             }
-        }    
-    
-        // book-keeping [reseting length and setting iistart]
-        count = length; iistart = -1; length = 0;
-    
-        // use each column that would have resulted from R*A
-        for (j=0; j < count; ++j) {
-            jj = istart;
-            istart = index[istart];
-            index[N2C(jj)] = -2;
-    
-            // go across the row of P
-            begin_row=ip[jj]; end_row=ip[jj+1];
-            for (k=begin_row; k<end_row; ++k) {
-                // pull out the appropriate columns of P
-                if (iindex[N2C(jp[N2C(k)])] == -2) {
-                    iindex[N2C(jp[N2C(k)])] = iistart;
-                    iistart = jp[N2C(k)];
-                    ++length;
+            fasp_iarray_cp(part_end[0], RAP_temp, RAP_i);
+            jj_counter = part_end[0];
+            Ctemp = 0;
+            for (i1 = 1; i1 < nthreads; i1 ++)
+                {
+                    Ctemp += RAP_temp[part_end[i1-1]-1];
+                    for (jj1 = part_end[i1-1]+1; jj1 < part_end[i1]; jj1 ++)
+                        {
+                            RAP_i[jj_counter] = RAP_temp[jj1] + Ctemp;
+                            jj_counter ++;
+                        }
                 }
-            } // end for k
-        } // end for j
-    
-        // set B->IA
-        iac[i1]=iac[i]+length;
-    
-        if (iac[i1]>nB) {
-            nB=nB*2;
-            jac=(int*)fasp_mem_realloc(jac, nB*sizeof(int));
+            RAP_size = RAP_i[n_coarse];
         }
-    
-        // put the correct columns of p into the column list of the products
-        begin_row=iac[i]; end_row=iac[i1];
-        for (j=begin_row; j<end_row; ++j) {
-            // put the value in B->JA
-            jac[N2C(j)] = iistart;
-            // set istart to the next value
-            iistart = iindex[N2C(iistart)];
-            // set the iindex spot to 0
-            iindex[N2C(jac[j])] = -2;
-        } // end j
-    
-    } // end i: First loop
-    
-    jac=(int*)fasp_mem_realloc(jac,(iac[row])*sizeof(int));
-    
-    acj=(REAL*)fasp_mem_calloc(iac[row],sizeof(REAL));
+    else
+        {
+            jj_counter = 0;
+            for (ic = 0; ic < n_coarse; ic ++)
+                {
+                    Ps_marker[ic] = jj_counter;
+                    jj_row_begining = jj_counter;
+                    jj_counter ++;
+            
+                    for (jj1 = R_i[ic]; jj1 < R_i[ic+1]; jj1 ++)
+                        {
+                            i1 = R_j[jj1];
+                
+                            for (jj2 = A_i[i1]; jj2 < A_i[i1+1]; jj2 ++)
+                                {
+                                    i2 = A_j[jj2];
+                                    if (As_marker[i2] != ic)
+                                        {
+                                            As_marker[i2] = ic;
+                                            for (jj3 = P_i[i2]; jj3 < P_i[i2+1]; jj3 ++)
+                                                {
+                                                    i3 = P_j[jj3];
+                                                    if (Ps_marker[i3] < jj_row_begining)
+                                                        {
+                                                            Ps_marker[i3] = jj_counter;
+                                                            jj_counter ++;
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+            
+                    RAP_i[ic] = jj_row_begining;
+                }
         
-    INT *BTindex=(int*)fasp_mem_calloc(col,sizeof(int));
-        
-    // Second loop: compute entries of R*A*P
-    for (i=0; i<row; ++i) {
-        i1 = i+1;
-    
-        // each col of B
-        begin_row=iac[i]; end_row=iac[i1];    
-        for (j=begin_row; j<end_row; ++j) {
-            BTindex[N2C(jac[N2C(j)])]=j;
+            RAP_i[n_coarse] = jj_counter;
+            RAP_size = jj_counter;
         }
+//    printf("A_H NNZ = %d\n", RAP_size);
+    RAP_j = (int *)fasp_mem_calloc(RAP_size, sizeof(int));
+    RAP_data = (double *)fasp_mem_calloc(RAP_size, sizeof(double));
     
-        // reset istart and length at the begining of each loop
-        istart = -1; length = 0;
+    fasp_iarray_set(minus_one_length, Ps_marker, -1);
     
-        // go across the rows in R
-        begin_rowR=ir[i]; end_rowR=ir[i1];    
-        for ( jj=begin_rowR; jj<end_rowR; ++jj ) {
-            j = jr[N2C(jj)];
-    
-            // for each column in A
-            begin_rowA=ia[j]; end_rowA=ia[j+1];    
-            for (k=begin_rowA; k<end_rowA; ++k) {
-                if (index[N2C(ja[N2C(k)])] == -2) {
-                    index[N2C(ja[N2C(k)])] = istart;
-                    istart = ja[N2C(k)];
-                    ++length;
+    if (use_openmp)
+        {
+            int myid, mybegin, myend;
+#pragma omp parallel private(myid, mybegin, myend, P_marker, A_marker, jj_counter, ic, jj_row_begining, \
+                             jj1, r_entry, i1, jj2, r_a_product, i2, jj3, r_a_p_product, i3)
+            {
+                myid = omp_get_thread_num();
+                FASP_GET_START_END(myid, nthreads, n_coarse, mybegin, myend);
+                P_marker = Ps_marker + myid * n_coarse;
+                A_marker = As_marker + myid * n_fine;
+                jj_counter = RAP_i[mybegin];
+                for (ic = mybegin; ic < myend; ic ++)
+                    {
+                        P_marker[ic] = jj_counter;
+                        jj_row_begining = jj_counter;
+                        RAP_j[jj_counter] = ic;
+                        RAP_data[jj_counter] = 0.0;
+                        jj_counter ++;
+                        for (jj1 = R_i[ic]; jj1 < R_i[ic+1]; jj1 ++)
+                            {
+                                r_entry = R_data[jj1];
+                    
+                                i1 = R_j[jj1];
+                                for (jj2 = A_i[i1]; jj2 < A_i[i1+1]; jj2 ++)
+                                    {
+                                        r_a_product = r_entry * A_data[jj2];
+                        
+                                        i2 = A_j[jj2];
+                                        if (A_marker[i2] != ic)
+                                            {
+                                                A_marker[i2] = ic;
+                                                for (jj3 = P_i[i2]; jj3 < P_i[i2+1]; jj3 ++)
+                                                    {
+                                                        r_a_p_product = r_a_product * P_data[jj3];
+                                
+                                                        i3 = P_j[jj3];
+                                                        if (P_marker[i3] < jj_row_begining)
+                                                            {
+                                                                P_marker[i3] = jj_counter;
+                                                                RAP_data[jj_counter] = r_a_p_product;
+                                                                RAP_j[jj_counter] = i3;
+                                                                jj_counter ++;
+                                                            }
+                                                        else
+                                                            {
+                                                                RAP_data[P_marker[i3]] += r_a_p_product;
+                                                            }
+                                                    }
+                                            }
+                                        else
+                                            {
+                                                for (jj3 = P_i[i2]; jj3 < P_i[i2+1]; jj3 ++)
+                                                    {
+                                                        i3 = P_j[jj3];
+                                                        r_a_p_product = r_a_product * P_data[jj3];
+                                                        RAP_data[P_marker[i3]] += r_a_p_product;
+                                                    }
+                                            }
+                                    }
+                            }
+                    }
+            }
+        }
+    else
+        {
+            jj_counter = 0;
+            for (ic = 0; ic < n_coarse; ic ++)
+                {
+                    Ps_marker[ic] = jj_counter;
+                    jj_row_begining = jj_counter;
+                    RAP_j[jj_counter] = ic;
+                    RAP_data[jj_counter] = 0.0;
+                    jj_counter ++;
+            
+                    for (jj1 = R_i[ic]; jj1 < R_i[ic+1]; jj1 ++)
+                        {
+                            r_entry = R_data[jj1];
+                
+                            i1 = R_j[jj1];
+                            for (jj2 = A_i[i1]; jj2 < A_i[i1+1]; jj2 ++)
+                                {
+                                    r_a_product = r_entry * A_data[jj2];
+                    
+                                    i2 = A_j[jj2];
+                                    if (As_marker[i2] != ic)
+                                        {
+                                            As_marker[i2] = ic;
+                                            for (jj3 = P_i[i2]; jj3 < P_i[i2+1]; jj3 ++)
+                                                {
+                                                    r_a_p_product = r_a_product * P_data[jj3];
+                            
+                                                    i3 = P_j[jj3];
+                                                    if (Ps_marker[i3] < jj_row_begining)
+                                                        {
+                                                            Ps_marker[i3] = jj_counter;
+                                                            RAP_data[jj_counter] = r_a_p_product;
+                                                            RAP_j[jj_counter] = i3;
+                                                            jj_counter ++;
+                                                        }
+                                                    else
+                                                        {
+                                                            RAP_data[Ps_marker[i3]] += r_a_p_product;
+                                                        }
+                                                }
+                                        }
+                                    else
+                                        {
+                                            for (jj3 = P_i[i2]; jj3 < P_i[i2+1]; jj3 ++)
+                                                {
+                                                    i3 = P_j[jj3];
+                                                    r_a_p_product = r_a_product * P_data[jj3];
+                                                    RAP_data[Ps_marker[i3]] += r_a_p_product;
+                                                }
+                                        }
+                                }
+                        }
                 }
-                temp[N2C(ja[N2C(k)])]+=rj[N2C(jj)]*aj[N2C(k)];
-            }
-        } 
-    
-        // book-keeping [reseting length and setting iistart]
-        // use each column that would have resulted from R*A
-        for (j=0; j<length; ++j) {
-            jj = N2C(istart);
-            istart = index[N2C(istart)];
-            index[N2C(jj)] = -2;
-    
-            // go across the row of P
-            begin_row=ip[jj]; end_row=ip[jj+1];    
-            for (k=begin_row; k<end_row; ++k) {
-                // pull out the appropriate columns of P
-                acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj]*pj[k];
-            }
-            temp[jj]=0.0;
         }
     
-    } // end for i: Second loop
+    RAP->row = n_coarse;
+    RAP->col = n_coarse;
+    RAP->nnz = RAP_size;
+    RAP->IA = RAP_i;
+    RAP->JA = RAP_j;
+    RAP->val = RAP_data;
     
-    // setup coarse matrix B
-    B->row=row; B->col=col;
-    B->IA=iac; B->JA=jac; B->val=acj;    
-    B->nnz=B->IA[B->row]-B->IA[0];
-    
-    fasp_mem_free(temp);
-    fasp_mem_free(index);
-    fasp_mem_free(iindex);
-    fasp_mem_free(BTindex);
+    fasp_mem_free(Ps_marker);
 }
 
 /**
@@ -870,6 +1256,305 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
     for (i=0;i<nnzP;++i) Pt->JA[i]--;
     
     return;
+}
+
+/**
+ * \fn void fasp_blas_dcsr_rap4(dCSRmat *R, dCSRmat *A, dCSRmat *P, dCSRmat *B, int *icor_ysk)
+ * \brief Triple sparse matrix multiplication B=R*A*P
+ *
+ * \param R   pointer to the dCSRmat matrix
+ * \param A   pointer to the dCSRmat matrix
+ * \param P   pointer to the dCSRmat matrix
+ * \param B   pointer to dCSRmat matrix equal to R*A*P
+ * \param icor_ysk pointer to the array
+ * \return     void
+ *
+ * Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
+ *      Advances in Computational Mathematics, 1 (1993), pp. 127-137.
+ *
+ * \author Feng Chunsheng, Yue Xiaoqiang
+ * \date 08/02/2011
+ */
+void fasp_blas_dcsr_rap4 (dCSRmat *R, 
+                          dCSRmat *A, 
+                          dCSRmat *P, 
+                          dCSRmat *B,
+                          int *icor_ysk) 
+{
+	int nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || R->row <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+    
+    if (use_openmp) {
+        const int row=R->row, col=P->col;
+        int *ir=R->IA, *ia=A->IA, *ip=P->IA;
+        int *jr=R->JA, *ja=A->JA, *jp=P->JA;
+        double *rj=R->val, *aj=A->val, *pj=P->val;
+        int istart, iistart;
+        int end_row, end_rowA, end_rowR;
+        int i, j, jj, k, length, myid, mybegin, myend, jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3;
+        int *index = NULL;
+        int *iindex = NULL;
+        int *BTindex = NULL;
+        double *temp = NULL;
+        int FiveMyid, min_A, min_P, A_pos, P_pos, FiveIc;
+        int minus_one_length_A = icor_ysk[5*nthreads];
+        int minus_one_length_P = icor_ysk[5*nthreads+1];
+        int minus_one_length = minus_one_length_A + minus_one_length_P;
+    
+        int *iindexs = (int *)fasp_mem_calloc(minus_one_length+minus_one_length_P, sizeof(int));
+#if CHMEM_MODE
+        total_alloc_mem += minus_one_length*sizeof(int);
+#endif
+        int *indexs = iindexs + minus_one_length_P;
+        int *BTindexs = indexs + minus_one_length_A;
+        
+        int *iac=(int*)fasp_mem_calloc(row+1,sizeof(int));
+#if CHMEM_MODE
+        total_alloc_mem += (row+1)*sizeof(int);
+#endif
+        int *part_end=(int*)fasp_mem_calloc(2*nthreads+row,sizeof(int));
+#if CHMEM_MODE
+        total_alloc_mem += (2*nthreads+row)*sizeof(int);
+#endif
+        int *iac_temp=part_end + nthreads;
+        int **iindex_array = (int **)fasp_mem_calloc(nthreads, sizeof(int *));
+        int **index_array = (int **)fasp_mem_calloc(nthreads, sizeof(int *));
+    
+        fasp_iarray_set(minus_one_length, iindexs, -2);
+#pragma omp parallel for private(myid, FiveMyid, mybegin, myend, min_A, min_P, index, iindex, A_pos, P_pos, ic, FiveIc, jj_counter, jj_row_begining, end_rowR, jj1, i1, end_rowA, jj2, i2, end_row, jj3, i3)
+        for (myid = 0; myid < nthreads; myid ++)
+            {
+                FiveMyid = myid * 5;
+                mybegin = icor_ysk[FiveMyid];
+                if (myid == nthreads-1) {
+                    myend = row;
+                }
+                else {
+                    myend = icor_ysk[FiveMyid+5];
+                }
+                min_A = icor_ysk[FiveMyid+2];
+                min_P = icor_ysk[FiveMyid+4];
+                A_pos = 0;
+                P_pos = 0;
+                for (ic = myid-1; ic >= 0; ic --) {
+                    FiveIc = ic * 5;
+                    A_pos += icor_ysk[FiveIc+1];
+                    P_pos += icor_ysk[FiveIc+3];
+                }
+                iindex_array[myid] = iindex= iindexs + P_pos - min_P;
+                index_array[myid] = index = indexs + A_pos - min_A;
+                jj_counter = 0;
+                for (ic = mybegin; ic < myend; ic ++)
+                    {
+                        iindex[ic] = jj_counter;
+                        jj_row_begining = jj_counter;
+                        jj_counter ++;
+                        end_rowR = ir[ic+1];
+                        for (jj1 = ir[ic]; jj1 < end_rowR; jj1 ++)
+                            {
+                                i1 = jr[jj1];
+                                end_rowA = ia[i1+1];
+                                for (jj2 = ia[i1]; jj2 < end_rowA; jj2 ++)
+                                    {
+                                        i2 = ja[jj2];
+                                        if (index[i2] != ic)
+                                            {
+                                                index[i2] = ic;
+                                                end_row = ip[i2+1];
+                                                for (jj3 = ip[i2]; jj3 < end_row; jj3 ++)
+                                                    {
+                                                        i3 = jp[jj3];
+                                                        if (iindex[i3] < jj_row_begining)
+                                                            {
+                                                                iindex[i3] = jj_counter;
+                                                                jj_counter ++;
+                                                            }
+                                                    }
+                                            }
+                                    }
+                            }
+                        iac_temp[ic+myid] = jj_row_begining;
+                    }
+                iac_temp[myend+myid] = jj_counter;
+                part_end[myid] = myend + myid + 1;
+            }
+        fasp_iarray_cp(part_end[0], iac_temp, iac);
+        jj_counter = part_end[0];
+        int Ctemp = 0;
+        for (i1 = 1; i1 < nthreads; i1 ++)
+            {
+                Ctemp += iac_temp[part_end[i1-1]-1];
+                for (jj1 = part_end[i1-1]+1; jj1 < part_end[i1]; jj1 ++)
+                    {
+                        iac[jj_counter] = iac_temp[jj1] + Ctemp;
+                        jj_counter ++;
+                    }
+            }
+        int *jac=(int*)fasp_mem_calloc(iac[row],sizeof(int));
+#if CHMEM_MODE
+        total_alloc_mem += iac[row]*sizeof(int);
+#endif
+        fasp_iarray_set(minus_one_length, iindexs, -2);
+#pragma omp parallel for private(myid, index, iindex, FiveMyid, mybegin, myend, i, istart, length, i1, end_rowR, jj, j, end_rowA, k, iistart, end_row)
+        for (myid = 0; myid < nthreads; myid ++)
+            {
+                iindex = iindex_array[myid];
+                index = index_array[myid];
+                FiveMyid = myid * 5;
+                mybegin = icor_ysk[FiveMyid];
+                if (myid == nthreads-1) {
+                    myend = row;
+                }
+                else {
+                    myend = icor_ysk[FiveMyid+5];
+                }
+                for (i = mybegin; i < myend; ++ i) {
+                    istart = -1;
+                    length = 0;
+                    i1 = i+1;
+                    // go across the rows in R
+                    end_rowR = ir[i1];
+                    for (jj = ir[i]; jj < end_rowR; ++ jj) {
+                        j = jr[N2C(jj)];
+                        // for each column in A
+                        end_rowA = ia[j+1];
+                        for (k = ia[j]; k < end_rowA; ++ k) {
+                            if (index[N2C(ja[N2C(k)])] == -2) {
+                                index[N2C(ja[N2C(k)])] = istart;
+                                istart = ja[N2C(k)];
+                                ++ length;
+                            }
+                        }
+                    }
+                    // book-keeping [reseting length and setting iistart]
+                    //count = length;
+                    iistart = -1;
+                    //length = 0;
+                    // use each column that would have resulted from R*A
+                    //for (j = 0; j < count; ++ j) {
+                    for (j = 0; j < length; ++ j) {
+                        jj = istart;
+                        istart = index[istart];
+                        index[N2C(jj)] = -2;
+                        // go across the row of P
+                        end_row = ip[jj+1];
+                        for (k = ip[jj]; k < end_row; ++ k) {
+                            // pull out the appropriate columns of P
+                            if (iindex[N2C(jp[N2C(k)])] == -2) {
+                                iindex[N2C(jp[N2C(k)])] = iistart;
+                                iistart = jp[N2C(k)];
+                                //++length;
+                            }
+                        } // end for k
+                    } // end for j
+                    // put the correct columns of p into the column list of the products
+                    end_row = iac[i1];
+                    for (j = iac[i]; j < end_row; ++ j) {
+                        // put the value in B->JA
+                        jac[N2C(j)] = iistart;
+                        // set istart to the next value
+                        iistart = iindex[N2C(iistart)];
+                        // set the iindex spot to 0
+                        iindex[N2C(jac[j])] = -2;
+                    } // end j
+                }
+            }
+        // Third loop: compute entries of R*A*P
+        double *acj=(double*)fasp_mem_calloc(iac[row],sizeof(double));
+#if CHMEM_MODE
+        total_alloc_mem += iac[row]*sizeof(double);
+#endif
+        double *temps=(double*)fasp_mem_calloc(minus_one_length_A,sizeof(double));
+#if CHMEM_MODE
+        total_alloc_mem += minus_one_length_A*sizeof(double);
+#endif
+#pragma omp parallel for private(myid, index, FiveMyid, mybegin, myend, min_A, min_P, A_pos, P_pos, ic, FiveIc, BTindex, temp, i, i1, end_row, j, istart, length, end_rowR, jj, end_rowA, k)
+        for (myid = 0; myid < nthreads; myid ++)
+            {
+                index = index_array[myid];
+                FiveMyid = myid * 5;
+                mybegin = icor_ysk[FiveMyid];
+                if (myid == nthreads-1) {
+                    myend = row;
+                }
+                else {
+                    myend = icor_ysk[FiveMyid+5];
+                }
+                min_A = icor_ysk[FiveMyid+2];
+                min_P = icor_ysk[FiveMyid+4];
+                A_pos = 0;
+                P_pos = 0;
+                for (ic = myid-1; ic >= 0; ic --) {
+                    FiveIc = ic * 5;
+                    A_pos += icor_ysk[FiveIc+1];
+                    P_pos += icor_ysk[FiveIc+3];
+                }
+                BTindex = BTindexs + P_pos - min_P;
+                temp = temps + A_pos - min_A;
+                for (i = mybegin; i < myend; ++ i) {
+                    i1 = i+1;
+                    // each col of B
+                    end_row = iac[i1];
+                    for (j = iac[i]; j < end_row; ++ j) {
+                        BTindex[N2C(jac[N2C(j)])] = j;
+                    }
+                    // reset istart and length at the begining of each loop
+                    istart = -1;
+                    length = 0;
+                    // go across the rows in R
+                    end_rowR = ir[i1];
+                    for (jj = ir[i]; jj < end_rowR; ++ jj) {
+                        j = jr[N2C(jj)];
+                        // for each column in A
+                        end_rowA = ia[j+1];
+                        for (k = ia[j]; k < end_rowA; ++ k) {
+                            if (index[N2C(ja[N2C(k)])] == -2){
+                                index[N2C(ja[N2C(k)])] = istart;
+                                istart = ja[N2C(k)];
+                                ++ length;
+                            }
+                            temp[N2C(ja[N2C(k)])] += rj[N2C(jj)]*aj[N2C(k)];
+                        }
+                    }
+                    // book-keeping [reseting length and setting iistart]
+                    // use each column that would have resulted from R*A
+                    for (j = 0; j < length; ++ j) {
+                        jj = N2C(istart);
+                        istart = index[N2C(istart)];
+                        index[N2C(jj)] = -2;
+                        // go across the row of P
+                        end_row = ip[jj+1];
+                        for (k = ip[jj]; k < end_row; ++ k) {
+                            // pull out the appropriate columns of P
+                            acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj]*pj[k];
+                        }
+                        temp[jj]=0.0;
+                    }
+                }
+            }
+        // setup coarse matrix B
+        B->row = row;
+        B->col = col;
+        B->IA = iac;
+        B->JA = jac;
+        B->val = acj;
+        B->nnz = B->IA[B->row] - B->IA[0];
+        fasp_mem_free(temps);
+        fasp_mem_free(iindexs);
+        fasp_mem_free(part_end);
+        fasp_mem_free(iindex_array);
+        fasp_mem_free(index_array);
+    }
+    else {
+        fasp_blas_dcsr_rap (R, A, P, B);
+    }
 }
 
 /*---------------------------------*/

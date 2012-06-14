@@ -3,6 +3,7 @@
  */
 
 #include <math.h>
+#include <omp.h>
 #include <time.h>
 
 #include "fasp.h"
@@ -275,7 +276,9 @@ void fasp_dcsr_sort (dCSRmat *A)
  *
  * \author Chensong Zhang
  * \date   05/20/2009
+ * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  */
+
 void fasp_dcsr_getdiag (INT n, 
                         dCSRmat *A, 
                         dvector *diag) 
@@ -283,19 +286,45 @@ void fasp_dcsr_getdiag (INT n,
     INT i,k,j,ibegin,iend;    
     
     if (n==0) n=MIN(A->row,A->col);
+	int nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
     
-    fasp_dvec_alloc(n,diag);
+    fasp_dvec_alloc(n, diag);
     
-    for (i=0;i<n;++i) {
-        ibegin=A->IA[i]; iend=A->IA[i+1];
-        for (k=ibegin;k<iend;++k) {
-            j=N2C(A->JA[N2C(k)]);
-            if ((j-i)==0) {
-                diag->val[i] = A->val[N2C(k)]; break;
-            }
-        } // end for k
-    } // end for i
-    
+    if (use_openmp) {
+        INT mybegin,myend,myid;
+#pragma omp parallel for private(myid, mybegin, myend, i, ibegin, iend, k, j) 
+        for (myid = 0; myid < nthreads; myid++ ) {
+            FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+            for (i=mybegin; i<myend; i++) {
+                ibegin=A->IA[i]; iend=A->IA[i+1];
+                for (k=ibegin;k<iend;++k) {
+                    j=N2C(A->JA[N2C(k)]);
+                    if ((j-i)==0) {
+                        diag->val[i] = A->val[N2C(k)]; break;
+                    } // end if
+                } // end for k
+            } // end for i
+        }
+    }
+    else {
+        for (i=0;i<n;++i) {
+            ibegin=A->IA[i]; iend=A->IA[i+1];
+            for (k=ibegin;k<iend;++k) {
+                j=N2C(A->JA[N2C(k)]);
+                if ((j-i)==0) {
+                    diag->val[i] = A->val[N2C(k)]; break;
+                } // end if
+            } // end for k
+        } // end for i
+    }
 }
 
 /**
@@ -465,17 +494,19 @@ SHORT fasp_dcsr_regdiag (dCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   04/06/2010  
+ * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue  
  */
+
 void fasp_dcsr_cp (dCSRmat *A, 
-                   dCSRmat *B)
-{    
+                   dCSRmat *B) 
+{
     B->row=A->row;
     B->col=A->col;
     B->nnz=A->nnz;
     
-    memcpy(B->IA,A->IA,(A->row+1)*sizeof(INT));
-    memcpy(B->JA,A->JA,(A->nnz)*sizeof(INT));
-    memcpy(B->val,A->val,(A->nnz)*sizeof(REAL));
+    fasp_iarray_cp (A->row+1, A->IA, B->IA);
+    fasp_iarray_cp (A->nnz, A->JA, B->JA);
+    fasp_array_cp  (A->nnz, A->val, B->val);
 }
 
 /**

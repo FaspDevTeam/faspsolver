@@ -6,6 +6,7 @@
  */
 
 #include <math.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -84,7 +85,7 @@ void fasp_dvec_alloc (const INT m,
  * \brief Create vector data space of INT type
  *
  * \param m   Number of rows
- * \param u   Pointer to the integer vector (OUTPUT)
+ * \param u   Pointer to the INTeger vector (OUTPUT)
  *
  * \author Chensong Zhang 
  * \date   2010/04/06
@@ -169,7 +170,7 @@ void fasp_dvec_null (dvector *x)
  * \par
  *   fasp_dvec_rand(100,&xapp);
  * \par
- *   fasp_dvec_print(100,&xapp);
+ *   fasp_dvec_prINT(100,&xapp);
  *
  * \author Chensong Zhang
  * \date   11/16/2009
@@ -180,7 +181,7 @@ void fasp_dvec_rand (const INT n,
     const INT va=(REAL) 0;
     const INT vb=(REAL) n;
     
-    unsigned int s=1; srand(s);
+    unsigned INT s=1; srand(s);
     
     INT i,j;
 
@@ -202,17 +203,54 @@ void fasp_dvec_rand (const INT n,
  *
  * \author Chensong Zhang
  * \date   11/16/2009
+ * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  */
-void fasp_dvec_set (const INT n, 
+
+void fasp_dvec_set (INT n, 
                     dvector *x, 
-                    REAL val)
+                    REAL val) 
 {
     unsigned INT i;
     REAL *xpt=x->val;
     
-    if ( n>0 ) x->row=n; 
+    if (n>0) x->row=n; 
+    else n=x->row; 
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
     
-    for ( i=0; i<x->row; ++i ) xpt[i]=val;
+    if (val == 0.0) {
+        if (use_openmp) {
+            INT mybegin,myend,myid;
+#pragma omp parallel for private(myid, mybegin,myend) 
+            for (myid = 0; myid < nthreads; myid++ ) {
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                memset(&xpt[mybegin],0x0, sizeof(REAL)*(myend-mybegin));
+            }
+        }
+        else {
+            memset(xpt, 0x0, sizeof(REAL)*n);
+        }
+    }
+    else {
+        if (use_openmp) {
+            INT mybegin,myend,myid;
+#pragma omp parallel for private(myid, mybegin,myend) 
+            for (myid = 0; myid < nthreads; myid++ ) {
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                for (i=mybegin; i<myend; ++i) xpt[i]=val;
+            }
+        }
+        else {
+            for (i=0; i<n; ++i) xpt[i]=val;
+        }
+    }
 }
 
 /**
@@ -225,14 +263,39 @@ void fasp_dvec_set (const INT n,
  *
  * \author Chensong Zhang
  * \date   2010/04/03  
+ * \date   2012/05/23    Modified by Chunsheng Feng Xiaoqiang Yue  
  */
+
 void fasp_ivec_set (const INT m, 
                     ivector *u)
 {    
     unsigned INT i;
-    for (i=0; i<u->row; ++i) u->val[i] = m;
-}
 
+	INT nthreads, use_openmp;
+    INT n = u->row;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+    
+	if (use_openmp) {
+		INT mybegin, myend, myid;
+#pragma omp parallel for private(myid, mybegin, myend) 
+            for (myid = 0; myid < nthreads; myid++ ) {
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                for (i=mybegin; i<myend; ++i) u->val[i] = m;
+			}        
+	}    
+	else {
+
+            for (i=0; i<n; ++i) u->val[i] = m;
+	}
+}
+   
 /**
  * \fn void fasp_dvec_cp (dvector *x, dvector *y) 
  *
@@ -298,16 +361,36 @@ void fasp_dvec_symdiagscale (dvector *b,
     
     // local variables
     unsigned INT i;
-    
+
     if (diag->row != n) {
         printf("### ERROR: Size of diag = %d and size of dvector = %d mismatch!!", 
                diag->row, n);
         exit(ERROR_MISC);
     }
     
-    // main loop
-    for (i=0; i<n; i++) val[i] = val[i]/sqrt(diag->val[i]);
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
     
+	if (use_openmp) {
+		INT mybegin, myend, myid;
+#pragma omp parallel for private(myid, mybegin,myend) 
+            for (myid = 0; myid < nthreads; myid++ ) {
+                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                for (i=mybegin; i<myend; ++i) val[i] = val[i]/sqrt(diag->val[i]);
+			}        
+	}    
+	else {
+
+            for (i=0; i<n; ++i) val[i] = val[i]/sqrt(diag->val[i]);
+	}
+   
     return;
 }
 

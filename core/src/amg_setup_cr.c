@@ -42,7 +42,7 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
     clock_t setup_start=clock();
     
     // The variable vertices stores level info (fine: 0; coarse: 1)
-    ivector vertices=fasp_ivec_create(m); // add by Fengchunsheng /Mar/10/2011
+    ivector vertices=fasp_ivec_create(m); 
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_cr ...... [Start]\n");
@@ -102,7 +102,7 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
         print_cputime("Compatible Relaxation AMG setup",setupduration);
     }
     
-    fasp_ivec_free(&vertices);    //add by Fengchunsheng /Mar/10/2011
+    fasp_ivec_free(&vertices); 
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_cr ...... [Finish]\n");

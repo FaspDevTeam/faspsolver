@@ -3,6 +3,7 @@
  */
 
 #include <time.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -186,6 +187,151 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 #endif
     
     return status;
+}
+
+
+/**
+ * \fn int fasp_amg_setup_rs_omp (AMG_data *mgl, AMG_param *param) 
+ * \param mgl    pointer to AMG_data data
+ * \param param  pointer to AMG parameters
+ *
+ * \note Setup A, P, R, levels using classic AMG!
+ * Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller. 
+ *           Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben).
+ *           Academic Press Inc., San Diego, CA, 2001. 
+ */
+
+int fasp_amg_setup_rs_omp (AMG_data *mgl, 
+                           AMG_param *param) 
+{
+#if FASP_USE_OPENMP
+    int status=SUCCESS, nthreads;
+    
+	// set thread number
+    nthreads = FASP_GET_NUM_THREADS();
+
+    const int print_level=param->print_level;
+    const int m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;    
+    
+    int max_levels=param->max_levels;
+    int mm, level=0;
+    int size;  
+
+	// stores level info (fine: 0; coarse: 1)
+    ivector vertices=fasp_ivec_create(m); 
+    int *icor_ysk = (int *)fasp_mem_calloc(5*nthreads+2, sizeof(int));
+	memset(icor_ysk, 0x0, sizeof(int)*(5*nthreads+2));
+    
+	// strong n-couplings
+	iCSRmat S;
+
+#if DEBUG_MODE
+    printf("fasp_amg_setup_rs ...... [Start]\n");
+    printf("fasp_amg_setup_rs: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+#endif
+   
+    double total_setup_time = 0.;
+    double setup_start = omp_get_wtime();
+    // initialize ILU parameters
+    mgl->ILU_levels = param->ILU_levels;
+    ILU_param iluparam;
+    if (param->ILU_levels>0) {
+        iluparam.print_level = param->print_level;
+        iluparam.ILU_lfil    = param->ILU_lfil;
+        iluparam.ILU_droptol = param->ILU_droptol;
+        iluparam.ILU_relax   = param->ILU_relax;
+        iluparam.ILU_type    = param->ILU_type;
+    }
+    
+    while ((mgl[level].A.row>param->coarse_dof) && (level<max_levels-1))
+        {
+#if DEBUG_MODE
+            printf("%5d  %14d  %16d\n",level,mgl[level].A.row,mgl[level].A.nnz);
+#endif
+        
+            /*-- setup ILU decomposition if necessary */
+            if (level<param->ILU_levels) {
+                status = fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
+                if (status < 0) goto FINISHED;
+            }
+        
+            /*-- Coarseing and form the structure of interpolation --*/
+            status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
+        
+            size = mgl[level].A.row;
+            mgl[level].cfmark = fasp_ivec_create(size);
+            fasp_iarray_cp(size, vertices.val, mgl[level].cfmark.val);
+        
+            if (mgl[level].P.col == 0) break;
+            if (status < 0) goto FINISHED;
+        
+            /*-- Form interpolation --*/
+            status = fasp_amg_interp1(&mgl[level].A, &vertices, &mgl[level].P, param, &S, icor_ysk);
+
+            if (status < 0) goto FINISHED;
+        
+            /*-- Form coarse level stiffness matrix --*/
+            fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
+
+            /*-- Form coarse level stiffness matrix: There are two RAP routines available! --*/
+            fasp_blas_dcsr_rap4(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A, icor_ysk);
+            ++level;
+        }
+    fasp_mem_free(icor_ysk);
+    
+    // setup total level number and current level
+    mgl[0].num_levels = max_levels = level+1;
+    mgl[0].w = fasp_dvec_create(m);
+    
+    for (level=1; level<max_levels; ++level) {
+        mm = mgl[level].A.row;
+        mgl[level].num_levels = max_levels;
+        mgl[level].b = fasp_dvec_create(mm);
+        mgl[level].x = fasp_dvec_create(mm);
+        mgl[level].w = fasp_dvec_create(mm);
+    }
+    
+#if With_UMFPACK    
+    // Need to sort the matrix A for UMFPACK to work
+    dCSRmat Ac_tran;
+    fasp_dcsr_trans(&mgl[max_levels-1].A, &Ac_tran);
+    fasp_dcsr_sort(&Ac_tran);
+    fasp_dcsr_cp(&Ac_tran,&mgl[max_levels-1].A);
+    fasp_dcsr_free(&Ac_tran);
+#endif
+    
+    if (print_level>2) {
+        double gridcom=0.0, opcom=0.0;
+        
+        printf("-----------------------------------------------\n");
+        printf("  Level     Num of rows     Num of nonzeros\n");
+        printf("-----------------------------------------------\n");
+        for (level=0;level<max_levels;++level) {
+            printf("%5d  %14d  %16d\n",level,mgl[level].A.row,mgl[level].A.nnz);
+            gridcom += mgl[level].A.row;
+            opcom += mgl[level].A.nnz;
+        }
+        printf("-----------------------------------------------\n");
+        
+        gridcom /= mgl[0].A.row;
+        opcom /= mgl[0].A.nnz;
+        printf("Ruge-Stuben AMG grid complexity = %f\n", gridcom);
+        printf("Ruge-Stuben AMG operator complexity = %f\n", opcom);
+    }
+    
+    if (print_level>0) {
+        double setup_end = omp_get_wtime();
+        double setupduration = setup_end - setup_start;
+        printf("Ruge-Stuben AMG setup costs %f seconds.\n", setupduration);    
+    }
+    
+    status = SUCCESS;
+    
+ FINISHED:    
+    fasp_ivec_free(&vertices);
+
+    return status;
+#endif
 }
 
 /*---------------------------------*/

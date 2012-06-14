@@ -3,6 +3,7 @@
  */
 
 #include <math.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -197,91 +198,181 @@ void fasp_smoother_dcsr_gs (dvector *u,
  * \brief Gauss-Seidel smoother with C/F ordering for Au=b
  *
  * \param u      Initial guess (in) and the new approximation after smoothing
- * \param A      Pointer to stiffness matrix
- * \param b      Pointer to right hand side
+ * \param A      PoINTer to stiffness matrix
+ * \param b      PoINTer to right hand side
  * \param L      Number of iterations
  * \param mark   C/F marker array
  * \param order  C/F ordering: -1: F-first; 1: C-first
  *
  * \author Zhiyang Zhou
  * \date   2010/11/12 
+ * \date   05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue 
  */
 void fasp_smoother_dcsr_gs_cf (dvector *u, 
                                dCSRmat *A, 
                                dvector *b, 
                                INT L, 
                                INT *mark, 
-                               const INT order )
+                               INT order) 
 {
-    const INT   *ia=A->IA,*ja=A->JA;
-    const REAL  *aj=A->val,*bval=b->val;
-    REAL        *uval=u->val;
+    const INT *ia=A->IA,*ja=A->JA;
     
-    // local variables
-    INT    i,j,k,begin_row,end_row;
-    INT    size = b->row;
-    REAL   t,d=0.0;
+    INT i,j,k,begin_row,end_row;
+    INT size = b->row;
     
-    // F-point first
+    REAL *aj=A->val,*bval=b->val,*uval=u->val;
+    REAL t,d=0.0;
+    INT myid,mybegin,myend;
+    
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || size <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+    
+    // F-poINT first
     if (order == -1) {    
         while (L--) {
-            for (i = 0; i < size; i ++) {
-                if (mark[i] != 1) {
-                    t = bval[i];
-                    begin_row = ia[i], end_row = ia[i+1];
-                    for (k = begin_row; k < end_row; k ++) {
-                        j = ja[k];
-                        if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];    
-                    } // end for k
-                    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+            if (use_openmp) {
+                
+#pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
+                for (myid = 0; myid < nthreads; myid ++) {
+                    FASP_GET_START_END(myid, nthreads, size, mybegin, myend);
+                    for (i=mybegin; i<myend; i++) {
+                        if (mark[i] != 1) {
+                            t = bval[i];
+                            begin_row = ia[i], end_row = ia[i+1];
+                            for (k = begin_row; k < end_row; k ++) {
+                                j = ja[k];
+                                if (i!=j) t -= aj[k]*uval[j]; 
+                                else d = aj[k];
+                            } // end for k
+                            if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                        }
+                    } // end for i
                 }
-            } // end for i
-            
-            for (i = 0; i < size; i ++) {
-                if (mark[i] == 1) {
-                    t = bval[i];
-                    begin_row = ia[i], end_row = ia[i+1];
-                    for (k = begin_row; k < end_row; k ++) {
-                        j = ja[k];
-                        if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];    
-                    } // end for k
-                    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+            }
+            else {
+                for (i = 0; i < size; i ++) {
+                    if (mark[i] != 1) {
+                        t = bval[i];
+                        begin_row = ia[i], end_row = ia[i+1];
+                        for (k = begin_row; k < end_row; k ++) {
+                            j = ja[k];
+                            if (i!=j) t -= aj[k]*uval[j]; 
+                            else d = aj[k];    
+                        } // end for k
+                        if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                    }
+                } // end for i
+            }
+    
+            if (use_openmp) {
+#pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
+                for (myid = 0; myid < nthreads; myid ++) {
+                    FASP_GET_START_END(myid, nthreads, size, mybegin, myend);
+                    for (i=mybegin; i<myend; i++) {
+                        if (mark[i] == 1) {
+                            t = bval[i];
+                            begin_row = ia[i], end_row = ia[i+1];
+                            for (k = begin_row; k < end_row; k ++) {
+                                j = ja[k];
+                                if (i!=j) t -= aj[k]*uval[j]; 
+                                else d = aj[k];    
+                            } // end for k
+                            if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                        }
+                    } // end for i
                 }
-            } // end for i
+            }
+            else {
+                for (i = 0; i < size; i ++) {
+                    if (mark[i] == 1) {
+                        t = bval[i];
+                        begin_row = ia[i], end_row = ia[i+1];
+                        for (k = begin_row; k < end_row; k ++) {
+                            j = ja[k];
+                            if (i!=j) t -= aj[k]*uval[j]; 
+                            else d = aj[k];    
+                        } // end for k
+                        if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                    }
+                } // end for i
+            }
         } // end while    
     }
     else {
         while (L--) {
-            for (i = 0; i < size; i ++) {
-                if (mark[i] == 1) {
-                    t = bval[i];
-                    begin_row = ia[i],end_row = ia[i+1]-1;
-                    for (k = begin_row; k <= end_row; k ++) {
-                        j = ja[k];
-                        if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];    
-                    } // end for k
-                    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+            if (use_openmp) {
+#pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
+                for (myid = 0; myid < nthreads; myid ++) {
+                    FASP_GET_START_END(myid, nthreads, size, mybegin, myend);
+                    for (i=mybegin; i<myend; i++) {
+                        if (mark[i] == 1) {
+                            t = bval[i];
+                            begin_row = ia[i],end_row = ia[i+1];
+                            for (k = begin_row; k < end_row; k ++) {
+                                j = ja[k];
+                                if (i!=j) t -= aj[k]*uval[j]; 
+                                else d = aj[k];
+                            } // end for k
+                            if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                        }
+                    } // end for i
                 }
-            } // end for i
-            
-            for (i = 0; i < size; i ++) {
-                if (mark[i] != 1) {
-                    t = bval[i];
-                    begin_row = ia[i],end_row = ia[i+1]-1;
-                    for (k = begin_row; k <= end_row; k ++) {
-                        j = ja[k];
-                        if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];    
-                    } // end for k
-                    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+            }
+            else {
+                for (i = 0; i < size; i ++)  {
+                    if (mark[i] == 1) {
+                        t = bval[i];
+                        begin_row = ia[i],end_row = ia[i+1];
+                        for (k = begin_row; k < end_row; k ++) {
+                            j = ja[k];
+                            if (i!=j) t -= aj[k]*uval[j]; 
+                            else d = aj[k];    
+                        } // end for k
+                        if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                    }
+                } // end for i
+            }
+            if (use_openmp) {
+#pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
+                for (myid = 0; myid < nthreads; myid ++) {
+                    FASP_GET_START_END(myid, nthreads, size, mybegin, myend);
+                    for (i=mybegin; i<myend; i++) {
+                        if (mark[i] != 1) {
+                            t = bval[i];
+                            begin_row = ia[i],end_row = ia[i+1];
+                            for (k = begin_row; k < end_row; k ++) {
+                                j = ja[k];
+                                if (i!=j) t -= aj[k]*uval[j]; 
+                                else d = aj[k];
+                            } // end for k
+                            if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                        }
+                    } // end for i
                 }
-            } // end for i
+            }
+            else {
+                for (i = 0; i < size; i ++) {
+                    if (mark[i] != 1) {
+                        t = bval[i];
+                        begin_row = ia[i],end_row = ia[i+1];
+                        for (k = begin_row; k < end_row; k ++) {
+                            j = ja[k];
+                            if (i!=j) t -= aj[k]*uval[j]; 
+                            else d = aj[k];    
+                        } // end for k
+                        if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                    }
+                } // end for i
+            }
         } // end while    
     }    
-    
     return;
 }
 
@@ -291,8 +382,8 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
  * \brief Symmetric Gauss-Seidel method as a smoother
  *
  * \param u    Initial guess (in) and the new approximation after smoothing
- * \param A    Pointer to stiffness matrix
- * \param b    Pointer to right hand side
+ * \param A    PoINTer to stiffness matrix
+ * \param b    PoINTer to right hand side
  * \param L    Number of iterations
  *
  * \author Xiaozhe Hu
@@ -353,8 +444,8 @@ void fasp_smoother_dcsr_sgs (dvector *u,
  * \param i_1  Starting index
  * \param i_n  Ending index
  * \param s    Increasing step
- * \param A    Pointer to stiffness matrix
- * \param b    Pointer to right hand side
+ * \param A    PoINTer to stiffness matrix
+ * \param b    PoINTer to right hand side
  * \param L    Number of iterations
  * \param w    Over-relaxation weight
  *
@@ -419,8 +510,8 @@ void fasp_smoother_dcsr_sor (dvector *u,
  * \brief SOR smoother with C/F ordering for Au=b
  *
  * \param u      Initial guess (in) and the new approximation after smoothing
- * \param A      Pointer to stiffness matrix
- * \param b      Pointer to right hand side
+ * \param A      PoINTer to stiffness matrix
+ * \param b      PoINTer to right hand side
  * \param L      Number of iterations
  * \param w      Over-relaxation weight
  * \param mark   C/F marker array
@@ -446,7 +537,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
     INT    size = b->row;
     REAL   t,d=0.0;
     
-    // F-point first
+    // F-poINT first
     if (order == -1) {    
         while (L--) {
             for (i = 0; i < size; i ++) {
@@ -514,10 +605,10 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
  *
  * \brief ILU method as a smoother
  *
- * \param A     Pointer to stiffness matrix
- * \param b     Pointer to right hand side
- * \param x     Pointer to current solution
- * \param data  Pointer to user defined data
+ * \param A     PoINTer to stiffness matrix
+ * \param b     PoINTer to right hand side
+ * \param x     PoINTer to current solution
+ * \param data  PoINTer to user defined data
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/11/12 
@@ -589,8 +680,8 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
  * \param i_1  Starting index
  * \param i_n  Ending index
  * \param s    Increasing step
- * \param A    Pointer to stiffness matrix
- * \param b    Pointer to right hand side
+ * \param A    PoINTer to stiffness matrix
+ * \param b    PoINTer to right hand side
  * \param L    Number of iterations
  * \param w    Relaxation weight
  *
@@ -675,8 +766,8 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
  * \param i_1  Starting index
  * \param i_n  Ending index
  * \param s    Increasing step
- * \param A    Pointer to stiffness matrix
- * \param b    Pointer to right hand side
+ * \param A    PoINTer to stiffness matrix
+ * \param b    PoINTer to right hand side
  * \param L    Number of iterations
  *
  * \author Xiaozhe Hu, James Brannick
@@ -746,6 +837,397 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
     return;    
 }
 
+
+/**
+ * \fn void swep3db (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT nbegz,INT *mark,
+ *                   INT nx, INT ny, INT nz) 
+ *
+ * \brief  a smoother
+ *
+ * The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ *
+ * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
+ */
+
+void swep3db(INT *ia, 
+             INT *ja, 
+             REAL *aa,
+             REAL *u, 
+             REAL *f,
+             INT nbegx,
+             INT nbegy,
+             INT nbegz,
+             INT *mark,
+             INT nx, 
+			 INT ny, 
+			 INT nz)
+{
+    INT nxy, k, k0, j, j0, i, i0;
+    INT begin_row, end_row, ii, jj;
+    REAL t, d;
+    
+    nxy=nx*ny;
+    nbegx = nx + nbegx;
+    nbegy = ny + nbegy;
+    nbegz = nz + nbegz;
+    
+    for (k=nbegz; k >=0; k-=2) {
+        k0= k*nxy;
+        for (j = nbegy; j >=0; j-=2) {
+            j0= j*nx;
+            
+            for (i = nbegx; i >=0; i-=2) {
+                i0 = i   +  j0    + k0;
+                i0 = mark[i0]-1;  // Fortran to C
+                if (i0>=0 ) {
+                    t = f[i0];
+                    begin_row = ia[i0], end_row = ia[i0+1];
+                    for (ii = begin_row; ii < end_row; ii ++) {
+                        jj = ja[ii];
+                        if (i0!=jj) t -= aa[ii]*u[jj]; 
+                        else d = aa[ii];    
+                    } // end for ii
+                    
+                    if (ABS(d) > SMALLREAL) u[i0] = t/d;
+                } //if (i0>=0 ) 
+            }
+        }
+    }
+}
+
+/* 
+ * \fn     rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+ * \brief  Colores Gauss-Seidel backward smoother for Au=b 
+ * \author FENG Chunsheng
+ * \date   02/06/2012 
+ */
+
+void rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+{
+    INT n0e, n0o, isweep;
+    INT ex, ey, ez;
+    INT ox, oy, oz;
+        
+    n0e= -1;
+    n0o= -2;
+    
+    for (isweep = 1; isweep <= nsweeps; isweep++){
+		if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==0)) {    
+			/*...  e-e-e (and going backwards) */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+			/*...  e-e-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+			/*...  e-o-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+			/*...  e-o-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+			/*...  o-e-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+			/*...  o-e-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+			/*...  o-o-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+			/*...  o-o-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+		} 
+		else if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==1)) { 
+			/*...  e-e-o (and going backwards) */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+			/*...  e-e-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+			/*...  e-o-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+			/*...  e-o-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+			/*...  o-e-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+			/*...  o-e-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+			/*...  o-o-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+			/*...  o-o-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+		}  
+		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==0)) { 
+			/*...  e-o-e (and going backwards) */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+			/*...  e-o-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+			/*...  e-e-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+			/*...  e-e-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+			/*...  o-o-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+			/*...  o-o-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+			/*...  o-e-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+			/*...  o-e-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);    
+		}  
+		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==1)) { 
+			/*...  e-o-o (and going backwards) */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+			/*...  e-o-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+			/*...  e-e-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+			/*...  e-e-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+			/*...  o-o-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+			/*...  o-o-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+			/*...  o-e-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+			/*...  o-e-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);    
+		}  
+		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==0)) { 
+			/*...  o-e-e (and going backwards) */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+			/*...  o-e-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+			/*...  o-o-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+			/*...  o-o-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+			/*...  e-e-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+			/*...  e-e-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+			/*...  e-o-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+			/*...  e-o-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);    
+		}  
+		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==1)) { 
+			/*...  o-e-o (and going backwards) */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+			/*...  o-e-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+			/*...  o-o-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+			/*...  o-o-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+			/*...  e-e-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+			/*...  e-e-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+			/*...  e-o-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+			/*...  e-o-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);    
+		}  
+		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==0)) { 
+			/*...  o-o-e (and going backwards) */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+			/*...  o-o-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+			/*...  o-e-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+			/*...  o-e-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+			/*...  e-o-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+			/*...  e-o-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+			/*...  e-e-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+			/*...  e-e-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);    
+		}  
+		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==1)) { 
+			/*...  o-o-o (and going backwards) */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+			/*...  o-o-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+			/*...  o-e-o */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+			/*...  o-e-e */
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+			/*...  e-o-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+			/*...  e-o-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+			/*...  e-e-o */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+			/*...  e-e-e */
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);    
+            
+		}
+	}
+}
+
+
+/* 
+ * \fn     rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+ * \brief  Colores Gauss-Seidel backward smoother for Au=b 
+ * \author FENG Chunsheng
+ * \date   02/06/2012 
+ */
+void swep3df(INT *ia, 
+             INT *ja, 
+             REAL *aa,
+             REAL *u, 
+             REAL *f,
+             INT nbegx, 
+             INT nbegy, 
+             INT nbegz, 
+             INT *mark,
+             INT nx, INT ny, INT nz)
+{
+    INT nxy,k,k0,j,j0,i,i0;
+    INT begin_row,end_row,ii,jj;
+    REAL t,d;
+    nxy=nx*ny;
+    for (k=nbegz; k < nz; k+=2) {
+        k0= k*nxy;
+        
+        for (j = nbegy; j < ny; j+=2) {
+            j0= j*nx;
+            
+            for (i = nbegx; i < nx; i+=2)    /*!*/
+                {
+                    i0 = i   +  j0    + k0;
+                    i0 = mark[i0]-1; //Fortran to C
+                
+                    //    prINTf("%d %d %d %d\n",i,j0,k0,i0);
+                    if (i0>=0 ) {
+                    
+                        t = f[i0];
+                        begin_row = ia[i0], end_row = ia[i0+1];
+                        for (ii = begin_row; ii < end_row; ii ++) {
+                            jj = ja[ii];
+                            if (i0!=jj) t -= aa[ii]*u[jj]; 
+                            else d = aa[ii];    
+                        } // end for ii
+                    
+                        if (ABS(d) > SMALLREAL) u[i0] = t/d;
+                    } //    if (i0>=0 ) 
+                }
+        }
+    }
+    
+}
+
+/* 
+ * \fn     rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+ * \brief  Colores Gauss-Seidel forward smoother for Au=b 
+ * \author FENG Chunsheng
+ * \date   02/06/2012 
+ */
+
+void rb0f3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+{
+    INT n0e,n0o,isweep;
+    
+    n0e=0;
+    n0o=1;
+    
+    for (isweep = 1; isweep <= nsweeps; isweep++) {
+        /*...  o-o-o */
+        swep3df(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+        /*...  o-o-e */
+        swep3df(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+        /*...  o-e-o */
+        swep3df(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+        /*...  o-e-e */
+        swep3df(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+        /*...  e-o-o */
+        swep3df(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+        /*...  e-o-e */
+        swep3df(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+        /*...  e-e-o */
+        swep3df(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+        /*...  e-e-e */
+        swep3df(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+        
+    }
+}
+
+
+/**
+ * \fn void fasp_smoother_dcsr_gs_rb3d(dvector *u, dCSRmat *A, dvector *b, INT L,INT order,
+ *                                     INT nx,INT ny,INT nz) 
+ *
+ * \brief       Colores Gauss-Seidel smoother  for Au=b
+ * \param u     initial guess and the new approximation to the solution obtained after L GS steps
+ * \param A     poINTer to stiffness matrix
+ * \param b     poINTer to right hand side
+ * \param L     number of iterations
+ * \param order ordering: -1: Forward; 1: Backward
+ * \param nx    number vertex of X diricter
+ * \param ny    number vertex of Y diricter
+ * \param nz    number vertex of Z diricter
+ *
+ * \author Chunsheng Feng
+ * \date   2011/11/23 
+ */
+
+void fasp_smoother_dcsr_gs_rb3d (dvector *u, 
+                                 dCSRmat *A, 
+                                 dvector *b, 
+                                 INT L, 
+                                 INT order,
+                                 INT *mark,
+                                 INT maximap,
+                                 INT nx,
+                                 INT ny,
+                                 INT nz )
+{
+    INT *ia=A->IA,*ja=A->JA;
+    REAL *aa=A->val, *bval=b->val, *uval=u->val;
+    
+    INT i,ii,j,k,begin_row,end_row;
+    INT size = b->row;
+    REAL t,d=0.0;
+    // L =10;
+
+    // forward
+    if (order == 1) {
+        while (L--) { 
+            rb0f3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);    
+#if 1
+            for (ii =0;ii <10;ii++)
+                for (i = maximap; i < size; i ++) {
+                    t = bval[i];
+                    begin_row = ia[i], end_row = ia[i+1];
+                    for (k = begin_row; k < end_row; k ++) {
+                        j = ja[k];
+                        if (i!=j) t -= aa[k]*uval[j]; 
+                        else d = aa[k];    
+                    } // end for k
+                    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                } // end for i
+#endif 
+        } // end while    
+    }
+
+    // backward
+    else {
+        while (L--) {
+#if 1    
+            for (ii =0;ii <10;ii++)
+                for (i = size-1; i >= maximap; i --) {
+                    t = bval[i];
+                    begin_row = ia[i],end_row = ia[i+1];
+                    for (k = begin_row; k < end_row; k ++) {
+                        j = ja[k];
+                        if (i!=j) t -= aa[k]*uval[j]; 
+                        else d = aa[k];    
+                    } // end for k
+                    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                } // end for i
+#endif 
+            rb0b3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);    
+        } // end while    
+    }
+    return;
+}
+
+
 #if 0
 /**
  * \fn dCSRmat static form_contractor(dCSRmat *A, const INT smoother, const INT steps, 
@@ -753,7 +1235,7 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  *
  * \brief Form contractor I-BA
  *
- * \param A          Pointer to the dCSRmat
+ * \param A          PoINTer to the dCSRmat
  * \param smoother   Smoother type
  * \param steps      Smoothing steps
  * \param ndeg       Degree of the polynomial smoother
@@ -830,7 +1312,7 @@ static dCSRmat form_contractor (dCSRmat *A,
             fasp_smoother_dcsr_sor(&x, n-1, 0,-1, A, &b, steps, relax);
             break;
         default:
-            printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+            prINTf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
         } 
         
         // store to B

@@ -3,6 +3,7 @@
  */
 
 #include <time.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -28,6 +29,7 @@
  *       independent of SETUP method used! Should be called after multigrid 
  *       hierarchy has been generated!
  */
+
 INT fasp_amg_solve (AMG_data *mgl, 
                     AMG_param *param)
 {
@@ -40,7 +42,12 @@ INT fasp_amg_solve (AMG_data *mgl,
     const REAL    sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
     
     // local variables
+#if FASP_USE_OPENMP
+    double        solve_start=omp_get_wtime();
+#else
     clock_t       solve_start=clock();
+#endif
+
     REAL          relres1=BIGREAL, absres0=BIGREAL, absres, factor;    
     INT           iter=0;
     
@@ -62,7 +69,8 @@ INT fasp_amg_solve (AMG_data *mgl,
 #endif
         
         // Form residual r = b-A*x    
-        fasp_dvec_cp(b,r); fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);    
+        fasp_dvec_cp(b,r); 
+		fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);    
     
         // Compute norms of r and convergence factor
         absres  = fasp_blas_dvec_norm2(r); // residual ||r||
@@ -84,9 +92,13 @@ INT fasp_amg_solve (AMG_data *mgl,
         else
             printf("Number of iterations = %d with relative residual %e.\n", 
                    iter, relres1);
-    
+#if FASP_USE_OPENMP
+        double solve_end=omp_get_wtime();
+        REAL solveduration = (REAL)(solve_end - solve_start);
+#else
         clock_t solve_end=clock();
         REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
+#endif
         print_cputime("AMG solve",solveduration);
     }
     

@@ -22,7 +22,6 @@
  * \param x   Pointer to the REAL array of vector x
  * \param y   Pointer to the REAL array of vector y
  *
- * \author Zhou Zhiyang
  * \date   2011/01/07
  */
 void fasp_blas_dcsrl_mxv (dCSRLmat *A, 

@@ -46,6 +46,7 @@
  */  
 
 #include <math.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -116,7 +117,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     fasp_array_cp(m,b->val,r);
     fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
     
-    if (pc != NULL)
+    if (pc != NULL)	
         pc->fct(r,z,pc->data); /* Apply preconditioner */
     else
         fasp_array_cp(m,r,z); /* No preconditioner */
@@ -297,7 +298,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
         // compute z_k = B(r_k)
         if (stop_type!=STOP_REL_PRECRES) {
             if (pc != NULL)
-                pc->fct(r,z,pc->data); /* preconditioning */
+                pc->fct(r,z,pc->data); /* Apply preconditioner */
             else
                 fasp_array_cp(m,r,z); /* No preconditioner, B=I */
         }
@@ -327,6 +328,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     else 
         return iter;
 }
+
 
 /**
  * \fn INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, dvector *b, dvector *u, precond *pc, 

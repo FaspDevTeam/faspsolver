@@ -59,6 +59,7 @@
 #define STAG_RATIO       1e-4  /**< Staganation tolerance = tol*STAGRATIO */
 #define MAX_STAG         20    /**< Maximal number of staganation times */
 #define MAX_RESTART      20    /**< Maximal number of restarting */
+#define OPENMP_HOLDS     10000 /**< Switch to sequence or openmp */
 
 /** 
  * \brief Definition of max, min, abs

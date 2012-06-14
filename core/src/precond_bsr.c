@@ -2,6 +2,7 @@
  *  \brief Preconditioners for sparse matrices in BSR format.
  */
 
+#include <omp.h>
 #include "fasp.h"
 #include "fasp_functs.h"
 
@@ -14,38 +15,39 @@
  *
  * \brief Diagonal preconditioner z=inv(D)*r
  *
- * \param r     Pointer to the vector needs preconditioning
- * \param z     Pointer to preconditioned vector
- * \param data  Pointer to precondition data
+ * \param r     PoINTer to the vector needs preconditioning
+ * \param z     PoINTer to preconditioned vector
+ * \param data  PoINTer to precondition data
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   10/26/2010
+ * \date   05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  *
  * \note Works for general nb (Xiaozhe)
  */
+
 void fasp_precond_dbsr_diag (REAL *r, 
                              REAL *z, 
-                             void *data)
+                             void *data) 
 {
-    precond_diagbsr *diag = (precond_diagbsr *)data;
+    precond_diagbsr *diag   = (precond_diagbsr *)data;
     const INT nb = diag->nb; 
     
-    switch (nb) { 
+    switch (nb) {
 
     case 2:
-        fasp_precond_dbsr_diag_nc2( r, z, diag );
+        fasp_precond_dbsr_diag_nc2( r, z, diag);
         break;
-    
     case 3:
-        fasp_precond_dbsr_diag_nc3( r, z, diag );
+        fasp_precond_dbsr_diag_nc3( r, z, diag);
         break;
     
     case 5:
-        fasp_precond_dbsr_diag_nc5( r, z, diag );
+        fasp_precond_dbsr_diag_nc5( r, z, diag);
         break;
     
     case 7:
-        fasp_precond_dbsr_diag_nc7( r, z, diag );
+        fasp_precond_dbsr_diag_nc7( r, z, diag);
         break;
     
     default:
@@ -54,14 +56,41 @@ void fasp_precond_dbsr_diag (REAL *r,
             const INT nb2 = nb*nb;
             const INT m = diag->diag.row/nb2;    
     
+	        INT nthreads, use_openmp;
             unsigned INT i;
-            for (i = 0; i < m; ++i) {
-                fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
+
+	        if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
+		        use_openmp = FALSE;
+	        }
+	        else{
+		        use_openmp = TRUE;
+                nthreads = FASP_GET_NUM_THREADS();
+	        }
+
+            if (use_openmp) {
+                INT myid;
+                INT mybegin;
+                INT myend;
+                INT stride_i = m/nthreads;
+#pragma omp parallel private(myid, mybegin, myend,i) num_threads(nthreads)
+                {
+                    myid = omp_get_thread_num();
+                    mybegin = myid*stride_i;
+                    if(myid < nthreads-1)  myend = mybegin+stride_i;
+                    else myend = m;
+                    for (i=mybegin; i < myend; ++i) {
+                        fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
+                    }
+                }
+            }
+            else {
+                for (i = 0; i < m; ++i) {
+                    fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
+                }
             }
         }
         break;
     }
-    
 }
 
 /**
@@ -69,28 +98,59 @@ void fasp_precond_dbsr_diag (REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param r     Pointer to the vector needs preconditioning
- * \param z     Pointer to preconditioned vector
- * \param data  Pointer to precondition data
+ * \param r     PoINTer to the vector needs preconditioning
+ * \param z     PoINTer to preconditioned vector
+ * \param data  PoINTer to precondition data
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   11/18/2011
+ * \date   05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  *
  * \note Works for 2-component (Xiaozhe)
  */
-void fasp_precond_dbsr_diag_nc2 (REAL *r, 
-                                 REAL *z, 
-                                 void *data )
+
+void fasp_precond_dbsr_diag_nc2(REAL *r, 
+                                REAL *z, 
+                                void *data) 
 {
-    precond_diagbsr *diag    = (precond_diagbsr *)data;
-    REAL            *diagptr = diag->diag.val;
+    precond_diagbsr *diag   = (precond_diagbsr *)data;
+    REAL          *diagptr = diag->diag.val;
     
     const INT m = diag->diag.row/4;    
     
     unsigned INT i;
-    for (i = 0; i < m; ++i) {
-        fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
-    }    
+
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+    
+    if (use_openmp) {
+        INT myid;
+        INT mybegin;
+        INT myend;
+        INT stride_i = m/nthreads;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            else myend = m;
+            for (i=mybegin; i < myend; ++i) {
+                fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
+            }
+        }
+    }
+    else {
+        for (i = 0; i < m; ++i) {
+            fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
+        }
+    }
 }
 
 /**
@@ -98,28 +158,59 @@ void fasp_precond_dbsr_diag_nc2 (REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param r     Pointer to the vector needs preconditioning
- * \param z     Pointer to preconditioned vector
- * \param data  Pointer to precondition data
+ * \param r     PoINTer to the vector needs preconditioning
+ * \param z     PoINTer to preconditioned vector
+ * \param data  PoINTer to precondition data
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date 01/06/2011
+ * \date 05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  *
  * \note Works for 3-component (Xiaozhe)
  */
-void fasp_precond_dbsr_diag_nc3 (REAL *r, 
-                                 REAL *z, 
-                                 void *data )
+
+void fasp_precond_dbsr_diag_nc3(REAL *r, 
+                                REAL *z, 
+                                void *data) 
 {
-    precond_diagbsr *diag    = (precond_diagbsr *)data;
-    REAL            *diagptr = diag->diag.val;
+    precond_diagbsr *diag   = (precond_diagbsr *)data;
+    REAL          *diagptr = diag->diag.val;
     
     const INT m = diag->diag.row/9;    
     
     unsigned INT i;
-    for (i = 0; i < m; ++i) {
-        fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
-    }    
+
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+    
+    if (use_openmp) {
+        INT myid;
+        INT mybegin;
+        INT myend;
+        INT stride_i = m/nthreads;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            else myend = m;
+            for (i=mybegin; i < myend; ++i) {
+                fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
+            }
+        }
+    }
+    else {
+        for (i = 0; i < m; ++i) {
+            fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
+        }
+    }
 }
 
 /**
@@ -127,28 +218,59 @@ void fasp_precond_dbsr_diag_nc3 (REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param r     Pointer to the vector needs preconditioning
- * \param z     Pointer to preconditioned vector
- * \param data  Pointer to precondition data
+ * \param r     PoINTer to the vector needs preconditioning
+ * \param z     PoINTer to preconditioned vector
+ * \param data  PoINTer to precondition data
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   01/06/2011
+ * \date   05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  *
  * \note Works for 5-component (Xiaozhe)
  */
-void fasp_precond_dbsr_diag_nc5 (REAL *r, 
-                                 REAL *z, 
-                                 void *data )
+
+void fasp_precond_dbsr_diag_nc5(REAL *r, 
+                                REAL *z, 
+                                void *data) 
 {
-    precond_diagbsr *diag    = (precond_diagbsr *)data;
-    REAL            *diagptr = diag->diag.val;
+    precond_diagbsr *diag   = (precond_diagbsr *)data;
+    REAL          *diagptr = diag->diag.val;
     
-    const INT m = diag->diag.row/25;    
+    const INT m = diag->diag.row/25;
     
     unsigned INT i;
-    for (i = 0; i < m; ++i) {
-        fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
-    }    
+
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+    
+    if (use_openmp) {
+        INT myid;
+        INT mybegin;
+        INT myend;
+        INT stride_i = m/nthreads;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            else myend = m;
+            for (i=mybegin; i < myend; ++i) {
+                fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
+            }
+        }
+    }
+    else {
+        for (i = 0; i < m; ++i) {
+            fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
+        }
+    }
 }
 
 /**
@@ -156,28 +278,58 @@ void fasp_precond_dbsr_diag_nc5 (REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param r     Pointer to the vector needs preconditioning
- * \param z     Pointer to preconditioned vector
- * \param data  Pointer to precondition data
+ * \param r     PoINTer to the vector needs preconditioning
+ * \param z     PoINTer to preconditioned vector
+ * \param data  PoINTer to precondition data
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   01/06/2011
+ * \date   05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  *
  * \note Works for 7-component (Xiaozhe)
  */
 void fasp_precond_dbsr_diag_nc7 (REAL *r, 
                                  REAL *z, 
-                                 void *data )
+                                 void *data) 
 {
     precond_diagbsr *diag   = (precond_diagbsr *)data;
-    REAL            *diagptr = diag->diag.val;
+    REAL          *diagptr = diag->diag.val;
     
     const INT m = diag->diag.row/49;    
     
     unsigned INT i;
-    for (i = 0; i < m; ++i) {
-        fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
-    }    
+
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+    
+    if (use_openmp) {
+        INT myid;
+        INT mybegin;
+        INT myend;
+        INT stride_i = m/nthreads;
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            else myend = m;
+            for (i=mybegin; i < myend; ++i) {
+                fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
+            }
+        }
+    }
+    else {
+        for (i = 0; i < m; ++i) {
+            fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
+        }
+    }
 }
 
 /**
@@ -185,9 +337,9 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
  *
  * \brief ILU preconditioner
  *
- * \param r     Pointer to the vector needs preconditioning
- * \param z     Pointer to preconditioned vector
- * \param data  Pointer to precondition data
+ * \param r     PoINTer to the vector needs preconditioning
+ * \param z     PoINTer to preconditioned vector
+ * \param data  PoINTer to precondition data
  *
  * \author Shiquan Zhang
  * \date   11/09/2010
@@ -440,27 +592,27 @@ void fasp_precond_dbsr_ilu (REAL *r,
 }
 
 /**
- * \fn void fasp_precond_dbsr_amg (double *r, double *z, void *data)
+ * \fn void fasp_precond_dbsr_amg (REAL *r, REAL *z, void *data)
  *
  * \brief AMG preconditioner
  *
- * \param r     Pointer to the vector needs preconditioning
- * \param z     Pointer to preconditioned vector
- * \param data  Pointer to precondition data
+ * \param r     PoINTer to the vector needs preconditioning
+ * \param z     PoINTer to preconditioned vector
+ * \param data  PoINTer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   08/07/2011
  */
-void fasp_precond_dbsr_amg (double *r, 
-                            double *z, 
+void fasp_precond_dbsr_amg (REAL *r, 
+                            REAL *z, 
                             void *data)
 {
     precond_data_bsr *predata=(precond_data_bsr *)data;
-    const int row=predata->mgl_data[0].A.ROW;
-    const int nb = predata->mgl_data[0].A.nb;
-    const int maxit=predata->maxit;
-    unsigned int i;
-    const int m = row*nb;
+    const INT row=predata->mgl_data[0].A.ROW;
+    const INT nb = predata->mgl_data[0].A.nb;
+    const INT maxit=predata->maxit;
+    unsigned INT i;
+    const INT m = row*nb;
     
     AMG_param amgparam; fasp_param_amg_init(&amgparam);
     amgparam.cycle_type = predata->cycle_type;
@@ -487,9 +639,9 @@ void fasp_precond_dbsr_amg (double *r,
  *
  * \brief Nonliear AMLI-cycle AMG preconditioner
  *
- * \param r     Pointer to the vector needs preconditioning
- * \param z     Pointer to preconditioned vector
- * \param data  Pointer to precondition data
+ * \param r     PoINTer to the vector needs preconditioning
+ * \param z     PoINTer to preconditioned vector
+ * \param data  PoINTer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   02/06/2012

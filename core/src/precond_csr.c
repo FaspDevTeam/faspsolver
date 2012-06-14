@@ -374,14 +374,14 @@ void fasp_precond_schwarz(double *r,
 	switch (schwarz_type)
 	{
 		case 2:
-			bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,	mask,maxa,au,al,rhsloc,&memt);
+			bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
 			break;
 		case 3:
-			fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,	mask,maxa,au,al,rhsloc,&memt);
-			bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,	mask,maxa,au,al,rhsloc,&memt);
+			fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
+			bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
 			break;
 		default:
-			fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,	mask,maxa,au,al,rhsloc,&memt);
+			fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
 			break;
 	}
     

@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <time.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -16,23 +17,27 @@ static SHORT orderone(INT **mat, REAL **matval, INT *lengths);
 static SHORT genintval(dCSRmat *A, INT **itmat, REAL **itmatval, INT ittniz, INT *isol, INT numiso, INT nf, INT nc);
 static SHORT getiteval(dCSRmat *A, dCSRmat *it);
 static void interp_RS(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param);
-static void interp_EM(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param);
-static void interp_STD(dCSRmat *A,ivector *vertices, dCSRmat *P, iCSRmat *S, AMG_param *param);
-
+void interp_EM(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param);
+static void interp_RS2(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param);
+static void interp_RS1(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param, INT *icor_ysk);
+static void fasp_get_icor_ysk(INT nrows, INT ncols, INT *CoarseIndex, INT nbl_ysk, INT nbr_ysk, INT *CF_marker, INT *icor_ysk);
+INT fasp_BinarySearch(INT *list, INT value, INT list_length);
+static void fasp_get_nbl_nbr_ysk(dCSRmat *A, INT *nbl_ptr, INT *nbr_ptr);
+static void fasp_mod_coarse_index(INT nrows, INT *CoarseIndex);
+static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S, AMG_param *param);
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn SHORT fasp_amg_interp (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S AMG_param *param)
+ * \fn SHORT fasp_amg_interp (dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param)
  *
  * \brief Generate interpolation P 
  *
- * \param A          Pointer to the stiffness matrix
- * \param vertices   Pointer to the indicator of CF split node is on fine (current) or coarse grid
- * \param P          Pointer to the dCSRmat matrix of resulted interpolation
- * \param S          Pointer to the iCSRmat of strenth matrix
- * \param param      Pointer to AMG parameters
+ * \param A          pointer to the stiffness matrix
+ * \param vertices   pointer to the indicator of CF split node is on fine (current) or coarse grid
+ * \param P          pointer to the dCSRmat matrix of resulted interpolation
+ * \param param      pointer to AMG parameters
  *
  * \return           SUCCESS or error message
  *
@@ -40,36 +45,33 @@ static void interp_STD(dCSRmat *A,ivector *vertices, dCSRmat *P, iCSRmat *S, AMG
  * \date 04/04/2010 
  *
  * \note: modified by Xiaozhe Hu: add S as input -- 05/23/2012
- * 
  */
 SHORT fasp_amg_interp (dCSRmat *A, 
                        ivector *vertices, 
                        dCSRmat *P, 
-                       iCSRmat *S,
+					   iCSRmat *S,
                        AMG_param *param)
 {
     INT interp_type=param->interpolation_type;
-    const INT coarsening_type = param->coarsening_type;
+	const INT coarsening_type = param->coarsening_type;
     INT status = SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_interp ...... [Start]\n");
 #endif
-    
     // make sure standard interpolaiton is used for aggressive coarsening
     if (coarsening_type == 4) interp_type = INTERP_STD;
     
     /*-- Standard interpolation operator --*/
     switch (interp_type) {
-    case INTERP_REG: // Direct interpolation
+    case INTERP_REG: // Standard interpolation
         interp_RS(A, vertices, P, param); 
         break;            
-    case INTERP_ENG_MIN: // Energy min interpolation
+    case INTERP_ENG_MIN: // Energy min interpolation in C
         interp_EM(A, vertices, P, param);
         break;
     case INTERP_STD: // standard interpolation
-        interp_STD(A, vertices, P, S, param);
-        break;
+		interp_STD(A, vertices, P, S, param);
     default:
         fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
         break;
@@ -83,6 +85,7 @@ SHORT fasp_amg_interp (dCSRmat *A,
     else exit(status);
 }
 
+
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
@@ -93,8 +96,8 @@ SHORT fasp_amg_interp (dCSRmat *A,
  * \brief the routine is to find the inverse of a dense matrix
  *
  * \param nn      Size of the matrix
- * \param mat     Pointer to the full matrix
- * \param invmat  Pointer to the full inverse matrix
+ * \param mat     pointer to the full matrix
+ * \param invmat  pointer to the full inverse matrix
  *
  * \return        SUCCESS or error message
  * 
@@ -135,7 +138,7 @@ static SHORT invden (INT nn,
  *
  * \brief Get a local block from a CSR sparse matrix
  *
- * \param A     Pointer to a sparse matrix
+ * \param A     pointer to a sparse matrix
  * \param m     Number of rows of the local block matrix
  * \param n     Number of columns of the local block matrix
  * \param rows  Indices to local rows
@@ -186,10 +189,10 @@ static SHORT get_block (dCSRmat *A,
  *
  * \brief given the row indices and col indices, to find a block submatrix and get its inverse
  *
- * \param A     Pointer to the whole matrix
+ * \param A     pointer to the whole matrix
  * \param mm    Size of the submatrix
  * \param Ii    Integer array, to store the indices of row (also col)
- * \param ima   Pointer to the inverse of the full submatrix, the storage is row by row
+ * \param ima   pointer to the inverse of the full submatrix, the storage is row by row
  * \param mask  Working array
  *
  * \return      SUCCESS or error message
@@ -219,12 +222,12 @@ static SHORT gentisquare_nomass (dCSRmat *A,
  *
  * \brief Add a small submatrix to a big matrix with respect to its row and cols in the big matrix
  *
- * \param mat      Pointer pointing to the structure of the matrix
- * \param matval   Pointer pointing to the values according to the structure
+ * \param mat      pointer poINTing to the structure of the matrix
+ * \param matval   pointer poINTing to the values according to the structure
  * \param lengths  2d array, the second entry is the lengths of matval
  * \param mm       Number of the rows (also the columns) 
- * \param Ii       Pointer to the array to store the relative position of the rows and cols
- * \param ima      Pointer to the full submatrix, the sequence is row by row
+ * \param Ii       pointer to the array to store the relative position of the rows and cols
+ * \param ima      pointer to the full submatrix, the sequence is row by row
  *
  * \return         SUCCESS or error message
  *
@@ -258,8 +261,8 @@ static SHORT getinonefull (INT **mat,
  *
  * \brief Order a cluster of entries in a sequence
  *
- * \param *mat      Pointer to the relative position of the entries
- * \param *matval   Pointer to the values corresponding to the position
+ * \param *mat      pointer to the relative position of the entries
+ * \param *matval   pointer to the values corresponding to the position
  * \param lengths   INT array, to store the number of rows, number of cols and number of nonzerow
  *
  * \return          SUCCESS or error message
@@ -392,9 +395,9 @@ static SHORT orderone (INT **mat,
  *
  * \brief Given the structure of the interpolation, to get the evaluation of the interpolation
  *
- * \param A         Pointer to the dCSRmat matrix
- * \param itmat     Pointer to the structure of the interpolation
- * \param itmatval  Pointer to the evaluation of the interpolation
+ * \param A         pointer to the dCSRmat matrix
+ * \param itmat     pointer to the structure of the interpolation
+ * \param itmatval  pointer to the evaluation of the interpolation
  * \param isol      ???
  * \param numiso    ???
  * \param ittniz    Length of interpolation
@@ -575,8 +578,8 @@ static SHORT genintval (dCSRmat *A,
  * \brief Given a coarsening (in the form of an interpolation operator), inherit the structure,
  *        get new evaluation
  *
- * \param A    Pointer to the dCSRmat matrix
- * \param it   Pointer to the interpolation matrix
+ * \param A    pointer to the dCSRmat matrix
+ * \param it   pointer to the interpolation matrix
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   10/29/2010  
@@ -679,10 +682,10 @@ static SHORT getiteval (dCSRmat *A,
  *
  * \brief Energy-min interpolation 
  *
- * \param A          Pointer to the stiffness matrix
- * \param vertices   Pointer to the indicator of CF split node is on fine or coarse grid
- * \param P          Pointer to the dCSRmat matrix of resulted interpolation
- * \param param      Pointer to AMG parameters 
+ * \param A          pointer to the stiffness matrix
+ * \param vertices   pointer to the indicator of CF split node is on fine or coarse grid
+ * \param P          pointer to the dCSRmat matrix of resulted interpolation
+ * \param param      pointer to AMG parameters 
  *
  * \author Shuo Zhang, Xuehai Huang
  * \date   04/04/2010 
@@ -691,10 +694,10 @@ static SHORT getiteval (dCSRmat *A,
  *           On An Energy Minimazing Basis in Algebraic Multigrid Methods
  *           Computing and visualization in sciences, 2003
  */
-static void interp_EM (dCSRmat *A, 
-                       ivector *vertices, 
-                       dCSRmat *P, 
-                       AMG_param *param)
+void interp_EM (dCSRmat *A, 
+                ivector *vertices, 
+                dCSRmat *P, 
+                AMG_param *param)
 {
     INT i, j, index;
     INT *vec=vertices->val;    
@@ -726,24 +729,26 @@ static void interp_EM (dCSRmat *A,
  *
  * \brief Direct interpolation 
  *
- * \param A         Pointer to the stiffness matrix
- * \param vertices  Pointer to the indicator of CF split node is on fine or coarse grid
- * \param Ptr       Pointer to the dCSRmat matrix of resulted interpolation
- * \param param     Pointer to AMG parameters
+ * \param A         pointer to the stiffness matrix
+ * \param vertices  pointer to the indicator of CF split node is on fine or coarse grid
+ * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
+ * \param param     pointer to AMG parameters
  *
  * \author Xuehai Huang
  * \date   01/31/2009  
+ * 
  *
  * \note Ref P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid. 
  *             Academic Press Inc., San Diego, CA, 2001. 
  *           With contributions by A. Brandt, P. Oswald and K. St¨uben.
  */
-static void interp_RS (dCSRmat *A, 
-                       ivector *vertices, 
-                       dCSRmat *Ptr, 
-                       AMG_param *param)
+
+static void interp_RS( dCSRmat *A, 
+		               ivector *vertices, 
+				       dCSRmat *Ptr, 
+				       AMG_param *param )
 {
-    const REAL epsilon_tr = param->truncation_threshold;
+    REAL epsilon_tr = param->truncation_threshold;
     REAL amN, amP, apN, apP;
     REAL alpha, beta, aii=0;
     INT *vec = vertices->val;
@@ -751,106 +756,221 @@ static void interp_RS (dCSRmat *A,
     
     unsigned INT i,j,k,l,index=0;
     INT begin_row, end_row;
+    INT myid;
+    INT mybegin;
+    INT myend;
+    INT stride_i;
+    
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || A->row <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
     
     /** Generate interpolation P */
     dCSRmat P=fasp_dcsr_create(Ptr->row,Ptr->col,Ptr->nnz);
     
     /** step 1: Find first the structure IA of P */
-    memcpy(P.IA,Ptr->IA,(P.row+1)*sizeof(INT));     //for (i=0;i<=P.row;++i) P.IA[i]=Ptr->IA[i];
+    fasp_iarray_cp(P.row+1, Ptr->IA, P.IA);
     
     /** step 2: Find the structure JA of P */
-    memcpy(P.JA,Ptr->JA,P.nnz*sizeof(INT));     //for (i=0;i<P.nnz;++i) P.JA[i]=Ptr->JA[i];
+    fasp_iarray_cp(P.nnz, Ptr->JA, P.JA);
     
     /** step 3: Fill the data of P */
-    for (i=0;i<A->row;++i) {
-        begin_row=A->IA[i]; end_row=A->IA[i+1]-1;    
-    
-        for (diagindex=begin_row;diagindex<=end_row;diagindex++) {
-            if (A->JA[diagindex]==i) {
-                aii=A->val[diagindex];
-                break;
-            }
+    if (use_openmp) {
+        stride_i = A->row/nthreads;
+#pragma omp parallel private(myid,mybegin,myend,i,begin_row,end_row,diagindex,aii,amN,amP,apN,apP,countPplus,j,k,alpha,beta,l) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1) myend = mybegin+stride_i;
+            else myend = A->row;
+            for (i=mybegin; i<myend; ++i){
+				begin_row=A->IA[i]; end_row=A->IA[i+1]-1;    
+				for(diagindex=begin_row;diagindex<=end_row;diagindex++){
+                        if (A->JA[diagindex]==i) {
+                            aii=A->val[diagindex];
+                            break;
+                        }
+				}
+				if(vec[i]==0){  // if node i is on fine grid 
+					amN=0, amP=0, apN=0, apP=0,  countPplus=0;
+					for(j=begin_row;j<=end_row;++j){
+						if(j==diagindex) continue;
+						for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
+							if(Ptr->JA[k]==A->JA[j]) break;
+						}
+						if(A->val[j]>0) {
+							apN+=A->val[j];
+							if(k<Ptr->IA[i+1]) {
+								apP+=A->val[j];
+								countPplus++;
+							}
+						}
+						else {
+							amN+=A->val[j];
+							if(k<Ptr->IA[i+1]) {
+								amP+=A->val[j];
+							}
+						}
+					} // j
+                            
+					alpha=amN/amP;
+					if(countPplus>0) {
+						beta=apN/apP;
+					}
+					else {
+						beta=0;
+						aii+=apN;
+					}
+					for(j=P.IA[i];j<P.IA[i+1];++j){
+						k=P.JA[j];
+						for(l=A->IA[i];l<A->IA[i+1];l++){
+							if(A->JA[l]==k) break;
+						}
+						if(A->val[l]>0){
+							P.val[j]=-beta*A->val[l]/aii;
+						}
+						else {
+							P.val[j]=-alpha*A->val[l]/aii;
+						}
+					}
+				}
+				else if(vec[i]==2) // if node i is a special fine node
+				{
+                        
+				}
+				else {// if node i is on coarse grid 
+					P.val[P.IA[i]]=1;
+				}
+			}
         }
-    
-        if (vec[i]==0) { // if node i is on fine grid 
-
-            amN=0, amP=0, apN=0, apP=0, countPplus=0;
-    
-            for (j=begin_row;j<=end_row;++j) {
-                if (j==diagindex) continue;
-    
-                for (k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
-                    if (Ptr->JA[k]==A->JA[j]) break;
-                }
-    
-                if (A->val[j]>0) {
-                    apN+=A->val[j];
-                    if (k<Ptr->IA[i+1]) {
-                        apP+=A->val[j];
-                        countPplus++;
-                    }
-                }
-                else {
-                    amN+=A->val[j];
-                    if (k<Ptr->IA[i+1]) {
-                        amP+=A->val[j];
-                    }
-                }
-            } // j
-    
-            alpha=amN/amP;
-            if (countPplus>0) {
-                beta=apN/apP;
-            }
-            else {
-                beta=0;
-                aii+=apN;
-            }
-    
-            for (j=P.IA[i];j<P.IA[i+1];++j) {
-                k=P.JA[j];
-                for (l=A->IA[i];l<A->IA[i+1];l++) {
-                    if (A->JA[l]==k) break;
-                }
-    
-                if (A->val[l]>0) {
-                    P.val[j]=-beta*A->val[l]/aii;
-                }
-                else {
-                    P.val[j]=-alpha*A->val[l]/aii;
-                }
-            }
-        }
-        else if (vec[i]==2) { // if node i is a special fine node
-        }
-        else { // if node i is on coarse grid 
-            P.val[P.IA[i]]=1;
-        }
-    }    
+    }
+    else {
+        for(i=0;i<A->row;++i){
+			begin_row=A->IA[i]; end_row=A->IA[i+1]-1;    
+			for(diagindex=begin_row;diagindex<=end_row;diagindex++) {
+				if (A->JA[diagindex]==i) {
+					aii=A->val[diagindex];
+					break;
+				}
+			}
+			if(vec[i]==0){  // if node i is on fine grid 
+				amN=0, amP=0, apN=0, apP=0,  countPplus=0;
+				for(j=begin_row;j<=end_row;++j){
+					if(j==diagindex) continue;
+					for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
+						if(Ptr->JA[k]==A->JA[j]) break;
+					}
+					if(A->val[j]>0) {
+						apN+=A->val[j];
+						if(k<Ptr->IA[i+1]) {
+							apP+=A->val[j];
+							countPplus++;
+						}
+					}
+					else {
+						amN+=A->val[j];
+						if(k<Ptr->IA[i+1]) {
+							amP+=A->val[j];
+						}
+					}
+				} // j
+                        
+				alpha=amN/amP;
+				if(countPplus>0) {
+					beta=apN/apP;
+				}
+				else {
+					beta=0;
+					aii+=apN;
+				}
+				for(j=P.IA[i];j<P.IA[i+1];++j) {
+					k=P.JA[j];
+					for(l=A->IA[i];l<A->IA[i+1];l++){
+						if(A->JA[l]==k) break;
+					}
+					if(A->val[l]>0) {
+						P.val[j]=-beta*A->val[l]/aii;
+					}
+					else {
+						P.val[j]=-alpha*A->val[l]/aii;
+					}
+				}
+			}
+			else if(vec[i]==2)  // if node i is a special fine node
+			{
+                    
+			}
+			else {// if node i is on coarse grid 
+				P.val[P.IA[i]]=1;
+			}
+		}
+	}
     
     fasp_mem_free(Ptr->IA);
     fasp_mem_free(Ptr->JA);
     fasp_mem_free(Ptr->val);    
-    
-#if 0 // Changed vertices->row to A->row, Edited by Feng Chunsheng 2011/04/11    
+#if 1
+    INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));
+#else
     INT *CoarseIndex=(INT*)fasp_mem_calloc(vertices->row, sizeof(INT));
-    index=0;
-    for (i=0;i<vertices->row;++i)
-#else    
-        INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));    
-    index=0;
-    for (i=0;i< A->row;++i)    
-#endif  // Changed vertices->row to A->row, Edited by Feng Chunsheng 2011/04/11
-        {
-            if (vec[i]==1) {
-                CoarseIndex[i]=index;
-                index++;
-            }
-        }
+#endif
     
-    for (i=0;i<P.IA[P.row];++i) {
-        j=P.JA[i];
-        P.JA[i]=CoarseIndex[j];
+#if CHMEM_MODE
+#if 1
+    total_alloc_mem += (A->row)*sizeof(INT);
+#else
+    total_alloc_mem += (vertices->row)*sizeof(INT);
+#endif
+#endif
+    
+    index=0;
+#if 1
+    for(i=0;i<A->row;++i)
+#else
+        for(i=0;i<vertices->row;++i)
+#endif
+            {
+                if(vec[i]==1)
+                    {
+                        CoarseIndex[i]=index;
+                        index++;
+                    }
+            }
+
+	if(!FASP_USE_OPENMP || P.IA[P.row] <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+    if (use_openmp) {
+        stride_i = P.IA[P.row]/nthreads;
+#pragma omp parallel private(myid,mybegin,myend,i,j) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1) myend = mybegin+stride_i;
+            else myend = P.IA[P.row];
+            for (i=mybegin; i<myend; ++i)
+                {
+                    j=P.JA[i];
+                    P.JA[i]=CoarseIndex[j];
+                }
+        }
+    }
+    else {
+        for(i=0;i<P.IA[P.row];++i)
+            {
+                j=P.JA[i];
+                P.JA[i]=CoarseIndex[j];
+            }
     }
     fasp_mem_free(CoarseIndex);
     
@@ -862,94 +982,126 @@ static void interp_RS (dCSRmat *A,
     INT num_lost=0;
     
     Ptr->val=(REAL*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(REAL));
+#if CHMEM_MODE
+    total_alloc_mem += (P.IA[Ptr->row])*sizeof(REAL);
+#endif
     Ptr->JA=(INT*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(INT));    
+#if CHMEM_MODE
+    total_alloc_mem += (P.IA[Ptr->row])*sizeof(INT);
+#endif
     Ptr->IA=(INT*)fasp_mem_calloc(Ptr->row+1, sizeof(INT));
+#if CHMEM_MODE
+    total_alloc_mem += (Ptr->row+1)*sizeof(INT);
+#endif
     
     INT index1=0, index2=0;
-    for (i=0;i<P.row;++i) {
-        mMin=0;
-        pMax=0;
-        mSum=0;
-        pSum=0;
-        mTruncedSum=0;
-        pTruncedSum=0;
-        mTruncCount=0;
-        pTruncCount=0;
-        
-        Ptr->IA[i]-=num_lost;
-        
-        for (j=P.IA[i];j<P.IA[i+1];++j) {
-            if (P.val[j]<0) {
-                mSum+=P.val[j];
-                if (P.val[j]<mMin) {
-                    mMin=P.val[j];
-                }
-            }
-            
-            if (P.val[j]>0) {
-                pSum+=P.val[j];
-                if (P.val[j]>pMax) {
-                    pMax=P.val[j];
-                }
-            }
-        }
-        
-        for (j=P.IA[i];j<P.IA[i+1];++j) {
-            if (P.val[j]<0) {
-                if (P.val[j]>mMin*epsilon_tr) {
-                    mTruncCount++;
-                }
-                else {
-                    num_lost--;
-                }
-            }
-            
-            if (P.val[j]>0) {
-                if (P.val[j]<pMax*epsilon_tr) {
-                    pTruncCount++;
-                }
-                else {
-                    num_lost--;
-                }
-            }
-        }
-        
-        // step 2: Find the structure JA and fill the data A of Ptr
-        for (j=P.IA[i];j<P.IA[i+1];++j) {
-            if (P.val[j]<0) {
-                if (!(P.val[j]>mMin*epsilon_tr)) {
-                    Ptr->JA[index1]=P.JA[j];
-                    mTruncedSum+=P.val[j];
-                    index1++;
-                }
-            }
+    for(i=0;i<P.row;++i)
+        {
+            mMin=0;
+            pMax=0;
+            mSum=0;
+            pSum=0;
+            mTruncedSum=0;
+            pTruncedSum=0;
+            mTruncCount=0;
+            pTruncCount=0;
     
-            if (P.val[j]>0) {
-                if (!(P.val[j]<pMax*epsilon_tr)) {
-                    Ptr->JA[index1]=P.JA[j];
-                    pTruncedSum+=P.val[j];
-                    index1++;
-                }
-            }
-        }
+            Ptr->IA[i]-=num_lost;
     
-        // step 3: Fill the data A of Ptr
-        for (j=P.IA[i];j<P.IA[i+1];++j) {
-            if (P.val[j]<0) {
-                if (!(P.val[j]>mMin*epsilon_tr)) {
-                    Ptr->val[index2]=P.val[j]/mTruncedSum*mSum;
-                    index2++;
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            mSum+=P.val[j];
+                            if(P.val[j]<mMin)
+                                {
+                                    mMin=P.val[j];
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            pSum+=P.val[j];
+                            if(P.val[j]>pMax)
+                                {
+                                    pMax=P.val[j];
+                                }
+                        }
                 }
-            }
-            
-            if (P.val[j]>0) {
-                if (!(P.val[j]<pMax*epsilon_tr)) {
-                    Ptr->val[index2]=P.val[j]/pTruncedSum*pSum;
-                    index2++;
+    
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            if(P.val[j]>mMin*epsilon_tr)
+                                {
+                                    mTruncCount++;
+                                }
+                            else
+                                {
+                                    num_lost--;
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            if(P.val[j]<pMax*epsilon_tr)
+                                {
+                                    pTruncCount++;
+                                }
+                            else
+                                {
+                                    num_lost--;
+                                }
+                        }
                 }
-            }
+    
+            // step 2: Find the structure JA and fill the data A of Ptr
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            if(!(P.val[j]>mMin*epsilon_tr))
+                                {
+                                    Ptr->JA[index1]=P.JA[j];
+                                    mTruncedSum+=P.val[j];
+                                    index1++;
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            if(!(P.val[j]<pMax*epsilon_tr))
+                                {
+                                    Ptr->JA[index1]=P.JA[j];
+                                    pTruncedSum+=P.val[j];
+                                    index1++;
+                                }
+                        }
+                }
+    
+            // step 3: Fill the data A of Ptr
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            if(!(P.val[j]>mMin*epsilon_tr))
+                                {
+                                    Ptr->val[index2]=P.val[j]/mTruncedSum*mSum;
+                                    index2++;
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            if(!(P.val[j]<pMax*epsilon_tr))
+                                {
+                                    Ptr->val[index2]=P.val[j]/pTruncedSum*pSum;
+                                    index2++;
+                                }
+                        }
+                }
         }
-    }
     Ptr->IA[P.row]-=num_lost;
     Ptr->nnz=Ptr->IA[Ptr->row];
     
@@ -959,7 +1111,1215 @@ static void interp_RS (dCSRmat *A,
     fasp_mem_free(P.IA);
     fasp_mem_free(P.JA);
     fasp_mem_free(P.val);
+
 }
+
+/**
+ * \fn INT fasp_amg_interp1(dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param)
+ * \brief Generate interpolation P 
+ *
+ * \param A          pointer to the stiffness matrix
+ * \param vertices   pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
+ * \param P          pointer to the dCSRmat matrix of resulted interpolation
+ * \param param      pointer to AMG parameters
+ * \return            SUCCESS or error message
+ *
+ * \date 03/01/2011
+ */
+INT fasp_amg_interp1( dCSRmat *A, 
+                      ivector *vertices, 
+                      dCSRmat *P, 
+                      AMG_param *param, 
+					  iCSRmat *S,
+                      INT *icor_ysk)
+{
+    INT status = SUCCESS;
+    INT interp_type=param->interpolation_type;
+	const INT coarsening_type = param->coarsening_type;
+    
+#if DEBUG_MODE
+    printf("fasp_amg_interp ...... [Start]\n");
+#endif
+    
+	// make sure standard interpolaiton is used for aggressive coarsening
+	if (coarsening_type == 4) interp_type = INTERP_STD;
+
+    /*-- Standard interpolation operator --*/
+    switch (interp_type) {
+	case INTERP_REG: // Direct interpolation
+        interp_RS1(A, vertices, P, param, icor_ysk);
+		break;
+	case INTERP_ENG_MIN: // Energy min interpolation 
+        interp_EM(A, vertices, P, param);
+        break;
+	case INTERP_STD: // standard interpolation
+		interp_STD(A, vertices, P, S, param);
+		break;
+    default:
+		fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
+		break;
+    }
+    
+#if DEBUG_MODE
+    printf("fasp_amg_interp ...... [Finish]\n");
+#endif
+    
+    if (status<0) exit(status);
+    else return status;
+}
+
+/**
+ * \fn static void fasp_get_nbl_nbr_ysk(dCSRmat *A, INT *nbl_ptr, INT *nbr_ptr)
+ * \brief Get the bandwidth of the matrix
+ *
+ * \param A         pointer to the stiffness matrix
+ * \param nbl_ptr   the left bandwidth
+ * \param nbr_ptr   the right bandwidth
+ *
+ * \date 03/01/2011
+ */
+static void fasp_get_nbl_nbr_ysk( dCSRmat *A, 
+		                          INT *nbl_ptr, 
+								  INT *nbr_ptr )
+{
+#if FASP_USE_OPENMP
+    INT *IA = A->IA;
+    INT *JA = A->JA;
+    INT myid, mybegin, myend, nthreads;
+    INT max_l, max_r;
+    INT i, end_row_A, j;
+	
+    nthreads = FASP_GET_NUM_THREADS();
+
+    INT *max_left_right = (INT *)fasp_mem_calloc(2*nthreads, sizeof(INT));
+
+#pragma omp parallel for private(myid,mybegin,myend,max_l,max_r,i,end_row_A,j)
+    for (myid = 0; myid < nthreads; myid ++)
+        {
+            FASP_GET_START_END(myid, nthreads, A->row, mybegin, myend);
+            max_l = 0;
+            max_r = 0;
+            for (i = mybegin; i < myend; i ++) {
+                end_row_A = IA[i+1];
+                for (j = IA[i]; j < end_row_A; j ++) {
+                    max_l = MAX(i-JA[j], max_l);
+                    max_r = MAX(JA[j]-i, max_r);
+                }
+            }
+            max_left_right[myid*2] = max_l;
+            max_left_right[myid*2+1] = max_r;
+        }
+    max_l = max_left_right[0];
+    max_r = max_left_right[1];
+    for (i = 1; i < nthreads; i ++) {
+        max_l = MAX(max_l, max_left_right[i*2]);
+        max_r = MAX(max_r, max_left_right[i*2+1]);
+    }
+    fasp_mem_free(max_left_right);
+    *nbl_ptr = max_l;
+    *nbr_ptr = max_r;
+#endif
+}
+
+/**
+ * \fn static void fasp_mod_coarse_index( INT nrows, INT *CoarseIndex)
+ * \brief Modify CoarseIndex
+ *
+ * \param nrows         length of CoarseIndex
+ * \param CoarseIndex  pointer to index of coarse poINTs
+ * \param  nthreads     number of threads
+ * \param openmp_holds  threshold of parallelization
+ *
+ * \date 03/01/2011
+ */
+static void fasp_mod_coarse_index( INT nrows, 
+		                           INT *CoarseIndex)
+{
+#if FASP_USE_OPENMP
+    INT myid, mybegin, myend, i, nthreads;
+
+    nthreads = FASP_GET_NUM_THREADS();
+
+#pragma omp parallel for private(myid,mybegin,myend,i)
+    for (myid = 0; myid < nthreads; myid ++)
+        {
+            FASP_GET_START_END(myid, nthreads, nrows, mybegin, myend);
+            if (myid == 0)
+                {
+                    mybegin ++;
+                }
+            for (i = mybegin; i < myend; i ++)
+                {
+                    if (CoarseIndex[i] < CoarseIndex[i-1])
+                        {
+                            CoarseIndex[i] = CoarseIndex[i-1];
+                        }
+                }
+        }
+#endif
+}
+
+/**
+ * \fn INT fasp_BinarySearch(INT *list, INT value, INT list_length)
+ * \brief Binary Search
+ *
+ * \date 03/01/2011
+ */
+INT fasp_BinarySearch (INT *list, 
+		               INT value, 
+					   INT list_length)
+{
+    INT not_found = 1;
+    INT low, high, m;
+    
+    low = 0;
+    high = list_length - 1;
+    while (not_found && low <= high)
+        {
+            m = (low + high) / 2;
+            if (value < list[m])
+                {
+                    high = m - 1;
+                }
+            else if (value > list[m])
+                {
+                    low = m + 1;
+                }
+            else
+                {
+                    not_found = 0;
+                    return m;
+                }
+        }
+    
+    return -1;
+}
+
+/**
+ * \fn static void fasp_get_icor_ysk
+ * \brief Get Icor_ysk
+ *
+ * \date 03/01/2011
+ */
+static void fasp_get_icor_ysk(INT nrows, 
+		                      INT ncols, 
+							  INT *CoarseIndex, 
+							  INT nbl_ysk, 
+							  INT nbr_ysk, 
+							  INT *CF_marker, 
+							  INT *icor_ysk)
+{
+#if FASP_USE_OPENMP
+    INT myid, FiveMyid, mybegin, myend, min_A, max_A, i, first_f_node, min_P, max_P, myend_minus_one;
+    INT lengthAA = 0, lengthPP = 0;
+    INT nthreads; 
+    
+    nthreads = FASP_GET_NUM_THREADS();
+
+#pragma omp parallel for private(myid,FiveMyid,mybegin,myend,min_A,max_A,i,first_f_node,min_P,max_P,myend_minus_one) reduction(+: lengthAA,lengthPP)
+    for (myid = 0; myid < nthreads; myid ++)
+        {
+            FiveMyid = myid * 5;
+            FASP_GET_START_END(myid, nthreads, ncols, mybegin, myend);
+            icor_ysk[FiveMyid] = mybegin;
+            if (mybegin == myend) {
+                lengthAA = 0;
+                lengthPP = 0;
+                icor_ysk[FiveMyid+1] = 0;
+                icor_ysk[FiveMyid+3] = 0;
+            }
+            else {
+                first_f_node = fasp_BinarySearch(CoarseIndex, mybegin, nrows);
+                for (i = first_f_node; i > -1; i --) {
+                    if (CoarseIndex[i] != mybegin) {
+                        break;
+                    }
+                }
+                min_A = i + 1;
+                min_A = MAX(0, min_A-2*nbl_ysk);
+                myend_minus_one = myend - 1;
+                first_f_node = fasp_BinarySearch(CoarseIndex, myend_minus_one, nrows);
+                for (i = first_f_node; i > -1; i --) {
+                    if (CoarseIndex[i] != myend_minus_one) {
+                        max_A = i;
+                        break;
+                    }
+                }
+                max_A = MIN(nrows, max_A+2*nbr_ysk+1);
+                lengthAA = max_A - min_A + 2;
+                icor_ysk[FiveMyid+1] = lengthAA;
+                icor_ysk[FiveMyid+2] = min_A;
+                for (i = min_A; i >= 0; i --) {
+                    if (CF_marker[i] == 0) {
+                        first_f_node = i;
+                        break;
+                    }
+                }
+                if (i == -1) {
+                    min_P = 0;
+                }
+                else {
+                    first_f_node -= nbl_ysk;
+                    if (first_f_node <= 0) {
+                        min_P = 0;
+                    }
+                    else {
+                        for (i = first_f_node; i >= 0; i --) {
+                            if (CF_marker[i] == 1) {
+                                min_P = CoarseIndex[i];
+                                break;
+                            }
+                        }
+                        if (i == -1) {
+                            min_P = 0;
+                        }
+                    }
+                }
+                for (i = max_A-1; i < nrows; i ++) {
+                    if (CF_marker[i] == 0) {
+                        first_f_node = i;
+                        break;
+                    }
+                }
+                if (i == nrows) {
+                    max_P = ncols;
+                }
+                else {
+                    first_f_node += nbr_ysk;
+                    if (first_f_node >= nrows) {
+                        max_P = ncols;
+                    }
+                    else {
+                        for (i = first_f_node; i < nrows; i ++) {
+                            if (CF_marker[i] == 1) {
+                                max_P = CoarseIndex[i] + 1;
+                                break;
+                            }
+                        }
+                        if (i == nrows) {
+                            max_P = ncols;
+                        }
+                    }
+                }
+                lengthPP = max_P - min_P + 2;
+                icor_ysk[FiveMyid+3] = lengthPP;
+                icor_ysk[FiveMyid+4] = min_P;
+            }
+        }
+    icor_ysk[5*nthreads] = lengthAA;
+    icor_ysk[5*nthreads+1] = lengthPP;
+#endif
+}
+
+/**
+ * \fn static void interp_RS1(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param)
+ * \brief Direct interpolation 
+ *
+ * \param A         pointer to the stiffness matrix
+ * \param vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
+ * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
+ * \param param     pointer to AMG parameters
+ *
+ * Refer to P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid. 
+ *              Academic Press Inc., San Diego, CA, 2001. 
+ *          With contributions by A. Brandt, P. Oswald and K. St¨uben.
+ */
+
+static void interp_RS1(dCSRmat *A, 
+		               ivector *vertices, 
+					   dCSRmat *Ptr, 
+					   AMG_param *param, 
+					   INT *icor_ysk)
+{
+    REAL epsilon_tr = param->truncation_threshold;
+    REAL amN, amP, apN, apP;
+    REAL alpha, beta, aii=0;
+    INT *vec = vertices->val;
+    INT countPplus, diagindex;
+    
+    unsigned INT i,j,k,l,index=0;
+    INT begin_row, end_row;
+    INT myid;
+    INT mybegin;
+    INT myend;
+    INT stride_i;
+    INT *indexs = NULL;
+    INT shift;
+    INT nbl_ysk, nbr_ysk;
+   
+	INT nthreads, use_openmp;
+
+	if(!FASP_USE_OPENMP || A->row <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+    
+    /** Generate interpolation P */
+    dCSRmat P=fasp_dcsr_create(Ptr->row,Ptr->col,Ptr->nnz);
+    
+    /** step 1: Find first the structure IA of P */
+    fasp_iarray_cp(P.row+1, Ptr->IA, P.IA);
+    
+    /** step 2: Find the structure JA of P */
+    fasp_iarray_cp(P.nnz, Ptr->JA, P.JA);
+    
+    /** step 3: Fill the data of P */
+    if (use_openmp) {
+#pragma omp parallel for private(myid,mybegin,myend,i,begin_row,end_row,diagindex,aii,amN,amP,apN,apP,countPplus,j,k,alpha,beta,l)
+        for (myid = 0; myid < nthreads; myid++ )
+            {
+                FASP_GET_START_END(myid, nthreads, A->row, mybegin, myend);
+                for (i=mybegin; i<myend; ++i)
+                    {
+                        begin_row=A->IA[i]; end_row=A->IA[i+1]-1;    
+    
+                        for(diagindex=begin_row;diagindex<=end_row;diagindex++) {
+                            if (A->JA[diagindex]==i) {
+                                aii=A->val[diagindex];
+                                break;
+                            }
+                        }
+    
+                        if(vec[i]==0)  // if node i is on fine grid 
+                            {
+                                amN=0, amP=0, apN=0, apP=0,  countPplus=0;
+    
+                                for(j=begin_row;j<=end_row;++j)
+                                    {
+                                        if(j==diagindex) continue;
+    
+                                        for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
+                                            if(Ptr->JA[k]==A->JA[j]) break;
+                                        }
+    
+                                        if(A->val[j]>0) {
+                                            apN+=A->val[j];
+                                            if(k<Ptr->IA[i+1]) {
+                                                apP+=A->val[j];
+                                                countPplus++;
+                                            }
+                                        }
+                                        else
+                                            {
+                                                amN+=A->val[j];
+                                                if(k<Ptr->IA[i+1]) {
+                                                    amP+=A->val[j];
+                                                }
+                                            }
+                                    } // j
+    
+                                alpha=amN/amP;
+                                if(countPplus>0) {
+                                    beta=apN/apP;
+                                }
+                                else {
+                                    beta=0;
+                                    aii+=apN;
+                                }
+    
+                                for(j=P.IA[i];j<P.IA[i+1];++j)
+                                    {
+                                        k=P.JA[j];
+                                        for(l=A->IA[i];l<A->IA[i+1];l++)
+                                            {
+                                                if(A->JA[l]==k) break;
+                                            }
+    
+                                        if(A->val[l]>0)
+                                            {
+                                                P.val[j]=-beta*A->val[l]/aii;
+                                            }
+                                        else
+                                            {
+                                                P.val[j]=-alpha*A->val[l]/aii;
+                                            }
+                                    }
+                            }
+                        else if(vec[i]==2)  // if node i is a special fine node
+                            {
+                            }
+                        else // if node i is on coarse grid 
+                            {
+                                P.val[P.IA[i]]=1;
+                            }
+                    }
+            }
+    }
+    else {
+        for(i=0;i<A->row;++i)
+            {
+                begin_row=A->IA[i]; end_row=A->IA[i+1]-1;    
+    
+                for(diagindex=begin_row;diagindex<=end_row;diagindex++) {
+                    if (A->JA[diagindex]==i) {
+                        aii=A->val[diagindex];
+                        break;
+                    }
+                }
+    
+                if(vec[i]==0)  // if node i is on fine grid 
+                    {
+                        amN=0, amP=0, apN=0, apP=0,  countPplus=0;
+    
+                        for(j=begin_row;j<=end_row;++j)
+                            {
+                                if(j==diagindex) continue;
+    
+                                for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
+                                    if(Ptr->JA[k]==A->JA[j]) break;
+                                }
+    
+                                if(A->val[j]>0) {
+                                    apN+=A->val[j];
+                                    if(k<Ptr->IA[i+1]) {
+                                        apP+=A->val[j];
+                                        countPplus++;
+                                    }
+                                }
+                                else
+                                    {
+                                        amN+=A->val[j];
+                                        if(k<Ptr->IA[i+1]) {
+                                            amP+=A->val[j];
+                                        }
+                                    }
+                            } // j
+    
+                        alpha=amN/amP;
+                        if(countPplus>0) {
+                            beta=apN/apP;
+                        }
+                        else {
+                            beta=0;
+                            aii+=apN;
+                        }
+    
+                        for(j=P.IA[i];j<P.IA[i+1];++j)
+                            {
+                                k=P.JA[j];
+                                for(l=A->IA[i];l<A->IA[i+1];l++)
+                                    {
+                                        if(A->JA[l]==k) break;
+                                    }
+    
+                                if(A->val[l]>0)
+                                    {
+                                        P.val[j]=-beta*A->val[l]/aii;
+                                    }
+                                else
+                                    {
+                                        P.val[j]=-alpha*A->val[l]/aii;
+                                    }
+                            }
+                    }
+                else if(vec[i]==2)  // if node i is a special fine node
+                    {
+                    }
+                else // if node i is on coarse grid 
+                    {
+                        P.val[P.IA[i]]=1;
+                    }
+            }
+    }
+    fasp_mem_free(Ptr->IA);
+    fasp_mem_free(Ptr->JA);
+    fasp_mem_free(Ptr->val);
+    
+    INT *CoarseIndex;
+
+    CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));
+
+#if CHMEM_MODE
+    total_alloc_mem += (A->row)*sizeof(INT);
+#endif
+    
+    // The following is one of OPTIMAL parts ...0802...
+    // Generate CoarseIndex in parallel
+    if (use_openmp) {
+#pragma omp master
+        {    
+            indexs = (INT *)fasp_mem_calloc(nthreads, sizeof(INT));
+        }
+#pragma omp parallel for private(myid, mybegin, myend, index, i)
+        for (myid = 0; myid < nthreads; myid ++)
+            {
+                FASP_GET_START_END(myid, nthreads, A->row, mybegin, myend);
+                index = 0;
+                for (i=mybegin;i<myend;++i) {
+                    if(vec[i]==1)
+                        {
+                            CoarseIndex[i]=index;
+                            index++;
+                        }
+                }
+                indexs[myid] = index;
+            }
+        for (i = 1; i < nthreads; i ++) {
+            indexs[i] += indexs[i-1];
+        }
+#pragma omp parallel for private(myid, mybegin, myend, shift, i)
+        for (myid = 0; myid < nthreads; myid ++)
+            {
+                FASP_GET_START_END(myid, nthreads, A->row, mybegin, myend);
+                shift = 0;
+                if (myid > 0) {
+                    shift = indexs[myid-1];
+                }
+                for (i=mybegin;i<myend;++i) {
+                    if(vec[i]==1)
+                        {
+                            CoarseIndex[i] += shift;
+                        }
+                }
+            }
+        fasp_mem_free(indexs);
+    }
+    else {
+        index=0;
+        for(i=0;i<A->row;++i) {
+            if(vec[i]==1)
+                {
+                    CoarseIndex[i]=index;
+                    index++;
+                }
+        }
+    }
+    
+    if (P.IA[P.row] > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin,myend,i,j) 
+        for (myid = 0; myid < nthreads; myid++ )
+            {
+                FASP_GET_START_END(myid, nthreads,P.IA[P.row], mybegin, myend);
+                for (i=mybegin; i<myend; ++i)
+                    {
+                        j=P.JA[i];
+                        P.JA[i]=CoarseIndex[j];
+                    }
+            }
+    }
+    else {
+        for(i=0;i<P.IA[P.row];++i)
+            {
+                j=P.JA[i];
+                P.JA[i]=CoarseIndex[j];
+            }
+    }
+//    if (Ptr->col > OPENMP_HOLDS) {
+        // The following is another OPTIMAL part ...0802...
+        ////////////////////////////////////////////////////////////////////////////////
+        fasp_get_nbl_nbr_ysk(A, &nbl_ysk, &nbr_ysk);
+        fasp_mod_coarse_index(A->row, CoarseIndex);
+        fasp_get_icor_ysk(A->row, Ptr->col, CoarseIndex, nbl_ysk, nbr_ysk, vec, icor_ysk);
+        ////////////////////////////////////////////////////////////////////////////////
+//    }
+    fasp_mem_free(CoarseIndex);
+    
+    /** Truncation of interpolation */
+    REAL mMin, pMax;
+    REAL mSum, pSum;
+    REAL mTruncedSum, pTruncedSum;
+    INT mTruncCount, pTruncCount;
+    INT num_lost=0;
+    
+    
+    Ptr->val=(REAL*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(REAL));
+
+#if CHMEM_MODE
+    total_alloc_mem += (P.IA[Ptr->row])*sizeof(REAL);
+#endif
+    Ptr->JA=(INT*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(INT));    
+#if CHMEM_MODE
+    total_alloc_mem += (P.IA[Ptr->row])*sizeof(INT);
+#endif
+    Ptr->IA=(INT*)fasp_mem_calloc(Ptr->row+1, sizeof(INT));
+#if CHMEM_MODE
+    total_alloc_mem += (Ptr->row+1)*sizeof(INT);
+#endif
+    
+    INT index1=0, index2=0;
+    for(i=0;i<P.row;++i)
+        {
+            mMin=0;
+            pMax=0;
+            mSum=0;
+            pSum=0;
+            mTruncedSum=0;
+            pTruncedSum=0;
+            mTruncCount=0;
+            pTruncCount=0;
+    
+            Ptr->IA[i]-=num_lost;
+    
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            mSum+=P.val[j];
+                            if(P.val[j]<mMin)
+                                {
+                                    mMin=P.val[j];
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            pSum+=P.val[j];
+                            if(P.val[j]>pMax)
+                                {
+                                    pMax=P.val[j];
+                                }
+                        }
+                }
+    
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            if(P.val[j]>mMin*epsilon_tr)
+                                {
+                                    mTruncCount++;
+                                }
+                            else
+                                {
+                                    num_lost--;
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            if(P.val[j]<pMax*epsilon_tr)
+                                {
+                                    pTruncCount++;
+                                }
+                            else
+                                {
+                                    num_lost--;
+                                }
+                        }
+                }
+    
+            // step 2: Find the structure JA and fill the data A of Ptr
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            if(!(P.val[j]>mMin*epsilon_tr))
+                                {
+                                    Ptr->JA[index1]=P.JA[j];
+                                    mTruncedSum+=P.val[j];
+                                    index1++;
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            if(!(P.val[j]<pMax*epsilon_tr))
+                                {
+                                    Ptr->JA[index1]=P.JA[j];
+                                    pTruncedSum+=P.val[j];
+                                    index1++;
+                                }
+                        }
+                }
+    
+            // step 3: Fill the data A of Ptr
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            if(!(P.val[j]>mMin*epsilon_tr))
+                                {
+                                    Ptr->val[index2]=P.val[j]/mTruncedSum*mSum;
+                                    index2++;
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            if(!(P.val[j]<pMax*epsilon_tr))
+                                {
+                                    Ptr->val[index2]=P.val[j]/pTruncedSum*pSum;
+                                    index2++;
+                                }
+                        }
+                }
+        }
+    Ptr->IA[P.row]-=num_lost;
+    Ptr->nnz=Ptr->IA[Ptr->row];
+    
+    Ptr->JA=(INT*)fasp_mem_realloc(Ptr->JA, Ptr->IA[Ptr->row]*sizeof(INT));    
+    Ptr->val=(REAL*)fasp_mem_realloc(Ptr->val, Ptr->IA[Ptr->row]*sizeof(REAL));
+    
+    fasp_mem_free(P.IA);
+    fasp_mem_free(P.JA);
+    fasp_mem_free(P.val);
+
+
+}
+
+
+/**
+ * \fn static void interp_RS2(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param)
+ * \brief Direct interpolation 
+ *
+ * \param A         pointer to the stiffness matrix
+ * \param vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
+ * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
+ * \param param     pointer to AMG parameters
+ *
+ * Refer to P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid. 
+ *              Academic Press Inc., San Diego, CA, 2001. 
+ *          With contributions by A. Brandt, P. Oswald and K. St¨uben.
+ */
+
+static void interp_RS2(dCSRmat *A, 
+		               ivector *vertices, 
+					   dCSRmat *Ptr, 
+					   AMG_param *param) 
+{
+    double epsilon_tr = param->truncation_threshold;
+    double amN, amP, apN, apP;
+    double alpha, beta, aii=0;
+    int *vec = vertices->val;
+    int countPplus, diagindex;
+    
+    unsigned int i,j,k,l,index=0;
+    int begin_row, end_row;
+    int myid;
+    int mybegin;
+    int myend;
+    int stride_i;
+    int *indexs = NULL;
+    int shift;
+   
+	int nthreads, use_openmp;
+	if(!FASP_USE_OPENMP || A->row <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+    
+    /** Generate interpolation P */
+    dCSRmat P=fasp_dcsr_create(Ptr->row,Ptr->col,Ptr->nnz);
+    
+    /** step 1: Find first the structure IA of P */
+    fasp_iarray_cp(P.row+1, Ptr->IA, P.IA);
+    
+    /** step 2: Find the structure JA of P */
+    fasp_iarray_cp(P.nnz, Ptr->JA, P.JA);
+    
+    /** step 3: Fill the data of P */
+    if (use_openmp) {
+        stride_i = A->row/nthreads;
+#pragma omp parallel private(myid,mybegin,myend,i,begin_row,end_row,diagindex,aii,amN,amP,apN,apP,countPplus,j,k,alpha,beta,l) ////num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1) myend = mybegin+stride_i;
+            else myend = A->row;
+            for (i=mybegin; i<myend; ++i)
+                {
+                    begin_row=A->IA[i]; end_row=A->IA[i+1]-1;    
+    
+                    for(diagindex=begin_row;diagindex<=end_row;diagindex++) {
+                        if (A->JA[diagindex]==i) {
+                            aii=A->val[diagindex];
+                            break;
+                        }
+                    }
+    
+                    if(vec[i]==0)  // if node i is on fine grid 
+                        {
+                            amN=0, amP=0, apN=0, apP=0,  countPplus=0;
+    
+                            for(j=begin_row;j<=end_row;++j)
+                                {
+                                    if(j==diagindex) continue;
+    
+                                    for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
+                                        if(Ptr->JA[k]==A->JA[j]) break;
+                                    }
+    
+                                    if(A->val[j]>0) {
+                                        apN+=A->val[j];
+                                        if(k<Ptr->IA[i+1]) {
+                                            apP+=A->val[j];
+                                            countPplus++;
+                                        }
+                                    }
+                                    else
+                                        {
+                                            amN+=A->val[j];
+                                            if(k<Ptr->IA[i+1]) {
+                                                amP+=A->val[j];
+                                            }
+                                        }
+                                } // j
+    
+                            alpha=amN/amP;
+                            if(countPplus>0) {
+                                beta=apN/apP;
+                            }
+                            else {
+                                beta=0;
+                                aii+=apN;
+                            }
+    
+                            for(j=P.IA[i];j<P.IA[i+1];++j)
+                                {
+                                    k=P.JA[j];
+                                    for(l=A->IA[i];l<A->IA[i+1];l++)
+                                        {
+                                            if(A->JA[l]==k) break;
+                                        }
+    
+                                    if(A->val[l]>0)
+                                        {
+                                            P.val[j]=-beta*A->val[l]/aii;
+                                        }
+                                    else
+                                        {
+                                            P.val[j]=-alpha*A->val[l]/aii;
+                                        }
+                                }
+                        }
+                    else if(vec[i]==2)  // if node i is a special fine node
+                        {
+                        }
+                    else // if node i is on coarse grid 
+                        {
+                            P.val[P.IA[i]]=1;
+                        }
+                }
+        }
+    }
+    else {
+        for(i=0;i<A->row;++i)
+            {
+                begin_row=A->IA[i]; end_row=A->IA[i+1]-1;    
+    
+                for(diagindex=begin_row;diagindex<=end_row;diagindex++) {
+                    if (A->JA[diagindex]==i) {
+                        aii=A->val[diagindex];
+                        break;
+                    }
+                }
+    
+                if(vec[i]==0)  // if node i is on fine grid 
+                    {
+                        amN=0, amP=0, apN=0, apP=0,  countPplus=0;
+    
+                        for(j=begin_row;j<=end_row;++j)
+                            {
+                                if(j==diagindex) continue;
+    
+                                for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
+                                    if(Ptr->JA[k]==A->JA[j]) break;
+                                }
+    
+                                if(A->val[j]>0) {
+                                    apN+=A->val[j];
+                                    if(k<Ptr->IA[i+1]) {
+                                        apP+=A->val[j];
+                                        countPplus++;
+                                    }
+                                }
+                                else
+                                    {
+                                        amN+=A->val[j];
+                                        if(k<Ptr->IA[i+1]) {
+                                            amP+=A->val[j];
+                                        }
+                                    }
+                            } // j
+    
+                        alpha=amN/amP;
+                        if(countPplus>0) {
+                            beta=apN/apP;
+                        }
+                        else {
+                            beta=0;
+                            aii+=apN;
+                        }
+    
+                        for(j=P.IA[i];j<P.IA[i+1];++j)
+                            {
+                                k=P.JA[j];
+                                for(l=A->IA[i];l<A->IA[i+1];l++)
+                                    {
+                                        if(A->JA[l]==k) break;
+                                    }
+    
+                                if(A->val[l]>0)
+                                    {
+                                        P.val[j]=-beta*A->val[l]/aii;
+                                    }
+                                else
+                                    {
+                                        P.val[j]=-alpha*A->val[l]/aii;
+                                    }
+                            }
+                    }
+                else if(vec[i]==2)  // if node i is a special fine node
+                    {
+                    }
+                else // if node i is on coarse grid 
+                    {
+                        P.val[P.IA[i]]=1;
+                    }
+            }
+    }
+    
+    fasp_mem_free(Ptr->IA);
+    fasp_mem_free(Ptr->JA);
+    fasp_mem_free(Ptr->val);    
+#if 1
+    int *CoarseIndex=(int*)fasp_mem_calloc(A->row, sizeof(int));
+#else
+    int *CoarseIndex=(int*)fasp_mem_calloc(vertices->row, sizeof(int));
+#endif
+    
+#if CHMEM_MODE
+#if 1
+    total_alloc_mem += (A->row)*sizeof(int);
+#else
+    total_alloc_mem += (vertices->row)*sizeof(int);
+#endif
+#endif
+    
+    index=0;
+#if 0
+#if 1
+    for(i=0;i<A->row;++i)
+#else
+        for(i=0;i<vertices->row;++i)
+#endif
+            {
+                if(vec[i]==1)
+                    {
+                        CoarseIndex[i]=index;
+                        index++;
+                    }
+            }
+#else
+    // The following is one of OPTIMAL parts ...0802...
+    // Generate CoarseIndex in parallel
+    if (use_openmp) {
+        indexs = (int *)fasp_mem_calloc(nthreads, sizeof(int));
+#pragma omp parallel for private(myid, mybegin, myend, index, i)
+        for (myid = 0; myid < nthreads; myid ++)
+            {
+                FASP_GET_START_END(myid, nthreads, A->row, mybegin, myend);
+                index = 0;
+                for (i=mybegin;i<myend;++i) {
+                    if(vec[i]==1)
+                        {
+                            CoarseIndex[i]=index;
+                            index++;
+                        }
+                }
+                indexs[myid] = index;
+            }
+        for (i = 1; i < nthreads; i ++) {
+            indexs[i] += indexs[i-1];
+        }
+#pragma omp parallel for private(myid, mybegin, myend, shift, i)
+        for (myid = 0; myid < nthreads; myid ++)
+            {
+                FASP_GET_START_END(myid, nthreads, A->row, mybegin, myend);
+                shift = 0;
+                if (myid > 0) {
+                    shift = indexs[myid-1];
+                }
+                for (i=mybegin;i<myend;++i) {
+                    if(vec[i]==1)
+                        {
+                            CoarseIndex[i] += shift;
+                        }
+                }
+            }
+        fasp_mem_free(indexs);
+    }
+    else {
+        index=0;
+        for(i=0;i<A->row;++i) {
+            if(vec[i]==1)
+                {
+                    CoarseIndex[i]=index;
+                    index++;
+                }
+        }
+    }
+#endif
+    if (P.IA[P.row] > OPENMP_HOLDS) {
+        stride_i = P.IA[P.row]/nthreads;
+#pragma omp parallel private(myid,mybegin,myend,i,j) ////num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1) myend = mybegin+stride_i;
+            else myend = P.IA[P.row];
+            for (i=mybegin; i<myend; ++i)
+                {
+                    j=P.JA[i];
+                    P.JA[i]=CoarseIndex[j];
+                }
+        }
+    }
+    else {
+        for(i=0;i<P.IA[P.row];++i)
+            {
+                j=P.JA[i];
+                P.JA[i]=CoarseIndex[j];
+            }
+    }
+    fasp_mem_free(CoarseIndex);
+    
+    /** Truncation of interpolation */
+    double mMin, pMax;
+    double mSum, pSum;
+    double mTruncedSum, pTruncedSum;
+    int mTruncCount, pTruncCount;
+    int num_lost=0;
+    
+    Ptr->val=(double*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(double));
+#if CHMEM_MODE
+    total_alloc_mem += (P.IA[Ptr->row])*sizeof(double);
+#endif
+    Ptr->JA=(int*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(int));    
+#if CHMEM_MODE
+    total_alloc_mem += (P.IA[Ptr->row])*sizeof(int);
+#endif
+    Ptr->IA=(int*)fasp_mem_calloc(Ptr->row+1, sizeof(int));
+#if CHMEM_MODE
+    total_alloc_mem += (Ptr->row+1)*sizeof(int);
+#endif
+    
+    int index1=0, index2=0;
+    for(i=0;i<P.row;++i)
+        {
+            mMin=0;
+            pMax=0;
+            mSum=0;
+            pSum=0;
+            mTruncedSum=0;
+            pTruncedSum=0;
+            mTruncCount=0;
+            pTruncCount=0;
+    
+            Ptr->IA[i]-=num_lost;
+    
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            mSum+=P.val[j];
+                            if(P.val[j]<mMin)
+                                {
+                                    mMin=P.val[j];
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            pSum+=P.val[j];
+                            if(P.val[j]>pMax)
+                                {
+                                    pMax=P.val[j];
+                                }
+                        }
+                }
+    
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            if(P.val[j]>mMin*epsilon_tr)
+                                {
+                                    mTruncCount++;
+                                }
+                            else
+                                {
+                                    num_lost--;
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            if(P.val[j]<pMax*epsilon_tr)
+                                {
+                                    pTruncCount++;
+                                }
+                            else
+                                {
+                                    num_lost--;
+                                }
+                        }
+                }
+    
+            // step 2: Find the structure JA and fill the data A of Ptr
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            if(!(P.val[j]>mMin*epsilon_tr))
+                                {
+                                    Ptr->JA[index1]=P.JA[j];
+                                    mTruncedSum+=P.val[j];
+                                    index1++;
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            if(!(P.val[j]<pMax*epsilon_tr))
+                                {
+                                    Ptr->JA[index1]=P.JA[j];
+                                    pTruncedSum+=P.val[j];
+                                    index1++;
+                                }
+                        }
+                }
+    
+            // step 3: Fill the data A of Ptr
+            for(j=P.IA[i];j<P.IA[i+1];++j)
+                {
+                    if(P.val[j]<0)
+                        {
+                            if(!(P.val[j]>mMin*epsilon_tr))
+                                {
+                                    Ptr->val[index2]=P.val[j]/mTruncedSum*mSum;
+                                    index2++;
+                                }
+                        }
+    
+                    if(P.val[j]>0)
+                        {
+                            if(!(P.val[j]<pMax*epsilon_tr))
+                                {
+                                    Ptr->val[index2]=P.val[j]/pTruncedSum*pSum;
+                                    index2++;
+                                }
+                        }
+                }
+        }
+    Ptr->IA[P.row]-=num_lost;
+    Ptr->nnz=Ptr->IA[Ptr->row];
+    
+    Ptr->JA=(int*)fasp_mem_realloc(Ptr->JA, Ptr->IA[Ptr->row]*sizeof(int));    
+    Ptr->val=(double*)fasp_mem_realloc(Ptr->val, Ptr->IA[Ptr->row]*sizeof(double));
+    
+    fasp_mem_free(P.IA);
+    fasp_mem_free(P.JA);
+    fasp_mem_free(P.val);
+
+}
+
 
 /**
  * \fn static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S, AMG_param *param)

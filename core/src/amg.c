@@ -32,6 +32,7 @@
  *
  * Modified by Chensong Zhang on 01/10/2012
  */
+
 void fasp_solver_amg (dCSRmat *A, 
                       dvector *b, 
                       dvector *x, 
@@ -44,16 +45,20 @@ void fasp_solver_amg (dCSRmat *A,
     const INT     nnz = A->nnz, m = A->row, n = A->col;
     
     // local variables
-    clock_t       AMG_start, AMG_end;
-    REAL          AMG_duration;
+    double        AMG_start, AMG_end;
+    REAL          AMG_duration=0.;
     SHORT         status = SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_amg ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
-    
-    if ( print_level > PRINT_NONE ) AMG_start = clock();
+    if ( print_level > PRINT_NONE ) 
+#if FASP_USE_OPENMP
+	AMG_start = omp_get_wtime();
+#else
+	AMG_start = clock();
+#endif
     
     // initialize mgl[0] with A, b, x    
     AMG_data *mgl = fasp_amg_data_create(max_levels);
@@ -73,7 +78,12 @@ void fasp_solver_amg (dCSRmat *A,
         break;
 
     default: // Classical AMG setup phase
+#if FASP_USE_OPENMP
+		// omp version RS coarsening 
+        if ( (status=fasp_amg_setup_rs_omp(mgl, param)) < 0 ) goto FINISHED;
+#else
         if ( (status=fasp_amg_setup_rs(mgl, param)) < 0 ) goto FINISHED;
+#endif
         break;
 
     }
@@ -100,16 +110,21 @@ void fasp_solver_amg (dCSRmat *A,
     
     // print out CPU time when needed
     if ( print_level > PRINT_NONE ) {
-        AMG_end = clock();    
-        AMG_duration = (double)(AMG_end - AMG_start)/(double)(CLOCKS_PER_SEC);    
+#if FASP_USE_OPENMP
+    AMG_end = omp_get_wtime();    
+    AMG_duration += (double)(AMG_end - AMG_start);    
+#else
+    AMG_end = clock();    
+    AMG_duration += (double)(AMG_end - AMG_start)/(double)(CLOCKS_PER_SEC);    
+#endif
         print_cputime("AMG totally",AMG_duration);
     }    
     
  FINISHED:    
     fasp_amg_data_free(mgl); // clean-up memory    
-    
     fasp_chkerr(status, "fasp_solver_amg");
     
+
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_amg ...... [Finish]\n");
 #endif
