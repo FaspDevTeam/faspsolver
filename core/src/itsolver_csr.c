@@ -393,9 +393,7 @@ FINISHED:
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_krylov_amg ...... [Finish]\n");
 #endif
-    
-    fasp_chkerr(status, "fasp_solver_dcsr_krylov_amg");
-    
+        
     return status;
 }
 

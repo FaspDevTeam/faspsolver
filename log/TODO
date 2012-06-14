@@ -82,6 +82,7 @@ Iterative Methods
 [ 06/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
 [ 06/15 ] test SpBLAS implementations in standard libraries (Chunsheng)
 [       ] right preconditioning (Chensong)
+[       ] matrix-free iterative methods (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
 [ 0.6.7 ] remove the non-GPL ILU routines

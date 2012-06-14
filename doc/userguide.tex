@@ -160,7 +160,7 @@ In this user's guide, we mainly describe how to use the existing solvers in FASP
 All the FASP packages are hosted on \emph{BitBucket.org}\footnote{Official website: \url{https://bitbucket.org/}} using Mercurial (Hg)\footnote{Official website: \url{http://mercurial.selenic.com/}}. As a DVCS (Distributed Version Control System) source-control software, Hg is relatively new. But compared with other tools like Git, Hg is considered \emph{friendlier} with a lower learning curve. This is despite the fact that Hg uses two distinct sets of commands and two distinct vocabularies for operations depending upon whether the repository is local or remote.
 Documentation for Hg is substantially better, including a book\footnote{The hgbook, \url{http://hgbook.red-bean.com/}}. They've also had the advantage of trying the documentation on a fairly savvy group of developers (Mozilla) who gave them lots of feedback that helped polish the rough edges.
 
-First, you need to obtain a free copy of FASP kernel functions from \emph{BitBucket.org}:
+First, you need to obtain a free copy of FASP kernel functions from our public Hg repository. If you are downloading FASP for the first time, you can clone the repository to your local machine:
 %
 \begin{lstlisting}[numbers=none]
 "Download FASP core subroutines via HTTPS"
@@ -172,7 +172,16 @@ $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver
 For the moment, it requires a password to access the Hg repository and the password is ``multigrid''. Very soon it will be open to public completely. 
 \end{snugshade}
 
-After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 125MB in total. Depending on the speed of your network, it could take 15 minutes to one hour.}, you should have obtained ``faspsolver'' in your current directory successfully. 
+After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 125MB in total. Depending on the speed of your network, it could take 15 minutes to one hour.}, you should have obtained ``faspsolver'' in your current directory successfully. If you have already cloned the repository before, you can just pull a new version and update your local version with it: Go to your local ``faspsolver'' directory and then
+%
+\begin{lstlisting}[numbers=none]
+"Pull a new version from BitBucket"
+$ hg pull
+
+"Update you local version to the new version"
+$ hg update
+\end{lstlisting}
+%
 
 \subsection{Compilation}\label{ssec:lib}
 

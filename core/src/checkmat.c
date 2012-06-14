@@ -27,13 +27,19 @@ INT fasp_check_diagpos (dCSRmat *A)
 {
     const INT      m=A->row;
     unsigned INT   i, num_neg;
-    dvector        diag; fasp_dcsr_getdiag(m,A,&diag);
     
 #if DEBUG_MODE
     printf("### DEBUG: nr = %d, nc = %d, nnz = %d\n", A->row, A->col, A->nnz);
 #endif
     
-    for (num_neg=i=0;i<m;++i) if (diag.val[i]<0) num_neg++;
+    // store diagonal of A 
+    dvector        diag;
+    fasp_dcsr_getdiag(m,A,&diag);
+    
+    // check positiveness of entries of diag
+    for (num_neg=i=0;i<m;++i) {
+        if (diag.val[i]<0) num_neg++;        
+    }
     
     printf("Number of negative diagonal entries = %d\n", num_neg);
     
@@ -206,14 +212,14 @@ INT fasp_check_symm (dCSRmat *A)
             mdi=rows[1][i];
             break;
         }
-    
+        
         cols[0][i]=cols[1][i]-cols[0][i];
         if (cols[0][i]!=0) {
             type=-2;
             mdj=cols[1][i];
             break;
         }
-    
+        
         if (fabs(vals[0][i])>SMALLREAL||fabs(vals[1][i])>SMALLREAL) {
             dif=fabs(vals[1][i]-vals[0][i])/(fabs(vals[0][i])+fabs(vals[1][i]));
             if (dif>maxdif) {
@@ -230,9 +236,6 @@ INT fasp_check_symm (dCSRmat *A)
     case 0:
         printf("Matrix is symmetric with max relative difference is %1.3le\n",maxdif);
         break;
-    case 3:
-        printf("Matrix is nonsymmetric with max relative difference is %1.3le\n",maxdif);
-        break;
     case -1:
         printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th rows and cols\n",
                mdi-1,mdi,mdi+1);
@@ -241,10 +244,13 @@ INT fasp_check_symm (dCSRmat *A)
         printf("Matrix has nonsymmetric pattern, check the %d-th, %d-th and %d-th cols and rows\n",
                mdj-1,mdj,mdj+1);
         break;
+    case -3:
+        printf("Matrix is nonsymmetric with max relative difference is %1.3le\n",maxdif);
+        break;
     default:
         break;
     }
-
+    
     fasp_mem_free(rowp);
     fasp_mem_free(rows[1]);
     fasp_mem_free(cols[1]);

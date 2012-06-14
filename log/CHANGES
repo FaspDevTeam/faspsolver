@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+06/14/2012 FASP 0.9.2:
+- Add 12 test problems from Matrix Market.
+- Add test/main/testmm.c for these new test problems from Matrix Market.
+- Adjust slightly in itsolver.c for testmm.
+
 06/12/2012 FASP 0.9.1:
 - Formatting some more routines for printing.
 - Modify doxygen.h a little, add developers pages.

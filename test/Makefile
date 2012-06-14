@@ -148,17 +148,21 @@ test:
 	$(CC) -c main/test.c -o main/test.o $(CFLAGS)
 	$(FC) -o test.ex main/test.o $(FLFLAGS)
 
-testbsr:
-	$(CC) -c main/testbsr.c -o main/testbsr.o $(CFLAGS)
-	$(FC) -o testbsr.ex main/testbsr.o $(FLFLAGS)
-
 regression: 
 	$(CC) -c main/regression.c -o main/regression.o $(CFLAGS)
 	$(FC) -o regression.ex main/regression.o $(FLFLAGS)
 
+testmm:
+	$(CC) -c main/testmm.c -o main/testmm.o $(CFLAGS)
+	$(FC) -o testmm.ex main/testmm.o $(FLFLAGS)
+
 testf: 
 	$(FC) -c main/testf.f90 -o main/testf.o $(CFLAGS)
 	$(FC) -o testf.ex main/testf.o $(FLFLAGS)
+
+testbsr:
+	$(CC) -c main/testbsr.c -o main/testbsr.o $(CFLAGS)
+	$(FC) -o testbsr.ex main/testbsr.o $(FLFLAGS)
 
 testmat: 
 	$(CC) -c main/testmat.c -o main/testmat.o $(CFLAGS)
@@ -191,14 +195,15 @@ testomp:
 testall:
 	make 
 	make regression
+	make testmm
 	make testf
+	make testbsr
 	make testmat
 	make testrap
 	make testfem
 	make testfdm2d
 	make testfdm3d
 	make testheat
-	make testbsr
 	make testomp
 
 ########################################################################
