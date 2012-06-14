@@ -107,14 +107,14 @@ static SHORT invden (INT nn,
                      REAL *mat, 
                      REAL *invmat)
 {
-    INT indic,i,j;
-    SHORT status = SUCCESS;
+    INT    i,j;
+    SHORT  status = SUCCESS;
     
     INT  *pivot=(INT *)fasp_mem_calloc(nn,sizeof(INT));    
     REAL *rhs=(REAL *)fasp_mem_calloc(nn,sizeof(REAL));    
     REAL *sol=(REAL *)fasp_mem_calloc(nn,sizeof(REAL));
     
-    indic=fasp_smat_lu_decomp(mat,pivot,nn);
+    fasp_smat_lu_decomp(mat,pivot,nn);
     
     for (i=0;i<nn;++i) {
         for (j=0;j<nn;++j) rhs[j]=0.;
@@ -590,7 +590,7 @@ static SHORT getiteval (dCSRmat *A,
     INT *rows[2],*cols[2];
     REAL *vals[2];
     INT nns[2],tnizs[2];
-    INT i,j,indic,numiso;
+    INT i,j,numiso;
     INT *isol;
     SHORT status = SUCCESS;
     
@@ -644,7 +644,7 @@ static SHORT getiteval (dCSRmat *A,
         itmat[1][i]=cols[1][i];
         itmatval[0][i]=vals[1][i];
     }
-    indic=genintval(A,itmat,itmatval,ittniz,isol,numiso,nf,nc);
+    genintval(A,itmat,itmatval,ittniz,isol,numiso,nf,nc);
     
     for (i=0;i<ittniz;++i) {
         rows[0][i]=itmat[0][i];
@@ -993,9 +993,7 @@ static void interp_STD (dCSRmat *A,
     INT *vec = vertices->val,*flag,*Arind1,*Arind2;
     INT row=P->row;
     REAL akk,akh,aik,aki,rowsum;
-    INT h,i,j,k,l,m,p,q,index=0;
-    INT begin_row, end_row;
-    
+    INT h,i,j,k,l,m,p,q,index=0;    
     
     cs=(REAL*)fasp_mem_calloc(row,sizeof(REAL));//for sums of strongly connected coarse neighbors
     
@@ -1005,10 +1003,11 @@ static void interp_STD (dCSRmat *A,
     
     flag=(INT*)fasp_mem_calloc(row,sizeof(INT));// index for coarse neighbor point for every node
     
-    Arind1=(INT*)fasp_mem_calloc(2*row,sizeof(INT));// for some row of A, the index from column number to the the number in A.val
+    // for some row of A, the index from column number to the the number in A.val
+    Arind1=(INT*)fasp_mem_calloc(2*row,sizeof(INT));
     
-    Arind2=(INT*)fasp_mem_calloc(2*row,sizeof(INT));// for some row of A, the index from column number to the the number in A.val
-    
+    // for some row of A, the index from column number to the the number in A.val
+    Arind2=(INT*)fasp_mem_calloc(2*row,sizeof(INT));    
     
     for(i=0;i<row;i++)
         flag[i]=-1;
@@ -1018,7 +1017,6 @@ static void interp_STD (dCSRmat *A,
             k=S->JA[j];
             if (vec[k]==CGPT) {
                 flag[k]=i;
-                
             }
         }
         
@@ -1028,8 +1026,8 @@ static void interp_STD (dCSRmat *A,
                 
                 cs[i]+=A->val[j];
                 if(A->val[j]>0)
-                    printf("Error:positive off diagonal value! (i,k)=(%d,%d),j:%d,val:%f\n",i,k,j,A->val[j]);
-                
+                    printf("### WARNING: Positive off diagonal value! (i,k)=(%d,%d),j:%d,val:%f!\n",
+                           i,k,j,A->val[j]);
             }
             if(k==i)
             {
@@ -1044,7 +1042,6 @@ static void interp_STD (dCSRmat *A,
     
     hatA=(REAL*)fasp_mem_calloc(row,sizeof(REAL));//to record coefficents hat a_ij for relevant CGPT of the i-th node
     
-    
     for (i=0; i<row; i++) {
         if (vec[i]==FGPT) {
             
@@ -1053,7 +1050,6 @@ static void interp_STD (dCSRmat *A,
             for (j=A->IA[i]; j<A->IA[i+1]; j++) {
                 k=A->JA[j];
                 Arind1[k]=j;
-                
             }
             
             alN=0;
@@ -1074,16 +1070,13 @@ static void interp_STD (dCSRmat *A,
                 k=S->JA[j];
                 l=Arind1[k];
                 
-                
                 if (vec[k]==CGPT) {
                     hatA[k]+=A->val[l];
                     
                 }
                 else if(vec[k]==FGPT)
                 {   
-                    aik=A->val[l];
-                    
-                    
+                    aik=A->val[l];                    
                     akk=diag[k];
                     
                     //find aki
@@ -1098,16 +1091,12 @@ static void interp_STD (dCSRmat *A,
                     alN-=(n[k]-aki+akk)*aik/akk;
                     alP-=cs[k]*aik/akk;
                     
-                    
                     //visit all the strongly connected coarse neighbors of k
                     // make Arind2 for k
                     
                     for (m=A->IA[k]; m<A->IA[k+1]; m++) {
                         h=A->JA[m];
-                        
-                        
                         Arind2[h]=m;
-                        
                     }
                     
                     for (m=S->IA[k]; m<S->IA[k+1]; m++) {
@@ -1120,8 +1109,8 @@ static void interp_STD (dCSRmat *A,
                             hatA[h]-=aik*akh/akk;
                             if(aik*akh/akk<0)
                             {
-                                printf("problem with sign of product,aik=%f, akh=%f, i:%d,k:%d,h:%d\n",aik,akh,i,k,h);
-                                
+                                printf("### WARNING: Problem with sign of product,aik=%f, akh=%f, i:%d,k:%d,h:%d\n",
+                                       aik,akh,i,k,h);
                             }
                         }
                         else if(h==i)
@@ -1163,7 +1152,7 @@ static void interp_STD (dCSRmat *A,
 			CoarseIndex[i]=index;
 			index++;
             if (index>P->col) {
-                printf("error! index:%d>p->col:%d\n",index,P->col);
+                printf("### WARNING: index=%d>p->col=%d\n",index,P->col);
             }
 		}
 	}

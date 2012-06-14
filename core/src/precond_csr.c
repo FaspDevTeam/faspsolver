@@ -4,6 +4,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "forts_ns.h"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

@@ -585,9 +585,9 @@ static void generate_S_rs_ag (dCSRmat *A,
                               ivector *CGPT_rindex)
 {
     
-    INT i,j,k,l, num_c,count,ci,cj,ck,cl,fi,fj,fk,fl,cck;
-    
-    INT *cp_index, *cp_rindex, *times_visited, *vec=vertices->val;
+    INT   i,j,k;
+    INT   num_c,count,ci,cj,ck,fj,cck;
+    INT  *cp_index, *cp_rindex, *times_visited, *vec=vertices->val;
     
     CGPT_rindex->row=A->row;
     CGPT_rindex->val=(INT*)fasp_mem_calloc(vertices->row,sizeof(INT));// for the reverse indexing of coarse grid points
@@ -606,16 +606,13 @@ static void generate_S_rs_ag (dCSRmat *A,
 	CGPT_index->val=(INT *)fasp_mem_calloc(num_c,sizeof(INT));
     cp_index=CGPT_index->val;
 	j=0; 
-	for(i=0;i<vertices->row;i++)
-    {
-	    if(vec[i]==CGPT)
-        {
+	for (i=0;i<vertices->row;i++) {
+	    if(vec[i]==CGPT) {
             cp_index[j]=i;
             cp_rindex[i]=j;
             j++;
         }
     }
-    
     
 	Sh->row=num_c;
 	Sh->col=num_c;
@@ -680,7 +677,6 @@ static void generate_S_rs_ag (dCSRmat *A,
 	    Sh->IA[ci+1]=Sh->IA[ci]+count;
         
     }//end for i
-    
 	
     
 	// step 2: Find JA of Sh
@@ -732,7 +728,6 @@ static void generate_S_rs_ag (dCSRmat *A,
                             Sh->JA[count]=cck;
                             count++;
                         }
-                        
                         
                     }//end if
                 }//end for k
@@ -1003,19 +998,20 @@ static INT form_coarse_level_ag (dCSRmat *A,
 	unsigned INT maxlambda, maxnode, num_left=0;	
 	REAL measure, new_meas;
     
-	INT *ia=A->IA, *vec=vertices->val;
-	INT ci_tilde = -1, ci_tilde_mark = -1;
-	INT set_empty = 1, C_i_nonempty = 0;
-	INT ji,jj,i,j,k,l,m,flag,index,ci,cj,ck,cl,num_c,count,fj;
+	INT *vec=vertices->val;
+	INT i,j,k,l,m,flag,ci,cj,ck,cl,num_c;
+	// INT ci_tilde = -1, ci_tilde_mark = -1, set_empty = 1;
 	
 	INT *work = (int*)fasp_mem_calloc(4*row,sizeof(INT));	
-	INT *lists = work, *where = lists+row, *lambda = where+row, *graph_array = lambda+row;
-    INT *cp_index,*cp_rindex;
-    
+	INT *lists = work, *where = lists+row, *lambda = where+row;
+    INT *cp_index;
 	
 	LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;	
 	
-	iCSRmat ST,Sh,ShT; //Sh is for the strong coupling matrix between temporary CGPTs, ShT is the transpose of Sh, Snew is for combining the information from S and Sh
+	// Sh is for the strong coupling matrix between temporary CGPTs
+    // ShT is the transpose of Sh
+    // Snew is for combining the information from S and Sh
+    iCSRmat ST,Sh,ShT; 
     
 	ivector CGPT_index, CGPT_rindex;
 	fasp_icsr_trans(S, &ST);
@@ -1038,8 +1034,6 @@ static INT form_coarse_level_ag (dCSRmat *A,
     CGPT_index.row=num_c;
     CGPT_rindex.row=row;
 	cp_index=CGPT_index.val;
-    cp_rindex=CGPT_rindex.val;
-	
     
 	// 1. Initialize lambda
 	for (ci=0;ci<num_c;++ci) lambda[ci]=ShT.IA[ci+1]-ShT.IA[ci];

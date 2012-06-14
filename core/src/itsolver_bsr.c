@@ -249,12 +249,8 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dbsr_krylov_ilu ...... [Finish]\n");
 #endif
-    
-    if (status < 0) goto MEMORY_ERROR;
-    return status;
-    
- MEMORY_ERROR:
-    fasp_chkerr (status, "fasp_solver_dbsr_krylov_ilu");
+        
+    return status;    
 }
 
 /**

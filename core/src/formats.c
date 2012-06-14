@@ -627,20 +627,17 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     INT *Is, *Js;
     INT i,j,num, k;
     INT nRow, nCol;
-    SHORT status=SUCCESS;
     
     dCSRmat tmpMat;
     dBSRmat A;
     
     // Safe-guard check --Chensong 05/27/2012
-    if (B->row%nb!=0) {
-        printf("### ERROR: B.row=%d is not a multiplication of nb=%d!!!\n", B->row, nb);
-        exit;
+    if ( B->row%nb != 0 ) {
+        printf("### WARNING: B.row=%d is NOT a multiplication of nb=%d!\n", B->row, nb);
     }
     
-    if (B->col%nb!=0) {
-        printf("### ERROR: B.col=%d is not a multiplication of nb=%d!!!\n", B->col, nb);
-        exit;
+    if ( B->col%nb != 0 ) {
+        printf("### WARNING: B.col=%d is NOT a multiplication of nb=%d!\n", B->col, nb);
     }
     
     nRow=B->row/nb; //we must ensure this is a integer
@@ -654,7 +651,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     for(i=0;i<nCol;i++) {
         Js[i]=i*nb;
     }
-    status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+    fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
     
     //here we have tmpmat as the submatrix
     A.ROW=nRow;
@@ -665,6 +662,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     A.IA=(INT*)fasp_mem_calloc(A.ROW+1, sizeof(INT));
     A.JA=(INT*)fasp_mem_calloc(A.NNZ, sizeof(INT));
     A.val=(REAL*)fasp_mem_calloc(A.NNZ*nb*nb, sizeof(REAL));
+
     for(i=0;i<tmpMat.row+1;i++) {
         A.IA[i]=tmpMat.IA[i];
     }
@@ -674,6 +672,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     for(i=0;i<tmpMat.nnz;i++) {
         A.val[i*nb*nb]=tmpMat.val[i];
     }
+
     fasp_mem_free(tmpMat.IA);
     fasp_mem_free(tmpMat.JA);
     fasp_mem_free(tmpMat.val);
@@ -690,7 +689,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
                 for(k=0;k<nCol;k++) {
                     Js[k]=k*nb+j;
                 }
-                status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+                fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
                 for(k=0;k<tmpMat.nnz;k++) {
                     A.val[k*nb*nb+num]=tmpMat.val[k];
                 }    

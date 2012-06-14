@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+06/14/2012 FASP 0.9.3:
+- Fix a bunch of WARNINGS in gcc when -Wall open.
+- Fix a few errors in VC++.
+- Bug fixes in various functions when fixing WARNINGS.
+
 06/14/2012 FASP 0.9.2:
 - Add 12 test problems from Matrix Market.
 - Add test/main/testmm.c for these new test problems from Matrix Market.

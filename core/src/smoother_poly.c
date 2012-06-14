@@ -100,7 +100,6 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     printf("### DEBUG: the degrees of polysmoothing are: %d\n",ndeg);
 #endif   
     
-    
     // free memory
     fasp_mem_free(Dinv);
     fasp_mem_free(r);
@@ -109,12 +108,14 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     fasp_mem_free(v1);
     fasp_mem_free(error);
     fasp_mem_free(k);
+    
     return;
     
 }
 
 /**
- * \fn void fasp_smoother_dcsr_poly_old (dCSRmat *Amat, dvector *brhs, dvector *usol, INT n, INT ndeg, INT L)
+ * \fn void fasp_smoother_dcsr_poly_old (dCSRmat *Amat, dvector *brhs, 
+ *                                       dvector *usol, INT n, INT ndeg, INT L)
  *
  * \brief poly approx to A^{-1} as MG smoother: JK&LTZ2010
  *
@@ -186,7 +187,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
     
     /* auv_(ia,ja,a,u,u,&n,&err0); NA: u = 0 */
     //bminax(b,ia,ja,a,u,&n,r);
-    //for (i=0; i < n ; ++i) {res0 += r[i]*r[i];}
+    //for (i=0; i < n; ++i) {res0 += r[i]*r[i];}
     //res0=sqrt(res0);
     
     for (it = 0 ; it < L; it++) { 
@@ -322,15 +323,15 @@ static void Diaginv(dCSRmat *Amat, REAL *Dinv)
 /**
  * \fn    static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
  *
- * \brief get the inf norm of Dinv*A
+ * \brief Get the inf norm of Dinv*A
  * 
  * \param Amat sparse matrix in CSR format
  * \param Dinv vector to store the inverse of diagonal of A
  *
- * \return inf norm of Dinv*A
+ * \return Inf norm of Dinv*A
  *
  * \author Fei Cao, Xiaozhe Hu
- * \date 05/24/2012
+ * \date   05/24/2012
  */
 static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
 {
@@ -339,19 +340,19 @@ static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
     const INT  *ia = Amat->IA, *ja = Amat->JA;
     const REAL *a  = Amat->val;
     unsigned INT i,j;
-    REAL norm=0, temp=0;
+    REAL norm, temp;
     
     // get the infinity norm of Dinv*A
-    for(i=0; i<n; i++)
-    {
-        temp=0;
-        for(j=ia[i]; j<ia[i+1]; j++)
-        {
-            temp += ABS(a[j]);
+    for (norm=0,i=0; i<n; i++) {
+
+        for (temp=0,j=ia[i]; j<ia[i+1]; j++) {
+            temp += ABS(a[ja[j]]); // Missing ja --Chensong 06/14/2012
         }
-        temp *= Dinv[i];// temp is the L1 norm of the ith row of Dinv*A;
+        
+        temp *= Dinv[i]; // temp is the L1 norm of the ith row of Dinv*A;
         norm  = MAX(norm, temp);
     }
+    
     return norm;
 }
 

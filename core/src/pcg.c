@@ -96,7 +96,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     INT          iter = 0, stag, more_step, restart_step;
     REAL         absres0, absres, relres, reldiff, factor;
     REAL         normr0 = BIGREAL, normu, infnormu;
-    REAL         alpha, beta, temp1, temp2, tempr; 
+    REAL         alpha, beta, temp1, temp2; 
     
     // allocate temp memory (need 4*m REAL numbers)
     REAL *work=(REAL *)fasp_mem_calloc(4*m,sizeof(REAL));    
@@ -369,7 +369,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
     INT          iter = 0, stag, more_step, restart_step;
     REAL         absres0 = BIGREAL, absres, relres = BIGREAL, reldiff, factor;
     REAL         normr0 = BIGREAL, normu, infnormu;
-    REAL         alpha, beta, temp1, temp2, tempr; 
+    REAL         alpha, beta, temp1, temp2; 
     
     // allocate temp memory (need 4*m REAL numbers)
     REAL *work=(REAL *)fasp_mem_calloc(4*m,sizeof(REAL));    
@@ -643,7 +643,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
     INT          iter = 0, stag, more_step, restart_step;
     REAL         absres0 = BIGREAL, absres, relres = BIGREAL, reldiff, factor;
     REAL         normr0 = BIGREAL, normu, infnormu;
-    REAL         alpha, beta, temp1, temp2, tempr; 
+    REAL         alpha, beta, temp1, temp2; 
     
     // allocate temp memory (need 4*m REAL numbers)
     REAL *work=(REAL *)fasp_mem_calloc(4*m,sizeof(REAL));    

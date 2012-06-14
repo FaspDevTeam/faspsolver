@@ -41,13 +41,13 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
 {
 #if FASP_USE_ILU
     const INT   type=iluparam->ILU_type, print_level=iluparam->print_level;
-    const INT   m=A->row, n=A->col, nnz=A->nnz, mbloc=n;
-    const REAL  ILU_relax=iluparam->ILU_relax, ILU_droptol=iluparam->ILU_droptol;
+    const INT   n=A->col, nnz=A->nnz, mbloc=n;
+    const REAL  ILU_droptol=iluparam->ILU_droptol;
     const REAL  permtol=iluparam->ILU_permtol;
     
     // local variable
     INT    lfil=iluparam->ILU_lfil, lfilt=iluparam->ILU_lfil;
-    INT    ierr, iwk, nzlu, nwork, maxstr, *ijlu;
+    INT    ierr, iwk, nzlu, nwork, *ijlu;
     REAL  *luval;
     
     clock_t  setup_start, setup_end;
@@ -78,7 +78,6 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     } 
     
     nwork  = 4*n;
-    maxstr = 3*(iwk+nwork);
     
 #if DEBUG_MODE
     printf("### DEBUG: fill-in=%d, iwk=%d, nwork=%d\n", lfil, iwk, nwork);

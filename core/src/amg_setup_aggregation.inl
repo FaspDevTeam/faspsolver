@@ -12,15 +12,15 @@
  *
  * \brief Form aggregation based on strong coupled neighborhoods 
  *
- * \param A                 pointer to the coefficient matrices
- * \param vertices          pointer to the aggregation of vertics
- * \param param             pointer to AMG parameters
- * \param levelNum          level number
- * \param Neigh             pointer to strongly coupled neighborhoods
- * \param num_aggregations  pointer to number of aggregations 
+ * \param A                 Pointer to the coefficient matrices
+ * \param vertices          Pointer to the aggregation of vertics
+ * \param param             Pointer to AMG parameters
+ * \param levelNum          Level number
+ * \param Neigh             Pointer to strongly coupled neighborhoods
+ * \param num_aggregations  Pointer to number of aggregations 
  * 
  * \author Xiaozhe Hu
- * \date 09/29/2009
+ * \date   09/29/2009
  */
 static void aggregation (dCSRmat *A,
                          ivector *vertices, 
@@ -37,12 +37,10 @@ static void aggregation (dCSRmat *A,
 	
 	// local variable
 	REAL strongly_coupled; 
-	if (GE(param->tentative_smooth, SMALLREAL))
-	{
+	if (GE(param->tentative_smooth, SMALLREAL)) {
 		strongly_coupled= param->strong_coupled * pow(0.5, levelNum-1);
 	}
-	else
-	{
+	else {
 		strongly_coupled= param->strong_coupled;
 	}
 	REAL strongly_coupled2 = pow(strongly_coupled,2);
@@ -55,7 +53,8 @@ static void aggregation (dCSRmat *A,
 	/*------------------------------------------*/
 	/* Form strongly coupled neighborhood */
 	/*------------------------------------------*/
-	dvector diag; fasp_dcsr_getdiag(0, A, &diag);  // get the diagonal entries
+	dvector diag; 
+    fasp_dcsr_getdiag(0, A, &diag);  // get the diagonal entries
 	
 	fasp_dcsr_alloc(row,col,nnz, Neigh);
 	NIA =  Neigh->IA;
@@ -69,8 +68,8 @@ static void aggregation (dCSRmat *A,
 		NIA[i] = index;
 		row_start = AIA[i]; row_end = AIA[i+1];
 		for (j = row_start; j<row_end; ++j) {
-			if ((AJA[j] == i) || (pow(Aval[j],2) >= strongly_coupled2 * fabs(diag.val[i]*diag.val[AJA[j]])))
-			{
+			if ((AJA[j] == i) 
+                || (pow(Aval[j],2) >= strongly_coupled2 * fabs(diag.val[i]*diag.val[AJA[j]])) ) {
 				NJA[index] = AJA[j];
 				Nval[index] = Aval[j];
 				index++;
@@ -107,28 +106,28 @@ static void aggregation (dCSRmat *A,
 	/*------------------------------------------*/
 	/* Step 1. */
 	/*------------------------------------------*/
-	for (i=0; i<row; ++i){
-		if ((AIA[i+1] - AIA[i] - 1) == 0){
+	for (i=0; i<row; ++i) {
+		if ((AIA[i+1] - AIA[i] - 1) == 0) {
 			vertices->val[i] = -1;
 			num_left--;
 		}
-		else{
+		else {
 			subset = 1;
 			row_start = NIA[i]; row_end = NIA[i+1];
-			for (j=row_start; j<row_end; ++j){
+			for (j=row_start; j<row_end; ++j) {
 				if (vertices->val[NJA[j]] >= -1){
 					subset = 0;
 					break;
 				}
 			}
 			
-			if (subset == 1){
+			if (subset == 1) {
 				count = 0;
 				vertices->val[i] = *num_aggregations;
 				num_left--;
 				count++;
 				row_start = NIA[i]; row_end = NIA[i+1];
-				for (j=row_start; j<row_end;++j){
+				for (j=row_start; j<row_end;++j) {
 					if ((NJA[j]!=i) && (count < max_aggregation)){
 						vertices->val[NJA[j]] = *num_aggregations;
 						num_left--;
@@ -147,18 +146,19 @@ static void aggregation (dCSRmat *A,
 	
 	num_each_aggregation = (int*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
 	
-	for (i=row;i--;){
+	for (i=row;i--;) {
 		temp_C[i] = vertices->val[i];  
-		if (vertices->val[i] >= 0){
+		if (vertices->val[i] >= 0) {
 			num_each_aggregation[vertices->val[i]] ++;
 		}
 	}
 	
-	for(i=0; i<row; ++i){
-		if (vertices->val[i] < -1){
+	for(i=0; i<row; ++i) {
+		if (vertices->val[i] < -1) {
 			row_start = NIA[i]; row_end = NIA[i+1];
-			for (j=row_start;j<row_end;++j){
-				if(temp_C[NJA[j]] >= -1 && num_each_aggregation[temp_C[NJA[j]]] < max_aggregation){
+			for (j=row_start;j<row_end;++j) {
+				if (temp_C[NJA[j]] >= -1 
+                    && num_each_aggregation[temp_C[NJA[j]]] < max_aggregation ) {
 					vertices->val[i] = temp_C[NJA[j]];
 					num_left--;
 					num_each_aggregation[temp_C[NJA[j]]] ++ ;
@@ -171,16 +171,18 @@ static void aggregation (dCSRmat *A,
 	/*------------------------------------------*/
 	/* Step 3. */
 	/*------------------------------------------*/
-	while (num_left > 0){
-		for (i=0; i<row; ++i){
-			if (vertices->val[i] < -1){
+	while (num_left > 0) {
+		for (i=0; i<row; ++i) {
+			if (vertices->val[i] < -1) {
 				count = 0;
 				vertices->val[i] = *num_aggregations;
 				num_left--;
 				count++;
 				row_start = NIA[i]; row_end = NIA[i+1];
-				for (j=row_start; j<row_end;++j){
-					if ((NJA[j]!=i) && (vertices->val[NJA[j]] < -1) && (count<max_aggregation)){
+				for (j=row_start; j<row_end;++j) {
+					if (   (NJA[j]!=i) 
+                        && (vertices->val[NJA[j]] < -1) 
+                        && (count<max_aggregation) ) {
 						vertices->val[NJA[j]] = *num_aggregations;
 						num_left--;
 						count++;
@@ -208,7 +210,7 @@ static void aggregation (dCSRmat *A,
  * \param num_aggregations   Number of aggregations
  *
  * \author Xiaozhe Hu
- * \date 09/29/2009
+ * \date   09/29/2009
  */
 static void form_tentative_p (ivector *vertices, 
                               dCSRmat *tentp, 
@@ -235,11 +237,9 @@ static void form_tentative_p (ivector *vertices,
 	const INT row = tentp->row;
 	
 	// first run
-	for (i = 0, j = 0; i < row; i ++)
-	{
+	for (i = 0, j = 0; i < row; i ++) {
 		IA[i] = j;
-		if (vval[i] > -1)
-		{
+		if (vval[i] > -1) {
 			j ++;
 		}
 	}
@@ -254,11 +254,9 @@ static void form_tentative_p (ivector *vertices,
 	val = tentp->val;
 	
 	// second run
-	for (i = 0, j = 0; i < row; i ++)
-	{
+	for (i = 0, j = 0; i < row; i ++) {
 		IA[i] = j;
-		if (vval[i] > -1)
-		{
+		if (vval[i] > -1) {
 			JA[j] = vval[i];
 			val[j] = basis[0][i];
 			j ++;
@@ -272,14 +270,14 @@ static void form_tentative_p (ivector *vertices,
  *
  * \brief Form aggregation based on strong coupled neighborhoods 
  *
- * \param *vertices          Pointer to the aggregation of vertices
- * \param *tentp             Pointer to the prolongation operators 
- * \param *mgl               Pointer to AMG levele data
+ * \param vertices           Pointer to the aggregation of vertices
+ * \param tentp              Pointer to the prolongation operators 
+ * \param mgl                Pointer to AMG levele data
  * \param levelNum           Level number
  * \param num_aggregations   Number of aggregations
  *
  * \author Xiaozhe Hu
- * \date 11/25/201
+ * \date   11/25/201
  */
 static void form_tentative_p_bsr (ivector *vertices, 
                                   dBSRmat *tentp, 
@@ -306,11 +304,9 @@ static void form_tentative_p_bsr (ivector *vertices,
 	const INT row = tentp->ROW;
 	
 	// first run
-	for (i = 0, j = 0; i < row; i ++)
-	{
+	for (i = 0, j = 0; i < row; i ++) {
 		IA[i] = j;
-		if (vval[i] > -1)
-		{
+		if (vval[i] > -1) {
 			j ++;
 		}
 	}
@@ -325,11 +321,9 @@ static void form_tentative_p_bsr (ivector *vertices,
 	val = tentp->val;
 	
 	// second run
-	for (i = 0, j = 0; i < row; i ++)
-	{
+	for (i = 0, j = 0; i < row; i ++) {
 		IA[i] = j;
-		if (vval[i] > -1)
-		{
+		if (vval[i] > -1) {
 			JA[j] = vval[i];
             fasp_smat_identity (&(val[j*nb2]), tentp->nb, nb2);
 			j ++;

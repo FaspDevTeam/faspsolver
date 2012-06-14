@@ -595,7 +595,6 @@ void fasp_param_input (char *filenm,
 			wall = fgets(buffer,500,fp); // skip rest of line
 		}
 
-    
         else {
             status = ERROR_INPUT_PAR;
             break;

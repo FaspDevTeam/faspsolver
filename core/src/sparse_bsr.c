@@ -688,7 +688,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
     INT    *JAb  = NULL;
     REAL   *valb = NULL;
     
-    INT i,j,k,m;  
+    INT i,k,m;  
     INT ibegin, iend;  
     
     // Create a dBSRmat 'B'
@@ -718,7 +718,6 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
             // compute D^{-1}*A
             for (k = ibegin+1; k < iend; ++k) {
                 m = k*4;
-                j = JA[k];
                 fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
             }
         }// end of main loop
@@ -740,7 +739,6 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
             // compute D^{-1}*A
             for (k = ibegin+1; k < iend; ++k) {
                 m = k*9;
-                j = JA[k];
                 fasp_blas_smat_mul_nc3(diaginv+i*9, val+m, valb+m);
             }
         }// end of main loop
@@ -762,7 +760,6 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
             // compute D^{-1}*A
             for (k = ibegin+1; k < iend; ++k) {
                 m = k*25;
-                j = JA[k];
                 fasp_blas_smat_mul_nc5(diaginv+i*25, val+m, valb+m);
             }
         }// end of main loop
@@ -784,7 +781,6 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
             // compute D^{-1}*A
             for (k = ibegin+1; k < iend; ++k) {
                 m = k*49;
-                j = JA[k];
                 fasp_blas_smat_mul_nc7(diaginv+i*49, val+m, valb+m);
             }
         }// end of main loop
@@ -806,7 +802,6 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
             // compute D^{-1}*A
             for (k = ibegin+1; k < iend; ++k) {
                 m = k*nb2;
-                j = JA[k];
                 fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
             }
         } // end of main loop

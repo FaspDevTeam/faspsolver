@@ -40,7 +40,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
                            ILU_param *iluparam)
 {
     const SHORT  print_level=iluparam->print_level;
-    const INT    m=A->ROW, n=A->COL, nnz=A->NNZ, nb=A->nb, nb2=nb*nb;
+    const INT    n=A->COL, nnz=A->NNZ, nb=A->nb, nb2=nb*nb;
     
     // local variables
     INT lfil=iluparam->ILU_lfil;

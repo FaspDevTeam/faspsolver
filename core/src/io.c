@@ -52,7 +52,6 @@ void fasp_dcsrvec2_read (char *filemat,
                          dvector *b )
 {
     INT i,n,nz;
-    INT wall;
     
     /* read the matrix from file */ 
     FILE *fp = fopen(filemat,"r");
@@ -64,13 +63,13 @@ void fasp_dcsrvec2_read (char *filemat,
     
     printf("fasp_dcsrvec2_read: reading file %s...\n", filemat);
     
-    wall = fscanf(fp,"%d\n",&n);
+    fscanf(fp,"%d\n",&n);
     A->row = n;
     A->col = n;
     A->IA = (INT *)fasp_mem_calloc(n+1, sizeof(INT));
     
     for(i=0; i<n+1; ++i) { 
-        wall = fscanf(fp,"%d\n",&(A->IA[i])); 
+        fscanf(fp,"%d\n",&(A->IA[i])); 
         A->IA[i]--; 
     }
     
@@ -80,11 +79,11 @@ void fasp_dcsrvec2_read (char *filemat,
     A->val = (REAL *)fasp_mem_calloc(nz, sizeof(REAL));
     
     for(i=0; i<nz; ++i) { 
-        wall = fscanf(fp,"%d\n",&(A->JA[i])); 
+        fscanf(fp,"%d\n",&(A->JA[i])); 
         A->JA[i]--; 
     }
     
-    for(i=0; i<nz; ++i) wall = fscanf(fp,"%le\n",&(A->val[i]));
+    for(i=0; i<nz; ++i) fscanf(fp,"%le\n",&(A->val[i]));
     
     fclose(fp);
     
@@ -101,7 +100,7 @@ void fasp_dcsrvec2_read (char *filemat,
     
     printf("fasp_dcsrvec2_read: reading file %s...\n", filerhs);
     
-    wall = fscanf(fp,"%d\n",&n);
+    fscanf(fp,"%d\n",&n);
     
     if (n!=b->row) {
         printf("### ERROR: rhs size %d does not match matrix size %d!\n",n,b->row);
@@ -109,7 +108,7 @@ void fasp_dcsrvec2_read (char *filemat,
     }
     
     for(i=0; i<n; ++i) {
-        wall = fscanf(fp,"%le\n", &(b->val[i]));
+        fscanf(fp,"%le\n", &(b->val[i]));
     }
     
     fclose(fp);
@@ -150,7 +149,6 @@ void fasp_dcsrvec1_read (char *filename,
                          dvector *b)
 {
     INT  i,m,n,nnz,idata; 
-    INT  wall;
     REAL ddata;
     
     // Open input disk file
@@ -164,12 +162,12 @@ void fasp_dcsrvec1_read (char *filename,
     printf("fasp_dcsrvec1_read: reading file %s...\n", filename);
     
     // Read CSR matrix
-    wall = fscanf(fp, "%d %d", &m, &n);
+    fscanf(fp, "%d %d", &m, &n);
     A->row=m; A->col=n;
     
     A->IA=(int*)fasp_mem_calloc(m+1, sizeof(INT));    
     for (i=0;i<=m;++i) {
-        wall = fscanf(fp, "%d", &idata);
+        fscanf(fp, "%d", &idata);
         A->IA[i]=idata;
     }
     
@@ -179,23 +177,23 @@ void fasp_dcsrvec1_read (char *filename,
     A->val=(REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     
     for (i=0;i<nnz;++i) {
-        wall = fscanf(fp, "%d", &idata);
+        fscanf(fp, "%d", &idata);
         A->JA[i]=idata;
     }
     
     for (i=0;i<nnz;++i) {
-        wall = fscanf(fp, "%lf", &ddata);
+        fscanf(fp, "%lf", &ddata);
         A->val[i]=ddata;
     }
     
     // Read RHS vector
-    wall = fscanf(fp, "%d", &m);
+    fscanf(fp, "%d", &m);
     b->row=m;
     
     b->val=(REAL*)fasp_mem_calloc(m, sizeof(REAL));
     
     for (i=0;i<m;++i) {
-        wall = fscanf(fp, "%lf", &ddata);
+        fscanf(fp, "%lf", &ddata);
         b->val[i]=ddata;
     }
     
@@ -204,13 +202,14 @@ void fasp_dcsrvec1_read (char *filename,
 
 /**
  * \fn void fasp_dcsr_read(char *filename, dCSRmat *A)
+ *
  * \brief Read A from matrix disk file in IJ format
  *
  * \param *filename  char for matrix file name
  * \param *A         pointer to the CSR matrix
  *
  * \author Xuehai Huang
- * \date 03/29/2009 
+ * \date   03/29/2009 
  */
 void fasp_dcsr_read (char *filename, 
                      dCSRmat *A)
@@ -221,9 +220,8 @@ void fasp_dcsr_read (char *filename,
 	 *    i, j, a_ij 
 	 */
 	
-	int i,j,k,m,n,nnz;
-	double value;	
-	int wall;
+	INT   i,j,k,m,n,nnz;
+	REAL  value;	
     
 	FILE *fp=fopen(filename,"r");
 	
@@ -234,7 +232,7 @@ void fasp_dcsr_read (char *filename,
 	
 	printf("fasp_dcsr_read: reading file %s...\n", filename);
 	
-	wall = fscanf(fp,"%d %d %d",&m,&n,&nnz); 
+	fscanf(fp,"%d %d %d",&m,&n,&nnz); 
 	
 	dCOOmat Atmp=fasp_dcoo_create(m,n,nnz); 
 	
@@ -275,7 +273,6 @@ void fasp_dcoo_read (char *filename,
                      dCSRmat *A)
 {
     INT  i,j,k,m,n,nnz;
-    INT  wall;
     REAL value;    
     
     FILE *fp=fopen(filename,"r");
@@ -287,7 +284,7 @@ void fasp_dcoo_read (char *filename,
     
     printf("fasp_dcoo_read: reading file %s...\n", filename);
     
-    wall = fscanf(fp,"%d %d %d",&m,&n,&nnz); 
+    fscanf(fp,"%d %d %d",&m,&n,&nnz); 
     
     dCOOmat Atmp=fasp_dcoo_create(m,n,nnz); 
     
@@ -464,7 +461,7 @@ void fasp_dstr_read (char *filename,
                      dSTRmat *A)
 {
     INT  nx, ny, nz, nxy, ngrid, nband, nc, offset;
-    INT  i, k, n, wall;
+    INT  i, k, n;
     REAL value;
     
     FILE *fp=fopen(filename,"r");
@@ -476,25 +473,25 @@ void fasp_dstr_read (char *filename,
     
     printf("fasp_dstr_read: reading file %s...\n", filename);
     
-    wall = fscanf(fp,"%d %d %d",&nx,&ny,&nz); // read dimension of the problem
+    fscanf(fp,"%d %d %d",&nx,&ny,&nz); // read dimension of the problem
     A->nx = nx; A->ny = ny; A->nz = nz;
     
     nxy = nx*ny; ngrid = nxy*nz;
     A->nxy = nxy; A->ngrid = ngrid;
     
-    wall = fscanf(fp,"%d",&nc); // read number of components
+    fscanf(fp,"%d",&nc); // read number of components
     A->nc = nc;
     
-    wall = fscanf(fp,"%d",&nband); // read number of bands
+    fscanf(fp,"%d",&nband); // read number of bands
     A->nband = nband;
     
     A->offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
     
     // read diagonal    
-    wall = fscanf(fp, "%d", &n);
+    fscanf(fp, "%d", &n);
     A->diag=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
     for (i=0;i<n;++i) {
-        wall = fscanf(fp, "%le", &value);
+        fscanf(fp, "%le", &value);
         A->diag[i]=value;
     }
     
@@ -502,12 +499,12 @@ void fasp_dstr_read (char *filename,
     k = nband;
     A->offdiag=(REAL **)fasp_mem_calloc(nband, sizeof(REAL *));
     while (k--) {
-        wall = fscanf(fp,"%d %d",&offset,&n); // read number band k
+        fscanf(fp,"%d %d",&offset,&n); // read number band k
         A->offsets[nband-k-1]=offset;
     
         A->offdiag[nband-k-1]=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
         for (i=0;i<n;++i) {
-            wall = fscanf(fp, "%le", &value);
+            fscanf(fp, "%le", &value);
             A->offdiag[nband-k-1][i]=value;
         }
     }
@@ -545,7 +542,7 @@ void fasp_dbsr_read (char *filename,
 {
     INT  ROW, COL, NNZ, nb, storage_manner;
     INT  i, n;
-    INT  index, wall;
+    INT  index;
     REAL value;
     
     FILE *fp=fopen(filename,"r");
@@ -557,36 +554,36 @@ void fasp_dbsr_read (char *filename,
     
     printf("fasp_dbsr_read: reading file %s...\n", filename);
     
-    wall = fscanf(fp, "%d %d %d", &ROW,&COL,&NNZ); // read dimension of the problem
+    fscanf(fp, "%d %d %d", &ROW,&COL,&NNZ); // read dimension of the problem
     A->ROW = ROW; A->COL = COL; A->NNZ = NNZ;
     
-    wall = fscanf(fp, "%d", &nb); // read the size of each block
+    fscanf(fp, "%d", &nb); // read the size of each block
     A->nb = nb;
     
-    wall = fscanf(fp, "%d", &storage_manner); // read the storage_manner of each block
+    fscanf(fp, "%d", &storage_manner); // read the storage_manner of each block
     A->storage_manner = storage_manner;
     
     // allocate memory space
     fasp_dbsr_alloc(ROW, COL, NNZ, nb, storage_manner, A);
     
     // read IA
-    wall = fscanf(fp, "%d", &n);
+    fscanf(fp, "%d", &n);
     for (i=0;i<n;++i) {
-        wall = fscanf(fp, "%d", &index);
+        fscanf(fp, "%d", &index);
         A->IA[i] = index;
     }
     
     // read JA
-    wall = fscanf(fp, "%d", &n);
+    fscanf(fp, "%d", &n);
     for (i=0; i<n; ++i){
-        wall = fscanf(fp, "%d", &index);
+        fscanf(fp, "%d", &index);
         A->JA[i] = index;
     }
     
     // read val
-    wall = fscanf(fp, "%d", &n);
+    fscanf(fp, "%d", &n);
     for (i=0; i<n; ++i) {
-        wall = fscanf(fp, "%le", &value);
+        fscanf(fp, "%le", &value);
         A->val[i] = value;
     }
     
@@ -613,7 +610,7 @@ void fasp_dbsr_read (char *filename,
 void fasp_dvecind_read (char *filename,
                         dvector *b)
 {
-    INT  i, n, index, wall;
+    INT  i, n, index;
     REAL value;
     FILE *fp=fopen(filename,"r");
     
@@ -624,11 +621,11 @@ void fasp_dvecind_read (char *filename,
     
     printf("fasp_dvecind_read: reading file %s...\n", filename);
     
-    wall = fscanf(fp,"%d",&n);    
+    fscanf(fp,"%d",&n);    
     fasp_dvec_alloc(n,b);
     
     for (i=0;i<n;++i) {
-        wall = fscanf(fp, "%d %le", &index, &value);
+        fscanf(fp, "%d %le", &index, &value);
         if (value>BIGREAL || index>=n) {
             printf("### WARNING: index = %d, value = %lf\n", index, value);
         }
@@ -657,7 +654,7 @@ void fasp_dvec_read (char *filename,
                      dvector *b)
 {
     
-    INT  i, n, wall;
+    INT  i, n;
     REAL value;
 
     FILE *fp=fopen(filename,"r");
@@ -669,11 +666,11 @@ void fasp_dvec_read (char *filename,
     
     printf("fasp_dvec_read: reading file %s...\n", filename);
     
-    wall = fscanf(fp,"%d",&n);    
+    fscanf(fp,"%d",&n);    
     fasp_dvec_alloc(n,b);
     
     for (i=0;i<n;++i) {
-        wall = fscanf(fp, "%le", &value);
+        fscanf(fp, "%le", &value);
         b->val[i]=value;
     }
     
@@ -699,7 +696,6 @@ void fasp_ivecind_read (char *filename,
                         ivector *b)
 {
     INT i, n, index, value;
-    INT wall;
     
     FILE *fp=fopen(filename,"r");
     
@@ -710,11 +706,11 @@ void fasp_ivecind_read (char *filename,
     
     printf("fasp_ivecind_read: reading file %s...\n", filename);
     
-    wall = fscanf(fp,"%d",&n);    
+    fscanf(fp,"%d",&n);    
     fasp_ivec_alloc(n,b);
     
     for (i=0;i<n;++i) {
-        wall = fscanf(fp, "%d %d", &index, &value);
+        fscanf(fp, "%d %d", &index, &value);
         b->val[index]=value;
     }
     
@@ -739,7 +735,7 @@ void fasp_ivecind_read (char *filename,
 void fasp_ivec_read (char *filename, 
                      ivector *b)
 {
-    INT i, n, value, wall;
+    INT i, n, value;
     
     FILE *fp=fopen(filename,"r");
     
@@ -751,11 +747,11 @@ void fasp_ivec_read (char *filename,
     
     printf("fasp_ivec_read: reading file %s...\n", filename);
     
-    wall = fscanf(fp,"%d",&n);    
+    fscanf(fp,"%d",&n);    
     fasp_ivec_alloc(n,b);
     
     for (i=0;i<n;++i) {
-        wall = fscanf(fp, "%d", &value);
+        fscanf(fp, "%d", &value);
         b->val[i]=value;
     }
     
@@ -799,8 +795,8 @@ void fasp_dcsrvec2_write (char *filemat,
                           dCSRmat *A, 
                           dvector *b )
 {
-    INT m=A->row, n=A->col, nnz=A->nnz;
-    INT i, j;
+    INT m=A->row, nnz=A->nnz;
+    INT i;
     
     FILE *fp=fopen(filemat, "w");
     
@@ -872,7 +868,7 @@ void fasp_dcsrvec1_write (char *filename,
                           dvector *b)
 {
     INT m=A->row, n=A->col, nnz=A->nnz;
-    INT i, j;
+    INT i;
     
     FILE *fp=fopen(filename, "w");
     

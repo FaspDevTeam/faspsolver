@@ -816,7 +816,7 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
                                      REAL *z, 
                                      void *data)
 {
-    INT i, ic, ic2;
+    INT i, ic;
     REAL *zz,*zr,*tc;
     INT nline, nplane;
     
@@ -870,9 +870,7 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
         fasp_array_cp_nc3(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
-            ic=i*nc;
-            ic2=i*nc2;
-    
+            ic=i*nc;    
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
             fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
             if (i>=nline) {
@@ -893,9 +891,7 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
         fasp_array_cp_nc5(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
-            ic=i*nc;
-            ic2=i*nc2;
-    
+            ic=i*nc;    
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
             fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
             if (i>=nline) {
@@ -917,9 +913,7 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
         fasp_array_cp_nc7(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
-            ic=i*nc;
-            ic2=i*nc2;
-    
+            ic=i*nc;    
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
             fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
             if (i>=nline) {
@@ -940,9 +934,7 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
         // forward sweep: solve unit lower matrix equation L*zz=zr
         fasp_array_cp(nc,&(zr[0]),&(zz[0]));
         for (i=1;i<m;++i) {
-            ic=i*nc;
-            ic2=i*nc2;
-    
+            ic=i*nc;    
             fasp_blas_smat_mxv(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc,nc);
             fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
     
@@ -1171,7 +1163,7 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
     REAL *zz,*zr,*tc;
     
     dSTRmat *ILU_data=(dSTRmat *)data;
-    INT i,ic, ic2;
+    INT i,ic;
     INT m=ILU_data->ngrid;
     INT nc=ILU_data->nc;
     INT nc2=nc*nc;
@@ -1235,9 +1227,7 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
         fasp_array_cp_nc3(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
-            ic=i*nc;
-            ic2=ic*nc;
-    
+            ic=i*nc;    
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
             fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
@@ -1283,9 +1273,7 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
         fasp_array_cp_nc5(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
-            ic=i*nc;
-            ic2=ic*nc;
-    
+            ic=i*nc;    
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
             fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
@@ -1331,9 +1319,7 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
         fasp_array_cp_nc7(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
-            ic=i*nc;
-            ic2=ic*nc;
-    
+            ic=i*nc;    
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
             fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
@@ -1378,7 +1364,6 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
         fasp_array_cp(nc,&(zr[0]),&(zz[0]));
         for (i=1;i<m;++i) {
             ic=i*nc;
-            ic2=ic*nc;
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc,nc);           
             fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));

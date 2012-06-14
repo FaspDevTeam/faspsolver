@@ -91,30 +91,30 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
     for (i=0; i<nband; ++i) {
         if (offsets[i] == -1) {
             offdiag0 = A->offdiag[i];
-            memcpy(LU->offdiag[0],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
+            memcpy(LU->offdiag[0],offdiag0,((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
         }
         else if (offsets[i] == 1) {
             offdiag1 = A->offdiag[i];
-            memcpy(LU->offdiag[1],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
+            memcpy(LU->offdiag[1],offdiag1,((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
         }    
         else if (offsets[i] == -nline) {
             offdiag2 = A->offdiag[i];
-            memcpy(LU->offdiag[2],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
+            memcpy(LU->offdiag[2],offdiag2,((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
         }    
         else if (offsets[i] == nline) {
             offdiag3 = A->offdiag[i];
-            memcpy(LU->offdiag[3],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
+            memcpy(LU->offdiag[3],offdiag3,((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
         }
         else if (offsets[i] == -nplane) {
             offdiag4 = A->offdiag[i];
-            memcpy(LU->offdiag[4],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
+            memcpy(LU->offdiag[4],offdiag4,((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
         }    
         else if (offsets[i] == nplane) {
             offdiag5 = A->offdiag[i];
-            memcpy(LU->offdiag[5],A->offdiag[i],((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
+            memcpy(LU->offdiag[5],offdiag5,((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
         }    
         else {
-            printf("fasp_ilu_dstr_setup0: offsets for structured ILU is illegal!\n");
+            printf("### ERROR: offsets for structured ILU is illegal!\n");
             return;
         }
     }

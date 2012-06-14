@@ -59,14 +59,13 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     const INT min_iter  = 0;
     
     // local variables
-    SHORT    converged = FALSE; 
     INT      iter = 0;
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
     REAL     epsmac = SMALLREAL; 
     REAL     r_norm, b_norm, den_norm;
-    REAL     epsilon, gamma, t, r_norm_0;   
+    REAL     epsilon, gamma, t;   
     
     REAL    *c = NULL, *s = NULL, *rs = NULL; 
     REAL    *norms = NULL, *r = NULL, *w = NULL;
@@ -101,7 +100,6 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     
     b_norm = fasp_blas_array_norm2(n, b->val);
     r_norm = fasp_blas_array_norm2(n, p[0]);
-    r_norm_0 = r_norm;
     
     if ( print_level > PRINT_NONE) {
         norms[0] = r_norm;
@@ -231,7 +229,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
             r_norm = fasp_blas_array_norm2(n, r);
     
             if (r_norm  <= epsilon) {
-                converged = TRUE; break;
+                break;
             }
             else {
                 if (print_level >= PRINT_SOME) ITS_FACONV;
@@ -551,14 +549,13 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     const INT min_iter = 0;
     
     // local variables
-    SHORT     converged = FALSE; 
     INT       iter = 0;
     INT       restartplus1 = restart + 1;
     INT       i, j, k;
     
     REAL      epsmac = SMALLREAL; 
     REAL      r_norm, b_norm, den_norm;
-    REAL      epsilon, gamma, t, r_norm_0;   
+    REAL      epsilon, gamma, t;   
     
     REAL     *c = NULL, *s = NULL, *rs = NULL; 
     REAL     *norms = NULL, *r = NULL, *w = NULL;
@@ -588,7 +585,6 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     
     b_norm = fasp_blas_array_norm2(n, b->val);
     r_norm = fasp_blas_array_norm2(n, p[0]);
-    r_norm_0 = r_norm;
     
     if ( print_level > PRINT_NONE) {
         norms[0] = r_norm;
@@ -717,7 +713,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
             r_norm = fasp_blas_array_norm2(n, r);
     
             if (r_norm  <= epsilon) {
-                converged = TRUE; break;
+                break;
             }
             else {
                 if ( print_level >= PRINT_SOME ) ITS_FACONV;
@@ -797,14 +793,13 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     const INT min_iter = 0;
     
     // local varialbes
-    SHORT     converged = FALSE; 
     INT       iter = 0;
     INT       restartplus1 = restart + 1;
     INT       i, j, k;
     
     REAL      epsmac = SMALLREAL; 
     REAL      r_norm, b_norm, den_norm;
-    REAL      epsilon, gamma, t, r_norm_0;   
+    REAL      epsilon, gamma, t;   
     
     REAL     *c = NULL, *s = NULL, *rs = NULL; 
     REAL     *norms = NULL, *r = NULL, *w = NULL;
@@ -834,7 +829,6 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     
     b_norm = fasp_blas_array_norm2(n, b->val);
     r_norm = fasp_blas_array_norm2(n, p[0]);
-    r_norm_0 = r_norm;
     
     if ( print_level > PRINT_NONE) {
         norms[0] = r_norm;
@@ -965,7 +959,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
             r_norm = fasp_blas_array_norm2(n, r);
     
             if (r_norm  <= epsilon) {
-                converged = TRUE; break;
+                break;
             }
             else {
                 if (print_level >= PRINT_SOME) ITS_FACONV;

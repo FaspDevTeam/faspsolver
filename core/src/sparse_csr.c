@@ -178,7 +178,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     const INT n=A->row,nnz=A->nnz;
     const INT *ia=A->IA, *ja=A->JA;
     const REAL *Aval=A->val;
-    INT i,j,k,jaj,i1,i2,start1,start2;
+    INT i,j,k,jaj,i1,i2,start;
     
     dCSRmat Aperm = fasp_dcsr_create(n,n,nnz);
     
@@ -197,9 +197,9 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     for (i=0; i<n; ++i) {
         i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1; 
         k = P[i];
-        start1 = ia[k]; start2 = ia[k+1]-1;
+        start = ia[k];
         for (j=i1; j<=i2; ++j) {
-            jaj = start1+j-i1;
+            jaj = start+j-i1;
             Aperm.JA[j] = ja[jaj];
             Aperm.val[j] = Aval[jaj];
         }    

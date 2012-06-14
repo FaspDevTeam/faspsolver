@@ -7,6 +7,8 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "forts_ns.h"
+
 #include "mg_util.inl"
 
 /*---------------------------------*/
@@ -62,20 +64,52 @@ void fasp_solver_mgcycle (AMG_data *mgl,
         else if (l<mgl->schwarz_levels){
 			switch (mgl[l].schwarz.schwarz_type){
 				case 3:
-					fbgs2ns_(&(mgl[l].schwarz.A.row),mgl[l].schwarz.A.IA,mgl[l].schwarz.A.JA,mgl[l].schwarz.A.val, \
-                             mgl[l].x.val, mgl[l].b.val,&(mgl[l].schwarz.nblk),mgl[l].schwarz.iblock,mgl[l].schwarz.jblock,	\
-                             mgl[l].schwarz.mask,mgl[l].schwarz.maxa,mgl[l].schwarz.au,mgl[l].schwarz.al, \
-                             mgl[l].schwarz.rhsloc,&(mgl[l].schwarz.memt));
-					bbgs2ns_(&(mgl[l].schwarz.A.row),mgl[l].schwarz.A.IA,mgl[l].schwarz.A.JA,mgl[l].schwarz.A.val, \
-                             mgl[l].x.val, mgl[l].b.val,&(mgl[l].schwarz.nblk),mgl[l].schwarz.iblock,mgl[l].schwarz.jblock,	\
-                             mgl[l].schwarz.mask,mgl[l].schwarz.maxa,mgl[l].schwarz.au,mgl[l].schwarz.al, \
-                             mgl[l].schwarz.rhsloc,&(mgl[l].schwarz.memt));
+					fbgs2ns_(&(mgl[l].schwarz.A.row),
+                             mgl[l].schwarz.A.IA,
+                             mgl[l].schwarz.A.JA,
+                             mgl[l].schwarz.A.val,
+                             mgl[l].x.val,
+                             mgl[l].b.val,
+                             &(mgl[l].schwarz.nblk),
+                             mgl[l].schwarz.iblock,
+                             mgl[l].schwarz.jblock,
+                             mgl[l].schwarz.mask,
+                             mgl[l].schwarz.maxa,
+                             mgl[l].schwarz.au,mgl[l].schwarz.al,
+                             mgl[l].schwarz.rhsloc,
+                             &(mgl[l].schwarz.memt));
+					bbgs2ns_(&(mgl[l].schwarz.A.row),
+                             mgl[l].schwarz.A.IA,
+                             mgl[l].schwarz.A.JA,
+                             mgl[l].schwarz.A.val,
+                             mgl[l].x.val,
+                             mgl[l].b.val,
+                             &(mgl[l].schwarz.nblk),
+                             mgl[l].schwarz.iblock,
+                             mgl[l].schwarz.jblock,
+                             mgl[l].schwarz.mask,
+                             mgl[l].schwarz.maxa,
+                             mgl[l].schwarz.au,
+                             mgl[l].schwarz.al,
+                             mgl[l].schwarz.rhsloc,
+                             &(mgl[l].schwarz.memt));
 					break;
 				default:
-					fbgs2ns_(&(mgl[l].schwarz.A.row),mgl[l].schwarz.A.IA,mgl[l].schwarz.A.JA,mgl[l].schwarz.A.val, \
-                             mgl[l].x.val, mgl[l].b.val,&(mgl[l].schwarz.nblk),mgl[l].schwarz.iblock,mgl[l].schwarz.jblock,	\
-                             mgl[l].schwarz.mask,mgl[l].schwarz.maxa,mgl[l].schwarz.au,mgl[l].schwarz.al, \
-                             mgl[l].schwarz.rhsloc,&(mgl[l].schwarz.memt));
+					fbgs2ns_(&(mgl[l].schwarz.A.row),
+                             mgl[l].schwarz.A.IA,
+                             mgl[l].schwarz.A.JA,
+                             mgl[l].schwarz.A.val,
+                             mgl[l].x.val,
+                             mgl[l].b.val,
+                             &(mgl[l].schwarz.nblk),
+                             mgl[l].schwarz.iblock,
+                             mgl[l].schwarz.jblock,
+                             mgl[l].schwarz.mask,
+                             mgl[l].schwarz.maxa,
+                             mgl[l].schwarz.au,
+                             mgl[l].schwarz.al,
+                             mgl[l].schwarz.rhsloc,
+                             &(mgl[l].schwarz.memt));
 					break;
 			}
 		}
@@ -150,20 +184,53 @@ void fasp_solver_mgcycle (AMG_data *mgl,
         else if (l<mgl->schwarz_levels){
 			switch (mgl[l].schwarz.schwarz_type){
                 case 3:
-                    bbgs2ns_(&(mgl[l].schwarz.A.row),mgl[l].schwarz.A.IA,mgl[l].schwarz.A.JA,mgl[l].schwarz.A.val, \
-                             mgl[l].x.val, mgl[l].b.val,&(mgl[l].schwarz.nblk),mgl[l].schwarz.iblock,mgl[l].schwarz.jblock,	\
-                             mgl[l].schwarz.mask,mgl[l].schwarz.maxa,mgl[l].schwarz.au,mgl[l].schwarz.al,\
-                             mgl[l].schwarz.rhsloc,&(mgl[l].schwarz.memt));
-                    fbgs2ns_(&(mgl[l].schwarz.A.row),mgl[l].schwarz.A.IA,mgl[l].schwarz.A.JA,mgl[l].schwarz.A.val, \
-                             mgl[l].x.val, mgl[l].b.val,&(mgl[l].schwarz.nblk),mgl[l].schwarz.iblock,mgl[l].schwarz.jblock,	\
-                             mgl[l].schwarz.mask,mgl[l].schwarz.maxa,mgl[l].schwarz.au,mgl[l].schwarz.al,\
-                             mgl[l].schwarz.rhsloc,&(mgl[l].schwarz.memt));
+                    bbgs2ns_(&(mgl[l].schwarz.A.row),
+                             mgl[l].schwarz.A.IA,
+                             mgl[l].schwarz.A.JA,
+                             mgl[l].schwarz.A.val,
+                             mgl[l].x.val,
+                             mgl[l].b.val,
+                             &(mgl[l].schwarz.nblk),
+                             mgl[l].schwarz.iblock,
+                             mgl[l].schwarz.jblock,
+                             mgl[l].schwarz.mask,
+                             mgl[l].schwarz.maxa,
+                             mgl[l].schwarz.au,
+                             mgl[l].schwarz.al,
+                             mgl[l].schwarz.rhsloc,
+                             &(mgl[l].schwarz.memt));
+                    fbgs2ns_(&(mgl[l].schwarz.A.row),
+                             mgl[l].schwarz.A.IA,
+                             mgl[l].schwarz.A.JA,
+                             mgl[l].schwarz.A.val,
+                             mgl[l].x.val,
+                             mgl[l].b.val,
+                             &(mgl[l].schwarz.nblk),
+                             mgl[l].schwarz.iblock,
+                             mgl[l].schwarz.jblock,
+                             mgl[l].schwarz.mask,
+                             mgl[l].schwarz.maxa,
+                             mgl[l].schwarz.au,
+                             mgl[l].schwarz.al,
+                             mgl[l].schwarz.rhsloc,
+                             &(mgl[l].schwarz.memt));
                     break;
                 default:
-                    bbgs2ns_(&(mgl[l].schwarz.A.row),mgl[l].schwarz.A.IA,mgl[l].schwarz.A.JA,mgl[l].schwarz.A.val, \
-                             mgl[l].x.val, mgl[l].b.val,&(mgl[l].schwarz.nblk),mgl[l].schwarz.iblock,mgl[l].schwarz.jblock,	\
-                             mgl[l].schwarz.mask,mgl[l].schwarz.maxa,mgl[l].schwarz.au,mgl[l].schwarz.al,\
-                             mgl[l].schwarz.rhsloc,&(mgl[l].schwarz.memt));
+                    bbgs2ns_(&(mgl[l].schwarz.A.row),
+                             mgl[l].schwarz.A.IA,
+                             mgl[l].schwarz.A.JA,
+                             mgl[l].schwarz.A.val,
+                             mgl[l].x.val,
+                             mgl[l].b.val,
+                             &(mgl[l].schwarz.nblk),
+                             mgl[l].schwarz.iblock,
+                             mgl[l].schwarz.jblock,
+                             mgl[l].schwarz.mask,
+                             mgl[l].schwarz.maxa,
+                             mgl[l].schwarz.au,
+                             mgl[l].schwarz.al,
+                             mgl[l].schwarz.rhsloc,
+                             &(mgl[l].schwarz.memt));
                     break;
 			}
 		}
@@ -204,12 +271,14 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
     const SHORT cycle_type  = param->cycle_type;    
     //const int smooth_order = param->smooth_order;
     const REAL relax = param->relaxation;
-    //const int ndeg = 0;
     
     // local variables
     INT nu_l[MAX_AMG_LVL] = {0}, l = 0;
     REAL alpha = 1.0;
     INT i;
+
+    if (print_level >= PRINT_MOST) 
+        printf("AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
 
  ForwardSweep:
     while (l<nl-1) { 

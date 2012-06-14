@@ -145,11 +145,9 @@ void fasp_aux_rveci (FILE *inp,
     
     INT n;
     INT *vec_end;
-    INT wall;
     n = *nn;
     vec_end  =  vec + n;
-    for ( ; vec < vec_end; ++vec)
-        wall = fscanf(inp,"%i",vec);
+    for ( ; vec < vec_end; ++vec) fscanf(inp,"%i",vec);
     fprintf(stdout,"Read %d INTEGERS", n);
     return;
 }
@@ -161,11 +159,9 @@ void fasp_aux_rvecd (FILE *inp,
 {
     INT n;
     REAL *vec_end;
-    INT wall;
     n=*nn;
     vec_end =  vec + n;
-    for ( ; vec < vec_end; ++vec)
-        wall = fscanf(inp,"%lg",vec);
+    for ( ; vec < vec_end; ++vec) fscanf(inp,"%lg",vec);
     fprintf(stdout,"Read %d REALS", n);
     return;
 }

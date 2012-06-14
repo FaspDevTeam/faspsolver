@@ -39,13 +39,12 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 	// information about A
 	dCSRmat A = schwarz->A;
 	INT n   = A.row;
-	INT nnz = A.nnz;
 	INT *ia = A.IA;
 	INT *ja = A.JA;
 	REAL *a = A.val;
 	
 	// local variables
-	INT n1=n+1,i,j;
+	INT n1=n+1,i;
 	INT inroot=-10,nsizei=-10,nsizeall=-10,nlvl=0;
 	INT maxbs=0;
 	INT *jb=NULL;

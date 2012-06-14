@@ -181,7 +181,6 @@ dCSRmat fasp_dbsr_getblk_dcsr (dBSRmat *A)
     
     // local variable
     INT i,j;
-    SHORT status = SUCCESS;
     
     // get pressure block
     memcpy(P_csr.JA, JA, NNZ*sizeof(INT)); 
@@ -193,7 +192,7 @@ dCSRmat fasp_dbsr_getblk_dcsr (dBSRmat *A)
         }
     
     // compress CSR format 
-    status = fasp_dcsr_compress_inplace(&P_csr,1e-8);
+    fasp_dcsr_compress_inplace(&P_csr,1e-8);
     
     // return P 
     return P_csr;
