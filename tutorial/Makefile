@@ -3,7 +3,7 @@
 # 
 # This is the Makefile for FASP test suite! 
 # Do NOT put your personal definitions in this general file. 
-# Use ../core/make.inc to define user settings instead.
+# Use ../base/make.inc to define user settings instead.
 #
 ########################################################################
 
@@ -18,8 +18,8 @@ FC=gfortran
 
 FASPDIR=../../faspsolver
 SRCDIR=./src
-INCLUDE=-I${FASPDIR}/core/include
-FASPLIB=${FASPDIR}/core/lib/libfasp.a
+INCLUDE=-I${FASPDIR}/base/include
+FASPLIB=${FASPDIR}/base/lib/libfasp.a
 
 ########################################################################      
 # Compiling options                                                             
@@ -44,7 +44,7 @@ LIBS=$(TESTLIB) $(FASPLIB)
 ########################################################################
 # Load user-defined parameters
 ########################################################################
-include ${FASPDIR}/core/make.inc
+include ${FASPDIR}/base/make.inc
 
 ########################################################################
 # Link options
