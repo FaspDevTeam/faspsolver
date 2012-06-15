@@ -196,10 +196,6 @@ test_rsamg_omp:
 	$(CC) -c main/test_rsamg_omp.c -o main/test_rsamg_omp.o $(CFLAGS)
 	$(FC) -o test_rsamg_omp.ex main/test_rsamg_omp.o $(FLFLAGS)
 
-fasp: 
-	$(CC) -c main/fasp.c -o main/fasp.o $(CFLAGS)
-	$(FC) -o fasp.ex main/fasp.o $(FLFLAGS)
-
 testall:
 	make 
 	make regression
