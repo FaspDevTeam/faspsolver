@@ -1,21 +1,34 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include"fasp.h"
 #include<omp.h>
 
 /**
  * \fn     FASP_GET_NUM_THREADS();
- * \brief  set the number of threads 
- * \author Chunsheng Feng && Xiaoqiang Yue 
- * \data   05/24/2012
+ * \brief  Get the number of threads for OpenMP functions.
+ * \author Chunsheng FENG, Xiaoqiang YUE and Zheng LI
+ * \data   June/15/2012
  */
-int FASP_GET_NUM_THREADS()
+INT thread_ini_flag = 0;
+INT FASP_GET_NUM_THREADS()
 {
-	static int flag, nthreads;
-	flag = 0;
-	if(flag == 0){
+	static INT nthreads;
+	if(thread_ini_flag == 0){
        #pragma omp parallel
 		nthreads = omp_get_num_threads();
-		flag = 1;
+		thread_ini_flag = 1;
 	}
+	return nthreads;
+}
+
+/**
+ * \fn     Fasp_Set_Num_Threads();
+ * \brief  Set the number of threads for OpenMP functions.
+ * \author Chunsheng FENG, Xiaoqiang YUE and Zheng LI
+ * \data   June/15/2012
+ */
+INT Fasp_Set_Num_Threads(INT nthreads )
+{
+	omp_set_num_threads( nthreads );
 	return nthreads;
 }

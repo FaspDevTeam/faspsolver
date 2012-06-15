@@ -214,7 +214,6 @@ testall:
 	make testheat
 	make testomp
 	make test_rsamg_omp
-	nake fasp
 
 ########################################################################
 # Clean up
