@@ -921,9 +921,9 @@ typedef ListElement *LinkList; /**< linked list */
 
 #include "omp.h"
 
-extern INT THDs_AMG_GS;  /**< ??? */
-extern INT THDs_CPR_lGS; /**< ??? */
-extern INT THDs_CPR_gGS; /**< ??? */
+extern INT THDs_AMG_GS;  /**<  amg gs smoothing threads  */
+extern INT THDs_CPR_lGS; /**<   reservoir gs smoothing threads */
+extern INT THDs_CPR_gGS; /**< global matrix gs smoothing threads  */
 
 extern REAL total_linear_time; /**< total linear times */
 extern REAL total_setup_time;  /**< ??? */

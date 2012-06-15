@@ -104,12 +104,12 @@ int main (int argc, const char * argv[])
 	
 #if FASP_USE_OPENMP
     // OMP version AMG as the iterative solver
-	else if( solver_type == 110) {        
+	else if( solver_type == 21) {        
         int nts = 2;
  		printf("omp test itsolver _ type = %d amgparam.max_iter = %d, amgparam.tol = %lf\n",
                 solver_type, amgparam.maxit, amgparam.tol);
 		omp_set_num_threads(nts);
-		status = fasp_solver_amg_omp(&A, &b, &x, &amgparam, nts, 1000);
+		fasp_solver_amg(&A, &b, &x, &amgparam);
 	}
 #endif	
 

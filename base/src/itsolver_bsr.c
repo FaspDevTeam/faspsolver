@@ -22,6 +22,10 @@
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/20/2011
  */
+INT THDs_AMG_GS;  /**< cpr amg gs smoothing threads      */
+INT THDs_CPR_lGS; /**< reservoir gs smoothing threads     */
+INT THDs_CPR_gGS; /**< global matrix gs smoothing threads */
+
 void fasp_set_GS_threads(int mythreads, int its)
 {
 #if FASP_USE_OPENMP
