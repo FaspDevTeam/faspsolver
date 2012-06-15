@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+06/15/2012 FASP 0.9.4:
+- Merge the new OMP version.
+- Change the name "core" to "base".
+- Fix a small bug in BSR format. 
+- Fix a typo in doxygen.h.
+
 06/14/2012 FASP 0.9.3:
 - Fix a bunch of WARNINGS in gcc when -Wall open.
 - Fix a few errors in VC++.

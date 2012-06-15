@@ -1154,7 +1154,7 @@ void fasp_precond_dstr_ilu0_backward (REAL *r,
  * \param data  Pointer to precondition data
  *
  * \author Shiquan Zhang
- * \date  04/21/2010
+ * \date   04/21/2010
  */
 void fasp_precond_dstr_ilu1_forward (REAL *r, 
                                      REAL *z, 

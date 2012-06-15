@@ -1,7 +1,7 @@
 ########################################################################
 # Fast Auxiliary Space Preconditioners (FASP)
 # 
-# This is the Makefile for FASP core! 
+# This is the Makefile for FASP base! 
 #
 ########################################################################
 

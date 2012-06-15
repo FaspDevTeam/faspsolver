@@ -42,7 +42,8 @@
  * 
  * $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver 
  * 
- * will give you the current version of the package.
+ * will give you the current version of the package. If you have any questions, you
+ * may contact faspdev@gmail.com.
  * 
  */
  
@@ -82,7 +83,7 @@
  *
  * - Feng, Chunsheng (Xiangtan University, China)
  *
- * - Hu, Xiaozhe (Peking University, China)
+ * - Hu, Xiaozhe (Penn State University, USA)
  * 
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
@@ -100,9 +101,11 @@
  *
  * - Li, Zheng (Xiangtan University, China)
  *
+ * - Qiao, Changhe (Penn State University, USA)
+ *
  * - Shu, Shi (Xiangtan University, China)
  *
- * - Wang, Ziteng (Beijing University, China)
+ * - Wang, Ziteng (Peking University, China)
  *
  * - Yang, Kai (Penn State University, USA)
  *      
@@ -119,6 +122,8 @@
  * Project Coordinator:
  * 
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
+ *
+ * Contact Info: faspusr@gmail.com
  *
  */
    
