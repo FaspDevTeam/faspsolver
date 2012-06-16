@@ -9,6 +9,7 @@
  * \author Chunsheng FENG, Xiaoqiang YUE and Zheng LI
  * \data   June/15/2012
  */
+ 
 INT thread_ini_flag = 0;
 INT FASP_GET_NUM_THREADS()
 {
