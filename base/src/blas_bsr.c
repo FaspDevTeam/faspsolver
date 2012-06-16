@@ -24,8 +24,8 @@
  * \param beta   REAL factor beta
  * \param y      Pointer to the array y
  *
- * \author Zhou Zhiyang
- * \date   2010/10/25  
+ * \author Zhiyang Zhou
+ * \date   10/25/2010  
  *
  * \note Works for general nb (Xiaozhe)
  */
@@ -115,12 +115,15 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
  * \param x      Pointer to the array x
  * \param y      Pointer to the array y
  *
- * \author Zhou Zhiyang
+ * \author Zhiyang Zhou
  * \date   2010/10/25  
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue  
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue  
+ * \date   05/23/2012    
  *
  * \note Works for general nb (Xiaozhe)
  */
+
 void fasp_blas_dbsr_aAxpy (const REAL alpha, 
 		                   dBSRmat *A, 
 		                   REAL *x, 
@@ -379,9 +382,11 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
  * \param x      Pointer to the array x
  * \param y      Pointer to the array y
  *
- * \author Zhou Zhiyang
+ * \author Zhiyang Zhou
  * \date   2010/10/25 
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue 
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue 
+ * \date   05/23/2012    
  *
  * \note Works for general nb (Xiaozhe) 
  */
@@ -2124,7 +2129,7 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
  * \param P   Pointer to the dBSRmat matrix
  * \param B   Pointer to dBSRmat matrix equal to R*A*P (output)
  *
- * \author Chunsheng FENG ,Xiaoqiang YUE, Xiaozhe Hu
+ * \author Chunsheng Feng, Xiaoqiang Yue and Xiaozhe Hu
  * \date   08/08/2011
  *
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 

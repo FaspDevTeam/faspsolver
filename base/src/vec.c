@@ -203,7 +203,9 @@ void fasp_dvec_rand (const INT n,
  *
  * \author Chensong Zhang
  * \date   11/16/2009
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/23/2012    
  */
 
 void fasp_dvec_set (INT n, 
@@ -263,7 +265,9 @@ void fasp_dvec_set (INT n,
  *
  * \author Chensong Zhang
  * \date   2010/04/03  
- * \date   2012/05/23    Modified by Chunsheng Feng Xiaoqiang Yue  
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue  
+ * \date   2012/05/23    
  */
 
 void fasp_ivec_set (const INT m, 

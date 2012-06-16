@@ -41,7 +41,7 @@ void fasp_array_null (REAL *x)
  *
  * \author Chensong Zhang 
  * \date   2010/04/03  
- * \date   2012/05/23  Modified by Chunsheng Feng && Xiaoqiang Yue
+ * \date   2012/05/23  Modified by Chunsheng Feng, Xiaoqiang Yue
  */
 
 void fasp_array_set (const INT n, 
@@ -100,7 +100,9 @@ void fasp_array_set (const INT n,
  *
  * \author Chensong Zhang 
  * \date   2010/04/03  
- * \date   2012/05/23  Modified by Chunsheng Feng && Xiaoqiang Yue
+ * 
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/25/2012
  */
 
 void fasp_iarray_set(const INT n, 
@@ -177,7 +179,7 @@ void fasp_array_cp (const INT n,
  * \param x    Pointer to the original vector
  * \param y    Pointer to the destination vector
  *
- * \author Chunsheng Feng && Xiaoqiang Yue
+ * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   2012/05/23  
  */
 void fasp_iarray_cp (const INT n, 

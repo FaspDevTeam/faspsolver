@@ -338,7 +338,7 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
  *
  * \param A   Pointer to the dBSRmat matrix
  *
- * \author Zhou Zhiyang
+ * \author Zhiyang Zhou
  * \date   2010/10/26
  *
  * \note Works for general nb (Xiaozhe)
@@ -428,7 +428,7 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
  * \param A        Pointer to the dBSRmat matrix
  * \param diaginv  Pointer to the inverses of all the diagonal blocks
  *
- * \author Zhou Zhiyang
+ * \author Zhiyang Zhou
  * \date  2010/11/07
  *
  * \note Works for general nb (Xiaozhe)
@@ -997,7 +997,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
  * \param A     Pointer to the 'dBSRmat' type matrix
  * \param diag  Pointer to array which stores the diagonal blocks in row by row manner
  *
- * \author Zhou Zhiyang
+ * \author Zhiyang Zhou
  * \date   2010/10/26 
  *
  * \note Works for general nb (Xiaozhe)

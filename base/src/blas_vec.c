@@ -23,7 +23,10 @@
  *
  * \author Chensong Zhang
  * \date   07/01/209
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/23/2012    
+ *
  */
 void fasp_blas_dvec_axpy (const REAL a, 
                           dvector *x, 
@@ -72,7 +75,9 @@ void fasp_blas_dvec_axpy (const REAL a,
  *
  * \author Chensong Zhang
  * \date   07/01/209
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/23/2012    
  */
 void fasp_blas_dvec_axpyz(const REAL a, 
                           dvector *x, 
@@ -105,7 +110,9 @@ void fasp_blas_dvec_axpyz(const REAL a,
  *
  * \author Chensong Zhang
  * \date   07/01/209
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/23/2012    
  */
 
 REAL fasp_blas_dvec_dotprod (dvector *x, 
@@ -148,7 +155,9 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
  *
  * \author Chensong Zhang
  * \date   07/01/209
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/23/2012    
  */
 
 REAL fasp_blas_dvec_relerr (dvector *x, 
@@ -200,7 +209,9 @@ REAL fasp_blas_dvec_relerr (dvector *x,
  *
  * \author Chensong Zhang
  * \date   07/01/209
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue 
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue 
+ * \date   05/23/2012    
  */
 
 REAL fasp_blas_dvec_norm1 (dvector *x) 
@@ -240,7 +251,9 @@ REAL fasp_blas_dvec_norm1 (dvector *x)
  *
  * \author Chensong Zhang
  * \date   07/01/209
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue 
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue 
+ * \date   05/23/2012    
  */
 
 REAL fasp_blas_dvec_norm2 (dvector *x)

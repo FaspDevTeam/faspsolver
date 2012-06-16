@@ -276,7 +276,9 @@ void fasp_dcsr_sort (dCSRmat *A)
  *
  * \author Chensong Zhang
  * \date   05/20/2009
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/23/2012    
  */
 
 void fasp_dcsr_getdiag (INT n, 
@@ -494,7 +496,9 @@ SHORT fasp_dcsr_regdiag (dCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   04/06/2010  
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue  
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue  
+ * \date   05/23/2012    
  */
 
 void fasp_dcsr_cp (dCSRmat *A, 

@@ -205,8 +205,10 @@ void fasp_smoother_dcsr_gs (dvector *u,
  * \param order  C/F ordering: -1: F-first; 1: C-first
  *
  * \author Zhiyang Zhou
- * \date   2010/11/12 
- * \date   05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue 
+ * \date   11/12/2010 
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue 
+ * \date   05/24/2012    
  */
 void fasp_smoother_dcsr_gs_cf (dvector *u, 
                                dCSRmat *A, 
@@ -842,10 +844,25 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  * \fn void swep3db (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT nbegz,INT *mark,
  *                   INT nx, INT ny, INT nz) 
  *
- * \brief  a smoother
+ * \brief      Gauss-Seidel backward smoother for certain color
  *
- * The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * \parama ia  Pointer to start location of each row
+ * \parama ja  Pointer to column index of nonzero elements
+ * \parama aa  Pointer to nonzero elements of 
+ * \parama u   Pointer to initial guess
+ * \parama f   Pointer to right hand
+ * \parama nbegx  The stride between the same color nodes in x direction
+ * \parama nbegy  The stride between the same color nodes in y direction
+ * \parama nbegz  The stride between the same color nodes in z direction
+ * \parama mark   Pointer to order of nodes
+ * \parama nx  Number of nodes in x direction
+ * \parama ny  Number of nodes in y direction
+ * \parama nz  Number of nodes in z direction
  *
+ * \author  Chunsheng Feng
+ * \date    02/06/2012
+ *
+ * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
@@ -896,13 +913,37 @@ void swep3db(INT *ia,
 }
 
 /* 
- * \fn     rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+ * \fn void rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
  * \brief  Colores Gauss-Seidel backward smoother for Au=b 
- * \author FENG Chunsheng
- * \date   02/06/2012 
+ *
+ * \parama ia  Pointer to start location of each row
+ * \parama ja  Pointer to column index of nonzero elements
+ * \parama aa  Pointer to nonzero elements of 
+ * \parama u   Pointer to initial guess
+ * \parama f   Pointer to right hand
+ * \parama mark   Pointer to order of nodes
+ * \parama nx  Number of nodes in x direction
+ * \parama ny  Number of nodes in y direction
+ * \parama nz  Number of nodes in z direction
+ * \parama nsweeps  Number of relaxation sweeps
+ *
+ * \author  Chunsheng Feng
+ * \date    02/06/2012
+ *
+ * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
-void rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+void rb0b3d(INT *ia, 
+		    INT *ja, 
+			REAL *aa,
+			REAL *u, 
+			REAL *f, 
+			INT *mark, 
+			INT nx, 
+			INT ny, 
+			INT nz, 
+			INT nsweeps)
 {
     INT n0e, n0o, isweep;
     INT ex, ey, ez;
@@ -1061,12 +1102,32 @@ void rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT 
 }
 
 
-/* 
- * \fn     rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
- * \brief  Colores Gauss-Seidel backward smoother for Au=b 
- * \author FENG Chunsheng
- * \date   02/06/2012 
+/**
+ * \fn void swep3df (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT nbegz,INT *mark,
+ *                   INT nx, INT ny, INT nz) 
+ *
+ * \brief      Gauss-Seidel forward smoother for certain color
+ *
+ * \parama ia  Pointer to start location of each row
+ * \parama ja  Pointer to column index of nonzero elements
+ * \parama aa  Pointer to nonzero elements of 
+ * \parama u   Pointer to initial guess
+ * \parama f   Pointer to right hand
+ * \parama nbegx  The stride between the same color nodes in x direction
+ * \parama nbegy  The stride between the same color nodes in y direction
+ * \parama nbegz  The stride between the same color nodes in z direction
+ * \parama mark   Pointer to order of nodes
+ * \parama nx  Number of nodes in x direction
+ * \parama ny  Number of nodes in y direction
+ * \parama nz  Number of nodes in z direction
+ *
+ * \author  Chunsheng Feng
+ * \date    02/06/2012
+ *
+ * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
+
 void swep3df(INT *ia, 
              INT *ja, 
              REAL *aa,
@@ -1113,13 +1174,38 @@ void swep3df(INT *ia,
 }
 
 /* 
- * \fn     rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+ * \fn void rb0f3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
  * \brief  Colores Gauss-Seidel forward smoother for Au=b 
- * \author FENG Chunsheng
- * \date   02/06/2012 
+ *
+ * \param ia  Pointer to the start location to of row 
+ * \param ja  Pointer to the column index of nonzero elements 
+ * \param aa  Pointer to the values of the nonzero elements
+ * \param u   Pointer to initial value 
+ * \param f   Pointer to right hand
+ * \param mark  Pointer to the order index of nodes
+ * \param nx    Number of nodes in x direction
+ * \param ny    Number of nodes in y direction
+ * \param nz    Number of nodes in z direction
+ * \param nsweeps  Number of relaxation sweeps
+ *
+ * \author      Chunsheng Feng 
+ * \data        02/06/2012
+ *
+ * NOTE: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
+ *
  */
 
-void rb0f3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+void rb0f3d( INT *ia, 
+		     INT *ja, 
+			 REAL *aa,
+			 REAL *u, 
+			 REAL *f, 
+			 INT *mark, 
+			 INT nx, 
+			 INT ny, 
+			 INT nz, 
+			 INT nsweeps )
 {
     INT n0e,n0o,isweep;
     
@@ -1158,12 +1244,12 @@ void rb0f3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT 
  * \param b     Pointer to right hand side
  * \param L     number of iterations
  * \param order ordering: -1: Forward; 1: Backward
- * \param nx    number vertex of X diricter
- * \param ny    number vertex of Y diricter
- * \param nz    number vertex of Z diricter
+ * \param nx    number vertex of X direction
+ * \param ny    number vertex of Y direction
+ * \param nz    number vertex of Z direction
  *
  * \author Chunsheng Feng
- * \date   2011/11/23 
+ * \date   02/08/2012
  */
 
 void fasp_smoother_dcsr_gs_rb3d (dvector *u, 

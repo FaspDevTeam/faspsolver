@@ -23,8 +23,8 @@
  * \param num_cols      Number of cols
  * \param num_nonzeros  Number of nonzero entries
  *
- * \author Zhou Zhiyang
- * \date   2011/01/07
+ * \author Zhiyang Zhou
+ * \date   01/07/2001
  */
 dCSRLmat * fasp_dcsrl_create (INT num_rows, 
                               INT num_cols, 
@@ -51,8 +51,8 @@ dCSRLmat * fasp_dcsrl_create (INT num_rows,
  *
  * \param A   Pointer to the dCSRLmat type matrix
  *
- * \author Zhou Zhiyang
- * \date   2011/01/07
+ * \author Zhiyang Zhou
+ * \date   01/07/2011
  */
 void fasp_dcsrl_free (dCSRLmat *A)
 {

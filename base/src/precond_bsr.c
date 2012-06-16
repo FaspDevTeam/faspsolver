@@ -21,7 +21,9 @@
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   10/26/2010
- * \date   05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/24/2012    
  *
  * \note Works for general nb (Xiaozhe)
  */
@@ -104,7 +106,9 @@ void fasp_precond_dbsr_diag (REAL *r,
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   11/18/2011
- * \date   05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/24/2012    
  *
  * \note Works for 2-component (Xiaozhe)
  */
@@ -164,7 +168,9 @@ void fasp_precond_dbsr_diag_nc2(REAL *r,
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date 01/06/2011
- * \date 05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng Xiaoqiang Yue
+ * \date 05/24/2012    
  *
  * \note Works for 3-component (Xiaozhe)
  */
@@ -224,7 +230,9 @@ void fasp_precond_dbsr_diag_nc3(REAL *r,
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   01/06/2011
- * \date   05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/24/2012    
  *
  * \note Works for 5-component (Xiaozhe)
  */
@@ -284,7 +292,9 @@ void fasp_precond_dbsr_diag_nc5(REAL *r,
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   01/06/2011
- * \date   05/24/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng Xiaoqiang Yue
+ * \date   05/24/2012    
  *
  * \note Works for 7-component (Xiaozhe)
  */

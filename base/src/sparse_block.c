@@ -28,7 +28,10 @@
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010
- * \date   05/23/2012  Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/23/2012  
+ *
  */
 
 SHORT fasp_dcsr_getblk (dCSRmat *A, 
@@ -114,7 +117,9 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010
- * \date   05/23/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/23/2012    
  */
 
 SHORT fasp_dbsr_getblk (dBSRmat *A, 

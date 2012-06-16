@@ -102,7 +102,7 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
  *
  * \return    SUCCESS if succeed
  * 
- * \author Zhou Zhiyang
+ * \author Zhiyang Zhou
  * \date   2010/04/29
  */
 SHORT fasp_format_dstr_dcsr (dSTRmat *A, 
@@ -340,7 +340,7 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
  *
  * \param A   Pointer to the dCSRLmat type matrix
  *
- * \author Zhou Zhiyang
+ * \author Zhiyang Zhou
  * \date   2011/01/07
  */
 dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
@@ -465,11 +465,13 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
  *
  * \brief Transfer a 'dBSRmat' type matrix into a dCSRmat.
  *
- * \param B   Pointer to the 'dBSRmat' type matrix
+ * \param B Pointer to the 'dBSRmat' type matrix
  *
- * \author Zhou Zhiyang
- * \date   2010/10/23 
- * \date   2012/05/24    Modified by Chunsheng Feng Xiaoqiang Yue 
+ * \author  Zhiyang Zhou
+ * \date    10/23/2010 
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue 
+ * \date    05/24/2012    
  *
  * \note Works for general nb (Xiaozhe)
  */
@@ -788,7 +790,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
  *
  * \param B   Pointer to the 'dSTRmat' type matrix
  *
- * \author Zhou Zhiyang
+ * \author Zhiyang Zhou
  * \date   2010/10/26 
  */
 dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
@@ -890,7 +892,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
  *
  * \param B   Pointer to the 'dBSRmat' type matrix
  *
- * \author Zhou Zhiyang
+ * \author Zhiyang Zhou
  * \date   2010/10/26 
  */
 dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)

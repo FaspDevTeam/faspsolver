@@ -167,7 +167,9 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   07/01/2009
- * \date   05/26/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/26/2012    
  *
  */
 void fasp_blas_dcsr_mxv (dCSRmat *A, 
@@ -396,7 +398,9 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   07/01/2009
- * \date   05/26/2012    Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/26/2012    
  */
 
 void fasp_blas_dcsr_aAxpy (const REAL alpha, 
@@ -715,7 +719,9 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   05/10/2010
- * \date   05/26/2012 Modified by Chunsheng Feng Xiaoqiang Yue
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/26/2012 
  *
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
