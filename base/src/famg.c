@@ -78,7 +78,7 @@ void fasp_solver_famg (dCSRmat *A,
     // print out CPU time when needed
     if (print_level>PRINT_NONE) {
         FMG_end=clock();    
-        FMG_duration = (double)(FMG_end - FMG_start)/(double)(CLOCKS_PER_SEC);    
+        FMG_duration = (REAL)(FMG_end - FMG_start)/(REAL)(CLOCKS_PER_SEC);    
         printf("FMG totally costs %f seconds.\n", FMG_duration);
     }    
     

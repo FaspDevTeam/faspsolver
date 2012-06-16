@@ -111,8 +111,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
     REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
     REAL         *uval=u->val, *bval=b->val;
     
-    // allocate temp memory (need 8*m double)
-    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(double));    
+    // allocate temp memory (need 8*m REAL)
+    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(REAL));    
     REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
     REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
     
@@ -452,8 +452,8 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
     REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
     REAL         *uval=u->val, *bval=b->val;
     
-    // allocate temp memory (need 8*m double)
-    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(double));    
+    // allocate temp memory (need 8*m REAL)
+    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(REAL));    
     REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
     REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
     
@@ -790,8 +790,8 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
     REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
     REAL         *uval=u->val, *bval=b->val;
     
-    // allocate temp memory (need 8*m double)
-    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(double));    
+    // allocate temp memory (need 8*m REAL)
+    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(REAL));    
     REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
     REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
     
@@ -1133,8 +1133,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
     REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
     REAL         *uval=u->val, *bval=b->val;
     
-    // allocate temp memory (need 8*m double)
-    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(double));    
+    // allocate temp memory (need 8*m REAL)
+    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(REAL));    
     REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
     REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
     

@@ -171,14 +171,14 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
  *
  */
 void fasp_blas_dcsr_mxv (dCSRmat *A, 
-                         double *x, 
-                         double *y) 
+                         REAL *x, 
+                         REAL *y) 
 {
     const int m=A->row;
     const int *ia=A->IA, *ja=A->JA;
-    const double *aj=A->val;
+    const REAL *aj=A->val;
     int i, k, begin_row, end_row, nnz_num_row;
-    register double temp;
+    register REAL temp;
 	int nthreads, use_openmp;
 
 	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
@@ -566,12 +566,12 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
                          REAL *x, 
                          REAL *y)
 {
-    register double value=0.0;
+    register REAL value=0.0;
     const int m=A->row;
     const int *ia=A->IA, *ja=A->JA;
-    const double *aj=A->val;
+    const REAL *aj=A->val;
     int i, k, begin_row, end_row, nthreads, use_openmp;
-    register double temp;
+    register REAL temp;
 
 	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
 		use_openmp = FALSE;
@@ -728,21 +728,21 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     int n_coarse = R->row;
     int *R_i = R->IA;
     int *R_j = R->JA;
-    double *R_data = R->val;
+    REAL *R_data = R->val;
     
     int n_fine = A->row;
     int *A_i = A->IA;
     int *A_j = A->JA;
-    double *A_data = A->val;
+    REAL *A_data = A->val;
     
     int *P_i = P->IA;
     int *P_j = P->JA;
-    double *P_data = P->val;
+    REAL *P_data = P->val;
     
     int RAP_size;
     int *RAP_i = NULL;
     int *RAP_j = NULL;
-    double *RAP_data = NULL;
+    REAL *RAP_data = NULL;
     
     int *P_marker = NULL;
     int *A_marker = NULL;
@@ -754,7 +754,7 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     
     int ic, i1, i2, i3, jj1, jj2, jj3;
     int jj_counter, jj_row_begining;
-    double r_entry, r_a_product, r_a_p_product;
+    REAL r_entry, r_a_product, r_a_p_product;
     
 	int nthreads, use_openmp;
 
@@ -888,7 +888,7 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
         }
 //    printf("A_H NNZ = %d\n", RAP_size);
     RAP_j = (int *)fasp_mem_calloc(RAP_size, sizeof(int));
-    RAP_data = (double *)fasp_mem_calloc(RAP_size, sizeof(double));
+    RAP_data = (REAL *)fasp_mem_calloc(RAP_size, sizeof(REAL));
     
     fasp_iarray_set(minus_one_length, Ps_marker, -1);
     
@@ -1295,14 +1295,14 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
         const int row=R->row, col=P->col;
         int *ir=R->IA, *ia=A->IA, *ip=P->IA;
         int *jr=R->JA, *ja=A->JA, *jp=P->JA;
-        double *rj=R->val, *aj=A->val, *pj=P->val;
+        REAL *rj=R->val, *aj=A->val, *pj=P->val;
         int istart, iistart;
         int end_row, end_rowA, end_rowR;
         int i, j, jj, k, length, myid, mybegin, myend, jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3;
         int *index = NULL;
         int *iindex = NULL;
         int *BTindex = NULL;
-        double *temp = NULL;
+        REAL *temp = NULL;
         int FiveMyid, min_A, min_P, A_pos, P_pos, FiveIc;
         int minus_one_length_A = icor_ysk[5*nthreads];
         int minus_one_length_P = icor_ysk[5*nthreads+1];
@@ -1467,13 +1467,13 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
                 }
             }
         // Third loop: compute entries of R*A*P
-        double *acj=(double*)fasp_mem_calloc(iac[row],sizeof(double));
+        REAL *acj=(REAL*)fasp_mem_calloc(iac[row],sizeof(REAL));
 #if CHMEM_MODE
-        total_alloc_mem += iac[row]*sizeof(double);
+        total_alloc_mem += iac[row]*sizeof(REAL);
 #endif
-        double *temps=(double*)fasp_mem_calloc(minus_one_length_A,sizeof(double));
+        REAL *temps=(REAL*)fasp_mem_calloc(minus_one_length_A,sizeof(REAL));
 #if CHMEM_MODE
-        total_alloc_mem += minus_one_length_A*sizeof(double);
+        total_alloc_mem += minus_one_length_A*sizeof(REAL);
 #endif
 #pragma omp parallel for private(myid, index, FiveMyid, mybegin, myend, min_A, min_P, A_pos, P_pos, ic, FiveIc, BTindex, temp, i, i1, end_row, j, istart, length, end_rowR, jj, end_rowA, k)
         for (myid = 0; myid < nthreads; myid ++)

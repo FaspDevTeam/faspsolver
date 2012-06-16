@@ -5,7 +5,7 @@
 #if With_DISOLVE
 extern "C" {
     void DIRECT_MUMPS(const int *n, const int *nnz, int *ia, int *ja, 
-                      double *a, double *b, double *x);
+                      REAL *a, REAL *b, REAL *x);
 }
 #endif 
 

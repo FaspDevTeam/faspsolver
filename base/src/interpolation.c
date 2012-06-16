@@ -1880,9 +1880,9 @@ static void interp_RS2(dCSRmat *A,
 					   dCSRmat *Ptr, 
 					   AMG_param *param) 
 {
-    double epsilon_tr = param->truncation_threshold;
-    double amN, amP, apN, apP;
-    double alpha, beta, aii=0;
+    REAL epsilon_tr = param->truncation_threshold;
+    REAL amN, amP, apN, apP;
+    REAL alpha, beta, aii=0;
     int *vec = vertices->val;
     int countPplus, diagindex;
     
@@ -2181,15 +2181,15 @@ static void interp_RS2(dCSRmat *A,
     fasp_mem_free(CoarseIndex);
     
     /** Truncation of interpolation */
-    double mMin, pMax;
-    double mSum, pSum;
-    double mTruncedSum, pTruncedSum;
+    REAL mMin, pMax;
+    REAL mSum, pSum;
+    REAL mTruncedSum, pTruncedSum;
     int mTruncCount, pTruncCount;
     int num_lost=0;
     
-    Ptr->val=(double*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(double));
+    Ptr->val=(REAL*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(REAL));
 #if CHMEM_MODE
-    total_alloc_mem += (P.IA[Ptr->row])*sizeof(double);
+    total_alloc_mem += (P.IA[Ptr->row])*sizeof(REAL);
 #endif
     Ptr->JA=(int*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(int));    
 #if CHMEM_MODE
@@ -2312,7 +2312,7 @@ static void interp_RS2(dCSRmat *A,
     Ptr->nnz=Ptr->IA[Ptr->row];
     
     Ptr->JA=(int*)fasp_mem_realloc(Ptr->JA, Ptr->IA[Ptr->row]*sizeof(int));    
-    Ptr->val=(double*)fasp_mem_realloc(Ptr->val, Ptr->IA[Ptr->row]*sizeof(double));
+    Ptr->val=(REAL*)fasp_mem_realloc(Ptr->val, Ptr->IA[Ptr->row]*sizeof(REAL));
     
     fasp_mem_free(P.IA);
     fasp_mem_free(P.JA);

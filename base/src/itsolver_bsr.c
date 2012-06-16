@@ -102,7 +102,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     INT iter;
 
 #if FASP_USE_OPENMP
-    double solver_start=omp_get_wtime();
+    REAL solver_start=omp_get_wtime();
 #else
     clock_t solver_start=clock();
 #endif
@@ -140,7 +140,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     
     if ( (print_level>PRINT_MIN) && (iter >= 0) ) {
 #if FASP_USE_OPENMP
-        double solver_end=omp_get_wtime();
+        REAL solver_end=omp_get_wtime();
         REAL solver_duration = (REAL)(solver_end - solver_start);
 #else
         clock_t solver_end=clock();    
@@ -376,7 +376,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     
     setup_end=clock();
     
-    setup_duration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
+    setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
     
     precond_data_bsr precdata;
     precdata.maxit = amgparam->maxit;
@@ -417,7 +417,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     status=fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
     solver_end=clock();
     
-    solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+    solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
     
     if ( print_level>=PRINT_MIN ) {
         print_cputime("CPR_Krylov method totally", setup_duration+solver_duration);

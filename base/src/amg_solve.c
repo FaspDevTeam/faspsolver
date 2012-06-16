@@ -43,7 +43,7 @@ INT fasp_amg_solve (AMG_data *mgl,
     
     // local variables
 #if FASP_USE_OPENMP
-    double        solve_start=omp_get_wtime();
+    REAL        solve_start=omp_get_wtime();
 #else
     clock_t       solve_start=clock();
 #endif
@@ -93,7 +93,7 @@ INT fasp_amg_solve (AMG_data *mgl,
             printf("Number of iterations = %d with relative residual %e.\n", 
                    iter, relres1);
 #if FASP_USE_OPENMP
-        double solve_end=omp_get_wtime();
+        REAL solve_end=omp_get_wtime();
         REAL solveduration = (REAL)(solve_end - solve_start);
 #else
         clock_t solve_end=clock();
@@ -257,7 +257,7 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
             printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
     
         clock_t solve_end=clock();
-        double solveduration = (double)(solve_end - solve_start)/(double)(CLOCKS_PER_SEC);
+        REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
         print_cputime("Nonlinear AMLI solve",solveduration);
     }
     

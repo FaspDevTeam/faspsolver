@@ -230,8 +230,8 @@ int fasp_amg_setup_rs_omp (AMG_data *mgl,
     printf("fasp_amg_setup_rs: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
    
-    double total_setup_time = 0.;
-    double setup_start = omp_get_wtime();
+    REAL total_setup_time = 0.;
+    REAL setup_start = omp_get_wtime();
     // initialize ILU parameters
     mgl->ILU_levels = param->ILU_levels;
     ILU_param iluparam;
@@ -301,7 +301,7 @@ int fasp_amg_setup_rs_omp (AMG_data *mgl,
 #endif
     
     if (print_level>2) {
-        double gridcom=0.0, opcom=0.0;
+        REAL gridcom=0.0, opcom=0.0;
         
         printf("-----------------------------------------------\n");
         printf("  Level     Num of rows     Num of nonzeros\n");
@@ -320,8 +320,8 @@ int fasp_amg_setup_rs_omp (AMG_data *mgl,
     }
     
     if (print_level>0) {
-        double setup_end = omp_get_wtime();
-        double setupduration = setup_end - setup_start;
+        REAL setup_end = omp_get_wtime();
+        REAL setupduration = setup_end - setup_start;
         printf("Ruge-Stuben AMG setup costs %f seconds.\n", setupduration);    
     }
     

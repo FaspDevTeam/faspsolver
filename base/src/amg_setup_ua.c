@@ -275,7 +275,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat)); 
     
     mgl[0].near_kernel_dim   = 1;
-    //mgl[0].near_kernel_basis = (double **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(double*));
+    //mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
     mgl[0].near_kernel_basis = NULL;
     
     // initialize ILU parameters
@@ -338,7 +338,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
 #endif
     
     if (print_level>1) {
-        double gridcom=0.0, opcom=0.0;
+        REAL gridcom=0.0, opcom=0.0;
     
         printf("-----------------------------------------------\n");
         printf("  Level     Num of rows      Num of nonzeros\n");
@@ -358,7 +358,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     
     if (print_level>PRINT_NONE) {
         setup_end=clock();
-        setupduration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
+        setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
         print_cputime("(BSR) Unsmoothed Aggregation AMG setup",setupduration);
     }
     

@@ -10,13 +10,13 @@
 
 /* ilu.for */
 #ifdef __cplusplus 
-extern "C" {void iluk_(const int *n,double *a,int *ja,int *ia,int *lfil,double *alu,int *jlu,int *iwk,int *ierr,int *nzlu);}
-extern "C" {void ilut_(const int *n,double *a,int *ja,int *ia,int *lfil,const double *droptol,double *alu,int *jlu,int *iwk,int *ierr,int *nz);}
-extern "C" {void ilutp_(const int *n,double *a,int *ja,int *ia,int *lfil,const double *droptol,const double *permtol,const int *mbloc,double *alu,int *jlu,int *iwk,int *ierr,int *nz);}
+extern "C" {void iluk_(const int *n,REAL *a,int *ja,int *ia,int *lfil,REAL *alu,int *jlu,int *iwk,int *ierr,int *nzlu);}
+extern "C" {void ilut_(const int *n,REAL *a,int *ja,int *ia,int *lfil,const REAL *droptol,REAL *alu,int *jlu,int *iwk,int *ierr,int *nz);}
+extern "C" {void ilutp_(const int *n,REAL *a,int *ja,int *ia,int *lfil,const REAL *droptol,const REAL *permtol,const int *mbloc,REAL *alu,int *jlu,int *iwk,int *ierr,int *nz);}
 #else
-extern void iluk_(const int *n,double *a,int *ja,int *ia,int *lfil,double *alu,int *jlu,int *iwk,int *ierr,int *nzlu);
-extern void ilut_(const int *n,double *a,int *ja,int *ia,int *lfil,const double *droptol,double *alu,int *jlu,int *iwk,int *ierr,int *nz);
-extern void ilutp_(const int *n,double *a,int *ja,int *ia,int *lfil,const double *droptol,const double *permtol,const int *mbloc,double *alu,int *jlu,int *iwk,int *ierr,int *nz);
+extern void iluk_(const int *n,REAL *a,int *ja,int *ia,int *lfil,REAL *alu,int *jlu,int *iwk,int *ierr,int *nzlu);
+extern void ilut_(const int *n,REAL *a,int *ja,int *ia,int *lfil,const REAL *droptol,REAL *alu,int *jlu,int *iwk,int *ierr,int *nz);
+extern void ilutp_(const int *n,REAL *a,int *ja,int *ia,int *lfil,const REAL *droptol,const REAL *permtol,const int *mbloc,REAL *alu,int *jlu,int *iwk,int *ierr,int *nz);
 #endif
 
 /*---------------------------------*/

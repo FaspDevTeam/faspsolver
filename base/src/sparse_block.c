@@ -181,7 +181,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     // allocate 
     B->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT)); 
     
-    B->val=(double*)fasp_mem_calloc(nnz*nb2,sizeof(double));
+    B->val=(REAL*)fasp_mem_calloc(nnz*nb2,sizeof(REAL));
     
     // second pass: copy data to B
     // no need to do the following loop, need to be modified!!  Xiaozhe 
@@ -191,7 +191,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
             j=A->JA[N2C(k)];
             if (col_flag[N2C(j)]>0) {
                 B->JA[nnz]=col_flag[j]-1;
-                memcpy(B->val+nnz*nb2, A->val+N2C(k)*nb2, nb2*sizeof(double));
+                memcpy(B->val+nnz*nb2, A->val+N2C(k)*nb2, nb2*sizeof(REAL));
                 nnz++;
             }
         } /* end for k */

@@ -45,7 +45,7 @@ void fasp_solver_amg (dCSRmat *A,
     const INT     nnz = A->nnz, m = A->row, n = A->col;
     
     // local variables
-    double        AMG_start, AMG_end;
+    REAL        AMG_start, AMG_end;
     REAL          AMG_duration=0.;
     SHORT         status = SUCCESS;
     
@@ -112,10 +112,10 @@ void fasp_solver_amg (dCSRmat *A,
     if ( print_level > PRINT_NONE ) {
 #if FASP_USE_OPENMP
     AMG_end = omp_get_wtime();    
-    AMG_duration += (double)(AMG_end - AMG_start);    
+    AMG_duration += (REAL)(AMG_end - AMG_start);    
 #else
     AMG_end = clock();    
-    AMG_duration += (double)(AMG_end - AMG_start)/(double)(CLOCKS_PER_SEC);    
+    AMG_duration += (REAL)(AMG_end - AMG_start)/(REAL)(CLOCKS_PER_SEC);    
 #endif
         print_cputime("AMG totally",AMG_duration);
     }    

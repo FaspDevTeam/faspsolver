@@ -94,7 +94,7 @@ void fasp_grid2d_plot (pgrid2d pg,
     FILE *datei;
     char buf[120];
     INT i;
-    double xmid,ymid,xc,yc;
+    REAL xmid,ymid,xc,yc;
     
     sprintf(buf,"Grid_ref_level%d.eps",level);
     datei = fopen(buf,"w");
@@ -203,10 +203,10 @@ static void put_word(FILE *fp, int w)
 /*! 
  * \fn static void put_dword(FILE *fp, int d)
  *
- * \brief Write to double-word to file
+ * \brief Write to REAL-word to file
  *
  * \param fp pointer to file
- * \param d  double-word to write
+ * \param d  REAL-word to write
  *
  */
 static void put_dword(FILE *fp, int d)

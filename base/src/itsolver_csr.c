@@ -48,7 +48,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     /* Local Variables */
     INT iter;
 #if FASP_USE_OPENMP
-    double solver_start = omp_get_wtime();
+    REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
 #endif
@@ -106,11 +106,11 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     
     if ( (print_level>=PRINT_SOME) && (iter >= 0) ) {
 #if FASP_USE_OPENMP
-    double solver_end = omp_get_wtime();
-	REAL solver_duration = (double)(solver_end - solver_start);
+    REAL solver_end = omp_get_wtime();
+	REAL solver_duration = (REAL)(solver_end - solver_start);
 #else
     clock_t solver_end = clock();
-	REAL solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+	REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
         print_cputime("Iterative method", solver_duration);
     }
@@ -147,7 +147,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
 
     /* Local Variables */
 //    clock_t  solver_start, solver_end;
-//    double   solver_start, solver_end;
+//    REAL   solver_start, solver_end;
     INT      status = SUCCESS;
     REAL     solver_duration;
     
@@ -158,7 +158,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
 #endif
     
 #if FASP_USE_OPENMP
-	double solver_start = omp_get_wtime();
+	REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
 #endif
@@ -167,11 +167,11 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
     
     if ( print_level>=PRINT_MIN ) {
 #if FASP_USE_OPENMP
-	double solver_end = omp_get_wtime();
-        solver_duration = (double)(solver_end - solver_start);
+	REAL solver_end = omp_get_wtime();
+        solver_duration = (REAL)(solver_end - solver_start);
 #else
     clock_t solver_end = clock();
-        solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
         print_cputime("Krylov method totally", solver_duration);
     }    
@@ -218,7 +218,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 #endif
 
 #if FASP_USE_OPENMP
-    double solver_start = omp_get_wtime();
+    REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
 #endif
@@ -234,11 +234,11 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
     
     if ( print_level>=PRINT_MIN ) {
 #if FASP_USE_OPENMP
-    double solver_end = omp_get_wtime();
-        solver_duration = (double)(solver_end - solver_start);
+    REAL solver_end = omp_get_wtime();
+        solver_duration = (REAL)(solver_end - solver_start);
 #else
     clock_t solver_end = clock();
-        solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
         print_cputime("Diag_Krylov method totally", solver_duration);
     }
@@ -284,7 +284,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 #endif
 
 #if FASP_USE_OPENMP
-	double setup_start = omp_get_wtime();
+	REAL setup_start = omp_get_wtime();
 #else
 	clock_t setup_start = clock();
 #endif
@@ -299,7 +299,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	fasp_schwarz_setup(&schwarz_data, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
 	
 #if FASP_USE_OPENMP
-	double setup_end = omp_get_wtime();
+	REAL setup_end = omp_get_wtime();
 	setup_duration = (REAL)(setup_end - setup_start);
 #else
 	clock_t setup_end = clock();
@@ -312,7 +312,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	prec.fct = fasp_precond_schwarz;
 	
 #if FASP_USE_OPENMP
-	double solver_start = omp_get_wtime();
+	REAL solver_start = omp_get_wtime();
 #else
 	clock_t solver_start = clock();
 #endif
@@ -322,7 +322,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	
 	if (print_level>0) {
 #if FASP_USE_OPENMP
-	    double solver_end = omp_get_wtime();
+	    REAL solver_end = omp_get_wtime();
         solver_duration = (REAL)(solver_end - solver_start);
 #else
 	    clock_t solver_end = clock();
@@ -381,7 +381,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
 #endif
    
 #if FASP_USE_OPENMP
-    double solver_start = omp_get_wtime();
+    REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
 #endif
@@ -434,11 +434,11 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     if ( print_level>=PRINT_MIN ) {
 
 #if FASP_USE_OPENMP
-    double solver_end = omp_get_wtime();
-        solver_duration = (double)(solver_end - solver_start);
+    REAL solver_end = omp_get_wtime();
+        solver_duration = (REAL)(solver_end - solver_start);
 #else
     clock_t solver_end = clock();
-        solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
         print_cputime("AMG_Krylov method totally", solver_duration);
     }
@@ -488,7 +488,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
 #endif
    
 #if FASP_USE_OPENMP
-    double solver_start = omp_get_wtime();
+    REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
 #endif
@@ -510,11 +510,11 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
     
     if (print_level>=PRINT_MIN) {
 #if FASP_USE_OPENMP
-    double solver_end = omp_get_wtime();
-        solver_duration = (double)(solver_end - solver_start);
+    REAL solver_end = omp_get_wtime();
+        solver_duration = (REAL)(solver_end - solver_start);
 #else
     clock_t solver_end = clock();
-        solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
     
         switch (iluparam->ILU_type) {
@@ -585,7 +585,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
 #endif
     
 #if FASP_USE_OPENMP
-    double solver_start = omp_get_wtime();
+    REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
 #endif
@@ -606,11 +606,11 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     
     if (print_level>=PRINT_MIN) {
 #if FASP_USE_OPENMP
-        double solver_end = omp_get_wtime();
-        solver_duration = (double)(solver_end - solver_start);
+        REAL solver_end = omp_get_wtime();
+        solver_duration = (REAL)(solver_end - solver_start);
 #else
         clock_t solver_end = clock();
-        solver_duration = (double)(solver_end - solver_start)/(double)(CLOCKS_PER_SEC);
+        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
 
         switch (iluparam->ILU_type) {
