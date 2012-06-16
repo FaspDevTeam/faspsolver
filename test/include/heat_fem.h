@@ -11,6 +11,7 @@
 #include <time.h>
 #include "misc.h"
 #include "mesh.h"
+#include "assemble.h"
 #include "fasp.h"
 #include "fasp_functs.h"
 

@@ -34,7 +34,7 @@ unsigned INT  nfail_amg_solver;           /**< number of failed tests for amg so
  *
  * This function compares x and sol to a given tolerance tol. 
  */
-static void check_solu(dvector *x, dvector *sol, double tol, int *nt, int *nf)
+static void check_solu(dvector *x, dvector *sol, double tol, unsigned int *nt, unsigned int *nf)
 {
     double diff_u = fasp_dvec_maxdiff(x, sol);
     (*nt)++;

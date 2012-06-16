@@ -7,6 +7,7 @@
 
 #include "misc.h"
 #include "mesh.h"
+#include "assemble.h"
 #include "fasp.h"
 
 extern double f(double *p);

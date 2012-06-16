@@ -37,7 +37,7 @@ static void localb (double (*node)[2],
     const double s=2.0*areaT(node[0][0],node[1][0],node[2][0],
                              node[0][1],node[1][1],node[2][1]);
     double p[DIM+1],a;
-    double gauss[num_qp][3],g;
+    double gauss[MAX_QUAD][3],g;
     int i, j;
     for (i=0;i<3*nt;++i)
         b[i] = 0;
@@ -103,8 +103,9 @@ static void assemble_stiffmat (dCSRmat *A,
     double s;
     
     int i,j,k,it;
-    int k1,k2,n1,n2,i1,j1;
-    double btmp[3*pt->nt], tmp_a;
+    int k1,n1,n2,i1;
+    double tmp_a;
+    double *btmp = (double*)fasp_mem_calloc(3*pt->nt, sizeof(double));
     int tmp, edge_c;
     
     fasp_gauss2d(pt->num_qp_mat, 2, gauss); // Gauss intergation initial
@@ -284,6 +285,7 @@ static void assemble_stiffmat (dCSRmat *A,
 
     fasp_mem_free(edge2idx_g1);
     fasp_mem_free(edge2idx_g2);
+    fasp_mem_free(btmp);
 }
 
 /*---------------------------------*/
@@ -443,8 +445,6 @@ double get_l2_error_heat (ddenmat *node,
                 p[j]=T[0][j]*gauss[i][0]+T[1][j]*gauss[i][1]+T[2][j]*l2;
             a=u(p);
             
-            // better readability please --Chensong
-        // fixed? --Feiteng
         uh_p = uh_local[0]*gauss[i][0] + uh_local[1]*gauss[i][1] + uh_local[2]*l2;
             l2error+=s*gauss[i][2]*((a - uh_p)*(a - uh_p));
         }

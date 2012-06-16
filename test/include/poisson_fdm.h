@@ -10,10 +10,8 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
-#include <sys/time.h>
 
-#define GetTime(a) gettimeofday(&a,NULL)
-#define mytime(a,b) ((b.tv_sec-a.tv_sec) + (float)(b.tv_usec-a.tv_usec)/1000000.0)
+#define mytime(a,b) (double)(b - a)/(double)(CLOCKS_PER_SEC)
 
 #define PI 3.1415926535897932
 #define fsls_max(a,b)  (((a)<(b)) ? (b) : (a))

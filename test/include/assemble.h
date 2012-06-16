@@ -2,8 +2,8 @@
  *  \brief auxiliary func for assembling
  */
 
-#ifndef _MESH_H_
-#define _MESH_H_
+#ifndef _ASSEMBLE_H_
+#define _ASSEMBLE_H_
 
 #include "fasp.h"
 #include "fasp_functs.h"

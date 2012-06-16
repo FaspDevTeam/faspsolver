@@ -54,10 +54,6 @@ static void check_solu(dvector *x, dvector *sol, double tol)
  * Modified by Chensong Zhang on 09/02/2011 
  * Modified by Chensong Zhang on 12/03/2011
  * Modified by Chensong Zhang on 03/20/2012
- *
- * \todo 
- *      - add a few more test problems
- *      - many solvers have not been tested
  */
 int main (int argc, const char * argv[]) 
 {

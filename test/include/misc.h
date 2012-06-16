@@ -6,6 +6,7 @@
 #define _MISC_H_
 
 #include <string.h>
+#include <stdlib.h>
 
 /** 
  * \struct FEM_param

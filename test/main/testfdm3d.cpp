@@ -31,7 +31,7 @@ extern "C"
 int
 main( int argc, char *argv[])
 {
-	struct timeval tStart,tEnd;
+	clock_t tStart, tEnd;
 	int TTest       = 1;
 	int arg_index   = 1;
 	int print_usage = 0;
@@ -48,9 +48,8 @@ main( int argc, char *argv[])
 	fsls_XVector    *b    = NULL;
 	fsls_XVector    *u    = NULL;
     
-	int nx,ny,nz,ngrid,nt,i,j;
+	int nx,ny,nz,ngrid,nt;
 	double dt = 0.0;
-	int rb = 0;
 	int test = 0;
 	int input_flag  = 1;
 	const char* order = "normal";
@@ -165,13 +164,13 @@ main( int argc, char *argv[])
 	/*-----------------------------------------------------
 	 * construct a linear system
 	 *----------------------------------------------------*/
-	if (TTest) GetTime(tStart);
+	if (TTest) tStart = clock();
 
 	fsls_BuildLinearSystem_7pt3d(nt, nx, ny, nz, &A, &b, &u);
 
 	if (TTest)
 	{
-		GetTime(tEnd);
+		tEnd = clock();
 		printf("\n >>> total time: %.3f seconds\n\n",mytime(tStart,tEnd));
 	}
 
