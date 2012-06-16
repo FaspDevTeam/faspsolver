@@ -1,8 +1,16 @@
 File Name: CHANGES
 
+06/16/2012 FASP 0.9.5:
+- Change OMP threshold.
+- Bug fixes in FEM assembling.
+- Add rsync support for SourceForge.net.
+- Revise FASP starting web page. 
+- Find a new bug in BiCGstab: need to be fixed.
+- Find a new bug when using gcc-4.6.3 in OMP version.
+
 06/15/2012 FASP 0.9.4:
 - Merge the new OMP version.
-- Change the name "core" to "base".
+- Change the name "core" to "base", including documentation.
 - Fix a small bug in BSR format. 
 - Fix a typo in doxygen.h.
 

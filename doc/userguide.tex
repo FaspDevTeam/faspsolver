@@ -62,7 +62,7 @@
 \title{User's Guide for FASP}
 
 \author{FASP Developer Team}
-\date{Version 0.9.3} % Activate to display a given date or no date
+\date{Version 1.0.0} % Activate to display a given date or no date
 
 %\preface{a}
 
@@ -89,7 +89,7 @@ We believe that there is no one-size-for-all solution method for discrete linear
 
 The FASP project is not a traditional software project; instead, it is designed to support our effort to identify efficient algorithms and to build fast solvers for a set of PDE problems---FASP is designed for developing and testing new efficient solvers and preconditioners for discrete partial differential equations (PDEs) or systems of PDEs. The main components of the package are basic linear iterative methods, standard Krylov methods, geometric and algebraic multigrid methods, and incomplete factorization methods. Based on these standard techniques, we build efficient solvers, based on the framework of Auxiliary Space Preconditioning, for several complicated applications. For the moment, we have a few examples include the fluid dynamics, underground water simulation, the black oil model in reservoir simulation, and so on. 
 
-FASP contains the kernel part and several applications (ranging from fluid dynamics to reservoir simulation). The kernel part is open-source and licensed under GNU LPGL. Some of the applications contain contributions from and owned partially by other parties. We wish to keep as many parts open to public as possible. We only discuss the kernel functions in this user's guide.
+FASP contains the kernel part and several applications (ranging from fluid dynamics to reservoir simulation). The kernel part is open-source and licensed under GNU Lesser General Public License or LGPL. We tried and will continue to try to keep as many parts of the FASP project open to public as possible. However, some of the applications contain contributions from and owned partially by other parties. We only discuss the kernel functions (open to public) in this user's guide.
 
 \begin{snugshade}\noindent
 LICENSE: This software is free software distributed under the Lesser General Public 
@@ -136,7 +136,7 @@ We are currently interested in the theory and numerical solution of many PDE pro
 \item Fluid-structure interaction
 \item Oldryod-B and Johnson-Seglman equations
 \item Darcy's flow
-\item Black oil model and its modifications
+\item Black oil model and its generalizations
 \item H(curl)/H(div) systems
 \item Maxwell equation
 \item MHD equation
@@ -150,7 +150,7 @@ We intend to design solution algorithms and their implementation for all these p
 \section{How to use this guide}\label{sec:how}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this user's guide, we mainly describe how to use the existing solvers in FASP via a couple of simple tutorial problems. This user's guide is self-contained but do not provide details of the algorithms nor the implementation. Along this guide, we provide a reference manual\footnote{Available online at \url{http://fasp.sourceforge.net}. It is also available in ``faspsolver/doc/doc.zip''.} for technical details of the implementation. For the algorithms implemented, we will provide the references and we recommend the users to read them for better understanding of the code. 
+In this user's guide, we mainly describe how to use the existing solvers in FASP via a couple of simple tutorial problems. This user's guide is self-contained but does \emph{not} provide details of the algorithms nor the implementation. Along this guide, we provide a reference manual\footnote{Available online at \url{http://fasp.sourceforge.net}. It is also available in ``faspsolver/doc/doc.zip''.} for technical details of the implementation. For the algorithms implemented, we will provide the references and we recommend the users to read them for better understanding of the code. Furthermore, since FASP is under heavy development, use this guide with caution because the code might have been changed before this document is updated. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -163,16 +163,16 @@ Documentation for Hg is substantially better, including a book\footnote{The hgbo
 First, you need to obtain a free copy of FASP kernel functions from our public Hg repository. If you are downloading FASP for the first time, you can clone the repository to your local machine:
 %
 \begin{lstlisting}[numbers=none]
-"Download FASP core subroutines via HTTPS"
+"Download FASP kernel subroutines via HTTPS"
 
 $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver
 \end{lstlisting}
 %
 \begin{snugshade}\noindent
-For the moment, it requires a password to access the Hg repository and the password is ``multigrid''. Very soon it will be open to public completely. 
+For the moment, it requires a password to access the Hg repository and the password is ``\emph{multigrid}''. Very soon it will be open to public completely. 
 \end{snugshade}
 
-After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 125MB in total. Depending on the speed of your network, it could take 15 minutes to one hour.}, you should have obtained ``faspsolver'' in your current directory successfully. If you have already cloned the repository before, you can just pull a new version and update your local version with it: Go to your local ``faspsolver'' directory and then
+After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 150MB in total. Depending on the speed of your network, it could take 15 minutes to one hour.}, you should have obtained ``faspsolver'' in your current directory successfully. If you have already cloned the repository before, you can just pull a new version and update your local version with it: Go to your local ``faspsolver'' directory and then
 %
 \begin{lstlisting}[numbers=none]
 "Pull a new version from BitBucket"
@@ -187,7 +187,7 @@ $ hg update
 
 FASP has been tested on Linux (Cent OS, Debian, Fedora, RedHat, Ubuntu), OS X (Leopard, Snow Leopard, Lion) and Windows (XP, Win 7) with a couple of compliers including GCC, G++, ICC, VC++, GFORTRAN, G95, IFORT. 
 
-Now we give a simple instruction on how to compile FASP on Linux: To build the FASP library, just go to the ``core'' directory and type:
+Now we give a simple instruction on how to compile FASP on Linux: To build the FASP library, just go to the ``base'' directory and type:
 %
 \begin{lstlisting}[numbers=none]
 $ make
@@ -1075,7 +1075,7 @@ typedef struct block_dCSRmat{
 %
 
 \begin{snugshade}\noindent
-NOTE: For more details as well as other specialized block matrices, we refer to ``core/include/fasp\_block.h''.
+NOTE: For more details as well as other specialized block matrices, we refer to ``base/include/fasp\_block.h''.
 \end{snugshade}
 
 
@@ -1157,7 +1157,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 %
 The names of the input arguments explain themselves mostly and they are explained in the Reference Manual in detail. 
 
-We briefly discuss how to call this function; and, once you understand PCG, you can easily call other iterative methods. The following code segment is taken from ``core/src/itsolver\_csr.c'':
+We briefly discuss how to call this function; and, once you understand PCG, you can easily call other iterative methods. The following code segment is taken from ``base/src/itsolver\_csr.c'':
 %
 \begin{lstlisting}
 ... ...
@@ -1236,7 +1236,7 @@ To be added.
 
 The classical algebraic multigrid method~\cite{Ruge.RugeStuben.1987bs} is an important component in many of our auxiliary space preconditioners. Because of its user-friendly and scalability, AMG becomes increasingly popular in scientific and engineering computing, especially when GMG is difficult or not possible to be applied. Various of new AMG techniques~\cite{Vanek.VanekMandel.1996kl,Wan.WanChan.2000qa,Brezina.BrezinaCleary.2000ly,Henson.HensonVassilevski.2001cr,Chartier.ChartierFalgout.2003ve,Livne.Livne.2004kl,Falgout.FalgoutVassilevski.2004bh,Xu.XuZikatanov.2004pi,Brannick.BrannickZikatanov.2007zr,Muresan.MuresanNotay.2008tg} have emerged in recent years. 
 
-The following code segment is part of ``core/src/amg.c'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, etc). 
+The following code segment is part of ``base/src/amg.c'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, etc). 
 %
 \begin{lstlisting}
 ... ...
@@ -1363,19 +1363,22 @@ NOTE: Here we can not discuss the details of these parameters as a full discussi
 \chapter{More Advanced Usage}\label{ch:advanced}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we discuss a few topics for more advanced users. 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Block preconditioners}\label{sec:block}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-To be added.
+In this chapter, we discuss a few more advanced features of FASP. We will discuss parallel versions of FASP and its build-in features for debugging purposes. These features will be helpful for people who would like to develop on the top of FASP. For users who only wish to call a few standard solvers, they can skip this chapter. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{An OpenMP example}\label{sec:mop}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To be added.
+OpenMP\footnote{Official website: \url{http://openmp.org/}} (Open Multiprocessing) is an API that supports multi-platform shared memory multiprocessing programming in C, C++, and Fortran, on most processor architectures and operating systems. It consists of a set of compiler directives, library routines, and environment variables that influence run-time behavior. Some preliminary OpenMP support has been included since the very beginning of FASP. We consistently improves and expands OpenMP support as multiprocessor architectures become the dominant desktop computing environment. 
+
+\begin{snugshade}\noindent
+NOTE: By default, OpenMP is not enabled in FASP. In order to turn it on, you need to do a few things:
+\end{snugshade}
+
+After you recompile your code, OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash}, you need to set:
+\begin{lstlisting}[numbers=none]
+$ export OMP_NUM_THREADS=8
+\end{lstlisting}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A CUDA example}\label{sec:cuda}
@@ -1388,6 +1391,23 @@ To be added.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To be added.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{FASP for Stokes and Navier-Stokes}\label{ch:ns}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Block iterative methods and preconditioners}\label{sec:block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+To be added.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{FASP for Reservoir Simulations}\label{ch:blkoil}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+To be added.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter*{Appendix}\label{ch:append}

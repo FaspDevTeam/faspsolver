@@ -70,7 +70,7 @@ double fasp_aux_change_endian8(double x)
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-double fasp_aux_bbyteToldouble(unsigned char bytes[])
+REAL fasp_aux_bbyteToldouble(unsigned char bytes[])
 {   
     double dbl;   
     unsigned char *buffer;   

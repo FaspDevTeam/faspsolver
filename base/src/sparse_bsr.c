@@ -180,7 +180,7 @@ void fasp_dbsr_cp (dBSRmat *A,
     
     memcpy(B->IA,A->IA,(A->ROW+1)*sizeof(int));
     memcpy(B->JA,A->JA,(A->NNZ)*sizeof(int));
-    memcpy(B->val,A->val,(A->NNZ)*(A->nb)*(A->nb)*sizeof(double));
+    memcpy(B->val,A->val,(A->NNZ)*(A->nb)*(A->nb)*sizeof(REAL));
 }
 
 /**
@@ -214,7 +214,7 @@ int fasp_dbsr_trans (dBSRmat *A,
     AT->JA=(int*)fasp_mem_calloc(nnz,sizeof(int));
     
     if (A->val) { 
-        AT->val=(double*)fasp_mem_calloc(nnz*nb*nb,sizeof(double));     
+        AT->val=(REAL*)fasp_mem_calloc(nnz*nb*nb,sizeof(REAL));     
     }
     else { 
         AT->val=NULL; 
@@ -509,11 +509,11 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     int     nb  = A->nb;
     int    *IA  = A->IA;
     int    *JA  = A->JA;   
-    double *val = A->val;
+    REAL *val = A->val;
     
     int    *IAb  = NULL;
     int    *JAb  = NULL;
-    double *valb = NULL;
+    REAL *valb = NULL;
     
     int nb2  = nb*nb;
     int i,j,k,m;
@@ -561,7 +561,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                         
                     k = IA[i];
                     m = k*4;
-                    memcpy(diaginv+i*4, val+m, 4*sizeof(double));
+                    memcpy(diaginv+i*4, val+m, 4*sizeof(REAL));
                     fasp_smat_identity_nc2(valb+m);
                         
                     // compute the inverses of the diagonal sub-blocks 
@@ -582,7 +582,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                 // get the diagonal sub-blocks
                 k = IA[i];
                 m = k*4;
-                memcpy(diaginv+i*4, val+m, 4*sizeof(double));
+                memcpy(diaginv+i*4, val+m, 4*sizeof(REAL));
                 fasp_smat_identity_nc2(valb+m);
     
                 // compute the inverses of the diagonal sub-blocks 
@@ -613,7 +613,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     for (k = IA[i]; k < IA[i+1]; ++k) {
                         if (JA[k] == i) {
                             m = k*9;
-                            memcpy(diaginv+i*9, val+m, 9*sizeof(double));
+                            memcpy(diaginv+i*9, val+m, 9*sizeof(REAL));
                             fasp_smat_identity_nc3(valb+m);
                         }
                     }
@@ -635,7 +635,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                 for (k = IA[i]; k < IA[i+1]; ++k) {
                     if (JA[k] == i) {
                         m = k*9;
-                        memcpy(diaginv+i*9, val+m, 9*sizeof(double));
+                        memcpy(diaginv+i*9, val+m, 9*sizeof(REAL));
                         fasp_smat_identity_nc3(valb+m);
                     }
                 }
@@ -669,7 +669,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     for (k = IA[i]; k < IA[i+1]; ++k) {
                         if (JA[k] == i) {
                             m = k*25;
-                            memcpy(diaginv+i*25, val+m, 25*sizeof(double));
+                            memcpy(diaginv+i*25, val+m, 25*sizeof(REAL));
                             fasp_smat_identity_nc5(valb+m);
                         }
                     }
@@ -694,7 +694,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     if (JA[k] == i)
                         {
                             m = k*25;
-                            memcpy(diaginv+i*25, val+m, 25*sizeof(double));
+                            memcpy(diaginv+i*25, val+m, 25*sizeof(REAL));
                             fasp_smat_identity_nc5(valb+m);
                         }
                 }
@@ -728,7 +728,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     for (k = IA[i]; k < IA[i+1]; ++k) {
                         if (JA[k] == i) {
                             m = k*49;
-                            memcpy(diaginv+i*49, val+m, 49*sizeof(double));
+                            memcpy(diaginv+i*49, val+m, 49*sizeof(REAL));
                             fasp_smat_identity_nc7(valb+m);
                         }
                     }
@@ -752,7 +752,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                 for (k = IA[i]; k < IA[i+1]; ++k) {
                     if (JA[k] == i) {
                         m = k*49;
-                        memcpy(diaginv+i*49, val+m, 49*sizeof(double));
+                        memcpy(diaginv+i*49, val+m, 49*sizeof(REAL));
                         fasp_smat_identity_nc7(valb+m);
                     }
                 }
@@ -786,7 +786,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     for (k = IA[i]; k < IA[i+1]; ++k) {
                         if (JA[k] == i) {
                             m = k*nb2;
-                            memcpy(diaginv+i*nb2, val+m, nb2*sizeof(double));
+                            memcpy(diaginv+i*nb2, val+m, nb2*sizeof(REAL));
                             fasp_smat_identity(valb+m, nb, nb2);
                         }
                     }
@@ -809,7 +809,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                 for (k = IA[i]; k < IA[i+1]; ++k) {
                     if (JA[k] == i) {
                         m = k*nb2;
-                        memcpy(diaginv+i*nb2, val+m, nb2*sizeof(double));
+                        memcpy(diaginv+i*nb2, val+m, nb2*sizeof(REAL));
                         fasp_smat_identity(valb+m, nb, nb2);
                     }
                 }

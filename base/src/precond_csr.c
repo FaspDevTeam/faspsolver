@@ -336,7 +336,7 @@ void fasp_precond_ilu_backward (REAL *r,
 }
 
 /**
- * \fn void fasp_precond_schwarz(double *r, double *z, void *data)
+ * \fn void fasp_precond_schwarz(REAL *r, REAL *z, void *data)
  * \brief get z from r by schwarz
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
@@ -345,8 +345,8 @@ void fasp_precond_ilu_backward (REAL *r,
  * \author Xiaozhe Hu
  * \date 03/22/2010
  */
-void fasp_precond_schwarz(double *r, 
-                          double *z, 
+void fasp_precond_schwarz(REAL *r, 
+                          REAL *z, 
                           void *data)
 {
 	Schwarz_data *schwarz_data=(Schwarz_data *)data;
@@ -354,14 +354,14 @@ void fasp_precond_schwarz(double *r,
 	int n = schwarz_data->A.row;
 	int *ia = schwarz_data->A.IA;
 	int *ja = schwarz_data->A.JA;
-	double *a = schwarz_data->A.val;
+	REAL *a = schwarz_data->A.val;
 	
 	int nblk = schwarz_data->nblk;
 	int *iblock = schwarz_data->iblock;
 	int *jblock = schwarz_data->jblock;
-	double *rhsloc = schwarz_data->rhsloc;
-	double *au = schwarz_data->au;
-	double *al = schwarz_data->al;
+	REAL *rhsloc = schwarz_data->rhsloc;
+	REAL *au = schwarz_data->au;
+	REAL *al = schwarz_data->al;
 	
 	int schwarz_type = schwarz_data->schwarz_type;
 	

@@ -145,7 +145,7 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
  * \param alpha  REAL factor alpha 
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  */
 void fasp_blas_dcsr_axm (dCSRmat *A, 
                          const REAL alpha)
@@ -166,7 +166,7 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
  * \param y   Pointer to array y
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  * \date   05/26/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  *
  */
@@ -395,7 +395,7 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
  * \param y      Pointer to array y
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  * \date   05/26/2012    Modified by Chunsheng Feng Xiaoqiang Yue
  */
 
@@ -560,7 +560,7 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
  * \param y   Pointer to array y
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  */
 REAL fasp_blas_dcsr_vmv (dCSRmat *A, 
                          REAL *x, 

@@ -33,7 +33,7 @@ static void localb (double (*node)[DIM],
                     double *b,
                     int num_qp)
 {
-    double gauss[num_qp][DIM+1];
+    double gauss[MAX_QUAD][DIM+1];
     double a,p[DIM];
     int i,j;
 
@@ -119,7 +119,7 @@ static void assemble_stiffmat (dCSRmat *A,
     double s;
     
     int i,j,k;
-    int k1,k2,n1,n2,i1,j1;
+    int k1,n1,n2,i1;
     double btmp[3], tmp_a;
     int tmp, edge_c;
     

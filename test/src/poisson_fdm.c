@@ -973,7 +973,7 @@ fsls_CAlloc ( size_t count, size_t elt_size )
     int   size = count*elt_size;
     
     if (size > 0) {
-        ptr = calloc(count, elt_size);
+        ptr = (char*)calloc(count, elt_size);
         if (ptr == NULL) {
             fsls_OutOfMemory(size);
         }

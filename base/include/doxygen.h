@@ -5,6 +5,8 @@
 /** \mainpage FASP Solver Package
  *
  *
+ * ## Introduction
+ *
  * Over the last few decades, researchers have expended significant effort on developing 
  * efficient iterative methods for solving discretized partial differential equations 
  * (PDEs). Though these efforts have yielded many mathematically optimal solvers such as 
@@ -25,14 +27,12 @@
  * or FASP for short.  
  *
  * FASP contains the kernel part and several applications (ranging from fluid dynamics to 
- * reservoir simulation). The kernel part is open-source and licensed under GNU LPGL. Some 
- * of the applications contain contributions from and owned partially by other parties.
+ * reservoir simulation). The kernel part is open-source and licensed under GNU Lesser General
+ * Public License or LGPL version 3.0 or later. Some of the applications contain contributions
+ * from and owned partially by other parties.
  *
- */
- 
- 
-/** 
- * \page page_cvs Obtaining FASP 
+ *
+ * ## How to obtain FASP
  *
  * In order to coordinate our collaboration, we use HG as our version control tool. 
  * HG (Mecurial) is easy to use and it is available at all platforms. For Linux and 
@@ -42,32 +42,29 @@
  * 
  * $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver 
  * 
- * will give you the current version of the package. If you have any questions, you
- * may contact faspdev@gmail.com.
- * 
- */
- 
-
-/**
- * \page page_readme Installation and Building
+ * will give you the current version of the package. 
  *
- * \section build Installation -- Building The Library:
+ * > For the moment, FASP is under alpha testing. If you wish to obtain a current version of
+ * > FASP or you have any questions, feel free to contact us at faspdev@gmail.com.
  * 
+ *
+ * ## Installation and Building
+ *
  * This is a simple instruction on building and testing. For more details, please refer to 
  * the README files and the user's guide in "doc/". 
  *
  * To compile, you need a Fortran and a C compiler. By default, we use gfortan and gcc, 
- * respectively; see core/Makefile and core/make.in for details.
+ * respectively; see base/Makefile and base/make.in for details.
  *
- * First, you can make the FASP library in the "core/" directory: 
+ * First, you can make the FASP library in the "base/" directory: 
  *
- * >> make
+ * $ make
  *
  * which makes the libfasp.a static library.
  *
  * If you wish to see the detailed usage of "make" or need any help, please 
  *
- * >> make help
+ * $ make help
  *
  */ 
 
@@ -122,8 +119,6 @@
  * Project Coordinator:
  * 
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
- *
- * Contact Info: faspusr@gmail.com
  *
  */
    
