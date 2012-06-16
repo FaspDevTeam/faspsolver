@@ -158,7 +158,7 @@ static void dispose_node (LinkList node_ptr)
  * \fn static void remove_node (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
  *                              INT measure, INT index, INT *lists, INT *where)
  *
- * \brief Removes a poINT from the lists
+ * \brief Removes a point from the lists
  * 
  * \author Xuehai Huang
  * \date   09/06/2009
@@ -176,7 +176,7 @@ void remove_node (LinkList *LoL_head_ptr,
     
     do {
         if (measure == list_ptr->data) {
-            /* poINT to be removed is only poINT on list,
+            /* point to be removed is only point on list,
                which must be destroyed */
             if (list_ptr->head == index && list_ptr->tail == index) {
                 /* removing only list, so num_left better be 0! */
@@ -270,7 +270,7 @@ static LinkList create_node (INT Item)
  * \fn static void enter_list (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
  *                             INT measure, INT index, INT *lists, INT *where)
  *
- * \brief Places poINT in new list
+ * \brief Places point in new list
  * 
  * \author Xuehai Huang
  * \date   09/06/2009
@@ -1318,7 +1318,7 @@ static void generate_sparsity_P_standard (dCSRmat *P,
     P->nnz=P->IA[P->row]-P->IA[0];
     
     // step 2: Find the structure JA of P
-    P->JA=(int*)fasp_mem_calloc(P->nnz,sizeof(INT));
+    P->JA=(INT*)fasp_mem_calloc(P->nnz,sizeof(INT));
     P->val=(REAL*)fasp_mem_calloc(P->nnz,sizeof(REAL));
     
 #if CHMEM_MODE
@@ -1426,7 +1426,7 @@ static INT form_coarse_level_ag (dCSRmat *A,
 	INT set_empty = 1, C_i_nonempty = 0;
 	INT ji,jj,i,j,k,l,m,flag,index,ci,cj,ck,cl,num_c,count,fj;
 	
-	INT *work = (int*)fasp_mem_calloc(4*row,sizeof(INT));	
+	INT *work = (INT*)fasp_mem_calloc(4*row,sizeof(INT));	
 	INT *lists = work, *where = lists+row, *lambda = where+row, *graph_array = lambda+row;
     INT *cp_index,*cp_rindex;
     

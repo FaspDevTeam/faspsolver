@@ -70,7 +70,7 @@ dSTRmat fasp_dstr_create (INT nx,
     A.ngrid=A.nxy*A.nz;
     A.nband=nband;
     
-    A.offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
+    A.offsets=(INT*)fasp_mem_calloc(nband, sizeof(INT));
     
     for (i=0;i<nband;++i) A.offsets[i]=offsets[i];
     
@@ -125,7 +125,7 @@ void fasp_dstr_alloc (INT nx,
     A->nband=nband;
     A->nc=nc;
     
-    A->offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
+    A->offsets=(INT*)fasp_mem_calloc(nband, sizeof(INT));
     
     for (i=0;i<nband;++i) A->offsets[i]=offsets[i];
     

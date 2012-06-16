@@ -80,7 +80,7 @@ static void aggregation (dCSRmat *A,
 	NIA[row] = index;
 	Neigh->nnz = index;
 	
-	Neigh->JA = (int*)fasp_mem_realloc(Neigh->JA, (Neigh->IA[row])*sizeof(INT));
+	Neigh->JA = (INT*)fasp_mem_realloc(Neigh->JA, (Neigh->IA[row])*sizeof(INT));
 	Neigh->val = (REAL*)fasp_mem_realloc(Neigh->val, (Neigh->IA[row])*sizeof(REAL));
 	
 	NIA =  Neigh->IA;
@@ -142,9 +142,9 @@ static void aggregation (dCSRmat *A,
 	/*------------------------------------------*/
 	/* Step 2. */
 	/*------------------------------------------*/
-	INT *temp_C = (int*)fasp_mem_calloc(row,sizeof(INT));
+	INT *temp_C = (INT*)fasp_mem_calloc(row,sizeof(INT));
 	
-	num_each_aggregation = (int*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
+	num_each_aggregation = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
 	
 	for (i=row;i--;) {
 		temp_C[i] = vertices->val[i];  

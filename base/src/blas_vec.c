@@ -18,8 +18,8 @@
  * \brief y = a*x + y
  *
  * \param a   REAL factor a
- * \param x   PoINTer to dvector x
- * \param y   PoINTer to dvector y
+ * \param x   Pointer to dvector x
+ * \param y   Pointer to dvector y
  *
  * \author Chensong Zhang
  * \date   07/01/209
@@ -66,9 +66,9 @@ void fasp_blas_dvec_axpy (const REAL a,
  * \brief z = a*x + y, z is a third vector (z is cleared)
  *
  * \param a   REAL factor a
- * \param x   PoINTer to dvector x
- * \param y   PoINTer to dvector y
- * \param z   PoINTer to dvector z
+ * \param x   Pointer to dvector x
+ * \param y   Pointer to dvector y
+ * \param z   Pointer to dvector z
  *
  * \author Chensong Zhang
  * \date   07/01/209
@@ -98,8 +98,8 @@ void fasp_blas_dvec_axpyz(const REAL a,
  *
  * \brief Inner product of two vectors (x,y)
  *
- * \param x   PoINTer to dvector x
- * \param y   PoINTer to dvector y
+ * \param x   Pointer to dvector x
+ * \param y   Pointer to dvector y
  *
  * \return Inner product
  *
@@ -141,8 +141,8 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
  *
  * \brief Relative error of two dvector x and y
  *
- * \param x   PoINTer to dvector x
- * \param y   PoINTer to dvector y
+ * \param x   Pointer to dvector x
+ * \param y   Pointer to dvector y
  *
  * \return relative error ||x-y||/||x||
  *
@@ -194,7 +194,7 @@ REAL fasp_blas_dvec_relerr (dvector *x,
  *
  * \brief L1 norm of dvector x
  *
- * \param x   PoINTer to dvector x
+ * \param x   Pointer to dvector x
  *
  * \return L1 norm of x
  *
@@ -234,7 +234,7 @@ REAL fasp_blas_dvec_norm1 (dvector *x)
  *
  * \brief L2 norm of dvector x
  *
- * \param x   PoINTer to dvector x
+ * \param x   Pointer to dvector x
  *
  * \return L2 norm of x
  *
@@ -274,7 +274,7 @@ REAL fasp_blas_dvec_norm2 (dvector *x)
  *
  * \brief Linf norm of dvector x
  *
- * \param x   PoINTer to dvector x
+ * \param x   Pointer to dvector x
  *
  * \return L_inf norm of x
  *

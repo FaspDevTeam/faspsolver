@@ -913,21 +913,21 @@ ivector fasp_sparse_MIS(dCSRmat *A)
 {
     
 	//! information of A
-	int n = A->row;
-	int *IA = A->IA;
-	int *JA = A->JA;
+	INT n = A->row;
+	INT *IA = A->IA;
+	INT *JA = A->JA;
 	
 	// local variables
-	int i,j;
-	int row_begin, row_end;
-	int count=0;
+	INT i,j;
+	INT row_begin, row_end;
+	INT count=0;
 	INT *flag; 
 	flag = (INT *)fasp_mem_calloc(n, sizeof(INT));
 	for (i=0;i<n;i++) flag[i]=0;
 	
 	//! work space
-	//int *work = (int *)fasp_mem_calloc (n, sizeof(int));
-    INT *work = (int*)fasp_mem_calloc(n,sizeof(INT));    
+	//INT *work = (INT *)fasp_mem_calloc (n, sizeof(INT));
+    INT *work = (INT*)fasp_mem_calloc(n,sizeof(INT));    
 	
 	//! return
 	ivector MIS;
@@ -964,7 +964,7 @@ ivector fasp_sparse_MIS(dCSRmat *A)
     
 	// form MIS
 	MIS.row = count;
-	work = (int *)fasp_mem_realloc(work, count*sizeof(int));
+	work = (INT *)fasp_mem_realloc(work, count*sizeof(INT));
 	MIS.val = work;
 	
 	// clean

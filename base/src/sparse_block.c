@@ -19,10 +19,10 @@
  *
  * \brief Get a sub CSR matrix of A with specified rows and colums
  *
- * \param A     PoINTer to dCSRmat CSR matrix
- * \param B     PoINTer to dCSRmat CSR matrix
- * \param Is    PoINTer to selected rows
- * \param Js    PoINTer to selected colums
+ * \param A     Pointer to dCSRmat CSR matrix
+ * \param B     Pointer to dCSRmat CSR matrix
+ * \param Is    Pointer to selected rows
+ * \param Js    Pointer to selected colums
  * \param m     Number of selected rows
  * \param n     Number of selected colums
  *
@@ -105,10 +105,10 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
  *
  * \brief Get a sub BSR matrix of A with specified rows and columns. 
  *
- * \param A     PoINTer to dBSRmat BSR matrix
- * \param B     PoINTer to dBSRmat BSR matrix
- * \param Is    PoINTer to selected rows
- * \param Js    PoINTer to selected colums
+ * \param A     Pointer to dBSRmat BSR matrix
+ * \param B     Pointer to dBSRmat BSR matrix
+ * \param Is    Pointer to selected rows
+ * \param Js    Pointer to selected colums
  * \param m     Number of selected rows
  * \param n     Number of selected colums
  *
@@ -205,7 +205,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
  * \fn dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
  * \brief get dCSRmat block from a dBSRmat matrix 
  * 
- * \param *A   poINTer to the BSR format matrix
+ * \param *A   Pointer to the BSR format matrix
  * \return     dCSRmat matrix if succeed, NULL if fail
  *
  * \author Xiaozhe Hu

@@ -222,8 +222,8 @@ static SHORT gentisquare_nomass (dCSRmat *A,
  *
  * \brief Add a small submatrix to a big matrix with respect to its row and cols in the big matrix
  *
- * \param mat      pointer poINTing to the structure of the matrix
- * \param matval   pointer poINTing to the values according to the structure
+ * \param mat      pointer pointing to the structure of the matrix
+ * \param matval   pointer pointing to the values according to the structure
  * \param lengths  2d array, the second entry is the lengths of matval
  * \param mm       Number of the rows (also the columns) 
  * \param Ii       pointer to the array to store the relative position of the rows and cols
@@ -1883,19 +1883,19 @@ static void interp_RS2(dCSRmat *A,
     REAL epsilon_tr = param->truncation_threshold;
     REAL amN, amP, apN, apP;
     REAL alpha, beta, aii=0;
-    int *vec = vertices->val;
-    int countPplus, diagindex;
+    INT *vec = vertices->val;
+    INT countPplus, diagindex;
     
-    unsigned int i,j,k,l,index=0;
-    int begin_row, end_row;
-    int myid;
-    int mybegin;
-    int myend;
-    int stride_i;
-    int *indexs = NULL;
-    int shift;
+    unsigned INT i,j,k,l,index=0;
+    INT begin_row, end_row;
+    INT myid;
+    INT mybegin;
+    INT myend;
+    INT stride_i;
+    INT *indexs = NULL;
+    INT shift;
    
-	int nthreads, use_openmp;
+	INT nthreads, use_openmp;
 	if(!FASP_USE_OPENMP || A->row <= OPENMP_HOLDS){
 		use_openmp = FALSE;
 	}
@@ -2079,16 +2079,16 @@ static void interp_RS2(dCSRmat *A,
     fasp_mem_free(Ptr->JA);
     fasp_mem_free(Ptr->val);    
 #if 1
-    int *CoarseIndex=(int*)fasp_mem_calloc(A->row, sizeof(int));
+    INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));
 #else
-    int *CoarseIndex=(int*)fasp_mem_calloc(vertices->row, sizeof(int));
+    INT *CoarseIndex=(INT*)fasp_mem_calloc(vertices->row, sizeof(INT));
 #endif
     
 #if CHMEM_MODE
 #if 1
-    total_alloc_mem += (A->row)*sizeof(int);
+    total_alloc_mem += (A->row)*sizeof(INT);
 #else
-    total_alloc_mem += (vertices->row)*sizeof(int);
+    total_alloc_mem += (vertices->row)*sizeof(INT);
 #endif
 #endif
     
@@ -2110,7 +2110,7 @@ static void interp_RS2(dCSRmat *A,
     // The following is one of OPTIMAL parts ...0802...
     // Generate CoarseIndex in parallel
     if (use_openmp) {
-        indexs = (int *)fasp_mem_calloc(nthreads, sizeof(int));
+        indexs = (INT *)fasp_mem_calloc(nthreads, sizeof(INT));
 #pragma omp parallel for private(myid, mybegin, myend, index, i)
         for (myid = 0; myid < nthreads; myid ++)
             {
@@ -2184,23 +2184,23 @@ static void interp_RS2(dCSRmat *A,
     REAL mMin, pMax;
     REAL mSum, pSum;
     REAL mTruncedSum, pTruncedSum;
-    int mTruncCount, pTruncCount;
-    int num_lost=0;
+    INT mTruncCount, pTruncCount;
+    INT num_lost=0;
     
     Ptr->val=(REAL*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(REAL));
 #if CHMEM_MODE
     total_alloc_mem += (P.IA[Ptr->row])*sizeof(REAL);
 #endif
-    Ptr->JA=(int*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(int));    
+    Ptr->JA=(INT*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(INT));    
 #if CHMEM_MODE
-    total_alloc_mem += (P.IA[Ptr->row])*sizeof(int);
+    total_alloc_mem += (P.IA[Ptr->row])*sizeof(INT);
 #endif
-    Ptr->IA=(int*)fasp_mem_calloc(Ptr->row+1, sizeof(int));
+    Ptr->IA=(INT*)fasp_mem_calloc(Ptr->row+1, sizeof(INT));
 #if CHMEM_MODE
-    total_alloc_mem += (Ptr->row+1)*sizeof(int);
+    total_alloc_mem += (Ptr->row+1)*sizeof(INT);
 #endif
     
-    int index1=0, index2=0;
+    INT index1=0, index2=0;
     for(i=0;i<P.row;++i)
         {
             mMin=0;
@@ -2311,7 +2311,7 @@ static void interp_RS2(dCSRmat *A,
     Ptr->IA[P.row]-=num_lost;
     Ptr->nnz=Ptr->IA[Ptr->row];
     
-    Ptr->JA=(int*)fasp_mem_realloc(Ptr->JA, Ptr->IA[Ptr->row]*sizeof(int));    
+    Ptr->JA=(INT*)fasp_mem_realloc(Ptr->JA, Ptr->IA[Ptr->row]*sizeof(INT));    
     Ptr->val=(REAL*)fasp_mem_realloc(Ptr->val, Ptr->IA[Ptr->row]*sizeof(REAL));
     
     fasp_mem_free(P.IA);

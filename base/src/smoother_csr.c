@@ -198,8 +198,8 @@ void fasp_smoother_dcsr_gs (dvector *u,
  * \brief Gauss-Seidel smoother with C/F ordering for Au=b
  *
  * \param u      Initial guess (in) and the new approximation after smoothing
- * \param A      PoINTer to stiffness matrix
- * \param b      PoINTer to right hand side
+ * \param A      Pointer to stiffness matrix
+ * \param b      Pointer to right hand side
  * \param L      Number of iterations
  * \param mark   C/F marker array
  * \param order  C/F ordering: -1: F-first; 1: C-first
@@ -234,7 +234,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
         nthreads = FASP_GET_NUM_THREADS();
 	}
     
-    // F-poINT first
+    // F-point first
     if (order == -1) {    
         while (L--) {
             if (use_openmp) {
@@ -382,8 +382,8 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
  * \brief Symmetric Gauss-Seidel method as a smoother
  *
  * \param u    Initial guess (in) and the new approximation after smoothing
- * \param A    PoINTer to stiffness matrix
- * \param b    PoINTer to right hand side
+ * \param A    Pointer to stiffness matrix
+ * \param b    Pointer to right hand side
  * \param L    Number of iterations
  *
  * \author Xiaozhe Hu
@@ -444,8 +444,8 @@ void fasp_smoother_dcsr_sgs (dvector *u,
  * \param i_1  Starting index
  * \param i_n  Ending index
  * \param s    Increasing step
- * \param A    PoINTer to stiffness matrix
- * \param b    PoINTer to right hand side
+ * \param A    Pointer to stiffness matrix
+ * \param b    Pointer to right hand side
  * \param L    Number of iterations
  * \param w    Over-relaxation weight
  *
@@ -510,8 +510,8 @@ void fasp_smoother_dcsr_sor (dvector *u,
  * \brief SOR smoother with C/F ordering for Au=b
  *
  * \param u      Initial guess (in) and the new approximation after smoothing
- * \param A      PoINTer to stiffness matrix
- * \param b      PoINTer to right hand side
+ * \param A      Pointer to stiffness matrix
+ * \param b      Pointer to right hand side
  * \param L      Number of iterations
  * \param w      Over-relaxation weight
  * \param mark   C/F marker array
@@ -537,7 +537,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
     INT    size = b->row;
     REAL   t,d=0.0;
     
-    // F-poINT first
+    // F-point first
     if (order == -1) {    
         while (L--) {
             for (i = 0; i < size; i ++) {
@@ -605,10 +605,10 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
  *
  * \brief ILU method as a smoother
  *
- * \param A     PoINTer to stiffness matrix
- * \param b     PoINTer to right hand side
- * \param x     PoINTer to current solution
- * \param data  PoINTer to user defined data
+ * \param A     Pointer to stiffness matrix
+ * \param b     Pointer to right hand side
+ * \param x     Pointer to current solution
+ * \param data  Pointer to user defined data
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/11/12 
@@ -680,8 +680,8 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
  * \param i_1  Starting index
  * \param i_n  Ending index
  * \param s    Increasing step
- * \param A    PoINTer to stiffness matrix
- * \param b    PoINTer to right hand side
+ * \param A    Pointer to stiffness matrix
+ * \param b    Pointer to right hand side
  * \param L    Number of iterations
  * \param w    Relaxation weight
  *
@@ -766,8 +766,8 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
  * \param i_1  Starting index
  * \param i_n  Ending index
  * \param s    Increasing step
- * \param A    PoINTer to stiffness matrix
- * \param b    PoINTer to right hand side
+ * \param A    Pointer to stiffness matrix
+ * \param b    Pointer to right hand side
  * \param L    Number of iterations
  *
  * \author Xiaozhe Hu, James Brannick
@@ -1093,7 +1093,7 @@ void swep3df(INT *ia,
                     i0 = i   +  j0    + k0;
                     i0 = mark[i0]-1; //Fortran to C
                 
-                    //    prINTf("%d %d %d %d\n",i,j0,k0,i0);
+                    //    printf("%d %d %d %d\n",i,j0,k0,i0);
                     if (i0>=0 ) {
                     
                         t = f[i0];
@@ -1154,8 +1154,8 @@ void rb0f3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT 
  *
  * \brief       Colores Gauss-Seidel smoother  for Au=b
  * \param u     initial guess and the new approximation to the solution obtained after L GS steps
- * \param A     poINTer to stiffness matrix
- * \param b     poINTer to right hand side
+ * \param A     Pointer to stiffness matrix
+ * \param b     Pointer to right hand side
  * \param L     number of iterations
  * \param order ordering: -1: Forward; 1: Backward
  * \param nx    number vertex of X diricter
@@ -1235,7 +1235,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
  *
  * \brief Form contractor I-BA
  *
- * \param A          PoINTer to the dCSRmat
+ * \param A          Pointer to the dCSRmat
  * \param smoother   Smoother type
  * \param steps      Smoothing steps
  * \param ndeg       Degree of the polynomial smoother
@@ -1312,7 +1312,7 @@ static dCSRmat form_contractor (dCSRmat *A,
             fasp_smoother_dcsr_sor(&x, n-1, 0,-1, A, &b, steps, relax);
             break;
         default:
-            prINTf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+            printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
         } 
         
         // store to B

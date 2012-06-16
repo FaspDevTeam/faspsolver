@@ -170,7 +170,7 @@ void fasp_dvec_null (dvector *x)
  * \par
  *   fasp_dvec_rand(100,&xapp);
  * \par
- *   fasp_dvec_prINT(100,&xapp);
+ *   fasp_dvec_print(100,&xapp);
  *
  * \author Chensong Zhang
  * \date   11/16/2009

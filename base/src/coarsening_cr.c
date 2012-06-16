@@ -61,7 +61,7 @@ INT fasp_amg_coarsening_cr (INT i_0,
     }
     
     /* CF, RHS, INITIAL GUESS, and MEAS. ARRAY */
-    cf = (int*)fasp_mem_calloc(in1,sizeof(int));
+    cf = (INT*)fasp_mem_calloc(in1,sizeof(INT));
     b  = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
     u  = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
     ma = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
@@ -244,7 +244,7 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
                 }
             }
             if (ma[i] > istack) {
-                istack = (int) ma[i];
+                istack = (INT) ma[i];
             }
         } else if (cf[i] == cpt) {
             ma[i] = -1;
@@ -256,8 +256,8 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
     
     /* INITIALIZE GRAPH */
     list = (Link*)fasp_mem_calloc(n,sizeof(Link));
-    head_mem = (int*)fasp_mem_calloc(stack_size,sizeof(int));
-    tail_mem = (int*)fasp_mem_calloc(stack_size,sizeof(int));
+    head_mem = (INT*)fasp_mem_calloc(stack_size,sizeof(INT));
+    tail_mem = (INT*)fasp_mem_calloc(stack_size,sizeof(INT));
     head = head_mem + stack_size; 
     tail = tail_mem + stack_size;
     
@@ -267,7 +267,7 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
     }
     for (i = 0; i < n; ++i) {
         if (ma[i] > 0) {
-            GraphAdd(list, head, tail, i, (int) ma[i]);
+            GraphAdd(list, head, tail, i, (INT) ma[i]);
         }
     }
     
@@ -304,9 +304,9 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
                         /* move index in graph */
                         GraphRemove(list, head, tail, index);
                         GraphAdd(list, head, tail, index,
-                                 (int) ma[index]);
+                                 (INT) ma[index]);
                         if (ma[index] > istack) {
-                            istack = (int) ma[index];
+                            istack = (INT) ma[index];
                         }
                     }
                 }

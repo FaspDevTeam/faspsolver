@@ -35,14 +35,14 @@ dBSRmat fasp_dbsr_create (INT ROW,
     dBSRmat A;
     
     if ( ROW > 0 ) {
-        A.IA = (int*)fasp_mem_calloc(ROW+1, sizeof(INT));
+        A.IA = (INT*)fasp_mem_calloc(ROW+1, sizeof(INT));
     }
     else {
         A.IA = NULL;
     }
     
     if ( NNZ > 0 ) {
-        A.JA = (int*)fasp_mem_calloc(NNZ ,sizeof(INT));
+        A.JA = (INT*)fasp_mem_calloc(NNZ ,sizeof(INT));
     }
     else {
         A.JA = NULL;
@@ -84,14 +84,14 @@ void fasp_dbsr_alloc (INT ROW,
                       dBSRmat *A)
 {    
     if ( ROW > 0 ) {
-        A->IA = (int*)fasp_mem_calloc(ROW+1, sizeof(INT));
+        A->IA = (INT*)fasp_mem_calloc(ROW+1, sizeof(INT));
     }
     else {
         A->IA = NULL;
     }
     
     if ( NNZ > 0 ) {
-        A->JA = (int*)fasp_mem_calloc(NNZ ,sizeof(INT));
+        A->JA = (INT*)fasp_mem_calloc(NNZ ,sizeof(INT));
     }
     else {
         A->JA = NULL;
@@ -178,13 +178,13 @@ void fasp_dbsr_cp (dBSRmat *A,
     B->nb = A->nb;
     B->storage_manner = A->storage_manner;
     
-    memcpy(B->IA,A->IA,(A->ROW+1)*sizeof(int));
-    memcpy(B->JA,A->JA,(A->NNZ)*sizeof(int));
+    memcpy(B->IA,A->IA,(A->ROW+1)*sizeof(INT));
+    memcpy(B->JA,A->JA,(A->NNZ)*sizeof(INT));
     memcpy(B->val,A->val,(A->NNZ)*(A->nb)*(A->nb)*sizeof(REAL));
 }
 
 /**
- * \fn int fasp_dbsr_trans (dBSRmat *A, dBSRmat *AT)
+ * \fn INT fasp_dbsr_trans (dBSRmat *A, dBSRmat *AT)
  *
  * \brief Find A^T from given dBSRmat matrix A
  *
@@ -196,22 +196,22 @@ void fasp_dbsr_cp (dBSRmat *A,
  *
  * Modified by Xiaozhe Hu (08/06/2011)
  */
-int fasp_dbsr_trans (dBSRmat *A, 
+INT fasp_dbsr_trans (dBSRmat *A, 
                      dBSRmat *AT)
 {
-    const int n=A->ROW, m=A->COL, nnz=A->NNZ, nb=A->nb;    
-    int i,j,k,p,inb,jnb,nb2;
-    int status = SUCCESS;
+    const INT n=A->ROW, m=A->COL, nnz=A->NNZ, nb=A->nb;    
+    INT i,j,k,p,inb,jnb,nb2;
+    INT status = SUCCESS;
     
     AT->ROW=m;
     AT->COL=n;
     AT->NNZ=nnz;
     AT->nb = nb;
     AT->storage_manner = A->storage_manner;
-    AT->IA=(int*)fasp_mem_calloc(m+1,sizeof(int));
+    AT->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
     nb2 =  A->nb*A->nb;
 
-    AT->JA=(int*)fasp_mem_calloc(nnz,sizeof(int));
+    AT->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
     
     if (A->val) { 
         AT->val=(REAL*)fasp_mem_calloc(nnz*nb*nb,sizeof(REAL));     
@@ -234,7 +234,7 @@ int fasp_dbsr_trans (dBSRmat *A,
     // second pass: form A'
     if (A->val) {
         for (i=0;i<n;++i) {
-            int ibegin=A->IA[i], iend1=A->IA[i+1];
+            INT ibegin=A->IA[i], iend1=A->IA[i+1];
     
             for(p=ibegin;p<iend1;p++) {
                 j=A->JA[N2C(p)]+1;
@@ -252,7 +252,7 @@ int fasp_dbsr_trans (dBSRmat *A,
     }
     else {
         for (i=0;i<n;++i) {
-            int ibegin=A->IA[i], iend1=A->IA[i+1];
+            INT ibegin=A->IA[i], iend1=A->IA[i+1];
     
             for(p=ibegin;p<iend1;p++) {
                 j=A->JA[N2C(p)]+1;
@@ -502,27 +502,27 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
 {
     dBSRmat B;
     // members of A 
-    int     ROW = A->ROW;
-    int     ROW_plus_one = ROW+1;
-    int     COL = A->COL;
-    int     NNZ = A->NNZ;
-    int     nb  = A->nb;
-    int    *IA  = A->IA;
-    int    *JA  = A->JA;   
+    INT     ROW = A->ROW;
+    INT     ROW_plus_one = ROW+1;
+    INT     COL = A->COL;
+    INT     NNZ = A->NNZ;
+    INT     nb  = A->nb;
+    INT    *IA  = A->IA;
+    INT    *JA  = A->JA;   
     REAL *val = A->val;
     
-    int    *IAb  = NULL;
-    int    *JAb  = NULL;
+    INT    *IAb  = NULL;
+    INT    *JAb  = NULL;
     REAL *valb = NULL;
     
-    int nb2  = nb*nb;
-    int i,j,k,m;
-    int myid;
-    int mybegin;
-    int stride_i;
-    int myend;
+    INT nb2  = nb*nb;
+    INT i,j,k,m;
+    INT myid;
+    INT mybegin;
+    INT stride_i;
+    INT myend;
 
-	int nthreads, use_openmp;
+	INT nthreads, use_openmp;
 
 	if(!FASP_USE_OPENMP || ROW <= OPENMP_HOLDS){
 		use_openmp = FALSE;

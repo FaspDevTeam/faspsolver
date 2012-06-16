@@ -15,9 +15,9 @@
  *
  * \brief Diagonal preconditioner z=inv(D)*r
  *
- * \param r     PoINTer to the vector needs preconditioning
- * \param z     PoINTer to preconditioned vector
- * \param data  PoINTer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   10/26/2010
@@ -98,9 +98,9 @@ void fasp_precond_dbsr_diag (REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param r     PoINTer to the vector needs preconditioning
- * \param z     PoINTer to preconditioned vector
- * \param data  PoINTer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   11/18/2011
@@ -158,9 +158,9 @@ void fasp_precond_dbsr_diag_nc2(REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param r     PoINTer to the vector needs preconditioning
- * \param z     PoINTer to preconditioned vector
- * \param data  PoINTer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date 01/06/2011
@@ -218,9 +218,9 @@ void fasp_precond_dbsr_diag_nc3(REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param r     PoINTer to the vector needs preconditioning
- * \param z     PoINTer to preconditioned vector
- * \param data  PoINTer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   01/06/2011
@@ -278,9 +278,9 @@ void fasp_precond_dbsr_diag_nc5(REAL *r,
  *
  * \brief Diagonal preconditioner z=inv(D)*r.
  *
- * \param r     PoINTer to the vector needs preconditioning
- * \param z     PoINTer to preconditioned vector
- * \param data  PoINTer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   01/06/2011
@@ -337,9 +337,9 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
  *
  * \brief ILU preconditioner
  *
- * \param r     PoINTer to the vector needs preconditioning
- * \param z     PoINTer to preconditioned vector
- * \param data  PoINTer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Shiquan Zhang
  * \date   11/09/2010
@@ -596,9 +596,9 @@ void fasp_precond_dbsr_ilu (REAL *r,
  *
  * \brief AMG preconditioner
  *
- * \param r     PoINTer to the vector needs preconditioning
- * \param z     PoINTer to preconditioned vector
- * \param data  PoINTer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   08/07/2011
@@ -639,9 +639,9 @@ void fasp_precond_dbsr_amg (REAL *r,
  *
  * \brief Nonliear AMLI-cycle AMG preconditioner
  *
- * \param r     PoINTer to the vector needs preconditioning
- * \param z     PoINTer to preconditioned vector
- * \param data  PoINTer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   02/06/2012

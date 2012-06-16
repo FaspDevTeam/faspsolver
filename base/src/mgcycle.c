@@ -269,7 +269,7 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
     const SHORT nl          = mgl[0].num_levels;
     const SHORT smoother    = param->smoother;
     const SHORT cycle_type  = param->cycle_type;    
-    //const int smooth_order = param->smooth_order;
+    //const INT smooth_order = param->smooth_order;
     const REAL relax = param->relaxation;
     
     // local variables

@@ -95,7 +95,7 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
 /**
  * \fn SHORT fasp_format_dstr_dcsr(dSTRmat *A, dCSRmat *B_ptr)
  *
- * \brief Transfer a 'dSTRmat' type matrix INTo a 'dCSRmat' type matrix.
+ * \brief Transfer a 'dSTRmat' type matrix into a 'dCSRmat' type matrix.
  *
  * \param A      Pointer to a 'dSTRmat' type matrix
  * \param B_ptr  Pointer to the 'dCSRmat' type matrix
@@ -336,7 +336,7 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
 /**
  * \fn dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
  *
- * \brief Convert a dCSRmat INTo a dCSRLmat
+ * \brief Convert a dCSRmat into a dCSRLmat
  *
  * \param A   Pointer to the dCSRLmat type matrix
  *
@@ -463,7 +463,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
 /*!
  * \fn dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  *
- * \brief Transfer a 'dBSRmat' type matrix INTo a dCSRmat.
+ * \brief Transfer a 'dBSRmat' type matrix into a dCSRmat.
  *
  * \param B   Pointer to the 'dBSRmat' type matrix
  *
@@ -685,7 +685,7 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
 /*!
  * \fn SHORT fasp_format_dcsr_dbsr ( dBSRmat *A, INT nb, dCSRmat *B )
  *
- * \brief Transfer a dCSRmat type matrix INTo a dBSRmat.
+ * \brief Transfer a dCSRmat type matrix into a dBSRmat.
  *
  * \param A   Pointer to the dCSRmat type matrix
  * \param nb  size of each block 
@@ -826,7 +826,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
     val = A.val;
     
     // Generate 'IA'
-    for (i = 1; i < ngridplus1; ++i) IA[i] = 1; // take the diagonal blocks INTo account
+    for (i = 1; i < ngridplus1; ++i) IA[i] = 1; // take the diagonal blocks into account
     for (i = 0; i < nband; ++i) {
         k = offsets[i];
         if (k < 0) {

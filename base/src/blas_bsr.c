@@ -2212,7 +2212,7 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
 			jac=(INT*)fasp_mem_realloc(jac, nB*sizeof(INT));
 		}
 
-		// put the correct columns of p INTo the column list of the products
+		// put the correct columns of p into the column list of the products
 		begin_row=iac[i]; end_row=iac[i1];
 		for (j=begin_row; j<end_row; ++j) {
 			// put the value in B->JA

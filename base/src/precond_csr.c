@@ -351,23 +351,23 @@ void fasp_precond_schwarz(REAL *r,
 {
 	Schwarz_data *schwarz_data=(Schwarz_data *)data;
 	
-	int n = schwarz_data->A.row;
-	int *ia = schwarz_data->A.IA;
-	int *ja = schwarz_data->A.JA;
+	INT n = schwarz_data->A.row;
+	INT *ia = schwarz_data->A.IA;
+	INT *ja = schwarz_data->A.JA;
 	REAL *a = schwarz_data->A.val;
 	
-	int nblk = schwarz_data->nblk;
-	int *iblock = schwarz_data->iblock;
-	int *jblock = schwarz_data->jblock;
+	INT nblk = schwarz_data->nblk;
+	INT *iblock = schwarz_data->iblock;
+	INT *jblock = schwarz_data->jblock;
 	REAL *rhsloc = schwarz_data->rhsloc;
 	REAL *au = schwarz_data->au;
 	REAL *al = schwarz_data->al;
 	
-	int schwarz_type = schwarz_data->schwarz_type;
+	INT schwarz_type = schwarz_data->schwarz_type;
 	
-	int memt = schwarz_data->memt;
-	int *mask = schwarz_data->mask;
-	int *maxa = schwarz_data->maxa;
+	INT memt = schwarz_data->memt;
+	INT *mask = schwarz_data->mask;
+	INT *maxa = schwarz_data->maxa;
 	
 	fasp_array_set(n, z, 0.0);
 	

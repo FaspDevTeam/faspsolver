@@ -165,7 +165,7 @@ void fasp_dcsrvec1_read (char *filename,
     fscanf(fp, "%d %d", &m, &n);
     A->row=m; A->col=n;
     
-    A->IA=(int*)fasp_mem_calloc(m+1, sizeof(INT));    
+    A->IA=(INT*)fasp_mem_calloc(m+1, sizeof(INT));    
     for (i=0;i<=m;++i) {
         fscanf(fp, "%d", &idata);
         A->IA[i]=idata;
@@ -173,7 +173,7 @@ void fasp_dcsrvec1_read (char *filename,
     
     nnz=A->IA[m]-A->IA[0]; A->nnz=nnz;
     
-    A->JA=(int*)fasp_mem_calloc(nnz, sizeof(INT));    
+    A->JA=(INT*)fasp_mem_calloc(nnz, sizeof(INT));    
     A->val=(REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     
     for (i=0;i<nnz;++i) {
@@ -485,7 +485,7 @@ void fasp_dstr_read (char *filename,
     fscanf(fp,"%d",&nband); // read number of bands
     A->nband = nband;
     
-    A->offsets=(int*)fasp_mem_calloc(nband, sizeof(INT));
+    A->offsets=(INT*)fasp_mem_calloc(nband, sizeof(INT));
     
     // read diagonal    
     fscanf(fp, "%d", &n);

@@ -286,7 +286,7 @@ void fasp_dcsr_getdiag (INT n,
     INT i,k,j,ibegin,iend;    
     
     if (n==0) n=MIN(A->row,A->col);
-	int nthreads, use_openmp;
+	INT nthreads, use_openmp;
 
 	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
 		use_openmp = FALSE;

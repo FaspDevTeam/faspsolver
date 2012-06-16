@@ -10,9 +10,9 @@
 
 /* The following functions are defined in ilu.for */
 #ifdef __cplusplus 
-extern "C" {void symbfactor_(const int *n,int *colind,int *rwptr,const int *levfill,const int *nzmax,int *nzlu,int *ijlu,int *uptr,int *ierr);}
+extern "C" {void symbfactor_(const INT *n,INT *colind,INT *rwptr,const INT *levfill,const INT *nzmax,INT *nzlu,INT *ijlu,INT *uptr,INT *ierr);}
 #else
-extern void symbfactor_(const int *n,int *colind,int *rwptr,const int *levfill,const int *nzmax,int *nzlu,int *ijlu,int *uptr,int *ierr);
+extern void symbfactor_(const INT *n,INT *colind,INT *rwptr,const INT *levfill,const INT *nzmax,INT *nzlu,INT *ijlu,INT *uptr,INT *ierr);
 #endif
 
 static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
@@ -68,8 +68,8 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     iludata->row=iludata->col=n;    
     iludata->nb=nb;
     
-    ijlu=(int*)fasp_mem_calloc(iwk,sizeof(INT));
-    uptr=(int*)fasp_mem_calloc(A->ROW,sizeof(INT));
+    ijlu=(INT*)fasp_mem_calloc(iwk,sizeof(INT));
+    uptr=(INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
         
 #if DEBUG_MODE
     printf("### DEBUG: symbolic factorization ... \n ");
@@ -91,7 +91,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     nwork=6*nzlu*nb;
     iludata->nzlu=nzlu;
     iludata->nwork=nwork;
-    iludata->ijlu=(int*)fasp_mem_calloc(nzlu,sizeof(INT));
+    iludata->ijlu=(INT*)fasp_mem_calloc(nzlu,sizeof(INT));
     
     memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
     iludata->work=(REAL*)fasp_mem_calloc(nwork, sizeof(REAL));  // Xiaozhe: Is the work space too large?
@@ -159,7 +159,7 @@ static INT numfac_bsr (dBSRmat *A,
     INT *colptrs;
     INT status=SUCCESS;
     
-    colptrs=(int*)fasp_mem_calloc(n,sizeof(INT));
+    colptrs=(INT*)fasp_mem_calloc(n,sizeof(INT));
     mult=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));
     mult1=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));
     

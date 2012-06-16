@@ -7,10 +7,10 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-static void put_byte(FILE *fp, int c);
-static void put_word(FILE *fp, int w);
-static void put_dword(FILE *fp, int d);
-static int  write_bmp16(const char *fname, int m, int n, const char map[]);
+static void put_byte(FILE *fp, INT c);
+static void put_word(FILE *fp, INT w);
+static void put_dword(FILE *fp, INT d);
+static INT  write_bmp16(const char *fname, INT m, INT n, const char map[]);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -170,7 +170,7 @@ void fasp_grid2d_plot (pgrid2d pg,
 /*---------------------------------*/
 
 /*! 
- * \fn static void put_byte(FILE *fp, int c)
+ * \fn static void put_byte(FILE *fp, INT c)
  *
  * \brief Write to byte to file
  *
@@ -178,14 +178,14 @@ void fasp_grid2d_plot (pgrid2d pg,
  * \param c  byte to write
  *
  */
-static void put_byte(FILE *fp, int c)
+static void put_byte(FILE *fp, INT c)
 { 
     fputc(c, fp);
     return;
 }
 
 /*! 
- * \fn static void put_word(FILE *fp, int w)
+ * \fn static void put_word(FILE *fp, INT w)
  *
  * \brief Write to word to file
  *
@@ -193,7 +193,7 @@ static void put_byte(FILE *fp, int c)
  * \param w  word to write
  *
  */
-static void put_word(FILE *fp, int w)
+static void put_word(FILE *fp, INT w)
 { /* big endian */
     put_byte(fp, w);
     put_byte(fp, w >> 8);
@@ -201,7 +201,7 @@ static void put_word(FILE *fp, int w)
 }
 
 /*! 
- * \fn static void put_dword(FILE *fp, int d)
+ * \fn static void put_dword(FILE *fp, INT d)
  *
  * \brief Write to REAL-word to file
  *
@@ -209,7 +209,7 @@ static void put_word(FILE *fp, int w)
  * \param d  REAL-word to write
  *
  */
-static void put_dword(FILE *fp, int d)
+static void put_dword(FILE *fp, INT d)
 { /* big endian */
     put_word(fp, d);
     put_word(fp, d >> 16);
@@ -217,7 +217,7 @@ static void put_dword(FILE *fp, int d)
 }
 
 /*! 
- * \fn static int write_bmp16(const char *fname, int m, int n, const char map[])
+ * \fn static INT write_bmp16(const char *fname, INT m, INT n, const char map[])
  *
  * \brief Write to BMP file
  *
@@ -280,10 +280,10 @@ static void put_dword(FILE *fp, int d)
  *  You should have received a copy of the GNU General Public License
  *  along with GLPK. If not, see <http://www.gnu.org/licenses/>.
  */
-static int write_bmp16(const char *fname, int m, int n, const char map[])
+static INT write_bmp16(const char *fname, INT m, INT n, const char map[])
 {     
     FILE *fp;
-    int offset, bmsize, i, j, b, ret = 1;
+    INT offset, bmsize, i, j, b, ret = 1;
     
     if (!(1 <= m && m <= 32767))
         printf("### ERROR: write_bmp16 invalid height %d\n", m);

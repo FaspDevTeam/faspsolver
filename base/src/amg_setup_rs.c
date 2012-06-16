@@ -191,7 +191,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 
 
 /**
- * \fn int fasp_amg_setup_rs_omp (AMG_data *mgl, AMG_param *param) 
+ * \fn INT fasp_amg_setup_rs_omp (AMG_data *mgl, AMG_param *param) 
  * \param mgl    pointer to AMG_data data
  * \param param  pointer to AMG parameters
  *
@@ -201,26 +201,26 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
  *           Academic Press Inc., San Diego, CA, 2001. 
  */
 
-int fasp_amg_setup_rs_omp (AMG_data *mgl, 
+INT fasp_amg_setup_rs_omp (AMG_data *mgl, 
                            AMG_param *param) 
 {
 #if FASP_USE_OPENMP
-    int status=SUCCESS, nthreads;
+    INT status=SUCCESS, nthreads;
     
 	// set thread number
     nthreads = FASP_GET_NUM_THREADS();
 
-    const int print_level=param->print_level;
-    const int m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;    
+    const INT print_level=param->print_level;
+    const INT m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;    
     
-    int max_levels=param->max_levels;
-    int mm, level=0;
-    int size;  
+    INT max_levels=param->max_levels;
+    INT mm, level=0;
+    INT size;  
 
 	// stores level info (fine: 0; coarse: 1)
     ivector vertices=fasp_ivec_create(m); 
-    int *icor_ysk = (int *)fasp_mem_calloc(5*nthreads+2, sizeof(int));
-	memset(icor_ysk, 0x0, sizeof(int)*(5*nthreads+2));
+    INT *icor_ysk = (INT *)fasp_mem_calloc(5*nthreads+2, sizeof(INT));
+	memset(icor_ysk, 0x0, sizeof(INT)*(5*nthreads+2));
     
 	// strong n-couplings
 	iCSRmat S;
