@@ -41,7 +41,7 @@
  * \note Indices start from 1, NOT 0!!!
  *
  * \author Zhiyang Zhou
- * \date   2010/08/06
+ * \date   08/06/2010
  *
  * Modified by Chensong Zhang on 2011/03/01
  * Modified by Chensong Zhang on 2012/01/05

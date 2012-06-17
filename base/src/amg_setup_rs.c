@@ -116,7 +116,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         /*-- Coarseing and form the structure of interpolation --*/
         status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
     
-        /*-- Store the C/F marker: Zhiyang Zhou 2010/11/12 --*/
+        /*-- Store the C/F marker --*/
         size = mgl[level].A.row;
         mgl[level].cfmark = fasp_ivec_create(size);
         memcpy(mgl[level].cfmark.val, vertices.val, size*sizeof(INT));
@@ -192,6 +192,9 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 
 /**
  * \fn INT fasp_amg_setup_rs_omp (AMG_data *mgl, AMG_param *param) 
+ *
+ * \brief  Setup of AMG based on R-S coarsening
+ *
  * \param mgl    pointer to AMG_data data
  * \param param  pointer to AMG parameters
  *

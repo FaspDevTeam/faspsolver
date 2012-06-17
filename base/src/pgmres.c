@@ -885,7 +885,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
                 pc->fct(p[i-1], r, pc->data);          
     
             //fasp_blas_dbsr_mxv(A, r, p[i]);
-            fasp_blas_dstr_aAxpy(1.0, A, r, p[i]); // we need spmxv_str here. --Zhiyang Zhou
+            fasp_blas_dstr_aAxpy(1.0, A, r, p[i]); 
     
             /* modified Gram_Schmidt */
             for (j = 0; j < i; ++j) {

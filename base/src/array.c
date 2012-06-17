@@ -40,8 +40,10 @@ void fasp_array_null (REAL *x)
  * \param val  Initial value for the REAL array
  *
  * \author Chensong Zhang 
- * \date   2010/04/03  
- * \date   2012/05/23  Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   04/03/2010  
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/23/2012  
  */
 
 void fasp_array_set (const INT n, 
@@ -99,7 +101,7 @@ void fasp_array_set (const INT n,
  * \param val  Initial value for the REAL array
  *
  * \author Chensong Zhang 
- * \date   2010/04/03  
+ * \date   04/03/2010  
  * 
  * Modified by Chunsheng Feng, Xiaoqiang Yue
  * \date   05/25/2012

@@ -14,14 +14,17 @@
 
 /**
  * \fn void fasp_set_GS_threads(INT threads,INT its)
- * \brief set threads for CPR. Please add it at the begin of Krylov openmp method function and after iter++.
  *
- * \param threads       total threads of sovler
- * \param its           curent its of the Krylov methods
+ * \brief  Set threads for CPR. Please add it at the begin of Krylov openmp method function 
+ *         and after iter++.
+ *
+ * \param threads  Total threads of sovler
+ * \param its      Current its of the Krylov methods
  *
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/20/2011
  */
+
 INT THDs_AMG_GS;  /**< cpr amg gs smoothing threads      */
 INT THDs_CPR_lGS; /**< reservoir gs smoothing threads     */
 INT THDs_CPR_gGS; /**< global matrix gs smoothing threads */

@@ -264,10 +264,10 @@ void fasp_dvec_set (INT n,
  * \param  u    Pointer to the vector (MODIFIED)
  *
  * \author Chensong Zhang
- * \date   2010/04/03  
+ * \date   04/03/2010  
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue  
- * \date   2012/05/23    
+ * \date   05/23/2012    
  */
 
 void fasp_ivec_set (const INT m, 

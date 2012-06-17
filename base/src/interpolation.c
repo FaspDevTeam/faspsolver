@@ -740,7 +740,7 @@ void interp_EM (dCSRmat *A,
  * \date   01/31/2009  
  * 
  * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date  05/23/2012
+ * \date   05/23/2012
  *
  * \note Ref P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid. 
  *             Academic Press Inc., San Diego, CA, 2001. 
