@@ -466,8 +466,11 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
     
     // r = b-A*u
     fasp_array_cp(m,bval,r);
+
+printf(">>> entering fasp_blas_dbsr_aAxpy\n");
     fasp_blas_dbsr_aAxpy(-1.0,A,uval,r);
-    
+printf(">>> exiting fasp_blas_dbsr_aAxpy\n");
+
     // pp=precond(p)
     fasp_array_cp(m,r,p);
     if (pc != NULL) 
@@ -526,7 +529,9 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
             fasp_array_cp(m,s,sp); /* No preconditioner */
         
         // t = A*sp;
+printf(">>> entering fasp_blas_dbsr_mxv\n");
         fasp_blas_dbsr_mxv(A,sp,t);
+printf(">>> exiting fasp_blas_dbsr_mxv\n");
         
         // omega = (t,s)/(t,t)
         tempr=fasp_blas_array_dotprod(m,t,t);

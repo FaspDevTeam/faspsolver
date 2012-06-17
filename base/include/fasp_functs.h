@@ -29,7 +29,7 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
 SHORT fasp_amg_setup_rs (AMG_data *mgl, 
                          AMG_param *param);
 
-int fasp_amg_setup_rs_omp (AMG_data *mgl, 
+INT fasp_amg_setup_rs_omp (AMG_data *mgl, 
                            AMG_param *param) ;
 
 

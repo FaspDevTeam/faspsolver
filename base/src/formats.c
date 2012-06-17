@@ -733,8 +733,8 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     for(i=0;i<nCol;i++) {
         Js[i]=i*nb;
     }
+
     status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
-    
     //here we have tmpmat as the submatrix
     A.ROW=nRow;
     A.COL=nCol;

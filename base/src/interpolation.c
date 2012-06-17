@@ -59,12 +59,13 @@ SHORT fasp_amg_interp (dCSRmat *A,
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_interp ...... [Start]\n");
 #endif
+
     // make sure standard interpolaiton is used for aggressive coarsening
     if (coarsening_type == 4) interp_type = INTERP_STD;
-    
+
     /*-- Standard interpolation operator --*/
     switch (interp_type) {
-    case INTERP_REG: // Standard interpolation
+    case INTERP_REG: // Direction interpolation
         interp_RS(A, vertices, P, param); 
         break;            
     case INTERP_ENG_MIN: // Energy min interpolation in C
@@ -72,6 +73,7 @@ SHORT fasp_amg_interp (dCSRmat *A,
         break;
     case INTERP_STD: // standard interpolation
 		interp_STD(A, vertices, P, S, param);
+        break;
     default:
         fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
         break;
