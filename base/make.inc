@@ -7,7 +7,7 @@
 #FC=ifort
 
 # User compiling options
-BOPT=-g -O2 -funroll-loops -ftree-vectorize -fopenmp 
+BOPT=-g -O2 -funroll-loops -ftree-vectorize  
 
 # User preprocessing definitions
 CDEFS=

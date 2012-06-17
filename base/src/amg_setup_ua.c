@@ -90,7 +90,11 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
  * 
  * \author Xiaozhe Hu
  * \date   02/21/2011 
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/27/2012
  */
+
 static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl, 
                                             AMG_param *param)
 {
@@ -103,8 +107,12 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     REAL          setupduration;
     SHORT         level=0, status=SUCCESS, max_levels=param->max_levels;
     INT           i, j;
-    
+
+#if FASP_USE_OPENMP
+	setup_start = omp_get_wtime();
+#else
     setup_start = clock();
+#endif 
     
     if (cycle_type == AMLI_CYCLE) {
         param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
@@ -113,7 +121,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
         fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
     }
     
-    //each elvel stores the information of the number of aggregations
+    //each level stores the information of the number of aggregations
     INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
     
     for (i=0; i<max_levels; ++i) num_aggregations[i] = 0;
@@ -128,7 +136,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     
     for (i=0; i<mgl->near_kernel_dim; ++i) {
         mgl[0].near_kernel_basis[i] = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
-        for (j=0;j<m;++j) mgl[0].near_kernel_basis[i][j] = 1.0;
+		fasp_array_set(m, mgl[0].near_kernel_basis[i], 1.0);
     }
     
     // initialize ILU parameters
@@ -168,7 +176,6 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 			fasp_dcsr_shift (&(mgl[level].schwarz.A), 1);
 			fasp_schwarz_setup(&mgl[level].schwarz, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
 		}
-
     
         /*-- Aggregation --*/
         aggregation(&mgl[level].A, &vertices[level], param, level+1, &Neighbor[level], &num_aggregations[level]);
@@ -218,8 +225,13 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 #endif
     
     if (print_level>PRINT_NONE) {
+#if FASP_USE_OPENMP
+        setup_end=omp_get_wtime();
+        setupduration = (REAL)(setup_end - setup_start);
+#else
         setup_end=clock();
         setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
+#endif
         print_amgcomplexity(mgl,print_level);
         print_cputime("Unsmoothed Aggregation AMG setup",setupduration);
     }
@@ -230,6 +242,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     
     return status;
 }
+
 
 /**
  * \fn static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *param)

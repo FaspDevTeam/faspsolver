@@ -180,7 +180,7 @@ void fasp_array_cp (const INT n,
  * \param y    Pointer to the destination vector
  *
  * \author Chunsheng Feng, Xiaoqiang Yue
- * \date   2012/05/23  
+ * \date   05/23/2012  
  */
 void fasp_iarray_cp (const INT n, 
                      INT *x, 
