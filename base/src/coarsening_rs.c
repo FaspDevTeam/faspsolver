@@ -371,6 +371,9 @@ void enter_list (LinkList *LoL_head_ptr,
  * 
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/06/2010
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/25/2012
  */
 
 static void generate_S ( dCSRmat *A, 
@@ -816,6 +819,8 @@ static void generate_S_rs_ag (dCSRmat *A,
  * 
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/06/2010
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
  * \date   05/24/2012
  */
 
@@ -1104,6 +1109,8 @@ static INT form_coarse_level ( dCSRmat *A,
  * 
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/06/2010
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
  * \date   05/23/2012
  */
 

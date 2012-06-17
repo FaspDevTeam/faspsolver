@@ -542,11 +542,13 @@ static void smooth_agg (dCSRmat *A,
  * \param mgl     pointer to AMG_data data
  * \param param   pointer to AMG parameters
  *
- * Setup A, P, PT, levels using smoothed aggregation
- * concrete algorithm see paper
- * Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
- * 
+ * \author        Chunsheng Feng, Xiaoqiang Yue
  * \date 03/15/2011
+ *
+ * \note Setup A, P, PT, levels using smoothed aggregation
+ *       concrete algorithm see paper
+ *       Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
+ * 
  */
 static INT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl,
                                          AMG_param *param)

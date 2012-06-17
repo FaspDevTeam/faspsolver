@@ -46,7 +46,9 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     const REAL   tol           = itparam->tol; 
     
     /* Local Variables */
+	REAL solver_duration;
     INT iter;
+
 #if FASP_USE_OPENMP
     REAL solver_start = omp_get_wtime();
 #else
@@ -107,10 +109,10 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     if ( (print_level>=PRINT_SOME) && (iter >= 0) ) {
 #if FASP_USE_OPENMP
     REAL solver_end = omp_get_wtime();
-	REAL solver_duration = (REAL)(solver_end - solver_start);
+	solver_duration = (REAL)(solver_end - solver_start);
 #else
     clock_t solver_end = clock();
-	REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+	solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
         print_cputime("Iterative method", solver_duration);
     }

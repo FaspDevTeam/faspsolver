@@ -384,7 +384,7 @@ void fasp_dcsr_getcol (const INT n,
  * \param A   Pointer to the matrix to be re-ordered
  *
  * \author Zhiyang Zhou
- * \date   2010/09/09
+ * \date   09/09/2010
  *
  * \note Reordering is done in place. 
  *

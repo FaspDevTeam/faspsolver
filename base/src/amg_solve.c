@@ -40,8 +40,10 @@ INT fasp_amg_solve (AMG_data *mgl,
     const INT     MaxIt = param->maxit; 
     const REAL    tol = param->tol;
     const REAL    sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
-    
-    // local variables
+
+	// local variables
+	REAL solveduration;
+
 #if FASP_USE_OPENMP
     REAL        solve_start=omp_get_wtime();
 #else
@@ -94,10 +96,10 @@ INT fasp_amg_solve (AMG_data *mgl,
                    iter, relres1);
 #if FASP_USE_OPENMP
         REAL solve_end=omp_get_wtime();
-        REAL solveduration = (REAL)(solve_end - solve_start);
+        solveduration = (REAL)(solve_end - solve_start);
 #else
         clock_t solve_end=clock();
-        REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
+        solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
         print_cputime("AMG solve",solveduration);
     }

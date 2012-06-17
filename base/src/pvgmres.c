@@ -332,7 +332,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Zhiyang Zhou 
- * \date   2010/12/21
+ * \date   12/21/2011
  *
  * Modified by Chensong Zhang on 05/01/2012
  */ 
@@ -757,7 +757,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
                 pc->fct(p[i-1], r, pc->data);          
     
             //fasp_blas_dbsr_mxv(A, r, p[i]);
-            fasp_blas_dstr_aAxpy(1.0, A, r, p[i]); // we need spmxv_str here. --Zhiyang Zhou
+            fasp_blas_dstr_aAxpy(1.0, A, r, p[i]);
     
             /* modified Gram_Schmidt */
             for (j = 0; j < i; ++j) {

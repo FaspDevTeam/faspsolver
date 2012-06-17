@@ -195,7 +195,11 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
  * \param mgl    pointer to AMG_data data
  * \param param  pointer to AMG parameters
  *
+ * \author Chunsheng Feng, Xiaoqiang Yue
+ * \date   03/11/2011
+ *
  * \note Setup A, P, R, levels using classic AMG!
+ *
  * Refter to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller. 
  *           Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben).
  *           Academic Press Inc., San Diego, CA, 2001. 

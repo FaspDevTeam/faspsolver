@@ -737,6 +737,8 @@ void interp_EM (dCSRmat *A,
  * \author Xuehai Huang
  * \date   01/31/2009  
  * 
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date  05/23/2012
  *
  * \note Ref P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid. 
  *             Academic Press Inc., San Diego, CA, 2001. 
@@ -1124,6 +1126,7 @@ static void interp_RS( dCSRmat *A,
  * \param param      pointer to AMG parameters
  * \return            SUCCESS or error message
  *
+ * \author           Chunsheng Feng, Xiaoqiang Yue
  * \date 03/01/2011
  */
 INT fasp_amg_interp1( dCSRmat *A, 
@@ -1175,7 +1178,8 @@ INT fasp_amg_interp1( dCSRmat *A,
  * \param A         pointer to the stiffness matrix
  * \param nbl_ptr   the left bandwidth
  * \param nbr_ptr   the right bandwidth
- *
+ * 
+ * \author          Chunsheng Feng, Xiaoqiang Yue
  * \date 03/01/2011
  */
 static void fasp_get_nbl_nbr_ysk( dCSRmat *A, 
@@ -1226,10 +1230,9 @@ static void fasp_get_nbl_nbr_ysk( dCSRmat *A,
  * \brief Modify CoarseIndex
  *
  * \param nrows         length of CoarseIndex
- * \param CoarseIndex  pointer to index of coarse poINTs
- * \param  nthreads     number of threads
- * \param openmp_holds  threshold of parallelization
+ * \param CoarseIndex  pointer to index of coarse points
  *
+ * \author Chunsheng Feng, Xiaoqiang Yue
  * \date 03/01/2011
  */
 static void fasp_mod_coarse_index( INT nrows, 
@@ -1261,10 +1264,17 @@ static void fasp_mod_coarse_index( INT nrows,
 
 /**
  * \fn INT fasp_BinarySearch(INT *list, INT value, INT list_length)
+ * 
  * \brief Binary Search
  *
+ * \param list   Pointer to a set of values
+ * \param value  The target 
+ * \param list_length Length of the array list
+ *
+ * \author Chunsheng Feng
  * \date 03/01/2011
  */
+
 INT fasp_BinarySearch (INT *list, 
 		               INT value, 
 					   INT list_length)
@@ -1296,9 +1306,19 @@ INT fasp_BinarySearch (INT *list,
 }
 
 /**
- * \fn static void fasp_get_icor_ysk
- * \brief Get Icor_ysk
+ * \fn static void fasp_get_icor_ysk(INT nrows, INT ncols, INT *CoarseIndex, INT nbl_ysk, INT nbr_ysk,
+ *                                   INT *CF_marker, INT *icor_ysk)
+ * \brief Get the index of coarse nodes in fine grid.
  *
+ * \param nrows Length of CoarseIndex
+ * \param ncols Length of CoarseIndex
+ * \param CoarseIndex Pointer to index of nodes in coarse grid
+ * \param nbl_ysk The left  bandwith
+ * \param nbr_ysk The right bandwith
+ * \param CF_marker Pointer to marking the nodes, 1: coarse nodes, 0: fine nodes.
+ * \param icor_ysk  Pointer to index of coarse nodes in fine grid
+ *
+ * \author Chunsheng Feng, Xiaoqiang Yue
  * \date 03/01/2011
  */
 static void fasp_get_icor_ysk(INT nrows, 
@@ -1419,6 +1439,9 @@ static void fasp_get_icor_ysk(INT nrows,
  * \param vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
  * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
  * \param param     pointer to AMG parameters
+ *
+ * \author Chunsheng Feng, Xiaoqiang Yue
+ * \date   03/01/2011
  *
  * Refer to P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid. 
  *              Academic Press Inc., San Diego, CA, 2001. 
@@ -1869,6 +1892,9 @@ static void interp_RS1(dCSRmat *A,
  * \param vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
  * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
  * \param param     pointer to AMG parameters
+ *
+ * \author   Chunsheng Feng, Xiaoqiang Yue
+ * \date     03/11/2011
  *
  * Refer to P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid. 
  *              Academic Press Inc., San Diego, CA, 2001. 
