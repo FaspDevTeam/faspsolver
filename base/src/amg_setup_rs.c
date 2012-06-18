@@ -195,8 +195,10 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
  *
  * \brief  Setup of AMG based on R-S coarsening
  *
- * \param mgl    pointer to AMG_data data
- * \param param  pointer to AMG parameters
+ * \param mgl    Pointer to AMG_data data
+ * \param param  Pointer to AMG parameters
+ *
+ * \return       SUCCESS if successed, otherwise, erro information.
  *
  * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   03/11/2011

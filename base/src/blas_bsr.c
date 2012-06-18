@@ -116,7 +116,7 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
  * \param y      Pointer to the array y
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25  
+ * \date   10/25/2010  
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue  
  * \date   05/23/2012    
@@ -383,7 +383,7 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
  * \param y      Pointer to the array y
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   10/25/2010 
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue 
  * \date   05/23/2012    

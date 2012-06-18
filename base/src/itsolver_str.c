@@ -101,7 +101,7 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
  * \return          Number of iterations if succeed
  *
  * \author Zhiyang Zhou
- * \date   4/25/2010
+ * \date   04/25/2010
  */
 INT fasp_solver_dstr_krylov (dSTRmat *A, 
                              dvector *b, 

@@ -87,7 +87,7 @@ void fasp_set_GS_threads(INT mythreads, INT its)
  * \return         Number of iterations if succeed
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
- * \date   2010/10/26
+ * \date   10/26/2010
  */
 INT fasp_solver_dbsr_itsolver (dBSRmat *A, 
                                dvector *b, 
@@ -171,7 +171,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
  * \return          Number of iterations if succeed
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
- * \date   2010/10/26
+ * \date   10/26/2010
  */
 INT fasp_solver_dbsr_krylov (dBSRmat *A, 
                              dvector *b, 
@@ -209,7 +209,7 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
  * \return the number of iterations
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
- * \date   2010/10/26
+ * \date   10/26/2010
  */
 INT fasp_solver_dbsr_krylov_diag (dBSRmat *A, 
                                   dvector *b, 

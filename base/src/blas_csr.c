@@ -1273,7 +1273,6 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
  * \param P   pointer to the dCSRmat matrix
  * \param B   pointer to dCSRmat matrix equal to R*A*P
  * \param icor_ysk pointer to the array
- * \return     void
  *
  * Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
  *      Advances in Computational Mathematics, 1 (1993), pp. 127-137.

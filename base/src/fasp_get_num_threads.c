@@ -8,8 +8,9 @@
  *
  * \brief  Get the number of threads for OpenMP functions.
  *
- * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
+ * \return The number of threads to run 
  *
+ * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \data   June/15/2012
  */
  
@@ -31,6 +32,8 @@ INT FASP_GET_NUM_THREADS()
  * \fn     INT Fasp_Set_Num_Threads();
  *
  * \brief  Set the number of threads for OpenMP functions.
+ *
+ * \return The number of threads to run
  *
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \data   June/15/2012

@@ -147,7 +147,7 @@ void fasp_aux_msort (INT numbers[],
  * \param right  Ending index
  *
  * \author Zhiyang Zhou
- * \date   2009/11/28 
+ * \date   11/28/2009 
  *
  * \note 'left' and 'right' are usually set to be 0 and n-1, respectively
  *        where n is the length of 'a'.  

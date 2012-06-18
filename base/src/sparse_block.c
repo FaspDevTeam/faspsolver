@@ -26,6 +26,8 @@
  * \param m     Number of selected rows
  * \param n     Number of selected colums
  *
+ * \return      SUCCESS if successed, otherwise, erro information.
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010
  *
@@ -117,6 +119,8 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
  * \param Js    Pointer to selected colums
  * \param m     Number of selected rows
  * \param n     Number of selected colums
+ *
+ * \return      SUCCESS if successed, otherwise, erro information.
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010

@@ -1123,9 +1123,10 @@ static void interp_RS( dCSRmat *A,
  * \brief Generate interpolation P 
  *
  * \param A          pointer to the stiffness matrix
- * \param vertices   pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
+ * \param vertices   pointer to the indicator of CF split nodes on fine grid (fine: 0; coarse: 1)
  * \param P          pointer to the dCSRmat matrix of resulted interpolation
  * \param param      pointer to AMG parameters
+ *
  * \return            SUCCESS or error message
  *
  * \author           Chunsheng Feng, Xiaoqiang Yue
@@ -1272,6 +1273,8 @@ static void fasp_mod_coarse_index( INT nrows,
  * \param list   Pointer to a set of values
  * \param value  The target 
  * \param list_length Length of the array list
+ *
+ * \return  The location of value in array list if successed, otherwise, return -1.
  *
  * \author Chunsheng Feng
  * \date 03/01/2011

@@ -58,13 +58,15 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
  * \param *mgl     pointer to AMG_data_bsr data
  * \param *param   pointer to AMG parameters
  *
+ * \return         SUCCESS if succeed, error otherwise
+ *
+ * \author Xiaozhe Hu
+ * \date 03/16/2012 
+ *
  * Setup A, P, PT, levels using smoothed aggregation
  * concrete algorithm see paper
  * Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
  * 
- * \author Xiaozhe Hu
- * \date 03/16/2012 
- *
  */
 SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl, 
                              AMG_param *param)
@@ -87,6 +89,8 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
  * 
  * \param mgl     Pointer to AMG_data data
  * \param param   Pointer to AMG parameters
+ *
+ * \return        SUCCESS if succeed, error otherwise 
  * 
  * \author Xiaozhe Hu
  * \date   02/21/2011 
@@ -103,15 +107,14 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     const INT     m=mgl[0].A.row;
     
     // local variables
-    clock_t       setup_start, setup_end;
     REAL          setupduration;
     SHORT         level=0, status=SUCCESS, max_levels=param->max_levels;
     INT           i, j;
 
 #if FASP_USE_OPENMP
-	setup_start = omp_get_wtime();
+	REAL setup_start = omp_get_wtime();
 #else
-    setup_start = clock();
+    clock_t setup_start = clock();
 #endif 
     
     if (cycle_type == AMLI_CYCLE) {
@@ -226,10 +229,10 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     
     if (print_level>PRINT_NONE) {
 #if FASP_USE_OPENMP
-        setup_end=omp_get_wtime();
-        setupduration = (REAL)(setup_end - setup_start);
+        REAL setup_end=omp_get_wtime();
+        setupduration = setup_end - setup_start;
 #else
-        setup_end=clock();
+        clock_t setup_end=clock();
         setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
         print_amgcomplexity(mgl,print_level);
@@ -248,15 +251,18 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
  * \fn static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *param)
  * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A (BSR format)
  * 
- * \param *mgl     pointer to AMG_data_bsr data
- * \param *param   pointer to AMG parameters
+ * \param *mgl     Pointer to AMG_data_bsr data
+ * \param *param   Pointer to AMG parameters
+ *
+ * \return         SUCCESS if succeed, error otherwise
+ *
+ * \author Xiaozhe Hu
+ * \date 03/16/2012 
  *
  * Setup A, P, PT, levels using smoothed aggregation
  * concrete algorithm see paper
  * Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
  * 
- * \author Xiaozhe Hu
- * \date 03/16/2012 
  */
 static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *param)
 {
