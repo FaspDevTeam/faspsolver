@@ -65,8 +65,6 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
     printf("### DEBUG: fasp_solver_dcsr_pgcg ...... [Start]\n");
     printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
 #endif    
-    
-    if ( print_level>PRINT_NONE ) printf("Calling GCG solver ...\n");
 
     normb=fasp_blas_array_norm2(m,b->val);
     

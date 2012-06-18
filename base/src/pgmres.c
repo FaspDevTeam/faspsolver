@@ -77,8 +77,6 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
 #endif    
 
-    if ( print_level>PRINT_NONE ) printf("Calling GMRes solver ...\n");    
-
     /* allocate memory */
     work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
     

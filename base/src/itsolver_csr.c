@@ -93,10 +93,12 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
         break;
             
     case SOLVER_VFGMRES: 
+		if (print_level>0) printf("Calling vFGMRes solver ...\n");
         iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
         break;
     
     case SOLVER_GCG:
+		if (print_level>0) printf("Calling GCG solver ...\n");
         iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
             
@@ -109,7 +111,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     if ( (print_level>=PRINT_SOME) && (iter >= 0) ) {
 #if FASP_USE_OPENMP
     REAL solver_end = omp_get_wtime();
-	solver_duration = (REAL)(solver_end - solver_start);
+	solver_duration = solver_end - solver_start;
 #else
     clock_t solver_end = clock();
 	solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);

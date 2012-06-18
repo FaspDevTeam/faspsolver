@@ -107,8 +107,6 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     printf("### DEBUG: fasp_solver_dcsr_pcg ...... [Start]\n");
     printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
 #endif    
-    
-    if ( print_level>PRINT_NONE ) printf("Calling PCG solver ...\n");
 
     // initialize counters
     stag=1; more_step=1; restart_step=1;

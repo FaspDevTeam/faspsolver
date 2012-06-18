@@ -121,8 +121,6 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
     printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
 #endif    
     
-    if ( print_level>PRINT_NONE ) printf("Calling BiCGstab solver ...\n");
-    
     // initialize counters
     stag=more_step=restart_step=1;
     
@@ -467,9 +465,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
     // r = b-A*u
     fasp_array_cp(m,bval,r);
 
-printf(">>> entering fasp_blas_dbsr_aAxpy\n");
     fasp_blas_dbsr_aAxpy(-1.0,A,uval,r);
-printf(">>> exiting fasp_blas_dbsr_aAxpy\n");
 
     // pp=precond(p)
     fasp_array_cp(m,r,p);
@@ -529,9 +525,7 @@ printf(">>> exiting fasp_blas_dbsr_aAxpy\n");
             fasp_array_cp(m,s,sp); /* No preconditioner */
         
         // t = A*sp;
-printf(">>> entering fasp_blas_dbsr_mxv\n");
         fasp_blas_dbsr_mxv(A,sp,t);
-printf(">>> exiting fasp_blas_dbsr_mxv\n");
         
         // omega = (t,s)/(t,t)
         tempr=fasp_blas_array_dotprod(m,t,t);
