@@ -1720,7 +1720,7 @@ static void interp_RS1(dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin,myend,i,j) 
         for (myid = 0; myid < nthreads; myid++ )
             {
-                FASP_GET_START_END(myid, nthreads,P.IA[P.row], mybegin, myend);
+                FASP_GET_START_END(myid, nthreads, P.IA[P.row], mybegin, myend);
                 for (i=mybegin; i<myend; ++i)
                     {
                         j=P.JA[i];
