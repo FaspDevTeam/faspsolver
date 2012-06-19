@@ -79,8 +79,8 @@ Iterative Methods
 [ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
 
-[ 06/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
-[ 06/15 ] test SpBLAS implementations in standard libraries (Chunsheng)
+[ 08/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
+[ 08/15 ] test SpBLAS implementations in standard libraries (Chunsheng)
 [       ] right preconditioning (Chensong)
 [       ] matrix-free iterative methods (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
@@ -134,9 +134,9 @@ OpenMP Support
 ========================
 
 [ 0.4.1 ] OMP functions should be separated from the sequential ones
-[ 05/15 ] OMP and serial functions use same interface -- preprocessing (Chunsheng)
-[ 05/15 ] make a uniform OpenMP version (Chunsheng)
-[ 05/30 ] profile and optimize OMP code (Chunsheng)
+[ 0.9.6 ] OMP and serial functions use same interface -- preprocessing
+[ 0.9.5 ] make a uniform OpenMP version
+[ 0.9.5 ] profile and optimize OMP code
 [       ] add black-red smoothing to OMP version (Chunsheng)
 
 ========================
