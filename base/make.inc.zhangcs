@@ -51,7 +51,7 @@ BOPT=-O3 -funroll-loops -ftree-vectorize
 #BOPT=-cc=icc -config=icc -O3
 #BOPT=-config=icc -O3
 
-CDEFS=-DWith_BLAS=1 -DWith_UMFPACK=1 -DWith_SuperLU=0
+CDEFS+=-DWith_BLAS=1 -DWith_UMFPACK=1 -DWith_SuperLU=0
 CINCLUDES+=$(SUPERLUINCLUDE) $(UMFPACKINCLUDE)
 
 ########################################################################

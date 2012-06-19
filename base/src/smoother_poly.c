@@ -22,7 +22,8 @@ static void Rr(dCSRmat *Amat, REAL *Dinv, REAL *r, REAL *rbar, REAL *v0, REAL *v
 /*---------------------------------*/
 
 /**
- * \fn void fasp_smoother_dcsr_poly (dCSRmat *Amat, dvector *brhs, dvector *usol, INT n, INT ndeg, INT L)
+ * \fn void fasp_smoother_dcsr_poly (dCSRmat *Amat, dvector *brhs, dvector *usol, 
+ *                                   INT n, INT ndeg, INT L)
  *
  * \brief poly approx to A^{-1} as MG smoother 
  *
@@ -346,7 +347,7 @@ static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
     for (norm=0,i=0; i<n; i++) {
 
         for (temp=0,j=ia[i]; j<ia[i+1]; j++) {
-            temp += ABS(a[ja[j]]); // Missing ja --Chensong 06/14/2012
+            temp += ABS(a[j]);
         }
         
         temp *= Dinv[i]; // temp is the L1 norm of the ith row of Dinv*A;
@@ -361,10 +362,10 @@ static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
  *
  * \brief Compute b = Dinv * x;
  * 
- * \param Dinv vector to represent Diagonal matrix
- * \param n   problem size
- * \param b   vector
- * \param x   vector 
+ * \param Dinv  Vector to represent Diagonal matrix
+ * \param n     Problem size
+ * \param b     Vector
+ * \param x     Vector 
  *
  * \author Fei Cao, Xiaozhe Hu
  * \date 05/24/2012
@@ -372,15 +373,15 @@ static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
 static void Diagx(REAL *Dinv, INT n, REAL *x, REAL *b)
 {
     unsigned INT i;
-    for (i=0; i<n; i++)
-    {
+    for (i=0; i<n; i++) {
         b[i] = Dinv[i] * x[i];
     }
     return;
 }
 
 /**
- * \fn static void Rr(dCSRmat *Amat, REAL *Dinv, REAL *r, REAL *rbar, REAL *v0, REAL *v1, REAL *vnew, REAL *k, INT m)
+ * \fn static void Rr (dCSRmat *Amat, REAL *Dinv, REAL *r, REAL *rbar, 
+ *                     REAL *v0, REAL *v1, REAL *vnew, REAL *k, INT m)
  *
  * \brief Compute action R*r, where R =  q_m(Dinv*A)*Dinv;
  * 
@@ -397,7 +398,15 @@ static void Diagx(REAL *Dinv, INT n, REAL *x, REAL *b)
  * \author Fei Cao, Xiaozhe Hu
  * \date 05/24/2012
  */
-static void Rr(dCSRmat *Amat, REAL *Dinv, REAL *r, REAL *rbar, REAL *v0, REAL *v1, REAL *vnew, REAL *k, INT m)
+static void Rr (dCSRmat *Amat, 
+                REAL *Dinv, 
+                REAL *r, 
+                REAL *rbar, 
+                REAL *v0, 
+                REAL *v1, 
+                REAL *vnew, 
+                REAL *k, 
+                INT m)
 {
     // local variables
     const INT   n  = Amat->row;
@@ -411,30 +420,25 @@ static void Rr(dCSRmat *Amat, REAL *Dinv, REAL *r, REAL *rbar, REAL *v0, REAL *v
     fasp_blas_dcsr_mxv(Amat, rbar, v1);//v1= A*rbar;
     Diagx(Dinv, n, v1, v1); // v1=Dinv *v1;
     
-    for(i=0;i<n;i++)
-    {
+    for(i=0;i<n;i++) {
         v0[i] = k[1] * rbar[i];
         v1[i] = k[2] * rbar[i] - k[3] * v1[i];
     }
     
     //3 iterate to get v_(j+1)
     
-    for (j=1;j<m;j++)
-    {
+    for (j=1;j<m;j++) {
         fasp_blas_dcsr_mxv(Amat, v1, rbar);//rbar= A*v_(j);
         
-        for(i=0;i<n;i++)
-        {
+        for(i=0;i<n;i++) {
             rbar[i] = (r[i] - rbar[i])*Dinv[i];// indeed rbar=Dinv*(r-A*v_(j));
             vnew[i] = v1[i] + k[5] *(v1[i] - v0[i]) + k[4] * rbar[i];// compute v_(j+1)
             
             // prepare for next cycle
             v0[i]=v1[i]; 
-            v1[i]=vnew[i];
-            
+            v1[i]=vnew[i];            
         }
     }
-    
     
 }
 

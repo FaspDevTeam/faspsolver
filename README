@@ -41,7 +41,7 @@ To setup the environment, you need to do two simple steps:
 
 Step 1. Compile the library: 
      
-     [faspsolver/core]$ make
+     [faspsolver/base]$ make
 
 Step 2. Now you can build a few test problems:
      
@@ -53,7 +53,7 @@ Step 2. Now you can build a few test problems:
 
 You may want to adjust the "make.inc" for your personal computer environement 
 or choose different compiling parameters, etc. For more details, read the README
-files in "core" and "test" directories.  
+files in "base" and "test" directories.  
 
 Some simple examples can be found in the "tutorial" directory and step-by-step 
 instructions are included in the examples therein.

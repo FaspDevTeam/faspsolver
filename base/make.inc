@@ -2,20 +2,17 @@
 # But do not check in your changes to the repository. :D
 
 # User compilers
-#CC=icc
-#CPP=icpc
-#FC=ifort
+# CC=icc
+# CPP=icpc
+# FC=ifort
 
 # User compiling options
-
 BOPT=-g -O2 -funroll-loops -ftree-vectorize
 
-
-#Uncomment the following line running at OpenMP model, and comment it running at serial model.
-#OMP=1
-
+# Uncomment the following line to turn on OpenMP version
+# OMP=1
 ifdef OMP
-   BOPT += -fopenmp
+   BOPT+=-fopenmp
    CDEFS=-D FASP_USE_OPENMP=1
    FDEFS=-D FASP_USE_OPENMP=1
 else
@@ -24,5 +21,5 @@ else
 endif
 
 # User preprocessing definitions
-#CDEFS +=xx
-#FDEFS +=xx
+# CDEFS+=xx
+# FDEFS+=xx

@@ -164,22 +164,6 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* FMG V-cycle (Direct interpolation) with GS smoother as a solver */			
-            printf("------------------------------------------------------------------\n");
-            printf("FMG (direct interp) V-cycle as iterative solver ...\n");	
-            
-            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-            fasp_param_solver_init(&itparam);
-            fasp_param_amg_init(&amgparam);
-            amgparam.maxit       = 20;
-            amgparam.tol         = 1e-10;
-            amgparam.print_level = print_level;
-            fasp_solver_famg(&A, &b, &x, &amgparam);
-            
-            check_solu(&x, &sol, tolerance);
-        }
-
-        if ( indp==1 || indp==2 || indp==3 ) {
             /* AMG V-cycle (Standard interpolation) with GS smoother as a solver */			
             printf("------------------------------------------------------------------\n");
             printf("Classical AMG (standard interp) V-cycle as iterative solver ...\n");	
@@ -209,6 +193,22 @@ int main (int argc, const char * argv[])
             amgparam.tol         = 1e-12;
             amgparam.print_level = print_level;
             fasp_solver_amg(&A, &b, &x, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
+        
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* FMG V-cycle (Direct interpolation) with GS smoother as a solver */			
+            printf("------------------------------------------------------------------\n");
+            printf("FMG (direct interp) V-cycle as iterative solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            amgparam.maxit       = 20;
+            amgparam.tol         = 1e-10;
+            amgparam.print_level = print_level;
+            fasp_solver_famg(&A, &b, &x, &amgparam);
             
             check_solu(&x, &sol, tolerance);
         }
@@ -388,7 +388,7 @@ int main (int argc, const char * argv[])
             fasp_param_solver_init(&itparam);
             itparam.precond_type  = PREC_NULL;	
             itparam.itsolver_type = SOLVER_BiCGstab;
-            itparam.maxit         = 5000;
+            itparam.maxit         = 500;
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             fasp_solver_dbsr_krylov(&A_bsr, &b, &x, &itparam);
@@ -454,8 +454,8 @@ int main (int argc, const char * argv[])
             fasp_param_solver_init(&itparam);
             fasp_param_amg_init(&amgparam);
             itparam.itsolver_type = SOLVER_MinRes;
-            itparam.maxit         = 5000;
-            itparam.tol           = 1e-10;
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-9;
             itparam.print_level   = print_level;
             fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
             

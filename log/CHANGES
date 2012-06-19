@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+06/19/2012 FASP 0.9.6:
+- Bug fixes: core dump error in gcc-4.6.3.
+- Fix the OMP merging problems.
+- Move OMP switch from fasp.h to make.inc.
+
 06/16/2012 FASP 0.9.5:
 - Change OMP threshold.
 - Bug fixes in FEM assembling.
