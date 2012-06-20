@@ -1716,7 +1716,15 @@ static void interp_RS1(dCSRmat *A,
         }
     }
     
-    if (P.IA[P.row] > OPENMP_HOLDS) {
+	if(!FASP_USE_OPENMP || P.IA[P.row] <= OPENMP_HOLDS){
+		use_openmp = FALSE;
+	}
+	else{
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+
+    if (use_openmp) {
 #pragma omp parallel for private(myid, mybegin,myend,i,j) 
         for (myid = 0; myid < nthreads; myid++ )
             {

@@ -525,6 +525,8 @@ void fasp_dcsr_cp (dCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   04/06/2010  
+ *  Modified by Chunsheng Feng, Zheng Li
+ * \date   06/20/2012   
  */
 void fasp_icsr_trans (iCSRmat *A, 
                       iCSRmat *AT)
@@ -554,7 +556,8 @@ void fasp_icsr_trans (iCSRmat *A,
     
     // first pass: find the Number of nonzeros in the first m-1 columns of A 
     // Note: these Numbers are stored in the array AT.IA from 1 to m-1
-    for (i=0;i<m;++i) AT->IA[i] = 0;
+    //for (i=0;i<m;++i) AT->IA[i] = 0;   //Here is a Bug.
+    for (i=0; i<=m; ++i) AT->IA[i] = 0;  //Chunsheng Feng ,Zheng Li, June/20/2012
     
     for (j=0;j<nnz;++j) {
         i=N2C(A->JA[j]); // column Number of A = row Number of A'
@@ -599,6 +602,8 @@ void fasp_icsr_trans (iCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   04/06/2010   
+ *  Modified by Chunsheng Feng, Zheng Li
+ * \date   06/20/2012   
  */
 INT fasp_dcsr_trans (dCSRmat *A, 
                      dCSRmat *AT)
@@ -624,7 +629,8 @@ INT fasp_dcsr_trans (dCSRmat *A,
     
     // first pass: find the Number of nonzeros in the first m-1 columns of A 
     // Note: these Numbers are stored in the array AT.IA from 1 to m-1
-    for (i=0;i<m;++i) AT->IA[i] = 0;
+    //for (i=0;i<m;++i) AT->IA[i] = 0;   //Here is a Bug.
+    for (i=0; i<=m; ++i) AT->IA[i] = 0;  //Chunsheng Feng ,Zheng Li, June/20/2012
     
     for (j=0;j<nnz;++j) {
         i=N2C(A->JA[j]); // column Number of A = row Number of A'

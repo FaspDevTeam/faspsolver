@@ -217,6 +217,8 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
     const INT print_level=param->print_level;
     const INT m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;    
 	const INT cycle_type = param->cycle_type;
+	const INT interp_type = param->interpolation_type;
+
 
 	//local variables
     INT mm, size, nthreads;  
@@ -301,16 +303,26 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
             if (mgl[level].P.col == 0) break;
             if (status < 0) goto FINISHED;
         
+			if(interp_type==INTERP_REG) {
             /*-- Form interpolation --*/
             status = fasp_amg_interp1(&mgl[level].A, &vertices, &mgl[level].P, param, &S, icor_ysk);
+			}
+			else {
+            status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
+			}
 
             if (status < 0) goto FINISHED;
         
             /*-- Form coarse level stiffness matrix --*/
             fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
 
+			if(interp_type==INTERP_REG) {
             /*-- Form coarse level stiffness matrix: There are two RAP routines available! --*/
             fasp_blas_dcsr_rap4(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A, icor_ysk);
+			}
+			else {
+            fasp_blas_dcsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
+			}
             /*-- clean up! --*/
 			fasp_mem_free(S.IA);
 			fasp_mem_free(S.JA);
