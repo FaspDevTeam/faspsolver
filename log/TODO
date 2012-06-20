@@ -16,8 +16,9 @@ Documentation
 [ 0.5.7 ] fix missing functions and files in Doxygen
 [ 0.9.0 ] add more details for Doxygen
 [ 0.9.0 ] write a short user's guide -- keep it simple
-[ 06/20 ] generate reference manual using Doxygen (Chensong)
-[ 06/20 ] make the FASP webpage ready (Chensong)
+[ 0.9.8 ] generate reference manual using Doxygen
+[ 0.9.8 ] make the FASP webpage ready
+[       ] further develop the documentation (Chensong)
 
 ========================
 Structure Changes
@@ -49,27 +50,27 @@ AMG
 [ 06/15 ] profile and optimize a few core functions: SA, UA (Xiaozhe)
 
 [ 0.8.5 ] non-overlapping/overlapping schwarz smoother
-[ 05/20 ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
+[ 07/20 ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
 [ 07/12 ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
-[ 06/01 ] strength matrix based on (polynomial) smoothers (Xiaozhe)
+[ 08/01 ] strength matrix based on (polynomial) smoothers (Xiaozhe)
 [       ] Maximal Independent Set (Ludmil)
-[       ] AMG with mesh information
+[       ] AMG based on mesh information
 
 [ 0.9.0 ] aggressive coarsening strategies (Xiaozhe)
-[ 06/01 ] aggregation based on MIS (Xiaozhe)
+[ 08/01 ] aggregation based on MIS (Xiaozhe)
 [       ] cleanup the compatible coarsening (Xiaozhe)
 [       ] Notay's aggregation scheme (Xiaozhe)
 [       ] LAMG's aggregation scheme (Xiaozhe)
 
 [ 0.8.6 ] standard interpolation
-[ 06/01 ] polynomial interpolation -- vector preserve (Xiaozhe)
+[ 08/01 ] polynomial interpolation -- vector preserve (Xiaozhe)
 [       ] multipass interpolation
 [       ] long-distance interpolation
 [       ] bootstrap interpolation
 
-[ 06/15 ] estimation of extreme eigenvalues (Xiaozhe)
-[ 06/15 ] smoothing interpolation by polynomial smoothers (Xiaozhe)
-[ 06/15 ] interpolation can preserve more kernel vectors (Xiaozhe)
+[ 08/15 ] estimation of extreme eigenvalues (Xiaozhe)
+[ 08/15 ] smoothing interpolation by polynomial smoothers (Xiaozhe)
+[ 08/15 ] interpolation can preserve more kernel vectors (Xiaozhe)
 
 ========================
 Iterative Methods
@@ -86,7 +87,7 @@ Iterative Methods
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
 [ 0.6.7 ] remove the non-GPL ILU routines
-[ 05/20 ] add block preconditioners for Stokes (Xiaozhe)
+[ 07/20 ] add block preconditioners for Stokes and NS (Xiaozhe)
 [       ] add preconditioners for Maxwell
 [       ] replace the ILU smoothers from SPARSEKIT ver2.0 (Chensong)
 

@@ -21,14 +21,14 @@
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-unsigned long fasp_aux_change_endian4(unsigned long x)
+unsigned long fasp_aux_change_endian4 (unsigned long x)
 {
     unsigned char *ptr = (unsigned char *)&x;
     return (ptr[0] << 24) | (ptr[1] << 16) | (ptr[2] << 8) | ptr[3];
 }
 
 /**
- * \fn REAL fasp_aux_change_endian8 (REAL x)
+ * \fn double fasp_aux_change_endian8 (double x)
  *
  * \brief Swap order for different endian systems
  *
@@ -39,9 +39,9 @@ unsigned long fasp_aux_change_endian4(unsigned long x)
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-REAL fasp_aux_change_endian8(REAL x)
+double fasp_aux_change_endian8 (double x)
 {   
-    REAL dbl;   
+    double dbl;   
     unsigned char *bytes, *buffer;   
     
     buffer=(unsigned char *)&dbl;
@@ -59,9 +59,9 @@ REAL fasp_aux_change_endian8(REAL x)
 }
 
 /**
- * \fn REAL fasp_aux_bbyteTolREAL (unsigned char bytes[])   
+ * \fn double fasp_aux_bbyteToldouble (unsigned char bytes[])   
  *
- * \brief Swap order for different endian systems
+ * \brief Swap order of double-precision float for different endian systems
  *
  * \param bytes  A unsigned char
  *
@@ -70,9 +70,9 @@ REAL fasp_aux_change_endian8(REAL x)
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-REAL fasp_aux_bbyteTolREAL(unsigned char bytes[])
+double fasp_aux_bbyteToldouble (unsigned char bytes[])
 {   
-    REAL dbl;   
+    double dbl;   
     unsigned char *buffer;   
     buffer=(unsigned char *)&dbl;   
     buffer[0]=bytes[7];   

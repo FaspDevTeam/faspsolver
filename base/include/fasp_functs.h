@@ -254,8 +254,8 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
                          const REAL alpha);
 
 void fasp_blas_dcsr_mxv (dCSRmat *A, 
-                         double *x, 
-                         double *y) ;
+                         REAL *x, 
+                         REAL *y) ;
 
 void fasp_blas_dcsr_mxv_agg (dCSRmat *A, 
                              REAL *x, 
@@ -298,7 +298,7 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
                           dCSRmat *A, 
                           dCSRmat *P, 
                           dCSRmat *B,
-                          int *icor_ysk) ;
+                          INT *icor_ysk) ;
 
 
 /*-------- In file: blas_csrl.c --------*/
@@ -560,8 +560,6 @@ void fasp_solver_famg (dCSRmat *A,
                        dvector *x, 
                        AMG_param *param);
 
-int FASP_GET_NUM_THREADS();
-
 
 /*-------- In file: fmgcycle.c --------*/
 
@@ -594,6 +592,13 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B);
 dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B);
 
 
+/*-------- In file: get_num_threads.c --------*/
+
+INT FASP_GET_NUM_THREADS();
+
+INT Fasp_Set_Num_Threads(INT nthreads );
+
+
 /*-------- In file: givens.c --------*/
 
 void fasp_aux_givens (const REAL beta, 
@@ -612,16 +617,16 @@ void fasp_grid2d_plot (pgrid2d pg,
                        INT level);
 
 
-/*-------- In file: ilu_setup_bsr.c --------*/
+/*-------- In file: ilu_setup.c --------*/
 
-SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
+SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
 
-/*-------- In file: ilu_setup.c --------*/
+/*-------- In file: ilu_setup_bsr.c --------*/
 
-SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
+SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
@@ -780,7 +785,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
 
 /*-------- In file: itsolver_bsr.c --------*/
 
-void fasp_set_GS_threads(int mythreads, int its);
+void fasp_set_GS_threads(INT mythreads, INT its);
 
 INT fasp_solver_dbsr_itsolver (dBSRmat *A, 
                                dvector *b, 
@@ -1253,8 +1258,8 @@ void fasp_precond_ilu_backward (REAL *r,
                                 REAL *z, 
                                 void *data);
 
-void fasp_precond_schwarz(double *r, 
-                          double *z, 
+void fasp_precond_schwarz(REAL *r, 
+                          REAL *z, 
                           void *data);
 
 void fasp_precond_amg (REAL *r, 
@@ -1608,7 +1613,16 @@ void swep3db(INT *ia,
 			 INT ny, 
 			 INT nz);
 
-void rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps);
+void rb0b3d(INT *ia, 
+		    INT *ja, 
+			REAL *aa,
+			REAL *u, 
+			REAL *f, 
+			INT *mark, 
+			INT nx, 
+			INT ny, 
+			INT nz, 
+			INT nsweeps);
 
 void swep3df(INT *ia, 
              INT *ja, 
@@ -1621,7 +1635,16 @@ void swep3df(INT *ia,
              INT *mark,
              INT nx, INT ny, INT nz);
 
-void rb0f3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps);
+void rb0f3d( INT *ia, 
+		     INT *ja, 
+			 REAL *aa,
+			 REAL *u, 
+			 REAL *f, 
+			 INT *mark, 
+			 INT nx, 
+			 INT ny, 
+			 INT nz, 
+			 INT nsweeps );
 
 void fasp_smoother_dcsr_gs_rb3d (dvector *u, 
                                  dCSRmat *A, 
@@ -1796,7 +1819,7 @@ void fasp_dbsr_null (dBSRmat *A);
 void fasp_dbsr_cp (dBSRmat *A, 
                    dBSRmat *B);
 
-int fasp_dbsr_trans (dBSRmat *A, 
+INT fasp_dbsr_trans (dBSRmat *A, 
                      dBSRmat *AT);
 
 SHORT fasp_dbsr_diagpref (dBSRmat *A);
@@ -2061,11 +2084,11 @@ ivector fasp_sparse_MIS(dCSRmat *A);
 
 /*-------- In file: util.c --------*/
 
-unsigned long fasp_aux_change_endian4(unsigned long x);
+unsigned long fasp_aux_change_endian4 (unsigned long x);
 
-double fasp_aux_change_endian8(double x);
+double fasp_aux_change_endian8 (double x);
 
-double fasp_aux_bbyteToldouble(unsigned char bytes[]);
+double fasp_aux_bbyteToldouble (unsigned char bytes[]);
 
 
 /*-------- In file: vec.c --------*/

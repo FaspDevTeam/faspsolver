@@ -6,6 +6,7 @@ File Name: CHANGES
 - Test the current version with gcc4.4, 4.5, and 4.6 in various of Linux systems.
 - OMP version merging is completed.
 - Modify default parameters based on performance tests.
+- Fix a function name bug. 
 
 06/19/2012 FASP 0.9.6:
 - Bug fixes: core dump error in gcc-4.6.3.
