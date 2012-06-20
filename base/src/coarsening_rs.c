@@ -37,6 +37,7 @@ static void generate_S_rs_ag (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vert
  *                        1: coarse grid points
  *                        2: isolated grid points
  * \param P          Pointer to the resulted INTerpolation matrix (nonzero pattern only)
+ * \param S          Pointer to strength matrix
  * \param param      Pointer to AMG parameters
  *
  * \return           SUCCESS or Error message
@@ -403,7 +404,7 @@ static void generate_S ( dCSRmat *A,
     // get the diagnal entry of A
     dvector diag; fasp_dcsr_getdiag(0, A, &diag);
     
-    /** Step 1: generate S */
+    /* Step 1: generate S */
     REAL row_scale, row_sum;
     
     // copy the structure of A to S
@@ -432,7 +433,7 @@ static void generate_S ( dCSRmat *A,
                 FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
                 for (i=mybegin; i<myend; i++)
                     {
-                        /** compute scaling factor and row sum */
+                        /* compute scaling factor and row sum */
                         row_scale=0; row_sum=0;
     
                         begin_row=ia[i]; end_row=ia[i+1];
@@ -447,15 +448,16 @@ static void generate_S ( dCSRmat *A,
                             if (ja[j]==i) {S->JA[j]=-1; break;}
                         }
     
-                        /** if $|\sum_{j=1}^n a_{ij}|> \theta_2 |a_{ii}|$ */
+                        /* if $|\sum_{j=1}^n a_{ij}|> \theta_2 |a_{ii}|$ */
                         if ((row_sum>max_row_sum)&&(max_row_sum<1)) { 
-                            /** make all dependencies weak */
+                            /* make all dependencies weak */
                             for (j=begin_row;j<end_row;j++) S->JA[j]=-1;
                         }
-                        /** otherwise */
+                        /* otherwise */
                         else {
                             for (j=begin_row;j<end_row;j++) {
-                                /** if $a_{ij}>=\epsilon_{str}*\min a_{ij}$, the connection $a_{ij}$ is set to be weak connection */
+                                /* if $a_{ij}>=\epsilon_{str}*\min a_{ij}$, the connection $a_{ij}$ 
+                                   is set to be weak connection */
                                 if (A->val[j]>=epsilon_str*row_scale) S->JA[j]=-1;
                             }
                         }
@@ -464,7 +466,7 @@ static void generate_S ( dCSRmat *A,
     }
     else {
         for (i=0;i<row;++i) {
-            /** compute scaling factor and row sum */
+            /* compute scaling factor and row sum */
             row_scale=0; row_sum=0;
     
             begin_row=ia[i]; end_row=ia[i+1];
@@ -479,15 +481,15 @@ static void generate_S ( dCSRmat *A,
                 if (ja[j]==i) {S->JA[j]=-1; break;}
             }
     
-            /** if $|\sum_{j=1}^n a_{ij}|> \theta_2 |a_{ii}|$ */
+            /* if $|\sum_{j=1}^n a_{ij}|> \theta_2 |a_{ii}|$ */
             if ((row_sum>max_row_sum)&&(max_row_sum<1)) { 
-                /** make all dependencies weak */
+                /* make all dependencies weak */
                 for (j=begin_row;j<end_row;j++) S->JA[j]=-1;
             }
-            /** otherwise */
+            /* otherwise */
             else {
                 for (j=begin_row;j<end_row;j++) {
-                    /** if $a_{ij}>=\epsilon_{str}*\min a_{ij}$, the connection $a_{ij}$ is set to be weak connection */
+                    /* if $a_{ij}>=\epsilon_{str}*\min a_{ij}$, the connection $a_{ij}$ is set to be weak connection */
                     if (A->val[j]>=epsilon_str*row_scale) S->JA[j]=-1; 
                 }
             }
@@ -960,7 +962,7 @@ static INT form_coarse_level ( dCSRmat *A,
         for (i=ST.IA[maxnode];i<ST.IA[maxnode+1];++i) {
             j=ST.JA[i];
     
-            /** if j is unkown */
+            /* if j is unkown */
             if (vec[j]==UNPT) {
                 vec[j]=FGPT;  // set j as fine node
                 remove_node(&LoL_head, &LoL_tail, lambda[j], j, lists, where);
@@ -1604,10 +1606,10 @@ static INT form_coarse_level_ag (dCSRmat *A,
             vec[i]=CGPT;
     }
     
-    /**************************************************/
-	/* Coarsening Phase THREE: Find all the FGPTs which have not CGPT neighbors within distance of 2. Change them into CGPT to make standard interpolation work  */
-	/**************************************************/	
-    
+	/* Coarsening Phase THREE: Find all the FGPTs which 
+       have not CGPT neighbors within distance of 2. 
+       Change them into CGPT to make standard interpolation
+       work  */    
     for (i=0; i<row; i++) {
         if (vec[i]==FGPT) {
             flag=0; //flag for whether there is any CGPT neighbor within distance of 2

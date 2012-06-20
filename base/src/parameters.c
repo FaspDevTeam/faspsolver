@@ -84,7 +84,7 @@ void fasp_param_input_init (input_param *inparam)
     inparam->precond_type = PREC_AMG;
     inparam->stop_type = STOP_REL_RES;
     
-    inparam->itsolver_tol = 1e-8;
+    inparam->itsolver_tol = 1e-6;
     inparam->itsolver_maxit = 500;
     inparam->restart = 25;
     
@@ -110,13 +110,13 @@ void fasp_param_input_init (input_param *inparam)
     inparam->AMG_maxit = 1;
     inparam->AMG_ILU_levels = 0;
     inparam->AMG_schwarz_levels = 0;
-    inparam->AMG_coarse_scaling = OFF;
-    inparam->AMG_amli_degree = 0; 
+    inparam->AMG_coarse_scaling = ON;
+    inparam->AMG_amli_degree = 1; 
     inparam->AMG_nl_amli_krylov_type = 2;
     
     inparam->AMG_coarsening_type = 1;    
     inparam->AMG_interpolation_type = 1;    
-    inparam->AMG_strong_threshold = 0.6; 
+    inparam->AMG_strong_threshold = 0.5; 
     inparam->AMG_truncation_threshold = 0.4;
     inparam->AMG_max_row_sum = 0.9;
     
@@ -152,15 +152,15 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->postsmooth_iter = 2;
     amgparam->relaxation = 1.0;
     amgparam->polynomial_degree = 3;
-    amgparam->coarse_scaling = OFF;
-    amgparam->amli_degree = 0;
+    amgparam->coarse_scaling = ON;
+    amgparam->amli_degree = 1;
     amgparam->amli_coef = NULL;
     amgparam->nl_amli_krylov_type = 2;
     
     amgparam->coarsening_type = 1;
     amgparam->interpolation_type = 1;
     
-    amgparam->strong_threshold = 0.6;
+    amgparam->strong_threshold = 0.5;
     amgparam->truncation_threshold = 0.4;
     amgparam->max_row_sum = 0.9;
     
@@ -179,7 +179,6 @@ void fasp_param_amg_init (AMG_param *amgparam)
 	amgparam->schwarz_mmsize = 200;
 	amgparam->schwarz_maxlvl = 2;
 	amgparam->schwarz_type = 1;
-
 }
 
 /**
@@ -235,9 +234,9 @@ void fasp_param_ilu_init (ILU_param *iluparam)
  */
 void fasp_param_schwarz_init (Schwarz_param *schwarzparam)
 {
-    schwarzparam->print_level  = 0;
-    schwarzparam->schwarz_type     = 3;
-    schwarzparam->schwarz_maxlvl     = 2;
+    schwarzparam->print_level    = 0;
+    schwarzparam->schwarz_type   = 3;
+    schwarzparam->schwarz_maxlvl = 2;
     schwarzparam->schwarz_mmsize = 200;    
 }
 
@@ -344,9 +343,9 @@ void fasp_param_ilu_set (ILU_param *iluparam,
 void fasp_param_schwarz_set (Schwarz_param *schwarzparam, 
                          input_param *inparam)
 {   
-    schwarzparam->print_level  = inparam->print_level;
-    schwarzparam->schwarz_type    = inparam->Schwarz_type;
-    schwarzparam->schwarz_maxlvl     = inparam->Schwarz_maxlvl;
+    schwarzparam->print_level    = inparam->print_level;
+    schwarzparam->schwarz_type   = inparam->Schwarz_type;
+    schwarzparam->schwarz_maxlvl = inparam->Schwarz_maxlvl;
     schwarzparam->schwarz_mmsize = inparam->Schwarz_mmsize;
 }
 
@@ -404,7 +403,7 @@ void fasp_precond_data_null (precond_data *pcdata)
     pcdata->postsmooth_iter     = 2;
     pcdata->relaxation          = 1.1;
     pcdata->coarsening_type     = 1;
-    pcdata->coarse_scaling      = OFF;
+    pcdata->coarse_scaling      = ON;
     pcdata->amli_degree         = 1;
     pcdata->nl_amli_krylov_type = SOLVER_GCG;
 }

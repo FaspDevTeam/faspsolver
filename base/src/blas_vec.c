@@ -144,7 +144,7 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
 
 
 /**
- * \fn REAL fasp_dvec_relerr (dvector *x, dvector *y) 
+ * \fn REAL fasp_blas_dvec_relerr (dvector *x, dvector *y) 
  *
  * \brief Relative error of two dvector x and y
  *

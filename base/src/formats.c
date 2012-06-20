@@ -158,10 +158,10 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
                 if (COL < ngrid) ++block;
             }
         } // end for BAND
-    
+        
         ncb = nc*block;
         row_start = ROW*nc;
-    
+        
         for (i = 0; i < nc; i ++) {
             row = row_start + i; 
             ia[row+1] = ia[row] + ncb;
@@ -177,7 +177,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
     for (ROW = 0; ROW < ngrid; ++ROW) {
         row_start = ROW*nc;    
         val_L_start = ROW*nc2;
-    
+        
         // deal with the diagonal band
         for (i = 0; i < nc; i ++) {
             nci   = nc*i;
@@ -190,14 +190,14 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
             }
         }
         block = 1;
-    
+        
         // deal with the off-diagonal bands
         for (BAND = 0; BAND < nband; ++BAND) {
             width     = offsets[BAND];
             COL       = ROW + width;
             ncb       = nc*block;
             col_start = COL*nc;
-    
+            
             if (width < 0) {
                 if (COL >= 0) {
                     val_R_start = COL*nc2;
@@ -241,12 +241,12 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
                 row   = row_start + j;
                 start = ia[row];
                 pos   = start + j;
-    
+                
                 // swap in 'ja'
                 tmp_col   = ja[start];
                 ja[start] = ja[pos];
                 ja[pos]   = tmp_col;
-    
+                
                 // swap in 'a'
                 tmp_val  = a[start];
                 a[start] = a[pos];
@@ -304,9 +304,9 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
     // set dCSRmat for A
     A.IA[0]=0;
     for (i=0;i<mb;++i) {
-    
+        
         for (ir=row[i];ir<row[i+1];ir++) {
-    
+            
             for (length=j=0;j<nb;++j) {
                 ij=i*nb+j; blockptrij=blockptr[ij];
                 if (blockptrij->nnz>0) {
@@ -321,10 +321,10 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
                     }
                 }
             } // end for j
-    
+            
             A.IA[ir+1]=A.IA[ir]+length;        
         } // end for ir
-    
+        
     } // end for i
     
     fasp_mem_free(row);
@@ -479,7 +479,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
 dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
 {
     dCSRmat A;
-
+    
     /* members of B */
     INT     ROW = B->ROW;
     INT     COL = B->COL;
@@ -509,13 +509,13 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     INT stride_i,mybegin,myend,myid;
     
 	INT nthreads, use_openmp;
-
+    
 	if(!FASP_USE_OPENMP ||  ROW <= OPENMP_HOLDS){
 		use_openmp = FALSE;
 	}
 	else{
 		use_openmp = TRUE;
-        #pragma omp parallel
+#pragma omp parallel
 		nthreads = omp_get_num_threads();
 	}
     
@@ -541,28 +541,28 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
             if(myid < nthreads-1) myend = mybegin+stride_i;
             else myend = ROW;
             for (i=mybegin; i<myend; ++i)
-                {
-                    rowstart = i*nb + 1;
-                    colblock = IA[i+1] - IA[i];
-                    nzperrow = colblock*nb;
-                    for (j = 0; j < nb; ++j)
-                        {
-                            ia[rowstart+j] = nzperrow;
-                        }
-                }
-        }
-    }
-    else {
-        for (i = 0; i < ROW; ++i)
             {
                 rowstart = i*nb + 1;
                 colblock = IA[i+1] - IA[i];
                 nzperrow = colblock*nb;
                 for (j = 0; j < nb; ++j)
-                    {
-                        ia[rowstart+j] = nzperrow;
-                    }
+                {
+                    ia[rowstart+j] = nzperrow;
+                }
             }
+        }
+    }
+    else {
+        for (i = 0; i < ROW; ++i)
+        {
+            rowstart = i*nb + 1;
+            colblock = IA[i+1] - IA[i];
+            nzperrow = colblock*nb;
+            for (j = 0; j < nb; ++j)
+            {
+                ia[rowstart+j] = nzperrow;
+            }
+        }
     }
     
     //-----------------------------------------------------
@@ -571,135 +571,133 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     
     ia[0] = 0;
     for (i = 1; i <= rowA; ++i)
-        {
-            ia[i] += ia[i-1];
-        }
+    {
+        ia[i] += ia[i-1];
+    }
     
     //-----------------------------------------------------
     // Generate 'ja' and 'a' for CSR of A
     //-----------------------------------------------------
     
     switch (storage_manner)
-        {
+    {
         case 0: // each non-zero block elements are stored in row-major order
-            {
-                if (use_openmp) {
+        {
+            if (use_openmp) {
 #pragma omp parallel private(myid, mybegin, myend, i, k, j, rowstart, colstart, vp, mr, ap, jap, mc) ////num_threads(nthreads)
+                {
+                    myid = omp_get_thread_num();
+                    mybegin = myid*stride_i;
+                    if(myid < nthreads-1) myend = mybegin+stride_i;
+                    else myend = ROW;
+                    for (i=mybegin; i<myend; ++i)
                     {
-                        myid = omp_get_thread_num();
-                        mybegin = myid*stride_i;
-                        if(myid < nthreads-1) myend = mybegin+stride_i;
-                        else myend = ROW;
-                        for (i=mybegin; i<myend; ++i)
+                        for (k = IA[i]; k < IA[i+1]; ++k)
+                        {
+                            j = JA[k];
+                            rowstart = i*nb;
+                            colstart = j*nb;
+                            vp = &val[k*jump];
+                            for (mr = 0; mr < nb; mr ++)
                             {
-                                for (k = IA[i]; k < IA[i+1]; ++k)
-                                    {
-                                        j = JA[k];
-                                        rowstart = i*nb;
-                                        colstart = j*nb;
-                                        vp = &val[k*jump];
-                                        for (mr = 0; mr < nb; mr ++)
-                                            {
-                                                ap  = &a[ia[rowstart]];
-                                                jap = &ja[ia[rowstart]];
-                                                for (mc = 0; mc < nb; mc ++)
-                                                    {
-                                                        *ap = *vp;
-                                                        *jap = colstart + mc;
-                                                        vp ++; ap ++; jap ++;
-                                                    }
-                                                ia[rowstart] += nb;
-                                                rowstart ++;
-                                            }
-                                    }
+                                ap  = &a[ia[rowstart]];
+                                jap = &ja[ia[rowstart]];
+                                for (mc = 0; mc < nb; mc ++)
+                                {
+                                    *ap = *vp;
+                                    *jap = colstart + mc;
+                                    vp ++; ap ++; jap ++;
+                                }
+                                ia[rowstart] += nb;
+                                rowstart ++;
                             }
+                        }
                     }
                 }
-                else {
-                    for (i = 0; i < ROW; ++i)
+            }
+            else {
+                for (i = 0; i < ROW; ++i)
+                {
+                    for (k = IA[i]; k < IA[i+1]; ++k)
+                    {
+                        j = JA[k];
+                        rowstart = i*nb;
+                        colstart = j*nb;
+                        vp = &val[k*jump];
+                        for (mr = 0; mr < nb; mr ++)
                         {
-                            for (k = IA[i]; k < IA[i+1]; ++k)
-                                {
-                                    j = JA[k];
-                                    rowstart = i*nb;
-                                    colstart = j*nb;
-                                    vp = &val[k*jump];
-                                    for (mr = 0; mr < nb; mr ++)
-                                        {
-                                            ap  = &a[ia[rowstart]];
-                                            jap = &ja[ia[rowstart]];
-                                            for (mc = 0; mc < nb; mc ++)
-                                                {
-                                                    *ap = *vp;
-                                                    *jap = colstart + mc;
-                                                    vp ++; ap ++; jap ++;
-                                                }
-                                            ia[rowstart] += nb;
-                                            rowstart ++;
-                                        }
-                                }
+                            ap  = &a[ia[rowstart]];
+                            jap = &ja[ia[rowstart]];
+                            for (mc = 0; mc < nb; mc ++)
+                            {
+                                *ap = *vp;
+                                *jap = colstart + mc;
+                                vp ++; ap ++; jap ++;
+                            }
+                            ia[rowstart] += nb;
+                            rowstart ++;
                         }
+                    }
                 }
             }
+        }
             break;
             
         case 1: // each non-zero block elements are stored in column-major order
+        {
+            for (i = 0; i < ROW; ++i)
             {
-                for (i = 0; i < ROW; ++i)
+                for (k = IA[i]; k < IA[i+1]; ++k)
+                {
+                    j = JA[k];
+                    rowstart0 = i*nb;
+                    colstart0 = j*nb;
+                    vp = &val[k*jump];
+                    for (mc = 0; mc < nb; mc ++)
                     {
-                        for (k = IA[i]; k < IA[i+1]; ++k)
-                            {
-                                j = JA[k];
-                                rowstart0 = i*nb;
-                                colstart0 = j*nb;
-                                vp = &val[k*jump];
-                                for (mc = 0; mc < nb; mc ++)
-                                    {
-                                        rowstart = rowstart0;
-                                        colstart = colstart0 + mc;
-                                        for (mr = 0; mr < nb; mr ++)
-                                            {
-                                                a[ia[rowstart]] = *vp; 
-                                                ja[ia[rowstart]] = colstart; 
-                                                vp ++; ia[rowstart]++; rowstart++;
-                                            }
-                                    }
-                            }
+                        rowstart = rowstart0;
+                        colstart = colstart0 + mc;
+                        for (mr = 0; mr < nb; mr ++)
+                        {
+                            a[ia[rowstart]] = *vp; 
+                            ja[ia[rowstart]] = colstart; 
+                            vp ++; ia[rowstart]++; rowstart++;
+                        }
                     }
+                }
             }
-            break;
         }
+            break;
+    }
     
     //-----------------------------------------------------
     // Map back the real 'ia' for CSR of A
     //-----------------------------------------------------
     
-    for (i = rowA; i > 0; i --)
-        {
-            ia[i] = ia[i-1];
-        }
+    for (i = rowA; i > 0; i --) {
+        ia[i] = ia[i-1];
+    }
     ia[0] = 0; 
-
-
+    
+    
     return (A);   
 }
 
 /*!
- * \fn SHORT fasp_format_dcsr_dbsr ( dBSRmat *A, INT nb, dCSRmat *B )
+ * \fn dBSRmat fasp_format_dcsr_dbsr ( dBSRmat *A, INT nb )
  *
  * \brief Transfer a dCSRmat type matrix into a dBSRmat.
  *
  * \param A   Pointer to the dCSRmat type matrix
  * \param nb  size of each block 
- * \param B   Pointer to the 'dBSRmat' type matrix
+ *
+ * \return    Pointer to the 'dBSRmat' type matrix
  *
  * \author Changhe Qiao
  * \date   03/12/2012
  *
- * \note Modified by Xiaozhe Hu on 03/13/2012
+ * Modified by Xiaozhe Hu on 03/13/2012
  */
-
-
 dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B, 
                                const INT nb)
 {
@@ -733,7 +731,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     for(i=0;i<nCol;i++) {
         Js[i]=i*nb;
     }
-
+    
     status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
     //here we have tmpmat as the submatrix
     A.ROW=nRow;
@@ -839,9 +837,9 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
         else {
             m = ngridplus1 - k;
             for (j = 1; j < m; ++j)
-                {
-                    IA[j] ++;
-                }
+            {
+                IA[j] ++;
+            }
         }
     }
     IA[0] = 0;

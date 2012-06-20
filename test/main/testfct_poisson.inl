@@ -1,4 +1,4 @@
-/*! \file testfct_poisson.c
+/*! \file testfct_poisson.inl
  *
  *  \brief Test functions for the Poisson's equation
  */

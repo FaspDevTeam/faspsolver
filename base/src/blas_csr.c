@@ -715,7 +715,7 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
  * \param R   Pointer to the dCSRmat matrix R
  * \param A   Pointer to the dCSRmat matrix A
  * \param P   Pointer to the dCSRmat matrix P
- * \param B   Pointer to dCSRmat matrix equal to R*A*P
+ * \param RAP Pointer to dCSRmat matrix equal to R*A*P
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   05/10/2010

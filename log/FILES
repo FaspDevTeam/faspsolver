@@ -1,6 +1,6 @@
      137 ./base/src/amg.c
      116 ./base/src/amg_setup_cr.c
-     389 ./base/src/amg_setup_rs.c
+     401 ./base/src/amg_setup_rs.c
      533 ./base/src/amg_setup_sa.c
      398 ./base/src/amg_setup_ua.c
      334 ./base/src/amg_solve.c
@@ -20,9 +20,9 @@
     1666 ./base/src/coarsening_rs.c
       71 ./base/src/eigen.c
       99 ./base/src/famg.c
-      49 ./base/src/fasp_get_num_threads.c
      284 ./base/src/fmgcycle.c
      959 ./base/src/formats.c
+      60 ./base/src/get_num_threads.c
       78 ./base/src/givens.c
      358 ./base/src/graphics.c
      173 ./base/src/ilu_setup.c
@@ -30,7 +30,7 @@
     1257 ./base/src/ilu_setup_str.c
      214 ./base/src/init.c
      651 ./base/src/input.c
-    2681 ./base/src/interpolation.c
+    2689 ./base/src/interpolation.c
     1246 ./base/src/io.c
      126 ./base/src/itsolver_bcsr.c
      443 ./base/src/itsolver_bsr.c
@@ -42,7 +42,7 @@
      406 ./base/src/mgcycle.c
      123 ./base/src/mgrecur.c
      346 ./base/src/ordering.c
-     727 ./base/src/parameters.c
+     726 ./base/src/parameters.c
     1431 ./base/src/pbcgs.c
      880 ./base/src/pcg.c
      171 ./base/src/pgcg.c
@@ -65,12 +65,12 @@
      265 ./base/src/sparse_block.c
     1026 ./base/src/sparse_bsr.c
       89 ./base/src/sparse_coo.c
-     933 ./base/src/sparse_csr.c
+     939 ./base/src/sparse_csr.c
       71 ./base/src/sparse_csrl.c
      202 ./base/src/sparse_str.c
      980 ./base/src/sparse_util.c
       91 ./base/src/util.c
-     403 ./base/src/vec.c
+     400 ./base/src/vec.c
      118 ./base/src/wrapper.c
      560 ./base/include/dlmalloc.h
      142 ./base/include/doxygen.h
@@ -81,4 +81,4 @@
     5818 ./base/include/malloc.c.h
      187 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   55886 total
+   55919 total

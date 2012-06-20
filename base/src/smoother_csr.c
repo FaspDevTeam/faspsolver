@@ -846,18 +846,18 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  *
  * \brief      Gauss-Seidel backward smoother for certain color
  *
- * \parama ia  Pointer to start location of each row
- * \parama ja  Pointer to column index of nonzero elements
- * \parama aa  Pointer to nonzero elements of 
- * \parama u   Pointer to initial guess
- * \parama f   Pointer to right hand
- * \parama nbegx  The stride between the same color nodes in x direction
- * \parama nbegy  The stride between the same color nodes in y direction
- * \parama nbegz  The stride between the same color nodes in z direction
- * \parama mark   Pointer to order of nodes
- * \parama nx  Number of nodes in x direction
- * \parama ny  Number of nodes in y direction
- * \parama nz  Number of nodes in z direction
+ * \param ia  Pointer to start location of each row
+ * \param ja  Pointer to column index of nonzero elements
+ * \param aa  Pointer to nonzero elements of 
+ * \param u   Pointer to initial guess
+ * \param f   Pointer to right hand
+ * \param nbegx  The stride between the same color nodes in x direction
+ * \param nbegy  The stride between the same color nodes in y direction
+ * \param nbegz  The stride between the same color nodes in z direction
+ * \param mark   Pointer to order of nodes
+ * \param nx  Number of nodes in x direction
+ * \param ny  Number of nodes in y direction
+ * \param nz  Number of nodes in z direction
  *
  * \author  Chunsheng Feng
  * \date    02/06/2012
@@ -916,16 +916,16 @@ void swep3db(INT *ia,
  * \fn void rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
  * \brief  Colores Gauss-Seidel backward smoother for Au=b 
  *
- * \parama ia  Pointer to start location of each row
- * \parama ja  Pointer to column index of nonzero elements
- * \parama aa  Pointer to nonzero elements of 
- * \parama u   Pointer to initial guess
- * \parama f   Pointer to right hand
- * \parama mark   Pointer to order of nodes
- * \parama nx  Number of nodes in x direction
- * \parama ny  Number of nodes in y direction
- * \parama nz  Number of nodes in z direction
- * \parama nsweeps  Number of relaxation sweeps
+ * \param ia  Pointer to start location of each row
+ * \param ja  Pointer to column index of nonzero elements
+ * \param aa  Pointer to nonzero elements of 
+ * \param u   Pointer to initial guess
+ * \param f   Pointer to right hand
+ * \param mark   Pointer to order of nodes
+ * \param nx  Number of nodes in x direction
+ * \param ny  Number of nodes in y direction
+ * \param nz  Number of nodes in z direction
+ * \param nsweeps  Number of relaxation sweeps
  *
  * \author  Chunsheng Feng
  * \date    02/06/2012
@@ -1108,18 +1108,18 @@ void rb0b3d(INT *ia,
  *
  * \brief      Gauss-Seidel forward smoother for certain color
  *
- * \parama ia  Pointer to start location of each row
- * \parama ja  Pointer to column index of nonzero elements
- * \parama aa  Pointer to nonzero elements of 
- * \parama u   Pointer to initial guess
- * \parama f   Pointer to right hand
- * \parama nbegx  The stride between the same color nodes in x direction
- * \parama nbegy  The stride between the same color nodes in y direction
- * \parama nbegz  The stride between the same color nodes in z direction
- * \parama mark   Pointer to order of nodes
- * \parama nx  Number of nodes in x direction
- * \parama ny  Number of nodes in y direction
- * \parama nz  Number of nodes in z direction
+ * \param ia  Pointer to start location of each row
+ * \param ja  Pointer to column index of nonzero elements
+ * \param aa  Pointer to nonzero elements of 
+ * \param u   Pointer to initial guess
+ * \param f   Pointer to right hand
+ * \param nbegx  The stride between the same color nodes in x direction
+ * \param nbegy  The stride between the same color nodes in y direction
+ * \param nbegz  The stride between the same color nodes in z direction
+ * \param mark   Pointer to order of nodes
+ * \param nx  Number of nodes in x direction
+ * \param ny  Number of nodes in y direction
+ * \param nz  Number of nodes in z direction
  *
  * \author  Chunsheng Feng
  * \date    02/06/2012

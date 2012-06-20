@@ -1,22 +1,7 @@
-Fast Auxiliary Space Preconditioning (FASP) Solver Package README
+Fast Auxiliary Space Preconditioning (FASP) Solver Package: README
 
---Core Functions Library
-
-last modified on 04/25/2012 by Chensong Zhang
-==================================================
-
-
-================================
-0. Introduction
-================================
-The FASP package is designed for developing and testing new efficient solvers 
-and preconditioners for discrete partial differential equations (PDEs) or 
-systems of PDEs. The main components of the package are standard Krylov methods, 
-algebaric multigrid methods, and incomplete factorization methods. Based on 
-these standard techniques, we build efficient solvers, based on the framework 
-of Auxiliary Space Preconditioning, for several complicated applications. 
-Current examples include the fluid dynamics, underground water simulation, 
-the black oil model in reservoir simulation, and so on. 
+-- Library of FASP kernel functions
+================================================================================
 
 This software is free software distributed under the Lesser General Public 
 License or LGPL, version 3.0 or any later versions. This software distributed 
@@ -26,6 +11,21 @@ See the GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License 
 along with FASP. If not, see <http://www.gnu.org/licenses/>.
+
+================================
+0. Introduction
+================================
+The FASP package is designed for developing and testing new efficient solvers 
+and preconditioners for discrete partial differential equations (PDEs) or 
+systems of PDEs. The main components of the package are standard Krylov methods, 
+algebraic multigrid methods, and incomplete factorization methods. Based on 
+these standard techniques, we build efficient solvers, based on the framework 
+of Auxiliary Space Preconditioning, for several complicated applications. 
+Current examples include the fluid dynamics, underground water simulation, 
+the black oil model in reservoir simulation, and so on. 
+
+More details about the FASP project can be found at http://fasp.sourceforge.net.
+And, if you have any questions, feel free to contact us at faspdev@gmail.com.
 
 
 ================================
@@ -65,15 +65,3 @@ clean directory (removing all the executables also), you need to do
 If you need any help, you can type:
 
     $ make help
-
-
-================================
-3. Test Problems
-================================
-Now you are ready to use the library. If you need to see some test problems, go to 
-the "../test" directory for test problems and read the README file therein as well. 
-If you wish to see some practical problems where FASP has been applied, see 
-"../fasp4*" directories. Each of these directories contains a particular application.
-
-Please be noted that the codes containing in some of the "../fasp4*" directories 
-might be proprietary (not freely available to general public). 

@@ -1,6 +1,6 @@
 /*! \file testfct_heat.inl
  *
- *  \brief Test functions for the Poisson's equation
+ *  \brief Test functions for the Heat equation
  */
  
 #include <math.h>

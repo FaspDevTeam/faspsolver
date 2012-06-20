@@ -198,11 +198,11 @@ int main (int argc, const char * argv[])
         goto FINISHED;
 	}
 	
-	if (status<0) {
+	if ( status<0 ) {
 		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
 	}
 	else {
-		printf("\nSolver finished successfully!\n\n", status);
+		printf("\nSolver finished successfully!\n\n");
 	}
     
     if (output_type) fclose (stdout);

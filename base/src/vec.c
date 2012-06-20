@@ -217,12 +217,9 @@ void fasp_dvec_set (INT n,
     
     if (n>0) x->row=n; 
     else n=x->row; 
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
