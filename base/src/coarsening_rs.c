@@ -843,7 +843,6 @@ static INT form_coarse_level ( dCSRmat *A,
     INT myid;
     INT mybegin;
     INT myend;
-    INT stride_i;
     
     INT *work = (INT*)fasp_mem_calloc(4*row,sizeof(INT));
     INT *lists = work, *where = lists+row, *lambda = where+row, *graph_array = lambda+row;
@@ -1430,19 +1429,20 @@ static INT form_coarse_level_ag (dCSRmat *A,
 	unsigned INT maxlambda, maxnode, num_left=0;	
 	REAL measure, new_meas;
     
-	INT *ia=A->IA, *vec=vertices->val;
-	INT ci_tilde = -1, ci_tilde_mark = -1;
-	INT set_empty = 1, C_i_nonempty = 0;
-	INT ji,jj,i,j,k,l,m,flag,index,ci,cj,ck,cl,num_c,count,fj;
+	INT *vec=vertices->val;
+	INT i,j,k,l,m,flag,ci,cj,ck,cl,num_c;
 	
 	INT *work = (INT*)fasp_mem_calloc(4*row,sizeof(INT));	
-	INT *lists = work, *where = lists+row, *lambda = where+row, *graph_array = lambda+row;
-    INT *cp_index,*cp_rindex;
+	INT *lists = work, *where = lists+row, *lambda = where+row;
+    INT *cp_index; //*cp_rindex;
     
 	
 	LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;	
 	
-	iCSRmat ST,Sh,ShT; //Sh is for the strong coupling matrix between temporary CGPTs, ShT is the transpose of Sh, Snew is for combining the information from S and Sh
+	iCSRmat ST,Sh,ShT; 
+    // Sh is for the strong coupling matrix between temporary CGPTs
+    // ShT is the transpose of Sh
+    // Snew is for combining the information from S and Sh
     
 	ivector CGPT_index, CGPT_rindex;
 	fasp_icsr_trans(S, &ST);
@@ -1465,8 +1465,7 @@ static INT form_coarse_level_ag (dCSRmat *A,
     CGPT_index.row=num_c;
     CGPT_rindex.row=row;
 	cp_index=CGPT_index.val;
-    cp_rindex=CGPT_rindex.val;
-	
+    // cp_rindex=CGPT_rindex.val;
     
 	// 1. Initialize lambda
 	for (ci=0;ci<num_c;++ci) lambda[ci]=ShT.IA[ci+1]-ShT.IA[ci];
@@ -1483,7 +1482,7 @@ static INT form_coarse_level_ag (dCSRmat *A,
                 num_left++;
 			}
             else {
-                if (measure<0) printf("### WARNING(form_coarse_level_ag): negative lambda!\n");
+                if (measure<0) printf("### WARNING (form_coarse_level_ag): negative lambda!\n");
                 
                 vec[i]=FGPT; // set i as fine node
                 

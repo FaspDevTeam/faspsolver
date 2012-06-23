@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+06/23/2012 FASP 0.9.9:
+- Fix warnings in the serial version except *.f files.
+- Find bugs in the OMP version with implicit function definitions.
+
 06/20/2012 FASP 0.9.8: alpha testing stage
 - Fix a bug in OMP conditional preprocessing.
 - Fix a bug in fasp_icsr_tran and fasp_dcsr_tran.

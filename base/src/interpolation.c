@@ -1448,9 +1448,9 @@ static void fasp_get_icor_ysk(INT nrows,
  * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   03/01/2011
  *
- * Refer to P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid. 
- *              Academic Press Inc., San Diego, CA, 2001. 
- *          With contributions by A. Brandt, P. Oswald and K. St¨uben.
+ * Refer to P479, U. Trottenberg, C. W. Oosterlee, and A. Schuller. Multigrid. 
+ *          Academic Press Inc., San Diego, CA, 2001. 
+ *          With contributions by A. Brandt, P. Oswald and K. Stuben.
  */
 
 static void interp_RS1(dCSRmat *A, 
@@ -1470,7 +1470,6 @@ static void interp_RS1(dCSRmat *A,
     INT myid;
     INT mybegin;
     INT myend;
-    INT stride_i;
     INT *indexs = NULL;
     INT shift;
     INT nbl_ysk, nbr_ysk;

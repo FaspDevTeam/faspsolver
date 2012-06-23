@@ -338,7 +338,7 @@ static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
 {
     //local variable
     const INT   n  = Amat->row;
-    const INT  *ia = Amat->IA, *ja = Amat->JA;
+    const INT  *ia = Amat->IA;
     const REAL *a  = Amat->val;
     unsigned INT i,j;
     REAL norm, temp;

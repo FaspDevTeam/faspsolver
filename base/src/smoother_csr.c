@@ -49,7 +49,7 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
     REAL *d = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
     
     while (L--) {
-    
+        
         if (s>0) {
             for (i=i_1;i<=i_n;i+=s) {
                 t[i]=bval[i];
@@ -60,14 +60,14 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
                     else d[i]=aj[k];
                 }    
             }
-    
+            
             for (i=i_1;i<=i_n;i+=s) {    
                 if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
             }    
         } 
-    
+        
         else {
-    
+            
             for (i=i_1;i>=i_n;i+=s) {
                 t[i]=bval[i];
                 begin_row=ia[i],end_row=ia[i+1];
@@ -76,14 +76,14 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
                     if (i!=j) t[i]-=aj[k]*uval[j];
                     else d[i]=aj[k];
                 }
-    
+                
             }
-    
+            
             for (i=i_1;i>=i_n;i+=s) {
                 if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
             }
         } 
-    
+        
     } // end while
     
     fasp_mem_free(t);
@@ -126,11 +126,11 @@ void fasp_smoother_dcsr_gs (dvector *u,
     REAL  t,d=0.0;
     
     if (s > 0) {
-    
+        
         while (L--) {
             
             for (i=i_1;i<=i_n;i+=s) {
-    
+                
                 t = bval[i];
                 begin_row=ia[i],end_row=ia[i+1];
                 
@@ -160,12 +160,12 @@ void fasp_smoother_dcsr_gs (dvector *u,
     else {    
         
         while (L--) {
-
-            for (i=i_1;i>=i_n;i+=s) {
             
+            for (i=i_1;i>=i_n;i+=s) {
+                
                 t=bval[i];
                 begin_row=ia[i],end_row=ia[i+1];
-
+                
 #if DIAGONAL_PREF // diagonal first
                 d=aj[begin_row];
                 if (ABS(d)>SMALLREAL) {
@@ -184,7 +184,7 @@ void fasp_smoother_dcsr_gs (dvector *u,
                 }
                 uval[i]=t*d;
 #endif
-
+                
             } // end for i
         } // end while    
         
@@ -227,7 +227,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
     INT myid,mybegin,myend;
     
 	INT nthreads, use_openmp;
-
+    
 	if(!FASP_USE_OPENMP || size <= OPENMP_HOLDS){
 		use_openmp = FALSE;
 	}
@@ -272,7 +272,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                     }
                 } // end for i
             }
-    
+            
             if (use_openmp) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
@@ -466,7 +466,7 @@ void fasp_smoother_dcsr_sor (dvector *u,
     const INT   *ia=A->IA,*ja=A->JA;
     const REAL  *aj=A->val,*bval=b->val;
     REAL        *uval=u->val;
-
+    
     // local variables
     INT    i,j,k,begin_row,end_row;
     REAL   t, d;
@@ -628,7 +628,7 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
     REAL *z  = iludata->work+m2;
     
     if (iludata->nwork<memneed) goto MEMERR; 
-
+    
     {
         INT i, j, jj, begin_row, end_row;
         REAL *lu = iludata->luval;
@@ -667,7 +667,7 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
     
     return;
     
- MEMERR:
+MEMERR:
     printf("### ERROR: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
     exit(ERROR_ALLOC_MEM);
 }
@@ -913,46 +913,44 @@ void swep3db(INT *ia,
 }
 
 /* 
- * \fn void rb0b3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+ * \fn void rb0b3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, 
+ *                  INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
  * \brief  Colores Gauss-Seidel backward smoother for Au=b 
  *
- * \param ia  Pointer to start location of each row
- * \param ja  Pointer to column index of nonzero elements
- * \param aa  Pointer to nonzero elements of 
- * \param u   Pointer to initial guess
- * \param f   Pointer to right hand
- * \param mark   Pointer to order of nodes
- * \param nx  Number of nodes in x direction
- * \param ny  Number of nodes in y direction
- * \param nz  Number of nodes in z direction
+ * \param ia       Pointer to start location of each row
+ * \param ja       Pointer to column index of nonzero elements
+ * \param aa       Pointer to nonzero elements of 
+ * \param u        Pointer to initial guess
+ * \param f        Pointer to right hand
+ * \param mark     Pointer to order of nodes
+ * \param nx       Number of nodes in x direction
+ * \param ny       Number of nodes in y direction
+ * \param nz       Number of nodes in z direction
  * \param nsweeps  Number of relaxation sweeps
  *
  * \author  Chunsheng Feng
  * \date    02/06/2012
  *
- * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * \note This subroutine is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-
-void rb0b3d(INT *ia, 
-		    INT *ja, 
-			REAL *aa,
-			REAL *u, 
-			REAL *f, 
-			INT *mark, 
-			INT nx, 
-			INT ny, 
-			INT nz, 
-			INT nsweeps)
+void rb0b3d (INT *ia, 
+             INT *ja, 
+             REAL *aa,
+             REAL *u, 
+             REAL *f, 
+             INT *mark, 
+             INT nx, 
+             INT ny, 
+             INT nz, 
+             INT nsweeps)
 {
-    INT n0e, n0o, isweep;
-    INT ex, ey, ez;
-    INT ox, oy, oz;
-        
-    n0e= -1;
-    n0o= -2;
+    INT n0e = -1, n0o = -2, isweep;
+    //INT ex, ey, ez;
+    //INT ox, oy, oz;
     
-    for (isweep = 1; isweep <= nsweeps; isweep++){
+    for (isweep = 1; isweep <= nsweeps; isweep++) {
+        
 		if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==0)) {    
 			/*...  e-e-e (and going backwards) */
 			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
@@ -1150,24 +1148,24 @@ void swep3df(INT *ia,
             j0= j*nx;
             
             for (i = nbegx; i < nx; i+=2)    /*!*/
-                {
-                    i0 = i   +  j0    + k0;
-                    i0 = mark[i0]-1; //Fortran to C
+            {
+                i0 = i   +  j0    + k0;
+                i0 = mark[i0]-1; //Fortran to C
                 
-                    //    printf("%d %d %d %d\n",i,j0,k0,i0);
-                    if (i0>=0 ) {
+                //    printf("%d %d %d %d\n",i,j0,k0,i0);
+                if (i0>=0 ) {
                     
-                        t = f[i0];
-                        begin_row = ia[i0], end_row = ia[i0+1];
-                        for (ii = begin_row; ii < end_row; ii ++) {
-                            jj = ja[ii];
-                            if (i0!=jj) t -= aa[ii]*u[jj]; 
-                            else d = aa[ii];    
-                        } // end for ii
+                    t = f[i0];
+                    begin_row = ia[i0], end_row = ia[i0+1];
+                    for (ii = begin_row; ii < end_row; ii ++) {
+                        jj = ja[ii];
+                        if (i0!=jj) t -= aa[ii]*u[jj]; 
+                        else d = aa[ii];    
+                    } // end for ii
                     
-                        if (ABS(d) > SMALLREAL) u[i0] = t/d;
-                    } //    if (i0>=0 ) 
-                }
+                    if (ABS(d) > SMALLREAL) u[i0] = t/d;
+                } //    if (i0>=0 ) 
+            }
         }
     }
     
@@ -1197,15 +1195,15 @@ void swep3df(INT *ia,
  */
 
 void rb0f3d( INT *ia, 
-		     INT *ja, 
-			 REAL *aa,
-			 REAL *u, 
-			 REAL *f, 
-			 INT *mark, 
-			 INT nx, 
-			 INT ny, 
-			 INT nz, 
-			 INT nsweeps )
+            INT *ja, 
+            REAL *aa,
+            REAL *u, 
+            REAL *f, 
+            INT *mark, 
+            INT nx, 
+            INT ny, 
+            INT nz, 
+            INT nsweeps )
 {
     INT n0e,n0o,isweep;
     
@@ -1270,7 +1268,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
     INT size = b->row;
     REAL t,d=0.0;
     // L =10;
-
+    
     // forward
     if (order == 1) {
         while (L--) { 
@@ -1290,7 +1288,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
 #endif 
         } // end while    
     }
-
+    
     // backward
     else {
         while (L--) {
@@ -1346,7 +1344,7 @@ static dCSRmat form_contractor (dCSRmat *A,
     unsigned INT i;
     
     REAL *work = (REAL *)fasp_mem_calloc(2*n,sizeof(REAL));
-
+    
     dvector b, x;
     b.row=x.row=n;
     b.val=work; x.val=work+n;
@@ -1368,37 +1366,37 @@ static dCSRmat form_contractor (dCSRmat *A,
         
         // smooth
         switch (smoother) {
-        case GS:
-            fasp_smoother_dcsr_gs(&x, 0, n-1, 1, A, &b, steps);
-            break;
-        case POLY:
-            fasp_smoother_dcsr_poly(A, &b, &x, n, ndeg, steps); 
-            break;
-        case JACOBI:
-            fasp_smoother_dcsr_jacobi(&x, 0, n-1, 1, A, &b, steps);
-            break;
-        case SGS:
-            fasp_smoother_dcsr_sgs(&x, A, &b, steps);
-            break;
-        case SOR:
-            fasp_smoother_dcsr_sor(&x, 0, n-1, 1, A, &b, steps, relax);
-            break;
-        case SSOR:
-            fasp_smoother_dcsr_sor(&x, 0, n-1, 1, A, &b, steps, relax);
-            fasp_smoother_dcsr_sor(&x, n-1, 0,-1, A, &b, steps, relax);
-            break;
-        case GSOR:
-            fasp_smoother_dcsr_gs(&x, 0, n-1, 1, A, &b, steps);
-            fasp_smoother_dcsr_sor(&x, n-1, 0, -1, A, &b, steps, relax);
-            break;
-        case SGSOR:
-            fasp_smoother_dcsr_gs(&x, 0, n-1, 1, A, &b, steps);
-            fasp_smoother_dcsr_gs(&x, n-1, 0,-1, A, &b, steps);
-            fasp_smoother_dcsr_sor(&x, 0, n-1, 1, A, &b, steps, relax);
-            fasp_smoother_dcsr_sor(&x, n-1, 0,-1, A, &b, steps, relax);
-            break;
-        default:
-            printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+            case GS:
+                fasp_smoother_dcsr_gs(&x, 0, n-1, 1, A, &b, steps);
+                break;
+            case POLY:
+                fasp_smoother_dcsr_poly(A, &b, &x, n, ndeg, steps); 
+                break;
+            case JACOBI:
+                fasp_smoother_dcsr_jacobi(&x, 0, n-1, 1, A, &b, steps);
+                break;
+            case SGS:
+                fasp_smoother_dcsr_sgs(&x, A, &b, steps);
+                break;
+            case SOR:
+                fasp_smoother_dcsr_sor(&x, 0, n-1, 1, A, &b, steps, relax);
+                break;
+            case SSOR:
+                fasp_smoother_dcsr_sor(&x, 0, n-1, 1, A, &b, steps, relax);
+                fasp_smoother_dcsr_sor(&x, n-1, 0,-1, A, &b, steps, relax);
+                break;
+            case GSOR:
+                fasp_smoother_dcsr_gs(&x, 0, n-1, 1, A, &b, steps);
+                fasp_smoother_dcsr_sor(&x, n-1, 0, -1, A, &b, steps, relax);
+                break;
+            case SGSOR:
+                fasp_smoother_dcsr_gs(&x, 0, n-1, 1, A, &b, steps);
+                fasp_smoother_dcsr_gs(&x, n-1, 0,-1, A, &b, steps);
+                fasp_smoother_dcsr_sor(&x, 0, n-1, 1, A, &b, steps, relax);
+                fasp_smoother_dcsr_sor(&x, n-1, 0,-1, A, &b, steps, relax);
+                break;
+            default:
+                printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
         } 
         
         // store to B

@@ -24,11 +24,12 @@
 /*--      Public Functions       --*/
 /*---------------------------------*/
 /**
- * \fn void fasp_sparse_abybms_ (INT *ia,INT *ja,INT *ib,INT *jb, INT *nap, INT *map, INT *mbp,
- *                               INT *ic,INT *jc)
+ * \fn void fasp_sparse_abybms_ (INT *ia,INT *ja,INT *ib,INT *jb, INT *nap,
+ *                               INT *map, INT *mbp, INT *ic,INT *jc)
  *
- * \brief Multiplication of two sparse matrices: calculating the nonzero structure of the result 
- *        if jc is not null. If jc is null only finds num of nonzeroes.
+ * \brief Multiplication of two sparse matrices: calculating the nonzero 
+ *        structure of the result if jc is not null. If jc is null only 
+ *        finds num of nonzeroes.
  *
  * \param ia   array of row pointers 1st multiplicand
  * \param ia   array of row pointers 1st multiplicand

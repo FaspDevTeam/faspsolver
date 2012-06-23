@@ -9,6 +9,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 #include "amg_setup_aggregation.inl"
+#include "amg_setup_aggregation_bsr.inl"
 
 static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
 static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param * param);
@@ -109,7 +110,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     // local variables
     REAL          setupduration;
     SHORT         level=0, status=SUCCESS, max_levels=param->max_levels;
-    INT           i, j;
+    INT           i;
 
 #if FASP_USE_OPENMP
 	REAL setup_start = omp_get_wtime();
@@ -246,7 +247,6 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     return status;
 }
 
-
 /**
  * \fn static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *param)
  * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A (BSR format)
@@ -257,11 +257,12 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
  * \return         SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
- * \date 03/16/2012 
+ * \date   03/16/2012 
  *
- * Setup A, P, PT, levels using smoothed aggregation
- * concrete algorithm see paper
- * Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
+ * \note Setup A, P, PT, levels using smoothed aggregation
+ * For the concrete algorithm, refer to:
+ * Peter Vanek, Jan Madel and Marin Brezina
+ * Algebraic Multigrid on Unstructured Meshes, 1994
  * 
  */
 static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *param)
