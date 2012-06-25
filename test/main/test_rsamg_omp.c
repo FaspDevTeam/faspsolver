@@ -37,7 +37,7 @@ main(int argc, const char * argv[])
 	const int print_level   = inparam.print_level;
 	const int problem_num   = inparam.problem_num;
 	const int itsolver_type = inparam.solver_type;
-	const int precond_type  = inparam.precond_type;
+//	const int precond_type  = inparam.precond_type;
 	const int output_type   = inparam.output_type;
     
     // Set output device

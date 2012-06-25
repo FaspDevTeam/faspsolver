@@ -391,13 +391,10 @@ static void generate_S ( dCSRmat *A,
     INT *ia=A->IA, *ja=A->JA;
     REAL *aj=A->val;
     
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || row <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
-		use_openmp = use_openmp;
+	if(FASP_USE_OPENMP && row > OPENMP_HOLDS){
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
     
@@ -427,10 +424,12 @@ static void generate_S ( dCSRmat *A,
     
     if (use_openmp) {
         INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin,myend,i,row_scale,row_sum,begin_row,end_row,j)
+#endif
         for (myid = 0; myid < nthreads; myid++ )
             {
-                FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+                FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++)
                     {
                         /* compute scaling factor and row sum */
@@ -851,12 +850,9 @@ static INT form_coarse_level ( dCSRmat *A,
     
     iCSRmat ST; fasp_icsr_trans(S, &ST);
 
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || row <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && row > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -867,10 +863,12 @@ static INT form_coarse_level ( dCSRmat *A,
     
     // 1. Initialize lambda
     if (use_openmp) {
+#if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin,myend,i) 
+#endif
         for (myid = 0; myid < nthreads; myid++ )
             {
-                FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+                FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) lambda[i]=ST.IA[i+1]-ST.IA[i];
             }
     }
@@ -881,10 +879,12 @@ static INT form_coarse_level ( dCSRmat *A,
     // 2. Before the following algorithm starts, filter out the variables which
     // have no connections at all and assign special F-variables.
     if (use_openmp) {
+#if FASP_USE_OPENMP
 #pragma omp parallel for reduction(+:num_left) private(myid, mybegin, myend, i) 
+#endif
         for (myid = 0; myid < nthreads; myid++ )
             {
-                FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+                FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++)
                     {
                         if ( (ia[i+1]-ia[i])<=1 ) {
@@ -1022,10 +1022,12 @@ static INT form_coarse_level ( dCSRmat *A,
     /* Coarsening Phase TWO: check fine points for coarse neighbors */
     /****************************************************************/
     if (use_openmp) {
+#if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin,myend,i) 
+#endif
         for (myid = 0; myid < nthreads; myid++ )
             {
-                FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+                FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) graph_array[i] = -1;
             }
     }
@@ -1127,12 +1129,9 @@ static void generate_sparsity_P ( dCSRmat *P,
     P->row=row; P->col=col;    
     P->IA=(INT*)fasp_mem_calloc(row+1, sizeof(INT));    
     
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || row <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && row > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -1144,10 +1143,12 @@ static void generate_sparsity_P ( dCSRmat *P,
     // step 1: Find the structure IA of P first
     if (use_openmp) {
         INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin,myend,i,j,k) 
+#endif
         for (myid = 0; myid < nthreads; myid++ )
             {
-                FASP_GET_START_END(myid, nthreads, row, mybegin, myend);
+                FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i)
                     {
                         if (vec[i]==FGPT) // if node i is on fine grid

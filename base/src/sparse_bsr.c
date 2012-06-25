@@ -517,21 +517,18 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     
     INT nb2  = nb*nb;
     INT i,j,k,m;
+#if FASP_USE_OPENMP
     INT myid;
     INT mybegin;
     INT stride_i;
     INT myend;
+#endif
 
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || ROW <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
-		use_openmp = TRUE;
-                
-	    #pragma omp parallel
-		nthreads = omp_get_num_threads();
+	if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
+		use_openmp = TRUE; 
+		nthreads = FASP_GET_NUM_THREADS();
 	}
     
     // Create a dBSRmat 'B'
@@ -549,6 +546,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     case 2:
         // main loop 
         if (use_openmp) {
+#if FASP_USE_OPENMP                
             stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
             {
@@ -575,6 +573,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                         }
                 }// end of main loop
             }
+#endif
         }
         else {
             // main loop 
@@ -601,6 +600,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     case 3:
         // main loop 
         if (use_openmp) {
+#if FASP_USE_OPENMP                
             stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
             {
@@ -627,6 +627,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     }
                 }// end of main loop
             }
+#endif
         }
 
         else {
@@ -657,6 +658,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     case 5: 
         // main loop 
         if (use_openmp) {
+#if FASP_USE_OPENMP                
             stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
             {
@@ -685,6 +687,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     }
                 }// end of main loop
             }
+#endif
         }
 
         else {
@@ -716,6 +719,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     case 7:
         // main loop
         if (use_openmp) {
+#if FASP_USE_OPENMP                
             stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
             {
@@ -744,6 +748,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     }
                 }// end of main loop
             }
+#endif
         }
 
         else {
@@ -774,6 +779,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     default:
         // main loop
         if (use_openmp) {
+#if FASP_USE_OPENMP                
             stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
             {
@@ -802,6 +808,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     }
                 }// end of main loop
             }
+#endif
         }
         else {
             for (i = 0; i < ROW; ++i) {

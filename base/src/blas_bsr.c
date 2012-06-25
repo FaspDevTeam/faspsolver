@@ -146,12 +146,9 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 	REAL *py0  = NULL;
 	REAL *py   = NULL;
 
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || ROW <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -184,9 +181,11 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 			{
 				if (use_openmp) {
 					INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
 #pragma omp parallel for  private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend)
+#endif
 					for (myid =0; myid < nthreads; myid++) {
-						FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
 						for (i=mybegin; i < myend; ++i) {
 							py0 = &y[i*2];
 							iend = IA[i+1];
@@ -220,9 +219,11 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 			{
 				if (use_openmp) {
 					INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
 #pragma omp parallel for  private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend ) 
+#endif
 					for (myid =0; myid < nthreads; myid++) {
-						FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
 						for (i=mybegin; i < myend; ++i) {
 							py0 = &y[i*3];
 							iend = IA[i+1];
@@ -256,9 +257,11 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 			{
 				if (use_openmp) {
 					INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
 #pragma omp parallel for  private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend )
+#endif
 					for (myid =0; myid < nthreads; myid++) {
-						FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
 						for (i=mybegin; i < myend; ++i) {
 							py0 = &y[i*5];
 							iend = IA[i+1];
@@ -291,9 +294,11 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 			{
 				if (use_openmp) {
 					INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend )
+#endif
 					for (myid =0; myid < nthreads; myid++) {
-						FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
 						for (i=mybegin; i < myend; ++i) {
 							py0 = &y[i*7];
 							iend = IA[i+1];
@@ -328,9 +333,11 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 			{
 				if (use_openmp) {
 					INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend)
+#endif
 					for (myid =0; myid < nthreads; myid++) {
-						FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
 						for (i=mybegin; i < myend; ++i) {
 							py0 = &y[i*nb];
 							iend = IA[i+1];
@@ -410,12 +417,9 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 	REAL *py0 = NULL;
 	REAL *py  = NULL;
 
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || ROW <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -435,11 +439,12 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 		case 3: 
 			{
 				if (use_openmp) {
+#if FASP_USE_OPENMP
 					INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i, py0, num_nnz_row, k, j, pA, px0, py)
 					{
 						myid = omp_get_thread_num();
-						FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
 						for (i=mybegin; i < myend; ++i)
 						{
 							py0 = &y[i*3];
@@ -644,6 +649,7 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 							}
 						}
 					}
+#endif
 				}
 				else {
 					for (i = 0; i < ROW; ++i)
@@ -856,11 +862,12 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 		case 5:
 			{
 				if (use_openmp) {
+#if FASP_USE_OPENMP
 					INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i, py0, num_nnz_row, k, j, pA, px0, py)
 					{
 						myid = omp_get_thread_num();
-						FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
 						for (i=mybegin; i < myend; ++i)
 						{
 							py0 = &y[i*5];
@@ -1065,6 +1072,7 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 							}
 						}
 					}
+#endif
 				}
 				else {
 					for (i = 0; i < ROW; ++i)
@@ -1277,11 +1285,12 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 		case 7:
 			{
 				if (use_openmp) {
+#if FASP_USE_OPENMP
 					INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i, py0, num_nnz_row, k, j, pA, px0, py)
 					{
 						myid = omp_get_thread_num();
-						FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
 						for (i=mybegin; i < myend; ++i)
 						{
 							py0 = &y[i*7];
@@ -1486,6 +1495,7 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 							}
 						}
 					}
+#endif
 				}
 				else {
 					for (i = 0; i < ROW; ++i)
@@ -1698,11 +1708,12 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 		default: 
 			{
 				if (use_openmp) {
+#if FASP_USE_OPENMP
 					INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i, py0, num_nnz_row, k, j, pA, px0, py)
 					{
 						myid = omp_get_thread_num();
-						FASP_GET_START_END(myid, nthreads, ROW, mybegin, myend);
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
 						for (i=mybegin; i < myend; ++i)
 						{
 							py0 = &y[i*nb];
@@ -1907,6 +1918,7 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 							}
 						}  
 					}
+#endif
 				}
 				else {
 					for (i = 0; i < ROW; ++i)

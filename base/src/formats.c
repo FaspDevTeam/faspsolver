@@ -506,17 +506,16 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     REAL *vp = NULL;
     REAL *ap = NULL;
     INT    *jap = NULL;
+
+#if FASP_USE_OPENMP
     INT stride_i,mybegin,myend,myid;
+#endif
+
+	INT nthreads = 1, use_openmp = FALSE;
     
-	INT nthreads, use_openmp;
-    
-	if(!FASP_USE_OPENMP ||  ROW <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP &&  ROW > OPENMP_HOLDS){
 		use_openmp = TRUE;
-#pragma omp parallel
-		nthreads = omp_get_num_threads();
+		nthreads = FASP_GET_NUM_THREADS();
 	}
     
     //--------------------------------------------------------
@@ -533,8 +532,9 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     //--------------------------------------------------------------------------
     
     if (use_openmp) {
+#if FASP_USE_OPENMP
         stride_i = ROW/nthreads;
-#pragma omp parallel private(myid, mybegin, myend, i, rowstart, colblock, nzperrow, j) ////num_threads(nthreads)
+#pragma omp parallel private(myid, mybegin, myend, i, rowstart, colblock, nzperrow, j) 
         {
             myid = omp_get_thread_num();
             mybegin = myid*stride_i;
@@ -551,6 +551,7 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
                 }
             }
         }
+#endif
     }
     else {
         for (i = 0; i < ROW; ++i)
@@ -584,6 +585,7 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
         case 0: // each non-zero block elements are stored in row-major order
         {
             if (use_openmp) {
+#if FASP_USE_OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i, k, j, rowstart, colstart, vp, mr, ap, jap, mc) ////num_threads(nthreads)
                 {
                     myid = omp_get_thread_num();
@@ -614,6 +616,7 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
                         }
                     }
                 }
+#endif
             }
             else {
                 for (i = 0; i < ROW; ++i)
@@ -710,12 +713,12 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     dBSRmat A;
     
     // Safe-guard check --Chensong 05/27/2012
-    if (B->row%nb!=0) {
+    if ((B->row)%nb!=0) {
         printf("### ERROR: B.row=%d is not a multiplication of nb=%d!!!\n", B->row, nb);
         exit;
     }
     
-    if (B->col%nb!=0) {
+    if ((B->col)%nb!=0) {
         printf("### ERROR: B.col=%d is not a multiplication of nb=%d!!!\n", B->col, nb);
         exit;
     }

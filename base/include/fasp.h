@@ -938,6 +938,7 @@ extern INT  nz_rb ;  /**< Red Black Gs Smoother Nz */
 extern INT *IMAP;    /**< Red Black Gs Smoother imap */
 extern INT  MAXIMAP; /**< Red Black Gs Smoother max dofs of reservoir */
 
+/*
 #define FASP_GET_START_END(procid,nprocs,n,start,end) \
 if((procid)<(n)%(nprocs)) \
 { \
@@ -950,7 +951,7 @@ else \
 (start)=(end)*(procid)+(n)%(nprocs); \
 } \
 (end)=(end)+(start);
-
+*/
 #endif /* end if for FASP_USE_OPENMP */
 
 #endif /* end if for __FASP_HEADER__ */

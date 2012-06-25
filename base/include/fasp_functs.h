@@ -592,13 +592,6 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B);
 dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B);
 
 
-/*-------- In file: get_num_threads.c --------*/
-
-INT FASP_GET_NUM_THREADS();
-
-INT Fasp_Set_Num_Threads(INT nthreads );
-
-
 /*-------- In file: givens.c --------*/
 
 void fasp_aux_givens (const REAL beta, 
@@ -617,16 +610,16 @@ void fasp_grid2d_plot (pgrid2d pg,
                        INT level);
 
 
-/*-------- In file: ilu_setup.c --------*/
+/*-------- In file: ilu_setup_bsr.c --------*/
 
-SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
+SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
 
-/*-------- In file: ilu_setup_bsr.c --------*/
+/*-------- In file: ilu_setup.c --------*/
 
-SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
+SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
@@ -1613,16 +1606,16 @@ void swep3db(INT *ia,
 			 INT ny, 
 			 INT nz);
 
-void rb0b3d(INT *ia, 
-		    INT *ja, 
-			REAL *aa,
-			REAL *u, 
-			REAL *f, 
-			INT *mark, 
-			INT nx, 
-			INT ny, 
-			INT nz, 
-			INT nsweeps);
+void rb0b3d (INT *ia, 
+             INT *ja, 
+             REAL *aa,
+             REAL *u, 
+             REAL *f, 
+             INT *mark, 
+             INT nx, 
+             INT ny, 
+             INT nz, 
+             INT nsweeps);
 
 void swep3df(INT *ia, 
              INT *ja, 
@@ -1636,15 +1629,15 @@ void swep3df(INT *ia,
              INT nx, INT ny, INT nz);
 
 void rb0f3d( INT *ia, 
-		     INT *ja, 
-			 REAL *aa,
-			 REAL *u, 
-			 REAL *f, 
-			 INT *mark, 
-			 INT nx, 
-			 INT ny, 
-			 INT nz, 
-			 INT nsweeps );
+            INT *ja, 
+            REAL *aa,
+            REAL *u, 
+            REAL *f, 
+            INT *mark, 
+            INT nx, 
+            INT ny, 
+            INT nz, 
+            INT nsweeps );
 
 void fasp_smoother_dcsr_gs_rb3d (dvector *u, 
                                  dCSRmat *A, 
@@ -2080,6 +2073,15 @@ void fasp_sparse_rapcmp_ (INT *ir,
                           INT *idummy);
 
 ivector fasp_sparse_MIS(dCSRmat *A);
+
+
+/*-------- In file: threads_schedule.c --------*/
+
+INT FASP_GET_NUM_THREADS();
+
+INT Fasp_Set_Num_Threads(INT nthreads );
+
+void FASP_GET_START_END(INT procid, INT nprocs, INT n, INT *start, INT *end);
 
 
 /*-------- In file: util.c --------*/

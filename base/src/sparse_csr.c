@@ -288,12 +288,9 @@ void fasp_dcsr_getdiag (INT n,
     INT i,k,j,ibegin,iend;    
     
     if (n==0) n=MIN(A->row,A->col);
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -302,9 +299,11 @@ void fasp_dcsr_getdiag (INT n,
     
     if (use_openmp) {
         INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, ibegin, iend, k, j) 
+#endif
         for (myid = 0; myid < nthreads; myid++ ) {
-            FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 ibegin=A->IA[i]; iend=A->IA[i+1];
                 for (k=ibegin;k<iend;++k) {
@@ -525,6 +524,7 @@ void fasp_dcsr_cp (dCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   04/06/2010  
+ *
  *  Modified by Chunsheng Feng, Zheng Li
  * \date   06/20/2012   
  */
@@ -556,6 +556,7 @@ void fasp_icsr_trans (iCSRmat *A,
     
     // first pass: find the Number of nonzeros in the first m-1 columns of A 
     // Note: these Numbers are stored in the array AT.IA from 1 to m-1
+	
     //for (i=0;i<m;++i) AT->IA[i] = 0;   //Here is a Bug.
     for (i=0; i<=m; ++i) AT->IA[i] = 0;  //Chunsheng Feng ,Zheng Li, June/20/2012
     
@@ -602,6 +603,7 @@ void fasp_icsr_trans (iCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   04/06/2010   
+ *
  *  Modified by Chunsheng Feng, Zheng Li
  * \date   06/20/2012   
  */
@@ -629,6 +631,7 @@ INT fasp_dcsr_trans (dCSRmat *A,
     
     // first pass: find the Number of nonzeros in the first m-1 columns of A 
     // Note: these Numbers are stored in the array AT.IA from 1 to m-1
+	
     //for (i=0;i<m;++i) AT->IA[i] = 0;   //Here is a Bug.
     for (i=0; i<=m; ++i) AT->IA[i] = 0;  //Chunsheng Feng ,Zheng Li, June/20/2012
     

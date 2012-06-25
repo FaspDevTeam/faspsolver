@@ -37,12 +37,9 @@ void fasp_blas_array_ax(const INT n,
                         REAL *x)
 {
 	unsigned INT i;
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
 	    use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -51,7 +48,9 @@ void fasp_blas_array_ax(const INT n,
     }
     else {
         if (use_openmp) {
+#if FASP_USE_OPENMP
 #pragma omp parallel for private(i) schedule(static)  
+#endif
             for (i=0; i<n; ++i) x[i] *= a;
         }
         else {
@@ -83,25 +82,25 @@ void fasp_blas_array_axpy (const INT n,
                            REAL *x, 
                            REAL *y)
 {
-	INT i, nthreads, use_openmp;
+	INT i;
+    INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
     
     if (a==1.0) {
         if (use_openmp) {
+#if FASP_USE_OPENMP
             INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
-                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) y[i] += x[i];
             }
+#endif
         }
         else {
             for (i=0; i<n; ++i) y[i] += x[i];
@@ -109,13 +108,15 @@ void fasp_blas_array_axpy (const INT n,
     }
     else if (a==-1.0) {
         if (use_openmp) {
+#if FASP_USE_OPENMP
             INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
-                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) y[i] -= x[i];
             }
+#endif
         }
         else {
             for (i=0; i<n; ++i) y[i] -= x[i];
@@ -123,13 +124,15 @@ void fasp_blas_array_axpy (const INT n,
     }
     else {
         if (use_openmp) {
+#if FASP_USE_OPENMP
             INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
-                FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) y[i] += a*x[i];
             }
+#endif
         }
         else {
             for (i=0; i<n; ++i) y[i] += a*x[i];
@@ -163,24 +166,23 @@ void fasp_blas_array_axpyz (const INT n,
                             REAL *z)
 {
 	unsigned INT i;
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
 
     if (use_openmp) {
+#if FASP_USE_OPENMP
         INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
-            FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) z[i] = a*x[i]+y[i];
         }
+#endif
     }
     else {
         for (i=0; i<n; ++i) z[i] = a*x[i]+y[i];
@@ -214,24 +216,23 @@ void fasp_blas_array_axpby(const INT n,
                            REAL *y) 
 {
 	unsigned INT i;
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
 
     if (use_openmp) {
+#if FASP_USE_OPENMP
         INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
-            FASP_GET_START_END(myid, nthreads, n, mybegin, myend);
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) y[i] = a*x[i]+b*y[i];
         }
+#endif
     }
     else {
         for (i=0; i<n; ++i) y[i] = a*x[i]+b*y[i];
@@ -262,18 +263,17 @@ REAL fasp_blas_array_dotprod(const INT n,
 {
 	unsigned INT i;
     REAL value=0.0;
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
     
     if (use_openmp) {
+#if FASP_USE_OPENMP
 #pragma omp parallel for reduction(+:value) private(i)
+#endif
         for (i=0;i<n;++i) value+=x[i]*y[i];
     }
     else {
@@ -304,18 +304,17 @@ REAL fasp_blas_array_norm1 (const INT n,
 {
 	unsigned INT i;
     REAL onenorm = 0.;
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
 
     if (use_openmp) {
+#if FASP_USE_OPENMP
 #pragma omp parallel for reduction(+:onenorm) private(i)
+#endif
         for (i=0;i<n;++i) onenorm+=ABS(x[i]);
     }
     else {
@@ -346,18 +345,17 @@ REAL fasp_blas_array_norm2 (const INT n,
 {
 	unsigned INT i;
     REAL twonorm = 0.;
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || n <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
 
     if (use_openmp) {
+#if FASP_USE_OPENMP
 #pragma omp parallel for reduction(+:twonorm) private(i)
+#endif
         for (i=0;i<n;++i) twonorm+=x[i]*x[i];
     }
     else {

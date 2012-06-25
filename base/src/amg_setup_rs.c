@@ -217,7 +217,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
     
 #if FASP_USE_OPENMP
     const INT print_level=param->print_level;
-    const INT m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz;    
+    const INT m=mgl[0].A.row;    
 	const INT cycle_type = param->cycle_type;
 	const INT interp_type = param->interpolation_type;
     
@@ -244,7 +244,6 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
     
 	param->tentative_smooth = 1.0;
     
-    REAL total_setup_time = 0.;
     REAL setup_start = omp_get_wtime();
     
 	//setup AMLI coefficients

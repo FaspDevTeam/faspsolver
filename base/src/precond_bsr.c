@@ -58,18 +58,16 @@ void fasp_precond_dbsr_diag (REAL *r,
             const INT nb2 = nb*nb;
             const INT m = diag->diag.row/nb2;    
     
-	        INT nthreads, use_openmp;
+	        INT nthreads = 1, use_openmp = FALSE;
             unsigned INT i;
 
-	        if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
-		        use_openmp = FALSE;
-	        }
-	        else{
+	        if(FASP_USE_OPENMP && m > OPENMP_HOLDS){
 		        use_openmp = TRUE;
                 nthreads = FASP_GET_NUM_THREADS();
 	        }
 
             if (use_openmp) {
+#if FASP_USE_OPENMP
                 INT myid;
                 INT mybegin;
                 INT myend;
@@ -84,6 +82,7 @@ void fasp_precond_dbsr_diag (REAL *r,
                         fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
                     }
                 }
+#endif
             }
             else {
                 for (i = 0; i < m; ++i) {
@@ -124,17 +123,15 @@ void fasp_precond_dbsr_diag_nc2(REAL *r,
     
     unsigned INT i;
 
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && m > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
     
     if (use_openmp) {
+#if FASP_USE_OPENMP
         INT myid;
         INT mybegin;
         INT myend;
@@ -149,6 +146,7 @@ void fasp_precond_dbsr_diag_nc2(REAL *r,
                 fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
             }
         }
+#endif
     }
     else {
         for (i = 0; i < m; ++i) {
@@ -186,17 +184,15 @@ void fasp_precond_dbsr_diag_nc3(REAL *r,
     
     unsigned INT i;
 
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && m > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
     
     if (use_openmp) {
+#if FASP_USE_OPENMP
         INT myid;
         INT mybegin;
         INT myend;
@@ -211,6 +207,7 @@ void fasp_precond_dbsr_diag_nc3(REAL *r,
                 fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
             }
         }
+#endif
     }
     else {
         for (i = 0; i < m; ++i) {
@@ -248,17 +245,15 @@ void fasp_precond_dbsr_diag_nc5(REAL *r,
     
     unsigned INT i;
 
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && m > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
     
     if (use_openmp) {
+#if FASP_USE_OPENMP
         INT myid;
         INT mybegin;
         INT myend;
@@ -273,6 +268,7 @@ void fasp_precond_dbsr_diag_nc5(REAL *r,
                 fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
             }
         }
+#endif
     }
     else {
         for (i = 0; i < m; ++i) {
@@ -309,17 +305,15 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
     
     unsigned INT i;
 
-	INT nthreads, use_openmp;
+	INT nthreads = 1, use_openmp = FALSE;
 
-	if(!FASP_USE_OPENMP || m <= OPENMP_HOLDS){
-		use_openmp = FALSE;
-	}
-	else{
+	if(FASP_USE_OPENMP && m > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
     
     if (use_openmp) {
+#if FASP_USE_OPENMP
         INT myid;
         INT mybegin;
         INT myend;
@@ -334,6 +328,7 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
                 fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
             }
         }
+#endif
     }
     else {
         for (i = 0; i < m; ++i) {

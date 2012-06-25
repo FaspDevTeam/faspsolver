@@ -154,7 +154,7 @@ int main (int argc, const char * argv[])
 		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
 	}
 	else {
-		printf("\nSolver succeed! Exit status = %d.\n\n");
+		printf("\nSolver succeed!\n\n");
 	}
     
     if (output_type) fclose (stdout);
