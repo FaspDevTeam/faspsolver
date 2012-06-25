@@ -11,6 +11,7 @@
 
 # Uncomment the following line to turn on OpenMP version
 #OMP=1
+
 ifdef OMP
    BOPT+=-fopenmp
    CDEFS=-D FASP_USE_OPENMP=1
