@@ -122,7 +122,7 @@ void fasp_iarray_set(const INT n,
         if (use_openmp) {
             INT mybegin,myend,myid;
 #if FASP_USE_OPENMP
-#pragma omp parallel for private(myid,mybegin,myend)
+#pragma omp parallel for private(myid, mybegin, myend)
 #endif
             for (myid = 0; myid < nthreads; myid ++) {
                 FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
@@ -137,7 +137,7 @@ void fasp_iarray_set(const INT n,
         if (use_openmp) {
             INT mybegin,myend,myid;
 #if FASP_USE_OPENMP
-#pragma omp parallel for private(myid,mybegin,myend,i)
+#pragma omp parallel for private(myid, mybegin, myend,i)
 #endif
             for (myid = 0; myid < nthreads; myid ++) {
                 FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);

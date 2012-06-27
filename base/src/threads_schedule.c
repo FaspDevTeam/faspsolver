@@ -21,7 +21,7 @@ INT thread_ini_flag = 0;
 /**
  * \fn     INT FASP_GET_NUM_THREADS();
  *
- * \brief  Get the number of threads for OpenMP functions.
+ * \brief  Get the number of threads for thread related functions.
  *
  * \return The number of threads to run 
  *
@@ -43,7 +43,7 @@ INT FASP_GET_NUM_THREADS()
 /**
  * \fn     INT Fasp_Set_Num_Threads();
  *
- * \brief  Set the number of threads for OpenMP functions.
+ * \brief  Set the number of threads for thread related functions.
  *
  * \return The number of threads to run
  *

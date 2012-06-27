@@ -687,12 +687,12 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
 }
 
 /*!
- * \fn dBSRmat fasp_format_dcsr_dbsr (dBSRmat *B, INT nb)
+ * \fn dBSRmat fasp_format_dcsr_dbsr ( dCSRmat *B, INT nb )
  *
  * \brief Transfer a dCSRmat type matrix into a dBSRmat.
  *
  * \param B   Pointer to the dCSRmat type matrix
- * \param nb  Size of each block 
+ * \param nb  size of each block 
  *
  * \return    Pointer to the 'dBSRmat' type matrix
  *
@@ -701,6 +701,7 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
  *
  * Modified by Xiaozhe Hu on 03/13/2012
  */
+
 dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B, 
                                const INT nb)
 {
@@ -715,12 +716,12 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     // Safe-guard check --Chensong 05/27/2012
     if ((B->row)%nb!=0) {
         printf("### ERROR: B.row=%d is not a multiplication of nb=%d!!!\n", B->row, nb);
-        exit;
+        exit(0);
     }
     
     if ((B->col)%nb!=0) {
         printf("### ERROR: B.col=%d is not a multiplication of nb=%d!!!\n", B->col, nb);
-        exit;
+        exit(0);
     }
     
     nRow=B->row/nb; //we must ensure this is a integer
