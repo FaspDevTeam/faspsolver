@@ -1,22 +1,8 @@
-! These routines are part of the matching MG method
-! Copyright (C) Ludmil Zikatanov 2006/2007
-!
-! This program is free software; you can redistribute it and/or modify
-! it under the terms of the GNU General Public License as published by
-! the Free Software Foundation; either version 2 of the License, or
-! (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License along
-! with this program; if not, write to the Free Software Foundation, Inc.,
-! 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-!
-!-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
+!> \file   schwarz.f
+!> \brief  Schwarz smoothers
+!> \author Ludmil Zikatanov
+!> \date   01/01/2007
+!> \note   These routines are part of the matching MG method
 
 ! DOES NOT WORK FOR NONSYM PATTERN
 
@@ -169,6 +155,7 @@ c c        end if
 cccccccccccccccccccccccccccccccccc
       return
       end
+
 C======================================================================
       subroutine chsize(a,b,tol,imin)
 C======================================================================
@@ -202,6 +189,7 @@ C
       return
       end
 C====================================================================
+
 C====================================================================
       subroutine shift(nxadj,nadj,n)
 C====================================================================
@@ -229,6 +217,7 @@ C---------------------------------------------------------------------
       end do
       return
       end
+
 C======================================================================
       subroutine dfs(
      I     n,ia,ja,
@@ -343,6 +332,7 @@ C
       go to 70
 C
       end
+
 C====================================================================
       subroutine permat(iord,ia,ja,an,n,m,iat,jat,ant)
 C====================================================================
@@ -367,6 +357,7 @@ C
 C
       return
       end
+
 C====================================================================
       subroutine pervec(iord,u1,u2,n)
 C====================================================================
@@ -384,6 +375,7 @@ C---------------------------------------------------------------------
       end do
       return
       end
+
 C====================================================================
       subroutine perback(iord,u1,u2,n)
 C====================================================================
@@ -401,6 +393,7 @@ C---------------------------------------------------------------------
       end do
       return
       end
+
 C====================================================================
       subroutine perm0(iord,ia,ja,an,n,m,iat,jat,ant)
 C====================================================================
@@ -455,6 +448,7 @@ C--------------------------------------------------------------------
 C
       return
       end
+
 C====================================================================
       subroutine icopyv(iu,iv,n)
 C====================================================================
@@ -540,8 +534,10 @@ c      write(*,*) memt,maxbs
 c      read(*,*) iii
       return
       end
+
 C=================================================================
       subroutine sky2ns(n,ia,ja,a,nblk,iblock,jblock,mask,maxa,au,al)
+C=================================================================
       implicit real*8(a-h,o-z)
       parameter (zero=0d+0, one=1d+0)
       dimension iblock(*),jblock(*),mask(*),ia(*),ja(*),a(*)
@@ -648,6 +644,7 @@ C...
       end
 C====================================================================
 C UP TO HERE
+
 C===================================================================
       subroutine fbgs2ns(n,ia,ja,a,x,b,
      >     nblk,iblock,jblock,mask,maxa,au,al,rhsloc,memt)
@@ -708,6 +705,7 @@ C... shift to the beginning of the next block.
 C...  DONE; Here m1 should be = memt and iii = iblock(nblk+1)-1+nblk
       return
       end
+
 C===================================================================
       subroutine bbgs2ns(n,ia,ja,a,x,b,
      >     nblk,iblock,jblock,mask,maxa,au,al,rhsloc,memt)
@@ -773,6 +771,7 @@ C... shift to the beginning of the next block.
 C... DONE
       return
       end
+
 C=====================================================================
       subroutine doluns(au,al,maxa,nn)
 C=====================================================================
@@ -846,6 +845,7 @@ C
      >     /10x,'      i = ',i10,/10x,'     a(i,i) =',e15.7/)
       return
       end
+
 C=====================================================================
       subroutine sluns(au,al,v,maxa,nn)
 C=====================================================================
@@ -891,6 +891,7 @@ C
 C
       return
       end
+
 C=====================================================================
       subroutine dolu(a,maxa,nn)
 C=====================================================================
@@ -952,6 +953,7 @@ C
      >     i4,//)
       return
       end
+
 C=====================================================================
       subroutine slvlu(a,v,maxa,nn)
 C=====================================================================
@@ -993,6 +995,7 @@ C
 C
       return
       end
+
 C====================================================================
       subroutine ijacrs(ln,ia,ja,a,n,nnz,ir,ic,aij)
 C====================================================================
@@ -1097,6 +1100,7 @@ C
 C
       return
       end
+
 C====================================================================
       subroutine sympat(ln,ia,ja,n,ir,ic,aij)
 C====================================================================
@@ -1135,9 +1139,10 @@ C      read(*,*) kk
 C
       return
       end
+
 C====================================================================
       subroutine levels(inroot,ia,ja,mask,nlvl,iblock,jblock,maxlev)
-
+C====================================================================
 C... Ludmil Zikatanov (1995); Following: Alan George, Joseph
 C... C Liu. Computer Solution of Large Sparse Positive Definite Systems.
 C... C Prentice Hall, 1981,

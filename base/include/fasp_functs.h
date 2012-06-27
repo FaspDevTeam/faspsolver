@@ -610,16 +610,16 @@ void fasp_grid2d_plot (pgrid2d pg,
                        INT level);
 
 
-/*-------- In file: ilu_setup_bsr.c --------*/
+/*-------- In file: ilu_setup.c --------*/
 
-SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
+SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
 
-/*-------- In file: ilu_setup.c --------*/
+/*-------- In file: ilu_setup_bsr.c --------*/
 
-SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
+SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
@@ -668,21 +668,12 @@ SHORT fasp_amg_interp (dCSRmat *A,
 					   iCSRmat *S,
                        AMG_param *param);
 
-void interp_EM (dCSRmat *A, 
-                ivector *vertices, 
-                dCSRmat *P, 
-                AMG_param *param);
-
-INT fasp_amg_interp1( dCSRmat *A, 
+INT fasp_amg_interp1 (dCSRmat *A, 
                       ivector *vertices, 
                       dCSRmat *P, 
                       AMG_param *param, 
-					  iCSRmat *S,
+                      iCSRmat *S,
                       INT *icor_ysk);
-
-INT fasp_BinarySearch (INT *list, 
-		               INT value, 
-					   INT list_length);
 
 
 /*-------- In file: io.c --------*/
@@ -960,6 +951,10 @@ void fasp_solver_mgrecur (AMG_data *mgl,
 
 
 /*-------- In file: ordering.c --------*/
+
+INT fasp_BinarySearch (INT *list, 
+		               INT value, 
+					   INT list_length);
 
 INT fasp_aux_unique (INT numbers[], 
                      INT size);
@@ -2081,7 +2076,11 @@ INT FASP_GET_NUM_THREADS();
 
 INT Fasp_Set_Num_Threads(INT nthreads );
 
-void FASP_GET_START_END(INT procid, INT nprocs, INT n, INT *start, INT *end);
+void FASP_GET_START_END (INT procid, 
+                         INT nprocs, 
+                         INT n, 
+                         INT *start, 
+                         INT *end);
 
 
 /*-------- In file: util.c --------*/

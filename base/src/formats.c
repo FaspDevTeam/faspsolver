@@ -687,12 +687,12 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
 }
 
 /*!
- * \fn dBSRmat fasp_format_dcsr_dbsr ( dBSRmat *A, INT nb )
+ * \fn dBSRmat fasp_format_dcsr_dbsr (dBSRmat *B, INT nb)
  *
  * \brief Transfer a dCSRmat type matrix into a dBSRmat.
  *
- * \param A   Pointer to the dCSRmat type matrix
- * \param nb  size of each block 
+ * \param B   Pointer to the dCSRmat type matrix
+ * \param nb  Size of each block 
  *
  * \return    Pointer to the 'dBSRmat' type matrix
  *
@@ -736,6 +736,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     }
     
     status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+    
     //here we have tmpmat as the submatrix
     A.ROW=nRow;
     A.COL=nCol;

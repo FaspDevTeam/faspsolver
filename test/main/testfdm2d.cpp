@@ -49,7 +49,6 @@ main( int argc, char *argv[])
 	fsls_XVector    *u    = NULL;
 
 	int nx,ny,ngrid,nt;
-	double dt = 0.0;
 	int rb = 0;
 	int test = 0;
 	int input_flag  = 1;
@@ -145,9 +144,9 @@ main( int argc, char *argv[])
 	if ( strcmp(order,"rb") == 0 ) rb = 1;
 
 	ngrid = nx*ny;
-	if (nt != 0) dt = 1./nt;
 
-	printf("\n ++++++++++++ (nx,ny,nt,test,order) = (%d,%d,%d,%d,%s)  ngrid = %d ++++++++++\n\n",nx,ny,nt,test,order,ngrid);
+	printf("\n ++++++++++++ (nx,ny,nt,test,order) = (%d,%d,%d,%d,%s)  ngrid = %d ++++++++++\n\n",
+           nx,ny,nt,test,order,ngrid);
 
 	MatFile = "./out/mat_";
 	RhsFile = "./out/rhs_";
@@ -161,7 +160,6 @@ main( int argc, char *argv[])
 
 	if (rb) fsls_BuildLinearSystem_5pt2d_rb(nt, nx, ny, &A, &b, &u);
 	else fsls_BuildLinearSystem_5pt2d(nt, nx, ny, &A, &b, &u);
-
 
 	if (TTest)
 	{

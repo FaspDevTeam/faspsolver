@@ -49,7 +49,6 @@ main( int argc, char *argv[])
 	fsls_XVector    *u    = NULL;
     
 	int nx,ny,nz,ngrid,nt;
-	double dt = 0.0;
 	int test = 0;
 	int input_flag  = 1;
 	const char* order = "normal";
@@ -152,9 +151,8 @@ main( int argc, char *argv[])
 
 	ngrid = nx*ny*nz;
 	
-    if (nt != 0) dt = 1./nt;
-
-	printf("\n ++++++++ (nx,ny,nz,nt,test,order) = (%d,%d,%d,%d,%d,%s)  ngrid = %d +++++++\n\n",nx,ny,nz,nt,test,order,ngrid);
+	printf("\n ++++++++ (nx,ny,nz,nt,test,order) = (%d,%d,%d,%d,%d,%s)  ngrid = %d +++++++\n\n",
+           nx,ny,nz,nt,test,order,ngrid);
 
 	MatFile = "./out/mat_";
 	RhsFile = "./out/rhs_";

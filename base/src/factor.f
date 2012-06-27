@@ -1,5 +1,5 @@
-!> \file factor.f
-!> \brief LU factoraization for CSR matrix
+!> \file   factor.f
+!> \brief  LU factoraization for CSR matrix
 !> \author Ludmil Zikatanov
 !> \date   01/01/2002
 
@@ -9,7 +9,7 @@ C=====================================================================
       dimension ia(1),ja(1),iu(1),ju(1),ip(n)
 C--------------------------------------------------------------------
 C...  SYMBOLIC FACTORIZATION OF A SYMMETRIC SPARSE MATRIX.
-C... Gives the upper triagle (U) of the LU factorization;
+C...  Gives the upper triagle (U) of the LU factorization;
 C--------------------------------------------------------------------
       nm = n - 1
       nh = n + 1
@@ -70,12 +70,13 @@ C
       nwku = iu(n+1)
       return
       end
+
 C=====================================================================
       subroutine sfactr_new(ia,ja,n,iu,ju,ip,nwku,mem_chk)
 C=====================================================================
       dimension ia(1),ja(1),iu(1),ju(1),ip(n)
 C--------------------------------------------------------------------
-C... SYMBOLIC FACTORIZATION OF A SYMMETRIC SPARSE MATRIX.
+C...  SYMBOLIC FACTORIZATION OF A SYMMETRIC SPARSE MATRIX.
 C--------------------------------------------------------------------
       nm = n - 1
       nh = n + 1
@@ -156,6 +157,7 @@ C...           memory check,
       nwku = iu(n+1)
       return
       end
+
 C=====================================================================
       subroutine factor(ia,ja,n,iu,ju,ip,iup,an,ad,un,di)
 C=====================================================================
@@ -229,6 +231,7 @@ C
 C
       return
       end
+
 C=====================================================================
       subroutine forbac(iu,ju,un,di,n,x)
 C=====================================================================

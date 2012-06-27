@@ -11,6 +11,50 @@ static void iSwapping(INT *w, INT i, INT j);
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
+/**
+ * \fn INT fasp_BinarySearch (INT *list, INT value, INT list_length)
+ * 
+ * \brief Binary Search
+ *
+ * \param list   Pointer to a set of values
+ * \param value  The target 
+ * \param list_length Length of the array list
+ *
+ * \return  The location of value in array list if successed, otherwise, return -1.
+ *
+ * \author Chunsheng Feng
+ * \date 03/01/2011
+ */
+INT fasp_BinarySearch (INT *list, 
+		               INT value, 
+					   INT list_length)
+{
+    INT not_found = 1;
+    INT low, high, m;
+    
+    low = 0;
+    high = list_length - 1;
+    while (not_found && low <= high)
+    {
+        m = (low + high) / 2;
+        if (value < list[m])
+        {
+            high = m - 1;
+        }
+        else if (value > list[m])
+        {
+            low = m + 1;
+        }
+        else
+        {
+            not_found = 0;
+            return m;
+        }
+    }
+    
+    return -1;
+}
+
 /*!
  * \fn INT fasp_aux_unique (INT numbers[], INT size)
  *

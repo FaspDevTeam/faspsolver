@@ -17,15 +17,17 @@
  *                           input_param *inparam, 
  *                           itsolver_param *itparam, 
  *                           AMG_param *amgparam, 
- *                           ILU_param *iluparam)
+ *                           ILU_param *iluparam,
+ *                           Schwarz_param *schwarzparam)
  *
  * \brief Initialize parameters, global variables, etc
  *
- * \param inputfile   Filename of the input file
- * \param inparam     Input parameters
- * \param itparam     Iterative solver parameters
- * \param amgparam    AMG parameters
- * \param iluparam    ILU parameters
+ * \param inputfile     Filename of the input file
+ * \param inparam       Input parameters
+ * \param itparam       Iterative solver parameters
+ * \param amgparam      AMG parameters
+ * \param iluparam      ILU parameters
+ * \param schwarzparam  Schwarz parameters
  *
  * \author Chensong Zhang
  * \date   2010/08/12 
