@@ -49,9 +49,14 @@ void fasp_blas_array_ax(const INT n,
     else {
         if (use_openmp) {
 #if FASP_USE_OPENMP
-#pragma omp parallel for private(i) schedule(static)  
+			INT myid, mybegin, myend;
+#pragma omp parallel private(myid, mybegin, myend, i) 
+			{
+				myid = omp_get_thread_num();
+				FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+				for (i=mybegin; i<myend; ++i) x[i] *= a;
+			}
 #endif
-            for (i=0; i<n; ++i) x[i] *= a;
         }
         else {
             for (i=0; i<n; ++i) x[i] *= a;
@@ -376,13 +381,46 @@ REAL fasp_blas_array_norm2 (const INT n,
  *
  * \author Chensong Zhang
  * \date   07/01/209
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   06/28/2012
  */
+
 REAL fasp_blas_array_norminf (const INT n, 
                               REAL *x)
 {
     unsigned INT i;
-    REAL infnorm=0.0;
-    for (i=0;i<n;++i) infnorm=MAX(infnorm,ABS(x[i]));
+    REAL infnorm = 0.0;
+
+	INT nthreads = 1, use_openmp = FALSE;
+
+	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+	
+    if(use_openmp) {
+#if FASP_USE_OPENMP
+		INT myid, mybegin, myend;
+        REAL infnorm_loc = 0.0;
+        #pragma omp parallel firstprivate(infnorm_loc) private(myid, mybegin, myend, i)
+		{
+			myid = omp_get_thread_num();
+			FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+
+            for (i=mybegin; i<myend; ++i) infnorm_loc = MAX(infnorm_loc, ABS(x[i]));
+
+			if(infnorm_loc > infnorm) {
+                #pragma omp critical 
+				infnorm = MAX(infnorm_loc, infnorm);
+			}
+		}
+#endif
+	}
+	else {
+        for (i=0;i<n;++i) infnorm=MAX(infnorm,ABS(x[i]));
+	}
+
     return infnorm;
 }
 
