@@ -37,7 +37,11 @@
  *
  * \author Xiaozhe Hu
  * \date   11/07/2009
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   06/29/2012
  */
+
 INT fasp_blas_dcsr_add (dCSRmat *A, 
                         const REAL alpha, 
                         dCSRmat *B, 
@@ -47,7 +51,14 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     INT i,j,k,l;
     INT count=0, added, countrow;
     INT status = SUCCESS;
-    
+
+    INT nthreads = 1, use_openmp = FALSE;
+
+	if(FASP_USE_OPENMP && A->nnz > OPENMP_HOLDS){
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+
     if (A->row != B->row || A->col != B->col) {
 #if DEBUG_MODE
         printf("### DEBUG: The dim of two matrices does not match --fasp_blas_dcsr_add!\n");
@@ -71,7 +82,22 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         fasp_dcsr_alloc(B->row,B->col,B->nnz,C);
         memcpy(C->IA,B->IA,(B->row+1)*sizeof(INT));
         memcpy(C->JA,B->JA,(B->nnz)*sizeof(INT));
-        for (i=0;i<A->nnz;++i) C->val[i]=B->val[i]*beta;
+
+		if(use_openmp) {
+#if FASP_USE_OPENMP
+			INT mybegin, myend, myid;
+#pragma omp parallel private(myid, mybegin, myend, i)
+			{
+				 myid = omp_get_thread_num();
+			     FASP_GET_START_END(myid, nthreads, A->nnz, &mybegin, &myend);
+                 for (i=mybegin;i<myend;++i) C->val[i]=B->val[i]*beta;
+			}
+#endif
+		}
+		else {
+            for (i=0;i<A->nnz;++i) C->val[i]=B->val[i]*beta;
+		}
+
         status=SUCCESS; goto FINISHED;
     }
     
@@ -80,7 +106,23 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         fasp_dcsr_alloc(A->row,A->col,A->nnz,C);
         memcpy(C->IA,A->IA,(A->row+1)*sizeof(INT));
         memcpy(C->JA,A->JA,(A->nnz)*sizeof(INT));
-        for (i=0;i<A->nnz;++i) C->val[i]=A->val[i]*alpha;
+
+		if(use_openmp) {
+#if FASP_USE_OPENMP
+			INT mybegin, myend, myid;
+#pragma omp parallel private(myid, mybegin, myend, i)
+			{
+				 myid = omp_get_thread_num();
+			     FASP_GET_START_END(myid, nthreads, A->nnz, &mybegin, &myend);
+                 for (i=mybegin;i<myend;++i) C->val[i]=A->val[i]*alpha;
+			}
+#endif
+		}
+		else {
+
+            for (i=0;i<A->nnz;++i) C->val[i]=A->val[i]*alpha;
+		}
+
         status=SUCCESS; goto FINISHED;
     }
     
@@ -92,9 +134,12 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     C->JA=(INT *)fasp_mem_calloc(A->nnz+B->nnz,sizeof(INT));
     
     C->val=(REAL *)fasp_mem_calloc(A->nnz+B->nnz,sizeof(REAL));
+
+	// initial C->IA 
+	memset(C->IA, 0, sizeof(INT)*(C->row+1));
     
     for (i=0; i<A->row; ++i) {
-    
+
         countrow = 0;
         for (j=A->IA[i]; j<A->IA[i+1]; ++j) {
             C->val[count] = alpha * A->val[N2C(j)];
@@ -146,14 +191,18 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   07/01/2009
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   06/29/2012
  */
+
 void fasp_blas_dcsr_axm (dCSRmat *A, 
                          const REAL alpha)
 {
     const INT nnz=A->nnz;
     
-    INT i;
-    for (i=0; i<nnz; ++i) A->val[i] = A->val[i] * alpha;
+    //for (i=0; i<nnz; ++i) A->val[i] = A->val[i] * alpha;
+	fasp_blas_array_ax(nnz, alpha, A->val);
 }
 
 /**

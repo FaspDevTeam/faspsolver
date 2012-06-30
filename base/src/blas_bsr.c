@@ -27,6 +27,9 @@
  * \author Zhiyang Zhou
  * \date   10/25/2010  
  *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   06/29/2012
+ *
  * \note Works for general nb (Xiaozhe)
  */
 void fasp_blas_dbsr_aAxpby (const REAL alpha, 
@@ -45,12 +48,19 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
 	/* local variables */
 	INT     size = ROW*nb;
 	INT     jump = nb*nb;
-	INT     i,j,k,ibegin,iend;
+	INT     i,j,k,iend;
 	REAL    temp;
 	REAL   *pA  = NULL;
 	REAL   *px0 = NULL;
 	REAL   *py0 = NULL;
 	REAL   *py  = NULL;
+
+	INT nthreads = 1, use_openmp = FALSE;
+
+	if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
 
 	//----------------------------------------------
 	//   Treat (alpha == 0.0) computation 
@@ -58,7 +68,8 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
 
 	if (alpha == 0.0)
 	{
-		for (i = size; i--; ) y[i] *= beta;
+	//	for (i = size; i--; ) y[i] *= beta;
+	    fasp_blas_array_ax(size, beta, y);
 		return;
 	}
 
@@ -72,7 +83,8 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
 			memset(y, 0X0, size*sizeof(REAL));
 		}
 		else {
-			for (i = size; i--; ) y[i] *= temp;  // modified by Xiaozhe, 03/11/2011
+			//for (i = size; i--; ) y[i] *= temp;  // modified by Xiaozhe, 03/11/2011
+            fasp_blas_array_ax(size, temp, y);
 		}
 	}
 
@@ -81,16 +93,199 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
 	//   each non-zero block elements are stored in row-major order
 	//-----------------------------------------------------------------
 
-	for (i = 0; i < ROW; ++i) {
-		py0 = &y[i*nb];
-		ibegin = IA[i]; iend = IA[i+1];
-		for (k = ibegin; k < iend; ++k) {
-			j = JA[k];
-			pA = val+k*jump; // &val[k*jump];
-			px0 = x+j*nb; // &x[j*nb];
-			py = py0;
-			fasp_blas_smat_ypAx( pA, px0, py, nb );
-		}  
+	switch (nb)
+	{
+		case 2: 
+			{
+				if (use_openmp) {
+					INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for  private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend)
+#endif
+					for (myid =0; myid < nthreads; myid++) {
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+						for (i=mybegin; i < myend; ++i) {
+							py0 = &y[i*2];
+							iend = IA[i+1];
+							for (k = IA[i]; k < iend; ++k) {
+								j = JA[k];
+								pA = val+k*4; // &val[k*jump];
+								px0 = x+j*2; // &x[j*nb];
+								py = py0;
+								fasp_blas_smat_ypAx_nc2( pA, px0, py );
+							}
+						}
+					}
+				}
+				else {
+					for (i = 0; i < ROW; ++i) {
+						py0 = &y[i*2];
+						iend = IA[i+1];
+						for (k = IA[i]; k < iend; ++k) {
+							j = JA[k];
+							pA = val+k*4; // &val[k*jump];
+							px0 = x+j*2; // &x[j*nb];
+							py = py0;
+							fasp_blas_smat_ypAx_nc2( pA, px0, py );
+						}
+					}
+				}
+			}
+			break;
+
+		case 3: 
+			{
+				if (use_openmp) {
+					INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for  private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend ) 
+#endif
+					for (myid =0; myid < nthreads; myid++) {
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+						for (i=mybegin; i < myend; ++i) {
+							py0 = &y[i*3];
+							iend = IA[i+1];
+							for (k = IA[i]; k < iend; ++k) {
+								j = JA[k];
+								pA = val+k*9; // &val[k*jump];
+								px0 = x+j*3; // &x[j*nb];
+								py = py0;
+								fasp_blas_smat_ypAx_nc3( pA, px0, py );
+							}    
+						}
+					}
+				}
+				else {
+					for (i = 0; i < ROW; ++i){
+						py0 = &y[i*3];
+						iend = IA[i+1];
+						for (k = IA[i]; k < iend; ++k) {
+							j = JA[k];
+							pA = val+k*9; // &val[k*jump];
+							px0 = x+j*3; // &x[j*nb];
+							py = py0;
+							fasp_blas_smat_ypAx_nc3( pA, px0, py );
+						}    
+					}
+				}
+			}
+			break;
+
+		case 5:
+			{
+				if (use_openmp) {
+					INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for  private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend )
+#endif
+					for (myid =0; myid < nthreads; myid++) {
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+						for (i=mybegin; i < myend; ++i) {
+							py0 = &y[i*5];
+							iend = IA[i+1];
+							for (k = IA[i]; k < iend; ++k) {
+								j = JA[k];
+								pA = val+k*25; // &val[k*jump];
+								px0 = x+j*5; // &x[j*nb];
+								py = py0;
+								fasp_blas_smat_ypAx_nc5( pA, px0, py );
+							}  
+						}
+					}
+				}
+				else {
+					for (i = 0; i < ROW; ++i){
+						py0 = &y[i*5];
+						iend = IA[i+1];
+						for (k = IA[i]; k < iend; ++k) {
+							j = JA[k];
+							pA = val+k*25; // &val[k*jump];
+							px0 = x+j*5; // &x[j*nb];
+							py = py0;
+							fasp_blas_smat_ypAx_nc5( pA, px0, py );
+						}
+					}
+				}
+			}
+			break;
+		case 7:
+			{
+				if (use_openmp) {
+					INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend )
+#endif
+					for (myid =0; myid < nthreads; myid++) {
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+						for (i=mybegin; i < myend; ++i) {
+							py0 = &y[i*7];
+							iend = IA[i+1];
+							for (k = IA[i]; k < iend; ++k) { 
+								j = JA[k];
+								pA = val+k*49; // &val[k*jump];
+								px0 = x+j*7; // &x[j*nb];
+								py = py0;
+								fasp_blas_smat_ypAx_nc7( pA, px0, py ); 
+							}  
+						}
+					}
+				}
+				else {
+					for (i = 0; i < ROW; ++i) {
+						py0 = &y[i*7];
+						iend = IA[i+1];
+						for (k = IA[i]; k < iend; ++k) {
+							j = JA[k];
+							pA = val+k*49; // &val[k*jump];
+							px0 = x+j*7; // &x[j*nb];
+							py = py0;
+							fasp_blas_smat_ypAx_nc7( pA, px0, py );
+						}
+
+					}
+				}
+			}
+			break;
+
+		default: 
+			{
+				if (use_openmp) {
+					INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend)
+#endif
+					for (myid =0; myid < nthreads; myid++) {
+						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+						for (i=mybegin; i < myend; ++i) {
+							py0 = &y[i*nb];
+							iend = IA[i+1];
+							for (k = IA[i]; k < iend; ++k) {
+								j = JA[k];
+								pA = val+k*jump; // &val[k*jump];
+								px0 = x+j*nb; // &x[j*nb];
+								py = py0;
+								fasp_blas_smat_ypAx( pA, px0, py, nb );
+							}  
+
+						}
+					}
+				}
+				else {
+					for (i = 0; i < ROW; ++i) {
+						py0 = &y[i*nb];
+						iend = IA[i+1];
+						for (k = IA[i]; k < iend; ++k) {
+							j = JA[k];
+							pA = val+k*jump; // &val[k*jump];
+							px0 = x+j*nb; // &x[j*nb];
+							py = py0;
+							fasp_blas_smat_ypAx( pA, px0, py, nb );
+						}
+
+					}
+				}
+			}
+			break;
 	}
 
 	//------------------------------------------
@@ -98,9 +293,8 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
 	//------------------------------------------
 
 	if (alpha != 1.0) {
-		for (i = size; i--; ++i) {
-			y[i] *= alpha;
-		}
+		//for (i = size; i--; ++i) y[i] *= alpha;
+		fasp_blas_array_ax(size, alpha, y);
 	}   
 }
 

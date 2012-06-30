@@ -186,6 +186,7 @@ void fasp_dvec_rand (const INT n,
     INT i,j;
 
     x->row = n;
+
     for (i=0; i<n; ++i){
         j = 1 + (INT) (((REAL)n)*rand()/(RAND_MAX+1.0));
         x->val[i] = (((REAL)j)-va)/(vb-va);
@@ -329,18 +330,50 @@ void fasp_dvec_cp (dvector *x,
  *
  * \author Chensong Zhang
  * \date   11/16/2009
+ *
+ * Modified by chunsheng Feng, Zheng Li
+ * \date   06/30/2012
  */
+
 REAL fasp_dvec_maxdiff (dvector *x, 
                         dvector *y)
 {
     const INT length=x->row;
-    REAL Linf=0, diffi=0;
+    REAL Linf=0., diffi=0.;
     REAL *xpt=x->val, *ypt=y->val;
     
+	INT nthreads = 1, use_openmp = FALSE;
+
+	if(FASP_USE_OPENMP && length > OPENMP_HOLDS) {
+		use_openmp = TRUE;
+		nthreads = FASP_GET_NUM_THREADS();
+	}
+
     unsigned INT i;
-    for (i=0; i<length; ++i) {
-        if ((diffi = ABS(xpt[i]-ypt[i])) > Linf) Linf = diffi;
-    }
+
+	if(use_openmp) {
+#if FASP_USE_OPENMP
+		INT myid, mybegin, myend;
+		REAL temp = 0.;
+#pragma omp parallel firstprivate(temp) private(myid, mybegin, myend, i, diffi) 
+		{
+			myid = omp_get_thread_num();
+			FASP_GET_START_END(myid, nthreads, length, &mybegin, &myend);
+			for(i=mybegin; i<myend; i++) {
+				if ((diffi = ABS(xpt[i]-ypt[i])) > temp) temp = diffi;
+			}
+
+            #pragma omp critical
+			if(temp > Linf) Linf = temp;
+		}
+#endif
+	}
+	else {
+        for (i=0; i<length; ++i) {
+            if ((diffi = ABS(xpt[i]-ypt[i])) > Linf) Linf = diffi;
+        }
+	}
+
     return Linf;
 }
 
