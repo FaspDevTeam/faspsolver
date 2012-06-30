@@ -3,6 +3,7 @@ File Name: CHANGES
 06/27/2012 FASP 1.0.1:
 - Fix a few GCC warnings and Doxygen warnings.
 - Update documentation.
+- Update a few OMP routines.
 
 06/26/2012 FASP 1.0.0:
 - Bug fixes: the OMP warnings and implicit definied functions.
