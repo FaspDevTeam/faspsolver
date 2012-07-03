@@ -821,10 +821,8 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, 
                                      dvector *b, 
                                      dvector *x, 
-                                     itsolver_param *itparam, 
-                                     INT schwarz_mmsize,
-                                     INT schwarz_maxlvl,
-                                     INT schwarz_type);
+                                     itsolver_param *itparam,
+                                     Schwarz_param *schparam);
 
 INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, 
                                  dvector *b, 
@@ -1015,7 +1013,7 @@ void fasp_param_ilu_set (ILU_param *iluparam,
                          input_param *inparam);
 
 void fasp_param_schwarz_set (Schwarz_param *schwarzparam, 
-                         input_param *inparam);
+                             input_param *inparam);
 
 void fasp_param_solver_set (itsolver_param *itparam, 
                             input_param *inparam);

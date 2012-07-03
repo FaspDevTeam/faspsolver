@@ -43,7 +43,7 @@ void fasp_param_init (char *inputfile,
 {    
     total_alloc_mem   = 0; // initialize total memeory amount
     total_alloc_count = 0; // initialize alloc count
-     
+    
     if (itparam)  fasp_param_solver_init(itparam);
     
     if (amgparam) fasp_param_amg_init(amgparam);
@@ -343,7 +343,7 @@ void fasp_param_ilu_set (ILU_param *iluparam,
  * \date   05/22/2012 
  */
 void fasp_param_schwarz_set (Schwarz_param *schwarzparam, 
-                         input_param *inparam)
+                             input_param *inparam)
 {   
     schwarzparam->print_level    = inparam->print_level;
     schwarzparam->schwarz_type   = inparam->Schwarz_type;
@@ -567,7 +567,7 @@ void fasp_param_amg_print (AMG_param *param)
         printf("AMG smoother order:                %d\n", param->smooth_order);
         printf("AMG num of presmoothing:           %d\n", param->presmooth_iter);
         printf("AMG num of postsmoothing:          %d\n", param->postsmooth_iter);
-    
+        
         if (param->smoother==SOR  || param->smoother==SSOR ||
             param->smoother==GSOR || param->smoother==SGSOR) {
             printf("AMG relax factor:                  %.4f\n", param->relaxation);            
@@ -586,23 +586,23 @@ void fasp_param_amg_print (AMG_param *param)
         }
         
         switch (param->AMG_type) {
-        case CLASSIC_AMG:
-            printf("AMG coarsening type:               %d\n", param->coarsening_type);
-            printf("AMG interpolation type:            %d\n", param->interpolation_type);
-            printf("AMG dof on coarsest grid:          %d\n", param->coarse_dof);
-            printf("AMG strong threshold:              %.4f\n", param->strong_threshold);
-            printf("AMG truncation threshold:          %.4f\n", param->truncation_threshold);
-            printf("AMG max row sum:                   %.4f\n", param->max_row_sum);
-            break;
+            case CLASSIC_AMG:
+                printf("AMG coarsening type:               %d\n", param->coarsening_type);
+                printf("AMG interpolation type:            %d\n", param->interpolation_type);
+                printf("AMG dof on coarsest grid:          %d\n", param->coarse_dof);
+                printf("AMG strong threshold:              %.4f\n", param->strong_threshold);
+                printf("AMG truncation threshold:          %.4f\n", param->truncation_threshold);
+                printf("AMG max row sum:                   %.4f\n", param->max_row_sum);
+                break;
                 
-        default: // SA_AMG or UA_AMG
-            printf("Aggregation AMG strong coupling:   %.4f\n", param->strong_coupled);
-            printf("Aggregation AMG max aggregation:   %d\n", param->max_aggregation);
-            printf("Aggregation AMG tentative smooth:  %.4f\n", param->tentative_smooth);
-            printf("Aggregation AMG smooth filter:     %d\n", param->smooth_filter);
-            break;
+            default: // SA_AMG or UA_AMG
+                printf("Aggregation AMG strong coupling:   %.4f\n", param->strong_coupled);
+                printf("Aggregation AMG max aggregation:   %d\n", param->max_aggregation);
+                printf("Aggregation AMG tentative smooth:  %.4f\n", param->tentative_smooth);
+                printf("Aggregation AMG smooth filter:     %d\n", param->smooth_filter);
+                break;
         }
-    
+        
         if (param->ILU_levels>0) {
             printf("AMG ILU type:                      %d\n", param->ILU_type); 
             printf("AMG ILU level:                     %d\n", param->ILU_levels);

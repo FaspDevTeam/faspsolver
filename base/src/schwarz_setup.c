@@ -1,8 +1,6 @@
 /*!
  *  \file schwarz_setup.c
  *  \brief Setup phase for the Schwarz methods
- *
- *  Created by Hu Xiaozhe on 3/22/11.
  */
 
 #include <math.h>
@@ -147,7 +145,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 	//  LU decomposition
     sky2ns_(&n,ia,ja,a,&nblk,iblock,jblock,mask,maxa,au,al);
 	  
-	printf("Schwarz setup succeeded: matrix size = %d, #blocks = %d, max block size =%d\n", 
+	printf("Schwarz setup succeeded: matrix size = %d, #blocks = %d, max block size = %d\n", 
            n, nblk, maxbs);
       
 	/*-------------------------------------------*/  
