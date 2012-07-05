@@ -346,8 +346,8 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
         else
             index=i-1;
     
-        unsigned INT begin_row=H.IA[i], end_row1=H.IA[i+1];    
-        for(j=begin_row;j<end_row1;++j) {
+        INT begin_row=H.IA[i], end_row1=H.IA[i+1];    
+        for (j=begin_row;j<end_row1;++j) {
             H.JA[j]=index;
             index++;
         }

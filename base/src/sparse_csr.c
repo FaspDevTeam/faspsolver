@@ -243,16 +243,16 @@ void fasp_dcsr_sort (dCSRmat *A)
     for (i=0;i<n;++i) {
         start=A->IA[i];
         row_length=A->IA[i+1]-start;
-    
+        
         for (j=0;j<row_length;++j) index[j]=j;
-    
+        
         fasp_aux_iQuickSortIndex(&(A->JA[start]), 0, row_length-1, index);
-    
+        
         for (j=0;j<row_length;++j) {
             ja[j]=A->JA[start+index[j]];
             a[j]=A->val[start+index[j]];
         }
-    
+        
         for (j=0;j<row_length;++j) {
             A->JA[start+j]=ja[j];
             A->val[start+j]=a[j];
@@ -289,8 +289,8 @@ void fasp_dcsr_getdiag (INT n,
     
     if (n==0) n=MIN(A->row,A->col);
 	INT nthreads = 1, use_openmp = FALSE;
-
-	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
+    
+	if (FASP_USE_OPENMP && n > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -359,18 +359,18 @@ void fasp_dcsr_getcol (const INT n,
     for (i=0; i<nrow; ++i) {
         // set the entry to zero
         col[i] = 0.0;
-    
+        
         row_begin = A->IA[i]; row_end = A->IA[i+1];
-    
+        
         for (j=row_begin; j<row_end; ++j) {
             if (A->JA[j] == n) {
                 col[i] = A->val[j];
             }
         } // end for (j=row_begin; j<row_end; ++j)
-    
+        
     } // end for (i=0; i<nrow; ++i)
     
- FINISHED:
+FINISHED:
     fasp_chkerr(status,"fasp_dcsr_getcol");
 }
 
@@ -481,7 +481,7 @@ SHORT fasp_dcsr_regdiag (dCSRmat *A,
     
     status = SUCCESS;
     
- FINISHED:    
+FINISHED:    
     return status;
 }
 
@@ -571,7 +571,7 @@ void fasp_icsr_trans (iCSRmat *A,
     if (A->val != NULL) {
         for (i=0;i<n;++i) {
             ibegin=A->IA[i], iend=A->IA[i+1];    
-            for(p=ibegin;p<iend;p++) {
+            for (p=ibegin;p<iend;p++) {
                 j=A->JA[N2C(p)]+1;
                 k=AT->IA[N2C(j)];
                 AT->JA[N2C(k)]=C2N(i);
@@ -583,7 +583,7 @@ void fasp_icsr_trans (iCSRmat *A,
     else {
         for (i=0;i<n;++i) {
             ibegin=A->IA[i], iend=A->IA[i+1];    
-            for(p=ibegin;p<iend;p++) {
+            for (p=ibegin;p<iend;p++) {
                 j=A->JA[N2C(p)]+1;
                 k=AT->IA[N2C(j)];
                 AT->JA[N2C(k)]=C2N(i);
@@ -625,7 +625,7 @@ INT fasp_dcsr_trans (dCSRmat *A,
     
     if (A->val) { 
         AT->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL)); 
-    
+        
     }
     else { AT->val=NULL; }
     
@@ -646,8 +646,8 @@ INT fasp_dcsr_trans (dCSRmat *A,
     if (A->val) {
         for (i=0;i<n;++i) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
-    
-            for(p=ibegin;p<iend1;p++) {
+            
+            for (p=ibegin;p<iend1;p++) {
                 j=A->JA[N2C(p)]+1;
                 k=AT->IA[N2C(j)];
                 AT->JA[N2C(k)]=C2N(i);
@@ -655,20 +655,20 @@ INT fasp_dcsr_trans (dCSRmat *A,
                 AT->IA[j]=k+1;
             } // end for p
         } // end for i
-    
+        
     }
     else {
         for (i=0;i<n;++i) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
-    
-            for(p=ibegin;p<iend1;p++) {
+            
+            for (p=ibegin;p<iend1;p++) {
                 j=A->JA[N2C(p)]+1;
                 k=AT->IA[N2C(j)];
                 AT->JA[N2C(k)]=C2N(i);
                 AT->IA[j]=k+1;
             } // end for p
         } // end of i
-    
+        
     } // end if 
     
     return SUCCESS;
@@ -816,16 +816,16 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
     } /* end of i */
     
     if (k<=nnz) 
-        {
-            A->nnz=k;
-            A->JA = (INT*)fasp_mem_realloc(A->JA, k*sizeof(INT));
-            A->val = (REAL *)fasp_mem_realloc(A->val, k*sizeof(REAL));
-        }
+    {
+        A->nnz=k;
+        A->JA = (INT*)fasp_mem_realloc(A->JA, k*sizeof(INT));
+        A->val = (REAL *)fasp_mem_realloc(A->val, k*sizeof(REAL));
+    }
     else 
-        {
-            status = RUN_FAIL;
-            printf("### ERROR: Size of compressed matrix is larger than the original!!\n");
-        }
+    {
+        status = RUN_FAIL;
+        printf("### ERROR: Size of compressed matrix is larger than the original!!\n");
+    }
     
     return (status);
 }
@@ -876,7 +876,7 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     REAL *val = A->val;
     
     // local variables
-    unsigned INT i, j, k, row_start, row_end;
+    INT i, j, k, row_start, row_end;
     
     if (diag->row != n) {
         printf("### ERROR: Size of diag = %d and size of matrix = %d mismatch!!", 

@@ -623,7 +623,7 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
                              dvector *x, 
                              void *data)
 {
-    const unsigned INT m=A->row, m2=2*m, memneed=3*m;
+    const INT m=A->row, m2=2*m, memneed=3*m;
     const ILU_data *iludata=(ILU_data *)data;    
     
     REAL *zz = iludata->work; 
@@ -1343,8 +1343,8 @@ static dCSRmat form_contractor (dCSRmat *A,
                                 const REAL relax, 
                                 const REAL dtol)
 {
-    const INT    n=A->row;
-    unsigned INT i;
+    const INT   n=A->row;
+    INT         i;
     
     REAL *work = (REAL *)fasp_mem_calloc(2*n,sizeof(REAL));
     
@@ -1357,6 +1357,7 @@ static dCSRmat form_contractor (dCSRmat *A,
     for (i=0; i<n; ++i) index[i]=i;
     
     dCSRmat B = fasp_dcsr_create(n, n, n*n); // too much memory required, need to change!!
+    
     dCSRmat C, D;
     
     for (i=0; i<n; ++i){

@@ -164,7 +164,7 @@ static SHORT get_block (dCSRmat *A,
                         REAL *Aloc, 
                         INT *mask)
 {
-    unsigned INT i, j, k, iloc;
+    INT i, j, k, iloc;
     
     for ( i=0; i<m; ++i ) {
         for ( j=0; j<n; ++j ) {
@@ -761,7 +761,7 @@ static void interp_RS( dCSRmat *A,
     INT *vec = vertices->val;
     INT countPplus, diagindex;
     INT begin_row, end_row; 
-    unsigned INT i,j,k,l,index=0;
+    INT i,j,k,l,index=0;
     
 #if FASP_USE_OPENMP
     INT myid, mybegin, myend, stride_i;
@@ -1421,7 +1421,7 @@ static void interp_RS1(dCSRmat *A,
     INT *vec = vertices->val;
     INT countPplus, diagindex;
     
-    unsigned INT i,j,k,l,index=0;
+    INT i,j,k,l,index=0;
     INT begin_row, end_row;
     INT myid;
     INT mybegin;

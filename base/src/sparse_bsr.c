@@ -236,12 +236,12 @@ INT fasp_dbsr_trans (dBSRmat *A,
         for (i=0;i<n;++i) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
     
-            for(p=ibegin;p<iend1;p++) {
+            for (p=ibegin;p<iend1;p++) {
                 j=A->JA[N2C(p)]+1;
                 k=AT->IA[N2C(j)];
                 AT->JA[N2C(k)]=C2N(i);
                 
-                for(inb=0;inb<nb;inb++)
+                for (inb=0;inb<nb;inb++)
                     for (jnb=0;jnb<nb;jnb++)
                         AT->val[ nb2*N2C(k) + inb*nb + jnb ] =A->val[nb2*N2C(p) + jnb*nb + inb ];
                 
@@ -254,7 +254,7 @@ INT fasp_dbsr_trans (dBSRmat *A,
         for (i=0;i<n;++i) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
     
-            for(p=ibegin;p<iend1;p++) {
+            for (p=ibegin;p<iend1;p++) {
                 j=A->JA[N2C(p)]+1;
                 k=AT->IA[N2C(j)];
                 AT->JA[N2C(k)]=C2N(i);
@@ -526,7 +526,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
 		use_openmp = TRUE; 
 		nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -552,7 +552,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
             {
                 myid = omp_get_thread_num();
                 mybegin = myid*stride_i;
-                if(myid < nthreads-1)  myend = mybegin+stride_i;
+                if (myid < nthreads-1)  myend = mybegin+stride_i;
                 else myend = ROW;
                 for (i=mybegin; i < myend; ++i) {
                     // get the diagonal sub-blocks
@@ -606,7 +606,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
             {
                 myid = omp_get_thread_num();
                 mybegin = myid*stride_i;
-                if(myid < nthreads-1)  myend = mybegin+stride_i;
+                if (myid < nthreads-1)  myend = mybegin+stride_i;
                 else myend = ROW;
                 for (i=mybegin; i < myend; ++i) { 
                     // get the diagonal sub-blocks
@@ -664,7 +664,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
             {
                 myid = omp_get_thread_num();
                 mybegin = myid*stride_i;
-                if(myid < nthreads-1)  myend = mybegin+stride_i;
+                if (myid < nthreads-1)  myend = mybegin+stride_i;
                 else myend = ROW;
                 for (i=mybegin; i < myend; ++i) {
                     // get the diagonal sub-blocks
@@ -725,7 +725,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
             {
                 myid = omp_get_thread_num();
                 mybegin = myid*stride_i;
-                if(myid < nthreads-1)  myend = mybegin+stride_i;
+                if (myid < nthreads-1)  myend = mybegin+stride_i;
                 else myend = ROW;
                 for (i=mybegin; i < myend; ++i) {
                     // get the diagonal sub-blocks
@@ -785,7 +785,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
             {
                 myid = omp_get_thread_num();
                 mybegin = myid*stride_i;
-                if(myid < nthreads-1)  myend = mybegin+stride_i;
+                if (myid < nthreads-1)  myend = mybegin+stride_i;
                 else myend = ROW;
                 for (i=mybegin; i < myend; ++i) {
                     // get the diagonal sub-blocks

@@ -418,7 +418,7 @@ INT fasp_blas_smat_inv (REAL *a,
  */
 void fasp_iden_free (idenmat *A)
 {    
-    unsigned INT i;
+    INT i;
     
     if (A==NULL) return;
     

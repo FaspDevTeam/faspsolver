@@ -24,8 +24,8 @@
 void fasp_aux_sh00 (dCSRmat *X, 
                     const INT ish)
 {
-    INT n=X->row, nnzX=X->nnz;
-    unsigned INT i;
+    const INT n=X->row, nnzX=X->nnz;
+    INT i;
     // shift back
     for (i=0;i<=n;i++)   { X->IA[i] += ish; }
     for (i=0;i<nnzX;i++) { X->JA[i] += ish; }

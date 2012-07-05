@@ -50,7 +50,7 @@ void fasp_array_set (const INT n,
                      REAL *x, 
                      const REAL val)
 {
-    unsigned INT i;
+    INT i;
 	INT nthreads = 1, use_openmp = FALSE; 
     
 	if(FASP_USE_OPENMP && n > OPENMP_HOLDS) {
@@ -110,7 +110,7 @@ void fasp_iarray_set(const INT n,
 		             INT *x, 
 					 const INT val)
 {
-    unsigned INT i;
+    INT i;
 	INT nthreads = 1, use_openmp = FALSE;
 
 	if(FASP_USE_OPENMP && n > OPENMP_HOLDS) {

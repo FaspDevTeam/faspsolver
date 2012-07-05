@@ -1023,7 +1023,6 @@ void fasp_dstr_write (char *filename,
  * \param A         Pointer to the dBSRmat matrix A
  *
  * \note
- * 
  *      The routine writes the specified REAL vector in BSR format. 
  *      Refer to the reading subroutine \ref fasp_dbsr_read.
  *
@@ -1193,9 +1192,10 @@ void fasp_ivec_write (char *filename,
 void fasp_dvec_print (INT n, 
                       dvector *u) 
 {
-    unsigned INT i;    
+    INT i;    
     
     if (n<=0) n=u->row;
+    
     for (i=0;i<n;++i) printf("vec_%d = %+.10E\n",i,u->val[N2C(i)]);
 }
 
@@ -1213,9 +1213,10 @@ void fasp_dvec_print (INT n,
 void fasp_ivec_print (INT n, 
                       ivector *u) 
 {
-    unsigned INT i;    
+    INT i;    
     
     if (n<=0) n=u->row;
+    
     for (i=0;i<n;++i) printf("vec_%d = %d\n",i,u->val[N2C(i)]);
 }
 

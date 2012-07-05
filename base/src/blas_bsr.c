@@ -57,7 +57,7 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -342,7 +342,7 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -613,7 +613,7 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -2347,7 +2347,7 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
 		                 dBSRmat *B)
 {
 	const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
-	unsigned INT nB=A->NNZ;
+    INT nB=A->NNZ;
 	INT i,i1,j,jj,k,length;    
 	INT begin_row,end_row,begin_rowA,end_rowA,begin_rowR,end_rowR;
 	INT istart,iistart,count;

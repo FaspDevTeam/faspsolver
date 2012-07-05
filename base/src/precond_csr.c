@@ -159,7 +159,7 @@ void fasp_precond_diag (REAL *r,
 {
     dvector *diag=(dvector *)data;
     REAL *diagptr=diag->val;
-    unsigned INT i, m=diag->row;    
+    INT i, m=diag->row;    
     
     memcpy(z,r,m*sizeof(REAL));
     for (i=0;i<m;++i) {
@@ -407,7 +407,7 @@ void fasp_precond_amg (REAL *r,
     precond_data *pcdata=(precond_data *)data;
     const INT m=pcdata->mgl_data[0].A.row;
     const INT maxit=pcdata->maxit;
-    unsigned INT i;
+    INT i;
     
     AMG_param amgparam; fasp_param_amg_init(&amgparam);
     fasp_param_prec_to_amg(&amgparam,pcdata);
@@ -416,7 +416,9 @@ void fasp_precond_amg (REAL *r,
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
-    for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam); //fasp_solver_mgrecur(mgl,&amgparam,0);
+    for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam); 
+    // We can use a recurcive version of MG:
+    //   for (i=0;i<maxit;++i) fasp_solver_mgrecur(mgl,&amgparam,0);
     
     fasp_array_cp(m,mgl->x.val,z);    
 }
@@ -440,7 +442,7 @@ void fasp_precond_famg (REAL *r,
     precond_data *pcdata=(precond_data *)data;
     const INT m=pcdata->mgl_data[0].A.row;
     const INT maxit=pcdata->maxit;
-    unsigned INT i;
+    INT i;
     
     AMG_param amgparam; fasp_param_amg_init(&amgparam);
     fasp_param_prec_to_amg(&amgparam,pcdata);
@@ -473,7 +475,7 @@ void fasp_precond_amli (REAL *r,
     precond_data *pcdata=(precond_data *)data;
     const INT m=pcdata->mgl_data[0].A.row;
     const INT maxit=pcdata->maxit;
-    unsigned INT i;
+    INT i;
     
     AMG_param amgparam; fasp_param_amg_init(&amgparam);
     fasp_param_prec_to_amg(&amgparam,pcdata);
@@ -508,7 +510,7 @@ void fasp_precond_nl_amli (REAL *r,
     const INT m=pcdata->mgl_data[0].A.row;
     const INT maxit=pcdata->maxit;
     const SHORT num_levels = pcdata->max_levels;
-    unsigned INT i;
+    INT i;
     
     AMG_param amgparam; fasp_param_amg_init(&amgparam);
     fasp_param_prec_to_amg(&amgparam,pcdata);

@@ -4,6 +4,7 @@ File Name: CHANGES
 - Modify the interface of Schwarz to make it consistent with AMG and ILU.
 - Update a few OMP routines. 
 - Fix a VC++ compability problem in fort_ns.h.
+- Fix a data type bug and other possible problems according to VC++ warnings.
 
 06/27/2012 FASP 1.0.1:
 - Fix a few GCC warnings and Doxygen warnings.

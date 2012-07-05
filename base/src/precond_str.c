@@ -29,7 +29,7 @@ void fasp_precond_dstr_diag (REAL *r,
 {
     precond_diagstr *diag=(precond_diagstr *)data;
     REAL *diagptr=diag->diag.val;
-    unsigned INT i,nc=diag->nc;
+    INT i,nc=diag->nc;
     INT nc2=nc*nc;
     INT m=diag->diag.row/nc2;    
     

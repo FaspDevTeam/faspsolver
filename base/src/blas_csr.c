@@ -82,7 +82,7 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         memcpy(C->IA,B->IA,(B->row+1)*sizeof(INT));
         memcpy(C->JA,B->JA,(B->nnz)*sizeof(INT));
 
-		if(use_openmp) {
+		if (use_openmp) {
 #if FASP_USE_OPENMP
 			INT mybegin, myend, myid;
 #pragma omp parallel private(myid, mybegin, myend, i)
@@ -106,7 +106,7 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         memcpy(C->IA,A->IA,(A->row+1)*sizeof(INT));
         memcpy(C->JA,A->JA,(A->nnz)*sizeof(INT));
 
-		if(use_openmp) {
+		if (use_openmp) {
 #if FASP_USE_OPENMP
 			INT mybegin, myend, myid;
 #pragma omp parallel private(myid, mybegin, myend, i)
@@ -1054,7 +1054,7 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
                              dCSRmat *B)
 {
     const INT row=R->row, col=P->col;
-    unsigned INT nB=A->nnz;
+    INT nB=A->nnz;
     INT i,i1,j,jj,k,length;    
     INT begin_row,end_row,begin_rowA,end_rowA,begin_rowR,end_rowR;
     INT istart,iistart,count;

@@ -288,7 +288,7 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
             fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
         else {
-            unsigned INT steps = param->presmooth_iter;
+            INT steps = param->presmooth_iter;
     
             if (steps > 0) {
                 switch (smoother) {
@@ -371,7 +371,7 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
             fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
         else {
-            unsigned INT steps = param->postsmooth_iter;
+            INT steps = param->postsmooth_iter;
     
             if (steps > 0) {
                 switch (smoother) {

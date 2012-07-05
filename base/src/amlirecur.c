@@ -149,7 +149,7 @@ void fasp_solver_amli (AMG_data *mgl,
         { 
             fasp_array_cp(m1,b1->val,r1);
             
-            unsigned INT i;
+            INT i;
             for (i=1; i<=degree; i++) {
                 fasp_dvec_set(m1,e1,0.0);
                 fasp_solver_amli(mgl, param, level+1);
@@ -595,7 +595,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
             fasp_smoother_dbsr_ilu(A_level0, b0, e0, LU_level);
         }
         else {
-            unsigned SHORT steps = param->presmooth_iter;
+            SHORT steps = param->presmooth_iter;
             
             if (steps > 0){
                 switch (smoother) {
@@ -630,11 +630,10 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
             
             // The coarsest problem is solved exactly.
             // No need to call krylov method on second coarest level
-            if (level == num_levels-2)  
-            {
+            if (level == num_levels-2) {
                 fasp_solver_nl_amli_bsr(&mgl[level+1], param, 0, num_levels-1);
             }
-            else{  // recursively call preconditioned Krylov method on coarse grid
+            else {  // recursively call preconditioned Krylov method on coarse grid
                 precond_data_bsr pcdata;
                 
                 fasp_param_amg_to_prec_bsr (&pcdata, param);
@@ -652,11 +651,11 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                 const INT maxit = param->amli_degree+1;
                 const REAL tol = 1e-12;
                 
-                switch (param->nl_amli_krylov_type) {
-                    default: // Use FGMRES
-                        fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH,&pc,tol,maxit,MIN(maxit,30),1,PRINT_NONE);
-                        break;
-                }
+                // switch (param->nl_amli_krylov_type) {
+                // default: // only FGMRES is supported so far --Chensong 
+                fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH,&pc,tol,maxit,MIN(maxit,30),1,PRINT_NONE);
+                //     break; 
+                // }
                 
                 fasp_array_cp (m1, bH.val, b1->val);
                 fasp_array_cp (m1, uH.val, e1->val);
@@ -671,7 +670,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
             fasp_smoother_dbsr_ilu(A_level0, b0, e0, LU_level);
         }
         else {
-            unsigned SHORT steps = param->postsmooth_iter;
+            SHORT steps = param->postsmooth_iter;
             
             if (steps > 0){
                 switch (smoother) {

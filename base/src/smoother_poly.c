@@ -45,7 +45,7 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
                               INT L)
 {
     // local variables
-    unsigned INT i;
+    INT i;
     REAL *b = brhs->val, *u = usol->val;
     REAL *Dinv = NULL, *r = NULL, *rbar = NULL, *v0 = NULL, *v1 = NULL, *error = NULL, *k = NULL;
     REAL mu0, mu1, smu0, smu1;
@@ -131,16 +131,16 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
  * \date   06/28/2010
  */
 void fasp_smoother_dcsr_poly_old (dCSRmat *Amat, 
-                              dvector *brhs, 
-                              dvector *usol, 
-                              INT n, 
-                              INT ndeg, 
-                              INT L)
+                                  dvector *brhs, 
+                                  dvector *usol, 
+                                  INT n, 
+                                  INT ndeg, 
+                                  INT L)
 {
     INT  *ia=Amat->IA,*ja=Amat->JA;
-    REAL *a=Amat->val, *b=brhs->val, *u=usol->val;
-    
     INT   i,j,k,it,jk,iaa,iab,ndeg0;  // id and ij for scaling of A
+
+    REAL *a=Amat->val, *b=brhs->val, *u=usol->val;
     REAL *v,*v0,*r,*vsave;  // one can get away without r as well;
     REAL  smaxa,smina,delinv,s,smu0,smu1,skappa,th,th1,sq; 
     REAL  ri,ari,vj,ravj,snj,sm,sm01,smsqrt,delta,delta2,chi;
@@ -292,7 +292,7 @@ static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
 }
 
 /**
- * \fn    static void Diaginv(dCSRmat *Amat, REAL *Dinv)
+ * \fn static void Diaginv (dCSRmat *Amat, REAL *Dinv)
  *
  * \brief find the inverse of the diagonal of A
  * 
@@ -300,19 +300,17 @@ static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
  * \param Dinv vector to store the inverse of diagonal of A
  *
  * \author Fei Cao, Xiaozhe Hu
- * \date 05/24/2012
+ * \date   05/24/2012
  */
-static void Diaginv(dCSRmat *Amat, REAL *Dinv)
+static void Diaginv (dCSRmat *Amat, REAL *Dinv)
 {
     const INT   n  = Amat->row;
     const INT  *ia = Amat->IA, *ja = Amat->JA;
     const REAL *a  = Amat->val;
-    unsigned INT i,j;
+    INT i,j;
     
-    for (i=0; i<n; i++)
-    {
-        for(j=ia[i]; j<ia[i+1]; j++)
-        {
+    for (i=0; i<n; i++) {
+        for(j=ia[i]; j<ia[i+1]; j++) {
             if(i==ja[j]) // find the diagonal 
                 break;
         }
@@ -345,7 +343,7 @@ static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
     
     // get the infinity norm of Dinv*A
     for (norm=0,i=0; i<n; i++) {
-
+        
         for (temp=0,j=ia[i]; j<ia[i+1]; j++) {
             temp += ABS(a[j]);
         }

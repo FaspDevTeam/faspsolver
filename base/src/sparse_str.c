@@ -62,7 +62,7 @@ dSTRmat fasp_dstr_create (INT nx,
 {    
     dSTRmat A;
     
-    unsigned INT i;
+    INT i;
     
     A.nx=nx; A.ny=ny; A.nz=nz;
     A.nc=nc;
@@ -78,7 +78,7 @@ dSTRmat fasp_dstr_create (INT nx,
     
     A.offdiag=(REAL**)fasp_mem_calloc(nband, sizeof(REAL*));
     
-    for(i=0;i<A.nband;++i) {
+    for (i=0;i<A.nband;++i) {
         A.offdiag[i]=(REAL*)fasp_mem_calloc((A.ngrid-ABS(A.offsets[i]))*A.nc*A.nc, sizeof(REAL));
     }
     
@@ -150,10 +150,11 @@ void fasp_dstr_alloc (INT nx,
  */
 void fasp_dstr_free (dSTRmat *A)
 {    
-    unsigned INT i;
+    INT i;
     
     fasp_mem_free(A->offsets);
     fasp_mem_free(A->diag);
+    
     for (i=0;i<A->nband;++i) fasp_mem_free(A->offdiag[i]);
     
     A->nx=0;

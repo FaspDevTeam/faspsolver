@@ -75,7 +75,7 @@ void fasp_solver_mgrecur (AMG_data *mgl,
         fasp_blas_dcsr_mxv(&mgl[level].R, r, b1->val);
     
         { // call MG recursively: type = 1 for V cycle, type = 2 for W cycle 
-            unsigned INT i;    
+            SHORT i;    
             fasp_dvec_set(m1,e1,0.0);    
             for (i=0; i<cycle_type; ++i) fasp_solver_mgrecur (mgl, param, level+1);
         }

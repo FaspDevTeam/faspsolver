@@ -134,7 +134,7 @@ void fasp_schwarz_data_free (Schwarz_data *schwarz)
 void fasp_amg_data_free (AMG_data *mgl)
 {    
     const INT max_levels = mgl[0].max_levels;
-    unsigned INT i;
+    INT i;
 
     for (i=0; i<max_levels; ++i) {
         if (&mgl[i].A) { fasp_dcsr_free(&mgl[i].A); }
@@ -152,6 +152,7 @@ void fasp_amg_data_free (AMG_data *mgl)
         fasp_mem_free(mgl->near_kernel_basis[i]); 
         mgl->near_kernel_basis[i]=NULL;
     }
+    
     fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
     fasp_mem_free(mgl); mgl = NULL;
 }

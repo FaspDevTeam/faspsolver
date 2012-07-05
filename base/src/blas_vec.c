@@ -32,12 +32,11 @@ void fasp_blas_dvec_axpy (const REAL a,
                           dvector *x, 
                           dvector *y)
 {
-    unsigned INT i, m=x->row;
+    INT i, m=x->row;
+	INT nthreads = 1, use_openmp = FALSE;
     REAL *xpt=x->val, *ypt=y->val;
 
-	INT nthreads = 1, use_openmp = FALSE;
-
-	if(FASP_USE_OPENMP && m > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && m > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -125,7 +124,7 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if(FASP_USE_OPENMP && length > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && length > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -175,7 +174,7 @@ REAL fasp_blas_dvec_relerr (dvector *x,
         exit(ERROR_DUMMY_VAR);    
     }
 
-	if(FASP_USE_OPENMP && length > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && length > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -223,7 +222,7 @@ REAL fasp_blas_dvec_norm1 (dvector *x)
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if(FASP_USE_OPENMP && length > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && length > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -265,7 +264,7 @@ REAL fasp_blas_dvec_norm2 (dvector *x)
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if(FASP_USE_OPENMP && length > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && length > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -297,7 +296,7 @@ REAL fasp_blas_dvec_norm2 (dvector *x)
 
 REAL fasp_blas_dvec_norminf (dvector *x)
 {
-    unsigned INT i;
+    INT i;
     const INT length=x->row;
     REAL *xpt=x->val;
     

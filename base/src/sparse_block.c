@@ -49,7 +49,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     INT *col_flag;
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && n > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -71,7 +71,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
         {
             myid = omp_get_thread_num();
             mybegin = myid*stride_i;
-            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            if (myid < nthreads-1)  myend = mybegin+stride_i;
             else myend = n;
             for (i=mybegin; i < myend; ++i) {
                 col_flag[N2C(Js[i])]=i+1;
@@ -143,7 +143,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     const INT nb = A->nb;
     const INT nb2=nb*nb;
 
-	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
+	if (FASP_USE_OPENMP && n > OPENMP_HOLDS){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
@@ -163,7 +163,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
         {
             myid = omp_get_thread_num();
             mybegin = myid*stride_i;
-            if(myid < nthreads-1)  myend = mybegin+stride_i;
+            if (myid < nthreads-1)  myend = mybegin+stride_i;
             else myend = n;
             for (i=mybegin; i < myend; ++i) {
                 col_flag[N2C(Js[i])]=i+1;

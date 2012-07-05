@@ -62,7 +62,7 @@ void fasp_sparse_abybms_ (INT *ia,
     unsigned INT jcform=0;
     INT na,ma,mb,icpp,iastrt,ibstrt,iaend,ibend,i,j,k,jia,jib;
     INT *icp;
-    if(jc) jcform=1;
+    if (jc) jcform=1;
     na=*nap;
     ma=*map;
     mb=*mbp;
@@ -75,16 +75,16 @@ void fasp_sparse_abybms_ (INT *ia,
         // fprintf(stdout,"ic[%d]=%d\n",i+1,ic[i]);
         iastrt = ia[i]-1;
         iaend = ia[i+1]-1;
-        if(iaend > iastrt) {
+        if (iaend > iastrt) {
             for (jia = iastrt; jia < iaend; ++jia) {
                 j = ja[jia]-1;
                 ibstrt = ib[j]-1;
                 ibend = ib[j+1]-1;
-                if(ibend > ibstrt) {
-                    for(jib = ibstrt; jib< ibend; ++jib) {
+                if (ibend > ibstrt) {
+                    for (jib = ibstrt; jib< ibend; ++jib) {
                         k = jb[jib]-1; 
-                        if(icp[k] != i+1) {
-                            if(jcform) jc[icpp-1] = k+1;
+                        if (icp[k] != i+1) {
+                            if (jcform) jc[icpp-1] = k+1;
                             ++icpp;
                             icp[k] = i+1;
                         } //if 
@@ -92,9 +92,9 @@ void fasp_sparse_abybms_ (INT *ia,
                 } //if
             } //for
         } //if
-    } //for(i...
+    } //for (i...
     ic[na] = icpp;
-    if(icp) free(icp);
+    if (icp) free(icp);
     return;
 }
 
@@ -145,34 +145,34 @@ void fasp_sparse_abyb_ (INT *ia,
     for (i = 0; i < na; ++i) {
         icstrt = ic[i]-1; 
         icend = ic[i+1]-1;
-        if(icend > icstrt) {
-            for(ji = icstrt;ji < icend;++ji) {
+        if (icend > icstrt) {
+            for (ji = icstrt;ji < icend;++ji) {
                 k=jc[ji]-1;
                 x[k] = 0e+0;
             }
             iastrt = ia[i]-1;
             iaend = ia[i+1]-1;
-            if(iaend > iastrt) {
+            if (iaend > iastrt) {
                 for (jia = iastrt; jia < iaend ; ++jia) {
                     j = ja[jia]-1;
                     x0 = a[jia];
                     ibstrt = ib[j]-1;
                     ibend = ib[j+1]-1;
-                    if(ibend > ibstrt) {
-                        for(jib = ibstrt; jib < ibend; ++jib) {
+                    if (ibend > ibstrt) {
+                        for (jib = ibstrt; jib < ibend; ++jib) {
                             k = jb[jib]-1;
                             x[k] += x0*b[jib];
                         }
                     }  // end if
                 } //  end for
             }
-            for(ji = icstrt; ji < icend; ++ji) {
+            for (ji = icstrt; ji < icend; ++ji) {
                 k=jc[ji]-1;
                 c[ji]=x[k];
             } // end for
         } // end if
     }//end do
-    if(x) free(x);
+    if (x) free(x);
     return;
 }
 
@@ -225,9 +225,9 @@ void fasp_sparse_iit_ (INT *ia,
         iat[i] = 0;
     }
     iab = ia[nh-1] - 1;
-    for(i = 1; i <= iab; ++i) {
+    for (i = 1; i <= iab; ++i) {
         j = ja[i-1] + 2;
-        if(j <= mh) 
+        if (j <= mh) 
             iat[j-1] = iat[j-1] + 1;
     }
     iat[0] = 1;
@@ -240,7 +240,7 @@ void fasp_sparse_iit_ (INT *ia,
     for (i = 1; i <= n; ++i) {
         iaa = ia[i-1];
         iab = ia[i] - 1;
-        if(iab >= iaa) {
+        if (iab >= iaa) {
             for (jp = iaa; jp <= iab; ++jp) {
                 j = ja[jp-1] + 1;
                 k = iat[j-1];
@@ -303,9 +303,9 @@ void fasp_sparse_aat_ (INT *ia,
         iat[i] = 0;
     }
     iab = ia[nh-1] - 1; /* Size of ja */
-    for(i = 1;i<=iab; ++i) {
+    for (i = 1;i<=iab; ++i) {
         j = ja[i-1] + 2;
-        if(j <= mh) {
+        if (j <= mh) {
             iat[j-1] = iat[j-1] + 1;
         }
     }
@@ -320,7 +320,7 @@ void fasp_sparse_aat_ (INT *ia,
     for (i=1; i<=n; ++i) {
         iaa = ia[i-1];
         iab = ia[i] - 1;
-        if(iab >= iaa) {
+        if (iab >= iaa) {
             for (jp = iaa; jp <= iab; ++jp) {
                 j = ja[jp-1] + 1;
                 k = iat[j-1];
@@ -369,7 +369,7 @@ void fasp_sparse_aplbms_ (INT *ia,
       c...  addition of two general sparse matricies (symbolic part) :
       c= a + b. 
     */
-    if(jc) jcform=1;
+    if (jc) jcform=1;
     n=*nab;
     m=*mab;
     icp=(INT *) calloc(m,sizeof(INT));
@@ -380,28 +380,28 @@ void fasp_sparse_aplbms_ (INT *ia,
         i1=i+1;
         iastrt = ia[i]-1;
         iaend = ia[i1]-1;
-        if(iaend > iastrt) {
+        if (iaend > iastrt) {
             for (jp = iastrt; jp < iaend; ++jp) {
                 j = ja[jp];
-                if(jcform) jc[icpp-1] = j;
+                if (jcform) jc[icpp-1] = j;
                 ++icpp;
                 icp[j-1] = i1;
             }
         }
         ibstrt = ib[i] - 1;
         ibend = ib[i1] - 1;
-        if(ibend > ibstrt) {
+        if (ibend > ibstrt) {
             for (jp = ibstrt; jp < ibend; ++jp) {
                 j = jb[jp];
-                if(icp[j-1] != i1) {
-                    if(jcform) jc[icpp-1] = j;
+                if (icp[j-1] != i1) {
+                    if (jcform) jc[icpp-1] = j;
                     ++icpp;
                 }
             }
         }
     }  // // loop i=0; i< n
     ic[n] = icpp;
-    if(icp) free(icp);
+    if (icp) free(icp);
     return;
 }
 
@@ -450,14 +450,14 @@ void fasp_sparse_aplusb_ (INT *ia,
         i1=i+1;
         icstrt = ic[i]-1;
         icend = ic[i1]-1;
-        if(icend > icstrt) {
+        if (icend > icstrt) {
             for (icpp = icstrt;icpp<icend;++icpp) {
                 j=jc[icpp]-1;
                 x[j] = 0e+00;
             }
             iastrt = ia[i]-1;
             iaend = ia[i1]-1;
-            if(iaend > iastrt) {
+            if (iaend > iastrt) {
                 for (icpp = iastrt;icpp<iaend;++icpp) {
                     j=ja[icpp]-1;
                     x[j] = a[icpp];
@@ -465,7 +465,7 @@ void fasp_sparse_aplusb_ (INT *ia,
             }
             ibstrt = ib[i]-1;
             ibend = ib[i1]-1;
-            if(ibend > ibstrt) {
+            if (ibend > ibstrt) {
                 for (icpp = ibstrt;icpp<ibend;++icpp) {
                     j = jb[icpp]-1;
                     x[j] = x[j] + b[icpp];
@@ -477,7 +477,7 @@ void fasp_sparse_aplusb_ (INT *ia,
             }
         } // if (icstrt > icend)...
     } // loop i=0; i< n
-    if(x) free(x);
+    if (x) free(x);
     return;
 }
 
@@ -525,36 +525,36 @@ void fasp_sparse_rapms_ (INT *ir,
     nc = *ncin;
     n  = *nin;
     ix=(INT *) calloc(nc,sizeof(INT));
-    if(jac) jacform=1;
+    if (jac) jacform=1;
     maxr = 0;
     for (i =0;i<nc; ++i) {
         ix[i]=0;
         ira=ir[i];
         irb=ir[i+1];
         maxri=irb-ira;
-        if(maxr < maxri) maxr=maxri;
+        if (maxr < maxri) maxr=maxri;
     }        
     iac[0] = 1;
     iacp = iac[0]-1;
     // fprintf(stdout,"\n");
-    for(ic = 0;ic<nc;ic++) {
+    for (ic = 0;ic<nc;ic++) {
         ira=ir[ic]-1;
         icp1=ic+1;
         irb=ir[icp1]-1;
-        for(jk = ira;jk<irb;jk++) {
+        for (jk = ira;jk<irb;jk++) {
             if1 = jr[jk]-1;
             iaa = ia[if1]-1;
             iab = ia[if1+1]-1;
             // fprintf(stdout,"%d %d %d %d\n",ic,if1,iaa,iab);
-            for(jak = iaa;jak < iab;jak++) {
+            for (jak = iaa;jak < iab;jak++) {
                 jf1 = ja[jak]-1;
                 ipa = ip[jf1]-1;
                 ipb = ip[jf1+1]-1;
                 for (jpk = ipa;jpk < ipb;jpk++) {
                     jc = jp[jpk]-1;
-                    if(ix[jc] != icp1) {
+                    if (ix[jc] != icp1) {
                         ix[jc]=icp1;
-                        if(jacform) jac[iacp] = jc+1;
+                        if (jacform) jac[iacp] = jc+1;
                         iacp++;
                     }
                 }
@@ -564,7 +564,7 @@ void fasp_sparse_rapms_ (INT *ir,
     }
     nnzc = iacp-1;
     *maxrout=maxr;
-    if(ix) free(ix);
+    if (ix) free(ix);
     // fprintf(stderr,"\n********Nodec1=%i %i %i\n",ic,iac[nc],iacp);
     return;
 }
@@ -600,7 +600,7 @@ void fasp_sparse_wtams_ (INT *jw,
                          INT *icp)
 {
     INT nw,ma,nv,iastrt,iaend,j,k,jiw,jia;
-    if(*nwp<=0) {*nvp=0; return;}
+    if (*nwp<=0) {*nvp=0; return;}
     nw=*nwp;
     ma=*map;
     nv = 0;
@@ -608,10 +608,10 @@ void fasp_sparse_wtams_ (INT *jw,
         j = jw[jiw]-1;
         iastrt = ia[j]-1;
         iaend  = ia[j+1]-1;
-        if(iaend > iastrt) {
-            for(jia = iastrt ;jia< iaend;jia++) {
+        if (iaend > iastrt) {
+            for (jia = iastrt ;jia< iaend;jia++) {
                 k = ja[jia]-1; 
-                if(!icp[k]) {
+                if (!icp[k]) {
                     jv[nv] = k+1;
                     nv++;
                     icp[k] = nv;
@@ -661,11 +661,11 @@ void fasp_sparse_wta_ (INT *jw,
       C--------------------------------------------------------------------
       C--------------------------------------------------------------------
     */
-    if(*nwp<=0) {*nvp=-1; return;}
+    if (*nwp<=0) {*nvp=-1; return;}
     nw=*nwp;
     ma=*map;
     nv=*nvp;
-    for(ji = 0;ji < nv;++ji) {
+    for (ji = 0;ji < nv;++ji) {
         k=jv[ji]-1;
         v[k] = 0e+0;
     }
@@ -674,8 +674,8 @@ void fasp_sparse_wta_ (INT *jw,
         v0 = w[jiw];
         iastrt = ia[j]-1;
         iaend  = ia[j+1]-1;
-        if(iaend > iastrt) {
-            for(jia = iastrt;jia < iaend;jia++) {
+        if (iaend > iastrt) {
+            for (jia = iastrt;jia < iaend;jia++) {
                 k = ja[jia]-1;
                 v[k] += v0*a[jia];
             } 
@@ -707,7 +707,7 @@ void fasp_sparse_ytxbig_ (INT *jy,
 {
     INT i,ii;
     *s=0e+00; 
-    if(*nyp > 0) {
+    if (*nyp > 0) {
         for (i = 0;i< *nyp; ++i) {
             ii = jy[i]-1;
             *s += y[i]*x[ii]; 
@@ -744,11 +744,11 @@ void fasp_sparse_ytx_ (INT *jy,
 {// not tested well
     INT i,j,i0,ii;
     *s=0e+00; 
-    if((*nyp > 0) && (*nxp > 0)) {
+    if ((*nyp > 0) && (*nxp > 0)) {
         for (i = 0;i< *nyp; ++i) {
             j = jy[i]-1;
             i0=icp[j];
-            if(i0) {
+            if (i0) {
                 ii=jx[i0]-1;
                 *s += y[i]*x[ii]; 
             }
@@ -815,7 +815,7 @@ void fasp_sparse_rapcmp_ (INT *ir,
     v  = (REAL *) calloc(n,sizeof(REAL));
     icp = (INT *) calloc(n,sizeof(INT));
     jv  = (INT *) calloc(n,sizeof(INT));
-    if(!(icp && v && jv)) {
+    if (!(icp && v && jv)) {
         fprintf(stderr,"\nCould not allocate local mem in rap\n");
         exit(19);
     }
@@ -824,10 +824,10 @@ void fasp_sparse_rapcmp_ (INT *ir,
         jv[i] = 0;
         v[i]=0e+00;
     }
-    for(ic = 0;ic<nc;ic++) {
+    for (ic = 0;ic<nc;ic++) {
         nw = ir[ic+1]-ir[ic];
         //    fprintf(stdout,"\n %i ***** VVVVVVVVVVV %i\n",ic,nw);
-        if(nw<=0) continue;
+        if (nw<=0) continue;
         is = ir[ic]-1;
         jris=jr+is;
         //    wtams_(jris,ia, ja, &nw,&n,jv, &nv, icp);
@@ -839,10 +839,10 @@ void fasp_sparse_rapcmp_ (INT *ir,
             j = *(jris+ji)-1;
             iastrt = ia[j]-1;
             iaend  = ia[j+1]-1;
-            if(iaend > iastrt) {
-                for(jia = iastrt ;jia< iaend;jia++) {
+            if (iaend > iastrt) {
+                for (jia = iastrt ;jia< iaend;jia++) {
                     k = ja[jia]-1; 
-                    if(!icp[k]) {
+                    if (!icp[k]) {
                         *(jv+nv) = k+1;
                         nv++;
                         icp[k] = nv;
@@ -852,7 +852,7 @@ void fasp_sparse_rapcmp_ (INT *ir,
         } //end for loop for forming the nonz struct of (r_i)^t*A
         ris=r+is;
         //    wta_(jris, ris,ia, ja, a,&nw, &n, jv, v, &nv);
-        for(ji = 0;ji < nv;++ji) {
+        for (ji = 0;ji < nv;++ji) {
             k=jv[ji]-1;
             v[k] = 0e+0;
         }
@@ -861,8 +861,8 @@ void fasp_sparse_rapcmp_ (INT *ir,
             v0 = *(ris+ji);
             iastrt = ia[j]-1;
             iaend  = ia[j+1]-1;
-            if(iaend > iastrt) {
-                for(jia = iastrt;jia < iaend;jia++) {
+            if (iaend > iastrt) {
+                for (jia = iastrt;jia < iaend;jia++) {
                     k = ja[jia]-1;
                     v[k] += v0*a[jia];
                 } 
@@ -870,7 +870,7 @@ void fasp_sparse_rapcmp_ (INT *ir,
         } //end for loop for calculating the product (r_i)^t*A    
         iacst=iac[ic]-1;
         iacen=iac[ic+1]-1;
-        for(jkc = iacst; jkc<iacen;jkc++) {
+        for (jkc = iacst; jkc<iacen;jkc++) {
             jc = jac[jkc]-1;
             nptjc = ipt[jc+1]-ipt[jc];
             js = ipt[jc]-1;
@@ -878,7 +878,7 @@ void fasp_sparse_rapcmp_ (INT *ir,
             ptjs = pt+js;
             //      ytxbig_(jptjs,ptjs,&nptjc,v,&aij);
             aij=0e+00;
-            if(nptjc > 0) {
+            if (nptjc > 0) {
                 for (i = 0;i< nptjc; ++i) {
                     j = *(jptjs+i)-1;
                     aij += (*(ptjs+i))*(*(v+j)); 
@@ -887,7 +887,7 @@ void fasp_sparse_rapcmp_ (INT *ir,
             ac[jkc] = aij;
         } //end for
         // set nos the values of v and icp back to 0;
-        for(i=0; i < nv; ++i) {
+        for (i=0; i < nv; ++i) {
             j=jv[i]-1;
             icp[j]=0;
             v[j]=0e+00;

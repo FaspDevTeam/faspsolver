@@ -125,7 +125,7 @@ INT fasp_dstr_diagscale (dSTRmat *A,
     for (i=0;i<ngrid;++i) {  
         ic2=i*nc2;
         for (j=0;j<nc2;++j)
-            { if(j/nc == j%nc) B->diag[ic2+j]=1; else B->diag[ic2+j]=0;}
+            { if (j/nc == j%nc) B->diag[ic2+j]=1; else B->diag[ic2+j]=0;}
     }
     
     for (i=0;i<ngrid;++i) fasp_blas_smat_inv(&(diag[i*nc2]),nc);
@@ -291,7 +291,7 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
                                           REAL *x, 
                                           REAL *y)
 {
-    unsigned INT i;
+    INT i;
     INT idx1,idx2;
     INT end1, end2;
     INT nline;

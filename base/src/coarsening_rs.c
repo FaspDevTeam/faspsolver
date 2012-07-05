@@ -824,6 +824,7 @@ static void generate_S_rs_ag (dCSRmat *A,
  * \date   09/06/2010
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012
+ * Modified by Chensong Zhang on 07/06/2012: fix a data type bug
  */
 static INT form_coarse_level (dCSRmat *A, 
                               iCSRmat *S, 
@@ -833,7 +834,7 @@ static INT form_coarse_level (dCSRmat *A,
 {
     INT col = 0; 
     unsigned INT maxlambda, maxnode, num_left=0;
-    REAL measure, new_meas;
+    INT measure, new_meas;
     
     INT *ia=A->IA, *vec=vertices->val;
     INT ci_tilde = -1, ci_tilde_mark = -1;
@@ -985,7 +986,7 @@ static INT form_coarse_level (dCSRmat *A,
             if (vec[j]==UNPT) // j is unkown
             {
                 measure=lambda[j];
-                remove_node(&LoL_head, &LoL_tail,measure, j, lists, where);
+                remove_node(&LoL_head, &LoL_tail, measure, j, lists, where);
                 lambda[j]=--measure;
                 if (measure>0) {
                     enter_list(&LoL_head, &LoL_tail,measure, j, lists, where);
@@ -1417,6 +1418,8 @@ static void generate_sparsity_P_standard (dCSRmat *P,
  * 
  * \author Kai Yang, Xiaozhe Hu
  * \date   09/06/2010
+ *
+ * Modified by Chensong Zhang on 07/05/2012: Fix a data type bug
  */
 static INT form_coarse_level_ag (dCSRmat *A, 
                                  iCSRmat *S,
@@ -1428,7 +1431,7 @@ static INT form_coarse_level_ag (dCSRmat *A,
     
     INT col = 0; // initialize col(P): returning output 
 	unsigned INT maxlambda, maxnode, num_left=0;	
-	REAL measure, new_meas;
+	INT measure, new_meas;
     
 	INT *vec=vertices->val;
 	INT i,j,k,l,m,flag,ci,cj,ck,cl,num_c;
@@ -1564,7 +1567,7 @@ static INT form_coarse_level_ag (dCSRmat *A,
 			{
 				measure=lambda[cj];
                 
-				remove_node(&LoL_head, &LoL_tail,measure, cj, lists, where);
+				remove_node(&LoL_head, &LoL_tail, measure, cj, lists, where);
 				measure--;
 				lambda[cj]=measure;
 				if (measure>0) {
