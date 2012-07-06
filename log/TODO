@@ -5,7 +5,6 @@ Milestones
 ========================
 
 * Release an alpha version by June 20 2012 -- then tested extensively inside our group
-
 * Release a stable beta version by the end of 2012 -- Dec/24/2012!
 
 ========================
@@ -21,7 +20,7 @@ Documentation
 [       ] further develop the documentation (Chensong)
 
 ========================
-Structure Changes
+Structure
 ========================
 	
 [ 0.4.1 ] prepare a new HG web server for release
@@ -47,30 +46,30 @@ AMG
 
 [ 0.3.9 ] separate SA and UA code
 [ 0.5.0 ] profile and optimize a few core functions: RS, EM
-[ 06/15 ] profile and optimize a few core functions: SA, UA (Xiaozhe)
+[ 08/15 ] profile and optimize a few core functions: SA, UA (Xiaozhe)
 
 [ 0.8.5 ] non-overlapping/overlapping schwarz smoother
 [ 07/20 ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
 [ 07/12 ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
-[ 08/01 ] strength matrix based on (polynomial) smoothers (Xiaozhe)
+[ 08/15 ] strength matrix based on (polynomial) smoothers (Xiaozhe)
 [       ] Maximal Independent Set (Ludmil)
 [       ] AMG based on mesh information
 
 [ 0.9.0 ] aggressive coarsening strategies (Xiaozhe)
-[ 08/01 ] aggregation based on MIS (Xiaozhe)
+[ 08/15 ] aggregation based on MIS (Xiaozhe)
 [       ] cleanup the compatible coarsening (Xiaozhe)
 [       ] Notay's aggregation scheme (Xiaozhe)
 [       ] LAMG's aggregation scheme (Xiaozhe)
 
 [ 0.8.6 ] standard interpolation
-[ 08/01 ] polynomial interpolation -- vector preserve (Xiaozhe)
+[ 08/15 ] polynomial interpolation -- vector preserve (Xiaozhe)
 [       ] multipass interpolation
 [       ] long-distance interpolation
 [       ] bootstrap interpolation
 
-[ 08/15 ] estimation of extreme eigenvalues (Xiaozhe)
-[ 08/15 ] smoothing interpolation by polynomial smoothers (Xiaozhe)
-[ 08/15 ] interpolation can preserve more kernel vectors (Xiaozhe)
+[ 09/15 ] estimation of extreme eigenvalues (Xiaozhe)
+[ 09/15 ] smoothing interpolation by polynomial smoothers (Xiaozhe)
+[ 09/15 ] interpolation can preserve more kernel vectors (Xiaozhe)
 
 ========================
 Iterative Methods

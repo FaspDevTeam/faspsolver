@@ -199,9 +199,11 @@ https://faspusers@bitbucket.org/fasp/faspsovler
 Then press ``Clone'' and you will obtain ``faspsolver'' in the directory you set.
 
 
-\subsection{Compilation}\label{ssec:lib}
+\section{How to build FASP}\label{sec:build}
 
 FASP has been tested on Linux (Cent OS, Debian, Fedora, RedHat, Ubuntu), OS X (Leopard, Snow Leopard, Lion) and Windows (XP, Win 7) with a couple of compliers including GCC, G++, ICC, VC++, GFORTRAN, G95, IFORT. 
+
+\subsection{Linux or OS X}
 
 Now we give a simple instruction on how to compile FASP on Linux: To build the FASP library, just go to the ``base'' directory and type:
 %
@@ -220,6 +222,10 @@ Then you should obtain a set of test problems. If you need more help, you can us
 \begin{lstlisting}[numbers=none]
 $ make help
 \end{lstlisting}
+
+\subsection{Windows}
+
+To be added!!!
 
 
 \subsection{External libraries}\label{ssec:lib}
@@ -1394,7 +1400,8 @@ NOTE: By default, OpenMP is not disabled in FASP. In order to turn it on, you ne
 To enable OpenMP support, you need to uncomment one line in ``make.inc'' and set ``OMP'' to be 1.
 \begin{lstlisting}[numbers=none]
 # Uncomment the following line to turn on OpenMP version                                                                                                      
-#OMP=1                                                                                                                                                        
+# OMP=1
+                                                                                                                                                      
 ifdef OMP                                                                                                                                                     
    BOPT+=-fopenmp                                                                                                                                             
    CDEFS=-D FASP_USE_OPENMP=1                                                                                                                                 
