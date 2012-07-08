@@ -339,7 +339,11 @@ void fasp_dcsr_getdiag (INT n,
  *
  * \author Xiaozhe Hu
  * \date   11/07/2009
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   07/08/2012
  */
+
 void fasp_dcsr_getcol (const INT n, 
                        dCSRmat *A, 
                        REAL *col) 
@@ -347,6 +351,13 @@ void fasp_dcsr_getcol (const INT n,
     INT i,j, row_begin, row_end;
     INT nrow = A->row, ncol = A->col;
     INT status = SUCCESS;
+
+	INT nthreads=1, use_openmp=FALSE;
+	
+	if(FASP_USE_OPENMP && nrow > OPENMP_HOLDS) {
+		use_openmp = TRUE;
+		nthreads = FASP_GET_NUM_THREADS();
+	}
     
     // check the column index n
     if (n < 0 || n >= ncol) {
@@ -356,19 +367,37 @@ void fasp_dcsr_getcol (const INT n,
     }
     
     // get the column
-    for (i=0; i<nrow; ++i) {
-        // set the entry to zero
-        col[i] = 0.0;
+	if(use_openmp) {
+		INT mybegin, myend, myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, j, row_begin, row_end) 
+#endif
+		for (myid = 0; myid < nthreads; myid++ ) {
+			FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+			for(i=mybegin; i<myend; i++) {
+				col[i] = 0.0;
+				row_begin = A->IA[i]; row_end = A->IA[i+1];
+				for (j=row_begin; j<row_end; ++j) {
+					if (A->JA[j] == n) {
+						col[i] = A->val[j];
+                	}
+            	} // end for j
+			}// end for i
+		}
+	}
+	else {
+        for (i=0; i<nrow; ++i) {
+            // set the entry to zero
+            col[i] = 0.0;
+            row_begin = A->IA[i]; row_end = A->IA[i+1];
         
-        row_begin = A->IA[i]; row_end = A->IA[i+1];
-        
-        for (j=row_begin; j<row_end; ++j) {
-            if (A->JA[j] == n) {
-                col[i] = A->val[j];
-            }
-        } // end for (j=row_begin; j<row_end; ++j)
-        
-    } // end for (i=0; i<nrow; ++i)
+            for (j=row_begin; j<row_end; ++j) {
+                if (A->JA[j] == n) {
+                    col[i] = A->val[j];
+                }
+            } // end for j
+        } // end for i
+	}
     
 FINISHED:
     fasp_chkerr(status,"fasp_dcsr_getcol");
