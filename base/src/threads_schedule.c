@@ -16,7 +16,6 @@
 
 #if FASP_USE_OPENMP
 
-INT thread_ini_flag = 0;
 
 /**
  * \fn     INT FASP_GET_NUM_THREADS();
@@ -28,6 +27,9 @@ INT thread_ini_flag = 0;
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \date   June/15/2012
  */
+
+INT thread_ini_flag = 0;
+
 INT FASP_GET_NUM_THREADS()
 {
 	static INT nthreads;

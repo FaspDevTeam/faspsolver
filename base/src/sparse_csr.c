@@ -352,12 +352,12 @@ void fasp_dcsr_getcol (const INT n,
     INT nrow = A->row, ncol = A->col;
     INT status = SUCCESS;
 
-	INT nthreads=1, use_openmp=FALSE;
+    INT nthreads=1, use_openmp=FALSE;
 	
-	if(FASP_USE_OPENMP && nrow > OPENMP_HOLDS) {
-		use_openmp = TRUE;
-		nthreads = FASP_GET_NUM_THREADS();
-	}
+    if(FASP_USE_OPENMP && nrow > OPENMP_HOLDS) {
+	use_openmp = TRUE;
+	nthreads = FASP_GET_NUM_THREADS();
+    }
     
     // check the column index n
     if (n < 0 || n >= ncol) {
@@ -367,37 +367,36 @@ void fasp_dcsr_getcol (const INT n,
     }
     
     // get the column
-	if(use_openmp) {
-		INT mybegin, myend, myid;
+    if(use_openmp) {
+	INT mybegin, myend, myid;
 #if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, j, row_begin, row_end) 
 #endif
-		for (myid = 0; myid < nthreads; myid++ ) {
-			FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
-			for(i=mybegin; i<myend; i++) {
-				col[i] = 0.0;
-				row_begin = A->IA[i]; row_end = A->IA[i+1];
-				for (j=row_begin; j<row_end; ++j) {
-					if (A->JA[j] == n) {
-						col[i] = A->val[j];
-                	}
+        for (myid = 0; myid < nthreads; myid++ ) {
+	    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+	    for(i=mybegin; i<myend; i++) {
+                col[i] = 0.0;
+		row_begin = A->IA[i]; row_end = A->IA[i+1];
+		for (j=row_begin; j<row_end; ++j) {
+		    if (A->JA[j] == n) {
+	                col[i] = A->val[j];
+                    }
             	} // end for j
-			}// end for i
-		}
-	}
-	else {
+	    }// end for i
+	 }
+    }
+    else {
         for (i=0; i<nrow; ++i) {
             // set the entry to zero
             col[i] = 0.0;
             row_begin = A->IA[i]; row_end = A->IA[i+1];
-        
             for (j=row_begin; j<row_end; ++j) {
                 if (A->JA[j] == n) {
                     col[i] = A->val[j];
                 }
             } // end for j
         } // end for i
-	}
+    }
     
 FINISHED:
     fasp_chkerr(status,"fasp_dcsr_getcol");
@@ -498,7 +497,7 @@ SHORT fasp_dcsr_regdiag (dCSRmat *A,
     SHORT status=RUN_FAIL;
     
     for (i=0;i<m;++i) {
-        begin_row=ia[i],end_row=ia[i+1];
+	begin_row=ia[i],end_row=ia[i+1];
         for (k=begin_row;k<end_row;++k) {
             j=ja[k];
             if (i==j) {
@@ -507,7 +506,7 @@ SHORT fasp_dcsr_regdiag (dCSRmat *A,
             }
         } // end for k
     } // end for i
-    
+
     status = SUCCESS;
     
 FINISHED:    
@@ -869,19 +868,57 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
  *
  * \author Chensong Zhang
  * \date   04/06/2010  
+ *
+ * Modified by chunsheng Feng, Zheng Li
+ * \date   07/11/2012
  */
+
 void fasp_dcsr_shift (dCSRmat *A, 
                       INT offset)
 {
     const INT nnz=A->nnz;
-    const INT n=A->row;
+    const INT n=A->row+1;
     INT i, *ai=A->IA, *aj=A->JA;
+    INT nthreads = 1, use_openmp = FALSE;
+
+    if(FASP_USE_OPENMP && MIN(n, nnz) > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+	nthreads = FASP_GET_NUM_THREADS();
+    }
     
     if (offset == 0) offset = ISTART;
     
-    for (i=0; i<=n; ++i) ai[i]+=offset;
-    
-    for (i=0;i<nnz;++i) aj[i]+=offset;
+    if(use_openmp) {
+        INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i)
+#endif
+        for(myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            for(i=mybegin; i<myend; i++) {
+                ai[i] += offset;
+            }
+        }
+    }
+    else {
+        for (i=0; i<n; ++i) ai[i]+=offset;
+    }
+
+    if(use_openmp) {
+        INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i)
+#endif	
+        for(myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);
+            for(i=mybegin; i<myend; i++) {
+                aj[i] += offset;
+            }
+        }
+    }
+    else {
+        for (i=0; i<nnz; ++i) aj[i]+=offset;
+    }
 }
 
 /**
@@ -894,7 +931,11 @@ void fasp_dcsr_shift (dCSRmat *A,
  *
  * \author Xiaozhe Hu
  * \date   01/31/2011
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   07/11/2012
  */
+
 void fasp_dcsr_symdiagscale (dCSRmat *A, 
                              dvector *diag)
 {
@@ -904,6 +945,13 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     INT *JA = A->JA;
     REAL *val = A->val;
     
+    INT nthreads = 1, use_openmp = FALSE;
+
+    if(FASP_USE_OPENMP && n > OPENMP_HOLDS) {
+	nthreads = FASP_GET_NUM_THREADS();
+	use_openmp = TRUE;
+    }
+
     // local variables
     INT i, j, k, row_start, row_end;
     
@@ -916,15 +964,45 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     // work space
     REAL *work = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
     
-    // square root of diagonal entries
-    for (i=0; i<n; i++) work[i] = sqrt(diag->val[i]);
+    if(use_openmp) {
+        INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i)
+#endif
+        for(myid=0; myid<nthreads; myid++) {
+	    FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            for(i=mybegin; i<myend; i++) work[i] = sqrt(diag->val[i]);
+        }
+    }
+    else {
+        // square root of diagonal entries
+        for (i=0; i<n; i++) work[i] = sqrt(diag->val[i]);
+    }
     
-    // main loop
-    for (i=0; i<n; i++) {
-        row_start = IA[i]; row_end = IA[i+1];
-        for (j=row_start; j<row_end; j++) {
-            k = JA[j];
-            val[j] = val[j]/(work[i]*work[k]);
+    if(use_openmp) {
+        INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, j)
+#endif
+        for(myid=0; myid<nthreads; myid++) {
+	    FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+	    for(i=mybegin; i<myend; i++) {
+	        row_start = IA[i]; row_end = IA[i+1];
+        	for(j=row_start; j<row_end; j++) {
+            	    k = JA[j];
+            	    val[j] = val[j]/(work[i]*work[k]);
+                }
+            }
+        }
+    }
+    else {
+        // main loop
+        for (i=0; i<n; i++) {
+            row_start = IA[i]; row_end = IA[i+1];
+            for (j=row_start; j<row_end; j++) {
+                k = JA[j];
+                val[j] = val[j]/(work[i]*work[k]);
+            }
         }
     }
     
