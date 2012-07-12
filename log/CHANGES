@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+07/12/2012 FASP 1.0.3:
+- Update a few OMP routines.
+- Prepare testing OMP version on Windows.
+- Modify the TODO list.
+
 07/05/2012 FASP 1.0.2:
 - Modify the interface of Schwarz to make it consistent with AMG and ILU.
 - Update a few OMP routines. 

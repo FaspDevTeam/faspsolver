@@ -64,7 +64,7 @@
      261 ./base/src/sparse_block.c
     1033 ./base/src/sparse_bsr.c
       89 ./base/src/sparse_coo.c
-     942 ./base/src/sparse_csr.c
+     971 ./base/src/sparse_csr.c
       71 ./base/src/sparse_csrl.c
      203 ./base/src/sparse_str.c
      981 ./base/src/sparse_util.c
@@ -81,4 +81,4 @@
     5818 ./base/include/malloc.c.h
      187 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   55835 total
+   55864 total

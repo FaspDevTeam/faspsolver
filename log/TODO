@@ -4,7 +4,6 @@ File Name: TODO
 Milestones
 ========================
 
-* Release an alpha version by June 20 2012 -- then tested extensively inside our group
 * Release a stable beta version by the end of 2012 -- Dec/24/2012!
 
 ========================
@@ -29,14 +28,15 @@ Structure
 [ 0.7.0 ] separate external packages
 [ 0.8.0 ] define repeated constants in header
 [ 0.8.0 ] auto format for plain text, replace TAB by 4 SPACE
-[ 07/12 ] generate shared lib's for external packages (Ludmil)
-[ 07/12 ] add Automake and Autoconf support for installation (Ludmil)
+[ 07/15 ] generate shared lib's for external packages (Ludmil)
+[ 07/15 ] add Automake and Autoconf support for installation (Ludmil)
+[ 08/30 ] make several functions 'standalone', e.g. just take PCG out easily (Chensong)
 
 ========================
 GMG 	
 ========================
 
-[ 07/12 ] add matrix-free Poisson GMG solver -- n = 2^L (Ludmil)
+[ 08/12 ] add matrix-free Poisson GMG solver -- n = 2^L (Ludmil)
 [       ] add support for general n (Ludmil)
 [       ] tabulate convergence rate of V-cycle (Ludmil)
  
@@ -49,27 +49,27 @@ AMG
 [ 08/15 ] profile and optimize a few core functions: SA, UA (Xiaozhe)
 
 [ 0.8.5 ] non-overlapping/overlapping schwarz smoother
-[ 07/20 ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
-[ 07/12 ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
-[ 08/15 ] strength matrix based on (polynomial) smoothers (Xiaozhe)
+[ 08/20 ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
+[ 08/12 ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
+[ 09/15 ] strength matrix based on (polynomial) smoothers (Xiaozhe)
 [       ] Maximal Independent Set (Ludmil)
 [       ] AMG based on mesh information
 
 [ 0.9.0 ] aggressive coarsening strategies (Xiaozhe)
-[ 08/15 ] aggregation based on MIS (Xiaozhe)
+[ 09/15 ] aggregation based on MIS (Xiaozhe)
 [       ] cleanup the compatible coarsening (Xiaozhe)
 [       ] Notay's aggregation scheme (Xiaozhe)
 [       ] LAMG's aggregation scheme (Xiaozhe)
 
 [ 0.8.6 ] standard interpolation
-[ 08/15 ] polynomial interpolation -- vector preserve (Xiaozhe)
+[ 09/15 ] polynomial interpolation -- vector preserve (Xiaozhe)
 [       ] multipass interpolation
 [       ] long-distance interpolation
 [       ] bootstrap interpolation
 
-[ 09/15 ] estimation of extreme eigenvalues (Xiaozhe)
-[ 09/15 ] smoothing interpolation by polynomial smoothers (Xiaozhe)
-[ 09/15 ] interpolation can preserve more kernel vectors (Xiaozhe)
+[ 09/30 ] estimation of extreme eigenvalues (Xiaozhe)
+[ 09/30 ] smoothing interpolation by polynomial smoothers (Xiaozhe)
+[ 09/30 ] interpolation can preserve more kernel vectors (Xiaozhe)
 
 ========================
 Iterative Methods
@@ -79,14 +79,14 @@ Iterative Methods
 [ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
 
-[ 08/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
-[ 08/15 ] test SpBLAS implementations in standard libraries (Chunsheng)
+[ 09/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
+[ 09/15 ] test SpBLAS implementations in standard libraries (Chunsheng)
 [       ] right preconditioning (Chensong)
 [       ] matrix-free iterative methods (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
 [ 0.6.7 ] remove the non-GPL ILU routines
-[ 07/20 ] add block preconditioners for Stokes and NS (Xiaozhe)
+[ 08/10 ] add block preconditioners for Stokes and NS (Xiaozhe)
 [       ] add preconditioners for Maxwell
 [       ] replace the ILU smoothers from SPARSEKIT ver2.0 (Chensong)
 
@@ -105,7 +105,7 @@ Test and Debug
 
 [ 0.4.1 ] start to build the debug environment
 [ 0.6.0 ] build upon regression.c to make a regression test suite
-[       ] finish the debug environment (Xiaoqiang)
+[       ] finish the debug environment (Chensong)
 [       ] add a new unit test tool for FASP, e.g. CHECK (Chensong)
 
 ========================

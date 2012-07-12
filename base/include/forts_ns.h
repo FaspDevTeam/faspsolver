@@ -1,3 +1,7 @@
+/*! \file forts_ns.h
+ *  \brief Function decroration for Schwarz smoothers
+ */                      
+
 #ifdef __cplusplus 
 extern "C" {void cut0_(INT *n,INT *ia,INT *ja,REAL *a,INT *iaw,INT *jaw,INT *jblk,INT *iblk,INT *nblk,INT *lwork1,INT *lwork2,INT *lwork3,INT *msize);}
 extern "C" {void chsize_(REAL *a,REAL *b,REAL *tol,INT *imin);}

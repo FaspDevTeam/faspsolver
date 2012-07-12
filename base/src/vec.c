@@ -1,5 +1,5 @@
 /*! \file vec.c
- *  \brief Simple operations for vectors (INT and REAL). 
+ *  \brief Simple operations for vectors. 
  *
  *  \note 
  *  Every structures should be initialized before usage.
