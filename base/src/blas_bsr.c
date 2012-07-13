@@ -33,269 +33,262 @@
  * \note Works for general nb (Xiaozhe)
  */
 void fasp_blas_dbsr_aAxpby (const REAL alpha, 
-		                    dBSRmat *A, 
-		                    REAL *x, 
-		                    const REAL beta, 
-		                    REAL *y )
+                                  dBSRmat *A, 
+                                  REAL *x, 
+                            const REAL beta, 
+                                  REAL *y )
 {
-	/* members of A */
-	INT     ROW = A->ROW;
-	INT     nb  = A->nb;
-	INT    *IA  = A->IA;
-	INT    *JA  = A->JA;
-	REAL   *val = A->val;
+    /* members of A */
+    INT  ROW  = A->ROW;
+    INT  nb   = A->nb;
+    INT  *IA  = A->IA;
+    INT  *JA  = A->JA;
+    REAL *val = A->val;
 
-	/* local variables */
-	INT     size = ROW*nb;
-	INT     jump = nb*nb;
-	INT     i,j,k,iend;
-	REAL    temp;
-	REAL   *pA  = NULL;
-	REAL   *px0 = NULL;
-	REAL   *py0 = NULL;
-	REAL   *py  = NULL;
+    /* local variables */
+    INT     size = ROW*nb;
+    INT     jump = nb*nb;
+    INT     i,j,k,iend;
+    REAL    temp;
+    REAL   *pA  = NULL;
+    REAL   *px0 = NULL;
+    REAL   *py0 = NULL;
+    REAL   *py  = NULL;
 
-	INT nthreads = 1, use_openmp = FALSE;
+    INT nthreads = 1, use_openmp = FALSE;
 
-	if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
-		use_openmp = TRUE;
+    if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 
-	//----------------------------------------------
-	//   Treat (alpha == 0.0) computation 
-	//----------------------------------------------
+    //----------------------------------------------
+    //   Treat (alpha == 0.0) computation 
+    //----------------------------------------------
 
-	if (alpha == 0.0)
-	{
-	//	for (i = size; i--; ) y[i] *= beta;
-	    fasp_blas_array_ax(size, beta, y);
-		return;
-	}
+    if (alpha == 0.0) {
+        fasp_blas_array_ax(size, beta, y);
+        return;
+    }
 
-	//-------------------------------------------------
-	//   y = (beta/alpha)*y
-	//-------------------------------------------------
+    //-------------------------------------------------
+    //   y = (beta/alpha)*y
+    //-------------------------------------------------
 
-	temp = beta / alpha;
-	if (temp != 1.0) {
-		if (temp == 0.0) {
-			memset(y, 0X0, size*sizeof(REAL));
-		}
-		else {
-			//for (i = size; i--; ) y[i] *= temp;  // modified by Xiaozhe, 03/11/2011
+    temp = beta / alpha;
+    if (temp != 1.0) {
+        if (temp == 0.0) {
+            memset(y, 0X0, size*sizeof(REAL));
+        }
+        else {
+	    //for (i = size; i--; ) y[i] *= temp;  // modified by Xiaozhe, 03/11/2011
             fasp_blas_array_ax(size, temp, y);
-		}
-	}
+        }
+    }
 
-	//-----------------------------------------------------------------
-	//   y += A*x (Core Computation)
-	//   each non-zero block elements are stored in row-major order
-	//-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    //   y += A*x (Core Computation)
+    //   each non-zero block elements are stored in row-major order
+    //-----------------------------------------------------------------
 
-	switch (nb)
-	{
-		case 2: 
-			{
-				if (use_openmp) {
-					INT myid, mybegin, myend;
+    switch (nb)
+    {
+        case 2: 
+        {
+            if (use_openmp) {
+                INT myid, mybegin, myend;
 #if FASP_USE_OPENMP
 #pragma omp parallel for  private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend)
 #endif
-					for (myid =0; myid < nthreads; myid++) {
-						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
-						for (i=mybegin; i < myend; ++i) {
-							py0 = &y[i*2];
-							iend = IA[i+1];
-							for (k = IA[i]; k < iend; ++k) {
-								j = JA[k];
-								pA = val+k*4; // &val[k*jump];
-								px0 = x+j*2; // &x[j*nb];
-								py = py0;
-								fasp_blas_smat_ypAx_nc2( pA, px0, py );
-							}
-						}
-					}
-				}
-				else {
-					for (i = 0; i < ROW; ++i) {
-						py0 = &y[i*2];
-						iend = IA[i+1];
-						for (k = IA[i]; k < iend; ++k) {
-							j = JA[k];
-							pA = val+k*4; // &val[k*jump];
-							px0 = x+j*2; // &x[j*nb];
-							py = py0;
-							fasp_blas_smat_ypAx_nc2( pA, px0, py );
-						}
-					}
-				}
-			}
-			break;
-
-		case 3: 
-			{
-				if (use_openmp) {
-					INT myid, mybegin, myend;
+                for (myid =0; myid < nthreads; myid++) {
+                     FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                     for (i=mybegin; i < myend; ++i) {
+                          py0 = &y[i*2];
+                          iend = IA[i+1];
+                          for (k = IA[i]; k < iend; ++k) {
+                               j = JA[k];
+                               pA = val+k*4; // &val[k*jump];
+                               px0 = x+j*2; // &x[j*nb];
+                               py = py0;
+                               fasp_blas_smat_ypAx_nc2( pA, px0, py );
+                          }
+                     }
+                }
+            }
+            else {
+                for (i = 0; i < ROW; ++i) {
+                    py0 = &y[i*2];
+                    iend = IA[i+1];
+                    for (k = IA[i]; k < iend; ++k) {
+                        j = JA[k];
+                        pA = val+k*4; // &val[k*jump];
+                        px0 = x+j*2; // &x[j*nb];
+                        py = py0;
+                        fasp_blas_smat_ypAx_nc2( pA, px0, py );
+                    }
+                }
+            }
+        }
+        break;
+        case 3: 
+        {
+            if (use_openmp) {
+                INT myid, mybegin, myend;
 #if FASP_USE_OPENMP
 #pragma omp parallel for  private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend ) 
 #endif
-					for (myid =0; myid < nthreads; myid++) {
-						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
-						for (i=mybegin; i < myend; ++i) {
-							py0 = &y[i*3];
-							iend = IA[i+1];
-							for (k = IA[i]; k < iend; ++k) {
-								j = JA[k];
-								pA = val+k*9; // &val[k*jump];
-								px0 = x+j*3; // &x[j*nb];
-								py = py0;
-								fasp_blas_smat_ypAx_nc3( pA, px0, py );
-							}    
-						}
-					}
-				}
-				else {
-					for (i = 0; i < ROW; ++i){
-						py0 = &y[i*3];
-						iend = IA[i+1];
-						for (k = IA[i]; k < iend; ++k) {
-							j = JA[k];
-							pA = val+k*9; // &val[k*jump];
-							px0 = x+j*3; // &x[j*nb];
-							py = py0;
-							fasp_blas_smat_ypAx_nc3( pA, px0, py );
-						}    
-					}
-				}
-			}
-			break;
+                for (myid =0; myid < nthreads; myid++) {
+                     FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                     for (i=mybegin; i < myend; ++i) {
+                          py0 = &y[i*3];
+                          iend = IA[i+1];
+                          for (k = IA[i]; k < iend; ++k) {
+                               j = JA[k];
+                               pA = val+k*9; // &val[k*jump];
+                               px0 = x+j*3; // &x[j*nb];
+                               py = py0;
+                               fasp_blas_smat_ypAx_nc3( pA, px0, py );
+                          }
+                     }
+                }
+            }
+            else {
+                 for (i = 0; i < ROW; ++i) {
+                      py0 = &y[i*3];
+                      iend = IA[i+1];
+                      for (k = IA[i]; k < iend; ++k) {
+                           j = JA[k];
+                           pA = val+k*9; // &val[k*jump];
+                           px0 = x+j*3; // &x[j*nb];
+                           py = py0;
+                           fasp_blas_smat_ypAx_nc3( pA, px0, py );
+                      }
+                 }
+            }
+        }
+        break;
 
-		case 5:
-			{
-				if (use_openmp) {
-					INT myid, mybegin, myend;
+        case 5:
+        {
+            if (use_openmp) {
+                INT myid, mybegin, myend;
 #if FASP_USE_OPENMP
 #pragma omp parallel for  private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend )
 #endif
-					for (myid =0; myid < nthreads; myid++) {
-						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
-						for (i=mybegin; i < myend; ++i) {
-							py0 = &y[i*5];
-							iend = IA[i+1];
-							for (k = IA[i]; k < iend; ++k) {
-								j = JA[k];
-								pA = val+k*25; // &val[k*jump];
-								px0 = x+j*5; // &x[j*nb];
-								py = py0;
-								fasp_blas_smat_ypAx_nc5( pA, px0, py );
-							}  
-						}
-					}
-				}
-				else {
-					for (i = 0; i < ROW; ++i){
-						py0 = &y[i*5];
-						iend = IA[i+1];
-						for (k = IA[i]; k < iend; ++k) {
-							j = JA[k];
-							pA = val+k*25; // &val[k*jump];
-							px0 = x+j*5; // &x[j*nb];
-							py = py0;
-							fasp_blas_smat_ypAx_nc5( pA, px0, py );
-						}
-					}
-				}
-			}
-			break;
-		case 7:
-			{
-				if (use_openmp) {
-					INT myid, mybegin, myend;
+                for (myid =0; myid < nthreads; myid++) {
+                     FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                     for (i=mybegin; i < myend; ++i) {
+                          py0 = &y[i*5];
+                          iend = IA[i+1];
+                          for (k = IA[i]; k < iend; ++k) {
+                               j = JA[k];
+                               pA = val+k*25; // &val[k*jump];
+                               px0 = x+j*5; // &x[j*nb];
+                               py = py0;
+                               fasp_blas_smat_ypAx_nc5( pA, px0, py );
+                          }
+                     }
+                }
+            }
+            else {
+                 for (i = 0; i < ROW; ++i) {
+                      py0 = &y[i*5];
+                      iend = IA[i+1];
+                      for (k = IA[i]; k < iend; ++k) {
+                           j = JA[k];
+                           pA = val+k*25; // &val[k*jump];
+                           px0 = x+j*5; // &x[j*nb];
+                           py = py0;
+                           fasp_blas_smat_ypAx_nc5( pA, px0, py );
+                      }
+                 }
+            }
+        }
+        break;
+        case 7:
+        {
+            if (use_openmp) {
+                INT myid, mybegin, myend;
 #if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend )
 #endif
-					for (myid =0; myid < nthreads; myid++) {
-						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
-						for (i=mybegin; i < myend; ++i) {
-							py0 = &y[i*7];
-							iend = IA[i+1];
-							for (k = IA[i]; k < iend; ++k) { 
-								j = JA[k];
-								pA = val+k*49; // &val[k*jump];
-								px0 = x+j*7; // &x[j*nb];
-								py = py0;
-								fasp_blas_smat_ypAx_nc7( pA, px0, py ); 
-							}  
-						}
-					}
-				}
-				else {
-					for (i = 0; i < ROW; ++i) {
-						py0 = &y[i*7];
-						iend = IA[i+1];
-						for (k = IA[i]; k < iend; ++k) {
-							j = JA[k];
-							pA = val+k*49; // &val[k*jump];
-							px0 = x+j*7; // &x[j*nb];
-							py = py0;
-							fasp_blas_smat_ypAx_nc7( pA, px0, py );
-						}
-
-					}
-				}
-			}
-			break;
-
-		default: 
-			{
-				if (use_openmp) {
-					INT myid, mybegin, myend;
+                for (myid =0; myid < nthreads; myid++) {
+                    FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                    for (i=mybegin; i < myend; ++i) {
+                        py0 = &y[i*7];
+                        iend = IA[i+1];
+                        for (k = IA[i]; k < iend; ++k) {
+                            j = JA[k];
+                            pA = val+k*49; // &val[k*jump];
+                            px0 = x+j*7; // &x[j*nb]；
+                            py = py0;
+                            fasp_blas_smat_ypAx_nc7( pA, px0, py );
+                        }
+                    }
+                } 
+            }
+            else {
+                 for (i = 0; i < ROW; ++i) {
+                      py0 = &y[i*7];
+                      iend = IA[i+1];
+                      for (k = IA[i]; k < iend; ++k) {
+                           j = JA[k];
+                           pA = val+k*49; // &val[k*jump];
+                           px0 = x+j*7; // &x[j*nb];
+                           py = py0;
+                           fasp_blas_smat_ypAx_nc7( pA, px0, py );
+                      }
+                 }
+            }
+        }
+        break;
+        
+        default: 
+        {
+             if (use_openmp) {
+                 INT myid, mybegin, myend;
 #if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend)
 #endif
-					for (myid =0; myid < nthreads; myid++) {
-						FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
-						for (i=mybegin; i < myend; ++i) {
-							py0 = &y[i*nb];
-							iend = IA[i+1];
-							for (k = IA[i]; k < iend; ++k) {
-								j = JA[k];
-								pA = val+k*jump; // &val[k*jump];
-								px0 = x+j*nb; // &x[j*nb];
-								py = py0;
-								fasp_blas_smat_ypAx( pA, px0, py, nb );
-							}  
+                 for (myid =0; myid < nthreads; myid++) {
+                      FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                      for (i=mybegin; i < myend; ++i) {
+                           py0 = &y[i*nb];
+                           iend = IA[i+1];
+                           for (k = IA[i]; k < iend; ++k) {
+                                j = JA[k];
+                                pA = val+k*jump; // &val[k*jump];
+                                px0 = x+j*nb; // &x[j*nb];
+                                py = py0;
+                                fasp_blas_smat_ypAx( pA, px0, py, nb );
+                           }
+                      }
+                 }
+             }
+             else {
+                  for (i = 0; i < ROW; ++i) {
+                      py0 = &y[i*nb];
+                      iend = IA[i+1];
+                      for (k = IA[i]; k < iend; ++k) {
+                           j = JA[k];
+                           pA = val+k*jump; // &val[k*jump];
+                           px0 = x+j*nb; // &x[j*nb];
+                           py = py0;
+                           fasp_blas_smat_ypAx( pA, px0, py, nb );
+                      }
+                  }
+             }
+        }
+        break;
+    }
 
-						}
-					}
-				}
-				else {
-					for (i = 0; i < ROW; ++i) {
-						py0 = &y[i*nb];
-						iend = IA[i+1];
-						for (k = IA[i]; k < iend; ++k) {
-							j = JA[k];
-							pA = val+k*jump; // &val[k*jump];
-							px0 = x+j*nb; // &x[j*nb];
-							py = py0;
-							fasp_blas_smat_ypAx( pA, px0, py, nb );
-						}
+    //------------------------------------------
+    //   y = alpha*y
+    //------------------------------------------
 
-					}
-				}
-			}
-			break;
-	}
-
-	//------------------------------------------
-	//   y = alpha*y
-	//------------------------------------------
-
-	if (alpha != 1.0) {
-		//for (i = size; i--; ++i) y[i] *= alpha;
-		fasp_blas_array_ax(size, alpha, y);
-	}   
+    if (alpha != 1.0) {
+        fasp_blas_array_ax(size, alpha, y);
+    }   
 }
 
 
@@ -613,9 +606,9 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+	if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
+            use_openmp = TRUE;
+            nthreads = FASP_GET_NUM_THREADS();
 	}
 
 	//-----------------------------------------------------------------
@@ -2341,13 +2334,13 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
  *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dbsr_rap (dBSRmat *R, 
-		                 dBSRmat *A, 
-		                 dBSRmat *P, 
-		                 dBSRmat *B)
+void fasp_blas_dbsr_rap (dBSRmat *R,
+                         dBSRmat *A, 
+                         dBSRmat *P, 
+                         dBSRmat *B)
 {
 	const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
-    INT nB=A->NNZ;
+        INT nB=A->NNZ;
 	INT i,i1,j,jj,k,length;    
 	INT begin_row,end_row,begin_rowA,end_rowA,begin_rowR,end_rowR;
 	INT istart,iistart,count;

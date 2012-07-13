@@ -11,7 +11,7 @@
  *    - you call another routine, which uses ic and jc to perform the addition. 
  *
  */
-
+#include <omp.h>
 #include <math.h>
 #include <time.h>
 
@@ -53,10 +53,10 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
 
     INT nthreads = 1, use_openmp = FALSE;
 
-	if (FASP_USE_OPENMP && A->nnz > OPENMP_HOLDS) {
-		use_openmp = TRUE;
+    if (FASP_USE_OPENMP && A->nnz > OPENMP_HOLDS) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 
     if (A->row != B->row || A->col != B->col) {
 #if DEBUG_MODE
@@ -82,22 +82,23 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         memcpy(C->IA,B->IA,(B->row+1)*sizeof(INT));
         memcpy(C->JA,B->JA,(B->nnz)*sizeof(INT));
 
-		if (use_openmp) {
+        if (use_openmp) {
 #if FASP_USE_OPENMP
-			INT mybegin, myend, myid;
+            INT mybegin, myend, myid;
 #pragma omp parallel private(myid, mybegin, myend, i)
-			{
+            {
                 myid = omp_get_thread_num();
                 FASP_GET_START_END(myid, nthreads, A->nnz, &mybegin, &myend);
                 for (i=mybegin;i<myend;++i) C->val[i]=B->val[i]*beta;
-			}
+            }
 #endif
-		}
-		else {
+        }
+        else {
             for (i=0;i<A->nnz;++i) C->val[i]=B->val[i]*beta;
-		}
+        }
 
-        status=SUCCESS; goto FINISHED;
+        status=SUCCESS; 
+        goto FINISHED;
     }
     
     // empty matrix B
@@ -106,20 +107,20 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         memcpy(C->IA,A->IA,(A->row+1)*sizeof(INT));
         memcpy(C->JA,A->JA,(A->nnz)*sizeof(INT));
 
-		if (use_openmp) {
+        if (use_openmp) {
 #if FASP_USE_OPENMP
-			INT mybegin, myend, myid;
+            INT mybegin, myend, myid;
 #pragma omp parallel private(myid, mybegin, myend, i)
-			{
+            {
                 myid = omp_get_thread_num();
                 FASP_GET_START_END(myid, nthreads, A->nnz, &mybegin, &myend);
                 for (i=mybegin;i<myend;++i) C->val[i]=A->val[i]*alpha;
-			}
+            }
 #endif
-		}
-		else {
+        }
+        else {
             for (i=0;i<A->nnz;++i) C->val[i]=A->val[i]*alpha;
-		}
+        }
 
         status=SUCCESS; goto FINISHED;
     }
@@ -133,11 +134,10 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     
     C->val=(REAL *)fasp_mem_calloc(A->nnz+B->nnz,sizeof(REAL));
 
-	// initial C->IA 
-	memset(C->IA, 0, sizeof(INT)*(C->row+1));
+    // initial C->IA 
+    memset(C->IA, 0, sizeof(INT)*(C->row+1));
     
     for (i=0; i<A->row; ++i) {
-
         countrow = 0;
         for (j=A->IA[i]; j<A->IA[i+1]; ++j) {
             C->val[count] = alpha * A->val[N2C(j)];
@@ -197,9 +197,8 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
 {
     const INT nnz=A->nnz;
     
-	fasp_blas_array_ax(nnz, alpha, A->val);
     // A direct calculation can be written as:
-    //    for (i=0; i<nnz; ++i) A->val[i] = A->val[i] * alpha;
+    fasp_blas_array_ax(nnz, alpha, A->val);
 }
 
 /**
@@ -226,12 +225,13 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
     const REAL *aj=A->val;
     INT i, k, begin_row, end_row, nnz_num_row;
     register REAL temp;
-	INT nthreads = 1, use_openmp = FALSE;
-
-	if (FASP_USE_OPENMP && m > OPENMP_HOLDS) {
-		use_openmp = TRUE;
+    
+    INT nthreads = 1, use_openmp = FALSE;
+    
+    if (FASP_USE_OPENMP && m > OPENMP_HOLDS) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 
     if (use_openmp) {
         INT myid, mybegin, myend;
@@ -453,12 +453,12 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
     INT i, k, begin_row, end_row;
     register REAL temp;
 
-	INT nthreads = 1, use_openmp = FALSE;
+    INT nthreads = 1, use_openmp = FALSE;
 
-	if (FASP_USE_OPENMP && m > OPENMP_HOLDS) {
-		use_openmp = TRUE;
+    if (FASP_USE_OPENMP && m > OPENMP_HOLDS) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 
     if ( alpha == 1.0 ) {
         if (use_openmp) {
@@ -466,17 +466,15 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
 #if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k)
 #endif
-            for (myid = 0; myid < nthreads; myid++ )
-                {
-                    FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
-                    for (i=mybegin; i<myend; ++i)
-                        {
-                            temp=0.0; 
-                            begin_row=ia[i]; end_row=ia[i+1]; 
-                            for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-                            y[i]+=temp;
-                        }
+            for (myid = 0; myid < nthreads; myid++ ) {
+                FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+                for (i=mybegin; i<myend; ++i) {
+                    temp=0.0; 
+                    begin_row=ia[i]; end_row=ia[i+1]; 
+                    for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                        y[i]+=temp;
                 }
+            }
         }
         else {
             for (i=0;i<m;++i) {
@@ -617,12 +615,12 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
     INT i, k, begin_row, end_row;
     register REAL temp;
 
-	INT nthreads = 1, use_openmp = FALSE;
-
-	if (FASP_USE_OPENMP && m > OPENMP_HOLDS) {
-		use_openmp = TRUE;
+    INT nthreads = 1, use_openmp = FALSE;
+    
+    if (FASP_USE_OPENMP && m > OPENMP_HOLDS) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
     
     if (use_openmp) {
 #if FASP_USE_OPENMP
@@ -804,12 +802,12 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     INT jj_counter, jj_row_begining;
     REAL r_entry, r_a_product, r_a_p_product;
     
-	INT nthreads = 1, use_openmp = FALSE;
+    INT nthreads = 1, use_openmp = FALSE;
 
-	if (FASP_USE_OPENMP && n_coarse > OPENMP_HOLDS) {
-		use_openmp = TRUE;
+    if (FASP_USE_OPENMP && n_coarse > OPENMP_HOLDS) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
     
     INT coarse_mul_nthreads = n_coarse * nthreads;
     INT fine_mul_nthreads = n_fine * nthreads;
@@ -830,7 +828,6 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     fasp_iarray_set(minus_one_length, Ps_marker, -1);
     
     if (use_openmp) {
-
 #if FASP_USE_OPENMP
         INT myid, mybegin, myend, Ctemp;
 #pragma omp parallel private(myid, mybegin, myend, P_marker, A_marker, jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
@@ -920,7 +917,6 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     fasp_iarray_set(minus_one_length, Ps_marker, -1);
     
     if (use_openmp) {
-
 #if FASP_USE_OPENMP
         INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, P_marker, A_marker, jj_counter, ic, jj_row_begining, \
@@ -1292,12 +1288,12 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
                           dCSRmat *B,
                           INT *icor_ysk) 
 {
-	INT nthreads = 1, use_openmp = FALSE;
+    INT nthreads = 1, use_openmp = FALSE;
 
-	if (FASP_USE_OPENMP && R->row > OPENMP_HOLDS) {
-		use_openmp = TRUE;
+    if (FASP_USE_OPENMP && R->row > OPENMP_HOLDS) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
     
     if (use_openmp) {
         const INT row=R->row, col=P->col;

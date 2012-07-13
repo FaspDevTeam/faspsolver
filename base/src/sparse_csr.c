@@ -170,9 +170,13 @@ void fasp_dcsr_null (dCSRmat *A)
  *
  * \author Shiquan Zhang
  * \date   03/10/2010
- * 
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   07/12/2012
+ *
  * \note   P[i] = k means k-th row and column become i-th row and column!
  */
+
 dCSRmat fasp_dcsr_perm (dCSRmat *A, 
                         INT *P)
 {
@@ -180,12 +184,31 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     const INT *ia=A->IA, *ja=A->JA;
     const REAL *Aval=A->val;
     INT i,j,k,jaj,i1,i2,start;
+    INT nthreads = 1, use_openmp = FALSE;
+
+    if (FASP_USE_OPENMP && MIN(n, nnz) > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
     
     dCSRmat Aperm = fasp_dcsr_create(n,n,nnz);
     
     // form the tranpose of P
-    INT *Pt = (INT*)fasp_mem_calloc(n,sizeof(INT)); 
-    for (i=0; i<n; ++i) Pt[P[i]] = i;
+    INT *Pt = (INT*)fasp_mem_calloc(n,sizeof(INT));
+    
+    if (use_openmp) {
+        INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i)
+#endif
+        for (myid=0; myid<nthreads; ++myid) {
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i) Pt[P[i]] = i;
+        }
+    }
+    else {  
+        for (i=0; i<n; ++i) Pt[P[i]] = i;
+    }
     
     // compute IA of P*A (row permutation)
     Aperm.IA[0] = 0;
@@ -195,21 +218,57 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     }
     
     // perform actual P*A
-    for (i=0; i<n; ++i) {
-        i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1; 
-        k = P[i];
-        start = ia[k];
-        for (j=i1; j<=i2; ++j) {
-            jaj = start+j-i1;
-            Aperm.JA[j] = ja[jaj];
-            Aperm.val[j] = Aval[jaj];
-        }    
+    if (use_openmp) {
+        INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i1, i2, k, start, j, jaj)
+#endif
+        for (myid=0; myid<nthreads; ++myid) {
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i) {
+                i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1; 
+                k = P[i];
+                start = ia[k];
+                for (j=i1; j<=i2; ++j) {
+                    jaj = start+j-i1;
+                    Aperm.JA[j] = ja[jaj];
+                    Aperm.val[j] = Aval[jaj];
+                }
+            }
+        }
+    }
+    else {      
+        for (i=0; i<n; ++i) {
+            i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1; 
+            k = P[i];
+            start = ia[k];
+            for (j=i1; j<=i2; ++j) {
+                jaj = start+j-i1;
+                Aperm.JA[j] = ja[jaj];
+                Aperm.val[j] = Aval[jaj];
+			}    
+        }
     }
     
     // perform P*A*P' (column permutation)
-    for (k=0; k<nnz; ++k) {
-        j = Aperm.JA[k];
-        Aperm.JA[k] = Pt[j];
+    if (use_openmp) {
+        INT myid, mybegin, myend;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, k, j)
+#endif
+        for (myid=0; myid<nthreads; ++myid) {
+            FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);
+            for (k=mybegin; k<myend; ++k) {
+                j = Aperm.JA[k];
+                Aperm.JA[k] = Pt[j];
+            }
+        }
+    }
+    else {
+        for (k=0; k<nnz; ++k) {
+            j = Aperm.JA[k];
+            Aperm.JA[k] = Pt[j];
+        }
     }
     
     fasp_mem_free(Pt);
@@ -288,12 +347,13 @@ void fasp_dcsr_getdiag (INT n,
     INT i,k,j,ibegin,iend;    
     
     if (n==0) n=MIN(A->row,A->col);
-	INT nthreads = 1, use_openmp = FALSE;
+	
+    INT nthreads = 1, use_openmp = FALSE;
     
-	if (FASP_USE_OPENMP && n > OPENMP_HOLDS){
-		use_openmp = TRUE;
+    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
     
     fasp_dvec_alloc(n, diag);
     
@@ -586,7 +646,8 @@ void fasp_icsr_trans (iCSRmat *A,
     // Note: these Numbers are stored in the array AT.IA from 1 to m-1
 	
     //for (i=0;i<m;++i) AT->IA[i] = 0;   //Here is a Bug.
-    for (i=0; i<=m; ++i) AT->IA[i] = 0;  //Chunsheng Feng ,Zheng Li, June/20/2012
+    //for (i=0; i<=m; ++i) AT->IA[i] = 0;  //Chunsheng Feng ,Zheng Li, June/20/2012
+    fasp_iarray_set(m+1, AT->IA, 0);
     
     for (j=0;j<nnz;++j) {
         i=N2C(A->JA[j]); // column Number of A = row Number of A'
@@ -982,7 +1043,7 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     if(use_openmp) {
         INT myid, mybegin, myend;
 #if FASP_USE_OPENMP
-#pragma omp parallel for private(myid, mybegin, myend, i, j)
+#pragma omp parallel for private(myid, mybegin, myend, row_start, row_end, i, j, k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
 	    FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
