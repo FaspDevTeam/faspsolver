@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+08/02/2012 FASP 1.0.4:
+- Update block Jacobi in OMP.
+- Fix function name bugs in io.c.
+
 07/12/2012 FASP 1.0.3:
 - Update a few OMP routines.
 - Prepare testing OMP version on Windows.

@@ -7,10 +7,10 @@
      798 ./base/src/amlirecur.c
      264 ./base/src/array.c
      257 ./base/src/auxiliary.c
-     428 ./base/src/blas_array.c
+     427 ./base/src/blas_array.c
      197 ./base/src/blas_block.c
-    2521 ./base/src/blas_bsr.c
-    1567 ./base/src/blas_csr.c
+    2514 ./base/src/blas_bsr.c
+    1563 ./base/src/blas_csr.c
      124 ./base/src/blas_csrl.c
     1481 ./base/src/blas_smat.c
     1537 ./base/src/blas_str.c
@@ -56,7 +56,7 @@
      108 ./base/src/rap.c
      175 ./base/src/schwarz_setup.c
      589 ./base/src/smat.c
-     928 ./base/src/smoother_bsr.c
+    1144 ./base/src/smoother_bsr.c
       81 ./base/src/smoother_cr.c
     1432 ./base/src/smoother_csr.c
      445 ./base/src/smoother_poly.c
@@ -64,11 +64,11 @@
      261 ./base/src/sparse_block.c
     1033 ./base/src/sparse_bsr.c
       89 ./base/src/sparse_coo.c
-     971 ./base/src/sparse_csr.c
+    1110 ./base/src/sparse_csr.c
       71 ./base/src/sparse_csrl.c
      203 ./base/src/sparse_str.c
      981 ./base/src/sparse_util.c
-     104 ./base/src/threads_schedule.c
+     107 ./base/src/threads_schedule.c
       91 ./base/src/util.c
      432 ./base/src/vec.c
      118 ./base/src/wrapper.c
@@ -76,9 +76,9 @@
      142 ./base/include/doxygen.h
      961 ./base/include/fasp.h
      481 ./base/include/fasp_block.h
-    2155 ./base/include/fasp_functs.h
-      42 ./base/include/forts_ns.h
+    2160 ./base/include/fasp_functs.h
+      47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      187 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   55864 total
+   56220 total

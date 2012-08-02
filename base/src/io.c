@@ -58,7 +58,7 @@ void fasp_dcsrvec2_read (char *filemat,
     
     if ( fp==NULL ) {
         printf("### ERROR: Opening file %s ...\n",filemat);
-        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_read");
     }
     
     printf("fasp_dcsrvec2_read: reading file %s...\n", filemat);
@@ -95,7 +95,7 @@ void fasp_dcsrvec2_read (char *filemat,
     
     if ( fp==NULL ) {
         printf("### ERROR: Opening file %s ...\n",filerhs);
-        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_read");
     }
     
     printf("fasp_dcsrvec2_read: reading file %s...\n", filerhs);
@@ -104,7 +104,7 @@ void fasp_dcsrvec2_read (char *filemat,
     
     if (n!=b->row) {
         printf("### ERROR: rhs size %d does not match matrix size %d!\n",n,b->row);
-        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_read");
     }
     
     for(i=0; i<n; ++i) {
@@ -156,7 +156,7 @@ void fasp_dcsrvec1_read (char *filename,
     
     if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
         printf("### ERROR: Opening file %s ...\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_read");
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec1_read");
     }
     
     printf("fasp_dcsrvec1_read: reading file %s...\n", filename);
@@ -392,7 +392,7 @@ void fasp_dmtxsym_read (char *filename,
     
     if ( fp==NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_read");
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dmtxsym_read");
     }
     
     printf("fasp_dmtxsym_read: reading file %s...\n", filename);
@@ -803,7 +803,7 @@ void fasp_dcsrvec2_write (char *filemat,
     /* write the matrix to file */ 
     if ( fp==NULL ) {
         printf("### ERROR: Opening file %s ...\n", filemat);
-        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_write");
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_write");
     }
     
     printf("fasp_dcsrvec2_write: writing matrix to `%s'...\n", filemat);
@@ -828,7 +828,7 @@ void fasp_dcsrvec2_write (char *filemat,
     /* write the rhs to file */
     if ( fp==NULL ) {
         printf("### ERROR: Opening file %s ...\n", filerhs);
-        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_write");
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_write");
     }    
     
     printf("fasp_dcsrvec2_write: writing vector to `%s'...\n", filerhs);
@@ -875,7 +875,7 @@ void fasp_dcsrvec1_write (char *filename,
     /* write the matrix to file */ 
     if ( fp==NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_write");
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec1_write");
     }
     
     printf("fasp_dcsrvec1_write: writing matrix to `%s'...\n", filename);
@@ -896,7 +896,7 @@ void fasp_dcsrvec1_write (char *filename,
     /* write the rhs to file */
     if ( fp==NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_write");
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec1_write");
     }    
     
     printf("fasp_dcsrvec1_write: writing vector to `%s'...\n", filename);
