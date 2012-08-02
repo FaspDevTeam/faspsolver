@@ -3,6 +3,7 @@
  */
 
 #include <math.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -41,28 +42,78 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     // local variables
     INT i,k;
     REAL *diaginv = NULL;
-    
+
+    INT nthreads = 1, use_openmp = FALSE;
+    if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
+   
     // allocate memory   
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
-    // get all the diagonal sub-blocks   
-    for (i = 0; i < ROW; ++i) {
-        for (k = IA[i]; k < IA[i+1]; ++k) {
-            if (JA[k] == i)
-                memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+    // get all the diagonal sub-blocks
+    if(use_openmp) {
+        INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,k)
+#endif
+        for(myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            for(i=mybegin; i<myend; i++) {
+                for(k=IA[i]; k<IA[i+1]; ++k)
+                    if(JA[k] == i)
+                        memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+            }
+        }
+    }
+    else {   
+        for (i = 0; i < ROW; ++i) {
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                if (JA[k] == i)
+                    memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+            }
         }
     }
     
     // compute the inverses of all the diagonal sub-blocks   
     if (nb > 1) {
-        for (i = 0; i < ROW; ++i) {
-            fasp_blas_smat_inv(diaginv+i*nb2, nb);
+        if(use_openmp) {
+            INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for(i=mybegin; i<myend; i++) {
+                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    }
+               }
+        }
+        else {
+            for (i = 0; i < ROW; ++i) {
+                fasp_blas_smat_inv(diaginv+i*nb2, nb);
+            }
         }
     }
     else {
-        for (i = 0; i < ROW; ++i) {  
-            // zero-diagonal should be tested previously
-            diaginv[i] = 1.0 / diaginv[i];
+        if(use_openmp) {
+            INT mybegin, myend, myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for(i=mybegin; i<myend; i++) {
+                    diaginv[i] = 1.0 / diaginv[i];
+                }
+            }
+        }
+        else {
+            for (i = 0; i < ROW; ++i) {  
+                // zero-diagonal should be tested previously
+                diaginv[i] = 1.0 / diaginv[i];
+            }
         }
     }
     
@@ -70,6 +121,111 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     fasp_mem_free(diaginv);    
 }
 
+/**
+ * \fn void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A, dvector *b, dvector *u, REAL *diaginv)
+ *
+ * \brief Setup for jacobi relaxation, fetch the diagonal sub-block matrixes and make them inverse first.
+ *
+ * \param A   Pointer to coefficient matrix
+ * \param b   Pointer to right hand side vector
+ * \param u   Initial guess (in) and new approximation after one iteration 
+ *
+ * \author Zhiyang Zhou
+ * \date   10/25/2010
+ *
+ * Modified by Chunsheng Feng, Zheng li
+ * \date  08/02/2012
+ */
+
+void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A, 
+                                      dvector *b, 
+                                      dvector *u,
+                                      REAL *diaginv)
+{
+    // members of A 
+    const INT     ROW = A->ROW;
+    const INT     nb  = A->nb;
+    const INT     nb2 = nb*nb;
+    const INT    size = ROW*nb2;
+    const INT    *IA  = A->IA;
+    const INT    *JA  = A->JA;   
+    const REAL   *val = A->val;
+    
+    // local variables
+    INT i,k;
+
+    INT nthreads = 1, use_openmp = FALSE;
+    if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
+    
+    // get all the diagonal sub-blocks
+    if(use_openmp) {
+        INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,k)
+#endif
+        for(myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            for(i=mybegin; i<myend; i++) {
+                for(k=IA[i]; k<IA[i+1]; ++k)
+                    if(JA[k] == i)
+                        memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+            }
+        }
+    }
+    else {   
+        for (i = 0; i < ROW; ++i) {
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                if (JA[k] == i)
+                    memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+            }
+        }
+    }
+    
+    // compute the inverses of all the diagonal sub-blocks   
+    if (nb > 1) {
+        if(use_openmp) {
+            INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for(i=mybegin; i<myend; i++) {
+                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    }
+               }
+        }
+        else {
+            for (i = 0; i < ROW; ++i) {
+                fasp_blas_smat_inv(diaginv+i*nb2, nb);
+            }
+        }
+    }
+    else {
+        if(use_openmp) {
+            INT mybegin, myend, myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for(i=mybegin; i<myend; i++) {
+                    diaginv[i] = 1.0 / diaginv[i];
+                }
+            }
+        }
+        else {
+            for (i = 0; i < ROW; ++i) {  
+                // zero-diagonal should be tested previously
+                diaginv[i] = 1.0 / diaginv[i];
+            }
+        }
+    }
+    
+}
 
 /**
  * \fn void fasp_smoother_dbsr_jacobi1 (dBSRmat *A, dvector *b, dvector *u, REAL *diaginv)
@@ -98,6 +254,11 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     const INT    *JA  = A->JA;   
     REAL         *val = A->val;
     
+    INT nthreads = 1, use_openmp = FALSE;
+    if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
     // values of dvector b and u
     REAL *b_val = b->val;
     REAL *u_val = u->val;
@@ -115,35 +276,90 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     
     // It's not necessary to assign the smoothing order since the result doesn't depend on it
     if (nb == 1) {
-        for (i = 0; i < ROW; ++i) {
-            for (k = IA[i]; k < IA[i+1]; ++k) { 
-                j = JA[k];
-                if (j != i)
-                    b_tmp[i] -= val[k]*u_val[j];
+        if(use_openmp) {
+            INT mybegin, myend, myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,j,k)
+#endif
+            for (myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for (i=mybegin; i<myend; i++) {
+                    for (k = IA[i]; k < IA[i+1]; ++k) { 
+                        j = JA[k];
+                        if (j != i)
+                            b_tmp[i] -= val[k]*u_val[j];
+                    }
+                }
             }
-        }
-    
-        for (i = 0; i < ROW; ++i) {
-            u_val[i] = b_tmp[i]*diaginv[i]; 
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for(i=mybegin; i<myend; i++) {
+                    u_val[i] = b_tmp[i]*diaginv[i];
+                }
+            }
+        } 
+        else {
+            for (i = 0; i < ROW; ++i) {
+                for (k = IA[i]; k < IA[i+1]; ++k) { 
+                    j = JA[k];
+                    if (j != i)
+                        b_tmp[i] -= val[k]*u_val[j];
+                }
+            }   
+            for (i = 0; i < ROW; ++i) {
+                u_val[i] = b_tmp[i]*diaginv[i]; 
+            }
         }      
 
         fasp_mem_free(b_tmp);   
     }
     else if (nb > 1) {
-        for (i = 0; i < ROW; ++i) {
-            pb = i*nb;
-            for (k = IA[i]; k < IA[i+1]; ++k) { 
-                j = JA[k];
-                if (j != i)
-                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+pb, nb);
+        if(use_openmp) {
+            INT mybegin, myend, myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,pb,k,j)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for (i=mybegin; i<myend; i++) {
+                    pb = i*nb;
+                    for (k = IA[i]; k < IA[i+1]; ++k) { 
+                        j = JA[k];
+                        if (j != i)
+                            fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+pb, nb);
+                    }
+                }
+            }
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,pb)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for (i=mybegin; i<myend; i++) {
+                    pb = i*nb;
+                    fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp+pb, u_val+pb, nb);
+                }
             }
         }
+        else {
+            for (i = 0; i < ROW; ++i) {
+                pb = i*nb;
+                for (k = IA[i]; k < IA[i+1]; ++k) { 
+                    j = JA[k];
+                    if (j != i)
+                        fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+pb, nb);
+                }
+            }
     
-        for (i = 0; i < ROW; ++i) {
-            pb = i*nb;
-            fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp+pb, u_val+pb, nb);
-        }     
-
+            for (i = 0; i < ROW; ++i) {
+                pb = i*nb;
+                fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp+pb, u_val+pb, nb);
+            }
+       
+        }
         fasp_mem_free(b_tmp);   
     }
     else {

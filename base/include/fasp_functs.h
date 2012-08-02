@@ -94,8 +94,8 @@ void fasp_array_set (const INT n,
                      const REAL val);
 
 void fasp_iarray_set(const INT n, 
-		             INT *x, 
-					 const INT val);
+                           INT *x,
+                     const INT val);
 
 void fasp_array_cp (const INT n, 
                     REAL *x, 
@@ -222,10 +222,10 @@ void fasp_blas_bdbsr_mxv (block_BSR *A,
 /*-------- In file: blas_bsr.c --------*/
 
 void fasp_blas_dbsr_aAxpby (const REAL alpha, 
-		                    dBSRmat *A, 
-		                    REAL *x, 
-		                    const REAL beta, 
-		                    REAL *y );
+                                  dBSRmat *A, 
+                                  REAL *x, 
+                            const REAL beta, 
+                                  REAL *y );
 
 void fasp_blas_dbsr_aAxpy (const REAL alpha, 
 		                   dBSRmat *A, 
@@ -236,10 +236,10 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 		                REAL *x, 
 		                REAL *y) ;
 
-void fasp_blas_dbsr_rap (dBSRmat *R, 
-		                 dBSRmat *A, 
-		                 dBSRmat *P, 
-		                 dBSRmat *B);
+void fasp_blas_dbsr_rap (dBSRmat *R,
+                         dBSRmat *A, 
+                         dBSRmat *P, 
+                         dBSRmat *B);
 
 
 /*-------- In file: blas_csr.c --------*/
@@ -610,16 +610,16 @@ void fasp_grid2d_plot (pgrid2d pg,
                        INT level);
 
 
-/*-------- In file: ilu_setup.c --------*/
+/*-------- In file: ilu_setup_bsr.c --------*/
 
-SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
+SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
 
-/*-------- In file: ilu_setup_bsr.c --------*/
+/*-------- In file: ilu_setup.c --------*/
 
-SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
+SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
@@ -1424,6 +1424,11 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
                                 dvector *b, 
                                 dvector *u);
 
+void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A, 
+                                      dvector *b, 
+                                      dvector *u,
+                                      REAL *diaginv);
+
 void fasp_smoother_dbsr_jacobi1 (dBSRmat *A, 
                                  dvector *b, 
                                  dvector *u, 
@@ -1654,11 +1659,11 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
                               INT L);
 
 void fasp_smoother_dcsr_poly_old (dCSRmat *Amat, 
-                              dvector *brhs, 
-                              dvector *usol, 
-                              INT n, 
-                              INT ndeg, 
-                              INT L);
+                                  dvector *brhs, 
+                                  dvector *usol, 
+                                  INT n, 
+                                  INT ndeg, 
+                                  INT L);
 
 
 /*-------- In file: smoother_str.c --------*/
