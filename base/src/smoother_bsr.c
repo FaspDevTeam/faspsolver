@@ -11,7 +11,7 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-
+    
 ////////////////////////////////////////  JACOBI  //////////////////////////////////////////
 
 /**
@@ -25,6 +25,9 @@
  *
  * \author Zhiyang Zhou
  * \date   2010/10/25
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date  08/02/2012
  */
 void fasp_smoother_dbsr_jacobi (dBSRmat *A, 
                                 dvector *b, 
@@ -38,7 +41,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     const INT    *IA  = A->IA;
     const INT    *JA  = A->JA;   
     const REAL   *val = A->val;
-    
+        
     // local variables
     INT i,k;
     REAL *diaginv = NULL;
@@ -87,8 +90,8 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     fasp_blas_smat_inv(diaginv+i*nb2, nb);
-                    }
-               }
+                }
+            }
         }
         else {
             for (i = 0; i < ROW; ++i) {
@@ -133,7 +136,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
  * \author Zhiyang Zhou
  * \date   10/25/2010
  *
- * Modified by Chunsheng Feng, Zheng li
+ * Modified by Chunsheng Feng, Zheng Li
  * \date  08/02/2012
  */
 
@@ -238,8 +241,12 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
  * \param diaginv  Inverses for all the diagonal blocks of A
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
+ * 
+ * Modified by Chunsheng Feng, Zheng Li
+ * \data   08/03/2012
  */
+
 void fasp_smoother_dbsr_jacobi1 (dBSRmat *A, 
                                  dvector *b, 
                                  dvector *u, 
@@ -388,14 +395,18 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
  *
  * \author Zhiyang Zhou
  * \date   2010/10/25 
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \data  08/03/2012
  */
+
 void fasp_smoother_dbsr_gs (dBSRmat *A, 
                             dvector *b, 
                             dvector *u, 
                             INT order, 
                             INT *mark )
 {
-    // members of A 
+   // members of A 
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
@@ -403,31 +414,82 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     const INT    *IA  = A->IA;
     const INT    *JA  = A->JA;   
     const REAL   *val = A->val;
-    
+        
     // local variables
     INT i,k;
+    REAL *diaginv = NULL;
+
+    INT nthreads = 1, use_openmp = FALSE;
+    if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
+   
+    // allocate memory   
+    diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
-    // allocate memory
-    REAL *diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
-    
-    // get all the diagonal sub-blocks   
-    for (i = 0; i < ROW; ++i) {
-        for (k = IA[i]; k < IA[i+1]; ++k) {
-            if (JA[k] == i)
-                memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+    // get all the diagonal sub-blocks
+    if(use_openmp) {
+        INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,k)
+#endif
+        for(myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            for(i=mybegin; i<myend; i++) {
+                for(k=IA[i]; k<IA[i+1]; ++k)
+                    if(JA[k] == i)
+                        memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+            }
+        }
+    }
+    else {   
+        for (i = 0; i < ROW; ++i) {
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                if (JA[k] == i)
+                    memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+            }
         }
     }
     
     // compute the inverses of all the diagonal sub-blocks   
     if (nb > 1) {
-        for (i = 0; i < ROW; ++i) {
-            fasp_blas_smat_inv(diaginv+i*nb2, nb);
+        if(use_openmp) {
+            INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for(i=mybegin; i<myend; i++) {
+                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    }
+               }
+        }
+        else {
+            for (i = 0; i < ROW; ++i) {
+                fasp_blas_smat_inv(diaginv+i*nb2, nb);
+            }
         }
     }
     else {
-        for (i = 0; i < ROW; ++i) {  
-            // zero-diagonal should be tested previously
-            diaginv[i] = 1.0 / diaginv[i];
+        if(use_openmp) {
+            INT mybegin, myend, myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for(i=mybegin; i<myend; i++) {
+                    diaginv[i] = 1.0 / diaginv[i];
+                }
+            }
+        }
+        else {
+            for (i = 0; i < ROW; ++i) {  
+                // zero-diagonal should be tested previously
+                diaginv[i] = 1.0 / diaginv[i];
+            }
         }
     }
     
@@ -781,6 +843,9 @@ void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
  *
  * \author Zhiyang Zhou
  * \date   2010/10/25 
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \data  08/03/2012
  */
 void fasp_smoother_dbsr_sor (dBSRmat *A, 
                              dvector *b, 
@@ -796,33 +861,83 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     const INT    size = ROW*nb2;
     const INT    *IA  = A->IA;
     const INT    *JA  = A->JA;   
-    REAL         *val = A->val;
-    
+    const REAL   *val = A->val;
+        
     // local variables
-    REAL *diaginv = NULL;
     INT i,k;
-    
-    // allocate memory
+    REAL *diaginv = NULL;
+
+    INT nthreads = 1, use_openmp = FALSE;
+    if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
+   
+    // allocate memory   
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
-    // get all the diagonal sub-blocks   
-    for (i = 0; i < ROW; ++i) {
-        for (k = IA[i]; k < IA[i+1]; ++k) {
-            if (JA[k] == i)
-                memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+    // get all the diagonal sub-blocks
+    if(use_openmp) {
+        INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,k)
+#endif
+        for(myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            for(i=mybegin; i<myend; i++) {
+                for(k=IA[i]; k<IA[i+1]; ++k)
+                    if(JA[k] == i)
+                        memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+            }
+        }
+    }
+    else {   
+        for (i = 0; i < ROW; ++i) {
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                if (JA[k] == i)
+                    memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+            }
         }
     }
     
     // compute the inverses of all the diagonal sub-blocks   
     if (nb > 1) {
-        for (i = 0; i < ROW; ++i) {
-            fasp_blas_smat_inv(diaginv+i*nb2, nb);
+        if(use_openmp) {
+            INT mybegin,myend,myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for(i=mybegin; i<myend; i++) {
+                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    }
+               }
+        }
+        else {
+            for (i = 0; i < ROW; ++i) {
+                fasp_blas_smat_inv(diaginv+i*nb2, nb);
+            }
         }
     }
     else {
-        for (i = 0; i < ROW; ++i) {  
-            // zero-diagonal should be tested previously
-            diaginv[i] = 1.0 / diaginv[i];
+        if(use_openmp) {
+            INT mybegin, myend, myid;
+#if FASP_USE_OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i)
+#endif
+            for(myid=0; myid<nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for(i=mybegin; i<myend; i++) {
+                    diaginv[i] = 1.0 / diaginv[i];
+                }
+            }
+        }
+        else {
+            for (i = 0; i < ROW; ++i) {  
+                // zero-diagonal should be tested previously
+                diaginv[i] = 1.0 / diaginv[i];
+            }
         }
     }
     
@@ -861,13 +976,13 @@ void fasp_smoother_dbsr_sor1 (dBSRmat *A,
 {    
     if (!mark) {
         if (order == ASCEND)       // smooth ascendingly
-            {
-                fasp_smoother_dbsr_sor_ascend(A, b, u, diaginv, weight);
-            }
+        {
+            fasp_smoother_dbsr_sor_ascend(A, b, u, diaginv, weight);
+        }
         else if (order == DESCEND) // smooth descendingly
-            {
-                fasp_smoother_dbsr_sor_descend(A, b, u, diaginv, weight);
-            }
+        {
+            fasp_smoother_dbsr_sor_descend(A, b, u, diaginv, weight);
+        }
     }
     // smooth according to the order 'mark' defined by user
     else {
