@@ -57,10 +57,12 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
 
     INT nthreads = 1, use_openmp = FALSE;
 
-    if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( ROW > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
 
     //----------------------------------------------
     //   Treat (alpha == 0.0) computation 
@@ -335,10 +337,12 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
+#if FASP_USE_OPENMP
+	if ( ROW > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
 
 	//----------------------------------------------
 	//   Treat (alpha == 0.0) computation 
@@ -606,10 +610,12 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
-            use_openmp = TRUE;
-            nthreads = FASP_GET_NUM_THREADS();
+#if FASP_USE_OPENMP
+	if ( ROW > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
 
 	//-----------------------------------------------------------------
 	//  zero out 'y' 

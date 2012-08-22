@@ -53,10 +53,12 @@ void fasp_array_set (const INT n,
     INT i;
     INT nthreads = 1, use_openmp = FALSE; 
     
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
     
     if (val == 0.0) {
         if (use_openmp) {
@@ -113,10 +115,12 @@ void fasp_iarray_set(const INT n,
     INT i;
     INT nthreads = 1, use_openmp = FALSE;
     
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    } 
+	}
+#endif
     
     if (val == 0) {
         if (use_openmp) {

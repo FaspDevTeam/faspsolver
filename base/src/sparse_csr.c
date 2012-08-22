@@ -186,11 +186,13 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     INT i,j,k,jaj,i1,i2,start;
     INT nthreads = 1, use_openmp = FALSE;
 
-    if (FASP_USE_OPENMP && MIN(n, nnz) > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP 
+	if ( MIN(n, nnz) > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
-    
+	}
+#endif
+
     dCSRmat Aperm = fasp_dcsr_create(n,n,nnz);
     
     // form the tranpose of P
@@ -350,12 +352,14 @@ void fasp_dcsr_getdiag (INT n,
 	
     INT nthreads = 1, use_openmp = FALSE;
     
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP 
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
-    
-    fasp_dvec_alloc(n, diag);
+	}
+#endif
+
+	fasp_dvec_alloc(n, diag);
     
     if (use_openmp) {
         INT mybegin,myend,myid;
@@ -414,11 +418,13 @@ void fasp_dcsr_getcol (const INT n,
 
     INT nthreads=1, use_openmp=FALSE;
 	
-    if(FASP_USE_OPENMP && nrow > OPENMP_HOLDS) {
-	use_openmp = TRUE;
-	nthreads = FASP_GET_NUM_THREADS();
-    }
-    
+#if FASP_USE_OPENMP 
+	if ( nrow > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+#endif
+	    
     // check the column index n
     if (n < 0 || n >= ncol) {
         printf("### ERROR: the column index n is illegal!!\n");
@@ -428,7 +434,8 @@ void fasp_dcsr_getcol (const INT n,
     
     // get the column
     if(use_openmp) {
-	INT mybegin, myend, myid;
+	    INT mybegin, myend, myid;
+
 #if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, j, row_begin, row_end) 
 #endif
@@ -942,11 +949,13 @@ void fasp_dcsr_shift (dCSRmat *A,
     INT i, *ai=A->IA, *aj=A->JA;
     INT nthreads = 1, use_openmp = FALSE;
 
-    if(FASP_USE_OPENMP && MIN(n, nnz) > OPENMP_HOLDS) {
-        use_openmp = TRUE;
-	nthreads = FASP_GET_NUM_THREADS();
-    }
-    
+#if FASP_USE_OPENMP 
+	if ( MIN(n, nnz) > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+#endif
+	
     if (offset == 0) offset = ISTART;
     
     if(use_openmp) {
@@ -1008,11 +1017,13 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     
     INT nthreads = 1, use_openmp = FALSE;
 
-    if(FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-	nthreads = FASP_GET_NUM_THREADS();
-	use_openmp = TRUE;
-    }
-
+#if FASP_USE_OPENMP 
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+	}
+#endif
+	
     // local variables
     INT i, j, k, row_start, row_end;
     

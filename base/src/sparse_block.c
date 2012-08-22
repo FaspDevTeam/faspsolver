@@ -49,10 +49,12 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     INT *col_flag;
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if (FASP_USE_OPENMP && n > OPENMP_HOLDS){
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
     // create colum flags
     col_flag=(INT*)fasp_mem_calloc(A->col,sizeof(INT)); 
@@ -143,10 +145,12 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     const INT nb = A->nb;
     const INT nb2=nb*nb;
 
-	if (FASP_USE_OPENMP && n > OPENMP_HOLDS){
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
 
     // create colum flags
     col_flag=(INT*)fasp_mem_calloc(A->COL,sizeof(INT)); 

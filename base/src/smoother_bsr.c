@@ -47,10 +47,13 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     REAL *diaginv = NULL;
 
     INT nthreads = 1, use_openmp = FALSE;
-    if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+
+#if FASP_USE_OPENMP
+	if ( ROW > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
    
     // allocate memory   
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
@@ -158,10 +161,13 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     INT i,k;
 
     INT nthreads = 1, use_openmp = FALSE;
-    if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+
+#if FASP_USE_OPENMP
+	if ( ROW > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
     
     // get all the diagonal sub-blocks
     if(use_openmp) {
@@ -262,10 +268,14 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     REAL         *val = A->val;
     
     INT nthreads = 1, use_openmp = FALSE;
-    if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+
+#if FASP_USE_OPENMP
+	if ( ROW > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
+
     // values of dvector b and u
     REAL *b_val = b->val;
     REAL *u_val = u->val;
@@ -420,11 +430,14 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     REAL *diaginv = NULL;
 
     INT nthreads = 1, use_openmp = FALSE;
-    if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+
+#if FASP_USE_OPENMP
+	if ( ROW > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
-   
+	}
+#endif
+
     // allocate memory   
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
@@ -868,10 +881,13 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     REAL *diaginv = NULL;
 
     INT nthreads = 1, use_openmp = FALSE;
-    if(FASP_USE_OPENMP && ROW > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+
+#if FASP_USE_OPENMP
+	if ( ROW > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
    
     // allocate memory   
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));

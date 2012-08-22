@@ -53,10 +53,12 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
 
     INT nthreads = 1, use_openmp = FALSE;
 
-    if (FASP_USE_OPENMP && A->nnz > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP 
+	if ( A->nnz > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
 
     if (A->row != B->row || A->col != B->col) {
 #if DEBUG_MODE
@@ -228,13 +230,16 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
     
     INT nthreads = 1, use_openmp = FALSE;
     
-    if (FASP_USE_OPENMP && m > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP 
+	if ( m > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
 
-    if (use_openmp) {
+   if (use_openmp) {
         INT myid, mybegin, myend;
+
 #if FASP_USE_OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, nnz_num_row, k) 
 #endif
@@ -455,10 +460,12 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
 
     INT nthreads = 1, use_openmp = FALSE;
 
-    if (FASP_USE_OPENMP && m > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP 
+	if ( m > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
 
     if ( alpha == 1.0 ) {
         if (use_openmp) {
@@ -617,10 +624,12 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
 
     INT nthreads = 1, use_openmp = FALSE;
     
-    if (FASP_USE_OPENMP && m > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP 
+	if ( m > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
     
     if (use_openmp) {
 #if FASP_USE_OPENMP
@@ -804,10 +813,12 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     
     INT nthreads = 1, use_openmp = FALSE;
 
-    if (FASP_USE_OPENMP && n_coarse > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP 
+	if ( n_coarse > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
     
     INT coarse_mul_nthreads = n_coarse * nthreads;
     INT fine_mul_nthreads = n_fine * nthreads;
@@ -1290,10 +1301,12 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
 {
     INT nthreads = 1, use_openmp = FALSE;
 
-    if (FASP_USE_OPENMP && R->row > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP 
+	if ( R->row > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
     
     if (use_openmp) {
         const INT row=R->row, col=P->col;

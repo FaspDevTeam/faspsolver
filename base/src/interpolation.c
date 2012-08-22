@@ -773,10 +773,12 @@ static void interp_RS( dCSRmat *A,
 	INT nthreads = 1, use_openmp = FALSE;
     INT row = MIN(P.IA[P.row], A->row);
     
-	if(FASP_USE_OPENMP && row > OPENMP_HOLDS){
+#if FASP_USE_OPENMP
+	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
     /** step 1: Find first the structure IA of P */
     fasp_iarray_cp(P.row+1, Ptr->IA, P.IA);
@@ -1436,10 +1438,12 @@ static void interp_RS1(dCSRmat *A,
 	INT nthreads = 1, use_openmp = FALSE;
 	INT row = MIN(P.IA[P.row], A->row);
     
-	if(FASP_USE_OPENMP && row > OPENMP_HOLDS){
+#if FASP_USE_OPENMP
+	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
     /** step 1: Find first the structure IA of P */
     fasp_iarray_cp(P.row+1, Ptr->IA, P.IA);

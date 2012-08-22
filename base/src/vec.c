@@ -219,10 +219,12 @@ void fasp_dvec_set (INT n,
     else n=x->row; 
 	INT nthreads = 1, use_openmp = FALSE;
     
-	if (FASP_USE_OPENMP && (n > OPENMP_HOLDS)) {
+#if FASP_USE_OPENMP 
+	if ( n > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
     if (val == 0.0) {
         if (use_openmp) {
@@ -278,10 +280,12 @@ void fasp_ivec_set (const INT m,
     INT n = u->row;
 	INT nthreads = 1, use_openmp = FALSE;
     
-	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
+#if FASP_USE_OPENMP 
+	if ( n > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
 	if (use_openmp) {
 		INT mybegin, myend, myid;
@@ -343,11 +347,13 @@ REAL fasp_dvec_maxdiff (dvector *x,
     
 	INT nthreads = 1, use_openmp = FALSE;
     INT i;
-    
-	if(FASP_USE_OPENMP && length > OPENMP_HOLDS) {
+
+#if FASP_USE_OPENMP
+	if ( length > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
 		nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
 	if(use_openmp) {
 #if FASP_USE_OPENMP
@@ -404,11 +410,13 @@ void fasp_dvec_symdiagscale (dvector *b,
     
 	INT nthreads = 1, use_openmp = FALSE;
     
-	if(FASP_USE_OPENMP && n > OPENMP_HOLDS){
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ){
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
-    
+#endif
+
 	if (use_openmp) {
 		INT mybegin, myend, myid;
 #if FASP_USE_OPENMP

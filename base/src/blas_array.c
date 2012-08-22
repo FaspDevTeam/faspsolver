@@ -39,10 +39,12 @@ void fasp_blas_array_ax(const INT n,
     INT i;
     INT nthreads = 1, use_openmp = FALSE;
    
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
 
     if (a == 1.0) {
     
@@ -91,10 +93,12 @@ void fasp_blas_array_axpy (const INT n,
     INT i;
     INT nthreads = 1, use_openmp = FALSE;
 
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
     
     if (a==1.0) {
         if (use_openmp) {
@@ -174,10 +178,12 @@ void fasp_blas_array_axpyz (const INT n,
     INT i;
     INT nthreads = 1, use_openmp = FALSE;
 
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
 
     if (use_openmp) {
 #if FASP_USE_OPENMP
@@ -224,10 +230,12 @@ void fasp_blas_array_axpby(const INT n,
     INT i;
     INT nthreads = 1, use_openmp = FALSE;
 
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS){
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
 
     if (use_openmp) {
 #if FASP_USE_OPENMP
@@ -271,10 +279,12 @@ REAL fasp_blas_array_dotprod(const INT n,
     INT nthreads = 1, use_openmp = FALSE;
     REAL value=0.0;
 
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
     
     if (use_openmp) {
 #if FASP_USE_OPENMP
@@ -312,10 +322,12 @@ REAL fasp_blas_array_norm1 (const INT n,
     INT nthreads = 1, use_openmp = FALSE;
     REAL onenorm = 0.;
  
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
 
     if (use_openmp) {
 #if FASP_USE_OPENMP
@@ -353,10 +365,12 @@ REAL fasp_blas_array_norm2 (const INT n,
     INT nthreads = 1, use_openmp = FALSE;
     REAL twonorm = 0.;
 
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
 
     if (use_openmp) {
 #if FASP_USE_OPENMP
@@ -394,10 +408,12 @@ REAL fasp_blas_array_norminf (const INT n,
     INT nthreads = 1, use_openmp = FALSE;
     REAL infnorm = 0.0;
 
-    if (FASP_USE_OPENMP && n > OPENMP_HOLDS) {
-        use_openmp = TRUE;
+#if FASP_USE_OPENMP
+	if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-    }
+	}
+#endif
 	
     if (use_openmp) {
 #if FASP_USE_OPENMP

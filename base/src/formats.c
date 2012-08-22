@@ -512,12 +512,14 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
 #endif
 
 	INT nthreads = 1, use_openmp = FALSE;
-    
-	if(FASP_USE_OPENMP &&  ROW > OPENMP_HOLDS){
+
+#if FASP_USE_OPENMP 
+	if ( ROW > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
-		nthreads = FASP_GET_NUM_THREADS();
+        nthreads = FASP_GET_NUM_THREADS();
 	}
-    
+#endif
+
     //--------------------------------------------------------
     // Create a CSR Matrix 
     //--------------------------------------------------------

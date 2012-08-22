@@ -526,10 +526,12 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-	if (FASP_USE_OPENMP && ROW > OPENMP_HOLDS){
-		use_openmp = TRUE; 
-		nthreads = FASP_GET_NUM_THREADS();
+#if FASP_USE_OPENMP 
+	if ( ROW > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
     // Create a dBSRmat 'B'
     B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);

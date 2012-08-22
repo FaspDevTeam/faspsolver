@@ -227,10 +227,12 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
     INT myid,mybegin,myend; 
 	INT nthreads = 1, use_openmp = FALSE;
     
-	if(FASP_USE_OPENMP && size > OPENMP_HOLDS){
+#if FASP_USE_OPENMP
+	if ( size > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
     // F-point first
     if (order == -1) {    

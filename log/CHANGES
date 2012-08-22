@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+08/22/2012 FASP 1.0.5:
+- Replace "if (FASP_USE_OPENMP)" by preprocessing "#if".
+
 08/02/2012 FASP 1.0.4:
 - Update block Jacobi in OMP.
 - Fix function name bugs in io.c.

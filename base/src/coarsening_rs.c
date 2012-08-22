@@ -393,10 +393,12 @@ static void generate_S ( dCSRmat *A,
     
 	INT nthreads = 1, use_openmp = FALSE;
     
-	if(FASP_USE_OPENMP && row > OPENMP_HOLDS){
+#if FASP_USE_OPENMP
+	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
     // get the diagnal entry of A
     dvector diag; fasp_dcsr_getdiag(0, A, &diag);
@@ -853,10 +855,12 @@ static INT form_coarse_level (dCSRmat *A,
     
 	INT nthreads = 1, use_openmp = FALSE;
     
-	if(FASP_USE_OPENMP && row > OPENMP_HOLDS){
+#if FASP_USE_OPENMP
+	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
     /**************************************************/
     /* Coarsening Phase ONE: find coarse level points */
@@ -1132,10 +1136,12 @@ static void generate_sparsity_P ( dCSRmat *P,
     
 	INT nthreads = 1, use_openmp = FALSE;
     
-	if(FASP_USE_OPENMP && row > OPENMP_HOLDS){
+#if FASP_USE_OPENMP
+	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
 	}
+#endif
     
 #if CHMEM_MODE
     total_alloc_mem += (row+1)*sizeof(INT);
