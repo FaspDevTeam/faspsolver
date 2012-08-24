@@ -49,7 +49,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
 	REAL solver_duration;
     INT iter;
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
@@ -109,7 +109,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     } 
     
     if ( (print_level>=PRINT_SOME) && (iter >= 0) ) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         REAL solver_end = omp_get_wtime();
         solver_duration = solver_end - solver_start;
 #else
@@ -159,7 +159,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
@@ -168,7 +168,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,NULL,itparam);
     
     if ( print_level>=PRINT_MIN ) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         REAL solver_end = omp_get_wtime();
         solver_duration = (REAL)(solver_end - solver_start);
 #else
@@ -218,7 +218,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
@@ -235,7 +235,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
     if ( print_level>=PRINT_MIN ) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         REAL solver_end = omp_get_wtime();
         solver_duration = (REAL)(solver_end - solver_start);
 #else
@@ -292,7 +292,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);		
 #endif
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	REAL setup_start = omp_get_wtime();
 #else
 	clock_t setup_start = clock();
@@ -308,7 +308,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	fasp_dcsr_shift (&schwarz_data.A, 1);
 	fasp_schwarz_setup(&schwarz_data, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
 	
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	REAL setup_end = omp_get_wtime();
 	setup_duration = (REAL)(setup_end - setup_start);
 #else
@@ -322,7 +322,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	prec.data = &schwarz_data; 
 	prec.fct = fasp_precond_schwarz;
 	
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	REAL solver_start = omp_get_wtime();
 #else
 	clock_t solver_start = clock();
@@ -332,7 +332,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	status=fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
 	
 	if (print_level>0) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	    REAL solver_end = omp_get_wtime();
         solver_duration = (REAL)(solver_end - solver_start);
 #else
@@ -389,7 +389,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
@@ -442,7 +442,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     
     if ( print_level>=PRINT_MIN ) {
         
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         REAL solver_end = omp_get_wtime();
         solver_duration = (REAL)(solver_end - solver_start);
 #else
@@ -496,7 +496,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
@@ -518,7 +518,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
     if (print_level>=PRINT_MIN) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         REAL solver_end = omp_get_wtime();
         solver_duration = (REAL)(solver_end - solver_start);
 #else
@@ -593,7 +593,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
@@ -614,7 +614,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
     if (print_level>=PRINT_MIN) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         REAL solver_end = omp_get_wtime();
         solver_duration = (REAL)(solver_end - solver_start);
 #else

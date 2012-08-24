@@ -44,7 +44,7 @@ INT fasp_amg_solve (AMG_data *mgl,
 	// local variables
 	REAL solveduration;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     REAL        solve_start=omp_get_wtime();
 #else
     clock_t       solve_start=clock();
@@ -94,7 +94,7 @@ INT fasp_amg_solve (AMG_data *mgl,
         else
             printf("Number of iterations = %d with relative residual %e.\n", 
                    iter, relres1);
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         REAL solve_end=omp_get_wtime();
         solveduration = (REAL)(solve_end - solve_start);
 #else

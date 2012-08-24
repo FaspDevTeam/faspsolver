@@ -393,7 +393,7 @@ static void generate_S ( dCSRmat *A,
     
 	INT nthreads = 1, use_openmp = FALSE;
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -426,7 +426,7 @@ static void generate_S ( dCSRmat *A,
     
     if (use_openmp) {
         INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin,myend,i,row_scale,row_sum,begin_row,end_row,j)
 #endif
         for (myid = 0; myid < nthreads; myid++ )
@@ -855,7 +855,7 @@ static INT form_coarse_level (dCSRmat *A,
     
 	INT nthreads = 1, use_openmp = FALSE;
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -868,7 +868,7 @@ static INT form_coarse_level (dCSRmat *A,
     
     // 1. Initialize lambda
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin,myend,i) 
 #endif
         for (myid = 0; myid < nthreads; myid++ )
@@ -884,7 +884,7 @@ static INT form_coarse_level (dCSRmat *A,
     // 2. Before the following algorithm starts, filter out the variables which
     // have no connections at all and assign special F-variables.
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for reduction(+:num_left) private(myid, mybegin, myend, i) 
 #endif
         for (myid = 0; myid < nthreads; myid++ )
@@ -1027,7 +1027,7 @@ static INT form_coarse_level (dCSRmat *A,
         /* Coarsening Phase TWO: check fine points for coarse neighbors */
         /****************************************************************/
         if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin,myend,i) 
 #endif
             for (myid = 0; myid < nthreads; myid++ )
@@ -1136,7 +1136,7 @@ static void generate_sparsity_P ( dCSRmat *P,
     
 	INT nthreads = 1, use_openmp = FALSE;
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -1150,7 +1150,7 @@ static void generate_sparsity_P ( dCSRmat *P,
     // step 1: Find the structure IA of P first
     if (use_openmp) {
         INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin,myend,i,j,k) 
 #endif
         for (myid = 0; myid < nthreads; myid++ )

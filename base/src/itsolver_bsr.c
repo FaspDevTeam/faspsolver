@@ -31,7 +31,7 @@ INT THDs_CPR_gGS; /**< global matrix gs smoothing threads */
 
 void fasp_set_GS_threads(INT mythreads, INT its)
 {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 
 #if 1
 
@@ -106,7 +106,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     INT iter;
     REAL solver_duration;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     REAL solver_start=omp_get_wtime();
 #else
     clock_t solver_start=clock();
@@ -144,7 +144,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     }
     
     if ( (print_level>PRINT_MIN) && (iter >= 0) ) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         REAL solver_end=omp_get_wtime();
         solver_duration = (REAL)(solver_end - solver_start);
 #else

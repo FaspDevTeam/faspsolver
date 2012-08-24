@@ -507,13 +507,13 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     REAL *ap = NULL;
     INT    *jap = NULL;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     INT stride_i,mybegin,myend,myid;
 #endif
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP 
+#ifdef _OPENMP  
 	if ( ROW > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -534,7 +534,7 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     //--------------------------------------------------------------------------
     
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i, rowstart, colblock, nzperrow, j) 
         {
@@ -587,7 +587,7 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
         case 0: // each non-zero block elements are stored in row-major order
         {
             if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel private(myid, mybegin, myend, i, k, j, rowstart, colstart, vp, mr, ap, jap, mc) ////num_threads(nthreads)
                 {
                     myid = omp_get_thread_num();

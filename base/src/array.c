@@ -53,7 +53,7 @@ void fasp_array_set (const INT n,
     INT i;
     INT nthreads = 1, use_openmp = FALSE; 
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( n > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -63,7 +63,7 @@ void fasp_array_set (const INT n,
     if (val == 0.0) {
         if (use_openmp) {
             INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend)
 #endif
             for (myid = 0; myid < nthreads; myid ++) {
@@ -77,7 +77,7 @@ void fasp_array_set (const INT n,
     else {
         if (use_openmp) {
             INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for (myid = 0; myid < nthreads; myid ++) {
@@ -115,7 +115,7 @@ void fasp_iarray_set(const INT n,
     INT i;
     INT nthreads = 1, use_openmp = FALSE;
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( n > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -125,7 +125,7 @@ void fasp_iarray_set(const INT n,
     if (val == 0) {
         if (use_openmp) {
             INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin, myend)
 #endif
             for (myid = 0; myid < nthreads; myid ++) {
@@ -140,7 +140,7 @@ void fasp_iarray_set(const INT n,
     else {
         if (use_openmp) {
             INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin, myend,i)
 #endif
             for (myid = 0; myid < nthreads; myid ++) {

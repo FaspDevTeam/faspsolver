@@ -61,7 +61,7 @@ void fasp_precond_dbsr_diag (REAL *r,
 	        INT nthreads = 1, use_openmp = FALSE;
             unsigned INT i;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	        if ( m > OPENMP_HOLDS ) {
 		        use_openmp = TRUE;
                 nthreads = FASP_GET_NUM_THREADS();
@@ -69,7 +69,7 @@ void fasp_precond_dbsr_diag (REAL *r,
 #endif
 
             if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
                 INT myid;
                 INT mybegin;
                 INT myend;
@@ -127,7 +127,7 @@ void fasp_precond_dbsr_diag_nc2(REAL *r,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( m > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -135,7 +135,7 @@ void fasp_precond_dbsr_diag_nc2(REAL *r,
 #endif
     
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         INT myid;
         INT mybegin;
         INT myend;
@@ -190,7 +190,7 @@ void fasp_precond_dbsr_diag_nc3(REAL *r,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( m > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -198,7 +198,7 @@ void fasp_precond_dbsr_diag_nc3(REAL *r,
 #endif
     
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         INT myid;
         INT mybegin;
         INT myend;
@@ -253,7 +253,7 @@ void fasp_precond_dbsr_diag_nc5(REAL *r,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( m > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -261,7 +261,7 @@ void fasp_precond_dbsr_diag_nc5(REAL *r,
 #endif
 
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         INT myid;
         INT mybegin;
         INT myend;
@@ -315,7 +315,7 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( m > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -323,7 +323,7 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
 #endif
     
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         INT myid;
         INT mybegin;
         INT myend;

@@ -517,7 +517,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     
     INT nb2  = nb*nb;
     INT i,j,k,m;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     INT myid;
     INT mybegin;
     INT stride_i;
@@ -526,7 +526,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP 
+#ifdef _OPENMP  
 	if ( ROW > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -548,7 +548,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     case 2:
         // main loop 
         if (use_openmp) {
-#if FASP_USE_OPENMP                
+#ifdef _OPENMP                 
             stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
             {
@@ -602,7 +602,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     case 3:
         // main loop 
         if (use_openmp) {
-#if FASP_USE_OPENMP                
+#ifdef _OPENMP                 
             stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
             {
@@ -660,7 +660,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     case 5: 
         // main loop 
         if (use_openmp) {
-#if FASP_USE_OPENMP                
+#ifdef _OPENMP                 
             stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
             {
@@ -721,7 +721,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     case 7:
         // main loop
         if (use_openmp) {
-#if FASP_USE_OPENMP                
+#ifdef _OPENMP                 
             stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
             {
@@ -781,7 +781,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     default:
         // main loop
         if (use_openmp) {
-#if FASP_USE_OPENMP                
+#ifdef _OPENMP                 
             stride_i = ROW/nthreads;
 #pragma omp parallel private(myid, mybegin, myend,i,k,m,j) num_threads(nthreads)
             {

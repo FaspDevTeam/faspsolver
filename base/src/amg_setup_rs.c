@@ -215,7 +215,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
 {
     INT status=SUCCESS;
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     const INT print_level=param->print_level;
     const INT m=mgl[0].A.row;    
 	const INT cycle_type = param->cycle_type;

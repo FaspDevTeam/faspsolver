@@ -54,7 +54,7 @@ void fasp_solver_amg (dCSRmat *A,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     if ( print_level > PRINT_NONE ) 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	AMG_start = omp_get_wtime();
 #else
 	AMG_start = clock();
@@ -78,7 +78,7 @@ void fasp_solver_amg (dCSRmat *A,
         break;
 
     default: // Classical AMG setup phase
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 		// omp version RS coarsening 
         if ( (status=fasp_amg_setup_rs_omp(mgl, param)) < 0 ) goto FINISHED;
 #else
@@ -110,7 +110,7 @@ void fasp_solver_amg (dCSRmat *A,
     
     // print out CPU time when needed
     if ( print_level > PRINT_NONE ) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     AMG_end = omp_get_wtime();    
     AMG_duration += (REAL)(AMG_end - AMG_start);    
 #else

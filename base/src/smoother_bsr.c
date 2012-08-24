@@ -48,7 +48,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
 
     INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( ROW > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -61,7 +61,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     // get all the diagonal sub-blocks
     if(use_openmp) {
         INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
@@ -86,7 +86,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     if (nb > 1) {
         if(use_openmp) {
             INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -105,7 +105,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     else {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -162,7 +162,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 
     INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( ROW > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -172,7 +172,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     // get all the diagonal sub-blocks
     if(use_openmp) {
         INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
@@ -197,7 +197,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     if (nb > 1) {
         if(use_openmp) {
             INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -216,7 +216,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     else {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -269,7 +269,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     
     INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( ROW > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -295,7 +295,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     if (nb == 1) {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i,j,k)
 #endif
             for (myid=0; myid<nthreads; myid++) {
@@ -308,7 +308,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
                     }
                 }
             }
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -336,7 +336,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     else if (nb > 1) {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i,pb,k,j)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -350,7 +350,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
                     }
                 }
             }
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i,pb)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -431,7 +431,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
 
     INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( ROW > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -444,7 +444,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     // get all the diagonal sub-blocks
     if(use_openmp) {
         INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
@@ -469,7 +469,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     if (nb > 1) {
         if(use_openmp) {
             INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -488,7 +488,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     else {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -882,7 +882,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
 
     INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( ROW > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -895,7 +895,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     // get all the diagonal sub-blocks
     if(use_openmp) {
         INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
@@ -920,7 +920,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     if (nb > 1) {
         if(use_openmp) {
             INT mybegin,myend,myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -939,7 +939,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     else {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {

@@ -112,7 +112,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     SHORT         level=0, status=SUCCESS, max_levels=param->max_levels;
     INT           i;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	REAL setup_start = omp_get_wtime();
 #else
     clock_t setup_start = clock();
@@ -229,7 +229,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 #endif
     
     if (print_level>PRINT_NONE) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         REAL setup_end=omp_get_wtime();
         setupduration = setup_end - setup_start;
 #else

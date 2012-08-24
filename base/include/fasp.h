@@ -747,7 +747,7 @@ typedef struct {
 	void *data; 	
 	//! action for preconditioner, void function pointer
 	void (*fct)(REAL *, REAL *, void *);
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	//! action for preconditioner, void function pointer
 	void (*fct_omp)(REAL *, REAL *, void *, INT, INT);
 #endif
@@ -918,7 +918,7 @@ typedef ListElement *LinkList; /**< linked list */
 /*
  * OpenMP definitions and decrorations
  */
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 
 #include "omp.h"
 

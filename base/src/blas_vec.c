@@ -36,7 +36,7 @@ void fasp_blas_dvec_axpy (const REAL a,
 	INT nthreads = 1, use_openmp = FALSE;
     REAL *xpt=x->val, *ypt=y->val;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( m > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -49,7 +49,7 @@ void fasp_blas_dvec_axpy (const REAL a,
     }
     
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         INT myid, mybegin, myend;
 #pragma omp parallel private(myid,mybegin,myend,i) num_threads(nthreads)
         {
@@ -126,7 +126,7 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( length > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -134,7 +134,7 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
 #endif
     
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for reduction(+:value) private(i)
 #endif
         for (i=0; i<length; ++i) value+=xpt[i]*ypt[i];
@@ -178,7 +178,7 @@ REAL fasp_blas_dvec_relerr (dvector *x,
         exit(ERROR_DUMMY_VAR);    
     }
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( length > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -186,7 +186,7 @@ REAL fasp_blas_dvec_relerr (dvector *x,
 #endif
 
 	if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for reduction(+:temp,diff) private(i)
 #endif
         for (i=0;i<length;++i) {
@@ -228,7 +228,7 @@ REAL fasp_blas_dvec_norm1 (dvector *x)
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( length > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -236,7 +236,7 @@ REAL fasp_blas_dvec_norm1 (dvector *x)
 #endif
     
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for reduction(+:onenorm) private(i)
 #endif
         for (i=0;i<length;++i) onenorm+=ABS(xpt[i]);
@@ -272,7 +272,7 @@ REAL fasp_blas_dvec_norm2 (dvector *x)
 
 	INT nthreads = 1, use_openmp = FALSE;
 
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( length > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -280,7 +280,7 @@ REAL fasp_blas_dvec_norm2 (dvector *x)
 #endif
     
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for reduction(+:twonorm) private(i) 
 #endif
         for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];

@@ -763,7 +763,7 @@ static void interp_RS( dCSRmat *A,
     INT begin_row, end_row; 
     INT i,j,k,l,index=0;
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     INT myid, mybegin, myend, stride_i;
 #endif
     
@@ -773,7 +773,7 @@ static void interp_RS( dCSRmat *A,
 	INT nthreads = 1, use_openmp = FALSE;
     INT row = MIN(P.IA[P.row], A->row);
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -788,7 +788,7 @@ static void interp_RS( dCSRmat *A,
     
     /** step 3: Fill the data of P */
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         stride_i = A->row/nthreads;
 #pragma omp parallel private(myid,mybegin,myend,i,begin_row,end_row,diagindex,aii,amN,amP,apN,apP,countPplus,j,k,alpha,beta,l) num_threads(nthreads)
         {
@@ -952,7 +952,7 @@ static void interp_RS( dCSRmat *A,
         }
     
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
         stride_i = P.IA[P.row]/nthreads;
 #pragma omp parallel private(myid,mybegin,myend,i,j) num_threads(nthreads)
         {
@@ -1192,7 +1192,7 @@ static void fasp_get_nbl_nbr_ysk (dCSRmat *A,
                                   INT *nbl_ptr, 
                                   INT *nbr_ptr )
 {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     INT *IA = A->IA;
     INT *JA = A->JA;
     INT myid, mybegin, myend, nthreads;
@@ -1244,7 +1244,7 @@ static void fasp_get_nbl_nbr_ysk (dCSRmat *A,
 static void fasp_mod_coarse_index( INT nrows, 
                                   INT *CoarseIndex)
 {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     INT myid, mybegin, myend, i, nthreads;
     
     nthreads = FASP_GET_NUM_THREADS();
@@ -1292,7 +1292,7 @@ static void fasp_get_icor_ysk(INT nrows,
 							  INT *CF_marker, 
 							  INT *icor_ysk)
 {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
     INT myid, FiveMyid, mybegin, myend, min_A, max_A, i, first_f_node, min_P, max_P, myend_minus_one;
     INT lengthAA = 0, lengthPP = 0;
     INT nthreads; 
@@ -1438,7 +1438,7 @@ static void interp_RS1(dCSRmat *A,
 	INT nthreads = 1, use_openmp = FALSE;
 	INT row = MIN(P.IA[P.row], A->row);
     
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -1453,7 +1453,7 @@ static void interp_RS1(dCSRmat *A,
     
     /** step 3: Fill the data of P */
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i,begin_row,end_row,diagindex,aii,amN,amP,apN,apP,countPplus,j,k,alpha,beta,l)
 #endif
         for (myid = 0; myid < nthreads; myid++ )
@@ -1627,7 +1627,7 @@ static void interp_RS1(dCSRmat *A,
     // The following is one of OPTIMAL parts ...0802...
     // Generate CoarseIndex in parallel
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp master
         {    
             indexs = (INT *)fasp_mem_calloc(nthreads, sizeof(INT));
@@ -1650,7 +1650,7 @@ static void interp_RS1(dCSRmat *A,
         for (i = 1; i < nthreads; i ++) {
             indexs[i] += indexs[i-1];
         }
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin, myend, shift, i)
 #endif
         for (myid = 0; myid < nthreads; myid ++)
@@ -1681,7 +1681,7 @@ static void interp_RS1(dCSRmat *A,
     }
     
     if (use_openmp) {
-#if FASP_USE_OPENMP
+#ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin,myend,i,j) 
 #endif
         for (myid = 0; myid < nthreads; myid++ )
