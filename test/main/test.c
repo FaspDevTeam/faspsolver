@@ -15,6 +15,9 @@
  *  \brief The main test function for FASP solvers
  */
 
+#include <time.h>
+
+
 #include "fasp.h"
 #include "fasp_functs.h"
 
@@ -79,21 +82,37 @@ int main (int argc, const char * argv[])
 		datafile2="rhs_FE.dat";
 		strcat(filename2,datafile2);        
 		fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+
+		dvector sol = fasp_dvec_create(A.row);
+		fasp_dvec_rand(A.row, &sol);
+
+		b = fasp_dvec_create(A.row);
+        
+		fasp_dvec_free(&sol);
+
 	}	
     
 	// Read A and b -- P1 FE discretization for Poisson, large    
     else if (problem_num == 11) {
-        datafile1="coomat_1046529.dat";
+      //datafile1="coomat_1046529.dat";
+        //datafile1="coomat_26k.dat";
+        datafile1="jump_TR_8_mat.dat";
         strcat(filename1,datafile1);
         fasp_dcoo_read(filename1, &A);
+        //fasp_dcsr_compress_inplace (&A, 1e-10);
         
-        dvector sol = fasp_dvec_create(A.row);
-        fasp_dvec_rand(A.row, &sol);
+        datafile2="jump_TR_8_rhs.dat";
+        strcat(filename2,datafile2);
+        fasp_dvec_read (filename2,&b);
+        
+        //dvector sol = fasp_dvec_create(A.row);
+        //fasp_dvec_rand(A.row, &sol);
          
         // Form the right-hand-side b = A*sol
-        b = fasp_dvec_create(A.row);
-        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-        fasp_dvec_free(&sol);
+        //b = fasp_dvec_create(A.row);
+        //fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+
+        //fasp_dvec_free(&sol);
 	}	
     
 	// Read A and b -- FD discretization for Poisson, large    

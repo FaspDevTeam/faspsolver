@@ -10,10 +10,10 @@ workdir = ../data/  % work directory, no more than 128 characters
 % problem, solver, and output type             %
 %----------------------------------------------%
 
-problem_num              = 10     % test problem number 
+problem_num              = 11     % test problem number 
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to scree | 1 to file
-solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
+solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
                                   % 5 vGMRes | 6 vFGMRes | 7 GCG |
                                   %--------------------------------------
                                   % 21 AMG Solver | 22 FMG Solver |
@@ -60,9 +60,9 @@ AMG_cycle_type           = V      % V V-cycle | W W-cycle
 AMG_tol                  = 1e-8   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
-AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
+AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
-AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
+AMG_amli_degree          = 1      % degree of the polynomial used by AMLI cycle
 AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
 
 %----------------------------------------------%
@@ -97,5 +97,5 @@ AMG_max_row_sum          = 0.9    % Max row sum
 AMG_strong_coupled       = 0.08   % Strong coupled threshold
 AMG_max_aggregation      = 20     % Max size of aggregations
 AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
-AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing
+AMG_smooth_filter        = ON    % Switch for filtered matrix for smoothing
 

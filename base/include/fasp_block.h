@@ -211,9 +211,9 @@ typedef struct {
 	dCSRmat Ac;
 	
 	/* Extra information */
-	
 	//! pointer to the pressure block (only for reservoir simulation)
 	dCSRmat PP;
+        
 	//! pointer to the CF marker at level level_num
 	ivector cfmark; 	
 	//! number of levels use ILU smoother
@@ -224,7 +224,6 @@ typedef struct {
 	INT near_kernel_dim;
 	//! basis of near kernel space for SAMG
 	REAL **near_kernel_basis;
-	// Smoother order information
 	
 	//! Temporary work space
 	dvector w;
@@ -275,7 +274,9 @@ typedef struct {
 	
 	//! AMG preconditioner data
 	AMG_data_bsr *mgl_data;
-	
+    //! AMG preconditioner data for pressure block 
+	AMG_data *pres_mgl_data;
+    
 	//! ILU preconditioner data (needed for CPR type preconditioner)
 	ILU_data *LU;
 	

@@ -56,7 +56,7 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
     SHORT i;
     
     AMG_data_bsr *mgl = (AMG_data_bsr *)fasp_mem_calloc(max_levels,sizeof(AMG_data_bsr));
-    
+        
     for (i=0; i<max_levels; ++i) {
         mgl[i].max_levels = max_levels;
         mgl[i].num_levels = 0;

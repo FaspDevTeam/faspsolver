@@ -146,7 +146,7 @@ lib: $(OBJSC) $(OBJSF)
 
 test:
 	$(CC) -c main/test.c -o main/test.o $(CFLAGS)
-	$(FC) -o test.ex main/test.o $(FLFLAGS)
+	$(CPP) -o test.ex main/test.o $(FLFLAGS) -lgfortran
 
 regression: 
 	$(CC) -c main/regression.c -o main/regression.o $(CFLAGS)

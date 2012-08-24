@@ -425,7 +425,6 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
         //-----------------------------------//
         //   adjust the restart parameter    //
         //-----------------------------------//
-    
         if (cr > cr_max || iter == 0) {
             Restart = restart_max;
         }
@@ -453,9 +452,10 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
                 if (print_level >= PRINT_SOME) ITS_FACONV;
             }
         }
-    
+            
         t = 1.0 / r_norm;
         fasp_blas_array_ax(n, t, p[0]); 
+                
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
         while (i < Restart && iter < MaxIt) {
@@ -468,7 +468,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
                 fasp_array_cp(n, p[i-1], r);
             else
                 pc->fct(p[i-1], r, pc->data);          
-    
+            
             fasp_blas_dbsr_mxv(A, r, p[i]);
     
             /* modified Gram_Schmidt */

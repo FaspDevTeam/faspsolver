@@ -390,19 +390,19 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
     z=(REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
     
     if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL)); 
-    
+
     r = work; rs = r + n; c = rs + restartplus1; s = c + restart;    
     for (i = 0; i < restartplus1; i ++) p[i] = s + restart + i*n;
     for (i = 0; i < restartplus1; i ++) hh[i] = p[restart] + n + i*restart;
     for (i = 0; i < restartplus1; i ++) z[i] = hh[restart] + restart + i*n;
-    
+
     /* initialization */
     fasp_array_cp(n, b->val, p[0]);
     fasp_blas_dbsr_aAxpy(-1.0, A, x->val, p[0]);
     
     b_norm = fasp_blas_array_norm2(n, b->val);
     r_norm = fasp_blas_array_norm2(n, p[0]);
-    
+
     if ( print_level > PRINT_NONE) {
         norms[0] = r_norm;
         if ( print_level >= PRINT_SOME) {

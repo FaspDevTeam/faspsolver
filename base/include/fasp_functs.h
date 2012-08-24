@@ -610,16 +610,16 @@ void fasp_grid2d_plot (pgrid2d pg,
                        INT level);
 
 
-/*-------- In file: ilu_setup_bsr.c --------*/
+/*-------- In file: ilu_setup.c --------*/
 
-SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
+SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
 
-/*-------- In file: ilu_setup.c --------*/
+/*-------- In file: ilu_setup_bsr.c --------*/
 
-SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
+SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
