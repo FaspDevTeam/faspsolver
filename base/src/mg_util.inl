@@ -36,11 +36,10 @@ static void fasp_coarse_itsolver (dCSRmat *A,
 {
     const INT csize  = A->row;
     const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
+    INT Status = SUCCESS;
     
-    fasp_smoother_dcsr_sgs(x, A, b, 10);
-    INT Status = 1;
+    // fasp_smoother_dcsr_sgs(x, A, b, 10);
 
-    /*
     INT status = fasp_solver_dcsr_pcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);
     
     if (status < 0) { // If PCG does not converge, use BiCGstab as a saft net.
@@ -50,7 +49,6 @@ static void fasp_coarse_itsolver (dCSRmat *A,
     if ( status < 0 && prt_lvl > PRINT_MIN ) {
         printf("### WARNING: coarse level solver does not converge in %d steps!\n", cmaxit);
     }
-    */
 }
 
 /**
