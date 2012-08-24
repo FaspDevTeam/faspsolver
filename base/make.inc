@@ -10,7 +10,7 @@
 BOPT=-g -O2 -funroll-loops -ftree-vectorize
 
 # Uncomment the following line to turn on OpenMP version
-# OMP=1
+#OMP=1
 
 ifdef OMP
    BOPT+=-fopenmp
