@@ -76,7 +76,7 @@
  *
  * - Xu, Jinchao (Penn State University, USA)
  *
- * Regular developers (in alphabetic order):
+ * Developers (in alphabetic order):
  *
  * - Feng, Chunsheng (Xiangtan University, China)
  *

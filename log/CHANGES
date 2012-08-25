@@ -1,5 +1,12 @@
 File Name: CHANGES
 
+08/25/2012 FASP 1.0.6:
+- Replace "#if FASP_USE_OPENMP" by the system environment variable "_OPENMP".
+- Some changes to OMP functions for sparse matrix operations.
+- Some changes for fasp4monix/SPE10.
+- Fix a typo in README for building FASP.
+- Change filename: amg_setup_aggregation.inl -> amg_setup_aggregation_csr.inl.
+
 08/22/2012 FASP 1.0.5:
 - Replace "if (FASP_USE_OPENMP)" by preprocessing "#if".
 

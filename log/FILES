@@ -62,9 +62,9 @@
      445 ./base/src/smoother_poly.c
     1859 ./base/src/smoother_str.c
      265 ./base/src/sparse_block.c
-    1035 ./base/src/sparse_bsr.c
-      89 ./base/src/sparse_coo.c
-    1121 ./base/src/sparse_csr.c
+    1147 ./base/src/sparse_bsr.c
+     117 ./base/src/sparse_coo.c
+    1149 ./base/src/sparse_csr.c
       71 ./base/src/sparse_csrl.c
      203 ./base/src/sparse_str.c
      981 ./base/src/sparse_util.c
@@ -75,10 +75,10 @@
      560 ./base/include/dlmalloc.h
      142 ./base/include/doxygen.h
      961 ./base/include/fasp.h
-     481 ./base/include/fasp_block.h
+     482 ./base/include/fasp_block.h
     2160 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      187 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   56449 total
+   56618 total

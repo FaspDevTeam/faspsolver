@@ -42,7 +42,7 @@ This package has been tested with:
     Fortran: gfortran-4.4, gfortran-4.5, gfortran-4.6, g95-0.92, ifort-11.x.
 
 --Windows XP and Windows Vista
-    C/C++:   VC++, icc-11.1.x, icc-12.0.x;
+    C/C++:   VC++9.0, icc-11.1.x, icc-12.0.x;
     Fortran: ifort-11.1.x, ifort-12.0.x. 
 
 ================================
