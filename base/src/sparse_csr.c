@@ -883,7 +883,7 @@ void fasp_dcsr_compress (dCSRmat *A,
     if ( use_openmp ) {
         int myid, mybegin, myend;
 #ifdef _OPENMP
-#pragma omp parallel for private(myid, i)
+#pragma omp parallel for private(myid, i, mybegin, myend)
 #endif
 	for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, B->nnz, &mybegin, &myend);

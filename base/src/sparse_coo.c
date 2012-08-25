@@ -80,7 +80,10 @@ void fasp_dcoo_shift (dCOOmat *A,
 {
     const INT nnz=A->nnz;
     INT i, *ai=A->I, *aj=A->J;
+    
+    // Variables for Openmp
     INT nthreads = 1, use_openmp = FALSE;
+    INT myid, mybegin, myend;
 
 #ifdef _OPENMP
     if (nnz > OPENMP_HOLDS) {
@@ -92,9 +95,8 @@ void fasp_dcoo_shift (dCOOmat *A,
     if (offset == 0) offset = ISTART;
     
     if (use_openmp) {
-        INT myid, mybegin, myend;
 #ifdef _OPENMP
-#pragma omp parallel for private(myid, i)
+#pragma omp parallel for private(myid, i, mybegin, myend)
 #endif
         for (myid=0; myid<nthreads; myid++) {
 	    FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);	
