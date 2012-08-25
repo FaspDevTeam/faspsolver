@@ -339,8 +339,8 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 
 #ifdef _OPENMP 
 	if ( ROW > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+            use_openmp = TRUE;
+            nthreads = FASP_GET_NUM_THREADS();
 	}
 #endif
 

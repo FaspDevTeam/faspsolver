@@ -276,14 +276,14 @@ void fasp_dvec_set (INT n,
 void fasp_ivec_set (const INT m, 
                     ivector *u)
 {    
-    INT i;
-    INT n = u->row;
-	INT nthreads = 1, use_openmp = FALSE;
+        INT i;
+        INT n = u->row;
+        INT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP  
 	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+            use_openmp = TRUE;
+            nthreads = FASP_GET_NUM_THREADS();
 	}
 #endif
     
@@ -299,7 +299,7 @@ void fasp_ivec_set (const INT m,
 	}    
 	else {
         
-        for (i=0; i<n; ++i) u->val[i] = m;
+            for (i=0; i<n; ++i) u->val[i] = m;
 	}
 }
 

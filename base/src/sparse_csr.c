@@ -419,10 +419,10 @@ void fasp_dcsr_getcol (const INT n,
     INT nthreads=1, use_openmp=FALSE;
 	
 #ifdef _OPENMP  
-	if ( nrow > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( nrow > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 	    
     // check the column index n
@@ -729,7 +729,8 @@ INT fasp_dcsr_trans (dCSRmat *A,
     // Note: these Numbers are stored in the array AT.IA from 1 to m-1
 	
     //for (i=0;i<m;++i) AT->IA[i] = 0;   //Here is a Bug.
-    for (i=0; i<=m; ++i) AT->IA[i] = 0;  //Chunsheng Feng ,Zheng Li, June/20/2012
+    //for (i=0; i<=m; ++i) AT->IA[i] = 0;  //Chunsheng Feng ,Zheng Li, June/20/2012
+    fasp_iarray_set(m+1, AT->IA, 0);
     
     for (j=0;j<nnz;++j) {
         i=N2C(A->JA[j]); // column Number of A = row Number of A'
@@ -834,6 +835,9 @@ void fasp_dcsr_transpose (INT *row[2],
  *
  * \author Shiquan Zhang
  * \date   03/10/2010
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date  08/25/2012
  */
 void fasp_dcsr_compress (dCSRmat *A, 
                          dCSRmat *B, 
@@ -842,6 +846,15 @@ void fasp_dcsr_compress (dCSRmat *A,
     INT i, j, k;
     INT ibegin,iend1;    
     
+    INT nthreads = 1, use_openmp = FALSE;
+
+#ifdef _OPENMP
+    if ( B->nnz > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
+#endif
+
     INT *index=(INT*)fasp_mem_calloc(A->nnz,sizeof(INT));
     
     B->row=A->row; B->col=A->col;
@@ -867,10 +880,25 @@ void fasp_dcsr_compress (dCSRmat *A,
     B->val=(REAL*)fasp_mem_calloc(B->nnz,sizeof(REAL));
     
     // second pass: generate the index and element to B
-    for (i=0;i<B->nnz;++i) {
-        B->JA[i]=A->JA[index[i]];
-        B->val[i]=A->val[index[i]]; 
-    }  
+    if ( use_openmp ) {
+        int myid, mybegin, myend;
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, i)
+#endif
+	for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, B->nnz, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i) {
+                B->JA[i]=A->JA[index[i]];
+                B->val[i]=A->val[index[i]]; 
+            }
+        }
+    }	
+    else {
+        for (i=0;i<B->nnz;++i) {
+            B->JA[i]=A->JA[index[i]];
+            B->val[i]=A->val[index[i]]; 
+        }
+    }	
     
     fasp_mem_free(index);
 }
@@ -1018,10 +1046,10 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP  
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 	
     // local variables
