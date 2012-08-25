@@ -3,6 +3,7 @@
  */
 
 #include <math.h>
+#include <omp.h>
 #include <time.h>
 
 #include "fasp.h"
@@ -70,17 +71,42 @@ void fasp_dcoo_free (dCOOmat *A)
  *
  * \author Chensong Zhang 
  * \date   2010/04/06
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date  08/25/2012
  */
 void fasp_dcoo_shift (dCOOmat *A,
                       INT offset)
 {
     const INT nnz=A->nnz;
     INT i, *ai=A->I, *aj=A->J;
-    
+    INT nthreads = 1, use_openmp = FALSE;
+
+#ifdef _OPENMP
+    if (nnz > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+	nthreads = FASP_GET_NUM_THREADS();
+    }
+#endif
+
     if (offset == 0) offset = ISTART;
     
-    for (i=0;i<nnz;++i) {    
-        ai[i]+=offset; aj[i]+=offset;
+    if (use_openmp) {
+        INT myid, mybegin, myend;
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, i)
+#endif
+        for (myid=0; myid<nthreads; myid++) {
+	    FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);	
+            for (i=mybegin; i<myend; ++i) {    
+                ai[i]+=offset; aj[i]+=offset;
+            }
+        }
+    }
+    else {
+        for (i=0;i<nnz;++i) {    
+            ai[i]+=offset; aj[i]+=offset;
+        }
     }
 }
 
