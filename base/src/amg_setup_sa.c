@@ -8,11 +8,13 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-#include "amg_setup_aggregation.inl"
+
+#include "amg_setup_aggregation_csr.inl"
 
 static SHORT amg_setup_smoothP_smoothA(AMG_data *mgl, AMG_param *param);
 static SHORT amg_setup_smoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
 static void smooth_agg(dCSRmat *A, dCSRmat *tentp, dCSRmat *P, AMG_param *param, INT levelNum, dCSRmat *N);
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/

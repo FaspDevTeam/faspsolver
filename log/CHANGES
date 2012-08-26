@@ -6,6 +6,9 @@ File Name: CHANGES
 - Some changes for fasp4monix/SPE10.
 - Fix a typo in README for building FASP.
 - Change filename: amg_setup_aggregation.inl -> amg_setup_aggregation_csr.inl.
+- Revert test.c and input.ini to their orginal state.
+- Fix a strange HG version problem.
+- Upgrade Doxygen to 1.8.2.
 
 08/22/2012 FASP 1.0.5:
 - Replace "if (FASP_USE_OPENMP)" by preprocessing "#if".

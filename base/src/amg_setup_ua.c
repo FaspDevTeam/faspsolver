@@ -8,7 +8,8 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-#include "amg_setup_aggregation.inl"
+
+#include "amg_setup_aggregation_csr.inl"
 #include "amg_setup_aggregation_bsr.inl"
 
 static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param);
