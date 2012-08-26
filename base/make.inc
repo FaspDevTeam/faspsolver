@@ -10,17 +10,7 @@
 BOPT=-g -O2 -funroll-loops -ftree-vectorize
 
 # Uncomment the following line to turn on OpenMP version
-   BOPT+=-fopenmp
-#OMP=1
-
-##iifdef OMP
-#   BOPT+=-fopenmp
-#   CDEFS=-D FASP_USE_OPENMP=1
-#   FDEFS=-D FASP_USE_OPENMP=1
-##ielse
-#   CDEFS=-D FASP_USE_OPENMP=0
-#   FDEFS=-D FASP_USE_OPENMP=0
-#endif
+# BOPT+=-fopenmp
 
 # User preprocessing definitions
 # CDEFS+=xx
