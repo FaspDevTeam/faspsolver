@@ -114,7 +114,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     INT           i;
 
 #ifdef _OPENMP 
-	REAL setup_start = omp_get_wtime();
+    REAL setup_start = omp_get_wtime();
 #else
     clock_t setup_start = clock();
 #endif 
