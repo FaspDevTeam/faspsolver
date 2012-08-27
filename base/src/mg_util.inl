@@ -36,6 +36,8 @@ static void fasp_coarse_itsolver (dCSRmat *A,
 {
     const INT csize  = A->row;
     const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
+
+   
     INT Status = SUCCESS;
     
     // fasp_smoother_dcsr_sgs(x, A, b, 10);

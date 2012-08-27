@@ -213,6 +213,8 @@ typedef struct {
 	/* Extra information */
 	//! pointer to the pressure block (only for reservoir simulation)
 	dCSRmat PP;
+    //! ILU data for pressure block
+    ILU_data PP_LU;
         
 	//! pointer to the CF marker at level level_num
 	ivector cfmark; 	
@@ -416,7 +418,7 @@ typedef struct precond_FASP_blkoil_data{
 	ivector *pivot_S; /**< pivot for the GS/block GS smoother for saturation block */
 	
 	//! data of AMG for pressure block
-	//dCSRmat *PP; /**< pressure block */
+	dCSRmat *PP; /**< pressure block */
 	AMG_data *mgl_data; /**< AMG data for presure-presure block */
 	//! parameters for AMG solver
 	//! print level in AMG preconditioner

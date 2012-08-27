@@ -344,6 +344,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
                               const SHORT stop_type, 
                               const SHORT print_level)
 {
+
     const INT n            = A->ROW*A->nb;  
     const INT min_iter     = 0;
     
