@@ -49,10 +49,10 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( ROW > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( ROW > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
    
     // allocate memory   
@@ -163,10 +163,10 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( ROW > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( ROW > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
     // get all the diagonal sub-blocks
@@ -204,8 +204,8 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     fasp_blas_smat_inv(diaginv+i*nb2, nb);
-                    }
-               }
+                }
+            }
         }
         else {
             for (i = 0; i < ROW; ++i) {
@@ -270,10 +270,10 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( ROW > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( ROW > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     // values of dvector b and u
@@ -432,10 +432,10 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( ROW > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( ROW > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     // allocate memory   
@@ -476,8 +476,8 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     fasp_blas_smat_inv(diaginv+i*nb2, nb);
-                    }
-               }
+                }
+            }
         }
         else {
             for (i = 0; i < ROW; ++i) {
@@ -883,10 +883,10 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( ROW > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( ROW > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
    
     // allocate memory   
@@ -927,8 +927,8 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     fasp_blas_smat_inv(diaginv+i*nb2, nb);
-                    }
-               }
+                }
+            }
         }
         else {
             for (i = 0; i < ROW; ++i) {

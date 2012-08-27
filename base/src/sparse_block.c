@@ -50,10 +50,10 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
 	INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
     // create colum flags
@@ -140,16 +140,16 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     INT status = SUCCESS;
     INT i,j,k,nnz=0;
     INT *col_flag;
-	INT nthreads = 1, use_openmp = FALSE;
+    INT nthreads = 1, use_openmp = FALSE;
     
     const INT nb = A->nb;
     const INT nb2=nb*nb;
 
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     // create colum flags
@@ -161,7 +161,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     
     if (use_openmp) {
 #ifdef _OPENMP 
-	    INT myid, mybegin, stride_i, myend;
+        INT myid, mybegin, stride_i, myend;
         stride_i = n/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {

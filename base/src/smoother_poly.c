@@ -6,6 +6,7 @@
 #include <time.h>
 #include <float.h>
 #include <limits.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -367,12 +368,40 @@ static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
  *
  * \author Fei Cao, Xiaozhe Hu
  * \date 05/24/2012
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date 08/27/2012
  */
 static void Diagx(REAL *Dinv, INT n, REAL *x, REAL *b)
 {
     unsigned INT i;
-    for (i=0; i<n; i++) {
-        b[i] = Dinv[i] * x[i];
+    
+    // Variables for OpenMP
+    INT nthreads = 1, use_openmp = FALSE;
+    INT myid, mybegin, myend;
+
+#ifdef _OPENMP
+    if (n > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
+#endif
+
+    if (use_openmp) {
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i)
+#endif
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            for (i = mybegin; i < myend; i++) {
+                b[i] = Dinv[i] * x[i];
+	    }
+        }
+    }
+    else {
+        for (i=0; i<n; i++) {
+            b[i] = Dinv[i] * x[i];
+        }
     }
     return;
 }
