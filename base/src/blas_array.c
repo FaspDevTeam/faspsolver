@@ -94,10 +94,10 @@ void fasp_blas_array_axpy (const INT n,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
     if (a==1.0) {
@@ -366,10 +366,10 @@ REAL fasp_blas_array_norm2 (const INT n,
     REAL twonorm = 0.;
 
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     if (use_openmp) {
@@ -409,10 +409,10 @@ REAL fasp_blas_array_norminf (const INT n,
     REAL infnorm = 0.0;
 
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 	
     if (use_openmp) {

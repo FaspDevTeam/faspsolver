@@ -177,8 +177,9 @@ static INT numfac_bsr (dBSRmat *A,
      *            U(k,k:n) = A(k,k:n) - U(1:k-1,k:n)*L(k,1:k-1)
      */    
     
-    for (k=0;k<n;k++) colptrs[k]=0;
-    
+    //for (k=0;k<n;k++) colptrs[k]=0;
+    memset(colptrs, 0, sizeof(INT)*n);
+
     switch (nb) {
     
     case 1:
