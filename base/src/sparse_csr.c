@@ -187,10 +187,10 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP  
-	if ( MIN(n, nnz) > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( MIN(n, nnz) > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     dCSRmat Aperm = fasp_dcsr_create(n,n,nnz);
@@ -248,7 +248,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
                 jaj = start+j-i1;
                 Aperm.JA[j] = ja[jaj];
                 Aperm.val[j] = Aval[jaj];
-			}    
+	    }    
         }
     }
     
@@ -353,13 +353,13 @@ void fasp_dcsr_getdiag (INT n,
     INT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP  
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
-	fasp_dvec_alloc(n, diag);
+    fasp_dvec_alloc(n, diag);
     
     if (use_openmp) {
         INT mybegin,myend,myid;
@@ -434,7 +434,7 @@ void fasp_dcsr_getcol (const INT n,
     
     // get the column
     if(use_openmp) {
-	    INT mybegin, myend, myid;
+        INT mybegin, myend, myid;
 
 #ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin, myend, i, j, row_begin, row_end) 
