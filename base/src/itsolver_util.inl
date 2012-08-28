@@ -1,4 +1,4 @@
-/*! \file its_util.inl
+/*! \file itsolver_util.inl
  *  \brief Utilies for iterative solvers
  */
 
@@ -29,6 +29,9 @@
 
 //! Warning for computed relative residual
 #define ITS_COMPRES(relres) printf("### WARNING: The computed relative residual = %e!\n",(relres))
+
+//! Warning for too small sp 
+#define ITS_SMALLSP printf("### WARNING: The sp is too small!\n")
 
 //! Output relative difference and residual
 #define ITS_DIFFRES(reldiff,relres) printf("||u-u'|| = %e and the comp. rel. res. = %e.\n",(reldiff),(relres));

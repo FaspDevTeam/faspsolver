@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+08/28/2012 FASP 1.0.7:
+- Change some filenames to keep naming consistent.
+- Some more OMP changes.
+
 08/25/2012 FASP 1.0.6:
 - Replace "#if FASP_USE_OPENMP" by the system environment variable "_OPENMP".
 - Some changes to OMP functions for sparse matrix operations.

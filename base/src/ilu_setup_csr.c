@@ -1,4 +1,4 @@
-/*! \file ilu_setup.c
+/*! \file ilu_setup_csr.c
  *  \brief Interface between FASP and ILU packages: setup ILU.
  */
 

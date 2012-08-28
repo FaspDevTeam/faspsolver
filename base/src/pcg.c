@@ -50,7 +50,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-#include "its_util.inl"
+#include "itsolver_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

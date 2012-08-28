@@ -56,10 +56,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-#include "its_util.inl"
-
-//! Warning for too small sp 
-#define ITS_SMALLSP printf("### WARNING: The sp is too small!\n")
+#include "itsolver_util.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

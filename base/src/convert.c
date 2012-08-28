@@ -1,5 +1,5 @@
-/*! \file util.c
- *  \brief Useful utilities.
+/*! \file convert.c
+ *  \brief Some utilities for format conversion.
  */
 
 #include "fasp.h"
