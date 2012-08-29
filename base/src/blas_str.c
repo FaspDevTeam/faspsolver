@@ -430,7 +430,7 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
     return;
     
 }
-
+#if 0
 /**
  * \fn void spaaxpy_str_2D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
  *
@@ -480,7 +480,7 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
     return;
     
 }
-
+#endif
 /**
  * \fn void spaaxpy_str_2D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
  *
