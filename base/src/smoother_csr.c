@@ -28,6 +28,9 @@
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/26/2009
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   08/29/2012
  */
 void fasp_smoother_dcsr_jacobi (dvector *u, 
                                 const INT i_1, 
@@ -45,40 +48,92 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
     // local variables
     INT i,j,k,begin_row,end_row;
     
+    // OpenMP variables 
+#ifdef _OPENMP   
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
     REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));    
     REAL *d = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
     
-    while (L--) {
-        
+    while (L--) { 
         if (s>0) {
-            for (i=i_1;i<=i_n;i+=s) {
-                t[i]=bval[i];
-                begin_row=ia[i],end_row=ia[i+1];
-                for (k=begin_row;k<end_row;++k) {
-                    j=ja[k];
-                    if (i!=j) t[i]-=aj[k]*uval[j];
-                    else d[i]=aj[k];
-                }    
+#ifdef _OPENMP
+            if (N > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, begin_row, end_row, i, k, j)
+                for (myid=0; myid<nthreads; ++myid) {
+                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    mybegin += i_1; myend += i_1;
+                    for (i=mybegin; i<myend; i+=s) {
+                        t[i]=bval[i];
+                        begin_row=ia[i],end_row=ia[i+1];
+                        for (k=begin_row; k<end_row; ++k) {
+                            j=ja[k];
+                            if (i!=j) t[i]-=aj[k]*uval[j];
+                            else d[i]=aj[k];
+                        }    
+                    }
+                }
+            }	    
+	    else {
+#endif
+                for (i=i_1;i<=i_n;i+=s) {
+                    t[i]=bval[i];
+                    begin_row=ia[i],end_row=ia[i+1];
+                    for (k=begin_row;k<end_row;++k) {
+                        j=ja[k];
+                        if (i!=j) t[i]-=aj[k]*uval[j];
+                        else d[i]=aj[k];
+                    }    
+                }
+#ifdef _OPENMP
             }
-            
+#endif	    
+
+#ifdef _OPENMP
+#pragma omp parallel for private (i)    
+#endif
             for (i=i_1;i<=i_n;i+=s) {    
                 if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
-            }    
-        } 
-        
-        else {
-            
-            for (i=i_1;i>=i_n;i+=s) {
-                t[i]=bval[i];
-                begin_row=ia[i],end_row=ia[i+1];
-                for (k=begin_row;k<end_row;++k) {
-                    j=ja[k];
-                    if (i!=j) t[i]-=aj[k]*uval[j];
-                    else d[i]=aj[k];
-                }
-                
             }
+        }         
+        else { 
+#ifdef _OPENMP
+            if (N > OPENMP_HOLDS) {	
+#pragma omp parallel for private(myid, mybegin, myend, i, begin_row, end_row, k, j)
+                for (myid=0; myid<nthreads; myid++) {
+                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    mybegin = i_1-mybegin; myend = i_1-myend;
+                    for (i=mybegin; i>myend; i+=s) {
+                        t[i]=bval[i];
+                        begin_row=ia[i],end_row=ia[i+1];
+                        for (k=begin_row; k<end_row; ++k) {
+                            j=ja[k];
+                            if (i!=j) t[i]-=aj[k]*uval[j];
+                            else d[i]=aj[k];
+                        }
+                    }
+                 }
+            }
+            else {
+#endif
+                for (i=i_1;i>=i_n;i+=s) {
+                    t[i]=bval[i];
+                    begin_row=ia[i],end_row=ia[i+1];
+                    for (k=begin_row;k<end_row;++k) {
+                        j=ja[k];
+                        if (i!=j) t[i]-=aj[k]*uval[j];
+                        else d[i]=aj[k];
+                    }
+                }
+#ifdef _OPENMP
+            }
+#endif
             
+#ifdef _OPENMP
+#pragma omp parallel for private(i)
+#endif
             for (i=i_1;i>=i_n;i+=s) {
                 if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
             }
@@ -125,12 +180,9 @@ void fasp_smoother_dcsr_gs (dvector *u,
     INT   i,j,k,begin_row,end_row;
     REAL  t,d=0.0;
     
-    if (s > 0) {
-        
+    if (s > 0) {     
         while (L--) {
-            
             for (i=i_1;i<=i_n;i+=s) {
-                
                 t = bval[i];
                 begin_row=ia[i],end_row=ia[i+1];
                 
@@ -224,23 +276,18 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
     
     REAL *aj=A->val,*bval=b->val,*uval=u->val;
     REAL t,d=0.0;
-    INT myid,mybegin,myend; 
-	INT nthreads = 1, use_openmp = FALSE;
     
-#ifdef _OPENMP 
-	if ( size > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-	}
+#ifdef _OPENMP
+    INT myid,mybegin,myend; 
+    INT nthreads = FASP_GET_NUM_THREADS();
 #endif
     
     // F-point first
     if (order == -1) {    
         while (L--) {
-            if (use_openmp) {
 #ifdef _OPENMP                 
+            if (size > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
-#endif
                 for (myid = 0; myid < nthreads; myid ++) {
                     FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
@@ -258,6 +305,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                 }
             }
             else {
+#endif
                 for (i = 0; i < size; i ++) {
                     if (mark[i] != 1) {
                         t = bval[i];
@@ -270,12 +318,13 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
                 } // end for i
+#ifdef _OPENMP
             }
-            
-            if (use_openmp) {
-#ifdef _OPENMP                 
-#pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
 #endif
+            
+#ifdef _OPENMP                 
+            if (size > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
                     FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
@@ -293,6 +342,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                 }
             }
             else {
+#endif
                 for (i = 0; i < size; i ++) {
                     if (mark[i] == 1) {
                         t = bval[i];
@@ -305,15 +355,16 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
                 } // end for i
+#ifdef _OPENMP
             }
+#endif
         } // end while    
     }
     else {
         while (L--) {
-            if (use_openmp) {
 #ifdef _OPENMP                 
+            if (size > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
-#endif
                 for (myid = 0; myid < nthreads; myid ++) {
                     FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
@@ -331,6 +382,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                 }
             }
             else {
+#endif
                 for (i = 0; i < size; i ++)  {
                     if (mark[i] == 1) {
                         t = bval[i];
@@ -343,11 +395,13 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
                 } // end for i
+#ifdef _OPENMP
             }
-            if (use_openmp) {
-#ifdef _OPENMP                 
-#pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
 #endif
+
+#ifdef _OPENMP                 
+            if (size > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
                     FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
@@ -365,6 +419,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                 }
             }
             else {
+#endif
                 for (i = 0; i < size; i ++) {
                     if (mark[i] != 1) {
                         t = bval[i];
@@ -377,7 +432,9 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
                 } // end for i
+#ifdef _OPENMP
             }
+#endif
         } // end while    
     }    
     return;
@@ -526,6 +583,10 @@ void fasp_smoother_dcsr_sor (dvector *u,
  *
  * \author Zhiyang Zhou
  * \date   2010/11/12 
+ * 
+ * Modified by Chunsheng Feng, Zheng Li
+ *\date    08/29/2012
+ *
  */
 void fasp_smoother_dcsr_sor_cf (dvector *u, 
                                 dCSRmat *A, 
@@ -543,64 +604,165 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
     INT    i,j,k,begin_row,end_row;
     INT    size = b->row;
     REAL   t,d=0.0;
-    
+
+#ifdef _OPENMP
+    INT    myid, mybegin, myend;
+    INT    nthreads = FASP_GET_NUM_THREADS();
+#endif
+
     // F-point first
     if (order == -1) {    
         while (L--) {
-            for (i = 0; i < size; i ++) {
-                if (mark[i] == 0 || mark[i] == 2) {
-                    t = bval[i];
-                    begin_row = ia[i], end_row = ia[i+1];
-                    for (k = begin_row; k < end_row; k ++) {
-                        j = ja[k];
-                        if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];    
-                    } // end for k
-                    if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+#ifdef _OPENMP
+            if (size > OPENMP_HOLDS) {
+#pragma omp parallel for private (myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
+                for (myid = 0; myid < nthreads; myid++) {
+                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    for (i = mybegin; i < myend; i ++) {
+                        if (mark[i] == 0 || mark[i] == 2) {
+                            t = bval[i];
+                            begin_row = ia[i], end_row = ia[i+1];
+                            for (k = begin_row; k < end_row; k ++) {
+                                j = ja[k];
+                                if (i!=j) t -= aj[k]*uval[j]; 
+                                else d = aj[k];    
+                            } // end for k
+                            if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+                        }
+                    }
                 }
             } // end for i
-            
-            for (i = 0; i < size; i ++) {
-                if (mark[i] == 1) {
-                    t = bval[i];
-                    begin_row = ia[i], end_row = ia[i+1];
-                    for (k = begin_row; k < end_row; k ++) {
-                        j = ja[k];
-                        if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];    
-                    } // end for k
-                    if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+            else {
+#endif
+                for (i = 0; i < size; i ++) {
+                    if (mark[i] == 0 || mark[i] == 2) {
+                        t = bval[i];
+                        begin_row = ia[i], end_row = ia[i+1];
+                        for (k = begin_row; k < end_row; k ++) {
+                            j = ja[k];
+                            if (i!=j) t -= aj[k]*uval[j]; 
+                            else d = aj[k];    
+                        } // end for k
+                        if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+                    }
+                } // end for i
+#ifdef _OPENMP
+            }
+#endif
+
+#ifdef _OPENMP
+            if (size > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, i, mybegin, myend, t, begin_row, end_row, k, j, d)
+                for (myid = 0; myid < nthreads; myid++) {
+                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    for (i = mybegin; i < myend; i++) {
+                        if (mark[i] == 1) {
+                            t = bval[i];
+                            begin_row = ia[i], end_row = ia[i+1];
+                            for (k = begin_row; k < end_row; k ++) {
+                                j = ja[k];
+                                if (i!=j) t -= aj[k]*uval[j]; 
+                                else d = aj[k];    
+                            } // end for k
+                            if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+                        }
+                    } // end for i
                 }
-            } // end for i
+            }
+	    else {
+#endif
+                for (i = 0; i < size; i ++) {
+                    if (mark[i] == 1) {
+                        t = bval[i];
+                        begin_row = ia[i], end_row = ia[i+1];
+                        for (k = begin_row; k < end_row; k ++) {
+                            j = ja[k];
+                            if (i!=j) t -= aj[k]*uval[j]; 
+                            else d = aj[k];    
+                        } // end for k
+                        if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+                    }
+                } // end for i
+#ifdef _OPENMP
+            }
+#endif
         } // end while    
     }
     else {
         while (L--) {
-            for (i = 0; i < size; i ++) {
-                if (mark[i] == 1) {
-                    t = bval[i];
-                    begin_row = ia[i], end_row = ia[i+1];
-                    for (k = begin_row; k < end_row; k ++) {
-                        j = ja[k];
-                        if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];    
-                    } // end for k
-                    if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+#ifdef _OPENMP
+            if (size > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, t, k, j, d, begin_row, end_row)
+                for (myid = 0; myid < nthreads; myid++) {
+                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    for (i = mybegin; i < myend; i++) {
+                        if (mark[i] == 1) {
+                            t = bval[i];
+                            begin_row = ia[i], end_row = ia[i+1];
+                            for (k = begin_row; k < end_row; k ++) {
+                                j = ja[k];
+                                if (i!=j) t -= aj[k]*uval[j]; 
+                                else d = aj[k];    
+                            } // end for k
+                            if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+                        }
+                    } // end for i
+                }
+            }
+	    else {
+#endif
+                for (i = 0; i < size; i ++) {
+                    if (mark[i] == 1) {
+                        t = bval[i];
+                        begin_row = ia[i], end_row = ia[i+1];
+                        for (k = begin_row; k < end_row; k ++) {
+                            j = ja[k];
+                            if (i!=j) t -= aj[k]*uval[j]; 
+                            else d = aj[k];    
+                        } // end for k
+                        if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+                    }
+                } // end for i
+#ifdef _OPENMP
+            }
+#endif
+
+#ifdef _OPENMP
+            if (size > OPENMP_HOLDS) {
+#pragma omp parallel for private (myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
+                for (myid = 0; myid < nthreads; myid++) {
+                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    for (i = mybegin; i < myend; i++) {
+                       if (mark[i] != 1) {
+                           t = bval[i];
+                           begin_row = ia[i], end_row = ia[i+1];
+                           for (k = begin_row; k < end_row; k ++) {
+                               j = ja[k];
+                               if (i!=j) t -= aj[k]*uval[j]; 
+                               else d = aj[k];    
+                           } // end for k
+                           if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+                       }
+                    }
                 }
             } // end for i
-            
-            for (i = 0; i < size; i ++) {
-                if (mark[i] != 1) {
-                    t = bval[i];
-                    begin_row = ia[i], end_row = ia[i+1];
-                    for (k = begin_row; k < end_row; k ++) {
-                        j = ja[k];
-                        if (i!=j) t -= aj[k]*uval[j]; 
-                        else d = aj[k];    
-                    } // end for k
-                    if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
-                }
-            } // end for i
+	    else {
+#endif
+                for (i = 0; i < size; i ++) {
+                    if (mark[i] != 1) {
+                        t = bval[i];
+                        begin_row = ia[i], end_row = ia[i+1];
+                        for (k = begin_row; k < end_row; k ++) {
+                            j = ja[k];
+                            if (i!=j) t -= aj[k]*uval[j]; 
+                            else d = aj[k];    
+                        } // end for k
+                        if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+                    }
+                } // end for i
+#ifdef _OPENMP
+            }
+#endif
         } // end while    
     }    
     
@@ -881,8 +1043,8 @@ void swep3db(INT *ia,
              INT nbegz,
              INT *mark,
              INT nx, 
-			 INT ny, 
-			 INT nz)
+             INT ny, 
+             INT nz)
 {
     INT nxy, k, k0, j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
@@ -896,8 +1058,7 @@ void swep3db(INT *ia,
     for (k=nbegz; k >=0; k-=2) {
         k0= k*nxy;
         for (j = nbegy; j >=0; j-=2) {
-            j0= j*nx;
-            
+            j0= j*nx;            
             for (i = nbegx; i >=0; i-=2) {
                 i0 = i   +  j0    + k0;
                 i0 = mark[i0]-1;  // Fortran to C
@@ -955,7 +1116,6 @@ void rb0b3d (INT *ia,
     //INT ox, oy, oz;
     
     for (isweep = 1; isweep <= nsweeps; isweep++) {
-        
 		if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==0)) {    
 			/*...  e-e-e (and going backwards) */
 			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);

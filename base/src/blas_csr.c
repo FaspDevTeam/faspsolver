@@ -231,10 +231,10 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP  
-	if ( m > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( m > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
    if (use_openmp) {
