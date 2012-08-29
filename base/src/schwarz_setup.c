@@ -28,11 +28,15 @@
  *
  * \author Ludmil, Xiaozhe Hu
  * \date   03/22/2011 
+ *
+ * Modified by Chunsheng Feng, Zheng Li 
+ * \date   08/28/2012
  */
+
 INT fasp_schwarz_setup (Schwarz_data *schwarz, 
-					    INT mmsize,
-					    INT maxlev,
-					    INT schwarz_type)
+                        INT mmsize,
+                        INT maxlev,
+                        INT schwarz_type)
 { 
 	// information about A
 	dCSRmat A = schwarz->A;
@@ -69,12 +73,17 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 	
 	nsizeall=0;
 	
+#if 0
 	for (i=0;i<n1;i++) {
-        mask[i]=0;
-        iblock[i]=0;
-        maxa[i]=0;
+            mask[i]=0; 
+	    iblock[i]=0;
+            maxa[i]=0;
 	}
-	
+#endif	
+	memset(mask,   0, sizeof(INT)*n1);
+	memset(iblock, 0, sizeof(INT)*n1);
+	memset(maxa,   0, sizeof(INT)*n1);
+
 	maxa[0]=1;
 	
 	MIS = fasp_sparse_MIS(&A);
@@ -126,9 +135,11 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 
 	maxa = (INT *)fasp_mem_realloc(maxa,n1*sizeof(INT));
 	
-	for (i=0;i<n1;i++) maxa[i]=0;
+	//for (i=0;i<n1;i++) maxa[i]=0;
+	memset(maxa, 0, sizeof(INT)*n1);
 
-	for (i=0;i<n; i++) mask[i]=0;
+	//for (i=0;i<n; i++) mask[i]=0;
+	memset(mask, 0, sizeof(INT)*n);
 	
 	// first estimate the memroy we need.
 	mxfrm2_(&n,ia,ja,&nblk,iblock,jblock,mask,maxa,&memt,&maxbs);
@@ -143,7 +154,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 	rhsloc = (REAL *)fasp_mem_calloc(maxbs, sizeof(REAL));
     
 	//  LU decomposition
-    sky2ns_(&n,ia,ja,a,&nblk,iblock,jblock,mask,maxa,au,al);
+        sky2ns_(&n,ia,ja,a,&nblk,iblock,jblock,mask,maxa,au,al);
 	  
 	printf("Schwarz setup succeeded: matrix size = %d, #blocks = %d, max block size = %d\n", 
            n, nblk, maxbs);

@@ -47,10 +47,10 @@ static void form_tentative_p_bsr (ivector *vertices,
     
     // first run
     for (i = 0, j = 0; i < row; i ++) {
-    IA[i] = j;
-    if (vval[i] > -1) {
-    j ++;
-    }
+        IA[i] = j;
+        if (vval[i] > -1) {
+            j ++;
+        }
     }
     IA[row] = j;
     
@@ -64,12 +64,12 @@ static void form_tentative_p_bsr (ivector *vertices,
     
     // second run
     for (i = 0, j = 0; i < row; i ++) {
-    IA[i] = j;
-    if (vval[i] > -1) {
-    JA[j] = vval[i];
+        IA[i] = j;
+        if (vval[i] > -1) {
+            JA[j] = vval[i];
             fasp_smat_identity (&(val[j*nb2]), tentp->nb, nb2);
-    j ++;
-    }
+            j ++;
+        }
     }
 }
 

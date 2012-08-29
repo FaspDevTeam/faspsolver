@@ -3,7 +3,7 @@
  *
  */
 
-#include<omp.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"

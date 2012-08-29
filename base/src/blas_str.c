@@ -4,6 +4,7 @@
  */
 
 #include <math.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -283,6 +284,9 @@ static inline void blkcontr_str (INT start_data,
  * \author Shiquan Zhang
  * \date   2010/10/15
  *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   2012/08/28
+ *
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
  *       for nx = 1, but the order can be arbitrary. 
  */
@@ -336,11 +340,123 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
     
     y[0] += alpha*(diag[0]*x[0] + offdiag1[0]*x[1] + offdiag3[0]*x[nline]);
     
-    for (i=1; i<nline; ++i) {
-        idx1 = i-1;
-        y[i] += alpha*(offdiag0[idx1]*x[idx1] + diag[i]*x[i] + offdiag1[i]*x[i+1] + 
-                       offdiag3[i]*x[i+nline]);
+#ifdef _OPENMP
+    if (nline-1 > OPENMP_HOLDS) {
+        INT myid, mybegin, myend;
+        INT nthreads = FASP_GET_NUM_THREADS();
+#pragma omp parallel for private(myid, mybegin, myend, i, idx1, idx)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, nline-1, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i) {
+                idx1 = i;
+                idx  = i+1;
+                y[idx] += alpha*(offdiag0[idx1]*x[idx1] + diag[idx]*x[idx] + offdiag1[idx]*x[idx+1] + 
+                          offdiag3[idx]*x[idx+nline]);
+            }
+        }
     }
+    else {
+#endif
+        for (i=1; i<nline; ++i) {
+            idx1 = i-1;
+            y[i] += alpha*(offdiag0[idx1]*x[idx1] + diag[i]*x[i] + offdiag1[i]*x[i+1] + 
+                       offdiag3[i]*x[i+nline]);
+        }
+#ifdef _OPENMP
+    }
+#endif
+   
+#ifdef _OPENMP
+    if (end2-nline > OPENMP_HOLDS) {
+        INT myid, mybegin, myend;
+        INT nthreads = FASP_GET_NUM_THREADS();
+#pragma omp parallel for private(myid, i, mybegin, myend, idx1, idx2, idx)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, end2-nline, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i) {
+                idx1 = i-1+nline; 
+                idx2 = i; 
+	        idx  = i+nline;
+                y[idx] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
+                          diag[idx]*x[idx] + offdiag1[idx]*x[idx+1] + offdiag3[idx]*x[idx+nline]);
+            }
+        }
+    }
+    else {
+#endif
+        for (i=nline; i<end2; ++i) {
+            idx1 = i-1; 
+            idx2 = i-nline; 
+            y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
+                       diag[i]*x[i] + offdiag1[i]*x[i+1] + offdiag3[i]*x[i+nline]);
+        }
+#ifdef _OPENMP
+    }
+#endif
+   
+#ifdef _OPENMP
+    if (end1-end2 > OPENMP_HOLDS) {
+        INT myid, mybegin, myend;
+        INT nthreads = FASP_GET_NUM_THREADS();
+#pragma omp parallel for private(myid, i, mybegin, myend, idx1, idx2, idx)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, end1-end2, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i) {
+                idx1 = i-1+end2; 
+                idx2 = i-nline+end2;
+                idx  = i+end2	
+                y[idx] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
+                          diag[idx]*x[idx] + offdiag1[idx]*x[idx+1]);
+            }
+        }
+    }
+    else {
+#endif
+        for (i=end2; i<end1; ++i) {
+            idx1 = i-1; 
+            idx2 = i-nline; 
+            y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
+                       diag[i]*x[i] + offdiag1[i]*x[i+1]);
+        }
+#ifdef _OPENMP
+    }
+#endif
+    
+    idx1 = end1-1; 
+    idx2 = end1-nline; 
+    y[end1] += alpha*(offdiag2[idx2]*x[idx2] + 
+                      offdiag0[idx1]*x[idx1] + diag[end1]*x[end1]);
+    
+    return;
+    
+}
+
+/**
+ * \fn void spaaxpy_str_2D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
+ *
+ * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D structured matrix (nc = 3)
+ *
+ * \param alpha   REAL factor alpha
+ * \param A       Pointer to dSTRmat matrix
+ * \param x       Pointer to real array
+ * \param y       Pointer to real array
+ * 
+ * \author Shiquan Zhang, Xiaozhe Hu
+ * \date   2010/10/15
+ *
+ * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
+ *       for nx = 1, but the order can be arbitrary. 
+ */
+static inline void spaaxpy_str_2D_nc3 (REAL alpha, 
+                                       dSTRmat *A, 
+                                       REAL *x, 
+                                       REAL *y)
+{
+    INT i;
+    INT idx,idx1,idx2;
+    INT matidx, matidx1, matidx2;
+    INT end1, end2;
+    INT nline, nlinenc;
     
     for (i=nline; i<end2; ++i) {
         idx1 = i-1; 

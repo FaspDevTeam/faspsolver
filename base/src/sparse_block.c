@@ -249,10 +249,16 @@ dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
     memcpy(P_csr.IA, IA, (ROW+1)*sizeof(INT));
     
     //for (i=NNZ, j=NNZ*nc2-nc2; i--; j-=nc2)
+#ifdef _OPENMP
+#pragma omp parallel for 
+    for (i=NNZ-1; i>=0; i--) {
+        Pval[i] = val[i*nc2];
+    }
+#else
     for (i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2) {
-            Pval[i] = val[j];
-        }
-    
+        Pval[i] = val[j];
+    }
+#endif
     // compress CSR format 
     fasp_dcsr_compress_inplace(&P_csr,1e-8);
     

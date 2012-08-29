@@ -2,6 +2,7 @@
  *  \brief Utilies for multigrid cycles for CSR matrices
  */
 
+#include <omp.h>
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
@@ -38,10 +39,10 @@ static void aggregation (dCSRmat *A,
     // local variable
     REAL strongly_coupled; 
     if (GE(param->tentative_smooth, SMALLREAL)) {
-    strongly_coupled= param->strong_coupled * pow(0.5, levelNum-1);
+        strongly_coupled= param->strong_coupled * pow(0.5, levelNum-1);
     }
     else {
-    strongly_coupled= param->strong_coupled;
+        strongly_coupled= param->strong_coupled;
     }
     REAL strongly_coupled2 = pow(strongly_coupled,2);
     
@@ -61,20 +62,23 @@ static void aggregation (dCSRmat *A,
     NJA = Neigh->JA;
     Nval = Neigh->val;
     
-    for(i=row+1; i--;) NIA[i] = AIA[i];
+    //for(i=row+1; i--;) NIA[i] = AIA[i];
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for(i=row; i>=0; i--) NIA[i] = AIA[i];
     
     index = 0;
     for (i=0; i<row; ++i) {
-    NIA[i] = index;
-    row_start = AIA[i]; row_end = AIA[i+1];
-    for (j = row_start; j<row_end; ++j) {
-    if ((AJA[j] == i) 
-                || (pow(Aval[j],2) >= strongly_coupled2 * fabs(diag.val[i]*diag.val[AJA[j]])) ) {
-    NJA[index] = AJA[j];
-    Nval[index] = Aval[j];
-    index++;
-    }
-    }
+        NIA[i] = index;
+        row_start = AIA[i]; row_end = AIA[i+1];
+        for (j = row_start; j<row_end; ++j) {
+            if ((AJA[j] == i) || (pow(Aval[j],2) >= strongly_coupled2 * fabs(diag.val[i]*diag.val[AJA[j]])) ) {
+                NJA[index] = AJA[j];
+                Nval[index] = Aval[j];
+                index++;
+            }
+        }
     }
     
     NIA[row] = index;
@@ -93,7 +97,12 @@ static void aggregation (dCSRmat *A,
     /* Initialization */
     /*------------------------------------------*/
     fasp_ivec_alloc(row, vertices);
-    for (i=row;i--;) vertices->val[i] = -2;
+
+    //for (i=row;i--;) vertices->val[i] = -2;
+#ifdef _OPENMP
+#pragma omp parallel for 
+#endif
+    for (i=row-1; i>=0; i--) vertices->val[i] = -2;
     
     INT num_left = row;
     INT subset;
@@ -107,36 +116,35 @@ static void aggregation (dCSRmat *A,
     /* Step 1. */
     /*------------------------------------------*/
     for (i=0; i<row; ++i) {
-    if ((AIA[i+1] - AIA[i] - 1) == 0) {
-    vertices->val[i] = -1;
-    num_left--;
-    }
-    else {
-    subset = 1;
-    row_start = NIA[i]; row_end = NIA[i+1];
-    for (j=row_start; j<row_end; ++j) {
-    if (vertices->val[NJA[j]] >= -1){
-    subset = 0;
-    break;
-    }
-    }
-    
-    if (subset == 1) {
-    count = 0;
-    vertices->val[i] = *num_aggregations;
-    num_left--;
-    count++;
-    row_start = NIA[i]; row_end = NIA[i+1];
-    for (j=row_start; j<row_end;++j) {
-    if ((NJA[j]!=i) && (count < max_aggregation)){
-    vertices->val[NJA[j]] = *num_aggregations;
-    num_left--;
-    count ++;
-    }
-    }
-    (*num_aggregations)++;
-    }
-    }
+        if ((AIA[i+1] - AIA[i] - 1) == 0) {
+            vertices->val[i] = -1;
+            num_left--;
+        }
+        else {
+            subset = 1;
+            row_start = NIA[i]; row_end = NIA[i+1];
+            for (j=row_start; j<row_end; ++j) {
+                if (vertices->val[NJA[j]] >= -1) {
+                    subset = 0;
+                    break;
+                }
+            }
+            if (subset == 1) {
+                count = 0;
+                vertices->val[i] = *num_aggregations;
+                num_left--;
+                count++;
+                row_start = NIA[i]; row_end = NIA[i+1];
+                for (j=row_start; j<row_end;++j) {
+                    if ((NJA[j]!=i) && (count < max_aggregation)){
+                        vertices->val[NJA[j]] = *num_aggregations;
+                        num_left--;
+                        count ++;
+                    }
+                }
+                (*num_aggregations)++;
+            }
+        }
     }
     
     /*------------------------------------------*/
@@ -147,50 +155,47 @@ static void aggregation (dCSRmat *A,
     num_each_aggregation = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
     
     for (i=row;i--;) {
-    temp_C[i] = vertices->val[i];  
-    if (vertices->val[i] >= 0) {
-    num_each_aggregation[vertices->val[i]] ++;
-    }
+        temp_C[i] = vertices->val[i];  
+        if (vertices->val[i] >= 0) {
+            num_each_aggregation[vertices->val[i]] ++;
+        }
     }
     
     for(i=0; i<row; ++i) {
-    if (vertices->val[i] < -1) {
-    row_start = NIA[i]; row_end = NIA[i+1];
-    for (j=row_start;j<row_end;++j) {
-    if (temp_C[NJA[j]] >= -1 
-                    && num_each_aggregation[temp_C[NJA[j]]] < max_aggregation ) {
-    vertices->val[i] = temp_C[NJA[j]];
-    num_left--;
-    num_each_aggregation[temp_C[NJA[j]]] ++ ;
-    break;
-    }
-    }
-    }
+        if (vertices->val[i] < -1) {
+            row_start = NIA[i]; row_end = NIA[i+1];
+            for (j=row_start;j<row_end;++j) {
+                if (temp_C[NJA[j]] >= -1 && num_each_aggregation[temp_C[NJA[j]]] < max_aggregation ) {
+                    vertices->val[i] = temp_C[NJA[j]];
+                    num_left--;
+                    num_each_aggregation[temp_C[NJA[j]]] ++ ;
+                    break;
+                }
+            }
+        }
     }
     
     /*------------------------------------------*/
     /* Step 3. */
     /*------------------------------------------*/
     while (num_left > 0) {
-    for (i=0; i<row; ++i) {
-    if (vertices->val[i] < -1) {
-    count = 0;
-    vertices->val[i] = *num_aggregations;
-    num_left--;
-    count++;
-    row_start = NIA[i]; row_end = NIA[i+1];
-    for (j=row_start; j<row_end;++j) {
-    if (   (NJA[j]!=i) 
-                        && (vertices->val[NJA[j]] < -1) 
-                        && (count<max_aggregation) ) {
-    vertices->val[NJA[j]] = *num_aggregations;
-    num_left--;
-    count++;
-    }
-    }
-    (*num_aggregations)++;
-    }
-    }
+        for (i=0; i<row; ++i) {
+            if (vertices->val[i] < -1) {
+                count = 0;
+                vertices->val[i] = *num_aggregations;
+                num_left--;
+                count++;
+                row_start = NIA[i]; row_end = NIA[i+1];
+                for (j=row_start; j<row_end;++j) {
+                    if ((NJA[j]!=i) && (vertices->val[NJA[j]] < -1) && (count<max_aggregation) ) {
+                        vertices->val[NJA[j]] = *num_aggregations;
+                        num_left--;
+                        count++;
+                    }
+                }
+                (*num_aggregations)++;
+            }
+        }
     }
     
     fasp_mem_free(temp_C);
@@ -238,10 +243,10 @@ static void form_tentative_p (ivector *vertices,
     
     // first run
     for (i = 0, j = 0; i < row; i ++) {
-    IA[i] = j;
-    if (vval[i] > -1) {
-    j ++;
-    }
+        IA[i] = j;
+        if (vval[i] > -1) {
+            j ++;
+        }
     }
     IA[row] = j;
     
@@ -255,12 +260,12 @@ static void form_tentative_p (ivector *vertices,
     
     // second run
     for (i = 0, j = 0; i < row; i ++) {
-    IA[i] = j;
-    if (vval[i] > -1) {
-    JA[j] = vval[i];
-    val[j] = basis[0][i];
-    j ++;
-    }
+        IA[i] = j;
+        if (vval[i] > -1) {
+            JA[j] = vval[i];
+            val[j] = basis[0][i];
+            j ++;
+        }
     }
 }
 

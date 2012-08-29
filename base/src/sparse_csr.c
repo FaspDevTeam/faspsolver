@@ -929,7 +929,7 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
     
     k=0;
     for (i=0;i<row;++i) {
-        ibegin=iend; iend=A->IA[i+1];    
+        ibegin=iend; iend=A->IA[i+1];
         for (j=ibegin;j<iend;++j)
             if (ABS(A->val[N2C(j)])>dtol) {
                 A->JA[N2C(k)] = A->JA[N2C(j)];
@@ -978,10 +978,10 @@ void fasp_dcsr_shift (dCSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP  
-	if ( MIN(n, nnz) > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( MIN(n, nnz) > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 	
     if (offset == 0) offset = ISTART;

@@ -58,14 +58,14 @@ void fasp_precond_dbsr_diag (REAL *r,
             const INT nb2 = nb*nb;
             const INT m = diag->diag.row/nb2;    
     
-	        INT nthreads = 1, use_openmp = FALSE;
+	    INT nthreads = 1, use_openmp = FALSE;
             unsigned INT i;
 
 #ifdef _OPENMP 
-	        if ( m > OPENMP_HOLDS ) {
-		        use_openmp = TRUE;
+	    if ( m > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
                 nthreads = FASP_GET_NUM_THREADS();
-	        }
+	    }
 #endif
 
             if (use_openmp) {
