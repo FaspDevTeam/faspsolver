@@ -57,42 +57,30 @@ void fasp_precond_dbsr_diag (REAL *r,
             REAL *diagptr = diag->diag.val;
             const INT nb2 = nb*nb;
             const INT m = diag->diag.row/nb2;    
-    
-	    INT nthreads = 1, use_openmp = FALSE;
             unsigned INT i;
 
 #ifdef _OPENMP 
-	    if ( m > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-                nthreads = FASP_GET_NUM_THREADS();
-	    }
-#endif
-
-            if (use_openmp) {
-#ifdef _OPENMP 
-                INT myid;
-                INT mybegin;
-                INT myend;
-                INT stride_i = m/nthreads;
-#pragma omp parallel private(myid, mybegin, myend,i) num_threads(nthreads)
-                {
-                    myid = omp_get_thread_num();
-                    mybegin = myid*stride_i;
-                    if(myid < nthreads-1)  myend = mybegin+stride_i;
-                    else myend = m;
-                    for (i=mybegin; i < myend; ++i) {
+            if (m > OPENMP_HOLDS) {
+                INT myid, mybegin, myend;
+                INT nthreads = FASP_GET_NUM_THREADS();
+#pragma omp parallel for private(myid, mybegin, myend, i)
+                for (myid = 0; myid < nthreads; myid++) {
+                    FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+                    for (i=mybegin; i<myend; ++i) {
                         fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
                     }
                 }
-#endif
             }
             else {
+#endif
                 for (i = 0; i < m; ++i) {
                     fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
                 }
+#ifdef _OPENMP
             }
-        }
+#endif
         break;
+        }
     }
 }
 
@@ -121,42 +109,29 @@ void fasp_precond_dbsr_diag_nc2(REAL *r,
     precond_diagbsr *diag   = (precond_diagbsr *)data;
     REAL          *diagptr = diag->diag.val;
     
-    const INT m = diag->diag.row/4;    
-    
     unsigned INT i;
-
-	INT nthreads = 1, use_openmp = FALSE;
+    const INT m = diag->diag.row/4;    
 
 #ifdef _OPENMP 
-	if ( m > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-	}
-#endif
-    
-    if (use_openmp) {
-#ifdef _OPENMP 
-        INT myid;
-        INT mybegin;
-        INT myend;
-        INT stride_i = m/nthreads;
-#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
-        {
-            myid = omp_get_thread_num();
-            mybegin = myid*stride_i;
-            if(myid < nthreads-1)  myend = mybegin+stride_i;
-            else myend = m;
-            for (i=mybegin; i < myend; ++i) {
+    if (m > OPENMP_HOLDS) {
+        INT myid, mybegin, myend;
+	INT nthreads = FASP_GET_NUM_THREADS();
+#pragma omp parallel for private(myid, mybegin, myend, i)
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+            for (i = mybegin; i < myend; ++i) {
                 fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
             }
         }
-#endif
     }
     else {
+#endif
         for (i = 0; i < m; ++i) {
             fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
         }
+#ifdef _OPENMP
     }
+#endif
 }
 
 /**
@@ -185,41 +160,28 @@ void fasp_precond_dbsr_diag_nc3(REAL *r,
     REAL          *diagptr = diag->diag.val;
     
     const INT m = diag->diag.row/9;    
-    
     unsigned INT i;
-
-	INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP 
-	if ( m > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-	}
-#endif
     
-    if (use_openmp) {
 #ifdef _OPENMP 
-        INT myid;
-        INT mybegin;
-        INT myend;
-        INT stride_i = m/nthreads;
-#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
-        {
-            myid = omp_get_thread_num();
-            mybegin = myid*stride_i;
-            if(myid < nthreads-1)  myend = mybegin+stride_i;
-            else myend = m;
-            for (i=mybegin; i < myend; ++i) {
+    if (m > OPENMP_HOLDS) {
+        INT myid, mybegin, myend;
+        INT nthreads = FASP_GET_NUM_THREADS();
+#pragma omp parallel for private(myid, mybegin, myend, i)
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+            for (i = mybegin; i < myend; ++i) {
                 fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
             }
         }
-#endif
     }
     else {
+#endif
         for (i = 0; i < m; ++i) {
             fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
         }
+#ifdef _OPENMP
     }
+#endif
 }
 
 /**
@@ -247,42 +209,29 @@ void fasp_precond_dbsr_diag_nc5(REAL *r,
     precond_diagbsr *diag   = (precond_diagbsr *)data;
     REAL          *diagptr = diag->diag.val;
     
-    const INT m = diag->diag.row/25;
-    
     unsigned INT i;
-
-	INT nthreads = 1, use_openmp = FALSE;
+    const INT m = diag->diag.row/25;
 
 #ifdef _OPENMP 
-	if ( m > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-	}
-#endif
-
-    if (use_openmp) {
-#ifdef _OPENMP 
-        INT myid;
-        INT mybegin;
-        INT myend;
-        INT stride_i = m/nthreads;
-#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
-        {
-            myid = omp_get_thread_num();
-            mybegin = myid*stride_i;
-            if(myid < nthreads-1)  myend = mybegin+stride_i;
-            else myend = m;
-            for (i=mybegin; i < myend; ++i) {
+    if (m > OPENMP_HOLDS) {
+        INT myid, mybegin, myend;
+        INT nthreads = FASP_GET_NUM_THREADS();
+#pragma omp parallel for private(myid, mybegin, myend, i)
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+            for (i = mybegin; i < myend; ++i) {
                 fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
             }
         }
-#endif
     }
     else {
+#endif
         for (i = 0; i < m; ++i) {
             fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
         }
+#ifdef _OPENMP 
     }
+#endif
 }
 
 /**
@@ -309,42 +258,29 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
     precond_diagbsr *diag   = (precond_diagbsr *)data;
     REAL          *diagptr = diag->diag.val;
     
-    const INT m = diag->diag.row/49;    
-    
     unsigned INT i;
-
-	INT nthreads = 1, use_openmp = FALSE;
+    const INT m = diag->diag.row/49;    
 
 #ifdef _OPENMP 
-	if ( m > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-	}
-#endif
-    
-    if (use_openmp) {
-#ifdef _OPENMP 
-        INT myid;
-        INT mybegin;
-        INT myend;
-        INT stride_i = m/nthreads;
-#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
-        {
-            myid = omp_get_thread_num();
-            mybegin = myid*stride_i;
-            if(myid < nthreads-1)  myend = mybegin+stride_i;
-            else myend = m;
-            for (i=mybegin; i < myend; ++i) {
+    if (m > OPENMP_HOLDS) {
+        INT myid, mybegin, myend;
+        INT nthreads = FASP_GET_NUM_THREADS();    
+#pragma omp parallel for private(myid, mybegin, myend, i)
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+            for (i = mybegin; i < myend; ++i) {
                 fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
             }
         }
-#endif
     }
     else {
+#endif
         for (i = 0; i < m; ++i) {
             fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
         }
+#ifdef _OPENMP 
     }
+#endif
 }
 
 /**

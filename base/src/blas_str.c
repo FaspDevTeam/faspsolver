@@ -296,7 +296,7 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
                                           REAL *y)
 {
     INT i;
-    INT idx1,idx2;
+    INT idx1,idx2, idx;
     INT end1, end2;
     INT nline;
     
@@ -404,7 +404,7 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
             for (i=mybegin; i<myend; ++i) {
                 idx1 = i-1+end2; 
                 idx2 = i-nline+end2;
-                idx  = i+end2	
+                idx  = i+end2;	
                 y[idx] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
                           diag[idx]*x[idx] + offdiag1[idx]*x[idx+1]);
             }
