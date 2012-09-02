@@ -52,7 +52,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_ilu_dbsr_setup ...... [Start]\n");
-    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",m,n,nnz);
+    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->ROW,n,nnz);
 #endif
     
     setup_start=clock();

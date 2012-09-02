@@ -166,7 +166,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
         }
     
         t = 1.0 / r_norm;
-        //for (j = 0; j < n; j ++) p[0][j] *= t;
+   
+   	//for (j = 0; j < n; j ++) p[0][j] *= t;
         fasp_blas_array_ax(n, t, p[0]); 
     
         /* RESTART CYCLE (right-preconditioning) */

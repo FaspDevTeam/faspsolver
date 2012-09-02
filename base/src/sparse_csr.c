@@ -483,6 +483,9 @@ FINISHED:
  * \note Reordering is done in place. 
  *
  * Modified by Chensong Zhang on Dec/21/2012
+ *
+ * Add OpenMP to it.
+ * Modified by Chunsheng Feng on Sep/02/2012
  */
 void fasp_dcsr_diagpref (dCSRmat *A)
 {
@@ -499,7 +502,43 @@ void fasp_dcsr_diagpref (dCSRmat *A)
 #if DEBUG_MODE
     printf("### DEBUG: fasp_dcsr_diagpref ...... [Start]\n");
 #endif
+
+#ifdef _OPENMP    
+
+    INT ibegin,iend;
+#pragma omp parallel for private(i,j,ibegin,iend,tempi,tempd)
+    for (i = 0; i < num_rowsA; i ++) {
+        ibegin = A_i[i];
+        iend = A_i[i+1];
+        // check whether the first entry is already diagonal        
+        if (A_j[ibegin] != i) { 
+            
+            for (j = ibegin+1 ; j < iend; j ++) {
+                if (A_j[j] == i) {
+#if DEBUG_MODE
+                    printf("### DEBUG: Switch entry_%d with entry_0\n", j);
+#endif
+                    
+                    tempi  = A_j[ibegin];
+                    A_j[ibegin] = A_j[j];
+                    A_j[j] = tempi;
+                    
+                    tempd     = A_data[ibegin];
+                    A_data[ibegin] = A_data[j];
+                    A_data[j] = tempd;
+                    
+                    break;
+                }
+            }
+            
+            if (j == iend) {
+                printf("### ERROR: Diagonal entry in row %d is either missing or zero!\n", i);
+                exit(ERROR_MISC); // Diagonal is zero    
+            }
+        }
+    }
     
+#else    
     for (i = 0; i < num_rowsA; i ++) {
         row_size = A_i[i+1] - A_i[i];
         
@@ -533,7 +572,8 @@ void fasp_dcsr_diagpref (dCSRmat *A)
         A_j    += row_size;
         A_data += row_size;
     }
-    
+#endif
+
 #if DEBUG_MODE
     printf("### DEBUG: fasp_dcsr_diagpref ...... [Finish]\n");
 #endif

@@ -56,7 +56,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_ilu_dcsr_setup ...... [Start]\n");
-    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",m,n,nnz);
+    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->row,n,nnz);
 #endif
     
     setup_start=clock();

@@ -353,6 +353,7 @@ c
 c-----------------------------------------------------------------------
       subroutine ilut(n,a,ja,ia,lfil,droptol,alu,jlu,iwk,ierr,nz)
 c-----------------------------------------------------------------------
+!$      use omp_lib
       implicit none 
       integer n 
       real*8 a(1),alu(1),w(n+1),droptol
@@ -437,7 +438,7 @@ c     droptol .ne. 0 but lfil=n will give the usual threshold strategy *
 c     (however, fill-in is then unpredictible).                        *
 c----------------------------------------------------------------------*
 c     locals
-      integer ju0,k,j1,j2,j,ii,i,lenl,lenu,jj,jrow,jpos,len 
+      integer ju0,k,j1,j2,j,ii,i,lenl,lenu,jj,jrow,jpos,NE,len
       real*8 tnorm, t, abs, s, fact 
       logical cinindex
 
@@ -446,12 +447,18 @@ c     locals
       cinindex = ia(1) .eq. 0
 
       if (cinindex) then
-         do i=1,n+1
+         NE = n+1       !modify by chunsheng 2012,Sep,1
+!$OMP PARALLEL DO PRIVATE(I)              
+         do i=1,NE
             ia(i)=ia(i)+1
          end do
-         do i = 1,ia(n+1)-1
+!$OMP END PARALLEL DO
+         NE = ia(n+1)-1
+!$OMP PARALLEL DO PRIVATE(I)              
+         do i = 1,NE
             ja(i)=ja(i)+1
          end do
+!$OMP END PARALLEL DO
       end if
 
 c-----------------------------------------------------------------------
@@ -463,9 +470,11 @@ c-----------------------------------------------------------------------
 c     
 c     initialize nonzero indicator array. 
 c     
+!$OMP PARALLEL DO PRIVATE(J)              
       do 1 j=1,n
          jw(n+j) = 0
  1    continue
+!$OMP END PARALLEL DO
 c-----------------------------------------------------------------------
 c     beginning of main loop.
 c-----------------------------------------------------------------------
@@ -680,9 +689,11 @@ c-----------------------------------------------------------------------
       nz=ju(n)-1
 
       if (cinindex) then 
+!$OMP PARALLEL DO PRIVATE(I)              
          do i=1,nz
             jlu(i)=jlu(i)-1
          end do
+!$OMP END PARALLEL DO               
       end if
 
       ierr = 0

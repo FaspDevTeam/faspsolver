@@ -239,7 +239,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
     
 #if DEBUG_MODE
     printf("fasp_amg_setup_rs ...... [Start]\n");
-    printf("fasp_amg_setup_rs: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    printf("fasp_amg_setup_rs: nr=%d, nc=%d, nnz=%d\n", m, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
 	param->tentative_smooth = 1.0;

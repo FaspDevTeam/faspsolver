@@ -197,9 +197,15 @@ void fasp_precond_ilu (REAL *r,
         INT i, j, jj, begin_row, end_row, mm2=m-2;
         INT *ijlu=iludata->ijlu;
         REAL *lu=iludata->luval;
+//	REAL tmp;
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
         zz[0]=zr[0];
+/*
+ * #ifdef _OPENMP	
+ * #pragma omp parallel for private(i,j,jj,begin_row,end_row) ordered //reduction(+:tmp) 
+ * #endif
+*/	
         for (i=1;i<=mm1;++i) {
             begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
             for (j=begin_row;j<=end_row;++j) {
@@ -207,7 +213,7 @@ void fasp_precond_ilu (REAL *r,
                 if (jj<i) zr[i]-=lu[j]*zz[jj];
                 else break;
             }
-            zz[i]=zr[i];
+            zz[i]=zr[i]; 
         }
     
         // backward sweep: solve upper matrix equation U*z=zz
