@@ -109,6 +109,9 @@ void fasp_blas_dstr_aAxpy (REAL alpha,
  * 
  * \author Shiquan Zhang
  * \date   2010/10/15
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   08/30/2012
  */
 INT fasp_dstr_diagscale (dSTRmat *A, 
                          dSTRmat *B)
@@ -116,6 +119,13 @@ INT fasp_dstr_diagscale (dSTRmat *A,
     INT ngrid=A->ngrid, nc=A->nc,nband=A->nband;
     INT nc2=nc*nc, size=ngrid*nc2;
     INT i,j,ic2,nb,nb1;
+
+#ifdef _OPENMP
+    //variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
     REAL *diag=(REAL *)fasp_mem_calloc(size,sizeof(REAL));
     
     fasp_array_cp(size,A->diag,diag);
@@ -123,12 +133,33 @@ INT fasp_dstr_diagscale (dSTRmat *A,
     fasp_dstr_alloc(A->nx, A->ny, A->nz,A->nxy,ngrid, nband,nc,A->offsets, B);
     
     //compute diagnal elements of B
-    for (i=0;i<ngrid;++i) {  
-        ic2=i*nc2;
-        for (j=0;j<nc2;++j)
-            { if (j/nc == j%nc) B->diag[ic2+j]=1; else B->diag[ic2+j]=0;}
+#ifdef _OPENMP
+    if (ngrid > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, ic2, j)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, ngrid, &mybegin, &myend);
+            for (i=mybegin; i<myend; i++) {  
+                ic2=i*nc2;
+                for (j=0; j<nc2; j++) { 
+                    if (j/nc == j%nc) B->diag[ic2+j]=1; 
+                    else B->diag[ic2+j]=0;
+                }
+            }
+        }
     }
-    
+    else {
+#endif
+        for (i=0;i<ngrid;++i) {  
+            ic2=i*nc2;
+            for (j=0;j<nc2;++j) { 
+                if (j/nc == j%nc) B->diag[ic2+j]=1; 
+                else B->diag[ic2+j]=0;
+            }
+        }
+#ifdef _OPENMP
+    }
+#endif
+
     for (i=0;i<ngrid;++i) fasp_blas_smat_inv(&(diag[i*nc2]),nc);
     
     for (i=0;i<nband;++i) {
@@ -215,6 +246,9 @@ static inline void smat_amxv_nc5 (REAL alpha,
  * 
  * \author Shiquan Zhang
  * \date   2010/10/15
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   08/30/2012
  */
 static inline void smat_amxv (REAL alpha, 
                               REAL *a, 
@@ -224,13 +258,35 @@ static inline void smat_amxv (REAL alpha,
 { 
     INT i,j;
     INT in;    
-    
-    for (i=0;i<n;++i) {
-        in = i*n;
-        for (j=0;j<n;++j)
-            c[i] += alpha*a[in+j]*b[j];
-    }  // end for (i=0;i<n;++i)
-    
+   
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS(); 
+#endif
+
+#ifdef _OPENMP
+    if (n > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, in, j)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            for (i=mybegin; i<myend; i++) {
+                in = i*n;
+                for (j=0; j<n; j++)
+                    c[i] += alpha*a[in+j]*b[j];
+            }
+        }
+    } 
+    else {
+#endif 
+        for (i=0;i<n;++i) {
+            in = i*n;
+            for (j=0;j<n;++j)
+                c[i] += alpha*a[in+j]*b[j];
+        }
+#ifdef _OPENMP
+    }	
+#endif
     return;
 }
 
@@ -252,7 +308,11 @@ static inline void smat_amxv (REAL alpha,
  * 
  * \author Shiquan Zhang
  * \date   2010/04/24
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date  08/30/2012
  */
+
 static inline void blkcontr_str (INT start_data, 
                                  INT start_vecx, 
                                  INT start_vecy, 
@@ -262,13 +322,39 @@ static inline void blkcontr_str (INT start_data,
                                  REAL *y)
 {
     INT i,j,k,m;
-    for (i = 0; i < nc; i ++) {
-        k = start_data + i*nc;
-        m = start_vecy + i;
-        for (j = 0; j < nc; j ++) {
-            y[m] += data[k+j]*x[start_vecx+j];
+
+#ifdef _OPENMP
+    //variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
+#ifdef _OPENMP
+    if (nc > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, k, m, j)
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, nc, &mybegin, &myend);
+            for (i = mybegin; i < myend; i ++) {
+                k = start_data + i*nc;
+                m = start_vecy + i;
+                for (j = 0; j < nc; j ++) {
+                    y[m] += data[k+j]*x[start_vecx+j];
+                }
+            }
         }
     }
+    else {
+#endif
+        for (i = 0; i < nc; i ++) {
+            k = start_data + i*nc;
+            m = start_vecy + i;
+            for (j = 0; j < nc; j ++) {
+                y[m] += data[k+j]*x[start_vecx+j];
+            }
+        }
+#ifdef _OPENMP
+   }
+#endif
 } 
 
 /**
@@ -299,7 +385,13 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
     INT idx1,idx2, idx;
     INT end1, end2;
     INT nline;
-    
+
+#ifdef _OPENMP
+    //variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
     // information of A
     INT nx = A->nx;
     INT ngrid = A->ngrid;  // number of grids
@@ -342,12 +434,10 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
     
 #ifdef _OPENMP
     if (nline-1 > OPENMP_HOLDS) {
-        INT myid, mybegin, myend;
-        INT nthreads = FASP_GET_NUM_THREADS();
 #pragma omp parallel for private(myid, mybegin, myend, i, idx1, idx)
         for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, nline-1, &mybegin, &myend);
-            for (i=mybegin; i<myend; ++i) {
+            for (i=mybegin; i<myend; i++) {
                 idx1 = i;
                 idx  = i+1;
                 y[idx] += alpha*(offdiag0[idx1]*x[idx1] + diag[idx]*x[idx] + offdiag1[idx]*x[idx+1] + 
@@ -368,15 +458,13 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
    
 #ifdef _OPENMP
     if (end2-nline > OPENMP_HOLDS) {
-        INT myid, mybegin, myend;
-        INT nthreads = FASP_GET_NUM_THREADS();
 #pragma omp parallel for private(myid, i, mybegin, myend, idx1, idx2, idx)
         for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, end2-nline, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
-                idx1 = i-1+nline; 
-                idx2 = i; 
 	        idx  = i+nline;
+                idx1 = idx-1; //idx1 = i-1+nline; 
+                idx2 = i; 
                 y[idx] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
                           diag[idx]*x[idx] + offdiag1[idx]*x[idx+1] + offdiag3[idx]*x[idx+nline]);
             }
@@ -396,15 +484,13 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
    
 #ifdef _OPENMP
     if (end1-end2 > OPENMP_HOLDS) {
-        INT myid, mybegin, myend;
-        INT nthreads = FASP_GET_NUM_THREADS();
 #pragma omp parallel for private(myid, i, mybegin, myend, idx1, idx2, idx)
         for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, end1-end2, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
-                idx1 = i-1+end2; 
-                idx2 = i-nline+end2;
                 idx  = i+end2;	
+                idx1 = idx-1;     //idx1 = i-1+end2; 
+                idx2 = idx-nline; //idx2 = i-nline+end2;
                 y[idx] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
                           diag[idx]*x[idx] + offdiag1[idx]*x[idx+1]);
             }
@@ -424,8 +510,7 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
     
     idx1 = end1-1; 
     idx2 = end1-nline; 
-    y[end1] += alpha*(offdiag2[idx2]*x[idx2] + 
-                      offdiag0[idx1]*x[idx1] + diag[end1]*x[end1]);
+    y[end1] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + diag[end1]*x[end1]);
     
     return;
     
@@ -494,6 +579,9 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   2012/08/30
+ *
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
  *       for nx = 1, but the order can be arbitrary. 
  */
@@ -513,7 +601,13 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
     INT ngrid = A->ngrid;  // number of grids
     INT nc = A->nc;
     INT nband = A->nband;
-    
+
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend, up;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
     REAL *diag = A->diag;
     REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL, *offdiag3=NULL;
     
@@ -560,45 +654,117 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
     smat_amxv_nc3(alpha, offdiag1, x+nc, y);
     smat_amxv_nc3(alpha, offdiag3, x+nlinenc, y);
     
-    for (i=1; i<nline; ++i) {
-        idx = i*nc;
-        matidx = idx*nc;
-        idx1 = idx - nc;
-        matidx1 = idx1*nc;
-        smat_amxv_nc3(alpha, offdiag0+matidx1, x+idx1, y+idx);
-        smat_amxv_nc3(alpha, diag+matidx, x+idx, y+idx);
-        smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
-        smat_amxv_nc3(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+#ifdef _OPENMP
+    up = nline - 1;
+    if (up > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, idx, matidx, idx1, matidx1)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+            for (i=mybegin; i<myend; i++) {
+                idx = (i+1)*nc;
+                matidx = idx*nc;
+                idx1 = i*nc;
+                matidx1 = idx1*nc;
+                smat_amxv_nc3(alpha, offdiag0+matidx1, x+idx1, y+idx);
+                smat_amxv_nc3(alpha, diag+matidx, x+idx, y+idx);
+                smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+                smat_amxv_nc3(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+            }
+        }
     }
-    
-    
-    for (i=nx; i<end2; ++i) {
-        idx = i*nc;
-        idx1 = idx-nc;
-        idx2 = idx-nlinenc;
-        matidx = idx*nc;
-        matidx1 = idx1*nc;
-        matidx2 = idx2*nc;
-        smat_amxv_nc3(alpha, offdiag2+matidx2, x+idx2, y+idx);
-        smat_amxv_nc3(alpha, offdiag0+matidx1, x+idx1, y+idx);
-        smat_amxv_nc3(alpha, diag+matidx, x+idx, y+idx);
-        smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
-        smat_amxv_nc3(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+    else {
+#endif
+        for (i=1; i<nline; ++i) {
+            idx = i*nc;
+            matidx = idx*nc;
+            idx1 = idx - nc;
+            matidx1 = idx1*nc;
+            smat_amxv_nc3(alpha, offdiag0+matidx1, x+idx1, y+idx);
+            smat_amxv_nc3(alpha, diag+matidx, x+idx, y+idx);
+            smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+            smat_amxv_nc3(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+         }
+#ifdef _OPENMP
     }
-    
-    for (i=end2; i<end1; ++i) {
-        idx = i*nc;
-        idx1 = idx-nc;
-        idx2 = idx-nlinenc;
-        matidx = idx*nc;
-        matidx1 = idx1*nc;
-        matidx2 = idx2*nc;
-        smat_amxv_nc3(alpha, offdiag2+matidx2, x+idx2, y+idx);
-        smat_amxv_nc3(alpha, offdiag0+matidx1, x+idx1, y+idx);
-        smat_amxv_nc3(alpha, diag+matidx, x+idx, y+idx);
-        smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+#endif
+ 
+#ifdef _OPENMP
+    up = end2 - nx;
+    if (up > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, idx, idx1, idx2, matidx, matidx1, matidx2)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);	
+            for (i=mybegin; i<myend; i++) {
+                idx = (i+nx)*nc;
+                idx1 = idx-nc;
+                idx2 = idx-nlinenc;
+                matidx = idx*nc;
+                matidx1 = idx1*nc;
+                matidx2 = idx2*nc;
+                smat_amxv_nc3(alpha, offdiag2+matidx2, x+idx2, y+idx);
+                smat_amxv_nc3(alpha, offdiag0+matidx1, x+idx1, y+idx);
+                smat_amxv_nc3(alpha, diag+matidx,      x+idx,  y+idx);
+                smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+                smat_amxv_nc3(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+            }
+        }
     }
-    
+    else {
+#endif
+        for (i=nx; i<end2; ++i) {
+            idx = i*nc;
+            idx1 = idx-nc;
+            idx2 = idx-nlinenc;
+            matidx = idx*nc;
+            matidx1 = idx1*nc;
+            matidx2 = idx2*nc;
+            smat_amxv_nc3(alpha, offdiag2+matidx2, x+idx2, y+idx);
+            smat_amxv_nc3(alpha, offdiag0+matidx1, x+idx1, y+idx);
+            smat_amxv_nc3(alpha, diag+matidx, x+idx, y+idx);
+            smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+            smat_amxv_nc3(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+        }
+#ifdef _OPENMP
+    }
+#endif
+
+#ifdef _OPENMP
+    up = end1 - end2;
+    if (up > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, idx, idx1, idx2, matidx, matidx1, matidx2)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+            for (i=mybegin; i<myend; i++) {
+                idx = (i+end2)*nc;
+                idx1 = idx-nc;
+                idx2 = idx-nlinenc;
+                matidx = idx*nc;
+                matidx1 = idx1*nc;
+                matidx2 = idx2*nc;
+                smat_amxv_nc3(alpha, offdiag2+matidx2, x+idx2, y+idx);
+                smat_amxv_nc3(alpha, offdiag0+matidx1, x+idx1, y+idx);
+                smat_amxv_nc3(alpha, diag+matidx, x+idx, y+idx);
+                smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+            }
+        }
+    }
+    else {
+#endif
+        for (i=end2; i<end1; ++i) {
+            idx = i*nc;
+            idx1 = idx-nc;
+            idx2 = idx-nlinenc;
+            matidx = idx*nc;
+            matidx1 = idx1*nc;
+            matidx2 = idx2*nc;
+            smat_amxv_nc3(alpha, offdiag2+matidx2, x+idx2, y+idx);
+            smat_amxv_nc3(alpha, offdiag0+matidx1, x+idx1, y+idx);
+            smat_amxv_nc3(alpha, diag+matidx, x+idx, y+idx);
+            smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+        }
+#ifdef _OPENMP
+    }
+#endif
     i=end1;
     idx = i*nc;
     idx1 = idx-nc;
@@ -627,6 +793,9 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
+ * \author Chensheng Feng, Zheng Li
+ * \date   2012/09/01
+ *
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
  *       for nx = 1, but the order can be arbitrary. 
  */
@@ -643,18 +812,24 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
     INT ngrid = A->ngrid;  // number of grids
     INT nc = A->nc;
     INT nband = A->nband;
+
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend, up;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
     
     REAL *diag = A->diag;
     REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL, *offdiag3=NULL;
     
     if (nx == 1)
-        {
-            nline = A->ny;
-        }
+    {
+        nline = A->ny;
+    }
     else
-        {
-            nline = nx;
-        }
+    {
+        nline = nx;
+    }
     nlinenc = nline*nc;
     
     for (i=0; i<nband; ++i)
@@ -690,44 +865,117 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
     smat_amxv_nc5(alpha, offdiag1, x+nc, y);
     smat_amxv_nc5(alpha, offdiag3, x+nlinenc, y);
     
-    for (i=1; i<nline; ++i) {
-        idx = i*nc;
-        matidx = idx*nc;
-        idx1 = idx - nc;
-        matidx1 = idx1*nc;
-        smat_amxv_nc5(alpha, offdiag0+matidx1, x+idx1, y+idx);
-        smat_amxv_nc5(alpha, diag+matidx, x+idx, y+idx);
-        smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
-        smat_amxv_nc5(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+#ifdef _OPENMP
+    up = nline - 1;
+    if (up > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, idx, matidx, idx1, matidx1)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+            for (i=mybegin; i<myend; i++) {
+                idx = (i+1)*nc;
+                matidx = idx*nc;
+                idx1 = i*nc; // idx1 = idx - nc;
+                matidx1 = idx1*nc;
+                smat_amxv_nc5(alpha, offdiag0+matidx1, x+idx1, y+idx);
+                smat_amxv_nc5(alpha, diag+matidx, x+idx, y+idx);
+                smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+                smat_amxv_nc5(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+            }
+        }
     }
-    
-    
-    for (i=nx; i<end2; ++i) {
-        idx = i*nc;
-        idx1 = idx-nc;
-        idx2 = idx-nlinenc;
-        matidx = idx*nc;
-        matidx1 = idx1*nc;
-        matidx2 = idx2*nc;
-        smat_amxv_nc5(alpha, offdiag2+matidx2, x+idx2, y+idx);
-        smat_amxv_nc5(alpha, offdiag0+matidx1, x+idx1, y+idx);
-        smat_amxv_nc5(alpha, diag+matidx, x+idx, y+idx);
-        smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
-        smat_amxv_nc5(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+    else {
+#endif
+        for (i=1; i<nline; ++i) {
+            idx = i*nc;
+            matidx = idx*nc;
+            idx1 = idx - nc;
+            matidx1 = idx1*nc;
+            smat_amxv_nc5(alpha, offdiag0+matidx1, x+idx1, y+idx);
+            smat_amxv_nc5(alpha, diag+matidx, x+idx, y+idx);
+            smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+            smat_amxv_nc5(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+         }
+#ifdef _OPENMP
     }
+#endif
     
-    for (i=end2; i<end1; ++i) {
-        idx = i*nc;
-        idx1 = idx-nc;
-        idx2 = idx-nlinenc;
-        matidx = idx*nc;
-        matidx1 = idx1*nc;
-        matidx2 = idx2*nc;
-        smat_amxv_nc5(alpha, offdiag2+matidx2, x+idx2, y+idx);
-        smat_amxv_nc5(alpha, offdiag0+matidx1, x+idx1, y+idx);
-        smat_amxv_nc5(alpha, diag+matidx, x+idx, y+idx);
-        smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+#ifdef _OPENMP
+    up = end2 - nx;
+    if (up > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, idx, idx1, idx2, matidx, matidx1, matidx2)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);	
+            for (i=mybegin; i<myend; i++) {
+                idx = (i+nx)*nc;
+                idx1 = idx-nc;
+                idx2 = idx-nlinenc;
+                matidx = idx*nc;
+                matidx1 = idx1*nc;
+                matidx2 = idx2*nc;
+                smat_amxv_nc5(alpha, offdiag2+matidx2, x+idx2, y+idx);
+                smat_amxv_nc5(alpha, offdiag0+matidx1, x+idx1, y+idx);
+                smat_amxv_nc5(alpha, diag+matidx,      x+idx,  y+idx);
+                smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+                smat_amxv_nc5(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+            }
+        }
     }
+    else {
+#endif
+        for (i=nx; i<end2; ++i) {
+            idx = i*nc;
+            idx1 = idx-nc;
+            idx2 = idx-nlinenc;
+            matidx = idx*nc;
+            matidx1 = idx1*nc;
+            matidx2 = idx2*nc;
+            smat_amxv_nc5(alpha, offdiag2+matidx2, x+idx2, y+idx);
+            smat_amxv_nc5(alpha, offdiag0+matidx1, x+idx1, y+idx);
+            smat_amxv_nc5(alpha, diag+matidx, x+idx, y+idx);
+            smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+            smat_amxv_nc5(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
+        }
+#ifdef _OPENMP
+    }
+#endif
+
+#ifdef _OPENMP
+    up = end1 - end2;
+    if (up > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, idx, idx1, idx2, matidx, matidx1, matidx2)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+            for (i=mybegin; i<myend; i++) {
+                idx = (i+end2)*nc;
+                idx1 = idx-nc;
+                idx2 = idx-nlinenc;
+                matidx = idx*nc;
+                matidx1 = idx1*nc;
+                matidx2 = idx2*nc;
+                smat_amxv_nc5(alpha, offdiag2+matidx2, x+idx2, y+idx);
+                smat_amxv_nc5(alpha, offdiag0+matidx1, x+idx1, y+idx);
+                smat_amxv_nc5(alpha, diag+matidx, x+idx, y+idx);
+                smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+            }
+        }
+    }
+    else {
+#endif
+        for (i=end2; i<end1; ++i) {
+            idx = i*nc;
+            idx1 = idx-nc;
+            idx2 = idx-nlinenc;
+            matidx = idx*nc;
+            matidx1 = idx1*nc;
+            matidx2 = idx2*nc;
+            smat_amxv_nc5(alpha, offdiag2+matidx2, x+idx2, y+idx);
+            smat_amxv_nc5(alpha, offdiag0+matidx1, x+idx1, y+idx);
+            smat_amxv_nc5(alpha, diag+matidx, x+idx, y+idx);
+            smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
+        }
+#ifdef _OPENMP
+    }
+#endif
     
     i=end1;
     idx = i*nc;

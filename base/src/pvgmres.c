@@ -166,6 +166,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
         }
     
         t = 1.0 / r_norm;
+        //for (j = 0; j < n; j ++) p[0][j] *= t;
         fasp_blas_array_ax(n, t, p[0]); 
     
         /* RESTART CYCLE (right-preconditioning) */
@@ -192,6 +193,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
             hh[i][i-1] = t;    
             if (t != 0.0) {
                 t = 1.0/t;
+		//for (j = 0; j < n; j ++) p[i][j] *= t;
                 fasp_blas_array_ax(n, t, p[i]);
             }
     
@@ -240,7 +242,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
             rs[k] = t / hh[k][k];
         }
         fasp_array_cp(n, p[i-1], w);
-		fasp_blas_array_ax(n, rs[i-1], w);
+	//for (j = 0; j < n; j ++) w[j] *= rs[i-1];
+	fasp_blas_array_ax(n, rs[i-1], w);
         for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], p[j], w);
         fasp_array_set(n, r, 0.0);
     

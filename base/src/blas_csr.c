@@ -426,11 +426,14 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
     INT i, k, begin_row, end_row;    
     register REAL temp;
 
-    
+#ifdef _OPENMP
+    // variables for OpenMP 
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
 #ifdef _OPENMP
     if (m > OPENMP_HOLDS) {
-        INT myid, mybegin, myend;
-	INT nthreads = FASP_GET_NUM_THREADS();
 #pragma omp parallel for private(myid, i, mybegin, myend, temp, begin_row, end_row, k)
 	for (myid=0; myid<nthreads; myid++) {
 	    FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);

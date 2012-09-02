@@ -38,7 +38,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     const SHORT  cycle_type = param->cycle_type;
     const SHORT  nl = mgl[0].num_levels;
     const REAL   relax = param->relaxation;
-	const SHORT  ndeg = param->polynomial_degree;
+    const SHORT  ndeg = param->polynomial_degree;
     
     // local variables
     REAL alpha = 1.0;

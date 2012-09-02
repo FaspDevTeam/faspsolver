@@ -217,44 +217,44 @@ void fasp_dvec_set (INT n,
     
     if (n>0) x->row=n; 
     else n=x->row; 
-	INT nthreads = 1, use_openmp = FALSE;
-    
-#ifdef _OPENMP  
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-	}
-#endif
-    
-    if (val == 0.0) {
-        if (use_openmp) {
-            INT mybegin,myend,myid;
+	
 #ifdef _OPENMP 
-#pragma omp parallel for private(myid, mybegin, myend) 
+    // variables for OpenMP 
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
 #endif
+   
+    if (val == 0.0) {
+#ifdef _OPENMP 
+        if (n > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend) 
             for (myid = 0; myid < nthreads; myid++ ) {
                 FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
                 memset(&xpt[mybegin],0x0, sizeof(REAL)*(myend-mybegin));
             }
         }
         else {
+#endif
             memset(xpt, 0x0, sizeof(REAL)*n);
+#ifdef _OPENMP
         }
+#endif
     }
     else {
-        if (use_openmp) {
-            INT mybegin,myend,myid;
 #ifdef _OPENMP 
+        if (n > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend) 
-#endif
             for (myid = 0; myid < nthreads; myid++ ) {
                 FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) xpt[i]=val;
             }
         }
         else {
+#endif
             for (i=0; i<n; ++i) xpt[i]=val;
+#ifdef _OPENMP
         }
+#endif
     }
 }
 

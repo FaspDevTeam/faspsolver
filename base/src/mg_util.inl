@@ -97,9 +97,9 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
     switch (smoother) {
 
         case GS:
-            if (order == NO_ORDER || ordering == NULL)
+            if (order == NO_ORDER || ordering == NULL) 
                 fasp_smoother_dcsr_gs(x, istart, iend, istep, A, b, nsweeps);
-            else if (order == CF_ORDER)
+            else if (order == CF_ORDER) 
                 fasp_smoother_dcsr_gs_cf(x, A, b, nsweeps, ordering, 1);
             break;
             
@@ -107,11 +107,11 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
             fasp_smoother_dcsr_sgs(x, A, b, nsweeps);
             break;
         
-        case JACOBI:
+        case JACOBI: 
             fasp_smoother_dcsr_jacobi(x, istart, iend, istep, A, b, nsweeps);
             break;
         
-        case L1_DIAG:
+        case L1_DIAG: 
             fasp_smoother_dcsr_L1diag(x, istart, iend, istep, A, b, nsweeps);
             break;
             

@@ -3,6 +3,7 @@
  */
 
 #include <time.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -102,14 +103,16 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     const INT   MaxIt = itparam->maxit;
     const REAL  tol = itparam->tol; 
     
-	// Local variables
+    // Local variables
     INT iter;
     REAL solver_duration;
 
 #ifdef _OPENMP 
-    REAL solver_start=omp_get_wtime();
+    REAL solver_start, solver_end;
+    solver_start = omp_get_wtime();
 #else
-    clock_t solver_start=clock();
+    clock_t solver_start, solver_end;
+    solver_start = clock();
 #endif
 
     /* Safe-guard checks on parameters */
@@ -145,10 +148,10 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     
     if ( (print_level>PRINT_MIN) && (iter >= 0) ) {
 #ifdef _OPENMP 
-        REAL solver_end=omp_get_wtime();
-        solver_duration = (REAL)(solver_end - solver_start);
+        solver_end = omp_get_wtime();
+        solver_duration = solver_end - solver_start;
 #else
-        clock_t solver_end=clock();    
+        solver_end = clock();    
         solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
         print_cputime("Iterative method", solver_duration);
