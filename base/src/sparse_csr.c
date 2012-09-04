@@ -480,12 +480,13 @@ FINISHED:
  * \author Zhiyang Zhou
  * \date   09/09/2010
  *
+ * \author Chunsheng Feng, Zheng Li
+ * \date   09/02/2012
+ *
  * \note Reordering is done in place. 
  *
  * Modified by Chensong Zhang on Dec/21/2012
  *
- * Add OpenMP to it.
- * Modified by Chunsheng Feng on Sep/02/2012
  */
 void fasp_dcsr_diagpref (dCSRmat *A)
 {
@@ -498,79 +499,81 @@ void fasp_dcsr_diagpref (dCSRmat *A)
     INT    i, j;
     INT    tempi, row_size;
     REAL   tempd;
-    
+
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT    myid, mybegin, myend, ibegin, iend;
+    INT    nthreads = FASP_GET_NUM_THREADS();
+#endif
+
 #if DEBUG_MODE
     printf("### DEBUG: fasp_dcsr_diagpref ...... [Start]\n");
 #endif
+   
 
 #ifdef _OPENMP    
-
-    INT ibegin,iend;
-#pragma omp parallel for private(i,j,ibegin,iend,tempi,tempd)
-    for (i = 0; i < num_rowsA; i ++) {
-        ibegin = A_i[i];
-        iend = A_i[i+1];
-        // check whether the first entry is already diagonal        
-        if (A_j[ibegin] != i) { 
-            
-            for (j = ibegin+1 ; j < iend; j ++) {
-                if (A_j[j] == i) {
+    if (num_rowsA > OPENMP_HOLDS) {     
+#pragma omp parallel for private(myid,i,j,ibegin,iend,tempi,tempd, mybegin, myend)
+	for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, num_rowsA, &mybegin, &myend);
+            for (i = mybegin; i < myend; i ++) {
+                ibegin = A_i[i]; iend = A_i[i+1];
+                // check whether the first entry is already diagonal        
+                if (A_j[ibegin] != i) { 
+                    for (j = ibegin+1 ; j < iend; j ++) {
+                        if (A_j[j] == i) {
 #if DEBUG_MODE
-                    printf("### DEBUG: Switch entry_%d with entry_0\n", j);
+                             printf("### DEBUG: Switch entry_%d with entry_0\n", j);
 #endif
+                             tempi  = A_j[ibegin];
+                             A_j[ibegin] = A_j[j];
+                             A_j[j] = tempi;
                     
-                    tempi  = A_j[ibegin];
-                    A_j[ibegin] = A_j[j];
-                    A_j[j] = tempi;
-                    
-                    tempd     = A_data[ibegin];
-                    A_data[ibegin] = A_data[j];
-                    A_data[j] = tempd;
-                    
-                    break;
+                             tempd     = A_data[ibegin];
+                             A_data[ibegin] = A_data[j];
+                             A_data[j] = tempd;
+                             break;
+                        }
+                    }
+                    if (j == iend) {
+                        printf("### ERROR: Diagonal entry in row %d is either missing or zero!\n", i);
+                        exit(ERROR_MISC); // Diagonal is zero    
+                    }
                 }
-            }
-            
-            if (j == iend) {
-                printf("### ERROR: Diagonal entry in row %d is either missing or zero!\n", i);
-                exit(ERROR_MISC); // Diagonal is zero    
             }
         }
     }
-    
-#else    
-    for (i = 0; i < num_rowsA; i ++) {
-        row_size = A_i[i+1] - A_i[i];
-        
-        // check whether the first entry is already diagonal        
-        if (A_j[0] != i) { 
-            
-            for (j = 1; j < row_size; j ++) {
-                if (A_j[j] == i) {
-#if DEBUG_MODE
-                    printf("### DEBUG: Switch entry_%d with entry_0\n", j);
+    else {
 #endif
+        for (i = 0; i < num_rowsA; i ++) {
+            row_size = A_i[i+1] - A_i[i];
+            // check whether the first entry is already diagonal        
+            if (A_j[0] != i) { 
+                for (j = 1; j < row_size; j ++) {
+                    if (A_j[j] == i) {
+#if DEBUG_MODE
+                         printf("### DEBUG: Switch entry_%d with entry_0\n", j);
+#endif
+                         tempi  = A_j[0];
+                         A_j[0] = A_j[j];
+                         A_j[j] = tempi;
                     
-                    tempi  = A_j[0];
-                    A_j[0] = A_j[j];
-                    A_j[j] = tempi;
+                         tempd     = A_data[0];
+                         A_data[0] = A_data[j];
+                         A_data[j] = tempd;
                     
-                    tempd     = A_data[0];
-                    A_data[0] = A_data[j];
-                    A_data[j] = tempd;
-                    
-                    break;
+                         break;
+                    }
+                }
+                if (j == row_size) {
+                    printf("### ERROR: Diagonal entry in row %d is either missing or zero!\n", i);
+                    exit(ERROR_MISC); // Diagonal is zero    
                 }
             }
-            
-            if (j == row_size) {
-                printf("### ERROR: Diagonal entry in row %d is either missing or zero!\n", i);
-                exit(ERROR_MISC); // Diagonal is zero    
-            }
+            A_j    += row_size;
+            A_data += row_size;
         }
-        
-        A_j    += row_size;
-        A_data += row_size;
+#ifdef _OPENMP
     }
 #endif
 
@@ -750,7 +753,13 @@ INT fasp_dcsr_trans (dCSRmat *A,
     
     // Local variables
     INT i,j,k,p;
-    
+
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
     AT->row=m;
     AT->col=n;
     AT->nnz=nnz;
@@ -770,42 +779,54 @@ INT fasp_dcsr_trans (dCSRmat *A,
 	
     //for (i=0;i<m;++i) AT->IA[i] = 0;   //Here is a Bug.
     //for (i=0; i<=m; ++i) AT->IA[i] = 0;  //Chunsheng Feng ,Zheng Li, June/20/2012
-    fasp_iarray_set(m+1, AT->IA, 0);
+    //fasp_iarray_set(m+1, AT->IA, 0);
+    memset(AT->IA, 0, sizeof(INT)*(m+1));
     
-    for (j=0;j<nnz;++j) {
-        i=N2C(A->JA[j]); // column Number of A = row Number of A'
-        if (i<m-1) AT->IA[i+2]++;
+#ifdef _OPENMP
+    if (nnz > OPENMP_HOLDS) {
+#pragma omp parallel for private (j, i)
+        for (j=0;j<nnz;++j) {
+            i=N2C(A->JA[j]); // column Number of A = row Number of A'
+            if (i<m-1)
+#pragma omp critical 
+               AT->IA[i+2]++;
+        }
     }
-    
+    else {
+#endif
+        for (j=0;j<nnz;++j) {
+            i=N2C(A->JA[j]); // column Number of A = row Number of A'
+            if (i<m-1) AT->IA[i+2]++;
+        }
+#ifdef _OPENMP
+    }
+#endif
+
     for (i=2;i<=m;++i) AT->IA[i]+=AT->IA[i-1];
     
     // second pass: form A'
-    if (A->val) {
-        for (i=0;i<n;++i) {
-            INT ibegin=A->IA[i], iend1=A->IA[i+1];
-            
-            for (p=ibegin;p<iend1;p++) {
-                j=A->JA[N2C(p)]+1;
-                k=AT->IA[N2C(j)];
-                AT->JA[N2C(k)]=C2N(i);
-                AT->val[N2C(k)]=A->val[N2C(p)];
-                AT->IA[j]=k+1;
-            } // end for p
-        } // end for i
-        
+    if (A->val) { 
+             for (i=0;i<n;++i) {
+                INT ibegin=A->IA[i], iend=A->IA[i+1];
+                for (p=ibegin;p<iend;p++) {
+                    j=A->JA[N2C(p)]+1;
+                    k=AT->IA[N2C(j)];
+                    AT->JA[N2C(k)]=C2N(i);
+                    AT->val[N2C(k)]=A->val[N2C(p)];
+                    AT->IA[j]=k+1;
+                } // end for p
+            } // end for i
     }
     else {
-        for (i=0;i<n;++i) {
-            INT ibegin=A->IA[i], iend1=A->IA[i+1];
-            
-            for (p=ibegin;p<iend1;p++) {
-                j=A->JA[N2C(p)]+1;
-                k=AT->IA[N2C(j)];
-                AT->JA[N2C(k)]=C2N(i);
-                AT->IA[j]=k+1;
-            } // end for p
-        } // end of i
-        
+            for (i=0;i<n;++i) {
+                INT ibegin=A->IA[i], iend1=A->IA[i+1];
+                for (p=ibegin;p<iend1;p++) {
+                    j=A->JA[N2C(p)]+1;
+                    k=AT->IA[N2C(j)];
+                    AT->JA[N2C(k)]=C2N(i);
+                    AT->IA[j]=k+1;
+                } // end for p
+            } // end of i
     } // end if 
     
     return SUCCESS;
