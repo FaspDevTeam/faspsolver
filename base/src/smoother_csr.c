@@ -557,7 +557,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
 #ifdef _OPENMP
         up = nm1 + 1;
         if (up > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, i, t, begin_row, end_row, j, d)
+#pragma omp parallel for private(myid, mybegin, myend, i, t, begin_row, end_row, j, k, d)
             for (myid=0; myid<nthreads; myid++) {	
                 FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) {
@@ -1333,7 +1333,7 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  * \param ny  Number of nodes in y direction
  * \param nz  Number of nodes in z direction
  *
- * \author  Chunsheng Feng
+ * \author  Chunsheng Feng, Zheng Li
  * \date    02/06/2012
  *
  * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
@@ -1362,6 +1362,10 @@ void swep3db(INT *ia,
     nbegy = ny + nbegy;
     nbegz = nz + nbegz;
     
+ 
+#ifdef _OPENMP
+#pragma omp parallel for private(k,k0,j,j0,i,i0,t,begin_row,end_row,ii,jj,d)    
+#endif
     for (k=nbegz; k >=0; k-=2) {
         k0= k*nxy;
         for (j = nbegy; j >=0; j-=2) {
@@ -1591,7 +1595,7 @@ void rb0b3d (INT *ia,
  * \param ny  Number of nodes in y direction
  * \param nz  Number of nodes in z direction
  *
- * \author  Chunsheng Feng
+ * \author  Chunsheng Feng, Zheng Li
  * \date    02/06/2012
  *
  * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
@@ -1613,12 +1617,14 @@ void swep3df(INT *ia,
     INT begin_row,end_row,ii,jj;
     REAL t,d;
     nxy=nx*ny;
+
+#ifdef _OPENMP
+#pragma omp parallel for private(k,k0,j,j0,i,i0,t,begin_row,end_row,ii,jj,d)    
+#endif
     for (k=nbegz; k < nz; k+=2) {
-        k0= k*nxy;
-        
+        k0= k*nxy;   
         for (j = nbegy; j < ny; j+=2) {
             j0= j*nx;
-            
             for (i = nbegx; i < nx; i+=2)    /*!*/
             {
                 i0 = i   +  j0    + k0;

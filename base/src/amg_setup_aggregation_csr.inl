@@ -22,6 +22,9 @@
  * 
  * \author Xiaozhe Hu
  * \date   09/29/2009
+ *
+ * \author Chunsheng Feng, Zheng Li
+ * \date   09/03/2012
  */
 static void aggregation (dCSRmat *A,
                          ivector *vertices, 
@@ -99,10 +102,8 @@ static void aggregation (dCSRmat *A,
     fasp_ivec_alloc(row, vertices);
 
     //for (i=row;i--;) vertices->val[i] = -2;
-#ifdef _OPENMP
-#pragma omp parallel for 
-#endif
-    for (i=row-1; i>=0; i--) vertices->val[i] = -2;
+    //for (i=row-1; i>=0; i--) vertices->val[i] = -2;
+    fasp_iarray_set(row, vertices->val, -2);
     
     INT num_left = row;
     INT subset;
@@ -153,13 +154,30 @@ static void aggregation (dCSRmat *A,
     INT *temp_C = (INT*)fasp_mem_calloc(row,sizeof(INT));
     
     num_each_aggregation = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
-    
-    for (i=row;i--;) {
-        temp_C[i] = vertices->val[i];  
-        if (vertices->val[i] >= 0) {
-            num_each_aggregation[vertices->val[i]] ++;
+   
+#ifdef _OPENMP
+    if (row > OPENMP_HOLDS) {
+#pragma omp parallel for private (i)
+        for (i=0; i<row; i++) {
+            INT ii = vertices->val[i];
+            temp_C[i] = ii;
+            if (ii >= 0) {
+#pragma omp critical
+                num_each_aggregation[ii] ++;
+	    }
         }
     }
+    else {
+#endif
+        for (i=row;i--;) {
+            temp_C[i] = vertices->val[i];  
+            if (vertices->val[i] >= 0) {
+                num_each_aggregation[vertices->val[i]] ++;
+            }
+        }
+#ifdef _OPENMP
+    }
+#endif
     
     for(i=0; i<row; ++i) {
         if (vertices->val[i] < -1) {

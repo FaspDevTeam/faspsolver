@@ -530,7 +530,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
             rs[k] = t / hh[k][k];
         }
         fasp_array_cp(n, p[i-1], w);
-		fasp_blas_array_ax(n, rs[i-1], w);
+        fasp_blas_array_ax(n, rs[i-1], w);
         for (j = i-2; j >= 0; --j)  fasp_blas_array_axpy(n, rs[j], p[j], w);
         fasp_array_set(n, r, 0.0);
     

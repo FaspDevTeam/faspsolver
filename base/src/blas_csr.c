@@ -54,10 +54,10 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP  
-	if ( A->nnz > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( A->nnz > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     if (A->row != B->row || A->col != B->col) {
@@ -820,7 +820,8 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
             }
         }
     
-        for (j=0;j<countJD;++j) JD[j]=-1;
+        //for (j=0;j<countJD;++j) JD[j]=-1;
+	fasp_iarray_set(countJD, JD, -1);
     }    
     
     fasp_mem_free(JD);
@@ -1166,7 +1167,8 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
     
     INT *iindex = (INT *)fasp_mem_calloc(col,sizeof(INT));    
     
-    for (i=0; i<A->col; ++i) index[i] = -2;
+    //for (i=0; i<A->col; ++i) index[i] = -2;
+    fasp_iarray_set(A->col, index, -2);
     
     memcpy(iindex,index,col*sizeof(INT));
     

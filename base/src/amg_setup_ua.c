@@ -141,7 +141,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     
     for (i=0; i<mgl->near_kernel_dim; ++i) {
         mgl[0].near_kernel_basis[i] = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
-		fasp_array_set(m, mgl[0].near_kernel_basis[i], 1.0);
+        fasp_array_set(m, mgl[0].near_kernel_basis[i], 1.0);
     }
     
     // initialize ILU parameters

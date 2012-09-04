@@ -924,43 +924,34 @@ ivector fasp_sparse_MIS(dCSRmat *A)
 	INT count=0;
 	INT *flag; 
 	flag = (INT *)fasp_mem_calloc(n, sizeof(INT));
-	for (i=0;i<n;i++) flag[i]=0;
+	//for (i=0;i<n;i++) flag[i]=0;
+	memset(flag, 0, sizeof(INT)*n);
 	
 	//! work space
 	//INT *work = (INT *)fasp_mem_calloc (n, sizeof(INT));
-    INT *work = (INT*)fasp_mem_calloc(n,sizeof(INT));    
+        INT *work = (INT*)fasp_mem_calloc(n,sizeof(INT));    
 	
 	//! return
 	ivector MIS;
 	
 	//main loop
-	for (i=0;i<n;i++)
-	{
-		
-		if (flag[i] == 0)
-		{
-			flag[i] = 1;
-			row_begin = IA[i] - 1; row_end = IA[i+1] - 1;
-			for (j = row_begin; j<row_end; j++)
-			{
-				if (flag[JA[j]-1] > 0)
-				{
-					flag[i] = -1;
-					break;
-				}
-			}
-			
-			if (flag[i])
-			{
-				work[count] = i; count++;
-				for (j = row_begin; j<row_end; j++)
-				{
-					flag[JA[j]-1] = -1;
-				}
-			}
-			
-		} // end if
-		
+	for (i=0;i<n;i++) {
+            if (flag[i] == 0) {
+                flag[i] = 1;
+                row_begin = IA[i] - 1; row_end = IA[i+1] - 1;
+                for (j = row_begin; j<row_end; j++) {
+                    if (flag[JA[j]-1] > 0) {
+                        flag[i] = -1;
+                        break;
+                    }
+                }	
+                if (flag[i]) {
+                    work[count] = i; count++;
+                    for (j = row_begin; j<row_end; j++) {
+                        flag[JA[j]-1] = -1;
+                    }
+                }		
+            } // end if	
 	}// end for
     
 	// form MIS

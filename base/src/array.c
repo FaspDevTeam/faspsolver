@@ -54,10 +54,10 @@ void fasp_array_set (const INT n,
     INT nthreads = 1, use_openmp = FALSE; 
     
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
     if (val == 0.0) {

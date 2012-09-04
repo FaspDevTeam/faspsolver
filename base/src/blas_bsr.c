@@ -612,8 +612,8 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 
 #ifdef _OPENMP 
 	if ( ROW > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+            use_openmp = TRUE;
+            nthreads = FASP_GET_NUM_THREADS();
 	}
 #endif
 

@@ -92,6 +92,7 @@ void fasp_blas_array_axpy (const INT n,
 {
     INT i;
     INT nthreads = 1, use_openmp = FALSE;
+    INT myid, mybegin, myend;
 
 #ifdef _OPENMP 
     if ( n > OPENMP_HOLDS ) {
@@ -103,7 +104,6 @@ void fasp_blas_array_axpy (const INT n,
     if (a==1.0) {
         if (use_openmp) {
 #ifdef _OPENMP 
-            INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
@@ -119,7 +119,6 @@ void fasp_blas_array_axpy (const INT n,
     else if (a==-1.0) {
         if (use_openmp) {
 #ifdef _OPENMP 
-            INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
@@ -135,7 +134,6 @@ void fasp_blas_array_axpy (const INT n,
     else {
         if (use_openmp) {
 #ifdef _OPENMP 
-            INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
@@ -179,10 +177,10 @@ void fasp_blas_array_axpyz (const INT n,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     if (use_openmp) {

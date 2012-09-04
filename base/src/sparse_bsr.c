@@ -281,57 +281,100 @@ INT fasp_dbsr_trans (dBSRmat *A,
  * \author Xiaozhe Hu
  * \date   03/10/2011
  *
+ * \author Chunsheng Feng, Zheng Li
+ * \date   09/02/2012
+ *
  * \note Reordering is done in place. 
  *
  */
 SHORT fasp_dbsr_diagpref (dBSRmat *A)
 {    
+    INT           STATUS;
     const INT     num_rowsA = A -> ROW; 
     const INT     num_colsA = A -> COL; 
     const INT     nb = A->nb;
-    const INT      nb2 = nb*nb;
+    const INT     nb2 = nb*nb;
     const INT    *A_i    = A -> IA;
     INT          *A_j    = A -> JA;
     REAL         *A_data = A -> val;
     
     INT   i, j, tempi, row_size;
 
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend, ibegin, iend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
     /* the matrix should be square */
     if (num_rowsA != num_colsA) return ERROR_INPUT_PAR;
     
     REAL *tempd = (REAL*)fasp_mem_calloc(nb2, sizeof(REAL));
-    
-    for (i = 0; i < num_rowsA; i ++) {
-        row_size = A_i[i+1] - A_i[i];
-    
-        for (j = 0; j < row_size; j ++) {
-            if (A_j[j] == i) {
-                if (j != 0) {
-                    // swap index
-                    tempi  = A_j[0];
-                    A_j[0] = A_j[j];
-                    A_j[j] = tempi;
-    
-                    // swap block
-                    memcpy(tempd, A_data, (nb2)*sizeof(REAL));
-                    memcpy(A_data, A_data+j*nb2, (nb2)*sizeof(REAL));
-                    memcpy(A_data+j*nb2, tempd, (nb2)*sizeof(REAL));
+   
+#ifdef _OPENMP
+    if (num_rowsA > OPENMP_HOLDS) {
+#pragma omp parallel for private (myid,mybegin,myend,i,j,tempi,tempd, ibegin,iend)
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, num_rowsA, &mybegin, &myend);
+            for (i = mybegin; i < myend; i++) {
+                ibegin = A_i[i+1]; iend = A_i[i];
+                for (j = ibegin; j < iend; j ++) {
+                    if (A_j[j] == i) {
+                         if (j != ibegin) {
+                             // swap index
+                             tempi  = A_j[ibegin];
+                             A_j[ibegin] = A_j[j];
+                             A_j[j] = tempi;
+                             // swap block
+                             memcpy(tempd,              A_data+ibegin*nb2,  (nb2)*sizeof(REAL));
+                             memcpy(A_data+ibegin*nb2,  A_data+j*nb2,       (nb2)*sizeof(REAL));
+                             memcpy(A_data+j*nb2,       tempd,              (nb2)*sizeof(REAL));
+                         }
+                         break;
+                    }
+                    /* diagonal element is missing */
+                    if (j == iend-1) {
+                        STATUS= -2;
+                        break;
+			//return -2;
+                    }
                 }
-                break;
             }
-    
-            /* diagonal element is missing */
-            if (j == row_size-1) return -2;
         }
-    
-        A_j    += row_size;
-        A_data += row_size*nb2;
     }
-    
+    else { 
+#endif
+        for (i = 0; i < num_rowsA; i ++) {
+            row_size = A_i[i+1] - A_i[i]; 
+            for (j = 0; j < row_size; j ++) {
+                if (A_j[j] == i) {
+                    if (j != 0) {
+                        // swap index
+                        tempi  = A_j[0];
+                        A_j[0] = A_j[j];
+                        A_j[j] = tempi;
+                        // swap block
+                        memcpy(tempd, A_data, (nb2)*sizeof(REAL));
+                        memcpy(A_data, A_data+j*nb2, (nb2)*sizeof(REAL));
+                        memcpy(A_data+j*nb2, tempd, (nb2)*sizeof(REAL));
+                    }
+                    break;
+                }
+                /* diagonal element is missing */
+                if (j == row_size-1) return -2;
+            }
+            A_j    += row_size;
+            A_data += row_size*nb2;
+        }
+#ifdef _OPENMP
+    }
+#endif
+
     // free tempd
     fasp_mem_free(tempd);
     
-    return SUCCESS;
+    if (STATUS < 0) return STATUS;
+    else            return SUCCESS;
 }
 
 /**
