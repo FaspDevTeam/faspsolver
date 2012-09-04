@@ -1313,6 +1313,71 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
     return;    
 }
 
+/**
+ * \fn void swep2db (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT *mark,
+ *                   INT nx, INT ny) 
+ *
+ * \brief      Gauss-Seidel backward smoother for certain color
+ *
+ * \param ia  Pointer to start location of each row
+ * \param ja  Pointer to column index of nonzero elements
+ * \param aa  Pointer to nonzero elements of 
+ * \param u   Pointer to initial guess
+ * \param f   Pointer to right hand
+ * \param nbegx  The stride between the same color nodes in x direction
+ * \param nbegy  The stride between the same color nodes in y direction
+ * \param mark   Pointer to order of nodes
+ * \param nx  Number of nodes in x direction
+ * \param ny  Number of nodes in y direction
+ *
+ * \author  Chunsheng Feng, Zheng Li
+ * \date    02/06/2012
+ *
+ * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
+ */
+
+void swep2db(INT *ia, 
+             INT *ja, 
+             REAL *aa,
+             REAL *u, 
+             REAL *f,
+             INT nbegx,
+             INT nbegy,
+             INT *mark,
+             INT nx, 
+             INT ny) 
+{
+    INT nxy, k, k0, j, j0, i, i0;
+    INT begin_row, end_row, ii, jj;
+    REAL t, d;
+    
+    nxy=nx*ny;
+    nbegx = nx + nbegx;
+    nbegy = ny + nbegy;
+ 
+#ifdef _OPENMP
+#pragma omp parallel for private(j,j0,i,i0,t,begin_row,end_row,ii,jj,d)    
+#endif
+        for (j = nbegy; j >=0; j-=2) {
+            j0= j*nx;            
+            for (i = nbegx; i >=0; i-=2) {
+                i0 = i + j0;
+                i0 = mark[i0]-1; // Fortran to C
+                if (i0>=0 ) {
+                    t = f[i0];
+                    begin_row = ia[i0], end_row = ia[i0+1];
+                    for (ii = begin_row; ii < end_row; ii ++) {
+                        jj = ja[ii];
+                        if (i0!=jj) t -= aa[ii]*u[jj]; 
+                        else d = aa[ii];    
+                    } // end for ii
+                    if (ABS(d) > SMALLREAL) u[i0] = t/d;
+                } //if (i0>=0 ) 
+            }
+        }
+}
+
 
 /**
  * \fn void swep3db (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT nbegz,INT *mark,
@@ -1387,6 +1452,85 @@ void swep3db(INT *ia,
             }
         }
     }
+}
+
+/* 
+ * \fn void rb0b2d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, 
+ *                  INT *mark, INT nx, INT ny, INT nsweeps)
+ * \brief  Colores Gauss-Seidel backward smoother for Au=b 
+ *
+ * \param ia       Pointer to start location of each row
+ * \param ja       Pointer to column index of nonzero elements
+ * \param aa       Pointer to nonzero elements of 
+ * \param u        Pointer to initial guess
+ * \param f        Pointer to right hand
+ * \param mark     Pointer to order of nodes
+ * \param nx       Number of nodes in x direction
+ * \param ny       Number of nodes in y direction
+ * \param nsweeps  Number of relaxation sweeps
+ *
+ * \author  Chunsheng Feng, Zheng Li
+ * \date    02/06/2012
+ *
+ * \note This subroutine is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
+ */
+void rb02d (INT *ia, 
+             INT *ja, 
+             REAL *aa,
+             REAL *u, 
+             REAL *f, 
+             INT *mark, 
+             INT nx, 
+             INT ny, 
+             INT nsweeps)
+{
+    INT n0e = -1, n0o = -2, isweep;
+    //INT ex, ey, ez;
+    //INT ox, oy, oz;
+    
+    for (isweep = 1; isweep <= nsweeps; isweep++) {
+		if ((nx%2==0) &&(ny%2 ==0)) {    
+			/*...  e-e (and going backwards) */
+			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
+			/*...  e-o */
+			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
+			/*...  o-e */
+			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+			/*...  o-o */
+			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
+		} 
+		else if ((nx%2==0)&&(ny%2 ==1)) { 
+			/*...  e-o (and going backwards) */
+			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
+			/*...  e-e */
+			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
+			/*...  o-o */
+			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
+			/*...  o-e */
+			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+                }
+		else if ((nx%2==1)&&(ny%2 ==0)) { 
+			/*...  o-e (and going backwards) */
+			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+			/*...  o-o */
+			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
+			/*...  e-e */
+			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
+			/*...  e-o */
+			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);    
+		}  
+		else if ((nx%2==1)&&(ny%2 ==1)) { 
+			/*...  o-o (and going backwards) */
+			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
+			/*...  o-e */
+			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+			/*...  e-o */
+			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
+			/*...  e-e */
+			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
+		}  
+	}
 }
 
 /* 
@@ -1574,6 +1718,69 @@ void rb0b3d (INT *ia,
 		}
 	}
 }
+/**
+ * \fn void swep2df (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT *mark,
+ *                   INT nx, INT ny) 
+ *
+ * \brief      Gauss-Seidel forward smoother for certain color
+ *
+ * \param ia  Pointer to start location of each row
+ * \param ja  Pointer to column index of nonzero elements
+ * \param aa  Pointer to nonzero elements of 
+ * \param u   Pointer to initial guess
+ * \param f   Pointer to right hand
+ * \param nbegx  The stride between the same color nodes in x direction
+ * \param nbegy  The stride between the same color nodes in y direction
+ * \param mark   Pointer to order of nodes
+ * \param nx  Number of nodes in x direction
+ * \param ny  Number of nodes in y direction
+ *
+ * \author  Chunsheng Feng, Zheng Li
+ * \date    02/06/2012
+ *
+ * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
+ */
+
+void swep2df(INT *ia, 
+             INT *ja, 
+             REAL *aa,
+             REAL *u, 
+             REAL *f,
+             INT nbegx, 
+             INT nbegy, 
+             INT *mark,
+             INT nx,
+	     INT ny ) 
+{
+    INT nxy,k,k0,j,j0,i,i0;
+    INT begin_row,end_row,ii,jj;
+    REAL t,d;
+    nxy=nx*ny;
+
+#ifdef _OPENMP
+#pragma omp parallel for private(j,j0,i,i0,t,begin_row,end_row,ii,jj,d)    
+#endif
+        for (j = nbegy; j < ny; j+=2) {
+            j0= j*nx;
+            for (i = nbegx; i < nx; i+=2)    /*!*/
+            {
+                i0 = i + j0;
+                i0 = mark[i0]-1; //Fortran to C
+                if (i0>=0 ) {
+                    t = f[i0];
+                    begin_row = ia[i0], end_row = ia[i0+1];
+                    for (ii = begin_row; ii < end_row; ii ++) {
+                        jj = ja[ii];
+                        if (i0!=jj) t -= aa[ii]*u[jj]; 
+                        else d = aa[ii];    
+                    } // end for ii
+                    if (ABS(d) > SMALLREAL) u[i0] = t/d;
+                } //    if (i0>=0 ) 
+            }
+        }
+    
+}
 
 
 /**
@@ -1611,7 +1818,9 @@ void swep3df(INT *ia,
              INT nbegy, 
              INT nbegz, 
              INT *mark,
-             INT nx, INT ny, INT nz)
+             INT nx,
+             INT ny, 
+             INT nz)
 {
     INT nxy,k,k0,j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
@@ -1629,10 +1838,8 @@ void swep3df(INT *ia,
             {
                 i0 = i   +  j0    + k0;
                 i0 = mark[i0]-1; //Fortran to C
-                
                 //    printf("%d %d %d %d\n",i,j0,k0,i0);
                 if (i0>=0 ) {
-                    
                     t = f[i0];
                     begin_row = ia[i0], end_row = ia[i0+1];
                     for (ii = begin_row; ii < end_row; ii ++) {
@@ -1650,6 +1857,56 @@ void swep3df(INT *ia,
 }
 
 /* 
+ * \fn void rb0f2d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny,INT nsweeps)
+ * \brief  Colores Gauss-Seidel forward smoother for Au=b 
+ *
+ * \param ia  Pointer to the start location to of row 
+ * \param ja  Pointer to the column index of nonzero elements 
+ * \param aa  Pointer to the values of the nonzero elements
+ * \param u   Pointer to initial value 
+ * \param f   Pointer to right hand
+ * \param mark  Pointer to the order index of nodes
+ * \param nx    Number of nodes in x direction
+ * \param ny    Number of nodes in y direction
+ * \param nsweeps  Number of relaxation sweeps
+ *
+ * \author  Chunsheng Feng, Zheng Li
+ * \data    02/06/2012
+ *
+ * NOTE: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
+ *
+ */
+
+void rb0f2d( INT *ia, 
+             INT *ja, 
+             REAL *aa,
+             REAL *u, 
+             REAL *f, 
+             INT *mark, 
+             INT nx, 
+             INT ny, 
+             INT nsweeps )
+{
+    INT n0e,n0o,isweep;
+    
+    n0e=0;
+    n0o=1;
+    
+    for (isweep = 1; isweep <= nsweeps; isweep++) {
+        /*...  o-o */
+        swep2df(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
+        /*...  o-e */
+        swep2df(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+        /*...  e-o */
+        swep2df(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
+        /*...  e-e */
+        swep2df(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
+    }
+}
+
+
+/* 
  * \fn void rb0f3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
  * \brief  Colores Gauss-Seidel forward smoother for Au=b 
  *
@@ -1664,7 +1921,7 @@ void swep3df(INT *ia,
  * \param nz    Number of nodes in z direction
  * \param nsweeps  Number of relaxation sweeps
  *
- * \author      Chunsheng Feng 
+ * \author      Chunsheng Feng, Zheng Li
  * \data        02/06/2012
  *
  * NOTE: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)

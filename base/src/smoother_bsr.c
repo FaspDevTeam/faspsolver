@@ -1018,7 +1018,10 @@ void fasp_smoother_dbsr_sor1 (dBSRmat *A,
  * \param weight   Over-relaxation weight   
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
+ *
+ * \author Chunsheng Feng, Zheng Li
+ * \date   2012/09/04 
  */
 void fasp_smoother_dbsr_sor_ascend (dBSRmat *A, 
                                     dvector *b, 
@@ -1043,33 +1046,81 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
     INT pb;
     REAL rhs = 0.0;
     REAL one_minus_weight = 1.0 - weight;
-    
+
+#ifdef _OPENMP  
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif 
+   
     if (nb == 1) {
-        for (i = 0; i < ROW; ++i) {
-            rhs = b_val[i];
-            for (k = IA[i]; k < IA[i+1]; ++k) {  
-                j = JA[k];
-                if (j != i)
-                    rhs -= val[k]*u_val[j];
+#ifdef _OPENMP
+        if (ROW > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, rhs, k, j)
+            for (myid = 0; myid < nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for (i = mybegin; i < myend; i++) {
+                    rhs = b_val[i];
+                    for (k = IA[i]; k < IA[i+1]; ++k) {  
+                        j = JA[k];
+                        if (j != i)
+                            rhs -= val[k]*u_val[j];
+                    }
+                    u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);
+                }
             }
-            u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
+        } 
+        else {
+#endif           
+            for (i = 0; i < ROW; ++i) {
+                rhs = b_val[i];
+                for (k = IA[i]; k < IA[i+1]; ++k) {  
+                    j = JA[k];
+                    if (j != i)
+                        rhs -= val[k]*u_val[j];
+                }
+                u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
+            }
+#ifdef _OPENMP
         }  
+#endif
     }
     else if (nb > 1) {
         REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
-
-        for (i = 0; i < ROW; ++i) {
-            pb = i*nb;
-            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-            for (k = IA[i]; k < IA[i+1]; ++k) { 
-                j = JA[k];
-                if (j != i)
-                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+#ifdef _OPENMP
+        if (ROW > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
+            for (myid = 0; myid < nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for (i = mybegin; i < myend; i++) {
+                    pb = i*nb;
+                    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                    for (k = IA[i]; k < IA[i+1]; ++k) { 
+                        j = JA[k];
+                        if (j != i)
+                            fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                    }
+                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
+                }
             }
-            fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+            fasp_mem_free(b_tmp);
         }
-
-        fasp_mem_free(b_tmp);
+        else {
+#endif
+            for (i = 0; i < ROW; ++i) {
+                pb = i*nb;
+                memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                for (k = IA[i]; k < IA[i+1]; ++k) { 
+                    j = JA[k];
+                    if (j != i)
+                        fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                }
+                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+            }
+            fasp_mem_free(b_tmp);
+#ifdef _OPENMP
+        }
+#endif
     }
     else {
         fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_sor_ascend");
@@ -1089,7 +1140,10 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
  * \param weight   Over-relaxation weight   
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
+ * 
+ * \author Chunsheng Feng, Zheng Li
+ * \date   2012/09/04
  */
 void fasp_smoother_dbsr_sor_descend (dBSRmat *A, 
                                      dvector *b, 
@@ -1114,33 +1168,83 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
     INT i,j,k;
     INT pb;
     REAL rhs = 0.0;
-    
+
+#ifdef _OPENMP  
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
     if (nb == 1) {
-        for (i = ROW-1; i >= 0; i--) {
-            rhs = b_val[i];
-            for (k = IA[i]; k < IA[i+1]; ++k) {  
-                j = JA[k];
-                if (j != i)
-                    rhs -= val[k]*u_val[j];
-            }
-            u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
-        }  
+#ifdef _OPENMP
+        if (ROW > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, rhs, k, j)
+            for (myid = 0; myid < nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                mybegin = ROW-1-mybegin; myend = ROW-1-myend;
+                for (i = mybegin; i > myend; i--) {
+                    rhs = b_val[i];
+                    for (k = IA[i]; k < IA[i+1]; ++k) {  
+                        j = JA[k];
+                        if (j != i)
+                            rhs -= val[k]*u_val[j];
+                    }
+                    u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);
+                }
+            }            
+        } 
+        else {
+#endif        
+            for (i = ROW-1; i >= 0; i--) {
+                rhs = b_val[i];
+                for (k = IA[i]; k < IA[i+1]; ++k) {  
+                    j = JA[k];
+                    if (j != i)
+                        rhs -= val[k]*u_val[j];
+                }
+                u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);
+            } 
+#ifdef _OPENMP
+        }       
+#endif      
     }
     else if (nb > 1) {
         REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
-
-        for (i = ROW-1; i >= 0; i--) {
-            pb = i*nb;
-            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-            for (k = IA[i]; k < IA[i+1]; ++k) { 
-                j = JA[k];
-                if (j != i)
-                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+#ifdef _OPENMP
+        if (ROW > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
+            for (myid = 0; myid < nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                mybegin = ROW-1-mybegin; myend = ROW-1-myend;
+                for (i = mybegin; i > myend; i--) {
+                    pb = i*nb;
+                    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                    for (k = IA[i]; k < IA[i+1]; ++k) { 
+                        j = JA[k];
+                        if (j != i)
+                            fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                    }
+                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
+                }
             }
-            fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+            fasp_mem_free(b_tmp);         
         }
-
-        fasp_mem_free(b_tmp);
+        else {
+#endif   
+            for (i = ROW-1; i >= 0; i--) {
+                pb = i*nb;
+                memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                for (k = IA[i]; k < IA[i+1]; ++k) { 
+                    j = JA[k];
+                    if (j != i)
+                        fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                }
+                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+            }
+            fasp_mem_free(b_tmp);
+#ifdef _OPENMP
+        }
+#endif
     }
     else {
         fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_sor_descend");
@@ -1163,6 +1267,9 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
  *
  * \author Zhiyang Zhou
  * \date   2010/10/25 
+ *  
+ * \author Chunsheng Feng, Zheng Li
+ * \date   2012/09/04
  */
 void fasp_smoother_dbsr_sor_order (dBSRmat *A, 
                                    dvector *b, 
@@ -1188,35 +1295,85 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
     INT i,j,k;
     INT I,pb;
     REAL rhs = 0.0;
+
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
     
     if (nb == 1) {
-        for (I = 0; I < ROW; ++I) {
-            i = mark[I];
-            rhs = b_val[i];
-            for (k = IA[i]; k < IA[i+1]; ++k) {  
-                j = JA[k];
-                if (j != i)
-                    rhs -= val[k]*u_val[j];
-            }
-            u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
-        }  
+#ifdef _OPENMP
+        if (ROW > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, I, i, rhs, k, j)
+             for (myid = 0; myid < nthreads; myid++) {
+                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                 for (I = mybegin; I < myend; ++I) {
+                     i = mark[I];
+                     rhs = b_val[i];
+                     for (k = IA[i]; k < IA[i+1]; ++k) {  
+                         j = JA[k];
+                         if (j != i)
+                             rhs -= val[k]*u_val[j];
+                     }
+                     u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
+                 }
+             }
+        }
+        else {
+#endif
+            for (I = 0; I < ROW; ++I) {
+                i = mark[I];
+                rhs = b_val[i];
+                for (k = IA[i]; k < IA[i+1]; ++k) {  
+                    j = JA[k];
+                    if (j != i)
+                        rhs -= val[k]*u_val[j];
+                }
+                u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
+            } 
+#ifdef _OPENMP
+        } 
+#endif
     }
     else if (nb > 1) {
         REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
-
-        for (I = 0; I < ROW; ++I) {
-            i = mark[I];
-            pb = i*nb;
-            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-            for (k = IA[i]; k < IA[i+1]; ++k) { 
-                j = JA[k];
-                if (j != i)
-                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+#ifdef _OPENMP
+        if (ROW > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, I, i, pb, b_tmp, k, j)
+            for (myid = 0; myid < nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for (I = mybegin; I < myend; ++I) {
+                    i = mark[I];
+                    pb = i*nb;
+                    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                    for (k = IA[i]; k < IA[i+1]; ++k) { 
+                        j = JA[k];
+                        if (j != i)
+                            fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                    }
+                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+                }
             }
-            fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+            fasp_mem_free(b_tmp);
         }
-        
-        fasp_mem_free(b_tmp);
+        else {
+#endif
+            for (I = 0; I < ROW; ++I) {
+                i = mark[I];
+                pb = i*nb;
+                memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                for (k = IA[i]; k < IA[i+1]; ++k) { 
+                    j = JA[k];
+                    if (j != i)
+                         fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                }
+                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+            }        
+            fasp_mem_free(b_tmp);
+#ifdef _OPENMP
+        }
+#endif
     }
     else {
         fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_sor_order");
