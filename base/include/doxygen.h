@@ -72,7 +72,7 @@
 /**
  * \page developers Developers
  *
- * FASP Project Leader: 
+ * Project Leader: 
  *
  * - Xu, Jinchao (Penn State University, USA)
  *

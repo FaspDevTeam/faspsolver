@@ -16,7 +16,7 @@ Documentation
 [ 0.9.0 ] write a short user's guide -- keep it simple
 [ 0.9.8 ] generate reference manual using Doxygen
 [ 0.9.8 ] make the FASP webpage ready
-[       ] further develop the documentation (Chensong)
+[       ] further develop the documentation
 
 ========================
 Structure
@@ -30,7 +30,7 @@ Structure
 [ 0.8.0 ] auto format for plain text, replace TAB by 4 SPACE
 [ 07/15 ] generate shared lib's for external packages (Ludmil)
 [ 07/15 ] add Automake and Autoconf support for installation (Ludmil)
-[ 08/30 ] make several functions 'standalone', e.g. just take PCG out easily (Chensong)
+[ 08/30 ] make several functions 'standalone', e.g. use PCG alone (Chensong)
 
 ========================
 GMG 	
@@ -80,7 +80,7 @@ Iterative Methods
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
 
 [ 09/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
-[ 09/15 ] test SpBLAS implementations in standard libraries (Chunsheng)
+[       ] test SpBLAS implementations in standard libraries (Chunsheng)
 [       ] right preconditioning (Chensong)
 [       ] matrix-free iterative methods (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
