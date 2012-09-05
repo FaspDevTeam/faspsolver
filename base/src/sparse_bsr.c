@@ -289,8 +289,8 @@ INT fasp_dbsr_trans (dBSRmat *A,
  */
 SHORT fasp_dbsr_diagpref (dBSRmat *A)
 {    
-    INT           STATUS;
-    const INT     num_rowsA = A -> ROW; 
+    SHORT         status = SUCCESS;
+    const INT     num_rowsA = A -> ROW;
     const INT     num_colsA = A -> COL; 
     const INT     nb = A->nb;
     const INT     nb2 = nb*nb;
@@ -334,7 +334,7 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
                     }
                     /* diagonal element is missing */
                     if (j == iend-1) {
-                        STATUS= -2;
+                        status = -2;
                         break;
 			//return -2;
                     }
@@ -373,7 +373,7 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
     // free tempd
     fasp_mem_free(tempd);
     
-    if (STATUS < 0) return STATUS;
+    if (status < 0) return status;
     else            return SUCCESS;
 }
 
