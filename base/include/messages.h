@@ -88,7 +88,7 @@
 #define SOLVER_VFGMRES          6    /**< Variable Restarting Flexible GMRES */
 #define SOLVER_GCG              7    /**< Generalized Conjugate Gradient */
 #define SOLVER_AMG              21   /**< AMG as an iterative solver */
-#define SOLVER_FMG		        22   /**< Full AMG as an solver */
+#define SOLVER_FMG              22   /**< Full AMG as an solver */
 
 /** 
  * \brief Definition of solver types for direct methods (requires external libs)
