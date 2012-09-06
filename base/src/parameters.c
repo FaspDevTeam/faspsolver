@@ -13,10 +13,10 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_param_init (char *inputfile, 
- *                           input_param *inparam, 
- *                           itsolver_param *itparam, 
- *                           AMG_param *amgparam, 
+ * \fn void fasp_param_init (char *inputfile,
+ *                           input_param *inparam,
+ *                           itsolver_param *itparam,
+ *                           AMG_param *amgparam,
  *                           ILU_param *iluparam,
  *                           Schwarz_param *schwarzparam)
  *
@@ -30,17 +30,17 @@
  * \param schwarzparam  Schwarz parameters
  *
  * \author Chensong Zhang
- * \date   2010/08/12 
+ * \date   2010/08/12
  *
  * Modified by Xiaozhe Hu (01/23/2011): initialize, then set value
  */
-void fasp_param_init (char *inputfile, 
-                      input_param *inparam, 
-                      itsolver_param *itparam, 
-                      AMG_param *amgparam, 
+void fasp_param_init (char *inputfile,
+                      input_param *inparam,
+                      itsolver_param *itparam,
+                      AMG_param *amgparam,
                       ILU_param *iluparam,
                       Schwarz_param *schwarzparam)
-{    
+{
     total_alloc_mem   = 0; // initialize total memeory amount
     total_alloc_count = 0; // initialize alloc count
     
@@ -48,7 +48,7 @@ void fasp_param_init (char *inputfile,
     
     if (amgparam) fasp_param_amg_init(amgparam);
     
-    if (iluparam) fasp_param_ilu_init(iluparam); 
+    if (iluparam) fasp_param_ilu_init(iluparam);
     
     if (schwarzparam) fasp_param_schwarz_init(schwarzparam);
     
@@ -56,13 +56,13 @@ void fasp_param_init (char *inputfile,
         fasp_param_input(inputfile,inparam);
         if (itparam)  fasp_param_solver_set(itparam,inparam);
         if (amgparam) fasp_param_amg_set(amgparam,inparam);
-        if (iluparam) fasp_param_ilu_set(iluparam,inparam);    
+        if (iluparam) fasp_param_ilu_set(iluparam,inparam);
         if (schwarzparam) fasp_param_schwarz_set(schwarzparam,inparam);
     }
     else {
         printf("### WARNING: No input specified. Use default values instead!\n");
-    }        
-}    
+    }
+}
 
 /**
  * \fn void fasp_param_input_init (input_param *inparam)
@@ -72,7 +72,7 @@ void fasp_param_init (char *inputfile,
  * \param inparam    Input parameters
  *
  * \author Chensong Zhang
- * \date   2010/03/20 
+ * \date   2010/03/20
  */
 void fasp_param_input_init (input_param *inparam)
 {
@@ -81,7 +81,7 @@ void fasp_param_input_init (input_param *inparam)
     inparam->print_level = PRINT_MIN;
     inparam->output_type = 0;
     
-    inparam->problem_num = 10;    
+    inparam->problem_num = 10;
     inparam->solver_type = SOLVER_CG;
     inparam->precond_type = PREC_AMG;
     inparam->stop_type = STOP_REL_RES;
@@ -107,18 +107,18 @@ void fasp_param_input_init (input_param *inparam)
     inparam->AMG_presmooth_iter = 2;
     inparam->AMG_postsmooth_iter = 2;
     inparam->AMG_relaxation = 1.0;
-    inparam->AMG_coarse_dof = 500;    
+    inparam->AMG_coarse_dof = 500;
     inparam->AMG_tol = 1e-4*inparam->itsolver_tol;
     inparam->AMG_maxit = 1;
     inparam->AMG_ILU_levels = 0;
     inparam->AMG_schwarz_levels = 0;
     inparam->AMG_coarse_scaling = ON;
-    inparam->AMG_amli_degree = 1; 
+    inparam->AMG_amli_degree = 1;
     inparam->AMG_nl_amli_krylov_type = 2;
     
-    inparam->AMG_coarsening_type = 1;    
-    inparam->AMG_interpolation_type = 1;    
-    inparam->AMG_strong_threshold = 0.5; 
+    inparam->AMG_coarsening_type = 1;
+    inparam->AMG_interpolation_type = 1;
+    inparam->AMG_strong_threshold = 0.5;
     inparam->AMG_truncation_threshold = 0.4;
     inparam->AMG_max_row_sum = 0.9;
     
@@ -145,16 +145,16 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->maxit = 1;
     amgparam->tol = 1e-8;
     
-    amgparam->max_levels = 20;    
+    amgparam->max_levels = 15;
     amgparam->coarse_dof = 500;
-    amgparam->cycle_type = V_CYCLE;    
+    amgparam->cycle_type = V_CYCLE;
     amgparam->smoother = GS;
     amgparam->smooth_order = CF_ORDER;
     amgparam->presmooth_iter = 2;
     amgparam->postsmooth_iter = 2;
     amgparam->relaxation = 1.0;
     amgparam->polynomial_degree = 3;
-    amgparam->coarse_scaling = ON;
+    amgparam->coarse_scaling = OFF; // Dangerous if ON, need to check --Chensong
     amgparam->amli_degree = 1;
     amgparam->amli_coef = NULL;
     amgparam->nl_amli_krylov_type = 2;
@@ -168,19 +168,19 @@ void fasp_param_amg_init (AMG_param *amgparam)
     
     amgparam->strong_coupled = 0.08;
     amgparam->max_aggregation = 9;
-    amgparam->tentative_smooth = 0.0; 
+    amgparam->tentative_smooth = 0.0;
     amgparam->smooth_filter = OFF;
     
-    amgparam->ILU_type = ILUk; 
+    amgparam->ILU_type = ILUk;
     amgparam->ILU_levels = 0;
     amgparam->ILU_lfil = 0;
     amgparam->ILU_droptol = 0.001;
     amgparam->ILU_relax = 0;
     
     amgparam->schwarz_levels = 0;
-	amgparam->schwarz_mmsize = 200;
-	amgparam->schwarz_maxlvl = 2;
-	amgparam->schwarz_type = 1;
+    amgparam->schwarz_mmsize = 200;
+    amgparam->schwarz_maxlvl = 2;
+    amgparam->schwarz_type = 1;
 }
 
 /**
@@ -191,17 +191,17 @@ void fasp_param_amg_init (AMG_param *amgparam)
  * \param itparam   Parameters for iterative solvers
  *
  * \author Chensong Zhang
- * \date   2010/03/23 
+ * \date   2010/03/23
  */
 void fasp_param_solver_init (itsolver_param *itparam)
 {
     itparam->print_level   = 0;
     itparam->itsolver_type = SOLVER_CG;
     itparam->precond_type  = PREC_AMG;
-    itparam->stop_type     = STOP_REL_RES;    
+    itparam->stop_type     = STOP_REL_RES;
     itparam->maxit         = 500;
     itparam->restart       = 25;
-    itparam->tol           = 1e-8;    
+    itparam->tol           = 1e-8;
 }
 
 /**
@@ -212,7 +212,7 @@ void fasp_param_solver_init (itsolver_param *itparam)
  * \param iluparam  Parameters for ILU
  *
  * \author Chensong Zhang
- * \date   2010/04/06 
+ * \date   2010/04/06
  */
 void fasp_param_ilu_init (ILU_param *iluparam)
 {
@@ -221,7 +221,7 @@ void fasp_param_ilu_init (ILU_param *iluparam)
     iluparam->ILU_lfil     = 2;
     iluparam->ILU_droptol  = 0.001;
     iluparam->ILU_relax    = 0;
-    iluparam->ILU_permtol  = 0.01;    
+    iluparam->ILU_permtol  = 0.01;
 }
 
 /**
@@ -232,14 +232,14 @@ void fasp_param_ilu_init (ILU_param *iluparam)
  * \param schwarzparam  Parameters for Schwarz method
  *
  * \author Xiaozhe Hu
- * \date   05/22/2012 
+ * \date   05/22/2012
  */
 void fasp_param_schwarz_init (Schwarz_param *schwarzparam)
 {
     schwarzparam->print_level    = 0;
     schwarzparam->schwarz_type   = 3;
     schwarzparam->schwarz_maxlvl = 2;
-    schwarzparam->schwarz_mmsize = 200;    
+    schwarzparam->schwarz_mmsize = 200;
 }
 
 /**
@@ -251,11 +251,11 @@ void fasp_param_schwarz_init (Schwarz_param *schwarzparam)
  * \param inparam   Input parameters
  *
  * \author Chensong Zhang
- * \date   2010/03/23 
+ * \date   2010/03/23
  */
-void fasp_param_amg_set (AMG_param *param, 
+void fasp_param_amg_set (AMG_param *param,
                          input_param *inparam)
-{    
+{
     param->AMG_type    = inparam->AMG_type;
     param->print_level = inparam->print_level;
     
@@ -269,11 +269,11 @@ void fasp_param_amg_set (AMG_param *param,
     }
     else {
         param->maxit = inparam->AMG_maxit;
-        param->tol   = inparam->AMG_tol; 
+        param->tol   = inparam->AMG_tol;
     }
     
-    param->max_levels           = inparam->AMG_levels;    
-    param->cycle_type           = inparam->AMG_cycle_type;    
+    param->max_levels           = inparam->AMG_levels;
+    param->cycle_type           = inparam->AMG_cycle_type;
     param->smoother             = inparam->AMG_smoother;
     param->relaxation           = inparam->AMG_relaxation;
     param->polynomial_degree    = inparam->AMG_polynomial_degree;
@@ -318,11 +318,11 @@ void fasp_param_amg_set (AMG_param *param,
  * \param inparam     Input parameters
  *
  * \author Chensong Zhang
- * \date   2010/04/03 
+ * \date   2010/04/03
  */
-void fasp_param_ilu_set (ILU_param *iluparam, 
+void fasp_param_ilu_set (ILU_param *iluparam,
                          input_param *inparam)
-{    
+{
     iluparam->print_level = inparam->print_level;
     iluparam->ILU_type    = inparam->ILU_type;
     iluparam->ILU_lfil    = inparam->ILU_lfil;
@@ -340,11 +340,11 @@ void fasp_param_ilu_set (ILU_param *iluparam,
  * \param inparam     Input parameters
  *
  * \author Xiaozhe Hu
- * \date   05/22/2012 
+ * \date   05/22/2012
  */
-void fasp_param_schwarz_set (Schwarz_param *schwarzparam, 
+void fasp_param_schwarz_set (Schwarz_param *schwarzparam,
                              input_param *inparam)
-{   
+{
     schwarzparam->print_level    = inparam->print_level;
     schwarzparam->schwarz_type   = inparam->Schwarz_type;
     schwarzparam->schwarz_maxlvl = inparam->Schwarz_maxlvl;
@@ -360,9 +360,9 @@ void fasp_param_schwarz_set (Schwarz_param *schwarzparam,
  * \param inparam    Input parameters
  *
  * \author Chensong Zhang
- * \date   2010/03/23 
+ * \date   2010/03/23
  */
-void fasp_param_solver_set (itsolver_param *itparam, 
+void fasp_param_solver_set (itsolver_param *itparam,
                             input_param *inparam)
 {
     itparam->print_level    = inparam->print_level;
@@ -372,14 +372,14 @@ void fasp_param_solver_set (itsolver_param *itparam,
     itparam->restart        = inparam->restart;
     
     if (itparam->itsolver_type == SOLVER_AMG) {
-        itparam->tol   = inparam->AMG_tol; 
-        itparam->maxit = inparam->AMG_maxit;    
+        itparam->tol   = inparam->AMG_tol;
+        itparam->maxit = inparam->AMG_maxit;
     }
     else {
-        itparam->tol   = inparam->itsolver_tol; 
+        itparam->tol   = inparam->itsolver_tol;
         itparam->maxit = inparam->itsolver_maxit;
     }
-}    
+}
 
 /**
  * \fn void fasp_precond_data_null (precond_data *pcdata)
@@ -389,7 +389,7 @@ void fasp_param_solver_set (itsolver_param *itparam,
  * \param pcdata   Preconditioning data structure
  *
  * \author Chensong Zhang
- * \date   2010/03/23 
+ * \date   2010/03/23
  */
 void fasp_precond_data_null (precond_data *pcdata)
 {
@@ -419,9 +419,9 @@ void fasp_precond_data_null (precond_data *pcdata)
  * \param amgparam    Parameters for AMG
  *
  * \author Chensong Zhang
- * \date   2011/01/10 
+ * \date   2011/01/10
  */
-void fasp_param_amg_to_prec (precond_data *pcdata, 
+void fasp_param_amg_to_prec (precond_data *pcdata,
                              AMG_param *amgparam)
 {
     pcdata->AMG_type = amgparam->AMG_type;
@@ -455,7 +455,7 @@ void fasp_param_amg_to_prec (precond_data *pcdata,
  * \author Xiaozhe Hu
  * \date   02/06/2012
  */
-void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata, 
+void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata,
                                  AMG_param *amgparam)
 {
     pcdata->AMG_type = amgparam->AMG_type;
@@ -480,13 +480,13 @@ void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata,
 /**
  * \fn void fasp_param_prec_to_amg (AMG_param *amgparam, precond_data *pcdata)
  *
- * \brief Set AMG_param with precond_data 
+ * \brief Set AMG_param with precond_data
  *
  * \param amgparam    Parameters for AMG
  * \param pcdata      Preconditioning data structure
  *
  * \author Chensong Zhang
- * \date   2011/01/10 
+ * \date   2011/01/10
  */
 void fasp_param_prec_to_amg (AMG_param *amgparam,
                              precond_data *pcdata)
@@ -511,13 +511,13 @@ void fasp_param_prec_to_amg (AMG_param *amgparam,
 /**
  * \fn void fasp_param_prec_to_amg_bsr (AMG_param *amgparam, precond_data_bsr *pcdata)
  *
- * \brief Set AMG_param with precond_data 
+ * \brief Set AMG_param with precond_data
  *
  * \param amgparam    Parameters for AMG
  * \param pcdata      Preconditioning data structure
  *
  * \author Xiaozhe Hu
- * \date   02/06/2012 
+ * \date   02/06/2012
  */
 void fasp_param_prec_to_amg_bsr (AMG_param *amgparam,
                                  precond_data_bsr *pcdata)
@@ -546,7 +546,7 @@ void fasp_param_prec_to_amg_bsr (AMG_param *amgparam,
  * \param param   Parameters for AMG
  *
  * \author Chensong Zhang
- * \date   2010/03/22 
+ * \date   2010/03/22
  */
 void fasp_param_amg_print (AMG_param *param)
 {
@@ -560,8 +560,8 @@ void fasp_param_amg_print (AMG_param *param)
         printf("AMG max num of iter:               %d\n", param->maxit);
         printf("AMG type:                          %d\n", param->AMG_type);
         printf("AMG tolerance:                     %.2e\n", param->tol);
-        printf("AMG max levels:                    %d\n", param->max_levels);    
-        printf("AMG cycle type:                    %d\n", param->cycle_type);    
+        printf("AMG max levels:                    %d\n", param->max_levels);
+        printf("AMG cycle type:                    %d\n", param->cycle_type);
         printf("AMG scaling of coarse correction:  %d\n", param->coarse_scaling);
         printf("AMG smoother type:                 %d\n", param->smoother);
         printf("AMG smoother order:                %d\n", param->smooth_order);
@@ -570,7 +570,7 @@ void fasp_param_amg_print (AMG_param *param)
         
         if (param->smoother==SOR  || param->smoother==SSOR ||
             param->smoother==GSOR || param->smoother==SGSOR) {
-            printf("AMG relax factor:                  %.4f\n", param->relaxation);            
+            printf("AMG relax factor:                  %.4f\n", param->relaxation);
         }
         
         if (param->smoother==POLY){
@@ -604,18 +604,18 @@ void fasp_param_amg_print (AMG_param *param)
         }
         
         if (param->ILU_levels>0) {
-            printf("AMG ILU type:                      %d\n", param->ILU_type); 
+            printf("AMG ILU type:                      %d\n", param->ILU_type);
             printf("AMG ILU level:                     %d\n", param->ILU_levels);
             printf("AMG ILU level of fill-in:          %d\n", param->ILU_lfil);
             printf("AMG ILU drop tol:                  %e\n", param->ILU_droptol);
-            printf("AMG ILU relaxation:                %f\n", param->ILU_relax);            
+            printf("AMG ILU relaxation:                %f\n", param->ILU_relax);
         }
         
         if (param->schwarz_levels>0){
             printf("AMG Schwarz type:                  %d\n", param->schwarz_type);
             printf("AMG Schwarz level:                 %d\n", param->schwarz_levels);
             printf("AMG Schwarz level of forming block:%d\n", param->schwarz_maxlvl);
-            printf("AMG Schwarz maximal block size:    %d\n", param->schwarz_mmsize);            
+            printf("AMG Schwarz maximal block size:    %d\n", param->schwarz_mmsize);
         }
         
         printf("-----------------------------------------------\n\n");
@@ -635,7 +635,7 @@ void fasp_param_amg_print (AMG_param *param)
  * \param param    Parameters for ILU
  *
  * \author Chensong Zhang
- * \date   2011/12/20 
+ * \date   2011/12/20
  */
 void fasp_param_ilu_print (ILU_param *param)
 {
@@ -646,9 +646,9 @@ void fasp_param_ilu_print (ILU_param *param)
         printf("ILU print level:                   %d\n",   param->print_level);
         printf("ILU type:                          %d\n",   param->ILU_type);
         printf("ILU level of fill-in:              %d\n",   param->ILU_lfil);
-        printf("ILU relaxation factor:             %.4f\n", param->ILU_relax);            
-        printf("ILU drop tolerance:                %.2e\n", param->ILU_droptol);    
-        printf("ILU permutation tolerance:         %.2e\n", param->ILU_permtol);    
+        printf("ILU relaxation factor:             %.4f\n", param->ILU_relax);
+        printf("ILU drop tolerance:                %.2e\n", param->ILU_droptol);
+        printf("ILU permutation tolerance:         %.2e\n", param->ILU_permtol);
         printf("-----------------------------------------------\n\n");
         
     }
@@ -665,7 +665,7 @@ void fasp_param_ilu_print (ILU_param *param)
  * \param param    Parameters for Schwarz
  *
  * \author Xiaozhe Hu
- * \date   05/22/2012 
+ * \date   05/22/2012
  */
 void fasp_param_schwarz_print (Schwarz_param *param)
 {
@@ -694,7 +694,7 @@ void fasp_param_schwarz_print (Schwarz_param *param)
  * \param param    Paramters for iterative solvers
  *
  * \author Chensong Zhang
- * \date   2011/12/20 
+ * \date   2011/12/20
  */
 void fasp_param_solver_print (itsolver_param *param)
 {
@@ -706,13 +706,13 @@ void fasp_param_solver_print (itsolver_param *param)
         printf("Solver print level:                %d\n", param->print_level);
         printf("Solver type:                       %d\n", param->itsolver_type);
         printf("Solver precond type:               %d\n", param->precond_type);
-        printf("Solver max num of iter:            %d\n", param->maxit);    
-        printf("Solver tolerance:                  %.2e\n", param->tol);            
+        printf("Solver max num of iter:            %d\n", param->maxit);
+        printf("Solver tolerance:                  %.2e\n", param->tol);
         printf("Solver stopping type:              %d\n", param->stop_type);
         
-        if (param->itsolver_type==SOLVER_GMRES || 
+        if (param->itsolver_type==SOLVER_GMRES ||
             param->itsolver_type==SOLVER_VGMRES) {
-            printf("Solver restart number:             %d\n", param->restart);            
+            printf("Solver restart number:             %d\n", param->restart);
         }
         
         printf("-----------------------------------------------\n\n");
@@ -720,7 +720,7 @@ void fasp_param_solver_print (itsolver_param *param)
     }
     else {
         printf("### WARNING: param has not been set!\n");
-    }    
+    }
 }
 
 /*---------------------------------*/
