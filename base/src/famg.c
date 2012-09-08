@@ -37,7 +37,6 @@ void fasp_solver_famg (dCSRmat *A,
     const INT     nnz=A->nnz, m=A->row, n=A->col;
     
     // local variables
-    clock_t       FMG_start, FMG_end;
     REAL          FMG_duration;
     SHORT         status = SUCCESS;
     
@@ -46,8 +45,14 @@ void fasp_solver_famg (dCSRmat *A,
     printf("###DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
-    FMG_start=clock();
-    
+#ifdef _OPENMP
+    REAL FMG_start, FMG_end;
+    FMG_start = omp_get_wtime();
+#else
+    clock_t FMG_start, FMG_end;
+    FMG_start = clock();
+#endif
+
     // initialize A, b, x for mgl[0]    
     AMG_data *mgl=fasp_amg_data_create(max_levels);    
     mgl[0].A = fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
@@ -57,7 +62,11 @@ void fasp_solver_famg (dCSRmat *A,
     // AMG setup phase
     switch (amg_type) {
     case CLASSIC_AMG: // Classical AMG setup phase
+#ifdef _OPENMP
+        if ( (status=fasp_amg_setup_rs_omp(mgl, param))<0 ) goto FINISHED;
+#else
         if ( (status=fasp_amg_setup_rs(mgl, param))<0 ) goto FINISHED;
+#endif
         break;
     case SA_AMG: // Smoothed Aggregation AMG setup phase
         if ( (status=fasp_amg_setup_sa(mgl, param))<0 ) goto FINISHED;
@@ -77,8 +86,13 @@ void fasp_solver_famg (dCSRmat *A,
     
     // print out CPU time when needed
     if (print_level>PRINT_NONE) {
-        FMG_end=clock();    
+#ifdef _OPENMP
+        FMG_end = omp_get_wtime();    
+        FMG_duration = FMG_end - FMG_start;    
+#else
+        FMG_end = clock();    
         FMG_duration = (REAL)(FMG_end - FMG_start)/(REAL)(CLOCKS_PER_SEC);    
+#endif
         printf("FMG totally costs %f seconds.\n", FMG_duration);
     }    
     

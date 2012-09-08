@@ -45,7 +45,7 @@ void fasp_solver_amg (dCSRmat *A,
     const INT     nnz = A->nnz, m = A->row, n = A->col;
     
     // local variables
-    REAL        AMG_start, AMG_end;
+    REAL          AMG_start, AMG_end;
     REAL          AMG_duration=0.;
     SHORT         status = SUCCESS;
     
@@ -53,13 +53,14 @@ void fasp_solver_amg (dCSRmat *A,
     printf("### DEBUG: fasp_solver_amg ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
-    if ( print_level > PRINT_NONE ) 
+    if ( print_level > PRINT_NONE ) { 
 #ifdef _OPENMP 
 	AMG_start = omp_get_wtime();
 #else
 	AMG_start = clock();
 #endif
-    
+    }
+
     // initialize mgl[0] with A, b, x    
     AMG_data *mgl = fasp_amg_data_create(max_levels);
     mgl[0].A = fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
@@ -79,7 +80,6 @@ void fasp_solver_amg (dCSRmat *A,
 
     default: // Classical AMG setup phase
 #ifdef _OPENMP 
-		// omp version RS coarsening 
         if ( (status=fasp_amg_setup_rs_omp(mgl, param)) < 0 ) goto FINISHED;
 #else
         if ( (status=fasp_amg_setup_rs(mgl, param)) < 0 ) goto FINISHED;
@@ -111,11 +111,11 @@ void fasp_solver_amg (dCSRmat *A,
     // print out CPU time when needed
     if ( print_level > PRINT_NONE ) {
 #ifdef _OPENMP 
-    AMG_end = omp_get_wtime();    
-    AMG_duration += (REAL)(AMG_end - AMG_start);    
+        AMG_end = omp_get_wtime();    
+        AMG_duration = AMG_end - AMG_start;    
 #else
-    AMG_end = clock();    
-    AMG_duration += (REAL)(AMG_end - AMG_start)/(REAL)(CLOCKS_PER_SEC);    
+        AMG_end = clock();    
+        AMG_duration = (REAL)(AMG_end - AMG_start)/(REAL)(CLOCKS_PER_SEC);    
 #endif
         print_cputime("AMG totally",AMG_duration);
     }    

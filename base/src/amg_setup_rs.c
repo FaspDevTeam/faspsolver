@@ -345,8 +345,8 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
         mgl[level].x = fasp_dvec_create(mm);
         //        mgl[level].w = fasp_dvec_create(2*mm);
         
-		if (cycle_type == NL_AMLI_CYCLE)  mgl[level].w = fasp_dvec_create(3*mm);
-		else mgl[level].w = fasp_dvec_create(2*mm);
+        if (cycle_type == NL_AMLI_CYCLE)  mgl[level].w = fasp_dvec_create(3*mm);
+        else mgl[level].w = fasp_dvec_create(2*mm);
     }
     
 #if With_UMFPACK    
@@ -358,29 +358,12 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
     fasp_dcsr_free(&Ac_tran);
 #endif
     
-    if (print_level>2) {
-        REAL gridcom=0.0, opcom=0.0;
-        
-        printf("-----------------------------------------------\n");
-        printf("  Level     Num of rows     Num of nonzeros\n");
-        printf("-----------------------------------------------\n");
-        for (level=0;level<max_levels;++level) {
-            printf("%5d  %14d  %16d\n",level,mgl[level].A.row,mgl[level].A.nnz);
-            gridcom += mgl[level].A.row;
-            opcom += mgl[level].A.nnz;
-        }
-        printf("-----------------------------------------------\n");
-        
-        gridcom /= mgl[0].A.row;
-        opcom /= mgl[0].A.nnz;
-        printf("Ruge-Stuben AMG grid complexity = %f\n", gridcom);
-        printf("Ruge-Stuben AMG operator complexity = %f\n", opcom);
-    }
     
-    if (print_level>0) {
+    if (print_level>PRINT_NONE) {
         REAL setup_end = omp_get_wtime();
         REAL setupduration = setup_end - setup_start;
-        printf("Ruge-Stuben AMG setup costs %f seconds.\n", setupduration);    
+        print_amgcomplexity(mgl,print_level);
+        print_cputime("Ruge-Stuben AMG setup",setupduration);
     }
     
     status = SUCCESS;

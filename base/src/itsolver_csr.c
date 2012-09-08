@@ -406,7 +406,11 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
         case UA_AMG: // Unsmoothed Aggregation AMG
             status = fasp_amg_setup_ua(mgl, amgparam); break;
         default: // Classical AMG
+#ifdef _OPENMP
+            status = fasp_amg_setup_rs_omp(mgl, amgparam); break;
+#else
             status = fasp_amg_setup_rs(mgl, amgparam); break;
+#endif
     }
     
 #if CHMEM_MODE    
@@ -444,7 +448,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
         
 #ifdef _OPENMP 
         REAL solver_end = omp_get_wtime();
-        solver_duration = (REAL)(solver_end - solver_start);
+        solver_duration = solver_end - solver_start;
 #else
         clock_t solver_end = clock();
         solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);

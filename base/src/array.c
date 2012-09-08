@@ -29,7 +29,6 @@ void fasp_array_null (REAL *x)
 {
     x=NULL;
 }
-
 /**
  * \fn void fasp_array_set (const INT n, REAL *x, const REAL val)
  *
