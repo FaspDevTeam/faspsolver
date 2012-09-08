@@ -5,6 +5,7 @@ File Name: CHANGES
 - Some more OMP changes, make changes to fasp4monix accordingly.
 - Several OMP optimization changes.
 - Change default parameters: coarse_scaling is not safe.
+- Modify make.inc and prepare it for debug environment.
 
 08/25/2012 FASP 1.0.6:
 - Replace "#if FASP_USE_OPENMP" by the system environment variable "_OPENMP".

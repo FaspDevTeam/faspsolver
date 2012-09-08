@@ -7,13 +7,13 @@
      798 ./base/src/amlirecur.c
      268 ./base/src/array.c
      257 ./base/src/auxiliary.c
-     443 ./base/src/blas_array.c
+     441 ./base/src/blas_array.c
      197 ./base/src/blas_block.c
     2520 ./base/src/blas_bsr.c
-    1665 ./base/src/blas_csr.c
+    1670 ./base/src/blas_csr.c
      124 ./base/src/blas_csrl.c
     1481 ./base/src/blas_smat.c
-    1653 ./base/src/blas_str.c
+    1901 ./base/src/blas_str.c
      322 ./base/src/blas_vec.c
      335 ./base/src/checkmat.c
      334 ./base/src/coarsening_cr.c
@@ -33,11 +33,11 @@
     2184 ./base/src/interpolation.c
     1247 ./base/src/io.c
      126 ./base/src/itsolver_bcsr.c
-     443 ./base/src/itsolver_bsr.c
+     446 ./base/src/itsolver_bsr.c
      650 ./base/src/itsolver_csr.c
      343 ./base/src/itsolver_str.c
      170 ./base/src/lu.c
-     265 ./base/src/memory.c
+     266 ./base/src/memory.c
      236 ./base/src/message.c
      406 ./base/src/mgcycle.c
      123 ./base/src/mgrecur.c
@@ -46,29 +46,29 @@
     1428 ./base/src/pbcgs.c
      880 ./base/src/pcg.c
      171 ./base/src/pgcg.c
-    1006 ./base/src/pgmres.c
+    1010 ./base/src/pgmres.c
      852 ./base/src/pminres.c
      626 ./base/src/precond_bsr.c
-     529 ./base/src/precond_csr.c
+     535 ./base/src/precond_csr.c
     1731 ./base/src/precond_str.c
-     605 ./base/src/pvfgmres.c
-     889 ./base/src/pvgmres.c
+     609 ./base/src/pvfgmres.c
+     893 ./base/src/pvgmres.c
      873 ./base/src/quadrature.c
      108 ./base/src/rap.c
      186 ./base/src/schwarz_setup.c
      589 ./base/src/smat.c
-    1275 ./base/src/smoother_bsr.c
+    1432 ./base/src/smoother_bsr.c
       81 ./base/src/smoother_cr.c
-    1594 ./base/src/smoother_csr.c
+    2164 ./base/src/smoother_csr.c
      474 ./base/src/smoother_poly.c
     1859 ./base/src/smoother_str.c
      271 ./base/src/sparse_block.c
-    1287 ./base/src/sparse_bsr.c
+    1330 ./base/src/sparse_bsr.c
      117 ./base/src/sparse_coo.c
-    1149 ./base/src/sparse_csr.c
+    1210 ./base/src/sparse_csr.c
       71 ./base/src/sparse_csrl.c
      203 ./base/src/sparse_str.c
-     981 ./base/src/sparse_util.c
+     972 ./base/src/sparse_util.c
      107 ./base/src/threads_schedule.c
      440 ./base/src/vec.c
      118 ./base/src/wrapper.c
@@ -81,4 +81,4 @@
     5818 ./base/include/malloc.c.h
      187 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   57123 total
+   58218 total

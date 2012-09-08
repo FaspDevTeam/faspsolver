@@ -6,8 +6,11 @@
 # CPP=icpc
 # FC=ifort
 
-# User compiling options
-BOPT=-g -O2 -funroll-loops -ftree-vectorize
+# User compiling options 
+# For debug purpose, use the following line; enable -Wall.
+# BOPT=-Wall -g -pg
+# For reasonable speed, use the following line; you may try -O3 instead of -O2.
+BOPT=-O2 -funroll-loops -ftree-vectorize
 
 # Uncomment the following line to turn on OpenMP version
 # BOPT+=-fopenmp
