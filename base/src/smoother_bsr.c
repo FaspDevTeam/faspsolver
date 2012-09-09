@@ -152,7 +152,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
-    const INT    size = ROW*nb2;
+//    const INT    size = ROW*nb2;
     const INT    *IA  = A->IA;
     const INT    *JA  = A->JA;   
     const REAL   *val = A->val;

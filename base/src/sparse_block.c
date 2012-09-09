@@ -47,7 +47,8 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
 
     INT i,j,k,nnz=0;
     INT *col_flag;
-	INT nthreads = 1, use_openmp = FALSE;
+    
+    INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP 
     if ( n > OPENMP_HOLDS ) {
@@ -242,7 +243,7 @@ dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
     REAL *Pval=P_csr.val;
     
     // local variable
-    INT i,j;
+    INT i, j;
     
     // get pressure block
     memcpy(P_csr.JA, JA, NNZ*sizeof(INT)); 
