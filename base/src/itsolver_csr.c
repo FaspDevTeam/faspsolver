@@ -66,39 +66,38 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
-            
         case SOLVER_CG:
-            if (print_level>0) printf("Calling PCG solver ...\n");
+            if (print_level>PRINT_NONE) printf("Calling PCG solver ...\n");
             iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
             
         case SOLVER_BiCGstab:
-            if (print_level>0) printf("Calling BiCGstab solver ...\n");
+            if (print_level>PRINT_NONE) printf("Calling BiCGstab solver ...\n");
             iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
             
         case SOLVER_MinRes:
-            if (print_level>0) printf("Calling MinRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("Calling MinRes solver ...\n");
             iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
             
         case SOLVER_GMRES:
-            if (print_level>0) printf("Calling GMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("Calling GMRes solver ...\n");
             iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_VGMRES: 
-            if (print_level>0) printf("Calling vGMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("Calling vGMRes solver ...\n");
             iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
             break;
             
         case SOLVER_VFGMRES: 
-            if (print_level>0) printf("Calling vFGMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("Calling vFGMRes solver ...\n");
             iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_GCG:
-            if (print_level>0) printf("Calling GCG solver ...\n");
+            if (print_level>PRINT_NONE) printf("Calling GCG solver ...\n");
             iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
             
@@ -147,7 +146,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
                              dvector *x, 
                              itsolver_param *itparam)
 {
-    const INT print_level = itparam->print_level;    
+    const SHORT print_level = itparam->print_level;
     
     /* Local Variables */
     INT      status = SUCCESS;
@@ -331,7 +330,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	// solver part
 	status=fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
 	
-	if (print_level>0) {
+	if (print_level>PRINT_NONE) {
 #ifdef _OPENMP 
 	    REAL solver_end = omp_get_wtime();
         solver_duration = (REAL)(solver_end - solver_start);

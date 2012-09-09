@@ -168,7 +168,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             alpha=temp1/temp2;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            ITS_DIVZERO;
             return ERROR_SOLVER_MISC;            
         }
         
@@ -214,7 +214,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             beta=(temp1*alpha)/(temp2*omega);
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            ITS_DIVZERO;
             return ERROR_SOLVER_MISC;            
         }
         
@@ -507,7 +507,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
             alpha=temp1/temp2;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            ITS_DIVZERO;
             return ERROR_SOLVER_MISC;            
         }
         
@@ -553,7 +553,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
             beta=(temp1*alpha)/(temp2*omega);
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            ITS_DIVZERO;
             return ERROR_SOLVER_MISC;            
         }
         
@@ -846,7 +846,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             alpha=temp1/temp2;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            ITS_DIVZERO;
             return ERROR_SOLVER_MISC;            
         }
         
@@ -893,7 +893,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             beta=(temp1*alpha)/(temp2*omega);
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            ITS_DIVZERO;
             return ERROR_SOLVER_MISC;            
         }
         
@@ -1189,7 +1189,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
             alpha=temp1/temp2;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            ITS_DIVZERO;
             return ERROR_SOLVER_MISC;            
         }
         
@@ -1236,7 +1236,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
             beta=(temp1*alpha)/(temp2*omega);
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
+            ITS_DIVZERO;
             return ERROR_SOLVER_MISC;            
         }
         
