@@ -1,6 +1,6 @@
 /*! \file blas_array.c
  *  \brief BLAS operations for arrays.
- * 
+ *
  *  Some simple array operations ...
  *
  */
@@ -32,28 +32,28 @@
  *
  * \note x is reused to store the resulting array.
  */
-void fasp_blas_array_ax(const INT n, 
-                        const REAL a, 
+void fasp_blas_array_ax(const INT n,
+                        const REAL a,
                         REAL *x)
 {
     INT i;
     INT use_openmp = FALSE;
-   
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
-    if (a == 1.0) {
     
+    if (a == 1.0) {
+        
     }
     else {
         if (use_openmp) {
-#ifdef _OPENMP 
-#pragma omp parallel private(myid, mybegin, myend, i) 
+#ifdef _OPENMP
+#pragma omp parallel private(myid, mybegin, myend, i)
             {
                 myid = omp_get_thread_num();
                 FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
@@ -81,19 +81,19 @@ void fasp_blas_array_ax(const INT n,
  * \date   07/01/209
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012    
+ * \date   05/23/2012
  *
  * \note y is reused to store the resulting array.
  */
-void fasp_blas_array_axpy (const INT n, 
-                           const REAL a, 
-                           REAL *x, 
+void fasp_blas_array_axpy (const INT n,
+                           const REAL a,
+                           REAL *x,
                            REAL *y)
 {
     INT i;
     INT use_openmp = FALSE;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
@@ -103,7 +103,7 @@ void fasp_blas_array_axpy (const INT n,
     
     if (a==1.0) {
         if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
@@ -118,7 +118,7 @@ void fasp_blas_array_axpy (const INT n,
     }
     else if (a==-1.0) {
         if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
@@ -133,7 +133,7 @@ void fasp_blas_array_axpy (const INT n,
     }
     else {
         if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
@@ -164,28 +164,28 @@ void fasp_blas_array_axpy (const INT n,
  * \date   07/01/209
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012    
+ * \date   05/23/2012
  */
 
-void fasp_blas_array_axpyz (const INT n, 
-                            const REAL a, 
-                            REAL *x, 
-                            REAL *y, 
+void fasp_blas_array_axpyz (const INT n,
+                            const REAL a,
+                            REAL *x,
+                            REAL *y,
                             REAL *z)
 {
     INT i;
     INT use_openmp = FALSE;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
@@ -200,7 +200,7 @@ void fasp_blas_array_axpyz (const INT n,
 }
 
 /**
- * \fn void fasp_blas_array_axpby (const INT n, const REAL a, REAL *x, 
+ * \fn void fasp_blas_array_axpby (const INT n, const REAL a, REAL *x,
  *                                 const REAL b, REAL *y)
  *
  * \brief y = a*x + b*y
@@ -215,29 +215,29 @@ void fasp_blas_array_axpyz (const INT n,
  * \date   07/01/209
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012    
- * 
+ * \date   05/23/2012
+ *
  * \note y is reused to store the resulting array.
  */
-void fasp_blas_array_axpby(const INT n, 
-                           const REAL a, 
-                           REAL *x, 
-                           const REAL b, 
-                           REAL *y) 
+void fasp_blas_array_axpby(const INT n,
+                           const REAL a,
+                           REAL *x,
+                           const REAL b,
+                           REAL *y)
 {
     INT i;
     INT use_openmp = FALSE;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
@@ -249,11 +249,11 @@ void fasp_blas_array_axpby(const INT n,
     else {
         for (i=0; i<n; ++i) y[i] = a*x[i]+b*y[i];
     }
-
+    
 }
 
 /**
- * \fn REAL fasp_blas_array_dotprod (const INT n, REAL *x, REAL *y) 
+ * \fn REAL fasp_blas_array_dotprod (const INT n, REAL *x, REAL *y)
  *
  * \brief Inner product of two arraies (x,y)
  *
@@ -266,27 +266,24 @@ void fasp_blas_array_axpby(const INT n,
  * \author Chensong Zhang
  * \date   07/01/209
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-REAL fasp_blas_array_dotprod(const INT n, 
-                             REAL *x, 
+REAL fasp_blas_array_dotprod(const INT n,
+                             REAL *x,
                              REAL *y)
 {
     INT i;
     INT use_openmp = FALSE;
     REAL value=0.0;
-
-#ifdef _OPENMP 
-    INT nthreads;
+    
+#ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
     
     if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for reduction(+:value) private(i)
 #endif
         for (i=0;i<n;++i) value+=x[i]*y[i];
@@ -311,26 +308,24 @@ REAL fasp_blas_array_dotprod(const INT n,
  * \date   07/01/209
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012    
+ * \date   05/23/2012
  */
 
-REAL fasp_blas_array_norm1 (const INT n, 
+REAL fasp_blas_array_norm1 (const INT n,
                             REAL *x)
 {
     INT i;
     INT use_openmp = FALSE;
     REAL onenorm = 0.;
- 
-#ifdef _OPENMP 
-    INT nthreads;
+    
+#ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for reduction(+:onenorm) private(i)
 #endif
         for (i=0;i<n;++i) onenorm+=ABS(x[i]);
@@ -342,7 +337,7 @@ REAL fasp_blas_array_norm1 (const INT n,
 }
 
 /**
- * \fn REAL fasp_blas_array_norm2 (const INT n, REAL *x) 
+ * \fn REAL fasp_blas_array_norm2 (const INT n, REAL *x)
  *
  * \brief L2 norm of array x
  *
@@ -355,26 +350,24 @@ REAL fasp_blas_array_norm1 (const INT n,
  * \date   07/01/209
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012    
+ * \date   05/23/2012
  */
 
-REAL fasp_blas_array_norm2 (const INT n, 
-                            REAL *x) 
+REAL fasp_blas_array_norm2 (const INT n,
+                            REAL *x)
 {
     INT i;
     INT use_openmp = FALSE;
     REAL twonorm = 0.;
-
-#ifdef _OPENMP 
-    INT nthreads;
+    
+#ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for reduction(+:twonorm) private(i)
 #endif
         for (i=0;i<n;++i) twonorm+=x[i]*x[i];
@@ -386,7 +379,7 @@ REAL fasp_blas_array_norm2 (const INT n,
 }
 
 /**
- * \fn REAL fasp_blas_array_norminf (const INT n, REAL *x) 
+ * \fn REAL fasp_blas_array_norminf (const INT n, REAL *x)
  *
  * \brief Linf norm of array x
  *
@@ -402,14 +395,14 @@ REAL fasp_blas_array_norm2 (const INT n,
  * \date   06/28/2012
  */
 
-REAL fasp_blas_array_norminf (const INT n, 
+REAL fasp_blas_array_norminf (const INT n,
                               REAL *x)
 {
     INT i;
     INT use_openmp = FALSE;
     REAL infnorm = 0.0;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
@@ -418,24 +411,24 @@ REAL fasp_blas_array_norminf (const INT n,
 #endif
 	
     if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
         REAL infnorm_loc = 0.0;
 #pragma omp parallel firstprivate(infnorm_loc) private(myid, mybegin, myend, i)
         {
             myid = omp_get_thread_num();
             FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) infnorm_loc = MAX(infnorm_loc, ABS(x[i]));
-                 if (infnorm_loc > infnorm) {
-                     #pragma omp critical 
-                     infnorm = MAX(infnorm_loc, infnorm);
-                 }
+            if (infnorm_loc > infnorm) {
+#pragma omp critical
+                infnorm = MAX(infnorm_loc, infnorm);
+            }
         }
 #endif
     }
     else {
         for (i=0;i<n;++i) infnorm=MAX(infnorm,ABS(x[i]));
     }
-
+    
     return infnorm;
 }
 

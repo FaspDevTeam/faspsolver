@@ -1,14 +1,14 @@
 /*! \file blas_csr.c
  *  \brief BLAS operations for sparse matrices in CSR format.
  *
- *  \note Sparse functions usually contain three runs. The three runs are all the 
- *        same but thy serve different purpose. 
- * 
- *  Example: If you do c=a+b: 
- *    - first do a dry run to find the number of non-zeroes in the result and form ic; 
- *    - allocate space (memory) for jc and form this one; 
+ *  \note Sparse functions usually contain three runs. The three runs are all the
+ *        same but thy serve different purpose.
+ *
+ *  Example: If you do c=a+b:
+ *    - first do a dry run to find the number of non-zeroes in the result and form ic;
+ *    - allocate space (memory) for jc and form this one;
  *    - if you only care about a "boolean" result of the addition, you stop here;
- *    - you call another routine, which uses ic and jc to perform the addition. 
+ *    - you call another routine, which uses ic and jc to perform the addition.
  *
  */
 #include <omp.h>
@@ -23,15 +23,15 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_blas_dcsr_add (dCSRmat *A, const REAL alpha, dCSRmat *B,  
+ * \fn void fasp_blas_dcsr_add (dCSRmat *A, const REAL alpha, dCSRmat *B,
  *                              const REAL beta, dCSRmat *C)
  *
- * \brief compute C = alpha*A + beta*B in CSR format 
+ * \brief compute C = alpha*A + beta*B in CSR format
  *
  * \param A      Pointer to CSR matrix
- * \param alpha  REAL factor alpha 
+ * \param alpha  REAL factor alpha
  * \param B      Pointer to CSR matrix
- * \param beta   REAL factor beta 
+ * \param beta   REAL factor beta
  * \param C      Pointer to CSR matrix
  *
  * \return       SUCCESS if succees, RUN_FAIL if not
@@ -41,26 +41,26 @@
  *
  * Modified by Chunsheng Feng, Zheng Li on 06/29/2012
  */
-INT fasp_blas_dcsr_add (dCSRmat *A, 
-                        const REAL alpha, 
-                        dCSRmat *B, 
-                        const REAL beta, 
+INT fasp_blas_dcsr_add (dCSRmat *A,
+                        const REAL alpha,
+                        dCSRmat *B,
+                        const REAL beta,
                         dCSRmat *C)
 {
     INT i,j,k,l;
     INT count=0, added, countrow;
     INT status = SUCCESS;
-
+    
     INT use_openmp = FALSE;
-
-#ifdef _OPENMP  
+    
+#ifdef _OPENMP
     INT mybegin, myend, myid, nthreads;
     if ( A->nnz > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     if (A->row != B->row || A->col != B->col) {
 #if DEBUG_MODE
         printf("### DEBUG: The dim of two matrices does not match --fasp_blas_dcsr_add!\n");
@@ -84,9 +84,9 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         fasp_dcsr_alloc(B->row,B->col,B->nnz,C);
         memcpy(C->IA,B->IA,(B->row+1)*sizeof(INT));
         memcpy(C->JA,B->JA,(B->nnz)*sizeof(INT));
-
+        
         if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i)
             {
                 myid = omp_get_thread_num();
@@ -98,8 +98,8 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         else {
             for (i=0;i<A->nnz;++i) C->val[i]=B->val[i]*beta;
         }
-
-        status=SUCCESS; 
+        
+        status=SUCCESS;
         goto FINISHED;
     }
     
@@ -108,9 +108,9 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         fasp_dcsr_alloc(A->row,A->col,A->nnz,C);
         memcpy(C->IA,A->IA,(A->row+1)*sizeof(INT));
         memcpy(C->JA,A->JA,(A->nnz)*sizeof(INT));
-
+        
         if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
             INT mybegin, myend, myid;
 #pragma omp parallel private(myid, mybegin, myend, i)
             {
@@ -123,7 +123,7 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         else {
             for (i=0;i<A->nnz;++i) C->val[i]=A->val[i]*alpha;
         }
-
+        
         status=SUCCESS; goto FINISHED;
     }
     
@@ -135,8 +135,8 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     C->JA=(INT *)fasp_mem_calloc(A->nnz+B->nnz,sizeof(INT));
     
     C->val=(REAL *)fasp_mem_calloc(A->nnz+B->nnz,sizeof(REAL));
-
-    // initial C->IA 
+    
+    // initial C->IA
     memset(C->IA, 0, sizeof(INT)*(C->row+1));
     
     for (i=0; i<A->row; ++i) {
@@ -148,10 +148,10 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
             count++;
             countrow++;
         } // end for j
-    
+        
         for (k=B->IA[i]; k<B->IA[i+1]; ++k) {
             added = 0;
-    
+            
             for (l=C->IA[i]; l<C->IA[i]+countrow+1; l++) {
                 if (B->JA[N2C(k)] == C->JA[N2C(l)]) {
                     C->val[N2C(l)] = C->val[N2C(l)] + beta * B->val[N2C(k)];
@@ -159,25 +159,25 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
                     break;
                 }
             } // end for l
-    
+            
             if (added == 0) {
                 C->val[count] = beta * B->val[N2C(k)];
                 C->JA[count] = B->JA[N2C(k)];
                 C->IA[i+1]++;
                 count++;
-            }    
-    
+            }
+            
         } // end for k
-    
+        
         C->IA[i+1] += C->IA[i];
-    
+        
     }
     
     C->nnz = count;
     C->JA  = (INT *)fasp_mem_realloc(C->JA, (count)*sizeof(INT));
     C->val = (REAL *)fasp_mem_realloc(C->val, (count)*sizeof(REAL));
     
- FINISHED:
+FINISHED:
     return status;
 }
 
@@ -187,14 +187,14 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
  * \brief Multiply a sparse matrix A in CSR format by a scalar alpha.
  *
  * \param A      Pointer to CSR matrix A
- * \param alpha  REAL factor alpha 
+ * \param alpha  REAL factor alpha
  *
  * \author Chensong Zhang
  * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Zheng Li on 06/29/2012
  */
-void fasp_blas_dcsr_axm (dCSRmat *A, 
+void fasp_blas_dcsr_axm (dCSRmat *A,
                          const REAL alpha)
 {
     const INT nnz=A->nnz;
@@ -204,7 +204,7 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
 }
 
 /**
- * \fn void fasp_blas_dcsr_mxv (dCSRmat *A, REAL *x, REAL *y) 
+ * \fn void fasp_blas_dcsr_mxv (dCSRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
@@ -215,12 +215,12 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
  * \author Chensong Zhang
  * \date   07/01/2009
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
  *
  */
-void fasp_blas_dcsr_mxv (dCSRmat *A, 
-                         REAL *x, 
-                         REAL *y) 
+void fasp_blas_dcsr_mxv (dCSRmat *A,
+                         REAL *x,
+                         REAL *y)
 {
     const INT m=A->row;
     const INT *ia=A->IA, *ja=A->JA;
@@ -230,98 +230,98 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
     
     INT nthreads = 1, use_openmp = FALSE;
     
-#ifdef _OPENMP  
+#ifdef _OPENMP
     if ( m > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
-   if (use_openmp) {
+    
+    if (use_openmp) {
         INT myid, mybegin, myend;
-
-#ifdef _OPENMP 
-#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, nnz_num_row, k) 
+        
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, nnz_num_row, k)
 #endif
         for (myid = 0; myid < nthreads; myid++ ) {
             FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
-                temp=0.0; 
+                temp=0.0;
                 begin_row = ia[i];
                 end_row = ia[i+1];
                 nnz_num_row = end_row - begin_row;
                 switch(nnz_num_row) {
-                case 3:
-                    k = begin_row;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    break;
-                case 4:
-                    k = begin_row;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    break;
-                case 5:
-                    k = begin_row;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    break;
-                case 6:
-                    k = begin_row;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    break;
-                case 7:
-                    k = begin_row;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    k ++;
-                    temp += aj[k]*x[ja[k]];
-                    break;
-                default:
-                    for (k=begin_row; k<end_row; ++k) {
+                    case 3:
+                        k = begin_row;
                         temp += aj[k]*x[ja[k]];
-                    }
-                    break;
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        break;
+                    case 4:
+                        k = begin_row;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        break;
+                    case 5:
+                        k = begin_row;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        break;
+                    case 6:
+                        k = begin_row;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        break;
+                    case 7:
+                        k = begin_row;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        k ++;
+                        temp += aj[k]*x[ja[k]];
+                        break;
+                    default:
+                        for (k=begin_row; k<end_row; ++k) {
+                            temp += aj[k]*x[ja[k]];
+                        }
+                        break;
                 }
                 y[i]=temp;
             }
         }
     }
-
+    
     else {
         for (i=0;i<m;++i) {
             temp=0.0;
@@ -329,71 +329,71 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
             end_row=ia[i+1];
             nnz_num_row = end_row - begin_row;
             switch(nnz_num_row) {
-            case 3:
-                k=begin_row;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                break;
-            case 4:
-                k=begin_row;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                break;
-            case 5:
-                k=begin_row;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                break;
-            case 6:
-                k=begin_row;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                break;
-            case 7:
-                k=begin_row;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                k ++;
-                temp+=aj[k]*x[ja[k]];
-                break;
-            default:
-                for (k=begin_row; k<end_row; ++k) {
+                case 3:
+                    k=begin_row;
                     temp+=aj[k]*x[ja[k]];
-                }
-                break;
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    break;
+                case 4:
+                    k=begin_row;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    break;
+                case 5:
+                    k=begin_row;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    break;
+                case 6:
+                    k=begin_row;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    break;
+                case 7:
+                    k=begin_row;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    k ++;
+                    temp+=aj[k]*x[ja[k]];
+                    break;
+                default:
+                    for (k=begin_row; k<end_row; ++k) {
+                        temp+=aj[k]*x[ja[k]];
+                    }
+                    break;
             }
             y[i]=temp;
         }
@@ -402,7 +402,7 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
 
 
 /**
- * \fn void fasp_blas_dcsr_mxv_agg (dCSRmat *A, REAL *x, REAL *y) 
+ * \fn void fasp_blas_dcsr_mxv_agg (dCSRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x, where the entries of A are all ones.
  *
@@ -417,29 +417,29 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
  * \date   08/29/2012
  */
 
-void fasp_blas_dcsr_mxv_agg (dCSRmat *A, 
-                             REAL *x, 
+void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
+                             REAL *x,
                              REAL *y)
 {
     const INT  m  = A->row;
     const INT *ia = A->IA, *ja = A->JA;
-    INT i, k, begin_row, end_row;    
+    INT i, k, begin_row, end_row;
     register REAL temp;
-
+    
 #ifdef _OPENMP
-    // variables for OpenMP 
+    // variables for OpenMP
     INT myid, mybegin, myend;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
-
+    
 #ifdef _OPENMP
     if (m > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, i, mybegin, myend, temp, begin_row, end_row, k)
-	for (myid=0; myid<nthreads; myid++) {
-	    FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
-	    for (i=mybegin; i<myend; i++) {
-                temp=0.0; 
-                begin_row=ia[i]; end_row=ia[i+1]; 
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+            for (i=mybegin; i<myend; i++) {
+                temp=0.0;
+                begin_row=ia[i]; end_row=ia[i+1];
                 for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
                 y[i]=temp;
             }
@@ -448,8 +448,8 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
     else {
 #endif
         for (i=0;i<m;++i) {
-            temp=0.0; 
-            begin_row=ia[i]; end_row=ia[i+1]; 
+            temp=0.0;
+            begin_row=ia[i]; end_row=ia[i+1];
             for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
             y[i]=temp;
         }
@@ -459,11 +459,11 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
 }
 
 /**
- * \fn void fasp_blas_dcsr_aAxpy (const REAL alpha, dCSRmat *A, REAL *x, REAL *y) 
+ * \fn void fasp_blas_dcsr_aAxpy (const REAL alpha, dCSRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
- * \param alpha  REAL factor alpha 
+ * \param alpha  REAL factor alpha
  * \param A      Pointer to dCSRmat matrix A
  * \param x      Pointer to array x
  * \param y      Pointer to array y
@@ -472,11 +472,11 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
  * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/26/2012    
+ * \date   05/26/2012
  */
 
-void fasp_blas_dcsr_aAxpy (const REAL alpha, 
-                           dCSRmat *A, 
+void fasp_blas_dcsr_aAxpy (const REAL alpha,
+                           dCSRmat *A,
                            REAL *x,
                            REAL *y)
 {
@@ -485,38 +485,38 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
     const REAL *aj = A->val;
     INT i, k, begin_row, end_row;
     register REAL temp;
-
+    
     INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP  
+    
+#ifdef _OPENMP
     if ( m > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     if ( alpha == 1.0 ) {
         if (use_openmp) {
             INT myid, mybegin, myend;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k)
 #endif
             for (myid = 0; myid < nthreads; myid++ ) {
                 FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) {
-                    temp=0.0; 
-                    begin_row=ia[i]; end_row=ia[i+1]; 
+                    temp=0.0;
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-                        y[i]+=temp;
+                    y[i]+=temp;
                 }
             }
         }
         else {
             for (i=0;i<m;++i) {
-                temp=0.0; 
-                begin_row=ia[i]; end_row=ia[i+1]; 
+                temp=0.0;
+                begin_row=ia[i]; end_row=ia[i+1];
                 for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
-                y[i]+=temp;    
+                y[i]+=temp;
             }
         }
     }
@@ -524,14 +524,14 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
     else if ( alpha == -1.0 ) {
         if (use_openmp) {
             INT myid, mybegin, myend;
-#ifdef _OPENMP 
-#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k) 
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k)
 #endif
             for (myid = 0; myid < nthreads; myid++ ) {
                 FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) {
-                    temp=0.0; 
-                    begin_row=ia[i]; end_row=ia[i+1]; 
+                    temp=0.0;
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
                     y[i]-=temp;
                 }
@@ -539,8 +539,8 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
         }
         else {
             for (i=0;i<m;++i) {
-                temp=0.0; 
-                begin_row=ia[i]; end_row=ia[i+1]; 
+                temp=0.0;
+                begin_row=ia[i]; end_row=ia[i+1];
                 for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
                 y[i]-=temp;
             }
@@ -550,8 +550,8 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
     else {
         if (use_openmp) {
             INT myid, mybegin, myend;
-#ifdef _OPENMP 
-#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k) 
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k)
 #endif
             for (myid = 0; myid < nthreads; myid++ ) {
                 FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
@@ -565,8 +565,8 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
         }
         else {
             for (i=0;i<m;++i) {
-                temp=0.0; 
-                begin_row=ia[i]; end_row=ia[i+1]; 
+                temp=0.0;
+                begin_row=ia[i]; end_row=ia[i+1];
                 for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
                 y[i]+=temp*alpha;
             }
@@ -575,11 +575,11 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
 }
 
 /**
- * \fn void fasp_blas_dcsr_aAxpy_agg (const REAL alpha, dCSRmat *A, REAL *x, REAL *y) 
+ * \fn void fasp_blas_dcsr_aAxpy_agg (const REAL alpha, dCSRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where the entries of A are all ones
  *
- * \param alpha  REAL factor alpha 
+ * \param alpha  REAL factor alpha
  * \param A      Pointer to dCSRmat matrix A
  * \param x      Pointer to array x
  * \param y      Pointer to array y
@@ -590,40 +590,40 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
  * Modified by Chunsheng Feng, Zheng Li
  * \date   08/29/2012
  */
-void fasp_blas_dcsr_aAxpy_agg (const REAL alpha, 
-                               dCSRmat *A, 
-                               REAL *x, 
+void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
+                               dCSRmat *A,
+                               REAL *x,
                                REAL *y)
 {
     const INT  m  = A->row;
     const INT *ia = A->IA, *ja = A->JA;
     
-    INT i, k, begin_row, end_row;    
+    INT i, k, begin_row, end_row;
     register REAL temp;
     
     if ( alpha == 1.0 ) {
 #ifdef _OPENMP
         if (m > OPENMP_HOLDS) {
             INT myid, mybegin, myend;
-	    INT nthreads = FASP_GET_NUM_THREADS();
+            INT nthreads = FASP_GET_NUM_THREADS();
 #pragma omp parallel for private(myid, i, mybegin, myend, begin_row, end_row, temp, k)
-	    for (myid = 0; myid < nthreads; myid++) {
+            for (myid = 0; myid < nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
                 for (i = mybegin; i < myend; ++i) {
-                    temp=0.0; 
-                    begin_row=ia[i]; end_row=ia[i+1]; 
+                    temp=0.0;
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
-                    y[i]+=temp;    
+                    y[i]+=temp;
                 }
             }
         }
-	else {
+        else {
 #endif
             for (i=0;i<m;++i) {
-                temp=0.0; 
-                begin_row=ia[i]; end_row=ia[i+1]; 
+                temp=0.0;
+                begin_row=ia[i]; end_row=ia[i+1];
                 for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
-                y[i]+=temp;    
+                y[i]+=temp;
             }
 #ifdef _OPENMP
         }
@@ -633,25 +633,25 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
 #ifdef _OPENMP
         if (m > OPENMP_HOLDS) {
             INT myid, mybegin, myend;
-	    INT nthreads = FASP_GET_NUM_THREADS();
+            INT nthreads = FASP_GET_NUM_THREADS();
 #pragma omp parallel for private(myid, i, mybegin, myend, begin_row, end_row, temp, k)
-	    for (myid = 0; myid < nthreads; myid++) {
+            for (myid = 0; myid < nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
                 for (i = mybegin; i < myend; ++i) {
-                    temp=0.0; 
-                    begin_row=ia[i]; end_row=ia[i+1]; 
+                    temp=0.0;
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
-                    y[i]-=temp;    
+                    y[i]-=temp;
                 }
             }
         }
-	else {
+        else {
 #endif
             for (i=0;i<m;++i) {
-                temp=0.0; 
-                begin_row=ia[i]; end_row=ia[i+1]; 
+                temp=0.0;
+                begin_row=ia[i]; end_row=ia[i+1];
                 for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
-                y[i]-=temp;    
+                y[i]-=temp;
             }
 #ifdef _OPENMP
         }
@@ -662,25 +662,25 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
 #ifdef _OPENMP
         if (m > OPENMP_HOLDS) {
             INT myid, mybegin, myend;
-	    INT nthreads = FASP_GET_NUM_THREADS();
+            INT nthreads = FASP_GET_NUM_THREADS();
 #pragma omp parallel for private(myid, i, mybegin, myend, begin_row, end_row, temp, k)
-	    for (myid = 0; myid < nthreads; myid++) {
+            for (myid = 0; myid < nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
                 for (i = mybegin; i < myend; ++i) {
-                    temp=0.0; 
-                    begin_row=ia[i]; end_row=ia[i+1]; 
+                    temp=0.0;
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
-                    y[i]+=temp*alpha;    
+                    y[i]+=temp*alpha;
                 }
             }
         }
-	else {
+        else {
 #endif
             for (i=0;i<m;++i) {
-                temp=0.0; 
-                begin_row=ia[i]; end_row=ia[i+1]; 
+                temp=0.0;
+                begin_row=ia[i]; end_row=ia[i+1];
                 for (k=begin_row; k<end_row; ++k) temp+=x[ja[k]];
-                y[i]+=temp*alpha;    
+                y[i]+=temp*alpha;
             }
 #ifdef _OPENMP
         }
@@ -690,7 +690,7 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
 }
 
 /**
- * \fn REAL fasp_blas_dcsr_vmv (dCSRmat *A, REAL *x, REAL *y) 
+ * \fn REAL fasp_blas_dcsr_vmv (dCSRmat *A, REAL *x, REAL *y)
  *
  * \brief vector-Matrix-vector multiplication alpha = y'*A*x
  *
@@ -701,8 +701,8 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
  * \author Chensong Zhang
  * \date   07/01/2009
  */
-REAL fasp_blas_dcsr_vmv (dCSRmat *A, 
-                         REAL *x, 
+REAL fasp_blas_dcsr_vmv (dCSRmat *A,
+                         REAL *x,
                          REAL *y)
 {
     register REAL value=0.0;
@@ -711,9 +711,9 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
     const REAL *aj=A->val;
     INT i, k, begin_row, end_row;
     register REAL temp;
-
+    
     INT use_openmp = FALSE;
-
+    
 #ifdef _OPENMP
     if ( m > OPENMP_HOLDS ) {
         use_openmp = TRUE;
@@ -721,8 +721,8 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
 #endif
     
     if (use_openmp) {
-#ifdef _OPENMP 
-#pragma omp parallel for reduction(+:value) private(i,temp,begin_row,end_row,k) 
+#ifdef _OPENMP
+#pragma omp parallel for reduction(+:value) private(i,temp,begin_row,end_row,k)
 #endif
         for (i=0;i<m;++i) {
             temp=0.0;
@@ -756,10 +756,10 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
  *
  * \note This fct will be replaced! --Chensong
  */
-void fasp_blas_dcsr_mxm (dCSRmat *A, 
-                         dCSRmat *B, 
+void fasp_blas_dcsr_mxm (dCSRmat *A,
+                         dCSRmat *B,
                          dCSRmat *C)
-{    
+{
     INT i,j,k,l,count;
     INT *JD = (INT *)fasp_mem_calloc(B->col,sizeof(INT));
     
@@ -767,7 +767,7 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
     C->col=B->col;
     
     C->val = NULL;
-    C->JA  = NULL;    
+    C->JA  = NULL;
     C->IA  = (INT*)fasp_mem_calloc(C->row+1,sizeof(INT));
     
     for (i=0;i<B->col;++i) JD[i]=-1;
@@ -775,13 +775,13 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
     // step 1: Find first the structure IA of C
     for(i=0;i<C->row;++i) {
         count=0;
-    
+        
         for (k=A->IA[i];k<A->IA[i+1];++k) {
             for (j=B->IA[A->JA[k]];j<B->IA[A->JA[k]+1];++j) {
                 for (l=0;l<count;l++) {
                     if (JD[l]==B->JA[j]) break;
                 }
-    
+                
                 if (l==count) {
                     JD[count]=B->JA[j];
                     count++;
@@ -791,8 +791,8 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
         C->IA[i+1]=count;
         for (j=0;j<count;++j) {
             JD[j]=-1;
-        }    
-    }    
+        }
+    }
     
     for (i=0;i<C->row;++i) C->IA[i+1]+=C->IA[i];
     
@@ -809,7 +809,7 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
                 for (l=0;l<countJD;l++) {
                     if (JD[l]==B->JA[j]) break;
                 }
-    
+                
                 if (l==countJD) {
                     C->JA[count]=B->JA[j];
                     JD[countJD]=B->JA[j];
@@ -818,10 +818,10 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
                 }
             }
         }
-    
+        
         //for (j=0;j<countJD;++j) JD[j]=-1;
-	fasp_iarray_set(countJD, JD, -1);
-    }    
+        fasp_iarray_set(countJD, JD, -1);
+    }
     
     fasp_mem_free(JD);
     
@@ -858,15 +858,15 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
  * \author Xuehai Huang, Chensong Zhang
  * \date   05/10/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012 
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
  *
- * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
+ * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
 void fasp_blas_dcsr_rap( dCSRmat  *R,
-                         dCSRmat  *A,
-                         dCSRmat  *P,
-                         dCSRmat  *RAP)
+                        dCSRmat  *A,
+                        dCSRmat  *P,
+                        dCSRmat  *RAP)
 {
     INT n_coarse = R->row;
     INT *R_i = R->IA;
@@ -886,24 +886,22 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     INT *RAP_i = NULL;
     INT *RAP_j = NULL;
     REAL *RAP_data = NULL;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     INT *P_marker = NULL;
     INT *A_marker = NULL;
 #endif
-
+    
     INT *Ps_marker = NULL;
     INT *As_marker = NULL;
-    INT *RAP_temp = NULL;
-    INT *part_end = NULL;
     
     INT ic, i1, i2, i3, jj1, jj2, jj3;
     INT jj_counter, jj_row_begining;
     REAL r_entry, r_a_product, r_a_p_product;
     
     INT nthreads = 1;
-
-#ifdef _OPENMP  
+    
+#ifdef _OPENMP
     INT myid, mybegin, myend, Ctemp;
     nthreads = FASP_GET_NUM_THREADS();
 #endif
@@ -916,8 +914,6 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     
     Ps_marker = (INT *)fasp_mem_calloc(total_calloc, sizeof(INT));
     As_marker = Ps_marker + coarse_mul_nthreads;
-    RAP_temp = As_marker + fine_mul_nthreads;
-    part_end = RAP_temp + coarse_add_nthreads;
     
     /*------------------------------------------------------*
      *  First Pass: Determine size of RAP and set up RAP_i  *
@@ -926,7 +922,10 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     
     fasp_iarray_set(minus_one_length, Ps_marker, -1);
     
-#ifdef _OPENMP 
+#ifdef _OPENMP
+    INT * RAP_temp = As_marker + fine_mul_nthreads;
+    INT * part_end = RAP_temp + coarse_add_nthreads;
+    
     if (n_coarse > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid++) {
@@ -974,7 +973,7 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
         }
         RAP_size = RAP_i[n_coarse];
     }
-
+    
     else {
 #endif
         jj_counter = 0;
@@ -1009,17 +1008,17 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
 #ifdef _OPENMP
     }
 #endif
-
+    
     //    printf("A_H NNZ = %d\n", RAP_size);
     RAP_j = (INT *)fasp_mem_calloc(RAP_size, sizeof(INT));
     RAP_data = (REAL *)fasp_mem_calloc(RAP_size, sizeof(REAL));
     
     fasp_iarray_set(minus_one_length, Ps_marker, -1);
     
-#ifdef _OPENMP 
+#ifdef _OPENMP
     if (n_coarse > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, P_marker, A_marker, jj_counter, ic, jj_row_begining, \
-                             jj1, r_entry, i1, jj2, r_a_product, i2, jj3, r_a_p_product, i3)
+jj1, r_entry, i1, jj2, r_a_product, i2, jj3, r_a_p_product, i3)
         for (myid = 0; myid < nthreads; myid ++) {
             FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
@@ -1116,7 +1115,7 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
 #ifdef _OPENMP
     }
 #endif
-
+    
     RAP->row = n_coarse;
     RAP->col = n_coarse;
     RAP->nnz = RAP_size;
@@ -1132,7 +1131,7 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
  *
  * \brief Triple sparse matrix multiplication B=R*A*P, where the entries of R and P are all ones.
  *
- * \param R   Pointer to the dCSRmat matrix R 
+ * \param R   Pointer to the dCSRmat matrix R
  * \param A   Pointer to the dCSRmat matrix A
  * \param P   Pointer to the dCSRmat matrix P
  * \param B   Pointer to dCSRmat matrix equal to R*A*P
@@ -1140,17 +1139,17 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
  * \author Xiaozhe Hu
  * \date   02/21/2011
  *
- * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
+ * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap_agg (dCSRmat *R, 
-                             dCSRmat *A, 
-                             dCSRmat *P, 
+void fasp_blas_dcsr_rap_agg (dCSRmat *R,
+                             dCSRmat *A,
+                             dCSRmat *P,
                              dCSRmat *B)
 {
     const INT row=R->row, col=P->col;
     INT nB=A->nnz;
-    INT i,i1,j,jj,k,length;    
+    INT i,i1,j,jj,k,length;
     INT begin_row,end_row,begin_rowA,end_rowA,begin_rowR,end_rowR;
     INT istart,iistart,count;
     
@@ -1160,32 +1159,32 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
     
     INT *index  = (INT *)fasp_mem_calloc(A->col,sizeof(INT));
     
-    INT *iindex = (INT *)fasp_mem_calloc(col,sizeof(INT));    
+    INT *iindex = (INT *)fasp_mem_calloc(col,sizeof(INT));
     
     //for (i=0; i<A->col; ++i) index[i] = -2;
     fasp_iarray_set(A->col, index, -2);
     
     memcpy(iindex,index,col*sizeof(INT));
     
-    jac = (INT*)fasp_mem_calloc(nB,sizeof(INT));    
+    jac = (INT*)fasp_mem_calloc(nB,sizeof(INT));
     
-    iac = (INT*)fasp_mem_calloc(row+1,sizeof(INT));    
+    iac = (INT*)fasp_mem_calloc(row+1,sizeof(INT));
     
     REAL *temp = (REAL*)fasp_mem_calloc(A->col,sizeof(REAL));
     
     iac[0] = 0;
     
     // First loop: form sparsity partern of R*A*P
-    for (i=0; i < row; ++i) {    
+    for (i=0; i < row; ++i) {
         // reset istart and length at the begining of each loop
         istart = -1; length = 0; i1 = i+1;
-    
+        
         // go across the rows in R
         begin_rowR=ir[i]; end_rowR=ir[i1];
         for (jj=begin_rowR; jj<end_rowR; ++jj) {
             j = jr[N2C(jj)];
             // for each column in A
-            begin_rowA=ia[j]; end_rowA=ia[j+1];    
+            begin_rowA=ia[j]; end_rowA=ia[j+1];
             for (k=begin_rowA; k<end_rowA; ++k) {
                 if (index[N2C(ja[N2C(k)])] == -2) {
                     index[N2C(ja[N2C(k)])] = istart;
@@ -1193,17 +1192,17 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
                     ++length;
                 }
             }
-        }    
-    
+        }
+        
         // book-keeping [reseting length and setting iistart]
         count = length; iistart = -1; length = 0;
-    
+        
         // use each column that would have resulted from R*A
         for (j=0; j < count; ++j) {
             jj = istart;
             istart = index[istart];
             index[N2C(jj)] = -2;
-    
+            
             // go across the row of P
             begin_row=ip[jj]; end_row=ip[jj+1];
             for (k=begin_row; k<end_row; ++k) {
@@ -1215,15 +1214,15 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
                 }
             } // end for k
         } // end for j
-    
+        
         // set B->IA
         iac[i1]=iac[i]+length;
-    
+        
         if (iac[i1]>nB) {
             nB=nB*2;
             jac=(INT*)fasp_mem_realloc(jac, nB*sizeof(INT));
         }
-    
+        
         // put the correct columns of p into the column list of the products
         begin_row=iac[i]; end_row=iac[i1];
         for (j=begin_row; j<end_row; ++j) {
@@ -1234,35 +1233,35 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
             // set the iindex spot to 0
             iindex[N2C(jac[j])] = -2;
         } // end j
-    
+        
     } // end i: First loop
     
     jac=(INT*)fasp_mem_realloc(jac,(iac[row])*sizeof(INT));
     
     acj=(REAL*)fasp_mem_calloc(iac[row],sizeof(REAL));
-
+    
     INT *BTindex=(INT*)fasp_mem_calloc(col,sizeof(INT));
     
     // Second loop: compute entries of R*A*P
     for (i=0; i<row; ++i) {
         i1 = i+1;
-    
+        
         // each col of B
-        begin_row=iac[i]; end_row=iac[i1];    
+        begin_row=iac[i]; end_row=iac[i1];
         for (j=begin_row; j<end_row; ++j) {
             BTindex[N2C(jac[N2C(j)])]=j;
         }
-    
+        
         // reset istart and length at the begining of each loop
         istart = -1; length = 0;
-    
+        
         // go across the rows in R
-        begin_rowR=ir[i]; end_rowR=ir[i1];    
+        begin_rowR=ir[i]; end_rowR=ir[i1];
         for ( jj=begin_rowR; jj<end_rowR; ++jj ) {
             j = jr[N2C(jj)];
-    
+            
             // for each column in A
-            begin_rowA=ia[j]; end_rowA=ia[j+1];    
+            begin_rowA=ia[j]; end_rowA=ia[j+1];
             for (k=begin_rowA; k<end_rowA; ++k) {
                 if (index[N2C(ja[N2C(k)])] == -2) {
                     index[N2C(ja[N2C(k)])] = istart;
@@ -1271,29 +1270,29 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
                 }
                 temp[N2C(ja[N2C(k)])]+=aj[N2C(k)];
             }
-        } 
-    
+        }
+        
         // book-keeping [reseting length and setting iistart]
         // use each column that would have resulted from R*A
         for (j=0; j<length; ++j) {
             jj = N2C(istart);
             istart = index[N2C(istart)];
             index[N2C(jj)] = -2;
-    
+            
             // go across the row of P
-            begin_row=ip[jj]; end_row=ip[jj+1];    
+            begin_row=ip[jj]; end_row=ip[jj+1];
             for (k=begin_row; k<end_row; ++k) {
                 // pull out the appropriate columns of P
                 acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj];
             }
             temp[jj]=0.0;
         }
-    
+        
     } // end for i: Second loop
     
     // setup coarse matrix B
     B->row=row; B->col=col;
-    B->IA=iac; B->JA=jac; B->val=acj;    
+    B->IA=iac; B->JA=jac; B->val=acj;
     B->nnz=B->IA[B->row]-B->IA[0];
     
     fasp_mem_free(temp);
@@ -1315,17 +1314,17 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
  * \author Ludmil Zikatanov, Chensong Zhang
  * \date   05/10/2010
  *
- * \note Driver to compute triple matrix product P'*A*P using ltz CSR format. 
- *       In ltx format: ia[0]=1, ja[0] and a[0] are used as usual. When called 
+ * \note Driver to compute triple matrix product P'*A*P using ltz CSR format.
+ *       In ltx format: ia[0]=1, ja[0] and a[0] are used as usual. When called
  *       from Fortran, ia[0], ja[0] and a[0] will be just ia(1),ja(1),a(1).
- *       For the indices, 
- *           ia_ltz[k] = ia_usual[k]+1, 
+ *       For the indices,
+ *           ia_ltz[k] = ia_usual[k]+1,
  *           ja_ltz[k] = ja_usual[k]+1,
  *            a_ltz[k] =  a_usual[k].
  */
 void fasp_blas_dcsr_ptap (dCSRmat *Pt,
-                          dCSRmat *A, 
-                          dCSRmat *P, 
+                          dCSRmat *A,
+                          dCSRmat *P,
                           dCSRmat *Ac)
 {
     const INT nc=Pt->row, n=Pt->col, nnzP=P->nnz, nnzA=A->nnz;
@@ -1355,7 +1354,7 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
     
     for (i=0;i<=n;++i)   A->IA[i]--;
     for (i=0;i<nnzA;++i) A->JA[i]--;
-
+    
     for (i=0;i<=n;++i)   P->IA[i]--;
     for (i=0;i<nnzP;++i) P->JA[i]--;
     
@@ -1379,18 +1378,18 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date   08/02/2011
  *
- * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
+ * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *          Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap4 (dCSRmat *R, 
-                          dCSRmat *A, 
-                          dCSRmat *P, 
+void fasp_blas_dcsr_rap4 (dCSRmat *R,
+                          dCSRmat *A,
+                          dCSRmat *P,
                           dCSRmat *B,
-                          INT *icor_ysk) 
+                          INT *icor_ysk)
 {
     INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP  
+    
+#ifdef _OPENMP
 	if ( R->row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -1414,7 +1413,7 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
         INT minus_one_length_A = icor_ysk[5*nthreads];
         INT minus_one_length_P = icor_ysk[5*nthreads+1];
         INT minus_one_length = minus_one_length_A + minus_one_length_P;
-    
+        
         INT *iindexs = (INT *)fasp_mem_calloc(minus_one_length+minus_one_length_P, sizeof(INT));
 #if CHMEM_MODE
         total_alloc_mem += minus_one_length*sizeof(INT);
@@ -1433,9 +1432,9 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
         INT *iac_temp=part_end + nthreads;
         INT **iindex_array = (INT **)fasp_mem_calloc(nthreads, sizeof(INT *));
         INT **index_array = (INT **)fasp_mem_calloc(nthreads, sizeof(INT *));
-    
+        
         fasp_iarray_set(minus_one_length, iindexs, -2);
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, FiveMyid, mybegin, myend, min_A, min_P, index, iindex, A_pos, P_pos, ic, FiveIc, jj_counter, jj_row_begining, end_rowR, jj1, i1, end_rowA, jj2, i2, end_row, jj3, i3)
 #endif
         for (myid = 0; myid < nthreads; myid ++) {
@@ -1502,7 +1501,7 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
         total_alloc_mem += iac[row]*sizeof(INT);
 #endif
         fasp_iarray_set(minus_one_length, iindexs, -2);
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, index, iindex, FiveMyid, mybegin, myend, i, istart, length, i1, end_rowR, jj, j, end_rowA, k, iistart, end_row)
 #endif
         for (myid = 0; myid < nthreads; myid ++) {
@@ -1576,8 +1575,8 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
 #if CHMEM_MODE
         total_alloc_mem += minus_one_length_A*sizeof(REAL);
 #endif
-
-#ifdef _OPENMP 
+        
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, index, FiveMyid, mybegin, myend, min_A, min_P, A_pos, P_pos, ic, FiveIc, BTindex, temp, i, i1, end_row, j, istart, length, end_rowR, jj, end_rowA, k)
 #endif
         for (myid = 0; myid < nthreads; myid ++) {
