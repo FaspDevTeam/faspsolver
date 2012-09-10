@@ -608,9 +608,10 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 	REAL *py0 = NULL;
 	REAL *py  = NULL;
 
-	INT nthreads = 1, use_openmp = FALSE;
+	INT use_openmp = FALSE;
 
 #ifdef _OPENMP 
+        INT myid, mybegin, myend, nthreads;
 	if ( ROW > OPENMP_HOLDS ) {
             use_openmp = TRUE;
             nthreads = FASP_GET_NUM_THREADS();
@@ -633,7 +634,6 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 			{
 				if (use_openmp) {
 #ifdef _OPENMP 
-					INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i, py0, num_nnz_row, k, j, pA, px0, py)
 					{
 						myid = omp_get_thread_num();
@@ -1056,7 +1056,6 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 			{
 				if (use_openmp) {
 #ifdef _OPENMP 
-					INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i, py0, num_nnz_row, k, j, pA, px0, py)
 					{
 						myid = omp_get_thread_num();
@@ -1479,7 +1478,6 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 			{
 				if (use_openmp) {
 #ifdef _OPENMP 
-					INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i, py0, num_nnz_row, k, j, pA, px0, py)
 					{
 						myid = omp_get_thread_num();
@@ -1902,7 +1900,6 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 			{
 				if (use_openmp) {
 #ifdef _OPENMP 
-					INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i, py0, num_nnz_row, k, j, pA, px0, py)
 					{
 						myid = omp_get_thread_num();

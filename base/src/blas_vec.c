@@ -33,14 +33,15 @@ void fasp_blas_dvec_axpy (const REAL a,
                           dvector *y)
 {
     INT i, m=x->row;
-	INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
     REAL *xpt=x->val, *ypt=y->val;
 
 #ifdef _OPENMP 
-	if ( m > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    INT myid, mybegin, myend, nthreads;
+    if ( m > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
     if ((y->row-m)!=0) {
@@ -50,7 +51,6 @@ void fasp_blas_dvec_axpy (const REAL a,
     
     if (use_openmp) {
 #ifdef _OPENMP 
-        INT myid, mybegin, myend;
 #pragma omp parallel private(myid,mybegin,myend,i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
@@ -124,13 +124,12 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
     const INT length=x->row;
     REAL *xpt=x->val, *ypt=y->val;    
 
-	INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( length > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-	}
+    if ( length > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
+    }
 #endif
     
     if (use_openmp) {
@@ -171,7 +170,7 @@ REAL fasp_blas_dvec_relerr (dvector *x,
     const INT length=x->row;
     REAL *xpt=x->val, *ypt=y->val;
 
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
 
     if (length!=y->row) {
         printf("Error: The lengths of vectors do not match! \n");
@@ -179,13 +178,12 @@ REAL fasp_blas_dvec_relerr (dvector *x,
     }
 
 #ifdef _OPENMP 
-	if ( length > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-	}
+    if ( length > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
+    }
 #endif
 
-	if (use_openmp) {
+    if (use_openmp) {
 #ifdef _OPENMP 
 #pragma omp parallel for reduction(+:temp,diff) private(i)
 #endif
@@ -226,13 +224,12 @@ REAL fasp_blas_dvec_norm1 (dvector *x)
     const INT length=x->row;
     REAL *xpt=x->val;
 
-	INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( length > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-	}
+    if ( length > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
+     }
 #endif
     
     if (use_openmp) {
@@ -270,13 +267,12 @@ REAL fasp_blas_dvec_norm2 (dvector *x)
     const INT length=x->row;
     REAL *xpt=x->val;
 
-	INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( length > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-	}
+    if ( length > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
+    }
 #endif
     
     if (use_openmp) {

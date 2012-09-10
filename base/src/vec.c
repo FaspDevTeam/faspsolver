@@ -345,38 +345,37 @@ REAL fasp_dvec_maxdiff (dvector *x,
     REAL Linf=0., diffi=0.;
     REAL *xpt=x->val, *ypt=y->val;
     
-	INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
     INT i;
 
 #ifdef _OPENMP 
-	if ( length > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-		nthreads = FASP_GET_NUM_THREADS();
-	}
+    INT myid, mybegin, myend, nthreads;
+    if ( length > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
 #endif
     
-	if(use_openmp) {
+    if(use_openmp) {
 #ifdef _OPENMP 
-		INT myid, mybegin, myend;
-		REAL temp = 0.;
+        REAL temp = 0.;
 #pragma omp parallel firstprivate(temp) private(myid, mybegin, myend, i, diffi) 
-		{
-			myid = omp_get_thread_num();
-			FASP_GET_START_END(myid, nthreads, length, &mybegin, &myend);
-			for(i=mybegin; i<myend; i++) {
-				if ((diffi = ABS(xpt[i]-ypt[i])) > temp) temp = diffi;
-			}
-            
+        {
+            myid = omp_get_thread_num();
+            FASP_GET_START_END(myid, nthreads, length, &mybegin, &myend);
+            for(i=mybegin; i<myend; i++) {
+                if ((diffi = ABS(xpt[i]-ypt[i])) > temp) temp = diffi;
+            }
 #pragma omp critical
-			if(temp > Linf) Linf = temp;
-		}
+            if(temp > Linf) Linf = temp;
+        }
 #endif
-	}
-	else {
+    }
+    else {
         for (i=0; i<length; ++i) {
             if ((diffi = ABS(xpt[i]-ypt[i])) > Linf) Linf = diffi;
         }
-	}
+    }
     
     return Linf;
 }
@@ -408,29 +407,28 @@ void fasp_dvec_symdiagscale (dvector *b,
         exit(ERROR_MISC);
     }
     
-	INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
     
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ){
-		use_openmp = TRUE;
+    INT mybegin, myend, myid, nthreads;
+    if ( n > OPENMP_HOLDS ){
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
-	if (use_openmp) {
-		INT mybegin, myend, myid;
+    if (use_openmp) {
 #ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin,myend) 
-#endif
         for (myid = 0; myid < nthreads; myid++ ) {
             FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) val[i] = val[i]/sqrt(diag->val[i]);
         }        
-	}    
-	else {
-        
+#endif
+    }    
+    else {
         for (i=0; i<n; ++i) val[i] = val[i]/sqrt(diag->val[i]);
-	}
+    }
     
     return;
 }

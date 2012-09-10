@@ -309,11 +309,13 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
     /* the matrix should be square */
     if (num_rowsA != num_colsA) return ERROR_INPUT_PAR;
     
-    REAL *tempd = (REAL*)fasp_mem_calloc(nb2, sizeof(REAL));
+    //REAL *tempd = (REAL*)fasp_mem_calloc(nb2, sizeof(REAL));
    
 #ifdef _OPENMP
     if (num_rowsA > OPENMP_HOLDS) {
-#pragma omp parallel for private (myid,mybegin,myend,i,j,tempi,tempd, ibegin,iend)
+        REAL *tempd = (REAL*)fasp_mem_calloc(nb2*nthreads, sizeof(REAL));
+//#pragma omp parallel for private (myid,mybegin,myend,i,j,tempi,tempd, ibegin,iend)
+#pragma omp parallel for private (myid,mybegin,myend,i,j,tempi,ibegin,iend)
         for (myid = 0; myid < nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, num_rowsA, &mybegin, &myend);
             for (i = mybegin; i < myend; i++) {
@@ -326,9 +328,11 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
                              A_j[ibegin] = A_j[j];
                              A_j[j] = tempi;
                              // swap block
-                             memcpy(tempd,              A_data+ibegin*nb2,  (nb2)*sizeof(REAL));
+                             //memcpy(tempd,     A_data+ibegin*nb2,  (nb2)*sizeof(REAL));
+                             memcpy(tempd+myid*nb2,     A_data+ibegin*nb2,  (nb2)*sizeof(REAL));
                              memcpy(A_data+ibegin*nb2,  A_data+j*nb2,       (nb2)*sizeof(REAL));
-                             memcpy(A_data+j*nb2,       tempd,              (nb2)*sizeof(REAL));
+                             //memcpy(A_data+j*nb2,     tempd,     (nb2)*sizeof(REAL));
+                             memcpy(A_data+j*nb2,       tempd+myid*nb2,     (nb2)*sizeof(REAL));
                          }
                          break;
                     }
@@ -341,9 +345,11 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
                 }
             }
         }
+        fasp_mem_free(tempd);
     }
     else { 
 #endif
+        REAL *tempd = (REAL*)fasp_mem_calloc(nb2, sizeof(REAL));
         for (i = 0; i < num_rowsA; i ++) {
             row_size = A_i[i+1] - A_i[i]; 
             for (j = 0; j < row_size; j ++) {
@@ -366,12 +372,13 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
             A_j    += row_size;
             A_data += row_size*nb2;
         }
+        fasp_mem_free(tempd);
 #ifdef _OPENMP
     }
 #endif
 
     // free tempd
-    fasp_mem_free(tempd);
+    //fasp_mem_free(tempd);
     
     if (status < 0) return status;
     else            return SUCCESS;
@@ -674,16 +681,11 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
     
     INT nb2  = nb*nb;
     INT i,j,k,m;
-#ifdef _OPENMP 
-    INT myid;
-    INT mybegin;
-    INT stride_i;
-    INT myend;
-#endif
 
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
 
 #ifdef _OPENMP  
+    INT myid, mybegin, myend, stride_i, nthreads;
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();

@@ -1047,6 +1047,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
     REAL rhs = 0.0;
     REAL one_minus_weight = 1.0 - weight;
 
+
 #ifdef _OPENMP  
     // variables for OpenMP
     INT myid, mybegin, myend;
@@ -1086,27 +1087,33 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
 #endif
     }
     else if (nb > 1) {
-        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+        //REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
+            REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
+//#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
+#pragma omp parallel for private(myid, mybegin, myend, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
                 for (i = mybegin; i < myend; i++) {
                     pb = i*nb;
-                    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                    //memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                    memcpy(b_tmp+myid*nb, b_val+pb, nb*sizeof(REAL));
                     for (k = IA[i]; k < IA[i+1]; ++k) { 
                         j = JA[k];
                         if (j != i)
+                            //fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+myid*nb, nb);
                             fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
                     }
-                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
+                    //fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
+                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
                 }
             }
             fasp_mem_free(b_tmp);
         }
         else {
 #endif
+            REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
             for (i = 0; i < ROW; ++i) {
                 pb = i*nb;
                 memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
@@ -1209,28 +1216,34 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
 #endif      
     }
     else if (nb > 1) {
-        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+        //REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
+        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
+//#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
+#pragma omp parallel for private(myid, mybegin, myend, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
                 mybegin = ROW-1-mybegin; myend = ROW-1-myend;
                 for (i = mybegin; i > myend; i--) {
                     pb = i*nb;
-                    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                    //memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                    memcpy(b_tmp+myid*nb, b_val+pb, nb*sizeof(REAL));
                     for (k = IA[i]; k < IA[i+1]; ++k) { 
                         j = JA[k];
                         if (j != i)
-                            fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                            //fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                            fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+myid*nb, nb);
                     }
-                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
+                    //fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
+                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
                 }
             }
             fasp_mem_free(b_tmp);         
         }
         else {
 #endif   
+            REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
             for (i = ROW-1; i >= 0; i--) {
                 pb = i*nb;
                 memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
@@ -1337,28 +1350,34 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
 #endif
     }
     else if (nb > 1) {
-        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+        //REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, I, i, pb, b_tmp, k, j)
+        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
+//#pragma omp parallel for private(myid, mybegin, myend, I, i, pb, b_tmp, k, j)
+#pragma omp parallel for private(myid, mybegin, myend, I, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
                 for (I = mybegin; I < myend; ++I) {
                     i = mark[I];
                     pb = i*nb;
-                    memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                    //memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+                    memcpy(b_tmp+myid*nb, b_val+pb, nb*sizeof(REAL));
                     for (k = IA[i]; k < IA[i+1]; ++k) { 
                         j = JA[k];
                         if (j != i)
-                            fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                            //fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                            fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+myid*nb, nb);
                     }
-                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+                    //fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);         
                 }
             }
             fasp_mem_free(b_tmp);
         }
         else {
 #endif
+            REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
             for (I = 0; I < ROW; ++I) {
                 i = mark[I];
                 pb = i*nb;

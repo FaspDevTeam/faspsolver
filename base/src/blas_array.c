@@ -37,13 +37,14 @@ void fasp_blas_array_ax(const INT n,
                         REAL *x)
 {
     INT i;
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
    
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    INT myid, mybegin, myend, nthreads;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     if (a == 1.0) {
@@ -52,7 +53,6 @@ void fasp_blas_array_ax(const INT n,
     else {
         if (use_openmp) {
 #ifdef _OPENMP 
-            INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) 
             {
                 myid = omp_get_thread_num();
@@ -91,10 +91,10 @@ void fasp_blas_array_axpy (const INT n,
                            REAL *y)
 {
     INT i;
-    INT nthreads = 1, use_openmp = FALSE;
-    INT myid, mybegin, myend;
+    INT use_openmp = FALSE;
 
 #ifdef _OPENMP 
+    INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -174,9 +174,10 @@ void fasp_blas_array_axpyz (const INT n,
                             REAL *z)
 {
     INT i;
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
 
 #ifdef _OPENMP 
+    INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -185,7 +186,6 @@ void fasp_blas_array_axpyz (const INT n,
 
     if (use_openmp) {
 #ifdef _OPENMP 
-        INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
@@ -226,18 +226,18 @@ void fasp_blas_array_axpby(const INT n,
                            REAL *y) 
 {
     INT i;
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    INT myid, mybegin, myend, nthreads;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     if (use_openmp) {
 #ifdef _OPENMP 
-        INT myid, mybegin, myend;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
@@ -274,14 +274,15 @@ REAL fasp_blas_array_dotprod(const INT n,
                              REAL *y)
 {
     INT i;
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
     REAL value=0.0;
 
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    INT nthreads;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
     if (use_openmp) {
@@ -317,14 +318,15 @@ REAL fasp_blas_array_norm1 (const INT n,
                             REAL *x)
 {
     INT i;
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
     REAL onenorm = 0.;
  
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    INT nthreads;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     if (use_openmp) {
@@ -360,10 +362,11 @@ REAL fasp_blas_array_norm2 (const INT n,
                             REAL *x) 
 {
     INT i;
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
     REAL twonorm = 0.;
 
 #ifdef _OPENMP 
+    INT nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -403,10 +406,11 @@ REAL fasp_blas_array_norminf (const INT n,
                               REAL *x)
 {
     INT i;
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
     REAL infnorm = 0.0;
 
 #ifdef _OPENMP 
+    INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -415,7 +419,6 @@ REAL fasp_blas_array_norminf (const INT n,
 	
     if (use_openmp) {
 #ifdef _OPENMP 
-        INT myid, mybegin, myend;
         REAL infnorm_loc = 0.0;
 #pragma omp parallel firstprivate(infnorm_loc) private(myid, mybegin, myend, i)
         {

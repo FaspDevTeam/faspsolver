@@ -507,17 +507,14 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     REAL *ap = NULL;
     INT    *jap = NULL;
 
-#ifdef _OPENMP 
-    INT stride_i,mybegin,myend,myid;
-#endif
-
-	INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
 
 #ifdef _OPENMP  
-	if ( ROW > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    INT stride_i,mybegin,myend,myid,nthreads;
+    if ( ROW > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     //--------------------------------------------------------

@@ -51,9 +51,10 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     INT count=0, added, countrow;
     INT status = SUCCESS;
 
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
 
 #ifdef _OPENMP  
+    INT mybegin, myend, myid, nthreads;
     if ( A->nnz > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -86,7 +87,6 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
 
         if (use_openmp) {
 #ifdef _OPENMP 
-            INT mybegin, myend, myid;
 #pragma omp parallel private(myid, mybegin, myend, i)
             {
                 myid = omp_get_thread_num();
@@ -712,12 +712,11 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
     INT i, k, begin_row, end_row;
     register REAL temp;
 
-    INT nthreads = 1, use_openmp = FALSE;
-    
-#ifdef _OPENMP  
+    INT use_openmp = FALSE;
+
+#ifdef _OPENMP
     if ( m > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
     
@@ -902,13 +901,11 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     INT jj_counter, jj_row_begining;
     REAL r_entry, r_a_product, r_a_p_product;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    INT nthreads = 1;
 
 #ifdef _OPENMP  
-    if ( n_coarse > OPENMP_HOLDS ) {
-        use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
-    }
+    INT myid, mybegin, myend, Ctemp;
+    nthreads = FASP_GET_NUM_THREADS();
 #endif
     
     INT coarse_mul_nthreads = n_coarse * nthreads;
@@ -931,8 +928,7 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     
 #ifdef _OPENMP 
     if (n_coarse > OPENMP_HOLDS) {
-        INT myid, mybegin, myend, Ctemp;
-#pragma omp parallel for private(myid, mybegin, myend, P_marker, A_marker, jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
+#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
@@ -1022,7 +1018,6 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
     
 #ifdef _OPENMP 
     if (n_coarse > OPENMP_HOLDS) {
-        INT myid, mybegin, myend;
 #pragma omp parallel for private(myid, mybegin, myend, P_marker, A_marker, jj_counter, ic, jj_row_begining, \
                              jj1, r_entry, i1, jj2, r_a_product, i2, jj3, r_a_p_product, i3)
         for (myid = 0; myid < nthreads; myid ++) {

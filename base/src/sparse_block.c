@@ -48,9 +48,10 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     INT i,j,k,nnz=0;
     INT *col_flag;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
 
 #ifdef _OPENMP 
+    INT stride_i, mybegin, myend, myid, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -68,7 +69,6 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     
     if (use_openmp) {
 #ifdef _OPENMP 
-        INT stride_i, mybegin, myend, myid;
         stride_i = n/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
@@ -103,8 +103,8 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     B->nnz=nnz;
     
     // allocate 
-	B->JA=(INT*)fasp_mem_realloc(B->JA, sizeof(INT)*nnz);
-	B->val=(REAL*)fasp_mem_realloc(B->val, sizeof(REAL)*nnz);
+    B->JA=(INT*)fasp_mem_realloc(B->JA, sizeof(INT)*nnz);
+    B->val=(REAL*)fasp_mem_realloc(B->val, sizeof(REAL)*nnz);
 
     fasp_mem_free(col_flag);   
     return(status);
@@ -141,12 +141,13 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     INT status = SUCCESS;
     INT i,j,k,nnz=0;
     INT *col_flag;
-    INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
     
     const INT nb = A->nb;
     const INT nb2=nb*nb;
 
 #ifdef _OPENMP 
+    INT myid, mybegin, stride_i, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -162,7 +163,6 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     
     if (use_openmp) {
 #ifdef _OPENMP 
-        INT myid, mybegin, stride_i, myend;
         stride_i = n/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {

@@ -763,21 +763,18 @@ static void interp_RS( dCSRmat *A,
     INT begin_row, end_row; 
     INT i,j,k,l,index=0;
     
-#ifdef _OPENMP 
-    INT myid, mybegin, myend, stride_i;
-#endif
-    
     /** Generate interpolation P */
     dCSRmat P=fasp_dcsr_create(Ptr->row,Ptr->col,Ptr->nnz);
     
-	INT nthreads = 1, use_openmp = FALSE;
+    INT use_openmp = FALSE;
     
 #ifdef _OPENMP 
+    INT myid, mybegin, myend, stride_i, nthreads;
     INT row = MIN(P.IA[P.row], A->row);
-	if ( row > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( row > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
     /** step 1: Find first the structure IA of P */
@@ -1144,7 +1141,7 @@ INT fasp_amg_interp1 (dCSRmat *A,
 {
     INT status = SUCCESS;
     INT interp_type=param->interpolation_type;
-	const INT coarsening_type = param->coarsening_type;
+    const INT coarsening_type = param->coarsening_type;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_interp1 ...... [Start]\n");
