@@ -710,7 +710,6 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     INT *Is, *Js;
     INT i,j,num, k;
     INT nRow, nCol;
-    SHORT status=SUCCESS;
     
     dCSRmat tmpMat;
     dBSRmat A;
@@ -738,7 +737,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
         Js[i]=i*nb;
     }
     
-    status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+    fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
     
     //here we have tmpmat as the submatrix
     A.ROW=nRow;
@@ -774,7 +773,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
                 for(k=0;k<nCol;k++) {
                     Js[k]=k*nb+j;
                 }
-                status=fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+                fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
                 for(k=0;k<tmpMat.nnz;k++) {
                     A.val[k*nb*nb+num]=tmpMat.val[k];
                 }    

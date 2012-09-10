@@ -13,7 +13,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n, const INT s, 
+ * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n, const INT s,
  *                                     dCSRmat *A, dvector *b, INT L)
  *
  * \brief Jacobi method as a smoother
@@ -32,12 +32,12 @@
  * Modified by Chunsheng Feng, Zheng Li
  * \date   08/29/2012
  */
-void fasp_smoother_dcsr_jacobi (dvector *u, 
-                                const INT i_1, 
-                                const INT i_n, 
-                                const INT s, 
-                                dCSRmat *A, 
-                                dvector *b, 
+void fasp_smoother_dcsr_jacobi (dvector *u,
+                                const INT i_1,
+                                const INT i_n,
+                                const INT s,
+                                dCSRmat *A,
+                                dvector *b,
                                 INT L)
 {
     const INT    N = ABS(i_n - i_1)+1;
@@ -48,16 +48,16 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
     // local variables
     INT i,j,k,begin_row,end_row;
     
-    // OpenMP variables 
-#ifdef _OPENMP   
+    // OpenMP variables
+#ifdef _OPENMP
     INT myid, mybegin, myend;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
-
-    REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));    
+    
+    REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
     REAL *d = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
     
-    while (L--) { 
+    while (L--) {
         if (s>0) {
 #ifdef _OPENMP
             if (N > OPENMP_HOLDS) {
@@ -72,11 +72,11 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
                             j=ja[k];
                             if (i!=j) t[i]-=aj[k]*uval[j];
                             else d[i]=aj[k];
-                        }    
+                        }
                     }
                 }
-            }	    
-	    else {
+            }
+            else {
 #endif
                 for (i=i_1;i<=i_n;i+=s) {
                     t[i]=bval[i];
@@ -85,22 +85,22 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
                         j=ja[k];
                         if (i!=j) t[i]-=aj[k]*uval[j];
                         else d[i]=aj[k];
-                    }    
+                    }
                 }
 #ifdef _OPENMP
             }
-#endif	    
-
-#ifdef _OPENMP
-#pragma omp parallel for private (i)    
 #endif
-            for (i=i_1;i<=i_n;i+=s) {    
+            
+#ifdef _OPENMP
+#pragma omp parallel for private (i)
+#endif
+            for (i=i_1;i<=i_n;i+=s) {
                 if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
             }
-        }         
-        else { 
+        }
+        else {
 #ifdef _OPENMP
-            if (N > OPENMP_HOLDS) {	
+            if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, begin_row, end_row, k, j)
                 for (myid=0; myid<nthreads; myid++) {
                     FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
@@ -114,7 +114,7 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
                             else d[i]=aj[k];
                         }
                     }
-                 }
+                }
             }
             else {
 #endif
@@ -137,18 +137,18 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
             for (i=i_1;i>=i_n;i+=s) {
                 if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
             }
-        } 
+        }
         
     } // end while
     
     fasp_mem_free(t);
     fasp_mem_free(d);
     
-    return;    
+    return;
 }
 
 /**
- * \fn void fasp_smoother_dcsr_gs (dvector *u, const INT i_1, const INT i_n, const INT s, 
+ * \fn void fasp_smoother_dcsr_gs (dvector *u, const INT i_1, const INT i_n, const INT s,
  *                                 dCSRmat *A, dvector *b, INT L)
  *
  * \brief Gauss-Seidel method as a smoother
@@ -168,15 +168,14 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
  * \date   09/01/2012
  */
 
-void fasp_smoother_dcsr_gs (dvector *u, 
-                            const INT i_1, 
-                            const INT i_n, 
-                            const INT s, 
-                            dCSRmat *A, 
-                            dvector *b, 
+void fasp_smoother_dcsr_gs (dvector *u,
+                            const INT i_1,
+                            const INT i_n,
+                            const INT s,
+                            dCSRmat *A,
+                            dvector *b,
                             INT L)
 {
-    const INT    N = ABS(i_n - i_1)+1;
     const INT   *ia=A->IA,*ja=A->JA;
     const REAL  *aj=A->val,*bval=b->val;
     REAL        *uval=u->val;
@@ -185,20 +184,21 @@ void fasp_smoother_dcsr_gs (dvector *u,
     INT   i,j,k,begin_row,end_row;
     REAL  t,d=0.0;
     
-#ifdef _OPENMP 
+#ifdef _OPENMP
     // variables for OpenMP
+    const INT    N = ABS(i_n - i_1)+1;
     INT   myid, mybegin, myend;
     INT   nthreads = FASP_GET_NUM_THREADS();
 #endif
-
-    if (s > 0) {     
+    
+    if (s > 0) {
         while (L--) {
 #ifdef _OPENMP
             if (N >OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, t, begin_row, end_row, d, k, j)
                 for (myid=0; myid<nthreads; myid++) {
                     FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
-                    mybegin += i_1, myend += i_1; 
+                    mybegin += i_1, myend += i_1;
                     for (i=mybegin; i<myend; i+=s) {
                         t = bval[i];
                         begin_row=ia[i],end_row=ia[i+1];
@@ -207,58 +207,58 @@ void fasp_smoother_dcsr_gs (dvector *u,
                         if (ABS(d)>SMALLREAL) {
                             for (k=begin_row+1;k<end_row;++k) {
                                 j=ja[k];
-                                t-=aj[k]*uval[j]; 
+                                t-=aj[k]*uval[j];
                             }
                             uval[i]=t/d;
-                        }                    
+                        }
 #else // general order
                         for (k=begin_row;k<end_row;++k) {
                             j=ja[k];
-                            if (i!=j) 
-                                t-=aj[k]*uval[j]; 
-                                else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];    
+                            if (i!=j)
+                                t-=aj[k]*uval[j];
+                            else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];
                         }
                         uval[i]=t*d;
 #endif
-                   } // end for i
+                    } // end for i
                 }
             }
-            else {       
-#endif	    
-	        for (i=i_1;i<=i_n;i+=s) {
+            else {
+#endif
+                for (i=i_1;i<=i_n;i+=s) {
                     t = bval[i];
                     begin_row=ia[i],end_row=ia[i+1];
-                
+                    
 #if DIAGONAL_PREF // diagonal first
                     d=aj[begin_row];
                     if (ABS(d)>SMALLREAL) {
                         for (k=begin_row+1;k<end_row;++k) {
                             j=ja[k];
-                            t-=aj[k]*uval[j]; 
+                            t-=aj[k]*uval[j];
                         }
                         uval[i]=t/d;
-                    }                    
+                    }
 #else // general order
                     for (k=begin_row;k<end_row;++k) {
                         j=ja[k];
-                        if (i!=j) 
-                            t-=aj[k]*uval[j]; 
-                        else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];    
+                        if (i!=j)
+                            t-=aj[k]*uval[j];
+                        else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];
                     }
                     uval[i]=t*d;
-#endif    
+#endif
                 } // end for i
 #ifdef _OPENMP
             }
 #endif
-        } // end while    
+        } // end while
         
     } // if s
-    else {    
+    else {
         
         while (L--) {
 #ifdef _OPENMP
-            if (N > OPENMP_HOLDS) {	    
+            if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, begin_row, end_row, d, k, j, t)
                 for (myid=0; myid<nthreads; myid++) {
                     FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
@@ -271,16 +271,16 @@ void fasp_smoother_dcsr_gs (dvector *u,
                         if (ABS(d)>SMALLREAL) {
                             for (k=begin_row+1;k<end_row;++k) {
                                 j=ja[k];
-                                t-=aj[k]*uval[j]; 
+                                t-=aj[k]*uval[j];
                             }
                             uval[i]=t/d;
-                        }                    
+                        }
 #else // general order
                         for (k=begin_row;k<end_row;++k) {
-                           j=ja[k];
-                           if (i!=j) 
-                               t-=aj[k]*uval[j]; 
-                           else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];    
+                            j=ja[k];
+                            if (i!=j)
+                                t-=aj[k]*uval[j];
+                            else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];
                         }
                         uval[i]=t*d;
 #endif
@@ -289,7 +289,7 @@ void fasp_smoother_dcsr_gs (dvector *u,
             }
             else {
 #endif
-                for (i=i_1;i>=i_n;i+=s) { 
+                for (i=i_1;i>=i_n;i+=s) {
                     t=bval[i];
                     begin_row=ia[i],end_row=ia[i+1];
 #if DIAGONAL_PREF // diagonal first
@@ -297,16 +297,16 @@ void fasp_smoother_dcsr_gs (dvector *u,
                     if (ABS(d)>SMALLREAL) {
                         for (k=begin_row+1;k<end_row;++k) {
                             j=ja[k];
-                            t-=aj[k]*uval[j]; 
+                            t-=aj[k]*uval[j];
                         }
                         uval[i]=t/d;
-                    }                    
+                    }
 #else // general order
                     for (k=begin_row;k<end_row;++k) {
                         j=ja[k];
-                        if (i!=j) 
-                            t-=aj[k]*uval[j]; 
-                        else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];    
+                        if (i!=j)
+                            t-=aj[k]*uval[j];
+                        else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];
                     }
                     uval[i]=t*d;
 #endif
@@ -314,7 +314,7 @@ void fasp_smoother_dcsr_gs (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-        } // end while    
+        } // end while
     } // end if
     return;
 }
@@ -332,17 +332,17 @@ void fasp_smoother_dcsr_gs (dvector *u,
  * \param order  C/F ordering: -1: F-first; 1: C-first
  *
  * \author Zhiyang Zhou
- * \date   11/12/2010 
+ * \date   11/12/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue 
- * \date   05/24/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue
+ * \date   05/24/2012
  */
-void fasp_smoother_dcsr_gs_cf (dvector *u, 
-                               dCSRmat *A, 
-                               dvector *b, 
-                               INT L, 
-                               INT *mark, 
-                               INT order) 
+void fasp_smoother_dcsr_gs_cf (dvector *u,
+                               dCSRmat *A,
+                               dvector *b,
+                               INT L,
+                               INT *mark,
+                               INT order)
 {
     const INT *ia=A->IA,*ja=A->JA;
     
@@ -353,14 +353,14 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
     REAL t,d=0.0;
     
 #ifdef _OPENMP
-    INT myid,mybegin,myend; 
+    INT myid,mybegin,myend;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
     
     // F-point first
-    if (order == -1) {    
+    if (order == -1) {
         while (L--) {
-#ifdef _OPENMP                 
+#ifdef _OPENMP
             if (size > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
@@ -371,7 +371,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                             begin_row = ia[i], end_row = ia[i+1];
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
-                                if (i!=j) t -= aj[k]*uval[j]; 
+                                if (i!=j) t -= aj[k]*uval[j];
                                 else d = aj[k];
                             } // end for k
                             if (ABS(d) > SMALLREAL) uval[i] = t/d;
@@ -387,8 +387,8 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         begin_row = ia[i], end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
-                            if (i!=j) t -= aj[k]*uval[j]; 
-                            else d = aj[k];    
+                            if (i!=j) t -= aj[k]*uval[j];
+                            else d = aj[k];
                         } // end for k
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
@@ -397,7 +397,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
             }
 #endif
             
-#ifdef _OPENMP                 
+#ifdef _OPENMP
             if (size > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
@@ -408,8 +408,8 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                             begin_row = ia[i], end_row = ia[i+1];
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
-                                if (i!=j) t -= aj[k]*uval[j]; 
-                                else d = aj[k];    
+                                if (i!=j) t -= aj[k]*uval[j];
+                                else d = aj[k];
                             } // end for k
                             if (ABS(d) > SMALLREAL) uval[i] = t/d;
                         }
@@ -424,8 +424,8 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         begin_row = ia[i], end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
-                            if (i!=j) t -= aj[k]*uval[j]; 
-                            else d = aj[k];    
+                            if (i!=j) t -= aj[k]*uval[j];
+                            else d = aj[k];
                         } // end for k
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
@@ -433,11 +433,11 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-        } // end while    
+        } // end while
     }
     else {
         while (L--) {
-#ifdef _OPENMP                 
+#ifdef _OPENMP
             if (size > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
@@ -448,7 +448,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                             begin_row = ia[i],end_row = ia[i+1];
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
-                                if (i!=j) t -= aj[k]*uval[j]; 
+                                if (i!=j) t -= aj[k]*uval[j];
                                 else d = aj[k];
                             } // end for k
                             if (ABS(d) > SMALLREAL) uval[i] = t/d;
@@ -464,8 +464,8 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         begin_row = ia[i],end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
-                            if (i!=j) t -= aj[k]*uval[j]; 
-                            else d = aj[k];    
+                            if (i!=j) t -= aj[k]*uval[j];
+                            else d = aj[k];
                         } // end for k
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
@@ -473,8 +473,8 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-
-#ifdef _OPENMP                 
+            
+#ifdef _OPENMP
             if (size > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
@@ -485,7 +485,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                             begin_row = ia[i],end_row = ia[i+1];
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
-                                if (i!=j) t -= aj[k]*uval[j]; 
+                                if (i!=j) t -= aj[k]*uval[j];
                                 else d = aj[k];
                             } // end for k
                             if (ABS(d) > SMALLREAL) uval[i] = t/d;
@@ -501,8 +501,8 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         begin_row = ia[i],end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
-                            if (i!=j) t -= aj[k]*uval[j]; 
-                            else d = aj[k];    
+                            if (i!=j) t -= aj[k]*uval[j];
+                            else d = aj[k];
                         } // end for k
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
@@ -510,8 +510,8 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-        } // end while    
-    }    
+        } // end while
+    }
     return;
 }
 
@@ -532,9 +532,9 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
  * \date   09/01/2012
  */
 
-void fasp_smoother_dcsr_sgs (dvector *u, 
-                             dCSRmat *A, 
-                             dvector *b, 
+void fasp_smoother_dcsr_sgs (dvector *u,
+                             dCSRmat *A,
+                             dvector *b,
                              INT L)
 {
     const INT    nm1=b->row-1;
@@ -545,7 +545,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
     // local variables
     INT   i,j,k,begin_row,end_row;
     REAL  t,d;
-
+    
 #ifdef _OPENMP
     // variables for OpenMP
     INT  myid, mybegin, myend, up;
@@ -558,7 +558,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
         up = nm1 + 1;
         if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, t, begin_row, end_row, j, k, d)
-            for (myid=0; myid<nthreads; myid++) {	
+            for (myid=0; myid<nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) {
                     t=bval[i];
@@ -572,7 +572,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
                 } // end for i
             }
         }
-	else {
+        else {
 #endif
             for (i=0;i<=nm1;++i) {
                 t=bval[i];
@@ -608,7 +608,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
                 } // end for i
             }
         }
-	else {
+        else {
 #endif
             for (i=nm1-1;i>=0;--i) {
                 t=bval[i];
@@ -622,14 +622,14 @@ void fasp_smoother_dcsr_sgs (dvector *u,
             } // end for i
 #ifdef _OPENMP
         }
-#endif  
-    } // end while    
+#endif
+    } // end while
     
     return;
 }
 
 /**
- * \fn void fasp_smoother_dcsr_sor (dvector *u, const INT i_1, const INT i_n, const INT s, 
+ * \fn void fasp_smoother_dcsr_sor (dvector *u, const INT i_1, const INT i_n, const INT s,
  *                                  dCSRmat *A, dvector *b, INT L, const REAL w)
  *
  * \brief SOR method as a smoother
@@ -649,16 +649,15 @@ void fasp_smoother_dcsr_sgs (dvector *u,
  * \author Chunsheng Feng, Zheng Li
  * \date   09/01/2012
  */
-void fasp_smoother_dcsr_sor (dvector *u, 
-                             const INT i_1, 
-                             const INT i_n, 
-                             const INT s, 
-                             dCSRmat *A, 
-                             dvector *b, 
-                             INT L, 
+void fasp_smoother_dcsr_sor (dvector *u,
+                             const INT i_1,
+                             const INT i_n,
+                             const INT s,
+                             dCSRmat *A,
+                             dvector *b,
+                             INT L,
                              const REAL w)
 {
-    const INT    N = ABS(i_n - i_1)+1;
     const INT   *ia=A->IA,*ja=A->JA;
     const REAL  *aj=A->val,*bval=b->val;
     REAL        *uval=u->val;
@@ -666,16 +665,17 @@ void fasp_smoother_dcsr_sor (dvector *u,
     // local variables
     INT    i,j,k,begin_row,end_row;
     REAL   t, d;
-
+    
 #ifdef _OPENMP
     // variables for OpenMP
+    const INT    N = ABS(i_n - i_1)+1;
     INT myid, mybegin, myend;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
     
     while (L--) {
         if (s>0) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
                 for (myid=0; myid<nthreads; myid++) {
@@ -694,7 +694,7 @@ void fasp_smoother_dcsr_sor (dvector *u,
                         if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                     }
                 }
-	
+                
             }
             else {
 #endif
@@ -713,7 +713,7 @@ void fasp_smoother_dcsr_sor (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-        } 
+        }
         else {
 #ifdef _OPENMP
             if (N > OPENMP_HOLDS) {
@@ -752,14 +752,14 @@ void fasp_smoother_dcsr_sor (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-        } 
+        }
     }  // end while
     
     return;
 }
 
 /**
- * \fn void fasp_smoother_dcsr_sor_cf (dvector *u, dCSRmat *A, dvector *b, INT L, 
+ * \fn void fasp_smoother_dcsr_sor_cf (dvector *u, dCSRmat *A, dvector *b, INT L,
  *                                     const REAL w, INT *mark, const INT order)
  *
  * \brief SOR smoother with C/F ordering for Au=b
@@ -773,18 +773,18 @@ void fasp_smoother_dcsr_sor (dvector *u,
  * \param order  C/F ordering: -1: F-first; 1: C-first
  *
  * \author Zhiyang Zhou
- * \date   2010/11/12 
- * 
+ * \date   2010/11/12
+ *
  * Modified by Chunsheng Feng, Zheng Li
  *\date    08/29/2012
  *
  */
-void fasp_smoother_dcsr_sor_cf (dvector *u, 
-                                dCSRmat *A, 
-                                dvector *b, 
-                                INT L, 
-                                const REAL w, 
-                                INT *mark, 
+void fasp_smoother_dcsr_sor_cf (dvector *u,
+                                dCSRmat *A,
+                                dvector *b,
+                                INT L,
+                                const REAL w,
+                                INT *mark,
                                 const INT order )
 {
     const INT   *ia=A->IA,*ja=A->JA;
@@ -795,14 +795,14 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
     INT    i,j,k,begin_row,end_row;
     INT    size = b->row;
     REAL   t,d=0.0;
-
+    
 #ifdef _OPENMP
     INT    myid, mybegin, myend;
     INT    nthreads = FASP_GET_NUM_THREADS();
 #endif
-
+    
     // F-point first
-    if (order == -1) {    
+    if (order == -1) {
         while (L--) {
 #ifdef _OPENMP
             if (size > OPENMP_HOLDS) {
@@ -815,8 +815,8 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                             begin_row = ia[i], end_row = ia[i+1];
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
-                                if (i!=j) t -= aj[k]*uval[j]; 
-                                else d = aj[k];    
+                                if (i!=j) t -= aj[k]*uval[j];
+                                else d = aj[k];
                             } // end for k
                             if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                         }
@@ -831,8 +831,8 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                         begin_row = ia[i], end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
-                            if (i!=j) t -= aj[k]*uval[j]; 
-                            else d = aj[k];    
+                            if (i!=j) t -= aj[k]*uval[j];
+                            else d = aj[k];
                         } // end for k
                         if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                     }
@@ -840,7 +840,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-
+            
 #ifdef _OPENMP
             if (size > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, i, mybegin, myend, t, begin_row, end_row, k, j, d)
@@ -852,15 +852,15 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                             begin_row = ia[i], end_row = ia[i+1];
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
-                                if (i!=j) t -= aj[k]*uval[j]; 
-                                else d = aj[k];    
+                                if (i!=j) t -= aj[k]*uval[j];
+                                else d = aj[k];
                             } // end for k
                             if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                         }
                     } // end for i
                 }
             }
-	    else {
+            else {
 #endif
                 for (i = 0; i < size; i ++) {
                     if (mark[i] == 1) {
@@ -868,8 +868,8 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                         begin_row = ia[i], end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
-                            if (i!=j) t -= aj[k]*uval[j]; 
-                            else d = aj[k];    
+                            if (i!=j) t -= aj[k]*uval[j];
+                            else d = aj[k];
                         } // end for k
                         if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                     }
@@ -877,7 +877,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-        } // end while    
+        } // end while
     }
     else {
         while (L--) {
@@ -892,15 +892,15 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                             begin_row = ia[i], end_row = ia[i+1];
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
-                                if (i!=j) t -= aj[k]*uval[j]; 
-                                else d = aj[k];    
+                                if (i!=j) t -= aj[k]*uval[j];
+                                else d = aj[k];
                             } // end for k
                             if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                         }
                     } // end for i
                 }
             }
-	    else {
+            else {
 #endif
                 for (i = 0; i < size; i ++) {
                     if (mark[i] == 1) {
@@ -908,8 +908,8 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                         begin_row = ia[i], end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
-                            if (i!=j) t -= aj[k]*uval[j]; 
-                            else d = aj[k];    
+                            if (i!=j) t -= aj[k]*uval[j];
+                            else d = aj[k];
                         } // end for k
                         if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                     }
@@ -917,27 +917,27 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-
+            
 #ifdef _OPENMP
             if (size > OPENMP_HOLDS) {
 #pragma omp parallel for private (myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
                 for (myid = 0; myid < nthreads; myid++) {
                     FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
                     for (i = mybegin; i < myend; i++) {
-                       if (mark[i] != 1) {
-                           t = bval[i];
-                           begin_row = ia[i], end_row = ia[i+1];
-                           for (k = begin_row; k < end_row; k ++) {
-                               j = ja[k];
-                               if (i!=j) t -= aj[k]*uval[j]; 
-                               else d = aj[k];    
-                           } // end for k
-                           if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
-                       }
+                        if (mark[i] != 1) {
+                            t = bval[i];
+                            begin_row = ia[i], end_row = ia[i+1];
+                            for (k = begin_row; k < end_row; k ++) {
+                                j = ja[k];
+                                if (i!=j) t -= aj[k]*uval[j];
+                                else d = aj[k];
+                            } // end for k
+                            if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
+                        }
                     }
                 }
             } // end for i
-	    else {
+            else {
 #endif
                 for (i = 0; i < size; i ++) {
                     if (mark[i] != 1) {
@@ -945,8 +945,8 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                         begin_row = ia[i], end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
-                            if (i!=j) t -= aj[k]*uval[j]; 
-                            else d = aj[k];    
+                            if (i!=j) t -= aj[k]*uval[j];
+                            else d = aj[k];
                         } // end for k
                         if (ABS(d)>SMALLREAL) uval[i]=w*(t/d)+(1-w)*uval[i];
                     }
@@ -954,8 +954,8 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-        } // end while    
-    }    
+        } // end while
+    }
     
     return;
 }
@@ -971,21 +971,21 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
  * \param data  Pointer to user defined data
  *
  * \author Shiquan Zhang, Xiaozhe Hu
- * \date   2010/11/12 
+ * \date   2010/11/12
  */
-void fasp_smoother_dcsr_ilu (dCSRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
+void fasp_smoother_dcsr_ilu (dCSRmat *A,
+                             dvector *b,
+                             dvector *x,
                              void *data)
 {
     const INT m=A->row, m2=2*m, memneed=3*m;
-    const ILU_data *iludata=(ILU_data *)data;    
+    const ILU_data *iludata=(ILU_data *)data;
     
-    REAL *zz = iludata->work; 
+    REAL *zz = iludata->work;
     REAL *zr = iludata->work+m;
     REAL *z  = iludata->work+m2;
     
-    if (iludata->nwork<memneed) goto MEMERR; 
+    if (iludata->nwork<memneed) goto MEMERR;
     
     {
         INT i, j, jj, begin_row, end_row;
@@ -1016,11 +1016,11 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
                 jj=ijlu[j];
                 if (jj>i) zz[i]-=lu[j]*z[jj];
                 else break;
-            } 
+            }
             z[i]=zz[i]*lu[i];
         }
         
-        fasp_blas_array_axpy(m,1,z,xval);    
+        fasp_blas_array_axpy(m,1,z,xval);
     }
     
     return;
@@ -1031,7 +1031,7 @@ MEMERR:
 }
 
 /**
- * \fn void fasp_smoother_dcsr_kaczmarz (dvector *u, const INT i_1, const INT i_n, const INT s, 
+ * \fn void fasp_smoother_dcsr_kaczmarz (dvector *u, const INT i_1, const INT i_n, const INT s,
  *                                       dCSRmat *A, dvector *b, INT L, const REAL w)
  *
  * \brief Kaczmarz method as a smoother
@@ -1046,22 +1046,21 @@ MEMERR:
  * \param w    Relaxation weight
  *
  * \author Xiaozhe Hu
- * \date   2010/11/12 
+ * \date   2010/11/12
  *
  * \author Chunsheng Feng, Zheng Li
  * \date   2012/09/01
  */
 
-void fasp_smoother_dcsr_kaczmarz (dvector *u, 
-                                  const INT i_1, 
-                                  const INT i_n, 
-                                  const INT s, 
-                                  dCSRmat *A, 
-                                  dvector *b, 
-                                  INT L, 
+void fasp_smoother_dcsr_kaczmarz (dvector *u,
+                                  const INT i_1,
+                                  const INT i_n,
+                                  const INT s,
+                                  dCSRmat *A,
+                                  dvector *b,
+                                  INT L,
                                   const REAL w)
 {
-    const INT    N = ABS(i_n - i_1)+1;
     const INT   *ia=A->IA,*ja=A->JA;
     const REAL  *aj=A->val,*bval=b->val;
     REAL        *uval=u->val;
@@ -1069,9 +1068,10 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
     // local variables
     INT   i,j,k,begin_row,end_row;
     REAL  temp1,temp2,alpha;
-
+    
 #ifdef _OPENMP
     // variables for OpenMP
+    const INT    N = ABS(i_n - i_1)+1;
     INT   myid, mybegin, myend;
     INT   nthreads = FASP_GET_NUM_THREADS();
 #endif
@@ -1084,7 +1084,7 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
 #pragma omp parallel for private(myid, mybegin, myend, i, temp1, temp2, begin_row, end_row, k, alpha, j)
                 for (myid=0; myid<nthreads; myid++) {
                     FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
-		    mybegin += i_1, myend += i_1;
+                    mybegin += i_1, myend += i_1;
                     for (i=mybegin; i<myend; i+=s) {
                         temp1 = 0; temp2 = 0;
                         begin_row=ia[i], end_row=ia[i+1];
@@ -1120,11 +1120,11 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
 #ifdef _OPENMP
             }
 #endif
-        } // end while    
+        } // end while
         
     } // if s
     
-    else {    
+    else {
         while (L--) {
 #ifdef _OPENMP
             if (N > OPENMP_HOLDS) {
@@ -1165,9 +1165,9 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
                     }// end for k
                 } // end for i
 #ifdef _OPENMP
-	    }
+            }
 #endif
-        } // end while    
+        } // end while
         
     } // end if
     
@@ -1175,7 +1175,7 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_L1diag (dvector *u, const INT i_1, const INT i_n, const INT s, 
+ * \fn void fasp_smoother_dcsr_L1diag (dvector *u, const INT i_1, const INT i_n, const INT s,
  *                                     dCSRmat *A, dvector *b, INT L)
  *
  * \brief Diagonal scaling (using L1 norm) as a smoother
@@ -1190,17 +1190,17 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
  *
  * \author Xiaozhe Hu, James Brannick
  * \date   01/26/2011
- * 
+ *
  * \author Chunsheng Feng, Zheng Li
  * \date   09/01/2012
  */
 
-void fasp_smoother_dcsr_L1diag (dvector *u, 
-                                const INT i_1, 
-                                const INT i_n, 
-                                const INT s, 
-                                dCSRmat *A, 
-                                dvector *b, 
+void fasp_smoother_dcsr_L1diag (dvector *u,
+                                const INT i_1,
+                                const INT i_n,
+                                const INT s,
+                                dCSRmat *A,
+                                dvector *b,
                                 INT L)
 {
     const INT    N = ABS(i_n - i_1)+1;
@@ -1210,25 +1210,25 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
     
     // local variables
     INT   i,j,k,begin_row,end_row;
-
+    
 #ifdef _OPENMP
     // variables for OpenMP
     INT   myid, mybegin, myend;
     INT   nthreads = FASP_GET_NUM_THREADS();
 #endif
-
+    
     // Checks should be outside of for; t,d can be allocated before calling!!! --Chensong
-    REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));    
+    REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
     REAL *d = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
     
-    while (L--) { 
+    while (L--) {
         if (s>0) {
 #ifdef _OPENMP
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, begin_row, end_row, k, j)
                 for (myid=0; myid<nthreads; myid++) {
                     FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
-                    mybegin += i_1, myend += i_1; 
+                    mybegin += i_1, myend += i_1;
                     for (i=mybegin; i<myend; i+=s) {
                         t[i]=bval[i]; d[i]=0.0;
                         begin_row=ia[i], end_row=ia[i+1];
@@ -1238,11 +1238,11 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
                             d[i]+=ABS(aj[k]);
                         }
                     }
-	        }	    
+                }
 #pragma omp parallel for private(i)
-                for (i=i_1;i<=i_n;i+=s) {    
+                for (i=i_1;i<=i_n;i+=s) {
                     if (ABS(d[i])>SMALLREAL) u->val[i]+=t[i]/d[i];
-                }    
+                }
             }
             else {
 #endif
@@ -1254,22 +1254,22 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
                         t[i]-=aj[k]*uval[j];
                         d[i]+=ABS(aj[k]);
                     }
-                }    
-            
-                for (i=i_1;i<=i_n;i+=s) {    
+                }
+                
+                for (i=i_1;i<=i_n;i+=s) {
                     if (ABS(d[i])>SMALLREAL) u->val[i]+=t[i]/d[i];
                 }
 #ifdef _OPENMP
             }
-#endif	    
-        } 
+#endif
+        }
         else {
 #ifdef _OPENMP
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, k, j, begin_row, end_row)
                 for (myid=0; myid<nthreads; myid++) {
                     FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
-                    mybegin = i_1 - mybegin, myend = i_1 - myend;		    
+                    mybegin = i_1 - mybegin, myend = i_1 - myend;
                     for (i=mybegin; i>myend; i+=s) {
                         t[i]=bval[i]; d[i]=0.0;
                         begin_row=ia[i], end_row=ia[i+1];
@@ -1296,32 +1296,32 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
                         d[i]+=ABS(aj[k]);
                     }
                 }
-         
+                
                 for (i=i_1;i>=i_n;i+=s) {
                     if (ABS(d[i])>SMALLREAL) u->val[i]+=t[i]/d[i];
                 }
 #ifdef _OPENMP
             }
 #endif
-       } 
+        }
         
     } // end while
     
     fasp_mem_free(t);
     fasp_mem_free(d);
     
-    return;    
+    return;
 }
 
 /**
  * \fn void swep2db (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT *mark,
- *                   INT nx, INT ny) 
+ *                   INT nx, INT ny)
  *
  * \brief      Gauss-Seidel backward smoother for certain color
  *
  * \param ia  Pointer to start location of each row
  * \param ja  Pointer to column index of nonzero elements
- * \param aa  Pointer to nonzero elements of 
+ * \param aa  Pointer to nonzero elements of
  * \param u   Pointer to initial guess
  * \param f   Pointer to right hand
  * \param nbegx  The stride between the same color nodes in x direction
@@ -1337,57 +1337,56 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
-void swep2db(INT *ia, 
-             INT *ja, 
+void swep2db(INT *ia,
+             INT *ja,
              REAL *aa,
-             REAL *u, 
+             REAL *u,
              REAL *f,
              INT nbegx,
              INT nbegy,
              INT *mark,
-             INT nx, 
-             INT ny) 
+             INT nx,
+             INT ny)
 {
-    INT nxy, j, j0, i, i0;
+    INT j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
     REAL t, d;
     
-    nxy=nx*ny;
     nbegx = nx + nbegx;
     nbegy = ny + nbegy;
- 
+    
 #ifdef _OPENMP
-#pragma omp parallel for private(j,j0,i,i0,t,begin_row,end_row,ii,jj,d)    
+#pragma omp parallel for private(j,j0,i,i0,t,begin_row,end_row,ii,jj,d)
 #endif
-        for (j = nbegy; j >=0; j-=2) {
-            j0= j*nx;            
-            for (i = nbegx; i >=0; i-=2) {
-                i0 = i + j0;
-                i0 = mark[i0]-1; // Fortran to C
-                if (i0>=0 ) {
-                    t = f[i0];
-                    begin_row = ia[i0], end_row = ia[i0+1];
-                    for (ii = begin_row; ii < end_row; ii ++) {
-                        jj = ja[ii];
-                        if (i0!=jj) t -= aa[ii]*u[jj]; 
-                        else d = aa[ii];    
-                    } // end for ii
-                    if (ABS(d) > SMALLREAL) u[i0] = t/d;
-                } //if (i0>=0 ) 
-            }
+    for (j = nbegy; j >=0; j-=2) {
+        j0= j*nx;
+        for (i = nbegx; i >=0; i-=2) {
+            i0 = i + j0;
+            i0 = mark[i0]-1; // Fortran to C
+            if (i0>=0 ) {
+                t = f[i0];
+                begin_row = ia[i0], end_row = ia[i0+1];
+                for (ii = begin_row; ii < end_row; ii ++) {
+                    jj = ja[ii];
+                    if (i0!=jj) t -= aa[ii]*u[jj];
+                    else d = aa[ii];
+                } // end for ii
+                if (ABS(d) > SMALLREAL) u[i0] = t/d;
+            } //if (i0>=0 )
         }
+    }
 }
 
 
 /**
  * \fn void swep3db (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT nbegz,INT *mark,
- *                   INT nx, INT ny, INT nz) 
+ *                   INT nx, INT ny, INT nz)
  *
  * \brief      Gauss-Seidel backward smoother for certain color
  *
  * \param ia  Pointer to start location of each row
  * \param ja  Pointer to column index of nonzero elements
- * \param aa  Pointer to nonzero elements of 
+ * \param aa  Pointer to nonzero elements of
  * \param u   Pointer to initial guess
  * \param f   Pointer to right hand
  * \param nbegx  The stride between the same color nodes in x direction
@@ -1401,21 +1400,21 @@ void swep2db(INT *ia,
  * \author  Chunsheng Feng, Zheng Li
  * \date    02/06/2012
  *
- * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
-void swep3db(INT *ia, 
-             INT *ja, 
+void swep3db(INT *ia,
+             INT *ja,
              REAL *aa,
-             REAL *u, 
+             REAL *u,
              REAL *f,
              INT nbegx,
              INT nbegy,
              INT nbegz,
              INT *mark,
-             INT nx, 
-             INT ny, 
+             INT nx,
+             INT ny,
              INT nz)
 {
     INT nxy, k, k0, j, j0, i, i0;
@@ -1427,14 +1426,14 @@ void swep3db(INT *ia,
     nbegy = ny + nbegy;
     nbegz = nz + nbegz;
     
- 
+    
 #ifdef _OPENMP
-#pragma omp parallel for private(k,k0,j,j0,i,i0,t,begin_row,end_row,ii,jj,d)    
+#pragma omp parallel for private(k,k0,j,j0,i,i0,t,begin_row,end_row,ii,jj,d)
 #endif
     for (k=nbegz; k >=0; k-=2) {
         k0= k*nxy;
         for (j = nbegy; j >=0; j-=2) {
-            j0= j*nx;            
+            j0= j*nx;
             for (i = nbegx; i >=0; i-=2) {
                 i0 = i   +  j0    + k0;
                 i0 = mark[i0]-1;  // Fortran to C
@@ -1443,25 +1442,25 @@ void swep3db(INT *ia,
                     begin_row = ia[i0], end_row = ia[i0+1];
                     for (ii = begin_row; ii < end_row; ii ++) {
                         jj = ja[ii];
-                        if (i0!=jj) t -= aa[ii]*u[jj]; 
-                        else d = aa[ii];    
+                        if (i0!=jj) t -= aa[ii]*u[jj];
+                        else d = aa[ii];
                     } // end for ii
                     
                     if (ABS(d) > SMALLREAL) u[i0] = t/d;
-                } //if (i0>=0 ) 
+                } //if (i0>=0 )
             }
         }
     }
 }
 
-/* 
- * \fn void rb0b2d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, 
+/*
+ * \fn void rb0b2d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f,
  *                  INT *mark, INT nx, INT ny, INT nsweeps)
- * \brief  Colores Gauss-Seidel backward smoother for Au=b 
+ * \brief  Colores Gauss-Seidel backward smoother for Au=b
  *
  * \param ia       Pointer to start location of each row
  * \param ja       Pointer to column index of nonzero elements
- * \param aa       Pointer to nonzero elements of 
+ * \param aa       Pointer to nonzero elements of
  * \param u        Pointer to initial guess
  * \param f        Pointer to right hand
  * \param mark     Pointer to order of nodes
@@ -1475,22 +1474,22 @@ void swep3db(INT *ia,
  * \note This subroutine is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void rb02d (INT *ia, 
-             INT *ja, 
-             REAL *aa,
-             REAL *u, 
-             REAL *f, 
-             INT *mark, 
-             INT nx, 
-             INT ny, 
-             INT nsweeps)
+void rb02d (INT *ia,
+            INT *ja,
+            REAL *aa,
+            REAL *u,
+            REAL *f,
+            INT *mark,
+            INT nx,
+            INT ny,
+            INT nsweeps)
 {
     INT n0e = -1, n0o = -2, isweep;
     //INT ex, ey, ez;
     //INT ox, oy, oz;
     
     for (isweep = 1; isweep <= nsweeps; isweep++) {
-		if ((nx%2==0) &&(ny%2 ==0)) {    
+		if ((nx%2==0) &&(ny%2 ==0)) {
 			/*...  e-e (and going backwards) */
 			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
 			/*...  e-o */
@@ -1499,8 +1498,8 @@ void rb02d (INT *ia,
 			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
 			/*...  o-o */
 			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
-		} 
-		else if ((nx%2==0)&&(ny%2 ==1)) { 
+		}
+		else if ((nx%2==0)&&(ny%2 ==1)) {
 			/*...  e-o (and going backwards) */
 			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
 			/*...  e-e */
@@ -1509,8 +1508,8 @@ void rb02d (INT *ia,
 			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
 			/*...  o-e */
 			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
-                }
-		else if ((nx%2==1)&&(ny%2 ==0)) { 
+        }
+		else if ((nx%2==1)&&(ny%2 ==0)) {
 			/*...  o-e (and going backwards) */
 			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
 			/*...  o-o */
@@ -1518,9 +1517,9 @@ void rb02d (INT *ia,
 			/*...  e-e */
 			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
 			/*...  e-o */
-			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);    
-		}  
-		else if ((nx%2==1)&&(ny%2 ==1)) { 
+			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
+		}
+		else if ((nx%2==1)&&(ny%2 ==1)) {
 			/*...  o-o (and going backwards) */
 			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
 			/*...  o-e */
@@ -1529,18 +1528,18 @@ void rb02d (INT *ia,
 			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
 			/*...  e-e */
 			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
-		}  
+		}
 	}
 }
 
-/* 
- * \fn void rb0b3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, 
+/*
+ * \fn void rb0b3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f,
  *                  INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
- * \brief  Colores Gauss-Seidel backward smoother for Au=b 
+ * \brief  Colores Gauss-Seidel backward smoother for Au=b
  *
  * \param ia       Pointer to start location of each row
  * \param ja       Pointer to column index of nonzero elements
- * \param aa       Pointer to nonzero elements of 
+ * \param aa       Pointer to nonzero elements of
  * \param u        Pointer to initial guess
  * \param f        Pointer to right hand
  * \param mark     Pointer to order of nodes
@@ -1555,15 +1554,15 @@ void rb02d (INT *ia,
  * \note This subroutine is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void rb0b3d (INT *ia, 
-             INT *ja, 
+void rb0b3d (INT *ia,
+             INT *ja,
              REAL *aa,
-             REAL *u, 
-             REAL *f, 
-             INT *mark, 
-             INT nx, 
-             INT ny, 
-             INT nz, 
+             REAL *u,
+             REAL *f,
+             INT *mark,
+             INT nx,
+             INT ny,
+             INT nz,
              INT nsweeps)
 {
     INT n0e = -1, n0o = -2, isweep;
@@ -1571,7 +1570,7 @@ void rb0b3d (INT *ia,
     //INT ox, oy, oz;
     
     for (isweep = 1; isweep <= nsweeps; isweep++) {
-		if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==0)) {    
+		if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==0)) {
 			/*...  e-e-e (and going backwards) */
 			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
 			/*...  e-e-o */
@@ -1588,8 +1587,8 @@ void rb0b3d (INT *ia,
 			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
 			/*...  o-o-o */
 			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
-		} 
-		else if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==1)) { 
+		}
+		else if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==1)) {
 			/*...  e-e-o (and going backwards) */
 			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
 			/*...  e-e-e */
@@ -1606,8 +1605,8 @@ void rb0b3d (INT *ia,
 			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
 			/*...  o-o-e */
 			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
-		}  
-		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==0)) { 
+		}
+		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==0)) {
 			/*...  e-o-e (and going backwards) */
 			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
 			/*...  e-o-o */
@@ -1623,9 +1622,9 @@ void rb0b3d (INT *ia,
 			/*...  o-e-e */
 			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
 			/*...  o-e-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);    
-		}  
-		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==1)) { 
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+		}
+		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==1)) {
 			/*...  e-o-o (and going backwards) */
 			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
 			/*...  e-o-e */
@@ -1641,9 +1640,9 @@ void rb0b3d (INT *ia,
 			/*...  o-e-o */
 			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
 			/*...  o-e-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);    
-		}  
-		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==0)) { 
+			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+		}
+		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==0)) {
 			/*...  o-e-e (and going backwards) */
 			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
 			/*...  o-e-o */
@@ -1659,9 +1658,9 @@ void rb0b3d (INT *ia,
 			/*...  e-o-e */
 			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
 			/*...  e-o-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);    
-		}  
-		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==1)) { 
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+		}
+		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==1)) {
 			/*...  o-e-o (and going backwards) */
 			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
 			/*...  o-e-e */
@@ -1677,9 +1676,9 @@ void rb0b3d (INT *ia,
 			/*...  e-o-o */
 			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
 			/*...  e-o-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);    
-		}  
-		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==0)) { 
+			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+		}
+		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==0)) {
 			/*...  o-o-e (and going backwards) */
 			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
 			/*...  o-o-o */
@@ -1695,9 +1694,9 @@ void rb0b3d (INT *ia,
 			/*...  e-e-e */
 			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
 			/*...  e-e-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);    
-		}  
-		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==1)) { 
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+		}
+		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==1)) {
 			/*...  o-o-o (and going backwards) */
 			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
 			/*...  o-o-e */
@@ -1713,20 +1712,20 @@ void rb0b3d (INT *ia,
 			/*...  e-e-o */
 			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
 			/*...  e-e-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);    
+			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
             
 		}
 	}
 }
 /**
  * \fn void swep2df (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT *mark,
- *                   INT nx, INT ny) 
+ *                   INT nx, INT ny)
  *
  * \brief      Gauss-Seidel forward smoother for certain color
  *
  * \param ia  Pointer to start location of each row
  * \param ja  Pointer to column index of nonzero elements
- * \param aa  Pointer to nonzero elements of 
+ * \param aa  Pointer to nonzero elements of
  * \param u   Pointer to initial guess
  * \param f   Pointer to right hand
  * \param nbegx  The stride between the same color nodes in x direction
@@ -1738,60 +1737,59 @@ void rb0b3d (INT *ia,
  * \author  Chunsheng Feng, Zheng Li
  * \date    02/06/2012
  *
- * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
-void swep2df(INT *ia, 
-             INT *ja, 
+void swep2df(INT *ia,
+             INT *ja,
              REAL *aa,
-             REAL *u, 
+             REAL *u,
              REAL *f,
-             INT nbegx, 
-             INT nbegy, 
+             INT nbegx,
+             INT nbegy,
              INT *mark,
              INT nx,
-	     INT ny ) 
+             INT ny )
 {
-    INT nxy,j,j0,i,i0;
+    INT j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
     REAL t,d;
-    nxy=nx*ny;
-
+    
 #ifdef _OPENMP
-#pragma omp parallel for private(j,j0,i,i0,t,begin_row,end_row,ii,jj,d)    
+#pragma omp parallel for private(j,j0,i,i0,t,begin_row,end_row,ii,jj,d)
 #endif
-        for (j = nbegy; j < ny; j+=2) {
-            j0= j*nx;
-            for (i = nbegx; i < nx; i+=2)    /*!*/
-            {
-                i0 = i + j0;
-                i0 = mark[i0]-1; //Fortran to C
-                if (i0>=0 ) {
-                    t = f[i0];
-                    begin_row = ia[i0], end_row = ia[i0+1];
-                    for (ii = begin_row; ii < end_row; ii ++) {
-                        jj = ja[ii];
-                        if (i0!=jj) t -= aa[ii]*u[jj]; 
-                        else d = aa[ii];    
-                    } // end for ii
-                    if (ABS(d) > SMALLREAL) u[i0] = t/d;
-                } //    if (i0>=0 ) 
-            }
+    for (j = nbegy; j < ny; j+=2) {
+        j0= j*nx;
+        for (i = nbegx; i < nx; i+=2)    /*!*/
+        {
+            i0 = i + j0;
+            i0 = mark[i0]-1; //Fortran to C
+            if (i0>=0 ) {
+                t = f[i0];
+                begin_row = ia[i0], end_row = ia[i0+1];
+                for (ii = begin_row; ii < end_row; ii ++) {
+                    jj = ja[ii];
+                    if (i0!=jj) t -= aa[ii]*u[jj];
+                    else d = aa[ii];
+                } // end for ii
+                if (ABS(d) > SMALLREAL) u[i0] = t/d;
+            } //    if (i0>=0 )
         }
+    }
     
 }
 
 
 /**
  * \fn void swep3df (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT nbegz,INT *mark,
- *                   INT nx, INT ny, INT nz) 
+ *                   INT nx, INT ny, INT nz)
  *
  * \brief      Gauss-Seidel forward smoother for certain color
  *
  * \param ia  Pointer to start location of each row
  * \param ja  Pointer to column index of nonzero elements
- * \param aa  Pointer to nonzero elements of 
+ * \param aa  Pointer to nonzero elements of
  * \param u   Pointer to initial guess
  * \param f   Pointer to right hand
  * \param nbegx  The stride between the same color nodes in x direction
@@ -1809,29 +1807,29 @@ void swep2df(INT *ia,
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
-void swep3df(INT *ia, 
-             INT *ja, 
+void swep3df(INT *ia,
+             INT *ja,
              REAL *aa,
-             REAL *u, 
+             REAL *u,
              REAL *f,
-             INT nbegx, 
-             INT nbegy, 
-             INT nbegz, 
+             INT nbegx,
+             INT nbegy,
+             INT nbegz,
              INT *mark,
              INT nx,
-             INT ny, 
+             INT ny,
              INT nz)
 {
     INT nxy,k,k0,j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
     REAL t,d;
     nxy=nx*ny;
-
+    
 #ifdef _OPENMP
-#pragma omp parallel for private(k,k0,j,j0,i,i0,t,begin_row,end_row,ii,jj,d)    
+#pragma omp parallel for private(k,k0,j,j0,i,i0,t,begin_row,end_row,ii,jj,d)
 #endif
     for (k=nbegz; k < nz; k+=2) {
-        k0= k*nxy;   
+        k0= k*nxy;
         for (j = nbegy; j < ny; j+=2) {
             j0= j*nx;
             for (i = nbegx; i < nx; i+=2)    /*!*/
@@ -1844,26 +1842,26 @@ void swep3df(INT *ia,
                     begin_row = ia[i0], end_row = ia[i0+1];
                     for (ii = begin_row; ii < end_row; ii ++) {
                         jj = ja[ii];
-                        if (i0!=jj) t -= aa[ii]*u[jj]; 
-                        else d = aa[ii];    
+                        if (i0!=jj) t -= aa[ii]*u[jj];
+                        else d = aa[ii];
                     } // end for ii
                     
                     if (ABS(d) > SMALLREAL) u[i0] = t/d;
-                } //    if (i0>=0 ) 
+                } //    if (i0>=0 )
             }
         }
     }
     
 }
 
-/* 
+/*
  * \fn void rb0f2d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny,INT nsweeps)
- * \brief  Colores Gauss-Seidel forward smoother for Au=b 
+ * \brief  Colores Gauss-Seidel forward smoother for Au=b
  *
- * \param ia  Pointer to the start location to of row 
- * \param ja  Pointer to the column index of nonzero elements 
+ * \param ia  Pointer to the start location to of row
+ * \param ja  Pointer to the column index of nonzero elements
  * \param aa  Pointer to the values of the nonzero elements
- * \param u   Pointer to initial value 
+ * \param u   Pointer to initial value
  * \param f   Pointer to right hand
  * \param mark  Pointer to the order index of nodes
  * \param nx    Number of nodes in x direction
@@ -1878,15 +1876,15 @@ void swep3df(INT *ia,
  *
  */
 
-void rb0f2d( INT *ia, 
-             INT *ja, 
-             REAL *aa,
-             REAL *u, 
-             REAL *f, 
-             INT *mark, 
-             INT nx, 
-             INT ny, 
-             INT nsweeps )
+void rb0f2d( INT *ia,
+            INT *ja,
+            REAL *aa,
+            REAL *u,
+            REAL *f,
+            INT *mark,
+            INT nx,
+            INT ny,
+            INT nsweeps )
 {
     INT n0e,n0o,isweep;
     
@@ -1906,14 +1904,14 @@ void rb0f2d( INT *ia,
 }
 
 
-/* 
+/*
  * \fn void rb0f3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
- * \brief  Colores Gauss-Seidel forward smoother for Au=b 
+ * \brief  Colores Gauss-Seidel forward smoother for Au=b
  *
- * \param ia  Pointer to the start location to of row 
- * \param ja  Pointer to the column index of nonzero elements 
+ * \param ia  Pointer to the start location to of row
+ * \param ja  Pointer to the column index of nonzero elements
  * \param aa  Pointer to the values of the nonzero elements
- * \param u   Pointer to initial value 
+ * \param u   Pointer to initial value
  * \param f   Pointer to right hand
  * \param mark  Pointer to the order index of nodes
  * \param nx    Number of nodes in x direction
@@ -1929,15 +1927,15 @@ void rb0f2d( INT *ia,
  *
  */
 
-void rb0f3d( INT *ia, 
-            INT *ja, 
+void rb0f3d( INT *ia,
+            INT *ja,
             REAL *aa,
-            REAL *u, 
-            REAL *f, 
-            INT *mark, 
-            INT nx, 
-            INT ny, 
-            INT nz, 
+            REAL *u,
+            REAL *f,
+            INT *mark,
+            INT nx,
+            INT ny,
+            INT nz,
             INT nsweeps )
 {
     INT n0e,n0o,isweep;
@@ -1969,7 +1967,7 @@ void rb0f3d( INT *ia,
 
 /**
  * \fn void fasp_smoother_dcsr_gs_rb3d(dvector *u, dCSRmat *A, dvector *b, INT L,INT order,
- *                                     INT nx,INT ny,INT nz) 
+ *                                     INT nx,INT ny,INT nz)
  *
  * \brief       Colores Gauss-Seidel smoother  for Au=b
  * \param u     initial guess and the new approximation to the solution obtained after L GS steps
@@ -1985,10 +1983,10 @@ void rb0f3d( INT *ia,
  * \date   02/08/2012
  */
 
-void fasp_smoother_dcsr_gs_rb3d (dvector *u, 
-                                 dCSRmat *A, 
-                                 dvector *b, 
-                                 INT L, 
+void fasp_smoother_dcsr_gs_rb3d (dvector *u,
+                                 dCSRmat *A,
+                                 dvector *b,
+                                 INT L,
                                  INT order,
                                  INT *mark,
                                  INT maximap,
@@ -2006,8 +2004,8 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
     
     // forward
     if (order == 1) {
-        while (L--) { 
-            rb0f3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);    
+        while (L--) {
+            rb0f3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);
 #if 1
             for (ii =0;ii <10;ii++)
                 for (i = maximap; i < size; i ++) {
@@ -2015,33 +2013,33 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
                     begin_row = ia[i], end_row = ia[i+1];
                     for (k = begin_row; k < end_row; k ++) {
                         j = ja[k];
-                        if (i!=j) t -= aa[k]*uval[j]; 
-                        else d = aa[k];    
+                        if (i!=j) t -= aa[k]*uval[j];
+                        else d = aa[k];
                     } // end for k
                     if (ABS(d) > SMALLREAL) uval[i] = t/d;
                 } // end for i
-#endif 
-        } // end while    
+#endif
+        } // end while
     }
     
     // backward
     else {
         while (L--) {
-#if 1    
+#if 1
             for (ii =0;ii <10;ii++)
                 for (i = size-1; i >= maximap; i --) {
                     t = bval[i];
                     begin_row = ia[i],end_row = ia[i+1];
                     for (k = begin_row; k < end_row; k ++) {
                         j = ja[k];
-                        if (i!=j) t -= aa[k]*uval[j]; 
-                        else d = aa[k];    
+                        if (i!=j) t -= aa[k]*uval[j];
+                        else d = aa[k];
                     } // end for k
                     if (ABS(d) > SMALLREAL) uval[i] = t/d;
                 } // end for i
-#endif 
-            rb0b3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);    
-        } // end while    
+#endif
+            rb0b3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);
+        } // end while
     }
     return;
 }
@@ -2049,7 +2047,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
 
 #if 0
 /**
- * \fn dCSRmat static form_contractor(dCSRmat *A, const INT smoother, const INT steps, 
+ * \fn dCSRmat static form_contractor(dCSRmat *A, const INT smoother, const INT steps,
  *                                    const INT ndeg, const REAL relax, const REAL dtol)
  *
  * \brief Form contractor I-BA
@@ -2068,11 +2066,11 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
  *
  * \note Not an O(N) algorithm, need to be modified!!!!
  */
-static dCSRmat form_contractor (dCSRmat *A, 
-                                const INT smoother, 
-                                const INT steps, 
-                                const INT ndeg, 
-                                const REAL relax, 
+static dCSRmat form_contractor (dCSRmat *A,
+                                const INT smoother,
+                                const INT steps,
+                                const INT ndeg,
+                                const REAL relax,
                                 const REAL dtol)
 {
     const INT   n=A->row;
@@ -2084,7 +2082,7 @@ static dCSRmat form_contractor (dCSRmat *A,
     b.row=x.row=n;
     b.val=work; x.val=work+n;
     
-    INT *index = (INT *)fasp_mem_calloc(n,sizeof(INT));    
+    INT *index = (INT *)fasp_mem_calloc(n,sizeof(INT));
     
     for (i=0; i<n; ++i) index[i]=i;
     
@@ -2097,7 +2095,7 @@ static dCSRmat form_contractor (dCSRmat *A,
         // get i-th column
         fasp_dcsr_getcol(i, A, b.val);
         
-        // set x =0.0 
+        // set x =0.0
         fasp_dvec_set(n, &x, 0.0);
         
         // smooth
@@ -2106,7 +2104,7 @@ static dCSRmat form_contractor (dCSRmat *A,
                 fasp_smoother_dcsr_gs(&x, 0, n-1, 1, A, &b, steps);
                 break;
             case POLY:
-                fasp_smoother_dcsr_poly(A, &b, &x, n, ndeg, steps); 
+                fasp_smoother_dcsr_poly(A, &b, &x, n, ndeg, steps);
                 break;
             case JACOBI:
                 fasp_smoother_dcsr_jacobi(&x, 0, n-1, 1, A, &b, steps);
@@ -2133,7 +2131,7 @@ static dCSRmat form_contractor (dCSRmat *A,
                 break;
             default:
                 printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
-        } 
+        }
         
         // store to B
         B.IA[i] = i*n;

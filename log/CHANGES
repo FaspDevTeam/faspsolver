@@ -4,6 +4,8 @@ File Name: CHANGES
 - Merge two branches.
 - Fix a bug in BiCGstab output.
 - Fix a bug in OpenMP related to "critical" in transpose operation.
+- Set -Wall as default, saved in make.inc.default.
+- Fix a few gcc warnings.
 
 09/04/2012 FASP 1.0.7:
 - Change some filenames to keep naming consistent.

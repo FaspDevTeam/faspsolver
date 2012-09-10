@@ -309,8 +309,7 @@ static inline void smat_amxv (REAL alpha,
  * \author Shiquan Zhang
  * \date   2010/04/24
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date  08/30/2012
+ * Modified by Chunsheng Feng, Zheng Li on 08/30/2012
  */
 
 static inline void blkcontr_str (INT start_data, 
@@ -370,10 +369,9 @@ static inline void blkcontr_str (INT start_data,
  * \author Shiquan Zhang
  * \date   2010/10/15
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   2012/08/28
+ * Modified by Chunsheng Feng, Zheng Li on 2012/08/28
  *
- * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
+ * \note The offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
  *       for nx = 1, but the order can be arbitrary. 
  */
 static inline void spaaxpy_str_2D_scalar (REAL alpha, 
@@ -382,13 +380,13 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
                                           REAL *y)
 {
     INT i;
-    INT idx1,idx2, idx;
+    INT idx1, idx2;
     INT end1, end2;
     INT nline;
 
 #ifdef _OPENMP
     //variables for OpenMP
-    INT myid, mybegin, myend;
+    INT myid, mybegin, myend, idx;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
 

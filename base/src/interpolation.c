@@ -771,9 +771,9 @@ static void interp_RS( dCSRmat *A,
     dCSRmat P=fasp_dcsr_create(Ptr->row,Ptr->col,Ptr->nnz);
     
 	INT nthreads = 1, use_openmp = FALSE;
-    INT row = MIN(P.IA[P.row], A->row);
     
 #ifdef _OPENMP 
+    INT row = MIN(P.IA[P.row], A->row);
 	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -1436,9 +1436,9 @@ static void interp_RS1(dCSRmat *A,
     dCSRmat P=fasp_dcsr_create(Ptr->row,Ptr->col,Ptr->nnz);
     
 	INT nthreads = 1, use_openmp = FALSE;
-	INT row = MIN(P.IA[P.row], A->row);
     
 #ifdef _OPENMP 
+	INT row = MIN(P.IA[P.row], A->row);
 	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();

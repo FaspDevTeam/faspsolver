@@ -241,25 +241,26 @@ dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
     // Pressure block
     dCSRmat P_csr = fasp_dcsr_create(ROW, COL, NNZ);
     REAL *Pval=P_csr.val;
-    
-    // local variable
-    INT i, j;
-    
+        
     // get pressure block
     memcpy(P_csr.JA, JA, NNZ*sizeof(INT)); 
     memcpy(P_csr.IA, IA, (ROW+1)*sizeof(INT));
     
-    //for (i=NNZ, j=NNZ*nc2-nc2; i--; j-=nc2)
 #ifdef _OPENMP
-#pragma omp parallel for 
+    INT i;
+
+#pragma omp parallel for
     for (i=NNZ-1; i>=0; i--) {
         Pval[i] = val[i*nc2];
     }
 #else
+    INT i, j;
+
     for (i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2) {
         Pval[i] = val[j];
     }
 #endif
+    
     // compress CSR format 
     fasp_dcsr_compress_inplace(&P_csr,1e-8);
     
