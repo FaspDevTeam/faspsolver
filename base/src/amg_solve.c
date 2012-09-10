@@ -41,8 +41,8 @@ INT fasp_amg_solve (AMG_data *mgl,
     const REAL    tol = param->tol;
     const REAL    sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
 
-	// local variables
-	REAL solveduration;
+    // local variables
+    REAL solveduration;
 
 #ifdef _OPENMP 
     REAL        solve_start=omp_get_wtime();
@@ -72,7 +72,7 @@ INT fasp_amg_solve (AMG_data *mgl,
         
         // Form residual r = b-A*x    
         fasp_dvec_cp(b,r); 
-		fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);    
+        fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);    
     
         // Compute norms of r and convergence factor
         absres  = fasp_blas_dvec_norm2(r); // residual ||r||
@@ -95,10 +95,10 @@ INT fasp_amg_solve (AMG_data *mgl,
             printf("Number of iterations = %d with relative residual %e.\n", 
                    iter, relres1);
 #ifdef _OPENMP 
-        REAL solve_end=omp_get_wtime();
-        solveduration = (REAL)(solve_end - solve_start);
+        REAL solve_end = omp_get_wtime();
+        solveduration = solve_end - solve_start;
 #else
-        clock_t solve_end=clock();
+        clock_t solve_end = clock();
         solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
         print_cputime("AMG solve",solveduration);

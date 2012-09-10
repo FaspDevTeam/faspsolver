@@ -754,12 +754,6 @@ INT fasp_dcsr_trans (dCSRmat *A,
     // Local variables
     INT i,j,k,p;
 
-#ifdef _OPENMP
-    // variables for OpenMP
-    INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
-#endif
-
     AT->row=m;
     AT->col=n;
     AT->nnz=nnz;
@@ -782,25 +776,10 @@ INT fasp_dcsr_trans (dCSRmat *A,
     //fasp_iarray_set(m+1, AT->IA, 0);
     memset(AT->IA, 0, sizeof(INT)*(m+1));
     
-#ifdef _OPENMP
-    if (nnz > OPENMP_HOLDS) {
-#pragma omp parallel for private (j, i)
-        for (j=0;j<nnz;++j) {
-            i=N2C(A->JA[j]); // column Number of A = row Number of A'
-            if (i<m-1)
-#pragma omp critical 
-               AT->IA[i+2]++;
-        }
+    for (j=0;j<nnz;++j) {
+        i=N2C(A->JA[j]); // column Number of A = row Number of A'
+        if (i<m-1) AT->IA[i+2]++;
     }
-    else {
-#endif
-        for (j=0;j<nnz;++j) {
-            i=N2C(A->JA[j]); // column Number of A = row Number of A'
-            if (i<m-1) AT->IA[i+2]++;
-        }
-#ifdef _OPENMP
-    }
-#endif
 
     for (i=2;i<=m;++i) AT->IA[i]+=AT->IA[i-1];
     

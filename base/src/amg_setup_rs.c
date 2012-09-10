@@ -47,8 +47,12 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     INT     mm, size;
     SHORT   level=0, status=SUCCESS;
     SHORT   max_levels=param->max_levels;
-    
+
+#ifdef _OPENMP
+    REAL setup_start = omp_get_wtime();
+#else
     clock_t setup_start=clock();
+#endif
     
     ivector vertices=fasp_ivec_create(m); // stores level info (fine: 0; coarse: 1)
     
@@ -90,7 +94,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
-    
+     
     // main AMG setup loop
     while ((mgl[level].A.row>MAX(50,param->coarse_dof)) && (level<max_levels-1)) {
         
@@ -106,12 +110,11 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         }
         
         /* -- setup Schwarz smoother if necessary */
-		if (level<param->schwarz_levels){
-			mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
-			fasp_dcsr_shift (&(mgl[level].schwarz.A), 1);
-			fasp_schwarz_setup(&mgl[level].schwarz, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
-		}
-        
+        if (level<param->schwarz_levels){
+            mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
+            fasp_dcsr_shift (&(mgl[level].schwarz.A), 1);
+            fasp_schwarz_setup(&mgl[level].schwarz, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
+        }
         
         /*-- Coarseing and form the structure of interpolation --*/
         status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
@@ -126,12 +129,14 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         
         /*-- Form interpolation --*/
         status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
+
         if (status < 0) goto FINISHED;
         
         /*-- Form coarse level stiffness matrix: There are two RAP routines available! --*/    
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
         fasp_blas_dcsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
         
+
         // fasp_blas_dcsr_ptap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
         
         // TODO: Make a new ptap using (A,P) only. R is not needed as an input! --Chensong
@@ -146,7 +151,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         fasp_dcsr_diagpref(&mgl[level].A); // reorder each row to make diagonal appear first
 #endif                
     }
-    
+
     // setup total level number and current level
     mgl[0].num_levels = max_levels = level+1;
     mgl[0].w = fasp_dvec_create(m);    
@@ -171,8 +176,13 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 #endif
     
     if (print_level>PRINT_NONE) {
-        clock_t setup_end=clock();
-        REAL setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);        
+#ifdef _OPENMP
+        REAL setup_end = omp_get_wtime();
+        REAL setupduration = setup_end - setup_start;
+#else	
+        clock_t setup_end = clock();
+        REAL setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);     
+#endif	
         print_amgcomplexity(mgl,print_level);
         print_cputime("Ruge-Stuben AMG setup",setupduration);
     }
@@ -268,7 +278,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
 	// initialize Schwarz parameters
 	mgl->schwarz_levels = param->schwarz_levels;
 	INT schwarz_mmsize  = param->schwarz_mmsize;
-    INT schwarz_maxlvl  = param->schwarz_maxlvl;
+        INT schwarz_maxlvl  = param->schwarz_maxlvl;
 	INT schwarz_type    = param->schwarz_type;
     
 #if DIAGONAL_PREF
@@ -302,7 +312,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
         
         if (mgl[level].P.col == 0) break;
         if (status < 0) goto FINISHED;
-        
+    
         if(interp_type==INTERP_REG) {
             /*-- Form interpolation --*/
             status = fasp_amg_interp1(&mgl[level].A, &vertices, &mgl[level].P, param, &S, icor_ysk);
@@ -311,11 +321,13 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
             status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
         }
         
+
         if (status < 0) goto FINISHED;
         
         /*-- Form coarse level stiffness matrix --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
         
+
         if(interp_type==INTERP_REG) {
             /*-- Form coarse level stiffness matrix: There are two RAP routines available! --*/
             fasp_blas_dcsr_rap4(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A, icor_ysk);

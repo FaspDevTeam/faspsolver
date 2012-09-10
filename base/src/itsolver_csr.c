@@ -159,7 +159,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
 #endif
     
 #ifdef _OPENMP 
-	REAL solver_start = omp_get_wtime();
+    REAL solver_start = omp_get_wtime();
 #else
     clock_t solver_start = clock();
 #endif
@@ -169,7 +169,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
     if ( print_level>=PRINT_MIN ) {
 #ifdef _OPENMP 
         REAL solver_end = omp_get_wtime();
-        solver_duration = (REAL)(solver_end - solver_start);
+        solver_duration = solver_end - solver_start;
 #else
         clock_t solver_end = clock();
         solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);

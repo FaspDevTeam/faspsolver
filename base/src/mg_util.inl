@@ -38,7 +38,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
     const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
 
    
-    INT Status = SUCCESS;
+    //INT Status = SUCCESS;
     
     // fasp_smoother_dcsr_sgs(x, A, b, 10);
 

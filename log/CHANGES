@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+09/10/2012 FASP 1.0.8:
+- Merge two branches.
+- Fix a bug in BiCGstab output.
+- Fix a bug in OpenMP related to "critical" in transpose operation.
+
 09/04/2012 FASP 1.0.7:
 - Change some filenames to keep naming consistent.
 - Some more OMP changes, make changes to fasp4monix accordingly.

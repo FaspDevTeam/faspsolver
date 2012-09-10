@@ -1,11 +1,11 @@
      137 ./base/src/amg.c
      116 ./base/src/amg_setup_cr.c
-     403 ./base/src/amg_setup_rs.c
+     398 ./base/src/amg_setup_rs.c
      535 ./base/src/amg_setup_sa.c
      400 ./base/src/amg_setup_ua.c
      334 ./base/src/amg_solve.c
      798 ./base/src/amlirecur.c
-     268 ./base/src/array.c
+     267 ./base/src/array.c
      257 ./base/src/auxiliary.c
      441 ./base/src/blas_array.c
      197 ./base/src/blas_block.c
@@ -20,7 +20,7 @@
     1677 ./base/src/coarsening_rs.c
       91 ./base/src/convert.c
       71 ./base/src/eigen.c
-      99 ./base/src/famg.c
+     113 ./base/src/famg.c
      284 ./base/src/fmgcycle.c
      964 ./base/src/formats.c
       78 ./base/src/givens.c
@@ -34,7 +34,7 @@
     1247 ./base/src/io.c
      126 ./base/src/itsolver_bcsr.c
      446 ./base/src/itsolver_bsr.c
-     650 ./base/src/itsolver_csr.c
+     653 ./base/src/itsolver_csr.c
      343 ./base/src/itsolver_str.c
      170 ./base/src/lu.c
      266 ./base/src/memory.c
@@ -49,7 +49,7 @@
     1010 ./base/src/pgmres.c
      852 ./base/src/pminres.c
      626 ./base/src/precond_bsr.c
-     535 ./base/src/precond_csr.c
+     543 ./base/src/precond_csr.c
     1731 ./base/src/precond_str.c
      609 ./base/src/pvfgmres.c
      893 ./base/src/pvgmres.c
@@ -62,10 +62,10 @@
     2164 ./base/src/smoother_csr.c
      474 ./base/src/smoother_poly.c
     1859 ./base/src/smoother_str.c
-     271 ./base/src/sparse_block.c
+     272 ./base/src/sparse_block.c
     1330 ./base/src/sparse_bsr.c
      117 ./base/src/sparse_coo.c
-    1210 ./base/src/sparse_csr.c
+    1189 ./base/src/sparse_csr.c
       71 ./base/src/sparse_csrl.c
      203 ./base/src/sparse_str.c
      972 ./base/src/sparse_util.c
@@ -81,4 +81,4 @@
     5818 ./base/include/malloc.c.h
      187 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   58218 total
+   58217 total

@@ -1348,7 +1348,7 @@ void swep2db(INT *ia,
              INT nx, 
              INT ny) 
 {
-    INT nxy, k, k0, j, j0, i, i0;
+    INT nxy, j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
     REAL t, d;
     
@@ -1753,7 +1753,7 @@ void swep2df(INT *ia,
              INT nx,
 	     INT ny ) 
 {
-    INT nxy,k,k0,j,j0,i,i0;
+    INT nxy,j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
     REAL t,d;
     nxy=nx*ny;

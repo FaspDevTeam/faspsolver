@@ -155,29 +155,12 @@ static void aggregation (dCSRmat *A,
     
     num_each_aggregation = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
    
-#ifdef _OPENMP
-    if (row > OPENMP_HOLDS) {
-#pragma omp parallel for private (i)
-        for (i=0; i<row; i++) {
-            INT ii = vertices->val[i];
-            temp_C[i] = ii;
-            if (ii >= 0) {
-#pragma omp critical
-                num_each_aggregation[ii] ++;
-	    }
+    for (i=row;i--;) {
+        temp_C[i] = vertices->val[i];  
+        if (vertices->val[i] >= 0) {
+            num_each_aggregation[vertices->val[i]] ++;
         }
     }
-    else {
-#endif
-        for (i=row;i--;) {
-            temp_C[i] = vertices->val[i];  
-            if (vertices->val[i] >= 0) {
-                num_each_aggregation[vertices->val[i]] ++;
-            }
-        }
-#ifdef _OPENMP
-    }
-#endif
     
     for(i=0; i<row; ++i) {
         if (vertices->val[i] < -1) {
