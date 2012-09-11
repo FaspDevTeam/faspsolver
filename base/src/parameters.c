@@ -1,5 +1,5 @@
 /*! \file parameters.c
- *  \brief Initialize, set, or print out data and parameters
+ *  \brief Initialize, set, or print input data and parameters
  *
  */
 
@@ -15,49 +15,50 @@
 /**
  * \fn void fasp_param_init (char *inputfile,
  *                           input_param *inparam,
- *                           itsolver_param *itparam,
+ *                           itsolver_param *itsparam,
  *                           AMG_param *amgparam,
  *                           ILU_param *iluparam,
- *                           Schwarz_param *schwarzparam)
+ *                           Schwarz_param *schparam)
  *
  * \brief Initialize parameters, global variables, etc
  *
  * \param inputfile     Filename of the input file
  * \param inparam       Input parameters
- * \param itparam       Iterative solver parameters
+ * \param itsparam      Iterative solver parameters
  * \param amgparam      AMG parameters
  * \param iluparam      ILU parameters
- * \param schwarzparam  Schwarz parameters
+ * \param schparam      Schwarz parameters
  *
  * \author Chensong Zhang
  * \date   2010/08/12
  *
  * Modified by Xiaozhe Hu (01/23/2011): initialize, then set value
+ * Modified by Chensong Zhang (09/12/2012): find a bug during debugging in VS08
  */
 void fasp_param_init (char *inputfile,
                       input_param *inparam,
-                      itsolver_param *itparam,
+                      itsolver_param *itsparam,
                       AMG_param *amgparam,
                       ILU_param *iluparam,
-                      Schwarz_param *schwarzparam)
+                      Schwarz_param *schparam)
 {
     total_alloc_mem   = 0; // initialize total memeory amount
     total_alloc_count = 0; // initialize alloc count
     
-    if (itparam)  fasp_param_solver_init(itparam);
+    if (itsparam) fasp_param_solver_init(itsparam);
     
     if (amgparam) fasp_param_amg_init(amgparam);
     
     if (iluparam) fasp_param_ilu_init(iluparam);
     
-    if (schwarzparam) fasp_param_schwarz_init(schwarzparam);
+    if (schparam) fasp_param_schwarz_init(schparam);
     
     if (inputfile) {
         fasp_param_input(inputfile,inparam);
-        if (itparam)  fasp_param_solver_set(itparam,inparam);
+        if (itsparam) fasp_param_solver_set(itsparam,inparam);
         if (amgparam) fasp_param_amg_set(amgparam,inparam);
         if (iluparam) fasp_param_ilu_set(iluparam,inparam);
-        if (schwarzparam) fasp_param_schwarz_set(schwarzparam,inparam);
+        if (schparam) fasp_param_schwarz_set(schparam,inparam);
     }
     else {
         printf("### WARNING: No input specified. Use default values instead!\n");
@@ -77,55 +78,63 @@ void fasp_param_init (char *inputfile,
 void fasp_param_input_init (input_param *inparam)
 {
     strcpy(inparam->workdir,"data/");
+
+    // Input/output
+    inparam->print_level              = PRINT_MIN;
+    inparam->output_type              = 0;
     
-    inparam->print_level = PRINT_MIN;
-    inparam->output_type = 0;
+    // Problem information
+    inparam->problem_num              = 10;
+    inparam->solver_type              = SOLVER_CG;
+    inparam->precond_type             = PREC_AMG;
+    inparam->stop_type                = STOP_REL_RES;
     
-    inparam->problem_num = 10;
-    inparam->solver_type = SOLVER_CG;
-    inparam->precond_type = PREC_AMG;
-    inparam->stop_type = STOP_REL_RES;
+    // Solver parameters
+    inparam->itsolver_tol             = 1e-6;
+    inparam->itsolver_maxit           = 500;
+    inparam->restart                  = 25;
     
-    inparam->itsolver_tol = 1e-6;
-    inparam->itsolver_maxit = 500;
-    inparam->restart = 25;
+    // ILU method parameters
+    inparam->ILU_type                 = ILUk;
+    inparam->ILU_lfil                 = 0;
+    inparam->ILU_droptol              = 0.001;
+    inparam->ILU_relax                = 0;
+    inparam->ILU_permtol              = 0.0;
     
-    inparam->ILU_type = ILUk;
-    inparam->ILU_lfil = 0;
-    inparam->ILU_droptol = 0.001;
-    inparam->ILU_relax = 0;
-    inparam->ILU_permtol = 0.0;
+    // Schwarz method parameters
+    inparam->Schwarz_mmsize           = 200;
+	inparam->Schwarz_maxlvl           = 2;
+	inparam->Schwarz_type             = 1;
     
-    inparam->Schwarz_mmsize = 200;
-	inparam->Schwarz_maxlvl = 2;
-	inparam->Schwarz_type = 1;
+    // AMG method parameters
+    inparam->AMG_type                 = CLASSIC_AMG;
+    inparam->AMG_levels               = 15;
+    inparam->AMG_cycle_type           = V_CYCLE;
+    inparam->AMG_smoother             = GS;
+    inparam->AMG_presmooth_iter       = 2;
+    inparam->AMG_postsmooth_iter      = 2;
+    inparam->AMG_relaxation           = 1.0;
+    inparam->AMG_coarse_dof           = 500;
+    inparam->AMG_tol                  = 1e-4*inparam->itsolver_tol;
+    inparam->AMG_maxit                = 1;
+    inparam->AMG_ILU_levels           = 0;
+    inparam->AMG_schwarz_levels       = 0;
+    inparam->AMG_coarse_scaling       = OFF; // Keep this off. Require investigation --Chensong
+    inparam->AMG_amli_degree          = 1;
+    inparam->AMG_nl_amli_krylov_type  = 2;
     
-    inparam->AMG_type = CLASSIC_AMG;
-    inparam->AMG_levels = 20;
-    inparam->AMG_cycle_type = V_CYCLE;
-    inparam->AMG_smoother = GS;
-    inparam->AMG_presmooth_iter = 2;
-    inparam->AMG_postsmooth_iter = 2;
-    inparam->AMG_relaxation = 1.0;
-    inparam->AMG_coarse_dof = 500;
-    inparam->AMG_tol = 1e-4*inparam->itsolver_tol;
-    inparam->AMG_maxit = 1;
-    inparam->AMG_ILU_levels = 0;
-    inparam->AMG_schwarz_levels = 0;
-    inparam->AMG_coarse_scaling = ON;
-    inparam->AMG_amli_degree = 1;
-    inparam->AMG_nl_amli_krylov_type = 2;
-    
-    inparam->AMG_coarsening_type = 1;
-    inparam->AMG_interpolation_type = 1;
-    inparam->AMG_strong_threshold = 0.5;
+    // Classical AMG specific
+    inparam->AMG_coarsening_type      = 1;
+    inparam->AMG_interpolation_type   = 1;
+    inparam->AMG_strong_threshold     = 0.5;
     inparam->AMG_truncation_threshold = 0.4;
-    inparam->AMG_max_row_sum = 0.9;
+    inparam->AMG_max_row_sum          = 0.9;
     
-    inparam->AMG_strong_coupled = 0.08;
-    inparam->AMG_max_aggregation = 9;
-    inparam->AMG_tentative_smooth = 0.67;
-    inparam->AMG_smooth_filter = ON;
+    // Aggregation AMG specific
+    inparam->AMG_strong_coupled       = 0.08;
+    inparam->AMG_max_aggregation      = 9;
+    inparam->AMG_tentative_smooth     = 0.67;
+    inparam->AMG_smooth_filter        = ON;
 }
 
 /**
@@ -140,68 +149,73 @@ void fasp_param_input_init (input_param *inparam)
  */
 void fasp_param_amg_init (AMG_param *amgparam)
 {
-    amgparam->AMG_type = CLASSIC_AMG;
-    amgparam->print_level = PRINT_NONE;
-    amgparam->maxit = 1;
-    amgparam->tol = 1e-8;
+    // AMG type 
+    amgparam->AMG_type             = CLASSIC_AMG;
+    amgparam->print_level          = PRINT_NONE;
+    amgparam->maxit                = 1;
+    amgparam->tol                  = 1e-8;
     
-    amgparam->max_levels = 15;
-    amgparam->coarse_dof = 500;
-    amgparam->cycle_type = V_CYCLE;
-    amgparam->smoother = GS;
-    amgparam->smooth_order = CF_ORDER;
-    amgparam->presmooth_iter = 2;
-    amgparam->postsmooth_iter = 2;
-    amgparam->relaxation = 1.0;
-    amgparam->polynomial_degree = 3;
-    amgparam->coarse_scaling = OFF; // Dangerous if ON, need to check --Chensong
-    amgparam->amli_degree = 1;
-    amgparam->amli_coef = NULL;
-    amgparam->nl_amli_krylov_type = 2;
+    // AMG method parameters
+    amgparam->max_levels           = 15;
+    amgparam->coarse_dof           = 500;
+    amgparam->cycle_type           = V_CYCLE;
+    amgparam->smoother             = GS;
+    amgparam->smooth_order         = CF_ORDER;
+    amgparam->presmooth_iter       = 2;
+    amgparam->postsmooth_iter      = 2;
+    amgparam->relaxation           = 1.0;
+    amgparam->polynomial_degree    = 3;
+    amgparam->coarse_scaling       = OFF; // Keep this off. Require investigation --Chensong
+    amgparam->amli_degree          = 1;
+    amgparam->amli_coef            = NULL;
+    amgparam->nl_amli_krylov_type  = 2;
     
-    amgparam->coarsening_type = 1;
-    amgparam->interpolation_type = 1;
-    
-    amgparam->strong_threshold = 0.5;
+    // Classical AMG specific
+    amgparam->coarsening_type      = 1;
+    amgparam->interpolation_type   = 1;
+    amgparam->strong_threshold     = 0.5;
     amgparam->truncation_threshold = 0.4;
-    amgparam->max_row_sum = 0.9;
+    amgparam->max_row_sum          = 0.9;
     
-    amgparam->strong_coupled = 0.08;
-    amgparam->max_aggregation = 9;
-    amgparam->tentative_smooth = 0.0;
-    amgparam->smooth_filter = OFF;
+    // Aggregation AMG specific
+    amgparam->strong_coupled       = 0.08;
+    amgparam->max_aggregation      = 9;
+    amgparam->tentative_smooth     = 0.0;
+    amgparam->smooth_filter        = OFF;
     
-    amgparam->ILU_type = ILUk;
-    amgparam->ILU_levels = 0;
-    amgparam->ILU_lfil = 0;
-    amgparam->ILU_droptol = 0.001;
-    amgparam->ILU_relax = 0;
+    // ILU smoother parameters
+    amgparam->ILU_type             = ILUk;
+    amgparam->ILU_levels           = 0;
+    amgparam->ILU_lfil             = 0;
+    amgparam->ILU_droptol          = 0.001;
+    amgparam->ILU_relax            = 0;
     
-    amgparam->schwarz_levels = 0;
-    amgparam->schwarz_mmsize = 200;
-    amgparam->schwarz_maxlvl = 2;
-    amgparam->schwarz_type = 1;
+    // Schwarz smoother parameters
+    amgparam->schwarz_levels       = 0;
+    amgparam->schwarz_mmsize       = 200;
+    amgparam->schwarz_maxlvl       = 2;
+    amgparam->schwarz_type         = 1;
 }
 
 /**
- * \fn void fasp_param_solver_init (itsolver_param *itparam)
+ * \fn void fasp_param_solver_init (itsolver_param *itsparam)
  *
  * \brief Initialize itsolver_param
  *
- * \param itparam   Parameters for iterative solvers
+ * \param itsparam   Parameters for iterative solvers
  *
  * \author Chensong Zhang
  * \date   2010/03/23
  */
-void fasp_param_solver_init (itsolver_param *itparam)
+void fasp_param_solver_init (itsolver_param *itsparam)
 {
-    itparam->print_level   = 0;
-    itparam->itsolver_type = SOLVER_CG;
-    itparam->precond_type  = PREC_AMG;
-    itparam->stop_type     = STOP_REL_RES;
-    itparam->maxit         = 500;
-    itparam->restart       = 25;
-    itparam->tol           = 1e-8;
+    itsparam->print_level   = 0;
+    itsparam->itsolver_type = SOLVER_CG;
+    itsparam->precond_type  = PREC_AMG;
+    itsparam->stop_type     = STOP_REL_RES;
+    itsparam->maxit         = 500;
+    itsparam->restart       = 25;
+    itsparam->tol           = 1e-8;
 }
 
 /**
@@ -225,21 +239,21 @@ void fasp_param_ilu_init (ILU_param *iluparam)
 }
 
 /**
- * \fn void fasp_param_schwarz_init (Schwarz_param *schwarzparam)
+ * \fn void fasp_param_schwarz_init (Schwarz_param *schparam)
  *
  * \brief Initialize Schwarz parameters
  *
- * \param schwarzparam  Parameters for Schwarz method
+ * \param schparam    Parameters for Schwarz method
  *
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_schwarz_init (Schwarz_param *schwarzparam)
+void fasp_param_schwarz_init (Schwarz_param *schparam)
 {
-    schwarzparam->print_level    = 0;
-    schwarzparam->schwarz_type   = 3;
-    schwarzparam->schwarz_maxlvl = 2;
-    schwarzparam->schwarz_mmsize = 200;
+    schparam->print_level    = 0;
+    schparam->schwarz_type   = 3;
+    schparam->schwarz_maxlvl = 2;
+    schparam->schwarz_mmsize = 200;
 }
 
 /**
@@ -332,52 +346,52 @@ void fasp_param_ilu_set (ILU_param *iluparam,
 }
 
 /**
- * \fn void fasp_param_schwarz_set (Schwarz_param *schwarzparam, input_param *inparam)
+ * \fn void fasp_param_schwarz_set (Schwarz_param *schparam, input_param *inparam)
  *
  * \brief Set Schwarz_param with INPUT
  *
- * \param schwarzparam    Parameters for Schwarz method
+ * \param schparam    Parameters for Schwarz method
  * \param inparam     Input parameters
  *
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_schwarz_set (Schwarz_param *schwarzparam,
+void fasp_param_schwarz_set (Schwarz_param *schparam,
                              input_param *inparam)
 {
-    schwarzparam->print_level    = inparam->print_level;
-    schwarzparam->schwarz_type   = inparam->Schwarz_type;
-    schwarzparam->schwarz_maxlvl = inparam->Schwarz_maxlvl;
-    schwarzparam->schwarz_mmsize = inparam->Schwarz_mmsize;
+    schparam->print_level    = inparam->print_level;
+    schparam->schwarz_type   = inparam->Schwarz_type;
+    schparam->schwarz_maxlvl = inparam->Schwarz_maxlvl;
+    schparam->schwarz_mmsize = inparam->Schwarz_mmsize;
 }
 
 /**
- * \fn void fasp_param_solver_set (itsolver_param *itparam, input_param *inparam)
+ * \fn void fasp_param_solver_set (itsolver_param *itsparam, input_param *inparam)
  *
  * \brief Set itsolver_param with INPUT
  *
- * \param itparam    Parameters for iterative solvers
+ * \param itsparam   Parameters for iterative solvers
  * \param inparam    Input parameters
  *
  * \author Chensong Zhang
  * \date   2010/03/23
  */
-void fasp_param_solver_set (itsolver_param *itparam,
+void fasp_param_solver_set (itsolver_param *itsparam,
                             input_param *inparam)
 {
-    itparam->print_level    = inparam->print_level;
-    itparam->itsolver_type  = inparam->solver_type;
-    itparam->precond_type   = inparam->precond_type;
-    itparam->stop_type      = inparam->stop_type;
-    itparam->restart        = inparam->restart;
+    itsparam->print_level    = inparam->print_level;
+    itsparam->itsolver_type  = inparam->solver_type;
+    itsparam->precond_type   = inparam->precond_type;
+    itsparam->stop_type      = inparam->stop_type;
+    itsparam->restart        = inparam->restart;
     
-    if (itparam->itsolver_type == SOLVER_AMG) {
-        itparam->tol   = inparam->AMG_tol;
-        itparam->maxit = inparam->AMG_maxit;
+    if (itsparam->itsolver_type == SOLVER_AMG) {
+        itsparam->tol   = inparam->AMG_tol;
+        itsparam->maxit = inparam->AMG_maxit;
     }
     else {
-        itparam->tol   = inparam->itsolver_tol;
-        itparam->maxit = inparam->itsolver_maxit;
+        itsparam->tol   = inparam->itsolver_tol;
+        itsparam->maxit = inparam->itsolver_maxit;
     }
 }
 
@@ -424,57 +438,24 @@ void fasp_precond_data_null (precond_data *pcdata)
 void fasp_param_amg_to_prec (precond_data *pcdata,
                              AMG_param *amgparam)
 {
-    pcdata->AMG_type = amgparam->AMG_type;
-    pcdata->print_level = amgparam->print_level;
-    pcdata->maxit = amgparam->maxit;
-    pcdata->max_levels = amgparam->max_levels;
-    pcdata->tol = amgparam->tol;
-    pcdata->cycle_type = amgparam->cycle_type;
-    pcdata->smoother = amgparam->smoother;
-    pcdata->smooth_order = amgparam->smooth_order;
-    pcdata->presmooth_iter  = amgparam->presmooth_iter;
-    pcdata->postsmooth_iter = amgparam->postsmooth_iter;
-    pcdata->coarsening_type = amgparam->coarsening_type;
-    pcdata->relaxation = amgparam->relaxation;
-    pcdata->polynomial_degree = amgparam->polynomial_degree;
-    pcdata->coarse_scaling = amgparam->coarse_scaling;
-    pcdata->amli_degree = amgparam->amli_degree;
-    pcdata->amli_coef = amgparam->amli_coef;
+    pcdata->AMG_type            = amgparam->AMG_type;
+    pcdata->print_level         = amgparam->print_level;
+    pcdata->maxit               = amgparam->maxit;
+    pcdata->max_levels          = amgparam->max_levels;
+    pcdata->tol                 = amgparam->tol;
+    pcdata->cycle_type          = amgparam->cycle_type;
+    pcdata->smoother            = amgparam->smoother;
+    pcdata->smooth_order        = amgparam->smooth_order;
+    pcdata->presmooth_iter      = amgparam->presmooth_iter;
+    pcdata->postsmooth_iter     = amgparam->postsmooth_iter;
+    pcdata->coarsening_type     = amgparam->coarsening_type;
+    pcdata->relaxation          = amgparam->relaxation;
+    pcdata->polynomial_degree   = amgparam->polynomial_degree;
+    pcdata->coarse_scaling      = amgparam->coarse_scaling;
+    pcdata->amli_degree         = amgparam->amli_degree;
+    pcdata->amli_coef           = amgparam->amli_coef;
     pcdata->nl_amli_krylov_type = amgparam->nl_amli_krylov_type;
-    pcdata->tentative_smooth = amgparam->tentative_smooth;
-}
-
-/**
- * \fn void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata, AMG_param *amgparam)
- *
- * \brief Set precond_data_bsr with AMG_param
- *
- * \param pcdata      Preconditioning data structure
- * \param amgparam    Parameters for AMG
- *
- * \author Xiaozhe Hu
- * \date   02/06/2012
- */
-void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata,
-                                 AMG_param *amgparam)
-{
-    pcdata->AMG_type = amgparam->AMG_type;
-    pcdata->print_level = amgparam->print_level;
-    pcdata->maxit = amgparam->maxit;
-    pcdata->max_levels = amgparam->max_levels;
-    pcdata->tol = amgparam->tol;
-    pcdata->cycle_type = amgparam->cycle_type;
-    pcdata->smoother = amgparam->smoother;
-    pcdata->smooth_order = amgparam->smooth_order;
-    pcdata->presmooth_iter  = amgparam->presmooth_iter;
-    pcdata->postsmooth_iter = amgparam->postsmooth_iter;
-    pcdata->coarsening_type = amgparam->coarsening_type;
-    pcdata->relaxation = amgparam->relaxation;
-    pcdata->coarse_scaling = amgparam->coarse_scaling;
-    pcdata->amli_degree = amgparam->amli_degree;
-    pcdata->amli_coef = amgparam->amli_coef;
-    pcdata->nl_amli_krylov_type = amgparam->nl_amli_krylov_type;
-    pcdata->tentative_smooth = amgparam->tentative_smooth;
+    pcdata->tentative_smooth    = amgparam->tentative_smooth;
 }
 
 /**
@@ -491,21 +472,54 @@ void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata,
 void fasp_param_prec_to_amg (AMG_param *amgparam,
                              precond_data *pcdata)
 {
-    amgparam->AMG_type = pcdata->AMG_type;
-    amgparam->print_level = pcdata->print_level;
-    amgparam->cycle_type = pcdata->cycle_type;
-    amgparam->smoother   = pcdata->smoother;
-    amgparam->smooth_order = pcdata->smooth_order;
-    amgparam->presmooth_iter  = pcdata->presmooth_iter;
-    amgparam->postsmooth_iter = pcdata->postsmooth_iter;
-    amgparam->relaxation = pcdata->relaxation;
-    amgparam->polynomial_degree = pcdata->polynomial_degree;
-    amgparam->coarse_scaling = pcdata->coarse_scaling;
-    amgparam->amli_degree = pcdata->amli_degree;
-    amgparam->amli_coef = pcdata->amli_coef;
-    amgparam->tentative_smooth = pcdata->tentative_smooth;
-    amgparam->ILU_levels = pcdata->mgl_data->ILU_levels;
+    amgparam->AMG_type            = pcdata->AMG_type;
+    amgparam->print_level         = pcdata->print_level;
+    amgparam->cycle_type          = pcdata->cycle_type;
+    amgparam->smoother            = pcdata->smoother;
+    amgparam->smooth_order        = pcdata->smooth_order;
+    amgparam->presmooth_iter      = pcdata->presmooth_iter;
+    amgparam->postsmooth_iter     = pcdata->postsmooth_iter;
+    amgparam->relaxation          = pcdata->relaxation;
+    amgparam->polynomial_degree   = pcdata->polynomial_degree;
+    amgparam->coarse_scaling      = pcdata->coarse_scaling;
+    amgparam->amli_degree         = pcdata->amli_degree;
+    amgparam->amli_coef           = pcdata->amli_coef;
     amgparam->nl_amli_krylov_type = pcdata->nl_amli_krylov_type;
+    amgparam->tentative_smooth    = pcdata->tentative_smooth;
+    amgparam->ILU_levels          = pcdata->mgl_data->ILU_levels;
+}
+
+/**
+ * \fn void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata, AMG_param *amgparam)
+ *
+ * \brief Set precond_data_bsr with AMG_param
+ *
+ * \param pcdata      Preconditioning data structure
+ * \param amgparam    Parameters for AMG
+ *
+ * \author Xiaozhe Hu
+ * \date   02/06/2012
+ */
+void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata,
+                                 AMG_param *amgparam)
+{
+    pcdata->AMG_type            = amgparam->AMG_type;
+    pcdata->print_level         = amgparam->print_level;
+    pcdata->maxit               = amgparam->maxit;
+    pcdata->max_levels          = amgparam->max_levels;
+    pcdata->tol                 = amgparam->tol;
+    pcdata->cycle_type          = amgparam->cycle_type;
+    pcdata->smoother            = amgparam->smoother;
+    pcdata->smooth_order        = amgparam->smooth_order;
+    pcdata->presmooth_iter      = amgparam->presmooth_iter;
+    pcdata->postsmooth_iter     = amgparam->postsmooth_iter;
+    pcdata->coarsening_type     = amgparam->coarsening_type;
+    pcdata->relaxation          = amgparam->relaxation;
+    pcdata->coarse_scaling      = amgparam->coarse_scaling;
+    pcdata->amli_degree         = amgparam->amli_degree;
+    pcdata->amli_coef           = amgparam->amli_coef;
+    pcdata->nl_amli_krylov_type = amgparam->nl_amli_krylov_type;
+    pcdata->tentative_smooth    = amgparam->tentative_smooth;
 }
 
 /**
@@ -522,20 +536,20 @@ void fasp_param_prec_to_amg (AMG_param *amgparam,
 void fasp_param_prec_to_amg_bsr (AMG_param *amgparam,
                                  precond_data_bsr *pcdata)
 {
-    amgparam->AMG_type = pcdata->AMG_type;
-    amgparam->print_level = pcdata->print_level;
-    amgparam->cycle_type = pcdata->cycle_type;
-    amgparam->smoother = pcdata->smoother;
-    amgparam->smooth_order = pcdata->smooth_order;
-    amgparam->presmooth_iter = pcdata->presmooth_iter;
-    amgparam->postsmooth_iter = pcdata->postsmooth_iter;
-    amgparam->relaxation = pcdata->relaxation;
-    amgparam->coarse_scaling = pcdata->coarse_scaling;
-    amgparam->amli_degree = pcdata->amli_degree;
-    amgparam->amli_coef = pcdata->amli_coef;
-    amgparam->tentative_smooth = pcdata->tentative_smooth;
-    amgparam->ILU_levels = pcdata->mgl_data->ILU_levels;
+    amgparam->AMG_type            = pcdata->AMG_type;
+    amgparam->print_level         = pcdata->print_level;
+    amgparam->cycle_type          = pcdata->cycle_type;
+    amgparam->smoother            = pcdata->smoother;
+    amgparam->smooth_order        = pcdata->smooth_order;
+    amgparam->presmooth_iter      = pcdata->presmooth_iter;
+    amgparam->postsmooth_iter     = pcdata->postsmooth_iter;
+    amgparam->relaxation          = pcdata->relaxation;
+    amgparam->coarse_scaling      = pcdata->coarse_scaling;
+    amgparam->amli_degree         = pcdata->amli_degree;
+    amgparam->amli_coef           = pcdata->amli_coef;
     amgparam->nl_amli_krylov_type = pcdata->nl_amli_krylov_type;
+    amgparam->tentative_smooth    = pcdata->tentative_smooth;
+    amgparam->ILU_levels          = pcdata->mgl_data->ILU_levels;
 }
 
 /**

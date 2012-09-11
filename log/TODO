@@ -158,3 +158,4 @@ Bug Fixes
 [ 0.7.8 ] check other iterative solvers for similar bugs
 [ 0.8.9 ] remove sevearl obsolete functions
 [ 1.0.8 ] fix a bug in BiCGstab: silent exit when divided by zero
+[       ] fix a bug in vs08 debug environment
