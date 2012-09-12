@@ -4,6 +4,7 @@ File Name: CHANGES
 - Fix warnings from VS2008.
 - Upadet ICC compiler in VS2008.
 - Compare classical AMG implementation with an older version and make a few changes.
+- Locate the difference between the old AMG and new one: CF-ordering is used as default.
 
 09/11/2012 FASP 1.0.8:
 - Merge two branches.
