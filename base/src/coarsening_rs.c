@@ -59,11 +59,12 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
 							iCSRmat *S,
                             AMG_param *param)
 {    
-    const INT   coarsening_type = param->coarsening_type;
+    const SHORT coarsening_type = param->coarsening_type;
     const INT   row = A->row;
     const REAL  epsilon_str = param->strong_threshold;
-	INT         interp_type = param->interpolation_type;
-    INT         status = SUCCESS, col = 0;    
+	SHORT       interp_type = param->interpolation_type;
+    SHORT       status = SUCCESS;
+	INT         col = 0;    
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_coarsening_rs ...... [Start]\n");
@@ -97,14 +98,11 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     // Step 2: standard coarsening algorithm 
     switch (coarsening_type) {
         case 3: // compatible relaxation (Need to be modified --Chensong)
-            col = fasp_amg_coarsening_cr(0,A->row-1, A, vertices, param);    
-            break;
+            col = fasp_amg_coarsening_cr(0,A->row-1, A, vertices, param); break;
         case 4: // aggressive coarsening
-            col=form_coarse_level_ag(A, S, vertices,row,interp_type);
-            break;
+            col = form_coarse_level_ag(A, S, vertices,row,interp_type); break;
         default:
-            col = form_coarse_level(A, S, vertices, row, interp_type);
-            break;
+            col = form_coarse_level(A, S, vertices, row, interp_type); break;
     }
     
 #if DEBUG_MODE
@@ -114,11 +112,9 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     // Step 3: generate sparsity pattern of P
 	switch (interp_type){
 		case INTERP_STD: // standard interpolaiton
-			generate_sparsity_P_standard (P, S, vertices, row, col);
-			break;
+			generate_sparsity_P_standard (P, S, vertices, row, col); break;
 		default: // direct interpolation & energy minimization interpolaiton
-			generate_sparsity_P(P, S, vertices, row, col);
-			break;
+			generate_sparsity_P(P, S, vertices, row, col); break;
 	}
     
 #if DEBUG_MODE
@@ -373,11 +369,10 @@ void enter_list (LinkList *LoL_head_ptr,
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/06/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/25/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/25/2012
  */
 
-static void generate_S ( dCSRmat *A, 
+static void generate_S (dCSRmat *A, 
                         iCSRmat *S, 
                         AMG_param *param )
 {
@@ -438,6 +433,7 @@ static void generate_S ( dCSRmat *A,
                 row_scale=0; row_sum=0;
                 
                 begin_row=ia[i]; end_row=ia[i+1];
+
                 for (j=begin_row;j<end_row;j++) {
                     row_scale=MIN(row_scale, aj[j]);
                     row_sum+=aj[j];
@@ -454,7 +450,6 @@ static void generate_S ( dCSRmat *A,
                     /* make all dependencies weak */
                     for (j=begin_row;j<end_row;j++) S->JA[j]=-1;
                 }
-                /* otherwise */
                 else {
                     for (j=begin_row;j<end_row;j++) {
                         /* if $a_{ij}>=\epsilon_{str}*\min a_{ij}$, the connection $a_{ij}$ 
@@ -471,6 +466,7 @@ static void generate_S ( dCSRmat *A,
             row_scale=0; row_sum=0;
             
             begin_row=ia[i]; end_row=ia[i+1];
+
             for (j=begin_row;j<end_row;j++) {
                 row_scale=MIN(row_scale, aj[j]);
                 row_sum+=aj[j];
@@ -487,7 +483,6 @@ static void generate_S ( dCSRmat *A,
                 /* make all dependencies weak */
                 for (j=begin_row;j<end_row;j++) S->JA[j]=-1;
             }
-            /* otherwise */
             else {
                 for (j=begin_row;j<end_row;j++) {
                     /* if $a_{ij}>=\epsilon_{str}*\min a_{ij}$, the connection $a_{ij}$ is set to be weak connection */
@@ -926,7 +921,7 @@ static INT form_coarse_level (dCSRmat *A,
                 enter_list(&LoL_head, &LoL_tail, lambda[i], i, lists, where);
             }
             else {
-                if (measure<0) printf("Warning: negative lambda!\n");
+				if (measure<0) printf("### WARNING: Negative lambda!\n");
                 vec[i]=FGPT; // set i as fine node
                 for (k=S->IA[i];k<S->IA[i+1];++k) {
                     j=S->JA[k];
@@ -993,7 +988,7 @@ static INT form_coarse_level (dCSRmat *A,
                 remove_node(&LoL_head, &LoL_tail, measure, j, lists, where);
                 lambda[j]=--measure;
                 if (measure>0) {
-                    enter_list(&LoL_head, &LoL_tail,measure, j, lists, where);
+                    enter_list(&LoL_head, &LoL_tail, measure, j, lists, where);
                 }
                 else {
                     vec[j]=FGPT; // set j as fine variable
@@ -1118,11 +1113,10 @@ static INT form_coarse_level (dCSRmat *A,
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/06/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 
-static void generate_sparsity_P ( dCSRmat *P, 
+static void generate_sparsity_P (dCSRmat *P, 
                                  iCSRmat *S, 
                                  ivector *vertices, 
                                  INT row, 
@@ -1264,7 +1258,6 @@ static void generate_sparsity_P_standard (dCSRmat *P,
     
     P->row=row; P->col=col;
     P->IA=(INT*)fasp_mem_calloc(row+1, sizeof(INT));
-    
     
     times_visited=(INT*)fasp_mem_calloc(row,sizeof(INT)); // to record the number of times a coarse point is visited.
     

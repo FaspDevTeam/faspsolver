@@ -296,10 +296,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\test\src\basis.inl"
-				>
-			</File>
-			<File
 				RelativePath="..\..\test\src\heat_fem.c"
 				>
 			</File>

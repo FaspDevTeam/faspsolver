@@ -21,10 +21,11 @@ static void interp_RS(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *pa
 static void interp_EM(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param);
 static void interp_RS1(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param, INT *icor_ysk);
 static void fasp_get_icor_ysk(INT nrows, INT ncols, INT *CoarseIndex, INT nbl_ysk, INT nbr_ysk, INT *CF_marker, INT *icor_ysk);
-INT fasp_BinarySearch(INT *list, INT value, INT list_length);
 static void fasp_get_nbl_nbr_ysk(dCSRmat *A, INT *nbl_ptr, INT *nbr_ptr);
 static void fasp_mod_coarse_index(INT nrows, INT *CoarseIndex);
 static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S, AMG_param *param);
+
+INT fasp_BinarySearch(INT *list, INT value, INT list_length);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -39,7 +40,7 @@ static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S, A
  * \param A          pointer to the stiffness matrix
  * \param vertices   pointer to the indicator of CF split node is on fine (current) or coarse grid
  * \param P          pointer to the dCSRmat matrix of resulted interpolation
- * \param S          pointer to ???
+ * \param S          pointer to strength of connection
  * \param param      pointer to AMG parameters
  *
  * \return           SUCCESS or error message
@@ -47,7 +48,8 @@ static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S, A
  * \author  Xuehai Huang, Chensong Zhang
  * \date    04/04/2010 
  *
- * \note Modified by Xiaozhe Hu: add S as input -- 05/23/2012
+ * Modified by Xiaozhe Hu on 05/23/2012: add S as input
+ * Modified by Chensong Zhang on 09/12/2012: clean up and debug for interp_RS
  */
 SHORT fasp_amg_interp (dCSRmat *A, 
                        ivector *vertices, 
@@ -55,9 +57,9 @@ SHORT fasp_amg_interp (dCSRmat *A,
 					   iCSRmat *S,
                        AMG_param *param)
 {
-    INT interp_type=param->interpolation_type;
 	const INT coarsening_type = param->coarsening_type;
-    INT status = SUCCESS;
+    INT       interp_type = param->interpolation_type;
+    SHORT     status = SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_interp ...... [Start]\n");
@@ -69,17 +71,13 @@ SHORT fasp_amg_interp (dCSRmat *A,
     /*-- Standard interpolation operator --*/
     switch (interp_type) {
         case INTERP_REG: // Direction interpolation
-            interp_RS(A, vertices, P, param); 
-            break;            
-        case INTERP_ENG_MIN: // Energy min interpolation in C
-            interp_EM(A, vertices, P, param);
-            break;
+            interp_RS(A, vertices, P, param); break;            
         case INTERP_STD: // standard interpolation
-            interp_STD(A, vertices, P, S, param);
-            break;
+            interp_STD(A, vertices, P, S, param); break;
+        case INTERP_ENG_MIN: // Energy min interpolation in C
+            interp_EM(A, vertices, P, param); break;
         default:
             fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
-            break;
     }
     
 #if DEBUG_MODE
@@ -742,8 +740,8 @@ static void interp_EM (dCSRmat *A,
  * \author Xuehai Huang
  * \date   01/31/2009  
  * 
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
+ * Modified by Chensong Zhang on 09/12/2012: compare with the old version
  *
  * \note Ref P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid. 
  *             Academic Press Inc., San Diego, CA, 2001. 
@@ -763,7 +761,7 @@ static void interp_RS( dCSRmat *A,
     INT begin_row, end_row; 
     INT i,j,k,l,index=0;
     
-    /** Generate interpolation P */
+    /* Generate interpolation P */
     dCSRmat P=fasp_dcsr_create(Ptr->row,Ptr->col,Ptr->nnz);
     
     INT use_openmp = FALSE;
@@ -777,13 +775,13 @@ static void interp_RS( dCSRmat *A,
     }
 #endif
     
-    /** step 1: Find first the structure IA of P */
+    /* step 1: Find first the structure IA of P */
     fasp_iarray_cp(P.row+1, Ptr->IA, P.IA);
     
-    /** step 2: Find the structure JA of P */
+    /* step 2: Find the structure JA of P */
     fasp_iarray_cp(P.nnz, Ptr->JA, P.JA);
     
-    /** step 3: Fill the data of P */
+    /* step 3: Fill the data of P */
     if (use_openmp) {
 #ifdef _OPENMP 
         stride_i = A->row/nthreads;
@@ -856,50 +854,50 @@ static void interp_RS( dCSRmat *A,
 #endif
     }
     else {
-        for(i=0;i<A->row;++i){
+        for (i=0;i<A->row;++i) {
 			begin_row=A->IA[i]; end_row=A->IA[i+1]-1;    
-			for(diagindex=begin_row;diagindex<=end_row;diagindex++) {
+			for (diagindex=begin_row;diagindex<=end_row;diagindex++) {
 				if (A->JA[diagindex]==i) {
 					aii=A->val[diagindex];
 					break;
 				}
 			}
-			if(vec[i]==0){  // if node i is on fine grid 
-				amN=0, amP=0, apN=0, apP=0,  countPplus=0;
-				for(j=begin_row;j<=end_row;++j){
-					if(j==diagindex) continue;
-					for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
-						if(Ptr->JA[k]==A->JA[j]) break;
+			if (vec[i]==0) {  // if node i is on fine grid 
+				amN=0, amP=0, apN=0, apP=0, countPplus=0;
+				for (j=begin_row;j<=end_row;++j) {
+					if (j==diagindex) continue;
+					for (k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
+						if (Ptr->JA[k]==A->JA[j]) break;
 					}
-					if(A->val[j]>0) {
+					if (A->val[j]>0) {
 						apN+=A->val[j];
-						if(k<Ptr->IA[i+1]) {
+						if (k<Ptr->IA[i+1]) {
 							apP+=A->val[j];
 							countPplus++;
 						}
 					}
 					else {
 						amN+=A->val[j];
-						if(k<Ptr->IA[i+1]) {
+						if (k<Ptr->IA[i+1]) {
 							amP+=A->val[j];
 						}
 					}
 				} // j
                 
 				alpha=amN/amP;
-				if(countPplus>0) {
+				if (countPplus>0) {
 					beta=apN/apP;
 				}
 				else {
 					beta=0;
 					aii+=apN;
 				}
-				for(j=P.IA[i];j<P.IA[i+1];++j) {
+				for (j=P.IA[i];j<P.IA[i+1];++j) {
 					k=P.JA[j];
-					for(l=A->IA[i];l<A->IA[i+1];l++){
-						if(A->JA[l]==k) break;
+					for (l=A->IA[i];l<A->IA[i+1];l++) {
+						if (A->JA[l]==k) break;
 					}
-					if(A->val[l]>0) {
+					if (A->val[l]>0) {
 						P.val[j]=-beta*A->val[l]/aii;
 					}
 					else {
@@ -907,7 +905,7 @@ static void interp_RS( dCSRmat *A,
 					}
 				}
 			}
-			else if(vec[i]==2)  // if node i is a special fine node
+			else if (vec[i]==2)  // if node i is a special fine node
 			{
                 
 			}
@@ -919,7 +917,8 @@ static void interp_RS( dCSRmat *A,
     
     fasp_mem_free(Ptr->IA);
     fasp_mem_free(Ptr->JA);
-    fasp_mem_free(Ptr->val);    
+    fasp_mem_free(Ptr->val);
+
 #if 1
     INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));
 #else
@@ -936,17 +935,17 @@ static void interp_RS( dCSRmat *A,
     
     index=0;
 #if 1
-    for(i=0;i<A->row;++i)
+    for (i=0;i<A->row;++i)
 #else
-        for(i=0;i<vertices->row;++i)
+    for(i=0;i<vertices->row;++i)
 #endif
-        {
-            if(vec[i]==1)
-            {
-                CoarseIndex[i]=index;
-                index++;
-            }
-        }
+	{
+		if (vec[i]==1)
+		{
+			CoarseIndex[i]=index;
+			index++;
+		}
+	}
     
     if (use_openmp) {
 #ifdef _OPENMP 
@@ -966,7 +965,7 @@ static void interp_RS( dCSRmat *A,
 #endif
     }
     else {
-        for(i=0;i<P.IA[P.row];++i)
+        for (i=0;i<P.IA[P.row];++i)
         {
             j=P.JA[i];
             P.JA[i]=CoarseIndex[j];
@@ -978,24 +977,26 @@ static void interp_RS( dCSRmat *A,
     REAL mMin, pMax;
     REAL mSum, pSum;
     REAL mTruncedSum, pTruncedSum;
-    INT mTruncCount, pTruncCount;
-    INT num_lost=0;
+    INT  mTruncCount, pTruncCount;
+    INT  num_lost=0;
     
     Ptr->val=(REAL*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(REAL));
 #if CHMEM_MODE
     total_alloc_mem += (P.IA[Ptr->row])*sizeof(REAL);
 #endif
+
     Ptr->JA=(INT*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(INT));    
 #if CHMEM_MODE
     total_alloc_mem += (P.IA[Ptr->row])*sizeof(INT);
 #endif
+
     Ptr->IA=(INT*)fasp_mem_calloc(Ptr->row+1, sizeof(INT));
 #if CHMEM_MODE
     total_alloc_mem += (Ptr->row+1)*sizeof(INT);
 #endif
     
     INT index1=0, index2=0;
-    for(i=0;i<P.row;++i)
+    for (i=0;i<P.row;++i)
     {
         mMin=0;
         pMax=0;
@@ -1008,32 +1009,32 @@ static void interp_RS( dCSRmat *A,
         
         Ptr->IA[i]-=num_lost;
         
-        for(j=P.IA[i];j<P.IA[i+1];++j)
+        for (j=P.IA[i];j<P.IA[i+1];++j)
         {
-            if(P.val[j]<0)
+            if (P.val[j]<0)
             {
                 mSum+=P.val[j];
-                if(P.val[j]<mMin)
+                if (P.val[j]<mMin)
                 {
                     mMin=P.val[j];
                 }
             }
             
-            if(P.val[j]>0)
+            if (P.val[j]>0)
             {
                 pSum+=P.val[j];
-                if(P.val[j]>pMax)
+                if (P.val[j]>pMax)
                 {
                     pMax=P.val[j];
                 }
             }
         }
         
-        for(j=P.IA[i];j<P.IA[i+1];++j)
+        for (j=P.IA[i];j<P.IA[i+1];++j)
         {
-            if(P.val[j]<0)
+            if (P.val[j]<0)
             {
-                if(P.val[j]>mMin*epsilon_tr)
+                if (P.val[j]>mMin*epsilon_tr)
                 {
                     mTruncCount++;
                 }
@@ -1043,9 +1044,9 @@ static void interp_RS( dCSRmat *A,
                 }
             }
             
-            if(P.val[j]>0)
+            if (P.val[j]>0)
             {
-                if(P.val[j]<pMax*epsilon_tr)
+                if (P.val[j]<pMax*epsilon_tr)
                 {
                     pTruncCount++;
                 }
@@ -1057,11 +1058,11 @@ static void interp_RS( dCSRmat *A,
         }
         
         // step 2: Find the structure JA and fill the data A of Ptr
-        for(j=P.IA[i];j<P.IA[i+1];++j)
+        for (j=P.IA[i];j<P.IA[i+1];++j)
         {
-            if(P.val[j]<0)
+            if (P.val[j]<0)
             {
-                if(!(P.val[j]>mMin*epsilon_tr))
+                if (!(P.val[j]>mMin*epsilon_tr))
                 {
                     Ptr->JA[index1]=P.JA[j];
                     mTruncedSum+=P.val[j];
@@ -1069,9 +1070,9 @@ static void interp_RS( dCSRmat *A,
                 }
             }
             
-            if(P.val[j]>0)
+            if (P.val[j]>0)
             {
-                if(!(P.val[j]<pMax*epsilon_tr))
+                if (!(P.val[j]<pMax*epsilon_tr))
                 {
                     Ptr->JA[index1]=P.JA[j];
                     pTruncedSum+=P.val[j];
@@ -1081,20 +1082,20 @@ static void interp_RS( dCSRmat *A,
         }
         
         // step 3: Fill the data A of Ptr
-        for(j=P.IA[i];j<P.IA[i+1];++j)
+        for (j=P.IA[i];j<P.IA[i+1];++j)
         {
-            if(P.val[j]<0)
+            if (P.val[j]<0)
             {
-                if(!(P.val[j]>mMin*epsilon_tr))
+                if (!(P.val[j]>mMin*epsilon_tr))
                 {
                     Ptr->val[index2]=P.val[j]/mTruncedSum*mSum;
                     index2++;
                 }
             }
             
-            if(P.val[j]>0)
+            if (P.val[j]>0)
             {
-                if(!(P.val[j]<pMax*epsilon_tr))
+                if (!(P.val[j]<pMax*epsilon_tr))
                 {
                     Ptr->val[index2]=P.val[j]/pTruncedSum*pSum;
                     index2++;
@@ -1102,6 +1103,7 @@ static void interp_RS( dCSRmat *A,
             }
         }
     }
+
     Ptr->IA[P.row]-=num_lost;
     Ptr->nnz=Ptr->IA[Ptr->row];
     
@@ -1111,7 +1113,6 @@ static void interp_RS( dCSRmat *A,
     fasp_mem_free(P.IA);
     fasp_mem_free(P.JA);
     fasp_mem_free(P.val);
-    
 }
 
 /**

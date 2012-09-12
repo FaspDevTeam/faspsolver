@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+09/12/2012 FASP 1.0.9:
+- Fix warnings from VS2008.
+- Upadet ICC compiler in VS2008.
+- Compare classical AMG implementation with an older version and make a few changes.
+
 09/11/2012 FASP 1.0.8:
 - Merge two branches.
 - Fix a bug in BiCGstab output.
