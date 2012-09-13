@@ -37,7 +37,6 @@
  *
  */
 typedef struct dBSRmat{
-	
     
 	//! number of rows of sub-blocks in matrix A, M
 	INT ROW;
@@ -420,7 +419,8 @@ typedef struct precond_FASP_blkoil_data{
 	//! data of AMG for pressure block
 	dCSRmat *PP; /**< pressure block */
 	AMG_data *mgl_data; /**< AMG data for presure-presure block */
-	//! parameters for AMG solver
+	
+	// parameters for AMG solver
 	//! print level in AMG preconditioner
 	SHORT print_level;
 	//! max number of iterations of AMG preconditioner
@@ -433,6 +433,8 @@ typedef struct precond_FASP_blkoil_data{
 	SHORT cycle_type;
 	//! AMG smoother type
 	SHORT smoother;
+	//! AMG smoothing order
+	SHORT smooth_order;
 	//! number of presmoothing
 	SHORT presmooth_iter;
 	//! number of postsmoothing

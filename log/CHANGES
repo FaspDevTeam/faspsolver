@@ -5,6 +5,8 @@ File Name: CHANGES
 - Upadet ICC compiler in VS2008.
 - Compare classical AMG implementation with an older version and make a few changes.
 - Locate the difference between the old AMG and new one: CF-ordering is used as default.
+- Fix warning in VS2008 due to coarset level solver. 
+- Bug fixing: Modify precond_data for Black Oil to fix the parameter passing problem. 
 
 09/11/2012 FASP 1.0.8:
 - Merge two branches.

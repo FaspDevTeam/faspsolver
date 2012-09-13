@@ -2,16 +2,14 @@
  *  \brief Utilies for multigrid cycles
  */
 
-#if With_DISOLVE
+#if With_DISOLVE // Pick either Direct solver or Iterative solver for coarsest space!
+
 extern "C" {
     void DIRECT_MUMPS(const INT *n, const INT *nnz, INT *ia, INT *ja, 
                       REAL *a, REAL *b, REAL *x);
 }
-#endif 
 
-/*---------------------------------*/
-/*--      Private Functions      --*/
-/*---------------------------------*/
+#else
 
 /**
  * \fn static void fasp_coarse_itsolver (dCSRmat *A, dvector *b, dvector *x,
@@ -53,6 +51,8 @@ static void fasp_coarse_itsolver (dCSRmat *A,
     }
 }
 
+#endif 
+
 /**
  * \fn static void fasp_dcsr_presmoothing (const SHORT smoother, dCSRmat *A, dvector *b, dvector *x,
  *                                         const INT nsweeps, const INT istart, const INT iend,
@@ -77,7 +77,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
  * \author Chensong Zhang
  * \date 01/10/2012
  *
- * \note Modified by Xiaozhe on 06/04/2012: add ndeg as input
+ * Modified by Xiaozhe on 06/04/2012: add ndeg as input
  */
 static void fasp_dcsr_presmoothing (const SHORT smoother,
                                     dCSRmat *A,
@@ -174,7 +174,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
  * \author Chensong Zhang
  * \date 01/10/2012
  *
- * \note: modified by Xiaozhe Hu on 06/04/2012: add ndeg as input
+ * Modified by Xiaozhe Hu on 06/04/2012: add ndeg as input
  */
 static void fasp_dcsr_postsmoothing (const SHORT smoother,
                                      dCSRmat *A,
