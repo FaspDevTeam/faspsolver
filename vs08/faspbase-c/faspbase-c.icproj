@@ -13,6 +13,7 @@
 			>
 			<Tool
 				Name="CppCmplrTool"
+				OptimizeForWindowsApplication="true"
 				EnableMatrixMultiplyLibraryCall="1"
 			/>
 		</Configuration>

@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+09/15/2012 FASP 1.1.0:
+- Use Direct solvers as default in VS2008 Release version.
+- Fix bug in VS2008 Release setting.
+- Fix regression.c.
+
 09/12/2012 FASP 1.0.9:
 - Fix warnings from VS2008.
 - Upadet ICC compiler in VS2008.
