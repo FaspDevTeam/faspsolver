@@ -57,12 +57,34 @@ main(int argc, const char * argv[])
 	
 	strncpy(filename1,inparam.workdir,128);
 	strncpy(filename2,inparam.workdir,128);
-    
+
+
 	// Read A and b -- P1 F1 discretization for Poisson.
 	if (problem_num == 10) {
 		datafile1="csrmat_FE.dat";
 		strcat(filename1,datafile1);
 		datafile2="rhs_FE.dat";
+		strcat(filename2,datafile2);
+		fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+	}
+	else if (problem_num == 11) {
+		datafile1="csrmat_FD.dat";
+		strcat(filename1,datafile1);
+		datafile2="rhs_FD.dat";
+		strcat(filename2,datafile2);
+		fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+	}
+	else if (problem_num == 100) {
+		datafile1="mat_csr_100X100.dat";
+		strcat(filename1,datafile1);
+		datafile2="rhs_100X100.dat";
+		strcat(filename2,datafile2);
+		fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+	}
+	else if (problem_num == 512) {
+		datafile1="mat_csr_512X512.dat";
+		strcat(filename1,datafile1);
+		datafile2="rhs_512X512.dat";
 		strcat(filename2,datafile2);
 		fasp_dcsrvec2_read(filename1, filename2, &A, &b);
 	}

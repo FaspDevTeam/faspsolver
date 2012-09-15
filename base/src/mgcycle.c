@@ -11,6 +11,14 @@
 
 #include "mg_util.inl"
 
+#if FASP_GSRB
+INT  nx_rb=1 ;  /**< Red Black Gs Smoother Nx */
+INT  ny_rb=1 ;  /**< Red Black Gs Smoother Ny */
+INT  nz_rb=1 ;  /**< Red Black Gs Smoother Nz */
+INT *IMAP=NULL;    /**< Red Black Gs Smoother imap */
+INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
+#endif
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -115,8 +123,17 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 		}
 
         else {
+#if FASP_GSRB
+	        if (( l==0 )&&(nx_rb>1))
+			fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b, param->presmooth_iter,1,IMAP,MAXIMAP,nx_rb,ny_rb,nz_rb);
+			else
             fasp_dcsr_presmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->presmooth_iter,
                                    0,mgl[l].A.row-1,1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
+#else
+            fasp_dcsr_presmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->presmooth_iter,
+                                   0,mgl[l].A.row-1,1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
+#endif
+
         }
     
         // form residual r = b - A x
@@ -236,8 +253,17 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 		}
 
         else {
+
+#if FASP_GSRB
+	        if (( l==0 )&&(nx_rb>1))
+			fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b, param->presmooth_iter,-1,IMAP,MAXIMAP,nx_rb,ny_rb,nz_rb);
+			else
             fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->postsmooth_iter,
                                     0,mgl[l].A.row-1,-1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
+#else
+            fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->postsmooth_iter,
+                                    0,mgl[l].A.row-1,-1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
+#endif
         }
     
         if (num_lvl[l]<cycle_type) break;

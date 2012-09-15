@@ -32,7 +32,7 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration>
 		<Configuration Name="Release|x64" OutputDirectory="..\..\base\lib\x64" ConfigurationType="typeStaticLibrary">
-				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" PrefetchInsertionOpt="prefetchAggressive" InterproceduralOptimizations="ipoMultiFile" MatrixLibrary="mlNo" ExternalNameInterpretation="extNameLowerCase" CallingConvention="callConventionCRef" ExternalNameUnderscore="true"/>
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" PrefetchInsertionOpt="prefetchAggressive" InterproceduralOptimizations="ipoSingleFile" MatrixLibrary="mlNo" ExternalNameInterpretation="extNameLowerCase" CallingConvention="callConventionCRef" ExternalNameUnderscore="true"/>
 				<Tool Name="VFLibrarianTool" OutputFile="$(OutDir)/$(ProjectName)-vs08.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
