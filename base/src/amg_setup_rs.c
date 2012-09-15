@@ -13,6 +13,64 @@
 /*---------------------------------*/
 
 /**
+ * \fn  dCSRmat_Division_Groups(dCSRmat A,INT *result,INT *groups)
+ *
+ * \brief Use the algebra method to get matrix's colored classes
+ *
+ * \param A    Input dCSRmat
+ * \param result  Pointer to Return group flags
+ * \param groups  Return group numbers
+ *
+ * \author Chunsheng Feng
+ * \date   15/09/2012 
+ */
+void  dCSRmat_Division_Groups(dCSRmat A,INT *result,INT *groups)
+{ 
+
+   INT k,i,pre,group;
+   INT j;
+   INT front,rear;
+   INT n=A.row;
+
+   INT *cq = (INT *)malloc(sizeof(INT)*n);
+   INT *newr = (INT *)malloc(sizeof(INT)*n);
+
+   for(k=0;k<n;k++)       cq[k]=k+1;
+   front=n-1;
+   rear=n-1;
+   for(k=0;k<n;k++)      newr[k]=0;
+   group=1;
+   pre=0;
+
+   do{  
+         front=(front+1)%n;
+         i=cq[front];
+         if(i<pre)
+         {   group++;
+             result[i-1]=group;
+  		     for(j= A.IA[i-1]; j< A.IA[i]; j++)
+			 if (A.JA[j] != i-1)  newr[ A.JA[j] ] = group;
+         }
+         else if(newr[i-1]==group)
+         {   rear=(rear+1)%n;
+             cq[rear]=i;
+         } 
+         else
+         {    result[i-1]=group;
+			  for(j= A.IA[i-1]; j< A.IA[i]; j++)
+				 if (A.JA[j] != i-1)  newr[ A.JA[j] ] = group;
+
+
+         }
+         pre=i;
+     }while(rear!=front);
+	 
+	 *groups = group;
+   free(cq);
+   free(newr);
+}
+
+/**
  * \fn SHORT fasp_amg_setup_rs (AMG_data *mgl, AMG_param *param)
  *
  * \brief Setup phase of Ruge and Stuben's classic AMG
@@ -149,12 +207,25 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         
 #if DIAGONAL_PREF
         fasp_dcsr_diagpref(&mgl[level].A); // reorder each row to make diagonal appear first
-#endif                
+#endif 
+
     }
 
     // setup total level number and current level
     mgl[0].num_levels = max_levels = level+1;
     mgl[0].w = fasp_dvec_create(m);    
+      
+#if 0
+      INT groups;
+      INT *results; //=(INT *)malloc(sizeof(INT)*mgl[level].A.row);
+      for (level=0;level<max_levels && mgl[level].A.row>2000; level++){
+      
+      results=(INT *)malloc(sizeof(INT)*mgl[level].A.row);
+      dCSRmat_Division_Groups(mgl[level].A,results,&groups);
+      printf("row = %d groups = %d \n",mgl[level].A.row, groups);
+      free(results);
+      }
+#endif      
     
     for (level=1; level<max_levels; ++level) {
         mm = mgl[level].A.row;

@@ -150,6 +150,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
     }
 }
 
+
 /**
  * \fn static void fasp_dcsr_postsmoothing (const SHORT smoother, dCSRmat *A, dvector *b, dvector *x,
  *                                          const INT nsweeps, const INT istart, const INT iend,

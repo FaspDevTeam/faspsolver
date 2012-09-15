@@ -918,6 +918,16 @@ typedef ListElement *LinkList; /**< linked list */
 /*
  * OpenMP definitions and decrorations
  */
+#define GS_RB 1  /*mg level 0  use RedBlack Gausss Seidel Smoothing */
+
+#if GS_RB
+extern INT  nx_rb ;  /**< Red Black Gs Smoother Nx */
+extern INT  ny_rb ;  /**< Red Black Gs Smoother Ny */
+extern INT  nz_rb ;  /**< Red Black Gs Smoother Nz */
+extern INT *IMAP;    /**< Red Black Gs Smoother imap */
+extern INT  MAXIMAP; /**< Red Black Gs Smoother max dofs of reservoir */
+#endif
+
 #ifdef _OPENMP 
 
 #include "omp.h"
@@ -932,11 +942,7 @@ extern REAL total_start_time;  /**< ??? */
 extern INT  total_iter;        /**< ??? */
 extern INT  fasp_called_times; /**< ??? */
 
-extern INT  nx_rb ;  /**< Red Black Gs Smoother Nx */
-extern INT  ny_rb ;  /**< Red Black Gs Smoother Ny */
-extern INT  nz_rb ;  /**< Red Black Gs Smoother Nz */
-extern INT *IMAP;    /**< Red Black Gs Smoother imap */
-extern INT  MAXIMAP; /**< Red Black Gs Smoother max dofs of reservoir */
+
 
 /*
 #define FASP_GET_START_END(procid,nprocs,n,start,end) \
