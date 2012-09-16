@@ -11,7 +11,7 @@
 
 #include "mg_util.inl"
 
-#if GS_RB
+#if FASP_GSRB
 INT  nx_rb=1 ;  /**< Red Black Gs Smoother Nx */
 INT  ny_rb=1 ;  /**< Red Black Gs Smoother Ny */
 INT  nz_rb=1 ;  /**< Red Black Gs Smoother Nz */
@@ -123,7 +123,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 		}
 
         else {
-#if GS_RB
+#if FASP_GSRB
 	        if (( l==0 )&&(nx_rb>1))
 			fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b, param->presmooth_iter,1,IMAP,MAXIMAP,nx_rb,ny_rb,nz_rb);
 			else
@@ -254,7 +254,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 
         else {
 
-#if GS_RB
+#if FASP_GSRB
 	        if (( l==0 )&&(nx_rb>1))
 			fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b, param->presmooth_iter,-1,IMAP,MAXIMAP,nx_rb,ny_rb,nz_rb);
 			else

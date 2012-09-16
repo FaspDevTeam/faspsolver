@@ -38,7 +38,6 @@
  * \brief For external software package support
  */
 #define FASP_USE_ILU     ON  /**< enable ILU or not */
-//#define FASP_USE_OPENMP  OFF /**< enable OpenMP support or not */
 #define DLMALLOC         OFF /**< use dlmalloc instead of standard malloc */
 #define NEDMALLOC        OFF /**< use nedmalloc instead of standard malloc */
 
@@ -918,9 +917,9 @@ typedef ListElement *LinkList; /**< linked list */
 /*
  * OpenMP definitions and decrorations
  */
-#define GS_RB 1  /*mg level 0  use RedBlack Gausss Seidel Smoothing */
+#define FASP_GSRB 1  /*mg level 0  use RedBlack Gausss Seidel Smoothing */
 
-#if GS_RB
+#if FASP_GSRB
 extern INT  nx_rb ;  /**< Red Black Gs Smoother Nx */
 extern INT  ny_rb ;  /**< Red Black Gs Smoother Ny */
 extern INT  nz_rb ;  /**< Red Black Gs Smoother Nz */

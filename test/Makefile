@@ -168,9 +168,9 @@ testmat:
 	$(CC) -c main/testmat.c -o main/testmat.o $(CFLAGS)
 	$(FC) -o testmat.ex main/testmat.o $(FLFLAGS)
 
-testmatgroup: 
-	$(CC) -c main/testmatgroup.c -o main/testmatgroup.o $(CFLAGS)
-	$(FC) -o testmatgroup.ex main/testmatgroup.o $(FLFLAGS)
+#testmatgroup: 
+#	$(CC) -c main/testmatgroup.c -o main/testmatgroup.o $(CFLAGS)
+#	$(FC) -o testmatgroup.ex main/testmatgroup.o $(FLFLAGS)
 
 testrap: 
 	$(CC) -c main/testrap.c -o main/testrap.o $(CFLAGS)
