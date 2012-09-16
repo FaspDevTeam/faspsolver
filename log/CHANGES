@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+09/18/2012 FASP 1.1.1:
+- Add red-black GS as a smoother for structured grids.
+
 09/15/2012 FASP 1.1.0:
 - Use Direct solvers as default in VS2008 Release version.
 - Fix bug in VS2008 Release setting.
