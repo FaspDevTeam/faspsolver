@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Intel C++ Project"
-	Version="12.0"
+	Version="12.1"
 	Name="faspbase-c"
 	ProjectGUID="{CF3FAF37-326E-4D42-BEF7-45F7CAFE7165}"
 	VCNestedProjectGUID="{11E47EDC-A0F2-4D7F-A6CD-1C2477DF185B}"
@@ -13,6 +13,7 @@
 			>
 			<Tool
 				Name="CppCmplrTool"
+				InterproceduralOptimization="1"
 				OptimizeForWindowsApplication="true"
 				EnableMatrixMultiplyLibraryCall="1"
 			/>
