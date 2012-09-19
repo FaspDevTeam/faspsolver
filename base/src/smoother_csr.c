@@ -1474,7 +1474,7 @@ void swep3db(INT *ia,
  * \note This subroutine is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void rb02d (INT *ia,
+void rb0b2d (INT *ia,
             INT *ja,
             REAL *aa,
             REAL *u,
@@ -1484,6 +1484,23 @@ void rb02d (INT *ia,
             INT ny,
             INT nsweeps)
 {
+#if 1
+    INT n0e,n0o,isweep;
+    
+    n0e=0;
+    n0o=1;
+    
+    for (isweep = 1; isweep <= nsweeps; isweep++) {
+        /*...  e-e */
+        swep2df(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
+        /*...  e-o */
+        swep2df(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
+        /*...  o-e */
+        swep2df(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+        /*...  o-o */
+        swep2df(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
+    }
+#else
     INT n0e = -1, n0o = -2, isweep;
     //INT ex, ey, ez;
     //INT ox, oy, oz;
@@ -1530,6 +1547,7 @@ void rb02d (INT *ia,
 			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
 		}
 	}
+#endif	
 }
 
 /*
@@ -1565,6 +1583,31 @@ void rb0b3d (INT *ia,
              INT nz,
              INT nsweeps)
 {
+#if 1
+    INT n0e,n0o,isweep;
+    
+    n0e=0;
+    n0o=1;
+    
+    for (isweep = 1; isweep <= nsweeps; isweep++) {
+        /*...  e-e-e */
+        swep3df(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+        /*...  e-e-o */
+        swep3df(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+        /*...  e-o-e */
+        swep3df(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);  
+        /*...  e-o-o */
+        swep3df(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+        /*...  o-e-e */
+        swep3df(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+        /*...  o-e-o */
+        swep3df(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+        /*...  o-o-e */
+        swep3df(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+        /*...  o-o-o */
+        swep3df(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+    }
+#else 
     INT n0e = -1, n0o = -2, isweep;
     //INT ex, ey, ez;
     //INT ox, oy, oz;
@@ -1588,7 +1631,7 @@ void rb0b3d (INT *ia,
 			/*...  o-o-o */
 			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
 			/*...  e-e-e (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+			//swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
 		}
 		else if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==1)) {
 			/*...  e-e-o (and going backwards) */
@@ -1608,7 +1651,7 @@ void rb0b3d (INT *ia,
 			/*...  o-o-e */
 			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
 			/*...  e-e-o (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+			//swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
 		}
 		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==0)) {
 			/*...  e-o-e (and going backwards) */
@@ -1628,7 +1671,7 @@ void rb0b3d (INT *ia,
 			/*...  o-e-o */
 			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
 			/*...  e-o-e (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+		//	swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
 		}
 		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==1)) {
 			/*...  e-o-o (and going backwards) */
@@ -1648,7 +1691,7 @@ void rb0b3d (INT *ia,
 			/*...  o-e-e */
 			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
 			/*...  e-o-o (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+		//	swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
 		}
 		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==0)) {
 			/*...  o-e-e (and going backwards) */
@@ -1668,7 +1711,7 @@ void rb0b3d (INT *ia,
 			/*...  e-o-o */
 			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
 			/*...  o-e-e (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+		//	swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
 		}
 		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==1)) {
 			/*...  o-e-o (and going backwards) */
@@ -1688,7 +1731,7 @@ void rb0b3d (INT *ia,
 			/*...  e-o-e */
 			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
 			/*...  o-e-o (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+		//	swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
 		}
 		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==0)) {
 			/*...  o-o-e (and going backwards) */
@@ -1708,7 +1751,7 @@ void rb0b3d (INT *ia,
 			/*...  e-e-o */
 			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
 			/*...  o-o-e (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+			//swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
 		}
 		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==1)) {
 			/*...  o-o-o (and going backwards) */
@@ -1728,10 +1771,11 @@ void rb0b3d (INT *ia,
 			/*...  e-e-e */
 			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
 			/*...  o-o-o (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+			//swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
             
 		}
 	}
+#endif
 }
 /**
  * \fn void swep2df (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT *mark,

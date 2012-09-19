@@ -26,6 +26,8 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
 
 /*-------- In file: amg_setup_rs.c --------*/
 
+void  dCSRmat_Division_Groups(dCSRmat A,INT *result,INT *groups);
+
 SHORT fasp_amg_setup_rs (AMG_data *mgl, 
                          AMG_param *param);
 
@@ -1624,7 +1626,7 @@ void swep3db(INT *ia,
              INT ny,
              INT nz);
 
-void rb02d (INT *ia,
+void rb0b2d (INT *ia,
             INT *ja,
             REAL *aa,
             REAL *u,
