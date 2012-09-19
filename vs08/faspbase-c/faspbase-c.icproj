@@ -13,6 +13,7 @@
 			>
 			<Tool
 				Name="CppCmplrTool"
+				Optimization="1000"
 				InterproceduralOptimization="1"
 				OptimizeForWindowsApplication="true"
 				EnableMatrixMultiplyLibraryCall="1"
@@ -23,6 +24,7 @@
 			>
 			<Tool
 				Name="CppCmplrTool"
+				Optimization="1000"
 				InterproceduralOptimization="1"
 				OptimizeForWindowsApplication="true"
 				EnableMatrixMultiplyLibraryCall="1"
