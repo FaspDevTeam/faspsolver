@@ -32,8 +32,8 @@ And, if you have any questions, feel free to contact us at faspdev@gmail.com.
 1. Compatibility
 ================================
 
-To compile, you need a Fortran and a C compiler. By default, we use gfortan 
-and gcc, respectively; see Makefile for details. 
+To compile, you need a C99 compiler and a F77 compiler. By default, we use 
+gfortan and gcc, respectively; see Makefile for details. 
 
 This package has been tested with: 
 

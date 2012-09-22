@@ -1,4 +1,4 @@
-/*! \file amg.c 
+/*! \file amg.c
  *  \brief AMG method as an iterative solver (main file)
  */
 
@@ -12,7 +12,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_solver_amg (dCSRmat *A, dvector *b, dvector *x, 
+ * \fn void fasp_solver_amg (dCSRmat *A, dvector *b, dvector *x,
  *                           AMG_param *param)
  *
  * \brief Solve Ax=b by Algebaric MultiGrid Method.
@@ -26,106 +26,116 @@
  * \date   04/06/2010
  *
  * \note Refter to "Multigrid"
- *       by U. Trottenberg, C. W. Oosterlee and A. Schuller 
+ *       by U. Trottenberg, C. W. Oosterlee and A. Schuller
  *       Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben)
- *       Academic Press Inc., San Diego, CA, 2001. 
+ *       Academic Press Inc., San Diego, CA, 2001.
  *
  * Modified by Chensong Zhang on 01/10/2012
  */
 
-void fasp_solver_amg (dCSRmat *A, 
-                      dvector *b, 
-                      dvector *x, 
+void fasp_solver_amg (dCSRmat *A,
+                      dvector *b,
+                      dvector *x,
                       AMG_param *param)
 {
     const SHORT   max_levels  = param->max_levels;
     const SHORT   print_level = param->print_level;
     const SHORT   amg_type    = param->AMG_type;
-    const SHORT   cycle_type  = param->cycle_type;    
+    const SHORT   cycle_type  = param->cycle_type;
     const INT     nnz = A->nnz, m = A->row, n = A->col;
     
     // local variables
-    REAL AMG_start, AMG_end;
-    REAL          AMG_duration=0.;
+    REAL          AMG_start, AMG_end;
+    REAL          AMG_duration = 0.0;
     SHORT         status = SUCCESS;
+    AMG_data *    mgl = fasp_amg_data_create(max_levels);
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_amg ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
-    if ( print_level > PRINT_NONE ) { 
-#ifdef _OPENMP 
-	AMG_start = omp_get_wtime();
+    
+    if ( print_level > PRINT_NONE ) {
+#ifdef _OPENMP
+        AMG_start = omp_get_wtime();
 #else
-	AMG_start = clock();
+        AMG_start = clock();
 #endif
     }
-
-    // initialize mgl[0] with A, b, x    
-    AMG_data *mgl = fasp_amg_data_create(max_levels);
-    mgl[0].A = fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
-    mgl[0].b = fasp_dvec_create(n);       fasp_dvec_cp(b,&mgl[0].b);     
-    mgl[0].x = fasp_dvec_create(n);       fasp_dvec_cp(x,&mgl[0].x); 
+    
+    // initialize mgl[0] with A, b and x
+    mgl[0].A = fasp_dcsr_create(m, n, nnz);
+    fasp_dcsr_cp(A, &mgl[0].A);
+    
+    mgl[0].b = fasp_dvec_create(n);
+    fasp_dvec_cp(b, &mgl[0].b);
+    
+    mgl[0].x = fasp_dvec_create(n);
+    fasp_dvec_cp(x, &mgl[0].x);
     
     // AMG setup phase
     switch (amg_type) {
+            
+        // Smoothed Aggregation AMG setup phase
+        case SA_AMG:
+            if ( (status=fasp_amg_setup_sa(mgl, param)) < 0 ) goto FINISHED;
+            break;
 
-    case SA_AMG: // Smoothed Aggregation AMG setup phase
-        if ( (status=fasp_amg_setup_sa(mgl, param)) < 0 ) goto FINISHED;
-        break;
+        // Unsmoothed Aggregation AMG setup phase
+        case UA_AMG:
+            if ( (status=fasp_amg_setup_ua(mgl, param)) < 0 ) goto FINISHED;
+            break;
 
-    case UA_AMG: // Unsmoothed Aggregation AMG setup phase
-        if ( (status=fasp_amg_setup_ua(mgl, param)) < 0 ) goto FINISHED;
-        break;
-
-    default: // Classical AMG setup phase
-#ifdef _OPENMP 
-		// omp version RS coarsening 
-        if ( (status=fasp_amg_setup_rs_omp(mgl, param)) < 0 ) goto FINISHED;
+        // Classical AMG setup phase
+        default:
+#ifdef _OPENMP // omp version RS coarsening
+            if ( (status=fasp_amg_setup_rs_omp(mgl, param)) < 0 ) goto FINISHED;
 #else
-        if ( (status=fasp_amg_setup_rs(mgl, param)) < 0 ) goto FINISHED;
+            if ( (status=fasp_amg_setup_rs(mgl, param)) < 0 ) goto FINISHED;
 #endif
-        break;
-
+            break;
+            
     }
     
     // AMG solve phase
     switch (cycle_type) {
 
-    case AMLI_CYCLE: // call AMLI-cycle
-        if ( (status=fasp_amg_solve_amli(mgl, param)) < 0 ) goto FINISHED;
-        break;
+        // call AMLI-cycle
+        case AMLI_CYCLE:
+            if ( (status=fasp_amg_solve_amli(mgl, param)) < 0 ) goto FINISHED;
+            break;
 
-    case NL_AMLI_CYCLE: // call Nonlinear AMLI-cycle
-        if ( (status=fasp_amg_solve_nl_amli(mgl, param)) < 0 ) goto FINISHED;
-        break;
+        // call Nonlinear AMLI-cycle
+        case NL_AMLI_CYCLE:
+            if ( (status=fasp_amg_solve_nl_amli(mgl, param)) < 0 ) goto FINISHED;
+            break;
 
-    default: // call classical V,W-cycles
-        if ( (status=fasp_amg_solve(mgl, param)) < 0 ) goto FINISHED;
-        break;
-
+        // call classical V,W-cycles (determined by param)
+        default:
+            if ( (status=fasp_amg_solve(mgl, param)) < 0 ) goto FINISHED;
+            break;
+            
     }
     
     // save solution vector
-    fasp_dvec_cp(&mgl[0].x, x); 
+    fasp_dvec_cp(&mgl[0].x, x);
     
     // print out CPU time when needed
     if ( print_level > PRINT_NONE ) {
-#ifdef _OPENMP 
-    AMG_end = omp_get_wtime();    
-    AMG_duration = AMG_end - AMG_start;    
+#ifdef _OPENMP
+        AMG_end = omp_get_wtime();
+        AMG_duration = AMG_end - AMG_start;
 #else
-    AMG_end = clock();    
-    AMG_duration = (REAL)(AMG_end - AMG_start)/(REAL)(CLOCKS_PER_SEC);    
+        AMG_end = clock();
+        AMG_duration = (REAL)(AMG_end - AMG_start)/(REAL)(CLOCKS_PER_SEC);
 #endif
-        print_cputime("AMG totally",AMG_duration);
-    }    
+        print_cputime("AMG totally", AMG_duration);
+    }
     
- FINISHED:    
-    fasp_amg_data_free(mgl); // clean-up memory    
+FINISHED:
+    fasp_amg_data_free(mgl); // clean-up memory
     fasp_chkerr(status, "fasp_solver_amg");
     
-
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_amg ...... [Finish]\n");
 #endif

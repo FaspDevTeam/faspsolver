@@ -18,6 +18,8 @@
  *
  * \author Chensong Zhang
  * \date   12/21/2011
+ * 
+ * Modified by Chensong Zhang on 09/22/2012
  */
 int main (int argc, const char * argv[]) 
 {
@@ -39,8 +41,8 @@ int main (int argc, const char * argv[])
     const int print_level = inparam.print_level;
     
     // Step 1. Get stiffness matrix and right-hand side
-    // Read A and b -- P1 FE discretization for Poisson.
-    // The location of the data files are given in "amg.dat".
+    // Read A and b -- P1 FE discretization for Poisson. The location
+    // of the data files is given in "./ini/amg.dat".
     dCSRmat A;
     dvector b, x;
     char filename1[512], *datafile1;
@@ -66,7 +68,9 @@ int main (int argc, const char * argv[])
     // Step 3. Solve the system with AMG as an iterative solver
     // Set the initial guess to be zero and then solve it
     // with AMG method as an iterative procedure
-    fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row,&x,0.0);
+    fasp_dvec_alloc(A.row, &x);
+    fasp_dvec_set(A.row, &x, 0.0);
+    
     fasp_solver_amg(&A, &b, &x, &amgparam);
     
     // Step 4. Clean up memory
