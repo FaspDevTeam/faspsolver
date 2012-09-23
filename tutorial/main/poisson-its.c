@@ -17,6 +17,8 @@
  *
  * \author Feiteng Huang
  * \date   04/13/2012
+ *
+ * Modified by Chensong Zhang on 09/22/2012
  */
 int main (int argc, const char * argv[]) 
 {
@@ -30,7 +32,7 @@ int main (int argc, const char * argv[])
     // Step 0. Set parameters
     // Read input and AMG parameters from a disk file
     // In this example, we read everything from a disk file:
-    //          "./ini/its.dat"
+    //          "ini/its.dat"
     // See the reference manual for details of the parameters. 
     fasp_param_init("ini/its.dat",&inparam,&itparam,NULL,NULL,NULL);
 
@@ -38,8 +40,8 @@ int main (int argc, const char * argv[])
     const int print_level = inparam.print_level;
     
     // Step 1. Get stiffness matrix and right-hand side
-    // Read A and b -- P1 FE discretization for Poisson.
-    // The location of the data files are given in "its.dat".
+    // Read A and b -- P1 FE discretization for Poisson. The location
+    // of the data files is given in "ini/its.dat".
     dCSRmat A;
     dvector b, x;
     char filename1[512], *datafile1;
@@ -65,7 +67,9 @@ int main (int argc, const char * argv[])
     // Step 3. Solve the system with ITS as an iterative solver
     // Set the initial guess to be zero and then solve it using standard
     // iterative methods, without applying any preconditioners
-    fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row,&x,0.0);
+    fasp_dvec_alloc(A.row, &x);
+    fasp_dvec_set(A.row,&x,0.0);
+    
     fasp_solver_dcsr_itsolver(&A, &b, &x, NULL, &itparam);
     
     // Step 4. Clean up memory

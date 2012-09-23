@@ -29,10 +29,15 @@
 /**
  * \brief For developers only
  */
-
 #define DEBUG_MODE       OFF /**< output DEBUG information */
+// When this flag is ON, the extra printing will be enabled for debug purpose
+
 #define CHMEM_MODE       OFF /**< output MEMORY usage information */
+// When this flag is ON, the memory usage checking will be enabled
+
 #define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
+// When this flag is ON, the matrix rows will be reordered as diagonal entries first
+// Use with cautious!!! 
 
 /**
  * \brief For external software package support

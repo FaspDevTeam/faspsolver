@@ -344,12 +344,12 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                                INT *mark,
                                INT order)
 {
-    const INT *ia=A->IA,*ja=A->JA;
+    const INT    nrow = b->row; // number of rows
+    const INT   *ia = A->IA, *ja = A->JA;
+    const REAL  *aj = A->val, *bval = b->val;
+    REAL        *uval = u->val;
     
-    INT i,j,k,begin_row,end_row;
-    INT size = b->row;
-    
-    REAL *aj=A->val,*bval=b->val,*uval=u->val;
+    INT i,j,k,begin_row,end_row;    
     REAL t,d=0.0;
     
 #ifdef _OPENMP
@@ -360,11 +360,12 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
     // F-point first
     if (order == -1) {
         while (L--) {
+            
 #ifdef _OPENMP
-            if (size > OPENMP_HOLDS) {
+            if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
-                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
                         if (mark[i] != 1) {
                             t = bval[i];
@@ -381,15 +382,23 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
             }
             else {
 #endif
-                for (i = 0; i < size; i ++) {
+                for (i = 0; i < nrow; i ++) {
                     if (mark[i] != 1) {
                         t = bval[i];
                         begin_row = ia[i], end_row = ia[i+1];
+#if DIAGONAL_PREF // Added by Chensong on 09/22/2012
+                        for (k = begin_row+1; k < end_row; k ++) {
+                            j = ja[k];
+                            t -= aj[k]*uval[j];
+                        } // end for k
+                        d = aj[begin_row];
+#else
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
                             if (i!=j) t -= aj[k]*uval[j];
                             else d = aj[k];
                         } // end for k
+#endif // end if DIAG_PREF
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
                 } // end for i
@@ -398,10 +407,10 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
 #endif
             
 #ifdef _OPENMP
-            if (size > OPENMP_HOLDS) {
+            if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
-                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
                         if (mark[i] == 1) {
                             t = bval[i];
@@ -418,15 +427,23 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
             }
             else {
 #endif
-                for (i = 0; i < size; i ++) {
+                for (i = 0; i < nrow; i ++) {
                     if (mark[i] == 1) {
                         t = bval[i];
                         begin_row = ia[i], end_row = ia[i+1];
+#if DIAGONAL_PREF // Added by Chensong on 09/22/2012
+                        for (k = begin_row+1; k < end_row; k ++) {
+                            j = ja[k];
+                            t -= aj[k]*uval[j];
+                        } // end for k
+                        d = aj[begin_row];
+#else
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
                             if (i!=j) t -= aj[k]*uval[j];
                             else d = aj[k];
                         } // end for k
+#endif // end if DIAG_PREF
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
                 } // end for i
@@ -434,14 +451,18 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
             }
 #endif
         } // end while
+        
     }
+    
+    // C-point first
     else {
+        
         while (L--) {
 #ifdef _OPENMP
-            if (size > OPENMP_HOLDS) {
+            if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
-                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
                         if (mark[i] == 1) {
                             t = bval[i];
@@ -458,15 +479,23 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
             }
             else {
 #endif
-                for (i = 0; i < size; i ++)  {
+                for (i = 0; i < nrow; i ++)  {
                     if (mark[i] == 1) {
                         t = bval[i];
                         begin_row = ia[i],end_row = ia[i+1];
+#if DIAGONAL_PREF // Added by Chensong on 09/22/2012
+                        for (k = begin_row+1; k < end_row; k ++) {
+                            j = ja[k];
+                            t -= aj[k]*uval[j];
+                        } // end for k
+                        d = aj[begin_row];
+#else
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
                             if (i!=j) t -= aj[k]*uval[j];
                             else d = aj[k];
                         } // end for k
+#endif // end if DIAG_PREF
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
                 } // end for i
@@ -475,10 +504,10 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
 #endif
             
 #ifdef _OPENMP
-            if (size > OPENMP_HOLDS) {
+            if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
-                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
                         if (mark[i] != 1) {
                             t = bval[i];
@@ -495,15 +524,23 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
             }
             else {
 #endif
-                for (i = 0; i < size; i ++) {
+                for (i = 0; i < nrow; i ++) {
                     if (mark[i] != 1) {
                         t = bval[i];
                         begin_row = ia[i],end_row = ia[i+1];
+#if DIAGONAL_PREF // Added by Chensong on 09/22/2012
+                        for (k = begin_row+1; k < end_row; k ++) {
+                            j = ja[k];
+                            t -= aj[k]*uval[j];
+                        } // end for k
+                        d = aj[begin_row];
+#else
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
                             if (i!=j) t -= aj[k]*uval[j];
                             else d = aj[k];
                         } // end for k
+#endif // end if DIAG_PREF
                         if (ABS(d) > SMALLREAL) uval[i] = t/d;
                     }
                 } // end for i
@@ -511,7 +548,9 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
             }
 #endif
         } // end while
-    }
+        
+    } // end if order
+    
     return;
 }
 
@@ -787,13 +826,13 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
                                 INT *mark,
                                 const INT order )
 {
-    const INT   *ia=A->IA,*ja=A->JA;
-    const REAL  *aj=A->val,*bval=b->val;
-    REAL        *uval=u->val;
+    const INT    nrow = b->row; // number of rows
+    const INT   *ia = A->IA, *ja=A->JA;
+    const REAL  *aj = A->val,*bval=b->val;
+    REAL        *uval = u->val;
     
     // local variables
     INT    i,j,k,begin_row,end_row;
-    INT    size = b->row;
     REAL   t,d=0.0;
     
 #ifdef _OPENMP
@@ -805,10 +844,10 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
     if (order == -1) {
         while (L--) {
 #ifdef _OPENMP
-            if (size > OPENMP_HOLDS) {
+            if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private (myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
                 for (myid = 0; myid < nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i = mybegin; i < myend; i ++) {
                         if (mark[i] == 0 || mark[i] == 2) {
                             t = bval[i];
@@ -825,7 +864,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
             } // end for i
             else {
 #endif
-                for (i = 0; i < size; i ++) {
+                for (i = 0; i < nrow; i ++) {
                     if (mark[i] == 0 || mark[i] == 2) {
                         t = bval[i];
                         begin_row = ia[i], end_row = ia[i+1];
@@ -842,10 +881,10 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
 #endif
             
 #ifdef _OPENMP
-            if (size > OPENMP_HOLDS) {
+            if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, i, mybegin, myend, t, begin_row, end_row, k, j, d)
                 for (myid = 0; myid < nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i = mybegin; i < myend; i++) {
                         if (mark[i] == 1) {
                             t = bval[i];
@@ -862,7 +901,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
             }
             else {
 #endif
-                for (i = 0; i < size; i ++) {
+                for (i = 0; i < nrow; i ++) {
                     if (mark[i] == 1) {
                         t = bval[i];
                         begin_row = ia[i], end_row = ia[i+1];
@@ -882,10 +921,10 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
     else {
         while (L--) {
 #ifdef _OPENMP
-            if (size > OPENMP_HOLDS) {
+            if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, t, k, j, d, begin_row, end_row)
                 for (myid = 0; myid < nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i = mybegin; i < myend; i++) {
                         if (mark[i] == 1) {
                             t = bval[i];
@@ -902,7 +941,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
             }
             else {
 #endif
-                for (i = 0; i < size; i ++) {
+                for (i = 0; i < nrow; i ++) {
                     if (mark[i] == 1) {
                         t = bval[i];
                         begin_row = ia[i], end_row = ia[i+1];
@@ -919,10 +958,10 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
 #endif
             
 #ifdef _OPENMP
-            if (size > OPENMP_HOLDS) {
+            if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private (myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
                 for (myid = 0; myid < nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, size, &mybegin, &myend);
+                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i = mybegin; i < myend; i++) {
                         if (mark[i] != 1) {
                             t = bval[i];
@@ -939,7 +978,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
             } // end for i
             else {
 #endif
-                for (i = 0; i < size; i ++) {
+                for (i = 0; i < nrow; i ++) {
                     if (mark[i] != 1) {
                         t = bval[i];
                         begin_row = ia[i], end_row = ia[i+1];
@@ -1475,14 +1514,14 @@ void swep3db(INT *ia,
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 void rb0b2d (INT *ia,
-            INT *ja,
-            REAL *aa,
-            REAL *u,
-            REAL *f,
-            INT *mark,
-            INT nx,
-            INT ny,
-            INT nsweeps)
+             INT *ja,
+             REAL *aa,
+             REAL *u,
+             REAL *f,
+             INT *mark,
+             INT nx,
+             INT ny,
+             INT nsweeps)
 {
 #if 1
     INT n0e,n0o,isweep;
@@ -1547,7 +1586,7 @@ void rb0b2d (INT *ia,
 			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
 		}
 	}
-#endif	
+#endif
 }
 
 /*
@@ -1595,7 +1634,7 @@ void rb0b3d (INT *ia,
         /*...  e-e-o */
         swep3df(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
         /*...  e-o-e */
-        swep3df(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);  
+        swep3df(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
         /*...  e-o-o */
         swep3df(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
         /*...  o-e-e */
@@ -1607,7 +1646,7 @@ void rb0b3d (INT *ia,
         /*...  o-o-o */
         swep3df(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
     }
-#else 
+#else
     INT n0e = -1, n0o = -2, isweep;
     //INT ex, ey, ez;
     //INT ox, oy, oz;
@@ -1671,7 +1710,7 @@ void rb0b3d (INT *ia,
 			/*...  o-e-o */
 			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
 			/*...  e-o-e (and going backwards) */
-		//	swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+            //	swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
 		}
 		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==1)) {
 			/*...  e-o-o (and going backwards) */
@@ -1691,7 +1730,7 @@ void rb0b3d (INT *ia,
 			/*...  o-e-e */
 			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
 			/*...  e-o-o (and going backwards) */
-		//	swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+            //	swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
 		}
 		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==0)) {
 			/*...  o-e-e (and going backwards) */
@@ -1711,7 +1750,7 @@ void rb0b3d (INT *ia,
 			/*...  e-o-o */
 			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
 			/*...  o-e-e (and going backwards) */
-		//	swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+            //	swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
 		}
 		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==1)) {
 			/*...  o-e-o (and going backwards) */
@@ -1731,7 +1770,7 @@ void rb0b3d (INT *ia,
 			/*...  e-o-e */
 			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
 			/*...  o-e-o (and going backwards) */
-		//	swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+            //	swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
 		}
 		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==0)) {
 			/*...  o-o-e (and going backwards) */
@@ -2056,30 +2095,30 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
                                  INT ny,
                                  INT nz )
 {
-    INT *ia=A->IA,*ja=A->JA;
-    REAL *aa=A->val, *bval=b->val, *uval=u->val;
+    const INT   nrow = b->row; // number of rows
+    INT        *ia=A->IA,*ja=A->JA;
+    REAL       *aa=A->val, *bval=b->val;
+    REAL       *uval=u->val;
     
-    INT i,ii,j,k,begin_row,end_row;
-    INT size = b->row;
-    REAL t,d=0.0;
-    // L =10;
+    INT         i,ii,j,k,begin_row,end_row;
+    REAL        t,d=0.0;
     
     // forward
     if (order == 1) {
         while (L--) {
             rb0f3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);
 #if 1
-         //   for (ii =0;ii <10;ii++)
-                for (i = maximap; i < size; i ++) {
-                    t = bval[i];
-                    begin_row = ia[i], end_row = ia[i+1];
-                    for (k = begin_row; k < end_row; k ++) {
-                        j = ja[k];
-                        if (i!=j) t -= aa[k]*uval[j];
-                        else d = aa[k];
-                    } // end for k
-                    if (ABS(d) > SMALLREAL) uval[i] = t/d;
-                } // end for i
+            //   for (ii =0;ii <10;ii++)
+            for (i = maximap; i < nrow; i ++) {
+                t = bval[i];
+                begin_row = ia[i], end_row = ia[i+1];
+                for (k = begin_row; k < end_row; k ++) {
+                    j = ja[k];
+                    if (i!=j) t -= aa[k]*uval[j];
+                    else d = aa[k];
+                } // end for k
+                if (ABS(d) > SMALLREAL) uval[i] = t/d;
+            } // end for i
 #endif
         } // end while
     }
@@ -2088,17 +2127,17 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
     else {
         while (L--) {
 #if 1
-          //  for (ii =0;ii <10;ii++)
-                for (i = size-1; i >= maximap; i --) {
-                    t = bval[i];
-                    begin_row = ia[i],end_row = ia[i+1];
-                    for (k = begin_row; k < end_row; k ++) {
-                        j = ja[k];
-                        if (i!=j) t -= aa[k]*uval[j];
-                        else d = aa[k];
-                    } // end for k
-                    if (ABS(d) > SMALLREAL) uval[i] = t/d;
-                } // end for i
+            //  for (ii =0;ii <10;ii++)
+            for (i = nrow-1; i >= maximap; i --) {
+                t = bval[i];
+                begin_row = ia[i],end_row = ia[i+1];
+                for (k = begin_row; k < end_row; k ++) {
+                    j = ja[k];
+                    if (i!=j) t -= aa[k]*uval[j];
+                    else d = aa[k];
+                } // end for k
+                if (ABS(d) > SMALLREAL) uval[i] = t/d;
+            } // end for i
 #endif
             rb0b3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);
         } // end while

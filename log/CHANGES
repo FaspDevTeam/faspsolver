@@ -4,7 +4,9 @@ File Name: CHANGES
 - Add red-black GS as a smoother for structured grids.
 - Use single-file interprocedual optimization as default for Intel IPO; multi-file will generate very large lib files.
 - Modify OMP version for smoothers.
-- Format amg.c and tutorial/poisson-amg.c
+- Format amg.c and tutorial/poisson-amg.c.
+- Clarify some comments in tutorial examples.
+- Test DIAGONAL_PERF for CF smoothing.
 
 09/15/2012 FASP 1.1.0:
 - Use Direct solvers as default in VS2008 Release version.

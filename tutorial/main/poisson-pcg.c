@@ -18,6 +18,8 @@
  *
  * \author Feiteng Huang
  * \date   05/17/2012
+ *
+ * Modified by Chensong Zhang on 09/22/2012
  */
 int main (int argc, const char * argv[]) 
 {
@@ -33,7 +35,7 @@ int main (int argc, const char * argv[])
     // Step 0. Set parameters
     // Read input and precondition parameters from a disk file
     // In this example, we read everything from a disk file:
-    //          "./ini/pcg.dat"
+    //          "ini/pcg.dat"
     // See the reference manual for details of the parameters. 
     fasp_param_init("ini/pcg.dat",&inparam,&itparam,&amgparam,&iluparam,NULL);
 
@@ -45,8 +47,8 @@ int main (int argc, const char * argv[])
     const REAL  tol         = itparam.tol;
     
     // Step 1. Get stiffness matrix and right-hand side
-    // Read A and b -- P1 FE discretization for Poisson.
-    // The location of the data files are given in "pcg.dat".
+    // Read A and b -- P1 FE discretization for Poisson. The location
+    // of the data files is given in "ini/pcg.dat".
     dCSRmat A;
     dvector b, x;
     char filename1[512], *datafile1;
@@ -78,7 +80,9 @@ int main (int argc, const char * argv[])
     // Note that we call PCG interface directly. There is another way which
     // calls the abstract iterative method interface; see possion-its.c for
     // more details. 
-    fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row, &x, 0.0);
+    fasp_dvec_alloc(A.row, &x);
+    fasp_dvec_set(A.row, &x, 0.0);
+    
     fasp_solver_dcsr_pcg(&A, &b, &x, pc, tol, maxit, stop_type, print_level);
     
     // Step 5. Clean up memory

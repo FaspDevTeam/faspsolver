@@ -33,7 +33,7 @@ int main (int argc, const char * argv[])
     // Step 0. Set parameters
     // Read input and AMG parameters from a disk file
     // In this example, we read everything from a disk file:
-    //          "./ini/amg.dat"
+    //          "ini/amg.dat"
     // See the reference manual for details of the parameters. 
     fasp_param_init("ini/amg.dat",&inparam,NULL,&amgparam,NULL,NULL);
     
@@ -42,7 +42,7 @@ int main (int argc, const char * argv[])
     
     // Step 1. Get stiffness matrix and right-hand side
     // Read A and b -- P1 FE discretization for Poisson. The location
-    // of the data files is given in "./ini/amg.dat".
+    // of the data files is given in "ini/amg.dat".
     dCSRmat A;
     dvector b, x;
     char filename1[512], *datafile1;

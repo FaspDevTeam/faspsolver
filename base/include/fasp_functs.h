@@ -12,9 +12,9 @@
 
 /*-------- In file: amg.c --------*/
 
-void fasp_solver_amg (dCSRmat *A, 
-                      dvector *b, 
-                      dvector *x, 
+void fasp_solver_amg (dCSRmat *A,
+                      dvector *b,
+                      dvector *x,
                       AMG_param *param);
 
 
@@ -1627,14 +1627,14 @@ void swep3db(INT *ia,
              INT nz);
 
 void rb0b2d (INT *ia,
-            INT *ja,
-            REAL *aa,
-            REAL *u,
-            REAL *f,
-            INT *mark,
-            INT nx,
-            INT ny,
-            INT nsweeps);
+             INT *ja,
+             REAL *aa,
+             REAL *u,
+             REAL *f,
+             INT *mark,
+             INT nx,
+             INT ny,
+             INT nsweeps);
 
 void rb0b3d (INT *ia,
              INT *ja,

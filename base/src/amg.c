@@ -63,7 +63,7 @@ void fasp_solver_amg (dCSRmat *A,
 #endif
     }
     
-    // initialize mgl[0] with A, b and x
+    // Step 0: initialize mgl[0] with A, b and x
     mgl[0].A = fasp_dcsr_create(m, n, nnz);
     fasp_dcsr_cp(A, &mgl[0].A);
     
@@ -72,8 +72,9 @@ void fasp_solver_amg (dCSRmat *A,
     
     mgl[0].x = fasp_dvec_create(n);
     fasp_dvec_cp(x, &mgl[0].x);
+
     
-    // AMG setup phase
+    // Step 1: AMG setup phase
     switch (amg_type) {
             
         // Smoothed Aggregation AMG setup phase
@@ -97,7 +98,7 @@ void fasp_solver_amg (dCSRmat *A,
             
     }
     
-    // AMG solve phase
+    // Step 2: AMG solve phase
     switch (cycle_type) {
 
         // call AMLI-cycle
@@ -117,10 +118,10 @@ void fasp_solver_amg (dCSRmat *A,
             
     }
     
-    // save solution vector
+    // Step 3: Save solution vector and return
     fasp_dvec_cp(&mgl[0].x, x);
     
-    // print out CPU time when needed
+    // print out CPU time if needed
     if ( print_level > PRINT_NONE ) {
 #ifdef _OPENMP
         AMG_end = omp_get_wtime();

@@ -18,6 +18,8 @@
  *
  * \author Feiteng Huang, Chensong Zhang
  * \date   05/22/2012
+ *
+ * Modified by Chensong Zhang on 09/22/2012
  */
 int main (int argc, const char * argv[]) 
 {
@@ -32,7 +34,7 @@ int main (int argc, const char * argv[])
     // Step 0. Set parameters
     // Read input parameters from a disk file
     // In this example, we read everything from a disk file:
-    //          "./ini/its_bsr.dat"
+    //          "ini/its_bsr.dat"
     // See the reference manual for details of the parameters. 
     fasp_param_init("ini/its_bsr.dat",&inparam,&itparam,NULL,&iluparam,NULL);
     
@@ -40,8 +42,8 @@ int main (int argc, const char * argv[])
     const int print_level = inparam.print_level;
     
     // Step 1. Get stiffness matrix and right-hand side
-    // Read A and b -- P1 FE discretization for Poisson.
-    // The location of the data files are given in "its.dat".
+    // Read A and b -- P1 FE discretization for Poisson. The location
+    // of the data files is given in "its.dat".
     dBSRmat A;
     dvector b, x;
     char filename1[512], *datafile1;
@@ -68,7 +70,9 @@ int main (int argc, const char * argv[])
     // Step 3. Solve the system with ITS_BSR as an iterative solver
     // Set the initial guess to be zero and then solve it using standard
     // iterative methods, without applying any preconditioners
-    fasp_dvec_alloc(b.row, &x); fasp_dvec_set(b.row,&x,0.0);
+    fasp_dvec_alloc(b.row, &x);
+    fasp_dvec_set(b.row,&x,0.0);
+    
     fasp_solver_dbsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
     
     // Step 4. Clean up memory
