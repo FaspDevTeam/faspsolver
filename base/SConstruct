@@ -1,0 +1,7 @@
+# SCons script for FASP
+SConscript('fasp.scons')
+
+# Output information ...
+print "==============================================================="
+print "  Building the FASP library -- Target:", map(str, BUILD_TARGETS)
+print "==============================================================="
