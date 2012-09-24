@@ -1,7 +1,14 @@
 # Initialize the environment
 import os
-
 allenv = Environment(ENV = {'PATH' : os.environ['PATH']})
+
+for key, value in ARGLIST:
+    if key == 'FC':
+        allenv.Replace( FORTRAN = value )
+    if key == 'CC':
+        allenv.Replace( CC = value )
+    if key == 'CXX':
+        allenv.Replace( CXX = value )
  
 # Set path for FASP header files
 allenv.Append(CPPPATH='include')
