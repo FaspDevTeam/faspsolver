@@ -156,6 +156,10 @@ testmm:
 	$(CC) -c main/testmm.c -o main/testmm.o $(CFLAGS)
 	$(FC) -o testmm.ex main/testmm.o $(FLFLAGS)
 
+testmf:
+	$(CC) -c main/test_matfree.c -o main/test_matfree.o $(CFLAGS)
+	$(FC) -o test_matfree.ex main/test_matfree.o $(FLFLAGS)
+
 testf: 
 	$(FC) -c main/testf.f90 -o main/testf.o $(CFLAGS)
 	$(FC) -o testf.ex main/testf.o $(FLFLAGS)
@@ -204,6 +208,7 @@ testall:
 	make 
 	make regression
 	make testmm
+	make testmf
 	make testf
 	make testbsr
 	make testmat

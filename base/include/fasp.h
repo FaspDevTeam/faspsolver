@@ -27,17 +27,15 @@
 /*---------------------------*/
 
 /**
- * \brief For developers only
+ * \brief Flags for developer's use only
  */
+// When this flag is ON, the extra printing will be enabled for debug purpose
 #define DEBUG_MODE       OFF /**< output DEBUG information */
 // When this flag is ON, the extra printing will be enabled for debug purpose
-
 #define CHMEM_MODE       OFF /**< output MEMORY usage information */
-// When this flag is ON, the memory usage checking will be enabled
-
-#define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
 // When this flag is ON, the matrix rows will be reordered as diagonal entries first
 // Use with cautious!!! 
+#define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
 
 /**
  * \brief For external software package support
@@ -64,7 +62,7 @@
 #define STAG_RATIO       1e-4  /**< Staganation tolerance = tol*STAGRATIO */
 #define MAX_STAG         20    /**< Maximal number of staganation times */
 #define MAX_RESTART      20    /**< Maximal number of restarting */
-#define OPENMP_HOLDS     2000 /**< Switch to sequence or openmp */
+#define OPENMP_HOLDS     2000  /**< Switch to sequence or openmp */
 
 /** 
  * \brief Definition of max, min, abs
@@ -759,6 +757,19 @@ typedef struct {
 } precond; /**< Data for general preconditioner passed to iterative solvers */
 
 /**
+ * \struct mxv_matfree
+ * \brief Matrix-vector multiplication, replace the actual matrix.
+ */
+typedef struct {
+	
+	//! data for MxV, can be a Matrix or something else
+	void *data;
+	//! action for MxV, void function pointer
+	void (*fct)(void *, REAL *, REAL *);
+	
+} mxv_matfree; /**< Data for general matrix passed to iterative solvers */
+
+/**
  * \struct input_param
  * \brief Input parameters 
  *
@@ -936,17 +947,15 @@ extern INT  MAXIMAP; /**< Red Black Gs Smoother max dofs of reservoir */
 
 #include "omp.h"
 
-extern INT THDs_AMG_GS;  /**<  amg gs smoothing threads  */
-extern INT THDs_CPR_lGS; /**<   reservoir gs smoothing threads */
-extern INT THDs_CPR_gGS; /**< global matrix gs smoothing threads  */
+extern INT THDs_AMG_GS;  /**< AMG GS smoothing threads  */
+extern INT THDs_CPR_lGS; /**< Reservoir GS smoothing threads */
+extern INT THDs_CPR_gGS; /**< Global matrix GS smoothing threads  */
 
 extern REAL total_linear_time; /**< total linear times */
 extern REAL total_setup_time;  /**< ??? */
 extern REAL total_start_time;  /**< ??? */
 extern INT  total_iter;        /**< ??? */
 extern INT  fasp_called_times; /**< ??? */
-
-
 
 /*
 #define FASP_GET_START_END(procid,nprocs,n,start,end) \

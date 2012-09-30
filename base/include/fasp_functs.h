@@ -855,6 +855,20 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
                                    dCSRmat *M);
 
 
+/*-------- In file: itsolver_mf.c --------*/
+
+INT fasp_solver_itsolver (mxv_matfree *mf, 
+                          dvector *b, 
+                          dvector *x, 
+                          precond *pc, 
+                          itsolver_param *itparam);
+
+INT fasp_solver_krylov (mxv_matfree *mf, 
+                        dvector *b, 
+                        dvector *x, 
+                        itsolver_param *itparam);
+
+
 /*-------- In file: itsolver_str.c --------*/
 
 INT fasp_solver_dstr_itsolver (dSTRmat *A, 
@@ -957,6 +971,45 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
 void fasp_solver_mgrecur (AMG_data *mgl, 
                           AMG_param *param, 
                           INT level);
+
+
+/*-------- In file: mxv_matfree.c --------*/
+
+void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
+                          REAL *x,
+                          REAL *y);
+
+void fasp_blas_dstr_mxv (dSTRmat *A,
+                         REAL *x,
+                         REAL *y);
+
+void fasp_blas_mxv_csr (void *A,
+                        REAL *x,
+                        REAL *y);
+
+void fasp_blas_mxv_bsr (void *A,
+                        REAL *x,
+                        REAL *y);
+
+void fasp_blas_mxv_str (void *A,
+                        REAL *x,
+                        REAL *y);
+
+void fasp_blas_mxv_bcsr (void *A,
+                         REAL *x,
+                         REAL *y);
+
+void fasp_blas_mxv_bbsr (void *A,
+                         REAL *x,
+                         REAL *y);
+
+void fasp_blas_mxv_csrl (void *A,
+                         REAL *x,
+                         REAL *y);
+
+void itsolver_init (int matrix_format,
+                    mxv_matfree *mf,
+                    void *A);
 
 
 /*-------- In file: ordering.c --------*/
@@ -1091,6 +1144,18 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
                             const SHORT print_level) ;
 
 
+/*-------- In file: pbcgs.c --------*/
+
+INT fasp_solver_pbcgs (mxv_matfree *mf, 
+                       dvector *b, 
+                       dvector *u, 
+                       precond *pc, 
+                       const REAL tol,
+                       const INT MaxIt, 
+                       const SHORT stop_type,
+                       const SHORT print_level);
+
+
 /*-------- In file: pcg.c --------*/
 
 INT fasp_solver_dcsr_pcg (dCSRmat *A, 
@@ -1121,6 +1186,18 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
                           const SHORT print_level);
 
 
+/*-------- In file: pcg.c --------*/
+
+INT fasp_solver_pcg (mxv_matfree *mf, 
+                     dvector *b, 
+                     dvector *u, 
+                     precond *pc, 
+                     const REAL tol,
+                     const INT MaxIt, 
+                     const SHORT stop_type,
+                     const SHORT print_level);
+
+
 /*-------- In file: pgcg.c --------*/
 
 INT fasp_solver_dcsr_pgcg (dCSRmat *A, 
@@ -1131,6 +1208,18 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
                            const INT MaxIt, 
                            const SHORT stop_type,
                            const SHORT print_level);
+
+
+/*-------- In file: pgcg.c --------*/
+
+INT fasp_solver_pgcg (mxv_matfree *mf, 
+                      dvector *b, 
+                      dvector *u, 
+                      precond *pc, 
+                      const REAL tol,
+                      const INT MaxIt, 
+                      const SHORT stop_type,
+                      const SHORT print_level);
 
 
 /*-------- In file: pgmres.c --------*/
@@ -1176,6 +1265,19 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
                              const SHORT print_level);
 
 
+/*-------- In file: pgmres.c --------*/
+
+INT fasp_solver_pgmres (mxv_matfree *mf, 
+                        dvector *b, 
+                        dvector *x, 
+                        precond *pc, 
+                        const REAL tol,
+                        const INT MaxIt, 
+                        const SHORT restart,
+                        const SHORT stop_type, 
+                        const SHORT print_level);
+
+
 /*-------- In file: pminres.c --------*/
 
 INT fasp_solver_dcsr_pminres (dCSRmat *A, 
@@ -1195,6 +1297,18 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
                                const INT MaxIt, 
                                const SHORT stop_type,
                                const SHORT print_level) ;
+
+
+/*-------- In file: pminres.c --------*/
+
+INT fasp_solver_pminres (mxv_matfree *mf, 
+                         dvector *b, 
+                         dvector *u, 
+                         precond *pc, 
+                         const REAL tol,
+                         const INT MaxIt, 
+                         const SHORT stop_type,
+                         const SHORT print_level) ;
 
 
 /*-------- In file: precond_bsr.c --------*/
@@ -1334,6 +1448,19 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
                                const SHORT print_level);
 
 
+/*-------- In file: pvfgmres.c --------*/
+
+INT fasp_solver_pvfgmres (mxv_matfree *mf, 
+                          dvector *b, 
+                          dvector *x, 
+                          precond *pc, 
+                          const REAL tol,
+                          const INT MaxIt, 
+                          const SHORT restart,
+                          const SHORT stop_type, 
+                          const SHORT print_level);
+
+
 /*-------- In file: pvgmres.c --------*/
 
 INT fasp_solver_dcsr_pvgmres (dCSRmat *A, 
@@ -1365,6 +1492,19 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
                               const SHORT restart,
                               const SHORT stop_type, 
                               const SHORT print_level);
+
+
+/*-------- In file: pvgmres.c --------*/
+
+INT fasp_solver_pvgmres (mxv_matfree *mf,
+                         dvector *b,
+                         dvector *x,
+                         precond *pc,
+                         const REAL tol,
+                         const INT MaxIt,
+                         const SHORT restart,
+                         const SHORT stop_type,
+                         const SHORT print_level);
 
 
 /*-------- In file: quadrature.c --------*/

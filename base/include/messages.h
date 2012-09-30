@@ -42,6 +42,18 @@
 #define PRINT_MOST              8    /**< most: maximal printouts, no disk files*/
 #define PRINT_ALL               10   /**< everything: all printouts allowed */
 
+/**
+ * \brief Definition of matrix format
+ **/
+#define MAT_FREE                0    /**< Matrix-free format: only mxv action */
+#define MAT_CSR                 1    /**< Compressed sparse row */
+#define MAT_BSR                 2    /**< Blockwise compressed sparse row */
+#define MAT_STR                 3    /**< Structured sparse matrix */
+#define MAT_bCSR                4    /**< Block matrix of CSR */
+#define MAT_bBSR                5    /**< Block matrix of BSR: Used for boarded systems */
+#define MAT_CSRL                6    /**< A modified CSR format to reduce cache missing */
+#define MAT_SymCSR              7    /**< Symmetric CSR format */
+
 /** 
  * \brief Definition of return status and error messages
  */

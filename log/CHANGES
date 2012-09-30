@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+10/01/2012 FASP 1.1.2:
+- More changes to OMP.
+- Add matrix-free version of iterative methods.
+- Add a test program for matrix-free format. 
+
 09/22/2012 FASP 1.1.1:
 - Add red-black GS as a smoother for structured grids.
 - Use single-file interprocedual optimization as default for Intel IPO; multi-file will generate very large lib files.
