@@ -28,9 +28,8 @@ Structure
 [ 0.7.0 ] separate external packages
 [ 0.8.0 ] define repeated constants in header
 [ 0.8.0 ] auto format for plain text, replace TAB by 4 SPACE
-[ 07/15 ] generate shared lib's for external packages (Ludmil)
-[ 07/15 ] add Automake and Autoconf support for installation (Ludmil)
 [ 08/30 ] make several functions 'standalone', e.g. use PCG alone (Chensong)
+[       ] generate shared lib's for external packages
 
 ========================
 GMG 	
@@ -79,14 +78,16 @@ Iterative Methods
 [ 0.7.8 ] reduced duplications in iterative methods
 [ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
+[       ] add support for SymCSR format
+[       ] further study CSRL format and extend it
 
 [ 09/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
+[ 1.1.2 ] add matrix-free iterative methods
 [       ] test SpBLAS implementations in standard libraries (Chunsheng)
-[       ] right preconditioning (Chensong)
-[       ] matrix-free iterative methods (Chensong)
+[       ] implement right preconditioning (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
-[ 0.6.7 ] remove the non-GPL ILU routines
+[ 0.6.7 ] remove non-GPL ILU routines
 [ 08/10 ] add block preconditioners for Stokes and NS (Xiaozhe)
 [       ] add preconditioners for Maxwell
 [       ] replace the ILU smoothers from SPARSEKIT ver2.0
@@ -129,6 +130,7 @@ Test Examples
 [ 0.4.1 ] build "tutorial" dir for simple examples
 [ 0.8.2 ] add examples in "tutorial" and modify user's guide accordingly
 [ 0.9.0 ] make online help pages for several tutorial examples
+[ 1.1.2 ] add a test example for matrix-free iterative methods
 
 ========================
 OpenMP Support
@@ -158,4 +160,4 @@ Bug Fixes
 [ 0.7.8 ] check other iterative solvers for similar bugs
 [ 0.8.9 ] remove sevearl obsolete functions
 [ 1.0.8 ] fix a bug in BiCGstab: silent exit when divided by zero
-[       ] fix a bug in vs08 debug environment
+[ 1.1.0 ] fix a bug in vs08 debug environment
