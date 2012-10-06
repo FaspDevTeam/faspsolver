@@ -295,7 +295,12 @@ void fasp_famg_solve (AMG_data *mgl,
     const REAL   sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
     
     // local variables
+#ifdef _OPENMP
+    double       solve_start=omp_get_wtime();
+#else
     clock_t      solve_start=clock();
+#endif
+
     REAL         relres1=BIGREAL, absres;    
     
 #if DEBUG_MODE
@@ -316,9 +321,13 @@ void fasp_famg_solve (AMG_data *mgl,
     
     if (print_level>PRINT_NONE) {
         printf("FMG finishes with relative residual %e.\n", relres1);
-    
+#ifdef _OPENMP 
+        double solve_end=omp_get_wtime();
+        REAL solveduration = solve_end - solve_start;
+#else
         clock_t solve_end=clock();
         REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
+#endif
         print_cputime("FMG solve",solveduration);
     }
     

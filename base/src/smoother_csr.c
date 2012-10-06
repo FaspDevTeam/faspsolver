@@ -1564,7 +1564,7 @@ void rb0b2d (INT *ia,
 			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
 			/*...  o-e */
 			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
-        }
+                }
 		else if ((nx%2==1)&&(ny%2 ==0)) {
 			/*...  o-e (and going backwards) */
 			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
