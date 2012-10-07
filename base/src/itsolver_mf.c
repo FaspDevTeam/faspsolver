@@ -48,7 +48,7 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
     const REAL   tol           = itparam->tol; 
     
     /* Local Variables */
-	REAL solver_duration;
+    REAL solver_duration;
     INT iter;
     
 #ifdef _OPENMP 
