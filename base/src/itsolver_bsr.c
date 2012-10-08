@@ -26,9 +26,9 @@
  * \date 03/20/2011
  */
 
-INT THDs_AMG_GS;  /**< cpr amg gs smoothing threads      */
-INT THDs_CPR_lGS; /**< reservoir gs smoothing threads     */
-INT THDs_CPR_gGS; /**< global matrix gs smoothing threads */
+INT THDs_AMG_GS=0;  /**< cpr amg gs smoothing threads      */
+INT THDs_CPR_lGS=0; /**< reservoir gs smoothing threads     */
+INT THDs_CPR_gGS=0; /**< global matrix gs smoothing threads */
 
 void fasp_set_GS_threads(INT mythreads, INT its)
 {
@@ -47,8 +47,8 @@ void fasp_set_GS_threads(INT mythreads, INT its)
         THDs_CPR_gGS = (4 < mythreads) ? 4 : mythreads;
     }
     else if (its <=15) {
-        THDs_AMG_GS =  (4 < mythreads) ? 4 : mythreads;
-        THDs_CPR_lGS = (4 < mythreads) ? 4 : mythreads;
+        THDs_AMG_GS =  (3 < mythreads) ? 3 : mythreads;
+        THDs_CPR_lGS = (3 < mythreads) ? 3 : mythreads;
         THDs_CPR_gGS = (2 < mythreads) ? 2 : mythreads;
     }
     else if (its <=18) {
