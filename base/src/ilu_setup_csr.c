@@ -50,8 +50,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     INT    ierr, iwk, nzlu, nwork, *ijlu;
     REAL  *luval;
     
-    clock_t  setup_start, setup_end;
-    REAL     setup_duration;
+    REAL  setup_start, setup_end, setup_duration;
     SHORT    status = SUCCESS;
     
 #if DEBUG_MODE
@@ -59,7 +58,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->row,n,nnz);
 #endif
     
-    setup_start=clock();
+    fasp_gettime(&setup_start);
     
     // Expected amount of memory for ILU needed and allocate memory 
     switch (type) {
@@ -136,8 +135,8 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     }
     
     if (print_level>PRINT_NONE) {
-        setup_end=clock();
-        setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;
         
         switch (type) {
             case ILUt:

@@ -109,16 +109,12 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     const INT     m=mgl[0].A.row;
     
     // local variables
-    REAL          setupduration;
+    REAL          setup_start, setup_end, setupduration;
     SHORT         level=0, status=SUCCESS, max_levels=param->max_levels;
     INT           i;
 
-#ifdef _OPENMP 
-    REAL setup_start = omp_get_wtime();
-#else
-    clock_t setup_start = clock();
-#endif 
-    
+    fasp_gettime(&setup_start);
+
     if (cycle_type == AMLI_CYCLE) {
         param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
         REAL lambda_max = 2.0;
@@ -230,13 +226,8 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 #endif
     
     if (print_level>PRINT_NONE) {
-#ifdef _OPENMP 
-        REAL setup_end=omp_get_wtime();
+        fasp_gettime(&setup_end);
         setupduration = setup_end - setup_start;
-#else
-        clock_t setup_end=clock();
-        setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-#endif
         print_amgcomplexity(mgl,print_level);
         print_cputime("Unsmoothed Aggregation AMG setup",setupduration);
     }
@@ -273,7 +264,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     
     SHORT max_levels=param->max_levels;
     SHORT i, level=0, status=SUCCESS;
-    clock_t setup_start, setup_end;
+    REAL setup_start, setup_end;
     REAL setupduration;
     
 #if DEBUG_MODE
@@ -283,7 +274,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     
     if (print_level>PRINT_MOST)    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
     
-    setup_start=clock();
+    fasp_gettime(&setup_start);
     
     //each elvel stores the information of the number of aggregations
     INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
@@ -378,8 +369,8 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     }
     
     if (print_level>PRINT_NONE) {
-        setup_end=clock();
-        setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
+        fasp_gettime(&setup_end);
+        setupduration = setup_end - setup_start;
         print_cputime("(BSR) Unsmoothed Aggregation AMG setup",setupduration);
     }
     

@@ -37,7 +37,7 @@ void fasp_solver_famg (dCSRmat *A,
     const INT     nnz=A->nnz, m=A->row, n=A->col;
     
     // local variables
-    REAL          FMG_duration;
+    REAL          FMG_start, FMG_end, FMG_duration;
     SHORT         status = SUCCESS;
     
 #if DEBUG_MODE
@@ -45,13 +45,7 @@ void fasp_solver_famg (dCSRmat *A,
     printf("###DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
-#ifdef _OPENMP
-    REAL FMG_start, FMG_end;
-    FMG_start = omp_get_wtime();
-#else
-    clock_t FMG_start, FMG_end;
-    FMG_start = clock();
-#endif
+    fasp_gettime(&FMG_start);
 
     // initialize A, b, x for mgl[0]    
     AMG_data *mgl=fasp_amg_data_create(max_levels);    
@@ -86,13 +80,8 @@ void fasp_solver_famg (dCSRmat *A,
     
     // print out CPU time when needed
     if (print_level>PRINT_NONE) {
-#ifdef _OPENMP
-        FMG_end = omp_get_wtime();    
+        fasp_gettime(&FMG_end);    
         FMG_duration = FMG_end - FMG_start;    
-#else
-        FMG_end = clock();    
-        FMG_duration = (REAL)(FMG_end - FMG_start)/(REAL)(CLOCKS_PER_SEC);    
-#endif
         printf("FMG totally costs %f seconds.\n", FMG_duration);
     }    
     

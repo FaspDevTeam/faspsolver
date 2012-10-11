@@ -572,6 +572,11 @@ void fasp_solver_famg (dCSRmat *A,
                        AMG_param *param);
 
 
+/*-------- In file: fasp_gettime --------*/
+
+void fasp_gettime(REAL *time);
+
+
 /*-------- In file: fmgcycle.c --------*/
 
 void fasp_solver_fmgcycle (AMG_data *mgl, 

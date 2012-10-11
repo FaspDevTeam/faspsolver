@@ -91,11 +91,11 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
     
     SHORT       max_levels=param->max_levels, level=0, status=SUCCESS;
     INT         i, j;
-    clock_t     setup_start, setup_end;
+    REAL        setup_start, setup_end;
     REAL        setupduration;
     
-    setup_start=clock();
-    
+    fasp_gettime(&setup_start);
+
     if (cycle_type == AMLI_CYCLE) {
         param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
         REAL lambda_max = 2.0;
@@ -213,8 +213,8 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
 #endif
     
     if (print_level>PRINT_NONE) {
-        setup_end=clock();
-        setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
+        fasp_gettime(&setup_end);
+        setupduration = setup_end - setup_start;
         print_amgcomplexity(mgl,print_level);
         print_cputime("Smoothed Aggregation AMG setup",setupduration);
     }
@@ -248,8 +248,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
     // local variables
     SHORT       max_levels=param->max_levels, level=0, status=SUCCESS;
     INT         i, j;
-    clock_t     setup_start, setup_end;
-    REAL        setupduration;
+    REAL     setup_start, setup_end, setup_duration;
     
 #if DEBUG_MODE
     printf("### DEBUG: amg_setup_sa ...... [Start]\n");
@@ -258,7 +257,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
     
     if (print_level>8)    printf("amg_setup: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
     
-    setup_start=clock();
+    fasp_gettime(&setup_start);
     
     if (cycle_type == AMLI_CYCLE) 
         {
@@ -385,9 +384,9 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
     }
     
     if (print_level>PRINT_NONE) {
-        setup_end=clock();
-        setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-        print_cputime("Half Smoothed Aggregation AMG setup",setupduration);
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;
+        print_cputime("Half Smoothed Aggregation AMG setup",setup_duration);
     }
     
     fasp_mem_free(vertices);

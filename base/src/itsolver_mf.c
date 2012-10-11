@@ -48,14 +48,10 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
     const REAL   tol           = itparam->tol; 
     
     /* Local Variables */
-    REAL solver_duration;
+    REAL solver_start, solver_end, solver_duration;
     INT iter;
     
-#ifdef _OPENMP 
-    REAL solver_start = omp_get_wtime();
-#else
-    clock_t solver_start = clock();
-#endif
+    fasp_gettime(&solver_start);
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_itsolver ...... [Start]\n");
@@ -109,13 +105,8 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
     } 
     
     if ( (print_level>=PRINT_SOME) && (iter >= 0) ) {
-#ifdef _OPENMP 
-        REAL solver_end = omp_get_wtime();
+        fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-#else
-        clock_t solver_end = clock();
-        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-#endif
         print_cputime("Iterative method", solver_duration);
     }
     
@@ -153,7 +144,7 @@ INT fasp_solver_krylov (mxv_matfree *mf,
     
     /* Local Variables */
     INT      status = SUCCESS;
-    REAL     solver_duration;
+    REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_krylov ...... [Start]\n");
@@ -161,22 +152,13 @@ INT fasp_solver_krylov (mxv_matfree *mf,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
     
-#ifdef _OPENMP
-    REAL solver_start = omp_get_wtime();
-#else
-    clock_t solver_start = clock();
-#endif
+    fasp_gettime(&solver_start);
     
     status = fasp_solver_itsolver(mf,b,x,NULL,itparam);
     
     if ( print_level>=PRINT_MIN ) {
-#ifdef _OPENMP 
-        REAL solver_end = omp_get_wtime();
+        fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-#else
-        clock_t solver_end = clock();
-        solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
-#endif
         print_cputime("Krylov method totally", solver_duration);
     }    
     
