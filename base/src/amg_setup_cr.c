@@ -38,9 +38,10 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
     INT     i_0=0,i_n;
     SHORT   level=0, status=SUCCESS;
     SHORT   max_levels=param->max_levels;
+    REAL    setup_start, setup_end, setup_duration;
     
-    clock_t setup_start=clock();
-    
+    fasp_gettime(&setup_start);
+
     // The variable vertices stores level info (fine: 0; coarse: 1)
     ivector vertices=fasp_ivec_create(m); 
     
@@ -96,10 +97,10 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
     }
     
     if (print_level>PRINT_NONE) {
-        clock_t setup_end=clock();
-        REAL setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;
         print_amgcomplexity(mgl,print_level);
-        print_cputime("Compatible Relaxation AMG setup",setupduration);
+        print_cputime("Compatible Relaxation AMG setup",setup_duration);
     }
     
     fasp_ivec_free(&vertices); 

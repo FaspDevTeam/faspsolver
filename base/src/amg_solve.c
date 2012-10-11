@@ -42,13 +42,9 @@ INT fasp_amg_solve (AMG_data *mgl,
     const REAL    sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
 
     // local variables
-    REAL solveduration;
+    REAL solveduration, solve_start, solve_end;
 
-#ifdef _OPENMP 
-    REAL        solve_start=omp_get_wtime();
-#else
-    clock_t       solve_start=clock();
-#endif
+    fasp_gettime(&solve_start);
 
     REAL          relres1=BIGREAL, absres0=BIGREAL, absres, factor;    
     INT           iter=0;
@@ -94,13 +90,9 @@ INT fasp_amg_solve (AMG_data *mgl,
         else
             printf("Number of iterations = %d with relative residual %e.\n", 
                    iter, relres1);
-#ifdef _OPENMP 
-        REAL solve_end = omp_get_wtime();
+        
+	fasp_gettime(&solve_end);
         solveduration = solve_end - solve_start;
-#else
-        clock_t solve_end = clock();
-        solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
-#endif
         print_cputime("AMG solve",solveduration);
     }
     
@@ -137,12 +129,14 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
     const SHORT  print_level = param->print_level;
     const REAL   tol = param->tol;
     const REAL   sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
+    REAL         solve_start, solve_end, solveduration;
     
     // local variables
-    clock_t      solve_start=clock();
     REAL         relres1=BIGREAL, absres0=BIGREAL, absres, factor;    
     INT          iter=0;
-    
+
+    fasp_gettime(&solve_start);
+
 #if DEBUG_MODE
     const INT    m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;    
     printf("### DEBUG: fasp_amg_solve_amli ...... [Start]\n");
@@ -180,8 +174,8 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
             printf("Number of iterations = %d with relative residual %e.\n",
                    iter, relres1);
     
-        clock_t solve_end=clock();
-        REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
+        fasp_gettime(&solve_end);
+        solveduration = solve_end - solve_start;
         print_cputime("AMLI solve",solveduration);
     }
     
@@ -218,7 +212,8 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
     const SHORT   print_level = param->print_level;
     const REAL    tol = param->tol;
     const REAL    sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
-    
+    REAL          solve_start, solve_end, solveduration;  
+
     // local variables
     REAL          relres1=BIGREAL, absres0=BIGREAL, absres, factor;    
     INT           iter=0;
@@ -229,7 +224,7 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
-    clock_t solve_start=clock();
+    fasp_gettime(&solve_start);
     
     while ((++iter <= MaxIt) & (sumb > SMALLREAL)) // MG solver here
         {    
@@ -258,8 +253,8 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
         else
             printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
     
-        clock_t solve_end=clock();
-        REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
+        fasp_gettime(&solve_end);
+        solveduration = solve_end - solve_start;
         print_cputime("Nonlinear AMLI solve",solveduration);
     }
     
@@ -293,16 +288,13 @@ void fasp_famg_solve (AMG_data *mgl,
     
     const SHORT  print_level = param->print_level;
     const REAL   sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
-    
-    // local variables
-#ifdef _OPENMP
-    double       solve_start=omp_get_wtime();
-#else
-    clock_t      solve_start=clock();
-#endif
+    REAL         solve_start, solve_end, solveduration;
 
+    // local variables
     REAL         relres1=BIGREAL, absres;    
-    
+
+    fasp_gettime(&solve_start);
+
 #if DEBUG_MODE
     const INT    m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;    
     printf("### DEBUG: fasp_famg_solve ...... [Start]\n");
@@ -321,13 +313,8 @@ void fasp_famg_solve (AMG_data *mgl,
     
     if (print_level>PRINT_NONE) {
         printf("FMG finishes with relative residual %e.\n", relres1);
-#ifdef _OPENMP 
-        double solve_end=omp_get_wtime();
-        REAL solveduration = solve_end - solve_start;
-#else
-        clock_t solve_end=clock();
-        REAL solveduration = (REAL)(solve_end - solve_start)/(REAL)(CLOCKS_PER_SEC);
-#endif
+        fasp_gettime(&solve_end);
+        solveduration = solve_end - solve_start;
         print_cputime("FMG solve",solveduration);
     }
     

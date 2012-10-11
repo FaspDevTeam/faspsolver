@@ -105,13 +105,10 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     INT     mm, size;
     SHORT   level=0, status=SUCCESS;
     SHORT   max_levels=param->max_levels;
+    REAL    setup_start, setup_end;
 
-#ifdef _OPENMP
-    REAL setup_start = omp_get_wtime();
-#else
-    clock_t setup_start=clock();
-#endif
-    
+    fasp_gettime(&setup_start);
+
     ivector vertices=fasp_ivec_create(m); // stores level info (fine: 0; coarse: 1)
     
     iCSRmat S; // strong n-couplings
@@ -247,13 +244,8 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 #endif
     
     if (print_level>PRINT_NONE) {
-#ifdef _OPENMP
-        REAL setup_end = omp_get_wtime();
+        fasp_gettime(&setup_end);
         REAL setupduration = setup_end - setup_start;
-#else	
-        clock_t setup_end = clock();
-        REAL setupduration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);     
-#endif	
         print_amgcomplexity(mgl,print_level);
         print_cputime("Ruge-Stuben AMG setup",setupduration);
     }

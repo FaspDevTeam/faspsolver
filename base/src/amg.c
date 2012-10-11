@@ -56,11 +56,7 @@ void fasp_solver_amg (dCSRmat *A,
 #endif
     
     if ( print_level > PRINT_NONE ) {
-#ifdef _OPENMP
-        AMG_start = omp_get_wtime();
-#else
-        AMG_start = clock();
-#endif
+        fasp_gettime(&AMG_start);
     }
     
     // Step 0: initialize mgl[0] with A, b and x
@@ -123,13 +119,8 @@ void fasp_solver_amg (dCSRmat *A,
     
     // print out CPU time if needed
     if ( print_level > PRINT_NONE ) {
-#ifdef _OPENMP
-        AMG_end = omp_get_wtime();
+        fasp_gettime(&AMG_end);
         AMG_duration = AMG_end - AMG_start;
-#else
-        AMG_end = clock();
-        AMG_duration = (REAL)(AMG_end - AMG_start)/(REAL)(CLOCKS_PER_SEC);
-#endif
         print_cputime("AMG totally", AMG_duration);
     }
     

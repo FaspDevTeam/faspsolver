@@ -46,8 +46,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     INT lfil=iluparam->ILU_lfil;
     INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
     
-    clock_t setup_start, setup_end;
-    REAL    setup_duration;
+    REAL    setup_start, setup_end, setup_duration;
     SHORT   status = SUCCESS;
     
 #if DEBUG_MODE
@@ -55,8 +54,8 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->ROW,n,nnz);
 #endif
     
-    setup_start=clock();
-    
+    fasp_gettime(&setup_start);
+
     // Expected amount of memory for ILU needed and allocate memory 
     iwk=(lfil+2)*nnz;
     
@@ -113,9 +112,8 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     }
     
     if (print_level>PRINT_NONE) {
-        setup_end=clock();
-        setup_duration = (REAL)(setup_end - setup_start)/(REAL)(CLOCKS_PER_SEC);
-    
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;    
         printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);    
     }
     

@@ -43,8 +43,11 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
     const SHORT  restart = itparam->restart;
     const INT    MaxIt = itparam->maxit;
     const REAL   tol = itparam->tol; 
+
+    REAL  solver_start, solver_end, solver_duration;        
     
-    clock_t solver_start=clock();
+    fasp_gettime(&solver_start);
+
     INT iter;
     
     /* Safe-guard checks on parameters */
@@ -74,8 +77,8 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
     }
     
     if ( (print_level>=PRINT_MIN) && (iter >= 0) ) {
-        clock_t solver_end=clock();    
-        REAL solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+        fasp_gettime(&solver_end);    
+        solver_duration = solver_end - solver_start;
         print_cputime("Iterative method", solver_duration);
     }
     
@@ -105,15 +108,16 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
 {
     const INT print_level = itparam->print_level;
     INT status=SUCCESS;
-    clock_t solver_start, solver_end;
-    REAL solver_duration;
+    REAL solver_start, solver_end, solver_duration;
     
     // solver part
-    solver_start=clock();
+    fasp_gettime(&solver_start);
+
     status=fasp_solver_bdcsr_itsolver(A,b,x,NULL,itparam);
-    solver_end=clock();
     
-    solver_duration = (REAL)(solver_end - solver_start)/(REAL)(CLOCKS_PER_SEC);
+    fasp_gettime(&solver_end);
+    
+    solver_duration = solver_end - solver_start;
     
     if ( print_level>=PRINT_MIN ) 
         print_cputime("Krylov method totally", solver_duration);

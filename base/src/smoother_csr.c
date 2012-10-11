@@ -2100,7 +2100,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
     REAL       *aa=A->val, *bval=b->val;
     REAL       *uval=u->val;
     
-    INT         i,ii,j,k,begin_row,end_row;
+    INT         i,j,k,begin_row,end_row;
     REAL        t,d=0.0;
     
     // forward
