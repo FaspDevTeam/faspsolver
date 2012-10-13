@@ -36,7 +36,8 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
     
     INT * ind = (INT *) fasp_mem_calloc(m+1,sizeof(INT));
     
-    for (i=0; i<=m; ++i) ind[i]=0; // initialize    
+    //for (i=0; i<=m; ++i) ind[i]=0; // initialize    
+    memset(ind, 0, sizeof(INT)*(m+1));
     
     for (i=0; i<nnz; ++i) ind[A->I[i]+1]++; // count nnz in each row
     
@@ -70,6 +71,9 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
  * 
  * \author Xuehai Huang
  * \date   08/10/2009
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date  10/12/2012
  */
 SHORT fasp_format_dcsr_dcoo (dCSRmat *A, 
                              dCOOmat *B)
@@ -81,7 +85,10 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
     B->I=(INT *)fasp_mem_calloc(nnz,sizeof(INT));    
     B->J=(INT *)fasp_mem_calloc(nnz,sizeof(INT));    
     B->val=(REAL *)fasp_mem_calloc(nnz,sizeof(REAL));
-    
+   
+#ifdef _OPENMP
+#pragma omp parallel for schedule (dynamic, CHUNKSIZE) if(m>OPENMP_HOLDS) private(i, j)
+#endif    
     for (i=0;i<m;++i) {
         for (j=A->IA[i];j<A->IA[i+1];++j) B->I[N2C(j)]=C2N(i);
     }
@@ -296,6 +303,10 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
     row[0]=0; col[0]=0;
     for (i=0;i<mb;++i) { m+=blockptr[i*nb]->row; row[i+1]=m; }
     for (i=0;i<nb;++i) { n+=blockptr[i]->col;    col[i+1]=n; }
+
+#ifdef _OPENMP
+#pragma omp parallel for reduction(+:nnz) if (nbl>OPENMP_HOLDS) private(i)
+#endif
     for (i=0;i<nbl;++i) { nnz+=blockptr[i]->nnz; }
     
     // memory space allocation
@@ -380,6 +391,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
     }
     /* generate 'counter' */
     counter = (INT *)fasp_mem_calloc(maxnzrow + 1, sizeof(INT));
+ 
     for (i = 0; i < num_rows; i ++) {
         counter[nzrow[i]] ++;
     }
@@ -699,6 +711,9 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
  * \date   03/12/2012
  *
  * Modified by Xiaozhe Hu on 03/13/2012
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date  10/13/2012
  */
 
 dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B, 
@@ -727,9 +742,16 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     
     Is=(INT *)fasp_mem_calloc(nRow, sizeof(INT));
     Js=(INT *)fasp_mem_calloc(nCol, sizeof(INT));
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(nRow>OPENMP_HOLDS) private(i)
+#endif
     for(i=0;i<nRow;i++) {
         Is[i]=i*nb;
     }
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(nCol>OPENMP_HOLDS) private(i)
+#endif
     for(i=0;i<nCol;i++) {
         Js[i]=i*nb;
     }
@@ -745,15 +767,32 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     A.IA=(INT*)fasp_mem_calloc(A.ROW+1, sizeof(INT));
     A.JA=(INT*)fasp_mem_calloc(A.NNZ, sizeof(INT));
     A.val=(REAL*)fasp_mem_calloc(A.NNZ*nb*nb, sizeof(REAL));
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(tmpMat.row>OPENMP_HOLDS) private(i)
+#endif
     for(i=0;i<tmpMat.row+1;i++) {
         A.IA[i]=tmpMat.IA[i];
     }
+
+ 
+#if 0
     for(i=0;i<tmpMat.nnz;i++) {
         A.JA[i]=tmpMat.JA[i];
     }
     for(i=0;i<tmpMat.nnz;i++) {
         A.val[i*nb*nb]=tmpMat.val[i];
     }
+#endif
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(tmpMat.nnz>OPENMP_HOLDS) private(i)
+#endif
+    for(i=0;i<tmpMat.nnz;i++) {
+        A.JA[i]=tmpMat.JA[i];
+        A.val[i*nb*nb]=tmpMat.val[i];
+    }
+
     fasp_mem_free(tmpMat.IA);
     fasp_mem_free(tmpMat.JA);
     fasp_mem_free(tmpMat.val);
@@ -764,13 +803,22 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
             if (i==0 && j==0) {
             }
             else {
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(nRow>OPENMP_HOLDS) private(k)
+#endif
                 for(k=0;k<nRow;k++) {
                     Is[k]=k*nb+i;
                 }
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(nCol>OPENMP_HOLDS) private(k)
+#endif
                 for(k=0;k<nCol;k++) {
                     Js[k]=k*nb+j;
                 }
                 fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(tmpMat.nnz>OPENMP_HOLDS) private(k)
+#endif
                 for(k=0;k<tmpMat.nnz;k++) {
                     A.val[k*nb*nb+num]=tmpMat.val[k];
                 }    
@@ -919,7 +967,7 @@ dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
     INT      cnt,mr,mc;
     REAL    *pt = NULL;
     
-    // Create and Initialize a dBSRmat 'A'
+    // Create and Initialize a dCOOmat 'A'
     A = (dCOOmat *)fasp_mem_calloc(1, sizeof(dCOOmat));
     A->row = ROW*nb;
     A->col = COL*nb;

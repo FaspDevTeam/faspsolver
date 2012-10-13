@@ -22,7 +22,7 @@
  * \param groups  Return group numbers
  *
  * \author Chunsheng Feng
- * \date   15/09/2012 
+ * \date   09/15/2012 
  */
 void  dCSRmat_Division_Groups(dCSRmat A,INT *result,INT *groups)
 { 
@@ -35,10 +35,15 @@ void  dCSRmat_Division_Groups(dCSRmat A,INT *result,INT *groups)
    INT *cq = (INT *)malloc(sizeof(INT)*n);
    INT *newr = (INT *)malloc(sizeof(INT)*n);
 
-   for(k=0;k<n;k++)       cq[k]=k+1;
+#ifdef _OPENMP
+#pragma omp parallel for schedule (dynamic, CHUNKSIZE) if(n>OPENMP_HOLDS) private(k)
+#endif
+   for(k=0;k<n;k++) cq[k]=k+1;
    front=n-1;
    rear=n-1;
-   for(k=0;k<n;k++)      newr[k]=0;
+   //for(k=0;k<n;k++)      newr[k]=0;
+   memset(newr, 0, sizeof(INT)*n);
+
    group=1;
    pre=0;
 
@@ -48,8 +53,8 @@ void  dCSRmat_Division_Groups(dCSRmat A,INT *result,INT *groups)
          if(i<pre)
          {   group++;
              result[i-1]=group;
-  		     for(j= A.IA[i-1]; j< A.IA[i]; j++)
-			 if (A.JA[j] != i-1)  newr[ A.JA[j] ] = group;
+             for(j= A.IA[i-1]; j< A.IA[i]; j++)
+                 if (A.JA[j] != i-1)  newr[ A.JA[j] ] = group;
          }
          else if(newr[i-1]==group)
          {   rear=(rear+1)%n;
@@ -57,15 +62,15 @@ void  dCSRmat_Division_Groups(dCSRmat A,INT *result,INT *groups)
          } 
          else
          {    result[i-1]=group;
-			  for(j= A.IA[i-1]; j< A.IA[i]; j++)
-				 if (A.JA[j] != i-1)  newr[ A.JA[j] ] = group;
+              for(j= A.IA[i-1]; j< A.IA[i]; j++)
+                  if (A.JA[j] != i-1)  newr[ A.JA[j] ] = group;
 
 
          }
          pre=i;
      }while(rear!=front);
 	 
-	 *groups = group;
+   *groups = group;
    free(cq);
    free(newr);
 }

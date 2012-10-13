@@ -5,6 +5,7 @@
 
 #include <math.h>
 #include <time.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -416,6 +417,9 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
  *
  * \author Xiaozhe Hu
  * \date   09/29/2009
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   10/12/2012
  */
 static void smooth_agg (dCSRmat *A, 
                         dCSRmat *tentp, 
@@ -435,11 +439,20 @@ static void smooth_agg (dCSRmat *A,
     
     REAL row_sum_A, row_sum_N;
     
+    // local variables
+#ifdef _OPENMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
     /* Step 1. Form smoother */
     
     /* Using A for damped Jacobian smoother */
     if (filter == 0){ 
         S = fasp_dcsr_create(row, col, A->IA[row]); // copy structure from A
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS) private(i)
+#endif
         for (i=0; i<row+1; ++i) S.IA[i] = A->IA[i];
         for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = A->JA[i];
     
@@ -447,12 +460,18 @@ static void smooth_agg (dCSRmat *A,
     
         // check the diaganol entries. 
         // if it is too small, use Richardson smoother for the corresponding row 
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS) private(i)
+#endif
         for (i=0;i<row;++i){
             if (ABS(diag.val[i]) < 1e-6){
                 diag.val[i] = 1.0;
             }    
         }
     
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS) private(i,j)
+#endif
         for (i=0;i<row;++i){
             for (j=S.IA[i]; j<S.IA[i+1]; ++j){
                 if (S.JA[j] == i) {
@@ -468,30 +487,43 @@ static void smooth_agg (dCSRmat *A,
     /* Using filtered A for damped Jacobian smoother */
     else {
         /* Form filtered A and store in N */
-        for (i=0; i<row; ++i){
-            row_sum_A = 0.0;
-            row_sum_N = 0.0;
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, j, row_sum_A, row_sum_N) if (row>OPENMP_HOLDS)
+       for (myid=0; myid<nthreads; myid++) {
+           FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);	
+           for (i=mybegin; i<myend; ++i){
+#else           
+           for (i=0; i<row; ++i){
+#endif
+                row_sum_A = 0.0;
+                row_sum_N = 0.0;
     
-            for (j=A->IA[i]; j<A->IA[i+1]; ++j){
-                if (A->JA[j] != i){
-                    row_sum_A+=A->val[j];
+                for (j=A->IA[i]; j<A->IA[i+1]; ++j){
+                    if (A->JA[j] != i){
+                            row_sum_A+=A->val[j];
+                        }
+                    }
+    
+                    for (j=N->IA[i]; j<N->IA[i+1]; ++j){
+                        if (N->JA[j] != i){
+                            row_sum_N+=N->val[j];
+                        }
+                    }
+    
+                    for (j=N->IA[i]; j<N->IA[i+1]; ++j){
+                        if (N->JA[j] == i){
+                            N->val[j] = N->val[j] - row_sum_A + row_sum_N;
+                        }
+                    }
                 }
-            }
-    
-            for (j=N->IA[i]; j<N->IA[i+1]; ++j){
-                if (N->JA[j] != i){
-                    row_sum_N+=N->val[j];
-                }
-            }
-    
-            for (j=N->IA[i]; j<N->IA[i+1]; ++j){
-                if (N->JA[j] == i){
-                    N->val[j] = N->val[j] - row_sum_A + row_sum_N;
-                }
-            }
-        }
-    
+#ifdef _OPENMP
+       }
+#endif
         S = fasp_dcsr_create(row, col, N->IA[row]); // copy structure from N (filtered A)
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS)
+#endif
         for (i=0; i<row+1; ++i) S.IA[i] = N->IA[i];
         for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
     
@@ -499,12 +531,18 @@ static void smooth_agg (dCSRmat *A,
     
         // check the diaganol entries. 
         // if it is too small, use Richardson smoother for the corresponding row 
-        for (i=0;i<row;++i){
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS)
+#endif
+	for (i=0;i<row;++i){
             if (ABS(diag.val[i]) < 1e-6){
                 diag.val[i] = 1.0;
             }    
         }
     
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS) private(i,j)
+#endif
         for (i=0;i<row;++i){
             for (j=S.IA[i]; j<S.IA[i+1]; ++j){
                 if (S.JA[j] == i) {
