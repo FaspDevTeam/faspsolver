@@ -1,12 +1,18 @@
 File Name: CHANGES
 
-10/06/2012 FASP 1.1.2:
+10/14/2012 FASP 1.1.3:
+- Add scons support for shared library.
+- Add scons support for OpenMP.
+
+10/13/2012 FASP 1.1.2:
 - Add matrix-free version of iterative methods.
 - Add a test example for matrix-free format. 
 - Some changes to OMP routines.
 - Fix an OMP timing bug.
+- Add OMP support for formats.c and amg_setup_sa.c.
 
 09/22/2012 FASP 1.1.1:
+- Add scons support for base/.
 - Add red-black GS as a smoother for structured grids.
 - Use single-file interprocedual optimization as default for Intel IPO; multi-file will generate very large lib files.
 - Modify OMP version for smoothers.

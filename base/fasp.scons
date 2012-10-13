@@ -17,51 +17,103 @@ allenv.Append(CPPPATH='include')
 allenv.Append(LIBPATH=['/usr/lib', '/usr/local/lib'])
 
 # Set FASP compiling options
-BOPT1='-O2 -funroll-loops -ftree-vectorize'
-BOPT2='-O0 -Wall -g -pg'
+BOPT1 = '-O2 -funroll-loops -ftree-vectorize'
+BOPT2 = '-O0 -Wall -g -pg'
 
-# Our release build is derived from the common build environment...
-# ... and set compiler flags for RELEASE version ...
+# Add a new command line variable
+omp = ARGUMENTS.get('omp', 0)
+if int(omp):
+    BOPT1 += ' -fopenmp'
+    BOPT2 += ' -fopenmp'
+
+#######################################################################
+# Our release build is derived from the common build environment...   #
+# ... and set compiler flags for RELEASE version ...                  #
+#######################################################################
 release_env = allenv.Clone()
 release_env.Append(CCFLAGS=BOPT1)
 release_env.Append(F77FLAGS=BOPT1)
 release_env.Append(F90FLAGS=BOPT1)
 release_env.Append(F95FLAGS=BOPT1)
 release_env.Append(FORTRANFLAGS=BOPT1)
+
 # ... and release builds end up in the "release" dir
 release_env.VariantDir('release','src',duplicate=False)
 release_env.VariantDir('release/ilu','extra/sparsekit',duplicate=False)
+
 # ... and set source directories for RELEASE version
 srcs_release = release_env.Glob('release/*.[cf]')
 srcs_release = srcs_release + release_env.Glob('release/ilu/*.f')
 
-# Building target for Release Version
+# ... build target for Release Version
 objs_release = release_env.Object(srcs_release)
+
+# ... make a static library
 fasp_release = release_env.Library('release/libfasp', objs_release)
 
-# We define our debug build environment in a similar fashion...
-# ... and set compiler flags for DEBUG version ...
+#######################################################################
+# Our sharelib build is derived from the common build environment...  #
+# ... and set compiler flags for SharedLib version ...                #
+#######################################################################
+shared_env = allenv.Clone()
+shared_env.Append(CCFLAGS=BOPT1)
+shared_env.Append(F77FLAGS=BOPT1)
+shared_env.Append(F90FLAGS=BOPT1)
+shared_env.Append(F95FLAGS=BOPT1)
+shared_env.Append(FORTRANFLAGS=BOPT1)
+
+# ... and release builds end up in the "shared" dir
+shared_env.VariantDir('shared','src',duplicate=False)
+shared_env.VariantDir('shared/ilu','extra/sparsekit',duplicate=False)
+
+# ... and set source directories for SharedLib version
+srcs_shared = shared_env.Glob('shared/*.[cf]')
+srcs_shared = srcs_shared + shared_env.Glob('shared/ilu/*.f')
+
+# ... build target for SharedLib Version
+objs_shared = shared_env.SharedObject(srcs_shared)
+
+# ... make a shared library
+fasp_shared = shared_env.SharedLibrary('shared/libfasp', objs_shared)
+
+#######################################################################
+# We define our debug build environment in a similar fashion...       #
+# ... and set compiler flags for DEBUG version ...                    #
+#######################################################################
+
 debug_env = allenv.Clone()
 debug_env.Append(CCFLAGS=BOPT2)
 debug_env.Append(F77FLAGS=BOPT2)
 debug_env.Append(F90FLAGS=BOPT2)
 debug_env.Append(F95FLAGS=BOPT2)
 debug_env.Append(FORTRANFLAGS=BOPT2)
+
 # ... and release builds end up in the "debug" dir
 debug_env.VariantDir('debug','src',duplicate=False)
 debug_env.VariantDir('debug/ilu','extra/sparsekit',duplicate=False)
+
 # ... and set source directories for DEBUG version
 srcs_debug = release_env.Glob('debug/*.[cf]')
 srcs_debug = srcs_debug + debug_env.Glob('debug/ilu/*.f')
 
-# Building target: Debug Version
+# ... build target for Debug Version
 objs_debug = debug_env.Object(srcs_debug)
+
+# ... make a static library
 fasp_debug = debug_env.Library('debug/libfaspd', objs_debug)
 
-# Set where to install FASP libfiles
-inslib  = release_env.Alias('install-lib', release_env.Install('lib', fasp_release))
-inslibd = debug_env.Alias('install-libd', debug_env.Install('lib', fasp_debug))
-allenv.Alias('install', [inslib,inslibd])
+#########################################
+# Set where to install FASP libfiles    #
+#########################################
 
-# Set default target
+inslib  = release_env.Alias('install-lib',  release_env.Install('lib', fasp_release))
+inslibs =  shared_env.Alias('install-libs',  shared_env.Install('lib', fasp_shared))
+inslibd =   debug_env.Alias('install-libd',   debug_env.Install('lib', fasp_debug))
+
+allenv.Alias('install', [inslib,inslibs,inslibd])
+
+#########################
+# Set default target    #
+#########################
+
 Default(fasp_release)

@@ -1,7 +1,17 @@
+# Output information ...
+print "================================================================="
+print "  Building the FASP library -- Target:", map(str, BUILD_TARGETS)
+print "  Sample Usage: "
+print "  >> scons -Q release        % Build the release lib only        "
+print "  >> scons -Q shared         % Build the shared lib only         "
+print "  >> scons -Q debug          % Build the debug lib only          "
+print "  >> scons -Q .              % Build all type of libraries       "
+print "  >> scons -Q release omp=1  % Build the release OpenMP lib only "
+print "  >> scons -Q shared omp=1   % Build the shared OpenMP lib only  "
+print "  >> scons -Q debug omp=1    % Build the debug OpenMP lib only   "
+print "  >> scons -Q install        % Install all compiled libraries    "
+print "  >> scons -c .              % Clean up build directories        "
+print "================================================================="
+
 # SCons script for FASP
 SConscript('fasp.scons')
-
-# Output information ...
-print "==============================================================="
-print "  Building the FASP library -- Target:", map(str, BUILD_TARGETS)
-print "==============================================================="
