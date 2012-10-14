@@ -147,7 +147,7 @@ static void aggregation (dCSRmat *A,
             }
         }
     }
-    
+        
     /*------------------------------------------*/
     /* Step 2. */
     /*------------------------------------------*/
@@ -166,7 +166,7 @@ static void aggregation (dCSRmat *A,
         if (vertices->val[i] < -1) {
             row_start = NIA[i]; row_end = NIA[i+1];
             for (j=row_start;j<row_end;++j) {
-                if (temp_C[NJA[j]] >= -1 && num_each_aggregation[temp_C[NJA[j]]] < max_aggregation ) {
+                if (temp_C[NJA[j]] > -1 && num_each_aggregation[temp_C[NJA[j]]] < max_aggregation ) {
                     vertices->val[i] = temp_C[NJA[j]];
                     num_left--;
                     num_each_aggregation[temp_C[NJA[j]]] ++ ;
@@ -175,7 +175,7 @@ static void aggregation (dCSRmat *A,
             }
         }
     }
-    
+        
     /*------------------------------------------*/
     /* Step 3. */
     /*------------------------------------------*/
@@ -201,6 +201,7 @@ static void aggregation (dCSRmat *A,
     
     fasp_mem_free(temp_C);
     fasp_mem_free(num_each_aggregation);
+
 }
 
 /**

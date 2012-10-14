@@ -10,7 +10,7 @@ workdir = ../data/  % work directory, no more than 128 characters
 % problem, solver, and output type             %
 %----------------------------------------------%
 
-problem_num              = 10     % test problem number 
+problem_num              = 11     % test problem number 
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to scree | 1 to file
 solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
@@ -28,7 +28,7 @@ precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 
 itsolver_tol             = 1e-6   % solver tolerance 
 itsolver_maxit           = 1000   % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
-itsolver_restart         = 20     % restart number for GMRES
+itsolver_restart         = 100     % restart number for GMRES
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
@@ -36,9 +36,9 @@ itsolver_restart         = 20     % restart number for GMRES
 
 ILU_type                 = 1      % 1 ILUk | 2 ILUt | 3 ILUtp 
 ILU_lfil                 = 0      % level of fill-in for ILUk
-ILU_droptol              = 0.1    % ILU drop tolerance
+ILU_droptol              = 0.01    % ILU drop tolerance
 ILU_permtol              = 0.001  % permutation toleration for ILUtp
-ILU_relax                = 0.9    % add dropped entries to diagonal with relaxation
+ILU_relax                = 0.0    % add dropped entries to diagonal with relaxation
 
 %----------------------------------------------%
 % parameters for Schwarz preconditioners       %
@@ -57,7 +57,7 @@ AMG_type                 = C      % C classic AMG
                                   % UA unsmoothed aggregation
 AMG_cycle_type           = V      % V V-cycle | W W-cycle
                                   % A AMLI-cycle | NA Nonlinear AMLI-cycleA
-AMG_tol                  = 1e-8   % tolerance for AMG
+AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
 AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
@@ -73,8 +73,8 @@ AMG_smoother             = GS     % GS | JACOBI | SGS
                                   % SOR | SSOR | GSOR | SGSOR | POLY
 AMG_ILU_levels           = 0      % number of levels using ILU smoother
 AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
-AMG_relaxation	         = 1.1    % relaxation parameter for SOR smoother 
-AMG_polynomial_degree	 = 3      % degree of the polynomial smoother
+AMG_relaxation	         = 1.2    % relaxation parameter for SOR smoother 
+AMG_polynomial_degree	 = 2      % degree of the polynomial smoother
 AMG_presmooth_iter       = 1      % number of presmoothing sweeps
 AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
 
@@ -86,7 +86,7 @@ AMG_coarsening_type      = 1      % 1 Modified RS
                                   % 3 Compatible Relaxation
                                   % 4 Aggressive 
 AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
-AMG_strong_threshold     = 0.3    % Strong threshold
+AMG_strong_threshold     = 0.6   % Strong threshold
 AMG_truncation_threshold = 0.4    % Truncation threshold
 AMG_max_row_sum          = 0.9    % Max row sum
 
@@ -95,7 +95,7 @@ AMG_max_row_sum          = 0.9    % Max row sum
 %----------------------------------------------%
 
 AMG_strong_coupled       = 0.08   % Strong coupled threshold
-AMG_max_aggregation      = 20     % Max size of aggregations
+AMG_max_aggregation      = 9     % Max size of aggregations
 AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
 AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing
 

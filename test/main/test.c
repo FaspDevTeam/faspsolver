@@ -5,7 +5,6 @@
  *
  *		Created by Chensong Zhang on 03/31/2009.
  *      Modified by Chensong Zhang on 09/09/2011.
- *      Modified by Chensong Zhang on 06/01/2012.
  *
  *------------------------------------------------------
  *
@@ -14,9 +13,6 @@
 /*! \file test.c
  *  \brief The main test function for FASP solvers
  */
-
-#include <time.h>
-
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -30,7 +26,6 @@
  * \date   03/31/2009
  * 
  * Modified by Chensong Zhang on 09/09/2011
- * Modified by Chensong Zhang on 06/01/2012
  */
 int main (int argc, const char * argv[]) 
 {
@@ -45,10 +40,10 @@ int main (int argc, const char * argv[])
 	itsolver_param  itparam;      // parameters for itsolver
 	AMG_param       amgparam;     // parameters for AMG
 	ILU_param       iluparam;     // parameters for ILU
-    Schwarz_param   schparam;     // parameters for Shcwarz method
+    Schwarz_param   schwarzparam; // parameters for Shcwarz method
     
     // Read input parameters from a disk file
-	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam,&schparam);
+	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam,&schwarzparam);
     
     // Set local parameters
 	const int print_level   = inparam.print_level;
@@ -60,7 +55,7 @@ int main (int argc, const char * argv[])
     // Set output device
     if (output_type) {
 		char *outputfile = "out/test.out";
-		printf("Redirecting output to %s ...\n", outputfile);
+		printf("Redirecting outputs to file: %s ...\n", outputfile);
 		freopen(outputfile,"w",stdout); // open a file for stdout
 	}
     
@@ -86,13 +81,15 @@ int main (int argc, const char * argv[])
     
 	// Read A and b -- P1 FE discretization for Poisson, large    
     else if (problem_num == 11) {
-        datafile1="coomat_1046529.dat";
-        strcat(filename1,datafile1);
-        fasp_dcoo_read(filename1, &A);
+		//datafile1="coomat_1046529.dat";
+        datafile1="coomat_26k.dat";
+		strcat(filename1,datafile1);
+		fasp_dcoo_read(filename1, &A);
         
-        // Form the right-hand-side b = A*sol
         dvector sol = fasp_dvec_create(A.row);
-        fasp_dvec_rand(A.row, &sol);         
+        fasp_dvec_rand(A.row, &sol);
+         
+        // Form the right-hand-side b = A*sol
         b = fasp_dvec_create(A.row);
         fasp_blas_dcsr_mxv(&A, sol.val, b.val);
         fasp_dvec_free(&sol);
@@ -117,6 +114,7 @@ int main (int argc, const char * argv[])
 	if (print_level>PRINT_NONE) {
         printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
         printf("b: n = %d\n", b.row);
+        fasp_mem_usage();
 	}
     
     // Print out solver parameters
@@ -154,14 +152,13 @@ int main (int argc, const char * argv[])
             if (print_level>PRINT_NONE) fasp_param_ilu_print(&iluparam);
 			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
 		}
-
         // Using Schwarz as preconditioner for Krylov iterative methods
         else if (precond_type == PREC_SCHWARZ){
-            if (print_level>PRINT_NONE) fasp_param_schwarz_print(&schparam);
-			status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, &schparam);
+            if (print_level>PRINT_NONE) fasp_param_schwarz_print(&schwarzparam);
+			status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, &schwarzparam);
 		}
 
-        // Unknown preconditioner
+        
 		else {
 			printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);		
 			exit(ERROR_SOLVER_PRECTYPE);
@@ -200,16 +197,18 @@ int main (int argc, const char * argv[])
         goto FINISHED;
 	}
 	
-	if ( status<0 ) {
+	fasp_mem_usage();
+	
+	if (status<0) {
 		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
 	}
 	else {
-		printf("\nSolver finished successfully!\n\n");
+		printf("\nSolver finished successfully!\n\n", status);
 	}
     
     if (output_type) fclose (stdout);
         
- FINISHED:
+FINISHED:
     // Clean up memory
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);
