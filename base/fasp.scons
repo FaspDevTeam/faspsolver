@@ -1,7 +1,13 @@
 # Initialize the environment
 import os
+
 allenv = Environment(ENV = {'PATH' : os.environ['PATH']})
 
+# Checks for libraries, header files, etc.
+conf = Configure(allenv)
+allenv = conf.Finish()
+
+# Get user-defined default compilers
 for key, value in ARGLIST:
     if key == 'FC':
         allenv.Replace( FORTRAN = value )
@@ -9,6 +15,9 @@ for key, value in ARGLIST:
         allenv.Replace( CC = value )
     if key == 'CXX':
         allenv.Replace( CXX = value )
+
+# Set Library path
+install_path = 'lib'
  
 # Set path for FASP header files
 allenv.Append(CPPPATH='include')
@@ -106,9 +115,9 @@ fasp_debug = debug_env.Library('debug/libfaspd', objs_debug)
 # Set where to install FASP libfiles    #
 #########################################
 
-inslib  = release_env.Alias('install-lib',  release_env.Install('lib', fasp_release))
-inslibs =  shared_env.Alias('install-libs',  shared_env.Install('lib', fasp_shared))
-inslibd =   debug_env.Alias('install-libd',   debug_env.Install('lib', fasp_debug))
+inslib  = release_env.Alias('install-lib',  release_env.Install(install_path, fasp_release))
+inslibs =  shared_env.Alias('install-libs',  shared_env.Install(install_path, fasp_shared))
+inslibd =   debug_env.Alias('install-libd',   debug_env.Install(install_path, fasp_debug))
 
 allenv.Alias('install', [inslib,inslibs,inslibd])
 

@@ -1,8 +1,10 @@
 File Name: CHANGES
 
-10/14/2012 FASP 1.1.3:
+10/15/2012 FASP 1.1.3:
 - Add scons support for shared library.
 - Add scons support for OpenMP.
+- Add scons help message.
+- Update documentation.
 
 10/13/2012 FASP 1.1.2:
 - Add matrix-free version of iterative methods.
