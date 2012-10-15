@@ -572,11 +572,6 @@ void fasp_solver_famg (dCSRmat *A,
                        AMG_param *param);
 
 
-/*-------- In file: fasp_gettime --------*/
-
-void fasp_gettime(REAL *time);
-
-
 /*-------- In file: fmgcycle.c --------*/
 
 void fasp_solver_fmgcycle (AMG_data *mgl, 
@@ -2284,6 +2279,11 @@ void FASP_GET_START_END (INT procid,
                          INT n, 
                          INT *start, 
                          INT *end);
+
+
+/*-------- In file: timing.c --------*/
+
+void fasp_gettime (REAL *time);
 
 
 /*-------- In file: vec.c --------*/

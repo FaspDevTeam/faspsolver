@@ -601,6 +601,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\base\src\timing.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\base\src\vec.c"
 				>
 			</File>

@@ -5,6 +5,8 @@ File Name: CHANGES
 - Add scons support for OpenMP.
 - Add scons help message.
 - Update documentation.
+- Change filename: fasp_gettime.c --> timing.c.
+- Update VS08 solutions.
 
 10/13/2012 FASP 1.1.2:
 - Add matrix-free version of iterative methods.
