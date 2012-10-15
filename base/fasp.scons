@@ -16,6 +16,12 @@ for key, value in ARGLIST:
     if key == 'CXX':
         allenv.Replace( CXX = value )
 
+# Add equivalent target as distclean 
+allenv.Clean("distclean",
+            [".sconsign.dblite",".sconf_temp","config.log",
+             "release","shared","debug",
+            ])
+
 # Set Library path
 install_path = 'lib'
  
@@ -51,7 +57,10 @@ release_env.VariantDir('release','src',duplicate=False)
 release_env.VariantDir('release/ilu','extra/sparsekit',duplicate=False)
 
 # ... and set source directories for RELEASE version
-srcs_release = release_env.Glob('release/*.[cf]')
+srcs_release = release_env.Glob('release/*.c')
+srcs_release = srcs_release + release_env.Glob('release/*.cpp')
+srcs_release = srcs_release + release_env.Glob('release/*.f')
+srcs_release = srcs_release + release_env.Glob('release/*.f90')
 srcs_release = srcs_release + release_env.Glob('release/ilu/*.f')
 
 # ... build target for Release Version
@@ -76,7 +85,10 @@ shared_env.VariantDir('shared','src',duplicate=False)
 shared_env.VariantDir('shared/ilu','extra/sparsekit',duplicate=False)
 
 # ... and set source directories for SharedLib version
-srcs_shared = shared_env.Glob('shared/*.[cf]')
+srcs_shared = shared_env.Glob('shared/*.c')
+srcs_shared = srcs_shared + shared_env.Glob('shared/*.cpp')
+srcs_shared = srcs_shared + shared_env.Glob('shared/*.f')
+srcs_shared = srcs_shared + shared_env.Glob('shared/*.f90')
 srcs_shared = srcs_shared + shared_env.Glob('shared/ilu/*.f')
 
 # ... build target for SharedLib Version
@@ -102,7 +114,10 @@ debug_env.VariantDir('debug','src',duplicate=False)
 debug_env.VariantDir('debug/ilu','extra/sparsekit',duplicate=False)
 
 # ... and set source directories for DEBUG version
-srcs_debug = release_env.Glob('debug/*.[cf]')
+srcs_debug = release_env.Glob('debug/*.c')
+srcs_debug = srcs_debug + release_env.Glob('debug/*.cpp')
+srcs_debug = srcs_debug + release_env.Glob('debug/*.f')
+srcs_debug = srcs_debug + release_env.Glob('debug/*.f90')
 srcs_debug = srcs_debug + debug_env.Glob('debug/ilu/*.f')
 
 # ... build target for Debug Version

@@ -1,15 +1,3 @@
-/**
- *		Test FASP solvers with a few simple problems. 
- *
- *------------------------------------------------------
- *
- *		Created by Chensong Zhang on 03/31/2009.
- *      Modified by Chensong Zhang on 09/09/2011.
- *
- *------------------------------------------------------
- *
- */
-
 /*! \file test.c
  *  \brief The main test function for FASP solvers
  */
@@ -26,6 +14,8 @@
  * \date   03/31/2009
  * 
  * Modified by Chensong Zhang on 09/09/2011
+ * Modified by Chensong Zhang on 06/21/2012
+ * Modified by Chensong Zhang on 10/15/2012: revise along with testfem.c
  */
 int main (int argc, const char * argv[]) 
 {
@@ -36,14 +26,14 @@ int main (int argc, const char * argv[])
     //------------------------//
 	// Step 0. Set parameters //
     //------------------------//
-	input_param     inparam;      // parameters from input files
-	itsolver_param  itparam;      // parameters for itsolver
-	AMG_param       amgparam;     // parameters for AMG
-	ILU_param       iluparam;     // parameters for ILU
-    Schwarz_param   schwarzparam; // parameters for Shcwarz method
+	input_param     inparam;  // parameters from input files
+	itsolver_param  itparam;  // parameters for itsolver
+	AMG_param       amgparam; // parameters for AMG
+	ILU_param       iluparam; // parameters for ILU
+    Schwarz_param   swzparam; // parameters for Shcwarz method
     
     // Read input parameters from a disk file
-	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam,&schwarzparam);
+	fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam,&swzparam);
     
     // Set local parameters
 	const int print_level   = inparam.print_level;
@@ -74,18 +64,20 @@ int main (int argc, const char * argv[])
 	if (problem_num == 10) {				
 		datafile1="csrmat_FE.dat";
 		strcat(filename1,datafile1);
-		datafile2="rhs_FE.dat";
+		
+        datafile2="rhs_FE.dat";
 		strcat(filename2,datafile2);        
-		fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+		
+        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
 	}	
     
-	// Read A and b -- P1 FE discretization for Poisson, large    
+	// Read A and b -- P1 FE discretization for Poisson, 1M DoF    
     else if (problem_num == 11) {
-		//datafile1="coomat_1046529.dat";
-        datafile1="coomat_26k.dat";
+		datafile1="coomat_1046529.dat"; // This file is NOT in ../data!
 		strcat(filename1,datafile1);
 		fasp_dcoo_read(filename1, &A);
         
+        // Generate a random solution 
         dvector sol = fasp_dvec_create(A.row);
         fasp_dvec_rand(A.row, &sol);
          
@@ -95,16 +87,17 @@ int main (int argc, const char * argv[])
         fasp_dvec_free(&sol);
 	}	
     
-	// Read A and b -- FD discretization for Poisson, large    
+	// Read A and b -- FD discretization for Poisson, 1M DoF    
     else if (problem_num == 12) {
-		datafile1="csrmat_1023X1023.dat";
+		datafile1="csrmat_1023X1023.dat"; // This file is NOT in ../data!
 		strcat(filename1,datafile1);
-		datafile2="rhs_1023X1023.dat";
+		
+        datafile2="rhs_1023X1023.dat";
 		strcat(filename2,datafile2);
         
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
     }
-    
+        
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
@@ -152,16 +145,16 @@ int main (int argc, const char * argv[])
             if (print_level>PRINT_NONE) fasp_param_ilu_print(&iluparam);
 			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
 		}
+        
         // Using Schwarz as preconditioner for Krylov iterative methods
         else if (precond_type == PREC_SCHWARZ){
-            if (print_level>PRINT_NONE) fasp_param_schwarz_print(&schwarzparam);
-			status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, &schwarzparam);
+            if (print_level>PRINT_NONE) fasp_param_schwarz_print(&swzparam);
+			status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, &swzparam);
 		}
-
         
 		else {
 			printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);		
-			exit(ERROR_SOLVER_PRECTYPE);
+			status = ERROR_SOLVER_PRECTYPE;
 		}
         
 	}
@@ -194,11 +187,8 @@ int main (int argc, const char * argv[])
 	else {
 		printf("### ERROR: Wrong solver type %d!!!\n", solver_type);		
 		status = ERROR_SOLVER_TYPE;
-        goto FINISHED;
 	}
-	
-	fasp_mem_usage();
-	
+		
 	if (status<0) {
 		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
 	}
@@ -208,7 +198,6 @@ int main (int argc, const char * argv[])
     
     if (output_type) fclose (stdout);
         
-FINISHED:
     // Clean up memory
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);

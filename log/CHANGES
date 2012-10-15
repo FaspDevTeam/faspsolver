@@ -7,6 +7,7 @@ File Name: CHANGES
 - Update documentation.
 - Change filename: fasp_gettime.c --> timing.c.
 - Update VS08 solutions.
+- Add distclean-like target to scons.
 
 10/13/2012 FASP 1.1.2:
 - Add matrix-free version of iterative methods.

@@ -1,10 +1,3 @@
-/**
- *    Testing the FASP FEM assembling routines. 
- *
- *------------------------------------------------------
- *
- */
-
 /*! \file testfem.c
  *  \brief The main test function for FASP FEM assembling.
  */
@@ -29,8 +22,9 @@
  * \date   09/11/2011
  *
  * Modified by Chensong Zhang and Feiteng Huang on 03/07/2012
- * Modified by Feiteng Huang on 04/01/2012, for l2 error
- * Modified by Feiteng Huang on 04/05/2012, for refine & assemble
+ * Modified by Feiteng Huang on 04/01/2012: l2 error
+ * Modified by Feiteng Huang on 04/05/2012: refine & assemble
+ * Modified by Chensong Zhang on 10/15/2012: add different solvers
  */
 int main (int argc, const char * argv[]) 
 {
@@ -95,23 +89,79 @@ int main (int argc, const char * argv[])
 	
 	// Step 4: solve the linear system with AMG
     {
-        AMG_param amgparam; // parameters for AMG
         dvector x; // just on DOF, not including boundary
-        
-        // Print problem size
-        printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
-        printf("b: n = %d\n", b.row);
-	
-        fasp_param_amg_init(&amgparam);    // set AMG param with default values
-        amgparam.print_level = PRINT_SOME; // print some AMG message
-        amgparam.maxit       = 100;        // max number of iterations
-        amgparam.tol         = 1e-12;      // convergence tol: 1e-12 is sufficent for 1M DOF 
 
-        fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row, &x, 0.0); // initial guess
+        input_param     inparam;  // parameters from input files
+        itsolver_param  itparam;  // parameters for itsolver
+        AMG_param       amgparam; // parameters for AMG
+        ILU_param       iluparam; // parameters for ILU
+        Schwarz_param   swzparam; // parameters for Shcwarz method
         
-        fasp_solver_amg(&A, &b, &x, &amgparam); // solve Ax = b with AMG
+        // Read input parameters from a disk file
+        fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam,&swzparam);
+        
+        const int print_level   = inparam.print_level;
+        const int solver_type   = inparam.solver_type;
+        const int precond_type  = inparam.precond_type;
 
-        for ( i=0; i<dof.row; ++i) uh.val[dof.val[i]] = x.val[i]; // save x to uh
+        // Set initial guess
+        fasp_dvec_alloc(A.row, &x);
+        fasp_dvec_set(A.row,&x,0.0);
+        
+        // Preconditioned Krylov methods
+        if ( solver_type >= 1 && solver_type <= 20) {
+            
+            // Using no preconditioner for Krylov iterative methods
+            if (precond_type == PREC_NULL) {
+                status = fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
+            }
+            
+            // Using diag(A) as preconditioner for Krylov iterative methods
+            else if (precond_type == PREC_DIAG) {
+                status = fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
+            }
+            
+            // Using AMG as preconditioner for Krylov iterative methods
+            else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
+                if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+                status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            }
+            
+            // Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
+            else if (precond_type == PREC_ILU) {
+                if (print_level>PRINT_NONE) fasp_param_ilu_print(&iluparam);
+                status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
+            }
+            
+            // Using Schwarz as preconditioner for Krylov iterative methods
+            else if (precond_type == PREC_SCHWARZ){
+                if (print_level>PRINT_NONE) fasp_param_schwarz_print(&swzparam);
+                status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, &swzparam);
+            }
+            
+            else {
+                printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);
+                exit(ERROR_SOLVER_PRECTYPE);
+            }
+            
+        }
+        
+        // AMG as the iterative solver
+        else if (solver_type == SOLVER_AMG) {
+            if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+            fasp_solver_amg(&A, &b, &x, &amgparam); 
+        }
+        
+        // Full AMG as the iterative solver 
+        else if (solver_type == SOLVER_FMG) {
+            if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+            fasp_solver_famg(&A, &b, &x, &amgparam);
+        }
+        
+        else {
+            printf("### ERROR: Wrong solver type %d!!!\n", solver_type);
+            status = ERROR_SOLVER_TYPE;
+        }
 
         fasp_dvec_free(&x);
     }
