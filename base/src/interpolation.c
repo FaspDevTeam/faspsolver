@@ -306,7 +306,7 @@ static SHORT getinonefull (INT **mat,
 
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,j) if(mm>OPENMP_HOLDS)
-    for (myid=0; myid<mm; ++myid) {
+    for (myid=0; myid<nthreads; ++myid) {
         FASP_GET_START_END(myid, nthreads, mm, &mybegin, &myend);
         for (i=mybegin; i<myend; ++i) {
 #else
@@ -575,7 +575,7 @@ static SHORT genintval (dCSRmat *A,
     mat[1]=(INT *)fasp_mem_calloc((sum+numiso),sizeof(INT));    
     matval=(REAL **)fasp_mem_calloc(1,sizeof(REAL *));    
     matval[0]=(REAL *)fasp_mem_calloc(sum+numiso,sizeof(REAL));
-    
+   
     lengths[1]=0;
     
     for (i=0;i<nc;++i) {    
@@ -594,8 +594,8 @@ static SHORT genintval (dCSRmat *A,
         for (j=0;j<mm*mm;++j) imas[i][j]=ima[j];
     }
     
-#ifdef _OPENMP
-#pragma omp parallel for if(numiso>OPENMP_HOLDS)
+#ifdef _OPENMP1
+#pragma omp parallel for if(numiso>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<numiso;++i) {
         mat[0][sum+i]=isol[i];
@@ -613,7 +613,7 @@ static SHORT genintval (dCSRmat *A,
     sol.val=(REAL*)fasp_mem_calloc(nf,sizeof(REAL));
     
     //for (i=0;i<nf;++i) izt[i]=0;
-    memset(izt, 0x0, sizeof(INT)*nf);
+    memset(izt, 0, sizeof(INT)*nf);
 
     for (i=0;i<tniz;++i) izt[mat[0][i]]++;
     
