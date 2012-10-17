@@ -1,10 +1,16 @@
 File Name: CHANGES
 
+10/20/2012 FASP 1.1.4:
+- Fix an error in scons help.
+- Modify a few OMP functions.
+- Modify comments in fasp_block.h.
+
 10/15/2012 FASP 1.1.3:
 - Add scons support for shared library.
 - Add scons support for OpenMP.
 - Add scons help message.
 - Update documentation.
+- Fix a potential bug in Aggregation AMG.
 - Change filename: fasp_gettime.c --> timing.c.
 - Update VS08 solutions.
 - Add distclean-like target to scons.
