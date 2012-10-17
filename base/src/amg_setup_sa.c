@@ -451,7 +451,7 @@ static void smooth_agg (dCSRmat *A,
     if (filter == 0){ 
         S = fasp_dcsr_create(row, col, A->IA[row]); // copy structure from A
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS) private(i)
+#pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
         for (i=0; i<row+1; ++i) S.IA[i] = A->IA[i];
         for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = A->JA[i];
@@ -461,7 +461,7 @@ static void smooth_agg (dCSRmat *A,
         // check the diaganol entries. 
         // if it is too small, use Richardson smoother for the corresponding row 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS) private(i)
+#pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
         for (i=0;i<row;++i){
             if (ABS(diag.val[i]) < 1e-6){
@@ -470,7 +470,7 @@ static void smooth_agg (dCSRmat *A,
         }
     
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS) private(i,j)
+#pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
         for (i=0;i<row;++i){
             for (j=S.IA[i]; j<S.IA[i+1]; ++j){
@@ -495,34 +495,33 @@ static void smooth_agg (dCSRmat *A,
 #else           
            for (i=0; i<row; ++i){
 #endif
-                row_sum_A = 0.0;
-                row_sum_N = 0.0;
+               row_sum_A = 0.0;
+               row_sum_N = 0.0;
     
-                for (j=A->IA[i]; j<A->IA[i+1]; ++j){
-                    if (A->JA[j] != i){
-                            row_sum_A+=A->val[j];
-                        }
-                    }
+               for (j=A->IA[i]; j<A->IA[i+1]; ++j){
+                   if (A->JA[j] != i){
+                       row_sum_A+=A->val[j];
+                   }
+               }  
+               for (j=N->IA[i]; j<N->IA[i+1]; ++j){
+                   if (N->JA[j] != i){
+                       row_sum_N+=N->val[j];
+                   }
+               }
     
-                    for (j=N->IA[i]; j<N->IA[i+1]; ++j){
-                        if (N->JA[j] != i){
-                            row_sum_N+=N->val[j];
-                        }
-                    }
-    
-                    for (j=N->IA[i]; j<N->IA[i+1]; ++j){
-                        if (N->JA[j] == i){
-                            N->val[j] = N->val[j] - row_sum_A + row_sum_N;
-                        }
-                    }
-                }
+               for (j=N->IA[i]; j<N->IA[i+1]; ++j){
+                   if (N->JA[j] == i){
+                       N->val[j] = N->val[j] - row_sum_A + row_sum_N;
+                   }
+               }
+           }
 #ifdef _OPENMP
        }
 #endif
         S = fasp_dcsr_create(row, col, N->IA[row]); // copy structure from N (filtered A)
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS)
+#pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
         for (i=0; i<row+1; ++i) S.IA[i] = N->IA[i];
         for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
@@ -532,7 +531,7 @@ static void smooth_agg (dCSRmat *A,
         // check the diaganol entries. 
         // if it is too small, use Richardson smoother for the corresponding row 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS)
+#pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
 	for (i=0;i<row;++i){
             if (ABS(diag.val[i]) < 1e-6){
@@ -541,7 +540,7 @@ static void smooth_agg (dCSRmat *A,
         }
     
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS) private(i,j)
+#pragma omp parallel for if(row>OPENMP_HOLDS) private(i,j)
 #endif
         for (i=0;i<row;++i){
             for (j=S.IA[i]; j<S.IA[i+1]; ++j){

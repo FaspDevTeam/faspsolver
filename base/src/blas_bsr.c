@@ -58,10 +58,10 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
     INT nthreads = 1, use_openmp = FALSE;
 
 #ifdef _OPENMP 
-	if ( ROW > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( ROW > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
 
     //----------------------------------------------
@@ -100,7 +100,7 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
             if (use_openmp) {
                 INT myid, mybegin, myend;
 #ifdef _OPENMP 
-#pragma omp parallel for  private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend)
+#pragma omp parallel for private(myid, mybegin, myend, i, py0, k, j, pA, px0, py,iend)
 #endif
                 for (myid =0; myid < nthreads; myid++) {
                      FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
@@ -314,9 +314,9 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
  */
 
 void fasp_blas_dbsr_aAxpy (const REAL alpha, 
-		                   dBSRmat *A, 
-		                   REAL *x, 
-		                   REAL *y) 
+                           dBSRmat *A, 
+                           REAL *x, 
+                           REAL *y) 
 {
 	/* members of A */
 	INT     ROW = A->ROW;
@@ -2342,174 +2342,167 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
                          dBSRmat *P, 
                          dBSRmat *B)
 {
-	const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
-        INT nB=A->NNZ;
-	INT i,i1,j,jj,k,length;    
-	INT begin_row,end_row,begin_rowA,end_rowA,begin_rowR,end_rowR;
-	INT istart,iistart,count;
+    const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
+    INT nB=A->NNZ;
+    INT i,i1,j,jj,k,length;    
+    INT begin_row,end_row,begin_rowA,end_rowA,begin_rowR,end_rowR;
+    INT istart,iistart,count;
 
-	REAL *rj=R->val, *aj=A->val, *pj=P->val, *acj;
-	INT *ir=R->IA, *ia=A->IA, *ip=P->IA, *iac;
-	INT *jr=R->JA, *ja=A->JA, *jp=P->JA, *jac;
+    REAL *rj=R->val, *aj=A->val, *pj=P->val, *acj;
+    INT *ir=R->IA, *ia=A->IA, *ip=P->IA, *iac;
+    INT *jr=R->JA, *ja=A->JA, *jp=P->JA, *jac;
 
-	INT *index=(INT *)fasp_mem_calloc(A->COL,sizeof(INT));
+    INT *index=(INT *)fasp_mem_calloc(A->COL,sizeof(INT));
 
-	REAL *smat_tmp=(REAL *)fasp_mem_calloc(nb2,sizeof(REAL));
+    REAL *smat_tmp=(REAL *)fasp_mem_calloc(nb2,sizeof(REAL));
 
-	INT *iindex=(INT *)fasp_mem_calloc(col,sizeof(INT));    
+    INT *iindex=(INT *)fasp_mem_calloc(col,sizeof(INT));    
 
-	for (i=0; i<A->COL; ++i) index[i] = -2;
+    for (i=0; i<A->COL; ++i) index[i] = -2;
 
-	memcpy(iindex,index,col*sizeof(INT));
+    memcpy(iindex,index,col*sizeof(INT));
 
-	jac=(INT*)fasp_mem_calloc(nB,sizeof(INT));    
+    jac=(INT*)fasp_mem_calloc(nB,sizeof(INT));    
 
-	iac=(INT*)fasp_mem_calloc(row+1,sizeof(INT));    
+    iac=(INT*)fasp_mem_calloc(row+1,sizeof(INT));    
 
-	REAL *temp=(REAL*)fasp_mem_calloc(A->COL*nb2,sizeof(REAL));
+    REAL *temp=(REAL*)fasp_mem_calloc(A->COL*nb2,sizeof(REAL));
 
-	iac[0] = 0;
+    iac[0] = 0;
 
-	// First loop: form sparsity partern of R*A*P
-	for (i=0; i < row; ++i) {    
-		// reset istart and length at the begining of each loop
-		istart = -1; length = 0; i1 = i+1;
+    // First loop: form sparsity partern of R*A*P
+    for (i=0; i < row; ++i) {
+        // reset istart and length at the begining of each loop
+        istart = -1; length = 0; i1 = i+1;
 
-		// go across the rows in R
-		begin_rowR=ir[i]; end_rowR=ir[i1];
-		for (jj=begin_rowR; jj<end_rowR; ++jj) {
-			j = jr[N2C(jj)];
-			// for each column in A
-			begin_rowA=ia[j]; end_rowA=ia[j+1];    
-			for (k=begin_rowA; k<end_rowA; ++k) {
-				if (index[N2C(ja[N2C(k)])] == -2) {
-					index[N2C(ja[N2C(k)])] = istart;
-					istart = ja[N2C(k)];
-					++length;
-				}
-			}
-		}    
+       // go across the rows in R
+       begin_rowR=ir[i]; end_rowR=ir[i1];
+       for (jj=begin_rowR; jj<end_rowR; ++jj) {
+           j = jr[N2C(jj)];
+           // for each column in A
+           begin_rowA=ia[j]; end_rowA=ia[j+1];    
+           for (k=begin_rowA; k<end_rowA; ++k) {
+               if (index[N2C(ja[N2C(k)])] == -2) {
+                   index[N2C(ja[N2C(k)])] = istart;
+                   istart = ja[N2C(k)];
+                   ++length;
+               }
+           }
+       }    
 
-		// book-keeping [reseting length and setting iistart]
-		count = length; iistart = -1; length = 0;
+       // book-keeping [reseting length and setting iistart]
+       count = length; iistart = -1; length = 0;
 
-		// use each column that would have resulted from R*A
-		for (j=0; j < count; ++j) {
-			jj = istart;
-			istart = index[istart];
-			index[N2C(jj)] = -2;
+       // use each column that would have resulted from R*A
+       for (j=0; j < count; ++j) {
+           jj = istart;
+           istart = index[istart];
+           index[N2C(jj)] = -2;
 
-			// go across the row of P
-			begin_row=ip[jj]; end_row=ip[jj+1];
-			for (k=begin_row; k<end_row; ++k) {
-				// pull out the appropriate columns of P
-				if (iindex[N2C(jp[N2C(k)])] == -2){
-					iindex[N2C(jp[N2C(k)])] = iistart;
-					iistart = jp[N2C(k)];
-					++length;
-				}
-			} // end for k
-		} // end for j
+           // go across the row of P
+           begin_row=ip[jj]; end_row=ip[jj+1];
+           for (k=begin_row; k<end_row; ++k) {
+               // pull out the appropriate columns of P
+               if (iindex[N2C(jp[N2C(k)])] == -2){
+                   iindex[N2C(jp[N2C(k)])] = iistart;
+                   iistart = jp[N2C(k)];
+                   ++length;
+               }
+           } // end for k
+       } // end for j
 
-		// set B->IA
-		iac[i1]=iac[i]+length;
+       // set B->IA
+       iac[i1]=iac[i]+length;
 
-		if (iac[i1]>nB) {
-			nB=nB*2;
-			jac=(INT*)fasp_mem_realloc(jac, nB*sizeof(INT));
-		}
+       if (iac[i1]>nB) {
+           nB=nB*2;
+           jac=(INT*)fasp_mem_realloc(jac, nB*sizeof(INT));
+       }
 
-		// put the correct columns of p into the column list of the products
-		begin_row=iac[i]; end_row=iac[i1];
-		for (j=begin_row; j<end_row; ++j) {
-			// put the value in B->JA
-			jac[N2C(j)] = iistart;
-			// set istart to the next value
-			iistart = iindex[N2C(iistart)];
-			// set the iindex spot to 0
-			iindex[N2C(jac[j])] = -2;
-		} // end j
+       // put the correct columns of p into the column list of the products
+       begin_row=iac[i]; end_row=iac[i1];
+       for (j=begin_row; j<end_row; ++j) {
+           // put the value in B->JA
+           jac[N2C(j)] = iistart;
+           // set istart to the next value
+           iistart = iindex[N2C(iistart)];
+           // set the iindex spot to 0
+           iindex[N2C(jac[j])] = -2;
+       } // end j
+    } // end i: First loop
 
-	} // end i: First loop
+    jac=(INT*)fasp_mem_realloc(jac,(iac[row])*sizeof(INT));
 
-	jac=(INT*)fasp_mem_realloc(jac,(iac[row])*sizeof(INT));
+    acj=(REAL*)fasp_mem_calloc(iac[row]*nb2,sizeof(REAL));
 
-	acj=(REAL*)fasp_mem_calloc(iac[row]*nb2,sizeof(REAL));
+    INT *BTindex=(INT*)fasp_mem_calloc(col,sizeof(INT));
 
-	INT *BTindex=(INT*)fasp_mem_calloc(col,sizeof(INT));
+    // Second loop: compute entries of R*A*P
+    for (i=0; i<row; ++i) {
+        i1 = i+1;
+        // each col of B
+        begin_row=iac[i]; end_row=iac[i1];
+        for (j=begin_row; j<end_row; ++j) {
+            BTindex[N2C(jac[N2C(j)])]=j;
+        }
+        // reset istart and length at the begining of each loop
+        istart = -1; length = 0;
 
-	// Second loop: compute entries of R*A*P
-	for (i=0; i<row; ++i) {
-		i1 = i+1;
+        // go across the rows in R
+        begin_rowR=ir[i]; end_rowR=ir[i1];    
+        for ( jj=begin_rowR; jj<end_rowR; ++jj ) {
+            j = jr[N2C(jj)];
+            // for each column in A
+            begin_rowA=ia[j]; end_rowA=ia[j+1];
+            for (k=begin_rowA; k<end_rowA; ++k) {
+                if (index[N2C(ja[N2C(k)])] == -2) {
+                    index[N2C(ja[N2C(k)])] = istart;
+                    istart = ja[N2C(k)];
+                    ++length;
+                }
+                fasp_blas_smat_mul(&rj[N2C(jj)*nb2],&aj[N2C(k)*nb2],smat_tmp,nb);
+                //fasp_array_xpy(nb2,&temp[N2C(ja[N2C(k)])*nb2], smat_tmp );
+                fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &temp[N2C(ja[N2C(k)])*nb2]);
 
-		// each col of B
-		begin_row=iac[i]; end_row=iac[i1];    
-		for (j=begin_row; j<end_row; ++j) {
-			BTindex[N2C(jac[N2C(j)])]=j;
-		}
+                //temp[N2C(ja[N2C(k)])]+=rj[N2C(jj)]*aj[N2C(k)];
+                // change to   X = X+Y*Z
+            }
+        } 
 
-		// reset istart and length at the begining of each loop
-		istart = -1; length = 0;
+        // book-keeping [reseting length and setting iistart]
+        // use each column that would have resulted from R*A
+        for (j=0; j<length; ++j) {
+             jj = N2C(istart);
+             istart = index[N2C(istart)];
+             index[N2C(jj)] = -2;
 
-		// go across the rows in R
-		begin_rowR=ir[i]; end_rowR=ir[i1];    
-		for ( jj=begin_rowR; jj<end_rowR; ++jj ) {
-			j = jr[N2C(jj)];
+             // go across the row of P
+             begin_row=ip[jj]; end_row=ip[jj+1];    
+             for (k=begin_row; k<end_row; ++k) {
+                 // pull out the appropriate columns of P
+                 //acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj]*pj[k];
+                 fasp_blas_smat_mul(&temp[jj*nb2],&pj[k*nb2],smat_tmp,nb);
+                 //fasp_array_xpy(nb2,&acj[BTindex[N2C(jp[N2C(k)])]*nb2], smat_tmp );
+                 fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &acj[BTindex[N2C(jp[N2C(k)])]*nb2]);
 
-			// for each column in A
-			begin_rowA=ia[j]; end_rowA=ia[j+1];    
-			for (k=begin_rowA; k<end_rowA; ++k) {
-				if (index[N2C(ja[N2C(k)])] == -2) {
-					index[N2C(ja[N2C(k)])] = istart;
-					istart = ja[N2C(k)];
-					++length;
-				}
+                 // change to   X = X+Y*Z
+             }
+             //temp[jj]=0.0; // change to   X[nb,nb] = 0;
+             fasp_array_set(nb2,&temp[jj*nb2],0.0);
+         }
+     } // end for i: Second loop
+     // setup coarse matrix B
+     B->ROW=row; B->COL=col;
+     B->IA=iac; B->JA=jac; B->val=acj;
+     B->NNZ=B->IA[B->ROW]-B->IA[0];
 
-				fasp_blas_smat_mul(&rj[N2C(jj)*nb2],&aj[N2C(k)*nb2],smat_tmp,nb);
-				//fasp_array_xpy(nb2,&temp[N2C(ja[N2C(k)])*nb2], smat_tmp );
-				fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &temp[N2C(ja[N2C(k)])*nb2]);
-
-				//temp[N2C(ja[N2C(k)])]+=rj[N2C(jj)]*aj[N2C(k)];
-				// change to   X = X+Y*Z
-			}
-		} 
-
-		// book-keeping [reseting length and setting iistart]
-		// use each column that would have resulted from R*A
-		for (j=0; j<length; ++j) {
-			jj = N2C(istart);
-			istart = index[N2C(istart)];
-			index[N2C(jj)] = -2;
-
-			// go across the row of P
-			begin_row=ip[jj]; end_row=ip[jj+1];    
-			for (k=begin_row; k<end_row; ++k) {
-				// pull out the appropriate columns of P
-				//acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj]*pj[k];
-				fasp_blas_smat_mul(&temp[jj*nb2],&pj[k*nb2],smat_tmp,nb);
-				//fasp_array_xpy(nb2,&acj[BTindex[N2C(jp[N2C(k)])]*nb2], smat_tmp );
-				fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &acj[BTindex[N2C(jp[N2C(k)])]*nb2]);
-
-				// change to   X = X+Y*Z
-			}
-			//temp[jj]=0.0; // change to   X[nb,nb] = 0;
-			fasp_array_set(nb2,&temp[jj*nb2],0.0);
-		}
-
-	} // end for i: Second loop
-
-	// setup coarse matrix B
-	B->ROW=row; B->COL=col;
-	B->IA=iac; B->JA=jac; B->val=acj;    
-	B->NNZ=B->IA[B->ROW]-B->IA[0];
-
-	B->nb=A->nb;
-	B->storage_manner = A->storage_manner;
-	fasp_mem_free(temp);
-	fasp_mem_free(index);
-	fasp_mem_free(iindex);
-	fasp_mem_free(BTindex);
-	fasp_mem_free(smat_tmp);
+     B->nb=A->nb;
+     B->storage_manner = A->storage_manner;
+     fasp_mem_free(temp);
+     fasp_mem_free(index);
+     fasp_mem_free(iindex);
+     fasp_mem_free(BTindex);
+     fasp_mem_free(smat_tmp);
 }
 
 /*---------------------------------*/

@@ -67,7 +67,7 @@ static void aggregation (dCSRmat *A,
     
     //for(i=row+1; i--;) NIA[i] = AIA[i];
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(row>OPENMP_HOLDS)
+#pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
     for(i=row; i>=0; i--) NIA[i] = AIA[i];
     

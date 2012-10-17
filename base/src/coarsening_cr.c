@@ -3,6 +3,7 @@
  */
 
 #include <math.h>
+#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"
@@ -29,6 +30,9 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
  * 
  * \author James Brannick
  * \date 04/21/2010
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date 10/14/2012
  */
 INT fasp_amg_coarsening_cr (INT i_0, 
                             INT i_n, 
@@ -49,6 +53,13 @@ INT fasp_amg_coarsening_cr (INT i_0,
     
     /* WORKING MEMORY -- b not needed, remove later */
     REAL *b=NULL,*u=NULL,*ma=NULL;
+
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    REAL sub_temp0 = 0.;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
     
     ia = A->IA;
     ja = A->JA;
@@ -66,6 +77,9 @@ INT fasp_amg_coarsening_cr (INT i_0,
     u  = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
     ma = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
     
+#ifdef _OPENMP
+#pragma omp parallel for if(i_n>OPENMP_HOLDS) 
+#endif
     for(i=i_0;i<=i_n;++i) {
         b[i] = 0.0e0; // ZERO RHS
         cf[i] = fpt;  // ALL FPTS 
@@ -74,7 +88,10 @@ INT fasp_amg_coarsening_cr (INT i_0,
     /** CR STAGES */
     while(1) {
         nc = 0;
-        for(i=i_0;i<=i_n;++i) {
+#ifdef _OPENMP
+#pragma omp parallel for if(i_n>OPENMP_HOLDS) 
+#endif
+        for(i=i_0; i<=i_n; ++i) {
             if (cf[i] == cpt) {
                 nc += 1;
                 u[i] = 0.0e0;
@@ -82,15 +99,36 @@ INT fasp_amg_coarsening_cr (INT i_0,
                 u[i] = 1.0e0;
             }
         } 
-        for (i=i_0;i<=nu;++i) {
-            if (i == num1)
-                for (j = i_0; j<= i_n; ++j) {
-                    if (cf[j] == fpt) {
-                        temp0 += u[j]*u[j];
+#ifdef _OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,j,sub_temp0) if(nu>OPENMP_HOLDS) 
+        for (myid=0; myid<nthreads; ++myid) {
+            FASP_GET_START_END(myid, nthreads, nu-i_0+1, &mybegin, &myend);
+            mybegin += i_0; myend += i_0;
+            for (i=mybegin; i<myend; ++i) {
+#else
+            for (i=i_0;i<=nu;++i) {
+#endif
+                if (i == num1)
+                    for (j = i_0; j<= i_n; ++j) {
+                        if (cf[j] == fpt) {
+#ifdef _OPENMP
+                            sub_temp0 += u[j]*u[j];
+#else
+                            temp0 += u[j]*u[j];
+#endif
+                        }
                     }
-                }
-            fasp_smoother_dcsr_gscr(fpt,i_n,u,ia,ja,a,b,1,cf);
+                    fasp_smoother_dcsr_gscr(fpt,i_n,u,ia,ja,a,b,1,cf);
+            }
+#ifdef _OPENMP
+#pragma omp critical(temp0)
+        temp0 += sub_temp0;
         }
+#endif
+
+#ifdef _OPENMP
+#pragma omp parallel for reduction(+:temp1) if(i_n>OPENMP_HOLDS)
+#endif
         for (i = i_0; i<= i_n; ++i) {
             if (cf[i] == fpt) {
                 temp1 += u[i]*u[i];
@@ -105,6 +143,7 @@ INT fasp_amg_coarsening_cr (INT i_0,
         if (rho > tg) {
             /* FORM CAND. SET & COMPUTE IND SET */ 
             temp0 = 0.0e0;
+
             for (i = i_0; i<= i_n; ++i) {
                 temp1 = fabs(u[i]);
                 if (cf[i] == cpt && temp1 > 0.0e0) {
@@ -117,6 +156,10 @@ INT fasp_amg_coarsening_cr (INT i_0,
             } else {
                 temp1 = 0.5;
             }
+
+#ifdef _OPENMP
+#pragma omp parallel for if(i_n>OPENMP_HOLDS)
+#endif
             for (i = i_0; i <= i_n; ++i) {
                 if (cf[i] == fpt && fabs(u[i])/temp0 > temp1 && ia[i+1]-ia[i] > 1)
                     cf[i] = cand;
@@ -126,6 +169,10 @@ INT fasp_amg_coarsening_cr (INT i_0,
             ns++;
         } else { 
             /* back to fasp labeling */ 
+
+#ifdef _OPENMP
+#pragma omp parallel for if(i_n>OPENMP_HOLDS)
+#endif
             for (i = i_0; i<= i_n; ++i) {
                 if (cf[i] == cpt) {
                     cf[i] = 1; // cpt 
@@ -221,6 +268,9 @@ static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
  * \param cf contains CF list  
  * \param ma contains candidate set info. 
  *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date 10/14/2012
+ *
  */
 static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, REAL *ma)
 {
@@ -232,26 +282,52 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
     INT  *tail, *tail_mem;
     
     INT i, ji, jj, jl, index, istack, stack_size;    
+
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    INT sub_istack = 0;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
     
     istack = 0;
-    for (i = 0; i < n; ++i) {
-        if (cf[i] == cand) {
-            ma[i] = 1;
-            for (ji = ia[i]+1; ji < ia[i+1]; ++ji) {
-                jj = ja[ji];
-                if (cf[jj] != cpt) {
-                    ma[i]++;
+
+#ifdef _OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,ji,jj,sub_istack) if(n>OPENMP_HOLDS)
+    for (myid=0; myid<nthreads; ++myid) {
+        FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+        for (i=mybegin; i<myend; ++i) {
+#else 
+        for (i = 0; i < n; ++i) {
+#endif
+            if (cf[i] == cand) {
+                ma[i] = 1;
+                for (ji = ia[i]+1; ji < ia[i+1]; ++ji) {
+                    jj = ja[ji];
+                    if (cf[jj] != cpt) {
+                        ma[i]++;
+                    }
                 }
+#ifdef _OPENMP
+                if (ma[i] > sub_istack) {
+                    sub_istack = (INT) ma[i];
+                }
+#else
+                if (ma[i] > istack) {
+                    istack = (INT) ma[i];
+                }
+#endif
+            } else if (cf[i] == cpt) {
+                ma[i] = -1;
+            } else {
+                ma[i] = 0;
             }
-            if (ma[i] > istack) {
-                istack = (INT) ma[i];
-            }
-        } else if (cf[i] == cpt) {
-            ma[i] = -1;
-        } else {
-            ma[i] = 0;
         }
+#ifdef _OPENMP
+#pragma omp critical(istack)
+     if (sub_istack > istack) istack = sub_istack;    
     }
+#endif
     stack_size = 2*istack;
     
     /* INITIALIZE GRAPH */
@@ -261,10 +337,17 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
     head = head_mem + stack_size; 
     tail = tail_mem + stack_size;
     
+#ifdef _OPENMP
+#pragma omp parallel for if(stack_size>OPENMP_HOLDS) 
+#endif
     for (i = -1; i >= -stack_size; i--) {
         head[i] = i;
         tail[i] = i;
     }
+
+#ifdef _OPENMP
+#pragma omp parallel for if(stack_size>OPENMP_HOLDS) 
+#endif
     for (i = 0; i < n; ++i) {
         if (ma[i] > 0) {
             GraphAdd(list, head, tail, i, (INT) ma[i]);
@@ -274,11 +357,9 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
     while (istack > 0) {
         /* i with maximal measure is at the head of the stacks */
         i = head[-istack];
-    
         /* make i a c-point */
         cf[i] = cpt;
         ma[i] = -1;
-    
         /* remove i from graph */
         GraphRemove(list, head, tail, i);
     
@@ -300,11 +381,9 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
                     /* if a candidate, increase likehood of being chosen */
                     if (ma[index] > 0) {
                         ma[index]++;
-    
                         /* move index in graph */
                         GraphRemove(list, head, tail, index);
-                        GraphAdd(list, head, tail, index,
-                                 (INT) ma[index]);
+                        GraphAdd(list, head, tail, index, (INT) ma[index]);
                         if (ma[index] > istack) {
                             istack = (INT) ma[index];
                         }

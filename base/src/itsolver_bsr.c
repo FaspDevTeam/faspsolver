@@ -204,7 +204,11 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   10/26/2010
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   10/15/2012
  */
+
 INT fasp_solver_dbsr_krylov_diag (dBSRmat *A, 
                                   dvector *b, 
                                   dvector *x, 
@@ -216,22 +220,48 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
     
     INT nb=A->nb,i,k;
     INT nb2=nb*nb;
-    INT ROW=A->ROW;
+    INT ROW=A->ROW; 
     
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
     // setup preconditioner
     precond_diagbsr diag;
     fasp_dvec_alloc(ROW*nb2, &(diag.diag));
     
     // get all the diagonal sub-blocks   
-    for (i = 0; i < ROW; ++i) {
-        for (k = A->IA[i]; k < A->IA[i+1]; ++k) {
-            if (A->JA[k] == i)
-                memcpy(diag.diag.val+i*nb2, A->val+k*nb2, nb2*sizeof(REAL));
+#ifdef _OPENMP
+    if (ROW > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, i, k)
+        for (myid=0; myid<nthreads; ++myid) {
+            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            for (i = mybegin; i < myend; ++i) {
+                for (k = A->IA[i]; k < A->IA[i+1]; ++k) {
+                    if (A->JA[k] == i)
+                    memcpy(diag.diag.val+i*nb2, A->val+k*nb2, nb2*sizeof(REAL));
+                }
+            }
         }
     }
+    else {
+#endif
+        for (i = 0; i < ROW; ++i) {
+            for (k = A->IA[i]; k < A->IA[i+1]; ++k) {
+                if (A->JA[k] == i)
+                memcpy(diag.diag.val+i*nb2, A->val+k*nb2, nb2*sizeof(REAL));
+            }
+        }
+#ifdef _OPENMP
+    }
+#endif
     
     diag.nb=nb;
     
+#ifdef _OPENMP
+#pragma omp parallel for if(ROW>OPENMP_HOLDS)
+#endif
     for (i=0; i<ROW; ++i) fasp_blas_smat_inv(&(diag.diag.val[i*nb2]), nb);
     
     precond *pc = (precond *)fasp_mem_calloc(1,sizeof(precond));    

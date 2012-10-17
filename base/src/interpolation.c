@@ -108,27 +108,46 @@ SHORT fasp_amg_interp (dCSRmat *A,
  *
  * \author Xuehai Huang
  * \date   04/04/2009 
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   10/14/2012
  */
 static SHORT invden (INT nn, 
                      REAL *mat, 
                      REAL *invmat)
 {
     INT    i,j;
-    SHORT  status = SUCCESS;
+    SHORT  status = SUCCESS; 
     
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif 
+
     INT  *pivot=(INT *)fasp_mem_calloc(nn,sizeof(INT));    
     REAL *rhs=(REAL *)fasp_mem_calloc(nn,sizeof(REAL));    
     REAL *sol=(REAL *)fasp_mem_calloc(nn,sizeof(REAL));
     
     fasp_smat_lu_decomp(mat,pivot,nn);
-    
-    for (i=0;i<nn;++i) {
-        for (j=0;j<nn;++j) rhs[j]=0.;
-        rhs[i]=1.;
-        fasp_smat_lu_solve(mat,rhs,pivot,sol,nn);
-        for (j=0;j<nn;++j) invmat[i*nn+j]=sol[j];
+   
+#ifdef _OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,j) if(nn>OPENMP_HOLDS)
+    for (myid=0; myid<nthreads; ++myid) {
+        FASP_GET_START_END(myid, nthreads, nn, &mybegin, &myend);
+        for (i=mybegin; i<myend; ++i) {
+#else	
+        for (i=0;i<nn;++i) {
+#endif
+            for (j=0;j<nn;++j) rhs[j]=0.;
+            rhs[i]=1.;
+            fasp_smat_lu_solve(mat,rhs,pivot,sol,nn);
+            for (j=0;j<nn;++j) invmat[i*nn+j]=sol[j];
+        }
+#ifdef _OPENMP
     }
-    
+#endif
+
     fasp_mem_free(pivot);
     fasp_mem_free(rhs);
     fasp_mem_free(sol);
@@ -153,6 +172,9 @@ static SHORT invden (INT nn,
  *
  * \author Xuehai Huang
  * \date   04/04/2009 
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   10/17/2012
  */
 static SHORT get_block (dCSRmat *A, 
                         INT m, 
@@ -163,25 +185,50 @@ static SHORT get_block (dCSRmat *A,
                         INT *mask)
 {
     INT i, j, k, iloc;
-    
+
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
+#if 0    
     for ( i=0; i<m; ++i ) {
         for ( j=0; j<n; ++j ) {
             Aloc[i*n+j] = 0.0; // initialize Aloc
         }    
     }
-    
+#endif
+    memset(Aloc, 0x0, sizeof(REAL)*m*n);
+
+#ifdef _OPENMP
+#pragma omp parallel for if(n>OPENMP_HOLDS)
+#endif    
     for ( j=0; j<n; ++j ) {
         mask[N2C(cols[j])] = j; // initialize mask, mask stores C indices 0,1,... 
     }    
     
-    for ( i=0; i<m; ++i ) {
-        iloc=N2C(rows[i]);
-        for ( k=A->IA[iloc]; k<A->IA[iloc+1]; ++k ) {
-            j = N2C(A->JA[N2C(k)]);
-            if (mask[j]>=0) Aloc[i*n+mask[j]]=A->val[k];
-        } /* end for k */
-    } /* enf for i */
+#ifdef _OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,j,k,iloc) if(m>OPENMP_HOLDS)
+    for ( myid=0; myid<nthreads; ++myid ) {
+        FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+        for ( i=mybegin; i<myend; ++i ) {
+#else
+        for ( i=0; i<m; ++i ) {
+#endif
+            iloc=N2C(rows[i]);
+            for ( k=A->IA[iloc]; k<A->IA[iloc+1]; ++k ) {
+                j = N2C(A->JA[N2C(k)]);
+                if (mask[j]>=0) Aloc[i*n+mask[j]]=A->val[k];
+            } /* end for k */
+        } /* enf for i */
+#ifdef _OPENMP
+    }
+#endif
     
+#ifdef _OPENMP
+#pragma omp parallel for if(n>OPENMP_HOLDS)
+#endif
     for ( j=0; j<n; ++j ) mask[N2C(cols[j])] = -1; // re-initialize mask
     
     return SUCCESS;
@@ -236,6 +283,9 @@ static SHORT gentisquare_nomass (dCSRmat *A,
  *
  * \author Xuehai Huang
  * \date   04/04/2009 
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date  10/14/2012
  */
 static SHORT getinonefull (INT **mat,
                            REAL **matval, 
@@ -246,14 +296,31 @@ static SHORT getinonefull (INT **mat,
 {
     INT tniz,i,j;
     
+#ifdef _OPENMP
+    // variables for OpenMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+
     tniz=lengths[1];
-    for (i=0;i<mm;++i) {
-        for (j=0;j<mm;++j) {    
-            mat[0][tniz+i*mm+j]=Ii[i];
-            mat[1][tniz+i*mm+j]=Ii[j];
-            matval[0][tniz+i*mm+j]=ima[i*mm+j];
+
+#ifdef _OPENMP
+#pragma omp parallel for private(myid,mybegin,myend,i,j) if(mm>OPENMP_HOLDS)
+    for (myid=0; myid<mm; ++myid) {
+        FASP_GET_START_END(myid, nthreads, mm, &mybegin, &myend);
+        for (i=mybegin; i<myend; ++i) {
+#else
+        for (i=0;i<mm;++i) {
+#endif
+            for (j=0;j<mm;++j) {    
+                mat[0][tniz+i*mm+j]=Ii[i];
+                mat[1][tniz+i*mm+j]=Ii[j];
+                matval[0][tniz+i*mm+j]=ima[i*mm+j];
+            }
         }
+#ifdef _OPENMP
     }
+#endif
     lengths[1]=tniz+mm*mm;
     
     return SUCCESS;
@@ -272,6 +339,9 @@ static SHORT getinonefull (INT **mat,
  *
  * \author Xuehai Huang
  * \date   04/04/2009 
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   10/17/2012
  */
 static SHORT orderone (INT **mat, 
                        REAL **matval, 
@@ -294,6 +364,9 @@ static SHORT orderone (INT **mat,
     cols[0]=(INT *)fasp_mem_calloc(tniz,sizeof(INT));    
     vals[0]=(REAL *)fasp_mem_calloc(tniz,sizeof(REAL));
     
+#ifdef _OPENMP
+#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#endif
     for (i=0;i<tniz;++i) {
         rows[0][i]=mat[0][i];
         cols[0][i]=mat[1][i];
@@ -308,6 +381,9 @@ static SHORT orderone (INT **mat,
     
     // all the nonzeros with same col are gathering together
     
+#ifdef _OPENMP
+#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#endif
     for (i=0;i<tniz;++i) {
         rows[0][i]=rows[1][i];
         cols[0][i]=cols[1][i];
@@ -321,6 +397,9 @@ static SHORT orderone (INT **mat,
     
     // all the nozeros with same col and row are gathering togheter    
     
+#ifdef _OPENMP
+#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#endif
     for (i=0;i<tniz;++i) {
         rows[0][i]=rows[1][i];
         cols[0][i]=cols[1][i];
@@ -344,6 +423,9 @@ static SHORT orderone (INT **mat,
     
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
+#ifdef _OPENMP
+#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#endif
     for (i=0;i<tniz;++i) {
         rows[0][i]=rows[1][i];
         cols[0][i]=cols[1][i];
@@ -356,6 +438,9 @@ static SHORT orderone (INT **mat,
     
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
+#ifdef _OPENMP
+#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#endif
     for (i=0;i<tniz;++i) {
         rows[0][i]=rows[1][i];
         cols[0][i]=cols[1][i];
@@ -370,6 +455,9 @@ static SHORT orderone (INT **mat,
     for (i=0;i<tnizs[0];++i)
         if (rows[0][i]<nns[0]-1) tniz++;
     
+#ifdef _OPENMP
+#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#endif
     for (i=0;i<tniz;++i) {
         mat[0][i]=rows[0][i];
         mat[1][i]=cols[0][i];
@@ -457,16 +545,24 @@ static SHORT genintval (dCSRmat *A,
     izt=(INT *)fasp_mem_calloc(nf,sizeof(INT));    
     izts=(INT *)fasp_mem_calloc(nf,sizeof(INT));
     
+#ifdef _OPENMP
+#pragma omp parallel for if(nf>OPENMP_HOLDS)
+#endif
     for (i=0;i<nf;++i) mask[i]=-1;
     
-    for (i=0;i<nc;++i) iz[i]=0;
-    
+    //for (i=0;i<nc;++i) iz[i]=0;
+    memset(iz, 0, sizeof(INT)*nc);
+
     for (i=0;i<ittniz;++i) iz[itmat[0][i]]++;
     
     izs[0]=0;
     for (i=1;i<nc;++i) izs[i]=izs[i-1]+iz[i-1];
     
-    for (sum=i=0;i<nc;++i) sum+=iz[i]*iz[i];
+    sum = 0;
+#ifdef _OPENMP
+#pragma omp parallel for reduction(+:sum) if(nc>OPENMP_HOLDS)
+#endif
+    for (i=0;i<nc;++i) sum+=iz[i]*iz[i];
     
     imas=(REAL **)fasp_mem_calloc(nc,sizeof(REAL *));
     
@@ -498,6 +594,9 @@ static SHORT genintval (dCSRmat *A,
         for (j=0;j<mm*mm;++j) imas[i][j]=ima[j];
     }
     
+#ifdef _OPENMP
+#pragma omp parallel for if(numiso>OPENMP_HOLDS)
+#endif
     for (i=0;i<numiso;++i) {
         mat[0][sum+i]=isol[i];
         mat[1][sum+i]=isol[i];
@@ -513,8 +612,9 @@ static SHORT genintval (dCSRmat *A,
     sol.row=nf;
     sol.val=(REAL*)fasp_mem_calloc(nf,sizeof(REAL));
     
-    for (i=0;i<nf;++i) izt[i]=0;
-    
+    //for (i=0;i<nf;++i) izt[i]=0;
+    memset(izt, 0x0, sizeof(INT)*nf);
+
     for (i=0;i<tniz;++i) izt[mat[0][i]]++;
     
     T.IA=(INT*)fasp_mem_calloc((nf+1),sizeof(INT));

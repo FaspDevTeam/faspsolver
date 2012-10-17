@@ -184,13 +184,12 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     
         /* -- Form Prolongation --*/      
         form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1, num_aggregations[level]);
-            
+    
         /*-- Form resitriction --*/    
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
-        
+    
         /*-- Form coarse level stiffness matrix --*/    
         fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
-        
     
         fasp_dcsr_free(&Neighbor[level]);
         fasp_ivec_free(&vertices[level]);
