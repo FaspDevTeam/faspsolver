@@ -98,7 +98,7 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
         else {
             for (i=0;i<A->nnz;++i) C->val[i]=B->val[i]*beta;
         }
-        
+       
         status=SUCCESS;
         goto FINISHED;
     }

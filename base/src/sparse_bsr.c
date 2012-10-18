@@ -225,7 +225,7 @@ INT fasp_dbsr_trans (dBSRmat *A,
     // first pass: find the number of nonzeros in the first m-1 columns of A 
     // Note: these numbers are stored in the array AT.IA from 1 to m-1
     //r (i=0;i<m;++i) AT->IA[i] = 0;
-    fasp_iarray_set(m, AT->IA, 0);
+    fasp_iarray_set(m+1, AT->IA, 0);
 
     for (j=0;j<nnz;++j) {
         i=N2C(A->JA[j]); // column number of A = row number of A'
@@ -238,16 +238,13 @@ INT fasp_dbsr_trans (dBSRmat *A,
     if (A->val) {
         for (i=0;i<n;++i) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
-    
             for (p=ibegin;p<iend1;p++) {
                 j=A->JA[N2C(p)]+1;
                 k=AT->IA[N2C(j)];
                 AT->JA[N2C(k)]=C2N(i);
-                
                 for (inb=0;inb<nb;inb++)
                     for (jnb=0;jnb<nb;jnb++)
                         AT->val[ nb2*N2C(k) + inb*nb + jnb ] =A->val[nb2*N2C(p) + jnb*nb + inb ];
-                
                 AT->IA[j]=k+1;
             } // end for p
         } // end for i
@@ -256,7 +253,6 @@ INT fasp_dbsr_trans (dBSRmat *A,
     else {
         for (i=0;i<n;++i) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
-    
             for (p=ibegin;p<iend1;p++) {
                 j=A->JA[N2C(p)]+1;
                 k=AT->IA[N2C(j)];
@@ -1304,7 +1300,10 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
  * \param diag  Pointer to array which stores the diagonal blocks in row by row manner
  *
  * \author Zhiyang Zhou
- * \date   2010/10/26 
+ * \date   2010/10/26
+ *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   2012/10/17 
  *
  *
  * \note Works for general nb (Xiaozhe)
@@ -1316,7 +1315,10 @@ void fasp_dbsr_getdiag (INT n,
     const INT nb2 = A->nb*A->nb;
     
     INT i,k;
-	
+
+#ifdef _OPENMP
+#pragma omp parallel for private(i,k) if(n>OPENMP_HOLDS)
+#endif   
     for (i = 0; i < n; ++i) {
         for (k = A->IA[i]; k < A->IA[i+1]; ++k) {
             if (A->JA[k] == i) {

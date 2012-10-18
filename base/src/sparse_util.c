@@ -927,7 +927,7 @@ ivector fasp_sparse_MIS(dCSRmat *A)
 	
 	//! work space
 	//INT *work = (INT *)fasp_mem_calloc (n, sizeof(INT));
-    INT *work = (INT*)fasp_mem_calloc(n,sizeof(INT));
+        INT *work = (INT*)fasp_mem_calloc(n,sizeof(INT));
 	
 	//! return
 	ivector MIS;
