@@ -249,7 +249,7 @@ dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
 #ifdef _OPENMP
     INT i;
 
-#pragma omp parallel for
+#pragma omp parallel for if(NNZ>OPENMP_HOLDS)
     for (i=NNZ-1; i>=0; i--) {
         Pval[i] = val[i*nc2];
     }
