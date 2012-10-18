@@ -32,7 +32,7 @@ allenv.Append(CPPPATH='include')
 allenv.Append(LIBPATH=['/usr/lib', '/usr/local/lib'])
 
 # Set FASP compiling options
-BOPT1 = '-O2 -funroll-loops -ftree-vectorize'
+BOPT1 = '-O2 -funroll-loops -ftree-vectorize -ffast-math'
 BOPT2 = '-O0 -Wall -g -pg'
 
 # Add a new command line variable
