@@ -2,6 +2,7 @@ File Name: CHANGES
 
 10/20/2012 FASP 1.1.4:
 - Fix an error in scons help.
+- Fix a bug in OMP version of EM-AMG.
 - Modify a few OMP functions.
 - Modify comments in fasp_block.h.
 
