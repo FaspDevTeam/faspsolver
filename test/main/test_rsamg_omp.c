@@ -28,10 +28,10 @@ main(int argc, const char * argv[])
 	itsolver_param  itparam;  // parameters for itsolver
 	AMG_param       amgparam; // parameters for AMG
 	ILU_param       iluparam; // parameters for ILU
-    Schwarz_param   schparam; // parameters for Shcwarz method
+        Schwarz_param   schparam; // parameters for Shcwarz method
 
     // Read input parameters from a disk file
-	fasp_param_init("ini/openmp.dat",&inparam,&itparam,&amgparam,&iluparam,&schparam);
+	fasp_param_init("ini/input49.dat",&inparam,&itparam,&amgparam,&iluparam,&schparam);
     
     // Set local parameters
 	const int print_level   = inparam.print_level;
@@ -64,6 +64,13 @@ main(int argc, const char * argv[])
 		datafile1="csrmat_FE.dat";
 		strcat(filename1,datafile1);
 		datafile2="rhs_FE.dat";
+		strcat(filename2,datafile2);
+		fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+	}
+	else if(problem_num == 13) {
+		datafile1="csrmat_49.dat";
+		strcat(filename1,datafile1);
+		datafile2="rhs_49.dat";
 		strcat(filename2,datafile2);
 		fasp_dcsrvec2_read(filename1, filename2, &A, &b);
 	}

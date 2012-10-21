@@ -295,42 +295,43 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
     
 #ifdef _OPENMP 
     const INT print_level=param->print_level;
-    const INT m=mgl[0].A.row;    
-	const INT cycle_type = param->cycle_type;
-	const INT interp_type = param->interpolation_type;
+    const INT m=mgl[0].A.row;
+    const INT cycle_type = param->cycle_type;
+    const INT interp_type = param->interpolation_type;
     
 	//local variables
-    INT mm, size, nthreads;  
-	INT level=0;
+    INT mm, size, nthreads;
+    INT level=0;
     INT max_levels=param->max_levels;
+    REAL setup_start, setup_end, setup_duration;
     
-	// set thread number
+    // set thread number
     nthreads = FASP_GET_NUM_THREADS();
     
-	// stores level info (fine: 0; coarse: 1)
+    // stores level info (fine: 0; coarse: 1)
     ivector vertices=fasp_ivec_create(m); 
     INT *icor_ysk = (INT *)fasp_mem_calloc(5*nthreads+2, sizeof(INT));
-	memset(icor_ysk, 0x0, sizeof(INT)*(5*nthreads+2));
+    memset(icor_ysk, 0x0, sizeof(INT)*(5*nthreads+2));
     
-	// strong n-couplings
-	iCSRmat S;
+    // strong n-couplings
+    iCSRmat S;
     
 #if DEBUG_MODE
     printf("fasp_amg_setup_rs ...... [Start]\n");
     printf("fasp_amg_setup_rs: nr=%d, nc=%d, nnz=%d\n", m, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-	param->tentative_smooth = 1.0;
+    param->tentative_smooth = 1.0;
     
-    REAL setup_start = omp_get_wtime();
+    fasp_gettime(&setup_start);
     
-	//setup AMLI coefficients
-	if(cycle_type == AMLI_CYCLE) {
-		param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
-		REAL lambda_max = 2.0;
+    //setup AMLI coefficients
+    if(cycle_type == AMLI_CYCLE) {
+        param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
+        REAL lambda_max = 2.0;
         REAL lambda_min = lambda_max/4;
-		fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
-	}
+        fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
+    }
     
     // initialize ILU parameters
     mgl->ILU_levels = param->ILU_levels;
@@ -381,26 +382,17 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
         if (mgl[level].P.col == 0) break;
         if (status < 0) goto FINISHED;
     
-        if(interp_type==INTERP_REG) {
-            /*-- Form interpolation --*/
-            status = fasp_amg_interp1(&mgl[level].A, &vertices, &mgl[level].P, param, &S, icor_ysk);
-        }
-        else {
-            status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
-        }
+        status = fasp_amg_interp1(&mgl[level].A, &vertices, &mgl[level].P, param, &S, icor_ysk);
         
-
         if (status < 0) goto FINISHED;
         
         /*-- Form coarse level stiffness matrix --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
-        
-
-        if(interp_type==INTERP_REG) {
-            /*-- Form coarse level stiffness matrix: There are two RAP routines available! --*/
+       
+        if(interp_type==INTERP_REG) {	
             fasp_blas_dcsr_rap4(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A, icor_ysk);
         }
-        else {
+	else {
             fasp_blas_dcsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
         }
         /*-- clean up! --*/
@@ -440,10 +432,10 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
     
     
     if (print_level>PRINT_NONE) {
-        REAL setup_end = omp_get_wtime();
-        REAL setupduration = setup_end - setup_start;
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;
         print_amgcomplexity(mgl,print_level);
-        print_cputime("Ruge-Stuben AMG setup",setupduration);
+        print_cputime("Ruge-Stuben AMG setup",setup_duration);
     }
     
     status = SUCCESS;

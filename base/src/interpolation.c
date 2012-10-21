@@ -554,6 +554,9 @@ static SHORT genintval (dCSRmat *A,
     //for (i=0;i<nc;++i) iz[i]=0;
     memset(iz, 0, sizeof(INT)*nc);
 
+#ifdef _OPENMP
+#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
+#endif
     for (i=0;i<ittniz;++i) iz[itmat[0][i]]++;
     
     izs[0]=0;
@@ -622,6 +625,9 @@ static SHORT genintval (dCSRmat *A,
     //for (i=0;i<nf;++i) izt[i]=0;
     memset(izt, 0, sizeof(INT)*nf);
 
+#ifdef _OPENMP
+#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#endif    
     for (i=0;i<tniz;++i) izt[mat[0][i]]++;
     
     T.IA=(INT*)fasp_mem_calloc((nf+1),sizeof(INT));

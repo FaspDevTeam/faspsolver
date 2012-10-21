@@ -1164,8 +1164,9 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
     //for (i=0; i<A->col; ++i) index[i] = -2;
     fasp_iarray_set(A->col, index, -2);
     
-    memcpy(iindex,index,col*sizeof(INT));
-    
+    //memcpy(iindex,index,col*sizeof(INT)); 
+    fasp_iarray_cp(col, index, iindex); 
+
     jac = (INT*)fasp_mem_calloc(nB,sizeof(INT));
     
     iac = (INT*)fasp_mem_calloc(row+1,sizeof(INT));
@@ -1314,6 +1315,9 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
  * \author Ludmil Zikatanov, Chensong Zhang
  * \date   05/10/2010
  *
+ * Modified by Chunsheng Feng, Zheng Li
+ * \date   10/19/2012 
+ *
  * \note Driver to compute triple matrix product P'*A*P using ltz CSR format.
  *       In ltx format: ia[0]=1, ja[0] and a[0] are used as usual. When called
  *       from Fortran, ia[0], ja[0] and a[0] will be just ia(1),ja(1),a(1).
@@ -1331,9 +1335,21 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
     INT i, maxrpout;
     
     // shift A from usual to ltz format
+#ifdef _OPENMP
+#pragma omp parallel for if(n>OPENMP_HOLDS)
+#endif
     for (i=0;i<=n;++i)   { A->IA[i]++; P->IA[i]++; }
+#ifdef _OPENMP
+#pragma omp parallel for if(nnzA>OPENMP_HOLDS)
+#endif
     for (i=0;i<nnzA;++i) { A->JA[i]++; }
+#ifdef _OPENMP
+#pragma omp parallel for if(nc>OPENMP_HOLDS)
+#endif
     for (i=0;i<=nc;++i)  { Pt->IA[i]++; }
+#ifdef _OPENMP
+#pragma omp parallel for if(nnzP>OPENMP_HOLDS)
+#endif
     for (i=0;i<nnzP;++i) { P->JA[i]++; Pt->JA[i]++; }
     
     // compute P' A P
@@ -1348,17 +1364,45 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
     Ac->JA  = PtAP.JA;
     Ac->val = PtAP.val;
     
-    // shift A back from ltz format
+    // shift A back from ltz format 
+#ifdef _OPENMP
+#pragma omp parallel for if(Ac->row>OPENMP_HOLDS)
+#endif
     for (i=0;i<=Ac->row;++i) Ac->IA[i]--;
+
+#ifdef _OPENMP
+#pragma omp parallel for if(Ac->nnz>OPENMP_HOLDS)
+#endif
     for (i=0;i< Ac->nnz;++i) Ac->JA[i]--;
     
+#ifdef _OPENMP
+#pragma omp parallel for if(n>OPENMP_HOLDS)
+#endif
     for (i=0;i<=n;++i)   A->IA[i]--;
+
+#ifdef _OPENMP
+#pragma omp parallel for if(nnzA>OPENMP_HOLDS)
+#endif
     for (i=0;i<nnzA;++i) A->JA[i]--;
     
+#ifdef _OPENMP
+#pragma omp parallel for if(n>OPENMP_HOLDS)
+#endif
     for (i=0;i<=n;++i)   P->IA[i]--;
+
+#ifdef _OPENMP
+#pragma omp parallel for if(nnzP>OPENMP_HOLDS)
+#endif
     for (i=0;i<nnzP;++i) P->JA[i]--;
     
+#ifdef _OPENMP
+#pragma omp parallel for if(nc>OPENMP_HOLDS)
+#endif
     for (i=0;i<=nc;++i)  Pt->IA[i]--;
+
+#ifdef _OPENMP
+#pragma omp parallel for if(nnzP>OPENMP_HOLDS)
+#endif
     for (i=0;i<nnzP;++i) Pt->JA[i]--;
     
     return;
@@ -1390,10 +1434,10 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
     INT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
-	if ( R->row > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
+    if ( R->row > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
     if (use_openmp) {
