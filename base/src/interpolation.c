@@ -2057,12 +2057,6 @@ static void interp_STD (dCSRmat *A,
     REAL akk,akh,aik,aki,rowsum;
     INT h,i,j,k,l,m,p,q,index=0;    
 
-#ifdef _OPENMP
-    // variables for OpenMP
-    INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
-#endif
-
     cs=(REAL*)fasp_mem_calloc(row,sizeof(REAL));//for sums of strongly connected coarse neighbors
     
     n=(REAL*)fasp_mem_calloc(row,sizeof(REAL));//for sums of all neighbors.
@@ -2080,40 +2074,29 @@ static void interp_STD (dCSRmat *A,
     //for(i=0;i<row;i++) flag[i]=-1;
     fasp_iarray_set(row, flag, -1);
     
-#ifdef _OPENMP
-#pragma omp parallel for private(myid,mybegin,myend,i,j,k) if(row>OPENMP_HOLDS)
-    for (myid=0; myid<nthreads; myid++) {
-        FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
-        for (i=mybegin; i<myend; i++) {
-#else	
-        for (i=0; i<row; i++) {
-#endif
-            for (j=S->IA[i]; j<S->IA[i+1]; j++) {
-                k=S->JA[j];
-                if (vec[k]==CGPT) {
-                    flag[k]=i;
-                }
-            }        
-            for (j=A->IA[i]; j<A->IA[i+1]; j++) {
-                k=A->JA[j];
-                if (flag[k]==i) {
-                    cs[i]+=A->val[j];
-                    if(A->val[j]>0)
-                        printf("### WARNING: Positive off diagonal value! (i,k)=(%d,%d),j:%d,val:%f!\n",
+    for (i=0; i<row; i++) {
+        for (j=S->IA[i]; j<S->IA[i+1]; j++) {
+            k=S->JA[j];
+            if (vec[k]==CGPT) {
+                flag[k]=i;
+            }
+        }        
+        for (j=A->IA[i]; j<A->IA[i+1]; j++) {
+            k=A->JA[j];
+            if (flag[k]==i) {
+                cs[i]+=A->val[j];
+                if(A->val[j]>0)
+                    printf("### WARNING: Positive off diagonal value! (i,k)=(%d,%d),j:%d,val:%f!\n",
                                i,k,j,A->val[j]);
-                }
-                if(k==i) {
-                    diag[i]=A->val[j];
-                }
-                else{
-                    n[i]+=A->val[j];
-                }
+            }
+            if(k==i) {
+                diag[i]=A->val[j];
+            }
+            else{
+               n[i]+=A->val[j];
             }
         }
-#ifdef _OPENMP
     }
-#endif
-    
     
     hatA=(REAL*)fasp_mem_calloc(row,sizeof(REAL));//to record coefficents hat a_ij for relevant CGPT of the i-th node
     
