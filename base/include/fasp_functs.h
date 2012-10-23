@@ -230,9 +230,9 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
                                   REAL *y );
 
 void fasp_blas_dbsr_aAxpy (const REAL alpha, 
-		                   dBSRmat *A, 
-		                   REAL *x, 
-		                   REAL *y) ;
+                           dBSRmat *A, 
+                           REAL *x, 
+                           REAL *y) ;
 
 void fasp_blas_dbsr_mxv(dBSRmat *A, 
 		                REAL *x, 
@@ -286,10 +286,15 @@ void fasp_blas_dcsr_rap( dCSRmat  *R,
                         dCSRmat  *P,
                         dCSRmat  *RAP);
 
-void fasp_blas_dcsr_rap_agg (dCSRmat *R,
-                             dCSRmat *A,
-                             dCSRmat *P,
-                             dCSRmat *B);
+void fasp_blas_dcsr_rap_agg ( dCSRmat  *R,
+                              dCSRmat  *A,
+                              dCSRmat  *P,
+                              dCSRmat  *RAP);
+
+void fasp_blas_dcsr_rap_agg1 (dCSRmat *R,
+                              dCSRmat *A,
+                              dCSRmat *P,
+                              dCSRmat *B);
 
 void fasp_blas_dcsr_ptap (dCSRmat *Pt,
                           dCSRmat *A,
@@ -524,8 +529,8 @@ INT fasp_amg_coarsening_cr (INT i_0,
 
 INT fasp_amg_coarsening_rs (dCSRmat *A, 
                             ivector *vertices, 
-                            dCSRmat *P, 
-							iCSRmat *S,
+                            dCSRmat *P,
+                            iCSRmat *S,
                             AMG_param *param);
 
 void remove_node (LinkList *LoL_head_ptr, 
