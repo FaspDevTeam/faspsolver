@@ -36,7 +36,7 @@ void  dCSRmat_Division_Groups(dCSRmat A,INT *result,INT *groups)
    INT *newr = (INT *)malloc(sizeof(INT)*n);
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule (dynamic, CHUNKSIZE) if(n>OPENMP_HOLDS) private(k)
+#pragma omp parallel for if(n>OPENMP_HOLDS)
 #endif
    for(k=0;k<n;k++) cq[k]=k+1;
    front=n-1;

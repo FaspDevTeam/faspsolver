@@ -63,7 +63,6 @@
 #define MAX_STAG         20    /**< Maximal number of staganation times */
 #define MAX_RESTART      20    /**< Maximal number of restarting */
 #define OPENMP_HOLDS     2000  /**< Switch to sequence or openmp */
-#define CHUNKSIZE        2000  /**< Unit workload to each thread */
 
 /** 
  * \brief Definition of max, min, abs

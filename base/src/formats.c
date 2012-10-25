@@ -87,7 +87,7 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
     B->val=(REAL *)fasp_mem_calloc(nnz,sizeof(REAL));
    
 #ifdef _OPENMP
-#pragma omp parallel for schedule (dynamic, CHUNKSIZE) if(m>OPENMP_HOLDS) private(i, j)
+#pragma omp parallel for if(m>OPENMP_HOLDS) private(i, j)
 #endif    
     for (i=0;i<m;++i) {
         for (j=A->IA[i];j<A->IA[i+1];++j) B->I[N2C(j)]=C2N(i);
@@ -744,13 +744,13 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     Js=(INT *)fasp_mem_calloc(nCol, sizeof(INT));
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(nRow>OPENMP_HOLDS) private(i)
+#pragma omp parallel for if(nRow>OPENMP_HOLDS) private(i)
 #endif
     for(i=0;i<nRow;i++) {
         Is[i]=i*nb;
     }
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(nCol>OPENMP_HOLDS) private(i)
+#pragma omp parallel for if(nCol>OPENMP_HOLDS) private(i)
 #endif
     for(i=0;i<nCol;i++) {
         Js[i]=i*nb;
@@ -769,7 +769,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     A.val=(REAL*)fasp_mem_calloc(A.NNZ*nb*nb, sizeof(REAL));
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(tmpMat.row>OPENMP_HOLDS) private(i)
+#pragma omp parallel for if(tmpMat.row>OPENMP_HOLDS) private(i)
 #endif
     for(i=0;i<tmpMat.row+1;i++) {
         A.IA[i]=tmpMat.IA[i];
@@ -786,7 +786,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
 #endif
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(tmpMat.nnz>OPENMP_HOLDS) private(i)
+#pragma omp parallel for if(tmpMat.nnz>OPENMP_HOLDS) private(i)
 #endif
     for(i=0;i<tmpMat.nnz;i++) {
         A.JA[i]=tmpMat.JA[i];
@@ -804,20 +804,20 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
             }
             else {
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(nRow>OPENMP_HOLDS) private(k)
+#pragma omp parallel for if(nRow>OPENMP_HOLDS) private(k)
 #endif
                 for(k=0;k<nRow;k++) {
                     Is[k]=k*nb+i;
                 }
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(nCol>OPENMP_HOLDS) private(k)
+#pragma omp parallel for if(nCol>OPENMP_HOLDS) private(k)
 #endif
                 for(k=0;k<nCol;k++) {
                     Js[k]=k*nb+j;
                 }
                 fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, CHUNKSIZE) if(tmpMat.nnz>OPENMP_HOLDS) private(k)
+#pragma omp parallel for if(tmpMat.nnz>OPENMP_HOLDS) private(k)
 #endif
                 for(k=0;k<tmpMat.nnz;k++) {
                     A.val[k*nb*nb+num]=tmpMat.val[k];
