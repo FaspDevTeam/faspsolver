@@ -2322,7 +2322,7 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 
 
 /**
- * \fn void fasp_blas_dbsr_rap (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
+ * \fn void fasp_blas_dbsr_rap1 (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
  *
  * \brief dBSRmat sparse matrix multiplication B=R*A*P
  *
@@ -2337,10 +2337,10 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
  *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dbsr_rap (dBSRmat *R,
-                         dBSRmat *A, 
-                         dBSRmat *P, 
-                         dBSRmat *B)
+void fasp_blas_dbsr_rap1 (dBSRmat *R,
+                          dBSRmat *A, 
+                          dBSRmat *P, 
+                          dBSRmat *B)
 {
     const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
     INT nB=A->NNZ;
@@ -2503,6 +2503,263 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
      fasp_mem_free(iindex);
      fasp_mem_free(BTindex);
      fasp_mem_free(smat_tmp);
+}
+
+/**
+ * \fn void fasp_blas_dbsr_rap (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
+ *
+ * \brief dBSRmat sparse matrix multiplication B=R*A*P
+ *
+ * \param R   Pointer to the dBSRmat matrix
+ * \param A   Pointer to the dBSRmat matrix
+ * \param P   Pointer to the dBSRmat matrix
+ * \param B   Pointer to dBSRmat matrix equal to R*A*P (output)
+ *
+ * \author Chunsheng Feng, Zheng Li
+ * \date   10/24/2012
+ *
+ * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package. 
+ *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
+ */
+void fasp_blas_dbsr_rap (dBSRmat *R,
+                         dBSRmat *A, 
+                         dBSRmat *P, 
+                         dBSRmat *B)
+{
+    const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
+    INT nB=A->NNZ;
+
+    REAL *rj=R->val, *aj=A->val, *pj=P->val, *acj;
+    INT *ir=R->IA, *ia=A->IA, *ip=P->IA, *iac;
+    INT *jr=R->JA, *ja=A->JA, *jp=P->JA, *jac;
+
+    INT *Ps_marker = NULL;
+    INT *As_marker = NULL;
+
+#ifdef _OPENMP
+    INT *P_marker = NULL;
+    INT *A_marker = NULL;
+    REAL *smat_tmp = NULL;
+#endif
+
+    INT i, i1, i2, i3, jj1, jj2, jj3;
+    INT counter, jj_row_begining;
+
+    INT nthreads = 1;
+
+#ifdef _OPENMP
+    INT myid, mybegin, myend, Ctemp;
+    nthreads = FASP_GET_NUM_THREADS();
+#endif
+
+    INT n_coarse = row;
+    INT n_fine   = A->ROW;
+    INT coarse_mul_nthreads = n_coarse * nthreads;
+    INT fine_mul_nthreads = n_fine * nthreads;
+    INT coarse_add_nthreads = n_coarse + nthreads;
+    INT minus_one_length = coarse_mul_nthreads + fine_mul_nthreads;
+    INT total_calloc = minus_one_length + coarse_add_nthreads + nthreads;
+
+    Ps_marker = (INT *)fasp_mem_calloc(total_calloc, sizeof(INT));
+    As_marker = Ps_marker + coarse_mul_nthreads;
+
+    /*------------------------------------------------------*
+     *  First Pass: Determine size of B and set up B_i  *
+     *------------------------------------------------------*/
+    iac = (INT *)fasp_mem_calloc(n_coarse+1, sizeof(INT));
+
+    fasp_iarray_set(minus_one_length, Ps_marker, -1);
+
+    REAL *tmp=(REAL *)fasp_mem_calloc(2*nthreads*nb2, sizeof(REAL));
+
+#ifdef _OPENMP
+    INT * RAP_temp = As_marker + fine_mul_nthreads;
+    INT * part_end = RAP_temp + coarse_add_nthreads;
+
+    if (n_coarse > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
+            P_marker = Ps_marker + myid * n_coarse;
+            A_marker = As_marker + myid * n_fine;
+            counter  = 0;
+            for (i = mybegin; i < myend; ++i) {
+                P_marker[i] = counter;
+                jj_row_begining = counter;
+                counter ++;
+                for (jj1 = ir[i]; jj1 < ir[i+1]; ++jj1) {
+                    i1 = jr[jj1];
+                    for (jj2 = ia[i1]; jj2 < ia[i1+1]; ++jj2) {
+                        i2 = ja[jj2];
+                        if (A_marker[i2] != i) {
+                            A_marker[i2] = i;
+                            for (jj3 = ip[i2]; jj3 < ip[i2+1]; ++jj3) {
+                                i3 = jp[jj3];
+                                if (P_marker[i3] < jj_row_begining) {
+                                    P_marker[i3] = counter;
+                                    counter ++;
+                                }
+                            }
+                        }
+                    }
+                }
+                RAP_temp[i+myid] = jj_row_begining;
+            }
+            RAP_temp[myend+myid] = counter;
+            part_end[myid] = myend + myid + 1;
+        }
+        fasp_iarray_cp(part_end[0], RAP_temp, iac);
+        counter = part_end[0];
+        Ctemp = 0;
+        for (i1 = 1; i1 < nthreads; i1 ++) {
+            Ctemp += RAP_temp[part_end[i1-1]-1];
+            for (jj1 = part_end[i1-1]+1; jj1 < part_end[i1]; jj1 ++) {
+                iac[counter] = RAP_temp[jj1] + Ctemp;
+                counter ++;
+            }
+        }
+    }
+    else {
+#endif
+        counter = 0;
+        for (i = 0; i < row; ++ i) {
+            Ps_marker[i] = counter;
+            jj_row_begining = counter;
+            counter ++;
+
+            for (jj1 = ir[i]; jj1 < ir[i+1]; ++jj1) {
+                i1 = jr[jj1];
+                for (jj2 = ia[i1]; jj2 < ia[i1+1]; ++jj2) {
+                    i2 = ja[jj2];
+                    if (As_marker[i2] != i) {
+                        As_marker[i2] = i;
+                        for (jj3 = ip[i2]; jj3 < ip[i2+1]; ++jj3) {
+                            i3 = jp[jj3];
+                            if (Ps_marker[i3] < jj_row_begining) {
+                                Ps_marker[i3] = counter;
+                                counter ++;
+                            }
+                        }
+                    }
+                }
+            }
+            iac[i] = jj_row_begining;
+        }
+#ifdef _OPENMP
+    }
+#endif
+
+    iac[row] = counter;
+
+    jac=(INT*)fasp_mem_calloc(iac[row], sizeof(INT));
+
+    acj=(REAL*)fasp_mem_calloc(iac[row]*nb2, sizeof(REAL));
+
+    fasp_iarray_set(minus_one_length, Ps_marker, -1);
+
+    /*------------------------------------------------------*
+     *  Second Pass: compute entries of B=R*A*P             *
+     *------------------------------------------------------*/
+#ifdef _OPENMP
+    if (n_coarse > OPENMP_HOLDS) {
+#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3, smat_tmp)
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
+            P_marker = Ps_marker + myid * n_coarse;
+            A_marker = As_marker + myid * n_fine;
+            smat_tmp = tmp + myid*2*nb2; 
+            counter = iac[mybegin];
+            for (i = mybegin; i < myend; ++i) {
+                P_marker[i] = counter;
+                jj_row_begining = counter;
+                jac[counter] = i;
+                fasp_array_set(nb2, &acj[counter*nb2], 0x0);
+                counter ++;
+
+                for (jj1 = ir[i]; jj1 < ir[i+1]; ++jj1) {
+                    i1 = jr[jj1];
+                    for (jj2 = ia[i1]; jj2 < ia[i1+1]; ++jj2) {
+                        fasp_blas_smat_mul(&rj[jj1*nb2],&aj[jj2*nb2], smat_tmp, nb);
+                        i2 = ja[jj2];
+                        if (A_marker[i2] != i) {
+                            A_marker[i2] = i;
+                            for (jj3 = ip[i2]; jj3 < ip[i2+1]; ++jj3) {
+                                i3 = jp[jj3];
+                                fasp_blas_smat_mul(smat_tmp, &pj[jj3*nb2], smat_tmp+nb2, nb);
+                                if (P_marker[i3] < jj_row_begining) {
+                                    P_marker[i3] = counter;
+                                    fasp_array_cp(nb2, smat_tmp+nb2, &acj[counter*nb2]);
+                                    jac[counter] = i3;
+                                    counter ++;
+                                }
+                                else {
+                                    fasp_blas_array_axpy (nb2, 1.0, smat_tmp+nb2, &acj[P_marker[i3]*nb2]);
+                                }
+                            }
+                        }
+                        else {
+                            for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
+                                i3 = jp[jj3];
+                                fasp_blas_smat_mul(smat_tmp, &pj[jj3*nb2], smat_tmp+nb2, nb);
+                                fasp_blas_array_axpy (nb2, 1.0, smat_tmp+nb2, &acj[P_marker[i3]*nb2]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else {
+#endif
+        counter = 0;
+        for (i = 0; i < row; ++i) {
+            Ps_marker[i] = counter;
+            jj_row_begining = counter;
+            jac[counter] = i;
+            fasp_array_set(nb2, &acj[counter*nb2], 0x0);
+            counter ++;
+
+            for (jj1 = ir[i]; jj1 < ir[i+1]; ++jj1) {
+                i1 = jr[jj1];
+                for (jj2 = ia[i1]; jj2 < ia[i1+1]; ++jj2) {
+                    fasp_blas_smat_mul(&rj[jj1*nb2],&aj[jj2*nb2], tmp, nb);
+                    i2 = ja[jj2];
+                    if (As_marker[i2] != i) {
+                        As_marker[i2] = i;
+                        for (jj3 = ip[i2]; jj3 < ip[i2+1]; ++jj3) {
+                            i3 = jp[jj3];
+                            fasp_blas_smat_mul(tmp, &pj[jj3*nb2], tmp+nb2, nb);
+                            if (Ps_marker[i3] < jj_row_begining) {
+                                Ps_marker[i3] = counter;
+                                fasp_array_cp(nb2, tmp+nb2, &acj[counter*nb2]);
+                                jac[counter] = i3;
+                                counter ++;
+                            }
+                            else {
+                                fasp_blas_array_axpy (nb2, 1.0, tmp+nb2, &acj[Ps_marker[i3]*nb2]);
+                            }
+                        }
+                    }
+                    else {
+                        for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
+                            i3 = jp[jj3];
+                            fasp_blas_smat_mul(tmp, &pj[jj3*nb2], tmp+nb2, nb);
+                            fasp_blas_array_axpy (nb2, 1.0, tmp+nb2, &acj[Ps_marker[i3]*nb2]);
+                        }
+                    }
+                }
+            }  
+        }
+#ifdef _OPENMP
+    }
+#endif
+    // setup coarse matrix B
+    B->ROW=row; B->COL=col;
+    B->IA=iac; B->JA=jac; B->val=acj;
+    B->NNZ=B->IA[B->ROW]-B->IA[0];
+    B->nb=A->nb;
+    B->storage_manner = A->storage_manner;
+    fasp_mem_free(Ps_marker);
 }
 
 /*---------------------------------*/
