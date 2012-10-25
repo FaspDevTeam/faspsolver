@@ -82,6 +82,8 @@
  *
  * - Hu, Xiaozhe (Penn State University, USA)
  * 
+ * - Li, Zheng (Xiangtan University, China)
+ *
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
  * - Zikatanov, Ludmil (Penn State Univeristy, USA)
@@ -95,8 +97,6 @@
  * - Huang, Feiteng (Sichuang University, China)
  *
  * - Huang, Xuehai (Shanghai Jiaotong University, China)
- *
- * - Li, Zheng (Xiangtan University, China)
  *
  * - Qiao, Changhe (Penn State University, USA)
  *
