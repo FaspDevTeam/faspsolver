@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+11/01/2012 FASP 1.1.5:
+- Fix the SuperLU interface.
+
 10/25/2012 FASP 1.1.4:
 - Fix an error in scons help.
 - Fix a bug in OMP version of EM-AMG.

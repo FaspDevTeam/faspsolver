@@ -1,23 +1,14 @@
-/*
- *  superlu.c
- *
- *------------------------------------------------------
- *  Created by Xiaozhe Hu on 11/05/09.
- *------------------------------------------------------
- *
- */
-
 /*! \file superlu.c
  *  \brief Direct solver on the coarest level (call subroutines from SuperLU)
  *
  *  How to use SuperLU as a coarset level solver:
  *
  *	  - Download SuperLU and Install it on your own computer
- *	  - Modify msc/csrc/multigrid.c 
+ *	  - Modify msc/csrc/multigrid.c
  *	    (On coarset level, comment pcg() and uncomment superlu())
  *	  - Modify msc/Makefile
  *	    (Define SUPERLULIB and BLASLIB according to where the libraries of SuperLU and Blas are on your computer)
- *	  - Then use "make" to compile 
+ *	  - Then use "make" to compile
  */
 
 #include <stdio.h>
@@ -37,7 +28,7 @@
 
 /**
  * \fn int superlu(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
- * \brief Solve Au=b by SuperLU 
+ * \brief Solve Au=b by SuperLU
  *
  * \param *ptrA   pointer to stiffness matrix of levelNum levels
  * \param *b      pointer to the dvector of right hand side term
@@ -45,10 +36,13 @@
  *
  * \author Xiaozhe Hu
  * \data 11/05/09
+ *
+ * Modified by Chensong Zhang on 11/01/2012 for new FASP function names.
+ *
  */
 int superlu(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
 {
-
+    
 #if With_SuperLU
 	
 	SuperMatrix A, L, U, B;
@@ -61,8 +55,9 @@ int superlu(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
 	
 	clock_t LU_start=clock();
 	
-	dCSRmat tempA=fasp_dcsr_create(m,n,nnz); copy_dCSRmat(ptrA,&tempA);
-	dvector tempb=fasp_dvec_create(n); copy_dvector(b, &tempb);
+	dCSRmat tempA=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(ptrA,&tempA);
+    
+	dvector tempb=fasp_dvec_create(n);       fasp_dvec_cp(b, &tempb);
 	
 	/* Create matrix A in the format expected by SuperLU. */
 	dCreate_CompCol_Matrix(&A, m, n, nnz, tempA.val, tempA.JA, tempA.IA, SLU_NR, SLU_D, SLU_GE);
@@ -90,8 +85,8 @@ int superlu(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
 	u->row = n;
 	
 	if (print_level>0) {
-		clock_t LU_end=clock();		
-		double LUduration = (double)(LU_end - LU_start)/(double)(CLOCKS_PER_SEC);		
+		clock_t LU_end=clock();
+		double LUduration = (double)(LU_end - LU_start)/(double)(CLOCKS_PER_SEC);
 		printf("SuperLU totally costs %f seconds.\n", LUduration);
 	}
 	
@@ -105,16 +100,15 @@ int superlu(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
 	StatFree(&stat);
 	
 	return SUCCESS;
-
+    
 #else
-
-	printf("Error: SuperLU is not available!\n");
+    
+	printf("### ERROR: SuperLU is not available!\n");
 	exit(ERROR_SOLVER_TYPE);
-
+    
 #endif
-
+    
 }
-
 
 /*---------------------------------*/
 /*--        End of File          --*/

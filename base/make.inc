@@ -8,7 +8,7 @@
 
 # User compiling options 
 # For reasonable speed, uncomment the following line; you may try -O3 instead of -O2.
-  BOPT=-O2 -funroll-loops -ftree-vectorize -ffast-math
+BOPT=-O2 -funroll-loops -ftree-vectorize -ffast-math
 
 # Uncomment the following line to turn on OpenMP version
 # BOPT+=-fopenmp

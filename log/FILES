@@ -84,11 +84,11 @@
      118 ./base/src/wrapper.c
      560 ./base/include/dlmalloc.h
      142 ./base/include/doxygen.h
-     981 ./base/include/fasp.h
+     980 ./base/include/fasp.h
      556 ./base/include/fasp_block.h
     2356 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      199 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   62470 total
+   62469 total
