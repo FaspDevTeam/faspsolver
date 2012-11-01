@@ -2527,7 +2527,7 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
                          dBSRmat *B)
 {
     const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
-    INT nB=A->NNZ;
+    //INT nB=A->NNZ;
 
     REAL *rj=R->val, *aj=A->val, *pj=P->val, *acj;
     INT *ir=R->IA, *ia=A->IA, *ip=P->IA, *iac;

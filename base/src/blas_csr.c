@@ -1152,7 +1152,7 @@ void fasp_blas_dcsr_rap_agg ( dCSRmat  *R,
     INT n_coarse = R->row;
     INT *R_i = R->IA;
     INT *R_j = R->JA;
-    REAL *R_data = R->val;
+    //REAL *R_data = R->val;
     
     INT n_fine = A->row;
     INT *A_i = A->IA;
@@ -1161,7 +1161,7 @@ void fasp_blas_dcsr_rap_agg ( dCSRmat  *R,
     
     INT *P_i = P->IA;
     INT *P_j = P->JA;
-    REAL *P_data = P->val;
+    //REAL *P_data = P->val;
     
     INT RAP_size;
     INT *RAP_i = NULL;
@@ -1178,7 +1178,6 @@ void fasp_blas_dcsr_rap_agg ( dCSRmat  *R,
     
     INT ic, i1, i2, i3, jj1, jj2, jj3;
     INT jj_counter, jj_row_begining;
-    REAL r_entry, r_a_product, r_a_p_product;
     
     INT nthreads = 1;
     

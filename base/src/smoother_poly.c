@@ -232,10 +232,10 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
             fasp_array_cp(n, v, vsave); 
 
 #ifdef _OPENMP
-#pragma omp parallel for private(myid,mybegin,myend,i,j,ravj,iaa,iab,jk,k,vj,snj) if(n>OPENMP_HOLDS) 
+#pragma omp parallel for private(myid,mybegin,myend,j,ravj,iaa,iab,jk,k,vj,snj) if(n>OPENMP_HOLDS) 
             for (myid=0; myid<nthreads; ++myid) {
                 FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
-                for (i=mybegin; i<myend; ++i) {
+                for (j=mybegin; j<myend; ++j) {
 #else
                 for (j=0; j < n ; ++j) {
 #endif
