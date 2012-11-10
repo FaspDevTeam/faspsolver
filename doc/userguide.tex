@@ -62,7 +62,7 @@
 \title{User's Guide for FASP}
 
 \author{FASP Developer Team}
-\date{Version 1.0.0} % Activate to display a given date or no date
+\date{Version 1.1.5} % Activate to display a given date or no date
 
 %\preface{a}
 
@@ -177,7 +177,7 @@ $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver
 \end{lstlisting}
 %
 \begin{snugshade}\noindent
-For the moment, it requires a password to access the Hg repository and the password is ``\emph{multigrid}''. Very soon it will be open to public completely. 
+For the moment, it requires a password to access the Hg repository. You may request an access passcode by sending an email to \url{faspdev@gmail.com}. Very soon, the FASP package will be open to public completely.
 \end{snugshade}
 
 After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 150MB in total. Depending on the speed of your network, it could take 15 minutes to one hour.}, you should have obtained ``faspsolver'' in your current directory successfully. If you have already cloned the repository before, you can just pull a new version and update your local version with it: Go to your local ``faspsolver'' directory and then
@@ -227,6 +227,12 @@ $ make help
 
 To be added!!!
 
+\subsection{Using Scons}
+In Linux, Mac OS X, or Windows, you can use the Scons tool to build and install different versions (Release, Shared, Debug) of the FASP library. You just need to type inside ``faspsolve/bas'' directory:
+%
+\begin{lstlisting}[numbers=none]
+$ scons -Q install
+\end{lstlisting}
 
 \subsection{External libraries}\label{ssec:lib}
 
