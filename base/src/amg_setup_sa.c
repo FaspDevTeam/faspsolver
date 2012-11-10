@@ -470,7 +470,7 @@ static void smooth_agg (dCSRmat *A,
         }
     
 #ifdef _OPENMP
-#pragma omp parallel for if(row>OPENMP_HOLDS)
+#pragma omp parallel for if(row>OPENMP_HOLDS) private(j)
 #endif
         for (i=0;i<row;++i){
             for (j=S.IA[i]; j<S.IA[i+1]; ++j){
