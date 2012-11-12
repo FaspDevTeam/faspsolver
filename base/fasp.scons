@@ -1,7 +1,9 @@
 # Initialize the environment
 import os
+import SCons.Platform
 
 allenv = Environment(ENV = {'PATH' : os.environ['PATH']})
+print "System platform:", allenv['PLATFORM']
 
 # Checks for libraries, header files, etc.
 conf = Configure(allenv)
@@ -10,11 +12,11 @@ allenv = conf.Finish()
 # Get user-defined default compilers
 for key, value in ARGLIST:
     if key == 'FC':
-        allenv.Replace( FORTRAN = value )
+        allenv.Replace(FORTRAN=value)
     if key == 'CC':
-        allenv.Replace( CC = value )
+        allenv.Replace(CC=value)
     if key == 'CXX':
-        allenv.Replace( CXX = value )
+        allenv.Replace(CXX=value)
 
 # Add equivalent target as distclean 
 allenv.Clean("distclean",
@@ -31,26 +33,50 @@ allenv.Append(CPPPATH='include')
 # Set path for external libraries
 allenv.Append(LIBPATH=['/usr/lib', '/usr/local/lib'])
 
-# Set FASP compiling options
-BOPT1 = '-O2 -funroll-loops -ftree-vectorize -ffast-math'
-BOPT2 = '-O0 -Wall -g -pg'
+# Set default FASP compiler options
+# Note: For compatibilty reasons, we only use the simplest options
+#       If necessary, one can add options like:
+#          -funroll-loops 
+#          -ftree-vectorize 
+#     -ffast-math
+#     -pg
+COPT1 = '-O2'
+COPT2 = '-O0 -Wall -g'
+FOPT1 = '-O2'
+FOPT2 = '-O0 -Wall -g'
 
-# Add a new command line variable
+# Speical Note: Some compilers need /TP compiler option due to some of 
+# FASP C files are using the C99-standard. 
+if allenv['CC']=='cl' or allenv['CC']=='icl':
+    COPT1 += ' -TP'
+    COPT2 += ' -TP'
+
+# Speical Note: If need OpenMP support, we need to add a new command 
+# line variable omp=1
 omp = ARGUMENTS.get('omp', 0)
 if int(omp):
-    BOPT1 += ' -fopenmp'
-    BOPT2 += ' -fopenmp'
+    if allenv['CC']=='cl' or allenv['CC']=='icl':
+        COPT1 += ' -openmp'
+        COPT2 += ' -openmp'
+    elif allenv['FORTRAN']=='ifort':
+        FOPT1 += ' -openmp'
+        FOPT2 += ' -openmp'
+    else:
+        COPT1 += ' -fopenmp'
+        COPT2 += ' -fopenmp'
+        FOPT1 += ' -fopenmp'
+        FOPT2 += ' -fopenmp'
 
 #######################################################################
 # Our release build is derived from the common build environment...   #
 # ... and set compiler flags for RELEASE version ...                  #
 #######################################################################
 release_env = allenv.Clone()
-release_env.Append(CCFLAGS=BOPT1)
-release_env.Append(F77FLAGS=BOPT1)
-release_env.Append(F90FLAGS=BOPT1)
-release_env.Append(F95FLAGS=BOPT1)
-release_env.Append(FORTRANFLAGS=BOPT1)
+release_env.Append(CCFLAGS=COPT1)
+release_env.Append(F77FLAGS=FOPT1)
+release_env.Append(F90FLAGS=FOPT1)
+release_env.Append(F95FLAGS=FOPT1)
+release_env.Append(FORTRANFLAGS=FOPT1)
 
 # ... and release builds end up in the "release" dir
 release_env.VariantDir('release','src',duplicate=False)
@@ -74,11 +100,11 @@ fasp_release = release_env.Library('release/libfasp', objs_release)
 # ... and set compiler flags for SharedLib version ...                #
 #######################################################################
 shared_env = allenv.Clone()
-shared_env.Append(CCFLAGS=BOPT1)
-shared_env.Append(F77FLAGS=BOPT1)
-shared_env.Append(F90FLAGS=BOPT1)
-shared_env.Append(F95FLAGS=BOPT1)
-shared_env.Append(FORTRANFLAGS=BOPT1)
+shared_env.Append(CCFLAGS=COPT1)
+shared_env.Append(F77FLAGS=FOPT1)
+shared_env.Append(F90FLAGS=FOPT1)
+shared_env.Append(F95FLAGS=FOPT1)
+shared_env.Append(FORTRANFLAGS=FOPT1)
 
 # ... and release builds end up in the "shared" dir
 shared_env.VariantDir('shared','src',duplicate=False)
@@ -103,11 +129,11 @@ fasp_shared = shared_env.SharedLibrary('shared/libfasp', objs_shared)
 #######################################################################
 
 debug_env = allenv.Clone()
-debug_env.Append(CCFLAGS=BOPT2)
-debug_env.Append(F77FLAGS=BOPT2)
-debug_env.Append(F90FLAGS=BOPT2)
-debug_env.Append(F95FLAGS=BOPT2)
-debug_env.Append(FORTRANFLAGS=BOPT2)
+debug_env.Append(CCFLAGS=COPT2)
+debug_env.Append(F77FLAGS=FOPT2)
+debug_env.Append(F90FLAGS=FOPT2)
+debug_env.Append(F95FLAGS=FOPT2)
+debug_env.Append(FORTRANFLAGS=FOPT2)
 
 # ... and release builds end up in the "debug" dir
 debug_env.VariantDir('debug','src',duplicate=False)
