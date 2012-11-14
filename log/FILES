@@ -10,7 +10,7 @@
      437 ./base/src/blas_array.c
      197 ./base/src/blas_block.c
     2767 ./base/src/blas_bsr.c
-    1978 ./base/src/blas_csr.c
+    1977 ./base/src/blas_csr.c
      124 ./base/src/blas_csrl.c
     1481 ./base/src/blas_smat.c
     1899 ./base/src/blas_str.c
@@ -91,4 +91,4 @@
     5818 ./base/include/malloc.c.h
      199 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   62469 total
+   62468 total

@@ -1,8 +1,10 @@
 File Name: CHANGES
 
-11/10/2012 FASP 1.1.5:
+11/14/2012 FASP 1.1.5:
 - Fix the SuperLU interface.
 - Fix a bug in SA setup for OMP.
+- Fix a problem in SCons for Windows. 
+- Modify the documentation: add instructions on how to compile FASP on Windows.
 
 10/25/2012 FASP 1.1.4:
 - Fix an error in scons help.

@@ -8,10 +8,10 @@
 \usepackage{amssymb}
 \usepackage{color}
 \usepackage{url}
-\usepackage[notcite,notref,color]{showkeys}
 \usepackage{graphicx}
 \usepackage{epstopdf}
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+%\usepackage[notcite,notref,color]{showkeys}
 
 % Define the listings environment
 \usepackage{listings}
@@ -19,7 +19,7 @@
 \definecolor{listinggray}{gray}{0.95}
 \definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
 \lstset{
-        numbers=left, 
+        numbers=left,
         numberstyle=\tiny,
         stepnumber=1,
         	backgroundcolor=\color{listinggray},
@@ -81,20 +81,20 @@
 \section{What is FASP}\label{sec:goal}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Over the last few decades, researchers have expended significant effort on developing efficient iterative methods for solving discretized partial differential equations (PDEs). Though these efforts have yielded many mathematically optimal solvers such as the multigrid method, the unfortunate reality is that multigrid methods have not been much used in practical applications. This marked gap between theory and practice is mainly due to the fragility of traditional multigrid (MG) methodology and the complexity of its implementation. We aim to develop techniques and the corresponding software that will narrow this gap, specifically by developing mathematically optimal solvers that are robust and easy to use in practice. 
+Over the last few decades, researchers have expended significant effort on developing efficient iterative methods for solving discretized partial differential equations (PDEs). Though these efforts have yielded many mathematically optimal solvers such as the multigrid method, the unfortunate reality is that multigrid methods have not been much used in practical applications. This marked gap between theory and practice is mainly due to the fragility of traditional multigrid (MG) methodology and the complexity of its implementation. We aim to develop techniques and the corresponding software that will narrow this gap, specifically by developing mathematically optimal solvers that are robust and easy to use in practice.
 
-We believe that there is no one-size-for-all solution method for discrete linear systems from different applications. And, efficient iterative solvers can be constructed by taking the properties of PDEs and discretizations into account. In this project, we plan to construct a pool of discrete problems arising from partial differential equations (PDEs) or PDE systems and efficient linear solvers for these problems. We mainly utilize the methodology of Auxiliary Space Preconditioning (ASP)~\cite{Xu.Xu.2010ff} to construct efficient linear solvers. Due to this reason, this software package is called ``Fast Auxiliary Space Preconditioning'' or FASP for short. 
+We believe that there is no one-size-for-all solution method for discrete linear systems from different applications. And, efficient iterative solvers can be constructed by taking the properties of PDEs and discretizations into account. In this project, we plan to construct a pool of discrete problems arising from partial differential equations (PDEs) or PDE systems and efficient linear solvers for these problems. We mainly utilize the methodology of Auxiliary Space Preconditioning (ASP)~\cite{Xu.Xu.2010ff} to construct efficient linear solvers. Due to this reason, this software package is called ``Fast Auxiliary Space Preconditioning'' or FASP for short.
 
 \subsection{Our goal}
 
-The FASP project is not a traditional software project; instead, it is designed to support our effort to identify efficient algorithms and to build fast solvers for a set of PDE problems---FASP is designed for developing and testing new efficient solvers and preconditioners for discrete partial differential equations (PDEs) or systems of PDEs. The main components of the package are basic linear iterative methods, standard Krylov methods, geometric and algebraic multigrid methods, and incomplete factorization methods. Based on these standard techniques, we build efficient solvers, based on the framework of Auxiliary Space Preconditioning, for several complicated applications. For the moment, we have a few examples include the fluid dynamics, underground water simulation, the black oil model in reservoir simulation, and so on. 
+The FASP project is not a traditional software project; instead, it is designed to support our effort to identify efficient algorithms and to build fast solvers for a set of PDE problems---FASP is designed for developing and testing new efficient solvers and preconditioners for discrete partial differential equations (PDEs) or systems of PDEs. The main components of the package are basic linear iterative methods, standard Krylov methods, geometric and algebraic multigrid methods, and incomplete factorization methods. Based on these standard techniques, we build efficient solvers, based on the framework of Auxiliary Space Preconditioning, for several complicated applications. For the moment, we have a few examples include the fluid dynamics, underground water simulation, the black oil model in reservoir simulation, and so on.
 
 FASP contains the kernel part and several applications (ranging from fluid dynamics to reservoir simulation). The kernel part is open-source and licensed under GNU Lesser General Public License or LGPL. We tried and will continue to try to keep as many parts of the FASP project open to public as possible. However, some of the applications contain contributions from and owned partially by other parties. We only discuss the kernel functions (open to public) in this user's guide.
 
 \begin{snugshade}\noindent
-LICENSE: This software is free software distributed under the Lesser General Public 
-License or LGPL, version~3.0 or any later versions. This software distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even 
+LICENSE: This software is free software distributed under the Lesser General Public
+License or LGPL, version~3.0 or any later versions. This software distributed
+in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License \url{http://www.gnu.org/licenses/} for more details.
 \end{snugshade}
 
@@ -107,9 +107,9 @@ We organize the development of FASP package in a \emph{``Multigrid''} or \emph{`
 \item Stage 1. Fine grid stage (or free market stage)
 
 \begin{enumerate}
-\item[(1)] Collect problems and solvers. Allow similarities or even duplications, for example same solution algorithm, but different implementation. Keep all the record: problem description, solver code, test results, etc. 
+\item[(1)] Collect problems and solvers. Allow similarities or even duplications, for example same solution algorithm, but different implementation. Keep all the record: problem description, solver code, test results, etc.
 %
-\item[(2)] Try to find a minimal set of standard or rules. And then we let the market to evolve freely. The idea is to allow the market to be FREE. 
+\item[(2)] Try to find a minimal set of standard or rules. And then we let the market to evolve freely. The idea is to allow the market to be FREE.
 \end{enumerate}
 
 \item Stage 2. Coarse grid stage (or state capitalism stage)
@@ -143,24 +143,24 @@ We are currently interested in the theory and numerical solution of many PDE pro
 \item QCD problem
 \end{itemize}
 %
-We intend to design solution algorithms and their implementation for all these problems with different discretizations. We have done a few of them but not all of them are publicly available at this moment. 
+We intend to design solution algorithms and their implementation for all these problems with different discretizations. We have done a few of them but not all of them are publicly available at this moment.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{How to use this guide}\label{sec:how}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this user's guide, we mainly describe how to use the existing solvers in FASP via a couple of simple tutorial problems. This user's guide is self-contained but does \emph{not} provide details of the algorithms nor the implementation. Along this guide, we provide a reference manual\footnote{Available online at \url{http://fasp.sourceforge.net}. It is also available in ``faspsolver/doc/doc.zip''.} for technical details of the implementation. For the algorithms implemented, we will provide the references and we recommend the users to read them for better understanding of the code. Furthermore, since FASP is under heavy development, use this guide with caution because the code might have been changed before this document is updated. 
+In this user's guide, we mainly describe how to use the existing solvers in FASP via a couple of simple tutorial problems. This user's guide is self-contained but does \emph{not} provide details of the algorithms nor the implementation. Along this guide, we provide a reference manual\footnote{Available online at \url{http://fasp.sourceforge.net}. It is also available in ``faspsolver/doc/doc.zip''.} for technical details of the implementation. For the algorithms implemented, we will provide the references and we recommend the users to read them for better understanding of the code. Furthermore, since FASP is under heavy development, use this guide with caution because the code might have been changed before this document is updated.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{How to obtain FASP}\label{sec:install}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-All the FASP packages are hosted on \emph{BitBucket.org}\footnote{Official website: \url{https://bitbucket.org/}} using Mercurial (Hg)\footnote{Official website: \url{http://mercurial.selenic.com/}}. A Hg client for GNU Linux, Mac OS X, or Windows can be downloaded from 
+All the FASP packages are hosted on \emph{BitBucket.org}\footnote{Official website: \url{https://bitbucket.org/}} using Mercurial (Hg)\footnote{Official website: \url{http://mercurial.selenic.com/}}. A Hg client for GNU Linux, Mac OS X, or Windows can be downloaded from
 % section section name (end)
 \begin{center}
-  \url{http://mercurial.selenic.com/downloads/} 
+  \url{http://mercurial.selenic.com/downloads/}
 \end{center}
 
 
@@ -201,7 +201,7 @@ Then press ``Clone'' and you will obtain ``faspsolver'' in the directory you set
 
 \section{How to build FASP}\label{sec:build}
 
-FASP has been tested on Linux (Cent OS, Debian, Fedora, RedHat, Ubuntu), OS X (Leopard, Snow Leopard, Lion) and Windows (XP, Win 7) with a couple of compliers including GCC, G++, ICC, VC++, GFORTRAN, G95, IFORT. 
+FASP has been tested on Linux (Cent OS, Debian, Fedora, RedHat, Ubuntu), OS X (Leopard, Snow Leopard, Lion) and Windows (XP, Win 7) with a couple of compliers including GCC, G++, ICC, VC++, GFORTRAN, G95, IFORT.
 
 \subsection{Linux or OS X}
 
@@ -225,7 +225,24 @@ $ make help
 
 \subsection{Windows}
 
-To be added!!!
+We provide a Visual Studio 2008 (VS08) solution of FASP for Windows users. You just need to open ``faspsolver/vs08/faspsolver-vs08.sln'' if you are using VS08 as your default developing environment. Then a single-click on the build-all button on the menu bar will give you all the FASP libraries and the test programs in ``faspsolver/test/''.
+
+\begin{snugshade}\noindent
+If you are using other versions of Visual Studio (like VS05 or VS10), do NOT convert the "VS08" solution file to your VS version because the FASP files might be cleaned up (removed) by Visual Studio automatically. You have to create another solution to build all the libraries and testing programs.
+\end{snugshade}
+
+If you need to build a VS solution by yourselves, you should create 5 projects:
+\begin{enumerate}
+\item ``faspbase-c'' contains all the ``.c'' and ``.inl'' files in the directory ``./base/src/''. You should add ``./base/include'' in Additional Directories. This project contains the core subroutines of faspsolver. 
+\item ``faspbase-f'' contains all the ``.f'' files in ``./base/src/'' and ``./base/extra/sparsekit''. 
+\item ``testlib'' contains all the ``.c'' files in ``./test/src/''. You should add ``./test/include'' in Additional Directories.
+\item ``test'' is an executing program for test purpose in FASP. The source file is ``./test/main/test.c''.
+\item ``regression'' is another executing program, which contains several methods to test the problems. The source file is ``./test/main/regression.c''.
+\end{enumerate}
+
+\begin{snugshade}\noindent
+If you are using Visual C++, all the C files should be compiled as C++ code (by using the /TP compiling option).
+\end{snugshade}
 
 \subsection{Using Scons}
 In Linux, Mac OS X, or Windows, you can use the Scons tool to build and install different versions (Release, Shared, Debug) of the FASP library. You just need to type inside ``faspsolve/bas'' directory:
@@ -234,9 +251,19 @@ In Linux, Mac OS X, or Windows, you can use the Scons tool to build and install 
 $ scons -Q install
 \end{lstlisting}
 
+By default, Scons will search for its preferred compilers in your system. If you wish to use your special compilers, you may use FC and CC flags to achieve this goal. For example, if a Windows user want to use Intel Fortran and VC++ compilers for FASP, he/she can use:
+\begin{lstlisting}[numbers=none]
+C:\> scons -Q install FC=ifort CC=cl
+\end{lstlisting}
+
+\begin{snugshade}\noindent
+Usually, the directories for compilers are not added to the PATH environment variable automatically. Hence, you may need to modify your PATH variable to make the above line to work. 
+\end{snugshade}
+
+
 \subsection{External libraries}\label{ssec:lib}
 
-There are a few \emph{optional} external libraries that you might want to use, including memory allocation routines, direct solvers, ILU methods, discretization packages, etc. FASP has interfaces to a couple of them which we often use, for example, SuperLU, MUMPS, dlmalloc, SparseKit. 
+There are a few \emph{optional} external libraries that you might want to use, including memory allocation routines, direct solvers, ILU methods, discretization packages, etc. FASP has interfaces to a couple of them which we often use, for example, SuperLU, MUMPS, dlmalloc, SparseKit.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -251,18 +278,18 @@ To build the tutorial examples, just go to this directory and type:
 $ make
 \end{lstlisting}
 %
-This command will build all the examples inside tutorial. You can use ``make help'' to get more details. 
+This command will build all the examples inside tutorial. You can use ``make help'' to get more details.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The first example}\label{sec:ex1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method~\cite{Brandt.BrandtMcCormick.1982uq,Ruge.RugeStuben.1985ij,Ruge.RugeStuben.1987bs}; see \S\ref{sec:amg}. The stiffness matrix $A$ is symmetric positive definite (SPD), arising from the continuous piecewise linear finite element discretization of the Poisson equation $-\Delta u = f$ (with Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$. 
- 
+The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method~\cite{Brandt.BrandtMcCormick.1982uq,Ruge.RugeStuben.1985ij,Ruge.RugeStuben.1987bs}; see \S\ref{sec:amg}. The stiffness matrix $A$ is symmetric positive definite (SPD), arising from the continuous piecewise linear finite element discretization of the Poisson equation $-\Delta u = f$ (with Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$.
+
 \begin{lstlisting}[stepnumber=1,firstnumber=1]
 /*! \file poisson-amg.c
- *  \brief The first test example for FASP: using AMG to solve 
+ *  \brief The first test example for FASP: using AMG to solve
  *         the discrete Poisson equation from P1 finite element.
  *         C version.
  */
@@ -270,11 +297,11 @@ The first example is the simplest one that we can imagine: We read the stiffness
 #include "fasp.h"
 #include "fasp_functs.h"
 
-int main (int argc, const char * argv[]) 
+int main (int argc, const char * argv[])
 {
     input_param     inparam;  // parameters from input files
     AMG_param       amgparam; // parameters for AMG
-    
+
     printf("\n========================================");
     printf("\n||   FASP: AMG example -- C version   ||");
     printf("\n========================================\n\n");
@@ -283,12 +310,12 @@ int main (int argc, const char * argv[])
     // Read input and AMG parameters from a disk file
     // In this example, we read everything from a disk file:
     //          "./ini/amg.dat"
-    // See the reference manual for details of the parameters. 
+    // See the reference manual for details of the parameters.
     fasp_param_init("ini/amg.dat",&inparam,NULL,&amgparam,NULL,NULL);
-    
+
     // Set local parameters using the input values
     const int print_level = inparam.print_level;
-    
+
     // Step 1. Get stiffness matrix and right-hand side
     // Read A and b -- P1 FE discretization for Poisson.
     // The location of the data files are given in "amg.dat".
@@ -298,33 +325,33 @@ int main (int argc, const char * argv[])
     char filename2[512], *datafile2;
 	
     // Read the stiffness matrix from matFE.dat
-    strncpy(filename1,inparam.workdir,128);    
+    strncpy(filename1,inparam.workdir,128);
     datafile1="csrmat_FE.dat"; strcat(filename1,datafile1);
-    
+
     // Read the RHS from rhsFE.dat
     strncpy(filename2,inparam.workdir,128);
     datafile2="rhs_FE.dat"; strcat(filename2,datafile2);
-    
+
     fasp_dcsrvec2_read(filename1,filename2,&A,&b);
-    
+
     // Step 2. Print problem size and AMG parameters
     if (print_level>PRINT_NONE) {
         printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
         printf("b: n = %d\n", b.row);
         fasp_param_amg_print(&amgparam);
     }
-    
+
     // Step 3. Solve the system with AMG as an iterative solver
     // Set the initial guess to be zero and then solve it
     // with AMG method as an iterative procedure
     fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row,&x,0.0);
     fasp_solver_amg(&A, &b, &x, &amgparam);
-    
+
     // Step 4. Clean up memory
     fasp_dcsr_free(&A);
     fasp_dvec_free(&b);
     fasp_dvec_free(&x);
-    
+
     return SUCCESS;
 }
 \end{lstlisting}
@@ -332,19 +359,19 @@ int main (int argc, const char * argv[])
 Since this is the first example, we will explain it in some detail:
 \begin{itemize}
 %
-\item Line 1 tells the Doxygen documentation system that the filename is ``poisson-amg.c''. Line 2--4 tells the Doxygen what is this function for. 
+\item Line 1 tells the Doxygen documentation system that the filename is ``poisson-amg.c''. Line 2--4 tells the Doxygen what is this function for.
 %
-\item Line 7--8 includes the main FASP header file ``fasp.h'' and FASP function decoration header ``fasp\_functs.h''. These two headers shall be included in all the examples in this section. Please be noted that the function decorations in ``fasp\_functs.h'' is automatically generated from the source files. 
+\item Line 7--8 includes the main FASP header file ``fasp.h'' and FASP function decoration header ``fasp\_functs.h''. These two headers shall be included in all the examples in this section. Please be noted that the function decorations in ``fasp\_functs.h'' is automatically generated from the source files.
 %
-\item Line 24 reads solver parameters from ``tutorial/ini/amg.dat''; see more discussions in \S\ref{sec:parameters}. In this files, we can set the location of the data files, type of solvers, maximal number of iteration numbers, convergence tolerance, and many other parameters for iterative solvers. 
+\item Line 24 reads solver parameters from ``tutorial/ini/amg.dat''; see more discussions in \S\ref{sec:parameters}. In this files, we can set the location of the data files, type of solvers, maximal number of iteration numbers, convergence tolerance, and many other parameters for iterative solvers.
 %
 \item Line 32 defines a sparse matrix $A$ in the compressed sparse row (CSR) format. Line 33 defines two vectors: the right-hand side $b$ and the numerical solution $x$. We refer to~\S\ref{sec:blas} for definitions of vectors and sparse matrices.
 %
 \item Line 45 reads the matrix and the right-hand side from two disk files. Line 38--43 defines the filenames of them.
 %
-\item Line 48--52 prints the information of the matrix and solver parameters. 
+\item Line 48--52 prints the information of the matrix and solver parameters.
 %
-\item Line 57 allocates memory for the solution vector $x$ and set its initial value to be all zero. 
+\item Line 57 allocates memory for the solution vector $x$ and set its initial value to be all zero.
 %
 \item Line 58 solves $Ax=b$ using the AMG method. Type the AMG method and other parameters have been given in ``amgparam'' at Line 24; see \S\ref{sec:amg}.
 %
@@ -417,18 +444,18 @@ AMG totally costs 0.0173 seconds.
 \section{The second example}\label{sec:ex2}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In the second example, we modify the previous example slightly and solve the Poisson equation using iterative methods. 
+In the second example, we modify the previous example slightly and solve the Poisson equation using iterative methods.
 
 \begin{lstlisting}[stepnumber=1,firstnumber=1]
 /*! \file poisson-its.c
- *  \brief The second test example for FASP: using ITS to solve 
+ *  \brief The second test example for FASP: using ITS to solve
  *         the discrete Poisson equation from P1 finite element.
  */
 
 #include "fasp.h"
 #include "fasp_functs.h"
 
-int main (int argc, const char * argv[]) 
+int main (int argc, const char * argv[])
 {
     input_param          inparam;  // parameters from input files
     itsolver_param       itparam;  // parameters for itsolver
@@ -436,17 +463,17 @@ int main (int argc, const char * argv[])
     printf("\n========================================");
     printf("\n||   FASP: ITS example -- C version   ||");
     printf("\n========================================\n\n");
-    
+
     // Step 0. Set parameters
     // Read input and AMG parameters from a disk file
     // In this example, we read everything from a disk file:
     //          "./ini/its.dat"
-    // See the reference manual for details of the parameters. 
+    // See the reference manual for details of the parameters.
     fasp_param_init("ini/its.dat",&inparam,&itparam,NULL,NULL,NULL);
 
     // Set local parameters
     const int print_level = inparam.print_level;
-    
+
     // Step 1. Get stiffness matrix and right-hand side
     // Read A and b -- P1 FE discretization for Poisson.
     // The location of the data files are given in "its.dat".
@@ -456,33 +483,33 @@ int main (int argc, const char * argv[])
     char filename2[512], *datafile2;
 
     // Read the stiffness matrix from matFE.dat
-    strncpy(filename1,inparam.workdir,128);    
+    strncpy(filename1,inparam.workdir,128);
     datafile1="csrmat_FE.dat"; strcat(filename1,datafile1);
-    
+
     // Read the RHS from rhsFE.dat
     strncpy(filename2,inparam.workdir,128);
     datafile2="rhs_FE.dat"; strcat(filename2,datafile2);
-    
+
     fasp_dcsrvec2_read(filename1,filename2,&A,&b);
-    
+
     // Step 2. Print problem size and ITS parameters
     if (print_level>PRINT_NONE) {
         printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
         printf("b: n = %d\n", b.row);
         fasp_param_solver_print(&itparam);
     }
-    
+
     // Step 3. Solve the system with ITS as an iterative solver
     // Set the initial guess to be zero and then solve it using standard
     // iterative methods, without applying any preconditioners
     fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row,&x,0.0);
     fasp_solver_dcsr_itsolver(&A, &b, &x, NULL, &itparam);
-    
+
     // Step 4. Clean up memory
     fasp_dcsr_free(&A);
     fasp_dvec_free(&b);
     fasp_dvec_free(&x);
-    
+
     return SUCCESS;
 }
 \end{lstlisting}
@@ -490,11 +517,11 @@ int main (int argc, const char * argv[])
 This example is very similar to the first example and we now briefly explain it:
 \begin{itemize}
 %
-\item Line 23 is slightly different than Line 24 in the previous example. This is because we are calling general interface of Krylov subspace methods~\cite{Saad.Saad.2003fv} and the parameters are recorded in ``itparam''. 
+\item Line 23 is slightly different than Line 24 in the previous example. This is because we are calling general interface of Krylov subspace methods~\cite{Saad.Saad.2003fv} and the parameters are recorded in ``itparam''.
 %
-\item Line 56 allocates memory for the solution vector $x$ and set its initial value to be all zero. 
+\item Line 56 allocates memory for the solution vector $x$ and set its initial value to be all zero.
 %
-\item Line 57 solves $Ax=b$ using the general interface for Krylov subspace methods. Type the iterative method and other parameters have been given in ``itparam''; see \S\ref{sec:iter} for details. 
+\item Line 57 solves $Ax=b$ using the general interface for Krylov subspace methods. Type the iterative method and other parameters have been given in ``itparam''; see \S\ref{sec:iter} for details.
 %
 \end{itemize}
 %
@@ -508,11 +535,11 @@ $ ./poisson-its-c.ex
 \section{The third example}\label{sec:ex3}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This example is slightly longer and is a modification of the previous one. In this example,  we want to demonstrate how to setup a preconditioner for the conjugate gradient (CG) method. 
+This example is slightly longer and is a modification of the previous one. In this example,  we want to demonstrate how to setup a preconditioner for the conjugate gradient (CG) method.
 
 \begin{lstlisting}[stepnumber=1,firstnumber=1]
 /*! \file poisson-pcg.c
- *  \brief The third test example for FASP: using PCG to solve 
+ *  \brief The third test example for FASP: using PCG to solve
  *         the discrete Poisson equation from P1 finite element.
  *         C version.
  */
@@ -520,7 +547,7 @@ This example is slightly longer and is a modification of the previous one. In th
 #include "fasp.h"
 #include "fasp_functs.h"
 
-int main (int argc, const char * argv[]) 
+int main (int argc, const char * argv[])
 {
     input_param          inparam;  // parameters from input files
     itsolver_param       itparam;  // parameters for itsolver
@@ -530,21 +557,21 @@ int main (int argc, const char * argv[])
     printf("\n========================================");
     printf("\n||   FASP: PCG example -- C version   ||");
     printf("\n========================================\n\n");
-    
+
     // Step 0. Set parameters
     // Read input and precondition parameters from a disk file
     // In this example, we read everything from a disk file:
     //          "./ini/pcg.dat"
-    // See the reference manual for details of the parameters. 
+    // See the reference manual for details of the parameters.
     fasp_param_init("ini/pcg.dat",&inparam,&itparam,&amgparam,&iluparam,NULL);
 
     // Set local parameters
-    const SHORT print_level = itparam.print_level;    
+    const SHORT print_level = itparam.print_level;
     const SHORT pc_type     = itparam.precond_type;
     const SHORT stop_type   = itparam.stop_type;
     const INT   maxit       = itparam.maxit;
     const REAL  tol         = itparam.tol;
-    
+
     // Step 1. Get stiffness matrix and right-hand side
     // Read A and b -- P1 FE discretization for Poisson.
     // The location of the data files are given in "pcg.dat".
@@ -554,22 +581,22 @@ int main (int argc, const char * argv[])
     char filename2[512], *datafile2;
 
     // Read the stiffness matrix from matFE.dat
-    strncpy(filename1,inparam.workdir,128);    
+    strncpy(filename1,inparam.workdir,128);
     datafile1="csrmat_FE.dat"; strcat(filename1,datafile1);
-    
+
     // Read the RHS from rhsFE.dat
     strncpy(filename2,inparam.workdir,128);
     datafile2="rhs_FE.dat"; strcat(filename2,datafile2);
-    
+
     fasp_dcsrvec2_read(filename1,filename2,&A,&b);
-    
+
     // Step 2. Print problem size and PCG parameters
     if (print_level>PRINT_NONE) {
         printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
         printf("b: n = %d\n", b.row);
         fasp_param_solver_print(&itparam);
     }
-    
+
     // Setp 3. Setup preconditioner
     // Preconditioiner type is determined by pc_type
     precond *pc = fasp_precond_setup(pc_type, &amgparam, &iluparam, &A);
@@ -578,16 +605,16 @@ int main (int argc, const char * argv[])
     // Set the initial guess to be zero and then solve it using pcg solver
     // Note that we call PCG interface directly. There is another way which
     // calls the abstract iterative method interface; see possion-its.c for
-    // more details. 
+    // more details.
     fasp_dvec_alloc(A.row, &x); fasp_dvec_set(A.row, &x, 0.0);
     fasp_solver_dcsr_pcg(&A, &b, &x, pc, tol, maxit, stop_type, print_level);
-    
+
     // Step 5. Clean up memory
     if (pc_type!=PREC_NULL) fasp_mem_free(pc->data);
     fasp_dcsr_free(&A);
     fasp_dvec_free(&b);
     fasp_dvec_free(&x);
-    
+
     return SUCCESS;
 }
 \end{lstlisting}
@@ -597,7 +624,7 @@ This example is very similar to the first example and we now briefly explain it:
 %
 \item Line 26 reads parameters from ``tutorial/ini/pcg.dat''. In this example, we need parameters for iterative methods, AMG preconditioner, and ILU method. The type of the preconditioner is set in ``pcg.dat'' and recorded in ``pc\_type''; see Line 30.
 %
-\item Line 62 sets up the desired preconditioner and prepare it for the preconditioned iterative methods. 
+\item Line 62 sets up the desired preconditioner and prepare it for the preconditioned iterative methods.
 %
 \item Line 70 calls PCG to solve $Ax=b$. One can also call the general iterative method interface in the previous example.
 %
@@ -624,8 +651,8 @@ In the previous examples, we have seen how to read input parameters from disk fi
 %----------------------------------------------%
 
 workdir = ../data/    % work directory, no more than 128 characters
-print_level = 3       % How much information to print out 
- 
+print_level = 3       % How much information to print out
+
 %----------------------------------------------%
 % parameters for multilevel iteration          %
 %----------------------------------------------%
@@ -647,11 +674,11 @@ AMG_nl_amli_krylov_type  = 6      % Krylov method in NLAMLI cycle: 6 FGMRES | 7 
 % parameters for AMG smoothing                 %
 %----------------------------------------------%
 
-AMG_smoother             = GS     % GS | JACOBI | SGS 
+AMG_smoother             = GS     % GS | JACOBI | SGS
                                   % SOR | SSOR | GSOR | SGSOR | POLY
 AMG_ILU_levels           = 0      % number of levels using ILU smoother
 AMG_schwarz_levels       = 0      % number of levels using Schwarz smoother
-AMG_relaxation           = 1.1    % relaxation parameter for SOR smoother 
+AMG_relaxation           = 1.1    % relaxation parameter for SOR smoother
 AMG_polynomial_degree    = 3      % degree of the polynomial smoother
 AMG_presmooth_iter       = 2      % number of presmoothing sweeps
 AMG_postsmooth_iter      = 2      % number of postsmoothing sweeps
@@ -662,7 +689,7 @@ AMG_postsmooth_iter      = 2      % number of postsmoothing sweeps
 
 AMG_coarsening_type      = 1      % 1 Modified RS
                                   % 3 Compatible Relaxation
-                                  % 4 Aggressive 
+                                  % 4 Aggressive
 AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
 AMG_strong_threshold     = 0.6    % Strong threshold
 AMG_truncation_threshold = 0.4    % Truncation threshold
@@ -682,28 +709,28 @@ We now briefly discuss the parameters above:
 This example is very similar to the first example and we now briefly explain it:
 \begin{itemize}
 %
-\item Line 7 sets the working directory, which stores the matrices and right-hand side vectors. 
+\item Line 7 sets the working directory, which stores the matrices and right-hand side vectors.
 %
-\item Line 8 sets the level of output for FASP routines. It should range from 0 to 10 with 0 means no output and 10 means output everything possible. 
+\item Line 8 sets the level of output for FASP routines. It should range from 0 to 10 with 0 means no output and 10 means output everything possible.
 %
-\item Line 14--25 sets the basic parameters for multilevel iterations. For example, type of AMG, type of multilevel cycles, number of maximal levels, etc. 
+\item Line 14--25 sets the basic parameters for multilevel iterations. For example, type of AMG, type of multilevel cycles, number of maximal levels, etc.
 %
-\item Line 31--38 sets the type of smoothers, number of smoothing sweeps, etc. 
+\item Line 31--38 sets the type of smoothers, number of smoothing sweeps, etc.
 %
 \item Line 44--50 sets the parameters for the setup phase of the classical AMG method (\S\ref{sec:amg}).
 %
-\item Line 56--59 gives the parameters for the setup phase of the aggregation-base AMG methods (\S\ref{sec:amg}). 
+\item Line 56--59 gives the parameters for the setup phase of the aggregation-base AMG methods (\S\ref{sec:amg}).
 %
 \end{itemize}
 %
 
-You can do a very simple experiment and change the AMG type from the classical AMG to smoothed aggregation AMG by revise Line 14 to 
+You can do a very simple experiment and change the AMG type from the classical AMG to smoothed aggregation AMG by revise Line 14 to
 %
 \begin{lstlisting}[numbers=none]
 AMG_type                 = SA
 \end{lstlisting}
 %
-Then you run ``poisson-amg-c.ex'' one more time and will get 
+Then you run ``poisson-amg-c.ex'' one more time and will get
 %
 \begin{lstlisting}[numbers=none]
 ========================================
@@ -778,27 +805,27 @@ AMG totally costs 0.0184 seconds.
 You can compare this with the sample results in \S\ref{sec:ex1}.
 
 \begin{snugshade}\noindent
-NOTE: The input parameters allowed in FASP are not limited to the ones used in this example. For more parameters and their ranges, we refer to the Reference Manual. 
+NOTE: The input parameters allowed in FASP are not limited to the ones used in this example. For more parameters and their ranges, we refer to the Reference Manual.
 \end{snugshade}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Basic Usage}\label{ch:basic}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we discuss the basic data structures and some important building blocks which will be useful for constructing auxiliary space preconditioners for systems of PDEs in Chapter~\ref{ch:advanced}. In particular, we will discuss vectors, sparse matrices, iterative methods, and multigrid methods. 
+In this chapter, we discuss the basic data structures and some important building blocks which will be useful for constructing auxiliary space preconditioners for systems of PDEs in Chapter~\ref{ch:advanced}. In particular, we will discuss vectors, sparse matrices, iterative methods, and multigrid methods.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Vectors and sparse matrices}\label{sec:blas}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The most important data structures for iterative methods are probably vectors and sparse matrices. In this section, we first discuss the data structures for vectors and matrices in FASP; and then we discuss BLAS for sparse matrices. 
+The most important data structures for iterative methods are probably vectors and sparse matrices. In this section, we first discuss the data structures for vectors and matrices in FASP; and then we discuss BLAS for sparse matrices.
 
 \subsection{Vectors}
 
-The data structure for vectors is very simple. It only contains the length of the vector and an array which contains the entries of this vector. 
+The data structure for vectors is very simple. It only contains the length of the vector and an array which contains the entries of this vector.
 
 \begin{lstlisting}
-/** 
+/**
  * \struct dvector
  * \brief Vector with n entries of REAL type.
  */
@@ -814,13 +841,13 @@ typedef struct dvector{
 
 \subsection{Sparse matrices}
 
-On the other hand, sparse matrices for PDE applications are very complicated. It depends on the particular applications, discretization methods, as well as solution algorithms. In FASP, there are several types of sparse matrices, COO, CSR, CSRL, BSR, and CSR Block, etc. The presentation closely follows ideas from Pissanetzky~\cite{Pissanetzky.Pissanetzky.1984hc}. 
+On the other hand, sparse matrices for PDE applications are very complicated. It depends on the particular applications, discretization methods, as well as solution algorithms. In FASP, there are several types of sparse matrices, COO, CSR, CSRL, BSR, and CSR Block, etc. The presentation closely follows ideas from Pissanetzky~\cite{Pissanetzky.Pissanetzky.1984hc}.
 
 In this section, we use the following sparse matrix as an example to explain different formats for sparse matrices:
 %
 \begin{example}\label{ex:sparse}
 Consider the following $4\times 5$ matrix with 12 non-zero entries
-$$ 
+$$
 \left(\begin{array}{ccccc}
 1 & 1.5 & 0 & 0 & 12\\
 0 & 1    & 6 & 7 & 1\\
@@ -833,9 +860,9 @@ $$
 
 \subsubsection*{(i) COO format}
 
-The coordinate (COO) format or IJ format is the simplest sparse matrix format. 
+The coordinate (COO) format or IJ format is the simplest sparse matrix format.
 \begin{lstlisting}
-/** 
+/**
  * \struct dCOOmat
  * \brief Sparse matrix of REAL type in COO (or IJ) format.
  *
@@ -846,15 +873,15 @@ The coordinate (COO) format or IJ format is the simplest sparse matrix format.
 typedef struct dCOOmat{
 	
 	//! row number of matrix A, m
-	INT row;   
+	INT row;
 	//! column of matrix A, n
-	INT col;   
+	INT col;
 	//! number of nonzero entries
 	INT nnz;
 	//! integer array of row indices, the size is nnz
-	INT *I;   
+	INT *I;
 	//! integer array of column indices, the size is nnz
-	INT *J;    
+	INT *J;
 	//! nonzero entries of A
 	REAL *val;
 	
@@ -868,7 +895,7 @@ row = 4
 col = 5
 nnz = 12
 
- I J  val 
+ I J  val
 -----------
  0 0  1.0
  0 1  1.5
@@ -883,7 +910,7 @@ nnz = 12
 Although the COO format is easy to understand or use, it wastes some storage and has no advantages in sparse BLAS operations.
 
 \begin{snugshade}\noindent
-NOTE: In FASP, the indices always start from 0, instead of from 1. This is often the source of problems related to vectors and matrices. 
+NOTE: In FASP, the indices always start from 0, instead of from 1. This is often the source of problems related to vectors and matrices.
 \end{snugshade}
 
 \subsubsection*{(ii) CSR format}
@@ -892,12 +919,12 @@ The most commonly used data structure for sparse matrices nowadays is probably t
 \begin{enumerate}
 \item An integer array of row pointers of size n+1;
 \item An integer array of column indexes of size nnz;
-\item An array of actual matrix entries. 
+\item An array of actual matrix entries.
 \end{enumerate}
 %
 In FASP, we define:
 \begin{lstlisting}
-/** 
+/**
  * \struct dCSRmat
  * \brief Sparse matrix of REAL type in CSR format.
  *
@@ -908,15 +935,15 @@ In FASP, we define:
 typedef struct dCSRmat{
 	
 	//! row number of matrix A, m
-	INT row;   
+	INT row;
 	//! column of matrix A, n
-	INT col;   
+	INT col;
 	//! number of nonzero entries
 	INT nnz;
 	//! integer array of row pointers, the size is m+1
-	INT *IA;   
+	INT *IA;
 	//! integer array of column indexes, the size is nnz
-	INT *JA;    
+	INT *JA;
 	//! nonzero entries of A
 	REAL *val;
 	
@@ -933,24 +960,24 @@ equal to $IA(n+1)-1$.
 
 \begin{snugshade}\noindent
 NOTE: When the sparse matrix $A$ is a boolean (i.e. all entries are either $0$ or
-$1$), the actual non-zeroes are not stored because it is understood that, if it is 
+$1$), the actual non-zeroes are not stored because it is understood that, if it is
 nonzero, it could only be $1$ and there is no need to store it.
 \end{snugshade}
 
 The matrix in Example~\ref{ex:sparse} in CSR format is represented in the following way:
 \begin{itemize}
-\item $IA$ is of size $5$ and 
-$$IA = 
+\item $IA$ is of size $5$ and
+$$IA =
 \begin{array}{||c|c|c|c|c||}0&3&7&9&12\end{array}
 $$
-\item $JA$ is of size $IA(5)-1=12$  
-$$JA = 
+\item $JA$ is of size $IA(5)-1=12$
+$$JA =
 \begin{array}{||c|c|c||c|c|c|c||c|c||c|c|c||}
 0&1&4&1&3&2&4&0&2&2&4&0
 \end{array}
 $$
-\item $val$ is of the same size as $JA$ and   
-$$val = 
+\item $val$ is of the same size as $JA$ and
+$$val =
 \begin{array}{||c|c|c||c|c|c|c||c|c||c|c|c||}
 1.&1.5&12.&1.&7.&6.&1.&3.&6.&2.&5.&1.
 \end{array}
@@ -958,7 +985,7 @@ $$
 \end{itemize}
 
 \begin{snugshade}\noindent
-NOTE: The indexes in $JA$ and entries of $val$ need not be ordered as seen in this example. Sometimes, they are sorted in ascending order in each row. More often, the diagonal entries are stored in the first position in each row and the rest are sorted in ascending order. 
+NOTE: The indexes in $JA$ and entries of $val$ need not be ordered as seen in this example. Sometimes, they are sorted in ascending order in each row. More often, the diagonal entries are stored in the first position in each row and the rest are sorted in ascending order.
 \end{snugshade}
 
 Below is another ``non-numeric'' example.
@@ -976,19 +1003,19 @@ a_{41}& a_{42} & a_{43} & 0 \\
 $$
 For this matrix, we have that the number of non-zeros $nnz=10$. Furthermore, the three arrays of in the CSR format are:
 $$
-IA = 
+IA =
 \begin{array}{||c|c|c|c||}0&2&5&7\end{array}\, ,
-%[ 0 \quad 2 \quad 5 \quad 7 \quad 10], 
+%[ 0 \quad 2 \quad 5 \quad 7 \quad 10],
 $$
 $$
-JA = 
+JA =
 \begin{array}{||c|c||c|c|c||c|c||c|c|c||}
 0&2&1&2&3&1&3&0&1&2\end{array}\, ,
 %[ 0 \; 2 \;|\; 1 \; 2 \; 3 \;|\; 1 \; 3 \;|\; 0 \; 1 \; 2],
 $$
-and 
+and
 $$
-val = 
+val =
 \begin{array}{||c|c||c|c|c||c|c||c|c|c||}
 a_{11} & a_{13} & a_{22} & a_{23} & a_{24} & a_{32} & a_{34} & a_{41} & a_{42} & a_{43}\end{array}\,.
 %[a_{11} \; a_{13}\;|\; a_{22} \; a_{23} \; a_{24}\;|\; a_{32} \; a_{34}\;|\; a_{41}\; a_{42}\; a_{43}].
@@ -1001,14 +1028,14 @@ NOTE: The CSR format presents challenges to sparse matrix-vector product mainly 
 
 \subsubsection*{(iii) CSRL format}
 
-CSRL matrix format~\cite{Mellor-crummey2004} groups rows with same number of nonzeros together and improves cache hitting rate. 
+CSRL matrix format~\cite{Mellor-crummey2004} groups rows with same number of nonzeros together and improves cache hitting rate.
 \begin{lstlisting}
 /*!
  * \struct dCSRLmat
  * \brief Sparse matrix of REAL type in CSRL format.
  */
 typedef struct dCSRLmat{
-    
+
 	//! number of rows	
 	INT row;
 	//! number of cols
@@ -1027,7 +1054,7 @@ typedef struct dCSRLmat{
 	INT *ja;
 	//! values of all the nonzero entries
 	REAL *val;
-    
+
 } dCSRLmat; /**< Sparse matrix of REAL type in CSRL format */
 \end{lstlisting}
 
@@ -1036,21 +1063,21 @@ typedef struct dCSRLmat{
 For PDE applications, we often need to solve systems of partial differential equations. Many iterative methods and preconditioners could take advantages of fact and improve efficiency. So we often need to use block matrices to store the coefficient matrix arising from PDE systems. Depending on different applications and different solving algorithms, we can use two types of block matrices: BSR (or Block Compressed Sparse Row) and CSR Block (Block of CSR matrices). The definitions of these types of block matrices are given as follows:
 
 \begin{lstlisting}
-/** 
+/**
  * \struct dBSRmat
  * \brief Block sparse row storage matrix of REAL type.
  *
- * \note This data structure is adapted from the Intel MKL library. 
- * Refer to 
+ * \note This data structure is adapted from the Intel MKL library.
+ * Refer to
  * http://software.intel.com/sites/products/documentation/hpc/mkl/lin/index.htm
  *
- * \note Some of the following entries are capitalized to stress that they are 
+ * \note Some of the following entries are capitalized to stress that they are
  *       for blocks!
  *
  */
 typedef struct dBSRmat{
 	
-    
+
 	//! number of rows of sub-blocks in matrix A, M
 	INT ROW;
 	//! number of cols of sub-blocks in matrix A, N
@@ -1058,16 +1085,16 @@ typedef struct dBSRmat{
 	//! number of nonzero sub-blocks in matrix A, NNZ
 	INT NNZ;
 	//! dimension of each sub-block
-	INT nb; // for the moment, allow nb*nb full block 
-	//! storage manner for each sub-block           
+	INT nb; // for the moment, allow nb*nb full block
+	//! storage manner for each sub-block
 	INT storage_manner; // 0: row-major order, 1: column-major order
 	
-	//! A real array that contains the elements of the non-zero blocks of 
-	//! a sparse matrix. The elements are stored block-by-block in row major 
-	//! order. A non-zero block is the block that contains at least one non-zero 
-	//! element. All elements of non-zero blocks are stored, even if some of 
-	//! them is equal to zero. Within each nonzero block elements are stored 
-	//! in row-major order and the size is (NNZ*nb*nb). 
+	//! A real array that contains the elements of the non-zero blocks of
+	//! a sparse matrix. The elements are stored block-by-block in row major
+	//! order. A non-zero block is the block that contains at least one non-zero
+	//! element. All elements of non-zero blocks are stored, even if some of
+	//! them is equal to zero. Within each nonzero block elements are stored
+	//! in row-major order and the size is (NNZ*nb*nb).
 	REAL *val;
 	
 	//! integer array of row pointers, the size is ROW+1
@@ -1081,20 +1108,20 @@ typedef struct dBSRmat{
 \end{lstlisting}
 %
 \begin{lstlisting}
-/** 
+/**
  * \struct block_dCSRmat
  * \brief Block of REAL CSR matrix structure.
  *
  * CSR Block Format in REAL
  *
- * \note The starting index of A is 0.  
+ * \note The starting index of A is 0.
  */
 typedef struct block_dCSRmat{
 	
 	//! row number of blocks in A, m
-	INT brow;   
+	INT brow;
 	//! column number of blocks A, n
-	INT bcol;   
+	INT bcol;
 	//! blocks of dCSRmat, point to blocks[brow][bcol]
 	dCSRmat **blocks;
 	
@@ -1114,7 +1141,7 @@ following simple way:
 
 \begin{lstlisting}
 /**
- * \fn void fasp_blas_dcsr_mxv (dCSRmat *A, REAL *x, REAL *y) 
+ * \fn void fasp_blas_dcsr_mxv (dCSRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
@@ -1125,27 +1152,27 @@ following simple way:
  * \author Chensong Zhang
  * \date   07/01/2009
  */
-void fasp_blas_dcsr_mxv (dCSRmat *A, 
-                         REAL *x, 
+void fasp_blas_dcsr_mxv (dCSRmat *A,
+                         REAL *x,
                          REAL *y)
 {
     const INT   m  = A->row;
     const INT  *ia = A->IA, *ja = A->JA;
     const REAL *aj = A->val;
-    
-    INT i, k, beg, end;    
+
+    INT i, k, beg, end;
     register REAL tmp;
-    
+
     for ( i=0; i<m; ++i ) {
-        tmp = 0.0; 
-        beg = ia[i]; end = ia[i+1]; 
+        tmp = 0.0;
+        beg = ia[i]; end = ia[i+1];
         for ( k=beg; k<end; ++k ) tmp += aj[k]*x[ja[k]];
         y[i] = tmp;
     }
 }
 \end{lstlisting}
 
-This is only a simple example for sparse matrix-vector multiplication (SpMV) kernel. Since we need many types of sparse matrices, there are various of versions of SpMV for different data structures. See the Reference Manual for more details. 
+This is only a simple example for sparse matrix-vector multiplication (SpMV) kernel. Since we need many types of sparse matrices, there are various of versions of SpMV for different data structures. See the Reference Manual for more details.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Iterative methods}\label{sec:iter}
@@ -1158,7 +1185,7 @@ We first notice the abstract interface for the iterative methods is:
 %
 \begin{lstlisting}[numbers=none]
 /**
- * \fn INT fasp_solver_dcsr_itsolver (dCSRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dcsr_itsolver (dCSRmat *A, dvector *b, dvector *x,
  *                                    precond *pc, itsolver_param *itparam)
  *
  * \brief Solve Ax=b by preconditioned Krylov methods for CSR matrices
@@ -1172,18 +1199,18 @@ We first notice the abstract interface for the iterative methods is:
  * \return         Number of iterations if succeed
  *
  * \author Chensong Zhang
- * \date   09/25/2009 
+ * \date   09/25/2009
  *
  * \note This is an abstract interface for iterative methods.
  */
-INT fasp_solver_dcsr_itsolver (dCSRmat *A, 
-                               dvector *b, 
-                               dvector *x, 
-                               precond *pc, 
+INT fasp_solver_dcsr_itsolver (dCSRmat *A,
+                               dvector *b,
+                               dvector *x,
+                               precond *pc,
                                itsolver_param *itparam)
 \end{lstlisting}
 %
-The names of the input arguments explain themselves mostly and they are explained in the Reference Manual in detail. 
+The names of the input arguments explain themselves mostly and they are explained in the Reference Manual in detail.
 
 We briefly discuss how to call this function; and, once you understand PCG, you can easily call other iterative methods. The following code segment is taken from ``base/src/itsolver\_csr.c'':
 %
@@ -1191,20 +1218,20 @@ We briefly discuss how to call this function; and, once you understand PCG, you 
 ... ...
 
     // ILU setup for whole matrix
-    ILU_data LU; 
+    ILU_data LU;
     if ( (status = fasp_ilu_dcsr_setup(A,&LU,iluparam))<0 ) goto FINISHED;
-    
+
     // check iludata
     if ( (status = fasp_mem_iludata_check(&LU))<0 ) goto FINISHED;
-    
-    // set preconditioner 
-    precond pc; 
-    pc.data = &LU; 
+
+    // set preconditioner
+    precond pc;
+    pc.data = &LU;
     pc.fct  = fasp_precond_ilu;
-    
+
     // call iterative solver
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
-    
+
 ... ...
 \end{lstlisting}
 %
@@ -1212,12 +1239,12 @@ Now we explain this code segment a little bit:
 \begin{itemize}
 \item Line 3--4 performs the setup phase for ILU method. The particular type of ILU method is determined by ``iluparam''; see \S\ref{sec:parameters}. Line 7 performs a simple memory check for ILU.
 \item Line 10--12 defines the preconditioner data structure ``pc'', which contains two parts: one is the actual preconditioning action ``pc.fct'', the other is the auxiliary data which is needed to perform the preconditioning action ``pc.data''.
-\item Line 15 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``itparam''. 
+\item Line 15 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``itparam''.
 \end{itemize}
 
-Apparently, we now left with no choice but introducing ``itparam''. 
+Apparently, we now left with no choice but introducing ``itparam''.
 \begin{lstlisting}[numbers=none]
-/** 
+/**
  * \struct itsolver_param
  * \brief Parameters passed to iterative solvers.
  *
@@ -1232,12 +1259,12 @@ typedef struct {
 	INT   restart;       /**< number of steps for restarting: for GMRES etc */
 	SHORT print_level;   /**< print level: 0--10 */	
 	
-} itsolver_param; /**< Parameters for iterative solvers */ 
+} itsolver_param; /**< Parameters for iterative solvers */
 \end{lstlisting}
 %
 Possible ``itsolver\_type'' includes:
 \begin{lstlisting}[numbers=none]
-/** 
+/**
  * \brief Definition of solver types for iterative methods
  */
 #define SOLVER_CG               1    /**< Conjugate Gradient */
@@ -1262,9 +1289,9 @@ To be added.
 \section{Algebraic multigrid}\label{sec:amg}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The classical algebraic multigrid method~\cite{Ruge.RugeStuben.1987bs} is an important component in many of our auxiliary space preconditioners. Because of its user-friendly and scalability, AMG becomes increasingly popular in scientific and engineering computing, especially when GMG is difficult or not possible to be applied. Various of new AMG techniques~\cite{Vanek.VanekMandel.1996kl,Wan.WanChan.2000qa,Brezina.BrezinaCleary.2000ly,Henson.HensonVassilevski.2001cr,Chartier.ChartierFalgout.2003ve,Livne.Livne.2004kl,Falgout.FalgoutVassilevski.2004bh,Xu.XuZikatanov.2004pi,Brannick.BrannickZikatanov.2007zr,Muresan.MuresanNotay.2008tg} have emerged in recent years. 
+The classical algebraic multigrid method~\cite{Ruge.RugeStuben.1987bs} is an important component in many of our auxiliary space preconditioners. Because of its user-friendly and scalability, AMG becomes increasingly popular in scientific and engineering computing, especially when GMG is difficult or not possible to be applied. Various of new AMG techniques~\cite{Vanek.VanekMandel.1996kl,Wan.WanChan.2000qa,Brezina.BrezinaCleary.2000ly,Henson.HensonVassilevski.2001cr,Chartier.ChartierFalgout.2003ve,Livne.Livne.2004kl,Falgout.FalgoutVassilevski.2004bh,Xu.XuZikatanov.2004pi,Brannick.BrannickZikatanov.2007zr,Muresan.MuresanNotay.2008tg} have emerged in recent years.
 
-The following code segment is part of ``base/src/amg.c'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, etc). 
+The following code segment is part of ``base/src/amg.c'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, etc).
 %
 \begin{lstlisting}
 ... ...
@@ -1272,14 +1299,14 @@ The following code segment is part of ``base/src/amg.c'' and it is a good exampl
     // param is a pointer to AMG_param
     const SHORT   max_levels  = param->max_levels;
     const SHORT   amg_type    = param->AMG_type;
-    const SHORT   cycle_type  = param->cycle_type;    
+    const SHORT   cycle_type  = param->cycle_type;
 
-    // initialize mgl[0] with A, b, x    
+    // initialize mgl[0] with A, b, x
     AMG_data *mgl = fasp_amg_data_create(max_levels);
     mgl[0].A = fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
-    mgl[0].b = fasp_dvec_create(n);       fasp_dvec_cp(b,&mgl[0].b);     
-    mgl[0].x = fasp_dvec_create(n);       fasp_dvec_cp(x,&mgl[0].x); 
-    
+    mgl[0].b = fasp_dvec_create(n);       fasp_dvec_cp(b,&mgl[0].b);
+    mgl[0].x = fasp_dvec_create(n);       fasp_dvec_cp(x,&mgl[0].x);
+
     // AMG setup phase
     switch (amg_type) {
 
@@ -1296,7 +1323,7 @@ The following code segment is part of ``base/src/amg.c'' and it is a good exampl
         break;
 
     }
-    
+
     // AMG solve phase
     switch (cycle_type) {
 
@@ -1313,7 +1340,7 @@ The following code segment is part of ``base/src/amg.c'' and it is a good exampl
         break;
 
     }
-    
+
 ... ...
 \end{lstlisting}
 %
@@ -1328,7 +1355,7 @@ The code above is very simple and we only wish to point out that:
 
 \subsection{Parameters for AMG}
 
-There are a couple of controlling parameters for algebraic multigrid methods in FASP. Basically, there are four types of parameters for AMG---They control multilevel iterations, smoothing, classical AMG setup, and aggregation AMG setup. The following is a sample from ``test/ini/input.dat'' and a brief explanation of each parameter is given. 
+There are a couple of controlling parameters for algebraic multigrid methods in FASP. Basically, there are four types of parameters for AMG---They control multilevel iterations, smoothing, classical AMG setup, and aggregation AMG setup. The following is a sample from ``test/ini/input.dat'' and a brief explanation of each parameter is given.
 
 \begin{lstlisting}
 %----------------------------------------------%
@@ -1352,11 +1379,11 @@ AMG_nl_amli_krylov_type  = 6      % Krylov method in NLAMLI cycle: 6 FGMRES | 7 
 % parameters for AMG smoothing                 %
 %----------------------------------------------%
 
-AMG_smoother             = GS     % GS | JACOBI | SGS 
+AMG_smoother             = GS     % GS | JACOBI | SGS
                                   % SOR | SSOR | GSOR | SGSOR | POLY
 AMG_ILU_levels           = 0      % number of levels using ILU smoother
 AMG_schwarz_levels       = 0      % number of levels using Schwarz smoother
-AMG_relaxation           = 1.1    % relaxation parameter for SOR smoother 
+AMG_relaxation           = 1.1    % relaxation parameter for SOR smoother
 AMG_polynomial_degree    = 3      % degree of the polynomial smoother
 AMG_presmooth_iter       = 1      % number of presmoothing sweeps
 AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
@@ -1367,7 +1394,7 @@ AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
 
 AMG_coarsening_type      = 1      % 1 Modified RS
                                   % 3 Compatible Relaxation
-                                  % 4 Aggressive 
+                                  % 4 Aggressive
 AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
 AMG_strong_threshold     = 0.25   % Strong threshold
 AMG_truncation_threshold = 0.4    % Truncation threshold
@@ -1384,20 +1411,20 @@ AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing
 \end{lstlisting}
 
 \begin{snugshade}\noindent
-NOTE: Here we can not discuss the details of these parameters as a full discussion requires more understand of the underlying algorithms which we have completely omitted. So to learn more about, we refer to the Reference Manual. 
+NOTE: Here we can not discuss the details of these parameters as a full discussion requires more understand of the underlying algorithms which we have completely omitted. So to learn more about, we refer to the Reference Manual.
 \end{snugshade}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{More Advanced Usage}\label{ch:advanced}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we discuss a few more advanced features of FASP. We will discuss parallel versions of FASP and its build-in features for debugging purposes. These features will be helpful for people who would like to develop on the top of FASP. For users who only wish to call a few standard solvers, they can skip this chapter. 
+In this chapter, we discuss a few more advanced features of FASP. We will discuss parallel versions of FASP and its build-in features for debugging purposes. These features will be helpful for people who would like to develop on the top of FASP. For users who only wish to call a few standard solvers, they can skip this chapter.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{An OpenMP example}\label{sec:mop}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-OpenMP\footnote{Official website: \url{http://openmp.org/}} (Open Multiprocessing) is an API that supports multi-platform shared memory multiprocessing programming in C, C++, and Fortran, on most processor architectures and operating systems. It consists of a set of compiler directives, library routines, and environment variables that influence run-time behavior. Some preliminary OpenMP support has been included since the very beginning of FASP. We consistently improves and expands OpenMP support as multiprocessor architectures become the dominant desktop computing environment. 
+OpenMP\footnote{Official website: \url{http://openmp.org/}} (Open Multiprocessing) is an API that supports multi-platform shared memory multiprocessing programming in C, C++, and Fortran, on most processor architectures and operating systems. It consists of a set of compiler directives, library routines, and environment variables that influence run-time behavior. Some preliminary OpenMP support has been included since the very beginning of FASP. We consistently improves and expands OpenMP support as multiprocessor architectures become the dominant desktop computing environment.
 
 \begin{snugshade}\noindent
 NOTE: By default, OpenMP is not disabled in FASP. In order to turn it on, you need to modify make.in a little bit.
@@ -1405,24 +1432,24 @@ NOTE: By default, OpenMP is not disabled in FASP. In order to turn it on, you ne
 
 To enable OpenMP support, you need to uncomment one line in ``make.inc'' and set ``OMP'' to be 1.
 \begin{lstlisting}[numbers=none]
-# Uncomment the following line to turn on OpenMP version                                                                                                      
+# Uncomment the following line to turn on OpenMP version
 # OMP=1
-                                                                                                                                                      
-ifdef OMP                                                                                                                                                     
-   BOPT+=-fopenmp                                                                                                                                             
-   CDEFS=-D FASP_USE_OPENMP=1                                                                                                                                 
-   FDEFS=-D FASP_USE_OPENMP=1                                                                                                                                 
-else                                                                                                                                                          
-   CDEFS=-D FASP_USE_OPENMP=0                                                                                                                                 
-   FDEFS=-D FASP_USE_OPENMP=0                                                                                                                                 
-endif                                               
+
+ifdef OMP
+   BOPT+=-fopenmp
+   CDEFS=-D FASP_USE_OPENMP=1
+   FDEFS=-D FASP_USE_OPENMP=1
+else
+   CDEFS=-D FASP_USE_OPENMP=0
+   FDEFS=-D FASP_USE_OPENMP=0
+endif
 \end{lstlisting}
 
 After you recompile your code, OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash}, you need to set:
 \begin{lstlisting}[numbers=none]
 $ export OMP_NUM_THREADS=8
 \end{lstlisting}
-Then you use 8 threads for computation. 
+Then you use 8 threads for computation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A CUDA example}\label{sec:cuda}
@@ -1474,4 +1501,4 @@ To be added.
 \end{footnotesize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\end{document}  
+\end{document}
