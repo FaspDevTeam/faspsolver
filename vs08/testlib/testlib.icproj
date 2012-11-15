@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Intel C++ Project"
-	Version="12.1"
+	Version="13.0"
 	Name="testlib"
 	ProjectGUID="{9ED3A214-1BF9-4741-9AA2-B4B875947115}"
 	VCNestedProjectGUID="{08DAEB62-2334-47B1-A7F3-7B998637A4C5}"
