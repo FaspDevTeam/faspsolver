@@ -238,6 +238,11 @@ void fasp_blas_dbsr_mxv(dBSRmat *A,
 		                REAL *x, 
 		                REAL *y) ;
 
+void fasp_blas_dbsr_rap1 (dBSRmat *R,
+                          dBSRmat *A, 
+                          dBSRmat *P, 
+                          dBSRmat *B);
+
 void fasp_blas_dbsr_rap (dBSRmat *R,
                          dBSRmat *A, 
                          dBSRmat *P, 

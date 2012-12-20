@@ -51,8 +51,8 @@ include ${FASPDIR}/base/make.inc
 # Link options
 ########################################################################
 LINKOPTS=$(BOPT)
-CLFLAGS=-lstdc++ $(LINKOPTS) $(LIBS)
-FLFLAGS=-lm $(LINKOPTS) $(LIBS)
+CLFLAGS=$(LINKOPTS) $(LIBS) -lstdc++
+FLFLAGS=$(LINKOPTS) $(LIBS) -lm
 
 ########################################################################
 # Rules for compiling the source files
@@ -146,7 +146,7 @@ lib: $(OBJSC) $(OBJSF)
 
 test:
 	$(CC) -c main/test.c -o main/test.o $(CFLAGS)
-	$(CPP) -o test.ex main/test.o $(FLFLAGS) -lgfortran
+	$(FC) -o test.ex main/test.o $(FLFLAGS)
 
 regression: 
 	$(CC) -c main/regression.c -o main/regression.o $(CFLAGS)
@@ -171,10 +171,6 @@ testbsr:
 testmat: 
 	$(CC) -c main/testmat.c -o main/testmat.o $(CFLAGS)
 	$(FC) -o testmat.ex main/testmat.o $(FLFLAGS)
-
-#testmatgroup: 
-#	$(CC) -c main/testmatgroup.c -o main/testmatgroup.o $(CFLAGS)
-#	$(FC) -o testmatgroup.ex main/testmatgroup.o $(FLFLAGS)
 
 testrap: 
 	$(CC) -c main/testrap.c -o main/testrap.o $(CFLAGS)
