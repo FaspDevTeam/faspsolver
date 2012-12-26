@@ -10,6 +10,7 @@
 ########################################################################
 # Compilers and dependences
 ########################################################################
+
 AR=ar ruc
 
 CC=gcc
@@ -24,6 +25,7 @@ FASPLIB=${FASPDIR}/base/lib/libfasp.a
 ########################################################################      
 # Compiling options                                                             
 ########################################################################        
+
 BOPT=-g -O0 -Wall
 
 COPTS=$(BOPT)
@@ -39,77 +41,23 @@ FFLAGS=$(FDEFS) $(FOPTS) $(FINCLUDES)
 ########################################################################
 # Set libraries
 ########################################################################
+
 LIBS=$(TESTLIB) $(FASPLIB)
 
 ########################################################################
 # Load user-defined parameters
 ########################################################################
+
 include ${FASPDIR}/base/make.inc
 
 ########################################################################
 # Link options
 ########################################################################
-LINKOPTS=$(BOPT)
-CLFLAGS=-lstdc++ $(LINKOPTS) $(LIBS)
-FLFLAGS=-lm $(LINKOPTS) $(LIBS)
 
-########################################################################
-# Rules for compiling the source files
-########################################################################
-.SUFFIXES: .c .cc .cpp .for .f .f77 .f90 .f95
-#
-FSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.for))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f77))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f90))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f95))
-CSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.c))
-CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cc))
-CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cpp))
-FSRC += $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*.f))
-CSRC += $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*.c))
-#
-OBJSF := $(patsubst %.for,%.o,$(FSRC))
-OBJSF += $(patsubst %.f,%.o,$(FSRC))
-OBJSF += $(patsubst %.f77,%.o,$(FSRC))
-OBJSF += $(patsubst %.f90,%.o,$(FSRC))
-OBJSF += $(patsubst %.f95,%.o,$(FSRC))
-OBJSC := $(patsubst %.c,%.o,$(CSRC))
-OBJSC += $(patsubst %.cc,%.o,$(CSRC))
-OBJSC += $(patsubst %.cpp,%.o,$(CSRC))
-#
-.for.o:
-	$(FC) -c $< -o $@ $(FFLAGS) 
-	$(AR) $(TESTLIB) $@
-#
-.f.o:
-	$(FC) -c $< -o $@ $(FFLAGS) 
-	$(AR) $(TESTLIB) $@
-#
-.f77.o:
-	$(FC) -c $< -o $@ $(FFLAGS) 
-	$(AR) $(TESTLIB) $@
-#
-.f90.o:
-	$(FC) -c $< -o $@ $(FFLAGS) 
-	$(AR) $(TESTLIB) $@
-#
-.f95.o:
-	$(FC) -c $< -o $@ $(FFLAGS) 
-	$(AR) $(TESTLIB) $@
-#
-.c.o:
-	$(CC) -c $< -o $@ $(CFLAGS) 
-	$(AR) $(TESTLIB) $@
-#
-.cc.o:
-	$(CPP) -c $< -o $@ $(CFLAGS) 
-	$(AR) $(TESTLIB) $@
-#
-.cpp.o:
-	$(CPP) -c $< -o $@ $(CFLAGS) 
-	$(AR) $(TESTLIB) $@
-#
+LINKOPTS=$(BOPT)
+CLFLAGS=$(LINKOPTS) $(LIBS) -lstdc++
+FLFLAGS=$(LINKOPTS) $(LIBS) -lm
+
 ########################################################################
 # List of all programs to be compiled
 ########################################################################

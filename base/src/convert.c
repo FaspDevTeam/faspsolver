@@ -86,6 +86,43 @@ double fasp_aux_bbyteToldouble (unsigned char bytes[])
     return dbl;   
 }
 
+
+INT endian_convert_int(const INT index,
+                       INT ilength,
+                       INT endianflag)
+{
+    INT iretVal,i;
+    char *intToConvert = ( char* ) & index;
+    char *returnInt = ( char* ) & iretVal;
+    if (endianflag==1) return index;
+    else {
+        for (i = 0; i < ilength; i++) {
+            returnInt[i] = intToConvert[ilength-i-1];                
+        }
+        return iretVal;
+    }
+}
+
+REAL endian_convert_real(const REAL value,
+                         INT vlength,
+                         INT endianflag)
+{
+    REAL dretVal;
+    char *realToConvert = ( char* ) & value;
+    char *returnReal = ( char* ) & dretVal;
+	INT  i;
+
+    if (endianflag==1) return value;
+    else {
+        for (i = 0; i < vlength; i++) {
+            returnReal[i] = realToConvert[vlength-i-1];
+        }
+        return dretVal;
+    }
+} 
+
+
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

@@ -10,6 +10,7 @@
 ########################################################################
 # Compilers and dependences
 ########################################################################
+
 AR=ar ruc
 
 CC=gcc
@@ -25,8 +26,8 @@ TESTLIB=lib/libfasptest.a
 ########################################################################      
 # Compiling options                                                             
 ########################################################################        
-BOPT=-g -pg -O0 -Wall
 
+BOPT=-g -pg -O0 -Wall
 COPTS=$(BOPT)
 CDEFS=
 CINCLUDES=$(INCLUDE)
@@ -40,43 +41,19 @@ FFLAGS=$(FDEFS) $(FOPTS) $(FINCLUDES)
 ########################################################################
 # Set libraries
 ########################################################################
+
 LIBS=$(TESTLIB) $(FASPLIB)
 
 ########################################################################
 # Load user-defined parameters
 ########################################################################
+
 include ${FASPDIR}/base/make.inc
 
 ########################################################################
-# Link options
+# Options for building libraries
 ########################################################################
-LINKOPTS=$(BOPT)
-CLFLAGS=$(LINKOPTS) $(LIBS) -lstdc++
-FLFLAGS=$(LINKOPTS) $(LIBS) -lm
 
-########################################################################
-# Rules for compiling the source files
-########################################################################
-.SUFFIXES: .c .cc .cpp .for .f .f77 .f90 .f95
-#
-FSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.for))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f77))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f90))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f95))
-CSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.c))
-CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cc))
-CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cpp))
-#
-OBJSF := $(patsubst %.for,%.o,$(FSRC))
-OBJSF += $(patsubst %.f,%.o,$(FSRC))
-OBJSF += $(patsubst %.f77,%.o,$(FSRC))
-OBJSF += $(patsubst %.f90,%.o,$(FSRC))
-OBJSF += $(patsubst %.f95,%.o,$(FSRC))
-OBJSC := $(patsubst %.c,%.o,$(CSRC))
-OBJSC += $(patsubst %.cc,%.o,$(CSRC))
-OBJSC += $(patsubst %.cpp,%.o,$(CSRC))
-#
 .for.o:
 	$(FC) -c $< -o $@ $(FFLAGS) 
 	$(AR) $(TESTLIB) $@
@@ -109,6 +86,18 @@ OBJSC += $(patsubst %.cpp,%.o,$(CSRC))
 	$(CPP) -c $< -o $@ $(CFLAGS) 
 	$(AR) $(TESTLIB) $@
 #
+.C.o:
+	$(CPP) -c $< -o $@ $(CFLAGS) 
+	$(AR) $(TESTLIB) $@
+
+########################################################################
+# Link options
+########################################################################
+
+LINKOPTS=$(BOPT)
+CLFLAGS=$(LINKOPTS) $(LIBS) -lstdc++
+FLFLAGS=$(LINKOPTS) $(LIBS) -lm
+
 ########################################################################
 # List of all programs to be compiled
 ########################################################################

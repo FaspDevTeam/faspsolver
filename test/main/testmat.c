@@ -5,6 +5,7 @@
  *
  *		Created by Chensong Zhang on 03/31/2009.
  *      Modified by Chensong Zhang on 09/02/2011.
+ *      Modified by Chensong Zhang on 12/26/2012.
  *
  *------------------------------------------------------
  *
@@ -66,7 +67,7 @@ int main(int argc, const char * argv[])
 	
 	// Output matrix in COO format	
 	char *matfile="out/matrix.out";	/* Output the matrix in coordinate format */	
-	fasp_dcsr_write(matfile, &A);
+	fasp_dcoo_write(matfile, &A);
 	
     // Clean up memory
     fasp_dcsr_free(&A);

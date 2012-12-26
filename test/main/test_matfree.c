@@ -61,7 +61,6 @@ int main (int argc, const char * argv[])
     
     /* Local Variables */
     itsolver_param itparam;      // input parameters for iterative solvers
-    AMG_param      amgparam; 	 // input parameters for AMG
     dCSRmat        A;            // coefficient matrix
     dvector        b, x, sol;    // rhs, numerical sol, exact sol
     INT            indp;         // index for test problems
@@ -120,60 +119,6 @@ int main (int argc, const char * argv[])
                 
                 // Read A in MatrixMarket SYM COO format.
                 fasp_dmtxsym_read("../data/nos7.mtx", &A);
-                
-                // Generate an exact solution randomly
-                sol = fasp_dvec_create(A.row);
-                fasp_dvec_rand(A.row, &sol);
-                
-                // Form the right-hand-side b = A*sol
-                b = fasp_dvec_create(A.row);
-                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-                
-                break;
-                
-            case 4: //     - Problem 4. 128X128 5pt FD for Poisson
-                
-                printf("128X128 5-point finite difference for Poisson");
-                printf("\n=====================================================\n");
-                
-                // Read A and b from two files in IJ format.
-                fasp_dcsr_read("data_test/mat_csr_128X128.dat", &A);
-                
-                // Generate an exact solution randomly
-                sol = fasp_dvec_create(A.row);
-                fasp_dvec_rand(A.row, &sol);
-                
-                // Form the right-hand-side b = A*sol
-                b = fasp_dvec_create(A.row);
-                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-                
-                break;
-                
-            case 5: //     - Problem 5. 256X256 5pt FD for Poisson
-                
-                printf("256X256 5-point finite difference for Poisson");
-                printf("\n=====================================================\n");
-                
-                // Read A and b from two files in IJ format.
-                fasp_dcsr_read("data_test/mat_csr_256X256.dat", &A);
-                
-                // Generate an exact solution randomly
-                sol = fasp_dvec_create(A.row);
-                fasp_dvec_rand(A.row, &sol);
-                
-                // Form the right-hand-side b = A*sol
-                b = fasp_dvec_create(A.row);
-                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-                
-                break;
-                
-            case 6: //     - Problem 6. 512X512 5pt FD for Poisson
-                
-                printf("512X512 5-point finite difference for Poisson");
-                printf("\n=====================================================\n");
-                
-                // Read A and b from two files in IJ format.
-                fasp_dcsr_read("data_test/mat_csr_512X512.dat", &A);
                 
                 // Generate an exact solution randomly
                 sol = fasp_dvec_create(A.row);

@@ -566,6 +566,14 @@ double fasp_aux_change_endian8 (double x);
 
 double fasp_aux_bbyteToldouble (unsigned char bytes[]);
 
+INT endian_convert_int(const INT index,
+                       INT ilength,
+                       INT endianflag);
+
+REAL endian_convert_real(const REAL value,
+                         INT vlength,
+                         INT endianflag);
+
 
 /*-------- In file: eigen.c --------*/
 
@@ -699,61 +707,58 @@ INT fasp_amg_interp1 (dCSRmat *A,
 
 /*-------- In file: io.c --------*/
 
-void fasp_dcsrvec2_read (char *filemat, 
-                         char *filerhs, 
-                         dCSRmat *A, 
-                         dvector *b );
-
 void fasp_dcsrvec1_read (char *filename,
                          dCSRmat *A,
                          dvector *b);
 
-void fasp_dcsr_read (char *filename, 
+void fasp_dcsrvec2_read (char *filemat,
+                         char *filerhs,
+                         dCSRmat *A,
+                         dvector *b );
+
+void fasp_dcoo_read (char *filename,
                      dCSRmat *A);
 
-void fasp_dcoo_read (char *filename, 
+void fasp_dmtx_read (char *filename,
                      dCSRmat *A);
 
-void fasp_dmtx_read (char *filename, 
-                     dCSRmat *A);
-
-void fasp_dmtxsym_read (char *filename, 
+void fasp_dmtxsym_read (char *filename,
                         dCSRmat *A);
 
 void fasp_dstr_read (char *filename,
                      dSTRmat *A);
 
-void fasp_dbsr_read (char *filename, 
+void fasp_dbsr_read (char *filename,
                      dBSRmat *A);
 
 void fasp_dvecind_read (char *filename,
                         dvector *b);
 
-void fasp_dvec_read (char *filename, 
+void fasp_dvec_read (char *filename,
                      dvector *b);
 
-void fasp_ivecind_read (char *filename, 
+void fasp_ivecind_read (char *filename,
                         ivector *b);
 
-void fasp_ivec_read (char *filename, 
+void fasp_ivec_read (char *filename,
                      ivector *b);
 
-void fasp_dcsrvec2_write (char *filemat, 
-                          char *filerhs, 
-                          dCSRmat *A, 
+void fasp_dcsrvec2_write (char *filemat,
+                          char *filerhs,
+                          dCSRmat *A,
                           dvector *b );
 
 void fasp_dcsrvec1_write (char *filename,
                           dCSRmat *A,
                           dvector *b);
 
-void fasp_dcsr_write (char *filename, 
+void fasp_dcoo_write (char *filename,
                       dCSRmat *A);
 
-void fasp_dstr_write (char *filename, 
+void fasp_dstr_write (char *filename,
                       dSTRmat *A);
 
-void fasp_dbsr_write (char *filename, 
+void fasp_dbsr_write (char *filename,
                       dBSRmat *A);
 
 void fasp_dvec_write (char *filename,
@@ -762,16 +767,36 @@ void fasp_dvec_write (char *filename,
 void fasp_dvecind_write (char *filename,
                          dvector *vec);
 
-void fasp_ivec_write (char *filename, 
+void fasp_ivec_write (char *filename,
                       ivector *vec);
 
-void fasp_dvec_print (INT n, 
-                      dvector *u) ;
+void fasp_dvec_print (INT n,
+                      dvector *u);
 
-void fasp_ivec_print (INT n, 
-                      ivector *u) ;
+void fasp_ivec_print (INT n,
+                      ivector *u);
 
 void fasp_dcsr_print (dCSRmat *A);
+
+void fasp_dcoo_print (dCSRmat *A);
+
+void fasp_dbsr_print (dBSRmat *A);
+
+void fasp_dstr_print (dCSRmat *A);
+
+void fasp_matrix_read (char *filename,
+                       void *A);
+
+void fasp_matrix_write (char *filename,
+					    void *A,
+                        INT  flag);
+
+void fasp_vector_read(char *filerhs,
+                      void *b);
+
+void fasp_vector_write(char *filerhs,
+		               void *b,
+			           INT  flag);
 
 
 /*-------- In file: itsolver_bcsr.c --------*/
