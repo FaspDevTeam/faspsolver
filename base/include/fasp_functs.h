@@ -566,13 +566,13 @@ double fasp_aux_change_endian8 (double x);
 
 double fasp_aux_bbyteToldouble (unsigned char bytes[]);
 
-INT endian_convert_int(const INT index,
-                       INT ilength,
-                       INT endianflag);
+INT endian_convert_int(const INT inum,
+                       const INT ilength,
+                       const INT endianflag);
 
-REAL endian_convert_real(const REAL value,
-                         INT vlength,
-                         INT endianflag);
+REAL endian_convert_real (const REAL rnum,
+                          INT vlength,
+                          INT endianflag);
 
 
 /*-------- In file: eigen.c --------*/
@@ -716,6 +716,9 @@ void fasp_dcsrvec2_read (char *filemat,
                          dCSRmat *A,
                          dvector *b );
 
+void fasp_dcsr_read (char *filename,
+                     dCSRmat *A);
+
 void fasp_dcoo_read (char *filename,
                      dCSRmat *A);
 
@@ -743,14 +746,14 @@ void fasp_ivecind_read (char *filename,
 void fasp_ivec_read (char *filename,
                      ivector *b);
 
+void fasp_dcsrvec1_write (char *filename,
+                          dCSRmat *A,
+                          dvector *b);
+
 void fasp_dcsrvec2_write (char *filemat,
                           char *filerhs,
                           dCSRmat *A,
                           dvector *b );
-
-void fasp_dcsrvec1_write (char *filename,
-                          dCSRmat *A,
-                          dvector *b);
 
 void fasp_dcoo_write (char *filename,
                       dCSRmat *A);
