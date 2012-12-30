@@ -1427,6 +1427,8 @@ void fasp_precond_nl_amli (REAL *r,
                            REAL *z, 
                            void *data);
 
+void fasp_precond_free (SHORT precond_type, precond *pc);
+
 
 /*-------- In file: precond_str.c --------*/
 

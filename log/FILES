@@ -18,7 +18,7 @@
      335 ./base/src/checkmat.c
      413 ./base/src/coarsening_cr.c
     1702 ./base/src/coarsening_rs.c
-     128 ./base/src/convert.c
+     156 ./base/src/convert.c
       71 ./base/src/eigen.c
      102 ./base/src/famg.c
      284 ./base/src/fmgcycle.c
@@ -31,7 +31,7 @@
      215 ./base/src/init.c
      650 ./base/src/input.c
     2329 ./base/src/interpolation.c
-    2665 ./base/src/io.c
+    2666 ./base/src/io.c
      130 ./base/src/itsolver_bcsr.c
      472 ./base/src/itsolver_bsr.c
      581 ./base/src/itsolver_csr.c
@@ -56,7 +56,7 @@
      852 ./base/src/pminres.c
      457 ./base/src/pminres_mf.c
      626 ./base/src/precond_bsr.c
-     543 ./base/src/precond_csr.c
+     597 ./base/src/precond_csr.c
     1731 ./base/src/precond_str.c
      613 ./base/src/pvfgmres.c
      321 ./base/src/pvfgmres_mf.c
@@ -86,9 +86,9 @@
      142 ./base/include/doxygen.h
      980 ./base/include/fasp.h
      556 ./base/include/fasp_block.h
-    2386 ./base/include/fasp_functs.h
+    2391 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      199 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   63953 total
+   64041 total
