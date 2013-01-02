@@ -16,8 +16,8 @@ Documentation
 [ 0.9.0 ] write a short user's guide -- keep it simple
 [ 0.9.8 ] generate reference manual using Doxygen
 [ 0.9.8 ] make the FASP webpage ready
-[       ] add details for building and installation using SCons and VS
-[       ] add details for GPU version 
+[ 1.1.5 ] add details for building and installation using SCons and VS
+[       ] add details for the GPU version
 
 ========================
 Structure
@@ -38,7 +38,7 @@ Structure
 GMG 	
 ========================
 
-[ 08/12 ] add matrix-free Poisson GMG solver -- n = 2^L (Ludmil)
+[       ] add matrix-free Poisson GMG solver -- n = 2^L (Ludmil)
 [       ] add support for general n (Ludmil)
 [       ] tabulate convergence rate of V-cycle (Ludmil)
  
@@ -65,7 +65,7 @@ AMG
 [       ] LAMG's aggregation scheme (Xiaozhe)
 
 [ 0.8.6 ] standard interpolation
-[ 09/15 ] polynomial interpolation -- vector preserve (Xiaozhe)
+[       ] polynomial interpolation -- vector preserve (Xiaozhe)
 [       ] multipass interpolation
 [       ] long-distance interpolation
 [       ] bootstrap interpolation
@@ -84,9 +84,9 @@ Iterative Methods
 [       ] add support for SymCSR format
 [       ] further study CSRL format and extend it
 
-[ 09/15 ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
 [ 1.1.2 ] add matrix-free iterative methods
-[ 11/05 ] test SpBLAS implementations in standard libraries (Chunsheng)
+[       ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
+[       ] test SpBLAS implementations in standard libraries (Chunsheng)
 [       ] implement right preconditioning (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
@@ -102,8 +102,8 @@ Performance Test
 [ 0.9.0 ] compare performance with hypre -- need to do it again for the new versions
 [ 0.1.1 ] compare performance with SAMG -- need to do it again for the new versions
 [ 0.9.0 ] compare performance with AGMG
-[ 11/10 ] compare performance with various of compilers on different systems (Chunsheng)
-[ 11/10 ] compare performance with compiler options (Chunsheng)
+[       ] compare performance with various of compilers on different systems (Chunsheng)
+[       ] compare performance with compiler options (Chunsheng)
 
 ========================
 Test and Debug
@@ -144,8 +144,8 @@ OpenMP Support
 [ 0.9.6 ] OMP and serial functions use same interface -- preprocessing
 [ 0.9.5 ] make a uniform OpenMP version
 [ 0.9.5 ] profile and optimize OMP code
-[ 10/20 ] Finish OpenMP vesion for some remnant subroutine, such as fasp_blas_dcsr_rap_agg (Chunsheng)
-[ 10/30 ] add black-red smoothing to OMP version (Chunsheng)
+[ 1.1.4 ] Finish OpenMP vesion for some subroutines, such as fasp_blas_dcsr_rap_agg
+[ 1.1.4 ] add black-red smoothing to OMP version
 [       ] reconstruct some OMP version, some could be simple
 
 ========================
@@ -167,3 +167,6 @@ Bug Fixes
 [ 0.8.9 ] remove sevearl obsolete functions
 [ 1.0.8 ] fix a bug in BiCGstab: silent exit when divided by zero
 [ 1.1.0 ] fix a bug in vs08 debug environment
+[ 1.1.3 ] fix a potential bug in Aggregation AMG
+[ 1.1.4 ] fix a bug in OMP EM-AMG
+[ 1.1.5 ] fix a bug in SA setup

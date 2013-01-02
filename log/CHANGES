@@ -1,11 +1,12 @@
 File Name: CHANGES
 
-12/26/2012 FASP 1.1.6:
+01/02/2013 FASP 1.1.6:
 - Modify library dependence order in Makefile's. 
 - Revise make.inc to include source compiling rules.
 - Add i/o routines for binary file.
 - Add a uniform i/o routine for ASCII and Binary file formats.
-- Add precond_free to free up memory used by preconditioner. 
+- Add precond_free to free up memory used by preconditioner.
+- Update README and User Guide.
 
 11/26/2012 FASP 1.1.5:
 - Fix the SuperLU interface.
