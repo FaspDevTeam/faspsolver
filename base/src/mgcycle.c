@@ -69,8 +69,8 @@ void fasp_solver_mgcycle (AMG_data *mgl,
         if (l<param->ILU_levels) {
             fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
-        else if (l<mgl->schwarz_levels){
-			switch (mgl[l].schwarz.schwarz_type){
+        else if (l<mgl->schwarz_levels) {
+			switch (mgl[l].schwarz.schwarz_type) {
 				case 3:
 					fbgs2ns_(&(mgl[l].schwarz.A.row),
                              mgl[l].schwarz.A.IA,
@@ -198,8 +198,8 @@ void fasp_solver_mgcycle (AMG_data *mgl,
         if (l<param->ILU_levels) {
             fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
-        else if (l<mgl->schwarz_levels){
-			switch (mgl[l].schwarz.schwarz_type){
+        else if (l<mgl->schwarz_levels) {
+			switch (mgl[l].schwarz.schwarz_type) {
                 case 3:
                     bbgs2ns_(&(mgl[l].schwarz.A.row),
                              mgl[l].schwarz.A.IA,

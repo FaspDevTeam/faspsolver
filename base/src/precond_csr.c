@@ -401,7 +401,6 @@ void fasp_precond_schwarz(REAL *r,
     
 }
 
-
 /**
  * \fn void fasp_precond_amg (REAL *r, REAL *z, void *data)
  *

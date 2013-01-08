@@ -35,7 +35,7 @@ static void form_tentative_p_bsr (ivector *vertices,
     tentp->nb = mgl->A.nb;
     INT nb2 = tentp->nb * tentp->nb;
     
-    tentp->IA  = (INT*)fasp_mem_calloc(tentp->ROW+1,sizeof(INT));
+    tentp->IA  = (INT*)fasp_mem_calloc(tentp->ROW+1, sizeof(INT));
     
     // local variables
     INT * IA = tentp->IA;
@@ -57,7 +57,7 @@ static void form_tentative_p_bsr (ivector *vertices,
     // allocate
     tentp->NNZ = j;
     tentp->JA = (INT*)fasp_mem_calloc(tentp->NNZ, sizeof(INT));
-    tentp->val = (REAL*)fasp_mem_calloc(tentp->NNZ*nb2,sizeof(REAL));
+    tentp->val = (REAL*)fasp_mem_calloc(tentp->NNZ*nb2, sizeof(REAL));
     
     JA = tentp->JA;
     val = tentp->val;

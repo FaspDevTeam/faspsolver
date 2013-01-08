@@ -8,7 +8,7 @@
 
 # User compiling options 
 # For reasonable speed, uncomment the following line; you may try -O3 instead of -O2.
-BOPT=-O2 -funroll-loops -ftree-vectorize -ffast-math
+# BOPT=-O2 -funroll-loops -ftree-vectorize -ffast-math
 
 # Uncomment the following line to turn on OpenMP version
 # BOPT+=-fopenmp
@@ -16,28 +16,3 @@ BOPT=-O2 -funroll-loops -ftree-vectorize -ffast-math
 # User preprocessing definitions
 # CDEFS+=xx
 # FDEFS+=xx
-
-# Rules for compiling the source files
-.SUFFIXES: .c .cc .cpp .C .for .f .f77 .f90 .f95
-#
-FSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.for))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f77))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f90))
-FSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.f95))
-CSRC := $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.c))
-CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cc))
-CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.cpp))
-CSRC += $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.C))
-FSRC += $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*.f))
-CSRC += $(foreach DIR,$(EXTDIR),$(wildcard $(DIR)/*.c))
-#
-OBJSF := $(patsubst %.for,%.o,$(FSRC))
-OBJSF += $(patsubst %.f,%.o,$(FSRC))
-OBJSF += $(patsubst %.f77,%.o,$(FSRC))
-OBJSF += $(patsubst %.f90,%.o,$(FSRC))
-OBJSF += $(patsubst %.f95,%.o,$(FSRC))
-OBJSC := $(patsubst %.c,%.o,$(CSRC))
-OBJSC += $(patsubst %.cc,%.o,$(CSRC))
-OBJSC += $(patsubst %.cpp,%.o,$(CSRC))
-OBJSC += $(patsubst %.C,%.o,$(CSRC))

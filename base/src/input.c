@@ -27,7 +27,7 @@ void fasp_param_input (char *filenm,
                        input_param *Input)
 {
     char     buffer[500]; // Note: max number of char for each line!
-    INT      val;
+    int      val;
     SHORT    status = SUCCESS;
     
     // set default input parameters
@@ -44,9 +44,9 @@ void fasp_param_input (char *filenm,
     }
     
     while ( status == SUCCESS ) {
-        INT   ibuff; 
-        REAL  dbuff;
-        char  sbuff[500];
+        int     ibuff;
+        double  dbuff;
+        char    sbuff[500];
     
         val = fscanf(fp,"%s",buffer);
         if (val==EOF) break;

@@ -26,13 +26,15 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
 
 /*-------- In file: amg_setup_rs.c --------*/
 
-void  dCSRmat_Division_Groups(dCSRmat A,INT *result,INT *groups);
+void dCSRmat_Division_Groups(dCSRmat A,
+                             INT *result,
+                             INT *groups);
 
-SHORT fasp_amg_setup_rs (AMG_data *mgl, 
+SHORT fasp_amg_setup_rs (AMG_data *mgl,
                          AMG_param *param);
 
-INT fasp_amg_setup_rs_omp (AMG_data *mgl, 
-                           AMG_param *param) ;
+INT fasp_amg_setup_rs_omp (AMG_data *mgl,
+                           AMG_param *param);
 
 
 /*-------- In file: amg_setup_sa.c --------*/
@@ -532,30 +534,25 @@ INT fasp_amg_coarsening_cr (INT i_0,
 
 /*-------- In file: coarsening_rs.c --------*/
 
-INT fasp_amg_coarsening_rs (dCSRmat *A, 
-                            ivector *vertices, 
+INT fasp_amg_coarsening_rs (dCSRmat *A,
+                            ivector *vertices,
                             dCSRmat *P,
                             iCSRmat *S,
                             AMG_param *param);
 
-void remove_node (LinkList *LoL_head_ptr, 
+void remove_node (LinkList *LoL_head_ptr,
                   LinkList *LoL_tail_ptr,
-                  INT measure, 
-                  INT index, 
-                  INT *lists, 
+                  INT measure,
+                  INT index,
+                  INT *lists,
                   INT *where);
 
-void enter_list (LinkList *LoL_head_ptr, 
+void enter_list (LinkList *LoL_head_ptr,
                  LinkList *LoL_tail_ptr,
-                 INT measure, 
-                 INT index, 
-                 INT *lists, 
+                 INT measure,
+                 INT index,
+                 INT *lists,
                  INT *where);
-
-void generate_S_rs (dCSRmat *A, 
-                    iCSRmat *S, 
-                    REAL epsilon_str, 
-                    INT coarsening_type);
 
 
 /*-------- In file: convert.c --------*/
@@ -691,16 +688,16 @@ void fasp_param_input (char *filenm,
 
 /*-------- In file: interpolation.c --------*/
 
-SHORT fasp_amg_interp (dCSRmat *A, 
-                       ivector *vertices, 
-                       dCSRmat *P, 
+SHORT fasp_amg_interp (dCSRmat *A,
+                       ivector *vertices,
+                       dCSRmat *P,
 					   iCSRmat *S,
                        AMG_param *param);
 
-INT fasp_amg_interp1 (dCSRmat *A, 
-                      ivector *vertices, 
-                      dCSRmat *P, 
-                      AMG_param *param, 
+INT fasp_amg_interp1 (dCSRmat *A,
+                      ivector *vertices,
+                      dCSRmat *P,
+                      AMG_param *param,
                       iCSRmat *S,
                       INT *icor_ysk);
 

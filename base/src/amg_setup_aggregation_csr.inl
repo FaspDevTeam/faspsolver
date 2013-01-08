@@ -236,8 +236,8 @@ static void form_tentative_p (ivector *vertices,
     tentp->IA  = (INT *)fasp_mem_calloc(tentp->row+1,sizeof(INT));    
     
     // local variables
-    INT * IA = tentp->IA;
-    INT * JA; 
+    INT  *IA = tentp->IA;
+    INT  *JA;
     REAL *val; 
     INT  *vval = vertices->val;
     

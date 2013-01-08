@@ -921,7 +921,7 @@ void fasp_dcsr_compress (dCSRmat *A,
     
     // second pass: generate the index and element to B
     if ( use_openmp ) {
-        int myid, mybegin, myend;
+        INT myid, mybegin, myend;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, i, mybegin, myend)
 #endif

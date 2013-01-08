@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+01/07/2013 FASP 1.1.7:
+- Fix unmatch brackets in OMP version.
+- Fix a bunch of bugs when using "long int" as INT-type in AMG and related.
+- Still need to fix more problems when using "long int" as INT.
+
 01/02/2013 FASP 1.1.6:
 - Modify library dependence order in Makefile's. 
 - Revise make.inc to include source compiling rules.
