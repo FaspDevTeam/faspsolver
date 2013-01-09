@@ -27,7 +27,7 @@ unsigned INT  nfail;    /**< number of failed tests */
 /**
  * \fn static void check_solu(dvector *x, dvector *sol, double tol)
  *
- * This function compares x and sol to a given tolerance tol. 
+ * \brief This function compares x and sol to a given tolerance tol. 
  */
 static void check_solu(dvector *x, dvector *sol, double tol)
 {
@@ -68,7 +68,7 @@ int main (int argc, const char * argv[])
     dvector        b, x, sol;    // rhs, numerical sol, exact sol 
     INT            indp;         // index for test problems
     
-    time_t         lt  = time(NULL);
+    time_t         lt = time(NULL);
     
     printf("\n\n");
     printf("------------------------- Test starts at -------------------------\n");
@@ -80,7 +80,7 @@ int main (int argc, const char * argv[])
     /*******************************************/
     /* Step 1. Get matrix and right-hand side  */ 
     /*******************************************/
-    for ( indp = 1; indp <= num_prob; indp++ ) {        
+    for ( indp = 1; indp <= num_prob; indp++ ) {
         
         printf("\n=====================================================\n");        
         printf("Test Problem Number %d ...\n", indp);	
@@ -97,7 +97,7 @@ int main (int argc, const char * argv[])
                 
                 // Read ref. sol. from a non-indexed vec file.
                 fasp_dvecind_read("../data/sol_FD.dat", &sol);
-                
+
                 break;
                 
             case 2: //     - Problem 2. P1 FE for Poisson.
@@ -140,8 +140,8 @@ int main (int argc, const char * argv[])
         fasp_check_symm(&A);     // check symmetry
         fasp_check_diagpos(&A);  // check sign of diagonal entries
         fasp_check_diagdom(&A);  // check diagonal dominance
-        
-        /*****************************/	
+
+        /*****************************/
         /* Step 3. Solve the system  */ 
         /*****************************/
         fasp_dvec_alloc(b.row, &x);  // allocate mem for numerical solution
@@ -161,7 +161,7 @@ int main (int argc, const char * argv[])
             
             check_solu(&x, &sol, tolerance);
         }
-        
+
         if ( indp==1 || indp==2 || indp==3 ) {
             /* AMG V-cycle (Standard interpolation) with GS smoother as a solver */			
             printf("------------------------------------------------------------------\n");
@@ -544,14 +544,14 @@ int main (int argc, const char * argv[])
             
             check_solu(&x, &sol, tolerance);
         }
-#endif	
-        
+#endif
+
         /* clean up memory */
         fasp_dcsr_free(&A);
         fasp_dvec_free(&b);
         fasp_dvec_free(&x);
-        fasp_dvec_free(&sol);	
-        
+        fasp_dvec_free(&sol);
+
     } // end of for indp
     
 	/* all done */

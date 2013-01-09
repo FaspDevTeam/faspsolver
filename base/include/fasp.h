@@ -48,7 +48,7 @@
  * \brief For Fortran compatibilty 
  */
 #define SHORT            short  /**< short integer type */
-#define INT              int    /**< regular integer type */
+#define INT              int    /**< regular integer type: int or long */
 #define LONG             long   /**< long integer type */ 
 #define REAL             double /**< float type */
 

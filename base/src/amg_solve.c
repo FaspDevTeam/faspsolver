@@ -42,7 +42,7 @@ INT fasp_amg_solve (AMG_data *mgl,
     const REAL    sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
 
     // local variables
-    REAL solveduration, solve_start, solve_end;
+    REAL solve_time, solve_start, solve_end;
 
     fasp_gettime(&solve_start);
 
@@ -92,8 +92,8 @@ INT fasp_amg_solve (AMG_data *mgl,
                    iter, relres1);
         
 	fasp_gettime(&solve_end);
-        solveduration = solve_end - solve_start;
-        print_cputime("AMG solve",solveduration);
+        solve_time = solve_end - solve_start;
+        print_cputime("AMG solve",solve_time);
     }
     
 #if DEBUG_MODE
@@ -129,7 +129,7 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
     const SHORT  print_level = param->print_level;
     const REAL   tol = param->tol;
     const REAL   sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
-    REAL         solve_start, solve_end, solveduration;
+    REAL         solve_start, solve_end, solve_time;
     
     // local variables
     REAL         relres1=BIGREAL, absres0=BIGREAL, absres, factor;    
@@ -175,8 +175,8 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
                    iter, relres1);
     
         fasp_gettime(&solve_end);
-        solveduration = solve_end - solve_start;
-        print_cputime("AMLI solve",solveduration);
+        solve_time = solve_end - solve_start;
+        print_cputime("AMLI solve",solve_time);
     }
     
 #if DEBUG_MODE
@@ -212,7 +212,7 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
     const SHORT   print_level = param->print_level;
     const REAL    tol = param->tol;
     const REAL    sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
-    REAL          solve_start, solve_end, solveduration;  
+    REAL          solve_start, solve_end, solve_time;  
 
     // local variables
     REAL          relres1=BIGREAL, absres0=BIGREAL, absres, factor;    
@@ -254,8 +254,8 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
             printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
     
         fasp_gettime(&solve_end);
-        solveduration = solve_end - solve_start;
-        print_cputime("Nonlinear AMLI solve",solveduration);
+        solve_time = solve_end - solve_start;
+        print_cputime("Nonlinear AMLI solve",solve_time);
     }
     
 #if DEBUG_MODE
@@ -288,7 +288,7 @@ void fasp_famg_solve (AMG_data *mgl,
     
     const SHORT  print_level = param->print_level;
     const REAL   sumb = fasp_blas_dvec_norm2(b); // L2norm(b)    
-    REAL         solve_start, solve_end, solveduration;
+    REAL         solve_start, solve_end, solve_time;
 
     // local variables
     REAL         relres1=BIGREAL, absres;    
@@ -314,8 +314,8 @@ void fasp_famg_solve (AMG_data *mgl,
     if (print_level>PRINT_NONE) {
         printf("FMG finishes with relative residual %e.\n", relres1);
         fasp_gettime(&solve_end);
-        solveduration = solve_end - solve_start;
-        print_cputime("FMG solve",solveduration);
+        solve_time = solve_end - solve_start;
+        print_cputime("FMG solve",solve_time);
     }
     
 #if DEBUG_MODE
