@@ -1,5 +1,5 @@
-# This is the included file for the main Makefile -- put your localization definitions here.
-# But do not check in your changes to the repository. :D
+# This is the included file by the main Makefile. Please put your localization 
+# definitions here. But do not check in your changes to the repository. :D
 
 # User compilers
 # CC=icc
@@ -7,15 +7,17 @@
 # FC=ifort
 
 # User compiling options 
-# For reasonable speed, uncomment the following line; you may try -O3 instead of -O2.
-BOPT=-O2 -funroll-loops -ftree-vectorize -ffast-math
+# For reasonable speed, uncomment the following line; you may try -O3 instead 
+# of -O2. Also, "-ffast-math", "-msse2" or "-maltivec" can be applied to allow 
+# vectorization.
+BOPT=-O2 -funroll-loops -ftree-vectorize
 
 # Uncomment the following line to turn on OpenMP version
 # BOPT+=-fopenmp
 
 # User preprocessing definitions
-# CDEFS+=xx
-# FDEFS+=xx
+# CDEFS+=
+# FDEFS+=
 
 # Rules for compiling the source files
 .SUFFIXES: .c .cc .cpp .C .for .f .f77 .f90 .f95

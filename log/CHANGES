@@ -6,6 +6,7 @@ File Name: CHANGES
 - Fix a bunch of bugs in regression when using "long int". 
 - There is a bug in ILU when using "long int". 
 - There might be non-matching types in i/o when using "long int".
+- Test different optimization parameters for gcc.
 
 01/02/2013 FASP 1.1.6:
 - Modify library dependence order in Makefile's. 
