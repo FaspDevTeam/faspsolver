@@ -2,9 +2,11 @@
 # definitions here. But do not check in your changes to the repository. :D
 
 # User compilers
+# FASP has been tested with many different compilers; see README for details.
 # CC=icc
 # CPP=icpc
 # FC=ifort
+# FC=g95
 
 # User compiling options 
 # For reasonable speed, uncomment the following line; you may try -O3 instead 

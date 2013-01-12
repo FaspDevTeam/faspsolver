@@ -39,16 +39,18 @@ gfortan and gcc, respectively; see Makefile for details.
 This package has been tested with: 
 
 --Linux
-    C/C++:   gcc-4.2, gcc-4.4, gcc-4.5, gcc-4.6; 
-    Fortran: gfortran-4.4, gfortran-4.5, gfortran-4.6, g95-0.92.
+    C/C++:   gcc-4.2.x, gcc-4.4.x, gcc-4.5.x, gcc-4.6.x; 
+    Fortran: gfortran-4.4.x, gfortran-4.5.x, gfortran-4.6.x, 
+             g95-0.92, g95-0.93, ifort-11.x.
 
 --Windows XP and Windows 7
     C/C++:   VC++9.0, icc-11.1.x, icc-12.0.x;
     Fortran: ifort-11.1.x, ifort-12.0.x. 
 
 --Mac OS X
-    C/C++:   gcc-4.4, gcc-4.5, gcc-4.6, icc-11.x; 
-    Fortran: gfortran-4.4, gfortran-4.5, gfortran-4.6, g95-0.92, ifort-11.x.
+    C/C++:   gcc-4.4.x, gcc-4.5.x, gcc-4.6.x, icc-11.x; 
+    Fortran: gfortran-4.4.x, gfortran-4.5.x, gfortran-4.6.x, 
+             g95-0.92, g95-0.93.
     
 ================================
 2. Build
