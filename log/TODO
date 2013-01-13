@@ -169,4 +169,5 @@ Bug Fixes
 [ 1.1.0 ] fix a bug in vs08 debug environment
 [ 1.1.3 ] fix a potential bug in Aggregation AMG
 [ 1.1.4 ] fix a bug in OMP EM-AMG
-[ 1.1.5 ] fix a bug in SA setup
+[ 1.1.5 ] fix a potential bug in SA setup
+[       ] fix a bug during AMG setup: number of DOF could drop dramatically
