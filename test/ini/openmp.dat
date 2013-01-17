@@ -10,15 +10,11 @@ workdir = ../data/  % work directory, no more than 128 characters
 % problem, solver, and output type             %
 %----------------------------------------------%
 
-problem_num              = 512     % test problem number 
+problem_num              = 10     % test problem number 
 print_level              = 3      % how much information to print out 
-output_type              = 0      % 0 to scree | 1 to file
-solver_type              = 21      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
+output_type              = 0      % 0 to screen | 1 to file
+solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
                                   % 5 vGMRes | 6 vFGMRes | 7 GCG |
-                                  %--------------------------------------
-                                  % 21 AMG Solver | 22 FMG Solver |
-                                  %--------------------------------------
-                                  % 31 SuperLU | 32 UMFPACK | 33 MUMPS
 
 %----------------------------------------------%
 % parameters for iterative solvers             %
