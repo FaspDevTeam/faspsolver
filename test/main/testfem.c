@@ -163,6 +163,9 @@ int main (int argc, const char * argv[])
             status = ERROR_SOLVER_TYPE;
         }
 
+        for ( i=0; i<dof.row; ++i)
+			uh.val[dof.val[i]] = x.val[i];
+        
         fasp_dvec_free(&x);
     }
 	

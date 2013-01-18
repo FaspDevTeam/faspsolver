@@ -1,23 +1,33 @@
 # This is the included file by the main Makefile. Please put your localization 
 # definitions here. But do not check in your changes to the repository. :D
 
-# User compilers
-# FASP has been tested with many different compilers; see README for details.
+#==============================================================================#
+# User compilers                                                               #
+# FASP has been tested with many different compilers; see README for details.  #
+# Note: This will overwrite the seting in Makefile!!!                          #
+#==============================================================================#
 # CC=icc
 # CPP=icpc
 # FC=ifort
-# FC=g95
 
-# User compiling options 
-# For reasonable speed, uncomment the following line; you may try -O3 instead 
-# of -O2. Also, "-ffast-math", "-msse2" or "-maltivec" can be applied to allow 
-# vectorization.
+#==============================================================================#
+# User compiling options                                                       #
+# For reasonable speed, uncomment the following line; you may try -O3 instead  #
+# of -O2. Also, "-ffast-math", "-msse2" or "-maltivec" can be applied to allow #
+# vectorization.                                                               #
+# Note: This will overwrite the seting in Makefile!!!                          #
+#==============================================================================#
 BOPT=-O2 -funroll-loops -ftree-vectorize
 
-# Uncomment the following line to turn on OpenMP version
+#==============================================================================#
+# OpenMP Support                                                               #
+# Uncomment the following line to turn on OpenMP version                       #
+#==============================================================================#
 # BOPT+=-fopenmp
 
-# User preprocessing definitions
+#==============================================================================#
+# User preprocessing definitions                                               #
+#==============================================================================#
 # CDEFS+=
 # FDEFS+=
 

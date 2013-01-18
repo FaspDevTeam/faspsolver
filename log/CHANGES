@@ -1,12 +1,14 @@
 File Name: CHANGES
 
-01/08/2013 FASP 1.1.7:
+01/17/2013 FASP 1.1.7:
 - Fix unmatch brackets in OMP version.
 - Fix a bunch of bugs when using "long int" as INT-type in AMG and related.
 - Fix a bunch of bugs in regression when using "long int". 
 - There is a bug in ILU when using "long int". 
 - There might be non-matching types in i/o when using "long int".
 - Test different optimization parameters for gcc.
+- Fix a bug in testfem example.
+- Add DIAG_PREF for a couple OMP functions.
 
 01/02/2013 FASP 1.1.6:
 - Modify library dependence order in Makefile's. 

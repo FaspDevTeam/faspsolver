@@ -166,8 +166,7 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/26/2009
  *
- * \author Chunsheng Feng, Zheng Li
- * \date   09/01/2012
+ * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
 
 void fasp_smoother_dcsr_gs (dvector *u,
@@ -336,15 +335,14 @@ void fasp_smoother_dcsr_gs (dvector *u,
  * \author Zhiyang Zhou
  * \date   11/12/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/24/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012
  */
 void fasp_smoother_dcsr_gs_cf (dvector *u,
                                dCSRmat *A,
                                dvector *b,
                                INT L,
                                INT *mark,
-                               INT order)
+                               const INT order)
 {
     const INT    nrow = b->row; // number of rows
     const INT   *ia = A->IA, *ja = A->JA;
@@ -359,8 +357,9 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
     
-    // F-point first
+    // F-point first, C-point second
     if (order == -1) {
+        
         while (L--) {
             
 #ifdef _OPENMP
@@ -372,11 +371,19 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         if (mark[i] != 1) {
                             t = bval[i];
                             begin_row = ia[i], end_row = ia[i+1];
+#if DIAGONAL_PREF // Added by Chensong on 01/17/2013
+                            for (k = begin_row+1; k < end_row; k ++) {
+                                j = ja[k];
+                                t -= aj[k]*uval[j];
+                            } // end for k
+                            d = aj[begin_row];
+#else
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
                                 if (i!=j) t -= aj[k]*uval[j];
                                 else d = aj[k];
                             } // end for k
+#endif // end if DIAG_PREF                            
                             if (ABS(d) > SMALLREAL) uval[i] = t/d;
                         }
                     } // end for i
@@ -410,18 +417,27 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
             
 #ifdef _OPENMP
             if (nrow > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
+#pragma omp parallel for private(myid, mybegin, myend, i,begin_row,end_row,k,j,d) \
+            reduction(-:t)
                 for (myid = 0; myid < nthreads; myid ++) {
                     FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
                         if (mark[i] == 1) {
                             t = bval[i];
                             begin_row = ia[i], end_row = ia[i+1];
+#if DIAGONAL_PREF // Added by Chensong on 01/17/2013
+                            for (k = begin_row+1; k < end_row; k ++) {
+                                j = ja[k];
+                                t -= aj[k]*uval[j];
+                            } // end for k
+                            d = aj[begin_row];
+#else
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
                                 if (i!=j) t -= aj[k]*uval[j];
                                 else d = aj[k];
                             } // end for k
+#endif // end if DIAG_PREF
                             if (ABS(d) > SMALLREAL) uval[i] = t/d;
                         }
                     } // end for i
@@ -456,24 +472,33 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
         
     }
     
-    // C-point first
+    // C-point first, F-point second
     else {
         
         while (L--) {
 #ifdef _OPENMP
             if (nrow > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
+#pragma omp parallel for private(myid, mybegin, myend, i,begin_row,end_row,k,j,d) \
+            reduction(-:t)
                 for (myid = 0; myid < nthreads; myid ++) {
                     FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
                         if (mark[i] == 1) {
                             t = bval[i];
                             begin_row = ia[i],end_row = ia[i+1];
+#if DIAGONAL_PREF // Added by Chensong on 01/17/2013
+                            for (k = begin_row+1; k < end_row; k ++) {
+                                j = ja[k];
+                                t -= aj[k]*uval[j];
+                            } // end for k
+                            d = aj[begin_row];
+#else
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
                                 if (i!=j) t -= aj[k]*uval[j];
                                 else d = aj[k];
                             } // end for k
+#endif // end if DIAG_PREF                            
                             if (ABS(d) > SMALLREAL) uval[i] = t/d;
                         }
                     } // end for i
@@ -514,11 +539,19 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         if (mark[i] != 1) {
                             t = bval[i];
                             begin_row = ia[i],end_row = ia[i+1];
+#if DIAGONAL_PREF // Added by Chensong on 01/17/2013
+                            for (k = begin_row+1; k < end_row; k ++) {
+                                j = ja[k];
+                                t -= aj[k]*uval[j];
+                            } // end for k
+                            d = aj[begin_row];
+#else
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
                                 if (i!=j) t -= aj[k]*uval[j];
                                 else d = aj[k];
                             } // end for k
+#endif // end if DIAG_PREF
                             if (ABS(d) > SMALLREAL) uval[i] = t/d;
                         }
                     } // end for i

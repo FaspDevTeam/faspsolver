@@ -525,7 +525,8 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
         if (use_openmp) {
             INT myid, mybegin, myend;
 #ifdef _OPENMP
-#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k)
+#pragma omp parallel for private(myid, mybegin, myend, i, begin_row, end_row, k) \
+            reduction(+: temp)
 #endif
             for (myid = 0; myid < nthreads; myid++ ) {
                 FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
