@@ -413,8 +413,7 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   02/22/2011
  *
- * Modified by Chunsheng Feng ,Zheng Li
- * \date   08/29/2012
+ * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
 
 void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
@@ -471,8 +470,7 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
  * \author Chensong Zhang
  * \date   07/01/2009
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/26/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
  */
 
 void fasp_blas_dcsr_aAxpy (const REAL alpha,
@@ -525,8 +523,7 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
         if (use_openmp) {
             INT myid, mybegin, myend;
 #ifdef _OPENMP
-#pragma omp parallel for private(myid, mybegin, myend, i, begin_row, end_row, k) \
-            reduction(+: temp)
+#pragma omp parallel for private(myid, mybegin, myend, temp, i, begin_row, end_row, k)
 #endif
             for (myid = 0; myid < nthreads; myid++ ) {
                 FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
@@ -588,8 +585,7 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
  * \author Xiaozhe Hu
  * \date   02/22/2011
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   08/29/2012
+ * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
 void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
                                dCSRmat *A,
@@ -1585,8 +1581,7 @@ void fasp_blas_dcsr_rap_agg1 (dCSRmat *R,
  * \author Ludmil Zikatanov, Chensong Zhang
  * \date   05/10/2010
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/19/2012 
+ * Modified by Chunsheng Feng, Zheng Li on 10/19/2012
  *
  * \note Driver to compute triple matrix product P'*A*P using ltz CSR format.
  *       In ltx format: ia[0]=1, ja[0] and a[0] are used as usual. When called

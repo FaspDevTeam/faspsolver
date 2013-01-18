@@ -27,8 +27,7 @@
  * \author Chensong Zhang
  * \date   07/01/209
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  *
  * \note x is reused to store the resulting array.
  */
@@ -80,8 +79,7 @@ void fasp_blas_array_ax(const INT n,
  * \author Chensong Zhang
  * \date   07/01/209
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  *
  * \note y is reused to store the resulting array.
  */
@@ -163,10 +161,8 @@ void fasp_blas_array_axpy (const INT n,
  * \author Chensong Zhang
  * \date   07/01/209
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-
 void fasp_blas_array_axpyz (const INT n,
                             const REAL a,
                             REAL *x,
@@ -214,8 +210,7 @@ void fasp_blas_array_axpyz (const INT n,
  * \author Chensong Zhang
  * \date   07/01/209
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  *
  * \note y is reused to store the resulting array.
  */
@@ -307,10 +302,8 @@ REAL fasp_blas_array_dotprod(const INT n,
  * \author Chensong Zhang
  * \date   07/01/209
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-
 REAL fasp_blas_array_norm1 (const INT n,
                             REAL *x)
 {
@@ -349,10 +342,8 @@ REAL fasp_blas_array_norm1 (const INT n,
  * \author Chensong Zhang
  * \date   07/01/209
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-
 REAL fasp_blas_array_norm2 (const INT n,
                             REAL *x)
 {
@@ -391,10 +382,8 @@ REAL fasp_blas_array_norm2 (const INT n,
  * \author Chensong Zhang
  * \date   07/01/209
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   06/28/2012
+ * Modified by Chunsheng Feng, Zheng Li on 06/28/2012
  */
-
 REAL fasp_blas_array_norminf (const INT n,
                               REAL *x)
 {

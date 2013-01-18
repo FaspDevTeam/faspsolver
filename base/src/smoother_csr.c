@@ -29,8 +29,7 @@
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/26/2009
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   08/29/2012
+ * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
 void fasp_smoother_dcsr_jacobi (dvector *u,
                                 const INT i_1,
@@ -417,8 +416,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
             
 #ifdef _OPENMP
             if (nrow > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, i,begin_row,end_row,k,j,d) \
-            reduction(-:t)
+#pragma omp parallel for private(myid,mybegin,myend,i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
                     FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
@@ -478,8 +476,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
         while (L--) {
 #ifdef _OPENMP
             if (nrow > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, i,begin_row,end_row,k,j,d) \
-            reduction(-:t)
+#pragma omp parallel for private(myid,mybegin,myend,t,i,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
                     FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
@@ -602,8 +599,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
  * \author Xiaozhe Hu
  * \date   10/26/2010
  *
- * \author Chunsheng Feng, Zheng Li
- * \date   09/01/2012
+ * \author Chunsheng Feng, Zheng Li on 09/01/2012
  */
 
 void fasp_smoother_dcsr_sgs (dvector *u,
@@ -720,8 +716,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
  * \author Xiaozhe Hu
  * \date   10/26/2010
  *
- * \author Chunsheng Feng, Zheng Li
- * \date   09/01/2012
+ * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
 void fasp_smoother_dcsr_sor (dvector *u,
                              const INT i_1,
@@ -849,8 +844,7 @@ void fasp_smoother_dcsr_sor (dvector *u,
  * \author Zhiyang Zhou
  * \date   2010/11/12
  *
- * Modified by Chunsheng Feng, Zheng Li
- *\date    08/29/2012
+ * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  *
  */
 void fasp_smoother_dcsr_sor_cf (dvector *u,
@@ -1122,8 +1116,7 @@ MEMERR:
  * \author Xiaozhe Hu
  * \date   2010/11/12
  *
- * \author Chunsheng Feng, Zheng Li
- * \date   2012/09/01
+ * Modified by Chunsheng Feng, Zheng Li on 2012/09/01
  */
 
 void fasp_smoother_dcsr_kaczmarz (dvector *u,
@@ -1265,8 +1258,7 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
  * \author Xiaozhe Hu, James Brannick
  * \date   01/26/2011
  *
- * \author Chunsheng Feng, Zheng Li
- * \date   09/01/2012
+ * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
 
 void fasp_smoother_dcsr_L1diag (dvector *u,
@@ -1407,7 +1399,7 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  * \author  Chunsheng Feng, Zheng Li
  * \date    02/06/2012
  *
- * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
+ * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
@@ -2200,7 +2192,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
  * \author Xiaozhe Hu, James Brannick
  * \date   01/26/2011
  *
- * \note Not an O(N) algorithm, need to be modified!!!!
+ * \note This is NOT an O(N) algorithm, need to be modified!!!!
  */
 static dCSRmat form_contractor (dCSRmat *A,
                                 const INT smoother,
