@@ -199,6 +199,7 @@ testall:
 	make testmm
 	make testmf
 	make testf
+	make testamg
 	make testbsr
 	make testmat
 	make testrap
