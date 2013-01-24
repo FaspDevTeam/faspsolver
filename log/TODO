@@ -171,3 +171,4 @@ Bug Fixes
 [ 1.1.4 ] fix a bug in OMP EM-AMG
 [ 1.1.5 ] fix a potential bug in SA setup
 [       ] fix a bug during AMG setup: number of DOF could drop dramatically
+[       ] fix a bug in Windows release version: MINRES gives wrong results, check compiler

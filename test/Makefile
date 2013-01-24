@@ -153,6 +153,10 @@ testf:
 	$(FC) -c main/testf.f90 -o main/testf.o $(CFLAGS)
 	$(FC) -o testf.ex main/testf.o $(FLFLAGS)
 
+testamg:
+	$(CC) -c main/testamg.c -o main/testamg.o $(CFLAGS)
+	$(FC) -o testamg.ex main/testamg.o $(FLFLAGS)
+
 testbsr:
 	$(CC) -c main/testbsr.c -o main/testbsr.o $(CFLAGS)
 	$(FC) -o testbsr.ex main/testbsr.o $(FLFLAGS)
