@@ -1,9 +1,10 @@
 File Name: CHANGES
 
-01/24/2013 FASP 1.1.8:
+01/26/2013 FASP 1.1.8:
 - Modify Windows VS08 compiler options.
-- Find a bug in Windows: MINRES gives wrong results in release version.
 - Add a test problem for testing (block) AMGs.
+- Find a bug in Windows: MINRES gives wrong results in release version.
+- Find a bug in VGMRES: Might use too big "restart".
 
 01/17/2013 FASP 1.1.7:
 - Fix unmatch brackets in OMP version.

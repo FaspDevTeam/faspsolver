@@ -172,3 +172,4 @@ Bug Fixes
 [ 1.1.5 ] fix a potential bug in SA setup
 [       ] fix a bug during AMG setup: number of DOF could drop dramatically
 [       ] fix a bug in Windows release version: MINRES gives wrong results, check compiler
+[       ] fix a bug in VGMRES: "restart" might be too big
