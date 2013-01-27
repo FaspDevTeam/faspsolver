@@ -62,7 +62,7 @@
 \title{User's Guide for FASP}
 
 \author{FASP Developer Team}
-\date{Version 1.1.7} % Activate to display a given date or no date
+\date{Version 1.1.8} % Activate to display a given date or no date
 
 %\preface{a}
 
@@ -162,7 +162,8 @@ All the FASP packages are hosted on \emph{BitBucket.org}\footnote{Official websi
 \begin{center}
   \url{http://mercurial.selenic.com/downloads/}
 \end{center}
-
+%
+There are also many other third-party clients which provides Hg services, for example: EasyMercurial\footnote{Official website: \url{http://easyhg.org}} (for Windows only) and SourceTree\footnote{Official website: \url{http://www.sourcetreeapp.com}} (for Mac OS X only).
 
 As a DVCS (Distributed Version Control System) source-control software, Hg is relatively new. But compared with other tools like Git, Hg is considered \emph{friendlier} with a lower learning curve. This is despite the fact that Hg uses two distinct sets of commands and two distinct vocabularies for operations depending upon whether the repository is local or remote.
 Documentation for Hg is substantially better, including a book\footnote{The hgbook, \url{http://hgbook.red-bean.com/}}. They've also had the advantage of trying the documentation on a fairly savvy group of developers (Mozilla) who gave them lots of feedback that helped polish the rough edges.
@@ -285,7 +286,9 @@ This command will build all the examples inside tutorial. You can use ``make hel
 \section{The first example}\label{sec:ex1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method~\cite{Brandt.BrandtMcCormick.1982uq,Ruge.RugeStuben.1985ij,Ruge.RugeStuben.1987bs}; see \S\ref{sec:amg}. The stiffness matrix $A$ is symmetric positive definite (SPD), arising from the continuous piecewise linear finite element discretization of the Poisson equation $-\Delta u = f$ (with Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$.
+The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method~\cite{Brandt.BrandtMcCormick.1982uq,Ruge.RugeStuben.1985ij,Ruge.RugeStuben.1987bs}; see \S\ref{sec:amg}. The stiffness matrix $A$ is symmetric positive definite (SPD), arising from the continuous piecewise linear finite element discretization of the Poisson equation 
+$$-\Delta u = f$$ 
+(with the Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$.
 
 \begin{lstlisting}[stepnumber=1,firstnumber=1]
 /*! \file poisson-amg.c
