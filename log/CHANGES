@@ -1,6 +1,13 @@
 File Name: CHANGES
 
-01/26/2013 FASP 1.1.8:
+02/02/2013 FASP 1.2.0:
+- Fix the bug in Windows: MINRES wrong in release version; remove /ffast option.
+- Revise Makefile's.
+- Update Documentation.
+- Available online now.
+- A public version is available online at fasp.sf.net.
+
+01/19/2013 FASP 1.1.8:
 - Modify Windows VS08 compiler options.
 - Add a test problem for testing (block) AMGs.
 - Find a bug in Windows: MINRES gives wrong results in release version.

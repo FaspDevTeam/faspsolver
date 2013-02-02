@@ -1733,7 +1733,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                                dvector *b,
                                INT L,
                                INT *mark,
-                               INT order);
+                               const INT order);
 
 void fasp_smoother_dcsr_sgs (dvector *u,
                              dCSRmat *A,

@@ -34,11 +34,13 @@
  *
  * ## How to obtain FASP
  *
- * In order to coordinate our collaboration, we use HG as our version control tool. 
- * HG (Mecurial) is easy to use and it is available at all platforms. For Linux and 
- * OS X users, set up the following environment variables.
+ * The most updated release version of FASP can be downloaded from
  *
- * To obtain the FASP package, just do 
+ * http://fasp.sourceforge.net/download/faspsolver.zip
+ *
+ * We use HG (Mecurial) as our version control tool. HG is easy to use and it is available at
+ * all platforms. For people who is interested in the developer version, you can obtain the
+ * FASP package with hg: 
  * 
  * $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver 
  * 

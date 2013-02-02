@@ -16,6 +16,7 @@
 				Optimization="1000"
 				InterproceduralOptimization="1"
 				OptimizeForWindowsApplication="true"
+				FloatingPointSpeculation="0"
 				EnableMatrixMultiplyLibraryCall="1"
 			/>
 		</Configuration>
@@ -27,6 +28,7 @@
 				Optimization="1000"
 				InterproceduralOptimization="1"
 				OptimizeForWindowsApplication="true"
+				FloatingPointSpeculation="3"
 				EnableMatrixMultiplyLibraryCall="1"
 			/>
 		</Configuration>
