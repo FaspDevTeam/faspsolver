@@ -1,23 +1,23 @@
      140 ./base/src/amg.c
      117 ./base/src/amg_setup_cr.c
-     458 ./base/src/amg_setup_rs.c
+     455 ./base/src/amg_setup_rs.c
      571 ./base/src/amg_setup_sa.c
      391 ./base/src/amg_setup_ua.c
      330 ./base/src/amg_solve.c
      798 ./base/src/amlirecur.c
      267 ./base/src/array.c
      257 ./base/src/auxiliary.c
-     437 ./base/src/blas_array.c
+     426 ./base/src/blas_array.c
      197 ./base/src/blas_block.c
     2767 ./base/src/blas_bsr.c
-    1977 ./base/src/blas_csr.c
+    1973 ./base/src/blas_csr.c
      124 ./base/src/blas_csrl.c
     1481 ./base/src/blas_smat.c
     1899 ./base/src/blas_str.c
      318 ./base/src/blas_vec.c
      335 ./base/src/checkmat.c
      413 ./base/src/coarsening_cr.c
-    1702 ./base/src/coarsening_rs.c
+    1709 ./base/src/coarsening_rs.c
      156 ./base/src/convert.c
       71 ./base/src/eigen.c
      102 ./base/src/famg.c
@@ -30,8 +30,8 @@
     1257 ./base/src/ilu_setup_str.c
      215 ./base/src/init.c
      650 ./base/src/input.c
-    2329 ./base/src/interpolation.c
-    2666 ./base/src/io.c
+    2333 ./base/src/interpolation.c
+    2670 ./base/src/io.c
      130 ./base/src/itsolver_bcsr.c
      472 ./base/src/itsolver_bsr.c
      581 ./base/src/itsolver_csr.c
@@ -56,7 +56,7 @@
      852 ./base/src/pminres.c
      457 ./base/src/pminres_mf.c
      626 ./base/src/precond_bsr.c
-     597 ./base/src/precond_csr.c
+     596 ./base/src/precond_csr.c
     1731 ./base/src/precond_str.c
      613 ./base/src/pvfgmres.c
      321 ./base/src/pvfgmres_mf.c
@@ -68,7 +68,7 @@
      589 ./base/src/smat.c
     1451 ./base/src/smoother_bsr.c
       81 ./base/src/smoother_cr.c
-    2265 ./base/src/smoother_csr.c
+    2290 ./base/src/smoother_csr.c
      575 ./base/src/smoother_poly.c
     1859 ./base/src/smoother_str.c
      273 ./base/src/sparse_block.c
@@ -83,12 +83,12 @@
      438 ./base/src/vec.c
      118 ./base/src/wrapper.c
      560 ./base/include/dlmalloc.h
-     142 ./base/include/doxygen.h
+     144 ./base/include/doxygen.h
      980 ./base/include/fasp.h
      556 ./base/include/fasp_block.h
-    2391 ./base/include/fasp_functs.h
+    2388 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      199 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   64041 total
+   64061 total

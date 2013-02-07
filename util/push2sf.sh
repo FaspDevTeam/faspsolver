@@ -8,4 +8,7 @@ USERID="faspsolver"
 OPT="--delete --progress --times --exclude *~"
 
 # upload: Should be ran in doc directory with html as a subdir
+cp ../../download/.ht* htdocs/download
+cp ../../download/*.zip htdocs/download
+cp ../../download/*.pdf htdocs/download
 rsync -avz $1 ${OPT} ./htdocs ${USERID}@${SERVER}:/home/project-web/fasp

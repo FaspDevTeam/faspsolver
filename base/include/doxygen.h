@@ -31,48 +31,60 @@
  * Public License or LGPL version 3.0 or later. Some of the applications contain contributions
  * from and owned partially by other parties.
  *
+ * > For the moment, FASP is under alpha testing. If you wish to obtain a current version of
+ * > FASP or you have any questions, feel free to contact us at faspdev@gmail.com.
+ * 
+ * This software distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * See the GNU Lesser General Public License for more details.
+ *
+ */
+ 
+/**
+ * \page download Download
+ * \brief Download page for the FASP package
  *
  * ## How to obtain FASP
  *
  * The most updated release version of FASP can be downloaded from
  *
- * http://fasp.sourceforge.net/download/faspsolver.zip
+ * > http://fasp.sourceforge.net/download/faspsolver.zip
  *
  * We use HG (Mecurial) as our version control tool. HG is easy to use and it is available at
  * all platforms. For people who is interested in the developer version, you can obtain the
  * FASP package with hg: 
  * 
- * $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver 
+ * > $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver 
  * 
  * will give you the current version of the package. 
- *
- * > For the moment, FASP is under alpha testing. If you wish to obtain a current version of
- * > FASP or you have any questions, feel free to contact us at faspdev@gmail.com.
- * 
  *
  * ## Installation and Building
  *
  * This is a simple instruction on building and testing. For more details, please refer to 
- * the README files and the user's guide in "doc/". 
+ * the README files and the short
+ * <a href="http://fasp.sourceforge.net/download/userguide.pdf">\bf User's Guide</a> in "doc/". 
  *
  * To compile, you need a Fortran and a C compiler. By default, we use gfortan and gcc, 
  * respectively; see base/Makefile and base/make.in for details.
  *
  * First, you can make the FASP library in the "base/" directory: 
  *
- * $ make
+ * > $ make
  *
  * which makes the libfasp.a static library.
  *
  * If you wish to see the detailed usage of "make" or need any help, please 
  *
- * $ make help
+ * > $ make help
+ *
+ * Tutorial examples can be found in "tutorial/".
  *
  */ 
 
 
 /**
  * \page developers Developers
+ * \brief FASP developers and contributors
  *
  * Project Leader: 
  *
@@ -85,6 +97,8 @@
  * - Hu, Xiaozhe (Penn State University, USA)
  * 
  * - Li, Zheng (Xiangtan University, China)
+ *
+ * - Shu, Shi (Xiangtan University, China)
  *
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
@@ -101,8 +115,6 @@
  * - Huang, Xuehai (Shanghai Jiaotong University, China)
  *
  * - Qiao, Changhe (Penn State University, USA)
- *
- * - Shu, Shi (Xiangtan University, China)
  *
  * - Wang, Ziteng (Peking University, China)
  *
@@ -125,7 +137,8 @@
  */
    
 /**
- * \page page_comment Documentation with Doxygen
+ * \page doxygen_comment Doxygen
+ * \brief Documentation Auto-Generation
  *
  * We use Doxygen as our automatically documentation generator which will make our 
  * future maintainance minimized. You can obtain the software (Windows, Linux and 
