@@ -821,7 +821,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
 #endif
                 for(k=0;k<tmpMat.nnz;k++) {
                     A.val[k*nb*nb+num]=tmpMat.val[k];
-                }    
+                 }    
                 fasp_mem_free(tmpMat.IA);
                 fasp_mem_free(tmpMat.JA);
                 fasp_mem_free(tmpMat.val);

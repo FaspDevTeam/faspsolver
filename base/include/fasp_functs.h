@@ -673,6 +673,8 @@ void fasp_schwarz_data_free (Schwarz_data *schwarz);
 
 void fasp_amg_data_free (AMG_data *mgl);
 
+void fasp_amg_data_bsr_free (AMG_data_bsr *mgl);
+
 void fasp_ilu_data_free (ILU_data *ILUdata);
 
 void fasp_ilu_data_null (ILU_data *ILUdata);
@@ -1583,6 +1585,8 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 void fasp_blas_smat_inv_nc2 (REAL *a);
 
 void fasp_blas_smat_inv_nc3 (REAL *a);
+
+void fasp_blas_smat_inv_nc4 (REAL *a);
 
 void fasp_blas_smat_inv_nc5 (REAL *a);
 

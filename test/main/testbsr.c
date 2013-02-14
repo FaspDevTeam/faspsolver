@@ -80,65 +80,6 @@ int main (int argc, const char * argv[])
         fasp_dvec_read(filename2, &b);
     }
     
-	// Test problem 1
-	else if (problem_num == 11) {				
-        dCSRmat A;
-
-		datafile1="PNNL/test1/A.dat";
-		strcat(filename1,datafile1);
-		datafile2="PNNL/test1/b.dat";
-		strcat(filename2,datafile2);
-        
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
-        
-        Absr = fasp_format_dcsr_dbsr(&A, 6);        
-
-        fasp_dcsr_free(&A);
-    }	
-    
-	// Test problem 2
-    else if (problem_num == 12) {
-        dCSRmat A;
-        
-		datafile1="PNNL/test2/A.dat";
-		strcat(filename1,datafile1);
-		datafile2="PNNL/test3/b.dat";
-		strcat(filename2,datafile2);
-        
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
-        Absr = fasp_format_dcsr_dbsr(&A, 6);        
-        
-#if 0
-        // Form the right-hand-side b = A*sol
-        dvector sol = fasp_dvec_create(A.row);
-        fasp_dvec_set(A.row,&sol,1);
-        fasp_dvec_rand(A.row, &sol);
-        b = fasp_dvec_create(A.row);
-        fasp_blas_dcsr_mxv(&A, sol.val, b.val);             
-        fasp_dvec_free(&sol);
-#endif 
-
-        fasp_dcsr_free(&A); // free up temp matrix
-    }
-    
-	// Test problem 3
-    else if (problem_num == 13) {				
-        dCSRmat A;
-
-		datafile1="PNNL/test3/A.dat";
-		strcat(filename1,datafile1);
-		datafile2="PNNL/test3/b.dat";
-		strcat(filename2,datafile2);
-        
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
-        Absr = fasp_format_dcsr_dbsr(&A, 6);
-        
-        fasp_dcsr_free(&A); // free up temp matrix
-    }	
-    
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
@@ -196,7 +137,7 @@ int main (int argc, const char * argv[])
 		status = ERROR_SOLVER_TYPE;
         goto FINISHED;
 	}
-	
+    	
 	if (status<0) {
 		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
 	}

@@ -197,7 +197,7 @@ int main (int argc, const char * argv[])
 	}
     
     if (output_type) fclose (stdout);
-        
+            
     // Clean up memory
 	fasp_dcsr_free(&A);
 	fasp_dvec_free(&b);

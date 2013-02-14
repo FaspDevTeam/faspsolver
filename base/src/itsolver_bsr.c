@@ -262,7 +262,9 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for if(ROW>OPENMP_HOLDS)
 #endif
-    for (i=0; i<ROW; ++i) fasp_blas_smat_inv(&(diag.diag.val[i*nb2]), nb);
+    for (i=0; i<ROW; ++i){
+        fasp_blas_smat_inv(&(diag.diag.val[i*nb2]), nb);
+    }
     
     precond *pc = (precond *)fasp_mem_calloc(1,sizeof(precond));    
     pc->data = &diag;

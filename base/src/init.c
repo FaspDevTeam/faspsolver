@@ -158,6 +158,46 @@ void fasp_amg_data_free (AMG_data *mgl)
 }
 
 /**
+ * \fn void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
+ *
+ * \brief Free AMG_data_bsr data memeory space
+ *
+ * \param mgl  Pointer to the AMG_data_bsr
+ *
+ * \author Xiaozhe Hu
+ * \date   2013/02/13
+ */
+void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
+{
+    const INT max_levels = mgl[0].max_levels;
+    INT i;
+
+    for (i=0; i<max_levels; ++i) {
+        if (&mgl[i].A) { fasp_dbsr_free(&mgl[i].A); }
+        if (&mgl[i].P) { fasp_dbsr_free(&mgl[i].P); }
+        if (&mgl[i].R) { fasp_dbsr_free(&mgl[i].R); }
+        if (&mgl[i].b) { fasp_dvec_free(&mgl[i].b); }
+        if (&mgl[i].x) { fasp_dvec_free(&mgl[i].x); }
+        if (&mgl[i].Ac) { fasp_dcsr_free(&mgl[i].Ac); }
+        if (&mgl[i].PP) { fasp_dcsr_free(&mgl[i].PP); }
+        if (&mgl[i].PP_LU) { fasp_ilu_data_free(&mgl[i].PP_LU); }
+        if (&mgl[i].w) { fasp_dvec_free(&mgl[i].w); }
+        if (&mgl[i].cfmark) { fasp_ivec_free(&mgl[i].cfmark); }
+        if (&mgl[i].LU) { fasp_ilu_data_free(&mgl[i].LU); }
+        //if (&mgl[i].schwarz) {fasp_schwarz_data_free (&mgl[i].schwarz);}
+    }
+        
+    for (i=0; i<mgl->near_kernel_dim; ++i) {
+        if (&mgl->near_kernel_basis[i]) fasp_mem_free(mgl->near_kernel_basis[i]);
+        mgl->near_kernel_basis[i]=NULL;
+    }
+    
+    fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
+    fasp_mem_free(mgl); mgl = NULL;
+}
+
+
+/**
  * \fn void fasp_ilu_data_free (ILU_data *ILUdata)
  *
  * \brief Create ILU_data sturcture

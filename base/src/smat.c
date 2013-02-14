@@ -90,6 +90,64 @@ void fasp_blas_smat_inv_nc3 (REAL *a)
 }
 
 /**
+ * \fn void fasp_blas_smat_inv_nc4 (REAL *a)
+ *
+ * \brief Compute the inverse matrix of a 4*4 full matrix A (in place)
+ *
+ * \param a  Pointer to the REAL array which stands a 4*4 matrix
+ *
+ * \author Xiaozhe Hu
+ * \date   01/12/2013
+ */
+void fasp_blas_smat_inv_nc4 (REAL *a)
+{
+    const REAL a11 = a[0],  a12 = a[1],  a13 = a[2],  a14 = a[3];
+    const REAL a21 = a[4],  a22 = a[5],  a23 = a[6],  a24 = a[7];
+    const REAL a31 = a[8],  a32 = a[9],  a33 = a[10], a34 = a[11];
+    const REAL a41 = a[12], a42 = a[13], a43 = a[14], a44 = a[15];
+
+    const REAL M11 = a22*a33*a44 + a23*a34*a42 + a24*a32*a43 - a22*a34*a43 - a23*a32*a44 - a24*a33*a42;
+    const REAL M12 = a12*a34*a43 + a13*a32*a44 + a14*a33*a42 - a12*a33*a44 - a13*a34*a42 - a14*a32*a43;
+    const REAL M13 = a12*a23*a44 + a13*a24*a42 + a14*a22*a43 - a12*a24*a43 - a13*a22*a44 - a14*a23*a42;
+    const REAL M14 = a12*a24*a33 + a13*a22*a34 + a14*a23*a32 - a12*a23*a34 - a13*a24*a32 - a14*a22*a33;
+    const REAL M21 = a21*a34*a43 + a23*a31*a44 + a24*a33*a41 - a21*a33*a44 - a23*a34*a41 - a24*a31*a43;
+    const REAL M22 = a11*a33*a44 + a13*a34*a41 + a14*a31*a43 - a11*a34*a43 - a13*a31*a44 - a14*a33*a41;
+    const REAL M23 = a11*a24*a43 + a13*a21*a44 + a14*a23*a41 - a11*a23*a41 - a13*a24*a41 - a14*a21*a43;
+    const REAL M24 = a11*a23*a34 + a13*a24*a31 + a14*a21*a33 - a11*a24*a33 - a13*a21*a34 - a14*a23*a31;
+    const REAL M31 = a21*a32*a44 + a22*a34*a41 + a24*a31*a42 - a21*a34*a42 - a22*a31*a44 - a24*a32*a41;
+    const REAL M32 = a11*a34*a42 + a12*a31*a44 + a14*a32*a41 - a11*a32*a44 - a12*a34*a41 - a14*a31*a42;
+    const REAL M33 = a11*a22*a44 + a12*a24*a41 + a14*a21*a42 - a11*a24*a42 - a12*a21*a44 - a14*a22*a41;
+    const REAL M34 = a11*a24*a32 + a12*a21*a34 + a14*a22*a31 - a11*a22*a34 - a12*a24*a31 - a14*a21*a32;
+    const REAL M41 = a21*a33*a42 + a22*a31*a43 + a23*a32*a41 - a21*a32*a43 - a22*a33*a41 - a23*a31*a42;
+    const REAL M42 = a11*a32*a43 + a12*a33*a41 + a13*a31*a42 - a11*a33*a42 - a12*a31*a43 - a13*a32*a41;
+    const REAL M43 = a11*a23*a42 + a12*a21*a43 + a13*a22*a41 - a11*a22*a43 - a12*a23*a41 - a13*a21*a42;
+    const REAL M44 = a11*a22*a33 + a12*a23*a31 + a13*a21*a32 - a11*a23*a32 - a12*a21*a33 - a13*a22*a31;
+    
+    const REAL det = a11*M11 + a12*M21 + a13*M31 + a14*M41;
+    REAL det_inv;
+    
+    if (ABS(det)<1e-22) {
+        printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
+        /*
+         printf("##----------------------------------------------\n");
+         printf("## %12.5e %12.5e %12.5e \n", a0, a1, a2);
+         printf("## %12.5e %12.5e %12.5e \n", a3, a4, a5);
+         printf("## %12.5e %12.5e %12.5e \n", a5, a6, a7);
+         printf("##----------------------------------------------\n");
+         getchar();
+         */
+    }
+    
+    det_inv = 1.0/det;
+    
+    a[0] = M11*det_inv;  a[1] = M12*det_inv;  a[2] = M13*det_inv;  a[3] = M14*det_inv;
+    a[4] = M21*det_inv;  a[5] = M22*det_inv;  a[6] = M23*det_inv;  a[7] = M24*det_inv;
+    a[8] = M31*det_inv;  a[9] = M32*det_inv;  a[10] = M33*det_inv; a[11] = M34*det_inv;
+    a[12] = M41*det_inv; a[13] = M42*det_inv; a[14] = M43*det_inv; a[15] = M44*det_inv;
+    
+}
+
+/**
  * \fn void fasp_blas_smat_inv_nc5 (REAL *a)
  *
  * \brief Compute the inverse matrix of a 5*5 full matrix A (in place)
@@ -343,6 +401,10 @@ INT fasp_blas_smat_inv (REAL *a,
             
         case 3:
             fasp_blas_smat_inv_nc3(a);
+            break;
+            
+        case 4:
+            fasp_blas_smat_inv_nc4(a);
             break;
             
         case 5: 
