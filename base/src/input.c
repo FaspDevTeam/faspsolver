@@ -22,6 +22,7 @@
  *
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
  * Modified by Chensong Zhang on 01/10/2012
+ * Modified by Ludmil Zikatanov on 02/15/2013
  */
 void fasp_param_input (char *filenm, 
                        input_param *Input)
@@ -364,7 +365,7 @@ void fasp_param_input (char *filenm,
             else if ((strcmp(buffer,"SGS")==0)||(strcmp(buffer,"sgs")==0))
                 Input->AMG_smoother = SGS;
             else if ((strcmp(buffer,"CG")==0)||(strcmp(buffer,"cg")==0))
-                Input->AMG_smoother = CG;    
+                Input->AMG_smoother = SMOOTHER_CG;    
             else if ((strcmp(buffer,"SOR")==0)||(strcmp(buffer,"sor")==0))
                 Input->AMG_smoother = SOR;
             else if ((strcmp(buffer,"SSOR")==0)||(strcmp(buffer,"ssor")==0))

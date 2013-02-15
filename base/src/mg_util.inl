@@ -140,7 +140,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
             fasp_smoother_dcsr_sor(x, iend, istart,-istep, A, b, nsweeps, relax);
             break;
         
-        case CG:
+        case SMOOTHER_CG:
             fasp_solver_dcsr_pcg(A, b, x, NULL, 1e-3, nsweeps, 1, PRINT_NONE);
             break;
         
@@ -238,7 +238,7 @@ static void fasp_dcsr_postsmoothing (const SHORT smoother,
             fasp_smoother_dcsr_gs (x, iend, istart,  istep, A, b, nsweeps);
             break;
         
-        case CG:
+        case SMOOTHER_CG:
             fasp_solver_dcsr_pcg(A, b, x, NULL, 1e-3, nsweeps, 1, PRINT_NONE);
             break;
         

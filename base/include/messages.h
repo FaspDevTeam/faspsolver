@@ -6,6 +6,7 @@
  *  Modified by Chensong Zhang on 12/06/2011.
  *  Modified by Chensong Zhang on 12/25/2011.
  *  Modified by Chensong Zhang on 04/22/2012.
+ *  Modified by Ludmil Zikatanov on 02/15/2013.
  *------------------------------------------------------
  *
  */
@@ -147,13 +148,13 @@
 #define JACOBI                  1    /**< Jacobi smoother */
 #define GS                      2    /**< Gauss-Seidel smoother */
 #define SGS                     3    /**< symm Gauss-Seidel smoother */
-#define CG                      4    /**< CG as a smoother */
+#define SMOOTHER_CG             4    /**< CG as a smoother */
 #define SOR                     5    /**< SOR smoother */
-#define SSOR		            6    /**< SSOR smoother */
-#define GSOR		            7    /**< GS + SOR smoother */
+#define SSOR		        6    /**< SSOR smoother */
+#define GSOR		        7    /**< GS + SOR smoother */
 #define SGSOR                   8    /**< SGS + SSOR smoother */
 #define POLY                    9    /**< Polynomial smoother */
-#define L1_DIAG		            10   /**< L1 norm diagonal scaling smoother */
+#define L1_DIAG		       10   /**< L1 norm diagonal scaling smoother */
 
 /** 
  * \brief Definition of interpolation types
