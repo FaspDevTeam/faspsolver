@@ -28,12 +28,12 @@
      420 ./base/src/ilu_setup_bsr.c
      172 ./base/src/ilu_setup_csr.c
     1257 ./base/src/ilu_setup_str.c
-     215 ./base/src/init.c
+     255 ./base/src/init.c
      650 ./base/src/input.c
     2333 ./base/src/interpolation.c
     2670 ./base/src/io.c
      130 ./base/src/itsolver_bcsr.c
-     472 ./base/src/itsolver_bsr.c
+     474 ./base/src/itsolver_bsr.c
      581 ./base/src/itsolver_csr.c
      174 ./base/src/itsolver_mf.c
      352 ./base/src/itsolver_str.c
@@ -65,7 +65,7 @@
      873 ./base/src/quadrature.c
      108 ./base/src/rap.c
      186 ./base/src/schwarz_setup.c
-     589 ./base/src/smat.c
+     651 ./base/src/smat.c
     1451 ./base/src/smoother_bsr.c
       81 ./base/src/smoother_cr.c
     2290 ./base/src/smoother_csr.c
@@ -83,12 +83,12 @@
      438 ./base/src/vec.c
      118 ./base/src/wrapper.c
      560 ./base/include/dlmalloc.h
-     144 ./base/include/doxygen.h
+     157 ./base/include/doxygen.h
      980 ./base/include/fasp.h
      556 ./base/include/fasp_block.h
-    2388 ./base/include/fasp_functs.h
+    2392 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      199 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   64061 total
+   64182 total
