@@ -144,7 +144,7 @@
 #define NL_AMLI_CYCLE           4    /**< Nonlinear AMLI-cycle */
 
 /** 
- * \brief Definition of smoother types
+ * \brief Definition of standard smoother types
  */
 #define SMOOTHER_JACOBI         1    /**< Jacobi smoother */
 #define SMOOTHER_GS             2    /**< Gauss-Seidel smoother */
@@ -158,9 +158,9 @@
 #define SMOOTHER_L1DIAG         10   /**< L1 norm diagonal scaling smoother */
 
 /**
- * \brief Definition of special smoother types
+ * \brief Definition of some special smoother types
  */
-#define SMOOTHER_BLKOIL         11   /**< Special smoother for the monolithic AMG for black oil model */
+#define SMOOTHER_BLKOIL         11   /**< Only for the monolithic AMG for black-oil */
 
 /** 
  * \brief Definition of interpolation types
