@@ -157,6 +157,11 @@
 #define SMOOTHER_POLY           9    /**< Polynomial smoother */
 #define SMOOTHER_L1DIAG         10   /**< L1 norm diagonal scaling smoother */
 
+/**
+ * \brief Definition of special smoother types
+ */
+#define SMOOTHER_BLKOIL         11   /**< Special smoother for the monolithic AMG for black oil model */
+
 /** 
  * \brief Definition of interpolation types
  */

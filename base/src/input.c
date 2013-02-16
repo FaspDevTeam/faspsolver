@@ -378,6 +378,8 @@ void fasp_param_input (char *filenm,
                 Input->AMG_smoother = SMOOTHER_POLY;
             else if ((strcmp(buffer,"L1DIAG")==0)||(strcmp(buffer,"l1diag")==0))
                 Input->AMG_smoother = SMOOTHER_L1DIAG;
+            else if ((strcmp(buffer,"BLKOIL")==0)||(strcmp(buffer,"blkoil")==0))
+                Input->AMG_smoother = SMOOTHER_BLKOIL;
             else
                 { status = ERROR_INPUT_PAR; break; }
             fgets(buffer,500,fp); // skip rest of line
