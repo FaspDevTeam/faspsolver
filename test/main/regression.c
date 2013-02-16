@@ -271,7 +271,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgparam);
             amgparam.maxit       = 20;
             amgparam.tol         = 1e-10;
-            amgparam.smoother    = SGS;
+            amgparam.smoother    = SMOOTHER_SGS;
             amgparam.print_level = print_level;
             fasp_solver_amg(&A, &b, &x, &amgparam);
             
@@ -286,7 +286,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgparam);
             amgparam.maxit       = 500;
             amgparam.tol         = 1e-10;
-            amgparam.smoother    = L1_DIAG;
+            amgparam.smoother    = SMOOTHER_L1DIAG;
             amgparam.print_level = print_level;
             fasp_solver_amg(&A, &b, &x, &amgparam);
             
@@ -302,7 +302,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgparam);
             amgparam.maxit       = 20;
             amgparam.tol         = 1e-10;
-            amgparam.smoother    = SOR;
+            amgparam.smoother    = SMOOTHER_SOR;
             amgparam.print_level = print_level;
             fasp_solver_amg(&A, &b, &x, &amgparam);
             
@@ -319,7 +319,7 @@ int main (int argc, const char * argv[])
             amgparam.maxit       = 500;
             amgparam.tol         = 1e-10;
             amgparam.AMG_type    = SA_AMG;
-            amgparam.smoother    = GS;
+            amgparam.smoother    = SMOOTHER_GS;
             amgparam.print_level = print_level;
             fasp_solver_amg(&A, &b, &x, &amgparam);
             
@@ -336,7 +336,7 @@ int main (int argc, const char * argv[])
             amgparam.maxit       = 500;
             amgparam.tol         = 1e-10;
             amgparam.AMG_type    = UA_AMG;
-            amgparam.smoother    = GS;
+            amgparam.smoother    = SMOOTHER_GS;
             amgparam.print_level = print_level;        
             fasp_solver_amg(&A, &b, &x, &amgparam);
             

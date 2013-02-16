@@ -6,9 +6,9 @@
 # FASP has been tested with many different compilers; see README for details.  #
 # Note: This will overwrite the seting in Makefile!!!                          #
 #==============================================================================#
- CC=gcc-mp-4.8
- CPP=g++-mp-4.8
- FC=gfortran-mp-4.8
+# CC=icc
+# CPP=icpc
+# FC=ifort
 
 #==============================================================================#
 # User compiling options                                                       #

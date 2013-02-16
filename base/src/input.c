@@ -359,25 +359,25 @@ void fasp_param_input (char *filenm,
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
     
             if ((strcmp(buffer,"JACOBI")==0)||(strcmp(buffer,"jacobi")==0))
-                Input->AMG_smoother = JACOBI;
+                Input->AMG_smoother = SMOOTHER_JACOBI;
             else if ((strcmp(buffer,"GS")==0)||(strcmp(buffer,"gs")==0))
-                Input->AMG_smoother = GS;
+                Input->AMG_smoother = SMOOTHER_GS;
             else if ((strcmp(buffer,"SGS")==0)||(strcmp(buffer,"sgs")==0))
-                Input->AMG_smoother = SGS;
+                Input->AMG_smoother = SMOOTHER_SGS;
             else if ((strcmp(buffer,"CG")==0)||(strcmp(buffer,"cg")==0))
                 Input->AMG_smoother = SMOOTHER_CG;    
             else if ((strcmp(buffer,"SOR")==0)||(strcmp(buffer,"sor")==0))
-                Input->AMG_smoother = SOR;
+                Input->AMG_smoother = SMOOTHER_SOR;
             else if ((strcmp(buffer,"SSOR")==0)||(strcmp(buffer,"ssor")==0))
-                Input->AMG_smoother = SSOR;
+                Input->AMG_smoother = SMOOTHER_SSOR;
             else if ((strcmp(buffer,"GSOR")==0)||(strcmp(buffer,"gsor")==0))
-                Input->AMG_smoother = GSOR;
+                Input->AMG_smoother = SMOOTHER_GSOR;
             else if ((strcmp(buffer,"SGSOR")==0)||(strcmp(buffer,"sgsor")==0))
-                Input->AMG_smoother = SGSOR;
+                Input->AMG_smoother = SMOOTHER_SGSOR;
             else if ((strcmp(buffer,"POLY")==0)||(strcmp(buffer,"poly")==0))
-                Input->AMG_smoother = POLY;
-            else if ((strcmp(buffer,"L1_DIAG")==0)||(strcmp(buffer,"l1_diag")==0))
-                Input->AMG_smoother = L1_DIAG;
+                Input->AMG_smoother = SMOOTHER_POLY;
+            else if ((strcmp(buffer,"L1DIAG")==0)||(strcmp(buffer,"l1diag")==0))
+                Input->AMG_smoother = SMOOTHER_L1DIAG;
             else
                 { status = ERROR_INPUT_PAR; break; }
             fgets(buffer,500,fp); // skip rest of line

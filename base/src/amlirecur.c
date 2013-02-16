@@ -599,15 +599,15 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
             
             if (steps > 0){
                 switch (smoother) {
-                    case JACOBI:
+                    case SMOOTHER_JACOBI:
                         for (i=0; i<steps; i++) 
                             fasp_smoother_dbsr_jacobi (A_level0, b0, e0);
                         break;
-                    case GS:
+                    case SMOOTHER_GS:
                         for (i=0; i<steps; i++) 
                             fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
                         break;
-                    case SOR:
+                    case SMOOTHER_SOR:
                         for (i=0; i<steps; i++) 
                             fasp_smoother_dbsr_sor (A_level0, b0, e0, ASCEND, NULL,relax);
                         break;
@@ -674,15 +674,15 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
             
             if (steps > 0){
                 switch (smoother) {
-                    case JACOBI:
+                    case SMOOTHER_JACOBI:
                         for (i=0; i<steps; i++) 
                             fasp_smoother_dbsr_jacobi (A_level0, b0, e0);
                         break;
-                    case GS:
+                    case SMOOTHER_GS:
                         for (i=0; i<steps; i++) 
                             fasp_smoother_dbsr_gs(A_level0, b0, e0, ASCEND, NULL);
                         break;
-                    case SOR:
+                    case SMOOTHER_SOR:
                         for (i=0; i<steps; i++) 
                             fasp_smoother_dbsr_sor(A_level0, b0, e0, ASCEND, NULL,relax);
                         break;

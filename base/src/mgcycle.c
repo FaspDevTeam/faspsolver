@@ -318,15 +318,15 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
     
             if (steps > 0) {
                 switch (smoother) {
-                case JACOBI:
+                case SMOOTHER_JACOBI:
                     for (i=0; i<steps; i++) 
                         fasp_smoother_dbsr_jacobi (&mgl[l].A, &mgl[l].b, &mgl[l].x);
                     break;
-                case GS:
+                case SMOOTHER_GS:
                     for (i=0; i<steps; i++) 
                         fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
                     break;
-                case SOR:
+                case SMOOTHER_SOR:
                     for (i=0; i<steps; i++) 
                         fasp_smoother_dbsr_sor (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL, relax);
                     break;
@@ -401,15 +401,15 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
     
             if (steps > 0) {
                 switch (smoother) {
-                case JACOBI:
+                case SMOOTHER_JACOBI:
                     for (i=0; i<steps; i++) 
                         fasp_smoother_dbsr_jacobi(&mgl[l].A, &mgl[l].b, &mgl[l].x);
                     break;
-                case GS:
+                case SMOOTHER_GS:
                     for (i=0; i<steps; i++) 
                         fasp_smoother_dbsr_gs(&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
                     break;
-                case SOR:
+                case SMOOTHER_SOR:
                     for (i=0; i<steps; i++) 
                         fasp_smoother_dbsr_sor(&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL, relax);
                     break;

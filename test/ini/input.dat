@@ -34,7 +34,7 @@ itsolver_restart         = 20     % restart number for GMRES
 % parameters for ILU preconditioners           %
 %----------------------------------------------%
 
-ILU_type                 = 2      % 1 ILUk | 2 ILUt | 3 ILUtp 
+ILU_type                 = 1      % 1 ILUk | 2 ILUt | 3 ILUtp 
 ILU_lfil                 = 0      % level of fill-in for ILUk
 ILU_droptol              = 0.1    % ILU drop tolerance
 ILU_permtol              = 0.001  % permutation toleration for ILUtp
@@ -60,7 +60,7 @@ AMG_cycle_type           = V      % V V-cycle | W W-cycle
 AMG_tol                  = 1e-8   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
-AMG_coarse_dof           = 1000    % max number of coarse degrees of freedom
+AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
 AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
@@ -69,14 +69,14 @@ AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
 % parameters for AMG smoothing                 %
 %----------------------------------------------%
 
-AMG_smoother             = CG     % GS | JACOBI | SGS 
-                                  % SOR | SSOR | GSOR | SGSOR | POLY
+AMG_smoother             = GS     % GS | JACOBI | SGS SOR | SSOR | 
+                                  % GSOR | SGSOR | POLY | L1DIAG | CG
 AMG_ILU_levels           = 0      % number of levels using ILU smoother
 AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.1    % relaxation parameter for SOR smoother 
 AMG_polynomial_degree	 = 3      % degree of the polynomial smoother
-AMG_presmooth_iter       = 1      % number of presmoothing sweeps
-AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
+AMG_presmooth_iter       = 2      % number of presmoothing sweeps
+AMG_postsmooth_iter      = 2      % number of postsmoothing sweeps
 
 %----------------------------------------------%
 % parameters for classical AMG SETUP           %
@@ -86,7 +86,7 @@ AMG_coarsening_type      = 1      % 1 Modified RS
                                   % 3 Compatible Relaxation
                                   % 4 Aggressive 
 AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
-AMG_strong_threshold     = 0.8    % Strong threshold
+AMG_strong_threshold     = 0.3    % Strong threshold
 AMG_truncation_threshold = 0.4    % Truncation threshold
 AMG_max_row_sum          = 0.9    % Max row sum
 

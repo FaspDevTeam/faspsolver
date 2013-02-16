@@ -110,7 +110,7 @@ void fasp_param_input_init (input_param *inparam)
     inparam->AMG_type                 = CLASSIC_AMG;
     inparam->AMG_levels               = 15;
     inparam->AMG_cycle_type           = V_CYCLE;
-    inparam->AMG_smoother             = GS;
+    inparam->AMG_smoother             = SMOOTHER_GS;
     inparam->AMG_presmooth_iter       = 2;
     inparam->AMG_postsmooth_iter      = 2;
     inparam->AMG_relaxation           = 1.0;
@@ -159,7 +159,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->max_levels           = 15;
     amgparam->coarse_dof           = 500;
     amgparam->cycle_type           = V_CYCLE;
-    amgparam->smoother             = GS;
+    amgparam->smoother             = SMOOTHER_GS;
     amgparam->smooth_order         = CF_ORDER;
     amgparam->presmooth_iter       = 2;
     amgparam->postsmooth_iter      = 2;
@@ -413,7 +413,7 @@ void fasp_precond_data_null (precond_data *pcdata)
     pcdata->max_levels          = 20;
     pcdata->tol                 = 1e-8;
     pcdata->cycle_type          = V_CYCLE;
-    pcdata->smoother            = GS;
+    pcdata->smoother            = SMOOTHER_GS;
     pcdata->smooth_order        = CF_ORDER;
     pcdata->presmooth_iter      = 2;
     pcdata->postsmooth_iter     = 2;
@@ -582,20 +582,22 @@ void fasp_param_amg_print (AMG_param *param)
         printf("AMG num of presmoothing:           %d\n", param->presmooth_iter);
         printf("AMG num of postsmoothing:          %d\n", param->postsmooth_iter);
         
-        if (param->smoother==SOR  || param->smoother==SSOR ||
-            param->smoother==GSOR || param->smoother==SGSOR) {
+        if ( param->smoother == SMOOTHER_SOR  ||
+             param->smoother == SMOOTHER_SSOR ||
+             param->smoother == SMOOTHER_GSOR ||
+             param->smoother == SMOOTHER_SGSOR ) {
             printf("AMG relax factor:                  %.4f\n", param->relaxation);
         }
         
-        if (param->smoother==POLY){
+        if ( param->smoother == SMOOTHER_POLY ) {
             printf("AMG polynomial smoother degree:    %d\n", param->polynomial_degree);
         }
         
-        if(param->cycle_type == AMLI_CYCLE) {
+        if ( param->cycle_type == AMLI_CYCLE ) {
             printf("AMG AMLI degree of polynomial:     %d\n", param->amli_degree);
         }
         
-        if(param->cycle_type == NL_AMLI_CYCLE) {
+        if ( param->cycle_type == NL_AMLI_CYCLE ) {
             printf("AMG Nonlinear AMLI Krylov type:    %d\n", param->nl_amli_krylov_type);
         }
         

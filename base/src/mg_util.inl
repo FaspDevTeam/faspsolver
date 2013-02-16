@@ -24,7 +24,7 @@ extern "C" {
  * \param  prt_lvl   level of output
  *
  * \author Chensong Zhang
- * \date 01/10/2012
+ * \date   01/10/2012
  */
 static void fasp_coarse_itsolver (dCSRmat *A,
                                   dvector *b,
@@ -34,9 +34,6 @@ static void fasp_coarse_itsolver (dCSRmat *A,
 {
     const INT csize  = A->row;
     const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
-
-   
-    //INT Status = SUCCESS;
     
     // fasp_smoother_dcsr_sgs(x, A, b, 10);
 
@@ -78,6 +75,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
  * \date 01/10/2012
  *
  * Modified by Xiaozhe on 06/04/2012: add ndeg as input
+ * Modified by Chensong on 02/16/2013: GS -> SMOOTHER_GS, etc
  */
 static void fasp_dcsr_presmoothing (const SHORT smoother,
                                     dCSRmat *A,
@@ -96,44 +94,44 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
     
     switch (smoother) {
 
-        case GS:
+        case SMOOTHER_GS:
             if (order == NO_ORDER || ordering == NULL) 
                 fasp_smoother_dcsr_gs(x, istart, iend, istep, A, b, nsweeps);
             else if (order == CF_ORDER) 
                 fasp_smoother_dcsr_gs_cf(x, A, b, nsweeps, ordering, 1);
             break;
             
-        case SGS:
+        case SMOOTHER_SGS:
             fasp_smoother_dcsr_sgs(x, A, b, nsweeps);
             break;
         
-        case JACOBI: 
+        case SMOOTHER_JACOBI: 
             fasp_smoother_dcsr_jacobi(x, istart, iend, istep, A, b, nsweeps);
             break;
         
-        case L1_DIAG: 
+        case SMOOTHER_L1DIAG: 
             fasp_smoother_dcsr_L1diag(x, istart, iend, istep, A, b, nsweeps);
             break;
             
-        case POLY:
+        case SMOOTHER_POLY:
             fasp_smoother_dcsr_poly(A, b, x, iend+1, ndeg, nsweeps); 
             break;
             
-        case SOR:
+        case SMOOTHER_SOR:
             fasp_smoother_dcsr_sor(x, istart, iend, istep, A, b, nsweeps, relax);
             break;
         
-        case SSOR:
+        case SMOOTHER_SSOR:
             fasp_smoother_dcsr_sor(x, istart, iend, istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_sor(x, iend, istart,-istep, A, b, nsweeps, relax);
             break;
         
-        case GSOR:
+        case SMOOTHER_GSOR:
             fasp_smoother_dcsr_gs (x, istart, iend, istep, A, b, nsweeps);
             fasp_smoother_dcsr_sor(x, iend, istart,-istep, A, b, nsweeps, relax);
             break;
         
-        case SGSOR:
+        case SMOOTHER_SGSOR:
             fasp_smoother_dcsr_gs (x, istart, iend, istep, A, b, nsweeps);
             fasp_smoother_dcsr_gs (x, iend, istart,-istep, A, b, nsweeps);
             fasp_smoother_dcsr_sor(x, istart, iend, istep, A, b, nsweeps, relax);
@@ -176,6 +174,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
  * \date 01/10/2012
  *
  * Modified by Xiaozhe Hu on 06/04/2012: add ndeg as input
+ * Modified by Chensong on 02/16/2013: GS -> SMOOTHER_GS, etc
  */
 static void fasp_dcsr_postsmoothing (const SHORT smoother,
                                      dCSRmat *A,
@@ -194,44 +193,44 @@ static void fasp_dcsr_postsmoothing (const SHORT smoother,
 
     switch (smoother) {
         
-        case GS:
+        case SMOOTHER_GS:
             if (order == NO_ORDER || ordering == NULL)
                 fasp_smoother_dcsr_gs(x, iend, istart, istep, A, b, nsweeps);
             else if (order == CF_ORDER)
                 fasp_smoother_dcsr_gs_cf(x, A, b, nsweeps, ordering, -1);
             break;
         
-        case SGS:
+        case SMOOTHER_SGS:
             fasp_smoother_dcsr_sgs(x, A, b, nsweeps);
             break;
             
-        case JACOBI:
+        case SMOOTHER_JACOBI:
             fasp_smoother_dcsr_jacobi(x, iend, istart, istep, A, b, nsweeps);
             break;
             
-        case L1_DIAG:
+        case SMOOTHER_L1DIAG:
             fasp_smoother_dcsr_L1diag(x, iend, istart, istep, A, b, nsweeps);
             break;            
        
-        case POLY:
+        case SMOOTHER_POLY:
             fasp_smoother_dcsr_poly(A, b, x, iend+1, ndeg, nsweeps); 
             break;
             
-        case SOR:
+        case SMOOTHER_SOR:
             fasp_smoother_dcsr_sor(x, iend, istart, istep, A, b, nsweeps, relax);
             break;
         
-        case SSOR:
+        case SMOOTHER_SSOR:
             fasp_smoother_dcsr_sor(x, istart, iend, -istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_sor(x, iend, istart,  istep, A, b, nsweeps, relax);
             break;
         
-        case GSOR:
+        case SMOOTHER_GSOR:
             fasp_smoother_dcsr_sor(x, istart, iend, -istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_gs (x, iend, istart,  istep, A, b, nsweeps);
             break;
         
-        case SGSOR:
+        case SMOOTHER_SGSOR:
             fasp_smoother_dcsr_sor(x, istart, iend, -istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_sor(x, iend, istart,  istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_gs (x, istart, iend, -istep, A, b, nsweeps);
