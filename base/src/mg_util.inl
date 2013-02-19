@@ -2,14 +2,14 @@
  *  \brief Utilies for multigrid cycles
  */
 
-#if With_DISOLVE // Pick either Direct solver or Iterative solver for coarsest space!
+#if WITH_DISOLVE // Decrorations of direct solvers
 
 extern "C" {
     void DIRECT_MUMPS(const INT *n, const INT *nnz, INT *ia, INT *ja, 
                       REAL *a, REAL *b, REAL *x);
 }
 
-#else
+#endif
 
 /**
  * \fn static void fasp_coarse_itsolver (dCSRmat *A, dvector *b, dvector *x,
@@ -35,8 +35,6 @@ static void fasp_coarse_itsolver (dCSRmat *A,
     const INT csize  = A->row;
     const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
     
-    // fasp_smoother_dcsr_sgs(x, A, b, 10);
-
     INT status = fasp_solver_dcsr_pcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);
     
     if (status < 0) { // If PCG does not converge, use BiCGstab as a saft net.
@@ -44,11 +42,9 @@ static void fasp_coarse_itsolver (dCSRmat *A,
     }
     
     if ( status < 0 && prt_lvl > PRINT_MIN ) {
-        printf("### WARNING: coarse level solver does not converge in %d steps!\n", cmaxit);
+        printf("### WARNING: Coarse level solver does not converge in %d steps!\n", cmaxit);
     }
-}
-
-#endif 
+} 
 
 /**
  * \fn static void fasp_dcsr_presmoothing (const SHORT smoother, dCSRmat *A, dvector *b, dvector *x,
@@ -58,7 +54,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
  *
  * \brief Multigrid presmoothing
  *
- * \param   smoother  type of smoother
+ * \param  smoother  type of smoother
  * \param  A         pointer to matrix data
  * \param  b         pointer to rhs data
  * \param  x         pointer to sol data
@@ -68,8 +64,8 @@ static void fasp_coarse_itsolver (dCSRmat *A,
  * \param  istep     step size
  * \param  relax     relaxation parameter for SOR-type smoothers
  * \param  ndeg      degree of the polynomial smoother
- * \param order  order for smoothing sweeps
- * \param ordering user defined ordering
+ * \param  order     order for smoothing sweeps
+ * \param  ordering  user defined ordering
  *
  * \author Chensong Zhang
  * \date 01/10/2012
@@ -89,9 +85,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
                                     const SHORT ndeg,
                                     const SHORT order,
                                     INT *ordering)
-{
-    //const SHORT ndeg = 6; // for polynomial smoothers
-    
+{    
     switch (smoother) {
 
         case SMOOTHER_GS:
@@ -157,7 +151,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
  *
  * \brief Multigrid presmoothing
  *
- * \param   smoother  type of smoother
+ * \param  smoother  type of smoother
  * \param  A         pointer to matrix data
  * \param  b         pointer to rhs data
  * \param  x         pointer to sol data
@@ -167,8 +161,8 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
  * \param  istep     step size
  * \param  relax     relaxation parameter for SOR-type smoothers
  * \param  ndeg      degree of the polynomial smoother 
- * \param order  order for smoothing sweeps
- * \param ordering user defined ordering
+ * \param  order     order for smoothing sweeps
+ * \param  ordering  user defined ordering
  *
  * \author Chensong Zhang
  * \date 01/10/2012
@@ -189,8 +183,6 @@ static void fasp_dcsr_postsmoothing (const SHORT smoother,
                                      const SHORT order,
                                      INT *ordering)
 {
-    //const SHORT ndeg = 6; // for polynomial smoothers
-
     switch (smoother) {
         
         case SMOOTHER_GS:
