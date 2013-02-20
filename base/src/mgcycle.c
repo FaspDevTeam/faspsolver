@@ -157,14 +157,14 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     
     // CoarseSpaceSolver:    
     {
-#if With_DISOLVE 
+#if   WITH_DISOLVE 
         /* use Direct.lib in Windows */
         DIRECT_MUMPS(&mgl[nl-1].A.row, &mgl[nl-1].A.nnz, mgl[nl-1].A.IA, mgl[nl-1].A.JA, 
                      mgl[nl-1].A.val,  mgl[nl-1].b.val, mgl[nl-1].x.val);
-#elif With_UMFPACK
+#elif WITH_UMFPACK
         /* use UMFPACK direct solver on the coarsest level */
         umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
-#elif With_SuperLU
+#elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else    
@@ -256,10 +256,11 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 
 #if FASP_GSRB
 	        if (( l==0 )&&(nx_rb>1))
-			fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b, param->presmooth_iter,-1,IMAP,MAXIMAP,nx_rb,ny_rb,nz_rb);
+				fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b, param->presmooth_iter,
+				                           -1,IMAP,MAXIMAP,nx_rb,ny_rb,nz_rb);
 			else
-            fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->postsmooth_iter,
-                                    0,mgl[l].A.row-1,-1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
+            	fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->postsmooth_iter,
+                                        0,mgl[l].A.row-1,-1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
 #else
             fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->postsmooth_iter,
                                     0,mgl[l].A.row-1,-1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
@@ -311,7 +312,7 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         nu_l[l]++;
         // pre smoothing
         if (l<param->ILU_levels) {
-            fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
+            fasp_smoother_dbsr_ilu (&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
         else {
             INT steps = param->presmooth_iter;
@@ -331,8 +332,8 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
                         fasp_smoother_dbsr_sor (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL, relax);
                     break;
                 default:
-                    printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
-                }
+                    printf("### ERROR: Wrong smoother type %d!\n", smoother);
+                    exit(ERROR_INPUT_PAR);                }
             }
         }
     
@@ -350,22 +351,22 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
     
     // CoarseSpaceSolver:    
     {
-#if With_DISOLVE /* use Direct.lib in Windows */
+#if   WITH_DISOLVE /* use Direct.lib in Windows */
         DIRECT_MUMPS(&mgl[nl-1].Ac.row, &mgl[nl-1].Ac.nnz, mgl[nl-1].Ac.IA, mgl[nl-1].Ac.JA, 
                      mgl[nl-1].Ac.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
-#elif With_UMFPACK
+#elif WITH_UMFPACK
         /* use UMFPACK direct solver on the coarsest level */
         umfpack(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
-#elif With_SuperLU
+#elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else    
-        /* use default iterative solver on the coarest level */
+        /* use iterative solver on the coarest level */
         const INT  csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
         const INT  cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
         const REAL ctol = param->tol; // coarse level tolerance
         if ( fasp_solver_dbsr_pvgmres(&mgl[nl-1].A,&mgl[nl-1].b,&mgl[nl-1].x,NULL,ctol,cmaxit,25,1,0)<0 ) {
-            printf("### WARNING: Coarse level solver does not converge!");
+            printf("### WARNING: Coarse level solver does not converge in %d iterations!", cmaxit);
         }
 #endif 
     }
@@ -414,7 +415,8 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
                         fasp_smoother_dbsr_sor(&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL, relax);
                     break;
                 default:
-                    printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+                    printf("### ERROR: Wrong smoother type %d!\n", smoother);
+                    exit(ERROR_INPUT_PAR);
                 }
             }
         }

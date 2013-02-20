@@ -247,14 +247,14 @@ void fasp_solver_amli (AMG_data *mgl,
     
     // coarsest level solver
     else {
-#if With_DISOLVE 
+#if   WITH_DISOLVE 
         /* use Direct.lib in Windows */
         DIRECT_MUMPS(&A_level0->row, &A_level0->nnz, A_level0->IA, A_level0->JA, 
                      A_level0->val, b0->val, e0->val);
-#elif With_UMFPACK
+#elif WITH_UMFPACK
         /* use UMFPACK direct solver on the coarsest level */
         umfpack(A_level0, b0, e0, 0);
-#elif With_SuperLU
+#elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         superlu(A_level0, b0, e0, 0);
 #else    
@@ -518,14 +518,14 @@ void fasp_solver_nl_amli (AMG_data *mgl,
     
     else // coarsest level solver
     {
-#if With_DISOLVE 
+#if   WITH_DISOLVE 
         /* use Direct.lib in Windows */
         DIRECT_MUMPS(&A_level0->row, &A_level0->nnz, A_level0->IA, A_level0->JA, A_level0->val, 
                      b0->val, e0->val);
-#elif With_UMFPACK
+#elif WITH_UMFPACK
         /* use UMFPACK direct solver on the coarsest level */
         umfpack(A_level0, b0, e0, 0);
-#elif With_SuperLU
+#elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         superlu(A_level0, b0, e0, 0);
 #else    
@@ -697,14 +697,14 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
     
     else // coarsest level solver
     {
-#if With_DISOLVE 
+#if   WITH_DISOLVE 
         /* use Direct.lib in Windows */
         DIRECT_MUMPS(&(mgl[level].Ac.row), &(mgl[level].Ac.nnz), mgl[level].Ac.IA, 
                      mgl[level].Ac.JA, mgl[level].Ac.val, b0->val, e0->val);
-#elif With_UMFPACK
+#elif WITH_UMFPACK
         /* use UMFPACK direct solver on the coarsest level */
         umfpack(&mgl[level].Ac, b0, e0, 0);
-#elif With_SuperLU
+#elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         superlu(&mgl[level].Ac, b0, e0, 0);
 #else    
