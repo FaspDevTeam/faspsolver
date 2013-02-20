@@ -178,8 +178,13 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
         if (&mgl[i].R) { fasp_dbsr_free(&mgl[i].R); }
         if (&mgl[i].b) { fasp_dvec_free(&mgl[i].b); }
         if (&mgl[i].x) { fasp_dvec_free(&mgl[i].x); }
+        if (&mgl[i].diaginv) { fasp_dvec_free(&mgl[i].diaginv); }
         if (&mgl[i].Ac) { fasp_dcsr_free(&mgl[i].Ac); }
         if (&mgl[i].PP) { fasp_dcsr_free(&mgl[i].PP); }
+        if (&mgl[i].pw) { fasp_mem_free(mgl[i].pw); }
+        if (&mgl[i].SS) { fasp_dbsr_free(&mgl[i].SS); }
+        if (&mgl[i].sw) { fasp_mem_free(mgl[i].sw); }
+        if (&mgl[i].diaginv_SS) { fasp_dvec_free(&mgl[i].diaginv_SS); }
         if (&mgl[i].PP_LU) { fasp_ilu_data_free(&mgl[i].PP_LU); }
         if (&mgl[i].w) { fasp_dvec_free(&mgl[i].w); }
         if (&mgl[i].cfmark) { fasp_ivec_free(&mgl[i].cfmark); }

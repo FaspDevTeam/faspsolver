@@ -381,6 +381,111 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
 }
 
 /**
+ * \fn dvector fasp_dbsr_getdiaginv ( dBSRmat *A )
+ *
+ * \brief Get D^{-1} of matrix A
+ *
+ * \param A   Pointer to the dBSRmat matrix
+ *
+ * \author Xiaozhe Hu
+ * \date   02/19/2013
+ *
+ *
+ * \note Works for general nb (Xiaozhe)
+ */
+dvector fasp_dbsr_getdiaginv (dBSRmat *A)
+{
+    // members of A
+    const INT     ROW = A->ROW;
+    const INT     COL = A->COL;
+    const INT     NNZ = A->NNZ;
+    const INT     nb  = A->nb;
+    const INT     nb2 = nb*nb;
+    const INT    size = ROW*nb2;
+    const INT    *IA  = A->IA;
+    const INT    *JA  = A->JA;
+    REAL         *val = A->val;
+        
+    dvector diaginv;
+    
+    INT i,j,k,m,l;
+    
+    // Variables for OpenMP
+    INT nthreads = 1, use_openmp = FALSE;
+    INT myid, mybegin, myend;
+    
+#ifdef _OPENMP
+    if (ROW > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
+#endif
+    
+    // allocate memory
+    diaginv.row = size;
+    diaginv.val = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
+    
+    // get all the diagonal sub-blocks
+    if (use_openmp) {
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, i, mybegin, myend, k)
+#endif
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            for (i = mybegin; i < myend; ++i) {
+                for (k = IA[i]; k < IA[i+1]; ++k) {
+                    if (JA[k] == i)
+                        memcpy(diaginv.val+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+                }
+            }
+        }
+    }
+    else {
+        for (i = 0; i < ROW; ++i) {
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                if (JA[k] == i)
+                    memcpy(diaginv.val+i*nb2, val+k*nb2, nb2*sizeof(REAL));
+            }
+        }
+    }
+    // compute the inverses of all the diagonal sub-blocks
+    if (use_openmp) {
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, i, mybegin, myend)
+#endif
+        for (myid = 0; myid < nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            if (nb > 1) {
+                for (i = mybegin; i < myend; ++i) {
+                    fasp_blas_smat_inv(diaginv.val+i*nb2, nb);
+                }
+            }
+            else {
+                for (i = mybegin; i < myend; ++i) {
+                    // zero-diagonal should be tested previously
+                    diaginv.val[i] = 1.0 / diaginv.val[i];
+                }
+            }
+        }
+    }
+    else {
+        if (nb > 1) {
+            for (i = 0; i < ROW; ++i) {
+                fasp_blas_smat_inv(diaginv.val+i*nb2, nb);
+            }
+        }
+        else {
+            for (i = 0; i < ROW; ++i) {
+                // zero-diagonal should be tested previously
+                diaginv.val[i] = 1.0 / diaginv.val[i];
+            }
+        }
+    }
+    
+    return (diaginv);
+}
+
+/**
  * \fn dBSRmat fasp_dbsr_diaginv ( dBSRmat *A )
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.

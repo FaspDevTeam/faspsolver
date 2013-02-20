@@ -170,7 +170,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 #else    
         /* use iterative solver on the coarest level */
         fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, param->tol, print_level);
-#endif 
+#endif
     }
     
     // BackwardSweep: 

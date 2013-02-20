@@ -211,12 +211,27 @@ typedef struct {
 	
     //! pointer to the iterative solution at level level_num
 	dvector x;
+    
+    //! pointer to the diagonal inverse at level level_num
+    dvector diaginv;
 	
     //! pointer to the matrix at level level_num (csr format)
 	dCSRmat Ac;
 	
 	//! pointer to the pressure block (only for reservoir simulation)
 	dCSRmat PP;
+    
+    //! pointer to the auxiliary vectors for pressure block
+    REAL *pw;
+    
+    //! pointer to the saturation block (only for reservoir simulation)
+	dBSRmat SS;
+    
+    //! pointer to the auxiliary vectors for saturation block
+    REAL *sw;
+    
+    //! pointer to the diagonal inverse of the saturation block at level level_num
+    dvector diaginv_SS;
 
     //! ILU data for pressure block
     ILU_data PP_LU;

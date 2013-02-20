@@ -429,7 +429,8 @@ void fasp_precond_amg (REAL *r,
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
-    for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam); 
+    for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam);
+
     // We can use a recurcive version of MG:
     //   for (i=0;i<maxit;++i) fasp_solver_mgrecur(mgl,&amgparam,0);
     

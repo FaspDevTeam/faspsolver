@@ -2051,6 +2051,8 @@ INT fasp_dbsr_trans (dBSRmat *A,
 
 SHORT fasp_dbsr_diagpref (dBSRmat *A);
 
+dvector fasp_dbsr_getdiaginv (dBSRmat *A);
+
 dBSRmat fasp_dbsr_diaginv (dBSRmat *A);
 
 dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A, 
