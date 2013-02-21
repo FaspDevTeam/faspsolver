@@ -33,12 +33,10 @@ FC=gfortran
 BOPT=-O0 -Wall -g -pg
 
 COPTS=$(BOPT)
-#CDEFS=-D FASP_USE_OPENMP=0
 CINCLUDES=$(INCLUDE)
 CFLAGS=$(COPTS) $(CINCLUDES) $(CDEFS)
 
 FOPTS=$(BOPT)
-#FDEFS=-D FASP_USE_OPENMP=0
 FINCLUDES=$(CINCLUDES)
 FFLAGS=$(FOPTS) $(FINCLUDES) $(FDEFS)
 
@@ -107,9 +105,6 @@ ALLPROG=$(AMGLIB)
 
 all: $(ALLPROG)
 
-Default: 
-	lib
-
 headers: 
 	/bin/cat $(SRCDIR)/*.c \
 	| awk -v name="fasp_functs.h" -f ../util/mkheaders.awk \
@@ -126,6 +121,9 @@ lib: $(OBJSC) $(OBJSF)
 ########################################################################
 
 .PHONY: clean allclean help
+
+.DEFAULT:
+	@-make help
 
 clean:
 	@-rm -f $(foreach DIR,$(SRCDIR),$(wildcard $(DIR)/*.o))

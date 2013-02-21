@@ -8,6 +8,8 @@ File Name: CHANGES
 - Modify coarse level solver definition according to a bug report for fasp4blkoil.
 - Change preprocessor: "With_DISOLVE" -> "WITH_DISOLVE", etc to be consistent with VS08.
 - Some small changes with variable names.
+- Remove some unnecessary parts in Makefile.
+- Add a top level Makefile for cleanup and backup.
 
 02/02/2013 FASP 1.2.0:
 - Fix the bug in Windows: MINRES wrong in release version; remove /ffast option.
