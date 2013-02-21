@@ -966,7 +966,7 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
     const INT nnz=A->nnz;
     
     INT i, j, k;
-    INT ibegin, iend;    
+    INT ibegin, iend = A->IA[0];    
     SHORT status = SUCCESS;
     
     k = 0;
