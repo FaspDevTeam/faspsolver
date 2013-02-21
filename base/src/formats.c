@@ -482,8 +482,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
  * \author  Zhiyang Zhou
  * \date    10/23/2010 
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue 
- * \date    05/24/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012    
  *
  * \note Works for general nb (Xiaozhe)
  */
@@ -500,7 +499,7 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     INT    *IA  = B->IA;
     INT    *JA  = B->JA;
     INT     storage_manner = B->storage_manner;
-    REAL *val = B->val;
+    REAL   *val = B->val;
     
     INT jump = nb*nb;
     INT rowA = ROW*nb;
@@ -509,15 +508,16 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     
     INT     *ia = NULL;
     INT     *ja = NULL;
-    REAL  *a  = NULL;
+    REAL    *a  = NULL;
     
     INT i,j,k;
     INT mr,mc;
     INT rowstart0,rowstart,colstart0,colstart;
     INT colblock,nzperrow; 
-    REAL *vp = NULL;
-    REAL *ap = NULL;
-    INT    *jap = NULL;
+
+    REAL  *vp = NULL;
+    REAL  *ap = NULL;
+    INT  *jap = NULL;
 
     INT use_openmp = FALSE;
 
@@ -532,10 +532,10 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     //--------------------------------------------------------
     // Create a CSR Matrix 
     //--------------------------------------------------------
-    A = fasp_dcsr_create(rowA, colA, nzA);
+    A  = fasp_dcsr_create(rowA, colA, nzA);
     ia = A.IA;
     ja = A.JA;
-    a = A.val;
+    a  = A.val;
     
     //--------------------------------------------------------------------------
     // Compute the number of nonzeros per row, and after this loop,
@@ -691,8 +691,7 @@ dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
     for (i = rowA; i > 0; i --) {
         ia[i] = ia[i-1];
     }
-    ia[0] = 0; 
-    
+    ia[0] = 0;
     
     return (A);   
 }

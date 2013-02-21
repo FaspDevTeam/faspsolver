@@ -123,11 +123,11 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    param->tentative_smooth = 1.0;
     // Xiaozhe 02/23/2011: make sure classical AMG will not call fasp_blas_dcsr_mxv_agg
+    param->tentative_smooth = 1.0;
     
     // setup AMLI coefficients
-    if (cycle_type == AMLI_CYCLE) {
+    if ( cycle_type == AMLI_CYCLE ) {
         param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
         REAL lambda_max = 2.0;
         REAL lambda_min = lambda_max/4;
@@ -137,7 +137,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     // initialize ILU parameters
     mgl->ILU_levels = param->ILU_levels;
     ILU_param iluparam;
-    if (param->ILU_levels>0) {
+    if ( param->ILU_levels > 0 ) {
         iluparam.print_level = param->print_level;
         iluparam.ILU_lfil    = param->ILU_lfil;
         iluparam.ILU_droptol = param->ILU_droptol;
@@ -164,13 +164,13 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 #endif
         
         /*-- setup ILU decomposition if necessary */
-        if (level<param->ILU_levels) {
+        if ( level < param->ILU_levels ) {
             status = fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
             if (status < 0) goto FINISHED;
         }
         
         /* -- setup Schwarz smoother if necessary */
-        if (level<param->schwarz_levels) {
+        if ( level < param->schwarz_levels ) {
             mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
             fasp_dcsr_shift (&(mgl[level].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[level].schwarz, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
@@ -184,13 +184,13 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         mgl[level].cfmark = fasp_ivec_create(size);
         memcpy(mgl[level].cfmark.val, vertices.val, size*sizeof(INT));
         
-        if (mgl[level].P.col == 0) break;
-        if (status < 0) goto FINISHED;
+        if ( mgl[level].P.col == 0 ) break;
+        if ( status < 0 ) goto FINISHED;
         
         /*-- Form interpolation --*/
         status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
         
-        if (status < 0) goto FINISHED;
+        if ( status < 0 ) goto FINISHED;
         
         /*-- Form coarse level stiffness matrix: There are two RAP routines available! --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
@@ -234,11 +234,11 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         mgl[level].b = fasp_dvec_create(mm);
         mgl[level].x = fasp_dvec_create(mm);
         
-        if (cycle_type == NL_AMLI_CYCLE)  mgl[level].w = fasp_dvec_create(3*mm);
+        if (cycle_type == NL_AMLI_CYCLE) mgl[level].w = fasp_dvec_create(3*mm);
         else mgl[level].w = fasp_dvec_create(2*mm);
     }
     
-#if With_UMFPACK
+#if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK to work
     dCSRmat Ac_tran;
     fasp_dcsr_trans(&mgl[max_levels-1].A, &Ac_tran);
@@ -247,7 +247,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     fasp_dcsr_free(&Ac_tran);
 #endif
     
-    if (print_level>PRINT_NONE) {
+    if ( print_level > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         REAL setupduration = setup_end - setup_start;
         print_amgcomplexity(mgl, print_level);
@@ -420,7 +420,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
         else mgl[level].w = fasp_dvec_create(2*mm);
     }
     
-#if With_UMFPACK
+#if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK to work
     dCSRmat Ac_tran;
     fasp_dcsr_trans(&mgl[max_levels-1].A, &Ac_tran);
@@ -429,7 +429,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
     fasp_dcsr_free(&Ac_tran);
 #endif
     
-    if (print_level>PRINT_NONE) {
+    if ( print_level > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
         print_amgcomplexity(mgl,print_level);

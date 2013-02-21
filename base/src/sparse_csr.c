@@ -955,6 +955,8 @@ void fasp_dcsr_compress (dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   12/25/2010
  *
+ * Modified by Chensong on 02/21/2013
+ *
  * \note This routine can be modified for filtering.
  */
 SHORT fasp_dcsr_compress_inplace (dCSRmat *A, 
@@ -964,31 +966,29 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
     const INT nnz=A->nnz;
     
     INT i, j, k;
-    INT ibegin,iend=A->IA[0];    
+    INT ibegin, iend;    
     SHORT status = SUCCESS;
     
-    k=0;
-    for (i=0;i<row;++i) {
-        ibegin=iend; iend=A->IA[i+1];
-        for (j=ibegin;j<iend;++j)
-            if (ABS(A->val[N2C(j)])>dtol) {
-                A->JA[N2C(k)] = A->JA[N2C(j)];
+    k = 0;
+    for ( i=0; i<row; ++i ) {
+        ibegin = iend; iend = A->IA[i+1];
+        for ( j=ibegin; j<iend; ++j )
+            if ( ABS(A->val[N2C(j)]) > dtol ) {
+                A->JA[N2C(k)]  = A->JA[N2C(j)];
                 A->val[N2C(k)] = A->val[N2C(j)];
                 ++k;
             } /* end of j */
-        A->IA[i+1]=C2N(k);
+        A->IA[i+1] = C2N(k);
     } /* end of i */
     
-    if (k<=nnz) 
-    {
+    if ( k <= nnz ) {
         A->nnz=k;
-        A->JA = (INT*)fasp_mem_realloc(A->JA, k*sizeof(INT));
+        A->JA  = (INT  *)fasp_mem_realloc(A->JA,  k*sizeof(INT));
         A->val = (REAL *)fasp_mem_realloc(A->val, k*sizeof(REAL));
     }
-    else 
-    {
+    else {
         status = RUN_FAIL;
-        printf("### ERROR: Size of compressed matrix is larger than the original!!\n");
+        printf("### ERROR: Size of compressed matrix is larger than the original!\n");
     }
     
     return (status);
@@ -1005,8 +1005,7 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
  * \author Chensong Zhang
  * \date   04/06/2010  
  *
- * Modified by chunsheng Feng, Zheng Li
- * \date   07/11/2012
+ * Modified by chunsheng Feng, Zheng Li on 07/11/2012
  */
 
 void fasp_dcsr_shift (dCSRmat *A, 

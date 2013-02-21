@@ -1,12 +1,13 @@
 File Name: CHANGES
 
-02/20/2013 FASP 1.2.1:
+02/21/2013 FASP 1.2.1:
 - Add monolithic AMG for system of PDEs.
 - Fix a bug in the Makefile inside the "test/" dir.
 - Modify push2sf.sh.
 - Change smoother names: GS -> SMOOTHER_GS, etc.
 - Modify coarse level solver definition according to a bug report for fasp4blkoil.
 - Change preprocessor: "With_DISOLVE" -> "WITH_DISOLVE", etc to be consistent with VS08.
+- Some small changes with variable names.
 
 02/02/2013 FASP 1.2.0:
 - Fix the bug in Windows: MINRES wrong in release version; remove /ffast option.
