@@ -10,8 +10,9 @@
 
 backup:
 	@-rm -f faspsolver.zip
-	@-zip -r faspsolver.zip base/ data/ log/ test/ tutorial/ vs08/
-
+	@-zip -r faspsolver.zip README License base data test tutorial vs08 \
+	                        doc/userguide.pdf
+	
 clean:
 	@-rm -f *~
 
