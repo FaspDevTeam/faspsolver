@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+02/23/2013 FASP 1.2.2:
+- Prepare to switch from make to cmake.
+- Add check for NAN.
+- Add a safe-net for coarse level iterative solver.
+- Remove non-standard examples from test.c.
+
 02/21/2013 FASP 1.2.1:
 - Add monolithic AMG for system of PDEs.
 - Fix a bug in the Makefile inside the "test/" dir.

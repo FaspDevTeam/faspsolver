@@ -26,7 +26,7 @@ solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 
 precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
 itsolver_tol             = 1e-6   % solver tolerance 
-itsolver_maxit           = 30   % maximal iteration number 
+itsolver_maxit           = 1000   % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
 itsolver_restart         = 20     % restart number for GMRES
 
@@ -34,9 +34,9 @@ itsolver_restart         = 20     % restart number for GMRES
 % parameters for ILU preconditioners           %
 %----------------------------------------------%
 
-ILU_type                 = 2      % 1 ILUk | 2 ILUt | 3 ILUtp 
+ILU_type                 = 1      % 1 ILUk | 2 ILUt | 3 ILUtp 
 ILU_lfil                 = 0      % level of fill-in for ILUk
-ILU_droptol              = 0.01    % ILU drop tolerance
+ILU_droptol              = 0.01   % ILU drop tolerance
 ILU_permtol              = 0.001  % permutation toleration for ILUtp
 ILU_relax                = 0.9    % add dropped entries to diagonal with relaxation
 

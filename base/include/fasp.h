@@ -72,13 +72,13 @@
 #define ABS(a) (((a)>=0.0)?(a):-(a)) /**< absolute value of a */
 
 /** 
- * \brief Definition of greater, greater and equal, less, less and equal, is nan. 
+ * \brief Definition of >, >=, <, <=, and isnan. 
  */
 #define GT(a,b) (((a)>(b))?(TRUE):(FALSE))   /**< is a > b? */
 #define GE(a,b) (((a)>=(b))?(TRUE):(FALSE))  /**< is a >= b? */
 #define LS(a,b) (((a)<(b))?(TRUE):(FALSE))   /**< is a < b? */
 #define LE(a,b) (((a)<=(b))?(TRUE):(FALSE))  /**< is a <= b? */
-#define ISNAN(a) (((a)!=(a))?(TRUE):(FALSE)) /**< is a == nan? */
+#define ISNAN(a) (((a)!=(a))?(TRUE):(FALSE)) /**< is a == NAN? */
 
 /**
  * \brief Index starting point: C convention or Fortran convention

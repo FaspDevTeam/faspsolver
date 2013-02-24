@@ -60,8 +60,8 @@ int main (int argc, const char * argv[])
 	strncpy(filename1,inparam.workdir,128);
 	strncpy(filename2,inparam.workdir,128);
     
-	// Read A and b -- P1 FE discretization for Poisson.
-	if (problem_num == 10) {				
+	// Read A and b -- P1 FE discretization for Poisson
+	if ( problem_num == 10 ) {				
 		datafile1="csrmat_FE.dat";
 		strcat(filename1,datafile1);
 		
@@ -72,44 +72,24 @@ int main (int argc, const char * argv[])
         
 	}	
     
-	// Read A and b -- P1 FE discretization for Poisson, 1M DoF    
-    else if (problem_num == 11) {
-		//datafile1="coomat_1046529.dat"; // This file is NOT in ../data!
-        datafile1="PP.dat";
-		strcat(filename1,datafile1);
-		fasp_dcoo_read(filename1, &A);
-        
-        // Generate a random solution 
-        //dvector sol = fasp_dvec_create(A.row);
-        //fasp_dvec_rand(A.row, &sol);
-         
-        // Form the right-hand-side b = A*sol
-        datafile2="Pb.dat";
-        strcat(filename2,datafile2);
-        fasp_dvec_read(filename2, &b);
-        //b = fasp_dvec_create(A.row);
-        //fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-        //fasp_dvec_free(&sol);
-	}	
-    
-	// Read A and b -- FD discretization for Poisson, 1M DoF    
-    else if (problem_num == 12) {
-		datafile1="csrmat_1023X1023.dat"; // This file is NOT in ../data!
+	// Read A and b -- five-point stencil for Poisson    
+    else if ( problem_num == 11 ) {
+		datafile1="csrmat_FD.dat";
 		strcat(filename1,datafile1);
 		
-        datafile2="rhs_1023X1023.dat";
+        datafile2="rhs_FD.dat";
 		strcat(filename2,datafile2);
-        
+		
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
-    }
-        
+	}
+    
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
 	}
     
     // Print problem size
-	if (print_level>PRINT_NONE) {
+	if ( print_level > PRINT_NONE ) {
         printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
         printf("b: n = %d\n", b.row);
         fasp_mem_usage();
