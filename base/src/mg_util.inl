@@ -34,11 +34,21 @@ static void fasp_coarse_itsolver (dCSRmat *A,
 {
     const INT csize  = A->row;
     const INT cmaxit = MAX(500,MIN(csize*csize, 2000)); // coarse level iteration number
+    INT i;
     
-    INT status = fasp_solver_dcsr_pcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);
-    
+    INT status = fasp_solver_dcsr_pcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);  
+        
     if (status < 0) { // If PCG does not converge, use BiCGstab as a saft net.
-        status = fasp_solver_dcsr_pvgmres (A, b, x, NULL, ctol, cmaxit, 25, 1, PRINT_NONE);
+        
+	// check if the solution is correct 
+	for (i=0; i<x->row; i++) {
+	    if (ISNAN(x->val[i])) {
+	       fasp_dvec_set(x->row, x, 0e+00);
+	       break;
+	    }
+	}
+
+	status = fasp_solver_dcsr_pvgmres (A, b, x, NULL, ctol, cmaxit, 25, 1, PRINT_NONE);
     }
     
     if ( status < 0 && prt_lvl > PRINT_MIN ) {

@@ -19,7 +19,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-#if With_UMFPACK
+#if WITH_UMFPACK
 #include "umfpack.h"
 #endif
 
@@ -38,7 +38,7 @@
 int umfpack(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
 {
 
-#if With_UMFPACK
+#if WITH_UMFPACK
 
 	const int n = ptrA->col;
 	const int m = ptrA->row;
@@ -84,7 +84,7 @@ int umfpack(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
 
 }
 
-#if With_UMFPACK
+#if WITH_UMFPACK
 
 /**
  * \fn int umfpack_factorize(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)

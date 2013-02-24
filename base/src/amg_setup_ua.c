@@ -216,7 +216,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
         
     }
     
-#if With_UMFPACK    
+#if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK format
     dCSRmat Ac_tran;
     fasp_dcsr_trans(&mgl[max_levels-1].A, &Ac_tran);
@@ -340,7 +340,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     
     mgl[max_levels-1].Ac = fasp_format_dbsr_dcsr(&mgl[max_levels-1].A);
     
-#if With_UMFPACK    
+#if WITH_UMFPACK    
     // Need to sort the matrix A for UMFPACK format
     dCSRmat Ac_tran;
     fasp_dcsr_trans(&mgl[max_levels-1].Ac, &Ac_tran);

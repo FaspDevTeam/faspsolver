@@ -69,22 +69,27 @@ int main (int argc, const char * argv[])
 		strcat(filename2,datafile2);        
 		
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        
 	}	
     
 	// Read A and b -- P1 FE discretization for Poisson, 1M DoF    
     else if (problem_num == 11) {
-		datafile1="coomat_1046529.dat"; // This file is NOT in ../data!
+		//datafile1="coomat_1046529.dat"; // This file is NOT in ../data!
+        datafile1="PP.dat";
 		strcat(filename1,datafile1);
 		fasp_dcoo_read(filename1, &A);
         
         // Generate a random solution 
-        dvector sol = fasp_dvec_create(A.row);
-        fasp_dvec_rand(A.row, &sol);
+        //dvector sol = fasp_dvec_create(A.row);
+        //fasp_dvec_rand(A.row, &sol);
          
         // Form the right-hand-side b = A*sol
-        b = fasp_dvec_create(A.row);
-        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-        fasp_dvec_free(&sol);
+        datafile2="Pb.dat";
+        strcat(filename2,datafile2);
+        fasp_dvec_read(filename2, &b);
+        //b = fasp_dvec_create(A.row);
+        //fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        //fasp_dvec_free(&sol);
 	}	
     
 	// Read A and b -- FD discretization for Poisson, 1M DoF    
@@ -172,13 +177,13 @@ int main (int argc, const char * argv[])
         fasp_solver_famg(&A, &b, &x, &amgparam);
     }
     
-#if With_SuperLU // use SuperLU directly
+#if WITH_SuperLU // use SuperLU directly
 	else if (solver_type == SOLVER_SUPERLU) {
 		status = superlu(&A, &b, &x, print_level);	 
 	}
 #endif	 
 	
-#if With_UMFPACK // use UMFPACK directly
+#if WITH_UMFPACK // use UMFPACK directly
 	else if (solver_type == SOLVER_UMFPACK) {
 		status = umfpack(&A, &b, &x, print_level);	 
 	}

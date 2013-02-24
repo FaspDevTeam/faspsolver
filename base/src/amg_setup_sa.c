@@ -204,7 +204,7 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
         else mgl[level].w = fasp_dvec_create(2*m);
     }
     
-#if With_UMFPACK    
+#if WITH_UMFPACK    
     // Need to sort the matrix A for UMFPACK format
     dCSRmat Ac_tran;
     fasp_dcsr_trans(&mgl[max_levels-1].A, &Ac_tran);

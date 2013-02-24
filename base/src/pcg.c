@@ -700,7 +700,10 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
             temp2=fasp_blas_array_dotprod(m,t,p);
             alpha=temp1/temp2;
-    
+	    if(alpha < 0e+00) {
+	      fprintf(stderr,"\n*** ALPHA is negative *** \n");
+	      exit(255);
+	    }    
             // u_k=u_{k-1} + alpha_k*p_{k-1}
             fasp_blas_array_axpy(m,alpha,p,u->val);
     
@@ -852,6 +855,10 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             // compute beta_k = (z_k, r_k)/(z_{k-1}, r_{k-1})
             temp2=fasp_blas_array_dotprod(m,z,r);
             beta=temp2/temp1;
+	    if(beta < 0e+00) {
+	      fprintf(stderr,"\n*** BETA is negative *** \n");
+	      exit(255);
+	    }    
             temp1=temp2;
     
             // compute p_k = z_k + beta_k*p_{k-1}
