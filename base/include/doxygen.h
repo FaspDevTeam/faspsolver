@@ -64,16 +64,17 @@
  * the README files and the short
  * <a href="http://fasp.sourceforge.net/download/userguide.pdf">\bf User's Guide</a> in "doc/". 
  *
- * To compile, you need a Fortran and a C compiler. By default, we use gfortan and gcc, 
- * respectively; see base/Makefile and base/make.in for details.
+ * To compile, you need a Fortran and a C compiler.  First, you can type:
  *
- * First, you can make the FASP library in the "base/" directory: 
+ * > $ make config
+ * 
+ * which will config the environment automatically. And, then, you can need to type:
  *
- * > $ make
+ * > $ make install
  *
- * which makes the libfasp.a static library.
+ * which will make the FASP shared static library and install to PREFIX/.
  *
- * If you wish to see the detailed usage of "make" or need any help, please 
+ * If you wish to see the detailed usage of "make" or need any help, please type:
  *
  * > $ make help
  *

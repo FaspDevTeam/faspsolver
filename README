@@ -1,6 +1,6 @@
 Fast Auxiliary Space Preconditioning (FASP) Solver Library: README
 
-Last modified on 01/01/2013
+Last modified on 02/25/2013
 
 ================================================================================
 
@@ -13,10 +13,6 @@ See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with FASP. If not, see <http://www.gnu.org/licenses/>.
 
-================================
-0. Introduction
-================================
-
 The FASP package is designed for developing and testing new efficient solvers 
 and preconditioners for discrete partial differential equations (PDEs) or 
 systems of PDEs. The main components of the package are standard Krylov methods, 
@@ -26,15 +22,29 @@ of Auxiliary Space Preconditioning, for several complicated applications.
 Current examples include the fluid dynamics, underground water simulation, 
 the black oil model in reservoir simulation, and so on. 
 
-More details about the FASP project can be found at http://fasp.sourceforge.net.
-And, if you have any questions, feel free to contact us at faspdev@gmail.com.
-
-================================
-1. Compatibility
-================================
-
 To compile, you need a C99 compiler and a F77 compiler. By default, we use 
-gfortan and gcc, respectively; see Makefile for details. 
+gfortan and gcc, respectively; see INSTALL for more details. Configuring and 
+building the FASP library and test suite requires CMake 2.6 or higher, which 
+can be found at http://www.cmake.org/ .
+
+There is a top level Makefile which calls cmake for configuration and building 
+of the FASP shared library and the test programs suite. The command to configure
+is:
+
+    $ make config 
+
+or
+    $ make config openmp=1
+
+After configuring, to compile the shared library, just type 
+
+    $ make 
+
+To install FASP library and executables for testing and tutorial:
+
+    $ make install
+
+Note: The default prefix is the FASP source directory.
 
 This package has been tested with: 
 
@@ -52,41 +62,7 @@ This package has been tested with:
     Fortran: gfortran-4.4.x, gfortran-4.5.x, gfortran-4.6.x, 
              g95-0.92, g95-0.93.
     
-================================
-2. Build
-================================
-
-To setup the environment, you need to do two simple steps: 
-
-Step 1. Compile the library: 
-     
-     [faspsolver/base]$ make
-
-Step 2. Now you can build a few test problems:
-     
-     [faspsolver/test]$ make
-
-     For helps on building, use:
-     
-     [faspsolver/test]$ make help 
-
-You may want to adjust the "make.inc" for your personal computer environment or 
-choose different compiling parameters, etc. For more details, read the README
-files in "base" and "test" directories.  
-
-================================
-3. Test Problems
-================================
-
-Now you are ready to use the library. If you need to see some test problems, go 
-to the "../test" directory for test problems and read the README file therein as
-well. If you wish to see some practical problems where FASP has been applied, 
-see "../fasp4*" directories. Each of the directories contains a particular 
-application.
-
-Some simple examples can be found in the "tutorial" directory and step-by-step 
-instructions are included in the examples therein.
-
-Please be noted that the codes containing in some of the "../fasp4*" directories 
-might be proprietary (not freely available to general public). See the README's 
-inside those directories for details. 
+================================================================================
+    
+More details about the FASP project can be found at http://fasp.sourceforge.net.
+And, if you have any questions, feel free to contact us at faspdev@gmail.com.

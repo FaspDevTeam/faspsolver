@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+02/25/2013 FASP 1.2.3:
+- Add an intial version of cmake.
+- Remove the origianl make and scons.
+- Update online documention, README, etc according to cmake.
+
 02/23/2013 FASP 1.2.2:
 - Prepare to switch from make to cmake.
 - Add check for NAN.

@@ -1195,30 +1195,30 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
 
 /*-------- In file: pcg.c --------*/
 
-INT fasp_solver_dcsr_pcg (dCSRmat *A, 
-                          dvector *b, 
-                          dvector *u, 
-                          precond *pc, 
+INT fasp_solver_dcsr_pcg (dCSRmat *A,
+                          dvector *b,
+                          dvector *u,
+                          precond *pc,
                           const REAL tol,
-                          const INT MaxIt, 
+                          const INT MaxIt,
                           const SHORT stop_type,
                           const SHORT print_level);
 
-INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, 
-                           dvector *b, 
-                           dvector *u, 
-                           precond *pc, 
+INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
+                           dvector *b,
+                           dvector *u,
+                           precond *pc,
                            const REAL tol,
-                           const INT MaxIt, 
+                           const INT MaxIt,
                            const SHORT stop_type,
                            const SHORT print_level);
 
-INT fasp_solver_dstr_pcg (dSTRmat *A, 
-                          dvector *b, 
-                          dvector *u, 
-                          precond *pc, 
-                          const REAL tol, 
-                          const INT MaxIt, 
+INT fasp_solver_dstr_pcg (dSTRmat *A,
+                          dvector *b,
+                          dvector *u,
+                          precond *pc,
+                          const REAL tol,
+                          const INT MaxIt,
                           const SHORT stop_type,
                           const SHORT print_level);
 

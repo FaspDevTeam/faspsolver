@@ -13,7 +13,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with FASP. If not, see <http://www.gnu.org/licenses/>.
 
 ================================
-0. Introduction
+Introduction
 ================================
 The FASP package is designed for developing and testing new efficient solvers 
 and preconditioners for discrete partial differential equations (PDEs) or 
@@ -29,39 +29,9 @@ And, if you have any questions, feel free to contact us at faspdev@gmail.com.
 
 
 ================================
-1. Tree Structure
+Tree Structure
 ================================
     - src:     source codes
     - include: header files
     - lib:     libraries 
     - extra:   external files optional for FASP
-
-
-================================
-2. Build
-================================
-You can make the header file using (You can skip this step as the headers files 
-have already been generated for you initially): 
-
-    $ make headers
-
-Now you are ready to make the FASP library file: 
-
-    $ make lib
-
-or just:
-
-    $ make
-
-To clean up the working directory, you may
-
-    $ make clean 
-
-which cleans up the directory by removing object files ONLY; To obtain a completely
-clean directory (removing all the executables also), you need to do
-
-    $ make allclean 
-
-If you need any help, you can type:
-
-    $ make help

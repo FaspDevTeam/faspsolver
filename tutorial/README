@@ -1,13 +1,19 @@
 Fast Auxiliary Space Preconditioning (FASP) Solver Package README
 
 -- Tutorial examples
+================================================================================
 
-last modified on 04/25/2012 by Chensong Zhang
-==================================================
+This software is free software distributed under the Lesser General Public 
+License or LGPL, version 3.0 or any later versions. This software distributed 
+in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even 
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+See the GNU Lesser General Public License for more details.
 
+You should have received a copy of the GNU Lesser General Public License 
+along with FASP. If not, see <http://www.gnu.org/licenses/>.
 
 ================================
-1. Introduction
+Introduction
 ================================
 This directory contains a set of examples for the FASP package.
 
@@ -31,32 +37,7 @@ along with FASP. If not, see <http://www.gnu.org/licenses/>.
 
 
 ================================
-2. Build
-================================
-To compile, you need a Fortran and a C compiler. By default, we use gfortan 
-and gcc, respectively; see Makefile for details. 
-
-Now you are ready to make all executables: 
-
-    $ make
-
-which makes all test executables. And, you can use
-
-    $ make clean 
-
-to clean up the directory by removing object files. Or, you can use
-
-    $ make allclean 
-
-to remove the executables also and gives a completely clean directory. 
-
-If you need any extra help, please 
-
-    $ make help
-
-
-================================
-3. Tree Structure
+Tree Structure
 ================================
   - ini:     Input files for parameters
   - main:    Test functions in C and Fortran

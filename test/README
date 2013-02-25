@@ -13,7 +13,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with FASP. If not, see <http://www.gnu.org/licenses/>.
 
 ================================
-1. Introduction
+Introduction
 ================================
 This directory contains a set of problems for regression tests and tools for 
 developing the FASP package.
@@ -32,34 +32,7 @@ And, if you have any questions, feel free to contact us at faspdev@gmail.com.
 
 
 ================================
-2. Build
-================================
-To compile, you need a Fortran and a C compiler. By default, we use gfortan 
-and gcc, respectively; see Makefile for details. 
-
-Now you are ready to make library and the test problem(s) by 
-
-    $ make
-or
-    $ make testall
-
-You can use
-
-    $ make clean 
-
-to clean up the directory by removing object files. Or, you can use
-
-    $ make allclean 
-
-to remove the executables also and gives a completely clean directory. 
-
-There are other test problems included in this directory. To see more details, try 
-
-    $ make help
-
-
-================================
-3. Test
+Test
 ================================
 By running the executable test.ex, we can get numerical results for different test 
 examples. The terminal command to invoke the test problems is
@@ -70,7 +43,7 @@ which tests a bunch of solvers at a single call.
 
 
 ================================
-4. Input
+Input
 ================================
 And test.ex reads parameters from ini/input.dat, where you can choose:
 
@@ -105,7 +78,7 @@ refer to the user documentation.
 
 
 ================================
-5. Tree Structure
+Tree Structure
 ================================
   - include: Header files
   - ini:     Input files for parameters
