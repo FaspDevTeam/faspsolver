@@ -5,6 +5,7 @@ File Name: CHANGES
 - Add check for NAN.
 - Add a safe-net for coarse level iterative solver.
 - Remove non-standard examples from test.c.
+- Fix and test DEBUG build in VS08.
 
 02/21/2013 FASP 1.2.1:
 - Add monolithic AMG for system of PDEs.

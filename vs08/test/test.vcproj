@@ -64,9 +64,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies=""
+				AdditionalDependencies="Direct.lib"
 				OutputFile="$(OutDir)\$(ProjectName)d.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../../../lib/ia32"
 				IgnoreDefaultLibraryNames="MSVCRTD.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -140,9 +141,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies=""
+				AdditionalDependencies="Direct.lib"
 				OutputFile="$(OutDir)\$(ProjectName)d.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../../../lib/x64"
 				IgnoreDefaultLibraryNames="MSVCRTD.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"

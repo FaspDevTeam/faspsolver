@@ -39,15 +39,15 @@ static void fasp_coarse_itsolver (dCSRmat *A,
         
     if (status < 0) { // If PCG fails to converge, use PGMRES as a saft net.
 
-	    // check if the solution is correct 
+        // check if the solution is correct 
         INT i;
-	    for ( i=0; i<x->row; i++ ) {
-	       if ( ISNAN(x->val[i]) ) {
-	          fasp_dvec_set(x->row, x, 0e+00); break;
-	       }
-	    }
+        for ( i=0; i<x->row; i++ ) {
+            if ( ISNAN(x->val[i]) ) {
+                fasp_dvec_set(x->row, x, 0e+00); break;
+            }
+        }
 
-	    status = fasp_solver_dcsr_pvgmres (A, b, x, NULL, ctol, cmaxit, 25, 1, PRINT_NONE);
+        status = fasp_solver_dcsr_pvgmres (A, b, x, NULL, ctol, cmaxit, 25, 1, PRINT_NONE);
     }
     
     if ( status < 0 && prt_lvl > PRINT_MIN ) {

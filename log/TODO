@@ -161,15 +161,15 @@ GPU Support
 Bug Fixes
 ========================
 	
-[ 0.4.1 ] fix a bug in BiCGstab: 9X9 diagonal matrix (one DoF, eight bdy) gives NaN
-[ 0.7.4 ] fix an iteration counting bug in BiCGstab
-[ 0.7.8 ] check other iterative solvers for similar bugs
+[ 0.4.1 ] BiCGstab: 9X9 diagonal matrix (one DoF, eight bdy) gives NaN
+[ 0.7.8 ] wrong iteration counting bug in BiCGstab, etc
 [ 0.8.9 ] remove sevearl obsolete functions
-[ 1.0.8 ] fix a bug in BiCGstab: silent exit when divided by zero
+[ 1.0.8 ] BiCGstab: silent exit when divided by zero
 [ 1.1.0 ] fix a bug in vs08 debug environment
 [ 1.1.3 ] fix a potential bug in Aggregation AMG
 [ 1.1.4 ] fix a bug in OMP EM-AMG
 [ 1.1.5 ] fix a potential bug in SA setup
-[ 1.2.0 ] fix a bug in Windows release version: MINRES gives wrong results, check compiler
-[       ] fix a bug during AMG setup: number of DOF could drop dramatically
-[       ] fix a bug in VGMRES: "restart" might be too big
+[ 1.2.0 ] Windows release version: MINRES gives wrong results, check compiler
+[       ] AMG setup: number of DOF could drop dramatically
+[       ] VGMRES: "restart" might be too big
+[       ] MUMPS: 64bit version does not work
