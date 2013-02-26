@@ -2,47 +2,62 @@
 # Fast Auxiliary Space Preconditioners (FASP) 
 #
 # Top level Makefile: Calls cmake to configure and build the library
-# and the test suite. modeled on METIS's Makefile.
+# and the test suite.
 #
 ########################################################################
 
-openmp     = no	    # openmp support
-shared     = no     # shared or static libs
-doxywizard = no     # use the GUI for doxygen 
-		    # (if there is one in a standard location)
-verbose = no	    # verbose compiling
-
-
-############## COMPLER FLAGS 
+####################   User Defined Options   ##########################
+#
+# If you want to reduce verbosity level, uncomment the next line :
+#
+verbose=no
+#
+# If you want to generate shared libs instead of static libs, uncomment
+# the next line :
+#
+# shared=yes
+#
+# If you want to compile with OpenMP support, uncomment the next line :
+#
+# openmp=yes
+#
+# If you want to use the GUI for doxgen (if there is one in doc/ dir) 
+# reduce verbosity level, uncomment the next line :
+#
+# doxywizard=yes
+#
+####################  User Defined Compiler Flags  #####################
+#
 cflags="-O3 -funroll-all-loops"
 cxxflags="-O3 -funroll-all-loops"
 fflags="-O3 -funroll-all-loops"
+#
+####################  User Changes UP TO HERE   ########################
 
-########################CHANGE UP TO HERE ##############
+VER0=1.2.1
+PKG0=fasp-$(VER0)
 
 # Let cmake do the configuration. Set up a build dir
 cpu0=$(shell uname -m | sed -e 's/[[:space:]][[:space:]]*/_/g')
 sys0=$(shell uname -s)
-build_dir = BUILD_$(cpu0)-$(sys0)
+build_dir=BUILD_$(cpu0)-$(sys0)
 
-CONFIG_FLAGS = -DCMAKE_VERBOSE_MAKEFILE=0
-ifneq ($(verbose), no)
-    CONFIG_FLAGS = -DCMAKE_VERBOSE_MAKEFILE=1
+CONFIG_FLAGS=-DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_RULE_MESSAGES=ON
+ifeq ($(verbose),no)
+    CONFIG_FLAGS=-DCMAKE_VERBOSE_MAKEFILE=OFF -DCMAKE_RULE_MESSAGES=OFF
 endif
-ifneq ($(openmp), no)
-    CONFIG_FLAGS += -DOPENMP=$(OPENMP)
+ifeq ($(shared),yes)
+    CONFIG_FLAGS+=-DSHARED=$(shared)
 endif
-ifneq ($(shared), no)
-    CONFIG_FLAGS += -DSHARED=$(shared)
+ifeq ($(openmp),yes)
+    CONFIG_FLAGS+=-DUSE_OPENMP=$(openmp)
 endif
-ifneq ($(doxywizard), no)
-    CONFIG_FLAGS += -DDOXYWIZARD=$(doxywizard)
+ifeq ($(doxywizard),yes)
+    CONFIG_FLAGS+=-DDOXYWIZARD=$(doxywizard)
 endif
-    CONFIG_FLAGS += -DCMAKE_C_FLAGS=$(cflags) -DCMAKE_CXX_FLAGS=$(cflags) -DCMAKE_Fortran_FLAGS=$(fflags)
-
-
-VER0=1.2.1
-PKG0=fasp-$(VER0)
+CONFIG_FLAGS+=-DCMAKE_C_FLAGS=$(cflags)
+CONFIG_FLAGS+=-DCMAKE_CXX_FLAGS=$(cxxflags)
+CONFIG_FLAGS+=-DCMAKE_Fortran_FLAGS=$(fflags)
 
 all clean install docs headers:
 	@if [ ! -f $(build_dir)/Makefile ]; then \
@@ -57,7 +72,6 @@ all clean install docs headers:
 config: distclean
 	mkdir -p $(build_dir)
 	cd $(build_dir) && cmake $(CURDIR) $(CONFIG_FLAGS)
-
 
 uninstall:
 	@if [ ! -f $(build_dir)/install_manifest.txt ]; then \
