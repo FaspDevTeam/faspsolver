@@ -2394,22 +2394,15 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
 
 /*-------- In file: interface_mumps.c --------*/
 
-int fasp_solver_mumps (int *nrow,
-                       int *nnz,
-                       int *IA,
-                       int *JA,
-                       double *AA,
-                       double *b,
-                       double *x);
+int fasp_solver_mumps  ( dCSRmat *ptrA,
+                         dvector *b,
+                         dvector *u,
+                         const int print_level);
 
-int fasp_solver_mumps_steps (int *nrow,
-                             int *nnz,
-                             int *IA,
-                             int *JA,
-                             double *AA,
-                             double *b,
-                             double *x,
-                             int *step);
+int fasp_solver_mumps_steps ( dCSRmat *ptrA,
+                              dvector *b,
+                              dvector *u,
+                              const int  step);
 
 
 /*-------- In file: interface_samg.c --------*/
