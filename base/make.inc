@@ -23,7 +23,7 @@ BOPT=-O2 -funroll-loops -ftree-vectorize
 # OpenMP Support                                                               #
 # Uncomment the following line to turn on OpenMP version                       #
 #==============================================================================#
-# BOPT+=-fopenmp
+BOPT+=-fopenmp
 
 #==============================================================================#
 # User preprocessing definitions                                               #

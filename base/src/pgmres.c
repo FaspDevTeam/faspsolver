@@ -1004,7 +1004,149 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     else 
         return iter;
 }
+#if 0
+double estimate_spectral_radius(const double **A, int n, size_t k = 20)
+{
+    double *x = (double *)malloc(n* sizeof(double));
+    double *y = (double *)malloc(n* sizeof(double));
+	double *z = (double *)malloc(n* sizeof(double));
+    double t;
+	int i1,j1;
 
+    // initialize x to random values in [0,1)
+//    cusp::copy(cusp::detail::random_reals<ValueType>(N), x);
+    dvector px;
+    px.row = n;
+    px.val = x;
+
+    fasp_dvec_rand(n, &px);
+	
+    for(size_t i = 0; i < k; i++)
+    {
+        //cusp::blas::scal(x, ValueType(1.0) / cusp::blas::nrmmax(x));
+		t= 1.0/ fasp_blas_array_norminf(n, px);
+		for(i1= 0; i1 <n; i1++) x[i1] *= t;
+		
+        //cusp::multiply(A, x, y);
+		
+		for(i1= 0; i1 <n; i1++) { 
+		   t= 0.0
+		   for(j1= 0; j1 <n; j1++)  t +=  A[i1][j1] * x[j1];
+		   y[i1] = t;   }
+//		   x.swap(y);   
+		for(i1= 0; i1 <n; i1++) z[i1] = x[i1];
+		for(i1= 0; i1 <n; i1++) x[i1] = y[i1];
+        for(i1= 0; i1 <n; i1++) y[i1] = z[i1];
+    }
+   
+    free(x);
+	free(y);
+	free(z);
+	
+    if (k == 0)
+        return 0;
+    else
+        //return cusp::blas::nrm2(x) / cusp::blas::nrm2(y);
+		return fasp_blas_array_norm2(n,x) / fasp_blas_array_norm2(n,y) ;
+}
+
+
+double fasp_spectral_radius(      dCSRmat *A, 
+                             const SHORT restart)
+{
+    const INT n         = A->row;  
+    const INT min_iter  = 0;
+    
+    // local variables
+    INT      iter = 0;
+    INT      restartplus1 = restart + 1;
+    INT      i, j, k;
+    
+    REAL     epsmac = SMALLREAL; 
+    REAL     r_norm, b_norm, den_norm;
+    REAL     epsilon, gamma, t;   
+    
+    REAL    *c = NULL, *s = NULL, *rs = NULL; 
+    REAL    *norms = NULL, *r = NULL, *w = NULL;
+    REAL   **p = NULL, **hh = NULL;
+    REAL    *work = NULL;
+    
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_dcsr_pgmres ...... [Start]\n");
+    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
+#endif    
+
+    /* allocate memory */
+    work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
+    p    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    hh   = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
+    if (print_level>PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL)); 
+    r = work; w = r + n; rs = w + n; c  = rs + restartplus1; s  = c + restart;    
+    
+    for (i = 0; i < restartplus1; i ++) p[i] = s + restart + i*n;
+    for (i = 0; i < restartplus1; i ++) hh[i] = p[restart] + n + i*restart;
+    
+    /* initialization */
+    dvector p0;
+    p0.row = n;
+    p0.val = p[0];
+    fasp_dvec_rand(n, &p0);
+   // for (i=0;i<n ;i++) p[0][i] = random()
+    
+	r_norm = fasp_blas_array_norm2(n, p[0]);
+    t = 1.0 / r_norm;
+    for (j = 0; j < n; j ++) p[0][j] *= t;  
+
+	int  maxiter = std::min(n, restart) ;
+	for(j = 0; j < maxiter; j++)
+	{
+//		cusp::multiply(A, V[j], V[j + 1]);
+        fasp_blas_dcsr_mxv(A, p[j], p[j+1]);
+		
+		for( i = 0; i <= j; i++)
+		{
+		//	H_(i,j) = cusp::blas::dot(V[i], V[j + 1]);
+            hh[i][j] = fasp_blas_array_dotprod(n, p[i], p[j+1]);
+			fasp_blas_array_axpy(n, -hh[i][j], p[i], p[ j+1 ]);
+		//	cusp::blas::axpy(V[i], V[j + 1], -H_(i,j));
+		}
+
+		//H_(j+1,j) = cusp::blas::nrm2(V[j + 1]);
+        hh[j+1][j] =  fasp_blas_array_norm2 (n, p[j+1]); 
+		if( hh[j+1][j] < 1e-10) break;
+		//cusp::blas::scal(V[j + 1], ValueType(1) / H_(j+1,j));
+		t = 1.0/hh[j+1][j];
+		 for (int  k = 0; k < n; k ++) p[j+1][k] *= t;  
+	}
+
+//	H.resize(j,j);
+    H   = (REAL **)fasp_mem_calloc(j, sizeof(REAL *)); 
+	H[0]   = (REAL *)fasp_mem_calloc(j*j, sizeof(REAL)); 
+	for (i = 1; i < j; i ++) H[i] = H[i-1] + j;
+	
+	
+	for( size_t row = 0; row < j; row++ )
+		for( size_t col = 0; col < j; col++ )
+			H[row][col] = hh[row][col];      
+	
+    double spectral_radius = estimate_spectral_radius( H, j, 20);
+
+
+    /*-------------------------------------------
+     * Clean up workspace
+     *------------------------------------------*/
+    fasp_mem_free(work); 
+    fasp_mem_free(p); 
+    fasp_mem_free(hh);
+
+    fasp_mem_free(norms);
+	fasp_mem_free(H[0]);
+	fasp_mem_free(H);    
+
+    
+    return spectral_radius;
+}
+#endif
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
