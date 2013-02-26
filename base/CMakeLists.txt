@@ -20,12 +20,12 @@ file(GLOB FASP_BASE_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 ##
 # Build libfasp
 # depends also on the source, header and inl files 
-add_library(fasp SHARED ${FASP_BASE_SOURCES} ${FASP_BASE_INL} 
+add_library(fasp ${FASP_LIBRARY_TYPE} ${FASP_BASE_SOURCES} ${FASP_BASE_INL} 
 		 ${FASP_BASE_HEADERS}) 
 
 # install libfasp
     install(TARGETS fasp
-    LIBRARY DESTINATION  lib
+    LIBRARY DESTINATION lib
     RUNTIME DESTINATION lib
     ARCHIVE DESTINATION lib)
 

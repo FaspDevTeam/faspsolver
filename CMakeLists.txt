@@ -1,7 +1,9 @@
-	cmake_minimum_required (VERSION 2.6)
+	cmake_minimum_required (VERSION 2.8)
+
 
 # INIT_CONFIG load...
 	include(fasp_init_config.cmake OPTIONAL )
+
 #
 	###################################################
 #
@@ -30,9 +32,12 @@
 #
         set(CMAKE_INSTALL_PREFIX "${FASP_SOURCE_DIR}" )
 	set(FASPLIB_BASE_PATH "base" CACHE PATH "base path to FASPLIB")
-	set(SHARED TRUE CACHE BOOL "Build a Shared Library")
         set(FASP_INSTALL TRUE)
-        set(FASP_LIBRARY_TYPE SHARED)
+	if(SHARED) 
+	   set(FASP_LIBRARY_TYPE SHARED)
+        else(SHARED)
+	   set(FASP_LIBRARY_TYPE STATIC)
+	endif(SHARED)	   
 
 # FOR MAC OS X to find shared libs in install location
         set(CMAKE_INSTALL_NAME_DIR 
@@ -55,20 +60,33 @@ file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR}
 ############## documentation with doxygen
 # target generating the FASP documentation with doxygen
 find_package(Doxygen)
+##message(" WAS doxygen found: ${DOXYGEN_FOUND} ")
 if(DOXYGEN_FOUND)
-	configure_file(
+    configure_file(
 		${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in 
 	      	${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf @ONLY
 		)
-	add_custom_target(docs ${DOXYGEN_EXECUTABLE} 
- 			       ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf
-			       WORKING_DIRECTORY 
-			       "${CMAKE_CURRENT_BINARY_DIR}"
-			       COMMENT 
-			       "Generating FASP documentation (Doxygen)" 
-			       VERBATIM)
+    set(DOXY_EXEC "${DOXYGEN_EXECUTABLE}")
+    if(DOXYWIZARD)
+        find_program(WIZARD doxywizard)
+        if(APPLE AND (NOT WIZARD) )
+           find_program(WIZARD 
+	     /Applications/Doxygen.app/Contents/MacOS/Doxywizard)
+        endif()
+        if(WIZARD)
+	    set(DOXY_EXEC "${WIZARD}")
+	endif()
+        message( "DOXY exec is ${DOXY_EXEC}")
+    endif(DOXYWIZARD)
+    add_custom_target(docs ${DOXY_EXEC}
+ 	       ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf
+	       WORKING_DIRECTORY 
+	       "${CMAKE_CURRENT_BINARY_DIR}"
+	       COMMENT 
+	       "Generating FASP documentation (Doxygen)" 
+	       VERBATIM)
 endif(DOXYGEN_FOUND)
-
+###############end documentation with doxygen
 # Add include directories.
    include_directories(${FASPLIB_BASE_PATH}/include)
 # 
@@ -76,6 +94,11 @@ endif(DOXYGEN_FOUND)
     add_subdirectory("base")
     add_subdirectory("test")
     add_subdirectory("tutorial")
+
+
+
+
+
 
 
 

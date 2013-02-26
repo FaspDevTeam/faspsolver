@@ -11,6 +11,7 @@ file(GLOB FASP_TLIB_SRC src/*.c src/*.f )
 #rpaths put the shared lib in the same dir as the executables.
 
 add_library(fasptest STATIC ${FASP_TLIB_SRC}) 
+#target_link_libraries(fasptest fasp) 
 
 #DO NOT## install(TARGETS fasptest
 #    LIBRARY DESTINATION ${FASP_TLIB_DIR}
@@ -24,8 +25,8 @@ foreach( srcfile ${FASP_TSRC} )
     string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile} )
 #    message( "${execfile} ${srcfile}" )
     add_executable( ${execfile} main/${srcfile} )
-# Make sure YourLib is linked to each app
-    target_link_libraries( ${execfile} fasp fasptest ) 
+# 
+    target_link_libraries( ${execfile} fasptest fasp ) 
     install(TARGETS ${execfile} DESTINATION ${FASP_SOURCE_DIR}/test)
 endforeach( srcfile ${FASP_TSRC} )
 
