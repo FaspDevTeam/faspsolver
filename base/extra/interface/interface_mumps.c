@@ -16,13 +16,15 @@
 /*---------------------------------*/
 
 /**
- * \fn int fasp_solver_mumps (dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
+ * \fn int fasp_solver_mumps (dCSRmat *ptrA, dvector *b, dvector *u, 
+ *                            const int print_level)
  *
  * \brief Solve Ax=b by MUMPS directly
  *
- *  \param ptrA   pointer to stiffness matrix of levelNum levels
- *  \param b      pointer to the dvector of right hand side term
- *  \param u      pointer to the dvector of dofs
+ * \param ptrA         Pointer to a dCSRmat matrix
+ * \param b            Pointer to the dvector of right-hand side term
+ * \param u            Pointer to the dvector of solution
+ * \param print_level  Output level
  *
  * \author Chunsheng Feng
  * \data   02/27/2013
@@ -30,10 +32,10 @@
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
  *
  */
-int fasp_solver_mumps  ( dCSRmat *ptrA,
-                         dvector *b,
-                         dvector *u,
-                         const int print_level)
+int fasp_solver_mumps ( dCSRmat *ptrA,
+                        dvector *b,
+                        dvector *u,
+                        const int print_level)
 {
     
 #if WITH_MUMPS
@@ -121,7 +123,7 @@ int fasp_solver_mumps  ( dCSRmat *ptrA,
     free(a);
     free(rhs);
 	
-	if (print_level>0) {
+	if ( print_level > PRINT_MIN ) {
 		clock_t end_time = clock();
 		double solve_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
 		printf("MUMPS costs %f seconds.\n", solve_duration);
@@ -141,15 +143,15 @@ int fasp_solver_mumps  ( dCSRmat *ptrA,
 }
 
 /**
- * \fn int fasp_solver_mumps_steps ( dCSRmat *ptrA, dvector *b, dvector *u, const int  step)
+ * \fn int fasp_solver_mumps_steps (dCSRmat *ptrA, dvector *b, dvector *u, 
+ *                                  const int step)
  *
  * \brief Solve Ax=b by MUMPS in three steps
  *
- *
- *  \param ptrA   pointer to stiffness matrix of levelNum levels
- *  \param b      pointer to the dvector of right hand side term
- *  \param u      pointer to the dvector of dofs
- *  \param step   1: Setup, 2: Sovle, 3 Destory
+ * \param ptrA         Pointer to a dCSRmat matrix
+ * \param b            Pointer to the dvector of right-hand side term
+ * \param u            Pointer to the dvector of solution
+ * \param step         1: Setup, 2: Sovle, 3 Destory
  *
  * \author Chunsheng Feng
  * \data   02/27/2013

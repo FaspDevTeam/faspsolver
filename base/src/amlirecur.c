@@ -30,6 +30,8 @@
  *
  * \author Xiaozhe Hu
  * \date   01/23/2011
+ *
+ * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
 void fasp_solver_amli (AMG_data *mgl, 
                        AMG_param *param, 
@@ -282,6 +284,8 @@ void fasp_solver_amli (AMG_data *mgl,
  *
  * \author Xiaozhe Hu
  * \date   04/06/2010
+ *
+ * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
 void fasp_solver_nl_amli (AMG_data *mgl, 
                           AMG_param *param, 
@@ -552,7 +556,9 @@ void fasp_solver_nl_amli (AMG_data *mgl,
  * \param num_levels  Total numebr of levels
  *
  * \author Xiaozhe Hu
- * \date 04/06/2010
+ * \date   04/06/2010
+ *
+ * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
 void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, 
                               AMG_param *param, 

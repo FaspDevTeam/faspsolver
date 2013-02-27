@@ -7,6 +7,7 @@ File Name: CHANGES
 - Update cmake with several options: shared, openmp, verbose, etc.
 - Add interface to MUMPS.
 - Update interface function names.
+- Change preprocessor: “WITH_DISOLVE” -> “WITH_MUMPS”.
 
 02/23/2013 FASP 1.2.2:
 - Prepare to switch from make to cmake.

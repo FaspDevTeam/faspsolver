@@ -24,9 +24,10 @@
  *
  * \brief Solve Au=b by SuperLU
  *
- * \param *ptrA   pointer to stiffness matrix of levelNum levels
- * \param *b      pointer to the dvector of right hand side term
- * \param *u      pointer to the dvector of dofs
+ * \param ptrA         Pointer to a dCSRmat matrix
+ * \param b            Pointer to the dvector of right-hand side term
+ * \param u            Pointer to the dvector of solution
+ * \param print_level  Output level
  *
  * \author Xiaozhe Hu
  * \data   11/05/09
@@ -82,7 +83,7 @@ int fasp_solver_superlu (dCSRmat *ptrA,
 	u->val = (double *) BB->nzval;
 	u->row = n;
 	
-	if (print_level>0) {
+	if ( print_level > PRINT_MIN ) {
 		clock_t LU_end=clock();
 		double LUduration = (double)(LU_end - LU_start)/(double)(CLOCKS_PER_SEC);
 		printf("SuperLU totally costs %f seconds.\n", LUduration);

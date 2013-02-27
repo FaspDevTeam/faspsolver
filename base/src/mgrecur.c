@@ -24,7 +24,8 @@
  * \author Xuehai Huang, Chensong Zhang
  * \date   04/06/2010
  *
- * Modified by Chensong on 01/10/2012
+ * Modified by Chensong Zhang on 01/10/2012
+ * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
 void fasp_solver_mgrecur (AMG_data *mgl, 
                           AMG_param *param, 

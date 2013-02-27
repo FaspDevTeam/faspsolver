@@ -16,12 +16,15 @@
 /*---------------------------------*/
 
 /**
- * \fn int fasp_solver_umfpack (dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
+ * \fn int fasp_solver_umfpack (dCSRmat *ptrA, dvector *b, dvector *u, 
+ *                              const int print_level)
+ *
  * \brief Solve Au=b by UMFpack
  *
- * \param ptrA   pointer to stiffness matrix of levelNum levels
- * \param b      pointer to the dvector of right hand side term
- * \param u      pointer to the dvector of dofs
+ * \param ptrA         Pointer to a dCSRmat matrix
+ * \param b            Pointer to the dvector of right-hand side term
+ * \param u            Pointer to the dvector of solution
+ * \param print_level  Output level
  *
  * \author Chensong Zhang
  * \data   05/20/2010
@@ -59,7 +62,7 @@ int fasp_solver_umfpack (dCSRmat *ptrA,
 	status = umfpack_di_solve (UMFPACK_A, Ap, Ai, Ax, u->val, b->val, Numeric, NULL, NULL);
 	umfpack_di_free_numeric (&Numeric);
 	
-	if (print_level>0) {
+	if ( print_level > PRINT_MIN ) {
 		clock_t end_time = clock();
 		double solve_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
 		printf("UMFPACK costs %f seconds.\n", solve_duration);
@@ -118,7 +121,7 @@ int umfpack_factorize (dCSRmat *ptrA,
 	status = umfpack_di_numeric (Ap, Ai, Ax, Symbolic, &Numeric, NULL, NULL);
 	umfpack_di_free_symbolic (&Symbolic);
 	
-	if (print_level>0) {
+	if ( print_level > PRINT_MIN ) {
 		clock_t end_time = clock();
 		double fac_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
 		printf("UMFPACK factorize costs %f seconds.\n", fac_duration);

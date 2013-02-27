@@ -2,15 +2,6 @@
  *  \brief Utilies for multigrid cycles
  */
 
-#if WITH_DISOLVE // Decrorations of direct solvers
-
-extern "C" {
-    void DIRECT_MUMPS(const INT *n, const INT *nnz, INT *ia, INT *ja, 
-                      REAL *a, REAL *b, REAL *x);
-}
-
-#endif
-
 /**
  * \fn static void fasp_coarse_itsolver (dCSRmat *A, dvector *b, dvector *x,
  *                                       const REAL ctol, const SHORT prt_lvl)

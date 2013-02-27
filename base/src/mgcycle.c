@@ -15,7 +15,7 @@
 INT  nx_rb=1 ;  /**< Red Black Gs Smoother Nx */
 INT  ny_rb=1 ;  /**< Red Black Gs Smoother Ny */
 INT  nz_rb=1 ;  /**< Red Black Gs Smoother Nz */
-INT *IMAP=NULL;    /**< Red Black Gs Smoother imap */
+INT *IMAP=NULL; /**< Red Black Gs Smoother imap */
 INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
 #endif
 
@@ -35,6 +35,7 @@ INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
  * \date   10/06/2010
  *
  * Modified by Chensong Zhang on 12/13/2011
+ * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
 void fasp_solver_mgcycle (AMG_data *mgl, 
                           AMG_param *param)
