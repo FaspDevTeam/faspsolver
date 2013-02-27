@@ -8,21 +8,23 @@
 
 ####################   User Defined Options   ##########################
 #
-# If you want to reduce verbosity level, uncomment the next line :
+# The default setting for vebosity level for FASP is verbose=yes. If you
+# want to reduce verbosity level, uncomment the next line:
 #
-verbose=no
+# verbose=no
 #
-# If you want to generate shared libs instead of static libs, uncomment
-# the next line :
+# By default, FASP generates static libraries. If you need to generate 
+# shared libs instead of static libs, uncomment the next line:
 #
 # shared=yes
 #
-# If you want to compile with OpenMP support, uncomment the next line :
+# If you want to compile with OpenMP support, uncomment the next line:
 #
 # openmp=yes
 #
-# If you want to use the GUI for doxgen (if there is one installed on
-# your system)
+# By default, FASP uses the command-line Doxygen to generate a reference
+# manual. If you want to use the GUI of Doxgen instead of command-line
+# (if there is one installed on your system), uncomment the next line:
 #
 # doxywizard=yes
 #
@@ -31,6 +33,13 @@ verbose=no
 cflags="-O3 -funroll-all-loops"
 cxxflags="-O3 -funroll-all-loops"
 fflags="-O3 -funroll-all-loops"
+#
+# If you need to generate debug information during building, you should 
+# uncomment the next few lines: 
+#
+# cflags="-Wall -g -pg"
+# cxxflags="-Wall -g -pg"
+# fflags="-Wall -g -pg"
 #
 ####################  User Changes UP TO HERE   ########################
 
@@ -82,7 +91,7 @@ uninstall:
 	else \
 		xargs rm < $(build_dir)/install_manifest.txt; \
 		rm -rf $(build_dir)/install_manifest.txt \
-			doc/htdocs \
+		       doc/htdocs; \
 	fi
 
 distclean:
@@ -95,7 +104,7 @@ help:
 backup:
 	@-rm -f faspsolver.zip
 	@-zip -r faspsolver.zip README INSTALL License Makefile \
-		                    *.txt *.cmake doc/userguide.pdf \
-		                    base data test tutorial vs08
+	                        *.txt *.cmake doc/userguide.pdf \
+	                        base data test tutorial vs08
 
 .PHONY: config distclean all clean install docs headers uninstall backup help
