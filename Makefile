@@ -10,7 +10,7 @@
 #
 # If you want to reduce verbosity level, uncomment the next line :
 #
-verbose=no
+# verbose=no
 #
 # If you want to generate shared libs instead of static libs, uncomment
 # the next line :

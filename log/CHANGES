@@ -1,10 +1,12 @@
 File Name: CHANGES
 
-02/26/2013 FASP 1.2.3:
+02/27/2013 FASP 1.2.3:
 - Add an intial version of cmake.
 - Remove the origianl make and scons.
 - Update online documention, README, etc according to cmake.
 - Update cmake with several options: shared, openmp, verbose, etc.
+- Add interface to MUMPS.
+- Update interface function names.
 
 02/23/2013 FASP 1.2.2:
 - Prepare to switch from make to cmake.

@@ -157,16 +157,15 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     
     // CoarseSpaceSolver:    
     {
-#if   WITH_DISOLVE 
-        /* use Direct.lib in Windows */
-        DIRECT_MUMPS(&mgl[nl-1].A.row, &mgl[nl-1].A.nnz, mgl[nl-1].A.IA, mgl[nl-1].A.JA, 
-                     mgl[nl-1].A.val,  mgl[nl-1].b.val, mgl[nl-1].x.val);
+#if   WITH_MUMPS
+        /* use MUMPS direct solver on the coarsest level */
+        fasp_solver_mumps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #elif WITH_UMFPACK
         /* use UMFPACK direct solver on the coarsest level */
-        umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+        fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
-        superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+        fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else    
         /* use iterative solver on the coarest level */
         fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, param->tol, print_level);
@@ -351,15 +350,15 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
     
     // CoarseSpaceSolver:    
     {
-#if   WITH_DISOLVE /* use Direct.lib in Windows */
-        DIRECT_MUMPS(&mgl[nl-1].Ac.row, &mgl[nl-1].Ac.nnz, mgl[nl-1].Ac.IA, mgl[nl-1].Ac.JA, 
-                     mgl[nl-1].Ac.val, mgl[nl-1].b.val, mgl[nl-1].x.val);
+#if   WITH_MUMPS
+        /* use MUMPS direct solver on the coarsest level */
+        fasp_solver_mumps(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #elif WITH_UMFPACK
         /* use UMFPACK direct solver on the coarsest level */
-        umfpack(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+        fasp_solver_umfpack(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
-        superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+        fasp_solver_superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else    
         /* use iterative solver on the coarest level */
         const INT  csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;

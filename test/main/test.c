@@ -157,15 +157,21 @@ int main (int argc, const char * argv[])
         fasp_solver_famg(&A, &b, &x, &amgparam);
     }
     
+#if WITH_MUMPS // use MUMPS directly
+	else if (solver_type == SOLVER_MUMPS) {
+		status = fasp_solver_mumps(&A, &b, &x, print_level);
+	}
+#endif
+    
 #if WITH_SuperLU // use SuperLU directly
 	else if (solver_type == SOLVER_SUPERLU) {
-		status = superlu(&A, &b, &x, print_level);	 
+		status = fasp_solver_superlu(&A, &b, &x, print_level);
 	}
 #endif	 
 	
 #if WITH_UMFPACK // use UMFPACK directly
 	else if (solver_type == SOLVER_UMFPACK) {
-		status = umfpack(&A, &b, &x, print_level);	 
+		status = fasp_solver_umfpack(&A, &b, &x, print_level);	 
 	}
 #endif	 
     

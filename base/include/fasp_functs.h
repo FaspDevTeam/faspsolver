@@ -1261,44 +1261,44 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
 
 /*-------- In file: pgmres.c --------*/
 
-INT fasp_solver_dcsr_pgmres (dCSRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
-                             precond *pc, 
+INT fasp_solver_dcsr_pgmres (dCSRmat *A,
+                             dvector *b,
+                             dvector *x,
+                             precond *pc,
                              const REAL tol,
-                             const INT MaxIt, 
+                             const INT MaxIt,
                              const SHORT restart,
-                             const SHORT stop_type, 
+                             const SHORT stop_type,
                              const SHORT print_level);
 
-INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A, 
-                              dvector *b, 
-                              dvector *u, 
-                              precond *pc, 
+INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
+                              dvector *b,
+                              dvector *u,
+                              precond *pc,
                               const REAL tol,
-                              const INT MaxIt, 
+                              const INT MaxIt,
                               const SHORT restart,
-                              const SHORT stop_type, 
+                              const SHORT stop_type,
                               const SHORT print_level);
 
-INT fasp_solver_dbsr_pgmres (dBSRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
-                             precond *pc, 
+INT fasp_solver_dbsr_pgmres (dBSRmat *A,
+                             dvector *b,
+                             dvector *x,
+                             precond *pc,
                              const REAL tol,
-                             const INT MaxIt, 
+                             const INT MaxIt,
                              const SHORT restart,
-                             const SHORT stop_type, 
+                             const SHORT stop_type,
                              const SHORT print_level);
 
-INT fasp_solver_dstr_pgmres (dSTRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
-                             precond *pc, 
+INT fasp_solver_dstr_pgmres (dSTRmat *A,
+                             dvector *b,
+                             dvector *x,
+                             precond *pc,
                              const REAL tol,
-                             const INT MaxIt, 
+                             const INT MaxIt,
                              const SHORT restart,
-                             const SHORT stop_type, 
+                             const SHORT stop_type,
                              const SHORT print_level);
 
 
@@ -2390,5 +2390,60 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
                                 REAL *tol, 
                                 INT *maxit, 
                                 INT *ptrlvl);
+
+
+/*-------- In file: interface_mumps.c --------*/
+
+int fasp_solver_mumps (int *nrow,
+                       int *nnz,
+                       int *IA,
+                       int *JA,
+                       double *AA,
+                       double *b,
+                       double *x);
+
+int fasp_solver_mumps_steps (int *nrow,
+                             int *nnz,
+                             int *IA,
+                             int *JA,
+                             double *AA,
+                             double *b,
+                             double *x,
+                             int *step);
+
+
+/*-------- In file: interface_samg.c --------*/
+
+void dvector2SAMGInput(dvector *vec, char *filename);
+
+INT dCSRmat2SAMGInput(dCSRmat *A, char *filefrm, char *fileamg);
+
+
+/*-------- In file: interface_superlu.c --------*/
+
+int fasp_solver_superlu (dCSRmat *ptrA,
+                         dvector *b,
+                         dvector *u,
+                         const int print_level);
+
+
+/*-------- In file: interface_umfpack.c --------*/
+
+int fasp_solver_umfpack (dCSRmat *ptrA,
+                         dvector *b,
+                         dvector *u,
+                         const int print_level);
+
+int umfpack_factorize (dCSRmat *ptrA,
+                       void *Numeric,
+                       const int print_level);
+
+int umfpack_solve (dCSRmat *ptrA,
+                   dvector *b,
+                   dvector *u,
+                   void *Numeric,
+                   const int print_level);
+
+int umfpack_free_numeric (void *Numeric);
 
 /* End of fasp_functs.h */

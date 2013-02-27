@@ -95,16 +95,15 @@ void fasp_solver_mgrecur (AMG_data *mgl,
     }
     else // coarsest level solver
         {
-#if   WITH_DISOLVE 
-            /* use Direct.lib in Windows */
-            DIRECT_MUMPS(&A_level0->row, &A_level0->nnz, A_level0->IA, A_level0->JA, A_level0->val, 
-                         b0->val, e0->val);
+#if   WITH_MUMPS 
+            /* use MUMPS direct solver on the coarsest level */
+            fasp_solver_mumps(A_level0, b0, e0, 0);
 #elif WITH_UMFPACK
             /* use UMFPACK direct solver on the coarsest level */
-            umfpack(A_level0, b0, e0, 0);
+            fasp_solver_umfpack(A_level0, b0, e0, 0);
 #elif WITH_SuperLU
             /* use SuperLU direct solver on the coarsest level */
-            superlu(A_level0, b0, e0, 0);
+            fasp_solver_superlu(A_level0, b0, e0, 0);
 #else    
             /* use default iterative solver on the coarest level */
             fasp_coarse_itsolver(A_level0, b0, e0, param->tol, print_level);

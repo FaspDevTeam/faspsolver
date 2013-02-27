@@ -1,14 +1,6 @@
-/*! \file superlu.c
- *  \brief Direct solver on the coarest level (call subroutines from SuperLU)
+/*! \file interface_superlu.c
+ *  \brief Call SuperLU direct solver.
  *
- *  How to use SuperLU as a coarset level solver:
- *
- *	  - Download SuperLU and Install it on your own computer
- *	  - Modify msc/csrc/multigrid.c
- *	    (On coarset level, comment pcg() and uncomment superlu())
- *	  - Modify msc/Makefile
- *	    (Define SUPERLULIB and BLASLIB according to where the libraries of SuperLU and Blas are on your computer)
- *	  - Then use "make" to compile
  */
 
 #include <stdio.h>
@@ -18,7 +10,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-#if With_SuperLU
+#if WITH_SuperLU
 #include "slu_ddefs.h"
 #endif
 
@@ -27,7 +19,9 @@
 /*---------------------------------*/
 
 /**
- * \fn int superlu(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
+ * \fn int fasp_solver_superlu (dCSRmat *ptrA, dvector *b, dvector *u,
+ *                              const int print_level)
+ *
  * \brief Solve Au=b by SuperLU
  *
  * \param *ptrA   pointer to stiffness matrix of levelNum levels
@@ -35,15 +29,19 @@
  * \param *u      pointer to the dvector of dofs
  *
  * \author Xiaozhe Hu
- * \data 11/05/09
+ * \data   11/05/09
  *
  * Modified by Chensong Zhang on 11/01/2012 for new FASP function names.
+ * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
  *
  */
-int superlu(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
+int fasp_solver_superlu (dCSRmat *ptrA,
+                         dvector *b,
+                         dvector *u,
+                         const int print_level)
 {
     
-#if With_SuperLU
+#if WITH_SuperLU
 	
 	SuperMatrix A, L, U, B;
 	
@@ -104,7 +102,7 @@ int superlu(dCSRmat *ptrA, dvector *b, dvector *u, const int print_level)
 #else
     
 	printf("### ERROR: SuperLU is not available!\n");
-	exit(ERROR_SOLVER_TYPE);
+    return ERROR_SOLVER_EXIT;
     
 #endif
     
