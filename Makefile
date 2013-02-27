@@ -21,8 +21,8 @@
 #
 # openmp=yes
 #
-# If you want to use the GUI for doxgen (if there is one in doc/ dir) 
-# reduce verbosity level, uncomment the next line :
+# If you want to use the GUI for doxgen (if there is one installed on
+# your system)
 #
 # doxywizard=yes
 #
@@ -83,7 +83,6 @@ uninstall:
 		xargs rm < $(build_dir)/install_manifest.txt; \
 		rm -rf $(build_dir)/install_manifest.txt \
 			doc/htdocs \
-			doc/doc.zip; \
 	fi
 
 distclean:

@@ -37,7 +37,6 @@
         else(SHARED)
 	   set(FASP_LIBRARY_TYPE STATIC)
 	endif(SHARED)	   
-
 # FOR MAC OS X to find shared libs in install location
         set(CMAKE_INSTALL_NAME_DIR 
 		${CMAKE_INSTALL_PREFIX}/lib CACHE PATH "path for apple")
@@ -59,7 +58,6 @@ file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR}
 ############## documentation with doxygen
 # target generating the FASP documentation with doxygen
 find_package(Doxygen)
-##message(" WAS doxygen found: ${DOXYGEN_FOUND} ")
 if(DOXYGEN_FOUND)
     configure_file(
 		${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in 
@@ -75,7 +73,7 @@ if(DOXYGEN_FOUND)
         if(WIZARD)
 	    set(DOXY_EXEC "${WIZARD}")
 	endif()
-        message( "DOXY exec is ${DOXY_EXEC}")
+##        message( "DOXY exec is ${DOXY_EXEC}")
     endif(DOXYWIZARD)
     add_custom_target(docs ${DOXY_EXEC}
  	       ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf
@@ -84,6 +82,8 @@ if(DOXYGEN_FOUND)
 	       COMMENT 
 	       "Generating FASP documentation (Doxygen)" 
 	       VERBATIM)
+else(DOXYGEN_FOUND)
+message(" WARNING: Doxygen was requested but is not found ")
 endif(DOXYGEN_FOUND)
 ###############end documentation with doxygen
 # Add include directories.
