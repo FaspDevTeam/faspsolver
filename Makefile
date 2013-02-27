@@ -8,10 +8,10 @@
 
 ####################   User Defined Options   ##########################
 #
-# The default setting for vebosity level for FASP is verbose=yes. If you
-# want to reduce verbosity level, uncomment the next line:
+# The default setting for vebosity level for FASP is verbose=no. If you
+# want to increase verbosity level, uncomment the next line:
 #
-# verbose=no
+# verbose=yes
 #
 # By default, FASP generates static libraries. If you need to generate 
 # shared libs instead of static libs, uncomment the next line:
@@ -51,9 +51,9 @@ cpu0=$(shell uname -m | sed -e 's/[[:space:]][[:space:]]*/_/g')
 sys0=$(shell uname -s)
 build_dir=BUILD_$(cpu0)-$(sys0)
 
-CONFIG_FLAGS=-DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_RULE_MESSAGES=ON
-ifeq ($(verbose),no)
-    CONFIG_FLAGS=-DCMAKE_VERBOSE_MAKEFILE=OFF -DCMAKE_RULE_MESSAGES=ON
+CONFIG_FLAGS=-DCMAKE_VERBOSE_MAKEFILE=OFF -DCMAKE_RULE_MESSAGES=ON
+ifeq ($(verbose),yes)
+    CONFIG_FLAGS=-DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_RULE_MESSAGES=ON
 endif
 ifeq ($(shared),yes)
     CONFIG_FLAGS+=-DSHARED=$(shared)
