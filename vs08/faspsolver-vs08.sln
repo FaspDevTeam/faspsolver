@@ -33,6 +33,9 @@ Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "testamg", "testamg\testamg.
 	EndProjectSection
 EndProject
 Global
+	GlobalSection(IntelOptPkgProperties) = preSolution
+		LoadPackage = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64

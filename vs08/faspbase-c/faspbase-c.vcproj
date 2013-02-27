@@ -21,7 +21,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\base\lib\ia32"
+			OutputDirectory="..\..\lib\ia32"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\base\include;..\..\test\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;WITH_DISOLVE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -85,7 +85,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="..\..\base\lib\x64"
+			OutputDirectory="..\..\lib\x64"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
@@ -110,7 +110,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\base\include;..\..\test\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;WITH_DISOLVE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -150,7 +150,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\base\lib\ia32"
+			OutputDirectory="..\..\lib\ia32"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
@@ -179,8 +179,8 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\base\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WITH_DISOLVE=0"
+				AdditionalIncludeDirectories="..\..\base\include;..\..\..\..\directsolver\WinMumps-4.10\MUMPS_4.10.0\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WITH_MUMPS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				FloatingPointModel="1"
@@ -220,7 +220,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="..\..\base\lib\x64"
+			OutputDirectory="..\..\lib\x64"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
@@ -249,8 +249,8 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\base\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WITH_DISOLVE=0"
+				AdditionalIncludeDirectories="..\..\base\include;..\..\..\..\directsolver\WinMumps-4.10\MUMPS_4.10.0\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WITH_MUMPS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				FloatingPointModel="1"
@@ -432,6 +432,18 @@
 			</File>
 			<File
 				RelativePath="..\..\base\src\input.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\extra\interface\interface_mumps.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\extra\interface\interface_superlu.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\extra\interface\interface_umfpack.c"
 				>
 			</File>
 			<File

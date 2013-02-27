@@ -205,7 +205,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\base\include"
+				AdditionalIncludeDirectories="..\..\base\include;$(INTEL_DEF_IA32_INSTALL_DIR)MKL\Include;$(INTEL_DEF_IA32_INSTALL_DIR)MKL\Include\fftw;$(INTEL_DEF_IA32_INSTALL_DIR)MKL\Include\ia32"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -225,9 +225,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Direct.lib"
+				AdditionalDependencies="Direct.lib mkl_intel_c.lib mkl_sequential.lib mkl_core.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../lib/ia32"
+				AdditionalLibraryDirectories="../../../../lib/ia32;$(INTEL_DEF_IA32_INSTALL_DIR)MKL\lib\ia32"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="MSVCRT.lib"
 				GenerateDebugInformation="true"
@@ -289,7 +289,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\base\include"
+				AdditionalIncludeDirectories="..\..\base\include;$(INTEL_DEF_X64_INSTALL_DIR)MKL\Include;$(INTEL_DEF_X64_INSTALL_DIR)MKL\Include\fftw;$(INTEL_DEF_X64_INSTALL_DIR)MKL\Include\intel64"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -310,9 +310,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Direct.lib"
+				AdditionalDependencies="Direct.lib mkl_intel_lp64.lib mkl_sequential.lib mkl_core.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../lib/x64"
+				AdditionalLibraryDirectories="../../../../lib/x64;$(INTEL_DEF_X64_INSTALL_DIR)MKL\lib\intel64"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="MSVCRT.lib"
 				GenerateDebugInformation="true"

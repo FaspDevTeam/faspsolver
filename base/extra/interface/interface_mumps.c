@@ -98,7 +98,7 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
     }
     
     /* Initialize a MUMPS instance. */
-    id.step=-1; id.par=1; id.sym=0;id.comm_fortran=0;
+    id.job=-1; id.par=1; id.sym=0; id.comm_fortran=0;
     dmumps_c(&id);
     /* Define the problem on the host */
     id.n = n; id.nz =nz; id.irn=irn; id.jcn=jcn;
@@ -111,11 +111,11 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
     /* Call the MUMPS package. */
     for(i=0; i<n; i++) rhs[i] = b1[i];
     
-    id.step=6;    dmumps_c(&id);
+    id.job=6; dmumps_c(&id);
     
     for(i=0; i<n; i++) x[i] = id.rhs[i];
     
-    id.step=-2;
+    id.job=-2;
     dmumps_c(&id); /* Terminate instance */
     
     free(irn);
@@ -144,14 +144,14 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
 
 /**
  * \fn int fasp_solver_mumps_steps (dCSRmat *ptrA, dvector *b, dvector *u, 
- *                                  const int step)
+ *                                  const int job)
  *
  * \brief Solve Ax=b by MUMPS in three steps
  *
- * \param ptrA         Pointer to a dCSRmat matrix
- * \param b            Pointer to the dvector of right-hand side term
- * \param u            Pointer to the dvector of solution
- * \param step         1: Setup, 2: Sovle, 3 Destory
+ * \param ptrA   Pointer to a dCSRmat matrix
+ * \param b      Pointer to the dvector of right-hand side term
+ * \param u      Pointer to the dvector of solution
+ * \param job    1: Setup, 2: Sovle, 3 Destory
  *
  * \author Chunsheng Feng
  * \data   02/27/2013
@@ -161,7 +161,7 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
 int fasp_solver_mumps_steps ( dCSRmat *ptrA,
                               dvector *b,
                               dvector *u,
-                              const int  step)
+                              const int job)
 {
     
 #if WITH_MUMPS
@@ -181,7 +181,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
     double *a = id.a;
     double *rhs = id.rhs;
     
-    switch( step ) {
+    switch ( job ) {
             
         case 1:
         {
@@ -222,7 +222,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             }
             
             /* Initialize a MUMPS instance. */
-            id.step = -1; id.par=1; id.sym=0;id.comm_fortran=0;
+            id.job = -1; id.par=1; id.sym=0; id.comm_fortran=0;
             dmumps_c(&id);
             /* Define the problem on the host */
             id.n = n; id.nz =nz; id.irn=irn; id.jcn=jcn;
@@ -232,7 +232,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             /* No outputs */
             id.ICNTL(1)=-1; id.ICNTL(2)=-1; id.ICNTL(3)=-1; id.ICNTL(4)=0;
 
-            id.step=4;   dmumps_c(&id);
+            id.job=4; dmumps_c(&id);
         }
             break;
             
@@ -241,7 +241,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             /* Call the MUMPS package. */
             for(i=0; i<id.n; i++) rhs[i] = b1[i];
             
-            id.step=3;  dmumps_c(&id);
+            id.job=3; dmumps_c(&id);
             
             for(i=0; i<id.n; i++) x[i] = id.rhs[i];
         }
@@ -249,7 +249,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             
         case 3:
         {
-            id.step = -2;
+            id.job = -2;
             dmumps_c(&id); /* Terminate instance */
             free(irn);
             free(jcn);
@@ -259,7 +259,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             break;
             
         default:
-            printf("### ERROR: Parameter step should be 1, 2, or 3!\n");
+            printf("### ERROR: Parameter job should be 1, 2, or 3!\n");
             return ERROR_SOLVER_EXIT;
             
     }

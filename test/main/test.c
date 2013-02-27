@@ -148,7 +148,6 @@ int main (int argc, const char * argv[])
 	else if (solver_type == SOLVER_AMG) {
         if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
 		fasp_solver_amg(&A, &b, &x, &amgparam); 
-        
 	}
 
     // Full AMG as the iterative solver 
