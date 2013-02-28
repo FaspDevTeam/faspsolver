@@ -49,10 +49,10 @@ Schwarz_type             = 1      % 1 forward | 2 backward | 3 symmetric
 % parameters for multilevel iteration          %
 %----------------------------------------------%
 
-AMG_type                 = C      % C classic AMG
+AMG_type                 = UA      % C classic AMG
                                   % SA smoothed aggregation
                                   % UA unsmoothed aggregation
-AMG_cycle_type           = W      % V V-cycle | W W-cycle
+AMG_cycle_type           = V      % V V-cycle | W W-cycle
                                   % A AMLI-cycle | NA Nonlinear AMLI-cycleA
 AMG_tol                  = 1e-8   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
@@ -68,7 +68,7 @@ AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
 
 AMG_smoother             = GS     % GS | JACOBI | SGS SOR | SSOR | 
                                   % GSOR | SGSOR | POLY | L1DIAG | CG
-AMG_ILU_levels           = 1      % number of levels using ILU smoother
+AMG_ILU_levels           = 0      % number of levels using ILU smoother
 AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.1    % relaxation parameter for SOR smoother 
 AMG_polynomial_degree	 = 3      % degree of the polynomial smoother
@@ -91,7 +91,7 @@ AMG_max_row_sum          = 0.9    % Max row sum
 % parameters for aggregation-type AMG SETUP    %
 %----------------------------------------------%
 
-AMG_strong_coupled       = 0.04   % Strong coupled threshold
+AMG_strong_coupled       = 0.08   % Strong coupled threshold
 AMG_max_aggregation      = 20     % Max size of aggregations
 AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
 AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing

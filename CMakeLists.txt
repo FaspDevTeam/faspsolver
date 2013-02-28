@@ -4,6 +4,7 @@
 # INIT_CONFIG load...
 	include ( FASP_init.cmake OPTIONAL )
 
+
 #
 	###################################################
 #
@@ -54,6 +55,33 @@ file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR}
                    COMMENT 
 		   "FASP: Autogenerating header file with C functions..."
                    VERBATIM)
+
+##################################################################
+# For UMFPACK
+##################################################################
+if (USE_UMFPACK)
+  
+   # set the path to find specific modules	  
+   set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
+
+   # set some path to the UMFPACK pacakge
+   set(UFCONFIG_DIR "${SUITESPARSE_DIR}")
+   set(AMD_DIR "${SUITESPARSE_DIR}")
+   set(CHOLMOD_DIR "${SUITESPARSE_DIR}")
+   set(COLAMD_DIR "${SUITESPARSE_DIR}")
+   set(CAMD_DIR "${SUITESPARSE_DIR}")
+   set(METIS_DIR "${SUITESPARSE_DIR}")
+   set(CCOLAMD_DIR "${SUITESPARSE_DIR}")
+   set(UMFPACK_DIR "${SUITESPARSE_DIR}")   
+
+   find_package(UMFPACK)     
+   if (UMFPACK_FOUND)
+      add_definitions("-DWITH_UMFPACK=1")
+      include_directories(${UMFPACK_INCLUDE_DIRS})
+   else(UMFPACK_FOUND)
+      message(WARNING "UMFPACK was requested but not supported!")
+   endif(UMFPACK_FOUND)
+endif(USE_UMFPACK)
 
 ############## documentation with doxygen
 # target generating the FASP documentation with doxygen

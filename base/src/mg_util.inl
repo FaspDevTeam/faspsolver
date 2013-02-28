@@ -28,7 +28,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
         
     INT status = fasp_solver_dcsr_pcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);  
         
-    if (status < 0) { // If PCG fails to converge, use PGMRES as a saft net.
+    if (status < 0) { // If PCG fails to converge, use PGMRES as a safe net.
 
         // check if the solution is correct 
         INT i;
@@ -42,7 +42,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
     }
     
     if ( status < 0 && prt_lvl > PRINT_MIN ) {
-        printf("### WARNING: Coarse level solver does not converge in %d steps!\n", cmaxit);
+        printf("### WARNING: Coarse level solver does not converge in %d steps! \n", cmaxit);
     }
 } 
 

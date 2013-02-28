@@ -366,7 +366,7 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         const INT  cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
         const REAL ctol = param->tol; // coarse level tolerance
         if ( fasp_solver_dbsr_pvgmres(&mgl[nl-1].A,&mgl[nl-1].b,&mgl[nl-1].x,NULL,ctol,cmaxit,25,1,0)<0 ) {
-            printf("### WARNING: Coarse level solver does not converge in %d iterations!", cmaxit);
+            printf("### WARNING: Coarse level solver does not converge in %d iterations!\n", cmaxit);
         }
 #endif 
     }

@@ -11,7 +11,7 @@
 # The default setting for vebosity level for FASP is verbose=no. If you
 # want to increase verbosity level, uncomment the next line:
 #
-# verbose=yes
+verbose=no
 #
 # By default, FASP generates static libraries. If you need to generate 
 # shared libs instead of static libs, uncomment the next line:
@@ -27,6 +27,14 @@
 # (if there is one installed on your system), uncomment the next line:
 #
 # doxywizard=yes
+#
+# If you want to use the UMFPACK, uncomment the next line: 
+# 
+# umfpack=yes
+#
+# If you want to specify the path to UMFPACK, uncomment the next line:
+#
+# suitesparse_dir="/Users/XiaozheHu/Research/Package/SuiteSparse"
 #
 ####################  User Defined Compiler Flags  #####################
 #
@@ -63,6 +71,10 @@ ifeq ($(openmp),yes)
 endif
 ifeq ($(doxywizard),yes)
     CONFIG_FLAGS+=-DDOXYWIZARD=$(doxywizard)
+endif
+ifeq ($(umfpack), yes)
+    CONFIG_FLAGS+=-DUSE_UMFPACK=$(umfpack)
+    CONFIG_FLAGS+=-DSUITESPARSE_DIR=$(suitesparse_dir)
 endif
 CONFIG_FLAGS+=-DCMAKE_C_FLAGS=$(cflags)
 CONFIG_FLAGS+=-DCMAKE_CXX_FLAGS=$(cxxflags)
