@@ -9,21 +9,50 @@
 	###################################################
 #
 	project(FASP C CXX Fortran )
+
+##       message(" CHECK:  ${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}}") 
+##       message(" CHECK1:  ${CMAKE_C_FLAGS}") 
+
 #
 # OpenMP : defined on command line in the top Makefile
 #
     if(USE_OPENMP)
        find_package(OpenMP)
+
+
        if(OPENMP_FOUND)
-          set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-          set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-          set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${OpenMP_C_FLAGS}")
+          set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
+	  	  "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")	 
+          set (CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
+	       "${CMAKE_CXX_FLAGS_${CMAKE_CBUILD_TYPE}} ${OpenMP_CXX_FLAGS}")
+          set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
+	       "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")
           set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
        else(OPENMP_FOUND)
           message(WARNING "OpenMP was requested but not supported!")
        endif(OPENMP_FOUND)
     endif(USE_OPENMP)
-#
+############## Additional compiler flags (not defined by the build
+################type
+
+	if(ADD_CFLAGS)
+          set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
+	  	  "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CFLAGS}")	 
+	endif(ADD_CFLAGS)
+	if(ADD_CXXFLAGS)
+          set (CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
+	  	  "${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CXXFLAGS}")	 
+	endif(ADD_CXXFLAGS)
+	if(ADD_FFLAGS)
+          set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
+	  	  "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_FFLAGS}")	 
+	endif(ADD_FFLAGS)
+
+#       message(" CHECKC:  ${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}}") 
+#       message(" CHECKCXX:  ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}}") 
+#       message(" CHECKF:  ${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}}") 
+
+
 	set(FASP_MAJOR_VERSION 1)
 	set(FASP_MINOR_VERSION 2)
 	set(FASP_PATCH_VERSION 1)

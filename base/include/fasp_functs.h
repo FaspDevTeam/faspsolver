@@ -589,7 +589,7 @@ void fasp_solver_famg (dCSRmat *A,
 
 /*-------- In file: fmgcycle.c --------*/
 
-void fasp_solver_fmgcycle (AMG_data *mgl, 
+void fasp_solver_fmgcycle (AMG_data *mgl,
                            AMG_param *param);
 
 
@@ -2402,7 +2402,7 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
 int fasp_solver_mumps_steps ( dCSRmat *ptrA,
                               dvector *b,
                               dvector *u,
-                              const int  step);
+                              const int job);
 
 
 /*-------- In file: interface_samg.c --------*/

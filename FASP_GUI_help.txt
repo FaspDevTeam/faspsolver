@@ -1,0 +1,21 @@
+-------------------------------------------------------------
+Configuring and building the FASP library and test suite requires
+CMake 2.6 or higher, found at http://www.cmake.org/ 
+
+This GUI calls cmake/make for configuration and
+building of the FASP shared library and the test programs suite. 
+
+Button "Config": Initial configuration. Deletes the build directory. 
+
+Button "Install": installation: library in "base/lib" and test in
+       		  	"test/" and tutorial in "tutorial/" executables.
+
+Button "HTML docs": Generates documentation in "doc/htdocs" 
+
+Button "Headers": If you change/add a function name in a C source
+       	     	           file, then pressing this button will
+       	     	           generate the header file with the updated
+       	     	           function definitions.
+
+Button "Uninstall": Removes all the components installed with "Install"
+-------------------------------------------------------------

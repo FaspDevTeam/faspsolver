@@ -8,6 +8,13 @@
 
 ####################   User Defined Options   ##########################
 #
+# The default setting for build type for FASP is RELEASE. If you
+# want to work with build type DEBUG, then uncomment the next line:
+# The compiler options then include by default  "-g". The RELEASE build type 
+# by default has the "-O3"
+#
+#  debug=yes
+#
 # The default setting for vebosity level for FASP is verbose=no. If you
 # want to increase verbosity level, uncomment the next line:
 #
@@ -39,16 +46,16 @@
 #
 ####################  User Defined Compiler Flags  #####################
 #
-cflags="-O3 -funroll-all-loops"
-cxxflags="-O3 -funroll-all-loops"
-fflags="-O3 -funroll-all-loops"
+#cflags="-funroll-all-loops"
+#cxxflags="-funroll-all-loops"
+#fflags="-funroll-all-loops"
 #
 # If you need to generate debug information during building, you should 
 # uncomment the next few lines: 
 #
-# cflags="-Wall -g -pg"
-# cxxflags="-Wall -g -pg"
-# fflags="-Wall -g -pg"
+ cflags="-Wall  -pg"
+ cxxflags="-Wall -pg"
+ fflags="-Wall -pg"
 #
 ####################  User Changes UP TO HERE   ########################
 
@@ -56,14 +63,23 @@ VER0=1.2.1
 PKG0=fasp-$(VER0)
 
 # Let cmake do the configuration. Set up a build dir
-cpu0=$(shell uname -m | sed -e 's/[[:space:]][[:space:]]*/_/g')
-sys0=$(shell uname -s)
-build_dir=BUILD_$(cpu0)-$(sys0)
+#cpu0=$(shell uname -m | sed -e 's/[[:space:]][[:space:]]*/_/g')
+#sys0=$(shell uname -s)
+#build_dir=BUILD_$(cpu0)-$(sys0)
+build_dir=BUILD_FASP
 
 CONFIG_FLAGS=-DCMAKE_VERBOSE_MAKEFILE=OFF -DCMAKE_RULE_MESSAGES=ON
 ifeq ($(verbose),yes)
     CONFIG_FLAGS=-DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_RULE_MESSAGES=ON
 endif
+
+ifeq ($(debug),yes)
+    CONFIG_FLAGS+=-DCMAKE_BUILD_TYPE=DEBUG
+else
+    CONFIG_FLAGS+=-DCMAKE_BUILD_TYPE=RELEASE
+endif
+
+
 ifeq ($(shared),yes)
     CONFIG_FLAGS+=-DSHARED=$(shared)
 endif
@@ -74,21 +90,22 @@ ifeq ($(doxywizard),yes)
     CONFIG_FLAGS+=-DDOXYWIZARD=$(doxywizard)
 endif
 ifeq ($(umfpack), yes)
-    CONFIG_FLAGS+=-DUSE_UMFPACK=$(umfpack)
-    CONFIG_FLAGS+=-DSUITESPARSE_DIR=$(suitesparse_dir)
+    CONFIG_FLAGS+=-DUSE_UMFPACK=$(umfpack) 
+    CONFIG_FLAGS+=-DSUITESPARSE_DIR=$(suitesparse_dir) 
 endif
-CONFIG_FLAGS+=-DCMAKE_C_FLAGS=$(cflags)
-CONFIG_FLAGS+=-DCMAKE_CXX_FLAGS=$(cxxflags)
-CONFIG_FLAGS+=-DCMAKE_Fortran_FLAGS=$(fflags)
+
+CONFIG_FLAGS+=-DADD_CFLAGS=$(cflags) 
+CONFIG_FLAGS+=-DADD_CXXFLAGS=$(cxxflags) 
+CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags) 
 
 all clean install docs headers:
-	@if [ ! -f $(build_dir)/Makefile ]; then \
+	@if [ ! -f $(build_dir)/Makefile ] ; then \
 		echo "Configuration not found! Please perform configuration first."; \
 		echo "See the following help screen for usage ..."; \
 		echo " "; \
 		cat INSTALL; \
 	else \
-	  	make -C $(build_dir) $@ $(MAKEFLAGS); \
+	  	make -C $(build_dir) $@ ; \
 	fi
 
 config: distclean
@@ -108,7 +125,7 @@ uninstall:
 	fi
 
 distclean:
-	@-rm -rf $(build_dir)
+	@-rm -rf $(build_dir)   
 	@-find . -name '*~' -exec rm {} \;
 
 help:

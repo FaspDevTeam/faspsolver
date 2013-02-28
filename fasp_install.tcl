@@ -1,7 +1,19 @@
 #!/usr/bin/wish
+proc InstallError { x } {
+	    puts stderr {*****************************************************************}
+	    puts stderr "ERROR: $x"
+	    puts stderr {*****************************************************************}
+	    exit
+}
 proc InstallStatus { s } {
 global status
 set status $s
+update idletasks
+}
+
+proc InstallHelper { s } {
+global helper
+set helper $s
 update idletasks
 }
 
@@ -10,7 +22,7 @@ proc Help {} {
     if {[info exists prompthelp(ok)]} {unset prompthelp(ok)}
     set f [toplevel .prompthelp -borderwidth 10 -width 30]
     set b [frame $f.buttons -bd 10]
-    ScrolledText $f 80 20
+    ScrolledText $f 72 24
     button $b.close -text close -command {set prompthelp(ok) 1}
     $f.text configure \
 	    -font -*-Helvetica-bold-r-*--*-120-* \
@@ -26,8 +38,8 @@ proc Help {} {
     pack $f.text  -side top -fill both -expand true
     pack $f.xscroll -side bottom -fill x
     pack $f.buttons -side bottom
-    if {[catch {open "FASP_GUI.help.txt" r} in1]} {
-	puts stderr "Can not read help file Install_FASP.help.txt" 
+    if {[catch {open "FASP_GUI_help.txt" r} in1]} {
+	InstallHelper "Can not read help file FASP_GUI_help.txt" 
     } else {
 	while { [gets $in1 line] >=0 } {
 #	    puts $line
@@ -80,71 +92,120 @@ proc ItemsSelect { w y } {
     $w see $ix
 }
 
+proc FindFile { startDir namePat } {
+    global filel
+# Find file: Unix chapter: Brent Welch http://www.beedub.com/book/
+# here we glob for files only in the current dir pwd
+    set pwd [pwd]
+    if [catch {cd $startDir} err] {
+	InstallError [list "Error in find file" $err]
+    }
+    foreach match [glob -nocomplain -- $namePat] {
+	lappend filel $startDir/$match
+    }
+    foreach file [glob -nocomplain *] {
+	if [file isdirectory $file] {
+	    FindFile $startDir/$file $namePat
+	}
+    }
+    cd $pwd
+}
+
 proc DistClean { } {
     global build_dir
-    catch "exec /bin/rm -r $build_dir" c3
-#    puts [list "C3 is =" $c3]
-#    set in [list {open} {|find . -name '*~'} r]
-#    puts $in
-#    catch [eval $in] result
-#    puts $result
-#    while {[gets $in line] >=0}  {
-#	catch "exec ls -l $line" result
-#	puts $line 
-#	puts $result
-#    }
+    global build_type
+    global status
+    global filel
+    set filel {}
+    update idletasks
+    set current_dir [pwd]
+    if {[file isdirectory "$current_dir/BUILD_FASP"]} {
+	catch "exec /bin/rm -rf $current_dir/BUILD_FASP" c3
+    }  
+    if {[info exists build_dir]} {unset build_dir}
+    #### complicated delete of emacs backup files
+    eval [list FindFile $current_dir *~]
+    foreach n [list $filel] {
+	catch "exec /bin/rm -rf $n" c4	     
+    }
 }
-
 proc  Uninstall { } {
+global status
 global build_dir
-    catch "exec xargs /bin/rm < $build_dir/install_manifest.txt" c1
-    catch "exec /bin/rm -rf $build_dir/install_manifest.txt doc/htdocs" c2
+    update idletasks
+    set current_dir [pwd]
+    set build_dir "$current_dir/BUILD_FASP"
+    if {[file isdirectory $build_dir]} {
+	if {[file exists $build_dir/install_manifest.txt ]} {
+	    catch "exec xargs /bin/rm < $build_dir/install_manifest.txt" c1
+	}
+	catch "exec /bin/rm -rf $build_dir/install_manifest.txt doc/htdocs" c2
+    } 
     DistClean
+    InstallHelper "Uninstall DONE"
 }
-
 
 proc Config { f } {
     global build_dir
+    global build_type
     global c_options
+    global compiler_flags
     global option_lbl
     global maxlen
-## Build dir name should be set here. 
+    global status
+## Create Build dir (name should be set here). 
     DistClean
-
-## Create Build_Dir now
+    set build_dir BUILD_FASP
     if {[catch {exec /bin/mkdir -p "$build_dir"}]} {
-	InstallError "Cannot create $dname. Exiting "
+	InstallError "Cannot create $build_dir. Exiting "
     }
+#
+    InstallHelper "Configuring..."
+#
+#    foreach el { verbose shared doxywizard openmp } {
+#	puts [list $el $c_options($el)]
+#    }
+#    puts [list "BUILD_TYPE=" $build_type]
 
-    foreach el { verbose shared doxywizard openmp } {
-	puts [list $el $c_options($el)]
-    }
-
-    set config_flags [list "-DCMAKE_VERBOSE_MAKEFILE=OFF" "-DCMAKE_RULE_MESSAGES=ON"]
+    set cmake_flags [list "-DCMAKE_BUILD_TYPE=$build_type"]
+##   
     if {$c_options(verbose)} {
-	set  config_flags [list "-DCMAKE_VERBOSE_MAKEFILE=ON" "-DCMAKE_RULE_MESSAGES=ON"]
+	set  cmake_flags [lappend cmake_flags \
+			       "-DCMAKE_VERBOSE_MAKEFILE=ON" \
+			       "-DCMAKE_RULE_MESSAGES=ON"]
+    } else {
+	set cmake_flags [lappend cmake_flags \
+			      "-DCMAKE_VERBOSE_MAKEFILE=OFF" \
+			      "-DCMAKE_RULE_MESSAGES=ON"]
     }
     if {$c_options(shared)} {
-	set config_flags [lappend config_flags "-DSHARED=$c_options(shared)"]
+	set cmake_flags [lappend cmake_flags "-DSHARED=$c_options(shared)"]
     }
     if {$c_options(openmp)} {
-	set config_flags [lappend config_flags "-DUSE_OPENMP=$c_options(openmp)"]
+	set cmake_flags [lappend cmake_flags "-DUSE_OPENMP=$c_options(openmp)"]
     }
     if {$c_options(doxywizard)} {
-	set config_flags [lappend config_flags "-DDOXYWIZARD=$c_options(doxywizard)"]
+	set cmake_flags [lappend cmake_flags "-DDOXYWIZARD=$c_options(doxywizard)"]
     }	
-
-    #CONFIG_FLAGS+=-DCMAKE_C_FLAGS=$(cflags)
-    #CONFIG_FLAGS+=-DCMAKE_CXX_FLAGS=$(cxxflags)
-    #CONFIG_FLAGS+=-DCMAKE_Fortran_FLAGS=$(fflags)
-
+##
+    if {![regexp {^[ |\t]*$} [join $compiler_flags(c)]]} {
+	set cmake_flags \
+	    [concat $cmake_flags " -DADD_CFLAGS=\\\"$compiler_flags(c)\\\""]
+    } 
+    if {![regexp {^[ |\t]*$} [join $compiler_flags(cxx)]]} {
+	set cmake_flags \
+	    [concat $cmake_flags " -DADD_CXXFLAGS=\\\"$compiler_flags(cxx)\\\""]
+    }
+    if {![regexp {^[ |\t]*$} [join $compiler_flags(fortran)]]} {
+	set cmake_flags \
+	    [concat $cmake_flags  " -DADD_FFLAGS=\\\"$compiler_flags(fortran)\\\""]
+    }
+#    puts $cmake_flags
 #### SHELL command 
 
-    set currdir [pwd]
-    catch "cd $build_dir" c2
-    puts $c2
-    set xcommand(cmake)  "|cmake .. $config_flags"
-    puts [list $xcommand(cmake) [pwd]]
+##   This needs to be changed for Windows
+    set xcommand(cmake)  "|/bin/sh -c  \"cd $build_dir && cmake .. $cmake_flags\" "
+#    puts [list $xcommand(cmake) [pwd] ]
     set in  [eval {open} [list $xcommand(cmake) r]]
     $f configure -state normal
     while {[gets $in line] >=0}  {
@@ -153,34 +214,49 @@ proc Config { f } {
 	$f see end
     }
     $f configure -state disabled 
-    catch "exec cd $currdir" c2
+    InstallHelper "DONE Configure."
 }
 proc RunIt { f command0 } {
+    global status
     global build_dir
-    set flag 1
-    if {![file exists $build_dir/Makefile]} {
-     puts "Run Config first"
-    } else {
-	switch -exact -- $command0 {
-	    docs { set xcommand(cmake) "|make -C $build_dir $command0" }
-	    headers { set xcommand(cmake) "|make -C $build_dir $command0" }
-	    install { set xcommand(cmake) "|make -C $build_dir $command0" }
-	    default { set flag 0 } 
-	}
-	puts [list $xcommand(cmake) $flag]
-	if { $flag == 1 } {
-	    set in  [eval {open} [list $xcommand(cmake) r]]
-	    $f configure -state normal
-	    while {[gets $in line] >=0}  {
-		$f insert end "$line\n"
-		update idletasks
-		$f see end
+    if {![info exists build_dir]} {
+	InstallHelper "Build Dir does not exist or is not a directory; Run Config First!"
+	InitOpts
+	update idletasks
+    } elseif { ![regexp {^BUILD_FASP$}  $build_dir]} {
+	InstallHelper "Build Dir has incorrect value=\"$build_dir\"; Run Config first!"
+	InitOpts
+	update idletasks
+    }	else {	
+	set flag 1
+	if {![file exists $build_dir/Makefile]} {
+	    InstallHelper "File $build_dir/Makefile does not exist. Run Config first!"
+###############	    puts "Run Config first"
+	    update idletasks
+	} else {
+	    InstallHelper "Installing ... please be patient..."
+	    switch -exact -- [CheckInpData $command0] {
+		docs { set xcommand(cmake) "|make -C $build_dir $command0 2>@ stdout"}		
+		headers { set xcommand(cmake) "|make -C $build_dir $command0 2>@ stdout"}
+		install { set xcommand(cmake) "|make -C $build_dir $command0 2>@ stdout"}
+		default { set flag 0 } 
 	    }
-	    close $in
-	    $f configure -state disabled 
+	    if { $flag == 1 } {
+		catch "open [list $xcommand(cmake)] r" in
+		$f configure -state normal
+		while {[gets $in line] >=0}  {
+		    $f insert end "$line\n"
+		    update idletasks
+		    $f see end
+		}
+		close $in
+		$f configure -state disabled 
+	    }
 	}
+	InstallHelper "DONE Installing."
     }
 }
+
 proc GentleExit {} {
     exit
 }
@@ -192,39 +268,24 @@ proc CheckInpData { x } {
     regsub -all -- "\[ \t\]\[ \t\]*" $y { } y
     return $y
 }
-proc InstallError { x } {
-	    puts stderr {*****************************************************************}
-	    puts stderr "ERROR: $x"
-	    puts stderr {*****************************************************************}
-	    exit
-}
-proc GetValue { whattofocus prompt01 } {
-    global prompt0
-    set f [toplevel .prompt0 -borderwidth 10 -width 200]
-    message $f.msg -aspect 1000 -text $prompt01
-    set b [frame $f.buttons -bd 10]
-    button $b.ok -text Yes -command {set prompt0(ok) 1}
-    button $b.cancel -text No -command {set prompt0(ok) 0}
-    pack $b.ok $b.cancel -side left
-    bind $b.ok <Tab> [list focus $b.cancel]
-    bind $b.cancel <Tab> [list focus $b.ok]
-    focus $b.$whattofocus
-    pack $f.msg -side top
-    pack $f.buttons -side top -fill x
-    grab $f
-    tkwait variable prompt0(ok)
-    grab release $f
-    destroy $f
-}
-
-proc ShowOpts { f } {
+proc InitOpts { } {
+#Initialize options
     global c_options
+    global option_lbl
+    global compiler_flags
+    global status
     global maxlen
+    global build_type
+    global build_dir
+    set build_dir {}
     set option_lbl(verbose) "Verbose output \?"
     set option_lbl(shared) "Build shared library \?"
     set option_lbl(doxywizard) "Use Doxygen GUI (if found)\?"
     set option_lbl(openmp) "Build with OpenMP support \?"
-    
+    set build_type "RELEASE"    
+    set compiler_flags(c) {}
+    set compiler_flags(cxx) {}
+    set compiler_flags(fortran) {}
     foreach el { verbose shared doxywizard openmp } {
 	set c_options($el) 0
 	set maxlen -1
@@ -233,6 +294,14 @@ proc ShowOpts { f } {
 	    set maxlen $len
 	}
     }
+#    InstallHelper "Initialization is done."
+}
+
+proc ShowOpts { f } {
+    global c_options
+    global maxlen
+    global build_type
+    global option_lbl
     foreach el { verbose shared doxywizard openmp } {
 	frame $f.$el
 	label $f.$el.l -relief flat -width $maxlen -anchor w \
@@ -242,11 +311,24 @@ proc ShowOpts { f } {
 	    -text "Yes" -value 1 -state normal
 	radiobutton $f.$el.n -variable c_options($el) \
 	    -text "No" -value 0 -state normal 
-	pack $f.$el.l -side left
-	pack $f.$el.n -side right
-	pack $f.$el.y -side right
-	pack $f.$el -side top
+	pack $f.$el.l -side left 
+	pack $f.$el.n -side right -fill both
+	pack $f.$el.y -side right -fill both
+	pack $f.$el -side top -fill both
     }
+## buttons for the Build type
+    frame $f.build_type
+    label $f.build_type.l -relief flat   -width $maxlen -anchor w \
+	-text "Build type" -border 0 \
+	-font  -*-Helvetica-bold-r-*--*-140-*
+    radiobutton $f.build_type.debug -variable build_type \
+	-text "Debug" -value DEBUG -state normal
+    radiobutton $f.build_type.release -variable build_type \
+	-text "Release" -value RELEASE -state normal 
+    pack $f.build_type.l -side left 
+    pack $f.build_type.release -side right
+    pack $f.build_type.debug -side right
+    pack $f.build_type -side top
 }
     #proc SortItems {} {
     #   global items0 files0
@@ -266,18 +348,57 @@ proc ShowOpts { f } {
 #    set files0 $d
 #}
 # end data Chapter 
-global aposition
-global prompt0
+
+proc EntryList { parent } {
+    global compiler_flags
+
+    text $parent.text 
+    $parent.text insert end "The Debug build type assumes -g as a compiler flag. Release build type assumes -O3 flag. Aditional compiler flags could be added below."
+    $parent.text configure -width 45 -height 4  -wrap word \
+	-font -*-Helvetica-normal-r-*--*-140-* \
+	-background white -foreground black -relief flat -state disabled 	
+
+    foreach n { c cxx fortran } {
+	frame $parent.e_$n 
+	label $parent.e_$n.l -width 20 -anchor w \
+		-foreground black \
+		-font -*-Helvetica-bold-r-*--*-140-*
+	entry $parent.e_$n.e \
+		-relief sunken \
+		-foreground black -width 25 \
+		-font -*-Helvetica-bold-r-*--*-140-* 
+    
+    }
+    $parent.e_c.l configure -text "C flags"
+    $parent.e_c.e configure -text [list $compiler_flags(c)] \
+	    -textvariable compiler_flags(c)  -relief sunken 
+    
+    $parent.e_cxx.l configure -text "CXX flags"
+    $parent.e_cxx.e configure -text $compiler_flags(cxx) \
+	-textvariable compiler_flags(cxx)  -relief sunken 
+    
+    $parent.e_fortran.l configure -text "F flags"
+    $parent.e_fortran.e configure -text  $compiler_flags(fortran) \
+	    -textvariable compiler_flags(fortran) -relief sunken 
+
+    foreach n {cxx fortran c } {
+	pack $parent.e_$n.l -side left 
+	pack $parent.e_$n.e -side left 
+	pack $parent.e_$n -side bottom 
+    }
+	pack $parent.text -side bottom -fill x
+}    
+
 global build_dir
 global c_options
 global maxlen
+global status
+global helper
 
 
-set prompt0(ok) 0
-set aposition -1
 
-set dname [join [list BUILD FASP [eval [list exec uname -m]]-[eval  [list exec uname -s]]] "_"]
-set build_dir [join [list [pwd] {/} $dname] ""]  
+#set dname [join [list BUILD [eval [list exec uname -m]]-[eval  [list exec uname -s]]] "_"]
+#set build_dir [join [list [pwd] {/} $dname] ""]  
 
 frame .f
 frame .f.buttons -borderwidth 10 
@@ -307,10 +428,11 @@ pack .f.buttons -side top -fill x
 ##########main 
 
 
-ScrolledText1 .f 80 20
+ScrolledText1 .f 72 24
 pack .f.text  -side right -fill both
     .f.text configure -state disabled
 #   grab release .f.text
+
 
 
 button .f.buttons.help -text Help -command {Help}
@@ -326,16 +448,23 @@ pack .f.buttons.quit .f.buttons.config .f.buttons.install .f.buttons.docs \
 
 pack .f.buttons.help -side right
 
+
+InitOpts 
+
 frame .f.opts -borderwidth 10
+label .f.opts.lhelper -textvar helper -relief flat -width 35 \
+    -background "#00008B" -foreground "yellow" -font { Helvetica -14 bold } 
+
+##label .f.opts.lstatus -textvar status -relief raised -width 35  
+
+pack .f.opts.lhelper -side bottom -fill both
+##pack .f.opts.lstatus -side bottom 
+
 ShowOpts .f.opts
+
+EntryList .f.opts
+
 pack .f.opts -side left -fill y
-
-
-
-#pack .f.f1 -expand true -side left -anchor w -fill both
-#entry .f.e.estatus -textvar status -relief flat -width 56 -background "#00008B" -foreground "#FFFFFF" -font { Helvetica -12 bold } -state disabled
-#frame .f.e.dirs
-#pack .f.e.estatus -side bottom -fill x
 
 
 
