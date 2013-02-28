@@ -11,7 +11,7 @@
 # The default setting for vebosity level for FASP is verbose=no. If you
 # want to increase verbosity level, uncomment the next line:
 #
-verbose=no
+# verbose=yes
 #
 # By default, FASP generates static libraries. If you need to generate 
 # shared libs instead of static libs, uncomment the next line:
@@ -32,7 +32,8 @@ verbose=no
 # 
 # umfpack=yes
 #
-# If you want to specify the path to UMFPACK, uncomment the next line:
+# If you want to specify the path to SparseSuite, uncomment the next 
+# line and give the correct path to it:
 #
 # suitesparse_dir="/Users/XiaozheHu/Research/Package/SuiteSparse"
 #

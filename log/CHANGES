@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+02/28/2013 FASP 1.2.4:
+- Add a TCL GUI for installing FASP.
+- Add find package support for SparseSuite (UMFPACK).
+- Fix a bug in test.c calling UMFPACK.
+
 02/27/2013 FASP 1.2.3:
 - Add an intial version of cmake.
 - Remove the origianl make and scons.
@@ -9,7 +14,6 @@ File Name: CHANGES
 - Update interface function names.
 - Change preprocessor: "WITH_DISOLVE" -> "WITH_MUMPS".
 - Update VS08 solution for the new direct solver interface. 
-- Add a TCL GUI for installing FASP.
 
 02/23/2013 FASP 1.2.2:
 - Prepare to switch from make to cmake.

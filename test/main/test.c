@@ -170,7 +170,14 @@ int main (int argc, const char * argv[])
 	
 #if WITH_UMFPACK // use UMFPACK directly
 	else if (solver_type == SOLVER_UMFPACK) {
-		status = fasp_solver_umfpack(&A, &b, &x, print_level);	 
+        // Need to sort the matrix A for UMFPACK to work
+        dCSRmat Ac_tran;
+        fasp_dcsr_trans(&A, &Ac_tran);
+        fasp_dcsr_sort(&Ac_tran);
+        fasp_dcsr_cp(&Ac_tran, &A);
+        fasp_dcsr_free(&Ac_tran);
+
+		status = fasp_solver_umfpack(&A, &b, &x, print_level);
 	}
 #endif	 
     
