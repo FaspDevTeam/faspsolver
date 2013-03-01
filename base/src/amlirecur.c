@@ -589,7 +589,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.ROW, mgl[0].A.COL, mgl[0].A.NNZ);
 #endif
     
-    if (print_level>=PRINT_MORE) 
+    if (print_level>=PRINT_MOST)
         printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
     
     if (level < num_levels-1) { 

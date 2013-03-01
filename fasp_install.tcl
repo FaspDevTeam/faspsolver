@@ -150,6 +150,7 @@ proc Config { f } {
     global build_type
     global c_options
     global compiler_flags
+    global extra_lib_path
     global option_lbl
     global maxlen
     global status
@@ -186,6 +187,13 @@ proc Config { f } {
     }
     if {$c_options(doxywizard)} {
 	set cmake_flags [lappend cmake_flags "-DDOXYWIZARD=$c_options(doxywizard)"]
+    }
+    if {$c_options(umfpack)} {
+	set cmake_flags [lappend cmake_flags "-DUSE_UMFPACK=$c_options(umfpack)"]
+		if {![regexp {^[ |\t]*$} [join $extra_lib_path(suitesparse_dir)]]} {
+		set cmake_flags \
+	    	[concat $cmake_flags  " -DSUITESPARSE_DIR=\\\"$extra_lib_path(suitesparse_dir)\\\""]
+    	}
     }	
 ##
     if {![regexp {^[ |\t]*$} [join $compiler_flags(c)]]} {
@@ -200,6 +208,7 @@ proc Config { f } {
 	set cmake_flags \
 	    [concat $cmake_flags  " -DADD_FFLAGS=\\\"$compiler_flags(fortran)\\\""]
     }
+    
 #    puts $cmake_flags
 #### SHELL command 
 
@@ -277,16 +286,19 @@ proc InitOpts { } {
     global maxlen
     global build_type
     global build_dir
+    global extra_lib_path
     set build_dir {}
     set option_lbl(verbose) "Verbose output \?"
     set option_lbl(shared) "Build shared library \?"
     set option_lbl(doxywizard) "Use Doxygen GUI (if found)\?"
     set option_lbl(openmp) "Build with OpenMP support \?"
+    set option_lbl(umfpack) "Build with UMFPACK support \?"
     set build_type "RELEASE"    
     set compiler_flags(c) {}
     set compiler_flags(cxx) {}
     set compiler_flags(fortran) {}
-    foreach el { verbose shared doxywizard openmp } {
+    set extra_lib_path(suitesparse_dir) {}
+    foreach el { verbose shared doxywizard openmp umfpack} {
 	set c_options($el) 0
 	set maxlen -1
 	set len [expr [string length $option_lbl($el)] + 2]
@@ -302,7 +314,7 @@ proc ShowOpts { f } {
     global maxlen
     global build_type
     global option_lbl
-    foreach el { verbose shared doxywizard openmp } {
+    foreach el { verbose shared doxywizard openmp umfpack} {
 	frame $f.$el
 	label $f.$el.l -relief flat -width $maxlen -anchor w \
 	    -text $option_lbl($el) -border 0 \
@@ -351,12 +363,19 @@ proc ShowOpts { f } {
 
 proc EntryList { parent } {
     global compiler_flags
+    global extra_lib_path
 
     text $parent.text 
     $parent.text insert end "The Debug build type assumes -g as a compiler flag. Release build type assumes -O3 flag. Aditional compiler flags could be added below."
     $parent.text configure -width 45 -height 4  -wrap word \
 	-font -*-Helvetica-normal-r-*--*-140-* \
 	-background white -foreground black -relief flat -state disabled 	
+	
+	text $parent.text1 
+    $parent.text1 insert end "Specify the path to SUITESPARSE (optional, use it when you want to use specific UMFPACK)."
+    $parent.text1 configure -width 45 -height 2  -wrap word \
+	-font -*-Helvetica-normal-r-*--*-140-* \
+	-background white -foreground black -relief flat -state disabled 
 
     foreach n { c cxx fortran } {
 	frame $parent.e_$n 
@@ -380,6 +399,26 @@ proc EntryList { parent } {
     $parent.e_fortran.l configure -text "F flags"
     $parent.e_fortran.e configure -text  $compiler_flags(fortran) \
 	    -textvariable compiler_flags(fortran) -relief sunken 
+	    
+	frame $parent.suitesparse
+	label $parent.suitesparse.l -width 20 -anchor w \
+		-foreground black \
+		-font -*-Helvetica-bold-r-*--*-140-*
+	entry $parent.suitesparse.e \
+		-relief sunken \
+		-foreground black -width 25 \
+		-font -*-Helvetica-bold-r-*--*-140-* 
+		
+	$parent.suitesparse.l configure -text "SUITESPARSE"
+    $parent.suitesparse.e configure -text [list $extra_lib_path(suitesparse_dir)] \
+	    -textvariable extra_lib_path(suitesparse_dir) -relief sunken
+
+	pack $parent.suitesparse.l -side left
+	pack $parent.suitesparse.e -side left
+	pack $parent.suitesparse -side bottom
+	
+	pack $parent.text1 -side bottom -fill both 
+		$parent.text1 configure -state disabled
 
     foreach n {cxx fortran c } {
 	pack $parent.e_$n.l -side left 
@@ -387,7 +426,8 @@ proc EntryList { parent } {
 	pack $parent.e_$n -side bottom 
     }
 	pack $parent.text -side bottom -fill x
-}    
+	
+} 
 
 global build_dir
 global c_options
@@ -431,6 +471,7 @@ pack .f.buttons -side top -fill x
 ScrolledText1 .f 72 24
 pack .f.text  -side right -fill both
     .f.text configure -state disabled
+    
 #   grab release .f.text
 
 
@@ -459,6 +500,8 @@ label .f.opts.lhelper -textvar helper -relief flat -width 35 \
 
 pack .f.opts.lhelper -side bottom -fill both
 ##pack .f.opts.lstatus -side bottom 
+
+
 
 ShowOpts .f.opts
 
