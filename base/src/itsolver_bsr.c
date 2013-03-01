@@ -413,6 +413,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     setup_duration = setup_end - setup_start;
     
     precond_data_bsr precdata;
+    precdata.print_level = amgparam->print_level;
     precdata.maxit = amgparam->maxit;
     precdata.tol = amgparam->tol;
     precdata.cycle_type = amgparam->cycle_type;

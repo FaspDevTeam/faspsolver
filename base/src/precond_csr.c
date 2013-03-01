@@ -430,6 +430,8 @@ void fasp_precond_amg (REAL *r,
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
     for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam);
+    
+    //fasp_smoother_dcsr_gs(&mgl->x, m, 0, -1, &mgl->A, &mgl->b, maxit);
 
     // We can use a recurcive version of MG:
     //   for (i=0;i<maxit;++i) fasp_solver_mgrecur(mgl,&amgparam,0);
