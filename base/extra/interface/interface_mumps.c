@@ -151,7 +151,7 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
  * \param ptrA   Pointer to a dCSRmat matrix
  * \param b      Pointer to the dvector of right-hand side term
  * \param u      Pointer to the dvector of solution
- * \param job    1: Setup, 2: Sovle, 3 Destory
+ * \param job    1: Setup, 2: Sovle, 3 Destroy
  *
  * \author Chunsheng Feng
  * \data   02/27/2013
@@ -166,6 +166,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
     
 #if WITH_MUMPS
     static  DMUMPS_STRUC_C id;
+	static int job_stat;
     int i,j;
 	
     const  int n =  ptrA->row;
@@ -185,7 +186,9 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             
         case 1:
         {
-            
+#if DEBUG_MODE
+           printf("### DEBUG: fasp_solver_mumps_steps ...... [1]\n");         
+#endif
             int begin_row, end_row;
             
             // First check the matrix format
@@ -233,28 +236,45 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             id.ICNTL(1)=-1; id.ICNTL(2)=-1; id.ICNTL(3)=-1; id.ICNTL(4)=0;
 
             id.job=4; dmumps_c(&id);
+            job_stat = 1;
+
+#if DEBUG_MODE
+			printf("### DEBUG: fasp_solver_mumps_steps ...... [1]\n");   
+#endif
         }
             break;
             
         case 2:
         {
+#if DEBUG_MODE
+			printf("### DEBUG: fasp_solver_mumps_steps ...... [2]\n");   
+#endif
+            if (job_stat !=1)  printf("### ERROR: fasp_solver_mumps_steps has not finish Setup...... [2]\n"); 
+
             /* Call the MUMPS package. */
             for(i=0; i<id.n; i++) rhs[i] = b1[i];
-            
+                    
             id.job=3; dmumps_c(&id);
-            
+                    
             for(i=0; i<id.n; i++) x[i] = id.rhs[i];
+#if DEBUG_MODE
+			printf("### DEBUG: fasp_solver_mumps_steps ...... [2]\n");   
+#endif
         }
             break;
             
         case 3:
         {
-            id.job = -2;
-            dmumps_c(&id); /* Terminate instance */
+            if (job_stat !=1)  printf("### ERROR: fasp_solver_mumps_steps has not finish Setup...... [3]\n"); 
             free(irn);
             free(jcn);
             free(a);
             free(rhs);
+            id.job = -2;
+            dmumps_c(&id); /* Terminate instance */
+#if DEBUG_MODE
+			printf("### DEBUG: fasp_solver_mumps_steps ...... [3]\n");   
+#endif
         }
             break;
             

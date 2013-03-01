@@ -160,7 +160,8 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     {
 #if   WITH_MUMPS
         /* use MUMPS direct solver on the coarsest level */
-        fasp_solver_mumps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+        fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 2);
+		//  fasp_solver_mumps (&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #elif WITH_UMFPACK
         /* use UMFPACK direct solver on the coarsest level */
         fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);

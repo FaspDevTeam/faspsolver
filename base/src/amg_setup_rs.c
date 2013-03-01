@@ -247,6 +247,11 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     fasp_dcsr_free(&Ac_tran);
 #endif
     
+#if WITH_MUMPS
+        /* Setup MUMPS direct solver on the coarsest level */
+        fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, 1);
+#endif
+	
     if ( print_level > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         REAL setupduration = setup_end - setup_start;
@@ -427,6 +432,11 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
     fasp_dcsr_sort(&Ac_tran);
     fasp_dcsr_cp(&Ac_tran,&mgl[max_levels-1].A);
     fasp_dcsr_free(&Ac_tran);
+#endif
+
+#if WITH_MUMPS
+        /* Setup MUMPS direct solver on the coarsest level */
+        fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, 1);
 #endif
     
     if ( print_level > PRINT_NONE ) {
