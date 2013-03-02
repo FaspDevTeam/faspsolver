@@ -8,12 +8,12 @@
 
 ####################   User Defined Options   ##########################
 #
-# The default setting for build type for FASP is RELEASE. If you
-# want to work with build type DEBUG, then uncomment the next line:
-# The compiler options then include by default  "-g". The RELEASE build type 
-# by default has the "-O3"
+# The default setting for build type for FASP is RELEASE. The compiler 
+# options then include by default "-g". The RELEASE build type by 
+# default has the "-O3". If you want to work with build type DEBUG, then 
+# uncomment the next line:
 #
-#  debug=yes
+# debug=yes
 #
 # The default setting for vebosity level for FASP is verbose=no. If you
 # want to increase verbosity level, uncomment the next line:
@@ -37,7 +37,7 @@
 #
 # If you want to use the UMFPACK, uncomment the next line: 
 # 
-umfpack=yes
+# umfpack=yes
 #
 # If you want to specify the path to SparseSuite, uncomment the next 
 # line and give the correct path to it:
@@ -46,16 +46,16 @@ umfpack=yes
 #
 ####################  User Defined Compiler Flags  #####################
 #
-#cflags="-funroll-all-loops"
-#cxxflags="-funroll-all-loops"
-#fflags="-funroll-all-loops"
+# cflags="-funroll-all-loops"
+# cxxflags="-funroll-all-loops"
+# fflags="-funroll-all-loops"
 #
 # If you need to generate debug information during building, you should 
 # uncomment the next few lines: 
 #
- cflags="-Wall  -pg"
- cxxflags="-Wall -pg"
- fflags="-Wall -pg"
+# cflags="-Wall -pg"
+# cxxflags="-Wall -pg"
+# fflags="-Wall -pg"
 #
 ####################  User Changes UP TO HERE   ########################
 
@@ -134,7 +134,7 @@ help:
 backup:
 	@-rm -f faspsolver.zip
 	@-zip -r faspsolver.zip README INSTALL License Makefile \
-	                        *.txt *.cmake doc/userguide.pdf \
+	                        *.txt *.cmake *.tcl doc/userguide.pdf \
 	                        base data test tutorial vs08
 
 .PHONY: config distclean all clean install docs headers uninstall backup help

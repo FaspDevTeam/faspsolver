@@ -2,8 +2,11 @@ File Name: CHANGES
 
 02/28/2013 FASP 1.2.4:
 - Add a TCL GUI for installing FASP.
-- Add find package support for SparseSuite (UMFPACK).
+- Add a cmake module for finding SparseSuite (UMFPACK).
+- Add TCL GUI support for UMFPACK.
 - Fix a bug in test.c calling UMFPACK.
+- Divide calling to MUMPS in three steps to improve efficiency.
+- Change VS2008 setting to accomodate changes in MUMPS 4.10.0.
 
 02/27/2013 FASP 1.2.3:
 - Add an intial version of cmake.
