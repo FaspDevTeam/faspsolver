@@ -1,4 +1,11 @@
 #!/usr/bin/wish
+########################################################################
+# Fast Auxiliary Space Preconditioners (FASP) 
+#
+# Top level tcl install script. Installs the libraries, tutorial and
+# test programs
+#
+########################################################################
 proc InstallError { x } {
 	    puts stderr {*****************************************************************}
 	    puts stderr "ERROR: $x"
@@ -176,8 +183,8 @@ proc Config { f } {
 			       "-DCMAKE_RULE_MESSAGES=ON"]
     } else {
 	set cmake_flags [lappend cmake_flags \
-			      "-DCMAKE_VERBOSE_MAKEFILE=OFF" \
-			      "-DCMAKE_RULE_MESSAGES=ON"]
+			     "-DCMAKE_VERBOSE_MAKEFILE=OFF" \
+			     "-DCMAKE_RULE_MESSAGES=ON"]
     }
     if {$c_options(shared)} {
 	set cmake_flags [lappend cmake_flags "-DSHARED=$c_options(shared)"]
@@ -190,8 +197,8 @@ proc Config { f } {
     }
     if {$c_options(umfpack)} {
 	set cmake_flags [lappend cmake_flags "-DUSE_UMFPACK=$c_options(umfpack)"]
-		if {![regexp {^[ |\t]*$} [join $extra_lib_path(suitesparse_dir)]]} {
-		set cmake_flags \
+	if {![regexp {^[ |\t]*$} [join $extra_lib_path(suitesparse_dir)]]} {
+	    set cmake_flags \
 	    	[concat $cmake_flags  " -DSUITESPARSE_DIR=\\\"$extra_lib_path(suitesparse_dir)\\\""]
     	}
     }	
@@ -342,24 +349,6 @@ proc ShowOpts { f } {
     pack $f.build_type.debug -side right
     pack $f.build_type -side top
 }
-    #proc SortItems {} {
-    #   global items0 files0
-    #  set c [lsort -command mycompare $items0]
-    # set d {}
-    # foreach el $c {
-    #	set ix [lsearch -exact $items0 $el]
-    #	if { $ix >= 0 } { 
-#	    set items0 [eval [list lreplace $items0 $ix $ix "\*$el"]]
-#	    lappend d [lindex $files0 $ix]
-#	} else {
-#	    puts stderror "Could not find item in {SortItems}"
-#	    exit
-#	} 
-#  }
-#    set items0 $c
-#    set files0 $d
-#}
-# end data Chapter 
 
 proc EntryList { parent } {
     global compiler_flags
@@ -467,7 +456,7 @@ pack .f.buttons -side top -fill x
 
 ##########main 
 
-
+## Fortran Style: 72 Chars per line :)
 ScrolledText1 .f 72 24
 pack .f.text  -side right -fill both
     .f.text configure -state disabled
@@ -493,7 +482,7 @@ pack .f.buttons.help -side right
 InitOpts 
 
 frame .f.opts -borderwidth 10
-label .f.opts.lhelper -textvar helper -relief flat -width 35 \
+label .f.opts.lhelper -textvar helper -relief flat -width 55 \
     -background "#00008B" -foreground "yellow" -font { Helvetica -14 bold } 
 
 ##label .f.opts.lstatus -textvar status -relief raised -width 35  
