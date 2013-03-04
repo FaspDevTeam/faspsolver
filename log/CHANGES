@@ -7,6 +7,7 @@ File Name: CHANGES
 - Fix a bug in test.c calling UMFPACK.
 - Divide calling to MUMPS in three steps to improve efficiency.
 - Change VS2008 setting to accomodate changes in MUMPS 4.10.0.
+- Update FASP homepage.
 
 02/27/2013 FASP 1.2.3:
 - Add an intial version of cmake.

@@ -2,10 +2,7 @@
  *  \brief Main page for Doygen documentation
  */
  
-/** \mainpage FASP Solver Package
- *
- *
- * ## Introduction
+/** \mainpage Introduction
  *
  * Over the last few decades, researchers have expended significant effort on developing 
  * efficient iterative methods for solving discretized partial differential equations 
@@ -41,10 +38,8 @@
  */
  
 /**
- * \page download Download
+ * \page download How to obtain FASP
  * \brief Download page for the FASP package
- *
- * ## How to obtain FASP
  *
  * The most updated release version of FASP can be downloaded from
  *
@@ -56,15 +51,21 @@
  * 
  * > $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver 
  * 
- * will give you the current version of the package. 
+ * will give you the developer version of the FASP package. 
  *
- * ## Installation and Building
+ */
+
+/**
+ * \page build Building and Installation
+ * \brief Building page for the FASP package
  *
  * This is a simple instruction on building and testing. For more details, please refer to 
  * the README files and the short
- * <a href="http://fasp.sourceforge.net/download/userguide.pdf">\bf User's Guide</a> in "doc/". 
+ * <a href="http://fasp.sourceforge.net/download/userguide.pdf">\bf User's Guide</a> in 
+ * "faspsolver/doc/".
  *
- * To compile, you need a Fortran and a C compiler.  First, you can type:
+ * To compile, you need a Fortran and a C compiler.  First, you can type in the "faspsolver/"
+ * root directory:
  *
  * > $ make config
  * 
@@ -72,13 +73,19 @@
  *
  * > $ make install
  *
- * which will make the FASP shared static library and install to PREFIX/.
+ * which will make the FASP shared static library and install to PREFIX/. By default, FASP 
+ * libraries and executables will be installed in the FASP home directory "faspsolver/".
  *
- * If you wish to see the detailed usage of "make" or need any help, please type:
+ * There is a simple GUI tool for building and installing FASP included in the package. You 
+ * need Tcl/Tk support in your computer. You may call this GUI by run in the root directory:
+ *
+ * > $ wish fasp_install.tcl
+ *
+ * If you need to see the detailed usage of "make" or need any help, please type:
  *
  * > $ make help
  *
- * Tutorial examples can be found in "tutorial/".
+ * After installation, tutorial examples can be found in "tutorial/".
  *
  */ 
 
