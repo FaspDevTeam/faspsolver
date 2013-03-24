@@ -26,9 +26,8 @@ foreach( srcfile ${FASP_TSRC} )
 #    message( "${execfile} ${srcfile}" )
     add_executable( ${execfile} main/${srcfile} )
 # 
-    target_link_libraries( ${execfile} ${UMFPACK_LIBRARIES} fasptest fasp) 
-
-   
+    target_link_libraries( ${execfile} ${UMFPACK_LIBRARIES} fasptest fasp ${ADD_STDLIBS} ) 
+#
     install(TARGETS ${execfile} DESTINATION ${FASP_SOURCE_DIR}/test)
 endforeach( srcfile ${FASP_TSRC} )
 

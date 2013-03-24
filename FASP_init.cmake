@@ -9,12 +9,22 @@ set(OPENMP 0 BOOL "Openmp use")
 # For which compilers we shall search (if none found then the 
 # default cmake compiler detection will be invoked. 
 
-# Search for compilers in the specified order.  
+# Search for C compilers in the specified order.  That will determine
+#  the rest.
 	find_program(THE_C NAMES icc gcc-mp-4.8 gcc gcc44 gcc43 )
 #
 	if( ${THE_C} MATCHES "gcc.*" )
 		string(REPLACE "gcc" "g++" C_XX ${THE_C} )
 		string(REPLACE "gcc" "gfortran" F_C ${THE_C} )
+
+## for a version of cmake < 2.8 add standard libs for gcc, because
+##   they are not automatically added.
+		if( ${CMAKE_VERSION} VERSION_LESS 2.8)
+	           set(ADD_STDLIBS "m" "gfortran")
+		else(${CMAKE_VERSION} VERSION_LESS 2.8)
+		   set(ADD_STDLIBS "" CACHE STRING "not adding standard libraries ")
+		endif(${CMAKE_VERSION} VERSION_LESS 2.8)
+
        	elseif( ${THE_C} MATCHES "icc" )                    
 		set(C_XX "icpc")
 		set(F_C "ifort")
