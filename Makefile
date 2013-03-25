@@ -23,7 +23,7 @@
 # By default, FASP generates static libraries. If you need to generate 
 # shared libs instead of static libs, uncomment the next line:
 #
-shared=yes
+# shared=yes
 #
 # If you want to compile with OpenMP support, uncomment the next line:
 #
