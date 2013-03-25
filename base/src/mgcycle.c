@@ -299,6 +299,7 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
     const SHORT cycle_type  = param->cycle_type;    
     //const INT smooth_order = param->smooth_order;
     const REAL relax = param->relaxation;
+    INT steps = param->presmooth_iter;
     
     // local variables
     INT nu_l[MAX_AMG_LVL] = {0}, l = 0;
@@ -313,24 +314,35 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         nu_l[l]++;
         // pre smoothing
         if (l<param->ILU_levels) {
-            fasp_smoother_dbsr_ilu (&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
+            fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
+            for (i=0; i<steps; i++)
+                fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
         }
         else {
-            INT steps = param->presmooth_iter;
-    
             if (steps > 0) {
                 switch (smoother) {
                 case SMOOTHER_JACOBI:
                     for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_jacobi (&mgl[l].A, &mgl[l].b, &mgl[l].x);
+                        fasp_smoother_dbsr_jacobi1(&mgl[l].A,&mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
                     break;
                 case SMOOTHER_GS:
                     for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_gs (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
+                        fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
                     break;
+                case SMOOTHER_SGS:
+                    for (i=0; i<steps; i++){
+                        fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                        fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                    }
+                        break;
                 case SMOOTHER_SOR:
                     for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_sor (&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL, relax);
+                        fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                    break;
+                case SMOOTHER_SSOR:
+                    for (i=0; i<steps; i++)
+                        fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                        fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
                     break;
                 default:
                     printf("### ERROR: Wrong smoother type %d!\n", smoother);
@@ -397,23 +409,34 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         // post-smoothing
         if (l<param->ILU_levels) {
             fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
+            for (i=0; i<steps; i++)
+                fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
         }
-        else {
-            INT steps = param->postsmooth_iter;
-    
+        else {    
             if (steps > 0) {
                 switch (smoother) {
                 case SMOOTHER_JACOBI:
                     for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_jacobi(&mgl[l].A, &mgl[l].b, &mgl[l].x);
+                        fasp_smoother_dbsr_jacobi1(&mgl[l].A,&mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
                     break;
                 case SMOOTHER_GS:
                     for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_gs(&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL);
+                        fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                    break;
+                case SMOOTHER_SGS:
+                    for (i=0; i<steps; i++){
+                        fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                        fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                    }
                     break;
                 case SMOOTHER_SOR:
                     for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_sor(&mgl[l].A, &mgl[l].b, &mgl[l].x, ASCEND, NULL, relax);
+                        fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                    break;
+                case SMOOTHER_SSOR:
+                    for (i=0; i<steps; i++)
+                        fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                        fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
                     break;
                 default:
                     printf("### ERROR: Wrong smoother type %d!\n", smoother);

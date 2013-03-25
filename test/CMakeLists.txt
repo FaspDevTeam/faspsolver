@@ -18,7 +18,7 @@ add_library(fasptest STATIC ${FASP_TLIB_SRC})
 #    RUNTIME DESTINATION ${FASP_TLIB_DIR}
 #    ARCHIVE DESTINATION ${FASP_TLIB_DIR})
 
-file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" main/*.c main/*.f main/*.f90 )
+file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" main/*.c main/*.f main/*.f90 main/*.cpp)
 ###message("FASP_TSRC=${FASP_TSRC} ")
 
 foreach( srcfile ${FASP_TSRC} )

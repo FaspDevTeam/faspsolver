@@ -76,7 +76,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     
     // ILU decomposition    
     // (1) symbolic factoration
-    symbfactor_(&A->ROW,A->JA,A->IA,&lfil,&iwk,&nzlu,ijlu,uptr,&ierr);    
+    symbfactor_(&A->ROW,A->JA,A->IA,&lfil,&iwk,&nzlu,ijlu,uptr,&ierr);
     
     iludata->luval=(REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
     
@@ -146,14 +146,14 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
  *
  * \note Works for general nb (Xiaozhe)
  */
-static INT numfac_bsr (dBSRmat *A, 
-                       REAL *luval, 
-                       INT *jlu, 
+static INT numfac_bsr (dBSRmat *A,
+                       REAL *luval,
+                       INT *jlu,
                        INT *uptr)
 {
-    INT n=A->ROW,nb=A->nb, nb2=nb*nb, ib, ibstart,ibstart1; 
+    INT n=A->ROW,nb=A->nb, nb2=nb*nb, ib, ibstart,ibstart1;
     INT k, indj, inds, indja,jluj, jlus, ijaj;
-    REAL  *mult,*mult1; 
+    REAL  *mult,*mult1;
     INT *colptrs;
     INT status=SUCCESS;
     
@@ -161,15 +161,15 @@ static INT numfac_bsr (dBSRmat *A,
     mult=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));
     mult1=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));
     
-    /**  
-     *     colptrs is used to hold the indices of entries in LU of row k.  
+    /**
+     *     colptrs is used to hold the indices of entries in LU of row k.
      *     It is initialized to zero here, and then reset after each row's
      *     work. The first segment of the loop on indj effectively solves
      *     the transposed upper triangular system
      *            U(1:k-1, 1:k-1)'L(k,1:k-1)' = A(k,1:k-1)'
      *     via sparse saxpy operations, throwing away disallowed fill.
      *     When the loop index indj reaches the k-th column (i.e., the diag
-     *     entry), then the innermost sparse saxpy operation effectively is 
+     *     entry), then the innermost sparse saxpy operation effectively is
      *     applying the previous updates to the corresponding part of U via
      *     sparse vec*mat, discarding disallowed fill-in entries, i.e.
      *            U(k,k:n) = A(k,k:n) - U(1:k-1,k:n)*L(k,1:k-1)

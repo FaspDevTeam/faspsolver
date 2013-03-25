@@ -89,7 +89,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
 
     // first pass: count nonzeros for sub matrix
     B->IA[0]=0;
-    for (i=0;i<m;++i) {    
+    for (i=0;i<m;++i) {     
         for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
             j=A->JA[N2C(k)];
             if (col_flag[N2C(j)]>0) {

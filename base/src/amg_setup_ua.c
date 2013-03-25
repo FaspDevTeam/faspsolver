@@ -281,6 +281,9 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     
     fasp_gettime(&setup_start);
     
+    /*-----------------------*/
+    /*--local working array--*/
+    /*-----------------------*/
     //each elvel stores the information of the number of aggregations
     INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
     
@@ -291,10 +294,20 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     // each level stores the information of the strongly coupled neighborhoods
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat)); 
     
-    mgl[0].near_kernel_dim   = 1;
-    //mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
-    mgl[0].near_kernel_basis = NULL;
+    /*-----------------------*/
+    /*-- setup null spaces --*/
+    /*-----------------------*/
+    //! null space for whole Jacobian
+	mgl[0].near_kernel_dim   = 1;
+    mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
     
+    for (i=0; i<mgl->near_kernel_dim; ++i) {
+        mgl[0].near_kernel_basis[i] = NULL;
+    }
+    
+    /*-----------------------*/
+    /*-- setup ILU parameters --*/
+    /*-----------------------*/
     // initialize ILU parameters
     mgl->ILU_levels = param->ILU_levels;
     ILU_param iluparam;
@@ -310,6 +323,9 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
 
         /*-- setup ILU decomposition if necessary */
         if (level<param->ILU_levels) fasp_ilu_dbsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
+        
+        /*-- get the diagonal inverse --*/
+        mgl[level].diaginv = fasp_dbsr_getdiaginv(&mgl[level].A);
     
         /*-- Aggregation --*/
         mgl[level].PP =  fasp_dbsr_getblk_dcsr(&mgl[level].A);  // use first block now, need to bechanged

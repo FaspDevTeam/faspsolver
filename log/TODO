@@ -48,12 +48,12 @@ AMG
 
 [ 0.3.9 ] separate SA and UA code
 [ 0.5.0 ] profile and optimize a few core functions: RS, EM
-[       ] profile and optimize a few core functions: SA, UA
+[       ] profile and optimize a few core functions: SA, UA (Xiaozhe)
 
 [ 0.8.5 ] non-overlapping/overlapping Schwarz smoother
-[       ] replace Schwarz smoother by a C version
+[       ] replace Schwarz smoother by a C version (UMFPack) (Xiaozhe, Ludmil, James B., Fei)
 [       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
-[       ] Tarjan algorithm and other orderings (Ludmil and Xiaozhe)
+[       ] Tarjan algorithm and other orderings (Xiaozhe and Ludmil)
 [       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
 [       ] Maximal Independent Set (Ludmil)
 [       ] AMG based on mesh information
@@ -92,7 +92,7 @@ Iterative Methods
 
 [ 0.6.7 ] remove non-GPL ILU routines
 [       ] add block preconditioners for Stokes and NS (Xiaozhe)
-[       ] add preconditioners for Maxwell
+[       ] add preconditioners for Maxwell (Xiaozhe, Ludmil, and Yicong)
 [       ] replace the ILU smoothers from SPARSEKIT ver2.0
 
 ========================

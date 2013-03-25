@@ -402,6 +402,9 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     // initialize A, b, x for mgl[0]
     mgl[0].A = fasp_dbsr_create(A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
     fasp_dbsr_cp(A,  &(mgl[0].A));
+    //mgl[0].A.ROW = A->ROW; mgl[0].A.COL = A->COL; mgl[0].A.NNZ = A->NNZ;
+    //mgl[0].A.nb = A->nb; mgl[0].A.storage_manner = A->storage_manner;
+    //mgl[0].A.IA = A->IA; mgl[0].A.JA = A->JA; mgl[0].A.val = A->val;
     mgl[0].b = fasp_dvec_create(mgl[0].A.ROW*mgl[0].A.nb); 
     mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb); 
     
@@ -461,7 +464,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     }
     
  FINISHED:
-    //fasp_amg_data_free(mgl);    // Xiaozhe: need to be added
+    fasp_amg_data_bsr_free(mgl);    
     if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
     return status;
     

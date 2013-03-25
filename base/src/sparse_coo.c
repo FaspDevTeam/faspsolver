@@ -43,6 +43,42 @@ dCOOmat fasp_dcoo_create (INT m,
 }
 
 /**
+ * \fn void fasp_dcoo_alloc (const INT m, const INT n, const INT nnz, dCOOmat *A)
+ *
+ * \brief Allocate COO sparse matrix memory space
+ *
+ * \param m      Number of rows
+ * \param n      Number of columns
+ * \param nnz    Number of nonzeros
+ * \param A      Pointer to the dCSRmat matrix
+ *
+ * \author Xiaozhe Hu
+ * \date   03/25/2013
+ */
+void fasp_dcoo_alloc (const INT m,
+                      const INT n,
+                      const INT nnz,
+                      dCOOmat *A)
+{
+    
+    if ( nnz > 0 ) {
+        A->I   = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
+        A->J   = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
+        A->val = (REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
+    }
+    else {
+        A->I = NULL;
+        A->J = NULL;
+        A->val = NULL;
+    }
+    
+    A->row=m; A->col=n; A->nnz=nnz;
+    
+    return;
+}
+
+
+/**
  * \fn void fasp_dcoo_free (dCOOmat *A)
  *
  * \brief Free IJ sparse matrix data memeory space

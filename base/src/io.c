@@ -347,6 +347,55 @@ void fasp_dcoo_read (char *filename,
 }
 
 /**
+ * \fn void fasp_dcoo1_read (char *filename, dCOOmat *A)
+ *
+ * \brief Read A from matrix disk file in IJ format -- indices starting from 0
+ *
+ * \param filename  File name for matrix
+ * \param A         Pointer to the COO matrix
+ *
+ * \note File format:
+ *   - nrow ncol nnz     % number of rows, number of columns, and nnz
+ *   - i  j  a_ij        % i, j a_ij in each line
+ *
+ * \note difference between fasp_dcoo_read and this funciton is this function do not change to CSR format
+ *
+ * \author Xiaozhe Hu
+ * \date   03/24/2013
+ */
+void fasp_dcoo1_read (char *filename,
+                     dCOOmat *A)
+{
+    int  i,j,k,m,n,nnz;
+    REAL value;
+    
+    FILE *fp=fopen(filename,"r");
+    
+    if ( fp==NULL ) {
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcoo1_read");
+    }
+    
+    printf("fasp_dcoo1_read: reading file %s...\n", filename);
+    
+    fscanf(fp,"%d %d %d",&m,&n,&nnz);
+    
+    fasp_dcoo_alloc(m, n, nnz, A);
+    
+    for (k=0;k<nnz;k++) {
+        if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
+            A->I[k]=i; A->J[k]=j; A->val[k]=value;
+        }
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo1_read");
+        }
+    }
+    
+    fclose(fp);
+    
+}
+
+/**
  * \fn void fasp_dmtx_read (char *filename, dCSRmat *A)
  *
  * \brief Read A from matrix disk file in MatrixMarket general format

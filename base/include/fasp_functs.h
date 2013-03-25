@@ -721,6 +721,9 @@ void fasp_dcsr_read (char *filename,
 void fasp_dcoo_read (char *filename,
                      dCSRmat *A);
 
+void fasp_dcoo1_read (char *filename,
+                     dCOOmat *A);
+
 void fasp_dmtx_read (char *filename,
                      dCSRmat *A);
 
@@ -2075,6 +2078,11 @@ dCOOmat fasp_dcoo_create (INT m,
                           INT n, 
                           INT nnz);
 
+void fasp_dcoo_alloc (const INT m,
+                      const INT n,
+                      const INT nnz,
+                      dCOOmat *A);
+
 void fasp_dcoo_free (dCOOmat *A);
 
 void fasp_dcoo_shift (dCOOmat *A,
@@ -2390,6 +2398,30 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
                                 REAL *tol, 
                                 INT *maxit, 
                                 INT *ptrlvl);
+
+INT fasp_wrapper_dbsr_krylov_amg (INT n,
+                                INT nnz,
+                                INT nb,
+                                INT *ia,
+                                INT *ja,
+                                REAL *a,
+                                REAL *b,
+                                REAL *u,
+                                REAL tol,
+                                INT maxit,
+                                INT ptrlvl);
+
+INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n,
+                                  INT nnz,
+                                  INT nb,
+                                  INT *ia,
+                                  INT *ja,
+                                  REAL *a,
+                                  REAL *b,
+                                  REAL *u,
+                                  REAL tol,
+                                  INT maxit,
+                                  INT ptrlvl);
 
 
 /*-------- In file: interface_mumps.c --------*/

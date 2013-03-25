@@ -2759,7 +2759,8 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
     B->NNZ=B->IA[B->ROW]-B->IA[0];
     B->nb=A->nb;
     B->storage_manner = A->storage_manner;
-    fasp_mem_free(Ps_marker);
+    if(Ps_marker) fasp_mem_free(Ps_marker);
+    if(tmp) fasp_mem_free(tmp);
 }
 
 /*---------------------------------*/

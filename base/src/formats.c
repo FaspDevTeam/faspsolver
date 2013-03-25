@@ -55,6 +55,8 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
         ind[iind] = ++jind;
     }
     
+    if (ind) fasp_mem_free(ind);
+    
     return SUCCESS;
 }
 
@@ -827,6 +829,9 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
             }
         }
     }
+    
+    if(Is) fasp_mem_free(Is);
+    if(Js) fasp_mem_free(Js);
     
     return A;
 }
