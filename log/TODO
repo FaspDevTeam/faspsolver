@@ -17,6 +17,8 @@ Documentation
 [ 0.9.8 ] generate reference manual using Doxygen
 [ 0.9.8 ] make the FASP webpage ready
 [ 1.1.5 ] add details for building and installation using SCons and VS
+[       ] add details for building and installation using cmake and VS
+[       ] add details for the OMP version
 [       ] add details for the GPU version
 
 ========================
@@ -51,11 +53,11 @@ AMG
 [       ] profile and optimize a few core functions: SA, UA (Xiaozhe)
 
 [ 0.8.5 ] non-overlapping/overlapping Schwarz smoother
-[       ] replace Schwarz smoother by a C version (UMFPack) (Xiaozhe, Ludmil, James B., Fei)
+[       ] maximal independent set based on a strength matrix (Ludmil)
+[       ] replace Schwarz smoother by a C version (Xiaozhe, Ludmil, James B., Fei)
 [       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
 [       ] Tarjan algorithm and other orderings (Xiaozhe and Ludmil)
 [       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
-[       ] Maximal Independent Set (Ludmil)
 [       ] AMG based on mesh information
 
 [ 0.9.0 ] aggressive coarsening strategies (Xiaozhe)
@@ -66,7 +68,7 @@ AMG
 
 [ 0.8.6 ] standard interpolation
 [       ] polynomial interpolation -- vector preserve (Xiaozhe)
-[       ] multipass interpolation
+[       ] multi-pass interpolation
 [       ] long-distance interpolation
 [       ] bootstrap interpolation
 
@@ -81,6 +83,7 @@ Iterative Methods
 [ 0.7.8 ] reduced duplications in iterative methods
 [ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
+[       ] add safer Krylov iterative methods and improve efficiency (Chensong)
 [       ] add support for SymCSR format
 [       ] further study CSRL format and extend it
 
@@ -146,7 +149,8 @@ OpenMP Support
 [ 0.9.5 ] profile and optimize OMP code
 [ 1.1.4 ] Finish OpenMP vesion for some subroutines, such as fasp_blas_dcsr_rap_agg
 [ 1.1.4 ] add black-red smoothing to OMP version
-[       ] reconstruct some OMP version, some could be simple
+[       ] add black-red smoothing based on greedy multicolor algorithms (Chunsheng)
+[       ] reconstruct OMP version: some parts could be simplified
 
 ========================
 GPU Support
@@ -170,6 +174,6 @@ Bug Fixes
 [ 1.1.4 ] fix a bug in OMP EM-AMG
 [ 1.1.5 ] fix a potential bug in SA setup
 [ 1.2.0 ] Windows release version: MINRES gives wrong results, check compiler
+[ 1.2.4 ] MUMPS: 64bit version does not work, replaced with a new version
 [       ] AMG setup: number of DOF could drop dramatically
 [       ] VGMRES: "restart" might be too big
-[       ] MUMPS: 64bit version does not work
