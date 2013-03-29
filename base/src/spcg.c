@@ -1,6 +1,6 @@
-/*! \file pcg.c
+/*! \file spcg.c
  *
- *  \brief Preconditioned conjugate gradient method
+ *  \brief Preconditioned conjugate gradient method with safe net
  *
  *  Abstract algorithm
  *
@@ -19,6 +19,7 @@
  *      - update solution: x_{k+1} = x_k + alpha*p_k;
  *      - perform stagnation check;
  *      - update residual: r_{k+1} = r_k - alpha*(A*p_k);
+ *      - if r_{k+1} < r_{best}: save x_{k+1} as x_{best};
  *      - perform residual check;
  *      - obtain p_{k+1} using {p_0, p_1, ... , p_k};
  *      - prepare for next iteration;
@@ -41,10 +42,15 @@
  *          -# IF ( not converged & restart_number < Max_Res_Check ) restart;
  *      - END IF
  *
+ *  Safe net check:
+ *      - IF r_{k+1} > r_{best}
+ *          -# x_{k+1} = x_{best}
+ *      - END IF
+ *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
- *  \note See spcg.c for a safer version
+ *  \note See pcg.c for a version without safe net
  *
  */
 
@@ -59,11 +65,11 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_dcsr_pcg (dCSRmat *A, dvector *b, dvector *u, precond *pc,
- *                               const REAL tol, const INT MaxIt,
- *                               const SHORT stop_type, const SHORT print_level)
+ * \fn INT fasp_solver_dcsr_spcg (dCSRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                const REAL tol, const INT MaxIt,
+ *                                const SHORT stop_type, const SHORT print_level)
  *
- * \brief Preconditioned conjugate gradient method for solving Au=b
+ * \brief Preconditioned conjugate gradient method for solving Au=b with safe net
  *
  * \param A            Pointer to the coefficient matrix
  * \param b            Pointer to the dvector of right hand side
@@ -76,20 +82,17 @@
  *
  * \return             Number of iterations if converged, error message otherwise
  *
- * \author Chensong Zhang, Xiaozhe Hu, Shiquan Zhang
- * \date   05/06/2010
- *
- * Modified by Chensong Zhang on 04/30/2012
- * Modified by Chensong Zhang on 03/28/2013
+ * \author Chensong Zhang
+ * \date   03/28/2013
  */
-INT fasp_solver_dcsr_pcg (dCSRmat *A,
-                          dvector *b,
-                          dvector *u,
-                          precond *pc,
-                          const REAL tol,
-                          const INT MaxIt,
-                          const SHORT stop_type,
-                          const SHORT print_level)
+INT fasp_solver_dcsr_spcg (dCSRmat *A,
+                           dvector *b,
+                           dvector *u,
+                           precond *pc,
+                           const REAL tol,
+                           const INT MaxIt,
+                           const SHORT stop_type,
+                           const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -102,9 +105,12 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     REAL         normr0 = BIGREAL, normu, infnormu;
     REAL         alpha, beta, temp1, temp2;
     
+    INT          iter_best = 0; // initial best known iteration
+    REAL         absres_best = BIGREAL; // initial best known residual
+    
     // allocate temp memory (need 4*m REAL numbers)
-    REAL *work = (REAL *)fasp_mem_calloc(4*m,sizeof(REAL));
-    REAL *p = work, *z = work+m, *r = z+m, *t = r+m;
+    REAL *work = (REAL *)fasp_mem_calloc(5*m,sizeof(REAL));
+    REAL *p = work, *z = work+m, *r = z+m, *t = r+m, *u_best = t+m;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_pcg ...... [Start]\n");
@@ -147,7 +153,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
-
+    
     fasp_array_cp(m,z,p);
     temp1 = fasp_blas_array_dotprod(m,z,r);
     
@@ -194,6 +200,13 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
         // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
+        // safe net check: save the best-so-far solution
+        if ( absres < absres_best - maxdiff) {
+            absres_best = absres;
+            iter_best   = iter;
+            fasp_array_cp(m,u->val,u_best);
+        }
+        
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
         if ( infnormu <= sol_inf_tol ) {
@@ -204,7 +217,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
         
         //  Check II: if staggenated, try to restart
         normu   = fasp_blas_dvec_norm2(u);
-
+        
         // compute relative difference
         reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
         if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
@@ -323,6 +336,33 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
         
     } // end of main PCG loop.
     
+    // safe net check: restore the best-so-far solution if necessary
+    fasp_array_cp(m,b->val,r);
+    fasp_blas_dcsr_aAxpy(-1.0,A,u_best,r);
+    
+    switch ( stop_type ) {
+        case STOP_REL_RES:
+            absres = fasp_blas_array_norm2(m,r);
+            break;
+        case STOP_REL_PRECRES:
+            // z = B(r)
+            if ( pc != NULL )
+                pc->fct(r,z,pc->data); /* Apply preconditioner */
+            else
+                fasp_array_cp(m,r,z); /* No preconditioner */
+            absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+            break;
+        case STOP_MOD_REL_RES:
+            absres_best = fasp_blas_array_norm2(m,r);
+            break;
+    }
+    
+    if ( absres > absres_best + maxdiff ) {
+        if ( print_level > PRINT_NONE )
+            printf("### WARNING: Restore iteration %d!!!", iter_best);
+        fasp_array_cp(m,u_best,u->val);
+    }
+    
 FINISHED:  // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
@@ -341,11 +381,11 @@ FINISHED:  // finish the iterative method
 
 
 /**
- * \fn INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, dvector *b, dvector *u, precond *pc,
- *                                const REAL tol, const INT MaxIt,
- *                                const SHORT stop_type, const SHORT print_level)
+ * \fn INT fasp_solver_bdcsr_spcg (block_dCSRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                 const REAL tol, const INT MaxIt,
+ *                                 const SHORT stop_type, const SHORT print_level)
  *
- * \brief Preconditioned conjugate gradient method for solving Au=b
+ * \brief Preconditioned conjugate gradient method for solving Au=b with safe net
  *
  * \param A            Pointer to the coefficient matrix
  * \param b            Pointer to the dvector of right hand side
@@ -358,20 +398,17 @@ FINISHED:  // finish the iterative method
  *
  * \return             Number of iterations if converged, error message otherwise
  *
- * \author Xiaozhe Hu
- * \date   05/24/2010
- *
- * Modified by Chensong Zhang on 04/30/2012
- * Modified by Chensong Zhang on 03/28/2013
+ * \author Chensong Zhang
+ * \date   03/28/2013
  */
-INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
-                           dvector *b,
-                           dvector *u,
-                           precond *pc,
-                           const REAL tol,
-                           const INT MaxIt,
-                           const SHORT stop_type,
-                           const SHORT print_level)
+INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
+                            dvector *b,
+                            dvector *u,
+                            precond *pc,
+                            const REAL tol,
+                            const INT MaxIt,
+                            const SHORT stop_type,
+                            const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -384,9 +421,12 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
     REAL         normr0 = BIGREAL, normu, infnormu;
     REAL         alpha, beta, temp1, temp2;
     
+    INT          iter_best = 0; // initial best known iteration
+    REAL         absres_best = BIGREAL; // initial best known residual
+    
     // allocate temp memory (need 4*m REAL numbers)
-    REAL *work = (REAL *)fasp_mem_calloc(4*m,sizeof(REAL));
-    REAL *p = work, *z = work+m, *r = z+m, *t = r+m;
+    REAL *work = (REAL *)fasp_mem_calloc(5*m,sizeof(REAL));
+    REAL *p = work, *z = work+m, *r = z+m, *t = r+m, *u_best = t+m;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_bdcsr_pcg ...... [Start]\n");
@@ -476,6 +516,13 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
         // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
+        // safe net check: save the best-so-far solution
+        if ( absres < absres_best - maxdiff) {
+            absres_best = absres;
+            iter_best   = iter;
+            fasp_array_cp(m,u->val,u_best);
+        }
+        
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
         if ( infnormu <= sol_inf_tol ) {
@@ -605,6 +652,33 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
         
     } // end of main PCG loop.
     
+    // safe net check: restore the best-so-far solution if necessary
+    fasp_array_cp(m,b->val,r);
+    fasp_blas_bdcsr_aAxpy(-1.0,A,u_best,r);
+    
+    switch ( stop_type ) {
+        case STOP_REL_RES:
+            absres = fasp_blas_array_norm2(m,r);
+            break;
+        case STOP_REL_PRECRES:
+            // z = B(r)
+            if ( pc != NULL )
+                pc->fct(r,z,pc->data); /* Apply preconditioner */
+            else
+                fasp_array_cp(m,r,z); /* No preconditioner */
+            absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+            break;
+        case STOP_MOD_REL_RES:
+            absres_best = fasp_blas_array_norm2(m,r);
+            break;
+    }
+    
+    if ( absres > absres_best + maxdiff ) {
+        if ( print_level > PRINT_NONE )
+            printf("### WARNING: Restore iteration %d!!!", iter_best);
+        fasp_array_cp(m,u_best,u->val);
+    }
+    
 FINISHED:  // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
@@ -622,11 +696,11 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn INT fasp_solver_dstr_pcg (dSTRmat *A, dvector *b, dvector *u, precond *pc,
- *                               const REAL tol, const INT MaxIt,
- *                               const SHORT stop_type, const SHORT print_level)
+ * \fn INT fasp_solver_dstr_spcg (dSTRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                const REAL tol, const INT MaxIt,
+ *                                const SHORT stop_type, const SHORT print_level)
  *
- * \brief Preconditioned conjugate gradient method for solving Au=b
+ * \brief Preconditioned conjugate gradient method for solving Au=b with safe net
  *
  * \param A            Pointer to the coefficient matrix
  * \param b            Pointer to the dvector of right hand side
@@ -639,20 +713,17 @@ FINISHED:  // finish the iterative method
  *
  * \return             Number of iterations if converged, error message otherwise
  *
- * \author Zhiyang Zhou
- * \date   04/25/2010
- *
- * Modified by Chensong Zhang on 04/30/2012
- * Modified by Chensong Zhang on 03/28/2013
+ * \author Chensong Zhang
+ * \date   03/28/2013
  */
-INT fasp_solver_dstr_pcg (dSTRmat *A,
-                          dvector *b,
-                          dvector *u,
-                          precond *pc,
-                          const REAL tol,
-                          const INT MaxIt,
-                          const SHORT stop_type,
-                          const SHORT print_level)
+INT fasp_solver_dstr_spcg (dSTRmat *A,
+                           dvector *b,
+                           dvector *u,
+                           precond *pc,
+                           const REAL tol,
+                           const INT MaxIt,
+                           const SHORT stop_type,
+                           const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -665,9 +736,12 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
     REAL         normr0 = BIGREAL, normu, infnormu;
     REAL         alpha, beta, temp1, temp2;
     
+    INT          iter_best = 0; // initial best known iteration
+    REAL         absres_best = BIGREAL; // initial best known residual
+    
     // allocate temp memory (need 4*m REAL numbers)
-    REAL *work = (REAL *)fasp_mem_calloc(4*m,sizeof(REAL));
-    REAL *p = work, *z = work+m, *r = z+m, *t = r+m;
+    REAL *work = (REAL *)fasp_mem_calloc(5*m,sizeof(REAL));
+    REAL *p = work, *z = work+m, *r = z+m, *t = r+m, *u_best = t+m;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dstr_pcg ...... [Start]\n");
@@ -757,6 +831,13 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
         // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
+        // safe net check: save the best-so-far solution
+        if ( absres < absres_best - maxdiff) {
+            absres_best = absres;
+            iter_best   = iter;
+            fasp_array_cp(m,u->val,u_best);
+        }
+        
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
         if ( infnormu <= sol_inf_tol ) {
@@ -885,6 +966,33 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
         fasp_blas_array_axpby(m,1.0,z,beta,p);
         
     } // end of main PCG loop.
+    
+    // safe net check: restore the best-so-far solution if necessary
+    fasp_array_cp(m,b->val,r);
+    fasp_blas_dstr_aAxpy(-1.0,A,u_best,r);
+    
+    switch ( stop_type ) {
+        case STOP_REL_RES:
+            absres = fasp_blas_array_norm2(m,r);
+            break;
+        case STOP_REL_PRECRES:
+            // z = B(r)
+            if ( pc != NULL )
+                pc->fct(r,z,pc->data); /* Apply preconditioner */
+            else
+                fasp_array_cp(m,r,z); /* No preconditioner */
+            absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+            break;
+        case STOP_MOD_REL_RES:
+            absres_best = fasp_blas_array_norm2(m,r);
+            break;
+    }
+    
+    if ( absres > absres_best + maxdiff ) {
+        if ( print_level > PRINT_NONE )
+            printf("### WARNING: Restore iteration %d!!!", iter_best);
+        fasp_array_cp(m,u_best,u->val);
+    }
     
 FINISHED:  // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);

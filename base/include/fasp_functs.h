@@ -2319,6 +2319,36 @@ void fasp_sparse_rapcmp_ (INT *ir,
 ivector fasp_sparse_MIS(dCSRmat *A);
 
 
+/*-------- In file: spcg.c --------*/
+
+INT fasp_solver_dcsr_spcg (dCSRmat *A,
+                           dvector *b,
+                           dvector *u,
+                           precond *pc,
+                           const REAL tol,
+                           const INT MaxIt,
+                           const SHORT stop_type,
+                           const SHORT print_level);
+
+INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
+                            dvector *b,
+                            dvector *u,
+                            precond *pc,
+                            const REAL tol,
+                            const INT MaxIt,
+                            const SHORT stop_type,
+                            const SHORT print_level);
+
+INT fasp_solver_dstr_spcg (dSTRmat *A,
+                           dvector *b,
+                           dvector *u,
+                           precond *pc,
+                           const REAL tol,
+                           const INT MaxIt,
+                           const SHORT stop_type,
+                           const SHORT print_level);
+
+
 /*-------- In file: threads_schedule.c --------*/
 
 INT FASP_GET_NUM_THREADS();

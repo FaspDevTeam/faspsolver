@@ -7,6 +7,8 @@ File Name: CHANGES
 - Update Intel compiler version to 2013.2.149 for VS2008 solution.
 - Add initial step print out for PCG.
 - Prepare PCG for adding safe-guard.
+- Fix a bug in computing reduction factor in PCG.
+- Add a safer version of PCG: SPCG.
 
 02/28/2013 FASP 1.2.4:
 - Add a TCL GUI for installing FASP.

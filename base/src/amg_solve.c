@@ -54,7 +54,10 @@ INT fasp_amg_solve (AMG_data *mgl,
     printf("### DEBUG: fasp_amg_solve ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
-        
+    
+    // Print iteration information if needed
+    print_itinfo(print_level, STOP_REL_RES, iter, 1.0, sumb, 0.0);
+
     // MG solver here
     while ((++iter <= MaxIt) & (sumb > SMALLREAL)) {
         
