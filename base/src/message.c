@@ -28,6 +28,8 @@
  *
  * \author Chensong Zhang
  * \date   11/16/2009
+ * 
+ * Modified by Chensong Zhang on 03/28/2013: Output initial guess.
  */
 void print_itinfo (const INT ptrlvl, 
                    const INT stop_type, 
@@ -38,11 +40,11 @@ void print_itinfo (const INT ptrlvl,
 {    
     if (ptrlvl>PRINT_SOME) {
         
-        if (iter>1) {
+        if (iter>0) {
             printf("%6d | %15.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);
         }
         else { 
-            // iter = 0 means initial guess, iter = 1 is the first iteration
+            // iter = 0 means initial guess
             printf("---------------------------------------------------------------\n");
             switch (stop_type) {
             case STOP_REL_RES:
@@ -54,12 +56,9 @@ void print_itinfo (const INT ptrlvl,
             case STOP_MOD_REL_RES:
                 printf("It Num |    ||r||/||x||    |     ||r||      |  Conv. Factor\n");
                 break;
-            default:
-                printf("Error: wrong stopping criteria!\n");
-                exit(ERROR_INPUT_PAR);
             }
             printf("---------------------------------------------------------------\n");
-            printf("%6d | %15.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);
+            printf("%6d | %15.6e   | %13.6e  |       -- \n",iter,relres,absres);
         } // end if iter
         
     } // end if ptrlvl

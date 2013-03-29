@@ -1,9 +1,12 @@
 File Name: CHANGES
 
-03/25/2013 FASP 1.2.5:
+03/28/2013 FASP 1.2.5:
 - Update MUMPS support.
 - Revise cmake to support cmake version 2.6.
 - Fix bugs in block AMG.
+- Update Intel compiler version to 2013.2.149 for VS2008 solution.
+- Add initial step print out for PCG.
+- Prepare PCG for adding safe-guard.
 
 02/28/2013 FASP 1.2.4:
 - Add a TCL GUI for installing FASP.
