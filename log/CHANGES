@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+03/31/2013 FASP 1.2.6:
+- Add NAN check to SPCG.
+- Prepare BiCGstab for adding safe-guard.
+- Fix a bug in computing reduction factor in BiCGstab.
+
 03/28/2013 FASP 1.2.5:
 - Update MUMPS support.
 - Revise cmake to support cmake version 2.6.

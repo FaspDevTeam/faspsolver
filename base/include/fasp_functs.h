@@ -2369,6 +2369,8 @@ void fasp_gettime (REAL *time);
 
 /*-------- In file: vec.c --------*/
 
+INT fasp_dvec_isnan (dvector *u);
+
 dvector fasp_dvec_create (const INT m);
 
 ivector fasp_ivec_create (const INT m);

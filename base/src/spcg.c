@@ -17,6 +17,7 @@
  *  FOR k = 0:MaxIt
  *      - get step size alpha = f(r_k,z_k,p_k);
  *      - update solution: x_{k+1} = x_k + alpha*p_k;
+ *      - check whether x is NAN;
  *      - perform stagnation check;
  *      - update residual: r_{k+1} = r_k - alpha*(A*p_k);
  *      - if r_{k+1} < r_{best}: save x_{k+1} as x_{best};
@@ -201,6 +202,12 @@ INT fasp_solver_dcsr_spcg (dCSRmat *A,
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
         // safe net check: save the best-so-far solution
+        if ( fasp_dvec_isnan(u) ) {
+            // If the solution is NAN, restrore the best solution
+            absres = BIGREAL;
+            goto RESTORE_BESTSOL;
+        }
+        
         if ( absres < absres_best - maxdiff) {
             absres_best = absres;
             iter_best   = iter;
@@ -357,6 +364,7 @@ INT fasp_solver_dcsr_spcg (dCSRmat *A,
             break;
     }
     
+RESTORE_BESTSOL:
     if ( absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!", iter_best);
@@ -517,6 +525,12 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
         // safe net check: save the best-so-far solution
+        if ( fasp_dvec_isnan(u) ) {
+            // If the solution is NAN, restrore the best solution
+            absres = BIGREAL;
+            goto RESTORE_BESTSOL;
+        }
+        
         if ( absres < absres_best - maxdiff) {
             absres_best = absres;
             iter_best   = iter;
@@ -673,6 +687,7 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
             break;
     }
     
+RESTORE_BESTSOL:
     if ( absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!", iter_best);
@@ -832,6 +847,12 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
         // safe net check: save the best-so-far solution
+        if ( fasp_dvec_isnan(u) ) {
+            // If the solution is NAN, restrore the best solution
+            absres = BIGREAL;
+            goto RESTORE_BESTSOL;
+        }
+        
         if ( absres < absres_best - maxdiff) {
             absres_best = absres;
             iter_best   = iter;
@@ -988,6 +1009,7 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
             break;
     }
     
+RESTORE_BESTSOL:
     if ( absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!", iter_best);

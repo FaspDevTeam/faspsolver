@@ -202,7 +202,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             break;
         }
         
-        //  Check II: if staggenated, try to restart
+        // Check II: if staggenated, try to restart
         normu   = fasp_blas_dvec_norm2(u);
 
         // compute relative difference
@@ -484,7 +484,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
             break;
         }
         
-        //  Check II: if staggenated, try to restart
+        // Check II: if staggenated, try to restart
         normu   = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
@@ -730,6 +730,10 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
         // r_k=r_{k-1} - alpha_k*A*p_{k-1}
         fasp_blas_array_axpy(m,-alpha,t,r);
         
+        // compute difference
+        normu   = fasp_blas_dvec_norm2(u);
+        reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
+
         // compute residuals
         switch ( stop_type ) {
             case STOP_REL_RES:
@@ -765,11 +769,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             break;
         }
         
-        //  Check II: if staggenated, try to restart
-        normu   = fasp_blas_dvec_norm2(u);
-        
-        // compute relative difference
-        reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
+        // Check II: if staggenated, try to restart        
         if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
             
             if ( print_level >= PRINT_MORE ) {
@@ -884,7 +884,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
         // compute p_k = z_k + beta_k*p_{k-1}
         fasp_blas_array_axpby(m,1.0,z,beta,p);
         
-    } // end of main PCG loop.
+    } // end of main PCG loop
     
 FINISHED:  // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);

@@ -63,8 +63,8 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
         case SOLVER_CG:
-            if (print_level>PRINT_NONE) printf("Calling SPCG solver ...\n");
-            iter = fasp_solver_dcsr_spcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            if (print_level>PRINT_NONE) printf("Calling PCG solver ...\n");
+            iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
             
         case SOLVER_BiCGstab:

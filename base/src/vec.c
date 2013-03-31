@@ -16,6 +16,29 @@
 /*---------------------------------*/
 
 /**
+ * \fn INT fasp_dvec_isnan (dvector *u)
+ *
+ * \brief Check a dvector whether there is NAN
+ *
+ * \param u    Pointer to the REAL vector
+ *
+ * \return     Return TRUE if there is NAN
+ *
+ * \author Chensong Zhang
+ * \date   2013/03/31
+ */
+INT fasp_dvec_isnan (dvector *u)
+{
+    INT i;
+    
+    for ( i=0; i<u->row; i++ ) {
+        if ( ISNAN(u->val[i]) ) return TRUE;
+    }
+
+    return FALSE;
+}
+
+/**
  * \fn dvector fasp_dvec_create (const INT m)
  *
  * \brief Create dvector data space of REAL type
