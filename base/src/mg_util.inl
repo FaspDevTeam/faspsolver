@@ -24,25 +24,16 @@ static void fasp_coarse_itsolver (dCSRmat *A,
                                   const SHORT prt_lvl)
 {
     const INT csize  = A->row;
-    const INT cmaxit = MAX(500,MIN(csize*csize, 2000));
+    const INT cmaxit = MAX(250,MIN(csize*csize, 1000));
         
-    INT status = fasp_solver_dcsr_pcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);  
-        
-    if (status < 0) { // If PCG fails to converge, use PGMRES as a safe net.
-
-        // check if the solution is correct 
-        INT i;
-        for ( i=0; i<x->row; i++ ) {
-            if ( ISNAN(x->val[i]) ) {
-                fasp_dvec_set(x->row, x, 0e+00); break;
-            }
-        }
-
+    INT status = fasp_solver_dcsr_spcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);
+    
+    if (status < 0) { // If PCG fails to converge, use PGMRES as another safe net
         status = fasp_solver_dcsr_pvgmres (A, b, x, NULL, ctol, cmaxit, 25, 1, PRINT_NONE);
     }
-    
+
     if ( status < 0 && prt_lvl > PRINT_MIN ) {
-        printf("### WARNING: Coarse level solver does not converge in %d steps! \n", cmaxit);
+        printf("### WARNING: Coarse level solver failed to converge!\n");
     }
 } 
 

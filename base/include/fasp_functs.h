@@ -2319,6 +2319,45 @@ void fasp_sparse_rapcmp_ (INT *ir,
 ivector fasp_sparse_MIS(dCSRmat *A);
 
 
+/*-------- In file: spbcgs.c --------*/
+
+INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
+                             dvector *b,
+                             dvector *u,
+                             precond *pc,
+                             const REAL tol,
+                             const INT MaxIt,
+                             const SHORT stop_type,
+                             const SHORT print_level);
+
+INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
+                            dvector *b,
+                            dvector *u,
+                            precond *pc,
+                            const REAL tol,
+                            const INT MaxIt,
+                            const SHORT stop_type,
+                            const SHORT print_level);
+
+INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
+                              dvector *b,
+                              dvector *u,
+                              precond *pc,
+                              const REAL tol,
+                              const INT MaxIt,
+                              const SHORT stop_type,
+                              const SHORT print_level);
+
+INT fasp_solver_dstr_spbcgs (dSTRmat *A,
+                             dvector *b,
+                             dvector *u,
+                             precond *pc,
+                             const REAL tol,
+                             const INT MaxIt,
+                             const SHORT stop_type,
+                             const SHORT print_level);
+
+
 /*-------- In file: spcg.c --------*/
 
 INT fasp_solver_dcsr_spcg (dCSRmat *A,
