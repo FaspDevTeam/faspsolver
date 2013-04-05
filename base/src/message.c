@@ -29,7 +29,8 @@
  * \author Chensong Zhang
  * \date   11/16/2009
  * 
- * Modified by Chensong Zhang on 03/28/2013: Output initial guess.
+ * Modified by Chensong Zhang on 03/28/2013: Output initial guess
+ * Modified by Chensong Zhang on 04/05/2013: Fix a typo
  */
 void print_itinfo (const INT ptrlvl, 
                    const INT stop_type, 
@@ -51,7 +52,7 @@ void print_itinfo (const INT ptrlvl,
                 printf("It Num |    ||r||/||b||    |     ||r||      |  Conv. Factor\n");
                 break;
             case STOP_REL_PRECRES:
-                printf("It Num |  ||r||_B/||b||_B  |     ||r||      |  Conv. Factor\n");
+                printf("It Num |  ||r||_B/||b||_B  |    ||r||_B     |  Conv. Factor\n");
                 break;
             case STOP_MOD_REL_RES:
                 printf("It Num |    ||r||/||x||    |     ||r||      |  Conv. Factor\n");

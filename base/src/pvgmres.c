@@ -1,6 +1,9 @@
 /*! \file pvgmres.c
  *  \brief Krylov subspace methods -- Preconditioned Variable-Restarting GMRes.
  *
+ *  \note Refer to Y. Saad 2003
+ *        Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *
  *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
  *        A Simple Strategy for Varying the Restart Parameter in GMRES(m)
  *        Journal of Computational and Applied Mathematics, 230 (2009)
@@ -8,7 +11,6 @@
  */  
 
 #include <math.h>
-#include <omp.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"

@@ -1,9 +1,13 @@
 File Name: CHANGES
 
-03/31/2013 FASP 1.2.6:
+04/05/2013 FASP 1.2.6:
 - Add NAN check to SPCG.
 - Prepare BiCGstab for adding safe-guard.
 - Fix a bug in computing reduction factor in BiCGstab.
+- Add a safer version of BiCGstab: SBCGS.
+- Fix a typo in the print out function.
+- Add stop type support to GMRes. 
+- Prepare GMRes for adding safe-guard.
 
 03/28/2013 FASP 1.2.5:
 - Update MUMPS support.
