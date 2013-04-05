@@ -1276,7 +1276,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
 
 INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
                               dvector *b,
-                              dvector *u,
+                              dvector *x,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
@@ -2386,6 +2386,49 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
                            const INT MaxIt,
                            const SHORT stop_type,
                            const SHORT print_level);
+
+
+/*-------- In file: pgmres.c --------*/
+
+INT fasp_solver_dcsr_spgmres (dCSRmat *A,
+                              dvector *b,
+                              dvector *x,
+                              precond *pc,
+                              const REAL tol,
+                              const INT MaxIt,
+                              const SHORT restart,
+                              const SHORT stop_type,
+                              const SHORT print_level);
+
+INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
+                               dvector *b,
+                               dvector *x,
+                               precond *pc,
+                               const REAL tol,
+                               const INT MaxIt,
+                               const SHORT restart,
+                               const SHORT stop_type,
+                               const SHORT print_level);
+
+INT fasp_solver_dbsr_spgmres (dBSRmat *A,
+                              dvector *b,
+                              dvector *x,
+                              precond *pc,
+                              const REAL tol,
+                              const INT MaxIt,
+                              const SHORT restart,
+                              const SHORT stop_type,
+                              const SHORT print_level);
+
+INT fasp_solver_dstr_spgmres (dSTRmat *A,
+                              dvector *b,
+                              dvector *x,
+                              precond *pc,
+                              const REAL tol,
+                              const INT MaxIt,
+                              const SHORT restart,
+                              const SHORT stop_type,
+                              const SHORT print_level);
 
 
 /*-------- In file: threads_schedule.c --------*/
