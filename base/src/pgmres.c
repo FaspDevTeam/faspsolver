@@ -54,24 +54,23 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
                              const SHORT stop_type,
                              const SHORT print_level)
 {
-    const INT n         = b->row;
-    const INT MIN_ITER  = 0;
-    
+    const INT   n         = b->row;
+    const INT   MIN_ITER  = 0;
+    const REAL  epsmac    = SMALLREAL;
+
     // local variables
     INT      iter = 0;
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     epsmac = SMALLREAL;
-    REAL     r_norm, r_normb, b_norm;
-    REAL     epsilon, gamma, t;
+    REAL     r_norm, r_normb, b_norm, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
     REAL    *norms = NULL, *r = NULL, *w = NULL;
-    REAL   **p = NULL, **hh = NULL;
     REAL    *work = NULL;
+    REAL    **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_pgmres ...... [Start]\n");
@@ -139,7 +138,8 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
         rs[0] = r_norm;
         
         t = 1.0 / r_norm;
-        for (j = 0; j < n; j ++) p[0][j] *= t;
+ 
+        fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
@@ -166,7 +166,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
             hh[i][i-1] = t;
             if (t != 0.0) {
                 t = 1.0/t;
-                for (j = 0; j < n; j ++) p[i][j] *= t;
+                fasp_blas_array_ax(n, t, p[i]);
             }
             
             for (j = 1; j < i; ++j) {
@@ -212,7 +212,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
         
         fasp_array_cp(n, p[i-1], w);
         
-        for ( j = 0; j < n; j++ ) w[j] *= rs[i-1];
+        fasp_blas_array_ax(n, rs[i-1], w);
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
@@ -269,7 +269,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
         /* compute residual vector and continue loop */
         for (j = i; j > 0; j--) {
             rs[j-1] = -s[j-1]*rs[j];
-            rs[j] = c[j-1]*rs[j];
+            rs[j]   = c[j-1]*rs[j];
         }
         
         if ( i ) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
@@ -339,24 +339,23 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
                               const SHORT stop_type,
                               const SHORT print_level)
 {
-    const INT n         = b->row;
-    const INT MIN_ITER  = 0;
+    const INT   n         = b->row;
+    const INT   MIN_ITER  = 0;
+    const REAL  epsmac    = SMALLREAL;
     
     // local variables
     INT      iter = 0;
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     epsmac = SMALLREAL;
-    REAL     r_norm, r_normb, b_norm;
-    REAL     epsilon, gamma, t;
+    REAL     r_norm, r_normb, b_norm, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
     REAL    *norms = NULL, *r = NULL, *w = NULL;
-    REAL   **p = NULL, **hh = NULL;
     REAL    *work = NULL;
+    REAL    **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_bdcsr_pgmres ...... [Start]\n");
@@ -424,7 +423,8 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
         rs[0] = r_norm;
         
         t = 1.0 / r_norm;
-        for (j = 0; j < n; j ++) p[0][j] *= t;
+        
+        fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
@@ -451,7 +451,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
             hh[i][i-1] = t;
             if (t != 0.0) {
                 t = 1.0/t;
-                for (j = 0; j < n; j ++) p[i][j] *= t;
+                fasp_blas_array_ax(n, t, p[i]);
             }
             
             for (j = 1; j < i; ++j) {
@@ -497,7 +497,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
         
         fasp_array_cp(n, p[i-1], w);
         
-        for ( j = 0; j < n; j++ ) w[j] *= rs[i-1];
+        fasp_blas_array_ax(n, rs[i-1], w);
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
@@ -554,7 +554,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
         /* compute residual vector and continue loop */
         for (j = i; j > 0; j--) {
             rs[j-1] = -s[j-1]*rs[j];
-            rs[j] = c[j-1]*rs[j];
+            rs[j]   = c[j-1]*rs[j];
         }
         
         if ( i ) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
@@ -624,24 +624,23 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
                              const SHORT stop_type,
                              const SHORT print_level)
 {
-    const INT n         = b->row;
-    const INT MIN_ITER  = 0;
+    const INT   n         = b->row;
+    const INT   MIN_ITER  = 0;
+    const REAL  epsmac    = SMALLREAL;
     
     // local variables
     INT      iter = 0;
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     epsmac = SMALLREAL;
-    REAL     r_norm, r_normb, b_norm;
-    REAL     epsilon, gamma, t;
+    REAL     r_norm, r_normb, b_norm, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
     REAL    *norms = NULL, *r = NULL, *w = NULL;
-    REAL   **p = NULL, **hh = NULL;
     REAL    *work = NULL;
+    REAL    **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dbsr_pgmres ...... [Start]\n");
@@ -709,7 +708,8 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
         rs[0] = r_norm;
         
         t = 1.0 / r_norm;
-        for (j = 0; j < n; j ++) p[0][j] *= t;
+        
+        fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
@@ -736,7 +736,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
             hh[i][i-1] = t;
             if (t != 0.0) {
                 t = 1.0/t;
-                for (j = 0; j < n; j ++) p[i][j] *= t;
+                fasp_blas_array_ax(n, t, p[i]);
             }
             
             for (j = 1; j < i; ++j) {
@@ -782,7 +782,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
         
         fasp_array_cp(n, p[i-1], w);
         
-        for ( j = 0; j < n; j++ ) w[j] *= rs[i-1];
+        fasp_blas_array_ax(n, rs[i-1], w);
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
@@ -839,7 +839,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
         /* compute residual vector and continue loop */
         for (j = i; j > 0; j--) {
             rs[j-1] = -s[j-1]*rs[j];
-            rs[j] = c[j-1]*rs[j];
+            rs[j]   = c[j-1]*rs[j];
         }
         
         if ( i ) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
@@ -909,24 +909,23 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
                              const SHORT stop_type,
                              const SHORT print_level)
 {
-    const INT n         = b->row;
-    const INT MIN_ITER  = 0;
+    const INT   n         = b->row;
+    const INT   MIN_ITER  = 0;
+    const REAL  epsmac    = SMALLREAL;
     
     // local variables
     INT      iter = 0;
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     epsmac = SMALLREAL;
-    REAL     r_norm, r_normb, b_norm;
-    REAL     epsilon, gamma, t;
+    REAL     r_norm, r_normb, b_norm, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
     REAL    *norms = NULL, *r = NULL, *w = NULL;
-    REAL   **p = NULL, **hh = NULL;
     REAL    *work = NULL;
+    REAL    **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dstr_pgmres ...... [Start]\n");
@@ -994,7 +993,8 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
         rs[0] = r_norm;
         
         t = 1.0 / r_norm;
-        for (j = 0; j < n; j ++) p[0][j] *= t;
+        
+        fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
@@ -1021,7 +1021,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
             hh[i][i-1] = t;
             if (t != 0.0) {
                 t = 1.0/t;
-                for (j = 0; j < n; j ++) p[i][j] *= t;
+                fasp_blas_array_ax(n, t, p[i]);
             }
             
             for (j = 1; j < i; ++j) {
@@ -1067,7 +1067,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
         
         fasp_array_cp(n, p[i-1], w);
         
-        for ( j = 0; j < n; j++ ) w[j] *= rs[i-1];
+        fasp_blas_array_ax(n, rs[i-1], w);
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
@@ -1124,7 +1124,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
         /* compute residual vector and continue loop */
         for (j = i; j > 0; j--) {
             rs[j-1] = -s[j-1]*rs[j];
-            rs[j] = c[j-1]*rs[j];
+            rs[j]   = c[j-1]*rs[j];
         }
         
         if ( i ) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
@@ -1226,7 +1226,7 @@ static double fasp_spectral_radius(dCSRmat *A,
     REAL    *work = NULL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pgmres ...... [Start]\n");
+    printf("### DEBUG: fasp_solver_dstr_pgmres ...... [Start]\n");
     printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
 #endif
     

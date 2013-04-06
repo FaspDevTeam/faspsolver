@@ -1515,6 +1515,16 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
                               const SHORT stop_type, 
                               const SHORT print_level);
 
+INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
+                              dvector *b,
+                              dvector *x,
+                              precond *pc,
+                              const REAL tol,
+                              const INT MaxIt,
+                              const SHORT restart,
+                              const SHORT stop_type,
+                              const SHORT print_level);
+
 INT fasp_solver_dbsr_pvgmres (dBSRmat *A, 
                               dvector *b, 
                               dvector *x, 
