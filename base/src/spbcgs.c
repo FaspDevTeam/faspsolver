@@ -433,7 +433,7 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
     }
     
 RESTORE_BESTSOL:
-    if ( absres > absres_best + maxdiff ) {
+    if ( iter != iter_best && absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!", iter_best);
         fasp_array_cp(m,u_best,u->val);
@@ -821,7 +821,7 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
     }
     
 RESTORE_BESTSOL:
-    if ( absres > absres_best + maxdiff ) {
+    if ( iter != iter_best && absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!", iter_best);
         fasp_array_cp(m,u_best,u->val);
@@ -1209,7 +1209,7 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
     }
     
 RESTORE_BESTSOL:
-    if ( absres > absres_best + maxdiff ) {
+    if ( iter != iter_best && absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!", iter_best);
         fasp_array_cp(m,u_best,u->val);
@@ -1597,7 +1597,7 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
     }
     
 RESTORE_BESTSOL:
-    if ( absres > absres_best + maxdiff ) {
+    if ( iter != iter_best && absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!", iter_best);
         fasp_array_cp(m,u_best,u->val);

@@ -10,6 +10,7 @@ File Name: CHANGES
 - Prepare GMRes for adding safe-guard.
 - Add a safer version of PGMRes: SPGMRes.
 - Finish up VGMRes and prepare it for adding safe-guard.
+- Add a safer version of PVGMRes: SPVGMRes.
 
 03/28/2013 FASP 1.2.5:
 - Update MUMPS support.

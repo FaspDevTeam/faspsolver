@@ -1,5 +1,5 @@
-/*! \file pgmres.c
- *  \brief Krylov subspace methods -- Preconditioned GMRes with a safe net.
+/*! \file spgmres.c
+ *  \brief Krylov subspace methods -- Preconditioned GMRes with a safe net
  *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
@@ -54,15 +54,14 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
     const INT  n         = b->row;
     const INT  MIN_ITER  = 0;
     const REAL maxdiff   = tol*STAG_RATIO; // staganation tolerance
-    
+    const REAL epsmac    = SMALLREAL;
+
     // local variables
     INT      iter = 0;
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     epsmac = SMALLREAL;
-    REAL     r_norm, r_normb, b_norm;
-    REAL     epsilon, gamma, t;
+    REAL     r_norm, r_normb, b_norm, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     INT      iter_best = 0; // initial best known iteration
@@ -71,8 +70,8 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
     REAL    *norms = NULL, *r = NULL, *w = NULL;
-    REAL   **p = NULL, **hh = NULL;
     REAL    *work = NULL, *x_best = NULL;
+    REAL    **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_pgmres ...... [Start]\n");
@@ -141,7 +140,8 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
         rs[0] = r_norm;
         
         t = 1.0 / r_norm;
-        for (j = 0; j < n; j ++) p[0][j] *= t;
+
+        fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
@@ -168,7 +168,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
             hh[i][i-1] = t;
             if (t != 0.0) {
                 t = 1.0/t;
-                for (j = 0; j < n; j ++) p[i][j] *= t;
+                fasp_blas_array_ax(n, t, p[i]);
             }
             
             for (j = 1; j < i; ++j) {
@@ -214,7 +214,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
         
         fasp_array_cp(n, p[i-1], w);
         
-        for ( j = 0; j < n; j++ ) w[j] *= rs[i-1];
+        fasp_blas_array_ax(n, rs[i-1], w);
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
@@ -299,14 +299,14 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
     } /* end of main while loop */
     
 RESTORE_BESTSOL:
-    if ( absres > absres_best + maxdiff ) {
+    if ( iter != iter_best && absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!\n", iter_best);
         fasp_array_cp(n,x_best,x->val);
     }
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,r_norm);
+    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Clean up workspace
@@ -361,15 +361,14 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
     const INT  n         = b->row;
     const INT  MIN_ITER  = 0;
     const REAL maxdiff   = tol*STAG_RATIO; // staganation tolerance
+    const REAL epsmac    = SMALLREAL;
     
     // local variables
     INT      iter = 0;
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     epsmac = SMALLREAL;
-    REAL     r_norm, r_normb, b_norm;
-    REAL     epsilon, gamma, t;
+    REAL     r_norm, r_normb, b_norm, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     INT      iter_best = 0; // initial best known iteration
@@ -378,8 +377,8 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
     REAL    *norms = NULL, *r = NULL, *w = NULL;
-    REAL   **p = NULL, **hh = NULL;
     REAL    *work = NULL, *x_best = NULL;
+    REAL    **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_bdcsr_pgmres ...... [Start]\n");
@@ -448,7 +447,8 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
         rs[0] = r_norm;
         
         t = 1.0 / r_norm;
-        for (j = 0; j < n; j ++) p[0][j] *= t;
+        
+        fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
@@ -475,7 +475,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
             hh[i][i-1] = t;
             if (t != 0.0) {
                 t = 1.0/t;
-                for (j = 0; j < n; j ++) p[i][j] *= t;
+                fasp_blas_array_ax(n, t, p[i]);
             }
             
             for (j = 1; j < i; ++j) {
@@ -521,7 +521,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
         
         fasp_array_cp(n, p[i-1], w);
         
-        for ( j = 0; j < n; j++ ) w[j] *= rs[i-1];
+        fasp_blas_array_ax(n, rs[i-1], w);
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
@@ -606,14 +606,14 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
     } /* end of main while loop */
     
 RESTORE_BESTSOL:
-    if ( absres > absres_best + maxdiff ) {
+    if ( iter != iter_best && absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!\n", iter_best);
         fasp_array_cp(n,x_best,x->val);
     }
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,r_norm);
+    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Clean up workspace
@@ -668,15 +668,14 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
     const INT  n         = b->row;
     const INT  MIN_ITER  = 0;
     const REAL maxdiff   = tol*STAG_RATIO; // staganation tolerance
+    const REAL epsmac    = SMALLREAL;
     
     // local variables
     INT      iter = 0;
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     epsmac = SMALLREAL;
-    REAL     r_norm, r_normb, b_norm;
-    REAL     epsilon, gamma, t;
+    REAL     r_norm, r_normb, b_norm, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     INT      iter_best = 0; // initial best known iteration
@@ -685,8 +684,8 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
     REAL    *norms = NULL, *r = NULL, *w = NULL;
-    REAL   **p = NULL, **hh = NULL;
     REAL    *work = NULL, *x_best = NULL;
+    REAL    **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dbsr_pgmres ...... [Start]\n");
@@ -755,7 +754,8 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
         rs[0] = r_norm;
         
         t = 1.0 / r_norm;
-        for (j = 0; j < n; j ++) p[0][j] *= t;
+        
+        fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
@@ -782,7 +782,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
             hh[i][i-1] = t;
             if (t != 0.0) {
                 t = 1.0/t;
-                for (j = 0; j < n; j ++) p[i][j] *= t;
+                fasp_blas_array_ax(n, t, p[i]);
             }
             
             for (j = 1; j < i; ++j) {
@@ -828,7 +828,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
         
         fasp_array_cp(n, p[i-1], w);
         
-        for ( j = 0; j < n; j++ ) w[j] *= rs[i-1];
+        fasp_blas_array_ax(n, rs[i-1], w);
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
@@ -913,14 +913,14 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
     } /* end of main while loop */
     
 RESTORE_BESTSOL:
-    if ( absres > absres_best + maxdiff ) {
+    if ( iter != iter_best && absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!\n", iter_best);
         fasp_array_cp(n,x_best,x->val);
     }
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,r_norm);
+    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Clean up workspace
@@ -975,15 +975,14 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
     const INT  n         = b->row;
     const INT  MIN_ITER  = 0;
     const REAL maxdiff   = tol*STAG_RATIO; // staganation tolerance
+    const REAL epsmac    = SMALLREAL;
     
     // local variables
     INT      iter = 0;
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     epsmac = SMALLREAL;
-    REAL     r_norm, r_normb, b_norm;
-    REAL     epsilon, gamma, t;
+    REAL     r_norm, r_normb, b_norm, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     INT      iter_best = 0; // initial best known iteration
@@ -992,8 +991,8 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
     REAL    *norms = NULL, *r = NULL, *w = NULL;
-    REAL   **p = NULL, **hh = NULL;
     REAL    *work = NULL, *x_best = NULL;
+    REAL    **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dstr_pgmres ...... [Start]\n");
@@ -1062,7 +1061,8 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
         rs[0] = r_norm;
         
         t = 1.0 / r_norm;
-        for (j = 0; j < n; j ++) p[0][j] *= t;
+        
+        fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
@@ -1089,7 +1089,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
             hh[i][i-1] = t;
             if (t != 0.0) {
                 t = 1.0/t;
-                for (j = 0; j < n; j ++) p[i][j] *= t;
+                fasp_blas_array_ax(n, t, p[i]);
             }
             
             for (j = 1; j < i; ++j) {
@@ -1135,7 +1135,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
         
         fasp_array_cp(n, p[i-1], w);
         
-        for ( j = 0; j < n; j++ ) w[j] *= rs[i-1];
+        fasp_blas_array_ax(n, rs[i-1], w);
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
@@ -1220,14 +1220,14 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
     } /* end of main while loop */
     
 RESTORE_BESTSOL:
-    if ( absres > absres_best + maxdiff ) {
+    if ( iter != iter_best && absres > absres_best + maxdiff ) {
         if ( print_level > PRINT_NONE )
             printf("### WARNING: Restore iteration %d!!!\n", iter_best);
         fasp_array_cp(n,x_best,x->val);
     }
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,r_norm);
+    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Clean up workspace
