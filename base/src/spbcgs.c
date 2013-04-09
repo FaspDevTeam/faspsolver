@@ -192,8 +192,7 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // s = r - alpha z
@@ -216,8 +215,8 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
             omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             omega = 0.0;
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -238,8 +237,7 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto RESTORE_BESTSOL;
         }
         
         // p = p - omega z
@@ -411,35 +409,37 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
         
     } // end of main BiCGstab loop
     
-    // safe net check: restore the best-so-far solution if necessary
-    fasp_array_cp(m,b->val,r);
-    fasp_blas_dcsr_aAxpy(-1.0,A,u_best,r);
-    
-    switch ( stop_type ) {
-        case STOP_REL_RES:
-            absres_best = fasp_blas_array_norm2(m,r);
-            break;
-        case STOP_REL_PRECRES:
-            // z = B(r)
-            if ( pc != NULL )
-                pc->fct(r,z,pc->data); /* Apply preconditioner */
-            else
-                fasp_array_cp(m,r,z); /* No preconditioner */
-            absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
-            break;
-        case STOP_MOD_REL_RES:
-            absres_best = fasp_blas_array_norm2(m,r);
-            break;
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(m,b->val,r);
+        fasp_blas_dcsr_aAxpy(-1.0,A,u_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+            case STOP_REL_PRECRES:
+                // z = B(r)
+                if ( pc != NULL )
+                    pc->fct(r,z,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(m,r,z); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(m,u_best,u->val);
+        }
     }
     
-RESTORE_BESTSOL:
-    if ( iter != iter_best && absres > absres_best + maxdiff ) {
-        if ( print_level > PRINT_NONE )
-            printf("### WARNING: Restore iteration %d!!!", iter_best);
-        fasp_array_cp(m,u_best,u->val);
-    }
-    
-FINISHED:  // finish the iterative method
+FINISHED: // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -580,8 +580,7 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto RESTORE_BESTSOL;
         }
         
         // s = r - alpha z
@@ -604,8 +603,8 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
             omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             omega = 0.0;
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -626,8 +625,7 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto RESTORE_BESTSOL;
         }
         
         // p = p - omega z
@@ -799,32 +797,34 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
         
     } // end of main BiCGstab loop
     
-    // safe net check: restore the best-so-far solution if necessary
-    fasp_array_cp(m,b->val,r);
-    fasp_blas_dbsr_aAxpy(-1.0,A,u_best,r);
-    
-    switch ( stop_type ) {
-        case STOP_REL_RES:
-            absres_best = fasp_blas_array_norm2(m,r);
-            break;
-        case STOP_REL_PRECRES:
-            // z = B(r)
-            if ( pc != NULL )
-                pc->fct(r,z,pc->data); /* Apply preconditioner */
-            else
-                fasp_array_cp(m,r,z); /* No preconditioner */
-            absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
-            break;
-        case STOP_MOD_REL_RES:
-            absres_best = fasp_blas_array_norm2(m,r);
-            break;
-    }
-    
-RESTORE_BESTSOL:
-    if ( iter != iter_best && absres > absres_best + maxdiff ) {
-        if ( print_level > PRINT_NONE )
-            printf("### WARNING: Restore iteration %d!!!", iter_best);
-        fasp_array_cp(m,u_best,u->val);
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(m,b->val,r);
+        fasp_blas_dbsr_aAxpy(-1.0,A,u_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+            case STOP_REL_PRECRES:
+                // z = B(r)
+                if ( pc != NULL )
+                    pc->fct(r,z,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(m,r,z); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(m,u_best,u->val);
+        }
     }
     
 FINISHED:  // finish the iterative method
@@ -968,8 +968,7 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto RESTORE_BESTSOL;
         }
         
         // s = r - alpha z
@@ -992,8 +991,8 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
             omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             omega = 0.0;
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -1014,8 +1013,7 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto RESTORE_BESTSOL;
         }
         
         // p = p - omega z
@@ -1187,32 +1185,34 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
         
     } // end of main BiCGstab loop
     
-    // safe net check: restore the best-so-far solution if necessary
-    fasp_array_cp(m,b->val,r);
-    fasp_blas_bdcsr_aAxpy(-1.0,A,u_best,r);
-    
-    switch ( stop_type ) {
-        case STOP_REL_RES:
-            absres_best = fasp_blas_array_norm2(m,r);
-            break;
-        case STOP_REL_PRECRES:
-            // z = B(r)
-            if ( pc != NULL )
-                pc->fct(r,z,pc->data); /* Apply preconditioner */
-            else
-                fasp_array_cp(m,r,z); /* No preconditioner */
-            absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
-            break;
-        case STOP_MOD_REL_RES:
-            absres_best = fasp_blas_array_norm2(m,r);
-            break;
-    }
-    
-RESTORE_BESTSOL:
-    if ( iter != iter_best && absres > absres_best + maxdiff ) {
-        if ( print_level > PRINT_NONE )
-            printf("### WARNING: Restore iteration %d!!!", iter_best);
-        fasp_array_cp(m,u_best,u->val);
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(m,b->val,r);
+        fasp_blas_bdcsr_aAxpy(-1.0,A,u_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+            case STOP_REL_PRECRES:
+                // z = B(r)
+                if ( pc != NULL )
+                    pc->fct(r,z,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(m,r,z); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(m,u_best,u->val);
+        }
     }
     
 FINISHED:  // finish the iterative method
@@ -1356,8 +1356,7 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto RESTORE_BESTSOL;
         }
         
         // s = r - alpha z
@@ -1402,8 +1401,7 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto RESTORE_BESTSOL;
         }
         
         // p = p - omega z
@@ -1575,32 +1573,34 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
         
     } // end of main BiCGstab loop
     
-    // safe net check: restore the best-so-far solution if necessary
-    fasp_array_cp(m,b->val,r);
-    fasp_blas_dstr_aAxpy(-1.0,A,u_best,r);
-    
-    switch ( stop_type ) {
-        case STOP_REL_RES:
-            absres_best = fasp_blas_array_norm2(m,r);
-            break;
-        case STOP_REL_PRECRES:
-            // z = B(r)
-            if ( pc != NULL )
-                pc->fct(r,z,pc->data); /* Apply preconditioner */
-            else
-                fasp_array_cp(m,r,z); /* No preconditioner */
-            absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
-            break;
-        case STOP_MOD_REL_RES:
-            absres_best = fasp_blas_array_norm2(m,r);
-            break;
-    }
-    
-RESTORE_BESTSOL:
-    if ( iter != iter_best && absres > absres_best + maxdiff ) {
-        if ( print_level > PRINT_NONE )
-            printf("### WARNING: Restore iteration %d!!!", iter_best);
-        fasp_array_cp(m,u_best,u->val);
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(m,b->val,r);
+        fasp_blas_dstr_aAxpy(-1.0,A,u_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+            case STOP_REL_PRECRES:
+                // z = B(r)
+                if ( pc != NULL )
+                    pc->fct(r,z,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(m,r,z); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(m,u_best,u->val);
+        }
     }
     
 FINISHED:  // finish the iterative method

@@ -17,7 +17,7 @@
  *  Step 3. Main loop ...
  *
  *  FOR k = 0:MaxIt      
- *      - get step size alpha = f(r_k,z_k,p_k);      
+ *      - get step size alpha = f(r_k,z_k,p_k);
  *      - update solution: x_{k+1} = x_k + alpha*p_k;      
  *      - perform stagnation check;      
  *      - update residual: r_{k+1} = r_k - alpha*(A*p_k);        
@@ -173,8 +173,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;            
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // s = r - alpha z
@@ -197,8 +196,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             omega = 0.0;
+            if ( print_level >= PRINT_SOME ) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -219,8 +218,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;            
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // p = p - omega z
@@ -521,8 +519,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // s = r - alpha z
@@ -545,8 +542,8 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
             omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             omega = 0.0;
+            if ( print_level >= PRINT_SOME ) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -567,8 +564,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // p = p - omega z
@@ -869,8 +865,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // s = r - alpha z
@@ -893,8 +888,8 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             omega = 0.0;
+            if ( print_level >= PRINT_SOME ) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -915,8 +910,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // p = p - omega z
@@ -1217,8 +1211,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // s = r - alpha z
@@ -1241,8 +1234,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
             omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             omega = 0.0;
+            if ( print_level >= PRINT_SOME ) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -1263,8 +1256,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
-            ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // p = p - omega z

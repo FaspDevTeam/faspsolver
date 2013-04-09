@@ -1,8 +1,8 @@
-/*! \file pminres.c
+/*! \file spminres.c
  *
- *  \brief Krylov subspace methods -- Preconditioned Minimal Residual.
+ *  \brief Krylov subspace methods -- Preconditioned Minimal Residual with safe net
  *
- *  Abstract algorithm of Krylov method
+ *  Abstract algorithm
  *
  *  Krylov method to solve A*x=b is to generate {x_k} to approximate x,
  *  where x_k is the optimal solution in Krylov space
@@ -24,8 +24,10 @@
  *  FOR k = 0:MaxIt
  *      - get step size alpha = f(r_k,z_k,p_k);
  *      - update solution: x_{k+1} = x_k + alpha*p_k;
+ *      - check whether x is NAN;
  *      - perform stagnation check;
  *      - update residual: r_{k+1} = r_k - alpha*(A*p_k);
+ *      - if r_{k+1} < r_{best}: save x_{k+1} as x_{best};
  *      - perform residual check;
  *      - obtain p_{k+1} using {p_0, p_1, ... , p_k};
  *      - prepare for next iteration;
@@ -48,10 +50,15 @@
  *          -# IF ( not converged & restart_number < Max_Res_Check ) restart;
  *      - END IF
  *
+ *  Safe net check:
+ *      - IF r_{k+1} > r_{best}
+ *          -# x_{k+1} = x_{best}
+ *      - END IF
+ *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
- *  \note See spminres.c for a safer version
+ *  \note See pminres.c for a version without safe net
  *
  */
 
@@ -66,11 +73,11 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_dcsr_pminres (dCSRmat *A, dvector *b, dvector *u, precond *pc,
- *                                   const REAL tol, const INT MaxIt,
- *                                   const SHORT stop_type, const SHORT print_level)
+ * \fn INT fasp_solver_dcsr_spminres (dCSRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                    const REAL tol, const INT MaxIt,
+ *                                    const SHORT stop_type, const SHORT print_level)
  *
- * \brief A preconditioned minimal residual (Minres) method for solving Au=b
+ * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safe net
  *
  * \param A            Pointer to the coefficient matrix
  * \param b            Pointer to the dvector of right hand side
@@ -84,20 +91,16 @@
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Chensong Zhang
- * \date   05/01/2012
- *
- * \note Rewritten based on the original version by Shiquan Zhang 05/10/2010
- *
- * Modified by Chensong Zhang on 04/09/2013
+ * \date   04/09/2013
  */
-INT fasp_solver_dcsr_pminres (dCSRmat *A,
-                              dvector *b,
-                              dvector *u,
-                              precond *pc,
-                              const REAL tol,
-                              const INT MaxIt,
-                              const SHORT stop_type,
-                              const SHORT print_level)
+INT fasp_solver_dcsr_spminres (dCSRmat *A,
+                               dvector *b,
+                               dvector *u,
+                               precond *pc,
+                               const REAL tol,
+                               const INT MaxIt,
+                               const SHORT stop_type,
+                               const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -110,10 +113,13 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
     REAL         alpha, alpha0, alpha1, temp2;
     REAL         normr0, normu2, normuu, normp, infnormu;
     
-    // allocate temp memory (need 11*m REAL)
-    REAL *work=(REAL *)fasp_mem_calloc(11*m,sizeof(REAL));
-    REAL *p0=work, *p1=work+m, *p2=p1+m, *z0=p2+m, *z1=z0+m;
-    REAL *t0=z1+m, *t1=t0+m, *t=t1+m, *tp=t+m, *tz=tp+m, *r=tz+m;
+    INT          iter_best = 0; // initial best known iteration
+    REAL         absres_best = BIGREAL; // initial best known residual
+    
+    // allocate temp memory (need 12*m REAL)
+    REAL *work=(REAL *)fasp_mem_calloc(12*m,sizeof(REAL));
+    REAL *p0=work, *p1=work+m, *p2=p1+m, *z0=p2+m, *z1=z0+m, *t0=z1+m;
+    REAL *t1=t0+m, *t=t1+m, *tp=t+m, *tz=tp+m, *r=tz+m, *u_best = r+m;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_pminres ...... [Start]\n");
@@ -270,6 +276,19 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
         
         // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+        
+        // safe net check: save the best-so-far solution
+        if ( fasp_dvec_isnan(u) ) {
+            // If the solution is NAN, restrore the best solution
+            absres = BIGREAL;
+            goto RESTORE_BESTSOL;
+        }
+        
+        if ( absres < absres_best - maxdiff) {
+            absres_best = absres;
+            iter_best   = iter;
+            fasp_array_cp(m,u->val,u_best);
+        }
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
@@ -455,6 +474,35 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
         
     } // end of the main loop
     
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(m,b->val,r);
+        fasp_blas_dcsr_aAxpy(-1.0,A,u_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+            case STOP_REL_PRECRES:
+                if ( pc != NULL )
+                    pc->fct(r,t,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(m,r,t); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,t,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(m,u_best,u->val);
+        }
+    }
+
 FINISHED:  // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
@@ -472,11 +520,11 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_pminres (block_dCSRmat *A, dvector *b, dvector *u, precond *pc,
- *                                    const REAL tol, const INT MaxIt,
- *                                    const SHORT stop_type, const SHORT print_level)
+ * \fn INT fasp_solver_bdcsr_spminres (block_dCSRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                     const REAL tol, const INT MaxIt,
+ *                                     const SHORT stop_type, const SHORT print_level)
  *
- * \brief A preconditioned minimal residual (Minres) method for solving Au=b
+ * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safe net
  *
  * \param A            Pointer to the coefficient matrix
  * \param b            Pointer to the dvector of right hand side
@@ -490,20 +538,16 @@ FINISHED:  // finish the iterative method
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Chensong Zhang
- * \date   05/01/2012
- *
- * \note Rewritten based on the original version by Xiaozhe Hu 05/24/2010
- *
- * Modified by Chensong Zhang on 04/09/2013
+ * \date   04/09/2013
  */
-INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
-                               dvector *b,
-                               dvector *u,
-                               precond *pc,
-                               const REAL tol,
-                               const INT MaxIt,
-                               const SHORT stop_type,
-                               const SHORT print_level)
+INT fasp_solver_bdcsr_spminres (block_dCSRmat *A,
+                                dvector *b,
+                                dvector *u,
+                                precond *pc,
+                                const REAL tol,
+                                const INT MaxIt,
+                                const SHORT stop_type,
+                                const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -516,10 +560,13 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
     REAL         alpha, alpha0, alpha1, temp2;
     REAL         normr0, normu2, normuu, normp, infnormu;
     
-    // allocate temp memory (need 11*m REAL)
-    REAL *work=(REAL *)fasp_mem_calloc(11*m,sizeof(REAL));
-    REAL *p0=work, *p1=work+m, *p2=p1+m, *z0=p2+m, *z1=z0+m;
-    REAL *t0=z1+m, *t1=t0+m, *t=t1+m, *tp=t+m, *tz=tp+m, *r=tz+m;
+    INT          iter_best = 0; // initial best known iteration
+    REAL         absres_best = BIGREAL; // initial best known residual
+    
+    // allocate temp memory (need 12*m REAL)
+    REAL *work=(REAL *)fasp_mem_calloc(12*m,sizeof(REAL));
+    REAL *p0=work, *p1=work+m, *p2=p1+m, *z0=p2+m, *z1=z0+m, *t0=z1+m;
+    REAL *t1=t0+m, *t=t1+m, *tp=t+m, *tz=tp+m, *r=tz+m, *u_best = r+m;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_bdcsr_pminres ...... [Start]\n");
@@ -676,6 +723,19 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
         
         // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+        
+        // safe net check: save the best-so-far solution
+        if ( fasp_dvec_isnan(u) ) {
+            // If the solution is NAN, restrore the best solution
+            absres = BIGREAL;
+            goto RESTORE_BESTSOL;
+        }
+        
+        if ( absres < absres_best - maxdiff) {
+            absres_best = absres;
+            iter_best   = iter;
+            fasp_array_cp(m,u->val,u_best);
+        }
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
@@ -861,6 +921,35 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
         
     } // end of the main loop
     
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(m,b->val,r);
+        fasp_blas_bdcsr_aAxpy(-1.0,A,u_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+            case STOP_REL_PRECRES:
+                if ( pc != NULL )
+                    pc->fct(r,t,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(m,r,t); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,t,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(m,u_best,u->val);
+        }
+    }
+    
 FINISHED:  // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
@@ -878,11 +967,11 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn INT fasp_solver_dstr_pminres (dSTRmat *A, dvector *b, dvector *u, precond *pc,
- *                                   const REAL tol, const INT MaxIt,
- *                                   const SHORT stop_type, const SHORT print_level)
+ * \fn INT fasp_solver_dstr_spminres (dSTRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                    const REAL tol, const INT MaxIt,
+ *                                    const SHORT stop_type, const SHORT print_level)
  *
- * \brief A preconditioned minimal residual (Minres) method for solving Au=b
+ * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safe net
  *
  * \param A            Pointer to the coefficient matrix
  * \param b            Pointer to the dvector of right hand side
@@ -896,16 +985,16 @@ FINISHED:  // finish the iterative method
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Chensong Zhang
- * \date   04/09/2013 
+ * \date   04/09/2013
  */
-INT fasp_solver_dstr_pminres (dSTRmat *A,
-                              dvector *b,
-                              dvector *u,
-                              precond *pc,
-                              const REAL tol,
-                              const INT MaxIt,
-                              const SHORT stop_type,
-                              const SHORT print_level)
+INT fasp_solver_dstr_spminres (dSTRmat *A,
+                               dvector *b,
+                               dvector *u,
+                               precond *pc,
+                               const REAL tol,
+                               const INT MaxIt,
+                               const SHORT stop_type,
+                               const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -918,10 +1007,13 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
     REAL         alpha, alpha0, alpha1, temp2;
     REAL         normr0, normu2, normuu, normp, infnormu;
     
-    // allocate temp memory (need 11*m REAL)
-    REAL *work=(REAL *)fasp_mem_calloc(11*m,sizeof(REAL));
-    REAL *p0=work, *p1=work+m, *p2=p1+m, *z0=p2+m, *z1=z0+m;
-    REAL *t0=z1+m, *t1=t0+m, *t=t1+m, *tp=t+m, *tz=tp+m, *r=tz+m;
+    INT          iter_best = 0; // initial best known iteration
+    REAL         absres_best = BIGREAL; // initial best known residual
+    
+    // allocate temp memory (need 12*m REAL)
+    REAL *work=(REAL *)fasp_mem_calloc(12*m,sizeof(REAL));
+    REAL *p0=work, *p1=work+m, *p2=p1+m, *z0=p2+m, *z1=z0+m, *t0=z1+m;
+    REAL *t1=t0+m, *t=t1+m, *tp=t+m, *tz=tp+m, *r=tz+m, *u_best = r+m;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dstr_pminres ...... [Start]\n");
@@ -1078,6 +1170,19 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
         
         // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+        
+        // safe net check: save the best-so-far solution
+        if ( fasp_dvec_isnan(u) ) {
+            // If the solution is NAN, restrore the best solution
+            absres = BIGREAL;
+            goto RESTORE_BESTSOL;
+        }
+        
+        if ( absres < absres_best - maxdiff) {
+            absres_best = absres;
+            iter_best   = iter;
+            fasp_array_cp(m,u->val,u_best);
+        }
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
@@ -1262,6 +1367,35 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
         absres0 = absres;
         
     } // end of the main loop
+    
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(m,b->val,r);
+        fasp_blas_dstr_aAxpy(-1.0,A,u_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+            case STOP_REL_PRECRES:
+                if ( pc != NULL )
+                    pc->fct(r,t,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(m,r,t); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(m,t,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(m,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(m,u_best,u->val);
+        }
+    }
     
 FINISHED:  // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);

@@ -33,6 +33,9 @@
 //! Warning for too small sp 
 #define ITS_SMALLSP printf("### WARNING: The sp is too small!\n")
 
+//! Warning for restore previous iteration 
+#define ITS_RESTORE(iter) printf("### WARNING: Restore iteration %d!!!",(iter));
+
 //! Output relative difference and residual
 #define ITS_DIFFRES(reldiff,relres) printf("||u-u'|| = %e and the comp. rel. res. = %e.\n",(reldiff),(relres));
 

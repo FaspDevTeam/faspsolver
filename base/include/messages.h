@@ -1,14 +1,15 @@
 /*
  *  messages.h
  *  
- *------------------------------------------------------
+ *-----------------------------------------------------------------------------------
  *  Created  by Chensong Zhang on 03/20/2010.
  *  Modified by Chensong Zhang on 12/06/2011.
  *  Modified by Chensong Zhang on 12/25/2011.
  *  Modified by Chensong Zhang on 04/22/2012.
  *  Modified by Ludmil Zikatanov on 02/15/2013: CG -> SMOOTHER_CG.
  *  Modified by Chensong Zhang on 02/16/2013: GS -> SMOOTHER_GS, etc.
- *------------------------------------------------------
+ *  Modified by Chensong Zhang on 04/09/2013: Add safe krylov methods.
+ *-----------------------------------------------------------------------------------
  *
  */
 
@@ -101,6 +102,15 @@
 #define SOLVER_VGMRES           5    /**< Variable Restarting GMRES */
 #define SOLVER_VFGMRES          6    /**< Variable Restarting Flexible GMRES */
 #define SOLVER_GCG              7    /**< Generalized Conjugate Gradient */
+//-----------------------------------------------------------------------------------
+#define SOLVER_SCG              11   /**< Conjugate Gradient with safe net */
+#define SOLVER_SBiCGstab        12   /**< Biconjugate Gradient Stabilized with safe net */
+#define SOLVER_SMinRes          13   /**< Minimal Residual with safe net */
+#define SOLVER_SGMRES           14   /**< Generalized Minimal Residual with safe net */
+#define SOLVER_SVGMRES          15   /**< Variable Restarting GMRES with safe net */
+#define SOLVER_SVFGMRES         16   /**< Variable Restarting Flexible GMRES with safe net */
+#define SOLVER_SGCG             17   /**< Generalized Conjugate Gradient with safe net */
+//-----------------------------------------------------------------------------------
 #define SOLVER_AMG              21   /**< AMG as an iterative solver */
 #define SOLVER_FMG              22   /**< Full AMG as an solver */
 

@@ -290,7 +290,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             if ( relres < tol ) break;
             
             if ( more_step >= MaxRestartStep ) {
-                if (print_level>PRINT_MIN) ITS_ZEROTOL;
+                if (print_level > PRINT_MIN) ITS_ZEROTOL;
                 iter = ERROR_SOLVER_TOLSMALL;
                 break;
             }

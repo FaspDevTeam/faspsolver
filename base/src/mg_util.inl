@@ -28,8 +28,8 @@ static void fasp_coarse_itsolver (dCSRmat *A,
         
     INT status = fasp_solver_dcsr_spcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);
     
-    if (status < 0) { // If PCG fails to converge, use PGMRES as another safe net
-        status = fasp_solver_dcsr_pvgmres (A, b, x, NULL, ctol, cmaxit, 25, 1, PRINT_NONE);
+    if ( status < 0 ) { // If PCG fails to converge, use PGMRES as another safe net
+        status = fasp_solver_dcsr_spvgmres (A, b, x, NULL, ctol, cmaxit, 20, 1, PRINT_NONE);
     }
 
     if ( status < 0 && prt_lvl > PRINT_MIN ) {

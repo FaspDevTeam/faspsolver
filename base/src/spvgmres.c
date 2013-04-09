@@ -337,11 +337,34 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
         
     } /* end of iteration while loop */
     
-RESTORE_BESTSOL:
-    if ( iter != iter_best && absres > absres_best + maxdiff ) {
-        if ( print_level > PRINT_NONE )
-            printf("### WARNING: Restore iteration %d!!!\n", iter_best);
-        fasp_array_cp(n,x_best,x->val);
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(n,b->val,r);
+        fasp_blas_dcsr_aAxpy(-1.0,A,x_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(n,r);
+                break;
+            case STOP_REL_PRECRES:
+                // z = B(r)
+                if ( pc != NULL )
+                    pc->fct(r,w,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(n,r,w); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(n,w,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(n,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(n,x_best,x->val);
+        }
     }
     
 FINISHED:
@@ -681,11 +704,34 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
         
     } /* end of iteration while loop */
     
-RESTORE_BESTSOL:
-    if ( iter != iter_best && absres > absres_best + maxdiff ) {
-        if ( print_level > PRINT_NONE )
-            printf("### WARNING: Restore iteration %d!!!\n", iter_best);
-        fasp_array_cp(n,x_best,x->val);
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(n,b->val,r);
+        fasp_blas_bdcsr_aAxpy(-1.0,A,x_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(n,r);
+                break;
+            case STOP_REL_PRECRES:
+                // z = B(r)
+                if ( pc != NULL )
+                    pc->fct(r,w,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(n,r,w); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(n,w,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(n,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(n,x_best,x->val);
+        }
     }
     
 FINISHED:
@@ -1026,11 +1072,34 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
         
     } /* end of iteration while loop */
     
-RESTORE_BESTSOL:
-    if ( iter != iter_best && absres > absres_best + maxdiff ) {
-        if ( print_level > PRINT_NONE )
-            printf("### WARNING: Restore iteration %d!!!\n", iter_best);
-        fasp_array_cp(n,x_best,x->val);
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(n,b->val,r);
+        fasp_blas_dbsr_aAxpy(-1.0,A,x_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(n,r);
+                break;
+            case STOP_REL_PRECRES:
+                // z = B(r)
+                if ( pc != NULL )
+                    pc->fct(r,w,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(n,r,w); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(n,w,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(n,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(n,x_best,x->val);
+        }
     }
     
 FINISHED:
@@ -1371,11 +1440,34 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
         
     } /* end of iteration while loop */
     
-RESTORE_BESTSOL:
-    if ( iter != iter_best && absres > absres_best + maxdiff ) {
-        if ( print_level > PRINT_NONE )
-            printf("### WARNING: Restore iteration %d!!!\n", iter_best);
-        fasp_array_cp(n,x_best,x->val);
+RESTORE_BESTSOL: // restore the best-so-far solution if necessary
+    if ( iter != iter_best ) {
+        
+        // compute best residual
+        fasp_array_cp(n,b->val,r);
+        fasp_blas_dstr_aAxpy(-1.0,A,x_best,r);
+        
+        switch ( stop_type ) {
+            case STOP_REL_RES:
+                absres_best = fasp_blas_array_norm2(n,r);
+                break;
+            case STOP_REL_PRECRES:
+                // z = B(r)
+                if ( pc != NULL )
+                    pc->fct(r,w,pc->data); /* Apply preconditioner */
+                else
+                    fasp_array_cp(n,r,w); /* No preconditioner */
+                absres_best = sqrt(ABS(fasp_blas_array_dotprod(n,w,r)));
+                break;
+            case STOP_MOD_REL_RES:
+                absres_best = fasp_blas_array_norm2(n,r);
+                break;
+        }
+        
+        if ( absres > absres_best + maxdiff ) {
+            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            fasp_array_cp(n,x_best,x->val);
+        }
     }
     
 FINISHED:

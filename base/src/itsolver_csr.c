@@ -74,7 +74,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
             
         case SOLVER_MinRes:
             if (print_level>PRINT_NONE) printf("Calling PMinRes solver ...\n");
-            iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
+            iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
             
         case SOLVER_GMRES:
