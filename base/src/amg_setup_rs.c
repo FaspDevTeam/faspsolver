@@ -13,69 +13,6 @@
 /*---------------------------------*/
 
 /**
- * \fn void dCSRmat_Division_Groups(dCSRmat A, INT *result, INT *groups)
- *
- * \brief Use the algebra method to get matrix's colored classes
- *
- * \param A    Input dCSRmat
- * \param result  Pointer to Return group flags
- * \param groups  Return group numbers
- *
- * \author Chunsheng Feng
- * \date   09/15/2012
- */
-void dCSRmat_Division_Groups(dCSRmat A,
-                             INT *result,
-                             INT *groups)
-{
-    
-    INT k,i,j,pre,group;
-    INT front,rear;
-    INT n=A.row;
-    
-    INT *cq = (INT *)malloc(sizeof(INT)*n);
-    INT *newr = (INT *)malloc(sizeof(INT)*n);
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(n>OPENMP_HOLDS)
-#endif
-    for(k=0;k<n;k++) cq[k]=k+1;
-    front=n-1;
-    rear=n-1;
-    memset(newr, 0, sizeof(INT)*n);
-    
-    group=1;
-    pre=0;
-    
-    do{
-        front=(front+1)%n;
-        i=cq[front];
-        if(i<pre)
-        {   group++;
-            result[i-1]=group;
-            for(j= A.IA[i-1]; j< A.IA[i]; j++)
-                if (A.JA[j] != i-1)  newr[ A.JA[j] ] = group;
-        }
-        else if(newr[i-1]==group)
-        {   rear=(rear+1)%n;
-            cq[rear]=i;
-        }
-        else
-        {    result[i-1]=group;
-            for(j= A.IA[i-1]; j< A.IA[i]; j++)
-                if (A.JA[j] != i-1)  newr[ A.JA[j] ] = group;
-            
-            
-        }
-        pre=i;
-    }while(rear!=front);
-    
-    *groups = group;
-    free(cq);
-    free(newr);
-}
-
-/**
  * \fn SHORT fasp_amg_setup_rs (AMG_data *mgl, AMG_param *param)
  *
  * \brief Setup phase of Ruge and Stuben's classic AMG

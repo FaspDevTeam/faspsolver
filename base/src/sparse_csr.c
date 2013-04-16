@@ -1182,6 +1182,87 @@ dCSRmat fasp_dcsr_sympat(dCSRmat *A)
 	
 }
 
+/**
+ * \fn void fasp_dcsr_multicoloring(dCSRmat A, INT *flags , INT *groups)
+ *
+ * \brief Use the greedy multicoloring algorithm to get color groups for for the adjacency graph of A
+ *
+ * \param A    Input dCSRmat
+ * \param flags   flags for the independent group
+ * \param groups  Return group numbers
+ *
+ * \author Chunsheng Feng
+ * \date   09/15/2012
+ */
+void fasp_dcsr_multicoloring(dCSRmat *A,
+                             INT *flags,
+                             INT *groups)
+{
+#ifdef MULTI_COLOR_ORDER 
+    INT k,i,j,pre,group;
+    INT iend;
+    INT icount;
+    INT front,rear;
+    INT n=A->row;
+    INT *IA = A -> IA;
+    INT *JA = A -> JA;
+    INT *cq = (INT *)malloc(sizeof(INT)*(n+1));
+    INT *newr = (INT *)malloc(sizeof(INT)*(n+1));
+  
+#ifdef _OPENMP
+#pragma omp parallel for private(k)
+#endif
+    for(k=0;k<n;k++) cq[k]= k; 
+
+    group = 0;
+    for(k=0;k<n;k++) {
+       if ((IA[k+1]-IA[k]) > group ) 
+          group = IA[k+1]-IA[k];
+     }
+
+    A->IC = (INT *)malloc(sizeof(INT)*(group+2));
+    A->ICMAP = (INT *)malloc(sizeof(INT)*(n));
+	
+    front = n-1;     rear = n-1;
+
+    memset(newr, -1, sizeof(INT)*(n+1));
+    memset(A->ICMAP, 0, sizeof(INT)*n);
+
+    group = 0; 	icount = 0;
+    A->IC[ 0 ] = 0;   pre=0;
+  
+    do{
+        front ++;  if (front == n ) front =0; 
+        i = cq[front];
+        if(i <= pre)  {  
+	    A->IC[group] = icount; 	A->ICMAP[icount] = i;
+	    group++; 			icount++;
+	    iend = IA[i+1];
+            for(j= IA[i]; j< iend; j++)  newr[ JA[j] ] = group;
+        }
+        else if (newr[i] == group  ) { 
+            rear ++;  if (rear == n) rear = 0;
+            cq[rear] = i;
+        }
+        else {  
+ 	    A->ICMAP[icount] = i;
+	    icount++;
+	    iend = IA[i+1];
+            for(j = IA[i]; j< iend; j++)  newr[ JA[j] ] =  group;
+        }
+        pre=i;
+		
+    }while(rear != front);
+
+    A->IC[group] = icount;  
+    A->color = group;
+    free(cq);
+    free(newr);
+    *groups = group;
+#else 
+	printf("### ERROR: MULTI_COLOR_ORDER has not been Defined...... \n"); 
+#endif
+}
 
 /*---------------------------------*/
 /*--        End of File          --*/
