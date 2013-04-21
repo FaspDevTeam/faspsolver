@@ -63,37 +63,37 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
         case SOLVER_CG:
-            if (print_level>PRINT_NONE) printf("Calling PCG solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PCG solver ...\n");
             iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
             
         case SOLVER_BiCGstab:
-            if (print_level>PRINT_NONE) printf("Calling PBiCGstab solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PBiCGstab solver ...\n");
             iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
             
         case SOLVER_MinRes:
-            if (print_level>PRINT_NONE) printf("Calling PMinRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PMinRes solver ...\n");
             iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
             
         case SOLVER_GMRES:
-            if (print_level>PRINT_NONE) printf("Calling PGMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PGMRes solver ...\n");
             iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_VGMRES: 
-            if (print_level>PRINT_NONE) printf("Calling PVGMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PVGMRes solver ...\n");
             iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_VFGMRES: 
-            if (print_level>PRINT_NONE) printf("Calling PVFGMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PVFGMRes solver ...\n");
             iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_GCG:
-            if (print_level>PRINT_NONE) printf("Calling PGCG solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PGCG solver ...\n");
             iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
             

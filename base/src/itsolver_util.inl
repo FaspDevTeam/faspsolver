@@ -79,7 +79,7 @@ inline static void ITS_FINAL (const INT iter, const INT MaxIt, const REAL relres
         printf("### WARNING: Max iter %d reached with rel. resid. %e.\n", MaxIt, relres);
     }
     else if ( iter >= 0 ) {
-        printf("Number of iteration = %d with relative residual %e.\n", iter, relres);
+        printf("Number of iterations = %d with relative residual %e.\n", iter, relres);
     }
 }
 

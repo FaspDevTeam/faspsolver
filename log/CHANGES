@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+04/21/2013 FASP 1.2.7:
+- Add a multicoloring scheme
+- Fix a typo in the AMG output
+
 04/09/2013 FASP 1.2.6:
 - Add NAN check to SPCG.
 - Prepare BiCGstab for adding safe-guard.
