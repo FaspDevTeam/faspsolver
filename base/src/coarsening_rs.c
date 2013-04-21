@@ -1,5 +1,10 @@
 /*! \file coarsening_rs.c
  *  \brief Coarsening with a modified Ruge-Stuben strategy.
+ *
+ *  \note Ref Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller
+ *            Appendix P475 A.7 (by A. Brandt, P. Oswald and K. Stuben)
+ *            Academic Press Inc., San Diego, CA, 2001.
+ *
  */
 
 #include <omp.h>
@@ -7,7 +12,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-// These linked list operations are adapted from hypre 2.0
+// These linked-list operations are adapted from hypre 2.0
 static LinkList create_node (INT Item);
 static void dispose_node (LinkList node_ptr);
 void enter_list (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, INT measure, INT index, INT *lists, INT *where);
@@ -33,27 +38,23 @@ static void generate_S_rs_ag (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vert
  * \brief RS coarsening
  *
  * \param A          Pointer to the coefficient matrix, the index starts from zero
- * \param vertices   Pointer to the indicator ivector of the CF splitting of the vertices
+ * \param vertices   Pointer to the indicator ivector of the C/F splitting of the vertices
  *                        0: fine gird points
  *                        1: coarse grid points
  *                        2: isolated grid points
- * \param P          Pointer to the resulted INTerpolation matrix (nonzero pattern only)
+ * \param P          Pointer to the interpolation matrix (nonzero pattern only)
  * \param S          Pointer to strength matrix
  * \param param      Pointer to AMG parameters
  *
  * \return           SUCCESS or Error message
  *
- * \note Ref Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller
- *           Appendix P475 A.7 (by A. Brandt, P. Oswald and K. Stuben)
- *           Academic Press Inc., San Diego, CA, 2001.
- *
  * \author Xuehai Huang, Chensong Zhang, Xiaozhe Hu, Ludmil Zikatanov
  * \date   09/06/2010
  *
- * Modified by Xiaozhe Hu: add strength matrix as an input/output. -- 05/23/201
+ * Modified by Xiaozhe Hu 05/23/2011: add strength matrix as an input/output
+ * Modified by Chensong Zhang 04/21/2013
  *
  */
-
 INT fasp_amg_coarsening_rs (dCSRmat *A,
                             ivector *vertices,
                             dCSRmat *P,
@@ -72,25 +73,24 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
 #endif
     
 #if DEBUG_MODE
-    printf("### DEBUG: Step 1. form dependent sets ......\n");
+    printf("### DEBUG: Step 1. form dependent set S ......\n");
 #endif
     
-    // make sure standard interpolaiton is used for aggressive coarsening
-    if (coarsening_type == 4) interp_type = INTERP_STD;
-    
-    // Step 1: generate S and S transpose
+    // Step 1: generate S
     switch (coarsening_type) {
-    case 1: // modified Ruge-Stuben
-        generate_S(A, S, param); break;
-    case 3: // compatible relaxation still uses S from modified Ruge-Stuben
-        generate_S(A, S, param); break;
-    case 4: // aggressive coarsening
-        generate_S(A, S, param); break;
-    default: // classical Ruge-Stuben
-        generate_S_rs(A, S, epsilon_str, coarsening_type); break;
+        case COARSE_RS: // modified Ruge-Stuben
+            generate_S(A, S, param); break;
+        case COARSE_CR: // compatible relaxation: use S from modified Ruge-Stuben
+            generate_S(A, S, param); break;
+        case COARSE_AC: // aggressive coarsening: use S from modified Ruge-Stuben
+            interp_type = INTERP_STD; // make sure standard interp is used
+            generate_S(A, S, param); break;
+        default:
+            printf("### ERROR: Coarsening type %d is not recognized!\n", coarsening_type);
+            return ERROR_AMG_COARSE_TYPE;
     }
     
-    if (S->nnz == 0) return RUN_FAIL;
+    if ( S->nnz == 0 ) return RUN_FAIL;
     
 #if DEBUG_MODE
     printf("### DEBUG: Step 2. choose C points ......\n");
@@ -98,12 +98,12 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     
     // Step 2: standard coarsening algorithm
     switch (coarsening_type) {
-    case 3: // compatible relaxation (Need to be modified --Chensong)
-        col = fasp_amg_coarsening_cr(0,A->row-1, A, vertices, param); break;
-    case 4: // aggressive coarsening
-        col = form_coarse_level_ag(A, S, vertices,row,interp_type); break;
-    default:
-        col = form_coarse_level(A, S, vertices, row, interp_type); break;
+        case COARSE_RS: // modified Ruge-Stuben
+            col = form_coarse_level(A, S, vertices, row, interp_type); break;
+        case COARSE_CR: // compatible relaxation (Need to be modified --Chensong)
+            col = fasp_amg_coarsening_cr(0, A->row-1, A, vertices, param); break;
+        case COARSE_AC: // aggressive coarsening
+            col = form_coarse_level_ag(A, S, vertices,row,interp_type); break;
     }
     
 #if DEBUG_MODE
@@ -112,16 +112,15 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     
     // Step 3: generate sparsity pattern of P
     switch (interp_type){
-    case INTERP_STD: // standard interpolaiton
-        generate_sparsity_P_standard (P, S, vertices, row, col); break;
-    default: // direct interpolation & energy minimization interpolaiton
-        generate_sparsity_P(P, S, vertices, row, col); break;
+        case INTERP_STD: // standard interpolaiton
+            generate_sparsity_P_standard (P, S, vertices, row, col); break;
+        default: // direct interpolation & energy minimization interpolaiton
+            generate_sparsity_P (P, S, vertices, row, col); break;
     }
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_coarsening_rs ...... [Finish]\n");
 #endif
-    
     
 #if CHMEM_MODE
     fasp_mem_usage();
@@ -175,7 +174,7 @@ void remove_node (LinkList *LoL_head_ptr,
     do {
         if (measure == list_ptr->data) {
             /* point to be removed is only point on list,
-               which must be destroyed */
+             which must be destroyed */
             if (list_ptr->head == index && list_ptr->tail == index) {
                 /* removing only list, so num_left better be 0! */
                 if (list_ptr == LoL_head && list_ptr == LoL_tail) {
@@ -426,40 +425,40 @@ static void generate_S (dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin,myend,i,row_scale,row_sum,begin_row,end_row,j)
 #endif
         for (myid = 0; myid < nthreads; myid++ )
+        {
+            FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+            for (i=mybegin; i<myend; i++)
             {
-                FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
-                for (i=mybegin; i<myend; i++)
-                    {
-                        /* compute scaling factor and row sum */
-                        row_scale=0; row_sum=0;
+                /* compute scaling factor and row sum */
+                row_scale=0; row_sum=0;
                 
-                        begin_row=ia[i]; end_row=ia[i+1];
+                begin_row=ia[i]; end_row=ia[i+1];
                 
-                        for (j=begin_row;j<end_row;j++) {
-                            row_scale=MIN(row_scale, aj[j]);
-                            row_sum+=aj[j];
-                        }
-                        row_sum=ABS(row_sum)/MAX(SMALLREAL,ABS(diag.val[i]));
+                for (j=begin_row;j<end_row;j++) {
+                    row_scale=MIN(row_scale, aj[j]);
+                    row_sum+=aj[j];
+                }
+                row_sum=ABS(row_sum)/MAX(SMALLREAL,ABS(diag.val[i]));
                 
-                        /* compute row entries of S */
-                        for (j=begin_row;j<end_row;j++) {
-                            if (ja[j]==i) {S->JA[j]=-1; break;}
-                        }
+                /* compute row entries of S */
+                for (j=begin_row;j<end_row;j++) {
+                    if (ja[j]==i) {S->JA[j]=-1; break;}
+                }
                 
-                        /* if $|\sum_{j=1}^n a_{ij}|> \theta_2 |a_{ii}|$ */
-                        if ((row_sum>max_row_sum)&&(max_row_sum<1)) {
-                            /* make all dependencies weak */
-                            for (j=begin_row;j<end_row;j++) S->JA[j]=-1;
-                        }
-                        else {
-                            for (j=begin_row;j<end_row;j++) {
-                                /* if $a_{ij}>=\epsilon_{str}*\min a_{ij}$, the connection $a_{ij}$
-                                   is set to be weak connection */
-                                if (A->val[j]>=epsilon_str*row_scale) S->JA[j]=-1;
-                            }
-                        }
-                    } // end for i
-            }
+                /* if $|\sum_{j=1}^n a_{ij}|> \theta_2 |a_{ii}|$ */
+                if ((row_sum>max_row_sum)&&(max_row_sum<1)) {
+                    /* make all dependencies weak */
+                    for (j=begin_row;j<end_row;j++) S->JA[j]=-1;
+                }
+                else {
+                    for (j=begin_row;j<end_row;j++) {
+                        /* if $a_{ij}>=\epsilon_{str}*\min a_{ij}$, the connection $a_{ij}$
+                         is set to be weak connection */
+                        if (A->val[j]>=epsilon_str*row_scale) S->JA[j]=-1;
+                    }
+                }
+            } // end for i
+        }
     }
     else {
         for (i=0;i<row;++i) {
@@ -572,7 +571,7 @@ static void generate_S_rs (dCSRmat *A,
         }
 #endif
     }
-        
+    
     if (coarsening_type==3) { // original RS coarsening, consider absolute strong coupled
 #ifdef _OPENMP
 #pragma omp parallel for if(A->row>OPENMP_HOLDS) private(myid,mybegin,myend,i,j)
@@ -595,14 +594,14 @@ static void generate_S_rs (dCSRmat *A,
         }
 #endif
     }
-        
+    
     // step 1: Find first the structure IA of S
     S->row=A->row;
     S->col=A->col;
     S->val=NULL;
     S->JA=NULL;
     S->IA=(INT*)fasp_mem_calloc(S->row+1, sizeof(INT));
-        
+    
     if (coarsening_type==2) {
 #ifdef _OPENMP
 #pragma omp parallel for if(S->row>OPENMP_HOLDS) private(myid,mybegin,myend,i,j)
@@ -624,7 +623,7 @@ static void generate_S_rs (dCSRmat *A,
         }
 #endif
     }
-        
+    
     if (coarsening_type==3) {
 #ifdef _OPENMP
 #pragma omp parallel for if(S->row>OPENMP_HOLDS) private(myid,mybegin,myend,i,j)
@@ -646,13 +645,13 @@ static void generate_S_rs (dCSRmat *A,
         }
 #endif
     }
-        
+    
     for (i=0;i<S->row;++i) S->IA[i+1]+=S->IA[i];
-        
+    
     // step 2: Find the structure JA of S
     INT index=0;
     S->JA=(INT*)fasp_mem_calloc(S->IA[S->row],sizeof(INT));
-        
+    
     if (coarsening_type==2) {
         for (i=0;i<S->row;++i) {
             for (j=A->IA[i];j<A->IA[i+1];j++) {
@@ -663,7 +662,7 @@ static void generate_S_rs (dCSRmat *A,
             }
         }
     }
-        
+    
     if (coarsening_type==3) {
         for (i=0;i<S->row;++i) {
             for (j=A->IA[i];j<A->IA[i+1];j++) {
@@ -674,10 +673,10 @@ static void generate_S_rs (dCSRmat *A,
             }
         }
     }
-        
+    
     fasp_mem_free(amax);
 }
-    
+
 /**
  * \fn static void generate_S_rs_ag (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vertices, ivector *CGPT_index, ivector *CGPT_rindex)
  *
@@ -700,24 +699,24 @@ static void generate_S_rs_ag (dCSRmat *A,
                               ivector * CGPT_index,
                               ivector *CGPT_rindex)
 {
-        
+    
     INT   i,j,k;
     INT   num_c,count,ci,cj,ck,fj,cck;
     INT  *cp_index, *cp_rindex, *times_visited, *vec=vertices->val;
-        
+    
     CGPT_rindex->row=A->row;
     CGPT_rindex->val=(INT*)fasp_mem_calloc(vertices->row,sizeof(INT));// for the reverse indexing of coarse grid points
     cp_rindex=CGPT_rindex->val;
-        
+    
     //count the number of coarse grid points
     num_c=0;
     for(i=0;i<vertices->row;i++)
-        {
-            if(vec[i]==CGPT) num_c++;
-        }
-        
+    {
+        if(vec[i]==CGPT) num_c++;
+    }
+    
     CGPT_index->row=num_c;
-        
+    
     //generate coarse grid point index
     CGPT_index->val=(INT *)fasp_mem_calloc(num_c,sizeof(INT));
     cp_index=CGPT_index->val;
@@ -729,130 +728,130 @@ static void generate_S_rs_ag (dCSRmat *A,
             j++;
         }
     }
-        
+    
     Sh->row=num_c;
     Sh->col=num_c;
     Sh->val=NULL;
     Sh->JA=NULL;
     Sh->IA=(INT*)fasp_mem_calloc(Sh->row+1,sizeof(INT));
-        
+    
     times_visited=(INT*)fasp_mem_calloc(num_c,sizeof(INT)); // record the number of times some coarse point is visited
-        
+    
     //for (i=0; i<num_c; i++) times_visited[i]=0;
     memset(times_visited, 0, sizeof(INT)*num_c);
-        
+    
     // step 1: Find first the structure IA of Sh
     Sh->IA[0]=0;
     for(ci=0;ci<Sh->row;ci++)
+    {
+        count=0; // count the the number of coarse point that i is strongly connected to w.r.t. (p,2)
+        i=cp_index[ci];//find the index of the ci-th coarse grid point
+        
+        //visit all the fine neighbors that ci is strongly connected to
+        for(j=S->IA[i];j<S->IA[i+1];j++)
         {
-            count=0; // count the the number of coarse point that i is strongly connected to w.r.t. (p,2)
-            i=cp_index[ci];//find the index of the ci-th coarse grid point
             
-            //visit all the fine neighbors that ci is strongly connected to
-            for(j=S->IA[i];j<S->IA[i+1];j++)
+            fj=S->JA[j];
+            
+            if(vec[fj]==CGPT&&fj!=i)
+            {
+                cj=cp_rindex[fj];
+                
+                if(times_visited[cj]!=ci+1)
                 {
+                    //newly visited
+                    times_visited[cj]=ci+1;//marked as strongly connected from ci
+                    count++;
+                }
                 
-                    fj=S->JA[j];
+            }
+            else if(vec[fj]==FGPT) // it is a fine grid point,
+            {
                 
-                    if(vec[fj]==CGPT&&fj!=i)
-                        {
-                            cj=cp_rindex[fj];
+                //find all the coarse neighbors that fj is strongly connected to
+                for(k=S->IA[fj];k<S->IA[fj+1];k++)
+                {
+                    ck=S->JA[k];
                     
-                            if(times_visited[cj]!=ci+1)
-                                {
-                                    //newly visited
-                                    times_visited[cj]=ci+1;//marked as strongly connected from ci
-                                    count++;
-                                }
-                    
-                        }
-                    else if(vec[fj]==FGPT) // it is a fine grid point,
-                        {
-                    
-                            //find all the coarse neighbors that fj is strongly connected to
-                            for(k=S->IA[fj];k<S->IA[fj+1];k++)
-                                {
-                                    ck=S->JA[k];
+                    if(vec[ck]==CGPT&&ck!=i)// it is a coarse grid point
+                    {
+                        if(cp_rindex[ck]>=num_c) printf("generate_S_rs_ag: index exceed bound!\n");
                         
-                                    if(vec[ck]==CGPT&&ck!=i)// it is a coarse grid point
-                                        {
-                                            if(cp_rindex[ck]>=num_c) printf("generate_S_rs_ag: index exceed bound!\n");
-                            
-                                            cck=cp_rindex[ck];
-                                            if (times_visited[cck]!=ci+1) {
-                                                //newly visited
-                                                times_visited[cck]=ci+1;//marked as strongly connected from ci
-                                                count++;
-                                            }
-                            
-                                        }//end if
-                                }//end for k
-                    
-                        }//end if
-                }//end for j
-            
-            Sh->IA[ci+1]=Sh->IA[ci]+count;
-            
-        }//end for i
+                        cck=cp_rindex[ck];
+                        if (times_visited[cck]!=ci+1) {
+                            //newly visited
+                            times_visited[cck]=ci+1;//marked as strongly connected from ci
+                            count++;
+                        }
+                        
+                    }//end if
+                }//end for k
+                
+            }//end if
+        }//end for j
         
+        Sh->IA[ci+1]=Sh->IA[ci]+count;
         
+    }//end for i
+    
+    
     // step 2: Find JA of Sh
-        
+    
     for (i=0; i<num_c; i++) times_visited[i]=0; // clean up times_visited
     Sh->nnz=Sh->IA[Sh->row];
     Sh->JA=(INT*)fasp_mem_calloc(Sh->nnz,sizeof(INT));
-        
+    
     for(ci=0;ci<Sh->row;ci++)
+    {
+        i=cp_index[ci]; //find the index of the i-th coarse grid point
+        count=Sh->IA[ci]; //count for coarse points
+        
+        //visit all the fine neighbors that ci is strongly connected to
+        for(j=S->IA[i];j<S->IA[i+1];j++)
         {
-            i=cp_index[ci]; //find the index of the i-th coarse grid point
-            count=Sh->IA[ci]; //count for coarse points
-            
-            //visit all the fine neighbors that ci is strongly connected to
-            for(j=S->IA[i];j<S->IA[i+1];j++)
+            fj=S->JA[j];
+            if(vec[fj]==CGPT&&fj!=i)
+            {
+                cj=cp_rindex[fj];
+                if(times_visited[cj]!=ci+1)
                 {
-                    fj=S->JA[j];
-                    if(vec[fj]==CGPT&&fj!=i)
+                    //newly visited
+                    times_visited[cj]=ci+1;
+                    Sh->JA[count]=cj;
+                    count++;
+                }
+                
+                
+            }
+            else if(vec[fj]==FGPT) // it is a fine grid point,
+            {
+                //find all the coarse neighbors that fj is strongly connected to
+                for(k=S->IA[fj];k<S->IA[fj+1];k++)
+                {
+                    ck=S->JA[k];
+                    if(vec[ck]==CGPT&&ck!=i)// it is a coarse grid point
+                    {
+                        cck=cp_rindex[ck];
+                        
+                        if(times_visited[cck]!=ci+1)
                         {
-                            cj=cp_rindex[fj];
-                            if(times_visited[cj]!=ci+1)
-                                {
-                                    //newly visited
-                                    times_visited[cj]=ci+1;
-                                    Sh->JA[count]=cj;
-                                    count++;
-                                }
-                    
-                    
+                            //newly visited
+                            times_visited[cck]=ci+1;
+                            Sh->JA[count]=cck;
+                            count++;
                         }
-                    else if(vec[fj]==FGPT) // it is a fine grid point,
-                        {
-                            //find all the coarse neighbors that fj is strongly connected to
-                            for(k=S->IA[fj];k<S->IA[fj+1];k++)
-                                {
-                                    ck=S->JA[k];
-                                    if(vec[ck]==CGPT&&ck!=i)// it is a coarse grid point
-                                        {
-                                            cck=cp_rindex[ck];
-                            
-                                            if(times_visited[cck]!=ci+1)
-                                                {
-                                                    //newly visited
-                                                    times_visited[cck]=ci+1;
-                                                    Sh->JA[count]=cck;
-                                                    count++;
-                                                }
-                            
-                                        }//end if
-                                }//end for k
-                    
-                        }//end if
-                }//end for j
-            if(count!=Sh->IA[ci+1]) printf("generate_S_rs_ag: inconsistency in number of nonzeros values\n ");
-        }//end for ci
+                        
+                    }//end if
+                }//end for k
+                
+            }//end if
+        }//end for j
+        if(count!=Sh->IA[ci+1]) printf("generate_S_rs_ag: inconsistency in number of nonzeros values\n ");
+    }//end for ci
     fasp_mem_free(times_visited);
 }
-    
-    
+
+
 /**
  * \fn static INT form_coarse_level (dCSRmat *A, iCSRmat *S, ivector *vertices,
  *                                   INT row, INT interp_type)
@@ -882,7 +881,7 @@ static INT form_coarse_level (dCSRmat *A,
     INT col = 0;
     unsigned INT maxlambda, maxnode, num_left=0;
     INT measure, new_meas;
-        
+    
     INT *ia=A->IA, *vec=vertices->val;
     INT ci_tilde = -1, ci_tilde_mark = -1;
     INT set_empty = 1, C_i_nonempty = 0;
@@ -890,42 +889,42 @@ static INT form_coarse_level (dCSRmat *A,
     INT myid;
     INT mybegin;
     INT myend;
-        
+    
     INT *work = (INT*)fasp_mem_calloc(4*row,sizeof(INT));
     INT *lists = work, *where = lists+row, *lambda = where+row, *graph_array = lambda+row;
-        
+    
     LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;
-        
+    
     iCSRmat ST; fasp_icsr_trans(S, &ST);
-        
+    
     INT nthreads = 1, use_openmp = FALSE;
-        
+    
 #ifdef _OPENMP
     if ( row > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-        
+    
     /**************************************************/
     /* Coarsening Phase ONE: find coarse level points */
     /**************************************************/
-        
+    
     // 1. Initialize lambda
     if (use_openmp) {
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin,myend,i)
 #endif
         for (myid = 0; myid < nthreads; myid++ )
-            {
-                FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
-                for (i=mybegin; i<myend; i++) lambda[i]=ST.IA[i+1]-ST.IA[i];
-            }
+        {
+            FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+            for (i=mybegin; i<myend; i++) lambda[i]=ST.IA[i+1]-ST.IA[i];
+        }
     }
     else {
         for (i=0;i<row;++i) lambda[i]=ST.IA[i+1]-ST.IA[i];
     }
-        
+    
     // 2. Before the following algorithm starts, filter out the variables which
     // have no connections at all and assign special F-variables.
     if (use_openmp) {
@@ -933,23 +932,9 @@ static INT form_coarse_level (dCSRmat *A,
 #pragma omp parallel for reduction(+:num_left) private(myid, mybegin, myend, i)
 #endif
         for (myid = 0; myid < nthreads; myid++ )
-            {
-                FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
-                for (i=mybegin; i<myend; i++)
-                    {
-                        if ( (ia[i+1]-ia[i])<=1 ) {
-                            vec[i]=ISPT; // set i as an ISOLATED fine node
-                            lambda[i]=0;
-                        }
-                        else {
-                            vec[i]=UNPT; // set i as a undecided node
-                            num_left++;
-                        }
-                    }
-            }
-    }
-    else {
-        for (i=0;i<row;++i)
+        {
+            FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+            for (i=mybegin; i<myend; i++)
             {
                 if ( (ia[i+1]-ia[i])<=1 ) {
                     vec[i]=ISPT; // set i as an ISOLATED fine node
@@ -960,113 +945,127 @@ static INT form_coarse_level (dCSRmat *A,
                     num_left++;
                 }
             }
+        }
     }
-        
-    // 3. Set the variables with nonpositvie measure as F-variables
-    for (i=0;i<row;++i)
+    else {
+        for (i=0;i<row;++i)
         {
-            measure=lambda[i];
-            if (vec[i]!=ISPT) {
-                if (measure>0) {
-                    enter_list(&LoL_head, &LoL_tail, lambda[i], i, lists, where);
-                }
-                else {
-                    if (measure<0) printf("### WARNING: Negative lambda!\n");
-                    vec[i]=FGPT; // set i as fine node
-                    for (k=S->IA[i];k<S->IA[i+1];++k) {
-                        j=S->JA[k];
-                        if (vec[j]!=ISPT) {
-                            if (j<i) {
-                                new_meas=lambda[j];
-                                if (new_meas>0) {
-                                    remove_node(&LoL_head, &LoL_tail, new_meas, j, lists, where);
-                                }
-                                new_meas= ++(lambda[j]);
-                                enter_list(&LoL_head, &LoL_tail,  new_meas, j, lists, where);
-                            }
-                            else {
-                                new_meas= ++(lambda[j]);
-                            }
-                        }
-                    }
-                    --num_left;
-                }
+            if ( (ia[i+1]-ia[i])<=1 ) {
+                vec[i]=ISPT; // set i as an ISOLATED fine node
+                lambda[i]=0;
+            }
+            else {
+                vec[i]=UNPT; // set i as a undecided node
+                num_left++;
             }
         }
-        
+    }
+    
+    // 3. Set the variables with nonpositvie measure as F-variables
+    for (i=0;i<row;++i)
+    {
+        measure=lambda[i];
+        if (vec[i]!=ISPT) {
+            if (measure>0) {
+                enter_list(&LoL_head, &LoL_tail, lambda[i], i, lists, where);
+            }
+            else {
+                if (measure<0) printf("### WARNING: Negative lambda!\n");
+                vec[i]=FGPT; // set i as fine node
+                for (k=S->IA[i];k<S->IA[i+1];++k) {
+                    j=S->JA[k];
+                    if (vec[j]!=ISPT) {
+                        if (j<i) {
+                            new_meas=lambda[j];
+                            if (new_meas>0) {
+                                remove_node(&LoL_head, &LoL_tail, new_meas, j, lists, where);
+                            }
+                            new_meas= ++(lambda[j]);
+                            enter_list(&LoL_head, &LoL_tail,  new_meas, j, lists, where);
+                        }
+                        else {
+                            new_meas= ++(lambda[j]);
+                        }
+                    }
+                }
+                --num_left;
+            }
+        }
+    }
+    
     // 4. Main loop
     while (num_left>0) {
-            
+        
         // pick $i\in U$ with $\max\lambda_i: C:=C\cup\{i\}, U:=U\\{i\}$
         maxnode=LoL_head->head;
         maxlambda=lambda[maxnode];
-            
+        
         vec[maxnode]=CGPT; // set maxnode as coarse node
         lambda[maxnode]=0;
         --num_left;
         remove_node(&LoL_head, &LoL_tail, maxlambda, maxnode, lists, where);
         col++;
-            
+        
         // for all $j\in S_i^T\cap U: F:=F\cup\{j\}, U:=U\backslash\{j\}$
         for (i=ST.IA[maxnode];i<ST.IA[maxnode+1];++i) {
             j=ST.JA[i];
-                
+            
             /* if j is unkown */
             if (vec[j]==UNPT) {
                 vec[j]=FGPT;  // set j as fine node
                 remove_node(&LoL_head, &LoL_tail, lambda[j], j, lists, where);
                 --num_left;
-                    
+                
                 for (l=S->IA[j];l<S->IA[j+1];l++) {
                     k=S->JA[l];
                     if (vec[k]==UNPT) // k is unkown
+                    {
+                        remove_node(&LoL_head, &LoL_tail, lambda[k], k, lists, where);
+                        new_meas= ++(lambda[k]);
+                        enter_list(&LoL_head, &LoL_tail,new_meas, k, lists, where);
+                    }
+                }
+                
+            } // if
+        } // i
+        
+        for (i=S->IA[maxnode];i<S->IA[maxnode+1];++i) {
+            j=S->JA[i];
+            if (vec[j]==UNPT) // j is unkown
+            {
+                measure=lambda[j];
+                remove_node(&LoL_head, &LoL_tail, measure, j, lists, where);
+                lambda[j]=--measure;
+                if (measure>0) {
+                    enter_list(&LoL_head, &LoL_tail, measure, j, lists, where);
+                }
+                else {
+                    vec[j]=FGPT; // set j as fine variable
+                    --num_left;
+                    
+                    for (l=S->IA[j];l<S->IA[j+1];l++) {
+                        k=S->JA[l];
+                        if (vec[k]==UNPT) // k is unkown
                         {
                             remove_node(&LoL_head, &LoL_tail, lambda[k], k, lists, where);
                             new_meas= ++(lambda[k]);
                             enter_list(&LoL_head, &LoL_tail,new_meas, k, lists, where);
                         }
-                }
-                    
-            } // if
-        } // i
-            
-        for (i=S->IA[maxnode];i<S->IA[maxnode+1];++i) {
-            j=S->JA[i];
-            if (vec[j]==UNPT) // j is unkown
-                {
-                    measure=lambda[j];
-                    remove_node(&LoL_head, &LoL_tail, measure, j, lists, where);
-                    lambda[j]=--measure;
-                    if (measure>0) {
-                        enter_list(&LoL_head, &LoL_tail, measure, j, lists, where);
-                    }
-                    else {
-                        vec[j]=FGPT; // set j as fine variable
-                        --num_left;
-                        
-                        for (l=S->IA[j];l<S->IA[j+1];l++) {
-                            k=S->JA[l];
-                            if (vec[k]==UNPT) // k is unkown
-                                {
-                                    remove_node(&LoL_head, &LoL_tail, lambda[k], k, lists, where);
-                                    new_meas= ++(lambda[k]);
-                                    enter_list(&LoL_head, &LoL_tail,new_meas, k, lists, where);
-                                }
-                        } // end for l
-                    } // end if
+                    } // end for l
                 } // end if
+            } // end if
         } // end for
     } // while
-        
+    
     if (LoL_head) {
         list_ptr=LoL_head;
         LoL_head->prev_node=NULL;
         LoL_head->next_node=NULL;
         LoL_head = list_ptr->next_node;
-            
+        
         fasp_mem_free(list_ptr);
     }
-        
+    
     if (interp_type != INTERP_STD) {
         /****************************************************************/
         /* Coarsening Phase TWO: check fine points for coarse neighbors */
@@ -1076,78 +1075,78 @@ static INT form_coarse_level (dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin,myend,i)
 #endif
             for (myid = 0; myid < nthreads; myid++ )
-                {
-                    FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
-                    for (i=mybegin; i<myend; ++i) graph_array[i] = -1;
-                }
+            {
+                FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+                for (i=mybegin; i<myend; ++i) graph_array[i] = -1;
+            }
         }
         else {
             for (i=0; i < row; ++i) graph_array[i] = -1;
         }
-            
+        
         for (i=0; i < row; ++i)
+        {
+            if (ci_tilde_mark |= i) ci_tilde = -1;
+            
+            if (vec[i] == FGPT) // F-variable
             {
-                if (ci_tilde_mark |= i) ci_tilde = -1;
+                for (ji = S->IA[i]; ji < S->IA[i+1]; ++ji) {
+                    j = S->JA[ji];
+                    if (vec[j] == CGPT) // C-variable
+                        graph_array[j] = i;
+                } // end for ji
                 
-                if (vec[i] == FGPT) // F-variable
-                    {
-                        for (ji = S->IA[i]; ji < S->IA[i+1]; ++ji) {
-                            j = S->JA[ji];
-                            if (vec[j] == CGPT) // C-variable
-                                graph_array[j] = i;
-                        } // end for ji
+                for (ji = S->IA[i]; ji < S->IA[i+1]; ++ji) {
                     
-                        for (ji = S->IA[i]; ji < S->IA[i+1]; ++ji) {
+                    j = S->JA[ji];
+                    
+                    if (vec[j] == FGPT) {
+                        set_empty = 1;
                         
-                            j = S->JA[ji];
-                        
-                            if (vec[j] == FGPT) {
-                                set_empty = 1;
-                            
-                                for (jj = S->IA[j]; jj < S->IA[j+1]; ++jj) {
-                                    index = S->JA[jj];
-                                    if (graph_array[index] == i) {
-                                        set_empty = 0;
-                                        break;
-                                    }
-                                } // end for jj
-                            
-                                if (set_empty) {
-                                    if (C_i_nonempty) {
-                                        vec[i] = CGPT;
-                                        col++;
-                                        if (ci_tilde > -1) {
-                                            vec[ci_tilde] = FGPT;
-                                            col--;
-                                            ci_tilde = -1;
-                                        }
-                                        C_i_nonempty = 0;
-                                        break;
-                                    }
-                                    else {
-                                        ci_tilde = j;
-                                        ci_tilde_mark = i;
-                                        vec[j] = CGPT;
-                                        col++;
-                                        C_i_nonempty = 1;
-                                        i--;
-                                        break;
-                                    } // end if C_i_nonempty
-                                } // end if set_empty
-                            
+                        for (jj = S->IA[j]; jj < S->IA[j+1]; ++jj) {
+                            index = S->JA[jj];
+                            if (graph_array[index] == i) {
+                                set_empty = 0;
+                                break;
                             }
-                        }
+                        } // end for jj
+                        
+                        if (set_empty) {
+                            if (C_i_nonempty) {
+                                vec[i] = CGPT;
+                                col++;
+                                if (ci_tilde > -1) {
+                                    vec[ci_tilde] = FGPT;
+                                    col--;
+                                    ci_tilde = -1;
+                                }
+                                C_i_nonempty = 0;
+                                break;
+                            }
+                            else {
+                                ci_tilde = j;
+                                ci_tilde_mark = i;
+                                vec[j] = CGPT;
+                                col++;
+                                C_i_nonempty = 1;
+                                i--;
+                                break;
+                            } // end if C_i_nonempty
+                        } // end if set_empty
+                        
                     }
+                }
             }
+        }
     }
-        
+    
     fasp_icsr_free(&ST);
-        
+    
     fasp_mem_free(work);
-        
+    
     return col;
 }
-    
+
 /**
  * \fn static void generate_sparsity_P (dCSRmat *P, iCSRmat *S, ivector *vertices,
  *                                      INT row, INT col)
@@ -1165,7 +1164,7 @@ static INT form_coarse_level (dCSRmat *A,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-    
+
 static void generate_sparsity_P (dCSRmat *P,
                                  iCSRmat *S,
                                  ivector *vertices,
@@ -1174,23 +1173,23 @@ static void generate_sparsity_P (dCSRmat *P,
 {
     INT i,j,k,index=0;
     INT *vec=vertices->val;
-        
+    
     P->row=row; P->col=col;
     P->IA=(INT*)fasp_mem_calloc(row+1, sizeof(INT));
-        
+    
     INT nthreads = 1, use_openmp = FALSE;
-        
+    
 #ifdef _OPENMP
     if ( row > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-        
+    
 #if CHMEM_MODE
     total_alloc_mem += (row+1)*sizeof(INT);
 #endif
-        
+    
     // step 1: Find the structure IA of P first
     if (use_openmp) {
         INT mybegin,myend,myid;
@@ -1198,44 +1197,21 @@ static void generate_sparsity_P (dCSRmat *P,
 #pragma omp parallel for private(myid, mybegin,myend,i,j,k)
 #endif
         for (myid = 0; myid < nthreads; myid++ )
-            {
-                FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
-                for (i=mybegin; i<myend; ++i)
-                    {
-                        if (vec[i]==FGPT) // if node i is on fine grid
-                            {
-                                for (j=S->IA[i];j<S->IA[i+1];j++)
-                                    {
-                                        k=S->JA[j];
-                                        if (vec[k]==CGPT)
-                                            {
-                                                P->IA[i+1]++;
-                                            }
-                                    }
-                            }
-                        else if (vec[i]==ISPT) { // if node i is a special fine node
-                            P->IA[i+1]=0;
-                        }
-                        else { // if node i is on coarse grid
-                            P->IA[i+1]=1;
-                        }
-                    }
-            }
-    }
-    else {
-        for (i=0;i<row;++i)
+        {
+            FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i)
             {
                 if (vec[i]==FGPT) // if node i is on fine grid
+                {
+                    for (j=S->IA[i];j<S->IA[i+1];j++)
                     {
-                        for (j=S->IA[i];j<S->IA[i+1];j++)
-                            {
-                                k=S->JA[j];
-                                if (vec[k]==CGPT)
-                                    {
-                                        P->IA[i+1]++;
-                                    }
-                            }
+                        k=S->JA[j];
+                        if (vec[k]==CGPT)
+                        {
+                            P->IA[i+1]++;
+                        }
                     }
+                }
                 else if (vec[i]==ISPT) { // if node i is a special fine node
                     P->IA[i+1]=0;
                 }
@@ -1243,45 +1219,68 @@ static void generate_sparsity_P (dCSRmat *P,
                     P->IA[i+1]=1;
                 }
             }
+        }
     }
-        
+    else {
+        for (i=0;i<row;++i)
+        {
+            if (vec[i]==FGPT) // if node i is on fine grid
+            {
+                for (j=S->IA[i];j<S->IA[i+1];j++)
+                {
+                    k=S->JA[j];
+                    if (vec[k]==CGPT)
+                    {
+                        P->IA[i+1]++;
+                    }
+                }
+            }
+            else if (vec[i]==ISPT) { // if node i is a special fine node
+                P->IA[i+1]=0;
+            }
+            else { // if node i is on coarse grid
+                P->IA[i+1]=1;
+            }
+        }
+    }
+    
     for (i=0;i<P->row;++i) P->IA[i+1]+=P->IA[i];
-        
+    
     P->nnz=P->IA[P->row]-P->IA[0];
-        
+    
     // step 2: Find the structure JA of P
     P->JA=(INT*)fasp_mem_calloc(P->nnz,sizeof(INT));
     P->val=(REAL*)fasp_mem_calloc(P->nnz,sizeof(REAL));
-        
+    
 #if CHMEM_MODE
     total_alloc_mem += (P->nnz)*sizeof(INT);
     total_alloc_mem += (P->nnz)*sizeof(REAL);
 #endif
-        
-    for (i=0;i<row;++i)
-        {
-            if (vec[i]==FGPT) // fine node
-                {
-                    for (j=S->IA[i];j<S->IA[i+1];j++) {
-                        k=S->JA[j];
-                        if (vec[k]==CGPT) {
-                            P->JA[index]=k;
-                            index++;
-                        } // end if
-                    } // end for j
-                } // end if
-            else if (vec[i]==ISPT)
-                {
-                    // if node i is a special fine node, do nothing
-                }
-            else // if node i is on coarse grid
-                {
-                    P->JA[index]=i;
-                    index++;
-                }
-        }
-}
     
+    for (i=0;i<row;++i)
+    {
+        if (vec[i]==FGPT) // fine node
+        {
+            for (j=S->IA[i];j<S->IA[i+1];j++) {
+                k=S->JA[j];
+                if (vec[k]==CGPT) {
+                    P->JA[index]=k;
+                    index++;
+                } // end if
+            } // end for j
+        } // end if
+        else if (vec[i]==ISPT)
+        {
+            // if node i is a special fine node, do nothing
+        }
+        else // if node i is on coarse grid
+        {
+            P->JA[index]=i;
+            index++;
+        }
+    }
+}
+
 /**
  * \fn static void generate_sparsity_P_standard (dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col)
  *
@@ -1308,21 +1307,21 @@ static void generate_sparsity_P_standard (dCSRmat *P,
     INT i,j,k,l,h,index=0;
     INT *vec=vertices->val;
     INT *times_visited;
-        
+    
     P->row=row; P->col=col;
     P->IA=(INT*)fasp_mem_calloc(row+1, sizeof(INT));
-        
+    
     times_visited=(INT*)fasp_mem_calloc(row,sizeof(INT)); // to record the number of times a coarse point is visited.
-        
+    
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
     for (i=0; i<row; i++) times_visited[i] = -1;  // initilize
-        
+    
 #if CHMEM_MODE
     total_alloc_mem += (row+1)*sizeof(INT);
 #endif
-        
+    
     // step 1: Find the structure IA of P first
     for (i=0; i<row; ++i) {
         if (vec[i]==FGPT) { // if node i is a F point
@@ -1362,83 +1361,83 @@ static void generate_sparsity_P_standard (dCSRmat *P,
             P->IA[i+1]=1;
         }  // end if (vec[i]==FGPT)
     } // end for (i=0;i<row;++i)
-        
+    
     for (i=0;i<P->row;++i) P->IA[i+1]+=P->IA[i];
-        
+    
     P->nnz=P->IA[P->row]-P->IA[0];
-        
+    
     // step 2: Find the structure JA of P
     P->JA=(INT*)fasp_mem_calloc(P->nnz,sizeof(INT));
     P->val=(REAL*)fasp_mem_calloc(P->nnz,sizeof(REAL));
-        
+    
 #if CHMEM_MODE
     total_alloc_mem += (P->nnz)*sizeof(INT);
     total_alloc_mem += (P->nnz)*sizeof(REAL);
 #endif
-        
+    
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
     for (i=0; i<row; i++) times_visited[i] = -1;  // reinitilize
-        
+    
     for (i=0;i<row;++i)
+    {
+        index = 0;
+        if (vec[i]==FGPT)  // if node i is a F point
         {
-            index = 0;
-            if (vec[i]==FGPT)  // if node i is a F point
+            for (j=S->IA[i];j<S->IA[i+1];j++) {
+                k=S->JA[j];
+                if (vec[k]==CGPT) // if neighbor k of i is a C point
                 {
-                    for (j=S->IA[i];j<S->IA[i+1];j++) {
-                        k=S->JA[j];
-                        if (vec[k]==CGPT) // if neighbor k of i is a C point
-                            {
-                                if (times_visited[k] == i) {
-                                    // already visited, do nothing
-                                }
-                                else {
-                                    // have not visited, do something
-                                    times_visited[k] = i;
-                                    P->JA[P->IA[i]+index] = k;
-                                    index++;
-                                }
-                        
-                            }
-                        else if( (vec[k]==FGPT)&&(k!=i) ) // if neighbor k of i is a F point and k is not i
-                            {
-                                for(l=S->IA[k];l<S->IA[k+1];l++) // look at the neighbors of k
-                                    {
-                                        h=S->JA[l];
-                                        if(vec[h]==CGPT) // only care about the C point neighbors of k
-                                            {
-                                                if (times_visited[h] == i){
-                                                    // already visited, do nothing
-                                                }
-                                                else {
-                                                    // have not visited, do something
-                                                    times_visited[h] = i;
-                                                    P->JA[P->IA[i]+index] = h;
-                                                    index++;
-                                                }
-                                            }
-                            
-                                    }  // end for(l=S->IA[k];l<S->IA[k+1];l++)
-                        
-                            }  // end if (vec[k]==CGPT)
+                    if (times_visited[k] == i) {
+                        // already visited, do nothing
+                    }
+                    else {
+                        // have not visited, do something
+                        times_visited[k] = i;
+                        P->JA[P->IA[i]+index] = k;
+                        index++;
+                    }
                     
-                    } // end for (j=S->IA[i];j<S->IA[i+1];j++)
                 }
-            else if (vec[i]==ISPT)
+                else if( (vec[k]==FGPT)&&(k!=i) ) // if neighbor k of i is a F point and k is not i
                 {
-                    // if node i is a special F point, do nothing
-                }
-            else // if node i is a C point
-                {
-                    P->JA[P->IA[i]]=i;
-                }
+                    for(l=S->IA[k];l<S->IA[k+1];l++) // look at the neighbors of k
+                    {
+                        h=S->JA[l];
+                        if(vec[h]==CGPT) // only care about the C point neighbors of k
+                        {
+                            if (times_visited[h] == i){
+                                // already visited, do nothing
+                            }
+                            else {
+                                // have not visited, do something
+                                times_visited[h] = i;
+                                P->JA[P->IA[i]+index] = h;
+                                index++;
+                            }
+                        }
+                        
+                    }  // end for(l=S->IA[k];l<S->IA[k+1];l++)
+                    
+                }  // end if (vec[k]==CGPT)
+                
+            } // end for (j=S->IA[i];j<S->IA[i+1];j++)
         }
+        else if (vec[i]==ISPT)
+        {
+            // if node i is a special F point, do nothing
+        }
+        else // if node i is a C point
+        {
+            P->JA[P->IA[i]]=i;
+        }
+    }
     // clea up
     fasp_mem_free(times_visited);
-        
-}
     
+}
+
 /**
  * \fn static INT form_coarse_level_ag (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row,INT interp_type)
  *
@@ -1456,9 +1455,7 @@ static void generate_sparsity_P_standard (dCSRmat *P,
  * \date   09/06/2010
  *
  * Modified by Chensong Zhang on 07/05/2012: Fix a data type bug
- *
- * Modified by Chunsheng Feng, Zheng Li
- * \date  10/13/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/13/2012
  */
 static INT form_coarse_level_ag (dCSRmat *A,
                                  iCSRmat *S,
@@ -1471,11 +1468,11 @@ static INT form_coarse_level_ag (dCSRmat *A,
     INT measure, new_meas;
     INT *vec=vertices->val;
     INT i,j,k,l,m,flag,ci,cj,ck,cl,num_c;
-        
+    
     INT *work = (INT*)fasp_mem_calloc(4*row,sizeof(INT));
     INT *lists = work, *where = lists+row, *lambda = where+row;
     INT *cp_index; //*cp_rindex;
-        
+    
     LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;
     iCSRmat ST,Sh,ShT;
     // Sh is for the strong coupling matrix between temporary CGPTs
@@ -1483,7 +1480,7 @@ static INT form_coarse_level_ag (dCSRmat *A,
     // Snew is for combining the information from S and Sh
     ivector CGPT_index, CGPT_rindex;
     fasp_icsr_trans(S, &ST);
-        
+    
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
@@ -1491,31 +1488,31 @@ static INT form_coarse_level_ag (dCSRmat *A,
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
     vertices->row=A->row;
-        
+    
     /**************************************************/
     /* Coarsening Phase ONE: find temporary coarse level points */
     /**************************************************/
     num_c=form_coarse_level(A, S, vertices, row, interp_type);//return the number of temporary CGPT
-        
+    
     /**************************************************/
     /* Coarsening Phase TWO: find real coarse level points  */
     /**************************************************/
     //find Sh, the strong coupling between coarse grid points w.r.t. (p,2)
     generate_S_rs_ag (A, S, &Sh, vertices, &CGPT_index, &CGPT_rindex);
-        
+    
     fasp_icsr_trans(&Sh, &ShT);
-        
+    
     CGPT_index.row=num_c;
     CGPT_rindex.row=row;
     cp_index=CGPT_index.val;
     // cp_rindex=CGPT_rindex.val;
-        
+    
     // 1. Initialize lambda
 #ifdef _OPENMP
 #pragma omp parallel for if(num_c>OPENMP_HOLDS)
 #endif
     for (ci=0;ci<num_c;++ci) lambda[ci]=ShT.IA[ci+1]-ShT.IA[ci];
-        
+    
     // 2. Set the variables with nonpositvie measure as F-variables
     num_left=0; // number of CGPT in the list LoL
     for (ci=0;ci<num_c;++ci) {
@@ -1549,12 +1546,12 @@ static INT form_coarse_level_ag (dCSRmat *A,
                         }//end if cj<ci
                     }//end if vec[j]!=ISPT
                 }//end for ck
-                    
+                
             }//end if
         }
     }
-        
-        
+    
+    
     // 4. Main loop
     while (num_left>0) {
         // pick $i\in U$ with $\max\lambda_i: C:=C\cup\{i\}, U:=U\\{i\}$
@@ -1566,12 +1563,12 @@ static INT form_coarse_level_ag (dCSRmat *A,
         remove_node(&LoL_head, &LoL_tail, maxlambda, maxnode, lists, where);
         lambda[maxnode]=0;
         col++;//count for the real coarse node after aggressive coarsening
-            
+        
         // for all $j\in S_i^T\cap U: F:=F\cup\{j\}, U:=U\backslash\{j\}$
         for (ci=ShT.IA[maxnode];ci<ShT.IA[maxnode+1];++ci) {
             cj=ShT.JA[ci];
             j=cp_index[cj];
-                
+            
             /* if j is temporary CGPT */
             if (vec[j]==CGPT) {
                 vec[j]=4; // set j as 4--fake CGPT
@@ -1616,7 +1613,7 @@ static INT form_coarse_level_ag (dCSRmat *A,
             } // end if
         } // end for
     } // while
-        
+    
     //organize the variable type
     // make temporary CGPT--1 and fake CGPT--4 become FGPT
     // make real CGPT--3 to be CGPT
@@ -1627,7 +1624,7 @@ static INT form_coarse_level_ag (dCSRmat *A,
         if(vec[i]==CGPT||vec[i]==4)//change all the temporary or fake CGPT into FGPT
             vec[i]=FGPT;
     }
-        
+    
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
@@ -1635,11 +1632,11 @@ static INT form_coarse_level_ag (dCSRmat *A,
         if(vec[i]==3)// if i is real CGPT
             vec[i]=CGPT;
     }
-        
+    
     /* Coarsening Phase THREE: Find all the FGPTs which
-       have not CGPT neighbors within distance of 2.
-       Change them into CGPT to make standard interpolation
-       work  */
+     have not CGPT neighbors within distance of 2.
+     Change them into CGPT to make standard interpolation
+     work  */
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS) private(myid,mybegin,myend,i,flag,j,k,l,m,sub_col)
     for (myid=0; myid<nthreads; myid++) {
@@ -1656,20 +1653,20 @@ static INT form_coarse_level_ag (dCSRmat *A,
                             break;
                         }
                         else if(vec[k]==CGPT)
-                            {
-                                flag=1;
-                                break;
-                            }
+                        {
+                            flag=1;
+                            break;
+                        }
                         else if(vec[k]==FGPT)
-                            {
-                                for (l=S->IA[k]; l<S->IA[k+1]; l++) {
-                                    m=S->JA[l];
-                                    if (vec[m]==CGPT) {
-                                        flag=1;
-                                        break;
-                                    }
-                                }//end for l
-                            }
+                        {
+                            for (l=S->IA[k]; l<S->IA[k+1]; l++) {
+                                m=S->JA[l];
+                                if (vec[m]==CGPT) {
+                                    flag=1;
+                                    break;
+                                }
+                            }//end for l
+                        }
                     }//end for j
                     if (flag==0) {
                         vec[i]=CGPT;
@@ -1686,7 +1683,7 @@ static INT form_coarse_level_ag (dCSRmat *A,
             col += sub_col;
         }
 #endif
-            
+        
         if (LoL_head) {
             list_ptr=LoL_head;
             LoL_head->prev_node=NULL;
@@ -1694,16 +1691,16 @@ static INT form_coarse_level_ag (dCSRmat *A,
             LoL_head = list_ptr->next_node;
             fasp_mem_free(list_ptr);
         }
-            
+        
         fasp_icsr_free(&Sh);
         fasp_icsr_free(&ST);
         fasp_icsr_free(&ShT);
         fasp_mem_free(work);
-            
+        
         return col;
     }
-        
-        
+    
+    
     /*---------------------------------*/
     /*--        End of File          --*/
     /*---------------------------------*/

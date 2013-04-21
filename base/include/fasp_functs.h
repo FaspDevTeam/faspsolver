@@ -26,12 +26,8 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
 
 /*-------- In file: amg_setup_rs.c --------*/
 
-void dCSRmat_Division_Groups(dCSRmat A,
-                             INT *result,
-                             INT *groups);
-
-SHORT fasp_amg_setup_rs (AMG_data *mgl,
-                         AMG_param *param);
+INT fasp_amg_setup_rs (AMG_data *mgl,
+                       AMG_param *param);
 
 INT fasp_amg_setup_rs_omp (AMG_data *mgl,
                            AMG_param *param);
@@ -54,16 +50,16 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
 
 /*-------- In file: amg_solve.c --------*/
 
-INT fasp_amg_solve (AMG_data *mgl, 
+INT fasp_amg_solve (AMG_data *mgl,
                     AMG_param *param);
 
-INT fasp_amg_solve_amli (AMG_data *mgl, 
+INT fasp_amg_solve_amli (AMG_data *mgl,
                          AMG_param *param);
 
-INT fasp_amg_solve_nl_amli (AMG_data *mgl, 
+INT fasp_amg_solve_nl_amli (AMG_data *mgl,
                             AMG_param *param);
 
-void fasp_famg_solve (AMG_data *mgl, 
+void fasp_famg_solve (AMG_data *mgl,
                       AMG_param *param);
 
 
@@ -2172,6 +2168,10 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
                              dvector *diag);
 
 dCSRmat fasp_dcsr_sympat(dCSRmat *A);
+
+void fasp_dcsr_multicoloring(dCSRmat *A,
+                             INT *flags,
+                             INT *groups);
 
 
 /*-------- In file: sparse_csrl.c --------*/

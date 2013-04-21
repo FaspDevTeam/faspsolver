@@ -59,7 +59,7 @@ void print_itinfo (const INT ptrlvl,
                 break;
             }
             printf("---------------------------------------------------------------\n");
-            printf("%6d | %15.6e   | %13.6e  |       -.- \n",iter,relres,absres);
+            printf("%6d | %15.6e   | %13.6e  |       -.-- \n",iter,relres,absres);
         } // end if iter
         
     } // end if ptrlvl

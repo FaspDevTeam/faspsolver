@@ -187,7 +187,7 @@ int main (int argc, const char * argv[])
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
             fasp_param_amg_init(&amgparam);
-            amgparam.interpolation_type = INTERP_ENG_MIN;
+            amgparam.interpolation_type = INTERP_ENG;
             amgparam.maxit       = 20;
             amgparam.tol         = 1e-12;
             amgparam.print_level = print_level;

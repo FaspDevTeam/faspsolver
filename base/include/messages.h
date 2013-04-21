@@ -76,6 +76,7 @@
 //-----------------------------------------------------------------------------------
 #define ERROR_AMG_INTERP_TYPE  -30   /**< unknown interpolation type */
 #define ERROR_AMG_SMOOTH_TYPE  -31   /**< unknown smoother type */
+#define ERROR_AMG_COARSE_TYPE  -32   /**< unknown coarsening type */
 //-----------------------------------------------------------------------------------
 #define ERROR_SOLVER_TYPE      -40   /**< unknown solver type */
 #define ERROR_SOLVER_PRECTYPE  -41   /**< unknow precond type */
@@ -177,7 +178,14 @@
  */
 #define INTERP_REG              1    /**< Direct interpolation */
 #define INTERP_STD              2    /**< Standard interpolation */
-#define INTERP_ENG_MIN          3    /**< energy minimization interp in C */
+#define INTERP_ENG              3    /**< energy minimization interp in C */
+
+/**
+ * \brief Definition of coarsening types
+ */
+#define COARSE_RS               1    /**< Modified classical coarsening */
+#define COARSE_CR               3    /**< Compatible relaxation */
+#define COARSE_AC               4    /**< Aggressive coarsening */
 
 /** 
  * \brief Type of vertices (dofs) for C/F splitting
