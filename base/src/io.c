@@ -1517,6 +1517,51 @@ void fasp_matrix_read (char *filename,
     
 }
 
+void fasp_matrix_read_temp(char *filename,
+                           void *A)
+{
+	INT index, flag;
+	FILE *fp=fopen(filename, "rb");
+    
+	if ( fp==NULL ) {
+		printf("### ERROR: Opening file %s ...\n", filename);
+		fasp_chkerr(ERROR_OPEN_FILE, "fasp_matrix_read");
+	}
+	
+	fread(&index, sizeof(INT), 1, fp);
+    
+    INT endianflag = 1;
+    
+	index = endian_convert_int(index, sizeof(INT), endianflag);
+
+	flag = (INT) index/100;
+	ilength = (int) (index - flag*100)/10;
+	dlength = index%10;
+    
+	switch (flag) {
+        case 1:
+            fasp_dcoo_read_b_s(fp, (dCSRmat *)A, endianflag);
+            break;
+        case 2:
+            fasp_dbsr_read_b_s(fp, (dBSRmat *)A, endianflag);
+            break;
+        case 3:
+            fasp_dstr_read_b_s(fp, (dSTRmat *)A, endianflag);
+            break;
+        case 4:
+            fasp_dcsr_read_b_s(fp, (dCSRmat *)A, endianflag);
+            break;
+        case 5:
+            fasp_dmtx_read_b_s(fp, (dCSRmat *)A, endianflag);
+            break;
+        case 6:
+            fasp_dmtxsym_read_b_s(fp, (dCSRmat *)A, endianflag);
+            break;
+	}
+	fclose(fp);
+}
+
+
 /**
  * \fn fasp_matrix_write (char *filemat, void *A, INT flag)
  *

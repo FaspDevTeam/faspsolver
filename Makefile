@@ -33,7 +33,7 @@
 # manual. If you want to use the GUI of Doxgen instead of command-line
 # (if there is one installed on your system), uncomment the next line:
 #
-# doxywizard=yes
+#doxywizard=no
 #
 # If you want to use the UMFPACK, uncomment the next line: 
 # 
@@ -46,9 +46,9 @@
 #
 ####################  User Defined Compiler Flags  #####################
 #
-# cflags="-funroll-all-loops"
-# cxxflags="-funroll-all-loops"
-# fflags="-funroll-all-loops"
+cflags="-funroll-all-loops"
+cxxflags="-funroll-all-loops"
+fflags="-funroll-all-loops"
 #
 # If you need to generate debug information during building, you should 
 # uncomment the next few lines: 

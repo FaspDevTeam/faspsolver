@@ -489,6 +489,10 @@ typedef struct {
 	REAL max_row_sum;
 	//! truncation threshold
 	REAL truncation_threshold;
+    //! number of levels use aggressive coarsening
+    INT aggressive_level;
+    //! numebr of paths use to determin stongly coupled C points
+    INT aggressive_path;
 	
 	//! strong coupled threshold for aggregate
 	REAL strong_coupled;
@@ -830,6 +834,8 @@ typedef struct {
 	REAL AMG_strong_threshold; /**< strong threshold for coarsening */
 	REAL AMG_truncation_threshold; /**< truncation factor for interpolation */
 	REAL AMG_max_row_sum; /**< maximal row sum */
+    INT AMG_aggressive_level;  /**< number of levels use aggressive coarsening */
+    INT AMG_aggressive_path;    /**< number of paths use to determine strongly coupled C points */
 	
 	//  parameters for smoothed aggregation AMG
 	REAL AMG_strong_coupled; /**< strong coupled threshold for aggregate */

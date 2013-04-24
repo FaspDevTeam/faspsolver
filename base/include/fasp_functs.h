@@ -788,6 +788,9 @@ void fasp_dstr_print (dCSRmat *A);
 void fasp_matrix_read (char *filename,
                        void *A);
 
+void fasp_matrix_read_temp(char *filename,
+                           void *A);
+
 void fasp_matrix_write (char *filename,
 					    void *A,
                         INT  flag);

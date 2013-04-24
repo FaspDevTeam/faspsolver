@@ -67,7 +67,6 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     // set up parameter
     mu0 = DinvAnorminf(Amat, Dinv); // get the inf norm of Dinv*A;
     
-    
     mu0 = 1.0/mu0;
     mu1 = 4.0*mu0;// default set 8;
     smu0 =  sqrt(mu0); smu1 = sqrt(mu1);

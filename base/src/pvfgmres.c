@@ -126,10 +126,21 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     if (b_norm > 0.0)  den_norm = b_norm;
     else               den_norm = r_norm;
     
+    if (b_norm > 0 ) {
+        if (print_level > PRINT_NONE)
+            print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,
+                         norms[iter],norms[iter]/norms[iter-1]);
+    }
+    else {
+        if (print_level > PRINT_NONE)
+            print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],
+                         norms[iter]/norms[iter-1]);
+    }
+    
     epsilon = tol*den_norm;
     
     /* outer iteration cycle */
-    while (iter < MaxIt) {  
+    while (iter < MaxIt) {
         rs[0] = r_norm;
         r_norm_old = r_norm;
         if (r_norm == 0.0) {
@@ -418,10 +429,21 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
     if (b_norm > 0.0)  den_norm = b_norm;
     else               den_norm = r_norm;
     
+    if (b_norm > 0 ) {
+        if (print_level > PRINT_NONE)
+            print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,
+                         norms[iter],norms[iter]/norms[iter-1]);
+    }
+    else {
+        if (print_level > PRINT_NONE)
+            print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],
+                         norms[iter]/norms[iter-1]);
+    }
+    
     epsilon = tol*den_norm;
     
     /* outer iteration cycle */
-    while (iter < MaxIt) {  
+    while (iter < MaxIt) {
         rs[0] = r_norm;
         r_norm_old = r_norm;
         if (r_norm == 0.0) {

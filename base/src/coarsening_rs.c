@@ -20,12 +20,13 @@ void remove_node (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, INT measure, I
 
 // Private routines for RS coarsening
 static INT form_coarse_level (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, INT interp_type);
-static INT form_coarse_level_ag (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row,INT interp_type);
+static INT form_coarse_level_ag (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row,INT interp_type, INT aggressive_path);
 static void generate_S (dCSRmat *A, iCSRmat *S, AMG_param *param);
 static void generate_S_rs (dCSRmat *A, iCSRmat *S, REAL epsilon_str, INT coarsening_type);
 static void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col);
 static void generate_sparsity_P_standard (dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col);
-static void generate_S_rs_ag (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vertices, ivector *CGPT_index, ivector *CGPT_rindex);
+static void generate_S_rs_ag_1 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vertices, ivector *CGPT_index, ivector *CGPT_rindex);
+static void generate_S_rs_ag_2 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vertices, ivector *CGPT_index, ivector *CGPT_rindex);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -53,6 +54,7 @@ static void generate_S_rs_ag (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vert
  *
  * Modified by Xiaozhe Hu 05/23/2011: add strength matrix as an input/output
  * Modified by Chensong Zhang 04/21/2013
+ * Modified by Xiaozhe Hu 04/24/2013: modfiy aggressive coarsening
  *
  */
 INT fasp_amg_coarsening_rs (dCSRmat *A,
@@ -67,6 +69,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     SHORT       interp_type = param->interpolation_type;
     SHORT       status = SUCCESS;
     INT         col = 0;
+    INT         aggressive_path = param->aggressive_path;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_coarsening_rs ...... [Start]\n");
@@ -103,7 +106,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
         case COARSE_CR: // compatible relaxation (Need to be modified --Chensong)
             col = fasp_amg_coarsening_cr(0, A->row-1, A, vertices, param); break;
         case COARSE_AC: // aggressive coarsening
-            col = form_coarse_level_ag(A, S, vertices,row,interp_type); break;
+            col = form_coarse_level_ag(A, S, vertices,row,interp_type,aggressive_path); break;
     }
     
 #if DEBUG_MODE
@@ -678,7 +681,7 @@ static void generate_S_rs (dCSRmat *A,
 }
 
 /**
- * \fn static void generate_S_rs_ag (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vertices, ivector *CGPT_index, ivector *CGPT_rindex)
+ * \fn static void generate_S_rs_ag_1 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vertices, ivector *CGPT_index, ivector *CGPT_rindex)
  *
  * \brief Generate the set of all strong negative or strong absolute couplings, aggressive coarsening A1 or A2
  *
@@ -692,11 +695,11 @@ static void generate_S_rs (dCSRmat *A,
  * \author Kai Yang, Xiaozhe Hu
  * \date   09/06/2010
  */
-static void generate_S_rs_ag (dCSRmat *A,
+static void generate_S_rs_ag_1 (dCSRmat *A,
                               iCSRmat *S,
                               iCSRmat *Sh,
                               ivector *vertices,
-                              ivector * CGPT_index,
+                              ivector *CGPT_index,
                               ivector *CGPT_rindex)
 {
     
@@ -742,6 +745,7 @@ static void generate_S_rs_ag (dCSRmat *A,
     
     // step 1: Find first the structure IA of Sh
     Sh->IA[0]=0;
+    
     for(ci=0;ci<Sh->row;ci++)
     {
         count=0; // count the the number of coarse point that i is strongly connected to w.r.t. (p,2)
@@ -778,11 +782,25 @@ static void generate_S_rs_ag (dCSRmat *A,
                         if(cp_rindex[ck]>=num_c) printf("generate_S_rs_ag: index exceed bound!\n");
                         
                         cck=cp_rindex[ck];
+                        
                         if (times_visited[cck]!=ci+1) {
                             //newly visited
                             times_visited[cck]=ci+1;//marked as strongly connected from ci
                             count++;
                         }
+                        
+                        /*
+                        if (times_visited[cck] == ci+1){
+                            
+                        }
+                        else if (times_visited[cck] == -ci-1){
+                            times_visited[cck]=ci+1;//marked as strongly connected from ci
+                            count++;
+                        }
+                        else{
+                            times_visited[cck]=-ci-1;//marked as visited
+                        }
+                         */
                         
                     }//end if
                 }//end for k
@@ -833,6 +851,7 @@ static void generate_S_rs_ag (dCSRmat *A,
                     {
                         cck=cp_rindex[ck];
                         
+                        
                         if(times_visited[cck]!=ci+1)
                         {
                             //newly visited
@@ -840,6 +859,209 @@ static void generate_S_rs_ag (dCSRmat *A,
                             Sh->JA[count]=cck;
                             count++;
                         }
+                        
+                        /*
+                        if (times_visited[cck] == ci+1){
+                            
+                        }
+                        else if (times_visited[cck] == -ci-1){
+                            times_visited[cck]=ci+1;
+                            Sh->JA[count]=cck;
+                            count++;
+                        }
+                        else {
+                            times_visited[cck]=-ci-1;
+                        }
+                         */
+                        
+                    }//end if
+                }//end for k
+                
+            }//end if
+        }//end for j
+        if(count!=Sh->IA[ci+1]) printf("generate_S_rs_ag: inconsistency in number of nonzeros values\n ");
+    }//end for ci
+    fasp_mem_free(times_visited);
+}
+
+/**
+ * \fn static void generate_S_rs_ag_2 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vertices, ivector *CGPT_index, ivector *CGPT_rindex)
+ *
+ * \brief Generate the set of all strong negative or strong absolute couplings, aggressive coarsening A1 or A2
+ *
+ * \param A                Pointer to the coefficient matrix
+ * \param S                Pointer to the set of all strong couplings matrix
+ * \param Sh               Pointer to the set of all strong couplings matrix between coarse grid points
+ * \param vertices         Pointer to the type of variables--C/F splitting
+ * \param CGPT_index       Pointer to the index of CGPT from the list of CGPT to the list of all points
+ * \param CGPT_rindex      Pointer to the index of CGPT from the list of all points to the list of CGPT
+ *
+ * \author Xiaozhe Hu
+ * \date   04/24/2013
+ *
+ * Note: the difference between generate_S_rs_ag_1 and generate_S_rs_ag_2 is that generate_S_rs_ag_1 uses
+ *       path 1 to detetermine strongly coupled C points while generate_S_rs_ag_2 uses path 2 to
+ *       determinestrongly coupled C points.  Usually generate_S_rs_ag_1 gives more aggresive coarsening
+ */
+static void generate_S_rs_ag_2 (dCSRmat *A,
+                              iCSRmat *S,
+                              iCSRmat *Sh,
+                              ivector *vertices,
+                              ivector *CGPT_index,
+                              ivector *CGPT_rindex)
+{
+    
+    INT   i,j,k;
+    INT   num_c,count,ci,cj,ck,fj,cck;
+    INT  *cp_index, *cp_rindex, *times_visited, *vec=vertices->val;
+    
+    CGPT_rindex->row=A->row;
+    CGPT_rindex->val=(INT*)fasp_mem_calloc(vertices->row,sizeof(INT));// for the reverse indexing of coarse grid points
+    cp_rindex=CGPT_rindex->val;
+    
+    //count the number of coarse grid points
+    num_c=0;
+    for(i=0;i<vertices->row;i++)
+    {
+        if(vec[i]==CGPT) num_c++;
+    }
+    
+    CGPT_index->row=num_c;
+    
+    //generate coarse grid point index
+    CGPT_index->val=(INT *)fasp_mem_calloc(num_c,sizeof(INT));
+    cp_index=CGPT_index->val;
+    j=0;
+    for (i=0;i<vertices->row;i++) {
+        if(vec[i]==CGPT) {
+            cp_index[j]=i;
+            cp_rindex[i]=j;
+            j++;
+        }
+    }
+    
+    Sh->row=num_c;
+    Sh->col=num_c;
+    Sh->val=NULL;
+    Sh->JA=NULL;
+    Sh->IA=(INT*)fasp_mem_calloc(Sh->row+1,sizeof(INT));
+    
+    times_visited=(INT*)fasp_mem_calloc(num_c,sizeof(INT)); // record the number of times some coarse point is visited
+    
+    //for (i=0; i<num_c; i++) times_visited[i]=0;
+    memset(times_visited, 0, sizeof(INT)*num_c);
+    
+    // step 1: Find first the structure IA of Sh
+    Sh->IA[0]=0;
+    
+    for(ci=0;ci<Sh->row;ci++)
+    {
+        count=0; // count the the number of coarse point that i is strongly connected to w.r.t. (p,2)
+        i=cp_index[ci];//find the index of the ci-th coarse grid point
+        
+        //visit all the fine neighbors that ci is strongly connected to
+        for(j=S->IA[i];j<S->IA[i+1];j++)
+        {
+            
+            fj=S->JA[j];
+            
+            if(vec[fj]==CGPT&&fj!=i)
+            {
+                cj=cp_rindex[fj];
+                
+                if(times_visited[cj]!=ci+1)
+                {
+                    //newly visited
+                    times_visited[cj]=ci+1;//marked as strongly connected from ci
+                    count++;
+                }
+                
+            }
+            else if(vec[fj]==FGPT) // it is a fine grid point,
+            {
+                
+                //find all the coarse neighbors that fj is strongly connected to
+                for(k=S->IA[fj];k<S->IA[fj+1];k++)
+                {
+                    ck=S->JA[k];
+                    
+                    if(vec[ck]==CGPT&&ck!=i)// it is a coarse grid point
+                    {
+                        if(cp_rindex[ck]>=num_c) printf("generate_S_rs_ag: index exceed bound!\n");
+                        
+                        cck=cp_rindex[ck];
+                        
+                         if (times_visited[cck] == ci+1){
+                         
+                         }
+                         else if (times_visited[cck] == -ci-1){
+                         times_visited[cck]=ci+1;//marked as strongly connected from ci
+                         count++;
+                         }
+                         else{
+                         times_visited[cck]=-ci-1;//marked as visited
+                         }
+                        
+                    }//end if
+                }//end for k
+                
+            }//end if
+        }//end for j
+        
+        Sh->IA[ci+1]=Sh->IA[ci]+count;
+        
+    }//end for i
+    
+    
+    // step 2: Find JA of Sh
+    
+    for (i=0; i<num_c; i++) times_visited[i]=0; // clean up times_visited
+    Sh->nnz=Sh->IA[Sh->row];
+    Sh->JA=(INT*)fasp_mem_calloc(Sh->nnz,sizeof(INT));
+    
+    for(ci=0;ci<Sh->row;ci++)
+    {
+        i=cp_index[ci]; //find the index of the i-th coarse grid point
+        count=Sh->IA[ci]; //count for coarse points
+        
+        //visit all the fine neighbors that ci is strongly connected to
+        for(j=S->IA[i];j<S->IA[i+1];j++)
+        {
+            fj=S->JA[j];
+            if(vec[fj]==CGPT&&fj!=i)
+            {
+                cj=cp_rindex[fj];
+                if(times_visited[cj]!=ci+1)
+                {
+                    //newly visited
+                    times_visited[cj]=ci+1;
+                    Sh->JA[count]=cj;
+                    count++;
+                }
+                
+                
+            }
+            else if(vec[fj]==FGPT) // it is a fine grid point,
+            {
+                //find all the coarse neighbors that fj is strongly connected to
+                for(k=S->IA[fj];k<S->IA[fj+1];k++)
+                {
+                    ck=S->JA[k];
+                    if(vec[ck]==CGPT&&ck!=i)// it is a coarse grid point
+                    {
+                        cck=cp_rindex[ck];
+                        
+                         if (times_visited[cck] == ci+1){
+                         
+                         }
+                         else if (times_visited[cck] == -ci-1){
+                         times_visited[cck]=ci+1;
+                         Sh->JA[count]=cck;
+                         count++;
+                         }
+                         else {
+                         times_visited[cck]=-ci-1;
+                         }
                         
                     }//end if
                 }//end for k
@@ -1439,7 +1661,7 @@ static void generate_sparsity_P_standard (dCSRmat *P,
 }
 
 /**
- * \fn static INT form_coarse_level_ag (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row,INT interp_type)
+ * \fn static INT form_coarse_level_ag (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row,INT interp_type INT aggressive_path)
  *
  * \brief Find coarse level points by aggressive coarsening
  *
@@ -1456,12 +1678,14 @@ static void generate_sparsity_P_standard (dCSRmat *P,
  *
  * Modified by Chensong Zhang on 07/05/2012: Fix a data type bug
  * Modified by Chunsheng Feng, Zheng Li on 10/13/2012
+ * Modified by Xiaozhe Hu on 04/24/2013: modify aggresive coarsening
  */
 static INT form_coarse_level_ag (dCSRmat *A,
                                  iCSRmat *S,
                                  ivector *vertices,
                                  INT row,
-                                 INT interp_type)
+                                 INT interp_type,
+                                 INT aggressive_path)
 {
     INT col = 0; // initialize col(P): returning output
     unsigned INT maxlambda, maxnode, num_left=0;
@@ -1497,8 +1721,11 @@ static INT form_coarse_level_ag (dCSRmat *A,
     /**************************************************/
     /* Coarsening Phase TWO: find real coarse level points  */
     /**************************************************/
-    //find Sh, the strong coupling between coarse grid points w.r.t. (p,2)
-    generate_S_rs_ag (A, S, &Sh, vertices, &CGPT_index, &CGPT_rindex);
+    //find Sh, the strong coupling between coarse grid points w.r.t. (path,2)
+    if ( aggressive_path < 2)
+        generate_S_rs_ag_1(A, S, &Sh, vertices, &CGPT_index, &CGPT_rindex);
+    else
+        generate_S_rs_ag_2(A, S, &Sh, vertices, &CGPT_index, &CGPT_rindex);
     
     fasp_icsr_trans(&Sh, &ShT);
     

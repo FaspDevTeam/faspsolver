@@ -176,6 +176,8 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->strong_threshold     = 0.5;
     amgparam->truncation_threshold = 0.4;
     amgparam->max_row_sum          = 0.9;
+    amgparam->aggressive_level     = 0;
+    amgparam->aggressive_path      = 1;
     
     // Aggregation AMG specific
     amgparam->strong_coupled       = 0.08;
@@ -304,6 +306,8 @@ void fasp_param_amg_set (AMG_param *param,
     param->strong_threshold     = inparam->AMG_strong_threshold;
     param->truncation_threshold = inparam->AMG_truncation_threshold;
     param->max_row_sum          = inparam->AMG_max_row_sum;
+    param->aggressive_level     = inparam->AMG_aggressive_level;
+    param->aggressive_path      = inparam->AMG_aggressive_path;
     
     param->strong_coupled       = inparam->AMG_strong_coupled;
     param->max_aggregation      = inparam->AMG_max_aggregation;
@@ -609,6 +613,8 @@ void fasp_param_amg_print (AMG_param *param)
                 printf("AMG strong threshold:              %.4f\n", param->strong_threshold);
                 printf("AMG truncation threshold:          %.4f\n", param->truncation_threshold);
                 printf("AMG max row sum:                   %.4f\n", param->max_row_sum);
+                printf("AMG aggressive levels:             %d\n", param->aggressive_level);
+                printf("AMG aggressive path:               %d\n", param->aggressive_path);
                 break;
                 
             default: // SA_AMG or UA_AMG

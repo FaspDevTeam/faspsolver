@@ -38,6 +38,7 @@
  * Modified by Zhiyang Zhou on 11/17/2010.
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle.
  * Modified by Chensong zhang on 09/09/2011: add min dof.
+ * Modified by Xiaozhe Hu on 04/24/2013: aggressive coarsening
  */
 INT fasp_amg_setup_rs (AMG_data *mgl,
                        AMG_param *param)
@@ -45,7 +46,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     const INT print_level = param->print_level;
     const INT m = mgl[0].A.row;
     const INT cycle_type = param->cycle_type;
-    
+        
     // local variables
     INT     mm, size;
     INT     level = 0, status = SUCCESS;
@@ -65,6 +66,9 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     
     // Xiaozhe 02/23/2011: make sure classical AMG will not call fasp_blas_dcsr_mxv_agg
     param->tentative_smooth = 1.0;
+    
+    // Xiaozhe 04/24/2013: if user want to use aggressive coarsening but did not specify number of levels use aggressive coarsening, make sure the apply aggresive coarsening on first level
+    if ( (param->coarsening_type == COARSE_AC) && (param->aggressive_level < 1) ) param->aggressive_level = 1;
     
     // setup AMLI coefficients
     if ( cycle_type == AMLI_CYCLE ) {
@@ -117,6 +121,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         }
         
         /*-- Coarseing and form the structure of interpolation --*/
+        if ( (param->coarsening_type == COARSE_AC) && (level >= param->aggressive_level) ) param->coarsening_type = COARSE_RS;
         status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
         if ( status < 0 ) goto FINISHED;
         
@@ -125,7 +130,10 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         mgl[level].cfmark = fasp_ivec_create(size);
         memcpy(mgl[level].cfmark.val, vertices.val, size*sizeof(INT));
         
-        if ( mgl[level].P.col <= 0 ) break;
+        if ( mgl[level].P.col <= 0 )
+            break;
+        else if ( mgl[level].P.col * 1.5 > mgl[level].A.row )
+            param->coarsening_type = COARSE_RS;
         
         /*-- Form interpolation --*/
         status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);

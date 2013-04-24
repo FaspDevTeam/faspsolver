@@ -406,6 +406,28 @@ void fasp_param_input (char *filenm,
             Input->AMG_interpolation_type = ibuff;
             fgets(buffer,500,fp); // skip rest of line
         }
+        
+        else if (strcmp(buffer,"AMG_aggressive_level")==0) {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%d",&ibuff);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+            Input->AMG_aggressive_level = ibuff;
+            fgets(buffer,500,fp); // skip rest of line
+        }
+        
+        else if (strcmp(buffer,"AMG_aggressive_path")==0) {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%d",&ibuff);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+            Input->AMG_aggressive_path = ibuff;
+            fgets(buffer,500,fp); // skip rest of line
+        }
     
         else if (strcmp(buffer,"AMG_presmooth_iter")==0) {
             val = fscanf(fp,"%s",buffer);
@@ -627,9 +649,9 @@ void fasp_param_input (char *filenm,
          || Input->AMG_strong_threshold<0.0 
          || Input->AMG_strong_threshold>1.0 
          || Input->AMG_truncation_threshold<0.0 
-         || Input->AMG_truncation_threshold>1.0 
+         || Input->AMG_truncation_threshold>1.0
          || Input->AMG_max_row_sum<0
-         || Input->AMG_presmooth_iter<0 
+         || Input->AMG_presmooth_iter<0
          || Input->AMG_postsmooth_iter<0 
          || Input->AMG_strong_coupled<0 
          || Input->AMG_max_aggregation<=0 
