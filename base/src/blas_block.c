@@ -117,6 +117,105 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
 }
 
 /**
+ * \fn void fasp_blas_bdcsr_mxv (block_dCSRmat *A, REAL *x, REAL *y)
+ *
+ * \brief Matrix-vector multiplication y = A*x
+ *
+ * \param A      Pointer to block_dCSR matrix A
+ * \param x      Pointer to array x
+ * \param y      Pointer to array y
+ *
+ * \author Chensong Zhang
+ * \date   04/27/2013
+ */
+void fasp_blas_bdcsr_mxv (block_dCSRmat *A, 
+                          REAL *x, 
+                          REAL *y)
+{
+    // information of A
+    INT brow = A->brow;
+    
+    // local variables
+    register dCSRmat *A11, *A12, *A21, *A22;
+    register dCSRmat *A13, *A23, *A31, *A32, *A33;
+    
+    unsigned INT row1, col1;
+    unsigned INT row2, col2;
+    
+    register REAL *x1, *x2, *y1, *y2;
+    register REAL *x3, *y3;
+    
+    switch (brow) {
+    
+    case 2:
+        A11 = A->blocks[0];
+        A12 = A->blocks[1];
+        A21 = A->blocks[2];
+        A22 = A->blocks[3];
+    
+        row1 = A11->row;
+        col1 = A11->col;
+    
+        x1 = x;
+        x2 = &(x[col1]);
+        y1 = y;
+        y2 = &(y[row1]);
+    
+        // y1 = A11*x1 + A12*x2
+        fasp_blas_dcsr_mxv(A11, x1, y1);
+        fasp_blas_dcsr_aAxpy(1.0, A12, x2, y1); 
+    
+        // y2 = A21*x1 + A22*x2
+        fasp_blas_dcsr_mxv(A21, x1, y2); 
+        fasp_blas_dcsr_aAxpy(1.0, A22, x2, y2); 
+    
+        break;
+    
+    case 3:
+        A11 = A->blocks[0];
+        A12 = A->blocks[1];
+        A13 = A->blocks[2];
+        A21 = A->blocks[3];
+        A22 = A->blocks[4];
+        A23 = A->blocks[5];
+        A31 = A->blocks[6];
+        A32 = A->blocks[7];
+        A33 = A->blocks[8];
+    
+        row1 = A11->row;
+        col1 = A11->col;
+        row2 = A22->row;
+        col2 = A22->col; 
+    
+        x1 = x;
+        x2 = &(x[col1]);
+        x3 = &(x[col1+col2]);
+        y1 = y;
+        y2 = &(y[row1]);
+        y3 = &(y[row1+row2]);
+    
+        // y1 = A11*x1 + A12*x2 + A13*x3 + y1
+        fasp_blas_dcsr_mxv(A11, x1, y1);
+        fasp_blas_dcsr_aAxpy(1.0, A12, x2, y1); 
+        fasp_blas_dcsr_aAxpy(1.0, A13, x3, y1);
+    
+        // y2 = A21*x1 + A22*x2 + A23*x3 + y2
+        fasp_blas_dcsr_mxv(A21, x1, y2); 
+        fasp_blas_dcsr_aAxpy(1.0, A22, x2, y2); 
+        fasp_blas_dcsr_aAxpy(1.0, A23, x3, y2);
+    
+        // y3 = A31*x1 + A32*x2 + A33*x3 + y2
+        fasp_blas_dcsr_mxv(A31, x1, y3); 
+        fasp_blas_dcsr_aAxpy(1.0, A32, x2, y3); 
+        fasp_blas_dcsr_aAxpy(1.0, A33, x3, y3); 
+    
+        break;
+    
+    } // end of switch
+    
+}
+
+/**
  * \fn void fasp_blas_bdbsr_aAxpy (const REAL alpha, block_BSR *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y

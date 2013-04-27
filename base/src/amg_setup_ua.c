@@ -277,7 +277,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
-    if (print_level>PRINT_MOST)    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    if (print_level>PRINT_MOST) printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
     
     fasp_gettime(&setup_start);
     
@@ -371,8 +371,8 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param *par
 #endif
 
 #if WITH_MUMPS
-        /* Setup MUMPS direct solver on the coarsest level */
-        fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, 1);
+    /* Setup MUMPS direct solver on the coarsest level */
+    fasp_solver_mumps_steps(&mgl[max_levels-1].Ac, &mgl[max_levels-1].b, &mgl[max_levels-1].x, 1);
 #endif	
     
     if (print_level>1) {

@@ -12,7 +12,7 @@
 static inline void smat_amxv_nc3(REAL alpha, REAL *a, REAL *b, REAL *c);
 static inline void smat_amxv_nc5(REAL alpha, REAL *a, REAL *b, REAL *c);
 static inline void smat_amxv(REAL alpha, REAL *a, REAL *b,INT n, REAL *c);
-static inline void blkcontr_str(INT start_data, INT start_vecx, INT start_vecy, INT nc, 
+static inline void blkcontr_str(INT start_data, INT start_vecx, INT start_vecy, INT nc,
                                 REAL *data, REAL *x, REAL *y);
 static inline void spaaxpy_str_2D_scalar(REAL alpha, dSTRmat *A, REAL *x, REAL *y);
 static inline void spaaxpy_str_2D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y);
@@ -41,62 +41,85 @@ static inline void spaaxpy_str_general(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  * \author Zhiyang Zhou, Xiaozhe Hu, Shiquan Zhang
  * \date   2010/10/15
  */
-void fasp_blas_dstr_aAxpy (REAL alpha, 
-                           dSTRmat *A, 
-                           REAL *x, 
+void fasp_blas_dstr_aAxpy (REAL alpha,
+                           dSTRmat *A,
+                           REAL *x,
                            REAL *y)
 {
     
     switch (A->nband) {
-
-    case 4:
-    
-        switch (A->nc) {
-        case 1:
-            spaaxpy_str_2D_scalar(alpha, A, x, y);
+            
+        case 4:
+            
+            switch (A->nc) {
+                case 1:
+                    spaaxpy_str_2D_scalar(alpha, A, x, y);
+                    break;
+                    
+                case 3:
+                    spaaxpy_str_2D_nc3(alpha, A, x, y);
+                    break;
+                    
+                case 5:
+                    spaaxpy_str_2D_nc5(alpha, A, x, y);
+                    break;
+                    
+                default:
+                    spaaxpy_str_2D_block(alpha, A, x, y);
+                    break;
+            }
+            
             break;
-    
-        case 3:
-            spaaxpy_str_2D_nc3(alpha, A, x, y);
+            
+        case 6:
+            
+            switch (A->nc) {
+                case 1:
+                    spaaxpy_str_3D_scalar(alpha, A, x, y);
+                    break;
+                    
+                case 3:
+                    spaaxpy_str_3D_nc3(alpha, A, x, y);
+                    break;
+                    
+                case 5:
+                    spaaxpy_str_3D_nc5(alpha, A, x, y);
+                    break;
+                    
+                default:
+                    spaaxpy_str_3D_block(alpha, A, x, y);
+                    break;
+            }
             break;
-    
-        case 5:
-            spaaxpy_str_2D_nc5(alpha, A, x, y);
-            break;
-    
+            
         default:
-            spaaxpy_str_2D_block(alpha, A, x, y);
+            spaaxpy_str_general(alpha, A, x, y);
             break;
-        }
-    
-        break;
-    
-    case 6:
-    
-        switch (A->nc) {
-        case 1:
-            spaaxpy_str_3D_scalar(alpha, A, x, y);
-            break;
-    
-        case 3:
-            spaaxpy_str_3D_nc3(alpha, A, x, y);
-            break;
-    
-        case 5:
-            spaaxpy_str_3D_nc5(alpha, A, x, y);
-            break;
-    
-        default:
-            spaaxpy_str_3D_block(alpha, A, x, y);
-            break;
-        }    
-        break;
-    
-    default:
-        spaaxpy_str_general(alpha, A, x, y);
-        break;
     }
     
+}
+
+/**
+ * \fn void fasp_blas_dstr_mxv (dSTRmat *A, REAL *x, REAL *y)
+ *
+ * \brief Matrix-vector multiplication y = A*x
+ *
+ * \param A       Pointer to dSTRmat matrix
+ * \param x       Pointer to real array
+ * \param y       Pointer to real array
+ *
+ * \author Chensong Zhang
+ * \date   04/27/2013
+ */
+void fasp_blas_dstr_mxv (dSTRmat *A,
+                         REAL *x,
+                         REAL *y)
+{
+    int n = (A->ngrid)*(A->nc)*(A->nc);
+    
+    memset(y, 0, n*sizeof(REAL));
+    
+    fasp_blas_dstr_aAxpy(1.0, A, x, y);
 }
 
 /*!
@@ -106,26 +129,26 @@ void fasp_blas_dstr_aAxpy (REAL alpha,
  *
  * \param A   Pointer to a 'dSTRmat' type matrix A
  * \param B   Pointer to a 'dSTRmat' type matrix B
- * 
+ *
  * \author Shiquan Zhang
  * \date   2010/10/15
  *
  * Modified by Chunsheng Feng, Zheng Li
  * \date   08/30/2012
  */
-INT fasp_dstr_diagscale (dSTRmat *A, 
+INT fasp_dstr_diagscale (dSTRmat *A,
                          dSTRmat *B)
 {
     INT ngrid=A->ngrid, nc=A->nc,nband=A->nband;
     INT nc2=nc*nc, size=ngrid*nc2;
     INT i,j,ic2,nb,nb1;
-
+    
 #ifdef _OPENMP
     //variables for OpenMP
     INT myid, mybegin, myend;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
-
+    
     REAL *diag=(REAL *)fasp_mem_calloc(size,sizeof(REAL));
     
     fasp_array_cp(size,A->diag,diag);
@@ -138,10 +161,10 @@ INT fasp_dstr_diagscale (dSTRmat *A,
 #pragma omp parallel for private(myid, mybegin, myend, i, ic2, j)
         for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, ngrid, &mybegin, &myend);
-            for (i=mybegin; i<myend; i++) {  
+            for (i=mybegin; i<myend; i++) {
                 ic2=i*nc2;
-                for (j=0; j<nc2; j++) { 
-                    if (j/nc == j%nc) B->diag[ic2+j]=1; 
+                for (j=0; j<nc2; j++) {
+                    if (j/nc == j%nc) B->diag[ic2+j]=1;
                     else B->diag[ic2+j]=0;
                 }
             }
@@ -149,36 +172,36 @@ INT fasp_dstr_diagscale (dSTRmat *A,
     }
     else {
 #endif
-        for (i=0;i<ngrid;++i) {  
+        for (i=0;i<ngrid;++i) {
             ic2=i*nc2;
-            for (j=0;j<nc2;++j) { 
-                if (j/nc == j%nc) B->diag[ic2+j]=1; 
+            for (j=0;j<nc2;++j) {
+                if (j/nc == j%nc) B->diag[ic2+j]=1;
                 else B->diag[ic2+j]=0;
             }
         }
 #ifdef _OPENMP
     }
 #endif
-
+    
     for (i=0;i<ngrid;++i) fasp_blas_smat_inv(&(diag[i*nc2]),nc);
     
     for (i=0;i<nband;++i) {
         nb=A->offsets[i];
         nb1=abs(nb);
         if (nb<0) {
-            for (j=0;j<ngrid-nb1;++j) 
+            for (j=0;j<ngrid-nb1;++j)
                 fasp_blas_smat_mul(&(diag[(j+nb1)*nc2]),&(A->offdiag[i][j*nc2]),&(B->offdiag[i][j*nc2]),nc);
         }
         else {
-            for (j=0;j<ngrid-nb1;++j) 
+            for (j=0;j<ngrid-nb1;++j)
                 fasp_blas_smat_mul(&(diag[j*nc2]),&(A->offdiag[i][j*nc2]),&(B->offdiag[i][j*nc2]),nc);
         }
-
+        
     }
     
     fasp_mem_free(diag);
     
-    return (0);    
+    return (0);
 }
 
 /*---------------------------------*/
@@ -194,15 +217,15 @@ INT fasp_dstr_diagscale (dSTRmat *A,
  * \param a       Pointer to the REAL vector which stands a 3*3 matrix
  * \param b       Pointer to the REAL vector with length 3
  * \param c       Pointer to the REAL vector with length 3
- * 
+ *
  * \author Shiquan Zhang
  * \date   2010/10/15
  */
-static inline void smat_amxv_nc3 (REAL alpha, 
-                                  REAL *a, 
-                                  REAL *b, 
+static inline void smat_amxv_nc3 (REAL alpha,
+                                  REAL *a,
+                                  REAL *b,
                                   REAL *c)
-{ 
+{
     c[0] += alpha*(a[0]*b[0] + a[1]*b[1] + a[2]*b[2]);
     c[1] += alpha*(a[3]*b[0] + a[4]*b[1] + a[5]*b[2]);
     c[2] += alpha*(a[6]*b[0] + a[7]*b[1] + a[8]*b[2]);
@@ -217,20 +240,20 @@ static inline void smat_amxv_nc3 (REAL alpha,
  * \param a       Pointer to the REAL vector which stands a 5*5 matrix
  * \param b       Pointer to the REAL vector with length 5
  * \param c       Pointer to the REAL vector with length 5
- * 
+ *
  * \author Shiquan Zhang
  * \date   2010/10/15
  */
-static inline void smat_amxv_nc5 (REAL alpha, 
-                                  REAL *a, 
-                                  REAL *b, 
+static inline void smat_amxv_nc5 (REAL alpha,
+                                  REAL *a,
+                                  REAL *b,
                                   REAL *c)
-{ 
+{
     c[0] += alpha*(a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3] * b[3] + a[4] * b[4]);
     c[1] += alpha*(a[5]*b[0] + a[6]*b[1] + a[7]*b[2] + a[8] * b[3] + a[9] * b[4]);
     c[2] += alpha*(a[10]*b[0] + a[11]*b[1] + a[12]*b[2] + a[13] * b[3] + a[14] * b[4]);
     c[3] += alpha*(a[15]*b[0] + a[16]*b[1] + a[17]*b[2] + a[18] * b[3] + a[19] * b[4]);
-    c[4] += alpha*(a[20]*b[0] + a[21]*b[1] + a[22]*b[2] + a[23] * b[3] + a[24] * b[4]);    
+    c[4] += alpha*(a[20]*b[0] + a[21]*b[1] + a[22]*b[2] + a[23] * b[3] + a[24] * b[4]);
 }
 
 /**
@@ -243,28 +266,28 @@ static inline void smat_amxv_nc5 (REAL alpha,
  * \param b       Pointer to the REAL vector with length n
  * \param c       Pointer to the REAL vector with length n
  * \param n the dimension of the matrix
- * 
+ *
  * \author Shiquan Zhang
  * \date   2010/10/15
  *
  * Modified by Chunsheng Feng, Zheng Li
  * \date   08/30/2012
  */
-static inline void smat_amxv (REAL alpha, 
-                              REAL *a, 
+static inline void smat_amxv (REAL alpha,
+                              REAL *a,
                               REAL *b,
-                              INT n, 
+                              INT n,
                               REAL *c)
-{ 
+{
     INT i,j;
-    INT in;    
-   
+    INT in;
+    
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS(); 
+    INT nthreads = FASP_GET_NUM_THREADS();
 #endif
-
+    
 #ifdef _OPENMP
     if (n > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, in, j)
@@ -276,27 +299,27 @@ static inline void smat_amxv (REAL alpha,
                     c[i] += alpha*a[in+j]*b[j];
             }
         }
-    } 
+    }
     else {
-#endif 
+#endif
         for (i=0;i<n;++i) {
             in = i*n;
             for (j=0;j<n;++j)
                 c[i] += alpha*a[in+j]*b[j];
         }
 #ifdef _OPENMP
-    }	
+    }
 #endif
     return;
 }
 
 /**
- * \fn static void blkcontr_str (INT start_data, INT start_vecx, INT start_vecy, INT nc, 
+ * \fn static void blkcontr_str (INT start_data, INT start_vecx, INT start_vecy, INT nc,
  *                               REAL *data, REAL *x, REAL *y)
  *
- * \brief contribute the block computation 'P*z' to 'y', where 'P' is a nc*nc  
- *        full matrix stored in 'data' from the address 'start_data', and 'z' 
- *        is a nc*1 vector stored in 'x' from the address 'start_vect'. 
+ * \brief contribute the block computation 'P*z' to 'y', where 'P' is a nc*nc
+ *        full matrix stored in 'data' from the address 'start_data', and 'z'
+ *        is a nc*1 vector stored in 'x' from the address 'start_vect'.
  *
  * \param start_data Starting position of data
  * \param start_vecx Starting position of vecx
@@ -305,29 +328,29 @@ static inline void smat_amxv (REAL alpha,
  * \param data       Pointer to matrix data
  * \param x          Pointer to real array x
  * \param y          Pointer to real array y
- * 
+ *
  * \author Shiquan Zhang
  * \date   2010/04/24
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/30/2012
  */
 
-static inline void blkcontr_str (INT start_data, 
-                                 INT start_vecx, 
-                                 INT start_vecy, 
-                                 INT nc, 
-                                 REAL *data, 
-                                 REAL *x, 
+static inline void blkcontr_str (INT start_data,
+                                 INT start_vecx,
+                                 INT start_vecy,
+                                 INT nc,
+                                 REAL *data,
+                                 REAL *x,
                                  REAL *y)
 {
     INT i,j,k,m;
-
+    
 #ifdef _OPENMP
     //variables for OpenMP
     INT myid, mybegin, myend;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
-
+    
 #ifdef _OPENMP
     if (nc > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, k, m, j)
@@ -352,12 +375,12 @@ static inline void blkcontr_str (INT start_data,
             }
         }
 #ifdef _OPENMP
-   }
+    }
 #endif
-} 
+}
 
 /**
- * \fn void spaaxpy_str_2D_scalar (REAL alpha, dSTRmat *A, REAL *x, REAL *y)  
+ * \fn void spaaxpy_str_2D_scalar (REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D structured matrix (nc = 1)
  *
@@ -365,31 +388,31 @@ static inline void blkcontr_str (INT start_data,
  * \param A       Pointer to dSTRmat matrix
  * \param x       Pointer to real array
  * \param y       Pointer to real array
- * 
+ *
  * \author Shiquan Zhang
  * \date   2010/10/15
  *
  * Modified by Chunsheng Feng, Zheng Li on 2012/08/28
  *
- * \note The offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
- *       for nx = 1, but the order can be arbitrary. 
+ * \note The offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny)
+ *       for nx = 1, but the order can be arbitrary.
  */
-static inline void spaaxpy_str_2D_scalar (REAL alpha, 
-                                          dSTRmat *A, 
-                                          REAL *x, 
+static inline void spaaxpy_str_2D_scalar (REAL alpha,
+                                          dSTRmat *A,
+                                          REAL *x,
                                           REAL *y)
 {
     INT i;
     INT idx1, idx2;
     INT end1, end2;
     INT nline;
-
+    
 #ifdef _OPENMP
     //variables for OpenMP
     INT myid, mybegin, myend, idx;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
-
+    
     // information of A
     INT nx = A->nx;
     INT ngrid = A->ngrid;  // number of grids
@@ -411,16 +434,16 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
         }
         else if (A->offsets[i] == 1) {
             offdiag1 = A->offdiag[i];
-        }    
+        }
         else if (A->offsets[i] == -nline) {
             offdiag2 = A->offdiag[i];
-        }    
+        }
         else if (A->offsets[i] == nline) {
             offdiag3 = A->offdiag[i];
-        }    
+        }
         else {
             printf("### WARNING: offsets for 2D scalar case is illegal!\n");
-            spaaxpy_str_general(alpha, A, x, y); 
+            spaaxpy_str_general(alpha, A, x, y);
             return;
         }
     }
@@ -438,8 +461,8 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
             for (i=mybegin; i<myend; i++) {
                 idx1 = i;
                 idx  = i+1;
-                y[idx] += alpha*(offdiag0[idx1]*x[idx1] + diag[idx]*x[idx] + offdiag1[idx]*x[idx+1] + 
-                          offdiag3[idx]*x[idx+nline]);
+                y[idx] += alpha*(offdiag0[idx1]*x[idx1] + diag[idx]*x[idx] + offdiag1[idx]*x[idx+1] +
+                                 offdiag3[idx]*x[idx+nline]);
             }
         }
     }
@@ -447,67 +470,67 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
 #endif
         for (i=1; i<nline; ++i) {
             idx1 = i-1;
-            y[i] += alpha*(offdiag0[idx1]*x[idx1] + diag[i]*x[i] + offdiag1[i]*x[i+1] + 
-                       offdiag3[i]*x[i+nline]);
+            y[i] += alpha*(offdiag0[idx1]*x[idx1] + diag[i]*x[i] + offdiag1[i]*x[i+1] +
+                           offdiag3[i]*x[i+nline]);
         }
 #ifdef _OPENMP
     }
 #endif
-   
+    
 #ifdef _OPENMP
     if (end2-nline > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, i, mybegin, myend, idx1, idx2, idx)
         for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, end2-nline, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
-	        idx  = i+nline;
-                idx1 = idx-1; //idx1 = i-1+nline; 
-                idx2 = i; 
-                y[idx] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
-                          diag[idx]*x[idx] + offdiag1[idx]*x[idx+1] + offdiag3[idx]*x[idx+nline]);
+                idx  = i+nline;
+                idx1 = idx-1; //idx1 = i-1+nline;
+                idx2 = i;
+                y[idx] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] +
+                                 diag[idx]*x[idx] + offdiag1[idx]*x[idx+1] + offdiag3[idx]*x[idx+nline]);
             }
         }
     }
     else {
 #endif
         for (i=nline; i<end2; ++i) {
-            idx1 = i-1; 
-            idx2 = i-nline; 
-            y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
-                       diag[i]*x[i] + offdiag1[i]*x[i+1] + offdiag3[i]*x[i+nline]);
+            idx1 = i-1;
+            idx2 = i-nline;
+            y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] +
+                           diag[i]*x[i] + offdiag1[i]*x[i+1] + offdiag3[i]*x[i+nline]);
         }
 #ifdef _OPENMP
     }
 #endif
-   
+    
 #ifdef _OPENMP
     if (end1-end2 > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, i, mybegin, myend, idx1, idx2, idx)
         for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, end1-end2, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
-                idx  = i+end2;	
-                idx1 = idx-1;     //idx1 = i-1+end2; 
+                idx  = i+end2;
+                idx1 = idx-1;     //idx1 = i-1+end2;
                 idx2 = idx-nline; //idx2 = i-nline+end2;
-                y[idx] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
-                          diag[idx]*x[idx] + offdiag1[idx]*x[idx+1]);
+                y[idx] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] +
+                                 diag[idx]*x[idx] + offdiag1[idx]*x[idx+1]);
             }
         }
     }
     else {
 #endif
         for (i=end2; i<end1; ++i) {
-            idx1 = i-1; 
-            idx2 = i-nline; 
-            y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
-                       diag[i]*x[i] + offdiag1[i]*x[i+1]);
+            idx1 = i-1;
+            idx2 = i-nline;
+            y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] +
+                           diag[i]*x[i] + offdiag1[i]*x[i+1]);
         }
 #ifdef _OPENMP
     }
 #endif
     
-    idx1 = end1-1; 
-    idx2 = end1-nline; 
+    idx1 = end1-1;
+    idx2 = end1-nline;
     y[end1] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + diag[end1]*x[end1]);
     
     return;
@@ -515,7 +538,7 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
 }
 #if 0
 /**
- * \fn void spaaxpy_str_2D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
+ * \fn void spaaxpy_str_2D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D structured matrix (nc = 3)
  *
@@ -523,16 +546,16 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
  * \param A       Pointer to dSTRmat matrix
  * \param x       Pointer to real array
  * \param y       Pointer to real array
- * 
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
- * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
- *       for nx = 1, but the order can be arbitrary. 
+ * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny)
+ *       for nx = 1, but the order can be arbitrary.
  */
-static inline void spaaxpy_str_2D_nc3 (REAL alpha, 
-                                       dSTRmat *A, 
-                                       REAL *x, 
+static inline void spaaxpy_str_2D_nc3 (REAL alpha,
+                                       dSTRmat *A,
+                                       REAL *x,
                                        REAL *y)
 {
     INT i;
@@ -542,22 +565,22 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
     INT nline, nlinenc;
     
     for (i=nline; i<end2; ++i) {
-        idx1 = i-1; 
-        idx2 = i-nline; 
-        y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
+        idx1 = i-1;
+        idx2 = i-nline;
+        y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] +
                        diag[i]*x[i] + offdiag1[i]*x[i+1] + offdiag3[i]*x[i+nline]);
     }
     
     for (i=end2; i<end1; ++i) {
-        idx1 = i-1; 
-        idx2 = i-nline; 
-        y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
+        idx1 = i-1;
+        idx2 = i-nline;
+        y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] +
                        diag[i]*x[i] + offdiag1[i]*x[i+1]);
     }
     
-    idx1 = end1-1; 
-    idx2 = end1-nline; 
-    y[end1] += alpha*(offdiag2[idx2]*x[idx2] + 
+    idx1 = end1-1;
+    idx2 = end1-nline;
+    y[end1] += alpha*(offdiag2[idx2]*x[idx2] +
                       offdiag0[idx1]*x[idx1] + diag[end1]*x[end1]);
     
     return;
@@ -565,7 +588,7 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
 }
 #endif
 /**
- * \fn void spaaxpy_str_2D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
+ * \fn void spaaxpy_str_2D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D structured matrix (nc = 3)
  *
@@ -573,19 +596,19 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
  * \param A       Pointer to dSTRmat matrix
  * \param x       Pointer to real array
  * \param y       Pointer to real array
- * 
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
  * Modified by Chunsheng Feng, Zheng Li
  * \date   2012/08/30
  *
- * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
- *       for nx = 1, but the order can be arbitrary. 
+ * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny)
+ *       for nx = 1, but the order can be arbitrary.
  */
-static inline void spaaxpy_str_2D_nc3 (REAL alpha, 
-                                       dSTRmat *A, 
-                                       REAL *x, 
+static inline void spaaxpy_str_2D_nc3 (REAL alpha,
+                                       dSTRmat *A,
+                                       REAL *x,
                                        REAL *y)
 {
     INT i;
@@ -599,51 +622,51 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
     INT ngrid = A->ngrid;  // number of grids
     INT nc = A->nc;
     INT nband = A->nband;
-
+    
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend, up;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
-
+    
     REAL *diag = A->diag;
     REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL, *offdiag3=NULL;
     
     if (nx == 1)
-        {
-            nline = A->ny;
-        }
+    {
+        nline = A->ny;
+    }
     else
-        {
-            nline = nx;
-        }
+    {
+        nline = nx;
+    }
     nlinenc = nline*nc;
     
     for (i=0; i<nband; ++i)
+    {
+        if (A->offsets[i] == -1)
         {
-            if (A->offsets[i] == -1)
-                {
-                    offdiag0 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == 1)
-                {
-                    offdiag1 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == -nline)
-                {
-                    offdiag2 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nline)
-                {
-                    offdiag3 = A->offdiag[i];
-                }    
-            else
-                {
-                    printf("### WARNING: offsets for 2D of nc=3 case is illegal!\n");
-                    spaaxpy_str_general(alpha, A, x, y); 
-                    return;
-                }
+            offdiag0 = A->offdiag[i];
         }
+        else if (A->offsets[i] == 1)
+        {
+            offdiag1 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nline)
+        {
+            offdiag2 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nline)
+        {
+            offdiag3 = A->offdiag[i];
+        }
+        else
+        {
+            printf("### WARNING: offsets for 2D of nc=3 case is illegal!\n");
+            spaaxpy_str_general(alpha, A, x, y);
+            return;
+        }
+    }
     
     end1 = ngrid-1;
     end2 = ngrid-nline;
@@ -681,17 +704,17 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
             smat_amxv_nc3(alpha, diag+matidx, x+idx, y+idx);
             smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
             smat_amxv_nc3(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
-         }
+        }
 #ifdef _OPENMP
     }
 #endif
- 
+    
 #ifdef _OPENMP
     up = end2 - nx;
     if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, idx, idx1, idx2, matidx, matidx1, matidx2)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);	
+            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 idx = (i+nx)*nc;
                 idx1 = idx-nc;
@@ -725,7 +748,7 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
 #ifdef _OPENMP
     }
 #endif
-
+    
 #ifdef _OPENMP
     up = end1 - end2;
     if (up > OPENMP_HOLDS) {
@@ -779,7 +802,7 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
 }
 
 /**
- * \fn void spaaxpy_str_2D_nc5 (REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
+ * \fn void spaaxpy_str_2D_nc5 (REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D structured matrix (nc = 5)
  *
@@ -787,15 +810,15 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
  * \param A       Pointer to dSTRmat matrix
  * \param x       Pointer to real array
  * \param y       Pointer to real array
- * 
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
  * \author Chensheng Feng, Zheng Li
  * \date   2012/09/01
  *
- * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny) 
- *       for nx = 1, but the order can be arbitrary. 
+ * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny)
+ *       for nx = 1, but the order can be arbitrary.
  */
 static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
 {
@@ -810,7 +833,7 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
     INT ngrid = A->ngrid;  // number of grids
     INT nc = A->nc;
     INT nband = A->nband;
-
+    
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend, up;
@@ -831,30 +854,30 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
     nlinenc = nline*nc;
     
     for (i=0; i<nband; ++i)
+    {
+        if (A->offsets[i] == -1)
         {
-            if (A->offsets[i] == -1)
-                {
-                    offdiag0 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == 1)
-                {
-                    offdiag1 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == -nline)
-                {
-                    offdiag2 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nline)
-                {
-                    offdiag3 = A->offdiag[i];
-                }    
-            else
-                {
-                    printf("### WARNING: offsets for 2D of nc=5 case is illegal!\n");
-                    spaaxpy_str_general(alpha, A, x, y); 
-                    return;
-                }
+            offdiag0 = A->offdiag[i];
         }
+        else if (A->offsets[i] == 1)
+        {
+            offdiag1 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nline)
+        {
+            offdiag2 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nline)
+        {
+            offdiag3 = A->offdiag[i];
+        }
+        else
+        {
+            printf("### WARNING: offsets for 2D of nc=5 case is illegal!\n");
+            spaaxpy_str_general(alpha, A, x, y);
+            return;
+        }
+    }
     
     end1 = ngrid-1;
     end2 = ngrid-nline;
@@ -892,7 +915,7 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
             smat_amxv_nc5(alpha, diag+matidx, x+idx, y+idx);
             smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
             smat_amxv_nc5(alpha, offdiag3+matidx, x+idx+nlinenc, y+idx);
-         }
+        }
 #ifdef _OPENMP
     }
 #endif
@@ -902,7 +925,7 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
     if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, idx, idx1, idx2, matidx, matidx1, matidx2)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);	
+            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 idx = (i+nx)*nc;
                 idx1 = idx-nc;
@@ -936,7 +959,7 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
 #ifdef _OPENMP
     }
 #endif
-
+    
 #ifdef _OPENMP
     up = end1 - end2;
     if (up > OPENMP_HOLDS) {
@@ -991,7 +1014,7 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
 }
 
 /**
- * \fn void spaaxpy_str_2D_block (REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
+ * \fn void spaaxpy_str_2D_block (REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D structured matrix (nc != 1)
  *
@@ -999,16 +1022,16 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  * \param A       Pointer to dSTRmat matrix
  * \param x       Pointer to real array
  * \param y       Pointer to real array
- * 
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1 and (-1,+1,-ny,+ny)
- *       for nx = 1, but the order can be arbitrary. 
+ *       for nx = 1, but the order can be arbitrary.
  */
-static inline void spaaxpy_str_2D_block (REAL alpha, 
-                                         dSTRmat *A, 
-                                         REAL *x, 
+static inline void spaaxpy_str_2D_block (REAL alpha,
+                                         dSTRmat *A,
+                                         REAL *x,
                                          REAL *y)
 {
     INT i;
@@ -1027,40 +1050,40 @@ static inline void spaaxpy_str_2D_block (REAL alpha,
     REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL, *offdiag3=NULL;
     
     if (nx == 1)
-        {
-            nline = A->ny;
-        }
+    {
+        nline = A->ny;
+    }
     else
-        {
-            nline = nx;
-        }
+    {
+        nline = nx;
+    }
     nlinenc = nline*nc;
     
     for (i=0; i<nband; ++i)
+    {
+        if (A->offsets[i] == -1)
         {
-            if (A->offsets[i] == -1)
-                {
-                    offdiag0 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == 1)
-                {
-                    offdiag1 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == -nline)
-                {
-                    offdiag2 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nline)
-                {
-                    offdiag3 = A->offdiag[i];
-                }    
-            else
-                {
-                    printf("### WARNING: offsets for 2D block case is illegal!\n");
-                    spaaxpy_str_general(alpha, A, x, y); 
-                    return;
-                }
+            offdiag0 = A->offdiag[i];
         }
+        else if (A->offsets[i] == 1)
+        {
+            offdiag1 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nline)
+        {
+            offdiag2 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nline)
+        {
+            offdiag3 = A->offdiag[i];
+        }
+        else
+        {
+            printf("### WARNING: offsets for 2D block case is illegal!\n");
+            spaaxpy_str_general(alpha, A, x, y);
+            return;
+        }
+    }
     
     end1 = ngrid-1;
     end2 = ngrid-nline;
@@ -1124,7 +1147,7 @@ static inline void spaaxpy_str_2D_block (REAL alpha,
 }
 
 /**
- * \fn void spaaxpy_str_3D_scalar(REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
+ * \fn void spaaxpy_str_3D_scalar(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded 3D structured matrix (nc = 1)
  *
@@ -1132,16 +1155,16 @@ static inline void spaaxpy_str_2D_block (REAL alpha,
  * \param A       Pointer to dSTRmat matrix
  * \param x       Pointer to real array
  * \param y       Pointer to real array
- * 
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
- * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxy and +nxy, but the order 
- *       can be arbitrary. 
+ * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxy and +nxy, but the order
+ *       can be arbitrary.
  */
-static inline void spaaxpy_str_3D_scalar (REAL alpha, 
-                                          dSTRmat *A, 
-                                          REAL *x, 
+static inline void spaaxpy_str_3D_scalar (REAL alpha,
+                                          dSTRmat *A,
+                                          REAL *x,
                                           REAL *y)
 {
     INT i;
@@ -1154,42 +1177,42 @@ static inline void spaaxpy_str_3D_scalar (REAL alpha,
     INT nband = A->nband;
     
     REAL *diag = A->diag;
-    REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL, 
-        *offdiag3=NULL, *offdiag4=NULL, *offdiag5=NULL;
+    REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL,
+    *offdiag3=NULL, *offdiag4=NULL, *offdiag5=NULL;
     
     for (i=0; i<nband; ++i)
+    {
+        if (A->offsets[i] == -1)
         {
-            if (A->offsets[i] == -1)
-                {
-                    offdiag0 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == 1)
-                {
-                    offdiag1 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == -nx)
-                {
-                    offdiag2 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nx)
-                {
-                    offdiag3 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == -nxy)
-                {
-                    offdiag4 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nxy)
-                {
-                    offdiag5 = A->offdiag[i];
-                }    
-            else
-                {
-                    printf("### WARNING: offsets for 3D scalar case is illegal!\n");
-                    spaaxpy_str_general(alpha, A, x, y); 
-                    return;
-                }
+            offdiag0 = A->offdiag[i];
         }
+        else if (A->offsets[i] == 1)
+        {
+            offdiag1 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nx)
+        {
+            offdiag2 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nx)
+        {
+            offdiag3 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nxy)
+        {
+            offdiag4 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nxy)
+        {
+            offdiag5 = A->offdiag[i];
+        }
+        else
+        {
+            printf("### WARNING: offsets for 3D scalar case is illegal!\n");
+            spaaxpy_str_general(alpha, A, x, y);
+            return;
+        }
+    }
     
     end1 = ngrid-1;
     end2 = ngrid-nx;
@@ -1199,45 +1222,45 @@ static inline void spaaxpy_str_3D_scalar (REAL alpha,
     
     for (i=1; i<nx; ++i) {
         idx1 = i-1;
-        y[i] += alpha*(offdiag0[idx1]*x[idx1] + diag[i]*x[i] + offdiag1[i]*x[i+1] + 
+        y[i] += alpha*(offdiag0[idx1]*x[idx1] + diag[i]*x[i] + offdiag1[i]*x[i+1] +
                        offdiag3[i]*x[i+nx] + offdiag5[i]*x[i+nxy]);
     }
     
     for (i=nx; i<nxy; ++i) {
-        idx1 = i-1; 
-        idx2 = i-nx; 
-        y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + diag[i]*x[i] + 
+        idx1 = i-1;
+        idx2 = i-nx;
+        y[i] += alpha*(offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + diag[i]*x[i] +
                        offdiag1[i]*x[i+1] + offdiag3[i]*x[i+nx] + offdiag5[i]*x[i+nxy]);
     }
     
     for (i=nxy; i<end3; ++i) {
-        idx1 = i-1; 
-        idx2 = i-nx; 
+        idx1 = i-1;
+        idx2 = i-nx;
         idx3 = i-nxy;
-        y[i] += alpha*(offdiag4[idx3]*x[idx3] + offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
+        y[i] += alpha*(offdiag4[idx3]*x[idx3] + offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] +
                        diag[i]*x[i] + offdiag1[i]*x[i+1] + offdiag3[i]*x[i+nx] + offdiag5[i]*x[i+nxy]);
     }
     
     for (i=end3; i<end2; ++i) {
-        idx1 = i-1; 
-        idx2 = i-nx; 
+        idx1 = i-1;
+        idx2 = i-nx;
         idx3 = i-nxy;
-        y[i] += alpha*(offdiag4[idx3]*x[idx3] + offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
+        y[i] += alpha*(offdiag4[idx3]*x[idx3] + offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] +
                        diag[i]*x[i] + offdiag1[i]*x[i+1] + offdiag3[i]*x[i+nx]);
     }
     
     for (i=end2; i<end1; ++i) {
-        idx1 = i-1; 
-        idx2 = i-nx; 
+        idx1 = i-1;
+        idx2 = i-nx;
         idx3 = i-nxy;
-        y[i] += alpha*(offdiag4[idx3]*x[idx3] + offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] + 
+        y[i] += alpha*(offdiag4[idx3]*x[idx3] + offdiag2[idx2]*x[idx2] + offdiag0[idx1]*x[idx1] +
                        diag[i]*x[i] + offdiag1[i]*x[i+1]);
     }
     
-    idx1 = end1-1; 
-    idx2 = end1-nx; 
+    idx1 = end1-1;
+    idx2 = end1-nx;
     idx3 = end1-nxy;
-    y[end1] += alpha*(offdiag4[idx3]*x[idx3] + offdiag2[idx2]*x[idx2] + 
+    y[end1] += alpha*(offdiag4[idx3]*x[idx3] + offdiag2[idx2]*x[idx2] +
                       offdiag0[idx1]*x[idx1] + diag[end1]*x[end1]);
     
     return;
@@ -1245,7 +1268,7 @@ static inline void spaaxpy_str_3D_scalar (REAL alpha,
 }
 
 /**
- * \fn void spaaxpy_str_3D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
+ * \fn void spaaxpy_str_3D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded 3D structured matrix (nc = 3)
  *
@@ -1253,16 +1276,16 @@ static inline void spaaxpy_str_3D_scalar (REAL alpha,
  * \param A       Pointer to dSTRmat matrix
  * \param x       Pointer to real array
  * \param y       Pointer to real array
- * 
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
- * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxyand +nxy, but the order 
- *       can be arbitrary. 
+ * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxyand +nxy, but the order
+ *       can be arbitrary.
  */
-static inline void spaaxpy_str_3D_nc3 (REAL alpha, 
-                                       dSTRmat *A, 
-                                       REAL *x, 
+static inline void spaaxpy_str_3D_nc3 (REAL alpha,
+                                       dSTRmat *A,
+                                       REAL *x,
                                        REAL *y)
 {
     INT i;
@@ -1279,42 +1302,42 @@ static inline void spaaxpy_str_3D_nc3 (REAL alpha,
     INT nband = A->nband;
     
     REAL *diag = A->diag;
-    REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL, 
-        *offdiag3=NULL, *offdiag4=NULL, *offdiag5=NULL;
+    REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL,
+    *offdiag3=NULL, *offdiag4=NULL, *offdiag5=NULL;
     
     for (i=0; i<nband; ++i)
+    {
+        if (A->offsets[i] == -1)
         {
-            if (A->offsets[i] == -1)
-                {
-                    offdiag0 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == 1)
-                {
-                    offdiag1 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == -nx)
-                {
-                    offdiag2 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nx)
-                {
-                    offdiag3 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == -nxy)
-                {
-                    offdiag4 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nxy)
-                {
-                    offdiag5 = A->offdiag[i];
-                }    
-            else
-                {
-                    printf("### WARNING: offsets for 3D of nc=3 case is illegal!\n");
-                    spaaxpy_str_general(alpha, A, x, y); 
-                    return;
-                }
+            offdiag0 = A->offdiag[i];
         }
+        else if (A->offsets[i] == 1)
+        {
+            offdiag1 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nx)
+        {
+            offdiag2 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nx)
+        {
+            offdiag3 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nxy)
+        {
+            offdiag4 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nxy)
+        {
+            offdiag5 = A->offdiag[i];
+        }
+        else
+        {
+            printf("### WARNING: offsets for 3D of nc=3 case is illegal!\n");
+            spaaxpy_str_general(alpha, A, x, y);
+            return;
+        }
+    }
     
     end1 = ngrid-1;
     end2 = ngrid-nx;
@@ -1350,7 +1373,7 @@ static inline void spaaxpy_str_3D_nc3 (REAL alpha,
         smat_amxv_nc3(alpha, offdiag1+matidx, x+idx+nc, y+idx);
         smat_amxv_nc3(alpha, offdiag3+matidx, x+idx+nxnc, y+idx);
         smat_amxv_nc3(alpha, offdiag5+matidx, x+idx+nxync, y+idx);
-    
+        
     }
     
     for (i=nxy; i<end3; ++i) {
@@ -1423,24 +1446,24 @@ static inline void spaaxpy_str_3D_nc3 (REAL alpha,
 }
 
 /**
- * \fn void spaaxpy_str_3D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
+ * \fn void spaaxpy_str_3D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded 3D structured matrix (nc = 5)
- * 
+ *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
  * \param x       Pointer to real array
  * \param y       Pointer to real array
- * 
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
- * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxyand +nxy, but the order 
- *       can be arbitrary. 
+ * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxyand +nxy, but the order
+ *       can be arbitrary.
  */
-static inline void spaaxpy_str_3D_nc5 (REAL alpha, 
-                                       dSTRmat *A, 
-                                       REAL *x, 
+static inline void spaaxpy_str_3D_nc5 (REAL alpha,
+                                       dSTRmat *A,
+                                       REAL *x,
                                        REAL *y)
 {
     INT i;
@@ -1457,42 +1480,42 @@ static inline void spaaxpy_str_3D_nc5 (REAL alpha,
     INT nband = A->nband;
     
     REAL *diag = A->diag;
-    REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL, 
-        *offdiag3=NULL, *offdiag4=NULL, *offdiag5=NULL;
+    REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL,
+    *offdiag3=NULL, *offdiag4=NULL, *offdiag5=NULL;
     
     for (i=0; i<nband; ++i)
+    {
+        if (A->offsets[i] == -1)
         {
-            if (A->offsets[i] == -1)
-                {
-                    offdiag0 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == 1)
-                {
-                    offdiag1 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == -nx)
-                {
-                    offdiag2 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nx)
-                {
-                    offdiag3 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == -nxy)
-                {
-                    offdiag4 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nxy)
-                {
-                    offdiag5 = A->offdiag[i];
-                }    
-            else
-                {
-                    printf("### WARNING: offsets for 3D of nc=5 case is illegal!\n");
-                    spaaxpy_str_general(alpha, A, x, y); 
-                    return;
-                }
+            offdiag0 = A->offdiag[i];
         }
+        else if (A->offsets[i] == 1)
+        {
+            offdiag1 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nx)
+        {
+            offdiag2 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nx)
+        {
+            offdiag3 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nxy)
+        {
+            offdiag4 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nxy)
+        {
+            offdiag5 = A->offdiag[i];
+        }
+        else
+        {
+            printf("### WARNING: offsets for 3D of nc=5 case is illegal!\n");
+            spaaxpy_str_general(alpha, A, x, y);
+            return;
+        }
+    }
     
     end1 = ngrid-1;
     end2 = ngrid-nx;
@@ -1528,7 +1551,7 @@ static inline void spaaxpy_str_3D_nc5 (REAL alpha,
         smat_amxv_nc5(alpha, offdiag1+matidx, x+idx+nc, y+idx);
         smat_amxv_nc5(alpha, offdiag3+matidx, x+idx+nxnc, y+idx);
         smat_amxv_nc5(alpha, offdiag5+matidx, x+idx+nxync, y+idx);
-    
+        
     }
     
     for (i=nxy; i<end3; ++i) {
@@ -1601,7 +1624,7 @@ static inline void spaaxpy_str_3D_nc5 (REAL alpha,
 }
 
 /**
- * \fn void spaaxpy_str_3D_block (REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
+ * \fn void spaaxpy_str_3D_block (REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded 3D structured matrix (nc != 1)
  *
@@ -1609,16 +1632,16 @@ static inline void spaaxpy_str_3D_nc5 (REAL alpha,
  * \param A       Pointer to dSTRmat matrix
  * \param x       Pointer to real array
  * \param y       Pointer to real array
- * 
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
- * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxyand +nxy, but the order 
- *       can be arbitrary. 
+ * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxyand +nxy, but the order
+ *       can be arbitrary.
  */
-static inline void spaaxpy_str_3D_block (REAL alpha, 
-                                         dSTRmat *A, 
-                                         REAL *x, 
+static inline void spaaxpy_str_3D_block (REAL alpha,
+                                         dSTRmat *A,
+                                         REAL *x,
                                          REAL *y)
 {
     INT i;
@@ -1635,42 +1658,42 @@ static inline void spaaxpy_str_3D_block (REAL alpha,
     INT nband = A->nband;
     
     REAL *diag = A->diag;
-    REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL, 
-        *offdiag3=NULL, *offdiag4=NULL, *offdiag5=NULL;
+    REAL *offdiag0=NULL, *offdiag1=NULL, *offdiag2=NULL,
+    *offdiag3=NULL, *offdiag4=NULL, *offdiag5=NULL;
     
     for (i=0; i<nband; ++i)
+    {
+        if (A->offsets[i] == -1)
         {
-            if (A->offsets[i] == -1)
-                {
-                    offdiag0 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == 1)
-                {
-                    offdiag1 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == -nx)
-                {
-                    offdiag2 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nx)
-                {
-                    offdiag3 = A->offdiag[i];
-                }
-            else if (A->offsets[i] == -nxy)
-                {
-                    offdiag4 = A->offdiag[i];
-                }    
-            else if (A->offsets[i] == nxy)
-                {
-                    offdiag5 = A->offdiag[i];
-                }    
-            else
-                {
-                    printf("### WARNING: offsets for 3D block case is illegal!\n");
-                    spaaxpy_str_general(alpha, A, x, y); 
-                    return;
-                }
+            offdiag0 = A->offdiag[i];
         }
+        else if (A->offsets[i] == 1)
+        {
+            offdiag1 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nx)
+        {
+            offdiag2 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nx)
+        {
+            offdiag3 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == -nxy)
+        {
+            offdiag4 = A->offdiag[i];
+        }
+        else if (A->offsets[i] == nxy)
+        {
+            offdiag5 = A->offdiag[i];
+        }
+        else
+        {
+            printf("### WARNING: offsets for 3D block case is illegal!\n");
+            spaaxpy_str_general(alpha, A, x, y);
+            return;
+        }
+    }
     
     end1 = ngrid-1;
     end2 = ngrid-nx;
@@ -1706,7 +1729,7 @@ static inline void spaaxpy_str_3D_block (REAL alpha,
         smat_amxv(alpha, offdiag1+matidx, x+idx+nc, nc, y+idx);
         smat_amxv(alpha, offdiag3+matidx, x+idx+nxnc, nc, y+idx);
         smat_amxv(alpha, offdiag5+matidx, x+idx+nxync, nc, y+idx);
-    
+        
     }
     
     for (i=nxy; i<end3; ++i) {
@@ -1779,7 +1802,7 @@ static inline void spaaxpy_str_3D_block (REAL alpha,
 }
 
 /**
- * \fn void spaaxpy_str_general(REAL alpha, dSTRmat *A, REAL *x, REAL *y) 
+ * \fn void spaaxpy_str_general(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y for general cases
  *
@@ -1787,15 +1810,15 @@ static inline void spaaxpy_str_3D_block (REAL alpha,
  * \param A       Pointer to dSTRmat matrix
  * \param x       Pointer to real array
  * \param y       Pointer to real array
- * 
+ *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  *
  */
-static inline void spaaxpy_str_general (REAL alpha, 
-                                        dSTRmat *A, 
-                                        REAL *x, 
-                                        REAL *y) 
+static inline void spaaxpy_str_general (REAL alpha,
+                                        dSTRmat *A,
+                                        REAL *x,
+                                        REAL *y)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids
@@ -1811,7 +1834,7 @@ static inline void spaaxpy_str_general (REAL alpha,
     INT point = 0;
     INT band  = 0;
     INT width = 0;
-    INT size = nc*ngrid; 
+    INT size = nc*ngrid;
     INT nc2  = nc*nc;
     INT ncw  = 0;
     INT start_data = 0;
@@ -1831,15 +1854,15 @@ static inline void spaaxpy_str_general (REAL alpha,
         y[k] *= beta;
     }
     
-    // y: = y + A*x   
-    if (nc > 1) {    
+    // y: = y + A*x
+    if (nc > 1) {
         // Deal with the diagonal band
         for (block = 0; block < ngrid; ++block) {
             start_data = nc2*block;
             start_vect = nc*block;
             blkcontr_str(start_data,start_vect,start_vect,nc,diag,x,y);
         }
-    
+        
         // Deal with the off-diagonal bands
         for (band = 0; band < nband; band ++) {
             width = offsets[band];
@@ -1848,7 +1871,7 @@ static inline void spaaxpy_str_general (REAL alpha,
                 for (block = 0; block < ngrid+width; ++block) {
                     start_data = nc2*block;
                     start_vecx = nc*block;
-                    start_vecy = start_vecx - ncw; 
+                    start_vecy = start_vecx - ncw;
                     blkcontr_str(start_data,start_vecx,start_vecy,nc,offdiag[band],x,y);
                 }
             }
@@ -1867,9 +1890,9 @@ static inline void spaaxpy_str_general (REAL alpha,
         for (point = 0; point < ngrid; point ++) {
             y[point] += diag[point]*x[point];
         }
-    
+        
         // Deal with the off-diagonal bands
-        for (band = 0; band < nband; band ++) {  
+        for (band = 0; band < nband; band ++) {
             width = offsets[band];
             if (width < 0) {
                 for (point = 0; point < ngrid+width; point ++) {
@@ -1877,7 +1900,7 @@ static inline void spaaxpy_str_general (REAL alpha,
                 }
             }
             else {
-                for (point = 0; point < ngrid-width; point ++) {  
+                for (point = 0; point < ngrid-width; point ++) {
                     y[point] += offdiag[band][point]*x[point+width];
                 }
             }
@@ -1891,7 +1914,7 @@ static inline void spaaxpy_str_general (REAL alpha,
     // y: = alpha*y
     for (k = 0; k < size; ++k) {
         y[k] *= alpha;
-    }            
+    }
 }
 
 /*---------------------------------*/

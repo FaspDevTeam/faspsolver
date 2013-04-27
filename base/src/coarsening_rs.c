@@ -1517,8 +1517,7 @@ static void generate_sparsity_P (dCSRmat *P,
  * \author Kai Yang, Xiaozhe Hu
  * \date   05/21/2012
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/13/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/13/2012
  */
 static void generate_sparsity_P_standard (dCSRmat *P,
                                           iCSRmat *S,
@@ -1892,9 +1891,9 @@ static INT form_coarse_level_ag (dCSRmat *A,
                                     flag=1;
                                     break;
                                 }
-                            }//end for l
+                            } //end for l
                         }
-                    }//end for j
+                    } //end for j
                     if (flag==0) {
                         vec[i]=CGPT;
 #ifdef _OPENMP
@@ -1903,8 +1902,8 @@ static INT form_coarse_level_ag (dCSRmat *A,
                         col++;
 #endif
                     }
-                }//end if
-            }//end for i
+                } //end if
+            } //end for i
 #ifdef _OPENMP
 #pragma omp critical(col)
             col += sub_col;

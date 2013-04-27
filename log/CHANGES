@@ -1,9 +1,13 @@
 File Name: CHANGES
 
-04/21/2013 FASP 1.2.7:
+04/27/2013 FASP 1.2.7:
 - Add a multicoloring scheme.
 - Fix a typo in the AMG output.
 - Add coarsening types to message.h.
+- Add two parameters to control aggressive coarsening levels and paths for strong coupled C points.
+- Update BLAS operations for Block_CSR and STR.
+- Fix a direct solver calling bug for BSR.
+- Fix a VS08 warning.
 
 04/09/2013 FASP 1.2.6:
 - Add NAN check to SPCG.

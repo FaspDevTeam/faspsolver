@@ -25,17 +25,17 @@ solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 %----------------------------------------------%
 
 precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
-itsolver_tol             = 1e-6   % solver tolerance 
-itsolver_maxit           = 1000   % maximal iteration number 
+itsolver_tol             = 1e-8   % solver tolerance 
+itsolver_maxit           = 100    % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
-itsolver_restart         = 20     % restart number for GMRES
+itsolver_restart         = 30     % restart number for GMRES
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
 %----------------------------------------------%
 
 ILU_type                 = 1      % 1 ILUk | 2 ILUt | 3 ILUtp 
-ILU_lfil                 = 0      % level of fill-in for ILUk
+ILU_lfil                 = 1      % level of fill-in for ILUk
 ILU_droptol              = 0.01   % ILU drop tolerance
 ILU_permtol              = 0.001  % permutation toleration for ILUtp
 ILU_relax                = 0.9    % add dropped entries to diagonal with relaxation
@@ -45,7 +45,7 @@ ILU_relax                = 0.9    % add dropped entries to diagonal with relaxat
 %----------------------------------------------%
 
 Schwarz_mmsize           = 200    % max block size
-Schwarz_maxlvl           = 2      % level used to form blocks
+Schwarz_maxlvl           = 3      % level used to form blocks
 Schwarz_type             = 1      % 1 forward | 2 backward | 3 symmetric
 
 %----------------------------------------------%
@@ -62,7 +62,7 @@ AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
 AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
-AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
+AMG_amli_degree          = 1      % degree of the polynomial used by AMLI cycle
 AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
 
 %----------------------------------------------%
@@ -82,13 +82,18 @@ AMG_postsmooth_iter      = 2      % number of postsmoothing sweeps
 % parameters for classical AMG SETUP           %
 %----------------------------------------------%
 
-AMG_coarsening_type      = 1      % 1 Modified RS
+AMG_coarsening_type      = 4      % 1 Modified RS
                                   % 3 Compatible Relaxation
                                   % 4 Aggressive 
-AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
-AMG_strong_threshold     = 0.3    % Strong threshold
-AMG_truncation_threshold = 0.4    % Truncation threshold
+AMG_interpolation_type   = 2      % 1 Direct | 2 Standard | 3 Energy-min
+AMG_strong_threshold     = 0.7    % Strong threshold
+AMG_truncation_threshold = 0.5    % Truncation threshold
 AMG_max_row_sum          = 0.9    % Max row sum
+AMG_aggressive_level	 = 1	  % number of levels use aggressive coarsening 
+				  % (only works when AMG_coarsening_type = 4)
+AMG_aggressive_path	 = 1	  % number of paths use to determine strongly coupled C points 
+				  % (only works when AMG_coarsening_type = 4)
+				  % (should be 1 or 2, usually 1 give more aggressive coarsening ratio)
 
 %----------------------------------------------%
 % parameters for aggregation-type AMG SETUP    %

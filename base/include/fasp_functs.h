@@ -209,6 +209,10 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
                             REAL *x, 
                             REAL *y);
 
+void fasp_blas_bdcsr_mxv (block_dCSRmat *A, 
+                          REAL *x, 
+                          REAL *y);
+
 void fasp_blas_bdbsr_aAxpy (const REAL alpha, 
                             block_BSR *A, 
                             REAL *x, 
@@ -471,12 +475,16 @@ void fasp_blas_smat_ymAx_ns (REAL *A,
 
 /*-------- In file: blas_str.c --------*/
 
-void fasp_blas_dstr_aAxpy (REAL alpha, 
-                           dSTRmat *A, 
-                           REAL *x, 
+void fasp_blas_dstr_aAxpy (REAL alpha,
+                           dSTRmat *A,
+                           REAL *x,
                            REAL *y);
 
-INT fasp_dstr_diagscale (dSTRmat *A, 
+void fasp_blas_dstr_mxv (dSTRmat *A,
+                         REAL *x,
+                         REAL *y);
+
+INT fasp_dstr_diagscale (dSTRmat *A,
                          dSTRmat *B);
 
 
@@ -1013,14 +1021,6 @@ void fasp_solver_mgrecur (AMG_data *mgl,
 
 
 /*-------- In file: mxv_matfree.c --------*/
-
-void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
-                          REAL *x,
-                          REAL *y);
-
-void fasp_blas_dstr_mxv (dSTRmat *A,
-                         REAL *x,
-                         REAL *y);
 
 void fasp_blas_mxv_csr (void *A,
                         REAL *x,
