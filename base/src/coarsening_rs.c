@@ -15,14 +15,13 @@
 #include "linklist.inl"
 
 // Private routines for RS coarsening
-static INT form_coarse_level (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, INT interp_type);
-static INT form_coarse_level_ag (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row,INT interp_type, INT aggressive_path);
-static void generate_S (dCSRmat *A, iCSRmat *S, AMG_param *param);
-static void generate_S_rs (dCSRmat *A, iCSRmat *S, REAL epsilon_str, INT coarsening_type);
-static void generate_sparsity_P(dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col);
-static void generate_sparsity_P_standard (dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col);
-static void generate_S_rs_ag_1 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vertices, ivector *CGPT_index, ivector *CGPT_rindex);
-static void generate_S_rs_ag_2 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vertices, ivector *CGPT_index, ivector *CGPT_rindex);
+static INT  form_coarse_level    (dCSRmat *, iCSRmat *, ivector *, INT, INT);
+static INT  form_coarse_level_ag (dCSRmat *, iCSRmat *, ivector *, INT, INT, INT);
+static void generate_S    (dCSRmat *, iCSRmat *, AMG_param *);
+static void generate_sparsity_P     (dCSRmat *, iCSRmat *, ivector *, INT, INT);
+static void generate_sparsity_P_std (dCSRmat *, iCSRmat *, ivector *, INT, INT);
+static void generate_S_rs_ag_1 (dCSRmat *, iCSRmat *, iCSRmat *, ivector *, ivector *, ivector *);
+static void generate_S_rs_ag_2 (dCSRmat *, iCSRmat *, iCSRmat *, ivector *, ivector *, ivector *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -125,7 +124,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     switch ( interp_type ) {
             
         case INTERP_STD: // standard interpolaiton
-            generate_sparsity_P_standard (P, S, vertices, row, col);
+            generate_sparsity_P_std (P, S, vertices, row, col);
             break;
             
         default: // direct or energy minimization interpolaiton
@@ -310,6 +309,7 @@ static void generate_S (dCSRmat *A,
     fasp_dvec_free(&diag);
 }
 
+#if 0 // Will be removed later --Chensong
 /**
  * \fn static void generate_S_rs (dCSRmat *A, iCSRmat *S, REAL epsilon_str, INT coarsening_type)
  *
@@ -468,6 +468,7 @@ static void generate_S_rs (dCSRmat *A,
     
     fasp_mem_free(amax);
 }
+#endif
 
 /**
  * \fn static void generate_S_rs_ag_1 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *vertices, ivector *CGPT_index, ivector *CGPT_rindex)
@@ -1293,7 +1294,7 @@ static void generate_sparsity_P (dCSRmat *P,
 }
 
 /**
- * \fn static void generate_sparsity_P_standard (dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col)
+ * \fn static void generate_sparsity_P_std (dCSRmat *P, iCSRmat *S, ivector *vertices, INT row, INT col)
  *
  * \brief Find sparsity pattern of P for standard interpolation
  *
@@ -1308,11 +1309,11 @@ static void generate_sparsity_P (dCSRmat *P,
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/13/2012
  */
-static void generate_sparsity_P_standard (dCSRmat *P,
-                                          iCSRmat *S,
-                                          ivector *vertices,
-                                          INT row,
-                                          INT col)
+static void generate_sparsity_P_std (dCSRmat *P,
+                                     iCSRmat *S,
+                                     ivector *vertices,
+                                     INT row,
+                                     INT col)
 {
     INT i,j,k,l,h,index=0;
     INT *vec=vertices->val;
@@ -1449,7 +1450,8 @@ static void generate_sparsity_P_standard (dCSRmat *P,
 }
 
 /**
- * \fn static INT form_coarse_level_ag (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row,INT interp_type INT aggressive_path)
+ * \fn static INT form_coarse_level_ag (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row,
+ *                                      INT interp_type INT aggressive_path)
  *
  * \brief Find coarse level points by aggressive coarsening
  *
@@ -1457,7 +1459,7 @@ static void generate_sparsity_P_standard (dCSRmat *P,
  * \param S             Pointer to the set of all strong couplings matrix
  * \param vertices      Pointer to the type of variables
  * \param row           Number of rows of P
- * \param interp_type   type of interpolation
+ * \param interp_type   Type of interpolation
  *
  * \return Number of cols of P
  *
@@ -1499,18 +1501,19 @@ static INT form_coarse_level_ag (dCSRmat *A,
     INT sub_col = 0;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
+    
     vertices->row=A->row;
     
     /**************************************************/
     /* Coarsening Phase ONE: find temporary coarse level points */
     /**************************************************/
-    num_c=form_coarse_level(A, S, vertices, row, interp_type);//return the number of temporary CGPT
+    num_c = form_coarse_level(A, S, vertices, row, interp_type);//return the number of temporary CGPT
     
     /**************************************************/
     /* Coarsening Phase TWO: find real coarse level points  */
     /**************************************************/
     //find Sh, the strong coupling between coarse grid points w.r.t. (path,2)
-    if ( aggressive_path < 2)
+    if ( aggressive_path < 2 )
         generate_S_rs_ag_1(A, S, &Sh, vertices, &CGPT_index, &CGPT_rindex);
     else
         generate_S_rs_ag_2(A, S, &Sh, vertices, &CGPT_index, &CGPT_rindex);
