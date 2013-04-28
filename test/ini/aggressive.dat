@@ -89,11 +89,10 @@ AMG_interpolation_type   = 2      % 1 Direct | 2 Standard | 3 Energy-min
 AMG_strong_threshold     = 0.7    % Strong threshold
 AMG_truncation_threshold = 0.5    % Truncation threshold
 AMG_max_row_sum          = 0.9    % Max row sum
-AMG_aggressive_level	 = 1	  % number of levels use aggressive coarsening 
-				  % (only works when AMG_coarsening_type = 4)
-AMG_aggressive_path	 = 1	  % number of paths use to determine strongly coupled C points 
-				  % (only works when AMG_coarsening_type = 4)
-				  % (should be 1 or 2, usually 1 give more aggressive coarsening ratio)
+AMG_aggressive_level	 = 1      % number of levels using aggressive coarsening 
+AMG_aggressive_path      = 1      % number of paths used to determine strong-coupled C points: 1 or 2
+                                  % only works when AMG_coarsening_type = 4
+                                  % usually 1 gives more aggressive coarsening ratio
 
 %----------------------------------------------%
 % parameters for aggregation-type AMG SETUP    %

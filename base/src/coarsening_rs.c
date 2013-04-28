@@ -12,11 +12,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-// These linked-list operations are adapted from hypre 2.0
-static LinkList create_node (INT Item);
-static void dispose_node (LinkList node_ptr);
-void enter_list (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, INT measure, INT index, INT *lists, INT *where);
-void remove_node (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr, INT measure, INT index, INT *lists, INT *where);
+#include "linklist.inl"
 
 // Private routines for RS coarsening
 static INT form_coarse_level (dCSRmat *A, iCSRmat *S, ivector *vertices, INT row, INT interp_type);
@@ -40,9 +36,6 @@ static void generate_S_rs_ag_2 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *ve
  *
  * \param A          Pointer to the coefficient matrix, the index starts from zero
  * \param vertices   Pointer to the indicator ivector of the C/F splitting of the vertices
- *                        0: fine gird points
- *                        1: coarse grid points
- *                        2: isolated grid points
  * \param P          Pointer to the interpolation matrix (nonzero pattern only)
  * \param S          Pointer to strength matrix
  * \param param      Pointer to AMG parameters
@@ -52,9 +45,12 @@ static void generate_S_rs_ag_2 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, ivector *ve
  * \author Xuehai Huang, Chensong Zhang, Xiaozhe Hu, Ludmil Zikatanov
  * \date   09/06/2010
  *
+ * \note vertices = 0: fine gird, 1: coarse grid, 2: isolated points
+ *
  * Modified by Xiaozhe Hu 05/23/2011: add strength matrix as an input/output
  * Modified by Chensong Zhang 04/21/2013
  * Modified by Xiaozhe Hu 04/24/2013: modfiy aggressive coarsening
+ * Mofified by Chensong Zhang 04/28/2013: remove linked list
  *
  */
 INT fasp_amg_coarsening_rs (dCSRmat *A,
@@ -76,49 +72,66 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
 #endif
     
 #if DEBUG_MODE
-    printf("### DEBUG: Step 1. form dependent set S ......\n");
+    printf("### DEBUG: Step 1. Form dependent set S ......\n");
 #endif
     
     // Step 1: generate S
-    switch (coarsening_type) {
+    switch ( coarsening_type ) {
+            
         case COARSE_RS: // modified Ruge-Stuben
             generate_S(A, S, param); break;
-        case COARSE_CR: // compatible relaxation: use S from modified Ruge-Stuben
-            generate_S(A, S, param); break;
+            
         case COARSE_AC: // aggressive coarsening: use S from modified Ruge-Stuben
             interp_type = INTERP_STD; // make sure standard interp is used
             generate_S(A, S, param); break;
+            
+        case COARSE_CR: // compatible relaxation: use S from modified Ruge-Stuben
+            generate_S(A, S, param); break;
+            
         default:
             printf("### ERROR: Coarsening type %d is not recognized!\n", coarsening_type);
             return ERROR_AMG_COARSE_TYPE;
+            
     }
     
     if ( S->nnz == 0 ) return RUN_FAIL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: Step 2. choose C points ......\n");
+    printf("### DEBUG: Step 2. Choose C points ......\n");
 #endif
     
     // Step 2: standard coarsening algorithm
-    switch (coarsening_type) {
+    switch ( coarsening_type ) {
+            
         case COARSE_RS: // modified Ruge-Stuben
-            col = form_coarse_level(A, S, vertices, row, interp_type); break;
-        case COARSE_CR: // compatible relaxation (Need to be modified --Chensong)
-            col = fasp_amg_coarsening_cr(0, A->row-1, A, vertices, param); break;
+            col = form_coarse_level(A, S, vertices, row, interp_type);
+            break;
+            
         case COARSE_AC: // aggressive coarsening
-            col = form_coarse_level_ag(A, S, vertices,row,interp_type,aggressive_path); break;
+            col = form_coarse_level_ag(A, S, vertices, row, interp_type, aggressive_path);
+            break;
+            
+        case COARSE_CR: // compatible relaxation (Need to be modified --Chensong)
+            col = fasp_amg_coarsening_cr(0, A->row-1, A, vertices, param);
+            break;
+            
     }
     
 #if DEBUG_MODE
-    printf("### DEBUG: Step 3. find support of C points ......\n");
+    printf("### DEBUG: Step 3. Find support of C points ......\n");
 #endif
     
     // Step 3: generate sparsity pattern of P
-    switch (interp_type){
+    switch ( interp_type ) {
+            
         case INTERP_STD: // standard interpolaiton
-            generate_sparsity_P_standard (P, S, vertices, row, col); break;
-        default: // direct interpolation & energy minimization interpolaiton
-            generate_sparsity_P (P, S, vertices, row, col); break;
+            generate_sparsity_P_standard (P, S, vertices, row, col);
+            break;
+            
+        default: // direct or energy minimization interpolaiton
+            generate_sparsity_P (P, S, vertices, row, col);
+            break;
+            
     }
     
 #if DEBUG_MODE
@@ -135,230 +148,6 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
-
-#define LIST_HEAD -1 /**< head of the linked list */
-#define LIST_TAIL -2 /**< tail of the linked list */
-
-/**
- * \fn static void dispose_node( LinkList node_ptr )
- *
- * \brief Free memory space used by node_ptr
- *
- * \param node_ptr   Pointer to the node in linked list
- *
- * \author Xuehai Huang
- * \date   09/06/2009
- */
-static void dispose_node (LinkList node_ptr)
-{
-    if (node_ptr) fasp_mem_free( node_ptr );
-}
-
-/**
- * \fn static void remove_node (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
- *                              INT measure, INT index, INT *lists, INT *where)
- *
- * \brief Removes a point from the lists
- *
- * \author Xuehai Huang
- * \date   09/06/2009
- */
-void remove_node (LinkList *LoL_head_ptr,
-                  LinkList *LoL_tail_ptr,
-                  INT measure,
-                  INT index,
-                  INT *lists,
-                  INT *where)
-{
-    LinkList LoL_head = *LoL_head_ptr;
-    LinkList LoL_tail = *LoL_tail_ptr;
-    LinkList list_ptr = LoL_head;
-    
-    do {
-        if (measure == list_ptr->data) {
-            /* point to be removed is only point on list,
-             which must be destroyed */
-            if (list_ptr->head == index && list_ptr->tail == index) {
-                /* removing only list, so num_left better be 0! */
-                if (list_ptr == LoL_head && list_ptr == LoL_tail) {
-                    LoL_head = NULL;
-                    LoL_tail = NULL;
-                    dispose_node(list_ptr);
-                    
-                    *LoL_head_ptr = LoL_head;
-                    *LoL_tail_ptr = LoL_tail;
-                    return;
-                }
-                else if (LoL_head == list_ptr) { /*removing 1st (max_measure) list */
-                    list_ptr -> next_node -> prev_node = NULL;
-                    LoL_head = list_ptr->next_node;
-                    dispose_node(list_ptr);
-                    
-                    *LoL_head_ptr = LoL_head;
-                    *LoL_tail_ptr = LoL_tail;
-                    return;
-                }
-                else if (LoL_tail == list_ptr) { /* removing last list */
-                    list_ptr -> prev_node -> next_node = NULL;
-                    LoL_tail = list_ptr->prev_node;
-                    dispose_node(list_ptr);
-                    
-                    *LoL_head_ptr = LoL_head;
-                    *LoL_tail_ptr = LoL_tail;
-                    return;
-                }
-                else {
-                    list_ptr -> next_node -> prev_node = list_ptr -> prev_node;
-                    list_ptr -> prev_node -> next_node = list_ptr -> next_node;
-                    dispose_node(list_ptr);
-                    
-                    *LoL_head_ptr = LoL_head;
-                    *LoL_tail_ptr = LoL_tail;
-                    return;
-                }
-            }
-            else if (list_ptr->head == index) { /* index is head of list */
-                list_ptr->head = lists[index];
-                where[lists[index]] = LIST_HEAD;
-                return;
-            }
-            else if (list_ptr->tail == index) { /* index is tail of list */
-                list_ptr->tail = where[index];
-                lists[where[index]] = LIST_TAIL;
-                return;
-            }
-            else { /* index is in middle of list */
-                lists[where[index]] = lists[index];
-                where[lists[index]] = where[index];
-                return;
-            }
-        }
-        list_ptr = list_ptr -> next_node;
-    } while (list_ptr != NULL);
-    
-    printf("No such list!\n");
-    return;
-}
-
-/**
- * \fn static LinkList create_node (INT Item)
- *
- * \brief Create an node using Item for its data field
- *
- * \author Xuehai Huang
- * \date   09/06/2009
- */
-static LinkList create_node (INT Item)
-{
-    LinkList new_node_ptr;
-    
-    /* Allocate memory space for the new node.
-     * return with error if no space available
-     */
-    new_node_ptr = (LinkList) fasp_mem_calloc(1,sizeof(ListElement));
-    
-    new_node_ptr -> data = Item;
-    new_node_ptr -> next_node = NULL;
-    new_node_ptr -> prev_node = NULL;
-    new_node_ptr -> head = LIST_TAIL;
-    new_node_ptr -> tail = LIST_HEAD;
-    
-    return (new_node_ptr);
-}
-
-/**
- * \fn static void enter_list (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
- *                             INT measure, INT index, INT *lists, INT *where)
- *
- * \brief Places point in new list
- *
- * \author Xuehai Huang
- * \date   09/06/2009
- */
-void enter_list (LinkList *LoL_head_ptr,
-                 LinkList *LoL_tail_ptr,
-                 INT measure,
-                 INT index,
-                 INT *lists,
-                 INT *where)
-{
-    LinkList   LoL_head = *LoL_head_ptr;
-    LinkList   LoL_tail = *LoL_tail_ptr;
-    LinkList   list_ptr;
-    LinkList   new_ptr;
-    
-    INT        old_tail;
-    
-    list_ptr =  LoL_head;
-    
-    if (LoL_head == NULL) { /* no lists exist yet */
-        new_ptr = create_node(measure);
-        new_ptr->head = index;
-        new_ptr->tail = index;
-        lists[index] = LIST_TAIL;
-        where[index] = LIST_HEAD;
-        LoL_head = new_ptr;
-        LoL_tail = new_ptr;
-        
-        *LoL_head_ptr = LoL_head;
-        *LoL_tail_ptr = LoL_tail;
-        return;
-    }
-    else {
-        do {
-            if (measure > list_ptr->data) {
-                new_ptr = create_node(measure);
-                
-                new_ptr->head = index;
-                new_ptr->tail = index;
-                
-                lists[index] = LIST_TAIL;
-                where[index] = LIST_HEAD;
-                
-                if ( list_ptr->prev_node != NULL) {
-                    new_ptr->prev_node            = list_ptr->prev_node;
-                    list_ptr->prev_node->next_node = new_ptr;
-                    list_ptr->prev_node           = new_ptr;
-                    new_ptr->next_node            = list_ptr;
-                }
-                else {
-                    new_ptr->next_node  = list_ptr;
-                    list_ptr->prev_node = new_ptr;
-                    new_ptr->prev_node  = NULL;
-                    LoL_head = new_ptr;
-                }
-                
-                *LoL_head_ptr = LoL_head;
-                *LoL_tail_ptr = LoL_tail;
-                return;
-            }
-            else if (measure == list_ptr->data) {
-                old_tail = list_ptr->tail;
-                lists[old_tail] = index;
-                where[index] = old_tail;
-                lists[index] = LIST_TAIL;
-                list_ptr->tail = index;
-                return;
-            }
-            
-            list_ptr = list_ptr->next_node;
-        } while (list_ptr != NULL);
-        
-        new_ptr = create_node(measure);
-        new_ptr->head = index;
-        new_ptr->tail = index;
-        lists[index] = LIST_TAIL;
-        where[index] = LIST_HEAD;
-        LoL_tail->next_node = new_ptr;
-        new_ptr->prev_node = LoL_tail;
-        new_ptr->next_node = NULL;
-        LoL_tail = new_ptr;
-        
-        *LoL_head_ptr = LoL_head;
-        *LoL_tail_ptr = LoL_tail;
-        return;
-    }
-}
 
 /**
  * \fn static void generate_S (dCSRmat *A, iCSRmat *S, AMG_param *param)
@@ -696,11 +485,11 @@ static void generate_S_rs (dCSRmat *A,
  * \date   09/06/2010
  */
 static void generate_S_rs_ag_1 (dCSRmat *A,
-                              iCSRmat *S,
-                              iCSRmat *Sh,
-                              ivector *vertices,
-                              ivector *CGPT_index,
-                              ivector *CGPT_rindex)
+                                iCSRmat *S,
+                                iCSRmat *Sh,
+                                ivector *vertices,
+                                ivector *CGPT_index,
+                                ivector *CGPT_rindex)
 {
     
     INT   i,j,k;
@@ -790,16 +579,16 @@ static void generate_S_rs_ag_1 (dCSRmat *A,
                         }
                         
                         /*
-                        if (times_visited[cck] == ci+1){
-                            
-                        }
-                        else if (times_visited[cck] == -ci-1){
-                            times_visited[cck]=ci+1;//marked as strongly connected from ci
-                            count++;
-                        }
-                        else{
-                            times_visited[cck]=-ci-1;//marked as visited
-                        }
+                         if (times_visited[cck] == ci+1){
+                         
+                         }
+                         else if (times_visited[cck] == -ci-1){
+                         times_visited[cck]=ci+1;//marked as strongly connected from ci
+                         count++;
+                         }
+                         else{
+                         times_visited[cck]=-ci-1;//marked as visited
+                         }
                          */
                         
                     }//end if
@@ -861,17 +650,17 @@ static void generate_S_rs_ag_1 (dCSRmat *A,
                         }
                         
                         /*
-                        if (times_visited[cck] == ci+1){
-                            
-                        }
-                        else if (times_visited[cck] == -ci-1){
-                            times_visited[cck]=ci+1;
-                            Sh->JA[count]=cck;
-                            count++;
-                        }
-                        else {
-                            times_visited[cck]=-ci-1;
-                        }
+                         if (times_visited[cck] == ci+1){
+                         
+                         }
+                         else if (times_visited[cck] == -ci-1){
+                         times_visited[cck]=ci+1;
+                         Sh->JA[count]=cck;
+                         count++;
+                         }
+                         else {
+                         times_visited[cck]=-ci-1;
+                         }
                          */
                         
                     }//end if
@@ -904,11 +693,11 @@ static void generate_S_rs_ag_1 (dCSRmat *A,
  *       determinestrongly coupled C points.  Usually generate_S_rs_ag_1 gives more aggresive coarsening
  */
 static void generate_S_rs_ag_2 (dCSRmat *A,
-                              iCSRmat *S,
-                              iCSRmat *Sh,
-                              ivector *vertices,
-                              ivector *CGPT_index,
-                              ivector *CGPT_rindex)
+                                iCSRmat *S,
+                                iCSRmat *Sh,
+                                ivector *vertices,
+                                ivector *CGPT_index,
+                                ivector *CGPT_rindex)
 {
     
     INT   i,j,k;
@@ -991,16 +780,16 @@ static void generate_S_rs_ag_2 (dCSRmat *A,
                         
                         cck=cp_rindex[ck];
                         
-                         if (times_visited[cck] == ci+1){
-                         
-                         }
-                         else if (times_visited[cck] == -ci-1){
-                         times_visited[cck]=ci+1;//marked as strongly connected from ci
-                         count++;
-                         }
-                         else{
-                         times_visited[cck]=-ci-1;//marked as visited
-                         }
+                        if (times_visited[cck] == ci+1){
+                            
+                        }
+                        else if (times_visited[cck] == -ci-1){
+                            times_visited[cck]=ci+1;//marked as strongly connected from ci
+                            count++;
+                        }
+                        else{
+                            times_visited[cck]=-ci-1;//marked as visited
+                        }
                         
                     }//end if
                 }//end for k
@@ -1051,17 +840,17 @@ static void generate_S_rs_ag_2 (dCSRmat *A,
                     {
                         cck=cp_rindex[ck];
                         
-                         if (times_visited[cck] == ci+1){
-                         
-                         }
-                         else if (times_visited[cck] == -ci-1){
-                         times_visited[cck]=ci+1;
-                         Sh->JA[count]=cck;
-                         count++;
-                         }
-                         else {
-                         times_visited[cck]=-ci-1;
-                         }
+                        if (times_visited[cck] == ci+1){
+                            
+                        }
+                        else if (times_visited[cck] == -ci-1){
+                            times_visited[cck]=ci+1;
+                            Sh->JA[count]=cck;
+                            count++;
+                        }
+                        else {
+                            times_visited[cck]=-ci-1;
+                        }
                         
                     }//end if
                 }//end for k

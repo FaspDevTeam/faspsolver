@@ -8,6 +8,8 @@ File Name: CHANGES
 - Update BLAS operations for Block_CSR and STR.
 - Fix a direct solver calling bug for BSR.
 - Fix a VS08 warning.
+- Separte linked list from RS coarsening.
+- Update sf.net and documentation.
 
 04/09/2013 FASP 1.2.6:
 - Add NAN check to SPCG.

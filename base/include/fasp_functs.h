@@ -544,20 +544,6 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
                             iCSRmat *S,
                             AMG_param *param);
 
-void remove_node (LinkList *LoL_head_ptr,
-                  LinkList *LoL_tail_ptr,
-                  INT measure,
-                  INT index,
-                  INT *lists,
-                  INT *where);
-
-void enter_list (LinkList *LoL_head_ptr,
-                 LinkList *LoL_tail_ptr,
-                 INT measure,
-                 INT index,
-                 INT *lists,
-                 INT *where);
-
 
 /*-------- In file: convert.c --------*/
 
