@@ -202,24 +202,24 @@ REAL fasp_blas_array_norminf (const INT n,
                               REAL *x);
 
 
-/*-------- In file: blas_block.c --------*/
+/*-------- In file: blas_bcsr.c --------*/
 
-void fasp_blas_bdcsr_aAxpy (const REAL alpha, 
-                            block_dCSRmat *A, 
-                            REAL *x, 
+void fasp_blas_bdcsr_aAxpy (const REAL alpha,
+                            block_dCSRmat *A,
+                            REAL *x,
                             REAL *y);
 
-void fasp_blas_bdcsr_mxv (block_dCSRmat *A, 
-                          REAL *x, 
+void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
+                          REAL *x,
                           REAL *y);
 
-void fasp_blas_bdbsr_aAxpy (const REAL alpha, 
-                            block_BSR *A, 
-                            REAL *x, 
+void fasp_blas_bdbsr_aAxpy (const REAL alpha,
+                            block_BSR *A,
+                            REAL *x,
                             REAL *y);
 
-void fasp_blas_bdbsr_mxv (block_BSR *A, 
-                          REAL *x, 
+void fasp_blas_bdbsr_mxv (block_BSR *A,
+                          REAL *x,
                           REAL *y);
 
 
@@ -2014,12 +2014,12 @@ void fasp_smoother_dstr_schwarz (dSTRmat *A,
 
 /*-------- In file: sparse_block.c --------*/
 
-SHORT fasp_dcsr_getblk (dCSRmat *A, 
-                        INT *Is, 
-                        INT *Js, 
-                        INT m, 
-                        INT n, 
-                        dCSRmat *B) ;
+SHORT fasp_dcsr_getblk (dCSRmat *A,
+                        INT *Is,
+                        INT *Js,
+                        INT m,
+                        INT n,
+                        dCSRmat *B);
 
 SHORT fasp_dbsr_getblk (dBSRmat *A, 
                         INT *Is, 
@@ -2514,9 +2514,9 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
 
 /*-------- In file: threads_schedule.c --------*/
 
-INT FASP_GET_NUM_THREADS();
+INT FASP_GET_NUM_THREADS ();
 
-INT Fasp_Set_Num_Threads(INT nthreads );
+INT Fasp_Set_Num_Threads (INT nthreads);
 
 void FASP_GET_START_END (INT procid, 
                          INT nprocs, 

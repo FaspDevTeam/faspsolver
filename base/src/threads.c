@@ -1,6 +1,5 @@
-/*! \file threads_schedule.c 
- *  \brief Get and set number of threads for OMP, 
- *         besides, assigning the load to each thread involed.
+/*! \file threads.c
+ *  \brief Get and set number of threads and assigne work load for each thread.
  */
 
 #include <stdio.h>
@@ -13,48 +12,48 @@
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
-
 #ifdef _OPENMP
-
-
-/**
- * \fn     INT FASP_GET_NUM_THREADS();
- *
- * \brief  Get the number of threads for thread related functions.
- *
- * \return The number of threads to run 
- *
- * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
- * \date   June/15/2012
- */
 
 INT thread_ini_flag = 0;
 
-INT FASP_GET_NUM_THREADS()
-{
-    static INT nthreads;
-    if (thread_ini_flag == 0) {
-        #pragma omp parallel
-        nthreads = omp_get_num_threads();
-        printf("\nFASP is running on %3d thread(s).\n\n",nthreads);
-        thread_ini_flag = 1;
-    }
-   
-    return nthreads;
-}
-
 /**
- * \fn     INT Fasp_Set_Num_Threads();
+ * \fn     INT FASP_GET_NUM_THREADS ()
  *
- * \brief  Set the number of threads for thread related functions.
+ * \brief  Get the number of threads for thread related functions.
  *
  * \return The number of threads to run
  *
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \date   June/15/2012
  */
+INT FASP_GET_NUM_THREADS ()
+{
+    static INT nthreads;
+    
+    if ( thread_ini_flag == 0 ) {
+#pragma omp parallel
+        nthreads = omp_get_num_threads();
+        
+        printf("\nFASP is running on %3d thread(s).\n\n",nthreads);
+        thread_ini_flag = 1;
+    }
+    
+    return nthreads;
+}
 
-INT Fasp_Set_Num_Threads(INT nthreads )
+/**
+ * \fn     INT Fasp_Set_Num_Threads (INT nthreads)
+ *
+ * \brief  Set the number of threads for thread related functions.
+ *
+ * \param  nthreads  Desirable number of threads
+ *
+ * \return The number of threads to run
+ *
+ * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
+ * \date   June/15/2012
+ */
+INT Fasp_Set_Num_Threads (INT nthreads)
 {
     omp_set_num_threads( nthreads );
     
@@ -62,7 +61,6 @@ INT Fasp_Set_Num_Threads(INT nthreads )
 }
 
 #endif
-
 
 /**
  * \fn    void FASP_GET_START_END (INT procid, INT nprocs, INT n, INT *start, INT *end)
@@ -78,18 +76,17 @@ INT Fasp_Set_Num_Threads(INT nthreads )
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \date   June/25/2012
  */
-
-void FASP_GET_START_END (INT procid, 
-                         INT nprocs, 
-                         INT n, 
-                         INT *start, 
+void FASP_GET_START_END (INT procid,
+                         INT nprocs,
+                         INT n,
+                         INT *start,
                          INT *end)
 {
     INT chunk_size = n / nprocs;
     INT mod =  n % nprocs;
     INT start_loc, end_loc;
     
-    if( procid < mod) {
+    if ( procid < mod) {
         end_loc = chunk_size + 1;
         start_loc = end_loc * procid;
     }
@@ -98,6 +95,7 @@ void FASP_GET_START_END (INT procid,
         start_loc = end_loc * procid + mod;
     }
     end_loc = end_loc + start_loc;
+    
     *start = start_loc;
     *end = end_loc;
 }

@@ -1,5 +1,5 @@
 /*! \file sparse_block.c
- *  \brief Functions and operation for block sparse matrices. 
+ *  \brief Functions and operation for block sparse matrices.
  *
  */
 
@@ -26,31 +26,29 @@
  * \param m     Number of selected rows
  * \param n     Number of selected colums
  *
- * \return      SUCCESS if successed, otherwise, erro information.
+ * \return      SUCCESS if successed, otherwise return error information.
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012  
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  *
  */
-
-SHORT fasp_dcsr_getblk (dCSRmat *A, 
-                        INT *Is, 
-                        INT *Js, 
-                        INT m, 
-                        INT n, 
-                        dCSRmat *B) 
+SHORT fasp_dcsr_getblk (dCSRmat *A,
+                        INT *Is,
+                        INT *Js,
+                        INT m,
+                        INT n,
+                        dCSRmat *B)
 {
     INT status = SUCCESS;
-
+    
     INT i,j,k,nnz=0;
     INT *col_flag;
     
     INT use_openmp = FALSE;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     INT stride_i, mybegin, myend, myid, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
@@ -59,7 +57,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
 #endif
     
     // create colum flags
-    col_flag=(INT*)fasp_mem_calloc(A->col,sizeof(INT)); 
+    col_flag=(INT*)fasp_mem_calloc(A->col,sizeof(INT));
     
     B->row=m; B->col=n;
     
@@ -68,7 +66,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     B->val=(REAL*)fasp_mem_calloc(A->nnz,sizeof(REAL));
     
     if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
         stride_i = n/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
@@ -86,10 +84,10 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
         for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
     }
     
-
+    
     // first pass: count nonzeros for sub matrix
     B->IA[0]=0;
-    for (i=0;i<m;++i) {     
+    for (i=0;i<m;++i) {
         for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
             j=A->JA[N2C(k)];
             if (col_flag[N2C(j)]>0) {
@@ -105,7 +103,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     // allocate 
     B->JA=(INT*)fasp_mem_realloc(B->JA, sizeof(INT)*nnz);
     B->val=(REAL*)fasp_mem_realloc(B->val, sizeof(REAL)*nnz);
-
+    
     fasp_mem_free(col_flag);   
     return(status);
 }
@@ -122,13 +120,12 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
  * \param m     Number of selected rows
  * \param n     Number of selected colums
  *
- * \return      SUCCESS if successed, otherwise, erro information.
+ * \return      SUCCESS if successed, otherwise return error information.
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
 
 SHORT fasp_dbsr_getblk (dBSRmat *A, 
@@ -145,7 +142,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     
     const INT nb = A->nb;
     const INT nb2=nb*nb;
-
+    
 #ifdef _OPENMP 
     INT myid, mybegin, stride_i, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
@@ -153,7 +150,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     // create colum flags
     col_flag=(INT*)fasp_mem_calloc(A->COL,sizeof(INT)); 
     
@@ -219,6 +216,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
  * \brief get dCSRmat block from a dBSRmat matrix 
  * 
  * \param *A   Pointer to the BSR format matrix
+ *
  * \return     dCSRmat matrix if succeed, NULL if fail
  *
  * \author Xiaozhe Hu
@@ -241,21 +239,21 @@ dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
     // Pressure block
     dCSRmat P_csr = fasp_dcsr_create(ROW, COL, NNZ);
     REAL *Pval=P_csr.val;
-        
+    
     // get pressure block
     memcpy(P_csr.JA, JA, NNZ*sizeof(INT)); 
     memcpy(P_csr.IA, IA, (ROW+1)*sizeof(INT));
     
 #ifdef _OPENMP
     INT i;
-
+    
 #pragma omp parallel for if(NNZ>OPENMP_HOLDS)
     for (i=NNZ-1; i>=0; i--) {
         Pval[i] = val[i*nc2];
     }
 #else
     INT i, j;
-
+    
     for (i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2) {
         Pval[i] = val[j];
     }
