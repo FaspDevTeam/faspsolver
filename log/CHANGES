@@ -4,6 +4,7 @@ File Name: CHANGES
 - Change filename blas_block.c --> blas_bcsr.c.
 - Change filename threads_schedule.c --> threads.c.
 - Change directory setting for fasp-based packages.
+- Update VS08 solution according to the recent changes of faspsolver.
 
 04/27/2013 FASP 1.2.7:
 - Add a multicoloring scheme.

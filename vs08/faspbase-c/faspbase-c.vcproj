@@ -347,7 +347,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\base\src\blas_block.c"
+				RelativePath="..\..\base\src\blas_bcsr.c"
 				>
 			</File>
 			<File
@@ -611,7 +611,27 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\base\src\threads_schedule.c"
+				RelativePath="..\..\base\src\spbcgs.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\spcg.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\spgmres.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\spminres.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\spvgmres.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\threads.c"
 				>
 			</File>
 			<File
