@@ -704,11 +704,12 @@ void fasp_dbsr_read (char *filename,
 void fasp_dvecind_read (char *filename,
                         dvector *b)
 {
-    int  i, n;
+    INT  i, n;
+    INT  index;
     REAL value;
-    FILE *fp=fopen(filename,"r");
+    FILE *fp = fopen(filename,"r");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s failed!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
@@ -718,12 +719,15 @@ void fasp_dvecind_read (char *filename,
     fscanf(fp,"%d",&n);
     fasp_dvec_alloc(n,b);
     
-    for (i=0;i<n;++i) {
-        int index;
+    for ( i = 0; i < n; ++i ) {
+
         fscanf(fp, "%d %le", &index, &value);
-        if (value>BIGREAL || index>=n) {
+        // printf("vec[%d] = %le\n", index, value);
+        
+        if ( value > BIGREAL || index >= n ) {
             printf("### WARNING: index = %d, value = %lf\n", index, value);
         }
+
         b->val[index]=value;
     }
     
@@ -1431,6 +1435,8 @@ void fasp_dstr_print (dCSRmat *A)
  *
  * \author Ziteng Wang
  * \date   12/24/2012
+ *
+ * Modified by Chensong Zhang on 05/01/2013
  */
 void fasp_matrix_read (char *filename,
                        void *A)
@@ -1438,10 +1444,9 @@ void fasp_matrix_read (char *filename,
     
     INT index,flag;
     
-    FILE *fp=fopen(filename,"rb");
+    FILE *fp = fopen(filename,"rb");
     
-    if ( fp==NULL ) {
-        /* code */
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_matrix_read");
     }
@@ -1450,10 +1455,11 @@ void fasp_matrix_read (char *filename,
     
     fread(&index, sizeof(INT), 1, fp);
     
-    // matrix stored in ASCII
+    // matrix stored in ASCII format
     if (index==808464432) {
+        
         fclose(fp);
-        fp=fopen(filename,"r"); // reopen file of reading file in ASCII
+        fp = fopen(filename,"r"); // reopen file of reading file in ASCII
         fscanf(fp,"%d\n",&flag); // jump over the first line
         fscanf(fp,"%d\n",&flag); // reading the format information
 		flag = (INT) flag/100;
@@ -1477,12 +1483,16 @@ void fasp_matrix_read (char *filename,
 			case 6:
                 fasp_dmtxsym_read_s(fp, (dCSRmat *)A);
                 break;
+            default:
+                printf("### ERROR: Unknown file flag %d", flag);
         }
+        
         fclose(fp);
 		return;
+        
     }
     
-    // matrix stored in binary
+    // matrix stored in binary format
     
     // judge endian's consistence of machine and file
     INT endianflag = index;
@@ -1512,20 +1522,35 @@ void fasp_matrix_read (char *filename,
         case 6:
             fasp_dmtxsym_read_b_s(fp, (dCSRmat *)A, endianflag);
             break;
+        default:
+            printf("### ERROR: Unknown file flag %d", flag);
     }
     fclose(fp);
     
 }
 
-void fasp_matrix_read_temp(char *filename,
+/**
+ * \fn fasp_matrix_read (char *filemat, void *A)
+ *
+ * \brief Read matrix in binary format
+ *
+ * \param filemat File name of matrix file
+ * \param A Pointer to the matrix
+ *
+ * \author Xiaozhe Hu
+ * \date   04/14/2012
+ *
+ * Modified by Chensong Zhang on 05/01/2013
+ */
+void fasp_matrix_read_bin (char *filename,
                            void *A)
 {
 	INT index, flag;
 	FILE *fp=fopen(filename, "rb");
     
-	if ( fp==NULL ) {
+	if ( fp == NULL ) {
 		printf("### ERROR: Opening file %s ...\n", filename);
-		fasp_chkerr(ERROR_OPEN_FILE, "fasp_matrix_read");
+		fasp_chkerr(ERROR_OPEN_FILE, "fasp_matrix_read_bin");
 	}
 	
 	fread(&index, sizeof(INT), 1, fp);
@@ -1557,10 +1582,13 @@ void fasp_matrix_read_temp(char *filename,
         case 6:
             fasp_dmtxsym_read_b_s(fp, (dCSRmat *)A, endianflag);
             break;
+        default:
+            printf("### ERROR: Unknown file flag %d", flag);
 	}
-	fclose(fp);
-}
 
+	fclose(fp);
+
+}
 
 /**
  * \fn fasp_matrix_write (char *filemat, void *A, INT flag)
@@ -1586,7 +1614,6 @@ void fasp_matrix_read_temp(char *filename,
  * \author Ziteng Wang
  * \date   12/24/2012
  */
-
 void fasp_matrix_write (char *filename,
 					    void *A,
                         INT  flag)

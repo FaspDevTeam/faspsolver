@@ -782,7 +782,7 @@ void fasp_dstr_print (dCSRmat *A);
 void fasp_matrix_read (char *filename,
                        void *A);
 
-void fasp_matrix_read_temp(char *filename,
+void fasp_matrix_read_bin (char *filename,
                            void *A);
 
 void fasp_matrix_write (char *filename,
@@ -2110,6 +2110,8 @@ void fasp_icsr_free (iCSRmat *A);
 
 void fasp_dcsr_null (dCSRmat *A);
 
+void fasp_icsr_null (iCSRmat *A);
+
 dCSRmat fasp_dcsr_perm (dCSRmat *A, 
                         INT *P);
 
@@ -2512,16 +2514,16 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
                                const SHORT print_level);
 
 
-/*-------- In file: threads_schedule.c --------*/
+/*-------- In file: threads.c --------*/
 
 INT FASP_GET_NUM_THREADS ();
 
 INT Fasp_Set_Num_Threads (INT nthreads);
 
-void FASP_GET_START_END (INT procid, 
-                         INT nprocs, 
-                         INT n, 
-                         INT *start, 
+void FASP_GET_START_END (INT procid,
+                         INT nprocs,
+                         INT n,
+                         INT *start,
                          INT *end);
 
 

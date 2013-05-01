@@ -115,7 +115,7 @@ void fasp_dcsr_alloc (const INT m,
  */
 void fasp_dcsr_free (dCSRmat *A)
 {    
-    if (A==NULL) return;
+    if ( A == NULL ) return;
     
     fasp_mem_free(A->IA);  A->IA  = NULL;
     fasp_mem_free(A->JA);  A->JA  = NULL;
@@ -134,7 +134,7 @@ void fasp_dcsr_free (dCSRmat *A)
  */
 void fasp_icsr_free (iCSRmat *A)
 {    
-    if (A==NULL) return;
+    if ( A == NULL ) return;
     
     fasp_mem_free(A->IA);  A->IA  = NULL;
     fasp_mem_free(A->JA);  A->JA  = NULL;
@@ -153,6 +153,23 @@ void fasp_icsr_free (iCSRmat *A)
  */
 void fasp_dcsr_null (dCSRmat *A)
 {    
+    A->row = A->col = A->nnz = 0;
+    A->IA  = A->JA  = NULL;
+    A->val = NULL;
+}
+
+/**
+ * \fn void fasp_icsr_null (iCSRmat *A)
+ *
+ * \brief Initialize CSR sparse matrix
+ *
+ * \param A   Pointer to the iCSRmat matrix
+ *
+ * \author Chensong Zhang
+ * \date   2010/04/03
+ */
+void fasp_icsr_null (iCSRmat *A)
+{
     A->row = A->col = A->nnz = 0;
     A->IA  = A->JA  = NULL;
     A->val = NULL;

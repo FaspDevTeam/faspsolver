@@ -96,7 +96,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
                             const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
-    const INT    m=b->row;
+    const INT    m = b->row;
     const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
@@ -442,7 +442,7 @@ INT fasp_solver_dbsr_pbcgs(dBSRmat *A,
                            const SHORT print_level) 
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
-    const INT    m=b->row;
+    const INT    m = b->row;
     const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
@@ -788,7 +788,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
                              const SHORT print_level) 
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
-    const INT    m=b->row;
+    const INT    m = b->row;
     const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
@@ -1134,7 +1134,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
                             const SHORT print_level) 
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
-    const INT    m=b->row;
+    const INT    m = b->row;
     const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
