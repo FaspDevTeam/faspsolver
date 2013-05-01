@@ -42,24 +42,24 @@ void print_itinfo (const INT ptrlvl,
     if (ptrlvl>PRINT_SOME) {
         
         if (iter>0) {
-            printf("%6d | %15.6e   | %13.6e  | %12.4f\n",iter,relres,absres,factor);
+            printf("%6d | %13.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);
         }
         else { 
             // iter = 0 means initial guess
-            printf("---------------------------------------------------------------\n");
+            printf("-----------------------------------------------------------\n");
             switch (stop_type) {
             case STOP_REL_RES:
-                printf("It Num |    ||r||/||b||    |     ||r||      |    Conv. Factor\n");
+                printf("It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor\n");
                 break;
             case STOP_REL_PRECRES:
-                printf("It Num |  ||r||_B/||b||_B  |    ||r||_B     |    Conv. Factor\n");
+                printf("It Num | ||r||_B/||b||_B |    ||r||_B     |  Conv. Factor\n");
                 break;
             case STOP_MOD_REL_RES:
-                printf("It Num |    ||r||/||x||    |     ||r||      |    Conv. Factor\n");
+                printf("It Num |   ||r||/||x||   |     ||r||      |  Conv. Factor\n");
                 break;
             }
-            printf("---------------------------------------------------------------\n");
-            printf("%6d | %15.6e   | %13.6e  |       -.-- \n",iter,relres,absres);
+            printf("-----------------------------------------------------------\n");
+            printf("%6d | %13.6e   | %13.6e  |     -.-- \n",iter,relres,absres);
         } // end if iter
         
     } // end if ptrlvl
