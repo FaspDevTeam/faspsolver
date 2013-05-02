@@ -61,7 +61,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     r_norm, r_normb, b_norm, gamma, t;
+    REAL     r_norm, r_normb, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     INT      iter_best = 0; // initial best known iteration
@@ -90,9 +90,6 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
     for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
     
     for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
-    
-    // compute norm of right-hand-side
-    b_norm = fasp_blas_array_norm2(n, b->val);
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -391,7 +388,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     r_norm, r_normb, b_norm, gamma, t;
+    REAL     r_norm, r_normb, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     INT      iter_best = 0; // initial best known iteration
@@ -420,9 +417,6 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
     for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
     
     for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
-    
-    // compute norm of right-hand-side
-    b_norm = fasp_blas_array_norm2(n, b->val);
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -721,7 +715,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     r_norm, r_normb, b_norm, gamma, t;
+    REAL     r_norm, r_normb, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     INT      iter_best = 0; // initial best known iteration
@@ -750,9 +744,6 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
     for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
     
     for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
-    
-    // compute norm of right-hand-side
-    b_norm = fasp_blas_array_norm2(n, b->val);
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -1051,7 +1042,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
     INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     r_norm, r_normb, b_norm, gamma, t;
+    REAL     r_norm, r_normb, gamma, t;
     REAL     absres0, absres, relres, normu;
     
     INT      iter_best = 0; // initial best known iteration
@@ -1080,9 +1071,6 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
     for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
     
     for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
-    
-    // compute norm of right-hand-side
-    b_norm = fasp_blas_array_norm2(n, b->val);
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);

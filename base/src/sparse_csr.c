@@ -1177,7 +1177,7 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
  * \author Xiaozhe Hu
  * \date 03/21/2011
  */
-dCSRmat fasp_dcsr_sympat(dCSRmat *A)
+dCSRmat fasp_dcsr_sympat (dCSRmat *A)
 {
 	//local variable
 	dCSRmat AT;
@@ -1200,9 +1200,9 @@ dCSRmat fasp_dcsr_sympat(dCSRmat *A)
 }
 
 /**
- * \fn void fasp_dcsr_multicoloring(dCSRmat A, INT *flags , INT *groups)
+ * \fn void fasp_dcsr_multicoloring (dCSRmat A, INT *flags , INT *groups)
  *
- * \brief Use the greedy multicoloring algorithm to get color groups for for the adjacency graph of A
+ * \brief Use the greedy multicoloring to get color groups of the adjacency graph of A
  *
  * \param A    Input dCSRmat
  * \param flags   flags for the independent group
@@ -1211,9 +1211,9 @@ dCSRmat fasp_dcsr_sympat(dCSRmat *A)
  * \author Chunsheng Feng
  * \date   09/15/2012
  */
-void fasp_dcsr_multicoloring(dCSRmat *A,
-                             INT *flags,
-                             INT *groups)
+void fasp_dcsr_multicoloring (dCSRmat *A,
+                              INT *flags,
+                              INT *groups)
 {
 #ifdef MULTI_COLOR_ORDER 
     INT k,i,j,pre,group;

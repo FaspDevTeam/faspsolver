@@ -489,7 +489,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
  * \note Works for general nb (Xiaozhe)
  */
 
-dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B)
+dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
 {
     dCSRmat A;
     

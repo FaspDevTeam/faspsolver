@@ -588,9 +588,9 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
  *
  * \note Works for general nb (Xiaozhe) 
  */
-void fasp_blas_dbsr_mxv(dBSRmat *A, 
-		                REAL *x, 
-		                REAL *y) 
+void fasp_blas_dbsr_mxv (dBSRmat *A,
+		                 REAL *x,
+		                 REAL *y) 
 {
 	/* members of A */
 	INT     ROW = A->ROW;

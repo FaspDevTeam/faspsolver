@@ -6,6 +6,8 @@ File Name: CHANGES
 - Change directory setting for fasp-based packages.
 - Update VS08 solution according to the recent changes of faspsolver.
 - Start to clean up fasp4blkoil; some functions related are changed.
+- Remove unused variables.
+- Fix a safe-guard saving bug in BiCGstab.
 
 04/27/2013 FASP 1.2.7:
 - Add a multicoloring scheme.

@@ -14,7 +14,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_set_GS_threads(INT threads,INT its)
+ * \fn void fasp_set_GS_threads (INT threads,INT its)
  *
  * \brief  Set threads for CPR. Please add it at the begin of Krylov openmp method function 
  *         and after iter++.
@@ -30,7 +30,8 @@ INT THDs_AMG_GS=0;  /**< cpr amg gs smoothing threads      */
 INT THDs_CPR_lGS=0; /**< reservoir gs smoothing threads     */
 INT THDs_CPR_gGS=0; /**< global matrix gs smoothing threads */
 
-void fasp_set_GS_threads(INT mythreads, INT its)
+void fasp_set_GS_threads (INT mythreads,
+                          INT its)
 {
 #ifdef _OPENMP 
 

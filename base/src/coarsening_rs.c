@@ -59,11 +59,10 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
                             AMG_param *param)
 {
     const SHORT coarsening_type = param->coarsening_type;
-    const INT   row = A->row;
-    const REAL  epsilon_str = param->strong_threshold;
-    SHORT       interp_type = param->interpolation_type;
-    SHORT       status = SUCCESS;
-    INT         col = 0;
+    const INT   row             = A->row;
+    SHORT       interp_type     = param->interpolation_type;
+    SHORT       status          = SUCCESS;
+    INT         col             = 0;
     INT         aggressive_path = param->aggressive_path;
     
 #if DEBUG_MODE

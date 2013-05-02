@@ -13,39 +13,39 @@ INT ilength, dlength;
 
 // Definition of private functions
 static void fasp_dcsr_read_s(FILE *fp, dCSRmat *A);
-static void fasp_dcsr_read_b_s(FILE *fp, dCSRmat *A, INT endianflag);
+static void fasp_dcsr_read_b(FILE *fp, dCSRmat *A, INT endianflag);
 static void fasp_dcoo_read_s(FILE *fp, dCSRmat *A);
-static void fasp_dcoo_read_b_s(FILE *fp, dCSRmat *A, INT endianflag);
+static void fasp_dcoo_read_b(FILE *fp, dCSRmat *A, INT endianflag);
 static void fasp_dbsr_read_s(FILE *fp, dBSRmat *A);
-static void fasp_dbsr_read_b_s(FILE *fp, dBSRmat *A, INT endianflag);
+static void fasp_dbsr_read_b(FILE *fp, dBSRmat *A, INT endianflag);
 static void fasp_dstr_read_s(FILE *fp, dSTRmat *A);
-static void fasp_dstr_read_b_s(FILE *fp, dSTRmat *A, INT endianflag);
+static void fasp_dstr_read_b(FILE *fp, dSTRmat *A, INT endianflag);
 static void fasp_dmtx_read_s(FILE *fp, dCSRmat *A);
-static void fasp_dmtx_read_b_s(FILE *fp, dCSRmat *A, INT endianflag);
+static void fasp_dmtx_read_b(FILE *fp, dCSRmat *A, INT endianflag);
 static void fasp_dmtxsym_read_s(FILE *fp, dCSRmat *A);
-static void fasp_dmtxsym_read_b_s(FILE *fp, dCSRmat *A, INT endianflag);
+static void fasp_dmtxsym_read_b(FILE *fp, dCSRmat *A, INT endianflag);
 static void fasp_dcsr_write_s(FILE *fp, dCSRmat *A);
-static void fasp_dcsr_write_b_s(FILE *fp, dCSRmat *A);
+static void fasp_dcsr_write_b(FILE *fp, dCSRmat *A);
 static void fasp_dbsr_write_s(FILE *fp, dBSRmat *A);
-static void fasp_dbsr_write_b_s(FILE *fp, dBSRmat *A);
+static void fasp_dbsr_write_b(FILE *fp, dBSRmat *A);
 static void fasp_dstr_write_s(FILE *fp, dSTRmat *A);
-static void fasp_dstr_write_b_s(FILE *fp, dSTRmat *A);
+static void fasp_dstr_write_b(FILE *fp, dSTRmat *A);
 static void fasp_dvec_read_s(FILE *fp, dvector *b);
-static void fasp_dvec_read_b_s(FILE *fp, dvector *b, INT endianflag);
+static void fasp_dvec_read_b(FILE *fp, dvector *b, INT endianflag);
 static void fasp_ivec_read_s(FILE *fp, ivector *b);
-static void fasp_ivec_read_b_s(FILE *fp, ivector *b, INT endianflag);
+static void fasp_ivec_read_b(FILE *fp, ivector *b, INT endianflag);
 static void fasp_dvecind_read_s(FILE *fp, dvector *b);
-static void fasp_dvecind_read_b_s(FILE *fp, dvector *b, INT endianflag);
+static void fasp_dvecind_read_b(FILE *fp, dvector *b, INT endianflag);
 static void fasp_ivecind_read_s(FILE *fp, ivector *b);
-static void fasp_ivecind_read_b_s(FILE *fp, ivector *b, INT endianflag);
+static void fasp_ivecind_read_b(FILE *fp, ivector *b, INT endianflag);
 static void fasp_dvec_write_s(FILE *fp, dvector *b);
-static void fasp_dvec_write_b_s(FILE *fp, dvector *b);
+static void fasp_dvec_write_b(FILE *fp, dvector *b);
 static void fasp_ivec_write_s(FILE *fp, ivector *b);
-static void fasp_ivec_write_b_s(FILE *fp, ivector *b);
+static void fasp_ivec_write_b(FILE *fp, ivector *b);
 static void fasp_dvecind_write_s(FILE *fp, dvector *b);
-static void fasp_dvecind_write_b_s(FILE *fp, dvector *b);
+static void fasp_dvecind_write_b(FILE *fp, dvector *b);
 static void fasp_ivecind_write_s(FILE *fp, ivector *b);
-static void fasp_ivecind_write_b_s(FILE *fp, ivector *A);
+static void fasp_ivecind_write_b(FILE *fp, ivector *A);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -364,7 +364,7 @@ void fasp_dcoo_read (char *filename,
  * \date   03/24/2013
  */
 void fasp_dcoo1_read (char *filename,
-                     dCOOmat *A)
+                      dCOOmat *A)
 {
     int  i,j,k,m,n,nnz;
     REAL value;
@@ -468,7 +468,7 @@ void fasp_dmtx_read (char *filename,
  *   And it converts the matrix to dCSRmat format. For details of mtx format,
  *   please refer to http://math.nist.gov/MatrixMarket/.
  *
- * \note 
+ * \note
  *
  *      Indices start from 1, NOT 0!!!
  *
@@ -720,14 +720,14 @@ void fasp_dvecind_read (char *filename,
     fasp_dvec_alloc(n,b);
     
     for ( i = 0; i < n; ++i ) {
-
+        
         fscanf(fp, "%d %le", &index, &value);
         // printf("vec[%d] = %le\n", index, value);
         
         if ( value > BIGREAL || index >= n ) {
             printf("### WARNING: index = %d, value = %lf\n", index, value);
         }
-
+        
         b->val[index]=value;
     }
     
@@ -766,9 +766,9 @@ void fasp_dvec_read (char *filename,
     printf("fasp_dvec_read: reading file %s...\n", filename);
     
     fscanf(fp,"%d",&n);
-
+    
     fasp_dvec_alloc(n,b);
-
+    
     for (i=0;i<n;++i) {
         fscanf(fp, "%le", &value);
         b->val[i]=value;
@@ -1505,22 +1505,22 @@ void fasp_matrix_read (char *filename,
     
     switch (flag) {
         case 1:
-            fasp_dcsr_read_b_s(fp, (dCSRmat *)A, endianflag);
+            fasp_dcsr_read_b(fp, (dCSRmat *)A, endianflag);
             break;
         case 2:
-            fasp_dbsr_read_b_s(fp, (dBSRmat *)A, endianflag);
+            fasp_dbsr_read_b(fp, (dBSRmat *)A, endianflag);
             break;
         case 3:
-            fasp_dstr_read_b_s(fp, (dSTRmat *)A, endianflag);
+            fasp_dstr_read_b(fp, (dSTRmat *)A, endianflag);
             break;
         case 4:
-            fasp_dcoo_read_b_s(fp, (dCSRmat *)A, endianflag);
+            fasp_dcoo_read_b(fp, (dCSRmat *)A, endianflag);
             break;
         case 5:
-            fasp_dmtx_read_b_s(fp, (dCSRmat *)A, endianflag);
+            fasp_dmtx_read_b(fp, (dCSRmat *)A, endianflag);
             break;
         case 6:
-            fasp_dmtxsym_read_b_s(fp, (dCSRmat *)A, endianflag);
+            fasp_dmtxsym_read_b(fp, (dCSRmat *)A, endianflag);
             break;
         default:
             printf("### ERROR: Unknown file flag %d", flag);
@@ -1558,36 +1558,36 @@ void fasp_matrix_read_bin (char *filename,
     INT endianflag = 1;
     
 	index = endian_convert_int(index, sizeof(INT), endianflag);
-
+    
 	flag = (INT) index/100;
 	ilength = (int) (index - flag*100)/10;
 	dlength = index%10;
     
 	switch (flag) {
         case 1:
-            fasp_dcoo_read_b_s(fp, (dCSRmat *)A, endianflag);
+            fasp_dcoo_read_b(fp, (dCSRmat *)A, endianflag);
             break;
         case 2:
-            fasp_dbsr_read_b_s(fp, (dBSRmat *)A, endianflag);
+            fasp_dbsr_read_b(fp, (dBSRmat *)A, endianflag);
             break;
         case 3:
-            fasp_dstr_read_b_s(fp, (dSTRmat *)A, endianflag);
+            fasp_dstr_read_b(fp, (dSTRmat *)A, endianflag);
             break;
         case 4:
-            fasp_dcsr_read_b_s(fp, (dCSRmat *)A, endianflag);
+            fasp_dcsr_read_b(fp, (dCSRmat *)A, endianflag);
             break;
         case 5:
-            fasp_dmtx_read_b_s(fp, (dCSRmat *)A, endianflag);
+            fasp_dmtx_read_b(fp, (dCSRmat *)A, endianflag);
             break;
         case 6:
-            fasp_dmtxsym_read_b_s(fp, (dCSRmat *)A, endianflag);
+            fasp_dmtxsym_read_b(fp, (dCSRmat *)A, endianflag);
             break;
         default:
             printf("### ERROR: Unknown file flag %d", flag);
 	}
-
+    
 	fclose(fp);
-
+    
 }
 
 /**
@@ -1671,13 +1671,13 @@ void fasp_matrix_write (char *filename,
     
     switch (matrixflag) {
         case 1:
-            fasp_dcsr_write_b_s(fp, (dCSRmat *)A);
+            fasp_dcsr_write_b(fp, (dCSRmat *)A);
             break;
         case 2:
-            fasp_dbsr_write_b_s(fp,(dBSRmat *)A);
+            fasp_dbsr_write_b(fp,(dBSRmat *)A);
             break;
         case 3:
-            fasp_dstr_write_b_s(fp, (dSTRmat *)A);
+            fasp_dstr_write_b(fp, (dSTRmat *)A);
             break;
     }
     fclose(fp);
@@ -1710,8 +1710,8 @@ void fasp_matrix_write (char *filename,
  * \date   12/24/2012
  */
 
-void fasp_vector_read(char *filerhs,
-                      void *b)
+void fasp_vector_read (char *filerhs,
+                       void *b)
 {
     
     INT index,flag;
@@ -1763,16 +1763,16 @@ void fasp_vector_read(char *filerhs,
     
     switch (flag) {
         case 1:
-            fasp_dvec_read_b_s(fp, (dvector *)b, endianflag);
+            fasp_dvec_read_b(fp, (dvector *)b, endianflag);
             break;
         case 2:
-            fasp_ivec_read_b_s(fp, (ivector *)b, endianflag);
+            fasp_ivec_read_b(fp, (ivector *)b, endianflag);
             break;
         case 3:
-            fasp_dvecind_read_b_s(fp, (dvector *)b, endianflag);
+            fasp_dvecind_read_b(fp, (dvector *)b, endianflag);
             break;
         case 4:
-            fasp_ivecind_read_b_s(fp, (ivector *)b, endianflag);
+            fasp_ivecind_read_b(fp, (ivector *)b, endianflag);
             break;
     }
     fclose(fp);
@@ -1804,10 +1804,12 @@ void fasp_vector_read(char *filerhs,
  *
  * \author Ziteng Wang
  * \date   12/24/2012
+ *
+ * Modified by Chensong Zhang on 05/02/2013: fix a bug when writing in binary format
  */
-void fasp_vector_write(char *filerhs,
-		               void *b,
-			           INT  flag)
+void fasp_vector_write (char *filerhs,
+                        void *b,
+                        INT  flag)
 {
     
     INT fileflag, vectorflag;
@@ -1857,23 +1859,23 @@ void fasp_vector_write(char *filerhs,
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_vector_write");
     }
     
-    printf("fasp_dvecind_write_b: writing vector to `%s'...\n",filerhs);
+    printf("fasp_vector_write: writing vector to `%s'...\n",filerhs);
     
     INT putflag = vectorflag*100 + sizeof(INT)*10 + sizeof(REAL);
     fwrite(&putflag,sizeof(INT),1,fp);
     
     switch (vectorflag) {
         case 1:
-            fasp_dvec_write_s(fp, (dvector *)b);
+            fasp_dvec_write_b(fp, (dvector *)b);
             break;
         case 2:
-            fasp_ivec_write_s(fp, (ivector *)b);
+            fasp_ivec_write_b(fp, (ivector *)b);
             break;
         case 3:
-            fasp_dvecind_write_s(fp, (dvector *)b);
+            fasp_dvecind_write_b(fp, (dvector *)b);
             break;
         case 4:
-            fasp_ivecind_write_s(fp, (ivector *)b);
+            fasp_ivecind_write_b(fp, (ivector *)b);
             break;
     }
     fclose(fp);
@@ -1915,9 +1917,9 @@ static void fasp_dcsr_read_s (FILE *fp,
     }
 }
 
-static void fasp_dcsr_read_b_s (FILE *fp,
-                                dCSRmat *A,
-                                INT endianflag)
+static void fasp_dcsr_read_b (FILE *fp,
+                              dCSRmat *A,
+                              INT endianflag)
 {
     INT  i,m,nnz,idata;
     REAL ddata;
@@ -1973,9 +1975,9 @@ static void fasp_dcoo_read_s (FILE *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dcoo_read_b_s (FILE *fp,
-                                dCSRmat *A,
-                                INT endianflag)
+static void fasp_dcoo_read_b (FILE *fp,
+                              dCSRmat *A,
+                              INT endianflag)
 {
     INT  k,m,n,nnz,index;
     REAL value;
@@ -2049,9 +2051,9 @@ static void fasp_dbsr_read_s (FILE *fp,
     
 }
 
-static void fasp_dbsr_read_b_s (FILE *fp,
-                                dBSRmat *A,
-                                INT endianflag)
+static void fasp_dbsr_read_b (FILE *fp,
+                              dBSRmat *A,
+                              INT endianflag)
 {
     INT    ROW, COL, NNZ, nb, storage_manner;
     INT    i, n, index;
@@ -2141,9 +2143,9 @@ static void fasp_dstr_read_s (FILE *fp,
     
 }
 
-static void fasp_dstr_read_b_s (FILE *fp,
-                                dSTRmat *A,
-                                INT endianflag)
+static void fasp_dstr_read_b (FILE *fp,
+                              dSTRmat *A,
+                              INT endianflag)
 {
     INT  nx, ny, nz, nxy, ngrid, nband, nc, offset;
     INT  i, k, n;
@@ -2227,9 +2229,9 @@ static void fasp_dmtx_read_s (FILE *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dmtx_read_b_s (FILE *fp,
-                                dCSRmat *A,
-                                INT endianflag)
+static void fasp_dmtx_read_b (FILE *fp,
+                              dCSRmat *A,
+                              INT endianflag)
 {
     INT   m,n,k,nnz;
     INT   index;
@@ -2254,7 +2256,7 @@ static void fasp_dmtx_read_b_s (FILE *fp,
             Atmp.val[k] = endian_convert_real(value, sizeof(REAL), endianflag);
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtx_read_b_s");
+            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtx_read_b");
         }
     }
     
@@ -2303,9 +2305,9 @@ static void fasp_dmtxsym_read_s (FILE *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dmtxsym_read_b_s (FILE *fp,
-                                   dCSRmat *A,
-                                   INT endianflag)
+static void fasp_dmtxsym_read_b (FILE *fp,
+                                 dCSRmat *A,
+                                 INT endianflag)
 {
     INT  m,n,nnz;
     INT  innz;
@@ -2352,7 +2354,7 @@ static void fasp_dmtxsym_read_b_s (FILE *fp,
             
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtxsym_read_b_s");
+            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtxsym_read_b");
         }
     }
     
@@ -2373,8 +2375,8 @@ static void fasp_dcsr_write_s (FILE *fp,
     }
 }
 
-static void fasp_dcsr_write_b_s (FILE *fp,
-                                 dCSRmat *A)
+static void fasp_dcsr_write_b (FILE *fp,
+                               dCSRmat *A)
 {
     const INT m=A->row, n=A->col;
     INT i, j, nnz, index;
@@ -2432,8 +2434,8 @@ static void fasp_dbsr_write_s (FILE *fp,
     
 }
 
-static void fasp_dbsr_write_b_s (FILE *fp,
-                                 dBSRmat *A)
+static void fasp_dbsr_write_b (FILE *fp,
+                               dBSRmat *A)
 {
     const INT ROW = A->ROW, COL = A->COL, NNZ = A->NNZ;
     const INT nb = A->nb, storage_manner = A->storage_manner;
@@ -2513,8 +2515,8 @@ static void fasp_dstr_write_s (FILE *fp,
     
 }
 
-static void fasp_dstr_write_b_s (FILE *fp,
-                                 dSTRmat *A)
+static void fasp_dstr_write_b (FILE *fp,
+                               dSTRmat *A)
 {
     const INT nx=A->nx, ny=A->ny, nz=A->nz;
     const INT ngrid=A->ngrid, nband=A->nband, nc=A->nc;
@@ -2572,9 +2574,9 @@ static void fasp_dvec_read_s (FILE *fp,
     }
 }
 
-static void fasp_dvec_read_b_s (FILE *fp,
-                                dvector *b,
-                                INT endianflag)
+static void fasp_dvec_read_b (FILE *fp,
+                              dvector *b,
+                              INT endianflag)
 {
     
     INT  i, n;
@@ -2604,9 +2606,9 @@ static void fasp_ivec_read_s (FILE *fp,
     }
 }
 
-static void fasp_ivec_read_b_s (FILE *fp,
-                                ivector *b,
-                                INT endianflag)
+static void fasp_ivec_read_b (FILE *fp,
+                              ivector *b,
+                              INT endianflag)
 {
     INT i, n, value;
     
@@ -2640,9 +2642,9 @@ static void fasp_dvecind_read_s (FILE *fp,
     }
 }
 
-static void fasp_dvecind_read_b_s (FILE *fp,
-                                   dvector *b,
-                                   INT endianflag)
+static void fasp_dvecind_read_b (FILE *fp,
+                                 dvector *b,
+                                 INT endianflag)
 {
     INT  i, n, index;
     REAL value;
@@ -2677,9 +2679,9 @@ static void fasp_ivecind_read_s (FILE *fp,
     }
 }
 
-static void fasp_ivecind_read_b_s (FILE *fp,
-                                   ivector *b,
-                                   INT endianflag)
+static void fasp_ivecind_read_b (FILE *fp,
+                                 ivector *b,
+                                 INT endianflag)
 {
     INT i, n, index, value;
     
@@ -2707,8 +2709,8 @@ static void fasp_dvec_write_s (FILE *fp,
     
 }
 
-static void fasp_dvec_write_b_s (FILE *fp,
-                                 dvector *vec)
+static void fasp_dvec_write_b (FILE *fp,
+                               dvector *vec)
 {
     INT m = vec->row, i;
     REAL value;
@@ -2732,8 +2734,8 @@ static void fasp_ivec_write_s (FILE *fp,
     
 }
 
-static void fasp_ivec_write_b_s (FILE *fp,
-                                 ivector *vec)
+static void fasp_ivec_write_b (FILE *fp,
+                               ivector *vec)
 {
     INT m = vec->row, i, value;
     
@@ -2758,8 +2760,8 @@ static void fasp_dvecind_write_s (FILE *fp,
     
 }
 
-static void fasp_dvecind_write_b_s (FILE *fp,
-                                    dvector *vec)
+static void fasp_dvecind_write_b (FILE *fp,
+                                  dvector *vec)
 {
     INT m = vec->row, i;
     REAL value;
@@ -2770,6 +2772,22 @@ static void fasp_dvecind_write_b_s (FILE *fp,
         value = vec->val[i];
         fwrite(&i, sizeof(INT), 1, fp);
         fwrite(&value, sizeof(REAL), 1, fp);
+    }
+    
+}
+
+static void fasp_ivecind_write_b (FILE *fp,
+                                  ivector *vec)
+{
+    INT m = vec->row, i;
+    INT value;
+    
+    fwrite(&m, sizeof(INT), 1, fp);
+    
+    for (i = 0; i < m; i++) {
+        value = vec->val[i];
+        fwrite(&i, sizeof(INT), 1, fp);
+        fwrite(&value, sizeof(INT), 1, fp);
     }
     
 }

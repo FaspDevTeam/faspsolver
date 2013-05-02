@@ -35,7 +35,8 @@
  * \author Zhiyang Zhou
  * \date 08/25/2010
  */
-void dvector2SAMGInput(dvector *vec, char *filename)
+void dvector2SAMGInput (dvector *vec,
+                        char *filename)
 {
 	INT m = vec->row, i;
 	
@@ -63,7 +64,9 @@ void dvector2SAMGInput(dvector *vec, char *filename)
  * \author Zhiyang Zhou
  * \data 2010/08/25
  */
-INT dCSRmat2SAMGInput(dCSRmat *A, char *filefrm, char *fileamg)
+INT dCSRmat2SAMGInput (dCSRmat *A,
+                       char *filefrm,
+                       char *fileamg)
 {
 	FILE    *fp            = NULL;
 	INT      file_base     = 1;

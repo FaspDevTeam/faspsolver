@@ -390,15 +390,12 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
  * \author Xiaozhe Hu
  * \date   02/19/2013
  *
- *
  * \note Works for general nb (Xiaozhe)
  */
 dvector fasp_dbsr_getdiaginv (dBSRmat *A)
 {
     // members of A
     const INT     ROW = A->ROW;
-    const INT     COL = A->COL;
-    const INT     NNZ = A->NNZ;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    size = ROW*nb2;
@@ -408,7 +405,7 @@ dvector fasp_dbsr_getdiaginv (dBSRmat *A)
         
     dvector diaginv;
     
-    INT i,j,k,m,l;
+    INT i,k;
     
     // Variables for OpenMP
     INT nthreads = 1, use_openmp = FALSE;

@@ -1402,17 +1402,16 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-
-void swep2db(INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT nbegx,
-             INT nbegy,
-             INT *mark,
-             INT nx,
-             INT ny)
+void swep2db (INT *ia,
+              INT *ja,
+              REAL *aa,
+              REAL *u,
+              REAL *f,
+              INT nbegx,
+              INT nbegy,
+              INT *mark,
+              INT nx,
+              INT ny)
 {
     INT j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
@@ -1470,18 +1469,18 @@ void swep2db(INT *ia,
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
-void swep3db(INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT nbegx,
-             INT nbegy,
-             INT nbegz,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nz)
+void swep3db (INT *ia,
+              INT *ja,
+              REAL *aa,
+              REAL *u,
+              REAL *f,
+              INT nbegx,
+              INT nbegy,
+              INT nbegz,
+              INT *mark,
+              INT nx,
+              INT ny,
+              INT nz)
 {
     INT nxy, k, k0, j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
@@ -1522,6 +1521,7 @@ void swep3db(INT *ia,
 /*
  * \fn void rb0b2d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f,
  *                  INT *mark, INT nx, INT ny, INT nsweeps)
+ *
  * \brief  Colores Gauss-Seidel backward smoother for Au=b
  *
  * \param ia       Pointer to start location of each row
@@ -1619,6 +1619,7 @@ void rb0b2d (INT *ia,
 /*
  * \fn void rb0b3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f,
  *                  INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+ *
  * \brief  Colores Gauss-Seidel backward smoother for Au=b
  *
  * \param ia       Pointer to start location of each row
@@ -1867,16 +1868,16 @@ void rb0b3d (INT *ia,
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
-void swep2df(INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT nbegx,
-             INT nbegy,
-             INT *mark,
-             INT nx,
-             INT ny )
+void swep2df (INT *ia,
+              INT *ja,
+              REAL *aa,
+              REAL *u,
+              REAL *f,
+              INT nbegx,
+              INT nbegy,
+              INT *mark,
+              INT nx,
+              INT ny )
 {
     INT j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
@@ -1933,18 +1934,18 @@ void swep2df(INT *ia,
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
-void swep3df(INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT nbegx,
-             INT nbegy,
-             INT nbegz,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nz)
+void swep3df (INT *ia,
+              INT *ja,
+              REAL *aa,
+              REAL *u,
+              REAL *f,
+              INT nbegx,
+              INT nbegy,
+              INT nbegz,
+              INT *mark,
+              INT nx,
+              INT ny,
+              INT nz)
 {
     INT nxy,k,k0,j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
@@ -1981,7 +1982,9 @@ void swep3df(INT *ia,
 }
 
 /*
- * \fn void rb0f2d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny,INT nsweeps)
+ * \fn void rb0f2d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, 
+ *                  INT *mark, INT nx, INT ny,INT nsweeps)
+ *
  * \brief  Colores Gauss-Seidel forward smoother for Au=b
  *
  * \param ia  Pointer to the start location to of row
@@ -2002,15 +2005,15 @@ void swep3df(INT *ia,
  *
  */
 
-void rb0f2d( INT *ia,
-            INT *ja,
-            REAL *aa,
-            REAL *u,
-            REAL *f,
-            INT *mark,
-            INT nx,
-            INT ny,
-            INT nsweeps )
+void rb0f2d (INT *ia,
+             INT *ja,
+             REAL *aa,
+             REAL *u,
+             REAL *f,
+             INT *mark,
+             INT nx,
+             INT ny,
+             INT nsweeps)
 {
     INT n0e,n0o,isweep;
     
@@ -2031,7 +2034,9 @@ void rb0f2d( INT *ia,
 
 
 /*
- * \fn void rb0f3d(INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+ * \fn void rb0f3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, 
+ *                  INT nx, INT ny, INT nz, INT nsweeps)
+ *
  * \brief  Colores Gauss-Seidel forward smoother for Au=b
  *
  * \param ia  Pointer to the start location to of row
@@ -2052,17 +2057,16 @@ void rb0f2d( INT *ia,
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  *
  */
-
-void rb0f3d( INT *ia,
-            INT *ja,
-            REAL *aa,
-            REAL *u,
-            REAL *f,
-            INT *mark,
-            INT nx,
-            INT ny,
-            INT nz,
-            INT nsweeps )
+void rb0f3d (INT *ia,
+             INT *ja,
+             REAL *aa,
+             REAL *u,
+             REAL *f,
+             INT *mark,
+             INT nx,
+             INT ny,
+             INT nz,
+             INT nsweeps )
 {
     INT n0e,n0o,isweep;
     

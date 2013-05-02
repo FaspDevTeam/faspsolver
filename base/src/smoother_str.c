@@ -77,7 +77,7 @@ void fasp_smoother_dstr_jacobi (dSTRmat *A,
 void fasp_smoother_dstr_jacobi1 (dSTRmat *A, 
                                  dvector *b, 
                                  dvector *u, 
-                                 REAL *diaginv)    
+                                 REAL *diaginv)
 {    
     // information of A
     INT       ngrid = A->ngrid;    // number of grids
@@ -903,13 +903,13 @@ void fasp_smoother_dstr_sor (dSTRmat *A,
  * \author Shiquan Zhang, Zhiyang Zhou
  * \date   10/10/2010
  */
-void fasp_smoother_dstr_sor1(dSTRmat *A, 
-                             dvector *b,
-                             dvector *u, 
-                             INT order, 
-                             INT *mark, 
-                             REAL *diaginv, 
-                             REAL weight)
+void fasp_smoother_dstr_sor1 (dSTRmat *A,
+                              dvector *b,
+                              dvector *u,
+                              INT order,
+                              INT *mark,
+                              REAL *diaginv,
+                              REAL weight)
 {    
     if (!mark) {
         if (order == ASCEND)       // smooth ascendingly
@@ -934,7 +934,8 @@ void fasp_smoother_dstr_sor1(dSTRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_sor_ascend(dSTRmat *A, dvector *b, dvector *u, REAL *diaginv, REAL weight)
+ * \fn void fasp_smoother_dstr_sor_ascend (dSTRmat *A, dvector *b, dvector *u, 
+ *                                         REAL *diaginv, REAL weight)
  *
  * \brief SOR method as the smoother in the ascending manner
  *
@@ -947,11 +948,11 @@ void fasp_smoother_dstr_sor1(dSTRmat *A,
  * \author Shiquan Zhang, Zhiyang Zhou
  * \date   10/10/2010
  */
-void fasp_smoother_dstr_sor_ascend(dSTRmat *A,
-                                   dvector *b,
-                                   dvector *u,
-                                   REAL *diaginv, 
-                                   REAL weight)
+void fasp_smoother_dstr_sor_ascend (dSTRmat *A,
+                                    dvector *b,
+                                    dvector *u,
+                                    REAL *diaginv,
+                                    REAL weight)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids

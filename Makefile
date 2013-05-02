@@ -40,26 +40,25 @@
 # umfpack=yes
 #
 # If you want to specify the path to SparseSuite, uncomment the next 
-# line and give the correct path to it:
+# line and give the correct path to SparseSuite here. For example:
 #
-# suitesparse_dir="/Users/XiaozheHu/Research/Package/SuiteSparse"
+# suitesparse_dir="/Users/username/dirto/SuiteSparse"
 #
 ####################  User Defined Compiler Flags  #####################
-#
-cflags="-funroll-all-loops"
-cxxflags="-funroll-all-loops"
-fflags="-funroll-all-loops"
-#
-# If you need to generate debug information during building, you should 
-# uncomment the next few lines: 
-#
-# cflags="-Wall -pg"
-# cxxflags="-Wall -pg"
-# fflags="-Wall -pg"
-#
+ifeq ($(debug),yes)
+	cflags="-Wall -pg"
+	cxxflags="-Wall -pg"
+	fflags="-Wall -pg"
+else
+	cflags="-funroll-all-loops"
+	cxxflags="-funroll-all-loops"
+	fflags="-funroll-all-loops"
+endif
 ####################  User Changes UP TO HERE   ########################
 
-VER0=1.2.1
+
+
+VER0=1.2.8
 PKG0=fasp-$(VER0)
 
 # Let cmake do the configuration. Set up a build dir

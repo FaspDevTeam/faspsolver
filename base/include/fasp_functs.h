@@ -167,9 +167,9 @@ void fasp_aux_auv_ (INT *ia,
 
 /*-------- In file: blas_array.c --------*/
 
-void fasp_blas_array_ax(const INT n,
-                        const REAL a,
-                        REAL *x);
+void fasp_blas_array_ax (const INT n,
+                         const REAL a,
+                         REAL *x);
 
 void fasp_blas_array_axpy (const INT n,
                            const REAL a,
@@ -182,15 +182,15 @@ void fasp_blas_array_axpyz (const INT n,
                             REAL *y,
                             REAL *z);
 
-void fasp_blas_array_axpby(const INT n,
-                           const REAL a,
-                           REAL *x,
-                           const REAL b,
-                           REAL *y);
+void fasp_blas_array_axpby (const INT n,
+                            const REAL a,
+                            REAL *x,
+                            const REAL b,
+                            REAL *y);
 
-REAL fasp_blas_array_dotprod(const INT n,
-                             REAL *x,
-                             REAL *y);
+REAL fasp_blas_array_dotprod (const INT n,
+                              REAL *x,
+                              REAL *y);
 
 REAL fasp_blas_array_norm1 (const INT n,
                             REAL *x);
@@ -236,9 +236,9 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
                            REAL *x, 
                            REAL *y) ;
 
-void fasp_blas_dbsr_mxv(dBSRmat *A, 
-		                REAL *x, 
-		                REAL *y) ;
+void fasp_blas_dbsr_mxv (dBSRmat *A,
+		                 REAL *x,
+		                 REAL *y) ;
 
 void fasp_blas_dbsr_rap1 (dBSRmat *R,
                           dBSRmat *A, 
@@ -288,15 +288,15 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
                          dCSRmat *B,
                          dCSRmat *C);
 
-void fasp_blas_dcsr_rap( dCSRmat  *R,
-                        dCSRmat  *A,
-                        dCSRmat  *P,
-                        dCSRmat  *RAP);
+void fasp_blas_dcsr_rap (dCSRmat  *R,
+                         dCSRmat  *A,
+                         dCSRmat  *P,
+                         dCSRmat  *RAP);
 
-void fasp_blas_dcsr_rap_agg ( dCSRmat  *R,
-                              dCSRmat  *A,
-                              dCSRmat  *P,
-                              dCSRmat  *RAP);
+void fasp_blas_dcsr_rap_agg (dCSRmat  *R,
+                             dCSRmat  *A,
+                             dCSRmat  *P,
+                             dCSRmat  *RAP);
 
 void fasp_blas_dcsr_rap_agg1 (dCSRmat *R,
                               dCSRmat *A,
@@ -553,9 +553,9 @@ double fasp_aux_change_endian8 (double x);
 
 double fasp_aux_bbyteToldouble (unsigned char bytes[]);
 
-INT endian_convert_int(const INT inum,
-                       const INT ilength,
-                       const INT endianflag);
+INT endian_convert_int (const INT inum,
+                        const INT ilength,
+                        const INT endianflag);
 
 REAL endian_convert_real (const REAL rnum,
                           INT vlength,
@@ -598,7 +598,7 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab);
 
 dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A);
 
-dCSRmat fasp_format_dbsr_dcsr(dBSRmat *B);
+dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B);
 
 dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B, 
                                const INT nb);
@@ -712,7 +712,7 @@ void fasp_dcoo_read (char *filename,
                      dCSRmat *A);
 
 void fasp_dcoo1_read (char *filename,
-                     dCOOmat *A);
+                      dCOOmat *A);
 
 void fasp_dmtx_read (char *filename,
                      dCSRmat *A);
@@ -789,12 +789,12 @@ void fasp_matrix_write (char *filename,
 					    void *A,
                         INT  flag);
 
-void fasp_vector_read(char *filerhs,
-                      void *b);
+void fasp_vector_read (char *filerhs,
+                       void *b);
 
-void fasp_vector_write(char *filerhs,
-		               void *b,
-			           INT  flag);
+void fasp_vector_write (char *filerhs,
+                        void *b,
+                        INT  flag);
 
 
 /*-------- In file: itsolver_bcsr.c --------*/
@@ -813,7 +813,8 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
 
 /*-------- In file: itsolver_bsr.c --------*/
 
-void fasp_set_GS_threads(INT mythreads, INT its);
+void fasp_set_GS_threads (INT mythreads,
+                          INT its);
 
 INT fasp_solver_dbsr_itsolver (dBSRmat *A, 
                                dvector *b, 
@@ -1141,14 +1142,14 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
                             const SHORT stop_type,
                             const SHORT print_level);
 
-INT fasp_solver_dbsr_pbcgs(dBSRmat *A, 
-                           dvector *b, 
-                           dvector *u, 
-                           precond *pc, 
-                           const REAL tol,
-                           const INT MaxIt, 
-                           const SHORT stop_type,
-                           const SHORT print_level) ;
+INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
+                            dvector *b,
+                            dvector *u,
+                            precond *pc,
+                            const REAL tol,
+                            const INT MaxIt,
+                            const SHORT stop_type,
+                            const SHORT print_level) ;
 
 INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, 
                              dvector *b, 
@@ -1351,17 +1352,17 @@ void fasp_precond_dbsr_diag (REAL *r,
                              REAL *z, 
                              void *data) ;
 
-void fasp_precond_dbsr_diag_nc2(REAL *r, 
-                                REAL *z, 
-                                void *data) ;
+void fasp_precond_dbsr_diag_nc2 (REAL *r,
+                                 REAL *z,
+                                 void *data) ;
 
-void fasp_precond_dbsr_diag_nc3(REAL *r, 
-                                REAL *z, 
-                                void *data) ;
+void fasp_precond_dbsr_diag_nc3 (REAL *r,
+                                 REAL *z,
+                                 void *data);
 
-void fasp_precond_dbsr_diag_nc5(REAL *r, 
-                                REAL *z, 
-                                void *data) ;
+void fasp_precond_dbsr_diag_nc5 (REAL *r,
+                                 REAL *z,
+                                 void *data);
 
 void fasp_precond_dbsr_diag_nc7 (REAL *r, 
                                  REAL *z, 
@@ -1790,29 +1791,29 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
                                 dvector *b,
                                 INT L);
 
-void swep2db(INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT nbegx,
-             INT nbegy,
-             INT *mark,
-             INT nx,
-             INT ny);
+void swep2db (INT *ia,
+              INT *ja,
+              REAL *aa,
+              REAL *u,
+              REAL *f,
+              INT nbegx,
+              INT nbegy,
+              INT *mark,
+              INT nx,
+              INT ny);
 
-void swep3db(INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT nbegx,
-             INT nbegy,
-             INT nbegz,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nz);
+void swep3db (INT *ia,
+              INT *ja,
+              REAL *aa,
+              REAL *u,
+              REAL *f,
+              INT nbegx,
+              INT nbegy,
+              INT nbegz,
+              INT *mark,
+              INT nx,
+              INT ny,
+              INT nz);
 
 void rb0b2d (INT *ia,
              INT *ja,
@@ -1835,50 +1836,50 @@ void rb0b3d (INT *ia,
              INT nz,
              INT nsweeps);
 
-void swep2df(INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT nbegx,
-             INT nbegy,
-             INT *mark,
-             INT nx,
-             INT ny );
+void swep2df (INT *ia,
+              INT *ja,
+              REAL *aa,
+              REAL *u,
+              REAL *f,
+              INT nbegx,
+              INT nbegy,
+              INT *mark,
+              INT nx,
+              INT ny );
 
-void swep3df(INT *ia,
+void swep3df (INT *ia,
+              INT *ja,
+              REAL *aa,
+              REAL *u,
+              REAL *f,
+              INT nbegx,
+              INT nbegy,
+              INT nbegz,
+              INT *mark,
+              INT nx,
+              INT ny,
+              INT nz);
+
+void rb0f2d (INT *ia,
              INT *ja,
              REAL *aa,
              REAL *u,
              REAL *f,
-             INT nbegx,
-             INT nbegy,
-             INT nbegz,
              INT *mark,
              INT nx,
              INT ny,
-             INT nz);
+             INT nsweeps);
 
-void rb0f2d( INT *ia,
-            INT *ja,
-            REAL *aa,
-            REAL *u,
-            REAL *f,
-            INT *mark,
-            INT nx,
-            INT ny,
-            INT nsweeps );
-
-void rb0f3d( INT *ia,
-            INT *ja,
-            REAL *aa,
-            REAL *u,
-            REAL *f,
-            INT *mark,
-            INT nx,
-            INT ny,
-            INT nz,
-            INT nsweeps );
+void rb0f3d (INT *ia,
+             INT *ja,
+             REAL *aa,
+             REAL *u,
+             REAL *f,
+             INT *mark,
+             INT nx,
+             INT ny,
+             INT nz,
+             INT nsweeps );
 
 void fasp_smoother_dcsr_gs_rb3d (dvector *u,
                                  dCSRmat *A,
@@ -1918,7 +1919,7 @@ void fasp_smoother_dstr_jacobi (dSTRmat *A,
 void fasp_smoother_dstr_jacobi1 (dSTRmat *A, 
                                  dvector *b, 
                                  dvector *u, 
-                                 REAL *diaginv)    ;
+                                 REAL *diaginv);
 
 void fasp_smoother_dstr_gs (dSTRmat *A, 
                             dvector *b, 
@@ -1963,19 +1964,19 @@ void fasp_smoother_dstr_sor (dSTRmat *A,
                              INT *mark, 
                              REAL weight);
 
-void fasp_smoother_dstr_sor1(dSTRmat *A, 
-                             dvector *b,
-                             dvector *u, 
-                             INT order, 
-                             INT *mark, 
-                             REAL *diaginv, 
-                             REAL weight);
+void fasp_smoother_dstr_sor1 (dSTRmat *A,
+                              dvector *b,
+                              dvector *u,
+                              INT order,
+                              INT *mark,
+                              REAL *diaginv,
+                              REAL weight);
 
-void fasp_smoother_dstr_sor_ascend(dSTRmat *A,
-                                   dvector *b,
-                                   dvector *u,
-                                   REAL *diaginv, 
-                                   REAL weight);
+void fasp_smoother_dstr_sor_ascend (dSTRmat *A,
+                                    dvector *b,
+                                    dvector *u,
+                                    REAL *diaginv,
+                                    REAL weight);
 
 void fasp_smoother_dstr_sor_descend (dSTRmat *A, 
                                      dvector *b, 
@@ -2158,11 +2159,11 @@ void fasp_dcsr_shift (dCSRmat *A,
 void fasp_dcsr_symdiagscale (dCSRmat *A, 
                              dvector *diag);
 
-dCSRmat fasp_dcsr_sympat(dCSRmat *A);
+dCSRmat fasp_dcsr_sympat (dCSRmat *A);
 
-void fasp_dcsr_multicoloring(dCSRmat *A,
-                             INT *flags,
-                             INT *groups);
+void fasp_dcsr_multicoloring (dCSRmat *A,
+                              INT *flags,
+                              INT *groups);
 
 
 /*-------- In file: sparse_csrl.c --------*/
@@ -2636,9 +2637,12 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
 
 /*-------- In file: interface_samg.c --------*/
 
-void dvector2SAMGInput(dvector *vec, char *filename);
+void dvector2SAMGInput (dvector *vec,
+                        char *filename);
 
-INT dCSRmat2SAMGInput(dCSRmat *A, char *filefrm, char *fileamg);
+INT dCSRmat2SAMGInput (dCSRmat *A,
+                       char *filefrm,
+                       char *fileamg);
 
 
 /*-------- In file: interface_superlu.c --------*/

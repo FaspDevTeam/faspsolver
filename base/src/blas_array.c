@@ -31,9 +31,9 @@
  *
  * \note x is reused to store the resulting array.
  */
-void fasp_blas_array_ax(const INT n,
-                        const REAL a,
-                        REAL *x)
+void fasp_blas_array_ax (const INT n,
+                         const REAL a,
+                         REAL *x)
 {
     INT i;
     INT use_openmp = FALSE;
@@ -214,11 +214,11 @@ void fasp_blas_array_axpyz (const INT n,
  *
  * \note y is reused to store the resulting array.
  */
-void fasp_blas_array_axpby(const INT n,
-                           const REAL a,
-                           REAL *x,
-                           const REAL b,
-                           REAL *y)
+void fasp_blas_array_axpby (const INT n,
+                            const REAL a,
+                            REAL *x,
+                            const REAL b,
+                            REAL *y)
 {
     INT i;
     INT use_openmp = FALSE;
@@ -263,9 +263,9 @@ void fasp_blas_array_axpby(const INT n,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-REAL fasp_blas_array_dotprod(const INT n,
-                             REAL *x,
-                             REAL *y)
+REAL fasp_blas_array_dotprod (const INT n,
+                              REAL *x,
+                              REAL *y)
 {
     INT i;
     INT use_openmp = FALSE;

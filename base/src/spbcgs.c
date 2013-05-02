@@ -99,7 +99,7 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
                              const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
-    const INT    m=b->row;
+    const INT    m = b->row;
     const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
@@ -115,9 +115,9 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
     REAL         absres_best = BIGREAL; // initial best known residual
     
     // allocate temp memory (need 8*m REAL)
-    REAL *work=(REAL *)fasp_mem_calloc(9*m,sizeof(REAL));
-    REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
-    REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m, *u_best=sp+m;
+    REAL *work = (REAL *)fasp_mem_calloc(9*m,sizeof(REAL));
+    REAL *p    = work,  *z  = work + m, *r = z  + m, *t  = r + m;
+    REAL *rho  = t + m, *pp = rho  + m, *s = pp + m, *sp = s + m, *u_best = sp + m;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_pbcgs ...... [Start]\n");
@@ -153,20 +153,7 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
     
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
-    
-    // safe net check: save the best-so-far solution
-    if ( fasp_dvec_isnan(u) ) {
-        // If the solution is NAN, restrore the best solution
-        absres = BIGREAL;
-        goto RESTORE_BESTSOL;
-    }
-    
-    if ( absres < absres_best - maxdiff) {
-        absres_best = absres;
-        iter_best   = iter;
-        fasp_array_cp(m,uval,u_best);
-    }
-    
+        
     // rho = r* := r
     fasp_array_cp(m,r,rho);
     temp1 = fasp_blas_array_dotprod(m,r,rho);
@@ -275,6 +262,19 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
                 break;
         }
         
+        // safe net check: save the best-so-far solution
+        if ( fasp_dvec_isnan(u) ) {
+            // If the solution is NAN, restrore the best solution
+            absres = BIGREAL;
+            goto RESTORE_BESTSOL;
+        }
+        
+        if ( absres < absres_best - maxdiff) {
+            absres_best = absres;
+            iter_best   = iter;
+            fasp_array_cp(m,uval,u_best);
+        }
+
         // compute reducation factor of residual ||r||
         factor = absres/absres0;
         
@@ -290,7 +290,7 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
         }
         
         // Check II: if staggenated, try to restart
-        if ( (stag<=MaxStag) && (reldiff<maxdiff) ) {
+        if ( (stag <= MaxStag) && (reldiff < maxdiff) ) {
             
             if ( print_level >= PRINT_MORE ) {
                 ITS_DIFFRES(reldiff,relres);
@@ -487,7 +487,7 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
                             const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
-    const INT    m=b->row;
+    const INT    m = b->row;
     const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
@@ -503,9 +503,9 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
     REAL         absres_best = BIGREAL; // initial best known residual
     
     // allocate temp memory (need 8*m REAL)
-    REAL *work=(REAL *)fasp_mem_calloc(9*m,sizeof(REAL));
-    REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
-    REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m, *u_best=sp+m;
+    REAL *work = (REAL *)fasp_mem_calloc(9*m,sizeof(REAL));
+    REAL *p    = work,  *z  = work + m, *r = z  + m, *t  = r + m;
+    REAL *rho  = t + m, *pp = rho  + m, *s = pp + m, *sp = s + m, *u_best = sp + m;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dbsr_pbcgs ...... [Start]\n");
@@ -542,19 +542,6 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
     
-    // safe net check: save the best-so-far solution
-    if ( fasp_dvec_isnan(u) ) {
-        // If the solution is NAN, restrore the best solution
-        absres = BIGREAL;
-        goto RESTORE_BESTSOL;
-    }
-    
-    if ( absres < absres_best - maxdiff) {
-        absres_best = absres;
-        iter_best   = iter;
-        fasp_array_cp(m,uval,u_best);
-    }
-    
     // rho = r* := r
     fasp_array_cp(m,r,rho);
     temp1 = fasp_blas_array_dotprod(m,r,rho);
@@ -580,7 +567,7 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO; goto RESTORE_BESTSOL;
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // s = r - alpha z
@@ -663,6 +650,19 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
                 break;
         }
         
+        // safe net check: save the best-so-far solution
+        if ( fasp_dvec_isnan(u) ) {
+            // If the solution is NAN, restrore the best solution
+            absres = BIGREAL;
+            goto RESTORE_BESTSOL;
+        }
+        
+        if ( absres < absres_best - maxdiff) {
+            absres_best = absres;
+            iter_best   = iter;
+            fasp_array_cp(m,uval,u_best);
+        }
+        
         // compute reducation factor of residual ||r||
         factor = absres/absres0;
         
@@ -678,7 +678,7 @@ INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
         }
         
         // Check II: if staggenated, try to restart
-        if ( (stag<=MaxStag) && (reldiff<maxdiff) ) {
+        if ( (stag <= MaxStag) && (reldiff < maxdiff) ) {
             
             if ( print_level >= PRINT_MORE ) {
                 ITS_DIFFRES(reldiff,relres);
@@ -827,7 +827,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
     }
     
-FINISHED:  // finish the iterative method
+FINISHED: // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -875,7 +875,7 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
                               const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
-    const INT    m=b->row;
+    const INT    m = b->row;
     const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
@@ -891,9 +891,9 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
     REAL         absres_best = BIGREAL; // initial best known residual
     
     // allocate temp memory (need 8*m REAL)
-    REAL *work=(REAL *)fasp_mem_calloc(9*m,sizeof(REAL));
-    REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
-    REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m, *u_best=sp+m;
+    REAL *work = (REAL *)fasp_mem_calloc(9*m,sizeof(REAL));
+    REAL *p    = work,  *z  = work + m, *r = z  + m, *t  = r + m;
+    REAL *rho  = t + m, *pp = rho  + m, *s = pp + m, *sp = s + m, *u_best = sp + m;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_bdcsr_pbcgs ...... [Start]\n");
@@ -930,19 +930,6 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
     
-    // safe net check: save the best-so-far solution
-    if ( fasp_dvec_isnan(u) ) {
-        // If the solution is NAN, restrore the best solution
-        absres = BIGREAL;
-        goto RESTORE_BESTSOL;
-    }
-    
-    if ( absres < absres_best - maxdiff) {
-        absres_best = absres;
-        iter_best   = iter;
-        fasp_array_cp(m,uval,u_best);
-    }
-    
     // rho = r* := r
     fasp_array_cp(m,r,rho);
     temp1 = fasp_blas_array_dotprod(m,r,rho);
@@ -968,7 +955,7 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO; goto RESTORE_BESTSOL;
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // s = r - alpha z
@@ -1051,6 +1038,19 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
                 break;
         }
         
+        // safe net check: save the best-so-far solution
+        if ( fasp_dvec_isnan(u) ) {
+            // If the solution is NAN, restrore the best solution
+            absres = BIGREAL;
+            goto RESTORE_BESTSOL;
+        }
+        
+        if ( absres < absres_best - maxdiff) {
+            absres_best = absres;
+            iter_best   = iter;
+            fasp_array_cp(m,uval,u_best);
+        }
+        
         // compute reducation factor of residual ||r||
         factor = absres/absres0;
         
@@ -1066,7 +1066,7 @@ INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
         }
         
         // Check II: if staggenated, try to restart
-        if ( (stag<=MaxStag) && (reldiff<maxdiff) ) {
+        if ( (stag <= MaxStag) && (reldiff < maxdiff) ) {
             
             if ( print_level >= PRINT_MORE ) {
                 ITS_DIFFRES(reldiff,relres);
@@ -1215,7 +1215,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
     }
     
-FINISHED:  // finish the iterative method
+FINISHED: // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -1263,7 +1263,7 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
                              const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
-    const INT    m=b->row;
+    const INT    m = b->row;
     const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
@@ -1279,9 +1279,9 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
     REAL         absres_best = BIGREAL; // initial best known residual
     
     // allocate temp memory (need 8*m REAL)
-    REAL *work=(REAL *)fasp_mem_calloc(9*m,sizeof(REAL));
-    REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
-    REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m, *u_best=sp+m;
+    REAL *work = (REAL *)fasp_mem_calloc(9*m,sizeof(REAL));
+    REAL *p    = work,  *z  = work + m, *r = z  + m, *t  = r + m;
+    REAL *rho  = t + m, *pp = rho  + m, *s = pp + m, *sp = s + m, *u_best = sp + m;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dstr_pbcgs ...... [Start]\n");
@@ -1318,19 +1318,6 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
     
-    // safe net check: save the best-so-far solution
-    if ( fasp_dvec_isnan(u) ) {
-        // If the solution is NAN, restrore the best solution
-        absres = BIGREAL;
-        goto RESTORE_BESTSOL;
-    }
-    
-    if ( absres < absres_best - maxdiff) {
-        absres_best = absres;
-        iter_best   = iter;
-        fasp_array_cp(m,uval,u_best);
-    }
-    
     // rho = r* := r
     fasp_array_cp(m,r,rho);
     temp1 = fasp_blas_array_dotprod(m,r,rho);
@@ -1356,7 +1343,7 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
             alpha = temp1/temp2;
         }
         else {
-            ITS_DIVZERO; goto RESTORE_BESTSOL;
+            ITS_DIVZERO; goto FINISHED;
         }
         
         // s = r - alpha z
@@ -1379,8 +1366,8 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
             omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         }
         else {
-            if (print_level>=PRINT_SOME) ITS_DIVZERO;
             omega = 0.0;
+            if (print_level>=PRINT_SOME) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -1439,6 +1426,19 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
                 break;
         }
         
+        // safe net check: save the best-so-far solution
+        if ( fasp_dvec_isnan(u) ) {
+            // If the solution is NAN, restrore the best solution
+            absres = BIGREAL;
+            goto RESTORE_BESTSOL;
+        }
+        
+        if ( absres < absres_best - maxdiff) {
+            absres_best = absres;
+            iter_best   = iter;
+            fasp_array_cp(m,uval,u_best);
+        }
+        
         // compute reducation factor of residual ||r||
         factor = absres/absres0;
         
@@ -1454,7 +1454,7 @@ INT fasp_solver_dstr_spbcgs (dSTRmat *A,
         }
         
         // Check II: if staggenated, try to restart
-        if ( (stag<=MaxStag) && (reldiff<maxdiff) ) {
+        if ( (stag <= MaxStag) && (reldiff < maxdiff) ) {
             
             if ( print_level >= PRINT_MORE ) {
                 ITS_DIFFRES(reldiff,relres);
@@ -1603,7 +1603,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
     }
     
-FINISHED:  // finish the iterative method
+FINISHED: // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory

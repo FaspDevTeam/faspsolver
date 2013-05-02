@@ -101,9 +101,9 @@ double fasp_aux_bbyteToldouble (unsigned char bytes[])
  * \author Ziteng Wang
  * \date   2012-12-24
  */
-INT endian_convert_int(const INT inum,
-                       const INT ilength,
-                       const INT endianflag)
+INT endian_convert_int (const INT inum,
+                        const INT ilength,
+                        const INT endianflag)
 {
     INT iretVal,i;
     char *intToConvert = ( char* ) & inum;

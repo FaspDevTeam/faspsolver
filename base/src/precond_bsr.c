@@ -102,9 +102,9 @@ void fasp_precond_dbsr_diag (REAL *r,
  * \note Works for 2-component (Xiaozhe)
  */
 
-void fasp_precond_dbsr_diag_nc2(REAL *r, 
-                                REAL *z, 
-                                void *data) 
+void fasp_precond_dbsr_diag_nc2 (REAL *r,
+                                 REAL *z,
+                                 void *data) 
 {
     precond_diagbsr *diag   = (precond_diagbsr *)data;
     REAL          *diagptr = diag->diag.val;
@@ -152,9 +152,9 @@ void fasp_precond_dbsr_diag_nc2(REAL *r,
  * \note Works for 3-component (Xiaozhe)
  */
 
-void fasp_precond_dbsr_diag_nc3(REAL *r, 
-                                REAL *z, 
-                                void *data) 
+void fasp_precond_dbsr_diag_nc3 (REAL *r,
+                                 REAL *z,
+                                 void *data)
 {
     precond_diagbsr *diag   = (precond_diagbsr *)data;
     REAL          *diagptr = diag->diag.val;
@@ -202,9 +202,9 @@ void fasp_precond_dbsr_diag_nc3(REAL *r,
  * \note Works for 5-component (Xiaozhe)
  */
 
-void fasp_precond_dbsr_diag_nc5(REAL *r, 
-                                REAL *z, 
-                                void *data) 
+void fasp_precond_dbsr_diag_nc5 (REAL *r,
+                                 REAL *z,
+                                 void *data)
 {
     precond_diagbsr *diag   = (precond_diagbsr *)data;
     REAL          *diagptr = diag->diag.val;
