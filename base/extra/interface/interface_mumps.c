@@ -165,8 +165,8 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
 {
     
 #if WITH_MUMPS
-    static  DMUMPS_STRUC_C id;
-	static int job_stat;
+    static DMUMPS_STRUC_C id;
+	static int job_stat = 0;
     int i,j;
 	
     const  int n =  ptrA->row;
@@ -182,6 +182,10 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
     double *a = id.a;
     double *rhs = id.rhs;
     
+#if DEBUG_MODE
+	printf("fasp_solver_mumps_steps: job_stat = %d\n", job_stat);
+#endif
+
     switch ( job ) {
             
         case 1:
@@ -249,7 +253,8 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
 #if DEBUG_MODE
 			printf("### DEBUG: fasp_solver_mumps_steps ...... [2]\n");   
 #endif
-            if (job_stat !=1)  printf("### ERROR: fasp_solver_mumps_steps has not finish Setup...... [2]\n"); 
+            if ( job_stat != 1 )
+                printf("### ERROR: fasp_solver_mumps_steps has not finish Setup...... [2]\n");
 
             /* Call the MUMPS package. */
             for(i=0; i<id.n; i++) rhs[i] = b1[i];
@@ -265,7 +270,9 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             
         case 3:
         {
-            if (job_stat !=1)  printf("### ERROR: fasp_solver_mumps_steps has not finish Setup...... [3]\n"); 
+            if ( job_stat !=1 )
+                printf("### ERROR: fasp_solver_mumps_steps has not finish Setup...... [3]\n");
+            
             free(irn);
             free(jcn);
             free(a);

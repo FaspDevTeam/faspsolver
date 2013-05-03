@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+05/03/2013 FASP 1.2.9:
+- When coarsening step not succeed, stop setup instead of quit.
+- Change interface to MUMPS a little bit.
+- Fix an output memory out-of-bound bug in pvfgmres.
+- Modify io.c a little, not important.
+
 04/30/2013 FASP 1.2.8:
 - Change filename blas_block.c --> blas_bcsr.c.
 - Change filename threads_schedule.c --> threads.c.

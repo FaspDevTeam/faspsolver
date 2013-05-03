@@ -141,7 +141,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(print_level,stop_type,0,relres,absres0,0);
     
     // store initial residual
     norms[0] = relres;
@@ -458,7 +458,7 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(print_level,stop_type,0,relres,absres0,0);
     
     // store initial residual
     norms[0] = relres;
@@ -742,7 +742,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
     for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
     
     for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
-    
+
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
     fasp_blas_dbsr_aAxpy(-1.0, A, x->val, p[0]);
@@ -776,9 +776,9 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
     
     // if initial residual is small, no need to iterate!
     if ( relres < tol ) goto FINISHED;
-    
+
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(print_level,stop_type,0,relres,absres0,0);
     
     // store initial residual
     norms[0] = relres;
@@ -1098,7 +1098,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(print_level,stop_type,0,relres,absres0,0);
     
     // store initial residual
     norms[0] = relres;

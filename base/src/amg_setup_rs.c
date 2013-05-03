@@ -94,7 +94,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 	INT schwarz_mmsize  = param->schwarz_mmsize;
 	INT schwarz_maxlvl  = param->schwarz_maxlvl;
 	INT schwarz_type    = param->schwarz_type;
-    
+
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
@@ -119,11 +119,13 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
             fasp_dcsr_shift (&(mgl[level].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[level].schwarz, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
         }
-        
+
         /*-- Coarseing and form the structure of interpolation --*/
-        if ( (param->coarsening_type == COARSE_AC) && (level >= param->aggressive_level) ) param->coarsening_type = COARSE_RS;
+		if ( (param->coarsening_type == COARSE_AC) && (level >= param->aggressive_level) ) {
+			param->coarsening_type = COARSE_RS;
+		}
         status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
-        if ( status < 0 ) goto FINISHED;
+		if ( status < 0 ) break; // Cannot complete coarsening this level!!!
         
         /*-- Store the C/F marker --*/
         size = mgl[level].A.row;

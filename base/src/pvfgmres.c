@@ -87,7 +87,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
     INT    d           = 3;       // reduction for the restart parameter 
     INT    restart_max = restart; // upper bound for restart in each restart cycle 
-    INT    restart_min = 3;          // lower bound for restart in each restart cycle (should be small)
+    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
     INT    Restart;               // the real restart in some fixed restarted cycle
     
 #if DEBUG_MODE
@@ -128,13 +128,11 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     
     if (b_norm > 0 ) {
         if (print_level > PRINT_NONE)
-            print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,
-                         norms[iter],norms[iter]/norms[iter-1]);
+            print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
     }
     else {
         if (print_level > PRINT_NONE)
-            print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],
-                         norms[iter]/norms[iter-1]);
+            print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],0);
     }
     
     epsilon = tol*den_norm;
@@ -391,13 +389,13 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
     REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
     INT    d           = 3;       // reduction for the restart parameter 
     INT    restart_max = restart; // upper bound for restart in each restart cycle 
-    INT    restart_min = 3;          // lower bound for restart in each restart cycle (should be small)
+    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
     INT    Restart;               // the real restart in some fixed restarted cycle
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dbsr_pvfgmres ...... [Start]\n");
 #endif    
-    
+
     /* allocate memory */
     work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n+ (restartplus1*n)-n, sizeof(REAL));    
     p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));    
@@ -425,21 +423,19 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
             ITS_PUTNORM("residual", r_norm);
         }
     }
-    
+
     if (b_norm > 0.0)  den_norm = b_norm;
     else               den_norm = r_norm;
     
     if (b_norm > 0 ) {
         if (print_level > PRINT_NONE)
-            print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,
-                         norms[iter],norms[iter]/norms[iter-1]);
+            print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
     }
     else {
         if (print_level > PRINT_NONE)
-            print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],
-                         norms[iter]/norms[iter-1]);
+            print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],0);
     }
-    
+
     epsilon = tol*den_norm;
     
     /* outer iteration cycle */

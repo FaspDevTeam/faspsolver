@@ -696,7 +696,9 @@ void fasp_dbsr_read (char *filename,
  *     - nrow
  *     - ind_j, val_j, j=0:nrow-1
  *
- * \note Because the index is given, order is NOT important!
+ * \note Because the index is given, order is not important!
+ *
+ * \note Need to add safe-guard during reading
  *
  * \author Chensong Zhang
  * \date   03/29/2009

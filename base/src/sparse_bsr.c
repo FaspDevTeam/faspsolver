@@ -752,11 +752,14 @@ dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
  * \param A        Pointer to the dBSRmat matrix
  * \param diaginv  Pointer to the inverses of all the diagonal blocks
  *
+ * \return BSR matrix after diagonal scaling
+ *
  * \note Works for general nb (Xiaozhe)
  *
  * \author Xiaozhe Hu
  * \date   12/25/2010
- * \date   05/26/2012
+ * 
+ * Modified by Xiaozhe Hu on 05/26/2012
  */
 
 dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A, 
@@ -1106,14 +1109,16 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
  * \param A        Pointer to the dBSRmat matrix  
  * \param diaginv  Pointer to the inverses of all the diagonal blocks
  *
+ * \return BSR matrix after diagonal scaling
+ *
+ * \note Works for general nb (Xiaozhe)
+ *
+ * \note A is preordered that the first block of each row is the diagonal block!
+ *
  * \author Xiaozhe Hu
  * \date 03/12/2011
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date 08/26/2012
- *
- * \note Works for general nb (Xiaozhe)
- * \note A is preordered that the first block of each row is the diagonal block!!
+ * Modified by Chunsheng Feng, Zheng Li on 08/26/2012
  */
 dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A, 
                             REAL *diaginv)
