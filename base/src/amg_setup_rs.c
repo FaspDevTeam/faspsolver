@@ -39,6 +39,7 @@
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle.
  * Modified by Chensong zhang on 09/09/2011: add min dof.
  * Modified by Xiaozhe Hu on 04/24/2013: aggressive coarsening
+ * Modified by Chensong Zhang on 05/03/2013: add error handling in setup
  */
 INT fasp_amg_setup_rs (AMG_data *mgl,
                        AMG_param *param)
@@ -50,7 +51,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     // local variables
     INT     mm, size;
     INT     level = 0, status = SUCCESS;
-    INT     max_levels = param->max_levels;
+    INT     max_levels = param->max_levels, clevel = 0;
     REAL    setup_start, setup_end;
     
     ivector vertices = fasp_ivec_create(m); // stores level info (fine: 0; coarse: 1)
@@ -64,13 +65,17 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     
     fasp_gettime(&setup_start);
     
-    // Xiaozhe 02/23/2011: make sure classical AMG will not call fasp_blas_dcsr_mxv_agg
+    // Xiaozhe 02/23/2011: Make sure classical AMG will not call fasp_blas_dcsr_mxv_agg
     param->tentative_smooth = 1.0;
     
-    // Xiaozhe 04/24/2013: if user want to use aggressive coarsening but did not specify number of levels use aggressive coarsening, make sure the apply aggresive coarsening on first level
-    if ( (param->coarsening_type == COARSE_AC) && (param->aggressive_level < 1) ) param->aggressive_level = 1;
+    // Xiaozhe 04/24/2013: If user want to use aggressive coarsening but did not specify
+    // number of levels use aggressive coarsening, make sure we apply aggresive coarsening
+    // on the finest level only
+    if ( (param->coarsening_type == COARSE_AC) && (param->aggressive_level < 1) ) {
+        param->aggressive_level = 1;
+    }
     
-    // setup AMLI coefficients
+    // Initialize AMLI coefficients
     if ( cycle_type == AMLI_CYCLE ) {
         param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
         REAL lambda_max = 2.0;
@@ -78,7 +83,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
     }
     
-    // initialize ILU parameters
+    // Initialize ILU parameters
     ILU_param iluparam;
     mgl->ILU_levels = param->ILU_levels;
     if ( param->ILU_levels > 0 ) {
@@ -89,17 +94,17 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         iluparam.ILU_type    = param->ILU_type;
     }
     
-    // initialize Schwarz parameters
+    // Initialize Schwarz parameters
 	mgl->schwarz_levels = param->schwarz_levels;
 	INT schwarz_mmsize  = param->schwarz_mmsize;
 	INT schwarz_maxlvl  = param->schwarz_maxlvl;
 	INT schwarz_type    = param->schwarz_type;
 
 #if DIAGONAL_PREF
-    fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
+    fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal entries appear first
 #endif
     
-    // main AMG setup loop
+    // Main AMG setup loop
     while ( (mgl[level].A.row>MAX(param->coarse_dof,50)) && (level<max_levels-1) ) {
         
 #if DEBUG_MODE
@@ -107,39 +112,52 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
                level,mgl[level].A.row,mgl[level].A.nnz);
 #endif
         
-        /*-- setup ILU decomposition if necessary --*/
+        /*-- Setup ILU decomposition if needed --*/
         if ( level < param->ILU_levels ) {
             status = fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
-            if ( status < 0 ) goto FINISHED;
+            if ( status < 0 ) {
+                printf("### ERROR: ILU setup on level %d failed!\n", level);
+                goto FINISHED;
+            }
         }
         
-        /*-- setup Schwarz smoother if necessary --*/
+        /*-- Setup Schwarz smoother if needed --*/
         if ( level < param->schwarz_levels ) {
             mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
             fasp_dcsr_shift (&(mgl[level].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[level].schwarz, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
         }
 
-        /*-- Coarseing and form the structure of interpolation --*/
+        /*-- Perform aggressive coarsening only up to the specified level --*/
 		if ( (param->coarsening_type == COARSE_AC) && (level >= param->aggressive_level) ) {
-			param->coarsening_type = COARSE_RS;
+			param->coarsening_type = COARSE_RS; 
 		}
+        
+        /*-- Coarseing and form the structure of interpolation --*/
         status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
-		if ( status < 0 ) break; // Cannot complete coarsening this level!!!
+        if ( status < 0 ) {
+            if ( print_level > PRINT_NONE ) printf("### WARNING: Coarsening on level %d failed!\n", level);
+            break;
+        }
         
         /*-- Store the C/F marker --*/
         size = mgl[level].A.row;
         mgl[level].cfmark = fasp_ivec_create(size);
         memcpy(mgl[level].cfmark.val, vertices.val, size*sizeof(INT));
         
-        if ( mgl[level].P.col <= 0 )
-            break;
-        else if ( mgl[level].P.col * 1.5 > mgl[level].A.row )
+        if ( mgl[level].P.col <= 50 ) {
+            break; // Chensong: If coarse size is smaller than 50, stop!!!
+        }
+        else if ( mgl[level].P.col * 1.5 > mgl[level].A.row ) {
             param->coarsening_type = COARSE_RS;
+        }
         
         /*-- Form interpolation --*/
         status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
-        if ( status < 0 ) goto FINISHED;
+        if ( status < 0 ) {
+            if ( print_level > PRINT_NONE ) printf("### WARNING: Coarsening on level %d failed!\n", level);
+            break;
+        }
         
         /*-- Form coarse level stiffness matrix: There are two RAP routines available! --*/
 #if TRUE
@@ -150,7 +168,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         // TODO: Make a new ptap using (A,P) only. R is not needed as an input! --Chensong
 #endif
         
-        /*-- clean up! --*/
+        /*-- clean up S! --*/
         fasp_mem_free(S.IA);
         fasp_mem_free(S.JA);
         
@@ -165,6 +183,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     // setup total level number and current level
     mgl[0].num_levels = max_levels = level+1;
     mgl[0].w          = fasp_dvec_create(m);
+    clevel            = level;
     
 #if FALSE
     INT groups;
@@ -177,13 +196,13 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     }
 #endif
     
-    for ( level = 1; level < max_levels; ++level ) {
+    for ( level = 1; level <= clevel; ++level ) {
         mm                    = mgl[level].A.row;
         mgl[level].num_levels = max_levels;
         mgl[level].b          = fasp_dvec_create(mm);
         mgl[level].x          = fasp_dvec_create(mm);
         
-        // allocate working array for solve phase
+        // allocate work arraies for the solve phase
         if ( cycle_type == NL_AMLI_CYCLE )
             mgl[level].w = fasp_dvec_create(3*mm);
         else
@@ -193,26 +212,23 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 #if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK to work
     dCSRmat Ac_tran;
-    fasp_dcsr_trans(&mgl[max_levels-1].A, &Ac_tran);
+    fasp_dcsr_trans(&mgl[clevel].A, &Ac_tran);
     fasp_dcsr_sort(&Ac_tran);
-    fasp_dcsr_cp(&Ac_tran, &mgl[max_levels-1].A);
+    fasp_dcsr_cp(&Ac_tran, &mgl[clevel].A);
     fasp_dcsr_free(&Ac_tran);
 #endif
     
 #if WITH_MUMPS
     // Setup MUMPS direct solver on the coarsest level
-    fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, 1);
+    fasp_solver_mumps_steps(&mgl[clevel].A, &mgl[clevel].b, &mgl[clevel].x, 1);
 #endif
 	
     if ( print_level > PRINT_NONE ) {
         fasp_gettime(&setup_end);
-        REAL setupduration = setup_end - setup_start;
         print_amgcomplexity(mgl, print_level);
-        print_cputime("Classical AMG setup", setupduration);
+        print_cputime("Classical AMG setup", setup_end - setup_start);
     }
-    
-    status = SUCCESS;
-    
+        
 FINISHED:
     fasp_ivec_free(&vertices);
     
@@ -282,7 +298,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
         fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
     }
     
-    // initialize ILU parameters
+    // Initialize ILU parameters
     ILU_param iluparam;
     mgl->ILU_levels = param->ILU_levels;
     if ( param->ILU_levels > 0 ) {
@@ -293,7 +309,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
         iluparam.ILU_type    = param->ILU_type;
     }
     
-	// initialize Schwarz parameters
+	// Initialize Schwarz parameters
 	mgl->schwarz_levels = param->schwarz_levels;
 	INT schwarz_mmsize  = param->schwarz_mmsize;
     INT schwarz_maxlvl  = param->schwarz_maxlvl;

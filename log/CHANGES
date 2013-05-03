@@ -5,6 +5,7 @@ File Name: CHANGES
 - Change interface to MUMPS a little bit.
 - Fix an output memory out-of-bound bug in pvfgmres.
 - Modify io.c a little, not important.
+- Add error handling in AMG setup in case problems happen.
 
 04/30/2013 FASP 1.2.8:
 - Change filename blas_block.c --> blas_bcsr.c.
