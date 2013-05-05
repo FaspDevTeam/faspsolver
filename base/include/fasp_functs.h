@@ -571,9 +571,9 @@ REAL fasp_dcsr_eig (dCSRmat *A,
 
 /*-------- In file: famg.c --------*/
 
-void fasp_solver_famg (dCSRmat *A, 
-                       dvector *b, 
-                       dvector *x, 
+void fasp_solver_famg (dCSRmat *A,
+                       dvector *b,
+                       dvector *x,
                        AMG_param *param);
 
 
@@ -1002,8 +1002,8 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
 
 /*-------- In file: mgrecur.c --------*/
 
-void fasp_solver_mgrecur (AMG_data *mgl, 
-                          AMG_param *param, 
+void fasp_solver_mgrecur (AMG_data *mgl,
+                          AMG_param *param,
                           INT level);
 
 
