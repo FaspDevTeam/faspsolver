@@ -351,16 +351,20 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     
     // setup preconditioner  
     switch (amgparam->AMG_type) {
+            
         case SA_AMG: // Smoothed Aggregation AMG
             status = fasp_amg_setup_sa(mgl, amgparam); break;
+        
         case UA_AMG: // Unsmoothed Aggregation AMG
             status = fasp_amg_setup_ua(mgl, amgparam); break;
+        
         default: // Classical AMG
 #ifdef _OPENMP
             status = fasp_amg_setup_rs_omp(mgl, amgparam); break;
 #else
             status = fasp_amg_setup_rs(mgl, amgparam); break;
 #endif
+            
     }
     
 #if CHMEM_MODE    
@@ -401,7 +405,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     }
     
 FINISHED:
-    fasp_amg_data_free(mgl);
+    fasp_amg_data_free(mgl, amgparam);
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_krylov_amg ...... [Finish]\n");

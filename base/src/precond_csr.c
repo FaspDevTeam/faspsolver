@@ -559,7 +559,7 @@ void fasp_precond_free (SHORT precond_type, precond *pc)
             
     case PREC_AMG: // AMG preconditioner
 
-        fasp_amg_data_free(((precond_data*)(pc->data))->mgl_data);
+        fasp_amg_data_free(((precond_data*)(pc->data))->mgl_data, NULL);
         fasp_mem_free((precond_data*)(pc->data));
         fasp_mem_free(pc);
             
@@ -567,7 +567,7 @@ void fasp_precond_free (SHORT precond_type, precond *pc)
             
     case PREC_FMG: // FMG preconditioner
             
-        fasp_amg_data_free(((precond_data*)(pc->data))->mgl_data);
+        fasp_amg_data_free(((precond_data*)(pc->data))->mgl_data, NULL);
         fasp_mem_free((precond_data*)(pc->data));
         fasp_mem_free(pc);
             

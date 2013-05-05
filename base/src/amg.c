@@ -74,25 +74,24 @@ void fasp_solver_amg (dCSRmat *A,
             
         // Smoothed Aggregation AMG setup phase
         case SA_AMG:
-            if ( print_level > PRINT_NONE ) printf("\nCalling SA AMG solver ...\n");
+            if ( print_level > PRINT_NONE ) printf("\nCalling SA AMG ...\n");
             fasp_amg_setup_sa(mgl, param);
             break;
 
         // Unsmoothed Aggregation AMG setup phase
         case UA_AMG:
-            if ( print_level > PRINT_NONE ) printf("\nCalling UA AMG solver ...\n");
+            if ( print_level > PRINT_NONE ) printf("\nCalling UA AMG ...\n");
             fasp_amg_setup_ua(mgl, param);
             break;
 
         // Classical AMG setup phase
         default:
-            if ( print_level > PRINT_NONE ) printf("\nCalling classical AMG solver ...\n");
+            if ( print_level > PRINT_NONE ) printf("\nCalling classical AMG ...\n");
 #ifdef _OPENMP // omp version RS coarsening
             fasp_amg_setup_rs_omp(mgl, param);
 #else
             fasp_amg_setup_rs(mgl, param);
 #endif
-            break;
             
     }
     
@@ -101,18 +100,17 @@ void fasp_solver_amg (dCSRmat *A,
 
         // call AMLI-cycle
         case AMLI_CYCLE:
-            if ( (status=fasp_amg_solve_amli(mgl, param)) < 0 ) goto FINISHED;
+            fasp_amg_solve_amli(mgl, param);
             break;
 
         // call Nonlinear AMLI-cycle
         case NL_AMLI_CYCLE:
-            if ( (status=fasp_amg_solve_nl_amli(mgl, param)) < 0 ) goto FINISHED;
+            fasp_amg_solve_nl_amli(mgl, param);
             break;
 
         // call classical V,W-cycles (determined by param)
         default:
-            if ( (status=fasp_amg_solve(mgl, param)) < 0 ) goto FINISHED;
-            break;
+            fasp_amg_solve(mgl, param);
             
     }
     
@@ -125,8 +123,9 @@ void fasp_solver_amg (dCSRmat *A,
         print_cputime("AMG totally", AMG_end - AMG_start);
     }
     
-FINISHED:
-    fasp_amg_data_free(mgl); // clean-up memory
+    // clean-up memory
+    fasp_amg_data_free(mgl, param);
+    
     fasp_chkerr(status, "fasp_solver_amg");
     
 #if DEBUG_MODE

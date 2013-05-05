@@ -66,19 +66,19 @@ void fasp_solver_famg (dCSRmat *A,
             
             // Smoothed Aggregation AMG setup phase
         case SA_AMG:
-            if ( print_level > PRINT_NONE ) printf("\nCalling SA FAMG solver ...\n");
+            if ( print_level > PRINT_NONE ) printf("\nCalling SA AMG (F-cycle) ...\n");
             fasp_amg_setup_sa(mgl, param);
             break;
             
             // Unsmoothed Aggregation AMG setup phase
         case UA_AMG:
-            if ( print_level > PRINT_NONE ) printf("\nCalling UA FAMG solver ...\n");
+            if ( print_level > PRINT_NONE ) printf("\nCalling UA AMG (F-cycle) ...\n");
             fasp_amg_setup_ua(mgl, param);
             break;
             
             // Classical AMG setup phase
         default:
-            if ( print_level > PRINT_NONE ) printf("\nCalling classical FAMG solver ...\n");
+            if ( print_level > PRINT_NONE ) printf("\nCalling classical AMG (F-cycle) ...\n");
 #ifdef _OPENMP // omp version RS coarsening
             fasp_amg_setup_rs_omp(mgl, param);
 #else
@@ -100,8 +100,8 @@ void fasp_solver_famg (dCSRmat *A,
         printf("FMG totally costs %f seconds.\n", FMG_end - FMG_start);
     }
     
-FINISHED:
-    fasp_amg_data_free(mgl);    // clean-up memory
+    // clean-up memory
+    fasp_amg_data_free(mgl, param);
     
     fasp_chkerr(status, "fasp_solver_famg");
     

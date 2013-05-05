@@ -655,13 +655,14 @@ AMG_data * fasp_amg_data_create (SHORT max_levels);
 
 AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels);
 
-void fasp_ilu_data_alloc (INT iwk, 
-                          INT nwork, 
+void fasp_ilu_data_alloc (INT iwk,
+                          INT nwork,
                           ILU_data *iludata);
 
 void fasp_schwarz_data_free (Schwarz_data *schwarz);
 
-void fasp_amg_data_free (AMG_data *mgl);
+void fasp_amg_data_free (AMG_data *mgl,
+                         AMG_param *param);
 
 void fasp_amg_data_bsr_free (AMG_data_bsr *mgl);
 

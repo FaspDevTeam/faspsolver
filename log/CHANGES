@@ -9,6 +9,7 @@ File Name: CHANGES
 - Remove error handling for AMG setup in amg.c/famg.c: now in amg_setup.c.
 - Change output format slightly.
 - Update regression tests.
+- Fix memory leakages, definite and possible, reported by valgrind.
 
 04/30/2013 FASP 1.2.8:
 - Change filename blas_block.c --> blas_bcsr.c.

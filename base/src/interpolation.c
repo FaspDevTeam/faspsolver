@@ -709,7 +709,14 @@ static SHORT genintval (dCSRmat *A,
     fasp_mem_free(izts);
     fasp_mem_free(mat[0]);
     fasp_mem_free(mat[1]);
+    fasp_mem_free(mat);
     fasp_mem_free(matval[0]);
+    fasp_mem_free(matval);
+    for (i=0;i<nc;++i) fasp_mem_free(imas[i]);
+    fasp_mem_free(imas);
+    fasp_dcsr_free(&T);
+    fasp_dvec_free(&rhs);
+    fasp_dvec_free(&sol);
     
     return status;
 }
@@ -2039,8 +2046,7 @@ static void interp_RS1(dCSRmat *A,
  * \author Kai Yang, Xiaozhe Hu
  * \date   05/21/2012
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/17/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/17/2012
  *
  * \note Ref P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid.
  *             Academic Press Inc., San Diego, CA, 2001.
@@ -2054,27 +2060,26 @@ static void interp_STD (dCSRmat *A,
 {
     const REAL epsilon_tr = param->truncation_threshold;
     
-    REAL alpha;
-    REAL *cs,*n,*diag,*hatA;
-    REAL alN,alP;
-    INT *vec = vertices->val,*flag,*Arind1,*Arind2;
-    INT row=P->row;
-    REAL akk,akh,aik,aki,rowsum;
-    INT h,i,j,k,l,m,p,q,index=0;
+    REAL   alpha, alN, alP;
+    REAL   akk, akh, aik, aki, rowsum;
+    REAL  *cs, *n, *diag, *hatA;
+    INT   *vec = vertices->val, *flag, *Arind1, *Arind2;
+    INT    row = P->row;
+    INT    h, i, j, k, l, m, p, q, index=0;
     
-    cs=(REAL*)fasp_mem_calloc(row,sizeof(REAL));//for sums of strongly connected coarse neighbors
+    cs   = (REAL*)fasp_mem_calloc(row,sizeof(REAL));//for sums of strongly connected coarse neighbors
     
-    n=(REAL*)fasp_mem_calloc(row,sizeof(REAL));//for sums of all neighbors.
+    n    = (REAL*)fasp_mem_calloc(row,sizeof(REAL));//for sums of all neighbors.
     
-    diag=(REAL*)fasp_mem_calloc(row,sizeof(REAL));//for diagonal numbers
+    diag = (REAL*)fasp_mem_calloc(row,sizeof(REAL));//for diagonal numbers
     
-    flag=(INT*)fasp_mem_calloc(row,sizeof(INT));// index for coarse neighbor point for every node
-    
-    // for some row of A, the index from column number to the the number in A.val
-    Arind1=(INT*)fasp_mem_calloc(2*row,sizeof(INT));
+    flag = (INT*)fasp_mem_calloc(row,sizeof(INT));// index for coarse neighbor point for every node
     
     // for some row of A, the index from column number to the the number in A.val
-    Arind2=(INT*)fasp_mem_calloc(2*row,sizeof(INT));
+    Arind1 = (INT*)fasp_mem_calloc(2*row,sizeof(INT));
+    
+    // for some row of A, the index from column number to the the number in A.val
+    Arind2 = (INT*)fasp_mem_calloc(2*row,sizeof(INT));
     
     //for(i=0;i<row;i++) flag[i]=-1;
     fasp_iarray_set(row, flag, -1);
@@ -2097,7 +2102,7 @@ static void interp_STD (dCSRmat *A,
             if(k==i) {
                 diag[i]=A->val[j];
             }
-            else{
+            else {
                 n[i]+=A->val[j];
             }
         }
@@ -2187,8 +2192,8 @@ static void interp_STD (dCSRmat *A,
     index=0;
     INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));
     
-    for(i=0;i< A->row;++i){
-        if(vec[i]==1) {
+    for (i=0;i< A->row;++i) {
+        if (vec[i]==1) {
             CoarseIndex[i]=index;
             index++;
             if (index>P->col) {
@@ -2201,23 +2206,23 @@ static void interp_STD (dCSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(i,j) if(P->IA[P->row]>OPENMP_HOLDS)
 #endif
-    for(i=0;i<P->IA[P->row];++i){
+    for (i=0;i<P->IA[P->row];++i) {
         j=P->JA[i];
         P->JA[i]=CoarseIndex[j];
     }
     
     /** Truncation of interpolation */
-    REAL mMin, pMax;
-    REAL mSum, pSum;
-    REAL mTruncedSum, pTruncedSum;
-    INT mTruncCount, pTruncCount;
-    INT num_lost=0;
-    REAL*Pval;
-    INT *PIA,*PJA;
+    REAL  mMin, pMax;
+    REAL  mSum, pSum;
+    REAL  mTruncedSum, pTruncedSum;
+    INT   mTruncCount, pTruncCount;
+    INT   num_lost=0;
+    REAL *Pval;
+    INT  *PIA,*PJA;
     
-    Pval=(REAL*)fasp_mem_calloc(P->IA[row],sizeof(REAL));
-    PJA=(INT*)fasp_mem_calloc(P->IA[row],sizeof(INT));
-    PIA=(INT*)fasp_mem_calloc(row+1, sizeof(INT));
+    Pval = (REAL*)fasp_mem_calloc(P->IA[row],sizeof(REAL));
+    PJA  = (INT*)fasp_mem_calloc(P->IA[row],sizeof(INT));
+    PIA  = (INT*)fasp_mem_calloc(row+1, sizeof(INT));
     
     INT index1=0, index2=0;
     for (i=0;i<P->row;++i) {
@@ -2322,6 +2327,7 @@ static void interp_STD (dCSRmat *A,
     fasp_mem_free(cs);
     fasp_mem_free(n);
     fasp_mem_free(diag);
+    fasp_mem_free(flag);
     fasp_mem_free(Arind1);
     fasp_mem_free(Arind2);
     fasp_mem_free(hatA);
