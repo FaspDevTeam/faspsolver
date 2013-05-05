@@ -116,27 +116,27 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     switch (itsolver_type) {
     
     case SOLVER_BiCGstab:
-        if ( print_level>PRINT_NONE ) printf("Calling BiCGstab solver (BSR format) ...\n");
+        if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (BSR matrix) ...\n");
         iter=fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
     
     case SOLVER_GMRES:
-        if ( print_level>PRINT_NONE ) printf("Calling GMRES solver (BSR format) ...\n");
+        if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (BSR matrix) ...\n");
         iter=fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
         break;    
     
     case SOLVER_VGMRES:
-        if ( print_level>PRINT_NONE ) printf("Calling vGMRES solver (BSR format) ...\n");
+        if ( print_level>PRINT_NONE ) printf("\nCalling vGMRES solver (BSR matrix) ...\n");
         iter=fasp_solver_dbsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
         break;    
             
     case SOLVER_VFGMRES: 
-        if ( print_level>PRINT_NONE ) printf("Calling vFGMRes solver (BSR format) ...\n");    
+        if ( print_level>PRINT_NONE ) printf("\nCalling vFGMRes solver (BSR matrix) ...\n");    
         iter = fasp_solver_dbsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
         break;
     
     default:
-        printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
+        printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
         iter = ERROR_SOLVER_TYPE;
     
     }

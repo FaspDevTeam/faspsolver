@@ -117,7 +117,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
     printf("### DEBUG: fasp_solver_dcsr_pbcgs ...... [Start]\n");
     printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
 #endif    
-    
+    printf("print_level = %d\n", print_level);
+
     // r = b-A*u
     fasp_array_cp(m,bval,r);
     fasp_blas_dcsr_aAxpy(-1.0,A,uval,r);
@@ -197,7 +198,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         }
         else {
             omega = 0.0;
-            if ( print_level >= PRINT_SOME ) ITS_DIVZERO;
+            if ( print_level >= PRINT_MORE ) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -543,7 +544,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         }
         else {
             omega = 0.0;
-            if ( print_level >= PRINT_SOME ) ITS_DIVZERO;
+            if ( print_level >= PRINT_MORE ) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -889,7 +890,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         }
         else {
             omega = 0.0;
-            if ( print_level >= PRINT_SOME ) ITS_DIVZERO;
+            if ( print_level >= PRINT_MORE ) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp
@@ -1235,7 +1236,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         }
         else {
             omega = 0.0;
-            if ( print_level >= PRINT_SOME ) ITS_DIVZERO;
+            if ( print_level >= PRINT_MORE ) ITS_DIVZERO;
         }
         
         // delu = alpha pp + omega sp

@@ -1,11 +1,14 @@
 File Name: CHANGES
 
-05/03/2013 FASP 1.2.9:
+05/05/2013 FASP 1.2.9:
 - When coarsening step not succeed, stop setup instead of quit.
 - Change interface to MUMPS a little bit.
 - Fix an output memory out-of-bound bug in pvfgmres.
 - Modify io.c a little, not important.
 - Add error handling in AMG setup in case problems happen.
+- Remove error handling for AMG setup in amg.c/famg.c: now in amg_setup.c.
+- Change output format slightly.
+- Update regression tests.
 
 04/30/2013 FASP 1.2.8:
 - Change filename blas_block.c --> blas_bcsr.c.

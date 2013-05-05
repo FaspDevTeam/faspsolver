@@ -199,7 +199,7 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 || indp==3 ) {
             /* FMG V-cycle (Direct interpolation) with GS smoother as a solver */			
             printf("------------------------------------------------------------------\n");
-            printf("FMG (direct interp) V-cycle as iterative solver ...\n");	
+            printf("FAMG (direct interp) V-cycle as iterative solver ...\n");	
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);

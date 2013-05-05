@@ -63,42 +63,42 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
         case SOLVER_CG:
-            if (print_level>PRINT_NONE) printf("\nCalling PCG solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PCG solver (CSR matrix) ...\n");
             iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
             
         case SOLVER_BiCGstab:
-            if (print_level>PRINT_NONE) printf("\nCalling PBiCGstab solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PBiCGstab solver (CSR matrix) ...\n");
             iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
             
         case SOLVER_MinRes:
-            if (print_level>PRINT_NONE) printf("\nCalling PMinRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PMinRes solver (CSR matrix) ...\n");
             iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
             
         case SOLVER_GMRES:
-            if (print_level>PRINT_NONE) printf("\nCalling PGMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PGMRes solver (CSR matrix) ...\n");
             iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_VGMRES: 
-            if (print_level>PRINT_NONE) printf("\nCalling PVGMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PVGMRes solver (CSR matrix) ...\n");
             iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_VFGMRES: 
-            if (print_level>PRINT_NONE) printf("\nCalling PVFGMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PVFGMRes solver (CSR matrix) ...\n");
             iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_GCG:
-            if (print_level>PRINT_NONE) printf("\nCalling PGCG solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PGCG solver (CSR matrix) ...\n");
             iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
             
         default:
-            printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
+            printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
             return ERROR_SOLVER_TYPE;
             
     } 

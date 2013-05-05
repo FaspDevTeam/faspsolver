@@ -64,42 +64,42 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
         case SOLVER_CG:
-            if (print_level>PRINT_NONE) printf("Calling PCG solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling PCG solver (matrix-free) ...\n");
             iter = fasp_solver_pcg(mf, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
             
         case SOLVER_BiCGstab:
-            if (print_level>PRINT_NONE) printf("Calling BiCGstab solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling BiCGstab solver (matrix-free) ...\n");
             iter = fasp_solver_pbcgs(mf, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
             
         case SOLVER_MinRes:
-            if (print_level>PRINT_NONE) printf("Calling MinRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling MinRes solver (matrix-free) ...\n");
             iter = fasp_solver_pminres(mf, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
             
         case SOLVER_GMRES:
-            if (print_level>PRINT_NONE) printf("Calling GMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling GMRes solver (matrix-free) ...\n");
             iter = fasp_solver_pgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_VGMRES: 
-            if (print_level>PRINT_NONE) printf("Calling vGMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling vGMRes solver (matrix-free) ...\n");
             iter = fasp_solver_pvgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
             break;
             
         case SOLVER_VFGMRES: 
-            if (print_level>PRINT_NONE) printf("Calling vFGMRes solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling vFGMRes solver (matrix-free) ...\n");
             iter = fasp_solver_pvfgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_GCG:
-            if (print_level>PRINT_NONE) printf("Calling GCG solver ...\n");
+            if (print_level>PRINT_NONE) printf("\nCalling GCG solver (matrix-free) ...\n");
             iter = fasp_solver_pgcg(mf, b, x, pc, tol, MaxIt, stop_type, print_level); 
             break;
             
         default:
-            printf("### ERROR: Wrong itertive solver type %d!\n", itsolver_type);
+            printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
             return ERROR_SOLVER_TYPE;
             
     } 

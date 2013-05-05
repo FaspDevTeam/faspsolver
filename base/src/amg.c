@@ -31,8 +31,8 @@
  *       Academic Press Inc., San Diego, CA, 2001.
  *
  * Modified by Chensong Zhang on 01/10/2012
+ * Modified by Chensong Zhang on 05/05/2013: Remove error handling for AMG setup
  */
-
 void fasp_solver_amg (dCSRmat *A,
                       dvector *b,
                       dvector *x,
@@ -46,7 +46,6 @@ void fasp_solver_amg (dCSRmat *A,
     
     // local variables
     REAL          AMG_start, AMG_end;
-    REAL          AMG_duration = 0.0;
     SHORT         status = SUCCESS;
     AMG_data *    mgl = fasp_amg_data_create(max_levels);
     
@@ -75,20 +74,23 @@ void fasp_solver_amg (dCSRmat *A,
             
         // Smoothed Aggregation AMG setup phase
         case SA_AMG:
-            if ( (status=fasp_amg_setup_sa(mgl, param)) < 0 ) goto FINISHED;
+            if ( print_level > PRINT_NONE ) printf("\nCalling SA AMG solver ...\n");
+            fasp_amg_setup_sa(mgl, param);
             break;
 
         // Unsmoothed Aggregation AMG setup phase
         case UA_AMG:
-            if ( (status=fasp_amg_setup_ua(mgl, param)) < 0 ) goto FINISHED;
+            if ( print_level > PRINT_NONE ) printf("\nCalling UA AMG solver ...\n");
+            fasp_amg_setup_ua(mgl, param);
             break;
 
         // Classical AMG setup phase
         default:
+            if ( print_level > PRINT_NONE ) printf("\nCalling classical AMG solver ...\n");
 #ifdef _OPENMP // omp version RS coarsening
-            if ( (status=fasp_amg_setup_rs_omp(mgl, param)) < 0 ) goto FINISHED;
+            fasp_amg_setup_rs_omp(mgl, param);
 #else
-            if ( (status=fasp_amg_setup_rs(mgl, param)) < 0 ) goto FINISHED;
+            fasp_amg_setup_rs(mgl, param);
 #endif
             break;
             
@@ -120,8 +122,7 @@ void fasp_solver_amg (dCSRmat *A,
     // print out CPU time if needed
     if ( print_level > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        AMG_duration = AMG_end - AMG_start;
-        print_cputime("AMG totally", AMG_duration);
+        print_cputime("AMG totally", AMG_end - AMG_start);
     }
     
 FINISHED:
