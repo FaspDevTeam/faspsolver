@@ -38,18 +38,15 @@ void fasp_solver_famg (dCSRmat *A,
     const INT     nnz = A->nnz, m = A->row, n = A->col;
     
     // local variables
-    REAL          FMG_start, FMG_end;
-    SHORT         status = SUCCESS;
     AMG_data *    mgl = fasp_amg_data_create(max_levels);
+    REAL          FMG_start, FMG_end;
     
 #if DEBUG_MODE
     printf("###DEBUG: fasp_solver_famg ...... [Start]\n");
     printf("###DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
-    if ( print_level > PRINT_NONE ) {
-        fasp_gettime(&FMG_start);
-    }
+    if ( print_level > PRINT_NONE ) fasp_gettime(&FMG_start);
     
     // Step 0: initialize mgl[0] with A, b and x
     mgl[0].A = fasp_dcsr_create(m,n,nnz);
@@ -67,14 +64,12 @@ void fasp_solver_famg (dCSRmat *A,
             // Smoothed Aggregation AMG setup phase
         case SA_AMG:
             if ( print_level > PRINT_NONE ) printf("\nCalling SA AMG (F-cycle) ...\n");
-            fasp_amg_setup_sa(mgl, param);
-            break;
+            fasp_amg_setup_sa(mgl, param); break;
             
             // Unsmoothed Aggregation AMG setup phase
         case UA_AMG:
             if ( print_level > PRINT_NONE ) printf("\nCalling UA AMG (F-cycle) ...\n");
-            fasp_amg_setup_ua(mgl, param);
-            break;
+            fasp_amg_setup_ua(mgl, param); break;
             
             // Classical AMG setup phase
         default:
@@ -84,7 +79,6 @@ void fasp_solver_famg (dCSRmat *A,
 #else
             fasp_amg_setup_rs(mgl, param);
 #endif
-            break;
             
     }
     
@@ -94,17 +88,15 @@ void fasp_solver_famg (dCSRmat *A,
     // Step 3: Save solution vector and return
     fasp_dvec_cp(&mgl[0].x, x);
     
+    // clean-up memory
+    fasp_amg_data_free(mgl, param);
+    
     // print out CPU time if needed
     if (print_level>PRINT_NONE) {
         fasp_gettime(&FMG_end);
         printf("FMG totally costs %f seconds.\n", FMG_end - FMG_start);
     }
-    
-    // clean-up memory
-    fasp_amg_data_free(mgl, param);
-    
-    fasp_chkerr(status, "fasp_solver_famg");
-    
+
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_famg ...... [Finish]\n");
 #endif

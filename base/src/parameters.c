@@ -129,6 +129,8 @@ void fasp_param_input_init (input_param *inparam)
     inparam->AMG_strong_threshold     = 0.5;
     inparam->AMG_truncation_threshold = 0.4;
     inparam->AMG_max_row_sum          = 0.9;
+    inparam->AMG_aggressive_level     = 0;
+    inparam->AMG_aggressive_path      = 1;
     
     // Aggregation AMG specific
     inparam->AMG_strong_coupled       = 0.08;
