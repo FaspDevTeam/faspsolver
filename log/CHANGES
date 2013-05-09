@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-05/06/2013 FASP 1.2.9:
+05/09/2013 FASP 1.2.9:
 - When coarsening step not succeed, stop setup instead of quit.
 - Change interface to MUMPS a little bit.
 - Fix an output memory out-of-bound bug in pvfgmres.
@@ -11,6 +11,7 @@ File Name: CHANGES
 - Update regression tests.
 - Fix memory leakages, definite and possible, reported by valgrind.
 - Fix a parameter initialization bug.
+- Revise matrix-free iterative solvers.
 
 04/30/2013 FASP 1.2.8:
 - Change filename blas_block.c --> blas_bcsr.c.

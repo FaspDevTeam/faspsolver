@@ -892,6 +892,10 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
 
 /*-------- In file: itsolver_mf.c --------*/
 
+void fasp_solver_itsolver_init (INT matrix_format,
+                                mxv_matfree *mf,
+                                void *A);
+
 INT fasp_solver_itsolver (mxv_matfree *mf, 
                           dvector *b, 
                           dvector *x, 
@@ -1006,37 +1010,6 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
 void fasp_solver_mgrecur (AMG_data *mgl,
                           AMG_param *param,
                           INT level);
-
-
-/*-------- In file: mxv_matfree.c --------*/
-
-void fasp_blas_mxv_csr (void *A,
-                        REAL *x,
-                        REAL *y);
-
-void fasp_blas_mxv_bsr (void *A,
-                        REAL *x,
-                        REAL *y);
-
-void fasp_blas_mxv_str (void *A,
-                        REAL *x,
-                        REAL *y);
-
-void fasp_blas_mxv_bcsr (void *A,
-                         REAL *x,
-                         REAL *y);
-
-void fasp_blas_mxv_bbsr (void *A,
-                         REAL *x,
-                         REAL *y);
-
-void fasp_blas_mxv_csrl (void *A,
-                         REAL *x,
-                         REAL *y);
-
-void itsolver_init (int matrix_format,
-                    mxv_matfree *mf,
-                    void *A);
 
 
 /*-------- In file: ordering.c --------*/
