@@ -1,6 +1,10 @@
 /*! \file amg_setup_sa.c
  *  \brief Smoothed Aggregation AMG: SETUP phase
  *
+ * \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
+ *       Refer to P. Vanek, J. Madel and M. Brezina
+ *       "Algebraic Multigrid on Unstructured Meshes", 1994
+ *
  */
 
 #include <math.h>
@@ -33,12 +37,8 @@ static void smooth_agg(dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRma
  * \author Xiaozhe Hu
  * \date   09/29/2009
  *
- * \note Setup A, P, PT levels using the smoothed aggregation algorithm;
- *       Refer to Peter Vanek, Jan Madel and Marin Brezina,
- *       "Algebraic Multigrid on Unstructured Meshes", 1994
- *
  * \note Only for testing smoothed P and unsmoothed A, not used usually.
-
+ 
  * Modified by Chensong Zhang on 04/06/2010.
  * Modified by Chensong Zhang on 05/09/2010.
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
@@ -46,7 +46,7 @@ static void smooth_agg(dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRma
  */
 SHORT fasp_amg_setup_sa (AMG_data *mgl,
                          AMG_param *param)
-{    
+{
     SHORT       status  = SUCCESS;
     
 #if DEBUG_MODE
@@ -60,7 +60,7 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
 #else
     status = amg_setup_smoothP_unsmoothA(mgl, param);
 #endif
-
+    
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_sa ...... [Finish]\n");
 #endif
@@ -106,7 +106,7 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
     
     // each elvel stores the information of the number of aggregations
     INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
-
+    
     // each level stores the information of the strongly coupled neighborhoods
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     
@@ -114,14 +114,14 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
     dCSRmat *tentp = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     
     // Initialzie level information
-    for ( i=0; i<max_levels; ++i ) num_aggregations[i] = 0;
-
+    for ( i = 0; i < max_levels; ++i ) num_aggregations[i] = 0;
+    
     mgl[0].near_kernel_dim   = 1;
     mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
     
-    for ( i=0; i<mgl->near_kernel_dim; ++i ) {
+    for ( i = 0; i < mgl->near_kernel_dim; ++i ) {
         mgl[0].near_kernel_basis[i] = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
-        for ( j=0; j<m; ++j ) mgl[0].near_kernel_basis[i][j] = 1.0;
+        for ( j = 0; j < m; ++j ) mgl[0].near_kernel_basis[i][j] = 1.0;
     }
     
     // Initialize ILU parameters
@@ -163,13 +163,13 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
         }
         
         /* -- setup Schwarz smoother if necessary */
-		if (level<param->schwarz_levels){
+		if ( level < param->schwarz_levels ) {
             const INT smmsize = param->schwarz_mmsize;
             const INT smaxlvl = param->schwarz_maxlvl;
             const INT schtype = param->schwarz_type;
             
-            mgl->schwarz_levels = param->schwarz_levels;
-            mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
+            mgl->schwarz_levels  = param->schwarz_levels;
+            mgl[level].schwarz.A = fasp_dcsr_sympat(&mgl[level].A);
             fasp_dcsr_shift(&(mgl[level].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[level].schwarz, smmsize, smaxlvl, schtype);
 		}
@@ -188,15 +188,6 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
         
         /*-- Perform aggressive coarsening only up to the specified level --*/
         if ( mgl[level].P.col < 20 ) break; // If coarse < 20, stop!!!
-        
-#if FALSE // TODO: Add ordering for smoothers --Chensong
-        /*-- Store the C/F marker --*/
-        {
-            INT size = mgl[level].A.row;
-            mgl[level].cfmark = fasp_ivec_create(size);
-            memcpy(mgl[level].cfmark.val, vertices[level].val, size*sizeof(INT));
-        }
-#endif
         
         /*-- Form restriction --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
@@ -292,7 +283,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
     
     // level info (fine: 0; coarse: 1)
     ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
-
+    
     // each elvel stores the information of the number of aggregations
     INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
     
@@ -303,14 +294,14 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
     dCSRmat *tentp    = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     dCSRmat *tentpt   = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     
-    for ( i=0; i<max_levels; ++i ) num_aggregations[i] = 0;
-
+    for ( i = 0; i < max_levels; ++i ) num_aggregations[i] = 0;
+    
     mgl[0].near_kernel_dim   = 1;
     mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
     
-    for ( i=0; i<mgl->near_kernel_dim; ++i ) {
+    for ( i = 0; i < mgl->near_kernel_dim; ++i ) {
         mgl[0].near_kernel_basis[i] = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
-        for ( j=0; j<m; ++j ) mgl[0].near_kernel_basis[i][j] = 1.0;
+        for ( j = 0; j < m; ++j ) mgl[0].near_kernel_basis[i][j] = 1.0;
     }
     
     // Initialize ILU parameters
@@ -329,21 +320,27 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
         REAL lambda_max = 2.0, lambda_min = lambda_max/4;
         fasp_amg_amli_coef(lambda_max, lambda_min, amlideg, param->amli_coef);
     }
-
+    
     // Main AMG setup loop
     while ( (mgl[level].A.row > min_cdof) && (level < max_levels-1) ) {
         
         /*-- setup ILU decomposition if necessary */
-        if (level<param->ILU_levels) fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
+        if ( level < param->ILU_levels ) {
+            status = fasp_ilu_dcsr_setup(&mgl[level].A, &mgl[level].LU, &iluparam);
+            if ( status < 0 ) {
+                param->ILU_levels = level;
+                printf("### WARNING: ILU setup on level %d failed!\n", level);
+            }
+        }
         
         /* -- setup Schwarz smoother if necessary */
-		if (level<param->schwarz_levels){
+		if ( level < param->schwarz_levels ) {
             const INT smmsize = param->schwarz_mmsize;
             const INT smaxlvl = param->schwarz_maxlvl;
             const INT schtype = param->schwarz_type;
             
-            mgl->schwarz_levels = param->schwarz_levels;
-            mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
+            mgl->schwarz_levels  = param->schwarz_levels;
+            mgl[level].schwarz.A = fasp_dcsr_sympat(&mgl[level].A);
             fasp_dcsr_shift(&(mgl[level].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[level].schwarz, smmsize, smaxlvl, schtype);
 		}
@@ -423,7 +420,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
 }
 
 /**
- * \fn static void smooth_agg (dCSRmat *A, dCSRmat *tentp, dCSRmat *P, 
+ * \fn static void smooth_agg (dCSRmat *A, dCSRmat *tentp, dCSRmat *P,
  *                             AMG_param *param, INT levelNum, dCSRmat *N)
  *
  * \brief Smooth the tentative prolongation
@@ -578,7 +575,7 @@ static void smooth_agg (dCSRmat *A,
         
         /* Step 2. Smooth the tentative prolongation */
         /* P = S*tenp */
-        fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this. 
+        fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this.
         
         P->nnz = P->IA[P->row];
         

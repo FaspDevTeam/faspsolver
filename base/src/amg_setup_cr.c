@@ -1,5 +1,12 @@
 /*! \file amg_setup_cr.c
  *  \brief Brannick-Falgout compatible relaxation based AMG: SETUP phase
+ *  
+ * \note Setup A, P, R and levels using the Compatible Relaxation coarsening
+ *       for classic AMG interpolation
+ *       Refer to J. Brannick and R. Falgout
+ *       "Compatible relaxation and coarsening in AMG"
+ *
+ *  TODO: Not working. Yet need to be fixed. --Chensong
  */
 
 #include <math.h>
@@ -23,40 +30,38 @@
  * \author James Brannick
  * \date   04/21/2010
  *
- * \note Setup A, P, R, levels using CR coarsening for 
- *       classic AMG interpolation
- *       Concrete algorithm see Brannick and Falgout 
- *          "Compatible relaxation and coarsening in AMG"  
+ * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
 SHORT fasp_amg_setup_cr (AMG_data *mgl, 
                          AMG_param *param)
 {
-    dCSRmat   *A=&mgl[0].A;
-    const INT  m=A->row, n=A->col, nnz=A->nnz;
-    const INT  print_level=param->print_level;
+    dCSRmat     *A = &mgl[0].A;
+    const SHORT  prtlvl = param->print_level;
+    const SHORT  min_cdof = MAX(param->coarse_dof,50);
+    const INT    m = A->row, n = A->col, nnz = A->nnz;
     
-    INT     i_0=0,i_n;
-    SHORT   level=0, status=SUCCESS;
+    // local variables
+    INT     i_0 = 0, i_n;
+    SHORT   level = 0, status = SUCCESS;
     SHORT   max_levels=param->max_levels;
-    REAL    setup_start, setup_end, setup_duration;
+    REAL    setup_start, setup_end;
     
-    fasp_gettime(&setup_start);
-
     // The variable vertices stores level info (fine: 0; coarse: 1)
     ivector vertices=fasp_ivec_create(m); 
     
+    fasp_gettime(&setup_start);
+
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_cr ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
-    if (print_level>=PRINT_MOST) printf("fasp_amg_setup_cr: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
-    
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
     
-    while ((mgl[level].A.row>param->coarse_dof) && (level<max_levels-1)) {
+    // Main AMG setup loop
+    while ( (mgl[level].A.row > min_cdof) && (level < max_levels-1) ) {
     
         /*-- Coarsen and form the structure of interpolation --*/
         i_n = mgl[level].A.row-1;
@@ -86,21 +91,20 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
     
     // setup total level number and current level
     mgl[0].num_levels = max_levels = level+1;
-    mgl[0].w = fasp_dvec_create(m);    
+    mgl[0].w          = fasp_dvec_create(m);    
     
-    for (level=1; level<max_levels; ++level) {
-        INT m = mgl[level].A.row;
+    for ( level = 1; level < max_levels; ++level ) {
+        INT mm = mgl[level].A.row;
         mgl[level].num_levels = max_levels;     
-        mgl[level].b = fasp_dvec_create(m);
-        mgl[level].x = fasp_dvec_create(m);
-        mgl[level].w = fasp_dvec_create(m);    
+        mgl[level].b = fasp_dvec_create(mm);
+        mgl[level].x = fasp_dvec_create(mm);
+        mgl[level].w = fasp_dvec_create(mm);
     }
     
-    if (print_level>PRINT_NONE) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
-        setup_duration = setup_end - setup_start;
-        print_amgcomplexity(mgl,print_level);
-        print_cputime("Compatible Relaxation AMG setup",setup_duration);
+        print_amgcomplexity(mgl,prtlvl);
+        print_cputime("Compatible relaxation setup", setup_end - setup_start);
     }
     
     fasp_ivec_free(&vertices); 

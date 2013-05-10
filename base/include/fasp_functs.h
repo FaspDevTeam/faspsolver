@@ -41,10 +41,10 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
 
 /*-------- In file: amg_setup_ua.c --------*/
 
-SHORT fasp_amg_setup_ua (AMG_data *mgl, 
+SHORT fasp_amg_setup_ua (AMG_data *mgl,
                          AMG_param *param);
 
-SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl, 
+SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
                              AMG_param *param);
 
 
@@ -976,23 +976,26 @@ SHORT fasp_mem_dcsr_check (dCSRmat *A);
 
 /*-------- In file: message.c --------*/
 
-void print_itinfo (const INT ptrlvl, 
-                   const INT stop_type, 
-                   const INT iter, 
-                   const REAL relres, 
-                   const REAL absres, 
+void print_itinfo (const INT ptrlvl,
+                   const INT stop_type,
+                   const INT iter,
+                   const REAL relres,
+                   const REAL absres,
                    const REAL factor);
 
-void print_amgcomplexity (AMG_data *mgl, 
+void print_amgcomplexity (AMG_data *mgl,
                           const SHORT prtlvl);
 
-void print_cputime (const char *message, 
+void print_amgcomplexity_bsr (AMG_data_bsr *mgl,
+                              const SHORT prtlvl);
+
+void print_cputime (const char *message,
                     const REAL cputime);
 
-void print_message (const INT ptrlvl, 
+void print_message (const INT ptrlvl,
                     const char *message);
 
-void fasp_chkerr (const SHORT status, 
+void fasp_chkerr (const SHORT status,
                   const char *fctname);
 
 

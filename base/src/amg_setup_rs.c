@@ -56,7 +56,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     REAL       setup_start, setup_end;
     ILU_param  iluparam;
     iCSRmat    S; // strong n-couplings
-
+    
     // level info (fine: 0; coarse: 1)
     ivector    vertices = fasp_ivec_create(m);
     
@@ -67,7 +67,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 #endif
     
     fasp_gettime(&setup_start);
-     
+    
     // Make sure classical AMG will not call fasp_blas_dcsr_mxv_agg !!!
     param->tentative_smooth = 1.0;
     
@@ -95,7 +95,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         iluparam.ILU_relax   = param->ILU_relax;
         iluparam.ILU_type    = param->ILU_type;
     }
-
+    
 #if DIAGONAL_PREF
     // Reorder each row to keep the diagonal entries appear first !!!
     fasp_dcsr_diagpref(&mgl[0].A);
@@ -124,12 +124,12 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
             const INT smaxlvl = param->schwarz_maxlvl;
             const INT schtype = param->schwarz_type;
             
-            mgl->schwarz_levels = param->schwarz_levels;
-            mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
+            mgl->schwarz_levels  = param->schwarz_levels;
+            mgl[level].schwarz.A = fasp_dcsr_sympat(&mgl[level].A);
             fasp_dcsr_shift(&(mgl[level].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[level].schwarz, smmsize, smaxlvl, schtype);
         }
-
+        
         /*-- Coarseing and form the structure of interpolation --*/
         status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
         if ( status < 0 ) {
@@ -145,7 +145,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         if ( mgl[level].P.col < 20 ) break; // If coarse < 20, stop!!!
         if ( mgl[level].P.col*1.5 > mgl[level].A.row ) param->coarsening_type = COARSE_RS;
         if ( level == param->aggressive_level ) param->coarsening_type = COARSE_RS;
-
+        
         /*-- Store the C/F marker --*/
         {
             INT size = mgl[level].A.row;
@@ -231,7 +231,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         print_amgcomplexity(mgl, prtlvl);
         print_cputime("Classical AMG setup", setup_end - setup_start);
     }
-        
+    
     fasp_ivec_free(&vertices);
     
 #if DEBUG_MODE
@@ -271,7 +271,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
     INT max_levels = param->max_levels;
     REAL setup_start, setup_end, setup_duration;
     ILU_param iluparam;
-   
+    
     // set thread number
     nthreads = FASP_GET_NUM_THREADS();
     
@@ -369,7 +369,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
         fasp_mem_free(S.JA);
         
         ++level;
-
+        
 #if DIAGONAL_PREF
         fasp_dcsr_diagpref(&mgl[level].A); // reorder each row to make diagonal appear first
 #endif
