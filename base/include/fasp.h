@@ -964,6 +964,7 @@ typedef struct {
 	SHORT AMG_levels;              /**< maximal number of levels */
 	SHORT AMG_cycle_type;          /**< type of cycle*/
 	SHORT AMG_smoother;            /**< type of smoother */
+	SHORT AMG_smooth_order;        /**< order for smoothers */
 	REAL AMG_relaxation;           /**< over-relaxation parameter for SOR */
     SHORT AMG_polynomial_degree;   /**< degree of the polynomial smoother */
 	SHORT AMG_presmooth_iter;      /**< number of presmoothing */

@@ -23,6 +23,7 @@
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
  * Modified by Chensong Zhang on 01/10/2012
  * Modified by Ludmil Zikatanov on 02/15/2013
+ * Modified by Chensong Zhang on 05/10/2013: add a new input.
  */
 void fasp_param_input (char *filenm, 
                        input_param *Input)
@@ -384,7 +385,24 @@ void fasp_param_input (char *filenm,
                 { status = ERROR_INPUT_PAR; break; }
             fgets(buffer,500,fp); // skip rest of line
         }
-    
+
+        else if (strcmp(buffer,"AMG_smooth_order")==0) {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+            
+            if ((strcmp(buffer,"NO")==0)||(strcmp(buffer,"no")==0))
+                Input->AMG_smooth_order = NO_ORDER;
+            else if ((strcmp(buffer,"CF")==0)||(strcmp(buffer,"cf")==0))
+                Input->AMG_smooth_order = CF_ORDER;
+            else
+            { status = ERROR_INPUT_PAR; break; }
+            fgets(buffer,500,fp); // skip rest of line
+        }
+
         else if (strcmp(buffer,"AMG_coarsening_type")==0) {
             val = fscanf(fp,"%s",buffer);
             if (val!=1 || strcmp(buffer,"=")!=0) {

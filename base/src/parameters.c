@@ -111,6 +111,7 @@ void fasp_param_input_init (input_param *inparam)
     inparam->AMG_levels               = 15;
     inparam->AMG_cycle_type           = V_CYCLE;
     inparam->AMG_smoother             = SMOOTHER_GS;
+    inparam->AMG_smooth_order         = CF_ORDER;
     inparam->AMG_presmooth_iter       = 2;
     inparam->AMG_postsmooth_iter      = 2;
     inparam->AMG_relaxation           = 1.0;
@@ -119,7 +120,7 @@ void fasp_param_input_init (input_param *inparam)
     inparam->AMG_maxit                = 1;
     inparam->AMG_ILU_levels           = 0;
     inparam->AMG_schwarz_levels       = 0;
-    inparam->AMG_coarse_scaling       = OFF; // Keep this off. Require investigation --Chensong
+    inparam->AMG_coarse_scaling       = OFF; //Require investigation --Chensong
     inparam->AMG_amli_degree          = 1;
     inparam->AMG_nl_amli_krylov_type  = 2;
     
@@ -167,7 +168,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->postsmooth_iter      = 2;
     amgparam->relaxation           = 1.0;
     amgparam->polynomial_degree    = 3;
-    amgparam->coarse_scaling       = OFF; // Keep this off. Require investigation --Chensong
+    amgparam->coarse_scaling       = OFF; // Require investigation --Chensong
     amgparam->amli_degree          = 1;
     amgparam->amli_coef            = NULL;
     amgparam->nl_amli_krylov_type  = 2;
@@ -293,6 +294,7 @@ void fasp_param_amg_set (AMG_param *param,
     param->max_levels           = inparam->AMG_levels;
     param->cycle_type           = inparam->AMG_cycle_type;
     param->smoother             = inparam->AMG_smoother;
+    param->smooth_order         = inparam->AMG_smooth_order;
     param->relaxation           = inparam->AMG_relaxation;
     param->polynomial_degree    = inparam->AMG_polynomial_degree;
     param->presmooth_iter       = inparam->AMG_presmooth_iter;

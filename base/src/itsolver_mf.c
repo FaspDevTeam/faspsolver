@@ -23,59 +23,6 @@ static void fasp_blas_mxv_csrl (void *A, REAL *x, REAL *y);
 /*---------------------------------*/
 
 /**
- * \fn void fasp_solver_itsolver_init (INT matrix_format, mxv_matfree *mf, void *A)
- *
- * \brief Initialize itsovlers
- *
- * \param matrix_format    matrix format
- * \param mf               mxv_matfree action for iterative solvers
- * \param A                void pointer to matrix
- *
- * \author Feiteng Huang
- * \date   09/18/2012
- *
- * Modified by Chensong Zhang on 05/10/2013: Change interface of mat-free mv
- */
-void fasp_solver_itsolver_init (INT matrix_format,
-                                mxv_matfree *mf,
-                                void *A)
-{
-    switch ( matrix_format ) {
-            
-        case MAT_CSR:
-            mf->fct = fasp_blas_mxv_csr;
-            break;
-            
-        case MAT_BSR:
-            mf->fct = fasp_blas_mxv_bsr;
-            break;
-            
-        case MAT_STR:
-            mf->fct = fasp_blas_mxv_str;
-            break;
-            
-        case MAT_bCSR:
-            mf->fct = fasp_blas_mxv_bcsr;
-            break;
-            
-        case MAT_bBSR:
-            mf->fct = fasp_blas_mxv_bbsr;
-            break;
-            
-        case MAT_CSRL:
-            mf->fct = fasp_blas_mxv_csrl;
-            break;
-            
-        default:
-            printf("### ERROR: Wrong matrix format %d!\n", matrix_format);
-            exit(ERROR_DATA_STRUCTURE);
-            
-    }
-    
-    mf->data = A;
-}
-
-/**
  * \fn INT fasp_solver_itsolver (mxv_matfree *mf, dvector *b, dvector *x, 
  *                               precond *pc, itsolver_param *itparam)
  *
@@ -229,6 +176,59 @@ INT fasp_solver_krylov (mxv_matfree *mf,
 #endif
     
     return status;
+}
+
+/**
+ * \fn void fasp_solver_itsolver_init (INT matrix_format, mxv_matfree *mf, void *A)
+ *
+ * \brief Initialize itsovlers
+ *
+ * \param matrix_format    matrix format
+ * \param mf               mxv_matfree action for iterative solvers
+ * \param A                void pointer to matrix
+ *
+ * \author Feiteng Huang
+ * \date   09/18/2012
+ *
+ * Modified by Chensong Zhang on 05/10/2013: Change interface of mat-free mv
+ */
+void fasp_solver_itsolver_init (INT matrix_format,
+                                mxv_matfree *mf,
+                                void *A)
+{
+    switch ( matrix_format ) {
+            
+        case MAT_CSR:
+            mf->fct = fasp_blas_mxv_csr;
+            break;
+            
+        case MAT_BSR:
+            mf->fct = fasp_blas_mxv_bsr;
+            break;
+            
+        case MAT_STR:
+            mf->fct = fasp_blas_mxv_str;
+            break;
+            
+        case MAT_bCSR:
+            mf->fct = fasp_blas_mxv_bcsr;
+            break;
+            
+        case MAT_bBSR:
+            mf->fct = fasp_blas_mxv_bbsr;
+            break;
+            
+        case MAT_CSRL:
+            mf->fct = fasp_blas_mxv_csrl;
+            break;
+            
+        default:
+            printf("### ERROR: Wrong matrix format %d!\n", matrix_format);
+            exit(ERROR_DATA_STRUCTURE);
+            
+    }
+    
+    mf->data = A;
 }
 
 /*---------------------------------*/

@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+05/10/2013 FASP 1.3.0:
+- Add a new input parameter AMG_smooth_order.
+- Fix matrix-free regression test and add a sample output.
+- Clean up AMG setup routines.
+
 05/09/2013 FASP 1.2.9:
 - When coarsening step not succeed, stop setup instead of quit.
 - Change interface to MUMPS a little bit.

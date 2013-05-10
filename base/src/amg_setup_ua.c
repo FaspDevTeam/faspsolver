@@ -29,7 +29,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *mgl, AMG_param * pa
  *
  * \return        SUCCESS if succeed, error otherwise
  *
- * \note Setup A, P, PT, levels using unsmoothed aggregation aggregation algorithm;
+ * \note Setup A, P, PT levels using the unsmoothed aggregation algorithm;
  *       Refer to Peter Vanek, Jan Madel and Marin Brezina
  *       "Algebraic Multigrid on Unstructured Meshes", 1994
  * 
@@ -41,7 +41,8 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
 {
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_ua ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
+    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
+           mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
     SHORT status = amg_setup_unsmoothP_unsmoothA(mgl, param);
@@ -65,18 +66,26 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
  * \author Xiaozhe Hu
  * \date 03/16/2012 
  *
- * Setup A, P, PT, levels using smoothed aggregation
- * concrete algorithm see paper
- * Peter Vanek, Jan Madel and Marin Brezina, Algebraic Multigrid on Unstructured Meshes, 1994
- * 
+ * \note Setup A, P, PT levels using unsmoothed aggregation
+ *       Refer to Peter Vanek, Jan Madel and Marin Brezina,
+ *       "Algebraic Multigrid on Unstructured Meshes", 1994
+ *
  */
 SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl, 
                              AMG_param *param)
 {
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_amg_setup_ua_bsr ...... [Start]\n");
+#endif
+
     SHORT status=SUCCESS;
     
     status = amg_setup_unsmoothP_unsmoothA_bsr(mgl, param);
     
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_amg_setup_ua_bsr ...... [Finish]\n");
+#endif
+
     return status;
 }
 
@@ -97,41 +106,38 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
  * \author Xiaozhe Hu
  * \date   02/21/2011 
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/27/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/27/2012.
+ * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
 
 static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl, 
                                             AMG_param *param)
 {
-    const SHORT   cycle_type=param->cycle_type;
-    const SHORT   print_level=param->print_level;
-    const INT     m=mgl[0].A.row;
+    const SHORT prtlvl     = param->print_level;
+    const SHORT cycle_type = param->cycle_type;
+    const SHORT min_cdof   = MAX(param->coarse_dof,50);
+    const INT   m          = mgl[0].A.row;
     
     // local variables
-    REAL          setup_start, setup_end, setupduration;
-    SHORT         level=0, status=SUCCESS, max_levels=param->max_levels;
-    INT           i;
+    SHORT       max_levels = param->max_levels, level=0, status=SUCCESS;
+    INT         i;
+    REAL        setup_start, setup_end;
+    ILU_param   iluparam;
 
     fasp_gettime(&setup_start);
 
-    if (cycle_type == AMLI_CYCLE) {
-        param->amli_coef = (REAL *)fasp_mem_calloc(param->amli_degree+1,sizeof(REAL));
-        REAL lambda_max = 2.0;
-        REAL lambda_min = lambda_max/8;
-        fasp_amg_amli_coef(lambda_max, lambda_min, param->amli_degree, param->amli_coef);
-    }
-    
-    //each level stores the information of the number of aggregations
-    INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
-    
-    for (i=0; i<max_levels; ++i) num_aggregations[i] = 0;
-    
+    // level info (fine: 0; coarse: 1)
     ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
+
+    // each level stores the information of the number of aggregations
+    INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
     
     // each level stores the information of the strongly coupled neighborhoods
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat)); 
     
+    // Initialzie level information
+    for (i=0; i<max_levels; ++i) num_aggregations[i] = 0;
+
     mgl[0].near_kernel_dim   = 1;
     mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
     
@@ -140,10 +146,8 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
         fasp_array_set(m, mgl[0].near_kernel_basis[i], 1.0);
     }
     
-    // initialize ILU parameters
-    mgl->ILU_levels = param->ILU_levels;
-    ILU_param iluparam;
-    if (param->ILU_levels>0) {
+    // Initialize ILU parameters
+    if ( param->ILU_levels > 0 ) {
         iluparam.print_level = param->print_level;
         iluparam.ILU_lfil    = param->ILU_lfil;
         iluparam.ILU_droptol = param->ILU_droptol;
@@ -151,41 +155,70 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
         iluparam.ILU_type    = param->ILU_type;
     }
     
-    // initialize Schwarz parameters
-	mgl->schwarz_levels = param->schwarz_levels;
-	INT schwarz_mmsize = param->schwarz_mmsize;
-	INT schwarz_maxlvl = param->schwarz_maxlvl;
-	INT schwarz_type = param->schwarz_type;
-
+    // Initialize AMLI coefficients
+    if ( cycle_type == AMLI_CYCLE ) {
+        const INT amlideg = param->amli_degree;
+        param->amli_coef = (REAL *)fasp_mem_calloc(amlideg+1,sizeof(REAL));
+        REAL lambda_max = 2.0, lambda_min = lambda_max/4;
+        fasp_amg_amli_coef(lambda_max, lambda_min, amlideg, param->amli_coef);
+    }
     
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
     
-    while ((mgl[level].A.row>param->coarse_dof) && (level<max_levels-1)) {
+    // Main AMG setup loop
+    while ( (mgl[level].A.row > min_cdof) && (level < max_levels-1) ) {
 
 #if DEBUG_MODE
         printf("### DEBUG: level = %5d  row = %14d  nnz = %16d\n",
                level,mgl[level].A.row,mgl[level].A.nnz);
 #endif
+        
         /*-- setup ILU decomposition if necessary */
-        if (level<param->ILU_levels) fasp_ilu_dcsr_setup(&mgl[level].A,&mgl[level].LU,&iluparam);
+        if ( level < param->ILU_levels ) {
+            status = fasp_ilu_dcsr_setup(&mgl[level].A, &mgl[level].LU, &iluparam);
+            if ( status < 0 ) {
+                param->ILU_levels = level;
+                printf("### WARNING: ILU setup on level %d failed!\n", level);
+            }
+        }
         
         /* -- setup Schwarz smoother if necessary */
 		if (level<param->schwarz_levels){
-			mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
-			fasp_dcsr_shift (&(mgl[level].schwarz.A), 1);
-			fasp_schwarz_setup(&mgl[level].schwarz, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
+            const INT smmsize = param->schwarz_mmsize;
+            const INT smaxlvl = param->schwarz_maxlvl;
+            const INT schtype = param->schwarz_type;
+            
+            mgl->schwarz_levels = param->schwarz_levels;
+            mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
+            fasp_dcsr_shift(&(mgl[level].schwarz.A), 1);
+            fasp_schwarz_setup(&mgl[level].schwarz, smmsize, smaxlvl, schtype);
 		}
     
         /*-- Aggregation --*/
-        aggregation(&mgl[level].A, &vertices[level], param, level+1, &Neighbor[level], &num_aggregations[level]);
-        if (num_aggregations[level] * 4 > mgl[level].A.row) param->strong_coupled /=2.0; 
+        aggregation(&mgl[level].A, &vertices[level], param, level+1,
+                    &Neighbor[level], &num_aggregations[level]);
+        
+        if (num_aggregations[level] * 4 > mgl[level].A.row) param->strong_coupled /= 2.0; 
     
         /* -- Form Prolongation --*/      
-        form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1, num_aggregations[level]);
+        form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1,
+                         num_aggregations[level]);
     
-        /*-- Form resitriction --*/    
+        /*-- Perform aggressive coarsening only up to the specified level --*/
+        if ( mgl[level].P.col < 20 ) break; // If coarse < 20, stop!!!
+        
+#if FALSE // TODO: Add ordering for smoothers --Chensong
+        /*-- Store the C/F marker --*/
+        {
+            INT size = mgl[level].A.row;
+            mgl[level].cfmark = fasp_ivec_create(size);
+            memcpy(mgl[level].cfmark.val, vertices[level].val, size*sizeof(INT));
+        }
+#endif
+
+        /*-- Form resitriction --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
     
         /*-- Form coarse level stiffness matrix --*/    
@@ -199,47 +232,48 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 #if DIAGONAL_PREF
         fasp_dcsr_diagpref(&mgl[level].A); // reorder each row to make diagonal appear first
 #endif      
-    }
-    
-    // setup total level number and current level
-    mgl[0].num_levels = max_levels = level+1;
-    mgl[0].w = fasp_dvec_create(m);    
-    
-    for (level=1; level<max_levels; ++level) {
-        INT    m = mgl[level].A.row;
-        mgl[level].num_levels = max_levels;     
-        mgl[level].b = fasp_dvec_create(m);
-        mgl[level].x = fasp_dvec_create(m);
-        
-        if (cycle_type == NL_AMLI_CYCLE)  mgl[level].w = fasp_dvec_create(3*m);    
-        else mgl[level].w = fasp_dvec_create(2*m);
-        
+
     }
     
 #if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK format
     dCSRmat Ac_tran;
-    fasp_dcsr_trans(&mgl[max_levels-1].A, &Ac_tran);
+    fasp_dcsr_trans(&mgl[level].A, &Ac_tran);
     fasp_dcsr_sort(&Ac_tran);
-    fasp_dcsr_cp(&Ac_tran,&mgl[max_levels-1].A);
+    fasp_dcsr_cp(&Ac_tran,&mgl[level].A);
     fasp_dcsr_free(&Ac_tran);
 #endif
-
+    
 #if WITH_MUMPS
-        /* Setup MUMPS direct solver on the coarsest level */
-        fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, 1);
-#endif	
-
-    if (print_level>PRINT_NONE) {
-        fasp_gettime(&setup_end);
-        setupduration = setup_end - setup_start;
-        print_amgcomplexity(mgl,print_level);
-        print_cputime("Unsmoothed Aggregation AMG setup",setupduration);
+    /* Setup MUMPS direct solver on the coarsest level */
+    fasp_solver_mumps_steps(&mgl[level].A, &mgl[level].b, &mgl[level].x, 1);
+#endif
+    
+    // setup total level number and current level
+    mgl[0].num_levels = max_levels = level+1;
+    mgl[0].w          = fasp_dvec_create(m);
+    
+    for ( level = 1; level < max_levels; ++level) {
+        INT mm = mgl[level].A.row;
+        mgl[level].num_levels = max_levels;
+        mgl[level].b          = fasp_dvec_create(mm);
+        mgl[level].x          = fasp_dvec_create(mm);
+        
+        if ( cycle_type == NL_AMLI_CYCLE )
+            mgl[level].w = fasp_dvec_create(3*mm);
+        else
+            mgl[level].w = fasp_dvec_create(2*mm);
     }
     
+    if ( prtlvl > PRINT_NONE ) {
+        fasp_gettime(&setup_end);
+        print_amgcomplexity(mgl,prtlvl);
+        print_cputime("Unsmoothed aggregation setup", setup_end - setup_start);
+    }
+    
+    fasp_mem_free(Neighbor);
     fasp_mem_free(vertices);
     fasp_mem_free(num_aggregations);
-    fasp_mem_free(Neighbor);
     
     return status;
 }

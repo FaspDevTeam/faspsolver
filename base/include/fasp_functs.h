@@ -35,7 +35,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
 
 /*-------- In file: amg_setup_sa.c --------*/
 
-SHORT fasp_amg_setup_sa (AMG_data *mgl, 
+SHORT fasp_amg_setup_sa (AMG_data *mgl,
                          AMG_param *param);
 
 
@@ -892,10 +892,6 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
 
 /*-------- In file: itsolver_mf.c --------*/
 
-void fasp_solver_itsolver_init (INT matrix_format,
-                                mxv_matfree *mf,
-                                void *A);
-
 INT fasp_solver_itsolver (mxv_matfree *mf, 
                           dvector *b, 
                           dvector *x, 
@@ -906,6 +902,10 @@ INT fasp_solver_krylov (mxv_matfree *mf,
                         dvector *b, 
                         dvector *x, 
                         itsolver_param *itparam);
+
+void fasp_solver_itsolver_init (INT matrix_format,
+                                mxv_matfree *mf,
+                                void *A);
 
 
 /*-------- In file: itsolver_str.c --------*/

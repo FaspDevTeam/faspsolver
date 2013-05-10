@@ -56,17 +56,17 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
     switch (itsolver_type) {
             
     case SOLVER_BiCGstab:
-        if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (Block CSR matrix) ...\n");
+        if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (Block CSR) ...\n");
         iter=fasp_solver_bdcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;    
             
     case SOLVER_MinRes:
-        if ( print_level>PRINT_NONE ) printf("\nCalling MinRes solver (Block CSR matrix) ...\n");
+        if ( print_level>PRINT_NONE ) printf("\nCalling MinRes solver (Block CSR) ...\n");
         iter=fasp_solver_bdcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;    
             
     case SOLVER_GMRES:
-        if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (Block CSR matrix) ...\n");
+        if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (Block CSR) ...\n");
         iter=fasp_solver_bdcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level); 
         break;    
             

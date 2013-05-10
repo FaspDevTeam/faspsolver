@@ -55,22 +55,22 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
     switch (itsolver_type) {
     
     case SOLVER_CG: 
-        if ( print_level>PRINT_NONE ) printf("\nCalling CG solver (STR matrix) ...\n");
+        if ( print_level>PRINT_NONE ) printf("\nCalling CG solver (STR) ...\n");
         iter=fasp_solver_dstr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
     
     case SOLVER_BiCGstab:
-        if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (STR matrix) ...\n");
+        if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (STR) ...\n");
         iter=fasp_solver_dstr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
         break;
     
     case SOLVER_GMRES:
-        if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (STR matrix) ...\n");
+        if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (STR) ...\n");
         iter=fasp_solver_dstr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
         break;    
     
     case SOLVER_VGMRES:
-        if ( print_level>PRINT_NONE ) printf("\nCalling vGMRES solver (STR matrix) ...\n");
+        if ( print_level>PRINT_NONE ) printf("\nCalling vGMRES solver (STR) ...\n");
         iter=fasp_solver_dstr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
         break;    
     

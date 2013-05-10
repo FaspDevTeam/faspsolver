@@ -56,7 +56,7 @@ static void check_solu(dvector *x, dvector *sol, double tol)
 int main (int argc, const char * argv[])
 {
     const INT      print_level = 1;    // how much information to print out
-    const INT      num_prob    = 3;    // how many problems to be used
+    const INT      num_prob    = 2;    // how many problems to be used
     const REAL     tolerance   = 1e-4; // tolerance for accepting the solution
     
     /* Local Variables */
@@ -107,26 +107,6 @@ int main (int argc, const char * argv[])
                 
                 // Read ref. sol. from an indexed vec file.
                 fasp_dvecind_read("../data/sol_FE.dat", &sol);
-                
-                break;
-                
-            case 3: //     - Problem 3. MatrixMarket finite element analysis NOS7.
-                // Finite difference approximation to diffusion equation with varying
-                // diffusivity in a 3D unit cube with Dirichlet boundary conditions.
-                
-                printf("MatrixMarket finite element analysis NOS7");
-                printf("\n=====================================================\n");
-                
-                // Read A in MatrixMarket SYM COO format.
-                fasp_dmtxsym_read("../data/nos7.mtx", &A);
-                
-                // Generate an exact solution randomly
-                sol = fasp_dvec_create(A.row);
-                fasp_dvec_rand(A.row, &sol);
-                
-                // Form the right-hand-side b = A*sol
-                b = fasp_dvec_create(A.row);
-                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
                 
                 break;
                 
