@@ -14,8 +14,8 @@
 // Private routines for RS coarsening
 static void find_strong_couple    (dCSRmat *, iCSRmat *, AMG_param *);
 static INT  form_coarse_level_std (dCSRmat *, iCSRmat *, ivector *, INT);
-static INT  remove_ff_connections (iCSRmat *, ivector *, INT, INT);
 static INT  form_coarse_level_agg (dCSRmat *, iCSRmat *, ivector *, INT, INT);
+static INT  remove_ff_connections (iCSRmat *, ivector *, INT, INT);
 static void form_P_pattern_dir    (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 static void form_P_pattern_std    (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 
@@ -293,417 +293,6 @@ static void find_strong_couple (dCSRmat *A,
 }
 
 /**
- * \fn static void find_strong_couple_agg1 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh, 
- *                                          ivector *vertices, ivector *CGPT_index,
- *                                          ivector *CGPT_rindex)
- *
- * \brief Generate the set of all strong negative or absolute couplings using 
- *        aggressive coarsening A1 or A2
- *
- * \param A            Coefficient matrix, the index starts from zero
- * \param S            Strong connection matrix
- * \param Sh           Strong couplings matrix between coarse grid points
- * \param vertices     Type of variables--C/F splitting
- * \param CGPT_index   Index of CGPT from CGPT to all points
- * \param CGPT_rindex  Index of CGPT from all points to CGPT
- *
- * \author Kai Yang, Xiaozhe Hu
- * \date   09/06/2010
- *
- * \note The difference between find_strong_couple_agg1 and find_strong_couple_agg2
- *       is that find_strong_couple_agg1 uses path 1 to detetermine strongly coupled
- *       C points while find_strong_couple_agg2 uses path 2 to determinestrongly
- *       coupled C points. Usually find_strong_couple_agg1 gives more aggresive
- *       coarsening!
- *
- * Mofified by Chensong Zhang on 05/11/2013: restructure the code
- */
-static void find_strong_couple_agg1 (dCSRmat *A,
-                                     iCSRmat *S,
-                                     iCSRmat *Sh,
-                                     ivector *vertices,
-                                     ivector *CGPT_index,
-                                     ivector *CGPT_rindex)
-{
-    
-    INT   i,j,k;
-    INT   num_c,count,ci,cj,ck,fj,cck;
-    INT  *cp_index, *cp_rindex, *times_visited, *vec=vertices->val;
-    
-    CGPT_rindex->row=A->row;
-    CGPT_rindex->val=(INT*)fasp_mem_calloc(vertices->row,sizeof(INT));// for the reverse indexing of coarse grid points
-    cp_rindex=CGPT_rindex->val;
-    
-    //count the number of coarse grid points
-    num_c=0;
-    for(i=0;i<vertices->row;i++)
-    {
-        if(vec[i]==CGPT) num_c++;
-    }
-    
-    CGPT_index->row=num_c;
-    
-    //generate coarse grid point index
-    CGPT_index->val=(INT *)fasp_mem_calloc(num_c,sizeof(INT));
-    cp_index=CGPT_index->val;
-    j=0;
-    for (i=0;i<vertices->row;i++) {
-        if(vec[i]==CGPT) {
-            cp_index[j]=i;
-            cp_rindex[i]=j;
-            j++;
-        }
-    }
-    
-    Sh->row=num_c;
-    Sh->col=num_c;
-    Sh->val=NULL;
-    Sh->JA=NULL;
-    Sh->IA=(INT*)fasp_mem_calloc(Sh->row+1,sizeof(INT));
-    
-    times_visited=(INT*)fasp_mem_calloc(num_c,sizeof(INT)); // record the number of times some coarse point is visited
-    
-    //for (i=0; i<num_c; i++) times_visited[i]=0;
-    memset(times_visited, 0, sizeof(INT)*num_c);
-    
-    // step 1: Find first the structure IA of Sh
-    Sh->IA[0]=0;
-    
-    for(ci=0;ci<Sh->row;ci++)
-    {
-        count=0; // count the the number of coarse point that i is strongly connected to w.r.t. (p,2)
-        i=cp_index[ci];//find the index of the ci-th coarse grid point
-        
-        //visit all the fine neighbors that ci is strongly connected to
-        for(j=S->IA[i];j<S->IA[i+1];j++)
-        {
-            
-            fj=S->JA[j];
-            
-            if(vec[fj]==CGPT&&fj!=i)
-            {
-                cj=cp_rindex[fj];
-                
-                if(times_visited[cj]!=ci+1)
-                {
-                    //newly visited
-                    times_visited[cj]=ci+1;//marked as strongly connected from ci
-                    count++;
-                }
-                
-            }
-            else if(vec[fj]==FGPT) // it is a fine grid point,
-            {
-                
-                //find all the coarse neighbors that fj is strongly connected to
-                for(k=S->IA[fj];k<S->IA[fj+1];k++)
-                {
-                    ck=S->JA[k];
-                    
-                    if(vec[ck]==CGPT&&ck!=i)// it is a coarse grid point
-                    {
-                        if(cp_rindex[ck]>=num_c) printf("find_strong_couple_agg1: index exceed bound!\n");
-                        
-                        cck=cp_rindex[ck];
-                        
-                        if (times_visited[cck]!=ci+1) {
-                            //newly visited
-                            times_visited[cck]=ci+1;//marked as strongly connected from ci
-                            count++;
-                        }
-                        
-                        /*
-                         if (times_visited[cck] == ci+1){
-                         
-                         }
-                         else if (times_visited[cck] == -ci-1){
-                         times_visited[cck]=ci+1;//marked as strongly connected from ci
-                         count++;
-                         }
-                         else{
-                         times_visited[cck]=-ci-1;//marked as visited
-                         }
-                         */
-                        
-                    }//end if
-                }//end for k
-                
-            }//end if
-        }//end for j
-        
-        Sh->IA[ci+1]=Sh->IA[ci]+count;
-        
-    }//end for i
-    
-    
-    // step 2: Find JA of Sh
-    
-    for (i=0; i<num_c; i++) times_visited[i]=0; // clean up times_visited
-    Sh->nnz=Sh->IA[Sh->row];
-    Sh->JA=(INT*)fasp_mem_calloc(Sh->nnz,sizeof(INT));
-    
-    for(ci=0;ci<Sh->row;ci++)
-    {
-        i=cp_index[ci]; //find the index of the i-th coarse grid point
-        count=Sh->IA[ci]; //count for coarse points
-        
-        //visit all the fine neighbors that ci is strongly connected to
-        for(j=S->IA[i];j<S->IA[i+1];j++)
-        {
-            fj=S->JA[j];
-            if(vec[fj]==CGPT&&fj!=i)
-            {
-                cj=cp_rindex[fj];
-                if(times_visited[cj]!=ci+1)
-                {
-                    //newly visited
-                    times_visited[cj]=ci+1;
-                    Sh->JA[count]=cj;
-                    count++;
-                }
-                
-                
-            }
-            else if(vec[fj]==FGPT) // it is a fine grid point,
-            {
-                //find all the coarse neighbors that fj is strongly connected to
-                for(k=S->IA[fj];k<S->IA[fj+1];k++)
-                {
-                    ck=S->JA[k];
-                    if(vec[ck]==CGPT&&ck!=i)// it is a coarse grid point
-                    {
-                        cck=cp_rindex[ck];
-                        
-                        
-                        if(times_visited[cck]!=ci+1)
-                        {
-                            //newly visited
-                            times_visited[cck]=ci+1;
-                            Sh->JA[count]=cck;
-                            count++;
-                        }
-                        
-                        /*
-                         if (times_visited[cck] == ci+1){
-                         
-                         }
-                         else if (times_visited[cck] == -ci-1){
-                         times_visited[cck]=ci+1;
-                         Sh->JA[count]=cck;
-                         count++;
-                         }
-                         else {
-                         times_visited[cck]=-ci-1;
-                         }
-                         */
-                        
-                    }//end if
-                }//end for k
-                
-            }//end if
-        }//end for j
-        if(count!=Sh->IA[ci+1]) printf("find_strong_couple_agg1: inconsistency in number of nonzeros values\n ");
-    }//end for ci
-    fasp_mem_free(times_visited);
-}
-
-/**
- * \fn static void find_strong_couple_agg2 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh,
- *                                          ivector *vertices, ivector *CGPT_index,
- *                                          ivector *CGPT_rindex)
- *
- * \brief Generate the set of all strong negative or absolute couplings using
- *        aggressive coarsening A1 or A2
- *
- * \param A            Coefficient matrix, the index starts from zero
- * \param S            Strong connection matrix
- * \param Sh           Strong couplings matrix between coarse grid points
- * \param vertices     Type of variables--C/F splitting
- * \param CGPT_index   Index of CGPT from CGPT to all points
- * \param CGPT_rindex  Index of CGPT from all points to CGPT
- *
- * \author Xiaozhe Hu
- * \date   04/24/2013
- *
- * \note The difference between find_strong_couple_agg1 and find_strong_couple_agg2 
- *       is that find_strong_couple_agg1 uses path 1 to detetermine strongly coupled 
- *       C points while find_strong_couple_agg2 uses path 2 to determinestrongly 
- *       coupled C points. Usually find_strong_couple_agg1 gives more aggresive 
- *       coarsening!
- *
- * Mofified by Chensong Zhang on 05/11/2013: restructure the code
- */
-static void find_strong_couple_agg2 (dCSRmat *A,
-                                     iCSRmat *S,
-                                     iCSRmat *Sh,
-                                     ivector *vertices,
-                                     ivector *CGPT_index,
-                                     ivector *CGPT_rindex)
-{
-    
-    INT   i,j,k;
-    INT   num_c,count,ci,cj,ck,fj,cck;
-    INT  *cp_index, *cp_rindex, *times_visited, *vec=vertices->val;
-    
-    CGPT_rindex->row=A->row;
-    CGPT_rindex->val=(INT*)fasp_mem_calloc(vertices->row,sizeof(INT));// for the reverse indexing of coarse grid points
-    cp_rindex=CGPT_rindex->val;
-    
-    //count the number of coarse grid points
-    num_c=0;
-    for(i=0;i<vertices->row;i++)
-    {
-        if(vec[i]==CGPT) num_c++;
-    }
-    
-    CGPT_index->row=num_c;
-    
-    //generate coarse grid point index
-    CGPT_index->val=(INT *)fasp_mem_calloc(num_c,sizeof(INT));
-    cp_index=CGPT_index->val;
-    j=0;
-    for (i=0;i<vertices->row;i++) {
-        if(vec[i]==CGPT) {
-            cp_index[j]=i;
-            cp_rindex[i]=j;
-            j++;
-        }
-    }
-    
-    Sh->row=num_c;
-    Sh->col=num_c;
-    Sh->val=NULL;
-    Sh->JA=NULL;
-    Sh->IA=(INT*)fasp_mem_calloc(Sh->row+1,sizeof(INT));
-    
-    times_visited=(INT*)fasp_mem_calloc(num_c,sizeof(INT)); // record the number of times some coarse point is visited
-    
-    //for (i=0; i<num_c; i++) times_visited[i]=0;
-    memset(times_visited, 0, sizeof(INT)*num_c);
-    
-    // step 1: Find first the structure IA of Sh
-    Sh->IA[0]=0;
-    
-    for(ci=0;ci<Sh->row;ci++)
-    {
-        count=0; // count the the number of coarse point that i is strongly connected to w.r.t. (p,2)
-        i=cp_index[ci];//find the index of the ci-th coarse grid point
-        
-        //visit all the fine neighbors that ci is strongly connected to
-        for(j=S->IA[i];j<S->IA[i+1];j++)
-        {
-            
-            fj=S->JA[j];
-            
-            if(vec[fj]==CGPT&&fj!=i)
-            {
-                cj=cp_rindex[fj];
-                
-                if(times_visited[cj]!=ci+1)
-                {
-                    //newly visited
-                    times_visited[cj]=ci+1;//marked as strongly connected from ci
-                    count++;
-                }
-                
-            }
-            else if(vec[fj]==FGPT) // it is a fine grid point,
-            {
-                
-                //find all the coarse neighbors that fj is strongly connected to
-                for(k=S->IA[fj];k<S->IA[fj+1];k++)
-                {
-                    ck=S->JA[k];
-                    
-                    if(vec[ck]==CGPT&&ck!=i)// it is a coarse grid point
-                    {
-                        if(cp_rindex[ck]>=num_c) printf("find_strong_couple_agg2: index exceed bound!\n");
-                        
-                        cck=cp_rindex[ck];
-                        
-                        if (times_visited[cck] == ci+1){
-                            
-                        }
-                        else if (times_visited[cck] == -ci-1){
-                            times_visited[cck]=ci+1;//marked as strongly connected from ci
-                            count++;
-                        }
-                        else{
-                            times_visited[cck]=-ci-1;//marked as visited
-                        }
-                        
-                    }//end if
-                }//end for k
-                
-            }//end if
-        }//end for j
-        
-        Sh->IA[ci+1]=Sh->IA[ci]+count;
-        
-    }//end for i
-    
-    
-    // step 2: Find JA of Sh
-    
-    for (i=0; i<num_c; i++) times_visited[i]=0; // clean up times_visited
-    Sh->nnz=Sh->IA[Sh->row];
-    Sh->JA=(INT*)fasp_mem_calloc(Sh->nnz,sizeof(INT));
-    
-    for(ci=0;ci<Sh->row;ci++)
-    {
-        i=cp_index[ci]; //find the index of the i-th coarse grid point
-        count=Sh->IA[ci]; //count for coarse points
-        
-        //visit all the fine neighbors that ci is strongly connected to
-        for(j=S->IA[i];j<S->IA[i+1];j++)
-        {
-            fj=S->JA[j];
-            if(vec[fj]==CGPT&&fj!=i)
-            {
-                cj=cp_rindex[fj];
-                if(times_visited[cj]!=ci+1)
-                {
-                    //newly visited
-                    times_visited[cj]=ci+1;
-                    Sh->JA[count]=cj;
-                    count++;
-                }
-                
-                
-            }
-            else if(vec[fj]==FGPT) // it is a fine grid point,
-            {
-                //find all the coarse neighbors that fj is strongly connected to
-                for(k=S->IA[fj];k<S->IA[fj+1];k++)
-                {
-                    ck=S->JA[k];
-                    if(vec[ck]==CGPT&&ck!=i)// it is a coarse grid point
-                    {
-                        cck=cp_rindex[ck];
-                        
-                        if (times_visited[cck] == ci+1){
-                            
-                        }
-                        else if (times_visited[cck] == -ci-1){
-                            times_visited[cck]=ci+1;
-                            Sh->JA[count]=cck;
-                            count++;
-                        }
-                        else {
-                            times_visited[cck]=-ci-1;
-                        }
-                        
-                    }//end if
-                }//end for k
-                
-            }//end if
-        }//end for j
-        if(count!=Sh->IA[ci+1]) printf("find_strong_couple_agg2: inconsistency in number of nonzeros values\n ");
-    }//end for ci
-    fasp_mem_free(times_visited);
-}
-
-/**
  * \fn static INT form_coarse_level_std (dCSRmat *A, iCSRmat *S, ivector *vertices,
  *                                       INT row)
  *
@@ -732,7 +321,7 @@ static INT form_coarse_level_std (dCSRmat *A,
 {
     // local variables
     INT col = 0;
-    INT maxlambda, maxnode, num_left = 0;
+    INT maxmeas, maxnode, num_left = 0;
     INT measure, newmeas;
     INT *ia = A->IA, *vec = vertices->val;
     INT i, j, k, l;
@@ -745,6 +334,10 @@ static INT form_coarse_level_std (dCSRmat *A,
         
     INT nthreads = 1, use_openmp = FALSE;
     
+#if DEBUG_MODE
+    printf("### DEBUG: form_coarse_level_std ...... [Start]\n");
+#endif
+
 #ifdef _OPENMP
     if ( row > OPENMP_HOLDS ) {
         use_openmp = TRUE;
@@ -848,13 +441,14 @@ static INT form_coarse_level_std (dCSRmat *A,
     while ( num_left > 0 ) {
         
         // pick $i\in U$ with $\max\lambda_i: C:=C\cup\{i\}, U:=U\\{i\}$
-        maxnode   = LoL_head->head;
-        maxlambda = lambda[maxnode];
-        
+        maxnode = LoL_head->head;
+        maxmeas = lambda[maxnode];
+        if ( maxmeas == 0 ) printf("### WARNING: Head of the list has measure 0!\n");
+
         vec[maxnode] = CGPT; // set maxnode as coarse node
         lambda[maxnode] = 0;
         --num_left;
-        remove_node(&LoL_head, &LoL_tail, maxlambda, maxnode, lists, where);
+        remove_node(&LoL_head, &LoL_tail, maxmeas, maxnode, lists, where);
         col++;
         
         // for all $j\in S_i^T\cap U: F:=F\cup\{j\}, U:=U\backslash\{j\}$
@@ -923,6 +517,10 @@ static INT form_coarse_level_std (dCSRmat *A,
     
     fasp_icsr_free(&ST);
     fasp_mem_free(work);
+    
+#if DEBUG_MODE
+    printf("### DEBUG: form_coarse_level_std ...... [Finish]\n");
+#endif
     
     return col;
 }
@@ -1037,6 +635,381 @@ static INT remove_ff_connections (iCSRmat *S,
 }
 
 /**
+ * \fn static void find_strong_couple_agg1 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh,
+ *                                          ivector *vertices, ivector *CGPT_index,
+ *                                          ivector *CGPT_rindex)
+ *
+ * \brief Generate the set of all strong negative or absolute couplings using
+ *        aggressive coarsening A1
+ *
+ * \param A            Coefficient matrix, the index starts from zero
+ * \param S            Strong connection matrix
+ * \param Sh           Strong couplings matrix between coarse grid points
+ * \param vertices     Type of variables--C/F splitting
+ * \param CGPT_index   Index of CGPT from CGPT to all points
+ * \param CGPT_rindex  Index of CGPT from all points to CGPT
+ *
+ * \author Kai Yang, Xiaozhe Hu
+ * \date   09/06/2010
+ *
+ * \note The difference between find_strong_couple_agg1 and find_strong_couple_agg2
+ *       is that find_strong_couple_agg1 uses one path to determine strongly coupled
+ *       C points while find_strong_couple_agg2 uses two paths to determine strongly
+ *       coupled C points. Usually find_strong_couple_agg1 gives more aggresive
+ *       coarsening!
+ *
+ * Mofified by Chensong Zhang on 05/13/2013: restructure the code
+ */
+static void find_strong_couple_agg1 (dCSRmat *A,
+                                     iCSRmat *S,
+                                     iCSRmat *Sh,
+                                     ivector *vertices,
+                                     ivector *CGPT_index,
+                                     ivector *CGPT_rindex)
+{
+    const INT row = A->row;
+    
+    // local variables
+    INT       i, j, k;
+    INT       num_c, count, ci, cj, ck, fj, cck;
+    INT      *cp_index, *cp_rindex, *times_visited;
+    INT      *vec = vertices->val;
+    
+    // count the number of coarse grid points
+    for ( num_c = i = 0; i < row; i++ ) {
+        if ( vec[i] == CGPT ) num_c++;
+    }
+    
+    // for the reverse indexing of coarse grid points
+    fasp_ivec_alloc(row, CGPT_rindex);
+    cp_rindex = CGPT_rindex->val;
+    
+    // generate coarse grid point index
+    fasp_ivec_alloc(num_c, CGPT_index);
+    cp_index = CGPT_index->val;
+    for ( j = i = 0; i < row; i++ ) {
+        if ( vec[i] == CGPT ) {
+            cp_index[j]  = i;
+            cp_rindex[i] = j;
+            j++;
+        }
+    }
+    
+    // allocate space for Sh
+    Sh->row = Sh->col = num_c;
+    Sh->val = Sh->JA = NULL;
+    Sh->IA  = (INT*)fasp_mem_calloc(Sh->row+1, sizeof(INT));
+    
+    // record the number of times some coarse point is visited
+    times_visited = (INT*)fasp_mem_calloc(num_c, sizeof(INT));
+    memset(times_visited, -1, sizeof(INT)*num_c);
+    
+    /**********************************************/
+    /* step 1: Find first the structure IA of Sh  */
+    /**********************************************/
+    
+    Sh->IA[0] = 0;
+    
+    for ( ci = 0; ci < Sh->row; ci++ ) {
+        
+        i = cp_index[ci]; // find the index of the ci-th coarse grid point
+
+        // number of coarse point that i is strongly connected to w.r.t. S(p,2)
+        count = 0;
+        
+        // visit all the fine neighbors that ci is strongly connected to
+        for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
+            
+            fj = S->JA[j];
+            
+            if ( vec[fj] == CGPT && fj != i ) {
+                cj = cp_rindex[fj];
+                if ( times_visited[cj] != ci ) {
+                    times_visited[cj] = ci; //marked as strongly connected from ci
+                    count++;
+                }
+                
+            }
+            
+            else if ( vec[fj] == FGPT ) { // fine grid point,
+                
+                // find all the coarse neighbors that fj is strongly connected to
+                for ( k = S->IA[fj]; k < S->IA[fj+1]; k++ ) {
+                    ck = S->JA[k];
+                    if ( vec[ck] == CGPT && ck != i ) { // it is a coarse grid point
+                        if ( cp_rindex[ck] >= num_c ) {
+                            printf("### ERROR: ck=%d, num_c=%d, out of bound in cp_rindex!\n", ck, num_c);
+                            exit(ERROR_AMG_COARSEING);
+                        }
+                        cck = cp_rindex[ck];
+                        
+                        if ( times_visited[cck] != ci ) {
+                            times_visited[cck] = ci; //marked as strongly connected from ci
+                            count++;
+                        }
+                    } //end if
+                } //end for k
+                
+            } //end if
+            
+        } //end for j
+        
+        Sh->IA[ci+1] = Sh->IA[ci] + count;
+        
+    } //end for i
+    
+    /*************************/
+    /* step 2: Find JA of Sh */
+    /*************************/
+    
+    memset(times_visited, -1, sizeof(INT)*num_c); // reset times_visited
+
+    Sh->nnz = Sh->IA[Sh->row];
+    Sh->JA  = (INT*)fasp_mem_calloc(Sh->nnz, sizeof(INT));
+    
+    for ( ci = 0; ci < Sh->row; ci++ ) {
+        
+        i = cp_index[ci]; // find the index of the i-th coarse grid point
+        count = Sh->IA[ci]; // count for coarse points
+        
+        // visit all the fine neighbors that ci is strongly connected to
+        for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
+
+            fj = S->JA[j];
+            
+            if ( vec[fj] == CGPT && fj != i ) {
+                cj = cp_rindex[fj];
+                if ( times_visited[cj] != ci ) { // not visited yet
+                    times_visited[cj] = ci;
+                    Sh->JA[count] = cj;
+                    count++;
+                }
+            }
+            else if ( vec[fj] == FGPT ) { // fine grid point,
+                //find all the coarse neighbors that fj is strongly connected to
+                for ( k = S->IA[fj]; k < S->IA[fj+1]; k++ ) {
+                    ck = S->JA[k];
+                    if ( vec[ck] == CGPT && ck != i ) { // coarse grid point
+                        cck = cp_rindex[ck];
+                        if ( times_visited[cck] != ci ) { // not visited yet
+                            times_visited[cck] = ci;
+                            Sh->JA[count] = cck;
+                            count++;
+                        }
+                    } // end if
+                } // end for k
+            } // end if
+
+        } // end for j
+        
+        if ( count != Sh->IA[ci+1] ) {
+            printf("### WARNING: Inconsistent numbers of nonzeros found!\n ");
+        }
+        
+    } // end for ci
+    
+    fasp_mem_free(times_visited);
+}
+
+/**
+ * \fn static void find_strong_couple_agg2 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh,
+ *                                          ivector *vertices, ivector *CGPT_index,
+ *                                          ivector *CGPT_rindex)
+ *
+ * \brief Generate the set of all strong negative or absolute couplings using
+ *        aggressive coarsening A2
+ *
+ * \param A            Coefficient matrix, the index starts from zero
+ * \param S            Strong connection matrix
+ * \param Sh           Strong couplings matrix between coarse grid points
+ * \param vertices     Type of variables--C/F splitting
+ * \param CGPT_index   Index of CGPT from CGPT to all points
+ * \param CGPT_rindex  Index of CGPT from all points to CGPT
+ *
+ * \author Xiaozhe Hu
+ * \date   04/24/2013
+ *
+ * \note The difference between find_strong_couple_agg1 and find_strong_couple_agg2
+ *       is that find_strong_couple_agg1 uses one path to determine strongly coupled
+ *       C points while find_strong_couple_agg2 uses two paths to determine strongly
+ *       coupled C points. Usually find_strong_couple_agg1 gives more aggresive
+ *       coarsening!
+ *
+ * Mofified by Chensong Zhang on 05/13/2013: restructure the code
+ */
+static void find_strong_couple_agg2 (dCSRmat *A,
+                                     iCSRmat *S,
+                                     iCSRmat *Sh,
+                                     ivector *vertices,
+                                     ivector *CGPT_index,
+                                     ivector *CGPT_rindex)
+{
+    const INT row = A->row;
+    
+    // local variables
+    INT       i, j, k;
+    INT       num_c, count, ci, cj, ck, fj, cck;
+    INT      *cp_index, *cp_rindex, *times_visited;
+    INT      *vec = vertices->val;
+    
+    // count the number of coarse grid points
+    for ( num_c = i = 0; i < row; i++ ) {
+        if ( vec[i] == CGPT ) num_c++;
+    }
+    
+    // for the reverse indexing of coarse grid points
+    fasp_ivec_alloc(row, CGPT_rindex);
+    cp_rindex = CGPT_rindex->val;
+    
+    // generate coarse grid point index
+    fasp_ivec_alloc(num_c, CGPT_index);
+    cp_index = CGPT_index->val;
+    for ( j = i = 0; i < row; i++ ) {
+        if ( vec[i] == CGPT ) {
+            cp_index[j]  = i;
+            cp_rindex[i] = j;
+            j++;
+        }
+    }
+    
+    // allocate space for Sh
+    Sh->row = Sh->col = num_c;
+    Sh->val = Sh->JA = NULL;
+    Sh->IA  = (INT*)fasp_mem_calloc(Sh->row+1, sizeof(INT));
+    
+    // record the number of times some coarse point is visited
+    times_visited = (INT*)fasp_mem_calloc(num_c, sizeof(INT));
+    memset(times_visited, 0, sizeof(INT)*num_c);
+    
+    /**********************************************/
+    /* step 1: Find first the structure IA of Sh  */
+    /**********************************************/
+    
+    Sh->IA[0] = 0;
+    
+    for ( ci = 0; ci < Sh->row; ci++ ) {
+        
+        i = cp_index[ci]; // find the index of the ci-th coarse grid point
+
+        // number of coarse point that i is strongly connected to w.r.t. S(p,2)
+        count = 0;
+        
+        // visit all the fine neighbors that ci is strongly connected to
+        for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
+            
+            fj = S->JA[j];
+            
+            if ( vec[fj] == CGPT && fj != i ) {
+                cj = cp_rindex[fj];
+                if ( times_visited[cj] != ci+1 ) { // not visited yet
+                    times_visited[cj] = ci+1; //marked as strongly connected from ci
+                    count++;
+                }
+            }
+            
+            else if ( vec[fj] == FGPT ) { // fine grid point
+                
+                // find all the coarse neighbors that fj is strongly connected to
+                for ( k = S->IA[fj]; k < S->IA[fj+1]; k++ ) {
+                    
+                    ck = S->JA[k];
+                    
+                    if ( vec[ck] == CGPT && ck != i ) { // coarse grid point
+                        if ( cp_rindex[ck] >= num_c ) {
+                            printf("### ERROR: ck=%d, num_c=%d, out of bound in cp_rindex!\n", ck, num_c);
+                            exit(ERROR_AMG_COARSEING);
+                        }
+                        cck = cp_rindex[ck];
+                        
+                        if ( times_visited[cck] == ci+1 ) {
+                            // visited already!
+                        }
+                        else if ( times_visited[cck] == -ci-1 ) {
+                            times_visited[cck] = ci+1; // marked as strongly connected from ci
+                            count++;
+                        }
+                        else {
+                            times_visited[cck] = -ci-1; //marked as visited
+                        }
+                        
+                    } //end if vec[ck]
+                    
+                } // end for k
+                
+            } // end if vec[fj]
+            
+        } // end for j
+        
+        Sh->IA[ci+1] = Sh->IA[ci] + count;
+        
+    } //end for i
+    
+    /*************************/
+    /* step 2: Find JA of Sh */
+    /*************************/
+    
+    memset(times_visited, 0, sizeof(INT)*num_c); // reset times_visited
+    
+    Sh->nnz = Sh->IA[Sh->row];
+    Sh->JA  = (INT*)fasp_mem_calloc(Sh->nnz,sizeof(INT));
+    
+    for ( ci = 0; ci < Sh->row; ci++ ) {
+        
+        i = cp_index[ci]; // find the index of the i-th coarse grid point
+        count = Sh->IA[ci]; // count for coarse points
+        
+        // visit all the fine neighbors that ci is strongly connected to
+        for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
+            
+            fj = S->JA[j];
+            
+            if ( vec[fj] == CGPT && fj != i ) {
+                cj = cp_rindex[fj];
+                if ( times_visited[cj] != ci+1 ) { // not visited yet
+                    times_visited[cj] = ci+1;
+                    Sh->JA[count] = cj;
+                    count++;
+                }                
+            }
+            
+            else if ( vec[fj] == FGPT ) { // fine grid point
+
+                //find all the coarse neighbors that fj is strongly connected to
+                for ( k = S->IA[fj]; k < S->IA[fj+1]; k++ ) {
+                    
+                    ck = S->JA[k];
+                    
+                    if ( vec[ck] == CGPT && ck != i ) { // coarse grid point
+                        cck = cp_rindex[ck];
+                        if ( times_visited[cck] == ci+1 ) {
+                            // visited before
+                        }
+                        else if ( times_visited[cck] == -ci-1 ) {
+                            times_visited[cck] = ci+1;
+                            Sh->JA[count] = cck;
+                            count++;
+                        }
+                        else {
+                            times_visited[cck] = -ci-1;
+                        }
+                    } // end if vec[ck]
+                
+                } // end for k
+                
+            } // end if vec[fj]
+            
+        } // end for j
+        
+        if ( count != Sh->IA[ci+1] ) {
+            printf("### WARNING: Inconsistent numbers of nonzeros found!\n ");
+        }
+
+    }//end for ci
+    
+    fasp_mem_free(times_visited);
+}
+
+/**
  * \fn static INT form_coarse_level_agg (dCSRmat *A, iCSRmat *S, ivector *vertices,
  *                                       INT row, INT aggressive_path)
  *
@@ -1056,6 +1029,7 @@ static INT remove_ff_connections (iCSRmat *S,
  * Modified by Chensong Zhang on 07/05/2012: Fix a data type bug
  * Modified by Chunsheng Feng, Zheng Li on 10/13/2012
  * Modified by Xiaozhe Hu on 04/24/2013: modify aggresive coarsening
+ * Mofified by Chensong Zhang on 05/13/2013: restructure the code
  */
 static INT form_coarse_level_agg (dCSRmat *A,
                                   iCSRmat *S,
@@ -1063,33 +1037,36 @@ static INT form_coarse_level_agg (dCSRmat *A,
                                   INT row,
                                   INT aggressive_path)
 {
-    INT col = 0; // initialize col(P): returning output
-    INT maxlambda, maxnode, num_left=0;
-    INT measure, newmeas;
-    INT *vec = vertices->val;
-    INT i,j,k,l,m,flag,ci,cj,ck,cl,num_c;
+    INT    col = 0; // initialize col(P): returning output
+
+    // local variables
+    INT   *vec = vertices->val, *cp_index;
+    INT    maxmeas, maxnode, num_left = 0;
+    INT    measure, newmeas;
+    INT    i, j, k, l, m, flag, ci, cj, ck, cl, num_c;
     
-    INT *work = (INT*)fasp_mem_calloc(4*row,sizeof(INT));
-    INT *lists = work, *where = lists+row, *lambda = where+row;
-    INT *cp_index;
+    INT   *work = (INT*)fasp_mem_calloc(3*row,sizeof(INT));
+    INT   *lists = work, *where = lists+row, *lambda = where+row;
     
-    ivector CGPT_index, CGPT_rindex;
+    ivector  CGPT_index, CGPT_rindex;
     LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;
-    iCSRmat ST,Sh,ShT;
+
     // Sh is for the strong coupling matrix between temporary CGPTs
     // ShT is the transpose of Sh
     // Snew is for combining the information from S and Sh
-        
+    iCSRmat ST, Sh, ShT;
+    
+#if DEBUG_MODE
+    printf("### DEBUG: form_coarse_level_agg ...... [Start]\n");
+#endif
+    
     fasp_icsr_trans(S, &ST);
     
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT sub_col = 0;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
-    
-    vertices->row = A->row;
     
     /************************************************************/
     /* Coarsening Phase ONE: find temporary coarse level points */
@@ -1101,7 +1078,7 @@ static INT form_coarse_level_agg (dCSRmat *A,
     /* Coarsening Phase TWO: find real coarse level points      */
     /************************************************************/
     
-    //find Sh, the strong coupling between coarse grid points w.r.t. (path,2)
+    // find Sh, the strong coupling between coarse grid points S(path,2)
     if ( aggressive_path < 2 )
         find_strong_couple_agg1(A, S, &Sh, vertices, &CGPT_index, &CGPT_rindex);
     else
@@ -1119,126 +1096,138 @@ static INT form_coarse_level_agg (dCSRmat *A,
 #endif
     for ( ci = 0; ci < num_c; ++ci ) lambda[ci] = ShT.IA[ci+1]-ShT.IA[ci];
     
-    // 2. Set the variables with nonpositvie measure as F-variables
-    num_left=0; // number of CGPT in the list LoL
-    for (ci=0;ci<num_c;++ci) {
-        i=cp_index[ci];
-        measure=lambda[ci];
-        if (vec[i]!=ISPT) {
-            if (measure>0) {
-                enter_list(&LoL_head, &LoL_tail, lambda[ci], ci, lists, where);
-                num_left++;
-            }
-            else {
-                if ( measure < 0) printf("### WARNING: Negative lambda[%d]!\n", i);
-                vec[i]=FGPT; // set i as fine node
-                //update the lambda value in the CGPT neighbor of i
-                for (ck=Sh.IA[ci];ck<Sh.IA[ci+1];++ck) {
-                    cj=Sh.JA[ck];
-                    j=cp_index[cj];
-                    if (vec[j]!=ISPT) {
-                        if (cj<ci) {
-                            newmeas=lambda[cj];
-                            if (newmeas>0) {
-                                remove_node(&LoL_head, &LoL_tail, newmeas, cj, lists, where);
-                                num_left--;
-                            }
-                            newmeas= ++(lambda[cj]);
-                            enter_list(&LoL_head, &LoL_tail,  newmeas, cj, lists, where);
-                            num_left++;
-                        }
-                        else{
-                            newmeas= ++(lambda[cj]);
-                        }//end if cj<ci
-                    }//end if vec[j]!=ISPT
-                }//end for ck
-                
-            }//end if
+    // 2. Form linked list for lambda (max to min)
+    for ( ci = 0; ci < num_c; ++ci ) {
+        
+        i       = cp_index[ci];
+        measure = lambda[ci];
+        
+        if ( vec[i] == ISPT ) continue; // skip isolated points
+        
+        if ( measure > 0 ) {
+            enter_list(&LoL_head, &LoL_tail, lambda[ci], ci, lists, where);
+            num_left++;
         }
-    }
-    
-    
-    // 4. Main loop
-    while (num_left>0) {
-        // pick $i\in U$ with $\max\lambda_i: C:=C\cup\{i\}, U:=U\\{i\}$
-        maxnode=LoL_head->head;
-        maxlambda=lambda[maxnode];
-        if (maxlambda==0) { printf("### WARNING: Head of the list has measure 0\n");}
-        vec[cp_index[maxnode]]=3; // set maxnode as real coarse node, labeled as num 3
-        --num_left;
-        remove_node(&LoL_head, &LoL_tail, maxlambda, maxnode, lists, where);
-        lambda[maxnode]=0;
-        col++;//count for the real coarse node after aggressive coarsening
-        
-        // for all $j\in S_i^T\cap U: F:=F\cup\{j\}, U:=U\backslash\{j\}$
-        for (ci=ShT.IA[maxnode];ci<ShT.IA[maxnode+1];++ci) {
-            cj=ShT.JA[ci];
-            j=cp_index[cj];
+        else {
+            if ( measure < 0) printf("### WARNING: Negative lambda[%d]!\n", i);
             
-            /* if j is temporary CGPT */
-            if (vec[j]==CGPT) {
-                vec[j]=4; // set j as 4--fake CGPT
-                remove_node(&LoL_head, &LoL_tail, lambda[cj], cj, lists, where);
-                --num_left;
-                //update the measure for neighboring points
-                for (cl=Sh.IA[cj];cl<Sh.IA[cj+1];cl++) {
-                    ck=Sh.JA[cl];
-                    k=cp_index[ck];
-                    if (vec[k]==CGPT) {// k is temporary CGPT
-                        remove_node(&LoL_head, &LoL_tail, lambda[ck], ck, lists, where);
-                        newmeas= ++(lambda[ck]);
-                        enter_list(&LoL_head, &LoL_tail,newmeas, ck, lists, where);
+            vec[i] = FGPT; // set i as fine node
+            
+            // update the lambda value in the CGPT neighbor of i
+            for ( ck = Sh.IA[ci]; ck < Sh.IA[ci+1]; ++ck ) {
+
+                cj = Sh.JA[ck];
+                j  = cp_index[cj];
+                
+                if ( vec[j] == ISPT ) continue;
+                
+                if ( cj < ci ) {
+                    newmeas = lambda[cj];
+                    if ( newmeas > 0 ) {
+                        remove_node(&LoL_head, &LoL_tail, newmeas, cj, lists, where);
+                        num_left--;
                     }
-                }
-            } // if
-        } // ci
-        
-        for (ci=Sh.IA[maxnode]; ci<Sh.IA[maxnode+1];++ci) {
-            cj=Sh.JA[ci];
-            j=cp_index[cj];
-            if (vec[j]==CGPT) {// j is temporary CGPT
-                measure=lambda[cj];
-                remove_node(&LoL_head, &LoL_tail, measure, cj, lists, where);
-                measure--;
-                lambda[cj]=measure;
-                if (measure>0) {
-                    enter_list(&LoL_head, &LoL_tail,measure, cj, lists, where);
+                    newmeas = ++(lambda[cj]);
+                    enter_list(&LoL_head, &LoL_tail,  newmeas, cj, lists, where);
+                    num_left++;
                 }
                 else {
-                    vec[j]=4; // set j as fake CGPT variable
-                    --num_left;
-                    for (cl=Sh.IA[cj];cl<Sh.IA[cj+1];cl++) {
-                        ck=Sh.JA[cl];
-                        k=cp_index[ck];
-                        if (vec[k]==CGPT) {// k is temporary CGPT
-                            remove_node(&LoL_head, &LoL_tail, lambda[ck], ck, lists, where);
-                            newmeas= ++(lambda[ck]);
-                            enter_list(&LoL_head, &LoL_tail,newmeas, ck, lists, where);
-                        }
-                    } // end for l
-                } // end if
+                    newmeas = ++(lambda[cj]);
+                } // end if cj<ci
+            
+            } // end for ck
+            
+        } // end if
+
+    } // end for ci
+    
+    
+    // 3. Main loop
+    while ( num_left > 0 ) {
+        
+        // pick $i\in U$ with $\max\lambda_i: C:=C\cup\{i\}, U:=U\\{i\}$
+        maxnode = LoL_head->head;
+        maxmeas = lambda[maxnode];
+        if ( maxmeas == 0 ) printf("### WARNING: Head of the list has measure 0!\n");
+        
+        // mark maxnode as real coarse node, labeled as num 3
+        vec[cp_index[maxnode]] = 3;
+        --num_left;
+        remove_node(&LoL_head, &LoL_tail, maxmeas, maxnode, lists, where);
+        lambda[maxnode] = 0;
+        col++; // count for the real coarse node after aggressive coarsening
+        
+        // for all $j\in S_i^T\cap U: F:=F\cup\{j\}, U:=U\backslash\{j\}$
+        for ( ci = ShT.IA[maxnode]; ci < ShT.IA[maxnode+1]; ++ci ) {
+            
+            cj = ShT.JA[ci];
+            j  = cp_index[cj];
+            
+            if ( vec[j] != CGPT ) continue; // skip if j is not C-point
+            
+            vec[j] = 4; // set j as 4--fake CGPT
+            remove_node(&LoL_head, &LoL_tail, lambda[cj], cj, lists, where);
+            --num_left;
+            //update the measure for neighboring points
+            for ( cl = Sh.IA[cj]; cl < Sh.IA[cj+1]; cl++ ) {
+                ck = Sh.JA[cl];
+                k  = cp_index[ck];
+                if ( vec[k] == CGPT ) {// k is temporary CGPT
+                    remove_node(&LoL_head, &LoL_tail, lambda[ck], ck, lists, where);
+                    newmeas= ++(lambda[ck]);
+                    enter_list(&LoL_head, &LoL_tail, newmeas, ck, lists, where);
+                }
+            }
+            
+        } // end for ci
+        
+        // Update lambda and linked list after maxnode->C
+        for ( ci = Sh.IA[maxnode]; ci < Sh.IA[maxnode+1]; ++ci ) {
+            
+            cj = Sh.JA[ci];
+            j  = cp_index[cj];
+            
+            if ( vec[j] != CGPT ) continue; // skip if j is not C-point
+
+            measure = lambda[cj];
+            remove_node(&LoL_head, &LoL_tail, measure, cj, lists, where);
+            lambda[cj] = --measure;
+            
+            if ( measure > 0 ) {
+                enter_list(&LoL_head, &LoL_tail,measure, cj, lists, where);
+            }
+            else {
+                vec[j] = 4; // set j as fake CGPT variable
+                --num_left;
+                for ( cl = Sh.IA[cj]; cl < Sh.IA[cj+1]; cl++ ) {
+                    ck = Sh.JA[cl];
+                    k  = cp_index[ck];
+                    if ( vec[k] == CGPT ) {// k is temporary CGPT
+                        remove_node(&LoL_head, &LoL_tail, lambda[ck], ck, lists, where);
+                        newmeas= ++(lambda[ck]);
+                        enter_list(&LoL_head, &LoL_tail, newmeas, ck, lists, where);
+                    }
+                } // end for l
             } // end if
+
         } // end for
         
     } // while
     
-    // organize the variable type
-    // make temporary CGPT--1 and fake CGPT--4 become FGPT
-    // make real CGPT--3 to be CGPT
+    // 4. reorganize the variable type: mark temporary CGPT--1 and fake CGPT--4 as
+    //    FGPT; mark real CGPT--3 to be CGPT
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
-    for(i=0;i<row;i++) {
-        if(vec[i]==CGPT||vec[i]==4)//change all the temporary or fake CGPT into FGPT
-            vec[i]=FGPT;
+    for ( i = 0; i < row; i++ ) {
+        if ( vec[i] == CGPT || vec[i] == 4 ) vec[i] = FGPT;
     }
     
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
-    for(i=0;i<row;i++) {
-        if(vec[i]==3)// if i is real CGPT
-            vec[i]=CGPT;
+    for ( i = 0; i < row; i++ ) {
+        if ( vec[i] == 3 ) vec[i]=CGPT;
     }
     
     /************************************************************/
@@ -1247,65 +1236,52 @@ static INT form_coarse_level_agg (dCSRmat *A,
     /* the standard interpolation works                         */
     /************************************************************/
 
-#ifdef _OPENMP
-#pragma omp parallel for if(row>OPENMP_HOLDS) private(myid,mybegin,myend,i,flag,j,k,l,m,sub_col)
-    for (myid=0; myid<nthreads; myid++) {
-        FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
-        for (i=mybegin; i<myend; i++) {
-#else
-        for (i=0; i<row; i++) {
-#endif
-            if (vec[i]==FGPT) {
-                flag=0; //flag for whether there is any CGPT neighbor within distance of 2
-                for (j=S->IA[i]; j<S->IA[i+1]; j++) {
-                    k=S->JA[j];
-                    if (flag==1) break;
-                    else if (vec[k]==CGPT) {
-                        flag=1;
-                        break;
-                    }
-                    else if(vec[k]==FGPT) {
-                        for (l=S->IA[k]; l<S->IA[k+1]; l++) {
-                            m=S->JA[l];
-                            if (vec[m]==CGPT) {
-                                flag=1;
-                                break;
-                            }
-                        } //end for l
-                    }
-                } //end for j
-                    
-                if (flag==0) {
-                    vec[i]=CGPT;
-#ifdef _OPENMP
-                    sub_col++;
-#else
-                    col++;
-#endif
-                }
-            } //end if
-                
-        } //end for i
-            
-#ifdef _OPENMP
-#pragma omp critical(col)
-        col += sub_col;
-    } // myid
-#endif
+    for ( i = 0; i < row; i++ ) {
         
-    if (LoL_head) {
-        list_ptr=LoL_head;
-        LoL_head->prev_node=NULL;
-        LoL_head->next_node=NULL;
+        if ( vec[i] != FGPT ) continue;
+        
+        flag = 0; //flag for whether there exist CGPT neighbors within distance of 2
+        
+        for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
+            k = S->JA[j];
+            if ( vec[k] == CGPT ) {
+                flag = 1;
+            }
+            else if ( vec[k] == FGPT ) {
+                for ( l = S->IA[k]; l < S->IA[k+1]; l++ ) {
+                    m = S->JA[l];
+                    if ( vec[m] == CGPT ) {
+                        flag = 1; break;
+                    }
+                } //end for l
+            }
+            if ( flag == 1 ) break;
+        } //end for j
+        
+        // no CGPT neighbors in distance <= 2, mark i as CGPT
+        if ( flag == 0 ) {
+            vec[i] = CGPT; col++;
+        }
+        
+    } //end for i
+    
+    if ( LoL_head ) {
+        list_ptr = LoL_head;
+        LoL_head->prev_node = NULL;
+        LoL_head->next_node = NULL;
         LoL_head = list_ptr->next_node;
         fasp_mem_free(list_ptr);
     }
-        
+    
     fasp_icsr_free(&Sh);
     fasp_icsr_free(&ST);
     fasp_icsr_free(&ShT);
     fasp_mem_free(work);
-        
+    
+#if DEBUG_MODE
+    printf("### DEBUG: form_coarse_level_agg ...... [Finish]\n");
+#endif
+    
     return col;
 }
     
