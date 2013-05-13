@@ -184,16 +184,16 @@ static void enter_list (LinkList *LoL_head_ptr,
                 where[index] = LIST_HEAD;
                 
                 if ( list_ptr->prev_node != NULL) {
-                    new_ptr->prev_node            = list_ptr->prev_node;
+                    new_ptr->prev_node             = list_ptr->prev_node;
                     list_ptr->prev_node->next_node = new_ptr;
-                    list_ptr->prev_node           = new_ptr;
-                    new_ptr->next_node            = list_ptr;
+                    list_ptr->prev_node            = new_ptr;
+                    new_ptr->next_node             = list_ptr;
                 }
                 else {
                     new_ptr->next_node  = list_ptr;
                     list_ptr->prev_node = new_ptr;
                     new_ptr->prev_node  = NULL;
-                    LoL_head = new_ptr;
+                    LoL_head            = new_ptr;
                 }
                 
                 *LoL_head_ptr = LoL_head;
@@ -201,11 +201,11 @@ static void enter_list (LinkList *LoL_head_ptr,
                 return;
             }
             else if (measure == list_ptr->data) {
-                old_tail = list_ptr->tail;
+                old_tail        = list_ptr->tail;
                 lists[old_tail] = index;
-                where[index] = old_tail;
-                lists[index] = LIST_TAIL;
-                list_ptr->tail = index;
+                where[index]    = old_tail;
+                lists[index]    = LIST_TAIL;
+                list_ptr->tail  = index;
                 return;
             }
             

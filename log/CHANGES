@@ -1,10 +1,15 @@
 File Name: CHANGES
 
-05/10/2013 FASP 1.3.0:
+05/11/2013 FASP 1.3.0:
 - Add a new input parameter AMG_smooth_order.
 - Fix matrix-free regression test and add a sample output.
 - Clean up AMG setup routines and re-did the code structure.
-- Add an AMG complexity print-out function for the BSR format. 
+- Add an AMG complexity print-out function for the BSR format.
+- Remove an old coarsening routine: generate_S_rs.
+- Clean up coarsening routines: shorten the code, change several function names, etc.
+- Separte C/F splitting phase 1 and phase 2. 
+- Flattern nested if and for { } in coarsening routines. 
+- Remove interp_type as an input for C/F splitting.
 
 05/09/2013 FASP 1.2.9:
 - When coarsening step not succeed, stop setup instead of quit.

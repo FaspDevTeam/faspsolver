@@ -35,10 +35,9 @@
 SHORT fasp_amg_setup_cr (AMG_data *mgl, 
                          AMG_param *param)
 {
-    dCSRmat     *A = &mgl[0].A;
-    const SHORT  prtlvl = param->print_level;
+    const SHORT  prtlvl   = param->print_level;
     const SHORT  min_cdof = MAX(param->coarse_dof,50);
-    const INT    m = A->row, n = A->col, nnz = A->nnz;
+    const INT    m        = mgl[0].A.row;
     
     // local variables
     INT     i_0 = 0, i_n;
@@ -53,7 +52,8 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
 
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_cr ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
+           mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
 #if DIAGONAL_PREF

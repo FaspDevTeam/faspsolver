@@ -57,10 +57,6 @@ endif
 ####################  User Changes UP TO HERE   ########################
 
 
-
-VER0=1.2.8
-PKG0=fasp-$(VER0)
-
 # Let cmake do the configuration. Set up a build dir
 #cpu0=$(shell uname -m | sed -e 's/[[:space:]][[:space:]]*/_/g')
 #sys0=$(shell uname -s)

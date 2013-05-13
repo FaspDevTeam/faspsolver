@@ -70,7 +70,7 @@ SHORT fasp_amg_interp (dCSRmat *A,
     
     /*-- Standard interpolation operator --*/
     switch (interp_type) {
-        case INTERP_REG: // Direction interpolation
+        case INTERP_DIR: // Direction interpolation
             interp_RS(A, vertices, P, param); break;
         case INTERP_STD: // standard interpolation
             interp_STD(A, vertices, P, S, param); break;
@@ -1332,7 +1332,7 @@ INT fasp_amg_interp1 (dCSRmat *A,
     
     /*-- Standard interpolation operator --*/
     switch (interp_type) {
-        case INTERP_REG: // Direct interpolation
+        case INTERP_DIR: // Direct interpolation
             interp_RS1(A, vertices, P, param, icor_ysk);
             break;
         case INTERP_ENG: // Energy min interpolation

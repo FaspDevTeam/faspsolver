@@ -173,27 +173,27 @@
  */
 #define SMOOTHER_BLKOIL         11   /**< Only for the monolithic AMG for black-oil */
 
-/** 
- * \brief Definition of interpolation types
- */
-#define INTERP_REG              1    /**< Direct interpolation */
-#define INTERP_STD              2    /**< Standard interpolation */
-#define INTERP_ENG              3    /**< energy minimization interp in C */
-
 /**
  * \brief Definition of coarsening types
  */
-#define COARSE_RS               1    /**< Modified classical coarsening */
+#define COARSE_RS               1    /**< Classical coarsening */
 #define COARSE_CR               3    /**< Compatible relaxation */
 #define COARSE_AC               4    /**< Aggressive coarsening */
+
+/**
+ * \brief Definition of interpolation types
+ */
+#define INTERP_DIR              1    /**< Direct interpolation */
+#define INTERP_STD              2    /**< Standard interpolation */
+#define INTERP_ENG              3    /**< energy minimization interp in C */
 
 /** 
  * \brief Type of vertices (dofs) for C/F splitting
  */
+#define UNPT                   -1    /**< undetermined points */
 #define FGPT                    0    /**< fine grid points  */
 #define CGPT                    1    /**< coarse grid points */
 #define ISPT                    2    /**< isolated points */
-#define UNPT                   -1    /**< unknown points */
 
 /** 
  * \brief Definition of smoothing order

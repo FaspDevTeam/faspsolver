@@ -36,7 +36,7 @@ int main (int argc, const char * argv[])
 	FEM_param_init(&fempar);
 	print_usage = FEM_param_set(argc, argv, &fempar);
     
-	if (print_usage) {
+	if ( print_usage ) {
         printf("\nUsage: %s [<ofemparions>]\n", argv[0]);
         printf("  -output <val>    : mesh output switch [default: 0]\n");
         printf("  -meshin <val>    : input mesh  [default: ../data/mesh.dat]\n");
@@ -72,7 +72,7 @@ int main (int argc, const char * argv[])
     
 	// Step 2: refine mesh
 	clock_t mesh_refine_s = clock();
-	for (i=0; i<fempar.refine_lvl; ++i) mesh_refine(&mesh, &mesh_aux);
+	for ( i=0; i < fempar.refine_lvl; ++i ) mesh_refine(&mesh, &mesh_aux);
 	clock_t mesh_refine_e = clock();
     double mesh_refine_time = (double)(mesh_refine_e - mesh_refine_s)/(double)(CLOCKS_PER_SEC);
     printf("Mesh refinement costs... %8.4f seconds\n", mesh_refine_time);
@@ -112,30 +112,30 @@ int main (int argc, const char * argv[])
         if ( solver_type >= 1 && solver_type <= 20) {
             
             // Using no preconditioner for Krylov iterative methods
-            if (precond_type == PREC_NULL) {
+            if ( precond_type == PREC_NULL ) {
                 status = fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
             }
             
             // Using diag(A) as preconditioner for Krylov iterative methods
-            else if (precond_type == PREC_DIAG) {
+            else if ( precond_type == PREC_DIAG ) {
                 status = fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
             }
             
             // Using AMG as preconditioner for Krylov iterative methods
-            else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
-                if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+            else if ( precond_type == PREC_AMG || precond_type == PREC_FMG ) {
+                if ( print_level > PRINT_NONE ) fasp_param_amg_print(&amgparam);
                 status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
             }
             
             // Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
-            else if (precond_type == PREC_ILU) {
-                if (print_level>PRINT_NONE) fasp_param_ilu_print(&iluparam);
+            else if ( precond_type == PREC_ILU ) {
+                if ( print_level > PRINT_NONE ) fasp_param_ilu_print(&iluparam);
                 status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
             }
             
             // Using Schwarz as preconditioner for Krylov iterative methods
-            else if (precond_type == PREC_SCHWARZ){
-                if (print_level>PRINT_NONE) fasp_param_schwarz_print(&swzparam);
+            else if ( precond_type == PREC_SCHWARZ ){
+                if ( print_level > PRINT_NONE ) fasp_param_schwarz_print(&swzparam);
                 status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, &swzparam);
             }
             
@@ -147,14 +147,14 @@ int main (int argc, const char * argv[])
         }
         
         // AMG as the iterative solver
-        else if (solver_type == SOLVER_AMG) {
-            if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+        else if ( solver_type == SOLVER_AMG ) {
+            if ( print_level > PRINT_NONE ) fasp_param_amg_print(&amgparam);
             fasp_solver_amg(&A, &b, &x, &amgparam); 
         }
         
         // Full AMG as the iterative solver 
-        else if (solver_type == SOLVER_FMG) {
-            if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+        else if ( solver_type == SOLVER_FMG ) {
+            if ( print_level > PRINT_NONE ) fasp_param_amg_print(&amgparam);
             fasp_solver_famg(&A, &b, &x, &amgparam);
         }
         
@@ -163,8 +163,7 @@ int main (int argc, const char * argv[])
             status = ERROR_SOLVER_TYPE;
         }
 
-        for ( i=0; i<dof.row; ++i)
-			uh.val[dof.val[i]] = x.val[i];
+        for ( i = 0; i < dof.row; ++i) uh.val[dof.val[i]] = x.val[i];
         
         fasp_dvec_free(&x);
     }

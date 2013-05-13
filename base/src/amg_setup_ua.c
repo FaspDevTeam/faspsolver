@@ -285,8 +285,6 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
     const SHORT prtlvl   = param->print_level;
     const SHORT min_cdof = MAX(param->coarse_dof,50);
     const INT   m        = mgl[0].A.ROW;
-    const INT   n        = mgl[0].A.COL;
-    const INT   nnz      = mgl[0].A.NNZ;
     const INT   nb       = mgl[0].A.nb;
     
     ILU_param iluparam;
@@ -296,7 +294,8 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
     
 #if DEBUG_MODE
     printf("### DEBUG: amg_setup_unsmoothP_unsmoothA_bsr ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
+           mgl[0].A.ROW, mgl[0].A.COL, mgl[0].A.NNZ);
 #endif
     
     fasp_gettime(&setup_start);
@@ -306,13 +305,13 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
     /*-----------------------*/
     
     // level info (fine: 0; coarse: 1)
-    ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
+    ivector *vertices = (ivector *)fasp_mem_calloc(max_levels, sizeof(ivector));
     
     //each elvel stores the information of the number of aggregations
-    INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
+    INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels, sizeof(INT));
     
     // each level stores the information of the strongly coupled neighborhoods
-    dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
+    dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels, sizeof(dCSRmat));
     
     for ( i=0; i<max_levels; ++i ) num_aggregations[i] = 0;
     
@@ -322,9 +321,9 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
     
     // null space for whole Jacobian
 	mgl[0].near_kernel_dim   = 1;
-    mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
+    mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim, sizeof(REAL*));
     
-    for ( i=0; i<mgl->near_kernel_dim; ++i ) mgl[0].near_kernel_basis[i] = NULL;
+    for ( i=0; i < mgl->near_kernel_dim; ++i ) mgl[0].near_kernel_basis[i] = NULL;
     
     /*-----------------------*/
     /*-- setup ILU param   --*/
@@ -361,7 +360,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
         aggregation(&mgl[level].PP, &vertices[level], param, level+1,
                     &Neighbor[level], &num_aggregations[level]);
         
-        if ( num_aggregations[level] * 4 > mgl[level].A.ROW ) param->strong_coupled /=8.0;
+        if ( num_aggregations[level]*4 > mgl[level].A.ROW ) param->strong_coupled /= 8.0;
         
         /* -- Form Prolongation --*/
         form_tentative_p_bsr(&vertices[level], &mgl[level].P, &mgl[0],
