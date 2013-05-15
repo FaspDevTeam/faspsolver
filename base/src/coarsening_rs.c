@@ -103,8 +103,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
             break;
             
         default:
-            printf("### ERROR: Coarsening type %d is not recognized!\n", coarse_type);
-            return ERROR_AMG_COARSE_TYPE;
+            fasp_chkerr(ERROR_AMG_COARSE_TYPE, "fasp_amg_coarsening_rs");
             
     }
     
@@ -130,8 +129,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
             break;
             
         default:
-            printf("### ERROR: Interpoltion type %d is not recognized!\n", interp_type);
-            return ERROR_AMG_INTERP_TYPE;
+            fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
             
     }
     
@@ -1385,13 +1383,13 @@ static void form_P_pattern_dir (dCSRmat *P,
     P->val = (REAL*)fasp_mem_calloc(P->nnz,sizeof(REAL));
     
     for ( index = i = 0; i < row; ++i ) {
-        if ( vec[i] == FGPT ) { // fine node
+        if ( vec[i] == FGPT ) { // fine grid point
             for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
                 k = S->JA[j];
                 if ( vec[k] == CGPT ) P->JA[index++] = k;
             } // end for j
         } // end if
-        else if ( vec[i] == CGPT ) { // if node i is on coarse grid
+        else if ( vec[i] == CGPT ) { // coarse grid point -- one entry only
             P->JA[index++] = i;
         }
     }

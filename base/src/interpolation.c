@@ -1,5 +1,10 @@
 /*! \file interpolation.c
  *  \brief Interpolation operators for AMG
+ *
+ *  \note Ref U. Trottenberg, C. W. Oosterlee, and A. Schuller
+ *            Multigrid (Appendix A: An Intro to Algebraic Multigrid)
+ *            Academic Press Inc., San Diego, CA, 2001
+ *            With contributions by A. Brandt, P. Oswald and K. Stuben.
  */
 
 #include <math.h>
@@ -9,83 +14,247 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-static SHORT invden(INT nn, REAL *mat, REAL *invmat);
-static SHORT get_block(dCSRmat *A, INT m, INT n, INT *rows, INT *cols, REAL *Aloc, INT *mask);
-static SHORT gentisquare_nomass(dCSRmat *A, INT mm, INT *Ii, REAL *ima, INT *mask);
-static SHORT getinonefull(INT **mat, REAL **matval, INT *lengths, INT mm, INT *Ii, REAL *ima);
-static SHORT orderone(INT **mat, REAL **matval, INT *lengths);
-static SHORT genintval(dCSRmat *A, INT **itmat, REAL **itmatval, INT ittniz, INT *isol, INT numiso, INT nf, INT nc);
-static SHORT getiteval(dCSRmat *A, dCSRmat *it);
-
-static void interp_RS(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param);
-static void interp_EM(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param);
-static void interp_RS1(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param, INT *icor_ysk);
-static void fasp_get_icor_ysk(INT nrows, INT ncols, INT *CoarseIndex, INT nbl_ysk, INT nbr_ysk, INT *CF_marker, INT *icor_ysk);
-static void fasp_get_nbl_nbr_ysk(dCSRmat *A, INT *nbl_ptr, INT *nbr_ptr);
-static void fasp_mod_coarse_index(INT nrows, INT *CoarseIndex);
-static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S, AMG_param *param);
-
-INT fasp_BinarySearch(INT *list, INT value, INT list_length);
+static void interp_DIR (dCSRmat *, ivector *, dCSRmat *, AMG_param *);
+static void interp_DIR1(dCSRmat *, ivector *, dCSRmat *, AMG_param *, INT *);
+static void interp_STD (dCSRmat *, ivector *, dCSRmat *, iCSRmat *, AMG_param *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn SHORT fasp_amg_interp (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S,
- *                            AMG_param *param)
+ * \fn void fasp_amg_interp (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S,
+ *                           AMG_param *param)
  *
- * \brief Generate interpolation P
+ * \brief Generate interpolation operator P
  *
- * \param A          pointer to the stiffness matrix
- * \param vertices   pointer to the indicator of CF split node is on fine (current) or coarse grid
- * \param P          pointer to the dCSRmat matrix of resulted interpolation
- * \param S          pointer to strength of connection
- * \param param      pointer to AMG parameters
- *
- * \return           SUCCESS or error message
+ * \param A          Coefficient matrix, the index starts from zero
+ * \param vertices   Indicator vector for the C/F splitting of the variables
+ * \param P          Prolongation (input: nonzero pattern, output: prolongation)
+ * \param S          Strong connection matrix
+ * \param param      AMG parameters
  *
  * \author  Xuehai Huang, Chensong Zhang
  * \date    04/04/2010
  *
  * Modified by Xiaozhe Hu on 05/23/2012: add S as input
- * Modified by Chensong Zhang on 09/12/2012: clean up and debug for interp_RS
+ * Modified by Chensong Zhang on 09/12/2012: clean up and debug interp_RS
+ * Modified by Chensong Zhang on 05/14/2013: reconstruct the code
  */
-SHORT fasp_amg_interp (dCSRmat *A,
-                       ivector *vertices,
-                       dCSRmat *P,
-					   iCSRmat *S,
-                       AMG_param *param)
+void fasp_amg_interp (dCSRmat *A,
+                      ivector *vertices,
+                      dCSRmat *P,
+                      iCSRmat *S,
+                      AMG_param *param)
 {
 	const INT coarsening_type = param->coarsening_type;
-    INT       interp_type = param->interpolation_type;
-    SHORT     status = SUCCESS;
+    INT       interp_type     = param->interpolation_type;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_interp ...... [Start]\n");
 #endif
     
     // make sure standard interpolaiton is used for aggressive coarsening
-    if (coarsening_type == 4) interp_type = INTERP_STD;
+    if ( coarsening_type == COARSE_AC ) interp_type = INTERP_STD;
     
-    /*-- Standard interpolation operator --*/
-    switch (interp_type) {
+    switch ( interp_type ) {
+            
         case INTERP_DIR: // Direction interpolation
-            interp_RS(A, vertices, P, param); break;
+            interp_DIR(A, vertices, P, param); break;
+            
         case INTERP_STD: // standard interpolation
             interp_STD(A, vertices, P, S, param); break;
+        
         case INTERP_ENG: // Energy min interpolation in C
-            interp_EM(A, vertices, P, param); break;
+            fasp_amg_interp_em(A, vertices, P, param); break;
+        
         default:
             fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
+    
     }
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_interp ...... [Finish]\n");
 #endif
+
+}
+
+/**
+ * \fn void fasp_amg_interp1 (dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param,
+ *                            iCSRmat *S, INT *icor_ysk)
+ *
+ * \brief Generate interpolation operator P
+ *
+ * \param A          Coefficient matrix, the index starts from zero
+ * \param vertices   Indicator vector for the C/F splitting of the variables
+ * \param P          Prolongation (input: nonzero pattern, output: prolongation)
+ * \param S          Strong connection matrix
+ * \param param      AMG parameters
+ * \param icor_ysk   Indices of coarse nodes in fine grid
+ *
+ * \return           SUCCESS or error message
+ *
+ * \author           Chunsheng Feng, Xiaoqiang Yue
+ * \date             03/01/2011
+ *
+ * Modified by Chensong Zhang on 05/14/2013: reconstruct the code
+ */
+void fasp_amg_interp1 (dCSRmat *A,
+                       ivector *vertices,
+                       dCSRmat *P,
+                       AMG_param *param,
+                       iCSRmat *S,
+                       INT *icor_ysk)
+{
+	const INT coarsening_type = param->coarsening_type;
+    INT       interp_type     = param->interpolation_type;
     
-    if (status==SUCCESS) return status;
-    else exit(status);
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_amg_interp1 ...... [Start]\n");
+#endif
+    
+    // make sure standard interpolaiton is used for aggressive coarsening
+    if ( coarsening_type == COARSE_AC ) interp_type = INTERP_STD;
+    
+    switch ( interp_type ) {
+            
+        case INTERP_DIR: // Direction interpolation
+            interp_DIR1(A, vertices, P, param, icor_ysk); break;
+            
+        case INTERP_STD: // standard interpolation
+            interp_STD(A, vertices, P, S, param); break;
+            
+        case INTERP_ENG: // Energy min interpolation in C
+            fasp_amg_interp_em(A, vertices, P, param); break;
+            
+        default:
+            fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
+            
+    }
+    
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_amg_interp1 ...... [Finish]\n");
+#endif
+}
+
+/**
+ * \fn void fasp_amg_interp_trunc (dCSRmat *A, dCSRmat *P, AMG_param *param)
+ *
+ * \brief Trunction step for prolongation operators
+ *
+ * \param A        Coefficient matrix, the index starts from zero
+ * \param P        Prolongation (input: full, output: truncated)
+ * \param param    AMG parameters
+ *
+ * \author Chensong Zhang
+ * \date   05/14/2013
+ *
+ * Originally by Xuehai Huang, Chensong Zhang on 01/31/2009
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012: add OMP support
+ * Modified by Chensong Zhang on 05/14/2013: rewritten
+ */
+void fasp_amg_interp_trunc (dCSRmat *A,
+                            dCSRmat *P,
+                            AMG_param *param)
+{
+    const INT   row    = P->row;
+    const INT   nnzp   = P->nnz;
+    const INT   prtlvl = param->print_level;
+    const REAL  eps_tr = param->truncation_threshold;
+    
+    // local variables
+    INT  num_nonzero = 0;    // number of non zeros after truncation
+    REAL Min_neg, Max_pos;   // min negative and max positive entries
+    REAL Sum_neg, TSum_neg;  // sum and truncated sum of negative entries
+    REAL Sum_pos, TSum_pos;  // sum and truncated sum of positive entries
+    REAL Fac_neg, Fac_pos;   // factors for negative and positive entries
+    
+    INT  index1 = 0, index2 = 0, begin, end;
+    INT  i, j;
+
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_amg_interp_trunc ...... [Start]\n");
+#endif
+
+    for ( i = 0; i < row; ++i ) {
+        
+        begin = P->IA[i]; end = P->IA[i+1];
+
+        Min_neg  = Max_pos  = 0;
+        Sum_neg  = Sum_pos  = 0;
+        TSum_neg = TSum_pos = 0;
+        
+        P->IA[i] = num_nonzero;
+        
+        // 1. Summations of positive and negative entries
+        for ( j = begin; j < end; ++j ) {
+            
+            if ( P->val[j] < 0 ) {
+                Sum_neg += P->val[j];
+                if ( P->val[j] < Min_neg ) Min_neg = P->val[j];
+            }
+            
+            if ( P->val[j] > 0 ) {
+                Sum_pos += P->val[j];
+                if ( P->val[j] > Max_pos ) Max_pos = P->val[j];
+            }
+            
+        }
+        
+        Max_pos *= eps_tr; Min_neg *= eps_tr;
+        
+        // 2. Form the structure JA of truncated P
+        for ( j = begin; j < end; ++j ) {
+            
+            if ( P->val[j] < Min_neg ) {
+                num_nonzero++;
+                P->JA[index1++] = P->JA[j];
+                TSum_neg += P->val[j];
+            }
+            
+            if ( P->val[j] > Max_pos ) {
+                num_nonzero++;
+                P->JA[index1++] = P->JA[j];
+                TSum_pos += P->val[j];
+            }
+        }
+        
+        // 3. Set values of truncated P
+        if ( TSum_pos >  SMALLREAL ) {
+            Fac_pos = Sum_pos / TSum_pos; // factor for positive entries
+        }
+        else {
+            Fac_pos = 1.0;
+        }
+            
+        if ( TSum_neg < -SMALLREAL ) {
+            Fac_neg = Sum_neg / TSum_neg; // factor for negative entries
+        }
+        else {
+            Fac_neg = 1.0;
+        }
+        
+        for ( j = begin; j < end; ++j ) {
+            if ( P->val[j] < Min_neg ) P->val[index2++] = P->val[j] * Fac_neg;
+            if ( P->val[j] > Max_pos ) P->val[index2++] = P->val[j] * Fac_pos;
+        }
+        
+    }
+    
+    // resize the truncated prolongation P
+    P->nnz = P->IA[row] = num_nonzero;
+    P->JA  = (INT  *)fasp_mem_realloc(P->JA,  num_nonzero*sizeof(INT));
+    P->val = (REAL *)fasp_mem_realloc(P->val, num_nonzero*sizeof(REAL));
+    
+    if ( prtlvl >= PRINT_MORE ) {
+        printf("Truncate prolongation, #nz befor: %10d, after: %10d\n",
+               nnzp, num_nonzero);
+    }
+    
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_amg_interp_trunc ...... [Finish]\n");
+#endif
+
 }
 
 /*---------------------------------*/
@@ -93,895 +262,75 @@ SHORT fasp_amg_interp (dCSRmat *A,
 /*---------------------------------*/
 
 /**
- * \fn static SHORT invden (INT nn, REAL *mat, REAL *invmat)
- *
- * \brief the routine is to find the inverse of a dense matrix
- *
- * \param nn      Size of the matrix
- * \param mat     pointer to the full matrix
- * \param invmat  pointer to the full inverse matrix
- *
- * \return        SUCCESS or error message
- *
- * \note this routine works for symmetric matrix.
- *
- * \author Xuehai Huang
- * \date   04/04/2009
- *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/14/2012
- */
-static SHORT invden (INT nn,
-                     REAL *mat,
-                     REAL *invmat)
-{
-    INT    i,j;
-    SHORT  status = SUCCESS;
-    
-#ifdef _OPENMP
-    // variables for OpenMP
-    INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
-#endif
-    
-    INT  *pivot=(INT *)fasp_mem_calloc(nn,sizeof(INT));
-    REAL *rhs=(REAL *)fasp_mem_calloc(nn,sizeof(REAL));
-    REAL *sol=(REAL *)fasp_mem_calloc(nn,sizeof(REAL));
-    
-    fasp_smat_lu_decomp(mat,pivot,nn);
-    
-#ifdef _OPENMP
-#pragma omp parallel for private(myid,mybegin,myend,i,j) if(nn>OPENMP_HOLDS)
-    for (myid=0; myid<nthreads; ++myid) {
-        FASP_GET_START_END(myid, nthreads, nn, &mybegin, &myend);
-        for (i=mybegin; i<myend; ++i) {
-#else
-            for (i=0;i<nn;++i) {
-#endif
-                for (j=0;j<nn;++j) rhs[j]=0.;
-                rhs[i]=1.;
-                fasp_smat_lu_solve(mat,rhs,pivot,sol,nn);
-                for (j=0;j<nn;++j) invmat[i*nn+j]=sol[j];
-#ifdef _OPENMP
-            }
-        }
-#else
-    }
-#endif
-    
-    fasp_mem_free(pivot);
-    fasp_mem_free(rhs);
-    fasp_mem_free(sol);
-    
-    return status;
-}
-
-/**
- * \fn static SHORT get_block (dCSRmat *A, INT m, INT n, INT *rows, INT *cols, REAL *Aloc, INT *mask)
- *
- * \brief Get a local block from a CSR sparse matrix
- *
- * \param A     pointer to a sparse matrix
- * \param m     Number of rows of the local block matrix
- * \param n     Number of columns of the local block matrix
- * \param rows  Indices to local rows
- * \param cols  Indices to local columns
- * \param Aloc  Local dense matrix saved as an array
- * \param mask  Working array, which should be a negative number initially
- *
- * \return      SUCCESS or error message
- *
- * \author Xuehai Huang
- * \date   04/04/2009
- *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/17/2012
- */
-static SHORT get_block (dCSRmat *A,
-                        INT m,
-                        INT n,
-                        INT *rows,
-                        INT *cols,
-                        REAL *Aloc,
-                        INT *mask)
-{
-    INT i, j, k, iloc;
-    
-#ifdef _OPENMP
-    // variables for OpenMP
-    INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
-#endif
-    
-#if 0
-    for ( i=0; i<m; ++i ) {
-        for ( j=0; j<n; ++j ) {
-            Aloc[i*n+j] = 0.0; // initialize Aloc
-        }
-    }
-#endif
-    memset(Aloc, 0x0, sizeof(REAL)*m*n);
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(n>OPENMP_HOLDS)
-#endif
-    for ( j=0; j<n; ++j ) {
-        mask[N2C(cols[j])] = j; // initialize mask, mask stores C indices 0,1,...
-    }
-    
-#ifdef _OPENMP
-#pragma omp parallel for private(myid,mybegin,myend,i,j,k,iloc) if(m>OPENMP_HOLDS)
-    for ( myid=0; myid<nthreads; ++myid ) {
-        FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
-        for ( i=mybegin; i<myend; ++i ) {
-#else
-            for ( i=0; i<m; ++i ) {
-#endif
-                iloc=N2C(rows[i]);
-                for ( k=A->IA[iloc]; k<A->IA[iloc+1]; ++k ) {
-                    j = N2C(A->JA[N2C(k)]);
-                    if (mask[j]>=0) Aloc[i*n+mask[j]]=A->val[k];
-                } /* end for k */
-#ifdef _OPENMP
-            }
-        }
-#else
-    } /* enf for i */
-#endif
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(n>OPENMP_HOLDS)
-#endif
-    for ( j=0; j<n; ++j ) mask[N2C(cols[j])] = -1; // re-initialize mask
-    
-    return SUCCESS;
-}
-
-/**
- * \fn static SHORT gentisquare_nomass (dCSRmat *A, INT mm, INT *Ii, REAL *ima, INT *mask)
- *
- * \brief given the row indices and col indices, to find a block submatrix and get its inverse
- *
- * \param A     pointer to the whole matrix
- * \param mm    Size of the submatrix
- * \param Ii    Integer array, to store the indices of row (also col)
- * \param ima   pointer to the inverse of the full submatrix, the storage is row by row
- * \param mask  Working array
- *
- * \return      SUCCESS or error message
- *
- * \author Xuehai Huang
- * \date   04/04/2010
- */
-static SHORT gentisquare_nomass (dCSRmat *A,
-                                 INT mm,
-                                 INT *Ii,
-                                 REAL *ima,
-                                 INT *mask)
-{
-    SHORT status = SUCCESS;
-    
-    REAL *ms = (REAL *)fasp_mem_calloc(mm*mm,sizeof(REAL));
-    
-    status = get_block(A,mm,mm,Ii,Ii,ms,mask);
-    status = invden(mm,ms,ima);
-    
-    fasp_mem_free(ms);
-    return status;
-}
-
-/**
- * \fn static SHORT getinonefull (INT **mat, REAL **matval, INT *lengths, INT mm, INT *Ii, REAL *ima)
- *
- * \brief Add a small submatrix to a big matrix with respect to its row and cols in the big matrix
- *
- * \param mat      pointer pointing to the structure of the matrix
- * \param matval   pointer pointing to the values according to the structure
- * \param lengths  2d array, the second entry is the lengths of matval
- * \param mm       Number of the rows (also the columns)
- * \param Ii       pointer to the array to store the relative position of the rows and cols
- * \param ima      pointer to the full submatrix, the sequence is row by row
- *
- * \return         SUCCESS or error message
- *
- * \author Xuehai Huang
- * \date   04/04/2009
- *
- * Modified by Chunsheng Feng, Zheng Li
- * \date  10/14/2012
- */
-static SHORT getinonefull (INT **mat,
-                           REAL **matval,
-                           INT *lengths,
-                           INT mm,
-                           INT *Ii,
-                           REAL *ima)
-{
-    INT tniz,i,j;
-    
-#ifdef _OPENMP
-    // variables for OpenMP
-    INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
-#endif
-    
-    tniz=lengths[1];
-    
-#ifdef _OPENMP
-#pragma omp parallel for private(myid,mybegin,myend,i,j) if(mm>OPENMP_HOLDS)
-    for (myid=0; myid<nthreads; ++myid) {
-        FASP_GET_START_END(myid, nthreads, mm, &mybegin, &myend);
-        for (i=mybegin; i<myend; ++i) {
-#else
-            for (i=0;i<mm;++i) {
-#endif
-                for (j=0;j<mm;++j) {
-                    mat[0][tniz+i*mm+j]=Ii[i];
-                    mat[1][tniz+i*mm+j]=Ii[j];
-                    matval[0][tniz+i*mm+j]=ima[i*mm+j];
-                }
-#ifdef _OPENMP
-            }
-        }
-#else
-    }
-#endif
-    lengths[1]=tniz+mm*mm;
-    
-    return SUCCESS;
-}
-
-/**
- * \fn static SHORT orderone (INT **mat, REAL **matval, INT *lengths)
- *
- * \brief Order a cluster of entries in a sequence
- *
- * \param *mat      pointer to the relative position of the entries
- * \param *matval   pointer to the values corresponding to the position
- * \param lengths   INT array, to store the number of rows, number of cols and number of nonzero
- *
- * \return          SUCCESS or error message
- *
- * \author Xuehai Huang
- * \date   04/04/2009
- *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/17/2012
- */
-static SHORT orderone (INT **mat,
-                       REAL **matval,
-                       INT *lengths)
-//    lengths[0] for the number of rows
-//    lengths[1] for the number of cols
-//    lengths[2] for the number of nonzeros
-{
-    INT *rows[2],*cols[2],nns[2],tnizs[2];
-    REAL *vals[2];
-    SHORT status = SUCCESS;
-    INT tniz,i;
-    
-    nns[0]=lengths[0];
-    nns[1]=lengths[1];
-    tnizs[0]=lengths[2];
-    tniz=lengths[2];
-    
-    rows[0]=(INT *)fasp_mem_calloc(tniz,sizeof(INT));
-    cols[0]=(INT *)fasp_mem_calloc(tniz,sizeof(INT));
-    vals[0]=(REAL *)fasp_mem_calloc(tniz,sizeof(REAL));
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<tniz;++i) {
-        rows[0][i]=mat[0][i];
-        cols[0][i]=mat[1][i];
-        vals[0][i]=matval[0][i];
-    }
-    
-    rows[1]=(INT *)fasp_mem_calloc(tniz,sizeof(INT));
-    cols[1]=(INT *)fasp_mem_calloc(tniz,sizeof(INT));
-    vals[1]=(REAL *)fasp_mem_calloc(tniz,sizeof(REAL));
-    
-    fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
-    
-    // all the nonzeros with same col are gathering together
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<tniz;++i) {
-        rows[0][i]=rows[1][i];
-        cols[0][i]=cols[1][i];
-        vals[0][i]=vals[1][i];
-    }
-    tnizs[1]=nns[0];
-    nns[0]=nns[1];
-    nns[1]=tnizs[1];
-    tnizs[1]=tnizs[0];
-    fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
-    
-    // all the nozeros with same col and row are gathering togheter
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<tniz;++i) {
-        rows[0][i]=rows[1][i];
-        cols[0][i]=cols[1][i];
-        vals[0][i]=vals[1][i];
-    }
-    tnizs[1]=nns[0];
-    nns[0]=nns[1];
-    nns[1]=tnizs[1];
-    tnizs[1]=tnizs[0];
-    
-    tniz=tnizs[0];
-    for (i=0;i<tniz-1;++i) {
-        if (rows[0][i]==rows[0][i+1]&&cols[0][i]==cols[0][i+1]) {
-            vals[0][i+1]+=vals[0][i];
-            rows[0][i]=nns[0];
-            cols[0][i]=nns[1];
-        }
-    }
-    nns[0]=nns[0]+1;
-    nns[1]=nns[1]+1;
-    
-    fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<tniz;++i) {
-        rows[0][i]=rows[1][i];
-        cols[0][i]=cols[1][i];
-        vals[0][i]=vals[1][i];
-    }
-    tnizs[1]=nns[0];
-    nns[0]=nns[1];
-    nns[1]=tnizs[1];
-    tnizs[1]=tnizs[0];
-    
-    fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<tniz;++i) {
-        rows[0][i]=rows[1][i];
-        cols[0][i]=cols[1][i];
-        vals[0][i]=vals[1][i];
-    }
-    tnizs[1]=nns[0];
-    nns[0]=nns[1];
-    nns[1]=tnizs[1];
-    tnizs[1]=tnizs[0];
-    
-    tniz=0;
-    for (i=0;i<tnizs[0];++i)
-        if (rows[0][i]<nns[0]-1) tniz++;
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<tniz;++i) {
-        mat[0][i]=rows[0][i];
-        mat[1][i]=cols[0][i];
-        matval[0][i]=vals[0][i];
-    }
-    nns[0]=nns[0]-1;
-    nns[1]=nns[1]-1;
-    lengths[0]=nns[0];
-    lengths[1]=nns[1];
-    lengths[2]=tniz;
-    
-    fasp_mem_free(rows[0]);
-    fasp_mem_free(rows[1]);
-    fasp_mem_free(cols[0]);
-    fasp_mem_free(cols[1]);
-    fasp_mem_free(vals[0]);
-    fasp_mem_free(vals[1]);
-    
-    return(status);
-}
-
-
-/**
- * \fn static SHORT genintval (dCSRmat *A, INT **itmat, REAL **itmatval, INT ittniz, INT *isol,
- *                             INT numiso, INT nf, INT nc)
- *
- * \brief Given the structure of the interpolation, to get the evaluation of the interpolation
- *
- * \param A         pointer to the dCSRmat matrix
- * \param itmat     pointer to the structure of the interpolation
- * \param itmatval  pointer to the evaluation of the interpolation
- * \param isol      ???
- * \param numiso    ???
- * \param ittniz    Length of interpolation
- * \param nf        Number of fine-level nodes
- * \param nc        Number of coarse-level nodes
- *
- * \return          SUCCESS or error message
- *
- * \author Xuehai Huang
- * \date   10/29/2010
- *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/17/2012
- *
- * \note
- *  nf=number fine, nc= n coarse
- *  Suppose that the structure of the interpolation is known.
- *  It is N*m matrix, N>m, recorded in itmat.
- *  We record its row index and col index, note that the same col indices gather together
- *  the itma and itmatval have a special data structure
- *  to be exact, the same columns gather together
- *  itmat[0] record the column number, and itmat[1] record the row number.
- */
-static SHORT genintval (dCSRmat *A,
-                        INT **itmat,
-                        REAL **itmatval,
-                        INT ittniz,
-                        INT *isol,
-                        INT numiso,
-                        INT nf,
-                        INT nc)
-{
-    INT *Ii=NULL, *mask=NULL;
-    REAL *ima=NULL, *pex=NULL, **imas=NULL;
-    INT **mat=NULL;
-    REAL **matval;
-    INT lengths[3];
-    dCSRmat T;
-    INT tniz;
-    dvector sol, rhs;
-    
-    INT mm,sum,i,j,k;
-    INT *iz,*izs,*izt,*izts;
-    SHORT status=SUCCESS;
-    
-    itsolver_param itparam;
-    itparam.print_level    = PRINT_NONE;
-    itparam.itsolver_type  = SOLVER_CG;
-    itparam.stop_type      = STOP_REL_RES;
-    itparam.tol            = 1e-3;
-    itparam.maxit          = 100;
-    itparam.restart        = 100;
-    
-    mask=(INT *)fasp_mem_calloc(nf,sizeof(INT));
-    iz=(INT *)fasp_mem_calloc(nc,sizeof(INT));
-    izs=(INT *)fasp_mem_calloc(nc,sizeof(INT));
-    izt=(INT *)fasp_mem_calloc(nf,sizeof(INT));
-    izts=(INT *)fasp_mem_calloc(nf,sizeof(INT));
-    
-    //    for (i=0;i<nf;++i) mask[i]=-1;
-    fasp_iarray_set(nf, mask, -1);
-    
-    //for (i=0;i<nc;++i) iz[i]=0;
-    memset(iz, 0, sizeof(INT)*nc);
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<ittniz;++i) iz[itmat[0][i]]++;
-    
-    izs[0]=0;
-    for (i=1;i<nc;++i) izs[i]=izs[i-1]+iz[i-1];
-    
-    sum = 0;
-#ifdef _OPENMP
-#pragma omp parallel for reduction(+:sum) if(nc>OPENMP_HOLDS)
-#endif
-    for (i=0;i<nc;++i) sum+=iz[i]*iz[i];
-    
-    imas=(REAL **)fasp_mem_calloc(nc,sizeof(REAL *));
-    
-    for (i=0;i<nc;++i) {
-        imas[i]=(REAL *)fasp_mem_calloc(iz[i]*iz[i],sizeof(REAL));
-    }
-    
-    mat=(INT **)fasp_mem_calloc(2,sizeof(INT *));
-    mat[0]=(INT *)fasp_mem_calloc((sum+numiso),sizeof(INT));
-    mat[1]=(INT *)fasp_mem_calloc((sum+numiso),sizeof(INT));
-    matval=(REAL **)fasp_mem_calloc(1,sizeof(REAL *));
-    matval[0]=(REAL *)fasp_mem_calloc(sum+numiso,sizeof(REAL));
-    
-    lengths[1]=0;
-    
-    for (i=0;i<nc;++i) {
-        
-        mm=iz[i];
-        Ii=(INT *)fasp_mem_realloc(Ii,mm*sizeof(INT));
-        
-#ifdef _OPENMP
-#pragma omp parallel for if(mm>OPENMP_HOLDS)
-#endif
-        for (j=0;j<mm;++j) Ii[j]=itmat[1][izs[i]+j];
-        
-        ima=(REAL *)fasp_mem_realloc(ima,mm*mm*sizeof(REAL));
-        
-        gentisquare_nomass(A,mm,Ii,ima,mask);
-        
-        getinonefull(mat,matval,lengths,mm,Ii,ima);
-        
-#ifdef _OPENMP
-#pragma omp parallel for if(mm*mm>OPENMP_HOLDS)
-#endif
-        for (j=0;j<mm*mm;++j) imas[i][j]=ima[j];
-    }
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(numiso>OPENMP_HOLDS) private(i)
-#endif
-    for (i=0;i<numiso;++i) {
-        mat[0][sum+i]=isol[i];
-        mat[1][sum+i]=isol[i];
-        matval[0][sum+i]=1.0;
-    }
-    
-    lengths[0]=nf;
-    lengths[2]=lengths[1]+numiso;
-    lengths[1]=nf;
-    orderone(mat,matval,lengths);
-    tniz=lengths[2];
-    
-    sol.row=nf;
-    sol.val=(REAL*)fasp_mem_calloc(nf,sizeof(REAL));
-    
-    //for (i=0;i<nf;++i) izt[i]=0;
-    memset(izt, 0, sizeof(INT)*nf);
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<tniz;++i) izt[mat[0][i]]++;
-    
-    T.IA=(INT*)fasp_mem_calloc((nf+1),sizeof(INT));
-    
-    T.row=nf;
-    T.col=nf;
-    T.nnz=tniz;
-    T.IA[0]=0;
-    for (i=1;i<nf+1;++i) T.IA[i]=T.IA[i-1]+izt[i-1];
-    
-    T.JA=(INT*)fasp_mem_calloc(tniz,sizeof(INT));
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
-#endif
-    for (j=0;j<tniz;++j) T.JA[j]=mat[1][j];
-    
-    T.val=(REAL*)fasp_mem_calloc(tniz,sizeof(REAL));
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
-#endif
-    for (j=0;j<tniz;++j) T.val[j]=matval[0][j];
-    
-    rhs.val=(REAL*)fasp_mem_calloc(nf,sizeof(REAL));
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(nf>OPENMP_HOLDS)
-#endif
-    for (i=0;i<nf;++i) rhs.val[i]=1.0;
-    rhs.row=nf;
-    
-    fasp_solver_dcsr_krylov_diag(&T,&rhs,&sol,&itparam);
-    
-    for (i=0;i<nc;++i) {
-        mm=iz[i];
-        
-        ima=(REAL *)fasp_mem_realloc(ima,mm*mm*sizeof(REAL));
-        
-        pex=(REAL *)fasp_mem_realloc(pex,mm*sizeof(REAL));
-        
-        Ii=(INT *)fasp_mem_realloc(Ii,mm*sizeof(INT));
-        
-#ifdef _OPENMP
-#pragma omp parallel for if(mm>OPENMP_HOLDS)
-#endif
-        for (j=0;j<mm;++j) Ii[j]=itmat[1][izs[i]+j];
-        
-#ifdef _OPENMP
-#pragma omp parallel for if(mm*mm>OPENMP_HOLDS)
-#endif
-        for (j=0;j<mm*mm;++j) ima[j]=imas[i][j];
-        
-#ifdef _OPENMP
-#pragma omp parallel for if(mm>OPENMP_HOLDS) private(k,j)
-#endif
-        for (k=0;k<mm;++k) {
-            for (pex[k]=j=0;j<mm;++j) pex[k]+=ima[k*mm+j]*sol.val[Ii[j]];
-        }
-#ifdef _OPENMP
-#pragma omp parallel for if(mm>OPENMP_HOLDS)
-#endif
-        for (j=0;j<mm;++j) itmatval[0][izs[i]+j]=pex[j];
-        
-    }
-    
-    fasp_mem_free(ima);
-    fasp_mem_free(pex);
-    fasp_mem_free(Ii);
-    fasp_mem_free(mask);
-    fasp_mem_free(iz);
-    fasp_mem_free(izs);
-    fasp_mem_free(izt);
-    fasp_mem_free(izts);
-    fasp_mem_free(mat[0]);
-    fasp_mem_free(mat[1]);
-    fasp_mem_free(mat);
-    fasp_mem_free(matval[0]);
-    fasp_mem_free(matval);
-    for (i=0;i<nc;++i) fasp_mem_free(imas[i]);
-    fasp_mem_free(imas);
-    fasp_dcsr_free(&T);
-    fasp_dvec_free(&rhs);
-    fasp_dvec_free(&sol);
-    
-    return status;
-}
-
-/**
- * \fn static SHORT getiteval (dCSRmat *A, dCSRmat *it)
- *
- * \brief Given a coarsening (in the form of an interpolation operator), inherit the structure,
- *        get new evaluation
- *
- * \param A    pointer to the dCSRmat matrix
- * \param it   pointer to the interpolation matrix
- *
- * \author Xuehai Huang, Chensong Zhang
- * \date   10/29/2010
- *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/17/2012
- */
-static SHORT getiteval (dCSRmat *A,
-                        dCSRmat *it)
-{
-    INT nf,nc,ittniz;
-    INT *itmat[2];
-    REAL **itmatval;
-    INT *rows[2],*cols[2];
-    REAL *vals[2];
-    INT nns[2],tnizs[2];
-    INT i,j,numiso;
-    INT *isol;
-    SHORT status = SUCCESS;
-    
-    nf=A->row;
-    nc=it->col;
-    ittniz=it->IA[nf];
-    
-    itmat[0]=(INT *)fasp_mem_calloc(ittniz,sizeof(INT));
-    itmat[1]=(INT *)fasp_mem_calloc(ittniz,sizeof(INT));
-    itmatval=(REAL **)fasp_mem_calloc(1,sizeof(REAL *));
-    itmatval[0]=(REAL *)fasp_mem_calloc(ittniz,sizeof(REAL));
-    isol=(INT *)fasp_mem_calloc(nf,sizeof(INT));
-    
-    numiso=0;
-    for (i=0;i<nf;++i) {
-        if (it->IA[i]==it->IA[i+1]) {
-            isol[numiso]=i;
-            numiso++;
-        }
-    }
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(nf>OPENMP_HOLDS) private(i,j)
-#endif
-    for (i=0;i<nf;++i) {
-        for (j=it->IA[i];j<it->IA[i+1];++j) itmat[0][j]=i;
-    }
-#if 0
-    for (j=0;j<ittniz;++j) itmat[1][j]=it->JA[j];
-    for (j=0;j<ittniz;++j) itmatval[0][j]=it->val[j];
-#endif
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
-#endif
-    for (j=0;j<ittniz;++j) {
-        itmat[1][j]=it->JA[j];
-        itmatval[0][j]=it->val[j];
-    }
-    
-    rows[0]=(INT *)fasp_mem_calloc(ittniz,sizeof(INT));
-    cols[0]=(INT *)fasp_mem_calloc(ittniz,sizeof(INT));
-    vals[0]=(REAL *)fasp_mem_calloc(ittniz,sizeof(REAL));
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<ittniz;++i) {
-        rows[0][i]=itmat[0][i];
-        cols[0][i]=itmat[1][i];
-        vals[0][i]=itmat[0][i];
-    }
-    
-    nns[0]=nf;
-    nns[1]=nc;
-    tnizs[0]=ittniz;
-    
-    rows[1]=(INT *)fasp_mem_calloc(ittniz,sizeof(INT));
-    cols[1]=(INT *)fasp_mem_calloc(ittniz,sizeof(INT));
-    vals[1]=(REAL *)fasp_mem_calloc(ittniz,sizeof(REAL));
-    
-    fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<ittniz;++i) {
-        itmat[0][i]=rows[1][i];
-        itmat[1][i]=cols[1][i];
-        itmatval[0][i]=vals[1][i];
-    }
-    genintval(A,itmat,itmatval,ittniz,isol,numiso,nf,nc);
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<ittniz;++i) {
-        rows[0][i]=itmat[0][i];
-        cols[0][i]=itmat[1][i];
-        vals[0][i]=itmatval[0][i];
-    }
-    nns[0]=nc;
-    nns[1]=nf;
-    tnizs[0]=ittniz;
-    
-    fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<ittniz;++i) it->val[i]=vals[1][i];
-    
-    fasp_mem_free(isol);
-    fasp_mem_free(itmat[0]);
-    fasp_mem_free(itmat[1]);
-    fasp_mem_free(itmatval[0]);
-    fasp_mem_free(itmatval);
-    fasp_mem_free(rows[0]);
-    fasp_mem_free(rows[1]);
-    fasp_mem_free(cols[0]);
-    fasp_mem_free(cols[1]);
-    fasp_mem_free(vals[0]);
-    fasp_mem_free(vals[1]);
-    
-    return status;
-}
-
-/**
- * \fn static void interp_EM (dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param)
- *
- * \brief Energy-min interpolation
- *
- * \param A          pointer to the stiffness matrix
- * \param vertices   pointer to the indicator of CF split node is on fine or coarse grid
- * \param P          pointer to the dCSRmat matrix of resulted interpolation
- * \param param      pointer to AMG parameters
- *
- * \author Shuo Zhang, Xuehai Huang
- * \date   04/04/2010
- *
- * Modified by Chunsheng Feng, Zheng Li
- * \date  10/17/2012
- *
- * \note Ref J. Xu and L. Zikatanov
- *           On An Energy Minimazing Basis in Algebraic Multigrid Methods
- *           Computing and visualization in sciences, 2003
- */
-static void interp_EM (dCSRmat *A,
-                       ivector *vertices,
-                       dCSRmat *P,
-                       AMG_param *param)
-{
-    INT i, j, index;
-    INT *vec=vertices->val;
-    INT *CoarseIndex=(INT*)fasp_mem_calloc(vertices->row,sizeof(INT));
-    
-    for (index=i=0;i<vertices->row;++i) {
-        if (vec[i]==1) {
-            CoarseIndex[i]=index;
-            index++;
-        }
-    }
-    
-#ifdef _OPENMP
-#pragma omp parallel for private(i,j) if(P->nnz>OPENMP_HOLDS)
-#endif
-    for (i=0;i<P->nnz;++i) {
-        j=P->JA[i];
-        P->JA[i]=CoarseIndex[j];
-    }
-    
-    // clean up memory
-    fasp_mem_free(CoarseIndex);
-    
-    // main part
-    getiteval(A, P);
-    
-    return;
-}
-
-/**
- * \fn static void interp_RS (dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param)
+ * \fn static void interp_DIR (dCSRmat *A, ivector *vertices, dCSRmat *P,
+ *                             AMG_param *param)
  *
  * \brief Direct interpolation
  *
- * \param A         pointer to the stiffness matrix
- * \param vertices  pointer to the indicator of CF split node is on fine or coarse grid
- * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
- * \param param     pointer to AMG parameters
+ * \param A          Coefficient matrix, the index starts from zero
+ * \param vertices   Indicator vector for the C/F splitting of the variables
+ * \param P          Prolongation (input: nonzero pattern, output: prolongation)
+ * \param param      AMG parameters
  *
  * \author Xuehai Huang
  * \date   01/31/2009
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012: add OMP support
  * Modified by Chensong Zhang on 09/12/2012: compare with the old version
- *
- * \note Ref P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid.
- *             Academic Press Inc., San Diego, CA, 2001.
- *           With contributions by A. Brandt, P. Oswald and K. St¨uben.
+ * Modified by Chensong Zhang on 05/14/2013: reconstruct the code
  */
-
-static void interp_RS( dCSRmat *A,
-                      ivector *vertices,
-                      dCSRmat *Ptr,
-                      AMG_param *param )
+static void interp_DIR (dCSRmat *A,
+                        ivector *vertices,
+                        dCSRmat *P,
+                        AMG_param *param )
 {
-    REAL epsilon_tr = param->truncation_threshold;
-    REAL amN, amP, apN, apP;
-    REAL alpha, beta, aii=0;
-    INT *vec = vertices->val;
-    INT countPplus, diagindex;
-    INT begin_row, end_row;
-    INT i,j,k,l,index=0;
-    
-    /* Generate interpolation P */
-    dCSRmat P=fasp_dcsr_create(Ptr->row,Ptr->col,Ptr->nnz);
-    
+    const INT  row   = A->row;
+    INT       *vec   = vertices->val;
+
+    // local variables
+    SHORT      IS_STRONG;   // is the variable strong coupled to i?
+    INT        num_pcouple; // number of positive strong couplings
+    INT        begin_row, end_row;
+    INT        i, j, k, l, index = 0, idiag;
+    REAL       amN, amP, apN, apP;
+    REAL       alpha, beta, aii;
+
+    // indices of C-nodes
+    INT      * cindex = (INT *)fasp_mem_calloc(row, sizeof(INT));
+
     INT use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, stride_i, nthreads;
-    INT row = MIN(P.IA[P.row], A->row);
+    INT row = MIN(P.IA[P.row], row);
     if ( row > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
     
-    /* step 1: Find first the structure IA of P */
-    fasp_iarray_cp(P.row+1, Ptr->IA, P.IA);
-    
-    /* step 2: Find the structure JA of P */
-    fasp_iarray_cp(P.nnz, Ptr->JA, P.JA);
-    
-    /* step 3: Fill the data of P */
+    // Step 1. Fill in values for interpolation operator P
     if (use_openmp) {
 #ifdef _OPENMP
-        stride_i = A->row/nthreads;
-#pragma omp parallel private(myid,mybegin,myend,i,begin_row,end_row,diagindex,aii,amN,amP,apN,apP,countPplus,j,k,alpha,beta,l) num_threads(nthreads)
+        stride_i = row/nthreads;
+#pragma omp parallel private(myid,mybegin,myend,i,begin_row,end_row,idiag,aii,amN,amP,apN,apP,num_pcouple,j,k,alpha,beta,l) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
             mybegin = myid*stride_i;
             if(myid < nthreads-1) myend = mybegin+stride_i;
-            else myend = A->row;
+            else myend = row;
             for (i=mybegin; i<myend; ++i){
                 begin_row=A->IA[i]; end_row=A->IA[i+1]-1;
-                for(diagindex=begin_row;diagindex<=end_row;diagindex++){
-                    if (A->JA[diagindex]==i) {
-                        aii=A->val[diagindex];
+                for(idiag=begin_row;idiag<=end_row;idiag++){
+                    if (A->JA[idiag]==i) {
+                        aii=A->val[idiag];
                         break;
                     }
                 }
                 if(vec[i]==0){  // if node i is on fine grid
-                    amN=0, amP=0, apN=0, apP=0,  countPplus=0;
+                    amN=0, amP=0, apN=0, apP=0,  num_pcouple=0;
                     for(j=begin_row;j<=end_row;++j){
-                        if(j==diagindex) continue;
+                        if(j==idiag) continue;
                         for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
                             if(Ptr->JA[k]==A->JA[j]) break;
                         }
@@ -989,7 +338,7 @@ static void interp_RS( dCSRmat *A,
                             apN+=A->val[j];
                             if(k<Ptr->IA[i+1]) {
                                 apP+=A->val[j];
-                                countPplus++;
+                                num_pcouple++;
                             }
                         }
                         else {
@@ -1001,7 +350,7 @@ static void interp_RS( dCSRmat *A,
                     } // j
                     
                     alpha=amN/amP;
-                    if(countPplus>0) {
+                    if(num_pcouple>0) {
                         beta=apN/apP;
                     }
                     else {
@@ -1032,99 +381,87 @@ static void interp_RS( dCSRmat *A,
         }
 #endif
     }
+    
     else {
-        for (i=0;i<A->row;++i) {
-            begin_row=A->IA[i]; end_row=A->IA[i+1]-1;
-            for (diagindex=begin_row;diagindex<=end_row;diagindex++) {
-                if (A->JA[diagindex]==i) {
-                    aii=A->val[diagindex];
-                    break;
+        
+        for ( i = 0; i < row; ++i ) {
+            
+            begin_row = A->IA[i]; end_row = A->IA[i+1];
+            
+            // find diagonal entry first!!!
+            for ( idiag = begin_row; idiag < end_row; idiag++ ) {
+                if ( A->JA[idiag] == i ) {
+                    aii = A->val[idiag]; break;
                 }
             }
-            if (vec[i]==0) {  // if node i is on fine grid
-                amN=0, amP=0, apN=0, apP=0, countPplus=0;
-                for (j=begin_row;j<=end_row;++j) {
-                    if (j==diagindex) continue;
-                    for (k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
-                        if (Ptr->JA[k]==A->JA[j]) break;
+            
+            if ( vec[i] == FGPT ) { // fine grid nodes
+                
+                amN = amP = apN = apP = 0.0;
+                
+                num_pcouple = 0;
+                
+                for ( j = begin_row; j < end_row; ++j ) {
+                
+                    if ( j == idiag ) continue; // skip diagonal
+                    
+                    // whether the neighbor strongly coupled with i
+                    IS_STRONG = FALSE;
+                    for ( k = P->IA[i]; k < P->IA[i+1]; ++k ) {
+                        if ( P->JA[k] == A->JA[j] ) {IS_STRONG=TRUE; break;}
                     }
-                    if (A->val[j]>0) {
-                        apN+=A->val[j];
-                        if (k<Ptr->IA[i+1]) {
-                            apP+=A->val[j];
-                            countPplus++;
+                    
+                    if ( A->val[j] > 0 ) {
+                        apN += A->val[j];
+                        if ( IS_STRONG ) {
+                            apP += A->val[j];
+                            num_pcouple++;
                         }
                     }
                     else {
-                        amN+=A->val[j];
-                        if (k<Ptr->IA[i+1]) {
-                            amP+=A->val[j];
+                        amN += A->val[j];
+                        if ( IS_STRONG ) {
+                            amP += A->val[j];
                         }
                     }
-                } // j
+                } // end for j
                 
-                alpha=amN/amP;
-                if (countPplus>0) {
-                    beta=apN/apP;
+                // set weight factors
+                alpha = amN / amP;
+                if ( num_pcouple > 0 ) {
+                    beta = apN/apP;
                 }
                 else {
-                    beta=0;
-                    aii+=apN;
+                    beta = 0;
+                    aii += apN;
                 }
-                for (j=P.IA[i];j<P.IA[i+1];++j) {
-                    k=P.JA[j];
-                    for (l=A->IA[i];l<A->IA[i+1];l++) {
-                        if (A->JA[l]==k) break;
+                
+                for ( j = P->IA[i]; j < P->IA[i+1]; ++j ) {
+                    k = P->JA[j];
+                    for ( l = A->IA[i]; l < A->IA[i+1]; l++ ) {
+                        if ( A->JA[l] == k ) break;
                     }
-                    if (A->val[l]>0) {
-                        P.val[j]=-beta*A->val[l]/aii;
+                    // keep aii inside the loop to avoid fp error !!! --Chensong
+                    if ( A->val[l] > 0 ) {
+                        P->val[j] = -beta  * A->val[l]/aii;
                     }
                     else {
-                        P.val[j]=-alpha*A->val[l]/aii;
+                        P->val[j] = -alpha * A->val[l]/aii;
                     }
                 }
             }
-            else if (vec[i]==2)  // if node i is a special fine node
-            {
-                
-            }
-            else {// if node i is on coarse grid
-                P.val[P.IA[i]]=1;
+            
+            else if ( vec[i] == CGPT ) { // coarse grid nodes
+                P->val[P->IA[i]] = 1.0;
             }
         }
     }
     
-    fasp_mem_free(Ptr->IA);
-    fasp_mem_free(Ptr->JA);
-    fasp_mem_free(Ptr->val);
-    
-#if 1
-    INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));
-#else
-    INT *CoarseIndex=(INT*)fasp_mem_calloc(vertices->row, sizeof(INT));
-#endif
-    
-#if CHMEM_MODE
-#if 1
-    total_alloc_mem += (A->row)*sizeof(INT);
-#else
-    total_alloc_mem += (vertices->row)*sizeof(INT);
-#endif
-#endif
-    
-    index=0;
-#if 1
-    for (i=0;i<A->row;++i)
-#else
-        for(i=0;i<vertices->row;++i)
-#endif
-        {
-            if (vec[i]==1)
-            {
-                CoarseIndex[i]=index;
-                index++;
-            }
-        }
+    // Step 2. Generate coarse level indices and set values of P.JA
+    for ( index = i = 0; i < row; ++i ) {
+        if ( vec[i] == CGPT ) cindex[i] = index++;
+    }
+    P->col = index;
     
     if (use_openmp) {
 #ifdef _OPENMP
@@ -1133,241 +470,226 @@ static void interp_RS( dCSRmat *A,
         {
             myid = omp_get_thread_num();
             mybegin = myid*stride_i;
-            if(myid < nthreads-1) myend = mybegin+stride_i;
+            if ( myid < nthreads-1 ) myend = mybegin+stride_i;
             else myend = P.IA[P.row];
-            for (i=mybegin; i<myend; ++i)
-            {
-                j=P.JA[i];
-                P.JA[i]=CoarseIndex[j];
+            for ( i = mybegin; i < myend; ++i ) {
+                j = P.JA[i];
+                P.JA[i] = cindex[j];
             }
         }
 #endif
     }
     else {
-        for (i=0;i<P.IA[P.row];++i)
-        {
-            j=P.JA[i];
-            P.JA[i]=CoarseIndex[j];
-        }
-    }
-    fasp_mem_free(CoarseIndex);
-    
-    /** Truncation of interpolation */
-    REAL mMin, pMax;
-    REAL mSum, pSum;
-    REAL mTruncedSum, pTruncedSum;
-    INT  mTruncCount, pTruncCount;
-    INT  num_lost=0;
-    
-    Ptr->val=(REAL*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(REAL));
-#if CHMEM_MODE
-    total_alloc_mem += (P.IA[Ptr->row])*sizeof(REAL);
-#endif
-    
-    Ptr->JA=(INT*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(INT));
-#if CHMEM_MODE
-    total_alloc_mem += (P.IA[Ptr->row])*sizeof(INT);
-#endif
-    
-    Ptr->IA=(INT*)fasp_mem_calloc(Ptr->row+1, sizeof(INT));
-#if CHMEM_MODE
-    total_alloc_mem += (Ptr->row+1)*sizeof(INT);
-#endif
-    
-    INT index1=0, index2=0;
-    for (i=0;i<P.row;++i)
-    {
-        mMin=0;
-        pMax=0;
-        mSum=0;
-        pSum=0;
-        mTruncedSum=0;
-        pTruncedSum=0;
-        mTruncCount=0;
-        pTruncCount=0;
-        
-        Ptr->IA[i]-=num_lost;
-        
-        for (j=P.IA[i];j<P.IA[i+1];++j)
-        {
-            if (P.val[j]<0)
-            {
-                mSum+=P.val[j];
-                if (P.val[j]<mMin)
-                {
-                    mMin=P.val[j];
-                }
-            }
-            
-            if (P.val[j]>0)
-            {
-                pSum+=P.val[j];
-                if (P.val[j]>pMax)
-                {
-                    pMax=P.val[j];
-                }
-            }
-        }
-        
-        for (j=P.IA[i];j<P.IA[i+1];++j)
-        {
-            if (P.val[j]<0)
-            {
-                if (P.val[j]>mMin*epsilon_tr)
-                {
-                    mTruncCount++;
-                }
-                else
-                {
-                    num_lost--;
-                }
-            }
-            
-            if (P.val[j]>0)
-            {
-                if (P.val[j]<pMax*epsilon_tr)
-                {
-                    pTruncCount++;
-                }
-                else
-                {
-                    num_lost--;
-                }
-            }
-        }
-        
-        // step 2: Find the structure JA and fill the data A of Ptr
-        for (j=P.IA[i];j<P.IA[i+1];++j)
-        {
-            if (P.val[j]<0)
-            {
-                if (!(P.val[j]>mMin*epsilon_tr))
-                {
-                    Ptr->JA[index1]=P.JA[j];
-                    mTruncedSum+=P.val[j];
-                    index1++;
-                }
-            }
-            
-            if (P.val[j]>0)
-            {
-                if (!(P.val[j]<pMax*epsilon_tr))
-                {
-                    Ptr->JA[index1]=P.JA[j];
-                    pTruncedSum+=P.val[j];
-                    index1++;
-                }
-            }
-        }
-        
-        // step 3: Fill the data A of Ptr
-        for (j=P.IA[i];j<P.IA[i+1];++j)
-        {
-            if (P.val[j]<0)
-            {
-                if (!(P.val[j]>mMin*epsilon_tr))
-                {
-                    Ptr->val[index2]=P.val[j]/mTruncedSum*mSum;
-                    index2++;
-                }
-            }
-            
-            if (P.val[j]>0)
-            {
-                if (!(P.val[j]<pMax*epsilon_tr))
-                {
-                    Ptr->val[index2]=P.val[j]/pTruncedSum*pSum;
-                    index2++;
-                }
-            }
+        for ( i = 0; i < P->nnz; ++i ) {
+            j = P->JA[i];
+            P->JA[i] = cindex[j];
         }
     }
     
-    Ptr->IA[P.row]-=num_lost;
-    Ptr->nnz=Ptr->IA[Ptr->row];
+    fasp_mem_free(cindex);
     
-    Ptr->JA=(INT*)fasp_mem_realloc(Ptr->JA, Ptr->IA[Ptr->row]*sizeof(INT));
-    Ptr->val=(REAL*)fasp_mem_realloc(Ptr->val, Ptr->IA[Ptr->row]*sizeof(REAL));
-    
-    fasp_mem_free(P.IA);
-    fasp_mem_free(P.JA);
-    fasp_mem_free(P.val);
+    // Step 3. Truncate the prolongation operator to reduce cost
+    fasp_amg_interp_trunc(A, P, param);
 }
 
 /**
- * \fn INT fasp_amg_interp1 (dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param,
- *                           iCSRmat *S, INT *icor_ysk)
+ * \fn static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, 
+ *                             iCSRmat *S, AMG_param *param)
  *
- * \brief Generate interpolation P
+ * \brief Standard interpolation
  *
- * \param A          pointer to the stiffness matrix
- * \param vertices   pointer to the indicator of CF split nodes on fine grid (fine: 0; coarse: 1)
- * \param P          pointer to the dCSRmat matrix of resulted interpolation
- * \param param      pointer to AMG parameters
- * \param S          pointer to ???
- * \param icor_ysk   pointer to ???
+ * \param A          Coefficient matrix, the index starts from zero
+ * \param vertices   Indicator vector for the C/F splitting of the variables
+ * \param P          Interpolation matrix (input: nnz pattern, output: prolongation)
+ * \param S          Strong connection matrix
+ * \param param      AMG parameters
  *
- * \return           SUCCESS or error message
+ * \author Kai Yang, Xiaozhe Hu
+ * \date   05/21/2012
  *
- * \author           Chunsheng Feng, Xiaoqiang Yue
- * \date             03/01/2011
+ * Modified by Chunsheng Feng, Zheng Li on 10/17/2012: add OMP support
+ * Modified by Chensong Zhang on 05/15/2013: reconstruct the code
  */
-INT fasp_amg_interp1 (dCSRmat *A,
-                      ivector *vertices,
-                      dCSRmat *P,
-                      AMG_param *param,
-                      iCSRmat *S,
-                      INT *icor_ysk)
+static void interp_STD (dCSRmat *A,
+                        ivector *vertices,
+                        dCSRmat *P,
+                        iCSRmat *S,
+                        AMG_param *param)
 {
-    INT status = SUCCESS;
-    INT interp_type=param->interpolation_type;
-    const INT coarsening_type = param->coarsening_type;
+    const INT   row    = A->row;
+    INT        *vec    = vertices->val;
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_interp1 ...... [Start]\n");
+    // local variables
+    REAL   alpha, alN, alP;
+    REAL   akk, akh, aik, aki, rowsum;
+    INT    h, i, j, k, l, m, p, q, index=0;
+    
+    // indices for coarse neighbor node for every node
+    INT  * flag   = (INT  *)fasp_mem_calloc(row, sizeof(INT));
+    
+    // for some row of A, the index from column number to the the number in A.val
+    INT  * Arind1 = (INT  *)fasp_mem_calloc(2*row, sizeof(INT));
+    
+    // for some row of A, the index from column number to the the number in A.val
+    INT  * Arind2 = (INT  *)fasp_mem_calloc(2*row, sizeof(INT));
+    
+    // indices of C-nodes
+    INT  * cindex = (INT  *)fasp_mem_calloc(row, sizeof(INT));
+
+    // sums of strongly connected coarse neighbors
+    REAL * cs     = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+    
+    // sums of all neighbors
+    REAL * n      = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+    
+    // diagonal entries
+    REAL * diag   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+    
+    // coefficents hat a_ij for relevant CGPT of the i-th node
+    REAL * hatA   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+    
+    fasp_iarray_set(row, flag, -1);
+    
+    // Step 1. Fill in values for interpolation operator P
+    for ( i = 0; i < row; i++ ) {
+
+        // set flags for C nodes
+        for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
+            k = S->JA[j];
+            if ( vec[k] == CGPT ) flag[k] = i;
+        }
+        
+        for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
+            
+            k = A->JA[j];
+            
+            if ( flag[k] == i ) cs[i] += A->val[j];
+            
+            if ( k == i ) diag[i] = A->val[j];
+            else n[i] += A->val[j];
+            
+        }
+    }
+        
+    for ( i = 0; i < row; i++ ) {
+        
+        if ( vec[i] == FGPT ) {
+            
+            // form the reverse index Arind1
+            for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
+                k = A->JA[j];
+                Arind1[k] = j;
+            }
+            alN = alP = 0;
+            alN = n[i];
+            alP = cs[i];
+            
+            // clean up hatA for relevent nodes
+            for ( j = P->IA[i]; j < P->IA[i+1]; j++ ) {
+                k = P->JA[j];
+                hatA[k] = 0;
+            }
+            
+            // set values of hatA
+            hatA[i] = diag[i];
+            
+            for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
+                
+                k = S->JA[j];
+                l = Arind1[k];
+                
+                if ( vec[k] == CGPT ) hatA[k]+=A->val[l];
+                
+                else if ( vec[k] == FGPT ) {
+                
+                    akk = diag[k];
+                    aik = A->val[l];
+                    
+                    // looking for aki
+                    aki = 0;
+                    for ( p = A->IA[k]; p < A->IA[k+1]; p++ ) {
+                        q = A->JA[p];
+                        if ( q == i ) {
+                            aki = A->val[p]; break;
+                        }
+                    }
+                    alN -= (n[k]-aki+akk)*aik/akk;
+                    alP -= cs[k]*aik/akk;
+                    
+                    // visit the strongly connected coarse neighbors of k
+                    // and form Arind2 for k
+                    for ( m = A->IA[k]; m < A->IA[k+1]; m++ ) {
+                        h = A->JA[m];
+                        Arind2[h] = m;
+                    }
+                    for ( m = S->IA[k]; m < S->IA[k+1]; m++ ) {
+                        h = S->JA[m];
+                        akh = A->val[Arind2[h]];
+                        if ( vec[h] == CGPT ) hatA[h] -= aik*akh/akk;
+                        else if ( h == i )    hatA[h] -= aik*akh/akk;
+                    } // end for m
+                    
+                } // end if vec[k]
+            } // end for j
+            
+            alpha = alN/alP;
+            rowsum = 0;
+            for ( j = P->IA[i]; j < P->IA[i+1]; j++ ) {
+                k = P->JA[j];
+                P->val[j] = -alpha*hatA[k]/hatA[i];
+                rowsum += P->val[j];
+            }
+        }
+        
+        else if ( vec[i] == CGPT ) {
+            j = P->IA[i];
+            P->val[j] = 1.0;
+        }
+    } // end for i
+    
+    // Step 2. Generate coarse level indices and set values of P.JA    
+    for ( index = i = 0; i < row; ++i ) {
+        if ( vec[i] == CGPT ) cindex[i] = index++;
+    }
+    P->col = index;
+    
+#ifdef _OPENMP
+#pragma omp parallel for private(i,j) if(P->IA[P->row]>OPENMP_HOLDS)
 #endif
-    
-    // make sure standard interpolaiton is used for aggressive coarsening
-    if (coarsening_type == 4) interp_type = INTERP_STD;
-    
-    /*-- Standard interpolation operator --*/
-    switch (interp_type) {
-        case INTERP_DIR: // Direct interpolation
-            interp_RS1(A, vertices, P, param, icor_ysk);
-            break;
-        case INTERP_ENG: // Energy min interpolation
-            interp_EM(A, vertices, P, param);
-            break;
-        case INTERP_STD: // standard interpolation
-            interp_STD(A, vertices, P, S, param);
-            break;
-        default:
-            fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp1");
-            break;
+    for ( i = 0; i < P->IA[P->row]; ++i ) {
+        j = P->JA[i];
+        P->JA[i] = cindex[j];
     }
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_interp1 ...... [Finish]\n");
-#endif
+    // clean up
+    fasp_mem_free(cindex);
+    fasp_mem_free(flag);
+    fasp_mem_free(n);
+    fasp_mem_free(cs);
+    fasp_mem_free(diag);
+    fasp_mem_free(Arind1);
+    fasp_mem_free(Arind2);
+    fasp_mem_free(hatA);
     
-    if (status<0) exit(status);
-    else return status;
+    // Step 3. Truncate the prolongation operator to reduce cost
+    fasp_amg_interp_trunc(A, P, param);
 }
 
 /**
- * \fn static void fasp_get_nbl_nbr_ysk (dCSRmat *A, INT *nbl_ptr, INT *nbr_ptr)
+ * \fn static void get_nwidth (dCSRmat *A, INT *nbl_ptr, INT *nbr_ptr)
+ *
  * \brief Get the bandwidth of the matrix
  *
- * \param A         pointer to the stiffness matrix
- * \param nbl_ptr   the left bandwidth
- * \param nbr_ptr   the right bandwidth
+ * \param A          Coefficient matrix, the index starts from zero
+ * \param nbl_ptr    Left bandwidth
+ * \param nbr_ptr    Right bandwidth
  *
- * \author          Chunsheng Feng, Xiaoqiang Yue
- * \date            03/01/2011
+ * \author Chunsheng Feng, Xiaoqiang Yue
+ * \date   03/01/2011
  */
-static void fasp_get_nbl_nbr_ysk (dCSRmat *A,
-                                  INT *nbl_ptr,
-                                  INT *nbr_ptr )
+static void get_nwidth (dCSRmat *A,
+                        INT *nbl_ptr,
+                        INT *nbr_ptr )
 {
 #ifdef _OPENMP
     INT *IA = A->IA;
@@ -1409,17 +731,18 @@ static void fasp_get_nbl_nbr_ysk (dCSRmat *A,
 }
 
 /**
- * \fn static void fasp_mod_coarse_index( INT nrows, INT *CoarseIndex)
- * \brief Modify CoarseIndex
+ * \fn static void mod_cindex (INT nrows, INT *cindex)
  *
- * \param nrows         length of CoarseIndex
- * \param CoarseIndex  pointer to index of coarse points
+ * \brief Modify coarse indices
+ *
+ * \param nrows      Length of coarse indices
+ * \param cindex     Indices of coarse nodes
  *
  * \author Chunsheng Feng, Xiaoqiang Yue
- * \date 03/01/2011
+ * \date   03/01/2011
  */
-static void fasp_mod_coarse_index( INT nrows,
-                                  INT *CoarseIndex)
+static void mod_cindex (INT nrows,
+                        INT *cindex)
 {
 #ifdef _OPENMP
     INT myid, mybegin, myend, i, nthreads;
@@ -1436,9 +759,9 @@ static void fasp_mod_coarse_index( INT nrows,
         }
         for (i = mybegin; i < myend; i ++)
         {
-            if (CoarseIndex[i] < CoarseIndex[i-1])
+            if (cindex[i] < cindex[i-1])
             {
-                CoarseIndex[i] = CoarseIndex[i-1];
+                cindex[i] = cindex[i-1];
             }
         }
     }
@@ -1446,28 +769,30 @@ static void fasp_mod_coarse_index( INT nrows,
 }
 
 /**
- * \fn static void fasp_get_icor_ysk(INT nrows, INT ncols, INT *CoarseIndex, INT nbl_ysk, INT nbr_ysk,
- *                                   INT *CF_marker, INT *icor_ysk)
- * \brief Get the index of coarse nodes in fine grid.
+ * \fn static void get_cindex (INT nrows, INT ncols, INT *cindex,
+ *                             INT nbl_ysk, INT nbr_ysk, INT *CF_marker,
+ *                             INT *icor_ysk)
  *
- * \param nrows Length of CoarseIndex
- * \param ncols Length of CoarseIndex
- * \param CoarseIndex Pointer to index of nodes in coarse grid
- * \param nbl_ysk The left  bandwith
- * \param nbr_ysk The right bandwith
- * \param CF_marker Pointer to marking the nodes, 1: coarse nodes, 0: fine nodes.
- * \param icor_ysk  Pointer to index of coarse nodes in fine grid
+ * \brief Get indices of coarse nodes in fine grid.
+ *
+ * \param nrows      Length of cindex
+ * \param ncols      Length of cindex
+ * \param cindex     Indices of nodes in coarse grid
+ * \param nbl_ysk    Left  bandwith
+ * \param nbr_ysk    Right bandwith
+ * \param CF_marker  C/F marker of the nodes, 1: coarse nodes, 0: fine nodes.
+ * \param icor_ysk   Indices of coarse nodes in fine grid
  *
  * \author Chunsheng Feng, Xiaoqiang Yue
- * \date 03/01/2011
+ * \date   03/01/2011
  */
-static void fasp_get_icor_ysk(INT nrows,
-                              INT ncols,
-                              INT *CoarseIndex,
-                              INT nbl_ysk,
-                              INT nbr_ysk,
-                              INT *CF_marker,
-                              INT *icor_ysk)
+static void get_cindex (INT nrows,
+                        INT ncols,
+                        INT *cindex,
+                        INT nbl_ysk,
+                        INT nbr_ysk,
+                        INT *CF_marker,
+                        INT *icor_ysk)
 {
 #ifdef _OPENMP
     INT myid, FiveMyid, mybegin, myend, min_A, max_A, i, first_f_node, min_P, max_P, myend_minus_one;
@@ -1489,18 +814,18 @@ static void fasp_get_icor_ysk(INT nrows,
             icor_ysk[FiveMyid+3] = 0;
         }
         else {
-            first_f_node = fasp_BinarySearch(CoarseIndex, mybegin, nrows);
+            first_f_node = fasp_BinarySearch(cindex, mybegin, nrows);
             for (i = first_f_node; i > -1; i --) {
-                if (CoarseIndex[i] != mybegin) {
+                if (cindex[i] != mybegin) {
                     break;
                 }
             }
             min_A = i + 1;
             min_A = MAX(0, min_A-2*nbl_ysk);
             myend_minus_one = myend - 1;
-            first_f_node = fasp_BinarySearch(CoarseIndex, myend_minus_one, nrows);
+            first_f_node = fasp_BinarySearch(cindex, myend_minus_one, nrows);
             for (i = first_f_node; i > -1; i --) {
-                if (CoarseIndex[i] != myend_minus_one) {
+                if (cindex[i] != myend_minus_one) {
                     max_A = i;
                     break;
                 }
@@ -1526,7 +851,7 @@ static void fasp_get_icor_ysk(INT nrows,
                 else {
                     for (i = first_f_node; i >= 0; i --) {
                         if (CF_marker[i] == 1) {
-                            min_P = CoarseIndex[i];
+                            min_P = cindex[i];
                             break;
                         }
                     }
@@ -1552,7 +877,7 @@ static void fasp_get_icor_ysk(INT nrows,
                 else {
                     for (i = first_f_node; i < nrows; i ++) {
                         if (CF_marker[i] == 1) {
-                            max_P = CoarseIndex[i] + 1;
+                            max_P = cindex[i] + 1;
                             break;
                         }
                     }
@@ -1572,33 +897,33 @@ static void fasp_get_icor_ysk(INT nrows,
 }
 
 /**
- * \fn static void interp_RS1(dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param)
+ * \fn static void interp_DIR1 (dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param)
+ *
  * \brief Direct interpolation
  *
- * \param A         pointer to the stiffness matrix
- * \param vertices  pointer to the indicator of CF split node is on fine(current level) or coarse grid (fine: 0; coarse: 1)
- * \param Ptr       pointer to the dCSRmat matrix of resulted interpolation
- * \param param     pointer to AMG parameters
+ * \param A          Coefficient matrix, the index starts from zero
+ * \param vertices   Indicator vector for the C/F splitting of the variables
+ * \param Ptr        Interpolation matrix (input: nnz pattern, output: prolongation)
+ * \param param      AMG parameters
  *
  * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   03/01/2011
  *
- * Refer to P479, U. Trottenberg, C. W. Oosterlee, and A. Schuller. Multigrid.
- *          Academic Press Inc., San Diego, CA, 2001.
- *          With contributions by A. Brandt, P. Oswald and K. Stuben.
+ * \note This function is redesigned for OpenMP efficiency. 
+ * 
+ * TODO: Need to be cleaned up! --Chensong
  */
-
-static void interp_RS1(dCSRmat *A,
-                       ivector *vertices,
-                       dCSRmat *Ptr,
-                       AMG_param *param,
-                       INT *icor_ysk)
+static void interp_DIR1 (dCSRmat *A,
+                         ivector *vertices,
+                         dCSRmat *Ptr,
+                         AMG_param *param,
+                         INT *icor_ysk)
 {
-    REAL epsilon_tr = param->truncation_threshold;
+    REAL eps_tr = param->truncation_threshold;
     REAL amN, amP, apN, apP;
     REAL alpha, beta, aii=0;
     INT *vec = vertices->val;
-    INT countPplus, diagindex;
+    INT num_pcouple, idiag;
     
     INT i,j,k,l,index=0;
     INT begin_row, end_row;
@@ -1609,7 +934,7 @@ static void interp_RS1(dCSRmat *A,
     INT shift;
     INT nbl_ysk, nbr_ysk;
     
-    /** Generate interpolation P */
+    /* Generate interpolation P */
     dCSRmat P=fasp_dcsr_create(Ptr->row,Ptr->col,Ptr->nnz);
     
     INT nthreads = 1, use_openmp = FALSE;
@@ -1622,16 +947,16 @@ static void interp_RS1(dCSRmat *A,
     }
 #endif
     
-    /** step 1: Find first the structure IA of P */
+    /* step 1: Find first the structure IA of P */
     fasp_iarray_cp(P.row+1, Ptr->IA, P.IA);
     
-    /** step 2: Find the structure JA of P */
+    /* step 2: Find the structure JA of P */
     fasp_iarray_cp(P.nnz, Ptr->JA, P.JA);
     
-    /** step 3: Fill the data of P */
+    /* step 3: Fill the data of P */
     if (use_openmp) {
 #ifdef _OPENMP
-#pragma omp parallel for private(myid,mybegin,myend,i,begin_row,end_row,diagindex,aii,amN,amP,apN,apP,countPplus,j,k,alpha,beta,l)
+#pragma omp parallel for private(myid,mybegin,myend,i,begin_row,end_row,idiag,aii,amN,amP,apN,apP,num_pcouple,j,k,alpha,beta,l)
 #endif
         for (myid = 0; myid < nthreads; myid++ )
         {
@@ -1640,20 +965,20 @@ static void interp_RS1(dCSRmat *A,
             {
                 begin_row=A->IA[i]; end_row=A->IA[i+1]-1;
                 
-                for(diagindex=begin_row;diagindex<=end_row;diagindex++) {
-                    if (A->JA[diagindex]==i) {
-                        aii=A->val[diagindex];
+                for(idiag=begin_row;idiag<=end_row;idiag++) {
+                    if (A->JA[idiag]==i) {
+                        aii=A->val[idiag];
                         break;
                     }
                 }
                 
                 if(vec[i]==0)  // if node i is on fine grid
                 {
-                    amN=0, amP=0, apN=0, apP=0,  countPplus=0;
+                    amN=0, amP=0, apN=0, apP=0,  num_pcouple=0;
                     
                     for(j=begin_row;j<=end_row;++j)
                     {
-                        if(j==diagindex) continue;
+                        if(j==idiag) continue;
                         
                         for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
                             if(Ptr->JA[k]==A->JA[j]) break;
@@ -1663,7 +988,7 @@ static void interp_RS1(dCSRmat *A,
                             apN+=A->val[j];
                             if(k<Ptr->IA[i+1]) {
                                 apP+=A->val[j];
-                                countPplus++;
+                                num_pcouple++;
                             }
                         }
                         else
@@ -1676,7 +1001,7 @@ static void interp_RS1(dCSRmat *A,
                     } // j
                     
                     alpha=amN/amP;
-                    if(countPplus>0) {
+                    if(num_pcouple>0) {
                         beta=apN/apP;
                     }
                     else {
@@ -1718,20 +1043,20 @@ static void interp_RS1(dCSRmat *A,
         for(i=0;i<A->row;++i) {
             begin_row=A->IA[i]; end_row=A->IA[i+1]-1;
             
-            for(diagindex=begin_row;diagindex<=end_row;diagindex++) {
-                if (A->JA[diagindex]==i) {
-                    aii=A->val[diagindex];
+            for(idiag=begin_row;idiag<=end_row;idiag++) {
+                if (A->JA[idiag]==i) {
+                    aii=A->val[idiag];
                     break;
                 }
             }
             
             if(vec[i]==0)  // if node i is on fine grid
             {
-                amN=0, amP=0, apN=0, apP=0,  countPplus=0;
+                amN=0, amP=0, apN=0, apP=0,  num_pcouple=0;
                 
                 for(j=begin_row;j<=end_row;++j)
                 {
-                    if(j==diagindex) continue;
+                    if(j==idiag) continue;
                     
                     for(k=Ptr->IA[i];k<Ptr->IA[i+1];++k) {
                         if(Ptr->JA[k]==A->JA[j]) break;
@@ -1741,7 +1066,7 @@ static void interp_RS1(dCSRmat *A,
                         apN+=A->val[j];
                         if(k<Ptr->IA[i+1]) {
                             apP+=A->val[j];
-                            countPplus++;
+                            num_pcouple++;
                         }
                     }
                     else
@@ -1754,7 +1079,7 @@ static void interp_RS1(dCSRmat *A,
                 } // j
                 
                 alpha=amN/amP;
-                if(countPplus>0) {
+                if(num_pcouple>0) {
                     beta=apN/apP;
                 }
                 else {
@@ -1793,16 +1118,16 @@ static void interp_RS1(dCSRmat *A,
     fasp_mem_free(Ptr->JA);
     fasp_mem_free(Ptr->val);
     
-    INT *CoarseIndex;
+    INT *cindex;
     
-    CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));
+    cindex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));
     
 #if CHMEM_MODE
     total_alloc_mem += (A->row)*sizeof(INT);
 #endif
     
     // The following is one of OPTIMAL parts ...0802...
-    // Generate CoarseIndex in parallel
+    // Generate cindex in parallel
     if (use_openmp) {
 #ifdef _OPENMP
 #pragma omp master
@@ -1818,7 +1143,7 @@ static void interp_RS1(dCSRmat *A,
             for (i=mybegin;i<myend;++i) {
                 if(vec[i]==1)
                 {
-                    CoarseIndex[i]=index;
+                    cindex[i]=index;
                     index++;
                 }
             }
@@ -1840,7 +1165,7 @@ static void interp_RS1(dCSRmat *A,
             for (i=mybegin;i<myend;++i) {
                 if(vec[i]==1)
                 {
-                    CoarseIndex[i] += shift;
+                    cindex[i] += shift;
                 }
             }
         }
@@ -1851,7 +1176,7 @@ static void interp_RS1(dCSRmat *A,
         for(i=0;i<A->row;++i) {
             if(vec[i]==1)
             {
-                CoarseIndex[i]=index;
+                cindex[i]=index;
                 index++;
             }
         }
@@ -1867,7 +1192,7 @@ static void interp_RS1(dCSRmat *A,
             for (i=mybegin; i<myend; ++i)
             {
                 j=P.JA[i];
-                P.JA[i]=CoarseIndex[j];
+                P.JA[i]=cindex[j];
             }
         }
     }
@@ -1875,25 +1200,25 @@ static void interp_RS1(dCSRmat *A,
         for(i=0;i<P.IA[P.row];++i)
         {
             j=P.JA[i];
-            P.JA[i]=CoarseIndex[j];
+            P.JA[i]=cindex[j];
         }
     }
     //    if (Ptr->col > OPENMP_HOLDS) {
     // The following is another OPTIMAL part ...0802...
     ////////////////////////////////////////////////////////////////////////////////
-    fasp_get_nbl_nbr_ysk(A, &nbl_ysk, &nbr_ysk);
-    fasp_mod_coarse_index(A->row, CoarseIndex);
-    fasp_get_icor_ysk(A->row, Ptr->col, CoarseIndex, nbl_ysk, nbr_ysk, vec, icor_ysk);
+    get_nwidth(A, &nbl_ysk, &nbr_ysk);
+    mod_cindex(A->row, cindex);
+    get_cindex(A->row, Ptr->col, cindex, nbl_ysk, nbr_ysk, vec, icor_ysk);
     ////////////////////////////////////////////////////////////////////////////////
     //    }
-    fasp_mem_free(CoarseIndex);
+    fasp_mem_free(cindex);
     
-    /** Truncation of interpolation */
-    REAL mMin, pMax;
-    REAL mSum, pSum;
-    REAL mTruncedSum, pTruncedSum;
-    INT mTruncCount, pTruncCount;
-    INT num_lost=0;
+    /* Truncation of interpolation */
+    REAL Min_neg, Max_pos;
+    REAL Sum_neg, Sum_pos;
+    REAL TSum_neg, TSum_pos;
+    INT num_neg, num_pos;
+    INT num_nonzero=0;
     
     
     Ptr->val=(REAL*)fasp_mem_calloc(P.IA[Ptr->row],sizeof(REAL));
@@ -1913,34 +1238,34 @@ static void interp_RS1(dCSRmat *A,
     INT index1=0, index2=0;
     for(i=0;i<P.row;++i)
     {
-        mMin=0;
-        pMax=0;
-        mSum=0;
-        pSum=0;
-        mTruncedSum=0;
-        pTruncedSum=0;
-        mTruncCount=0;
-        pTruncCount=0;
+        Min_neg=0;
+        Max_pos=0;
+        Sum_neg=0;
+        Sum_pos=0;
+        TSum_neg=0;
+        TSum_pos=0;
+        num_neg=0;
+        num_pos=0;
         
-        Ptr->IA[i]-=num_lost;
+        Ptr->IA[i]-=num_nonzero;
         
         for(j=P.IA[i];j<P.IA[i+1];++j)
         {
             if(P.val[j]<0)
             {
-                mSum+=P.val[j];
-                if(P.val[j]<mMin)
+                Sum_neg+=P.val[j];
+                if(P.val[j]<Min_neg)
                 {
-                    mMin=P.val[j];
+                    Min_neg=P.val[j];
                 }
             }
             
             if(P.val[j]>0)
             {
-                pSum+=P.val[j];
-                if(P.val[j]>pMax)
+                Sum_pos+=P.val[j];
+                if(P.val[j]>Max_pos)
                 {
-                    pMax=P.val[j];
+                    Max_pos=P.val[j];
                 }
             }
         }
@@ -1949,25 +1274,25 @@ static void interp_RS1(dCSRmat *A,
         {
             if(P.val[j]<0)
             {
-                if(P.val[j]>mMin*epsilon_tr)
+                if(P.val[j]>Min_neg*eps_tr)
                 {
-                    mTruncCount++;
+                    num_neg++;
                 }
                 else
                 {
-                    num_lost--;
+                    num_nonzero--;
                 }
             }
             
             if(P.val[j]>0)
             {
-                if(P.val[j]<pMax*epsilon_tr)
+                if(P.val[j]<Max_pos*eps_tr)
                 {
-                    pTruncCount++;
+                    num_pos++;
                 }
                 else
                 {
-                    num_lost--;
+                    num_nonzero--;
                 }
             }
         }
@@ -1977,20 +1302,20 @@ static void interp_RS1(dCSRmat *A,
         {
             if(P.val[j]<0)
             {
-                if(!(P.val[j]>mMin*epsilon_tr))
+                if(!(P.val[j]>Min_neg*eps_tr))
                 {
                     Ptr->JA[index1]=P.JA[j];
-                    mTruncedSum+=P.val[j];
+                    TSum_neg+=P.val[j];
                     index1++;
                 }
             }
             
             if(P.val[j]>0)
             {
-                if(!(P.val[j]<pMax*epsilon_tr))
+                if(!(P.val[j]<Max_pos*eps_tr))
                 {
                     Ptr->JA[index1]=P.JA[j];
-                    pTruncedSum+=P.val[j];
+                    TSum_pos+=P.val[j];
                     index1++;
                 }
             }
@@ -2001,24 +1326,24 @@ static void interp_RS1(dCSRmat *A,
         {
             if(P.val[j]<0)
             {
-                if(!(P.val[j]>mMin*epsilon_tr))
+                if(!(P.val[j]>Min_neg*eps_tr))
                 {
-                    Ptr->val[index2]=P.val[j]/mTruncedSum*mSum;
+                    Ptr->val[index2]=P.val[j]/TSum_neg*Sum_neg;
                     index2++;
                 }
             }
             
             if(P.val[j]>0)
             {
-                if(!(P.val[j]<pMax*epsilon_tr))
+                if(!(P.val[j]<Max_pos*eps_tr))
                 {
-                    Ptr->val[index2]=P.val[j]/pTruncedSum*pSum;
+                    Ptr->val[index2]=P.val[j]/TSum_pos*Sum_pos;
                     index2++;
                 }
             }
         }
     }
-    Ptr->IA[P.row]-=num_lost;
+    Ptr->IA[P.row]-=num_nonzero;
     Ptr->nnz=Ptr->IA[Ptr->row];
     
     Ptr->JA=(INT*)fasp_mem_realloc(Ptr->JA, Ptr->IA[Ptr->row]*sizeof(INT));
@@ -2026,312 +1351,7 @@ static void interp_RS1(dCSRmat *A,
     
     fasp_mem_free(P.IA);
     fasp_mem_free(P.JA);
-    fasp_mem_free(P.val);
-    
-    
-}
-
-
-/**
- * \fn static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S, AMG_param *param)
- *
- * \brief Standard interpolation
- *
- * \param A         Pointer to the stiffness matrix
- * \param S         Pointer to the strongly connection matrix
- * \param vertices  Pointer to the indicator of CF split node is on fine or coarse grid
- * \param P         Pointer to the dCSRmat matrix of resulted interpolation
- * \param param     Pointer to AMG parameters
- *
- * \author Kai Yang, Xiaozhe Hu
- * \date   05/21/2012
- *
- * Modified by Chunsheng Feng, Zheng Li on 10/17/2012
- *
- * \note Ref P479, U. Trottenberg, C. W. Oosterlee, and A. Sch¨uller. Multigrid.
- *             Academic Press Inc., San Diego, CA, 2001.
- *           With contributions by A. Brandt, P. Oswald and K. St¨uben.
- */
-static void interp_STD (dCSRmat *A,
-                        ivector *vertices,
-                        dCSRmat *P,
-                        iCSRmat *S,
-                        AMG_param *param)
-{
-    const REAL epsilon_tr = param->truncation_threshold;
-    
-    REAL   alpha, alN, alP;
-    REAL   akk, akh, aik, aki, rowsum;
-    REAL  *cs, *n, *diag, *hatA;
-    INT   *vec = vertices->val, *flag, *Arind1, *Arind2;
-    INT    row = P->row;
-    INT    h, i, j, k, l, m, p, q, index=0;
-    
-    cs   = (REAL*)fasp_mem_calloc(row,sizeof(REAL));//for sums of strongly connected coarse neighbors
-    
-    n    = (REAL*)fasp_mem_calloc(row,sizeof(REAL));//for sums of all neighbors.
-    
-    diag = (REAL*)fasp_mem_calloc(row,sizeof(REAL));//for diagonal numbers
-    
-    flag = (INT*)fasp_mem_calloc(row,sizeof(INT));// index for coarse neighbor point for every node
-    
-    // for some row of A, the index from column number to the the number in A.val
-    Arind1 = (INT*)fasp_mem_calloc(2*row,sizeof(INT));
-    
-    // for some row of A, the index from column number to the the number in A.val
-    Arind2 = (INT*)fasp_mem_calloc(2*row,sizeof(INT));
-    
-    //for(i=0;i<row;i++) flag[i]=-1;
-    fasp_iarray_set(row, flag, -1);
-    
-    for (i=0; i<row; i++) {
-        for (j=S->IA[i]; j<S->IA[i+1]; j++) {
-            k=S->JA[j];
-            if (vec[k]==CGPT) {
-                flag[k]=i;
-            }
-        }
-        for (j=A->IA[i]; j<A->IA[i+1]; j++) {
-            k=A->JA[j];
-            if (flag[k]==i) {
-                cs[i]+=A->val[j];
-                if(A->val[j]>0)
-                    printf("### WARNING: Positive off diagonal value! (i,k)=(%d,%d),j:%d,val:%f!\n",
-                           i,k,j,A->val[j]);
-            }
-            if(k==i) {
-                diag[i]=A->val[j];
-            }
-            else {
-                n[i]+=A->val[j];
-            }
-        }
-    }
-    
-    hatA=(REAL*)fasp_mem_calloc(row,sizeof(REAL));//to record coefficents hat a_ij for relevant CGPT of the i-th node
-    
-    for (i=0; i<row; i++) {
-        if (vec[i]==FGPT) {
-            //make the reverse index Arind1
-            for (j=A->IA[i]; j<A->IA[i+1]; j++) {
-                k=A->JA[j];
-                Arind1[k]=j;
-            }
-            alN=0;
-            alP=0;
-            alN=n[i];
-            alP=cs[i];
-            //clean up hatA for relevent nodes
-            for (j=P->IA[i]; j<P->IA[i+1]; j++) {
-                k=P->JA[j];
-                hatA[k]=0;
-            }
-            hatA[i]=diag[i];
-            for (j=S->IA[i]; j<S->IA[i+1]; j++) {
-                k=S->JA[j];
-                l=Arind1[k];
-                if (vec[k]==CGPT) {
-                    hatA[k]+=A->val[l];
-                }
-                else if(vec[k]==FGPT)
-                {
-                    aik=A->val[l];
-                    akk=diag[k];
-                    //find aki
-                    aki=0;
-                    for (p=A->IA[k]; p<A->IA[k+1]; p++) {
-                        q=A->JA[p];
-                        if(q==i) {
-                            aki=A->val[p];
-                        }
-                    }
-                    alN-=(n[k]-aki+akk)*aik/akk;
-                    alP-=cs[k]*aik/akk;
-                    
-                    //visit all the strongly connected coarse neighbors of k
-                    // make Arind2 for k
-                    for (m=A->IA[k]; m<A->IA[k+1]; m++) {
-                        h=A->JA[m];
-                        Arind2[h]=m;
-                    }
-                    for (m=S->IA[k]; m<S->IA[k+1]; m++) {
-                        h=S->JA[m];
-                        akh=A->val[Arind2[h]];
-                        if (vec[h]==CGPT) {
-                            hatA[h]-=aik*akh/akk;
-                            if(aik*akh/akk<0)
-                            {
-                                printf("### WARNING: Problem with sign of product,aik=%f, akh=%f, i:%d,k:%d,h:%d\n",
-                                       aik,akh,i,k,h);
-                            }
-                        }
-                        else if(h==i)
-                        {
-                            hatA[h]-=aik*akh/akk;
-                        }
-                    }
-                    
-                }
-            }
-            alpha=alN/alP;
-            rowsum=0;
-            for (j=P->IA[i]; j<P->IA[i+1];j++ ) {
-                k=P->JA[j];
-                P->val[j]=-alpha*hatA[k]/hatA[i];
-                rowsum+=P->val[j];
-            }
-        }
-        else if(vec[i]==CGPT)
-        {
-            j=P->IA[i];
-            P->val[j]=1;
-        }
-    }
-    
-    //modify the column number to make it coarse point indexing
-    index=0;
-    INT *CoarseIndex=(INT*)fasp_mem_calloc(A->row, sizeof(INT));
-    
-    for (i=0;i< A->row;++i) {
-        if (vec[i]==1) {
-            CoarseIndex[i]=index;
-            index++;
-            if (index>P->col) {
-                printf("### WARNING: index=%d>p->col=%d\n",index,P->col);
-            }
-        }
-    }
-    P->col=index;
-    
-#ifdef _OPENMP
-#pragma omp parallel for private(i,j) if(P->IA[P->row]>OPENMP_HOLDS)
-#endif
-    for (i=0;i<P->IA[P->row];++i) {
-        j=P->JA[i];
-        P->JA[i]=CoarseIndex[j];
-    }
-    
-    /** Truncation of interpolation */
-    REAL  mMin, pMax;
-    REAL  mSum, pSum;
-    REAL  mTruncedSum, pTruncedSum;
-    INT   mTruncCount, pTruncCount;
-    INT   num_lost=0;
-    REAL *Pval;
-    INT  *PIA,*PJA;
-    
-    Pval = (REAL*)fasp_mem_calloc(P->IA[row],sizeof(REAL));
-    PJA  = (INT*)fasp_mem_calloc(P->IA[row],sizeof(INT));
-    PIA  = (INT*)fasp_mem_calloc(row+1, sizeof(INT));
-    
-    INT index1=0, index2=0;
-    for (i=0;i<P->row;++i) {
-        mMin=0;
-        pMax=0;
-        mSum=0;
-        pSum=0;
-        mTruncedSum=0;
-        pTruncedSum=0;
-        mTruncCount=0;
-        pTruncCount=0;
-        
-        PIA[i]-=num_lost;
-        
-        for (j=P->IA[i];j<P->IA[i+1];++j) {
-            if (P->val[j]<0) {
-                mSum+=P->val[j];
-                if (P->val[j]<mMin) {
-                    mMin=P->val[j];
-                }
-            }
-            
-            if (P->val[j]>0) {
-                pSum+=P->val[j];
-                if (P->val[j]>pMax) {
-                    pMax=P->val[j];
-                }
-            }
-        }
-        
-        for (j=P->IA[i];j<P->IA[i+1];++j) {
-            if (P->val[j]<0) {
-                if (P->val[j]>mMin*epsilon_tr) {
-                    mTruncCount++;
-                }
-                else {
-                    num_lost--;
-                }
-            }
-            
-            if (P->val[j]>0) {
-                if (P->val[j]<pMax*epsilon_tr) {
-                    pTruncCount++;
-                }
-                else {
-                    num_lost--;
-                }
-            }
-        }
-        
-        // step 2: Find the structure JA and fill the data A of Ptr
-        for (j=P->IA[i];j<P->IA[i+1];++j) {
-            if (P->val[j]<0) {
-                if (!(P->val[j]>mMin*epsilon_tr)) {
-                    PJA[index1]=P->JA[j];
-                    mTruncedSum+=P->val[j];
-                    index1++;
-                }
-            }
-            
-            if (P->val[j]>0) {
-                if (!(P->val[j]<pMax*epsilon_tr)) {
-                    PJA[index1]=P->JA[j];
-                    pTruncedSum+=P->val[j];
-                    index1++;
-                }
-            }
-        }
-        
-        // step 3: Fill the data A of Ptr
-        for (j=P->IA[i];j<P->IA[i+1];++j) {
-            if (P->val[j]<0) {
-                if (!(P->val[j]>mMin*epsilon_tr)) {
-                    Pval[index2]=P->val[j]/mTruncedSum*mSum;
-                    index2++;
-                }
-            }
-            
-            if (P->val[j]>0) {
-                if (!(P->val[j]<pMax*epsilon_tr)) {
-                    Pval[index2]=P->val[j]/pTruncedSum*pSum;
-                    index2++;
-                }
-            }
-        }
-    }
-    PIA[P->row]-=num_lost;
-    P->nnz=PIA[P->row];
-    
-    PJA=(INT*)fasp_mem_realloc(PJA, PIA[P->row]*sizeof(INT));
-    Pval=(REAL*)fasp_mem_realloc(Pval, PIA[P->row]*sizeof(REAL));
-    
-    fasp_mem_free(P->IA);
-    fasp_mem_free(P->JA);
-    fasp_mem_free(P->val);
-    
-    P->IA=PIA;
-    P->JA=PJA;
-    P->val=Pval;
-    
-    fasp_mem_free(CoarseIndex);
-    fasp_mem_free(cs);
-    fasp_mem_free(n);
-    fasp_mem_free(diag);
-    fasp_mem_free(flag);
-    fasp_mem_free(Arind1);
-    fasp_mem_free(Arind2);
-    fasp_mem_free(hatA);
-    
+    fasp_mem_free(P.val);    
 }
 
 /*---------------------------------*/

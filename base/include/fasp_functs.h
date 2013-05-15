@@ -681,18 +681,30 @@ void fasp_param_input (char *filenm,
 
 /*-------- In file: interpolation.c --------*/
 
-SHORT fasp_amg_interp (dCSRmat *A,
-                       ivector *vertices,
-                       dCSRmat *P,
-					   iCSRmat *S,
-                       AMG_param *param);
-
-INT fasp_amg_interp1 (dCSRmat *A,
+void fasp_amg_interp (dCSRmat *A,
                       ivector *vertices,
                       dCSRmat *P,
-                      AMG_param *param,
                       iCSRmat *S,
-                      INT *icor_ysk);
+                      AMG_param *param);
+
+void fasp_amg_interp1 (dCSRmat *A,
+                       ivector *vertices,
+                       dCSRmat *P,
+                       AMG_param *param,
+                       iCSRmat *S,
+                       INT *icor_ysk);
+
+void fasp_amg_interp_trunc (dCSRmat *A,
+                            dCSRmat *P,
+                            AMG_param *param);
+
+
+/*-------- In file: interpolation_em.c --------*/
+
+void fasp_amg_interp_em (dCSRmat *A,
+                         ivector *vertices,
+                         dCSRmat *P,
+                         AMG_param *param);
 
 
 /*-------- In file: io.c --------*/

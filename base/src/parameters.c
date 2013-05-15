@@ -127,9 +127,9 @@ void fasp_param_input_init (input_param *inparam)
     // Classical AMG specific
     inparam->AMG_coarsening_type      = 1;
     inparam->AMG_interpolation_type   = 1;
+    inparam->AMG_max_row_sum          = 0.9;
     inparam->AMG_strong_threshold     = 0.5;
     inparam->AMG_truncation_threshold = 0.4;
-    inparam->AMG_max_row_sum          = 0.9;
     inparam->AMG_aggressive_level     = 0;
     inparam->AMG_aggressive_path      = 1;
     
@@ -176,9 +176,9 @@ void fasp_param_amg_init (AMG_param *amgparam)
     // Classical AMG specific
     amgparam->coarsening_type      = 1;
     amgparam->interpolation_type   = 1;
+    amgparam->max_row_sum          = 0.9;
     amgparam->strong_threshold     = 0.5;
     amgparam->truncation_threshold = 0.4;
-    amgparam->max_row_sum          = 0.9;
     amgparam->aggressive_level     = 0;
     amgparam->aggressive_path      = 1;
     

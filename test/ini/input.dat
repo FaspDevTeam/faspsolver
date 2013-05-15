@@ -86,7 +86,7 @@ AMG_postsmooth_iter      = 2      % number of postsmoothing sweeps
 AMG_coarsening_type      = 1      % 1 Modified RS
                                   % 3 Compatible Relaxation
                                   % 4 Aggressive 
-AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
+AMG_interpolation_type   = 2      % 1 Direct | 2 Standard | 3 Energy-min
 AMG_strong_threshold     = 0.3    % Strong threshold
 AMG_truncation_threshold = 0.4    % Truncation threshold
 AMG_max_row_sum          = 0.9    % Max row sum

@@ -39,13 +39,12 @@ void print_itinfo (const INT ptrlvl,
                    const REAL absres,
                    const REAL factor)
 {
-    if (ptrlvl>PRINT_SOME) {
+    if ( ptrlvl > PRINT_SOME ) {
         
-        if (iter>0) {
+        if ( iter > 0 ) {
             printf("%6d | %13.6e   | %13.6e  | %10.4f\n",iter,relres,absres,factor);
         }
-        else {
-            // iter = 0 means initial guess
+        else { // iter = 0: initial guess
             printf("-----------------------------------------------------------\n");
             switch (stop_type) {
                 case STOP_REL_RES:
@@ -168,7 +167,7 @@ void print_cputime (const char *message,
 void print_message (const INT ptrlvl,
                     const char *message)
 {
-    if (ptrlvl>PRINT_NONE) printf("%s", message);
+    if ( ptrlvl > PRINT_NONE ) printf("%s", message);
 }
 
 /**
@@ -185,9 +184,9 @@ void print_message (const INT ptrlvl,
 void fasp_chkerr (const SHORT status,
                   const char *fctname)
 {
-    if (status>=0) return; // No error at all
+    if ( status >= 0 ) return; // No error at all
     
-    switch (status) {
+    switch ( status ) {
         case ERROR_OPEN_FILE:
             printf("### ERROR: %s -- Cannot open file!!!\n", fctname);
             break;
@@ -218,6 +217,9 @@ void fasp_chkerr (const SHORT status,
         case ERROR_AMG_INTERP_TYPE:
             printf("### ERROR: %s -- Unknown AMG interpolation type!!!\n", fctname);
             break;
+        case ERROR_AMG_COARSE_TYPE:
+            printf("### ERROR: %s -- Unknown AMG coarsening type!!!\n", fctname);
+            break;
         case ERROR_AMG_SMOOTH_TYPE:
             printf("### ERROR: %s -- Unknown AMG smoother type!!!\n", fctname);
             break;
@@ -234,19 +236,19 @@ void fasp_chkerr (const SHORT status,
             printf("### ERROR: %s -- Solution is close to zero!!!\n", fctname);
             break;
         case ERROR_SOLVER_TOLSMALL:
-            printf("### ERROR: %s -- Tolerance is too small for the solver!!!\n", fctname);
+            printf("### ERROR: %s -- Tol is too small for the solver!!!\n", fctname);
             break;
         case ERROR_SOLVER_ILUSETUP:
             printf("### ERROR: %s -- ILU setup failed!!!\n", fctname);
             break;
         case ERROR_SOLVER_MAXIT:
-            printf("### ERROR: %s -- Maximal iteration number reached!!!\n", fctname);
+            printf("### ERROR: %s -- Max iteration number reached!!!\n", fctname);
             break;
         case ERROR_SOLVER_EXIT:
             printf("### ERROR: %s -- Solver exited unexpected!!!\n", fctname);
             break;
         case ERROR_SOLVER_MISC:
-            printf("### ERROR: %s -- Unknown solver runtime error occurred!!!\n", fctname);
+            printf("### ERROR: %s -- Unknown solver runtime error!!!\n", fctname);
             break;
         case ERROR_MISC:
             printf("### ERROR: %s -- Unknown error occurred!!!\n", fctname);
@@ -255,7 +257,7 @@ void fasp_chkerr (const SHORT status,
             printf("### ERROR: %s -- Unknown quadrature rules!!!\n", fctname);
             break;
         case ERROR_QUAD_DIM:
-            printf("### ERROR: %s -- Dimension for quadrature rules is not supported!!!\n", fctname);
+            printf("### ERROR: %s -- Num of quad points is not supported!!!\n", fctname);
             break;
         case RUN_FAIL:
             printf("### ERROR: %s -- Function does not exit successfully!!!\n", fctname);

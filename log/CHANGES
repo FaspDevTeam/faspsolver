@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+05/15/2013 FASP 1.3.1:
+- Separate interpolation_em.c from interpolation.c.
+- Make the truncation step as a stand-alone function.
+- Clean up direct interpolation: without allocate a temporary P.
+- Flattern nested if and for in interpolation routines.
+
 05/11/2013 FASP 1.3.0:
 - Add a new input parameter AMG_smooth_order.
 - Fix matrix-free regression test and add a sample output.

@@ -154,14 +154,8 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         }
         
         /*-- Form interpolation --*/
-        status = fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
-        if ( status < 0 ) {
-            if ( prtlvl > PRINT_NONE ) {
-                printf("### WARNING: Interpolation on level %d is not succeeful!\n", level);
-            }
-            break;
-        }
-        
+        fasp_amg_interp(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
+
         /*-- Form coarse level matrix: two RAP routines available! --*/
 #if TRUE
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
