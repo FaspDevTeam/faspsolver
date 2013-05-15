@@ -98,7 +98,7 @@
  *
  * - Xu, Jinchao (Penn State University, USA)
  *
- * Developers (in alphabetic order):
+ * Current Developers (in alphabetic order):
  *
  * - Feng, Chunsheng (Xiangtan University, China)
  *
@@ -107,6 +107,8 @@
  * - Li, Zheng (Xiangtan University, China)
  *
  * - Shu, Shi (Xiangtan University, China)
+ *
+ * - Yue, Xiaoqiang (Xiangtan University, China)
  *
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
@@ -127,8 +129,6 @@
  * - Wang, Ziteng (Peking University, China)
  *
  * - Yang, Kai (Penn State University, USA)
- *      
- * - Yue, Xiaoqiang (Xiangtan University, China)
  *
  * - Zhang, Shiquan (Sichuan University, China)
  *
