@@ -33,7 +33,6 @@
  * \date   05/09/2010
  *
  * Modified by Chensong Zhang on 04/04/2009.
- * Modified by Chensong Zhang on 04/06/2010.
  * Modified by Chensong Zhang on 05/09/2010.
  * Modified by Zhiyang Zhou on 11/17/2010.
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle.

@@ -43,7 +43,7 @@ int main (int argc, const char * argv[])
 	const int output_type   = inparam.output_type;
     
     // Set output device
-    if (output_type) {
+    if ( output_type ) {
 		char *outputfile = "out/test.out";
 		printf("Redirecting outputs to file: %s ...\n", outputfile);
 		freopen(outputfile,"w",stdout); // open a file for stdout
@@ -83,6 +83,19 @@ int main (int argc, const char * argv[])
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
 	}
     
+    else if ( problem_num == 50 ) {
+        
+        datafile1="spe10-uncong/SPE10120.amg";
+		strcat(filename1,datafile1);
+        
+        datafile2="spe10-uncong/SPE10120.rhs";
+		strcat(filename2,datafile2);
+        
+        fasp_matrix_read_bin(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+        
+    }
+    
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
@@ -96,7 +109,7 @@ int main (int argc, const char * argv[])
 	}
     
     // Print out solver parameters
-    if (print_level>PRINT_NONE) fasp_param_solver_print(&itparam);
+    if ( print_level > PRINT_NONE ) fasp_param_solver_print(&itparam);
     
     //--------------------------//
 	// Step 2. Solve the system //
@@ -110,30 +123,30 @@ int main (int argc, const char * argv[])
     if ( solver_type >= 1 && solver_type <= 20) {
         
 		// Using no preconditioner for Krylov iterative methods
-		if (precond_type == PREC_NULL) {
+		if ( precond_type == PREC_NULL ) {
 			status = fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
 		}	
         
 		// Using diag(A) as preconditioner for Krylov iterative methods
-		else if (precond_type == PREC_DIAG) {
+		else if ( precond_type == PREC_DIAG ) {
 			status = fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
 		}
         
 		// Using AMG as preconditioner for Krylov iterative methods
-		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
-            if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+		else if ( precond_type == PREC_AMG || precond_type == PREC_FMG ) {
+            if ( print_level > PRINT_NONE ) fasp_param_amg_print(&amgparam);
 			status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
 		}
         
 		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
-		else if (precond_type == PREC_ILU) {
-            if (print_level>PRINT_NONE) fasp_param_ilu_print(&iluparam);
+		else if ( precond_type == PREC_ILU ) {
+            if ( print_level > PRINT_NONE ) fasp_param_ilu_print(&iluparam);
 			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
 		}
         
         // Using Schwarz as preconditioner for Krylov iterative methods
-        else if (precond_type == PREC_SCHWARZ){
-            if (print_level>PRINT_NONE) fasp_param_schwarz_print(&swzparam);
+        else if ( precond_type == PREC_SCHWARZ ){
+            if ( print_level > PRINT_NONE ) fasp_param_schwarz_print(&swzparam);
 			status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, &swzparam);
 		}
         
@@ -145,31 +158,31 @@ int main (int argc, const char * argv[])
 	}
     
     // AMG as the iterative solver
-	else if (solver_type == SOLVER_AMG) {
-        if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+	else if ( solver_type == SOLVER_AMG ) {
+        if ( print_level > PRINT_NONE ) fasp_param_amg_print(&amgparam);
 		fasp_solver_amg(&A, &b, &x, &amgparam); 
 	}
 
     // Full AMG as the iterative solver 
-    else if (solver_type == SOLVER_FMG) {
-        if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
+    else if ( solver_type == SOLVER_FMG ) {
+        if ( print_level > PRINT_NONE ) fasp_param_amg_print(&amgparam);
         fasp_solver_famg(&A, &b, &x, &amgparam);
     }
     
 #if WITH_MUMPS // use MUMPS directly
-	else if (solver_type == SOLVER_MUMPS) {
+	else if ( solver_type == SOLVER_MUMPS ) {
 		status = fasp_solver_mumps(&A, &b, &x, print_level);
 	}
 #endif
     
 #if WITH_SuperLU // use SuperLU directly
-	else if (solver_type == SOLVER_SUPERLU) {
+	else if ( solver_type == SOLVER_SUPERLU ) {
 		status = fasp_solver_superlu(&A, &b, &x, print_level);
 	}
 #endif	 
 	
 #if WITH_UMFPACK // use UMFPACK directly
-	else if (solver_type == SOLVER_UMFPACK) {
+	else if ( solver_type == SOLVER_UMFPACK ) {
         // Need to sort the matrix A for UMFPACK to work
         dCSRmat Ac_tran;
         fasp_dcsr_trans(&A, &Ac_tran);
@@ -186,14 +199,14 @@ int main (int argc, const char * argv[])
 		status = ERROR_SOLVER_TYPE;
 	}
 		
-	if (status<0) {
+	if ( status < 0 ) {
 		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
 	}
 	else {
 		printf("\nSolver finished successfully!\n\n");
 	}
     
-    if (output_type) fclose (stdout);
+    if ( output_type ) fclose (stdout);
             
     // Clean up memory
 	fasp_dcsr_free(&A);

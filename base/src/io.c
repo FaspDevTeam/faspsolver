@@ -1403,12 +1403,7 @@ void fasp_dbsr_print (dBSRmat *A)
  */
 void fasp_dstr_print (dCSRmat *A)
 {
-    // INT i;
-    // printf("nrow = %d, ncol = %d, nnz = %d\n",A->row,A->col,A->nnz);
-    //    for (i = 0; i < count; i++) {
-    /* code */
-    
-    //    }
+    // To be added later! --Chensong
 }
 
 /**
@@ -1502,7 +1497,7 @@ void fasp_matrix_read (char *filename,
     fread(&index, sizeof(INT), 1, fp);
     index = endian_convert_int(index, sizeof(INT), endianflag);
     flag = (INT) index/100;
-    ilength = (int) (index - flag*100)/10;
+    ilength = (INT) (index - flag*100)/10;
     dlength = index%10;
     
     switch (flag) {
@@ -1532,7 +1527,7 @@ void fasp_matrix_read (char *filename,
 }
 
 /**
- * \fn fasp_matrix_read (char *filemat, void *A)
+ * \fn void fasp_matrix_read_bin (char *filemat, void *A)
  *
  * \brief Read matrix in binary format
  *
@@ -1540,9 +1535,9 @@ void fasp_matrix_read (char *filename,
  * \param A Pointer to the matrix
  *
  * \author Xiaozhe Hu
- * \date   04/14/2012
+ * \date   04/14/2013
  *
- * Modified by Chensong Zhang on 05/01/2013
+ * Modified by Chensong Zhang on 05/01/2013: Use it to read binary files!!!
  */
 void fasp_matrix_read_bin (char *filename,
                            void *A)
@@ -1555,6 +1550,8 @@ void fasp_matrix_read_bin (char *filename,
 		fasp_chkerr(ERROR_OPEN_FILE, "fasp_matrix_read_bin");
 	}
 	
+    printf("fasp_matrix_read_bin: reading file %s ...\n", filename);
+
 	fread(&index, sizeof(INT), 1, fp);
     
     INT endianflag = 1;

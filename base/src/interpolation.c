@@ -59,13 +59,13 @@ void fasp_amg_interp (dCSRmat *A,
     
     switch ( interp_type ) {
             
-        case INTERP_DIR: // Direction interpolation
+        case INTERP_DIR: // Direct interpolation
             interp_DIR(A, vertices, P, param); break;
             
-        case INTERP_STD: // standard interpolation
+        case INTERP_STD: // Standard interpolation
             interp_STD(A, vertices, P, S, param); break;
         
-        case INTERP_ENG: // Energy min interpolation in C
+        case INTERP_ENG: // Energy-min interpolation
             fasp_amg_interp_em(A, vertices, P, param); break;
         
         default:
@@ -76,7 +76,6 @@ void fasp_amg_interp (dCSRmat *A,
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_interp ...... [Finish]\n");
 #endif
-
 }
 
 /**
@@ -124,7 +123,7 @@ void fasp_amg_interp1 (dCSRmat *A,
         case INTERP_STD: // standard interpolation
             interp_STD(A, vertices, P, S, param); break;
             
-        case INTERP_ENG: // Energy min interpolation in C
+        case INTERP_ENG: // Energy-min interpolation
             fasp_amg_interp_em(A, vertices, P, param); break;
             
         default:
@@ -138,11 +137,10 @@ void fasp_amg_interp1 (dCSRmat *A,
 }
 
 /**
- * \fn void fasp_amg_interp_trunc (dCSRmat *A, dCSRmat *P, AMG_param *param)
+ * \fn void fasp_amg_interp_trunc (dCSRmat *P, AMG_param *param)
  *
  * \brief Trunction step for prolongation operators
  *
- * \param A        Coefficient matrix, the index starts from zero
  * \param P        Prolongation (input: full, output: truncated)
  * \param param    AMG parameters
  *
@@ -153,21 +151,20 @@ void fasp_amg_interp1 (dCSRmat *A,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012: add OMP support
  * Modified by Chensong Zhang on 05/14/2013: rewritten
  */
-void fasp_amg_interp_trunc (dCSRmat *A,
-                            dCSRmat *P,
+void fasp_amg_interp_trunc (dCSRmat *P,
                             AMG_param *param)
 {
     const INT   row    = P->row;
-    const INT   nnzp   = P->nnz;
+    const INT   nnzold = P->nnz;
     const INT   prtlvl = param->print_level;
     const REAL  eps_tr = param->truncation_threshold;
     
     // local variables
     INT  num_nonzero = 0;    // number of non zeros after truncation
     REAL Min_neg, Max_pos;   // min negative and max positive entries
+    REAL Fac_neg, Fac_pos;   // factors for negative and positive entries
     REAL Sum_neg, TSum_neg;  // sum and truncated sum of negative entries
     REAL Sum_pos, TSum_pos;  // sum and truncated sum of positive entries
-    REAL Fac_neg, Fac_pos;   // factors for negative and positive entries
     
     INT  index1 = 0, index2 = 0, begin, end;
     INT  i, j;
@@ -180,47 +177,47 @@ void fasp_amg_interp_trunc (dCSRmat *A,
         
         begin = P->IA[i]; end = P->IA[i+1];
 
+        P->IA[i] = num_nonzero;
         Min_neg  = Max_pos  = 0;
         Sum_neg  = Sum_pos  = 0;
         TSum_neg = TSum_pos = 0;
         
-        P->IA[i] = num_nonzero;
-        
         // 1. Summations of positive and negative entries
         for ( j = begin; j < end; ++j ) {
             
-            if ( P->val[j] < 0 ) {
-                Sum_neg += P->val[j];
-                if ( P->val[j] < Min_neg ) Min_neg = P->val[j];
-            }
-            
             if ( P->val[j] > 0 ) {
                 Sum_pos += P->val[j];
-                if ( P->val[j] > Max_pos ) Max_pos = P->val[j];
+                Max_pos = MAX(Max_pos, P->val[j]);
             }
-            
+
+            else if ( P->val[j] < 0 ) {
+                Sum_neg += P->val[j];
+                Min_neg = MIN(Min_neg, P->val[j]);
+            }
+
         }
         
         Max_pos *= eps_tr; Min_neg *= eps_tr;
         
-        // 2. Form the structure JA of truncated P
+        // 2. Set JA of truncated P
         for ( j = begin; j < end; ++j ) {
             
-            if ( P->val[j] < Min_neg ) {
-                num_nonzero++;
-                P->JA[index1++] = P->JA[j];
-                TSum_neg += P->val[j];
-            }
-            
-            if ( P->val[j] > Max_pos ) {
+            if ( P->val[j] >= Max_pos ) {
                 num_nonzero++;
                 P->JA[index1++] = P->JA[j];
                 TSum_pos += P->val[j];
             }
+
+            else if ( P->val[j] <= Min_neg ) {
+                num_nonzero++;
+                P->JA[index1++] = P->JA[j];
+                TSum_neg += P->val[j];
+            }
+
         }
         
-        // 3. Set values of truncated P
-        if ( TSum_pos >  SMALLREAL ) {
+        // 3. Compute factors and set values of truncated P
+        if ( TSum_pos > SMALLREAL ) {
             Fac_pos = Sum_pos / TSum_pos; // factor for positive entries
         }
         else {
@@ -233,10 +230,14 @@ void fasp_amg_interp_trunc (dCSRmat *A,
         else {
             Fac_neg = 1.0;
         }
-        
+
         for ( j = begin; j < end; ++j ) {
-            if ( P->val[j] < Min_neg ) P->val[index2++] = P->val[j] * Fac_neg;
-            if ( P->val[j] > Max_pos ) P->val[index2++] = P->val[j] * Fac_pos;
+            
+            if ( P->val[j] >= Max_pos )
+                P->val[index2++] = P->val[j] * Fac_pos;
+
+            else if ( P->val[j] <= Min_neg )
+                P->val[index2++] = P->val[j] * Fac_neg;
         }
         
     }
@@ -248,7 +249,7 @@ void fasp_amg_interp_trunc (dCSRmat *A,
     
     if ( prtlvl >= PRINT_MORE ) {
         printf("Truncate prolongation, #nz befor: %10d, after: %10d\n",
-               nnzp, num_nonzero);
+               nnzold, num_nonzero);
     }
     
 #if DEBUG_MODE
@@ -489,7 +490,7 @@ static void interp_DIR (dCSRmat *A,
     fasp_mem_free(cindex);
     
     // Step 3. Truncate the prolongation operator to reduce cost
-    fasp_amg_interp_trunc(A, P, param);
+    fasp_amg_interp_trunc(P, param);
 }
 
 /**
@@ -521,20 +522,15 @@ static void interp_STD (dCSRmat *A,
     
     // local variables
     REAL   alpha, alN, alP;
-    REAL   akk, akh, aik, aki, rowsum;
+    REAL   akk, akh, aik, aki;
     INT    h, i, j, k, l, m, p, q, index=0;
     
     // indices for coarse neighbor node for every node
-    INT  * flag   = (INT  *)fasp_mem_calloc(row, sizeof(INT));
+    INT  * cindex = (INT  *)fasp_mem_calloc(row, sizeof(INT));
     
     // for some row of A, the index from column number to the the number in A.val
     INT  * Arind1 = (INT  *)fasp_mem_calloc(2*row, sizeof(INT));
-    
-    // for some row of A, the index from column number to the the number in A.val
     INT  * Arind2 = (INT  *)fasp_mem_calloc(2*row, sizeof(INT));
-    
-    // indices of C-nodes
-    INT  * cindex = (INT  *)fasp_mem_calloc(row, sizeof(INT));
 
     // sums of strongly connected coarse neighbors
     REAL * cs     = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
@@ -548,22 +544,22 @@ static void interp_STD (dCSRmat *A,
     // coefficents hat a_ij for relevant CGPT of the i-th node
     REAL * hatA   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
     
-    fasp_iarray_set(row, flag, -1);
-    
-    // Step 1. Fill in values for interpolation operator P
+    // Step 0. Prepare coarse indices, diagonal, Cs-sum, and N-sum
+    fasp_iarray_set(row, cindex, -1);
+
     for ( i = 0; i < row; i++ ) {
 
         // set flags for C nodes
         for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
             k = S->JA[j];
-            if ( vec[k] == CGPT ) flag[k] = i;
+            if ( vec[k] == CGPT ) cindex[k] = i;
         }
         
         for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
             
             k = A->JA[j];
             
-            if ( flag[k] == i ) cs[i] += A->val[j];
+            if ( cindex[k] == i ) cs[i] += A->val[j]; // strong C couplings
             
             if ( k == i ) diag[i] = A->val[j];
             else n[i] += A->val[j];
@@ -571,6 +567,7 @@ static void interp_STD (dCSRmat *A,
         }
     }
         
+    // Step 1. Fill in values for interpolation operator P
     for ( i = 0; i < row; i++ ) {
         
         if ( vec[i] == FGPT ) {
@@ -580,14 +577,14 @@ static void interp_STD (dCSRmat *A,
                 k = A->JA[j];
                 Arind1[k] = j;
             }
-            alN = alP = 0;
+            alN = alP = 0.0;
             alN = n[i];
             alP = cs[i];
             
-            // clean up hatA for relevent nodes
+            // clean up hatA for relevent nodes only
             for ( j = P->IA[i]; j < P->IA[i+1]; j++ ) {
                 k = P->JA[j];
-                hatA[k] = 0;
+                hatA[k] = 0.0;
             }
             
             // set values of hatA
@@ -598,7 +595,7 @@ static void interp_STD (dCSRmat *A,
                 k = S->JA[j];
                 l = Arind1[k];
                 
-                if ( vec[k] == CGPT ) hatA[k]+=A->val[l];
+                if ( vec[k] == CGPT ) hatA[k] += A->val[l];
                 
                 else if ( vec[k] == FGPT ) {
                 
@@ -606,7 +603,7 @@ static void interp_STD (dCSRmat *A,
                     aik = A->val[l];
                     
                     // looking for aki
-                    aki = 0;
+                    aki = 0.0;
                     for ( p = A->IA[k]; p < A->IA[k+1]; p++ ) {
                         q = A->JA[p];
                         if ( q == i ) {
@@ -616,7 +613,7 @@ static void interp_STD (dCSRmat *A,
                     alN -= (n[k]-aki+akk)*aik/akk;
                     alP -= cs[k]*aik/akk;
                     
-                    // visit the strongly connected coarse neighbors of k
+                    // visit the strong-connected coarse neighbors of k
                     // and form Arind2 for k
                     for ( m = A->IA[k]; m < A->IA[k+1]; m++ ) {
                         h = A->JA[m];
@@ -633,17 +630,14 @@ static void interp_STD (dCSRmat *A,
             } // end for j
             
             alpha = alN/alP;
-            rowsum = 0;
             for ( j = P->IA[i]; j < P->IA[i+1]; j++ ) {
                 k = P->JA[j];
                 P->val[j] = -alpha*hatA[k]/hatA[i];
-                rowsum += P->val[j];
             }
         }
         
         else if ( vec[i] == CGPT ) {
-            j = P->IA[i];
-            P->val[j] = 1.0;
+            P->val[P->IA[i]] = 1.0;
         }
     } // end for i
     
@@ -663,7 +657,6 @@ static void interp_STD (dCSRmat *A,
     
     // clean up
     fasp_mem_free(cindex);
-    fasp_mem_free(flag);
     fasp_mem_free(n);
     fasp_mem_free(cs);
     fasp_mem_free(diag);
@@ -672,7 +665,7 @@ static void interp_STD (dCSRmat *A,
     fasp_mem_free(hatA);
     
     // Step 3. Truncate the prolongation operator to reduce cost
-    fasp_amg_interp_trunc(A, P, param);
+    fasp_amg_interp_trunc(P, param);
 }
 
 /**

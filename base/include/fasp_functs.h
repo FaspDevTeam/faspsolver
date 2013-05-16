@@ -694,8 +694,7 @@ void fasp_amg_interp1 (dCSRmat *A,
                        iCSRmat *S,
                        INT *icor_ysk);
 
-void fasp_amg_interp_trunc (dCSRmat *A,
-                            dCSRmat *P,
+void fasp_amg_interp_trunc (dCSRmat *P,
                             AMG_param *param);
 
 
@@ -2089,6 +2088,10 @@ dCSRmat fasp_dcsr_create (const INT m,
                           const INT n, 
                           const INT nnz);
 
+iCSRmat fasp_icsr_create (const INT m,
+                          const INT n,
+                          const INT nnz);
+
 void fasp_dcsr_alloc (const INT m, 
                       const INT n, 
                       const INT nnz, 
@@ -2119,6 +2122,9 @@ void fasp_dcsr_diagpref (dCSRmat *A);
 
 SHORT fasp_dcsr_regdiag (dCSRmat *A, 
                          REAL value);
+
+void fasp_icsr_cp (iCSRmat *A,
+                   iCSRmat *B);
 
 void fasp_dcsr_cp (dCSRmat *A, 
                    dCSRmat *B) ;

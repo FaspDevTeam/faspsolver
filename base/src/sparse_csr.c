@@ -34,27 +34,73 @@ dCSRmat fasp_dcsr_create (const INT m,
     dCSRmat A;
     
     if ( m > 0 ) {
-        A.IA = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
+        A.IA = (INT *)fasp_mem_calloc(m+1, sizeof(INT));
     }
     else {
         A.IA = NULL;
     }
     
     if ( n > 0 ) {
-        A.JA = (INT*)fasp_mem_calloc(nnz,sizeof(INT));
+        A.JA = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
     }
     else {
         A.JA = NULL;
     }    
     
     if ( nnz > 0 ) {
-        A.val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
+        A.val = (REAL *)fasp_mem_calloc(nnz, sizeof(REAL));
     }
     else {
         A.val = NULL;
     }
     
-    A.row=m; A.col=n; A.nnz=nnz;
+    A.row = m; A.col = n; A.nnz = nnz;
+    
+    return A;
+}
+
+/**
+ * \fn iCSRmat fasp_icsr_create (const INT m, const INT n, const INT nnz)
+ *
+ * \brief Create CSR sparse matrix data memory space
+ *
+ * \param m    Number of rows
+ * \param n    Number of columns
+ * \param nnz  Number of nonzeros
+ *
+ * \return A   the new iCSRmat matrix
+ *
+ * \author Chensong Zhang
+ * \date   2010/04/06
+ */
+iCSRmat fasp_icsr_create (const INT m,
+                          const INT n,
+                          const INT nnz)
+{
+    iCSRmat A;
+    
+    if ( m > 0 ) {
+        A.IA = (INT *)fasp_mem_calloc(m+1, sizeof(INT));
+    }
+    else {
+        A.IA = NULL;
+    }
+    
+    if ( n > 0 ) {
+        A.JA = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
+    }
+    else {
+        A.JA = NULL;
+    }
+    
+    if ( nnz > 0 ) {
+        A.val = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
+    }
+    else {
+        A.val = NULL;
+    }
+    
+    A.row = m; A.col = n; A.nnz = nnz;
     
     return A;
 }
@@ -641,6 +687,30 @@ FINISHED:
 }
 
 /**
+ * \fn void fasp_icsr_cp (iCSRmat *A, iCSRmat *B)
+ *
+ * \brief Copy a iCSRmat to a new one B=A
+ *
+ * \param A   Pointer to the iCSRmat matrix
+ * \param B   Pointer to the iCSRmat matrix
+ *
+ * \author Chensong Zhang
+ * \date   05/16/2013
+ */
+
+void fasp_icsr_cp (iCSRmat *A,
+                   iCSRmat *B)
+{
+    B->row=A->row;
+    B->col=A->col;
+    B->nnz=A->nnz;
+    
+    fasp_iarray_cp (A->row+1, A->IA, B->IA);
+    fasp_iarray_cp (A->nnz, A->JA, B->JA);
+    fasp_iarray_cp (A->nnz, A->val, B->val);
+}
+
+/**
  * \fn void fasp_dcsr_cp (dCSRmat *A, dCSRmat *B)
  *
  * \brief copy a dCSRmat to a new one B=A
@@ -651,8 +721,7 @@ FINISHED:
  * \author Chensong Zhang
  * \date   04/06/2010  
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue  
- * \date   05/23/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
 
 void fasp_dcsr_cp (dCSRmat *A, 
