@@ -85,10 +85,10 @@ int main (int argc, const char * argv[])
     
     else if ( problem_num == 50 ) {
         
-        datafile1="spe10-uncong/SPE10120.amg";
+        datafile1="spe10-uncong/SPE1020.amg";
 		strcat(filename1,datafile1);
         
-        datafile2="spe10-uncong/SPE10120.rhs";
+        datafile2="spe10-uncong/SPE1020.rhs";
 		strcat(filename2,datafile2);
         
         fasp_matrix_read_bin(filename1, &A);

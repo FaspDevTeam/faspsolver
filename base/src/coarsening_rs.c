@@ -15,7 +15,7 @@
 static void strong_couplings   (dCSRmat *, iCSRmat *, AMG_param *);
 static INT  clean_ff_couplings (iCSRmat *, ivector *, INT, INT);
 static INT  cfsplitting_cls    (dCSRmat *, iCSRmat *, ivector *);
-static INT  cfsplitting_cls1   (dCSRmat *, iCSRmat *, ivector *);
+static INT  cfsplitting_clsp   (dCSRmat *, iCSRmat *, ivector *);
 static INT  cfsplitting_agg    (dCSRmat *, iCSRmat *, ivector *, INT);
 static void form_P_pattern_dir (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 static void form_P_pattern_std (dCSRmat *, iCSRmat *, ivector *, INT, INT);
@@ -85,7 +85,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     switch ( coarse_type ) {
             
         case COARSE_RS: // Classical coarsening
-            col = cfsplitting_cls(A, S, vertices);
+            col = cfsplitting_clsp(A, S, vertices);
             break;
             
         case COARSE_AC: // Aggressive coarsening
@@ -114,7 +114,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
             
         case INTERP_DIR: // Direct interpolation
         case INTERP_ENG: // Energy-min interpolation
-            col = clean_ff_couplings(S, vertices, row, col);
+            //col = clean_ff_couplings(S, vertices, row, col); --Why not working???
             form_P_pattern_dir(P, S, vertices, row, col);
             break;
             
@@ -213,10 +213,8 @@ static void strong_couplings (dCSRmat *A,
                     if ( ja[j] == i ) { S->JA[j] = -1; break; }
                 }
                 
-                // If sum_{j=1}^n a_{ij} > max_row_sum * |a_{ii}, mark entile row as
-                // weak dependencies
-                if ( max_row_sum < 1.0 && ABS(row_sum) > max_row_sum*ABS(diag.val[i]) ) {
-                    //(row_sum > max_row_sum) ) {
+                // Mark entire row as weak couplings if stronly diagonal-dominant
+                if ( ABS(row_sum) > max_row_sum * ABS(diag.val[i]) ) {
                     for ( j = begin_row; j < end_row; j++ ) S->JA[j] = -1;
                 }
                 else {
@@ -241,12 +239,15 @@ static void strong_couplings (dCSRmat *A,
             row_scl = row_sum = 0.0;            
             begin_row = ia[i]; end_row = ia[i+1];
             for ( j = begin_row; j < end_row; j++ ) {
-#if TRUE
+                // Originally: Do not consider positive entries
+                // row_sum += aj[j];
+                // --Chensong 05/17/2013
+                row_sum += ABS(aj[j]); 
+#if 1
                 row_scl  = MAX(row_scl, -aj[j]); // smallest negative
-#else
+#else 
                 if ( ja[j] != i ) row_scl = MAX(row_scl, ABS(aj[j])); // largest abs
 #endif
-                row_sum += aj[j];
             }
             row_scl *= epsilon_str;
             
@@ -255,14 +256,16 @@ static void strong_couplings (dCSRmat *A,
                 if ( ja[j] == i ) { S->JA[j] = -1; break; }
             }
             
-            // If sum_{j=1}^n a_{ij} > max_row_sum * |a_{ii}|, entile row is weak
-            if ( ABS(row_sum) > max_row_sum * ABS(diag.val[i]) ) {
+            // Mark entire row as weak couplings if stronly diagonal-dominant
+            // Originally: Do not consider positive entries
+            // if ( ABS(row_sum) > max_row_sum * ABS(diag.val[i]) ) {
+            // --Chensong 05/17/2013
+            if ( row_sum < (2 - max_row_sum) * ABS(diag.val[i]) ) {
                 for ( j = begin_row; j < end_row; j++ ) S->JA[j] = -1;
             }
             else {
                 for ( j = begin_row; j < end_row; j++ ) {
-                    // If |a_{ij}| < row_scale, the connection j->i is weak!
-#if TRUE
+#if 0
                     if ( -A->val[j] < row_scl ) S->JA[j] = -1; // only n-couplings
 #else
                     if ( ABS(A->val[j]) < row_scl ) S->JA[j] = -1; // all couplings
@@ -652,9 +655,26 @@ FINISHED:
     return col;
 }
 
-static INT cfsplitting_cls1 (dCSRmat *A,
-                            iCSRmat *S,
-                            ivector *vertices)
+/**
+ * \fn static INT cfsplitting_clsp (dCSRmat *A, iCSRmat *S, ivector *vertices)
+ *
+ * \brief Find coarse level variables (C/F splitting): classic
+ *
+ * \param A            Coefficient matrix, the index starts from zero
+ * \param S            Strong connection matrix
+ * \param vertices     Indicator vector for the C/F splitting of the variables
+ *
+ * \return Number of cols of P
+ *
+ * \author Chensong Zhang
+ * \date   05/16/2013
+ *
+ * \note Compared with cfsplitting_cls, cfsplitting_clsp has an extra step for 
+ *       checking strong positive couplings and pick some of them as C. 
+ */
+static INT cfsplitting_clsp (dCSRmat *A,
+                             iCSRmat *S,
+                             ivector *vertices)
 {
     const INT   row = A->row;
     
@@ -870,26 +890,37 @@ static INT cfsplitting_cls1 (dCSRmat *A,
     }
     
     // Update interpolation support for positive strong couplings
-    REAL row_scl; INT ji;
+    REAL row_scl, max_entry;
+    INT ji, max_index;
 
     for ( i = 0; i < row; ++i ) {
         
+        max_index = -1; max_entry = 0.0;
+
         if ( vec[i] != FGPT ) continue; // skip non F-variables
         
         row_scl = 0.0;
         for ( ji = ia[i]; ji < ia[i+1]; ++ji ) {
             j = A->JA[ji];
-            if ( j == i ) continue;
-            row_scl = MAX(row_scl, ABS(A->val[j]));
+            if ( j == i ) continue; // skip diagonal
+            row_scl = MAX(row_scl, ABS(A->val[j])); // max abs entry
         } // end for ji
         row_scl *= 0.5;
         
         for ( ji = ia[i]; ji < ia[i+1]; ++ji ) {
             j = A->JA[ji];
             if ( j == i ) continue; // skip diagonal
-            if ( Stemp.JA[ji] > 0 ) continue; // already strong connections
-            if ( A->val[ji] > row_scl ) Stemp.JA[ji] = j;
+            if ( A->val[ji] > row_scl ) {
+                Stemp.JA[ji] = j;
+                if ( A->val[ji] > max_entry ) { // max positive entry
+                    max_entry = A->val[ji];
+                    max_index = j;
+                }
+             }
         } // end for ji
+        
+        // makr max positive entry as C-point
+        if ( max_index != -1 ) vec[max_index] = CGPT;
 
     } // end for i
     

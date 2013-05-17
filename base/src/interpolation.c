@@ -577,7 +577,7 @@ static void interp_STD (dCSRmat *A,
                 k = A->JA[j];
                 Arind1[k] = j;
             }
-            alN = alP = 0.0;
+
             alN = n[i];
             alP = cs[i];
             
@@ -629,11 +629,13 @@ static void interp_STD (dCSRmat *A,
                 } // end if vec[k]
             } // end for j
             
+            // How about positive entries? --Chensong
             alpha = alN/alP;
             for ( j = P->IA[i]; j < P->IA[i+1]; j++ ) {
                 k = P->JA[j];
                 P->val[j] = -alpha*hatA[k]/hatA[i];
             }
+
         }
         
         else if ( vec[i] == CGPT ) {
