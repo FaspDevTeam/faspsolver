@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{11E47EDC-A0F2-4D7F-A6CD-1C2477DF185B}</ProjectGuid>
+    <RootNamespace>faspbasec</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <InterproceduralOptimization>true</InterproceduralOptimization>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <InterproceduralOptimization>true</InterproceduralOptimization>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\lib\ia32\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\lib\x64\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\lib\ia32\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\lib\x64\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)-vs10</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)d-vs10</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)d-vs10</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectName)-vs10</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\base\include;..\..\test\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Lib>
+      <OutputFile>..\..\lib\ia32\$(ProjectName)d-vs10.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\base\include;..\..\test\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Lib>
+      <OutputFile>..\..\lib\x64\$(ProjectName)d-vs10.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\base\include;..\..\..\..\directsolver\mumps-4.10.0\MUMPS_4.10.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WITH_MUMPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Strict</FloatingPointModel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level1</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
+      <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
+      <FloatingPointSpeculation>Off</FloatingPointSpeculation>
+      <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
+      <Optimization>MaxSpeedHighLevel</Optimization>
+    </ClCompile>
+    <Lib>
+      <OutputFile>..\..\lib\ia32\$(ProjectName)-vs10.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\base\include;..\..\..\..\directsolver\mumps-4.10.0\MUMPS_4.10.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WITH_MUMPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Strict</FloatingPointModel>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level1</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
+      <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
+      <FloatingPointSpeculation>Off</FloatingPointSpeculation>
+      <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
+      <Optimization>MaxSpeedHighLevel</Optimization>
+    </ClCompile>
+    <Lib>
+      <OutputFile>..\..\lib\x64\$(ProjectName)-vs10.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\base\src\amg.c" />
+    <ClCompile Include="..\..\base\src\amg_setup_cr.c" />
+    <ClCompile Include="..\..\base\src\amg_setup_rs.c" />
+    <ClCompile Include="..\..\base\src\amg_setup_sa.c" />
+    <ClCompile Include="..\..\base\src\amg_setup_ua.c" />
+    <ClCompile Include="..\..\base\src\amg_solve.c" />
+    <ClCompile Include="..\..\base\src\amlirecur.c" />
+    <ClCompile Include="..\..\base\src\array.c" />
+    <ClCompile Include="..\..\base\src\auxiliary.c" />
+    <ClCompile Include="..\..\base\src\blas_array.c" />
+    <ClCompile Include="..\..\base\src\blas_bcsr.c" />
+    <ClCompile Include="..\..\base\src\blas_bsr.c" />
+    <ClCompile Include="..\..\base\src\blas_csr.c" />
+    <ClCompile Include="..\..\base\src\blas_csrl.c" />
+    <ClCompile Include="..\..\base\src\blas_smat.c" />
+    <ClCompile Include="..\..\base\src\blas_str.c" />
+    <ClCompile Include="..\..\base\src\blas_vec.c" />
+    <ClCompile Include="..\..\base\src\checkmat.c" />
+    <ClCompile Include="..\..\base\src\coarsening_cr.c" />
+    <ClCompile Include="..\..\base\src\coarsening_rs.c" />
+    <ClCompile Include="..\..\base\src\convert.c" />
+    <ClCompile Include="..\..\base\src\eigen.c" />
+    <ClCompile Include="..\..\base\src\famg.c" />
+    <ClCompile Include="..\..\base\src\fmgcycle.c" />
+    <ClCompile Include="..\..\base\src\formats.c" />
+    <ClCompile Include="..\..\base\src\givens.c" />
+    <ClCompile Include="..\..\base\src\graphics.c" />
+    <ClCompile Include="..\..\base\src\ilu_setup_bsr.c" />
+    <ClCompile Include="..\..\base\src\ilu_setup_csr.c" />
+    <ClCompile Include="..\..\base\src\ilu_setup_str.c" />
+    <ClCompile Include="..\..\base\src\init.c" />
+    <ClCompile Include="..\..\base\src\input.c" />
+    <ClCompile Include="..\..\base\extra\interface\interface_mumps.c" />
+    <ClCompile Include="..\..\base\extra\interface\interface_superlu.c" />
+    <ClCompile Include="..\..\base\extra\interface\interface_umfpack.c" />
+    <ClCompile Include="..\..\base\src\interpolation.c" />
+    <ClCompile Include="..\..\base\src\io.c" />
+    <ClCompile Include="..\..\base\src\itsolver_bcsr.c" />
+    <ClCompile Include="..\..\base\src\itsolver_bsr.c" />
+    <ClCompile Include="..\..\base\src\itsolver_csr.c" />
+    <ClCompile Include="..\..\base\src\itsolver_str.c" />
+    <ClCompile Include="..\..\base\src\lu.c" />
+    <ClCompile Include="..\..\base\src\memory.c" />
+    <ClCompile Include="..\..\base\src\message.c" />
+    <ClCompile Include="..\..\base\src\mgcycle.c" />
+    <ClCompile Include="..\..\base\src\mgrecur.c" />
+    <ClCompile Include="..\..\base\src\ordering.c" />
+    <ClCompile Include="..\..\base\src\parameters.c" />
+    <ClCompile Include="..\..\base\src\pbcgs.c" />
+    <ClCompile Include="..\..\base\src\pcg.c" />
+    <ClCompile Include="..\..\base\src\pgcg.c" />
+    <ClCompile Include="..\..\base\src\pgmres.c" />
+    <ClCompile Include="..\..\base\src\pminres.c" />
+    <ClCompile Include="..\..\base\src\precond_bsr.c" />
+    <ClCompile Include="..\..\base\src\precond_csr.c" />
+    <ClCompile Include="..\..\base\src\precond_str.c" />
+    <ClCompile Include="..\..\base\src\pvfgmres.c" />
+    <ClCompile Include="..\..\base\src\pvgmres.c" />
+    <ClCompile Include="..\..\base\src\quadrature.c" />
+    <ClCompile Include="..\..\base\src\rap.c" />
+    <ClCompile Include="..\..\base\src\schwarz_setup.c" />
+    <ClCompile Include="..\..\base\src\smat.c" />
+    <ClCompile Include="..\..\base\src\smoother_bsr.c" />
+    <ClCompile Include="..\..\base\src\smoother_cr.c" />
+    <ClCompile Include="..\..\base\src\smoother_csr.c" />
+    <ClCompile Include="..\..\base\src\smoother_poly.c" />
+    <ClCompile Include="..\..\base\src\smoother_str.c" />
+    <ClCompile Include="..\..\base\src\sparse_block.c" />
+    <ClCompile Include="..\..\base\src\sparse_bsr.c" />
+    <ClCompile Include="..\..\base\src\sparse_coo.c" />
+    <ClCompile Include="..\..\base\src\sparse_csr.c" />
+    <ClCompile Include="..\..\base\src\sparse_csrl.c" />
+    <ClCompile Include="..\..\base\src\sparse_str.c" />
+    <ClCompile Include="..\..\base\src\sparse_util.c" />
+    <ClCompile Include="..\..\base\src\spbcgs.c" />
+    <ClCompile Include="..\..\base\src\spcg.c" />
+    <ClCompile Include="..\..\base\src\spgmres.c" />
+    <ClCompile Include="..\..\base\src\spminres.c" />
+    <ClCompile Include="..\..\base\src\spvgmres.c" />
+    <ClCompile Include="..\..\base\src\threads.c" />
+    <ClCompile Include="..\..\base\src\timing.c" />
+    <ClCompile Include="..\..\base\src\vec.c" />
+    <ClCompile Include="..\..\base\src\wrapper.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\base\src\amg_setup_aggregation_bsr.inl" />
+    <None Include="..\..\base\src\amg_setup_aggregation_csr.inl" />
+    <None Include="..\..\base\src\itsolver_util.inl" />
+    <None Include="..\..\base\src\mg_util.inl" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
