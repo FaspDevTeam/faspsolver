@@ -85,7 +85,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     switch ( coarse_type ) {
             
         case COARSE_RS: // Classical coarsening
-            col = cfsplitting_clsp(A, S, vertices);
+            col = cfsplitting_cls(A, S, vertices);
             break;
             
         case COARSE_AC: // Aggressive coarsening
@@ -114,7 +114,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
             
         case INTERP_DIR: // Direct interpolation
         case INTERP_ENG: // Energy-min interpolation
-            //col = clean_ff_couplings(S, vertices, row, col); --Why not working???
+            col = clean_ff_couplings(S, vertices, row, col); // Working? --Chensong
             form_P_pattern_dir(P, S, vertices, row, col);
             break;
             
@@ -240,9 +240,9 @@ static void strong_couplings (dCSRmat *A,
             begin_row = ia[i]; end_row = ia[i+1];
             for ( j = begin_row; j < end_row; j++ ) {
                 // Originally: Do not consider positive entries
-                // row_sum += aj[j];
-                // --Chensong 05/17/2013
-                row_sum += ABS(aj[j]); 
+                row_sum += aj[j];
+                // Now changed to --Chensong 05/17/2013
+                // row_sum += ABS(aj[j]);
 #if 1
                 row_scl  = MAX(row_scl, -aj[j]); // smallest negative
 #else 
@@ -258,14 +258,14 @@ static void strong_couplings (dCSRmat *A,
             
             // Mark entire row as weak couplings if stronly diagonal-dominant
             // Originally: Do not consider positive entries
-            // if ( ABS(row_sum) > max_row_sum * ABS(diag.val[i]) ) {
-            // --Chensong 05/17/2013
-            if ( row_sum < (2 - max_row_sum) * ABS(diag.val[i]) ) {
+            if ( ABS(row_sum) > max_row_sum * ABS(diag.val[i]) ) {
+            // Now changed to --Chensong 05/17/2013
+            // if ( row_sum < (2 - max_row_sum) * ABS(diag.val[i]) ) {
                 for ( j = begin_row; j < end_row; j++ ) S->JA[j] = -1;
             }
             else {
                 for ( j = begin_row; j < end_row; j++ ) {
-#if 0
+#if 1
                     if ( -A->val[j] < row_scl ) S->JA[j] = -1; // only n-couplings
 #else
                     if ( ABS(A->val[j]) < row_scl ) S->JA[j] = -1; // all couplings
@@ -548,7 +548,7 @@ static INT cfsplitting_cls (dCSRmat *A,
             for ( k = S->IA[i]; k < S->IA[i+1]; ++k ) {
                 j = S->JA[k];
                 if ( vec[j] == ISPT ) continue; // skip isolate variables
-                if ( j < i ) { // why <? --Chensong
+                if ( j < i ) {
                     newmeas = lambda[j];
                     if ( newmeas > 0 ) {
                         remove_node(&LoL_head, &LoL_tail, newmeas, j, lists, where);
