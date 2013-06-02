@@ -238,17 +238,22 @@ static void strong_couplings (dCSRmat *A,
             // Compute row scale and row sum
             row_scl = row_sum = 0.0;            
             begin_row = ia[i]; end_row = ia[i+1];
+            
             for ( j = begin_row; j < end_row; j++ ) {
-                // Originally: Do not consider positive entries
-                row_sum += aj[j];
+                
+                // Originally: Not consider positive entries
+                // row_sum += aj[j];
                 // Now changed to --Chensong 05/17/2013
-                // row_sum += ABS(aj[j]);
-#if 1
-                row_scl  = MAX(row_scl, -aj[j]); // smallest negative
-#else 
+                row_sum += ABS(aj[j]);
+
+                // Originally: Not consider positive entries
+                // row_scl = MAX(row_scl, -aj[j]); // smallest negative
+                // Now changed to --Chensong 06/01/2013
                 if ( ja[j] != i ) row_scl = MAX(row_scl, ABS(aj[j])); // largest abs
-#endif
+
             }
+            
+            // Multiply by the strength threshold
             row_scl *= epsilon_str;
             
             // Find diagonal entries of S and remove them later
@@ -257,19 +262,15 @@ static void strong_couplings (dCSRmat *A,
             }
             
             // Mark entire row as weak couplings if stronly diagonal-dominant
-            // Originally: Do not consider positive entries
-            if ( ABS(row_sum) > max_row_sum * ABS(diag.val[i]) ) {
+            // Originally: Not consider positive entries
+            // if ( ABS(row_sum) > max_row_sum * ABS(diag.val[i]) ) {
             // Now changed to --Chensong 05/17/2013
-            // if ( row_sum < (2 - max_row_sum) * ABS(diag.val[i]) ) {
+            if ( row_sum < (2 - max_row_sum) * ABS(diag.val[i]) ) {
                 for ( j = begin_row; j < end_row; j++ ) S->JA[j] = -1;
             }
             else {
                 for ( j = begin_row; j < end_row; j++ ) {
-#if 1
-                    if ( -A->val[j] < row_scl ) S->JA[j] = -1; // only n-couplings
-#else
-                    if ( ABS(A->val[j]) < row_scl ) S->JA[j] = -1; // all couplings
-#endif
+                    if ( -A->val[j] <= row_scl ) S->JA[j] = -1; // only n-couplings
                 }
             }
         } // end for i
@@ -351,26 +352,27 @@ static INT clean_ff_couplings (iCSRmat *S,
                                INT col)
 {
     // local variables
-    INT *vec        = vertices->val;
-    INT *cindex     = (INT *)fasp_mem_calloc(row, sizeof(INT));
-    INT  set_empty  = TRUE, C_i_nonempty  = FALSE;
-    INT  ci_tilde   = -1,   ci_tilde_mark = -1;
+    INT  *vec        = vertices->val;
+    INT  *cindex     = (INT *)fasp_mem_calloc(row, sizeof(INT));
+    INT   set_empty  = TRUE, C_i_nonempty  = FALSE;
+    INT   ci_tilde   = -1,   ci_tilde_mark = -1;
     
-    INT  ji, jj, i, j, index;
-    INT  myid, mybegin, myend;
-        
+    INT   ji, jj, i, j, index;
+    INT   myid, mybegin, myend;
+    
     fasp_iarray_set(row, cindex, -1);
-    
+
     for ( i = 0; i < row; ++i ) {
         
         if ( vec[i] != FGPT ) continue; // skip non F-variables
-        
+                
         for ( ji = S->IA[i]; ji < S->IA[i+1]; ++ji ) {
             j = S->JA[ji];
             if ( vec[j] == CGPT ) cindex[j] = i; // mark C-neighbors
-        } // end for ji
+            else cindex[j] = -1; // reset cindex --Chensong 06/02/2013
+        }
         
-        if ( ci_tilde_mark != i ) ci_tilde = -1;
+        if ( ci_tilde_mark |= i ) ci_tilde = -1;
         
         for ( ji = S->IA[i]; ji < S->IA[i+1]; ++ji ) {
             
@@ -441,7 +443,7 @@ static INT cfsplitting_cls (dCSRmat *A,
                             iCSRmat *S,
                             ivector *vertices)
 {
-    const INT   row         = A->row;
+    const INT   row = A->row;
 
     // local variables
     INT col = 0;
@@ -671,6 +673,8 @@ FINISHED:
  *
  * \note Compared with cfsplitting_cls, cfsplitting_clsp has an extra step for 
  *       checking strong positive couplings and pick some of them as C. 
+ *
+ * TODO: Not working yet!!! Do NOT use it. --Chensong
  */
 static INT cfsplitting_clsp (dCSRmat *A,
                              iCSRmat *S,
@@ -694,7 +698,7 @@ static INT cfsplitting_clsp (dCSRmat *A,
     INT nthreads = 1, use_openmp = FALSE;
     
 #if DEBUG_MODE
-    printf("### DEBUG: cfsplitting_cls ...... [Start]\n");
+    printf("### DEBUG: cfsplitting_clsp ...... [Start]\n");
 #endif
     
 #ifdef _OPENMP
@@ -889,13 +893,13 @@ static INT cfsplitting_clsp (dCSRmat *A,
         fasp_mem_free(list_ptr);
     }
     
+    col = clean_ff_couplings(S, vertices, row, col); // Working? --Chensong
+
     // Update interpolation support for positive strong couplings
     REAL row_scl, max_entry;
     INT ji, max_index;
 
     for ( i = 0; i < row; ++i ) {
-        
-        max_index = -1; max_entry = 0.0;
 
         if ( vec[i] != FGPT ) continue; // skip non F-variables
         
@@ -903,23 +907,25 @@ static INT cfsplitting_clsp (dCSRmat *A,
         for ( ji = ia[i]; ji < ia[i+1]; ++ji ) {
             j = A->JA[ji];
             if ( j == i ) continue; // skip diagonal
-            row_scl = MAX(row_scl, ABS(A->val[j])); // max abs entry
+            row_scl = MAX(row_scl, ABS(A->val[ji])); // max abs entry
         } // end for ji
         row_scl *= 0.5;
         
+        // looking for strong F-F connections
+        max_index = -1; max_entry = 0.0;
         for ( ji = ia[i]; ji < ia[i+1]; ++ji ) {
             j = A->JA[ji];
             if ( j == i ) continue; // skip diagonal
             if ( A->val[ji] > row_scl ) {
                 Stemp.JA[ji] = j;
-                if ( A->val[ji] > max_entry ) { // max positive entry
+                if ( A->val[ji] > max_entry ) {
                     max_entry = A->val[ji];
-                    max_index = j;
+                    max_index = j; // max positive entry
                 }
              }
         } // end for ji
         
-        // makr max positive entry as C-point
+        // mark max positive entry as C-point
         if ( max_index != -1 ) vec[max_index] = CGPT;
 
     } // end for i
@@ -934,7 +940,7 @@ FINISHED:
     fasp_mem_free(work);
     
 #if DEBUG_MODE
-    printf("### DEBUG: cfsplitting_cls ...... [Finish]\n");
+    printf("### DEBUG: cfsplitting_clsp ...... [Finish]\n");
 #endif
     
     return col;

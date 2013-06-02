@@ -406,7 +406,7 @@ static void interp_DIR (dCSRmat *A,
                 
                     if ( j == idiag ) continue; // skip diagonal
                     
-                    // whether the neighbor strongly coupled with i
+                    // whether the neighbor strong-coupled with i
                     IS_STRONG = FALSE;
                     for ( k = P->IA[i]; k < P->IA[i+1]; ++k ) {
                         if ( P->JA[k] == A->JA[j] ) {IS_STRONG=TRUE; break;}
@@ -415,8 +415,7 @@ static void interp_DIR (dCSRmat *A,
                     if ( A->val[j] > 0 ) {
                         apN += A->val[j];
                         if ( IS_STRONG ) {
-                            apP += A->val[j];
-                            num_pcouple++;
+                            apP += A->val[j]; num_pcouple++;
                         }
                     }
                     else {
@@ -442,7 +441,7 @@ static void interp_DIR (dCSRmat *A,
                     for ( l = A->IA[i]; l < A->IA[i+1]; l++ ) {
                         if ( A->JA[l] == k ) break;
                     }
-                    // keep aii inside the loop to avoid fp error !!! --Chensong
+                    // keep aii in the loop to avoid floating pt error !!! --Chensong
                     if ( A->val[l] > 0 ) {
                         P->val[j] = -beta  * A->val[l]/aii;
                     }
