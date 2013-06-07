@@ -108,6 +108,8 @@
  *
  * - Shu, Shi (Xiangtan University, China)
  *
+ * - Wang, Ziteng (Peking University, China)
+ *
  * - Yue, Xiaoqiang (Xiangtan University, China)
  *
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
@@ -125,8 +127,6 @@
  * - Huang, Xuehai (Shanghai Jiaotong University, China)
  *
  * - Qiao, Changhe (Penn State University, USA)
- *
- * - Wang, Ziteng (Peking University, China)
  *
  * - Yang, Kai (Penn State University, USA)
  *

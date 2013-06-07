@@ -293,13 +293,15 @@ static void interp_DIR (dCSRmat *A,
     INT        num_pcouple; // number of positive strong couplings
     INT        begin_row, end_row;
     INT        i, j, k, l, index = 0, idiag;
+    
+    // a_minus and a_plus for Neighbors and Prolongation support
     REAL       amN, amP, apN, apP;
     REAL       alpha, beta, aii;
 
     // indices of C-nodes
     INT      * cindex = (INT *)fasp_mem_calloc(row, sizeof(INT));
 
-    INT use_openmp = FALSE;
+    INT        use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, stride_i, nthreads;
@@ -406,50 +408,46 @@ static void interp_DIR (dCSRmat *A,
                 
                     if ( j == idiag ) continue; // skip diagonal
                     
-                    // whether the neighbor strong-coupled with i
+                    // check a point strong-coupled to i or not
                     IS_STRONG = FALSE;
                     for ( k = P->IA[i]; k < P->IA[i+1]; ++k ) {
-                        if ( P->JA[k] == A->JA[j] ) {IS_STRONG=TRUE; break;}
+                        if ( P->JA[k] == A->JA[j] ) { IS_STRONG = TRUE; break; }
                     }
                     
                     if ( A->val[j] > 0 ) {
-                        apN += A->val[j];
-                        if ( IS_STRONG ) {
-                            apP += A->val[j]; num_pcouple++;
-                        }
+                        apN += A->val[j]; // sum up positive entries
+                        if ( IS_STRONG ) { apP += A->val[j]; num_pcouple++; }
                     }
                     else {
-                        amN += A->val[j];
-                        if ( IS_STRONG ) {
-                            amP += A->val[j];
-                        }
+                        amN += A->val[j]; // sum up negative entries
+                        if ( IS_STRONG ) { amP += A->val[j]; }
                     }
                 } // end for j
                 
                 // set weight factors
                 alpha = amN / amP;
                 if ( num_pcouple > 0 ) {
-                    beta = apN/apP;
+                    beta = apN / apP;
                 }
                 else {
-                    beta = 0;
-                    aii += apN;
+                    beta = 0.0; aii += apN;
                 }
                 
+                // keep aii inside the loop to avoid floating pt error! --Chensong
                 for ( j = P->IA[i]; j < P->IA[i+1]; ++j ) {
                     k = P->JA[j];
                     for ( l = A->IA[i]; l < A->IA[i+1]; l++ ) {
                         if ( A->JA[l] == k ) break;
                     }
-                    // keep aii in the loop to avoid floating pt error !!! --Chensong
                     if ( A->val[l] > 0 ) {
-                        P->val[j] = -beta  * A->val[l]/aii;
+                        P->val[j] = -beta  * A->val[l] / aii;
                     }
                     else {
-                        P->val[j] = -alpha * A->val[l]/aii;
+                        P->val[j] = -alpha * A->val[l] / aii;
                     }
                 }
-            }
+                
+            } // end if vec
             
             else if ( vec[i] == CGPT ) { // coarse grid nodes
                 P->val[P->IA[i]] = 1.0;

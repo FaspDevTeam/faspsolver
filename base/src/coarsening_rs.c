@@ -12,11 +12,11 @@
 #include "fasp_functs.h"
 
 // Private routines for RS coarsening
-static void strong_couplings   (dCSRmat *, iCSRmat *, AMG_param *);
-static INT  clean_ff_couplings (iCSRmat *, ivector *, INT, INT);
 static INT  cfsplitting_cls    (dCSRmat *, iCSRmat *, ivector *);
 static INT  cfsplitting_clsp   (dCSRmat *, iCSRmat *, ivector *);
 static INT  cfsplitting_agg    (dCSRmat *, iCSRmat *, ivector *, INT);
+static INT  clean_ff_couplings (iCSRmat *, ivector *, INT, INT);
+static void strong_couplings   (dCSRmat *, iCSRmat *, AMG_param *);
 static void form_P_pattern_dir (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 static void form_P_pattern_std (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 
@@ -114,7 +114,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
             
         case INTERP_DIR: // Direct interpolation
         case INTERP_ENG: // Energy-min interpolation
-            col = clean_ff_couplings(S, vertices, row, col); // Working? --Chensong
+            col = clean_ff_couplings(S, vertices, row, col);
             form_P_pattern_dir(P, S, vertices, row, col);
             break;
             
@@ -123,7 +123,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
             break;
             
         default:
-            fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
+            fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_coarsening_rs");
             
     }
     
@@ -325,104 +325,67 @@ static INT compress_S (iCSRmat *S)
 }
 
 /**
- * \fn static INT clean_ff_couplings (iCSRmat *S, ivector *vertices, INT row, INT col)
+ * \fn static void rem_positive_ff (dCSRmat *A, iCSRmat *Stemp, ivector *vertices)
  *
- * \brief Clear some of the FF connections
+ * \brief Update interpolation support for positive strong couplings
  *
- * \param S            Strong connection matrix
+ * \param A            Coefficient matrix, the index starts from zero
+ * \param Stemp        Original strong connection matrix
  * \param vertices     Indicator vector for the C/F splitting of the variables
- * \param row          Number of rows of P
- * \param col          Number of columns of P
  *
  * \return Number of cols of P
  *
- * \author Xuehai Huang, Chensong Zhang
- * \date   09/06/2010
- *
- * \note Coarsening Phase TWO: remove some F-F connections by F->C. Need to be 
- *       applied in direct and energy-min interpolations to make sure C-neighbors
- *       exist for each F-point!
- *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012: add OMP support
- * Modified by Chensong Zhang on 05/12/2013: restructure the code
+ * \author Chensong Zhang
+ * \date   06/07/2013
  */
-static INT clean_ff_couplings (iCSRmat *S,
-                               ivector *vertices,
-                               INT row,
-                               INT col)
+static void rem_positive_ff (dCSRmat *A,
+                             iCSRmat *Stemp,
+                             ivector *vertices)
 {
-    // local variables
-    INT  *vec        = vertices->val;
-    INT  *cindex     = (INT *)fasp_mem_calloc(row, sizeof(INT));
-    INT   set_empty  = TRUE, C_i_nonempty  = FALSE;
-    INT   ci_tilde   = -1,   ci_tilde_mark = -1;
+    const INT   row = A->row;
+    INT        *ia  = A->IA, *vec = vertices->val;
     
-    INT   ji, jj, i, j, index;
-    INT   myid, mybegin, myend;
+    REAL        row_scl, max_entry;
+    INT         i, j, ji, max_index;
     
-    fasp_iarray_set(row, cindex, -1);
-
     for ( i = 0; i < row; ++i ) {
         
         if ( vec[i] != FGPT ) continue; // skip non F-variables
-                
-        for ( ji = S->IA[i]; ji < S->IA[i+1]; ++ji ) {
-            j = S->JA[ji];
-            if ( vec[j] == CGPT ) cindex[j] = i; // mark C-neighbors
-            else cindex[j] = -1; // reset cindex --Chensong 06/02/2013
-        }
         
-        if ( ci_tilde_mark |= i ) ci_tilde = -1;
-        
-        for ( ji = S->IA[i]; ji < S->IA[i+1]; ++ji ) {
-            
-            j = S->JA[ji];
-            
-            if ( vec[j] != FGPT ) continue; // skip non F-variables
-            
-            // check whether there is a C-connection
-            set_empty = TRUE;
-            for ( jj = S->IA[j]; jj < S->IA[j+1]; ++jj ) {
-                index = S->JA[jj];
-                if ( cindex[index] == i ) {
-                    set_empty = FALSE; break;
-                }
-            } // end for jj
-            
-            // change the point i (if only F-F exists) to C
-            if ( set_empty ) {
-                if ( C_i_nonempty ) {
-                    vec[i] = CGPT; col++;
-                    if ( ci_tilde > -1 ) {
-                        vec[ci_tilde] = FGPT; col--;
-                        ci_tilde = -1;
-                    }
-                    C_i_nonempty = FALSE;
-                    break;
-                }
-                else {
-                    vec[j] = CGPT; col++;
-                    ci_tilde = j;
-                    ci_tilde_mark = i;
-                    C_i_nonempty = TRUE;
-                    i--; // roll back to check i-point again
-                    break;
-                } // end if C_i_nonempty
-            } // end if set_empty
-            
+        row_scl = 0.0;
+        for ( ji = ia[i]; ji < ia[i+1]; ++ji ) {
+            j = A->JA[ji];
+            if ( j == i ) continue; // skip diagonal
+            row_scl = MAX(row_scl, ABS(A->val[ji])); // max abs entry
         } // end for ji
+        row_scl *= 0.75;
+        
+        // looking for strong F-F connections
+        max_index = -1; max_entry = 0.0;
+        for ( ji = ia[i]; ji < ia[i+1]; ++ji ) {
+            j = A->JA[ji];
+            if ( j == i ) continue; // skip diagonal
+            if ( vec[j] != FGPT ) continue; // skip F-C connections
+            if ( A->val[ji] > row_scl ) {
+                Stemp->JA[ji] = j;
+                if ( A->val[ji] > max_entry ) {
+                    max_entry = A->val[ji];
+                    max_index = j; // max positive entry
+                }
+            }
+        } // end for ji
+        
+        // mark max positive entry as C-point
+        if ( max_index != -1 ) vec[max_index] = CGPT;
         
     } // end for i
     
-    fasp_mem_free(cindex);
-    
-    return col;
 }
 
 /**
  * \fn static INT cfsplitting_cls (dCSRmat *A, iCSRmat *S, ivector *vertices)
  *
- * \brief Find coarse level variables (C/F splitting): classic
+ * \brief Find coarse level variables (classic C/F splitting)
  *
  * \param A            Coefficient matrix, the index starts from zero
  * \param S            Strong connection matrix
@@ -433,7 +396,7 @@ static INT clean_ff_couplings (iCSRmat *S,
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/06/2010
  *
- * \note Coarsening Phase ONE: find coarse level points
+ * \note   Coarsening Phase ONE: find coarse level points
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012: add OMP support
  * Modified by Chensong Zhang on 07/06/2012: fix a data type bug
@@ -444,26 +407,26 @@ static INT cfsplitting_cls (dCSRmat *A,
                             ivector *vertices)
 {
     const INT   row = A->row;
-
+    
     // local variables
     INT col = 0;
     INT maxmeas, maxnode, num_left = 0;
     INT measure, newmeas;
-    INT *ia = A->IA, *vec = vertices->val;
     INT i, j, k, l;
     INT myid, mybegin, myend;
     
+    INT *ia = A->IA, *vec = vertices->val;
     INT *work = (INT*)fasp_mem_calloc(3*row,sizeof(INT));
     INT *lists = work, *where = lists+row, *lambda = where+row;
     
     LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;
-        
+    
     INT nthreads = 1, use_openmp = FALSE;
     
 #if DEBUG_MODE
     printf("### DEBUG: cfsplitting_cls ...... [Start]\n");
 #endif
-
+    
 #ifdef _OPENMP
     if ( row > OPENMP_HOLDS ) {
         use_openmp = TRUE;
@@ -476,7 +439,7 @@ static INT cfsplitting_cls (dCSRmat *A,
     if ( col < 0 ) goto FINISHED; // compression failed!!!
     
     iCSRmat ST; fasp_icsr_trans(S, &ST);
-
+    
     // 1. Initialize lambda
     if ( use_openmp ) {
 #ifdef _OPENMP
@@ -532,7 +495,7 @@ static INT cfsplitting_cls (dCSRmat *A,
     for ( i = 0; i < row; ++i ) {
         
         if ( vec[i] == ISPT ) continue; // skip isolated variables
-            
+        
         measure = lambda[i];
         
         if ( measure > 0 ) {
@@ -545,7 +508,7 @@ static INT cfsplitting_cls (dCSRmat *A,
             // Set variables with nonpositvie measure as F-variables
             vec[i] = FGPT; // no strong connections, set i as fine node
             --num_left;
-
+            
             // Update lambda and linked list after i->F
             for ( k = S->IA[i]; k < S->IA[i+1]; ++k ) {
                 j = S->JA[k];
@@ -574,7 +537,7 @@ static INT cfsplitting_cls (dCSRmat *A,
         maxnode = LoL_head->head;
         maxmeas = lambda[maxnode];
         if ( maxmeas == 0 ) printf("### WARNING: Head of the list has measure 0!\n");
-
+        
         vec[maxnode] = CGPT; // set maxnode as coarse node
         lambda[maxnode] = 0;
         --num_left;
@@ -610,7 +573,7 @@ static INT cfsplitting_cls (dCSRmat *A,
             j = S->JA[i];
             
             if ( vec[j] != UNPT ) continue; // skip decided variables
-
+            
             measure = lambda[j];
             remove_node(&LoL_head, &LoL_tail, measure, j, lists, where);
             lambda[j] = --measure;
@@ -636,9 +599,9 @@ static INT cfsplitting_cls (dCSRmat *A,
         } // end for
         
     } // end while
-
+    
     fasp_icsr_free(&ST);
-
+    
     if ( LoL_head ) {
         list_ptr = LoL_head;
         LoL_head->prev_node = NULL;
@@ -660,7 +623,7 @@ FINISHED:
 /**
  * \fn static INT cfsplitting_clsp (dCSRmat *A, iCSRmat *S, ivector *vertices)
  *
- * \brief Find coarse level variables (C/F splitting): classic
+ * \brief Find coarse level variables (C/F splitting with positive connections)
  *
  * \param A            Coefficient matrix, the index starts from zero
  * \param S            Strong connection matrix
@@ -671,10 +634,10 @@ FINISHED:
  * \author Chensong Zhang
  * \date   05/16/2013
  *
- * \note Compared with cfsplitting_cls, cfsplitting_clsp has an extra step for 
- *       checking strong positive couplings and pick some of them as C. 
+ * \note   Compared with cfsplitting_cls, cfsplitting_clsp has an extra step for
+ *         checking strong positive couplings and pick some of them as C. 
  *
- * TODO: Not working yet!!! Do NOT use it. --Chensong
+ * Modified by Chensong Zhang on 06/07/2013: restructure the code
  */
 static INT cfsplitting_clsp (dCSRmat *A,
                              iCSRmat *S,
@@ -686,10 +649,10 @@ static INT cfsplitting_clsp (dCSRmat *A,
     INT col = 0;
     INT maxmeas, maxnode, num_left = 0;
     INT measure, newmeas;
-    INT *ia = A->IA, *vec = vertices->val;
     INT i, j, k, l;
     INT myid, mybegin, myend;
     
+    INT *ia = A->IA, *vec = vertices->val;
     INT *work = (INT*)fasp_mem_calloc(3*row,sizeof(INT));
     INT *lists = work, *where = lists+row, *lambda = where+row;
     
@@ -893,49 +856,19 @@ static INT cfsplitting_clsp (dCSRmat *A,
         fasp_mem_free(list_ptr);
     }
     
-    col = clean_ff_couplings(S, vertices, row, col); // Working? --Chensong
+    col = clean_ff_couplings(S, vertices, row, col);
 
-    // Update interpolation support for positive strong couplings
-    REAL row_scl, max_entry;
-    INT ji, max_index;
+    rem_positive_ff(A, &Stemp, vertices);
 
-    for ( i = 0; i < row; ++i ) {
-
-        if ( vec[i] != FGPT ) continue; // skip non F-variables
-        
-        row_scl = 0.0;
-        for ( ji = ia[i]; ji < ia[i+1]; ++ji ) {
-            j = A->JA[ji];
-            if ( j == i ) continue; // skip diagonal
-            row_scl = MAX(row_scl, ABS(A->val[ji])); // max abs entry
-        } // end for ji
-        row_scl *= 0.5;
-        
-        // looking for strong F-F connections
-        max_index = -1; max_entry = 0.0;
-        for ( ji = ia[i]; ji < ia[i+1]; ++ji ) {
-            j = A->JA[ji];
-            if ( j == i ) continue; // skip diagonal
-            if ( A->val[ji] > row_scl ) {
-                Stemp.JA[ji] = j;
-                if ( A->val[ji] > max_entry ) {
-                    max_entry = A->val[ji];
-                    max_index = j; // max positive entry
-                }
-             }
-        } // end for ji
-        
-        // mark max positive entry as C-point
-        if ( max_index != -1 ) vec[max_index] = CGPT;
-
-    } // end for i
-    
     if ( compress_S(&Stemp) < 0 ) goto FINISHED; // compression failed!!!
     
-    S->row = Stemp.row; S->col = Stemp.col; S->nnz = Stemp.nnz;
+    S->row = Stemp.row;
+    S->col = Stemp.col;
+    S->nnz = Stemp.nnz;
+    
     fasp_mem_free(S->IA); S->IA = Stemp.IA;
     fasp_mem_free(S->JA); S->JA = Stemp.JA;
-    
+
 FINISHED:
     fasp_mem_free(work);
     
@@ -963,12 +896,6 @@ FINISHED:
  *
  * \author Kai Yang, Xiaozhe Hu
  * \date   09/06/2010
- *
- * \note The difference between strong_couplings_agg1 and strong_couplings_agg2
- *       is that strong_couplings_agg1 uses one path to determine strongly coupled
- *       C points while strong_couplings_agg2 uses two paths to determine strongly
- *       coupled C points. Usually strong_couplings_agg1 gives more aggresive
- *       coarsening!
  *
  * Modified by Chensong Zhang on 05/13/2013: restructure the code
  */
@@ -1141,11 +1068,11 @@ static void strong_couplings_agg1 (dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   04/24/2013
  *
- * \note The difference between strong_couplings_agg1 and strong_couplings_agg2
- *       is that strong_couplings_agg1 uses one path to determine strongly coupled
- *       C points while strong_couplings_agg2 uses two paths to determine strongly
- *       coupled C points. Usually strong_couplings_agg1 gives more aggresive
- *       coarsening!
+ * \note   The difference between strong_couplings_agg1 and strong_couplings_agg2
+ *         is that strong_couplings_agg1 uses one path to determine strongly coupled
+ *         C points while strong_couplings_agg2 uses two paths to determine strongly
+ *         coupled C points. Usually strong_couplings_agg1 gives more aggresive
+ *         coarsening!
  *
  * Modified by Chensong Zhang on 05/13/2013: restructure the code
  */
@@ -1601,7 +1528,103 @@ static INT cfsplitting_agg (dCSRmat *A,
     
     return col;
 }
+
+/**
+ * \fn static INT clean_ff_couplings (iCSRmat *S, ivector *vertices, 
+ *                                    INT row, INT col)
+ *
+ * \brief Clear some of the FF connections
+ *
+ * \param S            Strong connection matrix
+ * \param vertices     Indicator vector for the C/F splitting of the variables
+ * \param row          Number of rows of P
+ * \param col          Number of columns of P
+ *
+ * \return Number of cols of P
+ *
+ * \author Xuehai Huang, Chensong Zhang
+ * \date   09/06/2010
+ *
+ * \note   Coarsening Phase TWO: remove some F-F connections by F->C. Need to be
+ *         applied in direct and energy-min interpolations to make sure C-neighbors
+ *         exist for each F-point!
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012: add OMP support
+ * Modified by Chensong Zhang on 05/12/2013: restructure the code
+ */
+static INT clean_ff_couplings (iCSRmat *S,
+                               ivector *vertices,
+                               INT row,
+                               INT col)
+{
+    // local variables
+    INT  *vec        = vertices->val;
+    INT  *cindex     = (INT *)fasp_mem_calloc(row, sizeof(INT));
+    INT   set_empty  = TRUE, C_i_nonempty  = FALSE;
+    INT   ci_tilde   = -1,   ci_tilde_mark = -1;
     
+    INT   ji, jj, i, j, index;
+    INT   myid, mybegin, myend;
+    
+    fasp_iarray_set(row, cindex, -1);
+    
+    for ( i = 0; i < row; ++i ) {
+        
+        if ( vec[i] != FGPT ) continue; // skip non F-variables
+        
+        for ( ji = S->IA[i]; ji < S->IA[i+1]; ++ji ) {
+            j = S->JA[ji];
+            if ( vec[j] == CGPT ) cindex[j] = i; // mark C-neighbors
+            else cindex[j] = -1; // reset cindex --Chensong 06/02/2013
+        }
+        
+        if ( ci_tilde_mark |= i ) ci_tilde = -1;
+        
+        for ( ji = S->IA[i]; ji < S->IA[i+1]; ++ji ) {
+            
+            j = S->JA[ji];
+            
+            if ( vec[j] != FGPT ) continue; // skip non F-variables
+            
+            // check whether there is a C-connection
+            set_empty = TRUE;
+            for ( jj = S->IA[j]; jj < S->IA[j+1]; ++jj ) {
+                index = S->JA[jj];
+                if ( cindex[index] == i ) {
+                    set_empty = FALSE; break;
+                }
+            } // end for jj
+            
+            // change the point i (if only F-F exists) to C
+            if ( set_empty ) {
+                if ( C_i_nonempty ) {
+                    vec[i] = CGPT; col++;
+                    if ( ci_tilde > -1 ) {
+                        vec[ci_tilde] = FGPT; col--;
+                        ci_tilde = -1;
+                    }
+                    C_i_nonempty = FALSE;
+                    break;
+                }
+                else { // temperary set j->C and roll back
+                    vec[j] = CGPT; col++;
+                    ci_tilde = j;
+                    ci_tilde_mark = i;
+                    C_i_nonempty = TRUE;
+                    i--; // roll back to check i-point again
+                    break;
+                } // end if C_i_nonempty
+            } // end if set_empty
+            
+        } // end for ji
+        
+    } // end for i
+    
+    fasp_mem_free(cindex);
+    
+    return col;
+}
+
 /**
  * \fn static void form_P_pattern_dir (dCSRmat *P, iCSRmat *S, ivector *vertices,
  *                                     INT row, INT col)
