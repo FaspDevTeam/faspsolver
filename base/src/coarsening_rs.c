@@ -85,16 +85,14 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     switch ( coarse_type ) {
             
         case COARSE_RS: // Classical coarsening
-            col = cfsplitting_cls(A, S, vertices);
-            break;
+            col = cfsplitting_cls(A, S, vertices); break;
+            //col = cfsplitting_clsp(A, S, vertices); break;
             
         case COARSE_AC: // Aggressive coarsening
-            col = cfsplitting_agg(A, S, vertices, agg_path);
-            break;
+            col = cfsplitting_agg(A, S, vertices, agg_path); break;
             
         case COARSE_CR: // Compatible relaxation (Need to be modified --Chensong)
-            col = fasp_amg_coarsening_cr(0, A->row-1, A, vertices, param);
-            break;
+            col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param); break;
             
         default:
             fasp_chkerr(ERROR_AMG_COARSE_TYPE, "fasp_amg_coarsening_rs");
@@ -856,7 +854,9 @@ static INT cfsplitting_clsp (dCSRmat *A,
         fasp_mem_free(list_ptr);
     }
     
-    col = clean_ff_couplings(S, vertices, row, col);
+    // Enforce F-C connections. Adding this step helps for the ExxonMobil test
+    // problems! Need more tests though --Chensong 06/08/2013
+    // col = clean_ff_couplings(S, vertices, row, col);
 
     rem_positive_ff(A, &Stemp, vertices);
 
@@ -1774,7 +1774,7 @@ static void form_P_pattern_std (dCSRmat *P,
     
     fasp_iarray_set(row, visited, -1);
     
-    // step 1: Find the structure IA of P first: use P as a counter
+    // Step 1: Find the structure IA of P first: use P as a counter
     for ( i = 0; i < row; ++i ) {
         
         if ( vec[i] == FGPT ) { // if node i is a F point
@@ -1788,7 +1788,7 @@ static void form_P_pattern_std (dCSRmat *P,
                     P->IA[i+1]++;
                 }
                 
-                // if neighbor of i is a F point and k is not i, look for indirect C
+                // if k is a F point and k is not i, look for indirect C neighbors
                 else if ( (vec[k] == FGPT) && (k != i) ) {
                     for ( l = S->IA[k]; l < S->IA[k+1]; l++ ) { // neighbors of k
                         h = S->JA[l];
@@ -1816,11 +1816,11 @@ static void form_P_pattern_std (dCSRmat *P,
     for ( i = 0; i < P->row; ++i ) P->IA[i+1] += P->IA[i];
     P->nnz = P->IA[P->row]-P->IA[0];
     
-    // step 2: Find the structure JA of P
+    // Step 2: Find the structure JA of P
     P->JA  = (INT*)fasp_mem_calloc(P->nnz,sizeof(INT));
     P->val = (REAL*)fasp_mem_calloc(P->nnz,sizeof(REAL));
     
-    fasp_iarray_set(row, visited, -1);
+    fasp_iarray_set(row, visited, -1); // re-init visited arrary
     
     for ( i = 0; i < row; ++i ) {
         
