@@ -166,7 +166,7 @@ static void strong_couplings (dCSRmat *A,
     REAL *aj = A->val;
 
     // local variables
-    INT   index, i, j, begin_row, end_row;
+    INT   i, j, begin_row, end_row;
     REAL  row_scl, row_sum;
 
     INT nthreads = 1, use_openmp = FALSE;
@@ -1561,10 +1561,8 @@ static INT clean_ff_couplings (iCSRmat *S,
     INT  *vec        = vertices->val;
     INT  *cindex     = (INT *)fasp_mem_calloc(row, sizeof(INT));
     INT   set_empty  = TRUE, C_i_nonempty  = FALSE;
-    INT   ci_tilde   = -1,   ci_tilde_mark = -1;
-    
+    INT   ci_tilde   = -1,   ci_tilde_mark = -1;    
     INT   ji, jj, i, j, index;
-    INT   myid, mybegin, myend;
     
     fasp_iarray_set(row, cindex, -1);
     

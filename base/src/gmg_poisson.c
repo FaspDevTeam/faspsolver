@@ -36,9 +36,11 @@ void fasp_poisson_gmg_1D (REAL *u,
                           REAL rtol)
 {
     const REAL atol = 1.0E-15;
+    const INT  max_itr_num = 100;
+    
     REAL      *u0, *r0, *b0;
     REAL       norm_r, norm_r0, error;
-    INT        i, *level, count, max_itr_num;
+    INT        i, *level, count;
     
     // set level
     level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
@@ -64,15 +66,10 @@ void fasp_poisson_gmg_1D (REAL *u,
     fasp_array_set(level[1], r0, 0.0);
     compute_r_1d(u0, b0, r0, 0, level);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) {
-        free(r0);
-        free(u0);
-        free(b0);
-        return;
-    }
+    if (norm_r0 < atol) goto FINISHED;
     
     // GMG solver of V-cycle
-    max_itr_num = 50; count = 0;
+    count = 0;
     while (count < max_itr_num) {
         count++;
         multigriditeration1d(u0, b0, level, 0, maxlevel);
@@ -82,7 +79,7 @@ void fasp_poisson_gmg_1D (REAL *u,
         if (error < rtol || norm_r < atol) break;
     }
     
-    if (count > max_itr_num) {
+    if (count >= max_itr_num) {
         printf("### WARNING: V-cycle failed to converge.\n");
     }
     else {
@@ -92,9 +89,13 @@ void fasp_poisson_gmg_1D (REAL *u,
     // Update u
 	fasp_array_cp(level[1], u0, u);
     
+FINISHED:
+    free(level);
     free(r0);
     free(u0);
     free(b0);
+    
+    return;
 }
 
 /**
@@ -121,9 +122,11 @@ void fasp_poisson_gmg_2D (REAL *u,
                           REAL rtol)
 {
     const REAL atol = 1.0E-15;
+    const INT  max_itr_num = 100;
+
     REAL *u0,*r0,*b0;
     REAL norm_r,norm_r0,error;
-    INT i, k, count, max_itr_num, *nxk, *nyk, *level;
+    INT i, k, count, *nxk, *nyk, *level;
     
     // set nxk, nyk
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
@@ -155,15 +158,10 @@ void fasp_poisson_gmg_2D (REAL *u,
     // compute initial l2 norm of residue
     compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) {
-        free(r0);
-        free(u0);
-        free(b0);
-        return;
-    }
+    if (norm_r0 < atol) goto FINISHED;
     
     // GMG solver of V-cycle
-    max_itr_num = 50; count = 0;
+    count = 0;
     while (count < max_itr_num) {
         count++;
         multigriditeration2d(u0, b0, level, 0, maxlevel, nxk, nyk);
@@ -173,7 +171,7 @@ void fasp_poisson_gmg_2D (REAL *u,
         if (error < rtol || norm_r < atol) break;
     }
     
-    if (count > max_itr_num) {
+    if (count >= max_itr_num) {
         printf("### WARNING: V-cycle failed to converge.\n");
     }
     else {
@@ -183,9 +181,15 @@ void fasp_poisson_gmg_2D (REAL *u,
 	// update u
 	fasp_array_cp(level[1], u0, u);
     
+FINISHED:
+    free(level);
+    free(nxk);
+    free(nyk);
     free(r0);
     free(u0);
     free(b0);
+    
+    return;
 }
 
 /**
@@ -214,9 +218,11 @@ void fasp_poisson_gmg_3D (REAL *u,
                           REAL rtol)
 {
     const REAL atol = 1.0E-15;
+    const INT  max_itr_num = 100;
+
     REAL *u0,*r0,*b0;
     REAL norm_r,norm_r0,error;
-    int i, k, max_itr_num, count, *nxk, *nyk, *nzk, *level;
+    int i, k, count, *nxk, *nyk, *nzk, *level;
     
     // set nxk, nyk, nzk
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
@@ -250,15 +256,10 @@ void fasp_poisson_gmg_3D (REAL *u,
     // compute initial l2 norm of residue
     compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) {
-        free(r0);
-        free(u0);
-        free(b0);
-        return;
-    }
+    if (norm_r0 < atol) goto FINISHED;
     
     // GMG solver of V-cycle
-    max_itr_num = 50; count = 0;
+    count = 0;
     while (count < max_itr_num) {
         count++;
         multigriditeration3d(u0, b0, level, 0, maxlevel, nxk, nyk, nzk);
@@ -268,7 +269,7 @@ void fasp_poisson_gmg_3D (REAL *u,
         if (error < rtol || norm_r < atol) break;
     }
     
-    if (count > max_itr_num) {
+    if (count >= max_itr_num) {
         printf("### WARNING: V-cycle failed to converge.\n");
     }
     else {
@@ -278,9 +279,16 @@ void fasp_poisson_gmg_3D (REAL *u,
 	// update u
 	fasp_array_cp(level[1], u0, u);
     
+FINISHED:
+    free(level);
+    free(nxk);
+    free(nyk);
+    free(nzk);
     free(r0);
     free(u0);
     free(b0);
+    
+    return;
 }
 
 /**
@@ -332,12 +340,7 @@ void fasp_poisson_fgmg_1D (REAL *u,
     fasp_array_set(level[1], r0, 0.0);
     compute_r_1d(u0, b0, r0, 0, level);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) {
-        free(r0);
-        free(u0);
-        free(b0);
-        return;
-    }
+    if (norm_r0 < atol) goto FINISHED;
     
     //  Full GMG solver 
     fullmultigrid_1d(u0, b0, level, maxlevel, nx);
@@ -345,9 +348,13 @@ void fasp_poisson_fgmg_1D (REAL *u,
     // update u
     fasp_array_cp(level[1], u0, u);
     
+FINISHED:
+    free(level);
     free(r0);
     free(u0);
     free(b0);
+    
+    return;
 }
 
 /**
@@ -411,12 +418,7 @@ void fasp_poisson_fgmg_2D (REAL *u,
     fasp_array_set(level[1], r0, 0.0);
     compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) {
-        free(r0);
-        free(u0);
-        free(b0);
-        return;
-    }
+    if (norm_r0 < atol) goto FINISHED;
     
     // FMG solver
     fullmultigrid_2d(u0, b0, level, maxlevel, nxk, nyk);
@@ -424,9 +426,15 @@ void fasp_poisson_fgmg_2D (REAL *u,
 	// update u
 	fasp_array_cp(level[1], u0, u);
     
+FINISHED:
+    free(level);
+    free(nxk);
+    free(nyk);
     free(r0);
     free(u0);
     free(b0);
+    
+    return;
 }
 
 /**
@@ -493,12 +501,7 @@ void fasp_poisson_fgmg_3D (REAL *u,
     // compute initial l2 norm of residue
     compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) {
-        free(r0);
-        free(u0);
-        free(b0);
-        return;
-    }
+    if (norm_r0 < atol) goto FINISHED;
     
     // FMG
     fullmultigrid_3d(u0, b0, level, maxlevel, nxk, nyk, nzk);
@@ -506,10 +509,17 @@ void fasp_poisson_fgmg_3D (REAL *u,
 	// update u
 	fasp_array_cp(level[1], u0, u);
     
+FINISHED:
+    free(level);
+    free(nxk);
+    free(nyk);
+    free(nzk);
     free(r0);
-    free(b0);
     free(u0);
-}   
+    free(b0);
+    
+    return;
+}
 
 /**
  * \fn void fasp_poisson_pcg_gmg_1D (REAL *u, REAL *b, INT nx,
@@ -534,9 +544,11 @@ void fasp_poisson_pcg_gmg_1D (REAL *u,
                               REAL rtol)
 {
     const REAL atol = 1.0E-15;
+    const INT  max_itr_num = 100;
+
     REAL *u0,*r0,*b0;
     REAL norm_r0;
-    int i, max_itr_num, *level;
+    int i, *level;
     
     // set level
     level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
@@ -560,23 +572,21 @@ void fasp_poisson_pcg_gmg_1D (REAL *u,
     fasp_array_set(level[1], r0, 0.0);
     compute_r_1d(u, b, r0, 0, level);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) {
-        free(r0);
-        free(u0);
-        free(b0);
-        return;
-    }
-    
+    if (norm_r0 < atol) goto FINISHED;
+
     // Preconditioned CG method
-    max_itr_num = 50;
     pcg_1d(u0, b0, level, maxlevel, nx, rtol, max_itr_num);
     
     // Update u
 	fasp_array_cp(level[1], u0, u);
     
+FINISHED:
+    free(level);
     free(r0);
     free(u0);
     free(b0);
+    
+    return;
 }    
 
 /**
@@ -604,9 +614,11 @@ void fasp_poisson_pcg_gmg_2D (REAL *u,
                               REAL rtol)
 {
     const REAL atol = 1.0E-15;
+    const INT  max_itr_num = 100;
+
     REAL *u0,*r0,*b0;
     REAL norm_r0;
-    int i, k, max_itr_num, *nxk, *nyk, *level;        
+    int i, k, *nxk, *nyk, *level;
     
     // set nxk, nyk
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
@@ -640,23 +652,23 @@ void fasp_poisson_pcg_gmg_2D (REAL *u,
     fasp_array_set(level[1], r0, 0.0);
     compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) {
-        free(r0);
-        free(u0);
-        free(b0);
-        return;
-    }
+    if (norm_r0 < atol) goto FINISHED;
     
     // Preconditioned CG method
-    max_itr_num = 50;
     pcg_2d(u0, b0, level, maxlevel, nxk, nyk, rtol, max_itr_num);
     
 	// update u
 	fasp_array_cp(level[1], u0, u);
     
+FINISHED:
+    free(level);
+    free(nxk);
+    free(nyk);
     free(r0);
     free(u0);
     free(b0);
+    
+    return;
 }
 
 /**
@@ -686,9 +698,11 @@ void fasp_poisson_pcg_gmg_3D (REAL *u,
                               REAL rtol)
 {
     const REAL atol = 1.0E-15;
+    const INT  max_itr_num = 100;
+
     REAL *u0,*r0,*b0;
     REAL norm_r0;
-    int i, k, max_itr_num,  *nxk, *nyk, *nzk, *level;
+    int i, k, *nxk, *nyk, *nzk, *level;
     
     // set nxk, nyk, nzk
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
@@ -723,24 +737,25 @@ void fasp_poisson_pcg_gmg_3D (REAL *u,
     // compute initial l2 norm of residue
     compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) {
-        free(r0);
-        free(u0);
-        free(b0);
-        return;
-    }
+    if (norm_r0 < atol) goto FINISHED;
     
     // Preconditioned CG method
-    max_itr_num = 50;
     pcg_3d(u0, b0, level, maxlevel, nxk, nyk, nzk, rtol, max_itr_num);
     
 	// update u
 	fasp_array_cp(level[1], u0, u);
     
+FINISHED:
+    free(level);
+    free(nxk);
+    free(nyk);
+    free(nzk);
     free(r0);
     free(u0);
     free(b0);
-}    
+    
+    return;
+}
 
 /*---------------------------------*/
 /*--        End of File          --*/

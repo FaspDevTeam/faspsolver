@@ -84,7 +84,6 @@ static REAL L2NormError1d (REAL *u,
     for ( i = 1; i < nx; i++ ) {
         uexact  = sin(pi*i*h)/(pi*pi);
         l2norm += pow((u[i] - uexact), 2);
-        printf("%d, %e, %e\n", i, u[i], uexact);
     }
     l2norm = sqrt(l2norm*h);
     
@@ -146,8 +145,8 @@ int main (int argc, const char *argv[])
 {
     const REAL rtol = 1.0e-8;
     
-    INT        maxlevel, i, j, k, nx, ny, nz;
-    INT        dim = 2, method = 2;
+    INT        maxlevel = 8, dim = 3, method = 2;
+    INT        i, j, k, nx, ny, nz;
     REAL       GMG_start, GMG_end;
     REAL      *u, *b, h, error0;
     
@@ -282,6 +281,8 @@ int main (int argc, const char *argv[])
     
     free(u);
     free(b);
+    
+    return SUCCESS;
 }
 
 /*---------------------------------*/

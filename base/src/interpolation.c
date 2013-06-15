@@ -519,7 +519,7 @@ static void interp_STD (dCSRmat *A,
     INT        *vec    = vertices->val;
     
     // local variables
-    INT    h, i, j, k, l, m, index;
+    INT    i, j, k, l, m, index;
     REAL   alpha, factor, alN, alP;
     REAL   akk, akl, aik, aki;
     

@@ -202,20 +202,19 @@ static void multigriditeration1d(REAL *u,
                                  INT maxlevel)
 {
     INT n,i,j,k,levelk,levelk1;
-    REAL *r,resm;
-
-	r = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
+    
+    REAL *r = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
 
     // forward sweep 
     for (k = startlevel; k < maxlevel-1; k++) {
         // initial
 		levelk = level[k]; levelk1 = level[k+1];
 		n = level[k+1] - level[k];
-		for (i = 0; i < n; i++){
+		for (i = 0; i < n; i++) {
 			r[i+levelk] = 0.0;
 		}
-		if (k>startlevel){
-			for (i = 0; i < (level[k+1]-level[k]);i++){
+		if (k>startlevel) {
+			for (i = 0; i < (level[k+1]-level[k]);i++) {
 				u[level[k]+i] = 0.0;
 			}
 		}
@@ -226,7 +225,7 @@ static void multigriditeration1d(REAL *u,
             }
    		}
 		compute_r_1d(u, b, r, k, level);
-		resm = computenorm(r, level, k);
+		computenorm(r, level, k);
 
         // restriction on coarser grids
 		n = level[k+2]-level[k+1];
@@ -252,7 +251,7 @@ static void multigriditeration1d(REAL *u,
         // post-smoothing, G-S as smoother
         n = level[k] - level[k-1];
         for (i = 0; i < 3; i++) {
-            for (j = n-1; j > 1; j--) {
+            for (j = n-2; j > 0; j--) {
                 u[level[k-1]+j] = (b[level[k-1]+j]+u[level[k-1]-1+j]+u[level[k-1]+1+j])/2;    
             }
         }
@@ -286,15 +285,12 @@ static void multigriditeration2d(REAL *u,
                                  INT *nxk,
                                  INT *nyk)
 {
-    INT i,k,i1;
-    REAL *r=NULL;
-    INT *presm, *prosm;
+    INT   i,k,i1;
+	INT  *prosm = (INT *)malloc(maxlevel*sizeof(INT));
+	INT  *presm = (INT *)malloc(maxlevel*sizeof(INT));
+    REAL *r = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
 
-	prosm = (INT *)malloc(maxlevel*sizeof(INT));
-	presm = (INT *)malloc(maxlevel*sizeof(INT));
-	r = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
-
-	for (i = 0; i < maxlevel; i++){
+	for (i = 0; i < maxlevel; i++) {
 		prosm[i] = 3;
 		presm[i] = 3;
 	}
@@ -308,15 +304,15 @@ static void multigriditeration2d(REAL *u,
         
     // pre-smoothing, GS as smoother
 	// initial some vectors
-	for (i = 0; i < (level[k+1]-level[k]); i++){
+	for (i = 0; i < (level[k+1]-level[k]); i++) {
 		r[level[k]+i] = 0.0;
 	}
-	if(k>startlevel){
+	if (k>startlevel) {
 		for (i = 0; i < (level[k+1]-level[k]); i++) u[level[k]+i] = 0.0;
 	}
 
 	// Gauss-Seidel 2 colors
-	for (i = 0; i < presm[k]; i++){
+	for (i = 0; i < presm[k]; i++) {
 		gsiteration_2color_2d(u, b, level, k, maxlevel, nxk, nyk);
 	}           
 	compute_r_2d(u, b, r, k, level, nxk, nyk);
@@ -328,12 +324,12 @@ static void multigriditeration2d(REAL *u,
         
         // pre-smoothing, GS as smoother
 		// initial some vectors
-		for (i = 0; i < (level[k+1]-level[k]); i++){
+		for (i = 0; i < (level[k+1]-level[k]); i++) {
 			r[level[k]+i] = 0.0;
 			u[level[k]+i] = 0.0;
 		}
 		// Gauss-Seidel 2 colors
-		for (i = 0; i < presm[k]; i++){
+		for (i = 0; i < presm[k]; i++) {
 			gsiteration_2color_2d(u, b, level, k, maxlevel, nxk, nyk);
 		}           
 		compute_r_2d(u, b, r, k, level, nxk, nyk);
@@ -342,7 +338,7 @@ static void multigriditeration2d(REAL *u,
 	}
 
     // coarsest grid
-    if(k==maxlevel-1){
+    if (k==maxlevel-1) {
         u[level[k]+4] = b[level[k]+4]/4;
 		level[k+1] = level[k]+nxk[k]*nyk[k];
     }
@@ -354,14 +350,17 @@ static void multigriditeration2d(REAL *u,
 		finergridinterpolation2d(u, level, k, nxk, nyk);
         // post-smoothing
 		k = k-1;
-		for (i1 = 0; i1 <prosm[k]; i1++){
+		for (i1 = 0; i1 <prosm[k]; i1++) {
 			// Gauss-Seidel 2 colors
 			gsiteration_2color_2d(u, b, level, k, maxlevel, nxk, nyk);	
 		}
 		compute_r_2d(u, b, r, k, level, nxk, nyk);
 		k = k+1;
     }
+    
     free(r);
+    free(prosm);
+    free(presm);
 }
 
 /**
@@ -401,13 +400,13 @@ static void multigriditeration3d(REAL *u,
 	r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
 
 	// set times of post and pre smoothing
-	for (k = 0; k < maxlevel; k++){
+	for (k = 0; k < maxlevel; k++) {
 		presmoothtime[k] = 3;
 	}
 	presmoothtime[0] = 3;
 	presmoothtime[1] = 3;
 	presmoothtime[2] = 3;
-	for (k = 0; k < maxlevel; k++){
+	for (k = 0; k < maxlevel; k++) {
 		prosmoothtime[k] = 3;
 	}
 	prosmoothtime[0] = 3;
@@ -416,7 +415,7 @@ static void multigriditeration3d(REAL *u,
 
 	
     // forward sweep
-	for	(i = 0; i < presmoothtime[0]; i++){
+	for	(i = 0; i < presmoothtime[0]; i++) {
 		//gsiteration_2color_3d(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
 		gsiteration3d(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
 	}
@@ -428,12 +427,12 @@ static void multigriditeration3d(REAL *u,
     for (k = startlevel+1; k < maxlevel-1; k++) {
 
 		// initial vectors
-		for (i = 0; i < level[k+1]-level[k]; i++){
+		for (i = 0; i < level[k+1]-level[k]; i++) {
 			u[level[k]+i] = 0.0;
 		}
 
         // pre-smoothing 
-		for	(i = 0; i < presmoothtime[k]; i++){
+		for	(i = 0; i < presmoothtime[k]; i++) {
 			gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
 //			gsiteration3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
 		}
@@ -452,12 +451,15 @@ static void multigriditeration3d(REAL *u,
 		finergridinterpolation3d(u, level, k, nxk, nyk, nzk);
 		// post smoothing
 		k = k-1;
-		for (i = 0; i < prosmoothtime[k]; i++){
+		for (i = 0; i < prosmoothtime[k]; i++) {
 	//		gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
 			gsiteration3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
 		}
 		k = k+1;
 	}
+    
+    free(presmoothtime);
+    free(prosmoothtime);
 }
 
 /**
@@ -491,11 +493,11 @@ static void fullmultigrid_1d(REAL *u,
 
 		// initial some vectors
 		levelk = level[k];
-		for (i = 0; i < (level[k+1]-level[k]); i++){
+		for (i = 0; i < (level[k+1]-level[k]); i++) {
 			r[levelk+i] = 0.0;
 		}
 		if (k>0) {
-			for (i = 0; i < (level[k+1]-level[k]); i++){
+			for (i = 0; i < (level[k+1]-level[k]); i++) {
 				u[levelk+i] = 0.0;
 			}
 		}
@@ -509,7 +511,7 @@ static void fullmultigrid_1d(REAL *u,
     }
 
     // coarsest grid
-    if(k==maxlevel-1){
+    if (k==maxlevel-1) {
         i = level[maxlevel-1];
         u[i+1] = b[i+1]/2;
     }
@@ -527,6 +529,7 @@ static void fullmultigrid_1d(REAL *u,
 			multigriditeration1d(u, b, level, k, maxlevel);
         }
     }
+    
     free(r);
 }
 
@@ -554,7 +557,6 @@ static void fullmultigrid_2d(REAL *u,
 {
     INT i,k;
     REAL *r;
-	REAL norm_r;
 
 	// initial
 	r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
@@ -567,7 +569,7 @@ static void fullmultigrid_2d(REAL *u,
     for (k = 1; k < maxlevel-1; k++) {
 		// initial u of coarser grids
 		if (k>0) {
-			for (i = 0; i < (level[k+1]-level[k]); i++){
+			for (i = 0; i < (level[k+1]-level[k]); i++) {
 				u[level[k]+i] = 0.0;
 			}
 		}
@@ -577,7 +579,7 @@ static void fullmultigrid_2d(REAL *u,
     }
 
     // coarsest grid
-    if(k==maxlevel-1){
+    if (k==maxlevel-1) {
         u[level[k]+4] = b[level[k]+4]/4;
 		//level[k+1] = level[k]+nxk[k]*nyk[k];
     }
@@ -590,9 +592,10 @@ static void fullmultigrid_2d(REAL *u,
         for(i=0;i<3;i++) {
 			multigriditeration2d(u, b, level, k, maxlevel, nxk, nyk);
 			compute_r_2d(u, b, r, k, level, nxk, nyk);
-			norm_r = computenorm(r, level, k);
+			computenorm(r, level, k);
         }
     }
+    
     free(r);
 }
 
@@ -620,13 +623,11 @@ static void fullmultigrid_3d(REAL *u,
                              INT *nyk,
                              INT *nzk)
 {
-    INT n,i,k,levelk1;
+    INT i,k,levelk1;
     REAL *r;
-	REAL norm_r;
 
 	// initial
 	r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-    n = level[1] - level[0];
 
     fasp_array_set(level[maxlevel], r, 0.0);
 
@@ -647,9 +648,10 @@ static void fullmultigrid_3d(REAL *u,
         for(i = 0;i<5;i++) {
 			multigriditeration3d(u, b, level, k-1, maxlevel, nxk, nyk, nzk);
 			compute_r_3d(u, b, r, k-1, level, nxk, nyk, nzk);
-			norm_r = computenorm(r, level, k-1);
+			computenorm(r, level, k-1);
         }
     }
+    
     free(r);
 }
 
@@ -696,12 +698,8 @@ static void pcg_1d(REAL *u,
 	compute_r_1d(u, b, r, 0, level);
 	normr = computenorm(r, level, 0);
 	normb = computenorm(b, level, 0);
-	if (normb==0.0) {
-		normb==1.0;
-	}
-	if ((resid = normr / normb) <= rtol) {
-		return;
-	}
+	if (normb==0.0) normb=1.0;
+	if ((resid = normr / normb) <= rtol) return;
 
     multigriditeration1d(z, r, level, 0, maxlevel);
     rh0 = innerproductxy(r, z, level, 0);
@@ -734,6 +732,7 @@ static void pcg_1d(REAL *u,
 		rh0 = rh1;
 		k++;
 	}
+    
     free(r);
     free(q);
     free(p);
@@ -766,7 +765,7 @@ static void pcg_2d(REAL *u,
                    REAL rtol,
 			       INT maxiteration)
 {
-    INT k;
+    INT k = 0;
     REAL *p, *r, *z, *q;
     REAL rh0, rh1, rh2, alfa, beta, normb, normr, resid;
 
@@ -774,7 +773,6 @@ static void pcg_2d(REAL *u,
     r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
 	z = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
 	q = (REAL *)malloc(level[1]*sizeof(REAL));
-    k = 0;
 
     // initial residue and other vector
     fasp_array_set(level[maxlevel], z, 0.0);
@@ -785,12 +783,8 @@ static void pcg_2d(REAL *u,
 	compute_r_2d(u, b, r, 0, level, nxk, nyk);
 	normr = computenorm(r, level, 0);
 	normb = computenorm(b, level, 0);
-	if (normb==0.0) {
-		normb==1.0;
-	}
-	if ((resid = normr / normb) <= rtol) {
-		return;
-	}
+	if (normb==0.0) normb=1.0;
+	if ((resid = normr / normb) <= rtol) return;
 
     multigriditeration2d(z, r, level, 0, maxlevel, nxk, nyk);
 	//xequaly(z, r, level, 0);	
@@ -826,6 +820,7 @@ static void pcg_2d(REAL *u,
 		rh0 = rh1;
 		k++;
 	}
+    
     free(r);
     free(q);
     free(p);
@@ -860,18 +855,16 @@ static void pcg_3d(REAL *u,
                    REAL rtol,
 			       INT maxiteration)
 {
-    INT i,k,done;
+    INT i, k = 0, done = 0;
     REAL *p, *r, *z, *q;
     REAL rh0, rh1, rh2, alfa, beta, normb, normr, resid;
-	const int level1 = level[1];
-	const int levelmax = level[maxlevel];
+	const INT level1 = level[1];
+	const INT levelmax = level[maxlevel];
 
     p = (REAL *)malloc(level1*sizeof(REAL));
     r = (REAL *)malloc(levelmax*sizeof(REAL));
 	z = (REAL *)malloc(levelmax*sizeof(REAL));
 	q = (REAL *)malloc(level1*sizeof(REAL));
-	done = 0;
-    k = 0;
 
     // initial residue and other vector
     fasp_array_set(levelmax, z, 0.0);
@@ -881,12 +874,8 @@ static void pcg_3d(REAL *u,
 	compute_r_3d(u, b, r, 0, level, nxk, nyk, nzk);
 	normr = computenorm(r, level, 0);
 	normb = computenorm(b, level, 0);
-	if (normb==0.0) {
-		normb==1.0;
-	}
-	if ((resid = normr / normb) <= rtol) {
-		return;
-	}
+	if (normb==0.0) normb=1.0;
+	if ((resid = normr / normb) <= rtol) return;
 
 	multigriditeration3d(z, r, level, 0, maxlevel, nxk, nyk, nzk);
 	//xequaly(z, r, level, 0);	
@@ -922,6 +911,7 @@ static void pcg_3d(REAL *u,
 		rh0 = rh1;
 		k++;
 	}
+    
     free(r);
     free(q);
     free(p);
@@ -953,9 +943,9 @@ static void gsiteration_2color_2d(REAL *u,
                                   INT *nyk)
 {
 	INT h,i;
-	const int nxkk = nxk[k];
-	const int nykk = nyk[k];
-	const int levelk = level[k];
+	const INT nxkk = nxk[k];
+	const INT nykk = nyk[k];
+	const INT levelk = level[k];
 	int k1;
 
 	// red
@@ -1018,11 +1008,11 @@ static void gsiteration_2color_3d(REAL *u,
 {
 	INT i,j,h;
 	INT i0,j0,j1,j2,k0,k3,k4,k5,k6;
-	const int levelk = level[k];
-	const int nxkk = nxk[k];
-	const int nykk = nyk[k];
-	const int nzkk = nzk[k];
-	const int nxyk = nxkk*nykk;
+	const INT levelk = level[k];
+	const INT nxkk = nxk[k];
+	const INT nykk = nyk[k];
+	const INT nzkk = nzk[k];
+	const INT nxyk = nxkk*nykk;
 
 	// red point of 2*i,2*j,2*h
     for (i = 2; i < nzkk-1; i = i+2) {
@@ -1037,7 +1027,7 @@ static void gsiteration_2color_3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0+1]+u[k0-1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0+1]+u[k0-1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1054,7 +1044,7 @@ static void gsiteration_2color_3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0+1]+u[k0-1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0+1]+u[k0-1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1071,7 +1061,7 @@ static void gsiteration_2color_3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1088,7 +1078,7 @@ static void gsiteration_2color_3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1107,7 +1097,7 @@ static void gsiteration_2color_3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1124,7 +1114,7 @@ static void gsiteration_2color_3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }	
@@ -1141,7 +1131,7 @@ static void gsiteration_2color_3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1158,7 +1148,7 @@ static void gsiteration_2color_3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1191,14 +1181,14 @@ static void coarsergrid7pointrestriction2d(REAL *b,
 	int const nykk1 = nyk[k+1];
 	int const nxkk = nxk[k];
 	int const nykk = nyk[k];
-	const int levelk1 = level[k+1];
-	const int levelk = level[k];
+	const INT levelk1 = level[k+1];
+	const INT levelk = level[k];
 	int k1,k11,k2;
 
-	for (i = 1; i < nykk1-1; i++){
+	for (i = 1; i < nykk1-1; i++) {
 		k11 = levelk1+i*nxkk1;
 		k1 = levelk+2*i*nxkk;
-		for (j = 1; j < nxk[k+1]-1; j++){
+		for (j = 1; j < nxk[k+1]-1; j++) {
 			k2 = k1+2*j;
 			b[k11+j] = (r[k2]*2+r[k2+1]+r[k2-1]+r[k2+nxkk]+r[k2-nxkk]+r[k2+nxkk+1]+r[k2-nxkk-1])/2;
 		}
@@ -1206,7 +1196,7 @@ static void coarsergrid7pointrestriction2d(REAL *b,
 	}
 	k11 = levelk1+(nykk1-1)*nxkk1;
 	k1 = levelk+(nykk-1)*nxkk-1;
-	for (j = 1; j < nxk[k+1]-1; j++){
+	for (j = 1; j < nxk[k+1]-1; j++) {
 		b[k11+j] = (r[k1+2*j]+r[k1+2*j-nxkk])/2;
 	}
 	b[level[k+1]+nxk[k+1]*nyk[k+1]-1] = r[level[k]+(nyk[k]-1)*nxk[k]-2]/2;
@@ -1238,24 +1228,24 @@ static void coarsergrid7pointrestriction3d(REAL *b,
 {
 	INT i,j,h;
 	int i0,j0,k0,k1,k2,k3,k4,k5,k6,i01,j01;
-    const int levelk = level[k];
-	const int levelk1 = level[k+1];
-	const int nxkk = nxk[k];
-	const int nxkk1 = nxk[k+1];
-	const int nykk = nyk[k];
-	const int nykk1 = nyk[k+1];
-	const int nzkk1 = nzk[k+1];
+    const INT levelk = level[k];
+	const INT levelk1 = level[k+1];
+	const INT nxkk = nxk[k];
+	const INT nxkk1 = nxk[k+1];
+	const INT nykk = nyk[k];
+	const INT nykk1 = nyk[k+1];
+	const INT nzkk1 = nzk[k+1];
 
 	int nxyk = nxkk*nykk;
 	int nxyk1 = nxkk1*nykk1;
 
-	for (i = 1; i < nzkk1-1; i++){
+	for (i = 1; i < nzkk1-1; i++) {
 		i0 = levelk+2*i*nxyk;
 		i01 = levelk1+i*nxyk1; 
-		for (j = 1; j < nykk1-1; j++){
+		for (j = 1; j < nykk1-1; j++) {
 			j0 = i0+2*j*nxkk;
 			j01 = i01+j*nxkk1;
-			for (h = 1; h < nxkk1-1; h++){
+			for (h = 1; h < nxkk1-1; h++) {
 				k0 = j0+2*h;
 				k1 = k0-nxkk;
 				k2 = k0+nxkk;
@@ -1330,13 +1320,13 @@ static void finergridinterpolation3d(REAL *u,
 	INT i, j, h;
 	int i0,j0,j1,j2,j3,k0,k1,k2,k3;
 	int i01,j01,j11,j21,j31,k01,k11,k21,k31;
-    const int levelk = level[k];
-	const int levelk1 = level[k-1];
-	const int nxkk = nxk[k];
-	const int nxkk1 = nxk[k-1];
-	const int nykk = nyk[k];
-	const int nykk1 = nyk[k-1];
-	const int nzkk = nzk[k];
+    const INT levelk = level[k];
+	const INT levelk1 = level[k-1];
+	const INT nxkk = nxk[k];
+	const INT nxkk1 = nxk[k-1];
+	const INT nykk = nyk[k];
+	const INT nykk1 = nyk[k-1];
+	const INT nzkk = nzk[k];
 
 	int nxyk = nxkk*nykk;
 	int nxyk1 = nxkk1*nykk1;
@@ -1403,11 +1393,11 @@ static void gsiteration3d(REAL *u,
 {
 	INT i,j,h;
 	INT i0,j0,j1,j2,k0,k3,k4,k5,k6;
-	const int levelk = level[k];
-	const int nxkk = nxk[k];
-	const int nykk = nyk[k];
-	const int nzkk = nzk[k];
-	const int nxyk = nxkk*nykk;
+	const INT levelk = level[k];
+	const INT nxkk = nxk[k];
+	const INT nykk = nyk[k];
+	const INT nzkk = nzk[k];
+	const INT nxyk = nxkk*nykk;
 
 	// red point of 2*i,2*j,2*h
     for (i = 2; i < nzkk-1; i = i+2) {
@@ -1424,7 +1414,7 @@ static void gsiteration3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0+1]+u[k0-1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0+1]+u[k0-1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1443,7 +1433,7 @@ static void gsiteration3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1462,7 +1452,7 @@ static void gsiteration3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1481,7 +1471,7 @@ static void gsiteration3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1503,7 +1493,7 @@ static void gsiteration3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1522,7 +1512,7 @@ static void gsiteration3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1542,7 +1532,7 @@ static void gsiteration3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0+1]+u[k0-1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0+1]+u[k0-1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1561,7 +1551,7 @@ static void gsiteration3d(REAL *u,
 				k4 = j2+h;
 				k5 = k0+nxyk;
 				k6 = k0-nxyk;
-				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+				u[k0] = (b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
 			}
         }
     }
@@ -1621,9 +1611,9 @@ static void compute_r_2d(REAL *u,
                   INT *nyk)
 {
     INT i,j,k1;
-	const int nykk = nyk[k];
-	const int nxkk = nxk[k];
-	const int levelk = level[k];
+	const INT nykk = nyk[k];
+	const INT nxkk = nxk[k];
+	const INT levelk = level[k];
 
     for (i = 1; i < nykk-1; i++) {
 		k1 = levelk+i*nxkk;
@@ -1661,10 +1651,10 @@ static void compute_r_3d(REAL *u,
 {
     int i,j,h;       
 	int i0,j0,j1,j2,k0,k1,k2,k3,k4,k5,k6;
-    const int levelk = level[k];
-	const int nxkk = nxk[k];
-	const int nykk = nyk[k];
-	const int nzkk = nzk[k];
+    const INT levelk = level[k];
+	const INT nxkk = nxk[k];
+	const INT nykk = nyk[k];
+	const INT nzkk = nzk[k];
 
     // middle part of the cubic
     for (i = 1; i < nzkk-1; i++) {
@@ -1730,7 +1720,6 @@ static REAL computenorm(REAL *r,
     squarnorm = 0.0;
     n = level[k+1]-level[k];
     for (i = 1; i < n; i++) {
-		//printf("%f\n",u[i]);
         squarnorm = squarnorm + r[level[k]+i]*r[level[k]+i];    
     }
     squarnorm = sqrt(squarnorm);
@@ -1755,7 +1744,7 @@ static void xequaly(REAL *x,
              INT k)
 {
     INT i,n;
-	const int levelk = level[k];
+	const INT levelk = level[k];
 
     n = level[k+1] - level[k];
 
@@ -1786,7 +1775,7 @@ static void xequalypcz(REAL *x,
                 INT k)
 {
     INT i, n;
-	const int levelk = level[k];
+	const INT levelk = level[k];
 
     n = level[k+1]-level[k];
 
@@ -1813,17 +1802,19 @@ static void xequalay_1d(REAL *x,
                         INT k)
 {
     INT i,n;
-    REAL *btemp;
-    btemp = (REAL *)malloc(level[k+1]*sizeof(REAL));
+    REAL *btemp = (REAL *)malloc(level[k+1]*sizeof(REAL));
+    
     for (i = 0; i < level[k+1]; i++) {
         btemp[i] = 0.0;
     }
+    
     // compute (-x)
     compute_r_1d(y, btemp, x, k, level);
     n = level[k+1]-level[k];
     for (i = 0; i < n; i++) {
         x[level[k]+i] = (-1)*x[level[k]+i];
     }
+    
     free(btemp);
 }
 
@@ -1850,17 +1841,19 @@ static void xequalay_2d(REAL *x,
                         INT *nyk)
 {
     INT i,n;
-    REAL *btemp;
-    btemp = (REAL *)malloc(level[k+1]*sizeof(REAL));
+    REAL *btemp = (REAL *)malloc(level[k+1]*sizeof(REAL));
+    
     for (i = 0; i < level[k+1]; i++) {
         btemp[i] = 0.0;
     }
+    
     // compute (-x)
     compute_r_2d(y, btemp, x, k, level, nxk, nyk);
     n = level[k+1]-level[k];
     for (i = 0; i < n; i++) {
         x[level[k]+i] = (-1)*x[level[k]+i];
     }
+    
     free(btemp);
 }
 
@@ -1888,12 +1881,12 @@ static void xequalay_3d(REAL *x,
                         INT *nyk,
                         INT *nzk)
 {
-    INT i,n;
-    REAL *btemp;
-	const int levelk = level[k];
-	const int levelk1 = level[k+1];
+	const INT levelk = level[k];
+	const INT levelk1 = level[k+1];
 
-    btemp = (REAL *)malloc(levelk1*sizeof(REAL));
+    INT i,n;
+    REAL *btemp = (REAL *)malloc(levelk1*sizeof(REAL));
+    
     for (i = levelk; i < levelk1; i++) {
         btemp[i] = 0.0;
     }
@@ -1903,6 +1896,7 @@ static void xequalay_3d(REAL *x,
     for (i = 0; i < n; i++) {
         x[levelk+i] = (-1)*x[levelk+i];
     }
+    
     free(btemp);
 }
 
@@ -1926,13 +1920,13 @@ static REAL innerproductxy(REAL *x,
 {
 	INT i,n;
 	REAL innerproduct;
-	const int levelk = level[k];
-	const int levelk1 = level[k+1];
+	const INT levelk = level[k];
+	const INT levelk1 = level[k+1];
 
 	innerproduct = 0.0;
 	n = levelk1 - levelk;
 
-	for	(i = 0; i < n; i++){
+	for	(i = 0; i < n; i++) {
 		innerproduct = innerproduct + x[levelk+i]*y[levelk+i];
 	}
 
@@ -1954,15 +1948,17 @@ static REAL energynormu1d(REAL *u,
                           INT nx)
 {
     REAL *utemp;
-    REAL error;
-    INT nxk[1],level[2];
+    REAL  error;
+    INT   level[2];
 
-    level[0] = 0; level[1] = nx+1; nxk[0] = nx+1;
+    level[0] = 0; level[1] = nx+1;
     utemp = (REAL *)malloc(level[1]*sizeof(REAL));
     fasp_array_set(level[1], utemp, 0.0);
     xequalay_1d(utemp, u, level, 0);
     error = innerproductxy(utemp, u, level, 0);
+    
     free(utemp);
+    
     return error;
 }
        
@@ -1991,7 +1987,9 @@ static REAL energynormu2d(REAL *u,
     fasp_array_set(level[1], utemp, 0.0);
     xequalay_2d(utemp, u, level, 0, nxk, nyk);
     error = innerproductxy(utemp, u, level, 0);
+    
     free(utemp);
+    
     return error;
 }
           
@@ -2022,7 +2020,9 @@ static REAL energynormu3d(REAL *u,
     fasp_array_set(level[1], utemp, 0.0);
     xequalay_3d(utemp, u, level, 0, nxk, nyk, nzk);
     error = innerproductxy(utemp, u, level, 0);
+    
     free(utemp);
+    
     return error;
 }
       

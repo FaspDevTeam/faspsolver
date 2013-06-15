@@ -1,12 +1,13 @@
 File Name: CHANGES
 
-06/08/2013 FASP 1.3.3:
+06/15/2013 FASP 1.3.3:
 - Add geometric multigrid for Poisson in 1,2,3D.
-- Report a bug in GMG in 1D, need to be fixed. 
 - Fix a bug in cfsplitting_cls.
 - Update developers and website.
 - Simplify standard interpolation and add more comments.
 - Test cfsplitting_clsp.
+- Fix a bug in GMG in 1D: convergence rate optimal.
+- Remove unused variables.
 
 06/02/2103 FASP 1.3.2:
 - Add VS2010 support.
