@@ -547,7 +547,7 @@ static void fullmultigrid_1d(REAL *u,
             u[level[k-1]+2*i+1] += (u[level[k]+i]+u[level[k]+i+1])/2;
         }
 		k = k-1;
-        for(i=0;i<3;i++) {
+        for(i=0; i<1; i++) {
 			multigriditeration1d(u, b, level, k, maxlevel);
         }
     }
@@ -611,10 +611,8 @@ static void fullmultigrid_2d(REAL *u,
         // interpolation from coarser grid
         finergridinterpolation2d(u, level, k, nxk, nyk);
 		k = k-1;
-        for(i=0;i<3;i++) {
+        for (i=0; i<1; i++) {
 			multigriditeration2d(u, b, level, k, maxlevel, nxk, nyk);
-			compute_r_2d(u, b, r, k, level, nxk, nyk);
-			computenorm(r, level, k);
         }
     }
     
@@ -667,10 +665,8 @@ static void fullmultigrid_3d(REAL *u,
 		levelk1 = level[k-1];
 		for (i=0;i<level[k]-level[k-1]+1;i++) u[levelk1+i] = 0.0;
         finergridinterpolation3d(u, level, k, nxk, nyk, nzk);
-        for(i = 0;i<5;i++) {
+        for (i = 0; i < 2; i++) {
 			multigriditeration3d(u, b, level, k-1, maxlevel, nxk, nyk, nzk);
-			compute_r_3d(u, b, r, k-1, level, nxk, nyk, nzk);
-			computenorm(r, level, k-1);
         }
     }
     
