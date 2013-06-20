@@ -406,8 +406,8 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     //mgl[0].A.ROW = A->ROW; mgl[0].A.COL = A->COL; mgl[0].A.NNZ = A->NNZ;
     //mgl[0].A.nb = A->nb; mgl[0].A.storage_manner = A->storage_manner;
     //mgl[0].A.IA = A->IA; mgl[0].A.JA = A->JA; mgl[0].A.val = A->val;
-    mgl[0].b = fasp_dvec_create(mgl[0].A.ROW*mgl[0].A.nb); 
-    mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb); 
+    mgl[0].b = fasp_dvec_create(mgl[0].A.ROW*mgl[0].A.nb);
+    mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb);
     
     status = fasp_amg_setup_ua_bsr(mgl, amgparam);
     if (status < 0) goto FINISHED;

@@ -378,8 +378,10 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
         ++level;
     }
     
+    
 #if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK format
+    mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
     dCSRmat Ac_tran;
     fasp_dcsr_trans(&mgl[level].Ac, &Ac_tran);
     fasp_dcsr_sort(&Ac_tran);
@@ -389,6 +391,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
     
 #if WITH_MUMPS
     /* Setup MUMPS direct solver on the coarsest level */
+    mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
     fasp_solver_mumps_steps(&mgl[level].Ac, &mgl[level].b, &mgl[level].x, 1);
 #endif
     
@@ -396,15 +399,14 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
     mgl[0].num_levels = max_levels = level+1;
     mgl[0].w = fasp_dvec_create(3*m*nb);
     
-    for ( level = 1; level < max_levels; ++level ) {
+    for ( level = 1; level < max_levels; level++ ) {
         INT mm = mgl[level].A.ROW*nb;
         mgl[level].num_levels = max_levels;
         mgl[level].b = fasp_dvec_create(mm);
         mgl[level].x = fasp_dvec_create(mm);
         mgl[level].w = fasp_dvec_create(3*mm);
     }
-    
-    mgl[max_levels-1].Ac = fasp_format_dbsr_dcsr(&mgl[max_levels-1].A);
+
     
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);

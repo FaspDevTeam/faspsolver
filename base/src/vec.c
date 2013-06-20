@@ -51,7 +51,7 @@ INT fasp_dvec_isnan (dvector *u)
  * \date   2010/04/06
  */
 dvector fasp_dvec_create (const INT m)
-{    
+{
     dvector u;
     
     u.row = m;

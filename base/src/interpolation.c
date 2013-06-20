@@ -528,10 +528,10 @@ static void interp_STD (dCSRmat *A,
     
     // indices from column number to index in nonzeros in i-th row
     INT  * rindi  = (INT *)fasp_mem_calloc(2*row, sizeof(INT));
-
+    
     // indices from column number to index in nonzeros in k-th row
     INT  * rindk  = (INT *)fasp_mem_calloc(2*row, sizeof(INT));
-
+    
     // sums of strongly connected C neighbors
     REAL * csum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
     
@@ -548,9 +548,9 @@ static void interp_STD (dCSRmat *A,
     fasp_iarray_set(row, cindex, -1);
     fasp_array_set(row, csum, 0.0);
     fasp_array_set(row, nsum, 0.0);
-
+    
     for ( i = 0; i < row; i++ ) {
-
+        
         // set flags for strong-connected C nodes
         for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
             k = S->JA[j];
@@ -567,7 +567,7 @@ static void interp_STD (dCSRmat *A,
         }
         
     }
-        
+    
     // Step 1. Fill in values for interpolation operator P
     for ( i = 0; i < row; i++ ) {
         
@@ -578,7 +578,7 @@ static void interp_STD (dCSRmat *A,
             
             // form the reverse indices for i-th row
             for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) rindi[A->JA[j]] = j;
-
+            
             // clean up Ahat for relevent nodes only
             for ( j = P->IA[i]; j < P->IA[i+1]; j++ ) Ahat[P->JA[j]] = 0.0;
             
@@ -588,11 +588,11 @@ static void interp_STD (dCSRmat *A,
             for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
                 
                 k = S->JA[j]; aik = A->val[rindi[k]];
-
+                
                 if ( vec[k] == CGPT ) Ahat[k] += aik;
                 
                 else if ( vec[k] == FGPT ) {
-                
+                    
                     akk = diag[k];
                     
                     // form the reverse indices for k-th row
@@ -611,7 +611,7 @@ static void interp_STD (dCSRmat *A,
                             aki = akl; Ahat[l] -= factor * aki;
                         }
                     } // end for m
-
+                    
                     // compute Cs-sum and N-sum for Ahat
                     alN -= factor * (nsum[k]-aki+akk);
                     alP -= factor *  csum[k];
@@ -626,7 +626,7 @@ static void interp_STD (dCSRmat *A,
                 k = P->JA[j];
                 P->val[j] = -alpha*Ahat[k]/Ahat[i];
             }
-
+            
         }
         
         else if ( vec[i] == CGPT ) {
@@ -635,7 +635,7 @@ static void interp_STD (dCSRmat *A,
         
     } // end for i
     
-    // Step 2. Generate coarse level indices and set values of P.JA    
+    // Step 2. Generate coarse level indices and set values of P.JA
     for ( index = i = 0; i < row; ++i ) {
         if ( vec[i] == CGPT ) cindex[i] = index++;
     }

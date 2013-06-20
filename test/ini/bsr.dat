@@ -9,7 +9,7 @@ workdir = ../data/  % work directory, no more than 128 characters
 %----------------------------------------------%
 % problem, solver, and output type             %
 %----------------------------------------------%
-problem_num              = 47     % test problem number 
+problem_num              = 10     % test problem number 
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to scree | 1 to file
 solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
@@ -22,7 +22,7 @@ solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 %----------------------------------------------%
 
 precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
-itsolver_tol             = 1e-7   % solver tolerance 
+itsolver_tol             = 1e-6   % solver tolerance 
 itsolver_maxit           = 200   % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
 itsolver_restart         = 20     % restart number for GMRES
@@ -92,8 +92,8 @@ AMG_max_row_sum          = 0.9    % Max row sum
 % parameters for aggregation-type AMG SETUP    %
 %----------------------------------------------%
 
-AMG_strong_coupled       = 0.04   % Strong coupled threshold
-AMG_max_aggregation      = 100     % Max size of aggregations
+AMG_strong_coupled       = 0.08   % Strong coupled threshold
+AMG_max_aggregation      = 20     % Max size of aggregations
 AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
 AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing
 
