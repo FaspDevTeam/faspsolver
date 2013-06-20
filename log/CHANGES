@@ -8,6 +8,7 @@ File Name: CHANGES
 - Test cfsplitting_clsp.
 - Fix a bug in GMG in 1D: convergence rate optimal.
 - Improve GMG efficiency, remove unused variables, free up memory.
+- Fix a bug in BSR AMG introduced earlier.
 
 06/02/2103 FASP 1.3.2:
 - Add VS2010 support.

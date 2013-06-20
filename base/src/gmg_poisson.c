@@ -1,4 +1,4 @@
-/*! \file  fasp_poisson_gmg.c
+/*! \file  gmg_poisson.c
  *  \brief GMG as an iterative solver/preconditioner for Poisson Problem
  *
  *  \note  We learn a lot from an earlier GMG implementation:

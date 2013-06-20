@@ -2,7 +2,7 @@
      121 ./base/src/amg_setup_cr.c
      427 ./base/src/amg_setup_rs.c
      587 ./base/src/amg_setup_sa.c
-     428 ./base/src/amg_setup_ua.c
+     430 ./base/src/amg_setup_ua.c
      318 ./base/src/amg_solve.c
      801 ./base/src/amlirecur.c
      267 ./base/src/array.c
@@ -92,9 +92,9 @@
      165 ./base/include/doxygen.h
     1127 ./base/include/fasp.h
      571 ./base/include/fasp_block.h
-    2733 ./base/include/fasp_functs.h
+    2736 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      225 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   74400 total
+   74405 total
