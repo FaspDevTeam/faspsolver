@@ -1,5 +1,9 @@
 /*! \file  fasp_poisson_gmg.c
- *  \brief GMG method as an iterative solver for Poisson Problem
+ *  \brief GMG as an iterative solver/preconditioner for Poisson Problem
+ *
+ *  \note  We learn a lot from an earlier GMG implementation:
+ *         SiPSMG (Simple Poisson Solver based on MultiGrid)
+ *         (c) 2008 by Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
 
 #include <time.h>
@@ -7,7 +11,6 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-
 #include "gmg_util.inl"
 
 /*---------------------------------*/
@@ -28,6 +31,8 @@
  *
  * \author Ziteng Wang
  * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/20/2013: Adjust the structure and free memory
  */
 void fasp_poisson_gmg_1D (REAL *u,
                           REAL *b,
@@ -40,13 +45,13 @@ void fasp_poisson_gmg_1D (REAL *u,
     
     REAL      *u0, *r0, *b0;
     REAL       norm_r, norm_r0, error;
-    INT        i, *level, count;
+    INT        i, *level, count = 0;
     
     // set level
     level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
     level[0] = 0; level[1] = nx+1;
-    for (i = 1; i < maxlevel; i++) {
-        level[i+1] = level[i]+(level[i]-level[i-1]+1)/2;
+    for ( i = 1; i < maxlevel; i++ ) {
+        level[i+1] = level[i] + (level[i]-level[i-1]+1)/2;
     }
 	level[maxlevel+1] = level[maxlevel]+1;
     
@@ -69,18 +74,15 @@ void fasp_poisson_gmg_1D (REAL *u,
     if (norm_r0 < atol) goto FINISHED;
     
     // GMG solver of V-cycle
-    count = 0;
-    while (count < max_itr_num) {
-        count++;
+    while ( count++ < max_itr_num ) {
         multigriditeration1d(u0, b0, level, 0, maxlevel);
         compute_r_1d(u0, b0, r0, 0, level);
         norm_r = computenorm(r0, level, 0);
-		//printf("norm_r=%15.10e\n",norm_r);
         error = norm_r / norm_r0;
-        if (error < rtol || norm_r < atol) break;
+        if ( error < rtol || norm_r < atol ) break;
     }
     
-    if (count >= max_itr_num) {
+    if ( count >= max_itr_num ) {
         printf("### WARNING: V-cycle failed to converge.\n");
     }
     else {
@@ -114,6 +116,8 @@ FINISHED:
  *
  * \author Ziteng Wang
  * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/20/2013: Adjust the structure and free memory
  */
 void fasp_poisson_gmg_2D (REAL *u,
                           REAL *b,
@@ -126,22 +130,23 @@ void fasp_poisson_gmg_2D (REAL *u,
     const INT  max_itr_num = 100;
 
     REAL *u0,*r0,*b0;
-    REAL norm_r,norm_r0,error;
-    INT i, k, count, *nxk, *nyk, *level;
+    REAL  norm_r,norm_r0,error;
+    INT   i, k, count = 0;
+    INT  *nxk, *nyk, *level;
     
     // set nxk, nyk
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
 	nyk = (INT *)malloc(maxlevel*sizeof(INT));
 	nxk[0] = nx+1; nyk[0] = ny+1;
-    for(k=1;k<maxlevel;k++){
-		nxk[k] = (int) (nxk[k-1]+1)/2;
-		nyk[k] = (int) (nyk[k-1]+1)/2;
+    for ( k = 1; k < maxlevel; k++ ) {
+		nxk[k] = (INT) (nxk[k-1]+1)/2;
+		nyk[k] = (INT) (nyk[k-1]+1)/2;
 	}
     
     // set level
     level = (INT *)malloc((maxlevel+1)*sizeof(REAL));
     level[0] = 0; level[1] = (nx+1)*(ny+1);
-    for (i = 1; i < maxlevel; i++) {
+    for ( i = 1; i < maxlevel; i++ ) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1);
     }
 	level[maxlevel+1] = level[maxlevel]+1;
@@ -150,9 +155,11 @@ void fasp_poisson_gmg_2D (REAL *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
 	r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
+    
     fasp_array_set(level[maxlevel], u0, 0.0);
     fasp_array_set(level[maxlevel], b0, 0.0);
 	fasp_array_set(level[maxlevel], r0, 0.0);
+    
     fasp_array_cp(level[1], u, u0);
     fasp_array_cp(level[1], b, b0);
     
@@ -162,17 +169,15 @@ void fasp_poisson_gmg_2D (REAL *u,
     if (norm_r0 < atol) goto FINISHED;
     
     // GMG solver of V-cycle
-    count = 0;
-    while (count < max_itr_num) {
-        count++;
+    while ( count++ < max_itr_num ) {
         multigriditeration2d(u0, b0, level, 0, maxlevel, nxk, nyk);
         compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
         norm_r = computenorm(r0, level, 0);
         error = norm_r / norm_r0;
-        if (error < rtol || norm_r < atol) break;
+        if ( error < rtol || norm_r < atol ) break;
     }
     
-    if (count >= max_itr_num) {
+    if ( count >= max_itr_num ) {
         printf("### WARNING: V-cycle failed to converge.\n");
     }
     else {
@@ -209,6 +214,8 @@ FINISHED:
  *
  * \author Ziteng Wang
  * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/20/2013: Adjust the structure and free memory
  */
 void fasp_poisson_gmg_3D (REAL *u,
                           REAL *b,
@@ -222,24 +229,27 @@ void fasp_poisson_gmg_3D (REAL *u,
     const INT  max_itr_num = 100;
 
     REAL *u0,*r0,*b0;
-    REAL norm_r,norm_r0,error;
-    int i, k, count, *nxk, *nyk, *nzk, *level;
+    REAL  norm_r,norm_r0,error;
+    INT   i, k, count = 0;
+    INT  *nxk, *nyk, *nzk, *level;
     
     // set nxk, nyk, nzk
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
     nyk = (INT *)malloc(maxlevel*sizeof(INT));
     nzk = (INT *)malloc(maxlevel*sizeof(INT));
-	nxk[0] = nx+1; nyk[0] = ny+1; nzk[0] = nz+1;
+	
+    nxk[0] = nx+1; nyk[0] = ny+1; nzk[0] = nz+1;
     for(k=1;k<maxlevel;k++){
-		nxk[k] = (int) (nxk[k-1]+1)/2;
-		nyk[k] = (int) (nyk[k-1]+1)/2;
-        nzk[k] = (int) (nyk[k-1]+1)/2;
+		nxk[k] = (INT) (nxk[k-1]+1)/2;
+		nyk[k] = (INT) (nyk[k-1]+1)/2;
+        nzk[k] = (INT) (nyk[k-1]+1)/2;
 	}
     
     // set level
     level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    
     level[0] = 0; level[1] = (nx+1)*(ny+1)*(nz+1);
-    for (i = 1; i < maxlevel; i++) {
+    for ( i = 1; i < maxlevel; i++ ) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1)*(nz/pow(2.0,i)+1);
     }
 	level[maxlevel+1] = level[maxlevel]+1;
@@ -248,9 +258,11 @@ void fasp_poisson_gmg_3D (REAL *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
 	r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
+    
     fasp_array_set(level[maxlevel], u0, 0.0);
     fasp_array_set(level[maxlevel], b0, 0.0);
 	fasp_array_set(level[maxlevel], r0, 0.0);
+    
     fasp_array_cp(level[1], u, u0);
     fasp_array_cp(level[1], b, b0);
     
@@ -260,18 +272,15 @@ void fasp_poisson_gmg_3D (REAL *u,
     if (norm_r0 < atol) goto FINISHED;
     
     // GMG solver of V-cycle
-    count = 0;
-    while (count < max_itr_num) {
-        count++;
+    while ( count++ < max_itr_num ) {
         multigriditeration3d(u0, b0, level, 0, maxlevel, nxk, nyk, nzk);
         compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
         norm_r = computenorm(r0, level, 0);
         error = norm_r / norm_r0;
-		printf("%15.10e, %d\n",error,count);
-        if (error < rtol || norm_r < atol) break;
+        if ( error < rtol || norm_r < atol ) break;
     }
     
-    if (count >= max_itr_num) {
+    if ( count >= max_itr_num ) {
         printf("### WARNING: V-cycle failed to converge.\n");
     }
     else {
@@ -297,8 +306,7 @@ FINISHED:
  * \fn void fasp_poisson_fgmg_1D (REAL *u, REAL *b, INT nx,
  *                                INT maxlevel, REAL rtol)
  *
- * \brief Solve Ax=b of Poisson 1D equation by Geometric Multigrid Method
- *        (Full Multigrid)
+ * \brief Solve Ax=b of Poisson 1D equation by Full Geometric Multigrid Method
  *
  * \param u         Pointer to the vector of dofs
  * \param b         Pointer to the vector of right hand side
@@ -308,6 +316,8 @@ FINISHED:
  *
  * \author Ziteng Wang
  * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/20/2013: Adjust the structure and free memory
  */
 void fasp_poisson_fgmg_1D (REAL *u,
                            REAL *b,
@@ -315,15 +325,14 @@ void fasp_poisson_fgmg_1D (REAL *u,
                            INT maxlevel,
                            REAL rtol)
 {
-    const REAL atol = 1.0E-15;
-    REAL *u0,*r0,*b0;
-    REAL norm_r0;
-    int i, *level;
+    REAL      *u0, *b0;
+    INT        i, *level;
     
     // set level
     level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    
     level[0] = 0; level[1] = nx+1;
-    for (i = 1; i < maxlevel; i++) {
+    for ( i = 1; i < maxlevel; i++ ) {
         level[i+1] = level[i]+(level[i]-level[i-1]+1)/2;
     }
 	level[maxlevel+1] = level[maxlevel]+1;
@@ -331,18 +340,12 @@ void fasp_poisson_fgmg_1D (REAL *u,
     // set u0, b0, r0
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-	r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
+    
     fasp_array_set(level[maxlevel], u0, 0.0);
     fasp_array_set(level[maxlevel], b0, 0.0);
-	fasp_array_set(level[maxlevel], r0, 0.0);
+    
     fasp_array_cp(nx, u, u0);
     fasp_array_cp(nx, b, b0);    
-    
-    // compute initial l2 norm of residue
-    fasp_array_set(level[1], r0, 0.0);
-    compute_r_1d(u0, b0, r0, 0, level);
-    norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) goto FINISHED;
     
     //  Full GMG solver 
     fullmultigrid_1d(u0, b0, level, maxlevel, nx);
@@ -350,9 +353,7 @@ void fasp_poisson_fgmg_1D (REAL *u,
     // update u
     fasp_array_cp(level[1], u0, u);
     
-FINISHED:
     free(level);
-    free(r0);
     free(u0);
     free(b0);
     
@@ -363,8 +364,7 @@ FINISHED:
  * \fn void fasp_poisson_fgmg_2D (REAL *u, REAL *b, INT nx, INT ny,
  *                                INT maxlevel, REAL rtol)
  *
- * \brief Solve Ax=b of Poisson 2D equation by Geometric Multigrid Method
- *        (Full Multigrid)
+ * \brief Solve Ax=b of Poisson 2D equation by Full Geometric Multigrid Method
  *
  * \param u         Pointer to the vector of dofs
  * \param b         Pointer to the vector of right hand side
@@ -375,6 +375,8 @@ FINISHED:
  *
  * \author Ziteng Wang
  * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/20/2013: Adjust the structure and free memory
  */
 void fasp_poisson_fgmg_2D (REAL *u,
                            REAL *b,
@@ -383,10 +385,8 @@ void fasp_poisson_fgmg_2D (REAL *u,
                            INT maxlevel,
                            REAL rtol)
 {
-    const REAL atol = 1.0E-15;
-    REAL *u0,*r0,*b0;
-    REAL norm_r0;
-    int i, k, *nxk, *nyk, *level;
+    REAL      *u0, *b0;
+    INT        i, k, *nxk, *nyk, *level;
     
     // set nxk, nyk
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
@@ -394,14 +394,14 @@ void fasp_poisson_fgmg_2D (REAL *u,
     
 	nxk[0] = nx+1; nyk[0] = ny+1;
     for(k=1;k<maxlevel;k++){
-		nxk[k] = (int) (nxk[k-1]+1)/2;
-		nyk[k] = (int) (nyk[k-1]+1)/2;
+		nxk[k] = (INT) (nxk[k-1]+1)/2;
+		nyk[k] = (INT) (nyk[k-1]+1)/2;
 	}
     
     // set level
     level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
     level[0] = 0; level[1] = (nx+1)*(ny+1);
-    for (i = 1; i < maxlevel; i++) {
+    for ( i = 1; i < maxlevel; i++ ) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1);
     }
 	level[maxlevel+1] = level[maxlevel] + 1;
@@ -409,18 +409,12 @@ void fasp_poisson_fgmg_2D (REAL *u,
     // set u0, b0, r0
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-	r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
+
     fasp_array_set(level[maxlevel], u0, 0.0);
     fasp_array_set(level[maxlevel], b0, 0.0);
-	fasp_array_set(level[maxlevel], r0, 0.0);
+
     fasp_array_cp(level[1], u, u0);
     fasp_array_cp(level[1], b, b0);    
-    
-    // compute initial l2 norm of residue
-    fasp_array_set(level[1], r0, 0.0);
-    compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
-    norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) goto FINISHED;
     
     // FMG solver
     fullmultigrid_2d(u0, b0, level, maxlevel, nxk, nyk);
@@ -428,11 +422,9 @@ void fasp_poisson_fgmg_2D (REAL *u,
 	// update u
 	fasp_array_cp(level[1], u0, u);
     
-FINISHED:
     free(level);
     free(nxk);
     free(nyk);
-    free(r0);
     free(u0);
     free(b0);
     
@@ -443,8 +435,7 @@ FINISHED:
  * \fn void fasp_poisson_fgmg_3D (REAL *u, REAL *b, INT nx, INT ny, INT nz,
  *                                INT maxlevel, REAL rtol)
  *
- * \brief Solve Ax=b of Poisson 3D equation by Geometric Multigrid Method
- *        (Full Multigrid)
+ * \brief Solve Ax=b of Poisson 3D equation by Full Geometric Multigrid Method
  *
  * \param u         Pointer to the vector of dofs
  * \param b         Pointer to the vector of right hand side
@@ -456,6 +447,8 @@ FINISHED:
  *
  * \author Ziteng Wang
  * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/20/2013: Adjust the structure and free memory
  */
 void fasp_poisson_fgmg_3D (REAL *u,
                            REAL *b,
@@ -465,10 +458,8 @@ void fasp_poisson_fgmg_3D (REAL *u,
                            INT maxlevel,
                            REAL rtol)
 {
-    const REAL atol = 1.0E-15;
-    REAL *u0,*r0,*b0;
-    REAL norm_r0;
-    int i, k, *nxk, *nyk, *nzk, *level;
+    REAL      *u0, *b0;
+    INT        i, k, *nxk, *nyk, *nzk, *level;
     
     // set nxk, nyk, nzk
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
@@ -477,15 +468,16 @@ void fasp_poisson_fgmg_3D (REAL *u,
     
 	nxk[0] = nx+1; nyk[0] = ny+1; nzk[0] = nz+1;
     for(k=1;k<maxlevel;k++){
-		nxk[k] = (int) (nxk[k-1]+1)/2;
-		nyk[k] = (int) (nyk[k-1]+1)/2;
-        nzk[k] = (int) (nyk[k-1]+1)/2;     
+		nxk[k] = (INT) (nxk[k-1]+1)/2;
+		nyk[k] = (INT) (nyk[k-1]+1)/2;
+        nzk[k] = (INT) (nyk[k-1]+1)/2;     
 	}
     
     // set level
     level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    
     level[0] = 0; level[1] = (nx+1)*(ny+1)*(nz+1);
-    for (i = 1; i < maxlevel; i++) {
+    for ( i = 1; i < maxlevel; i++ ) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1)*(nz/pow(2.0,i)+1);
     }
 	level[maxlevel+1] = level[maxlevel]+1;
@@ -493,17 +485,12 @@ void fasp_poisson_fgmg_3D (REAL *u,
     // set u0, b0, r0
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-	r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
+
     fasp_array_set(level[maxlevel], u0, 0.0);
     fasp_array_set(level[maxlevel], b0, 0.0);
-	fasp_array_set(level[maxlevel], r0, 0.0);
+
     fasp_array_cp(level[1], u, u0);
     fasp_array_cp(level[1], b, b0);
-    
-    // compute initial l2 norm of residue
-    compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
-    norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) goto FINISHED;
     
     // FMG
     fullmultigrid_3d(u0, b0, level, maxlevel, nxk, nyk, nzk);
@@ -511,12 +498,10 @@ void fasp_poisson_fgmg_3D (REAL *u,
 	// update u
 	fasp_array_cp(level[1], u0, u);
     
-FINISHED:
     free(level);
     free(nxk);
     free(nyk);
     free(nzk);
-    free(r0);
     free(u0);
     free(b0);
     
@@ -527,8 +512,7 @@ FINISHED:
  * \fn void fasp_poisson_pcg_gmg_1D (REAL *u, REAL *b, INT nx,
  *                                   INT maxlevel, REAL rtol)
  *
- * \brief Solve Ax=b of Poisson 1D equation by Geometric Multigrid Method
- *        (GMG preconditioned Conjugate Gradient method)
+ * \brief Solve Ax=b of Poisson 1D equation by GMG-PCG
  *
  * \param u         Pointer to the vector of dofs
  * \param b         Pointer to the vector of right hand side
@@ -538,6 +522,8 @@ FINISHED:
  *
  * \author Ziteng Wang
  * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/20/2013: Adjust the structure and free memory
  */
 void fasp_poisson_pcg_gmg_1D (REAL *u,
                               REAL *b,
@@ -546,16 +532,17 @@ void fasp_poisson_pcg_gmg_1D (REAL *u,
                               REAL rtol)
 {
     const REAL atol = 1.0E-15;
-    const INT  max_itr_num = 100;
+    const INT  max_itr_num = 500;
 
-    REAL *u0,*r0,*b0;
-    REAL norm_r0;
-    int i, *level;
+    REAL      *u0, *r0, *b0;
+    REAL       norm_r0;
+    INT        i, *level;
     
     // set level
     level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    
     level[0] = 0; level[1] = nx+1;
-    for (i = 1; i < maxlevel; i++) {
+    for ( i = 1; i < maxlevel; i++ ) {
         level[i+1] = level[i]+(level[i]-level[i-1]+1)/2;
     }
 	level[maxlevel+1] = level[maxlevel]+1;
@@ -564,9 +551,11 @@ void fasp_poisson_pcg_gmg_1D (REAL *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
 	r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
+    
     fasp_array_set(level[maxlevel], u0, 0.0);
     fasp_array_set(level[maxlevel], b0, 0.0);
 	fasp_array_set(level[maxlevel], r0, 0.0);
+    
     fasp_array_cp(nx, u, u0);
     fasp_array_cp(nx, b, b0);    
     
@@ -574,7 +563,7 @@ void fasp_poisson_pcg_gmg_1D (REAL *u,
     fasp_array_set(level[1], r0, 0.0);
     compute_r_1d(u, b, r0, 0, level);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) goto FINISHED;
+    if ( norm_r0 < atol ) goto FINISHED;
 
     // Preconditioned CG method
     pcg_1d(u0, b0, level, maxlevel, nx, rtol, max_itr_num);
@@ -595,8 +584,7 @@ FINISHED:
  * \fn void fasp_poisson_pcg_gmg_2D (REAL *u, REAL *b, INT nx, INT ny, 
  *                                   INT maxlevel, REAL rtol)
  *
- * \brief Solve Ax=b of Poisson 2D equation by Geometric Multigrid Method
- *        (GMG preconditioned Conjugate Gradient method)
+ * \brief Solve Ax=b of Poisson 2D equation by GMG-PCG
  *
  * \param u         Pointer to the vector of dofs
  * \param b         Pointer to the vector of right hand side
@@ -607,6 +595,8 @@ FINISHED:
  *
  * \author Ziteng Wang
  * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/20/2013: Adjust the structure and free memory
  */
 void fasp_poisson_pcg_gmg_2D (REAL *u,
                               REAL *b,
@@ -616,26 +606,27 @@ void fasp_poisson_pcg_gmg_2D (REAL *u,
                               REAL rtol)
 {
     const REAL atol = 1.0E-15;
-    const INT  max_itr_num = 100;
+    const INT  max_itr_num = 500;
 
-    REAL *u0,*r0,*b0;
-    REAL norm_r0;
-    int i, k, *nxk, *nyk, *level;
+    REAL      *u0, *r0, *b0;
+    REAL       norm_r0;
+    INT        i, k, *nxk, *nyk, *level;
     
     // set nxk, nyk
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
 	nyk = (INT *)malloc(maxlevel*sizeof(INT));
     
 	nxk[0] = nx+1; nyk[0] = ny+1; 
-    for(k=1;k<maxlevel;k++){
-		nxk[k] = (int) (nxk[k-1]+1)/2;
-		nyk[k] = (int) (nyk[k-1]+1)/2;
+    for ( k = 1; k < maxlevel; k++ ) {
+		nxk[k] = (INT) (nxk[k-1]+1)/2;
+		nyk[k] = (INT) (nyk[k-1]+1)/2;
 	}
     
     // set level
     level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    
     level[0] = 0; level[1] = (nx+1)*(ny+1);
-    for (i = 1; i < maxlevel; i++) {
+    for ( i = 1; i < maxlevel; i++ ) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1);
     }
 	level[maxlevel+1] = level[maxlevel]+1;
@@ -644,9 +635,11 @@ void fasp_poisson_pcg_gmg_2D (REAL *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
 	r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
+    
     fasp_array_set(level[maxlevel], u0, 0.0);
     fasp_array_set(level[maxlevel], b0, 0.0);
 	fasp_array_set(level[maxlevel], r0, 0.0);
+    
     fasp_array_cp(level[1], u, u0);
     fasp_array_cp(level[1], b, b0);    
     
@@ -677,8 +670,7 @@ FINISHED:
  * \fn void fasp_poisson_pcg_gmg_3D (REAL *u, REAL *b, INT nx,
  *                                   INT maxlevel, REAL rtol)
  *
- * \brief Solve Ax=b of Poisson 3D equation by Geometric Multigrid Method
- *        (GMG preconditioned Conjugate Gradient method)
+ * \brief Solve Ax=b of Poisson 3D equation by GMG-PCG
  *
  * \param u         Pointer to the vector of dofs
  * \param b         Pointer to the vector of right hand side
@@ -690,6 +682,8 @@ FINISHED:
  *
  * \author Ziteng Wang
  * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/20/2013: Adjust the structure and free memory
  */
 void fasp_poisson_pcg_gmg_3D (REAL *u,
                               REAL *b,
@@ -700,11 +694,11 @@ void fasp_poisson_pcg_gmg_3D (REAL *u,
                               REAL rtol)
 {
     const REAL atol = 1.0E-15;
-    const INT  max_itr_num = 100;
+    const INT  max_itr_num = 500;
 
-    REAL *u0,*r0,*b0;
-    REAL norm_r0;
-    int i, k, *nxk, *nyk, *nzk, *level;
+    REAL      *u0, *r0, *b0;
+    REAL       norm_r0;
+    INT        i, k, *nxk, *nyk, *nzk, *level;
     
     // set nxk, nyk, nzk
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
@@ -712,16 +706,17 @@ void fasp_poisson_pcg_gmg_3D (REAL *u,
     nzk = (INT *)malloc(maxlevel*sizeof(INT));
     
 	nxk[0] = nx+1; nyk[0] = ny+1; nzk[0] = nz+1;
-    for(k=1;k<maxlevel;k++){
-		nxk[k] = (int) (nxk[k-1]+1)/2;
-		nyk[k] = (int) (nyk[k-1]+1)/2;
-        nzk[k] = (int) (nyk[k-1]+1)/2;     
+    for ( k = 1; k < maxlevel; k++ ) {
+		nxk[k] = (INT) (nxk[k-1]+1)/2;
+		nyk[k] = (INT) (nyk[k-1]+1)/2;
+        nzk[k] = (INT) (nyk[k-1]+1)/2;     
 	}
     
     // set level
     level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    
     level[0] = 0; level[1] = (nx+1)*(ny+1)*(nz+1);
-    for (i = 1; i < maxlevel; i++) {
+    for ( i = 1; i < maxlevel; i++ ) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1)*(nz/pow(2.0,i)+1);
     }
 	level[maxlevel+1] = level[maxlevel]+1;
@@ -730,16 +725,18 @@ void fasp_poisson_pcg_gmg_3D (REAL *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
 	r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
+    
     fasp_array_set(level[maxlevel], u0, 0.0);
     fasp_array_set(level[maxlevel], b0, 0.0);
 	fasp_array_set(level[maxlevel], r0, 0.0);
+    
     fasp_array_cp(level[1], u, u0);
     fasp_array_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
     compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
     norm_r0 = computenorm(r0, level, 0);
-    if (norm_r0 < atol) goto FINISHED;
+    if ( norm_r0 < atol ) goto FINISHED;
     
     // Preconditioned CG method
     pcg_3d(u0, b0, level, maxlevel, nxk, nyk, nzk, rtol, max_itr_num);

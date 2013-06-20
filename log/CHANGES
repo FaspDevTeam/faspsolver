@@ -7,8 +7,7 @@ File Name: CHANGES
 - Simplify standard interpolation and add more comments.
 - Test cfsplitting_clsp.
 - Fix a bug in GMG in 1D: convergence rate optimal.
-- Remove unused variables.
-- Improve GMG efficiency in 3D.  
+- Improve GMG efficiency, remove unused variables, free up memory.
 
 06/02/2103 FASP 1.3.2:
 - Add VS2010 support.
