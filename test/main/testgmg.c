@@ -143,7 +143,7 @@ static REAL L2NormError3d (REAL *u,
  */
 int main (int argc, const char *argv[])
 {
-    const REAL rtol = 1.0e-8;
+    const REAL rtol = 1.0e-6;
     
     INT        maxlevel = 8, dim = 3, method = 2;
     INT        i, j, k, nx, ny, nz;

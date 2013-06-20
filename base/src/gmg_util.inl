@@ -104,14 +104,22 @@ static void finergridinterpolation3d(REAL *u,
 									 INT *nxk, 
 									 INT *nyk, 
 									 INT *nzk);
-static void gsiteration3d(REAL *u,
-                          REAL *b,
-                          INT *level,
-                          INT k,
-                          INT maxlevel,
-                          INT *nxk, 
-                          INT *nyk, 
-                          INT *nzk);
+static void gsiteration3dpro(REAL *u,
+			   			     REAL *b,
+							 INT *level,
+							 INT k,
+							 INT maxlevel,
+							 INT *nxk, 
+							 INT *nyk, 
+							 INT *nzk);
+static void gsiteration3dpre(REAL *u,
+			   			     REAL *b,
+							 INT *level,
+							 INT k,
+							 INT maxlevel,
+							 INT *nxk, 
+							 INT *nyk, 
+							 INT *nzk);
 static void compute_r_1d(REAL *u,
 						 REAL *b,
 						 REAL *r,
@@ -403,21 +411,27 @@ static void multigriditeration3d(REAL *u,
 	for (k = 0; k < maxlevel; k++) {
 		presmoothtime[k] = 3;
 	}
-	presmoothtime[0] = 3;
-	presmoothtime[1] = 3;
+	presmoothtime[0] = 1;
+	presmoothtime[1] = 2;
 	presmoothtime[2] = 3;
 	for (k = 0; k < maxlevel; k++) {
 		prosmoothtime[k] = 3;
 	}
-	prosmoothtime[0] = 3;
-	prosmoothtime[1] = 3;
+	prosmoothtime[0] = 1;
+	prosmoothtime[1] = 2;
 	prosmoothtime[2] = 3;
 
-	
+#ifdef _OPENMP
+		prosmoothtime[0] = 1;
+#endif
     // forward sweep
 	for	(i = 0; i < presmoothtime[0]; i++) {
-		//gsiteration_2color_3d(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
-		gsiteration3d(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
+#ifdef _OPENMP
+		gsiteration_2color_3d(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
+#else
+		//gsiteration3dpre(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
+		gsiteration_2color_3d(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
+#endif
 	}
 	compute_r_3d(u, b, r, startlevel, level, nxk, nyk, nzk);
 	// restriction on coarser grid
@@ -433,8 +447,12 @@ static void multigriditeration3d(REAL *u,
 
         // pre-smoothing 
 		for	(i = 0; i < presmoothtime[k]; i++) {
+#ifdef _OPENMP
 			gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
-//			gsiteration3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
+#else
+			//gsiteration3dpre(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
+			gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
+#endif
 		}
 		compute_r_3d(u, b, r, k, level, nxk, nyk, nzk);
 		// restriction on coarser grid
@@ -452,8 +470,12 @@ static void multigriditeration3d(REAL *u,
 		// post smoothing
 		k = k-1;
 		for (i = 0; i < prosmoothtime[k]; i++) {
-	//		gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
-			gsiteration3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
+#ifdef _OPENMP
+			gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
+#else
+			//gsiteration3dpro(u, b, level, k, maxlevel, nxk, nyk, nzk);
+			gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
+#endif
 		}
 		k = k+1;
 	}
@@ -1366,9 +1388,9 @@ static void finergridinterpolation3d(REAL *u,
 }
 
 /**
- * \fn void gsiteration3d(REAL *u, REAL *b, INT *level, INT k,
+ * \fn void gsiteration3dpre(REAL *u, REAL *b, INT *level, INT k,
  *                        INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
- * \brief colored G-S iteration of 3D problem
+ * \brief colored G-S iteration of 3D problem, pre-smoothing
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -1382,14 +1404,14 @@ static void finergridinterpolation3d(REAL *u,
  * \author Ziteng Wang
  * \date 06/07/201
  */
-static void gsiteration3d(REAL *u,
-                          REAL *b,
-                          INT *level,
-                          INT k,
-                          INT maxlevel,
-                          INT *nxk, 
-                          INT *nyk, 
-                          INT *nzk)
+static void gsiteration3dpre(REAL *u,
+							 REAL *b,
+							 INT *level,
+							 INT k,
+							 INT maxlevel,
+							 INT *nxk, 
+							 INT *nyk, 
+							 INT *nzk)
 {
 	INT i,j,h;
 	INT i0,j0,j1,j2,k0,k3,k4,k5,k6;
@@ -1408,8 +1430,6 @@ static void gsiteration3d(REAL *u,
 			j2 = i0+(j-1)*nxkk;
             for (h = 2; h < nxkk-1; h = h+2) {
 				k0 = j0+h;
-				//k1 = j0+h-1;
-				//k2 = j0+h+1;
 				k3 = j1+h;
 				k4 = j2+h;
 				k5 = k0+nxyk;
@@ -1427,8 +1447,6 @@ static void gsiteration3d(REAL *u,
 			j2 = i0+(j-1)*nxkk;
             for (h = 2; h < nxkk-1; h = h+2) {
 				k0 = j0+h;
-				//k1 = j0+h-1;
-				//k2 = j0+h+1;
 				k3 = j1+h;
 				k4 = j2+h;
 				k5 = k0+nxyk;
@@ -1446,8 +1464,6 @@ static void gsiteration3d(REAL *u,
 			j2 = i0+(j-1)*nxkk;
             for (h = 2; h < nxkk-1; h = h+2) {
 				k0 = j0+h;
-				//k1 = j0+h-1;
-				//k2 = j0+h+1;
 				k3 = j1+h;
 				k4 = j2+h;
 				k5 = k0+nxyk;
@@ -1465,8 +1481,6 @@ static void gsiteration3d(REAL *u,
 			j2 = i0+(j-1)*nxkk;
             for (h = 2; h < nxkk-1; h = h+2) {
 				k0 = j0+h;
-				//k1 = j0+h-1;
-				//k2 = j0+h+1;
 				k3 = j1+h;
 				k4 = j2+h;
 				k5 = k0+nxyk;
@@ -1487,8 +1501,6 @@ static void gsiteration3d(REAL *u,
 			j2 = i0+(j-1)*nxkk;
             for (h = 1; h < nxkk-1; h = h+2) {
 				k0 = j0+h;
-				//k1 = j0+h-1;
-				//k2 = j0+h+1;
 				k3 = j1+h;
 				k4 = j2+h;
 				k5 = k0+nxyk;
@@ -1506,8 +1518,6 @@ static void gsiteration3d(REAL *u,
 			j2 = i0+(j-1)*nxkk;
             for (h = 1; h < nxkk-1; h = h+2) {
 				k0 = j0+h;
-				//k1 = j0+h-1;
-				//k2 = j0+h+1;
 				k3 = j1+h;
 				k4 = j2+h;
 				k5 = k0+nxyk;
@@ -1526,8 +1536,6 @@ static void gsiteration3d(REAL *u,
 			j2 = i0+(j-1)*nxkk;
             for (h = 1; h < nxkk-1; h = h+2) {
 				k0 = j0+h;
-				//k1 = j0+h-1;
-				//k2 = j0+h+1;
 				k3 = j1+h;
 				k4 = j2+h;
 				k5 = k0+nxyk;
@@ -1545,8 +1553,6 @@ static void gsiteration3d(REAL *u,
 			j2 = i0+(j-1)*nxkk;
             for (h = 1; h < nxkk-1; h = h+2) {
 				k0 = j0+h;
-				//k1 = j0+h-1;
-				//k2 = j0+h+1;
 				k3 = j1+h;
 				k4 = j2+h;
 				k5 = k0+nxyk;
@@ -1557,6 +1563,183 @@ static void gsiteration3d(REAL *u,
     }
 }
 
+/**
+ * \fn void gsiteration3dprp(REAL *u, REAL *b, INT *level, INT k,
+ *                        INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
+ * \brief colored G-S iteration of 3D problem, pro-smoothing
+ *
+ * \param u            Pointer to the vector of DOFs
+ * \param b            Pointer to the right hand vector
+ * \param level        Pointer to the start position of each level 
+ * \param k            Level k
+ * \param maxlevel     maxlevel of multigrids
+ * \param nxk          Number of grids in x direction in level k
+ * \param nyk          Number of grids in y direction in level k
+ * \param nzk          Number of grids in z direction in level k
+ *
+ * \author Ziteng Wang
+ * \date 06/07/201
+ */
+static void gsiteration3dpro(REAL *u,
+							 REAL *b,
+							 INT *level,
+							 INT k,
+							 INT maxlevel,
+							 INT *nxk, 
+							 INT *nyk, 
+							 INT *nzk)
+{
+	INT i,j,h;
+	INT i0,j0,j1,j2,k0,k3,k4,k5,k6;
+	const int levelk = level[k];
+	const int nxkk = nxk[k];
+	const int nykk = nyk[k];
+	const int nzkk = nzk[k];
+	const int nxyk = nxkk*nykk;
+
+	// 2*i+1,2*j+1,2*h+1
+	for (i = 1; i < nzkk-1; i = i+2) {
+		i0 = levelk+i*nxkk*nykk;
+        for (j = 1; j < nykk-1; j = j+2) {
+			j0 = i0+j*nxkk;
+			j1 = i0+(j+1)*nxkk;
+			j2 = i0+(j-1)*nxkk;
+            for (h = 1; h < nxkk-1; h = h+2) {
+				k0 = j0+h;
+				k3 = j1+h;
+				k4 = j2+h;
+				k5 = k0+nxyk;
+				k6 = k0-nxyk;
+				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+			}
+        }
+    }
+	
+	// 2*i,2*j+1,2*h+1
+	for (i = 2; i < nzkk-1; i = i+2) {
+		i0 = levelk+i*nxkk*nykk;
+        for (j = 1; j < nykk-1; j = j+2) {
+			j0 = i0+j*nxkk;
+			j1 = i0+(j+1)*nxkk;
+			j2 = i0+(j-1)*nxkk;
+            for (h = 1; h < nxkk-1; h = h+2) {
+				k0 = j0+h;
+				k3 = j1+h;
+				k4 = j2+h;
+				k5 = k0+nxyk;
+				k6 = k0-nxyk;
+				u[k0]=(b[k0]+u[k0+1]+u[k0-1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+			}
+        }
+    }
+	
+	// points of 2*i+1, 2*j, 2*h+1
+	for (i = 1; i < nzkk-1; i = i+2) {
+		i0 = levelk+i*nxkk*nykk;
+        for (j = 2; j < nykk-1; j = j+2) {
+			j0 = i0+j*nxkk;
+			j1 = i0+(j+1)*nxkk;
+			j2 = i0+(j-1)*nxkk;
+            for (h = 1; h < nxkk-1; h = h+2) {
+				k0 = j0+h;
+				k3 = j1+h;
+				k4 = j2+h;
+				k5 = k0+nxyk;
+				k6 = k0-nxyk;
+				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+			}
+        }
+    }
+
+	// 2*i,2*j,2*h+1
+	for (i = 2; i < nzkk-1; i = i+2) {
+		i0 = levelk+i*nxkk*nykk;
+        for (j = 2; j < nykk-1; j = j+2) {
+			j0 = i0+j*nxkk;
+			j1 = i0+(j+1)*nxkk;
+			j2 = i0+(j-1)*nxkk;
+            for (h = 1; h < nxkk-1; h = h+2) {
+				k0 = j0+h;
+				k3 = j1+h;
+				k4 = j2+h;
+				k5 = k0+nxyk;
+				k6 = k0-nxyk;
+				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+			}
+        }
+    }
+	// points of (2*i+1,2*j+1,2h)
+	for (i = 1; i < nzkk-1; i = i+2) {
+		i0 = levelk+i*nxkk*nykk;
+        for (j = 1; j < nykk-1; j = j+2) {
+			j0 = i0+j*nxkk;
+			j1 = i0+(j+1)*nxkk;
+			j2 = i0+(j-1)*nxkk;
+            for (h = 2; h < nxkk-1; h = h+2) {
+				k0 = j0+h;
+				k3 = j1+h;
+				k4 = j2+h;
+				k5 = k0+nxyk;
+				k6 = k0-nxyk;
+				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+			}
+        }
+    }
+	// 2*i,2*j+1,2*h
+	for (i = 2; i < nzkk-1; i = i+2) {
+		i0 = levelk+i*nxkk*nykk;
+        for (j = 1; j < nykk-1; j = j+2) {
+			j0 = i0+j*nxkk;
+			j1 = i0+(j+1)*nxkk;
+			j2 = i0+(j-1)*nxkk;
+            for (h = 2; h < nxkk-1; h = h+2) {
+				k0 = j0+h;
+				k3 = j1+h;
+				k4 = j2+h;
+				k5 = k0+nxyk;
+				k6 = k0-nxyk;
+				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+			}
+        }
+    }
+	// 2*i+1,2*j,2*h
+	for (i = 1; i < nzkk-1; i = i+2) {
+		i0 = levelk+i*nxkk*nykk;
+        for (j = 2; j < nykk-1; j = j+2) {
+			j0 = i0+j*nxkk;
+			j1 = i0+(j+1)*nxkk;
+			j2 = i0+(j-1)*nxkk;
+            for (h = 2; h < nxkk-1; h = h+2) {
+				k0 = j0+h;
+				k3 = j1+h;
+				k4 = j2+h;
+				k5 = k0+nxyk;
+				k6 = k0-nxyk;
+				u[k0]=(b[k0]+u[k0-1]+u[k0+1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+			}
+        }
+    }
+
+
+
+	// red point of 2*i,2*j,2*h
+    for (i = 2; i < nzkk-1; i = i+2) {
+		i0 = levelk+i*nxkk*nykk;
+        for (j = 2; j < nykk-1; j = j+2) {
+			j0 = i0+j*nxkk;
+			j1 = i0+(j+1)*nxkk;
+			j2 = i0+(j-1)*nxkk;
+            for (h = 2; h < nxkk-1; h = h+2) {
+				k0 = j0+h;
+				k3 = j1+h;
+				k4 = j2+h;
+				k5 = k0+nxyk;
+				k6 = k0-nxyk;
+				u[k0]=(b[k0]+u[k0+1]+u[k0-1]+u[k3]+u[k4]+u[k5]+u[k6])/6;
+			}
+        }
+    }
+}
 /**
  * \fn void compute_r_1d(REAL *u, REAL *b, REAL *r, INT k, INT *level) 
  * \brief compute residue vector r of 1D problem

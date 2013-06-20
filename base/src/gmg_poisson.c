@@ -75,6 +75,7 @@ void fasp_poisson_gmg_1D (REAL *u,
         multigriditeration1d(u0, b0, level, 0, maxlevel);
         compute_r_1d(u0, b0, r0, 0, level);
         norm_r = computenorm(r0, level, 0);
+		//printf("norm_r=%15.10e\n",norm_r);
         error = norm_r / norm_r0;
         if (error < rtol || norm_r < atol) break;
     }
@@ -266,6 +267,7 @@ void fasp_poisson_gmg_3D (REAL *u,
         compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
         norm_r = computenorm(r0, level, 0);
         error = norm_r / norm_r0;
+		printf("%15.10e, %d\n",error,count);
         if (error < rtol || norm_r < atol) break;
     }
     
