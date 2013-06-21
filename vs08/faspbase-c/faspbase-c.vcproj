@@ -411,6 +411,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\base\src\gmg_poisson.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\gmg_util.inl"
+				>
+			</File>
+			<File
 				RelativePath="..\..\base\src\graphics.c"
 				>
 			</File>
@@ -448,6 +456,10 @@
 			</File>
 			<File
 				RelativePath="..\..\base\src\interpolation.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\interpolation_em.c"
 				>
 			</File>
 			<File

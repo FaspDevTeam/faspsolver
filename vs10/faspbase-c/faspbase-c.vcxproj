@@ -214,6 +214,7 @@
     <ClCompile Include="..\..\base\src\fmgcycle.c" />
     <ClCompile Include="..\..\base\src\formats.c" />
     <ClCompile Include="..\..\base\src\givens.c" />
+    <ClCompile Include="..\..\base\src\gmg_poisson.c" />
     <ClCompile Include="..\..\base\src\graphics.c" />
     <ClCompile Include="..\..\base\src\ilu_setup_bsr.c" />
     <ClCompile Include="..\..\base\src\ilu_setup_csr.c" />
@@ -224,6 +225,7 @@
     <ClCompile Include="..\..\base\extra\interface\interface_superlu.c" />
     <ClCompile Include="..\..\base\extra\interface\interface_umfpack.c" />
     <ClCompile Include="..\..\base\src\interpolation.c" />
+    <ClCompile Include="..\..\base\src\interpolation_em.c" />
     <ClCompile Include="..\..\base\src\io.c" />
     <ClCompile Include="..\..\base\src\itsolver_bcsr.c" />
     <ClCompile Include="..\..\base\src\itsolver_bsr.c" />
@@ -275,6 +277,7 @@
   <ItemGroup>
     <None Include="..\..\base\src\amg_setup_aggregation_bsr.inl" />
     <None Include="..\..\base\src\amg_setup_aggregation_csr.inl" />
+    <None Include="..\..\base\src\gmg_util.inl" />
     <None Include="..\..\base\src\itsolver_util.inl" />
     <None Include="..\..\base\src\mg_util.inl" />
     <None Include="ReadMe.txt" />

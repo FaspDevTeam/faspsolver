@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+06/21/2013 FASP 1.3.4:
+- Update VS08 and VS10 solutions.
+
 06/20/2013 FASP 1.3.3:
 - Add geometric multigrid for Poisson in 1,2,3D.
 - Fix a bug in cfsplitting_cls.
