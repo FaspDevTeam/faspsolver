@@ -2,7 +2,9 @@
  *  \brief Utilies for multigrid cycles for CSR matrices
  */
 
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/

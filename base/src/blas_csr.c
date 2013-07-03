@@ -11,9 +11,12 @@
  *    - you call another routine, which uses ic and jc to perform the addition.
  *
  */
-#include <omp.h>
 #include <math.h>
 #include <time.h>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 #include "fasp.h"
 #include "fasp_functs.h"

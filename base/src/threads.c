@@ -4,7 +4,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 #include "fasp.h"
 

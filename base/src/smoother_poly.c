@@ -6,7 +6,10 @@
 #include <time.h>
 #include <float.h>
 #include <limits.h>
+
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 #include "fasp.h"
 #include "fasp_functs.h"

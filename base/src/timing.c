@@ -3,7 +3,10 @@
  */
 
 #include <time.h>
+
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 #include "fasp_functs.h"
 #include "fasp.h"

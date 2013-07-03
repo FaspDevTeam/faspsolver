@@ -6,7 +6,9 @@
  *            Academic Press Inc., San Diego, CA, 2001.
  */
 
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 #include "fasp.h"
 #include "fasp_functs.h"
