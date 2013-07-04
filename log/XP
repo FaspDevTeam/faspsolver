@@ -12,7 +12,7 @@ to see where they are and to tune the practices to their unique situation.
 ============================
 
 * Extreme Programming is one of several popular Agile Processes.
-* The team forms around a business representative called “the Customer”.
+* The team forms around a business representative called the `Customer'.
 * XP teams follow a common coding standard. 
 * All the code looks as if it was written by a single very competent individual.
 * Code in a consistent style so that everyone can understand and improve the code.
@@ -42,7 +42,7 @@ to see where they are and to tune the practices to their unique situation.
 ============================
 
 * Almost no one reads the manual. So keep it small and simple!
-* Documenting a feature shouldn’t be any more difficult than implementing it.
+* Documenting a feature shouldn't be any more difficult than implementing it.
 * Plan to have documentation one iteration behind development.
 
 
@@ -110,7 +110,7 @@ with some C/C++ compilers.
 
 You can use either array operators ([]) or pointers to access the elements of an array. 
 However, it's often hard for the compiler to optimize pointers because the pointers are, 
-by default, less constrained—the compiler has to assume that the pointer can read/write 
+by default, less constrained. The compiler has to assume that the pointer can read/write 
 to any location in memory. Because array notation is less ambiguous, the compiler may be 
 able to optimize it more effectively. Because it's hard to know which way is more 
 efficient, you may want to try coding your array reference using both pointers and array 
@@ -142,8 +142,8 @@ r[3] = m[0][3] * v[0] + m[1][3] * v[1] + m[2][3] * v[2] + m[3][3] * v[3];
 
 #4. Consider expression order when coding a compound branch
 
-Complex branches—those which consist of many Boolean expressions with logical AND (&&) 
-and logical OR (||) operators—provide great opportunities for optimization, if you know 
+Complex branches which consist of many Boolean expressions with logical AND (&&) and 
+logical OR (||) operators provide great opportunities for optimization, if you know 
 which AND and OR conditions are more likely to occur.
 
 That's because the C/C++ compiler will optimize the code to terminate execution of that 

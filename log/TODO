@@ -40,7 +40,7 @@ Structure
 GMG 	
 ========================
 
-[       ] add matrix-free Poisson GMG solver -- n = 2^L (Ludmil)
+[ 1.3.3 ] add matrix-free Poisson GMG solver -- n = 2^L
 [       ] add support for general n (Ludmil)
 [       ] tabulate convergence rate of V-cycle (Ludmil)
  
@@ -138,6 +138,7 @@ Test Examples
 [ 0.8.2 ] add examples in "tutorial" and modify user's guide accordingly
 [ 0.9.0 ] make online help pages for several tutorial examples
 [ 1.1.2 ] add a test example for matrix-free iterative methods
+[ 1.3.4 ] add a GMG V-cycle tutorial example 
 
 ========================
 OpenMP Support
