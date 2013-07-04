@@ -618,39 +618,44 @@ void fasp_aux_givens (const REAL beta,
 
 /*-------- In file: fasp_poisson_gmg.c --------*/
 
-void fasp_poisson_gmg_1D (REAL *u,
-                          REAL *b,
-                          INT nx,
-                          INT maxlevel,
-                          REAL rtol);
+INT fasp_poisson_gmg_1D (REAL *u,
+                         REAL *b,
+                         INT nx,
+                         INT maxlevel,
+                         REAL rtol,
+					     const SHORT print_level);
 
-void fasp_poisson_gmg_2D (REAL *u,
-                          REAL *b,
-                          INT nx,
-                          INT ny,
-                          INT maxlevel,
-                          REAL rtol);
+INT fasp_poisson_gmg_2D (REAL *u,
+                         REAL *b,
+                         INT nx,
+                         INT ny,
+                         INT maxlevel,
+                         REAL rtol,
+                         const SHORT print_level);
 
-void fasp_poisson_gmg_3D (REAL *u,
-                          REAL *b,
-                          INT nx,
-                          INT ny,
-                          INT nz,
-                          INT maxlevel,
-                          REAL rtol);
+INT fasp_poisson_gmg_3D (REAL *u,
+                         REAL *b,
+                         INT nx,
+                         INT ny,
+                         INT nz,
+                         INT maxlevel,
+                         REAL rtol,
+					     const SHORT print_level);
 
 void fasp_poisson_fgmg_1D (REAL *u,
                            REAL *b,
                            INT nx,
                            INT maxlevel,
-                           REAL rtol);
+                           REAL rtol,
+						   const SHORT print_level);
 
 void fasp_poisson_fgmg_2D (REAL *u,
                            REAL *b,
                            INT nx,
                            INT ny,
                            INT maxlevel,
-                           REAL rtol);
+                           REAL rtol,
+						   const SHORT print_level);
 
 void fasp_poisson_fgmg_3D (REAL *u,
                            REAL *b,
@@ -658,28 +663,32 @@ void fasp_poisson_fgmg_3D (REAL *u,
                            INT ny,
                            INT nz,
                            INT maxlevel,
-                           REAL rtol);
+                           REAL rtol,
+						   const SHORT print_level);
 
-void fasp_poisson_pcg_gmg_1D (REAL *u,
-                              REAL *b,
-                              INT nx,
-                              INT maxlevel,
-                              REAL rtol);
+INT fasp_poisson_pcg_gmg_1D (REAL *u,
+                             REAL *b,
+                             INT nx,
+                             INT maxlevel,
+                             REAL rtol,
+							 const SHORT print_level);
 
-void fasp_poisson_pcg_gmg_2D (REAL *u,
-                              REAL *b,
-                              INT nx,
-                              INT ny,
-                              INT maxlevel,
-                              REAL rtol);
+INT fasp_poisson_pcg_gmg_2D (REAL *u,
+                             REAL *b,
+                             INT nx,
+                             INT ny,
+                             INT maxlevel,
+                             REAL rtol,
+							 const SHORT print_level);
 
-void fasp_poisson_pcg_gmg_3D (REAL *u,
-                              REAL *b,
-                              INT nx,
-                              INT ny,
-                              INT nz,
-                              INT maxlevel,
-                              REAL rtol);
+INT fasp_poisson_pcg_gmg_3D (REAL *u,
+                             REAL *b,
+                             INT nx,
+                             INT ny,
+                             INT nz,
+                             INT maxlevel,
+                             REAL rtol,
+							 const SHORT print_level);
 
 
 /*-------- In file: graphics.c --------*/

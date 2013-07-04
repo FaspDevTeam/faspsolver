@@ -85,42 +85,44 @@ static REAL L2NormError2d (REAL *u,
 int main (int argc, const char *argv[])
 {
     const REAL rtol = 1.0e-8;
-    
-    INT        i, j, maxlevel, nx, ny;
+    const INT  print_level = 0;
+
+    INT        maxlevel, iter = 0, nx, ny;
+    INT        i, j;
+    REAL       h, error0, *u, *b;
     REAL       GMG_start, GMG_end;
-    REAL      *u, *b, h, error0;
    
     printf("=================================================\n");
-	printf("           FASP GMG V-cycle Example \n");
+	printf("            FASP GMG V-cycle in 2D \n");
     printf("=================================================\n");
-	printf("      DOFs      CPU time      L2 Error\n");
+	printf("  Level  Iter    CPU time      L2 Error\n");
 	
-	// Testing different Number of DOFs from nx=ny = 2^4 to 2^10
+	// Testing different Number of DOFs nx = ny = 2^2 to 2^10
     for ( maxlevel = 2; maxlevel <= 10; maxlevel++ ) {
 	
-		// Step 1: Setting size of grids	
-		nx = pow(2.0, maxlevel);
-		ny = pow(2.0, maxlevel);
-		h = 1.0/((REAL) nx);
-    
-		fasp_gettime(&GMG_start);
-   
+		// Step 1: Set size of the grid
+		nx = ny = pow(2.0, maxlevel); h = 1.0/((REAL) nx);
+
 		// Step 2: Solving Poisson equation with GMG solver
 		// Set initial guess 0, right hand side as given f	                
 		u = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
 		fasp_array_set((nx+1)*(ny+1), u, 0.0);
+        
 		b = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
 		for ( i = 0; i <= nx; i++ ) {
 			for ( j = 0; j <= ny; j++ ) {
 				b[j*(nx+1)+i] = h*h*f2d(i, j, nx, ny);
 			}
 		}
-		// Solve equation with V-cycle
-		fasp_poisson_gmg_2D(u, b, nx, ny, maxlevel, rtol); 
+        
+		// Step 3: Solve equation with V-cycle
+		fasp_gettime(&GMG_start);
+		iter = fasp_poisson_gmg_2D(u, b, nx, ny, maxlevel, rtol, print_level);
+		fasp_gettime(&GMG_end);
+
         error0 = L2NormError2d(u, nx, ny);
 	
-		fasp_gettime(&GMG_end);
-		printf("%10d %12.5f %16.5e\n", (nx+1)*(ny+1), GMG_end-GMG_start, error0);
+		printf("%5d  %5d %12.6f %16.5e\n", maxlevel, iter, GMG_end-GMG_start, error0);
       
 		// Clean up memory	
 		free(u);

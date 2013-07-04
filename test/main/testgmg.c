@@ -11,15 +11,54 @@
 const REAL pi = 3.14159265;
 
 /**
- * \fn static REAL f1d(INT i, INT nx)
- * \fn static REAL f2d(INT i, INT nx, INT ny)
- * \fn static REAL f3d(INT i, INT nx, INT ny, INT nz)
+ * \fn static REAL f1d (INT i, INT nx)
  *
  * \brief Setting f in Poisson equation, where
- *        f = sin(pi x) in 1D
- *        f = sin(pi x)*sin(pi y) in 2D
- *        f = sin(pi x)*sin(pi y)*sin(pi z) in 3D
+ *        f = sin(pi x) 				in 1D
  *
+ * \param i		 i-th position in x direction
+ * \param nx     Number of grids in x direction
+ *
+ * \author Ziteng Wang
+ * \date   06/07/2013
+ */
+static REAL f1d (INT i,
+                 INT nx)
+{
+    return sin(pi *(((REAL) i)/((REAL) nx)));
+}
+
+/**
+ * \fn static REAL f2d (INT i, INT j, INT nx, INT ny)
+ *
+ * \brief Setting f in Poisson equation, where
+ *        f = sin(pi x)*sin(pi y) 		in 2D
+ *
+ * \param i		 i-th position in x direction
+ * \param j		 j-th position in y direction
+ * \param nx     Number of grids in x direction
+ * \param ny     Number of grids in y direction
+ *
+ * \author Ziteng Wang
+ * \date   06/07/2013
+ */
+static REAL f2d (INT i,
+                 INT j,
+                 INT nx,
+                 INT ny)
+{
+    return sin(pi *(((REAL) j)/((REAL) nx)))
+    *sin(pi *(((REAL) i)/((REAL) nx)));
+}
+
+/**
+ * \fn static REAL f3d (INT i, INT j, INT k, INT nx, INT ny, INT nz)
+ * \brief Setting f in Poisson equation, where
+ *        f = sin(pi x*sin(pi y)*sin(pi z) in 3D
+ *
+ * \param i		 i-th position in x direction
+ * \param j		 j-th position in y direction
+ * \param k		 k-th position in y direction
  * \param nx     Number of grids in x direction
  * \param ny     Number of grids in y direction
  * \param nz     Number of grids in z direction
@@ -27,47 +66,26 @@ const REAL pi = 3.14159265;
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static REAL f1d(INT i,
-                INT nx)
-{
-    return sin(pi *(((REAL) i)/((REAL) nx)));
-}
-
-static REAL f2d(INT i,
-                INT j,
-                INT nx,
-                INT ny)
-{
-    return sin(pi *(((REAL) j)/((REAL) nx)))
-          *sin(pi *(((REAL) i)/((REAL) nx)));
-}
-
-static REAL f3d(INT i,
-                INT j,
-                INT k,
-                INT nx,
-                INT ny,
-                INT nz)
+static REAL f3d (INT i,
+                 INT j,
+                 INT k,
+                 INT nx,
+                 INT ny,
+                 INT nz)
 {
     return sin(pi *(((REAL) i)/((REAL) nx)))
-          *sin(pi *(((REAL) k)/((REAL) nx)))
-          *sin(pi *(((REAL) j)/((REAL) nz)));
+    *sin(pi *(((REAL) k)/((REAL) nx)))
+    *sin(pi *(((REAL) j)/((REAL) nz)));
 }
 
 /**
- * \fn static REAL L2NormError1d(REAL *u, INT nx)
- * \fn static REAL L2NormError2d(REAL *u, INT nx, INT ny)
- * \fn static REAL L2NormError3d(REAL *u, INT nx, INT ny, INT nz)
+ * \fn static REAL L2NormError1d (REAL *u, INT nx)
  *
  * \brief Computing Discretization Error, where exact solution
  *        u = sin(pi x)/(pi*pi)                         1D
- *        u = sin(pi x)*sin(pi y)/(2*pi*pi)             2D
- *        u = sin(pi x)*sin(pi y)*sin(pi z)/(3*pi*pi)   3D
  *
  * \param u      Vector of DOFs
  * \param nx     Number of grids in x direction
- * \param ny     Number of grids in y direction
- * \param nz     Number of grids in z direction
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -83,13 +101,28 @@ static REAL L2NormError1d (REAL *u,
     INT i;
     for ( i = 1; i < nx; i++ ) {
         uexact  = sin(pi*i*h)/(pi*pi);
+		//uexact  = ((REAL) i)*h*(1-((REAL) i)*h)/2;
         l2norm += pow((u[i] - uexact), 2);
     }
     l2norm = sqrt(l2norm*h);
     
     return l2norm;
 }
-
+/**
+ * \fn static REAL L2NormError2d(REAL *u, INT nx, INT ny)
+ *
+ * \brief Computing Discretization Error, where exact solution
+ *        u = sin(pi x)*sin(pi y)/(2*pi*pi)             2D
+ *
+ * \param u      Vector of DOFs
+ * \param nx     Number of grids in x direction
+ * \param ny     Number of grids in y direction
+ *
+ * \author Ziteng Wang
+ * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/07/2013: bug fixed and revise the structure
+ */
 static REAL L2NormError2d (REAL *u,
                            INT nx,
                            INT ny)
@@ -108,7 +141,22 @@ static REAL L2NormError2d (REAL *u,
     
     return l2norm;
 }
-
+/**
+ * \fn static REAL L2NormError3d (REAL *u, INT nx, INT ny, INT nz)
+ *
+ * \brief Computing Discretization Error, where exact solution
+ *        u = sin(pi x)*sin(pi y)*sin(pi z)/(3*pi*pi)   3D
+ *
+ * \param u      Vector of DOFs
+ * \param nx     Number of grids in x direction
+ * \param ny     Number of grids in y direction
+ * \param nz     Number of grids in z direction
+ *
+ * \author Ziteng Wang
+ * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 06/07/2013: bug fixed and revise the structure
+ */
 static REAL L2NormError3d (REAL *u,
                            INT nx,
                            INT ny,
@@ -140,14 +188,15 @@ static REAL L2NormError3d (REAL *u,
  * \note   Number of grids of nx, ny, ny should be all equal to 2^maxlevel.
  *
  * Modified by Chensong Zhang on 06/07/2013: bug fixed and revise the structure
+ * Modified by Ziteng Wang and Chensong on 07/04/2013: print level control
  */
 int main (int argc, const char *argv[])
 {
     const REAL rtol = 1.0e-6;
+    const INT  prtlvl = PRINT_MORE;
     
     INT        maxlevel = 8, dim = 3, method = 2;
     INT        i, j, k, nx, ny, nz;
-    REAL       GMG_start, GMG_end;
     REAL      *u, *b, h, error0;
     
     printf("Enter spatial dimenstion (1, 2 or 3):   ");
@@ -169,12 +218,10 @@ int main (int argc, const char *argv[])
     printf("Enter the desired number of levels:   ");
     scanf("%d", &maxlevel);
     
-    nx = pow(2, maxlevel);
-    if ( dim > 1 ) ny = pow(2, maxlevel);
-    if ( dim > 2 ) nz = pow(2, maxlevel);
+    nx = (int) pow(2.0, maxlevel);
+    if ( dim > 1 ) ny = (int) pow(2.0, maxlevel);
+    if ( dim > 2 ) nz = (int) pow(2.0, maxlevel);
     h = 1.0/((REAL) nx);
-    
-    fasp_gettime(&GMG_start);
     
     switch (dim) {
             
@@ -182,22 +229,23 @@ int main (int argc, const char *argv[])
             
             u = (REAL *)malloc((nx+1)*sizeof(REAL));
             fasp_array_set(nx+1, u, 0.0);
-
+            
             b = (REAL *)malloc((nx+1)*sizeof(REAL));
-            for (i = 0; i <= nx; i++) {
-                b[i] = h*h*f1d(i, nx);
-            }
+            for (i = 0; i <= nx; i++) b[i] = h*h*f1d(i, nx);
             
             switch (method) {
                     
                 case 1: // V-cycle
-                    fasp_poisson_gmg_1D(u, b, nx, maxlevel, rtol); break;
+                    fasp_poisson_gmg_1D(u, b, nx, maxlevel, rtol, prtlvl);
+                    break;
                     
                 case 2: // FMG
-                    fasp_poisson_fgmg_1D(u, b, nx, maxlevel, rtol); break;
+                    fasp_poisson_fgmg_1D(u, b, nx, maxlevel, rtol, prtlvl);
+                    break;
                     
                 case 3: // PCG
-                    fasp_poisson_pcg_gmg_1D(u, b, nx, maxlevel, rtol); break;
+                    fasp_poisson_pcg_gmg_1D(u, b, nx, maxlevel, rtol, prtlvl);
+                    break;
                     
             }
             
@@ -207,7 +255,7 @@ int main (int argc, const char *argv[])
             
             u = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
             fasp_array_set((nx+1)*(ny+1), u, 0.0);
-
+            
             b = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
             for (i = 0; i <= nx; i++) {
                 for (j = 0; j <= ny; j++) {
@@ -218,13 +266,16 @@ int main (int argc, const char *argv[])
             switch (method) {
                     
                 case 1: // V-cycle
-                    fasp_poisson_gmg_2D(u, b, nx, ny, maxlevel, rtol); break;
+                    fasp_poisson_gmg_2D(u, b, nx, ny, maxlevel, rtol, prtlvl);
+                    break;
                     
                 case 2: // FMG
-                    fasp_poisson_fgmg_2D(u, b, nx, ny, maxlevel, rtol); break;
+                    fasp_poisson_fgmg_2D(u, b, nx, ny, maxlevel, rtol, prtlvl);
+                    break;
                     
                 case 3: // PCG
-                    fasp_poisson_pcg_gmg_2D(u, b, nx, ny, maxlevel, rtol); break;
+                    fasp_poisson_pcg_gmg_2D(u, b, nx, ny, maxlevel, rtol, prtlvl);
+                    break;
                     
             }
             
@@ -234,7 +285,7 @@ int main (int argc, const char *argv[])
             
             u = (REAL *)malloc((nx+1)*(ny+1)*(nz+1)*sizeof(REAL));
             fasp_array_set((nx+1)*(ny+1)*(nz+1), u, 0.0);
-
+            
             b = (REAL *)malloc((nx+1)*(ny+1)*(nz+1)*sizeof(REAL));
             for (i = 0; i <= nx; i++) {
                 for (j = 0; j <= ny; j++) {
@@ -247,13 +298,16 @@ int main (int argc, const char *argv[])
             switch (method) {
                     
                 case 1: // V-cycle
-                    fasp_poisson_gmg_3D(u, b, nx, ny, nz, maxlevel, rtol); break;
+                    fasp_poisson_gmg_3D(u, b, nx, ny, nz, maxlevel, rtol, prtlvl);
+                    break;
                     
                 case 2: // FMG
-                    fasp_poisson_fgmg_3D(u, b, nx, ny, nz, maxlevel, rtol); break;
+                    fasp_poisson_fgmg_3D(u, b, nx, ny, nz, maxlevel, rtol, prtlvl);
+                    break;
                     
                 case 3: // PCG
-                    fasp_poisson_pcg_gmg_3D(u, b, nx, ny, nz, maxlevel, rtol); break;
+                    fasp_poisson_pcg_gmg_3D(u, b, nx, ny, nz, maxlevel, rtol, prtlvl);
+                    break;
                     
             }
             
@@ -261,25 +315,23 @@ int main (int argc, const char *argv[])
             
     }
     
-    fasp_gettime(&GMG_end);
-    print_cputime("GMG totally", GMG_end - GMG_start);
+	if ( prtlvl >= PRINT_SOME){
+		switch (dim) {
+			    
+			case 1: // 1 dimesion
+				error0 = L2NormError1d(u, nx); break;
+                
+			case 2: // 2 dimension
+				error0 = L2NormError2d(u, nx, ny); break;
+                
+	        case 3: // 3 dimension
+		        error0 = L2NormError3d(u, nx, ny, nz); break;
+                
+		}
+		printf("||u-u'|| = %e\n",error0);
+	}
     
-    switch (dim) {
-            
-        case 1: // 1 dimesion
-            error0 = L2NormError1d(u, nx); break;
-            
-        case 2: // 2 dimension
-            error0 = L2NormError2d(u, nx, ny); break;
-            
-        case 3: // 3 dimension
-            error0 = L2NormError3d(u, nx, ny, nz); break;
-            
-    }
-    
-    printf("L2-norm of the discretization error: %e\n", error0);
-    
-    free(u);
+	free(u);
     free(b);
     
     return SUCCESS;
