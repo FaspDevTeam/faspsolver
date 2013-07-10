@@ -24,7 +24,7 @@
      285 ./base/src/fmgcycle.c
     1012 ./base/src/formats.c
       79 ./base/src/givens.c
-     761 ./base/src/gmg_poisson.c
+    1001 ./base/src/gmg_poisson.c
      358 ./base/src/graphics.c
      420 ./base/src/ilu_setup_bsr.c
      172 ./base/src/ilu_setup_csr.c
@@ -88,13 +88,19 @@
       39 ./base/src/timing.c
      464 ./base/src/vec.c
      294 ./base/src/wrapper.c
+      78 ./base/src/amg_setup_aggregation_bsr.inl
+     278 ./base/src/amg_setup_aggregation_csr.inl
+    2294 ./base/src/gmg_util.inl
+      88 ./base/src/itsolver_util.inl
+     233 ./base/src/linklist.inl
+     240 ./base/src/mg_util.inl
      560 ./base/include/dlmalloc.h
      165 ./base/include/doxygen.h
     1127 ./base/include/fasp.h
      571 ./base/include/fasp_block.h
-    2736 ./base/include/fasp_functs.h
+    2745 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      225 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   74487 total
+   77947 total

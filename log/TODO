@@ -4,7 +4,8 @@ File Name: TODO
 Milestones
 ========================
 
-* Release a stable beta version by the end of 2012 -- Dec/24/2012!
+* Release an alpha version by the end of 2012!
+* Release a stable beta version by the end of 2013!
 
 ========================
 Documentation
@@ -178,3 +179,4 @@ Bug Fixes
 [ 1.2.4 ] MUMPS: 64bit version does not work, replaced with a new version
 [       ] AMG setup: number of DOF could drop dramatically
 [       ] VGMRES: "restart" might be too big
+[       ] Different results on different platforms
