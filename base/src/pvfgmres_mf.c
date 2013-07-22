@@ -49,6 +49,7 @@
  *
  * Modified by Chensong Zhang on 05/01/2012
  * Modified by Feiteng Huang on 09/26/2012, (matrix free)
+ * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */ 
 INT fasp_solver_pvfgmres (mxv_matfree *mf, 
                           dvector *b, 
@@ -56,7 +57,7 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
                           precond *pc, 
                           const REAL tol,
                           const INT MaxIt, 
-                          const SHORT restart,
+                          SHORT restart,
                           const SHORT stop_type, 
                           const SHORT print_level)
 {
@@ -97,7 +98,22 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
 #endif    
 
     /* allocate memory */
-    work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n+ (restartplus1*n)-n, sizeof(REAL));    
+    work = (REAL *)fasp_mem_calloc_retry((restart+4)*(restart+n)+1-n+ (restartplus1*n)-n, sizeof(REAL));   
+
+
+#if 1
+    while ((work == NULL) && (restart > restart_min+5 )) {
+    restart = restart - 5;
+    restartplus1 = restart + 1;
+    work = (REAL *)fasp_mem_calloc_retry((restart+4)*(restart+n)+1-n+ (restartplus1*n)-n, sizeof(REAL));   
+
+    printf("###Warning restart number cut off %d !\n", restart );
+    restart_max = restart;
+    }
+    
+    if (work == NULL) 
+    printf("###  gmres allocate memory error %s : %s: %d !\n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
     p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));    
     hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
     z=(REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 

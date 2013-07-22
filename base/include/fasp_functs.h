@@ -1041,11 +1041,14 @@ SHORT fasp_smat_lu_solve (REAL *A,
 
 /*-------- In file: memory.c --------*/
 
-void * fasp_mem_calloc (INT size, 
+void * fasp_mem_calloc (LONG size, 
+                        INT type);
+
+void * fasp_mem_calloc_retry (LONG size, 
                         INT type);
 
 void * fasp_mem_realloc (void * oldmem, 
-                         INT tsize);
+                         LONG tsize);
 
 void fasp_mem_free (void * mem);
 
@@ -1319,7 +1322,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
                              precond *pc,
                              const REAL tol,
                              const INT MaxIt,
-                             const SHORT restart,
+                             SHORT restart,
                              const SHORT stop_type,
                              const SHORT print_level);
 
@@ -1362,7 +1365,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
                         precond *pc, 
                         const REAL tol,
                         const INT MaxIt, 
-                        const SHORT restart,
+                        SHORT restart,
                         const SHORT stop_type, 
                         const SHORT print_level);
 
@@ -1533,7 +1536,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
                                precond *pc, 
                                const REAL tol,
                                const INT MaxIt, 
-                               const SHORT restart,
+                               SHORT restart,
                                const SHORT stop_type, 
                                const SHORT print_level);
 
@@ -1569,7 +1572,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
-                              const SHORT restart,
+                              SHORT restart,
                               const SHORT stop_type,
                               const SHORT print_level);
 

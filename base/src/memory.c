@@ -37,7 +37,7 @@ unsigned INT total_alloc_count = 0; // Total number of allocations
 /*---------------------------------*/
 
 /**
- * \fn void * fasp_mem_calloc (INT size, INT type)
+ * \fn void * fasp_mem_calloc (LONG size, INT type)
  *
  * \brief Allocate, initiate, and check memory
  *
@@ -48,11 +48,13 @@ unsigned INT total_alloc_count = 0; // Total number of allocations
  *
  * \author Chensong Zhang
  * \date   2010/08/12 
+ *
+ * Modified by Chunsheng Feng on 07/23/2013
  */
-void * fasp_mem_calloc (INT size, 
+void * fasp_mem_calloc (LONG size, 
                         INT type)
 {
-    const INT tsize=size*type;    
+    const LONG tsize=size*type;    
     void * mem;
     
 #if DEBUG_MODE
@@ -80,7 +82,9 @@ void * fasp_mem_calloc (INT size,
     }
     
     else {
+        printf("### ERROR: Try to allocate invalid integer number %.3fKB RAM or integer overflow!\n", tsize/1024.0);    
         mem = NULL;    
+        exit(ERROR_ALLOC_MEM);
     }    
     
 #if CHMEM_MODE    
@@ -91,7 +95,64 @@ void * fasp_mem_calloc (INT size,
 }
 
 /**
- * \fn void * fasp_mem_realloc (void * oldmem, INT type)
+ * \fn void * fasp_mem_calloc_retry (LONG size, INT type)
+ *
+ * \brief Allocate, initiate, and check memory
+ *
+ * \param size    Number of memory blocks
+ * \param type    Size of memory blocks
+ *
+ * \return        Void pointer to the allocated memory
+ *
+ * \author Chunsheng Feng
+ * \date   2013/07/23
+ *
+ */
+void * fasp_mem_calloc_retry (LONG size, 
+                        INT type)
+{
+    const LONG tsize=size*type;    
+    void * mem;
+    
+#if DEBUG_MODE
+    printf("### DEBUG: Trying to allocate %.3fKB RAM!\n", tsize/1024.0);
+#endif
+    
+    if (tsize>0) {
+    
+#if DLMALLOC
+        mem = dlcalloc(size,type);    
+#elif NEDMALLOC
+        mem = nedcalloc(size,type);
+#else
+        mem = calloc(size,type);
+#endif
+    
+        if (mem==NULL) {
+            printf("### ERROR: Fail to allocate %.3fKB RAM!\n", tsize/1024.0);    
+//            exit(ERROR_ALLOC_MEM);
+        }
+
+#if CHMEM_MODE    
+        total_alloc_mem += size*type;
+#endif
+    }
+    
+    else {
+        printf("### ERROR: Try to allocate invalid integer number %.3fKB RAM or integer overflow!\n", tsize/1024.0);    
+        mem = NULL;    
+//        exit(ERROR_ALLOC_MEM);
+    }    
+    
+#if CHMEM_MODE    
+    total_alloc_count++;
+#endif
+    
+    return mem;
+}
+
+/**
+ * \fn void * fasp_mem_realloc (void * oldmem, LONG type)
  *
  * \brief Reallocate, initiate, and check memory
  *
@@ -102,9 +163,11 @@ void * fasp_mem_calloc (INT size,
  *
  * \author Chensong Zhang
  * \date   2010/08/12 
+ *
+ * Modified by Chunsheng Feng on 07/23/2013
  */
 void * fasp_mem_realloc (void * oldmem, 
-                         INT tsize)
+                         LONG tsize)
 {
 #if DLMALLOC
     void * mem = dlrealloc(oldmem,tsize);
