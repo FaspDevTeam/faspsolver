@@ -25,7 +25,7 @@
 
 /*!
  * \fn INT fasp_solver_pvfgmres (mxv_matfree *mf, dvector *b, dvector *x, precond *pc, 
- *                               const REAL tol, const INT MaxIt, const SHORT restart,
+ *                               const REAL tol, const INT MaxIt, SHORT restart,
  *                               const SHORT stop_type, const SHORT print_level)
  *
  * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which the restart
@@ -98,23 +98,23 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
 #endif    
 
     /* allocate memory */
-    work = (REAL *)fasp_mem_calloc_retry((restart+4)*(restart+n)+1-n+ (restartplus1*n)-n, sizeof(REAL));   
+    work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n+ (restartplus1*n)-n, sizeof(REAL));   
 
-
-#if 1
-    while ((work == NULL) && (restart > restart_min+5 )) {
-    restart = restart - 5;
-    restartplus1 = restart + 1;
-    work = (REAL *)fasp_mem_calloc_retry((restart+4)*(restart+n)+1-n+ (restartplus1*n)-n, sizeof(REAL));   
-
-    printf("###Warning restart number cut off %d !\n", restart );
-    restart_max = restart;
+    while ( (work == NULL) && (restart > restart_min+5 ) ) {
+        restart = restart - 5 ;
+        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n+(restartplus1*n)-n, sizeof(REAL));
+        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
+        restartplus1 = restart + 1;
+        restart_max = restart;
     }
     
-    if (work == NULL) 
-    printf("###  gmres allocate memory error %s : %s: %d !\n", __FILE__, __FUNCTION__, __LINE__ );
-#endif
-    p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));    
+    if ( work == NULL ) {
+        printf("### ERROR: No enough memory for GMRES %s : %s: %d !\n",
+               __FILE__, __FUNCTION__, __LINE__ );
+        exit(ERROR_ALLOC_MEM);
+    }
+
+    p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
     z=(REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
     

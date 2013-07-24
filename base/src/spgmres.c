@@ -21,7 +21,7 @@
 
 /*!
  * \fn INT fasp_solver_dcsr_spgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                   const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                   const REAL tol, const INT MaxIt, SHORT restart,
  *                                   const SHORT stop_type, const SHORT print_level)
  *
  * \brief Preconditioned GMRES method for solving Au=b with safe-guard
@@ -80,20 +80,21 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
 #endif
     
     /* allocate memory and setup temp work space */
-    work  = (REAL *) fasp_mem_calloc_retry((restart+4)*(restart+n)+1, sizeof(REAL));
+    work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
 
-#if 1
-    while ((work == NULL) && (restart > 5 )) {
-    restart = restart - 5;
-    restartplus1 = restart + 1;
-    work  = (REAL *) fasp_mem_calloc_retry((restart+4)*(restart+n)+1-n, sizeof(REAL));
-
-    printf("###Warning restart number cut off %d !\n", restart );
+    while ( (work == NULL) && (restart > 5 ) ) {
+        restart = restart - 5 ;
+        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
+        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
+        restartplus1 = restart + 1;
     }
     
-    if (work == NULL) 
-    printf("###  gmres allocate memory error %s : %s: %d !\n", __FILE__, __FUNCTION__, __LINE__ );
-#endif
+    if ( work == NULL ) {
+        printf("### ERROR: No enough memory for GMRES %s : %s: %d !\n",
+               __FILE__, __FUNCTION__, __LINE__ );
+        exit(ERROR_ALLOC_MEM);
+    }
+
     p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
@@ -362,7 +363,7 @@ FINISHED:
 
 /**
  * \fn INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                    const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                    const REAL tol, const INT MaxIt, SHORT restart,
  *                                    const SHORT stop_type, const SHORT print_level)
  *
  * \brief Preconditioned GMRES method for solving Au=b with safe-guard
@@ -388,7 +389,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
                                precond *pc,
                                const REAL tol,
                                const INT MaxIt,
-                               const SHORT restart,
+                               SHORT restart,
                                const SHORT stop_type,
                                const SHORT print_level)
 {
@@ -421,6 +422,20 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
+
+    while ( (work == NULL) && (restart > 5 ) ) {
+        restart = restart - 5 ;
+        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
+        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
+        restartplus1 = restart + 1;
+    }
+    
+    if ( work == NULL ) {
+        printf("### ERROR: No enough memory for GMRES %s : %s: %d !\n",
+               __FILE__, __FUNCTION__, __LINE__ );
+        exit(ERROR_ALLOC_MEM);
+    }
+
     p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
@@ -689,7 +704,7 @@ FINISHED:
 
 /*!
  * \fn INT fasp_solver_dbsr_spgmres (dBSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                   const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                   const REAL tol, const INT MaxIt, SHORT restart,
  *                                   const SHORT stop_type, const SHORT print_level)
  *
  * \brief Preconditioned GMRES method for solving Au=b with safe-guard
@@ -715,7 +730,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
-                              const SHORT restart,
+                              SHORT restart,
                               const SHORT stop_type,
                               const SHORT print_level)
 {
@@ -748,6 +763,20 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
+    
+    while ( (work == NULL) && (restart > 5 ) ) {
+        restart = restart - 5 ;
+        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
+        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
+        restartplus1 = restart + 1;
+    }
+    
+    if ( work == NULL ) {
+        printf("### ERROR: No enough memory for GMRES %s : %s: %d !\n",
+               __FILE__, __FUNCTION__, __LINE__ );
+        exit(ERROR_ALLOC_MEM);
+    }
+
     p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
@@ -1016,7 +1045,7 @@ FINISHED:
 
 /*!
  * \fn INT fasp_solver_dstr_spgmres (dSTRmat *A, dvector *b, dvector *x, precond *pc,
- *                                   const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                   const REAL tol, const INT MaxIt, SHORT restart,
  *                                   const SHORT stop_type, const SHORT print_level)
  *
  * \brief Preconditioned GMRES method for solving Au=b with safe-guard
@@ -1042,7 +1071,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
-                              const SHORT restart,
+                              SHORT restart,
                               const SHORT stop_type,
                               const SHORT print_level)
 {
@@ -1075,6 +1104,20 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
+    
+    while ( (work == NULL) && (restart > 5 ) ) {
+        restart = restart - 5 ;
+        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
+        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
+        restartplus1 = restart + 1;
+    }
+    
+    if ( work == NULL ) {
+        printf("### ERROR: No enough memory for GMRES %s : %s: %d !\n",
+               __FILE__, __FUNCTION__, __LINE__ );
+        exit(ERROR_ALLOC_MEM);
+    }
+
     p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
