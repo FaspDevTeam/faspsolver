@@ -48,7 +48,7 @@
  * \date   01/04/2012
  *
  * Modified by Chensong Zhang on 05/01/2012
- * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
+ * Modified by Chunsheng Feng on 07/22/2013: Add adaptive memory allocate
  */ 
 INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, 
                                dvector *b, 

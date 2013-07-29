@@ -50,6 +50,7 @@ unsigned INT total_alloc_count = 0; // Total number of allocations
  * \date   2010/08/12 
  *
  * Modified by Chunsheng Feng on 07/23/2013
+ * Modified by Chunsheng Feng on 07/30/2013
  */
 void * fasp_mem_calloc (LONG size, 
                         INT type)
@@ -78,7 +79,7 @@ void * fasp_mem_calloc (LONG size,
     
     if ( mem == NULL ) {
         printf("### ERROR: Fail to allocate %.3fKB RAM!\n", tsize/1024.0);
-        exit(ERROR_ALLOC_MEM);
+//        exit(ERROR_ALLOC_MEM);
     }
     
 #if CHMEM_MODE

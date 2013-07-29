@@ -516,7 +516,7 @@ void fasp_poisson_fgmg_2D (REAL *u,
 
 #if DEBUG_MODE
     printf("### DEBUG: fasp_poisson_fgmg_2D ...... [Start]\n");
-    printf("### DEBUG: nx=%d, ny=%d, maxlevel=%d\n", nx, ny maxlevel);
+    printf("### DEBUG: nx=%d, ny=%d, maxlevel=%d\n", nx, ny, maxlevel);
 #endif
     
 	if ( print_level > PRINT_NONE ) {
