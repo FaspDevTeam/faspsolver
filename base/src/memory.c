@@ -51,6 +51,7 @@ unsigned INT total_alloc_count = 0; // Total number of allocations
  *
  * Modified by Chunsheng Feng on 07/23/2013
  * Modified by Chunsheng Feng on 07/30/2013
+ * Modified by Chensong Zhang on 07/30/2013: return warning if failed
  */
 void * fasp_mem_calloc (LONG size, 
                         INT type)
@@ -78,8 +79,7 @@ void * fasp_mem_calloc (LONG size,
     }
     
     if ( mem == NULL ) {
-        printf("### ERROR: Fail to allocate %.3fKB RAM!\n", tsize/1024.0);
-//        exit(ERROR_ALLOC_MEM);
+        printf("### WARNING: Cannot allocate %.3fKB RAM!\n", tsize/1024.0);
     }
     
 #if CHMEM_MODE
@@ -103,6 +103,7 @@ void * fasp_mem_calloc (LONG size,
  * \date   2010/08/12 
  *
  * Modified by Chunsheng Feng on 07/23/2013
+ * Modified by Chensong Zhang on 07/30/2013: return warning if failed
  */
 void * fasp_mem_realloc (void * oldmem, 
                          LONG tsize)
@@ -115,9 +116,8 @@ void * fasp_mem_realloc (void * oldmem,
     void * mem = realloc(oldmem,tsize);
 #endif
     
-    if (mem==NULL) {
-        printf("### ERROR: Fail to allocate %.3fKB RAM!\n", tsize/1024.0);    
-        exit(ERROR_ALLOC_MEM);
+    if ( mem == NULL ) {
+        printf("### WARNING: Cannot allocate %.3fKB RAM!\n", tsize/1024.0);
     }
 
 #if CHMEM_MODE    
@@ -141,7 +141,7 @@ void * fasp_mem_realloc (void * oldmem,
  */
 void fasp_mem_free (void * mem)
 {
-    if (mem) {
+    if ( mem ) {
 #if DLMALLOC
         dlfree(mem);
 #elif NEDMALLOC
@@ -190,7 +190,7 @@ SHORT fasp_mem_check (void *ptr,
                       char *message, 
                       INT ERR)
 {    
-    if (ptr==NULL) {
+    if ( ptr == NULL ) {
         printf("### ERROR: %s", message);
         return ERR;
     }
@@ -214,7 +214,7 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
 {    
     const INT memneed = 2*iludata->row; // estimated memory usage
     
-    if (iludata->nwork >= memneed) {
+    if ( iludata->nwork >= memneed ) {
         return SUCCESS;
     }
     else {
@@ -238,7 +238,7 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
  */
 SHORT fasp_mem_dcsr_check (dCSRmat *A)
 {
-    if ((A->IA == NULL) || (A->JA == NULL) || (A->val == NULL)) {
+    if ( (A->IA == NULL) || (A->JA == NULL) || (A->val == NULL) ) {
         printf("### ERROR: dCSRmat has not sucessfully allocate memory!!!\n");
         return ERROR_ALLOC_MEM;
     }

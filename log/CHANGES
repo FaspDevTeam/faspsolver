@@ -1,6 +1,7 @@
 File Name: CHANGES
 
-07/23/2013 FASP 1.3.5:
+07/30/2013 FASP 1.3.5:
+- If allocation memory failed, output warning and return NULL, instead of exit.
 - Add safe-guard for GMRES: when memory not enough, reduce restart number.
 
 07/10/2013 FASP 1.3.4:
