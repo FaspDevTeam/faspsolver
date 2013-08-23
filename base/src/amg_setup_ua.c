@@ -142,6 +142,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     }
     
     // Initialize ILU parameters
+    mgl->ILU_levels = param->ILU_levels;
     if ( param->ILU_levels > 0 ) {
         iluparam.print_level = param->print_level;
         iluparam.ILU_lfil    = param->ILU_lfil;

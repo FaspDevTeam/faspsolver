@@ -288,7 +288,7 @@ static void interp_DIR (dCSRmat *A,
                         dCSRmat *P,
                         AMG_param *param )
 {
-    const INT  row   = A->row;
+    INT  row   = A->row;
     INT       *vec   = vertices->val;
 
     // local variables
@@ -306,9 +306,86 @@ static void interp_DIR (dCSRmat *A,
 
     INT        use_openmp = FALSE;
     
+#ifdef _OPENMP
+    INT myid, mybegin, myend, stride_i, nthreads;
+    row = MIN(P->IA[P->row], row);
+    if ( row > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
+#endif
     
     // Step 1. Fill in values for interpolation operator P
     if (use_openmp) {
+#ifdef _OPENMP
+        stride_i = row/nthreads;
+#pragma omp parallel private(myid,mybegin,myend,i,begin_row,end_row,idiag,aii,amN,amP,apN,apP,num_pcouple,j,k,alpha,beta,l) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if(myid < nthreads-1) myend = mybegin+stride_i;
+            else myend = row;
+            for (i=mybegin; i<myend; ++i){
+                begin_row=A->IA[i]; end_row=A->IA[i+1]-1;
+                for(idiag=begin_row;idiag<=end_row;idiag++){
+                    if (A->JA[idiag]==i) {
+                        aii=A->val[idiag];
+                        break;
+                    }
+                }
+                if(vec[i]==0){  // if node i is on fine grid
+                    amN=0, amP=0, apN=0, apP=0,  num_pcouple=0;
+                    for(j=begin_row;j<=end_row;++j){
+                        if(j==idiag) continue;
+                        for(k=P->IA[i];k<P->IA[i+1];++k) {
+                            if(P->JA[k]==A->JA[j]) break;
+                        }
+                        if(A->val[j]>0) {
+                            apN+=A->val[j];
+                            if(k<P->IA[i+1]) {
+                                apP+=A->val[j];
+                                num_pcouple++;
+                            }
+                        }
+                        else {
+                            amN+=A->val[j];
+                            if(k<P->IA[i+1]) {
+                                amP+=A->val[j];
+                            }
+                        }
+                    } // j
+                    
+                    alpha=amN/amP;
+                    if(num_pcouple>0) {
+                        beta=apN/apP;
+                    }
+                    else {
+                        beta=0;
+                        aii+=apN;
+                    }
+                    for(j=P->IA[i];j<P->IA[i+1];++j){
+                        k=P->JA[j];
+                        for(l=A->IA[i];l<A->IA[i+1];l++){
+                            if(A->JA[l]==k) break;
+                        }
+                        if(A->val[l]>0){
+                            P->val[j]=-beta*A->val[l]/aii;
+                        }
+                        else {
+                            P->val[j]=-alpha*A->val[l]/aii;
+                        }
+                    }
+                }
+                else if(vec[i]==2) // if node i is a special fine node
+                {
+                    
+                }
+                else {// if node i is on coarse grid
+                    P->val[P->IA[i]]=1;
+                }
+            }
+        }
+#endif
     }
     
     else {
@@ -388,6 +465,20 @@ static void interp_DIR (dCSRmat *A,
     P->col = index;
     
     if (use_openmp) {
+#ifdef _OPENMP
+        stride_i = P->IA[P->row]/nthreads;
+#pragma omp parallel private(myid,mybegin,myend,i,j) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            mybegin = myid*stride_i;
+            if ( myid < nthreads-1 ) myend = mybegin+stride_i;
+            else myend = P->IA[P->row];
+            for ( i = mybegin; i < myend; ++i ) {
+                j = P->JA[i];
+                P->JA[i] = cindex[j];
+            }
+        }
+#endif
     }
     else {
         for ( i = 0; i < P->nnz; ++i ) {

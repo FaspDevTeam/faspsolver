@@ -1463,7 +1463,8 @@ void fasp_matrix_read (char *filename,
         
         switch (flag) {
             case 1:
-                fasp_dcsr_read_s(fp, (dCSRmat *)A);
+                //fasp_dcsr_read_s(fp, (dCSRmat *)A);
+                fasp_dcoo_read_s(fp, (dCSRmat *)A);
                 break;
             case 2:
                 fasp_dbsr_read_s(fp, (dBSRmat *)A);

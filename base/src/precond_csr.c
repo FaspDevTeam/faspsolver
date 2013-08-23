@@ -424,7 +424,7 @@ void fasp_precond_amg (REAL *r,
     
     AMG_param amgparam; fasp_param_amg_init(&amgparam);
     fasp_param_prec_to_amg(&amgparam,pcdata);
-    
+        
     AMG_data *mgl = pcdata->mgl_data;
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);

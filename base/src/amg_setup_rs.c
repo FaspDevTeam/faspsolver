@@ -345,16 +345,17 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
         mgl[level].cfmark = fasp_ivec_create(size);
         fasp_iarray_cp(size, vertices.val, mgl[level].cfmark.val);
         
-        if (mgl[level].P.col == 0) break;
+        if (mgl[level].P.col == 0) break;        
         
         //status = fasp_amg_interp1(&mgl[level].A, &vertices, &mgl[level].P, param, &S, icor_ysk);
-         fasp_amg_interp1(&mgl[level].A, &vertices, &mgl[level].P, param, &S, icor_ysk);
+        fasp_amg_interp1(&mgl[level].A, &vertices, &mgl[level].P, param, &S, icor_ysk);
+
         //if ( status < 0 ) goto FINISHED;
         
         /*-- Form coarse level stiffness matrix --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
         
-        if ( interp_type ==INTERP_DIR ) {
+        if ( interp_type == INTERP_DIR ) {
             fasp_blas_dcsr_rap4(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A, icor_ysk);
         }
         else {
