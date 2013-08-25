@@ -1,8 +1,8 @@
      130 ./base/src/amg.c
      121 ./base/src/amg_setup_cr.c
-     430 ./base/src/amg_setup_rs.c
+     432 ./base/src/amg_setup_rs.c
      590 ./base/src/amg_setup_sa.c
-     430 ./base/src/amg_setup_ua.c
+     431 ./base/src/amg_setup_ua.c
      318 ./base/src/amg_solve.c
      801 ./base/src/amlirecur.c
      270 ./base/src/array.c
@@ -33,14 +33,14 @@
      693 ./base/src/input.c
     1349 ./base/src/interpolation.c
      847 ./base/src/interpolation_em.c
-    2808 ./base/src/io.c
+    2809 ./base/src/io.c
      130 ./base/src/itsolver_bcsr.c
      482 ./base/src/itsolver_bsr.c
      588 ./base/src/itsolver_csr.c
      363 ./base/src/itsolver_mf.c
      352 ./base/src/itsolver_str.c
      170 ./base/src/lu.c
-     251 ./base/src/memory.c
+     252 ./base/src/memory.c
      274 ./base/src/message.c
      458 ./base/src/mgcycle.c
      124 ./base/src/mgrecur.c
@@ -52,17 +52,17 @@
      336 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
      179 ./base/src/pgcg_mf.c
-    1294 ./base/src/pgmres.c
-     280 ./base/src/pgmres_mf.c
+    1351 ./base/src/pgmres.c
+     294 ./base/src/pgmres_mf.c
     1284 ./base/src/pminres.c
      457 ./base/src/pminres_mf.c
      629 ./base/src/precond_bsr.c
      599 ./base/src/precond_csr.c
     1731 ./base/src/precond_str.c
-     631 ./base/src/pvfgmres.c
-     321 ./base/src/pvfgmres_mf.c
-    1303 ./base/src/pvgmres.c
-     322 ./base/src/pvgmres_mf.c
+     662 ./base/src/pvfgmres.c
+     337 ./base/src/pvfgmres_mf.c
+    1364 ./base/src/pvgmres.c
+     338 ./base/src/pvgmres_mf.c
      873 ./base/src/quadrature.c
      108 ./base/src/rap.c
      186 ./base/src/schwarz_setup.c
@@ -81,9 +81,9 @@
      970 ./base/src/sparse_util.c
     1624 ./base/src/spbcgs.c
     1043 ./base/src/spcg.c
-    1332 ./base/src/spgmres.c
+    1389 ./base/src/spgmres.c
     1418 ./base/src/spminres.c
-    1484 ./base/src/spvgmres.c
+    1544 ./base/src/spvgmres.c
      108 ./base/src/threads.c
       39 ./base/src/timing.c
      464 ./base/src/vec.c
@@ -103,4 +103,4 @@
     5818 ./base/include/malloc.c.h
      225 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   77947 total
+   78264 total
