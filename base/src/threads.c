@@ -1,4 +1,5 @@
 /*! \file threads.c
+ *
  *  \brief Get and set number of threads and assigne work load for each thread.
  */
 

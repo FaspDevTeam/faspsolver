@@ -1,4 +1,5 @@
 /*! \file checkmat.c
+ *
  *  \brief Check matrix properties
  */
 
@@ -16,7 +17,7 @@
  *
  * \brief Check positivity of diagonal entries of a CSR sparse matrix.
  *
- * \param A   Pointer to the dCSRmat matrix
+ * \param A   Pointer to dCSRmat matrix
  *
  * \return Number of negative diagonal entries 
  *

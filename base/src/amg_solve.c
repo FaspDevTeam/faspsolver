@@ -1,10 +1,10 @@
 /*! \file amg_solve.c
+ *
  *  \brief Algebraic multigrid iterations: SOLVE phase.
  *
  *  \note Solve Ax=b using multigrid method. This is SOLVE phase only and is
  *        independent of SETUP method used! Should be called after multigrid
  *        hierarchy has been generated!
- *
  */
 
 #include <time.h>
@@ -23,17 +23,16 @@
  *
  * \brief AMG -- SOLVE phase
  *
- * \param mgl     Pointer to AMG_data data
- * \param param   Pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return        Iteration number if succeed, ERROR otherwise
+ * \return       Iteration number if succeed, ERROR otherwise
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   04/02/2010
  *
- * Modified by Chensong 04/21/2013: Fix a output typo
+ * Modified by Chensong 04/21/2013: Fix an output typo
  */
-
 INT fasp_amg_solve (AMG_data *mgl,
                     AMG_param *param)
 {
@@ -107,15 +106,15 @@ INT fasp_amg_solve (AMG_data *mgl,
  *
  * \brief AMLI -- SOLVE phase
  *
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return        iteration number if succeed
+ * \return       Iteration number if succeed, ERROR otherwise
  *
  * \author Xiaozhe Hu
  * \date   01/23/2011
  *
- * Modified by Chensong 04/21/2013: Fix a output typo
+ * Modified by Chensong 04/21/2013: Fix an output typo
  */
 INT fasp_amg_solve_amli (AMG_data *mgl,
                          AMG_param *param)
@@ -186,15 +185,15 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
  *
  * \brief Nonlinear AMLI --- SOLVE phase
  *
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return        iteration number if succeed
+ * \return       Iteration number if succeed, ERROR otherwise
  *
  * \author Xiaozhe Hu
  * \date   04/30/2011
  *
- * Modified by Chensong 04/21/2013: Fix a output typo
+ * Modified by Chensong 04/21/2013: Fix an output typo
  */
 INT fasp_amg_solve_nl_amli (AMG_data *mgl,
                             AMG_param *param)
@@ -262,8 +261,8 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
  *
  * \brief FMG -- SOLVE phase
  *
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
  * \author Chensong Zhang
  * \date   01/10/2012

@@ -1,5 +1,6 @@
 /*! \file blas_csrl.c
- *  \brief BLAS operations for sparse matrices in CSRL format.
+ *
+ *  \brief BLAS operations for dCSRLmat matrices
  *
  *  \note For details of CSRL format, refer to 
  *        "Optimizaing sparse matrix vector product computations using unroll and jam"
@@ -18,9 +19,9 @@
  *
  * \brief Compute y = A*x for a sparse matrix in CSRL format
  *
- * \param A   Pointer to the dCSRLmat matrix A
- * \param x   Pointer to the REAL array of vector x
- * \param y   Pointer to the REAL array of vector y
+ * \param A   Pointer to dCSRLmat matrix A
+ * \param x   Pointer to REAL array of vector x
+ * \param y   Pointer to REAL array of vector y
  *
  * \date   2011/01/07
  */

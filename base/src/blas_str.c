@@ -1,6 +1,6 @@
 /*! \file blas_str.c
- *  \brief BLAS operations for STR sparse matrices.
  *
+ *  \brief BLAS operations for dSTRmat matrices
  */
 
 #include <math.h>
@@ -38,8 +38,8 @@ static inline void spaaxpy_str_general(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Zhiyang Zhou, Xiaozhe Hu, Shiquan Zhang
  * \date   2010/10/15
@@ -108,8 +108,8 @@ void fasp_blas_dstr_aAxpy (REAL alpha,
  * \brief Matrix-vector multiplication y = A*x
  *
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Chensong Zhang
  * \date   04/27/2013
@@ -329,8 +329,8 @@ static inline void smat_amxv (REAL alpha,
  * \param start_vecy Starting position of vecy
  * \param nc         Dimension of the submatrix
  * \param data       Pointer to matrix data
- * \param x          Pointer to real array x
- * \param y          Pointer to real array y
+ * \param x          Pointer to REAL array x
+ * \param y          Pointer to REAL array y
  *
  * \author Shiquan Zhang
  * \date   2010/04/24
@@ -389,8 +389,8 @@ static inline void blkcontr_str (INT start_data,
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Shiquan Zhang
  * \date   2010/10/15
@@ -547,8 +547,8 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
@@ -597,8 +597,8 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
@@ -811,8 +811,8 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
@@ -1023,8 +1023,8 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
@@ -1156,8 +1156,8 @@ static inline void spaaxpy_str_2D_block (REAL alpha,
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
@@ -1277,8 +1277,8 @@ static inline void spaaxpy_str_3D_scalar (REAL alpha,
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
@@ -1455,8 +1455,8 @@ static inline void spaaxpy_str_3D_nc3 (REAL alpha,
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
@@ -1633,8 +1633,8 @@ static inline void spaaxpy_str_3D_nc5 (REAL alpha,
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
@@ -1811,8 +1811,8 @@ static inline void spaaxpy_str_3D_block (REAL alpha,
  *
  * \param alpha   REAL factor alpha
  * \param A       Pointer to dSTRmat matrix
- * \param x       Pointer to real array
- * \param y       Pointer to real array
+ * \param x       Pointer to REAL array
+ * \param y       Pointer to REAL array
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15

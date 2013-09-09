@@ -1,5 +1,6 @@
 /*! \file itsolver_str.c
- *  \brief Iterative solvers (main file)
+ *
+ *  \brief Iterative solvers for dSTRmat matrices
  */
 
 #include <math.h>
@@ -19,10 +20,10 @@
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param A        Pointer to the dSTRmat matrix
- * \param b        Pointer to the dvector of right hand side
- * \param x        Pointer to the dvector of dofs
- * \param pc       Pointer to the preconditioner data
+ * \param A        Pointer to the coeff matrix in dSTRmat format
+ * \param b        Pointer to the right hand side in dvector format
+ * \param x        Pointer to the approx solution in dvector format
+ * \param pc       Pointer to the preconditioning action
  * \param itparam  Pointer to parameters for iterative solvers
  *
  * \return         Number of iterations if succeed
@@ -95,9 +96,9 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param A         Pointer to the dSTRmat matrix
- * \param b         Pointer to the dvector of right hand side
- * \param x         Pointer to the dvector of dofs
+ * \param A         Pointer to the coeff matrix in dSTRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  *
  * \return          Number of iterations if succeed
@@ -135,9 +136,9 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
- * \param A         Pointer to the dSTRmat matrix
- * \param b         Pointer to the dvector of right hand side
- * \param x         Pointer to the dvector of dofs
+ * \param A         Pointer to the coeff matrix in dSTRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  *
  * \return          Number of iterations if succeed
@@ -192,9 +193,9 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
  *
  * \brief Solve Ax=b by structured ILU preconditioned Krylov methods 
  *
- * \param A         Pointer to the dSTRmat matrix
- * \param b         Pointer to the dvector of right hand side
- * \param x         Pointer to the dvector of dofs
+ * \param A         Pointer to the coeff matrix in dSTRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  * \param iluparam  Pointer to parameters for ILU
  *
@@ -274,9 +275,9 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
- * \param A         Pointer to the dSTRmat matrix
- * \param b         Pointer to the dvector of right hand side
- * \param x         Pointer to the dvector of dofs
+ * \param A         Pointer to the coeff matrix in dSTRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  * \param neigh     Pointer to neighbor vector
  * \param order     Pointer to solver ordering

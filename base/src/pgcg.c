@@ -1,5 +1,6 @@
 /*! \file pgcg.c
- *  \brief Krylov subspace methods -- Preconditioned Generalized Conjugate Gradient.
+ *
+ *  \brief Krylov subspace methods -- Preconditioned Generalized CG
  *
  *  \note Refer to Concus, P. and Golub, G.H. and O'Leary, D.P.
  *        A Generalized Conjugate Gradient Method for the Numerical: 
@@ -24,13 +25,13 @@
  *
  * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b 
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to the structure of precondition (precond) 
+ * \param A            Pointer to dCSRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param u            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
- * \param stop_type    Stopping criteria type -- Not implemented
+ * \param stop_type    Stopping criteria type
  * \param print_level  How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise

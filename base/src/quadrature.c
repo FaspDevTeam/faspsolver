@@ -1,4 +1,5 @@
 /*! \file quadrature.c
+ *
  *  \brief Quadrature rules
  */
 
@@ -203,7 +204,7 @@ void fasp_quad2d (INT num_qp,
  * \date 10/21/2008
  * 
  * \note gauss[*][0] -- quad point x in ref coor
- *     gauss[*][1] -- quad point y in ref coor
+ *       gauss[*][1] -- quad point y in ref coor
  *       gauss[*][2] -- quad weight
  */
 void fasp_gauss2d (INT num_qp, 

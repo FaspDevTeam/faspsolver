@@ -1,5 +1,6 @@
 /*! \file ilu_setup_bsr.c
- *  \brief Setup Incomplete LU decomposition for BSR matrices.
+ *
+ *  \brief Setup Incomplete LU decomposition for dBSRmat matrices
  */
 
 #include <math.h>
@@ -10,9 +11,12 @@
 
 /* The following functions are defined in ilu.for */
 #ifdef __cplusplus 
-extern "C" {void symbfactor_(const INT *n,INT *colind,INT *rwptr,const INT *levfill,const INT *nzmax,INT *nzlu,INT *ijlu,INT *uptr,INT *ierr);}
+extern "C" {void symbfactor_(const INT *n,INT *colind,INT *rwptr,
+                             const INT *levfill,const INT *nzmax,
+                             INT *nzlu,INT *ijlu,INT *uptr,INT *ierr);}
 #else
-extern void symbfactor_(const INT *n,INT *colind,INT *rwptr,const INT *levfill,const INT *nzmax,INT *nzlu,INT *ijlu,INT *uptr,INT *ierr);
+extern void symbfactor_(const INT *n,INT *colind,INT *rwptr,const INT *levfill,
+                        const INT *nzmax,INT *nzlu,INT *ijlu,INT *uptr,INT *ierr);
 #endif
 
 static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
@@ -26,7 +30,7 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
  *
  * \brief Get ILU decoposition of a BSR matrix A
  *
- * \param A         Pointer to bSR matrir of REAL type
+ * \param A         Pointer to dBSRmat matrix
  * \param iludata   Pointer to ILU_data
  * \param iluparam  Pointer to ILU_param
  *
@@ -136,7 +140,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
  * \fn static INT numfac_bsr (dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
  * \brief Get numerical ILU decoposition of a BSR matrix A
  *
- * \param A        Pointer to BSR matrir of REAL type
+ * \param A        Pointer to dBSRmat matrix
  * \param luval    Pointer to numerical value of ILU
  * \param jlu      Pointer to the nonzero pattern of ILU
  * \param uptr     Pointer to the diagnal position of ILU

@@ -1,4 +1,5 @@
 /*! \file interpolation_em.c
+ *
  *  \brief Interpolation operators for AMG based on energy-min
  *
  *  \note Ref J. Xu and L. Zikatanov
@@ -34,10 +35,10 @@ static SHORT genintval(dCSRmat *, INT **, REAL **, INT, INT *, INT, INT, INT);
  *
  * \brief Energy-min interpolation
  *
- * \param A          pointer to the stiffness matrix
- * \param vertices   pointer to the indicator of CF split node is on fine or coarse grid
- * \param P          pointer to the dCSRmat matrix of resulted interpolation
- * \param param      pointer to AMG parameters
+ * \param A          Pointer to dCSRmat: the coefficient matrix (index starts from 0)
+ * \param vertices   Pointer to the indicator of CF splitting on fine or coarse grid
+ * \param P          Pointer to the dCSRmat matrix of resulted interpolation
+ * \param param      Pointer to AMG_param: AMG parameters
  *
  * \author Shuo Zhang, Xuehai Huang
  * \date   04/04/2010
@@ -97,8 +98,7 @@ void fasp_amg_interp_em (dCSRmat *A,
  * \author Xuehai Huang
  * \date   04/04/2009
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/14/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */
 static SHORT invden (INT nn,
                      REAL *mat,
@@ -150,7 +150,7 @@ static SHORT invden (INT nn,
  *
  * \brief Get a local block from a CSR sparse matrix
  *
- * \param A     pointer to a sparse matrix
+ * \param A     Pointer to dCSRmat matrix: the coefficient matrix
  * \param m     Number of rows of the local block matrix
  * \param n     Number of columns of the local block matrix
  * \param rows  Indices to local rows
@@ -163,8 +163,7 @@ static SHORT invden (INT nn,
  * \author Xuehai Huang
  * \date   04/04/2009
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/17/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/17/2012
  */
 static SHORT get_block (dCSRmat *A,
                         INT m,
@@ -231,10 +230,10 @@ static SHORT get_block (dCSRmat *A,
  *
  * \brief given the row indices and col indices, to find a block submatrix and get its inverse
  *
- * \param A     pointer to the whole matrix
+ * \param A     Pointer to dCSRmat matrix: the coefficient matrix
  * \param mm    Size of the submatrix
  * \param Ii    Integer array, to store the indices of row (also col)
- * \param ima   pointer to the inverse of the full submatrix, the storage is row by row
+ * \param ima   Pointer to the inverse of the full submatrix, the storage is row by row
  * \param mask  Working array
  *
  * \return      SUCCESS or error message
@@ -264,20 +263,19 @@ static SHORT gentisquare_nomass (dCSRmat *A,
  *
  * \brief Add a small submatrix to a big matrix with respect to its row and cols in the big matrix
  *
- * \param mat      pointer pointing to the structure of the matrix
- * \param matval   pointer pointing to the values according to the structure
+ * \param mat      Pointer pointing to the structure of the matrix
+ * \param matval   Pointer pointing to the values according to the structure
  * \param lengths  2d array, the second entry is the lengths of matval
  * \param mm       Number of the rows (also the columns)
- * \param Ii       pointer to the array to store the relative position of the rows and cols
- * \param ima      pointer to the full submatrix, the sequence is row by row
+ * \param Ii       Pointer to the array to store the relative position of the rows and cols
+ * \param ima      Pointer to the full submatrix, the sequence is row by row
  *
  * \return         SUCCESS or error message
  *
  * \author Xuehai Huang
  * \date   04/04/2009
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date  10/14/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */
 static SHORT getinonefull (INT **mat,
                            REAL **matval,
@@ -325,8 +323,8 @@ static SHORT getinonefull (INT **mat,
  *
  * \brief Order a cluster of entries in a sequence
  *
- * \param *mat      pointer to the relative position of the entries
- * \param *matval   pointer to the values corresponding to the position
+ * \param *mat      Pointer to the relative position of the entries
+ * \param *matval   Pointer to the values corresponding to the position
  * \param lengths   INT array, to store the number of rows, number of cols and number of nonzero
  *
  * \return          SUCCESS or error message
@@ -334,8 +332,7 @@ static SHORT getinonefull (INT **mat,
  * \author Xuehai Huang
  * \date   04/04/2009
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/17/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/17/2012
  */
 static SHORT orderone (INT **mat,
                        REAL **matval,
@@ -480,11 +477,11 @@ static SHORT orderone (INT **mat,
  *
  * \brief Given the structure of the interpolation, to get the evaluation of the interpolation
  *
- * \param A         pointer to the dCSRmat matrix
- * \param itmat     pointer to the structure of the interpolation
- * \param itmatval  pointer to the evaluation of the interpolation
- * \param isol      ???
- * \param numiso    ???
+ * \param A         Pointer to dCSRmat matrix: the coefficient matrix
+ * \param itmat     Pointer to the structure of the interpolation
+ * \param itmatval  Pointer to the evaluation of the interpolation
+ * \param isol      Pointer to the isolated points
+ * \param numiso    Number of the isolated points
  * \param ittniz    Length of interpolation
  * \param nf        Number of fine-level nodes
  * \param nc        Number of coarse-level nodes
@@ -494,9 +491,6 @@ static SHORT orderone (INT **mat,
  * \author Xuehai Huang
  * \date   10/29/2010
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/17/2012
- *
  * \note
  *  nf=number fine, nc= n coarse
  *  Suppose that the structure of the interpolation is known.
@@ -505,6 +499,8 @@ static SHORT orderone (INT **mat,
  *  the itma and itmatval have a special data structure
  *  to be exact, the same columns gather together
  *  itmat[0] record the column number, and itmat[1] record the row number.
+ *
+ * Modified by Chunsheng Feng, Zheng Li on 10/17/2012
  */
 static SHORT genintval (dCSRmat *A,
                         INT **itmat,
@@ -716,14 +712,13 @@ static SHORT genintval (dCSRmat *A,
  * \brief Given a coarsening (in the form of an interpolation operator), inherit the structure,
  *        get new evaluation
  *
- * \param A    pointer to the dCSRmat matrix
- * \param it   pointer to the interpolation matrix
+ * \param A    Pointer to dCSRmat matrix: the coefficient matrix
+ * \param it   Pointer to dCSRmat matrix: the interpolation matrix
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   10/29/2010
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/17/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/17/2012
  */
 static SHORT getiteval (dCSRmat *A,
                         dCSRmat *it)

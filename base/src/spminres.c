@@ -1,6 +1,6 @@
 /*! \file spminres.c
  *
- *  \brief Krylov subspace methods -- Preconditioned Minimal Residual with safe net
+ *  \brief Krylov subspace methods -- Preconditioned minimal residual with safe net
  *
  *  Abstract algorithm
  *
@@ -79,9 +79,9 @@
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safe net
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
+ * \param A            Pointer to dCSRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param u            Pointer to dvector: the unknowns
  * \param pc           Pointer to the structure of precondition (precond)
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
@@ -526,9 +526,9 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safe net
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
+ * \param A            Pointer to block_dCSRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param u            Pointer to dvector: the unknowns
  * \param pc           Pointer to the structure of precondition (precond)
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
@@ -973,9 +973,9 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safe net
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
+ * \param A            Pointer to dSTRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param u            Pointer to dvector: the unknowns
  * \param MaxIt        Maximal number of iterations
  * \param tol          Tolerance for stopping
  * \param pc           Pointer to the structure of precondition (precond)

@@ -1,10 +1,10 @@
 /*! \file amg_setup_sa.c
- *  \brief Smoothed Aggregation AMG: SETUP phase
  *
- * \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
- *       Refer to P. Vanek, J. Madel and M. Brezina
- *       "Algebraic Multigrid on Unstructured Meshes", 1994
+ *  \brief Smoothed aggregation AMG: SETUP phase
  *
+ *  \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
+ *        Refer to P. Vanek, J. Madel and M. Brezina
+ *        "Algebraic Multigrid on Unstructured Meshes", 1994
  */
 
 #include <math.h>
@@ -32,10 +32,10 @@ static void smooth_agg(dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRma
  *
  * \brief Set up phase of smoothed aggregation AMG
  *
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return        SUCCESS if succeed, error otherwise
+ * \return       SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   09/29/2009
@@ -78,10 +78,10 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
 /**
  * \fn static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl, AMG_param *param)
  *
- * \brief Set up phase of smoothed aggregation AMG, using smoothed P and smoothed A
+ * \brief Setup phase of smoothed aggregation AMG, using smoothed P and smoothed A
  *
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
  * \author Xiaozhe Hu
  * \date   02/21/2011
@@ -260,8 +260,8 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
  *
  * \brief Set up phase of plain aggregation AMG, using smoothed P and unsmoothed A
  *
- * \param mgl     pointer to AMG_data data
- * \param param   pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
  * \author Xiaozhe Hu
  * \date   02/21/2011

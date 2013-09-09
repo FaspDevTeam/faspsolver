@@ -1,5 +1,6 @@
-/*! \file smoother_cr.c
- *  \brief Smoothers for sparse matrix in CSR format for CR
+/*! \file smoother_csr_cr.c
+ *
+ *  \brief Smoothers for dCSRmat matrices using compatible relaxation
  *
  *  \note Restricted-smoothers for compatible relaxation, C/F smoothing, etc.
  */
@@ -14,7 +15,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_smoother_dcsr_gscr (INT pt, INT n, REAL *u, INT *ia, INT *ja, REAL *a, REAL *b, INT L, INT *CF)
+ * \fn void fasp_smoother_dcsr_gscr (INT pt, INT n, REAL *u, INT *ia, INT *ja, 
+ *                                   REAL *a, REAL *b, INT L, INT *CF)
  *
  * \brief Gauss Seidel method restriced to a block 
  *

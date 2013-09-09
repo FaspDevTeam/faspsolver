@@ -1,7 +1,9 @@
 /*! \file  sparse_util.c
- *  \brief sparse matrix routines.
- *  \brief Most algorithms work as follows:
- *  \brief (a) Boolean operations (to determine the nonzero structure);
+ *
+ *  \brief Routines for sparse matrix operations
+ *
+ *  \note  Most algorithms work as follows:
+ *         (a) Boolean operations (to determine the nonzero structure);
  *         (b) Numerical part, where the result is calculated.
  *
  *  \note: Parameter notation

@@ -1,5 +1,6 @@
 /*! \file ilu_setup_str.c
- *  \brief Setup of ILU decomposition on structured grid.
+ *
+ *  \brief Setup of ILU decomposition for dSTRmat matrices
  */
 
 #include <math.h>
@@ -16,7 +17,7 @@
  *
  * \brief Get ILU(0) decomposition of a structured matrix A 
  *
- * \param A   Pointer to oringinal structured matrix of REAL type
+ * \param A   Pointer to dSTRmat
  * \param LU  Pointer to ILU structured matrix of REAL type
  *
  * \author Shiquan Zhang, Xiaozhe Hu

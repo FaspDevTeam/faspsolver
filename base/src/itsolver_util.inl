@@ -1,5 +1,5 @@
 /*! \file itsolver_util.inl
- *  \brief Utilies for iterative solvers
+ *  \brief Routines for iterative solvers
  */
 
 /*---------------------------------*/

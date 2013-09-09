@@ -1,5 +1,5 @@
 /*! \file fasp.h
- *  \brief Main header file for the FASP package
+ *  \brief Main header file for FASP
  *  
  *  This header file contains general constants and data structures used in FASP.
  * 
@@ -72,7 +72,7 @@
 #define ABS(a) (((a)>=0.0)?(a):-(a)) /**< absolute value of a */
 
 /** 
- * \brief Definition of >, >=, <, <=, and isnan. 
+ * \brief Definition of >, >=, <, <=, and isnan
  */
 #define GT(a,b) (((a)>(b))?(TRUE):(FALSE))   /**< is a > b? */
 #define GE(a,b) (((a)>=(b))?(TRUE):(FALSE))  /**< is a >= b? */
@@ -100,7 +100,7 @@ extern unsigned INT total_alloc_count; /**< total allocation times */
 
 /** 
  * \struct ddenmat
- * \brief Dense matrix of REAL type.
+ * \brief Dense matrix of REAL type
  *
  * A dense REAL matrix
  */ 
@@ -119,7 +119,7 @@ typedef struct ddenmat{
 
 /** 
  * \struct idenmat
- * \brief Dense matrix of INT type.
+ * \brief Dense matrix of INT type
  *
  * A dense INT matrix
  */ 
@@ -138,7 +138,7 @@ typedef struct idenmat{
 
 /** 
  * \struct dCSRmat
- * \brief Sparse matrix of REAL type in CSR format.
+ * \brief Sparse matrix of REAL type in CSR format
  *
  * CSR Format (IA,JA,A) in REAL
  *
@@ -168,7 +168,7 @@ typedef struct dCSRmat{
 
 /** 
  * \struct iCSRmat
- * \brief Sparse matrix of INT type in CSR format.
+ * \brief Sparse matrix of INT type in CSR format
  *
  * CSR Format (IA,JA,A) in integer
  *
@@ -198,7 +198,7 @@ typedef struct iCSRmat{
 
 /** 
  * \struct dCOOmat
- * \brief Sparse matrix of REAL type in COO (or IJ) format.
+ * \brief Sparse matrix of REAL type in COO (or IJ) format
  *
  * Coordinate Format (I,J,A)
  *
@@ -228,7 +228,7 @@ typedef struct dCOOmat{
 
 /** 
  * \struct iCOOmat
- * \brief Sparse matrix of INT type in COO (or IJ) format.
+ * \brief Sparse matrix of INT type in COO (or IJ) format
  *
  * Coordinate Format (I,J,A)
  *
@@ -258,7 +258,7 @@ typedef struct iCOOmat{
 
 /*!
  * \struct dCSRLmat
- * \brief Sparse matrix of REAL type in CSRL format.
+ * \brief Sparse matrix of REAL type in CSRL format
  */
 typedef struct dCSRLmat{
     
@@ -293,9 +293,7 @@ typedef struct dCSRLmat{
 
 /** 
  * \struct dSTRmat
- * \brief Structure matrix of REAL type.
- *
- * A structure REAL matrix
+ * \brief Structure matrix of REAL type
  *
  * \note Every nc^2 entries of the array diag and off-diag[i] store one block:
  *		 For 2D matrix, the recommended offsets is [-1,1,-nx,nx];
@@ -337,7 +335,7 @@ typedef struct dSTRmat{
 
 /** 
  * \struct dvector
- * \brief Vector with n entries of REAL type.
+ * \brief Vector with n entries of REAL type
  */
 typedef struct dvector{
 	
@@ -351,7 +349,7 @@ typedef struct dvector{
 
 /** 
  * \struct ivector
- * \brief Vector with n entries of INT type.
+ * \brief Vector with n entries of INT type
  */
 typedef struct ivector{
 	
@@ -451,7 +449,7 @@ typedef struct {
 
 /** 
  * \struct Schwarz_data
- * \brief Data for Schwarz methods.
+ * \brief Data for Schwarz methods
  *
  * This is needed for the schwarz solver, preconditioner/smoother.
  *
@@ -499,7 +497,7 @@ typedef struct {
 
 /** 
  * \struct AMG_param
- * \brief Parameters for AMG solver.
+ * \brief Parameters for AMG solver
  *
  * \note This is needed for the AMG solver/preconditioner.
  */
@@ -623,7 +621,7 @@ typedef struct {
 
 /** 
  * \struct AMG_data
- * \brief Data for multigrid levels.
+ * \brief Data for AMG solvers
  *
  * \note This is needed for the AMG solver/preconditioner.
  */
@@ -686,8 +684,7 @@ typedef struct {
 
 /** 
  * \struct precond_data
- * \brief Data passed to the preconditioners.
- *
+ * \brief Data passed to the preconditioners
  */
 typedef struct {
 	
@@ -766,8 +763,7 @@ typedef struct {
 
 /** 
  * \struct precond_data_str
- * \brief Data passed to the preconditioner for STR format.
- *
+ * \brief Data passed to the preconditioner for dSTRmat matrices
  */
 typedef struct {
 	
@@ -858,7 +854,7 @@ typedef struct {
 
 /** 
  * \struct precond_diagstr
- * \brief Data passed to diagnal preconditioner for STR.
+ * \brief Data passed to diagnal preconditioner for dSTRmat matrices
  *
  * \note This is needed for the diagnal preconditioner.
  */
@@ -872,25 +868,9 @@ typedef struct {
 	
 } precond_diagstr; /**< Data for diagonal preconditioner of STR matrices */
 
-/** 
- * \struct precond_diagbsr
- * \brief Data passed to diagnal preconditioner for BSR.
- *
- * \note This is needed for the diagnal preconditioner.
- */
-typedef struct {
-	
-	//! dimension of each sub-block
-	INT nb;
-    
-	//! diagnal elements
-	dvector diag;
-	
-} precond_diagbsr; /**< Data for diagonal preconditioner of BSR matrices */
-
-/** 
+/**
  * \struct precond
- * \brief Preconditioner data and action.
+ * \brief Preconditioner data and action
  *
  * \note This is the preconditioner structure for preconditioned iterative methods.
  */ 
@@ -911,7 +891,7 @@ typedef struct {
 
 /**
  * \struct mxv_matfree
- * \brief Matrix-vector multiplication, replace the actual matrix.
+ * \brief Matrix-vector multiplication, replace the actual matrix
  */
 typedef struct {
 	
@@ -997,8 +977,7 @@ typedef struct {
 
 /** 
  * \struct itsolver_param
- * \brief Parameters passed to iterative solvers.
- *
+ * \brief Parameters passed to iterative solvers
  */
 typedef struct {
 	
@@ -1014,7 +993,7 @@ typedef struct {
 
 /**
  * \struct grid2d
- * \brief 2d grid data structure
+ * \brief Two dimensional grid data structure
  *
  * \note The grid2d structure is simply a list of triangles, 
  *       edges and vertices. 

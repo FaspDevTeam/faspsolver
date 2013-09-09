@@ -1,4 +1,5 @@
 /*! \file graphics.c
+ *
  *  \brief Functions for graphical output
  */
 
@@ -21,7 +22,7 @@ static INT  write_bmp16(const char *fname, INT m, INT n, const char map[]);
  *
  * \brief Write sparse matrix pattern in BMP file format
  *
- * \param A         Pointer to the dCSRmat matrix in CSR format
+ * \param A         Pointer to the dCSRmat matrix
  * \param filename  File name
  * \param size      size*size is the picture size for the picture
  * 

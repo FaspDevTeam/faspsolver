@@ -1,4 +1,5 @@
 /*! \file message.c
+ *
  *  \brief Output some useful messages
  *
  *  \note These routines are meant for internal use only.

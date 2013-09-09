@@ -1,9 +1,10 @@
 File Name: CHANGES
 
-08/25/2013 FASP 1.3.5:
+09/09/2013 FASP 1.3.5:
 - If allocation memory failed, output warning and return NULL, instead of exit.
 - Add safe-guard for GMRES: when memory not enough, reduce restart number.
 - Fix a bug in interpolation: OMP version.
+- Clean up Doxygen and modify homepage.
 
 07/10/2013 FASP 1.3.4:
 - Update VS08 and VS10 solutions.

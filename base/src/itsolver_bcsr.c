@@ -1,5 +1,6 @@
 /*! \file itsolver_bcsr.c
- *  \brief Iterative solvers for block_CSR matrices (main file)
+ *
+ *  \brief Iterative solvers for block_dCSRmat matrices
  */
 
 #include <math.h>
@@ -18,12 +19,12 @@
  * \fn INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, dvector *b, dvector *x, 
  *                                     precond *pc, itsolver_param *itparam)
  *
- * \brief Solve Ax=b by standard Krylov methods 
+ * \brief Solve Ax = b by standard Krylov methods 
  *
- * \param A        Pointer to the block dCSRmat matrix
- * \param b        Pointer to the dvector of right hand side
- * \param x        Pointer to the dvector of dofs
- * \param pc       Pointer to the preconditioner data
+ * \param A        Pointer to the coeff matrix in block_dCSRmat format
+ * \param b        Pointer to the right hand side in dvector format
+ * \param x        Pointer to the approx solution in dvector format
+ * \param pc       Pointer to the preconditioning action
  * \param itparam  Pointer to parameters for iterative solvers
  *
  * \return         Number of iterations if succeed
@@ -89,11 +90,11 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
  * \fn INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, dvector *b, dvector *x, 
  *                                   itsolver_param *itparam)
  *
- * \brief Solve Ax=b by standard Krylov methods
+ * \brief Solve Ax = b by standard Krylov methods
  *
- * \param A         Pointer to the block_dCSRmat matrix
- * \param b         Pointer to the dvector of right hand side
- * \param x         Pointer to the dvector of dofs
+ * \param A         Pointer to the coeff matrix in block_dCSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  *
  * \return          Number of iterations if succeed

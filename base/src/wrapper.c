@@ -1,7 +1,8 @@
 /*! \file wrapper.c
- *  \brief Wrappers for accessing functions by advanced users.
+ *
+ *  \brief Wrappers for accessing functions by advanced users
  *  
- *  \note Input variables shall not need fasp.h at all!
+ *  \note Input variables should not need fasp.h!!!
  */
 
 #include "fasp.h"
@@ -13,8 +14,9 @@
 /*---------------------------------*/
 
 /**
- * \fn void void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, REAL *b, 
- *                                   REAL *u, REAL *tol, INT *maxit, INT *ptrlvl)
+ * \fn void void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, 
+ *                                   REAL *b, REAL *u, REAL *tol, INT *maxit, 
+ *                                   INT *ptrlvl)
  *
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG
  *
@@ -62,8 +64,9 @@ void fasp_fwrapper_amg_ (INT *n,
 }
 
 /**
- * \fn void fasp_fwrapper_krylov_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, REAL *b, REAL *u, 
- *                                     REAL *tol, INT *maxit, INT *ptrlvl)
+ * \fn void fasp_fwrapper_krylov_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, 
+ *                                     REAL *b, REAL *u, REAL *tol, INT *maxit, 
+ *                                     INT *ptrlvl)
  *
  * \brief Solve Ax=b by Krylov method preconditioned by classic AMG
  *
@@ -92,9 +95,9 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
                                 INT *maxit, 
                                 INT *ptrlvl)
 {
-    dCSRmat    mat;      // coefficient matrix
-    dvector    rhs, sol; // right-hand-side, solution    
-    AMG_param  amgparam; // parameters for AMG
+    dCSRmat         mat;      // coefficient matrix
+    dvector         rhs, sol; // right-hand-side, solution
+    AMG_param       amgparam; // parameters for AMG
     itsolver_param  itparam;  // parameters for itsolver
     
     fasp_param_amg_init(&amgparam);    
@@ -114,8 +117,9 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
 
 
 /**
- * \fn INT fasp_wrapper_dbsr_krylov_amg (INT n, INT nnz, INT nb, INT *ia, INT *ja, REAL *a, REAL *b, REAL *u,
- *                                     REAL tol, INT maxit, INT ptrlvl)
+ * \fn INT fasp_wrapper_dbsr_krylov_amg (INT n, INT nnz, INT nb, INT *ia, INT *ja, 
+ *                                       REAL *a, REAL *b, REAL *u, REAL tol, 
+ *                                       INT maxit, INT ptrlvl)
  *
  * \brief Solve Ax=b by Krylov method preconditioned by AMG (dcsr - > dbsr)
  *
@@ -135,23 +139,23 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
  * \date   03/05/2013
  */
 INT fasp_wrapper_dbsr_krylov_amg (INT n,
-                                INT nnz,
-                                INT nb,
-                                INT *ia,
-                                INT *ja,
-                                REAL *a,
-                                REAL *b,
-                                REAL *u,
-                                REAL tol,
-                                INT maxit,
-                                INT ptrlvl)
+                                  INT nnz,
+                                  INT nb,
+                                  INT *ia,
+                                  INT *ja,
+                                  REAL *a,
+                                  REAL *b,
+                                  REAL *u,
+                                  REAL tol,
+                                  INT maxit,
+                                  INT ptrlvl)
 {
-    dCSRmat    mat;      // coefficient matrix in CSR format
-    dBSRmat    bsrmat;   // coefficient matrix in BSR format
-    dvector    rhs, sol; // right-hand-side, solution
-    AMG_param  amgparam; // parameters for AMG
+    dCSRmat         mat;      // coefficient matrix in CSR format
+    dBSRmat         bsrmat;   // coefficient matrix in BSR format
+    dvector         rhs, sol; // right-hand-side, solution
+    AMG_param       amgparam; // parameters for AMG
     itsolver_param  itparam;  // parameters for itsolver
-    INT        status=SUCCESS;   // return parameter
+    INT             status = SUCCESS; // return parameter
     
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);
@@ -194,12 +198,12 @@ INT fasp_wrapper_dbsr_krylov_amg (INT n,
     fasp_dbsr_free(&bsrmat);
     
     return status;
-    
 }
 
 /**
- * \fn INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n, INT nnz, INT nb, INT *ia, INT *ja, REAL *a, REAL *b, REAL *u,
- *                                     REAL tol, INT maxit, INT ptrlvl)
+ * \fn INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n, INT nnz, INT nb, INT *ia, 
+ *                                            INT *ja, REAL *a, REAL *b, REAL *u,
+ *                                            REAL tol, INT maxit, INT ptrlvl)
  *
  * \brief Solve Ax=b by Krylov method preconditioned by AMG (dcoo - > dbsr)
  *
@@ -230,13 +234,13 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n,
                                   INT maxit,
                                   INT ptrlvl)
 {
-    dCOOmat    coomat;      // coefficient matrix in COO format
-    dCSRmat    csrmat;      // coefficient matrix in CSR format
-    dBSRmat    bsrmat;   // coefficient matrix in BSR format
-    dvector    rhs, sol; // right-hand-side, solution
-    AMG_param  amgparam; // parameters for AMG
+    dCOOmat         coomat;   // coefficient matrix in COO format
+    dCSRmat         csrmat;   // coefficient matrix in CSR format
+    dBSRmat         bsrmat;   // coefficient matrix in BSR format
+    dvector         rhs, sol; // right-hand-side, solution
+    AMG_param       amgparam; // parameters for AMG
     itsolver_param  itparam;  // parameters for itsolver
-    INT        status=SUCCESS;   // return parameter
+    INT             status = SUCCESS; // return parameter
     
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);
@@ -286,7 +290,6 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n,
     fasp_dbsr_free(&bsrmat);
     
     return status;
-    
 }
 
 /*---------------------------------*/

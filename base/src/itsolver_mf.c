@@ -1,5 +1,6 @@
 /*! \file itsolver_mf.c
- *  \brief Matrix-free iterative solvers
+ *
+ *  \brief Iterative solvers with matrix-free spmv
  */
 
 #include <time.h>
@@ -31,7 +32,7 @@ static void fasp_blas_mxv_csrl (void *A, REAL *x, REAL *y);
  *
  * \brief Solve Ax=b by preconditioned Krylov methods for CSR matrices
  *
- * \param mf       Pointer to mxv_matfree
+ * \param mf       Pointer to mxv_matfree matrix-free spmv operation
  * \param b        Pointer to the right hand side in dvector format
  * \param x        Pointer to the approx solution in dvector format
  * \param pc       Pointer to the preconditioning action
@@ -135,7 +136,7 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
  *
  * \brief Solve Ax=b by standard Krylov methods -- without preconditioner 
  *
- * \param mf       Pointer to mxv_matfree
+ * \param mf       Pointer to mxv_matfree matrix-free spmv operation
  * \param b        Pointer to the right hand side in dvector format
  * \param x        Pointer to the approx solution in dvector format
  * \param itparam  Pointer to parameters for iterative solvers
@@ -187,7 +188,7 @@ INT fasp_solver_krylov (mxv_matfree *mf,
  * \brief Initialize itsovlers
  *
  * \param matrix_format    matrix format
- * \param mf               mxv_matfree action for iterative solvers
+ * \param mf               Pointer to mxv_matfree matrix-free spmv operation
  * \param A                void pointer to matrix
  *
  * \author Feiteng Huang

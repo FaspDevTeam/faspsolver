@@ -1,5 +1,6 @@
 /*! \file coarsening_cr.c
- *  \brief Coarsening with Brannick-Falgout strategy. 
+ *
+ *  \brief Coarsening with Brannick-Falgout strategy.
  */
 
 #include <math.h>
@@ -27,9 +28,9 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
  *
  * \param i_0       Starting index
  * \param i_n       Ending index
- * \param A         Pointer to matrix, i_0 = 0 
- * \param vertices  Pointer to CF, 0: fpt (current level) or 1: cpt 
- * \param param     Pointer to AMG parameters
+ * \param A         Pointer to dCSRmat: the coefficient matrix (index starts from 0)
+ * \param vertices  Pointer to CF, 0: fpt (current level) or 1: cpt
+ * \param param     Pointer to AMG_param: AMG parameters
  * 
  * \author James Brannick
  * \date 04/21/2010

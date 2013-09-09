@@ -1,4 +1,5 @@
 /*! \file ordering.c
+ *
  *  \brief A collection of ordering, merging, removing duplicated integers functions
  */
 
@@ -16,8 +17,8 @@ static void iSwapping(INT *w, INT i, INT j);
  * 
  * \brief Binary Search
  *
- * \param list   Pointer to a set of values
- * \param value  The target 
+ * \param list        Pointer to a set of values
+ * \param value       The target 
  * \param list_length Length of the array list
  *
  * \return  The location of value in array list if successed, otherwise, return -1.

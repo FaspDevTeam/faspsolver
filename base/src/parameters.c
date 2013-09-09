@@ -1,6 +1,6 @@
 /*! \file parameters.c
- *  \brief Initialize, set, or print input data and parameters
  *
+ *  \brief Initialize, set, or print input data and parameters
  */
 
 #include <stdio.h>

@@ -1,4 +1,5 @@
 /*! \file fmgcycle.c
+ *
  *  \brief Abstract non-recursive full multigrid cycle
  */
 
@@ -20,8 +21,8 @@
  *
  * \brief Solve Ax=b with non-recursive full multigrid K-cycle
  *
- * \param mgl     Pointer to AMG_data data
- * \param param   Pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
  * \author Chensong Zhang
  * \date   02/27/2011

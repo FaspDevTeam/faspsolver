@@ -1,5 +1,7 @@
-/*! \file pvfgmres.c
- *  \brief Krylov subspace methods -- Preconditioned Variable-Restarting Flexible GMRes.
+/*! \file pvfgmres_mf.c
+ *
+ *  \brief Krylov subspace methods -- Preconditioned variable-restarting
+ *         flexible GMRes (matrix free)
  *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
@@ -32,10 +34,10 @@
  *        parameter can be adaptively modified during the iteration and flexible preconditioner 
  *        can be used.
  *
- * \param mf           Pointer to the mxv_matfree
- * \param b            Pointer to the dvector of right hand side
- * \param x            Pointer to the dvector of DOFs
- * \param pc           Pointer to the structure of precondition (precond) 
+ * \param mf           Pointer to mxv_matfree: the spmv operation
+ * \param b            Pointer to dvector: the right hand side
+ * \param x            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps

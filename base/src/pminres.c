@@ -1,6 +1,6 @@
 /*! \file pminres.c
  *
- *  \brief Krylov subspace methods -- Preconditioned Minimal Residual.
+ *  \brief Krylov subspace methods -- Preconditioned minimal residual
  *
  *  Abstract algorithm of Krylov method
  *
@@ -72,10 +72,10 @@
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to dCSRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param u            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -478,10 +478,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to block_dCSRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param x            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -884,14 +884,14 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param MaxIt        Maximal number of iterations
+ * \param A            Pointer to dSTRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param x            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
- * \param pc           Pointer to the structure of precondition (precond)
- * \param print_level  How much information to print out
+ * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
+ * \param print_level  How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *

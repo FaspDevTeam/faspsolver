@@ -1,10 +1,11 @@
 /*! \file amg_setup_cr.c
+ *
  *  \brief Brannick-Falgout compatible relaxation based AMG: SETUP phase
  *  
- * \note Setup A, P, R and levels using the Compatible Relaxation coarsening
- *       for classic AMG interpolation
- *       Refer to J. Brannick and R. Falgout
- *       "Compatible relaxation and coarsening in AMG"
+ *  \note Setup A, P, R and levels using the Compatible Relaxation coarsening
+ *        for classic AMG interpolation
+ *        Refer to J. Brannick and R. Falgout
+ *        "Compatible relaxation and coarsening in AMG"
  *
  *  TODO: Not working. Yet need to be fixed. --Chensong
  */
@@ -24,8 +25,10 @@
  *
  * \brief Set up phase of Brannick Falgout CR coarsening for classic AMG
  *
- * \param mgl     Pointer to AMG_data data
- * \param param   Pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
+ *
+ * \return       SUCCESS if successed, otherwise, error information.
  *
  * \author James Brannick
  * \date   04/21/2010

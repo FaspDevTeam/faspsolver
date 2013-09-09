@@ -1,14 +1,3 @@
-/*
- *  interface_samg.c
- *  Interface to call SAMG by Stuben.
- *
- *------------------------------------------------------
- *  Created by Zhiyang Zhou on 08/25/2010.
- *  Modified by Chensong Zhang on 09/16/2010.
- *------------------------------------------------------
- *
- */
-
 /*! \file interface_samg.c
  *  \brief Interface to SAMG
  *

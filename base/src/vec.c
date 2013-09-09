@@ -1,8 +1,8 @@
 /*! \file vec.c
- *  \brief Simple operations for vectors. 
  *
- *  \note 
- *  Every structures should be initialized before usage.
+ *  \brief Simple operations for vectors.
+ *
+ *  \note Every structures should be initialized before usage.
  */
 
 #include <math.h>
@@ -23,7 +23,7 @@
  *
  * \brief Check a dvector whether there is NAN
  *
- * \param u    Pointer to the REAL vector
+ * \param u    Pointer to dvector
  *
  * \return     Return TRUE if there is NAN
  *
@@ -91,7 +91,7 @@ ivector fasp_ivec_create (const INT m)
  * \brief Create dvector data space of REAL type
  *
  * \param m    Number of rows
- * \param u    Pointer to the REAL vector (OUTPUT)
+ * \param u    Pointer to dvector (OUTPUT)
  *
  * \author Chensong Zhang 
  * \date   2010/04/06
@@ -111,7 +111,7 @@ void fasp_dvec_alloc (const INT m,
  * \brief Create vector data space of INT type
  *
  * \param m   Number of rows
- * \param u   Pointer to the INTeger vector (OUTPUT)
+ * \param u   Pointer to ivector (OUTPUT)
  *
  * \author Chensong Zhang 
  * \date   2010/04/06
@@ -131,7 +131,7 @@ void fasp_ivec_alloc (const INT m,
  *
  * \brief Free vector data space of REAL type
  *
- * \param u   Pointer to the vector which needs to be deallocated
+ * \param u   Pointer to dvector which needs to be deallocated
  *
  * \author Chensong Zhang
  * \date   2010/04/03  
@@ -149,7 +149,7 @@ void fasp_dvec_free (dvector *u)
  *
  * \brief Free vector data space of INT type
  *
- * \param u   Pointer to the vector which needs to be deallocated
+ * \param u   Pointer to ivector which needs to be deallocated
  *
  * \author Chensong Zhang
  * \date   2010/04/03  
@@ -185,10 +185,9 @@ void fasp_dvec_null (dvector *x)
  * \brief Generate random REAL vector in the range from 0 to 1
  *
  * \param n    Size of the vector
- * \param x    Pointer to a dvector
+ * \param x    Pointer to dvector
  * 
- * \note
- * Sample usage: 
+ * \note Sample usage: 
  * \par
  *   dvector xapp;
  * \par
@@ -226,14 +225,13 @@ void fasp_dvec_rand (const INT n,
  *
  * \param n      Number of variables
  * \param x      Pointer to dvector
- * \param val    Initial value for the dvector
+ * \param val    Initial value for the vector
  *
  * \author Chensong Zhang
  * \date   11/16/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
-
 void fasp_dvec_set (INT n, 
                     dvector *x, 
                     REAL val) 
@@ -251,6 +249,7 @@ void fasp_dvec_set (INT n,
 #endif
    
     if (val == 0.0) {
+        
 #ifdef _OPENMP 
         if (n > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend) 
@@ -265,8 +264,11 @@ void fasp_dvec_set (INT n,
 #ifdef _OPENMP
         }
 #endif
+        
     }
+    
     else {
+        
 #ifdef _OPENMP 
         if (n > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend) 
@@ -281,6 +283,7 @@ void fasp_dvec_set (INT n,
 #ifdef _OPENMP
         }
 #endif
+        
     }
 }
 
@@ -290,7 +293,7 @@ void fasp_dvec_set (INT n,
  * \brief Set ivector value to be m
  *
  * \param  m    Integer value of ivector
- * \param  u    Pointer to the vector (MODIFIED)
+ * \param  u    Pointer to ivector (MODIFIED)
  *
  * \author Chensong Zhang
  * \date   04/03/2010  
@@ -298,7 +301,6 @@ void fasp_dvec_set (INT n,
  * Modified by Chunsheng Feng, Xiaoqiang Yue  
  * \date   05/23/2012    
  */
-
 void fasp_ivec_set (const INT m, 
                     ivector *u)
 {    
@@ -363,7 +365,6 @@ void fasp_dvec_cp (dvector *x,
  * Modified by chunsheng Feng, Zheng Li
  * \date   06/30/2012
  */
-
 REAL fasp_dvec_maxdiff (dvector *x, 
                         dvector *y)
 {
@@ -411,8 +412,8 @@ REAL fasp_dvec_maxdiff (dvector *x,
  *
  * \brief Symmetric diagonal scaling D^{-1/2}b
  *
- * \param b       Pointer to the dvector
- * \param diag    Pointer to the diagonal entries
+ * \param b       Pointer to dvector
+ * \param diag    Pointer to dvector: the diagonal entries
  *
  * \author Xiaozhe Hu
  * \date   01/31/2011

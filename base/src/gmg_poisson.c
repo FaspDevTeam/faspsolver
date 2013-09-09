@@ -1,4 +1,5 @@
-/*! \file  fasp_poisson_gmg.c
+/*! \file  gmg_poisson.c
+ *
  *  \brief GMG method as an iterative solver for Poisson Problem
  */
 

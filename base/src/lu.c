@@ -1,4 +1,5 @@
 /*! \file lu.c
+ *
  *  \brief LU decomposition and direct solve for dense matrix
  */
 

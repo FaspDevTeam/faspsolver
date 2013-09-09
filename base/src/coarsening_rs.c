@@ -1,4 +1,5 @@
 /*! \file coarsening_rs.c
+ *
  *  \brief Coarsening with a modified Ruge-Stuben strategy.
  *
  *  \note Ref Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller
@@ -34,11 +35,11 @@ static void form_P_pattern_std (dCSRmat *, iCSRmat *, ivector *, INT, INT);
  *
  * \brief Standard and aggressive coarsening schemes
  *
- * \param A          Coefficient matrix, the index starts from zero
+ * \param A          Pointer to dCSRmat: Coefficient matrix (index starts from 0)
  * \param vertices   Indicator vector for the C/F splitting of the variables
  * \param P          Interpolation matrix (nonzero pattern only)
  * \param S          Strong connection matrix
- * \param param      AMG parameters
+ * \param param      Pointer to AMG_param: AMG parameters
  *
  * \return           SUCCESS or error message
  *

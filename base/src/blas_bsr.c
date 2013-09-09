@@ -1,5 +1,6 @@
 /*! \file blas_bsr.c
- *  \brief BLAS operations for sparse matrices in BSR format.
+ *
+ *  \brief BLAS operations for dBSRmat matrices
  */
 
 #include <math.h>
@@ -22,7 +23,7 @@
  * \brief Compute y := alpha*A*x + beta*y
  *
  * \param alpha  REAL factor alpha
- * \param A      Pointer to the dBSR matrix
+ * \param A      Pointer to the dBSRmat matrix
  * \param x      Pointer to the array x
  * \param beta   REAL factor beta
  * \param y      Pointer to the array y
@@ -303,7 +304,7 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
  * \brief Compute y := alpha*A*x + y
  *
  * \param alpha  REAL factor alpha
- * \param A      Pointer to the dBSR matrix
+ * \param A      Pointer to the dBSRmat matrix
  * \param x      Pointer to the array x
  * \param y      Pointer to the array y
  *
@@ -579,7 +580,7 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
  *
  * \brief Compute y := A*x
  *
- * \param A      Pointer to the dBSR matrix
+ * \param A      Pointer to the dBSRmat matrix
  * \param x      Pointer to the array x
  * \param y      Pointer to the array y
  *

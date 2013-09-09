@@ -1,5 +1,6 @@
 /*! \file rap.c
- *  \brief R*A*P driver 
+ *
+ *  \brief R*A*P driver
  *
  *------------------------------------------------------
  * C-version by Ludmil Zikatanov 2010-04-08
@@ -18,9 +19,9 @@
 /*---------------------------------*/
 
 /*!
- * \fn dCSRmat fasp_blas_dcsr_rap2 (INT *ir, INT *jr, REAL *r, \
- *    INT *ia, INT *ja, REAL *a, INT *ipt, INT *jpt, REAL *pt, \
- *    INT n, INT nc, INT *maxrpout, INT *ipin, INT *jpin) 
+ * \fn dCSRmat fasp_blas_dcsr_rap2 (INT *ir, INT *jr, REAL *r, INT *ia, INT *ja, 
+ *                                  REAL *a, INT *ipt, INT *jpt, REAL *pt, INT n, 
+ *                                  INT nc, INT *maxrpout, INT *ipin, INT *jpin) 
  *
  * \brief Compute R*A*P 
  *
@@ -28,7 +29,6 @@
  * \date   04/08/2010
  *  
  * \note It uses dCSRmat only. The functions called from here are in sparse_util.c
- *
  */
 dCSRmat fasp_blas_dcsr_rap2 (INT *ir, 
                              INT *jr, 

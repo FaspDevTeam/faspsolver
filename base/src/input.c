@@ -1,4 +1,5 @@
 /*! \file input.c
+ *
  *  \brief Read input parameters
  */
 

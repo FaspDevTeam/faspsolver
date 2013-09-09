@@ -39,15 +39,17 @@
  
 /**
  * \page download How to obtain FASP
- * \brief Download page for the FASP package
  *
- * The most updated release version of FASP can be downloaded from
+ * > For the moment, FASP is still under alpha testing. You need a password to download
+ * > the package. Sorry about it!
+ *
+ * The most updated version of FASP can be downloaded from
  *
  * > http://fasp.sourceforge.net/download/faspsolver.zip
  *
- * We use HG (Mecurial) as our version control tool. HG is easy to use and it is available at
- * all platforms. For people who is interested in the developer version, you can obtain the
- * FASP package with hg: 
+ * We use HG (Mecurial) as our main version control tool. HG is easy to use and it is 
+ * available at all OS platforms. For people who is interested in the developer version, 
+ * you can obtain the FASP package with hg: 
  * 
  * > $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver 
  * 
@@ -57,7 +59,6 @@
 
 /**
  * \page build Building and Installation
- * \brief Building page for the FASP package
  *
  * This is a simple instruction on building and testing. For more details, please refer to 
  * the README files and the short
@@ -92,7 +93,6 @@
 
 /**
  * \page developers Developers
- * \brief FASP developers and contributors
  *
  * Project Leader: 
  *
@@ -146,7 +146,6 @@
    
 /**
  * \page doxygen_comment Doxygen
- * \brief Documentation Auto-Generation
  *
  * We use Doxygen as our automatically documentation generator which will make our 
  * future maintainance minimized. You can obtain the software (Windows, Linux and 

@@ -1,5 +1,6 @@
 /*! \file eigen.c
- *  \brief simple subroutines for compute the extreme eigenvalues.
+ *
+ *  \brief Simple subroutines for compute the extreme eigenvalues
  */
 
 #include <math.h> 
@@ -16,9 +17,9 @@
  *
  * \brief Approximate the largest eigenvalue of A by the power method
  *
- * \param A      Pointer to the dCSRmat
+ * \param A      Pointer to the dCSRmat matrix
  * \param tol    Tolerance for stopping the power method
- * \param maxit     Max number of iterations
+ * \param maxit  Max number of iterations
  *
  * \return       Largest eigenvalue
  *

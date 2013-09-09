@@ -1,5 +1,6 @@
 /*! \file itsolver_csr.c
- *  \brief Iterative solvers (main file)
+ *
+ *  \brief Iterative solvers for dCSRmat matrices
  */
 
 #include <time.h>
@@ -235,12 +236,13 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
  *
  * \brief Solve Ax=b by overlapping schwarz Krylov methods 
  * 
- * \param *A          Pointer to the dCSRmat matrix
- * \param *b          Pointer to the dvector of right hand side
- * \param *x          Pointer to the dvector of dofs
- * \param *itparam    Pointer to parameters for iterative solvers
- * \param *schparam   Pointer to parameters for Schwarz methods
- * \return            Number of iterations
+ * \param A        Pointer to the coeff matrix in dCSRmat format
+ * \param b        Pointer to the right hand side in dvector format
+ * \param x        Pointer to the approx solution in dvector format
+ * \param itparam  Pointer to parameters for iterative solvers
+ * \param schparam Pointer to parameters for Schwarz methods
+ *
+ * \return         Number of iterations
  *
  * \author Xiaozhe Hu
  * \date   03/21/2011

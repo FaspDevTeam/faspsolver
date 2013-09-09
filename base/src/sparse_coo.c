@@ -1,5 +1,6 @@
 /*! \file sparse_coo.c
- *  \brief Functions for COO sparse matrices. 
+ *
+ *  \brief Sparse matrix operations for dCOOmat matrices
  */
 
 #include <math.h>
@@ -111,8 +112,7 @@ void fasp_dcoo_free (dCOOmat *A)
  * \author Chensong Zhang 
  * \date   2010/04/06
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date  08/25/2012
+ * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
 void fasp_dcoo_shift (dCOOmat *A,
                       INT offset)

@@ -1,5 +1,6 @@
 /*! \file sparse_csrl.c
- *  \brief Functions for sparse matrices in CSRL format
+ *
+ *  \brief Sparse matrix operations for dCSRLmat matrices
  *
  *  \note For details of CSRL format, refer to 
  *        Optimizing sparse matrix vector product computations using unroll and jam

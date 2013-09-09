@@ -1,5 +1,5 @@
 /*! \file interface_superlu.c
- *  \brief Call SuperLU direct solver.
+ *  \brief Interface to SuperLU direct solvers
  *
  */
 

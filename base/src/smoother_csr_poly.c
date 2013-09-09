@@ -1,5 +1,6 @@
-/*! \file smoother_poly.c
- *  \brief Smoothers for sparse matrix in CSR format using poly. approx. to A^{-1} 
+/*! \file smoother_csr_poly.c
+ *
+ *  \brief Smoothers for dCSRmat matrices using poly. approx. to A^{-1}
  */
 
 #include <math.h>
@@ -18,7 +19,8 @@ static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
 static void Diaginv(dCSRmat *Amat, REAL *Dinv);
 static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv);
 static void Diagx(REAL *Dinv, INT n, REAL *x, REAL *b);
-static void Rr(dCSRmat *Amat, REAL *Dinv, REAL *r, REAL *rbar, REAL *v0, REAL *v1, REAL *vnew, REAL *k, INT m);
+static void Rr(dCSRmat *Amat, REAL *Dinv, REAL *r, REAL *rbar, REAL *v0, REAL *v1,
+               REAL *vnew, REAL *k, INT m);
 
 
 /*---------------------------------*/
@@ -51,7 +53,8 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     // local variables
     INT i;
     REAL *b = brhs->val, *u = usol->val;
-    REAL *Dinv = NULL, *r = NULL, *rbar = NULL, *v0 = NULL, *v1 = NULL, *error = NULL, *k = NULL;
+    REAL *Dinv = NULL, *r = NULL, *rbar = NULL, *v0 = NULL, *v1 = NULL;
+    REAL *error = NULL, *k = NULL;
     REAL mu0, mu1, smu0, smu1;
     
     /* allocate memory */
@@ -133,8 +136,7 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
  * \author James Brannick and Ludmil T Zikatanov
  * \date   06/28/2010
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/18/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/18/2012
  */
 void fasp_smoother_dcsr_poly_old (dCSRmat *Amat, 
                                   dvector *brhs, 

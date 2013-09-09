@@ -1,4 +1,5 @@
 /*! \file mgcycle.c
+ *
  *  \brief Abstract non-recursive multigrid cycle
  */
 
@@ -28,8 +29,8 @@ INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
  *
  * \brief Solve Ax=b with non-recursive multigrid cycle 
  *
- * \param mgl     Pointer to AMG_data data
- * \param param   Pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
  * \author Chensong Zhang
  * \date   10/06/2010
@@ -284,8 +285,8 @@ void fasp_solver_mgcycle (AMG_data *mgl,
  *
  * \brief Solve Ax=b with non-recursive multigrid cycle 
  *
- * \param mgl     Pointer to AMG_data_bsr data
- * \param param   Pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data_bsr
+ * \param param  Pointer to AMG parameters: AMG_param
  *
  * \author Xiaozhe Hu 
  * \date   08/07/2011

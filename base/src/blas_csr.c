@@ -1,5 +1,6 @@
 /*! \file blas_csr.c
- *  \brief BLAS operations for sparse matrices in CSR format.
+ *
+ *  \brief BLAS operations for dCSRmat matrices
  *
  *  \note Sparse functions usually contain three runs. The three runs are all the
  *        same but thy serve different purpose.
@@ -31,11 +32,11 @@
  *
  * \brief compute C = alpha*A + beta*B in CSR format
  *
- * \param A      Pointer to CSR matrix
+ * \param A      Pointer to dCSRmat matrix
  * \param alpha  REAL factor alpha
- * \param B      Pointer to CSR matrix
+ * \param B      Pointer to dCSRmat matrix
  * \param beta   REAL factor beta
- * \param C      Pointer to CSR matrix
+ * \param C      Pointer to dCSRmat matrix
  *
  * \return       SUCCESS if succees, RUN_FAIL if not
  *
@@ -189,7 +190,7 @@ FINISHED:
  *
  * \brief Multiply a sparse matrix A in CSR format by a scalar alpha.
  *
- * \param A      Pointer to CSR matrix A
+ * \param A      Pointer to dCSRmat matrix A
  * \param alpha  REAL factor alpha
  *
  * \author Chensong Zhang

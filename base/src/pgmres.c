@@ -1,5 +1,6 @@
 /*! \file pgmres.c
- *  \brief Krylov subspace methods -- Preconditioned GMRes.
+ *
+ *  \brief Krylov subspace methods -- Preconditioned GMRes
  *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
@@ -26,10 +27,10 @@
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param x            Pointer to the dvector of DOFs
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to dCSRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param x            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -323,10 +324,10 @@ FINISHED:
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param x            Pointer to the dvector of DOFs
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to block_dCSRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param x            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -619,10 +620,10 @@ FINISHED:
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param x            Pointer to the dvector of DOFs
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to dBSRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param x            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -915,10 +916,10 @@ FINISHED:
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param x            Pointer to the dvector of DOFs
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to dSTRmat: the coefficient matrix
+ * \param b            Pointer to dvector: the right hand side
+ * \param x            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps

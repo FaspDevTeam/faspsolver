@@ -1,5 +1,6 @@
 /*! \file sparse_csr.c
- *  \brief Functions for CSR sparse matrices. 
+ *
+ *  \brief Sparse matrix operations for dCSRmat matrices
  */
 
 #include <math.h>
@@ -237,12 +238,10 @@ void fasp_icsr_null (iCSRmat *A)
  * \author Shiquan Zhang
  * \date   03/10/2010
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   07/12/2012
- *
  * \note   P[i] = k means k-th row and column become i-th row and column!
+ *
+ * Modified by Chunsheng Feng, Zheng Li on 07/12/2012
  */
-
 dCSRmat fasp_dcsr_perm (dCSRmat *A, 
                         INT *P)
 {
@@ -404,10 +403,8 @@ void fasp_dcsr_sort (dCSRmat *A)
  * \author Chensong Zhang
  * \date   05/20/2009
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
-
 void fasp_dcsr_getdiag (INT n, 
                         dCSRmat *A, 
                         dvector *diag) 
@@ -470,10 +467,8 @@ void fasp_dcsr_getdiag (INT n,
  * \author Xiaozhe Hu
  * \date   11/07/2009
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   07/08/2012
+ * Modified by Chunsheng Feng, Zheng Li on 07/08/2012
  */
-
 void fasp_dcsr_getcol (const INT n, 
                        dCSRmat *A, 
                        REAL *col) 
@@ -552,7 +547,6 @@ FINISHED:
  * \note Reordering is done in place. 
  *
  * Modified by Chensong Zhang on Dec/21/2012
- *
  */
 void fasp_dcsr_diagpref (dCSRmat *A)
 {
@@ -700,7 +694,6 @@ FINISHED:
  * \author Chensong Zhang
  * \date   05/16/2013
  */
-
 void fasp_icsr_cp (iCSRmat *A,
                    iCSRmat *B)
 {
@@ -726,7 +719,6 @@ void fasp_icsr_cp (iCSRmat *A,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
-
 void fasp_dcsr_cp (dCSRmat *A, 
                    dCSRmat *B) 
 {
@@ -752,8 +744,7 @@ void fasp_dcsr_cp (dCSRmat *A,
  * \author Chensong Zhang
  * \date   04/06/2010  
  *
- *  Modified by Chunsheng Feng, Zheng Li
- * \date   06/20/2012   
+ *  Modified by Chunsheng Feng, Zheng Li on 06/20/2012   
  */
 void fasp_icsr_trans (iCSRmat *A, 
                       iCSRmat *AT)
@@ -832,8 +823,7 @@ void fasp_icsr_trans (iCSRmat *A,
  * \author Chensong Zhang
  * \date   04/06/2010   
  *
- *  Modified by Chunsheng Feng, Zheng Li
- * \date   06/20/2012   
+ *  Modified by Chunsheng Feng, Zheng Li on 06/20/2012   
  */
 INT fasp_dcsr_trans (dCSRmat *A, 
                      dCSRmat *AT)
@@ -965,8 +955,7 @@ void fasp_dcsr_transpose (INT *row[2],
  * \author Shiquan Zhang
  * \date   03/10/2010
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date  08/25/2012
+ * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
 void fasp_dcsr_compress (dCSRmat *A, 
                          dCSRmat *B, 
@@ -1096,7 +1085,6 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
  *
  * Modified by chunsheng Feng, Zheng Li on 07/11/2012
  */
-
 void fasp_dcsr_shift (dCSRmat *A, 
                       INT offset)
 {
@@ -1158,10 +1146,8 @@ void fasp_dcsr_shift (dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   01/31/2011
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   07/11/2012
+ * Modified by Chunsheng Feng, Zheng Li on 07/11/2012
  */
-
 void fasp_dcsr_symdiagscale (dCSRmat *A, 
                              dvector *diag)
 {
@@ -1276,7 +1262,7 @@ dCSRmat fasp_dcsr_sympat (dCSRmat *A)
  *
  * \brief Use the greedy multicoloring to get color groups of the adjacency graph of A
  *
- * \param A    Input dCSRmat
+ * \param A       Input dCSRmat
  * \param flags   flags for the independent group
  * \param groups  Return group numbers
  *

@@ -1,4 +1,5 @@
 /*! \file precond_str.c
+ *
  *  \brief Preconditioners for dSTRmat matrices
  */
 

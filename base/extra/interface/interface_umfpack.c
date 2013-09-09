@@ -1,5 +1,5 @@
 /*! \file interface_umfpack.c
- *  \brief Call UMFPACK direct solver.
+ *  \brief Interface to UMFPACK direct solvers
  */
 
 #include <time.h>

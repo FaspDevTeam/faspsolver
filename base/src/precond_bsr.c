@@ -1,5 +1,6 @@
 /*! \file precond_bsr.c
- *  \brief Preconditioners for sparse matrices in BSR format.
+ *
+ *  \brief Preconditioners for dBSRmat matrices
  */
 
 #ifdef _OPENMP

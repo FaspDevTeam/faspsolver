@@ -1,6 +1,6 @@
 /*! \file blas_bcsr.c
- *  \brief BLAS operations for sparse matrices in block CSR format.
  *
+ *  \brief BLAS operations for block_dCSRmat matrices
  */
 
 #include <time.h>
@@ -20,7 +20,7 @@
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
  * \param alpha  REAL factor a
- * \param A      Pointer to block_dCSR matrix A
+ * \param A      Pointer to block_dCSRmat matrix A
  * \param x      Pointer to array x
  * \param y      Pointer to array y
  *
@@ -120,7 +120,7 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
  *
  * \brief Matrix-vector multiplication y = A*x
  *
- * \param A      Pointer to block_dCSR matrix A
+ * \param A      Pointer to block_dCSRmat matrix A
  * \param x      Pointer to array x
  * \param y      Pointer to array y
  *

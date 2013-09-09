@@ -1,5 +1,6 @@
 /*! \file itsolver_bsr.c
- *  \brief Interface for iterative solvers for BSR matrices
+ *
+ *  \brief Iterative solvers for dBSRmat matrices
  */
 
 #include <time.h>
@@ -83,10 +84,10 @@ void fasp_set_GS_threads (INT mythreads,
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param A        Pointer to the dBSRmat matrix
- * \param b        Pointer to the dvector of right hand side
- * \param x        Pointer to the dvector of dofs
- * \param pc       Pointer to the preconditioner data
+ * \param A        Pointer to the coeff matrix in dBSRmat format
+ * \param b        Pointer to the right hand side in dvector format
+ * \param x        Pointer to the approx solution in dvector format
+ * \param pc       Pointer to the preconditioning action
  * \param itparam  Pointer to parameters for iterative solvers
  *
  * \return         Number of iterations if succeed
@@ -159,9 +160,9 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
- * \param A         Pointer to the dCSRmat matrix
- * \param b         Pointer to the dvector of right hand side
- * \param x         Pointer to the dvector of dofs
+ * \param A         Pointer to the coeff matrix in dBSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  *
  * \return          Number of iterations if succeed
@@ -199,9 +200,9 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
- * \param A         Pointer to the dBSRmat matrix
- * \param b         Pointer to the dvector of right hand side
- * \param x         Pointer to the dvector of dofs
+ * \param A         Pointer to the coeff matrix in dBSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  *
  * \return the number of iterations
@@ -298,9 +299,9 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods
  *
- * \param A         Pointer to dBSRmat matrix
- * \param b         Pointer to dvector of right hand side
- * \param x         Pointer to dvector of dofs
+ * \param A         Pointer to the coeff matrix in dBSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  * \param iluparam  Pointer to parameters of ILU
  *
@@ -365,9 +366,9 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
  *
  * \brief Solve Ax=b by AMG preconditioned Krylov methods 
  *
- * \param A         Pointer to dBSRmat matrix
- * \param b         Pointer to dvector of right hand side
- * \param x         Pointer to dvector of dofs
+ * \param A         Pointer to the coeff matrix in dBSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  * \param amgparam  Pointer to parameters of AMG
  *

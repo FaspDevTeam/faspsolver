@@ -1,5 +1,5 @@
 /*! \file mg_util.inl
- *  \brief Utilies for multigrid cycles
+ *  \brief Routines for algebraic multigrid cycles
  */
 
 /**

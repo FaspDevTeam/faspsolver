@@ -1,6 +1,6 @@
 /*! \file sparse_bsr.c
- *  \brief Simple operations for BSR format
  *
+ *  \brief Sparse matrix operations for dBSRmat matrices
  */
 
 #ifdef _OPENMP
@@ -66,7 +66,8 @@ dBSRmat fasp_dbsr_create (INT ROW,
 }
 
 /**
- * \fn void fasp_dbsr_alloc (INT ROW, INT COL, INT NNZ, INT nb, INT storage_manner, dBSRmat *A)
+ * \fn void fasp_dbsr_alloc (INT ROW, INT COL, INT NNZ, INT nb, INT storage_manner, 
+ *                           dBSRmat *A)
  *
  * \brief Allocate memory space for BSR format sparse matrix
  *
@@ -283,7 +284,6 @@ INT fasp_dbsr_trans (dBSRmat *A,
  * \date   09/02/2012
  *
  * \note Reordering is done in place. 
- *
  */
 SHORT fasp_dbsr_diagpref (dBSRmat *A)
 {    
@@ -494,10 +494,9 @@ dvector fasp_dbsr_getdiaginv (dBSRmat *A)
  * \author Zhiyang Zhou
  * \date   2010/10/26
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   08/25/2012
- *
  * \note Works for general nb (Xiaozhe)
+ *
+ * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
 dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
 {
@@ -657,10 +656,9 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
  * \author Zhiyang Zhou
  * \date  2010/11/07
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date  08/25/2012
- *
  * \note Works for general nb (Xiaozhe)
+ *
+ * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
 dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A, 
                             REAL *diaginv)
@@ -756,11 +754,11 @@ dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
  *
  * \return BSR matrix after diagonal scaling
  *
- * \note Works for general nb (Xiaozhe)
- *
  * \author Xiaozhe Hu
  * \date   12/25/2010
- * 
+ *
+ * \note Works for general nb (Xiaozhe)
+ *
  * Modified by Xiaozhe Hu on 05/26/2012
  */
 
@@ -1411,11 +1409,9 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
  * \author Zhiyang Zhou
  * \date   2010/10/26
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   2012/10/17 
- *
- *
  * \note Works for general nb (Xiaozhe)
+ *
+ * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
 void fasp_dbsr_getdiag (INT n, 
                         dBSRmat *A, 

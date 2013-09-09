@@ -1,5 +1,6 @@
 /*! \file smoother_csr.c
- *  \brief Smoothers for sparse matrix in CSR format
+ *
+ *  \brief Smoothers for dCSRmat matrices
  */
 
 #include <math.h>
@@ -16,18 +17,18 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n, const INT s,
- *                                     dCSRmat *A, dvector *b, INT L)
+ * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n, 
+ *                                     const INT s, dCSRmat *A, dvector *b, INT L)
  *
  * \brief Jacobi method as a smoother
  *
- * \param u    Initial guess (in) and the new approximation after smoothing
- * \param i_1  Starting index
- * \param i_n  Ending index
- * \param s    Increasing step
- * \param A    Pointer to stiffness matrix
- * \param b    Pointer to right hand side
- * \param L    Number of iterations
+ * \param u      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
+ * \param i_1    Starting index
+ * \param i_n    Ending index
+ * \param s      Increasing step
+ * \param A      Pointer to dBSRmat: the coefficient matrix
+ * \param b      Pointer to dvector: the right hand side
+ * \param L      Number of iterations
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/26/2009
@@ -152,17 +153,17 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_gs (dvector *u, const INT i_1, const INT i_n, const INT s,
- *                                 dCSRmat *A, dvector *b, INT L)
+ * \fn void fasp_smoother_dcsr_gs (dvector *u, const INT i_1, const INT i_n, 
+ *                                 const INT s, dCSRmat *A, dvector *b, INT L)
  *
  * \brief Gauss-Seidel method as a smoother
  *
- * \param u    Initial guess (in) and the new approximation after smoothing
+ * \param u    Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
  * \param i_1  Starting index
  * \param i_n  Ending index
  * \param s    Increasing step
- * \param A    Pointer to stiffness matrix
- * \param b    Pointer to right hand side
+ * \param A    Pointer to dBSRmat: the coefficient matrix
+ * \param b    Pointer to dvector: the right hand side
  * \param L    Number of iterations
  *
  * \author Xuehai Huang, Chensong Zhang
@@ -170,7 +171,6 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
  *
  * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
-
 void fasp_smoother_dcsr_gs (dvector *u,
                             const INT i_1,
                             const INT i_n,
@@ -323,13 +323,14 @@ void fasp_smoother_dcsr_gs (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_gs_cf (dvector *u, dCSRmat *A, dvector *b, INT L, INT *mark, const INT order)
+ * \fn void fasp_smoother_dcsr_gs_cf (dvector *u, dCSRmat *A, dvector *b, INT L, 
+ *                                    INT *mark, const INT order)
  *
  * \brief Gauss-Seidel smoother with C/F ordering for Au=b
  *
- * \param u      Initial guess (in) and the new approximation after smoothing
- * \param A      Pointer to stiffness matrix
- * \param b      Pointer to right hand side
+ * \param u      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
+ * \param A      Pointer to dBSRmat: the coefficient matrix
+ * \param b      Pointer to dvector: the right hand side
  * \param L      Number of iterations
  * \param mark   C/F marker array
  * \param order  C/F ordering: -1: F-first; 1: C-first
@@ -594,17 +595,16 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
  *
  * \brief Symmetric Gauss-Seidel method as a smoother
  *
- * \param u    Initial guess (in) and the new approximation after smoothing
- * \param A    Pointer to stiffness matrix
- * \param b    Pointer to right hand side
- * \param L    Number of iterations
+ * \param u      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
+ * \param A      Pointer to dBSRmat: the coefficient matrix
+ * \param b      Pointer to dvector: the right hand side
+ * \param L      Number of iterations
  *
  * \author Xiaozhe Hu
  * \date   10/26/2010
  *
- * \author Chunsheng Feng, Zheng Li on 09/01/2012
+ * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
-
 void fasp_smoother_dcsr_sgs (dvector *u,
                              dCSRmat *A,
                              dvector *b,
@@ -707,14 +707,14 @@ void fasp_smoother_dcsr_sgs (dvector *u,
  *
  * \brief SOR method as a smoother
  *
- * \param u    Initial guess (in) and the new approximation after smoothing
- * \param i_1  Starting index
- * \param i_n  Ending index
- * \param s    Increasing step
- * \param A    Pointer to stiffness matrix
- * \param b    Pointer to right hand side
- * \param L    Number of iterations
- * \param w    Over-relaxation weight
+ * \param u      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
+ * \param i_1    Starting index
+ * \param i_n    Ending index
+ * \param s      Increasing step
+ * \param A      Pointer to dBSRmat: the coefficient matrix
+ * \param b      Pointer to dvector: the right hand side
+ * \param L      Number of iterations
+ * \param w      Over-relaxation weight
  *
  * \author Xiaozhe Hu
  * \date   10/26/2010
@@ -836,9 +836,9 @@ void fasp_smoother_dcsr_sor (dvector *u,
  *
  * \brief SOR smoother with C/F ordering for Au=b
  *
- * \param u      Initial guess (in) and the new approximation after smoothing
- * \param A      Pointer to stiffness matrix
- * \param b      Pointer to right hand side
+ * \param u      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
+ * \param A      Pointer to dBSRmat: the coefficient matrix
+ * \param b      Pointer to dvector: the right hand side
  * \param L      Number of iterations
  * \param w      Over-relaxation weight
  * \param mark   C/F marker array
@@ -848,7 +848,6 @@ void fasp_smoother_dcsr_sor (dvector *u,
  * \date   2010/11/12
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
- *
  */
 void fasp_smoother_dcsr_sor_cf (dvector *u,
                                 dCSRmat *A,
@@ -1036,10 +1035,10 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
  *
  * \brief ILU method as a smoother
  *
- * \param A     Pointer to stiffness matrix
- * \param b     Pointer to right hand side
- * \param x     Pointer to current solution
- * \param data  Pointer to user defined data
+ * \param A      Pointer to dBSRmat: the coefficient matrix
+ * \param b      Pointer to dvector: the right hand side
+ * \param x      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
+ * \param data   Pointer to user defined data
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/11/12
@@ -1107,21 +1106,20 @@ MEMERR:
  *
  * \brief Kaczmarz method as a smoother
  *
- * \param u    Initial guess (in) and the new approximation after smoothing
- * \param i_1  Starting index
- * \param i_n  Ending index
- * \param s    Increasing step
- * \param A    Pointer to stiffness matrix
- * \param b    Pointer to right hand side
- * \param L    Number of iterations
- * \param w    Relaxation weight
+ * \param u      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
+ * \param i_1    Starting index
+ * \param i_n    Ending index
+ * \param s      Increasing step
+ * \param A      Pointer to dBSRmat: the coefficient matrix
+ * \param b      Pointer to dvector: the right hand side
+ * \param L      Number of iterations
+ * \param w      Over-relaxation weight
  *
  * \author Xiaozhe Hu
  * \date   2010/11/12
  *
  * Modified by Chunsheng Feng, Zheng Li on 2012/09/01
  */
-
 void fasp_smoother_dcsr_kaczmarz (dvector *u,
                                   const INT i_1,
                                   const INT i_n,
@@ -1250,20 +1248,19 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
  *
  * \brief Diagonal scaling (using L1 norm) as a smoother
  *
- * \param u    Initial guess (in) and the new approximation after smoothing
- * \param i_1  Starting index
- * \param i_n  Ending index
- * \param s    Increasing step
- * \param A    Pointer to stiffness matrix
- * \param b    Pointer to right hand side
- * \param L    Number of iterations
+ * \param u      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
+ * \param i_1    Starting index
+ * \param i_n    Ending index
+ * \param s      Increasing step
+ * \param A      Pointer to dBSRmat: the coefficient matrix
+ * \param b      Pointer to dvector: the right hand side
+ * \param L      Number of iterations
  *
  * \author Xiaozhe Hu, James Brannick
  * \date   01/26/2011
  *
  * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
-
 void fasp_smoother_dcsr_L1diag (dvector *u,
                                 const INT i_1,
                                 const INT i_n,
@@ -1383,21 +1380,21 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
 }
 
 /**
- * \fn void swep2db (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT *mark,
- *                   INT nx, INT ny)
+ * \fn void swep2db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx, 
+ *                   INT nbegy, INT *mark, INT nx, INT ny)
  *
  * \brief      Gauss-Seidel backward smoother for certain color
  *
- * \param ia  Pointer to start location of each row
- * \param ja  Pointer to column index of nonzero elements
- * \param aa  Pointer to nonzero elements of
- * \param u   Pointer to initial guess
- * \param f   Pointer to right hand
+ * \param ia     Pointer to start location of each row
+ * \param ja     Pointer to column index of nonzero elements
+ * \param aa     Pointer to nonzero elements of
+ * \param u      Pointer to initial guess
+ * \param f      Pointer to right hand
  * \param nbegx  The stride between the same color nodes in x direction
  * \param nbegy  The stride between the same color nodes in y direction
  * \param mark   Pointer to order of nodes
- * \param nx  Number of nodes in x direction
- * \param ny  Number of nodes in y direction
+ * \param nx     Number of nodes in x direction
+ * \param ny     Number of nodes in y direction
  *
  * \author  Chunsheng Feng, Zheng Li
  * \date    02/06/2012
@@ -1447,23 +1444,23 @@ void swep2db (INT *ia,
 
 
 /**
- * \fn void swep3db (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT nbegz,INT *mark,
- *                   INT nx, INT ny, INT nz)
+ * \fn void swep3db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
+ *                   INT nbegy, INT nbegz, INT *mark, INT nx, INT ny, INT nz)
  *
  * \brief      Gauss-Seidel backward smoother for certain color
  *
- * \param ia  Pointer to start location of each row
- * \param ja  Pointer to column index of nonzero elements
- * \param aa  Pointer to nonzero elements of
- * \param u   Pointer to initial guess
- * \param f   Pointer to right hand
+ * \param ia     Pointer to start location of each row
+ * \param ja     Pointer to column index of nonzero elements
+ * \param aa     Pointer to nonzero elements of
+ * \param u      Pointer to initial guess
+ * \param f      Pointer to right hand
  * \param nbegx  The stride between the same color nodes in x direction
  * \param nbegy  The stride between the same color nodes in y direction
  * \param nbegz  The stride between the same color nodes in z direction
  * \param mark   Pointer to order of nodes
- * \param nx  Number of nodes in x direction
- * \param ny  Number of nodes in y direction
- * \param nz  Number of nodes in z direction
+ * \param nx     Number of nodes in x direction
+ * \param ny     Number of nodes in y direction
+ * \param nz     Number of nodes in z direction
  *
  * \author  Chunsheng Feng, Zheng Li
  * \date    02/06/2012
@@ -1471,7 +1468,6 @@ void swep2db (INT *ia,
  * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-
 void swep3db (INT *ia,
               INT *ja,
               REAL *aa,
@@ -1493,7 +1489,6 @@ void swep3db (INT *ia,
     nbegx = nx + nbegx;
     nbegy = ny + nbegy;
     nbegz = nz + nbegz;
-    
     
 #ifdef _OPENMP
 #pragma omp parallel for private(k,k0,j,j0,i,i0,t,begin_row,end_row,ii,jj,d)
@@ -1847,22 +1842,23 @@ void rb0b3d (INT *ia,
 	}
 #endif
 }
+
 /**
- * \fn void swep2df (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT *mark,
- *                   INT nx, INT ny)
+ * \fn void swep2df (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx, 
+ *                   INT nbegy, INT *mark, INT nx, INT ny)
  *
  * \brief      Gauss-Seidel forward smoother for certain color
  *
- * \param ia  Pointer to start location of each row
- * \param ja  Pointer to column index of nonzero elements
- * \param aa  Pointer to nonzero elements of
- * \param u   Pointer to initial guess
- * \param f   Pointer to right hand
+ * \param ia     Pointer to start location of each row
+ * \param ja     Pointer to column index of nonzero elements
+ * \param aa     Pointer to nonzero elements of
+ * \param u      Pointer to initial guess
+ * \param f      Pointer to right hand
  * \param nbegx  The stride between the same color nodes in x direction
  * \param nbegy  The stride between the same color nodes in y direction
  * \param mark   Pointer to order of nodes
- * \param nx  Number of nodes in x direction
- * \param ny  Number of nodes in y direction
+ * \param nx     Number of nodes in x direction
+ * \param ny     Number of nodes in y direction
  *
  * \author  Chunsheng Feng, Zheng Li
  * \date    02/06/2012
@@ -1870,7 +1866,6 @@ void rb0b3d (INT *ia,
  * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-
 void swep2df (INT *ia,
               INT *ja,
               REAL *aa,
@@ -1912,23 +1907,23 @@ void swep2df (INT *ia,
 
 
 /**
- * \fn void swep3df (INT *ia,INT *ja,REAL *aa,REAL *u,REAL *f,INT nbegx,INT nbegy,INT nbegz,INT *mark,
- *                   INT nx, INT ny, INT nz)
+ * \fn void swep3df (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx, 
+ *                   INT nbegy, INT nbegz, INT *mark, INT nx, INT ny, INT nz)
  *
  * \brief      Gauss-Seidel forward smoother for certain color
  *
- * \param ia  Pointer to start location of each row
- * \param ja  Pointer to column index of nonzero elements
- * \param aa  Pointer to nonzero elements of
- * \param u   Pointer to initial guess
- * \param f   Pointer to right hand
+ * \param ia     Pointer to start location of each row
+ * \param ja     Pointer to column index of nonzero elements
+ * \param aa     Pointer to nonzero elements of
+ * \param u      Pointer to initial guess
+ * \param f      Pointer to right hand
  * \param nbegx  The stride between the same color nodes in x direction
  * \param nbegy  The stride between the same color nodes in y direction
  * \param nbegz  The stride between the same color nodes in z direction
  * \param mark   Pointer to order of nodes
- * \param nx  Number of nodes in x direction
- * \param ny  Number of nodes in y direction
- * \param nz  Number of nodes in z direction
+ * \param nx     Number of nodes in x direction
+ * \param ny     Number of nodes in y direction
+ * \param nz     Number of nodes in z direction
  *
  * \author  Chunsheng Feng, Zheng Li
  * \date    02/06/2012
@@ -1936,7 +1931,6 @@ void swep2df (INT *ia,
  * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-
 void swep3df (INT *ia,
               INT *ja,
               REAL *aa,
@@ -1985,19 +1979,19 @@ void swep3df (INT *ia,
 }
 
 /*
- * \fn void rb0f2d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, 
- *                  INT *mark, INT nx, INT ny,INT nsweeps)
+ * \fn void rb0f2d (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, 
+ *                  INT *mark, INT nx, INT ny, INT nsweeps)
  *
- * \brief  Colores Gauss-Seidel forward smoother for Au=b
+ * \brief  Colores Gauss-Seidel forward smoother for Au = b
  *
- * \param ia  Pointer to the start location to of row
- * \param ja  Pointer to the column index of nonzero elements
- * \param aa  Pointer to the values of the nonzero elements
- * \param u   Pointer to initial value
- * \param f   Pointer to right hand
- * \param mark  Pointer to the order index of nodes
- * \param nx    Number of nodes in x direction
- * \param ny    Number of nodes in y direction
+ * \param ia       Pointer to the start location to of row
+ * \param ja       Pointer to the column index of nonzero elements
+ * \param aa       Pointer to the values of the nonzero elements
+ * \param u        Pointer to initial value
+ * \param f        Pointer to right hand
+ * \param mark     Pointer to the order index of nodes
+ * \param nx       Number of nodes in x direction
+ * \param ny       Number of nodes in y direction
  * \param nsweeps  Number of relaxation sweeps
  *
  * \author  Chunsheng Feng, Zheng Li
@@ -2005,9 +1999,7 @@ void swep3df (INT *ia,
  *
  * NOTE: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
- *
  */
-
 void rb0f2d (INT *ia,
              INT *ja,
              REAL *aa,
@@ -2042,15 +2034,15 @@ void rb0f2d (INT *ia,
  *
  * \brief  Colores Gauss-Seidel forward smoother for Au=b
  *
- * \param ia  Pointer to the start location to of row
- * \param ja  Pointer to the column index of nonzero elements
- * \param aa  Pointer to the values of the nonzero elements
- * \param u   Pointer to initial value
- * \param f   Pointer to right hand
- * \param mark  Pointer to the order index of nodes
- * \param nx    Number of nodes in x direction
- * \param ny    Number of nodes in y direction
- * \param nz    Number of nodes in z direction
+ * \param ia       Pointer to the start location to of row
+ * \param ja       Pointer to the column index of nonzero elements
+ * \param aa       Pointer to the values of the nonzero elements
+ * \param u        Pointer to initial value
+ * \param f        Pointer to right hand
+ * \param mark     Pointer to the order index of nodes
+ * \param nx       Number of nodes in x direction
+ * \param ny       Number of nodes in y direction
+ * \param nz       Number of nodes in z direction
  * \param nsweeps  Number of relaxation sweeps
  *
  * \author      Chunsheng Feng, Zheng Li
@@ -2058,7 +2050,6 @@ void rb0f2d (INT *ia,
  *
  * NOTE: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
- *
  */
 void rb0f3d (INT *ia,
              INT *ja,
@@ -2101,8 +2092,8 @@ void rb0f3d (INT *ia,
 
 
 /**
- * \fn void fasp_smoother_dcsr_gs_rb3d(dvector *u, dCSRmat *A, dvector *b, INT L,INT order,
- *                                     INT nx,INT ny,INT nz)
+ * \fn void fasp_smoother_dcsr_gs_rb3d (dvector *u, dCSRmat *A, dvector *b, INT L, 
+ *                                      INT order, INT nx,INT ny,INT nz)
  *
  * \brief       Colores Gauss-Seidel smoother  for Au=b
  * \param u     initial guess and the new approximation to the solution obtained after L GS steps
@@ -2117,7 +2108,6 @@ void rb0f3d (INT *ia,
  * \author Chunsheng Feng
  * \date   02/08/2012
  */
-
 void fasp_smoother_dcsr_gs_rb3d (dvector *u,
                                  dCSRmat *A,
                                  dvector *b,
@@ -2182,7 +2172,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
 
 #if 0
 /**
- * \fn dCSRmat static form_contractor(dCSRmat *A, const INT smoother, const INT steps,
+ * \fn dCSRmat static form_contractor (dCSRmat *A, const INT smoother, const INT steps,
  *                                    const INT ndeg, const REAL relax, const REAL dtol)
  *
  * \brief Form contractor I-BA

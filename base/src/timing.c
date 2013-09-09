@@ -1,4 +1,5 @@
 /*! \file timing.c
+ *
  *  \brief Timing subroutines
  */
 
@@ -17,7 +18,8 @@
 
 /**
  * \fn fasp_gettime (REAL *time)
- * \biref Simple timing
+ *
+ * \biref Get system time
  *
  * \author Chunsheng Feng, Zheng LI
  * \date   11/10/2012

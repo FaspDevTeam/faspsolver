@@ -1,4 +1,5 @@
 /*! \file interpolation.c
+ *
  *  \brief Interpolation operators for AMG
  *
  *  \note Ref U. Trottenberg, C. W. Oosterlee, and A. Schuller
@@ -31,7 +32,7 @@ static void interp_STD (dCSRmat *, ivector *, dCSRmat *, iCSRmat *, AMG_param *)
  *
  * \brief Generate interpolation operator P
  *
- * \param A          Coefficient matrix, the index starts from zero
+ * \param A          Pointer to dCSRmat: the coefficient matrix (index starts from 0)
  * \param vertices   Indicator vector for the C/F splitting of the variables
  * \param P          Prolongation (input: nonzero pattern, output: prolongation)
  * \param S          Strong connection matrix
@@ -87,7 +88,7 @@ void fasp_amg_interp (dCSRmat *A,
  *
  * \brief Generate interpolation operator P
  *
- * \param A          Coefficient matrix, the index starts from zero
+ * \param A          Pointer to dCSRmat: the coefficient matrix (index starts from 0)
  * \param vertices   Indicator vector for the C/F splitting of the variables
  * \param P          Prolongation (input: nonzero pattern, output: prolongation)
  * \param S          Strong connection matrix
@@ -145,7 +146,7 @@ void fasp_amg_interp1 (dCSRmat *A,
  * \brief Trunction step for prolongation operators
  *
  * \param P        Prolongation (input: full, output: truncated)
- * \param param    AMG parameters
+ * \param param    Pointer to AMG_param: AMG parameters
  *
  * \author Chensong Zhang
  * \date   05/14/2013
@@ -271,10 +272,10 @@ void fasp_amg_interp_trunc (dCSRmat *P,
  *
  * \brief Direct interpolation
  *
- * \param A          Coefficient matrix, the index starts from zero
+ * \param A          Pointer to dCSRmat: the coefficient matrix (index starts from 0)
  * \param vertices   Indicator vector for the C/F splitting of the variables
  * \param P          Prolongation (input: nonzero pattern, output: prolongation)
- * \param param      AMG parameters
+ * \param param      Pointer to AMG_param: AMG parameters
  *
  * \author Xuehai Huang
  * \date   01/31/2009
@@ -500,11 +501,11 @@ static void interp_DIR (dCSRmat *A,
  *
  * \brief Standard interpolation
  *
- * \param A          Coefficient matrix, the index starts from zero
+ * \param A          Pointer to dCSRmat: the coefficient matrix (index starts from 0)
  * \param vertices   Indicator vector for the C/F splitting of the variables
  * \param P          Interpolation matrix (input: nnz pattern, output: prolongation)
  * \param S          Strong connection matrix
- * \param param      AMG parameters
+ * \param param      Pointer to AMG_param: AMG parameters
  *
  * \author Kai Yang, Xiaozhe Hu
  * \date   05/21/2012
@@ -670,7 +671,7 @@ static void interp_STD (dCSRmat *A,
  *
  * \brief Get the bandwidth of the matrix
  *
- * \param A          Coefficient matrix, the index starts from zero
+ * \param A          Pointer to dCSRmat: the coefficient matrix (index starts from 0)
  * \param nbl_ptr    Left bandwidth
  * \param nbr_ptr    Right bandwidth
  *
@@ -891,10 +892,10 @@ static void get_cindex (INT nrows,
  *
  * \brief Direct interpolation
  *
- * \param A          Coefficient matrix, the index starts from zero
+ * \param A          Pointer to dCSRmat: the coefficient matrix (index starts from 0)
  * \param vertices   Indicator vector for the C/F splitting of the variables
  * \param Ptr        Interpolation matrix (input: nnz pattern, output: prolongation)
- * \param param      AMG parameters
+ * \param param      Pointer to AMG_param: AMG parameters
  *
  * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   03/01/2011

@@ -1,10 +1,10 @@
 /*! \file amg_setup_ua.c
- *  \brief Unsmoothed Aggregation AMG: SETUP phase
  *
- * \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
- *       Refer to P. Vanek, J. Madel and M. Brezina
- *       "Algebraic Multigrid on Unstructured Meshes", 1994
+ *  \brief Unsmoothed aggregation AMG: SETUP phase
  *
+ *  \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
+ *        Refer to P. Vanek, J. Madel and M. Brezina
+ *        "Algebraic Multigrid on Unstructured Meshes", 1994
  */
 
 #include <math.h>
@@ -28,10 +28,10 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *, AMG_param *);
  *
  * \brief Set up phase of unsmoothed aggregation AMG
  *
- * \param mgl     Pointer to AMG_data data
- * \param param   Pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return        SUCCESS if succeed, error otherwise
+ * \return       SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   12/28/2011
@@ -56,12 +56,13 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
 
 /**
  * \fn INT fasp_amg_setup_ua_bsr(AMG_data_bsr *mgl, AMG_param *param)
+ *
  * \brief Set up phase of unsmoothed aggregation AMG (BSR format)
  *
- * \param *mgl     pointer to AMG_data_bsr data
- * \param *param   pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data_bsr
+ * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return         SUCCESS if succeed, error otherwise
+ * \return       SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date 03/16/2012
@@ -89,14 +90,14 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
 /*---------------------------------*/
 
 /**
- * \fn static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *mgl, AMG_param *param)
+ * \fn static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl, AMG_param *param)
  *
  * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
  *
- * \param mgl     Pointer to AMG_data data
- * \param param   Pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return        SUCCESS if succeed, error otherwise
+ * \return       SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   02/21/2011
@@ -266,14 +267,16 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 }
 
 /**
- * \fn static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl, AMG_param *param)
+ * \fn static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl, 
+ *                                                     AMG_param *param)
  *
- * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A (BSR format)
+ * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A 
+ *        in BSR format
  *
- * \param *mgl     Pointer to AMG_data_bsr data
- * \param *param   Pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data_bsr
+ * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return         SUCCESS if succeed, error otherwise
+ * \return       SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   03/16/2012

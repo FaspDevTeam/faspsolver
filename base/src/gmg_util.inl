@@ -1,5 +1,5 @@
 /*! \file  gmg_util.inl
- *  \brief Utilities for GMG_Poisson
+ *  \brief Routines for GMG solvers
  */
 
 // Declarations of all function in this file

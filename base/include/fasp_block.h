@@ -1,5 +1,5 @@
 /*! \file fasp_block.h
- *  \brief Main header file for block matrices in FASP
+ *  \brief Main header file for FASP (block matrices)
  *
  *  \note This header file contains definitions of block matrices, including
  *        grid-major type and variable-major type. In this header, we only 
@@ -26,7 +26,7 @@
 
 /**
  * \struct dBSRmat
- * \brief Block sparse row storage matrix of REAL type.
+ * \brief Block sparse row storage matrix of REAL type
  *
  * \note This data structure is adapted from the Intel MKL library. Refer to:
  * http://software.intel.com/sites/products/documentation/hpc/mkl/lin/index.htm
@@ -70,7 +70,7 @@ typedef struct dBSRmat{
 
 /**
  * \struct block_dCSRmat
- * \brief Block REAL CSR matrix format.
+ * \brief Block REAL CSR matrix format
  *
  * \note The starting index of A is 0.
  */
@@ -89,7 +89,7 @@ typedef struct block_dCSRmat{
 
 /**
  * \struct block_iCSRmat
- * \brief Block INT CSR matrix format.
+ * \brief Block INT CSR matrix format
  *
  * \note The starting index of A is 0.
  */
@@ -108,8 +108,7 @@ typedef struct block_iCSRmat{
 
 /**
  * \struct block_dvector
- * \brief Block REAL vector structure.
- *
+ * \brief Block REAL vector structure
  */
 typedef struct block_dvector{
 	
@@ -123,7 +122,7 @@ typedef struct block_dvector{
 
 /**
  * \struct block_ivector
- * \brief Block INT vector structure.
+ * \brief Block INT vector structure
  *
  * \note The starting index of A is 0.
  */
@@ -139,7 +138,7 @@ typedef struct block_ivector{
 
 /**
  * \struct block_Reservoir
- * \brief Block REAL matrix format for reservoir simulation.
+ * \brief Block REAL matrix format for reservoir simulation
  *
  */
 typedef struct block_Reservoir{
@@ -160,7 +159,7 @@ typedef struct block_Reservoir{
 
 /**
  * \struct block_BSR
- * \brief Block REAL matrix format for reservoir simulation.
+ * \brief Block REAL matrix format for reservoir simulation
  *
  */
 typedef struct block_BSR{
@@ -257,6 +256,23 @@ typedef struct {
 } AMG_data_bsr; /**< AMG data for BSR matrices */
 
 /**
+ * \struct precond_diagbsr
+ * \brief Data passed to diagnal preconditioner for dBSRmat matrices
+ *
+ * \note This is needed for the diagnal preconditioner.
+ */
+typedef struct {
+	
+	//! dimension of each sub-block
+	INT nb;
+    
+	//! diagnal elements
+	dvector diag;
+	
+} precond_diagbsr; /**< Data for diagonal preconditioner of BSR matrices */
+
+
+/**
  * \struct precond_data_bsr
  * \brief Data passed to the preconditioners.
  *
@@ -335,7 +351,6 @@ typedef struct {
 	REAL *w;
 	
 } precond_data_bsr; /**< Preconditioner data for BSR matrices */
-
 
 /**
  * \struct precond_block_reservoir_data

@@ -1,6 +1,6 @@
 /*! \file sparse_str.c
- *  \brief Simple operations for STR sparse matrices.
  *
+ *  \brief Sparse matrix operations for dSTRmat matrices
  */
 
 #include <math.h>
@@ -84,7 +84,6 @@ dSTRmat fasp_dstr_create (INT nx,
     
     return(A);
 }
-
 
 /**
  * \fn void fasp_dstr_alloc (INT nx, INT ny, INT nz, INT nxy, INT ngrid, INT nband, 

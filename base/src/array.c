@@ -1,4 +1,5 @@
 /*! \file array.c
+ *
  *  \brief Array operations
  * 
  *  Simple array operations -- init, set, copy, etc

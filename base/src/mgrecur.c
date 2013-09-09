@@ -1,4 +1,5 @@
 /*! \file mgrecur.c
+ *
  *  \brief Abstract multigrid cycle -- recursive version
  */
 
@@ -17,9 +18,9 @@
  *
  * \brief Solve Ax=b with recursive multigrid K-cycle
  *
- * \param mgl      Pointer to AMG_data data
- * \param param    Pointer to AMG parameters
- * \param level    Index of the current level
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
+ * \param level  Index of the current level
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   04/06/2010

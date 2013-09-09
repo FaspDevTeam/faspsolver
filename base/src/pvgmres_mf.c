@@ -1,5 +1,7 @@
-/*! \file pvgmres.c
- *  \brief Krylov subspace methods -- Preconditioned Variable-Restarting GMRes.
+/*! \file pvgmres_mf.c
+ *
+ *  \brief Krylov subspace methods -- Preconditioned variable-restarting GMRes
+ *         (matrix free)
  *
  *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
  *        A Simple Strategy for Varying the Restart Parameter in GMRES(m)
@@ -29,10 +31,10 @@
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
  *
- * \param mf           Pointer to the mxv_matfree
- * \param b            Pointer to the dvector of right hand side
- * \param x            Pointer to the dvector of DOFs
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param mf           Pointer to mxv_matfree: the spmv operation
+ * \param b            Pointer to dvector: the right hand side
+ * \param x            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps

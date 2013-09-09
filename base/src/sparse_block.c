@@ -1,6 +1,6 @@
 /*! \file sparse_block.c
- *  \brief Functions and operation for block sparse matrices.
  *
+ *  \brief Sparse matrix block operations
  */
 
 #include <time.h>
@@ -22,8 +22,8 @@
  *
  * \brief Get a sub CSR matrix of A with specified rows and colums
  *
- * \param A     Pointer to dCSRmat CSR matrix
- * \param B     Pointer to dCSRmat CSR matrix
+ * \param A     Pointer to dCSRmat matrix
+ * \param B     Pointer to dCSRmat matrix
  * \param Is    Pointer to selected rows
  * \param Js    Pointer to selected colums
  * \param m     Number of selected rows
@@ -35,7 +35,6 @@
  * \date   12/25/2010
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
- *
  */
 SHORT fasp_dcsr_getblk (dCSRmat *A,
                         INT *Is,
@@ -130,7 +129,6 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
-
 SHORT fasp_dbsr_getblk (dBSRmat *A, 
                         INT *Is, 
                         INT *Js, 
@@ -215,7 +213,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
 }
 
 /**
- * \fn dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
+ * \fn dCSRmat fasp_dbsr_getblk_dcsr (dBSRmat *A)
  * \brief get dCSRmat block from a dBSRmat matrix 
  * 
  * \param *A   Pointer to the BSR format matrix
@@ -224,7 +222,6 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
  *
  * \author Xiaozhe Hu
  * \date   03/16/2012 
- *
  */
 dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
 {

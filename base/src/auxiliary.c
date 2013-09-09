@@ -11,8 +11,9 @@
 // Todo: add doxygen for each function! remove unwanted functions. --Chensong
 
 /*! \file auxiliary.c
- *  \brief Read write and outher auxiliary routines. Also routine to convert 
- *  \brief ij value format to crs.
+ *
+ *  \brief Read write and outher auxiliary routines. Also routine to convert
+ *         ij value format to crs.
  */
 
 #include <math.h>

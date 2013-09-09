@@ -1,8 +1,6 @@
 /*! \file blas_array.c
- *  \brief BLAS operations for arrays.
  *
- *  Some simple array operations ...
- *
+ *  \brief BLAS operations for arrays
  */
 
 #include <math.h>

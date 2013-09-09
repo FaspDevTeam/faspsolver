@@ -1,5 +1,5 @@
 /*! \file interface_mumps.c
- *  \brief Call MUMPS direct solver.
+ *  \brief Interface to MUMPS direct solvers
  */
 
 #include <time.h>

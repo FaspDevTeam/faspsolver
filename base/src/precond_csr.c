@@ -1,5 +1,6 @@
 /*! \file precond_csr.c
- *  \brief Preconditioners
+ *
+ *  \brief Preconditioners for dCSRmat matrices
  */
 
 #include "fasp.h"

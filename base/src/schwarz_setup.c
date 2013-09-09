@@ -1,5 +1,5 @@
-/*!
- *  \file schwarz_setup.c
+/*! \file schwarz_setup.c
+ *
  *  \brief Setup phase for the Schwarz methods
  */
 
@@ -15,7 +15,8 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_schwarz_setup(Schwarz_data *schwarz, INT mmsize, INT maxlev, INT schwarz_type)
+ * \fn INT fasp_schwarz_setup (Schwarz_data *schwarz, INT mmsize, 
+ *                             INT maxlev, INT schwarz_type)
  *
  * \brief Setup phase for the Schwarz methods
  *
@@ -29,10 +30,8 @@
  * \author Ludmil, Xiaozhe Hu
  * \date   03/22/2011 
  *
- * Modified by Chunsheng Feng, Zheng Li 
- * \date   08/28/2012
+ * Modified by Chunsheng Feng, Zheng Li on 08/28/2012
  */
-
 INT fasp_schwarz_setup (Schwarz_data *schwarz, 
                         INT mmsize,
                         INT maxlev,

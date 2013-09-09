@@ -1,4 +1,5 @@
 /*! \file blas_vec.c
+ *
  *  \brief BLAS operations for vectors
  */
 

@@ -1,5 +1,6 @@
-/*! \file pminres.c
- *  \brief Krylov subspace methods -- Preconditioned Minimal Residual.
+/*! \file pminres_mf.c
+ *
+ *  \brief Krylov subspace methods -- Preconditioned minimal residual (matrix free)
  *
  *  Abstract algorithm of Krylov method    
  *
@@ -69,10 +70,10 @@
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b 
  *
- * \param mf           Pointer to the mxv_matfree
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to the structure of precondition (precond) 
+ * \param mf           Pointer to mxv_matfree: the spmv operation
+ * \param b            Pointer to dvector: the right hand side
+ * \param u            Pointer to dvector: the unknowns
+ * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type

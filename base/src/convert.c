@@ -1,4 +1,5 @@
 /*! \file convert.c
+ *
  *  \brief Some utilities for format conversion.
  */
 

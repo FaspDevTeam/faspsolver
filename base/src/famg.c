@@ -1,4 +1,5 @@
 /*! \file famg.c
+ *
  *  \brief full AMG method as an iterative solver (main file)
  */
 
@@ -16,10 +17,10 @@
  *
  * \brief Solve Ax=b by full AMG.
  *
- * \param A      Pointer to the coefficient matrix
- * \param b      Pointer to the dvector of right hand side
- * \param x      Pointer to the dvector of dofs
- * \param param  Pointer to AMG parameters
+ * \param A      Pointer to dCSRmat: the coefficient matrix
+ * \param b      Pointer to dvector: the right hand side
+ * \param x      Pointer to dvector: the unknowns
+ * \param param  Pointer to AMG_param: AMG parameters
  *
  * \author Xiaozhe Hu
  * \date   02/27/2011

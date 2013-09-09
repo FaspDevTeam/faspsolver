@@ -1,6 +1,6 @@
 /*! \file memory.c
- *  \brief Memory allocation and deallocation
  *
+ *  \brief Memory allocation and deallocation
  */
 
 #include "fasp.h"

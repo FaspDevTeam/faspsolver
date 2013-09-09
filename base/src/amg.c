@@ -1,4 +1,5 @@
 /*! \file amg.c
+ *
  *  \brief AMG method as an iterative solver (main file)
  */
 
@@ -15,23 +16,23 @@
  * \fn void fasp_solver_amg (dCSRmat *A, dvector *b, dvector *x,
  *                           AMG_param *param)
  *
- * \brief Solve Ax=b by Algebaric MultiGrid Method.
+ * \brief Solve Ax = b by algebaric multigrid methods
  *
- * \param A      Pointer to the coefficient matrix
- * \param b      Pointer to the dvector of right hand side
- * \param x      Pointer to the dvector of dofs
- * \param param  Pointer to AMG parameters
+ * \param A      Pointer to dCSRmat: the coefficient matrix
+ * \param b      Pointer to dvector: the right hand side
+ * \param x      Pointer to dvector: the unknowns
+ * \param param  Pointer to AMG_param: AMG parameters
  *
  * \author Chensong Zhang
  * \date   04/06/2010
  *
- * \note Refter to "Multigrid"
+ * \note Refer to "Multigrid"
  *       by U. Trottenberg, C. W. Oosterlee and A. Schuller
  *       Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben)
  *       Academic Press Inc., San Diego, CA, 2001.
  *
  * Modified by Chensong Zhang on 01/10/2012
- * Modified by Chensong Zhang on 05/05/2013: Remove error handling for AMG setup
+ * Modified by Chensong Zhang on 05/05/2013: Remove error handling from AMG setup
  */
 void fasp_solver_amg (dCSRmat *A,
                       dvector *b,

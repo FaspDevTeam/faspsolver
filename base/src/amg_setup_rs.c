@@ -1,12 +1,12 @@
 /*! \file amg_setup_rs.c
- *  \brief Ruge-Stuben AMG: SETUP phase.
+ *
+ *  \brief Ruge-Stuben AMG: SETUP phase
  *
  *  \note Setup A, P, R, levels using classic AMG!
  *        Refter to "Multigrid" by Stuben
  *        in U. Trottenberg, C. W. Oosterlee and A. Schuller.
  *        Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben).
  *        Academic Press Inc., San Diego, CA, 2001.
- *
  */
 
 #include <time.h>
@@ -27,8 +27,8 @@
  *
  * \brief Setup phase of Ruge and Stuben's classic AMG
  *
- * \param mgl    Pointer to AMG_data data
- * \param param  Pointer to AMG parameters
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
  *
  * \return       SUCCESS if successed, otherwise, error information.
  *

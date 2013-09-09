@@ -1,9 +1,10 @@
 /*! \file amlirecur.c
- *  \brief Abstract AMLI Multilevel Iteration (recursive version)
+ *
+ *  \brief Abstract AMLI multilevel iteration -- recursive version
  *
  *  \note Contains AMLI and nonlinear AMLI cycles
  *
- *  TODO: Need to add a non-recursive version. --Chensong 
+ *  TODO: Need to add a non-recursive version! --Chensong 
  */
 
 #include <math.h>
@@ -24,9 +25,9 @@
  *
  * \brief Solve Ax=b with recursive AMLI-cycle
  *
- * \param  mgl       Pointer to AMG_data data
- * \param  param     Pointer to AMG parameters
- * \param  level     Current level
+ * \param mgl    Pointer to AMG data: AMG_data
+ * \param param  Pointer to AMG parameters: AMG_param
+ * \param level  Current level
  *
  * \author Xiaozhe Hu
  * \date   01/23/2011
@@ -273,7 +274,8 @@ void fasp_solver_amli (AMG_data *mgl,
 }
 
 /**
- * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param, INT level, INT num_levels)
+ * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param, 
+ *                               INT level, INT num_levels)
  *
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
  *
@@ -550,8 +552,8 @@ void fasp_solver_nl_amli (AMG_data *mgl,
  *
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
  *
- * \param mgl         Pointer to AMG_data_bsr data
- * \param param       Pointer to AMG parameters
+ * \param mgl         Pointer to AMG data: AMG_data
+ * \param param       Pointer to AMG parameters: AMG_param
  * \param level       Current level
  * \param num_levels  Total numebr of levels
  *

@@ -1,5 +1,6 @@
 /*! \file blas_smat.c
- *  \brief BLAS operations for small full matrix.
+ *
+ *  \brief BLAS operations for small full matrix
  */
 
 #include "fasp.h"
