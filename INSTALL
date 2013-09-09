@@ -3,7 +3,6 @@
 ======================================================
 
 $ make config           # Configure the building environment
-$ make config openmp=1  # Configure with OpenMP support
 $ make                  # Compile the library
 $ make install          # install FASP libraries and related files
 $ make docs             # Generate the FASP documentation with Doxygen

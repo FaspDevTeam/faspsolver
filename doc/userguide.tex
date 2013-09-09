@@ -62,7 +62,7 @@
 \title{User's Guide for FASP}
 
 \author{FASP Developer Team}
-\date{Version 1.2.0} % Activate to display a given date or no date
+\date{Version 1.3.5} % Activate to display a given date or no date
 
 %\preface{a}
 
@@ -122,7 +122,7 @@ We organize the development of FASP package in a \emph{``Multigrid''} or \emph{`
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{What solvers we are going to put}\label{sec:idea}
+\section{What solvers you are going to get}\label{sec:idea}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We are currently interested in the theory and numerical solution of many PDE problems. Currently, we are mainly working on solving the following PDEs and PDE systems (this is not a complete list and it is still expanding):
@@ -206,16 +206,17 @@ FASP has been tested on Linux (Cent OS, Debian, Fedora, RedHat, Ubuntu), OS X (L
 
 \subsection{Linux or OS X}
 
-Now we give a simple instruction on how to compile FASP on Linux: To build the FASP library, just go to the ``base'' directory and type:
+Now we give a simple instruction on how to compile FASP on Linux: To build the FASP library, just go to the ``faspsolver'' directory and type:
 %
 \begin{lstlisting}[numbers=none]
-$ make
+$ make config
+$ make install
 \end{lstlisting}
 %
-In order to make sure everything is OK, you can go to the ``test'' directory and type:
+In order to make sure everything is OK, you can go to the ``faspsolver/test'' directory and try to run the test problem:
 %
 \begin{lstlisting}[numbers=none]
-$ make testall
+$ ./test.ex
 \end{lstlisting}
 %
 Then you should obtain a set of test problems. If you need more help, you can use
@@ -223,6 +224,21 @@ Then you should obtain a set of test problems. If you need more help, you can us
 \begin{lstlisting}[numbers=none]
 $ make help
 \end{lstlisting}
+%
+To uninstall FASP and clean up the working directory, you can 
+%
+\begin{lstlisting}[numbers=none]
+$ make uninstall
+$ make distclean
+\end{lstlisting}
+%
+To enable OpenMP support, you need to uncomment one line in ``Makefile'' and set ``openmp'' to be ``yes''.
+\begin{lstlisting}[numbers=none]
+# If you want to compile with OpenMP support, uncomment the next line:
+#
+# openmp=yes
+\end{lstlisting}
+
 
 \subsection{Windows}
 
@@ -245,6 +261,17 @@ If you need to build a VS solution by yourselves, you should create 5 projects:
 If you are using Visual C++, all the C files should be compiled as C++ code (by using the /TP compiling option).
 \end{snugshade}
 
+
+\subsection{Using TCL GUI}
+You can also try to build FASP using the TCL graphical user interface. For example, in Linux or Mac OS X, you may 
+%
+\begin{lstlisting}[numbers=none]
+$ wish FASP_install.tcl
+\end{lstlisting}
+%
+A graphical interface will popup and the rest of the building process is straightforward. 
+
+\begin{comment}
 \subsection{Using Scons}
 In Linux, Mac OS X, or Windows, you can use the Scons tool to build and install different versions (Release, Shared, Debug) of the FASP library. You just need to type inside ``faspsolve/bas'' directory:
 %
@@ -260,6 +287,7 @@ C:\> scons -Q install FC=ifort CC=cl
 \begin{snugshade}\noindent
 Usually, the directories for compilers are not added to the PATH environment variable automatically. Hence, you may need to modify your PATH variable to make the above line to work. 
 \end{snugshade}
+\end{comment}
 
 
 \subsection{External libraries}\label{ssec:lib}
@@ -271,16 +299,7 @@ There are a few \emph{optional} external libraries that you might want to use, i
 \chapter{A Tutorial}\label{ch:tutor}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we use a couple simple examples to demonstrate how to use the FASP package for solving existing linear systems which have been saved as disk files. All the examples can be found in ``faspsolver/tutorial/''. Here we only discuss the C version of these examples; interested users can read the F90 version of some of the examples.
-
-To build the tutorial examples, just go to this directory and type:
-%
-\begin{lstlisting}[numbers=none]
-$ make
-\end{lstlisting}
-%
-This command will build all the examples inside tutorial. You can use ``make help'' to get more details.
-
+In this chapter, we use a couple simple examples to demonstrate how to use the FASP package for solving existing linear systems which have been saved as disk files. All the examples can be found in ``faspsolver/tutorial/''. Here we only discuss the C version of these examples; interested users can read the F90 version of some of the examples. After you successfully build FASP (see \S\ref{sec:build}), just go to the ``faspsolver/tutorial/" directory and the compiled tutorial examples should be ready to be tried.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The first example}\label{sec:ex1}
@@ -404,7 +423,7 @@ AMG print level:                   3
 AMG max num of iter:               100
 AMG type:                          1
 AMG tolerance:                     1.00e-08
-AMG max levels:                    15
+AMG max levels:                    20
 AMG cycle type:                    1
 AMG scaling of coarse correction:  0
 AMG smoother type:                 2
@@ -417,8 +436,12 @@ AMG dof on coarsest grid:          500
 AMG strong threshold:              0.6000
 AMG truncation threshold:          0.4000
 AMG max row sum:                   0.9000
+AMG aggressive levels:             0
+AMG aggressive path:               1
 -----------------------------------------------
 
+
+Calling classical AMG ...
 -----------------------------------------------
   Level     Num of rows      Num of nonzeros
 -----------------------------------------------
@@ -429,16 +452,17 @@ AMG max row sum:                   0.9000
 -----------------------------------------------
 AMG grid complexity     = 1.863
 AMG operator complexity = 3.280
-Ruge-Stuben AMG setup costs 0.0087 seconds.
----------------------------------------------------------------
-It Num |    ||r||/||b||    |     ||r||      |  Conv. Factor
----------------------------------------------------------------
-     1 |    5.160015e-04   |  3.877420e-03  |     0.0000
-     2 |    1.895524e-06   |  1.424365e-05  |     0.0037
-     3 |    7.554832e-09   |  5.676972e-08  |     0.0040
+Classical AMG setup costs 0.0123 seconds.
+-----------------------------------------------------------
+It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
+-----------------------------------------------------------
+     0 |  1.000000e+00   |  7.514358e+00  |     -.--
+     1 |  5.160015e-04   |  3.877420e-03  |     0.0005
+     2 |  1.895524e-06   |  1.424365e-05  |     0.0037
+     3 |  7.554832e-09   |  5.676972e-08  |     0.0040
 Number of iterations = 3 with relative residual 7.554832e-09.
-AMG solve costs 0.0080 seconds.
-AMG totally costs 0.0173 seconds.
+AMG solve costs 0.0189 seconds.
+AMG totally costs 0.0316 seconds.
 \end{lstlisting}
 
 
@@ -751,7 +775,7 @@ AMG print level:                   3
 AMG max num of iter:               100
 AMG type:                          2
 AMG tolerance:                     1.00e-08
-AMG max levels:                    15
+AMG max levels:                    20
 AMG cycle type:                    1
 AMG scaling of coarse correction:  0
 AMG smoother type:                 2
@@ -761,48 +785,49 @@ AMG num of postsmoothing:          2
 Aggregation AMG strong coupling:   0.0800
 Aggregation AMG max aggregation:   20
 Aggregation AMG tentative smooth:  0.6700
-Aggregation AMG smooth filter:     1
+Aggregation AMG smooth filter:     0
 -----------------------------------------------
 
+
+Calling SA AMG ...
 -----------------------------------------------
   Level     Num of rows      Num of nonzeros
 -----------------------------------------------
     0            3969             27281
-    1             541              5121
-    2              41               391
+    1             541              6531
+    2              41               421
 -----------------------------------------------
 AMG grid complexity     = 1.147
-AMG operator complexity = 1.202
-Smoothed Aggregation AMG setup costs 0.0038 seconds.
----------------------------------------------------------------
-It Num |    ||r||/||b||    |     ||r||      |  Conv. Factor
----------------------------------------------------------------
-     1 |    4.274024e-02   |  3.211655e-01  |     0.0000
-     2 |    7.681829e-03   |  5.772402e-02  |     0.1797
-     3 |    3.769909e-03   |  2.832845e-02  |     0.4908
-     4 |    1.908833e-03   |  1.434365e-02  |     0.5063
-     5 |    9.544638e-04   |  7.172183e-03  |     0.5000
-     6 |    4.811769e-04   |  3.615735e-03  |     0.5041
-     7 |    2.454538e-04   |  1.844428e-03  |     0.5101
-     8 |    1.264489e-04   |  9.501825e-04  |     0.5152
-     9 |    6.560382e-05   |  4.929706e-04  |     0.5188
-    10 |    3.419782e-05   |  2.569747e-04  |     0.5213
-    11 |    1.788119e-05   |  1.343657e-04  |     0.5229
-    12 |    9.367771e-06   |  7.039279e-05  |     0.5239
-    13 |    4.913626e-06   |  3.692274e-05  |     0.5245
-    14 |    2.579247e-06   |  1.938138e-05  |     0.5249
-    15 |    1.354509e-06   |  1.017827e-05  |     0.5252
-    16 |    7.115253e-07   |  5.346656e-06  |     0.5253
-    17 |    3.738252e-07   |  2.809056e-06  |     0.5254
-    18 |    1.964204e-07   |  1.475973e-06  |     0.5254
-    19 |    1.032110e-07   |  7.755642e-07  |     0.5255
-    20 |    5.423451e-08   |  4.075375e-07  |     0.5255
-    21 |    2.849901e-08   |  2.141518e-07  |     0.5255
-    22 |    1.497562e-08   |  1.125322e-07  |     0.5255
-    23 |    7.869358e-09   |  5.913318e-08  |     0.5255
-Number of iterations = 23 with relative residual 7.869358e-09.
-AMG solve costs 0.0140 seconds.
-AMG totally costs 0.0184 seconds.
+AMG operator complexity = 1.255
+Smoothed aggregation setup costs 0.0072 seconds.
+-----------------------------------------------------------
+It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
+-----------------------------------------------------------
+     0 |  1.000000e+00   |  7.514358e+00  |     -.--
+     1 |  4.345463e-02   |  3.265336e-01  |     0.0435
+     2 |  8.041967e-03   |  6.043022e-02  |     0.1851
+     3 |  3.808810e-03   |  2.862076e-02  |     0.4736
+     4 |  1.838990e-03   |  1.381883e-02  |     0.4828
+     5 |  8.675952e-04   |  6.519421e-03  |     0.4718
+     6 |  4.089274e-04   |  3.072827e-03  |     0.4713
+     7 |  1.939823e-04   |  1.457653e-03  |     0.4744
+     8 |  9.276723e-05   |  6.970862e-04  |     0.4782
+     9 |  4.471799e-05   |  3.360270e-04  |     0.4820
+    10 |  2.171249e-05   |  1.631554e-04  |     0.4855
+    11 |  1.060934e-05   |  7.972239e-05  |     0.4886
+    12 |  5.212246e-06   |  3.916668e-05  |     0.4913
+    13 |  2.572464e-06   |  1.933042e-05  |     0.4935
+    14 |  1.274466e-06   |  9.576797e-06  |     0.4954
+    15 |  6.333891e-07   |  4.759512e-06  |     0.4970
+    16 |  3.155926e-07   |  2.371476e-06  |     0.4983
+    17 |  1.575755e-07   |  1.184079e-06  |     0.4993
+    18 |  7.881043e-08   |  5.922098e-07  |     0.5001
+    19 |  3.947044e-08   |  2.965950e-07  |     0.5008
+    20 |  1.978978e-08   |  1.487075e-07  |     0.5014
+    21 |  9.931176e-09   |  7.462641e-08  |     0.5018
+Number of iterations = 21 with relative residual 9.931176e-09.
+AMG solve costs 0.0252 seconds.
+AMG totally costs 0.0327 seconds.
 \end{lstlisting}
 %
 You can compare this with the sample results in \S\ref{sec:ex1}.
@@ -1435,25 +1460,10 @@ In this chapter, we discuss a few more advanced features of FASP. We will discus
 OpenMP\footnote{Official website: \url{http://openmp.org/}} (Open Multiprocessing) is an API that supports multi-platform shared memory multiprocessing programming in C, C++, and Fortran, on most processor architectures and operating systems. It consists of a set of compiler directives, library routines, and environment variables that influence run-time behavior. Some preliminary OpenMP support has been included since the very beginning of FASP. We consistently improves and expands OpenMP support as multiprocessor architectures become the dominant desktop computing environment.
 
 \begin{snugshade}\noindent
-NOTE: By default, OpenMP is not disabled in FASP. In order to turn it on, you need to modify make.in a little bit.
+NOTE: By default, OpenMP is not disabled in FASP. In order to turn it on, you need to modify Makefile a little bit; see \S\ref{sec:build}.
 \end{snugshade}
 
-To enable OpenMP support, you need to uncomment one line in ``make.inc'' and set ``OMP'' to be 1.
-\begin{lstlisting}[numbers=none]
-# Uncomment the following line to turn on OpenMP version
-# OMP=1
-
-ifdef OMP
-   BOPT+=-fopenmp
-   CDEFS=-D FASP_USE_OPENMP=1
-   FDEFS=-D FASP_USE_OPENMP=1
-else
-   CDEFS=-D FASP_USE_OPENMP=0
-   FDEFS=-D FASP_USE_OPENMP=0
-endif
-\end{lstlisting}
-
-After you recompile your code, OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash}, you need to set:
+After you build FASP with ``openmp=yes'', OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash}, you need to set:
 \begin{lstlisting}[numbers=none]
 $ export OMP_NUM_THREADS=8
 \end{lstlisting}
