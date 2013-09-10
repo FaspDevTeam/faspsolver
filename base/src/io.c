@@ -8,10 +8,10 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-// Flags which indicates lengths of int and real numbers
+//! Flags which indicates lengths of INT and REAL numbers
 INT ilength, dlength;
 
-// Definition of private functions
+// Decoration of private functions
 static void fasp_dcsr_read_s(FILE *fp, dCSRmat *A);
 static void fasp_dcsr_read_b(FILE *fp, dCSRmat *A, INT endianflag);
 static void fasp_dcoo_read_s(FILE *fp, dCSRmat *A);
@@ -1355,12 +1355,12 @@ void fasp_dcsr_print (dCSRmat *A)
  * \author Ziteng Wang
  * \date   12/24/2012
  */
-void fasp_dcoo_print (dCSRmat *A)
+void fasp_dcoo_print (dCOOmat *A)
 {
     INT k;
     printf("nrow = %d, ncol = %d, nnz = %d\n",A->row,A->col,A->nnz);
     for (k = 0; k < A->nnz; k++) {
-        printf("A_(%d,%d) = %+.10E\n",A->IA[k],A->JA[k],A->val[k]);
+        printf("A_(%d,%d) = %+.10E\n",A->I[k],A->J[k],A->val[k]);
     }
 }
 
@@ -1392,7 +1392,7 @@ void fasp_dbsr_print (dBSRmat *A)
 }
 
 /**
- * \fn void fasp_dbsr_print (dSTRmat *A)
+ * \fn void fasp_dstr_print (dSTRmat *A)
  *
  * \brief Print out a dSTRmat matrix in coordinate format
  *
@@ -1401,7 +1401,7 @@ void fasp_dbsr_print (dBSRmat *A)
  * \author Ziteng Wang
  * \date   12/24/2012
  */
-void fasp_dstr_print (dCSRmat *A)
+void fasp_dstr_print (dSTRmat *A)
 {
     // To be added later! --Chensong
 }
@@ -1689,8 +1689,7 @@ void fasp_matrix_write (char *filename,
  * \brief Read RHS vector from different kinds of formats from both ASCII and binary files
  *
  * \param filerhs File name of vector file
- *
- * \param A Pointer to the matrix
+ * \param b Pointer to the vector
  *
  * \note Matrix file format:
  *   - fileflag			 % fileflag = 1: binary, fileflag = 0000: ASCII
@@ -1709,7 +1708,6 @@ void fasp_matrix_write (char *filename,
  * \author Ziteng Wang
  * \date   12/24/2012
  */
-
 void fasp_vector_read (char *filerhs,
                        void *b)
 {

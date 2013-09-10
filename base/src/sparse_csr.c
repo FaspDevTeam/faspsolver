@@ -1258,7 +1258,7 @@ dCSRmat fasp_dcsr_sympat (dCSRmat *A)
 }
 
 /**
- * \fn void fasp_dcsr_multicoloring (dCSRmat A, INT *flags , INT *groups)
+ * \fn void fasp_dcsr_multicoloring (dCSRmat *A, INT *flags, INT *groups)
  *
  * \brief Use the greedy multicoloring to get color groups of the adjacency graph of A
  *

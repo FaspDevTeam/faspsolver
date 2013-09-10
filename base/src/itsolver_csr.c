@@ -124,7 +124,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
  * \fn INT fasp_solver_dcsr_krylov (dCSRmat *A, dvector *b, dvector *x, 
  *                                  itsolver_param *itparam)
  *
- * \brief Solve Ax=b by standard Krylov methods -- without preconditioner 
+ * \brief Solve Ax=b by standard Krylov methods for CSR matrices 
  *
  * \param A        Pointer to the coeff matrix in dCSRmat format
  * \param b        Pointer to the right hand side in dvector format
@@ -232,7 +232,8 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 
 /**
  * \fn INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, dvector *b, dvector *x, 
- *                                          itsolver_param *itparam, Schwarz_param *schparam)
+ *                                          itsolver_param *itparam, 
+ *                                          Schwarz_param *schparam)
  *
  * \brief Solve Ax=b by overlapping schwarz Krylov methods 
  * 
@@ -319,14 +320,13 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
  * \param b         Pointer to the right hand side in dvector format
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
- * \param amgparam  AMG parameters
+ * \param amgparam  Pointer to parameters for AMG methods
  *
  * \return          Number of iterations if succeed
  *
  * \author Chensong Zhang
  * \date   09/25/2009  
  */
-
 INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, 
                                  dvector *b, 
                                  dvector *x, 
@@ -505,7 +505,7 @@ FINISHED:
  *                                        itsolver_param *itparam, ILU_param *iluparam, 
  *                                        dCSRmat *M)
  *
- * \brief Solve Ax=b by ILUs preconditioned Krylov methods: ILU of M plays as preconditioner
+ * \brief Solve Ax=b by ILUs preconditioned Krylov methods: ILU of M as preconditioner
  *
  * \param A         Pointer to the coeff matrix in dCSRmat format
  * \param b         Pointer to the right hand side in dvector format

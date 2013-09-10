@@ -22,7 +22,7 @@
  * \param *filename   char for vector file name
  *
  * \author Zhiyang Zhou
- * \date 08/25/2010
+ * \date   08/25/2010
  */
 void dvector2SAMGInput (dvector *vec,
                         char *filename)
@@ -51,7 +51,7 @@ void dvector2SAMGInput (dvector *vec,
  * \param *fileamg   pointer to the name of the .amg file
  *
  * \author Zhiyang Zhou
- * \data 2010/08/25
+ * \date 2010/08/25
  */
 INT dCSRmat2SAMGInput (dCSRmat *A,
                        char *filefrm,

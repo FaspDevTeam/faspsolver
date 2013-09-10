@@ -137,9 +137,10 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
  * \brief Setup for jacobi relaxation, fetch the diagonal sub-block matrixes and 
  *        make them inverse first
  *
- * \param A      Pointer to dBSRmat: the coefficient matrix
- * \param b      Pointer to dvector: the right hand side
- * \param u      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
+ * \param A       Pointer to dBSRmat: the coefficient matrix
+ * \param b       Pointer to dvector: the right hand side
+ * \param u       Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
+ * \param diaginv Inverse of the diagonal entries
  *
  * \author Zhiyang Zhou
  * \date   10/25/2010

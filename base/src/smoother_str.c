@@ -903,6 +903,7 @@ void fasp_smoother_dstr_sor (dSTRmat *A,
  *                   FPFIRST     -1 : F-points first and then C-points
  * \param mark     Pointer to the user-defined ordering(when order=0)
  *                   or CF_marker array(when order!=0)
+ * \param diaginv  Inverse of the diagonal entries
  * \param weight   Over-relaxation weight
  *
  * \author Shiquan Zhang, Zhiyang Zhou

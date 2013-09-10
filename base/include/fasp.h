@@ -1073,7 +1073,7 @@ typedef ListElement *LinkList; /**< linked list */
 /*
  * OpenMP definitions and decrorations
  */
-#define FASP_GSRB 1  /*mg level 0  use RedBlack Gausss Seidel Smoothing */
+#define FASP_GSRB 1  /**< MG level 0 use RedBlack Gauss Seidel Smoothing */
 
 #if FASP_GSRB
 extern INT  nx_rb ;  /**< Red Black Gs Smoother Nx */

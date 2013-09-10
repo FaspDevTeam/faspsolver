@@ -28,6 +28,8 @@
  *
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date 03/20/2011
+ *
+ * TODO: Why put it here??? --Chensong
  */
 
 INT THDs_AMG_GS=0;  /**< cpr amg gs smoothing threads      */
@@ -82,7 +84,7 @@ void fasp_set_GS_threads (INT mythreads,
  * \fn INT fasp_solver_dbsr_itsolver (dBSRmat *A, dvector *b, dvector *x, 
  *                                    precond *pc, itsolver_param *itparam)
  *
- * \brief Solve Ax=b by standard Krylov methods 
+ * \brief Solve Ax=b by preconditioned Krylov methods for BSR matrices
  *
  * \param A        Pointer to the coeff matrix in dBSRmat format
  * \param b        Pointer to the right hand side in dvector format
@@ -158,7 +160,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
  * \fn INT fasp_solver_dbsr_krylov (dBSRmat *A, dvector *b, dvector *x, 
  *                                  itsolver_param *itparam)
  *
- * \brief Solve Ax=b by standard Krylov methods 
+ * \brief Solve Ax=b by standard Krylov methods for BSR matrices
  *
  * \param A         Pointer to the coeff matrix in dBSRmat format
  * \param b         Pointer to the right hand side in dvector format

@@ -13,11 +13,32 @@
 #include "fasp_functs.h"
 
 /*---------------------------------*/
+/*--   Decoration of Functions   --*/
+/*---------------------------------*/
+
+static void swep2db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
+                     INT nbegy, INT *mark, INT nx, INT ny);
+static void swep3db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
+                     INT nbegy, INT nbegz, INT *mark, INT nx, INT ny, INT nz);
+static void rb0b2d (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f,
+                    INT *mark, INT nx, INT ny, INT nsweeps);
+static void rb0b3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f,
+                    INT *mark, INT nx, INT ny, INT nz, INT nsweeps);
+static void swep2df (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
+                     INT nbegy, INT *mark, INT nx, INT ny);
+static void swep3df (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
+                     INT nbegy, INT nbegz, INT *mark, INT nx, INT ny, INT nz);
+static void rb0f2d (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f,
+                    INT *mark, INT nx, INT ny, INT nsweeps);
+static void rb0f3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark,
+                    INT nx, INT ny, INT nz, INT nsweeps);
+
+/*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n, 
+ * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n,
  *                                     const INT s, dCSRmat *A, dvector *b, INT L)
  *
  * \brief Jacobi method as a smoother
@@ -153,7 +174,7 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_gs (dvector *u, const INT i_1, const INT i_n, 
+ * \fn void fasp_smoother_dcsr_gs (dvector *u, const INT i_1, const INT i_n,
  *                                 const INT s, dCSRmat *A, dvector *b, INT L)
  *
  * \brief Gauss-Seidel method as a smoother
@@ -323,7 +344,7 @@ void fasp_smoother_dcsr_gs (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_gs_cf (dvector *u, dCSRmat *A, dvector *b, INT L, 
+ * \fn void fasp_smoother_dcsr_gs_cf (dvector *u, dCSRmat *A, dvector *b, INT L,
  *                                    INT *mark, const INT order)
  *
  * \brief Gauss-Seidel smoother with C/F ordering for Au=b
@@ -352,7 +373,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
     const REAL  *aj = A->val, *bval = b->val;
     REAL        *uval = u->val;
     
-    INT i,j,k,begin_row,end_row;    
+    INT i,j,k,begin_row,end_row;
     REAL t,d=0.0;
     
 #ifdef _OPENMP
@@ -386,7 +407,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                                 if (i!=j) t -= aj[k]*uval[j];
                                 else d = aj[k];
                             } // end for k
-#endif // end if DIAG_PREF                            
+#endif // end if DIAG_PREF
                             if (ABS(d) > SMALLREAL) uval[i] = t/d;
                         }
                     } // end for i
@@ -499,7 +520,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                                 if (i!=j) t -= aj[k]*uval[j];
                                 else d = aj[k];
                             } // end for k
-#endif // end if DIAG_PREF                            
+#endif // end if DIAG_PREF
                             if (ABS(d) > SMALLREAL) uval[i] = t/d;
                         }
                     } // end for i
@@ -1380,8 +1401,91 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
 }
 
 /**
- * \fn void swep2db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx, 
- *                   INT nbegy, INT *mark, INT nx, INT ny)
+ * \fn void fasp_smoother_dcsr_gs_rb3d (dvector *u, dCSRmat *A, dvector *b, INT L,
+ *                                      INT order, INT nx,INT ny,INT nz)
+ *
+ * \brief       Colored Gauss-Seidel smoother for Au=b
+ *
+ * \param u     initial guess and the new approximation to the solution obtained after L GS steps
+ * \param A     Pointer to stiffness matrix
+ * \param b     Pointer to right hand side
+ * \param L     number of iterations
+ * \param order ordering: -1: Forward; 1: Backward
+ * \param nx    number vertex of X direction
+ * \param ny    number vertex of Y direction
+ * \param nz    number vertex of Z direction
+ *
+ * \author Chunsheng Feng
+ * \date   02/08/2012
+ */
+void fasp_smoother_dcsr_gs_rb3d (dvector *u,
+                                 dCSRmat *A,
+                                 dvector *b,
+                                 INT L,
+                                 INT order,
+                                 INT *mark,
+                                 INT maximap,
+                                 INT nx,
+                                 INT ny,
+                                 INT nz )
+{
+    const INT   nrow = b->row; // number of rows
+    INT        *ia=A->IA,*ja=A->JA;
+    REAL       *aa=A->val, *bval=b->val;
+    REAL       *uval=u->val;
+    
+    INT         i,j,k,begin_row,end_row;
+    REAL        t,d=0.0;
+    
+    // forward
+    if (order == 1) {
+        while (L--) {
+            rb0f3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);
+#if 1
+            //   for (ii =0;ii <10;ii++)
+            for (i = maximap; i < nrow; i ++) {
+                t = bval[i];
+                begin_row = ia[i], end_row = ia[i+1];
+                for (k = begin_row; k < end_row; k ++) {
+                    j = ja[k];
+                    if (i!=j) t -= aa[k]*uval[j];
+                    else d = aa[k];
+                } // end for k
+                if (ABS(d) > SMALLREAL) uval[i] = t/d;
+            } // end for i
+#endif
+        } // end while
+    }
+    
+    // backward
+    else {
+        while (L--) {
+#if 1
+            //  for (ii =0;ii <10;ii++)
+            for (i = nrow-1; i >= maximap; i --) {
+                t = bval[i];
+                begin_row = ia[i],end_row = ia[i+1];
+                for (k = begin_row; k < end_row; k ++) {
+                    j = ja[k];
+                    if (i!=j) t -= aa[k]*uval[j];
+                    else d = aa[k];
+                } // end for k
+                if (ABS(d) > SMALLREAL) uval[i] = t/d;
+            } // end for i
+#endif
+            rb0b3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);
+        } // end while
+    }
+    return;
+}
+
+/*---------------------------------*/
+/*--      Private Functions      --*/
+/*---------------------------------*/
+
+/**
+ * \fn static void swep2db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
+ *                          INT nbegy, INT *mark, INT nx, INT ny)
  *
  * \brief      Gauss-Seidel backward smoother for certain color
  *
@@ -1402,16 +1506,16 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void swep2db (INT *ia,
-              INT *ja,
-              REAL *aa,
-              REAL *u,
-              REAL *f,
-              INT nbegx,
-              INT nbegy,
-              INT *mark,
-              INT nx,
-              INT ny)
+static void swep2db (INT *ia,
+                     INT *ja,
+                     REAL *aa,
+                     REAL *u,
+                     REAL *f,
+                     INT nbegx,
+                     INT nbegy,
+                     INT *mark,
+                     INT nx,
+                     INT ny)
 {
     INT j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
@@ -1444,8 +1548,8 @@ void swep2db (INT *ia,
 
 
 /**
- * \fn void swep3db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
- *                   INT nbegy, INT nbegz, INT *mark, INT nx, INT ny, INT nz)
+ * \fn static void swep3db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
+ *                          INT nbegy, INT nbegz, INT *mark, INT nx, INT ny, INT nz)
  *
  * \brief      Gauss-Seidel backward smoother for certain color
  *
@@ -1468,18 +1572,18 @@ void swep2db (INT *ia,
  * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void swep3db (INT *ia,
-              INT *ja,
-              REAL *aa,
-              REAL *u,
-              REAL *f,
-              INT nbegx,
-              INT nbegy,
-              INT nbegz,
-              INT *mark,
-              INT nx,
-              INT ny,
-              INT nz)
+static void swep3db (INT *ia,
+                     INT *ja,
+                     REAL *aa,
+                     REAL *u,
+                     REAL *f,
+                     INT nbegx,
+                     INT nbegy,
+                     INT nbegz,
+                     INT *mark,
+                     INT nx,
+                     INT ny,
+                     INT nz)
 {
     INT nxy, k, k0, j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
@@ -1517,10 +1621,10 @@ void swep3db (INT *ia,
 }
 
 /*
- * \fn void rb0b2d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f,
- *                  INT *mark, INT nx, INT ny, INT nsweeps)
+ * \fn static void rb0b2d (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f,
+ *                         INT *mark, INT nx, INT ny, INT nsweeps)
  *
- * \brief  Colores Gauss-Seidel backward smoother for Au=b
+ * \brief Colored Gauss-Seidel backward smoother for Au=b
  *
  * \param ia       Pointer to start location of each row
  * \param ja       Pointer to column index of nonzero elements
@@ -1538,15 +1642,15 @@ void swep3db (INT *ia,
  * \note This subroutine is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void rb0b2d (INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nsweeps)
+static void rb0b2d (INT *ia,
+                    INT *ja,
+                    REAL *aa,
+                    REAL *u,
+                    REAL *f,
+                    INT *mark,
+                    INT nx,
+                    INT ny,
+                    INT nsweeps)
 {
 #if 1
     INT n0e,n0o,isweep;
@@ -1589,7 +1693,7 @@ void rb0b2d (INT *ia,
 			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
 			/*...  o-e */
 			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
-                }
+        }
 		else if ((nx%2==1)&&(ny%2 ==0)) {
 			/*...  o-e (and going backwards) */
 			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
@@ -1615,8 +1719,8 @@ void rb0b2d (INT *ia,
 }
 
 /*
- * \fn void rb0b3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f,
- *                  INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
+ * \fn static void rb0b3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f,
+ *                         INT *mark, INT nx, INT ny, INT nz, INT nsweeps)
  *
  * \brief  Colores Gauss-Seidel backward smoother for Au=b
  *
@@ -1637,16 +1741,16 @@ void rb0b2d (INT *ia,
  * \note This subroutine is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void rb0b3d (INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nz,
-             INT nsweeps)
+static void rb0b3d (INT *ia,
+                    INT *ja,
+                    REAL *aa,
+                    REAL *u,
+                    REAL *f,
+                    INT *mark,
+                    INT nx,
+                    INT ny,
+                    INT nz,
+                    INT nsweeps)
 {
 #if 1
     INT n0e,n0o,isweep;
@@ -1844,8 +1948,8 @@ void rb0b3d (INT *ia,
 }
 
 /**
- * \fn void swep2df (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx, 
- *                   INT nbegy, INT *mark, INT nx, INT ny)
+ * \fn static void swep2df (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
+ *                          INT nbegy, INT *mark, INT nx, INT ny)
  *
  * \brief      Gauss-Seidel forward smoother for certain color
  *
@@ -1866,16 +1970,16 @@ void rb0b3d (INT *ia,
  * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void swep2df (INT *ia,
-              INT *ja,
-              REAL *aa,
-              REAL *u,
-              REAL *f,
-              INT nbegx,
-              INT nbegy,
-              INT *mark,
-              INT nx,
-              INT ny )
+static void swep2df (INT *ia,
+                     INT *ja,
+                     REAL *aa,
+                     REAL *u,
+                     REAL *f,
+                     INT nbegx,
+                     INT nbegy,
+                     INT *mark,
+                     INT nx,
+                     INT ny )
 {
     INT j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
@@ -1907,8 +2011,8 @@ void swep2df (INT *ia,
 
 
 /**
- * \fn void swep3df (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx, 
- *                   INT nbegy, INT nbegz, INT *mark, INT nx, INT ny, INT nz)
+ * \fn static void swep3df (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
+ *                          INT nbegy, INT nbegz, INT *mark, INT nx, INT ny, INT nz)
  *
  * \brief      Gauss-Seidel forward smoother for certain color
  *
@@ -1931,18 +2035,18 @@ void swep2df (INT *ia,
  * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void swep3df (INT *ia,
-              INT *ja,
-              REAL *aa,
-              REAL *u,
-              REAL *f,
-              INT nbegx,
-              INT nbegy,
-              INT nbegz,
-              INT *mark,
-              INT nx,
-              INT ny,
-              INT nz)
+static void swep3df (INT *ia,
+                     INT *ja,
+                     REAL *aa,
+                     REAL *u,
+                     REAL *f,
+                     INT nbegx,
+                     INT nbegy,
+                     INT nbegz,
+                     INT *mark,
+                     INT nx,
+                     INT ny,
+                     INT nz)
 {
     INT nxy,k,k0,j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
@@ -1979,8 +2083,8 @@ void swep3df (INT *ia,
 }
 
 /*
- * \fn void rb0f2d (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, 
- *                  INT *mark, INT nx, INT ny, INT nsweeps)
+ * \fn static void rb0f2d (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f,
+ *                         INT *mark, INT nx, INT ny, INT nsweeps)
  *
  * \brief  Colores Gauss-Seidel forward smoother for Au = b
  *
@@ -2000,15 +2104,15 @@ void swep3df (INT *ia,
  * NOTE: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void rb0f2d (INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nsweeps)
+static void rb0f2d (INT *ia,
+                    INT *ja,
+                    REAL *aa,
+                    REAL *u,
+                    REAL *f,
+                    INT *mark,
+                    INT nx,
+                    INT ny,
+                    INT nsweeps)
 {
     INT n0e,n0o,isweep;
     
@@ -2027,10 +2131,9 @@ void rb0f2d (INT *ia,
     }
 }
 
-
 /*
- * \fn void rb0f3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark, 
- *                  INT nx, INT ny, INT nz, INT nsweeps)
+ * \fn static void rb0f3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark,
+ *                         INT nx, INT ny, INT nz, INT nsweeps)
  *
  * \brief  Colores Gauss-Seidel forward smoother for Au=b
  *
@@ -2051,16 +2154,16 @@ void rb0f2d (INT *ia,
  * NOTE: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-void rb0f3d (INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nz,
-             INT nsweeps )
+static void rb0f3d (INT *ia,
+                    INT *ja,
+                    REAL *aa,
+                    REAL *u,
+                    REAL *f,
+                    INT *mark,
+                    INT nx,
+                    INT ny,
+                    INT nz,
+                    INT nsweeps )
 {
     INT n0e,n0o,isweep;
     
@@ -2090,90 +2193,10 @@ void rb0f3d (INT *ia,
     }
 }
 
-
-/**
- * \fn void fasp_smoother_dcsr_gs_rb3d (dvector *u, dCSRmat *A, dvector *b, INT L, 
- *                                      INT order, INT nx,INT ny,INT nz)
- *
- * \brief       Colores Gauss-Seidel smoother  for Au=b
- * \param u     initial guess and the new approximation to the solution obtained after L GS steps
- * \param A     Pointer to stiffness matrix
- * \param b     Pointer to right hand side
- * \param L     number of iterations
- * \param order ordering: -1: Forward; 1: Backward
- * \param nx    number vertex of X direction
- * \param ny    number vertex of Y direction
- * \param nz    number vertex of Z direction
- *
- * \author Chunsheng Feng
- * \date   02/08/2012
- */
-void fasp_smoother_dcsr_gs_rb3d (dvector *u,
-                                 dCSRmat *A,
-                                 dvector *b,
-                                 INT L,
-                                 INT order,
-                                 INT *mark,
-                                 INT maximap,
-                                 INT nx,
-                                 INT ny,
-                                 INT nz )
-{
-    const INT   nrow = b->row; // number of rows
-    INT        *ia=A->IA,*ja=A->JA;
-    REAL       *aa=A->val, *bval=b->val;
-    REAL       *uval=u->val;
-    
-    INT         i,j,k,begin_row,end_row;
-    REAL        t,d=0.0;
-    
-    // forward
-    if (order == 1) {
-        while (L--) {
-            rb0f3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);
-#if 1
-            //   for (ii =0;ii <10;ii++)
-            for (i = maximap; i < nrow; i ++) {
-                t = bval[i];
-                begin_row = ia[i], end_row = ia[i+1];
-                for (k = begin_row; k < end_row; k ++) {
-                    j = ja[k];
-                    if (i!=j) t -= aa[k]*uval[j];
-                    else d = aa[k];
-                } // end for k
-                if (ABS(d) > SMALLREAL) uval[i] = t/d;
-            } // end for i
-#endif
-        } // end while
-    }
-    
-    // backward
-    else {
-        while (L--) {
-#if 1
-            //  for (ii =0;ii <10;ii++)
-            for (i = nrow-1; i >= maximap; i --) {
-                t = bval[i];
-                begin_row = ia[i],end_row = ia[i+1];
-                for (k = begin_row; k < end_row; k ++) {
-                    j = ja[k];
-                    if (i!=j) t -= aa[k]*uval[j];
-                    else d = aa[k];
-                } // end for k
-                if (ABS(d) > SMALLREAL) uval[i] = t/d;
-            } // end for i
-#endif
-            rb0b3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);
-        } // end while
-    }
-    return;
-}
-
-
 #if 0
 /**
- * \fn dCSRmat static form_contractor (dCSRmat *A, const INT smoother, const INT steps,
- *                                    const INT ndeg, const REAL relax, const REAL dtol)
+ * \fn static dCSRmat form_contractor (dCSRmat *A, const INT smoother, const INT steps,
+ *                                     const INT ndeg, const REAL relax, const REAL dtol)
  *
  * \brief Form contractor I-BA
  *

@@ -480,7 +480,7 @@ FINISHED:  // finish the iterative method
  *
  * \param A            Pointer to block_dCSRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
+ * \param u            Pointer to dvector: the unknowns
  * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
@@ -886,7 +886,7 @@ FINISHED:  // finish the iterative method
  *
  * \param A            Pointer to dSTRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
+ * \param u            Pointer to dvector: the unknowns
  * \param pc           Pointer to precond: the structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations

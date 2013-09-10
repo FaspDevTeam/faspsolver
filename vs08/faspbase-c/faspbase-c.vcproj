@@ -579,15 +579,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\base\src\smoother_cr.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\base\src\smoother_csr.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\base\src\smoother_poly.c"
+				RelativePath="..\..\base\src\smoother_csr_cr.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\smoother_csr_poly.c"
 				>
 			</File>
 			<File

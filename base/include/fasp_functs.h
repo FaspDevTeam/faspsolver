@@ -623,7 +623,7 @@ INT fasp_poisson_gmg_1D (REAL *u,
                          INT nx,
                          INT maxlevel,
                          REAL rtol,
-					     const SHORT print_level);
+					     const SHORT prtlvl);
 
 INT fasp_poisson_gmg_2D (REAL *u,
                          REAL *b,
@@ -631,7 +631,7 @@ INT fasp_poisson_gmg_2D (REAL *u,
                          INT ny,
                          INT maxlevel,
                          REAL rtol,
-                         const SHORT print_level);
+                         const SHORT prtlvl);
 
 INT fasp_poisson_gmg_3D (REAL *u,
                          REAL *b,
@@ -640,14 +640,14 @@ INT fasp_poisson_gmg_3D (REAL *u,
                          INT nz,
                          INT maxlevel,
                          REAL rtol,
-					     const SHORT print_level);
+					     const SHORT prtlvl);
 
 void fasp_poisson_fgmg_1D (REAL *u,
                            REAL *b,
                            INT nx,
                            INT maxlevel,
                            REAL rtol,
-						   const SHORT print_level);
+						   const SHORT prtlvl);
 
 void fasp_poisson_fgmg_2D (REAL *u,
                            REAL *b,
@@ -655,7 +655,7 @@ void fasp_poisson_fgmg_2D (REAL *u,
                            INT ny,
                            INT maxlevel,
                            REAL rtol,
-						   const SHORT print_level);
+						   const SHORT prtlvl);
 
 void fasp_poisson_fgmg_3D (REAL *u,
                            REAL *b,
@@ -664,14 +664,14 @@ void fasp_poisson_fgmg_3D (REAL *u,
                            INT nz,
                            INT maxlevel,
                            REAL rtol,
-						   const SHORT print_level);
+						   const SHORT prtlvl);
 
 INT fasp_poisson_pcg_gmg_1D (REAL *u,
                              REAL *b,
                              INT nx,
                              INT maxlevel,
                              REAL rtol,
-							 const SHORT print_level);
+							 const SHORT prtlvl);
 
 INT fasp_poisson_pcg_gmg_2D (REAL *u,
                              REAL *b,
@@ -679,7 +679,7 @@ INT fasp_poisson_pcg_gmg_2D (REAL *u,
                              INT ny,
                              INT maxlevel,
                              REAL rtol,
-							 const SHORT print_level);
+							 const SHORT prtlvl);
 
 INT fasp_poisson_pcg_gmg_3D (REAL *u,
                              REAL *b,
@@ -688,7 +688,7 @@ INT fasp_poisson_pcg_gmg_3D (REAL *u,
                              INT nz,
                              INT maxlevel,
                              REAL rtol,
-							 const SHORT print_level);
+							 const SHORT prtlvl);
 
 
 /*-------- In file: graphics.c --------*/
@@ -860,11 +860,11 @@ void fasp_ivec_print (INT n,
 
 void fasp_dcsr_print (dCSRmat *A);
 
-void fasp_dcoo_print (dCSRmat *A);
+void fasp_dcoo_print (dCOOmat *A);
 
 void fasp_dbsr_print (dBSRmat *A);
 
-void fasp_dstr_print (dCSRmat *A);
+void fasp_dstr_print (dSTRmat *A);
 
 void fasp_matrix_read (char *filename,
                        void *A);
@@ -1843,96 +1843,6 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
                                 dCSRmat *A,
                                 dvector *b,
                                 INT L);
-
-void swep2db (INT *ia,
-              INT *ja,
-              REAL *aa,
-              REAL *u,
-              REAL *f,
-              INT nbegx,
-              INT nbegy,
-              INT *mark,
-              INT nx,
-              INT ny);
-
-void swep3db (INT *ia,
-              INT *ja,
-              REAL *aa,
-              REAL *u,
-              REAL *f,
-              INT nbegx,
-              INT nbegy,
-              INT nbegz,
-              INT *mark,
-              INT nx,
-              INT ny,
-              INT nz);
-
-void rb0b2d (INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nsweeps);
-
-void rb0b3d (INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nz,
-             INT nsweeps);
-
-void swep2df (INT *ia,
-              INT *ja,
-              REAL *aa,
-              REAL *u,
-              REAL *f,
-              INT nbegx,
-              INT nbegy,
-              INT *mark,
-              INT nx,
-              INT ny );
-
-void swep3df (INT *ia,
-              INT *ja,
-              REAL *aa,
-              REAL *u,
-              REAL *f,
-              INT nbegx,
-              INT nbegy,
-              INT nbegz,
-              INT *mark,
-              INT nx,
-              INT ny,
-              INT nz);
-
-void rb0f2d (INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nsweeps);
-
-void rb0f3d (INT *ia,
-             INT *ja,
-             REAL *aa,
-             REAL *u,
-             REAL *f,
-             INT *mark,
-             INT nx,
-             INT ny,
-             INT nz,
-             INT nsweeps );
 
 void fasp_smoother_dcsr_gs_rb3d (dvector *u,
                                  dCSRmat *A,

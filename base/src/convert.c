@@ -92,7 +92,7 @@ double fasp_aux_bbyteToldouble (unsigned char bytes[])
  *
  * \brief Swap order of an INT number
  *
- * \param index       An INT value
+ * \param inum        An INT value
  * \param ilength     Length of INT: 2 for short, 4 for int, 8 for long
  * \param endianflag  If endianflag = 1, it returns inum itself
  *                    If endianflag = 2, it returns the swapped inum
@@ -124,7 +124,7 @@ INT endian_convert_int (const INT inum,
  *
  * \brief Swap order of a REAL number
  *
- * \param index       An REAL value
+ * \param rnum        An REAL value
  * \param ilength     Length of INT: 2 for short, 4 for int, 8 for long
  * \param endianflag  If endianflag = 1, it returns rnum itself
  *                    If endianflag = 2, it returns the swapped rnum

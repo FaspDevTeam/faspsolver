@@ -62,7 +62,7 @@
  *
  * This is a simple instruction on building and testing. For more details, please refer to 
  * the README files and the short
- * <a href="http://fasp.sourceforge.net/download/userguide.pdf">\bf User's Guide</a> in 
+ * <a href="http://fasp.sourceforge.net/download/userguide.pdf">User's Guide</a> in 
  * "faspsolver/doc/".
  *
  * To compile, you need a Fortran and a C compiler.  First, you can type in the "faspsolver/"

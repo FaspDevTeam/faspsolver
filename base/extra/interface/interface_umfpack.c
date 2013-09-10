@@ -27,7 +27,7 @@
  * \param print_level  Output level
  *
  * \author Chensong Zhang
- * \data   05/20/2010
+ * \date   05/20/2010
  *
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
  */
@@ -94,7 +94,7 @@ int fasp_solver_umfpack (dCSRmat *ptrA,
  * \param Numeric   pointer to the numerical factorization
  *
  * \author Xiaozhe Hu
- * \data   10/20/2010
+ * \date   10/20/2010
  */
 int umfpack_factorize (dCSRmat *ptrA,
                        void *Numeric,
@@ -145,7 +145,7 @@ int umfpack_factorize (dCSRmat *ptrA,
  * \param Numeric   pointer to the numerical factorization
  *
  * \author Xiaozhe Hu
- * \data   10/20/2010
+ * \date   10/20/2010
  */
 
 int umfpack_solve (dCSRmat *ptrA,
@@ -194,7 +194,7 @@ int umfpack_solve (dCSRmat *ptrA,
  * \param u        pointer to the dvector of dofs
  *
  * \author Xiaozhe Hu
- * \data   10/20/2010
+ * \date   10/20/2010
  */
 int umfpack_free_numeric (void *Numeric)
 {

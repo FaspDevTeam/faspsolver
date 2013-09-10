@@ -24,7 +24,7 @@
      286 ./base/src/fmgcycle.c
     1017 ./base/src/formats.c
       80 ./base/src/givens.c
-    1002 ./base/src/gmg_poisson.c
+    1011 ./base/src/gmg_poisson.c
      359 ./base/src/graphics.c
      424 ./base/src/ilu_setup_bsr.c
      182 ./base/src/ilu_setup_csr.c
@@ -33,9 +33,9 @@
      694 ./base/src/input.c
     1350 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
-    2809 ./base/src/io.c
+    2807 ./base/src/io.c
      131 ./base/src/itsolver_bcsr.c
-     483 ./base/src/itsolver_bsr.c
+     485 ./base/src/itsolver_bsr.c
      590 ./base/src/itsolver_csr.c
      364 ./base/src/itsolver_mf.c
      353 ./base/src/itsolver_str.c
@@ -67,11 +67,11 @@
      108 ./base/src/rap.c
      185 ./base/src/schwarz_setup.c
      651 ./base/src/smat.c
-    1456 ./base/src/smoother_bsr.c
-    2287 ./base/src/smoother_csr.c
+    1457 ./base/src/smoother_bsr.c
+    2310 ./base/src/smoother_csr.c
       83 ./base/src/smoother_csr_cr.c
      579 ./base/src/smoother_csr_poly.c
-    1873 ./base/src/smoother_str.c
+    1874 ./base/src/smoother_str.c
      271 ./base/src/sparse_block.c
     1439 ./base/src/sparse_bsr.c
      156 ./base/src/sparse_coo.c
@@ -98,9 +98,9 @@
      164 ./base/include/doxygen.h
     1106 ./base/include/fasp.h
      586 ./base/include/fasp_block.h
-    2748 ./base/include/fasp_functs.h
+    2658 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      225 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
-   78327 total
+   78271 total

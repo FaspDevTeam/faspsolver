@@ -30,7 +30,7 @@
  * \param print_level  Output level
  *
  * \author Xiaozhe Hu
- * \data   11/05/09
+ * \date   11/05/09
  *
  * Modified by Chensong Zhang on 11/01/2012 for new FASP function names.
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.

@@ -27,7 +27,7 @@
  * \param print_level  Output level
  *
  * \author Chunsheng Feng
- * \data   02/27/2013
+ * \date   02/27/2013
  *
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
  *
@@ -154,7 +154,7 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
  * \param job    1: Setup, 2: Sovle, 3 Destroy
  *
  * \author Chunsheng Feng
- * \data   02/27/2013
+ * \date   02/27/2013
  * 
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
  */

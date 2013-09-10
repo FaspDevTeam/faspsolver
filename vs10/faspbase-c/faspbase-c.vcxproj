@@ -253,9 +253,9 @@
     <ClCompile Include="..\..\base\src\schwarz_setup.c" />
     <ClCompile Include="..\..\base\src\smat.c" />
     <ClCompile Include="..\..\base\src\smoother_bsr.c" />
-    <ClCompile Include="..\..\base\src\smoother_cr.c" />
     <ClCompile Include="..\..\base\src\smoother_csr.c" />
-    <ClCompile Include="..\..\base\src\smoother_poly.c" />
+    <ClCompile Include="..\..\base\src\smoother_csr_cr.c" />
+    <ClCompile Include="..\..\base\src\smoother_csr_poly.c" />
     <ClCompile Include="..\..\base\src\smoother_str.c" />
     <ClCompile Include="..\..\base\src\sparse_block.c" />
     <ClCompile Include="..\..\base\src\sparse_bsr.c" />

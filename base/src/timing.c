@@ -19,7 +19,7 @@
 /**
  * \fn fasp_gettime (REAL *time)
  *
- * \biref Get system time
+ * \brief Get system time
  *
  * \author Chunsheng Feng, Zheng LI
  * \date   11/10/2012

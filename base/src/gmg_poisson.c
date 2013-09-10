@@ -1,4 +1,4 @@
-/*! \file  gmg_poisson.c
+/*! \file gmg_poisson.c
  *
  *  \brief GMG method as an iterative solver for Poisson Problem
  */
@@ -17,7 +17,7 @@
 
 /**
  * \fn INT fasp_poisson_gmg_1D (REAL *u, REAL *b, INT nx, INT maxlevel,
- *                              REAL rtol)
+ *                              REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 1D equation by Geometric Multigrid Method
  *
@@ -26,6 +26,7 @@
  * \param nx        Number of grids in x direction
  * \param maxlevel  Maximum levels of the multigrid
  * \param rtol      Relative tolerance to judge convergence
+ * \param prtlvl    Print level for output
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -35,7 +36,7 @@ INT fasp_poisson_gmg_1D (REAL *u,
                          INT nx,
                          INT maxlevel,
                          REAL rtol,
-					     const SHORT print_level)
+					     const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -50,7 +51,7 @@ INT fasp_poisson_gmg_1D (REAL *u,
     printf("### DEBUG: nx=%d, maxlevel=%d\n", nx, maxlevel);
 #endif
 
-	if ( print_level > PRINT_NONE ) {
+	if ( prtlvl > PRINT_NONE ) {
 		fasp_gettime(&AMG_start);
 		printf("Num of DOF's: %d\n", nx+1);
 	}
@@ -82,7 +83,7 @@ INT fasp_poisson_gmg_1D (REAL *u,
 	norm_r1 = norm_r0;
     if (norm_r0 < atol) goto FINISHED;
 
-	if ( print_level > PRINT_SOME ){
+	if ( prtlvl > PRINT_SOME ){
 		printf("-----------------------------------------------------------\n");
 		printf("It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor\n");
 		printf("-----------------------------------------------------------\n");
@@ -98,12 +99,12 @@ INT fasp_poisson_gmg_1D (REAL *u,
 		factor = norm_r/norm_r1;
         error = norm_r / norm_r0;
 		norm_r1 = norm_r;
-		if ( print_level > PRINT_SOME ){
+		if ( prtlvl > PRINT_SOME ){
 			printf("%6d | %13.6e   | %13.6e  | %10.4f\n",count,error,norm_r,factor);
 		}
         if (error < rtol || norm_r < atol) break;
     }
-	if ( print_level > PRINT_NONE ){
+	if ( prtlvl > PRINT_NONE ){
 		if (count >= max_itr_num) {
 			printf("### WARNING: V-cycle failed to converge.\n");
 		}
@@ -115,7 +116,7 @@ INT fasp_poisson_gmg_1D (REAL *u,
 	fasp_array_cp(level[1], u0, u);
 
     // print out CPU time if needed
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("GMG totally", AMG_end - AMG_start);
     }
@@ -134,8 +135,8 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_poisson_gmg_2D (REAL *u, REAL *b, INT nx, INT nx,
- *                              INT maxlevel, REAL rtol)
+ * \fn INT fasp_poisson_gmg_2D (REAL *u, REAL *b, INT nx, INT ny,
+ *                              INT maxlevel, REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 2D equation by Geometric Multigrid Method
  *
@@ -145,6 +146,7 @@ FINISHED:
  * \param ny        Number of grids in y direction
  * \param maxlevel  Maximum levels of the multigrid
  * \param rtol      Relative tolerance to judge convergence
+ * \param prtlvl    Print level for output
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -155,7 +157,7 @@ INT fasp_poisson_gmg_2D (REAL *u,
                          INT ny,
                          INT maxlevel,
                          REAL rtol,
-                         const SHORT print_level)
+                         const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -170,7 +172,7 @@ INT fasp_poisson_gmg_2D (REAL *u,
     printf("### DEBUG: nx=%d, ny=%d, maxlevel=%d\n", nx, ny, maxlevel);
 #endif
 
-	if ( print_level > PRINT_NONE ) {
+	if ( prtlvl > PRINT_NONE ) {
 		fasp_gettime(&AMG_start);
 		printf("Num of DOF's: %d\n", (nx+1)*(ny+1));
 	}
@@ -208,7 +210,7 @@ INT fasp_poisson_gmg_2D (REAL *u,
 	norm_r1 = norm_r0;
     if (norm_r0 < atol) goto FINISHED;
 
-	if ( print_level > PRINT_SOME ){
+	if ( prtlvl > PRINT_SOME ){
 		printf("-----------------------------------------------------------\n");
 		printf("It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor\n");
 		printf("-----------------------------------------------------------\n");
@@ -223,13 +225,13 @@ INT fasp_poisson_gmg_2D (REAL *u,
         error = norm_r / norm_r0;
 		factor = norm_r/norm_r1;
 		norm_r1 = norm_r;
-		if ( print_level > PRINT_SOME ){
+		if ( prtlvl > PRINT_SOME ){
 			printf("%6d | %13.6e   | %13.6e  | %10.4f\n",count,error,norm_r,factor);
 		}
         if (error < rtol || norm_r < atol) break;
     }
     
-	if ( print_level > PRINT_NONE ){
+	if ( prtlvl > PRINT_NONE ){
 		if (count >= max_itr_num) {
 			printf("### WARNING: V-cycle failed to converge.\n");
 		}
@@ -242,7 +244,7 @@ INT fasp_poisson_gmg_2D (REAL *u,
 	fasp_array_cp(level[1], u0, u);
    
     // print out CPU time if needed
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("GMG totally", AMG_end - AMG_start);
     }
@@ -263,8 +265,8 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_poisson_gmg_3D (REAL *u, REAL *b, INT nx, INT nx, INT nz,
- *                              INT maxlevel, REAL rtol)
+ * \fn INT fasp_poisson_gmg_3D (REAL *u, REAL *b, INT nx, INT ny, INT nz,
+ *                              INT maxlevel, REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 3D equation by Geometric Multigrid Method
  *
@@ -275,6 +277,7 @@ FINISHED:
  * \param nz        Number of grids in z direction
  * \param maxlevel  Maximum levels of the multigrid
  * \param rtol      Relative tolerance to judge convergence
+ * \param prtlvl    Print level for output
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -286,7 +289,7 @@ INT fasp_poisson_gmg_3D (REAL *u,
                          INT nz,
                          INT maxlevel,
                          REAL rtol,
-					     const SHORT print_level)
+					     const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -302,7 +305,7 @@ INT fasp_poisson_gmg_3D (REAL *u,
 			nx, ny, nz, maxlevel);
 #endif
 
-	if ( print_level > PRINT_NONE ) {
+	if ( prtlvl > PRINT_NONE ) {
 		fasp_gettime(&AMG_start);
 		printf("Num of DOF's: %d\n", (nx+1)*(ny+1)*(nz+1));
 	}
@@ -342,7 +345,7 @@ INT fasp_poisson_gmg_3D (REAL *u,
 	norm_r1 = norm_r0;
     if (norm_r0 < atol) goto FINISHED;
 
-	if ( print_level > PRINT_SOME ){
+	if ( prtlvl > PRINT_SOME ){
 		printf("-----------------------------------------------------------\n");
 		printf("It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor\n");
 		printf("-----------------------------------------------------------\n");
@@ -358,13 +361,13 @@ INT fasp_poisson_gmg_3D (REAL *u,
         factor = norm_r/norm_r1;
         error = norm_r / norm_r0;
 		norm_r1 = norm_r;
-		if ( print_level > PRINT_SOME ){
+		if ( prtlvl > PRINT_SOME ){
 			printf("%6d | %13.6e   | %13.6e  | %10.4f\n",count,error,norm_r,factor);
 		}
         if (error < rtol || norm_r < atol) break;
     }
     
-	if ( print_level > PRINT_NONE ){
+	if ( prtlvl > PRINT_NONE ){
 		if (count >= max_itr_num) {
 			printf("### WARNING: V-cycle failed to converge.\n");
 		}
@@ -377,7 +380,7 @@ INT fasp_poisson_gmg_3D (REAL *u,
 	fasp_array_cp(level[1], u0, u);
     
 	// print out CPU time if needed
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("GMG totally", AMG_end - AMG_start);
     }
@@ -396,7 +399,7 @@ FINISHED:
 
 /**
  * \fn void fasp_poisson_fgmg_1D (REAL *u, REAL *b, INT nx,
- *                                INT maxlevel, REAL rtol)
+ *                                INT maxlevel, REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 1D equation by Geometric Multigrid Method
  *        (Full Multigrid)
@@ -406,6 +409,7 @@ FINISHED:
  * \param nx        Number of grids in x direction
  * \param maxlevel  Maximum levels of the multigrid 
  * \param rtol      Relative tolerance to judge convergence
+ * \param prtlvl    Print level for output
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -415,7 +419,7 @@ void fasp_poisson_fgmg_1D (REAL *u,
                            INT nx,
                            INT maxlevel,
                            REAL rtol,
-						   const SHORT print_level)
+						   const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
     REAL *u0,*r0,*b0;
@@ -428,7 +432,7 @@ void fasp_poisson_fgmg_1D (REAL *u,
     printf("### DEBUG: nx=%d, maxlevel=%d\n", nx, maxlevel);
 #endif
     
-	if ( print_level > PRINT_NONE ) {
+	if ( prtlvl > PRINT_NONE ) {
 		fasp_gettime(&AMG_start);
 		printf("Num of DOF's: %d\n", (nx+1));
 	}
@@ -464,7 +468,7 @@ void fasp_poisson_fgmg_1D (REAL *u,
     fasp_array_cp(level[1], u0, u);
 
 	// print out Relative Residual and CPU time if needed
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("FGMG totally", AMG_end - AMG_start);
 		compute_r_1d(u0, b0, r0, 0, level);
@@ -486,7 +490,7 @@ FINISHED:
 
 /**
  * \fn void fasp_poisson_fgmg_2D (REAL *u, REAL *b, INT nx, INT ny,
- *                                INT maxlevel, REAL rtol)
+ *                                INT maxlevel, REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 2D equation by Geometric Multigrid Method
  *        (Full Multigrid)
@@ -497,6 +501,7 @@ FINISHED:
  * \param ny        Number of grids in Y direction
  * \param maxlevel  Maximum levels of the multigrid 
  * \param rtol      Relative tolerance to judge convergence
+ * \param prtlvl    Print level for output
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -507,7 +512,7 @@ void fasp_poisson_fgmg_2D (REAL *u,
                            INT ny,
                            INT maxlevel,
                            REAL rtol,
-						   const SHORT print_level)
+						   const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
     REAL *u0,*r0,*b0;
@@ -520,7 +525,7 @@ void fasp_poisson_fgmg_2D (REAL *u,
     printf("### DEBUG: nx=%d, ny=%d, maxlevel=%d\n", nx, ny, maxlevel);
 #endif
     
-	if ( print_level > PRINT_NONE ) {
+	if ( prtlvl > PRINT_NONE ) {
 		fasp_gettime(&AMG_start);
 		printf("Num of DOF's: %d\n", (nx+1)*(ny+1));
 	}
@@ -566,7 +571,7 @@ void fasp_poisson_fgmg_2D (REAL *u,
 	fasp_array_cp(level[1], u0, u);
 
 	// print out Relative Residual and CPU time if needed
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("FGMG totally", AMG_end - AMG_start);
 		compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
@@ -591,7 +596,7 @@ FINISHED:
 
 /**
  * \fn void fasp_poisson_fgmg_3D (REAL *u, REAL *b, INT nx, INT ny, INT nz,
- *                                INT maxlevel, REAL rtol)
+ *                                INT maxlevel, REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 3D equation by Geometric Multigrid Method
  *        (Full Multigrid)
@@ -603,6 +608,7 @@ FINISHED:
  * \param nz        NUmber of grids in z direction
  * \param maxlevel  Maximum levels of the multigrid 
  * \param rtol      Relative tolerance to judge convergence
+ * \param prtlvl    Print level for output
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -614,7 +620,7 @@ void fasp_poisson_fgmg_3D (REAL *u,
                            INT nz,
                            INT maxlevel,
                            REAL rtol,
-						   const SHORT print_level)
+						   const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
     REAL *u0,*r0,*b0;
@@ -628,7 +634,7 @@ void fasp_poisson_fgmg_3D (REAL *u,
 			nx, ny, nz, maxlevel);
 #endif
     
-	if ( print_level > PRINT_NONE ) {
+	if ( prtlvl > PRINT_NONE ) {
 		fasp_gettime(&AMG_start);
 		printf("Num of DOF's: %d\n", (nx+1)*(ny+1)*(nz+1));
 	}
@@ -673,7 +679,7 @@ void fasp_poisson_fgmg_3D (REAL *u,
 	// update u
 	fasp_array_cp(level[1], u0, u);
 
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("FGMG totally", AMG_end - AMG_start);
 		compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
@@ -699,7 +705,7 @@ FINISHED:
 
 /**
  * \fn INT fasp_poisson_pcg_gmg_1D (REAL *u, REAL *b, INT nx,
- *                                  INT maxlevel, REAL rtol)
+ *                                  INT maxlevel, REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 1D equation by Geometric Multigrid Method
  *        (GMG preconditioned Conjugate Gradient method)
@@ -709,6 +715,7 @@ FINISHED:
  * \param nx        Number of grids in x direction
  * \param maxlevel  Maximum levels of the multigrid 
  * \param rtol      Relative tolerance to judge convergence
+ * \param prtlvl    Print level for output
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -718,7 +725,7 @@ INT fasp_poisson_pcg_gmg_1D (REAL *u,
                              INT nx,
                              INT maxlevel,
                              REAL rtol,
-							 const SHORT print_level)
+							 const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -733,7 +740,7 @@ INT fasp_poisson_pcg_gmg_1D (REAL *u,
     printf("### DEBUG: nx=%d, maxlevel=%d\n", nx, maxlevel);
 #endif
     
-	if ( print_level > PRINT_NONE ) {
+	if ( prtlvl > PRINT_NONE ) {
 		fasp_gettime(&AMG_start);
 		printf("Num of DOF's: %d\n", (nx+1));
 	}
@@ -762,13 +769,13 @@ INT fasp_poisson_pcg_gmg_1D (REAL *u,
     if (norm_r0 < atol) goto FINISHED;
 
     // Preconditioned CG method
-    iter = pcg_1d(u0, b0, level, maxlevel, nx, rtol, max_itr_num, print_level);
+    iter = pcg_1d(u0, b0, level, maxlevel, nx, rtol, max_itr_num, prtlvl);
     
     // Update u
 	fasp_array_cp(level[1], u0, u);
 
     // print out CPU time if needed
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("GMG_PCG totally", AMG_end - AMG_start);
     }
@@ -787,7 +794,7 @@ FINISHED:
 
 /**
  * \fn INT fasp_poisson_pcg_gmg_2D (REAL *u, REAL *b, INT nx, INT ny, 
- *                                  INT maxlevel, REAL rtol)
+ *                                  INT maxlevel, REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 2D equation by Geometric Multigrid Method
  *        (GMG preconditioned Conjugate Gradient method)
@@ -798,6 +805,7 @@ FINISHED:
  * \param ny        Number of grids in y direction
  * \param maxlevel  Maximum levels of the multigrid 
  * \param rtol      Relative tolerance to judge convergence
+ * \param prtlvl    Print level for output
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -808,7 +816,7 @@ INT fasp_poisson_pcg_gmg_2D (REAL *u,
                              INT ny,
                              INT maxlevel,
                              REAL rtol,
-							 const SHORT print_level)
+							 const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -823,7 +831,7 @@ INT fasp_poisson_pcg_gmg_2D (REAL *u,
     printf("### DEBUG: nx=%d, ny=%d, maxlevel=%d\n", nx, ny, maxlevel);
 #endif
     
-	if ( print_level > PRINT_NONE ) {
+	if ( prtlvl > PRINT_NONE ) {
 		fasp_gettime(&AMG_start);
 		printf("Num of DOF's: %d\n", (nx+1)*(ny+1));
 	}
@@ -863,13 +871,13 @@ INT fasp_poisson_pcg_gmg_2D (REAL *u,
     
     // Preconditioned CG method
     iter = pcg_2d(u0, b0, level, maxlevel, nxk, 
-				  nyk, rtol, max_itr_num, print_level);
+				  nyk, rtol, max_itr_num, prtlvl);
     
 	// update u
 	fasp_array_cp(level[1], u0, u);
 
     // print out CPU time if needed
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("GMG_PCG totally", AMG_end - AMG_start);
     }
@@ -889,8 +897,8 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_poisson_pcg_gmg_3D (REAL *u, REAL *b, INT nx,
- *                                  INT maxlevel, REAL rtol)
+ * \fn INT fasp_poisson_pcg_gmg_3D (REAL *u, REAL *b, INT nx, INT ny, INT nz,
+ *                                  INT maxlevel, REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 3D equation by Geometric Multigrid Method
  *        (GMG preconditioned Conjugate Gradient method)
@@ -902,6 +910,7 @@ FINISHED:
  * \param nz        Number of grids in z direction
  * \param maxlevel  Maximum levels of the multigrid 
  * \param rtol      Relative tolerance to judge convergence
+ * \param prtlvl    Print level for output
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -913,7 +922,7 @@ INT fasp_poisson_pcg_gmg_3D (REAL *u,
                              INT nz,
                              INT maxlevel,
                              REAL rtol,
-							 const SHORT print_level)
+							 const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -929,7 +938,7 @@ INT fasp_poisson_pcg_gmg_3D (REAL *u,
 			nx, ny, nz, maxlevel);
 #endif
     
-	if ( print_level > PRINT_NONE ) {
+	if ( prtlvl > PRINT_NONE ) {
 		fasp_gettime(&AMG_start);
 		printf("Num of DOF's: %d\n", (nx+1)*(ny+1)*(nz+1));
 	}
@@ -971,13 +980,13 @@ INT fasp_poisson_pcg_gmg_3D (REAL *u,
     
     // Preconditioned CG method
     iter = pcg_3d(u0, b0, level, maxlevel, nxk, 
-				  nyk, nzk, rtol, max_itr_num, print_level);
+				  nyk, nzk, rtol, max_itr_num, prtlvl);
     
 	// update u
 	fasp_array_cp(level[1], u0, u);
 
     // print out CPU time if needed
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("GMG_PCG totally", AMG_end - AMG_start);
     }
