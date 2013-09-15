@@ -89,7 +89,7 @@ void fasp_dcsrvec1_read (char *filename,
     REAL ddata;
     
     // Open input disk file
-    FILE *fp=fopen(filename, "r");
+    FILE *fp = fopen(filename, "r");
     
     if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
         printf("### ERROR: Opening file %s ...\n", filename);
@@ -103,9 +103,9 @@ void fasp_dcsrvec1_read (char *filename,
     A->row=m; A->col=n;
     
     A->IA=(INT *)fasp_mem_calloc(m+1, sizeof(INT));
-    for (i=0;i<=m;++i) {
+    for ( i = 0; i <= m; ++i ) {
         fscanf(fp, "%d", &idata);
-        A->IA[i]=idata;
+        A->IA[i] = idata;
     }
     
     INT nnz = A->IA[m]-A->IA[0];
@@ -114,25 +114,25 @@ void fasp_dcsrvec1_read (char *filename,
     A->JA  = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
     A->val = (REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     
-    for (i=0;i<nnz;++i) {
+    for ( i = 0; i < nnz; ++i ) {
         fscanf(fp, "%d", &idata);
-        A->JA[i]=idata;
+        A->JA[i] = idata;
     }
     
-    for (i=0;i<nnz;++i) {
+    for ( i = 0; i < nnz; ++i ) {
         fscanf(fp, "%lf", &ddata);
-        A->val[i]=ddata;
+        A->val[i] = ddata;
     }
     
     // Read RHS vector
     fscanf(fp, "%d", &m);
-    b->row=m;
+    b->row = m;
     
-    b->val=(REAL*)fasp_mem_calloc(m, sizeof(REAL));
+    b->val = (REAL*)fasp_mem_calloc(m, sizeof(REAL));
     
-    for (i=0;i<m;++i) {
+    for ( i = 0; i < m; ++i ) {
         fscanf(fp, "%lf", &ddata);
-        b->val[i]=ddata;
+        b->val[i] = ddata;
     }
     
     fclose(fp);
@@ -182,7 +182,7 @@ void fasp_dcsrvec2_read (char *filemat,
     /* read the matrix from file */
     FILE *fp = fopen(filemat,"r");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n",filemat);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
     }
@@ -192,9 +192,9 @@ void fasp_dcsrvec2_read (char *filemat,
     fscanf(fp,"%d\n",&n);
     A->row = n;
     A->col = n;
-    A->IA = (INT *)fasp_mem_calloc(n+1, sizeof(INT));
+    A->IA  = (INT *)fasp_mem_calloc(n+1, sizeof(INT));
     
-    for (i=0; i<n+1; ++i) {
+    for ( i = 0; i <= n; ++i ) {
         fscanf(fp,"%d\n",&tempi);
         A->IA[i] = tempi-1;
     }
@@ -204,12 +204,12 @@ void fasp_dcsrvec2_read (char *filemat,
     A->JA  = (INT *) fasp_mem_calloc(nz, sizeof(INT));
     A->val = (REAL *)fasp_mem_calloc(nz, sizeof(REAL));
     
-    for (i=0; i<nz; ++i) {
+    for ( i = 0; i < nz; ++i ) {
         fscanf(fp,"%d\n",&tempi);
         A->JA[i] = tempi-1;
     }
     
-    for (i=0; i<nz; ++i) fscanf(fp,"%le\n",&(A->val[i]));
+    for ( i = 0; i < nz; ++i ) fscanf(fp,"%le\n",&(A->val[i]));
     
     fclose(fp);
     
@@ -219,7 +219,7 @@ void fasp_dcsrvec2_read (char *filemat,
     
     fp = fopen(filerhs,"r");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n",filerhs);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
     }
@@ -228,12 +228,12 @@ void fasp_dcsrvec2_read (char *filemat,
     
     fscanf(fp,"%d\n",&n);
     
-    if (n!=b->row) {
+    if ( n != b->row ) {
         printf("### ERROR: rhs size %d does not match matrix size %d!\n",n,b->row);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec_read");
     }
     
-    for (i=0; i<n; ++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp,"%le\n", &(b->val[i]));
     }
     
@@ -258,7 +258,7 @@ void fasp_dcsr_read (char *filename,
     REAL ddata;
     
     // Open input disk file
-    FILE *fp=fopen(filename, "r");
+    FILE *fp = fopen(filename, "r");
     
     if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
         printf("### ERROR: Opening file %s ...\n", filename);
@@ -269,12 +269,12 @@ void fasp_dcsr_read (char *filename,
     
     // Read CSR matrix
     fscanf(fp, "%d", &m);
-    A->row=m;
+    A->row = m;
     
-    A->IA=(INT *)fasp_mem_calloc(m+1, sizeof(INT));
-    for (i=0;i<=m;++i) {
+    A->IA = (INT *)fasp_mem_calloc(m+1, sizeof(INT));
+    for ( i = 0; i <= m; ++i ) {
         fscanf(fp, "%d", &idata);
-        A->IA[i]=idata;
+        A->IA[i] = idata;
     }
     
     INT nnz = A->IA[m]-A->IA[0];
@@ -283,14 +283,14 @@ void fasp_dcsr_read (char *filename,
     A->JA  = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
     A->val = (REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     
-    for (i=0;i<nnz;++i) {
+    for ( i = 0; i < nnz; ++i ) {
         fscanf(fp, "%d", &idata);
-        A->JA[i]=idata;
+        A->JA[i] = idata;
     }
     
-    for (i=0;i<nnz;++i) {
+    for ( i = 0; i < nnz; ++i ) {
         fscanf(fp, "%lf", &ddata);
-        A->val[i]=ddata;
+        A->val[i]= ddata;
     }
 	fclose(fp);
 }
@@ -318,9 +318,9 @@ void fasp_dcoo_read (char *filename,
     int  i,j,k,m,n,nnz;
     REAL value;
     
-    FILE *fp=fopen(filename,"r");
+    FILE *fp = fopen(filename,"r");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcoo_read");
     }
@@ -331,9 +331,9 @@ void fasp_dcoo_read (char *filename,
     
     dCOOmat Atmp=fasp_dcoo_create(m,n,nnz);
     
-    for (k=0;k<nnz;k++) {
+    for ( k = 0; k < nnz; k++ ) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k]=value;
+            Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k] = value;
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_read");
@@ -369,9 +369,9 @@ void fasp_dcoo1_read (char *filename,
     int  i,j,k,m,n,nnz;
     REAL value;
     
-    FILE *fp=fopen(filename,"r");
+    FILE *fp = fopen(filename,"r");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcoo1_read");
     }
@@ -382,9 +382,9 @@ void fasp_dcoo1_read (char *filename,
     
     fasp_dcoo_alloc(m, n, nnz, A);
     
-    for (k=0;k<nnz;k++) {
+    for ( k = 0; k < nnz; k++ ) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            A->I[k]=i; A->J[k]=j; A->val[k]=value;
+            A->I[k]=i; A->J[k]=j; A->val[k] = value;
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo1_read");
@@ -420,9 +420,9 @@ void fasp_dmtx_read (char *filename,
     INT  innz; // index of nonzeros
     REAL value;
     
-    FILE *fp=fopen(filename,"r");
+    FILE *fp = fopen(filename,"r");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dmtx_read");
     }
@@ -440,7 +440,7 @@ void fasp_dmtx_read (char *filename,
             
             Atmp.I[innz]=i-1;
             Atmp.J[innz]=j-1;
-            Atmp.val[innz]=value;
+            Atmp.val[innz] = value;
             innz = innz + 1;
             
         }
@@ -482,9 +482,9 @@ void fasp_dmtxsym_read (char *filename,
     int  innz; // index of nonzeros
     REAL value;
     
-    FILE *fp=fopen(filename,"r");
+    FILE *fp = fopen(filename,"r");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_read");
     }
@@ -502,16 +502,17 @@ void fasp_dmtxsym_read (char *filename,
     while (innz < nnz) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
             
-            if (i==j) {
-                Atmp.I[innz]=i-1;
-                Atmp.J[innz]=j-1;
-                Atmp.val[innz]=value;
+            if ( i == j ) {
+                Atmp.I[innz] = i-1;
+                Atmp.J[innz] = j-1;
+                Atmp.val[innz] = value;
                 innz = innz + 1;
             }
             else {
-                Atmp.I[innz]=i-1; Atmp.I[innz+1]=j-1;
-                Atmp.J[innz]=j-1; Atmp.J[innz+1]=i-1;
-                Atmp.val[innz]=value; Atmp.val[innz+1]=value;
+                Atmp.I[innz] = i-1; Atmp.I[innz+1] = j-1;
+                Atmp.J[innz] = j-1; Atmp.J[innz+1] = i-1;
+                Atmp.val[innz] = value;
+                Atmp.val[innz+1] = value;
                 innz = innz + 2;
             }
             
@@ -558,9 +559,9 @@ void fasp_dstr_read (char *filename,
     int  i, k, n;
     REAL value;
     
-    FILE *fp=fopen(filename,"r");
+    FILE *fp = fopen(filename,"r");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s failed!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
@@ -579,27 +580,27 @@ void fasp_dstr_read (char *filename,
     fscanf(fp,"%d",&nband); // read number of bands
     A->nband = nband;
     
-    A->offsets=(INT *)fasp_mem_calloc(nband, sizeof(INT));
+    A->offsets = (INT *)fasp_mem_calloc(nband, sizeof(INT));
     
     // read diagonal
     fscanf(fp, "%d", &n);
-    A->diag=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
-    for (i=0;i<n;++i) {
+    A->diag = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%le", &value);
-        A->diag[i]=value;
+        A->diag[i] = value;
     }
     
     // read offdiags
     k = nband;
-    A->offdiag=(REAL **)fasp_mem_calloc(nband, sizeof(REAL *));
-    while (k--) {
+    A->offdiag = (REAL **)fasp_mem_calloc(nband, sizeof(REAL *));
+    while ( k-- ) {
         fscanf(fp,"%d %d",&offset,&n); // read number band k
-        A->offsets[nband-k-1]=offset;
+        A->offsets[nband-k-1] = offset;
         
-        A->offdiag[nband-k-1]=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
-        for (i=0;i<n;++i) {
+        A->offdiag[nband-k-1] = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
+        for ( i = 0; i < n; ++i ) {
             fscanf(fp, "%le", &value);
-            A->offdiag[nband-k-1][i]=value;
+            A->offdiag[nband-k-1][i] = value;
         }
     }
     
@@ -639,9 +640,8 @@ void fasp_dbsr_read (char *filename,
     int  index;
     REAL value;
     
-    FILE *fp=fopen(filename,"r");
-    
-    if ( fp==NULL ) {
+    FILE *fp = fopen(filename,"r");
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s failed!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
@@ -662,21 +662,21 @@ void fasp_dbsr_read (char *filename,
     
     // read IA
     fscanf(fp, "%d", &n);
-    for (i=0;i<n;++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%d", &index);
         A->IA[i] = index;
     }
     
     // read JA
     fscanf(fp, "%d", &n);
-    for (i=0; i<n; ++i){
+    for ( i = 0; i < n; ++i ){
         fscanf(fp, "%d", &index);
         A->JA[i] = index;
     }
     
     // read val
     fscanf(fp, "%d", &n);
-    for (i=0; i<n; ++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%le", &value);
         A->val[i] = value;
     }
@@ -730,7 +730,7 @@ void fasp_dvecind_read (char *filename,
             printf("### WARNING: index = %d, value = %lf\n", index, value);
         }
         
-        b->val[index]=value;
+        b->val[index] = value;
     }
     
     fclose(fp);
@@ -758,9 +758,8 @@ void fasp_dvec_read (char *filename,
     int  i, n;
     REAL value;
     
-    FILE *fp=fopen(filename,"r");
-    
-    if ( fp==NULL ) {
+    FILE *fp = fopen(filename,"r");
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dvec_read");
     }
@@ -771,9 +770,9 @@ void fasp_dvec_read (char *filename,
     
     fasp_dvec_alloc(n,b);
     
-    for (i=0;i<n;++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%le", &value);
-        b->val[i]=value;
+        b->val[i] = value;
     }
     
     fclose(fp);
@@ -799,9 +798,9 @@ void fasp_ivecind_read (char *filename,
 {
     int i, n, index, value;
     
-    FILE *fp=fopen(filename,"r");
+    FILE *fp = fopen(filename,"r");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_ivecind_read");
     }
@@ -811,9 +810,9 @@ void fasp_ivecind_read (char *filename,
     fscanf(fp,"%d",&n);
     fasp_ivec_alloc(n,b);
     
-    for (i=0;i<n;++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%d %d", &index, &value);
-        b->val[index]=value;
+        b->val[index] = value;
     }
     
     fclose(fp);
@@ -839,9 +838,9 @@ void fasp_ivec_read (char *filename,
 {
     int i, n, value;
     
-    FILE *fp=fopen(filename,"r");
+    FILE *fp = fopen(filename,"r");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_ivec_read");
         
@@ -852,9 +851,9 @@ void fasp_ivec_read (char *filename,
     fscanf(fp,"%d",&n);
     fasp_ivec_alloc(n,b);
     
-    for (i=0;i<n;++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%d", &value);
-        b->val[i]=value;
+        b->val[i] = value;
     }
     
     fclose(fp);
@@ -892,10 +891,10 @@ void fasp_dcsrvec1_write (char *filename,
     INT m = A->row, n = A->col, nnz = A->nnz;
     INT i;
     
-    FILE *fp=fopen(filename, "w");
+    FILE *fp = fopen(filename, "w");
     
     /* write the matrix to file */
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec1_write");
     }
@@ -903,7 +902,7 @@ void fasp_dcsrvec1_write (char *filename,
     printf("fasp_dcsrvec1_write: writing matrix to `%s'...\n", filename);
     
     fprintf(fp,"%d %d\n",m,n);
-    for (i = 0; i < m+1; ++i) {
+    for ( i = 0; i < m+1; ++i ) {
         fprintf(fp, "%d\n", A->IA[i]);
     }
     for (i = 0; i < nnz; ++i) {
@@ -916,7 +915,7 @@ void fasp_dcsrvec1_write (char *filename,
     m = b->row;
     
     /* write the rhs to file */
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec1_write");
     }
@@ -925,7 +924,7 @@ void fasp_dcsrvec1_write (char *filename,
     
     fprintf(fp,"%d\n",m);
     
-    for (i=0;i<m;++i) fprintf(fp,"%le\n",b->val[i]);
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%le\n",b->val[i]);
     
     fclose(fp);
 }
@@ -970,10 +969,10 @@ void fasp_dcsrvec2_write (char *filemat,
     INT m=A->row, nnz=A->nnz;
     INT i;
     
-    FILE *fp=fopen(filemat, "w");
+    FILE *fp = fopen(filemat, "w");
     
     /* write the matrix to file */
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filemat);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_write");
     }
@@ -981,7 +980,7 @@ void fasp_dcsrvec2_write (char *filemat,
     printf("fasp_dcsrvec2_write: writing matrix to `%s'...\n", filemat);
     
     fprintf(fp,"%d\n",m);
-    for (i = 0; i < m+1; ++i) {
+    for ( i = 0; i < m+1; ++i ) {
         fprintf(fp, "%d\n", A->IA[i]+1);
     }
     for (i = 0; i < nnz; ++i) {
@@ -995,10 +994,10 @@ void fasp_dcsrvec2_write (char *filemat,
     
     m = b->row;
     
-    fp=fopen(filerhs,"w");
+    fp = fopen(filerhs,"w");
     
     /* write the rhs to file */
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filerhs);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsrvec2_write");
     }
@@ -1007,7 +1006,7 @@ void fasp_dcsrvec2_write (char *filemat,
     
     fprintf(fp,"%d\n",m);
     
-    for (i=0;i<m;++i) fprintf(fp,"%le\n",b->val[i]);
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%le\n",b->val[i]);
     
     fclose(fp);
 }
@@ -1036,12 +1035,12 @@ void fasp_dcsrvec2_write (char *filemat,
 void fasp_dcoo_write (char *filename,
                       dCSRmat *A)
 {
-    const INT m=A->row, n=A->col;
+    const INT m = A->row, n = A->col;
     INT i, j;
     
-    FILE *fp=fopen(filename, "w");
+    FILE *fp = fopen(filename, "w");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcoo_write");
     }
@@ -1049,8 +1048,8 @@ void fasp_dcoo_write (char *filename,
     printf("fasp_dcoo_write: writing matrix to `%s'...\n",filename);
     
     fprintf(fp,"%d  %d  %d\n",m,n,A->nnz);
-    for (i = 0; i < m; ++i) {
-        for (j = A->IA[N2C(i)]; j < A->IA[N2C(i+1)]; j++)
+    for ( i = 0; i < m; ++i ) {
+        for ( j = A->IA[N2C(i)]; j < A->IA[N2C(i+1)]; j++ )
             fprintf(fp,"%d  %d  %le\n",i,A->JA[j],A->val[j]);
     }
     
@@ -1076,16 +1075,15 @@ void fasp_dcoo_write (char *filename,
 void fasp_dstr_write (char *filename,
                       dSTRmat *A)
 {
-    const INT nx=A->nx, ny=A->ny, nz=A->nz;
-    const INT ngrid=A->ngrid, nband=A->nband, nc=A->nc;
+    const INT nx = A->nx, ny = A->ny, nz = A->nz;
+    const INT ngrid = A->ngrid, nband = A->nband, nc = A->nc;
     
     INT *offsets=A->offsets;
     
     unsigned INT i, k, n;
     
-    FILE *fp=fopen(filename,"w");
-    
-    if ( fp==NULL ) {
+    FILE *fp = fopen(filename,"w");
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dstr_write");
         
@@ -1102,15 +1100,15 @@ void fasp_dstr_write (char *filename,
     // write diagonal
     n=ngrid*nc*nc; // number of nonzeros in each band
     fprintf(fp,"%d\n",n); // number of diagonal entries
-    for (i=0;i<n;++i) fprintf(fp, "%le\n", A->diag[i]);
+    for ( i = 0; i < n; ++i ) fprintf(fp, "%le\n", A->diag[i]);
     
     // write offdiags
     k = nband;
-    while (k--) {
+    while ( k-- ) {
         INT offset=offsets[nband-k-1];
         n=(ngrid-ABS(offset))*nc*nc; // number of nonzeros in each band
         fprintf(fp,"%d  %d\n",offset,n); // read number band k
-        for (i=0;i<n;++i) {
+        for ( i = 0; i < n; ++i ) {
             fprintf(fp, "%le\n", A->offdiag[nband-k-1][i]);
         }
     }
@@ -1146,9 +1144,8 @@ void fasp_dbsr_write (char *filename,
     
     unsigned INT i, n;
     
-    FILE *fp=fopen(filename,"w");
-    
-    if ( fp==NULL ) {
+    FILE *fp = fopen(filename,"w");
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dbsr_write");
     }
@@ -1164,17 +1161,17 @@ void fasp_dbsr_write (char *filename,
     // write A->IA
     n = ROW+1; // length of A->IA
     fprintf(fp,"%d\n",n); // length of A->IA
-    for (i=0; i<n; ++i) fprintf(fp, "%d\n", ia[i]);
+    for ( i = 0; i < n; ++i ) fprintf(fp, "%d\n", ia[i]);
     
     // write A->JA
     n = NNZ; // length of A->JA
     fprintf(fp, "%d\n", n); // length of A->JA
-    for (i=0; i<n; ++i) fprintf(fp, "%d\n", ja[i]);
+    for ( i = 0; i < n; ++i ) fprintf(fp, "%d\n", ja[i]);
     
     // write A->val
     n = NNZ*nb*nb; // length of A->val
     fprintf(fp, "%d\n", n); // length of A->val
-    for (i=0; i<n; ++i) fprintf(fp, "%le\n", val[i]);
+    for ( i = 0; i < n; ++i ) fprintf(fp, "%le\n", val[i]);
     
     fclose(fp);
 }
@@ -1195,9 +1192,9 @@ void fasp_dvec_write (char *filename,
 {
     INT m = vec->row, i;
     
-    FILE *fp=fopen(filename,"w");
+    FILE *fp = fopen(filename,"w");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dvec_write");
     }
@@ -1206,7 +1203,7 @@ void fasp_dvec_write (char *filename,
     
     fprintf(fp,"%d\n",m);
     
-    for (i=0;i<m;++i) fprintf(fp,"%le\n",vec->val[i]);
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%le\n",vec->val[i]);
     
     fclose(fp);
 }
@@ -1231,9 +1228,8 @@ void fasp_dvecind_write (char *filename,
 {
     INT m = vec->row, i;
     
-    FILE *fp=fopen(filename,"w");
-    
-    if ( fp==NULL ) {
+    FILE *fp = fopen(filename,"w");
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dvec_write");
     }
@@ -1242,7 +1238,7 @@ void fasp_dvecind_write (char *filename,
     
     fprintf(fp,"%d\n",m);
     
-    for (i=0;i<m;++i) fprintf(fp,"%d %le\n",i,vec->val[i]);
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%d %le\n",i,vec->val[i]);
     
     fclose(fp);
 }
@@ -1267,9 +1263,9 @@ void fasp_ivec_write (char *filename,
 {
     INT m = vec->row, i;
     
-    FILE *fp=fopen(filename,"w");
+    FILE *fp = fopen(filename,"w");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_ivec_write");
     }
@@ -1278,7 +1274,7 @@ void fasp_ivec_write (char *filename,
     
     fprintf(fp,"%d\n",m);
     
-    for (i=0;i<m;++i) fprintf(fp,"%d %d\n",i,vec->val[i]);
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%d %d\n",i,vec->val[i]);
     
     fclose(fp);
 }
@@ -1299,8 +1295,8 @@ void fasp_dvec_print (INT n,
 {
     unsigned INT i;
     
-    if (n<=0) n=u->row;
-    for (i=0;i<n;++i) printf("vec_%d = %+.10E\n",i,u->val[N2C(i)]);
+    if ( n <= 0 ) n=u->row;
+    for ( i = 0; i < n; ++i ) printf("vec_%d = %+.10E\n",i,u->val[N2C(i)]);
 }
 
 /**
@@ -1319,8 +1315,8 @@ void fasp_ivec_print (INT n,
 {
     unsigned INT i;
     
-    if (n<=0) n=u->row;
-    for (i=0;i<n;++i) printf("vec_%d = %d\n",i,u->val[N2C(i)]);
+    if ( n <= 0 ) n = u->row;
+    for ( i = 0; i < n; ++i ) printf("vec_%d = %d\n",i,u->val[N2C(i)]);
 }
 
 /**
@@ -1339,7 +1335,7 @@ void fasp_dcsr_print (dCSRmat *A)
     INT i, j;
     
     printf("nrow = %d, ncol = %d, nnz = %d\n",m,n,A->nnz);
-    for (i = 0; i < m; ++i) {
+    for ( i = 0; i < m; ++i ) {
         for (j=A->IA[N2C(i)]; j<A->IA[N2C(i+1)]; j++)
             printf("A_(%d,%d) = %+.10E\n",i,A->JA[j],A->val[j]);
     }
@@ -1359,7 +1355,7 @@ void fasp_dcoo_print (dCOOmat *A)
 {
     INT k;
     printf("nrow = %d, ncol = %d, nnz = %d\n",A->row,A->col,A->nnz);
-    for (k = 0; k < A->nnz; k++) {
+    for ( k = 0; k < A->nnz; k++ ) {
         printf("A_(%d,%d) = %+.10E\n",A->I[k],A->J[k],A->val[k]);
     }
 }
@@ -1377,14 +1373,14 @@ void fasp_dcoo_print (dCOOmat *A)
 void fasp_dbsr_print (dBSRmat *A)
 {
     INT i, j, k, l;
-    printf("nrow = %d, ncol = %d, nnz = %d, nb = %d, storage_manner = %d\n"
-		   ,A->ROW,A->COL,A->NNZ,A->nb,A->storage_manner);
-    for (i = 0; i < A->ROW; i++) {
-        for (j = A->IA[i]; j < A->IA[i+1]; k++) {
-            for (k = 0; k < A->nb; k++) {
-                for (l = 0; l < A->nb; l++) {
+    printf("nrow = %d, ncol = %d, nnz = %d, nb = %d, storage_manner = %d\n",
+           A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
+    for ( i = 0; i < A->ROW; i++ ) {
+        for ( j = A->IA[i]; j < A->IA[i+1]; k++ ) {
+            for ( k = 0; k < A->nb; k++ ) {
+                for ( l = 0; l < A->nb; l++ ) {
                     printf("A_(%d,%d) = %+.10E\n",
-						   i+k,A->JA[j]+l,A->val[A->nb*A->nb*j+k*A->nb+l]);
+						   i+k, A->JA[j]+l, A->val[A->nb*A->nb*j+k*A->nb+l]);
                 }
             }
         }
@@ -1453,7 +1449,7 @@ void fasp_matrix_read (char *filename,
     fread(&index, sizeof(INT), 1, fp);
     
     // matrix stored in ASCII format
-    if (index==808464432) {
+    if ( index == 808464432 ) {
         
         fclose(fp);
         fp = fopen(filename,"r"); // reopen file of reading file in ASCII
@@ -1544,7 +1540,7 @@ void fasp_matrix_read_bin (char *filename,
                            void *A)
 {
 	INT index, flag;
-	FILE *fp=fopen(filename, "rb");
+	FILE *fp = fopen(filename, "rb");
     
 	if ( fp == NULL ) {
 		printf("### ERROR: Opening file %s ...\n", filename);
@@ -1626,11 +1622,10 @@ void fasp_matrix_write (char *filename,
 	fileflag = (INT) flag/100;
     
     // write matrix in ASCII file
-    if( !fileflag) {
+    if( !fileflag ) {
         
-        fp=fopen(filename,"w");
-        
-        if ( fp==NULL ) {
+        fp = fopen(filename,"w");
+        if ( fp == NULL ) {
             printf("### ERROR: Opening file %s ...\n", filename);
             fasp_chkerr(ERROR_OPEN_FILE, "fasp_matrix_write");
         }
@@ -1657,9 +1652,9 @@ void fasp_matrix_write (char *filename,
     }
     
     // write matrix in binary file
-    fp=fopen(filename,"wb");
+    fp = fopen(filename,"wb");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_matrix_write");
     }
@@ -1714,9 +1709,9 @@ void fasp_vector_read (char *filerhs,
     
     INT index,flag;
     
-    FILE *fp=fopen(filerhs,"rb");
+    FILE *fp = fopen(filerhs,"rb");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filerhs);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_vector_read");
     }
@@ -1728,7 +1723,7 @@ void fasp_vector_read (char *filerhs,
     // vector stored in ASCII
     if (index==808464432) {
         fclose(fp);
-        fp=fopen(filerhs,"r");
+        fp = fopen(filerhs,"r");
         fscanf(fp,"%d\n",&flag);
         fscanf(fp,"%d\n",&flag);
         flag = (int) flag/100;
@@ -1818,9 +1813,9 @@ void fasp_vector_write (char *filerhs,
     
     // write vector in ASCII
     if (!fileflag) {
-        fp=fopen(filerhs,"w");
+        fp = fopen(filerhs,"w");
         
-        if ( fp==NULL ) {
+        if ( fp == NULL ) {
             printf("### ERROR: Opening file %s ...\n", filerhs);
             fasp_chkerr(ERROR_OPEN_FILE, "fasp_vector_write");
         }
@@ -1850,9 +1845,9 @@ void fasp_vector_write (char *filerhs,
     }
     
     // write vector in binary
-    fp=fopen(filerhs,"wb");
+    fp = fopen(filerhs,"wb");
     
-    if ( fp==NULL ) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filerhs);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_vector_write");
     }
@@ -1894,9 +1889,9 @@ static void fasp_dcsr_read_s (FILE *fp,
     A->row=m;
     
     A->IA=(INT *)fasp_mem_calloc(m+1, sizeof(INT));
-    for (i=0;i<=m;++i) {
+    for ( i = 0; i <= m; ++i ) {
         fscanf(fp, "%d", &idata);
-        A->IA[i]=idata;
+        A->IA[i] = idata;
     }
     
     nnz=A->IA[m]-A->IA[0]; A->nnz=nnz;
@@ -1904,14 +1899,14 @@ static void fasp_dcsr_read_s (FILE *fp,
     A->JA=(INT *)fasp_mem_calloc(nnz, sizeof(INT));
     A->val=(REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     
-    for (i=0;i<nnz;++i) {
+    for ( i = 0; i < nnz; ++i ) {
         fscanf(fp, "%d", &idata);
-        A->JA[i]=idata;
+        A->JA[i] = idata;
     }
     
-    for (i=0;i<nnz;++i) {
+    for ( i = 0; i < nnz; ++i ) {
         fscanf(fp, "%lf", &ddata);
-        A->val[i]=ddata;
+        A->val[i]= ddata;
     }
 }
 
@@ -1928,7 +1923,7 @@ static void fasp_dcsr_read_b (FILE *fp,
 	m = A->row;
     
     A->IA=(INT *)fasp_mem_calloc(m+1, sizeof(INT));
-    for (i=0;i<=m;++i) {
+    for ( i = 0; i <= m; ++i ) {
         fread(&idata, ilength, 1, fp);
         A->IA[i] = endian_convert_int(idata, ilength, endianflag);
     }
@@ -1938,12 +1933,12 @@ static void fasp_dcsr_read_b (FILE *fp,
     A->JA=(INT *)fasp_mem_calloc(nnz, sizeof(INT));
     A->val=(REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     
-    for (i=0;i<nnz;++i) {
+    for ( i = 0; i < nnz; ++i ) {
         fread(&idata, ilength, 1, fp);
         A->JA[i] = endian_convert_int(idata, ilength, endianflag);
     }
     
-    for (i=0;i<nnz;++i) {
+    for ( i = 0; i < nnz; ++i ) {
         fread(&ddata, dlength, 1, fp);
         A->val[i] = endian_convert_real(ddata, dlength, endianflag);
     }
@@ -1957,11 +1952,11 @@ static void fasp_dcoo_read_s (FILE *fp,
     
 	fscanf(fp,"%d %d %d",&m,&n,&nnz);
     
-    dCOOmat Atmp=fasp_dcoo_create(m,n,nnz);
+    dCOOmat Atmp = fasp_dcoo_create(m,n,nnz);
     
-    for (k=0;k<nnz;k++) {
+    for ( k = 0; k < nnz; k++ ) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k]=value;
+            Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k] = value;
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_read");
@@ -2028,21 +2023,21 @@ static void fasp_dbsr_read_s (FILE *fp,
     
     // read IA
     fscanf(fp, "%d", &n);
-    for (i=0;i<n;++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%d", &index);
         A->IA[i] = index;
     }
     
     // read JA
     fscanf(fp, "%d", &n);
-    for (i=0; i<n; ++i){
+    for ( i = 0; i < n; ++i ){
         fscanf(fp, "%d", &index);
         A->JA[i] = index;
     }
     
     // read val
     fscanf(fp, "%d", &n);
-    for (i=0; i<n; ++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%le", &value);
         A->val[i] = value;
     }
@@ -2076,21 +2071,21 @@ static void fasp_dbsr_read_b (FILE *fp,
     
     // read IA
     fread(&n, ilength, 1, fp);
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
         fread(&index, 1, ilength, fp);
         A->IA[i] = endian_convert_int(index, ilength, endianflag);
     }
     
     // read JA
     fread(&n, ilength, 1, fp);
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
         fread(&index, ilength, 1, fp);
         A->JA[i] = endian_convert_int(index, ilength, endianflag);
     }
     
     // read val
     fread(&n, ilength, 1, fp);
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
         fread(&value, sizeof(REAL), 1, fp);
         A->val[i] = endian_convert_real(value, sizeof(REAL), endianflag);
     }
@@ -2120,22 +2115,22 @@ static void fasp_dstr_read_s (FILE *fp,
     // read diagonal
     fscanf(fp, "%d", &n);
     A->diag=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
-    for (i=0;i<n;++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%le", &value);
-        A->diag[i]=value;
+        A->diag[i] = value;
     }
     
     // read offdiags
     k = nband;
     A->offdiag=(REAL **)fasp_mem_calloc(nband, sizeof(REAL *));
-    while (k--) {
+    while ( k-- ) {
         fscanf(fp,"%d %d",&offset,&n); // read number band k
         A->offsets[nband-k-1]=offset;
         
         A->offdiag[nband-k-1]=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
-        for (i=0;i<n;++i) {
+        for ( i = 0; i < n; ++i ) {
             fscanf(fp, "%le", &value);
-            A->offdiag[nband-k-1][i]=value;
+            A->offdiag[nband-k-1][i] = value;
         }
     }
     
@@ -2174,7 +2169,7 @@ static void fasp_dstr_read_b (FILE *fp,
     fread(&n, ilength, 1, fp);
 	n = endian_convert_int(n, ilength, endianflag);
     A->diag=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
         fread(&value, sizeof(REAL), 1, fp);
         A->diag[i]=endian_convert_real(value, sizeof(REAL), endianflag);
     }
@@ -2182,14 +2177,14 @@ static void fasp_dstr_read_b (FILE *fp,
     // read offdiags
     k = nband;
     A->offdiag=(REAL **)fasp_mem_calloc(nband, sizeof(REAL *));
-    while (k--) {
+    while ( k-- ) {
         fread(&offset, ilength, 1, fp);
         A->offsets[nband-k-1]=endian_convert_int(offset, ilength, endianflag);;
         
         fread(&n, ilength, 1, fp);
 		n = endian_convert_int(n, ilength, endianflag);
         A->offdiag[nband-k-1]=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
-        for (i = 0; i < n; i++) {
+        for ( i = 0; i < n; i++ ) {
             fread(&value, sizeof(REAL), 1, fp);
             A->offdiag[nband-k-1][i]=endian_convert_real(value, sizeof(REAL), endianflag);
         }
@@ -2214,7 +2209,7 @@ static void fasp_dmtx_read_s (FILE *fp,
             
             Atmp.I[innz]=i-1;
             Atmp.J[innz]=j-1;
-            Atmp.val[innz]=value;
+            Atmp.val[innz] = value;
             innz = innz + 1;
             
         }
@@ -2283,13 +2278,13 @@ static void fasp_dmtxsym_read_s (FILE *fp,
             if (i==j) {
                 Atmp.I[innz]=i-1;
                 Atmp.J[innz]=j-1;
-                Atmp.val[innz]=value;
+                Atmp.val[innz] = value;
                 innz = innz + 1;
             }
             else {
                 Atmp.I[innz]=i-1; Atmp.I[innz+1]=j-1;
                 Atmp.J[innz]=j-1; Atmp.J[innz+1]=i-1;
-                Atmp.val[innz]=value; Atmp.val[innz+1]=value;
+                Atmp.val[innz] = value; Atmp.val[innz+1] = value;
                 innz = innz + 2;
             }
             
@@ -2367,7 +2362,7 @@ static void fasp_dcsr_write_s (FILE *fp,
     INT i, j;
     
     fprintf(fp,"%d  %d  %d\n",m,n,A->nnz);
-    for (i = 0; i < m; ++i) {
+    for ( i = 0; i < m; ++i ) {
         for (j = A->IA[N2C(i)]; j < A->IA[N2C(i+1)]; j++)
             fprintf(fp,"%d  %d  %le\n",i,A->JA[j],A->val[j]);
     }
@@ -2384,7 +2379,7 @@ static void fasp_dcsr_write_b (FILE *fp,
     fwrite(&m, sizeof(INT), 1, fp);
     fwrite(&n, sizeof(INT), 1, fp);
     fwrite(&nnz, sizeof(INT), 1, fp);
-    for (i = 0; i < m; i++) {
+    for ( i = 0; i < m; i++ ) {
         for (j = A->IA[N2C(i)]; j < A->IA[N2C(i+1)]; j++) {
             fwrite(&i, sizeof(INT), 1, fp);
             index = A->JA[j];
@@ -2418,17 +2413,17 @@ static void fasp_dbsr_write_s (FILE *fp,
     // write A->IA
     n = ROW+1; // length of A->IA
     fprintf(fp,"%d\n",n); // length of A->IA
-    for (i=0; i<n; ++i) fprintf(fp, "%d\n", ia[i]);
+    for ( i = 0; i < n; ++i ) fprintf(fp, "%d\n", ia[i]);
     
     // write A->JA
     n = NNZ; // length of A->JA
     fprintf(fp, "%d\n", n); // length of A->JA
-    for (i=0; i<n; ++i) fprintf(fp, "%d\n", ja[i]);
+    for ( i = 0; i < n; ++i ) fprintf(fp, "%d\n", ja[i]);
     
     // write A->val
     n = NNZ*nb*nb; // length of A->val
     fprintf(fp, "%d\n", n); // length of A->val
-    for (i=0; i<n; ++i) fprintf(fp, "%le\n", val[i]);
+    for ( i = 0; i < n; ++i ) fprintf(fp, "%le\n", val[i]);
     
 }
 
@@ -2457,7 +2452,7 @@ static void fasp_dbsr_write_b (FILE *fp,
     // write A.IA
     n = ROW+1;
     fwrite(&n, sizeof(INT), 1, fp);
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
         index = ia[i];
         fwrite(&index, sizeof(INT), 1, fp);
     }
@@ -2465,7 +2460,7 @@ static void fasp_dbsr_write_b (FILE *fp,
     // write A.JA
     n = NNZ;
     fwrite(&n, sizeof(INT), 1, fp);
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
 		index = ja[i];
         fwrite(&index, sizeof(INT), 1, fp);
     }
@@ -2473,7 +2468,7 @@ static void fasp_dbsr_write_b (FILE *fp,
     // write A.val
     n = NNZ*nb*nb;
     fwrite(&n,sizeof(INT), 1, fp);
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
 		value = val[i];
         fwrite(&value, sizeof(REAL), 1, fp);
 	}
@@ -2498,15 +2493,15 @@ static void fasp_dstr_write_s (FILE *fp,
     // write diagonal
     n=ngrid*nc*nc; // number of nonzeros in each band
     fprintf(fp,"%d\n",n); // number of diagonal entries
-    for (i=0;i<n;++i) fprintf(fp, "%le\n", A->diag[i]);
+    for ( i = 0; i < n; ++i ) fprintf(fp, "%le\n", A->diag[i]);
     
     // write offdiags
     k = nband;
-    while (k--) {
+    while ( k-- ) {
         INT offset=offsets[nband-k-1];
         n=(ngrid-ABS(offset))*nc*nc; // number of nonzeros in each band
         fprintf(fp,"%d  %d\n",offset,n); // read number band k
-        for (i=0;i<n;++i) {
+        for ( i = 0; i < n; ++i ) {
             fprintf(fp, "%le\n", A->offdiag[nband-k-1][i]);
         }
     }
@@ -2536,19 +2531,19 @@ static void fasp_dstr_write_b (FILE *fp,
     // write diagonal
     n=ngrid*nc*nc; // number of nonzeros in each band
     fwrite(&n, sizeof(INT), 1, fp); // number of diagonal entries
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
         value = A->diag[i];
         fwrite(&value, sizeof(REAL), 1, fp);
     }
     
     // write offdiags
     k = nband;
-    while (k--) {
+    while ( k-- ) {
         INT offset=offsets[nband-k-1];
         n=(ngrid-ABS(offset))*nc*nc; // number of nonzeros in each band
         fwrite(&offset, sizeof(INT), 1, fp);
         fwrite(&n, sizeof(INT), 1, fp);
-        for (i = 0; i < n; i++) {
+        for ( i = 0; i < n; i++ ) {
             value = A->offdiag[nband-k-1][i];
             fwrite(&value, sizeof(REAL), 1, fp);
         }
@@ -2566,9 +2561,9 @@ static void fasp_dvec_read_s (FILE *fp,
     fscanf(fp,"%d",&n);
     fasp_dvec_alloc(n,b);
     
-    for (i=0;i<n;++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%le", &value);
-        b->val[i]=value;
+        b->val[i] = value;
     }
 }
 
@@ -2584,7 +2579,7 @@ static void fasp_dvec_read_b (FILE *fp,
     n = endian_convert_int(n, ilength, endianflag);
     fasp_dvec_alloc(n,b);
     
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
         fread(&value, dlength, 1, fp);
         b->val[i]=endian_convert_real(value, dlength, endianflag);
     }
@@ -2598,9 +2593,9 @@ static void fasp_ivec_read_s (FILE *fp,
     fscanf(fp,"%d",&n);
     fasp_ivec_alloc(n,b);
     
-    for (i=0;i<n;++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%d", &value);
-        b->val[i]=value;
+        b->val[i] = value;
     }
 }
 
@@ -2614,7 +2609,7 @@ static void fasp_ivec_read_b (FILE *fp,
     n = endian_convert_int(n, ilength, endianflag);
     fasp_ivec_alloc(n,b);
     
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
         fread(&value, dlength, 1, fp);
         b->val[i]=endian_convert_real(value, dlength, endianflag);
     }
@@ -2631,12 +2626,12 @@ static void fasp_dvecind_read_s (FILE *fp,
     fscanf(fp,"%d",&n);
     fasp_dvec_alloc(n,b);
     
-    for (i=0;i<n;++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%d %le", &index, &value);
         if (value>BIGREAL || index>=n) {
             printf("### WARNING: index = %d, value = %lf\n", index, value);
         }
-        b->val[index]=value;
+        b->val[index] = value;
     }
 }
 
@@ -2651,7 +2646,7 @@ static void fasp_dvecind_read_b (FILE *fp,
     n = endian_convert_int(n, ilength, endianflag);
     fasp_dvec_alloc(n,b);
     
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
         fread(&index, ilength, 1, fp);
         fread(&value, dlength, 1, fp);
         index = endian_convert_int(index, ilength, endianflag);
@@ -2671,9 +2666,9 @@ static void fasp_ivecind_read_s (FILE *fp,
     fscanf(fp,"%d",&n);
     fasp_ivec_alloc(n,b);
     
-    for (i=0;i<n;++i) {
+    for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%d %d", &index, &value);
-        b->val[index]=value;
+        b->val[index] = value;
     }
 }
 
@@ -2687,12 +2682,12 @@ static void fasp_ivecind_read_b (FILE *fp,
     n = endian_convert_int(n, ilength, endianflag);
     fasp_ivec_alloc(n,b);
     
-    for (i = 0; i < n; i++) {
+    for ( i = 0; i < n; i++ ) {
         fread(&index, ilength, 1, fp);
         fread(&value, dlength, 1, fp);
         index = endian_convert_int(index, ilength, endianflag);
         value = endian_convert_real(value, dlength, endianflag);
-        b->val[index]=value;
+        b->val[index] = value;
     }
 }
 
@@ -2703,7 +2698,7 @@ static void fasp_dvec_write_s (FILE *fp,
     
     fprintf(fp,"%d\n",m);
     
-    for (i=0;i<m;++i) fprintf(fp,"%le\n",vec->val[i]);
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%le\n",vec->val[i]);
     
 }
 
@@ -2715,7 +2710,7 @@ static void fasp_dvec_write_b (FILE *fp,
     
     fwrite(&m, sizeof(INT), 1, fp);
     
-    for (i = 0; i < m; i++) {
+    for ( i = 0; i < m; i++ ) {
         value = vec->val[i];
         fwrite(&value, sizeof(REAL), 1, fp);
     }
@@ -2728,7 +2723,7 @@ static void fasp_ivec_write_s (FILE *fp,
     
     fprintf(fp,"%d\n",m);
     
-    for (i=0;i<m;++i) fprintf(fp,"%d %d\n",i,vec->val[i]);
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%d %d\n",i,vec->val[i]);
     
 }
 
@@ -2739,7 +2734,7 @@ static void fasp_ivec_write_b (FILE *fp,
     
     fwrite(&m, sizeof(INT), 1, fp);
     
-    for (i = 0; i < m; i++) {
+    for ( i = 0; i < m; i++ ) {
         value = vec->val[i];
         fwrite(&i, sizeof(INT), 1, fp);
         fwrite(&value, sizeof(INT), 1, fp);
@@ -2754,7 +2749,7 @@ static void fasp_dvecind_write_s (FILE *fp,
     
     fprintf(fp,"%d\n",m);
     
-    for (i=0;i<m;++i) fprintf(fp,"%d %le\n",i,vec->val[i]);
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%d %le\n",i,vec->val[i]);
     
 }
 
@@ -2766,7 +2761,7 @@ static void fasp_dvecind_write_b (FILE *fp,
     
     fwrite(&m, sizeof(INT), 1, fp);
     
-    for (i = 0; i < m; i++) {
+    for ( i = 0; i < m; i++ ) {
         value = vec->val[i];
         fwrite(&i, sizeof(INT), 1, fp);
         fwrite(&value, sizeof(REAL), 1, fp);
@@ -2782,7 +2777,7 @@ static void fasp_ivecind_write_b (FILE *fp,
     
     fwrite(&m, sizeof(INT), 1, fp);
     
-    for (i = 0; i < m; i++) {
+    for ( i = 0; i < m; i++ ) {
         value = vec->val[i];
         fwrite(&i, sizeof(INT), 1, fp);
         fwrite(&value, sizeof(INT), 1, fp);
@@ -2797,7 +2792,7 @@ static void fasp_ivecind_write_s (FILE *fp,
     
     fprintf(fp,"%d\n",m);
     
-    for (i=0;i<m;++i) fprintf(fp,"%d %d\n",i,vec->val[i]);
+    for ( i = 0; i < m; ++i ) fprintf(fp, "%d %d\n", i, vec->val[i]);
     
 }
 

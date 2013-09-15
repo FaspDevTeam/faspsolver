@@ -64,8 +64,6 @@
 \author{FASP Developer Team}
 \date{Version 1.3.5} % Activate to display a given date or no date
 
-%\preface{a}
-
 \begin{document}
 
 \maketitle
@@ -219,13 +217,13 @@ In order to make sure everything is OK, you can go to the ``faspsolver/test'' di
 $ ./test.ex
 \end{lstlisting}
 %
-Then you should obtain a set of test problems. If you need more help, you can use
+If you need more help, you can use
 %
 \begin{lstlisting}[numbers=none]
 $ make help
 \end{lstlisting}
 %
-To uninstall FASP and clean up the working directory, you can 
+To uninstall FASP and clean up the working directory, you can simply run
 %
 \begin{lstlisting}[numbers=none]
 $ make uninstall
@@ -242,10 +240,14 @@ To enable OpenMP support, you need to uncomment one line in ``Makefile'' and set
 
 \subsection{Windows}
 
-We provide a Visual Studio 2008 (VS08) solution of FASP for Windows users. You just need to open ``faspsolver/vs08/faspsolver-vs08.sln'' if you are using VS08 as your default developing environment. Then a single-click on the build-all button on the menu bar will give you all the FASP libraries and the test programs in ``faspsolver/test/''.
+We provide a Visual Studio 2008 (VS08) solution and a VS10 solution of FASP for Windows users. For example, you can just open ``faspsolver/vs08/faspsolver-vs08.sln'' if you are using VS08 as your default developing environment. Then a single-click on the build-all button on the menu bar will give you all the FASP libraries and the test programs in ``faspsolver/test/''.
 
 \begin{snugshade}\noindent
-If you are using other versions of Visual Studio (like VS05 or VS10), do NOT convert the "VS08" solution file to your VS version because the FASP files might be cleaned up (removed) by Visual Studio automatically. You have to create another solution to build all the libraries and testing programs.
+You need a C/C++ complier and a Fortran compiler together with Visual Studio to build FASP. You can use either Microsoft Visual C++ or Intel C compiler, together with Intel Fortran compiler.
+\end{snugshade}
+
+\begin{snugshade}\noindent
+If you are using other versions of Visual Studio (like VS05 or VS12), do NOT convert the "VS08" solution file to your VS version because the FASP files might be cleaned up (removed) by Visual Studio automatically. You have to create another solution to build all the libraries and testing programs by yourselves.
 \end{snugshade}
 
 If you need to build a VS solution by yourselves, you should create 5 projects:
@@ -258,18 +260,18 @@ If you need to build a VS solution by yourselves, you should create 5 projects:
 \end{enumerate}
 
 \begin{snugshade}\noindent
-If you are using Visual C++, all the C files should be compiled as C++ code (by using the /TP compiling option).
+NOTE: If you are using Visual C++, all the C files should be compiled as C++ code (by using the /TP compiling option).
 \end{snugshade}
 
 
-\subsection{Using TCL GUI}
+\subsection{Using GUI based on TCL}
 You can also try to build FASP using the TCL graphical user interface. For example, in Linux or Mac OS X, you may 
 %
 \begin{lstlisting}[numbers=none]
 $ wish FASP_install.tcl
 \end{lstlisting}
 %
-A graphical interface will popup and the rest of the building process is straightforward. 
+A graphical interface will pop up and the rest of the building process is straightforward. 
 
 \begin{comment}
 \subsection{Using Scons}
@@ -292,7 +294,7 @@ Usually, the directories for compilers are not added to the PATH environment var
 
 \subsection{External libraries}\label{ssec:lib}
 
-There are a few \emph{optional} external libraries that you might want to use, including memory allocation routines, direct solvers, ILU methods, discretization packages, etc. FASP has interfaces to a couple of them which we often use, for example, SuperLU, MUMPS, dlmalloc, SparseKit.
+There are a few \emph{optional} external libraries that you might want to use, including memory allocation routines, direct solvers, ILU methods, discretization packages, etc. FASP has interfaces to a couple of them which we often use, for example, UMFPack, SuperLU, MUMPS, dlmalloc, SparseKit.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
