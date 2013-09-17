@@ -240,7 +240,14 @@ To enable OpenMP support, you need to uncomment one line in ``Makefile'' and set
 
 \subsection{Windows}
 
-We provide a Visual Studio 2008 (VS08) solution and a VS10 solution of FASP for Windows users. For example, you can just open ``faspsolver/vs08/faspsolver-vs08.sln'' if you are using VS08 as your default developing environment. Then a single-click on the build-all button on the menu bar will give you all the FASP libraries and the test programs in ``faspsolver/test/''.
+We provide a Visual Studio 2008 (VS08) solution and a VS10 solution of FASP for Windows users. For example, you can just open ``faspsolver/vs08/faspsolver-vs08.sln'' if you are using VS08 as your default developing environment. Then a single-click at the ``Build Solution'' on the menu or ``F7'' key  will give you all the FASP libraries and the test programs in ``faspsolver/test/''.
+\begin{figure}[htbp] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[width=6in]{fig/build-fasp.pdf} 
+   \caption{Build FASP using Visual Studio 2008.}
+   \label{fig:build}
+\end{figure}
+
 
 \begin{snugshade}\noindent
 You need a C/C++ complier and a Fortran compiler together with Visual Studio to build FASP. You can use either Microsoft Visual C++ or Intel C compiler, together with Intel Fortran compiler.
@@ -263,6 +270,12 @@ If you need to build a VS solution by yourselves, you should create 5 projects:
 NOTE: If you are using Visual C++, all the C files should be compiled as C++ code (by using the /TP compiling option).
 \end{snugshade}
 
+After you successfully build the solution, you will get two static libraries named ``faspbase-c-vs08.lib'' and ``faspbase-f-vs08.lib''. You can use the ``lib'' command to wrap together as one single file (e.g. FASP.lib) for better portability. For example:
+%
+\begin{lstlisting}[numbers=none]
+C:\FASP> lib /ltcg /out:FASP.lib faspbase-c-vs08.lib faspbase-f-vs08.lib
+\end{lstlisting}
+%
 
 \subsection{Using GUI based on TCL}
 You can also try to build FASP using the TCL graphical user interface. For example, in Linux or Mac OS X, you may 

@@ -309,7 +309,7 @@ void fasp_dcsr_read (char *filename,
  *
  * \note After reading, it converts the matrix to dCSRmat format.
  *
- * \author Xuehai Huang, Chensong
+ * \author Xuehai Huang, Chensong Zhang
  * \date   03/29/2009
  */
 void fasp_dcoo_read (char *filename,
@@ -698,8 +698,6 @@ void fasp_dbsr_read (char *filename,
  *
  * \note Because the index is given, order is not important!
  *
- * \note Need to add safe-guard during reading
- *
  * \author Chensong Zhang
  * \date   03/29/2009
  */
@@ -724,10 +722,12 @@ void fasp_dvecind_read (char *filename,
     for ( i = 0; i < n; ++i ) {
         
         fscanf(fp, "%d %le", &index, &value);
-        // printf("vec[%d] = %le\n", index, value);
         
         if ( value > BIGREAL || index >= n ) {
-            printf("### WARNING: index = %d, value = %lf\n", index, value);
+            printf("### ERROR: Wrong index = %d or value = %lf\n", index, value);
+            fasp_dvec_free(b);
+            fclose(fp);
+            exit(ERROR_INPUT_PAR);
         }
         
         b->val[index] = value;
@@ -771,8 +771,16 @@ void fasp_dvec_read (char *filename,
     fasp_dvec_alloc(n,b);
     
     for ( i = 0; i < n; ++i ) {
+        
         fscanf(fp, "%le", &value);
         b->val[i] = value;
+        
+        if ( value > BIGREAL ) {
+            printf("### ERROR: Wrong value = %lf\n", value);
+            fasp_dvec_free(b);
+            fclose(fp);
+            exit(ERROR_INPUT_PAR);
+        }
     }
     
     fclose(fp);
