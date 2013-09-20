@@ -4,32 +4,32 @@
  
 /** \mainpage Introduction
  *
- * Over the last few decades, researchers have expended significant effort on developing 
- * efficient iterative methods for solving discretized partial differential equations 
- * (PDEs). Though these efforts have yielded many mathematically optimal solvers such as 
- * the multigrid method, the unfortunate reality is that multigrid methods have not been 
- * much used in practical applications. This marked gap between theory and practice is 
- * mainly due to the fragility of traditional multigrid (MG) methodology and the complexity
- * of its implementation. We aim to develop techniques and the corresponding software that 
- * will narrow this gap, specifically by developing mathematically optimal solvers that are 
- * robust and easy to use in practice. 
- * 
- * We believe that there is no one-size-for-all solution method for discrete linear systems 
- * from different applications. And, efficient iterative solvers can be constructed by taking 
- * the properties of PDEs and discretizations into account. In this project, we plan to 
- * construct a pool of discrete problems arising from partial differential equations (PDEs) 
- * or PDE systems and efficient linear solvers for these problems. We mainly utilize the 
- * methodology of Auxiliary Space Preconditioning (ASP) to construct efficient linear solvers. 
- * Due to this reason, this software package is called Fast Auxiliary Space Preconditioning
- * or FASP for short.  
+ * Over the last few decades, researchers have expended significant effort on
+ * developing efficient iterative methods for solving discretized partial differential
+ * equations (PDEs). Though these efforts have yielded many mathematically optimal
+ * solvers such as the multigrid method, the unfortunate reality is that multigrid
+ * methods have not been much used in practical applications. This marked gap between
+ * theory and practice is mainly due to the fragility of traditional multigrid (MG)
+ * methodology and the complexity of its implementation. We aim to develop techniques
+ * and the corresponding software that will narrow this gap, specifically by developing
+ * mathematically optimal solvers that are robust and easy to use in practice.
  *
- * FASP contains the kernel part and several applications (ranging from fluid dynamics to 
- * reservoir simulation). The kernel part is open-source and licensed under GNU Lesser General
- * Public License or LGPL version 3.0 or later. Some of the applications contain contributions
- * from and owned partially by other parties.
+ * We believe that there is no one-size-for-all solution method for discrete linear
+ * systemsfrom different applications. And, efficient iterative solvers can be
+ * constructed by taking the properties of PDEs and discretizations into account. In
+ * this project, we plan to construct a pool of discrete problems arising from partial
+ * differential equations (PDEs) or PDE systems and efficient linear solvers for these
+ * problems. We mainly utilize the methodology of Auxiliary Space Preconditioning (ASP)
+ * to construct efficient linear solvers. Due to this reason, this software package
+ * is called Fast Auxiliary Space Preconditioning or FASP for short.
  *
- * > For the moment, FASP is under alpha testing. If you wish to obtain a current version of
- * > FASP or you have any questions, feel free to contact us at faspdev@gmail.com.
+ * FASP contains the kernel part and several applications (ranging from fluid dynamics  
+ * to reservoir simulation). The kernel part is open-source and licensed under GNU 
+ * Lesser General Public License or LGPL version 3.0 or later. Some of the applications 
+ * contain contributions from and owned partially by other parties.
+ *
+ * > For the moment, FASP is under alpha testing. If you wish to obtain a current version
+ * > of FASP or you have any questions, feel free to contact us at faspdev@gmail.com.
  * 
  * This software distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
