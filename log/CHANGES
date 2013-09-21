@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+09/21/2013 FASP 1.3.6:
+- Modify VS08 and VS10 dependency setup.
+- Update stat script. 
+
 09/17/2013 FASP 1.3.5:
 - If allocation memory failed, output warning and return NULL, instead of exit.
 - Add safe-guard for GMRES: when memory not enough, reduce restart number.

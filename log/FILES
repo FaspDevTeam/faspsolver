@@ -1,3 +1,14 @@
+     560 ./base/include/dlmalloc.h
+     164 ./base/include/doxygen.h
+    1106 ./base/include/fasp.h
+     586 ./base/include/fasp_block.h
+    2658 ./base/include/fasp_functs.h
+      47 ./base/include/forts_ns.h
+    5818 ./base/include/malloc.c.h
+     225 ./base/include/messages.h
+     291 ./base/include/nedmalloc.h
+     274 ./base/src/factor.f
+    1207 ./base/src/schwarz.f
      131 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
      432 ./base/src/amg_setup_rs.c
@@ -33,7 +44,7 @@
      694 ./base/src/input.c
     1350 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
-    2807 ./base/src/io.c
+    2810 ./base/src/io.c
      131 ./base/src/itsolver_bcsr.c
      485 ./base/src/itsolver_bsr.c
      590 ./base/src/itsolver_csr.c
@@ -94,13 +105,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-     560 ./base/include/dlmalloc.h
-     164 ./base/include/doxygen.h
-    1106 ./base/include/fasp.h
-     586 ./base/include/fasp_block.h
-    2658 ./base/include/fasp_functs.h
-      47 ./base/include/forts_ns.h
-    5818 ./base/include/malloc.c.h
-     225 ./base/include/messages.h
-     291 ./base/include/nedmalloc.h
-   78271 total
+   79755 total

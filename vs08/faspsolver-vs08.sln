@@ -9,6 +9,9 @@ Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "regression", "regression\re
 	EndProjectSection
 EndProject
 Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "faspbase-c", "faspbase-c\faspbase-c.icproj", "{CF3FAF37-326E-4D42-BEF7-45F7CAFE7165}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ED358645-4065-4405-90DC-18F219970156} = {ED358645-4065-4405-90DC-18F219970156}
+	EndProjectSection
 EndProject
 Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "faspbase-f", "faspbase-f\faspbase-f.vfproj", "{ED358645-4065-4405-90DC-18F219970156}"
 EndProject
