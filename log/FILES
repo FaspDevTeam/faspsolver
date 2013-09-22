@@ -5,7 +5,7 @@
     2658 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
-     225 ./base/include/messages.h
+     221 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
      274 ./base/src/factor.f
     1207 ./base/src/schwarz.f
@@ -105,4 +105,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   79755 total
+   79751 total

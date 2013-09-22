@@ -9,7 +9,7 @@
 ####################   User Defined Options   ##########################
 #
 # The default setting for build type for FASP is RELEASE. The compiler 
-# options then include by default "-g". The RELEASE build type by 
+# options then include by default "-Wall -g". The RELEASE build type by 
 # default has the "-O3". If you want to work with build type DEBUG, then 
 # uncomment the next line:
 #
@@ -46,16 +46,15 @@
 #
 ####################  User Defined Compiler Flags  #####################
 ifeq ($(debug),yes)
-	cflags="-Wall -pg"
-	cxxflags="-Wall -pg"
-	fflags="-Wall -pg"
+	cflags="-Wall -g"
+	cxxflags="-Wall -g"
+	fflags="-Wall -g"
 else
-	cflags="-funroll-all-loops"
-	cxxflags="-funroll-all-loops"
-	fflags="-funroll-all-loops"
+	cflags="-O3 -funroll-all-loops"
+	cxxflags="-O3 -funroll-all-loops"
+	fflags="-O3 -funroll-all-loops"
 endif
 ####################  User Changes UP TO HERE   ########################
-
 
 # Let cmake do the configuration. Set up a build dir
 #cpu0=$(shell uname -m | sed -e 's/[[:space:]][[:space:]]*/_/g')
