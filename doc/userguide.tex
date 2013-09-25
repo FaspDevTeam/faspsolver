@@ -227,7 +227,7 @@ $ make help
 \end{lstlisting}
 %
 and you will get the following screen
-\lstinputlisting[language=sh]{../INSTALL}
+\lstinputlisting[numbers=none,language=sh]{../INSTALL}
 
 To uninstall FASP and clean up the working directory, you can simply run
 %
@@ -260,7 +260,7 @@ You need a C/C++ complier and a Fortran compiler together with Visual Studio to 
 \end{snugshade}
 
 \begin{snugshade}\noindent
-If you are using other versions of Visual Studio (like VS05 or VS12), do NOT convert the "VS08" solution file to your VS version because the FASP files might be cleaned up (removed) by Visual Studio automatically. You have to create another solution to build all the libraries and testing programs by yourselves.
+If you are using other versions of Visual Studio (like VS05 or VS12), do NOT convert the "VS08" solution file to your VS version because the FASP files might be cleaned up (removed) by Visual Studio automatically. You have to create another solution to build all the libraries and test programs by yourselves.
 \end{snugshade}
 
 If you need to build a VS solution by yourselves, you should create 5 projects:
@@ -268,7 +268,7 @@ If you need to build a VS solution by yourselves, you should create 5 projects:
 \item ``faspbase-c'' contains all the ``.c'' and ``.inl'' files in the directory ``./base/src/''. You should add ``./base/include'' in Additional Directories. This project contains the core subroutines of faspsolver. 
 \item ``faspbase-f'' contains all the ``.f'' files in ``./base/src/'' and ``./base/extra/sparsekit''. 
 \item ``testlib'' contains all the ``.c'' files in ``./test/src/''. You should add ``./test/include'' in Additional Directories.
-\item ``test'' is an executing program for test purpose in FASP. The source file is ``./test/main/test.c''.
+\item ``test'' is an executing program for test purpose in FASP.  The source file is ``./test/main/test.c''.
 \item ``regression'' is another executing program, which contains several methods to test the problems. The source file is ``./test/main/regression.c''.
 \end{enumerate}
 
@@ -1179,9 +1179,9 @@ To be added.
 \section{Algebraic multigrid}\label{sec:amg}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The classical algebraic multigrid method~\cite{Ruge.RugeStuben.1987bs} is an important component in many of our auxiliary space preconditioners. Because of its user-friendly and scalability, AMG becomes increasingly popular in scientific and engineering computing, especially when GMG is difficult or not possible to be applied. Various of new AMG techniques~\cite{Vanek.VanekMandel.1996kl,Wan.WanChan.2000qa,Brezina.BrezinaCleary.2000ly,Henson.HensonVassilevski.2001cr,Chartier.ChartierFalgout.2003ve,Livne.Livne.2004kl,Falgout.FalgoutVassilevski.2004bh,Xu.XuZikatanov.2004pi,Brannick.BrannickZikatanov.2007zr,Muresan.MuresanNotay.2008tg} have emerged in recent years.
+The classical algebraic multigrid method~\cite{Ruge.RugeStuben.1987bs} is an important component in many of our auxiliary space preconditioners. Because of its user-friendly and scalability, AMG becomes increasingly popular in scientific and engineering computing, especially when GMG is difficult or not possible to be applied. Various of new AMG techniques~\cite{Vanek.VanekMandel.1996kl,Wan.WanChan.2000qa,Brezina.BrezinaCleary.2000ly,Henson.HensonVassilevski.2001cr,Chartier.ChartierFalgout.2003ve,Livne.Livne.2004kl,Falgout.FalgoutVassilevski.2004bh,Xu.XuZikatanov.2004pi,Brannick.BrannickZikatanov.2007zr,Muresan.MuresanNotay.2008tg, Hu.X;Vassilevski.P;Xu.J.2013a} have emerged in recent years.
 
-The following code segment is part of ``base/src/amg.c'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, etc).
+The following code segment is part of ``base/src/amg.c'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, Nonlinear AMLI-cycle, etc).
 %
 \begin{lstlisting}
 ... ...
@@ -1317,7 +1317,7 @@ In this chapter, we discuss a few more advanced features of FASP. We will discus
 OpenMP\footnote{Official website: \url{http://openmp.org/}} (Open Multiprocessing) is an API that supports multi-platform shared memory multiprocessing programming in C, C++, and Fortran, on most processor architectures and operating systems. It consists of a set of compiler directives, library routines, and environment variables that influence run-time behavior. Some preliminary OpenMP support has been included since the very beginning of FASP. We consistently improves and expands OpenMP support as multiprocessor architectures become the dominant desktop computing environment.
 
 \begin{snugshade}\noindent
-NOTE: By default, OpenMP is not disabled in FASP. In order to turn it on, you need to modify Makefile a little bit; see \S\ref{sec:build}.
+NOTE: By default, OpenMP is disabled in FASP. In order to turn it on, you need to modify Makefile a little bit; see \S\ref{sec:build}.
 \end{snugshade}
 
 After you build FASP with ``openmp=yes'', OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash}, you need to set:

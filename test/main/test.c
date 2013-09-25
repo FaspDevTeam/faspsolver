@@ -103,7 +103,7 @@ int main (int argc, const char * argv[])
         FILE *fid;
         int i;
         
-        fid = fopen("../data/PowerGrid/matrix.bin.2", "r");
+        fid = fopen("../data/PowerGrid/matrix.bin", "r");
         if ( fid==NULL ) {
             printf("### ERROR: Opening file ...\n");
         }
@@ -172,7 +172,6 @@ int main (int argc, const char * argv[])
         fasp_dvec_read(filename2, &b);
 	}
     
-    /*
     else if (problem_num == 50){
         
         datafile1="spe10-uncong/SPE10120.amg";
@@ -181,14 +180,13 @@ int main (int argc, const char * argv[])
         datafile2="spe10-uncong/SPE10120.rhs";
 		strcat(filename2,datafile2);
         
-        fasp_matrix_read_temp(filename1, &A);
+        fasp_matrix_read_bin(filename1, &A);
         //fasp_dvec_alloc(A.row, &b);
         //fasp_dvec_set(A.row,&b,1.0);
         fasp_dvec_read(filename2, &b);
 
         
-    }\
-    */
+    }
     
     /*
     else if (problem_num == 32) {
@@ -216,19 +214,6 @@ int main (int argc, const char * argv[])
         //fasp_dcsrvec2_read(filename1, filename2, &A, &b);
         
         //fasp_dcoo_write("Pan_mech_mat_coo.dat", &A);
-        
-    }
-    
-    else if (problem_num == 41){
-        
-        datafile1="Yicong/GAG.txt";
-		strcat(filename1,datafile1);
-		
-        datafile2="Yicong/Gb.txt";
-		strcat(filename2,datafile2);
-        
-        fasp_matrix_read(filename1, &A);
-        fasp_vector_read(filename2, &b);
         
     }
         
@@ -271,6 +256,7 @@ int main (int argc, const char * argv[])
         
 		// Using AMG as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
+            printf("level = %d\n", amgparam.aggressive_level);
             if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
             //amgparam.smooth_order=NO_ORDER;
 			status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);

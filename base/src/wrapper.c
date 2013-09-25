@@ -102,6 +102,9 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
     
     fasp_param_amg_init(&amgparam);    
     fasp_param_solver_init(&itparam);
+    
+    
+    
     itparam.tol         = *tol;
     itparam.print_level = *ptrlvl;
     itparam.maxit       = *maxit;
