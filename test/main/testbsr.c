@@ -1,15 +1,3 @@
-/**
- *		Test FASP solvers with a few simple problems. 
- *
- *------------------------------------------------------
- *
- *		Created by Chensong Zhang on 03/31/2009.
- *      Modified by Chensong Zhang on 06/04/2012.
- *
- *------------------------------------------------------
- *
- */
-
 /*! \file testbsr.c
  *  \brief The main test function for FASP solvers -- BSR format
  */

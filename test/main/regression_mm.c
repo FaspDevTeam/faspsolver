@@ -1,16 +1,17 @@
 /**
- *		Solver test for FASP. 
+ *		Regression test for FASP: Matrix-Market
  *
  *------------------------------------------------------
  *
  *		Created  by Feiteng Huang on 06/12/2012
+ *      Modified by Chensong Zhang on 09/28/2013
  *
  *------------------------------------------------------
  *
  */
 
-/*! \file testmm.c
- *  \brief solver test for FASP with some matrix from Matrix-Market. 
+/*! \file regression_mm.c
+ *  \brief Regression testing for iterative solvers using Matrix-Market problems
  */
 
 #include <time.h>
@@ -18,16 +19,16 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-#define num_prob      12                  /**< how many problems to be used */
-#define num_solvers    7                  /**< how many methods  to be used */
-unsigned INT  ntest_diag[num_solvers];    /**< number of tests all together for diag preconditioner */
-unsigned INT  nfail_diag[num_solvers];    /**< number of failed tests for diag preconditioner */
-unsigned INT  ntest_ilu[num_solvers];     /**< number of tests all together for ilu preconditioner */
-unsigned INT  nfail_ilu[num_solvers];     /**< number of failed tests for ilu preconditioner */
-unsigned INT  ntest_amg[num_solvers];     /**< number of tests all together for amg preconditioner */
-unsigned INT  nfail_amg[num_solvers];     /**< number of failed tests for amg preconditioner */
-unsigned INT  ntest_amg_solver;           /**< number of tests all together for amg solver */
-unsigned INT  nfail_amg_solver;           /**< number of failed tests for amg solver */
+#define num_prob      12                /**< how many problems to be used */
+#define num_solvers    7                /**< how many methods  to be used */
+unsigned INT  ntest_diag[num_solvers];  /**< number of tests all together for diag preconditioner */
+unsigned INT  nfail_diag[num_solvers];  /**< number of failed tests for diag preconditioner */
+unsigned INT  ntest_ilu[num_solvers];   /**< number of tests all together for ILU preconditioner */
+unsigned INT  nfail_ilu[num_solvers];   /**< number of failed tests for ILU preconditioner */
+unsigned INT  ntest_amg[num_solvers];   /**< number of tests all together for amg preconditioner */
+unsigned INT  nfail_amg[num_solvers];   /**< number of failed tests for amg preconditioner */
+unsigned INT  ntest_amg_solver;         /**< number of tests all together for amg solver */
+unsigned INT  nfail_amg_solver;         /**< number of failed tests for amg solver */
 
 /**
  * \fn static void check_solu(dvector *x, dvector *sol, double tol)
@@ -44,7 +45,7 @@ static void check_solu(dvector *x, dvector *sol, double tol, unsigned int *nt, u
     }
     else {
         (*nf)++;
-        printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [REQUIRES ATTENTION!!!]\n", diff_u);
+        printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [ATTENTION!!!]\n", diff_u);
     }	
 }
 
@@ -64,7 +65,9 @@ int main (int argc, const char * argv[])
 {
     const INT      print_level = 1;    // how much information to print out
     const REAL     tolerance   = 1e-4; // tolerance for accepting the solution
-    
+    const char     solvers[num_solvers][128] = {"CG", "BiCGstab", "MinRes", "GMRES",
+                                                "VGMRES", "VFGMRES", "GCG"};
+
     /* Local Variables */
     itsolver_param itparam;      // input parameters for iterative solvers
     ILU_param      iluparam; 	 // input parameters for AMG
@@ -73,7 +76,6 @@ int main (int argc, const char * argv[])
     dvector        b, x, sol;    // rhs, numerical sol, exact sol 
     INT            indp;         // index for test problems
     INT            indm;         // index for test methods
-    const char     solvers[num_solvers][128] = {"CG", "BiCGstab", "MinRes", "GMRES", "VGMRES", "VFGMRES", "GCG"};
     
     time_t         lt  = time(NULL);
     
@@ -438,11 +440,14 @@ int main (int argc, const char * argv[])
         
         if (1) {
             /* Using classical AMG as a solver */
+            /* Using classical AMG as preconditioner for Krylov methods */
+            printf("------------------------------------------------------------------\n");
+            printf("AMG as iterative solver ...\n");
+
             amgparam.maxit        = 20;
             amgparam.tol          = 1e-10;
             amgparam.print_level  = print_level;
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-            printf("Calling AMG solver ...\n");
             fasp_solver_amg(&A, &b, &x,&amgparam);
             
             check_solu(&x, &sol, tolerance, &ntest_amg_solver, &nfail_amg_solver);

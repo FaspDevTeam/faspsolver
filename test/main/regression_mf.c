@@ -1,5 +1,5 @@
 /**
- *		Test matrix-free itsolvers for FASP.
+ *		Regression test for FASP: matrix-free
  *
  *------------------------------------------------------
  *
@@ -9,8 +9,8 @@
  *
  */
 
-/*! \file mf_test.c
- *  \brief mesh free test for CSR Iterative Solvers
+/*! \file regression_mf.c
+ *  \brief Regression testing for matrix-free iterative solvers
  */
 
 #include <time.h>
@@ -36,7 +36,7 @@ static void check_solu(dvector *x, dvector *sol, double tol)
     }
     else {
         nfail++;
-        printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [REQUIRES ATTENTION!!!]\n", diff_u);
+        printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [ATTENTION!!!]\n", diff_u);
     }
 }
 

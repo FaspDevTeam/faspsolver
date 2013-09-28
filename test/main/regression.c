@@ -1,5 +1,5 @@
 /**
- *		Regression test for FASP. 
+ *		Regression test for FASP: CSR
  *
  *------------------------------------------------------
  *
@@ -13,7 +13,7 @@
  */
 
 /*! \file regression.c
- *  \brief Regression Testing Function for CSR Iterative Solvers
+ *  \brief Regression testing for CSR iterative solvers
  */
 
 #include <time.h>
@@ -39,7 +39,7 @@ static void check_solu(dvector *x, dvector *sol, double tol)
     }
     else {
         nfail++;
-        printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [REQUIRES ATTENTION!!!]\n", diff_u);
+        printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [ATTENTION!!!]\n", diff_u);
     }	
 }
 
