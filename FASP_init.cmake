@@ -11,7 +11,7 @@ set(OPENMP 0 BOOL "Openmp use")
 
 # Search for C compilers in the specified order.  That will determine
 #  the rest.
-	find_program(THE_C NAMES icc gcc-mp-4.8 gcc gcc44 gcc43 )
+	find_program(THE_C NAMES gcc-mp-4.8 gcc gcc44 gcc43 icc )
 #
 	if( ${THE_C} MATCHES "gcc.*" )
 		string(REPLACE "gcc" "g++" C_XX ${THE_C} )

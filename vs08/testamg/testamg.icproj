@@ -30,6 +30,28 @@
 				EnableMatrixMultiplyLibraryCall="1"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Release_OMP|Win32"
+			>
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"
+				InterproceduralOptimization="1"
+				OptimizeForWindowsApplication="true"
+				EnableMatrixMultiplyLibraryCall="1"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release_OMP|x64"
+			>
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"
+				InterproceduralOptimization="1"
+				OptimizeForWindowsApplication="true"
+				EnableMatrixMultiplyLibraryCall="1"
+			/>
+		</Configuration>
 	</Configurations>
 	<Files>
 		<Filter
@@ -48,6 +70,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
+					>
+					<Tool
+						Name="CppCmplrTool"
+						C99Support="true"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release_OMP|Win32"
+					>
+					<Tool
+						Name="CppCmplrTool"
+						C99Support="true"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release_OMP|x64"
 					>
 					<Tool
 						Name="CppCmplrTool"
