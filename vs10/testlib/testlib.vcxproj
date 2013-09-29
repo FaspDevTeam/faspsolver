@@ -213,6 +213,7 @@
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
+      <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName)-vs10.lib</OutputFile>

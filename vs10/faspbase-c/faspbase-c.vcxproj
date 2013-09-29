@@ -217,6 +217,7 @@
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <FloatingPointSpeculation>Off</FloatingPointSpeculation>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
+      <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Lib>
       <OutputFile>..\..\lib\ia32\$(ProjectName)-vs10.lib</OutputFile>

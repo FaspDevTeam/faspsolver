@@ -1,16 +1,7 @@
-/**
- *		Test FASP solvers with a few simple problems. 
- *
- *------------------------------------------------------
- *
- *		Created by Chensong Zhang on 10/06/2011.
- *
- *------------------------------------------------------
- *
- */
-
 /*! \file testomp.c
  *  \brief The main test function for FASP OpenMP solvers
+ * 
+ *  \note  This file becomes obsolete as test.c can do the same job now!
  */
 
 #include "fasp.h"
@@ -23,6 +14,8 @@
  *
  * \author Chensong Zhang
  * \date   10/06/2011
+ *
+ * Modified by Chesong Zhang on 09/29/2013: revise according to test.c
  */
 int main (int argc, const char * argv[]) 
 {
@@ -30,7 +23,9 @@ int main (int argc, const char * argv[])
 	dvector b, x;
 	int status=SUCCESS;
 	
-	// Set parameters
+    //------------------------//
+	// Step 0. Set parameters //
+    //------------------------//
 	input_param     inparam;  // parameters from input files
 	itsolver_param  itparam;  // parameters for itsolver
 	AMG_param       amgparam; // parameters for AMG
@@ -53,7 +48,9 @@ int main (int argc, const char * argv[])
 		freopen(outputfile,"w",stdout); // open a file for stdout
 	}
     	
-	// Assemble or read matrix and right-hand side
+    //----------------------------------------------------//
+	// Step 1. Input stiffness matrix and right-hand side //
+    //----------------------------------------------------//
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
 	
@@ -83,42 +80,26 @@ int main (int argc, const char * argv[])
     printf("b: n = %d\n", b.row);
 
 	// Solve the system
-	if (print_level>0) {
+	if (print_level > PRINT_NONE) {
 		printf("Max it num = %d\n", inparam.itsolver_maxit);
 		printf("Tolerance  = %e\n", inparam.itsolver_tol);
 	}
-	    
+	   
+    //--------------------------//
+	// Step 2. Solve the system //
+    //--------------------------//
+
 	// Initial guess
     fasp_dvec_alloc(A.row, &x); 
     fasp_dvec_set(A.row,&x,0.0);
 	
-    // AMG as the iterative solver
-	if (solver_type == 0) { 	
-		 fasp_solver_amg(&A, &b, &x, &amgparam); 
-	}
-
-    // Full AMG as the iterative solver 
-	else if (solver_type == 8) {
-		 fasp_solver_famg(&A, &b, &x, &amgparam);
-	}
-	
-#if FASP_USE_OPENMP
-    // OMP version AMG as the iterative solver
-	else if( solver_type == 21) {        
-        int nts = 2;
- 		printf("omp test itsolver _ type = %d amgparam.max_iter = %d, amgparam.tol = %lf\n",
-                solver_type, amgparam.maxit, amgparam.tol);
-		omp_set_num_threads(nts);
-		fasp_solver_amg(&A, &b, &x, &amgparam);
-	}
-#endif	
-
-	else if (solver_type >= 1 && solver_type <= 5) {
+    // Preconditioned Krylov methods
+    if ( solver_type >= 1 && solver_type <= 20) {
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
 			status = fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
-		}	
+		}
         
 		// Using diag(A) as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_DIAG) {
@@ -127,20 +108,35 @@ int main (int argc, const char * argv[])
         
 		// Using AMG as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
+            if (print_level > PRINT_NONE) fasp_param_amg_print(&amgparam);
 			status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
 		}
         
 		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
 		else if (precond_type == PREC_ILU) {
+            if (print_level > PRINT_NONE) fasp_param_ilu_print(&iluparam);
 			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
 		}
         
 		else {
-			printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);		
-			exit(ERROR_SOLVER_PRECTYPE);
+			printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);
+			status = ERROR_SOLVER_PRECTYPE;
 		}
-		
+        
 	}
+    
+    // AMG as the iterative solver
+	else if (solver_type == SOLVER_AMG) {
+        if (print_level > PRINT_NONE) fasp_param_amg_print(&amgparam);
+		fasp_solver_amg(&A, &b, &x, &amgparam);
+        
+	}
+    
+    // Full AMG as the iterative solver
+    else if (solver_type == SOLVER_FMG) {
+        if (print_level > PRINT_NONE) fasp_param_amg_print(&amgparam);
+        fasp_solver_famg(&A, &b, &x, &amgparam);
+    }
 
 	else {
 		printf("### ERROR: Wrong solver type %d!!!\n", solver_type);		
@@ -166,3 +162,7 @@ int main (int argc, const char * argv[])
 		
 	return SUCCESS;
 }
+
+/*---------------------------------*/
+/*--        End of File          --*/
+/*---------------------------------*/
