@@ -1090,12 +1090,13 @@ extern INT  MAXIMAP; /**< Red Black Gs Smoother max dofs of reservoir */
 extern INT THDs_AMG_GS;  /**< AMG GS smoothing threads  */
 extern INT THDs_CPR_lGS; /**< Reservoir GS smoothing threads */
 extern INT THDs_CPR_gGS; /**< Global matrix GS smoothing threads  */
-
+#ifdef DETAILTIME
 extern REAL total_linear_time; /**< Total used time of linear solvers */
 extern REAL total_start_time;  /**< Total used time */
 extern REAL total_setup_time;  /**< Total setup time */
 extern INT  total_iter;        /**< Total number of iterations */
 extern INT  fasp_called_times; /**< Tatal FASP calls */
+#endif
 
 #endif /* end if for FASP_USE_OPENMP */
 
