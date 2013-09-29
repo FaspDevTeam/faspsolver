@@ -27,7 +27,7 @@
 #
 # If you want to compile with OpenMP support, uncomment the next line:
 #
- openmp=yes
+# openmp=yes
 #
 # By default, FASP uses the command-line Doxygen to generate a reference
 # manual. If you want to use the GUI of Doxgen instead of command-line
