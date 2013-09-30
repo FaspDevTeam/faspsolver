@@ -1,10 +1,11 @@
 File Name: CHANGES
 
-09/29/2013 FASP 1.3.7:
+09/30/2013 FASP 1.3.7:
 - Add OpenMP versions to VS08 and VS10 solutions.
 - Add more GCC versions to cmake list.
 - Modify testomp.c according to the new OpenMP setting.
 - Fix some warnings due to duplicate definitions in fasp.h.
+- Update documentation: HTML and TeX.
 
 09/28/2013 FASP 1.3.6:
 - Modify VS08 and VS10 dependency setup.
