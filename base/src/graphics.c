@@ -18,7 +18,7 @@ static INT  write_bmp16(const char *fname, INT m, INT n, const char map[]);
 /*---------------------------------*/
 
 /**
- * \fn void fasp_dcsr_plot (const dCSRmat *A, const char *filename, INT size)
+ * \fn void fasp_dcsr_subplot (const dCSRmat *A, const char *filename, INT size)
  *
  * \brief Write sparse matrix pattern in BMP file format
  *
@@ -29,7 +29,7 @@ static INT  write_bmp16(const char *fname, INT m, INT n, const char map[]);
  * \author Chensong Zhang
  * \date   03/29/2009
  *
- * \note The routine spm_show_mat writes pattern of the specified dCSRmat
+ * \note The routine fasp_dcsr_subplot writes pattern of the specified dCSRmat
  *       matrix in uncompressed BMP file format (Windows bitmap) to a binary
  *       file whose name is specified by the character string filename.
  * 
@@ -41,7 +41,7 @@ static INT  write_bmp16(const char *fname, INT m, INT n, const char map[]);
  *  Red      negative element
  *  Brown    nearly zero element
  */
-void fasp_dcsr_plot (const dCSRmat *A, 
+void fasp_dcsr_subplot (const dCSRmat *A, 
                      const char *filename, 
                      INT size)
 {     
@@ -73,6 +73,89 @@ void fasp_dcsr_plot (const dCSRmat *A,
         } // end for j
     } // end for i
     
+    write_bmp16(filename, size, size, map);
+    
+    fasp_mem_free(map);
+}
+
+/**
+ * \fn void fasp_dbsr_subplot (const dBSRmat *A, const char *filename)
+ *
+ * \brief Write sparse matrix pattern in BMP file format
+ *
+ * \param A         Pointer to the dBSRmat matrix
+ * \param filename  File name
+ * \param size      size*size is the picture size for the picture
+ * 
+ * \author Chunsheng Feng
+ * \date   11/16/2013
+ *
+ * \note The routine fasp_dbsr_subplot writes pattern of the specified dBSRmat
+ *       matrix in uncompressed BMP file format (Windows bitmap) to a binary
+ *       file whose name is specified by the character string filename.
+ * 
+ * Each pixel corresponds to one matrix element. The pixel colors have
+ * the following meaning:
+ *
+ *  White    structurally zero element
+ *  Black    zero element
+ *  Blue     positive element
+ *  Red      negative element
+ *  Brown    nearly zero element
+ */
+void fasp_dbsr_subplot(const dBSRmat *A, 
+                     const char *filename, 
+                     INT size)
+{     
+	INT m = A->ROW;
+    INT n = A->COL;
+	INT nb = A->nb;
+	INT nb2 = nb*nb;
+    INT offset;
+
+    INT row,col,i, j, k,l, minmn=nb*MIN(m,n);
+    REAL val;
+
+    char *map;
+    
+    if (size>minmn) size=minmn;
+    
+    printf("Writing matrix pattern to `%s'...\n",filename);
+    
+    map = (char *)fasp_mem_calloc(size * size, sizeof(char));
+    
+    memset(map, 0x0F, size * size);
+
+    for ( i = 0; i < size/nb; i++ ) {
+
+        for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
+            for ( k = 0; k < A->nb; k++ ) {
+                for ( l = 0; l < A->nb; l++ ) {
+         
+		     row = i*nb + k; 
+			 col =  A->JA[j]*nb + l; 
+			 val = A->val[ A->JA[j]*nb2 + k*nb + l];
+
+            if (col<size) {
+                
+				offset = size*row + col;
+
+                if (map[offset] != 0x0F)
+                    map[offset] = 0x0F;
+                else if ( val > 1e-20)
+                    map[offset] = 0x09; /* bright blue */
+                else if ( val < -1e-20)
+                    map[offset] = 0x0C; /* bright red */
+				else if (val == 0)
+                   map[offset] = 0x00; /* bright red */
+                else
+                    map[offset] = 0x06; /* brown */
+            } // end if
+               }
+            }
+        }
+    }
+
     write_bmp16(filename, size, size, map);
     
     fasp_mem_free(map);
@@ -346,11 +429,321 @@ static INT write_bmp16(const char *fname, INT m, INT n, const char map[])
         }
     }
     fflush(fp);
+
     if (ferror(fp)) {  
         printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
         ret = 0;
     }
  fini: if (fp != NULL) fclose(fp);
+    return ret;
+}
+
+
+/**
+ * \fn void fasp_dbsr_plot (const dBSRmat *A, const char *filename)
+ *
+ * \brief Write dBSR sparse matrix pattern in BMP file format
+ *
+ * \param A         Pointer to the dBSRmat matrix
+ * \param filename  File name
+  * 
+ * \author Chunsheng Feng
+ * \date   11/16/2013
+ *
+ * \note The routine fasp_dbsr_plot writes pattern of the specified dBSRmat
+ *       matrix in uncompressed BMP file format (Windows bitmap) to a binary
+ *       file whose name is specified by the character string filename.
+ * 
+ * Each pixel corresponds to one matrix element. The pixel colors have
+ * the following meaning:
+ *
+ *  White    structurally zero element
+ *  Black    zero element
+ *  Blue     positive element
+ *  Red      negative element
+ *  Brown    nearly zero element
+ */
+INT fasp_dbsr_plot(const dBSRmat *A, const char *fname)
+{     
+    FILE *fp;
+    INT offset, bmsize, i, j, b, ret = 1;
+	INT n,m;
+	INT size;
+	INT nb = A->nb;
+	INT nb2 = nb*nb;
+    INT row,col,k,l;
+	REAL val;
+
+	m = A->ROW*A->nb;
+	n = A->COL*A->nb;
+
+    char *map;    
+
+	size = ( (n+7)/8 )*8;
+
+    map = (char *)fasp_mem_calloc(size, sizeof(char));
+
+    memset(map, 0x0F, size);
+
+    if (!(1 <= m && m <= 32767))
+        printf("### ERROR: write_bmp16 invalid height %d\n", m);
+    
+    if (!(1 <= n && n <= 32767))
+        printf("### ERROR: write_bmp16 invalid width %d\n", n);
+    
+    fp = fopen(fname, "wb");
+    if (fp == NULL) {  
+        printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
+        ret = 0;
+        goto fini;
+    }
+
+    offset = 14 + 40 + 16 * 4;
+    bmsize = (4 * n + 31) / 32;
+    /* struct BMPFILEHEADER (14 bytes) */
+    /* UINT bfType */          put_byte(fp, 'B'), put_byte(fp, 'M');
+    /* DWORD bfSize */         put_dword(fp, offset + bmsize * 4);
+    /* UINT bfReserved1 */     put_word(fp, 0);
+    /* UNIT bfReserved2 */     put_word(fp, 0);
+    /* DWORD bfOffBits */      put_dword(fp, offset);
+    /* struct BMPINFOHEADER (40 bytes) */
+    /* DWORD biSize */         put_dword(fp, 40);
+    /* LONG biWidth */         put_dword(fp, n);
+    /* LONG biHeight */        put_dword(fp, m);
+    /* WORD biPlanes */        put_word(fp, 1);
+    /* WORD biBitCount */      put_word(fp, 4);
+    /* DWORD biCompression */  put_dword(fp, 0 /* BI_RGB */);
+    /* DWORD biSizeImage */    put_dword(fp, 0);
+    /* LONG biXPelsPerMeter */ put_dword(fp, 2953 /* 75 dpi */);
+    /* LONG biYPelsPerMeter */ put_dword(fp, 2953 /* 75 dpi */);
+    /* DWORD biClrUsed */      put_dword(fp, 0);
+    /* DWORD biClrImportant */ put_dword(fp, 0);
+    /* struct RGBQUAD (16 * 4 = 64 bytes) */
+    /* CGA-compatible colors: */
+    /* 0x00 = black */         put_dword(fp, 0x000000);
+    /* 0x01 = blue */          put_dword(fp, 0x000080);
+    /* 0x02 = green */         put_dword(fp, 0x008000);
+    /* 0x03 = cyan */          put_dword(fp, 0x008080);
+    /* 0x04 = red */           put_dword(fp, 0x800000);
+    /* 0x05 = magenta */       put_dword(fp, 0x800080);
+    /* 0x06 = brown */         put_dword(fp, 0x808000);
+    /* 0x07 = light gray */    put_dword(fp, 0xC0C0C0);
+    /* 0x08 = dark gray */     put_dword(fp, 0x808080);
+    /* 0x09 = bright blue */   put_dword(fp, 0x0000FF);
+    /* 0x0A = bright green */  put_dword(fp, 0x00FF00);
+    /* 0x0B = bright cyan */   put_dword(fp, 0x00FFFF);
+    /* 0x0C = bright red */    put_dword(fp, 0xFF0000);
+    /* 0x0D = bright magenta */put_dword(fp, 0xFF00FF);
+    /* 0x0E = yellow */        put_dword(fp, 0xFFFF00);
+    /* 0x0F = white */         put_dword(fp, 0xFFFFFF);
+    /* pixel data bits */
+    b = 0;
+
+////----------------------------------------------------------------------------------------
+//	for(i=size-1; i>=m; i--){
+//		memset(map, 0x0F, size);	
+//        for (j = 0; j < size; ++j) {  
+//            b <<= 4;
+//            b |= (j < n ? map[j] & 15 : 0);
+//            if (j & 1) put_byte(fp, b);
+//        }
+//	}
+////----------------------------------------------------------------------------------------
+
+	for ( i = A->ROW-1; i >=0; i-- ) {
+	  for ( k = A->nb-1; k >=0; k-- ) {       
+		  row = i*nb + k; 
+	
+		  memset(map, 0x0F, size);	
+
+		  for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
+             for ( l = 0; l < A->nb; l++ ) {
+		      
+ 		        col =  A->JA[j]*nb + l; 
+			    val = A->val[ A->JA[j]*nb2 + k*nb + l];
+
+				if (map[col] != 0x0F)
+                    map[col] = 0x0F;
+                else if ( val > 1e-20)
+                    map[col] = 0x09; /* bright blue */
+                else if ( val < -1e-20)
+                    map[col] = 0x0C; /* bright red */
+				else if (val == 0)
+                   map[col] = 0x00; /* bright red */
+                else
+                    map[col] = 0x06; /* brown */
+                } // for l
+             } // for j
+        
+
+        for (j = 0; j < size; ++j) {  
+            b <<= 4;
+            b |= (j < n ? map[j] & 15 : 0);
+            if (j & 1) put_byte(fp, b);
+        }
+      }
+  }
+
+
+
+    fflush(fp);
+    if (ferror(fp)) {  
+        printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
+        ret = 0;
+    }
+ fini: if (fp != NULL) fclose(fp);
+
+	fasp_mem_free(map);
+
+    return ret;
+}
+
+/**
+ * \fn void fasp_dcsr_plot (const dBSRmat *A, const char *filename)
+ *
+ * \brief Write dCSR sparse matrix pattern in BMP file format
+ *
+ * \param A         Pointer to the dBSRmat matrix
+ * \param filename  File name
+  * 
+ * \author Chunsheng Feng
+ * \date   11/16/2013
+ *
+ * \note The routine fasp_dcsr_plot writes pattern of the specified dCSRmat
+ *       matrix in uncompressed BMP file format (Windows bitmap) to a binary
+ *       file whose name is specified by the character string filename.
+ * 
+ * Each pixel corresponds to one matrix element. The pixel colors have
+ * the following meaning:
+ *
+ *  White    structurally zero element
+ *  Black    zero element
+ *  Blue     positive element
+ *  Red      negative element
+ *  Brown    nearly zero element
+ */
+INT fasp_dcsr_plot(const dCSRmat *A, const char *fname)
+{     
+    FILE *fp;
+    INT offset, bmsize, i, j, b, ret = 1;
+	INT n,m;
+	INT size;
+
+	INT row,col;
+	REAL val;
+
+	m = A->row;
+	n = A->col;
+
+    char *map;    
+
+	size = ( (n+7)/8 )*8;
+
+    map = (char *)fasp_mem_calloc(size, sizeof(char));
+
+    memset(map, 0x0F, size);
+
+    if (!(1 <= m && m <= 32767))
+        printf("### ERROR: write_bmp16 invalid height %d\n", m);
+    
+    if (!(1 <= n && n <= 32767))
+        printf("### ERROR: write_bmp16 invalid width %d\n", n);
+    
+    fp = fopen(fname, "wb");
+    if (fp == NULL) {  
+        printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
+        ret = 0;
+        goto fini;
+    }
+
+    offset = 14 + 40 + 16 * 4;
+    bmsize = (4 * n + 31) / 32;
+    /* struct BMPFILEHEADER (14 bytes) */
+    /* UINT bfType */          put_byte(fp, 'B'), put_byte(fp, 'M');
+    /* DWORD bfSize */         put_dword(fp, offset + bmsize * 4);
+    /* UINT bfReserved1 */     put_word(fp, 0);
+    /* UNIT bfReserved2 */     put_word(fp, 0);
+    /* DWORD bfOffBits */      put_dword(fp, offset);
+    /* struct BMPINFOHEADER (40 bytes) */
+    /* DWORD biSize */         put_dword(fp, 40);
+    /* LONG biWidth */         put_dword(fp, n);
+    /* LONG biHeight */        put_dword(fp, m);
+    /* WORD biPlanes */        put_word(fp, 1);
+    /* WORD biBitCount */      put_word(fp, 4);
+    /* DWORD biCompression */  put_dword(fp, 0 /* BI_RGB */);
+    /* DWORD biSizeImage */    put_dword(fp, 0);
+    /* LONG biXPelsPerMeter */ put_dword(fp, 2953 /* 75 dpi */);
+    /* LONG biYPelsPerMeter */ put_dword(fp, 2953 /* 75 dpi */);
+    /* DWORD biClrUsed */      put_dword(fp, 0);
+    /* DWORD biClrImportant */ put_dword(fp, 0);
+    /* struct RGBQUAD (16 * 4 = 64 bytes) */
+    /* CGA-compatible colors: */
+    /* 0x00 = black */         put_dword(fp, 0x000000);
+    /* 0x01 = blue */          put_dword(fp, 0x000080);
+    /* 0x02 = green */         put_dword(fp, 0x008000);
+    /* 0x03 = cyan */          put_dword(fp, 0x008080);
+    /* 0x04 = red */           put_dword(fp, 0x800000);
+    /* 0x05 = magenta */       put_dword(fp, 0x800080);
+    /* 0x06 = brown */         put_dword(fp, 0x808000);
+    /* 0x07 = light gray */    put_dword(fp, 0xC0C0C0);
+    /* 0x08 = dark gray */     put_dword(fp, 0x808080);
+    /* 0x09 = bright blue */   put_dword(fp, 0x0000FF);
+    /* 0x0A = bright green */  put_dword(fp, 0x00FF00);
+    /* 0x0B = bright cyan */   put_dword(fp, 0x00FFFF);
+    /* 0x0C = bright red */    put_dword(fp, 0xFF0000);
+    /* 0x0D = bright magenta */put_dword(fp, 0xFF00FF);
+    /* 0x0E = yellow */        put_dword(fp, 0xFFFF00);
+    /* 0x0F = white */         put_dword(fp, 0xFFFFFF);
+    /* pixel data bits */
+    b = 0;
+
+////----------------------------------------------------------------------------------------
+//	for(i=((m+7)/8)*8 - 1; i>=m; i--){
+//		memset(map, 0x0F, size);	
+//        for (j = 0; j < size; ++j) {  
+//            b <<= 4;
+//            b |= (j < n ? map[j] & 15 : 0);
+//            if (j & 1) put_byte(fp, b);
+//        }
+//	}
+////----------------------------------------------------------------------------------------
+
+	for ( i = A->row-1; i >=0; i-- ) {
+		  memset(map, 0x0F, size);	
+
+		  for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
+ 		        col =  A->JA[j]; 
+			    val =  A->val[j];
+				if (map[col] != 0x0F)
+                    map[col] = 0x0F;
+                else if ( val > 1e-20)
+                    map[col] = 0x09; /* bright blue */
+                else if ( val < -1e-20)
+                    map[col] = 0x0C; /* bright red */
+				else if (val == 0)
+                   map[col] = 0x00; /* bright red */
+                else
+                    map[col] = 0x06; /* brown */
+             } // for j
+
+        for (j = 0; j < size; ++j) {  
+            b <<= 4;
+            b |= (j < n ? map[j] & 15 : 0);
+            if (j & 1) put_byte(fp, b);
+        }
+  }
+
+
+
+    fflush(fp);
+    if (ferror(fp)) {  
+        printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
+        ret = 0;
+    }
+ fini: if (fp != NULL) fclose(fp);
+
+	fasp_mem_free(map);
+
     return ret;
 }
 

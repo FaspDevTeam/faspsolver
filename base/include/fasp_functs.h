@@ -693,13 +693,19 @@ INT fasp_poisson_pcg_gmg_3D (REAL *u,
 
 /*-------- In file: graphics.c --------*/
 
-void fasp_dcsr_plot (const dCSRmat *A, 
+void fasp_dcsr_subplot (const dCSRmat *A, 
                      const char *filename, 
                      INT size);
 
 void fasp_grid2d_plot (pgrid2d pg, 
                        INT level);
 
+void fasp_dbsr_subplot(const dBSRmat *A, 
+                     const char *filename, 
+                     INT size);
+INT fasp_dcsr_plot(const dCSRmat *A, const char *fname);
+
+INT fasp_dbsr_plot(const dBSRmat *A, const char *fname);
 
 /*-------- In file: ilu_setup_bsr.c --------*/
 
@@ -863,6 +869,10 @@ void fasp_dcsr_print (dCSRmat *A);
 void fasp_dcoo_print (dCOOmat *A);
 
 void fasp_dbsr_print (dBSRmat *A);
+
+void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A);
+
+void fasp_dcsr_write_coo (const char *filename,const dCSRmat *A);
 
 void fasp_dstr_print (dSTRmat *A);
 
