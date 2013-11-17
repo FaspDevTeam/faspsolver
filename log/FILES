@@ -1,8 +1,8 @@
      560 ./base/include/dlmalloc.h
      164 ./base/include/doxygen.h
-    1106 ./base/include/fasp.h
+    1107 ./base/include/fasp.h
      586 ./base/include/fasp_block.h
-    2658 ./base/include/fasp_functs.h
+    2668 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      221 ./base/include/messages.h
@@ -36,7 +36,7 @@
     1017 ./base/src/formats.c
       80 ./base/src/givens.c
     1011 ./base/src/gmg_poisson.c
-     359 ./base/src/graphics.c
+     752 ./base/src/graphics.c
      424 ./base/src/ilu_setup_bsr.c
      182 ./base/src/ilu_setup_csr.c
     1258 ./base/src/ilu_setup_str.c
@@ -44,7 +44,7 @@
      694 ./base/src/input.c
     1350 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
-    2810 ./base/src/io.c
+    2901 ./base/src/io.c
      131 ./base/src/itsolver_bcsr.c
      485 ./base/src/itsolver_bsr.c
      590 ./base/src/itsolver_csr.c
@@ -105,4 +105,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   79752 total
+   80247 total
