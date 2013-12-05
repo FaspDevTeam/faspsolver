@@ -697,15 +697,17 @@ void fasp_dcsr_subplot (const dCSRmat *A,
                      const char *filename, 
                      INT size);
 
-void fasp_grid2d_plot (pgrid2d pg, 
-                       INT level);
-
 void fasp_dbsr_subplot(const dBSRmat *A, 
                      const char *filename, 
                      INT size);
-INT fasp_dcsr_plot(const dCSRmat *A, const char *fname);
+
+void fasp_grid2d_plot (pgrid2d pg, 
+                       INT level);
 
 INT fasp_dbsr_plot(const dBSRmat *A, const char *fname);
+
+INT fasp_dcsr_plot(const dCSRmat *A, const char *fname);
+
 
 /*-------- In file: ilu_setup_bsr.c --------*/
 
@@ -1498,6 +1500,15 @@ void fasp_precond_nl_amli (REAL *r,
                            void *data);
 
 void fasp_precond_free (SHORT precond_type, precond *pc);
+
+precond *fasp_precond_setup_blk (SHORT precond_type, 
+                                 AMG_param *amgparam, 
+                                 ILU_param *iluparam, 
+                                 dCSRmat *A1,
+                                 dCSRmat *A2,
+                                 dCSRmat *A3);
+
+void fasp_precond_free_blk (precond *pc);
 
 
 /*-------- In file: precond_str.c --------*/
