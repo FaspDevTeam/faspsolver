@@ -2,7 +2,7 @@
      164 ./base/include/doxygen.h
     1107 ./base/include/fasp.h
      586 ./base/include/fasp_block.h
-    2668 ./base/include/fasp_functs.h
+    2679 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      221 ./base/include/messages.h
@@ -105,4 +105,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   80247 total
+   80258 total

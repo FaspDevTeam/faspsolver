@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+12/09/2013 FASP 1.3.8:
+- Delete '' caused by '\n' in windows in the file graphic.c.
+- Fix a relative path problem for MUMPS interface.
+- Fix an OpenMP setting problem in VS08 x64 Release configuration.
+
 11/17/2013 FASP 1.3.7:
 - Add OpenMP versions to VS08 and VS10 solutions.
 - Add more GCC versions to cmake list.
@@ -8,7 +13,6 @@ File Name: CHANGES
 - Update documentation: HTML and TeX.
 - Fix a printing bug in io.c.
 - Add plot function for BSR matrices. 
-- Delete '' caused by '\n' in windows in the file graphic.c
 
 09/28/2013 FASP 1.3.6:
 - Modify VS08 and VS10 dependency setup.
