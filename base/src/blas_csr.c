@@ -142,6 +142,8 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     
     // initial C->IA
     memset(C->IA, 0, sizeof(INT)*(C->row+1));
+    memset(C->JA, -1, sizeof(INT)*(A->nnz+B->nnz));
+
     
     for (i=0; i<A->row; ++i) {
         countrow = 0;
@@ -151,7 +153,9 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
             C->IA[i+1]++;
             count++;
             countrow++;
-        } // end for j
+        } // end for js
+        
+        printf("i = %d\n", i);
         
         for (k=B->IA[i]; k<B->IA[i+1]; ++k) {
             added = 0;
@@ -170,6 +174,8 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
                 C->IA[i+1]++;
                 count++;
             }
+            
+            getchar();
             
         } // end for k
         

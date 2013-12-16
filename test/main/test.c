@@ -193,6 +193,45 @@ int main (int argc, const char * argv[])
         
         fasp_matrix_read_bin(filename1, &A);
         fasp_dvec_read(filename2, &b);
+         
+    }
+    
+    else if (problem_num == 61) {
+        
+        datafile1="PP_37.dat";
+		strcat(filename1,datafile1);
+        datafile2="Prhs_37.dat";
+		strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+        
+        /*
+        int n = A.row;
+        fasp_dvec_alloc(n, &x); fasp_dvec_rand(n, &x);
+        fasp_dvec_alloc(n, &b); fasp_dvec_set(n,&b,0.0);
+        fasp_blas_dcsr_aAxpy(1.0, &A, x.val, b.val);
+         */
+        
+    }
+    
+    else if (problem_num == 62) {
+        
+        datafile1="SS_37.dat";
+		strcat(filename1,datafile1);
+        datafile2="Srhs_37.dat";
+		strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+        
+        /*
+         int n = A.row;
+         fasp_dvec_alloc(n, &x); fasp_dvec_rand(n, &x);
+         fasp_dvec_alloc(n, &b); fasp_dvec_set(n,&b,0.0);
+         fasp_blas_dcsr_aAxpy(1.0, &A, x.val, b.val);
+         */
+        
     }
     
     else {

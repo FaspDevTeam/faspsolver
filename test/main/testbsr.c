@@ -39,7 +39,7 @@ int main (int argc, const char * argv[])
 	const int precond_type  = inparam.precond_type;
 	const int output_type   = inparam.output_type;
     
-    // Set output device
+    // Set output devices
     if (output_type) {
 		char *outputfile = "out/test.out";
 		printf("Redirecting outputs to file: %s ...\n", outputfile);
