@@ -1053,7 +1053,7 @@ SHORT fasp_smat_lu_solve (REAL *A,
 
 /*-------- In file: memory.c --------*/
 
-void * fasp_mem_calloc (LONG size, 
+void * fasp_mem_calloc (LONGLONG size, 
                         INT type);
 
 void * fasp_mem_realloc (void * oldmem, 

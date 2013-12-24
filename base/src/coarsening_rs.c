@@ -402,6 +402,7 @@ static void rem_positive_ff (dCSRmat *A,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012: add OMP support
  * Modified by Chensong Zhang on 07/06/2012: fix a data type bug
  * Modified by Chensong Zhang on 05/11/2013: restructure the code
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: cfsplitting of RS coarsening check C1 Criterion
  */
 static INT cfsplitting_cls (dCSRmat *A,
                             iCSRmat *S,
@@ -415,11 +416,17 @@ static INT cfsplitting_cls (dCSRmat *A,
     INT measure, newmeas;
     INT i, j, k, l;
     INT myid, mybegin, myend;
-    
     INT *ia = A->IA, *vec = vertices->val;
     INT *work = (INT*)fasp_mem_calloc(3*row,sizeof(INT));
     INT *lists = work, *where = lists+row, *lambda = where+row;
-    
+
+#if RS_C1
+    INT set_empty = 1;
+    INT jkeep = 0, cnt, index;
+    INT row_end_S, ji, row_end_S_nabor, jj;
+    INT *graph_array = lambda;
+#endif    
+
     LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;
     
     INT nthreads = 1, use_openmp = FALSE;
@@ -465,7 +472,11 @@ static INT cfsplitting_cls (dCSRmat *A,
         for ( myid = 0; myid < nthreads; myid++ ) {
             FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
             for ( i = mybegin; i < myend; i++ ) {
+#if RS_C1
+                if ( S->IA[i+1] == S->IA[i] ) {                
+#else
                 if ( (ia[i+1]-ia[i]) <= 1 ) {
+#endif
                     vec[i] = ISPT; // set i as an ISOLATED fine node
                     lambda[i] = 0;
                 }
@@ -480,7 +491,12 @@ static INT cfsplitting_cls (dCSRmat *A,
     else {
         
         for ( i = 0; i < row; ++i ) {
-            if ( (ia[i+1]-ia[i]) <= 1 ) {
+
+#if RS_C1
+                if ( S->IA[i+1] == S->IA[i] ) {                
+#else
+                if ( (ia[i+1]-ia[i]) <= 1 ) {
+#endif
                 vec[i] = ISPT; // set i as an ISOLATED fine node
                 lambda[i] = 0;
             }
@@ -600,6 +616,62 @@ static INT cfsplitting_cls (dCSRmat *A,
         } // end for
         
     } // end while
+    
+#if RS_C1
+	//cfsplitting of RS coarsening check C1 Criterion
+    fasp_iarray_set(row, graph_array, -1);
+    for (i = 0; i < row; i ++)
+    {
+        if (vec[i] == FGPT)
+        {
+            row_end_S = S->IA[i+1];
+            for (ji = S->IA[i]; ji < row_end_S; ji ++)
+            {
+                j = S->JA[ji];
+                if (vec[j] == CGPT)
+                {
+                    graph_array[j] = i;
+                }
+            }
+            cnt = 0;
+            for (ji = S->IA[i]; ji < row_end_S; ji ++)
+            {
+                j = S->JA[ji];
+                if (vec[j] == FGPT)
+                {
+                    set_empty = 1;
+                    row_end_S_nabor = S->IA[j+1];
+                    for (jj = S->IA[j]; jj < row_end_S_nabor; jj ++)
+                    {
+                        index = S->JA[jj];
+                        if (graph_array[index] == i)
+                        {
+                            set_empty = 0;
+                            break;
+                        }
+                    }
+                    if (set_empty)
+                    {
+                        if (cnt == 0)
+                        {
+                            vec[j] = CGPT;
+                            col ++;
+                            graph_array[j] = i;
+                            jkeep = j;
+                            cnt = 1;
+                        }
+                        else
+                        {
+                            vec[i] = CGPT;
+                            vec[jkeep] = FGPT;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+#endif
     
     fasp_icsr_free(&ST);
     
