@@ -623,29 +623,30 @@ static void interp_STD (dCSRmat *A,
                     
                     // visit the strong-connected C neighbors of k, compute
                     // Ahat in the i-th row, set aki if found
-//                    aki = 0.0;
-//                    for ( m = S->IA[k]; m < S->IA[k+1]; m++ ) {
-//                        l   = S->JA[m];
-//                        akl = A->val[rindk[l]];
-//                        if ( vec[l] == CGPT ) Ahat[l] -= factor * akl;
-//                        else if ( l == i ) {
-//                            aki = akl; Ahat[l] -= factor * aki;
-//                        }
-//                    } // end for m
                     aki = 0.0;
+#if 0               // modified by Xiaoqiang Yue 12/25/2013
+                    for ( m = S->IA[k]; m < S->IA[k+1]; m++ ) {
+                        l   = S->JA[m];
+                        akl = A->val[rindk[l]];
+                        if ( vec[l] == CGPT ) Ahat[l] -= factor * akl;
+                        else if ( l == i ) {
+                            aki = akl; Ahat[l] -= factor * aki;
+                        }
+                    } // end for m
+#else
                     for ( m = A->IA[k]; m < A->IA[k+1]; m++ ) {
                         if ( A->JA[m] == i ) {
                             aki = A->val[m];
                             Ahat[i] -= factor * aki;
                         }
                     } // end for m
-                    
+#endif
                     for ( m = S->IA[k]; m < S->IA[k+1]; m++ ) {
                         l   = S->JA[m];
                         akl = A->val[rindk[l]];
                         if ( vec[l] == CGPT ) Ahat[l] -= factor * akl;
                     } // end for m
-//                    
+                    
                     // compute Cs-sum and N-sum for Ahat
                     alN -= factor * (nsum[k]-aki+akk);
                     alP -= factor *  csum[k];

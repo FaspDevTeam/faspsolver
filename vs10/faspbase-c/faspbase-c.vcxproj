@@ -181,7 +181,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WITH_MUMPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <FloatingPointModel>Strict</FloatingPointModel>
+      <FloatingPointModel>Fast2</FloatingPointModel>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
@@ -191,6 +191,7 @@
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <FloatingPointSpeculation>Off</FloatingPointSpeculation>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
+      <Optimization>MaxSpeedHighLevel</Optimization>
     </ClCompile>
     <Lib>
       <OutputFile>..\..\lib\ia32\$(ProjectName)-vs10.lib</OutputFile>
@@ -207,7 +208,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WITH_MUMPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <FloatingPointModel>Strict</FloatingPointModel>
+      <FloatingPointModel>Fast2</FloatingPointModel>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
@@ -218,6 +219,7 @@
       <FloatingPointSpeculation>Off</FloatingPointSpeculation>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <OpenMP>GenerateParallelCode</OpenMP>
+      <Optimization>MaxSpeedHighLevel</Optimization>
     </ClCompile>
     <Lib>
       <OutputFile>..\..\lib\ia32\$(ProjectName)-vs10.lib</OutputFile>
@@ -236,7 +238,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WITH_MUMPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <FloatingPointModel>Strict</FloatingPointModel>
+      <FloatingPointModel>Fast2</FloatingPointModel>
       <OpenMPSupport>false</OpenMPSupport>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -247,6 +249,7 @@
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <FloatingPointSpeculation>Off</FloatingPointSpeculation>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
+      <Optimization>MaxSpeedHighLevel</Optimization>
     </ClCompile>
     <Lib>
       <OutputFile>..\..\lib\x64\$(ProjectName)-vs10.lib</OutputFile>
@@ -265,7 +268,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WITH_MUMPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <FloatingPointModel>Strict</FloatingPointModel>
+      <FloatingPointModel>Fast2</FloatingPointModel>
       <OpenMPSupport>false</OpenMPSupport>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -277,6 +280,7 @@
       <FloatingPointSpeculation>Off</FloatingPointSpeculation>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <OpenMP>GenerateParallelCode</OpenMP>
+      <Optimization>MaxSpeedHighLevel</Optimization>
     </ClCompile>
     <Lib>
       <OutputFile>..\..\lib\x64\$(ProjectName)-vs10.lib</OutputFile>
