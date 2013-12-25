@@ -43,7 +43,7 @@
 #define FASP_USE_ILU     ON  /**< enable ILU or not */
 #define DLMALLOC         OFF /**< use dlmalloc instead of standard malloc */
 #define NEDMALLOC        OFF /**< use nedmalloc instead of standard malloc */
-#define RS_C1			 ON  /**< cfsplitting of RS coarsening check C1 Criterion */
+#define RS_C1            ON  /**< cfsplitting of RS coarsening check C1 Criterion */
 /**
  * \brief For Fortran compatibilty 
  */

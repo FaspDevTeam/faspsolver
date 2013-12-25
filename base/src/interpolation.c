@@ -578,10 +578,10 @@ static void interp_STD (dCSRmat *A,
                 if ( vec[k] != ISPT ) {
                     psum[i] += A->val[j];
                 }
+            }
 #else
             else          nsum[i] += A->val[j];
 #endif
-            }
         }
         
     }
