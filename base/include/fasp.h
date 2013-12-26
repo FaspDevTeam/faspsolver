@@ -43,15 +43,16 @@
 #define FASP_USE_ILU     ON  /**< enable ILU or not */
 #define DLMALLOC         OFF /**< use dlmalloc instead of standard malloc */
 #define NEDMALLOC        OFF /**< use nedmalloc instead of standard malloc */
-#define RS_C1            ON  /**< cfsplitting of RS coarsening check C1 Criterion */
+
 /**
- * \brief For Fortran compatibilty 
+ * \brief For internal code branches and data types
  */
-#define SHORT            short  /**< short integer type */
-#define INT              int    /**< regular integer type: int or long */
-#define LONG             long   /**< long integer type */ 
+#define RS_C1            ON         /**< CF splitting of RS: check C1 Criterion */
+#define SHORT            short      /**< short integer type */
+#define INT              int        /**< regular integer type: int or long */
+#define LONG             long       /**< long integer type */
 #define LONGLONG         long long  /**< long integer type */ 
-#define REAL             double /**< float type */
+#define REAL             double     /**< float type */
 
 /**
  * \brief Some global constants 
