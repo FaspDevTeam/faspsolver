@@ -10,7 +10,11 @@ workdir = ../data/  % work directory, no more than 128 characters
 % problem, solver, and output type             %
 %----------------------------------------------%
 
+<<<<<<< local
+problem_num              = 20     % test problem number 
+=======
 problem_num              = 10     % test problem number 
+>>>>>>> other
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to screen | 1 to file
 solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
@@ -24,20 +28,20 @@ solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 % parameters for iterative solvers             %
 %----------------------------------------------%
 
-precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
-itsolver_tol             = 1e-4   % solver tolerance 
+precond_type             = 0      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
+itsolver_tol             = 1e-6   % solver tolerance 
 itsolver_maxit           = 1000   % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
-itsolver_restart         = 50     % restart number for GMRES
+itsolver_restart         = 20     % restart number for GMRES
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
 %----------------------------------------------%
 
-ILU_type                 = 3      % 1 ILUk | 2 ILUt | 3 ILUtp 
+ILU_type                 = 1      % 1 ILUk | 2 ILUt | 3 ILUtp 
 ILU_lfil                 = 0      % level of fill-in for ILUk
 ILU_droptol              = 0.01   % ILU drop tolerance
-ILU_permtol              = 0.0005  % permutation toleration for ILUtp
+ILU_permtol              = 0.001  % permutation toleration for ILUtp
 ILU_relax                = 0.9    % add dropped entries to diagonal with relaxation
 
 %----------------------------------------------%
@@ -45,7 +49,7 @@ ILU_relax                = 0.9    % add dropped entries to diagonal with relaxat
 %----------------------------------------------%
 
 Schwarz_mmsize           = 200    % max block size
-Schwarz_maxlvl           = 3      % level used to form blocks
+Schwarz_maxlvl           = 2      % level used to form blocks
 Schwarz_type             = 1      % 1 forward | 2 backward | 3 symmetric
 
 %----------------------------------------------%
@@ -76,8 +80,8 @@ AMG_ILU_levels           = 0      % number of levels using ILU smoother
 AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.1    % relaxation parameter for SOR smoother 
 AMG_polynomial_degree	 = 3      % degree of the polynomial smoother
-AMG_presmooth_iter       = 1      % number of presmoothing sweeps
-AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
+AMG_presmooth_iter       = 2      % number of presmoothing sweeps
+AMG_postsmooth_iter      = 2      % number of postsmoothing sweeps
 
 %----------------------------------------------%
 % parameters for classical AMG SETUP           %
@@ -86,7 +90,7 @@ AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
 AMG_coarsening_type      = 1      % 1 Modified RS
                                   % 3 Compatible Relaxation
                                   % 4 Aggressive 
-AMG_interpolation_type   = 2      % 1 Direct | 2 Standard | 3 Energy-min
+AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
 AMG_strong_threshold     = 0.3    % Strong threshold
 AMG_truncation_threshold = 0.4    % Truncation threshold
 AMG_max_row_sum          = 0.9    % Max row sum
@@ -95,8 +99,8 @@ AMG_max_row_sum          = 0.9    % Max row sum
 % parameters for aggregation-type AMG SETUP    %
 %----------------------------------------------%
 
-AMG_strong_coupled       = 0.00   % Strong coupled threshold
-AMG_max_aggregation      = 100     % Max size of aggregations
+AMG_strong_coupled       = 0.08   % Strong coupled threshold
+AMG_max_aggregation      = 20     % Max size of aggregations
 AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
 AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing
 

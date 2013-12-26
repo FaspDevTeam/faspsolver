@@ -155,8 +155,6 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
             countrow++;
         } // end for js
         
-        printf("i = %d\n", i);
-        
         for (k=B->IA[i]; k<B->IA[i+1]; ++k) {
             added = 0;
             
@@ -174,8 +172,6 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
                 C->IA[i+1]++;
                 count++;
             }
-            
-            getchar();
             
         } // end for k
         
