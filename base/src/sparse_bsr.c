@@ -103,7 +103,8 @@ void fasp_dbsr_alloc (INT ROW,
     }    
     
     if ( nb > 0 ) {
-        A->val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
+        //A->val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
+		A->val = (REAL*)malloc(NNZ*nb*nb*sizeof(REAL));
     }
     else {
         A->val = NULL;

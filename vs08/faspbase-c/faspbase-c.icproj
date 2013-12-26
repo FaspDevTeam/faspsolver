@@ -16,6 +16,7 @@
 				Optimization="1000"
 				InterproceduralOptimization="1"
 				OptimizeForWindowsApplication="true"
+				FloatingPointModel="1000"
 				FloatingPointSpeculation="3"
 				EnableMatrixMultiplyLibraryCall="1"
 			/>
@@ -28,6 +29,7 @@
 				Optimization="1000"
 				InterproceduralOptimization="1"
 				OptimizeForWindowsApplication="true"
+				FloatingPointModel="1000"
 				FloatingPointSpeculation="3"
 				EnableMatrixMultiplyLibraryCall="1"
 			/>
@@ -40,6 +42,7 @@
 				Optimization="1000"
 				InterproceduralOptimization="1"
 				OptimizeForWindowsApplication="true"
+				FloatingPointModel="1000"
 				FloatingPointSpeculation="3"
 				EnableMatrixMultiplyLibraryCall="1"
 			/>
@@ -52,6 +55,7 @@
 				Optimization="1000"
 				InterproceduralOptimization="1"
 				OptimizeForWindowsApplication="true"
+				FloatingPointModel="1000"
 				FloatingPointSpeculation="3"
 				EnableMatrixMultiplyLibraryCall="1"
 			/>

@@ -213,6 +213,8 @@
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
+      <Optimization>MaxSpeedHighLevel</Optimization>
+      <FloatingPointModel>Fast2</FloatingPointModel>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Direct.lib;faspbase-f-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -245,6 +247,8 @@
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <OpenMP>GenerateParallelCode</OpenMP>
+      <Optimization>MaxSpeedHighLevel</Optimization>
+      <FloatingPointModel>Fast2</FloatingPointModel>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Direct.lib;faspbase-f-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -279,6 +283,8 @@
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
+      <Optimization>MaxSpeedHighLevel</Optimization>
+      <FloatingPointModel>Fast2</FloatingPointModel>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Direct.lib;faspbase-f-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -313,6 +319,8 @@
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
+      <Optimization>MaxSpeedHighLevel</Optimization>
+      <FloatingPointModel>Fast2</FloatingPointModel>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Direct.lib;faspbase-f-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>

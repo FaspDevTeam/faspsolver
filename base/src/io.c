@@ -1377,23 +1377,114 @@ void fasp_dcoo_print (dCOOmat *A)
  *
  * \author Ziteng Wang
  * \date   12/24/2012
+ *
+ * Modified by Chunsheng Feng
+ * \date    11/16/2013
  */
 void fasp_dbsr_print (dBSRmat *A)
 {
     INT i, j, k, l;
+	INT nb,nb2;
+	nb = A->nb; 
+	nb2 =nb*nb;
+
     printf("nrow = %d, ncol = %d, nnz = %d, nb = %d, storage_manner = %d\n",
            A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
+	
     for ( i = 0; i < A->ROW; i++ ) {
-        for ( j = A->IA[i]; j < A->IA[i+1]; k++ ) {
+        for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
             for ( k = 0; k < A->nb; k++ ) {
                 for ( l = 0; l < A->nb; l++ ) {
                     printf("A_(%d,%d) = %+.10E\n",
-						   i+k, A->JA[j]+l, A->val[A->nb*A->nb*j+k*A->nb+l]);
+						   i*nb + k + 1, A->JA[j]*nb + l + 1,  A->val[ A->JA[j]*nb2 + k*nb + l]);
                 }
             }
         }
     }
+
 }
+
+
+/**
+ * \fn void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A)
+ *
+ * \brief Print out a dBSRmat matrix in coordinate format for matlab spy
+ *
+ * \param A   Pointer to the dBSRmat matrix A
+ *
+ * \author Chunsheng Feng
+ * \date   11/14/2013
+ */
+void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A)
+{
+
+    INT i, j, k, l;
+	INT nb,nb2;
+	nb = A->nb; 
+	nb2 =nb*nb;
+    printf("nrow = %d, ncol = %d, nnz = %d, nb = %d, storage_manner = %d\n",
+           A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
+
+    FILE *fp = fopen(filename,"w");
+    if ( fp == NULL ) {
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dbsr_write");
+    }
+    
+    printf("fasp_dbsr_write: writing matrix to `%s'...\n",filename);
+    
+    fprintf(fp,"%% dimension of the block matrix and nonzeros %d  %d  %d\n",A->ROW,A->COL,A->NNZ); // write dimension of the block matrix
+    fprintf(fp,"%% the size of each block %d\n",A->nb); // write the size of each block
+    fprintf(fp,"%% storage manner of each block %d\n",A->storage_manner); // write storage manner of each block
+	
+    for ( i = 0; i < A->ROW; i++ ) {
+        for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
+            for ( k = 0; k < A->nb; k++ ) {
+                for ( l = 0; l < A->nb; l++ ) {
+         fprintf(fp, "%d %d %+.10E\n",
+			    i*nb + k + 1, A->JA[j]*nb + l + 1, A->val[ A->JA[j]*nb2 + k*nb + l]);
+                }
+            }
+        }
+    }
+fclose(fp);
+}
+
+/**
+ * \fn void fasp_dcsr_write_coo (const char *filename,const dXSRmat *A)
+ *
+ * \brief Print out a dCSRmat matrix in coordinate format for matlab spy
+ *
+ * \param A   Pointer to the dCSRmat matrix A
+ *
+ * \author Chunsheng Feng
+ * \date   11/14/2013
+ */
+void fasp_dcsr_write_coo (const char *filename,const dCSRmat *A)
+{
+
+    INT i, j, k, l;
+    printf("nrow = %d, ncol = %d, nnz = %d\n",
+		A->row, A->col, A->nnz);
+
+    FILE *fp = fopen(filename,"w");
+    if ( fp == NULL ) {
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsr_write");
+    }
+    
+    printf("fasp_dcsr_write: writing matrix to `%s'...\n",filename);
+    fprintf(fp,"%% dimension of the block matrix and nonzeros %d  %d  %d\n",A->row,A->col,A->nnz); // write dimension of the block matrix
+    
+    for ( i = 0; i < A->row; i++ ) {
+        for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
+
+         fprintf(fp, "%d %d %+.10E\n", i+1, A->JA[j]+ 1, A->val[j]);
+        }
+    }
+fclose(fp);
+}
+
 
 /**
  * \fn void fasp_dstr_print (dSTRmat *A)

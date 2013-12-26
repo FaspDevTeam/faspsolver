@@ -49,18 +49,20 @@ unsigned INT total_alloc_count = 0; // Total number of allocations
  * \author Chensong Zhang
  * \date   2010/08/12 
  *
+ * Modified by Chunsheng Feng on 12/20/2013
  * Modified by Chunsheng Feng on 07/23/2013
  * Modified by Chunsheng Feng on 07/30/2013
  * Modified by Chensong Zhang on 07/30/2013: return warning if failed
  */
-void * fasp_mem_calloc (LONG size, 
+void * fasp_mem_calloc (LONGLONG size, 
                         INT type)
 {
-    const LONG tsize = size*type;    
+    const LONGLONG tsize =  size*type;    
+	
     void * mem = NULL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: Trying to allocate %.3fKB RAM!\n", tsize/1024.0);
+    printf("### DEBUG: Trying to allocate %.3lfKB RAM! (%lld) \n", (REAL)tsize/1024.0,tsize);
 #endif
     
     if ( tsize > 0 ) {
@@ -79,7 +81,7 @@ void * fasp_mem_calloc (LONG size,
     }
     
     if ( mem == NULL ) {
-        printf("### WARNING: Cannot allocate %.3fKB RAM!\n", tsize/1024.0);
+        printf("### WARNING: Cannot allocate %.3lfKB RAM(%lld)!\n", (REAL)tsize/1024.0,tsize);
     }
     
 #if CHMEM_MODE

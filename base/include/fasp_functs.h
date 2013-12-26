@@ -693,12 +693,20 @@ INT fasp_poisson_pcg_gmg_3D (REAL *u,
 
 /*-------- In file: graphics.c --------*/
 
-void fasp_dcsr_plot (const dCSRmat *A, 
+void fasp_dcsr_subplot (const dCSRmat *A, 
+                     const char *filename, 
+                     INT size);
+
+void fasp_dbsr_subplot(const dBSRmat *A, 
                      const char *filename, 
                      INT size);
 
 void fasp_grid2d_plot (pgrid2d pg, 
                        INT level);
+
+INT fasp_dbsr_plot(const dBSRmat *A, const char *fname);
+
+INT fasp_dcsr_plot(const dCSRmat *A, const char *fname);
 
 
 /*-------- In file: ilu_setup_bsr.c --------*/
@@ -863,6 +871,10 @@ void fasp_dcsr_print (dCSRmat *A);
 void fasp_dcoo_print (dCOOmat *A);
 
 void fasp_dbsr_print (dBSRmat *A);
+
+void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A);
+
+void fasp_dcsr_write_coo (const char *filename,const dCSRmat *A);
 
 void fasp_dstr_print (dSTRmat *A);
 
@@ -1041,7 +1053,7 @@ SHORT fasp_smat_lu_solve (REAL *A,
 
 /*-------- In file: memory.c --------*/
 
-void * fasp_mem_calloc (LONG size, 
+void * fasp_mem_calloc (LONGLONG size, 
                         INT type);
 
 void * fasp_mem_realloc (void * oldmem, 
@@ -1488,6 +1500,15 @@ void fasp_precond_nl_amli (REAL *r,
                            void *data);
 
 void fasp_precond_free (SHORT precond_type, precond *pc);
+
+precond *fasp_precond_setup_blk (SHORT precond_type, 
+                                 AMG_param *amgparam, 
+                                 ILU_param *iluparam, 
+                                 dCSRmat *A1,
+                                 dCSRmat *A2,
+                                 dCSRmat *A3);
+
+void fasp_precond_free_blk (precond *pc);
 
 
 /*-------- In file: precond_str.c --------*/

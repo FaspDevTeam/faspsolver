@@ -512,6 +512,7 @@ static void interp_DIR (dCSRmat *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/17/2012: add OMP support
  * Modified by Chensong Zhang on 05/15/2013: reconstruct the code
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: cfsplitting of RS coarsening check C1 Criterion
  */
 static void interp_STD (dCSRmat *A,
                         ivector *vertices,
@@ -538,7 +539,11 @@ static void interp_STD (dCSRmat *A,
     
     // sums of strongly connected C neighbors
     REAL * csum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
-    
+
+#if RS_C1
+    // sums of all neighbors except ISPT
+    REAL * psum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+#endif    
     // sums of all neighbors
     REAL * nsum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
     
@@ -567,7 +572,16 @@ static void interp_STD (dCSRmat *A,
             if ( cindex[k] == i ) csum[i] += A->val[j]; // strong C-couplings
             
             if ( k == i ) diag[i]  = A->val[j];
+#if RS_C1
+            else {
+                nsum[i] += A->val[j];
+                if ( vec[k] != ISPT ) {
+                    psum[i] += A->val[j];
+                }
+            }
+#else
             else          nsum[i] += A->val[j];
+#endif
         }
         
     }
@@ -576,8 +590,11 @@ static void interp_STD (dCSRmat *A,
     for ( i = 0; i < row; i++ ) {
         
         if ( vec[i] == FGPT ) {
-            
+#if RS_C1            
+            alN = psum[i];
+#else
             alN = nsum[i];
+#endif
             alP = csum[i];
             
             // form the reverse indices for i-th row
@@ -607,6 +624,7 @@ static void interp_STD (dCSRmat *A,
                     // visit the strong-connected C neighbors of k, compute
                     // Ahat in the i-th row, set aki if found
                     aki = 0.0;
+#if 0               // modified by Xiaoqiang Yue 12/25/2013
                     for ( m = S->IA[k]; m < S->IA[k+1]; m++ ) {
                         l   = S->JA[m];
                         akl = A->val[rindk[l]];
@@ -614,6 +632,19 @@ static void interp_STD (dCSRmat *A,
                         else if ( l == i ) {
                             aki = akl; Ahat[l] -= factor * aki;
                         }
+                    } // end for m
+#else
+                    for ( m = A->IA[k]; m < A->IA[k+1]; m++ ) {
+                        if ( A->JA[m] == i ) {
+                            aki = A->val[m];
+                            Ahat[i] -= factor * aki;
+                        }
+                    } // end for m
+#endif
+                    for ( m = S->IA[k]; m < S->IA[k+1]; m++ ) {
+                        l   = S->JA[m];
+                        akl = A->val[rindk[l]];
+                        if ( vec[l] == CGPT ) Ahat[l] -= factor * akl;
                     } // end for m
                     
                     // compute Cs-sum and N-sum for Ahat
@@ -658,6 +689,11 @@ static void interp_STD (dCSRmat *A,
     fasp_mem_free(rindi);
     fasp_mem_free(rindk);
     fasp_mem_free(nsum);
+
+#if RS_C1
+    fasp_mem_free(psum);
+#endif
+
     fasp_mem_free(csum);
     fasp_mem_free(diag);
     fasp_mem_free(Ahat);

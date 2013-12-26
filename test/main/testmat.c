@@ -53,8 +53,11 @@ int main(int argc, const char * argv[])
     fasp_dcsrvec2_read(filename1, filename2, &A, &b);
 		
 	// Check sparse pattern
-	char *bmpfile="out/matrix.bmp";	/* Output the matrix as BMP file */
-	fasp_dcsr_plot(&A, bmpfile, 200);
+	char *bmpfile="out/matrixsubplot.bmp";	/* Output the matrix as BMP file */
+	fasp_dcsr_subplot(&A, bmpfile, 200);
+
+	bmpfile="out/matrix.bmp";	/* Output the matrix as BMP file */
+	fasp_dcsr_plot(&A, bmpfile);
 	
 	// Check symmetry
 	fasp_check_symm(&A);
