@@ -161,7 +161,6 @@ GPU Support
 [ 0.3.4 ] add AMG based on aggregation on GPU
 [       ] add matrix-free Poisson GMG solver on GPU -- n = 2^L (Chunsheng)
 [       ] sparse basic linear algebra subroutines on GPU (Xiaozhe)
-[       ] testing some routines using OpenACC (Chensong)
 
 ========================
 Bug Fixes

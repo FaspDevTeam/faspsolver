@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+12/27/2013 FASP 1.4.1:
+- Fix a bug in ADD of CSR matrices.
+- Fix a merge problem in HG.
+
 12/25/2013 FASP 1.4.0:
 - Check C1 criteria in CF splitting.
 - Fix a bug in standard interpolation.
