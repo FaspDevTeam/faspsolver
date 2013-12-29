@@ -945,7 +945,7 @@ typedef struct {
 	// parameters for AMG
 	SHORT AMG_type;                /**< Type of AMG */
 	SHORT AMG_levels;              /**< maximal number of levels */
-	SHORT AMG_cycle_type;          /**< type of cycle*/
+	SHORT AMG_cycle_type;          /**< type of cycle */
 	SHORT AMG_smoother;            /**< type of smoother */
 	SHORT AMG_smooth_order;        /**< order for smoothers */
 	REAL AMG_relaxation;           /**< over-relaxation parameter for SOR */

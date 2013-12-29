@@ -137,6 +137,13 @@
 #define PREC_SCHWARZ            5  /**< with Schwarz preconditioner */
 
 /**
+ * \brief Type of ILU methods
+ */
+#define ILUk                    1  /**< ILUk */
+#define ILUt                    2  /**< ILUt */
+#define ILUtp                   3  /**< ILUtp */
+
+/**
  * \brief Definition of AMG types
  */
 #define CLASSIC_AMG             1  /**< classic AMG */
@@ -206,13 +213,6 @@
 #define FPFIRST                -1  /**< F-points first order */
 #define ASCEND                 12  /**< Asscending order */
 #define DESCEND                21  /**< Dsscending order */
-
-/** 
- * \brief Type of ILU methods
- */
-#define ILUk                    1  /**< ILUk */
-#define ILUt                    2  /**< ILUt */
-#define ILUtp                   3  /**< ILUtp */
 
 #endif			                   /* end if for __FASP_MESSAGES__ */
 

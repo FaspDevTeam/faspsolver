@@ -758,6 +758,8 @@ void fasp_precond_null (precond *pcdata);
 
 /*-------- In file: input.c --------*/
 
+SHORT fasp_param_check (input_param *inparam);
+
 void fasp_param_input (char *filenm, 
                        input_param *Input);
 
