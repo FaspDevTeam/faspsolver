@@ -26,21 +26,21 @@ int main (int argc, const char * argv[])
     //------------------------//
 	// Step 0. Set parameters //
     //------------------------//
-	input_param     inparam;  // parameters from input files
-	itsolver_param  itparam;  // parameters for itsolver
-	AMG_param       amgparam; // parameters for AMG
-	ILU_param       iluparam; // parameters for ILU
+	input_param     inpar;  // parameters from input files
+	itsolver_param  itpar;  // parameters for itsolver
+	AMG_param       amgpar; // parameters for AMG
+	ILU_param       ilupar; // parameters for ILU
     
-    // Read input parameters from a disk file
-	char *inputfile = "ini/openmp.dat";
-	fasp_param_init(inputfile,&inparam,&itparam,&amgparam,&iluparam,NULL);
+    // Set solver parameters: use ./ini/openmp.dat
+    fasp_param_set(argc, argv, &inpar);
+    fasp_param_init(&inpar, &itpar, &amgpar, &ilupar, NULL);
 	
     // Set local parameters
-	const int print_level   = inparam.print_level;
-	const int problem_num   = inparam.problem_num;
-	const int solver_type   = inparam.solver_type;
-	const int precond_type  = inparam.precond_type;
-	const int output_type   = inparam.output_type;
+	const int print_level   = inpar.print_level;
+	const int problem_num   = inpar.problem_num;
+	const int solver_type   = inpar.solver_type;
+	const int precond_type  = inpar.precond_type;
+	const int output_type   = inpar.output_type;
 	
 	if (output_type) {
 		char *outputfile = "out/test.out";
@@ -54,8 +54,8 @@ int main (int argc, const char * argv[])
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
 	
-	strncpy(filename1,inparam.workdir,128);
-	strncpy(filename2,inparam.workdir,128);
+	strncpy(filename1,inpar.workdir,128);
+	strncpy(filename2,inpar.workdir,128);
     
 	printf("Test Problem %d\n", problem_num);
 
@@ -81,8 +81,8 @@ int main (int argc, const char * argv[])
 
 	// Solve the system
 	if (print_level > PRINT_NONE) {
-		printf("Max it num = %d\n", inparam.itsolver_maxit);
-		printf("Tolerance  = %e\n", inparam.itsolver_tol);
+		printf("Max it num = %d\n", inpar.itsolver_maxit);
+		printf("Tolerance  = %e\n", inpar.itsolver_tol);
 	}
 	   
     //--------------------------//
@@ -98,24 +98,24 @@ int main (int argc, const char * argv[])
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
-			status = fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
+			status = fasp_solver_dcsr_krylov(&A, &b, &x, &itpar);
 		}
         
 		// Using diag(A) as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_DIAG) {
-			status = fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
+			status = fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itpar);
 		}
         
 		// Using AMG as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
-            if (print_level > PRINT_NONE) fasp_param_amg_print(&amgparam);
-			status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            if (print_level > PRINT_NONE) fasp_param_amg_print(&amgpar);
+			status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itpar, &amgpar);
 		}
         
 		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
 		else if (precond_type == PREC_ILU) {
-            if (print_level > PRINT_NONE) fasp_param_ilu_print(&iluparam);
-			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
+            if (print_level > PRINT_NONE) fasp_param_ilu_print(&ilupar);
+			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itpar, &ilupar);
 		}
         
 		else {
@@ -127,15 +127,15 @@ int main (int argc, const char * argv[])
     
     // AMG as the iterative solver
 	else if (solver_type == SOLVER_AMG) {
-        if (print_level > PRINT_NONE) fasp_param_amg_print(&amgparam);
-		fasp_solver_amg(&A, &b, &x, &amgparam);
+        if (print_level > PRINT_NONE) fasp_param_amg_print(&amgpar);
+		fasp_solver_amg(&A, &b, &x, &amgpar);
         
 	}
     
     // Full AMG as the iterative solver
     else if (solver_type == SOLVER_FMG) {
-        if (print_level > PRINT_NONE) fasp_param_amg_print(&amgparam);
-        fasp_solver_famg(&A, &b, &x, &amgparam);
+        if (print_level > PRINT_NONE) fasp_param_amg_print(&amgpar);
+        fasp_solver_famg(&A, &b, &x, &amgpar);
     }
 
 	else {

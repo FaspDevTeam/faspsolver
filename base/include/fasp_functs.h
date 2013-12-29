@@ -761,6 +761,10 @@ void fasp_precond_null (precond *pcdata);
 void fasp_param_input (char *filenm, 
                        input_param *Input);
 
+void fasp_param_set (int argc,
+                     const char *argv[],
+                     input_param *inparam);
+
 
 /*-------- In file: interpolation.c --------*/
 
@@ -1154,8 +1158,7 @@ void fasp_aux_dQuickSortIndex (REAL *a,
 
 /*-------- In file: parameters.c --------*/
 
-void fasp_param_init (char *inputfile,
-                      input_param *inparam,
+void fasp_param_init (input_param *inparam,
                       itsolver_param *itsparam,
                       AMG_param *amgparam,
                       ILU_param *iluparam,
@@ -1500,15 +1503,6 @@ void fasp_precond_nl_amli (REAL *r,
                            void *data);
 
 void fasp_precond_free (SHORT precond_type, precond *pc);
-
-precond *fasp_precond_setup_blk (SHORT precond_type, 
-                                 AMG_param *amgparam, 
-                                 ILU_param *iluparam, 
-                                 dCSRmat *A1,
-                                 dCSRmat *A2,
-                                 dCSRmat *A3);
-
-void fasp_precond_free_blk (precond *pc);
 
 
 /*-------- In file: precond_str.c --------*/

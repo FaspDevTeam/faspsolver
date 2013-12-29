@@ -13,8 +13,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_param_init (char *inputfile,
- *                           input_param *inparam,
+ * \fn void fasp_param_init (input_param *inparam,
  *                           itsolver_param *itsparam,
  *                           AMG_param *amgparam,
  *                           ILU_param *iluparam,
@@ -22,7 +21,6 @@
  *
  * \brief Initialize parameters, global variables, etc
  *
- * \param inputfile     Filename of the input file
  * \param inparam       Input parameters
  * \param itsparam      Iterative solver parameters
  * \param amgparam      AMG parameters
@@ -34,16 +32,18 @@
  *
  * Modified by Xiaozhe Hu (01/23/2011): initialize, then set value
  * Modified by Chensong Zhang (09/12/2012): find a bug during debugging in VS08
+ * Modified by Chensong Zhang (12/29/2013): rewritten
  */
-void fasp_param_init (char *inputfile,
-                      input_param *inparam,
+void fasp_param_init (input_param *inparam,
                       itsolver_param *itsparam,
                       AMG_param *amgparam,
                       ILU_param *iluparam,
                       Schwarz_param *schparam)
 {
+#if CHMEM_MODE
     total_alloc_mem   = 0; // initialize total memeory amount
     total_alloc_count = 0; // initialize alloc count
+#endif
     
     if (itsparam) fasp_param_solver_init(itsparam);
     
@@ -53,8 +53,7 @@ void fasp_param_init (char *inputfile,
     
     if (schparam) fasp_param_schwarz_init(schparam);
     
-    if (inputfile) {
-        fasp_param_input(inputfile,inparam);
+    if (inparam) {
         if (itsparam) fasp_param_solver_set(itsparam,inparam);
         if (amgparam) fasp_param_amg_set(amgparam,inparam);
         if (iluparam) fasp_param_ilu_set(iluparam,inparam);
@@ -77,8 +76,8 @@ void fasp_param_init (char *inputfile,
  */
 void fasp_param_input_init (input_param *inparam)
 {
-    strcpy(inparam->workdir,"data/");
-
+    strcpy(inparam->workdir,"../data/");
+    
     // Input/output
     inparam->print_level              = PRINT_MIN;
     inparam->output_type              = 0;
@@ -120,7 +119,7 @@ void fasp_param_input_init (input_param *inparam)
     inparam->AMG_maxit                = 1;
     inparam->AMG_ILU_levels           = 0;
     inparam->AMG_schwarz_levels       = 0;
-    inparam->AMG_coarse_scaling       = OFF; //Require investigation --Chensong
+    inparam->AMG_coarse_scaling       = OFF; // Require investigation --Chensong
     inparam->AMG_amli_degree          = 1;
     inparam->AMG_nl_amli_krylov_type  = 2;
     

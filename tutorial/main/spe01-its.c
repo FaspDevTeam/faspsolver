@@ -31,13 +31,10 @@ int main (int argc, const char * argv[])
     printf("\n||   FASP: SPE01 -- ITS BSR version   ||");
     printf("\n========================================\n\n");
     
-    // Step 0. Set parameters
-    // Read input parameters from a disk file
-    // In this example, we read everything from a disk file:
-    //          "ini/its_bsr.dat"
-    // See the reference manual for details of the parameters. 
-    fasp_param_init("ini/its_bsr.dat",&inparam,&itparam,NULL,&iluparam,NULL);
-    
+    // Step 0. Set parameters: We can ini/its_bsr.dat
+    fasp_param_set(argc, argv, &inparam);
+    fasp_param_init(&inparam, &itparam, NULL, &iluparam, NULL);
+
     // Set local parameters
     const int print_level = inparam.print_level;
     

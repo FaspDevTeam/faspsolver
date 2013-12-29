@@ -29,12 +29,9 @@ int main (int argc, const char * argv[])
     printf("\n||   FASP: ITS example -- C version   ||");
     printf("\n========================================\n\n");
     
-    // Step 0. Set parameters
-    // Read input and AMG parameters from a disk file
-    // In this example, we read everything from a disk file:
-    //          "ini/its.dat"
-    // See the reference manual for details of the parameters. 
-    fasp_param_init("ini/its.dat",&inparam,&itparam,NULL,NULL,NULL);
+    // Step 0. Set parameters: We can use ini/its.dat
+    fasp_param_set(argc, argv, &inparam);
+    fasp_param_init(&inparam, &itparam, NULL, NULL, NULL);
 
     // Set local parameters
     const int print_level = inparam.print_level;

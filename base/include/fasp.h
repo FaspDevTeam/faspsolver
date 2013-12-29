@@ -918,6 +918,7 @@ typedef struct {
 	SHORT output_type;   /**< type of output stream */
 	
 	// problem parameters
+    char inifile[256];   /**< ini file name */
 	char workdir[256];   /**< working directory for data files */
 	INT  problem_num;    /**< problem number to solve */
 	

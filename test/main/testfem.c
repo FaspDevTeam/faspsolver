@@ -98,7 +98,8 @@ int main (int argc, const char * argv[])
         Schwarz_param   swzparam; // parameters for Shcwarz method
         
         // Read input parameters from a disk file
-        fasp_param_init("ini/input.dat",&inparam,&itparam,&amgparam,&iluparam,&swzparam);
+        fasp_param_input_init(&inparam);
+        fasp_param_init(&inparam,&itparam,&amgparam,&iluparam,&swzparam);
         
         const int print_level   = inparam.print_level;
         const int solver_type   = inparam.solver_type;

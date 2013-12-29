@@ -34,6 +34,7 @@ Structure
 [ 0.8.0 ] auto format for plain text, replace TAB by 4 SPACE
 [ 1.1.3 ] add support for shared lib using SCons
 [ 1.1.6 ] add uniform I/O routines: Binary and ASCII
+[ 1.4.2 ] add command line options
 [       ] make several functions 'standalone', e.g. use PCG alone (Chensong)
 [       ] modify format of automatically generated headers (Chensong)
 
@@ -181,3 +182,4 @@ Bug Fixes
 [       ] different results on different platforms
 [       ] problems with BSR test function: see testbsr.c
 [       ] check convergence for problems from MM: see regression_mm.c
+[       ] memory allocation problem in testbsr.c: during ILU setup

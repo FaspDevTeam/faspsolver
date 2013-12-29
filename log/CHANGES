@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+12/29/2013 FASP 1.4.2:
+- Add command line options for FASP functions.
+- Report a bug in testbsr.c during ILU setup.
+
 12/27/2013 FASP 1.4.1:
 - Fix a bug in ADD of CSR matrices.
 - Fix a merge problem in HG.

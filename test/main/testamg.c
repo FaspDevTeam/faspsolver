@@ -34,21 +34,21 @@ int main (int argc, const char * argv[])
 	int status=SUCCESS;
 	
 	// Step 0. Set parameters
-	input_param     inparam;  // parameters from input files
-	itsolver_param  itparam;  // parameters for itsolver
-	AMG_param       amgparam; // parameters for AMG
-	ILU_param       iluparam; // parameters for ILU
-    Schwarz_param   schparam; // parameters for Shcwarz method
+	input_param     inpar;  // parameters from input files
+	itsolver_param  itpar;  // parameters for itsolver
+	AMG_param       amgpar; // parameters for AMG
+	ILU_param       ilupar; // parameters for ILU
     
-    // Read input parameters from a disk file
-	fasp_param_init("ini/bamg.dat",&inparam,&itparam,&amgparam,&iluparam,&schparam);
-    
+    // Set solver parameters: use ./ini/bamg.dat
+    fasp_param_set(argc, argv, &inpar);
+    fasp_param_init(&inpar, &itpar, &amgpar, &ilupar, NULL);
+
     // Set local parameters
-	const int print_level   = inparam.print_level;
-	const int problem_num   = inparam.problem_num;
-	const int itsolver_type = inparam.solver_type;
-	const int precond_type  = inparam.precond_type;
-	const int output_type   = inparam.output_type;
+	const int print_level   = inpar.print_level;
+	const int problem_num   = inpar.problem_num;
+	const int itsolver_type = inpar.solver_type;
+	const int precond_type  = inpar.precond_type;
+	const int output_type   = inpar.output_type;
     
     // Set output device
     if (output_type) {
@@ -63,18 +63,18 @@ int main (int argc, const char * argv[])
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
 	
-	strncpy(filename1,inparam.workdir,128);
-	strncpy(filename2,inparam.workdir,128);
+	strncpy(filename1,inpar.workdir,128);
+	strncpy(filename2,inpar.workdir,128);
     
     // Default test problem from black-oil benchmark: SPE01
 	if (problem_num == 10) {				
         // Read the stiffness matrix from bsrmat_SPE01.dat
-        strncpy(filename1,inparam.workdir,128);    
+        strncpy(filename1,inpar.workdir,128);    
         datafile1="bsrmat_SPE01.dat"; strcat(filename1,datafile1);
         fasp_dbsr_read(filename1, &Absr);
         
         // Read the RHS from rhs_SPE01.dat
-        strncpy(filename2,inparam.workdir,128);
+        strncpy(filename2,inpar.workdir,128);
         datafile2="rhs_SPE01.dat"; strcat(filename2,datafile2);
         fasp_dvec_read(filename2, &b);
     }
@@ -304,7 +304,7 @@ int main (int argc, const char * argv[])
 	// Step 2. Solve the system
     
     // Print out solver parameters
-    if (print_level>PRINT_NONE) fasp_param_solver_print(&itparam);
+    if (print_level>PRINT_NONE) fasp_param_solver_print(&itpar);
     
     // Set initial guess
     fasp_dvec_alloc(b.row, &uh); 
@@ -315,24 +315,24 @@ int main (int argc, const char * argv[])
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
-            status = fasp_solver_dbsr_krylov(&Absr, &b, &uh, &itparam);
+            status = fasp_solver_dbsr_krylov(&Absr, &b, &uh, &itpar);
 		}	
         
 		// Using diag(A) as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_DIAG) {
-            status = fasp_solver_dbsr_krylov_diag(&Absr, &b, &uh, &itparam);
+            status = fasp_solver_dbsr_krylov_diag(&Absr, &b, &uh, &itpar);
 		}
         
 		// Using AMG as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
-            if (print_level>PRINT_NONE) fasp_param_amg_print(&amgparam);
-            status = fasp_solver_dbsr_krylov_amg(&Absr, &b, &uh, &itparam, &amgparam); 
+            if (print_level>PRINT_NONE) fasp_param_amg_print(&amgpar);
+            status = fasp_solver_dbsr_krylov_amg(&Absr, &b, &uh, &itpar, &amgpar); 
 		}
         
 		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
 		else if (precond_type == PREC_ILU) {
-            if (print_level>PRINT_NONE) fasp_param_ilu_print(&iluparam);
-            status = fasp_solver_dbsr_krylov_ilu(&Absr, &b, &uh, &itparam, &iluparam);
+            if (print_level>PRINT_NONE) fasp_param_ilu_print(&ilupar);
+            status = fasp_solver_dbsr_krylov_ilu(&Absr, &b, &uh, &itpar, &ilupar);
 		}
         
 		else {

@@ -1,5 +1,5 @@
-/*! \file test.c
- *  \brief The main test function for FASP solvers
+/*! \file testlab.c
+ *  \brief The experimental test function for FASP solvers
  */
 
 #include "fasp.h"
@@ -11,12 +11,7 @@
  * \brief This is the main function for a few simple tests.
  *
  * \author Chensong Zhang
- * \date   03/31/2009
- * 
- * Modified by Chensong Zhang on 09/09/2011
- * Modified by Chensong Zhang on 06/21/2012
- * Modified by Chensong Zhang on 10/15/2012: revise along with testfem.c
- * Modified by Chensong Zhang on 12/29/2013: clean up non-test problems
+ * \date   12/29/2013 
  */
 int main (int argc, const char * argv[]) 
 {
@@ -100,15 +95,135 @@ int main (int argc, const char * argv[])
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
     }
     
+    else if (problem_num == 20){
+        
+        FILE *fid;
+        int i;
+        
+        fid = fopen("../data/PowerGrid/matrix.bin", "r");
+        if ( fid==NULL ) {
+            printf("### ERROR: Opening file ...\n");
+        }
+        
+        int nb;
+        fread(&A.row, sizeof(int), 1, fid);
+        A.col = A.row;
+        b.row = A.row;
+        
+        fread(&A.nnz, sizeof(int), 1, fid);
+        
+        A.val = (double *)fasp_mem_calloc(A.nnz, sizeof(double));
+        for (i=0;i<A.nnz; i++){
+            fread(&A.val[i], sizeof(double), 1, fid);
+        }
+        
+        b.val = (double *)fasp_mem_calloc(b.row, sizeof(double));
+        for (i=0;i<b.row; i++){
+            fread(&b.val[i], sizeof(double), 1, fid);
+        }
+        
+        A.IA = (int *)fasp_mem_calloc(A.row+1, sizeof(int));
+        for (i=0; i<A.row+1; i++){
+            fread(&A.IA[i], sizeof(int), 1, fid);
+            A.IA[i] = A.IA[i] - 1;
+        }
+        
+        A.JA = (int *)fasp_mem_calloc(A.nnz, sizeof(int));
+        for (i=0; i<A.nnz; i++){
+            fread(&A.JA[i], sizeof(int), 1, fid);
+            A.JA[i] = A.JA[i] - 1;
+        }
+        
+        fclose(fid);
+        
+    }
+    
+    else if (problem_num == 30) {
+		datafile1="Pan_mat_small.dat";
+		strcat(filename1,datafile1);
+		
+        datafile2="Pan_rhs_small.dat";
+		strcat(filename2,datafile2);
+		
+        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+	}
+    
+    else if (problem_num == 31) {
+		datafile1="Pan_mat_big.dat";
+		strcat(filename1,datafile1);
+		
+        datafile2="Pan_rhs_big.dat";
+		strcat(filename2,datafile2);
+		
+        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+	}
+    
+    else if (problem_num == 40 ) {
+		datafile1="JumpData/mat128_p4_k8.dat";
+		strcat(filename1,datafile1);
+		
+        datafile2="JumpData/rhs128_p4_k8.dat";
+		strcat(filename2,datafile2);
+		
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+	}
+    
+    else if (problem_num == 50){
+        
+        datafile1="spe10-uncong/SPE10120.amg";
+		strcat(filename1,datafile1);
+    
+        datafile2="spe10-uncong/SPE10120.rhs";
+		strcat(filename2,datafile2);
+        
+        fasp_matrix_read_bin(filename1, &A);
+        //fasp_dvec_alloc(A.row, &b);
+        //fasp_dvec_set(A.row,&b,1.0);
+        fasp_dvec_read(filename2, &b);
+
+        
+    }
+    
+    /*
+    else if (problem_num == 32) {
+		datafile1="mech-matrix";
+		strcat(filename1,datafile1);
+		
+        datafile2="mech-load";
+		strcat(filename2,datafile2);
+		
+        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        
+	}
+     */
+    
+    else if (problem_num == 32) {
+		datafile1="Pan_mech_mat_1.dat";
+		strcat(filename1,datafile1);
+		
+        datafile2="Pan_mech_rhs_1.dat";
+		strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+		
+        //fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        
+        //fasp_dcoo_write("Pan_mech_mat_coo.dat", &A);
+        
+    }
+        
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
 	}
     
     // Print problem size
-	if (print_level > PRINT_NONE) {
+	if (print_level>PRINT_NONE) {
         printf("A: m = %d, n = %d, nnz = %d\n", A.row, A.col, A.nnz);
         printf("b: n = %d\n", b.row);
+        fasp_mem_usage();
 	}
     
     // Print out solver parameters
@@ -121,6 +236,7 @@ int main (int argc, const char * argv[])
     // Set initial guess
     fasp_dvec_alloc(A.row, &x);
     fasp_dvec_set(A.row,&x,0.0);
+    //fasp_dvec_rand(A.row,&x);
 
     // Preconditioned Krylov methods
     if ( solver_type >= 1 && solver_type <= 20) {
@@ -138,7 +254,10 @@ int main (int argc, const char * argv[])
 		// Using AMG as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
             if (print_level>PRINT_NONE) fasp_param_amg_print(&amgpar);
+            //amgpar.smooth_order=NO_ORDER;
 			status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itpar, &amgpar);
+            //fasp_dvec_print(10, &x);
+            //fasp_dvec_write("solu.dat", &x);
 		}
         
 		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
@@ -196,6 +315,9 @@ int main (int argc, const char * argv[])
 	else {
 		printf("\nSolver finished successfully!\n\n");
 	}
+    
+    //fasp_dvec_write("solu.dat", &x);
+    //fasp_dvec_print(10, &x);
     
     if (output_type) fclose (stdout);
             

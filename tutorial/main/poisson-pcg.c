@@ -32,12 +32,9 @@ int main (int argc, const char * argv[])
     printf("\n||   FASP: PCG example -- C version   ||");
     printf("\n========================================\n\n");
     
-    // Step 0. Set parameters
-    // Read input and precondition parameters from a disk file
-    // In this example, we read everything from a disk file:
-    //          "ini/pcg.dat"
-    // See the reference manual for details of the parameters. 
-    fasp_param_init("ini/pcg.dat",&inparam,&itparam,&amgparam,&iluparam,NULL);
+    // Step 0. Set parameters: We can use ini/pcg.dat
+    fasp_param_set(argc, argv, &inparam);
+    fasp_param_init(&inparam, &itparam, &amgparam, &iluparam, NULL);
 
     // Set local parameters
     const SHORT print_level = itparam.print_level;    

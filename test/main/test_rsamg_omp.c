@@ -24,21 +24,21 @@ main(int argc, const char * argv[])
     //------------------------//
 	// Step 0. Set parameters //
     //------------------------//
-	input_param     inparam;  // parameters from input files
-	itsolver_param  itparam;  // parameters for itsolver
-	AMG_param       amgparam; // parameters for AMG
-	ILU_param       iluparam; // parameters for ILU
-        Schwarz_param   schparam; // parameters for Shcwarz method
+	input_param     inpar;  // parameters from input files
+	itsolver_param  itpar;  // parameters for itsolver
+	AMG_param       amgpar; // parameters for AMG
+	ILU_param       ilupar; // parameters for ILU
 
-    // Read input parameters from a disk file
-	fasp_param_init("ini/openmp.dat",&inparam,&itparam,&amgparam,&iluparam,&schparam);
+    // Set solver parameters: use ./ini/openmp.dat
+    fasp_param_set(argc, argv, &inpar);
+    fasp_param_init(&inpar, &itpar, &amgpar, &ilupar, NULL);
+
     
     // Set local parameters
-	const int print_level   = inparam.print_level;
-	const int problem_num   = inparam.problem_num;
-	const int itsolver_type = inparam.solver_type;
-//	const int precond_type  = inparam.precond_type;
-	const int output_type   = inparam.output_type;
+	const int print_level   = inpar.print_level;
+	const int problem_num   = inpar.problem_num;
+	const int itsolver_type = inpar.solver_type;
+	const int output_type   = inpar.output_type;
     
     // Set output device
     if (output_type) {
@@ -55,8 +55,8 @@ main(int argc, const char * argv[])
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
 	
-	strncpy(filename1,inparam.workdir,128);
-	strncpy(filename2,inparam.workdir,128);
+	strncpy(filename1,inpar.workdir,128);
+	strncpy(filename2,inpar.workdir,128);
 
 
 	// Read A and b -- P1 F1 discretization for Poisson.
@@ -108,7 +108,7 @@ main(int argc, const char * argv[])
 	}
 
 	// Print out solver parameters
-	if (print_level>PRINT_NONE) fasp_param_solver_print(&itparam);
+	if (print_level>PRINT_NONE) fasp_param_solver_print(&itpar);
 
     //--------------------------//
 	// Step 2. Solve the system //
@@ -120,7 +120,7 @@ main(int argc, const char * argv[])
 
     // AMG as the iterative solver
 	if (itsolver_type == 21) { 	
-		 fasp_solver_amg(&A, &b, &x, &amgparam); 
+		 fasp_solver_amg(&A, &b, &x, &amgpar); 
 	}
 	else {
 		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);

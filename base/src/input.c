@@ -689,6 +689,104 @@ void fasp_param_input (char *filenm,
     fasp_chkerr(status,"fasp_param_input");
 }
 
+/**
+ * \fn void fasp_param_set (int argc, const char *argv [], input_param *inparam)
+ *
+ * \brief read input from arguments
+ *
+ * \param argc       Number of arg input
+ * \param argv       Input arguments
+ * \param inparam    Parameters to be set
+ *
+ * \author Chensong Zhang
+ * \date   12/29/2013
+ */
+void fasp_param_set (int argc,
+                     const char *argv[],
+                     input_param *inparam)
+{
+    int arg_index   = 1;
+    int print_usage = 0;
+    
+    // Option 1. set default input parameters
+    fasp_param_input_init(inparam);
+    
+    while ( arg_index < argc ) {
+        
+        if ( strcmp(argv[arg_index], "-help") == 0 ) {
+            print_usage = 1;
+            break;
+        }
+        
+        // Option 2. Get parameters from an ini file
+        else if ( strcmp(argv[arg_index], "-ini") == 0 ) {
+            strcpy(inparam->inifile, argv[++arg_index]);
+            fasp_param_input(inparam->inifile,inparam);
+            if ( ++arg_index >= argc ) break;
+        }
+        
+        // Option 3. Get parameters from command line input
+        else if ( strcmp(argv[arg_index], "-print") == 0 ) {
+            inparam->print_level = atoi(argv[++arg_index]);
+            if ( ++arg_index >= argc ) break;
+        }
+
+        else if ( strcmp(argv[arg_index], "-output") == 0 ) {
+            inparam->output_type = atoi(argv[++arg_index]);
+            if ( ++arg_index >= argc ) break;
+        }
+
+        else if ( strcmp(argv[arg_index], "-solver") == 0 ) {
+            inparam->solver_type = atoi(argv[++arg_index]);
+            if ( ++arg_index >= argc ) break;
+        }
+
+        else if ( strcmp(argv[arg_index], "-precond") == 0 ) {
+            inparam->precond_type = atoi(argv[++arg_index]);
+            if ( ++arg_index >= argc ) break;
+        }
+
+        else if ( strcmp(argv[arg_index], "-maxit") == 0 ) {
+            inparam->itsolver_maxit = atoi(argv[++arg_index]);
+            if ( ++arg_index >= argc ) break;
+        }
+        
+        else if ( strcmp(argv[arg_index], "-it_tol") == 0 ) {
+            inparam->itsolver_tol = atof(argv[++arg_index]);
+            if ( ++arg_index >= argc ) break;
+        }
+
+        else if ( strcmp(argv[arg_index], "-amgtol") == 0 ) {
+            inparam->AMG_tol = atof(argv[++arg_index]);
+            if ( ++arg_index >= argc ) break;
+        }
+
+        else {
+            print_usage = 1;
+            break;
+        }
+
+    }
+    
+    if ( print_usage ) {
+        
+        printf("Supported FASP command line options:\n");
+        printf("  -ini     [CharValue] : Ini file name\n");
+        printf("  -print   [IntValue]  : Print level\n");
+        printf("  -output  [IntValue]  : Output to screen or a log file\n");
+        printf("  -solver  [IntValue]  : Solver type\n");
+        printf("  -precond [IntValue]  : Preconditioner type\n");
+        printf("  -maxit   [IntValue]  : Max number of iterations\n");
+        printf("  -it_tol  [RealValue] : Tolerance for iterative solvers\n");
+        printf("  -amgtol  [RealValue] : Tolerance for AMG methods\n");
+        printf("  -help                : Brief help messages\n");
+
+        exit(ERROR_INPUT_PAR);
+        
+    }
+    
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
