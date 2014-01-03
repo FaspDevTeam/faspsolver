@@ -626,6 +626,80 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
 }
 
 /**
+ * \fn void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A, dvector *b, dvector *u)
+ *
+ * \brief Gauss-Seidel relaxation in the ascending order
+ *
+ * \param A  Pointer to dBSRmat: the coefficient matrix
+ * \param b  Pointer to dvector: the right hand side
+ * \param u  Pointer to dvector: the unknowns (IN: initial guess, OUT: approximation)
+ *
+ * \author Xiaozhe
+ * \date   01/01/2014
+ *
+ * \note The only difference between the functions 'fasp_smoother_dbsr_gs_ascend1'
+ *       and 'fasp_smoother_dbsr_gs_ascend' is that we don't have to multiply
+ *       by the inverses of the diagonal blocks in each ROW since matrix A has
+ *       been such scaled that all the diagonal blocks become identity matrices.
+ */
+void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
+                                   dvector *b,
+                                   dvector *u )
+{
+    // members of A
+    const INT     ROW = A->ROW;
+    const INT     nb  = A->nb;
+    const INT     nb2 = nb*nb;
+    const INT    *IA  = A->IA;
+    const INT    *JA  = A->JA;
+    REAL         *val = A->val;
+    
+    // values of dvector b and u
+    REAL *b_val = b->val;
+    REAL *u_val = u->val;
+    
+    // local variables
+    INT   i,j,k;
+    INT   pb;
+    REAL  rhs = 0.0;
+    
+    if (nb == 1) {
+        for (i = 0; i < ROW; ++i) {
+            rhs = b_val[i];
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                j = JA[k];
+                if (j != i)
+                    rhs -= val[k]*u_val[j];
+            }
+            //u_val[i] = rhs*diaginv[i];
+            u_val[i] = rhs;
+        }
+    }
+    else if (nb > 1) {
+        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+        
+        for (i = 0; i < ROW; ++i) {
+            pb = i*nb;
+            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                j = JA[k];
+                if (j != i)
+                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+            }
+            //fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
+            memcpy(u_val+pb, b_tmp, nb*sizeof(REAL));
+        }
+        
+        fasp_mem_free(b_tmp);
+    }
+    else {
+        printf("### ERROR: nb is illegal!\n");
+        exit(RUN_FAIL);
+    }
+    
+}
+
+/**
  * \fn void fasp_smoother_dbsr_gs_descend (dBSRmat *A, dvector *b, dvector *u, 
  *                                         REAL *diaginv)
  *
@@ -686,6 +760,81 @@ void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
             fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
         }
 
+        fasp_mem_free(b_tmp);
+    }
+    else {
+        printf("### ERROR: nb is illegal!\n");
+        exit(RUN_FAIL);
+    }
+    
+}
+
+/**
+ * \fn void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A, dvector *b, dvector *u)
+ *
+ * \brief Gauss-Seidel relaxation in the descending order
+ *
+ * \param A  Pointer to dBSRmat: the coefficient matrix
+ * \param b  Pointer to dvector: the right hand side
+ * \param u  Pointer to dvector: the unknowns (IN: initial guess, OUT: approximation)
+ *
+ * \author Xiaozhe Hu
+ * \date   01/01/2014
+ *
+ * \note The only difference between the functions 'fasp_smoother_dbsr_gs_ascend1'
+ *       and 'fasp_smoother_dbsr_gs_ascend' is that we don't have to multiply
+ *       by the inverses of the diagonal blocks in each ROW since matrix A has
+ *       been such scaled that all the diagonal blocks become identity matrices.
+ *
+ */
+void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
+                                    dvector *b,
+                                    dvector *u)
+{
+    // members of A
+    const INT     ROW = A->ROW;
+    const INT     nb  = A->nb;
+    const INT     nb2 = nb*nb;
+    const INT    *IA  = A->IA;
+    const INT    *JA  = A->JA;
+    REAL         *val = A->val;
+    
+    // values of dvector b and u
+    REAL *b_val = b->val;
+    REAL *u_val = u->val;
+    
+    // local variables
+    INT i,j,k;
+    INT pb;
+    REAL rhs = 0.0;
+    
+    if (nb == 1) {
+        for (i = ROW-1; i >= 0; i--) {
+            rhs = b_val[i];
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                j = JA[k];
+                if (j != i)
+                    rhs -= val[k]*u_val[j];
+            }
+            //u_val[i] = rhs*diaginv[i];
+            u_val[i] = rhs;
+        }
+    }
+    else if (nb > 1) {
+        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
+        
+        for (i = ROW-1; i >= 0; i--) {
+            pb = i*nb;
+            memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
+            for (k = IA[i]; k < IA[i+1]; ++k) {
+                j = JA[k];
+                if (j != i)
+                    fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+            }
+            //fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
+            memcpy(u_val+pb, b_tmp, nb*sizeof(REAL));
+        }
+        
         fasp_mem_free(b_tmp);
     }
     else {

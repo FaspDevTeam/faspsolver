@@ -251,7 +251,7 @@ void fasp_amg_interp_trunc (dCSRmat *P,
     P->JA  = (INT  *)fasp_mem_realloc(P->JA,  num_nonzero*sizeof(INT));
     P->val = (REAL *)fasp_mem_realloc(P->val, num_nonzero*sizeof(REAL));
     
-    if ( prtlvl >= PRINT_MORE ) {
+    if ( prtlvl >= PRINT_MOST ) {
         printf("Truncate prolongation, #nz befor: %10d, after: %10d\n",
                nnzold, num_nonzero);
     }

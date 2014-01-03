@@ -236,9 +236,18 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
                            REAL *x, 
                            REAL *y) ;
 
+void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
+                           dBSRmat *A,
+                           REAL *x,
+                           REAL *y);
+
 void fasp_blas_dbsr_mxv (dBSRmat *A,
 		                 REAL *x,
 		                 REAL *y) ;
+
+void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
+		                 REAL *x,
+		                 REAL *y);
 
 void fasp_blas_dbsr_rap1 (dBSRmat *R,
                           dBSRmat *A, 
@@ -248,6 +257,11 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
 void fasp_blas_dbsr_rap (dBSRmat *R,
                          dBSRmat *A, 
                          dBSRmat *P, 
+                         dBSRmat *B);
+
+void fasp_blas_dbsr_rap_agg (dBSRmat *R,
+                         dBSRmat *A,
+                         dBSRmat *P,
                          dBSRmat *B);
 
 
@@ -761,7 +775,7 @@ void fasp_precond_null (precond *pcdata);
 SHORT fasp_param_check (input_param *inparam);
 
 void fasp_param_input (char *filenm, 
-                       input_param *Input);
+                       input_param *inparam);
 
 void fasp_param_set (int argc,
                      const char *argv[],
@@ -1735,10 +1749,18 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
                                    dvector *u, 
                                    REAL *diaginv );
 
+void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
+                                   dvector *b,
+                                   dvector *u );
+
 void fasp_smoother_dbsr_gs_descend (dBSRmat *A, 
                                     dvector *b, 
                                     dvector *u, 
                                     REAL *diaginv );
+
+void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
+                                    dvector *b,
+                                    dvector *u);
 
 void fasp_smoother_dbsr_gs_order1 (dBSRmat *A, 
                                    dvector *b, 

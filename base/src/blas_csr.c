@@ -1139,7 +1139,7 @@ jj1, r_entry, i1, jj2, r_a_product, i2, jj3, r_a_p_product, i3)
  * \param P   Pointer to the dCSRmat matrix P
  * \param RAP Pointer to dCSRmat matrix equal to R*A*P
  *
- * \author Xuehai Huang, Chensong Zhang
+ * \author Xiaozhe Hu
  * \date   05/10/2010
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012

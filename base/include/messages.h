@@ -176,6 +176,8 @@
  * \brief Definition of specialized smoother types
  */
 #define SMOOTHER_BLKOIL        11  /**< Used in monolithic AMG for black-oil */
+#define SMOOTHER_SPETEN        19  /**< Used in monolithic AMG for black-oil */
+
 
 /**
  * \brief Definition of coarsening types

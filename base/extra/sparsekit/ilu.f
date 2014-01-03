@@ -732,7 +732,7 @@ c
 c     insufficient storage in U.
 c     
  997  ierr = -3
-      write(*,*),'insufficient storage in L'
+      write(*,*),'insufficient storage in U'
       return
 c     
 c     illegal lfil entered.

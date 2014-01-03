@@ -73,16 +73,16 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     // Expected amount of memory for ILU needed and allocate memory 
     switch (type) {
         case ILUt:
-            iwk=3*nnz;     // iwk is the maxim possible nnz for ILU
+            iwk=10*nnz;     // iwk is the maxim possible nnz for ILU
             lfilt=floor(n*0.5)+1;
             break;
         case ILUtp:
-            iwk=2*nnz;     // iwk is the maxim possible nnz for ILU
+            iwk=10*nnz;     // iwk is the maxim possible nnz for ILU
             lfilt=floor(n*0.5)+1;
             break;
         default: // ILUk
             if (lfil == 0) iwk=nnz+500;
-            else iwk=(lfil+2)*nnz;
+            else iwk=(lfil+5)*nnz;
             break;
     } 
     
