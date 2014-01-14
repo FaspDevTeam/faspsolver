@@ -35,7 +35,7 @@ INT fasp_dvec_isnan (dvector *u)
     INT i;
     
     for ( i=0; i<u->row; i++ ) {
-        if ( ISNAN(u->val[i]) ) return TRUE;
+        if ( u->val[i] ) return TRUE;
     }
 
     return FALSE;

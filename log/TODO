@@ -37,6 +37,7 @@ Structure
 [ 1.4.2 ] add command line options
 [       ] make several functions 'standalone', e.g. use PCG alone (Chensong)
 [       ] modify format of automatically generated headers (Chensong)
+[       ] auto-vectorization (Chensong)
 
 ========================
 GMG 	

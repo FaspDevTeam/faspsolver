@@ -1,11 +1,11 @@
      560 ./base/include/dlmalloc.h
      164 ./base/include/doxygen.h
-    1108 ./base/include/fasp.h
+    1110 ./base/include/fasp.h
      586 ./base/include/fasp_block.h
-    2679 ./base/include/fasp_functs.h
+    2697 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
-     221 ./base/include/messages.h
+     223 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
      274 ./base/src/factor.f
     1207 ./base/src/schwarz.f
@@ -20,8 +20,8 @@
      258 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
      296 ./base/src/blas_bcsr.c
-    2772 ./base/src/blas_bsr.c
-    1977 ./base/src/blas_csr.c
+    5550 ./base/src/blas_bsr.c
+    1979 ./base/src/blas_csr.c
      125 ./base/src/blas_csrl.c
     1482 ./base/src/blas_smat.c
     1925 ./base/src/blas_str.c
@@ -41,8 +41,8 @@
      182 ./base/src/ilu_setup_csr.c
     1258 ./base/src/ilu_setup_str.c
      274 ./base/src/init.c
-     694 ./base/src/input.c
-    1385 ./base/src/interpolation.c
+     963 ./base/src/input.c
+    1386 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
     2901 ./base/src/io.c
      131 ./base/src/itsolver_bcsr.c
@@ -56,7 +56,7 @@
      459 ./base/src/mgcycle.c
      125 ./base/src/mgrecur.c
      391 ./base/src/ordering.c
-     754 ./base/src/parameters.c
+     753 ./base/src/parameters.c
     1449 ./base/src/pbcgs.c
      408 ./base/src/pbcgs_mf.c
      907 ./base/src/pcg.c
@@ -78,7 +78,7 @@
      108 ./base/src/rap.c
      185 ./base/src/schwarz_setup.c
      651 ./base/src/smat.c
-    1457 ./base/src/smoother_bsr.c
+    1606 ./base/src/smoother_bsr.c
     2310 ./base/src/smoother_csr.c
       83 ./base/src/smoother_csr_cr.c
      579 ./base/src/smoother_csr_poly.c
@@ -105,4 +105,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   80369 total
+   83589 total
