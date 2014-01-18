@@ -104,11 +104,9 @@
  *
  * - Hu, Xiaozhe (Penn State University, USA)
  * 
- * - Li, Zheng (Xiangtan University, China)
+ * - Li, Zheng (Kunming University of Science and Technology, China)
  *
  * - Shu, Shi (Xiangtan University, China)
- *
- * - Wang, Ziteng (Peking University, China)
  *
  * - Yue, Xiaoqiang (Xiangtan University, China)
  *
@@ -129,6 +127,8 @@
  * - Qiao, Changhe (Penn State University, USA)
  *
  * - Yang, Kai (Penn State University, USA)
+ *
+ * - Wang, Ziteng (University of Alabama, USA)
  *
  * - Zhang, Shiquan (Sichuan University, China)
  *
