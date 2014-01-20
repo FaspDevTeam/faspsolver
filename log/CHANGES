@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+01/20/2013 FASP 1.4.3:
+- Fix a bug introduced in the previous version.
+- Fix wront regression test results caused by -ffast-math.
+
 01/18/2013 FASP 1.4.2:
 - Add command line options for FASP functions.
 - Report a bug in testbsr.c during ILU setup.

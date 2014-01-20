@@ -50,9 +50,9 @@ ifeq ($(debug),yes)
 	cxxflags="-Wall -g"
 	fflags="-Wall -g"
 else
-	cflags="-O3 -funroll-all-loops"
-	cxxflags="-O3 -funroll-all-loops"
-	fflags="-O3 -funroll-all-loops"
+	cflags="-O3 -funroll-loops"
+	cxxflags="-O3 -funroll-loops"
+	fflags="-O3 -funroll-loops"
 endif
 ####################  User Changes UP TO HERE   ########################
 
