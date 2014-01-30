@@ -1385,9 +1385,9 @@ void fasp_dbsr_print (dBSRmat *A)
 {
     INT i, j, k, l;
 	INT nb,nb2;
-	nb = A->nb; 
+	nb = A->nb;
 	nb2 =nb*nb;
-
+    
     printf("nrow = %d, ncol = %d, nnz = %d, nb = %d, storage_manner = %d\n",
            A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
 	
@@ -1401,7 +1401,7 @@ void fasp_dbsr_print (dBSRmat *A)
             }
         }
     }
-
+    
 }
 
 
@@ -1417,14 +1417,14 @@ void fasp_dbsr_print (dBSRmat *A)
  */
 void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A)
 {
-
+    
     INT i, j, k, l;
 	INT nb,nb2;
-	nb = A->nb; 
+	nb = A->nb;
 	nb2 =nb*nb;
     printf("nrow = %d, ncol = %d, nnz = %d, nb = %d, storage_manner = %d\n",
            A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
-
+    
     FILE *fp = fopen(filename,"w");
     if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
@@ -1441,13 +1441,13 @@ void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A)
         for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
             for ( k = 0; k < A->nb; k++ ) {
                 for ( l = 0; l < A->nb; l++ ) {
-         fprintf(fp, "%d %d %+.10E\n",
-			    i*nb + k + 1, A->JA[j]*nb + l + 1, A->val[ A->JA[j]*nb2 + k*nb + l]);
+                    fprintf(fp, "%d %d %+.10E\n",
+                            i*nb + k + 1, A->JA[j]*nb + l + 1, A->val[ A->JA[j]*nb2 + k*nb + l]);
                 }
             }
         }
     }
-fclose(fp);
+    fclose(fp);
 }
 
 /**
@@ -1462,27 +1462,29 @@ fclose(fp);
  */
 void fasp_dcsr_write_coo (const char *filename,const dCSRmat *A)
 {
-
-    INT i, j, k, l;
+    
+    INT i, j;
     printf("nrow = %d, ncol = %d, nnz = %d\n",
-		A->row, A->col, A->nnz);
-
+           A->row, A->col, A->nnz);
+    
     FILE *fp = fopen(filename,"w");
     if ( fp == NULL ) {
         printf("### ERROR: Opening file %s ...\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcsr_write");
     }
     
+    // write dimension of the block matrix
     printf("fasp_dcsr_write: writing matrix to `%s'...\n",filename);
-    fprintf(fp,"%% dimension of the block matrix and nonzeros %d  %d  %d\n",A->row,A->col,A->nnz); // write dimension of the block matrix
+    fprintf(fp,"%% dimension of the block matrix and nonzeros %d  %d  %d\n",
+            A->row,A->col,A->nnz);
     
     for ( i = 0; i < A->row; i++ ) {
         for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
-
-         fprintf(fp, "%d %d %+.10E\n", i+1, A->JA[j]+ 1, A->val[j]);
+            fprintf(fp, "%d %d %+.10E\n", i+1, A->JA[j]+ 1, A->val[j]);
         }
     }
-fclose(fp);
+    
+    fclose(fp);
 }
 
 
@@ -1647,7 +1649,7 @@ void fasp_matrix_read_bin (char *filename,
 	}
 	
     printf("fasp_matrix_read_bin: reading file %s ...\n", filename);
-
+    
 	fread(&index, sizeof(INT), 1, fp);
     
     INT endianflag = 1;

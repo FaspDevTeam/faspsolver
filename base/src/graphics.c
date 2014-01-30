@@ -25,14 +25,14 @@ static INT  write_bmp16(const char *fname, INT m, INT n, const char map[]);
  * \param A         Pointer to the dCSRmat matrix
  * \param filename  File name
  * \param size      size*size is the picture size for the picture
- * 
+ *
  * \author Chensong Zhang
  * \date   03/29/2009
  *
  * \note The routine fasp_dcsr_subplot writes pattern of the specified dCSRmat
  *       matrix in uncompressed BMP file format (Windows bitmap) to a binary
  *       file whose name is specified by the character string filename.
- * 
+ *
  * Each pixel corresponds to one matrix element. The pixel colors have
  * the following meaning:
  *
@@ -41,10 +41,10 @@ static INT  write_bmp16(const char *fname, INT m, INT n, const char map[]);
  *  Red      negative element
  *  Brown    nearly zero element
  */
-void fasp_dcsr_subplot (const dCSRmat *A, 
-                     const char *filename, 
-                     INT size)
-{     
+void fasp_dcsr_subplot (const dCSRmat *A,
+                        const char *filename,
+                        INT size)
+{
     INT m = A->row;
     INT n = A->col;
     INT i, j, k, minmn=MIN(m,n);
@@ -86,14 +86,14 @@ void fasp_dcsr_subplot (const dCSRmat *A,
  * \param A         Pointer to the dBSRmat matrix
  * \param filename  File name
  * \param size      size*size is the picture size for the picture
- * 
+ *
  * \author Chunsheng Feng
  * \date   11/16/2013
  *
  * \note The routine fasp_dbsr_subplot writes pattern of the specified dBSRmat
  *       matrix in uncompressed BMP file format (Windows bitmap) to a binary
  *       file whose name is specified by the character string filename.
- * 
+ *
  * Each pixel corresponds to one matrix element. The pixel colors have
  * the following meaning:
  *
@@ -103,19 +103,19 @@ void fasp_dcsr_subplot (const dCSRmat *A,
  *  Red      negative element
  *  Brown    nearly zero element
  */
-void fasp_dbsr_subplot(const dBSRmat *A, 
-                     const char *filename, 
-                     INT size)
-{     
+void fasp_dbsr_subplot(const dBSRmat *A,
+                       const char *filename,
+                       INT size)
+{
 	INT m = A->ROW;
     INT n = A->COL;
 	INT nb = A->nb;
 	INT nb2 = nb*nb;
     INT offset;
-
+    
     INT row,col,i, j, k,l, minmn=nb*MIN(m,n);
     REAL val;
-
+    
     char *map;
     
     if (size>minmn) size=minmn;
@@ -125,54 +125,54 @@ void fasp_dbsr_subplot(const dBSRmat *A,
     map = (char *)fasp_mem_calloc(size * size, sizeof(char));
     
     memset(map, 0x0F, size * size);
-
+    
     for ( i = 0; i < size/nb; i++ ) {
-
+        
         for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
             for ( k = 0; k < A->nb; k++ ) {
                 for ( l = 0; l < A->nb; l++ ) {
-         
-		     row = i*nb + k; 
-			 col =  A->JA[j]*nb + l; 
-			 val = A->val[ A->JA[j]*nb2 + k*nb + l];
-
-            if (col<size) {
-                
-				offset = size*row + col;
-
-                if (map[offset] != 0x0F)
-                    map[offset] = 0x0F;
-                else if ( val > 1e-20)
-                    map[offset] = 0x09; /* bright blue */
-                else if ( val < -1e-20)
-                    map[offset] = 0x0C; /* bright red */
-				else if (val == 0)
-                   map[offset] = 0x00; /* bright red */
-                else
-                    map[offset] = 0x06; /* brown */
-            } // end if
-               }
+                    
+                    row = i*nb + k;
+                    col =  A->JA[j]*nb + l;
+                    val = A->val[ A->JA[j]*nb2 + k*nb + l];
+                    
+                    if (col<size) {
+                        
+                        offset = size*row + col;
+                        
+                        if (map[offset] != 0x0F)
+                            map[offset] = 0x0F;
+                        else if ( val > 1e-20)
+                            map[offset] = 0x09; /* bright blue */
+                        else if ( val < -1e-20)
+                            map[offset] = 0x0C; /* bright red */
+                        else if (val == 0)
+                            map[offset] = 0x00; /* bright red */
+                        else
+                            map[offset] = 0x06; /* brown */
+                    } // end if
+                }
             }
         }
     }
-
+    
     write_bmp16(filename, size, size, map);
     
     fasp_mem_free(map);
 }
 
-/*! 
+/*!
  * \fn void fasp_grid2d_plot (pgrid2d pg, INT level)
  *
  * \brief Output grid to a EPS file
  *
  * \param pg     Pointer to grid in 2d
- * \param level  Number of levels 
+ * \param level  Number of levels
  *
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_grid2d_plot (pgrid2d pg, 
+void fasp_grid2d_plot (pgrid2d pg,
                        INT level)
 {
     FILE *datei;
@@ -204,7 +204,7 @@ void fasp_grid2d_plot (pgrid2d pg,
     for(i=0; i<pg->triangles; ++i) {
         xc = (pg->p[pg->t[i][0]][0]+pg->p[pg->t[i][1]][0]+pg->p[pg->t[i][2]][0])*150.0;
         yc = (pg->p[pg->t[i][0]][1]+pg->p[pg->t[i][1]][1]+pg->p[pg->t[i][2]][1])*150.0;
-    
+        
         xmid = pg->p[pg->t[i][0]][0]*450.0;
         ymid = pg->p[pg->t[i][0]][1]*450.0;
         fprintf(datei,"%.1f %.1f m ",0.9*xmid+0.1*xc,0.9*ymid+0.1*yc);
@@ -229,7 +229,7 @@ void fasp_grid2d_plot (pgrid2d pg,
         ymid = 0.5*(pg->p[pg->e[i][0]][1]+pg->p[pg->e[i][1]][1])*450.0;
         fprintf(datei,"%.1f %.1f m ",xmid,ymid);
         fprintf(datei,"(%d) show\n ",i);
-    
+        
         xmid = pg->p[pg->e[i][0]][0]*450.0;
         ymid = pg->p[pg->e[i][0]][1]*450.0;
         fprintf(datei,"%.1f %.1f m ",xmid,ymid);
@@ -246,14 +246,14 @@ void fasp_grid2d_plot (pgrid2d pg,
         fprintf(datei,"(%d) show\n ",i);
     }
     fprintf(datei, "showpage\n");
-    fclose(datei);    
+    fclose(datei);
 }
 
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
 
-/*! 
+/*!
  * \fn static void put_byte(FILE *fp, INT c)
  *
  * \brief Write to byte to file
@@ -263,12 +263,12 @@ void fasp_grid2d_plot (pgrid2d pg,
  *
  */
 static void put_byte(FILE *fp, INT c)
-{ 
+{
     fputc(c, fp);
     return;
 }
 
-/*! 
+/*!
  * \fn static void put_word(FILE *fp, INT w)
  *
  * \brief Write to word to file
@@ -284,7 +284,7 @@ static void put_word(FILE *fp, INT w)
     return;
 }
 
-/*! 
+/*!
  * \fn static void put_dword(FILE *fp, INT d)
  *
  * \brief Write to REAL-word to file
@@ -300,15 +300,15 @@ static void put_dword(FILE *fp, INT d)
     return;
 }
 
-/*! 
+/*!
  * \fn static INT write_bmp16(const char *fname, INT m, INT n, const char map[])
  *
  * \brief Write to BMP file
  *
- * \param fname  char for filename 
+ * \param fname  char for filename
  * \param m      number of pixels for height
  * \param n      number of pixels for weight
- * \param map    picture for BMP  
+ * \param map    picture for BMP
  * \return       1 if succeed, 0 if fail
  *
  * \note
@@ -345,11 +345,11 @@ static void put_dword(FILE *fp, INT d)
  *  RETURNS
  *
  *  If no error occured, the routine returns zero; otherwise, it prints
- *  an appropriate error message and returns non-zero. 
- *  This code is modified from graphical output in 
+ *  an appropriate error message and returns non-zero.
+ *  This code is modified from graphical output in
  *         GLPK (GNU Linear Programming Kit).
  *
- *  Note: 
+ *  Note:
  *
  *  GLPK is free software: you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by
@@ -365,7 +365,7 @@ static void put_dword(FILE *fp, INT d)
  *  along with GLPK. If not, see <http://www.gnu.org/licenses/>.
  */
 static INT write_bmp16(const char *fname, INT m, INT n, const char map[])
-{     
+{
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;
     
@@ -376,10 +376,10 @@ static INT write_bmp16(const char *fname, INT m, INT n, const char map[])
         printf("### ERROR: write_bmp16 invalid width %d\n", n);
     
     fp = fopen(fname, "wb");
-    if (fp == NULL) {  
+    if (fp == NULL) {
         printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
         ret = 0;
-        goto fini;
+        goto FINISH;
     }
     offset = 14 + 40 + 16 * 4;
     bmsize = (4 * n + 31) / 32;
@@ -421,20 +421,20 @@ static INT write_bmp16(const char *fname, INT m, INT n, const char map[])
     /* 0x0F = white */         put_dword(fp, 0xFFFFFF);
     /* pixel data bits */
     b = 0;
-    for (i = m - 1; i >= 0; i--) {  
-        for (j = 0; j < ((n + 7) / 8) * 8; ++j) {  
+    for (i = m - 1; i >= 0; i--) {
+        for (j = 0; j < ((n + 7) / 8) * 8; ++j) {
             b <<= 4;
             b |= (j < n ? map[i * n + j] & 15 : 0);
             if (j & 1) put_byte(fp, b);
         }
     }
     fflush(fp);
-
-    if (ferror(fp)) {  
+    
+    if (ferror(fp)) {
         printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
         ret = 0;
     }
- fini: if (fp != NULL) fclose(fp);
+FINISH: if (fp != NULL) fclose(fp);
     return ret;
 }
 
@@ -446,14 +446,14 @@ static INT write_bmp16(const char *fname, INT m, INT n, const char map[])
  *
  * \param A         Pointer to the dBSRmat matrix
  * \param filename  File name
-  * 
+ *
  * \author Chunsheng Feng
  * \date   11/16/2013
  *
  * \note The routine fasp_dbsr_plot writes pattern of the specified dBSRmat
  *       matrix in uncompressed BMP file format (Windows bitmap) to a binary
  *       file whose name is specified by the character string filename.
- * 
+ *
  * Each pixel corresponds to one matrix element. The pixel colors have
  * the following meaning:
  *
@@ -464,27 +464,27 @@ static INT write_bmp16(const char *fname, INT m, INT n, const char map[])
  *  Brown    nearly zero element
  */
 INT fasp_dbsr_plot(const dBSRmat *A, const char *fname)
-{     
+{
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;
 	INT n,m;
 	INT size;
 	INT nb = A->nb;
 	INT nb2 = nb*nb;
-    INT row,col,k,l;
+    INT col,k,l;
 	REAL val;
-
+    
 	m = A->ROW*A->nb;
 	n = A->COL*A->nb;
-
-    char *map;    
-
+    
+    char *map;
+    
 	size = ( (n+7)/8 )*8;
-
+    
     map = (char *)fasp_mem_calloc(size, sizeof(char));
-
+    
     memset(map, 0x0F, size);
-
+    
     if (!(1 <= m && m <= 32767))
         printf("### ERROR: write_bmp16 invalid height %d\n", m);
     
@@ -492,12 +492,12 @@ INT fasp_dbsr_plot(const dBSRmat *A, const char *fname)
         printf("### ERROR: write_bmp16 invalid width %d\n", n);
     
     fp = fopen(fname, "wb");
-    if (fp == NULL) {  
+    if (fp == NULL) {
         printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
         ret = 0;
-        goto fini;
+        goto FINISH;
     }
-
+    
     offset = 14 + 40 + 16 * 4;
     bmsize = (4 * n + 31) / 32;
     /* struct BMPFILEHEADER (14 bytes) */
@@ -538,63 +538,64 @@ INT fasp_dbsr_plot(const dBSRmat *A, const char *fname)
     /* 0x0F = white */         put_dword(fp, 0xFFFFFF);
     /* pixel data bits */
     b = 0;
-
-////----------------------------------------------------------------------------------------
-//	for(i=size-1; i>=m; i--){
-//		memset(map, 0x0F, size);	
-//        for (j = 0; j < size; ++j) {  
-//            b <<= 4;
-//            b |= (j < n ? map[j] & 15 : 0);
-//            if (j & 1) put_byte(fp, b);
-//        }
-//	}
-////----------------------------------------------------------------------------------------
-
+    
+    ////----------------------------------------------------------------------------------------
+    //	for(i=size-1; i>=m; i--){
+    //		memset(map, 0x0F, size);
+    //        for (j = 0; j < size; ++j) {
+    //            b <<= 4;
+    //            b |= (j < n ? map[j] & 15 : 0);
+    //            if (j & 1) put_byte(fp, b);
+    //        }
+    //	}
+    ////----------------------------------------------------------------------------------------
+    
 	for ( i = A->ROW-1; i >=0; i-- ) {
-	  for ( k = A->nb-1; k >=0; k-- ) {       
-		  row = i*nb + k; 
-	
-		  memset(map, 0x0F, size);	
-
-		  for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
-             for ( l = 0; l < A->nb; l++ ) {
-		      
- 		        col =  A->JA[j]*nb + l; 
-			    val = A->val[ A->JA[j]*nb2 + k*nb + l];
-
-				if (map[col] != 0x0F)
-                    map[col] = 0x0F;
-                else if ( val > 1e-20)
-                    map[col] = 0x09; /* bright blue */
-                else if ( val < -1e-20)
-                    map[col] = 0x0C; /* bright red */
-				else if (val == 0)
-                   map[col] = 0x00; /* bright red */
-                else
-                    map[col] = 0x06; /* brown */
-                } // for l
-             } // for j
         
-
-        for (j = 0; j < size; ++j) {  
-            b <<= 4;
-            b |= (j < n ? map[j] & 15 : 0);
-            if (j & 1) put_byte(fp, b);
+        for ( k = A->nb-1; k >=0; k-- ) {
+            
+            memset(map, 0x0F, size);
+            
+            for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
+                for ( l = 0; l < A->nb; l++ ) {
+                    
+                    col =  A->JA[j]*nb + l;
+                    val = A->val[ A->JA[j]*nb2 + k*nb + l];
+                    
+                    if (map[col] != 0x0F)
+                        map[col] = 0x0F;
+                    else if ( val > 1e-20)
+                        map[col] = 0x09; /* bright blue */
+                    else if ( val < -1e-20)
+                        map[col] = 0x0C; /* bright red */
+                    else if (val == 0)
+                        map[col] = 0x00; /* bright red */
+                    else
+                        map[col] = 0x06; /* brown */
+                } // for l
+            } // for j
+            
+            
+            for (j = 0; j < size; ++j) {
+                b <<= 4;
+                b |= (j < n ? map[j] & 15 : 0);
+                if (j & 1) put_byte(fp, b);
+            }
+            
         }
-      }
-  }
-
-
-
+    }
+    
+    
+    
     fflush(fp);
-    if (ferror(fp)) {  
+    if (ferror(fp)) {
         printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
         ret = 0;
     }
- fini: if (fp != NULL) fclose(fp);
-
+FINISH: if (fp != NULL) fclose(fp);
+    
 	fasp_mem_free(map);
-
+    
     return ret;
 }
 
@@ -605,14 +606,14 @@ INT fasp_dbsr_plot(const dBSRmat *A, const char *fname)
  *
  * \param A         Pointer to the dBSRmat matrix
  * \param filename  File name
-  * 
+ *
  * \author Chunsheng Feng
  * \date   11/16/2013
  *
  * \note The routine fasp_dcsr_plot writes pattern of the specified dCSRmat
  *       matrix in uncompressed BMP file format (Windows bitmap) to a binary
  *       file whose name is specified by the character string filename.
- * 
+ *
  * Each pixel corresponds to one matrix element. The pixel colors have
  * the following meaning:
  *
@@ -623,26 +624,26 @@ INT fasp_dbsr_plot(const dBSRmat *A, const char *fname)
  *  Brown    nearly zero element
  */
 INT fasp_dcsr_plot(const dCSRmat *A, const char *fname)
-{     
+{
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;
 	INT n,m;
 	INT size;
-
-	INT row,col;
+    
+	INT col;
 	REAL val;
-
+    
 	m = A->row;
 	n = A->col;
-
-    char *map;    
-
+    
+    char *map;
+    
 	size = ( (n+7)/8 )*8;
-
+    
     map = (char *)fasp_mem_calloc(size, sizeof(char));
-
+    
     memset(map, 0x0F, size);
-
+    
     if (!(1 <= m && m <= 32767))
         printf("### ERROR: write_bmp16 invalid height %d\n", m);
     
@@ -650,12 +651,12 @@ INT fasp_dcsr_plot(const dCSRmat *A, const char *fname)
         printf("### ERROR: write_bmp16 invalid width %d\n", n);
     
     fp = fopen(fname, "wb");
-    if (fp == NULL) {  
+    if (fp == NULL) {
         printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
         ret = 0;
-        goto fini;
+        goto FINISH;
     }
-
+    
     offset = 14 + 40 + 16 * 4;
     bmsize = (4 * n + 31) / 32;
     /* struct BMPFILEHEADER (14 bytes) */
@@ -696,54 +697,52 @@ INT fasp_dcsr_plot(const dCSRmat *A, const char *fname)
     /* 0x0F = white */         put_dword(fp, 0xFFFFFF);
     /* pixel data bits */
     b = 0;
-
-////----------------------------------------------------------------------------------------
-//	for(i=((m+7)/8)*8 - 1; i>=m; i--){
-//		memset(map, 0x0F, size);	
-//        for (j = 0; j < size; ++j) {  
-//            b <<= 4;
-//            b |= (j < n ? map[j] & 15 : 0);
-//            if (j & 1) put_byte(fp, b);
-//        }
-//	}
-////----------------------------------------------------------------------------------------
-
+    
+    ////----------------------------------------------------------------------------------------
+    //	for(i=((m+7)/8)*8 - 1; i>=m; i--){
+    //		memset(map, 0x0F, size);
+    //        for (j = 0; j < size; ++j) {
+    //            b <<= 4;
+    //            b |= (j < n ? map[j] & 15 : 0);
+    //            if (j & 1) put_byte(fp, b);
+    //        }
+    //	}
+    ////----------------------------------------------------------------------------------------
+    
 	for ( i = A->row-1; i >=0; i-- ) {
-		  memset(map, 0x0F, size);	
-
-		  for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
- 		        col =  A->JA[j]; 
-			    val =  A->val[j];
-				if (map[col] != 0x0F)
-                    map[col] = 0x0F;
-                else if ( val > 1e-20)
-                    map[col] = 0x09; /* bright blue */
-                else if ( val < -1e-20)
-                    map[col] = 0x0C; /* bright red */
-				else if (val == 0)
-                   map[col] = 0x00; /* bright red */
-                else
-                    map[col] = 0x06; /* brown */
-             } // for j
-
+        memset(map, 0x0F, size);
+        
+        for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
+            col =  A->JA[j];
+            val =  A->val[j];
+            if (map[col] != 0x0F)
+                map[col] = 0x0F;
+            else if ( val > 1e-20)
+                map[col] = 0x09; /* bright blue */
+            else if ( val < -1e-20)
+                map[col] = 0x0C; /* bright red */
+            else if (val == 0)
+                map[col] = 0x00; /* bright red */
+            else
+                map[col] = 0x06; /* brown */
+        } // for j
+        
         for (j = 0; j < size; ++j) {  
             b <<= 4;
             b |= (j < n ? map[j] & 15 : 0);
             if (j & 1) put_byte(fp, b);
         }
-  }
-
-
-
+    }
+    
     fflush(fp);
     if (ferror(fp)) {  
         printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
         ret = 0;
     }
- fini: if (fp != NULL) fclose(fp);
-
+FINISH: if (fp != NULL) fclose(fp);
+    
 	fasp_mem_free(map);
-
+    
     return ret;
 }
 

@@ -1,6 +1,6 @@
      560 ./base/include/dlmalloc.h
      164 ./base/include/doxygen.h
-    1110 ./base/include/fasp.h
+    1119 ./base/include/fasp.h
      586 ./base/include/fasp_block.h
     2697 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
@@ -28,7 +28,7 @@
      322 ./base/src/blas_vec.c
      336 ./base/src/checkmat.c
      417 ./base/src/coarsening_cr.c
-    1944 ./base/src/coarsening_rs.c
+    1946 ./base/src/coarsening_rs.c
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
      110 ./base/src/famg.c
@@ -36,19 +36,19 @@
     1017 ./base/src/formats.c
       80 ./base/src/givens.c
     1011 ./base/src/gmg_poisson.c
-     752 ./base/src/graphics.c
-     424 ./base/src/ilu_setup_bsr.c
+     751 ./base/src/graphics.c
+     421 ./base/src/ilu_setup_bsr.c
      182 ./base/src/ilu_setup_csr.c
     1258 ./base/src/ilu_setup_str.c
      274 ./base/src/init.c
      963 ./base/src/input.c
     1386 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
-    2901 ./base/src/io.c
+    2903 ./base/src/io.c
      131 ./base/src/itsolver_bcsr.c
      485 ./base/src/itsolver_bsr.c
      590 ./base/src/itsolver_csr.c
-     364 ./base/src/itsolver_mf.c
+     363 ./base/src/itsolver_mf.c
      353 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
      254 ./base/src/memory.c
@@ -105,4 +105,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   83589 total
+   83597 total

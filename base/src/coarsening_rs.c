@@ -416,7 +416,7 @@ static INT cfsplitting_cls (dCSRmat *A,
     INT measure, newmeas;
     INT i, j, k, l;
     INT myid, mybegin, myend;
-    INT *ia = A->IA, *vec = vertices->val;
+    INT *vec = vertices->val;
     INT *work = (INT*)fasp_mem_calloc(3*row,sizeof(INT));
     INT *lists = work, *where = lists+row, *lambda = where+row;
 
@@ -425,7 +425,9 @@ static INT cfsplitting_cls (dCSRmat *A,
     INT jkeep = 0, cnt, index;
     INT row_end_S, ji, row_end_S_nabor, jj;
     INT *graph_array = lambda;
-#endif    
+#else
+    INT *ia = A->IA;
+#endif
 
     LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;
     

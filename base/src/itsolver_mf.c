@@ -161,8 +161,7 @@ INT fasp_solver_krylov (mxv_matfree *mf,
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_krylov ...... [Start]\n");
-    printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
-    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
+    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
     fasp_gettime(&solver_start);

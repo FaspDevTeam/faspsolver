@@ -63,10 +63,6 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     // Expected amount of memory for ILU needed and allocate memory 
     iwk=(lfil+2)*nnz;
     
-#if DEBUG_MODE
-    printf("### DEBUG: fill-in=%d, iwk=%d, nwork=%d\n", lfil, iwk, nwork);
-#endif
-    
     // setup preconditioner
     iludata->row=iludata->col=n;    
     iludata->nb=nb;
@@ -100,6 +96,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     iludata->work=(REAL*)fasp_mem_calloc(nwork, sizeof(REAL));  // Xiaozhe: Is the work space too large?
     
 #if DEBUG_MODE
+    printf("### DEBUG: fill-in=%d, nwork=%d\n", lfil, nwork);
     printf("### DEBUG: iwk=%d, nzlu=%d\n",iwk,nzlu);
 #endif    
     

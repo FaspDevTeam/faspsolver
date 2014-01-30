@@ -46,9 +46,9 @@
 #
 ####################  User Defined Compiler Flags  #####################
 ifeq ($(debug),yes)
-	cflags="-Wall -g"
-	cxxflags="-Wall -g"
-	fflags="-Wall -g"
+	cflags="-Wall -g -DDEBUG_MODE"
+	cxxflags="-Wall -g -DDEBUG_MODE"
+	fflags="-Wall -g -DDEBUG_MODE"
 else
 	cflags="-O3 -funroll-loops"
 	cxxflags="-O3 -funroll-loops"
@@ -129,6 +129,6 @@ backup:
 	@-rm -f faspsolver.zip
 	@-zip -r faspsolver.zip README INSTALL License Makefile \
 	                        *.txt *.cmake *.tcl doc/userguide.pdf \
-	                        base data test tutorial vs08
+	                        base data test tutorial vs08 vs10
 
 .PHONY: config distclean all clean install docs headers uninstall backup help

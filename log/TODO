@@ -35,6 +35,7 @@ Structure
 [ 1.1.3 ] add support for shared lib using SCons
 [ 1.1.6 ] add uniform I/O routines: Binary and ASCII
 [ 1.4.2 ] add command line options
+[ 1.4.3 ] set DEBUG_MODE in Makefile instead of the header file
 [       ] make several functions 'standalone', e.g. use PCG alone (Chensong)
 [       ] modify format of automatically generated headers (Chensong)
 [       ] auto-vectorization (Chensong)

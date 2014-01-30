@@ -32,9 +32,10 @@ of the FASP shared library and the test programs suite. The command to configure
 is:
 
     $ make config 
-
 or
-    $ make config openmp=1
+    $ make config openmp=yes // in order to enable OpenMP
+or
+    $ make config debug=yes // in order to enable DEBUG mode
 
 After configuring, to compile the shared library, just type 
 

@@ -9,6 +9,7 @@
  *  Created by Chensong Zhang on 08/12/2010.
  *  Modified by Chensong Zhang on 12/13/2011.
  *  Modified by Chensong Zhang on 12/25/2011.
+ *  Modified by Chensong Zhang on 01/30/2014.
  *------------------------------------------------------
  * 
  */
@@ -29,10 +30,18 @@
 /**
  * \brief Flags for developer's use only
  */
+// #define DEBUG_MODE       OFF /**< output DEBUG information */
 // When this flag is ON, the extra printing will be enabled for debug purpose
-#define DEBUG_MODE       OFF /**< output DEBUG information */
+// This flag is now disabled in fasp.h and you can enable it in the Makefile
+// file. --Chensong 01/30/2014
+// #define CHMEM_MODE       OFF /**< output MEMORY usage information */
 // When this flag is ON, the extra printing will be enabled for debug purpose
-#define CHMEM_MODE       OFF /**< output MEMORY usage information */
+// This flag is now disabled in fasp.h and you can enable it in the Makefile
+// file. --Chensong 01/30/2014
+
+/**
+ * \brief Flags for diagonal preference data structures
+ */
 // When this flag is ON, the matrix rows will be reordered as diagonal entries first
 // Use with cautious!!! 
 #define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */

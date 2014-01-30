@@ -105,7 +105,6 @@ int main (int argc, const char * argv[])
             printf("### ERROR: Opening file ...\n");
         }
         
-        int nb;
         fread(&A.row, sizeof(int), 1, fid);
         A.col = A.row;
         b.row = A.row;
