@@ -125,10 +125,15 @@ distclean:
 help:
 	@cat INSTALL
 
+version:
+	@-hg -q id > version
+	@-hg log -r tip --template 'FASP {latesttag}.{latesttagdistance}:'
+	@-cat version
+
 backup:
 	@-rm -f faspsolver.zip
 	@-zip -r faspsolver.zip README INSTALL License Makefile \
 	                        *.txt *.cmake *.tcl doc/userguide.pdf \
 	                        base data test tutorial vs08 vs10
 
-.PHONY: config distclean all clean install docs headers uninstall backup help
+.PHONY: config distclean all clean install docs headers uninstall help version  backup

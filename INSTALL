@@ -10,5 +10,6 @@ $ make headers          # Generate function decorations automatically
 $ make uninstall        # Remove installed files by "make install"
 $ make clean            # Remove obj files but retain configuration options
 $ make distclean        # Clean and completely removes the build directory
+$ make version          # Show version information
 $ make help             # Show this screen
 
