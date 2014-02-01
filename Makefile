@@ -9,9 +9,9 @@
 ####################   User Defined Options   ##########################
 #
 # The default setting for build type for FASP is RELEASE. The compiler 
-# options then include by default "-Wall -g". The RELEASE build type by 
-# default has the "-O3". If you want to work with build type DEBUG, then 
-# uncomment the next line:
+# options then include by default "-Wall -g" as well as "-DDEBUG_MODE". 
+# The RELEASE build type by default has the "-O3". If you want to work 
+# with build type DEBUG, then uncomment the next line:
 #
 # debug=yes
 #
@@ -44,6 +44,11 @@
 #
 # suitesparse_dir="/Users/username/dirto/SuiteSparse"
 #
+# These user options can also be applied as make command line options.
+# For example, to enforce the debug compiling options:
+#
+# make config debug=yes
+#
 ####################  User Defined Compiler Flags  #####################
 ifeq ($(debug),yes)
 	cflags="-Wall -g -DDEBUG_MODE"
@@ -62,9 +67,12 @@ endif
 #build_dir=BUILD_$(cpu0)-$(sys0)
 build_dir=BUILD_FASP
 
-CONFIG_FLAGS=-DCMAKE_VERBOSE_MAKEFILE=OFF -DCMAKE_RULE_MESSAGES=ON
+CONFIG_FLAGS=-DCMAKE_RULE_MESSAGES=ON
+
 ifeq ($(verbose),yes)
-    CONFIG_FLAGS=-DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_RULE_MESSAGES=ON
+    CONFIG_FLAGS+=-DCMAKE_VERBOSE_MAKEFILE=ON
+else
+    CONFIG_FLAGS+=-DCMAKE_VERBOSE_MAKEFILE=OFF
 endif
 
 ifeq ($(debug),yes)
@@ -73,16 +81,18 @@ else
     CONFIG_FLAGS+=-DCMAKE_BUILD_TYPE=RELEASE
 endif
 
-
 ifeq ($(shared),yes)
     CONFIG_FLAGS+=-DSHARED=$(shared)
 endif
+
 ifeq ($(openmp),yes)
     CONFIG_FLAGS+=-DUSE_OPENMP=$(openmp)
 endif
+
 ifeq ($(doxywizard),yes)
     CONFIG_FLAGS+=-DDOXYWIZARD=$(doxywizard)
 endif
+
 ifeq ($(umfpack), yes)
     CONFIG_FLAGS+=-DUSE_UMFPACK=$(umfpack) 
     CONFIG_FLAGS+=-DSUITESPARSE_DIR=$(suitesparse_dir) 
@@ -132,8 +142,8 @@ version:
 
 backup:
 	@-rm -f faspsolver.zip
-	@-zip -r faspsolver.zip README INSTALL License Makefile \
-	                        *.txt *.cmake *.tcl doc/userguide.pdf \
-	                        base data test tutorial vs08 vs10
+	@-zip -r faspsolver.zip README INSTALL License Makefile version     \
+	                        base data test tutorial *.txt *.cmake *.tcl \
+                            doc/userguide.pdf doc/refman.pdf vs08 vs10
 
-.PHONY: config distclean all clean install docs headers uninstall help version  backup
+.PHONY: all backup config clean distclean install uninstall docs headers help version

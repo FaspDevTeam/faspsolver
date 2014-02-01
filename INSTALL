@@ -2,6 +2,8 @@
 ||   Fast Auxiliary Space Preconditioners (FASP)    ||
 ======================================================
 
+Simplest way to compile FASP is "make config; make install". More options:
+
 $ make config           # Configure the building environment
 $ make                  # Compile the library
 $ make install          # install FASP libraries and related files
