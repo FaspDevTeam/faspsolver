@@ -4,10 +4,10 @@ File Name: CHANGES
 - Fix a bug introduced in the previous version.
 - Fix wront regression test results caused by -ffast-math.
 - Fix several un-used variable warnings.
+- Fix a bug due to disk failures. 
 - Remove DEBUG_MODE setting from fasp.h and add it to Makefile.
 - Add version tag to the current version.
-- Update webpage.
-- Fix a bug due to disk failures. 
+- Update webpage and developer list.
 
 01/18/2014 FASP 1.4.2:
 - Add command line options for FASP functions.

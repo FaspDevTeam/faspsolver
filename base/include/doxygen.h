@@ -107,6 +107,8 @@
  * - Li, Zheng (Kunming University of Science and Technology, China)
  *
  * - Shu, Shi (Xiangtan University, China)
+ * 
+ * - Wang, Lu (Penn State University, USA)
  *
  * - Yue, Xiaoqiang (Xiangtan University, China)
  *
@@ -120,11 +122,15 @@
  * 
  * - Cao, Fei (Penn State University, USA)
  *
+ * - Chen, Long (University of California, Irvine, USA)
+ *
  * - Huang, Feiteng (Sichuang University, China)
  *
  * - Huang, Xuehai (Shanghai Jiaotong University, China)
  *
  * - Qiao, Changhe (Penn State University, USA)
+ *
+ * - Sun, Pengtao (University of Nevada, Las Vegas, USA)
  *
  * - Yang, Kai (Penn State University, USA)
  *
