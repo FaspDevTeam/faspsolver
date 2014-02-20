@@ -179,9 +179,14 @@ int main (int argc, const char * argv[])
 	}
 #endif	 
 	
-#if With_UMFPACK // use UMFPACK directly
+#if WITH_UMFPACK // use UMFPACK directly
 	else if (solver_type == SOLVER_UMFPACK) {
-		status = umfpack(&A, &b, &x, print_level);	 
+		dCSRmat A_tran;
+        fasp_dcsr_trans(&A, &A_tran);
+        fasp_dcsr_sort(&A_tran);
+        fasp_dcsr_cp(&A_tran, &A);
+        fasp_dcsr_free(&A_tran);
+        status = fasp_solver_umfpack(&A, &b, &x, print_level);
 	}
 #endif	 
     
