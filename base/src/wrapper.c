@@ -107,6 +107,8 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
     itparam.print_level = *ptrlvl;
     itparam.maxit       = *maxit;
     
+    amgparam.print_level = *ptrlvl;
+    
     mat.row = *n; mat.col = *n; mat.nnz = *nnz;
     mat.IA = ia;  mat.JA  = ja; mat.val = a;
     

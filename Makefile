@@ -18,7 +18,7 @@
 # The default setting for vebosity level for FASP is verbose=no. If you
 # want to increase verbosity level, uncomment the next line:
 #
-# verbose=yes
+verbose=yes
 #
 # By default, FASP generates static libraries. If you need to generate 
 # shared libs instead of static libs, uncomment the next line:
