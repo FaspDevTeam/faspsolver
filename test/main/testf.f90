@@ -13,7 +13,7 @@ program test
   integer          :: iufile, n, nnz, i, prt_lvl, maxit, stype
 
   ! Step 0: user defined variables
-  stype = 1  
+  stype = 2  
   prt_lvl = 3
   maxit = 100
   tol = 1.0d-8
