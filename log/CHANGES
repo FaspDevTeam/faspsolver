@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+02/24/2014 FASP 1.4.4:
+- Fix missing print information in Fortran wrapper.
+- Fix a typo in test.c and test.f90.
+
 02/01/2014 FASP 1.4.3:
 - Fix a bug introduced in the previous version.
 - Fix wront regression test results caused by -ffast-math.
