@@ -1,5 +1,5 @@
      560 ./base/include/dlmalloc.h
-     164 ./base/include/doxygen.h
+     170 ./base/include/doxygen.h
     1116 ./base/include/fasp.h
      586 ./base/include/fasp_block.h
     2697 ./base/include/fasp_functs.h
@@ -11,7 +11,7 @@
     1207 ./base/src/schwarz.f
      131 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
-     432 ./base/src/amg_setup_rs.c
+     433 ./base/src/amg_setup_rs.c
      590 ./base/src/amg_setup_sa.c
      434 ./base/src/amg_setup_ua.c
      317 ./base/src/amg_solve.c
@@ -98,11 +98,11 @@
      109 ./base/src/threads.c
       41 ./base/src/timing.c
      465 ./base/src/vec.c
-     298 ./base/src/wrapper.c
+     300 ./base/src/wrapper.c
       78 ./base/src/amg_setup_aggregation_bsr.inl
      278 ./base/src/amg_setup_aggregation_csr.inl
     2294 ./base/src/gmg_util.inl
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   83594 total
+   83603 total
