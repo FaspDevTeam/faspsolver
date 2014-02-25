@@ -19,7 +19,6 @@
     if(USE_OPENMP)
        find_package(OpenMP)
 
-
        if(OPENMP_FOUND)
           set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
 	  	  "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")	 
@@ -111,6 +110,28 @@ if (USE_UMFPACK)
       message(WARNING "UMFPACK was requested but not supported!")
    endif(UMFPACK_FOUND)
 endif(USE_UMFPACK)
+
+##################################################################
+# For SuperLU
+##################################################################
+if (USE_SUPERLU)
+
+   # set the path to find specific modules
+   set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
+
+   set(SUPERLU_DIR "${SUPERLU_DIR}")
+
+   # try to find SuperLU
+   find_package(SUPERLU)
+
+   if (SUPERLU_FOUND)
+      add_definitions("-DWITH_SuperLU=1")
+      include_directories(${SUPERLU_INCLUDE_DIRS})
+   else(SUPERLU_FOUND)
+      message(WARNING "SuperLU was requested but not supported!")
+   endif(SUPERLU_FOUND)
+
+endif(USE_SUPERLU)
 
 ############## documentation with doxygen
 # target generating the FASP documentation with doxygen

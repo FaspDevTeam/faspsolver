@@ -382,6 +382,11 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
         ++level;
     }
     
+#if WITH_SuperLU
+    /* Setup SuperLU direct solver on the coarsest level */
+    mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
+#endif
+    
     
 #if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK format

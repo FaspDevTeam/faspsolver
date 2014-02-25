@@ -35,7 +35,7 @@
 #
 # doxywizard=yes
 #
-# If you want to use the UMFPACK, uncomment the next line: 
+# If you want to use UMFPACK, uncomment the next line: 
 # 
 # umfpack=yes
 #
@@ -43,6 +43,15 @@
 # line and give the correct path to SparseSuite here. For example:
 #
 # suitesparse_dir="/Users/username/dirto/SuiteSparse"
+#
+# If you want to use SuperLU, uncomment the next line:
+#
+# superlu=yes
+#
+# If you want to specify the path to SuperLU, uncomment the next line
+# and give the correct path to SuperLU here. For example:
+#
+# superlu_dir=/Users/XiaozheHu/Research/Package/SuperLU_4.3
 #
 # These user options can also be applied as make command line options.
 # For example, to enforce the debug compiling options:
@@ -96,6 +105,11 @@ endif
 ifeq ($(umfpack), yes)
     CONFIG_FLAGS+=-DUSE_UMFPACK=$(umfpack) 
     CONFIG_FLAGS+=-DSUITESPARSE_DIR=$(suitesparse_dir) 
+endif
+
+ifeq ($(superlu), yes)
+    CONFIG_FLAGS+=-DUSE_SUPERLU=$(superlu)
+    CONFIG_FLAGS+=-DSUPERLU_DIR=$(superlu_dir)
 endif
 
 CONFIG_FLAGS+=-DADD_CFLAGS=$(cflags) 
