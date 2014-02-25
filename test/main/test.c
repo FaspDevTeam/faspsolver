@@ -173,9 +173,9 @@ int main (int argc, const char * argv[])
         fasp_solver_famg(&A, &b, &x, &amgpar);
     }
     
-#if With_SuperLU // use SuperLU directly
+#if WITH_SuperLU // use SuperLU directly
 	else if (solver_type == SOLVER_SUPERLU) {
-		status = superlu(&A, &b, &x, print_level);	 
+		status = fasp_solver_superlu(&A, &b, &x, print_level);
 	}
 #endif	 
 	
@@ -194,7 +194,7 @@ int main (int argc, const char * argv[])
 		printf("### ERROR: Wrong solver type %d!!!\n", solver_type);		
 		status = ERROR_SOLVER_TYPE;
 	}
-		
+    
 	if (status<0) {
 		printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
 	}

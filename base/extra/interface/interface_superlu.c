@@ -71,7 +71,7 @@ int fasp_solver_superlu (dCSRmat *ptrA,
 	superlu_options_t options;
 	set_default_options(&options);
 	//options.PrintStat = NO;
-	options.ColPerm = NATURAL;
+	options.ColPerm = COLAMD; //MMD_AT_PLUS_A; MMD_ATA; NATURAL;
 	
 	/* Initialize the statistics variables. */
 	SuperLUStat_t stat;
