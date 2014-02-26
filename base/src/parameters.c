@@ -79,7 +79,7 @@ void fasp_param_input_init (input_param *inparam)
     strcpy(inparam->workdir,"../data/");
     
     // Input/output
-    inparam->print_level              = PRINT_MIN;
+    inparam->print_level              = PRINT_SOME;
     inparam->output_type              = 0;
     
     // Problem information
@@ -415,7 +415,7 @@ void fasp_param_solver_set (itsolver_param *itsparam,
 void fasp_precond_data_null (precond_data *pcdata)
 {
     pcdata->AMG_type            = CLASSIC_AMG;
-    pcdata->print_level         = PRINT_MIN;
+    pcdata->print_level         = PRINT_NONE;
     pcdata->maxit               = 500;
     pcdata->max_levels          = 20;
     pcdata->tol                 = 1e-8;

@@ -42,7 +42,7 @@
 # If you want to specify the path to SparseSuite, uncomment the next 
 # line and give the correct path to SparseSuite here. For example:
 #
-# suitesparse_dir="/Users/username/dirto/SuiteSparse"
+# suitesparse_dir="/dir/to/SuiteSparse"
 #
 # If you want to use SuperLU, uncomment the next line:
 #
@@ -51,7 +51,7 @@
 # If you want to specify the path to SuperLU, uncomment the next line
 # and give the correct path to SuperLU here. For example:
 #
-# superlu_dir=/Users/XiaozheHu/Research/Package/SuperLU_4.3
+# superlu_dir="/dir/to/SuperLU"
 #
 # These user options can also be applied as make command line options.
 # For example, to enforce the debug compiling options:
