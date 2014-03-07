@@ -91,7 +91,7 @@ INT dCSRmat2SAMGInput (dCSRmat *A,
 	}
 	
 	/* Get the matrix type of A */
-	if (symmetry_type == 1) {
+	if (symmetry_type == 0) {
 		if (rowsum_type == 0)
 			matrix_type = 11;
 		else
