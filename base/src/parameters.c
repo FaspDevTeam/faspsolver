@@ -170,11 +170,11 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->coarse_scaling       = OFF; // Require investigation --Chensong
     amgparam->amli_degree          = 1;
     amgparam->amli_coef            = NULL;
-    amgparam->nl_amli_krylov_type  = 2;
+    amgparam->nl_amli_krylov_type  = SOLVER_GCG;
     
     // Classical AMG specific
-    amgparam->coarsening_type      = 1;
-    amgparam->interpolation_type   = 1;
+    amgparam->coarsening_type      = COARSE_RS;
+    amgparam->interpolation_type   = INTERP_DIR;
     amgparam->max_row_sum          = 0.9;
     amgparam->strong_threshold     = 0.5;
     amgparam->truncation_threshold = 0.4;

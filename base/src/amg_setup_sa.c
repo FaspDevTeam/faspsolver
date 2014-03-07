@@ -377,7 +377,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
         ++level;
     }
     
-#if With_UMFPACK
+#if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK format
     dCSRmat Ac_tran;
     fasp_dcsr_trans(&mgl[level].A, &Ac_tran);

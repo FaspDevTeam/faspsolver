@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+
+03/07/2014 FASP 1.4.5:
+- Fix a return value inconsistent problem in interface_samg.c
+- Fix a macro typo in amg_setup_sa.c 
+- Use specified name of parameter instead of value in parameters.c
+
 02/26/2014 FASP 1.4.4:
 - Fix missing print information in Fortran wrapper.
 - Fix a typo in test.c and test.f90.
