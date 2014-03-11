@@ -5,7 +5,7 @@
     2697 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
-     223 ./base/include/messages.h
+     225 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
      274 ./base/src/factor.f
     1207 ./base/src/schwarz.f
@@ -13,7 +13,7 @@
      124 ./base/src/amg_setup_cr.c
      433 ./base/src/amg_setup_rs.c
      590 ./base/src/amg_setup_sa.c
-     434 ./base/src/amg_setup_ua.c
+     439 ./base/src/amg_setup_ua.c
      317 ./base/src/amg_solve.c
      803 ./base/src/amlirecur.c
      271 ./base/src/array.c
@@ -105,4 +105,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   83603 total
+   83610 total
