@@ -87,6 +87,8 @@
 #define ERROR_QUAD_TYPE       -60  /**< unknown quadrature type */
 #define ERROR_QUAD_DIM        -61  /**< unsupported quadrature dim */
 //---------------------------------------------------------------------------------
+#define ERROR_LIC_TYPE        -80  /**< wrong license type */
+//---------------------------------------------------------------------------------
 #define RUN_FAIL              -99  /**< general failure */
 #define SUCCESS                 0  /**< return from funtion successfully */
 
