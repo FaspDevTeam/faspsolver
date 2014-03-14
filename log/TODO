@@ -5,7 +5,7 @@ Milestones
 ========================
 
 * Release an alpha version by the end of 2012!
-* Release a stable beta version by the end of 2013!
+* Release a stable beta version by the end of 2014!
 
 ========================
 Documentation
@@ -18,7 +18,7 @@ Documentation
 [ 0.9.8 ] generate reference manual using Doxygen
 [ 0.9.8 ] make the FASP webpage ready
 [ 1.1.5 ] add details for building and installation using SCons and VS
-[       ] add details for building and installation using cmake and VS
+[ 1.2.4 ] add details for building and installation using cmake and VS
 [       ] add details for the OMP version
 [       ] add details for the GPU version
 
@@ -37,8 +37,6 @@ Structure
 [ 1.4.2 ] add command line options
 [ 1.4.3 ] set DEBUG_MODE in Makefile instead of the header file
 [       ] make several functions 'standalone', e.g. use PCG alone (Chensong)
-[       ] modify format of automatically generated headers (Chensong)
-[       ] auto-vectorization (Chensong)
 
 ========================
 GMG 	
@@ -179,9 +177,11 @@ Bug Fixes
 [ 1.1.5 ] fix a potential bug in SA setup
 [ 1.2.0 ] Windows release version: MINRES gives wrong results, check compiler
 [ 1.2.4 ] MUMPS: 64bit version does not work, replaced with a new version
+[ 1.2.5 ] VGMRES: "restart" could become too big
 [       ] AMG setup: number of DOF could drop dramatically
-[       ] VGMRES: "restart" could become too big
 [       ] different results on different platforms
 [       ] problems with BSR test function: see testbsr.c
 [       ] check convergence for problems from MM: see regression_mm.c
 [       ] memory allocation problem in testbsr.c: during ILU setup
+[       ] divide by zero in BiCGstab, see regression.c
+[       ] MinRes sometimes takes too many iterations, see regression.c

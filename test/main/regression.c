@@ -188,8 +188,8 @@ int main (int argc, const char * argv[])
             fasp_param_solver_init(&itparam);
             fasp_param_amg_init(&amgparam);
             amgparam.interpolation_type = INTERP_ENG;
-            amgparam.maxit       = 20;
-            amgparam.tol         = 1e-12;
+            amgparam.maxit       = 30;
+            amgparam.tol         = 1e-11;
             amgparam.print_level = print_level;
             fasp_solver_amg(&A, &b, &x, &amgparam);
             
@@ -454,8 +454,14 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgparam);
             itparam.itsolver_type = SOLVER_MinRes;
             itparam.maxit         = 500;
-            itparam.tol           = 1e-9;
             itparam.print_level   = print_level;
+
+            // This is special. If 1e-10, cost a lot more iterations
+            itparam.tol           = 1e-9;
+            // We need to use 2 smoothing steps to make test 3 to converge --Chensong
+            amgparam.presmooth_iter  = amgparam.postsmooth_iter = 2;
+            amgparam.strong_threshold = 0.5;
+
             fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
             
             check_solu(&x, &sol, tolerance);
