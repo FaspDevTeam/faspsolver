@@ -99,17 +99,19 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
     printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
 #endif    
 
-    /* allocate memory */
-    work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n+ (restartplus1*n)-n, sizeof(REAL));   
-
+    // allocate memory and setup temp work space
+    work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n+(restartplus1*n)-n, sizeof(REAL));
+    
+    // If cannot allocate memory, reduce the size of stored vectors
     while ( (work == NULL) && (restart > restart_min+5 ) ) {
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n+(restartplus1*n)-n, sizeof(REAL));
-        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
+        printf("### WARNING: vFGMRES restart number becomes %d!\n", restart );
         restartplus1 = restart + 1;
         restart_max = restart;
     }
     
+    // Quit if still cannot allocate memory with reduced restart
     if ( work == NULL ) {
         printf("### ERROR: No enough memory for GMRES %s : %s: %d !\n",
                __FILE__, __FUNCTION__, __LINE__ );
