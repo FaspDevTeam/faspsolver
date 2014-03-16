@@ -70,10 +70,10 @@
      630 ./base/src/precond_bsr.c
      600 ./base/src/precond_csr.c
     1732 ./base/src/precond_str.c
-     663 ./base/src/pvfgmres.c
-     339 ./base/src/pvfgmres_mf.c
-    1365 ./base/src/pvgmres.c
-     340 ./base/src/pvgmres_mf.c
+     667 ./base/src/pvfgmres.c
+     341 ./base/src/pvfgmres_mf.c
+    1373 ./base/src/pvgmres.c
+     342 ./base/src/pvgmres_mf.c
      874 ./base/src/quadrature.c
      108 ./base/src/rap.c
      185 ./base/src/schwarz_setup.c
@@ -105,4 +105,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   83610 total
+   83626 total
