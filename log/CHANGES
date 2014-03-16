@@ -7,6 +7,7 @@ File Name: CHANGES
 - Fix a relative directory problem in VS08.
 - Fix file property problem for *.sh files.
 - Fix number of iterations problem in regression.c.
+- Update regression test results. 
 - Update TODO list.
 
 02/26/2014 FASP 1.4.4:

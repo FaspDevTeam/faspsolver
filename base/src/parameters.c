@@ -128,7 +128,7 @@ void fasp_param_input_init (input_param *inparam)
     inparam->AMG_interpolation_type   = 1;
     inparam->AMG_max_row_sum          = 0.9;
     inparam->AMG_strong_threshold     = 0.3;
-    inparam->AMG_truncation_threshold = 0.4;
+    inparam->AMG_truncation_threshold = 0.2;
     inparam->AMG_aggressive_level     = 0;
     inparam->AMG_aggressive_path      = 1;
     
@@ -177,7 +177,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->interpolation_type   = INTERP_DIR;
     amgparam->max_row_sum          = 0.9;
     amgparam->strong_threshold     = 0.3;
-    amgparam->truncation_threshold = 0.4;
+    amgparam->truncation_threshold = 0.2;
     amgparam->aggressive_level     = 0;
     amgparam->aggressive_path      = 1;
     
