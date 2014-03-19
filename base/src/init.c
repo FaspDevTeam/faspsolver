@@ -13,6 +13,35 @@
 /*---------------------------------*/
 
 /**
+ * \fn void fasp_precond_data_null (precond_data *pcdata)
+ *
+ * \brief Initialize precond_data
+ *
+ * \param pcdata   Preconditioning data structure
+ *
+ * \author Chensong Zhang
+ * \date   2010/03/23
+ */
+void fasp_precond_data_null (precond_data *pcdata)
+{
+    pcdata->AMG_type            = CLASSIC_AMG;
+    pcdata->print_level         = PRINT_NONE;
+    pcdata->maxit               = 500;
+    pcdata->max_levels          = 20;
+    pcdata->tol                 = 1e-8;
+    pcdata->cycle_type          = V_CYCLE;
+    pcdata->smoother            = SMOOTHER_GS;
+    pcdata->smooth_order        = CF_ORDER;
+    pcdata->presmooth_iter      = 1;
+    pcdata->postsmooth_iter     = 1;
+    pcdata->relaxation          = 1.1;
+    pcdata->coarsening_type     = 1;
+    pcdata->coarse_scaling      = ON;
+    pcdata->amli_degree         = 1;
+    pcdata->nl_amli_krylov_type = SOLVER_GCG;
+}
+
+/**
  * \fn AMG_data * fasp_amg_data_create (SHORT max_levels)
  *
  * \brief Create and initialize AMG_data for classical and SA AMG

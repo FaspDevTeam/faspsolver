@@ -27,22 +27,22 @@ int main (int argc, const char * argv[])
     //------------------------//
 	// Step 0. Set parameters //
     //------------------------//
-	input_param     inpar;  // parameters from input files
-	itsolver_param  itpar;  // parameters for itsolver
+	input_param     inipar; // parameters from input files
+	itsolver_param  itspar; // parameters for itsolver
 	AMG_param       amgpar; // parameters for AMG
 	ILU_param       ilupar; // parameters for ILU
     Schwarz_param   swzpar; // parameters for Shcwarz method
     
     // Set solver parameters
-    fasp_param_set(argc, argv, &inpar);
-    fasp_param_init(&inpar, &itpar, &amgpar, &ilupar, &swzpar);
+    fasp_param_set(argc, argv, &inipar);
+    fasp_param_init(&inipar, &itspar, &amgpar, &ilupar, &swzpar);
     
     // Set local parameters
-	const int print_level   = inpar.print_level;
-	const int problem_num   = inpar.problem_num;
-	const int solver_type   = inpar.solver_type;
-	const int precond_type  = inpar.precond_type;
-	const int output_type   = inpar.output_type;
+	const int print_level   = inipar.print_level;
+	const int problem_num   = inipar.problem_num;
+	const int solver_type   = inipar.solver_type;
+	const int precond_type  = inipar.precond_type;
+	const int output_type   = inipar.output_type;
     
     // Set output device
     if (output_type) {
@@ -59,8 +59,8 @@ int main (int argc, const char * argv[])
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
 	
-	strncpy(filename1,inpar.workdir,128);
-	strncpy(filename2,inpar.workdir,128);
+	strncpy(filename1,inipar.workdir,128);
+	strncpy(filename2,inipar.workdir,128);
     
 	// Read A and b -- P1 FE discretization for Poisson.
 	if (problem_num == 10) {				
@@ -112,7 +112,7 @@ int main (int argc, const char * argv[])
 	}
     
     // Print out solver parameters
-    if (print_level>PRINT_NONE) fasp_param_solver_print(&itpar);
+    if (print_level>PRINT_NONE) fasp_param_solver_print(&itspar);
     
     //--------------------------//
 	// Step 2. Solve the system //
@@ -127,30 +127,30 @@ int main (int argc, const char * argv[])
         
 		// Using no preconditioner for Krylov iterative methods
 		if (precond_type == PREC_NULL) {
-			status = fasp_solver_dcsr_krylov(&A, &b, &x, &itpar);
+			status = fasp_solver_dcsr_krylov(&A, &b, &x, &itspar);
 		}	
         
 		// Using diag(A) as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_DIAG) {
-			status = fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itpar);
+			status = fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itspar);
 		}
         
 		// Using AMG as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
             if (print_level>PRINT_NONE) fasp_param_amg_print(&amgpar);
-			status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itpar, &amgpar);
+			status = fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itspar, &amgpar);
 		}
         
 		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
 		else if (precond_type == PREC_ILU) {
             if (print_level>PRINT_NONE) fasp_param_ilu_print(&ilupar);
-			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itpar, &ilupar);
+			status = fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itspar, &ilupar);
 		}
         
         // Using Schwarz as preconditioner for Krylov iterative methods
         else if (precond_type == PREC_SCHWARZ){
             if (print_level>PRINT_NONE) fasp_param_schwarz_print(&swzpar);
-			status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itpar, &swzpar);
+			status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itspar, &swzpar);
 		}
         
 		else {
