@@ -4,13 +4,13 @@
 % must have spaces around the equal sign "="   %
 %----------------------------------------------%
 
-workdir = ../data/  % work directory, no more than 128 characters
+workdir = ../../data/  % work directory, no more than 128 characters
  
 %----------------------------------------------%
 % problem, solver, and output type             %
 %----------------------------------------------%
 
-problem_num              = 10     % test problem number 
+problem_num              = 11     % test problem number 
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to screen | 1 to file
 solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |

@@ -304,7 +304,7 @@ void fasp_smoother_dcsr_gs (dvector *u,
                             j=ja[k];
                             if (i!=j)
                                 t-=aj[k]*uval[j];
-                            else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];
+                            else if (ABS(aj[k])>SMALLREAL) d=1.0/aj[k];
                         }
                         uval[i]=t*d;
 #endif
@@ -330,7 +330,7 @@ void fasp_smoother_dcsr_gs (dvector *u,
                         j=ja[k];
                         if (i!=j)
                             t-=aj[k]*uval[j];
-                        else if (ABS(aj[k])>SMALLREAL) d=1.e+0/aj[k];
+                        else if (ABS(aj[k])>SMALLREAL) d=1.0/aj[k];
                     }
                     uval[i]=t*d;
 #endif
@@ -382,7 +382,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
 #endif
     
     // F-point first, C-point second
-    if (order == -1) {
+    if (order == FPFIRST) {
         
         while (L--) {
             
@@ -396,11 +396,11 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                             t = bval[i];
                             begin_row = ia[i], end_row = ia[i+1];
 #if DIAGONAL_PREF // Added by Chensong on 01/17/2013
+                            d = aj[begin_row];
                             for (k = begin_row+1; k < end_row; k ++) {
                                 j = ja[k];
                                 t -= aj[k]*uval[j];
                             } // end for k
-                            d = aj[begin_row];
 #else
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
@@ -419,12 +419,12 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                     if (mark[i] != 1) {
                         t = bval[i];
                         begin_row = ia[i], end_row = ia[i+1];
-#if DIAGONAL_PREF // Added by Chensong on 09/22/2012
+#if DIAGONAL_PREF // Added by Chensong on 01/17/2013
+                        d = aj[begin_row];
                         for (k = begin_row+1; k < end_row; k ++) {
                             j = ja[k];
                             t -= aj[k]*uval[j];
                         } // end for k
-                        d = aj[begin_row];
 #else
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
@@ -449,11 +449,11 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                             t = bval[i];
                             begin_row = ia[i], end_row = ia[i+1];
 #if DIAGONAL_PREF // Added by Chensong on 01/17/2013
+                            d = aj[begin_row];
                             for (k = begin_row+1; k < end_row; k ++) {
                                 j = ja[k];
                                 t -= aj[k]*uval[j];
                             } // end for k
-                            d = aj[begin_row];
 #else
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
@@ -472,12 +472,12 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                     if (mark[i] == 1) {
                         t = bval[i];
                         begin_row = ia[i], end_row = ia[i+1];
-#if DIAGONAL_PREF // Added by Chensong on 09/22/2012
+#if DIAGONAL_PREF // Added by Chensong on 01/17/2013
+                        d = aj[begin_row];
                         for (k = begin_row+1; k < end_row; k ++) {
                             j = ja[k];
                             t -= aj[k]*uval[j];
                         } // end for k
-                        d = aj[begin_row];
 #else
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
@@ -509,11 +509,11 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                             t = bval[i];
                             begin_row = ia[i],end_row = ia[i+1];
 #if DIAGONAL_PREF // Added by Chensong on 01/17/2013
+                            d = aj[begin_row];
                             for (k = begin_row+1; k < end_row; k ++) {
                                 j = ja[k];
                                 t -= aj[k]*uval[j];
                             } // end for k
-                            d = aj[begin_row];
 #else
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
@@ -533,11 +533,11 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         t = bval[i];
                         begin_row = ia[i],end_row = ia[i+1];
 #if DIAGONAL_PREF // Added by Chensong on 09/22/2012
+                        d = aj[begin_row];
                         for (k = begin_row+1; k < end_row; k ++) {
                             j = ja[k];
                             t -= aj[k]*uval[j];
                         } // end for k
-                        d = aj[begin_row];
 #else
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
@@ -562,11 +562,11 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                             t = bval[i];
                             begin_row = ia[i],end_row = ia[i+1];
 #if DIAGONAL_PREF // Added by Chensong on 01/17/2013
+                            d = aj[begin_row];
                             for (k = begin_row+1; k < end_row; k ++) {
                                 j = ja[k];
                                 t -= aj[k]*uval[j];
                             } // end for k
-                            d = aj[begin_row];
 #else
                             for (k = begin_row; k < end_row; k ++) {
                                 j = ja[k];
@@ -586,11 +586,11 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
                         t = bval[i];
                         begin_row = ia[i],end_row = ia[i+1];
 #if DIAGONAL_PREF // Added by Chensong on 09/22/2012
+                        d = aj[begin_row];
                         for (k = begin_row+1; k < end_row; k ++) {
                             j = ja[k];
                             t -= aj[k]*uval[j];
                         } // end for k
-                        d = aj[begin_row];
 #else
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
