@@ -222,7 +222,6 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
             mgl[level].w = fasp_dvec_create(2*mm);
     }
     
-    
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         print_amgcomplexity(mgl, prtlvl);

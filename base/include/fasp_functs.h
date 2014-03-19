@@ -225,29 +225,29 @@ void fasp_blas_bdbsr_mxv (block_BSR *A,
 
 /*-------- In file: blas_bsr.c --------*/
 
-void fasp_blas_dbsr_aAxpby (const REAL alpha, 
-                                  dBSRmat *A, 
-                                  REAL *x, 
-                            const REAL beta, 
-                                  REAL *y );
+void fasp_blas_dbsr_aAxpby (const REAL alpha,
+                            dBSRmat *A,
+                            REAL *x,
+                            const REAL beta,
+                            REAL *y );
 
-void fasp_blas_dbsr_aAxpy (const REAL alpha, 
-                           dBSRmat *A, 
-                           REAL *x, 
-                           REAL *y) ;
-
-void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
+void fasp_blas_dbsr_aAxpy (const REAL alpha,
                            dBSRmat *A,
                            REAL *x,
                            REAL *y);
 
+void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
+                               dBSRmat *A,
+                               REAL *x,
+                               REAL *y);
+
 void fasp_blas_dbsr_mxv (dBSRmat *A,
 		                 REAL *x,
-		                 REAL *y) ;
+		                 REAL *y);
 
 void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
-		                 REAL *x,
-		                 REAL *y);
+                             REAL *x,
+                             REAL *y);
 
 void fasp_blas_dbsr_rap1 (dBSRmat *R,
                           dBSRmat *A, 
@@ -260,9 +260,9 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
                          dBSRmat *B);
 
 void fasp_blas_dbsr_rap_agg (dBSRmat *R,
-                         dBSRmat *A,
-                         dBSRmat *P,
-                         dBSRmat *B);
+                             dBSRmat *A,
+                             dBSRmat *P,
+                             dBSRmat *B);
 
 
 /*-------- In file: blas_csr.c --------*/
@@ -707,15 +707,15 @@ INT fasp_poisson_pcg_gmg_3D (REAL *u,
 
 /*-------- In file: graphics.c --------*/
 
-void fasp_dcsr_subplot (const dCSRmat *A, 
-                     const char *filename, 
-                     INT size);
+void fasp_dcsr_subplot (const dCSRmat *A,
+                        const char *filename,
+                        INT size);
 
-void fasp_dbsr_subplot(const dBSRmat *A, 
-                     const char *filename, 
-                     INT size);
+void fasp_dbsr_subplot(const dBSRmat *A,
+                       const char *filename,
+                       INT size);
 
-void fasp_grid2d_plot (pgrid2d pg, 
+void fasp_grid2d_plot (pgrid2d pg,
                        INT level);
 
 INT fasp_dbsr_plot(const dBSRmat *A, const char *fname);
@@ -748,6 +748,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
 
 /*-------- In file: init.c --------*/
 
+void fasp_precond_data_null (precond_data *pcdata);
+
 AMG_data * fasp_amg_data_create (SHORT max_levels);
 
 AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels);
@@ -776,10 +778,6 @@ SHORT fasp_param_check (input_param *inparam);
 
 void fasp_param_input (char *filenm, 
                        input_param *inparam);
-
-void fasp_param_set (int argc,
-                     const char *argv[],
-                     input_param *inparam);
 
 
 /*-------- In file: interpolation.c --------*/
@@ -1174,13 +1172,17 @@ void fasp_aux_dQuickSortIndex (REAL *a,
 
 /*-------- In file: parameters.c --------*/
 
-void fasp_param_init (input_param *inparam,
+void fasp_param_set (int argc,
+                     const char *argv[],
+                     input_param *iniparam);
+
+void fasp_param_init (input_param *iniparam,
                       itsolver_param *itsparam,
                       AMG_param *amgparam,
                       ILU_param *iluparam,
                       Schwarz_param *schparam);
 
-void fasp_param_input_init (input_param *inparam);
+void fasp_param_input_init (input_param *iniparam);
 
 void fasp_param_amg_init (AMG_param *amgparam);
 
@@ -1191,18 +1193,16 @@ void fasp_param_ilu_init (ILU_param *iluparam);
 void fasp_param_schwarz_init (Schwarz_param *schparam);
 
 void fasp_param_amg_set (AMG_param *param,
-                         input_param *inparam);
+                         input_param *iniparam);
 
 void fasp_param_ilu_set (ILU_param *iluparam,
-                         input_param *inparam);
+                         input_param *iniparam);
 
 void fasp_param_schwarz_set (Schwarz_param *schparam,
-                             input_param *inparam);
+                             input_param *iniparam);
 
 void fasp_param_solver_set (itsolver_param *itsparam,
-                            input_param *inparam);
-
-void fasp_precond_data_null (precond_data *pcdata);
+                            input_param *iniparam);
 
 void fasp_param_amg_to_prec (precond_data *pcdata,
                              AMG_param *amgparam);

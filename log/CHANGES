@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+03/19/2014 FASP 1.4.6:
+- Change AMG setup output layout. 
+- Clean up a few files for further optimization. 
+- Update the auto header file.
+- Update FASP webpage.
+
 03/14/2014 FASP 1.4.5:
 - Fix a return value inconsistent problem in interface_samg.c
 - Fix a macro typo in amg_setup_sa.c 

@@ -115,13 +115,13 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     fasp_array_cp(m,b->val,r);
     fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
     
-    if (pc != NULL)
+    if ( pc != NULL )
         pc->fct(r,z,pc->data); /* Apply preconditioner */
     else
         fasp_array_cp(m,r,z); /* No preconditioner */
     
     // compute initial residuals
-    switch (stop_type) {
+    switch ( stop_type ) {
         case STOP_REL_RES:
             absres0 = fasp_blas_array_norm2(m,r);
             normr0  = MAX(SMALLREAL,absres0);

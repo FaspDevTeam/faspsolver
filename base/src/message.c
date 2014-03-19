@@ -84,20 +84,25 @@ void print_amgcomplexity (AMG_data *mgl,
     REAL          gridcom=0.0, opcom=0.0;
     
     if ( prtlvl >= PRINT_SOME ) {
-        printf("-----------------------------------------------\n");
-        printf("  Level     Num of rows      Num of nonzeros\n");
-        printf("-----------------------------------------------\n");
+
+        printf("----------------------------------------------------------------\n");
+        printf("  Level     Num of rows      Num of nonzeros    Avg. NNZ / row  \n");
+        printf("----------------------------------------------------------------\n");
+        
         for ( level = 0; level < max_levels; ++level) {
-            printf("%5d  %14d  %16d\n", level, mgl[level].A.row, mgl[level].A.nnz);
+            REAL AvgNNZ = mgl[level].A.nnz/mgl[level].A.row;
+            printf("%5d  %14d  %16d  %15.1f\n",
+                   level, mgl[level].A.row, mgl[level].A.nnz, AvgNNZ);
             gridcom += mgl[level].A.row;
             opcom   += mgl[level].A.nnz;
         }
-        printf("-----------------------------------------------\n");
+        printf("----------------------------------------------------------------\n");
         
         gridcom /= mgl[0].A.row;
         opcom   /= mgl[0].A.nnz;
         printf("AMG grid complexity     = %.3f\n", gridcom);
         printf("AMG operator complexity = %.3f\n", opcom);
+        
     }
 }
 
@@ -120,20 +125,25 @@ void print_amgcomplexity_bsr (AMG_data_bsr *mgl,
     REAL         gridcom = 0.0, opcom = 0.0;
     
     if ( prtlvl >= PRINT_SOME ) {
-        printf("-----------------------------------------------\n");
-        printf("  Level     Num of rows      Num of nonzeros\n");
-        printf("-----------------------------------------------\n");
+        
+        printf("----------------------------------------------------------------\n");
+        printf("  Level     Num of rows      Num of nonzeros    Avg. NNZ / row  \n");
+        printf("----------------------------------------------------------------\n");
+        
         for ( level = 0; level < max_levels; ++level ) {
-            printf("%5d  %14d  %16d\n", level,mgl[level].A.ROW, mgl[level].A.NNZ);
+            REAL AvgNNZ = mgl[level].A.NNZ/mgl[level].A.ROW;
+            printf("%5d  %14d  %16d  %15.1f\n",
+                   level,mgl[level].A.ROW, mgl[level].A.NNZ, AvgNNZ);
             gridcom += mgl[level].A.ROW;
             opcom   += mgl[level].A.NNZ;
         }
-        printf("-----------------------------------------------\n");
+        printf("----------------------------------------------------------------\n");
         
         gridcom /= mgl[0].A.ROW;
         opcom   /= mgl[0].A.NNZ;
         printf("AMG (BSR) grid complexity     = %.3f\n", gridcom);
         printf("AMG (BSR) operator complexity = %.3f\n", opcom);
+    
     }
 }
 

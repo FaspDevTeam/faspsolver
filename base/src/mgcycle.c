@@ -59,7 +59,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 #endif
     
     if (print_level >= PRINT_MOST) 
-        printf("AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
+        printf("MG: AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
     
     INT num_lvl[MAX_AMG_LVL] = {0}, l = 0;
     

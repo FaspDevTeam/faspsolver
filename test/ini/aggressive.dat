@@ -57,7 +57,7 @@ AMG_type                 = C      % C classic AMG
                                   % UA unsmoothed aggregation
 AMG_cycle_type           = V      % V V-cycle | W W-cycle
                                   % A AMLI-cycle | NA Nonlinear AMLI-cycleA
-AMG_tol                  = 1e-8   % tolerance for AMG
+AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
 AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
@@ -87,11 +87,11 @@ AMG_coarsening_type      = 4      % 1 Modified RS
                                   % 3 Compatible Relaxation
                                   % 4 Aggressive 
 AMG_interpolation_type   = 2      % 1 Direct | 2 Standard | 3 Energy-min
-AMG_strong_threshold     = 0.7    % Strong threshold
-AMG_truncation_threshold = 0.5    % Truncation threshold
+AMG_strong_threshold     = 0.3    % Strong threshold
+AMG_truncation_threshold = 0.1    % Truncation threshold
 AMG_max_row_sum          = 0.9    % Max row sum
 AMG_aggressive_level	 = 1      % number of levels using aggressive coarsening 
-AMG_aggressive_path      = 1      % number of paths used to determine strong-coupled C points: 1 or 2
+AMG_aggressive_path      = 2      % number of paths used to determine strong-coupled C points: 1 or 2
                                   % only works when AMG_coarsening_type = 4
                                   % usually 1 gives more aggressive coarsening ratio
 
