@@ -249,7 +249,7 @@ void fasp_blas_array_axpby (const INT n,
 }
 
 /**
- * \fn REAL fasp_blas_array_dotprod (const INT n, REAL *x, REAL *y)
+ * \fn REAL fasp_blas_array_dotprod (const INT n, const REAL *x, const REAL *y)
  *
  * \brief Inner product of two arraies (x,y)
  *
@@ -265,33 +265,32 @@ void fasp_blas_array_axpby (const INT n,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 REAL fasp_blas_array_dotprod (const INT n,
-                              REAL *x,
-                              REAL *y)
+                              const REAL * x,
+                              const REAL * y)
 {
     INT i;
     INT use_openmp = FALSE;
-    REAL value=0.0;
+    REAL value = 0.0;
     
 #ifdef _OPENMP
-    if ( n > OPENMP_HOLDS ) {
-        use_openmp = TRUE;
-    }
+    if ( n > OPENMP_HOLDS ) use_openmp = TRUE;
 #endif
     
     if (use_openmp) {
 #ifdef _OPENMP
 #pragma omp parallel for reduction(+:value) private(i)
 #endif
-        for (i=0;i<n;++i) value+=x[i]*y[i];
+        for ( i=0; i<n; ++i ) value += x[i]*y[i];
     }
     else {
-        for (i=0;i<n;++i) value+=x[i]*y[i];
+        for ( i=0; i<n; ++i ) value += x[i]*y[i];
     }
+    
     return value;
 }
 
 /**
- * \fn REAL fasp_blas_array_norm1 (const INT n, REAL *x)
+ * \fn REAL fasp_blas_array_norm1 (const INT n, const REAL *x)
  *
  * \brief L1 norm of array x
  *
@@ -306,7 +305,7 @@ REAL fasp_blas_array_dotprod (const INT n,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 REAL fasp_blas_array_norm1 (const INT n,
-                            REAL *x)
+                            const REAL *x)
 {
     INT i;
     INT use_openmp = FALSE;
@@ -331,7 +330,7 @@ REAL fasp_blas_array_norm1 (const INT n,
 }
 
 /**
- * \fn REAL fasp_blas_array_norm2 (const INT n, REAL *x)
+ * \fn REAL fasp_blas_array_norm2 (const INT n, const REAL *x)
  *
  * \brief L2 norm of array x
  *
@@ -346,7 +345,7 @@ REAL fasp_blas_array_norm1 (const INT n,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 REAL fasp_blas_array_norm2 (const INT n,
-                            REAL *x)
+                            const REAL *x)
 {
     INT i;
     INT use_openmp = FALSE;
@@ -367,6 +366,7 @@ REAL fasp_blas_array_norm2 (const INT n,
     else {
         for (i=0;i<n;++i) twonorm+=x[i]*x[i];
     }
+    
     return sqrt(twonorm);
 }
 

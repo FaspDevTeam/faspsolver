@@ -189,14 +189,14 @@ void fasp_blas_array_axpby (const INT n,
                             REAL *y);
 
 REAL fasp_blas_array_dotprod (const INT n,
-                              REAL *x,
-                              REAL *y);
+                              const REAL * x,
+                              const REAL * y);
 
 REAL fasp_blas_array_norm1 (const INT n,
-                            REAL *x);
+                            const REAL *x);
 
 REAL fasp_blas_array_norm2 (const INT n,
-                            REAL *x);
+                            const REAL *x);
 
 REAL fasp_blas_array_norminf (const INT n,
                               REAL *x);

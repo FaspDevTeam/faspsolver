@@ -85,18 +85,18 @@ void print_amgcomplexity (AMG_data *mgl,
     
     if ( prtlvl >= PRINT_SOME ) {
 
-        printf("----------------------------------------------------------------\n");
-        printf("  Level     Num of rows      Num of nonzeros    Avg. NNZ / row  \n");
-        printf("----------------------------------------------------------------\n");
+        printf("-----------------------------------------------------------\n");
+        printf("  Level   Num of rows   Num of nonzeros   Avg. NNZ / row   \n");
+        printf("-----------------------------------------------------------\n");
         
         for ( level = 0; level < max_levels; ++level) {
             REAL AvgNNZ = mgl[level].A.nnz/mgl[level].A.row;
-            printf("%5d  %14d  %16d  %15.1f\n",
+            printf("%5d %13d %17d %12.1f\n",
                    level, mgl[level].A.row, mgl[level].A.nnz, AvgNNZ);
             gridcom += mgl[level].A.row;
             opcom   += mgl[level].A.nnz;
         }
-        printf("----------------------------------------------------------------\n");
+        printf("-----------------------------------------------------------\n");
         
         gridcom /= mgl[0].A.row;
         opcom   /= mgl[0].A.nnz;
