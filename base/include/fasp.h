@@ -27,23 +27,6 @@
 /*---------------------------*/
 
 /**
- * \brief Flags for developer's use only
- */
-// When this flag is ON, the extra printing will be enabled for debug purpose
-// #define DEBUG_MODE       OFF /**< output DEBUG information */
-// When this flag is ON, the extra printing will be enabled for debug purpose
-// #define CHMEM_MODE       OFF /**< output MEMORY usage information */
-// These two flags have been disable in fasp.h and you can enable it in the Makefile
-// file. --Chensong 01/30/2014
-
-/**
- * \brief Flags for diagonal preference data structures
- */
-#define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
-// When this flag is ON, the matrix rows will be reordered as diagonal entries first
-// Use with caution!!!
-
-/**
  * \brief For external software package support
  */
 #define FASP_USE_ILU     ON  /**< enable ILU or not */
@@ -51,13 +34,22 @@
 #define NEDMALLOC        OFF /**< use nedmalloc instead of standard malloc */
 
 /**
- * \brief For internal code branches and data types
+ * \brief Flags for internal uses (change with caution!!!)
  */
-#define RS_C1            ON         /**< CF splitting of RS: check C1 Criterion */
+#define RS_C1            ON  /**< CF splitting of RS: check C1 Criterion */
+                             // When this flag is OFF, do not force C1 criterion for
+                             // the classical AMG method
+#define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
+                             // When this flag is ON, the matrix rows need to be
+                             // reordered as diagonal entries first
+
+/**
+ * \brief FASP integer and floating point numbers
+ */
 #define SHORT            short      /**< short integer type */
 #define INT              int        /**< regular integer type: int or long */
 #define LONG             long       /**< long integer type */
-#define LONGLONG         long long  /**< long integer type */ 
+#define LONGLONG         long long  /**< long integer type */
 #define REAL             double     /**< float type */
 
 /**
@@ -70,7 +62,7 @@
 #define STAG_RATIO       1e-4  /**< Staganation tolerance = tol*STAGRATIO */
 #define MAX_STAG         20    /**< Maximal number of staganation times */
 #define MAX_RESTART      20    /**< Maximal number of restarting */
-#define OPENMP_HOLDS     2000  /**< Switch to sequence or openmp */
+#define OPENMP_HOLDS     2000  /**< Switch to sequence version when size is small */
 
 /** 
  * \brief Definition of max, min, abs
