@@ -20,7 +20,45 @@
 #ifndef __FASP_MESSAGES__		   /*-- allow multiple inclusions --*/
 #define __FASP_MESSAGES__
 
-/** 
+/**
+ * \brief Definition of return status and error messages
+ */
+#define ERROR_OPEN_FILE       -10  /**< fail to open a file */
+#define ERROR_WRONG_FILE      -11  /**< input contains wrong format */
+#define ERROR_INPUT_PAR       -13  /**< wrong input argument */
+#define ERROR_REGRESS         -14  /**< regression test fail */
+#define ERROR_NUM_BLOCKS      -18  /**< wrong number of blocks */
+#define ERROR_MISC            -19  /**< other error */
+//---------------------------------------------------------------------------------
+#define ERROR_ALLOC_MEM       -20  /**< fail to allocate memory */
+#define ERROR_DATA_STRUCTURE  -21  /**< problem with data structures */
+#define ERROR_DATA_ZERODIAG   -22  /**< matrix has zero diagonal entries */
+#define ERROR_DUMMY_VAR       -23  /**< unexpected input data */
+//---------------------------------------------------------------------------------
+#define ERROR_AMG_INTERP_TYPE -30  /**< unknown interpolation type */
+#define ERROR_AMG_SMOOTH_TYPE -31  /**< unknown smoother type */
+#define ERROR_AMG_COARSE_TYPE -32  /**< unknown coarsening type */
+#define ERROR_AMG_COARSEING   -33  /**< coarsening step failed to complete */
+//---------------------------------------------------------------------------------
+#define ERROR_SOLVER_TYPE     -40  /**< unknown solver type */
+#define ERROR_SOLVER_PRECTYPE -41  /**< unknow precond type */
+#define ERROR_SOLVER_STAG     -42  /**< solver stagnates */
+#define ERROR_SOLVER_SOLSTAG  -43  /**< solver's solution is too small */
+#define ERROR_SOLVER_TOLSMALL -44  /**< solver's tolerance is too small */
+#define ERROR_SOLVER_ILUSETUP -45  /**< ILU setup error */
+#define ERROR_SOLVER_MISC     -46  /**< misc solver error during run time */
+#define ERROR_SOLVER_MAXIT    -48  /**< maximal iteration number exceeded */
+#define ERROR_SOLVER_EXIT     -49  /**< solver does not quit successfully */
+//---------------------------------------------------------------------------------
+#define ERROR_QUAD_TYPE       -60  /**< unknown quadrature type */
+#define ERROR_QUAD_DIM        -61  /**< unsupported quadrature dim */
+//---------------------------------------------------------------------------------
+#define ERROR_LIC_TYPE        -80  /**< wrong license type */
+//---------------------------------------------------------------------------------
+#define RUN_FAIL              -99  /**< general failure */
+#define SUCCESS                 0  /**< return from funtion successfully */
+
+/**
  * \brief Definition of logic type  
  */
 #define TRUE                    1  /**< logic TRUE */
@@ -54,45 +92,7 @@
 #define MAT_CSRL                6  /**< modified CSR to reduce cache missing */
 #define MAT_SymCSR              7  /**< symmetric CSR format */
 
-/** 
- * \brief Definition of return status and error messages
- */
-#define ERROR_OPEN_FILE       -10  /**< fail to open a file */
-#define ERROR_WRONG_FILE      -11  /**< input contains wrong format */
-#define ERROR_INPUT_PAR       -13  /**< wrong input argument */
-#define ERROR_REGRESS         -14  /**< regression test fail */
-#define ERROR_NUM_BLOCKS      -18  /**< wrong number of blocks */
-#define ERROR_MISC            -19  /**< other error */
-//---------------------------------------------------------------------------------
-#define ERROR_ALLOC_MEM       -20  /**< fail to allocate memory */
-#define ERROR_DATA_STRUCTURE  -21  /**< matrix or vector structures */
-#define ERROR_DATA_ZERODIAG   -22  /**< matrix has zero diagonal entries */
-#define ERROR_DUMMY_VAR       -23  /**< unexpected input data */
-//---------------------------------------------------------------------------------
-#define ERROR_AMG_INTERP_TYPE -30  /**< unknown interpolation type */
-#define ERROR_AMG_SMOOTH_TYPE -31  /**< unknown smoother type */
-#define ERROR_AMG_COARSE_TYPE -32  /**< unknown coarsening type */
-#define ERROR_AMG_COARSEING   -33  /**< coarsening step failed to complete */
-//---------------------------------------------------------------------------------
-#define ERROR_SOLVER_TYPE     -40  /**< unknown solver type */
-#define ERROR_SOLVER_PRECTYPE -41  /**< unknow precond type */
-#define ERROR_SOLVER_STAG     -42  /**< solver stagnates */
-#define ERROR_SOLVER_SOLSTAG  -43  /**< solver's solution is too small */
-#define ERROR_SOLVER_TOLSMALL -44  /**< solver's tolerance is too small */
-#define ERROR_SOLVER_ILUSETUP -45  /**< ILU setup error */
-#define ERROR_SOLVER_MISC     -46  /**< misc solver error during run time */
-#define ERROR_SOLVER_MAXIT    -48  /**< maximal iteration number exceeded */
-#define ERROR_SOLVER_EXIT     -49  /**< solver does not quit successfully */
-//---------------------------------------------------------------------------------
-#define ERROR_QUAD_TYPE       -60  /**< unknown quadrature type */
-#define ERROR_QUAD_DIM        -61  /**< unsupported quadrature dim */
-//---------------------------------------------------------------------------------
-#define ERROR_LIC_TYPE        -80  /**< wrong license type */
-//---------------------------------------------------------------------------------
-#define RUN_FAIL              -99  /**< general failure */
-#define SUCCESS                 0  /**< return from funtion successfully */
-
-/** 
+/**
  * \brief Definition of solver types for iterative methods
  */
 #define SOLVER_CG               1  /**< Conjugate Gradient */
@@ -157,7 +157,7 @@
  */
 #define V_CYCLE	                1  /**< V-cycle */
 #define W_CYCLE                 2  /**< W-cycle */
-#define AMLI_CYCLE	            3  /**< AMLI-cycle */
+#define AMLI_CYCLE              3  /**< AMLI-cycle */
 #define NL_AMLI_CYCLE           4  /**< Nonlinear AMLI-cycle */
 
 /** 
@@ -217,7 +217,7 @@
 #define ASCEND                 12  /**< Asscending order */
 #define DESCEND                21  /**< Dsscending order */
 
-#endif			                   /* end if for __FASP_MESSAGES__ */
+#endif                             /* end if for __FASP_MESSAGES__ */
 
 /*---------------------------------*/
 /*--        End of File          --*/
