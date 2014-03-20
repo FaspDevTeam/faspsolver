@@ -4,7 +4,7 @@
  *
  *  \note Contains AMLI and nonlinear AMLI cycles
  *
- *  TODO: Need to add a non-recursive version! --Chensong 
+ *  TODO: Need to add a non-recursive version! --Chensong
  */
 
 #include <math.h>
@@ -34,10 +34,10 @@
  *
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
-void fasp_solver_amli (AMG_data *mgl, 
-                       AMG_param *param, 
+void fasp_solver_amli (AMG_data *mgl,
+                       AMG_param *param,
                        INT level)
-{    
+{
     const SHORT  amg_type=param->AMG_type;
     const SHORT  print_level = param->print_level;
     const SHORT  smoother = param->smoother;
@@ -68,10 +68,10 @@ void fasp_solver_amli (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    if (print_level>=PRINT_MOST) 
+    if (print_level>=PRINT_MOST)
         printf("AMLI level %d, pre-smoother %d.\n", level, smoother);
     
-    if (level < mgl[level].num_levels-1) { 
+    if (level < mgl[level].num_levels-1) {
         
         // pre smoothing
         if (level<param->ILU_levels) {
@@ -80,56 +80,56 @@ void fasp_solver_amli (AMG_data *mgl,
         else if (level<mgl->schwarz_levels){
             switch (mgl[level].schwarz.schwarz_type){
                 case 3: // TODO: Need to give a name instead of 3 --Chensong
-		     fbgs2ns_(&(mgl[level].schwarz.A.row),
-                     mgl[level].schwarz.A.IA,
-                     mgl[level].schwarz.A.JA,
-                     mgl[level].schwarz.A.val,
-                     mgl[level].x.val, 
-                     mgl[level].b.val,
-                     &(mgl[level].schwarz.nblk),
-                     mgl[level].schwarz.iblock,
-                     mgl[level].schwarz.jblock,
-                     mgl[level].schwarz.mask,
-                     mgl[level].schwarz.maxa,
-                     mgl[level].schwarz.au,
-                     mgl[level].schwarz.al,
-                     mgl[level].schwarz.rhsloc,
-                     &(mgl[level].schwarz.memt));
-                     bbgs2ns_(&(mgl[level].schwarz.A.row),
-                     mgl[level].schwarz.A.IA,
-                     mgl[level].schwarz.A.JA,
-                     mgl[level].schwarz.A.val,
-                     mgl[level].x.val,
-                     mgl[level].b.val,
-                     &(mgl[level].schwarz.nblk),
-                     mgl[level].schwarz.iblock,
-                     mgl[level].schwarz.jblock,
-                     mgl[level].schwarz.mask,
-                     mgl[level].schwarz.maxa,
-                     mgl[level].schwarz.au,
-                     mgl[level].schwarz.al,
-                     mgl[level].schwarz.rhsloc,
-                     &(mgl[level].schwarz.memt));
-                     break;
+                    fbgs2ns_(&(mgl[level].schwarz.A.row),
+                             mgl[level].schwarz.A.IA,
+                             mgl[level].schwarz.A.JA,
+                             mgl[level].schwarz.A.val,
+                             mgl[level].x.val,
+                             mgl[level].b.val,
+                             &(mgl[level].schwarz.nblk),
+                             mgl[level].schwarz.iblock,
+                             mgl[level].schwarz.jblock,
+                             mgl[level].schwarz.mask,
+                             mgl[level].schwarz.maxa,
+                             mgl[level].schwarz.au,
+                             mgl[level].schwarz.al,
+                             mgl[level].schwarz.rhsloc,
+                             &(mgl[level].schwarz.memt));
+                    bbgs2ns_(&(mgl[level].schwarz.A.row),
+                             mgl[level].schwarz.A.IA,
+                             mgl[level].schwarz.A.JA,
+                             mgl[level].schwarz.A.val,
+                             mgl[level].x.val,
+                             mgl[level].b.val,
+                             &(mgl[level].schwarz.nblk),
+                             mgl[level].schwarz.iblock,
+                             mgl[level].schwarz.jblock,
+                             mgl[level].schwarz.mask,
+                             mgl[level].schwarz.maxa,
+                             mgl[level].schwarz.au,
+                             mgl[level].schwarz.al,
+                             mgl[level].schwarz.rhsloc,
+                             &(mgl[level].schwarz.memt));
+                    break;
                 default:
-                     fbgs2ns_(&(mgl[level].schwarz.A.row),
-                     mgl[level].schwarz.A.IA,
-                     mgl[level].schwarz.A.JA,
-                     mgl[level].schwarz.A.val,
-                     mgl[level].x.val,
-                     mgl[level].b.val,
-                     &(mgl[level].schwarz.nblk),
-                     mgl[level].schwarz.iblock,
-                     mgl[level].schwarz.jblock,
-                     mgl[level].schwarz.mask,
-                     mgl[level].schwarz.maxa,
-                     mgl[level].schwarz.au,
-                     mgl[level].schwarz.al,
-                     mgl[level].schwarz.rhsloc,
-                     &(mgl[level].schwarz.memt));
-                     break;
-                }
-         }
+                    fbgs2ns_(&(mgl[level].schwarz.A.row),
+                             mgl[level].schwarz.A.IA,
+                             mgl[level].schwarz.A.JA,
+                             mgl[level].schwarz.A.val,
+                             mgl[level].x.val,
+                             mgl[level].b.val,
+                             &(mgl[level].schwarz.nblk),
+                             mgl[level].schwarz.iblock,
+                             mgl[level].schwarz.jblock,
+                             mgl[level].schwarz.mask,
+                             mgl[level].schwarz.maxa,
+                             mgl[level].schwarz.au,
+                             mgl[level].schwarz.al,
+                             mgl[level].schwarz.rhsloc,
+                             &(mgl[level].schwarz.memt));
+                    break;
+            }
+        }
         
         else {
             fasp_dcsr_presmoothing(smoother,A_level0,b0,e0,param->presmooth_iter,
@@ -137,19 +137,19 @@ void fasp_solver_amli (AMG_data *mgl,
         }
         
         // form residual r = b - A x
-        fasp_array_cp(m0,b0->val,r); 
+        fasp_array_cp(m0,b0->val,r);
         fasp_blas_dcsr_aAxpy(-1.0,A_level0,e0->val,r);
         
         // restriction r1 = R*r0
-        switch (amg_type) {    
-            case UA_AMG: 
+        switch (amg_type) {
+            case UA_AMG:
                 fasp_blas_dcsr_mxv_agg(&mgl[level].R, r, b1->val); break;
             default:
                 fasp_blas_dcsr_mxv(&mgl[level].R, r, b1->val); break;
         }
         
         // coarse grid correction
-        { 
+        {
             fasp_array_cp(m1,b1->val,r1);
             
             INT i;
@@ -159,19 +159,19 @@ void fasp_solver_amli (AMG_data *mgl,
                 
                 // b1 = (coef[degree-i]/coef[degree])*r1 + A_level1*e1;
                 // First, compute b1 = A_level1*e1
-                fasp_blas_dcsr_mxv(A_level1, e1->val, b1->val); 
+                fasp_blas_dcsr_mxv(A_level1, e1->val, b1->val);
                 // Then, compute b1 = b1 + (coef[degree-i]/coef[degree])*r1
-                fasp_blas_array_axpy(m1, coef[degree-i]/coef[degree], r1, b1->val); 
+                fasp_blas_array_axpy(m1, coef[degree-i]/coef[degree], r1, b1->val);
             }
             
-            fasp_dvec_set(m1,e1,0.0);    
+            fasp_dvec_set(m1,e1,0.0);
             fasp_solver_amli(mgl, param, level+1);
         }
         
         // find the optimal scaling factor alpha
         fasp_blas_array_ax(m1, coef[degree], e1->val);
         if ( param->coarse_scaling == ON ) {
-            alpha = fasp_blas_array_dotprod(m1, e1->val, r1) 
+            alpha = fasp_blas_array_dotprod(m1, e1->val, r1)
             / fasp_blas_dcsr_vmv(A_level1, e1->val, e1->val);
         }
         
@@ -181,7 +181,7 @@ void fasp_solver_amli (AMG_data *mgl,
                 fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[level].P, e1->val, e0->val); break;
             default:
                 fasp_blas_dcsr_aAxpy(alpha, &mgl[level].P, e1->val, e0->val); break;
-        }    
+        }
         
         // post smoothing
         if (level < param->ILU_levels) {
@@ -194,7 +194,7 @@ void fasp_solver_amli (AMG_data *mgl,
                              mgl[level].schwarz.A.IA,
                              mgl[level].schwarz.A.JA,
                              mgl[level].schwarz.A.val,
-                             mgl[level].x.val, 
+                             mgl[level].x.val,
                              mgl[level].b.val,
                              &(mgl[level].schwarz.nblk),
                              mgl[level].schwarz.iblock,
@@ -259,13 +259,13 @@ void fasp_solver_amli (AMG_data *mgl,
 #elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         fasp_solver_superlu(A_level0, b0, e0, 0);
-#else    
+#else
         /* use iterative solver on the coarest level */
         fasp_coarse_itsolver(A_level0, b0, e0, param->tol, print_level);
-#endif 
+#endif
     }
     
-    if (print_level>=PRINT_MOST) 
+    if (print_level>=PRINT_MOST)
         printf("AMLI level %d, post-smoother %d.\n", level, smoother);
     
 #if DEBUG_MODE
@@ -274,7 +274,7 @@ void fasp_solver_amli (AMG_data *mgl,
 }
 
 /**
- * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param, 
+ * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param,
  *                               INT level, INT num_levels)
  *
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
@@ -289,11 +289,11 @@ void fasp_solver_amli (AMG_data *mgl,
  *
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
-void fasp_solver_nl_amli (AMG_data *mgl, 
-                          AMG_param *param, 
-                          INT level, 
+void fasp_solver_nl_amli (AMG_data *mgl,
+                          AMG_param *param,
+                          INT level,
                           INT num_levels)
-{    
+{
     const SHORT  amg_type=param->AMG_type;
     const SHORT  print_level = param->print_level;
     const SHORT  smoother = param->smoother;
@@ -322,10 +322,10 @@ void fasp_solver_nl_amli (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    if (print_level>=PRINT_MOST) 
-        printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
+    if (print_level>=PRINT_MOST)
+        printf("Nonlinear AMLI level %d, pre-smoother %d.\n", num_levels, smoother);
     
-    if (level < num_levels-1) { 
+    if (level < num_levels-1) {
         
         // pre smoothing
         if (level<param->ILU_levels) {
@@ -370,7 +370,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                              mgl[level].schwarz.A.IA,
                              mgl[level].schwarz.A.JA,
                              mgl[level].schwarz.A.val,
-                             mgl[level].x.val, 
+                             mgl[level].x.val,
                              mgl[level].b.val,
                              &(mgl[level].schwarz.nblk),
                              mgl[level].schwarz.iblock,
@@ -391,12 +391,12 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         }
         
         // form residual r = b - A x
-        fasp_array_cp(m0,b0->val,r); 
+        fasp_array_cp(m0,b0->val,r);
         fasp_blas_dcsr_aAxpy(-1.0,A_level0,e0->val,r);
         
         // restriction r1 = R*r0
-        switch (amg_type) {    
-            case UA_AMG: 
+        switch (amg_type) {
+            case UA_AMG:
                 fasp_blas_dcsr_mxv_agg(&mgl[level].R, r, b1->val);
                 break;
             default:
@@ -405,8 +405,8 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         }
         
         // call nonlinear AMLI-cycle recursively
-        {         
-            fasp_dvec_set(m1,e1,0.0);    
+        {
+            fasp_dvec_set(m1,e1,0.0);
             
             // The coarsest problem is solved exactly.
             // No need to call krylov method on second coarest level
@@ -422,14 +422,14 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                 pcdata.mgl_data = &mgl[level+1];
                 
                 precond pc;
-                pc.data = &pcdata; 
+                pc.data = &pcdata;
                 pc.fct = fasp_precond_nl_amli;
                 
                 fasp_array_cp (m1, b1->val, bH.val);
                 fasp_array_cp (m1, e1->val, uH.val);
                 
                 const INT maxit = param->amli_degree+1;
-                const REAL tol = 1e-12;
+                const REAL tol = 1e-8;
                 
                 switch (param->nl_amli_krylov_type) {
                     case SOLVER_GCG: // Use GCG
@@ -532,13 +532,13 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 #elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         fasp_solver_superlu(A_level0, b0, e0, 0);
-#else    
+#else
         /* use iterative solver on the coarest level */
         fasp_coarse_itsolver(A_level0, b0, e0, param->tol, print_level);
-#endif 
+#endif
     }
     
-    if (print_level>=PRINT_MOST) 
+    if (print_level>=PRINT_MOST)
         printf("Nonlinear AMLI level %d, post-smoother %d.\n", level, smoother);
     
 #if DEBUG_MODE
@@ -547,7 +547,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 }
 
 /**
- * \fn void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, AMG_param *param, 
+ * \fn void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, AMG_param *param,
  *                                   INT level, INT num_levels)
  *
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
@@ -562,11 +562,11 @@ void fasp_solver_nl_amli (AMG_data *mgl,
  *
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
-void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, 
-                              AMG_param *param, 
-                              INT level, 
+void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
+                              AMG_param *param,
+                              INT level,
                               INT num_levels)
-{    
+{
     const SHORT  print_level = param->print_level;
     const SHORT  smoother = param->smoother;
     const REAL relax = param->relaxation;
@@ -594,7 +594,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
     if (print_level>=PRINT_MOST)
         printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
     
-    if (level < num_levels-1) { 
+    if (level < num_levels-1) {
         
         // pre smoothing
         if (level<param->ILU_levels) {
@@ -606,33 +606,33 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
             if (steps > 0){
                 switch (smoother) {
                     case SMOOTHER_JACOBI:
-                        for (i=0; i<steps; i++) 
+                        for (i=0; i<steps; i++)
                             fasp_smoother_dbsr_jacobi (A_level0, b0, e0);
                         break;
                     case SMOOTHER_GS:
-                        for (i=0; i<steps; i++) 
+                        for (i=0; i<steps; i++)
                             fasp_smoother_dbsr_gs (A_level0, b0, e0, ASCEND, NULL);
                         break;
                     case SMOOTHER_SOR:
-                        for (i=0; i<steps; i++) 
+                        for (i=0; i<steps; i++)
                             fasp_smoother_dbsr_sor (A_level0, b0, e0, ASCEND, NULL,relax);
                         break;
                     default:
-                        printf("### ERROR: Wrong smoother type %d!\n", smoother); 
+                        printf("### ERROR: Wrong smoother type %d!\n", smoother);
                         exit(ERROR_INPUT_PAR);
                 }
             }
         }
         
         // form residual r = b - A x
-        fasp_array_cp(m0,b0->val,r); 
+        fasp_array_cp(m0,b0->val,r);
         fasp_blas_dbsr_aAxpy(-1.0,A_level0,e0->val,r);
         
         fasp_blas_dbsr_mxv(&mgl[level].R, r, b1->val);
         
         // call nonlinear AMLI-cycle recursively
-        { 
-            fasp_dvec_set(m1,e1,0.0);    
+        {
+            fasp_dvec_set(m1,e1,0.0);
             
             // The coarsest problem is solved exactly.
             // No need to call krylov method on second coarest level
@@ -648,7 +648,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                 pcdata.mgl_data = &mgl[level+1];
                 
                 precond pc;
-                pc.data = &pcdata; 
+                pc.data = &pcdata;
                 pc.fct = fasp_precond_dbsr_nl_amli;
                 
                 fasp_array_cp (m1, b1->val, bH.val);
@@ -658,9 +658,9 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                 const REAL tol = 1e-12;
                 
                 // switch (param->nl_amli_krylov_type) {
-                // default: // only FGMRES is supported so far --Chensong 
+                // default: // only FGMRES is supported so far --Chensong
                 fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH,&pc,tol,maxit,MIN(maxit,30),1,PRINT_NONE);
-                //     break; 
+                //     break;
                 // }
                 
                 fasp_array_cp (m1, bH.val, b1->val);
@@ -681,19 +681,19 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
             if (steps > 0){
                 switch (smoother) {
                     case SMOOTHER_JACOBI:
-                        for (i=0; i<steps; i++) 
+                        for (i=0; i<steps; i++)
                             fasp_smoother_dbsr_jacobi (A_level0, b0, e0);
                         break;
                     case SMOOTHER_GS:
-                        for (i=0; i<steps; i++) 
+                        for (i=0; i<steps; i++)
                             fasp_smoother_dbsr_gs(A_level0, b0, e0, ASCEND, NULL);
                         break;
                     case SMOOTHER_SOR:
-                        for (i=0; i<steps; i++) 
+                        for (i=0; i<steps; i++)
                             fasp_smoother_dbsr_sor(A_level0, b0, e0, ASCEND, NULL,relax);
                         break;
                     default:
-                        printf("### ERROR: Wrong smoother type!\n"); 
+                        printf("### ERROR: Wrong smoother type!\n");
                         exit(ERROR_INPUT_PAR);
                 }
             }
@@ -712,13 +712,13 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 #elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         fasp_solver_superlu(&mgl[level].Ac, b0, e0, 0);
-#else    
+#else
         /* use iterative solver on the coarest level */
-        fasp_coarse_itsolver(&mgl[level].Ac, b0, e0, param->tol, print_level);  
-#endif 
+        fasp_coarse_itsolver(&mgl[level].Ac, b0, e0, param->tol, print_level);
+#endif
     }
     
-    if (print_level>=PRINT_MOST) 
+    if (print_level>=PRINT_MOST)
         printf("Nonlinear AMLI level %d, post-smoother %d.\n", level, smoother);
     
 #if DEBUG_MODE
@@ -727,7 +727,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 }
 
 /**
- * \fn void fasp_amg_amli_coef (const REAL lambda_max, const REAL lambda_min, 
+ * \fn void fasp_amg_amli_coef (const REAL lambda_max, const REAL lambda_min,
  *                              const INT degree, REAL *coef)
  *
  * \brief Compute the coefficients of the polynomial used by AMLI-cycle
@@ -736,13 +736,13 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
  * \param lambda_min  Minimal lambda
  * \param degree      Degree of polynomial approximation
  * \param coef        Coefficient of AMLI (output)
- * 
+ *
  * \author Xiaozhe Hu
  * \date   01/23/2011
  */
-void fasp_amg_amli_coef (const REAL lambda_max, 
-                         const REAL lambda_min, 
-                         const INT degree, 
+void fasp_amg_amli_coef (const REAL lambda_max,
+                         const REAL lambda_min,
+                         const INT degree,
                          REAL *coef)
 {
     const REAL mu0 = 1.0/lambda_max, mu1 = 1.0/lambda_min;
@@ -750,7 +750,7 @@ void fasp_amg_amli_coef (const REAL lambda_max,
     const REAL a = (4*mu0*mu1)/(c);
     
     const REAL kappa = lambda_max/lambda_min; // condition number
-    const REAL delta = (sqrt(kappa) - 1.0)/(sqrt(kappa)+1.0);  
+    const REAL delta = (sqrt(kappa) - 1.0)/(sqrt(kappa)+1.0);
     const REAL b = delta*delta;
     
     if (degree == 0) {
@@ -765,7 +765,7 @@ void fasp_amg_amli_coef (const REAL lambda_max,
     else if (degree > 1) {
         INT i;
         
-        // allocate memory 
+        // allocate memory
         REAL *work = (REAL *)fasp_mem_calloc(2*degree-1, sizeof(REAL));
         REAL *coef_k, *coef_km1;
         coef_k = work; coef_km1 = work+degree;
@@ -775,7 +775,7 @@ void fasp_amg_amli_coef (const REAL lambda_max,
         // get q_km1
         fasp_amg_amli_coef(lambda_max, lambda_min, degree-2, coef_km1);
         
-        // get coef    
+        // get coef
         coef[0] = a - b*coef_km1[0] + (1+b)*coef_k[0];
         
         for (i=1; i<degree-1; i++) {
