@@ -1313,7 +1313,7 @@ static double fasp_spectral_radius(dCSRmat *A,
         
 		//H_(j+1,j) = cusp::blas::nrm2(V[j + 1]);
         hh[j+1][j] =  fasp_blas_array_norm2 (n, p[j+1]);
-		if( hh[j+1][j] < 1e-10) break;
+		if ( hh[j+1][j] < 1e-10) break;
 		//cusp::blas::scal(V[j + 1], ValueType(1) / H_(j+1,j));
 		t = 1.0/hh[j+1][j];
         for (int  k = 0; k < n; k ++) p[j+1][k] *= t;

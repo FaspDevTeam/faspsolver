@@ -340,7 +340,7 @@ void fasp_param_input_init (input_param *iniparam)
     
     // AMG method parameters
     iniparam->AMG_type                 = CLASSIC_AMG;
-    iniparam->AMG_levels               = 15;
+    iniparam->AMG_levels               = 20;
     iniparam->AMG_cycle_type           = V_CYCLE;
     iniparam->AMG_smoother             = SMOOTHER_GS;
     iniparam->AMG_smooth_order         = CF_ORDER;
@@ -348,7 +348,7 @@ void fasp_param_input_init (input_param *iniparam)
     iniparam->AMG_postsmooth_iter      = 1;
     iniparam->AMG_relaxation           = 1.0;
     iniparam->AMG_coarse_dof           = 500;
-    iniparam->AMG_tol                  = 1e-4*iniparam->itsolver_tol;
+    iniparam->AMG_tol                  = 1e-6;
     iniparam->AMG_maxit                = 1;
     iniparam->AMG_ILU_levels           = 0;
     iniparam->AMG_schwarz_levels       = 0;
@@ -388,10 +388,10 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->AMG_type             = CLASSIC_AMG;
     amgparam->print_level          = PRINT_NONE;
     amgparam->maxit                = 1;
-    amgparam->tol                  = 1e-8;
+    amgparam->tol                  = 1e-6;
     
     // AMG method parameters
-    amgparam->max_levels           = 15;
+    amgparam->max_levels           = 20;
     amgparam->coarse_dof           = 500;
     amgparam->cycle_type           = V_CYCLE;
     amgparam->smoother             = SMOOTHER_GS;
@@ -452,7 +452,7 @@ void fasp_param_solver_init (itsolver_param *itsparam)
     itsparam->stop_type     = STOP_REL_RES;
     itsparam->maxit         = 500;
     itsparam->restart       = 25;
-    itsparam->tol           = 1e-8;
+    itsparam->tol           = 1e-6;
 }
 
 /**
