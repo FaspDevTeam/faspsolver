@@ -5,6 +5,7 @@ File Name: CHANGES
 - Clean up a few files for further optimization.
 - Check diagonal preference branch for GS.
 - Update FASP header files.
+- Update VS10 solution settings.
 - Update FASP webpage.
 
 03/14/2014 FASP 1.4.5:
