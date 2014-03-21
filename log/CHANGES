@@ -4,6 +4,7 @@ File Name: CHANGES
 - Change AMG setup output layout. 
 - Clean up a few files for further optimization.
 - Check diagonal preference branch for GS.
+- Modify default parameters in input files. 
 - Update FASP header files.
 - Update VS10 solution settings.
 - Update FASP webpage.

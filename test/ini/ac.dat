@@ -1,5 +1,5 @@
 %----------------------------------------------%
-% input parameters                             %
+% input parameters: Aggressive Coarsening      %
 % lines starting with % are comments           %
 % must have spaces around the equal sign "="   %
 %----------------------------------------------%
@@ -60,7 +60,7 @@ AMG_cycle_type           = V      % V V-cycle | W W-cycle
 AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
-AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
+AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 1      % degree of the polynomial used by AMLI cycle
 AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
@@ -76,8 +76,8 @@ AMG_ILU_levels           = 0      % number of levels using ILU smoother
 AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.1    % relaxation parameter for SOR smoother 
 AMG_polynomial_degree	 = 3      % degree of the polynomial smoother
-AMG_presmooth_iter       = 2      % number of presmoothing sweeps
-AMG_postsmooth_iter      = 2      % number of postsmoothing sweeps
+AMG_presmooth_iter       = 1      % number of presmoothing sweeps
+AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
 
 %----------------------------------------------%
 % parameters for classical AMG SETUP           %
