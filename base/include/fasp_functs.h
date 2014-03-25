@@ -65,23 +65,23 @@ void fasp_famg_solve (AMG_data *mgl,
 
 /*-------- In file: amlirecur.c --------*/
 
-void fasp_solver_amli (AMG_data *mgl, 
-                       AMG_param *param, 
+void fasp_solver_amli (AMG_data *mgl,
+                       AMG_param *param,
                        INT level);
 
-void fasp_solver_nl_amli (AMG_data *mgl, 
-                          AMG_param *param, 
-                          INT level, 
+void fasp_solver_nl_amli (AMG_data *mgl,
+                          AMG_param *param,
+                          INT level,
                           INT num_levels);
 
-void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, 
-                              AMG_param *param, 
-                              INT level, 
+void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
+                              AMG_param *param,
+                              INT level,
                               INT num_levels);
 
-void fasp_amg_amli_coef (const REAL lambda_max, 
-                         const REAL lambda_min, 
-                         const INT degree, 
+void fasp_amg_amli_coef (const REAL lambda_max,
+                         const REAL lambda_min,
+                         const INT degree,
                          REAL *coef);
 
 
@@ -193,13 +193,13 @@ REAL fasp_blas_array_dotprod (const INT n,
                               const REAL * y);
 
 REAL fasp_blas_array_norm1 (const INT n,
-                            const REAL *x);
+                            const REAL * x);
 
 REAL fasp_blas_array_norm2 (const INT n,
-                            const REAL *x);
+                            const REAL * x);
 
 REAL fasp_blas_array_norminf (const INT n,
-                              REAL *x);
+                              const REAL * x);
 
 
 /*-------- In file: blas_bcsr.c --------*/

@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+03/26/2014 FASP 1.4.7:
+- Fix a bug which makes regression results depend on the default parameters unwantedly. 
+- Fix a coarsest level iterative method tolerance problem for AMG.
+- Update regression test results.
+- Test GCC4.8 on OS X Mavericks.
+
 03/19/2014 FASP 1.4.6:
 - Change AMG setup output layout. 
 - Clean up a few files for further optimization.

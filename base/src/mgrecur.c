@@ -33,11 +33,12 @@ void fasp_solver_mgrecur (AMG_data *mgl,
                           INT level)
 {
     
-    const SHORT  print_level = param->print_level;
+    const SHORT  prtlvl = param->print_level;
     const SHORT  smoother = param->smoother;
     const SHORT  cycle_type = param->cycle_type;
     const SHORT  smooth_order = param->smooth_order;
     const REAL   relax = param->relaxation;
+    const REAL   tol = param->tol*1e-4;
     const SHORT  ndeg = param->polynomial_degree;
     
     dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x; // fine level b and x
@@ -56,7 +57,7 @@ void fasp_solver_mgrecur (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    if (print_level>=PRINT_MOST) printf("AMG level %d, pre-smoother %d.\n", level, smoother);
+    if (prtlvl>=PRINT_MOST) printf("AMG level %d, pre-smoother %d.\n", level, smoother);
     
     if (level < mgl[level].num_levels-1) {
         
@@ -109,11 +110,11 @@ void fasp_solver_mgrecur (AMG_data *mgl,
         fasp_solver_superlu(A0, b0, e0, 0);
 #else
         /* use default iterative solver on the coarest level */
-        fasp_coarse_itsolver(A0, b0, e0, param->tol, print_level);
+        fasp_coarse_itsolver(A0, b0, e0, tol, prtlvl);
 #endif
     }
     
-    if (print_level>=PRINT_MOST) printf("AMG level %d, post-smoother %d.\n", level, smoother);
+    if (prtlvl>=PRINT_MOST) printf("AMG level %d, post-smoother %d.\n", level, smoother);
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_mgrecur ...... [Finish]\n");

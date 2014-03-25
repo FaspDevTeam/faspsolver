@@ -545,6 +545,8 @@ int main (int argc, const char * argv[])
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
             fasp_param_ilu_init(&iluparam);
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-8;
             itparam.print_level   = print_level;
             fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
             

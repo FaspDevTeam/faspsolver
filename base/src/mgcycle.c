@@ -42,12 +42,13 @@ void fasp_solver_mgcycle (AMG_data *mgl,
                           AMG_param *param)
 {    
     const SHORT  amg_type=param->AMG_type;
-    const SHORT  print_level = param->print_level;
+    const SHORT  prtlvl = param->print_level;
     const SHORT  smoother = param->smoother;
     const SHORT  smooth_order = param->smooth_order;
     const SHORT  cycle_type = param->cycle_type;
     const SHORT  nl = mgl[0].num_levels;
     const REAL   relax = param->relaxation;
+    const REAL   tol = param->tol * 1e-4;
     const SHORT  ndeg = param->polynomial_degree;
     
     // local variables
@@ -58,7 +59,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    if (print_level >= PRINT_MOST) 
+    if (prtlvl >= PRINT_MOST) 
         printf("MG: AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
     
     INT num_lvl[MAX_AMG_LVL] = {0}, l = 0;
@@ -127,14 +128,17 @@ void fasp_solver_mgcycle (AMG_data *mgl,
         else {
 #if FASP_GSRB
 	        if (( l==0 )&&(nx_rb>1))
-				fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b, param->presmooth_iter,
-				                           1, IMAP, MAXIMAP, nx_rb, ny_rb, nz_rb);
+				fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
+                                           param->presmooth_iter, 1, IMAP, MAXIMAP,
+                                           nx_rb, ny_rb, nz_rb);
 			else
-				fasp_dcsr_presmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->presmooth_iter,
-									   0,mgl[l].A.row-1,1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
+				fasp_dcsr_presmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
+                                       param->presmooth_iter, 0, mgl[l].A.row-1, 1,
+                                       relax, ndeg, smooth_order, mgl[l].cfmark.val);
 #else
-            fasp_dcsr_presmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->presmooth_iter,
-                                   0,mgl[l].A.row-1,1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
+            fasp_dcsr_presmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
+                                   param->presmooth_iter, 0, mgl[l].A.row-1, 1,
+                                   relax, ndeg, smooth_order, mgl[l].cfmark.val);
 #endif
         }
     
@@ -171,7 +175,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
         fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else    
         /* use iterative solver on the coarest level */
-        fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, param->tol, print_level);
+        fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
 #endif
     }
     
@@ -258,14 +262,17 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 
 #if FASP_GSRB
 	        if (( l==0 )&&(nx_rb>1))
-				fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b, param->presmooth_iter,
-				                           -1,IMAP,MAXIMAP,nx_rb,ny_rb,nz_rb);
+				fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
+                                           param->presmooth_iter, -1, IMAP, MAXIMAP,
+                                           nx_rb, ny_rb, nz_rb);
 			else
-            	fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->postsmooth_iter,
-                                        0,mgl[l].A.row-1,-1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
+            	fasp_dcsr_postsmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
+                                        param->postsmooth_iter, 0, mgl[l].A.row-1, -1,
+                                        relax, ndeg, smooth_order,mgl[l].cfmark.val);
 #else
-            fasp_dcsr_postsmoothing(smoother,&mgl[l].A,&mgl[l].b,&mgl[l].x,param->postsmooth_iter,
-                                    0,mgl[l].A.row-1,-1,relax,ndeg,smooth_order,mgl[l].cfmark.val);
+            fasp_dcsr_postsmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
+                                    param->postsmooth_iter, 0, mgl[l].A.row-1, -1,
+                                    relax, ndeg, smooth_order, mgl[l].cfmark.val);
 #endif
         }
     
@@ -294,20 +301,19 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl, 
                               AMG_param *param)
 {    
-    const SHORT print_level = param->print_level;
+    const SHORT prtlvl      = param->print_level;
     const SHORT nl          = mgl[0].num_levels;
     const SHORT smoother    = param->smoother;
     const SHORT cycle_type  = param->cycle_type;    
-    //const INT smooth_order = param->smooth_order;
-    const REAL relax = param->relaxation;
-    INT steps = param->presmooth_iter;
+    const REAL  relax       = param->relaxation;
+          INT   steps       = param->presmooth_iter;
     
     // local variables
     INT nu_l[MAX_AMG_LVL] = {0}, l = 0;
     REAL alpha = 1.0;
     INT i;
 
-    if (print_level >= PRINT_MOST) 
+    if (prtlvl >= PRINT_MOST) 
         printf("AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
 
  ForwardSweep:

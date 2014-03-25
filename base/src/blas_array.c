@@ -290,7 +290,7 @@ REAL fasp_blas_array_dotprod (const INT n,
 }
 
 /**
- * \fn REAL fasp_blas_array_norm1 (const INT n, const REAL *x)
+ * \fn REAL fasp_blas_array_norm1 (const INT n, const REAL * x)
  *
  * \brief L1 norm of array x
  *
@@ -305,7 +305,7 @@ REAL fasp_blas_array_dotprod (const INT n,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 REAL fasp_blas_array_norm1 (const INT n,
-                            const REAL *x)
+                            const REAL * x)
 {
     INT i;
     INT use_openmp = FALSE;
@@ -330,7 +330,7 @@ REAL fasp_blas_array_norm1 (const INT n,
 }
 
 /**
- * \fn REAL fasp_blas_array_norm2 (const INT n, const REAL *x)
+ * \fn REAL fasp_blas_array_norm2 (const INT n, const REAL * x)
  *
  * \brief L2 norm of array x
  *
@@ -345,7 +345,7 @@ REAL fasp_blas_array_norm1 (const INT n,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 REAL fasp_blas_array_norm2 (const INT n,
-                            const REAL *x)
+                            const REAL * x)
 {
     INT i;
     INT use_openmp = FALSE;
@@ -371,7 +371,7 @@ REAL fasp_blas_array_norm2 (const INT n,
 }
 
 /**
- * \fn REAL fasp_blas_array_norminf (const INT n, REAL *x)
+ * \fn REAL fasp_blas_array_norminf (const INT n, const REAL * x)
  *
  * \brief Linf norm of array x
  *
@@ -386,7 +386,7 @@ REAL fasp_blas_array_norm2 (const INT n,
  * Modified by Chunsheng Feng, Zheng Li on 06/28/2012
  */
 REAL fasp_blas_array_norminf (const INT n,
-                              REAL *x)
+                              const REAL * x)
 {
     INT i;
     INT use_openmp = FALSE;
