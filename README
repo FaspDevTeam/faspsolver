@@ -59,8 +59,8 @@ This package has been tested with:
     Fortran: ifort-11.1.x, ifort-12.0.x. 
 
 --Mac OS X
-    C/C++:   gcc-4.4.x, gcc-4.5.x, gcc-4.6.x, icc-11.x; 
-    Fortran: gfortran-4.4.x, gfortran-4.5.x, gfortran-4.6.x, 
+    C/C++:   gcc-4.4.x, gcc-4.5.x, gcc-4.6.x, gcc-4.8.x, icc-11.x; 
+    Fortran: gfortran-4.4.x, gfortran-4.5.x, gfortran-4.6.x, gfortran-4.8.x, 
              g95-0.92, g95-0.93.
     
 ================================================================================

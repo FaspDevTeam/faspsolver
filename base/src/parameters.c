@@ -19,7 +19,7 @@
  *
  * \param argc       Number of arg input
  * \param argv       Input arguments
- * \param iniparam    Parameters to be set
+ * \param iniparam   Parameters to be set
  *
  * \author Chensong Zhang
  * \date   12/29/2013
@@ -254,7 +254,7 @@ void fasp_param_set (int argc,
  *
  * \brief Initialize parameters, global variables, etc
  *
- * \param iniparam       Input parameters
+ * \param iniparam      Input parameters
  * \param itsparam      Iterative solver parameters
  * \param amgparam      AMG parameters
  * \param iluparam      ILU parameters

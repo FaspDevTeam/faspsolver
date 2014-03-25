@@ -35,16 +35,15 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
                            AMG_param *param)
 {
     const SHORT  maxit = 3; // Max allowed V-cycles in each level
-    
-    const SHORT  amg_type=param->AMG_type;
-    const SHORT  print_level = param->print_level;
+    const SHORT  amg_type = param->AMG_type;
+    const SHORT  prtlvl = param->print_level;
     const SHORT  nl = mgl[0].num_levels;
     const SHORT  smoother = param->smoother;
     const SHORT  smooth_order = param->smooth_order;
     
     const REAL   relax = param->relaxation;
     const SHORT  ndeg = param->polynomial_degree;
-    const REAL   tol = param->tol;
+    const REAL   tol = param->tol*1e-4;
     
     // local variables
     INT l, i, lvl, num_cycle;
@@ -55,7 +54,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    if (print_level >= PRINT_MOST) printf("FMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
+    if (prtlvl >= PRINT_MOST) printf("FMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
     
     // restriction r1 = R*r0
     switch (amg_type) {
@@ -84,7 +83,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
         fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else
         /* use default iterative solver on the coarest level */
-        fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, param->tol, print_level);
+        fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
 #endif
         return;
     }
@@ -104,7 +103,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
             fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else
             /* use default iterative solver on the coarest level */
-            fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, param->tol, print_level);
+            fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
 #endif
         }
         
@@ -130,7 +129,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
         // initialzie rel error
         num_cycle = 0; relerr = BIGREAL;
         
-        while ( relerr > tol && num_cycle < maxit) {
+        while ( relerr > param->tol && num_cycle < maxit) {
             
             ++num_cycle;
             
@@ -209,7 +208,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
                 fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #else
                 /* use default iterative solver on the coarest level */
-                fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, param->tol, print_level);
+                fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
 #endif
             }
             

@@ -39,11 +39,12 @@ void fasp_solver_amli (AMG_data *mgl,
                        INT level)
 {
     const SHORT  amg_type=param->AMG_type;
-    const SHORT  print_level = param->print_level;
+    const SHORT  prtlvl = param->print_level;
     const SHORT  smoother = param->smoother;
     const SHORT  smooth_order = param->smooth_order;
     const SHORT  degree= param->amli_degree;
     const REAL   relax = param->relaxation;
+    const REAL   tol = param->tol*1e-4;
     const SHORT  ndeg = param->polynomial_degree;
     
     // local variables
@@ -68,7 +69,7 @@ void fasp_solver_amli (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    if (print_level>=PRINT_MOST)
+    if (prtlvl>=PRINT_MOST)
         printf("AMLI level %d, pre-smoother %d.\n", level, smoother);
     
     if (level < mgl[level].num_levels-1) {
@@ -261,11 +262,11 @@ void fasp_solver_amli (AMG_data *mgl,
         fasp_solver_superlu(A_level0, b0, e0, 0);
 #else
         /* use iterative solver on the coarest level */
-        fasp_coarse_itsolver(A_level0, b0, e0, param->tol, print_level);
+        fasp_coarse_itsolver(A_level0, b0, e0, tol, prtlvl);
 #endif
     }
     
-    if (print_level>=PRINT_MOST)
+    if (prtlvl>=PRINT_MOST)
         printf("AMLI level %d, post-smoother %d.\n", level, smoother);
     
 #if DEBUG_MODE
@@ -295,10 +296,11 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                           INT num_levels)
 {
     const SHORT  amg_type=param->AMG_type;
-    const SHORT  print_level = param->print_level;
+    const SHORT  prtlvl = param->print_level;
     const SHORT  smoother = param->smoother;
     const SHORT  smooth_order = param->smooth_order;
     const REAL   relax = param->relaxation;
+    const REAL   tol = param->tol*1e-4;
     const SHORT  ndeg = param->polynomial_degree;
     
     dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x;   // fine level b and x
@@ -322,7 +324,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    if (print_level>=PRINT_MOST)
+    if (prtlvl>=PRINT_MOST)
         printf("Nonlinear AMLI level %d, pre-smoother %d.\n", num_levels, smoother);
     
     if (level < num_levels-1) {
@@ -429,14 +431,15 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                 fasp_array_cp (m1, e1->val, uH.val);
                 
                 const INT maxit = param->amli_degree+1;
-                const REAL tol = 1e-8;
                 
                 switch (param->nl_amli_krylov_type) {
                     case SOLVER_GCG: // Use GCG
-                        fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,&pc,tol,maxit,1,PRINT_NONE);
+                        fasp_solver_dcsr_pgcg(A_level1,&bH,&uH,&pc,param->tol,
+                                              maxit,1,PRINT_NONE);
                         break;
                     default: // Use FGMRES
-                        fasp_solver_dcsr_pvfgmres(A_level1,&bH,&uH,&pc,tol,maxit,30,1,PRINT_NONE);
+                        fasp_solver_dcsr_pvfgmres(A_level1,&bH,&uH,&pc,param->tol,
+                                                  maxit,30,1,PRINT_NONE);
                         break;
                 }
                 
@@ -534,11 +537,11 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         fasp_solver_superlu(A_level0, b0, e0, 0);
 #else
         /* use iterative solver on the coarest level */
-        fasp_coarse_itsolver(A_level0, b0, e0, param->tol, print_level);
+        fasp_coarse_itsolver(A_level0, b0, e0, tol, prtlvl);
 #endif
     }
     
-    if (print_level>=PRINT_MOST)
+    if (prtlvl>=PRINT_MOST)
         printf("Nonlinear AMLI level %d, post-smoother %d.\n", level, smoother);
     
 #if DEBUG_MODE
@@ -567,9 +570,10 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                               INT level,
                               INT num_levels)
 {
-    const SHORT  print_level = param->print_level;
+    const SHORT  prtlvl = param->print_level;
     const SHORT  smoother = param->smoother;
-    const REAL relax = param->relaxation;
+    const REAL   relax = param->relaxation;
+    const REAL   tol = param->tol;
     INT i;
     
     dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x; // fine level b and x
@@ -591,7 +595,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.ROW, mgl[0].A.COL, mgl[0].A.NNZ);
 #endif
     
-    if (print_level>=PRINT_MOST)
+    if (prtlvl>=PRINT_MOST)
         printf("Nonlinear AMLI level %d, pre-smoother %d.\n", level, smoother);
     
     if (level < num_levels-1) {
@@ -655,11 +659,11 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                 fasp_array_cp (m1, e1->val, uH.val);
                 
                 const INT maxit = param->amli_degree+1;
-                const REAL tol = 1e-12;
                 
                 // switch (param->nl_amli_krylov_type) {
                 // default: // only FGMRES is supported so far --Chensong
-                fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH,&pc,tol,maxit,MIN(maxit,30),1,PRINT_NONE);
+                fasp_solver_dbsr_pvfgmres(A_level1,&bH,&uH,&pc,param->tol,
+                                          maxit,MIN(maxit,30),1,PRINT_NONE);
                 //     break;
                 // }
                 
@@ -714,11 +718,11 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
         fasp_solver_superlu(&mgl[level].Ac, b0, e0, 0);
 #else
         /* use iterative solver on the coarest level */
-        fasp_coarse_itsolver(&mgl[level].Ac, b0, e0, param->tol, print_level);
+        fasp_coarse_itsolver(&mgl[level].Ac, b0, e0, tol, prtlvl);
 #endif
     }
     
-    if (print_level>=PRINT_MOST)
+    if (prtlvl>=PRINT_MOST)
         printf("Nonlinear AMLI level %d, post-smoother %d.\n", level, smoother);
     
 #if DEBUG_MODE
