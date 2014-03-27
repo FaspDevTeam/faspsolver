@@ -5,6 +5,7 @@ File Name: CHANGES
 - Fix a coarsest level iterative method tolerance problem for AMG.
 - Update regression test results.
 - Test GCC4.8 on OS X Mavericks.
+- Rewrite fasp_format_dcsr_dbsr routine.
 
 03/19/2014 FASP 1.4.6:
 - Change AMG setup output layout. 

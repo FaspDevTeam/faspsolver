@@ -702,6 +702,7 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     return (A);   
 }
 
+#if 0
 /*!
  * \fn dBSRmat fasp_format_dcsr_dbsr ( dCSRmat *B, INT nb )
  *
@@ -837,6 +838,99 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
     return A;
 }
 
+#endif
+/*!
+ * \fn dBSRmat fasp_format_dcsr_dbsr ( dCSRmat *A, INT nb )
+ *
+ * \brief Transfer a dCSRmat type matrix into a dBSRmat.
+ *
+ * \param A   Pointer to the dCSRmat type matrix
+ * \param nb  size of each block 
+ *
+ * \return  dBSRmat matrix
+ *
+ * \author  Zheng Li
+ * \date    03/27/2014
+ *
+ */
+dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
+{
+	// Safe-guard check 
+    if ((A->row)%nb!=0) {
+        printf("### ERROR: A.row=%d is not a multiplication of nb=%d!!!\n", A->row, nb);
+        exit(0);
+    }
+
+    if ((A->col)%nb!=0) {
+        printf("### ERROR: A.col=%d is not a multiplication of nb=%d!!!\n", A->col, nb);
+        exit(0);
+    }
+
+    INT i, j, k, ii, jj, kk, l, mod, nnz;
+    INT row = A->row/nb;
+    INT col = A->col/nb;
+    INT NNZ = A->nnz;
+    INT nb2 = nb*nb;
+    INT *IA  = A->IA;
+    INT *JA  = A->JA;
+    REAL *val = A->val;
+	
+	dBSRmat B = fasp_dbsr_create(row, col, NNZ, nb, 0);
+
+    INT *col_flag = (INT *)fasp_mem_calloc(col, sizeof(INT));
+
+	INT *ia = B.IA;
+	INT *ja = B.JA;
+    REAL *bval = B.val;
+
+    fasp_iarray_set(col, col_flag, -1);
+
+    nnz = 0;
+
+    // Get ia and ja for BSR format
+	for (i=0; i<row; ++i) {
+        ii = nb*i;
+        for(j=0; j<nb; ++j) {
+            jj = ii+j;
+            for(k=IA[jj]; k<IA[jj+1]; ++k) {
+                kk = JA[k]/nb;
+                if (col_flag[kk]!=0) {
+                    col_flag[kk] = 0;
+                    ja[nnz] = kk;
+                    nnz ++;
+                }
+			}
+		}
+        ia[i+1] = nnz;
+        fasp_iarray_set(col, col_flag, -1);
+	}
+
+    B.NNZ = nnz;
+	ja = (INT*)fasp_mem_realloc(ja, sizeof(INT)*nnz);
+
+    // Get non-zeros of BSR 
+	for (i=0; i<row; ++i) {
+		ii = nb*i;
+        for(j=0; j<nb; ++j) {
+			jj = ii+j;
+			for(k=IA[jj]; k<IA[jj+1]; ++k) {
+				for (l=ia[i]; l<ia[i+1]; ++l) {
+					if (JA[k]/nb ==ja[l]) {
+                        mod = JA[k]%nb;
+                        bval[l*nb2+j*nb+mod] = val[k];
+                        break;
+                    }
+				}
+			}
+		}
+	}
+
+	bval = (REAL*)fasp_mem_realloc(bval, sizeof(REAL)*nnz*nb2);
+
+    fasp_mem_free(col_flag);
+
+    return B;
+}
 /*!
  * \fn dBSRmat fasp_format_dstr_dbsr ( dSTRmat *B )
  *
