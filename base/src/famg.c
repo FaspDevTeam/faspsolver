@@ -95,7 +95,7 @@ void fasp_solver_famg (dCSRmat *A,
     // print out CPU time if needed
     if (print_level>PRINT_NONE) {
         fasp_gettime(&FMG_end);
-        printf("FMG totally costs %f seconds.\n", FMG_end - FMG_start);
+        print_cputime("FAMG totally", FMG_end - FMG_start);
     }
 
 #if DEBUG_MODE
