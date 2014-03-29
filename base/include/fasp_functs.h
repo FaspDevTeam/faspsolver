@@ -599,13 +599,13 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 
 /*-------- In file: formats.c --------*/
 
-SHORT fasp_format_dcoo_dcsr (dCOOmat *A, 
+SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
                              dCSRmat *B);
 
-SHORT fasp_format_dcsr_dcoo (dCSRmat *A, 
+SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
                              dCOOmat *B);
 
-SHORT fasp_format_dstr_dcsr (dSTRmat *A, 
+SHORT fasp_format_dstr_dcsr (dSTRmat *A,
                              dCSRmat *B);
 
 dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab);
@@ -614,12 +614,14 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A);
 
 dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B);
 
-dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B, 
-                               const INT nb);
+dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb);
 
 dBSRmat fasp_format_dstr_dbsr (dSTRmat *B);
 
 dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B);
+
+dBSRmat fasp_format_dcsr_dbsr0 (dCSRmat *B,
+                                const INT nb);
 
 
 /*-------- In file: givens.c --------*/

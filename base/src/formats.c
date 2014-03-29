@@ -21,11 +21,11 @@
  * \param B   Pointer to dCSRmat matrix
  *
  * \return    SUCCESS if succeed
- * 
+ *
  * \author Xuehai Huang
  * \date   08/10/2009
  */
-SHORT fasp_format_dcoo_dcsr (dCOOmat *A, 
+SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
                              dCSRmat *B)
 {
     const INT m=A->row, n=A->col, nnz=A->nnz;
@@ -37,7 +37,7 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
     
     INT * ind = (INT *) fasp_mem_calloc(m+1,sizeof(INT));
     
-    //for (i=0; i<=m; ++i) ind[i]=0; // initialize    
+    //for (i=0; i<=m; ++i) ind[i]=0; // initialize
     memset(ind, 0, sizeof(INT)*(m+1));
     
     for (i=0; i<nnz; ++i) ind[A->I[i]+1]++; // count nnz in each row
@@ -50,7 +50,7 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
     
     // loop over nnz and set col_idx and val
     for (i=0; i<nnz; ++i) {
-        iind = A->I[i]; jind = ind[iind]; 
+        iind = A->I[i]; jind = ind[iind];
         B->JA [jind] = A->J[i];
         B->val[jind] = A->val[i];
         ind[iind] = ++jind;
@@ -71,27 +71,27 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
  * \param B   Pointer to dCOOmat matrix
  *
  * \return    SUCCESS if succeed
- * 
+ *
  * \author Xuehai Huang
  * \date   08/10/2009
  *
  * Modified by Chunsheng Feng, Zheng Li
  * \date  10/12/2012
  */
-SHORT fasp_format_dcsr_dcoo (dCSRmat *A, 
+SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
                              dCOOmat *B)
 {
     const INT m=A->row, nnz=A->nnz;
     INT i, j;
     SHORT status = SUCCESS;
     
-    B->I=(INT *)fasp_mem_calloc(nnz,sizeof(INT));    
-    B->J=(INT *)fasp_mem_calloc(nnz,sizeof(INT));    
+    B->I=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
+    B->J=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
     B->val=(REAL *)fasp_mem_calloc(nnz,sizeof(REAL));
-   
+    
 #ifdef _OPENMP
 #pragma omp parallel for if(m>OPENMP_HOLDS) private(i, j)
-#endif    
+#endif
     for (i=0;i<m;++i) {
         for (j=A->IA[i];j<A->IA[i+1];++j) B->I[N2C(j)]=C2N(i);
     }
@@ -111,15 +111,15 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
  * \param B   Pointer to dCSRmat matrix
  *
  * \return    SUCCESS if succeed
- * 
+ *
  * \author Zhiyang Zhou
  * \date   2010/04/29
  */
-SHORT fasp_format_dstr_dcsr (dSTRmat *A, 
+SHORT fasp_format_dstr_dcsr (dSTRmat *A,
                              dCSRmat *B)
 {
     // some members of A
-    const INT nc    = A->nc;   
+    const INT nc    = A->nc;
     const INT ngrid = A->ngrid;
     const INT nband = A->nband;
     const INT *offsets = A->offsets;
@@ -173,7 +173,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
         row_start = ROW*nc;
         
         for (i = 0; i < nc; i ++) {
-            row = row_start + i; 
+            row = row_start + i;
             ia[row+1] = ia[row] + ncb;
         }
     } // end for ROW
@@ -183,9 +183,9 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
     ja = (INT *)fasp_mem_calloc(glo_nnz,sizeof(INT));
     a = (REAL *)fasp_mem_calloc(glo_nnz,sizeof(REAL));
     
-    // Generate the 'ja' and 'a' arrays at the same time 
+    // Generate the 'ja' and 'a' arrays at the same time
     for (ROW = 0; ROW < ngrid; ++ROW) {
-        row_start = ROW*nc;    
+        row_start = ROW*nc;
         val_L_start = ROW*nc2;
         
         // deal with the diagonal band
@@ -242,7 +242,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
         }
     }
     
-    // Reordering in such manner that every diagonal element 
+    // Reordering in such manner that every diagonal element
     // is firstly stored in the corresponding row
     if (nc > 1) {
         for (ROW = 0; ROW < ngrid; ++ROW) {
@@ -260,12 +260,12 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
                 // swap in 'a'
                 tmp_val  = a[start];
                 a[start] = a[pos];
-                a[pos]   = tmp_val;            
+                a[pos]   = tmp_val;
             }
         }
-    } 
+    }
     
-    /* fill all the members of B_tmp */   
+    /* fill all the members of B_tmp */
     B_tmp.row = glo_row;
     B_tmp.col = glo_row;
     B_tmp.nnz = glo_nnz;
@@ -286,7 +286,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
  * \param Ab   Pointer to block_dCSRmat matrix
  *
  * \return     dCSRmat matrix if succeed, NULL if fail
- * 
+ *
  * \author Shiquan Zhang
  * \date   08/10/2010
  */
@@ -306,7 +306,7 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
     row[0]=0; col[0]=0;
     for (i=0;i<mb;++i) { m+=blockptr[i*nb]->row; row[i+1]=m; }
     for (i=0;i<nb;++i) { n+=blockptr[i]->col;    col[i+1]=n; }
-
+    
 #ifdef _OPENMP
 #pragma omp parallel for reduction(+:nnz) if (nbl>OPENMP_HOLDS) private(i)
 #endif
@@ -331,12 +331,12 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
                         memcpy(&(A.val[start]),&(blockptrij->val[blockptrij->IA[irmrow]]),ilength*sizeof(REAL));
                         memcpy(&(A.JA[start]), &(blockptrij->JA[blockptrij->IA[irmrow]]), ilength*sizeof(INT));
                         for (i1=0;i1<ilength;i1++) A.JA[start+i1]+=col[j];
-                        length+=ilength;     
+                        length+=ilength;
                     }
                 }
             } // end for j
             
-            A.IA[ir+1]=A.IA[ir]+length;        
+            A.IA[ir+1]=A.IA[ir]+length;
         } // end for ir
         
     } // end for i
@@ -344,7 +344,7 @@ dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
     fasp_mem_free(row);
     fasp_mem_free(col);
     
-    return(A);    
+    return(A);
 }
 
 /**
@@ -396,14 +396,14 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
     }
     /* generate 'counter' */
     counter = (INT *)fasp_mem_calloc(maxnzrow + 1, sizeof(INT));
- 
+    
     for (i = 0; i < num_rows; i ++) {
         counter[nzrow[i]] ++;
     }
     
     //--------------------------------------------
     //  Determine 'dif'
-    //-------------------------------------------- 
+    //--------------------------------------------
     
     for (dif = 0, i = 0; i < maxnzrow + 1; i ++) {
         if (counter[i] > 0) dif ++;
@@ -411,7 +411,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
     
     //--------------------------------------------
     //  Generate the 'nzdifnum' and 'rowstart'
-    //-------------------------------------------- 
+    //--------------------------------------------
     
     nzdifnum = (INT *)fasp_mem_calloc(dif, sizeof(INT));
     invnzdif = (INT *)fasp_mem_calloc(maxnzrow + 1, sizeof(INT));
@@ -428,7 +428,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
     
     //--------------------------------------------
     //  Generate the 'rowindex'
-    //-------------------------------------------- 
+    //--------------------------------------------
     
     for (i = 0; i < num_rows; i ++) {
         j = invnzdif[nzrow[i]];
@@ -443,7 +443,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
     
     //--------------------------------------------
     //  Generate the 'data' and 'ja'
-    //-------------------------------------------- 
+    //--------------------------------------------
     
     for (cnt = 0, i = 0; i < num_rows; i ++) {
         k = rowindex[i];
@@ -456,7 +456,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
     
     //------------------------------------------------------------
     //  Create and fill a dCSRLmat B
-    //------------------------------------------------------------ 
+    //------------------------------------------------------------
     
     B = fasp_dcsrl_create(num_rows, num_cols, num_nonzeros);
     B -> dif      = dif;
@@ -464,11 +464,11 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
     B -> index    = rowindex;
     B -> start    = rowstart;
     B -> ja       = ja;
-    B -> val      = data;   
+    B -> val      = data;
     
     //----------------------------
     //  Free the auxiliary arrays
-    //----------------------------  
+    //----------------------------
     
     free(nzrow);
     free(counter);
@@ -487,9 +487,9 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
  * \return    dCSRmat matrix
  *
  * \author  Zhiyang Zhou
- * \date    10/23/2010 
+ * \date    10/23/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012
  *
  * \note Works for general nb (Xiaozhe)
  */
@@ -500,7 +500,7 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     /* members of B */
     INT     ROW = B->ROW;
     INT     COL = B->COL;
-    INT     NNZ = B->NNZ;    
+    INT     NNZ = B->NNZ;
     INT     nb  = B->nb;
     INT    *IA  = B->IA;
     INT    *JA  = B->JA;
@@ -519,24 +519,24 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     INT i,j,k;
     INT mr,mc;
     INT rowstart0,rowstart,colstart0,colstart;
-    INT colblock,nzperrow; 
-
+    INT colblock,nzperrow;
+    
     REAL  *vp = NULL;
     REAL  *ap = NULL;
     INT  *jap = NULL;
-
+    
     INT use_openmp = FALSE;
-
-#ifdef _OPENMP  
+    
+#ifdef _OPENMP
     INT stride_i,mybegin,myend,myid,nthreads;
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     //--------------------------------------------------------
-    // Create a CSR Matrix 
+    // Create a CSR Matrix
     //--------------------------------------------------------
     A  = fasp_dcsr_create(rowA, colA, nzA);
     ia = A.IA;
@@ -549,9 +549,9 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     //--------------------------------------------------------------------------
     
     if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
         stride_i = ROW/nthreads;
-#pragma omp parallel private(myid, mybegin, myend, i, rowstart, colblock, nzperrow, j) 
+#pragma omp parallel private(myid, mybegin, myend, i, rowstart, colblock, nzperrow, j)
         {
             myid = omp_get_thread_num();
             mybegin = myid*stride_i;
@@ -602,7 +602,7 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
         case 0: // each non-zero block elements are stored in row-major order
         {
             if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i, k, j, rowstart, colstart, vp, mr, ap, jap, mc) ////num_threads(nthreads)
                 {
                     myid = omp_get_thread_num();
@@ -679,8 +679,8 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
                         colstart = colstart0 + mc;
                         for (mr = 0; mr < nb; mr ++)
                         {
-                            a[ia[rowstart]] = *vp; 
-                            ja[ia[rowstart]] = colstart; 
+                            a[ia[rowstart]] = *vp;
+                            ja[ia[rowstart]] = colstart;
                             vp ++; ia[rowstart]++; rowstart++;
                         }
                     }
@@ -699,153 +699,16 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     }
     ia[0] = 0;
     
-    return (A);   
+    return (A);
 }
 
-#if 0
-/*!
- * \fn dBSRmat fasp_format_dcsr_dbsr ( dCSRmat *B, INT nb )
- *
- * \brief Transfer a dCSRmat type matrix into a dBSRmat.
- *
- * \param B   Pointer to the dCSRmat type matrix
- * \param nb  size of each block 
- *
- * \return    dBSRmat matrix
- *
- * \author Changhe Qiao
- * \date   03/12/2012
- *
- * Modified by Xiaozhe Hu on 03/13/2012
- * Modified by Chunsheng Feng, Zheng Li on 10/13/2012
- */
-dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B, 
-                               const INT nb)
-{
-    INT *Is, *Js;
-    INT i,j,num, k;
-    INT nRow, nCol;
-    
-    dCSRmat tmpMat;
-    dBSRmat A;
-    
-    // Safe-guard check --Chensong 05/27/2012
-    if ((B->row)%nb!=0) {
-        printf("### ERROR: B.row=%d is not a multiplication of nb=%d!!!\n", B->row, nb);
-        exit(0);
-    }
-    
-    if ((B->col)%nb!=0) {
-        printf("### ERROR: B.col=%d is not a multiplication of nb=%d!!!\n", B->col, nb);
-        exit(0);
-    }
-    
-    nRow=B->row/nb; //we must ensure this is a integer
-    nCol=B->col/nb;
-    
-    Is=(INT *)fasp_mem_calloc(nRow, sizeof(INT));
-    Js=(INT *)fasp_mem_calloc(nCol, sizeof(INT));
-
-#ifdef _OPENMP
-#pragma omp parallel for if(nRow>OPENMP_HOLDS) private(i)
-#endif
-    for(i=0;i<nRow;i++) {
-        Is[i]=i*nb;
-    }
-#ifdef _OPENMP
-#pragma omp parallel for if(nCol>OPENMP_HOLDS) private(i)
-#endif
-    for(i=0;i<nCol;i++) {
-        Js[i]=i*nb;
-    }
-    
-    fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
-    
-    //here we have tmpmat as the submatrix
-    A.ROW=nRow;
-    A.COL=nCol;
-    A.NNZ=tmpMat.nnz;
-    A.nb=nb;
-    A.storage_manner=0;//row majored
-    A.IA=(INT*)fasp_mem_calloc(A.ROW+1, sizeof(INT));
-    A.JA=(INT*)fasp_mem_calloc(A.NNZ, sizeof(INT));
-    A.val=(REAL*)fasp_mem_calloc(A.NNZ*nb*nb, sizeof(REAL));
-
-#ifdef _OPENMP
-#pragma omp parallel for if(tmpMat.row>OPENMP_HOLDS) private(i)
-#endif
-    for(i=0;i<tmpMat.row+1;i++) {
-        A.IA[i]=tmpMat.IA[i];
-    }
-
- 
-#if 0
-    for(i=0;i<tmpMat.nnz;i++) {
-        A.JA[i]=tmpMat.JA[i];
-    }
-    for(i=0;i<tmpMat.nnz;i++) {
-        A.val[i*nb*nb]=tmpMat.val[i];
-    }
-#endif
-
-#ifdef _OPENMP
-#pragma omp parallel for if(tmpMat.nnz>OPENMP_HOLDS) private(i)
-#endif
-    for(i=0;i<tmpMat.nnz;i++) {
-        A.JA[i]=tmpMat.JA[i];
-        A.val[i*nb*nb]=tmpMat.val[i];
-    }
-
-    fasp_mem_free(tmpMat.IA);
-    fasp_mem_free(tmpMat.JA);
-    fasp_mem_free(tmpMat.val);
-    
-    for(i=0;i<nb;i++) {
-        for(j=0;j<nb;j++) {
-            num=i*nb+j;
-            if (i==0 && j==0) {
-            }
-            else {
-#ifdef _OPENMP
-#pragma omp parallel for if(nRow>OPENMP_HOLDS) private(k)
-#endif
-                for(k=0;k<nRow;k++) {
-                    Is[k]=k*nb+i;
-                }
-#ifdef _OPENMP
-#pragma omp parallel for if(nCol>OPENMP_HOLDS) private(k)
-#endif
-                for(k=0;k<nCol;k++) {
-                    Js[k]=k*nb+j;
-                }
-                fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
-#ifdef _OPENMP
-#pragma omp parallel for if(tmpMat.nnz>OPENMP_HOLDS) private(k)
-#endif
-                for(k=0;k<tmpMat.nnz;k++) {
-                    A.val[k*nb*nb+num]=tmpMat.val[k];
-                 }    
-                fasp_mem_free(tmpMat.IA);
-                fasp_mem_free(tmpMat.JA);
-                fasp_mem_free(tmpMat.val);
-            }
-        }
-    }
-    
-    if(Is) fasp_mem_free(Is);
-    if(Js) fasp_mem_free(Js);
-    
-    return A;
-}
-
-#endif
 /*!
  * \fn dBSRmat fasp_format_dcsr_dbsr ( dCSRmat *A, INT nb )
  *
  * \brief Transfer a dCSRmat type matrix into a dBSRmat.
  *
  * \param A   Pointer to the dCSRmat type matrix
- * \param nb  size of each block 
+ * \param nb  size of each block
  *
  * \return  dBSRmat matrix
  *
@@ -855,17 +718,17 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *B,
  */
 dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
 {
-	// Safe-guard check 
+	// Safe-guard check
     if ((A->row)%nb!=0) {
         printf("### ERROR: A.row=%d is not a multiplication of nb=%d!!!\n", A->row, nb);
         exit(0);
     }
-
+    
     if ((A->col)%nb!=0) {
         printf("### ERROR: A.col=%d is not a multiplication of nb=%d!!!\n", A->col, nb);
         exit(0);
     }
-
+    
     INT i, j, k, ii, jj, kk, l, mod, nnz;
     INT row = A->row/nb;
     INT col = A->col/nb;
@@ -876,17 +739,17 @@ dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
     REAL *val = A->val;
 	
 	dBSRmat B = fasp_dbsr_create(row, col, NNZ, nb, 0);
-
+    
     INT *col_flag = (INT *)fasp_mem_calloc(col, sizeof(INT));
-
+    
 	INT *ia = B.IA;
 	INT *ja = B.JA;
     REAL *bval = B.val;
-
+    
     fasp_iarray_set(col, col_flag, -1);
-
+    
     nnz = 0;
-
+    
     // Get ia and ja for BSR format
 	for (i=0; i<row; ++i) {
         ii = nb*i;
@@ -904,11 +767,11 @@ dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
         ia[i+1] = nnz;
         fasp_iarray_set(col, col_flag, -1);
 	}
-
+    
     B.NNZ = nnz;
 	ja = (INT*)fasp_mem_realloc(ja, sizeof(INT)*nnz);
-
-    // Get non-zeros of BSR 
+    
+    // Get non-zeros of BSR
 	for (i=0; i<row; ++i) {
 		ii = nb*i;
         for(j=0; j<nb; ++j) {
@@ -924,13 +787,14 @@ dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
 			}
 		}
 	}
-
+    
 	bval = (REAL*)fasp_mem_realloc(bval, sizeof(REAL)*nnz*nb2);
-
+    
     fasp_mem_free(col_flag);
-
+    
     return B;
 }
+
 /*!
  * \fn dBSRmat fasp_format_dstr_dbsr ( dSTRmat *B )
  *
@@ -941,7 +805,7 @@ dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
  * \return    dBSRmat matrix
  *
  * \author Zhiyang Zhou
- * \date   2010/10/26 
+ * \date   2010/10/26
  */
 dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
 {
@@ -969,7 +833,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
     NNZ = ngrid;
     for (i = 0; i < nband; ++i) {
         NNZ += (ngrid - abs(offsets[i]));
-    } 
+    }
     
     // Create and Initialize a dBSRmat 'A'
     A = fasp_dbsr_create(ngrid, ngrid, NNZ, nc, 0);
@@ -1030,7 +894,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
     for (i = ngrid; i > 0; i --) {
         IA[i] = IA[i-1];
     }
-    IA[0] = 0; 
+    IA[0] = 0;
     
     return (A);
 }
@@ -1045,14 +909,14 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
  * \return    Pointer to dCOOmat matrix
  *
  * \author Zhiyang Zhou
- * \date   2010/10/26 
+ * \date   2010/10/26
  */
 dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
 {
     /* members of B */
     INT     ROW = B->ROW;
     INT     COL = B->COL;
-    INT     NNZ = B->NNZ;    
+    INT     NNZ = B->NNZ;
     INT     nb  = B->nb;
     INT    *IA  = B->IA;
     INT    *JA  = B->JA;
@@ -1074,8 +938,8 @@ dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
     A = (dCOOmat *)fasp_mem_calloc(1, sizeof(dCOOmat));
     A->row = ROW*nb;
     A->col = COL*nb;
-    A->nnz = num_nonzeros;    
-    rowA   = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT)); 
+    A->nnz = num_nonzeros;
+    rowA   = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT));
     colA   = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT));
     valA   = (REAL *)fasp_mem_calloc(num_nonzeros, sizeof(REAL));
     A->I   = rowA;
@@ -1088,7 +952,7 @@ dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
         for (k = IA[i]; k < IA[i+1]; ++k) {
             j  = JA[k];
             pt = &val[k*nb2];
-            row_start = inb; 
+            row_start = inb;
             col_start = j*nb;
             for (mr = 0; mr < nb; mr ++) {
                 for (mc = 0; mc < nb; mc ++) {
@@ -1109,3 +973,143 @@ dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
+
+#if FALSE
+
+/*!
+ * \fn dBSRmat fasp_format_dcsr_dbsr0 ( dCSRmat *B, INT nb )
+ *
+ * \brief Transfer a dCSRmat type matrix into a dBSRmat.
+ *
+ * \param B   Pointer to the dCSRmat type matrix
+ * \param nb  size of each block
+ *
+ * \return    dBSRmat matrix
+ *
+ * \author Changhe Qiao
+ * \date   03/12/2012
+ *
+ * Modified by Xiaozhe Hu on 03/13/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/13/2012
+ *
+ * TODO: Remove later! --Chensong
+ */
+dBSRmat fasp_format_dcsr_dbsr0 (dCSRmat *B,
+                                const INT nb)
+{
+    INT *Is, *Js;
+    INT i,j,num, k;
+    INT nRow, nCol;
+    
+    dCSRmat tmpMat;
+    dBSRmat A;
+    
+    // Safe-guard check --Chensong 05/27/2012
+    if ((B->row)%nb!=0) {
+        printf("### ERROR: B.row=%d is not a multiplication of nb=%d!!!\n", B->row, nb);
+        exit(0);
+    }
+    
+    if ((B->col)%nb!=0) {
+        printf("### ERROR: B.col=%d is not a multiplication of nb=%d!!!\n", B->col, nb);
+        exit(0);
+    }
+    
+    nRow=B->row/nb; //we must ensure this is a integer
+    nCol=B->col/nb;
+    
+    Is=(INT *)fasp_mem_calloc(nRow, sizeof(INT));
+    Js=(INT *)fasp_mem_calloc(nCol, sizeof(INT));
+    
+#ifdef _OPENMP
+#pragma omp parallel for if(nRow>OPENMP_HOLDS) private(i)
+#endif
+    for(i=0;i<nRow;i++) {
+        Is[i]=i*nb;
+    }
+#ifdef _OPENMP
+#pragma omp parallel for if(nCol>OPENMP_HOLDS) private(i)
+#endif
+    for(i=0;i<nCol;i++) {
+        Js[i]=i*nb;
+    }
+    
+    fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+    
+    //here we have tmpmat as the submatrix
+    A.ROW=nRow;
+    A.COL=nCol;
+    A.NNZ=tmpMat.nnz;
+    A.nb=nb;
+    A.storage_manner=0;//row majored
+    A.IA=(INT*)fasp_mem_calloc(A.ROW+1, sizeof(INT));
+    A.JA=(INT*)fasp_mem_calloc(A.NNZ, sizeof(INT));
+    A.val=(REAL*)fasp_mem_calloc(A.NNZ*nb*nb, sizeof(REAL));
+    
+#ifdef _OPENMP
+#pragma omp parallel for if(tmpMat.row>OPENMP_HOLDS) private(i)
+#endif
+    for(i=0;i<tmpMat.row+1;i++) {
+        A.IA[i]=tmpMat.IA[i];
+    }
+    
+#if 0
+    for(i=0;i<tmpMat.nnz;i++) {
+        A.JA[i]=tmpMat.JA[i];
+    }
+    for(i=0;i<tmpMat.nnz;i++) {
+        A.val[i*nb*nb]=tmpMat.val[i];
+    }
+#endif
+    
+#ifdef _OPENMP
+#pragma omp parallel for if(tmpMat.nnz>OPENMP_HOLDS) private(i)
+#endif
+    for(i=0;i<tmpMat.nnz;i++) {
+        A.JA[i]=tmpMat.JA[i];
+        A.val[i*nb*nb]=tmpMat.val[i];
+    }
+    
+    fasp_mem_free(tmpMat.IA);
+    fasp_mem_free(tmpMat.JA);
+    fasp_mem_free(tmpMat.val);
+    
+    for(i=0;i<nb;i++) {
+        for(j=0;j<nb;j++) {
+            num=i*nb+j;
+            if (i==0 && j==0) {
+            }
+            else {
+#ifdef _OPENMP
+#pragma omp parallel for if(nRow>OPENMP_HOLDS) private(k)
+#endif
+                for(k=0;k<nRow;k++) {
+                    Is[k]=k*nb+i;
+                }
+#ifdef _OPENMP
+#pragma omp parallel for if(nCol>OPENMP_HOLDS) private(k)
+#endif
+                for(k=0;k<nCol;k++) {
+                    Js[k]=k*nb+j;
+                }
+                fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
+#ifdef _OPENMP
+#pragma omp parallel for if(tmpMat.nnz>OPENMP_HOLDS) private(k)
+#endif
+                for(k=0;k<tmpMat.nnz;k++) {
+                    A.val[k*nb*nb+num]=tmpMat.val[k];
+                }
+                fasp_mem_free(tmpMat.IA);
+                fasp_mem_free(tmpMat.JA);
+                fasp_mem_free(tmpMat.val);
+            }
+        }
+    }
+    
+    if(Is) fasp_mem_free(Is);
+    if(Js) fasp_mem_free(Js);
+    
+    return A;
+}
+
+#endif
