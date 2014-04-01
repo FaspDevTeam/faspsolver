@@ -8,7 +8,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-//! Flags which indicates lengths of INT and REAL numbers
+// Flags which indicates lengths of INT and REAL numbers
 INT ilength, dlength;
 
 // Decoration of private functions
@@ -1410,7 +1410,8 @@ void fasp_dbsr_print (dBSRmat *A)
  *
  * \brief Print out a dBSRmat matrix in coordinate format for matlab spy
  *
- * \param A   Pointer to the dBSRmat matrix A
+ * \param filename   Name of file to write to
+ * \param A          Pointer to the dBSRmat matrix A
  *
  * \author Chunsheng Feng
  * \date   11/14/2013
@@ -1451,16 +1452,18 @@ void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A)
 }
 
 /**
- * \fn void fasp_dcsr_write_coo (const char *filename,const dXSRmat *A)
+ * \fn void fasp_dcsr_write_coo (const char *filename, const dCSRmat *A)
  *
  * \brief Print out a dCSRmat matrix in coordinate format for matlab spy
  *
- * \param A   Pointer to the dCSRmat matrix A
+ * \param filename   Name of file to write to
+ * \param A          Pointer to the dCSRmat matrix A
  *
  * \author Chunsheng Feng
  * \date   11/14/2013
  */
-void fasp_dcsr_write_coo (const char *filename,const dCSRmat *A)
+void fasp_dcsr_write_coo (const char *filename,
+                          const dCSRmat *A)
 {
     
     INT i, j;

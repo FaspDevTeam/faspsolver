@@ -1401,19 +1401,23 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_gs_rb3d (dvector *u, dCSRmat *A, dvector *b, INT L,
- *                                      INT order, INT nx,INT ny,INT nz)
+ * \fn void fasp_smoother_dcsr_gs_rb3d (dvector *u, dCSRmat *A, dvector *b,
+ *                                      INT L, INT order, INT *mark, INT maximap,
+ *                                      INT nx, INT ny, INT nz)
+
  *
  * \brief       Colored Gauss-Seidel smoother for Au=b
  *
- * \param u     initial guess and the new approximation to the solution obtained after L GS steps
- * \param A     Pointer to stiffness matrix
- * \param b     Pointer to right hand side
- * \param L     number of iterations
- * \param order ordering: -1: Forward; 1: Backward
- * \param nx    number vertex of X direction
- * \param ny    number vertex of Y direction
- * \param nz    number vertex of Z direction
+ * \param u        Initial guess and the new approximation to the solution
+ * \param A        Pointer to stiffness matrix
+ * \param b        Pointer to right hand side
+ * \param L        Number of iterations
+ * \param order    Ordering: -1: Forward; 1: Backward
+ * \param mark     Marker for C/F points
+ * \param maximap  Size of IMAP
+ * \param nx       Number vertex of X direction
+ * \param ny       Number vertex of Y direction
+ * \param nz       Number vertex of Z direction
  *
  * \author Chunsheng Feng
  * \date   02/08/2012
@@ -1427,7 +1431,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
                                  INT maximap,
                                  INT nx,
                                  INT ny,
-                                 INT nz )
+                                 INT nz)
 {
     const INT   nrow = b->row; // number of rows
     INT        *ia=A->IA,*ja=A->JA;
