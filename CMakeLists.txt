@@ -133,6 +133,28 @@ if (USE_SUPERLU)
 
 endif(USE_SUPERLU)
 
+##################################################################
+# For MUMPS
+##################################################################
+if (USE_MUMPS)
+
+   # set the path to find specific modules
+   set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
+
+   set(MUMPS_DIR "${MUMPS_DIR}")
+
+   # try to find MUMPS
+   find_package(MUMPS)
+
+   if (MUMPS_FOUND)
+      add_definitions("-DWITH_MUMPS=1")
+      include_directories(${MUMPS_INCLUDE_DIRS})
+   else(MUMPS_FOUND)
+      message(WARNING "MUMPS was requested but not supported!")
+   endif(MUMPS_FOUND)
+
+endif(USE_MUMPS)
+
 ############## documentation with doxygen
 # target generating the FASP documentation with doxygen
 find_package(Doxygen)
