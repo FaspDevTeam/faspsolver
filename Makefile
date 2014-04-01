@@ -29,12 +29,20 @@
 #
 # openmp=yes
 #
+# These user options can also be applied as make command line options.
+# For example, to enforce the debug compiling options:
+#
+# make config debug=yes
+#
+#-------------------------------------------------------------------------
+#
 # By default, FASP uses the command-line Doxygen to generate a reference
 # manual. If you want to use the GUI of Doxgen instead of command-line
 # (if there is one installed on your system), uncomment the next line:
 #
 # doxywizard=yes
 #
+#-------------------------------------------------------------------------
 # If you want to use UMFPACK, uncomment the next line: 
 # 
 # umfpack=yes
@@ -43,7 +51,7 @@
 # line and give the correct path to SparseSuite here. For example:
 #
 # suitesparse_dir="/dir/to/SuiteSparse"
-#
+#-------------------------------------------------------------------------
 # If you want to use SuperLU, uncomment the next line:
 #
 # superlu=yes
@@ -52,11 +60,15 @@
 # and give the correct path to SuperLU here. For example:
 #
 # superlu_dir="/dir/to/SuperLU"
+#-------------------------------------------------------------------------
+# If you want to use MUMPS, uncomment the next line:
 #
-# These user options can also be applied as make command line options.
-# For example, to enforce the debug compiling options:
+# mumps=yes
 #
-# make config debug=yes
+# If you want to specify the path to MUMPS, uncomment the next line
+# and give the correct path to MUMPS here. For example:
+#
+# mumps_dir="/dir/to/MUMPS"
 #
 ####################  User Defined Compiler Flags  #####################
 ifeq ($(debug),yes)
@@ -110,6 +122,11 @@ endif
 ifeq ($(superlu), yes)
     CONFIG_FLAGS+=-DUSE_SUPERLU=$(superlu)
     CONFIG_FLAGS+=-DSUPERLU_DIR=$(superlu_dir)
+endif
+
+ifeq ($(mumps), yes)
+    CONFIG_FLAGS+=-DUSE_MUMPS=$(mumps)
+    CONFIG_FLAGS+=-DMUMPS_DIR=$(mumps_dir)
 endif
 
 CONFIG_FLAGS+=-DADD_CFLAGS=$(cflags) 
