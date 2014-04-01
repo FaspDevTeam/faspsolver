@@ -7,8 +7,8 @@ include_directories(${FASP_TINC_DIR})
 file(GLOB FASP_TLIB_SRC src/*.c src/*.f )
 
 # Build libfasptest as STATIC and do not install it. If we want
-#SHARED, then we need to figure out how apple works with multiple
-#rpaths put the shared lib in the same dir as the executables.
+# SHARED, then we need to figure out how apple works with multiple
+# rpaths put the shared lib in the same dir as the executables.
 
 add_library(fasptest STATIC ${FASP_TLIB_SRC}) 
 #target_link_libraries(fasptest fasp) 
@@ -30,5 +30,4 @@ foreach( srcfile ${FASP_TSRC} )
 #
     install(TARGETS ${execfile} DESTINATION ${FASP_SOURCE_DIR}/test)
 endforeach( srcfile ${FASP_TSRC} )
-
 

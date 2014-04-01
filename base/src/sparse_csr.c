@@ -891,7 +891,8 @@ INT fasp_dcsr_trans (dCSRmat *A,
 }    
 
 /* 
- * \fn void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2], INT *nn, INT *tniz)
+ * \fn void void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2],
+ *                                    INT *nn, INT *tniz)
  *
  * \brief Transpose of an CSR matrix.
  *
@@ -904,7 +905,7 @@ INT fasp_dcsr_trans (dCSRmat *A,
  * \author Shuo Zhang
  * \date   07/06/2009   
  *
- * \note This subroutine transpose in CSR format IN ORDER. 
+ * \note This subroutine transpose in CSR format IN ORDER
  */
 void fasp_dcsr_transpose (INT *row[2], 
                           INT *col[2], 

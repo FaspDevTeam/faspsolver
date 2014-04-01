@@ -6,7 +6,6 @@
 
 
 #
-	###################################################
 
 	project(FASP C CXX Fortran )
 
@@ -31,8 +30,8 @@
           message(WARNING "OpenMP was requested but not supported!")
        endif(OPENMP_FOUND)
     endif(USE_OPENMP)
-############## Additional compiler flags (not defined by the build
-################type
+
+########## Additional compiler flags (not defined by the build
 
 	if(ADD_CFLAGS)
           set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
@@ -134,7 +133,7 @@ if (USE_SUPERLU)
 endif(USE_SUPERLU)
 
 ##################################################################
-# For MUMPS
+# For MUMPS 
 ##################################################################
 if (USE_MUMPS)
 
@@ -155,7 +154,9 @@ if (USE_MUMPS)
 
 endif(USE_MUMPS)
 
-############## documentation with doxygen
+##################################################################
+# For Doxygen
+##################################################################
 # target generating the FASP documentation with doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
@@ -173,7 +174,6 @@ if(DOXYGEN_FOUND)
         if(WIZARD)
 	    set(DOXY_EXEC "${WIZARD}")
 	endif()
-##        message( "DOXY exec is ${DOXY_EXEC}")
     endif(DOXYWIZARD)
     add_custom_target(docs ${DOXY_EXEC}
  	       ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf
@@ -186,19 +186,14 @@ else(DOXYGEN_FOUND)
 message(" WARNING: Doxygen was requested but is not found ")
 endif(DOXYGEN_FOUND)
 ###############end documentation with doxygen
+
 # Add include directories.
-   include_directories(${FASPLIB_BASE_PATH}/include)
+    include_directories(${FASPLIB_BASE_PATH}/include)
 # 
 # Recursively look for CMakeLists.txt in subdirs.
     add_subdirectory("base")
     add_subdirectory("test")
     add_subdirectory("tutorial")
-
-
-
-
-
-
 
 
 ##############################below are debugs and tries out

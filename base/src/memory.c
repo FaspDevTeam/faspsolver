@@ -37,7 +37,7 @@ unsigned INT total_alloc_count = 0; // Total number of allocations
 /*---------------------------------*/
 
 /**
- * \fn void * fasp_mem_calloc (LONG size, INT type)
+ * \fn void * fasp_mem_calloc (LONGLONG size, INT type)
  *
  * \brief Allocate, initiate, and check memory
  *

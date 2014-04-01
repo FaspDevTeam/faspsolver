@@ -79,7 +79,7 @@ void fasp_dcsr_subplot (const dCSRmat *A,
 }
 
 /**
- * \fn void fasp_dbsr_subplot (const dBSRmat *A, const char *filename)
+ * \fn void fasp_dbsr_subplot (const dBSRmat *A, const char *filename, INT size)
  *
  * \brief Write sparse matrix pattern in BMP file format
  *
@@ -103,9 +103,9 @@ void fasp_dcsr_subplot (const dCSRmat *A,
  *  Red      negative element
  *  Brown    nearly zero element
  */
-void fasp_dbsr_subplot(const dBSRmat *A,
-                       const char *filename,
-                       INT size)
+void fasp_dbsr_subplot (const dBSRmat *A,
+                        const char *filename,
+                        INT size)
 {
 	INT m = A->ROW;
     INT n = A->COL;
@@ -600,12 +600,12 @@ FINISH: if (fp != NULL) fclose(fp);
 }
 
 /**
- * \fn void fasp_dcsr_plot (const dBSRmat *A, const char *filename)
+ * \fn void fasp_dcsr_plot (const dBSRmat *A, const char *fname)
  *
  * \brief Write dCSR sparse matrix pattern in BMP file format
  *
- * \param A         Pointer to the dBSRmat matrix
- * \param filename  File name
+ * \param A       Pointer to the dBSRmat matrix
+ * \param fname   File name to plot to
  *
  * \author Chunsheng Feng
  * \date   11/16/2013

@@ -150,7 +150,7 @@ config: distclean
 uninstall:
 	@if [ ! -f $(build_dir)/install_manifest.txt ]; then \
 		echo "Installation manifest not found! Nothing to uninstall."; \
-		echo "See the following help screen for usages ..."; \
+		echo "See the following help screen for usage ..."; \
 		echo " "; \
 		cat INSTALL; \
 	else \
@@ -166,15 +166,15 @@ distclean:
 help:
 	@cat INSTALL
 
-version:
-	@-hg -q id > version
-	@-hg log -r tip --template 'FASP {latesttag}.{latesttagdistance}:'
-	@-cat version
-
 backup:
 	@-rm -f faspsolver.zip
 	@-zip -r faspsolver.zip README INSTALL License Makefile version     \
 	                        base data test tutorial *.txt *.cmake *.tcl \
                             doc/userguide.pdf doc/refman.pdf vs08 vs10
+
+version:
+	@-hg -q id > version
+	@-hg log -r tip --template 'FASP {latesttag}.{latesttagdistance}:'
+	@-cat version
 
 .PHONY: all backup config clean distclean install uninstall docs headers help version

@@ -1,6 +1,12 @@
 File Name: CHANGES
 
-04/01/2014 FASP 1.4.7:
+04/01/2014 FASP 1.4.8:
+- Add ini/ua.dat and ini/sa.dat parameters.
+- Clean up make/cmake files.
+- Fix multiple doxygen problems.
+- Update FASP website.
+
+03/31/2014 FASP 1.4.7:
 - Fix a bug which makes regression results depend on the default parameters unwantedly. 
 - Fix a coarsest level iterative method tolerance problem for AMG.
 - Update regression test results.
