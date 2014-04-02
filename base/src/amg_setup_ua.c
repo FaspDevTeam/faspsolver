@@ -12,9 +12,8 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-
-#include "amg_setup_aggregation_csr.inl"
-#include "amg_setup_aggregation_bsr.inl"
+#include "aggregation_csr.inl"
+#include "aggregation_bsr.inl"
 
 static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *, AMG_param *);
 static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *, AMG_param *);
@@ -24,7 +23,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *, AMG_param *);
 /*---------------------------------*/
 
 /**
- * \fn SHORT fasp_amg_setup_ua(AMG_data *mgl, AMG_param *param)
+ * \fn SHORT fasp_amg_setup_ua (AMG_data *mgl, AMG_param *param)
  *
  * \brief Set up phase of unsmoothed aggregation AMG
  *
@@ -55,7 +54,7 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
 }
 
 /**
- * \fn INT fasp_amg_setup_ua_bsr(AMG_data_bsr *mgl, AMG_param *param)
+ * \fn INT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl, AMG_param *param)
  *
  * \brief Set up phase of unsmoothed aggregation AMG (BSR format)
  *
@@ -74,9 +73,7 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
     printf("### DEBUG: fasp_amg_setup_ua_bsr ...... [Start]\n");
 #endif
     
-    SHORT status=SUCCESS;
-    
-    status = amg_setup_unsmoothP_unsmoothA_bsr(mgl, param);
+    SHORT status = amg_setup_unsmoothP_unsmoothA_bsr(mgl, param);
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_ua_bsr ...... [Finish]\n");
@@ -92,10 +89,10 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
 /**
  * \fn static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl, AMG_param *param)
  *
- * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
+ * \brief Setup phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
  *
- * \param mgl    Pointer to AMG data: AMG_data
- * \param param  Pointer to AMG parameters: AMG_param
+ * \param mgl    Pointer to AMG_data
+ * \param param  Pointer to AMG_param
  *
  * \return       SUCCESS if succeed, error otherwise
  *
@@ -105,7 +102,6 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/27/2012.
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
-
 static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
                                             AMG_param *param)
 {
@@ -115,7 +111,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     const INT   m          = mgl[0].A.row;
     
     // local variables
-    SHORT       max_levels = param->max_levels, level=0, status=SUCCESS;
+    SHORT       max_levels = param->max_levels, level = 0, status = SUCCESS;
     INT         i;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
@@ -172,7 +168,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
                level,mgl[level].A.row,mgl[level].A.nnz);
 #endif
         
-        /*-- setup ILU decomposition if necessary */
+        /*-- Setup ILU decomposition if necessary */
         if ( level < param->ILU_levels ) {
             status = fasp_ilu_dcsr_setup(&mgl[level].A, &mgl[level].LU, &iluparam);
             if ( status < 0 ) {
@@ -181,8 +177,8 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
             }
         }
         
-        /* -- setup Schwarz smoother if necessary */
-		if ( level < param->schwarz_levels ){
+        /*-- Setup Schwarz smoother if necessary */
+		if ( level < param->schwarz_levels ) {
             const INT smmsize = param->schwarz_mmsize;
             const INT smaxlvl = param->schwarz_maxlvl;
             const INT schtype = param->schwarz_type;
@@ -197,14 +193,18 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
         aggregation(&mgl[level].A, &vertices[level], param, level+1,
                     &Neighbor[level], &num_aggregations[level]);
         
-        if ( num_aggregations[level] * 4 > mgl[level].A.row ) param->strong_coupled /= 2.0;
+        /*-- Choose strenth threshold adaptively --*/
+        if ( num_aggregations[level]*4 > mgl[level].A.row )
+            param->strong_coupled /= 1.5;
+        else if ( num_aggregations[level]*1.25 < mgl[level].A.row )
+            param->strong_coupled *= 1.5;
         
-        /* -- Form Prolongation --*/
+        /*-- Form Prolongation --*/
         form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1,
                          num_aggregations[level]);
         
         /*-- Perform aggressive coarsening only up to the specified level --*/
-        if ( mgl[level].P.col < 20 ) break; // If coarse < 20, stop!!!
+        if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
         
         /*-- Form resitriction --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
@@ -359,12 +359,13 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
         mgl[level].diaginv = fasp_dbsr_getdiaginv(&mgl[level].A);
         
         /*-- Aggregation --*/
-        // TODO: use first block now, need to bechanged later!!!
+        // TODO: use first block now, need to be changed later!!!
         mgl[level].PP =  fasp_dbsr_getblk_dcsr(&mgl[level].A);
         aggregation(&mgl[level].PP, &vertices[level], param, level+1,
                     &Neighbor[level], &num_aggregations[level]);
         
-        if ( num_aggregations[level]*4 > mgl[level].A.ROW ) param->strong_coupled /= 8.0;
+        if ( num_aggregations[level]*4 > mgl[level].A.ROW )
+            param->strong_coupled /= 8.0;
         
         /* -- Form Prolongation --*/
         form_tentative_p_bsr(&vertices[level], &mgl[level].P, &mgl[0],

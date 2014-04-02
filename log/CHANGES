@@ -1,10 +1,12 @@
 File Name: CHANGES
 
-04/01/2014 FASP 1.4.8:
+04/02/2014 FASP 1.4.8:
 - Add ini/ua.dat and ini/sa.dat parameters.
 - Clean up make/cmake files.
 - Fix multiple doxygen problems.
 - Update FASP website.
+- Change names of the aggregation inclusion files.
+- Prepare aggregation code for testing Notay's algorithm.
 
 03/31/2014 FASP 1.4.7:
 - Fix a bug which makes regression results depend on the default parameters unwantedly. 
