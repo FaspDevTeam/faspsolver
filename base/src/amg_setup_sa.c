@@ -562,7 +562,7 @@ static void smooth_agg (dCSRmat *A,
         for (i=0;i<row;++i) {
             for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
                 if (S.JA[j] == i) {
-                    S.val[j] = 1 -  smooth_factor * N->val[j] / diag.val[i];
+                    S.val[j] = 1 - smooth_factor * N->val[j] / diag.val[i];
                 }
                 else {
                     S.val[j] = - smooth_factor * N->val[j] / diag.val[i];
@@ -574,14 +574,12 @@ static void smooth_agg (dCSRmat *A,
         
     fasp_dvec_free(&diag);
         
-    /* Step 2. Smooth the tentative prolongation */
-    /* P = S*tenp */
+    /* Step 2. Smooth the tentative prolongation P = S*tenp */
     fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this.
         
     P->nnz = P->IA[P->row];
         
-        fasp_dcsr_free(&S);
-
+    fasp_dcsr_free(&S);
 }
     
 /*---------------------------------*/

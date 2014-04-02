@@ -13,7 +13,7 @@ workdir = ../data/  % work directory, no more than 128 characters
 problem_num              = 10     % test problem number 
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to screen | 1 to file
-solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
+solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
                                   % 5 vGMRes | 6 vFGMRes | 7 GCG |
                                   %--------------------------------------
                                   % 21 AMG Solver | 22 FMG Solver |
@@ -25,10 +25,10 @@ solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 %----------------------------------------------%
 
 precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
-itsolver_tol             = 1e-10   % solver tolerance 
-itsolver_maxit           = 1000    % maximal iteration number 
+itsolver_tol             = 1e-6   % solver tolerance 
+itsolver_maxit           = 200    % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
-itsolver_restart         = 30     % restart number for GMRES
+itsolver_restart         = 20     % restart number for GMRES
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
