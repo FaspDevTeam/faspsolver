@@ -7,6 +7,7 @@ File Name: CHANGES
 - Update FASP website.
 - Change names of the aggregation inclusion files.
 - Prepare aggregation code for testing Notay's algorithm.
+- Fix potential memory leakage in CSR to BSR conversions. 
 
 03/31/2014 FASP 1.4.7:
 - Fix a bug which makes regression results depend on the default parameters unwantedly. 
