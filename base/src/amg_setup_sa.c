@@ -125,6 +125,7 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
     }
     
     // Initialize ILU parameters
+    mgl->ILU_levels = param->ILU_levels;
     if ( param->ILU_levels > 0 ) {
         iluparam.print_level = param->print_level;
         iluparam.ILU_lfil    = param->ILU_lfil;
@@ -533,6 +534,7 @@ static void smooth_agg (dCSRmat *A,
                 }
             }
 #ifdef _OPENMP
+            }
         }
 #endif
         S = fasp_dcsr_create(row, col, N->IA[row]); // copy structure from N (filtered A)
@@ -578,7 +580,8 @@ static void smooth_agg (dCSRmat *A,
         
     P->nnz = P->IA[P->row];
         
-    fasp_dcsr_free(&S);
+        fasp_dcsr_free(&S);
+
 }
     
 /*---------------------------------*/

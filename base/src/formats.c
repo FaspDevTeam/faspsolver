@@ -715,6 +715,8 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  * \author  Zheng Li
  * \date    03/27/2014
  *
+ * \note modified by Xiaozhe Hu to avoid potential memory leakage problem
+ *
  */
 dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
 {
@@ -738,20 +740,48 @@ dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
     INT *JA  = A->JA;
     REAL *val = A->val;
 	
-	dBSRmat B = fasp_dbsr_create(row, col, NNZ, nb, 0);
+    dBSRmat B;
+    B.ROW = row;
+    B.COL = col;
+    B.nb = nb;
+    B.storage_manner = 0;
     
     INT *col_flag = (INT *)fasp_mem_calloc(col, sizeof(INT));
     
-	INT *ia = B.IA;
-	INT *ja = B.JA;
-    REAL *bval = B.val;
+    // allocate ia for B
+    INT *ia = (INT *) fasp_mem_calloc(row+1, sizeof(INT));
     
     fasp_iarray_set(col, col_flag, -1);
     
+    // Get ia for BSR format
     nnz = 0;
-    
-    // Get ia and ja for BSR format
 	for (i=0; i<row; ++i) {
+        ii = nb*i;
+        for(j=0; j<nb; ++j) {
+            jj = ii+j;
+            for(k=IA[jj]; k<IA[jj+1]; ++k) {
+                kk = JA[k]/nb;
+                if (col_flag[kk]!=0) {
+                    col_flag[kk] = 0;
+                    //ja[nnz] = kk;
+                    nnz ++;
+                }
+			}
+		}
+        ia[i+1] = nnz;
+        fasp_iarray_set(col, col_flag, -1);
+	}
+    
+    // set NNZ
+    B.NNZ = nnz;
+	
+    // allocate ja and bval
+    INT *ja = (INT*)fasp_mem_calloc(nnz, sizeof(INT));
+    REAL *bval = (REAL*)fasp_mem_calloc(nnz*nb2, sizeof(REAL));
+
+    // Get ja for BSR format
+    nnz = 0;
+    for (i=0; i<row; ++i) {
         ii = nb*i;
         for(j=0; j<nb; ++j) {
             jj = ii+j;
@@ -767,9 +797,6 @@ dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
         ia[i+1] = nnz;
         fasp_iarray_set(col, col_flag, -1);
 	}
-    
-    B.NNZ = nnz;
-	ja = (INT*)fasp_mem_realloc(ja, sizeof(INT)*nnz);
     
     // Get non-zeros of BSR
 	for (i=0; i<row; ++i) {
@@ -788,12 +815,15 @@ dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
 		}
 	}
     
-	bval = (REAL*)fasp_mem_realloc(bval, sizeof(REAL)*nnz*nb2);
+    B.IA = ia;
+    B.JA = ja;
+    B.val = bval;
     
     fasp_mem_free(col_flag);
     
     return B;
 }
+
 
 /*!
  * \fn dBSRmat fasp_format_dstr_dbsr ( dSTRmat *B )
@@ -974,7 +1004,7 @@ dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
 /*--        End of File          --*/
 /*---------------------------------*/
 
-#if FALSE
+#if TRUE
 
 /*!
  * \fn dBSRmat fasp_format_dcsr_dbsr0 ( dCSRmat *B, INT nb )

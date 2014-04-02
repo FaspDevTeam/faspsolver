@@ -206,6 +206,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
         /*-- Perform aggressive coarsening only up to the specified level --*/
         if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
         
+        
         /*-- Form resitriction --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
         
@@ -222,7 +223,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 #endif
         
     }
-    
+        
 #if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK format
     dCSRmat Ac_tran;

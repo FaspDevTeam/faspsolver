@@ -396,6 +396,59 @@ void fasp_dcoo1_read (char *filename,
 }
 
 /**
+ * \fn void fasp_dcoo_shift_read (char *filename, dCSRmat *A)
+ *
+ * \brief Read A from matrix disk file in IJ format -- indices starting from 0
+ *
+ * \param filename  File name for matrix
+ * \param A         Pointer to the CSR matrix
+ *
+ * \note File format:
+ *   - nrow ncol nnz     % number of rows, number of columns, and nnz
+ *   - i  j  a_ij        % i, j a_ij in each line
+ * 
+ * \note i and j suppose to start with index 1!!!
+ *
+ * \note After read in, it shifts the index to C fashin and converts the matrix to dCSRmat format.
+ *
+ * \author Xiaozhe Hu
+ * \date   04/01/2014
+ */
+void fasp_dcoo_shift_read (char *filename,
+                     dCSRmat *A)
+{
+    int  i,j,k,m,n,nnz;
+    REAL value;
+    
+    FILE *fp = fopen(filename,"r");
+    
+    if ( fp == NULL ) {
+        printf("### ERROR: Opening file %s ...\n", filename);
+        fasp_chkerr(ERROR_OPEN_FILE, "fasp_dcoo_read");
+    }
+    
+    printf("fasp_dcoo_shift_read: reading file %s...\n", filename);
+    
+    fscanf(fp,"%d %d %d",&m,&n,&nnz);
+    
+    dCOOmat Atmp=fasp_dcoo_create(m,n,nnz);
+    
+    for ( k = 0; k < nnz; k++ ) {
+        if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
+            Atmp.I[k]=i-1; Atmp.J[k]=j-1; Atmp.val[k] = value;
+        }
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_shift_read");
+        }
+    }
+    
+    fclose(fp);
+    
+    fasp_format_dcoo_dcsr(&Atmp,A);
+    fasp_dcoo_free(&Atmp);
+}
+
+/**
  * \fn void fasp_dmtx_read (char *filename, dCSRmat *A)
  *
  * \brief Read A from matrix disk file in MatrixMarket general format

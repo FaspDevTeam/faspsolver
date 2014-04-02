@@ -191,7 +191,7 @@ static void aggregation (dCSRmat *A,
             }
         }
     }
-    
+        
     fasp_mem_free(temp_C);
     fasp_mem_free(num_each_aggregation);
 }
