@@ -16,12 +16,11 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "aggregation_csr.inl"
 
 static SHORT amg_setup_smoothP_smoothA(AMG_data *, AMG_param *);
 static SHORT amg_setup_smoothP_unsmoothA(AMG_data *, AMG_param *);
 static void smooth_agg(dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRmat *);
-
-#include "amg_setup_aggregation_csr.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -40,8 +39,6 @@ static void smooth_agg(dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRma
  * \author Xiaozhe Hu
  * \date   09/29/2009
  *
- * \note Only for testing smoothed P and unsmoothed A, not used usually.
- 
  * Modified by Chensong Zhang on 04/06/2010.
  * Modified by Chensong Zhang on 05/09/2010.
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
@@ -50,7 +47,7 @@ static void smooth_agg(dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRma
 SHORT fasp_amg_setup_sa (AMG_data *mgl,
                          AMG_param *param)
 {
-    SHORT       status  = SUCCESS;
+    SHORT status  = SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_sa ...... [Start]\n");
@@ -60,7 +57,7 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
     
 #if TRUE
     status = amg_setup_smoothP_smoothA(mgl, param);
-#else
+#else // smoothed P, unsmoothed A
     status = amg_setup_smoothP_unsmoothA(mgl, param);
 #endif
     
@@ -190,7 +187,7 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
                    level+1, &Neighbor[level]);
         
         /*-- Perform aggressive coarsening only up to the specified level --*/
-        if ( mgl[level].P.col < 20 ) break; // If coarse < 20, stop!!!
+        if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
         
         /*-- Form restriction --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
@@ -361,7 +358,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
                    level+1, &Neighbor[level]);
         
         /*-- Perform aggressive coarsening only up to the specified level --*/
-        if ( mgl[level].P.col < 20 ) break; // If coarse < 20, stop!!!
+        if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
         
         /*-- Form resitriction --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
@@ -468,6 +465,7 @@ static void smooth_agg (dCSRmat *A,
     
     /* Using A for damped Jacobian smoother */
     if (filter == 0){
+        
         S = fasp_dcsr_create(row, col, A->IA[row]); // copy structure from A
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
@@ -510,81 +508,79 @@ static void smooth_agg (dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin, myend, i, j, row_sum_A, row_sum_N) if (row>OPENMP_HOLDS)
         for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
-            for (i=mybegin; i<myend; ++i){
+            for (i=mybegin; i<myend; ++i) {
 #else
-                for (i=0; i<row; ++i){
+            for (i=0; i<row; ++i) {
 #endif
-                    row_sum_A = 0.0;
-                    row_sum_N = 0.0;
+                row_sum_A = 0.0;
+                row_sum_N = 0.0;
                     
-                    for (j=A->IA[i]; j<A->IA[i+1]; ++j){
-                        if (A->JA[j] != i){
-                            row_sum_A+=A->val[j];
-                        }
-                    }
-                    for (j=N->IA[i]; j<N->IA[i+1]; ++j){
-                        if (N->JA[j] != i){
-                            row_sum_N+=N->val[j];
-                        }
-                    }
-                    
-                    for (j=N->IA[i]; j<N->IA[i+1]; ++j){
-                        if (N->JA[j] == i){
-                            N->val[j] = N->val[j] - row_sum_A + row_sum_N;
-                        }
+                for (j=A->IA[i]; j<A->IA[i+1]; ++j){
+                    if (A->JA[j] != i){
+                        row_sum_A+=A->val[j];
                     }
                 }
-#ifdef _OPENMP
+                for (j=N->IA[i]; j<N->IA[i+1]; ++j){
+                    if (N->JA[j] != i){
+                        row_sum_N+=N->val[j];
+                    }
+                }
+                    
+                for (j=N->IA[i]; j<N->IA[i+1]; ++j){
+                    if (N->JA[j] == i){
+                        N->val[j] = N->val[j] - row_sum_A + row_sum_N;
+                    }
+                }
             }
+#ifdef _OPENMP
+        }
 #endif
-            S = fasp_dcsr_create(row, col, N->IA[row]); // copy structure from N (filtered A)
+        S = fasp_dcsr_create(row, col, N->IA[row]); // copy structure from N (filtered A)
             
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
-            for (i=0; i<row+1; ++i) S.IA[i] = N->IA[i];
-            for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
+        for (i=0; i<row+1; ++i) S.IA[i] = N->IA[i];
+        for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
             
-            fasp_dcsr_getdiag(0, N, &diag);  // get the diaganol entries of N (filtered A)
+        fasp_dcsr_getdiag(0, N, &diag);  // get the diaganol entries of N (filtered A)
             
-            // check the diaganol entries.
-            // if it is too small, use Richardson smoother for the corresponding row
+        // check the diaganol entries.
+        // if it is too small, use Richardson smoother for the corresponding row
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
-            for (i=0;i<row;++i){
-                if (ABS(diag.val[i]) < 1e-6){
-                    diag.val[i] = 1.0;
-                }
-            }
+        for (i=0;i<row;++i) {
+            if (ABS(diag.val[i]) < 1e-6) diag.val[i] = 1.0;
+        }
             
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS) private(i,j)
 #endif
-            for (i=0;i<row;++i){
-                for (j=S.IA[i]; j<S.IA[i+1]; ++j){
-                    if (S.JA[j] == i) {
-                        S.val[j] = 1 -  smooth_factor * N->val[j] / diag.val[i];
-                    }
-                    else {
-                        S.val[j] = - smooth_factor * N->val[j] / diag.val[i];
-                    }
+        for (i=0;i<row;++i) {
+            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
+                if (S.JA[j] == i) {
+                    S.val[j] = 1 -  smooth_factor * N->val[j] / diag.val[i];
+                }
+                else {
+                    S.val[j] = - smooth_factor * N->val[j] / diag.val[i];
                 }
             }
-            
         }
-        
-        fasp_dvec_free(&diag);
-        
-        /* Step 2. Smooth the tentative prolongation */
-        /* P = S*tenp */
-        fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this.
-        
-        P->nnz = P->IA[P->row];
-        
-        fasp_dcsr_free(&S);
+            
     }
+        
+    fasp_dvec_free(&diag);
+        
+    /* Step 2. Smooth the tentative prolongation */
+    /* P = S*tenp */
+    fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this.
+        
+    P->nnz = P->IA[P->row];
+        
+    fasp_dcsr_free(&S);
+}
     
-    /*---------------------------------*/
-    /*--        End of File          --*/
-    /*---------------------------------*/
+/*---------------------------------*/
+/*--        End of File          --*/
+/*---------------------------------*/
