@@ -829,6 +829,9 @@ void fasp_dcoo_read (char *filename,
 void fasp_dcoo1_read (char *filename,
                       dCOOmat *A);
 
+void fasp_dcoo_shift_read (char *filename,
+                     dCSRmat *A);
+
 void fasp_dmtx_read (char *filename,
                      dCSRmat *A);
 

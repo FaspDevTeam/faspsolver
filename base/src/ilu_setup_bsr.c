@@ -43,6 +43,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
                            ILU_data *iludata, 
                            ILU_param *iluparam)
 {
+    
     const SHORT  print_level=iluparam->print_level;
     const INT    n=A->COL, nnz=A->NNZ, nb=A->nb, nb2=nb*nb;
     
@@ -94,11 +95,11 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     
     memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
     iludata->work=(REAL*)fasp_mem_calloc(nwork, sizeof(REAL));  // Xiaozhe: Is the work space too large?
-    
+
 #if DEBUG_MODE
     printf("### DEBUG: fill-in=%d, nwork=%d\n", lfil, nwork);
     printf("### DEBUG: iwk=%d, nzlu=%d\n",iwk,nzlu);
-#endif    
+#endif
     
     if (ierr!=0) {
         printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);

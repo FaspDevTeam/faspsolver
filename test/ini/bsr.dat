@@ -23,9 +23,9 @@ solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 
 precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
 itsolver_tol             = 1e-6   % solver tolerance 
-itsolver_maxit           = 200   % maximal iteration number 
+itsolver_maxit           = 1000   % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
-itsolver_restart         = 20     % restart number for GMRES
+itsolver_restart         = 30     % restart number for GMRES
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
@@ -69,7 +69,7 @@ AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
 AMG_smoother             = GS     % GS | JACOBI | SGS | SOR | SSOR | 
                                   % GSOR | SGSOR | POLY | L1DIAG | CG
 AMG_smooth_order         = CF     % NO: natural order | CF: CF order
-AMG_ILU_levels           = 1      % number of levels using ILU smoother
+AMG_ILU_levels           = 0      % number of levels using ILU smoother
 AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.1    % relaxation parameter for SOR smoother 
 AMG_polynomial_degree	 = 3      % degree of the polynomial smoother

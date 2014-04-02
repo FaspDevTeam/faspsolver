@@ -452,7 +452,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     }
     
     if ( print_level>=PRINT_MIN ) {
-        print_cputime("CPR setup", setup_duration);
+        print_cputime("BSR AMG setup", setup_duration);
     }
 
     //--------------------------------------------------------------
@@ -467,7 +467,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     solver_duration = solver_end - solver_start;
     
     if ( print_level>=PRINT_MIN ) {
-        print_cputime("CPR_Krylov method totally", setup_duration+solver_duration);
+        print_cputime("BSR AMG Krylov method totally", setup_duration+solver_duration);
     }
     
  FINISHED:
@@ -476,7 +476,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     return status;
     
  MEMORY_ERROR:
-    printf("krylov_CPR_bsr: Cannot allocate memory!\n");
+    printf("krylov_AMG_bsr: Cannot allocate memory!\n");
     exit(status);    
 }
 
