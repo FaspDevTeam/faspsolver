@@ -168,13 +168,13 @@ help:
 
 backup:
 	@-rm -f faspsolver.zip
-	@-zip -r faspsolver.zip README INSTALL License Makefile version     \
+	@-zip -r faspsolver.zip README INSTALL License Makefile VERSION     \
 	                        base data test tutorial *.txt *.cmake *.tcl \
                             doc/userguide.pdf doc/refman.pdf vs08 vs10
 
 version:
-	@-hg -q id > version
+	@-hg -q id > VERSION
 	@-hg log -r tip --template 'FASP {latesttag}.{latesttagdistance}:'
-	@-cat version
+	@-cat VERSION
 
-.PHONY: all backup config clean distclean install uninstall docs headers help version
+.PHONY: all backup config clean distclean install uninstall docs headers help VERSION
