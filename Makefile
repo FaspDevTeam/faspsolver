@@ -177,4 +177,4 @@ version:
 	@-hg log -r tip --template 'FASP {latesttag}.{latesttagdistance}:'
 	@-cat VERSION
 
-.PHONY: all backup config clean distclean install uninstall docs headers help VERSION
+.PHONY: all backup config clean distclean install uninstall docs headers help version
