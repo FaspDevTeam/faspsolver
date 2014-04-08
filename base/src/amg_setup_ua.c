@@ -344,8 +344,10 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
         iluparam.ILU_type    = param->ILU_type;
     }
     
+    
     // Main AMG setup loop
     while ( (mgl[level].A.ROW > min_cdof) && (level < max_levels-1) ) {
+        
         
         /*-- setup ILU decomposition if necessary */
         if ( level < param->ILU_levels ) {
@@ -359,11 +361,13 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
         /*-- get the diagonal inverse --*/
         mgl[level].diaginv = fasp_dbsr_getdiaginv(&mgl[level].A);
         
+
         /*-- Aggregation --*/
         // TODO: use first block now, need to be changed later!!!
         mgl[level].PP =  fasp_dbsr_getblk_dcsr(&mgl[level].A);
         aggregation(&mgl[level].PP, &vertices[level], param, level+1,
                     &Neighbor[level], &num_aggregations[level]);
+        
         
         if ( num_aggregations[level]*4 > mgl[level].A.ROW )
             param->strong_coupled /= 8.0;
@@ -372,11 +376,15 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
         form_tentative_p_bsr(&vertices[level], &mgl[level].P, &mgl[0],
                              level+1, num_aggregations[level]);
         
+        
         /*-- Form resitriction --*/
         fasp_dbsr_trans(&mgl[level].P, &mgl[level].R);
         
+        
         /*-- Form coarse level stiffness matrix --*/
         fasp_blas_dbsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
+        
+
         
         fasp_dcsr_free(&Neighbor[level]);
         fasp_ivec_free(&vertices[level]);

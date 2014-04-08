@@ -452,6 +452,25 @@ typedef struct precond_block_reservoir_data {
 } precond_block_reservoir_data; /**< Precond data for Reservoir Simulation */
 
 /**
+ * \brief Data passed to the preconditioner for diagonal preconditioning for 3 by 3 blocks
+ *
+ * This is needed for the block preconditioner.
+ */
+typedef struct {
+	
+	block_dCSRmat *Abcsr; /**< problem data, the blocks */
+	
+    AMG_data *mgl1; /**< data for AMG */
+    AMG_data *mgl2; /**< data for AMG */
+    AMG_data *mgl3; /**< data for AMG */
+    
+	AMG_param *amgparam; /**< parameters for AMG */
+    
+    dvector r;
+	
+} precond_block_data_3; /**< Precond data for block matrices */
+
+/**
  * \struct precond_block_data
  * \brief Data passed to the preconditioner for block diagonal preconditioning.
  *

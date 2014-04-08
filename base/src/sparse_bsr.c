@@ -1435,6 +1435,240 @@ void fasp_dbsr_getdiag (INT n,
     }
 }
 
+
+/**
+ * \fn dBSRmat fasp_dbsr_diagLU(dBSRmat *A, REAL *DL, REAL *DU)
+ *
+ * \brief Compute B := DL*A*DU.  We decompose each diagonal block of A into LDU form and DL = diag(L^{-1}) and DU = diag(U^{-1}).
+ *
+ * \param A        Pointer to the dBSRmat matrix
+ * \param DL       Pointer to the diag(L^{-1})
+ * \param DU       Pointer to the diag(U^{-1})
+ *
+ * \return BSR matrix after scaling
+ *
+ *
+ * \author Xiaozhe Hu
+ * \date 04/02/2014
+ *
+ */
+dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
+                         REAL *DL,
+                         REAL *DU)
+{
+
+    // members of A
+    INT  ROW = A->ROW;
+    INT  ROW_plus_one = ROW+1;
+    INT  COL = A->COL;
+    INT  NNZ = A->NNZ;
+    INT  nb  = A->nb;
+    INT  *IA  = A->IA;
+    INT  *JA  = A->JA;
+    REAL *val = A->val;
+    
+    INT  *IAb  = NULL;
+    INT  *JAb  = NULL;
+    REAL *valb = NULL;
+    
+    INT nb2  = nb*nb;
+    INT i,j,k,m;
+    
+    // Create a dBSRmat 'B'
+    dBSRmat B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
+    
+    IAb  = B.IA;
+    JAb  = B.JA;
+    valb = B.val;
+    
+    fasp_iarray_cp(ROW_plus_one, IA, IAb);
+    fasp_iarray_cp(NNZ, JA, JAb);
+    
+    // work array
+    REAL *temp = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
+    //REAL s;
+    
+    // get DL and DU
+    switch (nb) {
+            
+        case 2:
+            
+            for (i=0; i<ROW; i++){
+                
+                for (j=IA[i]; j<IA[i+1]; j++){
+                    
+                    if (JA[j] == i){
+                        
+                        temp[0] = val[j*nb2];
+                        temp[1] = val[j*nb2+1];
+                        temp[2] = val[j*nb2+2];
+                        temp[3] = val[j*nb2+3];
+                        
+                        // compute s
+                        //s = temp[3] - (temp[1]*temp[2])/temp[0];
+                        
+                        // form DL
+                        DL[i*nb2]   = 1.0;
+                        DL[i*nb2+1] = 0.0;
+                        DL[i*nb2+2] = -temp[2]/temp[0];
+                        DL[i*nb2+3] = 1.0;
+                        //DL[i*nb2+2] = -temp[2]/(temp[0]*s);
+                        //DL[i*nb2+3] = 1.0/s;
+                        
+                        // form DU
+                        DU[i*nb2]   = 1.0;
+                        DU[i*nb2+1] = -temp[1]/temp[0];
+                        DU[i*nb2+2] = 0.0;
+                        DU[i*nb2+3] = 1.0;
+    
+                        
+                        break;
+                        
+                    } // end of if (JA[j] == i)
+                    
+                } // end of for (j=IA[i]; j<IA[i+1]; j++)
+                
+            } // end of for (i=0; i<ROW; i++)
+            
+            break;
+            
+        case 3:
+            
+            for (i=0; i<ROW; i++){
+                
+                for (j=IA[i]; j<IA[i+1]; j++){
+                    
+                    if (JA[j] == i){
+                        
+                        temp[0] = val[j*nb2];
+                        temp[1] = val[j*nb2+1];
+                        temp[2] = val[j*nb2+2];
+                        temp[3] = val[j*nb2+3];
+                        temp[4] = val[j*nb2+4];
+                        temp[5] = val[j*nb2+5];
+                        temp[6] = val[j*nb2+6];
+                        temp[7] = val[j*nb2+7];
+                        temp[8] = val[j*nb2+8];
+
+                        // some auxiliry variables
+                        REAL s22 = temp[4] - ((temp[1]*temp[3])/temp[0]);
+                        REAL s23 = temp[5] - ((temp[2]*temp[3])/temp[0]);
+                        REAL s32 = temp[7] - ((temp[1]*temp[6])/temp[0]);
+                        REAL s33 = temp[8] - ((temp[2]*temp[6])/temp[0]) - (s23*s32/s22);
+                        
+                        // form DL
+                        DL[i*nb2]   = 1.0;
+                        DL[i*nb2+1] = 0.0;
+                        DL[i*nb2+2] = 0.0;
+                        DL[i*nb2+3] = -temp[3]/temp[0];
+                        DL[i*nb2+4] = 1.0;
+                        DL[i*nb2+5] = 0.0;
+                        DL[i*nb2+6] = -temp[6]/temp[0] + (temp[3]/temp[0])*(s32/s22);
+                        DL[i*nb2+7] = -s32/s22;
+                        DL[i*nb2+8] = 1.0;
+                        
+                        // form DU
+                        DU[i*nb2]   = 1.0;
+                        DU[i*nb2+1] = -temp[1]/temp[0];
+                        DU[i*nb2+2] = -temp[2]/temp[0] + (temp[1]/temp[0])*(s23/s22);
+                        DU[i*nb2+3] = 0.0;
+                        DU[i*nb2+4] = 1.0;
+                        DU[i*nb2+5] = -s23/s22;
+                        DU[i*nb2+6] = 0.0;
+                        DU[i*nb2+7] = 0.0;
+                        DU[i*nb2+8] = 1.0;
+                        
+                        break;
+                        
+                    } // end of if (JA[j] == i)
+                    
+                } // end of for (j=IA[i]; j<IA[i+1]; j++)
+                
+            } // end of for (i=0; i<ROW; i++)
+            
+            break;
+            
+        default:
+            printf("only works for nb = 2 or 3 now!!");
+            break;
+            
+    } // end of switch
+    
+    // compute B = DL*A*DU
+    switch (nb){
+            
+        case 2:
+            
+            for (i=0; i<ROW; i++){
+                
+                for (j=IA[i]; j<IA[i+1]; j++){
+                    
+                    k = JA[j];
+                    
+                    // left multiply DL
+                    fasp_blas_smat_mul_nc2(DL+i*nb2, val+j*nb2, temp);
+
+                    // right multiply DU
+                    fasp_blas_smat_mul_nc2(temp, DU+k*nb2, valb+j*nb2);
+                    
+                    // for diagonal block, set it to be diagonal matrix
+                    if (JA[j] == i){
+                        
+                        valb[j*nb2+1] = 0.0;
+                        valb[j*nb2+2] = 0.0;
+                        
+                    } // end if (JA[j] == i)
+
+                    
+                } // end for (j=IA[i]; j<IA[i+1]; j++)
+                
+            } // end of for (i=0; i<ROW; i++)
+            
+            break;
+            
+        case 3:
+            
+            for (i=0; i<ROW; i++){
+                
+                for (j=IA[i]; j<IA[i+1]; j++){
+                    
+                    k = JA[j];
+                    
+                    // left multiply DL
+                    fasp_blas_smat_mul_nc3(DL+i*nb2, val+j*nb2, temp);
+                    
+                    // right multiply DU
+                    fasp_blas_smat_mul_nc3(temp, DU+k*nb2, valb+j*nb2);
+                    
+                    // for diagonal block, set it to be diagonal matrix
+                    if (JA[j] == i){
+                    
+                        valb[j*nb2+1] = 0.0;
+                        valb[j*nb2+2] = 0.0;
+                        valb[j*nb2+3] = 0.0;
+                        valb[j*nb2+5] = 0.0;
+                        valb[j*nb2+6] = 0.0;
+                        valb[j*nb2+7] = 0.0;
+                        
+                    } // end if (JA[j] == i)
+                    
+                } // end for (j=IA[i]; j<IA[i+1]; j++)
+                
+            } // end of for (i=0; i<ROW; i++)
+            
+            break;
+            
+        default:
+            printf("only works for nb = 2 or 3 now!!");
+            break;
+            
+    }
+    
+    // return
+    return B;
+    
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

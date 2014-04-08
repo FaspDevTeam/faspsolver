@@ -67,6 +67,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     B->JA=(INT*)fasp_mem_calloc(A->nnz,sizeof(INT));
     B->val=(REAL*)fasp_mem_calloc(A->nnz,sizeof(REAL));
     
+    
     if (use_openmp) {
 #ifdef _OPENMP
         stride_i = n/nthreads;
@@ -85,8 +86,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
     else {
         for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
     }
-    
-    
+        
     // first pass: count nonzeros for sub matrix
     B->IA[0]=0;
     for (i=0;i<m;++i) {
@@ -159,8 +159,10 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     
     B->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
     
+    
+    
     if (use_openmp) {
-#ifdef _OPENMP 
+#ifdef _OPENMP
         stride_i = n/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {

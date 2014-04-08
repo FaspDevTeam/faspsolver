@@ -60,9 +60,9 @@ static void aggregation (dCSRmat *A,
     /*------------------------------------------*/
     dvector diag; 
     fasp_dcsr_getdiag(0, A, &diag);  // get the diagonal entries
-    
+        
     fasp_dcsr_alloc(row, col, nnz, Neigh);
-
+    
     NIA  = Neigh->IA;
     NJA  = Neigh->JA;
     Nval = Neigh->val;
@@ -147,6 +147,10 @@ static void aggregation (dCSRmat *A,
     /*   Step 2.   */
     /*-------------*/
     INT *temp_C = (INT*)fasp_mem_calloc(row,sizeof(INT));
+
+    if (*num_aggregations == 0){
+        printf("WWARNING -- did not find any aggregate in the first round, the matrix might be diagonal matrix\n");
+    }
     
     num_each_aggregation = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
    
