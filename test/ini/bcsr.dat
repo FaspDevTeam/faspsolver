@@ -9,7 +9,7 @@ workdir = ../data/  % work directory, no more than 128 characters
 %----------------------------------------------%
 % problem, solver, and output type             %
 %----------------------------------------------%
-problem_num              = 20     % test problem number 
+problem_num              = 10     % test problem number 
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to scree | 1 to file
 solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
@@ -21,7 +21,7 @@ solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 % parameters for iterative solvers             %
 %----------------------------------------------%
 
-precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
+precond_type             = 22      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
 itsolver_tol             = 1e-6   % solver tolerance 
 itsolver_maxit           = 100   % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
@@ -49,7 +49,7 @@ Schwarz_type             = 1      % 1 forward | 2 backward | 3 symmetric
 % parameters for multilevel iteration          %
 %----------------------------------------------%
 
-AMG_type                 = UA      % C classic AMG
+AMG_type                 = C      % C classic AMG
                                   % SA smoothed aggregation
                                   % UA unsmoothed aggregation
 AMG_cycle_type           = V      % V V-cycle | W W-cycle

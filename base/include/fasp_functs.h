@@ -713,9 +713,9 @@ void fasp_dcsr_subplot (const dCSRmat *A,
                         const char *filename,
                         INT size);
 
-void fasp_dbsr_subplot(const dBSRmat *A,
-                       const char *filename,
-                       INT size);
+void fasp_dbsr_subplot (const dBSRmat *A,
+                        const char *filename,
+                        INT size);
 
 void fasp_grid2d_plot (pgrid2d pg,
                        INT level);
@@ -897,7 +897,8 @@ void fasp_dbsr_print (dBSRmat *A);
 
 void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A);
 
-void fasp_dcsr_write_coo (const char *filename,const dCSRmat *A);
+void fasp_dcsr_write_coo (const char *filename,
+                          const dCSRmat *A);
 
 void fasp_dstr_print (dSTRmat *A);
 
@@ -931,6 +932,12 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
                               dvector *b, 
                               dvector *x, 
                               itsolver_param *itparam);
+
+INT fasp_solver_bdcsr_krylov_block(block_dCSRmat *A,
+                              dvector *b,
+                              dvector *x,
+                              itsolver_param *itparam,
+                                AMG_param *amgparam);
 
 
 /*-------- In file: itsolver_bsr.c --------*/
@@ -1445,6 +1452,17 @@ INT fasp_solver_pminres (mxv_matfree *mf,
                          const SHORT print_level) ;
 
 
+/*-------- In file: precond_bcsr.c --------*/
+
+void fasp_precond_block_diag (double *r,
+                            double *z, 
+                            void *data);
+
+void fasp_precond_block_lower (double *r,
+                            double *z, 
+                            void *data);
+
+
 /*-------- In file: precond_bsr.c --------*/
 
 void fasp_precond_dbsr_diag (REAL *r, 
@@ -1582,6 +1600,17 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
                                SHORT restart,
                                const SHORT stop_type, 
                                const SHORT print_level);
+
+INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
+                                dvector *b,
+                                dvector *x,
+                                precond *pre,
+                                const REAL tol,
+                                const INT MaxIt,
+                                const SHORT restart,
+                                const SHORT stop_type,
+                                const SHORT print_level
+                                );
 
 
 /*-------- In file: pvfgmres_mf.c --------*/
@@ -1897,7 +1926,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
                                  INT maximap,
                                  INT nx,
                                  INT ny,
-                                 INT nz );
+                                 INT nz);
 
 
 /*-------- In file: smoother_csr_cr.c --------*/
@@ -2095,6 +2124,10 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
 void fasp_dbsr_getdiag (INT n, 
                         dBSRmat *A, 
                         REAL *diag );
+
+dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
+                         REAL *DL,
+                         REAL *DU);
 
 
 /*-------- In file: sparse_coo.c --------*/
