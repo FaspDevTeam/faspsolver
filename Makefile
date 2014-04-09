@@ -43,9 +43,10 @@
 # doxywizard=yes
 #
 #-------------------------------------------------------------------------
-# If you want to use UMFPACK, uncomment the next line: 
+# If you want to use UMFPACK (part of SparseSuite), uncomment the next 
+# line:
 # 
-umfpack=yes
+# umfpack=yes
 #
 # If you want to specify the path to SparseSuite, uncomment the next 
 # line and give the correct path to SparseSuite here. For example:
