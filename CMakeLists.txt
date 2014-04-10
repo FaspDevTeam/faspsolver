@@ -1,10 +1,7 @@
 	cmake_minimum_required (VERSION 2.6)
 
-
 # INIT_CONFIG load...
 	include ( FASP_init.cmake OPTIONAL )
-
-
 #
 
 	project(FASP C CXX Fortran )
