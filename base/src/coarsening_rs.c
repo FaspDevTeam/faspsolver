@@ -1653,7 +1653,7 @@ static INT clean_ff_couplings (iCSRmat *S,
             else cindex[j] = -1; // reset cindex --Chensong 06/02/2013
         }
         
-        if ( ci_tilde_mark |= i ) ci_tilde = -1;
+        if ( ci_tilde_mark != i ) ci_tilde = -1;//???
         
         for ( ji = S->IA[i]; ji < S->IA[i+1]; ++ji ) {
             

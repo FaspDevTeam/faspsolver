@@ -1,7 +1,9 @@
 File Name: CHANGES
 
 04/09/2014 FASP 1.4.9:
-- Add block preconditioners for block_dCSRmat matrices
+- Add block preconditioners for block_dCSRmat matrices.
+- Add clang to default compiler searching list.
+- Fix a typo in coarsening_rs.c.
 
 04/02/2014 FASP 1.4.8:
 - Add ini/ua.dat and ini/sa.dat parameters.
