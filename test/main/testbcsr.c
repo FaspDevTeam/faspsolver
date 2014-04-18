@@ -127,7 +127,7 @@ int main (int argc, const char * argv[])
             
         }
         
-        Absr = fasp_format_dcsr_dbsr(&A, 3);
+        //Absr = fasp_format_dcsr_dbsr(&A, 3);
         
     }
     
@@ -188,6 +188,7 @@ int main (int argc, const char * argv[])
     
  FINISHED:
     // Clean up memory
+    fasp_bdcsr_free(&Abcsr);
     fasp_dbsr_free(&Absr);
 	fasp_dvec_free(&b);
 	fasp_dvec_free(&uh);

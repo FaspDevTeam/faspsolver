@@ -18,6 +18,36 @@
 /*---------------------------------*/
 
 /**
+ * \fn void fasp_bdcsr_free(block_dCSRmat *A)
+ *
+ * \brief Free block CSR sparse matrix data memeory space
+ *
+ * \param A   Pointer to the block_dCSRmat matrix
+ *
+ * \author Xiaozhe Hu
+ * \date   04/18/2014
+ *
+ */
+void fasp_bdcsr_free(block_dCSRmat *A)
+{
+    
+    if (A == NULL) return;
+    
+    INT i;
+    INT num_blocks = (A->brow)*(A->bcol);
+    
+    for (i=0; i< num_blocks; i++){
+        fasp_dcsr_free(A->blocks[i]);
+        A->blocks[i] = NULL;
+    }
+    
+    fasp_mem_free(A->blocks);
+    A->blocks = NULL;
+    
+}
+
+
+/**
  * \fn SHORT fasp_dcsr_getblk (dCSRmat *A, INT *Is, INT *Js, INT m, INT n, dCSRmat *B)
  *
  * \brief Get a sub CSR matrix of A with specified rows and colums
