@@ -1,6 +1,7 @@
 File Name: CHANGES
 
-04/09/2014 FASP 1.4.9:
+04/16/2014 FASP 1.4.9:
+- Add free function for block_dCSRmat matrices. 
 - Add block preconditioners for block_dCSRmat matrices.
 - Add clang to default compiler searching list.
 - Fix a typo in coarsening_rs.c.
