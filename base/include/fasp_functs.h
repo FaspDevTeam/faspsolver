@@ -2064,6 +2064,8 @@ void fasp_smoother_dstr_schwarz (dSTRmat *A,
 
 /*-------- In file: sparse_block.c --------*/
 
+void fasp_bdcsr_free(block_dCSRmat *A);
+
 SHORT fasp_dcsr_getblk (dCSRmat *A,
                         INT *Is,
                         INT *Js,

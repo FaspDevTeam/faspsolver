@@ -153,6 +153,12 @@
 #define UA_AMG                  3  /**< unsmoothed aggregation AMG */
 
 /**
+ * \brief Definition of aggregation types
+ */
+#define PAIRWISE                1  /**< pairwise aggregation AMG */
+#define VMB                     2  /**< VMB aggregation AMG */
+
+/**
  * \brief Definition of cycle types
  */
 #define V_CYCLE	                1  /**< V-cycle */

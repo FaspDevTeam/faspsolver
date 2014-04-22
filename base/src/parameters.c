@@ -370,6 +370,7 @@ void fasp_param_input_init (input_param *iniparam)
     iniparam->AMG_max_aggregation      = 9;
     iniparam->AMG_tentative_smooth     = 0.67;
     iniparam->AMG_smooth_filter        = ON;
+    iniparam->AMG_aggregation_type     = 1;
 }
 
 /**
@@ -419,6 +420,8 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->max_aggregation      = 9;
     amgparam->tentative_smooth     = 0.0;
     amgparam->smooth_filter        = OFF;
+    amgparam->aggregation_type     = PAIRWISE;
+    amgparam->pairwise_path        = 2;
     
     // ILU smoother parameters
     amgparam->ILU_type             = ILUk;
@@ -538,6 +541,8 @@ void fasp_param_amg_set (AMG_param *param,
     param->nl_amli_krylov_type  = iniparam->AMG_nl_amli_krylov_type;
     
     param->coarsening_type      = iniparam->AMG_coarsening_type;
+    param->aggregation_type     = iniparam->AMG_aggregation_type;
+    param->pairwise_path        = iniparam->AMG_pairwise_path;
     param->interpolation_type   = iniparam->AMG_interpolation_type;
     param->strong_threshold     = iniparam->AMG_strong_threshold;
     param->truncation_threshold = iniparam->AMG_truncation_threshold;
@@ -548,6 +553,7 @@ void fasp_param_amg_set (AMG_param *param,
     param->strong_coupled       = iniparam->AMG_strong_coupled;
     param->max_aggregation      = iniparam->AMG_max_aggregation;
     param->tentative_smooth     = iniparam->AMG_tentative_smooth;
+    param->smooth_filter        = iniparam->AMG_smooth_filter;
     param->smooth_filter        = iniparam->AMG_smooth_filter;
     
     param->ILU_levels           = iniparam->AMG_ILU_levels;
