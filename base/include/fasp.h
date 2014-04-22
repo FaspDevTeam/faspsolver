@@ -557,6 +557,9 @@ typedef struct {
 	//! coarsening type
 	SHORT coarsening_type;
 	
+	//! aggregation type
+	SHORT aggregation_type;
+
     //! interpolation type
 	SHORT interpolation_type;
 	
@@ -575,6 +578,9 @@ typedef struct {
     //! numebr of paths use to determin stongly coupled C points
     INT aggressive_path;
 	
+    //! numebr of paths use to determin pairwise matching
+    INT pairwise_path;
+
 	//! strong coupled threshold for aggregate
 	REAL strong_coupled;
 	
@@ -961,12 +967,14 @@ typedef struct {
 	
 	// parameters for classical AMG
 	SHORT AMG_coarsening_type;     /**< coarsening type */
+	SHORT AMG_aggregation_type;    /**< aggregation type */
 	SHORT AMG_interpolation_type;  /**< interpolation type */
 	REAL AMG_strong_threshold;     /**< strong threshold for coarsening */
 	REAL AMG_truncation_threshold; /**< truncation factor for interpolation */
 	REAL AMG_max_row_sum;          /**< maximal row sum */
     INT AMG_aggressive_level;      /**< number of levels use aggressive coarsening */
     INT AMG_aggressive_path;       /**< number of paths used to determine strongly coupled C-set */
+    INT AMG_pairwise_path;         /**< number of paths used to determine pairwise matching */
 	
 	//  parameters for smoothed aggregation AMG
 	REAL AMG_strong_coupled;       /**< strong coupled threshold for aggregate */

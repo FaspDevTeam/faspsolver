@@ -159,6 +159,10 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
+   
+    if (param->aggregation_type == PAIRWISE){
+        fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
+	}
     
     // Main AMG setup loop
     while ( (mgl[level].A.row > min_cdof) && (level < max_levels-1) ) {
@@ -190,28 +194,51 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 		}
         
         /*-- Aggregation --*/
-        aggregation(&mgl[level].A, &vertices[level], param, level+1,
+        if (param->aggregation_type == VMB) {
+            // VMB aggregation
+            aggregation(&mgl[level].A, &vertices[level], param, level+1,
                     &Neighbor[level], &num_aggregations[level]);
         
-        /*-- Choose strenth threshold adaptively --*/
-        if ( num_aggregations[level]*4 > mgl[level].A.row )
-            param->strong_coupled /= 1.5;
-        else if ( num_aggregations[level]*1.25 < mgl[level].A.row )
-            param->strong_coupled *= 1.5;
+            /*-- Choose strenth threshold adaptively --*/
+            if ( num_aggregations[level]*4 > mgl[level].A.row )
+                param->strong_coupled /= 1.5;
+            else if ( num_aggregations[level]*1.25 < mgl[level].A.row )
+                param->strong_coupled *= 1.5;
         
-        /*-- Form Prolongation --*/
-        form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1,
+            /*-- Form Prolongation --*/
+            form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1,
                          num_aggregations[level]);
         
-        /*-- Perform aggressive coarsening only up to the specified level --*/
-        if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
+            /*-- Perform aggressive coarsening only up to the specified level --*/
+            if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
         
         
-        /*-- Form resitriction --*/
-        fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
+            /*-- Form resitriction --*/
+            fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
         
-        /*-- Form coarse level stiffness matrix --*/
-        fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
+            /*-- Form coarse level stiffness matrix --*/
+            fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
+
+        }
+		else if (param->aggregation_type == PAIRWISE){
+            // pairwise matching aggregation
+            for (i=0; i<param->pairwise_path; ++i) {
+                pairwise_aggregation(&mgl[level].A, &vertices[level], &num_aggregations[level]);
+
+                /*-- Form Prolongation --*/
+                form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1,
+                                 num_aggregations[level]);
+        
+                /*-- Perform aggressive coarsening only up to the specified level --*/
+                if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
+        
+                /*-- Form resitriction --*/
+                fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
+        
+                /*-- Form coarse level stiffness matrix --*/
+                fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
+		    }
+		}
         
         fasp_dcsr_free(&Neighbor[level]);
         fasp_ivec_free(&vertices[level]);
@@ -368,6 +395,8 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
         aggregation(&mgl[level].PP, &vertices[level], param, level+1,
                     &Neighbor[level], &num_aggregations[level]);
         
+        //aggregation_coarsening(&mgl[level].PP, &vertices[level], param, level+1,
+        //                    &Neighbor[level], &num_aggregations[level]);
         
         if ( num_aggregations[level]*4 > mgl[level].A.ROW )
             param->strong_coupled /= 8.0;

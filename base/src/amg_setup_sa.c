@@ -179,6 +179,8 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
         aggregation(&mgl[level].A, &vertices[level], param, level+1,
                     &Neighbor[level], &num_aggregations[level]);
         
+        //aggregation_coarsening(&mgl[level].A, &vertices[level], param, level+1,
+        //            &Neighbor[level], &num_aggregations[level]);
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[level], &tentp[level], &mgl[0],
                          level+1, num_aggregations[level]);
@@ -350,6 +352,8 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
         aggregation(&mgl[level].A, &vertices[level], param, level+1,
                     &Neighbor[level], &num_aggregations[level]);
         
+        //aggregation_coarsening(&mgl[level].A, &vertices[level], param, level+1,
+        //            &Neighbor[level], &num_aggregations[level]);
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[level], &tentp[level], &mgl[0],
                          level+1, num_aggregations[level]);
