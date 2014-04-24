@@ -269,7 +269,7 @@ void fasp_dcsr_read (char *filename,
     
     // Read CSR matrix
     fscanf(fp, "%d", &m);
-    A->row = m;
+    A->row = A->col = m;
     
     A->IA = (INT *)fasp_mem_calloc(m+1, sizeof(INT));
     for ( i = 0; i <= m; ++i ) {
