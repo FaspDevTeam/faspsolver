@@ -109,6 +109,8 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     const SHORT cycle_type = param->cycle_type;
     const SHORT min_cdof   = MAX(param->coarse_dof,50);
     const INT   m          = mgl[0].A.row;
+
+	dCSRmat tmpA;
     
     // local variables
     SHORT       max_levels = param->max_levels, level = 0, status = SUCCESS;
@@ -212,7 +214,6 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
             /*-- Perform aggressive coarsening only up to the specified level --*/
             if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
         
-        
             /*-- Form resitriction --*/
             fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
         
@@ -222,22 +223,19 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
         }
 		else if (param->aggregation_type == PAIRWISE){
             // pairwise matching aggregation
-            for (i=0; i<param->pairwise_path; ++i) {
-                pairwise_aggregation(&mgl[level].A, &vertices[level], &num_aggregations[level]);
+            aggregation_coarsening(mgl, param, level, vertices, &num_aggregations[level]);
 
-                /*-- Form Prolongation --*/
-                form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1,
-                                 num_aggregations[level]);
+            form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1,
+                         num_aggregations[level]);
         
-                /*-- Perform aggressive coarsening only up to the specified level --*/
-                if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
+            /*-- Perform aggressive coarsening only up to the specified level --*/
+            if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
+         
+            /*-- Form resitriction --*/
+            fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
         
-                /*-- Form resitriction --*/
-                fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
-        
-                /*-- Form coarse level stiffness matrix --*/
-                fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
-		    }
+            /*-- Form coarse level stiffness matrix --*/
+            fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
 		}
         
         fasp_dcsr_free(&Neighbor[level]);
