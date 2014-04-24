@@ -3,6 +3,7 @@ File Name: CHANGES
 04/24/2014 FASP 1.5.0:
 - Add matching-base AMG methods (UA and SA).
 - Fix a bug in dcsr_read.
+- Fix an early exit problem in AMG coarsening. 
 - Close an old branch (dead) and merge branches.
 
 04/16/2014 FASP 1.4.9:

@@ -318,7 +318,7 @@ static INT compress_S (iCSRmat *S)
     S->nnz = S->IA[row] = index;
     
     if ( S->nnz <= 0 ) {
-        printf("### ERROR: Fail to find strong connections!\n");
+        printf("### ERROR: nnz = %d. Fail to find strong connections!\n", S->nnz);
         return RUN_FAIL;
     }
     

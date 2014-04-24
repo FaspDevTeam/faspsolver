@@ -11,23 +11,19 @@ file(GLOB FASP_TLIB_SRC src/*.c src/*.f )
 # rpaths put the shared lib in the same dir as the executables.
 
 add_library(fasptest STATIC ${FASP_TLIB_SRC}) 
-#target_link_libraries(fasptest fasp) 
 
-#DO NOT## install(TARGETS fasptest
 #    LIBRARY DESTINATION ${FASP_TLIB_DIR}
 #    RUNTIME DESTINATION ${FASP_TLIB_DIR}
 #    ARCHIVE DESTINATION ${FASP_TLIB_DIR})
 
 file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" main/*.c main/*.f main/*.f90 main/*.cpp)
-###message("FASP_TSRC=${FASP_TSRC} ")
 
 foreach( srcfile ${FASP_TSRC} )
     string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile} )
-#    message( "${execfile} ${srcfile}" )
+#
     add_executable( ${execfile} main/${srcfile} )
 # 
     target_link_libraries( ${execfile} fasptest fasp ${UMFPACK_LIBRARIES} ${SUPERLU_LIBRARIES} ${MUMPS_LIBRARIES} ${ADD_STDLIBS} ) 
 #
     install(TARGETS ${execfile} DESTINATION ${FASP_SOURCE_DIR}/test)
 endforeach( srcfile ${FASP_TSRC} )
-

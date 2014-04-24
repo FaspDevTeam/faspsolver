@@ -49,7 +49,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 {
     const SHORT  prtlvl     = param->print_level;
     const SHORT  cycle_type = param->cycle_type;
-    const SHORT  min_cdof   = MAX(param->coarse_dof,50);
+    const SHORT  min_cdof   = MAX(param->coarse_dof,MIN_CDOF);
     const INT    m          = mgl[0].A.row;
     
     // local variables
@@ -136,15 +136,15 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
         status = fasp_amg_coarsening_rs(&mgl[level].A, &vertices, &mgl[level].P, &S, param);
         if ( status < 0 ) {
             if ( prtlvl > PRINT_NONE ) {
-                printf("### WARNING: Coarsening on level %d is not successful!\n", level);
+                printf("### ERROR: Coarsening on level %d is not successful!\n", level);
             }
             fasp_mem_free(S.IA);
             fasp_mem_free(S.JA);
-            break;
+            return status;
         }
         
         /*-- Perform aggressive coarsening only up to the specified level --*/
-        if ( mgl[level].P.col < 20 ) break; // If coarse < 20, stop!!!
+        if ( mgl[level].P.col < MIN_CDOF ) break;
         if ( mgl[level].P.col*1.5 > mgl[level].A.row ) param->coarsening_type = COARSE_RS;
         if ( level == param->aggressive_level ) param->coarsening_type = COARSE_RS;
         
