@@ -55,7 +55,7 @@ Schwarz_type             = 1      % 1 forward | 2 backward | 3 symmetric
 AMG_type                 = UA     % C classic AMG
                                   % SA smoothed aggregation
                                   % UA unsmoothed aggregation
-AMG_cycle_type           = NA     % V V-cycle | W W-cycle
+AMG_cycle_type           = A      % V V-cycle | W W-cycle
                                   % A AMLI-cycle | NA Nonlinear AMLI-cycleA
 AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
@@ -95,6 +95,8 @@ AMG_max_row_sum          = 0.9    % Max row sum
 % parameters for aggregation-type AMG SETUP    %
 %----------------------------------------------%
 
+AMG_aggregation_type     = 1      % 1 Matching | 2 VMB 
+AMG_pair_number          = 2      % Number of pairs in matching
 AMG_strong_coupled       = 0.1    % Strong coupled threshold
 AMG_max_aggregation      = 20     % Max size of aggregations
 AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation

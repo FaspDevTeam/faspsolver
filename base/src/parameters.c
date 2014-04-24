@@ -366,12 +366,12 @@ void fasp_param_input_init (input_param *iniparam)
     iniparam->AMG_aggressive_path      = 1;
     
     // Aggregation AMG specific
+    iniparam->AMG_aggregation_type     = PAIRWISE;
+    iniparam->AMG_pair_number          = 2;
     iniparam->AMG_strong_coupled       = 0.08;
     iniparam->AMG_max_aggregation      = 9;
     iniparam->AMG_tentative_smooth     = 0.67;
     iniparam->AMG_smooth_filter        = ON;
-    iniparam->AMG_aggregation_type     = PAIRWISE;//VMB;
-    iniparam->AMG_pairwise_path        = 2;
 }
 
 /**
@@ -389,7 +389,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     // AMG type 
     amgparam->AMG_type             = CLASSIC_AMG;
     amgparam->print_level          = PRINT_NONE;
-    amgparam->maxit                = 50;//1;
+    amgparam->maxit                = 20;
     amgparam->tol                  = 1e-6;
     
     // AMG method parameters
@@ -417,12 +417,12 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->aggressive_path      = 1;
     
     // Aggregation AMG specific
+    amgparam->aggregation_type     = PAIRWISE;
+    amgparam->pair_number          = 2;
     amgparam->strong_coupled       = 0.08;
     amgparam->max_aggregation      = 9;
     amgparam->tentative_smooth     = 0.0;
     amgparam->smooth_filter        = OFF;
-    amgparam->aggregation_type     = PAIRWISE;
-    amgparam->pairwise_path        = 2;
     
     // ILU smoother parameters
     amgparam->ILU_type             = ILUk;
@@ -542,8 +542,6 @@ void fasp_param_amg_set (AMG_param *param,
     param->nl_amli_krylov_type  = iniparam->AMG_nl_amli_krylov_type;
     
     param->coarsening_type      = iniparam->AMG_coarsening_type;
-    param->aggregation_type     = iniparam->AMG_aggregation_type;
-    param->pairwise_path        = iniparam->AMG_pairwise_path;
     param->interpolation_type   = iniparam->AMG_interpolation_type;
     param->strong_threshold     = iniparam->AMG_strong_threshold;
     param->truncation_threshold = iniparam->AMG_truncation_threshold;
@@ -551,6 +549,8 @@ void fasp_param_amg_set (AMG_param *param,
     param->aggressive_level     = iniparam->AMG_aggressive_level;
     param->aggressive_path      = iniparam->AMG_aggressive_path;
     
+    param->aggregation_type     = iniparam->AMG_aggregation_type;
+    param->pair_number          = iniparam->AMG_pair_number;
     param->strong_coupled       = iniparam->AMG_strong_coupled;
     param->max_aggregation      = iniparam->AMG_max_aggregation;
     param->tentative_smooth     = iniparam->AMG_tentative_smooth;
@@ -632,7 +632,7 @@ void fasp_param_solver_set (itsolver_param *itsparam,
     itsparam->stop_type      = iniparam->stop_type;
     itsparam->restart        = iniparam->restart;
     
-    if (itsparam->itsolver_type == SOLVER_AMG) {
+    if ( itsparam->itsolver_type == SOLVER_AMG ) {
         itsparam->tol   = iniparam->AMG_tol;
         itsparam->maxit = iniparam->AMG_maxit;
     }
@@ -832,10 +832,16 @@ void fasp_param_amg_print (AMG_param *param)
                 break;
                 
             default: // SA_AMG or UA_AMG
-                printf("Aggregation AMG strong coupling:   %.4f\n", param->strong_coupled);
-                printf("Aggregation AMG max aggregation:   %d\n", param->max_aggregation);
-                printf("Aggregation AMG tentative smooth:  %.4f\n", param->tentative_smooth);
-                printf("Aggregation AMG smooth filter:     %d\n", param->smooth_filter);
+                printf("Aggregation type:                  %d\n", param->aggregation_type);
+                if ( param->aggregation_type == PAIRWISE ) {
+                    printf("Aggregation number of pairs:       %d\n", param->pair_number);
+                }
+                if ( param->aggregation_type == VMB ) {
+                    printf("Aggregation AMG strong coupling:   %.4f\n", param->strong_coupled);
+                    printf("Aggregation AMG max aggregation:   %d\n", param->max_aggregation);
+                    printf("Aggregation AMG tentative smooth:  %.4f\n", param->tentative_smooth);
+                    printf("Aggregation AMG smooth filter:     %d\n", param->smooth_filter);
+                }
                 break;
         }
         
