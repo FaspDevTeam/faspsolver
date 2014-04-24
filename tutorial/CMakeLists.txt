@@ -5,8 +5,7 @@ file( GLOB FASP_TUTSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" main/*.c main
 #message("FASP_TUTSRC=${FASP_TUTSRC} ")
 
 foreach( srcfile ${FASP_TUTSRC} )
- 	 string( REGEX MATCH "\\.c$|\\.f90$|\\.cpp$" X ${srcfile} )
-#        message( "X=${X} ${srcfile} ")
+ 	string( REGEX MATCH "\\.c$|\\.f90$|\\.cpp$" X ${srcfile} )
     if("${X}" STREQUAL ".c")
         string( REGEX REPLACE "\\.c$" "-c.ex" execfile ${srcfile} )
     elseif("${X}" STREQUAL ".f90")
@@ -18,7 +17,6 @@ foreach( srcfile ${FASP_TUTSRC} )
       add_executable( ${execfile} main/${srcfile} )
       target_link_libraries( ${execfile} fasp ${UMFPACK_LIBRARIES} ${SUPERLU_LIBRARIES} ${MUMPS_LIBRARIES} ${ADD_STDLIBS} ) 
       install(TARGETS ${execfile} DESTINATION ${FASP_SOURCE_DIR}/tutorial)
-#      message( "${execfile} ${srcfile} ")
     endif(execfile)
 endforeach( srcfile ${FASP_TUTSRC} )
 
