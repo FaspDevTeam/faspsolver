@@ -179,8 +179,6 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
         aggregation(&mgl[level].A, &vertices[level], param, level+1,
                     &Neighbor[level], &num_aggregations[level]);
         
-        //aggregation_coarsening(&mgl[level].A, &vertices[level], param, level+1,
-        //            &Neighbor[level], &num_aggregations[level]);
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[level], &tentp[level], &mgl[0],
                          level+1, num_aggregations[level]);
@@ -190,7 +188,7 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
                    level+1, &Neighbor[level]);
         
         /*-- Perform aggressive coarsening only up to the specified level --*/
-        if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
+        if ( mgl[level].P.col < MIN_CDOF ) break;
         
         /*-- Form restriction --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
@@ -352,8 +350,6 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
         aggregation(&mgl[level].A, &vertices[level], param, level+1,
                     &Neighbor[level], &num_aggregations[level]);
         
-        //aggregation_coarsening(&mgl[level].A, &vertices[level], param, level+1,
-        //            &Neighbor[level], &num_aggregations[level]);
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[level], &tentp[level], &mgl[0],
                          level+1, num_aggregations[level]);
@@ -362,8 +358,8 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
         smooth_agg(&mgl[level].A, &tentp[level], &mgl[level].P, param,
                    level+1, &Neighbor[level]);
         
-        /*-- Perform aggressive coarsening only up to the specified level --*/
-        if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
+        /*-- Perform coarsening only up to the specified level --*/
+        if ( mgl[level].P.col < MIN_CDOF ) break;
         
         /*-- Form resitriction --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);

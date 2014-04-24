@@ -67,6 +67,8 @@ SHORT fasp_param_check (input_param *inparam)
         || inparam->AMG_amli_degree<0
         || inparam->AMG_aggressive_level<0
         || inparam->AMG_aggressive_path<0
+        || inparam->AMG_aggregation_type<0
+        || inparam->AMG_pair_number<0
         || inparam->AMG_strong_coupled<0
         || inparam->AMG_max_aggregation<=0
         || inparam->AMG_tentative_smooth<0
@@ -493,7 +495,29 @@ void fasp_param_input (char *filenm,
             inparam->AMG_interpolation_type = ibuff;
             fgets(buffer,500,fp); // skip rest of line
         }
-        
+
+        else if (strcmp(buffer,"AMG_aggregation_type")==0) {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%d",&ibuff);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+            inparam->AMG_aggregation_type = ibuff;
+            fgets(buffer,500,fp); // skip rest of line
+        }
+
+        else if (strcmp(buffer,"AMG_pair_number")==0) {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%d",&ibuff);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+            inparam->AMG_pair_number = ibuff;
+            fgets(buffer,500,fp); // skip rest of line
+        }
+
         else if (strcmp(buffer,"AMG_aggressive_level")==0) {
             val = fscanf(fp,"%s",buffer);
             if (val!=1 || strcmp(buffer,"=")!=0) {

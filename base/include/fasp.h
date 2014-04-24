@@ -59,6 +59,7 @@
 #define SMALLREAL        1e-20 /**< A small real number */ 
 #define MAX_REFINE_LVL   20    /**< Maximal refinement level */
 #define MAX_AMG_LVL      20    /**< Maximal AMG coarsening level */
+#define MIN_CDOF         20    /**< Minimal number of coarsest variables */
 #define STAG_RATIO       1e-4  /**< Staganation tolerance = tol*STAGRATIO */
 #define MAX_STAG         20    /**< Maximal number of staganation times */
 #define MAX_RESTART      20    /**< Maximal number of restarting */
@@ -578,8 +579,8 @@ typedef struct {
     //! numebr of paths use to determin stongly coupled C points
     INT aggressive_path;
 	
-    //! numebr of paths use to determin pairwise matching
-    INT pairwise_path;
+    //! numebr of pairwise matchings
+    INT pair_number;
 
 	//! strong coupled threshold for aggregate
 	REAL strong_coupled;
@@ -974,7 +975,7 @@ typedef struct {
 	REAL AMG_max_row_sum;          /**< maximal row sum */
     INT AMG_aggressive_level;      /**< number of levels use aggressive coarsening */
     INT AMG_aggressive_path;       /**< number of paths used to determine strongly coupled C-set */
-    INT AMG_pairwise_path;         /**< number of paths used to determine pairwise matching */
+    INT AMG_pair_number;           /**< number of pairs in matching algorithm */
 	
 	//  parameters for smoothed aggregation AMG
 	REAL AMG_strong_coupled;       /**< strong coupled threshold for aggregate */

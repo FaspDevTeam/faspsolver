@@ -124,13 +124,13 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
     
     // each level stores the information of the number of aggregations
-    INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
+    INT *num_aggs = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
     
     // each level stores the information of the strongly coupled neighborhoods
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     
     // Initialzie level information
-    for ( i = 0; i < max_levels; ++i ) num_aggregations[i] = 0;
+    for ( i = 0; i < max_levels; ++i ) num_aggs[i] = 0;
     
     mgl[0].near_kernel_dim   = 1;
     mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
@@ -162,9 +162,8 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
    
-    if (param->aggregation_type == PAIRWISE){
-        fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
-	}
+    // Pairwise matching algorithm requires diagonal preference ordering
+    if ( param->aggregation_type == PAIRWISE ) fasp_dcsr_diagpref(&mgl[0].A);
     
     // Main AMG setup loop
     while ( (mgl[level].A.row > min_cdof) && (level < max_levels-1) ) {
@@ -196,48 +195,42 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 		}
         
         /*-- Aggregation --*/
-        if (param->aggregation_type == VMB) {
-            // VMB aggregation
-            aggregation(&mgl[level].A, &vertices[level], param, level+1,
-                    &Neighbor[level], &num_aggregations[level]);
-        
-            /*-- Choose strenth threshold adaptively --*/
-            if ( num_aggregations[level]*4 > mgl[level].A.row )
-                param->strong_coupled /= 1.5;
-            else if ( num_aggregations[level]*1.25 < mgl[level].A.row )
-                param->strong_coupled *= 1.5;
-        
-            /*-- Form Prolongation --*/
-            form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1,
-                         num_aggregations[level]);
-        
-            /*-- Perform aggressive coarsening only up to the specified level --*/
-            if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
-        
-            /*-- Form resitriction --*/
-            fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
-        
-            /*-- Form coarse level stiffness matrix --*/
-            fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
-
+        switch ( param->aggregation_type ) {
+                
+            case VMB: // VMB aggregation
+                
+                aggregation(&mgl[level].A, &vertices[level], param, level+1,
+                            &Neighbor[level], &num_aggs[level]);
+                
+                /*-- Choose strenth threshold adaptively --*/
+                if ( num_aggs[level]*4 > mgl[level].A.row )
+                    param->strong_coupled /= 1.5;
+                else if ( num_aggs[level]*1.25 < mgl[level].A.row )
+                    param->strong_coupled *= 1.5;
+                
+                break;
+                
+            default: // pairwise matching aggregation
+                
+                aggregation_coarsening(mgl, param, level, vertices, &num_aggs[level]);
+                
+                break;
         }
-		else if (param->aggregation_type == PAIRWISE){
-            // pairwise matching aggregation
-            aggregation_coarsening(mgl, param, level, vertices, &num_aggregations[level]);
+        
+        /*-- Form Prolongation --*/
+        form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1,
+                         num_aggs[level]);
+        
+        /*-- Perform coarsening only up to the specified level --*/
+        if ( mgl[level].P.col < MIN_CDOF ) break;
+        
+        /*-- Form resitriction --*/
+        fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
+        
+        /*-- Form coarse level stiffness matrix --*/
+        fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P,
+                               &mgl[level+1].A);
 
-            form_tentative_p(&vertices[level], &mgl[level].P, &mgl[0], level+1,
-                         num_aggregations[level]);
-        
-            /*-- Perform aggressive coarsening only up to the specified level --*/
-            if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
-         
-            /*-- Form resitriction --*/
-            fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
-        
-            /*-- Form coarse level stiffness matrix --*/
-            fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
-		}
-        
         fasp_dcsr_free(&Neighbor[level]);
         fasp_ivec_free(&vertices[level]);
         
@@ -287,7 +280,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
     
     fasp_mem_free(Neighbor);
     fasp_mem_free(vertices);
-    fasp_mem_free(num_aggregations);
+    fasp_mem_free(num_aggs);
     
     return status;
 }
@@ -338,12 +331,12 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
     ivector *vertices = (ivector *)fasp_mem_calloc(max_levels, sizeof(ivector));
     
     //each elvel stores the information of the number of aggregations
-    INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels, sizeof(INT));
+    INT *num_aggs = (INT *)fasp_mem_calloc(max_levels, sizeof(INT));
     
     // each level stores the information of the strongly coupled neighborhoods
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels, sizeof(dCSRmat));
     
-    for ( i=0; i<max_levels; ++i ) num_aggregations[i] = 0;
+    for ( i=0; i<max_levels; ++i ) num_aggs[i] = 0;
     
     /*-----------------------*/
     /*-- setup null spaces --*/
@@ -391,17 +384,14 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
         // TODO: use first block now, need to be changed later!!!
         mgl[level].PP =  fasp_dbsr_getblk_dcsr(&mgl[level].A);
         aggregation(&mgl[level].PP, &vertices[level], param, level+1,
-                    &Neighbor[level], &num_aggregations[level]);
+                    &Neighbor[level], &num_aggs[level]);
         
-        //aggregation_coarsening(&mgl[level].PP, &vertices[level], param, level+1,
-        //                    &Neighbor[level], &num_aggregations[level]);
-        
-        if ( num_aggregations[level]*4 > mgl[level].A.ROW )
+        if ( num_aggs[level]*4 > mgl[level].A.ROW )
             param->strong_coupled /= 8.0;
         
         /* -- Form Prolongation --*/
         form_tentative_p_bsr(&vertices[level], &mgl[level].P, &mgl[0],
-                             level+1, num_aggregations[level]);
+                             level+1, num_aggs[level]);
         
         
         /*-- Form resitriction --*/
@@ -410,9 +400,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
         
         /*-- Form coarse level stiffness matrix --*/
         fasp_blas_dbsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
-        
-
-        
+                
         fasp_dcsr_free(&Neighbor[level]);
         fasp_ivec_free(&vertices[level]);
         
@@ -461,7 +449,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
     }
     
     fasp_mem_free(vertices);
-    fasp_mem_free(num_aggregations);
+    fasp_mem_free(num_aggs);
     fasp_mem_free(Neighbor);
     
 #if DEBUG_MODE
