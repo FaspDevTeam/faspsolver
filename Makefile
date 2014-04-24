@@ -175,7 +175,7 @@ backup:
 
 version:
 	@-hg -q id > VERSION
-	@-hg log -r tip --template 'FASP {latesttag}.{latesttagdistance}:'
+	@-hg log -r "." --template 'FASP {latesttag}.{latesttagdistance}:'
 	@-cat VERSION
 
 .PHONY: all backup config clean distclean install uninstall docs headers help version

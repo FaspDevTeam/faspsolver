@@ -389,7 +389,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     // AMG type 
     amgparam->AMG_type             = CLASSIC_AMG;
     amgparam->print_level          = PRINT_NONE;
-    amgparam->maxit                = 20;
+    amgparam->maxit                = 1;
     amgparam->tol                  = 1e-6;
     
     // AMG method parameters
