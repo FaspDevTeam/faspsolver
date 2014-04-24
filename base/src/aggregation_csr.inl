@@ -275,7 +275,7 @@ static void form_tentative_p (ivector *vertices,
  * \param vertices          Pointer to the aggregation of vertics
  * \param num_aggregations  Pointer to number of aggregations 
  * 
- * \author Xiaoping Li, Chensong Zhang
+ * \author Xiaoping Li, Zheng Li, Chensong Zhang
  * \date   04/21/2014
  */
 static void pairwise_aggregation (const dCSRmat * A,
@@ -399,6 +399,25 @@ static void pairwise_aggregation (const dCSRmat * A,
     fasp_mem_free(s);
 }
 
+
+/**
+ * \fn static void aggregation_coarsening (AMG_data *mgl,
+ *                                         AMG_param *param,
+ *                                         INT level,
+ *                                         ivector *vertice, 
+ *                                         INT *num_aggregations)
+ *
+ * \brief AMG coarsening based on pairwise matching aggregation 
+ *
+ * \param mgl               Pointer to AMG levele data
+ * \param param             Pointer to AMG parameters
+ * \param level             Level number
+ * \param vertices          Pointer to the aggregation of vertics
+ * \param num_aggregations  Pointer to number of aggregations 
+ * 
+ * \author Xiaoping Li, Zheng Li, Chensong Zhang
+ * \date   04/21/2014
+ */
 static void aggregation_coarsening (AMG_data *mgl, 
                                     AMG_param *param, 
                                     INT level, 
