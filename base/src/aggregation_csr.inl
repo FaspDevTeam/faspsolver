@@ -280,6 +280,7 @@ static void form_tentative_p (ivector *vertices,
  *
  */
 static void pairwise_aggregation(const dCSRmat * A,
+                                 INT   path,
                                  ivector *vertices,
                                  INT *num_aggregations)
 {
@@ -290,7 +291,7 @@ static void pairwise_aggregation(const dCSRmat * A,
     INT i, j, row_start, row_end;
     REAL sum;
 
-    INT k_tg = 6.75;
+    REAL k_tg = 6.75;
 
     /*---------------------------------------------------------- */
     /* Step 1.select very strong diagnoal dominate row (vertices)*/ 
@@ -301,21 +302,26 @@ static void pairwise_aggregation(const dCSRmat * A,
 
     fasp_ivec_alloc(row, vertices);
     	
-    for( i = 0; i < row; i++ )
-    {
-        sum = 0.0;
-        row_start = AIA[i]; 
-        row_end = AIA[i+1];
+    if ( path == 1 ) {
+        for( i = 0; i < row; i++ )
+        {
+            sum = 0.0;
+            row_start = AIA[i]; 
+            row_end = AIA[i+1];
 
-        for ( j = row_start+1; j < row_end; j++) sum += ABS(Aval[j]);
+            for ( j = row_start+1; j < row_end; j++) sum += ABS(Aval[j]);
         
-        if( Aval[AIA[i]] >= ((k_tg+1.)/(k_tg-1.))*sum) {
-            vertices->val[i] = -5;
+            if( Aval[AIA[i]] >= ((k_tg+1.)/(k_tg-1.))*sum) {
+                vertices->val[i] = -5;
+            }
+            else {
+                vertices->val[i] = -1;
+            }
         }
-        else {
-            vertices->val[i] = -1;
-        }
-    }
+	}
+	else {
+		fasp_iarray_set(row, vertices->val, -1);
+	}
     
     /*-------------------------------------------------------*/
     /* Step 2. computate row sum (off-diagonal) for each vertice*/
@@ -391,7 +397,7 @@ static void pairwise_aggregation(const dCSRmat * A,
                 index=col;
             }
         }
-        
+
         *num_aggregations += 1;
         if( min_miu <= k_tg )
         {
@@ -407,55 +413,62 @@ static void pairwise_aggregation(const dCSRmat * A,
     fasp_mem_free(s);
 }
 
-#if 0
 
-/**
- * \fn void aggregation_coarsening (dCSRmat *A, ivector *vertices, AMG_param *param, 
- *                               INT levelNum, dCSRmat *Neigh, INT *num_aggregations)
- *
- * \brief AMG coarsening based on aggregation
- *
- * \param A                 Pointer to the coefficient matrices
- * \param vertices          Pointer to the aggregation of vertics
- * \param param             Pointer to AMG parameters
- * \param levelNum          Level number
- * \param Neigh             Pointer to strongly coupled neighborhoods
- * \param num_aggregations  Pointer to number of aggregations 
- * 
- * \author Xiaoping Li, Chensong Zhang
- * \date   04/21/2014
- *
- */
-
-void aggregation_coarsening (dCSRmat *A,
-		                      ivector *vertices,
-						      AMG_param *param, 
-                              INT levelNum,
-						      dCSRmat *Neigh,
-						      INT *num_aggregations)
+static void aggregation_coarsening(AMG_data *mgl, AMG_param *param, INT level, ivector *vertice, INT *num_aggregations)
 {
-    INT agg_type = AMG_param->aggregation_type;
+    INT i, j, num_agg, aggindex;
+    INT pairwise_path = param->pairwise_path;
 
-    switch (agg_type)
-    {
-        case PAIRWISE: 
-            // pairwise aggregation
-			// A should diagnoal preference
-            fasp_dcsr_diagpref(A);
-            pairwise_aggregation(A, vertices, num_aggregations);
-            break;
+    dCSRmat tmpA = mgl[level].A;
 
-        case VMB:
-            // VMB aggregation
-			aggregatation(A, vertices, param, levelNum, Neigh, num_aggregations);
-            break;
+    for ( i = 0; i < pairwise_path; ++i ) {
+        /*-- generate aggregations by pairwise matching --*/
+        pairwise_aggregation(&tmpA, i+1, &vertice[level+i], &num_agg);
 
-        default:
-            printf("### Warnning: No such aggregation type!\n");
-            exit(0);
+        if ( i < pairwise_path-1 ) {
+            /*-- Form Prolongation --*/
+            form_tentative_p(&vertice[level+i], &mgl[level].P, &mgl[0], level+1, num_agg);
+        
+            /*-- Perform aggressive coarsening only up to the specified level --*/
+            if ( mgl[level].P.col < 50 ) break; // If coarse < 50, stop!!!
+        
+            /*-- Form resitriction --*/
+            fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
+        
+            /*-- Form coarse level stiffness matrix --*/
+            fasp_blas_dcsr_rap_agg(&mgl[level].R, &tmpA, &mgl[level].P, &mgl[level+1].A);
+
+		    tmpA = mgl[level+1].A;
+
+		    fasp_dcsr_free(&mgl[level].P);
+		    fasp_dcsr_free(&mgl[level].R);
+		}
 	}
+
+    // global aggregation index 
+	if ( pairwise_path > 1 ) {
+		for (i = 0; i < mgl[level].A.row; ++i) {
+			aggindex = vertice[level].val[i];
+
+			if ( aggindex < 0) continue;
+
+			for (j = 1; j < pairwise_path; ++j) {
+                aggindex = vertice[level+j].val[aggindex];
+			}
+
+			vertice[level].val[i] = aggindex;
+		}
+	}
+
+
+   *num_aggregations = num_agg;
+  
+   /*-- clean memory --*/ 
+   fasp_dcsr_free(&mgl[level+1].A);
+
+   for (i = 1; i < pairwise_path; ++i) fasp_ivec_free(&vertice[level+i]); 
 }
-#endif
+
 
 /*---------------------------------*/
 /*--        End of File          --*/

@@ -370,7 +370,8 @@ void fasp_param_input_init (input_param *iniparam)
     iniparam->AMG_max_aggregation      = 9;
     iniparam->AMG_tentative_smooth     = 0.67;
     iniparam->AMG_smooth_filter        = ON;
-    iniparam->AMG_aggregation_type     = 1;
+    iniparam->AMG_aggregation_type     = PAIRWISE;//VMB;
+    iniparam->AMG_pairwise_path        = 2;
 }
 
 /**
@@ -388,7 +389,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     // AMG type 
     amgparam->AMG_type             = CLASSIC_AMG;
     amgparam->print_level          = PRINT_NONE;
-    amgparam->maxit                = 1;
+    amgparam->maxit                = 50;//1;
     amgparam->tol                  = 1e-6;
     
     // AMG method parameters
