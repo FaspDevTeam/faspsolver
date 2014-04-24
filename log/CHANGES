@@ -2,6 +2,7 @@ File Name: CHANGES
 
 04/24/2014 FASP 1.5.0:
 - Add matching-base AMG methods (UA and SA).
+- Fix a bug in dcsr_read.
 
 04/16/2014 FASP 1.4.9:
 - Add free function for block_dCSRmat matrices. 
