@@ -657,7 +657,7 @@ static INT cfsplitting_cls (dCSRmat *A,
                         if (cnt == 0)
                         {
                             vec[j] = CGPT;
-                            col ++;
+                            col++;
                             graph_array[j] = i;
                             jkeep = j;
                             cnt = 1;
@@ -1485,11 +1485,11 @@ static INT cfsplitting_agg (dCSRmat *A,
             remove_node(&LoL_head, &LoL_tail, lambda[cj], cj, lists, where);
             --num_left;
             
-            //update the measure for neighboring points
+            // update the measure for neighboring points
             for ( cl = Sh.IA[cj]; cl < Sh.IA[cj+1]; cl++ ) {
                 ck = Sh.JA[cl];
                 k  = cp_index[ck];
-                if ( vec[k] == CGPT ) {// k is temporary CGPT
+                if ( vec[k] == CGPT ) { // k is temporary CGPT
                     remove_node(&LoL_head, &LoL_tail, lambda[ck], ck, lists, where);
                     newmeas = ++(lambda[ck]);
                     enter_list(&LoL_head, &LoL_tail, newmeas, ck, lists, where);
