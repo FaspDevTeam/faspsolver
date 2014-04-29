@@ -481,7 +481,7 @@ static void smooth_agg (dCSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
-        for (i=0;i<row;++i){
+        for (i=0; i<row; ++i) {
             if (ABS(diag.val[i]) < 1e-6){
                 diag.val[i] = 1.0;
             }
@@ -490,8 +490,8 @@ static void smooth_agg (dCSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS) private(j)
 #endif
-        for (i=0;i<row;++i){
-            for (j=S.IA[i]; j<S.IA[i+1]; ++j){
+        for (i=0; i<row; ++i) {
+            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
                 if (S.JA[j] == i) {
                     S.val[j] = 1 -  smooth_factor * A->val[j] / diag.val[i];
                 }
@@ -513,23 +513,18 @@ static void smooth_agg (dCSRmat *A,
 #else
             for (i=0; i<row; ++i) {
 #endif
-                row_sum_A = 0.0;
-                row_sum_N = 0.0;
-                    
-                for (j=A->IA[i]; j<A->IA[i+1]; ++j){
-                    if (A->JA[j] != i){
-                        row_sum_A+=A->val[j];
-                    }
+                for (row_sum_A = 0.0, j=A->IA[i]; j<A->IA[i+1]; ++j) {
+                    if (A->JA[j] != i) row_sum_A += A->val[j];
                 }
-                for (j=N->IA[i]; j<N->IA[i+1]; ++j){
-                    if (N->JA[j] != i){
-                        row_sum_N+=N->val[j];
-                    }
+                
+                for (row_sum_N = 0.0, j=N->IA[i]; j<N->IA[i+1]; ++j) {
+                    if (N->JA[j] != i) row_sum_N += N->val[j];
                 }
                     
-                for (j=N->IA[i]; j<N->IA[i+1]; ++j){
-                    if (N->JA[j] == i){
-                        N->val[j] = N->val[j] - row_sum_A + row_sum_N;
+                for (j=N->IA[i]; j<N->IA[i+1]; ++j) {
+                    if (N->JA[j] == i) {
+                        // The original paper has a wrong sign here!!! --Chensong
+                        N->val[j] += row_sum_A - row_sum_N;
                     }
                 }
             }
@@ -542,7 +537,8 @@ static void smooth_agg (dCSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
-        for (i=0; i<row+1; ++i) S.IA[i] = N->IA[i];
+        for (i=0; i<=row; ++i) S.IA[i] = N->IA[i];
+        
         for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
             
         fasp_dcsr_getdiag(0, N, &diag);  // get the diaganol entries of N (filtered A)
