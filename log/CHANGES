@@ -5,6 +5,7 @@ File Name: CHANGES
 - Fix a bug in dcsr_read.
 - Fix an early exit problem in AMG coarsening. 
 - Close an old branch (dead) and merge branches.
+- Fix a wrong sign in smoothed aggregation method.
 
 04/16/2014 FASP 1.4.9:
 - Add free function for block_dCSRmat matrices. 
