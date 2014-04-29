@@ -18,8 +18,8 @@
 #include "fasp_functs.h"
 #include "aggregation_csr.inl"
 
-static SHORT amg_setup_smoothP_smoothA(AMG_data *, AMG_param *);
-static SHORT amg_setup_smoothP_unsmoothA(AMG_data *, AMG_param *);
+static SHORT amg_setup_smoothP_smoothR  (AMG_data *, AMG_param *);
+static SHORT amg_setup_smoothP_unsmoothR(AMG_data *, AMG_param *);
 static void smooth_agg(dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRmat *);
 
 /*---------------------------------*/
@@ -56,9 +56,9 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
 #endif
     
 #if TRUE
-    status = amg_setup_smoothP_smoothA(mgl, param);
-#else // smoothed P, unsmoothed A
-    status = amg_setup_smoothP_unsmoothA(mgl, param);
+    status = amg_setup_smoothP_smoothR(mgl, param);
+#else // smoothed P, unsmoothed R
+    status = amg_setup_smoothP_unsmoothR(mgl, param);
 #endif
     
 #if DEBUG_MODE
@@ -73,9 +73,9 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
 /*---------------------------------*/
 
 /**
- * \fn static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl, AMG_param *param)
+ * \fn static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl, AMG_param *param)
  *
- * \brief Setup phase of smoothed aggregation AMG, using smoothed P and smoothed A
+ * \brief Setup phase of smoothed aggregation AMG, using smoothed P and smoothed R
  *
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
@@ -85,7 +85,7 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
  *
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
-static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
+static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
                                         AMG_param *param)
 {
     const SHORT prtlvl     = param->print_level;
@@ -187,7 +187,7 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
         smooth_agg(&mgl[level].A, &tentp[level], &mgl[level].P, param,
                    level+1, &Neighbor[level]);
         
-        /*-- Perform aggressive coarsening only up to the specified level --*/
+        /*-- Perform coarsening only up to the specified level --*/
         if ( mgl[level].P.col < MIN_CDOF ) break;
         
         /*-- Form restriction --*/
@@ -254,9 +254,9 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
 }
 
 /**
- * \fn static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl, AMG_param *param)
+ * \fn static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl, AMG_param *param)
  *
- * \brief Set up phase of plain aggregation AMG, using smoothed P and unsmoothed A
+ * \brief Set up phase of plain aggregation AMG, using smoothed P and unsmoothed R
  *
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
@@ -266,7 +266,7 @@ static SHORT amg_setup_smoothP_smoothA (AMG_data *mgl,
  *
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
-static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
+static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
                                           AMG_param *param)
 {
     const SHORT prtlvl     = param->print_level;
@@ -292,12 +292,13 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     
     // each level stores the information of the tentative prolongations
-    dCSRmat *tentp    = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
-    dCSRmat *tentpt   = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
+    dCSRmat *tentp = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
+    dCSRmat *tentr = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     
     for ( i = 0; i < max_levels; ++i ) num_aggregations[i] = 0;
     
     mgl[0].near_kernel_dim   = 1;
+    
     mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
     
     for ( i = 0; i < mgl->near_kernel_dim; ++i ) {
@@ -363,10 +364,10 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
         
         /*-- Form resitriction --*/
         fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
-        fasp_dcsr_trans(&tentp[level], &tentpt[level]);
+        fasp_dcsr_trans(&tentp[level], &tentr[level]);
         
         /*-- Form coarse level stiffness matrix --*/
-        fasp_blas_dcsr_rap_agg(&tentpt[level], &mgl[level].A, &tentp[level], &mgl[level+1].A);
+        fasp_blas_dcsr_rap_agg(&tentr[level], &mgl[level].A, &tentp[level], &mgl[level+1].A);
         
         fasp_dcsr_free(&Neighbor[level]);
         fasp_dcsr_free(&tentp[level]);
@@ -415,7 +416,7 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
     fasp_mem_free(num_aggregations);
     fasp_mem_free(Neighbor);
     fasp_mem_free(tentp);
-    fasp_mem_free(tentpt);
+    fasp_mem_free(tentr);
     
     return status;
 }
@@ -426,17 +427,18 @@ static SHORT amg_setup_smoothP_unsmoothA (AMG_data *mgl,
  *
  * \brief Smooth the tentative prolongation
  *
- * \param A         pointer to the coefficient matrices
- * \param tentp     pointer to the tentative prolongation operators
- * \param P         pointer to the prolongation operators
- * \param param     pointer to AMG parameters
+ * \param A         Pointer to the coefficient matrices
+ * \param tentp     Pointer to the tentative prolongation operators
+ * \param P         Pointer to the prolongation operators
+ * \param param     Pointer to AMG parameters
  * \param levelNum  Current level number
- * \param N         pointer to strongly coupled neighborhoods
+ * \param N         Pointer to strongly coupled neighborhoods
  *
  * \author Xiaozhe Hu
  * \date   09/29/2009
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/12/2012
+ * Modified by Chensong on 04/29/2014: Fix a sign problem
  */
 static void smooth_agg (dCSRmat *A,
                         dCSRmat *tentp,
@@ -445,16 +447,15 @@ static void smooth_agg (dCSRmat *A,
                         INT levelNum,
                         dCSRmat *N)
 {
-    const REAL smooth_factor = param->tentative_smooth;
     const SHORT filter = param->smooth_filter;
-    
-    INT row = A->row, col= A->col;
-    INT i,j;
+    const INT   row = A->row, col= A->col;
+    const REAL  smooth_factor = param->tentative_smooth;
     
     dCSRmat S;
     dvector diag;  // diaganoal entries
     
     REAL row_sum_A, row_sum_N;
+    INT i,j;
     
     // local variables
 #ifdef _OPENMP
@@ -464,15 +465,17 @@ static void smooth_agg (dCSRmat *A,
     
     /* Step 1. Form smoother */
     
-    /* Using A for damped Jacobian smoother */
-    if (filter == 0){
+    /* Without filter: Using A for damped Jacobian smoother */
+    if ( filter != ON ) {
         
-        S = fasp_dcsr_create(row, col, A->IA[row]); // copy structure from A
+        // copy structure from A
+        S = fasp_dcsr_create(row, col, A->IA[row]);
+        
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
-        for (i=0; i<row+1; ++i) S.IA[i] = A->IA[i];
-        for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = A->JA[i];
+        for ( i=0; i<=row; ++i ) S.IA[i] = A->IA[i];
+        for ( i=0; i<S.IA[S.row]; ++i ) S.JA[i] = A->JA[i];
         
         fasp_dcsr_getdiag(0, A, &diag);  // get the diaganol entries of A
         
@@ -482,9 +485,7 @@ static void smooth_agg (dCSRmat *A,
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
         for (i=0; i<row; ++i) {
-            if (ABS(diag.val[i]) < 1e-6){
-                diag.val[i] = 1.0;
-            }
+            if (ABS(diag.val[i]) < 1e-6) diag.val[i] = 1.0;
         }
         
 #ifdef _OPENMP
@@ -493,7 +494,7 @@ static void smooth_agg (dCSRmat *A,
         for (i=0; i<row; ++i) {
             for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
                 if (S.JA[j] == i) {
-                    S.val[j] = 1 -  smooth_factor * A->val[j] / diag.val[i];
+                    S.val[j] = 1 - smooth_factor * A->val[j] / diag.val[i];
                 }
                 else {
                     S.val[j] = - smooth_factor * A->val[j] / diag.val[i];
@@ -523,7 +524,7 @@ static void smooth_agg (dCSRmat *A,
                     
                 for (j=N->IA[i]; j<N->IA[i+1]; ++j) {
                     if (N->JA[j] == i) {
-                        // The original paper has a wrong sign here!!! --Chensong
+                        // The original paper has a wrong sign!!! --Chensong
                         N->val[j] += row_sum_A - row_sum_N;
                     }
                 }
@@ -532,7 +533,8 @@ static void smooth_agg (dCSRmat *A,
             }
         }
 #endif
-        S = fasp_dcsr_create(row, col, N->IA[row]); // copy structure from N (filtered A)
+        // copy structure from N (filtered A)
+        S = fasp_dcsr_create(row, col, N->IA[row]);
             
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)

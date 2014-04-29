@@ -368,7 +368,7 @@ void fasp_param_input_init (input_param *iniparam)
     // Aggregation AMG specific
     iniparam->AMG_aggregation_type     = PAIRWISE;
     iniparam->AMG_pair_number          = 2;
-    iniparam->AMG_strong_coupled       = 0.08;
+    iniparam->AMG_strong_coupled       = 0.25;
     iniparam->AMG_max_aggregation      = 9;
     iniparam->AMG_tentative_smooth     = 0.67;
     iniparam->AMG_smooth_filter        = ON;
@@ -419,7 +419,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     // Aggregation AMG specific
     amgparam->aggregation_type     = PAIRWISE;
     amgparam->pair_number          = 2;
-    amgparam->strong_coupled       = 0.08;
+    amgparam->strong_coupled       = 0.25;
     amgparam->max_aggregation      = 9;
     amgparam->tentative_smooth     = 0.0;
     amgparam->smooth_filter        = OFF;
