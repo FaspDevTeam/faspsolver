@@ -15,8 +15,8 @@
 #include "aggregation_csr.inl"
 #include "aggregation_bsr.inl"
 
-static SHORT amg_setup_unsmoothP_unsmoothA(AMG_data *, AMG_param *);
-static SHORT amg_setup_unsmoothP_unsmoothA_bsr(AMG_data_bsr *, AMG_param *);
+static SHORT amg_setup_unsmoothP_unsmoothR(AMG_data *, AMG_param *);
+static SHORT amg_setup_unsmoothP_unsmoothR_bsr(AMG_data_bsr *, AMG_param *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -44,7 +44,7 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    SHORT status = amg_setup_unsmoothP_unsmoothA(mgl, param);
+    SHORT status = amg_setup_unsmoothP_unsmoothR(mgl, param);
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_ua ...... [Finish]\n");
@@ -64,7 +64,7 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
  * \return       SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
- * \date 03/16/2012
+ * \date   03/16/2012
  */
 SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
                              AMG_param *param)
@@ -73,7 +73,7 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
     printf("### DEBUG: fasp_amg_setup_ua_bsr ...... [Start]\n");
 #endif
     
-    SHORT status = amg_setup_unsmoothP_unsmoothA_bsr(mgl, param);
+    SHORT status = amg_setup_unsmoothP_unsmoothR_bsr(mgl, param);
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_ua_bsr ...... [Finish]\n");
@@ -87,7 +87,7 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
 /*---------------------------------*/
 
 /**
- * \fn static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl, AMG_param *param)
+ * \fn static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl, AMG_param *param)
  *
  * \brief Setup phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
  *
@@ -102,7 +102,7 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/27/2012.
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
-static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
+static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                                             AMG_param *param)
 {
     const SHORT prtlvl     = param->print_level;
@@ -286,7 +286,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
 }
 
 /**
- * \fn static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl, 
+ * \fn static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl, 
  *                                                     AMG_param *param)
  *
  * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A 
@@ -302,7 +302,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA (AMG_data *mgl,
  *
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
-static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
+static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
                                                 AMG_param *param)
 {
     const SHORT prtlvl   = param->print_level;
@@ -316,7 +316,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
     REAL      setup_start, setup_end;
     
 #if DEBUG_MODE
-    printf("### DEBUG: amg_setup_unsmoothP_unsmoothA_bsr ...... [Start]\n");
+    printf("### DEBUG: amg_setup_unsmoothP_unsmoothR_bsr ...... [Start]\n");
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
            mgl[0].A.ROW, mgl[0].A.COL, mgl[0].A.NNZ);
 #endif
@@ -453,7 +453,7 @@ static SHORT amg_setup_unsmoothP_unsmoothA_bsr (AMG_data_bsr *mgl,
     fasp_mem_free(Neighbor);
     
 #if DEBUG_MODE
-    printf("### DEBUG: amg_setup_unsmoothP_unsmoothA_bsr ...... [Finish]\n");
+    printf("### DEBUG: amg_setup_unsmoothP_unsmoothR_bsr ...... [Finish]\n");
 #endif
     
     return status;
