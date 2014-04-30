@@ -891,21 +891,21 @@ INT fasp_dcsr_trans (dCSRmat *A,
 }    
 
 /* 
- * \fn void void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2],
- *                                    INT *nn, INT *tniz)
+ * \fn void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2],
+ *                               INT *nn, INT *tniz)
  *
  * \brief Transpose of an CSR matrix.
  *
- * \param row     Pointers of the rows of the matrix and its transpose
- * \param col     Pointers of the columns of the matrix and its transpose
- * \param val     Pointers to the values of the matrix and its transpose
- * \param nn      Number of rows and columns of the matrix
- * \param tniz    Number of the nonzeros in the matrices A and A'
+ * \param row[2]     Pointers of the rows of the matrix and its transpose
+ * \param col[2]     Pointers of the columns of the matrix and its transpose
+ * \param val[2]     Pointers to the values of the matrix and its transpose
+ * \param nn         Number of rows and columns of the matrix
+ * \param tniz       Number of the nonzeros in the matrices A and A'
  *
  * \author Shuo Zhang
  * \date   07/06/2009   
  *
- * \note This subroutine transpose in CSR format IN ORDER
+ * \note   This subroutine transpose in CSR format IN ORDER
  */
 void fasp_dcsr_transpose (INT *row[2], 
                           INT *col[2], 

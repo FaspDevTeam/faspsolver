@@ -1,4 +1,4 @@
-/*! \file amg_setup_aggregation_bsr.inl
+/*! \file  aggregation_bsr.inl
  *  \brief Utilies for multigrid cycles in BSR format
  */
 

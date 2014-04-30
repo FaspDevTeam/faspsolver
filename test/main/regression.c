@@ -316,11 +316,12 @@ int main (int argc, const char * argv[])
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_amg_init(&amgparam);
-            amgparam.maxit       = 500;
-            amgparam.tol         = 1e-10;
-            amgparam.AMG_type    = SA_AMG;
-            amgparam.smoother    = SMOOTHER_GS;
-            amgparam.print_level = print_level;
+            amgparam.maxit          = 500;
+            amgparam.tol            = 1e-10;
+            amgparam.strong_coupled = 0.15; // cannot be too big
+            amgparam.AMG_type       = SA_AMG;
+            amgparam.smoother       = SMOOTHER_GS;
+            amgparam.print_level    = print_level;
             fasp_solver_amg(&A, &b, &x, &amgparam);
             
             check_solu(&x, &sol, tolerance);

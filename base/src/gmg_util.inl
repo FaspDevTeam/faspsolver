@@ -625,8 +625,8 @@ static void fullmultigrid_2d(REAL *u,
 }
 
 /**
- * \fn void fullmultigrid_3D(REAL *u, REAL *b, INT *level, INT maxlevel,
- *                           INT nxk, INT nyk)
+ * \fn static void fullmultigrid_3d (REAL *u, REAL *b, INT *level, INT maxlevel,
+ *                                   INT *nxk, INT *nyk, INT *nzk)
  * \brief Full multigrid method of 3D poisson equation
  *
  * \param u            Pointer to the vector of DOFs
@@ -638,15 +638,15 @@ static void fullmultigrid_2d(REAL *u,
  * \param nzk          Number of grids in z direction in level k
  *
  * \author Ziteng Wang
- * \date 06/07/2013
+ * \date   06/07/2013
  */
-static void fullmultigrid_3d(REAL *u,
-                             REAL *b,
-                             INT *level,
-                             INT maxlevel,
-                             INT *nxk,
-                             INT *nyk,
-                             INT *nzk)
+static void fullmultigrid_3d (REAL *u,
+                              REAL *b,
+                              INT *level,
+                              INT maxlevel,
+                              INT *nxk,
+                              INT *nyk,
+                              INT *nzk)
 {
     INT i,k,levelk1;
     REAL *r;
@@ -682,8 +682,9 @@ static void fullmultigrid_3d(REAL *u,
 }
 
 /**
- * \fn void pcg_1D(REAL *u, REAL *b, INT *level, INT maxlevel,
- *                 INT nx, INT rtol, INT maxiteration)
+ * \fn static INT pcg_1d (REAL *u, REAL *b, INT *level, INT maxlevel,
+ *                        INT nx, INT rtol, INT maxiteration, const SHORT print_level)
+ *
  * \brief Preconditioned CG method of 1D poisson equation
  *
  * \param u            Pointer to the vector of DOFs
@@ -693,18 +694,19 @@ static void fullmultigrid_3d(REAL *u,
  * \param nx           Number of grids in x direction 
  * \param rtol         Relative Tolerance judging convergence
  * \param maxiteration Number of maximum iteration number of CG method
+ * \param print_level  Print level of iterative method
  *
  * \author Ziteng Wang
  * \date 06/07/2013
  */
-static INT pcg_1d(REAL *u,
-                  REAL *b,
-                  INT *level,
-		          INT maxlevel,
-                  INT nx,
-                  REAL rtol,
-		          INT maxiteration,
-				  const SHORT print_level)
+static INT pcg_1d (REAL *u,
+                   REAL *b,
+                   INT *level,
+		           INT maxlevel,
+                   INT nx,
+                   REAL rtol,
+		           INT maxiteration,
+				   const SHORT print_level)
 {
     INT k;
     REAL *p, *r, *z, *q;
@@ -794,8 +796,9 @@ FINISHED:
 }
 
 /**
- * \fn INT pcg_2D(REAL *u, REAL *b, INT *level, INT maxlevel,
- *                 INT *nxk, INT *nyk, INT rtol, INT maxiteration)
+ * \fn static INT pcg_2d (REAL *u, REAL *b, INT *level, INT maxlevel, INT *nxk, 
+ *                        INT *nyk, INT rtol, INT maxiteration, const SHORT print_level)
+ *
  * \brief Preconditioned CG method of 2D poisson equation
  *
  * \param u            Pointer to the vector of DOFs
@@ -806,9 +809,10 @@ FINISHED:
  * \param nyk          Number of grids in y direction
  * \param rtol         Relative Tolerance judging convergence
  * \param maxiteration Number of maximum iteration number of CG method
+ * \param print_level  Print level of iterative method
  *
  * \author Ziteng Wang
- * \date 06/07/2013
+ * \date   06/07/2013
  */
 static INT pcg_2d(REAL *u,
                   REAL *b,
@@ -907,8 +911,10 @@ FINISHED:
 }
 
 /**
- * \fn INT pcg_3D(REAL *u, REAL *b, INT *level, INT maxlevel, INT *nxk,
- *                 INT *nyk, INT *nzk, INT rtol, INT maxiteration)
+ * \fn static INT pcg_3d (REAL *u, REAL *b, INT *level, INT maxlevel, INT *nxk,
+ *                        INT *nyk, INT *nzk, INT rtol, INT maxiteration, 
+ *                        const SHORT print_level)
+ *
  * \brief Preconditioned CG method of 2D poisson equation
  *
  * \param u            Pointer to the vector of DOFs
@@ -920,20 +926,21 @@ FINISHED:
  * \param nzk          Number of grids in z direction
  * \param rtol         Relative Tolerance judging convergence
  * \param maxiteration Number of maximum iteration number of CG method
+ * \param print_level  Print level of iterative method
  *
  * \author Ziteng Wang
- * \date 06/07/2013
+ * \date   06/07/2013
  */
-static INT pcg_3d(REAL *u,
-                  REAL *b,
-                  INT *level,
-		          INT maxlevel,
-                  INT *nxk,
-                  INT *nyk,
-                  INT *nzk, 
-                  REAL rtol,
-		          INT maxiteration,
-				  const SHORT print_level)
+static INT pcg_3d (REAL *u,
+                   REAL *b,
+                   INT *level,
+		           INT maxlevel,
+                   INT *nxk,
+                   INT *nyk,
+                   INT *nzk, 
+                   REAL rtol,
+		           INT maxiteration,
+				   const SHORT print_level)
 {
     INT i, k = 0, done = 0;
     REAL *p, *r, *z, *q;
@@ -1646,9 +1653,10 @@ static void gsiteration3dpre(REAL *u,
 }
 
 /**
- * \fn void gsiteration3dprp(REAL *u, REAL *b, INT *level, INT k,
- *                        INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
- * \brief colored G-S iteration of 3D problem, pro-smoothing
+ * \fn static void gsiteration3dpro (REAL *u, REAL *b, INT *level, INT k,
+ *                                   INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
+ *
+ * \brief Colored G-S iteration of 3D problem, pro-smoothing
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -1660,16 +1668,16 @@ static void gsiteration3dpre(REAL *u,
  * \param nzk          Number of grids in z direction in level k
  *
  * \author Ziteng Wang
- * \date 06/07/201
+ * \date   06/07/201
  */
-static void gsiteration3dpro(REAL *u,
-							 REAL *b,
-							 INT *level,
-							 INT k,
-							 INT maxlevel,
-							 INT *nxk, 
-							 INT *nyk, 
-							 INT *nzk)
+static void gsiteration3dpro (REAL *u,
+					  		  REAL *b,
+							  INT *level,
+							  INT k,
+							  INT maxlevel,
+							  INT *nxk, 
+							  INT *nyk, 
+							  INT *nzk)
 {
 	INT i,j,h;
 	INT i0,j0,j1,j2,k0,k3,k4,k5,k6;

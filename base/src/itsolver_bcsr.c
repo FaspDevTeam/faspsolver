@@ -16,10 +16,10 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, dvector *b, dvector *x,
  *                                     precond *pc, itsolver_param *itparam)
  *
- * \brief Solve Ax = b by standard Krylov methods 
+ * \brief Solve Ax = b by standard Krylov methods
  *
  * \param A        Pointer to the coeff matrix in block_dCSRmat format
  * \param b        Pointer to the right hand side in dvector format
@@ -32,10 +32,10 @@
  * \author Chensong Zhang
  * \date   11/25/2010
  */
-INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, 
-                                dvector *b, 
-                                dvector *x, 
-                                precond *pc, 
+INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
+                                dvector *b,
+                                dvector *x,
+                                precond *pc,
                                 itsolver_param *itparam)
 {
     const SHORT  print_level = itparam->print_level;
@@ -43,61 +43,61 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
     const SHORT  stop_type = itparam->stop_type;
     const SHORT  restart = itparam->restart;
     const INT    MaxIt = itparam->maxit;
-    const REAL   tol = itparam->tol; 
-
-    REAL  solver_start, solver_end, solver_duration;        
+    const REAL   tol = itparam->tol;
+    
+    REAL  solver_start, solver_end, solver_duration;
     
     fasp_gettime(&solver_start);
-
+    
     INT iter;
     
     /* Safe-guard checks on parameters */
     ITS_CHECK ( MaxIt, tol );
-
+    
     switch (itsolver_type) {
             
-    case SOLVER_BiCGstab:
-        if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (Block CSR) ...\n");
-        iter=fasp_solver_bdcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-        break;    
+        case SOLVER_BiCGstab:
+            if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (Block CSR) ...\n");
+            iter=fasp_solver_bdcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            break;
             
-    case SOLVER_MinRes:
-        if ( print_level>PRINT_NONE ) printf("\nCalling MinRes solver (Block CSR) ...\n");
-        iter=fasp_solver_bdcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-        break;    
+        case SOLVER_MinRes:
+            if ( print_level>PRINT_NONE ) printf("\nCalling MinRes solver (Block CSR) ...\n");
+            iter=fasp_solver_bdcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            break;
             
-    case SOLVER_GMRES:
-        if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (Block CSR) ...\n");
-        iter=fasp_solver_bdcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level); 
-        break;
+        case SOLVER_GMRES:
+            if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (Block CSR) ...\n");
+            iter=fasp_solver_bdcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            break;
             
-    case SOLVER_VGMRES:
-        if (print_level>0) printf("Calling vGMRES solver (Block CSR format) ...\n");
-        iter=fasp_solver_bdcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
-        break;
-        
-    case SOLVER_VFGMRES:
-        if (print_level>0) printf("Calling FGMRES solver (Block CSR format) ...\n");
-        iter=fasp_solver_bdcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
-        break;
+        case SOLVER_VGMRES:
+            if (print_level>0) printf("Calling vGMRES solver (Block CSR format) ...\n");
+            iter=fasp_solver_bdcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            break;
             
-    default:
-        printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
-        iter = ERROR_SOLVER_TYPE;
+        case SOLVER_VFGMRES:
+            if (print_level>0) printf("Calling FGMRES solver (Block CSR format) ...\n");
+            iter=fasp_solver_bdcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            break;
+            
+        default:
+            printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
+            iter = ERROR_SOLVER_TYPE;
             
     }
     
     if ( (print_level>=PRINT_MIN) && (iter >= 0) ) {
-        fasp_gettime(&solver_end);    
+        fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("Iterative method", solver_duration);
     }
     
     return iter;
-}    
+}
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, dvector *b, dvector *x,
  *                                   itsolver_param *itparam)
  *
  * \brief Solve Ax = b by standard Krylov methods
@@ -112,9 +112,9 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   07/18/2010
  */
-INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, 
-                              dvector *b, 
-                              dvector *x, 
+INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
+                              dvector *b,
+                              dvector *x,
                               itsolver_param *itparam)
 {
     const INT print_level = itparam->print_level;
@@ -123,22 +123,23 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
     
     // solver part
     fasp_gettime(&solver_start);
-
+    
     status=fasp_solver_bdcsr_itsolver(A,b,x,NULL,itparam);
     
     fasp_gettime(&solver_end);
     
     solver_duration = solver_end - solver_start;
     
-    if ( print_level>=PRINT_MIN ) 
+    if ( print_level>=PRINT_MIN )
         print_cputime("Krylov method totally", solver_duration);
     
     return status;
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov_block(block_dCSRmat *A, dvector *b, dvector *x,
- *                                   itsolver_param *itparam)
+ * \fn INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A, dvector *b, dvector *x,
+ *                                         itsolver_param *itparam,
+ *                                         AMG_param *amgparam)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -153,11 +154,11 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   04/07/2014
  */
-INT fasp_solver_bdcsr_krylov_block(block_dCSRmat *A,
-                              dvector *b,
-                              dvector *x,
-                              itsolver_param *itparam,
-                                AMG_param *amgparam)
+INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
+                                    dvector *b,
+                                    dvector *x,
+                                    itsolver_param *itparam,
+                                    AMG_param *amgparam)
 {
     const INT print_level = itparam->print_level;
     const INT precond_type = itparam->precond_type;
@@ -250,7 +251,7 @@ INT fasp_solver_bdcsr_krylov_block(block_dCSRmat *A,
         setup_duration = setup_end - setup_start;
         print_cputime("Setup totally", setup_duration);
     }
-
+    
     
     // solver part
     fasp_gettime(&solver_start);
