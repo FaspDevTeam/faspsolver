@@ -174,8 +174,8 @@ backup:
                             doc/userguide.pdf doc/refman.pdf vs08 vs10
 
 version:
-	@-hg -q id > VERSION
-	@-hg log -r "." --template 'FASP {latesttag}.{latesttagdistance}:'
+	@-hg log -r "." --template 'FASP {latesttag}.{latesttagdistance}:' > VERSION
+	@-hg -q id >> VERSION
 	@-cat VERSION
 
 .PHONY: all backup config clean distclean install uninstall docs headers help version

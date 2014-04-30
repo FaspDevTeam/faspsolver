@@ -466,7 +466,7 @@ typedef struct {
     
 	AMG_param *amgparam; /**< parameters for AMG */
     
-    dvector r;
+    dvector r; /**< temp work space */
 	
 } precond_block_data_3; /**< Precond data for block matrices */
 

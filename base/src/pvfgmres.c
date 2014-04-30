@@ -663,9 +663,10 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
 }
 
 /*!
- * \fn INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A, dvector *b, dvector *x, const INT MaxIt,
- *                                    const REAL tol, precond *pre, const SHORT print_level,
- *                                    const SHORT stop_type, const SHORT restart )
+ * \fn INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A, dvector *b, dvector *x,
+ *                                     precond *pre, const REAL tol, const INT MaxIt,
+ *                                     const SHORT restart, const SHORT stop_type,
+ *                                     const SHORT print_level)
  *
  * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration and flexible preconditioner
@@ -685,10 +686,9 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
  * \return             number of iteration if succeed
  *
  * \author Xiaozhe Hu
- * \date 01/04/2012
+ * \date   01/04/2012
  *
- * \note
- *  based on Zhiyang Zhou's pvgmres.c
+ * \note   Based on Zhiyang Zhou's pvgmres.c
  */
 INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
                                 dvector *b,
@@ -698,8 +698,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
                                 const INT MaxIt,
                                 const SHORT restart,
                                 const SHORT stop_type,
-                                const SHORT print_level
-                                )
+                                const SHORT print_level)
 {
 	const INT n                 = b->row;
 	const INT min_iter          = 0;

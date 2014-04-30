@@ -600,7 +600,7 @@ FINISH: if (fp != NULL) fclose(fp);
 }
 
 /**
- * \fn void fasp_dcsr_plot (const dBSRmat *A, const char *fname)
+ * \fn INT fasp_dcsr_plot (const dBSRmat *A, const char *fname)
  *
  * \brief Write dCSR sparse matrix pattern in BMP file format
  *
@@ -623,7 +623,7 @@ FINISH: if (fp != NULL) fclose(fp);
  *  Red      negative element
  *  Brown    nearly zero element
  */
-INT fasp_dcsr_plot(const dCSRmat *A, const char *fname)
+INT fasp_dcsr_plot (const dCSRmat *A, const char *fname)
 {
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;

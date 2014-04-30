@@ -8,6 +8,7 @@ File Name: CHANGES
 - Fix a wrong sign in smoothed aggregation method.
 - Change a few internal function names for SA AMG.
 - Update default strong_coupling parameter for VMB aggregation algorithm.
+- Fix Doxygen problems introduced recently.
 
 04/16/2014 FASP 1.4.9:
 - Add free function for block_dCSRmat matrices. 

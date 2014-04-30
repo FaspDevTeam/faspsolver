@@ -1,4 +1,4 @@
-/*! \file amg_setup_aggregation_csr.inl
+/*! \file  aggregation_csr.inl
  *  \brief Utilies for multigrid cycles for CSR matrices
  */
 

@@ -9,7 +9,8 @@
 #include "fasp_functs.h"
 
 // Flags which indicates lengths of INT and REAL numbers
-INT ilength, dlength;
+INT   ilength; /**< Length of INT in byte */
+INT   dlength; /**< Length of REAL in byte */
 
 // Decoration of private functions
 static void fasp_dcsr_read_s(FILE *fp, dCSRmat *A);
