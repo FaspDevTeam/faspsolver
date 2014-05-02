@@ -86,7 +86,7 @@ int fasp_solver_umfpack (dCSRmat *ptrA,
 #if WITH_UMFPACK
 
 /**
- * \fn int umfpack_factorize (dCSRmat *ptrA, dvector *b, dvector *u,
+ * \fn int fasp_umfpack_factorize (dCSRmat *ptrA, dvector *b, dvector *u,
  *                            const int print_level)
  * \brief factorize A by UMFpack
  *
@@ -95,9 +95,11 @@ int fasp_solver_umfpack (dCSRmat *ptrA,
  *
  * \author Xiaozhe Hu
  * \date   10/20/2010
+ * \date   05/02/2014  -- modified by Xiaozhe Hu
+ *
+ *
  */
-int umfpack_factorize (dCSRmat *ptrA,
-                       void *Numeric,
+void* fasp_umfpack_factorize (dCSRmat *ptrA,
                        const int print_level)
 {
 	const int n = ptrA->col;
@@ -108,6 +110,7 @@ int umfpack_factorize (dCSRmat *ptrA,
 	int *Ai = ptrA->JA;
 	double *Ax = ptrA->val;
 	void *Symbolic;
+    void *Numeric;
 	int status=SUCCESS;
 	
 #if DEBUG_MODE
@@ -131,11 +134,11 @@ int umfpack_factorize (dCSRmat *ptrA,
 	printf("### DEBUG: umfpack_factorize ...... [Finish]\n");
 #endif
 	
-	return status;
+    return Numeric;
 }
 
 /**
- * \fn int umfpack_solve (dCSRmat *ptrA, dvector *b, dvector *u,
+ * \fn int fasp_umfpack_solve (dCSRmat *ptrA, dvector *b, dvector *u,
  *                        void *Numeric, const int print_level)
  * \brief Solve Au=b by UMFpack, numerical factorization is given
  *
@@ -146,9 +149,11 @@ int umfpack_factorize (dCSRmat *ptrA,
  *
  * \author Xiaozhe Hu
  * \date   10/20/2010
+ * \date   05/02/2014 -- modified by Xiaozhe
+ *
  */
 
-int umfpack_solve (dCSRmat *ptrA,
+int fasp_umfpack_solve (dCSRmat *ptrA,
                    dvector *b,
                    dvector *u,
                    void *Numeric,
@@ -186,7 +191,7 @@ int umfpack_solve (dCSRmat *ptrA,
 }
 
 /**
- * \fn int umfpack_free_numeric (void *Numeric)
+ * \fn int fasp_umfpack_free_numeric (void *Numeric)
  * \brief Solve Au=b by UMFpack
  *
  * \param ptrA     pointer to stiffness matrix of levelNum levels
@@ -196,7 +201,7 @@ int umfpack_solve (dCSRmat *ptrA,
  * \author Xiaozhe Hu
  * \date   10/20/2010
  */
-int umfpack_free_numeric (void *Numeric)
+int fasp_umfpack_free_numeric (void *Numeric)
 {
 	int status=SUCCESS;
 	

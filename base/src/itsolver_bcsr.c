@@ -153,6 +153,8 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
  *
  * \author Xiaozhe Hu
  * \date   04/07/2014
+ *
+ * \note only works for 3by3 block dCSRmat problems!! -- Xiaozhe Hu
  */
 INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
                                     dvector *b,
@@ -267,6 +269,112 @@ INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
     
     return status;
 }
+
+/**
+ * \fn INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b, dvector *x,
+ *                                         itsolver_param *itparam,
+ *                                         INT NumLayers,
+ *                                         block_CSRmat *Ai, 
+ *                                         dCSRmat *local_A, 
+ *                                         ivector *local_index)
+ *
+ * \brief Solve Ax = b by standard Krylov methods
+ *
+ * \param A             Pointer to the coeff matrix in block_dCSRmat format
+ * \param b             Pointer to the right hand side in dvector format
+ * \param x             Pointer to the approx solution in dvector format
+ * \param itparam       Pointer to parameters for iterative solvers
+ * \param NumLayers     Number of layers used for sweeping preconditioner
+ * \param Ai            Pointer to the coeff matrix for the preconditioner in block_dCSRmat format
+ * \param local_A       Pointer to the local coeff matrices in the dCSRmat format
+ * \param local_index   Pointer to the local index in ivector format
+ *
+ * \return          Number of iterations if succeed
+ *
+ * \author Xiaozhe Hu
+ * \date   05/01/2014
+ *
+ */
+INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b, dvector *x,
+                                       itsolver_param *itparam,
+                                       INT NumLayers,
+                                       block_dCSRmat *Ai,
+                                       dCSRmat *local_A,
+                                       ivector *local_index)
+{
+    const INT print_level = itparam->print_level;
+    const INT precond_type = itparam->precond_type;
+    INT status=SUCCESS;
+    REAL setup_start, setup_end, setup_duration;
+    REAL solver_start, solver_end, solver_duration;
+    
+    INT l;
+    
+    /* setup preconditioner */
+    fasp_gettime(&setup_start);
+    
+    void **local_LU = NULL;
+    
+    
+#if WITH_UMFPACK
+    // Need to sort the matrices local_A for UMFPACK format
+    dCSRmat A_tran;
+    
+    local_LU = (void **)fasp_mem_calloc(NumLayers, sizeof(void *));
+    
+    for (l=0; l<NumLayers; l++){
+        
+        fasp_dcsr_trans(&local_A[l], &A_tran);
+        fasp_dcsr_sort(&A_tran);
+        fasp_dcsr_cp(&A_tran,&local_A[l]);
+        
+        printf("Factorization for layer %d: \n", l);
+        local_LU[l] = fasp_umfpack_factorize(&local_A[l], print_level);
+        
+    }
+    
+    fasp_dcsr_free(&A_tran);
+#endif
+    
+    precond_sweeping_data precdata;
+    precdata.NumLayers = NumLayers;
+    precdata.A = A;
+    precdata.Ai = Ai;
+    precdata.local_A = local_A;
+    precdata.local_LU = local_LU;
+    precdata.local_index = local_index;
+    precdata.r = fasp_dvec_create(b->row);
+    precdata.w = (REAL *)fasp_mem_calloc(2*b->row,sizeof(REAL));
+    
+    precond prec; prec.data = &precdata;
+    prec.fct = fasp_precond_sweeping;
+    
+    if ( print_level>=PRINT_MIN ) {
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;
+        print_cputime("Setup totally", setup_duration);
+    }
+    
+    /* solver part */
+    fasp_gettime(&solver_start);
+    
+    status=fasp_solver_bdcsr_itsolver(A,b,x, &prec,itparam);
+    
+    fasp_gettime(&solver_end);
+    
+    solver_duration = solver_end - solver_start;
+    
+    if ( print_level>=PRINT_MIN )
+        print_cputime("Krylov method totally", setup_duration+solver_duration);
+    
+    // clean
+#if WITH_UMFPACK
+    for (l=0; l<NumLayers; l++) fasp_umfpack_free_numeric(local_LU[l]);
+#endif
+    
+    return status;
+}
+
 
 /*---------------------------------*/
 /*--        End of File          --*/

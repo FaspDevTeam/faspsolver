@@ -4,12 +4,12 @@
 % must have spaces around the equal sign "="   %
 %----------------------------------------------%
 
-workdir = ../data/  % work directory, no more than 128 characters
+workdir = ../data  % work directory, no more than 128 characters
  
 %----------------------------------------------%
 % problem, solver, and output type             %
 %----------------------------------------------%
-problem_num              = 10     % test problem number 
+problem_num              = 20     % test problem number 
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to scree | 1 to file
 solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
@@ -21,9 +21,9 @@ solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 % parameters for iterative solvers             %
 %----------------------------------------------%
 
-precond_type             = 22      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
-itsolver_tol             = 1e-6   % solver tolerance 
-itsolver_maxit           = 100   % maximal iteration number 
+precond_type             = 30      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
+itsolver_tol             = 1e-3   % solver tolerance 
+itsolver_maxit           = 3000   % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
 itsolver_restart         = 30     % restart number for GMRES
 

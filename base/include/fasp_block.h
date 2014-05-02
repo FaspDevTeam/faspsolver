@@ -598,6 +598,33 @@ typedef struct {
 	
 } precond_FASP_blkoil_data; /**< FASP precond data for Reservoir Simulation */
 
+/**
+ * \struct precond_sweeping_data
+ * \brief Data passed to the preconditioner for sweeping preconditioning.
+ *
+ * \author Xiaozhe Hu
+ * \date   05/01/2014
+ *
+ * \note This is needed for the sweeping preconditioner.
+ */
+typedef struct {
+    
+    INT NumLayers;      /**< number of layers */
+	
+	block_dCSRmat *A;   /**< problem data, the sparse matrix */
+    block_dCSRmat *Ai;  /**< preconditioner data, the sparse matrix */
+	
+	dCSRmat *local_A;   /**< local stiffness matrix for each layer */
+    void **local_LU;     /**< lcoal LU decomposition -- (only for UMFpack -- Xiaozhe Hu) */
+	
+	ivector *local_index;  /**< local index for each layer */
+    
+    // temprary work spaces
+    dvector r; /**< temporary dvector used to store and restore the residual */
+	REAL *w; /**<  temporary work space for other usage */
+	
+} precond_sweeping_data; /**< Precond data for block matrices */
+
 #endif /* end if for __FASPBLOCK_HEADER__ */
 
 /*---------------------------------*/
