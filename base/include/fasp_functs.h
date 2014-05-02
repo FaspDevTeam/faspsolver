@@ -722,7 +722,7 @@ void fasp_grid2d_plot (pgrid2d pg,
 
 INT fasp_dbsr_plot(const dBSRmat *A, const char *fname);
 
-INT fasp_dcsr_plot(const dCSRmat *A, const char *fname);
+INT fasp_dcsr_plot (const dCSRmat *A, const char *fname);
 
 
 /*-------- In file: ilu_setup_bsr.c --------*/
@@ -922,22 +922,29 @@ void fasp_vector_write (char *filerhs,
 
 /*-------- In file: itsolver_bcsr.c --------*/
 
-INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, 
-                                dvector *b, 
-                                dvector *x, 
-                                precond *pc, 
+INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
+                                dvector *b,
+                                dvector *x,
+                                precond *pc,
                                 itsolver_param *itparam);
 
-INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, 
-                              dvector *b, 
-                              dvector *x, 
-                              itsolver_param *itparam);
-
-INT fasp_solver_bdcsr_krylov_block(block_dCSRmat *A,
+INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
                               dvector *b,
                               dvector *x,
-                              itsolver_param *itparam,
-                                AMG_param *amgparam);
+                              itsolver_param *itparam);
+
+INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
+                                    dvector *b,
+                                    dvector *x,
+                                    itsolver_param *itparam,
+                                    AMG_param *amgparam);
+
+INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b, dvector *x,
+                                       itsolver_param *itparam,
+                                       INT NumLayers,
+                                       block_dCSRmat *Ai,
+                                       dCSRmat *local_A,
+                                       ivector *local_index);
 
 
 /*-------- In file: itsolver_bsr.c --------*/
@@ -1462,6 +1469,10 @@ void fasp_precond_block_lower (double *r,
                             double *z, 
                             void *data);
 
+void fasp_precond_sweeping (double *r,
+                              double *z,
+                              void *data);
+
 
 /*-------- In file: precond_bsr.c --------*/
 
@@ -1609,8 +1620,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
                                 const INT MaxIt,
                                 const SHORT restart,
                                 const SHORT stop_type,
-                                const SHORT print_level
-                                );
+                                const SHORT print_level);
 
 
 /*-------- In file: pvfgmres_mf.c --------*/
@@ -2722,11 +2732,10 @@ int fasp_solver_umfpack (dCSRmat *ptrA,
                          dvector *u,
                          const int print_level);
 
-int umfpack_factorize (dCSRmat *ptrA,
-                       void *Numeric,
+void* fasp_umfpack_factorize (dCSRmat *ptrA,
                        const int print_level);
 
-int umfpack_solve (dCSRmat *ptrA,
+int fasp_umfpack_solve (dCSRmat *ptrA,
                    dvector *b,
                    dvector *u,
                    void *Numeric,

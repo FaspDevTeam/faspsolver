@@ -17,6 +17,7 @@
  * Modified by Chensong Zhang on 06/21/2012
  * Modified by Chensong Zhang on 10/15/2012: revise along with testfem.c
  * Modified by Chensong Zhang on 12/29/2013: clean up non-test problems
+ * Modified by Xiaozhe Hu on 05/02/2014: revise the umfpack solver, seperate factorization and solve 
  */
 int main (int argc, const char * argv[]) 
 {
@@ -186,9 +187,16 @@ int main (int argc, const char * argv[])
         fasp_dcsr_sort(&A_tran);
         fasp_dcsr_cp(&A_tran, &A);
         fasp_dcsr_free(&A_tran);
-        status = fasp_solver_umfpack(&A, &b, &x, print_level);
+        
+        void *Numeric;
+        Numeric = fasp_umfpack_factorize(&A, print_level);
+        status = fasp_umfpack_solve(&A, &b, &x, Numeric, print_level);
+        fasp_umfpack_free_numeric(Numeric);
+        
+        //status = fasp_solver_umfpack(&A, &b, &x, print_level);
+        
 	}
-#endif	 
+#endif
     
 	else {
 		printf("### ERROR: Wrong solver type %d!!!\n", solver_type);		

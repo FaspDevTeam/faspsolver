@@ -45,6 +45,10 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
     register REAL *x1, *x2, *y1, *y2;
     register REAL *x3, *y3;
     
+    INT i,j;
+    INT start_row;
+    INT start_col;
+    
     switch (brow) {
             
         case 2:
@@ -71,7 +75,7 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
             
             break;
             
-        case 3:
+        case 4:
             A11 = A->blocks[0];
             A12 = A->blocks[1];
             A13 = A->blocks[2];
@@ -111,6 +115,27 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
             
             break;
             
+        default:
+            
+            start_row = 0;
+            start_col = 0;
+            
+            for (i=0; i<brow; i++) {
+                
+                for (j=0; j<brow; j++){
+                    
+                    if (A->blocks[i*brow+j]){
+                        fasp_blas_dcsr_aAxpy(alpha, A->blocks[i*brow+j], &(x[start_col]), &(y[start_row]));
+                    }
+                    start_col = start_col + A->blocks[j*brow+j]->col;
+                }
+                
+                start_row = start_row + A->blocks[i*brow+i]->row;
+                start_col = 0;
+            }
+            
+            break;
+            
     } // end of switch
     
 }
@@ -144,6 +169,10 @@ void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
     register REAL *x1, *x2, *y1, *y2;
     register REAL *x3, *y3;
     
+    INT i,j;
+    INT start_row;
+    INT start_col;
+    
     switch (brow) {
             
         case 2:
@@ -170,7 +199,7 @@ void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
             
             break;
             
-        case 3:
+        case 4:
             A11 = A->blocks[0];
             A12 = A->blocks[1];
             A13 = A->blocks[2];
@@ -207,6 +236,34 @@ void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
             fasp_blas_dcsr_mxv(A31, x1, y3);
             fasp_blas_dcsr_aAxpy(1.0, A32, x2, y3);
             fasp_blas_dcsr_aAxpy(1.0, A33, x3, y3);
+            
+            break;
+            
+        default:
+            
+            start_row = 0;
+            start_col = 0;
+            
+            for (i=0; i<brow; i++) {
+                
+                for (j=0; j<brow; j++){
+                    
+                    if (j==0) {
+                        if (A->blocks[i*brow+j]){
+                            fasp_blas_dcsr_mxv(A->blocks[i*brow+j], &(x[start_col]), &(y[start_row]));
+                        }
+                    }
+                    else {
+                        if (A->blocks[i*brow+j]){
+                            fasp_blas_dcsr_aAxpy(1.0, A->blocks[i*brow+j], &(x[start_col]), &(y[start_row]));
+                        }
+                    }
+                    start_col = start_col + A->blocks[j*brow+j]->col;
+                }
+                
+                start_row = start_row + A->blocks[i*brow+i]->row;
+                start_col = 0;
+            }
             
             break;
             

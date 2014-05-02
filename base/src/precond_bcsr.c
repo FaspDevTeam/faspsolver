@@ -149,6 +149,154 @@ void fasp_precond_block_lower (double *r,
 }
 
 
+/**
+ * \fn void fasp_precond_sweeping (double *r, double *z, void *data)
+ * \brief sweeping preconditioner for Maxwell equations
+ * \param *r pointer to residual
+ * \param *z pointer to preconditioned residual
+ * \param *data pointer to precondition data
+ *
+ * \author Xiaozhe Hu
+ * \date  05/01/2014
+ */
+void fasp_precond_sweeping (double *r,
+                              double *z,
+                              void *data)
+{
+	
+	precond_sweeping_data *precdata=(precond_sweeping_data *)data;
+    
+    INT NumLayers = precdata->NumLayers;
+	block_dCSRmat *A = precdata->A;
+    block_dCSRmat *Ai = precdata->Ai;
+    dCSRmat *local_A = precdata->local_A;
+	ivector *local_index = precdata->local_index;
+    void **local_LU = precdata->local_LU;
+
+	dvector *r_backup = &(precdata->r);
+	REAL *w = precdata->w;
+
+    // local veriables
+	INT i,l;
+    dvector temp_r;
+    dvector temp_e;
+    
+    dvector *local_r = (dvector *)fasp_mem_calloc(NumLayers, sizeof(dvector));
+    dvector *local_e = (dvector *)fasp_mem_calloc(NumLayers, sizeof(dvector));
+
+    // calculate the size and generate block local_r and local_z
+    INT N=0;
+    
+    for (l=0;l<NumLayers; l++) {
+
+        local_r[l].row = A->blocks[l*NumLayers+l]->row;
+        local_r[l].val = r+N;
+        
+        local_e[l].row = A->blocks[l*NumLayers+l]->col;
+        local_e[l].val = z+N;
+        
+        N = N+A->blocks[l*NumLayers+l]->col;
+        
+    }
+    
+    temp_r.val = w;
+    temp_e.val = w+N;
+	
+	//! back up r, setup z;
+	fasp_array_cp(N, r, r_backup->val);
+    fasp_array_cp(N, r, z);
+	//fasp_array_set(N, z, 0.0);
+	
+    // L^{-1}r
+    for (l=0; l<NumLayers-1; l++){
+        
+        temp_r.row = local_A[l].row;
+        temp_e.row = local_A[l].row;
+        
+        fasp_dvec_set(local_A[l].row, &temp_r, 0.0);
+        
+        for (i=0; i<local_e[l].row; i++){
+            temp_r.val[local_index[l].val[i]] = local_e[l].val[i];
+        }
+        
+#if  WITH_UMFPACK
+        /* use UMFPACK direct solver */
+        //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+        fasp_umfpack_solve(&local_A[l], &temp_r, &temp_e, local_LU[l], 0);
+#elif WITH_SuperLU
+        /* use SuperLU direct solver on the coarsest level */
+        fasp_solver_superlu(&local_A[l], &temp_r, &temp_e, 0);
+#endif
+      
+        for (i=0; i<local_r[l].row; i++){
+            local_r[l].val[i] = temp_e.val[local_index[l].val[i]];
+        }
+        
+        fasp_blas_dcsr_aAxpy(-1.0, Ai->blocks[(l+1)*NumLayers+l], local_r[l].val, local_e[l+1].val);
+        
+    }
+
+    // D^{-1}L^{-1}r
+    for (l=0; l<NumLayers; l++){
+        
+        temp_r.row = local_A[l].row;
+        temp_e.row = local_A[l].row;
+        
+        fasp_dvec_set(local_A[l].row, &temp_r, 0.0);
+        
+        for (i=0; i<local_e[l].row; i++){
+            temp_r.val[local_index[l].val[i]] = local_e[l].val[i];
+        }
+        
+#if  WITH_UMFPACK
+        /* use UMFPACK direct solver */
+        //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+        fasp_umfpack_solve(&local_A[l], &temp_r, &temp_e, local_LU[l], 0);
+#elif WITH_SuperLU
+        /* use SuperLU direct solver on the coarsest level */
+        fasp_solver_superlu(&local_A[l], &temp_r, &temp_e, 0);
+#endif
+        
+        for (i=0; i<local_e[l].row; i++){
+            local_e[l].val[i] = temp_e.val[local_index[l].val[i]];
+        }
+        
+    }
+    
+    // L^{-t}D^{-1}L^{-1}u
+    for (l=NumLayers-2; l>=0; l--){
+        
+        temp_r.row = local_A[l].row;
+        temp_e.row = local_A[l].row;
+        
+        fasp_dvec_set(local_A[l].row, &temp_r, 0.0);
+        
+        fasp_blas_dcsr_mxv (Ai->blocks[l*NumLayers+l+1], local_e[l+1].val, local_r[l].val);
+        
+        for (i=0; i<local_r[l].row; i++){
+            temp_r.val[local_index[l].val[i]] = local_r[l].val[i];
+        }
+        
+#if  WITH_UMFPACK
+        /* use UMFPACK direct solver */
+        //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+        fasp_umfpack_solve(&local_A[l], &temp_r, &temp_e, local_LU[l], 0);
+#elif WITH_SuperLU
+        /* use SuperLU direct solver on the coarsest level */
+        fasp_solver_superlu(&local_A[l], &temp_r, &temp_e, 0);
+#endif
+       
+        for (i=0; i<local_e[l].row; i++){
+            local_e[l].val[i] = local_e[l].val[i] - temp_e.val[local_index[l].val[i]];
+        }
+        
+    }
+	
+	//! restore r
+	fasp_array_cp(N, r_backup->val, r);
+	
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
