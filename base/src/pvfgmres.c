@@ -668,9 +668,9 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
  *                                     const SHORT restart, const SHORT stop_type,
  *                                     const SHORT print_level)
  *
- * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which the restart
- *        parameter can be adaptively modified during the iteration and flexible preconditioner
- *        can be used.
+ * \brief Solve "Ax=b" using PFGMRES (right preconditioned) iterative method in which 
+ *        the restart parameter can be adaptively modified during the iteration and 
+ *        flexible preconditioner can be used.
  *
  * \param *A           pointer to the coefficient matrix
  * \param *b           pointer to the right hand side vector
@@ -679,8 +679,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
  * \param tol          tolerance
  * \param *pre         pointer to preconditioner data
  * \param print_level  how much of the SOLVE-INFORMATION be printed
- * \param stop_type    this parameter is not used in this function at present,
- *                     the default stopping criterion,i.e.||r_k||/||r_0||<tol, is used. Need to change!
+ * \param stop_type    default stopping criterion,i.e.||r_k||/||r_0||<tol, is used.
  * \param restart      number of restart for GMRES
  *
  * \return             number of iteration if succeed
@@ -711,7 +710,6 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
 	const REAL cr_min      = 0.174;   // = cos(80^o) (experimental)
 	
     // local variables
-	INT    converged            = 0;
 	INT    iter                 = 0;
 	INT    status               = SUCCESS;
 	INT    restartplus1         = restart + 1;
@@ -719,7 +717,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
 	
 	REAL   epsmac               = SMALLREAL;
 	REAL   r_norm, b_norm, den_norm;
-	REAL   epsilon, gamma, t, r_norm_0;
+	REAL   epsilon, gamma, t;
 	
 	REAL  *c = NULL, *s = NULL, *rs = NULL;
 	REAL  *norms = NULL, *r = NULL;
@@ -752,7 +750,6 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
 	
 	b_norm = fasp_blas_array_norm2(n, b->val);
 	r_norm = fasp_blas_array_norm2(n, p[0]);
-	r_norm_0 = r_norm;
 	
 	if ( print_level > PRINT_NONE)
 	{
@@ -918,11 +915,11 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
 			fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, r);
 			r_norm = fasp_blas_array_norm2(n, r);
 			
-			if (r_norm  <= epsilon)
+			if (r_norm <= epsilon)
 			{
 				if (print_level > PRINT_NONE)
                     printf("Number of iterations = %d with L2 residual %e.\n", iter, r_norm);
-				converged = 1; break;
+				break;
 			}
 			else
 			{
@@ -956,8 +953,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
 		
 	} /* end of iteration while loop */
 	
-	if (print_level > PRINT_NONE && iter >= MaxIt && r_norm > epsilon)
-	{
+	if (print_level > PRINT_NONE && iter >= MaxIt && r_norm > epsilon) {
 		printf("### WARNING: Not reaching the given tolerance in %d iterations!!\n", MaxIt);
 	}
 	

@@ -1439,7 +1439,8 @@ void fasp_dbsr_getdiag (INT n,
 /**
  * \fn dBSRmat fasp_dbsr_diagLU(dBSRmat *A, REAL *DL, REAL *DU)
  *
- * \brief Compute B := DL*A*DU.  We decompose each diagonal block of A into LDU form and DL = diag(L^{-1}) and DU = diag(U^{-1}).
+ * \brief Compute B := DL*A*DU. We decompose each diagonal block of A into LDU form 
+ *        and DL = diag(L^{-1}) and DU = diag(U^{-1}).
  *
  * \param A        Pointer to the dBSRmat matrix
  * \param DL       Pointer to the diag(L^{-1})
@@ -1447,10 +1448,8 @@ void fasp_dbsr_getdiag (INT n,
  *
  * \return BSR matrix after scaling
  *
- *
  * \author Xiaozhe Hu
- * \date 04/02/2014
- *
+ * \date   04/02/2014
  */
 dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
                          REAL *DL,
@@ -1472,7 +1471,7 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
     REAL *valb = NULL;
     
     INT nb2  = nb*nb;
-    INT i,j,k,m;
+    INT i, j, k;
     
     // Create a dBSRmat 'B'
     dBSRmat B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
@@ -1554,7 +1553,6 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
                         REAL s22 = temp[4] - ((temp[1]*temp[3])/temp[0]);
                         REAL s23 = temp[5] - ((temp[2]*temp[3])/temp[0]);
                         REAL s32 = temp[7] - ((temp[1]*temp[6])/temp[0]);
-                        REAL s33 = temp[8] - ((temp[2]*temp[6])/temp[0]) - (s23*s32/s22);
                         
                         // form DL
                         DL[i*nb2]   = 1.0;
