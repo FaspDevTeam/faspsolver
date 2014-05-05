@@ -327,7 +327,7 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 	INT     nb  = A->nb;
 	INT    *IA  = A->IA;
 	INT    *JA  = A->JA;
-	REAL *val = A->val;
+	REAL   *val = A->val;
     
 	/* local variables */
 	INT     size = ROW*nb;
@@ -587,7 +587,6 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
  *
  * \author Xiaozhe Hu
  * \date   01/02/2014
- *
  *
  * \note Works for general nb (Xiaozhe)
  */

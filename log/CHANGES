@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+05/05/2014 FASP 1.5.1:
+- Seperate factorization and solve for UMFpack.
+- Add sweeping preconditioner.
+- Fix a few compiler warnings recently introduced.
+
 04/24/2014 FASP 1.5.0:
 - Add matching-base AMG methods (UA and SA).
 - Fix a bug in dcsr_read.

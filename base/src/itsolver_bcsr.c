@@ -272,11 +272,11 @@ INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
 
 /**
  * \fn INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b, dvector *x,
- *                                         itsolver_param *itparam,
- *                                         INT NumLayers,
- *                                         block_CSRmat *Ai, 
- *                                         dCSRmat *local_A, 
- *                                         ivector *local_index)
+ *                                            itsolver_param *itparam,
+ *                                            INT NumLayers,
+ *                                            block_CSRmat *Ai,
+ *                                            dCSRmat *local_A,
+ *                                            ivector *local_index)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -295,7 +295,9 @@ INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
  * \date   05/01/2014
  *
  */
-INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b, dvector *x,
+INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
+                                       dvector *b,
+                                       dvector *x,
                                        itsolver_param *itparam,
                                        INT NumLayers,
                                        block_dCSRmat *Ai,
@@ -303,12 +305,9 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b, dvector *x,
                                        ivector *local_index)
 {
     const INT print_level = itparam->print_level;
-    const INT precond_type = itparam->precond_type;
-    INT status=SUCCESS;
+    INT status = SUCCESS;
     REAL setup_start, setup_end, setup_duration;
-    REAL solver_start, solver_end, solver_duration;
-    
-    INT l;
+    REAL solve_start, solve_end, solve_duration;
     
     /* setup preconditioner */
     fasp_gettime(&setup_start);
@@ -356,16 +355,16 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b, dvector *x,
     }
     
     /* solver part */
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     status=fasp_solver_bdcsr_itsolver(A,b,x, &prec,itparam);
     
-    fasp_gettime(&solver_end);
+    fasp_gettime(&solve_end);
     
-    solver_duration = solver_end - solver_start;
+    solve_duration = solve_end - solve_start;
     
     if ( print_level>=PRINT_MIN )
-        print_cputime("Krylov method totally", setup_duration+solver_duration);
+        print_cputime("Krylov method totally", setup_duration+solve_duration);
     
     // clean
 #if WITH_UMFPACK

@@ -109,8 +109,6 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     const SHORT cycle_type = param->cycle_type;
     const SHORT min_cdof   = MAX(param->coarse_dof,50);
     const INT   m          = mgl[0].A.row;
-
-	dCSRmat tmpA;
     
     // local variables
     SHORT       max_levels = param->max_levels, level = 0, status = SUCCESS;

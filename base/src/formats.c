@@ -734,7 +734,6 @@ dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
     INT i, j, k, ii, jj, kk, l, mod, nnz;
     INT row = A->row/nb;
     INT col = A->col/nb;
-    INT NNZ = A->nnz;
     INT nb2 = nb*nb;
     INT *IA  = A->IA;
     INT *JA  = A->JA;
