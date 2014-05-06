@@ -441,15 +441,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\base\src\aggregation_bsr.inl"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\aggregation_csr.inl"
+				>
+			</File>
+			<File
 				RelativePath="..\..\base\src\amg.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\base\src\amg_setup_aggregation_bsr.inl"
-				>
-			</File>
-			<File
-				RelativePath="..\..\base\src\amg_setup_aggregation_csr.inl"
 				>
 			</File>
 			<File
@@ -621,11 +621,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\base\src\itsolver_mf.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\base\src\itsolver_str.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\base\src\itsolver_util.inl"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\linklist.inl"
 				>
 			</File>
 			<File
@@ -665,7 +673,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\base\src\pbcgs_mf.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\base\src\pcg.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\pcg_mf.c"
 				>
 			</File>
 			<File
@@ -673,11 +689,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\base\src\pgcg_mf.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\base\src\pgmres.c"
 				>
 			</File>
 			<File
+				RelativePath="..\..\base\src\pgmres_mf.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\base\src\pminres.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\pminres_mf.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\precond_bcsr.c"
 				>
 			</File>
 			<File
@@ -697,7 +729,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\base\src\pvfgmres_mf.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\base\src\pvgmres.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\src\pvgmres_mf.c"
 				>
 			</File>
 			<File
@@ -813,10 +853,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

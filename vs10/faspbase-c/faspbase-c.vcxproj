@@ -329,6 +329,7 @@
     <ClCompile Include="..\..\base\src\itsolver_bcsr.c" />
     <ClCompile Include="..\..\base\src\itsolver_bsr.c" />
     <ClCompile Include="..\..\base\src\itsolver_csr.c" />
+    <ClCompile Include="..\..\base\src\itsolver_mf.c" />
     <ClCompile Include="..\..\base\src\itsolver_str.c" />
     <ClCompile Include="..\..\base\src\lu.c" />
     <ClCompile Include="..\..\base\src\memory.c" />
@@ -338,15 +339,23 @@
     <ClCompile Include="..\..\base\src\ordering.c" />
     <ClCompile Include="..\..\base\src\parameters.c" />
     <ClCompile Include="..\..\base\src\pbcgs.c" />
+    <ClCompile Include="..\..\base\src\pbcgs_mf.c" />
     <ClCompile Include="..\..\base\src\pcg.c" />
+    <ClCompile Include="..\..\base\src\pcg_mf.c" />
     <ClCompile Include="..\..\base\src\pgcg.c" />
+    <ClCompile Include="..\..\base\src\pgcg_mf.c" />
     <ClCompile Include="..\..\base\src\pgmres.c" />
+    <ClCompile Include="..\..\base\src\pgmres_mf.c" />
     <ClCompile Include="..\..\base\src\pminres.c" />
+    <ClCompile Include="..\..\base\src\pminres_mf.c" />
+    <ClCompile Include="..\..\base\src\precond_bcsr.c" />
     <ClCompile Include="..\..\base\src\precond_bsr.c" />
     <ClCompile Include="..\..\base\src\precond_csr.c" />
     <ClCompile Include="..\..\base\src\precond_str.c" />
     <ClCompile Include="..\..\base\src\pvfgmres.c" />
+    <ClCompile Include="..\..\base\src\pvfgmres_mf.c" />
     <ClCompile Include="..\..\base\src\pvgmres.c" />
+    <ClCompile Include="..\..\base\src\pvgmres_mf.c" />
     <ClCompile Include="..\..\base\src\quadrature.c" />
     <ClCompile Include="..\..\base\src\rap.c" />
     <ClCompile Include="..\..\base\src\schwarz_setup.c" />
@@ -374,12 +383,12 @@
     <ClCompile Include="..\..\base\src\wrapper.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\base\src\amg_setup_aggregation_bsr.inl" />
-    <None Include="..\..\base\src\amg_setup_aggregation_csr.inl" />
+    <None Include="..\..\base\src\aggregation_bsr.inl" />
+    <None Include="..\..\base\src\aggregation_csr.inl" />
     <None Include="..\..\base\src\gmg_util.inl" />
     <None Include="..\..\base\src\itsolver_util.inl" />
+    <None Include="..\..\base\src\linklist.inl" />
     <None Include="..\..\base\src\mg_util.inl" />
-    <None Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
