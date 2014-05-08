@@ -820,6 +820,313 @@ int main (int argc, const char * argv[])
         
     }
     
+    else if (problem_num == 22) {
+        
+        printf("-------------------------\n");
+        printf("Read matrix A\n");
+        printf("-------------------------\n");
+        
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="/3layers/A.dat";
+        strcat(filename1,datafile1);
+        
+        dCSRmat A;
+        fasp_dcoo_shift_read(filename1, &A);
+        
+        
+        printf("-------------------------\n");
+        printf("Read right hand size b\n");
+        printf("-------------------------\n");
+        dvector b_temp;
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="/3layers/b.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dvec_read(filename2, &b_temp);
+        
+        NumLayers = 3;
+        INT l;
+        
+        dCSRmat Ai;
+        
+        // -----------------------------------------
+        // read in the matrix for the preconditioner
+        // -----------------------------------------
+        printf("-------------------------\n");
+        printf("Read preconditioner Ai\n");
+        printf("-------------------------\n");
+        
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="/3layers/Ai.dat";
+        strcat(filename1,datafile1);
+        
+        fasp_dcoo_shift_read(filename1, &Ai);
+        
+        // -----------------------------------------
+        // read in the index for forming the blocks
+        // -----------------------------------------
+        printf("-------------------------\n");
+        printf("Read gloabl index\n");
+        printf("-------------------------\n");
+        ivector *global_idx = (ivector *)fasp_mem_calloc(NumLayers,sizeof(ivector));
+        {
+            
+            // layer 0
+            strncpy(filename3,inpar.workdir,128);
+            datafile3="/3layers/global_idx_0.dat";
+            strcat(filename3,datafile3);
+            
+            fasp_ivecind_read(filename3, &global_idx[0]);
+            
+            // layer 1
+            strncpy(filename4,inpar.workdir,128);
+            datafile4="/3layers/global_idx_1.dat";
+            strcat(filename4,datafile4);
+            
+            fasp_ivecind_read(filename4, &global_idx[1]);
+            
+            // layer 2
+            strncpy(filename5,inpar.workdir,128);
+            datafile5="/3layers/global_idx_2.dat";
+            strcat(filename5,datafile5);
+            
+            fasp_ivecind_read(filename5, &global_idx[2]);
+            
+            
+        }
+        
+        // ------------------------------------------------
+        // form the correct index (real and imaginary part)
+        // ------------------------------------------------
+        printf("-------------------------\n");
+        printf("Modify global index\n");
+        printf("-------------------------\n");
+        
+        ivector *global_index = (ivector *)fasp_mem_calloc(NumLayers,sizeof(ivector));
+        
+        for (l=0; l<NumLayers; l++){
+            
+            fasp_ivec_alloc(2*global_idx[l].row, &global_index[l]);
+            
+            for (i=0; i<global_idx[l].row; i++){
+                
+                global_index[l].val[i] = global_idx[l].val[i];
+                global_index[l].val[i+global_idx[l].row] = global_idx[l].val[i] + (A.row/2);
+                
+            }
+            
+        }
+        
+        // -----------------------------------------
+        // form the tridiagonal matrix of A
+        // -----------------------------------------
+        printf("-------------------------\n");
+        printf("Tridiagonalize A\n");
+        printf("-------------------------\n");
+        
+        Abcsr.brow = NumLayers; Abcsr.bcol = NumLayers;
+		Abcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        for (i=0; i<NumLayers*NumLayers; i++) {
+            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+        }
+        
+        for (i=0; i<NumLayers; i++){
+            
+            for (j=0; j<NumLayers; j++){
+                
+                if (j==i) {
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                }
+                else if (j == (i-1)) {
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                }
+                else if (j == (i+1)) {
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                }
+                else {
+                    Abcsr.blocks[i*NumLayers+j] = NULL;
+                }
+                
+            }
+            
+        }
+        
+        // -----------------------------------------
+        // form b corresponding to the tridiagonal matrix
+        // -----------------------------------------
+        printf("-------------------------\n");
+        printf("Modify b for tridiagonlaized A\n");
+        printf("-------------------------\n");
+        fasp_dvec_alloc(b_temp.row, &b);
+        
+        INT start=0;
+        for (l=0; l<NumLayers; l++){
+            
+            for (i=0; i<global_index[l].row; i++)
+            {
+                b.val[start+i] = b_temp.val[global_index[l].val[i]];
+            }
+            
+            start = start + global_index[l].row;
+        }
+        
+        // -----------------------------------------
+        // for tridiagonal matrix of Ai
+        // -----------------------------------------
+        printf("-------------------------\n");
+        printf("Tridiagonalize Ai\n");
+        printf("-------------------------\n");
+        
+        Aibcsr.brow = NumLayers; Aibcsr.bcol = NumLayers;
+		Aibcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        for (i=0; i<NumLayers*NumLayers; i++) {
+            Aibcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+        }
+        
+        for (i=0; i<NumLayers; i++){
+            
+            for (j=0; j<NumLayers; j++){
+                
+                if (j==i) {
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                }
+                else if (j == (i-1)) {
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                }
+                else if (j == (i+1)) {
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                }
+                else {
+                    Aibcsr.blocks[i*NumLayers+j] = NULL;
+                }
+                
+            }
+            
+        }
+        
+        // -----------------------------------------
+        // read in local A (Schur Complement approximation)
+        // -----------------------------------------
+        printf("----------------------------------------\n");
+        printf("Read Schur complements approximations\n");
+        printf("----------------------------------------\n");
+        local_A = (dCSRmat *)fasp_mem_calloc(NumLayers, sizeof(dCSRmat));
+        
+        // first level is just A11 block
+        local_A[0] = fasp_dcsr_create (Aibcsr.blocks[0]->row, Aibcsr.blocks[0]->col, Aibcsr.blocks[0]->nnz);
+        fasp_dcsr_cp(Aibcsr.blocks[0], &(local_A[0]));
+        
+        // other levels
+        {
+            // layer 1
+            strncpy(filename1,inpar.workdir,128);
+            datafile1="/3layers/local_A_0.dat";
+            strcat(filename1,datafile1);
+            
+            fasp_dcoo_shift_read(filename1, &(local_A[1]));
+            
+            // layer 2
+            strncpy(filename2,inpar.workdir,128);
+            datafile2="/3layers/local_A_1.dat";
+            strcat(filename2,datafile2);
+            
+            fasp_dcoo_shift_read(filename2, &(local_A[2]));
+            
+            
+        }
+        
+        // -----------------------------------------
+        // read in local pointer for Schur complement
+        // -----------------------------------------
+        printf("-------------------------\n");
+        printf("Read local pointer\n");
+        printf("-------------------------\n");
+        ivector *local_ptr = (ivector *)fasp_mem_calloc(NumLayers,sizeof(ivector));
+        
+        {
+            
+            // layer 0 (no need to read)
+            
+            // layer 1
+            strncpy(filename1,inpar.workdir,128);
+            datafile1="/3layers/local_ptr_0.dat";
+            strcat(filename1,datafile1);
+            
+            fasp_ivecind_read(filename1, &local_ptr[1]);
+            
+            // layer 2
+            strncpy(filename2,inpar.workdir,128);
+            datafile2="/3layers/local_ptr_1.dat";
+            strcat(filename2,datafile2);
+            
+            fasp_ivecind_read(filename2, &local_ptr[2]);
+            
+           
+            
+        }
+        
+        // -----------------------------------------
+        // generate local index for Schur complement
+        // -----------------------------------------
+        printf("-------------------------\n");
+        printf("Generate local index\n");
+        printf("-------------------------\n");
+        local_index = (ivector *)fasp_mem_calloc(NumLayers,sizeof(ivector));
+        
+        {
+            INT local_size;
+            INT local_A_size;
+            
+            // layer 0
+            local_index[0] = fasp_ivec_create(Aibcsr.blocks[0]->row);
+            
+            for (i=0; i<Aibcsr.blocks[0]->row; i++) local_index[0].val[i] = i;
+            
+            // other layers
+            for (l=1; l<NumLayers; l++){
+                
+                // compute local size
+                local_size = local_ptr[l].val[1] - local_ptr[l].val[0];
+                local_A_size = (local_A[l].row)/2;
+                
+                // allocate
+                local_index[l] = fasp_ivec_create(local_size*2);
+                
+                // generate
+                for (i=0; i<local_size; i++){
+                    
+                    local_index[l].val[i] = local_ptr[l].val[0] + i;
+                    local_index[l].val[i+local_size] = local_index[l].val[i]+local_A_size;
+                    
+                }
+                
+            }
+            
+        }
+        
+        // -----------------------------------------
+        // cleaning
+        // -----------------------------------------
+        printf("-------------------------\n");
+        printf("Cleaning \n");
+        printf("-------------------------\n");
+        
+        fasp_dcsr_free(&A);
+        fasp_dvec_free(&b_temp);
+        fasp_dcsr_free(&Ai);
+        
+        for(l=0;l<NumLayers;l++) fasp_ivec_free(&(global_idx[l]));
+        for(l=0;l<NumLayers;l++) fasp_ivec_free(&(local_ptr[l]));
+        
+        //------------------------------------
+        // check
+        //------------------------------------
+        //fasp_dcsr_write_coo("A54.dat", Aibcsr.blocks[23]);
+        //fasp_ivec_write("local_index_4.dat", &local_index[4]);
+        
+        
+    }
+    
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;

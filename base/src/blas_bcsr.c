@@ -66,12 +66,12 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
             y2 = &(y[row1]);
             
             // y1 = alpha*A11*x1 + alpha*A12*x2 + y1
-            fasp_blas_dcsr_aAxpy(alpha, A11, x1, y1);
-            fasp_blas_dcsr_aAxpy(alpha, A12, x2, y1);
+            if (A11) fasp_blas_dcsr_aAxpy(alpha, A11, x1, y1);
+            if (A12) fasp_blas_dcsr_aAxpy(alpha, A12, x2, y1);
             
             // y2 = alpha*A21*x1 + alpha*A22*x2 + y2
-            fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2);
-            fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2);
+            if (A21) fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2);
+            if (A22) fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2);
             
             break;
             
@@ -99,19 +99,19 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
             y3 = &(y[row1+row2]);
             
             // y1 = alpha*A11*x1 + alpha*A12*x2 + alpha*A13*x3 + y1
-            fasp_blas_dcsr_aAxpy(alpha, A11, x1, y1);
-            fasp_blas_dcsr_aAxpy(alpha, A12, x2, y1);
-            fasp_blas_dcsr_aAxpy(alpha, A13, x3, y1);
+            if (A11) fasp_blas_dcsr_aAxpy(alpha, A11, x1, y1);
+            if (A12) fasp_blas_dcsr_aAxpy(alpha, A12, x2, y1);
+            if (A13) fasp_blas_dcsr_aAxpy(alpha, A13, x3, y1);
             
             // y2 = alpha*A21*x1 + alpha*A22*x2 + alpha*A23*x3 + y2
-            fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2);
-            fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2);
-            fasp_blas_dcsr_aAxpy(alpha, A23, x3, y2);
+            if (A21) fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2);
+            if (A22) fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2);
+            if (A23)fasp_blas_dcsr_aAxpy(alpha, A23, x3, y2);
             
             // y3 = alpha*A31*x1 + alpha*A32*x2 + alpha*A33*x3 + y2
-            fasp_blas_dcsr_aAxpy(alpha, A31, x1, y3);
-            fasp_blas_dcsr_aAxpy(alpha, A32, x2, y3);
-            fasp_blas_dcsr_aAxpy(alpha, A33, x3, y3);
+            if (A31) fasp_blas_dcsr_aAxpy(alpha, A31, x1, y3);
+            if (A32) fasp_blas_dcsr_aAxpy(alpha, A32, x2, y3);
+            if (A33) fasp_blas_dcsr_aAxpy(alpha, A33, x3, y3);
             
             break;
             
@@ -190,12 +190,12 @@ void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
             y2 = &(y[row1]);
             
             // y1 = A11*x1 + A12*x2
-            fasp_blas_dcsr_mxv(A11, x1, y1);
-            fasp_blas_dcsr_aAxpy(1.0, A12, x2, y1);
+            if (A11) fasp_blas_dcsr_mxv(A11, x1, y1);
+            if (A12) fasp_blas_dcsr_aAxpy(1.0, A12, x2, y1);
             
             // y2 = A21*x1 + A22*x2
-            fasp_blas_dcsr_mxv(A21, x1, y2);
-            fasp_blas_dcsr_aAxpy(1.0, A22, x2, y2);
+            if (A21) fasp_blas_dcsr_mxv(A21, x1, y2);
+            if (A22) fasp_blas_dcsr_aAxpy(1.0, A22, x2, y2);
             
             break;
             
@@ -223,19 +223,19 @@ void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
             y3 = &(y[row1+row2]);
             
             // y1 = A11*x1 + A12*x2 + A13*x3 + y1
-            fasp_blas_dcsr_mxv(A11, x1, y1);
-            fasp_blas_dcsr_aAxpy(1.0, A12, x2, y1);
-            fasp_blas_dcsr_aAxpy(1.0, A13, x3, y1);
+            if (A11) fasp_blas_dcsr_mxv(A11, x1, y1);
+            if (A12) fasp_blas_dcsr_aAxpy(1.0, A12, x2, y1);
+            if (A13) fasp_blas_dcsr_aAxpy(1.0, A13, x3, y1);
             
             // y2 = A21*x1 + A22*x2 + A23*x3 + y2
-            fasp_blas_dcsr_mxv(A21, x1, y2);
-            fasp_blas_dcsr_aAxpy(1.0, A22, x2, y2);
-            fasp_blas_dcsr_aAxpy(1.0, A23, x3, y2);
+            if (A21) fasp_blas_dcsr_mxv(A21, x1, y2);
+            if (A22) fasp_blas_dcsr_aAxpy(1.0, A22, x2, y2);
+            if (A23) fasp_blas_dcsr_aAxpy(1.0, A23, x3, y2);
             
             // y3 = A31*x1 + A32*x2 + A33*x3 + y2
-            fasp_blas_dcsr_mxv(A31, x1, y3);
-            fasp_blas_dcsr_aAxpy(1.0, A32, x2, y3);
-            fasp_blas_dcsr_aAxpy(1.0, A33, x3, y3);
+            if (A31) fasp_blas_dcsr_mxv(A31, x1, y3);
+            if (A32) fasp_blas_dcsr_aAxpy(1.0, A32, x2, y3);
+            if (A33) fasp_blas_dcsr_aAxpy(1.0, A33, x3, y3);
             
             break;
             
