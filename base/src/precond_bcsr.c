@@ -164,6 +164,7 @@ void fasp_precond_sweeping (double *r,
                               void *data)
 {
 	
+    
 	precond_sweeping_data *precdata=(precond_sweeping_data *)data;
     
     INT NumLayers = precdata->NumLayers;
@@ -187,6 +188,8 @@ void fasp_precond_sweeping (double *r,
     // calculate the size and generate block local_r and local_z
     INT N=0;
     
+
+    
     for (l=0;l<NumLayers; l++) {
 
         local_r[l].row = A->blocks[l*NumLayers+l]->row;
@@ -199,6 +202,7 @@ void fasp_precond_sweeping (double *r,
         
     }
     
+
     temp_r.val = w;
     temp_e.val = w+N;
 	
@@ -206,6 +210,7 @@ void fasp_precond_sweeping (double *r,
 	fasp_array_cp(N, r, r_backup->val);
     fasp_array_cp(N, r, z);
 	//fasp_array_set(N, z, 0.0);
+    
 	
     // L^{-1}r
     for (l=0; l<NumLayers-1; l++){
@@ -236,6 +241,7 @@ void fasp_precond_sweeping (double *r,
         
     }
 
+    
     // D^{-1}L^{-1}r
     for (l=0; l<NumLayers; l++){
         
@@ -262,6 +268,7 @@ void fasp_precond_sweeping (double *r,
         }
         
     }
+    
     
     // L^{-t}D^{-1}L^{-1}u
     for (l=NumLayers-2; l>=0; l--){
@@ -291,9 +298,11 @@ void fasp_precond_sweeping (double *r,
         }
         
     }
+    
 	
 	//! restore r
 	fasp_array_cp(N, r_backup->val, r);
+    
 	
 }
 

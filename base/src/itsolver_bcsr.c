@@ -313,6 +313,7 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     fasp_gettime(&setup_start);
     
     void **local_LU = NULL;
+    INT l;
     
     
 #if WITH_UMFPACK
@@ -343,7 +344,7 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     precdata.local_LU = local_LU;
     precdata.local_index = local_index;
     precdata.r = fasp_dvec_create(b->row);
-    precdata.w = (REAL *)fasp_mem_calloc(2*b->row,sizeof(REAL));
+    precdata.w = (REAL *)fasp_mem_calloc(10*b->row,sizeof(REAL));
     
     precond prec; prec.data = &precdata;
     prec.fct = fasp_precond_sweeping;
