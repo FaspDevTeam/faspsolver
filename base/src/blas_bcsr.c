@@ -75,7 +75,7 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
             
             break;
             
-        case 4:
+        case 3:
             A11 = A->blocks[0];
             A12 = A->blocks[1];
             A13 = A->blocks[2];
@@ -199,7 +199,7 @@ void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
             
             break;
             
-        case 4:
+        case 3:
             A11 = A->blocks[0];
             A12 = A->blocks[1];
             A13 = A->blocks[2];
