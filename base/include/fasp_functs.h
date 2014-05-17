@@ -811,7 +811,7 @@ void fasp_amg_interp_em (dCSRmat *A,
 
 /*-------- In file: io.c --------*/
 
-void fasp_dcsrvec1_read (char *filename,
+void fasp_dcsrvec1_read (const char *filename,
                          dCSRmat *A,
                          dvector *b);
 
@@ -820,43 +820,43 @@ void fasp_dcsrvec2_read (char *filemat,
                          dCSRmat *A,
                          dvector *b );
 
-void fasp_dcsr_read (char *filename,
+void fasp_dcsr_read (const char *filename,
                      dCSRmat *A);
 
-void fasp_dcoo_read (char *filename,
+void fasp_dcoo_read (const char *filename,
                      dCSRmat *A);
 
-void fasp_dcoo1_read (char *filename,
+void fasp_dcoo1_read (const char *filename,
                       dCOOmat *A);
 
-void fasp_dcoo_shift_read (char *filename,
+void fasp_dcoo_shift_read (const char *filename,
                      dCSRmat *A);
 
-void fasp_dmtx_read (char *filename,
+void fasp_dmtx_read (const char *filename,
                      dCSRmat *A);
 
-void fasp_dmtxsym_read (char *filename,
+void fasp_dmtxsym_read (const char *filename,
                         dCSRmat *A);
 
-void fasp_dstr_read (char *filename,
+void fasp_dstr_read (const char *filename,
                      dSTRmat *A);
 
-void fasp_dbsr_read (char *filename,
+void fasp_dbsr_read (const char *filename,
                      dBSRmat *A);
 
-void fasp_dvecind_read (char *filename,
+void fasp_dvecind_read (const char *filename,
                         dvector *b);
 
-void fasp_dvec_read (char *filename,
+void fasp_dvec_read (const char *filename,
                      dvector *b);
 
-void fasp_ivecind_read (char *filename,
+void fasp_ivecind_read (const char *filename,
                         ivector *b);
 
-void fasp_ivec_read (char *filename,
+void fasp_ivec_read (const char *filename,
                      ivector *b);
 
-void fasp_dcsrvec1_write (char *filename,
+void fasp_dcsrvec1_write (const char *filename,
                           dCSRmat *A,
                           dvector *b);
 
@@ -865,22 +865,22 @@ void fasp_dcsrvec2_write (char *filemat,
                           dCSRmat *A,
                           dvector *b );
 
-void fasp_dcoo_write (char *filename,
+void fasp_dcoo_write (const char *filename,
                       dCSRmat *A);
 
-void fasp_dstr_write (char *filename,
+void fasp_dstr_write (const char *filename,
                       dSTRmat *A);
 
-void fasp_dbsr_write (char *filename,
+void fasp_dbsr_write (const char *filename,
                       dBSRmat *A);
 
-void fasp_dvec_write (char *filename,
+void fasp_dvec_write (const char *filename,
                       dvector *vec);
 
-void fasp_dvecind_write (char *filename,
+void fasp_dvecind_write (const char *filename,
                          dvector *vec);
 
-void fasp_ivec_write (char *filename,
+void fasp_ivec_write (const char *filename,
                       ivector *vec);
 
 void fasp_dvec_print (INT n,
@@ -902,13 +902,13 @@ void fasp_dcsr_write_coo (const char *filename,
 
 void fasp_dstr_print (dSTRmat *A);
 
-void fasp_matrix_read (char *filename,
+void fasp_matrix_read (const char *filename,
                        void *A);
 
-void fasp_matrix_read_bin (char *filename,
+void fasp_matrix_read_bin (const char *filename,
                            void *A);
 
-void fasp_matrix_write (char *filename,
+void fasp_matrix_write (const char *filename,
 					    void *A,
                         INT  flag);
 
@@ -939,7 +939,9 @@ INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
                                     itsolver_param *itparam,
                                     AMG_param *amgparam);
 
-INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b, dvector *x,
+INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
+                                       dvector *b,
+                                       dvector *x,
                                        itsolver_param *itparam,
                                        INT NumLayers,
                                        block_dCSRmat *Ai,
@@ -2741,6 +2743,6 @@ int fasp_umfpack_solve (dCSRmat *ptrA,
                    void *Numeric,
                    const int print_level);
 
-int umfpack_free_numeric (void *Numeric);
+int fasp_umfpack_free_numeric (void *Numeric);
 
 /* End of fasp_functs.h */

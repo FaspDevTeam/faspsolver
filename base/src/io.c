@@ -53,7 +53,7 @@ static void fasp_ivecind_write_b(FILE *fp, ivector *A);
 /*---------------------------------*/
 
 /**
- * \fn void fasp_dcsrvec1_read (char *filename, dCSRmat *A, dvector *b)
+ * \fn void fasp_dcsrvec1_read (const char *filename, dCSRmat *A, dvector *b)
  *
  * \brief Read A and b from a SINGLE disk file
  *
@@ -82,7 +82,7 @@ static void fasp_ivecind_write_b(FILE *fp, ivector *A);
  *
  * Modified by Chensong Zhang on 03/14/2012
  */
-void fasp_dcsrvec1_read (char *filename,
+void fasp_dcsrvec1_read (const char *filename,
                          dCSRmat *A,
                          dvector *b)
 {
@@ -242,7 +242,7 @@ void fasp_dcsrvec2_read (char *filemat,
 }
 
 /**
- * \fn void fasp_dcsr_read (char *filename, dCSRmat *A)
+ * \fn void fasp_dcsr_read (const char *filename, dCSRmat *A)
  *
  * \brief Read A from matrix disk file in IJ format
  *
@@ -252,7 +252,7 @@ void fasp_dcsrvec2_read (char *filemat,
  * \author Ziteng Wang
  * \date   12/25/2012
  */
-void fasp_dcsr_read (char *filename,
+void fasp_dcsr_read (const char *filename,
                      dCSRmat *A)
 {
     int  i,m,idata;
@@ -297,7 +297,7 @@ void fasp_dcsr_read (char *filename,
 }
 
 /**
- * \fn void fasp_dcoo_read (char *filename, dCSRmat *A)
+ * \fn void fasp_dcoo_read (const char *filename, dCSRmat *A)
  *
  * \brief Read A from matrix disk file in IJ format -- indices starting from 0
  *
@@ -313,7 +313,7 @@ void fasp_dcsr_read (char *filename,
  * \author Xuehai Huang, Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_dcoo_read (char *filename,
+void fasp_dcoo_read (const char *filename,
                      dCSRmat *A)
 {
     int  i,j,k,m,n,nnz;
@@ -348,7 +348,7 @@ void fasp_dcoo_read (char *filename,
 }
 
 /**
- * \fn void fasp_dcoo1_read (char *filename, dCOOmat *A)
+ * \fn void fasp_dcoo1_read (const char *filename, dCOOmat *A)
  *
  * \brief Read A from matrix disk file in IJ format -- indices starting from 0
  *
@@ -364,7 +364,7 @@ void fasp_dcoo_read (char *filename,
  * \author Xiaozhe Hu
  * \date   03/24/2013
  */
-void fasp_dcoo1_read (char *filename,
+void fasp_dcoo1_read (const char *filename,
                       dCOOmat *A)
 {
     int  i,j,k,m,n,nnz;
@@ -397,7 +397,7 @@ void fasp_dcoo1_read (char *filename,
 }
 
 /**
- * \fn void fasp_dcoo_shift_read (char *filename, dCSRmat *A)
+ * \fn void fasp_dcoo_shift_read (const char *filename, dCSRmat *A)
  *
  * \brief Read A from matrix disk file in IJ format -- indices starting from 0
  *
@@ -415,7 +415,7 @@ void fasp_dcoo1_read (char *filename,
  * \author Xiaozhe Hu
  * \date   04/01/2014
  */
-void fasp_dcoo_shift_read (char *filename,
+void fasp_dcoo_shift_read (const char *filename,
                      dCSRmat *A)
 {
     int  i,j,k,m,n,nnz;
@@ -450,7 +450,7 @@ void fasp_dcoo_shift_read (char *filename,
 }
 
 /**
- * \fn void fasp_dmtx_read (char *filename, dCSRmat *A)
+ * \fn void fasp_dmtx_read (const char *filename, dCSRmat *A)
  *
  * \brief Read A from matrix disk file in MatrixMarket general format
  *
@@ -467,7 +467,7 @@ void fasp_dcoo_shift_read (char *filename,
  * \author Chensong Zhang
  * \date   09/05/2011
  */
-void fasp_dmtx_read (char *filename,
+void fasp_dmtx_read (const char *filename,
                      dCSRmat *A)
 {
     int  i,j,m,n,nnz;
@@ -510,7 +510,7 @@ void fasp_dmtx_read (char *filename,
 }
 
 /**
- * \fn void fasp_dmtxsym_read (char *filename, dCSRmat *A)
+ * \fn void fasp_dmtxsym_read (const char *filename, dCSRmat *A)
  *
  * \brief Read A from matrix disk file in MatrixMarket sym format
  *
@@ -529,7 +529,7 @@ void fasp_dmtx_read (char *filename,
  * \author Chensong Zhang
  * \date   09/02/2011
  */
-void fasp_dmtxsym_read (char *filename,
+void fasp_dmtxsym_read (const char *filename,
                         dCSRmat *A)
 {
     int  i,j,m,n,nnz;
@@ -583,7 +583,7 @@ void fasp_dmtxsym_read (char *filename,
 }
 
 /**
- * \fn void fasp_dstr_read (char *filename, dSTRmat *A)
+ * \fn void fasp_dstr_read (const char *filename, dSTRmat *A)
  *
  * \brief Read A from a disk file in dSTRmat format
  *
@@ -606,7 +606,7 @@ void fasp_dmtxsym_read (char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_dstr_read (char *filename,
+void fasp_dstr_read (const char *filename,
                      dSTRmat *A)
 {
     int  nx, ny, nz, nxy, ngrid, nband, nc, offset;
@@ -662,7 +662,7 @@ void fasp_dstr_read (char *filename,
 }
 
 /**
- * \fn void fasp_dbsr_read (char *filename, dBSRmat *A)
+ * \fn void fasp_dbsr_read (const char *filename, dBSRmat *A)
  *
  * \brief Read A from a disk file in dBSRmat format
  *
@@ -686,7 +686,7 @@ void fasp_dstr_read (char *filename,
  * \author Xiaozhe Hu
  * \date   10/29/2010
  */
-void fasp_dbsr_read (char *filename,
+void fasp_dbsr_read (const char *filename,
                      dBSRmat *A)
 {
     int  ROW, COL, NNZ, nb, storage_manner;
@@ -739,7 +739,7 @@ void fasp_dbsr_read (char *filename,
 }
 
 /**
- * \fn void fasp_dvecind_read (char *filename, dvector *b)
+ * \fn void fasp_dvecind_read (const char *filename, dvector *b)
  *
  * \brief Read b from matrix disk file
  *
@@ -755,7 +755,7 @@ void fasp_dbsr_read (char *filename,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_dvecind_read (char *filename,
+void fasp_dvecind_read (const char *filename,
                         dvector *b)
 {
     INT  i, n;
@@ -791,7 +791,7 @@ void fasp_dvecind_read (char *filename,
 }
 
 /**
- * \fn void fasp_dvec_read(char *filename, dvector *b)
+ * \fn void fasp_dvec_read(const char *filename, dvector *b)
  *
  * \brief Read b from a disk file in array format
  *
@@ -805,7 +805,7 @@ void fasp_dvecind_read (char *filename,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_dvec_read (char *filename,
+void fasp_dvec_read (const char *filename,
                      dvector *b)
 {
     
@@ -841,7 +841,7 @@ void fasp_dvec_read (char *filename,
 }
 
 /**
- * \fn void fasp_ivecind_read (char *filename, ivector *b)
+ * \fn void fasp_ivecind_read (const char *filename, ivector *b)
  *
  * \brief Read b from matrix disk file
  *
@@ -855,7 +855,7 @@ void fasp_dvec_read (char *filename,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_ivecind_read (char *filename,
+void fasp_ivecind_read (const char *filename,
                         ivector *b)
 {
     int i, n, index, value;
@@ -881,7 +881,7 @@ void fasp_ivecind_read (char *filename,
 }
 
 /**
- * \fn void fasp_ivec_read (char *filename, ivector *b)
+ * \fn void fasp_ivec_read (const char *filename, ivector *b)
  *
  * \brief Read b from a disk file in array format
  *
@@ -895,7 +895,7 @@ void fasp_ivecind_read (char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_ivec_read (char *filename,
+void fasp_ivec_read (const char *filename,
                      ivector *b)
 {
     int i, n, value;
@@ -922,7 +922,7 @@ void fasp_ivec_read (char *filename,
 }
 
 /**
- * \fn void fasp_dcsrvec1_write (char *filename, dCSRmat *A, dvector *b)
+ * \fn void fasp_dcsrvec1_write (const char *filename, dCSRmat *A, dvector *b)
  *
  * \brief Write A and b to a SINGLE disk file
  *
@@ -946,7 +946,7 @@ void fasp_ivec_read (char *filename,
  *
  * Modified by Chensong on 12/26/2012
  */
-void fasp_dcsrvec1_write (char *filename,
+void fasp_dcsrvec1_write (const char *filename,
                           dCSRmat *A,
                           dvector *b)
 {
@@ -1074,7 +1074,7 @@ void fasp_dcsrvec2_write (char *filemat,
 }
 
 /**
- * \fn void fasp_dcoo_write (char *filename, dCSRmat *A)
+ * \fn void fasp_dcoo_write (const char *filename, dCSRmat *A)
  *
  * \brief Write a matrix to disk file in IJ format (coordinate format)
  *
@@ -1094,7 +1094,7 @@ void fasp_dcsrvec2_write (char *filemat,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_dcoo_write (char *filename,
+void fasp_dcoo_write (const char *filename,
                       dCSRmat *A)
 {
     const INT m = A->row, n = A->col;
@@ -1119,7 +1119,7 @@ void fasp_dcoo_write (char *filename,
 }
 
 /**
- * \fn void fasp_dstr_write (char *filename, dSTRmat *A)
+ * \fn void fasp_dstr_write (const char *filename, dSTRmat *A)
  *
  * \brief Write a dSTRmat to a disk file
  *
@@ -1134,7 +1134,7 @@ void fasp_dcoo_write (char *filename,
  * \author Shiquan Zhang
  * \date   03/29/2010
  */
-void fasp_dstr_write (char *filename,
+void fasp_dstr_write (const char *filename,
                       dSTRmat *A)
 {
     const INT nx = A->nx, ny = A->ny, nz = A->nz;
@@ -1179,7 +1179,7 @@ void fasp_dstr_write (char *filename,
 }
 
 /**
- * \fn void fasp_dbsr_write (char *filename, dBSRmat *A)
+ * \fn void fasp_dbsr_write (const char *filename, dBSRmat *A)
  *
  * \brief Write a dBSRmat to a disk file
  *
@@ -1194,7 +1194,7 @@ void fasp_dstr_write (char *filename,
  * \author Shiquan Zhang
  * \date   10/29/2010
  */
-void fasp_dbsr_write (char *filename,
+void fasp_dbsr_write (const char *filename,
                       dBSRmat *A)
 {
     const INT ROW = A->ROW, COL = A->COL, NNZ = A->NNZ;
@@ -1239,7 +1239,7 @@ void fasp_dbsr_write (char *filename,
 }
 
 /**
- * \fn void fasp_dvec_write (char *filename, dvector *vec)
+ * \fn void fasp_dvec_write (const char *filename, dvector *vec)
  *
  * \brief Write a dvector to disk file
  *
@@ -1249,7 +1249,7 @@ void fasp_dbsr_write (char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_dvec_write (char *filename,
+void fasp_dvec_write (const char *filename,
                       dvector *vec)
 {
     INT m = vec->row, i;
@@ -1271,7 +1271,7 @@ void fasp_dvec_write (char *filename,
 }
 
 /**
- * \fn void fasp_dvecind_write (char *filename, dvector *vec)
+ * \fn void fasp_dvecind_write (const char *filename, dvector *vec)
  *
  * \brief Write a dvector to disk file in coordinate format
  *
@@ -1285,7 +1285,7 @@ void fasp_dvec_write (char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_dvecind_write (char *filename,
+void fasp_dvecind_write (const char *filename,
                          dvector *vec)
 {
     INT m = vec->row, i;
@@ -1306,7 +1306,7 @@ void fasp_dvecind_write (char *filename,
 }
 
 /**
- * \fn void fasp_ivec_write (char *filename, ivector *vec)
+ * \fn void fasp_ivec_write (const char *filename, ivector *vec)
  *
  * \brief Write a ivector to disk file in coordinate format
  *
@@ -1320,7 +1320,7 @@ void fasp_dvecind_write (char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_ivec_write (char *filename,
+void fasp_ivec_write (const char *filename,
                       ivector *vec)
 {
     INT m = vec->row, i;
@@ -1589,7 +1589,7 @@ void fasp_dstr_print (dSTRmat *A)
  *
  * Modified by Chensong Zhang on 05/01/2013
  */
-void fasp_matrix_read (char *filename,
+void fasp_matrix_read (const char *filename,
                        void *A)
 {
     
@@ -1694,7 +1694,7 @@ void fasp_matrix_read (char *filename,
  *
  * Modified by Chensong Zhang on 05/01/2013: Use it to read binary files!!!
  */
-void fasp_matrix_read_bin (char *filename,
+void fasp_matrix_read_bin (const char *filename,
                            void *A)
 {
 	INT index, flag;
@@ -1768,7 +1768,7 @@ void fasp_matrix_read_bin (char *filename,
  * \author Ziteng Wang
  * \date   12/24/2012
  */
-void fasp_matrix_write (char *filename,
+void fasp_matrix_write (const char *filename,
 					    void *A,
                         INT  flag)
 {
