@@ -2,7 +2,7 @@
      170 ./base/include/doxygen.h
     1117 ./base/include/fasp.h
      632 ./base/include/fasp_block.h
-    2746 ./base/include/fasp_functs.h
+    2748 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
     5818 ./base/include/malloc.c.h
      230 ./base/include/messages.h
@@ -45,7 +45,7 @@
     1386 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
     2960 ./base/src/io.c
-     380 ./base/src/itsolver_bcsr.c
+     381 ./base/src/itsolver_bcsr.c
      485 ./base/src/itsolver_bsr.c
      590 ./base/src/itsolver_csr.c
      363 ./base/src/itsolver_mf.c
@@ -67,7 +67,7 @@
      295 ./base/src/pgmres_mf.c
     1284 ./base/src/pminres.c
      458 ./base/src/pminres_mf.c
-     302 ./base/src/precond_bcsr.c
+     311 ./base/src/precond_bcsr.c
      630 ./base/src/precond_bsr.c
      598 ./base/src/precond_csr.c
     1732 ./base/src/precond_str.c
@@ -106,4 +106,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   85378 total
+   85390 total
