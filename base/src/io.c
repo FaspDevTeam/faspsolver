@@ -140,7 +140,8 @@ void fasp_dcsrvec1_read (const char *filename,
 }
 
 /**
- * \fn void fasp_dcsrvec2_read (char *filemat, char *filerhs, dCSRmat *A, dvector *b)
+ * \fn void fasp_dcsrvec2_read (const char *filemat, const char *filerhs, 
+ *                              dCSRmat *A, dvector *b)
  *
  * \brief Read A and b from two disk files
  *
@@ -173,8 +174,8 @@ void fasp_dcsrvec1_read (const char *filename,
  * Modified by Chensong Zhang on 2011/03/01
  * Modified by Chensong Zhang on 2012/01/05
  */
-void fasp_dcsrvec2_read (char *filemat,
-                         char *filerhs,
+void fasp_dcsrvec2_read (const char *filemat,
+                         const char *filerhs,
                          dCSRmat *A,
                          dvector *b )
 {
@@ -791,7 +792,7 @@ void fasp_dvecind_read (const char *filename,
 }
 
 /**
- * \fn void fasp_dvec_read(const char *filename, dvector *b)
+ * \fn void fasp_dvec_read (const char *filename, dvector *b)
  *
  * \brief Read b from a disk file in array format
  *
@@ -992,7 +993,8 @@ void fasp_dcsrvec1_write (const char *filename,
 }
 
 /**
- * \fn void fasp_dcsrvec2_write (char *filemat, char *filerhs, dCSRmat *A, dvector *b)
+ * \fn void fasp_dcsrvec2_write (const char *filemat, const char *filerhs, 
+ *                               dCSRmat *A, dvector *b)
  *
  * \brief Write A and b to two disk files
  *
@@ -1023,8 +1025,8 @@ void fasp_dcsrvec1_write (const char *filename,
  * \date   05/19/2012
  *
  */
-void fasp_dcsrvec2_write (char *filemat,
-                          char *filerhs,
+void fasp_dcsrvec2_write (const char *filemat,
+                          const char *filerhs,
                           dCSRmat *A,
                           dvector *b )
 {
@@ -1561,7 +1563,7 @@ void fasp_dstr_print (dSTRmat *A)
 }
 
 /**
- * \fn fasp_matrix_read (char *filemat, void *A)
+ * \fn fasp_matrix_read (const char *filemat, void *A)
  *
  * \brief Read matrix from different kinds of formats from both ASCII and binary files
  *
@@ -1682,7 +1684,7 @@ void fasp_matrix_read (const char *filename,
 }
 
 /**
- * \fn void fasp_matrix_read_bin (char *filemat, void *A)
+ * \fn void fasp_matrix_read_bin (const char *filemat, void *A)
  *
  * \brief Read matrix in binary format
  *
@@ -1745,7 +1747,7 @@ void fasp_matrix_read_bin (const char *filename,
 }
 
 /**
- * \fn fasp_matrix_write (char *filemat, void *A, INT flag)
+ * \fn fasp_matrix_write (const char *filemat, void *A, INT flag)
  *
  * \brief write matrix from different kinds of formats from both ASCII and binary files
  *
@@ -1837,7 +1839,7 @@ void fasp_matrix_write (const char *filename,
 }
 
 /**
- * \fn fasp_vector_read (char *filerhs, void *b)
+ * \fn fasp_vector_read (const char *filerhs, void *b)
  *
  * \brief Read RHS vector from different kinds of formats from both ASCII and binary files
  *
@@ -1861,7 +1863,7 @@ void fasp_matrix_write (const char *filename,
  * \author Ziteng Wang
  * \date   12/24/2012
  */
-void fasp_vector_read (char *filerhs,
+void fasp_vector_read (const char *filerhs,
                        void *b)
 {
     
@@ -1930,7 +1932,7 @@ void fasp_vector_read (char *filerhs,
 }
 
 /**
- * \fn fasp_vector_write (char *filerhs, void *b, INT flag)
+ * \fn fasp_vector_write (const char *filerhs, void *b, INT flag)
  *
  * \brief write RHS vector from different kinds of formats in both ASCII and binary files
  *
@@ -1958,7 +1960,7 @@ void fasp_vector_read (char *filerhs,
  *
  * Modified by Chensong Zhang on 05/02/2013: fix a bug when writing in binary format
  */
-void fasp_vector_write (char *filerhs,
+void fasp_vector_write (const char *filerhs,
                         void *b,
                         INT  flag)
 {

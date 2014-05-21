@@ -778,7 +778,7 @@ void fasp_precond_null (precond *pcdata);
 
 SHORT fasp_param_check (input_param *inparam);
 
-void fasp_param_input (char *filenm, 
+void fasp_param_input (const char *filenm,
                        input_param *inparam);
 
 
@@ -815,8 +815,8 @@ void fasp_dcsrvec1_read (const char *filename,
                          dCSRmat *A,
                          dvector *b);
 
-void fasp_dcsrvec2_read (char *filemat,
-                         char *filerhs,
+void fasp_dcsrvec2_read (const char *filemat,
+                         const char *filerhs,
                          dCSRmat *A,
                          dvector *b );
 
@@ -860,8 +860,8 @@ void fasp_dcsrvec1_write (const char *filename,
                           dCSRmat *A,
                           dvector *b);
 
-void fasp_dcsrvec2_write (char *filemat,
-                          char *filerhs,
+void fasp_dcsrvec2_write (const char *filemat,
+                          const char *filerhs,
                           dCSRmat *A,
                           dvector *b );
 
@@ -912,10 +912,10 @@ void fasp_matrix_write (const char *filename,
 					    void *A,
                         INT  flag);
 
-void fasp_vector_read (char *filerhs,
+void fasp_vector_read (const char *filerhs,
                        void *b);
 
-void fasp_vector_write (char *filerhs,
+void fasp_vector_write (const char *filerhs,
                         void *b,
                         INT  flag);
 
@@ -1103,7 +1103,7 @@ void fasp_mem_free (void * mem);
 void fasp_mem_usage ();
 
 SHORT fasp_mem_check (void *ptr, 
-                      char *message, 
+                      const char *message, 
                       INT ERR);
 
 SHORT fasp_mem_iludata_check (ILU_data *iludata);

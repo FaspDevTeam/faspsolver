@@ -191,14 +191,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         
         // omega = (t,s)/(t,t)
         tempr = fasp_blas_array_dotprod(m,t,t);
-        
-        if ( ABS(tempr) > SMALLREAL ) {
-            omega = fasp_blas_array_dotprod(m,s,t)/tempr;
-        }
-        else {
-            omega = 0.0;
-            if ( print_level >= PRINT_MORE ) ITS_DIVZERO;
-        }
+        omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         
         // delu = alpha pp + omega sp
         fasp_blas_array_axpby(m,alpha,pp,omega,sp);
@@ -214,7 +207,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         temp2 = temp1;
         temp1 = fasp_blas_array_dotprod(m,r,rho);
         
-        if ( ABS(temp2) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
@@ -537,14 +530,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         
         // omega = (t,s)/(t,t)
         tempr = fasp_blas_array_dotprod(m,t,t);
-        
-        if ( ABS(tempr) > SMALLREAL ) {
-            omega = fasp_blas_array_dotprod(m,s,t)/tempr;
-        }
-        else {
-            omega = 0.0;
-            if ( print_level >= PRINT_MORE ) ITS_DIVZERO;
-        }
+        omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         
         // delu = alpha pp + omega sp
         fasp_blas_array_axpby(m,alpha,pp,omega,sp);
@@ -560,7 +546,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         temp2 = temp1;
         temp1 = fasp_blas_array_dotprod(m,r,rho);
         
-        if ( ABS(temp2) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
@@ -883,14 +869,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         
         // omega = (t,s)/(t,t)
         tempr = fasp_blas_array_dotprod(m,t,t);
-        
-        if ( ABS(tempr) > SMALLREAL ) {
-            omega = fasp_blas_array_dotprod(m,s,t)/tempr;
-        }
-        else {
-            omega = 0.0;
-            if ( print_level >= PRINT_MORE ) ITS_DIVZERO;
-        }
+        omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         
         // delu = alpha pp + omega sp
         fasp_blas_array_axpby(m,alpha,pp,omega,sp);
@@ -906,7 +885,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         temp2 = temp1;
         temp1 = fasp_blas_array_dotprod(m,r,rho);
         
-        if ( ABS(temp2) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {
@@ -1229,14 +1208,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         
         // omega = (t,s)/(t,t)
         tempr = fasp_blas_array_dotprod(m,t,t);
-        
-        if ( ABS(tempr) > SMALLREAL ) {
-            omega = fasp_blas_array_dotprod(m,s,t)/tempr;
-        }
-        else {
-            omega = 0.0;
-            if ( print_level >= PRINT_MORE ) ITS_DIVZERO;
-        }
+        omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         
         // delu = alpha pp + omega sp
         fasp_blas_array_axpby(m,alpha,pp,omega,sp);
@@ -1252,7 +1224,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         temp2 = temp1;
         temp1 = fasp_blas_array_dotprod(m,r,rho);
         
-        if ( ABS(temp2) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
         else {

@@ -48,15 +48,14 @@ void fasp_dcsr_subplot (const dCSRmat *A,
     INT m = A->row;
     INT n = A->col;
     INT i, j, k, minmn=MIN(m,n);
-    char *map;
     
     if (size>minmn) size=minmn;
     
     printf("Writing matrix pattern to `%s'...\n",filename);
     
-    map = (char *)fasp_mem_calloc(size * size, sizeof(char));
-    
+    char *map = (char *)fasp_mem_calloc(size * size, sizeof(char));
     memset(map, 0x0F, size * size);
+    
     for (i = 0; i < size; ++i) {
         for (j = A->IA[i]; j < A->IA[i+1]; ++j) {
             if (A->JA[j]<size) {
@@ -116,13 +115,11 @@ void fasp_dbsr_subplot (const dBSRmat *A,
     INT row,col,i, j, k,l, minmn=nb*MIN(m,n);
     REAL val;
     
-    char *map;
-    
     if (size>minmn) size=minmn;
     
     printf("Writing matrix pattern to `%s'...\n",filename);
     
-    map = (char *)fasp_mem_calloc(size * size, sizeof(char));
+    char *map = (char *)fasp_mem_calloc(size * size, sizeof(char));
     
     memset(map, 0x0F, size * size);
     

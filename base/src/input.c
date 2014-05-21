@@ -79,7 +79,7 @@ SHORT fasp_param_check (input_param *inparam)
 }
 
 /**
- * \fn void fasp_param_input (char *filenm, input_param *inparam)
+ * \fn void fasp_param_input (const char *filenm, input_param *inparam)
  *
  * \brief Read input parameters from disk file
  *
@@ -94,7 +94,7 @@ SHORT fasp_param_check (input_param *inparam)
  * Modified by Ludmil Zikatanov on 02/15/2013
  * Modified by Chensong Zhang on 05/10/2013: add a new input.
  */
-void fasp_param_input (char *filenm, 
+void fasp_param_input (const char *filenm,
                        input_param *inparam)
 {
     char     buffer[500]; // Note: max number of char for each line!
