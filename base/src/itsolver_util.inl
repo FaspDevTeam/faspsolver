@@ -10,7 +10,7 @@
 #define ITS_FACONV  printf("### WARNING: False convergence!\n")
 
 //! Warning for solution close to zero
-#define ITS_ZEROSOL printf("### WARNING: Iteration stopped due to the solution is close to zero!\n")
+#define ITS_ZEROSOL printf("### WARNING: Iteration stopped due to the solution is almost zero! %s: %d\n", __FILE__, __LINE__)
 
 //! Warning for iteration restarted
 #define ITS_RESTART printf("### WARNING: Iteration restarted due to stagnation!\n")
@@ -19,10 +19,10 @@
 #define ITS_STAGGED printf("### WARNING: Iteration stopped due to staggnation!\n")
 
 //! Warning for tolerance practically close to zero
-#define ITS_ZEROTOL printf("### WARNING: The tolerence might be too small!\n")
+#define ITS_ZEROTOL printf("### WARNING: The tolerence might be too small! %s: %d\n", __FILE__, __LINE__)
 
 //! Warning for divided by zero
-#define ITS_DIVZERO printf("### WARNING: Divided by zero!\n")
+#define ITS_DIVZERO printf("### WARNING: Divided by zero! %s: %d\n", __FILE__, __LINE__)
 
 //! Warning for actual relative residual
 #define ITS_REALRES(relres) printf("### WARNING: The actual relative residual = %e!\n",(relres))
@@ -31,10 +31,10 @@
 #define ITS_COMPRES(relres) printf("### WARNING: The computed relative residual = %e!\n",(relres))
 
 //! Warning for too small sp 
-#define ITS_SMALLSP printf("### WARNING: The sp is too small!\n")
+#define ITS_SMALLSP printf("### WARNING: The sp is too small! %s: %d\n", __FILE__, __LINE__)
 
 //! Warning for restore previous iteration 
-#define ITS_RESTORE(iter) printf("### WARNING: Restore iteration %d!!!",(iter));
+#define ITS_RESTORE(iter) printf("### WARNING: Restore iteration %d!",(iter));
 
 //! Output relative difference and residual
 #define ITS_DIFFRES(reldiff,relres) printf("||u-u'|| = %e and the comp. rel. res. = %e.\n",(reldiff),(relres));

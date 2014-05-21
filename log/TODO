@@ -176,10 +176,10 @@ Bug Fixes
 [ 1.2.0 ] Windows release version: MINRES gives wrong results, check compiler
 [ 1.2.4 ] MUMPS: 64bit version does not work, replaced with a new version
 [ 1.2.5 ] VGMRES: "restart" could become too big
+[ 1.5.2 ] divide by zero in BiCGstab, see regression.c
 [       ] AMG setup: number of DOF could drop dramatically
 [       ] different results on different platforms
 [       ] problems with BSR test function: see testbsr.c
 [       ] check convergence for problems from MM: see regression_mm.c
 [       ] memory allocation problem in testbsr.c: during ILU setup
-[       ] divide by zero in BiCGstab, see regression.c
 [       ] MinRes sometimes takes too many iterations, see regression.c

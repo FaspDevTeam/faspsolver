@@ -175,7 +175,7 @@ void fasp_mem_usage ()
 }    
 
 /**
- * \fn SHORT fasp_mem_check (void * ptr, char *message, const INT ERR)
+ * \fn SHORT fasp_mem_check (void * ptr, const char *message, const INT ERR)
  *
  * \brief Check wether a point is null or not. 
  *
@@ -189,7 +189,7 @@ void fasp_mem_usage ()
  * \date   11/16/2009
  */
 SHORT fasp_mem_check (void *ptr, 
-                      char *message, 
+                      const char *message, 
                       INT ERR)
 {    
     if ( ptr == NULL ) {
