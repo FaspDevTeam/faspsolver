@@ -36,7 +36,7 @@
     1144 ./base/src/formats.c
       80 ./base/src/givens.c
     1011 ./base/src/gmg_poisson.c
-     751 ./base/src/graphics.c
+     748 ./base/src/graphics.c
      422 ./base/src/ilu_setup_bsr.c
      182 ./base/src/ilu_setup_csr.c
     1258 ./base/src/ilu_setup_str.c
@@ -44,7 +44,7 @@
      754 ./base/src/input.c
     1386 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
-    2960 ./base/src/io.c
+    2962 ./base/src/io.c
      381 ./base/src/itsolver_bcsr.c
      485 ./base/src/itsolver_bsr.c
      590 ./base/src/itsolver_csr.c
@@ -57,7 +57,7 @@
      126 ./base/src/mgrecur.c
      391 ./base/src/ordering.c
      970 ./base/src/parameters.c
-    1449 ./base/src/pbcgs.c
+    1421 ./base/src/pbcgs.c
      408 ./base/src/pbcgs_mf.c
      907 ./base/src/pcg.c
      337 ./base/src/pcg_mf.c
@@ -101,9 +101,9 @@
      465 ./base/src/vec.c
      300 ./base/src/wrapper.c
       78 ./base/src/aggregation_bsr.inl
-     478 ./base/src/aggregation_csr.inl
+     480 ./base/src/aggregation_csr.inl
     2302 ./base/src/gmg_util.inl
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   85390 total
+   85363 total

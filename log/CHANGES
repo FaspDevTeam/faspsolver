@@ -1,10 +1,10 @@
 File Name: CHANGES
 
-05/21/2014 FASP 1.5.2:
+05/23/2014 FASP 1.5.2:
 - Update some more 'char *' to 'const char *'.
 - Fix BiCGstab divided by zero problem.
+- Fix pairwise aggregation core dumped bug caused by number of passes.
 - Update webpage.
-- Fix pairwise aggregation core dumped caused by number pass.
 
 05/17/2014 FASP 1.5.1:
 - Seperate factorization and solve for UMFpack.
