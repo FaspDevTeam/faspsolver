@@ -426,6 +426,7 @@ static void aggregation_coarsening (AMG_data *mgl,
 {
     INT i, j, num_agg, aggindex;
     INT pair_number = param->pair_number;
+    INT dopass = 0;
 
     dCSRmat tmpA = mgl[level].A;
 
@@ -451,16 +452,17 @@ static void aggregation_coarsening (AMG_data *mgl,
 		    fasp_dcsr_free(&mgl[level].P);
 		    fasp_dcsr_free(&mgl[level].R);
 		}
+        dopass ++;
 	}
 
     // global aggregation index 
-	if ( pair_number > 1 ) {
+	if ( dopass > 1 ) {
 		for ( i = 0; i < mgl[level].A.row; ++i ) {
 			aggindex = vertice[level].val[i];
 
 			if ( aggindex < 0) continue;
 
-			for ( j = 1; j < pair_number; ++j ) aggindex = vertice[level+j].val[aggindex];
+			for ( j = 1; j < dopass; ++j ) aggindex = vertice[level+j].val[aggindex];
 
 			vertice[level].val[i] = aggindex;
 		}
@@ -470,7 +472,7 @@ static void aggregation_coarsening (AMG_data *mgl,
   
    /*-- clean memory --*/ 
    fasp_dcsr_free(&mgl[level+1].A);
-   for ( i = 1; i < pair_number; ++i ) fasp_ivec_free(&vertice[level+i]); 
+   for ( i = 1; i < dopass; ++i ) fasp_ivec_free(&vertice[level+i]); 
 }
 
 /*---------------------------------*/
