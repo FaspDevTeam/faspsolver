@@ -530,7 +530,6 @@ static void smooth_agg (dCSRmat *A,
                 }
             }
 #ifdef _OPENMP
-            }
         }
 #endif
         // copy structure from N (filtered A)
