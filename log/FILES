@@ -12,7 +12,7 @@
      131 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
      432 ./base/src/amg_setup_rs.c
-     585 ./base/src/amg_setup_sa.c
+     584 ./base/src/amg_setup_sa.c
      462 ./base/src/amg_setup_ua.c
      317 ./base/src/amg_solve.c
      807 ./base/src/amlirecur.c
@@ -101,9 +101,9 @@
      465 ./base/src/vec.c
      300 ./base/src/wrapper.c
       78 ./base/src/aggregation_bsr.inl
-     480 ./base/src/aggregation_csr.inl
+     479 ./base/src/aggregation_csr.inl
     2302 ./base/src/gmg_util.inl
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   85363 total
+   85361 total

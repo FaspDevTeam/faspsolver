@@ -263,8 +263,8 @@ static void form_tentative_p (ivector *vertices,
 }
 
 /**
- * \fn static void pairwise_aggregation (dCSRmat *A,
- *                                       INT pair,
+ * \fn static void pairwise_aggregation (const dCSRmat *A,
+ *                                       const INT pair,
  *                                       ivector *vertices, 
  *                                       INT *num_aggregations)
  *
@@ -279,20 +279,21 @@ static void form_tentative_p (ivector *vertices,
  * \date   04/21/2014
  */
 static void pairwise_aggregation (const dCSRmat * A,
-                                  INT pair,
+                                  const INT pair,
                                   ivector *vertices,
                                   INT *num_aggregations)
 {
-    INT row  = A->row;
-    INT *AIA = A->IA;
-    INT *AJA = A->JA;
+    const INT row  = A->row;
+    const REAL k_tg = 6.75;
+
+    INT  *AIA  = A->IA;
+    INT  *AJA  = A->JA;
     REAL *Aval = A->val;
+
     INT i, j, row_start, row_end;
     REAL sum;
 
-    REAL k_tg = 6.75;
-
-    /*---------------------------------------------------------- */
+    /*-----------------------------------------------------------*/
     /* Step 1.select very strong diagnoal dominate row (vertices)*/ 
 	/*        and store in G0.                                   */
     /*-----------------------------------------------------------*/
@@ -324,37 +325,29 @@ static void pairwise_aggregation (const dCSRmat * A,
     /*-------------------------------------------------------*/
     /* Step 2. computate row sum (off-diagonal) for each vertice*/
     /*-------------------------------------------------------*/
-    REAL *s;
-
-    s = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+    REAL *s = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
 
     for ( i = 0; i < row; i++ ) {
         s[i] = 0.0;
-        row_start = AIA[i];
-		row_end = AIA[i+1];
 
-        if (vertices->val[i] == -5) continue;
+        if ( vertices->val[i] == -5 ) continue;
 
+        row_start = AIA[i]; row_end = AIA[i+1];
         for ( j = row_start + 1; j < row_end; j++ ) s[i] -= Aval[j];
     }
 
     /*------------------------------------------*/
     /* Step 3. start the pairwise aggregation   */
     /*------------------------------------------*/
-    REAL mu;
-    REAL min_mu;
-    REAL aii;
-    REAL ajj;
-    REAL aij;
     INT  col,index;
-
-    /* temp var for comput mu */
+    REAL mu, min_mu, aii, ajj, aij;
     REAL temp1, temp2, temp3, temp4;
     
     *num_aggregations = 0;
 
     for ( i = 0; i < row; i++ ) {
-        if ( vertices->val[i] != -1) continue;
+
+        if ( vertices->val[i] != -1 ) continue;
         
         aij = 0.0;
         min_mu = 1000.0;
@@ -382,13 +375,13 @@ static void pairwise_aggregation (const dCSRmat * A,
 
             if ( min_mu > mu ) {
                 min_mu = mu;
-                index   = col;
+                index  = col;
             }
         }
 
         *num_aggregations += 1;
         if ( min_mu <= k_tg ) {
-            vertices->val[i] = *num_aggregations - 1;
+            vertices->val[i]     = *num_aggregations - 1;
             vertices->val[index] = *num_aggregations - 1;
         }
 		else {
@@ -403,7 +396,7 @@ static void pairwise_aggregation (const dCSRmat * A,
 /**
  * \fn static void aggregation_coarsening (AMG_data *mgl,
  *                                         AMG_param *param,
- *                                         INT level,
+ *                                         const INT level,
  *                                         ivector *vertice, 
  *                                         INT *num_aggregations)
  *
@@ -420,47 +413,51 @@ static void pairwise_aggregation (const dCSRmat * A,
  */
 static void aggregation_coarsening (AMG_data *mgl, 
                                     AMG_param *param, 
-                                    INT level, 
+                                    const INT level, 
                                     ivector *vertice, 
                                     INT *num_aggregations)
 {
-    INT i, j, num_agg, aggindex;
-    INT pair_number = param->pair_number;
-    INT dopass = 0;
+    const INT pair_number = param->pair_number;
 
-    dCSRmat tmpA = mgl[level].A;
+    dCSRmat   *ptrA = &mgl[level].A;
+    INT       i, j, num_agg, aggindex;
+    INT       dopass = 0;
+    INT       lvl = level;
 
-    for ( i = 0; i < pair_number; ++i ) {
+    for ( i = 1; i <= pair_number; ++i ) {
+
         /*-- generate aggregations by pairwise matching --*/
-        pairwise_aggregation(&tmpA, i+1, &vertice[level+i], &num_agg);
+        pairwise_aggregation(ptrA, i, &vertice[lvl], &num_agg);
 
-        if ( i < pair_number-1 ) {
+        if ( i < pair_number ) {
             /*-- Form Prolongation --*/
-            form_tentative_p(&vertice[level+i], &mgl[level].P, &mgl[0], level+1, num_agg);
+            form_tentative_p(&vertice[lvl], &mgl[lvl].P, &mgl[0], lvl+1, num_agg);
         
             /*-- Perform aggressive coarsening only up to the specified level --*/
-            if ( mgl[level].P.col < 20 ) break; // If coarse < 20, stop!!!
+            if ( mgl[lvl].P.col < MIN_CDOF ) break;
         
             /*-- Form resitriction --*/
-            fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
+            fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
         
             /*-- Form coarse level stiffness matrix --*/
-            fasp_blas_dcsr_rap_agg(&mgl[level].R, &tmpA, &mgl[level].P, &mgl[level+1].A);
+            fasp_blas_dcsr_rap_agg(&mgl[lvl].R, ptrA, &mgl[lvl].P, &mgl[lvl+1].A);
 
-		    tmpA = mgl[level+1].A;
+		    ptrA = &mgl[lvl+1].A;
 
-		    fasp_dcsr_free(&mgl[level].P);
-		    fasp_dcsr_free(&mgl[level].R);
+		    fasp_dcsr_free(&mgl[lvl].P);
+		    fasp_dcsr_free(&mgl[lvl].R);
 		}
-        dopass ++;
+
+        lvl ++; dopass ++;
+
 	}
 
-    // global aggregation index 
+    // Form global aggregation indices 
 	if ( dopass > 1 ) {
 		for ( i = 0; i < mgl[level].A.row; ++i ) {
 			aggindex = vertice[level].val[i];
 
-			if ( aggindex < 0) continue;
+			if ( aggindex < 0 ) continue;
 
 			for ( j = 1; j < dopass; ++j ) aggindex = vertice[level+j].val[aggindex];
 
@@ -471,8 +468,10 @@ static void aggregation_coarsening (AMG_data *mgl,
    *num_aggregations = num_agg;
   
    /*-- clean memory --*/ 
-   fasp_dcsr_free(&mgl[level+1].A);
-   for ( i = 1; i < dopass; ++i ) fasp_ivec_free(&vertice[level+i]); 
+   for ( i = 1; i < dopass; ++i ) {
+       fasp_dcsr_free(&mgl[level+i].A);
+       fasp_ivec_free(&vertice[level+i]); 
+   }
 }
 
 /*---------------------------------*/
