@@ -386,14 +386,12 @@ void fasp_param_input_init (input_param *iniparam)
  */
 void fasp_param_amg_init (AMG_param *amgparam)
 {
-    // AMG type 
+    // General AMG parameters
     amgparam->AMG_type             = CLASSIC_AMG;
     amgparam->print_level          = PRINT_NONE;
     amgparam->maxit                = 1;
     amgparam->tol                  = 1e-6;
-    
-    // AMG method parameters
-    amgparam->max_levels           = 20;
+    amgparam->max_levels           = 10;
     amgparam->coarse_dof           = 500;
     amgparam->cycle_type           = V_CYCLE;
     amgparam->smoother             = SMOOTHER_GS;
@@ -402,8 +400,8 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->postsmooth_iter      = 1;
     amgparam->relaxation           = 1.0;
     amgparam->polynomial_degree    = 3;
-    amgparam->coarse_scaling       = OFF; // Require investigation --Chensong
-    amgparam->amli_degree          = 1;
+    amgparam->coarse_scaling       = OFF; // Requires investigation --Chensong
+    amgparam->amli_degree          = 2;
     amgparam->amli_coef            = NULL;
     amgparam->nl_amli_krylov_type  = SOLVER_GCG;
     
