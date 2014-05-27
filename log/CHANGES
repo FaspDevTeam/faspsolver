@@ -1,11 +1,12 @@
 File Name: CHANGES
 
-05/23/2014 FASP 1.5.2:
+05/27/2014 FASP 1.5.2:
 - Update some more 'char *' to 'const char *'.
 - Fix BiCGstab divided by zero problem.
 - Fix pairwise aggregation core dumped bug caused by number of passes.
+- Fix a '}' caused by openmp parallelization in smooth_agg subroutine.
+- Fix a potential memory bug in multipass pairwise aggregation.
 - Update webpage.
-- Fix a '}' caused by openmp parallelization in smooth_agg subroutine. 
 
 05/17/2014 FASP 1.5.1:
 - Seperate factorization and solve for UMFpack.
