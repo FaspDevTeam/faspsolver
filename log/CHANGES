@@ -6,6 +6,7 @@ File Name: CHANGES
 - Fix pairwise aggregation core dumped bug caused by number of passes.
 - Fix a '}' caused by openmp parallelization in smooth_agg subroutine.
 - Fix a potential memory bug in multipass pairwise aggregation.
+- Adjust default parameters slightly.
 - Update webpage.
 
 05/17/2014 FASP 1.5.1:
