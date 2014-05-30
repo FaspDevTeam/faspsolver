@@ -136,7 +136,7 @@ CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags)
 
 all clean install docs headers:
 	@if [ ! -f $(build_dir)/Makefile ] ; then \
-		echo "Configuration not found! Please perform configuration first."; \
+		echo "Cmake configuration not found! Perform `make config' first."; \
 		echo "See the following help screen for usage ..."; \
 		echo " "; \
 		cat INSTALL; \

@@ -155,8 +155,8 @@
 /**
  * \brief Definition of aggregation types
  */
-#define PAIRWISE                1  /**< pairwise aggregation AMG */
-#define VMB                     2  /**< VMB aggregation AMG */
+#define PAIRWISE                1  /**< pairwise aggregation */
+#define VMB                     2  /**< VMB aggregation */
 
 /**
  * \brief Definition of cycle types
