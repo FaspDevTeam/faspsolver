@@ -18,7 +18,7 @@
 # The default setting for vebosity level for FASP is verbose=no. If you
 # want to increase verbosity level, uncomment the next line:
 #
- verbose=yes
+# verbose=yes
 #
 # By default, FASP generates static libraries. If you need to generate 
 # shared libs instead of static libs, uncomment the next line:
@@ -137,7 +137,7 @@ CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags)
 
 all clean install docs headers:
 	@if [ ! -f $(build_dir)/Makefile ] ; then \
-		echo "Cmake configuration not found! Perform `make config' first."; \
+		echo "Cmake configuration not found! Perform make config first."; \
 		echo "See the following help screen for usage ..."; \
 		echo " "; \
 		cat INSTALL; \

@@ -15,7 +15,7 @@ find_path(MUMPS_INCLUDE_DIR NAMES dmumps_c.h
            "/usr/include/" )
    
 find_library( MUMPS_LIBRARY 
-              dmumps coinmumps
+              dmumps
               PATHS "$ENV{IPOPT_HOME}/lib/"
                     "/usr/lib" )
 
