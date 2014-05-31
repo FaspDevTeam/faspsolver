@@ -39,6 +39,7 @@ Structure
 [       ] allow users to set compilers, e.g. using CC, CXX (Chensong)
 [       ] make several functions 'standalone', e.g. use PCG alone (Chensong)
 [       ] fix problem with UMFPACK when it is installed alone without CHOLMOD
+[       ] fix problem with MUMPS: cannot find package
 
 ========================
 GMG 	
