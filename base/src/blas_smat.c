@@ -9,6 +9,62 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
+/**
+ * \fn void fasp_blas_smat_axm (REAL *a, const INT n, const REAL alpha)
+ *
+ * \brief Compute alpha*a, store in a
+ *
+ * \param a        Pointer to the REAL array which stands a n*n matrix
+ * \param n        Dimension of the matrix
+ * \param alpha    Scalar
+ *
+ * \author Xiaozhe Hu
+ * \date   05/26/2014
+ */
+void fasp_blas_smat_axm (REAL *a,
+                         const INT n,
+                         const REAL alpha)
+{
+    INT i;
+    
+    for (i=0; i<n*n; i++) {
+        a[i] = alpha * a[i];
+    }
+    
+    return;
+}
+
+/**
+ * \fn void fasp_blas_smat_add (REAL *a, REAL *b, const INT n, const REAL alpha, const REAL beta, REAL *c)
+ *
+ * \brief Compute c = alpha*a + beta*b
+ *
+ * \param a        Pointer to the REAL array which stands a n*n matrix
+ * \param b        Pointer to the REAL array which stands a n*n matrix
+ * \param n        Dimension of the matrix
+ * \param alpha    Scalar
+ * \param beta     Scalar
+ * \param c        Pointer to the REAL array which stands a n*n matrix
+ *
+ * \author Xiaozhe Hu
+ * \date   05/26/2014
+ */
+void fasp_blas_smat_add (REAL *a,
+                         REAL *b,
+                         const INT n,
+                         const REAL alpha,
+                         const REAL beta,
+                         REAL *c)
+{
+    INT i;
+    
+    for (i=0; i<n*n; i++) {
+        c[i] = alpha * a[i] + beta * b[i];
+    }
+    
+    return;
+}
+
 
 /**
  * \fn void fasp_blas_smat_mxv_nc2 (REAL *a, REAL *b, REAL *c)
@@ -1475,7 +1531,10 @@ void fasp_blas_smat_ymAx_ns (REAL *A,
     }
     
     return;
-} 
+}
+
+
+
 
 /*---------------------------------*/
 /*--        End of File          --*/

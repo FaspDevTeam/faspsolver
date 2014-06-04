@@ -982,6 +982,23 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
                                  itsolver_param *itparam, 
                                  AMG_param *amgparam);
 
+INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
+                                    dvector *b,
+                                    dvector *x,
+                                    itsolver_param *itparam,
+                                    AMG_param *amgparam,
+                                    dCSRmat *A_nk,
+                                    dCSRmat *P_nk,
+                                    dCSRmat *R_nk);
+
+INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
+                                 dvector *b,
+                                 dvector *x,
+                                 itsolver_param *itparam,
+                                 AMG_param *amgparam,
+                                 const INT nk_dim,
+                                 dvector *nk);
+
 
 /*-------- In file: itsolver_csr.c --------*/
 
@@ -1506,6 +1523,10 @@ void fasp_precond_dbsr_amg (REAL *r,
                             REAL *z, 
                             void *data);
 
+void fasp_precond_dbsr_amg_nk (REAL *r,
+                            REAL *z,
+                            void *data);
+
 void fasp_precond_dbsr_nl_amli (REAL *r, 
                                 REAL *z, 
                                 void *data);
@@ -1541,6 +1562,10 @@ void fasp_precond_schwarz(REAL *r,
 void fasp_precond_amg (REAL *r, 
                        REAL *z, 
                        void *data);
+
+void fasp_precond_amg_nk (REAL *r,
+                          REAL *z,
+                          void *data);
 
 void fasp_precond_famg (REAL *r, 
                         REAL *z, 
@@ -1759,6 +1784,9 @@ void fasp_smat_identity_nc7 (REAL *a);
 void fasp_smat_identity (REAL *a, 
                          INT n, 
                          INT n2);
+
+REAL fasp_blas_smat_Linfinity(REAL *A,
+                              const INT n);
 
 
 /*-------- In file: smoother_bsr.c --------*/
@@ -2093,6 +2121,8 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
                         dBSRmat *B) ;
 
 dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A);
+
+dCSRmat fasp_dbsr_Linfinity_dcsr(dBSRmat *A);
 
 
 /*-------- In file: sparse_bsr.c --------*/

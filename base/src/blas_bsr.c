@@ -16,6 +16,28 @@
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
+/**
+ * \fn void fasp_blas_dbsr_axm (dBSRmat *A, const REAL alpha)
+ *
+ * \brief Multiply a sparse matrix A in BSR format by a scalar alpha.
+ *
+ * \param A      Pointer to dBSRmat matrix A
+ * \param alpha  REAL factor alpha
+ *
+ * \author Xiaozhe Hu
+ * \date   05/26/2014
+ *
+ */
+void fasp_blas_dbsr_axm (dBSRmat *A,
+                         const REAL alpha)
+{
+    const INT nnz = A->NNZ;
+    const INT nb  = A->nb;
+    
+    // A direct calculation can be written as:
+    fasp_blas_array_ax(nnz*nb*nb, alpha, A->val);
+}
+
 /*!
  * \fn void fasp_blas_dbsr_aAxpby ( const REAL alpha, dBSRmat *A,
  *                                  REAL *x, const REAL beta, REAL *y )
@@ -4823,6 +4845,124 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
 	}
 }
 
+
+/**
+ * \fn void fasp_blas_dbsr_mxm (dBSRmat *A, dBSRmat *B, dBSRmat *C)
+ *
+ * \brief Sparse matrix multiplication C=A*B
+ *
+ * \param A   Pointer to the dBSRmat matrix A
+ * \param B   Pointer to the dBSRmat matrix B
+ * \param C   Pointer to dBSRmat matrix equal to A*B
+ *
+ * \author Xiaozhe Hu
+ * \date   05/26/2014
+ *
+ * \note This fct will be replaced! -- Xiaozhe
+ */
+void fasp_blas_dbsr_mxm (dBSRmat *A,
+                         dBSRmat *B,
+                         dBSRmat *C)
+{
+    
+    INT i,j,k,l,count;
+    INT *JD = (INT *)fasp_mem_calloc(B->COL,sizeof(INT));
+    
+    const INT nb  = A->nb;
+    const INT nb2 = nb*nb;
+    
+    // /TODO: check A and B see if there are compatible for multiplication!! -- Xiaozhe
+    
+    C->ROW = A->ROW;
+    C->COL = B->COL;
+    C->nb  = A->nb;
+    C->storage_manner = A->storage_manner;
+    
+    C->val = NULL;
+    C->JA  = NULL;
+    C->IA  = (INT*)fasp_mem_calloc(C->ROW+1,sizeof(INT));
+    
+    REAL *temp = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
+    
+    for (i=0;i<B->COL;++i) JD[i]=-1;
+    
+    // step 1: Find first the structure IA of C
+    for(i=0;i<C->ROW;++i) {
+        count=0;
+        
+        for (k=A->IA[i];k<A->IA[i+1];++k) {
+            for (j=B->IA[A->JA[k]];j<B->IA[A->JA[k]+1];++j) {
+                for (l=0;l<count;l++) {
+                    if (JD[l]==B->JA[j]) break;
+                }
+                
+                if (l==count) {
+                    JD[count]=B->JA[j];
+                    count++;
+                }
+            }
+        }
+        C->IA[i+1]=count;
+        for (j=0;j<count;++j) {
+            JD[j]=-1;
+        }
+    }
+    
+    for (i=0;i<C->ROW;++i) C->IA[i+1]+=C->IA[i];
+    
+    // step 2: Find the structure JA of C
+    INT countJD;
+    
+    C->JA=(INT*)fasp_mem_calloc(C->IA[C->ROW],sizeof(INT));
+    
+    for (i=0;i<C->ROW;++i) {
+        countJD=0;
+        count=C->IA[i];
+        for (k=A->IA[i];k<A->IA[i+1];++k) {
+            for (j=B->IA[A->JA[k]];j<B->IA[A->JA[k]+1];++j) {
+                for (l=0;l<countJD;l++) {
+                    if (JD[l]==B->JA[j]) break;
+                }
+                
+                if (l==countJD) {
+                    C->JA[count]=B->JA[j];
+                    JD[countJD]=B->JA[j];
+                    count++;
+                    countJD++;
+                }
+            }
+        }
+        
+        //for (j=0;j<countJD;++j) JD[j]=-1;
+        fasp_iarray_set(countJD, JD, -1);
+    }
+    
+    fasp_mem_free(JD);
+    
+    // step 3: Find the structure A of C
+    C->val=(REAL*)fasp_mem_calloc((C->IA[C->ROW])*nb2,sizeof(REAL));
+    
+    for (i=0;i<C->ROW;++i) {
+        for (j=C->IA[i];j<C->IA[i+1];++j) {
+            
+            fasp_array_set(nb2, C->val+(j*nb2), 0x0);
+            
+            for (k=A->IA[i];k<A->IA[i+1];++k) {
+                for (l=B->IA[A->JA[k]];l<B->IA[A->JA[k]+1];l++) {
+                    if (B->JA[l]==C->JA[j]) {
+                        fasp_blas_smat_mul (A->val+(k*nb2), B->val+(l*nb2), temp, nb);
+                        fasp_blas_array_axpy (nb2, 1.0, temp, C->val+(j*nb2));
+                    } // end if
+                } // end for l
+            } // end for k
+        } // end for j
+    }    // end for i
+    
+    C->NNZ = C->IA[C->ROW]-C->IA[0];
+    
+    fasp_mem_free(temp);
+    
+}
 
 
 /**

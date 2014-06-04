@@ -76,17 +76,26 @@ void fasp_blas_smat_inv_nc3 (REAL *a)
          printf("## %12.5e %12.5e %12.5e \n", a3, a4, a5);
          printf("## %12.5e %12.5e %12.5e \n", a5, a6, a7);
          printf("##----------------------------------------------\n");
-         getchar(); 
+         getchar();
          */
+        
+        a[0] = 1.0; a[1] = 0.0; a[2] = 0.0;
+        
+        a[3] = 0.0; a[4] = 1.0; a[5] = 0.0;
+        
+        a[6] = 0.0; a[7] = 0.0; a[8] = 1.0;
+        
     }
+    else {
+        
+        det_inv = 1.0/det;
     
-    det_inv = 1.0/det;
+        a[0] = M0*det_inv; a[1] = M3*det_inv; a[2] = M6*det_inv;
     
-    a[0] = M0*det_inv; a[1] = M3*det_inv; a[2] = M6*det_inv;
+        a[3] = M1*det_inv; a[4] = M4*det_inv; a[5] = M7*det_inv;
     
-    a[3] = M1*det_inv; a[4] = M4*det_inv; a[5] = M7*det_inv;
-    
-    a[6] = M2*det_inv; a[7] = M5*det_inv; a[8] = M8*det_inv;    
+        a[6] = M2*det_inv; a[7] = M5*det_inv; a[8] = M8*det_inv;
+    }
 }
 
 /**
@@ -645,6 +654,41 @@ void fasp_smat_identity (REAL *a,
     }
     
 }    
+
+/**
+ * \fn REAL fasp_blas_smat_Linfinity(REAL *A, const INT n )
+ *
+ * \brief Compute the L infinity norm of A
+ *
+ * \param A   Pointer to the n*n dense matrix
+ * \param n   the dimension of the dense matrix
+ *
+ * \author Xiaozhe Hu
+ * \date   05/26/2014
+ *
+ */
+REAL fasp_blas_smat_Linfinity(REAL *A,
+                              const INT n)
+{
+    
+    REAL norm = 0.0;
+    REAL value = 0.0;
+    
+    INT i,j;
+    
+    for (i=0; i<n; i++){
+        
+        value = 0.0;
+        
+        for (j=0; j<n; j++){
+            value = value + ABS(A[i*n+j]);
+        }
+        
+        norm = MAX(norm, value);
+    }
+    
+    return norm;
+}
 
 /*---------------------------------*/
 /*--        End of File          --*/

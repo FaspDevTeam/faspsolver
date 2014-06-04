@@ -7,6 +7,8 @@
 #include "fasp_functs.h"
 #include "forts_ns.h"
 
+#include "mg_util.inl"
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -537,6 +539,90 @@ void fasp_precond_nl_amli (REAL *r,
     for (i=0;i<maxit;++i) fasp_solver_nl_amli(mgl,&amgparam,0, num_levels); 
     
     fasp_array_cp(m,mgl->x.val,z);    
+}
+
+/**
+ * \fn void fasp_precond_amg_nk (REAL *r, REAL *z, void *data)
+ *
+ * \brief AMG with extra near kernel solve as preconditioner
+ *
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
+ *
+ * \author Xiaozhe Hu
+ * \date   05/26/2014
+ */
+void fasp_precond_amg_nk (REAL *r,
+                       REAL *z,
+                       void *data)
+{
+    precond_data *pcdata=(precond_data *)data;
+    const INT m=pcdata->mgl_data[0].A.row;
+    const INT maxit=pcdata->maxit;
+    INT i;
+    
+    dCSRmat *A_nk = pcdata->A_nk;
+    dCSRmat *P_nk = pcdata->P_nk;
+    dCSRmat *R_nk = pcdata->R_nk;
+    
+    fasp_array_set(m, z, 0.0);
+
+    // local variables
+    dvector r_nk, z_nk;
+    fasp_dvec_alloc(A_nk->row, &r_nk);
+    fasp_dvec_alloc(A_nk->row, &z_nk);
+    
+    //----------------------
+    // extra kernel solve
+    //----------------------
+    // r_nk = R_nk*r
+    fasp_blas_dcsr_mxv(R_nk, r, r_nk.val);
+    
+    // z_nk = A_nk^{-1}*r_nk
+#if WITH_UMFPACK // use UMFPACK directly
+    fasp_solver_umfpack(A_nk, &r_nk, &z_nk, 0);
+#else
+    fasp_coarse_itsolver(A_nk, &r_nk, &z_nk, 1e-12, 0);
+#endif
+    
+    // z = z + P_nk*z_nk;
+    fasp_blas_dcsr_aAxpy(1.0, P_nk, z_nk.val, z);
+    
+    //----------------------
+    // AMG solve
+    //----------------------
+    AMG_param amgparam; fasp_param_amg_init(&amgparam);
+    fasp_param_prec_to_amg(&amgparam,pcdata);
+    
+    AMG_data *mgl = pcdata->mgl_data;
+    mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input
+    mgl->x.row=m; //fasp_dvec_set(m,&mgl->x,0.0);
+    fasp_array_cp(m, z, mgl->x.val);
+    
+    for ( i = 0; i < maxit; ++i ) fasp_solver_mgcycle(mgl,&amgparam);
+    
+    fasp_array_cp(m,mgl->x.val,z);
+
+    //----------------------
+    // extra kernel solve
+    //----------------------
+    // r = r - A*z
+    fasp_blas_dcsr_aAxpy(-1.0, &(pcdata->mgl_data[0].A), z, mgl->b.val);
+    
+    // r_nk = R_nk*r
+    fasp_blas_dcsr_mxv(R_nk, mgl->b.val, r_nk.val);
+    
+    // z_nk = A_nk^{-1}*r_nk
+#if WITH_UMFPACK // use UMFPACK directly
+    fasp_solver_umfpack(A_nk, &r_nk, &z_nk, 0);
+#else
+    fasp_coarse_itsolver(A_nk, &r_nk, &z_nk, 1e-12, 0);
+#endif
+    
+    // z = z + P_nk*z_nk;
+    fasp_blas_dcsr_aAxpy(1.0, P_nk, z_nk.val, z);
+    
 }
 
 /**

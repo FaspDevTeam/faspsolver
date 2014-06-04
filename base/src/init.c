@@ -91,6 +91,9 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
         mgl[i].num_levels = 0;
         mgl[i].near_kernel_dim = 0;
         mgl[i].near_kernel_basis = NULL;
+        mgl[i].A_nk = NULL;
+        mgl[i].P_nk = NULL;
+        mgl[i].R_nk = NULL;
     }
     
     return(mgl);

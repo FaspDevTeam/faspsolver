@@ -313,7 +313,16 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
     REAL alpha = 1.0;
     INT i;
 
-    if (prtlvl >= PRINT_MOST) 
+    dvector r_nk, z_nk;
+
+    if (mgl[0].A_nk != NULL){
+    
+        fasp_dvec_alloc(mgl[0].A_nk->row, &r_nk);
+        fasp_dvec_alloc(mgl[0].A_nk->row, &z_nk);
+        
+    }
+    
+    if (prtlvl >= PRINT_MOST)
         printf("AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
 
  ForwardSweep:
@@ -357,6 +366,30 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
             }
         }
     
+        // extra kernel solve
+        if (mgl[l].A_nk != NULL) {
+            //--------------------------------------------
+            // extra kernel solve
+            //--------------------------------------------
+            // form residual r = b - A x
+            fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
+            fasp_blas_dbsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
+        
+            // r_nk = R_nk*r
+            fasp_blas_dcsr_mxv(mgl[l].R_nk, mgl[l].w.val, r_nk.val);
+        
+            // z_nk = A_nk^{-1}*r_nk
+#if WITH_UMFPACK // use UMFPACK directly
+            fasp_solver_umfpack(mgl[l].A_nk, &r_nk, &z_nk, 0);
+#else
+            fasp_coarse_itsolver(mgl[l].A_nk, &r_nk, &z_nk, 1e-12, 0);
+#endif
+        
+            // z = z + P_nk*z_nk;
+            fasp_blas_dcsr_aAxpy(1.0, mgl[l].P_nk, z_nk.val, mgl[l].x.val);
+            //--------------------------------------------
+        }
+        
         // form residual r = b - A x
         fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val); 
         fasp_blas_dbsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
@@ -376,7 +409,8 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         fasp_solver_mumps(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
 #elif WITH_UMFPACK
         /* use UMFPACK direct solver on the coarsest level */
-        fasp_solver_umfpack(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+        //fasp_solver_umfpack(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+        fasp_umfpack_solve(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
 #elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         fasp_solver_superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
@@ -411,7 +445,31 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         }
         else {
             fasp_blas_dbsr_aAxpy(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
-        }    
+        }
+        
+        // extra kernel solve
+        if (mgl[l].A_nk != NULL) {
+            //--------------------------------------------
+            // extra kernel solve
+            //--------------------------------------------
+            // form residual r = b - A x
+            fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
+            fasp_blas_dbsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
+            
+            // r_nk = R_nk*r
+            fasp_blas_dcsr_mxv(mgl[l].R_nk, mgl[l].w.val, r_nk.val);
+            
+            // z_nk = A_nk^{-1}*r_nk
+#if WITH_UMFPACK // use UMFPACK directly
+            fasp_solver_umfpack(mgl[l].A_nk, &r_nk, &z_nk, 0);
+#else
+            fasp_coarse_itsolver(mgl[l].A_nk, &r_nk, &z_nk, 1e-12, 0);
+#endif
+            
+            // z = z + P_nk*z_nk;
+            fasp_blas_dcsr_aAxpy(1.0, mgl[l].P_nk, z_nk.val, mgl[l].x.val);
+            //--------------------------------------------
+        }
         
         // post-smoothing
         if (l<param->ILU_levels) {

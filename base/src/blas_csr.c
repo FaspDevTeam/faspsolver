@@ -764,16 +764,22 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
                          dCSRmat *C)
 {
     INT i,j,k,l,count;
+    
     INT *JD = (INT *)fasp_mem_calloc(B->col,sizeof(INT));
     
     C->row=A->row;
-    C->col=B->col;
     
+    C->col=B->col;
+
     C->val = NULL;
     C->JA  = NULL;
+    
+    
     C->IA  = (INT*)fasp_mem_calloc(C->row+1,sizeof(INT));
     
+    
     for (i=0;i<B->col;++i) JD[i]=-1;
+    
     
     // step 1: Find first the structure IA of C
     for(i=0;i<C->row;++i) {
@@ -797,12 +803,15 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
         }
     }
     
+    
     for (i=0;i<C->row;++i) C->IA[i+1]+=C->IA[i];
+    
     
     // step 2: Find the structure JA of C
     INT countJD;
     
     C->JA=(INT*)fasp_mem_calloc(C->IA[C->row],sizeof(INT));
+    
     
     for (i=0;i<C->row;++i) {
         countJD=0;
@@ -826,10 +835,12 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
         fasp_iarray_set(countJD, JD, -1);
     }
     
+    
     fasp_mem_free(JD);
     
     // step 3: Find the structure A of C
     C->val=(REAL*)fasp_mem_calloc(C->IA[C->row],sizeof(REAL));
+    
     
     for (i=0;i<C->row;++i) {
         for (j=C->IA[i];j<C->IA[i+1];++j) {

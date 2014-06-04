@@ -120,30 +120,35 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     ITS_CHECK ( MaxIt, tol );
 
     switch (itsolver_type) {
+        
+        case SOLVER_CG:
+            if ( print_level>PRINT_NONE ) printf("\nCalling PCG solver (BSR) ...\n");
+            iter=fasp_solver_dbsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            break;
     
-    case SOLVER_BiCGstab:
-        if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (BSR) ...\n");
-        iter=fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level); 
-        break;
+        case SOLVER_BiCGstab:
+            if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (BSR) ...\n");
+            iter=fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            break;
     
-    case SOLVER_GMRES:
-        if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (BSR) ...\n");
-        iter=fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
-        break;    
+        case SOLVER_GMRES:
+            if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (BSR) ...\n");
+            iter=fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            break;
     
-    case SOLVER_VGMRES:
-        if ( print_level>PRINT_NONE ) printf("\nCalling vGMRES solver (BSR) ...\n");
-        iter=fasp_solver_dbsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
-        break;    
+        case SOLVER_VGMRES:
+            if ( print_level>PRINT_NONE ) printf("\nCalling vGMRES solver (BSR) ...\n");
+            iter=fasp_solver_dbsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            break;
             
-    case SOLVER_VFGMRES: 
-        if ( print_level>PRINT_NONE ) printf("\nCalling vFGMRes solver (BSR) ...\n");    
-        iter = fasp_solver_dbsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
-        break;
-    
-    default:
-        printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
-        iter = ERROR_SOLVER_TYPE;
+        case SOLVER_VFGMRES:
+            if ( print_level>PRINT_NONE ) printf("\nCalling vFGMRes solver (BSR) ...\n");
+            iter = fasp_solver_dbsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            break;
+            
+        default:
+            printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
+            iter = ERROR_SOLVER_TYPE;
     
     }
     
@@ -415,7 +420,17 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     mgl[0].b = fasp_dvec_create(mgl[0].A.ROW*mgl[0].A.nb);
     mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb);
     
-    status = fasp_amg_setup_ua_bsr(mgl, amgparam);
+    
+    switch (amgparam->AMG_type) {
+            
+        case SA_AMG: // Smoothed Aggregation AMG
+            status = fasp_amg_setup_sa_bsr(mgl, amgparam); break;
+    
+        default:
+            status = fasp_amg_setup_ua_bsr(mgl, amgparam); break;
+            
+    }
+    
     if (status < 0) goto FINISHED;
     
     fasp_gettime(&setup_end);
@@ -445,10 +460,12 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     precond prec; 
     prec.data = &precdata; 
     switch (amgparam->cycle_type) {
-    case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
-        prec.fct = fasp_precond_dbsr_nl_amli; break;
-    default: // V,W-Cycle AMG
-        prec.fct = fasp_precond_dbsr_amg; break;
+        case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
+            prec.fct = fasp_precond_dbsr_nl_amli;
+            break;
+        default: // V,W-Cycle AMG
+            prec.fct = fasp_precond_dbsr_amg;
+            break;
     }
     
     if ( print_level>=PRINT_MIN ) {
@@ -479,6 +496,305 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     printf("krylov_AMG_bsr: Cannot allocate memory!\n");
     exit(status);    
 }
+
+/**
+ * \fn INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A, dvector *b, dvector *x,
+ *                                      itsolver_param *itparam, AMG_param *amgparam
+ *                                       dCSRmat *A_nk, dCSRmat *P_nk, dCSRmat *R_nk)
+ *
+ * \brief Solve Ax=b by AMG with extra near kernel solve preconditioned Krylov methods
+ *
+ * \param A         Pointer to the coeff matrix in dBSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
+ * \param itparam   Pointer to parameters for iterative solvers
+ * \param amgparam  Pointer to parameters of AMG
+ * \param A_nk      Pointer to the coeff matrix for near kernel space in dBSRmat format
+ * \param P_nk      Pointer to the prolongation for near kernel space in dBSRmat format
+ * \param R_nk      Pointer to the restriction for near kernel space in dBSRmat format
+ *
+ * \return          Number of iterations if succeed
+ *
+ * \author Xiaozhe Hu
+ * \date   05/26/2012
+ */
+INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
+                                 dvector *b,
+                                 dvector *x,
+                                 itsolver_param *itparam,
+                                 AMG_param *amgparam,
+                                 dCSRmat *A_nk,
+                                 dCSRmat *P_nk,
+                                 dCSRmat *R_nk)
+{
+    //--------------------------------------------------------------
+    // Part 1: prepare
+    // --------------------------------------------------------------
+    //! parameters of iterative method
+    const SHORT print_level = itparam->print_level;
+    const SHORT max_levels = amgparam->max_levels;
+    
+    // return variable
+    INT status = SUCCESS;
+    
+    // data of AMG
+    AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
+    
+    // timing
+    REAL setup_start, setup_end, solver_start, solver_end, solver_duration, setup_duration;
+    
+    //--------------------------------------------------------------
+    //Part 2: set up the preconditioner
+    //--------------------------------------------------------------
+    fasp_gettime(&setup_start);
+    
+    // initialize A, b, x for mgl[0]
+    mgl[0].A = fasp_dbsr_create(A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
+    fasp_dbsr_cp(A,  &(mgl[0].A));
+    //mgl[0].A.ROW = A->ROW; mgl[0].A.COL = A->COL; mgl[0].A.NNZ = A->NNZ;
+    //mgl[0].A.nb = A->nb; mgl[0].A.storage_manner = A->storage_manner;
+    //mgl[0].A.IA = A->IA; mgl[0].A.JA = A->JA; mgl[0].A.val = A->val;
+    mgl[0].b = fasp_dvec_create(mgl[0].A.ROW*mgl[0].A.nb);
+    mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb);
+    
+    // near kernel space
+    //mgl[0].A_nk = A_nk;
+    mgl[0].A_nk = NULL;
+    mgl[0].P_nk = P_nk;
+    mgl[0].R_nk = R_nk;
+    
+    switch (amgparam->AMG_type) {
+            
+        case SA_AMG: // Smoothed Aggregation AMG
+            status = fasp_amg_setup_sa_bsr(mgl, amgparam); break;
+            
+        default:
+            status = fasp_amg_setup_ua_bsr(mgl, amgparam); break;
+            
+    }
+    
+    if (status < 0) goto FINISHED;
+    
+    fasp_gettime(&setup_end);
+    
+    setup_duration = setup_end - setup_start;
+    
+    precond_data_bsr precdata;
+    precdata.print_level = amgparam->print_level;
+    precdata.maxit = amgparam->maxit;
+    precdata.tol = amgparam->tol;
+    precdata.cycle_type = amgparam->cycle_type;
+    precdata.smoother = amgparam->smoother;
+    precdata.presmooth_iter = amgparam->presmooth_iter;
+    precdata.postsmooth_iter = amgparam->postsmooth_iter;
+    precdata.coarsening_type = amgparam->coarsening_type;
+    precdata.relaxation = amgparam->relaxation;
+    precdata.coarse_scaling = amgparam->coarse_scaling;
+    precdata.amli_degree = amgparam->amli_degree;
+    precdata.amli_coef = amgparam->amli_coef;
+    precdata.tentative_smooth = amgparam->tentative_smooth;
+    precdata.max_levels = mgl[0].num_levels;
+    precdata.mgl_data = mgl;
+    precdata.A = A;
+    
+#if WITH_UMFPACK // use UMFPACK directly
+    dCSRmat A_tran;
+    fasp_dcsr_trans(A_nk, &A_tran);
+    fasp_dcsr_sort(&A_tran);
+    precdata.A_nk = &A_tran;
+#else
+    precdata.A_nk = A_nk;
+#endif    
+    precdata.P_nk = P_nk;
+    precdata.R_nk = R_nk;
+    
+    if (status < 0) goto FINISHED;
+    
+    precond prec;
+    prec.data = &precdata;
+    
+    prec.fct = fasp_precond_dbsr_amg_nk;
+    
+    if ( print_level>=PRINT_MIN ) {
+        print_cputime("BSR AMG setup", setup_duration);
+    }
+    
+    //--------------------------------------------------------------
+    // Part 3: solver
+    //--------------------------------------------------------------
+    fasp_gettime(&solver_start);
+    
+    status=fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
+    
+    fasp_gettime(&solver_end);
+    
+    solver_duration = solver_end - solver_start;
+    
+    if ( print_level>=PRINT_MIN ) {
+        print_cputime("BSR AMG NK Krylov method totally", setup_duration+solver_duration);
+    }
+    
+FINISHED:
+    fasp_amg_data_bsr_free(mgl);
+#if WITH_UMFPACK // use UMFPACK directly
+    fasp_dcsr_free(&A_tran);
+#endif
+    if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
+    return status;
+    
+MEMORY_ERROR:
+    printf("krylov_AMG_bsr: Cannot allocate memory!\n");
+    exit(status);
+}
+
+
+/**
+ * \fn INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A, dvector *b, dvector *x,
+ *                                      itsolver_param *itparam, AMG_param *amgparam,
+ *                                      const INT nk_dim, dvector *nk)
+ *
+ * \brief Solve Ax=b by AMG preconditioned Krylov methods
+ *
+ * \param A         Pointer to the coeff matrix in dBSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
+ * \param itparam   Pointer to parameters for iterative solvers
+ * \param amgparam  Pointer to parameters of AMG
+ * \param nk_dim    Dimension of the near kernel spaces
+ * \param nk        Pointer to the near kernal spaces
+ *
+ * \return          Number of iterations if succeed
+ *
+ * \author Xiaozhe Hu
+ * \date   05/27/2012
+ */
+INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
+                                 dvector *b,
+                                 dvector *x,
+                                 itsolver_param *itparam,
+                                 AMG_param *amgparam,
+                                 const INT nk_dim,
+                                 dvector *nk)
+{
+    //--------------------------------------------------------------
+    // Part 1: prepare
+    // --------------------------------------------------------------
+    //! parameters of iterative method
+    const SHORT print_level = itparam->print_level;
+    const SHORT max_levels = amgparam->max_levels;
+    
+    // local variable
+    INT i;
+    
+    // return variable
+    INT status = SUCCESS;
+    
+    // data of AMG
+    AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
+    
+    // timing
+    REAL setup_start, setup_end, solver_start, solver_end, solver_duration, setup_duration;
+    
+    //--------------------------------------------------------------
+    //Part 2: set up the preconditioner
+    //--------------------------------------------------------------
+    fasp_gettime(&setup_start);
+    
+    // initialize A, b, x for mgl[0]
+    mgl[0].A = fasp_dbsr_create(A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
+    fasp_dbsr_cp(A,  &(mgl[0].A));
+    //mgl[0].A.ROW = A->ROW; mgl[0].A.COL = A->COL; mgl[0].A.NNZ = A->NNZ;
+    //mgl[0].A.nb = A->nb; mgl[0].A.storage_manner = A->storage_manner;
+    //mgl[0].A.IA = A->IA; mgl[0].A.JA = A->JA; mgl[0].A.val = A->val;
+    mgl[0].b = fasp_dvec_create(mgl[0].A.ROW*mgl[0].A.nb);
+    mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb);
+    
+    /*-----------------------*/
+    /*-- setup null spaces --*/
+    /*-----------------------*/
+    
+    // null space for whole Jacobian
+    mgl[0].near_kernel_dim   = nk_dim;
+    mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim, sizeof(REAL*));
+     
+    for ( i=0; i < mgl->near_kernel_dim; ++i ) mgl[0].near_kernel_basis[i] = nk[i].val;
+    
+    switch (amgparam->AMG_type) {
+            
+        case SA_AMG: // Smoothed Aggregation AMG
+            status = fasp_amg_setup_sa_bsr(mgl, amgparam); break;
+            
+        default:
+            status = fasp_amg_setup_ua_bsr(mgl, amgparam); break;
+            
+    }
+    
+    if (status < 0) goto FINISHED;
+    
+    fasp_gettime(&setup_end);
+    
+    setup_duration = setup_end - setup_start;
+    
+    precond_data_bsr precdata;
+    precdata.print_level = amgparam->print_level;
+    precdata.maxit = amgparam->maxit;
+    precdata.tol = amgparam->tol;
+    precdata.cycle_type = amgparam->cycle_type;
+    precdata.smoother = amgparam->smoother;
+    precdata.presmooth_iter = amgparam->presmooth_iter;
+    precdata.postsmooth_iter = amgparam->postsmooth_iter;
+    precdata.coarsening_type = amgparam->coarsening_type;
+    precdata.relaxation = amgparam->relaxation;
+    precdata.coarse_scaling = amgparam->coarse_scaling;
+    precdata.amli_degree = amgparam->amli_degree;
+    precdata.amli_coef = amgparam->amli_coef;
+    precdata.tentative_smooth = amgparam->tentative_smooth;
+    precdata.max_levels = mgl[0].num_levels;
+    precdata.mgl_data = mgl;
+    precdata.A = A;
+    
+    if (status < 0) goto FINISHED;
+    
+    precond prec;
+    prec.data = &precdata;
+    switch (amgparam->cycle_type) {
+        case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
+            prec.fct = fasp_precond_dbsr_nl_amli;
+            break;
+        default: // V,W-Cycle AMG
+            prec.fct = fasp_precond_dbsr_amg;
+            break;
+    }
+    
+    if ( print_level>=PRINT_MIN ) {
+        print_cputime("BSR AMG setup", setup_duration);
+    }
+    
+    //--------------------------------------------------------------
+    // Part 3: solver
+    //--------------------------------------------------------------
+    fasp_gettime(&solver_start);
+    
+    status=fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
+    
+    fasp_gettime(&solver_end);
+    
+    solver_duration = solver_end - solver_start;
+    
+    if ( print_level>=PRINT_MIN ) {
+        print_cputime("BSR AMG Krylov method totally", setup_duration+solver_duration);
+    }
+    
+FINISHED:
+    fasp_amg_data_bsr_free(mgl);
+    if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
+    return status;
+    
+MEMORY_ERROR:
+    printf("krylov_AMG_bsr: Cannot allocate memory!\n");
+    exit(status);
+}
+
 
 /*---------------------------------*/
 /*--        End of File          --*/

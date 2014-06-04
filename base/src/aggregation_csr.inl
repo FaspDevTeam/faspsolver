@@ -201,28 +201,33 @@ static void aggregation (dCSRmat *A,
 }
 
 /**
- * \fn static void form_tentative_p (ivector *vertices, dCSRmat *tentp, AMG_data *mgl, 
- *                                   INT levelNum, INT num_aggregations)
+ * \fn static void form_tentative_p (ivector *vertices, 
+                                     dCSRmat *tentp, 
+                                     REAL **basis,
+                                     INT levelNum,
+                                     INT num_aggregations)
  *
  * \brief Form aggregation based on strong coupled neighborhoods 
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators 
- * \param mgl                Pointer to AMG levele data
+ * \param basis              Pointer to the near kernel
  * \param levelNum           Level number
  * \param num_aggregations   Number of aggregations
  *
  * \author Xiaozhe Hu
  * \date   09/29/2009
+ *
+ * \note Modified by Xiaozhe Hu on 05/25/2014
  */
 static void form_tentative_p (ivector *vertices, 
                               dCSRmat *tentp, 
-                              AMG_data *mgl, 
+                              REAL **basis,
                               INT levelNum, 
                               INT num_aggregations)
 {
     INT i, j;
-    REAL **basis = mgl->near_kernel_basis;
+    //REAL **basis = mgl->near_kernel_basis;
     
     /* Form tentative prolongation */
     tentp->row = vertices->row;
@@ -263,9 +268,72 @@ static void form_tentative_p (ivector *vertices,
 }
 
 /**
- * \fn static void pairwise_aggregation (const dCSRmat *A,
- *                                       const INT pair,
- *                                       ivector *vertices, 
+ * \fn static void form_boolean_p (ivector *vertices,
+                                   dCSRmat *tentp,
+                                   INT levelNum,
+                                   INT num_aggregations)
+ *
+ * \brief Form aggregation based on strong coupled neighborhoods
+ *
+ * \param vertices           Pointer to the aggregation of vertices
+ * \param tentp              Pointer to the prolongation operators
+ * \param levelNum           Level number
+ * \param num_aggregations   Number of aggregations
+ *
+ * \author Xiaozhe Hu
+ * \date   09/29/2009
+ *
+ * \note Modified by Xiaozhe Hu on 05/25/2014
+ */
+static void form_boolean_p (ivector *vertices,
+                              dCSRmat *tentp,
+                              INT levelNum,
+                              INT num_aggregations)
+{
+    INT i, j;
+    
+    /* Form tentative prolongation */
+    tentp->row = vertices->row;
+    tentp->col = num_aggregations;
+    tentp->nnz = vertices->row;
+    
+    tentp->IA  = (INT *)fasp_mem_calloc(tentp->row+1,sizeof(INT));
+    
+    // local variables
+    INT  *IA = tentp->IA;
+    INT  *vval = vertices->val;
+    const INT row = tentp->row;
+    
+    // first run
+    for ( i = 0, j = 0; i < row; i++ ) {
+        IA[i] = j;
+        if (vval[i] > -1) j++;
+    }
+    IA[row] = j;
+    
+    // allocate memory for P
+    tentp->nnz = j;
+    tentp->JA  = (INT *)fasp_mem_calloc(tentp->nnz, sizeof(INT));
+    tentp->val = (REAL *)fasp_mem_calloc(tentp->nnz, sizeof(REAL));
+    
+    INT  *JA = tentp->JA;
+    REAL *val = tentp->val;
+    
+    // second run
+    for (i = 0, j = 0; i < row; i ++) {
+        IA[i] = j;
+        if (vval[i] > -1) {
+            JA[j] = vval[i];
+            val[j] = 1.0;
+            j ++;
+        }
+    }
+}
+
+/**
+ * \fn static void pairwise_aggregation (dCSRmat *A,
+ *                                       INT pair,
+ *                                       ivector *vertices,
  *                                       INT *num_aggregations)
  *
  * \brief Form aggregation based on pairwise matching 
@@ -344,6 +412,8 @@ static void pairwise_aggregation (const dCSRmat * A,
     REAL temp1, temp2, temp3, temp4;
     
     *num_aggregations = 0;
+    
+    //fasp_ivec_write("out/vertices", vertices);
 
     for ( i = 0; i < row; i++ ) {
 
@@ -380,6 +450,7 @@ static void pairwise_aggregation (const dCSRmat * A,
         }
 
         *num_aggregations += 1;
+        
         if ( min_mu <= k_tg ) {
             vertices->val[i]     = *num_aggregations - 1;
             vertices->val[index] = *num_aggregations - 1;
@@ -392,24 +463,25 @@ static void pairwise_aggregation (const dCSRmat * A,
     fasp_mem_free(s);
 }
 
-
 /**
- * \fn static void aggregation_coarsening (AMG_data *mgl,
+ * \fn static void aggregation_coarsening (dCSRmat *A,
  *                                         AMG_param *param,
  *                                         const INT level,
  *                                         ivector *vertice, 
  *                                         INT *num_aggregations)
  *
- * \brief AMG coarsening based on pairwise matching aggregation 
+ * \brief AMG coarsening based on pairwise matching aggregation
  *
- * \param mgl               Pointer to AMG levele data
+ * \param A                 Pointer to dCSRmat
  * \param param             Pointer to AMG parameters
  * \param level             Level number
  * \param vertices          Pointer to the aggregation of vertics
- * \param num_aggregations  Pointer to number of aggregations 
- * 
+ * \param num_aggregations  Pointer to number of aggregations
+ *
  * \author Xiaoping Li, Zheng Li, Chensong Zhang
  * \date   04/21/2014
+ *
+ * \note Modified by Xiaozhe Hu on 05/25/2014
  */
 static void aggregation_coarsening (AMG_data *mgl, 
                                     AMG_param *param, 
@@ -417,7 +489,7 @@ static void aggregation_coarsening (AMG_data *mgl,
                                     ivector *vertice, 
                                     INT *num_aggregations)
 {
-    const INT pair_number = param->pair_number;
+   const INT pair_number = param->pair_number;
 
     dCSRmat   *ptrA = &mgl[level].A;
     INT       i, j, num_agg, aggindex;
@@ -431,7 +503,8 @@ static void aggregation_coarsening (AMG_data *mgl,
 
         if ( i < pair_number ) {
             /*-- Form Prolongation --*/
-            form_tentative_p(&vertice[lvl], &mgl[lvl].P, &mgl[0], lvl+1, num_agg);
+            //form_tentative_p(&vertice[lvl], &mgl[lvl].P, &mgl[0], lvl+1, num_agg);
+            form_boolean_p(&vertice[lvl], &mgl[lvl].P, lvl+1, num_agg);
         
             /*-- Perform aggressive coarsening only up to the specified level --*/
             if ( mgl[lvl].P.col < MIN_CDOF ) break;
@@ -457,6 +530,7 @@ static void aggregation_coarsening (AMG_data *mgl,
 		for ( i = 0; i < mgl[level].A.row; ++i ) {
 			aggindex = vertice[level].val[i];
 
+
 			if ( aggindex < 0 ) continue;
 
 			for ( j = 1; j < dopass; ++j ) aggindex = vertice[level+j].val[aggindex];
@@ -464,14 +538,176 @@ static void aggregation_coarsening (AMG_data *mgl,
 			vertice[level].val[i] = aggindex;
 		}
 	}
+    
+    
+    /*-- clean memory --*/
+    *num_aggregations = num_agg;
 
-   *num_aggregations = num_agg;
-  
-   /*-- clean memory --*/ 
-   for ( i = 1; i < dopass; ++i ) {
-       fasp_dcsr_free(&mgl[level+i].A);
-       fasp_ivec_free(&vertice[level+i]); 
-   }
+    for ( i = 1; i < dopass; ++i ) {
+        fasp_dcsr_free(&mgl[level+i].A);
+        fasp_ivec_free(&vertice[level+i]);
+    }
+    
+}
+
+/**
+ * \fn static void smooth_agg (dCSRmat *A, dCSRmat *tentp, dCSRmat *P,
+ *                             AMG_param *param, INT levelNum, dCSRmat *N)
+ *
+ * \brief Smooth the tentative prolongation
+ *
+ * \param A         Pointer to the coefficient matrices
+ * \param tentp     Pointer to the tentative prolongation operators
+ * \param P         Pointer to the prolongation operators
+ * \param param     Pointer to AMG parameters
+ * \param levelNum  Current level number
+ * \param N         Pointer to strongly coupled neighborhoods
+ *
+ * \author Xiaozhe Hu
+ * \date   09/29/2009
+ *
+ * Modified by Chunsheng Feng, Zheng Li on 10/12/2012
+ * Modified by Chensong on 04/29/2014: Fix a sign problem
+ */
+static void smooth_agg (dCSRmat *A,
+                        dCSRmat *tentp,
+                        dCSRmat *P,
+                        AMG_param *param,
+                        INT levelNum,
+                        dCSRmat *N)
+{
+    const SHORT filter = param->smooth_filter;
+    const INT   row = A->row, col= A->col;
+    const REAL  smooth_factor = param->tentative_smooth;
+    
+    dCSRmat S;
+    dvector diag;  // diaganoal entries
+    
+    REAL row_sum_A, row_sum_N;
+    INT i,j;
+    
+    // local variables
+#ifdef _OPENMP
+    INT myid, mybegin, myend;
+    INT nthreads = FASP_GET_NUM_THREADS();
+#endif
+    
+    /* Step 1. Form smoother */
+    
+    /* Without filter: Using A for damped Jacobian smoother */
+    if ( filter != ON ) {
+        
+        // copy structure from A
+        S = fasp_dcsr_create(row, col, A->IA[row]);
+        
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS)
+#endif
+        for ( i=0; i<=row; ++i ) S.IA[i] = A->IA[i];
+        for ( i=0; i<S.IA[S.row]; ++i ) S.JA[i] = A->JA[i];
+        
+        fasp_dcsr_getdiag(0, A, &diag);  // get the diaganol entries of A
+        
+        // check the diaganol entries.
+        // if it is too small, use Richardson smoother for the corresponding row
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS)
+#endif
+        for (i=0; i<row; ++i) {
+            if (ABS(diag.val[i]) < 1e-6) diag.val[i] = 1.0;
+        }
+        
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS) private(j)
+#endif
+        for (i=0; i<row; ++i) {
+            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
+                if (S.JA[j] == i) {
+                    S.val[j] = 1 - smooth_factor * A->val[j] / diag.val[i];
+                }
+                else {
+                    S.val[j] = - smooth_factor * A->val[j] / diag.val[i];
+                }
+            }
+        }
+    }
+    
+    /* Using filtered A for damped Jacobian smoother */
+    else {
+        /* Form filtered A and store in N */
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, j, row_sum_A, row_sum_N) if (row>OPENMP_HOLDS)
+        for (myid=0; myid<nthreads; myid++) {
+            FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i) {
+#else
+                for (i=0; i<row; ++i) {
+#endif
+                    for (row_sum_A = 0.0, j=A->IA[i]; j<A->IA[i+1]; ++j) {
+                        if (A->JA[j] != i) row_sum_A += A->val[j];
+                    }
+                    
+                    for (row_sum_N = 0.0, j=N->IA[i]; j<N->IA[i+1]; ++j) {
+                        if (N->JA[j] != i) row_sum_N += N->val[j];
+                    }
+                    
+                    for (j=N->IA[i]; j<N->IA[i+1]; ++j) {
+                        if (N->JA[j] == i) {
+                            // The original paper has a wrong sign!!! --Chensong
+                            N->val[j] += row_sum_A - row_sum_N;
+                        }
+                    }
+                }
+#ifdef _OPENMP
+            }
+        }
+#endif
+        // copy structure from N (filtered A)
+        S = fasp_dcsr_create(row, col, N->IA[row]);
+        
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS)
+#endif
+        for (i=0; i<=row; ++i) S.IA[i] = N->IA[i];
+        
+        for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
+        
+        fasp_dcsr_getdiag(0, N, &diag);  // get the diaganol entries of N (filtered A)
+        
+        // check the diaganol entries.
+        // if it is too small, use Richardson smoother for the corresponding row
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS)
+#endif
+        for (i=0;i<row;++i) {
+            if (ABS(diag.val[i]) < 1e-6) diag.val[i] = 1.0;
+        }
+        
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS) private(i,j)
+#endif
+        for (i=0;i<row;++i) {
+            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
+                if (S.JA[j] == i) {
+                    S.val[j] = 1 - smooth_factor * N->val[j] / diag.val[i];
+                }
+                else {
+                    S.val[j] = - smooth_factor * N->val[j] / diag.val[i];
+                }
+            }
+        }
+        
+    }
+    
+    fasp_dvec_free(&diag);
+    
+    /* Step 2. Smooth the tentative prolongation P = S*tenp */
+    fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this.
+    
+    P->nnz = P->IA[P->row];
+    
+    fasp_dcsr_free(&S);
+
 }
 
 /*---------------------------------*/

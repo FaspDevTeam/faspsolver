@@ -216,6 +216,9 @@ typedef struct {
 	
     //! pointer to the matrix at level level_num (csr format)
 	dCSRmat Ac;
+    
+    //! pointer to the numerical dactorization from UMFPACK
+    void *Numeric;
 	
 	//! pointer to the pressure block (only for reservoir simulation)
 	dCSRmat PP;
@@ -249,6 +252,19 @@ typedef struct {
 	
     //! basis of near kernel space for SAMG
 	REAL **near_kernel_basis;
+    
+    //-----------------------------------------
+    // extra near kernal space for extra solve
+    
+    //! Matrix data for near kernal
+    dCSRmat *A_nk;
+    
+    //! Prolongation for near kernal
+    dCSRmat *P_nk;
+    
+    //! Resriction for near kernal
+    dCSRmat *R_nk;
+    //-----------------------------------------
 	
 	//! temporary work space
 	dvector w;
@@ -343,6 +359,17 @@ typedef struct {
 	
 	//! Matrix data
 	dBSRmat *A;
+    
+    // extra near kernal space
+    
+    //! Matrix data for near kernal
+    dCSRmat *A_nk;
+    
+    //! Prolongation for near kernal
+    dCSRmat *P_nk;
+    
+    //! Resriction for near kernal
+    dCSRmat *R_nk;
 	
 	//! temporary dvector used to store and restore the residual
 	dvector r;

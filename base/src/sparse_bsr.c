@@ -214,12 +214,13 @@ INT fasp_dbsr_trans (dBSRmat *A,
     AT->NNZ=nnz;
     AT->nb = nb;
     AT->storage_manner = A->storage_manner;
+    
     AT->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
     nb2 =  A->nb*A->nb;
 
     AT->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
     
-    if (A->val) { 
+    if (A->val) {
         AT->val=(REAL*)fasp_mem_calloc(nnz*nb*nb,sizeof(REAL));     
     }
     else { 
