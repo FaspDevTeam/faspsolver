@@ -298,6 +298,52 @@ dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A)
     return P_csr;
 }
 
+/**
+ * \fn dCSRmat fasp_dbsr_Linfinity_dcsr (dBSRmat *A)
+ * \brief get dCSRmat from a dBSRmat matrix using L infinity norm of each small block
+ *
+ * \param *A   Pointer to the BSR format matrix
+ *
+ * \return     dCSRmat matrix if succeed, NULL if fail
+ *
+ * \author Xiaozhe Hu
+ * \date   05/25/2014
+ */
+dCSRmat fasp_dbsr_Linfinity_dcsr(dBSRmat *A)
+{
+    // information about A
+    const INT ROW = A->ROW;
+    const INT COL = A->COL;
+    const INT NNZ = A->NNZ;
+    const SHORT nc = A->nb;
+    const INT nc2 = nc*nc;
+    
+    REAL *val = A->val;
+    INT *IA = A->IA;
+    INT *JA = A->JA;
+    
+    // CSR matrix
+    dCSRmat Acsr = fasp_dcsr_create(ROW, COL, NNZ);
+    REAL *Aval=Acsr.val;
+    
+    // get structure
+    memcpy(Acsr.JA, JA, NNZ*sizeof(INT));
+    memcpy(Acsr.IA, IA, (ROW+1)*sizeof(INT));
+    
+    INT i, j;
+    
+    for (i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2) {
+        //Aval[i] = val[j];
+        Aval[i] = fasp_blas_smat_Linfinity(val+j, nc);
+    }
+    
+    // compress CSR format
+    fasp_dcsr_compress_inplace(&Acsr,1e-8);
+    
+    // return CSR matrix
+    return Acsr;
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

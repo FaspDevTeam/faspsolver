@@ -25,16 +25,16 @@ solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 %----------------------------------------------%
 
 precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
-itsolver_tol             = 1e-6   % solver tolerance 
-itsolver_maxit           = 200    % maximal iteration number 
-stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
+itsolver_tol             = 1e-8   % solver tolerance 
+itsolver_maxit           = 1000    % maximal iteration number 
+stop_type                = 2      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
 itsolver_restart         = 20     % restart number for GMRES
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
 %----------------------------------------------%
 
-ILU_type                 = 1      % 1 ILUk | 2 ILUt | 3 ILUtp 
+ILU_type                 = 1     % 1 ILUk | 2 ILUt | 3 ILUtp 
 ILU_lfil                 = 0      % level of fill-in for ILUk
 ILU_droptol              = 0.01   % ILU drop tolerance
 ILU_permtol              = 0.001  % permutation toleration for ILUtp
@@ -45,7 +45,7 @@ ILU_relax                = 0.9    % add dropped entries to diagonal with relaxat
 %----------------------------------------------%
 
 Schwarz_mmsize           = 200    % max block size
-Schwarz_maxlvl           = 2      % level used to form blocks
+Schwarz_maxlvl           = 3      % level used to form blocks
 Schwarz_type             = 1      % 1 forward | 2 backward | 3 symmetric
 
 %----------------------------------------------%
@@ -59,8 +59,8 @@ AMG_cycle_type           = V      % V V-cycle | W W-cycle
                                   % A AMLI-cycle | NA Nonlinear AMLI-cycleA
 AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
-AMG_levels               = 20     % max number of levels
-AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
+AMG_levels               = 5     % max number of levels
+AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
 AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
@@ -86,16 +86,18 @@ AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
 AMG_coarsening_type      = 1      % 1 Modified RS
                                   % 3 Compatible Relaxation
                                   % 4 Aggressive 
-AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
+AMG_interpolation_type   = 2      % 1 Direct | 2 Standard | 3 Energy-min
 AMG_strong_threshold     = 0.3    % Strong threshold
-AMG_truncation_threshold = 0.1    % Truncation threshold
+AMG_truncation_threshold = 0.6    % Truncation threshold
 AMG_max_row_sum          = 0.9    % Max row sum
 
 %----------------------------------------------%
 % parameters for aggregation-type AMG SETUP    %
 %----------------------------------------------%
 
-AMG_strong_coupled       = 0.08   % Strong coupled threshold
-AMG_max_aggregation      = 20     % Max size of aggregations
+AMG_aggregation_type     = 2      % 1 Matching | 2 VMB 
+AMG_pair_number          = 2      % Number of pairs in matching
+AMG_strong_coupled       = 0.12   % Strong coupled threshold
+AMG_max_aggregation      = 100    % Max size of aggregations
 AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
 AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing

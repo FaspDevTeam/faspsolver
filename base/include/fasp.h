@@ -757,6 +757,17 @@ typedef struct {
 	
 	//! Matrix data
 	dCSRmat *A;
+    
+    // extra near kernal space
+    
+    //! Matrix data for near kernal
+    dCSRmat *A_nk;
+    
+    //! Prolongation for near kernal
+    dCSRmat *P_nk;
+    
+    //! Resriction for near kernal
+    dCSRmat *R_nk;
 	
 	// temporary work space
     

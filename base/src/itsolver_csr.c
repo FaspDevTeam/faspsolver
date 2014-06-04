@@ -585,6 +585,123 @@ FINISHED:
     return status;
 }
 
+/**
+ * \fn INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A, dvector *b, dvector *x,
+ *                                      itsolver_param *itparam, AMG_param *amgparam,
+                                        dCSRmat *A_nk, dCSRmat *P_nk, dCSRmat *R_nk)
+ *
+ * \brief Solve Ax=b by AMG preconditioned Krylov methods with an extra near kernel solve
+ *
+ * \param A         Pointer to the coeff matrix in dCSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
+ * \param itparam   Pointer to parameters for iterative solvers
+ * \param amgparam  Pointer to parameters for AMG methods
+ * \param A_nk      Pointer to the coeff matrix of near kernel space in dCSRmat format
+ * \param P_nk      Pointer to the prolongation of near kernel space in dCSRmat format
+ * \param R_nk      Pointer to the restriction of near kernel space in dCSRmat format
+ *
+ * \return          Number of iterations if succeed
+ *
+ * \author Xiaozhe Hu
+ * \date   05/26/2014
+ */
+INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
+                                 dvector *b,
+                                 dvector *x,
+                                 itsolver_param *itparam,
+                                 AMG_param *amgparam,
+                                 dCSRmat *A_nk,
+                                 dCSRmat *P_nk,
+                                 dCSRmat *R_nk)
+{
+    const INT print_level = itparam->print_level;
+    const INT max_levels = amgparam->max_levels;
+    const INT nnz=A->nnz, m=A->row, n=A->col;
+    
+    /* Local Variables */
+    INT      status = SUCCESS;
+    REAL     solver_start, solver_end, solver_duration;
+    
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_dcsr_krylov_amg ...... [Start]\n");
+    printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
+    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
+#endif
+    
+    fasp_gettime(&solver_start);
+    
+    // initialize A, b, x for mgl[0]
+    AMG_data *mgl=fasp_amg_data_create(max_levels);
+    mgl[0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
+    mgl[0].b=fasp_dvec_create(n); mgl[0].x=fasp_dvec_create(n);
+    
+    // setup preconditioner
+    switch (amgparam->AMG_type) {
+            
+        case SA_AMG: // Smoothed Aggregation AMG
+            status = fasp_amg_setup_sa(mgl, amgparam); break;
+            
+        case UA_AMG: // Unsmoothed Aggregation AMG
+            status = fasp_amg_setup_ua(mgl, amgparam); break;
+            
+        default: // Classical AMG
+#ifdef _OPENMP
+            status = fasp_amg_setup_rs_omp(mgl, amgparam); break;
+#else
+            status = fasp_amg_setup_rs(mgl, amgparam); break;
+#endif
+            
+    }
+    
+#if CHMEM_MODE
+    fasp_mem_usage();
+#endif
+    
+    if (status < 0) goto FINISHED;
+    
+    // setup preconditioner
+    precond_data pcdata;
+    fasp_param_amg_to_prec(&pcdata,amgparam);
+    pcdata.max_levels = mgl[0].num_levels;
+    pcdata.mgl_data = mgl;
+    
+    // near kernel space
+#if WITH_UMFPACK // use UMFPACK directly
+    dCSRmat A_tran;
+    fasp_dcsr_trans(A_nk, &A_tran);
+    fasp_dcsr_sort(&A_tran);
+    pcdata.A_nk = &A_tran;
+#else
+    pcdata.A_nk = A_nk;
+#endif
+    pcdata.P_nk = P_nk;
+    pcdata.R_nk = R_nk;
+    
+    precond pc; pc.data = &pcdata;
+    
+    pc.fct = fasp_precond_amg_nk;
+    
+    // call iterative solver
+    status = fasp_solver_dcsr_itsolver(A, b, x, &pc, itparam);
+    
+    if ( print_level>=PRINT_MIN ) {
+        fasp_gettime(&solver_end);
+        solver_duration = solver_end - solver_start;
+        print_cputime("AMG_NK_Krylov method totally", solver_duration);
+    }
+    
+FINISHED:
+    fasp_amg_data_free(mgl, amgparam);
+#if WITH_UMFPACK // use UMFPACK directly
+    fasp_dcsr_free(&A_tran);
+#endif
+    
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_solver_dcsr_krylov_amg ...... [Finish]\n");
+#endif
+    return status;
+}
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

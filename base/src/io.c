@@ -2034,6 +2034,274 @@ void fasp_vector_write (const char *filerhs,
     fclose(fp);
 }
 
+/**
+ * \fn fasp_hb_read(char *input_file, dCSRmat *A, dvector *b)
+ *
+ * \brief write RHS vector from different kinds of formats in both ASCII and binary files
+ *
+ * \param filerhs   File name of vector file
+ * \param A         Pointer to the matrix
+ * \param b         Pointer to the vector
+ *
+ * \note modified from the c code hb_io_prb.c by John Burkardt
+ *
+ * \author Xiaoehe Hu
+ * \date   05/30/2014
+ *
+ */
+void fasp_hb_read(char *input_file,
+                  dCSRmat *A,
+                  dvector *b)
+{
+    //-------------------------
+    // Setup local variables
+    //-------------------------
+    // variables for FASP
+    dCSRmat tempA;
+    
+    // variables for hb_io
+    
+    int *colptr = NULL;
+    double *exact = NULL;
+    double *guess = NULL;
+    int i;
+    int indcrd;
+    char *indfmt = NULL;
+    FILE *input;
+    int j;
+    char *key = NULL;
+    int khi;
+    int klo;
+    char *mxtype = NULL;
+    int ncol;
+    int neltvl;
+    int nnzero;
+    int nrhs;
+    int nrhsix;
+    int nrow;
+    int ptrcrd;
+    char *ptrfmt = NULL;
+    int rhscrd;
+    char *rhsfmt = NULL;
+    int *rhsind = NULL;
+    int *rhsptr = NULL;
+    char *rhstyp = NULL;
+    double *rhsval = NULL;
+    double *rhsvec = NULL;
+    int *rowind = NULL;
+    char *title = NULL;
+    int totcrd;
+    int valcrd;
+    char *valfmt = NULL;
+    double *values = NULL;
+    
+    printf ( "\n" );
+    printf ( "  HB_FILE_READ reads all the data in an HB file.\n" );
+    //printf ( "  HB_FILE_MODULE is the module that stores the data.\n" );
+    
+    printf ( "\n" );
+    printf ( "  Reading the file '%s'\n", input_file );
+    
+    input = fopen ( input_file, "rt" );
+    
+    if ( !input )
+    {
+        printf ( "\n" );
+        printf ( "  Error opening the file.\n" );
+        return;
+    }
+    
+    //-------------------------
+    // Reading...
+    //-------------------------
+    hb_file_read ( input, &title, &key, &totcrd, &ptrcrd, &indcrd,
+                  &valcrd, &rhscrd, &mxtype, &nrow, &ncol, &nnzero, &neltvl,
+                  &ptrfmt, &indfmt, &valfmt, &rhsfmt, &rhstyp, &nrhs, &nrhsix,
+                  &colptr, &rowind, &values, &rhsval, &rhsptr, &rhsind, &rhsvec,
+                  &guess, &exact );
+
+    //-------------------------
+    // Printing if needed
+    //-------------------------
+#if DEBUG_MODE
+    /*
+     Print out the header information.
+     */
+    hb_header_print ( title, key, totcrd, ptrcrd, indcrd, valcrd,
+                     rhscrd, mxtype, nrow, ncol, nnzero, neltvl, ptrfmt, indfmt, valfmt,
+                     rhsfmt, rhstyp, nrhs, nrhsix );
+    /*
+     Print the structure information.
+     */
+    hb_structure_print ( ncol, mxtype, nnzero, neltvl, colptr, rowind );
+    
+    /*
+     Print the values.
+     */
+    hb_values_print ( ncol, colptr, mxtype, nnzero, neltvl, values );
+    
+    if ( 0 < rhscrd )
+    {
+        /*
+         Print a bit of the right hand sides.
+         */
+        if ( rhstyp[0] == 'F' )
+        {
+            r8mat_print_some ( nrow, nrhs, rhsval, 1, 1, 5, 5, "  Part of RHS" );
+        }
+        else if ( rhstyp[0] == 'M' && mxtype[2] == 'A' )
+        {
+            i4vec_print_part ( nrhs+1, rhsptr, 10, "  Part of RHSPTR" );
+            i4vec_print_part ( nrhsix, rhsind, 10, "  Part of RHSIND" );
+            r8vec_print_part ( nrhsix, rhsvec, 10, "  Part of RHSVEC" );
+        }
+        else if ( rhstyp[0] == 'M' && mxtype[2] == 'E' )
+        {
+            r8mat_print_some ( nnzero, nrhs, rhsval, 1, 1, 5, 5, "  Part of RHS" );
+        }
+        /*
+         Print a bit of the starting guesses.
+         */
+        if ( rhstyp[1] == 'G' )
+        {
+            r8mat_print_some ( nrow, nrhs, guess, 1, 1, 5, 5, "  Part of GUESS" );
+        }
+        /*
+         Print a bit of the exact solutions.
+         */
+        if ( rhstyp[2] == 'X' )
+        {
+            r8mat_print_some ( nrow, nrhs, exact, 1, 1, 5, 5, "  Part of EXACT" );
+        }
+        
+    }
+#endif
+
+    //-------------------------
+    // Closing
+    //-------------------------
+    fclose ( input );
+    
+    //-------------------------
+    // Convert to FASP format
+    //-------------------------
+    
+    // convert matrix
+    if (ncol != nrow) {
+       
+        printf ( "ERROR: The matrix is not square!!\n" );
+        goto FINISHED;
+
+    }
+    
+    tempA = fasp_dcsr_create(nrow, ncol, nnzero);
+    
+    //fasp_iarray_cp(ncol+1, colptr, tempA.IA);
+    //fasp_iarray_cp(nnzero, rowind, tempA.JA);
+    for (i=0; i<=ncol; i++) tempA.IA[i] = colptr[i]-1;
+    for (i=0; i<nnzero; i++) tempA.JA[i] = rowind[i]-1;
+    fasp_array_cp (nnzero, values, tempA.val);
+    
+    // if the matrix is symmeric
+    if (mxtype[1] == 'S'){
+        
+        // A = A'+ A
+        dCSRmat tempA_tran;
+        fasp_dcsr_trans(&tempA, &tempA_tran);
+        fasp_blas_dcsr_add(&tempA, 1.0, &tempA_tran, 1.0, A);
+        fasp_dcsr_free(&tempA);
+        fasp_dcsr_free(&tempA_tran);
+
+        // modify diagonal entries
+        for (i=0; i<A->row; i++) {
+            
+            for(j=A->IA[i]; j<A->IA[i+1]; j++){
+                
+                if (A->JA[j] == i) {
+                    A->val[j] = A->val[j]/2;
+                    break;
+                }
+            
+            }
+            
+        }
+        
+    }
+    // if the matrix is not symmetric
+    else
+    {
+        fasp_dcsr_trans(&tempA, A);
+        fasp_dcsr_free(&tempA);
+    
+    }
+    
+    // convert right hand side
+    
+    if ( nrhs == 0 ){
+        
+        printf ( "ERROR: There is not right hand side!!\n" );
+        goto FINISHED;
+        
+    }
+    else if (nrhs > 1){
+        
+        printf ( "ERROR: There is more than one right hand side!!\n" );
+        goto FINISHED;
+        
+    }
+    else {
+        
+        fasp_dvec_alloc(nrow, b);
+        fasp_array_cp(nrow, rhsval, b->val);
+    }
+    
+    
+    //-------------------------
+    // Cleanning
+    //-------------------------
+FINISHED:
+    if ( colptr )
+    {
+        free ( colptr );
+    }
+    if ( exact )
+    {
+        free ( exact );
+    }
+    if ( guess )
+    {
+        free ( guess );
+    }
+    if ( rhsind )
+    {
+        free ( rhsind );
+    }
+    if ( rhsptr )
+    {
+        free ( rhsptr );
+    }
+    if ( rhsval )
+    {
+        free ( rhsval );
+    }
+    if ( rhsvec )
+    {
+        free ( rhsvec );
+    }
+    if ( rowind )
+    {
+        free ( rowind );
+    }
+    if ( values )
+    {
+        free ( values );
+    }
+    
+    return;
+    
+    
+}
+
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/

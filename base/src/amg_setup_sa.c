@@ -17,10 +17,13 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 #include "aggregation_csr.inl"
+#include "aggregation_bsr.inl"
 
-static SHORT amg_setup_smoothP_smoothR  (AMG_data *, AMG_param *);
+
+static SHORT amg_setup_smoothP_smoothR(AMG_data *, AMG_param *);
 static SHORT amg_setup_smoothP_unsmoothR(AMG_data *, AMG_param *);
-static void smooth_agg(dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRmat *);
+static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
+                                            AMG_param *param);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -63,6 +66,35 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_sa ...... [Finish]\n");
+#endif
+    
+    return status;
+}
+
+/**
+ * \fn INT fasp_amg_setup_sa_bsr (AMG_data_bsr *mgl, AMG_param *param)
+ *
+ * \brief Set up phase of smoothed aggregation AMG (BSR format)
+ *
+ * \param mgl    Pointer to AMG data: AMG_data_bsr
+ * \param param  Pointer to AMG parameters: AMG_param
+ *
+ * \return       SUCCESS if succeed, error otherwise
+ *
+ * \author Xiaozhe Hu
+ * \date   05/26/2014
+ */
+SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr *mgl,
+                             AMG_param *param)
+{
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_amg_setup_ua_bsr ...... [Start]\n");
+#endif
+    
+    SHORT status = amg_setup_smoothP_smoothR_bsr(mgl, param);
+    
+#if DEBUG_MODE
+    printf("### DEBUG: fasp_amg_setup_ua_bsr ...... [Finish]\n");
 #endif
     
     return status;
@@ -146,6 +178,11 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
     
+    /*----------------------------*/
+    /*--- checking aggregation ---*/
+    /*----------------------------*/    
+    if (param->aggregation_type == PAIRWISE) param->pair_number = MIN(param->pair_number, max_levels);
+    
     // Main AMG setup loop
     while ( (mgl[level].A.row > min_cdof) && (level < max_levels-1) ) {
         
@@ -180,7 +217,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
                     &Neighbor[level], &num_aggregations[level]);
         
         /* -- Form Tentative prolongation --*/
-        form_tentative_p(&vertices[level], &tentp[level], &mgl[0],
+        form_tentative_p(&vertices[level], &tentp[level], mgl[0].near_kernel_basis,
                          level+1, num_aggregations[level]);
         
         /* -- Smoothing -- */
@@ -352,7 +389,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
                     &Neighbor[level], &num_aggregations[level]);
         
         /* -- Form Tentative prolongation --*/
-        form_tentative_p(&vertices[level], &tentp[level], &mgl[0],
+        form_tentative_p(&vertices[level], &tentp[level], mgl[0].near_kernel_basis,
                          level+1, num_aggregations[level]);
         
         /* -- Smoothing -- */
@@ -421,163 +458,268 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     return status;
 }
 
+
 /**
- * \fn static void smooth_agg (dCSRmat *A, dCSRmat *tentp, dCSRmat *P,
- *                             AMG_param *param, INT levelNum, dCSRmat *N)
+ * \fn static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
+ *                                                     AMG_param *param)
  *
- * \brief Smooth the tentative prolongation
+ * \brief Set up phase of smoothed aggregation AMG, using smoothed P and smoothed A
+ *        in BSR format
  *
- * \param A         Pointer to the coefficient matrices
- * \param tentp     Pointer to the tentative prolongation operators
- * \param P         Pointer to the prolongation operators
- * \param param     Pointer to AMG parameters
- * \param levelNum  Current level number
- * \param N         Pointer to strongly coupled neighborhoods
+ * \param mgl    Pointer to AMG data: AMG_data_bsr
+ * \param param  Pointer to AMG parameters: AMG_param
+ *
+ * \return       SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
- * \date   09/29/2009
+ * \date   05/26/2014
  *
- * Modified by Chunsheng Feng, Zheng Li on 10/12/2012
- * Modified by Chensong on 04/29/2014: Fix a sign problem
  */
-static void smooth_agg (dCSRmat *A,
-                        dCSRmat *tentp,
-                        dCSRmat *P,
-                        AMG_param *param,
-                        INT levelNum,
-                        dCSRmat *N)
+static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
+                                            AMG_param *param)
 {
-    const SHORT filter = param->smooth_filter;
-    const INT   row = A->row, col= A->col;
-    const REAL  smooth_factor = param->tentative_smooth;
+    const SHORT prtlvl   = param->print_level;
+    const SHORT min_cdof = MAX(param->coarse_dof,50);
+    const INT   m        = mgl[0].A.ROW;
+    const INT   nb       = mgl[0].A.nb;
     
-    dCSRmat S;
-    dvector diag;  // diaganoal entries
+    ILU_param iluparam;
+    SHORT     max_levels=param->max_levels;
+    SHORT     i, level=0, status=SUCCESS;
+    REAL      setup_start, setup_end;
     
-    REAL row_sum_A, row_sum_N;
-    INT i,j;
+    dCSRmat temp1, temp2;
     
-    // local variables
-#ifdef _OPENMP
-    INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+#if DEBUG_MODE
+    printf("### DEBUG: amg_setup_unsmoothP_unsmoothR_bsr ...... [Start]\n");
+    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
+           mgl[0].A.ROW, mgl[0].A.COL, mgl[0].A.NNZ);
 #endif
     
-    /* Step 1. Form smoother */
+    fasp_gettime(&setup_start);
     
-    /* Without filter: Using A for damped Jacobian smoother */
-    if ( filter != ON ) {
-        
-        // copy structure from A
-        S = fasp_dcsr_create(row, col, A->IA[row]);
-        
-#ifdef _OPENMP
-#pragma omp parallel for if(row>OPENMP_HOLDS)
-#endif
-        for ( i=0; i<=row; ++i ) S.IA[i] = A->IA[i];
-        for ( i=0; i<S.IA[S.row]; ++i ) S.JA[i] = A->JA[i];
-        
-        fasp_dcsr_getdiag(0, A, &diag);  // get the diaganol entries of A
-        
-        // check the diaganol entries.
-        // if it is too small, use Richardson smoother for the corresponding row
-#ifdef _OPENMP
-#pragma omp parallel for if(row>OPENMP_HOLDS)
-#endif
-        for (i=0; i<row; ++i) {
-            if (ABS(diag.val[i]) < 1e-6) diag.val[i] = 1.0;
-        }
-        
-#ifdef _OPENMP
-#pragma omp parallel for if(row>OPENMP_HOLDS) private(j)
-#endif
-        for (i=0; i<row; ++i) {
-            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
-                if (S.JA[j] == i) {
-                    S.val[j] = 1 - smooth_factor * A->val[j] / diag.val[i];
-                }
-                else {
-                    S.val[j] = - smooth_factor * A->val[j] / diag.val[i];
-                }
-            }
-        }
+    /*-----------------------*/
+    /*--local working array--*/
+    /*-----------------------*/
+    
+    // level info (fine: 0; coarse: 1)
+    ivector *vertices = (ivector *)fasp_mem_calloc(max_levels, sizeof(ivector));
+    
+    //each elvel stores the information of the number of aggregations
+    INT *num_aggs = (INT *)fasp_mem_calloc(max_levels, sizeof(INT));
+    
+    // each level stores the information of the strongly coupled neighborhoods
+    dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels, sizeof(dCSRmat));
+    
+    // each level stores the information of the tentative prolongations
+    dBSRmat *tentp = (dBSRmat *)fasp_mem_calloc(max_levels,sizeof(dBSRmat));
+    
+    for ( i=0; i<max_levels; ++i ) num_aggs[i] = 0;
+    
+    /*-----------------------*/
+    /*-- setup null spaces --*/
+    /*-----------------------*/
+    
+    // null space for whole Jacobian
+	//mgl[0].near_kernel_dim   = 1;
+    //mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim, sizeof(REAL*));
+    
+    //for ( i=0; i < mgl->near_kernel_dim; ++i ) mgl[0].near_kernel_basis[i] = NULL;
+    
+    /*-----------------------*/
+    /*-- setup ILU param   --*/
+    /*-----------------------*/
+    
+    // initialize ILU parameters
+    mgl->ILU_levels = param->ILU_levels;
+    if ( param->ILU_levels > 0 ) {
+        iluparam.print_level = param->print_level;
+        iluparam.ILU_lfil    = param->ILU_lfil;
+        iluparam.ILU_droptol = param->ILU_droptol;
+        iluparam.ILU_relax   = param->ILU_relax;
+        iluparam.ILU_type    = param->ILU_type;
     }
     
-    /* Using filtered A for damped Jacobian smoother */
-    else {
-        /* Form filtered A and store in N */
-#ifdef _OPENMP
-#pragma omp parallel for private(myid, mybegin, myend, i, j, row_sum_A, row_sum_N) if (row>OPENMP_HOLDS)
-        for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
-            for (i=mybegin; i<myend; ++i) {
-#else
-            for (i=0; i<row; ++i) {
-#endif
-                for (row_sum_A = 0.0, j=A->IA[i]; j<A->IA[i+1]; ++j) {
-                    if (A->JA[j] != i) row_sum_A += A->val[j];
-                }
+    /*----------------------------*/
+    /*--- checking aggregation ---*/
+    /*----------------------------*/
+
+    if (param->aggregation_type == PAIRWISE) param->pair_number = MIN(param->pair_number, max_levels);
+    
+    // Main AMG setup loop
+    while ( (mgl[level].A.ROW > min_cdof) && (level < max_levels-1) ) {
+        
+        printf("level = %d\n", level);
+        
+        /*-- setup ILU decomposition if necessary */
+        if ( level < param->ILU_levels ) {
+            status = fasp_ilu_dbsr_setup(&mgl[level].A, &mgl[level].LU, &iluparam);
+            if ( status < 0 ) {
+                param->ILU_levels = level;
+                printf("### WARNING: ILU setup on level %d failed!\n", level);
+            }
+        }
+        
+        /*-- get the diagonal inverse --*/
+        mgl[level].diaginv = fasp_dbsr_getdiaginv(&mgl[level].A);
+        
+        /*-- Aggregation --*/
+        //mgl[level].PP =  fasp_dbsr_getblk_dcsr(&mgl[level].A);
+        mgl[level].PP = fasp_dbsr_Linfinity_dcsr(&mgl[level].A);
+        
+        switch ( param->aggregation_type ) {
                 
-                for (row_sum_N = 0.0, j=N->IA[i]; j<N->IA[i+1]; ++j) {
-                    if (N->JA[j] != i) row_sum_N += N->val[j];
-                }
-                    
-                for (j=N->IA[i]; j<N->IA[i+1]; ++j) {
-                    if (N->JA[j] == i) {
-                        // The original paper has a wrong sign!!! --Chensong
-                        N->val[j] += row_sum_A - row_sum_N;
-                    }
-                }
-            }
-#ifdef _OPENMP
+            case VMB: // VMB aggregation
+                
+                aggregation(&mgl[level].PP, &vertices[level], param, level+1,
+                            &Neighbor[level], &num_aggs[level]);
+                
+                /*-- Choose strenth threshold adaptively --*/
+                if ( num_aggs[level]*4 > mgl[level].PP.row )
+                    param->strong_coupled /= 4;
+                else if ( num_aggs[level]*1.25 < mgl[level].PP.row )
+                    param->strong_coupled *= 1.5;
+                
+                break;
+                
+            default: // pairwise matching aggregation
+                
+                //aggregation_coarsening(&mgl[level].PP, param, level, vertices, &num_aggs[level]);
+                aggregation(&mgl[level].PP, &vertices[level], param, level+1,
+                            &Neighbor[level], &num_aggs[level]);
+                
+                break;
         }
-#endif
-        // copy structure from N (filtered A)
-        S = fasp_dcsr_create(row, col, N->IA[row]);
-            
-#ifdef _OPENMP
-#pragma omp parallel for if(row>OPENMP_HOLDS)
-#endif
-        for (i=0; i<=row; ++i) S.IA[i] = N->IA[i];
         
-        for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
-            
-        fasp_dcsr_getdiag(0, N, &diag);  // get the diaganol entries of N (filtered A)
-            
-        // check the diaganol entries.
-        // if it is too small, use Richardson smoother for the corresponding row
-#ifdef _OPENMP
-#pragma omp parallel for if(row>OPENMP_HOLDS)
-#endif
-        for (i=0;i<row;++i) {
-            if (ABS(diag.val[i]) < 1e-6) diag.val[i] = 1.0;
+        /* -- Form Tentative prolongation --*/
+        printf("before form tentative P\n");
+        if (level == 0 && mgl[0].near_kernel_dim >0 ){
+            form_tentative_p_bsr1(&vertices[level], &tentp[level], &mgl[0], level+1, num_aggs[level], mgl[0].near_kernel_dim, mgl[0].near_kernel_basis);
         }
-            
-#ifdef _OPENMP
-#pragma omp parallel for if(row>OPENMP_HOLDS) private(i,j)
-#endif
-        for (i=0;i<row;++i) {
-            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
-                if (S.JA[j] == i) {
-                    S.val[j] = 1 - smooth_factor * N->val[j] / diag.val[i];
-                }
-                else {
-                    S.val[j] = - smooth_factor * N->val[j] / diag.val[i];
-                }
-            }
+        else{
+            form_boolean_p_bsr(&vertices[level], &tentp[level], &mgl[0], level+1, num_aggs[level]);
         }
+        
+        /* -- Smoothing -- */
+        printf("Smoothing P\n");
+        smooth_agg_bsr(&mgl[level].A, &tentp[level], &mgl[level].P, param,
+                   level+1, &Neighbor[level]);
+        
+        /*-- Form resitriction --*/
+        printf("Form Restriction\n");
+        fasp_dbsr_trans(&mgl[level].P, &mgl[level].R);
+        
+        /*-- Form coarse level stiffness matrix --*/
+        printf("RAP\n");
+        fasp_blas_dbsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
+        
+        /* -- Form extra near kernal space if needed --*/
+        printf("Form extra near kernel space\n");
+        if (mgl[level].A_nk != NULL){
             
+            mgl[level+1].A_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            mgl[level+1].P_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            mgl[level+1].R_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            
+            temp1 = fasp_format_dbsr_dcsr(&mgl[level].R);
+            fasp_blas_dcsr_mxm(&temp1, mgl[level].P_nk, mgl[level+1].P_nk);
+            fasp_dcsr_trans(mgl[level+1].P_nk, mgl[level+1].R_nk);
+            temp2 = fasp_format_dbsr_dcsr(&mgl[level+1].A);
+            fasp_blas_dcsr_rap(mgl[level+1].R_nk, &temp2, mgl[level+1].P_nk, mgl[level+1].A_nk);
+            fasp_dcsr_free(&temp1);
+            fasp_dcsr_free(&temp2);
+            
+        }
+        
+        printf("clean\n");
+        fasp_dcsr_free(&Neighbor[level]);
+        fasp_ivec_free(&vertices[level]);
+        fasp_dbsr_free(&tentp[level]);
+        
+        ++level;
     }
+    
+#if WITH_SuperLU
+    /* Setup SuperLU direct solver on the coarsest level */
+    mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
+#endif
+    
+    
+#if WITH_UMFPACK
+    // Need to sort the matrix A for UMFPACK format
+    mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
+    dCSRmat Ac_tran;
+    fasp_dcsr_trans(&mgl[level].Ac, &Ac_tran);
+    fasp_dcsr_sort(&Ac_tran);
+    fasp_dcsr_cp(&Ac_tran, &mgl[level].Ac);
+    fasp_dcsr_free(&Ac_tran);
+    
+    mgl[level].Numeric = fasp_umfpack_factorize(&mgl[level].Ac, 5);
+#endif
+    
+#if WITH_MUMPS
+    /* Setup MUMPS direct solver on the coarsest level */
+    mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
+    fasp_solver_mumps_steps(&mgl[level].Ac, &mgl[level].b, &mgl[level].x, 1);
+#endif
+    
+    // setup total level number and current level
+    mgl[0].num_levels = max_levels = level+1;
+    mgl[0].w = fasp_dvec_create(3*m*nb);
+    
+    if (mgl[0].A_nk != NULL){
         
-    fasp_dvec_free(&diag);
+#if WITH_UMFPACK
+        // Need to sort the matrix A_nk for UMFPACK
+        fasp_dcsr_trans(mgl[0].A_nk, &temp1);
+        fasp_dcsr_sort(&temp1);
+        fasp_dcsr_cp(&temp1, mgl[0].A_nk);
+        fasp_dcsr_free(&temp1);
+#endif
         
-    /* Step 2. Smooth the tentative prolongation P = S*tenp */
-    fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this.
+    }
+
+    
+    for ( level = 1; level < max_levels; level++ ) {
+        INT mm = mgl[level].A.ROW*nb;
+        mgl[level].num_levels = max_levels;
+        mgl[level].b = fasp_dvec_create(mm);
+        mgl[level].x = fasp_dvec_create(mm);
+        mgl[level].w = fasp_dvec_create(3*mm);
         
-    P->nnz = P->IA[P->row];
+        if (mgl[level].A_nk != NULL){
+         
+#if WITH_UMFPACK
+            // Need to sort the matrix A_nk for UMFPACK
+            fasp_dcsr_trans(mgl[level].A_nk, &temp1);
+            fasp_dcsr_sort(&temp1);
+            fasp_dcsr_cp(&temp1, mgl[level].A_nk);
+            fasp_dcsr_free(&temp1);
+#endif
+            
+        }
+
         
-    fasp_dcsr_free(&S);
+    }
+    
+    
+    if ( prtlvl > PRINT_NONE ) {
+        fasp_gettime(&setup_end);
+        print_amgcomplexity_bsr(mgl,prtlvl);
+        print_cputime("Smoothed aggregation (BSR) setup", setup_end - setup_start);
+    }
+    
+    fasp_mem_free(vertices);
+    fasp_mem_free(num_aggs);
+    fasp_mem_free(Neighbor);
+    
+#if DEBUG_MODE
+    printf("### DEBUG: amg_setup_unsmoothP_unsmoothR_bsr ...... [Finish]\n");
+#endif
+    
+    return status;
 }
+
     
 /*---------------------------------*/
 /*--        End of File          --*/
