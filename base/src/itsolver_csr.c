@@ -144,7 +144,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
     const SHORT print_level = itparam->print_level;
     
     /* Local Variables */
-    INT      status = SUCCESS;
+    INT      status = FASP_SUCCESS;
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE
@@ -194,7 +194,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
     const INT print_level = itparam->print_level;    
     
     /* Local Variables */
-    INT       status = SUCCESS;
+    INT       status = FASP_SUCCESS;
     REAL      solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE
@@ -262,7 +262,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
     const INT schwarz_type   = schparam->schwarz_type;
 	
     REAL setup_start, setup_end, setup_duration, solver_start, solver_end, solver_duration;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
 	
 #if DEBUG_MODE
 	printf("### DEBUG: krylov_schwarz ...... [Start]\n");
@@ -338,7 +338,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     const INT nnz=A->nnz, m=A->row, n=A->col;    
     
     /* Local Variables */
-    INT      status = SUCCESS;
+    INT      status = FASP_SUCCESS;
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE
@@ -444,7 +444,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
     const INT print_level = itparam->print_level;
     
     /* Local Variables */
-    INT      status = SUCCESS;
+    INT      status = FASP_SUCCESS;
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE
@@ -533,7 +533,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     
     /* Local Variables */
     REAL solver_start, solver_end, solver_duration;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_dcsr_krylov_ilu_M ...... [Start]\n");
@@ -620,7 +620,7 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
     const INT nnz=A->nnz, m=A->row, n=A->col;
     
     /* Local Variables */
-    INT      status = SUCCESS;
+    INT      status = FASP_SUCCESS;
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE

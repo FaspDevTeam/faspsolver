@@ -129,7 +129,7 @@ int main (int argc, const char *argv[])
 		free(b);
 	}
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

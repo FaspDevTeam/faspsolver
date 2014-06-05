@@ -28,7 +28,7 @@
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       SUCCESS if successed, otherwise, error information.
+ * \return       FASP_SUCCESS if successed, otherwise, error information.
  *
  * \author James Brannick
  * \date   04/21/2010
@@ -44,7 +44,7 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
     
     // local variables
     INT     i_0 = 0, i_n;
-    SHORT   level = 0, status = SUCCESS;
+    SHORT   level = 0, status = FASP_SUCCESS;
     SHORT   max_levels=param->max_levels;
     REAL    setup_start, setup_end;
     

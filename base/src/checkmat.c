@@ -56,7 +56,7 @@ INT fasp_check_diagpos (dCSRmat *A)
  *
  * \param A pointr to the dCSRmat matrix
  * 
- * \return SUCCESS if no diagonal entry is clase to zero, else ERROR (negative value)
+ * \return FASP_SUCCESS if no diagonal entry is clase to zero, else ERROR (negative value)
  *
  * \author Shuo Zhang
  * \date   03/29/2009
@@ -83,7 +83,7 @@ SHORT fasp_check_diagzero (dCSRmat *A)
         } // end for k
     } // end for i
     
-    status = SUCCESS;
+    status = FASP_SUCCESS;
     
  FINISHED:    
     return status;
@@ -294,7 +294,7 @@ SHORT fasp_check_dCSRmat (dCSRmat *A)
         }
     }
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -328,7 +328,7 @@ SHORT fasp_check_iCSRmat (iCSRmat *A)
         }
     }
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

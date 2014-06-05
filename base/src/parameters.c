@@ -30,7 +30,7 @@ void fasp_param_set (int argc,
 {
     int      arg_index   = 1;
     int      print_usage = 0;
-    SHORT    status      = SUCCESS;
+    SHORT    status      = FASP_SUCCESS;
     
     // Option 1. set default input parameters
     fasp_param_input_init(iniparam);

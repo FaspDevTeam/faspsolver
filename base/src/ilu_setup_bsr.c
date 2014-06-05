@@ -52,7 +52,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
     
     REAL    setup_start, setup_end, setup_duration;
-    SHORT   status = SUCCESS;
+    SHORT   status = FASP_SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_ilu_dbsr_setup ...... [Start]\n");
@@ -157,7 +157,7 @@ static INT numfac_bsr (dBSRmat *A,
     INT k, indj, inds, indja,jluj, jlus, ijaj;
     REAL  *mult,*mult1;
     INT *colptrs;
-    INT status=SUCCESS;
+    INT status=FASP_SUCCESS;
     
     colptrs=(INT*)fasp_mem_calloc(n,sizeof(INT));
     mult=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));

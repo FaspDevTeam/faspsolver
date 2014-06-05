@@ -270,7 +270,7 @@ void fasp_chkerr (const SHORT status,
         case ERROR_QUAD_DIM:
             printf("### ERROR: %s -- Num of quad points is not supported!!!\n", fctname);
             break;
-        case RUN_FAIL:
+        case ERROR_UNKNOWN:
             printf("### ERROR: %s -- Function does not exit successfully!!!\n", fctname);
             break;
         default:

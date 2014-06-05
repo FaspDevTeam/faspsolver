@@ -384,7 +384,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     }
     else {
         printf("### ERROR: nb is illegal!\n");
-        exit(RUN_FAIL);
+        exit(ERROR_UNKNOWN);
     }
     
 }
@@ -620,7 +620,7 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
     }
     else {
         printf("### ERROR: nb is illegal!\n");
-        exit(RUN_FAIL);
+        exit(ERROR_UNKNOWN);
     }
 
 }
@@ -694,7 +694,7 @@ void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
     }
     else {
         printf("### ERROR: nb is illegal!\n");
-        exit(RUN_FAIL);
+        exit(ERROR_UNKNOWN);
     }
     
 }
@@ -764,7 +764,7 @@ void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
     }
     else {
         printf("### ERROR: nb is illegal!\n");
-        exit(RUN_FAIL);
+        exit(ERROR_UNKNOWN);
     }
     
 }
@@ -839,7 +839,7 @@ void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
     }
     else {
         printf("### ERROR: nb is illegal!\n");
-        exit(RUN_FAIL);
+        exit(ERROR_UNKNOWN);
     }
     
 }

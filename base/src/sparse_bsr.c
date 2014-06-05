@@ -207,7 +207,7 @@ INT fasp_dbsr_trans (dBSRmat *A,
 {
     const INT n=A->ROW, m=A->COL, nnz=A->NNZ, nb=A->nb;    
     INT i,j,k,p,inb,jnb,nb2;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     
     AT->ROW=m;
     AT->COL=n;
@@ -289,7 +289,7 @@ INT fasp_dbsr_trans (dBSRmat *A,
  */
 SHORT fasp_dbsr_diagpref (dBSRmat *A)
 {    
-    SHORT         status = SUCCESS;
+    SHORT         status = FASP_SUCCESS;
     const INT     num_rowsA = A -> ROW;
     const INT     num_colsA = A -> COL; 
     const INT     nb = A->nb;
@@ -381,7 +381,7 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
     //fasp_mem_free(tempd);
     
     if (status < 0) return status;
-    else            return SUCCESS;
+    else            return FASP_SUCCESS;
 }
 
 /**

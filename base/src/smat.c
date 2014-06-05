@@ -474,7 +474,7 @@ INT fasp_blas_smat_inv (REAL *a,
             
     }
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**

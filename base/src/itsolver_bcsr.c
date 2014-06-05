@@ -118,7 +118,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
                               itsolver_param *itparam)
 {
     const INT print_level = itparam->print_level;
-    INT status=SUCCESS;
+    INT status=FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
     
     // solver part
@@ -164,7 +164,7 @@ INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
 {
     const INT print_level = itparam->print_level;
     const INT precond_type = itparam->precond_type;
-    INT status=SUCCESS;
+    INT status=FASP_SUCCESS;
     REAL setup_start, setup_end, setup_duration;
     REAL solver_start, solver_end, solver_duration;
     
@@ -271,12 +271,10 @@ INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b, dvector *x,
- *                                            itsolver_param *itparam,
- *                                            INT NumLayers,
- *                                            block_CSRmat *Ai,
- *                                            dCSRmat *local_A,
- *                                            ivector *local_index)
+ * \fn INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b,
+ *                                            dvector *x, itsolver_param *itparam,
+ *                                            INT NumLayers, block_dCSRmat *Ai,
+ *                                            dCSRmat *local_A, ivector *local_index)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -289,11 +287,10 @@ INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
  * \param local_A       Pointer to the local coeff matrices in the dCSRmat format
  * \param local_index   Pointer to the local index in ivector format
  *
- * \return          Number of iterations if succeed
+ * \return              Number of iterations if succeed
  *
  * \author Xiaozhe Hu
  * \date   05/01/2014
- *
  */
 INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
                                        dvector *b,
@@ -305,7 +302,7 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
                                        ivector *local_index)
 {
     const INT print_level = itparam->print_level;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     REAL setup_start, setup_end, setup_duration;
     REAL solve_start, solve_end, solve_duration;
     

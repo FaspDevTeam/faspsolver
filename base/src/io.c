@@ -2035,23 +2035,22 @@ void fasp_vector_write (const char *filerhs,
 }
 
 /**
- * \fn fasp_hb_read(char *input_file, dCSRmat *A, dvector *b)
+ * \fn fasp_hb_read (char *input_file, dCSRmat *A, dvector *b)
  *
- * \brief write RHS vector from different kinds of formats in both ASCII and binary files
+ * \brief Read matrix and right-hans side from a HB format file
  *
- * \param filerhs   File name of vector file
- * \param A         Pointer to the matrix
- * \param b         Pointer to the vector
+ * \param input_file   File name of vector file
+ * \param A            Pointer to the matrix
+ * \param b            Pointer to the vector
  *
- * \note modified from the c code hb_io_prb.c by John Burkardt
+ * \note Modified from the c code hb_io_prb.c by John Burkardt
  *
  * \author Xiaoehe Hu
  * \date   05/30/2014
- *
  */
-void fasp_hb_read(char *input_file,
-                  dCSRmat *A,
-                  dvector *b)
+void fasp_hb_read (char *input_file,
+                   dCSRmat *A,
+                   dvector *b)
 {
     //-------------------------
     // Setup local variables
@@ -2107,7 +2106,7 @@ void fasp_hb_read(char *input_file,
     if ( !input )
     {
         printf ( "\n" );
-        printf ( "  Error opening the file.\n" );
+        printf ( "### Error: Fail to open the file.\n" );
         return;
     }
     
@@ -2189,7 +2188,7 @@ void fasp_hb_read(char *input_file,
     // convert matrix
     if (ncol != nrow) {
        
-        printf ( "ERROR: The matrix is not square!!\n" );
+        printf ( "### ERROR: The matrix is not square!!\n" );
         goto FINISHED;
 
     }
@@ -2239,13 +2238,13 @@ void fasp_hb_read(char *input_file,
     
     if ( nrhs == 0 ){
         
-        printf ( "ERROR: There is not right hand side!!\n" );
+        printf ( "### ERROR: There is not right hand side!!\n" );
         goto FINISHED;
         
     }
     else if (nrhs > 1){
         
-        printf ( "ERROR: There is more than one right hand side!!\n" );
+        printf ( "### ERROR: There is more than one right hand side!!\n" );
         goto FINISHED;
         
     }

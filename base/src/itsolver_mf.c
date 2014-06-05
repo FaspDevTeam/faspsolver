@@ -156,7 +156,7 @@ INT fasp_solver_krylov (mxv_matfree *mf,
     const SHORT print_level = itparam->print_level;
     
     /* Local Variables */
-    INT      status = SUCCESS;
+    INT      status = FASP_SUCCESS;
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE

@@ -30,7 +30,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr(AMG_data_bsr *, AMG_param *);
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       SUCCESS if succeed, error otherwise
+ * \return       FASP_SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   12/28/2011
@@ -61,7 +61,7 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
  * \param mgl    Pointer to AMG data: AMG_data_bsr
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       SUCCESS if succeed, error otherwise
+ * \return       FASP_SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   03/16/2012
@@ -94,7 +94,7 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
  * \param mgl    Pointer to AMG_data
  * \param param  Pointer to AMG_param
  *
- * \return       SUCCESS if succeed, error otherwise
+ * \return       FASP_SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   02/21/2011
@@ -111,7 +111,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     const INT   m          = mgl[0].A.row;
     
     // local variables
-    SHORT       max_levels = param->max_levels, level = 0, status = SUCCESS;
+    SHORT       max_levels = param->max_levels, level = 0, status = FASP_SUCCESS;
     INT         i;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
@@ -298,7 +298,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
  * \param mgl    Pointer to AMG data: AMG_data_bsr
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       SUCCESS if succeed, error otherwise
+ * \return       FASP_SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   03/16/2012
@@ -315,7 +315,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     
     ILU_param iluparam;
     SHORT     max_levels=param->max_levels;
-    SHORT     i, level=0, status=SUCCESS;
+    SHORT     i, level=0, status=FASP_SUCCESS;
     REAL      setup_start, setup_end;
     
     dCSRmat temp1, temp2;

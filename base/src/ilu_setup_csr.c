@@ -61,7 +61,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     REAL  *luval;
     
     REAL  setup_start, setup_end, setup_duration;
-    SHORT    status = SUCCESS;
+    SHORT    status = FASP_SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_ilu_dcsr_setup ...... [Start]\n");

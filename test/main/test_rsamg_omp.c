@@ -19,7 +19,7 @@ main(int argc, const char * argv[])
 {
 	dCSRmat A;
 	dvector b, x;
-	int status=SUCCESS;
+	int status=FASP_SUCCESS;
 	
     //------------------------//
 	// Step 0. Set parameters //
@@ -131,10 +131,7 @@ main(int argc, const char * argv[])
 	fasp_mem_usage();
 
 	if (status<0) {
-		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
-	}
-	else {
-		printf("\nSolver finished successfully!\n\n");
+		printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
 	}
 
 	if (output_type) fclose (stdout);

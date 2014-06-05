@@ -41,7 +41,7 @@ static void form_P_pattern_std (dCSRmat *, iCSRmat *, ivector *, INT, INT);
  * \param S          Strong connection matrix
  * \param param      Pointer to AMG_param: AMG parameters
  *
- * \return           SUCCESS or error message
+ * \return           FASP_SUCCESS or error message
  *
  * \author Xuehai Huang, Chensong Zhang, Xiaozhe Hu, Ludmil Zikatanov
  * \date   09/06/2010
@@ -104,7 +104,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     
     if ( col <= 0 ) {
         printf("### ERROR: Fail to find C variables!\n");
-        return RUN_FAIL;
+        return ERROR_UNKNOWN;
     }
 
 #if DEBUG_MODE
@@ -132,7 +132,7 @@ INT fasp_amg_coarsening_rs (dCSRmat *A,
     printf("### DEBUG: fasp_amg_coarsening_rs ...... [Finish]\n");
 #endif
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /*---------------------------------*/
@@ -319,10 +319,10 @@ static INT compress_S (iCSRmat *S)
     
     if ( S->nnz <= 0 ) {
         printf("### ERROR: nnz = %d. Fail to find strong connections!\n", S->nnz);
-        return RUN_FAIL;
+        return ERROR_UNKNOWN;
     }
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**

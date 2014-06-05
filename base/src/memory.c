@@ -183,7 +183,7 @@ void fasp_mem_usage ()
  * \param message   Error message to print
  * \param ERR       Integer error code
  *
- * \return          SUCCESS or error code
+ * \return          FASP_SUCCESS or error code
  *
  * \author Chensong Zhang
  * \date   11/16/2009
@@ -197,7 +197,7 @@ SHORT fasp_mem_check (void *ptr,
         return ERR;
     }
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 } 
 
 /**
@@ -207,7 +207,7 @@ SHORT fasp_mem_check (void *ptr,
  *
  * \param iludata    Pointer to be cheked
  *
- * \return           SUCCESS if success, else ERROR (negative value) 
+ * \return           FASP_SUCCESS if success, else ERROR (negative value) 
  *
  * \author Xiaozhe Hu, Chensong Zhang
  * \date   11/27/09
@@ -217,7 +217,7 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
     const INT memneed = 2*iludata->row; // estimated memory usage
     
     if ( iludata->nwork >= memneed ) {
-        return SUCCESS;
+        return FASP_SUCCESS;
     }
     else {
         printf("### ERROR: ILU needs %d memory, only %d available!!!\n", 
@@ -233,7 +233,7 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
  *
  * \param A   Pointer to be cheked
  *
- * \return    SUCCESS if success, else ERROR message (negative value) 
+ * \return    FASP_SUCCESS if success, else ERROR message (negative value) 
  *
  * \author Xiaozhe Hu
  * \date   11/27/09
@@ -245,7 +245,7 @@ SHORT fasp_mem_dcsr_check (dCSRmat *A)
         return ERROR_ALLOC_MEM;
     }
     else {
-        return SUCCESS;
+        return FASP_SUCCESS;
     }
 }
 

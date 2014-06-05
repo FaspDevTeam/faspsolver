@@ -59,7 +59,7 @@ void fasp_bdcsr_free(block_dCSRmat *A)
  * \param m     Number of selected rows
  * \param n     Number of selected colums
  *
- * \return      SUCCESS if successed, otherwise return error information.
+ * \return      FASP_SUCCESS if successed, otherwise return error information.
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010
@@ -73,7 +73,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
                         INT n,
                         dCSRmat *B)
 {
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     
     INT i,j,k,nnz=0;
     INT *col_flag;
@@ -152,7 +152,7 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
  * \param m     Number of selected rows
  * \param n     Number of selected colums
  *
- * \return      SUCCESS if successed, otherwise return error information.
+ * \return      FASP_SUCCESS if successed, otherwise return error information.
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   12/25/2010
@@ -166,7 +166,7 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
                         INT n, 
                         dBSRmat *B) 
 {
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     INT i,j,k,nnz=0;
     INT *col_flag;
     INT use_openmp = FALSE;

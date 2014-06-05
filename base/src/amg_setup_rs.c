@@ -30,7 +30,7 @@
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       SUCCESS if successed, otherwise, error information.
+ * \return       FASP_SUCCESS if successed, otherwise, error information.
  *
  * \author Chensong Zhang
  * \date   05/09/2010
@@ -53,7 +53,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     const INT    m          = mgl[0].A.row;
     
     // local variables
-    INT        level = 0, status = SUCCESS;
+    INT        level = 0, status = FASP_SUCCESS;
     INT        max_levels = param->max_levels;
     REAL       setup_start, setup_end;
     ILU_param  iluparam;
@@ -245,7 +245,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
  * \param mgl    Pointer to AMG_data data
  * \param param  Pointer to AMG parameters
  *
- * \return       SUCCESS if successed, otherwise, error information.
+ * \return       FASP_SUCCESS if successed, otherwise, error information.
  *
  * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   03/11/2011
@@ -253,7 +253,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 INT fasp_amg_setup_rs_omp (AMG_data *mgl,
                            AMG_param *param)
 {
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     
 #ifdef _OPENMP
     const INT prtlvl      = param->print_level;
@@ -413,7 +413,7 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
         print_cputime("Classical AMG setup", setup_duration);
     }
     
-    status = SUCCESS;
+    status = FASP_SUCCESS;
     
 FINISHED:
     fasp_ivec_free(&vertices);

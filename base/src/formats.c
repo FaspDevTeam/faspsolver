@@ -20,7 +20,7 @@
  * \param A   Pointer to dCOOmat matrix
  * \param B   Pointer to dCSRmat matrix
  *
- * \return    SUCCESS if succeed
+ * \return    FASP_SUCCESS if succeed
  *
  * \author Xuehai Huang
  * \date   08/10/2009
@@ -58,7 +58,7 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
     
     if (ind) fasp_mem_free(ind);
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 
@@ -70,7 +70,7 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
  * \param A   Pointer to dCSRmat matrix
  * \param B   Pointer to dCOOmat matrix
  *
- * \return    SUCCESS if succeed
+ * \return    FASP_SUCCESS if succeed
  *
  * \author Xuehai Huang
  * \date   08/10/2009
@@ -83,7 +83,7 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
 {
     const INT m=A->row, nnz=A->nnz;
     INT i, j;
-    SHORT status = SUCCESS;
+    SHORT status = FASP_SUCCESS;
     
     B->I=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
     B->J=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
@@ -110,7 +110,7 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
  * \param A   Pointer to dSTRmat matrix
  * \param B   Pointer to dCSRmat matrix
  *
- * \return    SUCCESS if succeed
+ * \return    FASP_SUCCESS if succeed
  *
  * \author Zhiyang Zhou
  * \date   2010/04/29
@@ -275,7 +275,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
     
     *B = B_tmp;
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**

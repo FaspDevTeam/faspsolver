@@ -334,7 +334,7 @@ int main (int argc, const char *argv[])
 	free(u);
     free(b);
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /*---------------------------------*/
