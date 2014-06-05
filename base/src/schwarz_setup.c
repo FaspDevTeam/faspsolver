@@ -25,7 +25,7 @@
  * \param maxlev         Max number of levels
  * \param schwarz_type   Type of the Schwarz method
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Ludmil, Xiaozhe Hu
  * \date   03/22/2011 

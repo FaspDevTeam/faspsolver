@@ -522,7 +522,7 @@ int main (int argc, const char * argv[])
 	printf("%s",asctime(localtime(&lt))); // output ending local time
 	printf("------------------------------------------------------------------\n");
 	
-	return SUCCESS;
+	return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

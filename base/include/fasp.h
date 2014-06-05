@@ -39,7 +39,7 @@
 #define RS_C1            ON  /**< CF splitting of RS: check C1 Criterion */
                              // When this flag is OFF, do not force C1 criterion for
                              // the classical AMG method
-#define DIAGONAL_PREF    OFF  /**< order each row such that diagonal appears first */
+#define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
                              // When this flag is ON, the matrix rows need to be
                              // reordered as diagonal entries first
 

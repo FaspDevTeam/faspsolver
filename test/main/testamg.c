@@ -31,7 +31,7 @@ int main (int argc, const char * argv[])
     dBSRmat Absr;
 	dvector b, uh;
     
-	int status=SUCCESS;
+	int status=FASP_SUCCESS;
 	
 	// Step 0. Set parameters
 	input_param     inpar;  // parameters from input files
@@ -349,10 +349,7 @@ int main (int argc, const char * argv[])
 	}
 	
 	if (status<0) {
-		printf("\n### WARNING: Solver failed! Exit status = %d.\n\n", status);
-	}
-	else {
-		printf("\nSolver finished successfully!\n\n");
+		printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
 	}
     
     if (output_type) fclose (stdout);

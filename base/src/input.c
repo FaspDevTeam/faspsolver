@@ -22,7 +22,7 @@
  */
 SHORT fasp_param_check (input_param *inparam)
 {
-    SHORT status = SUCCESS;
+    SHORT status = FASP_SUCCESS;
     
     if ( inparam->problem_num<0
         || inparam->solver_type<0
@@ -99,7 +99,7 @@ void fasp_param_input (const char *filenm,
 {
     char     buffer[500]; // Note: max number of char for each line!
     int      val;
-    SHORT    status = SUCCESS;
+    SHORT    status = FASP_SUCCESS;
     
     // set default input parameters
     fasp_param_input_init(inparam);
@@ -114,7 +114,7 @@ void fasp_param_input (const char *filenm,
 
     }
     
-    while ( status == SUCCESS ) {
+    while ( status == FASP_SUCCESS ) {
         int     ibuff;
         double  dbuff;
         char    sbuff[500];
@@ -245,7 +245,7 @@ void fasp_param_input (const char *filenm,
 				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { status = SUCCESS; break; }
+			if (val!=1) { status = FASP_SUCCESS; break; }
 			inparam->AMG_schwarz_levels = ibuff;
 			fgets(buffer,500,fp); // skip rest of line
 		}

@@ -489,7 +489,7 @@ int main (int argc, const char * argv[])
            ntest_amg_solver, nfail_amg_solver, ntest_amg_solver-nfail_amg_solver);
 	printf("==================================================================\n");
 	
-	return SUCCESS;
+	return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

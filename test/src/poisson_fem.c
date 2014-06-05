@@ -64,7 +64,7 @@ static void localb (double (*node)[DIM],
 #else
 
     printf("### ERROR: DIM=%d is not supported currently!\n", DIM);
-    exit(RUN_FAIL);
+    exit(ERROR_UNKNOWN);
 
 #endif
 
@@ -299,7 +299,7 @@ static void assemble_stiffmat (dCSRmat *A,
  * \param *ptr_uh                 Discrete solution
  * \param *ptr_dof                 DOF index
  *
- * \return                       SUCCESS if succeed
+ * \return                       FASP_SUCCESS if succeed
  *
  * \author Xuehai Huang, Kai Yang, Chensong Zhang and Feiteng Huang
  * \date   08/10/2010
@@ -372,7 +372,7 @@ int setup_poisson (dCSRmat *A,
     fasp_ivec_free(&dirichlet);
     fasp_ivec_free(&index);
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /** 

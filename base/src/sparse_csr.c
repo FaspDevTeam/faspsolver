@@ -475,7 +475,7 @@ void fasp_dcsr_getcol (const INT n,
 {
     INT i,j, row_begin, row_end;
     INT nrow = A->row, ncol = A->col;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
 
     INT nthreads=1, use_openmp=FALSE;
 	
@@ -650,7 +650,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
  * \param A      Pointer to the dCSRmat matrix
  * \param value  Set a value on diag(A) which is too close to zero to "value"
  * 
- * \return       SUCCESS if no diagonal entry is close to zero, else ERROR
+ * \return       FASP_SUCCESS if no diagonal entry is close to zero, else ERROR
  *
  * \author Shiquan Zhang
  * \date   11/07/2009
@@ -664,7 +664,7 @@ SHORT fasp_dcsr_regdiag (dCSRmat *A,
     
     // Local variables
     INT i,j,k,begin_row,end_row;
-    SHORT status=RUN_FAIL;
+    SHORT status=ERROR_UNKNOWN;
     
     for (i=0;i<m;++i) {
 	begin_row=ia[i],end_row=ia[i+1];
@@ -677,7 +677,7 @@ SHORT fasp_dcsr_regdiag (dCSRmat *A,
         } // end for k
     } // end for i
 
-    status = SUCCESS;
+    status = FASP_SUCCESS;
     
 FINISHED:    
     return status;
@@ -887,7 +887,7 @@ INT fasp_dcsr_trans (dCSRmat *A,
             } // end of i
     } // end if 
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }    
 
 /* 
@@ -1046,7 +1046,7 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
     
     INT i, j, k;
     INT ibegin, iend = A->IA[0];    
-    SHORT status = SUCCESS;
+    SHORT status = FASP_SUCCESS;
     
     k = 0;
     for ( i=0; i<row; ++i ) {
@@ -1066,7 +1066,7 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
         A->val = (REAL *)fasp_mem_realloc(A->val, k*sizeof(REAL));
     }
     else {
-        status = RUN_FAIL;
+        status = ERROR_UNKNOWN;
         printf("### ERROR: Size of compressed matrix is larger than the original!\n");
     }
     

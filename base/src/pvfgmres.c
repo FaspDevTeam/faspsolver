@@ -711,7 +711,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
 	
     // local variables
 	INT    iter                 = 0;
-	INT    status               = SUCCESS;
+	INT    status               = FASP_SUCCESS;
 	INT    restartplus1         = restart + 1;
 	INT    i,j,k;
 	

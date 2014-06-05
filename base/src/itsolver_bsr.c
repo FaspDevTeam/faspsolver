@@ -183,7 +183,7 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
                              itsolver_param *itparam)
 {
     const SHORT print_level = itparam->print_level;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     REAL solver_start, solver_end;
     
     // solver part
@@ -227,7 +227,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
                                   itsolver_param *itparam)
 {
     const SHORT print_level = itparam->print_level;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     REAL solver_start, solver_end;
     
     INT nb=A->nb,i,k;
@@ -325,7 +325,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
 {
     const SHORT print_level = itparam->print_level;    
     REAL solver_start, solver_end;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     
     ILU_data LU; 
     precond pc; 
@@ -398,7 +398,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     const SHORT max_levels = amgparam->max_levels;
     
     // return variable
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     
     // data of AMG 
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
@@ -535,7 +535,7 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
     const SHORT max_levels = amgparam->max_levels;
     
     // return variable
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     
     // data of AMG
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
@@ -687,7 +687,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
     INT i;
     
     // return variable
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     
     // data of AMG
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);

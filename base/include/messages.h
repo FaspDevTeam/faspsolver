@@ -23,6 +23,8 @@
 /**
  * \brief Definition of return status and error messages
  */
+#define FASP_SUCCESS            0  /**< return from funtion successfully */
+//---------------------------------------------------------------------------------
 #define ERROR_OPEN_FILE       -10  /**< fail to open a file */
 #define ERROR_WRONG_FILE      -11  /**< input contains wrong format */
 #define ERROR_INPUT_PAR       -13  /**< wrong input argument */
@@ -55,8 +57,7 @@
 //---------------------------------------------------------------------------------
 #define ERROR_LIC_TYPE        -80  /**< wrong license type */
 //---------------------------------------------------------------------------------
-#define RUN_FAIL              -99  /**< general failure */
-#define SUCCESS                 0  /**< return from funtion successfully */
+#define ERROR_UNKNOWN         -99  /**< an unknown error type */
 
 /**
  * \brief Definition of logic type  

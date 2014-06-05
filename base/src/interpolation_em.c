@@ -91,7 +91,7 @@ void fasp_amg_interp_em (dCSRmat *A,
  * \param mat     pointer to the full matrix
  * \param invmat  pointer to the full inverse matrix
  *
- * \return        SUCCESS or error message
+ * \return        FASP_SUCCESS or error message
  *
  * \note this routine works for symmetric matrix.
  *
@@ -105,7 +105,7 @@ static SHORT invden (INT nn,
                      REAL *invmat)
 {
     INT    i,j;
-    SHORT  status = SUCCESS;
+    SHORT  status = FASP_SUCCESS;
     
 #ifdef _OPENMP
     // variables for OpenMP
@@ -158,7 +158,7 @@ static SHORT invden (INT nn,
  * \param Aloc  Local dense matrix saved as an array
  * \param mask  Working array, which should be a negative number initially
  *
- * \return      SUCCESS or error message
+ * \return      FASP_SUCCESS or error message
  *
  * \author Xuehai Huang
  * \date   04/04/2009
@@ -222,7 +222,7 @@ static SHORT get_block (dCSRmat *A,
 #endif
     for ( j=0; j<n; ++j ) mask[N2C(cols[j])] = -1; // re-initialize mask
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -236,7 +236,7 @@ static SHORT get_block (dCSRmat *A,
  * \param ima   Pointer to the inverse of the full submatrix, the storage is row by row
  * \param mask  Working array
  *
- * \return      SUCCESS or error message
+ * \return      FASP_SUCCESS or error message
  *
  * \author Xuehai Huang
  * \date   04/04/2010
@@ -247,7 +247,7 @@ static SHORT gentisquare_nomass (dCSRmat *A,
                                  REAL *ima,
                                  INT *mask)
 {
-    SHORT status = SUCCESS;
+    SHORT status = FASP_SUCCESS;
     
     REAL *ms = (REAL *)fasp_mem_calloc(mm*mm,sizeof(REAL));
     
@@ -270,7 +270,7 @@ static SHORT gentisquare_nomass (dCSRmat *A,
  * \param Ii       Pointer to the array to store the relative position of the rows and cols
  * \param ima      Pointer to the full submatrix, the sequence is row by row
  *
- * \return         SUCCESS or error message
+ * \return         FASP_SUCCESS or error message
  *
  * \author Xuehai Huang
  * \date   04/04/2009
@@ -315,7 +315,7 @@ static SHORT getinonefull (INT **mat,
 #endif
     lengths[1]=tniz+mm*mm;
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -327,7 +327,7 @@ static SHORT getinonefull (INT **mat,
  * \param *matval   Pointer to the values corresponding to the position
  * \param lengths   INT array, to store the number of rows, number of cols and number of nonzero
  *
- * \return          SUCCESS or error message
+ * \return          FASP_SUCCESS or error message
  *
  * \author Xuehai Huang
  * \date   04/04/2009
@@ -343,7 +343,7 @@ static SHORT orderone (INT **mat,
 {
     INT *rows[2],*cols[2],nns[2],tnizs[2];
     REAL *vals[2];
-    SHORT status = SUCCESS;
+    SHORT status = FASP_SUCCESS;
     INT tniz,i;
     
     nns[0]=lengths[0];
@@ -486,7 +486,7 @@ static SHORT orderone (INT **mat,
  * \param nf        Number of fine-level nodes
  * \param nc        Number of coarse-level nodes
  *
- * \return          SUCCESS or error message
+ * \return          FASP_SUCCESS or error message
  *
  * \author Xuehai Huang
  * \date   10/29/2010
@@ -522,7 +522,7 @@ static SHORT genintval (dCSRmat *A,
     
     INT mm,sum,i,j,k;
     INT *iz,*izs,*izt,*izts;
-    SHORT status=SUCCESS;
+    SHORT status=FASP_SUCCESS;
     
     itsolver_param itparam;
     itparam.print_level    = PRINT_NONE;
@@ -731,7 +731,7 @@ static SHORT getiteval (dCSRmat *A,
     INT nns[2],tnizs[2];
     INT i,j,numiso;
     INT *isol;
-    SHORT status = SUCCESS;
+    SHORT status = FASP_SUCCESS;
     
     nf=A->row;
     nc=it->col;

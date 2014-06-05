@@ -76,5 +76,5 @@ int main(int argc, const char * argv[])
     fasp_dcsr_free(&A);
     fasp_dvec_free(&b);
 	
-	return SUCCESS;
+	return FASP_SUCCESS;
 }

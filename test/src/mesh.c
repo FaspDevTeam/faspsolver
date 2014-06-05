@@ -15,7 +15,7 @@
  * \param *mesh          Mesh info
  * \param *filename      Input mesh filename
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/05/2009
@@ -77,7 +77,7 @@ int mesh_init (Mesh *mesh, const char *filename)
     }
 
     fclose(inputFile);
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -88,7 +88,7 @@ int mesh_init (Mesh *mesh, const char *filename)
  * \param *mesh          Mesh info
  * \param *filename      Input mesh filename
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/05/2009
@@ -148,7 +148,7 @@ int mesh_init_pro (Mesh *mesh, const char *filename)
     }
 
     fclose(inputFile);
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -160,7 +160,7 @@ int mesh_init_pro (Mesh *mesh, const char *filename)
  * \param *mesh_aux      Auxiliary mesh info
  * \param *filename      Input mesh filename
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2009
@@ -233,7 +233,7 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     }
 
     fclose(inputFile);
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -245,7 +245,7 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
  * \param *mesh_aux      Auxiliary mesh info
  * \param *filename      Input mesh filename
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2009
@@ -309,7 +309,7 @@ int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     }
 
     fclose(inputFile);
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -320,7 +320,7 @@ int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
  * \param *mesh          Mesh info
  * \param *mesh_aux      Auxiliary mesh info
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/05/2009
@@ -467,7 +467,7 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
     
     fasp_mem_free(edge_aux);
 
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -478,7 +478,7 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
  * \param *mesh          Mesh info
  * \param *filename      Output mesh file
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2012
@@ -517,7 +517,7 @@ int mesh_write (Mesh *mesh, const char *filename)
     
     fclose(outputFile);
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -528,7 +528,7 @@ int mesh_write (Mesh *mesh, const char *filename)
  * \param *mesh          Mesh info
  * \param *filename      Output mesh file
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2012
@@ -572,7 +572,7 @@ int mesh_write_pro (Mesh *mesh, const char *filename)
     
     fclose(outputFile);
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -583,7 +583,7 @@ int mesh_write_pro (Mesh *mesh, const char *filename)
  * \param *mesh_aux      Auxiliary mesh info
  * \param *filename      Output mesh file
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2012
@@ -622,7 +622,7 @@ int mesh_aux_write (Mesh_aux *mesh_aux, const char *filename)
     
     fclose(outputFile);
     
-    return SUCCESS;
+    return FASP_SUCCESS;
     
 }
 
@@ -634,7 +634,7 @@ int mesh_aux_write (Mesh_aux *mesh_aux, const char *filename)
  * \param *mesh_aux      Auxiliary mesh info
  * \param *filename      Output mesh file
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2012
@@ -679,7 +679,7 @@ int mesh_aux_write_pro (Mesh_aux *mesh_aux, const char *filename)
     
     fclose(outputFile);
     
-    return SUCCESS;
+    return FASP_SUCCESS;
     
 }
 
@@ -690,7 +690,7 @@ int mesh_aux_write_pro (Mesh_aux *mesh_aux, const char *filename)
  *
  * \param *mesh          Mesh info
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/05/2009
@@ -712,7 +712,7 @@ int mesh_free (Mesh *mesh)
     mesh->elem.val = NULL;
     mesh->node_bd.val  = NULL;
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -744,7 +744,7 @@ int mesh_aux_free (Mesh_aux *mesh_aux)
     mesh_aux->elem2edge.val = NULL;
     mesh_aux->edge_bd.val = NULL;
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /**
@@ -755,7 +755,7 @@ int mesh_aux_free (Mesh_aux *mesh_aux)
  * \param *mesh          Mesh info
  * \param *mesh_aux      Auxiliary mesh info
  *
- * \return               SUCCESS if succeed
+ * \return               FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2009
@@ -892,7 +892,7 @@ int mesh_refine(Mesh *mesh, Mesh_aux *mesh_aux)
         mesh_aux->elem2edge.val[i][2] = e[4];
     }
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

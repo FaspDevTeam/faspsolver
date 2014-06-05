@@ -21,7 +21,7 @@ int main (int argc, const char * argv[])
 {
 	dCSRmat A;
 	dvector b, x;
-	int status=SUCCESS;
+	int status=FASP_SUCCESS;
 	
     //------------------------//
 	// Step 0. Set parameters //
@@ -160,7 +160,7 @@ int main (int argc, const char * argv[])
 	fasp_dvec_free(&b);
 	fasp_dvec_free(&x);
 		
-	return SUCCESS;
+	return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

@@ -155,7 +155,7 @@ int main(int argc, const char * argv[])
 	mesh_free(&mesh);
 	mesh_aux_free(&mesh_aux);
 	
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

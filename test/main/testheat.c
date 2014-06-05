@@ -35,7 +35,7 @@
 int main (int argc, const char * argv[]) 
 {
     // Set default values
-    int status = SUCCESS;
+    int status = FASP_SUCCESS;
 	int print_usage;
 	
     FEM_param pt; // parameter for testfem
@@ -186,7 +186,7 @@ int main (int argc, const char * argv[])
 	fasp_mem_free(rhs_pro);
 	fasp_mem_free(l2error);
     
-	return SUCCESS;
+	return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

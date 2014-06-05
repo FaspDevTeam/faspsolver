@@ -38,6 +38,9 @@ INT fasp_amg_setup_rs_omp (AMG_data *mgl,
 SHORT fasp_amg_setup_sa (AMG_data *mgl,
                          AMG_param *param);
 
+SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr *mgl,
+                             AMG_param *param);
+
 
 /*-------- In file: amg_setup_ua.c --------*/
 
@@ -225,6 +228,9 @@ void fasp_blas_bdbsr_mxv (block_BSR *A,
 
 /*-------- In file: blas_bsr.c --------*/
 
+void fasp_blas_dbsr_axm (dBSRmat *A,
+                         const REAL alpha);
+
 void fasp_blas_dbsr_aAxpby (const REAL alpha,
                             dBSRmat *A,
                             REAL *x,
@@ -248,6 +254,10 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
 void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
                              REAL *x,
                              REAL *y);
+
+void fasp_blas_dbsr_mxm (dBSRmat *A,
+                         dBSRmat *B,
+                         dBSRmat *C);
 
 void fasp_blas_dbsr_rap1 (dBSRmat *R,
                           dBSRmat *A, 
@@ -337,6 +347,17 @@ void fasp_blas_dcsrl_mxv (dCSRLmat *A,
 
 
 /*-------- In file: blas_smat.c --------*/
+
+void fasp_blas_smat_axm (REAL *a,
+                         const INT n,
+                         const REAL alpha);
+
+void fasp_blas_smat_add (REAL *a,
+                         REAL *b,
+                         const INT n,
+                         const REAL alpha,
+                         const REAL beta,
+                         REAL *c);
 
 void fasp_blas_smat_mxv_nc2 (REAL *a, 
                              REAL *b, 
@@ -919,6 +940,10 @@ void fasp_vector_write (const char *filerhs,
                         void *b,
                         INT  flag);
 
+void fasp_hb_read (char *input_file,
+                   dCSRmat *A,
+                   dvector *b);
+
 
 /*-------- In file: itsolver_bcsr.c --------*/
 
@@ -983,13 +1008,13 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
                                  AMG_param *amgparam);
 
 INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
-                                    dvector *b,
-                                    dvector *x,
-                                    itsolver_param *itparam,
-                                    AMG_param *amgparam,
-                                    dCSRmat *A_nk,
-                                    dCSRmat *P_nk,
-                                    dCSRmat *R_nk);
+                                 dvector *b,
+                                 dvector *x,
+                                 itsolver_param *itparam,
+                                 AMG_param *amgparam,
+                                 dCSRmat *A_nk,
+                                 dCSRmat *P_nk,
+                                 dCSRmat *R_nk);
 
 INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
                                  dvector *b,
@@ -1042,6 +1067,15 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
                                    itsolver_param *itparam, 
                                    ILU_param *iluparam, 
                                    dCSRmat *M);
+
+INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
+                                 dvector *b,
+                                 dvector *x,
+                                 itsolver_param *itparam,
+                                 AMG_param *amgparam,
+                                 dCSRmat *A_nk,
+                                 dCSRmat *P_nk,
+                                 dCSRmat *R_nk);
 
 
 /*-------- In file: itsolver_mf.c --------*/
@@ -1325,6 +1359,15 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
                           const SHORT stop_type,
                           const SHORT print_level);
 
+INT fasp_solver_dbsr_pcg (dBSRmat *A,
+                          dvector *b,
+                          dvector *u,
+                          precond *pc,
+                          const REAL tol,
+                          const INT MaxIt,
+                          const SHORT stop_type,
+                          const SHORT print_level);
+
 INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
                            dvector *b,
                            dvector *u,
@@ -1523,13 +1566,13 @@ void fasp_precond_dbsr_amg (REAL *r,
                             REAL *z, 
                             void *data);
 
-void fasp_precond_dbsr_amg_nk (REAL *r,
-                            REAL *z,
-                            void *data);
-
 void fasp_precond_dbsr_nl_amli (REAL *r, 
                                 REAL *z, 
                                 void *data);
+
+void fasp_precond_dbsr_amg_nk (REAL *r,
+                            REAL *z,
+                            void *data);
 
 
 /*-------- In file: precond_csr.c --------*/
@@ -1563,10 +1606,6 @@ void fasp_precond_amg (REAL *r,
                        REAL *z, 
                        void *data);
 
-void fasp_precond_amg_nk (REAL *r,
-                          REAL *z,
-                          void *data);
-
 void fasp_precond_famg (REAL *r, 
                         REAL *z, 
                         void *data);
@@ -1578,6 +1617,10 @@ void fasp_precond_amli (REAL *r,
 void fasp_precond_nl_amli (REAL *r, 
                            REAL *z, 
                            void *data);
+
+void fasp_precond_amg_nk (REAL *r,
+                       REAL *z,
+                       void *data);
 
 void fasp_precond_free (SHORT precond_type, precond *pc);
 

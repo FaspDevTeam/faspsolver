@@ -38,7 +38,7 @@
  * \param beta   REAL factor beta
  * \param C      Pointer to dCSRmat matrix
  *
- * \return       SUCCESS if succees, RUN_FAIL if not
+ * \return       FASP_SUCCESS if succees, ERROR_UNKNOWN if not
  *
  * \author Xiaozhe Hu
  * \date   11/07/2009
@@ -53,7 +53,7 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
 {
     INT i,j,k,l;
     INT count=0, added, countrow;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     
     INT use_openmp = FALSE;
     
@@ -75,12 +75,12 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
     
     if (A == NULL && B == NULL) {
         C->row=0; C->col=0; C->nnz=0;
-        status=SUCCESS; goto FINISHED;
+        status=FASP_SUCCESS; goto FINISHED;
     }
     
     if (A->nnz == 0 && B->nnz == 0) {
         C->row=A->row; C->col=A->col; C->nnz=A->nnz;
-        status=SUCCESS; goto FINISHED;
+        status=FASP_SUCCESS; goto FINISHED;
     }
     
     // empty matrix A
@@ -103,7 +103,7 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
             for (i=0;i<A->nnz;++i) C->val[i]=B->val[i]*beta;
         }
        
-        status=SUCCESS;
+        status=FASP_SUCCESS;
         goto FINISHED;
     }
     
@@ -128,7 +128,7 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
             for (i=0;i<A->nnz;++i) C->val[i]=A->val[i]*alpha;
         }
         
-        status=SUCCESS; goto FINISHED;
+        status=FASP_SUCCESS; goto FINISHED;
     }
     
     C->row=A->row; C->col=A->col;

@@ -1,5 +1,15 @@
 File Name: CHANGES
 
+06/05/2014 FASP 1.5.3:
+- Add Smoothed Aggregation AMG for BSR format.
+- Add solver for linear elasiticy (under development).
+- Add subroutines for read in and write HB format files.
+- Change some macros to prevent confliction with MPI.h.
+- Fix a bug in tutorial when using AMG as a solver.
+- Fix a bug in SPE1 tutorial example.
+- Fix a few Doxygen problems. 
+- Update documentation and website.
+
 05/27/2014 FASP 1.5.2:
 - Update some more 'char *' to 'const char *'.
 - Fix BiCGstab divided by zero problem.

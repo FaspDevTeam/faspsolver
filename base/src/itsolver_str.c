@@ -112,7 +112,7 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
                              itsolver_param *itparam)
 {
     const INT print_level = itparam->print_level;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
     
     // solver part
@@ -152,7 +152,7 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
                                   itsolver_param *itparam)
 {
     const INT print_level = itparam->print_level;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
     INT nc=A->nc,i;
     INT nc2=nc*nc;
@@ -212,7 +212,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
 {
     const INT print_level = itparam->print_level;
     const INT ILU_lfil = iluparam->ILU_lfil;
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     REAL setup_start, setup_end, solver_start, solver_end, solver_duration, setup_duration;
     
     //set up
@@ -301,7 +301,7 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
     INT ngrid=A->ngrid;
     
     // return parameter
-    INT status = SUCCESS;
+    INT status = FASP_SUCCESS;
     
     // local parameter
     REAL solver_start, solver_end, setup_start, setup_end, solver_duration, setup_duration;

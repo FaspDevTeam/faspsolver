@@ -70,6 +70,7 @@ int main (int argc, const char * argv[])
     fasp_dvec_alloc(b.row, &x);
     fasp_dvec_set(b.row,&x,0.0);
     
+    itparam.itsolver_type = SOLVER_GMRES;
     fasp_solver_dbsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
     
     // Step 4. Clean up memory
@@ -77,7 +78,7 @@ int main (int argc, const char * argv[])
     fasp_dvec_free(&b);
     fasp_dvec_free(&x);
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

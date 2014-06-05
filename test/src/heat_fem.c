@@ -315,7 +315,7 @@ static void assemble_stiffmat (dCSRmat *A,
  * \param *bdinfo                               info to apply boundary condition 
  * \param dt                     size of time step
  *
- * \return                       SUCCESS if succeed
+ * \return                       FASP_SUCCESS if succeed
  *
  * \author Chensong Zhang and Feiteng Huang
  * \date   08/10/2010
@@ -391,7 +391,7 @@ int setup_heat (dCSRmat *A_heat,
     // clean up memory
     fasp_dcsr_free(&Stiff);
     
-    return SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /** 

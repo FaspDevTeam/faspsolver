@@ -95,7 +95,7 @@ void fasp_amg_interp (dCSRmat *A,
  * \param param      AMG parameters
  * \param icor_ysk   Indices of coarse nodes in fine grid
  *
- * \return           SUCCESS or error message
+ * \return           FASP_SUCCESS or error message
  *
  * \author           Chunsheng Feng, Xiaoqiang Yue
  * \date             03/01/2011

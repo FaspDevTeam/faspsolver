@@ -158,7 +158,7 @@ INT fasp_wrapper_dbsr_krylov_amg (INT n,
     dvector         rhs, sol; // right-hand-side, solution
     AMG_param       amgparam; // parameters for AMG
     itsolver_param  itparam;  // parameters for itsolver
-    INT             status = SUCCESS; // return parameter
+    INT             status = FASP_SUCCESS; // return parameter
     
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);
@@ -243,7 +243,7 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n,
     dvector         rhs, sol; // right-hand-side, solution
     AMG_param       amgparam; // parameters for AMG
     itsolver_param  itparam;  // parameters for itsolver
-    INT             status = SUCCESS; // return parameter
+    INT             status = FASP_SUCCESS; // return parameter
     
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);

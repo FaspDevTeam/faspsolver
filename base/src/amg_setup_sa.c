@@ -37,7 +37,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       SUCCESS if succeed, error otherwise
+ * \return       FASP_SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   09/29/2009
@@ -50,7 +50,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
 SHORT fasp_amg_setup_sa (AMG_data *mgl,
                          AMG_param *param)
 {
-    SHORT status  = SUCCESS;
+    SHORT status  = FASP_SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_amg_setup_sa ...... [Start]\n");
@@ -79,7 +79,7 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
  * \param mgl    Pointer to AMG data: AMG_data_bsr
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       SUCCESS if succeed, error otherwise
+ * \return       FASP_SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014
@@ -126,7 +126,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     const INT   m          = mgl[0].A.row;
     
     // local variables
-    SHORT       max_levels = param->max_levels, level=0, status=SUCCESS;
+    SHORT       max_levels = param->max_levels, level=0, status=FASP_SUCCESS;
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
@@ -312,7 +312,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     const INT   m          = mgl[0].A.row;
     
     // local variables
-    SHORT       max_levels = param->max_levels, level=0, status=SUCCESS;
+    SHORT       max_levels = param->max_levels, level=0, status=FASP_SUCCESS;
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
@@ -469,7 +469,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
  * \param mgl    Pointer to AMG data: AMG_data_bsr
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       SUCCESS if succeed, error otherwise
+ * \return       FASP_SUCCESS if succeed, error otherwise
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014
@@ -485,7 +485,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     
     ILU_param iluparam;
     SHORT     max_levels=param->max_levels;
-    SHORT     i, level=0, status=SUCCESS;
+    SHORT     i, level=0, status=FASP_SUCCESS;
     REAL      setup_start, setup_end;
     
     dCSRmat temp1, temp2;
