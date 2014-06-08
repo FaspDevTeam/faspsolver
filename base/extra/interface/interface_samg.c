@@ -128,7 +128,7 @@ INT dCSRmat2SAMGInput (dCSRmat *A,
 	}
 	fclose(fp);
 	
-	return SUCCESS;
+	return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

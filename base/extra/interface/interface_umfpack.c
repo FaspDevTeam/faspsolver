@@ -47,7 +47,7 @@ int fasp_solver_umfpack (dCSRmat *ptrA,
 	int *Ai = ptrA->JA;
 	double *Ax = ptrA->val;
 	void *Symbolic, *Numeric;
-	int status=SUCCESS;
+	int status=FASP_SUCCESS;
 	
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_solver_umfpack ...... [Start]\n");
@@ -111,7 +111,7 @@ void* fasp_umfpack_factorize (dCSRmat *ptrA,
 	double *Ax = ptrA->val;
 	void *Symbolic;
     void *Numeric;
-	int status=SUCCESS;
+	int status=FASP_SUCCESS;
 	
 #if DEBUG_MODE
 	printf("### DEBUG: umfpack_factorize ...... [Start]\n");
@@ -166,7 +166,7 @@ int fasp_umfpack_solve (dCSRmat *ptrA,
 	int *Ap = ptrA->IA;
 	int *Ai = ptrA->JA;
 	double *Ax = ptrA->val;
-	int status=SUCCESS;
+	int status=FASP_SUCCESS;
 	
 #if DEBUG_MODE
 	printf("### DEBUG: umfpack_solve ...... [Start]\n");
@@ -203,7 +203,7 @@ int fasp_umfpack_solve (dCSRmat *ptrA,
  */
 int fasp_umfpack_free_numeric (void *Numeric)
 {
-	int status=SUCCESS;
+	int status=FASP_SUCCESS;
 	
 #if DEBUG_MODE
 	printf("### DEBUG: umfpack_free_numeric ...... [Start]\n");
