@@ -98,7 +98,7 @@ int fasp_solver_superlu (dCSRmat *ptrA,
 	Destroy_CompCol_Matrix(&U);
 	StatFree(&stat);
 	
-	return SUCCESS;
+	return FASP_SUCCESS;
     
 #else
     

@@ -132,7 +132,7 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
 #if DEBUG_MODE
 	printf("### DEBUG: fasp_solver_mumps ...... [Finish]\n");
 #endif	
-    return SUCCESS;
+    return FASP_SUCCESS;
 #else
     
 	printf("### ERROR: MUMPS is not available!\n");
@@ -291,7 +291,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             
     }
     
-    return SUCCESS;
+    return FASP_SUCCESS;
     
 #else
     
