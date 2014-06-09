@@ -219,7 +219,7 @@ void fasp_dvec_rand (const INT n,
 }
 
 /**
- * \fn void fasp_dvec_set (const INT n, dvector *x, REAL val) 
+ * \fn void fasp_dvec_set (INT n, dvector *x, REAL val)
  *
  * \brief Initialize dvector x[i]=val for i=0:n-1
  *

@@ -8,6 +8,7 @@ File Name: CHANGES
 - Change macros accordingly for interfaces and other FASP projects.
 - Fix a bug in tutorial when using AMG as a solver.
 - Fix a bug in SPE1 tutorial example.
+- Fix a bug in mkheaders.awk which cause incompatible linkage with cpp.
 - Fix a few Doxygen problems. 
 - Update documentation and website.
 
