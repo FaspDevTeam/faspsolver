@@ -9,6 +9,7 @@
 # modified by Chensong Zhang for the new format ( 03/03/2011 )
 # modified by Xiaozhe Hu for CUDA ( 09/20/2011 )
 # modified by Chensong Zhang to fix the CPP bug in VC++ ( 12/13/2011 )
+# modified by Chensong Zhang to fix CPP compatibility problem (06/08/2014 )
 
 BEGIN {
   inheader=0;
@@ -21,9 +22,10 @@ BEGIN {
   print " */ \n"
   print "#include \"fasp.h\" "
   print "#include \"fasp_block.h\" "
-  #print "#ifdef __cplusplus"
-  #print "extern \"C\" { "
-  #print "#endif" 
+  print " "
+  print "#ifdef __cplusplus"
+  print "extern \"C\" { "
+  print "#endif" 
 }
 
 {
@@ -62,8 +64,10 @@ BEGIN {
 }
 
 END {
-  #print "#ifdef __cplusplus"
-  #print "} "
-  #print "#endif"
+  print " "
+  print "#ifdef __cplusplus"
+  print "} "
+  print "#endif"
+  print " "
   print "/* End of " name " */"
 }
