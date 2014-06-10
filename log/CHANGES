@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+06/10/2014 FASP 1.5.4:
+- Fix a bug in io.c.
+- Fix incompability in Windows VC++/IC++: mkheaders.awk reverted to the previous version.
+- When using FASP function in CPP file, now need to use extern "C". 
+- Update Windows VS10 solution: Updated to Intel C++ 14.0.3.
+
 06/08/2014 FASP 1.5.3:
 - Add Smoothed Aggregation AMG for BSR format.
 - Add solver for linear elasiticy (under development).

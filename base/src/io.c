@@ -7,6 +7,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "hb_io.h"
 
 // Flags which indicates lengths of INT and REAL numbers
 INT   ilength; /**< Length of INT in byte */
