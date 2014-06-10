@@ -659,7 +659,7 @@ static void smooth_agg (dCSRmat *A,
                     }
                 }
 #ifdef _OPENMP
-            }
+//            }
         }
 #endif
         // copy structure from N (filtered A)
@@ -697,7 +697,7 @@ static void smooth_agg (dCSRmat *A,
             }
         }
         
-   // }
+    }
     
     fasp_dvec_free(&diag);
     
