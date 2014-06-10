@@ -10,9 +10,6 @@
 #include "fasp.h" 
 #include "fasp_block.h" 
  
-#ifdef __cplusplus
-extern "C" { 
-#endif
 
 /*-------- In file: amg.c --------*/
 
@@ -2822,9 +2819,5 @@ int fasp_umfpack_solve (dCSRmat *ptrA,
 
 int fasp_umfpack_free_numeric (void *Numeric);
 
- 
-#ifdef __cplusplus
-} 
-#endif
  
 /* End of fasp_functs.h */

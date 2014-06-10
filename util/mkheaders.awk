@@ -23,9 +23,9 @@ BEGIN {
   print "#include \"fasp.h\" "
   print "#include \"fasp_block.h\" "
   print " "
-  print "#ifdef __cplusplus"
-  print "extern \"C\" { "
-  print "#endif" 
+#  print "#ifdef __cplusplus"
+#  print "extern \"C\" { "
+#  print "#endif" 
 }
 
 {
@@ -64,10 +64,10 @@ BEGIN {
 }
 
 END {
-  print " "
-  print "#ifdef __cplusplus"
-  print "} "
-  print "#endif"
+#  print " "
+#  print "#ifdef __cplusplus"
+#  print "} "
+#  print "#endif"
   print " "
   print "/* End of " name " */"
 }
