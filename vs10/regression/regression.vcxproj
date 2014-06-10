@@ -321,6 +321,7 @@
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <Optimization>MaxSpeedHighLevel</Optimization>
       <FloatingPointModel>Fast2</FloatingPointModel>
+      <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Direct.lib;faspbase-f-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>

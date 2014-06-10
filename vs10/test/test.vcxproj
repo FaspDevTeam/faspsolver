@@ -286,7 +286,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>Direct.lib;faspbase-f-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../lib/x64;../../../../lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../lib/x64; ../../../../lib/x64/; %(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>MSVCRT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -319,6 +319,7 @@
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <Optimization>MaxSpeedHighLevel</Optimization>
       <FloatingPointModel>Fast2</FloatingPointModel>
+      <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Direct.lib;faspbase-f-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>
