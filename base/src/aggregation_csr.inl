@@ -697,7 +697,7 @@ static void smooth_agg (dCSRmat *A,
             }
         }
         
-    }
+   // }
     
     fasp_dvec_free(&diag);
     
