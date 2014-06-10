@@ -327,6 +327,7 @@
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <Optimization>MaxSpeedHighLevel</Optimization>
       <FloatingPointModel>Fast2</FloatingPointModel>
+      <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Direct.lib;faspbase-f-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -342,9 +343,10 @@
   <ItemGroup>
     <ClCompile Include="..\..\test\main\testamg.c">
       <C99Support Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</C99Support>
-      <C99Support Condition="'$(Configuration)|$(Platform)'=='Release_OMP|x64'">true</C99Support>
+      <C99Support Condition="'$(Configuration)|$(Platform)'=='Release_OMP|x64'">false</C99Support>
       <C99Support Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</C99Support>
-      <C99Support Condition="'$(Configuration)|$(Platform)'=='Release_OMP|Win32'">true</C99Support>
+      <C99Support Condition="'$(Configuration)|$(Platform)'=='Release_OMP|Win32'">false</C99Support>
+      <OpenMP Condition="'$(Configuration)|$(Platform)'=='Release_OMP|x64'">None</OpenMP>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -125,7 +125,7 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release_OMP|x64'" />
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)-vs10</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_OMP|Win32'">$(ProjectName)-vs10</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_OMP|Win32'">$(ProjectName)-omp-vs10</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)d-vs10</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)d-vs10</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectName)-vs10</TargetName>
@@ -276,6 +276,7 @@
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <Optimization>MaxSpeedHighLevel</Optimization>
       <FloatingPointModel>Fast2</FloatingPointModel>
+      <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName)-vs10.lib</OutputFile>

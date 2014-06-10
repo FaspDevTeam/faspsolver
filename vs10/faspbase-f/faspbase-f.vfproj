@@ -43,7 +43,7 @@
 		<Configuration Name="Release_OMP|Win32" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Optimization="optimizeFull" PrefetchInsertionOpt="prefetchAggressive" BufferedIO="true" InterproceduralOptimizations="ipoSingleFile" MatrixLibrary="mlNo" OpenMP="OpenMPParallelCode" ExternalNameInterpretation="extNameLowerCase" CallingConvention="callConventionCRef" ExternalNameUnderscore="true"/>
 				<Tool Name="VFLinkerTool" SuppressStartupBanner="true"/>
-				<Tool Name="VFLibrarianTool" OutputFile="..\..\lib\ia32\$(ProjectName)-vs10.lib"/>
+				<Tool Name="VFLibrarianTool" OutputFile="..\..\lib\ia32\$(ProjectName)-omp-vs10.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFCustomBuildTool"/>
