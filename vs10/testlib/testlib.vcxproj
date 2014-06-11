@@ -129,7 +129,7 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)d-vs10</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)d-vs10</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectName)-vs10</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_OMP|x64'">$(ProjectName)-vs10</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_OMP|x64'">$(ProjectName)-omp-vs10</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -220,7 +220,7 @@
       <FloatingPointModel>Fast2</FloatingPointModel>
     </ClCompile>
     <Lib>
-      <OutputFile>$(OutDir)\$(ProjectName)-vs10.lib</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -279,7 +279,7 @@
       <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Lib>
-      <OutputFile>$(OutDir)\$(ProjectName)-vs10.lib</OutputFile>
+      <OutputFile>$(OutDir)\$(ProjectName)-omp-vs10.lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
