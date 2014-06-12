@@ -252,7 +252,7 @@
       <FloatingPointModel>Fast2</FloatingPointModel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Direct-omp.lib;faspbase-f-omp-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Direct.lib;faspbase-f-omp-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../lib/ia32;../../../../lib/ia32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>MSVCRT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -325,7 +325,7 @@
       <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Direct-omp.lib;faspbase-f-omp-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Direct.lib;faspbase-f-omp-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../lib/x64;../../../../lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>MSVCRT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
