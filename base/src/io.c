@@ -1472,6 +1472,8 @@ void fasp_dbsr_print (dBSRmat *A)
  *
  * \author Chunsheng Feng
  * \date   11/14/2013
+ *
+ * Modified by Chensong Zhang on 06/14/2014: Fix index problem.
  */
 void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A)
 {
@@ -1500,7 +1502,7 @@ void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A)
             for ( k = 0; k < A->nb; k++ ) {
                 for ( l = 0; l < A->nb; l++ ) {
                     fprintf(fp, "%d %d %+.10E\n",
-                            i*nb + k + 1, A->JA[j]*nb + l + 1, A->val[ A->JA[j]*nb2 + k*nb + l]);
+                            i*nb + k + 1, A->JA[j]*nb + l + 1, A->val[ j*nb2 + k*nb + l]);
                 }
             }
         }
@@ -1540,7 +1542,7 @@ void fasp_dcsr_write_coo (const char *filename,
     
     for ( i = 0; i < A->row; i++ ) {
         for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
-            fprintf(fp, "%d %d %+.10E\n", i+1, A->JA[j]+ 1, A->val[j]);
+            fprintf(fp, "%d %d %+.10E\n", i+1, A->JA[j]+1, A->val[j]);
         }
     }
     
