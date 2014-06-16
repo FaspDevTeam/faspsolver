@@ -1,13 +1,15 @@
 File Name: CHANGES
 
-06/14/2014 FASP 1.5.4:
+06/16/2014 FASP 1.5.4:
 - Fix a bug in io.c.
 - Fix incompability in Windows VC++/IC++: mkheaders.awk reverted to the previous version.
 - Fix a bug in aggregation_csr.inl for OpenMP.
-- Fix VS10 setting for OpenMP.
+- Fix a bug in smat.c for 4X4 matrix inversion. 
 - Fix a bug in BSR_COO output function.
+- Fix VS10 setting for OpenMP.
 - When using FASP function in CPP file, now need to use extern "C". 
 - Update Windows VS10 solution: Updated to Intel C++ 14.0.3.
+- Update regression test results. 
 
 06/08/2014 FASP 1.5.3:
 - Add Smoothed Aggregation AMG for BSR format.
