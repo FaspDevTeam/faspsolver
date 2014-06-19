@@ -46,13 +46,12 @@
 # If you want to use UMFPACK (part of SparseSuite), uncomment the next 
 # line:
 # 
-# umfpack=yes
+ umfpack=yes
 #
 # If you want to specify the path to SparseSuite, uncomment the next 
 # line and give the correct path to SparseSuite here. For example:
 #
-# suitesparse_dir="/dir/to/SuiteSparse"
-#
+#suitesparse_dir="/home/stone/Tests/SuiteSparse"
 #-------------------------------------------------------------------------
 # If you want to use SuperLU, uncomment the next line:
 #
@@ -70,7 +69,8 @@
 # If you want to specify the path to MUMPS, uncomment the next line
 # and give the correct path to MUMPS here. For example:
 #
-# mumps_dir="/dir/to/MUMPS"
+#mumps_dir="/dir/to/MUMPS"
+#mumps_dir="/home/stone/Tests/MUMPS_4.10.0"
 #
 ####################  User Defined Compiler Flags  #####################
 ifeq ($(debug),yes)
@@ -137,7 +137,7 @@ CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags)
 
 all clean install docs headers:
 	@if [ ! -f $(build_dir)/Makefile ] ; then \
-		echo "Cmake configuration not found! Perform make config first."; \
+		echo "Configuration not found! Please perform configuration first."; \
 		echo "See the following help screen for usage ..."; \
 		echo " "; \
 		cat INSTALL; \

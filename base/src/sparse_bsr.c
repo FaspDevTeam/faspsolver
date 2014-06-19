@@ -1520,7 +1520,6 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
                         DU[i*nb2+1] = -temp[1]/temp[0];
                         DU[i*nb2+2] = 0.0;
                         DU[i*nb2+3] = 1.0;
-    
                         
                         break;
                         
@@ -1648,6 +1647,8 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
                         valb[j*nb2+5] = 0.0;
                         valb[j*nb2+6] = 0.0;
                         valb[j*nb2+7] = 0.0;
+						if (fabs(valb[j*nb2+4]) < SMALLREAL)  valb[j*nb2+4] = SMALLREAL;
+						if (fabs(valb[j*nb2+8]) < SMALLREAL)  valb[j*nb2+8] = SMALLREAL;
                         
                     } // end if (JA[j] == i)
                     
@@ -1668,6 +1669,207 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
     
 }
 
+
+/**
+ * \fn dBSRmat fasp_dbsr_diagLU(dBSRmat *A, REAL *DL, REAL *DU)
+ *
+ * \brief Compute B := DL*A*DU. We decompose each diagonal block of A into LDU form 
+ *        and DL = diag(L^{-1}) and DU = diag(U^{-1}).
+ *
+ * \param A        Pointer to the dBSRmat matrix
+ * \param DL       Pointer to the diag(L^{-1})
+ * \param DU       Pointer to the diag(U^{-1})
+ *
+ * \return BSR matrix after scaling
+ *
+ * \author Zheng Li, Xiaozhe Hu
+ * \date   06/17/2014
+ */
+dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
+                           REAL *DL,
+                           REAL *DU)
+{
+
+    // members of A
+    INT  ROW = A->ROW;
+    INT  ROW_plus_one = ROW+1;
+    INT  COL = A->COL;
+    INT  NNZ = A->NNZ;
+    INT  nb  = A->nb;
+    INT  *IA  = A->IA;
+    INT  *JA  = A->JA;
+    REAL *val = A->val;
+    
+    INT  *IAb  = NULL;
+    INT  *JAb  = NULL;
+    REAL *valb = NULL;
+    
+    INT nb2  = nb*nb;
+    INT i,j,k,m;
+
+    REAL sqt3, sqt4, sqt8;
+    
+    // Create a dBSRmat 'B'
+    dBSRmat B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
+    
+	REAL *temp = (REAL *)fasp_mem_calloc(nb*nb, sizeof(REAL));
+
+    IAb  = B.IA;
+    JAb  = B.JA;
+    valb = B.val;
+    
+    fasp_iarray_cp(ROW_plus_one, IA, IAb);
+    fasp_iarray_cp(NNZ, JA, JAb);
+    
+    // get DL and DU
+    switch (nb) {
+        case 2:
+            for (i=0; i<ROW; i++){
+                for (j=IA[i]; j<IA[i+1]; j++){
+                    if (JA[j] == i){
+                        REAL temp0 = val[j*nb2];
+                        REAL temp1 = val[j*nb2+1];
+                        REAL temp2 = val[j*nb2+2];
+                        REAL temp3 = val[j*nb2+3];
+
+						if(fabs(temp3) < SMALLREAL) temp3 = SMALLREAL;
+
+                        sqt3 = sqrt(fabs(temp3));
+                        
+                        // form DL
+                        DL[i*nb2]   = 1.0;
+                        DL[i*nb2+1] = 0.0;
+                        DL[i*nb2+2] = -temp2/temp0/sqt3;
+                        DL[i*nb2+3] = 1.0/sqt3;
+                        
+                        // form DU
+                        DU[i*nb2]   = 1.0;
+                        DU[i*nb2+1] = -temp1/temp0/sqt3;
+                        DU[i*nb2+2] = 0.0;
+                        DU[i*nb2+3] = 1.0/sqt3;
+                        break;
+                        
+                    }
+                }
+            } 
+            
+            break;
+            
+        case 3:
+            for (i=0; i<ROW; i++){
+                for (j=IA[i]; j<IA[i+1]; j++){
+                    if (JA[j] == i){
+                        REAL temp0 = val[j*nb2];
+                        REAL temp1 = val[j*nb2+1];
+                        REAL temp2 = val[j*nb2+2];
+                        REAL temp3 = val[j*nb2+3];
+                        REAL temp4 = val[j*nb2+4];
+                        REAL temp5 = val[j*nb2+5];
+                        REAL temp6 = val[j*nb2+6];
+                        REAL temp7 = val[j*nb2+7];
+                        REAL temp8 = val[j*nb2+8];
+						
+						if (fabs(temp4) < SMALLREAL)  temp4 = SMALLREAL;
+						if (fabs(temp8) < SMALLREAL)  temp8 = SMALLREAL;
+
+						sqt4 = sqrt(fabs(temp4));
+						sqt8 = sqrt(fabs(temp8));
+
+                        // some auxiliry variables
+                        REAL s22 = temp4 - ((temp1*temp3)/temp0);
+                        REAL s23 = temp5 - ((temp2*temp3)/temp0);
+                        REAL s32 = temp7 - ((temp1*temp6)/temp0);
+                        
+                        // form DL
+                        DL[i*nb2]   = 1.0;
+                        DL[i*nb2+1] = 0.0;
+                        DL[i*nb2+2] = 0.0;
+                        DL[i*nb2+3] = -temp3/temp0/sqt4;
+                        DL[i*nb2+4] = 1.0/sqt4;
+                        DL[i*nb2+5] = 0.0;
+                        DL[i*nb2+6] = (-temp6/temp0 + (temp3/temp0)*(s32/s22))/sqt8;
+                        DL[i*nb2+7] = -s32/s22/sqt8;
+                        DL[i*nb2+8] = 1.0/sqt8;
+                        
+                        // form DU
+                        DU[i*nb2]   = 1.0;
+                        DU[i*nb2+1] = -temp1/temp0/sqt4;
+                        DU[i*nb2+2] = (-temp2/temp0 + (temp1/temp0)*(s23/s22))/sqt8;
+                        DU[i*nb2+3] = 0.0;
+                        DU[i*nb2+4] = 1.0/sqt4;
+                        DU[i*nb2+5] = -s23/s22/sqt8;
+                        DU[i*nb2+6] = 0.0;
+                        DU[i*nb2+7] = 0.0;
+                        DU[i*nb2+8] = 1.0/sqt8;
+                        
+                        break;
+                        
+                    }
+                }
+            }
+            
+            break;
+            
+        default:
+            printf("only works for nb = 2 or 3 now!!");
+            break;
+            
+    } // end of switch
+    
+    // compute B = DL*A*DU
+    switch (nb){
+            
+        case 2:
+            for (i=0; i<ROW; i++){
+                for (j=IA[i]; j<IA[i+1]; j++){
+                    k = JA[j];
+                    // left multiply DL
+                    fasp_blas_smat_mul_nc2(DL+i*nb2, val+j*nb2, temp);
+                    // right multiply DU
+                    fasp_blas_smat_mul_nc2(temp, DU+k*nb2, valb+j*nb2);
+                    // for diagonal block, set it to be diagonal matrix
+                    if (JA[j] == i){
+                        valb[j*nb2+1] = 0.0;
+                        valb[j*nb2+2] = 0.0;
+						if (fabs(valb[j*nb2+3]) < SMALLREAL)  valb[j*nb2+3] = SMALLREAL;
+                    } 
+                } 
+            }
+            
+            break;
+            
+        case 3:
+            for (i=0; i<ROW; i++){
+                for (j=IA[i]; j<IA[i+1]; j++){
+                    k = JA[j];
+                    // left multiply DL
+                    fasp_blas_smat_mul_nc3(DL+i*nb2, val+j*nb2, temp);
+                    // right multiply DU
+                    fasp_blas_smat_mul_nc3(temp, DU+k*nb2, valb+j*nb2);
+                    // for diagonal block, set it to be diagonal matrix
+                    if (JA[j] == i){
+                        valb[j*nb2+1] = 0.0;
+                        valb[j*nb2+2] = 0.0;
+                        valb[j*nb2+3] = 0.0;
+                        valb[j*nb2+5] = 0.0;
+                        valb[j*nb2+6] = 0.0;
+                        valb[j*nb2+7] = 0.0;
+						if (fabs(valb[j*nb2+4]) < SMALLREAL)  valb[j*nb2+4] = SMALLREAL;
+						if (fabs(valb[j*nb2+8]) < SMALLREAL)  valb[j*nb2+8] = SMALLREAL;
+                    }
+                }
+            }
+            break;
+            
+        default:
+            printf("only works for nb = 2 or 3 now!!");
+            break;
+    }
+    
+    // return
+    return B;
+    
+}
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
