@@ -2217,6 +2217,10 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
                          REAL *DL,
                          REAL *DU);
 
+dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
+                           REAL *DL,
+                           REAL *DU);
+
 
 /*-------- In file: sparse_coo.c --------*/
 
