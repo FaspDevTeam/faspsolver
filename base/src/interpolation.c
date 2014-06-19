@@ -123,6 +123,7 @@ void fasp_amg_interp1 (dCSRmat *A,
             
         case INTERP_DIR: // Direct interpolation
             interp_DIR1(A, vertices, P, param, icor_ysk); break;
+ //           interp_DIR(A, vertices, P, param); break;
             
         case INTERP_STD: // Standard interpolation
             interp_STD(A, vertices, P, S, param); break;

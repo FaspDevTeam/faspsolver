@@ -83,7 +83,8 @@ void fasp_solver_amg (dCSRmat *A,
         default:
             if ( print_level > PRINT_NONE ) printf("\nCalling classical AMG ...\n");
 #ifdef _OPENMP // omp version RS coarsening
-            fasp_amg_setup_rs_omp(mgl, param);
+//            fasp_amg_setup_rs_omp(mgl, param);  // need clean.   chunsheng
+            fasp_amg_setup_rs(mgl, param);
 #else
             fasp_amg_setup_rs(mgl, param);
 #endif
