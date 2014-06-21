@@ -352,7 +352,7 @@ static void pairwise_aggregation (const dCSRmat * A,
                                   INT *num_aggregations)
 {
     const INT row  = A->row;
-    const REAL k_tg = 6.75;
+    const REAL k_tg = 7.65;
 
     INT  *AIA  = A->IA;
     INT  *AJA  = A->JA;
@@ -437,8 +437,8 @@ static void pairwise_aggregation (const dCSRmat * A,
             temp2 = ajj+s[col]+2*aij;
             temp2 = 1.0/temp1+1.0/temp2;
  
-			temp3 = MAX(aii-s[i], SMALLREAL); // avoid temp3 to be zero		
-			temp4 = MAX(ajj-s[col], SMALLREAL);	// avoid temp4 to be zero
+			temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero		
+			temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);	// avoid temp4 to be zero
             temp4 = -aij+1./(1.0/temp3+1.0/temp4); 
             
             mu    = (-aij+1.0/temp2) / temp4;
