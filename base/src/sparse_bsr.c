@@ -7,6 +7,8 @@
 #include <omp.h>
 #endif
 
+#include <math.h>
+
 #include "fasp.h"
 #include "fasp_functs.h"
 
@@ -1647,8 +1649,8 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
                         valb[j*nb2+5] = 0.0;
                         valb[j*nb2+6] = 0.0;
                         valb[j*nb2+7] = 0.0;
-						if (fabs(valb[j*nb2+4]) < SMALLREAL)  valb[j*nb2+4] = SMALLREAL;
-						if (fabs(valb[j*nb2+8]) < SMALLREAL)  valb[j*nb2+8] = SMALLREAL;
+						if (ABS(valb[j*nb2+4]) < SMALLREAL) valb[j*nb2+4] = SMALLREAL;
+						if (ABS(valb[j*nb2+8]) < SMALLREAL) valb[j*nb2+8] = SMALLREAL;
                         
                     } // end if (JA[j] == i)
                     
@@ -1732,9 +1734,9 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
                         REAL temp2 = val[j*nb2+2];
                         REAL temp3 = val[j*nb2+3];
 
-						if(fabs(temp3) < SMALLREAL) temp3 = SMALLREAL;
+						if (ABS(temp3) < SMALLREAL) temp3 = SMALLREAL;
 
-                        sqt3 = sqrt(fabs(temp3));
+                        sqt3 = sqrt(ABS(temp3));
                         
                         // form DL
                         DL[i*nb2]   = 1.0;
@@ -1769,11 +1771,11 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
                         REAL temp7 = val[j*nb2+7];
                         REAL temp8 = val[j*nb2+8];
 						
-						if (fabs(temp4) < SMALLREAL)  temp4 = SMALLREAL;
-						if (fabs(temp8) < SMALLREAL)  temp8 = SMALLREAL;
+						if (ABS(temp4) < SMALLREAL)  temp4 = SMALLREAL;
+						if (ABS(temp8) < SMALLREAL)  temp8 = SMALLREAL;
 
-						sqt4 = sqrt(fabs(temp4));
-						sqt8 = sqrt(fabs(temp8));
+						sqt4 = sqrt(ABS(temp4));
+						sqt8 = sqrt(ABS(temp8));
 
                         // some auxiliry variables
                         REAL s22 = temp4 - ((temp1*temp3)/temp0);
@@ -1831,7 +1833,7 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
                     if (JA[j] == i){
                         valb[j*nb2+1] = 0.0;
                         valb[j*nb2+2] = 0.0;
-						if (fabs(valb[j*nb2+3]) < SMALLREAL)  valb[j*nb2+3] = SMALLREAL;
+						if (ABS(valb[j*nb2+3]) < SMALLREAL)  valb[j*nb2+3] = SMALLREAL;
                     } 
                 } 
             }
@@ -1854,8 +1856,8 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
                         valb[j*nb2+5] = 0.0;
                         valb[j*nb2+6] = 0.0;
                         valb[j*nb2+7] = 0.0;
-						if (fabs(valb[j*nb2+4]) < SMALLREAL)  valb[j*nb2+4] = SMALLREAL;
-						if (fabs(valb[j*nb2+8]) < SMALLREAL)  valb[j*nb2+8] = SMALLREAL;
+						if (ABS(valb[j*nb2+4]) < SMALLREAL)  valb[j*nb2+4] = SMALLREAL;
+						if (ABS(valb[j*nb2+8]) < SMALLREAL)  valb[j*nb2+8] = SMALLREAL;
                     }
                 }
             }
