@@ -14,14 +14,15 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_precond_block_diag (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_diag_3 (double *r, double *z, void *data)
  * \brief block diagonal preconditioning reservoir-reservoir block: AMG for pressure-pressure block, Jacobi for saturation-saturation block
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
+ *
  * \author Xiaozhe Hu
  */
-void fasp_precond_block_diag (double *r,
+void fasp_precond_block_diag_3 (double *r,
                             double *z, 
                             void *data)
 {
@@ -78,14 +79,104 @@ void fasp_precond_block_diag (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_lower (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_diag_4 (double *r, double *z, void *data)
+ * \brief block diagonal preconditioning
+ * \param *r pointer to residual
+ * \param *z pointer to preconditioned residual
+ * \param *data pointer to precondition data
+ *
+ * \author Xiaozhe Hu
+ */
+void fasp_precond_block_diag_4 (double *r,
+                                double *z,
+                                void *data)
+{
+	
+	precond_block_data_4 *precdata=(precond_block_data_4 *)data;
+	block_dCSRmat *A = precdata->Abcsr;
+    dCSRmat *A_diag = precdata->A_diag;
+    void **LU_diag = precdata->LU_diag;
+    
+	dvector *tempr = &(precdata->r);
+	
+	const int N0 = A_diag[0].row;
+	const int N1 = A_diag[1].row;
+    const int N2 = A_diag[2].row;
+    const int N3 = A_diag[3].row;
+	const int N = N0 + N1 + N2 + N3;
+	
+	int i;
+	
+	//! back up r, setup z;
+	fasp_array_cp(N, r, tempr->val);
+	fasp_array_set(N, z, 0.0);
+	
+	//! prepare
+	dvector r0, r1, r2, r3, z0, z1, z2, z3;
+    
+	r0.row = N0; z0.row = N0;
+    r1.row = N1; z1.row = N1;
+    r2.row = N2; z2.row = N2;
+    r3.row = N3; z3.row = N3;
+
+	r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]); r3.val = &(r[N0+N1+N2]);
+    z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]); z3.val = &(z[N0+N1+N2]);
+	
+	//! Preconditioning A00 block
+#if  WITH_UMFPACK
+    /* use UMFPACK direct solver */
+    //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+    fasp_umfpack_solve(&A_diag[0], &r0, &z0, LU_diag[0], 0);
+#elif WITH_SuperLU
+    /* use SuperLU direct solver on the coarsest level */
+    fasp_solver_superlu(&A_diag[0], &r0, &z0, 0);
+#endif
+    
+    //! Preconditioning A11 block
+#if  WITH_UMFPACK
+    /* use UMFPACK direct solver */
+    //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+    fasp_umfpack_solve(&A_diag[1], &r1, &z1, LU_diag[1], 0);
+#elif WITH_SuperLU
+    /* use SuperLU direct solver on the coarsest level */
+    fasp_solver_superlu(&A_diag[1], &r1, &z1, 0);
+#endif
+    
+    //! Preconditioning A22 block
+#if  WITH_UMFPACK
+    /* use UMFPACK direct solver */
+    //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+    fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
+#elif WITH_SuperLU
+    /* use SuperLU direct solver on the coarsest level */
+    fasp_solver_superlu(&A_diag[2], &r2, &z2, 0);
+#endif
+    
+    //! Preconditioning A33 block
+#if  WITH_UMFPACK
+    /* use UMFPACK direct solver */
+    //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+    fasp_umfpack_solve(&A_diag[3], &r3, &z3, LU_diag[3], 0);
+#elif WITH_SuperLU
+    /* use SuperLU direct solver on the coarsest level */
+    fasp_solver_superlu(&A_diag[3], &r3, &z3, 0);
+#endif
+	
+	//! restore r
+	fasp_array_cp(N, tempr->val, r);
+	
+}
+
+/**
+ * \fn void fasp_precond_block_lower_3 (double *r, double *z, void *data)
  * \brief block diagonal preconditioning reservoir-reservoir block: AMG for pressure-pressure block, Jacobi for saturation-saturation block
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
+ *
  * \author Xiaozhe Hu
  */
-void fasp_precond_block_lower (double *r,
+void fasp_precond_block_lower_3 (double *r,
                             double *z, 
                             void *data)
 {
@@ -148,6 +239,108 @@ void fasp_precond_block_lower (double *r,
 	
 }
 
+
+/**
+ * \fn void fasp_precond_block_lower_4 (double *r, double *z, void *data)
+ * \brief block lower triangular preconditioning
+ * \param *r pointer to residual
+ * \param *z pointer to preconditioned residual
+ * \param *data pointer to precondition data
+ *
+ * \author Xiaozhe Hu
+ */
+void fasp_precond_block_lower_4 (double *r,
+                                double *z,
+                                void *data)
+{
+	
+	precond_block_data_4 *precdata=(precond_block_data_4 *)data;
+	block_dCSRmat *A = precdata->Abcsr;
+    dCSRmat *A_diag = precdata->A_diag;
+    void **LU_diag = precdata->LU_diag;
+    
+	dvector *tempr = &(precdata->r);
+	
+	const int N0 = A_diag[0].row;
+	const int N1 = A_diag[1].row;
+    const int N2 = A_diag[2].row;
+    const int N3 = A_diag[3].row;
+	const int N = N0 + N1 + N2 + N3;
+	
+	int i;
+	
+	//! back up r, setup z;
+	fasp_array_cp(N, r, tempr->val);
+	fasp_array_set(N, z, 0.0);
+	
+	//! prepare
+	dvector r0, r1, r2, r3, z0, z1, z2, z3;
+    
+	r0.row = N0; z0.row = N0;
+    r1.row = N1; z1.row = N1;
+    r2.row = N2; z2.row = N2;
+    r3.row = N3; z3.row = N3;
+    
+	r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]); r3.val = &(r[N0+N1+N2]);
+    z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]); z3.val = &(z[N0+N1+N2]);
+	
+	//! Preconditioning A00 block
+#if  WITH_UMFPACK
+    /* use UMFPACK direct solver */
+    //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+    fasp_umfpack_solve(&A_diag[0], &r0, &z0, LU_diag[0], 0);
+#elif WITH_SuperLU
+    /* use SuperLU direct solver on the coarsest level */
+    fasp_solver_superlu(&A_diag[0], &r0, &z0, 0);
+#endif
+    
+    // r1 = r1 - A4*z0
+	fasp_blas_dcsr_aAxpy(-1.0, A->blocks[4], z0.val, r1.val);
+    
+    
+    //! Preconditioning A11 block
+#if  WITH_UMFPACK
+    /* use UMFPACK direct solver */
+    //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+    fasp_umfpack_solve(&A_diag[1], &r1, &z1, LU_diag[1], 0);
+#elif WITH_SuperLU
+    /* use SuperLU direct solver on the coarsest level */
+    fasp_solver_superlu(&A_diag[1], &r1, &z1, 0);
+#endif
+    
+    // r2 = r2 - A8*z0 - A9*z1
+	fasp_blas_dcsr_aAxpy(-1.0, A->blocks[8], z0.val, r2.val);
+    fasp_blas_dcsr_aAxpy(-1.0, A->blocks[9], z1.val, r2.val);
+    
+    //! Preconditioning A22 block
+#if  WITH_UMFPACK
+    /* use UMFPACK direct solver */
+    //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+    fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
+#elif WITH_SuperLU
+    /* use SuperLU direct solver on the coarsest level */
+    fasp_solver_superlu(&A_diag[2], &r2, &z2, 0);
+#endif
+    
+    // r3 = r3 - A12*z0 - A13*z1-A14*z2
+	fasp_blas_dcsr_aAxpy(-1.0, A->blocks[12], z0.val, r3.val);
+    fasp_blas_dcsr_aAxpy(-1.0, A->blocks[13], z1.val, r3.val);
+    fasp_blas_dcsr_aAxpy(-1.0, A->blocks[14], z2.val, r3.val);
+    
+    //! Preconditioning A33 block
+#if  WITH_UMFPACK
+    /* use UMFPACK direct solver */
+    //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
+    fasp_umfpack_solve(&A_diag[3], &r3, &z3, LU_diag[3], 0);
+#elif WITH_SuperLU
+    /* use SuperLU direct solver on the coarsest level */
+    fasp_solver_superlu(&A_diag[3], &r3, &z3, 0);
+#endif
+	
+	//! restore r
+	fasp_array_cp(N, tempr->val, r);
+	
+}
 
 /**
  * \fn void fasp_precond_sweeping (double *r, double *z, void *data)

@@ -827,16 +827,18 @@ void fasp_dvec_read (const char *filename,
     fasp_dvec_alloc(n,b);
     
     for ( i = 0; i < n; ++i ) {
-        
+                
         fscanf(fp, "%le", &value);
         b->val[i] = value;
-        
+                
         if ( value > BIGREAL ) {
             printf("### ERROR: Wrong value = %lf\n", value);
             fasp_dvec_free(b);
             fclose(fp);
             exit(ERROR_INPUT_PAR);
         }
+        
+        
     }
     
     fclose(fp);

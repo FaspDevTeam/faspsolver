@@ -27,7 +27,7 @@
 #
 # If you want to compile with OpenMP support, uncomment the next line:
 #
- openmp=yes
+# openmp=yes
 #
 # These user options can also be applied as make command line options.
 # For example, to enforce the debug compiling options:
@@ -46,7 +46,7 @@
 # If you want to use UMFPACK (part of SparseSuite), uncomment the next 
 # line:
 # 
-# umfpack=yes
+umfpack=yes
 #
 # If you want to specify the path to SparseSuite, uncomment the next 
 # line and give the correct path to SparseSuite here. For example:

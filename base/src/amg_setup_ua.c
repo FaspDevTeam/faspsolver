@@ -116,6 +116,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
     
+    dCSRmat AT, AS;
+    
     fasp_gettime(&setup_start);
     
     // level info (fine: 0; coarse: 1)
@@ -202,14 +204,23 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                 
             case VMB: // VMB aggregation
                 
-                aggregation(&mgl[level].A, &vertices[level], param, level+1,
-                            &Neighbor[level], &num_aggs[level]);
+                aggregation(&mgl[level].A, &vertices[level], param, level+1, &Neighbor[level], &num_aggs[level]);
                 
+                /*
+                fasp_dcsr_trans(&mgl[level].A, &AT);
+                fasp_blas_dcsr_add (&mgl[level].A, 0.5, &AT, 0.5, &AS);
+                                    
+                aggregation(&AS, &vertices[level], param, level+1, &Neighbor[level], &num_aggs[level]);
+                                    
+                fasp_dcsr_free(&AT);
+                fasp_dcsr_free(&AS);
+                */
+                 
                 /*-- Choose strenth threshold adaptively --*/
                 if ( num_aggs[level]*4 > mgl[level].A.row )
-                    param->strong_coupled /= 1.5;
+                    param->strong_coupled /= 2;
                 else if ( num_aggs[level]*1.25 < mgl[level].A.row )
-                    param->strong_coupled *= 1.5;
+                    param->strong_coupled *= 2;
                 
                 break;
                 
