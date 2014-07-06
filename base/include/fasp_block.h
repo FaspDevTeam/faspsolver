@@ -479,7 +479,7 @@ typedef struct precond_block_reservoir_data {
 } precond_block_reservoir_data; /**< Precond data for Reservoir Simulation */
 
 /**
- * \brief Data passed to the preconditioner for diagonal preconditioning for 3 by 3 blocks
+ * \brief Data passed to the preconditioner for block preconditioning for 3 by 3 blocks
  *
  * This is needed for the block preconditioner.
  */
@@ -496,6 +496,23 @@ typedef struct {
     dvector r; /**< temp work space */
 	
 } precond_block_data_3; /**< Precond data for block matrices */
+
+/**
+ * \brief Data passed to the preconditioner for block preconditioning for 4 by 4 blocks
+ *
+ * This is needed for the block preconditioner.
+ */
+typedef struct {
+	
+	block_dCSRmat *Abcsr; /**< problem data, the blocks */
+	
+    dCSRmat *A_diag;  /**< data for each diagonal block */
+    void **LU_diag;     /**< LU decomposition for each diagonal block -- (only for UMFpack -- Xiaozhe Hu) */
+    
+    dvector r; /**< temp work space */
+	
+} precond_block_data_4; /**< Precond data for block matrices */
+
 
 /**
  * \struct precond_block_data

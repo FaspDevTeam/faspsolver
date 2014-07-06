@@ -137,7 +137,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A, dvector *b, dvector *x,
+ * \fn INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A, dvector *b, dvector *x,
  *                                         itsolver_param *itparam,
  *                                         AMG_param *amgparam)
  *
@@ -156,7 +156,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
  *
  * \note only works for 3by3 block dCSRmat problems!! -- Xiaozhe Hu
  */
-INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
+INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
                                     dvector *b,
                                     dvector *x,
                                     itsolver_param *itparam,
@@ -240,11 +240,11 @@ INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
     switch (precond_type)
     {
         case 21:
-            prec.fct = fasp_precond_block_diag;
+            prec.fct = fasp_precond_block_diag_3;
             break;
             
         case 22:
-            prec.fct = fasp_precond_block_lower;
+            prec.fct = fasp_precond_block_lower_3;
             break;
     }
     
@@ -269,6 +269,112 @@ INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
     
     return status;
 }
+
+/**
+ * \fn INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A, dvector *b, dvector *x,
+ *                                         itsolver_param *itparam,
+ *                                         AMG_param *amgparam)
+ *
+ * \brief Solve Ax = b by standard Krylov methods
+ *
+ * \param A         Pointer to the coeff matrix in block_dCSRmat format
+ * \param b         Pointer to the right hand side in dvector format
+ * \param x         Pointer to the approx solution in dvector format
+ * \param itparam   Pointer to parameters for iterative solvers
+ * \param amgparam  Pointer to parameters for AMG solvers
+ *
+ * \return          Number of iterations if succeed
+ *
+ * \author Xiaozhe Hu
+ * \date   07/06/2014
+ *
+ * \note only works for 4 by 4 block dCSRmat problems!! -- Xiaozhe Hu
+ */
+INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
+                                      dvector *b,
+                                      dvector *x,
+                                      itsolver_param *itparam,
+                                      AMG_param *amgparam,
+                                      dCSRmat *A_diag)
+{
+    const INT print_level = itparam->print_level;
+    const INT precond_type = itparam->precond_type;
+    INT status=FASP_SUCCESS;
+    REAL setup_start, setup_end, setup_duration;
+    REAL solver_start, solver_end, solver_duration;
+    
+    void **LU_diag = NULL;
+    INT i;
+    
+    /* setup preconditioner */
+    fasp_gettime(&setup_start);
+    
+#if WITH_UMFPACK
+    // Need to sort the matrices local_A for UMFPACK format
+    dCSRmat A_tran;
+    
+    LU_diag = (void **)fasp_mem_calloc(4, sizeof(void *));
+    
+    for (i=0; i<4; i++){
+        
+        fasp_dcsr_trans(&A_diag[i], &A_tran);
+        fasp_dcsr_sort(&A_tran);
+        fasp_dcsr_cp(&A_tran,&A_diag[i]);
+        
+        printf("Factorization for %d-th diagnol: \n", i);
+        LU_diag[i] = fasp_umfpack_factorize(&A_diag[i], print_level);
+        
+    }
+    
+    fasp_dcsr_free(&A_tran);
+#endif
+    
+    precond_block_data_4 precdata;
+    
+    precdata.Abcsr = A;
+    precdata.A_diag = A_diag;
+    precdata.LU_diag = LU_diag;
+    precdata.r = fasp_dvec_create(b->row);
+    
+    precond prec; prec.data = &precdata;
+    
+    switch (precond_type)
+    {
+        case 21:
+            prec.fct = fasp_precond_block_diag_4;
+            break;
+            
+        case 22:
+            prec.fct = fasp_precond_block_lower_4;
+            break;
+    }
+    
+    if ( print_level>=PRINT_MIN ) {
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;
+        print_cputime("Setup totally", setup_duration);
+    }
+
+    // solver part
+    fasp_gettime(&solver_start);
+    
+    status=fasp_solver_bdcsr_itsolver(A,b,x, &prec,itparam);
+    
+    fasp_gettime(&solver_end);
+    
+    solver_duration = solver_end - solver_start;
+    
+    if ( print_level>=PRINT_MIN )
+        print_cputime("Krylov method totally", solver_duration);
+    
+    // clean
+#if WITH_UMFPACK
+    for (i=0; i<4; i++) fasp_umfpack_free_numeric(LU_diag[i]);
+#endif
+    
+    return status;
+}
+
 
 /**
  * \fn INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b,

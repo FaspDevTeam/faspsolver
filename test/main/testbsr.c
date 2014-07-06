@@ -5,6 +5,8 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
+#include "math.h"
+
 /**
  * \fn int main (int argc, const char * argv[])
  *
@@ -19,7 +21,7 @@ int main (int argc, const char * argv[])
 {
     dBSRmat Absr;
 	dvector b, uh;
-    
+
 	int status=FASP_SUCCESS;
 	
 	// Step 0. Set parameters
@@ -51,9 +53,12 @@ int main (int argc, const char * argv[])
 	// Step 1. Input stiffness matrix and right-hand side
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
+    char filename3[512], *datafile3;
 	
 	strncpy(filename1,inpar.workdir,128);
 	strncpy(filename2,inpar.workdir,128);
+    strncpy(filename3,inpar.workdir,128);
+
     
     // Default test problem from black-oil benchmark: SPE01
 	if (problem_num == 10) {				
@@ -85,7 +90,8 @@ int main (int argc, const char * argv[])
     if (print_level>PRINT_NONE) fasp_param_solver_print(&itpar);
     
     // Set initial guess
-    fasp_dvec_alloc(b.row, &uh); 
+    fasp_dvec_alloc(b.row, &uh);
+    //fasp_dvec_cp(&b, &uh);
     fasp_dvec_set(b.row, &uh, 0.0);
     
     // Preconditioned Krylov methods
@@ -104,7 +110,7 @@ int main (int argc, const char * argv[])
 		// Using AMG as preconditioner for Krylov iterative methods
 		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
             if (print_level>PRINT_NONE) fasp_param_amg_print(&amgpar);
-            status = fasp_solver_dbsr_krylov_amg(&Absr, &b, &uh, &itpar, &amgpar); 
+            status = fasp_solver_dbsr_krylov_amg(&Absr, &b, &uh, &itpar, &amgpar);
 		}
         
 		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
@@ -129,6 +135,9 @@ int main (int argc, const char * argv[])
 	if (status<0) {
 		printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
 	}
+    
+    //fasp_dvec_write("out/13000-3.dat", &uh);
+    
     
     if (output_type) fclose (stdout);
     

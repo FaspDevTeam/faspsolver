@@ -13,12 +13,14 @@
  * \author Xiaozhe Hu
  * \date   04/07/2014
  * 
- * Modified by Chensong Zhang on 09/09/2011
  */
 int main (int argc, const char * argv[]) 
 {
     block_dCSRmat Abcsr;
 	dvector b, uh;
+    
+    dCSRmat A;
+    dCSRmat *A_diag;
     
     dBSRmat Absr;
     
@@ -87,7 +89,6 @@ int main (int argc, const char * argv[])
         datafile1="/pnp-data/A.dat";
         strcat(filename1,datafile1);
 
-        dCSRmat A;
         fasp_dcoo_shift_read(filename1, &A);
         
         // form block CSR matrix
@@ -164,7 +165,6 @@ int main (int argc, const char * argv[])
         datafile1="/5layers/A.dat";
         strcat(filename1,datafile1);
         
-        dCSRmat A;
         fasp_dcoo_shift_read(filename1, &A);
         
         
@@ -494,7 +494,7 @@ int main (int argc, const char * argv[])
         //fasp_ivec_write("local_index_4.dat", &local_index[4]);
         
         
-    }
+}
     
     else if (problem_num == 21) {
         
@@ -506,7 +506,6 @@ int main (int argc, const char * argv[])
         datafile1="/4layers/A.dat";
         strcat(filename1,datafile1);
         
-        dCSRmat A;
         fasp_dcoo_shift_read(filename1, &A);
         
         
@@ -830,7 +829,6 @@ int main (int argc, const char * argv[])
         datafile1="/3layers/A.dat";
         strcat(filename1,datafile1);
         
-        dCSRmat A;
         fasp_dcoo_shift_read(filename1, &A);
         
         
@@ -1127,15 +1125,394 @@ int main (int argc, const char * argv[])
         
     }
     
+    // test problem for MHD benchmark
+    else if (problem_num == 30) {
+        
+        //----------------------------------
+        // read in data
+        //----------------------------------
+        
+        // read in A
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="/MHD/t0.05_h0.5/A.dat";
+        strcat(filename1,datafile1);
+        
+        fasp_dcoo_read(filename1, &A);
+        
+        // read in b
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="/MHD/t0.05_h0.5/b.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dvec_read(filename2, &b);
+        
+        //---------------------------------
+        // read in diagonal block data
+        //---------------------------------
+        A_diag = (dCSRmat *)fasp_mem_calloc(4, sizeof(dCSRmat));
+        
+        // read in A_U
+        strncpy(filename3,inpar.workdir,128);
+        datafile3="/MHD/t0.05_h0.5/H1H1.dat";
+        strcat(filename3, datafile3);
+        
+        fasp_dcoo_read(filename3, &(A_diag[0]));
+        
+        // read in M_P
+        dCSRmat M_P;
+        strncpy(filename4,inpar.workdir,128);
+        datafile4="/MHD/t0.05_h0.5/L2L2.dat";
+        strcat(filename4,datafile4);
+        
+        fasp_dcoo_read(filename4, &(A_diag[1]));
+        
+        // read in A_E
+        dCSRmat A_E;
+        strncpy(filename5,inpar.workdir,128);
+        datafile5="/MHD/t0.05_h0.5/Hcurl.dat";
+        strcat(filename5,datafile5);
+        
+        fasp_dcoo_read(filename5, &(A_diag[2]));
+        
+        // read in M_B
+        dCSRmat M_B;
+        strncpy(filename6,inpar.workdir,128);
+        datafile6="/MHD/t0.05_h0.5/Hdiv.dat";
+        strcat(filename6,datafile6);
+        
+        fasp_dcoo_read(filename6, &(A_diag[3]));
+        
+        // form block CSR matrix
+		ivector U_idx;
+        ivector P_idx;
+        ivector E_idx;
+        ivector B_idx;
+        
+        fasp_ivec_alloc(A_diag[0].row, &U_idx);
+        fasp_ivec_alloc(A_diag[1].row, &P_idx);
+        fasp_ivec_alloc(A_diag[2].row, &E_idx);
+        fasp_ivec_alloc(A_diag[3].row, &B_idx);
+        
+        for (i=0; i<A_diag[0].row; i++){
+            U_idx.val[i] = i;
+        }
+        
+        for (i=0; i<A_diag[1].row; i++){
+            P_idx.val[i] = A_diag[0].row+i;
+        }
+    
+        for (i=0; i<A_diag[2].row; i++){
+            E_idx.val[i] = A_diag[0].row+A_diag[1].row+i;
+        }
+        
+        for (i=0; i<A_diag[3].row; i++){
+            B_idx.val[i] = A_diag[0].row+A_diag[1].row+A_diag[2].row+i;
+        }
+        
+        // Assemble the matrix in block dCSR format
+		Abcsr.brow = 4; Abcsr.bcol = 4;
+		Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
+        for (i=0; i<16 ;i++) {
+            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+        }
+        
+		// A11
+        fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Abcsr.blocks[0]);
+        // A12
+        fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Abcsr.blocks[1]);
+        // A13
+        fasp_dcsr_getblk(&A, U_idx.val, E_idx.val, U_idx.row, E_idx.row, Abcsr.blocks[2]);
+        // A14
+        fasp_dcsr_getblk(&A, U_idx.val, B_idx.val, U_idx.row, B_idx.row, Abcsr.blocks[3]);
+        // A21
+        fasp_dcsr_getblk(&A, P_idx.val, U_idx.val, P_idx.row, U_idx.row, Abcsr.blocks[4]);
+        // A22
+        fasp_dcsr_getblk(&A, P_idx.val, P_idx.val, P_idx.row, P_idx.row, Abcsr.blocks[5]);
+        // A23
+        fasp_dcsr_getblk(&A, P_idx.val, E_idx.val, P_idx.row, E_idx.row, Abcsr.blocks[6]);
+        // A24
+        fasp_dcsr_getblk(&A, P_idx.val, B_idx.val, P_idx.row, B_idx.row, Abcsr.blocks[7]);
+        // A31
+        fasp_dcsr_getblk(&A, E_idx.val, U_idx.val, E_idx.row, U_idx.row, Abcsr.blocks[8]);
+        // A32
+        fasp_dcsr_getblk(&A, E_idx.val, P_idx.val, E_idx.row, P_idx.row, Abcsr.blocks[9]);
+        // A33
+        fasp_dcsr_getblk(&A, E_idx.val, E_idx.val, E_idx.row, E_idx.row, Abcsr.blocks[10]);
+        // A34
+        fasp_dcsr_getblk(&A, E_idx.val, B_idx.val, E_idx.row, B_idx.row, Abcsr.blocks[11]);
+        // A41
+        fasp_dcsr_getblk(&A, B_idx.val, U_idx.val, B_idx.row, U_idx.row, Abcsr.blocks[12]);
+        // A42
+        fasp_dcsr_getblk(&A, B_idx.val, P_idx.val, B_idx.row, P_idx.row, Abcsr.blocks[13]);
+        // A43
+        fasp_dcsr_getblk(&A, B_idx.val, E_idx.val, B_idx.row, E_idx.row, Abcsr.blocks[14]);
+        // A44
+        fasp_dcsr_getblk(&A, B_idx.val, B_idx.val, B_idx.row, B_idx.row, Abcsr.blocks[15]);
+        
+        // use A0 block in the preconditioner
+        fasp_dcsr_cp(Abcsr.blocks[0], &(A_diag[0]));
+        
+    }
+    
+    else if (problem_num == 31) {
+        
+        //----------------------------------
+        // read in data
+        //----------------------------------
+        
+        // read in A
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="/MHD/t0.05_h0.25/A.dat";
+        strcat(filename1,datafile1);
+        
+        fasp_dcoo_read(filename1, &A);
+        
+        // read in b
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="/MHD/t0.05_h0.25/b.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dvec_read(filename2, &b);
+        
+        //---------------------------------
+        // read in diagonal block data
+        //---------------------------------
+        A_diag = (dCSRmat *)fasp_mem_calloc(4, sizeof(dCSRmat));
+        
+        // read in A_U
+        strncpy(filename3,inpar.workdir,128);
+        datafile3="/MHD/t0.05_h0.25/H1H1.dat";
+        strcat(filename3, datafile3);
+        
+        fasp_dcoo_read(filename3, &(A_diag[0]));
+        
+        // read in M_P
+        dCSRmat M_P;
+        strncpy(filename4,inpar.workdir,128);
+        datafile4="/MHD/t0.05_h0.25/L2L2.dat";
+        strcat(filename4,datafile4);
+        
+        fasp_dcoo_read(filename4, &(A_diag[1]));
+        
+        // read in A_E
+        dCSRmat A_E;
+        strncpy(filename5,inpar.workdir,128);
+        datafile5="/MHD/t0.05_h0.25/Hcurl.dat";
+        strcat(filename5,datafile5);
+        
+        fasp_dcoo_read(filename5, &(A_diag[2]));
+        
+        // read in M_B
+        dCSRmat M_B;
+        strncpy(filename6,inpar.workdir,128);
+        datafile6="/MHD/t0.05_h0.25/Hdiv.dat";
+        strcat(filename6,datafile6);
+        
+        fasp_dcoo_read(filename6, &(A_diag[3]));
+        
+        // form block CSR matrix
+		ivector U_idx;
+        ivector P_idx;
+        ivector E_idx;
+        ivector B_idx;
+        
+        fasp_ivec_alloc(A_diag[0].row, &U_idx);
+        fasp_ivec_alloc(A_diag[1].row, &P_idx);
+        fasp_ivec_alloc(A_diag[2].row, &E_idx);
+        fasp_ivec_alloc(A_diag[3].row, &B_idx);
+        
+        for (i=0; i<A_diag[0].row; i++){
+            U_idx.val[i] = i;
+        }
+        
+        for (i=0; i<A_diag[1].row; i++){
+            P_idx.val[i] = A_diag[0].row+i;
+        }
+        
+        for (i=0; i<A_diag[2].row; i++){
+            E_idx.val[i] = A_diag[0].row+A_diag[1].row+i;
+        }
+        
+        for (i=0; i<A_diag[3].row; i++){
+            B_idx.val[i] = A_diag[0].row+A_diag[1].row+A_diag[2].row+i;
+        }
+        
+        // Assemble the matrix in block dCSR format
+		Abcsr.brow = 4; Abcsr.bcol = 4;
+		Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
+        for (i=0; i<16 ;i++) {
+            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+        }
+        
+		// A11
+        fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Abcsr.blocks[0]);
+        // A12
+        fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Abcsr.blocks[1]);
+        // A13
+        fasp_dcsr_getblk(&A, U_idx.val, E_idx.val, U_idx.row, E_idx.row, Abcsr.blocks[2]);
+        // A14
+        fasp_dcsr_getblk(&A, U_idx.val, B_idx.val, U_idx.row, B_idx.row, Abcsr.blocks[3]);
+        // A21
+        fasp_dcsr_getblk(&A, P_idx.val, U_idx.val, P_idx.row, U_idx.row, Abcsr.blocks[4]);
+        // A22
+        fasp_dcsr_getblk(&A, P_idx.val, P_idx.val, P_idx.row, P_idx.row, Abcsr.blocks[5]);
+        // A23
+        fasp_dcsr_getblk(&A, P_idx.val, E_idx.val, P_idx.row, E_idx.row, Abcsr.blocks[6]);
+        // A24
+        fasp_dcsr_getblk(&A, P_idx.val, B_idx.val, P_idx.row, B_idx.row, Abcsr.blocks[7]);
+        // A31
+        fasp_dcsr_getblk(&A, E_idx.val, U_idx.val, E_idx.row, U_idx.row, Abcsr.blocks[8]);
+        // A32
+        fasp_dcsr_getblk(&A, E_idx.val, P_idx.val, E_idx.row, P_idx.row, Abcsr.blocks[9]);
+        // A33
+        fasp_dcsr_getblk(&A, E_idx.val, E_idx.val, E_idx.row, E_idx.row, Abcsr.blocks[10]);
+        // A34
+        fasp_dcsr_getblk(&A, E_idx.val, B_idx.val, E_idx.row, B_idx.row, Abcsr.blocks[11]);
+        // A41
+        fasp_dcsr_getblk(&A, B_idx.val, U_idx.val, B_idx.row, U_idx.row, Abcsr.blocks[12]);
+        // A42
+        fasp_dcsr_getblk(&A, B_idx.val, P_idx.val, B_idx.row, P_idx.row, Abcsr.blocks[13]);
+        // A43
+        fasp_dcsr_getblk(&A, B_idx.val, E_idx.val, B_idx.row, E_idx.row, Abcsr.blocks[14]);
+        // A44
+        fasp_dcsr_getblk(&A, B_idx.val, B_idx.val, B_idx.row, B_idx.row, Abcsr.blocks[15]);
+        
+        // use A0 block in the preconditioner
+        fasp_dcsr_cp(Abcsr.blocks[0], &(A_diag[0]));
+        
+    }
+    
+    else if (problem_num == 32) {
+        
+        //----------------------------------
+        // read in data
+        //----------------------------------
+        
+        // read in A
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="/MHD/t0.05_h0.18/A.dat";
+        strcat(filename1,datafile1);
+        
+        fasp_dcoo_read(filename1, &A);
+        
+        // read in b
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="/MHD/t0.05_h0.18/b.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dvec_read(filename2, &b);
+        
+        //---------------------------------
+        // read in diagonal block data
+        //---------------------------------
+        A_diag = (dCSRmat *)fasp_mem_calloc(4, sizeof(dCSRmat));
+        
+        // read in A_U
+        strncpy(filename3,inpar.workdir,128);
+        datafile3="/MHD/t0.05_h0.18/H1H1.dat";
+        strcat(filename3, datafile3);
+        
+        fasp_dcoo_read(filename3, &(A_diag[0]));
+        
+        // read in M_P
+        dCSRmat M_P;
+        strncpy(filename4,inpar.workdir,128);
+        datafile4="/MHD/t0.05_h0.18/L2L2.dat";
+        strcat(filename4,datafile4);
+        
+        fasp_dcoo_read(filename4, &(A_diag[1]));
+        
+        // read in A_E
+        dCSRmat A_E;
+        strncpy(filename5,inpar.workdir,128);
+        datafile5="/MHD/t0.05_h0.18/Hcurl.dat";
+        strcat(filename5,datafile5);
+        
+        fasp_dcoo_read(filename5, &(A_diag[2]));
+        
+        // read in M_B
+        dCSRmat M_B;
+        strncpy(filename6,inpar.workdir,128);
+        datafile6="/MHD/t0.05_h0.18/Hdiv.dat";
+        strcat(filename6,datafile6);
+        
+        fasp_dcoo_read(filename6, &(A_diag[3]));
+        
+        // form block CSR matrix
+		ivector U_idx;
+        ivector P_idx;
+        ivector E_idx;
+        ivector B_idx;
+        
+        fasp_ivec_alloc(A_diag[0].row, &U_idx);
+        fasp_ivec_alloc(A_diag[1].row, &P_idx);
+        fasp_ivec_alloc(A_diag[2].row, &E_idx);
+        fasp_ivec_alloc(A_diag[3].row, &B_idx);
+        
+        for (i=0; i<A_diag[0].row; i++){
+            U_idx.val[i] = i;
+        }
+        
+        for (i=0; i<A_diag[1].row; i++){
+            P_idx.val[i] = A_diag[0].row+i;
+        }
+        
+        for (i=0; i<A_diag[2].row; i++){
+            E_idx.val[i] = A_diag[0].row+A_diag[1].row+i;
+        }
+        
+        for (i=0; i<A_diag[3].row; i++){
+            B_idx.val[i] = A_diag[0].row+A_diag[1].row+A_diag[2].row+i;
+        }
+        
+        // Assemble the matrix in block dCSR format
+		Abcsr.brow = 4; Abcsr.bcol = 4;
+		Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
+        for (i=0; i<16 ;i++) {
+            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+        }
+        
+		// A11
+        fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Abcsr.blocks[0]);
+        // A12
+        fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Abcsr.blocks[1]);
+        // A13
+        fasp_dcsr_getblk(&A, U_idx.val, E_idx.val, U_idx.row, E_idx.row, Abcsr.blocks[2]);
+        // A14
+        fasp_dcsr_getblk(&A, U_idx.val, B_idx.val, U_idx.row, B_idx.row, Abcsr.blocks[3]);
+        // A21
+        fasp_dcsr_getblk(&A, P_idx.val, U_idx.val, P_idx.row, U_idx.row, Abcsr.blocks[4]);
+        // A22
+        fasp_dcsr_getblk(&A, P_idx.val, P_idx.val, P_idx.row, P_idx.row, Abcsr.blocks[5]);
+        // A23
+        fasp_dcsr_getblk(&A, P_idx.val, E_idx.val, P_idx.row, E_idx.row, Abcsr.blocks[6]);
+        // A24
+        fasp_dcsr_getblk(&A, P_idx.val, B_idx.val, P_idx.row, B_idx.row, Abcsr.blocks[7]);
+        // A31
+        fasp_dcsr_getblk(&A, E_idx.val, U_idx.val, E_idx.row, U_idx.row, Abcsr.blocks[8]);
+        // A32
+        fasp_dcsr_getblk(&A, E_idx.val, P_idx.val, E_idx.row, P_idx.row, Abcsr.blocks[9]);
+        // A33
+        fasp_dcsr_getblk(&A, E_idx.val, E_idx.val, E_idx.row, E_idx.row, Abcsr.blocks[10]);
+        // A34
+        fasp_dcsr_getblk(&A, E_idx.val, B_idx.val, E_idx.row, B_idx.row, Abcsr.blocks[11]);
+        // A41
+        fasp_dcsr_getblk(&A, B_idx.val, U_idx.val, B_idx.row, U_idx.row, Abcsr.blocks[12]);
+        // A42
+        fasp_dcsr_getblk(&A, B_idx.val, P_idx.val, B_idx.row, P_idx.row, Abcsr.blocks[13]);
+        // A43
+        fasp_dcsr_getblk(&A, B_idx.val, E_idx.val, B_idx.row, E_idx.row, Abcsr.blocks[14]);
+        // A44
+        fasp_dcsr_getblk(&A, B_idx.val, B_idx.val, B_idx.row, B_idx.row, Abcsr.blocks[15]);
+        
+        // use A0 block in the preconditioner
+        fasp_dcsr_cp(Abcsr.blocks[0], &(A_diag[0]));
+        
+    }
+    
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
-	}
-    
-    // Print problem size
-	if (print_level>PRINT_NONE) {
-        printf("A: m = %d, n = %d, nnz = %d\n", Absr.ROW, Absr.COL, Absr.NNZ);
-        printf("b: n = %d\n", b.row);
 	}
     
 	// Step 2. Solve the system
@@ -1157,7 +1534,16 @@ int main (int argc, const char * argv[])
         
 		// Using diag(A) as preconditioner for Krylov iterative methods
 		else if (precond_type >= 20 &&  precond_type < 30) {
-            status = fasp_solver_bdcsr_krylov_block(&Abcsr, &b, &uh, &itpar, &amgpar);
+            
+            if (Abcsr.brow == 3) {
+                status = fasp_solver_bdcsr_krylov_block_3(&Abcsr, &b, &uh, &itpar, &amgpar);
+            }
+            else if (Abcsr.brow == 4) {
+                status = fasp_solver_bdcsr_krylov_block_4(&Abcsr, &b, &uh, &itpar, &amgpar, A_diag);
+            }
+            else {
+                //status = fasp_solver_bdcsr_krylov_block(&Abcsr, &b, &uh, &itpar, &amgpar);
+            }
 		}
         
         // sweeping preconditioners

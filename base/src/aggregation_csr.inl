@@ -495,10 +495,23 @@ static void aggregation_coarsening (AMG_data *mgl,
     INT       i, j, num_agg, aggindex;
     INT       dopass = 0;
     INT       lvl = level;
+    
+    //dCSRmat AT, AS;
 
     for ( i = 1; i <= pair_number; ++i ) {
 
         /*-- generate aggregations by pairwise matching --*/
+        
+        /*
+        fasp_dcsr_trans(ptrA, &AT);
+        fasp_blas_dcsr_add(ptrA, 0.5, &AT, 0.5, &AS);
+        
+        pairwise_aggregation(&AS, i, &vertice[lvl], &num_agg);
+        
+        fasp_dcsr_free(&AT);
+        fasp_dcsr_free(&AS);
+        */
+        
         pairwise_aggregation(ptrA, i, &vertice[lvl], &num_agg);
 
         if ( i < pair_number ) {

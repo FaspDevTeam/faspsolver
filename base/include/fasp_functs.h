@@ -959,11 +959,18 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
                               dvector *x,
                               itsolver_param *itparam);
 
-INT fasp_solver_bdcsr_krylov_block (block_dCSRmat *A,
+INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
                                     dvector *b,
                                     dvector *x,
                                     itsolver_param *itparam,
                                     AMG_param *amgparam);
+
+INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
+                                      dvector *b,
+                                      dvector *x,
+                                      itsolver_param *itparam,
+                                      AMG_param *amgparam,
+                                      dCSRmat *A_diag);
 
 INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
                                        dvector *b,
@@ -1524,13 +1531,21 @@ INT fasp_solver_pminres (mxv_matfree *mf,
 
 /*-------- In file: precond_bcsr.c --------*/
 
-void fasp_precond_block_diag (double *r,
+void fasp_precond_block_diag_3 (double *r,
                             double *z, 
                             void *data);
 
-void fasp_precond_block_lower (double *r,
+void fasp_precond_block_diag_4 (double *r,
+                                double *z,
+                                void *data);
+
+void fasp_precond_block_lower_3 (double *r,
                             double *z, 
                             void *data);
+
+void fasp_precond_block_lower_4 (double *r,
+                                double *z,
+                                void *data);
 
 void fasp_precond_sweeping (double *r,
                               double *z,
