@@ -1,9 +1,10 @@
 File Name: CHANGES
 
-06/21/2014 FASP 1.5.5:
+07/07/2014 FASP 1.5.5:
 - Modify the parameter for pairwise aggregation.
 - Fix warnings for data type REAL in sparse_bsr.c
 - Update results of the regression test.
+- Add block preconditioners for MHD.
 
 06/20/2014 FASP 1.5.4:
 - Fix a bug in io.c.
