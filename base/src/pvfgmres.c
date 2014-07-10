@@ -765,6 +765,9 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
 	else               den_norm = r_norm;
 	
 	epsilon = tol*den_norm;
+    
+    if (print_level > PRINT_NONE)
+        print_itinfo(print_level,stop_type,0,r_norm/b_norm,r_norm,1.0);
 	
 	/* outer iteration cycle */
 	while (iter < MaxIt)
@@ -824,6 +827,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
 		}
 		
 		t = 1.0 / r_norm;
+        
 		for (j = 0; j < n; j ++) p[0][j] *= t;
 		
 		/* RESTART CYCLE (right-preconditioning) */
@@ -839,17 +843,21 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
                 fasp_array_cp(n, p[i-1], z[i-1]);
 			else
                 pre->fct(p[i-1], z[i-1], pre->data);
-			
+             
             fasp_blas_bdcsr_mxv(A, z[i-1], p[i]);
-			
+             
 			/* modified Gram_Schmidt */
 			for (j = 0; j < i; j ++)
 			{
 				hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
+                 
 				fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
+                 
 			}
+            
 			t = fasp_blas_array_norm2(n, p[i]);
 			hh[i][i-1] = t;
+            
 			if (t != 0.0)
 			{
 				t = 1.0/t;
@@ -862,15 +870,21 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
 				hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
 				hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
 			}
+            
 			t= hh[i][i-1]*hh[i][i-1];
 			t+= hh[i-1][i-1]*hh[i-1][i-1];
+            
 			gamma = sqrt(t);
+            
 			if (gamma == 0.0) gamma = epsmac;
 			c[i-1]  = hh[i-1][i-1] / gamma;
 			s[i-1]  = hh[i][i-1] / gamma;
+            
 			rs[i]   = -s[i-1]*rs[i-1];
 			rs[i-1] = c[i-1]*rs[i-1];
+            
 			hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
+            
 			r_norm = fabs(rs[i]);
 			
 			if (print_level > PRINT_NONE) norms[iter] = r_norm;

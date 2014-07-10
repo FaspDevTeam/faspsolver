@@ -152,15 +152,16 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
  * \return          Number of iterations if succeed
  *
  * \author Xiaozhe Hu
- * \date   04/07/2014
+ * \date   07/10/2014
  *
  * \note only works for 3by3 block dCSRmat problems!! -- Xiaozhe Hu
  */
 INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
-                                    dvector *b,
-                                    dvector *x,
-                                    itsolver_param *itparam,
-                                    AMG_param *amgparam)
+                                      dvector *b,
+                                      dvector *x,
+                                      itsolver_param *itparam,
+                                      AMG_param *amgparam,
+                                      dCSRmat *A_diag)
 {
     const INT print_level = itparam->print_level;
     const INT precond_type = itparam->precond_type;
@@ -168,72 +169,89 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     REAL setup_start, setup_end, setup_duration;
     REAL solver_start, solver_end, solver_duration;
     
-    dCSRmat *A11, *A22, *A33;
-    
     const INT max_levels = amgparam->max_levels;
     INT m, n, nnz;
+    
+    void **LU_diag = NULL;
+    AMG_data **mgl = NULL;
+    INT i;
     
     /* setup preconditioner */
     fasp_gettime(&setup_start);
     
-    // AMG for A11 block
-    AMG_data *mgl1=fasp_amg_data_create(max_levels);
-    A11 = A->blocks[0];
-    m = A11->row; n = A11->col; nnz = A11->nnz;
-    mgl1[0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A11,&mgl1[0].A);
-    mgl1[0].b=fasp_dvec_create(n); mgl1[0].x=fasp_dvec_create(n);
+    /* diagonal blocks are solved exactly */
+    if (precond_type >20 && precond_type < 30) {
+        
+#if WITH_UMFPACK
+        // Need to sort the diagonal blocks for UMFPACK format
+        dCSRmat A_tran;
+        
+        LU_diag = (void **)fasp_mem_calloc(3, sizeof(void *));
+        
+        for (i=0; i<3; i++){
+            
+            fasp_dcsr_trans(&A_diag[i], &A_tran);
+            fasp_dcsr_sort(&A_tran);
+            fasp_dcsr_cp(&A_tran,&A_diag[i]);
+            
+            printf("Factorization for %d-th diagnol: \n", i);
+            LU_diag[i] = fasp_umfpack_factorize(&A_diag[i], print_level);
+            
+        }
+        
+        fasp_dcsr_free(&A_tran);
+#endif
     
-    // setup preconditioner
-    switch (amgparam->AMG_type) {
-        case SA_AMG: // Smoothed Aggregation AMG
-            status = fasp_amg_setup_sa(mgl1, amgparam); break;
-        case UA_AMG: // Unsmoothed Aggregation AMG
-            status = fasp_amg_setup_ua(mgl1, amgparam); break;
-        default: // Classical AMG
-            status = fasp_amg_setup_rs(mgl1, amgparam); break;
+    }
+    /* diagonal blocks are solved by AMG */
+    else if (precond_type >30 && precond_type < 40) {
+     
+        mgl = (AMG_data **)fasp_mem_calloc(3, sizeof(AMG_data *));
+        
+        for (i=0; i<3; i++){
+            
+            mgl[i] = fasp_amg_data_create(max_levels);
+            m = A_diag[i].row; n = A_diag[i].col; nnz = A_diag[i].nnz;
+            mgl[i][0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(&A_diag[i],&mgl[i][0].A);
+            mgl[i][0].b=fasp_dvec_create(n); mgl[i][0].x=fasp_dvec_create(n);
+            
+            switch (amgparam->AMG_type) {
+                case SA_AMG: // Smoothed Aggregation AMG
+                    status = fasp_amg_setup_sa(mgl[i], amgparam); break;
+                case UA_AMG: // Unsmoothed Aggregation AMG
+                    status = fasp_amg_setup_ua(mgl[i], amgparam); break;
+                default: // Classical AMG
+                    status = fasp_amg_setup_rs(mgl[i], amgparam); break;
+            }
+
+        }
+        
+    }
+    else {
+        fasp_chkerr(ERROR_SOLVER_PRECTYPE, "fasp_solver_bdcsr_krylov_block_3");
+        return ERROR_SOLVER_PRECTYPE;
     }
     
-    // AMG for A22 block
-    AMG_data *mgl2=fasp_amg_data_create(max_levels);
-    A22 = A->blocks[4];
-    m = A22->row; n = A22->col; nnz = A22->nnz;
-    mgl2[0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A22,&mgl2[0].A);
-    mgl2[0].b=fasp_dvec_create(n); mgl2[0].x=fasp_dvec_create(n);
-    
-    // setup preconditioner
-    switch (amgparam->AMG_type) {
-        case SA_AMG: // Smoothed Aggregation AMG
-            status = fasp_amg_setup_sa(mgl2, amgparam); break;
-        case UA_AMG: // Unsmoothed Aggregation AMG
-            status = fasp_amg_setup_ua(mgl2, amgparam); break;
-        default: // Classical AMG
-            status = fasp_amg_setup_rs(mgl2, amgparam); break;
-    }
-    
-    // AMG for A33 block
-    AMG_data *mgl3=fasp_amg_data_create(max_levels);
-    A33 = A->blocks[8];
-    m = A33->row; n = A33->col; nnz = A33->nnz;
-    mgl3[0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A33,&mgl3[0].A);
-    mgl3[0].b=fasp_dvec_create(n); mgl3[0].x=fasp_dvec_create(n);
-    
-    // setup preconditioner
-    switch (amgparam->AMG_type) {
-        case SA_AMG: // Smoothed Aggregation AMG
-            status = fasp_amg_setup_sa(mgl3, amgparam); break;
-        case UA_AMG: // Unsmoothed Aggregation AMG
-            status = fasp_amg_setup_ua(mgl3, amgparam); break;
-        default: // Classical AMG
-            status = fasp_amg_setup_rs(mgl3, amgparam); break;
-    }
-    
-    precond_block_data_3 precdata;
+    precond_block_data precdata;
     precdata.Abcsr = A;
-    precdata.amgparam = amgparam;
-    precdata.mgl1 = mgl1;
-    precdata.mgl2 = mgl3;
-    precdata.mgl3 = mgl3;
+    precdata.A_diag = A_diag;
     precdata.r = fasp_dvec_create(b->row);
+    
+    /* diagonal blocks are solved exactly */
+    if (precond_type >20 && precond_type < 30) {
+#if WITH_UMFPACK
+        precdata.LU_diag = LU_diag;
+#endif
+    }
+    /* diagonal blocks are solved by AMG */
+    else if (precond_type >30 && precond_type < 40) {
+        precdata.amgparam = amgparam;
+        precdata.mgl = mgl;
+    }
+    else {
+        fasp_chkerr(ERROR_SOLVER_PRECTYPE, "fasp_solver_bdcsr_krylov_block_3");
+        return ERROR_SOLVER_PRECTYPE;
+    }
     
     precond prec; prec.data = &precdata;
     
@@ -245,6 +263,18 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
             
         case 22:
             prec.fct = fasp_precond_block_lower_3;
+            break;
+            
+        case 31:
+            prec.fct = fasp_precond_block_diag_3_amg;
+            break;
+            
+        case 32:
+            prec.fct = fasp_precond_block_lower_3_amg;
+            break;
+            
+        default:
+            fasp_chkerr(ERROR_SOLVER_PRECTYPE, "fasp_solver_bdcsr_krylov_block_3");
             break;
     }
     
@@ -266,6 +296,24 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     
     if ( print_level>=PRINT_MIN )
         print_cputime("Krylov method totally", solver_duration);
+    
+    // clean
+    /* diagonal blocks are solved exactly */
+    if (precond_type >20 && precond_type < 30) {
+#if WITH_UMFPACK
+    for (i=0; i<3; i++) fasp_umfpack_free_numeric(LU_diag[i]);
+#endif
+    }
+    /* diagonal blocks are solved by AMG */
+    else if (precond_type >30 && precond_type < 40) {
+        
+        for (i=0; i<3; i++) fasp_amg_data_free(mgl[i], amgparam);
+        if (mgl) fasp_mem_free(mgl);
+    }
+    else {
+        fasp_chkerr(ERROR_SOLVER_PRECTYPE, "fasp_solver_bdcsr_krylov_block_3");
+        return ERROR_SOLVER_PRECTYPE;
+    }
     
     return status;
 }
@@ -309,6 +357,9 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     /* setup preconditioner */
     fasp_gettime(&setup_start);
     
+    /* diagonal blocks are solved exactly */
+    if (precond_type >20 && precond_type < 30) {
+    
 #if WITH_UMFPACK
     // Need to sort the matrices local_A for UMFPACK format
     dCSRmat A_tran;
@@ -328,12 +379,19 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     
     fasp_dcsr_free(&A_tran);
 #endif
+        
+    }
+    else {
+        fasp_chkerr(ERROR_SOLVER_PRECTYPE, "fasp_solver_bdcsr_krylov_block_4");
+    }
     
-    precond_block_data_4 precdata;
+    precond_block_data precdata;
     
     precdata.Abcsr = A;
     precdata.A_diag = A_diag;
+#if WITH_UMFPACK
     precdata.LU_diag = LU_diag;
+#endif
     precdata.r = fasp_dvec_create(b->row);
     
     precond prec; prec.data = &precdata;

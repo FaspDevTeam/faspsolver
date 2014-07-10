@@ -106,7 +106,7 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
             // y2 = alpha*A21*x1 + alpha*A22*x2 + alpha*A23*x3 + y2
             if (A21) fasp_blas_dcsr_aAxpy(alpha, A21, x1, y2);
             if (A22) fasp_blas_dcsr_aAxpy(alpha, A22, x2, y2);
-            if (A23)fasp_blas_dcsr_aAxpy(alpha, A23, x3, y2);
+            if (A23) fasp_blas_dcsr_aAxpy(alpha, A23, x3, y2);
             
             // y3 = alpha*A31*x1 + alpha*A32*x2 + alpha*A33*x3 + y2
             if (A31) fasp_blas_dcsr_aAxpy(alpha, A31, x1, y3);

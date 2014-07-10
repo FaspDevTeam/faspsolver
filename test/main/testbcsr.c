@@ -21,8 +21,13 @@ int main (int argc, const char * argv[])
     
     dCSRmat A;
     dCSRmat *A_diag;
+    dvector b_temp;
     
     dBSRmat Absr;
+    
+    ivector phi_idx;
+    ivector n_idx;
+    ivector p_idx;
     
     INT i,j;
     block_dCSRmat Aibcsr;
@@ -86,16 +91,13 @@ int main (int argc, const char * argv[])
 	if (problem_num == 10) {
         
         strncpy(filename1,inpar.workdir,128);
-        datafile1="/pnp-data/A.dat";
+        datafile1="/pnp-data/set-1/A.dat";
         strcat(filename1,datafile1);
 
         fasp_dcoo_shift_read(filename1, &A);
         
         // form block CSR matrix
         INT row = A.row/3;
-		ivector phi_idx;
-        ivector n_idx;
-        ivector p_idx;
         
         fasp_ivec_alloc(row, &phi_idx);
         fasp_ivec_alloc(row, &n_idx);
@@ -135,9 +137,8 @@ int main (int argc, const char * argv[])
         fasp_dcsr_getblk(&A, p_idx.val, p_idx.val, row, row, Abcsr.blocks[8]);
         
         // form right hand side
-        dvector b_temp;
         strncpy(filename2,inpar.workdir,128);
-        datafile2="/pnp-data/rhs.dat"; strcat(filename2,datafile2);
+        datafile2="/pnp-data/set-1/rhs.dat"; strcat(filename2,datafile2);
         fasp_dvec_read(filename2, &b_temp);
         
         
@@ -150,7 +151,232 @@ int main (int argc, const char * argv[])
             
         }
         
-        //Absr = fasp_format_dcsr_dbsr(&A, 3);
+        // setup diagonal blocks for the preconditioner
+        A_diag = (dCSRmat *)fasp_mem_calloc(3, sizeof(dCSRmat));
+
+        // first diagonal block
+        A_diag[0].row = Abcsr.blocks[0]->row;
+        A_diag[0].col = Abcsr.blocks[0]->col;
+        A_diag[0].nnz = Abcsr.blocks[0]->nnz;
+        A_diag[0].IA  = Abcsr.blocks[0]->IA;
+        A_diag[0].JA  = Abcsr.blocks[0]->JA;
+        A_diag[0].val = Abcsr.blocks[0]->val;
+        
+        // second diagonal block
+        A_diag[1].row = Abcsr.blocks[4]->row;
+        A_diag[1].col = Abcsr.blocks[4]->col;
+        A_diag[1].nnz = Abcsr.blocks[4]->nnz;
+        A_diag[1].IA  = Abcsr.blocks[4]->IA;
+        A_diag[1].JA  = Abcsr.blocks[4]->JA;
+        A_diag[1].val = Abcsr.blocks[4]->val;
+        
+        // third diagonal block
+        A_diag[2].row = Abcsr.blocks[8]->row;
+        A_diag[2].col = Abcsr.blocks[8]->col;
+        A_diag[2].nnz = Abcsr.blocks[8]->nnz;
+        A_diag[2].IA  = Abcsr.blocks[8]->IA;
+        A_diag[2].JA  = Abcsr.blocks[8]->JA;
+        A_diag[2].val = Abcsr.blocks[8]->val;
+        
+    }
+    
+    else if (problem_num == 11) {
+        
+        // read in matrix
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="/pnp-data/set-2/A.dat";
+        strcat(filename1,datafile1);
+        
+        fasp_dcoo_read(filename1, &A);
+        
+        // read in index
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="/pnp-data/set-2/phi_idx.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_ivecind_read(filename2, &phi_idx);
+        
+        // read in index
+        strncpy(filename3,inpar.workdir,128);
+        datafile3="/pnp-data/set-2/n_idx.dat";
+        strcat(filename3,datafile3);
+        
+        fasp_ivecind_read(filename3, &n_idx);
+        
+        // read in index
+        strncpy(filename4,inpar.workdir,128);
+        datafile4="/pnp-data/set-2/p_idx.dat";
+        strcat(filename4,datafile4);
+        
+        fasp_ivecind_read(filename4, &p_idx);
+        
+        // read in b
+        strncpy(filename5,inpar.workdir,128);
+        datafile5="/pnp-data/set-2/b.dat";
+        strcat(filename5,datafile5);
+        
+        fasp_dvec_read(filename5, &b_temp);
+        
+        // Assemble the matrix in block dCSR format
+		Abcsr.brow = 3; Abcsr.bcol = 3;
+		Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
+        for (i=0; i<9 ;i++) {
+            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+        }
+        
+		// A11
+        fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, phi_idx.row, phi_idx.row, Abcsr.blocks[0]);
+        // A12
+        fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, phi_idx.row, n_idx.row, Abcsr.blocks[1]);
+        // A13
+        fasp_dcsr_getblk(&A, phi_idx.val, p_idx.val, phi_idx.row, p_idx.row, Abcsr.blocks[2]);
+        // A21
+        fasp_dcsr_getblk(&A, n_idx.val, phi_idx.val, n_idx.row, phi_idx.row, Abcsr.blocks[3]);
+        // A22
+        fasp_dcsr_getblk(&A, n_idx.val, n_idx.val, n_idx.row, n_idx.row, Abcsr.blocks[4]);
+        // A23
+        fasp_dcsr_getblk(&A, n_idx.val, p_idx.val, n_idx.row, p_idx.row, Abcsr.blocks[5]);
+        // A31
+        fasp_dcsr_getblk(&A, p_idx.val, phi_idx.val, p_idx.row, phi_idx.row, Abcsr.blocks[6]);
+        // A32
+        fasp_dcsr_getblk(&A, p_idx.val, n_idx.val, p_idx.row, n_idx.row, Abcsr.blocks[7]);
+        // A33
+        fasp_dcsr_getblk(&A, p_idx.val, p_idx.val, p_idx.row, p_idx.row, Abcsr.blocks[8]);
+        
+        // form right hand side b
+        fasp_dvec_alloc(b_temp.row, &b);
+        
+        for (i=0; i<phi_idx.row; i++) b.val[i] = b_temp.val[phi_idx.val[i]];
+        for (i=0; i<n_idx.row; i++) b.val[phi_idx.row+i] = b_temp.val[n_idx.val[i]];
+        for (i=0; i<p_idx.row; i++) b.val[phi_idx.row+n_idx.row+i] = b_temp.val[p_idx.val[i]];
+
+        // setup diagonal blocks for the preconditioner
+        A_diag = (dCSRmat *)fasp_mem_calloc(3, sizeof(dCSRmat));
+        
+        // first diagonal block
+        A_diag[0].row = Abcsr.blocks[0]->row;
+        A_diag[0].col = Abcsr.blocks[0]->col;
+        A_diag[0].nnz = Abcsr.blocks[0]->nnz;
+        A_diag[0].IA  = Abcsr.blocks[0]->IA;
+        A_diag[0].JA  = Abcsr.blocks[0]->JA;
+        A_diag[0].val = Abcsr.blocks[0]->val;
+        
+        // second diagonal block
+        A_diag[1].row = Abcsr.blocks[4]->row;
+        A_diag[1].col = Abcsr.blocks[4]->col;
+        A_diag[1].nnz = Abcsr.blocks[4]->nnz;
+        A_diag[1].IA  = Abcsr.blocks[4]->IA;
+        A_diag[1].JA  = Abcsr.blocks[4]->JA;
+        A_diag[1].val = Abcsr.blocks[4]->val;
+        
+        // third diagonal block
+        A_diag[2].row = Abcsr.blocks[8]->row;
+        A_diag[2].col = Abcsr.blocks[8]->col;
+        A_diag[2].nnz = Abcsr.blocks[8]->nnz;
+        A_diag[2].IA  = Abcsr.blocks[8]->IA;
+        A_diag[2].JA  = Abcsr.blocks[8]->JA;
+        A_diag[2].val = Abcsr.blocks[8]->val;
+        
+        
+    }
+    
+    else if (problem_num == 12) {
+        
+        // read in matrix
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="/pnp-data/set-3/A.dat";
+        strcat(filename1,datafile1);
+        
+        fasp_dcoo_read(filename1, &A);
+        
+        // read in index
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="/pnp-data/set-3/phi_idx.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_ivecind_read(filename2, &phi_idx);
+        
+        // read in index
+        strncpy(filename3,inpar.workdir,128);
+        datafile3="/pnp-data/set-3/n_idx.dat";
+        strcat(filename3,datafile3);
+        
+        fasp_ivecind_read(filename3, &n_idx);
+        
+        // read in index
+        strncpy(filename4,inpar.workdir,128);
+        datafile4="/pnp-data/set-3/p_idx.dat";
+        strcat(filename4,datafile4);
+        
+        fasp_ivecind_read(filename4, &p_idx);
+        
+        // read in b
+        strncpy(filename5,inpar.workdir,128);
+        datafile5="/pnp-data/set-3/b.dat";
+        strcat(filename5,datafile5);
+        
+        fasp_dvec_read(filename5, &b_temp);
+        
+        // Assemble the matrix in block dCSR format
+		Abcsr.brow = 3; Abcsr.bcol = 3;
+		Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
+        for (i=0; i<9 ;i++) {
+            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+        }
+        
+		// A11
+        fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, phi_idx.row, phi_idx.row, Abcsr.blocks[0]);
+        // A12
+        fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, phi_idx.row, n_idx.row, Abcsr.blocks[1]);
+        // A13
+        fasp_dcsr_getblk(&A, phi_idx.val, p_idx.val, phi_idx.row, p_idx.row, Abcsr.blocks[2]);
+        // A21
+        fasp_dcsr_getblk(&A, n_idx.val, phi_idx.val, n_idx.row, phi_idx.row, Abcsr.blocks[3]);
+        // A22
+        fasp_dcsr_getblk(&A, n_idx.val, n_idx.val, n_idx.row, n_idx.row, Abcsr.blocks[4]);
+        // A23
+        fasp_dcsr_getblk(&A, n_idx.val, p_idx.val, n_idx.row, p_idx.row, Abcsr.blocks[5]);
+        // A31
+        fasp_dcsr_getblk(&A, p_idx.val, phi_idx.val, p_idx.row, phi_idx.row, Abcsr.blocks[6]);
+        // A32
+        fasp_dcsr_getblk(&A, p_idx.val, n_idx.val, p_idx.row, n_idx.row, Abcsr.blocks[7]);
+        // A33
+        fasp_dcsr_getblk(&A, p_idx.val, p_idx.val, p_idx.row, p_idx.row, Abcsr.blocks[8]);
+        
+        // form right hand side b
+        fasp_dvec_alloc(b_temp.row, &b);
+        
+        for (i=0; i<phi_idx.row; i++) b.val[i] = b_temp.val[phi_idx.val[i]];
+        for (i=0; i<n_idx.row; i++) b.val[phi_idx.row+i] = b_temp.val[n_idx.val[i]];
+        for (i=0; i<p_idx.row; i++) b.val[phi_idx.row+n_idx.row+i] =  b_temp.val[p_idx.val[i]];
+        
+        // setup diagonal blocks for the preconditioner
+        A_diag = (dCSRmat *)fasp_mem_calloc(3, sizeof(dCSRmat));
+        
+        // first diagonal block
+        A_diag[0].row = Abcsr.blocks[0]->row;
+        A_diag[0].col = Abcsr.blocks[0]->col;
+        A_diag[0].nnz = Abcsr.blocks[0]->nnz;
+        A_diag[0].IA  = Abcsr.blocks[0]->IA;
+        A_diag[0].JA  = Abcsr.blocks[0]->JA;
+        A_diag[0].val = Abcsr.blocks[0]->val;
+        
+        // second diagonal block
+        A_diag[1].row = Abcsr.blocks[4]->row;
+        A_diag[1].col = Abcsr.blocks[4]->col;
+        A_diag[1].nnz = Abcsr.blocks[4]->nnz;
+        A_diag[1].IA  = Abcsr.blocks[4]->IA;
+        A_diag[1].JA  = Abcsr.blocks[4]->JA;
+        A_diag[1].val = Abcsr.blocks[4]->val;
+        
+        // third diagonal block
+        A_diag[2].row = Abcsr.blocks[8]->row;
+        A_diag[2].col = Abcsr.blocks[8]->col;
+        A_diag[2].nnz = Abcsr.blocks[8]->nnz;
+        A_diag[2].IA  = Abcsr.blocks[8]->IA;
+        A_diag[2].JA  = Abcsr.blocks[8]->JA;
+        A_diag[2].val = Abcsr.blocks[8]->val;
+
         
     }
     
@@ -1533,10 +1759,10 @@ int main (int argc, const char * argv[])
 		}	
         
 		// Using diag(A) as preconditioner for Krylov iterative methods
-		else if (precond_type >= 20 &&  precond_type < 30) {
+		else if (precond_type >= 20 &&  precond_type < 40) {
             
             if (Abcsr.brow == 3) {
-                status = fasp_solver_bdcsr_krylov_block_3(&Abcsr, &b, &uh, &itpar, &amgpar);
+                status = fasp_solver_bdcsr_krylov_block_3(&Abcsr, &b, &uh, &itpar, &amgpar, A_diag);
             }
             else if (Abcsr.brow == 4) {
                 status = fasp_solver_bdcsr_krylov_block_4(&Abcsr, &b, &uh, &itpar, &amgpar, A_diag);
@@ -1547,7 +1773,7 @@ int main (int argc, const char * argv[])
 		}
         
         // sweeping preconditioners
-        else if (precond_type >= 30 && precond_type < 40) {
+        else if (precond_type >= 50 && precond_type < 60) {
             status = fasp_solver_bdcsr_krylov_sweeping(&Abcsr, &b, &uh, &itpar, NumLayers, &Aibcsr, local_A, local_index);
         }
         

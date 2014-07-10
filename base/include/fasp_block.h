@@ -479,39 +479,34 @@ typedef struct precond_block_reservoir_data {
 } precond_block_reservoir_data; /**< Precond data for Reservoir Simulation */
 
 /**
- * \brief Data passed to the preconditioner for block preconditioning for 3 by 3 blocks
+ * \brief Data passed to the preconditioner for block preconditioning for block_dCSRmat format
  *
  * This is needed for the block preconditioner.
  */
 typedef struct {
 	
+    /*-------------------------------------*/
+    /* Basic data for block preconditioner */
+    /*-------------------------------------*/
 	block_dCSRmat *Abcsr; /**< problem data, the blocks */
 	
-    AMG_data *mgl1; /**< data for AMG */
-    AMG_data *mgl2; /**< data for AMG */
-    AMG_data *mgl3; /**< data for AMG */
-    
-	AMG_param *amgparam; /**< parameters for AMG */
+    dCSRmat *A_diag;  /**< data for each diagonal block which need to solve in the block preconditioners */
     
     dvector r; /**< temp work space */
+    
+    /*------------------------------*/
+    /* Data for the diagonal blocks */
+    /*------------------------------*/
+    /*--- solve by direct solver ---*/
+    void **LU_diag;   /**< LU decomposition for the diagonal blocks -- (only for UMFpack -- Xiaozhe Hu) */
+    
+    /*---  solve by AMG ---*/
+    AMG_data **mgl;   /**< AMG data for the diagonal blocks */
+    AMG_param *amgparam; /**< parameters for AMG */
+    
 	
-} precond_block_data_3; /**< Precond data for block matrices */
+} precond_block_data; /**< Precond data for block matrices */
 
-/**
- * \brief Data passed to the preconditioner for block preconditioning for 4 by 4 blocks
- *
- * This is needed for the block preconditioner.
- */
-typedef struct {
-	
-	block_dCSRmat *Abcsr; /**< problem data, the blocks */
-	
-    dCSRmat *A_diag;  /**< data for each diagonal block */
-    void **LU_diag;     /**< LU decomposition for each diagonal block -- (only for UMFpack -- Xiaozhe Hu) */
-    
-    dvector r; /**< temp work space */
-	
-} precond_block_data_4; /**< Precond data for block matrices */
 
 
 /**
@@ -520,19 +515,20 @@ typedef struct {
  *
  * \note This is needed for the diagnoal block preconditioner.
  */
-typedef struct {
+//typedef struct {
 	
-	dCSRmat  *A; /**< problem data, the sparse matrix */
-	dvector  *r; /**< problem data, the right-hand side vector */
+//	dCSRmat  *A; /**< problem data, the sparse matrix */
+//	dvector  *r; /**< problem data, the right-hand side vector */
 	
-	dCSRmat **Ablock;  /**< problem data, the blocks */
-	ivector **row_idx; /**< problem data, row indices */
-	ivector **col_idx; /**< problem data, col indices */
+//	dCSRmat **Ablock;  /**< problem data, the blocks */
+//	ivector **row_idx; /**< problem data, row indices */
+//	ivector **col_idx; /**< problem data, col indices */
 	
-	AMG_param *amgparam; /**< parameters for AMG */
-	dCSRmat  **Aarray;   /**< data generated in the setup phase */
+//	AMG_param *amgparam; /**< parameters for AMG */
+//	dCSRmat  **Aarray;   /**< data generated in the setup phase */
 	
-} precond_block_data; /**< Precond data for block matrices */
+//} precond_block_data; /**< Precond data for block matrices */
+
 
 /**
  * \struct precond_FASP_blkoil_data
