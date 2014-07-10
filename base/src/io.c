@@ -1117,7 +1117,7 @@ void fasp_dcoo_write (const char *filename,
     fprintf(fp,"%d  %d  %d\n",m,n,A->nnz);
     for ( i = 0; i < m; ++i ) {
         for ( j = A->IA[N2C(i)]; j < A->IA[N2C(i+1)]; j++ )
-            fprintf(fp,"%d  %d  %le\n",i,A->JA[j],A->val[j]);
+            fprintf(fp,"%d  %d  %0.15e\n",i,A->JA[j],A->val[j]);
     }
     
     fclose(fp);
@@ -1270,7 +1270,7 @@ void fasp_dvec_write (const char *filename,
     
     fprintf(fp,"%d\n",m);
     
-    for ( i = 0; i < m; ++i ) fprintf(fp,"%le\n",vec->val[i]);
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%0.15e\n",vec->val[i]);
     
     fclose(fp);
 }

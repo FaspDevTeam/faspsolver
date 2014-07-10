@@ -106,6 +106,22 @@ int main (int argc, const char * argv[])
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
     }
     
+    //
+    else if (problem_num == 20) {
+        
+        // read in matrix
+        datafile1="/pnp-data/set-2/A.dat";
+        strcat(filename1,datafile1);
+        
+        fasp_dcoo_read(filename1, &A);
+        
+        // read in b
+        datafile2="/pnp-data/set-2/b.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dvec_read(filename2, &b);
+    }
+    
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
