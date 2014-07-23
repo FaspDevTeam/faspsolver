@@ -272,7 +272,7 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n,
     
     // COO format
     coomat.row = n; coomat.col = n; coomat.nnz = nnz;
-    coomat.I = ia; coomat.J = ja; coomat.val = a;
+    coomat.rowind = ia; coomat.colind = ja; coomat.val = a;
     
     // convert COO to CSR format
     fasp_format_dcoo_dcsr(&coomat,&csrmat);
