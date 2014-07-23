@@ -336,7 +336,7 @@ void fasp_dcoo_read (const char *filename,
     
     for ( k = 0; k < nnz; k++ ) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k] = value;
+            Atmp.rowind[k]=i; Atmp.colind[k]=j; Atmp.val[k] = value;
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_read");
@@ -387,7 +387,7 @@ void fasp_dcoo1_read (const char *filename,
     
     for ( k = 0; k < nnz; k++ ) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            A->I[k]=i; A->J[k]=j; A->val[k] = value;
+            A->rowind[k]=i; A->colind[k]=j; A->val[k] = value;
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo1_read");
@@ -438,7 +438,7 @@ void fasp_dcoo_shift_read (const char *filename,
     
     for ( k = 0; k < nnz; k++ ) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            Atmp.I[k]=i-1; Atmp.J[k]=j-1; Atmp.val[k] = value;
+            Atmp.rowind[k]=i-1; Atmp.colind[k]=j-1; Atmp.val[k] = value;
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_shift_read");
@@ -494,8 +494,8 @@ void fasp_dmtx_read (const char *filename,
     while (innz < nnz) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
             
-            Atmp.I[innz]=i-1;
-            Atmp.J[innz]=j-1;
+            Atmp.rowind[innz]=i-1;
+            Atmp.colind[innz]=j-1;
             Atmp.val[innz] = value;
             innz = innz + 1;
             
@@ -559,14 +559,14 @@ void fasp_dmtxsym_read (const char *filename,
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
             
             if ( i == j ) {
-                Atmp.I[innz] = i-1;
-                Atmp.J[innz] = j-1;
+                Atmp.rowind[innz] = i-1;
+                Atmp.colind[innz] = j-1;
                 Atmp.val[innz] = value;
                 innz = innz + 1;
             }
             else {
-                Atmp.I[innz] = i-1; Atmp.I[innz+1] = j-1;
-                Atmp.J[innz] = j-1; Atmp.J[innz+1] = i-1;
+                Atmp.rowind[innz] = i-1; Atmp.rowind[innz+1] = j-1;
+                Atmp.colind[innz] = j-1; Atmp.colind[innz+1] = i-1;
                 Atmp.val[innz] = value;
                 Atmp.val[innz+1] = value;
                 innz = innz + 2;
@@ -1423,7 +1423,7 @@ void fasp_dcoo_print (dCOOmat *A)
     INT k;
     printf("nrow = %d, ncol = %d, nnz = %d\n",A->row,A->col,A->nnz);
     for ( k = 0; k < A->nnz; k++ ) {
-        printf("A_(%d,%d) = %+.10E\n",A->I[k],A->J[k],A->val[k]);
+        printf("A_(%d,%d) = %+.10E\n",A->rowind[k],A->colind[k],A->val[k]);
     }
 }
 
@@ -2192,17 +2192,13 @@ void fasp_hb_read (char *input_file,
     
     // convert matrix
     if (ncol != nrow) {
-       
         printf ( "### ERROR: The matrix is not square!!\n" );
         goto FINISHED;
-
     }
     
     tempA = fasp_dcsr_create(nrow, ncol, nnzero);
     
-    //fasp_iarray_cp(ncol+1, colptr, tempA.IA);
-    //fasp_iarray_cp(nnzero, rowind, tempA.JA);
-    for (i=0; i<=ncol; i++) tempA.IA[i] = colptr[i]-1;
+    for (i=0; i<=ncol;  i++) tempA.IA[i] = colptr[i]-1;
     for (i=0; i<nnzero; i++) tempA.JA[i] = rowind[i]-1;
     fasp_array_cp (nnzero, values, tempA.val);
     
@@ -2388,7 +2384,7 @@ static void fasp_dcoo_read_s (FILE *fp,
     
     for ( k = 0; k < nnz; k++ ) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            Atmp.I[k]=i; Atmp.J[k]=j; Atmp.val[k] = value;
+            Atmp.rowind[k]=i; Atmp.colind[k]=j; Atmp.val[k] = value;
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_read");
@@ -2418,9 +2414,9 @@ static void fasp_dcoo_read_b (FILE *fp,
     
     for (k = 0; k < nnz; k++) {
         if ( fread(&index, ilength, 1, fp) !=EOF ) {
-			Atmp.I[k] = endian_convert_int(index, ilength, endianflag);
+			Atmp.rowind[k] = endian_convert_int(index, ilength, endianflag);
             fread(&index, ilength, 1, fp);
-            Atmp.J[k] = endian_convert_int(index, ilength, endianflag);
+            Atmp.colind[k] = endian_convert_int(index, ilength, endianflag);
             fread(&value, sizeof(REAL), 1, fp);
             Atmp.val[k] = endian_convert_real(value, sizeof(REAL), endianflag);
         }
@@ -2639,8 +2635,8 @@ static void fasp_dmtx_read_s (FILE *fp,
     while (innz < nnz) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
             
-            Atmp.I[innz]=i-1;
-            Atmp.J[innz]=j-1;
+            Atmp.rowind[innz]=i-1;
+            Atmp.colind[innz]=j-1;
             Atmp.val[innz] = value;
             innz = innz + 1;
             
@@ -2674,9 +2670,9 @@ static void fasp_dmtx_read_b (FILE *fp,
     
     for (k = 0; k < nnz; k++) {
         if ( fread(&index, ilength, 1, fp) !=EOF ) {
-            Atmp.I[k] = endian_convert_int(index, ilength, endianflag)-1;
+            Atmp.rowind[k] = endian_convert_int(index, ilength, endianflag)-1;
             fread(&index, ilength, 1, fp);
-            Atmp.J[k] = endian_convert_int(index, ilength, endianflag)-1;
+            Atmp.colind[k] = endian_convert_int(index, ilength, endianflag)-1;
             fread(&value, sizeof(REAL), 1, fp);
             Atmp.val[k] = endian_convert_real(value, sizeof(REAL), endianflag);
         }
@@ -2708,14 +2704,14 @@ static void fasp_dmtxsym_read_s (FILE *fp,
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
             
             if (i==j) {
-                Atmp.I[innz]=i-1;
-                Atmp.J[innz]=j-1;
+                Atmp.rowind[innz]=i-1;
+                Atmp.colind[innz]=j-1;
                 Atmp.val[innz] = value;
                 innz = innz + 1;
             }
             else {
-                Atmp.I[innz]=i-1; Atmp.I[innz+1]=j-1;
-                Atmp.J[innz]=j-1; Atmp.J[innz+1]=i-1;
+                Atmp.rowind[innz]=i-1; Atmp.rowind[innz+1]=j-1;
+                Atmp.colind[innz]=j-1; Atmp.colind[innz+1]=i-1;
                 Atmp.val[innz] = value; Atmp.val[innz+1] = value;
                 innz = innz + 2;
             }
@@ -2757,20 +2753,20 @@ static void fasp_dmtxsym_read_b (FILE *fp,
             
             if (index[0]==index[1]) {
 				INT indextemp = index[0];
-                Atmp.I[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
+                Atmp.rowind[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
 				indextemp = index[1];
-                Atmp.J[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
+                Atmp.colind[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
                 fread(&value, sizeof(REAL), 1, fp);
                 Atmp.val[innz] = endian_convert_real(value, sizeof(REAL), endianflag);
                 innz = innz + 1;
             }
             else {
 				INT indextemp = index[0];
-                Atmp.I[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
-				Atmp.I[innz+1] = Atmp.I[innz];
+                Atmp.rowind[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
+				Atmp.rowind[innz+1] = Atmp.rowind[innz];
 				indextemp = index[1];
-                Atmp.J[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
-				Atmp.J[innz+1] = Atmp.J[innz];
+                Atmp.colind[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
+				Atmp.colind[innz+1] = Atmp.colind[innz];
                 fread(&value, sizeof(REAL), 1, fp);
                 Atmp.val[innz] = endian_convert_real(value, sizeof(REAL), endianflag);
 				Atmp.val[innz+1] = Atmp.val[innz];

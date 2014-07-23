@@ -37,11 +37,11 @@ dCOOmat fasp_dcoo_create (INT m,
 {    
     dCOOmat A;
     
-    A.I   = (INT *)fasp_mem_calloc(nnz, sizeof(INT));     
-    A.J   = (INT *)fasp_mem_calloc(nnz, sizeof(INT));     
-    A.val = (REAL *)fasp_mem_calloc(nnz, sizeof(REAL)); 
+    A.rowind = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
+    A.colind = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
+    A.val    = (REAL *)fasp_mem_calloc(nnz, sizeof(REAL));
     
-    A.row=m; A.col=n; A.nnz=nnz;
+    A.row = m; A.col = n; A.nnz = nnz;
     
     return A;
 }
@@ -66,17 +66,17 @@ void fasp_dcoo_alloc (const INT m,
 {
     
     if ( nnz > 0 ) {
-        A->I   = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
-        A->J   = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
-        A->val = (REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
+        A->rowind = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
+        A->colind = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
+        A->val    = (REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
     }
     else {
-        A->I = NULL;
-        A->J = NULL;
-        A->val = NULL;
+        A->rowind = NULL;
+        A->colind = NULL;
+        A->val    = NULL;
     }
     
-    A->row=m; A->col=n; A->nnz=nnz;
+    A->row = m; A->col = n; A->nnz = nnz;
     
     return;
 }
@@ -96,9 +96,9 @@ void fasp_dcoo_free (dCOOmat *A)
 {    
     if (A==NULL) return;
     
-    fasp_mem_free(A->I);   A->I   = NULL;
-    fasp_mem_free(A->J);   A->J   = NULL;
-    fasp_mem_free(A->val); A->val = NULL;
+    fasp_mem_free(A->rowind); A->rowind= NULL;
+    fasp_mem_free(A->colind); A->colind = NULL;
+    fasp_mem_free(A->val);    A->val = NULL;
 }
 
 /**
@@ -117,8 +117,8 @@ void fasp_dcoo_free (dCOOmat *A)
 void fasp_dcoo_shift (dCOOmat *A,
                       INT offset)
 {
-    const INT nnz=A->nnz;
-    INT i, *ai=A->I, *aj=A->J;
+    const INT nnz = A->nnz;
+    INT       i, *ai = A->rowind, *aj = A->colind;
     
     // Variables for Openmp
     INT nthreads = 1, use_openmp = FALSE;

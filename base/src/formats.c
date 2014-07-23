@@ -40,7 +40,7 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
     //for (i=0; i<=m; ++i) ind[i]=0; // initialize
     memset(ind, 0, sizeof(INT)*(m+1));
     
-    for (i=0; i<nnz; ++i) ind[A->I[i]+1]++; // count nnz in each row
+    for (i=0; i<nnz; ++i) ind[A->rowind[i]+1]++; // count nnz in each row
     
     ia[0] = 0; // first index starting from zero
     for (i=1; i<=m; ++i) {
@@ -50,8 +50,8 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
     
     // loop over nnz and set col_idx and val
     for (i=0; i<nnz; ++i) {
-        iind = A->I[i]; jind = ind[iind];
-        B->JA [jind] = A->J[i];
+        iind = A->rowind[i]; jind = ind[iind];
+        B->JA [jind] = A->colind[i];
         B->val[jind] = A->val[i];
         ind[iind] = ++jind;
     }
@@ -85,19 +85,19 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
     INT i, j;
     SHORT status = FASP_SUCCESS;
     
-    B->I=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
-    B->J=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
-    B->val=(REAL *)fasp_mem_calloc(nnz,sizeof(REAL));
+    B->rowind = (INT *)fasp_mem_calloc(nnz,sizeof(INT));
+    B->colind = (INT *)fasp_mem_calloc(nnz,sizeof(INT));
+    B->val    = (REAL *)fasp_mem_calloc(nnz,sizeof(REAL));
     
 #ifdef _OPENMP
 #pragma omp parallel for if(m>OPENMP_HOLDS) private(i, j)
 #endif
     for (i=0;i<m;++i) {
-        for (j=A->IA[i];j<A->IA[i+1];++j) B->I[N2C(j)]=C2N(i);
+        for (j=A->IA[i];j<A->IA[i+1];++j) B->rowind[N2C(j)]=C2N(i);
     }
     
-    memcpy(B->J,  A->JA, nnz*sizeof(INT));
-    memcpy(B->val,A->val,nnz*sizeof(REAL));
+    memcpy(B->colind, A->JA, nnz*sizeof(INT));
+    memcpy(B->val, A->val, nnz*sizeof(REAL));
     
     return status;
 }
@@ -504,8 +504,9 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     INT     nb  = B->nb;
     INT    *IA  = B->IA;
     INT    *JA  = B->JA;
-    INT     storage_manner = B->storage_manner;
     REAL   *val = B->val;
+
+    INT     storage_manner = B->storage_manner;
     
     INT jump = nb*nb;
     INT rowA = ROW*nb;
@@ -732,17 +733,17 @@ dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
     }
     
     INT i, j, k, ii, jj, kk, l, mod, nnz;
-    INT row = A->row/nb;
-    INT col = A->col/nb;
-    INT nb2 = nb*nb;
-    INT *IA  = A->IA;
-    INT *JA  = A->JA;
+    INT row   = A->row/nb;
+    INT col   = A->col/nb;
+    INT nb2   = nb*nb;
+    INT *IA   = A->IA;
+    INT *JA   = A->JA;
     REAL *val = A->val;
 	
     dBSRmat B;
     B.ROW = row;
     B.COL = col;
-    B.nb = nb;
+    B.nb  = nb;
     B.storage_manner = 0;
     
     INT *col_flag = (INT *)fasp_mem_calloc(col, sizeof(INT));
@@ -964,16 +965,16 @@ dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
     REAL    *pt = NULL;
     
     // Create and Initialize a dCOOmat 'A'
-    A = (dCOOmat *)fasp_mem_calloc(1, sizeof(dCOOmat));
-    A->row = ROW*nb;
-    A->col = COL*nb;
-    A->nnz = num_nonzeros;
-    rowA   = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT));
-    colA   = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT));
-    valA   = (REAL *)fasp_mem_calloc(num_nonzeros, sizeof(REAL));
-    A->I   = rowA;
-    A->J   = colA;
-    A->val = valA;
+    A         = (dCOOmat *)fasp_mem_calloc(1, sizeof(dCOOmat));
+    A->row    = ROW*nb;
+    A->col    = COL*nb;
+    A->nnz    = num_nonzeros;
+    rowA      = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT));
+    colA      = (INT *)fasp_mem_calloc(num_nonzeros, sizeof(INT));
+    valA      = (REAL *)fasp_mem_calloc(num_nonzeros, sizeof(REAL));
+    A->rowind = rowA;
+    A->colind = colA;
+    A->val    = valA;
     
     cnt = 0;
     for (i = 0; i < ROW; ++i) {
