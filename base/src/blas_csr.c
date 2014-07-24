@@ -66,9 +66,8 @@ INT fasp_blas_dcsr_add (dCSRmat *A,
 #endif
     
     if (A->row != B->row || A->col != B->col) {
-#if DEBUG_MODE
-        printf("### DEBUG: The dim of two matrices does not match --fasp_blas_dcsr_add!\n");
-#endif
+        printf("### ERROR: The dim of two matrices does not match! %s\n",
+               __FUNCTION__);
         status = ERROR_DATA_STRUCTURE;
         goto FINISHED;
     }

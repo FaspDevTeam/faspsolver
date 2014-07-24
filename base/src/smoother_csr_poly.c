@@ -85,8 +85,8 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_smoother_dcsr_poly ...... [Start]\n");
-#endif    
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
     
     // Update 
     for(i=0; i<L;i++ )
@@ -104,7 +104,7 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     }
     
 #if DEBUG_MODE
-    printf("### DEBUG: the degrees of polysmoothing are: %d\n",ndeg);
+    printf("### DEBUG: Degree of polysmoothing is: %d\n",ndeg);
 #endif   
     
     // free memory
@@ -115,6 +115,10 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     fasp_mem_free(v1);
     fasp_mem_free(error);
     fasp_mem_free(k);
+    
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
     
     return;
     
@@ -160,8 +164,8 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
 #endif
 
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_smoother_dcsr_poly ...... [Start]\n");
-#endif    
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
     
     /* WORKING MEM */
     v     = (REAL *) fasp_mem_calloc(n,sizeof(REAL));  
@@ -195,8 +199,8 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
     sm01=smu0*smu1;
     
 #if DEBUG_MODE
-    printf("### DEBUG: the degrees of polysmoothing are: %d %d\n",ndeg0,ndeg);
-#endif    
+    printf("### DEBUG: Degree of polysmoothing is: %d\n",ndeg);
+#endif
     
     /* BEGIN POLY ITS */
     
@@ -279,8 +283,8 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
     fasp_mem_free(vsave);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_smoother_dcsr_poly ...... [FINISH]\n");
-#endif    
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
     
     return; 
 }

@@ -7,7 +7,7 @@ File Name: CHANGES
 - Add block preconditioners for MHD.
 - Update block preconditioners.
 - Change dCOOmat entries to avoid conflicts with complex.h.
-- Revise debug output for iterative methods. 
+- Revise debug output for iterative methods and more. 
 
 06/20/2014 FASP 1.5.4:
 - Fix a bug in io.c.

@@ -31,7 +31,7 @@
  */
 void fasp_array_null (REAL *x) 
 {
-    x=NULL;
+    x = NULL;
 }
 /**
  * \fn void fasp_array_set (const INT n, REAL *x, const REAL val)
@@ -89,7 +89,7 @@ void fasp_array_set (const INT n,
             }
         }
         else {
-            for (i=0; i<n; ++i) x[i]=val;
+            for (i=0; i<n; ++i) x[i] = val;
         }
     }
 }
@@ -111,9 +111,9 @@ void fasp_array_set (const INT n,
  * \date   05/25/2012
  */
 
-void fasp_iarray_set(const INT n, 
-                           INT *x,
-                     const INT val)
+void fasp_iarray_set (const INT n,
+                            INT *x,
+                      const INT val)
 {
     INT i;
     INT nthreads = 1, use_openmp = FALSE;

@@ -56,9 +56,8 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     fasp_gettime(&solver_start);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_itsolver ...... [Start]\n");
-    printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
-    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
     /* Safe-guard checks on parameters */
@@ -107,14 +106,14 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
             
     } 
     
-    if ( (print_level>=PRINT_SOME) && (iter >= 0) ) {
+    if ( (print_level >= PRINT_SOME) && (iter >= 0) ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("Iterative method", solver_duration);
     }
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_itsolver ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return iter;

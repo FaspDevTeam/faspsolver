@@ -1117,7 +1117,8 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
     return;
     
 MEMERR:
-    printf("### ERROR: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
+    printf("### ERROR: ILU needs %d memory, only %d available! %s : %d\n",
+           memneed, iludata->nwork, __FILE__, __LINE__);
     exit(ERROR_ALLOC_MEM);
 }
 
@@ -2282,7 +2283,8 @@ static dCSRmat form_contractor (dCSRmat *A,
                 fasp_smoother_dcsr_sor(&x, n-1, 0,-1, A, &b, steps, relax);
                 break;
             default:
-                printf("### ERROR: Wrong smoother type!\n"); exit(ERROR_INPUT_PAR);
+                printf("### ERROR: Wrong smoother type!\n");
+                exit(ERROR_INPUT_PAR);
         }
         
         // store to B

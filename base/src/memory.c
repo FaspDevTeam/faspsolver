@@ -62,7 +62,8 @@ void * fasp_mem_calloc (LONGLONG size,
     void * mem = NULL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: Trying to allocate %.3lfKB RAM! (%lld) \n", (REAL)tsize/1024.0,tsize);
+    printf("### DEBUG: Trying to allocate %.3lfKB RAM! (%lld) \n",
+           (REAL)tsize/1024.0,tsize);
 #endif
     
     if ( tsize > 0 ) {
@@ -81,7 +82,8 @@ void * fasp_mem_calloc (LONGLONG size,
     }
     
     if ( mem == NULL ) {
-        printf("### WARNING: Cannot allocate %.3lfKB RAM(%lld)!\n", (REAL)tsize/1024.0,tsize);
+        printf("### WARNING: Cannot allocate %.3lfKB RAM(%lld)!\n",
+               (REAL)tsize/1024.0,tsize);
     }
     
 #if CHMEM_MODE
@@ -241,7 +243,7 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
 SHORT fasp_mem_dcsr_check (dCSRmat *A)
 {
     if ( (A->IA == NULL) || (A->JA == NULL) || (A->val == NULL) ) {
-        printf("### ERROR: dCSRmat has not sucessfully allocate memory!!!\n");
+        printf("### ERROR: Something is wrong with matrix data! %s\n", __FUNCTION__);
         return ERROR_ALLOC_MEM;
     }
     else {
