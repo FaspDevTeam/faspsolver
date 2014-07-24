@@ -61,7 +61,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 	INT flag = 0;
 
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_schwarz_setup ...... [Start]\n");
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 
 	// allocate memory
@@ -71,15 +71,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 	jblock  = (INT *)fasp_mem_calloc(n1,sizeof(INT));
 	
 	nsizeall=0;
-	
-#if 0
-	for (i=0;i<n1;i++) {
-            mask[i]=0; 
-	    iblock[i]=0;
-            maxa[i]=0;
-	}
-#endif	
-	memset(mask,   0, sizeof(INT)*n1);
+    memset(mask,   0, sizeof(INT)*n1);
 	memset(iblock, 0, sizeof(INT)*n1);
 	memset(maxa,   0, sizeof(INT)*n1);
 
@@ -88,10 +80,10 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 	MIS = fasp_sparse_MIS(&A);
 	
 	/*-------------------------------------------*/
-	//! find the blocks
+	// find the blocks
 	/*-------------------------------------------*/
 	// first pass
-	for (i=0;i<MIS.row;i++) {
+	for ( i = 0; i < MIS.row; i++ ) {
 		// for each node do a maxlev level sets out 
 		inroot = MIS.val[i]+1;
 		levels_(&inroot,ia,ja,mask,&nlvl,maxa,jblock,&maxlev);
@@ -128,23 +120,21 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 #endif
 	
 	/*-------------------------------------------*/
-	//! LU decomposition of blocks
+	//  LU decomposition of blocks
 	/*-------------------------------------------*/
 	n1 = (nblk + iblock[nblk]-1);
 
 	maxa = (INT *)fasp_mem_realloc(maxa,n1*sizeof(INT));
 	
-	//for (i=0;i<n1;i++) maxa[i]=0;
 	memset(maxa, 0, sizeof(INT)*n1);
-
-	//for (i=0;i<n; i++) mask[i]=0;
 	memset(mask, 0, sizeof(INT)*n);
 	
 	// first estimate the memroy we need.
 	mxfrm2_(&n,ia,ja,&nblk,iblock,jblock,mask,maxa,&memt,&maxbs);
 	
 #if DEBUG_MODE
-	fprintf(stdout,"### DEBUG: Number of nonzeroes for LU=%d maxbs=%d\n",memt, maxbs);
+	fprintf(stdout,"### DEBUG: Number of nonzeroes for LU=%d maxbs=%d\n",
+            memt, maxbs);
 #endif
 	
 	// allocate the memory
@@ -153,13 +143,15 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 	rhsloc = (REAL *)fasp_mem_calloc(maxbs, sizeof(REAL));
     
 	//  LU decomposition
-        sky2ns_(&n,ia,ja,a,&nblk,iblock,jblock,mask,maxa,au,al);
+    sky2ns_(&n,ia,ja,a,&nblk,iblock,jblock,mask,maxa,au,al);
 	  
-	printf("Schwarz setup succeeded: matrix size = %d, #blocks = %d, max block size = %d\n", 
-           n, nblk, maxbs);
-      
+#if DEBUG_MODE
+	fprintf(stdout,"### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
+            n, nblk, maxbs);
+#endif
+    
 	/*-------------------------------------------*/  
-	//! return
+	//  return
 	/*-------------------------------------------*/
 	schwarz->nblk = nblk;
 	schwarz->iblock = iblock;
@@ -174,7 +166,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 	schwarz->maxa = maxa;
 
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_schwarz_setup ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
 	return flag;	

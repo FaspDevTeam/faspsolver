@@ -429,7 +429,7 @@ void fasp_dvec_symdiagscale (dvector *b,
     INT i;
     
     if (diag->row != n) {
-        printf("### ERROR: Size of diag = %d and size of dvector = %d mismatch!!", 
+        printf("### ERROR: Sizes of diag = %d and dvector = %d mismatch!", 
                diag->row, n);
         exit(ERROR_MISC);
     }

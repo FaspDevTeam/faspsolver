@@ -67,8 +67,8 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
     fasp_gettime(&solver_start);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_itsolver ...... [Start]\n");
-    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
     /* Safe-guard checks on parameters */
@@ -124,7 +124,7 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
     }
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_itsolver ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return iter;

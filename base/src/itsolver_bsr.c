@@ -114,6 +114,11 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     INT iter;
     REAL solver_start, solver_end, solver_duration;
 
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
+#endif
+
     fasp_gettime(&solver_start);
 
     /* Safe-guard checks on parameters */
@@ -158,6 +163,10 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
         print_cputime("Iterative method", solver_duration);
     }
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return iter;
 }
 

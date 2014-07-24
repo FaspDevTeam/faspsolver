@@ -62,7 +62,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
  * \param  ordering  user defined ordering
  *
  * \author Chensong Zhang
- * \date 01/10/2012
+ * \date   01/10/2012
  *
  * Modified by Xiaozhe on 06/04/2012: add ndeg as input
  * Modified by Chensong on 02/16/2013: GS -> SMOOTHER_GS, etc
@@ -131,7 +131,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
             break;
         
         default:
-            printf("### ERROR: Wrong smoother type %d!!!\n", smoother); 
+            printf("### ERROR: Wrong smoother type %d!\n", smoother); 
             exit(ERROR_INPUT_PAR);
     }
 }
@@ -161,7 +161,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
  * \param  ordering  user defined ordering
  *
  * \author Chensong Zhang
- * \date 01/10/2012
+ * \date   01/10/2012
  *
  * Modified by Xiaozhe Hu on 06/04/2012: add ndeg as input
  * Modified by Chensong on 02/16/2013: GS -> SMOOTHER_GS, etc
@@ -230,7 +230,7 @@ static void fasp_dcsr_postsmoothing (const SHORT smoother,
             break;
         
         default:
-            printf("### ERROR: Wrong smoother type %d!!!\n", smoother); 
+            printf("### ERROR: Wrong smoother type %d!\n", smoother); 
             exit(ERROR_INPUT_PAR);
     }
 }

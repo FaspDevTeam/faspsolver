@@ -445,7 +445,7 @@ static inline void spaaxpy_str_2D_scalar (REAL alpha,
             offdiag3 = A->offdiag[i];
         }
         else {
-            printf("### WARNING: offsets for 2D scalar case is illegal!\n");
+            printf("### WARNING: offsets for 2D scalar case is illegal! %s\n", __FUNCTION__);
             spaaxpy_str_general(alpha, A, x, y);
             return;
         }
@@ -665,7 +665,7 @@ static inline void spaaxpy_str_2D_nc3 (REAL alpha,
         }
         else
         {
-            printf("### WARNING: offsets for 2D of nc=3 case is illegal!\n");
+            printf("### WARNING: offsets for 2D scalar case is illegal! %s\n", __FUNCTION__);
             spaaxpy_str_general(alpha, A, x, y);
             return;
         }
@@ -876,7 +876,7 @@ static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
         }
         else
         {
-            printf("### WARNING: offsets for 2D of nc=5 case is illegal!\n");
+            printf("### WARNING: offsets for 2D scalar case is illegal! %s\n", __FUNCTION__);
             spaaxpy_str_general(alpha, A, x, y);
             return;
         }
@@ -1082,7 +1082,7 @@ static inline void spaaxpy_str_2D_block (REAL alpha,
         }
         else
         {
-            printf("### WARNING: offsets for 2D block case is illegal!\n");
+            printf("### WARNING: offsets for 2D scalar case is illegal! %s\n", __FUNCTION__);
             spaaxpy_str_general(alpha, A, x, y);
             return;
         }
@@ -1211,7 +1211,7 @@ static inline void spaaxpy_str_3D_scalar (REAL alpha,
         }
         else
         {
-            printf("### WARNING: offsets for 3D scalar case is illegal!\n");
+            printf("### WARNING: offsets for 3D scalar case is illegal! %s\n", __FUNCTION__);
             spaaxpy_str_general(alpha, A, x, y);
             return;
         }
@@ -1336,7 +1336,7 @@ static inline void spaaxpy_str_3D_nc3 (REAL alpha,
         }
         else
         {
-            printf("### WARNING: offsets for 3D of nc=3 case is illegal!\n");
+            printf("### WARNING: offsets for 2D scalar case is illegal! %s\n", __FUNCTION__);
             spaaxpy_str_general(alpha, A, x, y);
             return;
         }
@@ -1514,7 +1514,7 @@ static inline void spaaxpy_str_3D_nc5 (REAL alpha,
         }
         else
         {
-            printf("### WARNING: offsets for 3D of nc=5 case is illegal!\n");
+            printf("### WARNING: offsets for 2D scalar case is illegal! %s\n", __FUNCTION__);
             spaaxpy_str_general(alpha, A, x, y);
             return;
         }
@@ -1692,7 +1692,7 @@ static inline void spaaxpy_str_3D_block (REAL alpha,
         }
         else
         {
-            printf("### WARNING: offsets for 3D block case is illegal!\n");
+            printf("### WARNING: offsets for 2D scalar case is illegal! %s\n", __FUNCTION__);
             spaaxpy_str_general(alpha, A, x, y);
             return;
         }
@@ -1910,7 +1910,7 @@ static inline void spaaxpy_str_general (REAL alpha,
         }
     }
     else {
-        printf("### WARNING: nc is illegal!\n");
+        printf("### WARNING: nc is illegal! %s\n", __FUNCTION__);
         return;
     }
     
