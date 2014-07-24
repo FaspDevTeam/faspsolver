@@ -93,8 +93,8 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
     INT    Restart;               // the real restart in some fixed restarted cycle
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pvgmres ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
     // allocate memory and setup temp work space
@@ -328,7 +328,7 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
     fasp_mem_free(norms);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pvgmres ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     if (iter>=MaxIt) 

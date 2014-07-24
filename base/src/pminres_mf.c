@@ -113,9 +113,9 @@ INT fasp_solver_pminres (mxv_matfree *mf,
     REAL *t0=z1+m, *t1=t0+m, *t=t1+m, *tp=t+m, *tz=tp+m, *r=tz+m;
 
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pminres ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
-#endif    
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
+#endif
 
     // initialization counters
     stag=1; more_step=1; restart_step=1;
@@ -444,7 +444,7 @@ INT fasp_solver_pminres (mxv_matfree *mf,
     fasp_mem_free(work);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pminres ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     if (iter>MaxIt) 

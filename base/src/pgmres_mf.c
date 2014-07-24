@@ -76,9 +76,9 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
     REAL    *work = NULL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pgmres ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
-#endif    
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
+#endif
 
     /* allocate memory */
     work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
@@ -91,7 +91,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for GMRES %s : %s: %d !\n",
+        printf("### ERROR: No enough memory for GMRES %s : %s : %d!\n",
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
@@ -281,8 +281,8 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
     fasp_mem_free(norms);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pgmres ...... [Finish]\n");
-#endif    
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
 
     if (iter>=MaxIt) 
         return ERROR_SOLVER_MAXIT;

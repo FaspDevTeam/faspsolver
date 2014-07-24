@@ -114,8 +114,8 @@ INT fasp_solver_dcsr_spcg (dCSRmat *A,
     REAL *p = work, *z = work+m, *r = z+m, *t = r+m, *u_best = t+m;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_spcg ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
     // r = b-A*u
@@ -380,7 +380,7 @@ FINISHED:  // finish the iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_spcg ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     if ( iter > MaxIt )
@@ -439,8 +439,8 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
     REAL *p = work, *z = work+m, *r = z+m, *t = r+m, *u_best = t+m;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_bdcsr_spcg ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
     // r = b-A*u
@@ -705,7 +705,7 @@ FINISHED:  // finish the iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_bdcsr_spcg ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     if ( iter > MaxIt )
@@ -763,8 +763,8 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
     REAL *p = work, *z = work+m, *r = z+m, *t = r+m, *u_best = t+m;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dstr_spcg ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
     // r = b-A*u
@@ -1029,7 +1029,7 @@ FINISHED:  // finish the iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dstr_spcg ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     if ( iter > MaxIt )
