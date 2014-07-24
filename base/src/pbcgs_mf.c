@@ -116,9 +116,9 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
     REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pbcgs ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
-#endif    
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
+#endif
     
     // initialize counters
     stag=more_step=restart_step=1;
@@ -394,7 +394,7 @@ FINISHED:  // finish the iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pbcgs ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     if (iter>MaxIt) 

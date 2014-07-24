@@ -92,8 +92,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
     REAL  **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pvgmres ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
     // allocate memory and setup temp work space
@@ -351,7 +351,7 @@ FINISHED:
     fasp_mem_free(norms);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pvgmres ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     if (iter>=MaxIt)
@@ -426,8 +426,8 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
     REAL  **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_bdcsr_pvgmres ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
     // allocate memory and setup temp work space
@@ -685,7 +685,7 @@ FINISHED:
     fasp_mem_free(norms);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_bdcsr_pvgmres ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     if (iter>=MaxIt)
@@ -763,8 +763,8 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
     REAL  **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dbsr_pvgmres ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
     // allocate memory and setup temp work space
@@ -1022,7 +1022,7 @@ FINISHED:
     fasp_mem_free(norms);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dbsr_pvgmres ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     if (iter>=MaxIt)
@@ -1100,8 +1100,8 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
     REAL  **p = NULL, **hh = NULL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dstr_pvgmres ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
     // allocate memory and setup temp work space
@@ -1359,8 +1359,8 @@ FINISHED:
     fasp_mem_free(norms);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dstr_pvgmres ...... [Finish]\n");
-#endif    
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
     
     if (iter>=MaxIt) 
         return ERROR_SOLVER_MAXIT;

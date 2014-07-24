@@ -109,9 +109,9 @@ INT fasp_solver_pcg (mxv_matfree *mf,
     REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pcg ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
-#endif    
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
+#endif
 
     // initialize counters
     stag=1; more_step=1; restart_step=1;
@@ -323,8 +323,8 @@ INT fasp_solver_pcg (mxv_matfree *mf,
     fasp_mem_free(work);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dcsr_pcg ...... [Finish]\n");
-#endif    
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
     
     if (iter>MaxIt) 
         return ERROR_SOLVER_MAXIT;
