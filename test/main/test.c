@@ -61,11 +61,9 @@ int main (int argc, const char * argv[])
     //----------------------------------------------------//
 	char filename1[512], *datafile1;
 	char filename2[512], *datafile2;
-    char filename3[512], *datafile3;
 	
 	strncpy(filename1,inipar.workdir,128);
 	strncpy(filename2,inipar.workdir,128);
-    strncpy(filename3,inipar.workdir,128);
     
 	// Read A and b -- P1 FE discretization for Poisson.
 	if (problem_num == 10) {				
