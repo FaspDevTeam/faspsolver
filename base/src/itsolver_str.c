@@ -124,6 +124,10 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
     INT status = FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
     // solver part
     fasp_gettime(&solver_start);
 
@@ -136,6 +140,10 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
         print_cputime("Krylov method totally", solver_duration);
     }
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return status;
 }
 
@@ -181,6 +189,11 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
     pc->data = &diag;
     pc->fct  = fasp_precond_dstr_diag;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
+    
     // solver part
     fasp_gettime(&solver_start);
 
@@ -193,6 +206,10 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
     if (print_level>=PRINT_MIN) 
         print_cputime("Diag_Krylov method totally", solver_duration);
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return status;
 }
 
@@ -227,6 +244,10 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
     //set up
     dSTRmat LU;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
     fasp_gettime(&setup_start);
 
     if (ILU_lfil == 0) {
@@ -274,6 +295,10 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
     
     fasp_dstr_free(&LU);
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return status;
 }
 
@@ -318,6 +343,10 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
     dvector *diaginv;
     ivector *pivot;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+    
     // setup preconditioner
     fasp_gettime(&setup_start);
     
@@ -354,6 +383,10 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
         print_cputime("BlockGS_Krylov method totally", setup_duration+solver_duration);
     }
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return status;
 }
 

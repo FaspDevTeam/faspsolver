@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+07/26/2014 FASP 1.5.6:
+- Handling errors when coarsening does not succeed. 
+- Uniformize debug output format.
+
 07/26/2014 FASP 1.5.5:
 - Modify the parameter for pairwise aggregation.
 - Fix warnings for data type REAL in sparse_bsr.c

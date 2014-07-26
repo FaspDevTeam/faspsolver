@@ -165,10 +165,12 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     /*----------------------------*/
     /*--- checking aggregation ---*/
     /*----------------------------*/
-    // Pairwise matching algorithm requires diagonal preference ordering
-    if (param->aggregation_type == PAIRWISE) param->pair_number = MIN(param->pair_number, max_levels);
     
-    if ( param->aggregation_type == PAIRWISE ) fasp_dcsr_diagpref(&mgl[0].A);
+    // Pairwise matching algorithm requires diagonal preference ordering
+    if ( param->aggregation_type == PAIRWISE ) {
+        param->pair_number = MIN(param->pair_number, max_levels);
+        fasp_dcsr_diagpref(&mgl[0].A);
+    }
     
     // Main AMG setup loop
     while ( (mgl[level].A.row > min_cdof) && (level < max_levels-1) ) {
@@ -204,18 +206,9 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                 
             case VMB: // VMB aggregation
                 
-                aggregation(&mgl[level].A, &vertices[level], param, level+1, &Neighbor[level], &num_aggs[level]);
+                aggregation(&mgl[level].A, &vertices[level], param, level+1,
+                            &Neighbor[level], &num_aggs[level]);
                 
-                /*
-                fasp_dcsr_trans(&mgl[level].A, &AT);
-                fasp_blas_dcsr_add (&mgl[level].A, 0.5, &AT, 0.5, &AS);
-                                    
-                aggregation(&AS, &vertices[level], param, level+1, &Neighbor[level], &num_aggs[level]);
-                                    
-                fasp_dcsr_free(&AT);
-                fasp_dcsr_free(&AS);
-                */
-                 
                 /*-- Choose strenth threshold adaptively --*/
                 if ( num_aggs[level]*4 > mgl[level].A.row )
                     param->strong_coupled /= 2;
@@ -232,8 +225,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         }
         
         /*-- Form Prolongation --*/
-        form_tentative_p(&vertices[level], &mgl[level].P, mgl[0].near_kernel_basis, level+1,
-                         num_aggs[level]);
+        form_tentative_p(&vertices[level], &mgl[level].P, mgl[0].near_kernel_basis,
+                         level+1, num_aggs[level]);
         
         /*-- Perform coarsening only up to the specified level --*/
         if ( mgl[level].P.col < MIN_CDOF ) break;

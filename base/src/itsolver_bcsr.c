@@ -129,6 +129,10 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
     INT status=FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
     // solver part
     fasp_gettime(&solver_start);
     
@@ -141,13 +145,17 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
     if ( print_level >= PRINT_MIN )
         print_cputime("Krylov method totally", solver_duration);
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return status;
 }
 
 /**
  * \fn INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A, dvector *b, dvector *x,
- *                                         itsolver_param *itparam,
- *                                         AMG_param *amgparam)
+ *                                           itsolver_param *itparam,
+ *                                           AMG_param *amgparam)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -184,6 +192,10 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     AMG_data **mgl = NULL;
     INT i;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
     /* setup preconditioner */
     fasp_gettime(&setup_start);
     
@@ -325,13 +337,17 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
         return ERROR_SOLVER_PRECTYPE;
     }
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return status;
 }
 
 /**
  * \fn INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A, dvector *b, dvector *x,
- *                                         itsolver_param *itparam,
- *                                         AMG_param *amgparam)
+ *                                           itsolver_param *itparam,
+ *                                           AMG_param *amgparam)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -364,6 +380,10 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     void **LU_diag = NULL;
     INT i;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
     /* setup preconditioner */
     fasp_gettime(&setup_start);
     
@@ -440,6 +460,10 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     for (i=0; i<4; i++) fasp_umfpack_free_numeric(LU_diag[i]);
 #endif
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return status;
 }
 
@@ -486,6 +510,9 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     void **local_LU = NULL;
     INT l;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
     
 #if WITH_UMFPACK
     // Need to sort the matrices local_A for UMFPACK format
@@ -543,6 +570,10 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     for (l=0; l<NumLayers; l++) fasp_umfpack_free_numeric(local_LU[l]);
 #endif
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return status;
 }
 
