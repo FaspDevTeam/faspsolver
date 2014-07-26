@@ -195,6 +195,10 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
     INT status = FASP_SUCCESS;
     REAL solver_start, solver_end;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
     // solver part
     fasp_gettime(&solver_start);
 
@@ -207,6 +211,10 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
         print_cputime("Krylov method totally", solver_duration);
     }
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return status;
 }
 
@@ -252,7 +260,11 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
     precond_diagbsr diag;
     fasp_dvec_alloc(ROW*nb2, &(diag.diag));
     
-    // get all the diagonal sub-blocks   
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
+    // get all the diagonal sub-blocks
 #ifdef _OPENMP
     if (ROW > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, k)
@@ -306,6 +318,10 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
     // clean up
     fasp_dvec_free(&(diag.diag));
 
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return status;
 }
 
@@ -340,7 +356,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
     precond pc; 
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dbsr_krylov_ilu ...... [Start]\n");
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->ROW, A->COL, A->NNZ);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
 #endif
@@ -370,7 +386,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
     fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dbsr_krylov_ilu ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
         
     return status;    
@@ -415,6 +431,10 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     // timing
     REAL setup_start, setup_end, solver_start, solver_end, solver_duration, setup_duration;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
     //--------------------------------------------------------------
     //Part 2: set up the preconditioner
     //--------------------------------------------------------------
@@ -498,6 +518,11 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     
  FINISHED:
     fasp_amg_data_bsr_free(mgl);    
+    
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
     return status;
     
@@ -508,8 +533,8 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
 
 /**
  * \fn INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A, dvector *b, dvector *x,
- *                                      itsolver_param *itparam, AMG_param *amgparam
- *                                       dCSRmat *A_nk, dCSRmat *P_nk, dCSRmat *R_nk)
+ *                                         itsolver_param *itparam, AMG_param *amgparam
+ *                                         dCSRmat *A_nk, dCSRmat *P_nk, dCSRmat *R_nk)
  *
  * \brief Solve Ax=b by AMG with extra near kernel solve preconditioned Krylov methods
  *
@@ -551,6 +576,10 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
     
     // timing
     REAL setup_start, setup_end, solver_start, solver_end, solver_duration, setup_duration;
+    
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
     
     //--------------------------------------------------------------
     //Part 2: set up the preconditioner
@@ -645,6 +674,11 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
     
 FINISHED:
     fasp_amg_data_bsr_free(mgl);
+    
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
 #if WITH_UMFPACK // use UMFPACK directly
     fasp_dcsr_free(&A_tran);
 #endif
@@ -655,7 +689,6 @@ MEMORY_ERROR:
     printf("krylov_AMG_bsr: Cannot allocate memory!\n");
     exit(status);
 }
-
 
 /**
  * \fn INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A, dvector *b, dvector *x,
@@ -704,6 +737,10 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
     // timing
     REAL setup_start, setup_end, solver_start, solver_end, solver_duration, setup_duration;
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
     //--------------------------------------------------------------
     //Part 2: set up the preconditioner
     //--------------------------------------------------------------
@@ -796,6 +833,11 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
     
 FINISHED:
     fasp_amg_data_bsr_free(mgl);
+    
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
     return status;
     
@@ -803,7 +845,6 @@ MEMORY_ERROR:
     printf("krylov_AMG_bsr: Cannot allocate memory!\n");
     exit(status);
 }
-
 
 /*---------------------------------*/
 /*--        End of File          --*/

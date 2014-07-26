@@ -160,8 +160,8 @@ INT fasp_solver_krylov (mxv_matfree *mf,
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_krylov ...... [Start]\n");
-    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
     fasp_gettime(&solver_start);
@@ -175,7 +175,7 @@ INT fasp_solver_krylov (mxv_matfree *mf,
     }    
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_krylov ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return status;

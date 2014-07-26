@@ -574,11 +574,11 @@ INT fasp_amg_coarsening_cr (INT i_0,
 
 /*-------- In file: coarsening_rs.c --------*/
 
-INT fasp_amg_coarsening_rs (dCSRmat *A,
-                            ivector *vertices,
-                            dCSRmat *P,
-                            iCSRmat *S,
-                            AMG_param *param);
+SHORT fasp_amg_coarsening_rs (dCSRmat *A,
+                              ivector *vertices,
+                              dCSRmat *P,
+                              iCSRmat *S,
+                              AMG_param *param);
 
 
 /*-------- In file: convert.c --------*/
@@ -1036,55 +1036,55 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
 
 /*-------- In file: itsolver_csr.c --------*/
 
-INT fasp_solver_dcsr_itsolver (dCSRmat *A, 
-                               dvector *b, 
-                               dvector *x, 
-                               precond *pc, 
+INT fasp_solver_dcsr_itsolver (dCSRmat *A,
+                               dvector *b,
+                               dvector *x,
+                               precond *pc,
                                itsolver_param *itparam);
 
-INT fasp_solver_dcsr_krylov (dCSRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
+INT fasp_solver_dcsr_krylov (dCSRmat *A,
+                             dvector *b,
+                             dvector *x,
                              itsolver_param *itparam);
 
-INT fasp_solver_dcsr_krylov_diag (dCSRmat *A, 
-                                  dvector *b, 
-                                  dvector *x, 
+INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
+                                  dvector *b,
+                                  dvector *x,
                                   itsolver_param *itparam);
 
-INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, 
-                                     dvector *b, 
-                                     dvector *x, 
+INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
+                                     dvector *b,
+                                     dvector *x,
                                      itsolver_param *itparam,
                                      Schwarz_param *schparam);
 
-INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, 
-                                 dvector *b, 
-                                 dvector *x, 
-                                 itsolver_param *itparam, 
-                                 AMG_param *amgparam);
-
-INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A, 
-                                 dvector *b, 
-                                 dvector *x, 
-                                 itsolver_param *itparam, 
-                                 ILU_param *iluparam);
-
-INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A, 
-                                   dvector *b, 
-                                   dvector *x, 
-                                   itsolver_param *itparam, 
-                                   ILU_param *iluparam, 
-                                   dCSRmat *M);
-
-INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
+INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
                                  dvector *b,
                                  dvector *x,
                                  itsolver_param *itparam,
-                                 AMG_param *amgparam,
-                                 dCSRmat *A_nk,
-                                 dCSRmat *P_nk,
-                                 dCSRmat *R_nk);
+                                 AMG_param *amgparam);
+
+INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
+                                 dvector *b,
+                                 dvector *x,
+                                 itsolver_param *itparam,
+                                 ILU_param *iluparam);
+
+INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
+                                   dvector *b,
+                                   dvector *x,
+                                   itsolver_param *itparam,
+                                   ILU_param *iluparam,
+                                   dCSRmat *M);
+
+INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
+                                    dvector *b,
+                                    dvector *x,
+                                    itsolver_param *itparam,
+                                    AMG_param *amgparam,
+                                    dCSRmat *A_nk,
+                                    dCSRmat *P_nk,
+                                    dCSRmat *R_nk);
 
 
 /*-------- In file: itsolver_mf.c --------*/
