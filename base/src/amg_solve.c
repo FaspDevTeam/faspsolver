@@ -48,13 +48,13 @@ INT fasp_amg_solve (AMG_data *mgl,
     REAL solve_start, solve_end;
     REAL relres1 = BIGREAL, absres0 = sumb, absres, factor;
     INT  iter = 0;
-    
+
 #if DEBUG_MODE
-    const INT m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;
-    printf("### DEBUG: fasp_amg_solve ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
+           mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
-    
+
     fasp_gettime(&solve_start);
     
     // Print iteration information if needed
@@ -64,10 +64,10 @@ INT fasp_amg_solve (AMG_data *mgl,
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) {
         
 #if TRUE
-        // Call one multigrid cycle -- non recursive
+        // Call one multigrid cycle -- non recursive version
         fasp_solver_mgcycle(mgl, param);
 #else
-        // If you wish to call the recursive version instead, replace it with:
+        // Call one multigrid cycle -- recursive version
         fasp_solver_mgrecur(mgl, param, 0);
 #endif
         
@@ -95,7 +95,7 @@ INT fasp_amg_solve (AMG_data *mgl,
     }
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_solve ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return iter;
@@ -133,9 +133,9 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
     INT          iter = 0;
     
 #if DEBUG_MODE
-    const INT m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;
-    printf("### DEBUG: fasp_amg_solve_amli ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
+           mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
     fasp_gettime(&solve_start);
@@ -170,11 +170,11 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
         solve_time = solve_end - solve_start;
-        print_cputime("AMLI solve",solve_time);
+        print_cputime("AMLI solve", solve_time);
     }
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_solve_amli ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return iter;
@@ -183,7 +183,7 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
 /**
  * \fn INT fasp_amg_solve_nl_amli (AMG_data *mgl, AMG_param *param)
  *
- * \brief Nonlinear AMLI --- SOLVE phase
+ * \brief Nonlinear AMLI -- SOLVE phase
  *
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
@@ -212,9 +212,9 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
     INT           iter = 0;
     
 #if DEBUG_MODE
-    const INT m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;
-    printf("### DEBUG: fasp_amg_solve_nl_amli ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
+           mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
     fasp_gettime(&solve_start);
@@ -246,11 +246,11 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
     if ( print_level > PRINT_NONE ) {
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
-        print_cputime("Nonlinear AMLI solve",solve_end - solve_start);
+        print_cputime("Nonlinear AMLI solve", solve_end - solve_start);
     }
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_solve_nl_amli ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return iter;
@@ -281,9 +281,9 @@ void fasp_famg_solve (AMG_data *mgl,
     REAL         relres1 = BIGREAL, absres;
         
 #if DEBUG_MODE
-    const INT m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;
-    printf("### DEBUG: fasp_famg_solve ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
+           mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
     fasp_gettime(&solve_start);
@@ -306,7 +306,7 @@ void fasp_famg_solve (AMG_data *mgl,
     }
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_famg_solve ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return;

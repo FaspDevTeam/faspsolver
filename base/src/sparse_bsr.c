@@ -1707,7 +1707,7 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
     REAL *valb = NULL;
     
     INT nb2  = nb*nb;
-    INT i,j,k,m;
+    INT i,j,k;
 
     REAL sqt3, sqt4, sqt8;
     
