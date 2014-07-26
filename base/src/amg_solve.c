@@ -45,9 +45,9 @@ INT fasp_amg_solve (AMG_data *mgl,
     const REAL    sumb        = fasp_blas_dvec_norm2(b); // L2norm(b)
     
     // local variables
-    REAL solve_start, solve_end;
-    REAL relres1 = BIGREAL, absres0 = sumb, absres, factor;
-    INT  iter = 0;
+    REAL  solve_start, solve_end;
+    REAL  relres1 = BIGREAL, absres0 = sumb, absres, factor;
+    INT   iter = 0;
 
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);

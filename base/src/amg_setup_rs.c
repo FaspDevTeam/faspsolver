@@ -23,7 +23,7 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_amg_setup_rs (AMG_data *mgl, AMG_param *param)
+ * \fn SHORT fasp_amg_setup_rs (AMG_data *mgl, AMG_param *param)
  *
  * \brief Setup phase of Ruge and Stuben's classic AMG
  *
@@ -45,8 +45,8 @@
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
  */
-INT fasp_amg_setup_rs (AMG_data *mgl,
-                       AMG_param *param)
+SHORT fasp_amg_setup_rs (AMG_data *mgl,
+                         AMG_param *param)
 {
     const SHORT  prtlvl     = param->print_level;
     const SHORT  cycle_type = param->cycle_type;
@@ -54,8 +54,8 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
     const INT    m          = mgl[0].A.row;
     
     // local variables
-    INT        lvl = 0, status = FASP_SUCCESS;
-    INT        max_lvls = param->max_levels;
+    SHORT      status = FASP_SUCCESS;
+    INT        lvl = 0, max_lvls = param->max_levels;
     REAL       setup_start, setup_end;
     ILU_param  iluparam;
     iCSRmat    Scouple; // strong n-couplings
@@ -239,7 +239,7 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
 }
 
 /**
- * \fn INT fasp_amg_setup_rs_omp (AMG_data *mgl, AMG_param *param)
+ * \fn SHORT fasp_amg_setup_rs_omp (AMG_data *mgl, AMG_param *param)
  *
  * \brief  Setup of AMG based on R-S coarsening
  *
@@ -253,10 +253,10 @@ INT fasp_amg_setup_rs (AMG_data *mgl,
  *
  * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
  */
-INT fasp_amg_setup_rs_omp (AMG_data *mgl,
-                           AMG_param *param)
+SHORT fasp_amg_setup_rs_omp (AMG_data *mgl,
+                             AMG_param *param)
 {
-    INT status = FASP_SUCCESS;
+    SHORT status = FASP_SUCCESS;
     
 #ifdef _OPENMP
     const INT prtlvl      = param->print_level;

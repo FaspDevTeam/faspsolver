@@ -32,7 +32,7 @@
  *       Academic Press Inc., San Diego, CA, 2001.
  *
  * Modified by Chensong Zhang on 01/10/2012
- * Modified by Chensong Zhang on 05/05/2013: Remove error handling from AMG setup
+ * Modified by Chensong Zhang on 07/26/2014: Add error handling for AMG setup
  */
 void fasp_solver_amg (dCSRmat *A,
                       dvector *b,
@@ -46,17 +46,27 @@ void fasp_solver_amg (dCSRmat *A,
     const INT     nnz = A->nnz, m = A->row, n = A->col;
     
     // local variables
+    SHORT         status;
     AMG_data *    mgl = fasp_amg_data_create(max_levels);
     REAL          AMG_start, AMG_end;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_amg ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
     if ( print_level > PRINT_NONE ) fasp_gettime(&AMG_start);
     
     // Step 0: initialize mgl[0] with A, b and x
+    if ( m != n ) {
+        printf("### ERROR: A is not a square matrix!\n");
+        fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
+    }
+    
+    if ( nnz <= 0 ) {
+        printf("### ERROR: A has no nonzero entries!\n");
+        fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
+    }
+    
     mgl[0].A = fasp_dcsr_create(m, n, nnz);
     fasp_dcsr_cp(A, &mgl[0].A);
     
@@ -65,51 +75,53 @@ void fasp_solver_amg (dCSRmat *A,
     
     mgl[0].x = fasp_dvec_create(n);
     fasp_dvec_cp(x, &mgl[0].x);
-
+    
     // Step 1: AMG setup phase
     switch (amg_type) {
             
-        // Smoothed Aggregation AMG setup phase
+            // Smoothed Aggregation AMG setup phase
         case SA_AMG:
             if ( print_level > PRINT_NONE ) printf("\nCalling SA AMG ...\n");
-            fasp_amg_setup_sa(mgl, param); break;
-
-        // Unsmoothed Aggregation AMG setup phase
+            status = fasp_amg_setup_sa(mgl, param); break;
+            
+            // Unsmoothed Aggregation AMG setup phase
         case UA_AMG:
             if ( print_level > PRINT_NONE ) printf("\nCalling UA AMG ...\n");
-            fasp_amg_setup_ua(mgl, param); break;
-
-        // Classical AMG setup phase
+            status = fasp_amg_setup_ua(mgl, param); break;
+            
+            // Classical AMG setup phase
         default:
             if ( print_level > PRINT_NONE ) printf("\nCalling classical AMG ...\n");
-#ifdef _OPENMP // omp version RS coarsening
-//            fasp_amg_setup_rs_omp(mgl, param);  // need clean.   chunsheng
-            fasp_amg_setup_rs(mgl, param);
-#else
-            fasp_amg_setup_rs(mgl, param);
-#endif
+            status = fasp_amg_setup_rs(mgl, param);
             
     }
     
     // Step 2: AMG solve phase
-    switch (cycle_type) {
+    if ( status == FASP_SUCCESS ) { // call a multilevel cycle
+        
+        switch (cycle_type) {
+                
+            case AMLI_CYCLE: // call AMLI-cycle
+                fasp_amg_solve_amli(mgl, param); break;
+                
+            case NL_AMLI_CYCLE: // call Nonlinear AMLI-cycle
+                fasp_amg_solve_nl_amli(mgl, param); break;
+                
+            default: // call classical V,W-cycles (determined by param)
+                fasp_amg_solve(mgl, param);
+                
+        }
 
-        // call AMLI-cycle
-        case AMLI_CYCLE:
-            fasp_amg_solve_amli(mgl, param); break;
-
-        // call Nonlinear AMLI-cycle
-        case NL_AMLI_CYCLE:
-            fasp_amg_solve_nl_amli(mgl, param); break;
-
-        // call classical V,W-cycles (determined by param)
-        default:
-            fasp_amg_solve(mgl, param);
-            
+        fasp_dvec_cp(&mgl[0].x, x);
+        
     }
+    else { // call a backup solver
+        
+        printf("### WARNING: Use a backup solver instead multilevel methods!\n");
+        fasp_solver_dcsr_spgmres (A, b, x, NULL, param->tol, param->maxit,
+                                  20, 1, print_level);
     
-    // Step 3: Save solution vector and return
-    fasp_dvec_cp(&mgl[0].x, x);
+    }
     
     // clean-up memory
     fasp_amg_data_free(mgl, param);
@@ -119,9 +131,9 @@ void fasp_solver_amg (dCSRmat *A,
         fasp_gettime(&AMG_end);
         print_cputime("AMG totally", AMG_end - AMG_start);
     }
-
+    
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_amg ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return;
