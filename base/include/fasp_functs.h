@@ -27,11 +27,11 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
 
 /*-------- In file: amg_setup_rs.c --------*/
 
-INT fasp_amg_setup_rs (AMG_data *mgl,
-                       AMG_param *param);
+SHORT fasp_amg_setup_rs (AMG_data *mgl,
+                         AMG_param *param);
 
-INT fasp_amg_setup_rs_omp (AMG_data *mgl,
-                           AMG_param *param);
+SHORT fasp_amg_setup_rs_omp (AMG_data *mgl,
+                             AMG_param *param);
 
 
 /*-------- In file: amg_setup_sa.c --------*/
@@ -97,9 +97,9 @@ void fasp_array_set (const INT n,
                      REAL *x, 
                      const REAL val);
 
-void fasp_iarray_set(const INT n, 
-                           INT *x,
-                     const INT val);
+void fasp_iarray_set (const INT n,
+                            INT *x,
+                      const INT val);
 
 void fasp_array_cp (const INT n, 
                     REAL *x, 
@@ -852,7 +852,7 @@ void fasp_dcoo1_read (const char *filename,
                       dCOOmat *A);
 
 void fasp_dcoo_shift_read (const char *filename,
-                     dCSRmat *A);
+                           dCSRmat *A);
 
 void fasp_dmtx_read (const char *filename,
                      dCSRmat *A);
@@ -965,12 +965,6 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
                                       itsolver_param *itparam,
                                       AMG_param *amgparam,
                                       dCSRmat *A_diag);
-
-INT fasp_solver_bdcsr_krylov_block_33 (block_dCSRmat *A,
-                                    dvector *b,
-                                    dvector *x,
-                                    itsolver_param *itparam,
-                                    AMG_param *amgparam);
 
 INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
                                       dvector *b,

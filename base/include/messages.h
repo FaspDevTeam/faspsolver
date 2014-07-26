@@ -29,6 +29,7 @@
 #define ERROR_WRONG_FILE      -11  /**< input contains wrong format */
 #define ERROR_INPUT_PAR       -13  /**< wrong input argument */
 #define ERROR_REGRESS         -14  /**< regression test fail */
+#define ERROR_MAT_SIZE        -15  /**< wrong problem size */
 #define ERROR_NUM_BLOCKS      -18  /**< wrong number of blocks */
 #define ERROR_MISC            -19  /**< other error */
 //---------------------------------------------------------------------------------

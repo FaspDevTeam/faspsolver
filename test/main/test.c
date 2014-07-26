@@ -74,7 +74,6 @@ int main (int argc, const char * argv[])
 		strcat(filename2,datafile2);        
 		
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
-        
 	}	
     
 	// Read A and b -- P1 FE discretization for Poisson, 1M DoF    
