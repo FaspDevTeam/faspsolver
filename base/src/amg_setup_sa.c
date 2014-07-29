@@ -2,9 +2,6 @@
  *
  *  \brief Smoothed aggregation AMG: SETUP phase
  *
- *  \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
- *        Refer to P. Vanek, J. Madel and M. Brezina
- *        "Algebraic Multigrid on Unstructured Meshes", 1994
  */
 
 #include <math.h>
@@ -19,9 +16,8 @@
 #include "aggregation_csr.inl"
 #include "aggregation_bsr.inl"
 
-
-static SHORT amg_setup_smoothP_smoothR(AMG_data *, AMG_param *);
-static SHORT amg_setup_smoothP_unsmoothR(AMG_data *, AMG_param *);
+static SHORT amg_setup_smoothP_smoothR (AMG_data *, AMG_param *);
+static SHORT amg_setup_smoothP_unsmoothR (AMG_data *, AMG_param *);
 static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
                                             AMG_param *param);
 
@@ -44,7 +40,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
  *
  * Modified by Chensong Zhang on 04/06/2010.
  * Modified by Chensong Zhang on 05/09/2010.
- * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
+ * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle.
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
 SHORT fasp_amg_setup_sa (AMG_data *mgl,
@@ -53,7 +49,7 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
     SHORT status  = FASP_SUCCESS;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_setup_sa ...... [Start]\n");
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
@@ -65,7 +61,7 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
 #endif
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_setup_sa ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return status;
@@ -88,13 +84,13 @@ SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr *mgl,
                              AMG_param *param)
 {
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_setup_ua_bsr ...... [Start]\n");
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
     SHORT status = amg_setup_smoothP_smoothR_bsr(mgl, param);
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_setup_ua_bsr ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return status;
@@ -130,6 +126,10 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
+    
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
     
     fasp_gettime(&setup_start);
     
@@ -181,13 +181,14 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     /*----------------------------*/
     /*--- checking aggregation ---*/
     /*----------------------------*/    
-    if (param->aggregation_type == PAIRWISE) param->pair_number = MIN(param->pair_number, max_levels);
+    if ( param->aggregation_type == PAIRWISE )
+        param->pair_number = MIN(param->pair_number, max_levels);
     
     // Main AMG setup loop
     while ( (mgl[level].A.row > min_cdof) && (level < max_levels-1) ) {
         
 #if DEBUG_MODE
-        printf("### DEBUG: level = %5d  row = %14d  nnz = %16d\n",
+        printf("### DEBUG: level = %d, row = %d, nnz = %d\n",
                level,mgl[level].A.row,mgl[level].A.nnz);
 #endif
         
@@ -213,8 +214,30 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
 		}
         
         /*-- Aggregation --*/
-        aggregation(&mgl[level].A, &vertices[level], param, level+1,
-                    &Neighbor[level], &num_aggregations[level]);
+        status = aggregation_vmb(&mgl[level].A, &vertices[level], param, level+1,
+                                 &Neighbor[level], &num_aggregations[level]);
+		
+        if ( status < 0 ) { 
+             if ( level > 0 ) { // Cannot continue coarsening, use the current levels!
+                 status = FASP_SUCCESS; break;
+             }
+			 else {
+                 
+                 printf("### WARNING: Coarsening on level=%d failed!\n", level);
+                 
+                 for (i=0;i<max_levels;++i) {
+                     fasp_dcsr_free(&Neighbor[i]);
+                     fasp_dcsr_free(&tentp[i]);
+                     fasp_ivec_free(&vertices[i]);
+				 }
+                 fasp_mem_free(vertices);
+                 fasp_mem_free(num_aggregations);
+                 fasp_mem_free(Neighbor);
+                 fasp_mem_free(tentp);
+                 
+                 return status;
+             }
+        } 
         
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[level], &tentp[level], mgl[0].near_kernel_basis,
@@ -286,6 +309,10 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     fasp_mem_free(num_aggregations);
     fasp_mem_free(Neighbor);
     fasp_mem_free(tentp);
+   
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
     
     return status;
 }
@@ -316,6 +343,10 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
+    
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
     
     fasp_gettime(&setup_start);
     
@@ -385,9 +416,31 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
 		}
         
         /*-- Aggregation --*/
-        aggregation(&mgl[level].A, &vertices[level], param, level+1,
-                    &Neighbor[level], &num_aggregations[level]);
+        status = aggregation_vmb(&mgl[level].A, &vertices[level], param, level+1,
+                                 &Neighbor[level], &num_aggregations[level]);
         
+        if ( status < 0 ) { 
+             if ( level > 0 ) { // Cannot continue coarsening, use the current levels!
+                 status = FASP_SUCCESS; break;
+             }
+			 else {
+                 printf("### WARNING: Coarsening on level=%d failed!\n", level);
+                 
+                 for (i=0;i<max_levels;++i) {
+                     fasp_dcsr_free(&Neighbor[i]);
+                     fasp_dcsr_free(&tentp[i]);
+                     fasp_dcsr_free(&tentr[i]);
+                     fasp_ivec_free(&vertices[i]);
+				 }
+                 fasp_mem_free(vertices);
+                 fasp_mem_free(num_aggregations);
+                 fasp_mem_free(Neighbor);
+                 fasp_mem_free(tentp);
+                 fasp_mem_free(tentr);
+                 
+                 return status;
+             }
+        } 
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[level], &tentp[level], mgl[0].near_kernel_basis,
                          level+1, num_aggregations[level]);
@@ -455,13 +508,17 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     fasp_mem_free(tentp);
     fasp_mem_free(tentr);
     
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+    
     return status;
 }
 
 
 /**
  * \fn static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
- *                                                     AMG_param *param)
+ *                                                 AMG_param *param)
  *
  * \brief Set up phase of smoothed aggregation AMG, using smoothed P and smoothed A
  *        in BSR format
@@ -491,7 +548,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     dCSRmat temp1, temp2;
     
 #if DEBUG_MODE
-    printf("### DEBUG: amg_setup_unsmoothP_unsmoothR_bsr ...... [Start]\n");
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
            mgl[0].A.ROW, mgl[0].A.COL, mgl[0].A.NNZ);
 #endif
@@ -571,7 +628,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
                 
             case VMB: // VMB aggregation
                 
-                aggregation(&mgl[level].PP, &vertices[level], param, level+1,
+                status = aggregation_vmb(&mgl[level].PP, &vertices[level], param, level+1,
                             &Neighbor[level], &num_aggs[level]);
                 
                 /*-- Choose strenth threshold adaptively --*/
@@ -585,11 +642,29 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
             default: // pairwise matching aggregation
                 
                 //aggregation_coarsening(&mgl[level].PP, param, level, vertices, &num_aggs[level]);
-                aggregation(&mgl[level].PP, &vertices[level], param, level+1,
+                status = aggregation_vmb(&mgl[level].PP, &vertices[level], param, level+1,
                             &Neighbor[level], &num_aggs[level]);
                 
                 break;
         }
+
+        if ( status < 0 ) { 
+             if ( level > 0 ) { // Cannot continue coarsening, use the current levels!
+                 status = FASP_SUCCESS; break;
+             }
+			 else {
+                 printf("### WARNING: Coarsening on level=%d failed!\n", level);
+                 for (i=0;i<max_levels;++i) {
+                     fasp_dcsr_free(&Neighbor[i]);
+                     fasp_dbsr_free(&tentp[i]);
+                     fasp_ivec_free(&vertices[i]);
+				 }
+                 fasp_mem_free(vertices);
+                 fasp_mem_free(num_aggs);
+                 fasp_mem_free(Neighbor);
+                 return status;
+             }
+        } 
         
         /* -- Form Tentative prolongation --*/
         printf("before form tentative P\n");
@@ -644,7 +719,6 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
 #endif
     
-    
 #if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK format
     mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
@@ -698,10 +772,8 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
 #endif
             
         }
-
         
     }
-    
     
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
@@ -714,13 +786,12 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     fasp_mem_free(Neighbor);
     
 #if DEBUG_MODE
-    printf("### DEBUG: amg_setup_unsmoothP_unsmoothR_bsr ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return status;
 }
 
-    
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
