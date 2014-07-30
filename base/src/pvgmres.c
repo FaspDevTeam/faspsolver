@@ -23,7 +23,7 @@
 
 /*!
  * \fn INT fasp_solver_dcsr_pvgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                   const REAL tol, const INT MaxIt, SHORT restart,
+ *                                   const REAL tol, const INT MaxIt, const SHORT restart,
  *                                   const SHORT stop_type, const SHORT print_level)
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
@@ -55,7 +55,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
-                              SHORT restart,
+                              const SHORT restart,
                               const SHORT stop_type,
                               const SHORT print_level)
 {
@@ -72,58 +72,57 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
     
     // local variables
     INT    iter            = 0;
-    INT    restartplus1    = restart + 1;
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
     REAL   absres0, absres, relres, normu;
     
-    REAL   cr          = 1.0;     // convergence rate
-    REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
-    INT    d           = 3;       // reduction for the restart parameter
-    INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
-    INT    Restart;               // the real restart in some fixed restarted cycle
+    REAL   cr           = 1.0;     // convergence rate
+    REAL   r_norm_old   = 0.0;     // save the residual norm of the previous restart cycle
+    INT    d            = 3;       // reduction for the restart parameter
+    INT    restart_max  = restart; // upper bound for restart in each restart cycle
+    INT    restart_min  = 3;       // lower bound for restart in each restart cycle (should be small)
+    INT    Restart      = restart; // the real restart in some fixed restarted cycle
+    INT    Restartplus1 = Restart + 1;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL  *c = NULL, *s = NULL, *rs = NULL;
     REAL  *norms = NULL, *r = NULL, *w = NULL;
     REAL  *work = NULL;
     REAL  **p = NULL, **hh = NULL;
+    LONG   worksize = (Restart+4)*(Restart+n)+1-n;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
-    // allocate memory and setup temp work space
-    work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
-
-    // If cannot allocate memory, reduce the size of stored vectors
-    while ( (work == NULL) && (restart > restart_min+5 ) ) {
-        restart = restart - 5 ;
-        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
-        printf("### WARNING: vGMRES restart number becomes %d!\n", restart );
-        restartplus1 = restart + 1;
-        restart_max = restart;
+    /* allocate memory and setup temp work space */
+    work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
+    
+    while ( (work == NULL) && (Restart > 5 ) ) {
+        Restart = Restart - 5;
+        worksize = (Restart+4)*(Restart+n)+1-n;
+        work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
+        printf("### WARNING: vGMRES restart number changed to %d!\n", Restart);
+        Restartplus1 = Restart + 1;
     }
     
-    // Quit if still cannot allocate memory with reduced restart
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for vGMRES %s: %s: %d !\n",
+        printf("### ERROR: No enough memory for vGMRES %s : %s : %d!\n",
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
 
-    p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    p     = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;
+    r = work; w = r + n; rs = w + n; c = rs + Restartplus1; s = c + Restart;
     
-    for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
+    for ( i = 0; i < Restartplus1; i++ ) p[i] = s + Restart + i*n;
     
-    for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
+    for ( i = 0; i < Restartplus1; i++ ) hh[i] = p[Restart] + n + i*Restart;
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -362,7 +361,7 @@ FINISHED:
 
 /**
  * \fn INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                    const REAL tol, const INT MaxIt, SHORT restart,
+ *                                    const REAL tol, const INT MaxIt, const SHORT restart,
  *                                    const SHORT stop_type, const SHORT print_level)
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
@@ -389,7 +388,7 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
                                precond *pc,
                                const REAL tol,
                                const INT MaxIt,
-                               SHORT restart,
+                               const SHORT restart,
                                const SHORT stop_type,
                                const SHORT print_level)
 {
@@ -406,58 +405,57 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
     
     // local variables
     INT    iter            = 0;
-    INT    restartplus1    = restart + 1;
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
     REAL   absres0, absres, relres, normu;
     
-    REAL   cr          = 1.0;     // convergence rate
-    REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
-    INT    d           = 3;       // reduction for the restart parameter
-    INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
-    INT    Restart;               // the real restart in some fixed restarted cycle
+    REAL   cr           = 1.0;     // convergence rate
+    REAL   r_norm_old   = 0.0;     // save the residual norm of the previous restart cycle
+    INT    d            = 3;       // reduction for the restart parameter
+    INT    restart_max  = restart; // upper bound for restart in each restart cycle
+    INT    restart_min  = 3;       // lower bound for restart in each restart cycle (should be small)
+    INT    Restart      = restart; // the real restart in some fixed restarted cycle
+    INT    Restartplus1 = Restart + 1;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL  *c = NULL, *s = NULL, *rs = NULL;
     REAL  *norms = NULL, *r = NULL, *w = NULL;
     REAL  *work = NULL;
     REAL  **p = NULL, **hh = NULL;
+    LONG   worksize = (Restart+4)*(Restart+n)+1-n;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
-    // allocate memory and setup temp work space
-    work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
+    /* allocate memory and setup temp work space */
+    work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-    // If cannot allocate memory, reduce the size of stored vectors
-    while ( (work == NULL) && (restart > restart_min+5 ) ) {
-        restart = restart - 5 ;
-        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
-        printf("### WARNING: vGMRES restart number becomes %d!\n", restart );
-        restartplus1 = restart + 1;
-        restart_max = restart;
+    while ( (work == NULL) && (Restart > 5 ) ) {
+        Restart = Restart - 5;
+        worksize = (Restart+4)*(Restart+n)+1-n;
+        work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
+        printf("### WARNING: vGMRES restart number changed to %d!\n", Restart);
+        Restartplus1 = Restart + 1;
     }
     
-    // Quit if still cannot allocate memory with reduced restart
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for vGMRES %s: %s: %d !\n",
+        printf("### ERROR: No enough memory for vGMRES %s : %s : %d!\n",
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
-
-    p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    
+    p     = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;
+    r = work; w = r + n; rs = w + n; c = rs + Restartplus1; s = c + Restart;
     
-    for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
+    for ( i = 0; i < Restartplus1; i++ ) p[i] = s + Restart + i*n;
     
-    for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
+    for ( i = 0; i < Restartplus1; i++ ) hh[i] = p[Restart] + n + i*Restart;
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -696,7 +694,7 @@ FINISHED:
 
 /*!
  * \fn INT fasp_solver_dbsr_pvgmres (dBSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                   const REAL tol, const INT MaxIt, SHORT restart,
+ *                                   const REAL tol, const INT MaxIt, const SHORT restart,
  *                                   const SHORT stop_type, const SHORT print_level)
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
@@ -726,7 +724,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
-                              SHORT restart,
+                              const SHORT restart,
                               const SHORT stop_type,
                               const SHORT print_level)
 {
@@ -743,59 +741,58 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
     
     // local variables
     INT    iter            = 0;
-    INT    restartplus1    = restart + 1;
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
     REAL   absres0, absres, relres, normu;
     
-    REAL   cr          = 1.0;     // convergence rate
-    REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
-    INT    d           = 3;       // reduction for the restart parameter
-    INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
-    INT    Restart;               // the real restart in some fixed restarted cycle
+    REAL   cr           = 1.0;     // convergence rate
+    REAL   r_norm_old   = 0.0;     // save the residual norm of the previous restart cycle
+    INT    d            = 3;       // reduction for the restart parameter
+    INT    restart_max  = restart; // upper bound for restart in each restart cycle
+    INT    restart_min  = 3;       // lower bound for restart in each restart cycle (should be small)
+    INT    Restart      = restart; // the real restart in some fixed restarted cycle
+    INT    Restartplus1 = Restart + 1;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL  *c = NULL, *s = NULL, *rs = NULL;
     REAL  *norms = NULL, *r = NULL, *w = NULL;
     REAL  *work = NULL;
     REAL  **p = NULL, **hh = NULL;
+    LONG   worksize = (Restart+4)*(Restart+n)+1-n;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
-    // allocate memory and setup temp work space
-    work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
+    /* allocate memory and setup temp work space */
+    work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-    // If cannot allocate memory, reduce the size of stored vectors
-    while ( (work == NULL) && (restart > restart_min+5 ) ) {
-        restart = restart - 5 ;
-        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
-        printf("### WARNING: vGMRES restart number becomes %d!\n", restart );
-        restartplus1 = restart + 1;
-        restart_max = restart;
+    while ( (work == NULL) && (Restart > 5 ) ) {
+        Restart = Restart - 5;
+        worksize = (Restart+4)*(Restart+n)+1-n;
+        work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
+        printf("### WARNING: vGMRES restart number changed to %d!\n", Restart);
+        Restartplus1 = Restart + 1;
     }
     
-    // Quit if still cannot allocate memory with reduced restart
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for vGMRES %s: %s: %d !\n",
+        printf("### ERROR: No enough memory for vGMRES %s : %s : %d!\n",
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
-
-    p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    
+    p     = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;
+    r = work; w = r + n; rs = w + n; c = rs + Restartplus1; s = c + Restart;
     
-    for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
+    for ( i = 0; i < Restartplus1; i++ ) p[i] = s + Restart + i*n;
     
-    for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
-
+    for ( i = 0; i < Restartplus1; i++ ) hh[i] = p[Restart] + n + i*Restart;
+    
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
     fasp_blas_dbsr_aAxpy(-1.0, A, x->val, p[0]);
@@ -829,7 +826,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
     
     // if initial residual is small, no need to iterate!
     if ( relres < tol ) goto FINISHED;
-
+    
     // output iteration information if needed
     print_itinfo(print_level,stop_type,0,relres,absres0,0);
     
@@ -1033,7 +1030,7 @@ FINISHED:
 
 /*!
  * \fn INT fasp_solver_dstr_pvgmres (dSTRmat *A, dvector *b, dvector *x, precond *pc,
- *                                   const REAL tol, const INT MaxIt, SHORT restart,
+ *                                   const REAL tol, const INT MaxIt, const SHORT restart,
  *                                   const SHORT stop_type, const SHORT print_level)
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
@@ -1063,7 +1060,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
-                              SHORT restart,
+                              const SHORT restart,
                               const SHORT stop_type,
                               const SHORT print_level)
 {
@@ -1080,58 +1077,57 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
     
     // local variables
     INT    iter            = 0;
-    INT    restartplus1    = restart + 1;
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
     REAL   absres0, absres, relres, normu;
     
-    REAL   cr          = 1.0;     // convergence rate
-    REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
-    INT    d           = 3;       // reduction for the restart parameter
-    INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
-    INT    Restart;               // the real restart in some fixed restarted cycle
+    REAL   cr           = 1.0;     // convergence rate
+    REAL   r_norm_old   = 0.0;     // save the residual norm of the previous restart cycle
+    INT    d            = 3;       // reduction for the restart parameter
+    INT    restart_max  = restart; // upper bound for restart in each restart cycle
+    INT    restart_min  = 3;       // lower bound for restart in each restart cycle (should be small)
+    INT    Restart      = restart; // the real restart in some fixed restarted cycle
+    INT    Restartplus1 = Restart + 1;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL  *c = NULL, *s = NULL, *rs = NULL;
     REAL  *norms = NULL, *r = NULL, *w = NULL;
     REAL  *work = NULL;
     REAL  **p = NULL, **hh = NULL;
+    LONG   worksize = (Restart+4)*(Restart+n)+1-n;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
-    // allocate memory and setup temp work space
-    work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
+    /* allocate memory and setup temp work space */
+    work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-    // If cannot allocate memory, reduce the size of stored vectors
-    while ( (work == NULL) && (restart > restart_min+5 ) ) {
-        restart = restart - 5 ;
-        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
-        printf("### WARNING: vGMRES restart number becomes %d!\n", restart );
-        restartplus1 = restart + 1;
-        restart_max = restart;
+    while ( (work == NULL) && (Restart > 5 ) ) {
+        Restart = Restart - 5;
+        worksize = (Restart+4)*(Restart+n)+1-n;
+        work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
+        printf("### WARNING: vGMRES restart number changed to %d!\n", Restart);
+        Restartplus1 = Restart + 1;
     }
     
-    // Quit if still cannot allocate memory with reduced restart
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for vGMRES %s: %s: %d !\n",
+        printf("### ERROR: No enough memory for vGMRES %s : %s : %d!\n",
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
-
-    p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    
+    p     = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;
+    r = work; w = r + n; rs = w + n; c = rs + Restartplus1; s = c + Restart;
     
-    for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
+    for ( i = 0; i < Restartplus1; i++ ) p[i] = s + Restart + i*n;
     
-    for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
+    for ( i = 0; i < Restartplus1; i++ ) hh[i] = p[Restart] + n + i*Restart;
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -1362,9 +1358,9 @@ FINISHED:
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
-    if (iter>=MaxIt) 
+    if (iter>=MaxIt)
         return ERROR_SOLVER_MAXIT;
-    else 
+    else
         return iter;
 }
 

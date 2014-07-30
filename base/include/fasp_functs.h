@@ -1440,7 +1440,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
                              precond *pc,
                              const REAL tol,
                              const INT MaxIt,
-                             SHORT restart,
+                             const SHORT restart,
                              const SHORT stop_type,
                              const SHORT print_level);
 
@@ -1450,7 +1450,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
-                              SHORT restart,
+                              const SHORT restart,
                               const SHORT stop_type,
                               const SHORT print_level);
 
@@ -1460,7 +1460,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
                              precond *pc,
                              const REAL tol,
                              const INT MaxIt,
-                             SHORT restart,
+                             const SHORT restart,
                              const SHORT stop_type,
                              const SHORT print_level);
 
@@ -1470,7 +1470,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
                              precond *pc,
                              const REAL tol,
                              const INT MaxIt,
-                             SHORT restart,
+                             const SHORT restart,
                              const SHORT stop_type,
                              const SHORT print_level);
 
@@ -1483,7 +1483,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
                         precond *pc, 
                         const REAL tol,
                         const INT MaxIt, 
-                        SHORT restart,
+                        const SHORT restart,
                         const SHORT stop_type, 
                         const SHORT print_level);
 
@@ -1693,7 +1693,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
                                precond *pc, 
                                const REAL tol,
                                const INT MaxIt, 
-                               SHORT restart,
+                               const SHORT restart,
                                const SHORT stop_type, 
                                const SHORT print_level);
 
@@ -1703,14 +1703,14 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
                                precond *pc, 
                                const REAL tol,
                                const INT MaxIt, 
-                               SHORT restart,
+                               const SHORT restart,
                                const SHORT stop_type, 
                                const SHORT print_level);
 
 INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
                                 dvector *b,
                                 dvector *x,
-                                precond *pre,
+                                precond *pc,
                                 const REAL tol,
                                 const INT MaxIt,
                                 const SHORT restart,
@@ -1726,7 +1726,7 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
                           precond *pc, 
                           const REAL tol,
                           const INT MaxIt, 
-                          SHORT restart,
+                          const SHORT restart,
                           const SHORT stop_type, 
                           const SHORT print_level);
 
@@ -1739,7 +1739,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
-                              SHORT restart,
+                              const SHORT restart,
                               const SHORT stop_type,
                               const SHORT print_level);
 
@@ -1749,7 +1749,7 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
                                precond *pc,
                                const REAL tol,
                                const INT MaxIt,
-                               SHORT restart,
+                               const SHORT restart,
                                const SHORT stop_type,
                                const SHORT print_level);
 
@@ -1759,7 +1759,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
-                              SHORT restart,
+                              const SHORT restart,
                               const SHORT stop_type,
                               const SHORT print_level);
 
@@ -1769,7 +1769,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
                               precond *pc,
                               const REAL tol,
                               const INT MaxIt,
-                              SHORT restart,
+                              const SHORT restart,
                               const SHORT stop_type,
                               const SHORT print_level);
 

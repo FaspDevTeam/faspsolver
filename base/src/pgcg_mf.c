@@ -42,7 +42,7 @@
  * \note Not completely implemented yet! --Chensong
  *
  * Modified by Chensong Zhang on 05/01/2012
- * Modified by Feiteng Huang on 09/26/2012, (matrix free)
+ * Modified by Feiteng Huang on 09/26/2012: matrix free
  */
 INT fasp_solver_pgcg (mxv_matfree *mf, 
                       dvector *b, 

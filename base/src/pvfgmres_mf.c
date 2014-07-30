@@ -27,12 +27,12 @@
 
 /*!
  * \fn INT fasp_solver_pvfgmres (mxv_matfree *mf, dvector *b, dvector *x, precond *pc, 
- *                               const REAL tol, const INT MaxIt, SHORT restart,
+ *                               const REAL tol, const INT MaxIt, const SHORT restart,
  *                               const SHORT stop_type, const SHORT print_level)
  *
- * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which the restart
- *        parameter can be adaptively modified during the iteration and flexible preconditioner 
- *        can be used.
+ * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which 
+ *        the restart parameter can be adaptively modified during the iteration and 
+ *        flexible preconditioner can be used.
  *
  * \param mf           Pointer to mxv_matfree: the spmv operation
  * \param b            Pointer to dvector: the right hand side
@@ -50,7 +50,7 @@
  * \date   01/04/2012
  *
  * Modified by Chensong Zhang on 05/01/2012
- * Modified by Feiteng Huang on 09/26/2012, (matrix free)
+ * Modified by Feiteng Huang on 09/26/2012: matrix free
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */ 
 INT fasp_solver_pvfgmres (mxv_matfree *mf, 
@@ -59,7 +59,7 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
                           precond *pc, 
                           const REAL tol,
                           const INT MaxIt, 
-                          SHORT restart,
+                          const SHORT restart,
                           const SHORT stop_type, 
                           const SHORT print_level)
 {
@@ -75,59 +75,58 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
     
     // local variables
     INT    iter                 = 0;
-    INT    restartplus1         = restart + 1;
     INT    i,j,k;
     
-    REAL   epsmac               = SMALLREAL; 
+    REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;
-    REAL   epsilon, gamma, t;   
+    REAL   epsilon, gamma, t;
     
-    REAL  *c = NULL, *s = NULL, *rs = NULL; 
-    REAL  *norms = NULL, *r = NULL; 
-    REAL  **p = NULL, **hh = NULL, **z=NULL;   
+    REAL  *c = NULL, *s = NULL, *rs = NULL;
+    REAL  *norms = NULL, *r = NULL;
+    REAL  **p = NULL, **hh = NULL, **z=NULL;
     REAL  *work = NULL;
     
     REAL   cr          = 1.0;     // convergence rate
     REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
-    INT    d           = 3;       // reduction for the restart parameter 
-    INT    restart_max = restart; // upper bound for restart in each restart cycle 
-    INT    restart_min = 3;          // lower bound for restart in each restart cycle (should be small)
-    INT    Restart;               // the real restart in some fixed restarted cycle
+    INT    d           = 3;       // reduction for the restart parameter
+    INT    restart_max = restart; // upper bound for restart in each restart cycle
+    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
+    INT    Restart = restart;     // the real restart in some fixed restarted cycle
+    INT    Restartplus1 = Restart + 1;
+    LONG   worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
-
-    // allocate memory and setup temp work space
-    work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n+(restartplus1*n)-n, sizeof(REAL));
     
-    // If cannot allocate memory, reduce the size of stored vectors
-    while ( (work == NULL) && (restart > restart_min+5 ) ) {
-        restart = restart - 5 ;
-        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n+(restartplus1*n)-n, sizeof(REAL));
-        printf("### WARNING: vFGMRES restart number becomes %d!\n", restart );
-        restartplus1 = restart + 1;
-        restart_max = restart;
+    /* allocate memory and setup temp work space */
+    work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
+    
+    while ( (work == NULL) && (Restart > 5 ) ) {
+        Restart = Restart - 5;
+        worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
+        work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
+        printf("### WARNING: vFGMRES restart number changed to %d!\n", Restart);
+        Restartplus1 = Restart + 1;
     }
     
-    // Quit if still cannot allocate memory with reduced restart
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for GMRES %s : %s: %d !\n",
+        printf("### ERROR: No enough memory for vFGMRES %s : %s : %d!\n",
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
-
-    p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
-    z=(REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
+    
+    p  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    hh = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    z  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     
     if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL)); 
     
-    r = work; rs = r + n; c = rs + restartplus1; s = c + restart;    
-    for (i = 0; i < restartplus1; i ++) p[i] = s + restart + i*n;
-    for (i = 0; i < restartplus1; i ++) hh[i] = p[restart] + n + i*restart;
-    for (i = 0; i < restartplus1; i ++) z[i] = hh[restart] + restart + i*n;
+    r = work; rs = r + n; c = rs + Restartplus1; s = c + Restart;    
+    for (i = 0; i < Restartplus1; i ++) p[i] = s + Restart + i*n;
+    for (i = 0; i < Restartplus1; i ++) hh[i] = p[Restart] + n + i*Restart;
+    for (i = 0; i < Restartplus1; i ++) z[i] = hh[Restart] + Restart + i*n;
     
     /* initialization */
     mf->fct(mf->data, x->val, p[0]);

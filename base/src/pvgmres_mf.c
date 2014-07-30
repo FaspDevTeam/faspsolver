@@ -48,7 +48,7 @@
  *
  * Modified by Chensong Zhang on 12/13/2011
  * Modified by Chensong Zhang on 05/01/2012
- * Modified by Feiteng Huang on 09/26/2012, (matrix free)
+ * Modified by Feiteng Huang on 09/26/2012: matrix free
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
 INT fasp_solver_pvgmres (mxv_matfree *mf,
@@ -91,27 +91,26 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;          // lower bound for restart in each restart cycle (should be small)
     INT    Restart;               // the real restart in some fixed restarted cycle
+    LONG   worksize = (restart+4)*(restart+n)+1-n;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
-    // allocate memory and setup temp work space
-    work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
+    /* allocate memory and setup temp work space */
+    work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-    // If cannot allocate memory, reduce the size of stored vectors
-    while ( (work == NULL) && (restart > restart_min+5 ) ) {
-        restart = restart - 5 ;
-        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
-        printf("### WARNING: vGMRES restart number becomes %d!\n", restart );
+    while ( (work == NULL) && (restart > 5 ) ) {
+        restart = restart - 5;
+        worksize = (restart+4)*(restart+n)+1-n;
+        work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
+        printf("### WARNING: vGMRES restart number changed to %d!\n", restart);
         restartplus1 = restart + 1;
-        restart_max = restart;
     }
     
-    // Quit if still cannot allocate memory with reduced restart
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for vGMRES %s: %s: %d !\n",
+        printf("### ERROR: No enough memory for vGMRES %s : %s : %d!\n",
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
