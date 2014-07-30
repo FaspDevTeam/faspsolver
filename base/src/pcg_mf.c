@@ -82,7 +82,7 @@
  * \date   05/06/2010
  * 
  * Modified by Chensong Zhang on 04/30/2012
- * Modified by Feiteng Huang on 09/19/2012, (matrix free)
+ * Modified by Feiteng Huang on 09/19/2012: matrix free
  */
 INT fasp_solver_pcg (mxv_matfree *mf, 
                      dvector *b, 

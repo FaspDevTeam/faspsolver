@@ -85,7 +85,7 @@
  * \date   10/24/2010
  *
  * Rewritten by Chensong Zhang on 05/01/2012
- * Modified by Feiteng Huang on 09/26/2012, (matrix free)
+ * Modified by Feiteng Huang on 09/26/2012: matrix free
  */
 INT fasp_solver_pminres (mxv_matfree *mf, 
                          dvector *b, 

@@ -24,7 +24,7 @@
 
 /*!
  * \fn INT fasp_solver_pgmres (mxv_matfree *mf, dvector *b, dvector *x, precond *pc, 
- *                             const REAL tol, const INT MaxIt, SHORT restart,
+ *                             const REAL tol, const INT MaxIt, const SHORT restart,
  *                             const SHORT stop_type, const SHORT print_level)
  *
  * \brief Solve "Ax=b" using PGMRES (right preconditioned) iterative method
@@ -45,7 +45,7 @@
  * \date   2010/11/28
  *
  * Modified by Chensong Zhang on 05/01/2012
- * Modified by Feiteng Huang on 09/26/2012, (matrix free)
+ * Modified by Feiteng Huang on 09/26/2012: matrix free
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */ 
 INT fasp_solver_pgmres (mxv_matfree *mf, 
@@ -54,7 +54,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
                         precond *pc, 
                         const REAL tol,
                         const INT MaxIt, 
-                        SHORT restart,
+                        const SHORT restart,
                         const SHORT stop_type, 
                         const SHORT print_level)
 {
@@ -63,31 +63,36 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
     
     // local variables
     INT      iter = 0;
-    INT      restartplus1 = restart + 1;
     INT      i, j, k;
     
-    REAL     epsmac = SMALLREAL; 
+    REAL     epsmac = SMALLREAL;
     REAL     r_norm, b_norm, den_norm;
-    REAL     epsilon, gamma, t;   
+    REAL     epsilon, gamma, t;
     
-    REAL    *c = NULL, *s = NULL, *rs = NULL; 
+    // allocate temp memory (need about (restart+4)*n REAL numbers)
+    REAL    *c = NULL, *s = NULL, *rs = NULL;
     REAL    *norms = NULL, *r = NULL, *w = NULL;
-    REAL   **p = NULL, **hh = NULL;
     REAL    *work = NULL;
+    REAL    **p = NULL, **hh = NULL;
+    
+    INT      Restart = restart;
+    INT      Restartplus1 = Restart + 1;
+    LONG     worksize = (Restart+4)*(Restart+n)+1-n;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
-
-    /* allocate memory */
-    work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
     
-    while ( (work == NULL) && (restart > 5 ) ) {
-        restart = restart - 5 ;
-        work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
-        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
-        restartplus1 = restart + 1;
+    /* allocate memory and setup temp work space */
+    work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
+    
+    while ( (work == NULL) && (Restart > 5 ) ) {
+        Restart = Restart - 5;
+        worksize = (Restart+4)*(Restart+n)+1-n;
+        work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
+        printf("### WARNING: GMRES restart number changed to %d!\n", Restart);
+        Restartplus1 = Restart + 1;
     }
     
     if ( work == NULL ) {
@@ -96,17 +101,17 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
         exit(ERROR_ALLOC_MEM);
     }
 
-    p    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    p    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     
-    hh   = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *)); 
+    hh   = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *)); 
     
     if (print_level>PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL)); 
     
-    r = work; w = r + n; rs = w + n; c  = rs + restartplus1; s  = c + restart;    
+    r = work; w = r + n; rs = w + n; c  = rs + Restartplus1; s  = c + Restart;    
     
-    for (i = 0; i < restartplus1; i ++) p[i] = s + restart + i*n;
+    for (i = 0; i < Restartplus1; i ++) p[i] = s + Restart + i*n;
     
-    for (i = 0; i < restartplus1; i ++) hh[i] = p[restart] + n + i*restart;
+    for (i = 0; i < Restartplus1; i ++) hh[i] = p[Restart] + n + i*Restart;
     
     /* initialization */
     mf->fct(mf->data, x->val, p[0]);
@@ -159,7 +164,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
     
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
-        while (i < restart && iter < MaxIt) {
+        while (i < Restart && iter < MaxIt) {
 
             i ++;  iter ++;
     
