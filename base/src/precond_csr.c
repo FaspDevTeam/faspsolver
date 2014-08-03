@@ -63,11 +63,7 @@ precond *fasp_precond_setup (SHORT precond_type,
         case UA_AMG: // Unsmoothed Aggregation AMG
             fasp_amg_setup_ua(mgl, amgparam); break;
         default: // Classical AMG
-#ifdef _OPENMP
-            fasp_amg_setup_rs_omp(mgl, amgparam); break;
-#else
             fasp_amg_setup_rs(mgl, amgparam); break;
-#endif
         }
             
         pcdata = (precond_data *)fasp_mem_calloc(1, sizeof(precond_data));
@@ -106,11 +102,7 @@ precond *fasp_precond_setup (SHORT precond_type,
         case UA_AMG: // Unsmoothed Aggregation AMG
             fasp_amg_setup_ua(mgl, amgparam); break;
         default: // Classical AMG
-#ifdef _OPENMP
-            fasp_amg_setup_rs_omp(mgl, amgparam); break;
-#else
             fasp_amg_setup_rs(mgl, amgparam); break;
-#endif
         }
             
         pcdata = (precond_data *)fasp_mem_calloc(1, sizeof(precond_data));
