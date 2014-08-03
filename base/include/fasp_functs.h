@@ -30,9 +30,6 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
 SHORT fasp_amg_setup_rs (AMG_data *mgl,
                          AMG_param *param);
 
-SHORT fasp_amg_setup_rs_omp (AMG_data *mgl,
-                             AMG_param *param);
-
 
 /*-------- In file: amg_setup_sa.c --------*/
 

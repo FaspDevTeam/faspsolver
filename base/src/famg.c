@@ -75,11 +75,7 @@ void fasp_solver_famg (dCSRmat *A,
             // Classical AMG setup phase
         default:
             if ( print_level > PRINT_NONE ) printf("\nCalling classical AMG (F-cycle) ...\n");
-#ifdef _OPENMP // omp version RS coarsening
-            fasp_amg_setup_rs_omp(mgl, param);
-#else
             fasp_amg_setup_rs(mgl, param);
-#endif
             
     }
     
