@@ -1,11 +1,12 @@
 File Name: CHANGES
 
-07/30/2014 FASP 1.5.6:
+08/03/2014 FASP 1.5.6:
 - Handling errors when RS coarsening does not succeed. 
 - Handling errors when Pairwise aggreation does not succeed. 
 - Handling errors when VMB aggreation does not succeed. 
 - Uniformize debug output format.
 - Change adaptive GMRES (various versions) restart number.
+- Remove unused *_omp() functions.
 
 07/26/2014 FASP 1.5.5:
 - Modify the parameter for pairwise aggregation.

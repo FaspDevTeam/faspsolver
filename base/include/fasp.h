@@ -900,11 +900,6 @@ typedef struct {
 	
 	//! action for preconditioner, void function pointer
 	void (*fct)(REAL *, REAL *, void *);
-    
-#ifdef _OPENMP 
-	//! action for preconditioner, void function pointer
-	void (*fct_omp)(REAL *, REAL *, void *, INT, INT);
-#endif
 	
 } precond; /**< Data for general preconditioner passed to iterative solvers */
 
