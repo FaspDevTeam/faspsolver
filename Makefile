@@ -31,7 +31,7 @@
 #  >> setenv OMP_NUM_THREADS 4 (for tcsh)
 # If you want to compile with OpenMP support, uncomment the next line:
 #
- openmp=yes
+# openmp=yes
 #
 # These user options can also be applied as make command line options.
 # For example, to enforce the debug compiling options:
