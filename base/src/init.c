@@ -55,10 +55,12 @@ void fasp_precond_data_null (precond_data *pcdata)
  */
 AMG_data * fasp_amg_data_create (SHORT max_levels)
 {
+    max_levels = MAX(1, max_levels); // at least allocate one level
+    
     AMG_data *mgl = (AMG_data *)fasp_mem_calloc(max_levels,sizeof(AMG_data));
     
     INT i;
-    for (i=0; i<max_levels; ++i) {
+    for ( i=0; i<max_levels; ++i ) {
         mgl[i].max_levels = max_levels;
         mgl[i].num_levels = 0;
         mgl[i].near_kernel_dim = 0;
@@ -169,7 +171,8 @@ void fasp_schwarz_data_free (Schwarz_data *schwarz)
 void fasp_amg_data_free (AMG_data *mgl,
                          AMG_param *param)
 {
-    const INT max_levels = mgl[0].max_levels;
+    const INT max_levels = MAX(1,mgl[0].max_levels);
+    
     INT i;
     
     for (i=0; i<max_levels; ++i) {

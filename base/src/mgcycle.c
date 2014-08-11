@@ -53,17 +53,17 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     
     // local variables
     REAL alpha = 1.0;
-    
+    INT  num_lvl[MAX_AMG_LVL] = {0}, l = 0;
+
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
+    printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
     
-    if ( prtlvl >= PRINT_MOST )
-        printf("MG: AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
-    
-    INT num_lvl[MAX_AMG_LVL] = {0}, l = 0;
-    
+#if DEBUG_MODE
+    printf("### DEBUG: AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
+#endif
+
 ForwardSweep:
     while ( l < nl-1 ) {
         num_lvl[l]++;
