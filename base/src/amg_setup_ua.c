@@ -191,7 +191,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
             status = fasp_ilu_dcsr_setup(&mgl[level].A, &mgl[level].LU, &iluparam);
             if ( status < 0 ) {
                 param->ILU_levels = level;
-                printf("### WARNING: ILU setup on level %d failed!\n", level);
+                printf("### WARNING: ILU setup on level%d failed!\n", level);
             }
         }
         
@@ -231,21 +231,10 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                 break;
         }
 		
-        if ( status < 0 ) { 
-            if ( level > 0 ) { // Cannot continue coarsening, use the current levels!
-                 status = FASP_SUCCESS; break;
-            }   
-            else {
-                 printf("### WARNING: Coarsening on level=%d failed!\n", level);
-                 for ( i = 0; i < max_levels; ++i ) {
-                     fasp_ivec_free(&vertices[i]);
-                     fasp_dcsr_free(&Neighbor[i]);
-                 }
-                 fasp_mem_free(num_aggs);
-				 fasp_mem_free(Neighbor);
-                 fasp_mem_free(vertices);
-                 return status;
-            }
+        if ( status < 0 ) {
+            // When error happens, force solver to use the current multigrid levels!
+            printf("### WARNING: Coarsening on level%d is not successful!\n", level);
+            status = FASP_SUCCESS; break;
         }
         
         /*-- Form Prolongation --*/
@@ -417,7 +406,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
             status = fasp_ilu_dbsr_setup(&mgl[level].A, &mgl[level].LU, &iluparam);
             if ( status < 0 ) {
                 param->ILU_levels = level;
-                printf("### WARNING: ILU setup on level %d failed!\n", level);
+                printf("### WARNING: ILU setup on level%d failed!\n", level);
             }
         }
         
@@ -450,22 +439,12 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
                 break;
         }
         
-        if ( status < 0 ) { 
-            if ( level > 0 ) { // Cannot continue coarsening, use the current levels!
-                 status = FASP_SUCCESS; break;
-            }   
-            else {
-                 printf("### WARNING: Coarsening on level=%d failed!\n", level);
-                 for (i=0;i<max_levels;++i) {
-                     fasp_ivec_free(&vertices[i]);
-                     fasp_dcsr_free(&Neighbor[level]);
-                 }
-                 fasp_mem_free(vertices);
-                 fasp_mem_free(num_aggs);
-                 fasp_mem_free(Neighbor);
-                 return status;
-            }
+        if ( status < 0 ) {
+            // When error happens, force solver to use the current multigrid levels!
+            printf("### WARNING: Coarsening on level%d is not successful!\n", level);
+            status = FASP_SUCCESS; break;
         }
+
         /* -- Form Prolongation --*/
         //form_tentative_p_bsr(&vertices[level], &mgl[level].P, &mgl[0], level+1, num_aggs[level]);
         

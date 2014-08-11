@@ -116,7 +116,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
             status = fasp_ilu_dcsr_setup(&mgl[lvl].A, &mgl[lvl].LU, &iluparam);
             if ( status < 0 ) {
                 param->ILU_levels = lvl;
-                printf("### WARNING: ILU setup on level=%d failed!\n", lvl);
+                printf("### WARNING: ILU setup on level%d failed!\n", lvl);
             }
         }
         
@@ -135,15 +135,9 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         /*-- Coarseing and form the structure of interpolation --*/
         status = fasp_amg_coarsening_rs(&mgl[lvl].A, &vertices, &mgl[lvl].P, &Scouple, param);
         if ( status < 0 ) {
-            if ( lvl > 0 ) { // Cannot continue coarsening, use the current levels!
-                status = FASP_SUCCESS; break;
-            }
-            else {
-                printf("### WARNING: Coarsening on level=%d failed!\n", lvl);
-                fasp_mem_free(Scouple.IA);
-                fasp_mem_free(Scouple.JA);
-                return status;
-            }
+            // When error happens, force solver to use the current multigrid levels!
+            printf("### WARNING: Coarsening on level%d is not successful!\n", lvl);
+            status = FASP_SUCCESS; break;
         }
         
         /*-- Perform aggressive coarsening only up to the specified level --*/
