@@ -59,7 +59,7 @@ AMG_cycle_type           = V      % V V-cycle | W W-cycle
                                   % A AMLI-cycle | NA Nonlinear AMLI-cycleA
 AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
-AMG_levels               = 8      % max number of levels
+AMG_levels               = 10     % max number of levels
 AMG_coarse_dof           = 1000   % max number of coarse degrees of freedom
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle

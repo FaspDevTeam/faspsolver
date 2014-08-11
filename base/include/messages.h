@@ -203,12 +203,13 @@
 #define INTERP_ENG              3  /**< energy minimization interp in C */
 
 /** 
- * \brief Type of vertices (dofs) for C/F splitting
+ * \brief Type of vertices (dofs) for coarsening
  */
-#define UNPT                   -1  /**< undetermined points */
-#define FGPT                    0  /**< fine grid points  */
-#define CGPT                    1  /**< coarse grid points */
-#define ISPT                    2  /**< isolated points */
+#define G0PT                   -5  /**< Cannot fit in aggregates */
+#define UNPT                   -1  /**< Undetermined points */
+#define FGPT                    0  /**< Fine grid points  */
+#define CGPT                    1  /**< Coarse grid points */
+#define ISPT                    2  /**< Isolated points */
 
 /** 
  * \brief Definition of smoothing order

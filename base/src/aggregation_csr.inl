@@ -52,7 +52,7 @@ static void form_tentative_p (ivector *vertices,
     // first run
     for ( i = 0, j = 0; i < row; i++ ) {
         IA[i] = j;
-        if (vval[i] > -1) j++;
+        if (vval[i] > UNPT) j++;
     }
     IA[row] = j;
     
@@ -67,7 +67,7 @@ static void form_tentative_p (ivector *vertices,
     // second run
     for (i = 0, j = 0; i < row; i ++) {
         IA[i] = j;
-        if (vval[i] > -1) {
+        if (vval[i] > UNPT) {
             JA[j] = vval[i];
             val[j] = basis[0][i];
             j ++;
@@ -115,7 +115,7 @@ static void form_boolean_p (ivector *vertices,
     // first run
     for ( i = 0, j = 0; i < row; i++ ) {
         IA[i] = j;
-        if (vval[i] > -1) j++;
+        if (vval[i] > UNPT) j++;
     }
     IA[row] = j;
     
@@ -130,7 +130,7 @@ static void form_boolean_p (ivector *vertices,
     // second run
     for (i = 0, j = 0; i < row; i ++) {
         IA[i] = j;
-        if (vval[i] > -1) {
+        if (vval[i] > UNPT) {
             JA[j] = vval[i];
             val[j] = 1.0;
             j ++;
@@ -174,7 +174,7 @@ static void form_pairwise (const dCSRmat * A,
 	/*        and store in G0.                                   */
     /*-----------------------------------------------------------*/
 
-    /* G0 : vertices->val[i] =-5 Remain: vertices->val[i] =-1 */
+    /* G0 : vertices->val[i]=G0PT, Remain: vertices->val[i]=UNPT */
 
     fasp_ivec_alloc(row, vertices);
     	
@@ -187,15 +187,15 @@ static void form_pairwise (const dCSRmat * A,
             for ( j = row_start+1; j < row_end; j++) sum += ABS(Aval[j]);
         
             if ( Aval[AIA[i]] >= ((k_tg+1.)/(k_tg-1.))*sum) {
-                vertices->val[i] = -5;
+                vertices->val[i] = G0PT;
             }
             else {
-                vertices->val[i] = -1;
+                vertices->val[i] = UNPT;
             }
         }
 	}
 	else {
-		fasp_iarray_set(row, vertices->val, -1);
+		fasp_iarray_set(row, vertices->val, UNPT);
 	}
     
     /*-------------------------------------------------------*/
@@ -206,7 +206,7 @@ static void form_pairwise (const dCSRmat * A,
     for ( i = 0; i < row; i++ ) {
         s[i] = 0.0;
 
-        if ( vertices->val[i] == -5 ) continue;
+        if ( vertices->val[i] == G0PT ) continue;
 
         row_start = AIA[i]; row_end = AIA[i+1];
         for ( j = row_start + 1; j < row_end; j++ ) s[i] -= Aval[j];
@@ -225,7 +225,7 @@ static void form_pairwise (const dCSRmat * A,
 
     for ( i = 0; i < row; i++ ) {
 
-        if ( vertices->val[i] != -1 ) continue;
+        if ( vertices->val[i] != UNPT ) continue;
         
         aij = 0.0;
         min_mu = 1000.0;
@@ -236,7 +236,7 @@ static void form_pairwise (const dCSRmat * A,
         
         for ( j= row_start + 1; j < row_end; j++ ) {
             col = AJA[j];
-            if ( vertices->val[col] != -1 ) continue;
+            if ( vertices->val[col] != UNPT ) continue;
             
             aij = Aval[j];
             ajj = Aval[AIA[col]];
@@ -461,12 +461,13 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
                                    INT *num_aggregations)
 {
     const INT  pair_number = param->pair_number;
-
     dCSRmat  * ptrA = &mgl[level].A;
-    INT        i, j, num_agg, aggindex;
-    INT        dopass = 0;
+    
+    INT        i, j, k, num_agg, aggindex;
     INT        lvl = level;
+    REAL       isorate;
 
+    SHORT      dopass = 0, domin = 0;
     SHORT      status = FASP_SUCCESS;
     
     for ( i = 1; i <= pair_number; ++i ) {
@@ -474,10 +475,17 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
         /*-- generate aggregations by pairwise matching --*/
         form_pairwise(ptrA, i, &vertice[lvl], &num_agg);
 
-        if ( num_agg < MIN_CDOF ) {
-            printf("### WARNING: Could not find enough aggregates in the first pass!\n");
-            status = ERROR_AMG_COARSEING;
-	        goto END;
+        /*-- check number of aggregates in the first pass --*/
+        if ( i == 1 && num_agg < MIN_CDOF ) {
+            for ( domin=k=0; k<ptrA->row; k++ ) {
+                if ( vertice[lvl].val[k] == G0PT ) domin ++;
+            }
+            isorate = (REAL)num_agg/domin;
+            if ( isorate < 0.1 ) {
+                printf("### WARNING: Could not find enough aggregates!\n");
+                status = ERROR_AMG_COARSEING;
+	            goto END;
+            }
         }
 
         if ( i < pair_number ) {
@@ -603,7 +611,8 @@ static SHORT aggregation_vmb (dCSRmat *A,
         NIA[i] = index;
         row_start = AIA[i]; row_end = AIA[i+1];
         for ( j = row_start; j < row_end; ++j ) {
-            if ( (AJA[j] == i) || (pow(Aval[j],2) >= strongly_coupled2 * fabs(diag.val[i]*diag.val[AJA[j]])) ) {
+            if ( (AJA[j] == i) || (pow(Aval[j],2)
+                      >= strongly_coupled2 * fabs(diag.val[i]*diag.val[AJA[j]])) ) {
                 NJA[index] = AJA[j];
                 Nval[index] = Aval[j];
                 index++;
@@ -634,14 +643,14 @@ static SHORT aggregation_vmb (dCSRmat *A,
     /*-------------*/
     for ( i = 0; i < row; ++i ) {
         if ( (AIA[i+1] - AIA[i]) == 1 ) {
-            vertices->val[i] = -1;
+            vertices->val[i] = UNPT;
             num_left--;
         }
         else {
             subset = TRUE;
             row_start = NIA[i]; row_end = NIA[i+1];
             for ( j = row_start; j < row_end; ++j ) {
-                if ( vertices->val[NJA[j]] >= -1 ) {
+                if ( vertices->val[NJA[j]] >= UNPT ) {
                     subset = FALSE;
                     break;
                 }
@@ -670,7 +679,7 @@ static SHORT aggregation_vmb (dCSRmat *A,
     INT *temp_C = (INT*)fasp_mem_calloc(row,sizeof(INT));
 
     if (*num_aggregations < MIN_CDOF) {
-        printf("### WARNING: Could not find enough aggregates in the first pass!\n");
+        printf("### WARNING: Could not find enough aggregates!\n");
         status = ERROR_AMG_COARSEING;
 	    goto END;
     }
@@ -683,10 +692,10 @@ static SHORT aggregation_vmb (dCSRmat *A,
     }
     
     for ( i = 0; i < row; ++i ) {
-        if ( vertices->val[i] < -1 ) {
+        if ( vertices->val[i] < UNPT ) {
             row_start = NIA[i]; row_end = NIA[i+1];
             for ( j = row_start; j < row_end; ++j ) {
-                if (temp_C[NJA[j]] > -1 && num_each_aggregation[temp_C[NJA[j]]] < max_aggregation ) {
+                if (temp_C[NJA[j]] > UNPT && num_each_aggregation[temp_C[NJA[j]]] < max_aggregation ) {
                     vertices->val[i] = temp_C[NJA[j]];
                     num_left--;
                     num_each_aggregation[temp_C[NJA[j]]] ++ ;
@@ -701,14 +710,14 @@ static SHORT aggregation_vmb (dCSRmat *A,
     /*-------------*/
     while ( num_left > 0 ) {
         for ( i = 0; i < row; ++i ) {
-            if ( vertices->val[i] < -1 ) {
+            if ( vertices->val[i] < UNPT ) {
                 count = 0;
                 vertices->val[i] = *num_aggregations;
                 num_left--;
                 count++;
                 row_start = NIA[i]; row_end = NIA[i+1];
                 for ( j = row_start; j < row_end; ++j ) {
-                    if ( (NJA[j]!=i) && (vertices->val[NJA[j]] < -1) && (count<max_aggregation) ) {
+                    if ( (NJA[j]!=i) && (vertices->val[NJA[j]] < UNPT) && (count<max_aggregation) ) {
                         vertices->val[NJA[j]] = *num_aggregations;
                         num_left--;
                         count++;
