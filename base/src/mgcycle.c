@@ -27,7 +27,7 @@ INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
 /**
  * \fn void fasp_solver_mgcycle (AMG_data *mgl, AMG_param *param)
  *
- * \brief Solve Ax=b with non-recursive multigrid cycle 
+ * \brief Solve Ax=b with non-recursive multigrid cycle
  *
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
@@ -38,10 +38,10 @@ INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
  * Modified by Chensong Zhang on 12/13/2011
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
-void fasp_solver_mgcycle (AMG_data *mgl, 
+void fasp_solver_mgcycle (AMG_data *mgl,
                           AMG_param *param)
-{    
-    const SHORT  amg_type=param->AMG_type;
+{
+    const SHORT  amg_type = param->AMG_type;
     const SHORT  prtlvl = param->print_level;
     const SHORT  smoother = param->smoother;
     const SHORT  smooth_order = param->smooth_order;
@@ -55,24 +55,24 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     REAL alpha = 1.0;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_mgcycle ...... [Start]\n");
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
     
-    if (prtlvl >= PRINT_MOST) 
+    if ( prtlvl >= PRINT_MOST )
         printf("MG: AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
     
     INT num_lvl[MAX_AMG_LVL] = {0}, l = 0;
     
- ForwardSweep:
-    while (l<nl-1) { 
+ForwardSweep:
+    while ( l < nl-1 ) {
         num_lvl[l]++;
-    
+        
         // pre smoothing
-        if (l<param->ILU_levels) {
+        if ( l < param->ILU_levels ) {
             fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
-        else if (l<mgl->schwarz_levels) {
+        else if ( l < mgl->schwarz_levels ) {
 			switch (mgl[l].schwarz.schwarz_type) {
 				case 3:
 					fbgs2ns_(&(mgl[l].schwarz.A.row),
@@ -124,7 +124,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 					break;
 			}
 		}
-
+        
         else {
 #if FASP_GSRB
 	        if (( l==0 )&&(nx_rb>1))
@@ -141,27 +141,28 @@ void fasp_solver_mgcycle (AMG_data *mgl,
                                    relax, ndeg, smooth_order, mgl[l].cfmark.val);
 #endif
         }
-    
+        
         // form residual r = b - A x
-        fasp_array_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val); 
+        fasp_array_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
         fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
-    
+        
         // restriction r1 = R*r0
-        switch (amg_type) {    
-        case UA_AMG: 
-            fasp_blas_dcsr_mxv_agg(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val);
-            break;
-        default:
-            fasp_blas_dcsr_mxv(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val);
-            break;
+        switch (amg_type) {
+            case UA_AMG:
+                fasp_blas_dcsr_mxv_agg(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val);
+                break;
+            default:
+                fasp_blas_dcsr_mxv(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val);
+                break;
         }
-    
+        
         // prepare for the next level
-        ++l; fasp_dvec_set(mgl[l].A.row, &mgl[l].x, 0.0);    
+        ++l; fasp_dvec_set(mgl[l].A.row, &mgl[l].x, 0.0);
+        
+    }
     
-    }    
-    
-    // CoarseSpaceSolver:    
+    // If AMG only has one level or we have arrived at the coarsest level,
+    // call the coarse space solver:
     {
 #if   WITH_MUMPS
         /* use MUMPS direct solver on the coarsest level */
@@ -173,38 +174,38 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 #elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
-#else    
+#else
         /* use iterative solver on the coarest level */
         fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
 #endif
     }
     
-    // BackwardSweep: 
-    while (l>0) { 
-    
+    // BackwardSweep:
+    while ( l > 0 ) {
+        
         --l;
-    
+        
         // find the optimal scaling factor alpha
         if ( param->coarse_scaling == ON ) {
             alpha = fasp_blas_array_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
-                / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
+            / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
         }
-    
+        
         // prolongation u = u + alpha*P*e1
         switch (amg_type) {
-        case UA_AMG:
-            fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
-            break;
-        default:
-            fasp_blas_dcsr_aAxpy(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
-            break;
+            case UA_AMG:
+                fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
+                break;
+            default:
+                fasp_blas_dcsr_aAxpy(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
+                break;
         }
-    
+        
         // post-smoothing
-        if (l<param->ILU_levels) {
+        if ( l < param->ILU_levels ) {
             fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
-        else if (l<mgl->schwarz_levels) {
+        else if ( l < mgl->schwarz_levels ) {
 			switch (mgl[l].schwarz.schwarz_type) {
                 case 3:
                     bbgs2ns_(&(mgl[l].schwarz.A.row),
@@ -257,9 +258,9 @@ void fasp_solver_mgcycle (AMG_data *mgl,
                     break;
 			}
 		}
-
+        
         else {
-
+            
 #if FASP_GSRB
 	        if (( l==0 )&&(nx_rb>1))
 				fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
@@ -275,58 +276,61 @@ void fasp_solver_mgcycle (AMG_data *mgl,
                                     relax, ndeg, smooth_order, mgl[l].cfmark.val);
 #endif
         }
-    
-        if (num_lvl[l]<cycle_type) break;
+        
+        if ( num_lvl[l] < cycle_type ) break;
         else num_lvl[l] = 0;
     }
     
-    if (l>0) goto ForwardSweep;
+    if ( l > 0 ) goto ForwardSweep;
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_mgcycle ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
+    
 }
 
 /**
  * \fn void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl, AMG_param *param)
  *
- * \brief Solve Ax=b with non-recursive multigrid cycle 
+ * \brief Solve Ax=b with non-recursive multigrid cycle
  *
  * \param mgl    Pointer to AMG data: AMG_data_bsr
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \author Xiaozhe Hu 
+ * \author Xiaozhe Hu
  * \date   08/07/2011
  */
-void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl, 
+void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
                               AMG_param *param)
-{    
+{
     const SHORT prtlvl      = param->print_level;
     const SHORT nl          = mgl[0].num_levels;
     const SHORT smoother    = param->smoother;
-    const SHORT cycle_type  = param->cycle_type;    
+    const SHORT cycle_type  = param->cycle_type;
     const REAL  relax       = param->relaxation;
-          INT   steps       = param->presmooth_iter;
+    INT   steps             = param->presmooth_iter;
     
     // local variables
     INT nu_l[MAX_AMG_LVL] = {0}, l = 0;
     REAL alpha = 1.0;
     INT i;
-
-    dvector r_nk, z_nk;
-
-    if (mgl[0].A_nk != NULL){
     
+    dvector r_nk, z_nk;
+    
+    if ( mgl[0].A_nk != NULL ) {
         fasp_dvec_alloc(mgl[0].A_nk->row, &r_nk);
         fasp_dvec_alloc(mgl[0].A_nk->row, &z_nk);
-        
     }
-    
+
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
     if (prtlvl >= PRINT_MOST)
         printf("AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
-
- ForwardSweep:
-    while (l<nl-1) { 
+    
+ForwardSweep:
+    while ( l < nl-1 ) {
         nu_l[l]++;
         // pre smoothing
         if (l<param->ILU_levels) {
@@ -337,35 +341,35 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         else {
             if (steps > 0) {
                 switch (smoother) {
-                case SMOOTHER_JACOBI:
-                    for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_jacobi1(&mgl[l].A,&mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
-                    break;
-                case SMOOTHER_GS:
-                    for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
-                    break;
-                case SMOOTHER_SGS:
-                    for (i=0; i<steps; i++){
-                        fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
-                        fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
-                    }
+                    case SMOOTHER_JACOBI:
+                        for (i=0; i<steps; i++)
+                            fasp_smoother_dbsr_jacobi1(&mgl[l].A,&mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
                         break;
-                case SMOOTHER_SOR:
-                    for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
-                    break;
-                case SMOOTHER_SSOR:
-                    for (i=0; i<steps; i++)
-                        fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                    case SMOOTHER_GS:
+                        for (i=0; i<steps; i++)
+                            fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                        break;
+                    case SMOOTHER_SGS:
+                        for (i=0; i<steps; i++){
+                            fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                        }
+                        break;
+                    case SMOOTHER_SOR:
+                        for (i=0; i<steps; i++)
+                            fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                        break;
+                    case SMOOTHER_SSOR:
+                        for (i=0; i<steps; i++)
+                            fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
                         fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
-                    break;
-                default:
-                    printf("### ERROR: Wrong smoother type %d!\n", smoother);
+                        break;
+                    default:
+                        printf("### ERROR: Wrong smoother type %d!\n", smoother);
                     exit(ERROR_INPUT_PAR);                }
             }
         }
-    
+        
         // extra kernel solve
         if (mgl[l].A_nk != NULL) {
             //--------------------------------------------
@@ -374,35 +378,36 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
             // form residual r = b - A x
             fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
             fasp_blas_dbsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
-        
+            
             // r_nk = R_nk*r
             fasp_blas_dcsr_mxv(mgl[l].R_nk, mgl[l].w.val, r_nk.val);
-        
+            
             // z_nk = A_nk^{-1}*r_nk
 #if WITH_UMFPACK // use UMFPACK directly
             fasp_solver_umfpack(mgl[l].A_nk, &r_nk, &z_nk, 0);
 #else
             fasp_coarse_itsolver(mgl[l].A_nk, &r_nk, &z_nk, 1e-12, 0);
 #endif
-        
+            
             // z = z + P_nk*z_nk;
             fasp_blas_dcsr_aAxpy(1.0, mgl[l].P_nk, z_nk.val, mgl[l].x.val);
             //--------------------------------------------
         }
         
         // form residual r = b - A x
-        fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val); 
+        fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
         fasp_blas_dbsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
-    
+        
         // restriction r1 = R*r0
         fasp_blas_dbsr_mxv(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val);
-    
+        
         // prepare for the next level
-        ++l; fasp_dvec_set(mgl[l].A.ROW*mgl[l].A.nb, &mgl[l].x, 0.0);    
+        ++l; fasp_dvec_set(mgl[l].A.ROW*mgl[l].A.nb, &mgl[l].x, 0.0);
+        
+    }
     
-    }    
-    
-    // CoarseSpaceSolver:    
+    // If AMG only has one level or we have arrived at the coarsest level,
+    // call the coarse space solver:
     {
 #if   WITH_MUMPS
         /* use MUMPS direct solver on the coarsest level */
@@ -414,7 +419,7 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
 #elif WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         fasp_solver_superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
-#else    
+#else
         /* use iterative solver on the coarest level */
         const INT  csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
         const INT  cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
@@ -422,25 +427,25 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         if ( fasp_solver_dbsr_pvgmres(&mgl[nl-1].A,&mgl[nl-1].b,&mgl[nl-1].x,NULL,ctol,cmaxit,25,1,0)<0 ) {
             printf("### WARNING: Coarse level solver does not converge in %d iterations!\n", cmaxit);
         }
-#endif 
+#endif
     }
     
-    // BackwardSweep: 
-    while (l>0) { 
+    // BackwardSweep:
+    while ( l > 0 ) {
         --l;
-    
+        
         // prolongation u = u + alpha*P*e1
         if ( param->coarse_scaling == ON ) {
             dvector PeH, Aeh;
-            PeH.row = Aeh.row = mgl[l].b.row; 
+            PeH.row = Aeh.row = mgl[l].b.row;
             PeH.val = mgl[l].w.val + mgl[l].b.row;
             Aeh.val = PeH.val + mgl[l].b.row;
-    
+            
             fasp_blas_dbsr_mxv (&mgl[l].P, mgl[l+1].x.val,  PeH.val);
             fasp_blas_dbsr_mxv (&mgl[l].A, PeH.val, Aeh.val);
-    
+            
             alpha = (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, mgl[l].w.val))
-                / (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, Aeh.val));
+            / (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, Aeh.val));
             fasp_blas_array_axpy (mgl[l].b.row, alpha, PeH.val, mgl[l].x.val);
         }
         else {
@@ -472,49 +477,53 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         }
         
         // post-smoothing
-        if (l<param->ILU_levels) {
+        if ( l < param->ILU_levels ) {
             fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
-            for (i=0; i<steps; i++)
+            for ( i=0; i<steps; i++ )
                 fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
         }
-        else {    
-            if (steps > 0) {
+        else {
+            if ( steps > 0 ) {
                 switch (smoother) {
-                case SMOOTHER_JACOBI:
-                    for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_jacobi1(&mgl[l].A,&mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
-                    break;
-                case SMOOTHER_GS:
-                    for (i=0; i<steps; i++) 
-                        fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
-                    break;
-                case SMOOTHER_SGS:
-                    for (i=0; i<steps; i++){
-                        fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
-                        fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
-                    }
-                    break;
-                case SMOOTHER_SOR:
-                    for (i=0; i<steps; i++) 
+                    case SMOOTHER_JACOBI:
+                        for (i=0; i<steps; i++)
+                            fasp_smoother_dbsr_jacobi1(&mgl[l].A,&mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                        break;
+                    case SMOOTHER_GS:
+                        for (i=0; i<steps; i++)
+                            fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                        break;
+                    case SMOOTHER_SGS:
+                        for (i=0; i<steps; i++){
+                            fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                        }
+                        break;
+                    case SMOOTHER_SOR:
+                        for (i=0; i<steps; i++)
+                            fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                        break;
+                    case SMOOTHER_SSOR:
+                        for (i=0; i<steps; i++)
+                            fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
                         fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
-                    break;
-                case SMOOTHER_SSOR:
-                    for (i=0; i<steps; i++)
-                        fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
-                        fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
-                    break;
-                default:
-                    printf("### ERROR: Wrong smoother type %d!\n", smoother);
-                    exit(ERROR_INPUT_PAR);
+                        break;
+                    default:
+                        printf("### ERROR: Wrong smoother type %d!\n", smoother);
+                        exit(ERROR_INPUT_PAR);
                 }
             }
         }
-    
-        if (nu_l[l]<cycle_type) break;
+        
+        if ( nu_l[l] < cycle_type ) break;
         else nu_l[l] = 0;
     }
     
-    if (l>0) goto ForwardSweep;
+    if ( l > 0 ) goto ForwardSweep;
+    
+#if DEBUG_MODE
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
     
 }
 

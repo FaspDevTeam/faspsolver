@@ -72,8 +72,8 @@ INT fasp_amg_solve (AMG_data *mgl,
 #endif
         
         // Form residual r = b - A*x
-        fasp_dvec_cp(b,r);
-        fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);
+        fasp_dvec_cp(b, r);
+        fasp_blas_dcsr_aAxpy(-1.0, ptrA, x->val, r->val);
         
         // Compute norms of r and convergence factor
         absres  = fasp_blas_dvec_norm2(r); // residual ||r||
@@ -150,8 +150,8 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
         fasp_solver_amli(mgl, param, 0);
         
         // Form residual r = b-A*x
-        fasp_dvec_cp(b,r);
-        fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);
+        fasp_dvec_cp(b, r);
+        fasp_blas_dcsr_aAxpy(-1.0, ptrA, x->val, r->val);
         
         // Compute norms of r and convergence factor
         absres  = fasp_blas_dvec_norm2(r); // residual ||r||
@@ -228,8 +228,8 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
         fasp_solver_nl_amli(mgl, param, 0, mgl[0].num_levels);
         
         // r = b-A*x
-        fasp_dvec_cp(b,r);
-        fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);
+        fasp_dvec_cp(b, r);
+        fasp_blas_dcsr_aAxpy(-1.0, ptrA, x->val, r->val);
         
         absres  = fasp_blas_dvec_norm2(r); // residual ||r||
         relres1 = absres/sumb;       // relative residual ||r||/||b||
@@ -292,8 +292,8 @@ void fasp_famg_solve (AMG_data *mgl,
     fasp_solver_fmgcycle(mgl, param);
     
     // Form residual r = b-A*x
-    fasp_dvec_cp(b,r);
-    fasp_blas_dcsr_aAxpy(-1.0,ptrA,x->val,r->val);
+    fasp_dvec_cp(b, r);
+    fasp_blas_dcsr_aAxpy(-1.0, ptrA, x->val, r->val);
     
     // Compute norms of r and convergence factor
     absres  = fasp_blas_dvec_norm2(r); // residual ||r||

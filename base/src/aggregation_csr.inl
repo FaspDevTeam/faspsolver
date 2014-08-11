@@ -476,7 +476,6 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
 
         if ( num_agg < MIN_CDOF ) {
             printf("### WARNING: Could not find enough aggregates in the first pass!\n");
-            printf("### WARNING: the matrix might be diagonal matrix!\n");
             status = ERROR_AMG_COARSEING;
 	        goto END;
         }
@@ -670,8 +669,8 @@ static SHORT aggregation_vmb (dCSRmat *A,
     /*-------------*/
     INT *temp_C = (INT*)fasp_mem_calloc(row,sizeof(INT));
 
-    if (*num_aggregations < MIN_CDOF){
-        printf("WWARNING -- did not find any aggregate in the first round, the matrix might be diagonal matrix\n");
+    if (*num_aggregations < MIN_CDOF) {
+        printf("### WARNING: Could not find enough aggregates in the first pass!\n");
         status = ERROR_AMG_COARSEING;
 	    goto END;
     }
