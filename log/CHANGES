@@ -1,10 +1,11 @@
 File Name: CHANGES
 
-08/10/2014 FASP 1.5.6:
+08/11/2014 FASP 1.5.6:
 - Handling errors when RS coarsening does not succeed. 
 - Handling errors when Pairwise aggreation does not succeed. 
 - Handling errors when VMB aggreation does not succeed. 
 - When AMG setup fail on the finest level, use coarse solver.
+- Check max level and make sure allocate at least one level.
 - Uniformize debug output format.
 - Change adaptive GMRES (various versions) restart number.
 - Remove unused *_omp() functions.

@@ -65,8 +65,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
-           mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
+    printf("### DEBUG: n = %d, nnz = %d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
     
     fasp_gettime(&setup_start);
