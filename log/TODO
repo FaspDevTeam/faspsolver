@@ -37,7 +37,6 @@ Structure
 [ 1.4.2 ] add command line options
 [ 1.4.3 ] set DEBUG_MODE in Makefile instead of the header file
 [       ] allow users to set compilers, e.g. using CC, CXX (Chensong)
-[       ] make several functions 'standalone', e.g. use PCG alone (Chensong)
 [       ] fix problem with UMFPACK when it is installed alone without CHOLMOD
 [       ] fix problem with MUMPS: cannot find package
 
@@ -66,9 +65,9 @@ AMG
 [       ] AMG based on mesh information
 
 [ 0.9.0 ] aggressive coarsening strategies (Xiaozhe)
+[ 1.5.0 ] Notay's aggregation scheme
 [       ] aggregation based on MIS (Xiaozhe)
 [       ] cleanup the compatible coarsening (Xiaozhe)
-[       ] Notay's aggregation scheme (Xiaozhe)
 [       ] LAMG's aggregation scheme (Xiaozhe)
 
 [ 0.8.6 ] standard interpolation
@@ -88,7 +87,7 @@ Iterative Methods
 [ 0.7.8 ] reduced duplications in iterative methods
 [ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
-[       ] add safer Krylov iterative methods and improve efficiency (Chensong)
+[ 1.3.5 ] add safer Krylov iterative methods and improve efficiency
 [       ] add support for SymCSR format
 [       ] further study CSRL format and extend it
 
@@ -176,12 +175,11 @@ Bug Fixes
 [ 1.1.4 ] fix a bug in OMP EM-AMG
 [ 1.1.5 ] fix a potential bug in SA setup
 [ 1.2.0 ] Windows release version: MINRES gives wrong results, check compiler
+[ 1.2.0 ] MinRes sometimes takes too many iterations, see regression.c
 [ 1.2.4 ] MUMPS: 64bit version does not work, replaced with a new version
 [ 1.2.5 ] VGMRES: "restart" could become too big
 [ 1.5.2 ] divide by zero in BiCGstab, see regression.c
 [       ] AMG setup: number of DOF could drop dramatically
-[       ] different results on different platforms
 [       ] problems with BSR test function: see testbsr.c
 [       ] check convergence for problems from MM: see regression_mm.c
 [       ] memory allocation problem in testbsr.c: during ILU setup
-[       ] MinRes sometimes takes too many iterations, see regression.c

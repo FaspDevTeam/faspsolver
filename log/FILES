@@ -1,20 +1,20 @@
      560 ./base/include/dlmalloc.h
      170 ./base/include/doxygen.h
-    1129 ./base/include/fasp.h
+    1124 ./base/include/fasp.h
      672 ./base/include/fasp_block.h
-    2851 ./base/include/fasp_functs.h
+    2848 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
     5818 ./base/include/malloc.c.h
-     232 ./base/include/messages.h
+     233 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
      274 ./base/src/factor.f
     1207 ./base/src/schwarz.f
      144 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
-     442 ./base/src/amg_setup_rs.c
-     726 ./base/src/amg_setup_sa.c
-     549 ./base/src/amg_setup_ua.c
+     236 ./base/src/amg_setup_rs.c
+     753 ./base/src/amg_setup_sa.c
+     571 ./base/src/amg_setup_ua.c
      317 ./base/src/amg_solve.c
      807 ./base/src/amlirecur.c
      271 ./base/src/array.c
@@ -32,7 +32,7 @@
     1947 ./base/src/coarsening_rs.c
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
-     110 ./base/src/famg.c
+     106 ./base/src/famg.c
      285 ./base/src/fmgcycle.c
     1145 ./base/src/formats.c
       80 ./base/src/givens.c
@@ -41,7 +41,7 @@
      422 ./base/src/ilu_setup_bsr.c
      182 ./base/src/ilu_setup_csr.c
     1258 ./base/src/ilu_setup_str.c
-     306 ./base/src/init.c
+     309 ./base/src/init.c
      754 ./base/src/input.c
     1387 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
@@ -54,7 +54,7 @@
      171 ./base/src/lu.c
      256 ./base/src/memory.c
      285 ./base/src/message.c
-     523 ./base/src/mgcycle.c
+     532 ./base/src/mgcycle.c
      126 ./base/src/mgrecur.c
      391 ./base/src/ordering.c
      968 ./base/src/parameters.c
@@ -64,18 +64,18 @@
      337 ./base/src/pcg_mf.c
      172 ./base/src/pgcg.c
      180 ./base/src/pgcg_mf.c
-    1353 ./base/src/pgmres.c
-     295 ./base/src/pgmres_mf.c
+    1370 ./base/src/pgmres.c
+     300 ./base/src/pgmres_mf.c
     1284 ./base/src/pminres.c
      458 ./base/src/pminres_mf.c
      665 ./base/src/precond_bcsr.c
      725 ./base/src/precond_bsr.c
-     684 ./base/src/precond_csr.c
+     676 ./base/src/precond_csr.c
     1732 ./base/src/precond_str.c
-     997 ./base/src/pvfgmres.c
-     341 ./base/src/pvfgmres_mf.c
-    1373 ./base/src/pvgmres.c
-     342 ./base/src/pvgmres_mf.c
+     985 ./base/src/pvfgmres.c
+     340 ./base/src/pvfgmres_mf.c
+    1369 ./base/src/pvgmres.c
+     341 ./base/src/pvgmres_mf.c
      874 ./base/src/quadrature.c
      116 ./base/src/rap.c
      177 ./base/src/schwarz_setup.c
@@ -102,9 +102,9 @@
      465 ./base/src/vec.c
      300 ./base/src/wrapper.c
      398 ./base/src/aggregation_bsr.inl
-     728 ./base/src/aggregation_csr.inl
+     740 ./base/src/aggregation_csr.inl
     2302 ./base/src/gmg_util.inl
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   88817 total
+   88669 total
