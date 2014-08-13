@@ -55,7 +55,7 @@
 # If you want to specify the path to SparseSuite, uncomment the next 
 # line and give the correct path to SparseSuite here. For example:
 #
-#suitesparse_dir="/home/stone/Tests/SuiteSparse"
+# suitesparse_dir="/dir/to/SuiteSparse"
 #-------------------------------------------------------------------------
 # If you want to use SuperLU, uncomment the next line:
 #

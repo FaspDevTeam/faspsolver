@@ -333,6 +333,9 @@ typedef struct {
     //! relaxation parameter for SOR smoother
 	REAL relaxation;
 	
+    //! coarse solver type for AMG
+	SHORT coarse_solver;
+    
     //! switch of scaling of the coarse grid correction
 	SHORT coarse_scaling;
 	

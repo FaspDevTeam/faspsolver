@@ -53,6 +53,7 @@ SHORT fasp_param_check (input_param *inparam)
         || inparam->AMG_maxit<0
         || inparam->AMG_coarsening_type<=0
         || inparam->AMG_coarsening_type>4
+        || inparam->AMG_coarse_solver<0
         || inparam->AMG_interpolation_type<0
         || inparam->AMG_interpolation_type>5
         || inparam->AMG_smoother<0
@@ -334,6 +335,17 @@ void fasp_param_input (const char *filenm,
             fgets(buffer,500,fp); // skip rest of line
         }
     
+        else if (strcmp(buffer,"AMG_coarse_solver")==0) {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%d",&ibuff);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+            inparam->AMG_coarse_solver = ibuff;
+            fgets(buffer,500,fp); // skip rest of line
+        }
+
         else if (strcmp(buffer,"AMG_coarse_scaling")==0) {
             val = fscanf(fp,"%s",buffer);
             if (val!=1 || strcmp(buffer,"=")!=0) {

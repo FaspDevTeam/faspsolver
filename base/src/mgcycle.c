@@ -41,11 +41,12 @@ INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
 void fasp_solver_mgcycle (AMG_data *mgl,
                           AMG_param *param)
 {
-    const SHORT  amg_type = param->AMG_type;
     const SHORT  prtlvl = param->print_level;
+    const SHORT  amg_type = param->AMG_type;
     const SHORT  smoother = param->smoother;
     const SHORT  smooth_order = param->smooth_order;
     const SHORT  cycle_type = param->cycle_type;
+    const SHORT  coarse_solver = param->coarse_solver;
     const SHORT  nl = mgl[0].num_levels;
     const REAL   relax = param->relaxation;
     const REAL   tol = param->tol * 1e-4;
@@ -54,7 +55,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     // local variables
     REAL alpha = 1.0;
     INT  num_lvl[MAX_AMG_LVL] = {0}, l = 0;
-
+    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
@@ -63,7 +64,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 #if DEBUG_MODE
     printf("### DEBUG: AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
 #endif
-
+    
 ForwardSweep:
     while ( l < nl-1 ) {
         num_lvl[l]++;
@@ -163,21 +164,33 @@ ForwardSweep:
     
     // If AMG only has one level or we have arrived at the coarsest level,
     // call the coarse space solver:
-    {
-#if   WITH_MUMPS
-        /* use MUMPS direct solver on the coarsest level */
-        fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 2);
-		//  fasp_solver_mumps (&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
-#elif WITH_UMFPACK
-        /* use UMFPACK direct solver on the coarsest level */
-        fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
-#elif WITH_SuperLU
+    switch (coarse_solver) {
+            
+#if WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
-        fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
-#else
-        /* use iterative solver on the coarest level */
-        fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
+        case SOLVER_SUPERLU:
+            fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+            break;
 #endif
+            
+#if WITH_UMFPACK
+        /* use UMFPACK direct solver on the coarsest level */
+        case SOLVER_UMFPACK:
+            fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+            break;
+#endif
+            
+#if WITH_MUMPS
+        /* use MUMPS direct solver on the coarsest level */
+        case SOLVER_MUMPS:
+            fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 2);
+            break;
+#endif
+            
+        /* use iterative solver on the coarest level */
+        default:
+            fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
+            
     }
     
     // BackwardSweep:
@@ -303,12 +316,13 @@ ForwardSweep:
 void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
                               AMG_param *param)
 {
-    const SHORT prtlvl      = param->print_level;
-    const SHORT nl          = mgl[0].num_levels;
-    const SHORT smoother    = param->smoother;
-    const SHORT cycle_type  = param->cycle_type;
-    const REAL  relax       = param->relaxation;
-    INT   steps             = param->presmooth_iter;
+    const SHORT prtlvl        = param->print_level;
+    const SHORT nl            = mgl[0].num_levels;
+    const SHORT smoother      = param->smoother;
+    const SHORT cycle_type    = param->cycle_type;
+    const SHORT coarse_solver = param->coarse_solver;
+    const REAL  relax         = param->relaxation;
+    INT   steps               = param->presmooth_iter;
     
     // local variables
     INT nu_l[MAX_AMG_LVL] = {0}, l = 0;
@@ -321,11 +335,11 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         fasp_dvec_alloc(mgl[0].A_nk->row, &r_nk);
         fasp_dvec_alloc(mgl[0].A_nk->row, &z_nk);
     }
-
+    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
-
+    
     if (prtlvl >= PRINT_MOST)
         printf("AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
     
@@ -408,26 +422,39 @@ ForwardSweep:
     
     // If AMG only has one level or we have arrived at the coarsest level,
     // call the coarse space solver:
-    {
-#if   WITH_MUMPS
+    switch (coarse_solver) {
+            
+#if WITH_MUMPS
         /* use MUMPS direct solver on the coarsest level */
-        fasp_solver_mumps(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
-#elif WITH_UMFPACK
-        /* use UMFPACK direct solver on the coarsest level */
-        //fasp_solver_umfpack(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
-        fasp_umfpack_solve(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
-#elif WITH_SuperLU
-        /* use SuperLU direct solver on the coarsest level */
-        fasp_solver_superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
-#else
-        /* use iterative solver on the coarest level */
-        const INT  csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
-        const INT  cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
-        const REAL ctol = param->tol; // coarse level tolerance
-        if ( fasp_solver_dbsr_pvgmres(&mgl[nl-1].A,&mgl[nl-1].b,&mgl[nl-1].x,NULL,ctol,cmaxit,25,1,0)<0 ) {
-            printf("### WARNING: Coarse level solver does not converge in %d iterations!\n", cmaxit);
-        }
+        case SOLVER_MUMPS:
+            fasp_solver_mumps(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+            break;
 #endif
+            
+#if WITH_UMFPACK
+        /* use UMFPACK direct solver on the coarsest level */
+        case SOLVER_UMFPACK:
+            fasp_umfpack_solve(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
+            break;
+#endif
+            
+#if WITH_SuperLU
+        /* use SuperLU direct solver on the coarsest level */
+        case SOLVER_SUPERLU:
+            fasp_solver_superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+            break;
+#endif
+            
+        /* use iterative solver on the coarest level */
+        default: {
+            const INT  csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
+            const INT  cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
+            const REAL ctol = param->tol; // coarse level tolerance
+            if ( fasp_solver_dbsr_pvgmres(&mgl[nl-1].A,&mgl[nl-1].b,&mgl[nl-1].x,
+                                          NULL,ctol,cmaxit,25,1,0)<0 ) {
+                printf("### WARNING: Coarse level solver does not converge in %d iterations!\n", cmaxit);
+            }
+        }
     }
     
     // BackwardSweep:

@@ -1,12 +1,12 @@
      560 ./base/include/dlmalloc.h
      170 ./base/include/doxygen.h
-    1124 ./base/include/fasp.h
-     672 ./base/include/fasp_block.h
+    1131 ./base/include/fasp.h
+     675 ./base/include/fasp_block.h
     2848 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
     5818 ./base/include/malloc.c.h
-     233 ./base/include/messages.h
+     232 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
      274 ./base/src/factor.f
     1207 ./base/src/schwarz.f
@@ -16,7 +16,7 @@
      753 ./base/src/amg_setup_sa.c
      571 ./base/src/amg_setup_ua.c
      317 ./base/src/amg_solve.c
-     807 ./base/src/amlirecur.c
+     849 ./base/src/amlirecur.c
      271 ./base/src/array.c
      258 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
@@ -33,7 +33,7 @@
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
      106 ./base/src/famg.c
-     285 ./base/src/fmgcycle.c
+     331 ./base/src/fmgcycle.c
     1145 ./base/src/formats.c
       80 ./base/src/givens.c
     1011 ./base/src/gmg_poisson.c
@@ -42,7 +42,7 @@
      182 ./base/src/ilu_setup_csr.c
     1258 ./base/src/ilu_setup_str.c
      309 ./base/src/init.c
-     754 ./base/src/input.c
+     766 ./base/src/input.c
     1387 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
     3231 ./base/src/io.c
@@ -54,10 +54,10 @@
      171 ./base/src/lu.c
      256 ./base/src/memory.c
      285 ./base/src/message.c
-     532 ./base/src/mgcycle.c
-     126 ./base/src/mgrecur.c
+     559 ./base/src/mgcycle.c
+     141 ./base/src/mgrecur.c
      391 ./base/src/ordering.c
-     968 ./base/src/parameters.c
+     975 ./base/src/parameters.c
     1421 ./base/src/pbcgs.c
      408 ./base/src/pbcgs_mf.c
     1186 ./base/src/pcg.c
@@ -107,4 +107,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   88669 total
+   88827 total
