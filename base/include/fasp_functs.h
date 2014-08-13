@@ -1195,10 +1195,10 @@ void fasp_chkerr (const SHORT status,
 
 /*-------- In file: mgcycle.c --------*/
 
-void fasp_solver_mgcycle (AMG_data *mgl, 
+void fasp_solver_mgcycle (AMG_data *mgl,
                           AMG_param *param);
 
-void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl, 
+void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
                               AMG_param *param);
 
 
@@ -2828,21 +2828,21 @@ int fasp_solver_superlu (dCSRmat *ptrA,
 
 /*-------- In file: interface_umfpack.c --------*/
 
-int fasp_solver_umfpack (dCSRmat *ptrA,
+INT fasp_solver_umfpack (dCSRmat *ptrA,
                          dvector *b,
                          dvector *u,
-                         const int print_level);
+                         const INT print_level);
 
 void* fasp_umfpack_factorize (dCSRmat *ptrA,
-                       const int print_level);
+                              const INT print_level);
 
-int fasp_umfpack_solve (dCSRmat *ptrA,
-                   dvector *b,
-                   dvector *u,
-                   void *Numeric,
-                   const int print_level);
+INT fasp_umfpack_solve (dCSRmat *ptrA,
+                        dvector *b,
+                        dvector *u,
+                        void *Numeric,
+                        const INT print_level);
 
-int fasp_umfpack_free_numeric (void *Numeric);
+INT fasp_umfpack_free_numeric (void *Numeric);
 
  
 /* End of fasp_functs.h */

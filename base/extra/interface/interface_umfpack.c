@@ -16,8 +16,8 @@
 /*---------------------------------*/
 
 /**
- * \fn int fasp_solver_umfpack (dCSRmat *ptrA, dvector *b, dvector *u, 
- *                              const int print_level)
+ * \fn INT fasp_solver_umfpack (dCSRmat *ptrA, dvector *b, dvector *u, 
+ *                              const INT print_level)
  *
  * \brief Solve Au=b by UMFpack
  *
@@ -31,26 +31,26 @@
  *
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
  */
-int fasp_solver_umfpack (dCSRmat *ptrA,
+INT fasp_solver_umfpack (dCSRmat *ptrA,
                          dvector *b,
                          dvector *u,
-                         const int print_level)
+                         const INT print_level)
 {
     
 #if WITH_UMFPACK
     
-	const int n = ptrA->col;
-	const int m = ptrA->row;
-	const int nnz = ptrA->nnz;
+	const INT n = ptrA->col;
+	const INT m = ptrA->row;
+	const INT nnz = ptrA->nnz;
 	
-	int *Ap = ptrA->IA;
-	int *Ai = ptrA->JA;
+	INT *Ap = ptrA->IA;
+	INT *Ai = ptrA->JA;
 	double *Ax = ptrA->val;
 	void *Symbolic, *Numeric;
-	int status=FASP_SUCCESS;
+	INT status = FASP_SUCCESS;
 	
 #if DEBUG_MODE
-	printf("### DEBUG: fasp_solver_umfpack ...... [Start]\n");
+	printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
@@ -69,7 +69,7 @@ int fasp_solver_umfpack (dCSRmat *ptrA,
 	}
 	
 #if DEBUG_MODE
-	printf("### DEBUG: fasp_solver_umfpack ...... [Finish]\n");
+	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
 	return status;
@@ -86,8 +86,8 @@ int fasp_solver_umfpack (dCSRmat *ptrA,
 #if WITH_UMFPACK
 
 /**
- * \fn int fasp_umfpack_factorize (dCSRmat *ptrA, dvector *b, dvector *u,
- *                            const int print_level)
+ * \fn void* fasp_umfpack_factorize (dCSRmat *ptrA, dvector *b, dvector *u,
+ *                                 const INT print_level)
  * \brief factorize A by UMFpack
  *
  * \param ptrA      pointer to stiffness matrix of levelNum levels
@@ -95,26 +95,25 @@ int fasp_solver_umfpack (dCSRmat *ptrA,
  *
  * \author Xiaozhe Hu
  * \date   10/20/2010
- * \date   05/02/2014  -- modified by Xiaozhe Hu
  *
- *
+ * Modified by Xiaozhe Hu on 05/02/2014
  */
 void* fasp_umfpack_factorize (dCSRmat *ptrA,
-                       const int print_level)
+                              const INT print_level)
 {
-	const int n = ptrA->col;
-	const int m = ptrA->row;
-	const int nnz = ptrA->nnz;
+	const INT n = ptrA->col;
+	const INT m = ptrA->row;
+	const INT nnz = ptrA->nnz;
 	
-	int *Ap = ptrA->IA;
-	int *Ai = ptrA->JA;
+	INT *Ap = ptrA->IA;
+	INT *Ai = ptrA->JA;
 	double *Ax = ptrA->val;
 	void *Symbolic;
     void *Numeric;
-	int status=FASP_SUCCESS;
+	INT status = FASP_SUCCESS;
 	
 #if DEBUG_MODE
-	printf("### DEBUG: umfpack_factorize ...... [Start]\n");
+	printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
@@ -131,15 +130,15 @@ void* fasp_umfpack_factorize (dCSRmat *ptrA,
 	}
 	
 #if DEBUG_MODE
-	printf("### DEBUG: umfpack_factorize ...... [Finish]\n");
+	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
     return Numeric;
 }
 
 /**
- * \fn int fasp_umfpack_solve (dCSRmat *ptrA, dvector *b, dvector *u,
- *                        void *Numeric, const int print_level)
+ * \fn INT fasp_umfpack_solve (dCSRmat *ptrA, dvector *b, dvector *u,
+ *                             void *Numeric, const INT print_level)
  * \brief Solve Au=b by UMFpack, numerical factorization is given
  *
  * \param ptrA      pointer to stiffness matrix of levelNum levels
@@ -149,27 +148,26 @@ void* fasp_umfpack_factorize (dCSRmat *ptrA,
  *
  * \author Xiaozhe Hu
  * \date   10/20/2010
- * \date   05/02/2014 -- modified by Xiaozhe
- *
+ * 
+ * Modified by Xiaozhe on 05/10/2014
  */
-
-int fasp_umfpack_solve (dCSRmat *ptrA,
-                   dvector *b,
-                   dvector *u,
-                   void *Numeric,
-                   const int print_level)
+INT fasp_umfpack_solve (dCSRmat *ptrA,
+                        dvector *b,
+                        dvector *u,
+                        void *Numeric,
+                        const INT print_level)
 {
-	const int n = ptrA->col;
-	const int m = ptrA->row;
-	const int nnz = ptrA->nnz;
+	const INT n = ptrA->col;
+	const INT m = ptrA->row;
+	const INT nnz = ptrA->nnz;
 	
-	int *Ap = ptrA->IA;
-	int *Ai = ptrA->JA;
+	INT *Ap = ptrA->IA;
+	INT *Ai = ptrA->JA;
 	double *Ax = ptrA->val;
-	int status=FASP_SUCCESS;
+	INT status = FASP_SUCCESS;
 	
 #if DEBUG_MODE
-	printf("### DEBUG: umfpack_solve ...... [Start]\n");
+	printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 	printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
@@ -184,14 +182,14 @@ int fasp_umfpack_solve (dCSRmat *ptrA,
 	}
 	
 #if DEBUG_MODE
-	printf("### DEBUG: umfpack_solve ...... [Finish]\n");
+	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
 	return status;
 }
 
 /**
- * \fn int fasp_umfpack_free_numeric (void *Numeric)
+ * \fn INT fasp_umfpack_free_numeric (void *Numeric)
  * \brief Solve Au=b by UMFpack
  *
  * \param ptrA     pointer to stiffness matrix of levelNum levels
@@ -201,18 +199,18 @@ int fasp_umfpack_solve (dCSRmat *ptrA,
  * \author Xiaozhe Hu
  * \date   10/20/2010
  */
-int fasp_umfpack_free_numeric (void *Numeric)
+INT fasp_umfpack_free_numeric (void *Numeric)
 {
-	int status=FASP_SUCCESS;
+	INT status = FASP_SUCCESS;
 	
 #if DEBUG_MODE
-	printf("### DEBUG: umfpack_free_numeric ...... [Start]\n");
+	printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
  	
 	umfpack_di_free_numeric (&Numeric);
 	
 #if DEBUG_MODE
-	printf("### DEBUG: umfpack_free_numeric ...... [Finish]\n");
+	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
 	return status;

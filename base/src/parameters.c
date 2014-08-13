@@ -398,6 +398,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->smooth_order         = CF_ORDER;
     amgparam->presmooth_iter       = 1;
     amgparam->postsmooth_iter      = 1;
+    amgparam->coarse_solver        = SOLVER_DEFAULT;
     amgparam->relaxation           = 1.0;
     amgparam->polynomial_degree    = 3;
     amgparam->coarse_scaling       = OFF; // Requires investigation --Chensong
@@ -530,6 +531,7 @@ void fasp_param_amg_set (AMG_param *param,
     param->smoother             = iniparam->AMG_smoother;
     param->smooth_order         = iniparam->AMG_smooth_order;
     param->relaxation           = iniparam->AMG_relaxation;
+    param->coarse_solver        = iniparam->AMG_coarse_solver;
     param->polynomial_degree    = iniparam->AMG_polynomial_degree;
     param->presmooth_iter       = iniparam->AMG_presmooth_iter;
     param->postsmooth_iter      = iniparam->AMG_postsmooth_iter;
@@ -665,6 +667,7 @@ void fasp_param_amg_to_prec (precond_data *pcdata,
     pcdata->presmooth_iter      = amgparam->presmooth_iter;
     pcdata->postsmooth_iter     = amgparam->postsmooth_iter;
     pcdata->coarsening_type     = amgparam->coarsening_type;
+    pcdata->coarse_solver       = amgparam->coarse_solver;
     pcdata->relaxation          = amgparam->relaxation;
     pcdata->polynomial_degree   = amgparam->polynomial_degree;
     pcdata->coarse_scaling      = amgparam->coarse_scaling;
@@ -697,6 +700,7 @@ void fasp_param_prec_to_amg (AMG_param *amgparam,
     amgparam->postsmooth_iter     = pcdata->postsmooth_iter;
     amgparam->relaxation          = pcdata->relaxation;
     amgparam->polynomial_degree   = pcdata->polynomial_degree;
+    amgparam->coarse_solver       = pcdata->coarse_solver;
     amgparam->coarse_scaling      = pcdata->coarse_scaling;
     amgparam->amli_degree         = pcdata->amli_degree;
     amgparam->amli_coef           = pcdata->amli_coef;
@@ -729,6 +733,7 @@ void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata,
     pcdata->smooth_order        = amgparam->smooth_order;
     pcdata->presmooth_iter      = amgparam->presmooth_iter;
     pcdata->postsmooth_iter     = amgparam->postsmooth_iter;
+    pcdata->coarse_solver       = amgparam->coarse_solver;
     pcdata->coarsening_type     = amgparam->coarsening_type;
     pcdata->relaxation          = amgparam->relaxation;
     pcdata->coarse_scaling      = amgparam->coarse_scaling;
@@ -760,6 +765,7 @@ void fasp_param_prec_to_amg_bsr (AMG_param *amgparam,
     amgparam->presmooth_iter      = pcdata->presmooth_iter;
     amgparam->postsmooth_iter     = pcdata->postsmooth_iter;
     amgparam->relaxation          = pcdata->relaxation;
+    amgparam->coarse_solver       = pcdata->coarse_solver;
     amgparam->coarse_scaling      = pcdata->coarse_scaling;
     amgparam->amli_degree         = pcdata->amli_degree;
     amgparam->amli_coef           = pcdata->amli_coef;
@@ -792,6 +798,7 @@ void fasp_param_amg_print (AMG_param *param)
         printf("AMG tolerance:                     %.2e\n", param->tol);
         printf("AMG max levels:                    %d\n", param->max_levels);
         printf("AMG cycle type:                    %d\n", param->cycle_type);
+        printf("AMG coarse solver type:            %d\n", param->coarse_solver);
         printf("AMG scaling of coarse correction:  %d\n", param->coarse_scaling);
         printf("AMG smoother type:                 %d\n", param->smoother);
         printf("AMG smoother order:                %d\n", param->smooth_order);

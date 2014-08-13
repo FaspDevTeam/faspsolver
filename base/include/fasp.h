@@ -544,6 +544,9 @@ typedef struct {
     //! degree of the polynomial smoother
     SHORT polynomial_degree;
 	
+    //! coarse solver type
+    SHORT coarse_solver;
+    
     //! switch of scaling of the coarse grid correction
 	SHORT coarse_scaling;
 	
@@ -726,8 +729,8 @@ typedef struct {
     //! number of postsmoothing
 	SHORT postsmooth_iter;
 	
-    //! coarsening type
-	REAL relaxation;
+    //! relaxation parameter for SOR smoother
+    REAL relaxation;
     
     //! degree of the polynomial smoother
     SHORT polynomial_degree;
@@ -735,7 +738,10 @@ typedef struct {
     //! switch of scaling of the coarse grid correction
 	SHORT coarsening_type;
 	
-    //! relaxation parameter for SOR smoother
+    //! coarse solver type for AMG
+	SHORT coarse_solver;
+
+    //! switch of scaling of the coarse grid correction
 	SHORT coarse_scaling;
 	
     //! degree of the polynomial used by AMLI cycle
@@ -968,6 +974,7 @@ typedef struct {
 	REAL AMG_tol;                  /**< tolerance for AMG if used as preconditioner */
 	INT AMG_maxit;                 /**< number of iterations for AMG used as preconditioner */
 	SHORT AMG_ILU_levels;          /**< how many levels use ILU smoother */	
+	SHORT AMG_coarse_solver;       /**< coarse solver type */
 	SHORT AMG_coarse_scaling;      /**< switch of scaling of the coarse grid correction */
 	SHORT AMG_amli_degree;         /**< degree of the polynomial used by AMLI cycle */
     SHORT AMG_nl_amli_krylov_type; /**< type of krylov method used by nonlinear AMLI cycle */

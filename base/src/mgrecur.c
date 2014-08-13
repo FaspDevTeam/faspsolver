@@ -32,10 +32,10 @@ void fasp_solver_mgrecur (AMG_data *mgl,
                           AMG_param *param,
                           INT level)
 {
-    
     const SHORT  prtlvl = param->print_level;
     const SHORT  smoother = param->smoother;
     const SHORT  cycle_type = param->cycle_type;
+    const SHORT  coarse_solver = param->coarse_solver;
     const SHORT  smooth_order = param->smooth_order;
     const REAL   relax = param->relaxation;
     const REAL   tol = param->tol*1e-4;
@@ -53,13 +53,14 @@ void fasp_solver_mgrecur (AMG_data *mgl,
     INT *ordering = mgl[level].cfmark.val; // for smoother ordering
     
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_mgrecur ...... [Start]\n");
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
     
-    if (prtlvl>=PRINT_MOST) printf("AMG level %d, pre-smoother %d.\n", level, smoother);
+    if ( prtlvl >= PRINT_MOST )
+        printf("AMG level %d, smoother %d.\n", level, smoother);
     
-    if (level < mgl[level].num_levels-1) {
+    if ( level < mgl[level].num_levels-1 ) {
         
         // pre smoothing
         if (level<param->ILU_levels) {
@@ -99,25 +100,39 @@ void fasp_solver_mgrecur (AMG_data *mgl,
     
     else { // coarsest level solver
         
-#if   WITH_MUMPS
-        /* use MUMPS direct solver on the coarsest level */
-        fasp_solver_mumps(A0, b0, e0, 0);
-#elif WITH_UMFPACK
-        /* use UMFPACK direct solver on the coarsest level */
-        fasp_solver_umfpack(A0, b0, e0, 0);
-#elif WITH_SuperLU
-        /* use SuperLU direct solver on the coarsest level */
-        fasp_solver_superlu(A0, b0, e0, 0);
-#else
-        /* use default iterative solver on the coarest level */
-        fasp_coarse_itsolver(A0, b0, e0, tol, prtlvl);
+        switch (coarse_solver) {
+                
+#if WITH_SuperLU
+            /* use SuperLU direct solver on the coarsest level */
+            case SOLVER_SUPERLU:
+                fasp_solver_superlu(A0, b0, e0, 0);
+                break;
 #endif
+                
+#if WITH_UMFPACK
+            /* use UMFPACK direct solver on the coarsest level */
+            case SOLVER_UMFPACK:
+                fasp_solver_umfpack(A0, b0, e0, 0);
+                break;
+#endif
+                
+#if WITH_MUMPS
+            /* use MUMPS direct solver on the coarsest level */
+            case SOLVER_MUMPS:
+                fasp_solver_mumps(A0, b0, e0, 0);
+                break;
+#endif
+                
+            /* use iterative solver on the coarest level */
+            default:
+                fasp_coarse_itsolver(A0, b0, e0, tol, prtlvl);
+                
+        }
+        
     }
     
-    if (prtlvl>=PRINT_MOST) printf("AMG level %d, post-smoother %d.\n", level, smoother);
-    
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_mgrecur ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 }
 

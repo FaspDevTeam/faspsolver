@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+08/13/2014 FASP 1.5.7:
+- Add a user option for choosing coarse level solvers.
+
 08/12/2014 FASP 1.5.6:
 - Handling errors when RS coarsening does not succeed. 
 - Handling errors when Pairwise aggreation does not succeed. 

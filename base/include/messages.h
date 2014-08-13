@@ -97,6 +97,8 @@
 /**
  * \brief Definition of solver types for iterative methods
  */
+#define SOLVER_DEFAULT          0  /**< Use default solver in FASP */
+//---------------------------------------------------------------------------------
 #define SOLVER_CG               1  /**< Conjugate Gradient */
 #define SOLVER_BiCGstab         2  /**< Biconjugate Gradient Stabilized */
 #define SOLVER_MinRes           3  /**< Minimal Residual */
@@ -115,10 +117,7 @@
 //---------------------------------------------------------------------------------
 #define SOLVER_AMG             21  /**< AMG as an iterative solver */
 #define SOLVER_FMG             22  /**< Full AMG as an solver */
-
-/** 
- * \brief Definition of solver types for direct methods (requires external libs)
- */
+//---------------------------------------------------------------------------------
 #define SOLVER_SUPERLU         31  /**< SuperLU Direct Solver */
 #define SOLVER_UMFPACK         32  /**< UMFPack Direct Solver */
 #define SOLVER_MUMPS           33  /**< MUMPS   Direct Solver */
