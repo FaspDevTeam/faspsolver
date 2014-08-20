@@ -191,7 +191,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
             status = fasp_ilu_dcsr_setup(&mgl[level].A, &mgl[level].LU, &iluparam);
             if ( status < 0 ) {
                 param->ILU_levels = level;
-                printf("### WARNING: ILU setup on level%d failed!\n", level);
+                printf("### WARNING: ILU setup on level-%d failed!\n", level);
             }
         }
         
@@ -233,7 +233,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
 		
         if ( status < 0 ) {
             // When error happens, force solver to use the current multigrid levels!
-            printf("### WARNING: Coarsening on level%d is not successful!\n", level);
+            printf("### WARNING: Coarsening on level-%d is not successful!\n", level);
             status = FASP_SUCCESS; break;
         }
         
@@ -406,7 +406,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
             status = fasp_ilu_dbsr_setup(&mgl[level].A, &mgl[level].LU, &iluparam);
             if ( status < 0 ) {
                 param->ILU_levels = level;
-                printf("### WARNING: ILU setup on level%d failed!\n", level);
+                printf("### WARNING: ILU setup on level-%d failed!\n", level);
             }
         }
         
@@ -441,7 +441,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         
         if ( status < 0 ) {
             // When error happens, force solver to use the current multigrid levels!
-            printf("### WARNING: Coarsening on level%d is not successful!\n", level);
+            printf("### WARNING: Coarsening on level-%d is not successful!\n", level);
             status = FASP_SUCCESS; break;
         }
 
