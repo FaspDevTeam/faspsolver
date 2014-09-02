@@ -37,7 +37,8 @@ Structure
 [ 1.1.6 ] add uniform I/O routines: Binary and ASCII
 [ 1.4.2 ] add command line options
 [ 1.4.3 ] set DEBUG_MODE in Makefile instead of the header file
-[       ] allow users to set compilers, e.g. using CC, CXX (Chensong)
+[       ] allow users to set compilers, e.g. using CC, CXX
+[       ] enforce ANSI C standard: do not allow C99
 [       ] fix problem with UMFPACK when it is installed alone without CHOLMOD
 [       ] fix problem with MUMPS: cannot find package
 
