@@ -128,22 +128,22 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
         
         case SOLVER_CG:
             if ( print_level>PRINT_NONE ) printf("\nCalling PCG solver (BSR) ...\n");
-            iter=fasp_solver_dbsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            iter = fasp_solver_dbsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
     
         case SOLVER_BiCGstab:
             if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (BSR) ...\n");
-            iter=fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            iter = fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
     
         case SOLVER_GMRES:
             if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (BSR) ...\n");
-            iter=fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            iter = fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
     
         case SOLVER_VGMRES:
             if ( print_level>PRINT_NONE ) printf("\nCalling vGMRES solver (BSR) ...\n");
-            iter=fasp_solver_dbsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            iter = fasp_solver_dbsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
             break;
             
         case SOLVER_VFGMRES:
