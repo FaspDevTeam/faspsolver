@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+09/16/2014 FASP 1.5.8:
+- Update documentation and webpage.
+- Regression test for fasp4blkoil due to a bug for setting parameters.
+
 09/15/2014 FASP 1.5.7:
 - Add a user option for choosing coarse level solvers.
 - Fix average number of nonzeros output format problem. 

@@ -53,7 +53,7 @@
      395 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
      256 ./base/src/memory.c
-     285 ./base/src/message.c
+     289 ./base/src/message.c
      559 ./base/src/mgcycle.c
      141 ./base/src/mgrecur.c
      391 ./base/src/ordering.c
@@ -107,4 +107,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   88827 total
+   88831 total

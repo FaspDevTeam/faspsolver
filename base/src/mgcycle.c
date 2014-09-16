@@ -166,6 +166,13 @@ ForwardSweep:
     // call the coarse space solver:
     switch (coarse_solver) {
             
+#if WITH_MUMPS
+        /* use MUMPS direct solver on the coarsest level */
+        case SOLVER_MUMPS:
+            fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 2);
+            break;
+#endif
+            
 #if WITH_SuperLU
         /* use SuperLU direct solver on the coarsest level */
         case SOLVER_SUPERLU:
@@ -179,14 +186,7 @@ ForwardSweep:
             fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
             break;
 #endif
-            
-#if WITH_MUMPS
-        /* use MUMPS direct solver on the coarsest level */
-        case SOLVER_MUMPS:
-            fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 2);
-            break;
-#endif
-            
+
         /* use iterative solver on the coarest level */
         default:
             fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);

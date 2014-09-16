@@ -169,10 +169,10 @@ static void form_pairwise (const dCSRmat * A,
     INT i, j, row_start, row_end;
     REAL sum;
 
-    /*-----------------------------------------------------------*/
-    /* Step 1.select very strong diagnoal dominate row (vertices)*/ 
-	/*        and store in G0.                                   */
-    /*-----------------------------------------------------------*/
+    /*---------------------------------------------------------*/
+    /* Step 1. select extremely strong diagonal dominate rows  */ 
+	/*        and store in G0.                                 */
+    /*---------------------------------------------------------*/
 
     /* G0 : vertices->val[i]=G0PT, Remain: vertices->val[i]=UNPT */
 
@@ -198,9 +198,9 @@ static void form_pairwise (const dCSRmat * A,
 		fasp_iarray_set(row, vertices->val, UNPT);
 	}
     
-    /*-------------------------------------------------------*/
-    /* Step 2. computate row sum (off-diagonal) for each vertice*/
-    /*-------------------------------------------------------*/
+    /*---------------------------------------------------------*/
+    /* Step 2. compute row sum (off-diagonal) for each vertex  */
+    /*---------------------------------------------------------*/
     REAL *s = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
 
     for ( i = 0; i < row; i++ ) {
@@ -212,9 +212,9 @@ static void form_pairwise (const dCSRmat * A,
         for ( j = row_start + 1; j < row_end; j++ ) s[i] -= Aval[j];
     }
 
-    /*------------------------------------------*/
-    /* Step 3. start the pairwise aggregation   */
-    /*------------------------------------------*/
+    /*-----------------------------------------*/
+    /* Step 3. start the pairwise aggregation  */
+    /*-----------------------------------------*/
     INT  col,index;
     REAL mu, min_mu, aii, ajj, aij;
     REAL temp1, temp2, temp3, temp4;
