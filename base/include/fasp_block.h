@@ -597,7 +597,10 @@ typedef struct {
     //! coarsening type
 	SHORT coarsening_type;
 	
-    //! relaxation parameter for SOR smoother
+    //! coarse level solver type
+	SHORT coarse_solver;
+
+	//! relaxation parameter for SOR smoother
 	REAL relaxation;
 	
     //! switch of scaling of coarse grid correction
