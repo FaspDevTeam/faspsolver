@@ -28,7 +28,7 @@ void fasp_blas_smat_inv_nc2 (REAL *a)
     const REAL det = a0*a3 - a1*a2;
     REAL det_inv;
     
-    if (ABS(det)<1e-22) {
+    if ( ABS(det) < 1e-22 ) {
         printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
         /*
          printf("##----------------------------------------------\n");
@@ -68,7 +68,7 @@ void fasp_blas_smat_inv_nc3 (REAL *a)
     const REAL det = a0*M0+a3*M3+a6*M6;
     REAL det_inv;
     
-    if (ABS(det)<1e-22) {
+    if ( ABS(det) < 1e-22 ) {
         printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
         /*
          printf("##----------------------------------------------\n");
@@ -137,7 +137,7 @@ void fasp_blas_smat_inv_nc4 (REAL *a)
     const REAL det = a11*M11 + a12*M21 + a13*M31 + a14*M41;
     REAL det_inv;
     
-    if (ABS(det)<1e-22) {
+    if ( ABS(det) < 1e-22 ) {
         printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
         /*
          printf("##----------------------------------------------\n");
@@ -205,7 +205,7 @@ void fasp_blas_smat_inv_nc5 (REAL *a)
     
     det = det0*a0 + det1*a5+ det2*a10 + det3*a15 + det4*a20;
     
-    if (ABS(det)<1e-22) {
+    if ( ABS(det) < 1e-22 ) {
         printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
         /*
          printf("##----------------------------------------------\n");
@@ -432,7 +432,8 @@ INT fasp_blas_smat_inv (REAL *a,
                 l  = kn+k;
                 
                 if (ABS(a[l]) < SMALLREAL) {
-                    printf("### WARNING: Diagonal entry is close to zero! diag_%d=%e\n",k,a[l]);
+                    printf("### WARNING: Diagonal entry is close to zero!");
+                    printf("### WARNING: diag_%d=%e\n", k, a[l]);
                     a[l] = SMALLREAL;
                 }
                 alinv = 1.0/a[l];

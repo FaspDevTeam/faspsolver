@@ -1,8 +1,11 @@
 File Name: CHANGES
 
-09/16/2014 FASP 1.5.8:
+09/17/2014 FASP 1.5.8:
 - Update documentation and webpage.
 - Regression test for fasp4blkoil due to a bug for setting parameters.
+- Change warning print level: less important warnings requires level>PRINT_MIN.
+- Fix several small problems in GMRES-type methods.
+- Update regression test results.
 
 09/15/2014 FASP 1.5.7:
 - Add a user option for choosing coarse level solvers.

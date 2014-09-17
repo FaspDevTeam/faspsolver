@@ -114,8 +114,11 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         if ( lvl < param->ILU_levels ) {
             status = fasp_ilu_dcsr_setup(&mgl[lvl].A, &mgl[lvl].LU, &iluparam);
             if ( status < 0 ) {
+                if ( prtlvl > PRINT_MIN ) {
+                    printf("### WARNING: ILU setup on level-%d failed!\n", lvl);
+                    printf("### WARNING: Disable ILU for level >= %d.\n", lvl);
+                }
                 param->ILU_levels = lvl;
-                printf("### WARNING: ILU setup on level-%d failed!\n", lvl);
             }
         }
         
@@ -135,7 +138,10 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         status = fasp_amg_coarsening_rs(&mgl[lvl].A, &vertices, &mgl[lvl].P, &Scouple, param);
         if ( status < 0 ) {
             // When error happens, force solver to use the current multigrid levels!
-            printf("### WARNING: Coarsening on level-%d is not successful!\n", lvl);
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Could not find any C-variables!\n");
+                printf("### WARNING: RS coarsening on level-%d failed!\n", lvl);
+            }
             status = FASP_SUCCESS; break;
         }
         

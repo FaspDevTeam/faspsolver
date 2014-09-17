@@ -108,19 +108,22 @@ void fasp_solver_amg (dCSRmat *A,
                 fasp_amg_solve_nl_amli(mgl, param); break;
                 
             default: // call classical V,W-cycles (determined by param)
-                fasp_amg_solve(mgl, param);
+                fasp_amg_solve(mgl, param); break;
                 
         }
-
+        
         fasp_dvec_cp(&mgl[0].x, x);
         
     }
     else { // call a backup solver
         
-        printf("### WARNING: Use a backup solver instead multilevel methods!\n");
+        if ( print_level > PRINT_MIN ) {
+            printf("### WARNING: AMG setup failed!\n");
+            printf("### WARNING: Use a backup solver instead.\n");
+        }
         fasp_solver_dcsr_spgmres (A, b, x, NULL, param->tol, param->maxit,
                                   20, 1, print_level);
-    
+        
     }
     
     // clean-up memory

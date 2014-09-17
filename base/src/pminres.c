@@ -151,7 +151,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
             relres  = absres0/normu2;
             break;
         default:
-            printf("### WARNING: Unrecognized stopping type!\n");
+            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -557,7 +557,7 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
             relres  = absres0/normu2;
             break;
         default:
-            printf("### WARNING: Unrecognized stopping type!\n");
+            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -959,7 +959,7 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
             relres  = absres0/normu2;
             break;
         default:
-            printf("### WARNING: Unrecognized stopping type!\n");
+            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
