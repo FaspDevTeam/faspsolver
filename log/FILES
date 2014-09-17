@@ -1,7 +1,7 @@
      560 ./base/include/dlmalloc.h
      170 ./base/include/doxygen.h
     1131 ./base/include/fasp.h
-     675 ./base/include/fasp_block.h
+     678 ./base/include/fasp_block.h
     2848 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
@@ -10,11 +10,11 @@
      291 ./base/include/nedmalloc.h
      274 ./base/src/factor.f
     1207 ./base/src/schwarz.f
-     144 ./base/src/amg.c
+     148 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
-     236 ./base/src/amg_setup_rs.c
-     753 ./base/src/amg_setup_sa.c
-     571 ./base/src/amg_setup_ua.c
+     242 ./base/src/amg_setup_rs.c
+     759 ./base/src/amg_setup_sa.c
+     581 ./base/src/amg_setup_ua.c
      317 ./base/src/amg_solve.c
      849 ./base/src/amlirecur.c
      271 ./base/src/array.c
@@ -22,14 +22,14 @@
      427 ./base/src/blas_array.c
      353 ./base/src/blas_bcsr.c
     5689 ./base/src/blas_bsr.c
-    1989 ./base/src/blas_csr.c
+    1988 ./base/src/blas_csr.c
      125 ./base/src/blas_csrl.c
     1541 ./base/src/blas_smat.c
     1925 ./base/src/blas_str.c
-     322 ./base/src/blas_vec.c
-     336 ./base/src/checkmat.c
+     320 ./base/src/blas_vec.c
+     335 ./base/src/checkmat.c
      417 ./base/src/coarsening_cr.c
-    1947 ./base/src/coarsening_rs.c
+    1946 ./base/src/coarsening_rs.c
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
      106 ./base/src/famg.c
@@ -45,16 +45,16 @@
      766 ./base/src/input.c
     1387 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
-    3231 ./base/src/io.c
-     583 ./base/src/itsolver_bcsr.c
+    3225 ./base/src/io.c
+     580 ./base/src/itsolver_bcsr.c
      851 ./base/src/itsolver_bsr.c
      701 ./base/src/itsolver_csr.c
      363 ./base/src/itsolver_mf.c
      395 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
-     256 ./base/src/memory.c
+     254 ./base/src/memory.c
      289 ./base/src/message.c
-     559 ./base/src/mgcycle.c
+     562 ./base/src/mgcycle.c
      141 ./base/src/mgrecur.c
      391 ./base/src/ordering.c
      975 ./base/src/parameters.c
@@ -64,23 +64,23 @@
      337 ./base/src/pcg_mf.c
      172 ./base/src/pgcg.c
      180 ./base/src/pgcg_mf.c
-    1370 ./base/src/pgmres.c
-     300 ./base/src/pgmres_mf.c
+    1386 ./base/src/pgmres.c
+     306 ./base/src/pgmres_mf.c
     1284 ./base/src/pminres.c
      458 ./base/src/pminres_mf.c
      665 ./base/src/precond_bcsr.c
      725 ./base/src/precond_bsr.c
      676 ./base/src/precond_csr.c
     1732 ./base/src/precond_str.c
-     985 ./base/src/pvfgmres.c
+     979 ./base/src/pvfgmres.c
      340 ./base/src/pvfgmres_mf.c
-    1369 ./base/src/pvgmres.c
-     341 ./base/src/pvgmres_mf.c
+    1385 ./base/src/pvgmres.c
+     342 ./base/src/pvgmres_mf.c
      874 ./base/src/quadrature.c
      116 ./base/src/rap.c
      177 ./base/src/schwarz_setup.c
-     697 ./base/src/smat.c
-    1607 ./base/src/smoother_bsr.c
+     698 ./base/src/smat.c
+    1608 ./base/src/smoother_bsr.c
     2316 ./base/src/smoother_csr.c
       83 ./base/src/smoother_csr_cr.c
      583 ./base/src/smoother_csr_poly.c
@@ -88,23 +88,23 @@
      349 ./base/src/sparse_block.c
     1877 ./base/src/sparse_bsr.c
      156 ./base/src/sparse_coo.c
-    1345 ./base/src/sparse_csr.c
+    1344 ./base/src/sparse_csr.c
       72 ./base/src/sparse_csrl.c
      202 ./base/src/sparse_str.c
      972 ./base/src/sparse_util.c
     1624 ./base/src/spbcgs.c
     1043 ./base/src/spcg.c
-    1390 ./base/src/spgmres.c
+    1394 ./base/src/spgmres.c
     1418 ./base/src/spminres.c
-    1546 ./base/src/spvgmres.c
+    1547 ./base/src/spvgmres.c
      109 ./base/src/threads.c
       41 ./base/src/timing.c
-     465 ./base/src/vec.c
+     464 ./base/src/vec.c
      300 ./base/src/wrapper.c
      398 ./base/src/aggregation_bsr.inl
-     740 ./base/src/aggregation_csr.inl
+     736 ./base/src/aggregation_csr.inl
     2302 ./base/src/gmg_util.inl
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
-     240 ./base/src/mg_util.inl
-   88831 total
+     239 ./base/src/mg_util.inl
+   88880 total

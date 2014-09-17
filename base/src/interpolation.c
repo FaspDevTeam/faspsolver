@@ -73,7 +73,7 @@ void fasp_amg_interp (dCSRmat *A,
             fasp_amg_interp_em(A, vertices, P, param); break;
         
         default:
-            fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp");
+            fasp_chkerr(ERROR_AMG_INTERP_TYPE, __FUNCTION__);
     
     }
     
@@ -132,7 +132,7 @@ void fasp_amg_interp1 (dCSRmat *A,
             fasp_amg_interp_em(A, vertices, P, param); break;
             
         default:
-            fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_interp1");
+            fasp_chkerr(ERROR_AMG_INTERP_TYPE, __FUNCTION__);
             
     }
     

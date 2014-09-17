@@ -56,7 +56,7 @@ void fasp_solver_amg (dCSRmat *A,
     
     if ( print_level > PRINT_NONE ) fasp_gettime(&AMG_start);
     
-    // Step 0: initialize mgl[0] with A, b and x
+    // check matrix data
     if ( m != n ) {
         printf("### ERROR: A is not a square matrix!\n");
         fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
@@ -67,6 +67,7 @@ void fasp_solver_amg (dCSRmat *A,
         fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
     }
     
+    // Step 0: initialize mgl[0] with A, b and x
     mgl[0].A = fasp_dcsr_create(m, n, nnz);
     fasp_dcsr_cp(A, &mgl[0].A);
     

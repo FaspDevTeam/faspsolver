@@ -167,27 +167,27 @@ ForwardSweep:
     switch (coarse_solver) {
             
 #if WITH_MUMPS
-        /* use MUMPS direct solver on the coarsest level */
+            /* use MUMPS direct solver on the coarsest level */
         case SOLVER_MUMPS:
             fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 2);
             break;
 #endif
             
 #if WITH_SuperLU
-        /* use SuperLU direct solver on the coarsest level */
+            /* use SuperLU direct solver on the coarsest level */
         case SOLVER_SUPERLU:
             fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
             break;
 #endif
             
 #if WITH_UMFPACK
-        /* use UMFPACK direct solver on the coarsest level */
+            /* use UMFPACK direct solver on the coarsest level */
         case SOLVER_UMFPACK:
             fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
             break;
 #endif
-
-        /* use iterative solver on the coarest level */
+            
+            /* use iterative solver on the coarest level */
         default:
             fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
             
@@ -380,7 +380,8 @@ ForwardSweep:
                         break;
                     default:
                         printf("### ERROR: Wrong smoother type %d!\n", smoother);
-                    exit(ERROR_INPUT_PAR);                }
+                        fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
+                }
             }
         }
         
@@ -425,27 +426,27 @@ ForwardSweep:
     switch (coarse_solver) {
             
 #if WITH_MUMPS
-        /* use MUMPS direct solver on the coarsest level */
+            /* use MUMPS direct solver on the coarsest level */
         case SOLVER_MUMPS:
             fasp_solver_mumps(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
             break;
 #endif
             
 #if WITH_UMFPACK
-        /* use UMFPACK direct solver on the coarsest level */
+            /* use UMFPACK direct solver on the coarsest level */
         case SOLVER_UMFPACK:
             fasp_umfpack_solve(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
             break;
 #endif
             
 #if WITH_SuperLU
-        /* use SuperLU direct solver on the coarsest level */
+            /* use SuperLU direct solver on the coarsest level */
         case SOLVER_SUPERLU:
             fasp_solver_superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
             break;
 #endif
             
-        /* use iterative solver on the coarest level */
+            /* use iterative solver on the coarest level */
         default: {
             const INT  csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
             const INT  cmaxit = MIN(csize*csize, 200); // coarse level iteration number
@@ -539,7 +540,7 @@ ForwardSweep:
                         break;
                     default:
                         printf("### ERROR: Wrong smoother type %d!\n", smoother);
-                        exit(ERROR_INPUT_PAR);
+                        fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
                 }
             }
         }

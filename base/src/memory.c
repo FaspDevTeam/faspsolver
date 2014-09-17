@@ -62,8 +62,7 @@ void * fasp_mem_calloc (LONGLONG size,
     void * mem = NULL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: Trying to allocate %.3lfKB RAM! (%lld) \n",
-           (REAL)tsize/1024.0,tsize);
+    printf("### DEBUG: Trying to allocate %.3lfKB RAM!\n", (REAL)tsize/1024.0);
 #endif
     
     if ( tsize > 0 ) {
@@ -82,8 +81,7 @@ void * fasp_mem_calloc (LONGLONG size,
     }
     
     if ( mem == NULL ) {
-        printf("### ERROR: Cannot allocate %.3lfKB RAM(%lld)!\n",
-               (REAL)tsize/1024.0,tsize);
+        printf("### ERROR: Cannot allocate %.3lfKB RAM!\n", (REAL)tsize/1024.0);
     }
     
 #if CHMEM_MODE
@@ -222,7 +220,7 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
         return FASP_SUCCESS;
     }
     else {
-        printf("### ERROR: ILU needs %d memory, only %d available!!!\n", 
+        printf("### ERROR: ILU needs %d memory, only %d available!\n", 
                memneed, iludata->nwork);
         return ERROR_ALLOC_MEM;
     }

@@ -56,7 +56,7 @@ INT fasp_check_diagpos (dCSRmat *A)
  *
  * \param A pointr to the dCSRmat matrix
  * 
- * \return FASP_SUCCESS if no diagonal entry is clase to zero, else ERROR (negative value)
+ * \return FASP_SUCCESS if no diagonal entry is clase to zero, else ERROR
  *
  * \author Shuo Zhang
  * \date   03/29/2009
@@ -75,9 +75,8 @@ SHORT fasp_check_diagzero (dCSRmat *A)
             j=ja[k];
             if (i==j) {
                 if (ABS(aj[k]) < SMALLREAL) {
-                    printf("### ERROR: Diagonal entry (%d,%e) close to zero!\n", i, aj[k]);
+                    printf("### ERROR: Diagonal_%d=%e, close to zero!\n", i, aj[k]);
                     status = ERROR_DATA_ZERODIAG; 
-                    goto FINISHED;
                 }
             }    
         } // end for k
@@ -167,8 +166,8 @@ INT fasp_check_symm (dCSRmat *A)
     nnz=A->IA[nn]-A->IA[0];
     
     if (nnz!=A->nnz) {
-        printf("### ERROR: nnz=%d, ia[n]-ia[0]=%d does NOT match!!!\n",A->nnz,nnz);
-        exit(ERROR_WRONG_FILE);
+        printf("### ERROR: nnz=%d, ia[n]-ia[0]=%d does NOT match!\n",A->nnz,nnz);
+        fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
     rowp=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
@@ -279,18 +278,18 @@ SHORT fasp_check_dCSRmat (dCSRmat *A)
     
     if (A->row != A->col) {
         printf("### ERROR: Non-square CSR matrix!\n");
-        exit(ERROR_DATA_STRUCTURE);    
+        fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
     if ((A->nnz==0)|(A->row==0)|(A->col==0)) {
         printf("### ERROR: Empty CSR matrix!\n");
-        exit(ERROR_DATA_STRUCTURE);
+        fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
     for (i=0;i<A->nnz;++i) {
         if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
             printf("### ERROR: Wrong CSR matrix format!\n");
-            exit(ERROR_DATA_STRUCTURE);
+            fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
         }
     }
     
@@ -313,18 +312,18 @@ SHORT fasp_check_iCSRmat (iCSRmat *A)
     
     if (A->row != A->col) {
         printf("### ERROR: Non-square CSR matrix!\n");
-        exit(ERROR_DATA_STRUCTURE);    
+        fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
     if ((A->nnz==0)|(A->row==0)|(A->col==0)) {
         printf("### ERROR: Empty CSR matrix!\n");
-        exit(ERROR_DATA_STRUCTURE);
+        fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
     for (i=0;i<A->nnz;++i) {
         if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
             printf("### ERROR: Wrong CSR matrix!\n");
-            exit(ERROR_DATA_STRUCTURE);
+            fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
         }
     }
     

@@ -28,9 +28,7 @@
  * \author Chensong Zhang
  * \date   07/01/209
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012    
- *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 void fasp_blas_dvec_axpy (const REAL a, 
                           dvector *x, 
@@ -49,8 +47,8 @@ void fasp_blas_dvec_axpy (const REAL a,
 #endif
     
     if ((y->row-m)!=0) {
-        printf("Error: two vectors have different length!\n");
-        exit(ERROR_DATA_STRUCTURE);
+        printf("### ERROR: Two vectors have different dimensions!\n");
+        fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
     if (use_openmp) {
@@ -93,8 +91,8 @@ void fasp_blas_dvec_axpyz(const REAL a,
     REAL *xpt=x->val, *ypt=y->val, *zpt=z->val;
     
     if ((y->row-m)!=0) {
-        printf("Error: two vectors have different length!\n");
-        exit(ERROR_DATA_STRUCTURE);
+        printf("### ERROR: Two vectors have different dimensions!\n");
+        fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
     z->row = m;
@@ -177,8 +175,8 @@ REAL fasp_blas_dvec_relerr (dvector *x,
     INT use_openmp = FALSE;
 
     if (length!=y->row) {
-        printf("Error: The lengths of vectors do not match! \n");
-        exit(ERROR_DUMMY_VAR);    
+        printf("### ERROR: Two vectors have different dimensions!\n");
+        fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
 
 #ifdef _OPENMP 

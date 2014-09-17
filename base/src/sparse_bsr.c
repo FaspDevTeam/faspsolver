@@ -1589,7 +1589,7 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
             break;
             
         default:
-            printf("only works for nb = 2 or 3 now!!");
+            printf("### ERROR: Only works for nb = 2 or 3 now!");
             break;
             
     } // end of switch
@@ -1661,7 +1661,7 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
             break;
             
         default:
-            printf("only works for nb = 2 or 3 now!!");
+            printf("### ERROR: Only works for nb = 2 or 3 now!");
             break;
             
     }
@@ -1813,7 +1813,7 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
             break;
             
         default:
-            printf("only works for nb = 2 or 3 now!!");
+            printf("### ERROR: Only works for nb = 2 or 3 now!");
             break;
             
     } // end of switch
@@ -1864,7 +1864,7 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
             break;
             
         default:
-            printf("only works for nb = 2 or 3 now!!");
+            printf("### ERROR: Only works for nb = 2 or 3 now!");
             break;
     }
     

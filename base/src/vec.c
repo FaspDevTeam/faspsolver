@@ -429,9 +429,8 @@ void fasp_dvec_symdiagscale (dvector *b,
     INT i;
     
     if (diag->row != n) {
-        printf("### ERROR: Sizes of diag = %d and dvector = %d mismatch!", 
-               diag->row, n);
-        exit(ERROR_MISC);
+        printf("### ERROR: Sizes of diag = %d != dvector = %d!", diag->row, n);
+        fasp_chkerr(ERROR_MISC, __FUNCTION__);
     }
     
     INT use_openmp = FALSE;

@@ -257,8 +257,8 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
         fasp_ilu_dstr_setup1(A,&LU);
     }
     else  {    
-        printf("### ERROR: Illegal level of fill-in for structured ILU (lfil>=2)!!\n");
-        return 0;
+        printf("### ERROR: Illegal level of fill-in for ILU (lfil>=2)!\n");
+        return ERROR_MISC;
     }
 
     fasp_gettime(&setup_end);
@@ -276,8 +276,8 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
         pc.fct = fasp_precond_dstr_ilu1;
     }
     else {
-        printf("### ERROR: Illegal level of fill-in for structured ILU (lfil>=2)!!\n");
-        return 0;
+        printf("### ERROR: Illegal level of fill-in for ILU (lfil>=2)!\n");
+        return ERROR_MISC;
     }
     
     // solver part

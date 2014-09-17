@@ -250,8 +250,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     }
     
     else {
-        fasp_chkerr(ERROR_SOLVER_PRECTYPE, "fasp_solver_bdcsr_krylov_block_3");
-        return ERROR_SOLVER_PRECTYPE;
+        fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__);
     }
     
     precond_block_data precdata;
@@ -271,8 +270,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
         precdata.mgl = mgl;
     }
     else {
-        fasp_chkerr(ERROR_SOLVER_PRECTYPE, "fasp_solver_bdcsr_krylov_block_3");
-        return ERROR_SOLVER_PRECTYPE;
+        fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__);
     }
     
     precond prec; prec.data = &precdata;
@@ -296,7 +294,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
             break;
             
         default:
-            fasp_chkerr(ERROR_SOLVER_PRECTYPE, "fasp_solver_bdcsr_krylov_block_3");
+            fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__);
             break;
     }
     
@@ -333,8 +331,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
         if (mgl) fasp_mem_free(mgl);
     }
     else {
-        fasp_chkerr(ERROR_SOLVER_PRECTYPE, "fasp_solver_bdcsr_krylov_block_3");
-        return ERROR_SOLVER_PRECTYPE;
+        fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__);
     }
     
 #if DEBUG_MODE
@@ -412,7 +409,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
         
     }
     else {
-        fasp_chkerr(ERROR_SOLVER_PRECTYPE, "fasp_solver_bdcsr_krylov_block_4");
+        fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__);
     }
     
     precond_block_data precdata;

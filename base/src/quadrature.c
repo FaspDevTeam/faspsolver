@@ -32,9 +32,9 @@ void fasp_quad2d (INT num_qp,
                   INT ncoor, 
                   REAL (*quad)[3])
 {
-    if (num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, "fasp_quad2d");
+    if (num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, __FUNCTION__);
     
-    if (ncoor!=2) fasp_chkerr(ERROR_QUAD_DIM, "fasp_quad2d");
+    if (ncoor!=2) fasp_chkerr(ERROR_QUAD_DIM, __FUNCTION__);
     
     switch (num_qp) {
     case 1:  // 1-point Gauss rule
@@ -184,7 +184,7 @@ void fasp_quad2d (INT num_qp,
         quad[14][2] = 1.0/16;
         break;
     default:
-        fasp_chkerr(ERROR_QUAD_TYPE, "fasp_quad2d");
+        fasp_chkerr(ERROR_QUAD_TYPE, __FUNCTION__);
         break;
     }
     
@@ -211,9 +211,9 @@ void fasp_gauss2d (INT num_qp,
                    INT ncoor, 
                    REAL (*gauss)[3])
 {
-    if(num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, "fasp_gauss2d");
+    if(num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, __FUNCTION__);
     
-    if(ncoor!=2) fasp_chkerr(ERROR_QUAD_DIM, "fasp_gauss2d");
+    if(ncoor!=2) fasp_chkerr(ERROR_QUAD_DIM, __FUNCTION__);
     
     switch (num_qp) {
     case 1:  // 1-point Gauss rule
@@ -862,7 +862,7 @@ void fasp_gauss2d (INT num_qp,
         gauss[48][2] = 0.3623466079725786927077026e-02;
         break;
     default:
-        fasp_chkerr(ERROR_QUAD_TYPE, "fasp_gauss2d");
+        fasp_chkerr(ERROR_QUAD_TYPE, __FUNCTION__);
         break;
     }
     

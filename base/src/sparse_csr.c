@@ -487,8 +487,8 @@ void fasp_dcsr_getcol (const INT n,
 #endif
 	    
     // check the column index n
-    if (n < 0 || n >= ncol) {
-        printf("### ERROR: the column index n is illegal!!\n");
+    if ( n < 0 || n >= ncol ) {
+        printf("### ERROR: Column index %d is illegal!\n", n);
         status = ERROR_DUMMY_VAR;
         goto FINISHED;
     }
@@ -596,8 +596,8 @@ void fasp_dcsr_diagpref (dCSRmat *A)
                         }
                     }
                     if (j == iend) {
-                        printf("### ERROR: Diagonal entry in row %d is either missing or zero!\n", i);
-                        exit(ERROR_MISC); // Diagonal is zero    
+                        printf("### ERROR: Diagonal entry %d is missing or zero!\n", i);
+                        fasp_chkerr(ERROR_MISC, __FUNCTION__);
                     }
                 }
             }
@@ -626,8 +626,8 @@ void fasp_dcsr_diagpref (dCSRmat *A)
                     }
                 }
                 if (j == row_size) {
-                    printf("### ERROR: Diagonal entry in row %d is either missing or zero!\n", i);
-                    exit(ERROR_MISC); // Diagonal is zero    
+                    printf("### ERROR: Diagonal entry %d is missing or zero!\n", i);
+                    fasp_chkerr(ERROR_MISC, __FUNCTION__);
                 }
             }
             A_j    += row_size;
@@ -1066,8 +1066,8 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
         A->val = (REAL *)fasp_mem_realloc(A->val, k*sizeof(REAL));
     }
     else {
-        status = ERROR_UNKNOWN;
         printf("### ERROR: Size of compressed matrix is larger than the original!\n");
+        status = ERROR_UNKNOWN;
     }
     
     return (status);
@@ -1171,9 +1171,8 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     INT i, j, k, row_start, row_end;
     
     if (diag->row != n) {
-        printf("### ERROR: Size of diag = %d and size of matrix = %d mismatch!!", 
-               diag->row, n);
-        exit(ERROR_MISC);
+        printf("### ERROR: Size of diag = %d != size of matrix = %d!", diag->row, n);
+        fasp_chkerr(ERROR_MISC, __FUNCTION__);
     }
     
     // work space
@@ -1336,7 +1335,7 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
     free(newr);
     *groups = group;
 #else 
-	printf("### ERROR: MULTI_COLOR_ORDER has not been Defined...... \n"); 
+	printf("### ERROR: MULTI_COLOR_ORDER has not been defined!\n");
 #endif
 }
 

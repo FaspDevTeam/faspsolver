@@ -384,7 +384,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     }
     else {
         printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
-        exit(ERROR_NUM_BLOCKS);
+        fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
 }
@@ -620,7 +620,7 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
     }
     else {
         printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
-        exit(ERROR_NUM_BLOCKS);
+        fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
 
 }
@@ -694,7 +694,7 @@ void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
     }
     else {
         printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
-        exit(ERROR_NUM_BLOCKS);
+        fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
 }
@@ -764,7 +764,7 @@ void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
     }
     else {
         printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
-        exit(ERROR_NUM_BLOCKS);
+        fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
 }
@@ -839,7 +839,7 @@ void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
     }
     else {
         printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
-        exit(ERROR_NUM_BLOCKS);
+        fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
 }
@@ -912,7 +912,7 @@ void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
         fasp_mem_free(b_tmp);
     }
     else {
-        fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_gs_order1");
+        fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
 }
@@ -988,7 +988,7 @@ void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
         }
     }
     else {
-        fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_gs_order2");
+        fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
 }
 
@@ -1286,7 +1286,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
 #endif
     }
     else {
-        fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_sor_ascend");
+        fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
 }
@@ -1416,7 +1416,7 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
 #endif
     }
     else {
-        fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_sor_descend");
+        fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
 }
@@ -1550,7 +1550,7 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
 #endif
     }
     else {
-        fasp_chkerr(ERROR_NUM_BLOCKS,"fasp_smoother_dbsr_sor_order");
+        fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
 }
@@ -1599,7 +1599,8 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
  MEMERR:
     printf("### ERROR: ILU needs %d memory, only %d available! %s : %d\n",
            memneed, iludata->nwork, __FILE__, __LINE__);
-    exit(ERROR_ALLOC_MEM);
+    fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
+
 }
 
 /*---------------------------------*/

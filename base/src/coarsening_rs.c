@@ -1052,8 +1052,9 @@ static INT cfsplitting_cls (dCSRmat *A,
                             ck = S->JA[k];
                             if ( vec[ck] == CGPT && ck != i ) { // it is a coarse grid point
                                 if ( cp_rindex[ck] >= num_c ) {
-                                    printf("### ERROR: ck=%d, num_c=%d, out of bound in cp_rindex!\n", ck, num_c);
-                                    exit(ERROR_AMG_COARSEING);
+                                    printf("### ERROR: ck=%d, num_c=%d, out of bound!\n",
+                                           ck, num_c);
+                                    fasp_chkerr(ERROR_AMG_COARSEING, __FUNCTION__);
                                 }
                                 cck = cp_rindex[ck];
                                 
@@ -1230,8 +1231,9 @@ static INT cfsplitting_cls (dCSRmat *A,
                             
                             if ( vec[ck] == CGPT && ck != i ) { // coarse grid point
                                 if ( cp_rindex[ck] >= num_c ) {
-                                    printf("### ERROR: ck=%d, num_c=%d, out of bound in cp_rindex!\n", ck, num_c);
-                                    exit(ERROR_AMG_COARSEING);
+                                    printf("### ERROR: ck=%d, num_c=%d, out of bound!\n",
+                                           ck, num_c);
+                                    fasp_chkerr(ERROR_AMG_COARSEING, __FUNCTION__);
                                 }
                                 cck = cp_rindex[ck];
                                 
@@ -1812,7 +1814,7 @@ static INT cfsplitting_cls (dCSRmat *A,
         }
         
         /**
-         * \fn static void form_P_pattern_std (dCSRmat *P, iCSRmat *S, ivector *vertices, 
+         * \fn static void form_P_pattern_std (dCSRmat *P, iCSRmat *S, ivector *vertices,
          *                                     INT row, INT col)
          *
          * \brief Generate sparsity pattern of prolongation for standard interpolation
