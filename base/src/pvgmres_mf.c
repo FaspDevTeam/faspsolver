@@ -73,7 +73,6 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
     
     // local variables
     INT    iter                 = 0;
-    INT    restartplus1         = restart + 1;
     INT    i,j,k;
     
     REAL   epsmac               = SMALLREAL;
@@ -89,8 +88,10 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
     REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
     INT    d           = 3;       // reduction for the restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;          // lower bound for restart in each restart cycle (should be small)
+    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
     INT    Restart;               // the real restart in some fixed restarted cycle
+    INT    Restartplus1 = Restart + 1;
+    
     LONG   worksize = (restart+4)*(restart+n)+1-n;
     
 #if DEBUG_MODE
@@ -101,12 +102,12 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-    while ( (work == NULL) && (restart > 5 ) ) {
-        restart = restart - 5;
-        worksize = (restart+4)*(restart+n)+1-n;
+    /* check whether memory is enough for GMRES */
+    while ( (work == NULL) && (Restart > 5) ) {
+        Restart = Restart - 5;
+        worksize = (Restart+4)*(Restart+n)+1-n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
-        printf("### WARNING: vGMRES restart number changed to %d!\n", restart);
-        restartplus1 = restart + 1;
+        Restartplus1 = Restart + 1;
     }
     
     if ( work == NULL ) {
@@ -114,15 +115,19 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
-
-    p  = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    
+    if ( print_level > PRINT_MIN & Restart < restart ) {
+        printf("### WARNING: vGMRES restart number set to %d!\n", Restart);
+    }
+    
+    p  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    hh = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     
     if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c = rs + restartplus1; s = c + restart;
-    for (i = 0; i < restartplus1; i ++) p[i] = s + restart + i*n;
-    for (i = 0; i < restartplus1; i ++) hh[i] = p[restart] + n + i*restart;
+    r = work; w = r + n; rs = w + n; c = rs + Restartplus1; s = c + Restart;
+    for (i = 0; i < Restartplus1; i ++) p[i] = s + Restart + i*n;
+    for (i = 0; i < Restartplus1; i ++) hh[i] = p[Restart] + n + i*Restart;
     
     /* initialization */
     mf->fct(mf->data, x->val, p[0]);
@@ -130,13 +135,11 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
     
     b_norm = fasp_blas_array_norm2(n, b->val);
     r_norm = fasp_blas_array_norm2(n, p[0]);
+    norms[0] = r_norm;
     
-    if ( print_level > PRINT_NONE) {
-        norms[0] = r_norm;
-        if ( print_level >= PRINT_SOME) {
-            ITS_PUTNORM("right-hand side", b_norm);
-            ITS_PUTNORM("residual", r_norm);
-        }
+    if ( print_level >= PRINT_SOME) {
+        ITS_PUTNORM("right-hand side", b_norm);
+        ITS_PUTNORM("residual", r_norm);
     }
     
     if (b_norm > 0.0)  den_norm = b_norm;
@@ -164,7 +167,7 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
             Restart = restart_max;
         }
         else if (cr < cr_min) {
-            Restart = Restart;
+            // Restart = Restart;
         }
         else {
             if (Restart - d > restart_min) {
@@ -237,17 +240,15 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
             hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
             r_norm = fabs(rs[i]);
             
-            if (print_level > PRINT_NONE) norms[iter] = r_norm;
+            norms[iter] = r_norm;
             
             if (b_norm > 0 ) {
-                if (print_level > PRINT_NONE)
-                    print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,
-                                 norms[iter],norms[iter]/norms[iter-1]);
+                print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,
+                             norms[iter],norms[iter]/norms[iter-1]);
             }
             else {
-                if (print_level > PRINT_NONE)
-                    print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],
-                                 norms[iter]/norms[iter-1]);
+                print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],
+                             norms[iter]/norms[iter-1]);
             }
             
             /* should we exit the restart cycle? */
@@ -330,9 +331,9 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
-    if (iter>=MaxIt) 
+    if (iter>=MaxIt)
         return ERROR_SOLVER_MAXIT;
-    else 
+    else
         return iter;
 }
 

@@ -57,7 +57,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
     const INT  MIN_ITER  = 0;
     const REAL maxdiff   = tol*STAG_RATIO; // staganation tolerance
     const REAL epsmac    = SMALLREAL;
-
+    
     // local variables
     INT      iter = 0;
     INT      restartplus1 = restart + 1;
@@ -82,11 +82,12 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
-
+    
+    /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (restart > 5 ) ) {
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
-        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
+        printf("### WARNING: GMRES restart number set to %d!\n", restart );
         restartplus1 = restart + 1;
     }
     
@@ -95,7 +96,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
-
+    
     p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
@@ -134,7 +135,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### WARNING: Unrecognized stopping type!\n");
+            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -153,7 +154,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
         rs[0] = r_norm;
         
         t = 1.0 / r_norm;
-
+        
         fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
@@ -204,7 +205,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
             
             relres = absres/absres0;
             
-            if ( print_level > PRINT_NONE ) norms[iter] = relres;
+            norms[iter] = relres;
             
             // output iteration information if needed
             print_itinfo(print_level, stop_type, iter, relres, absres,
@@ -282,7 +283,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
                     break;
             }
             
-            if ( print_level > PRINT_NONE ) norms[iter] = relres;
+            norms[iter] = relres;
             
             if ( relres <= tol ) {
                 break;
@@ -423,11 +424,12 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
-
+    
+    /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (restart > 5 ) ) {
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
-        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
+        printf("### WARNING: GMRES restart number set to %d!\n", restart );
         restartplus1 = restart + 1;
     }
     
@@ -436,7 +438,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
-
+    
     p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
@@ -475,7 +477,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### WARNING: Unrecognized stopping type!\n");
+            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -545,7 +547,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
             
             relres = absres/absres0;
             
-            if ( print_level > PRINT_NONE ) norms[iter] = relres;
+            norms[iter] = relres;
             
             // output iteration information if needed
             print_itinfo(print_level, stop_type, iter, relres, absres,
@@ -623,7 +625,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
                     break;
             }
             
-            if ( print_level > PRINT_NONE ) norms[iter] = relres;
+            norms[iter] = relres;
             
             if ( relres <= tol ) {
                 break;
@@ -765,10 +767,11 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
     
+    /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (restart > 5 ) ) {
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
-        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
+        printf("### WARNING: GMRES restart number set to %d!\n", restart );
         restartplus1 = restart + 1;
     }
     
@@ -777,7 +780,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
-
+    
     p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
@@ -816,7 +819,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### WARNING: Unrecognized stopping type!\n");
+            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -886,7 +889,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
             
             relres = absres/absres0;
             
-            if ( print_level > PRINT_NONE ) norms[iter] = relres;
+            norms[iter] = relres;
             
             // output iteration information if needed
             print_itinfo(print_level, stop_type, iter, relres, absres,
@@ -964,7 +967,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
                     break;
             }
             
-            if ( print_level > PRINT_NONE ) norms[iter] = relres;
+            norms[iter] = relres;
             
             if ( relres <= tol ) {
                 break;
@@ -1106,10 +1109,11 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
     
+    /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (restart > 5 ) ) {
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
-        printf("### WARNING: GMRES restart number becomes %d!\n", restart );
+        printf("### WARNING: GMRES restart number set to %d!\n", restart );
         restartplus1 = restart + 1;
     }
     
@@ -1118,7 +1122,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
-
+    
     p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
@@ -1157,7 +1161,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### WARNING: Unrecognized stopping type!\n");
+            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1227,7 +1231,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
             
             relres = absres/absres0;
             
-            if ( print_level > PRINT_NONE ) norms[iter] = relres;
+            norms[iter] = relres;
             
             // output iteration information if needed
             print_itinfo(print_level, stop_type, iter, relres, absres,
@@ -1305,7 +1309,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
                     break;
             }
             
-            if ( print_level > PRINT_NONE ) norms[iter] = relres;
+            norms[iter] = relres;
             
             if ( relres <= tol ) {
                 break;

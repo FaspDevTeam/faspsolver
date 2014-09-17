@@ -98,14 +98,11 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
             col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param); break;
             
         default:
-            fasp_chkerr(ERROR_AMG_COARSE_TYPE, "fasp_amg_coarsening_rs");
+            fasp_chkerr(ERROR_AMG_COARSE_TYPE, __FUNCTION__);
             
     }
     
-    if ( col <= 0 ) {
-        printf("### WARNING: Cannot find any C-variables!\n");
-        return ERROR_UNKNOWN;
-    }
+    if ( col <= 0 ) return ERROR_UNKNOWN;
     
 #if DEBUG_MODE
     printf("### DEBUG: Step 3. Find support of C points ......\n");
@@ -124,7 +121,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
             break;
             
         default:
-            fasp_chkerr(ERROR_AMG_INTERP_TYPE, "fasp_amg_coarsening_rs");
+            fasp_chkerr(ERROR_AMG_INTERP_TYPE, __FUNCTION__);
             
     }
     

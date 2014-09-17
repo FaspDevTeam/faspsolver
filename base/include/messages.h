@@ -76,11 +76,11 @@
  * \brief Print level for all subroutines -- not including DEBUG output
  */
 #define PRINT_NONE              0  /**< slient: no printout at all */
-#define PRINT_MIN               1  /**< quiet: minimal print, like convergence */
-#define PRINT_SOME              2  /**< some: print cpu time, iteration number */
-#define PRINT_MORE              4  /**< more: print more useful information */
-#define PRINT_MOST              8  /**< most: maximal printouts, no disk files*/
-#define PRINT_ALL              10  /**< everything: all printouts allowed */
+#define PRINT_MIN               1  /**< quiet: min info, error, important warnings */
+#define PRINT_SOME              2  /**< some: more info, less important warnings */
+#define PRINT_MORE              4  /**< more: print some useful debug information */
+#define PRINT_MOST              8  /**< most: maximal printouts, no files */
+#define PRINT_ALL              10  /**< everything: all printouts, including files */
 
 /**
  * \brief Definition of matrix format

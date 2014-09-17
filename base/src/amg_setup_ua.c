@@ -111,7 +111,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     const INT   m          = mgl[0].A.row;
     
     // local variables
-    SHORT       max_levels = param->max_levels, level = 0, status = FASP_SUCCESS;
+    SHORT       max_levels = param->max_levels, lvl = 0, status = FASP_SUCCESS;
     INT         i;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
@@ -179,32 +179,35 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     }
     
     // Main AMG setup loop
-    while ( (mgl[level].A.row > min_cdof) && (level < max_levels-1) ) {
+    while ( (mgl[lvl].A.row > min_cdof) && (lvl < max_levels-1) ) {
         
 #if DEBUG_MODE
         printf("### DEBUG: level = %d, row = %d, nnz = %d\n",
-               level, mgl[level].A.row, mgl[level].A.nnz);
+               lvl, mgl[lvl].A.row, mgl[lvl].A.nnz);
 #endif
         
         /*-- Setup ILU decomposition if necessary */
-        if ( level < param->ILU_levels ) {
-            status = fasp_ilu_dcsr_setup(&mgl[level].A, &mgl[level].LU, &iluparam);
+        if ( lvl < param->ILU_levels ) {
+            status = fasp_ilu_dcsr_setup(&mgl[lvl].A, &mgl[lvl].LU, &iluparam);
             if ( status < 0 ) {
-                param->ILU_levels = level;
-                printf("### WARNING: ILU setup on level-%d failed!\n", level);
+                if ( prtlvl > PRINT_MIN ) {
+                    printf("### WARNING: ILU setup on level-%d failed!\n", lvl);
+                    printf("### WARNING: Disable ILU for level >= %d.\n", lvl);
+                }
+                param->ILU_levels = lvl;
             }
         }
         
         /*-- Setup Schwarz smoother if necessary */
-		if ( level < param->schwarz_levels ) {
+		if ( lvl < param->schwarz_levels ) {
             const INT smmsize = param->schwarz_mmsize;
             const INT smaxlvl = param->schwarz_maxlvl;
             const INT schtype = param->schwarz_type;
             
             mgl->schwarz_levels = param->schwarz_levels;
-            mgl[level].schwarz.A=fasp_dcsr_sympat(&mgl[level].A);
-            fasp_dcsr_shift(&(mgl[level].schwarz.A), 1);
-            fasp_schwarz_setup(&mgl[level].schwarz, smmsize, smaxlvl, schtype);
+            mgl[lvl].schwarz.A=fasp_dcsr_sympat(&mgl[lvl].A);
+            fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
+            fasp_schwarz_setup(&mgl[lvl].schwarz, smmsize, smaxlvl, schtype);
 		}
         
         /*-- Aggregation --*/
@@ -212,52 +215,54 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                 
             case VMB: // VMB aggregation
                 
-                status = aggregation_vmb(&mgl[level].A, &vertices[level], param,
-                                         level+1, &Neighbor[level], &num_aggs[level]);
+                status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param,
+                                         lvl+1, &Neighbor[lvl], &num_aggs[lvl]);
                 
                 /*-- Choose strenth threshold adaptively --*/
-                if ( num_aggs[level]*4 > mgl[level].A.row )
+                if ( num_aggs[lvl]*4 > mgl[lvl].A.row )
                     param->strong_coupled /= 2;
-                else if ( num_aggs[level]*1.25 < mgl[level].A.row )
+                else if ( num_aggs[lvl]*1.25 < mgl[lvl].A.row )
                     param->strong_coupled *= 2;
                 
                 break;
                 
             default: // pairwise matching aggregation
                 
-                status = aggregation_pairwise(mgl, param, level, vertices,
-                                              &num_aggs[level]);
+                status = aggregation_pairwise(mgl, param, lvl, vertices,
+                                              &num_aggs[lvl]);
                 
                 break;
         }
 		
         if ( status < 0 ) {
             // When error happens, force solver to use the current multigrid levels!
-            printf("### WARNING: Coarsening on level-%d is not successful!\n", level);
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Aggregation on level-%d failed!\n", lvl);
+            }
             status = FASP_SUCCESS; break;
         }
         
         /*-- Form Prolongation --*/
-        form_tentative_p(&vertices[level], &mgl[level].P, mgl[0].near_kernel_basis,
-                         level+1, num_aggs[level]);
+        form_tentative_p(&vertices[lvl], &mgl[lvl].P, mgl[0].near_kernel_basis,
+                         lvl+1, num_aggs[lvl]);
         
         /*-- Perform coarsening only up to the specified level --*/
-        if ( mgl[level].P.col < MIN_CDOF ) break;
+        if ( mgl[lvl].P.col < MIN_CDOF ) break;
         
         /*-- Form resitriction --*/
-        fasp_dcsr_trans(&mgl[level].P, &mgl[level].R);
+        fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
         
         /*-- Form coarse level stiffness matrix --*/
-        fasp_blas_dcsr_rap_agg(&mgl[level].R, &mgl[level].A, &mgl[level].P,
-                               &mgl[level+1].A);
+        fasp_blas_dcsr_rap_agg(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P,
+                               &mgl[lvl+1].A);
 
-        fasp_dcsr_free(&Neighbor[level]);
-        fasp_ivec_free(&vertices[level]);
+        fasp_dcsr_free(&Neighbor[lvl]);
+        fasp_ivec_free(&vertices[lvl]);
         
-        ++level;
+        ++lvl;
         
 #if DIAGONAL_PREF
-        fasp_dcsr_diagpref(&mgl[level].A); // reorder each row to make diagonal appear first
+        fasp_dcsr_diagpref(&mgl[lvl].A); // reorder each row to make diagonal appear first
 #endif
         
     }
@@ -265,31 +270,31 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
 #if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK format
     dCSRmat Ac_tran;
-    fasp_dcsr_trans(&mgl[level].A, &Ac_tran);
+    fasp_dcsr_trans(&mgl[lvl].A, &Ac_tran);
     fasp_dcsr_sort(&Ac_tran);
-    fasp_dcsr_cp(&Ac_tran,&mgl[level].A);
+    fasp_dcsr_cp(&Ac_tran,&mgl[lvl].A);
     fasp_dcsr_free(&Ac_tran);
 #endif
     
 #if WITH_MUMPS
     /* Setup MUMPS direct solver on the coarsest level */
-    fasp_solver_mumps_steps(&mgl[level].A, &mgl[level].b, &mgl[level].x, 1);
+    fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, 1);
 #endif
     
     // setup total level number and current level
-    mgl[0].num_levels = max_levels = level+1;
+    mgl[0].num_levels = max_levels = lvl+1;
     mgl[0].w          = fasp_dvec_create(m);
     
-    for ( level = 1; level < max_levels; ++level) {
-        INT mm = mgl[level].A.row;
-        mgl[level].num_levels = max_levels;
-        mgl[level].b          = fasp_dvec_create(mm);
-        mgl[level].x          = fasp_dvec_create(mm);
+    for ( lvl = 1; lvl < max_levels; ++lvl) {
+        INT mm = mgl[lvl].A.row;
+        mgl[lvl].num_levels = max_levels;
+        mgl[lvl].b          = fasp_dvec_create(mm);
+        mgl[lvl].x          = fasp_dvec_create(mm);
         
         if ( cycle_type == NL_AMLI_CYCLE )
-            mgl[level].w = fasp_dvec_create(3*mm);
+            mgl[lvl].w = fasp_dvec_create(3*mm);
         else
-            mgl[level].w = fasp_dvec_create(2*mm);
+            mgl[lvl].w = fasp_dvec_create(2*mm);
     }
     
     if ( prtlvl > PRINT_NONE ) {
@@ -336,7 +341,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     
     ILU_param iluparam;
     SHORT     max_levels=param->max_levels;
-    SHORT     i, level=0, status=FASP_SUCCESS;
+    SHORT     i, lvl=0, status=FASP_SUCCESS;
     REAL      setup_start, setup_end;
     
     dCSRmat temp1, temp2;
@@ -398,36 +403,39 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         param->pair_number = MIN(param->pair_number, max_levels);
     
     // Main AMG setup loop
-    while ( (mgl[level].A.ROW > min_cdof) && (level < max_levels-1) ) {
+    while ( (mgl[lvl].A.ROW > min_cdof) && (lvl < max_levels-1) ) {
         
         
         /*-- setup ILU decomposition if necessary */
-        if ( level < param->ILU_levels ) {
-            status = fasp_ilu_dbsr_setup(&mgl[level].A, &mgl[level].LU, &iluparam);
+        if ( lvl < param->ILU_levels ) {
+            status = fasp_ilu_dbsr_setup(&mgl[lvl].A, &mgl[lvl].LU, &iluparam);
             if ( status < 0 ) {
-                param->ILU_levels = level;
-                printf("### WARNING: ILU setup on level-%d failed!\n", level);
+                if ( prtlvl > PRINT_MIN ) {
+                    printf("### WARNING: ILU setup on level-%d failed!\n", lvl);
+                    printf("### WARNING: Disable ILU for level >= %d.\n", lvl);
+                }
+                param->ILU_levels = lvl;
             }
         }
         
         /*-- get the diagonal inverse --*/
-        mgl[level].diaginv = fasp_dbsr_getdiaginv(&mgl[level].A);
+        mgl[lvl].diaginv = fasp_dbsr_getdiaginv(&mgl[lvl].A);
 
         /*-- Aggregation --*/
-        //mgl[level].PP =  fasp_dbsr_getblk_dcsr(&mgl[level].A);
-        mgl[level].PP = fasp_dbsr_Linfinity_dcsr(&mgl[level].A);
+        //mgl[lvl].PP =  fasp_dbsr_getblk_dcsr(&mgl[lvl].A);
+        mgl[lvl].PP = fasp_dbsr_Linfinity_dcsr(&mgl[lvl].A);
         
         switch ( param->aggregation_type ) {
                 
             case VMB: // VMB aggregation
                 
-                status = aggregation_vmb(&mgl[level].PP, &vertices[level], param,
-                                         level+1, &Neighbor[level], &num_aggs[level]);
+                status = aggregation_vmb(&mgl[lvl].PP, &vertices[lvl], param,
+                                         lvl+1, &Neighbor[lvl], &num_aggs[lvl]);
                 
                 /*-- Choose strenth threshold adaptively --*/
-                if ( num_aggs[level]*4 > mgl[level].PP.row )
+                if ( num_aggs[lvl]*4 > mgl[lvl].PP.row )
                     param->strong_coupled /= 4;
-                else if ( num_aggs[level]*1.25 < mgl[level].PP.row )
+                else if ( num_aggs[lvl]*1.25 < mgl[lvl].PP.row )
                     param->strong_coupled *= 1.5;
                 
                 break;
@@ -441,79 +449,81 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         
         if ( status < 0 ) {
             // When error happens, force solver to use the current multigrid levels!
-            printf("### WARNING: Coarsening on level-%d is not successful!\n", level);
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Aggregation on level-%d failed!\n", lvl);
+            }
             status = FASP_SUCCESS; break;
         }
 
         /* -- Form Prolongation --*/
-        //form_tentative_p_bsr(&vertices[level], &mgl[level].P, &mgl[0], level+1, num_aggs[level]);
+        //form_tentative_p_bsr(&vertices[lvl], &mgl[lvl].P, &mgl[0], lvl+1, num_aggs[lvl]);
         
-        if ( level == 0 && mgl[0].near_kernel_dim >0 ) {
-            form_tentative_p_bsr1(&vertices[level], &mgl[level].P, &mgl[0], level+1,
-                                  num_aggs[level], mgl[0].near_kernel_dim,
+        if ( lvl == 0 && mgl[0].near_kernel_dim >0 ) {
+            form_tentative_p_bsr1(&vertices[lvl], &mgl[lvl].P, &mgl[0], lvl+1,
+                                  num_aggs[lvl], mgl[0].near_kernel_dim,
                                   mgl[0].near_kernel_basis);
         }
         else {
-            form_boolean_p_bsr(&vertices[level], &mgl[level].P, &mgl[0], level+1,
-                               num_aggs[level]);
+            form_boolean_p_bsr(&vertices[lvl], &mgl[lvl].P, &mgl[0], lvl+1,
+                               num_aggs[lvl]);
         }
         
         /*-- Form resitriction --*/
-        fasp_dbsr_trans(&mgl[level].P, &mgl[level].R);
+        fasp_dbsr_trans(&mgl[lvl].P, &mgl[lvl].R);
         
         /*-- Form coarse level stiffness matrix --*/
-        fasp_blas_dbsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
+        fasp_blas_dbsr_rap(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
         
         /* -- Form extra near kernal space if needed --*/
         printf("Form extra near kernel space\n");
-        if (mgl[level].A_nk != NULL){
+        if (mgl[lvl].A_nk != NULL){
             
-            mgl[level+1].A_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
-            mgl[level+1].P_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
-            mgl[level+1].R_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            mgl[lvl+1].A_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            mgl[lvl+1].P_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            mgl[lvl+1].R_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
             
-            temp1 = fasp_format_dbsr_dcsr(&mgl[level].R);
-            fasp_blas_dcsr_mxm(&temp1, mgl[level].P_nk, mgl[level+1].P_nk);
-            fasp_dcsr_trans(mgl[level+1].P_nk, mgl[level+1].R_nk);
-            temp2 = fasp_format_dbsr_dcsr(&mgl[level+1].A);
-            fasp_blas_dcsr_rap(mgl[level+1].R_nk, &temp2, mgl[level+1].P_nk, mgl[level+1].A_nk);
+            temp1 = fasp_format_dbsr_dcsr(&mgl[lvl].R);
+            fasp_blas_dcsr_mxm(&temp1, mgl[lvl].P_nk, mgl[lvl+1].P_nk);
+            fasp_dcsr_trans(mgl[lvl+1].P_nk, mgl[lvl+1].R_nk);
+            temp2 = fasp_format_dbsr_dcsr(&mgl[lvl+1].A);
+            fasp_blas_dcsr_rap(mgl[lvl+1].R_nk, &temp2, mgl[lvl+1].P_nk, mgl[lvl+1].A_nk);
             fasp_dcsr_free(&temp1);
             fasp_dcsr_free(&temp2);
             
         }
                 
-        fasp_dcsr_free(&Neighbor[level]);
-        fasp_ivec_free(&vertices[level]);
+        fasp_dcsr_free(&Neighbor[lvl]);
+        fasp_ivec_free(&vertices[lvl]);
         
-        ++level;
+        ++lvl;
     }
     
 #if WITH_SuperLU
     /* Setup SuperLU direct solver on the coarsest level */
-    mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
+    mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
 #endif
     
     
 #if WITH_UMFPACK
     // Need to sort the matrix A for UMFPACK format
-    mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
+    mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
     dCSRmat Ac_tran;
-    fasp_dcsr_trans(&mgl[level].Ac, &Ac_tran);
+    fasp_dcsr_trans(&mgl[lvl].Ac, &Ac_tran);
     fasp_dcsr_sort(&Ac_tran);
-    fasp_dcsr_cp(&Ac_tran, &mgl[level].Ac);
+    fasp_dcsr_cp(&Ac_tran, &mgl[lvl].Ac);
     fasp_dcsr_free(&Ac_tran);
     
-    mgl[level].Numeric = fasp_umfpack_factorize(&mgl[level].Ac, 5);
+    mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].Ac, 5);
 #endif
     
 #if WITH_MUMPS
     /* Setup MUMPS direct solver on the coarsest level */
-    mgl[level].Ac = fasp_format_dbsr_dcsr(&mgl[level].A);
-    fasp_solver_mumps_steps(&mgl[level].Ac, &mgl[level].b, &mgl[level].x, 1);
+    mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
+    fasp_solver_mumps_steps(&mgl[lvl].Ac, &mgl[lvl].b, &mgl[lvl].x, 1);
 #endif
     
     // setup total level number and current level
-    mgl[0].num_levels = max_levels = level+1;
+    mgl[0].num_levels = max_levels = lvl+1;
     mgl[0].w = fasp_dvec_create(3*m*nb);
     
     if (mgl[0].A_nk != NULL){
@@ -528,20 +538,20 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         
     }
     
-    for ( level = 1; level < max_levels; level++ ) {
-        INT mm = mgl[level].A.ROW*nb;
-        mgl[level].num_levels = max_levels;
-        mgl[level].b = fasp_dvec_create(mm);
-        mgl[level].x = fasp_dvec_create(mm);
-        mgl[level].w = fasp_dvec_create(3*mm);
+    for ( lvl = 1; lvl < max_levels; lvl++ ) {
+        INT mm = mgl[lvl].A.ROW*nb;
+        mgl[lvl].num_levels = max_levels;
+        mgl[lvl].b = fasp_dvec_create(mm);
+        mgl[lvl].x = fasp_dvec_create(mm);
+        mgl[lvl].w = fasp_dvec_create(3*mm);
         
-        if (mgl[level].A_nk != NULL){
+        if (mgl[lvl].A_nk != NULL){
             
 #if WITH_UMFPACK
             // Need to sort the matrix A_nk for UMFPACK
-            fasp_dcsr_trans(mgl[level].A_nk, &temp1);
+            fasp_dcsr_trans(mgl[lvl].A_nk, &temp1);
             fasp_dcsr_sort(&temp1);
-            fasp_dcsr_cp(&temp1, mgl[level].A_nk);
+            fasp_dcsr_cp(&temp1, mgl[lvl].A_nk);
             fasp_dcsr_free(&temp1);
 #endif
             

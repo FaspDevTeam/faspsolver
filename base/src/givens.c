@@ -18,7 +18,7 @@
  * \brief Perform Givens rotations to compute y |beta*e_1- H*y|
  *
  * \param beta   Norm of residual r_0
- * \param H      (m+1)*m upper Hessenberg dCSRmat matrix 
+ * \param H      Upper Hessenberg dCSRmat matrix: (m+1)*m
  * \param y      Minimizer of |beta*e_1- H*y|
  * \param tmp    Temporary work array
  *

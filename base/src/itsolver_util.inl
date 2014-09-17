@@ -31,7 +31,7 @@
 #define ITS_COMPRES(relres) printf("### WARNING: The computed relative residual = %e!\n",(relres))
 
 //! Warning for too small sp 
-#define ITS_SMALLSP printf("### WARNING: The sp is too small! %s : %d\n", __FILE__, __LINE__)
+#define ITS_SMALLSP printf("### WARNING: sp is too small! %s : %d\n", __FILE__, __LINE__)
 
 //! Warning for restore previous iteration 
 #define ITS_RESTORE(iter) printf("### WARNING: Restore iteration %d!",(iter));

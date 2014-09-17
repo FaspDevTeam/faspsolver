@@ -52,7 +52,7 @@ unsigned INT total_alloc_count = 0; // Total number of allocations
  * Modified by Chunsheng Feng on 12/20/2013
  * Modified by Chunsheng Feng on 07/23/2013
  * Modified by Chunsheng Feng on 07/30/2013
- * Modified by Chensong Zhang on 07/30/2013: return warning if failed
+ * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
 void * fasp_mem_calloc (LONGLONG size, 
                         INT type)
@@ -82,7 +82,7 @@ void * fasp_mem_calloc (LONGLONG size,
     }
     
     if ( mem == NULL ) {
-        printf("### WARNING: Cannot allocate %.3lfKB RAM(%lld)!\n",
+        printf("### ERROR: Cannot allocate %.3lfKB RAM(%lld)!\n",
                (REAL)tsize/1024.0,tsize);
     }
     
@@ -107,7 +107,7 @@ void * fasp_mem_calloc (LONGLONG size,
  * \date   2010/08/12 
  *
  * Modified by Chunsheng Feng on 07/23/2013
- * Modified by Chensong Zhang on 07/30/2013: return warning if failed
+ * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
 void * fasp_mem_realloc (void * oldmem, 
                          LONG tsize)
@@ -121,7 +121,7 @@ void * fasp_mem_realloc (void * oldmem,
 #endif
     
     if ( mem == NULL ) {
-        printf("### WARNING: Cannot allocate %.3fKB RAM!\n", tsize/1024.0);
+        printf("### ERROR: Cannot allocate %.3fKB RAM!\n", tsize/1024.0);
     }
 
 #if CHMEM_MODE    

@@ -482,9 +482,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
             }
             isorate = (REAL)num_agg/domin;
             if ( isorate < 0.1 ) {
-                printf("### WARNING: Could not find enough aggregates!\n");
-                status = ERROR_AMG_COARSEING;
-	            goto END;
+                status = ERROR_AMG_COARSEING; goto END;
             }
         }
 
@@ -679,9 +677,7 @@ static SHORT aggregation_vmb (dCSRmat *A,
     INT *temp_C = (INT*)fasp_mem_calloc(row,sizeof(INT));
 
     if (*num_aggregations < MIN_CDOF) {
-        printf("### WARNING: Could not find enough aggregates!\n");
-        status = ERROR_AMG_COARSEING;
-	    goto END;
+        status = ERROR_AMG_COARSEING; goto END;
     }
     
     num_each_aggregation = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));

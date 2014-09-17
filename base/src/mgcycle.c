@@ -448,11 +448,13 @@ ForwardSweep:
         /* use iterative solver on the coarest level */
         default: {
             const INT  csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
-            const INT  cmaxit = MIN(csize*csize, 1000); // coarse level iteration number
+            const INT  cmaxit = MIN(csize*csize, 200); // coarse level iteration number
             const REAL ctol = param->tol; // coarse level tolerance
             if ( fasp_solver_dbsr_pvgmres(&mgl[nl-1].A,&mgl[nl-1].b,&mgl[nl-1].x,
                                           NULL,ctol,cmaxit,25,1,0)<0 ) {
-                printf("### WARNING: Coarse level solver does not converge in %d iterations!\n", cmaxit);
+                if ( prtlvl > PRINT_MIN ) {
+                    printf("### WARNING: Coarse solver does not converge! maxit=%d\n", cmaxit);
+                }
             }
         }
     }

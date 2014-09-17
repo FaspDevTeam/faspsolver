@@ -3057,9 +3057,6 @@ static void fasp_dvecind_read_s (FILE *fp,
     
     for ( i = 0; i < n; ++i ) {
         fscanf(fp, "%d %le", &index, &value);
-        if (value>BIGREAL || index>=n) {
-            printf("### WARNING: index = %d, value = %lf\n", index, value);
-        }
         b->val[index] = value;
     }
 }
@@ -3080,9 +3077,6 @@ static void fasp_dvecind_read_b (FILE *fp,
         fread(&value, dlength, 1, fp);
         index = endian_convert_int(index, ilength, endianflag);
         value = endian_convert_real(value, ilength, endianflag);
-        if (value>BIGREAL || index>=n) {
-            printf("### WARNING: index = %d, value = %lf\n", index, value);
-        }
         b->val[index] = value;
     }
 }
