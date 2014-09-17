@@ -1119,7 +1119,7 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
 MEMERR:
     printf("### ERROR: ILU needs %d memory, only %d available! %s : %d\n",
            memneed, iludata->nwork, __FILE__, __LINE__);
-    exit(ERROR_ALLOC_MEM);
+    fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
 }
 
 /**
@@ -2284,7 +2284,7 @@ static dCSRmat form_contractor (dCSRmat *A,
                 break;
             default:
                 printf("### ERROR: Wrong smoother type!\n");
-                exit(ERROR_INPUT_PAR);
+                fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
         }
         
         // store to B

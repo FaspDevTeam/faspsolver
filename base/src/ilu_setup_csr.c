@@ -171,8 +171,8 @@ FINISHED:
     
 #else // WITH_ILU
     
-    printf("### ERROR: ILU is not enabled!!!\n");
-    exit(ERROR_MISC);
+    printf("### ERROR: ILU is not enabled!\n");
+    fasp_chkerr(ERROR_MISC, __FUNCTION__);
     
 #endif
 }

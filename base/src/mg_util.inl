@@ -132,10 +132,9 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
         
         default:
             printf("### ERROR: Wrong smoother type %d!\n", smoother); 
-            exit(ERROR_INPUT_PAR);
+            fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
     }
 }
-
 
 /**
  * \fn static void fasp_dcsr_postsmoothing (const SHORT smoother, dCSRmat *A, 
@@ -231,7 +230,7 @@ static void fasp_dcsr_postsmoothing (const SHORT smoother,
         
         default:
             printf("### ERROR: Wrong smoother type %d!\n", smoother); 
-            exit(ERROR_INPUT_PAR);
+            fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
     }
 }
 

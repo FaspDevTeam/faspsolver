@@ -57,7 +57,7 @@ void fasp_param_set (int argc,
         else if ( strcmp(argv[arg_index], "-print") == 0 ) {
             arg_index++;
             if ( arg_index >= argc ) {
-                printf("### ERROR: Expecting print level (an integer between 0 and 10).\n");
+                printf("### ERROR: Expecting print level (int between 0 and 10).\n");
                 print_usage = 1; break;
             }
             iniparam->print_level = atoi(argv[arg_index]);

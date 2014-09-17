@@ -2,7 +2,7 @@
  *
  *  \brief Wrappers for accessing functions by advanced users
  *  
- *  \note Input variables should not need fasp.h!!!
+ *  TODO: Input variables should not need fasp.h!!! --Chensong
  */
 
 #include "fasp.h"

@@ -2193,7 +2193,7 @@ void fasp_hb_read (char *input_file,
     
     // convert matrix
     if (ncol != nrow) {
-        printf ( "### ERROR: The matrix is not square!!\n" );
+        printf ( "### ERROR: The matrix is not square!\n" );
         goto FINISHED;
     }
     
@@ -2240,13 +2240,13 @@ void fasp_hb_read (char *input_file,
     
     if ( nrhs == 0 ){
         
-        printf ( "### ERROR: There is not right hand side!!\n" );
+        printf ( "### ERROR: There is not right hand side!\n" );
         goto FINISHED;
         
     }
     else if (nrhs > 1){
         
-        printf ( "### ERROR: There is more than one right hand side!!\n" );
+        printf ( "### ERROR: There is more than one right hand side!\n" );
         goto FINISHED;
         
     }

@@ -652,7 +652,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                         break;
                     default:
                         printf("### ERROR: Wrong smoother type %d!\n", smoother);
-                        exit(ERROR_INPUT_PAR);
+                        fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
                 }
             }
         }
@@ -727,7 +727,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                         break;
                     default:
                         printf("### ERROR: Wrong smoother type!\n");
-                        exit(ERROR_INPUT_PAR);
+                        fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
                 }
             }
         }
@@ -837,8 +837,8 @@ void fasp_amg_amli_coef (const REAL lambda_max,
     }
     
     else {
-        printf("### ERROR: Wrong degree number %d for AMLI polynomial!\n", degree);
-        exit(ERROR_INPUT_PAR);
+        printf("### ERROR: Wrong AMLI degree %d!\n", degree);
+        fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
     }
     
     return;

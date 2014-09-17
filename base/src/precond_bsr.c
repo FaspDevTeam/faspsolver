@@ -319,7 +319,7 @@ void fasp_precond_dbsr_ilu (REAL *r,
     REAL       *zz, *zr, *mult;       
     
     if (iludata->nwork<memneed) {
-        printf("### ERROR: Need %d memory, only %d available!!!\n", memneed, iludata->nwork);
+        printf("### ERROR: Need %d memory, only %d available!\n", memneed, iludata->nwork);
         exit(ERROR_ALLOC_MEM);
     }
     

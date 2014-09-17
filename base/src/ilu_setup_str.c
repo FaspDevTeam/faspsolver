@@ -115,7 +115,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
             memcpy(LU->offdiag[5],offdiag5,((ngrid - ABS(offsets[i]))*nc2)*sizeof(REAL));
         }    
         else {
-            printf("### ERROR: offsets for structured ILU is illegal!\n");
+            printf("### ERROR: Offsets for structured ILU is illegal!\n");
             return;
         }
     }

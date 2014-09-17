@@ -527,7 +527,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     return status;
     
  MEMORY_ERROR:
-    printf("krylov_AMG_bsr: Cannot allocate memory!\n");
+    printf("### ERROR: %s cannot allocate memory!\n", __FUNCTION__);
     exit(status);    
 }
 
@@ -686,7 +686,7 @@ FINISHED:
     return status;
     
 MEMORY_ERROR:
-    printf("krylov_AMG_bsr: Cannot allocate memory!\n");
+    printf("### ERROR: %s cannot allocate memory!\n", __FUNCTION__);
     exit(status);
 }
 
@@ -842,7 +842,7 @@ FINISHED:
     return status;
     
 MEMORY_ERROR:
-    printf("krylov_AMG_bsr: Cannot allocate memory!\n");
+    printf("### ERROR: %s cannot allocate memory!\n", __FUNCTION__);
     exit(status);
 }
 
