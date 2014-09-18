@@ -7,6 +7,8 @@ File Name: CHANGES
 - Modify error print level and exit output.
 - Fix several small problems in GMRES-type methods.
 - Fix an AMG setup bug when setting up coarsest systems for direct solvers. 
+- Fix a bug in setting restart number for pvgmres_mf.
+- Fix warnings in VS2010 Win32 version.
 - File name change to avoid conflicts: message.h -> fasp_const.h.
 - Update regression test results.
 
