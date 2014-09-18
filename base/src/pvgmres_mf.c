@@ -84,12 +84,12 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
     REAL  **p = NULL, **hh = NULL;
     REAL  *work = NULL;
     
-    REAL   cr          = 1.0;     // convergence rate
-    REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
-    INT    d           = 3;       // reduction for the restart parameter
-    INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
-    INT    Restart;               // the real restart in some fixed restarted cycle
+    REAL   cr           = 1.0;     // convergence rate
+    REAL   r_norm_old   = 0.0;     // save the residual norm of the previous restart cycle
+    INT    d            = 3;       // reduction for the restart parameter
+    INT    restart_max  = restart; // upper bound for restart in each restart cycle
+    INT    restart_min  = 3;       // lower bound for restart in each restart cycle (should be small)
+    INT    Restart      = restart; // the real restart in some fixed restarted cycle
     INT    Restartplus1 = Restart + 1;
     
     LONG   worksize = (restart+4)*(restart+n)+1-n;
