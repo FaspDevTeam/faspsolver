@@ -118,6 +118,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
 {
     const SHORT prtlvl     = param->print_level;
     const SHORT cycle_type = param->cycle_type;
+    const SHORT csolver    = param->coarse_solver;
     const SHORT min_cdof   = MAX(param->coarse_dof,50);
     const INT   m          = mgl[0].A.row;
     
@@ -257,19 +258,33 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
         
     }
     
-#if WITH_UMFPACK
-    // Need to sort the matrix A for UMFPACK format
-    dCSRmat Ac_tran;
-    fasp_dcsr_trans(&mgl[lvl].A, &Ac_tran);
-    fasp_dcsr_sort(&Ac_tran);
-    fasp_dcsr_cp(&Ac_tran,&mgl[lvl].A);
-    fasp_dcsr_free(&Ac_tran);
-#endif
-    
+    // Setup coarse level systems for direct solvers
+    switch (csolver) {
+            
 #if WITH_MUMPS
-    /* Setup MUMPS direct solver on the coarsest level */
-    fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, 1);
+        case SOLVER_MUMPS: {
+            // Setup MUMPS direct solver on the coarsest level
+            fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, 1);
+            break;
+        }
 #endif
+            
+#if WITH_UMFPACK
+        case SOLVER_UMFPACK: {
+            // Need to sort the matrix A for UMFPACK to work
+            dCSRmat Ac_tran;
+            fasp_dcsr_trans(&mgl[lvl].A, &Ac_tran);
+            fasp_dcsr_sort(&Ac_tran);
+            fasp_dcsr_cp(&Ac_tran, &mgl[lvl].A);
+            fasp_dcsr_free(&Ac_tran);
+            break;
+        }
+#endif
+            
+        default:
+            // Do nothing!
+            break;
+    }
     
     // setup total level number and current level
     mgl[0].num_levels = max_levels = lvl+1;
@@ -323,6 +338,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
 {
     const SHORT prtlvl     = param->print_level;
     const SHORT cycle_type = param->cycle_type;
+    const SHORT csolver    = param->coarse_solver;
     const SHORT min_cdof   = MAX(param->coarse_dof,50);
     const INT   m          = mgl[0].A.row;
     
@@ -442,19 +458,33 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
         ++lvl;
     }
     
-#if WITH_UMFPACK
-    // Need to sort the matrix A for UMFPACK format
-    dCSRmat Ac_tran;
-    fasp_dcsr_trans(&mgl[lvl].A, &Ac_tran);
-    fasp_dcsr_sort(&Ac_tran);
-    fasp_dcsr_cp(&Ac_tran,&mgl[lvl].A);
-    fasp_dcsr_free(&Ac_tran);
-#endif
-    
+    // Setup coarse level systems for direct solvers
+    switch (csolver) {
+            
 #if WITH_MUMPS
-    /* Setup MUMPS direct solver on the coarsest level */
-    fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, 1);
+        case SOLVER_MUMPS: {
+            // Setup MUMPS direct solver on the coarsest level
+            fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, 1);
+            break;
+        }
 #endif
+            
+#if WITH_UMFPACK
+        case SOLVER_UMFPACK: {
+            // Need to sort the matrix A for UMFPACK to work
+            dCSRmat Ac_tran;
+            fasp_dcsr_trans(&mgl[lvl].A, &Ac_tran);
+            fasp_dcsr_sort(&Ac_tran);
+            fasp_dcsr_cp(&Ac_tran, &mgl[lvl].A);
+            fasp_dcsr_free(&Ac_tran);
+            break;
+        }
+#endif
+            
+        default:
+            // Do nothing!
+            break;
+    }
     
     // setup total level number and current level
     mgl[0].num_levels = max_levels = lvl+1;
@@ -512,6 +542,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
                                             AMG_param *param)
 {
     const SHORT prtlvl   = param->print_level;
+    const SHORT csolver  = param->coarse_solver;
     const SHORT min_cdof = MAX(param->coarse_dof,50);
     const INT   m        = mgl[0].A.ROW;
     const INT   nb       = mgl[0].A.nb;
@@ -676,29 +707,44 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         ++lvl;
     }
     
-#if WITH_SuperLU
-    /* Setup SuperLU direct solver on the coarsest level */
-    mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
-#endif
-    
-#if WITH_UMFPACK
-    // Need to sort the matrix A for UMFPACK format
-    mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
-    dCSRmat Ac_tran;
-    fasp_dcsr_trans(&mgl[lvl].Ac, &Ac_tran);
-    fasp_dcsr_sort(&Ac_tran);
-    fasp_dcsr_cp(&Ac_tran, &mgl[lvl].Ac);
-    fasp_dcsr_free(&Ac_tran);
-    
-    mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].Ac, 5);
-#endif
-    
+    // Setup coarse level systems for direct solvers (BSR version)
+    switch (csolver) {
+            
 #if WITH_MUMPS
-    /* Setup MUMPS direct solver on the coarsest level */
-    mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
-    fasp_solver_mumps_steps(&mgl[lvl].Ac, &mgl[lvl].b, &mgl[lvl].x, 1);
+        case SOLVER_MUMPS: {
+            // Setup MUMPS direct solver on the coarsest level
+            mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
+            fasp_solver_mumps_steps(&mgl[lvl].Ac, &mgl[lvl].b, &mgl[lvl].x, 1);
+            break;
+        }
 #endif
-    
+            
+#if WITH_UMFPACK
+        case SOLVER_UMFPACK: {
+            // Need to sort the matrix A for UMFPACK to work
+            mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
+            dCSRmat Ac_tran;
+            fasp_dcsr_trans(&mgl[lvl].Ac, &Ac_tran);
+            fasp_dcsr_sort(&Ac_tran);
+            fasp_dcsr_cp(&Ac_tran, &mgl[lvl].Ac);
+            fasp_dcsr_free(&Ac_tran);
+            mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].Ac, 5);
+            break;
+        }
+#endif
+            
+#if WITH_SuperLU
+        case SOLVER_SUPERLU: {
+            /* Setup SuperLU direct solver on the coarsest level */
+            mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
+        }
+#endif
+            
+        default:
+            // Do nothing!
+            break;
+    }
+
     // setup total level number and current level
     mgl[0].num_levels = max_levels = lvl+1;
     mgl[0].w = fasp_dvec_create(3*m*nb);
@@ -714,7 +760,6 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
 #endif
         
     }
-
     
     for ( lvl = 1; lvl < max_levels; lvl++ ) {
         INT mm = mgl[lvl].A.ROW*nb;

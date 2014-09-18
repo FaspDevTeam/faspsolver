@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "messages.h"
+#include "fasp_const.h"
 
 #ifndef __FASP_HEADER__       /*-- allow multiple inclusions --*/
 #define __FASP_HEADER__       /**< indicate fasp.h has been included before */

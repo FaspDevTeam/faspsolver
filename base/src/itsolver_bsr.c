@@ -642,7 +642,8 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
     precdata.A_nk = &A_tran;
 #else
     precdata.A_nk = A_nk;
-#endif    
+#endif
+    
     precdata.P_nk = P_nk;
     precdata.R_nk = R_nk;
     
