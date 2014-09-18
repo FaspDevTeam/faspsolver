@@ -2,7 +2,7 @@
  *  \brief mesh input, output, refine etc.
  */
 
-#include "messages.h"
+#include "fasp.h"
 #include "mesh.h"
 
 #define DIM 2

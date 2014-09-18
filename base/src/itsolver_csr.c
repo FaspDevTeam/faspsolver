@@ -667,6 +667,7 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
 #else
     pcdata.A_nk = A_nk;
 #endif
+    
     pcdata.P_nk = P_nk;
     pcdata.R_nk = R_nk;
     

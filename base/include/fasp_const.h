@@ -1,8 +1,8 @@
-/*! \file messages.h
+/*! \file fasp_const.h
  *  \brief Definition of all kinds of messages, including error messages, 
  *         solver types, etc.
  *
- *  \note  This is internal use only. 
+ *  \note  This is internal use only. Do NOT change.
  *
  *---------------------------------------------------------------------------------
  *  Created  by Chensong Zhang on 03/20/2010.
@@ -13,6 +13,7 @@
  *  Modified by Chensong Zhang on 02/16/2013: GS -> SMOOTHER_GS, etc.
  *  Modified by Chensong Zhang on 04/09/2013: Add safe krylov methods.
  *  Modified by Chensong Zhang on 09/22/2013: Clean up Doxygen.
+ *  Modified by Chensong Zhang on 09/17/2013: Filename changed from message.h.
  *---------------------------------------------------------------------------------
  *
  */
