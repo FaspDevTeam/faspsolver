@@ -84,7 +84,6 @@
  * Rewritten by Chensong Zhang on 04/30/2012
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init 
  * Modified by Chensong Zhang on 03/31/2013
- *
  */
 INT fasp_solver_dcsr_pbcgs (dCSRmat *A, 
                             dvector *b, 
@@ -210,7 +209,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
-        else {
+        else { // Possible breakdown?
             ITS_DIVZERO; goto FINISHED;
         }
         
@@ -225,7 +224,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         normu   = fasp_blas_array_norm2(m,uval);
         reldiff = normd/normu;
         
-        if ( normd < TOL_s ) {
+        if ( normd < TOL_s ) { // Possible breakdown?
             ITS_SMALLSP; goto FINISHED;
         }
 
