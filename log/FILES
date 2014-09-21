@@ -2,19 +2,19 @@
      170 ./base/include/doxygen.h
     1131 ./base/include/fasp.h
      678 ./base/include/fasp_block.h
+     233 ./base/include/fasp_const.h
     2848 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
     5818 ./base/include/malloc.c.h
-     232 ./base/include/messages.h
      291 ./base/include/nedmalloc.h
      274 ./base/src/factor.f
     1207 ./base/src/schwarz.f
      148 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
-     242 ./base/src/amg_setup_rs.c
-     759 ./base/src/amg_setup_sa.c
-     581 ./base/src/amg_setup_ua.c
+     246 ./base/src/amg_setup_rs.c
+     804 ./base/src/amg_setup_sa.c
+     611 ./base/src/amg_setup_ua.c
      317 ./base/src/amg_solve.c
      849 ./base/src/amlirecur.c
      271 ./base/src/array.c
@@ -47,24 +47,24 @@
      842 ./base/src/interpolation_em.c
     3225 ./base/src/io.c
      580 ./base/src/itsolver_bcsr.c
-     851 ./base/src/itsolver_bsr.c
-     701 ./base/src/itsolver_csr.c
+     852 ./base/src/itsolver_bsr.c
+     702 ./base/src/itsolver_csr.c
      363 ./base/src/itsolver_mf.c
      395 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
      254 ./base/src/memory.c
      289 ./base/src/message.c
-     562 ./base/src/mgcycle.c
+     565 ./base/src/mgcycle.c
      141 ./base/src/mgrecur.c
      391 ./base/src/ordering.c
      975 ./base/src/parameters.c
-    1421 ./base/src/pbcgs.c
+    1420 ./base/src/pbcgs.c
      408 ./base/src/pbcgs_mf.c
     1186 ./base/src/pcg.c
      337 ./base/src/pcg_mf.c
      172 ./base/src/pgcg.c
      180 ./base/src/pgcg_mf.c
-    1386 ./base/src/pgmres.c
+    1368 ./base/src/pgmres.c
      306 ./base/src/pgmres_mf.c
     1284 ./base/src/pminres.c
      458 ./base/src/pminres_mf.c
@@ -107,4 +107,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      239 ./base/src/mg_util.inl
-   88880 total
+   88946 total
