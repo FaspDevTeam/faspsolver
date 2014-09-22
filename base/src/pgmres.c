@@ -149,14 +149,11 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
     
-    // if initial residual is small, no need to continue!
-    if ( relres < tol ) goto FINISHED;
-    
     // store initial residual
     norms[0] = relres;
     
     /* GMRES(M) outer iteration */
-    while ( iter < MaxIt ) {
+    while ( iter < MaxIt && relres > tol ) {
         
         rs[0] = r_norm;
         
@@ -218,7 +215,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
             print_itinfo(print_level, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // should we exit the restart cycle
+            // exit the restart cycle if reaches tolerance
             if ( relres <= tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -448,14 +445,11 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
     
-    // if initial residual is small, no need to continue!
-    if ( relres < tol ) goto FINISHED;
-    
     // store initial residual
     norms[0] = relres;
     
     /* GMRES(M) outer iteration */
-    while ( iter < MaxIt ) {
+    while ( iter < MaxIt && relres > tol ) {
         
         rs[0] = r_norm;
         
@@ -517,7 +511,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
             print_itinfo(print_level, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // should we exit the restart cycle
+            // exit the restart cycle if reaches tolerance
             if ( relres <= tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -549,7 +543,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
         // Check: prevent false convergence
         if ( relres <= tol && iter >= MIN_ITER ) {
             
-            // recompute residual
+            // compute residual
             fasp_array_cp(n, b->val, r);
             fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, r);
             r_norm = fasp_blas_array_norm2(n, r);
@@ -747,14 +741,11 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
     
-    // if initial residual is small, no need to continue!
-    if ( relres < tol ) goto FINISHED;
-    
     // store initial residual
     norms[0] = relres;
     
     /* GMRES(M) outer iteration */
-    while ( iter < MaxIt ) {
+    while ( iter < MaxIt && relres > tol ) {
         
         rs[0] = r_norm;
         
@@ -816,7 +807,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
             print_itinfo(print_level, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // should we exit the restart cycle
+            // exit the restart cycle if reaches tolerance
             if ( relres <= tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -848,7 +839,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
         // Check: prevent false convergence
         if ( relres <= tol && iter >= MIN_ITER ) {
             
-            // recompute residual
+            // compute residual
             fasp_array_cp(n, b->val, r);
             fasp_blas_dbsr_aAxpy(-1.0, A, x->val, r);
             r_norm = fasp_blas_array_norm2(n, r);
@@ -1046,14 +1037,11 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
     
-    // if initial residual is small, no need to continue!
-    if ( relres < tol ) goto FINISHED;
-    
     // store initial residual
     norms[0] = relres;
     
     /* GMRES(M) outer iteration */
-    while ( iter < MaxIt ) {
+    while ( iter < MaxIt && relres > tol ) {
         
         rs[0] = r_norm;
         
@@ -1115,7 +1103,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
             print_itinfo(print_level, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // should we exit the restart cycle
+            // exit the restart cycle if reaches tolerance
             if ( relres <= tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -1147,7 +1135,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
         // Check: prevent false convergence
         if ( relres <= tol && iter >= MIN_ITER ) {
             
-            // recompute residual
+            // compute residual
             fasp_array_cp(n, b->val, r);
             fasp_blas_dstr_aAxpy(-1.0, A, x->val, r);
             r_norm = fasp_blas_array_norm2(n, r);
@@ -1316,7 +1304,7 @@ static double fasp_spectral_radius (dCSRmat *A,
 	for(j = 0; j < maxiter; j++)
 	{
         //		cusp::multiply(A, V[j], V[j + 1]);
-        fasp_blas_dcsr_mxv(A, p[j], p[j+1]);
+        fasp_blas_bdbsr_mxv(A, p[j], p[j+1]);
 		
 		for( i = 0; i <= j; i++)
 		{
