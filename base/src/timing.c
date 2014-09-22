@@ -9,7 +9,6 @@
 #include <omp.h>
 #endif
 
-#include "fasp_functs.h"
 #include "fasp.h"
 
 /*---------------------------------*/
@@ -24,10 +23,11 @@
  * \author Chunsheng Feng, Zheng LI
  * \date   11/10/2012
  *
+ * Modified by Chensong Zhang on 09/22/2014: Use CLOCKS_PER_SEC for cross-platform
  */
 void fasp_gettime (REAL *time)
 {
-    if (time != NULL) {
+    if ( time != NULL ) {
 #ifdef _OPENMP
         *time = omp_get_wtime();
 #else
