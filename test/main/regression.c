@@ -361,6 +361,23 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 ) {
+            /* GMRES */
+            printf("------------------------------------------------------------------\n");
+            printf("GMRES solver ...\n");
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.precond_type  = PREC_NULL;
+            itparam.itsolver_type = SOLVER_GMRES;
+            itparam.maxit         = 5000;
+            itparam.tol           = 1e-12;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
+        
+        if ( indp==1 || indp==2 ) {
             /* BiCGstab */
             printf("------------------------------------------------------------------\n");
             printf("BiCGstab solver ...\n");	
@@ -376,7 +393,7 @@ int main (int argc, const char * argv[])
             
             check_solu(&x, &sol, tolerance);
         }
-        
+
         if ( indp==1 || indp==2 ) {
             /* BiCGstab in BSR */
             dBSRmat A_bsr = fasp_format_dcsr_dbsr (&A, 1);

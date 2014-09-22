@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+09/22/2014 FASP 1.5.9:
+- Update PGMRES code. 
+- Add new regression tests and update regression results. 
+
 09/22/2014 FASP 1.5.8:
 - Update documentation and webpage.
 - Regression test for fasp4blkoil due to a bug for setting parameters.
