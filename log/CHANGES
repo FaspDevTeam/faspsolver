@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-09/21/2014 FASP 1.5.8:
+09/22/2014 FASP 1.5.8:
 - Update documentation and webpage.
 - Regression test for fasp4blkoil due to a bug for setting parameters.
 - Modify warning print level: less important warnings requires level>PRINT_MIN.
@@ -9,6 +9,7 @@ File Name: CHANGES
 - Fix an AMG setup bug when setting up coarsest systems for direct solvers. 
 - Fix a bug in setting restart number for pvgmres_mf.
 - Fix warnings in VS2010 Win32 version.
+- Fix a bug in timing subroutine which caused wrong wall time for some systems.
 - File name change to avoid conflicts: message.h -> fasp_const.h.
 - Reorganize GMRES code. 
 - Update regression test results.
