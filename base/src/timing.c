@@ -31,7 +31,7 @@ void fasp_gettime (REAL *time)
 #ifdef _OPENMP
         *time = omp_get_wtime();
 #else
-        *time = (REAL) clock()*1.e-6;
+        *time = (REAL) clock() / CLOCKS_PER_SEC;
 #endif
     }
 }
