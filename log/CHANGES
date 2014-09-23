@@ -7,8 +7,10 @@ File Name: CHANGES
 - Change default max number of levels back to 20.
 - Check AMG coarse levels: decay ratio, density, min DOF. 
 - Resolve multiple warnings in *.c files.
+- Remove an unnecessary step: setting residual initial value.
 - Update Poisson FEM/FDM test results in out/poisson.out.
 - Update TODO list.
+- Modify Makefile and separate debug=yes and debug=all (all with FASP debug info).
 
 09/22/2014 FASP 1.5.8:
 - Update documentation and webpage.

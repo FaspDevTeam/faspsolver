@@ -202,9 +202,8 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
         while (i < Restart && iter < MaxIt) {
-            i ++;  iter ++;
             
-            fasp_array_set(n, z[i-1], 0.0);
+            i ++;  iter ++;
             
             /* apply the preconditioner */
             if (pc == NULL)

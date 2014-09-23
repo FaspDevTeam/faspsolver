@@ -172,8 +172,6 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
             
             i ++;  iter ++;
             
-            fasp_array_set(n, r, 0.0);
-            
             /* apply the preconditioner */
             if (pc == NULL)
                 fasp_array_cp(n, p[i-1], r);
@@ -241,7 +239,6 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
         //for (j = 0; j < n; j ++) w[j] *= rs[i-1];
         fasp_blas_array_ax(n, rs[i-1], w);
         for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], p[j], w);
-        fasp_array_set(n, r, 0.0);
         
         /* apply the preconditioner */
         if (pc == NULL)
