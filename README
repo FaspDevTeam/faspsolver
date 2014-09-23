@@ -32,9 +32,13 @@ of the FASP shared library and the test programs suite. The command to configure
 is:
 
     $ make config 
+
 or
+
     $ make config openmp=yes // in order to enable OpenMP
+
 or
+
     $ make config debug=yes // in order to enable DEBUG mode
 
 After configuring, to compile the shared library, just type 
@@ -50,19 +54,22 @@ Note: The default prefix is the FASP source directory.
 This package has been tested with: 
 
 --Linux
+
     C/C++:   gcc-4.2.x, gcc-4.4.x, gcc-4.5.x, gcc-4.6.x; 
     Fortran: gfortran-4.4.x, gfortran-4.5.x, gfortran-4.6.x, 
              g95-0.92, g95-0.93, ifort-11.x.
 
---Windows XP and Windows 7
-    C/C++:   VC++9.0, icc-11.1.x, icc-12.0.x; icc-13.0.x; icc-14.0.x;
-    Fortran: ifort-11.1.x, ifort-12.0.x; ifort-13.0.x; ifort-14.0.x.
-
 --Mac OS X
+
     C/C++:   gcc-4.4.x, gcc-4.5.x, gcc-4.6.x, gcc-4.8.x, icc-11.x; 
     Fortran: gfortran-4.4.x, gfortran-4.5.x, gfortran-4.6.x, gfortran-4.8.x, 
              g95-0.92, g95-0.93.
     
+--Windows XP and Windows 7
+
+    C/C++:   VC++9.0, icc-11.1.x, icc-12.0.x; icc-13.0.x; icc-14.0.x;
+    Fortran: ifort-11.1.x, ifort-12.0.x; ifort-13.0.x; ifort-14.0.x.
+
 ================================================================================
     
 More details about the FASP project can be found at http://fasp.sourceforge.net.
