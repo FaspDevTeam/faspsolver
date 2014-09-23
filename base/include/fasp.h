@@ -62,7 +62,7 @@
 #define MIN_CDOF         20    /**< Minimal number of coarsest variables */
 #define STAG_RATIO       1e-4  /**< Staganation tolerance = tol*STAGRATIO */
 #define MAX_STAG         20    /**< Maximal number of staganation times */
-#define MAX_RESTART      20    /**< Maximal number of restarting */
+#define MAX_RESTART      20    /**< Maximal number of restarting for BiCGStab */
 #define OPENMP_HOLDS     2000  /**< Switch to sequence version when size is small */
 
 /** 

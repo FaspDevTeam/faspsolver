@@ -147,7 +147,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
 
-    // rho = r* := r
+    // shadow residual rho = r* := r
     fasp_array_cp(m,r,rho);    
     temp1 = fasp_blas_array_dotprod(m,r,rho);
 
@@ -171,7 +171,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         if ( ABS(temp2) > SMALLREAL ) {
             alpha = temp1/temp2;
         }
-        else {
+        else { // Possible breakdown
             ITS_DIVZERO; goto FINISHED;
         }
         
@@ -192,10 +192,10 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         tempr = fasp_blas_array_dotprod(m,t,t);
         omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         
-        // delu = alpha pp + omega sp
+        // diffu = alpha pp + omega sp
         fasp_blas_array_axpby(m,alpha,pp,omega,sp);
         
-        // u = u + delu
+        // u = u + diffu
         fasp_blas_array_axpy(m,1.0,sp,uval);
         
         // r = s - omega t
@@ -209,7 +209,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
-        else { // Possible breakdown?
+        else { // Possible breakdown
             ITS_DIVZERO; goto FINISHED;
         }
         
@@ -221,13 +221,13 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         
         // compute difference
         normd   = fasp_blas_array_norm2(m,sp);
-        normu   = fasp_blas_array_norm2(m,uval);
-        reldiff = normd/normu;
-        
         if ( normd < TOL_s ) { // Possible breakdown?
             ITS_SMALLSP; goto FINISHED;
         }
 
+        normu   = fasp_blas_array_norm2(m,uval);
+        reldiff = normd/normu;
+        
         // compute residuals
         switch (stop_type) {
             case STOP_REL_RES:
@@ -325,7 +325,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         if ( relres < tol ) {
             if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
             
-            // re-init iteration param
+            // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_dcsr_aAxpy(-1.0,A,uval,r);
             
@@ -376,7 +376,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             
             ++more_step;
             ++restart_step;
-        } // end if safe guard
+        } // end of false convergence check
         
         absres0 = absres;
         
@@ -486,7 +486,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
     
-    // rho = r* := r
+    // shadow residual rho = r* := r
     fasp_array_cp(m,r,rho);
     temp1 = fasp_blas_array_dotprod(m,r,rho);
     
@@ -510,7 +510,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         if ( ABS(temp2) > SMALLREAL ) {
             alpha = temp1/temp2;
         }
-        else {
+        else { // Possible breakdown
             ITS_DIVZERO; goto FINISHED;
         }
         
@@ -531,10 +531,10 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         tempr = fasp_blas_array_dotprod(m,t,t);
         omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         
-        // delu = alpha pp + omega sp
+        // diffu = alpha pp + omega sp
         fasp_blas_array_axpby(m,alpha,pp,omega,sp);
         
-        // u = u + delu
+        // u = u + diffu
         fasp_blas_array_axpy(m,1.0,sp,uval);
         
         // r = s - omega t
@@ -548,7 +548,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
-        else {
+        else { // Possible breakdown
             ITS_DIVZERO; goto FINISHED;
         }
         
@@ -560,12 +560,12 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         
         // compute difference
         normd   = fasp_blas_array_norm2(m,sp);
-        normu   = fasp_blas_array_norm2(m,uval);
-        reldiff = normd/normu;
-        
-        if ( normd < TOL_s ) {
+        if ( normd < TOL_s ) { // Possible breakdown?
             ITS_SMALLSP; goto FINISHED;
         }
+        
+        normu   = fasp_blas_array_norm2(m,uval);
+        reldiff = normd/normu;
         
         // compute residuals
         switch (stop_type) {
@@ -664,7 +664,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         if ( relres < tol ) {
             if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
             
-            // re-init iteration param
+            // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_dbsr_aAxpy(-1.0,A,uval,r);
             
@@ -715,7 +715,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
             
             ++more_step;
             ++restart_step;
-        } // end if safe guard
+        } // end of false convergence check
         
         absres0 = absres;
         
@@ -825,7 +825,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
     
-    // rho = r* := r
+    // shadow residual rho = r* := r
     fasp_array_cp(m,r,rho);
     temp1 = fasp_blas_array_dotprod(m,r,rho);
     
@@ -849,7 +849,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         if ( ABS(temp2) > SMALLREAL ) {
             alpha = temp1/temp2;
         }
-        else {
+        else { // Possible breakdown
             ITS_DIVZERO; goto FINISHED;
         }
         
@@ -870,10 +870,10 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         tempr = fasp_blas_array_dotprod(m,t,t);
         omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         
-        // delu = alpha pp + omega sp
+        // diffu = alpha pp + omega sp
         fasp_blas_array_axpby(m,alpha,pp,omega,sp);
         
-        // u = u + delu
+        // u = u + diffu
         fasp_blas_array_axpy(m,1.0,sp,uval);
         
         // r = s - omega t
@@ -887,7 +887,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
-        else {
+        else { // Possible breakdown
             ITS_DIVZERO; goto FINISHED;
         }
         
@@ -899,12 +899,12 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         
         // compute difference
         normd   = fasp_blas_array_norm2(m,sp);
-        normu   = fasp_blas_array_norm2(m,uval);
-        reldiff = normd/normu;
-        
-        if ( normd < TOL_s ) {
+        if ( normd < TOL_s ) { // Possible breakdown?
             ITS_SMALLSP; goto FINISHED;
         }
+        
+        normu   = fasp_blas_array_norm2(m,uval);
+        reldiff = normd/normu;
         
         // compute residuals
         switch (stop_type) {
@@ -1003,7 +1003,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         if ( relres < tol ) {
             if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
             
-            // re-init iteration param
+            // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_bdcsr_aAxpy(-1.0,A,uval,r);
             
@@ -1054,7 +1054,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             
             ++more_step;
             ++restart_step;
-        } // end if safe guard
+        } // end of false convergence check
         
         absres0 = absres;
         
@@ -1164,7 +1164,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
     
-    // rho = r* := r
+    // shadow residual rho = r* := r
     fasp_array_cp(m,r,rho);
     temp1 = fasp_blas_array_dotprod(m,r,rho);
     
@@ -1188,7 +1188,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         if ( ABS(temp2) > SMALLREAL ) {
             alpha = temp1/temp2;
         }
-        else {
+        else { // Possible breakdown
             ITS_DIVZERO; goto FINISHED;
         }
         
@@ -1209,10 +1209,10 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         tempr = fasp_blas_array_dotprod(m,t,t);
         omega = fasp_blas_array_dotprod(m,s,t)/tempr;
         
-        // delu = alpha pp + omega sp
+        // diffu = alpha pp + omega sp
         fasp_blas_array_axpby(m,alpha,pp,omega,sp);
         
-        // u = u + delu
+        // u = u + diffu
         fasp_blas_array_axpy(m,1.0,sp,uval);
         
         // r = s - omega t
@@ -1226,7 +1226,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
-        else {
+        else { // Possible breakdown
             ITS_DIVZERO; goto FINISHED;
         }
         
@@ -1238,12 +1238,12 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         
         // compute difference
         normd   = fasp_blas_array_norm2(m,sp);
-        normu   = fasp_blas_array_norm2(m,uval);
-        reldiff = normd/normu;
-        
-        if ( normd < TOL_s ) {
+        if ( normd < TOL_s ) { // Possible breakdown?
             ITS_SMALLSP; goto FINISHED;
         }
+        
+        normu   = fasp_blas_array_norm2(m,uval);
+        reldiff = normd/normu;
         
         // compute residuals
         switch (stop_type) {
@@ -1342,7 +1342,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         if ( relres < tol ) {
             if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
             
-            // re-init iteration param
+            // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_dstr_aAxpy(-1.0,A,uval,r);
             
@@ -1393,7 +1393,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
             
             ++more_step;
             ++restart_step;
-        } // end if safe guard
+        } // end of false convergence check
         
         absres0 = absres;
         

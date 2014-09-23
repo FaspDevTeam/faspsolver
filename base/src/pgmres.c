@@ -167,8 +167,6 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
             
             i++; iter++;
             
-            fasp_array_set(n, r, 0.0);
-            
             /* apply the preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
@@ -236,7 +234,6 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
         /* apply the preconditioner */
-        fasp_array_set(n, r, 0.0);
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -463,8 +460,6 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
             
             i++; iter++;
             
-            fasp_array_set(n, r, 0.0);
-            
             /* apply the preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
@@ -532,7 +527,6 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
         /* apply the preconditioner */
-        fasp_array_set(n, r, 0.0);
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -759,8 +753,6 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
             
             i++; iter++;
             
-            fasp_array_set(n, r, 0.0);
-            
             /* apply the preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
@@ -828,7 +820,6 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
         /* apply the preconditioner */
-        fasp_array_set(n, r, 0.0);
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -1055,8 +1046,6 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
             
             i++; iter++;
             
-            fasp_array_set(n, r, 0.0);
-            
             /* apply the preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
@@ -1124,7 +1113,6 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
         /* apply the preconditioner */
-        fasp_array_set(n, r, 0.0);
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else

@@ -618,7 +618,6 @@ FINISHED:  // finish the iterative method
         return iter;
 }
 
-
 /**
  * \fn INT fasp_solver_bdcsr_pcg (block_dCSRmat *A, dvector *b, dvector *u,
  *                                precond *pc, const REAL tol, const INT MaxIt,
@@ -676,13 +675,13 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
     fasp_array_cp(m,b->val,r);
     fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
     
-    if (pc != NULL)
+    if ( pc != NULL )
         pc->fct(r,z,pc->data); /* Apply preconditioner */
     else
         fasp_array_cp(m,r,z); /* No preconditioner */
     
     // compute initial residuals
-    switch (stop_type) {
+    switch ( stop_type ) {
         case STOP_REL_RES:
             absres0 = fasp_blas_array_norm2(m,r);
             normr0  = MAX(SMALLREAL,absres0);
@@ -851,7 +850,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
             if ( relres < tol ) break;
             
             if ( more_step >= MaxRestartStep ) {
-                if (print_level>PRINT_MIN) ITS_ZEROTOL;
+                if (print_level > PRINT_MIN) ITS_ZEROTOL;
                 iter = ERROR_SOLVER_TOLSMALL;
                 break;
             }
@@ -957,13 +956,13 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
     fasp_array_cp(m,b->val,r);
     fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
     
-    if (pc != NULL)
+    if ( pc != NULL )
         pc->fct(r,z,pc->data); /* Apply preconditioner */
     else
         fasp_array_cp(m,r,z); /* No preconditioner */
     
     // compute initial residuals
-    switch (stop_type) {
+    switch ( stop_type ) {
         case STOP_REL_RES:
             absres0 = fasp_blas_array_norm2(m,r);
             normr0  = MAX(SMALLREAL,absres0);
@@ -1009,10 +1008,6 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
         // r_k=r_{k-1} - alpha_k*A*p_{k-1}
         fasp_blas_array_axpy(m,-alpha,t,r);
         
-        // compute difference
-        normu   = fasp_blas_dvec_norm2(u);
-        reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
-
         // compute residuals
         switch ( stop_type ) {
             case STOP_REL_RES:
@@ -1048,7 +1043,11 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             break;
         }
         
-        // Check II: if staggenated, try to restart        
+        // Check II: if staggenated, try to restart
+        normu   = fasp_blas_dvec_norm2(u);
+        
+        // compute relative difference
+        reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
         if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
             
             if ( print_level >= PRINT_MORE ) {
@@ -1132,7 +1131,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             if ( relres < tol ) break;
             
             if ( more_step >= MaxRestartStep ) {
-                if (print_level>PRINT_MIN) ITS_ZEROTOL;
+                if (print_level > PRINT_MIN) ITS_ZEROTOL;
                 iter = ERROR_SOLVER_TOLSMALL;
                 break;
             }
@@ -1163,7 +1162,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
         // compute p_k = z_k + beta_k*p_{k-1}
         fasp_blas_array_axpby(m,1.0,z,beta,p);
         
-    } // end of main PCG loop
+    } // end of main PCG loop.
     
 FINISHED:  // finish the iterative method
     if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);

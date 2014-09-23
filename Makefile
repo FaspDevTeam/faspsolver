@@ -8,12 +8,16 @@
 
 ####################   User Defined Options   ##########################
 #
-# The default setting for build type for FASP is RELEASE. The compiler 
-# options then include by default "-Wall -g" as well as "-DDEBUG_MODE". 
-# The RELEASE build type by default has the "-O3". If you want to work 
-# with build type DEBUG, then uncomment the next line:
+# The default setting for build type for FASP is RELEASE. The RELEASE 
+# build type by default has the "-O3". If you want to work with build 
+# type DEBUG, then uncomment the next line (to include "-Wall -g")
 #
 # debug=yes
+#
+# You can also uncomment the following line (to include "-DDEBUG_MODE"
+# as well as "-Wall -g"): 
+#
+# debug=all
 #
 # The default setting for vebosity level for FASP is verbose=no. If you
 # want to increase verbosity level, uncomment the next line:
@@ -78,13 +82,19 @@
 #
 ####################  User Defined Compiler Flags  #####################
 ifeq ($(debug),yes)
-	cflags="-Wall -g -DDEBUG_MODE"
-	cxxflags="-Wall -g -DDEBUG_MODE"
-	fflags="-Wall -g -DDEBUG_MODE"
+	cflags="-Wall -g"
+	cxxflags="-Wall -g"
+	fflags="-Wall -g"
 else
-	cflags="-O3 -funroll-loops"
-	cxxflags="-O3 -funroll-loops"
-	fflags="-O3 -funroll-loops"
+	ifeq ($(debug),all)
+		cflags="-Wall -g -DDEBUG_MODE"
+		cxxflags="-Wall -g -DDEBUG_MODE"
+		fflags="-Wall -g -DDEBUG_MODE"
+	else
+		cflags="-O3 -funroll-loops"
+		cxxflags="-O3 -funroll-loops"
+		fflags="-O3 -funroll-loops"
+	endif
 endif
 ####################  User Changes UP TO HERE   ########################
 
@@ -135,9 +145,9 @@ ifeq ($(mumps), yes)
     CONFIG_FLAGS+=-DMUMPS_DIR=$(mumps_dir)
 endif
 
-CONFIG_FLAGS+=-DADD_CFLAGS=$(cflags) 
-CONFIG_FLAGS+=-DADD_CXXFLAGS=$(cxxflags) 
-CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags) 
+CONFIG_FLAGS+=-DADD_CFLAGS=$(cflags)
+CONFIG_FLAGS+=-DADD_CXXFLAGS=$(cxxflags)
+CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags)
 
 all clean install docs headers:
 	@if [ ! -f $(build_dir)/Makefile ] ; then \

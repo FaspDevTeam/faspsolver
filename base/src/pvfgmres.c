@@ -207,9 +207,8 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
         while (i < Restart && iter < MaxIt) {
-            i ++;  iter ++;
             
-            fasp_array_set(n, z[i-1], 0.0);
+            i ++;  iter ++;
             
             /* apply the preconditioner */
             if (pc == NULL)
@@ -523,9 +522,8 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
         while (i < Restart && iter < MaxIt) {
-            i ++;  iter ++;
             
-            fasp_array_set(n, z[i-1], 0.0);
+            i ++;  iter ++;
             
             /* apply the preconditioner */
             if (pc == NULL)
@@ -840,10 +838,9 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
         while (i < Restart && iter < MaxIt) {
+            
             i ++;  iter ++;
-            
-            fasp_array_set(n, z[i-1], 0.0);
-            
+                        
             /* apply the preconditioner */
             if (pc == NULL)
                 fasp_array_cp(n, p[i-1], z[i-1]);
