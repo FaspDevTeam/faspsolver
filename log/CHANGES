@@ -4,6 +4,8 @@ File Name: CHANGES
 - Update PGMRES code. 
 - Add new regression tests and update regression results. 
 - Add upper limit for GMRES restarting number.
+- Change default max number of levels back to 20.
+- Check AMG coarse levels: decay ratio, density, min DOF. 
 - Resolve multiple warnings in *.c files.
 - Update Poisson FEM/FDM test results in out/poisson.out.
 - Update TODO list.
