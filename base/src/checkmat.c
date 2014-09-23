@@ -64,26 +64,26 @@ INT fasp_check_diagpos (dCSRmat *A)
 SHORT fasp_check_diagzero (dCSRmat *A)
 {
     const INT    m = A->row;
-    const INT   *ia=A->IA, *ja=A->JA;
-    const REAL  *aj=A->val;
+    const INT   *ia =A->IA, *ja = A->JA;
+    const REAL  *aj =A->val;
+
+    SHORT        status = FASP_SUCCESS;
     INT          i,j,k,begin_row,end_row;
-    SHORT        status;
     
-    for (i=0;i<m;++i) {
-        begin_row=ia[i],end_row=ia[i+1];
-        for (k=begin_row;k<end_row;++k) {
-            j=ja[k];
-            if (i==j) {
-                if (ABS(aj[k]) < SMALLREAL) {
+    for ( i = 0; i < m; ++i ) {
+        begin_row = ia[i], end_row = ia[i+1];
+        for ( k = begin_row; k < end_row; ++k ) {
+            j = ja[k];
+            if ( i == j ) {
+                if ( ABS(aj[k]) < SMALLREAL ) {
                     printf("### ERROR: Diagonal_%d=%e, close to zero!\n", i, aj[k]);
-                    status = ERROR_DATA_ZERODIAG; 
+                    status = ERROR_DATA_ZERODIAG;
+                    goto FINISHED;
                 }
             }    
         } // end for k
     } // end for i
-    
-    status = FASP_SUCCESS;
-    
+
  FINISHED:    
     return status;
 }

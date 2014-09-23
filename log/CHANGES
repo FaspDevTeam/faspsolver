@@ -1,8 +1,12 @@
 File Name: CHANGES
 
-09/22/2014 FASP 1.5.9:
+09/23/2014 FASP 1.5.9:
 - Update PGMRES code. 
 - Add new regression tests and update regression results. 
+- Add upper limit for GMRES restarting number.
+- Resolve multiple warnings in *.c files.
+- Update Poisson FEM/FDM test results in out/poisson.out.
+- Update TODO list.
 
 09/22/2014 FASP 1.5.8:
 - Update documentation and webpage.

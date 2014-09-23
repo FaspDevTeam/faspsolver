@@ -114,7 +114,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN & Restart < restart ) {
+    if ( print_level > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: vGMRES restart number set to %d!\n", Restart);
     }
 
@@ -451,7 +451,7 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN & Restart < restart ) {
+    if ( print_level > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: vGMRES restart number set to %d!\n", Restart);
     }
     
@@ -791,7 +791,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN & Restart < restart ) {
+    if ( print_level > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: vGMRES restart number set to %d!\n", Restart);
     }
     
@@ -1131,7 +1131,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN & Restart < restart ) {
+    if ( print_level > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: vGMRES restart number set to %d!\n", Restart);
     }
 

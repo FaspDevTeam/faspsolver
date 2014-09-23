@@ -117,7 +117,7 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN & Restart < restart ) {
+    if ( print_level > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: vFGMRES restart number set to %d!\n", Restart);
     }
     

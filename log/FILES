@@ -64,7 +64,7 @@
      337 ./base/src/pcg_mf.c
      172 ./base/src/pgcg.c
      180 ./base/src/pgcg_mf.c
-    1368 ./base/src/pgmres.c
+    1356 ./base/src/pgmres.c
      306 ./base/src/pgmres_mf.c
     1284 ./base/src/pminres.c
      458 ./base/src/pminres_mf.c
@@ -107,4 +107,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      239 ./base/src/mg_util.inl
-   88946 total
+   88934 total

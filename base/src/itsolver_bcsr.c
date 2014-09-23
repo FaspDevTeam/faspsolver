@@ -188,7 +188,6 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     const INT max_levels = amgparam->max_levels;
     INT m, n, nnz;
     
-    void **LU_diag = NULL;
     AMG_data **mgl = NULL;
     INT i;
     
@@ -206,7 +205,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
         // Need to sort the diagonal blocks for UMFPACK format
         dCSRmat A_tran;
         
-        LU_diag = (void **)fasp_mem_calloc(3, sizeof(void *));
+        void **LU_diag = (void **)fasp_mem_calloc(3, sizeof(void *));
         
         for (i=0; i<3; i++){
             
@@ -374,9 +373,6 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     REAL setup_start, setup_end, setup_duration;
     REAL solver_start, solver_end, solver_duration;
     
-    void **LU_diag = NULL;
-    INT i;
-    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
@@ -389,9 +385,9 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     
 #if WITH_UMFPACK
     // Need to sort the matrices local_A for UMFPACK format
+    INT i;
     dCSRmat A_tran;
-    
-    LU_diag = (void **)fasp_mem_calloc(4, sizeof(void *));
+    void **LU_diag = (void **)fasp_mem_calloc(4, sizeof(void *));
     
     for (i=0; i<4; i++){
         
@@ -505,7 +501,6 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     fasp_gettime(&setup_start);
     
     void **local_LU = NULL;
-    INT l;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -513,8 +508,8 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     
 #if WITH_UMFPACK
     // Need to sort the matrices local_A for UMFPACK format
+    INT l;
     dCSRmat A_tran;
-    
     local_LU = (void **)fasp_mem_calloc(NumLayers, sizeof(void *));
     
     for ( l=0; l<NumLayers; l++ ) {

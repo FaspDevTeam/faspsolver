@@ -629,11 +629,8 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
 	INT     size = ROW*nb;
 	INT     jump = nb*nb;
 	INT     i,j,k, iend;
-	REAL  temp = 0.0;
-	REAL *pA   = NULL;
-	REAL *px0  = NULL;
-	REAL *py0  = NULL;
-	REAL *py   = NULL;
+	REAL    temp = 0.0;
+	REAL    *pA, *px0 = NULL, *py0 = NULL, *py = NULL;
     
 	INT nthreads = 1, use_openmp = FALSE;
     
@@ -2668,7 +2665,6 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
  * \author Xiaozhe Hu
  * \date   01/02/2014
  *
- *
  * \note Works for general nb (Xiaozhe)
  */
 void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
@@ -2680,18 +2676,15 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
 	INT     nb  = A->nb;
 	INT    *IA  = A->IA;
 	INT    *JA  = A->JA;
-	REAL *val = A->val;
+	REAL   *val = A->val;
     
 	/* local variables */
 	INT     size = ROW*nb;
 	INT     jump = nb*nb;
 	INT     i,j,k, num_nnz_row;
-	REAL *pA  = NULL;
-	REAL *px0 = NULL;
-	REAL *py0 = NULL;
-	REAL *py  = NULL;
+	REAL    *pA, *px0 = NULL, *py0 = NULL, *py = NULL;
     
-	INT use_openmp = FALSE;
+	INT     use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;

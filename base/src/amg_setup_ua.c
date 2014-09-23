@@ -116,9 +116,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     INT         i;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
-    
-    dCSRmat AT, AS;
-    
+        
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",

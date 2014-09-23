@@ -4415,6 +4415,7 @@ void timestamp ( )
   Modified:
 
     24 September 2003
+    Modified by Chensong on 09/23/2014
 
   Author:
 
@@ -4437,7 +4438,7 @@ void timestamp ( )
 
   len = strftime ( time_buffer, TIME_SIZE, "%d %B %Y %I:%M:%S %p", tm );
 
-  fprintf ( stdout, "%s\n", time_buffer );
+  if ( len > 0 ) fprintf ( stdout, "%s\n", time_buffer );
 
   return;
 # undef TIME_SIZE
