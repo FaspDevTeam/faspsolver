@@ -2,11 +2,9 @@
  *
  *  \brief Ruge-Stuben AMG: SETUP phase
  *
- *  \note Setup A, P, R, levels using classic AMG!
- *        Refter to "Multigrid" by Stuben
- *        in U. Trottenberg, C. W. Oosterlee and A. Schuller.
- *        Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben).
- *        Academic Press Inc., San Diego, CA, 2001.
+ *  \note Ref Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller
+ *            Appendix P475 A.7 (by A. Brandt, P. Oswald and K. Stuben)
+ *            Academic Press Inc., San Diego, CA, 2001.
  */
 
 #include <time.h>
@@ -44,6 +42,7 @@
  * Modified by Chensong Zhang on 05/03/2013: add error handling in setup.
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
+ * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  */
 SHORT fasp_amg_setup_rs (AMG_data *mgl,
                          AMG_param *param)
@@ -137,17 +136,31 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         
         /*-- Coarseing and form the structure of interpolation --*/
         status = fasp_amg_coarsening_rs(&mgl[lvl].A, &vertices, &mgl[lvl].P, &Scouple, param);
+        
+        // Check 1: Did coarsening step successed?
         if ( status < 0 ) {
-            // When error happens, force solver to use the current multigrid levels!
+            // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Could not find any C-variables!\n");
                 printf("### WARNING: RS coarsening on level-%d failed!\n", lvl);
             }
             status = FASP_SUCCESS; break;
         }
+
+        // Check 2: Is coarse sparse too small?
+        if ( mgl[lvl].P.col < MIN_CDOF ) break;
+        
+        // Check 3: Does this coarsening step too aggressive?
+        if ( mgl[lvl].P.row > mgl[lvl].P.col * 10.0 ) {
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Coarsening might be too aggressive!\n");
+                printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
+                       mgl[lvl].P.row, mgl[lvl].P.col);
+            }
+            break;
+        }
         
         /*-- Perform aggressive coarsening only up to the specified level --*/
-        if ( mgl[lvl].P.col < MIN_CDOF ) break;
         if ( mgl[lvl].P.col*1.5 > mgl[lvl].A.row ) param->coarsening_type = COARSE_RS;
         if ( lvl == param->aggressive_level ) param->coarsening_type = COARSE_RS;
         
@@ -171,6 +184,16 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         /*-- Clean up Scouple generated in coarsening --*/
         fasp_mem_free(Scouple.IA);
         fasp_mem_free(Scouple.JA);
+        
+        // Check 4: Is the coarse matrix too dense?
+        if ( mgl[lvl].A.nnz / mgl[lvl].A.row > mgl[lvl].A.col * 0.2 ) {
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Coarse matrix is too dense!\n");
+                printf("### WARNING: m = n = %d, nnz = %d!\n",
+                       mgl[lvl].A.col, mgl[lvl].A.nnz);
+            }
+            break;
+        }
         
         ++lvl;
         
@@ -212,7 +235,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     // setup total level number and current level
     mgl[0].num_levels = max_lvls = lvl+1;
     mgl[0].w          = fasp_dvec_create(m);
-    
+        
     for ( lvl = 1; lvl < max_lvls; ++lvl ) {
         INT mm = mgl[lvl].A.row;
         mgl[lvl].num_levels = max_lvls;

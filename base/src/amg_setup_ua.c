@@ -15,8 +15,8 @@
 #include "aggregation_csr.inl"
 #include "aggregation_bsr.inl"
 
-static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *, AMG_param *);
-static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *, AMG_param *);
+static SHORT amg_setup_unsmoothP_unsmoothR(AMG_data *, AMG_param *);
+static SHORT amg_setup_unsmoothP_unsmoothR_bsr(AMG_data_bsr *, AMG_param *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -101,6 +101,8 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/27/2012.
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
+ * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
+ * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  */
 static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                                             AMG_param *param)
@@ -233,10 +235,12 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                 break;
         }
 		
+        // Check 1: Did coarsening step successed?
         if ( status < 0 ) {
-            // When error happens, force solver to use the current multigrid levels!
+            // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
-                printf("### WARNING: Aggregation on level-%d failed!\n", lvl);
+                printf("### WARNING: Could not find any C-variables!\n");
+                printf("### WARNING: RS coarsening on level-%d failed!\n", lvl);
             }
             status = FASP_SUCCESS; break;
         }
@@ -245,8 +249,18 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         form_tentative_p(&vertices[lvl], &mgl[lvl].P, mgl[0].near_kernel_basis,
                          lvl+1, num_aggs[lvl]);
         
-        /*-- Perform coarsening only up to the specified level --*/
+        // Check 2: Is coarse sparse too small?
         if ( mgl[lvl].P.col < MIN_CDOF ) break;
+        
+        // Check 3: Does this coarsening step too aggressive?
+        if ( mgl[lvl].P.row > mgl[lvl].P.col * 10.0 ) {
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Coarsening might be too aggressive!\n");
+                printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
+                       mgl[lvl].P.row, mgl[lvl].P.col);
+            }
+            break;
+        }
         
         /*-- Form resitriction --*/
         fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);

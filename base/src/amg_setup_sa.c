@@ -112,6 +112,8 @@ SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr *mgl,
  * \date   02/21/2011
  *
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
+ * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
+ * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  */
 static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
                                         AMG_param *param)
@@ -123,7 +125,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     const INT   m          = mgl[0].A.row;
     
     // local variables
-    SHORT       max_levels = param->max_levels, lvl=0, status=FASP_SUCCESS;
+    SHORT       max_levels = param->max_levels, lvl = 0, status = FASP_SUCCESS;
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
@@ -220,8 +222,10 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
         /*-- Aggregation --*/
         status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param, lvl+1,
                                  &Neighbor[lvl], &num_aggregations[lvl]);
+        
+        // Check 1: Did coarsening step successed?
         if ( status < 0 ) {
-            // When error happens, force solver to use the current multigrid levels!
+            // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: VMB aggregation on level-%d failed!\n", lvl);
             }
@@ -232,13 +236,23 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
         form_tentative_p(&vertices[lvl], &tentp[lvl], mgl[0].near_kernel_basis,
                          lvl+1, num_aggregations[lvl]);
         
-        /* -- Smoothing -- */
-        smooth_agg(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param,
-                   lvl+1, &Neighbor[lvl]);
+        /* -- Form smoothed prolongation -- */
+        smooth_agg(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1,
+                   &Neighbor[lvl]);
         
-        /*-- Perform coarsening only up to the specified level --*/
+        // Check 2: Is coarse sparse too small?
         if ( mgl[lvl].P.col < MIN_CDOF ) break;
         
+        // Check 3: Does this coarsening step too aggressive?
+        if ( mgl[lvl].P.row > mgl[lvl].P.col * 20.0 ) {
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Coarsening might be too aggressive!\n");
+                printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
+                       mgl[lvl].P.row, mgl[lvl].P.col);
+            }
+            break;
+        }
+
         /*-- Form restriction --*/
         fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
         
@@ -323,7 +337,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
 /**
  * \fn static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl, AMG_param *param)
  *
- * \brief Set up phase of plain aggregation AMG, using smoothed P and unsmoothed R
+ * \brief Setup phase of plain aggregation AMG, using smoothed P and unsmoothed R
  *
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
@@ -332,6 +346,8 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
  * \date   02/21/2011
  *
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
+ * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
+ * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  */
 static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
                                           AMG_param *param)
@@ -425,8 +441,10 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
         /*-- Aggregation --*/
         status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param, lvl+1,
                                  &Neighbor[lvl], &num_aggregations[lvl]);
+
+        // Check 1: Did coarsening step successed?
         if ( status < 0 ) {
-            // When error happens, force solver to use the current multigrid levels!
+            // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: VMB aggregation on level-%d failed!\n", lvl);
             }
@@ -437,12 +455,22 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
         form_tentative_p(&vertices[lvl], &tentp[lvl], mgl[0].near_kernel_basis,
                          lvl+1, num_aggregations[lvl]);
         
-        /* -- Smoothing -- */
-        smooth_agg(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param,
-                   lvl+1, &Neighbor[lvl]);
+        /* -- Form smoothed prolongation -- */
+        smooth_agg(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1,
+                   &Neighbor[lvl]);
         
-        /*-- Perform coarsening only up to the specified level --*/
+        // Check 2: Is coarse sparse too small?
         if ( mgl[lvl].P.col < MIN_CDOF ) break;
+        
+        // Check 3: Does this coarsening step too aggressive?
+        if ( mgl[lvl].P.row > mgl[lvl].P.col * 20.0 ) {
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Coarsening might be too aggressive!\n");
+                printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
+                       mgl[lvl].P.row, mgl[lvl].P.col);
+            }
+            break;
+        }
         
         /*-- Form resitriction --*/
         fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
