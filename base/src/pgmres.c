@@ -1,6 +1,6 @@
 /*! \file pgmres.c
  *
- *  \brief Krylov subspace methods -- Preconditioned GMRes
+ *  \brief Krylov subspace methods -- Right-preconditioned GMRes
  *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
@@ -76,7 +76,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    INT      Restart = restart;
+    INT      Restart = MIN(restart, MaxIt);
     INT      Restartplus1 = Restart + 1;
     LONG     worksize = (Restart+4)*(Restart+n)+1-n;
     
@@ -91,9 +91,9 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
+        Restartplus1 = Restart + 1;
         worksize = (Restart+4)*(Restart+n)+1-n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
-        Restartplus1 = Restart + 1;
     }
 
     if ( work == NULL ) {
@@ -102,7 +102,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
 
-    if ( print_level > PRINT_MIN & Restart < restart ) {
+    if ( print_level > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
@@ -372,7 +372,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    INT      Restart = restart;
+    INT      Restart = MIN(restart, MaxIt);
     INT      Restartplus1 = Restart + 1;
     LONG     worksize = (Restart+4)*(Restart+n)+1-n;
     
@@ -387,9 +387,9 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
+        Restartplus1 = Restart + 1;
         worksize = (Restart+4)*(Restart+n)+1-n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
-        Restartplus1 = Restart + 1;
     }
     
     if ( work == NULL ) {
@@ -398,7 +398,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN & Restart < restart ) {
+    if ( print_level > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
@@ -668,7 +668,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    INT      Restart = restart;
+    INT      Restart = MIN(restart, MaxIt);
     INT      Restartplus1 = Restart + 1;
     LONG     worksize = (Restart+4)*(Restart+n)+1-n;
     
@@ -683,9 +683,9 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
+        Restartplus1 = Restart + 1;
         worksize = (Restart+4)*(Restart+n)+1-n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
-        Restartplus1 = Restart + 1;
     }
     
     if ( work == NULL ) {
@@ -694,7 +694,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN & Restart < restart ) {
+    if ( print_level > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
@@ -964,7 +964,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    INT      Restart = restart;
+    INT      Restart = MIN(restart, MaxIt);
     INT      Restartplus1 = Restart + 1;
     LONG     worksize = (Restart+4)*(Restart+n)+1-n;
     
@@ -979,9 +979,9 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
+        Restartplus1 = Restart + 1;
         worksize = (Restart+4)*(Restart+n)+1-n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
-        Restartplus1 = Restart + 1;
     }
     
     if ( work == NULL ) {
@@ -990,7 +990,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN & Restart < restart ) {
+    if ( print_level > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     

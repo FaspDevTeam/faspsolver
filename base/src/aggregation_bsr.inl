@@ -7,16 +7,17 @@
 /*---------------------------------*/
 
 /**
- * \fn static void form_tentative_p_bsr (ivector *vertices, dBSRmat *tentp, AMG_data_bsr *mgl,
- *                                       INT levelNum, INT num_aggregations)
+ * \fn static void form_tentative_p_bsr (ivector *vertices, dBSRmat *tentp, 
+ *                                       AMG_data_bsr *mgl, INT levelNum,
+ *                                       INT num_agg)
  *
  * \brief Form aggregation based on strong coupled neighborhoods
  *
- * \param vertices           Pointer to the aggregation of vertices
- * \param tentp              Pointer to the prolongation operators
- * \param mgl                Pointer to AMG levele data
- * \param levelNum           Level number
- * \param num_aggregations   Number of aggregations
+ * \param vertices    Pointer to the aggregation of vertices
+ * \param tentp       Pointer to the prolongation operators
+ * \param mgl         Pointer to AMG levele data
+ * \param levelNum    Level number
+ * \param num_agg     Number of aggregations
  *
  * \author Xiaozhe Hu
  * \date   11/25/2011
@@ -25,18 +26,18 @@ static void form_tentative_p_bsr (ivector *vertices,
                                   dBSRmat *tentp,
                                   AMG_data_bsr *mgl,
                                   INT levelNum,
-                                  INT num_aggregations)
+                                  INT num_agg)
 {
     INT i, j;
     
     /* Form tentative prolongation */
     tentp->ROW = vertices->row;
-    tentp->COL = num_aggregations;
-    tentp->nb = mgl->A.nb;
-    INT nb2 = tentp->nb * tentp->nb;
+    tentp->COL = num_agg;
+    tentp->nb  = mgl->A.nb;
+    INT nb2    = tentp->nb * tentp->nb;
     
     tentp->IA  = (INT*)fasp_mem_calloc(tentp->ROW+1, sizeof(INT));
-    
+
     // local variables
     INT *IA = tentp->IA;
     INT *JA;
@@ -75,7 +76,7 @@ static void form_tentative_p_bsr (ivector *vertices,
 
 /**
  * \fn static void form_boolean_p_bsr (ivector *vertices, dBSRmat *tentp, AMG_data_bsr *mgl,
- *                                       INT levelNum, INT num_aggregations)
+ *                                       INT levelNum, INT num_agg)
  *
  * \brief Form boolean prolongations in dBSRmat
  *
@@ -83,7 +84,7 @@ static void form_tentative_p_bsr (ivector *vertices,
  * \param tentp              Pointer to the prolongation operators
  * \param mgl                Pointer to AMG levele data
  * \param levelNum           Level number
- * \param num_aggregations   Number of aggregations
+ * \param num_agg   Number of aggregations
  *
  * \author Xiaozhe Hu
  * \date   05/27/2014
@@ -92,15 +93,15 @@ static void form_boolean_p_bsr (ivector *vertices,
                                   dBSRmat *tentp,
                                   AMG_data_bsr *mgl,
                                   INT levelNum,
-                                  INT num_aggregations)
+                                  INT num_agg)
 {
     INT i, j;
     
     /* Form tentative prolongation */
     tentp->ROW = vertices->row;
-    tentp->COL = num_aggregations;
-    tentp->nb = mgl->A.nb;
-    INT nb2 = tentp->nb * tentp->nb;
+    tentp->COL = num_agg;
+    tentp->nb  = mgl->A.nb;
+    INT nb2    = tentp->nb * tentp->nb;
     
     tentp->IA  = (INT*)fasp_mem_calloc(tentp->ROW+1, sizeof(INT));
     
@@ -140,11 +141,10 @@ static void form_boolean_p_bsr (ivector *vertices,
     }
 }
 
-
 /**
- * \fn static void form_tentative_p_bsr1 (ivector *vertices, dBSRmat *tentp, AMG_data_bsr *mgl,
- *                                       INT levelNum, INT num_aggregations,
- *                                        const INT dim, REAL **basis)
+ * \fn static void form_tentative_p_bsr1 (ivector *vertices, dBSRmat *tentp,
+ *                                        AMG_data_bsr *mgl, INT levelNum,
+ *                                        INT num_agg, const INT dim, REAL **basis)
  *
  * \brief Form aggregation based on strong coupled neighborhoods
  *
@@ -152,7 +152,7 @@ static void form_boolean_p_bsr (ivector *vertices,
  * \param tentp              Pointer to the prolongation operators
  * \param mgl                Pointer to AMG levele data
  * \param levelNum           Level number
- * \param num_aggregations   Number of aggregations
+ * \param num_agg   Number of aggregations
  * \param dim                Dimension of the near kernel space
  * \param basis              Pointer to the basis of the near kernel space
  *
@@ -163,7 +163,7 @@ static void form_tentative_p_bsr1 (ivector *vertices,
                                   dBSRmat *tentp,
                                   AMG_data_bsr *mgl,
                                   INT levelNum,
-                                  INT num_aggregations,
+                                  INT num_agg,
                                    const INT dim,
                                    REAL **basis)
 {
@@ -175,7 +175,7 @@ static void form_tentative_p_bsr1 (ivector *vertices,
     
     /* Form tentative prolongation */
     tentp->ROW = vertices->row;
-    tentp->COL = num_aggregations*nnz_row;
+    tentp->COL = num_agg*nnz_row;
     tentp->nb = mgl->A.nb;
     const INT nb = tentp->nb;
     const INT nb2 = nb * nb;
@@ -234,10 +234,9 @@ static void form_tentative_p_bsr1 (ivector *vertices,
     }
 }
 
-
 /**
  * \fn static void smooth_agg_bsr (dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
- *                             AMG_param *param, INT levelNum, dCSRmat *N)
+ *                                 AMG_param *param, INT levelNum, dCSRmat *N)
  *
  * \brief Smooth the tentative prolongation
  *
@@ -250,7 +249,6 @@ static void form_tentative_p_bsr1 (ivector *vertices,
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014
- *
  */
 static void smooth_agg_bsr (dBSRmat *A,
                         dBSRmat *tentp,
@@ -265,13 +263,10 @@ static void smooth_agg_bsr (dBSRmat *A,
     const INT nb2 = nb*nb;
     const REAL  smooth_factor = param->tentative_smooth;
     
-    
-    
     // local variables
     dBSRmat S;
     dvector diaginv;  // diaganoal block inv
     
-    REAL row_sum_A, row_sum_N;
     INT i,j;
     
     REAL *Id   = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
@@ -294,7 +289,9 @@ static void smooth_agg_bsr (dBSRmat *A,
         
         // for S
         for (i=0; i<row; ++i) {
+            
             for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
+            
                 if (S.JA[j] == i) {
                     
                     fasp_blas_smat_mul(diaginv.val+(i*nb2), A->val+(j*nb2), temp, nb);
@@ -307,7 +304,9 @@ static void smooth_agg_bsr (dBSRmat *A,
                     fasp_blas_smat_axm(S.val+(j*nb2), nb, (-1.0)*smooth_factor);
                     
                 }
+                
             }
+            
         }
     }
     
@@ -325,7 +324,7 @@ static void smooth_agg_bsr (dBSRmat *A,
 
 /**
  * \fn static void smooth_agg_bsr1 (dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
- *                             AMG_param *param, INT levelNum, dCSRmat *N)
+ *                                  AMG_param *param, INT levelNum, dCSRmat *N)
  *
  * \brief Smooth the tentative prolongation
  *
@@ -338,7 +337,6 @@ static void smooth_agg_bsr (dBSRmat *A,
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014
- *
  */
 static void smooth_agg_bsr1 (dBSRmat *A,
                             dBSRmat *tentp,
@@ -346,12 +344,10 @@ static void smooth_agg_bsr1 (dBSRmat *A,
                             AMG_param *param,
                             INT levelNum,
                             dCSRmat *N)
-{
-    
-    const SHORT filter = param->smooth_filter;
-    const INT   row = A->ROW, col= A->COL, nnz = A->NNZ;
+{    
+    const INT   row = A->ROW;
     const INT   nb = A->nb;
-    const INT nb2 = nb*nb;
+    const INT   nb2 = nb*nb;
     const REAL  smooth_factor = param->tentative_smooth;
     
     // local variables

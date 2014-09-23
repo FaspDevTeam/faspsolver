@@ -37,8 +37,9 @@ Structure
 [ 1.1.6 ] add uniform I/O routines: Binary and ASCII
 [ 1.4.2 ] add command line options
 [ 1.4.3 ] set DEBUG_MODE in Makefile instead of the header file
-[       ] allow users to set compilers, e.g. using CC, CXX
+[       ] add subrouties for general purpose tests on matrices and vectors
 [       ] enforce ANSI C standard: do not allow C99
+[       ] allow users to set compilers, e.g. using CC, CXX
 [       ] fix problem with UMFPACK when it is installed alone without CHOLMOD
 [       ] fix problem with MUMPS: cannot find package
 
@@ -48,9 +49,9 @@ GMG
 
 [ 1.3.3 ] add matrix-free Poisson GMG solver -- n = 2^L
 [       ] add semi-structured grid GMG for Poisson
-[       ] add support for general n (Ludmil)
+[       ] add support for general n
 [       ] tabulate convergence rate of V-cycle (Ludmil)
-[       ] add GMG for elasticity 
+[       ] add GMG for linear elasticity 
 
 ========================
 AMG
@@ -64,7 +65,7 @@ AMG
 
 [ 0.8.5 ] non-overlapping/overlapping Schwarz smoother
 [       ] maximal independent set based on a strength matrix (Ludmil)
-[       ] replace Schwarz smoother by a C version (Xiaozhe, Ludmil, James B., Fei)
+[       ] replace Schwarz smoother by a C version (Xiaozhe, Zheng)
 [       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
 [       ] Tarjan algorithm and other orderings (Xiaozhe and Ludmil)
 [       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
@@ -94,10 +95,12 @@ Iterative Methods
 [ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
 [ 1.3.5 ] add safer Krylov iterative methods and improve efficiency
+[       ] store diagonal seperately
 [       ] add support for SymCSR format
 [       ] further study CSRL format and extend it
 
 [ 1.1.2 ] add matrix-free iterative methods
+[       ] add some useful methods: BiCGStab(l), GMRES augemented restart, GCRO
 [       ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
 [       ] test SpBLAS implementations in standard libraries (Chunsheng)
 [       ] implement right preconditioning (Chensong)
@@ -115,8 +118,8 @@ Performance Test
 [ 1.4.6 ] compare performance with hypre
 [ 1.4.6 ] compare performance with SAMG
 [ 1.4.6 ] compare performance with AGMG
-[       ] compare performance using various of compilers on different systems (Zheng)
-[       ] compare performance using compiler options (Zheng)
+[       ] compare performance with various of compilers on different systems (Zheng)
+[       ] compare performance for different compiler options (Zheng)
 
 ========================
 Test and Debug

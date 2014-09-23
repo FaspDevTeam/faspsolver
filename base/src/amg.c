@@ -80,18 +80,15 @@ void fasp_solver_amg (dCSRmat *A,
     // Step 1: AMG setup phase
     switch (amg_type) {
             
-            // Smoothed Aggregation AMG setup phase
-        case SA_AMG:
+        case SA_AMG: // Smoothed Aggregation AMG setup
             if ( print_level > PRINT_NONE ) printf("\nCalling SA AMG ...\n");
             status = fasp_amg_setup_sa(mgl, param); break;
             
-            // Unsmoothed Aggregation AMG setup phase
-        case UA_AMG:
+        case UA_AMG: // Unsmoothed Aggregation AMG setup
             if ( print_level > PRINT_NONE ) printf("\nCalling UA AMG ...\n");
             status = fasp_amg_setup_ua(mgl, param); break;
             
-            // Classical AMG setup phase
-        default:
+        default: // Classical AMG setup
             if ( print_level > PRINT_NONE ) printf("\nCalling classical AMG ...\n");
             status = fasp_amg_setup_rs(mgl, param);
             
@@ -102,13 +99,13 @@ void fasp_solver_amg (dCSRmat *A,
         
         switch (cycle_type) {
                 
-            case AMLI_CYCLE: // call AMLI-cycle
+            case AMLI_CYCLE: // AMLI-cycle
                 fasp_amg_solve_amli(mgl, param); break;
                 
-            case NL_AMLI_CYCLE: // call Nonlinear AMLI-cycle
+            case NL_AMLI_CYCLE: // Nonlinear AMLI-cycle
                 fasp_amg_solve_nl_amli(mgl, param); break;
                 
-            default: // call classical V,W-cycles (determined by param)
+            default: // V,W-cycles (determined by param)
                 fasp_amg_solve(mgl, param); break;
                 
         }

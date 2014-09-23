@@ -42,11 +42,11 @@ void fasp_precond_block_diag_3 (double *r,
 	
 	int i;
 	
-	//! back up r, setup z;
+	// back up r, setup z;
 	fasp_array_cp(N, r, tempr->val);
 	fasp_array_set(N, z, 0.0);
 	
-	//! prepare
+	// prepare
 	dvector r0, r1, r2, z0, z1, z2;
     
 	r0.row = N0; z0.row = N0;
@@ -56,7 +56,7 @@ void fasp_precond_block_diag_3 (double *r,
 	r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]);
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
 	
-	//! Preconditioning A00 block
+	// Preconditioning A00 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -66,7 +66,7 @@ void fasp_precond_block_diag_3 (double *r,
     fasp_solver_superlu(&A_diag[0], &r0, &z0, 0);
 #endif
     
-    //! Preconditioning A11 block
+    // Preconditioning A11 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -76,7 +76,7 @@ void fasp_precond_block_diag_3 (double *r,
     fasp_solver_superlu(&A_diag[1], &r1, &z1, 0);
 #endif
     
-    //! Preconditioning A22 block
+    // Preconditioning A22 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -86,7 +86,7 @@ void fasp_precond_block_diag_3 (double *r,
     fasp_solver_superlu(&A_diag[2], &r2, &z2, 0);
 #endif
 	
-	//! restore r
+	// restore r
 	fasp_array_cp(N, tempr->val, r);
 	
 }
@@ -100,6 +100,7 @@ void fasp_precond_block_diag_3 (double *r,
  * \param *data pointer to precondition data
  *
  * \author Xiaozhe Hu
+ * \date   07/10/2014
  */
 void fasp_precond_block_diag_3_amg (double *r,
                             double *z, 
@@ -120,37 +121,37 @@ void fasp_precond_block_diag_3_amg (double *r,
     
 	INT i;
     
-	//! back up r, setup z;
+	// back up r, setup z;
 	fasp_array_cp(N, r, tempr->val);
 	fasp_array_set(N, z, 0.0);
 	
-	//! prepare
+	// prepare
 	dvector r0, r1, r2, z0, z1, z2;
 	r0.row = N0; z0.row = N0; r1.row = N1; z1.row = N1; r2.row = N2; z2.row = N2;
 	r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]); z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
 	
-	//! Preconditioning A00 block
+	// Preconditioning A00 block
 	mgl[0]->b.row=N0; fasp_array_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
 	mgl[0]->x.row=N0; fasp_dvec_set(N0, &mgl[0]->x, 0.0);
 	
 	for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[0], amgparam);
 	fasp_array_cp(N0, mgl[0]->x.val, z0.val);
      
-    //! Preconditioning A11 block
+    // Preconditioning A11 block
 	mgl[1]->b.row=N1; fasp_array_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
 	mgl[1]->x.row=N1; fasp_dvec_set(N1, &mgl[1]->x,0.0);
 	
 	for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[1], amgparam);
 	fasp_array_cp(N1, mgl[1]->x.val, z1.val);
     
-    //! Preconditioning A22 block
+    // Preconditioning A22 block
 	mgl[2]->b.row=N2; fasp_array_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
 	mgl[2]->x.row=N2; fasp_dvec_set(N2, &mgl[2]->x,0.0);
 	
 	for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[2], amgparam);
 	fasp_array_cp(N2, mgl[2]->x.val, z2.val);
     
-	//! restore r
+	// restore r
 	fasp_array_cp(N, tempr->val, r);
     
 }
@@ -163,6 +164,7 @@ void fasp_precond_block_diag_3_amg (double *r,
  * \param *data pointer to precondition data
  *
  * \author Xiaozhe Hu
+ * \date   07/10/2014
  */
 void fasp_precond_block_diag_4 (double *r,
                                 double *z,
@@ -184,11 +186,11 @@ void fasp_precond_block_diag_4 (double *r,
 	
 	int i;
 	
-	//! back up r, setup z;
+	// back up r, setup z;
 	fasp_array_cp(N, r, tempr->val);
 	fasp_array_set(N, z, 0.0);
 	
-	//! prepare
+	// prepare
 	dvector r0, r1, r2, r3, z0, z1, z2, z3;
     
 	r0.row = N0; z0.row = N0;
@@ -199,7 +201,7 @@ void fasp_precond_block_diag_4 (double *r,
 	r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]); r3.val = &(r[N0+N1+N2]);
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]); z3.val = &(z[N0+N1+N2]);
 	
-	//! Preconditioning A00 block
+	// Preconditioning A00 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -209,7 +211,7 @@ void fasp_precond_block_diag_4 (double *r,
     fasp_solver_superlu(&A_diag[0], &r0, &z0, 0);
 #endif
     
-    //! Preconditioning A11 block
+    // Preconditioning A11 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -219,7 +221,7 @@ void fasp_precond_block_diag_4 (double *r,
     fasp_solver_superlu(&A_diag[1], &r1, &z1, 0);
 #endif
     
-    //! Preconditioning A22 block
+    // Preconditioning A22 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -229,7 +231,7 @@ void fasp_precond_block_diag_4 (double *r,
     fasp_solver_superlu(&A_diag[2], &r2, &z2, 0);
 #endif
     
-    //! Preconditioning A33 block
+    // Preconditioning A33 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -239,7 +241,7 @@ void fasp_precond_block_diag_4 (double *r,
     fasp_solver_superlu(&A_diag[3], &r3, &z3, 0);
 #endif
 	
-	//! restore r
+	// restore r
 	fasp_array_cp(N, tempr->val, r);
 	
 }
@@ -252,7 +254,7 @@ void fasp_precond_block_diag_4 (double *r,
  * \param *data pointer to precondition data
  *
  * \author Xiaozhe Hu
- * \date 07/10/2014
+ * \date   07/10/2014
  */
 void fasp_precond_block_lower_3 (double *r,
                                  double *z,
@@ -273,11 +275,11 @@ void fasp_precond_block_lower_3 (double *r,
 	
 	int i;
 	
-	//! back up r, setup z;
+	// back up r, setup z;
 	fasp_array_cp(N, r, tempr->val);
 	fasp_array_set(N, z, 0.0);
 	
-	//! prepare
+	// prepare
 	dvector r0, r1, r2, z0, z1, z2;
     
 	r0.row = N0; z0.row = N0;
@@ -287,7 +289,7 @@ void fasp_precond_block_lower_3 (double *r,
 	r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]);
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
 	
-	//! Preconditioning A00 block
+	// Preconditioning A00 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -301,7 +303,7 @@ void fasp_precond_block_lower_3 (double *r,
 	fasp_blas_dcsr_aAxpy(-1.0, A->blocks[3], z0.val, r1.val);
     
     
-    //! Preconditioning A11 block
+    // Preconditioning A11 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -315,7 +317,7 @@ void fasp_precond_block_lower_3 (double *r,
 	fasp_blas_dcsr_aAxpy(-1.0, A->blocks[6], z0.val, r2.val);
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[7], z1.val, r2.val);
     
-    //! Preconditioning A22 block
+    // Preconditioning A22 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -325,7 +327,7 @@ void fasp_precond_block_lower_3 (double *r,
     fasp_solver_superlu(&A_diag[2], &r2, &z2, 0);
 #endif
     
-	//! restore r
+	// restore r
 	fasp_array_cp(N, tempr->val, r);
 	
 }
@@ -338,6 +340,7 @@ void fasp_precond_block_lower_3 (double *r,
  * \param *data pointer to precondition data
  *
  * \author Xiaozhe Hu
+ * \date   07/10/2014
  */
 void fasp_precond_block_lower_3_amg (double *r,
                             double *z, 
@@ -358,16 +361,16 @@ void fasp_precond_block_lower_3_amg (double *r,
     
 	INT i;
     
-	//! back up r, setup z;
+	// back up r, setup z;
 	fasp_array_cp(N, r, tempr->val);
 	fasp_array_set(N, z, 0.0);
 	
-	//! prepare
+	// prepare
 	dvector r0, r1, r2, z0, z1, z2;
 	r0.row = N0; z0.row = N0; r1.row = N1; z1.row = N1; r2.row = N2; z2.row = N2;
 	r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]); z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
 	
-	//! Preconditioning A00 block
+	// Preconditioning A00 block
 	mgl[0]->b.row=N0; fasp_array_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
 	mgl[0]->x.row=N0; fasp_dvec_set(N0, &mgl[0]->x, 0.0);
 	
@@ -377,7 +380,7 @@ void fasp_precond_block_lower_3_amg (double *r,
     // r1 = r1 - A10*z0
 	fasp_blas_dcsr_aAxpy(-1.0, A->blocks[3], z0.val, r1.val);
     
-    //! Preconditioning A11 block
+    // Preconditioning A11 block
 	mgl[1]->b.row=N1; fasp_array_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
 	mgl[1]->x.row=N1; fasp_dvec_set(N1, &mgl[1]->x,0.0);
 	
@@ -388,14 +391,14 @@ void fasp_precond_block_lower_3_amg (double *r,
 	fasp_blas_dcsr_aAxpy(-1.0, A->blocks[6], z0.val, r2.val);
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[7], z1.val, r2.val);
     
-    //! Preconditioning A22 block
+    // Preconditioning A22 block
 	mgl[2]->b.row=N2; fasp_array_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
 	mgl[2]->x.row=N2; fasp_dvec_set(N2, &mgl[2]->x,0.0);
 	
 	for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[2], amgparam);
 	fasp_array_cp(N2, mgl[2]->x.val, z2.val);
      
-	//! restore r
+	// restore r
 	fasp_array_cp(N, tempr->val, r);
 	
 }
@@ -409,6 +412,7 @@ void fasp_precond_block_lower_3_amg (double *r,
  * \param *data pointer to precondition data
  *
  * \author Xiaozhe Hu
+ * \date   07/10/2014
  */
 void fasp_precond_block_lower_4 (double *r,
                                 double *z,
@@ -430,11 +434,11 @@ void fasp_precond_block_lower_4 (double *r,
 	
 	int i;
 	
-	//! back up r, setup z;
+	// back up r, setup z;
 	fasp_array_cp(N, r, tempr->val);
 	fasp_array_set(N, z, 0.0);
 	
-	//! prepare
+	// prepare
 	dvector r0, r1, r2, r3, z0, z1, z2, z3;
     
 	r0.row = N0; z0.row = N0;
@@ -445,7 +449,7 @@ void fasp_precond_block_lower_4 (double *r,
 	r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]); r3.val = &(r[N0+N1+N2]);
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]); z3.val = &(z[N0+N1+N2]);
 	
-	//! Preconditioning A00 block
+	// Preconditioning A00 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -459,7 +463,7 @@ void fasp_precond_block_lower_4 (double *r,
 	fasp_blas_dcsr_aAxpy(-1.0, A->blocks[4], z0.val, r1.val);
     
     
-    //! Preconditioning A11 block
+    // Preconditioning A11 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -473,7 +477,7 @@ void fasp_precond_block_lower_4 (double *r,
 	fasp_blas_dcsr_aAxpy(-1.0, A->blocks[8], z0.val, r2.val);
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[9], z1.val, r2.val);
     
-    //! Preconditioning A22 block
+    // Preconditioning A22 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -488,7 +492,7 @@ void fasp_precond_block_lower_4 (double *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[13], z1.val, r3.val);
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[14], z2.val, r3.val);
     
-    //! Preconditioning A33 block
+    // Preconditioning A33 block
 #if  WITH_UMFPACK
     /* use UMFPACK direct solver */
     //fasp_solver_umfpack(&local_A[l], &temp_r, &temp_e, 0);
@@ -498,7 +502,7 @@ void fasp_precond_block_lower_4 (double *r,
     fasp_solver_superlu(&A_diag[3], &r3, &z3, 0);
 #endif
 	
-	//! restore r
+	// restore r
 	fasp_array_cp(N, tempr->val, r);
 	
 }
@@ -511,7 +515,7 @@ void fasp_precond_block_lower_4 (double *r,
  * \param *data pointer to precondition data
  *
  * \author Xiaozhe Hu
- * \date  05/01/2014
+ * \date   05/01/2014
  */
 void fasp_precond_sweeping (double *r,
                               double *z,
@@ -541,9 +545,7 @@ void fasp_precond_sweeping (double *r,
 
     // calculate the size and generate block local_r and local_z
     INT N=0;
-    
 
-    
     for (l=0;l<NumLayers; l++) {
 
         local_r[l].row = A->blocks[l*NumLayers+l]->row;
@@ -560,7 +562,7 @@ void fasp_precond_sweeping (double *r,
     temp_r.val = w;
     temp_e.val = w+N;
 	
-	//! back up r, setup z;
+	// back up r, setup z;
 	fasp_array_cp(N, r, r_backup->val);
     fasp_array_cp(N, r, z);
 	//fasp_array_set(N, z, 0.0);
@@ -594,7 +596,6 @@ void fasp_precond_sweeping (double *r,
         fasp_blas_dcsr_aAxpy(-1.0, Ai->blocks[(l+1)*NumLayers+l], local_r[l].val, local_e[l+1].val);
         
     }
-
     
     // D^{-1}L^{-1}r
     for (l=0; l<NumLayers; l++){
@@ -622,7 +623,6 @@ void fasp_precond_sweeping (double *r,
         }
         
     }
-    
     
     // L^{-t}D^{-1}L^{-1}u
     for (l=NumLayers-2; l>=0; l--){
@@ -652,11 +652,9 @@ void fasp_precond_sweeping (double *r,
         }
         
     }
-    
 	
-	//! restore r
+	// restore r
 	fasp_array_cp(N, r_backup->val, r);
-    
 	
 }
 
