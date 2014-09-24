@@ -95,4 +95,4 @@ endif()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(UMFPACK
   "UMFPACK could not be found. Be sure to set UMFPACK_DIR."
-  UMFPACK_LIBRARY UMFPACK_INCLUDE_DIRS UMFPACK_TEST_RUNS)
+UMFPACK_LIBRARY UMFPACK_INCLUDE_DIRS UMFPACK_TEST_RUNS)
