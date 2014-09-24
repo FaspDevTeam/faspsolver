@@ -60,6 +60,7 @@
 # line and give the correct path to SparseSuite here. For example:
 #
 # suitesparse_dir="/dir/to/SuiteSparse"
+#
 #-------------------------------------------------------------------------
 # If you want to use SuperLU, uncomment the next line:
 #
@@ -69,6 +70,7 @@
 # and give the correct path to SuperLU here. For example:
 #
 # superlu_dir="/dir/to/SuperLU"
+#
 #-------------------------------------------------------------------------
 # If you want to use MUMPS, uncomment the next line:
 #
@@ -78,7 +80,6 @@
 # and give the correct path to MUMPS here. For example:
 #
 #mumps_dir="/dir/to/MUMPS"
-#mumps_dir="/home/stone/Tests/MUMPS_4.10.0"
 #
 ####################  User Defined Compiler Flags  #####################
 ifeq ($(debug),yes)
@@ -91,9 +92,9 @@ else
 		cxxflags="-Wall -g -DDEBUG_MODE"
 		fflags="-Wall -g -DDEBUG_MODE"
 	else
-		cflags="-O3 -funroll-loops"
-		cxxflags="-O3 -funroll-loops"
-		fflags="-O3 -funroll-loops"
+		cflags="-funroll-loops"
+		cxxflags="-funroll-loops"
+		fflags="-funroll-loops"
 	endif
 endif
 ####################  User Changes UP TO HERE   ########################
@@ -131,8 +132,8 @@ ifeq ($(doxywizard),yes)
 endif
 
 ifeq ($(umfpack), yes)
-    CONFIG_FLAGS+=-DUSE_UMFPACK=$(umfpack) 
-    CONFIG_FLAGS+=-DSUITESPARSE_DIR=$(suitesparse_dir) 
+    CONFIG_FLAGS+=-DUSE_UMFPACK=$(umfpack)
+    CONFIG_FLAGS+=-DSUITESPARSE_DIR=$(suitesparse_dir)
 endif
 
 ifeq ($(superlu), yes)

@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-09/23/2014 FASP 1.5.9:
+09/24/2014 FASP 1.5.9:
 - Update PGMRES code. 
 - Add new regression tests and update regression results. 
 - Add upper limit for GMRES restarting number.
@@ -8,6 +8,7 @@ File Name: CHANGES
 - Check AMG coarse levels: decay ratio, density, min DOF. 
 - Resolve multiple warnings in *.c files.
 - Remove an unnecessary step: setting residual initial value.
+- Fix missing variables for UMFPACK.
 - Update Poisson FEM/FDM test results in out/poisson.out.
 - Update TODO list.
 - Modify Makefile and separate debug=yes and debug=all (all with FASP debug info).
