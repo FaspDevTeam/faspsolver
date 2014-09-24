@@ -189,6 +189,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     INT m, n, nnz;
     
     AMG_data **mgl = NULL;
+    void **LU_diag = (void **)fasp_mem_calloc(3, sizeof(void *));
     INT i;
     
 #if DEBUG_MODE
@@ -204,8 +205,6 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
 #if WITH_UMFPACK
         // Need to sort the diagonal blocks for UMFPACK format
         dCSRmat A_tran;
-        
-        void **LU_diag = (void **)fasp_mem_calloc(3, sizeof(void *));
         
         for (i=0; i<3; i++){
             
@@ -372,6 +371,9 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     INT status=FASP_SUCCESS;
     REAL setup_start, setup_end, setup_duration;
     REAL solver_start, solver_end, solver_duration;
+
+    void **LU_diag = (void **)fasp_mem_calloc(4, sizeof(void *));
+    INT i;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -385,9 +387,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     
 #if WITH_UMFPACK
     // Need to sort the matrices local_A for UMFPACK format
-    INT i;
     dCSRmat A_tran;
-    void **LU_diag = (void **)fasp_mem_calloc(4, sizeof(void *));
     
     for (i=0; i<4; i++){
         
