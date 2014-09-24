@@ -72,6 +72,8 @@ if (METIS_FOUND)
   set(CHOLMOD_LIBRARIES ${CHOLMOD_LIBRARIES} ${METIS_LIBRARIES})
 endif()
 
+set(CHOLMOD_LIBRARIES ${CHOLMOD_LIBRARIES} "-lgfortran")
+
 # Try to run a test program that uses CHOLMOD
 if (CHOLMOD_INCLUDE_DIRS AND CHOLMOD_LIBRARIES)
 
@@ -132,4 +134,4 @@ endif()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CHOLMOD
   "CHOLMOD could not be found. Be sure to set CHOLMOD_DIR."
-  CHOLMOD_LIBRARY CHOLMOD_INCLUDE_DIRS CHOLMOD_TEST_RUNS)
+ CHOLMOD_LIBRARY CHOLMOD_INCLUDE_DIRS CHOLMOD_TEST_RUNS)
