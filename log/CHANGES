@@ -9,6 +9,7 @@ File Name: CHANGES
 - Resolve multiple warnings in *.c files.
 - Remove an unnecessary step: setting residual initial value.
 - Fix missing variables for UMFPACK.
+- Fix a potential problem in CMAKE when finding UMFPACK.
 - Update Poisson FEM/FDM test results in out/poisson.out.
 - Update TODO list.
 - Modify Makefile and separate debug=yes and debug=all (all with FASP debug info).
