@@ -105,11 +105,9 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
-    p    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    
-    hh   = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    
-    if (print_level>PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
+    p     = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
     r = work; w = r + n; rs = w + n; c  = rs + Restartplus1; s  = c + Restart;
     

@@ -1271,8 +1271,10 @@ static double fasp_spectral_radius (dCSRmat *A,
     work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
     p    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
     hh   = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    if (print_level>PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
-    r = work; w = r + n; rs = w + n; c  = rs + restartplus1; s  = c + restart;
+    
+	norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
+    
+	r = work; w = r + n; rs = w + n; c  = rs + restartplus1; s  = c + restart;
     
     for (i = 0; i < restartplus1; i ++) p[i] = s + restart + i*n;
     for (i = 0; i < restartplus1; i ++) hh[i] = p[restart] + n + i*restart;

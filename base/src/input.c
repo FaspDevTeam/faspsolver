@@ -23,13 +23,13 @@
 SHORT fasp_param_check (input_param *inparam)
 {
     SHORT status = FASP_SUCCESS;
-    
+
     if ( inparam->problem_num<0
         || inparam->solver_type<0
         || inparam->solver_type>50
         || inparam->precond_type<0
-        || inparam->itsolver_tol<=0
-        || inparam->itsolver_maxit<=0
+        || inparam->itsolver_tol<0
+        || inparam->itsolver_maxit<0
         || inparam->stop_type<=0
         || inparam->stop_type>3
         || inparam->restart<0

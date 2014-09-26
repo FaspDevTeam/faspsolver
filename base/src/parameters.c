@@ -241,7 +241,7 @@ void fasp_param_set (int argc,
     status = fasp_param_check(iniparam);
     
     // if meet unexpected input, stop the program
-    fasp_chkerr(status,"fasp_param_set");
+    fasp_chkerr(status,__FUNCTION__);
     
 }
 
@@ -348,6 +348,7 @@ void fasp_param_input_init (input_param *iniparam)
     iniparam->AMG_postsmooth_iter      = 1;
     iniparam->AMG_relaxation           = 1.0;
     iniparam->AMG_coarse_dof           = 500;
+	iniparam->AMG_coarse_solver        = 0;
     iniparam->AMG_tol                  = 1e-6;
     iniparam->AMG_maxit                = 1;
     iniparam->AMG_ILU_levels           = 0;

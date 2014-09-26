@@ -239,8 +239,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         if ( status < 0 ) {
             // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
-                printf("### WARNING: Could not find any C-variables!\n");
-                printf("### WARNING: RS coarsening on level-%d failed!\n", lvl);
+                printf("### WARNING: Forming aggregates on level-%d failed!\n", lvl);
             }
             status = FASP_SUCCESS; break;
         }
@@ -478,7 +477,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         if ( status < 0 ) {
             // When error happens, force solver to use the current multigrid levels!
             if ( prtlvl > PRINT_MIN ) {
-                printf("### WARNING: Aggregation on level-%d failed!\n", lvl);
+                printf("### WARNING: Forming aggregates on level-%d failed!\n", lvl);
             }
             status = FASP_SUCCESS; break;
         }
