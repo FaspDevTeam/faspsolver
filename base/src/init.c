@@ -192,10 +192,19 @@ void fasp_amg_data_free (AMG_data *mgl,
         mgl->near_kernel_basis[i]=NULL;
     }
     
-#if WITH_MUMPS
-    /* Destroy MUMPS direct solver on the coarsest level */
-    fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, 3);
+	// Clean direct solver data in necessary
+	switch (param->coarse_solver) {
+
+#if WITH_MUMPS   /* Destroy MUMPS direct solver on the coarsest level */
+		case SOLVER_MUMPS: {
+			fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, 3);
+			break;
+		}
 #endif
+
+		default: // Do nothing!
+			break;
+	}
     
     fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
     

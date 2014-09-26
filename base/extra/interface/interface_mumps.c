@@ -183,7 +183,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
     double *rhs = id.rhs;
     
 #if DEBUG_MODE
-	printf("fasp_solver_mumps_steps: job_stat = %d\n", job_stat);
+	printf("### DEBUG: %s job_stat = %d\n", __FUNCTION__, job_stat);
 #endif
 
     switch ( job ) {
@@ -191,7 +191,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
         case 1:
         {
 #if DEBUG_MODE
-           printf("### DEBUG: fasp_solver_mumps_steps ...... [1]\n");         
+           printf("### DEBUG: %s Step 1 ...... [Start]\n", __FUNCTION__);         
 #endif
             int begin_row, end_row;
             
@@ -243,7 +243,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             job_stat = 1;
 
 #if DEBUG_MODE
-			printf("### DEBUG: fasp_solver_mumps_steps ...... [1]\n");   
+			printf("### DEBUG: %s, Step 1 ...... [Finish]\n", __FUNCTION__);   
 #endif
         }
             break;
@@ -251,7 +251,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
         case 2:
         {
 #if DEBUG_MODE
-			printf("### DEBUG: fasp_solver_mumps_steps ...... [2]\n");   
+			printf("### DEBUG: %s, Step 2 ...... [Start]\n", __FUNCTION__);   
 #endif
             if ( job_stat != 1 )
                 printf("### ERROR: fasp_solver_mumps_steps has not finish Setup...... [2]\n");
@@ -263,7 +263,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
                     
             for(i=0; i<id.n; i++) x[i] = id.rhs[i];
 #if DEBUG_MODE
-			printf("### DEBUG: fasp_solver_mumps_steps ...... [2]\n");   
+			printf("### DEBUG: %s, Step 2 ...... [Finish]\n", __FUNCTION__);   
 #endif
         }
             break;
@@ -271,7 +271,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
         case 3:
         {
             if ( job_stat !=1 )
-                printf("### ERROR: fasp_solver_mumps_steps has not finish Setup...... [3]\n");
+                printf("### ERROR: %s has not been setted up!\n", __FUNCTION__);
             
             free(irn);
             free(jcn);
@@ -279,9 +279,6 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             free(rhs);
             id.job = -2;
             dmumps_c(&id); /* Terminate instance */
-#if DEBUG_MODE
-			printf("### DEBUG: fasp_solver_mumps_steps ...... [3]\n");   
-#endif
         }
             break;
             

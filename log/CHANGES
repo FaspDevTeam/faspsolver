@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+09/26/2014 FASP 1.6.0:
+- Update website and documentation.
+- Fix a bug with MUMPS in VS2010 setting. 
+- Modify debug information in MUMPS interface.
+
 09/24/2014 FASP 1.5.9:
 - Update PGMRES code. 
 - Add new regression tests and update regression results. 
