@@ -285,6 +285,7 @@
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <Optimization>MaxSpeedHighLevel</Optimization>
       <C99Support>false</C99Support>
+      <FloatingPointModel>Fast2</FloatingPointModel>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Direct.lib;faspbase-f-vs10.lib;%(AdditionalDependencies)</AdditionalDependencies>

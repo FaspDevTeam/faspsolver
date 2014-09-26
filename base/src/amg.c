@@ -123,10 +123,10 @@ void fasp_solver_amg (dCSRmat *A,
                                   20, 1, print_level);
         
     }
-    
+
     // clean-up memory
     fasp_amg_data_free(mgl, param);
-    
+
     // print out CPU time if needed
     if ( print_level > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
