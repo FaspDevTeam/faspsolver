@@ -124,8 +124,7 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
     p  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     hh = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     z  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    
-    if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
+    norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
     r = work; rs = r + n; c = rs + Restartplus1; s = c + Restart;
     for (i = 0; i < Restartplus1; i ++) p[i] = s + Restart + i*n;

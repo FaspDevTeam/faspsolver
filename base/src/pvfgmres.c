@@ -122,8 +122,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     p  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     hh = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     z  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    
-    if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
+    norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
     r = work; rs = r + n; c = rs + Restartplus1; s = c + Restart;
     for (i = 0; i < Restartplus1; i ++) p[i] = s + Restart + i*n;
@@ -437,8 +436,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
     p  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     hh = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     z  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    
-    if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
+    norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
     r = work; rs = r + n; c = rs + Restartplus1; s = c + Restart;
     for (i = 0; i < Restartplus1; i ++) p[i] = s + Restart + i*n;
@@ -753,8 +751,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
     p  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     hh = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
     z  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    
-    if (print_level > PRINT_NONE) norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
+    norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
     r = work; rs = r + n; c = rs + Restartplus1; s = c + Restart;
     for (i = 0; i < Restartplus1; i ++) p[i] = s + Restart + i*n;
