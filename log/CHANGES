@@ -1,11 +1,13 @@
 File Name: CHANGES
 
-09/26/2014 FASP 1.6.0:
+10/03/2014 FASP 1.6.0:
 - Update website and documentation.
 - Fix a bug with MUMPS in VS2010 setting. 
 - Modify debug information in MUMPS interface.
 - Test FASP in the new Pangolin and fix several minor bugs.
 - Fix VS2010 DEBUG mode bug.
+- Fix a problem in test/main/test_bsr.c.
+- Test regression_mm.c and record output in mm.out.
 
 09/24/2014 FASP 1.5.9:
 - Update PGMRES code. 

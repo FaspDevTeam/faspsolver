@@ -502,7 +502,6 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         fasp_blas_dbsr_rap(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
         
         /* -- Form extra near kernal space if needed --*/
-        printf("Form extra near kernel space\n");
         if (mgl[lvl].A_nk != NULL){
             
             mgl[lvl+1].A_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));

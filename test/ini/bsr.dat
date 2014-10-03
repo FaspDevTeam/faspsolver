@@ -9,7 +9,7 @@ workdir = ../data/  % work directory, no more than 128 characters
 %----------------------------------------------%
 % problem, solver, and output type             %
 %----------------------------------------------%
-problem_num              = 64     % test problem number 
+problem_num              = 10     % test problem number 
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to scree | 1 to file
 solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
@@ -23,9 +23,9 @@ solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 
 precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
 itsolver_tol             = 1e-8   % solver tolerance 
-itsolver_maxit           = 200   % maximal iteration number 
+itsolver_maxit           = 200    % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
-itsolver_restart         = 100     % restart number for GMRES
+itsolver_restart         = 100    % restart number for GMRES
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
@@ -57,7 +57,7 @@ AMG_cycle_type           = V      % V V-cycle | W W-cycle
 AMG_tol                  = 1e-8   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
-AMG_coarse_dof           = 1000    % max number of coarse degrees of freedom
+AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 3      % degree of the polynomial used by AMLI cycle
 AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG

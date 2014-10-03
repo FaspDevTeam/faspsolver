@@ -18,69 +18,6 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_set_GS_threads (INT threads,INT its)
- *
- * \brief  Set threads for CPR. Please add it at the begin of Krylov openmp method function 
- *         and after iter++.
- *
- * \param threads  Total threads of sovler
- * \param its      Current its of the Krylov methods
- *
- * \author Feng Chunsheng, Yue Xiaoqiang
- * \date 03/20/2011
- *
- * TODO: Why put it here??? --Chensong
- */
-
-INT THDs_AMG_GS=0;  /**< cpr amg gs smoothing threads      */
-INT THDs_CPR_lGS=0; /**< reservoir gs smoothing threads     */
-INT THDs_CPR_gGS=0; /**< global matrix gs smoothing threads */
-
-void fasp_set_GS_threads (INT mythreads,
-                          INT its)
-{
-#ifdef _OPENMP 
-
-#if 1
-
-    if (its <=8) {
-        THDs_AMG_GS =  mythreads;
-        THDs_CPR_lGS = mythreads ;
-        THDs_CPR_gGS = mythreads ;
-    }
-    else if (its <=12) {
-        THDs_AMG_GS =  mythreads;
-        THDs_CPR_lGS = (6 < mythreads) ? 6 : mythreads;
-        THDs_CPR_gGS = (4 < mythreads) ? 4 : mythreads;
-    }
-    else if (its <=15) {
-        THDs_AMG_GS =  (3 < mythreads) ? 3 : mythreads;
-        THDs_CPR_lGS = (3 < mythreads) ? 3 : mythreads;
-        THDs_CPR_gGS = (2 < mythreads) ? 2 : mythreads;
-    }
-    else if (its <=18) {
-        THDs_AMG_GS =  (2 < mythreads) ? 2 : mythreads;
-        THDs_CPR_lGS = (2 < mythreads) ? 2 : mythreads;
-        THDs_CPR_gGS = (1 < mythreads) ? 1 : mythreads;
-    }
-    else {
-        THDs_AMG_GS =  1;
-        THDs_CPR_lGS = 1;
-        THDs_CPR_gGS = 1;
-    }
-
-#else
-
-    THDs_AMG_GS =  mythreads;
-    THDs_CPR_lGS = mythreads ;
-    THDs_CPR_gGS = mythreads ;
-
-#endif
-    
-#endif // FASP_USE_OPENMP
-}
-
-/**
  * \fn INT fasp_solver_dbsr_itsolver (dBSRmat *A, dvector *b, dvector *x, 
  *                                    precond *pc, itsolver_param *itparam)
  *
@@ -442,13 +379,10 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     
     // initialize A, b, x for mgl[0]
     mgl[0].A = fasp_dbsr_create(A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
-    fasp_dbsr_cp(A,  &(mgl[0].A));
-    //mgl[0].A.ROW = A->ROW; mgl[0].A.COL = A->COL; mgl[0].A.NNZ = A->NNZ;
-    //mgl[0].A.nb = A->nb; mgl[0].A.storage_manner = A->storage_manner;
-    //mgl[0].A.IA = A->IA; mgl[0].A.JA = A->JA; mgl[0].A.val = A->val;
     mgl[0].b = fasp_dvec_create(mgl[0].A.ROW*mgl[0].A.nb);
     mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb);
     
+    fasp_dbsr_cp(A, &(mgl[0].A));
     
     switch (amgparam->AMG_type) {
             
