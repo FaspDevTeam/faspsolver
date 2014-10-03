@@ -1,0 +1,39 @@
+---------------------- All test finished at ----------------------
+Fri Oct  3 13:00:17 2014
+------------------------------------------------------------------
+
+========================No preconditioner=========================
+Solver         CG:  11 tests finished: 10 failed, 1 succeeded!
+Solver   BiCGstab:  11 tests finished: 8 failed, 3 succeeded!
+Solver     MinRes:  11 tests finished: 11 failed, 0 succeeded!
+Solver      GMRES:  11 tests finished: 9 failed, 2 succeeded!
+Solver     VGMRES:  11 tests finished: 9 failed, 2 succeeded!
+Solver    VFGMRES:  11 tests finished: 9 failed, 2 succeeded!
+Solver        GCG:  11 tests finished: 10 failed, 1 succeeded!
+=======================Diagonal preconditioner====================
+Solver         CG:  11 tests finished: 10 failed, 1 succeeded!
+Solver   BiCGstab:  11 tests finished: 8 failed, 3 succeeded!
+Solver     MinRes:  11 tests finished: 11 failed, 0 succeeded!
+Solver      GMRES:  11 tests finished: 8 failed, 3 succeeded!
+Solver     VGMRES:  11 tests finished: 8 failed, 3 succeeded!
+Solver    VFGMRES:  11 tests finished: 8 failed, 3 succeeded!
+Solver        GCG:  11 tests finished: 10 failed, 1 succeeded!
+=========================ILU preconditioner======================
+Solver         CG:  11 tests finished: 5 failed, 6 succeeded!
+Solver   BiCGstab:  11 tests finished: 4 failed, 7 succeeded!
+Solver     MinRes:  11 tests finished: 8 failed, 3 succeeded!
+Solver      GMRES:  11 tests finished: 5 failed, 6 succeeded!
+Solver     VGMRES:  11 tests finished: 5 failed, 6 succeeded!
+Solver    VFGMRES:  11 tests finished: 5 failed, 6 succeeded!
+Solver        GCG:  11 tests finished: 7 failed, 4 succeeded!
+=========================AMG preconditioner======================
+Solver         CG:  11 tests finished: 6 failed, 5 succeeded!
+Solver   BiCGstab:  11 tests finished: 4 failed, 7 succeeded!
+Solver     MinRes:  11 tests finished: 10 failed, 1 succeeded!
+Solver      GMRES:  11 tests finished: 5 failed, 6 succeeded!
+Solver     VGMRES:  11 tests finished: 5 failed, 6 succeeded!
+Solver    VFGMRES:  11 tests finished: 5 failed, 6 succeeded!
+Solver        GCG:  11 tests finished: 3 failed, 8 succeeded!
+=============================AMG==================================
+Solver        AMG:  11 tests finished: 5 failed, 6 succeeded!
+==================================================================

@@ -104,6 +104,68 @@ void FASP_GET_START_END (INT procid,
     *end = end_loc;
 }
 
+INT THDs_AMG_GS=0;  /**< cpr amg gs smoothing threads      */
+INT THDs_CPR_lGS=0; /**< reservoir gs smoothing threads     */
+INT THDs_CPR_gGS=0; /**< global matrix gs smoothing threads */
+
+/**
+ * \fn void fasp_set_GS_threads (INT threads,INT its)
+ *
+ * \brief  Set threads for CPR. Please add it at the begin of Krylov openmp method function
+ *         and after iter++.
+ *
+ * \param threads  Total threads of sovler
+ * \param its      Current its of the Krylov methods
+ *
+ * \author Feng Chunsheng, Yue Xiaoqiang
+ * \date   03/20/2011
+ *
+ * TODO: Why put it here??? --Chensong
+ */
+void fasp_set_GS_threads (INT mythreads,
+                          INT its)
+{
+#ifdef _OPENMP
+    
+#if 1
+    
+    if (its <=8) {
+        THDs_AMG_GS =  mythreads;
+        THDs_CPR_lGS = mythreads ;
+        THDs_CPR_gGS = mythreads ;
+    }
+    else if (its <=12) {
+        THDs_AMG_GS =  mythreads;
+        THDs_CPR_lGS = (6 < mythreads) ? 6 : mythreads;
+        THDs_CPR_gGS = (4 < mythreads) ? 4 : mythreads;
+    }
+    else if (its <=15) {
+        THDs_AMG_GS =  (3 < mythreads) ? 3 : mythreads;
+        THDs_CPR_lGS = (3 < mythreads) ? 3 : mythreads;
+        THDs_CPR_gGS = (2 < mythreads) ? 2 : mythreads;
+    }
+    else if (its <=18) {
+        THDs_AMG_GS =  (2 < mythreads) ? 2 : mythreads;
+        THDs_CPR_lGS = (2 < mythreads) ? 2 : mythreads;
+        THDs_CPR_gGS = (1 < mythreads) ? 1 : mythreads;
+    }
+    else {
+        THDs_AMG_GS =  1;
+        THDs_CPR_lGS = 1;
+        THDs_CPR_gGS = 1;
+    }
+    
+#else
+    
+    THDs_AMG_GS =  mythreads;
+    THDs_CPR_lGS = mythreads ;
+    THDs_CPR_gGS = mythreads ;
+    
+#endif
+    
+#endif // _OPENMP
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

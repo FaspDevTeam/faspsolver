@@ -30,10 +30,10 @@ int main (int argc, const char * argv[])
 	AMG_param       amgpar; // parameters for AMG
 	ILU_param       ilupar; // parameters for ILU
     
-    // Set solver parameters: use ./ini/bsr.dat
+    // Set solver parameters: Should use ./ini/bsr.dat
     fasp_param_set(argc, argv, &inpar);
     fasp_param_init(&inpar, &itpar, &amgpar, &ilupar, NULL);
-    
+        
     // Set local parameters
 	const int print_level   = inpar.print_level;
 	const int problem_num   = inpar.problem_num;
@@ -58,7 +58,6 @@ int main (int argc, const char * argv[])
 	strncpy(filename1,inpar.workdir,128);
 	strncpy(filename2,inpar.workdir,128);
     strncpy(filename3,inpar.workdir,128);
-
     
     // Default test problem from black-oil benchmark: SPE01
 	if (problem_num == 10) {				
@@ -91,7 +90,6 @@ int main (int argc, const char * argv[])
     
     // Set initial guess
     fasp_dvec_alloc(b.row, &uh);
-    //fasp_dvec_cp(&b, &uh);
     fasp_dvec_set(b.row, &uh, 0.0);
     
     // Preconditioned Krylov methods
@@ -135,9 +133,6 @@ int main (int argc, const char * argv[])
 	if (status<0) {
 		printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
 	}
-    
-    //fasp_dvec_write("out/13000-3.dat", &uh);
-    
     
     if (output_type) fclose (stdout);
     
