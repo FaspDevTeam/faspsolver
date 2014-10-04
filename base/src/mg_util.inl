@@ -24,7 +24,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
                                   const SHORT prt_lvl)
 {
     const INT csize  = A->row;
-    const INT cmaxit = MAX(250,MIN(csize*csize, 1000));
+    const INT cmaxit = MAX(250,MIN(csize*csize, 1000)); // Should NOT be less!
         
     INT status = fasp_solver_dcsr_spcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);
     
@@ -33,7 +33,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
         status = fasp_solver_dcsr_spvgmres (A, b, x, NULL, ctol, cmaxit, 20, 1, PRINT_NONE);
     }
 
-    if ( status < 0 && prt_lvl > PRINT_MIN ) {
+    if ( status < 0 && prt_lvl >= PRINT_MORE ) {
         printf("### WARNING: Coarse level solver failed to converge!\n");
     }
 } 

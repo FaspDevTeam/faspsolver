@@ -402,7 +402,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->coarse_solver        = SOLVER_DEFAULT;
     amgparam->relaxation           = 1.0;
     amgparam->polynomial_degree    = 3;
-    amgparam->coarse_scaling       = OFF; // Requires investigation --Chensong
+    amgparam->coarse_scaling       = OFF;
     amgparam->amli_degree          = 2;
     amgparam->amli_coef            = NULL;
     amgparam->nl_amli_krylov_type  = SOLVER_GCG;

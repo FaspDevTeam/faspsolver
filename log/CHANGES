@@ -9,6 +9,7 @@ File Name: CHANGES
 - Fix a problem in test/main/test_bsr.c.
 - Test regression_mm.c and record output in mm.out.
 - Test regression_mf.c and record output in mf.out.
+- Add a safty step for coarse correction scaling.
 - Update Doxygen and webpage.
 
 09/24/2014 FASP 1.5.9:

@@ -204,7 +204,8 @@ ForwardSweep:
         // find the optimal scaling factor alpha
         if ( param->coarse_scaling == ON ) {
             alpha = fasp_blas_array_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
-            / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
+                  / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
+            alpha = MIN(alpha, 1.0); // Add this for safty! --Chensong on 10/04/2014
         }
         
         // prolongation u = u + alpha*P*e1
@@ -478,7 +479,8 @@ ForwardSweep:
             fasp_blas_dbsr_mxv (&mgl[l].A, PeH.val, Aeh.val);
             
             alpha = (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, mgl[l].w.val))
-            / (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, Aeh.val));
+                  / (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, Aeh.val));
+            alpha = MIN(alpha, 1.0); // Add this for safty! --Chensong on 10/04/2014
             fasp_blas_array_axpy (mgl[l].b.row, alpha, PeH.val, mgl[l].x.val);
         }
         else {

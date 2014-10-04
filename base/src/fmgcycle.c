@@ -147,7 +147,8 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
             // find the optimal scaling factor alpha
             if ( param->coarse_scaling == ON ) {
                 alpha = fasp_blas_array_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
-                / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
+                      / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
+                alpha = MIN(alpha, 1.0); // Add this for safty! --Chensong on 10/04/2014
             }
             
             // prolongation u = u + alpha*P*e1
@@ -266,7 +267,8 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
                 // find the optimal scaling factor alpha
                 if ( param->coarse_scaling == ON ) {
                     alpha = fasp_blas_array_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
-                    / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
+                          / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
+                    alpha = MIN(alpha, 1.0); // Add this for safty! --Chensong on 10/04/2014
                 }
                 
                 // prolongation u = u + alpha*P*e1
