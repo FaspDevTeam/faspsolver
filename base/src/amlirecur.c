@@ -2,9 +2,7 @@
  *
  *  \brief Abstract AMLI multilevel iteration -- recursive version
  *
- *  \note Contains AMLI and nonlinear AMLI cycles
- *
- *  TODO: Need to add a non-recursive version! --Chensong
+ *  \note  AMLI and nonlinear AMLI cycles
  */
 
 #include <math.h>
@@ -79,8 +77,8 @@ void fasp_solver_amli (AMG_data *mgl,
         if (level<param->ILU_levels) {
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
         }
-        else if (level<mgl->schwarz_levels){
-            switch (mgl[level].schwarz.schwarz_type){
+        else if (level<mgl->schwarz_levels) {
+            switch (mgl[level].schwarz.schwarz_type) {
                 case 3: // TODO: Need to give a name instead of 3 --Chensong
                     fbgs2ns_(&(mgl[level].schwarz.A.row),
                              mgl[level].schwarz.A.IA,
@@ -155,7 +153,7 @@ void fasp_solver_amli (AMG_data *mgl,
             fasp_array_cp(m1,b1->val,r1);
             
             INT i;
-            for (i=1; i<=degree; i++) {
+            for ( i=1; i<=degree; i++ ) {
                 fasp_dvec_set(m1,e1,0.0);
                 fasp_solver_amli(mgl, param, level+1);
                 
@@ -174,15 +172,18 @@ void fasp_solver_amli (AMG_data *mgl,
         fasp_blas_array_ax(m1, coef[degree], e1->val);
         if ( param->coarse_scaling == ON ) {
             alpha = fasp_blas_array_dotprod(m1, e1->val, r1)
-            / fasp_blas_dcsr_vmv(A1, e1->val, e1->val);
+                  / fasp_blas_dcsr_vmv(A1, e1->val, e1->val);
+            alpha = MIN(alpha, 1.0);
         }
         
         // prolongation e0 = e0 + alpha * P * e1
         switch (amg_type) {
             case UA_AMG:
-                fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[level].P, e1->val, e0->val); break;
+                fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[level].P, e1->val, e0->val);
+                break;
             default:
-                fasp_blas_dcsr_aAxpy(alpha, &mgl[level].P, e1->val, e0->val); break;
+                fasp_blas_dcsr_aAxpy(alpha, &mgl[level].P, e1->val, e0->val);
+                break;
         }
         
         // post smoothing
@@ -190,7 +191,7 @@ void fasp_solver_amli (AMG_data *mgl,
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
         }
         else if (level<mgl->schwarz_levels) {
-			switch (mgl[level].schwarz.schwarz_type) {
+            switch (mgl[level].schwarz.schwarz_type) {
                 case 3:
                     bbgs2ns_(&(mgl[level].schwarz.A.row),
                              mgl[level].schwarz.A.IA,
@@ -240,8 +241,8 @@ void fasp_solver_amli (AMG_data *mgl,
                              mgl[level].schwarz.rhsloc,
                              &(mgl[level].schwarz.memt));
                     break;
-			}
-		}
+            }
+        }
         
         else {
             fasp_dcsr_postsmoothing(smoother,A0,b0,e0,param->postsmooth_iter,
@@ -349,9 +350,9 @@ void fasp_solver_nl_amli (AMG_data *mgl,
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
         }
         else if (level<mgl->schwarz_levels){
-			switch (mgl[level].schwarz.schwarz_type){
-				case 3:
-					fbgs2ns_(&(mgl[level].schwarz.A.row),
+            switch (mgl[level].schwarz.schwarz_type){
+                case 3:
+                    fbgs2ns_(&(mgl[level].schwarz.A.row),
                              mgl[level].schwarz.A.IA,
                              mgl[level].schwarz.A.JA,
                              mgl[level].schwarz.A.val,
@@ -366,7 +367,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                              mgl[level].schwarz.al,
                              mgl[level].schwarz.rhsloc,
                              &(mgl[level].schwarz.memt));
-					bbgs2ns_(&(mgl[level].schwarz.A.row),
+                    bbgs2ns_(&(mgl[level].schwarz.A.row),
                              mgl[level].schwarz.A.IA,
                              mgl[level].schwarz.A.JA,
                              mgl[level].schwarz.A.val,
@@ -381,9 +382,9 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                              mgl[level].schwarz.al,
                              mgl[level].schwarz.rhsloc,
                              &(mgl[level].schwarz.memt));
-					break;
-				default:
-					fbgs2ns_(&(mgl[level].schwarz.A.row),
+                    break;
+                default:
+                    fbgs2ns_(&(mgl[level].schwarz.A.row),
                              mgl[level].schwarz.A.IA,
                              mgl[level].schwarz.A.JA,
                              mgl[level].schwarz.A.val,
@@ -398,9 +399,9 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                              mgl[level].schwarz.al,
                              mgl[level].schwarz.rhsloc,
                              &(mgl[level].schwarz.memt));
-					break;
-			}
-		}
+                    break;
+            }
+        }
         
         else {
             fasp_dcsr_presmoothing(smoother,A0,b0,e0,param->presmooth_iter,
@@ -479,9 +480,9 @@ void fasp_solver_nl_amli (AMG_data *mgl,
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
         }
         else if (level<mgl->schwarz_levels){
-			switch (mgl[level].schwarz.schwarz_type){
-				case 3:
-					bbgs2ns_(&(mgl[level].schwarz.A.row),
+            switch (mgl[level].schwarz.schwarz_type){
+                case 3:
+                    bbgs2ns_(&(mgl[level].schwarz.A.row),
                              mgl[level].schwarz.A.IA,
                              mgl[level].schwarz.A.JA,
                              mgl[level].schwarz.A.val,
@@ -496,7 +497,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                              mgl[level].schwarz.al,
                              mgl[level].schwarz.rhsloc,
                              &(mgl[level].schwarz.memt));
-					fbgs2ns_(&(mgl[level].schwarz.A.row),
+                    fbgs2ns_(&(mgl[level].schwarz.A.row),
                              mgl[level].schwarz.A.IA,
                              mgl[level].schwarz.A.JA,
                              mgl[level].schwarz.A.val,
@@ -511,9 +512,9 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                              mgl[level].schwarz.al,
                              mgl[level].schwarz.rhsloc,
                              &(mgl[level].schwarz.memt));
-					break;
-				default:
-					bbgs2ns_(&(mgl[level].schwarz.A.row),
+                    break;
+                default:
+                    bbgs2ns_(&(mgl[level].schwarz.A.row),
                              mgl[level].schwarz.A.IA,
                              mgl[level].schwarz.A.JA,
                              mgl[level].schwarz.A.val,
@@ -528,9 +529,9 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                              mgl[level].schwarz.al,
                              mgl[level].schwarz.rhsloc,
                              &(mgl[level].schwarz.memt));
-					break;
-			}
-		}
+                    break;
+            }
+        }
         
         else {
             fasp_dcsr_postsmoothing(smoother,A0,b0,e0,param->postsmooth_iter,
@@ -766,7 +767,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
         }
         
     }
-
+    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif

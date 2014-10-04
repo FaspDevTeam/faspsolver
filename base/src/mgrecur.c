@@ -1,6 +1,8 @@
 /*! \file mgrecur.c
  *
  *  \brief Abstract multigrid cycle -- recursive version
+ * 
+ *  \note  Not used any more. Will be removed! --Chensong
  */
 
 #include <time.h>

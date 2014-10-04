@@ -157,6 +157,21 @@ int main (int argc, const char * argv[])
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
 	}
     
+    else if (problem_num == 32) {
+        datafile1="Pan_mech_mat_1.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="Pan_mech_rhs_1.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+        
+        //fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        
+        //fasp_dcoo_write("Pan_mech_mat_coo.dat", &A);
+    }
+    
     else if (problem_num == 40 ) {
 		datafile1="JumpData/mat128_p4_k8.dat";
 		strcat(filename1,datafile1);
@@ -180,39 +195,24 @@ int main (int argc, const char * argv[])
         //fasp_dvec_alloc(A.row, &b);
         //fasp_dvec_set(A.row,&b,1.0);
         fasp_dvec_read(filename2, &b);
-
-        
     }
     
-    /*
-    else if (problem_num == 32) {
-		datafile1="mech-matrix";
-		strcat(filename1,datafile1);
-		
-        datafile2="mech-load";
-		strcat(filename2,datafile2);
-		
-        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+    //
+    else if (problem_num == 60) {
         
-	}
-     */
-    
-    else if (problem_num == 32) {
-		datafile1="Pan_mech_mat_1.dat";
-		strcat(filename1,datafile1);
-		
-        datafile2="Pan_mech_rhs_1.dat";
-		strcat(filename2,datafile2);
+        // read in matrix
+        datafile1="/pnp-data/set-2/A.dat";
+        strcat(filename1,datafile1);
         
         fasp_dcoo_read(filename1, &A);
+        
+        // read in b
+        datafile2="/pnp-data/set-2/b.dat";
+        strcat(filename2,datafile2);
+        
         fasp_dvec_read(filename2, &b);
-		
-        //fasp_dcsrvec2_read(filename1, filename2, &A, &b);
-        
-        //fasp_dcoo_write("Pan_mech_mat_coo.dat", &A);
-        
     }
-        
+
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
