@@ -158,7 +158,7 @@ endif(USE_MUMPS)
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
     configure_file(
-		${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in 
+		${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in
 	      	${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf @ONLY
 		)
     set(DOXY_EXEC "${DOXYGEN_EXECUTABLE}")
