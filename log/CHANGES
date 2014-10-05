@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-10/03/2014 FASP 1.6.0:
+10/05/2014 FASP 1.6.0:
 - Update website and documentation.
 - Fix a bug with MUMPS in VS2010 setting. 
 - Modify debug information in MUMPS interface.
@@ -10,7 +10,8 @@ File Name: CHANGES
 - Test regression_mm.c and record output in mm.out.
 - Test regression_mf.c and record output in mf.out.
 - Add a safty step for coarse correction scaling.
-- Update Doxygen and webpage.
+- Update FASP tutorial, make Fortran version gives same results as C version.
+- Update Doxygen, webpage and TCL.
 
 09/24/2014 FASP 1.5.9:
 - Update PGMRES code. 
