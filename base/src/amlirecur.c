@@ -150,9 +150,10 @@ void fasp_solver_amli (AMG_data *mgl,
         
         // coarse grid correction
         {
+            INT i;
+
             fasp_array_cp(m1,b1->val,r1);
             
-            INT i;
             for ( i=1; i<=degree; i++ ) {
                 fasp_dvec_set(m1,e1,0.0);
                 fasp_solver_amli(mgl, param, level+1);
