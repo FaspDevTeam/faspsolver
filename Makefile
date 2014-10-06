@@ -79,7 +79,7 @@
 # If you want to specify the path to MUMPS, uncomment the next line
 # and give the correct path to MUMPS here. For example:
 #
-#mumps_dir="/dir/to/MUMPS"
+# mumps_dir="/dir/to/MUMPS"
 #
 ####################  User Defined Compiler Flags  #####################
 ifeq ($(debug),yes)
