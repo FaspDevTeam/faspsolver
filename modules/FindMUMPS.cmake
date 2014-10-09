@@ -12,6 +12,7 @@
 message(STATUS "Checking for dependent packages of 'MUMPS'")
 
 find_package(BLAS)
+find_package(Threads REQUIRED)
 
 if (MUMPS_INCLUDE_DIR)
   # in cache already
@@ -20,38 +21,38 @@ endif (MUMPS_INCLUDE_DIR)
 
 # Check for header file
 find_path(MUMPS_INCLUDE_DIR dmumps_c.h
- HINTS ${MUMPS_DIR}/include $ENV{MUMPS_DIR}/include $ENV{IPOPT_HOME}/MUMPS/include/ /usr/include/ 
+ HINTS ${MUMPS_DIR}/include $ENV{MUMPS_DIR}/include $ENV{IPOPT_HOME}/MUMPS/include/
  DOC "Directory where the MUMPS header is located"
  )
 mark_as_advanced(MUMPS_INCLUDE_DIR)
 
 # Check for MUMPS libraries: dmumps, mumps_common pord mpiseq
 find_library(MUMPS_LIB dmumps
-  HINTS ${MUMPS_DIR}/lib $ENV{MUMPS_DIR}/lib $ENV{IPOPT_HOME}/MUMPS/lib/ /usr/lib/
-  DOC "The MUMPS libraries"
+  HINTS ${MUMPS_DIR}/lib $ENV{MUMPS_DIR}/lib $ENV{IPOPT_HOME}/MUMPS/lib/
+  DOC "The MUMPS library"
   )
-mark_as_advanced(MUMPS_LIB)
 
-find_library(MUMPS_LIB_COMMON mumps_common
-  HINTS ${MUMPS_DIR}/lib $ENV{MUMPS_DIR}/lib $ENV{IPOPT_HOME}/MUMPS/lib/ /usr/lib/
-  DOC "The MUMPS libraries"
+find_library(MUMPS_LIBC mumps_common
+  HINTS ${MUMPS_DIR}/lib $ENV{MUMPS_DIR}/lib $ENV{IPOPT_HOME}/MUMPS/lib/
+  DOC "The MUMPS Common library"
   )
-mark_as_advanced(MUMPS_LIB_COMMON)
 
 find_library(MUMPS_LIB_PORD pord
   HINTS ${MUMPS_DIR}/lib $ENV{MUMPS_DIR}/lib ${MUMPS_DIR}/PORD/lib $ENV{MUMPS_DIR}/PORD/lib
-  DOC "The MUMPS PORD libraries"
+  DOC "The MUMPS PORD library"
   )
-mark_as_advanced(MUMPS_LIB_PORD)
 
 find_library(MUMPS_LIB_MPISEQ mpiseq
   HINTS ${MUMPS_DIR}/lib $ENV{MUMPS_DIR}/lib ${MUMPS_DIR}/libseq $ENV{MUMPS_DIR}/libseq
-  DOC "The MUMPS MPISEQ libraries"
+  DOC "The MUMPS MPISEQ library"
   )
-mark_as_advanced(MUMPS_LIB_MPISEQ)
 
 set(MUMPS_INCLUDE_DIRS "${MUMPS_INCLUDE_DIR}" )
-set(MUMPS_LIBRARIES "${MUMPS_LIB}" "${MUMPS_LIB_COMMON}" "${MUMPS_LIB_PORD}" "${MUMPS_LIB_MPISEQ}")
+set(MUMPS_LIBRARIES "${MUMPS_LIB}" "${MUMPS_LIBC}" "${MUMPS_LIB_PORD}" "${MUMPS_LIB_MPISEQ}")
+
+if (Threads_FOUND)
+  set(MUMPS_LIBRARIES ${MUMPS_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+endif()
 
 if (BLAS_FOUND)
   set(MUMPS_LIBRARIES ${MUMPS_LIBRARIES} ${BLAS_LIBRARIES})
@@ -63,4 +64,4 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MUMPS  DEFAULT_MSG
                                   MUMPS_LIB MUMPS_INCLUDE_DIR)
 
-mark_as_advanced(MUMPS_INCLUDE_DIR MUMPS_LIB)
+mark_as_advanced(MUMPS_INCLUDE_DIR MUMPS_LIB MUMPS_LIBC MUMPS_LIB_PORD MUMPS_LIB_MPISEQ)
