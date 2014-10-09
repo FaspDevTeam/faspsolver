@@ -3,7 +3,6 @@
 # INIT_CONFIG load...
 	include ( FASP_init.cmake OPTIONAL )
 #
-
 	project(FASP C CXX Fortran )
 
 ##       message(" CHECK:  ${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}}") 
@@ -46,17 +45,11 @@
 #       message(" CHECKC:  ${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}}") 
 #       message(" CHECKCXX:  ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}}") 
 #       message(" CHECKF:  ${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}}") 
-
-
-	set(FASP_MAJOR_VERSION 1)
-	set(FASP_MINOR_VERSION 2)
-	set(FASP_PATCH_VERSION 1)
-	set(FASP_VERSION
-		${FASP_MAJOR_VERSION}.${FASP_MINOR_VERSION}.${FASP_PATCH_VERSION})
 #
-        set(CMAKE_INSTALL_PREFIX "${FASP_SOURCE_DIR}" )
+    set(CMAKE_INSTALL_PREFIX "${FASP_SOURCE_DIR}" )
 	set(FASPLIB_BASE_PATH "base" CACHE PATH "base path to FASPLIB")
-        set(FASP_INSTALL TRUE)
+    set(FASP_INSTALL TRUE)
+#
 	if(SHARED) 
 	   set(FASP_LIBRARY_TYPE SHARED)
         else(SHARED)
