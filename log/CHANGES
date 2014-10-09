@@ -1,7 +1,7 @@
 File Name: CHANGES
 
 10/09/2014 FASP 1.6.1:
-- Try to fix MUMPS link problem in Ubuntu.
+- Fix MUMPS link problem due to system directory and pthread in Ubuntu.
 
 10/06/2014 FASP 1.6.0:
 - Update website and documentation.
