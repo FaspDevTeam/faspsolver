@@ -14,9 +14,9 @@
 #
 # debug=yes
 #
-# You can also uncomment the following line (to include "-DDEBUG_MODE"
-# as well as "-Wall -g"): 
-#
+# In order to get debug output during run-time, you can uncomment the 
+# following line (to include "-DDEBUG_MODE -Wall -g"): 
+# 
 # debug=all
 #
 # The default setting for vebosity level for FASP is verbose=no. If you
@@ -54,12 +54,13 @@
 # If you want to use UMFPACK (part of SparseSuite), uncomment the next 
 # line:
 # 
-# umfpack=yes
+ umfpack=yes
 #
 # If you want to specify the path to SparseSuite, uncomment the next 
 # line and give the correct path to SparseSuite here. For example:
 #
-# suitesparse_dir="/dir/to/MUMPS"
+# suitesparse_dir="/dir/to/SuiteSparse"
+suitesparse_dir="/Users/zhangcs/Packages/SuiteSparse"
 #
 #-------------------------------------------------------------------------
 # If you want to use SuperLU, uncomment the next line:
@@ -75,6 +76,7 @@
 # If you want to use MUMPS, uncomment the next line:
 #
 # mumps=yes
+# mumps_dir="/Users/zhangcs/Packages/MUMPS_4.10.0"
 #
 # If you want to specify the path to MUMPS, uncomment the next line
 # and give the correct path to MUMPS here. For example:

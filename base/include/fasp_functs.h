@@ -1812,20 +1812,26 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
 
 /*-------- In file: schwarz_setup.c --------*/
 
-void levelsc(int inroot, dCSRmat *A, int *mask, int *nlvl, int *iblock, int *jblock, int maxlev);
+void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
+                                    INT nblk,
+                                    INT *iblock,
+                                    INT *jblock,
+                                    INT *mask);
 
-void fasp_schwarz_get_block_matrix(Schwarz_data *schwarz, int nblk, int *iblock, int *jblock, int *mask);
-
-INT fasp_schwarz_setup (Schwarz_data *schwarz, 
+INT fasp_schwarz_setup (Schwarz_data *schwarz,
                         INT mmsize,
                         INT maxlev,
                         INT schwarz_type);
 
-void fasp_dcsr_schwarz_smoother(Schwarz_data *schwarz, dvector *x, dvector *b);
+void fasp_dcsr_schwarz_smoother (Schwarz_data *schwarz,
+                                 dvector *x,
+                                 dvector *b);
 
-void fasp_dcsr_schwarz_backward_smoother(Schwarz_data *schwarz, dvector *x, dvector *b);
+void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
+                                          dvector *x,
+                                          dvector *b);
 
-INT fasp_schwarz_setup (Schwarz_data *schwarz, 
+INT fasp_schwarz_setup (Schwarz_data *schwarz,
                         INT mmsize,
                         INT maxlev,
                         INT schwarz_type);
@@ -2830,6 +2836,8 @@ void fasp_mumps_solve ( dCSRmat *ptrA,
                         dvector *u,
                         Mumps_data mumps,
 						const INT print_level);
+
+void fasp_mumps_free ( Mumps_data *mumps );
 
 
 /*-------- In file: interface_samg.c --------*/
