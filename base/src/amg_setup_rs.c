@@ -127,9 +127,11 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
             const INT smmsize = param->schwarz_mmsize;
             const INT smaxlvl = param->schwarz_maxlvl;
             const INT schtype = param->schwarz_type;
+            const INT blk_solver = param->schwarz_blksolver;
             
             mgl->schwarz_levels  = param->schwarz_levels;
             mgl[lvl].schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
+			mgl[lvl].schwarz.blk_solver = blk_solver;
             fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[lvl].schwarz, smmsize, smaxlvl, schtype);
         }
@@ -210,7 +212,9 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
             // Setup MUMPS direct solver on the coarsest level
-            fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, 1);
+			mgl[lvl].mumps.job = 1;
+            fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, &mgl[lvl].mumps);
+
             break;
         }
 #endif

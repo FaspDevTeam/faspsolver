@@ -337,6 +337,7 @@ void fasp_param_input_init (input_param *iniparam)
     iniparam->Schwarz_mmsize           = 200;
 	iniparam->Schwarz_maxlvl           = 2;
 	iniparam->Schwarz_type             = 1;
+	iniparam->Schwarz_blksolver        = SOLVER_DEFAULT;
     
     // AMG method parameters
     iniparam->AMG_type                 = CLASSIC_AMG;
@@ -436,6 +437,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->schwarz_mmsize       = 200;
     amgparam->schwarz_maxlvl       = 2;
     amgparam->schwarz_type         = 1;
+    amgparam->schwarz_blksolver    = SOLVER_DEFAULT;
 }
 
 /**

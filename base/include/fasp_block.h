@@ -268,6 +268,9 @@ typedef struct {
 	
 	//! temporary work space
 	dvector w;
+
+	//! data for MUMPS
+    Mumps_data mumps;
 	
 } AMG_data_bsr; /**< AMG data for BSR matrices */
 

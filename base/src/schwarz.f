@@ -1174,6 +1174,7 @@ C     Initialization
       iblock(nlvl) = lbegin
       do i = lbegin,lvlend
          node = jblock(i)
+         !if (node .eq. 1) write(*,*) 'ia[node]=' ia[node]  
          jstrt = ia(node)
          jstop = ia(node+1) -1
          if(jstop .ge. jstrt) then
@@ -1190,7 +1191,13 @@ C     Initialization
 c     
       lvsize = nsize - lvlend
       if(lvsize .gt. 0 .and. nlvl .lt. maxlev) go to 200
-      iblock(nlvl+1) = lvlend + 1
+      iblock(nlvl+1) = nsize + 1
+      !iblock(nlvl+1) = lvlend + 1
+
+      !write(*,*) 'lvlend', lvlend
+      !write(*,*) 'nsize',  nsize
+
+
       do i = 1 , nsize
          node = jblock(i)
          mask(node) = 0

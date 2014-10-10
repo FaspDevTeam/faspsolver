@@ -20,6 +20,7 @@ INT *IMAP=NULL; /**< Red Black Gs Smoother imap */
 INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
 #endif
 
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -56,6 +57,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     REAL alpha = 1.0;
     INT  num_lvl[MAX_AMG_LVL] = {0}, l = 0;
     
+	double begin, end;
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
@@ -76,6 +78,7 @@ ForwardSweep:
         else if ( l < mgl->schwarz_levels ) {
 			switch (mgl[l].schwarz.schwarz_type) {
 				case 3:
+#if 0
 					fbgs2ns_(&(mgl[l].schwarz.A.row),
                              mgl[l].schwarz.A.IA,
                              mgl[l].schwarz.A.JA,
@@ -106,7 +109,11 @@ ForwardSweep:
                              mgl[l].schwarz.rhsloc,
                              &(mgl[l].schwarz.memt));
 					break;
+#endif
+//					fasp_dcsr_schwarz_smoother(&mgl[l].schwarz, &mgl[l].x, &mgl[l].b);
+					break;
 				default:
+#if 0
 					fbgs2ns_(&(mgl[l].schwarz.A.row),
                              mgl[l].schwarz.A.IA,
                              mgl[l].schwarz.A.JA,
@@ -122,6 +129,10 @@ ForwardSweep:
                              mgl[l].schwarz.al,
                              mgl[l].schwarz.rhsloc,
                              &(mgl[l].schwarz.memt));
+#else
+					fasp_dcsr_schwarz_smoother(&mgl[l].schwarz, &mgl[l].x, &mgl[l].b);
+#endif
+
 					break;
 			}
 		}
@@ -146,6 +157,8 @@ ForwardSweep:
         // form residual r = b - A x
         fasp_array_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
         fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
+
+
         
         // restriction r1 = R*r0
         switch (amg_type) {
@@ -169,7 +182,8 @@ ForwardSweep:
 #if WITH_MUMPS
         /* use MUMPS direct solver on the coarsest level */
         case SOLVER_MUMPS: {
-            fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 2);
+            mgl[nl-1].mumps.job = 2;
+            fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
             break;
         }
 #endif
@@ -225,6 +239,7 @@ ForwardSweep:
         else if ( l < mgl->schwarz_levels ) {
 			switch (mgl[l].schwarz.schwarz_type) {
                 case 3:
+#if 0
                     bbgs2ns_(&(mgl[l].schwarz.A.row),
                              mgl[l].schwarz.A.IA,
                              mgl[l].schwarz.A.JA,
@@ -256,7 +271,12 @@ ForwardSweep:
                              mgl[l].schwarz.rhsloc,
                              &(mgl[l].schwarz.memt));
                     break;
+#endif
+//					fasp_dcsr_schwarz_smoother(&mgl[l].schwarz, &mgl[l].x, &mgl[l].b);
+					break;
                 default:
+
+#if 0
                     bbgs2ns_(&(mgl[l].schwarz.A.row),
                              mgl[l].schwarz.A.IA,
                              mgl[l].schwarz.A.JA,
@@ -272,7 +292,11 @@ ForwardSweep:
                              mgl[l].schwarz.al,
                              mgl[l].schwarz.rhsloc,
                              &(mgl[l].schwarz.memt));
-                    break;
+#else
+					fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &mgl[l].x, &mgl[l].b);
+#endif
+
+					break;
 			}
 		}
         

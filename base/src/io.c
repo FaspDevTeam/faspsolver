@@ -2791,10 +2791,11 @@ static void fasp_dcsr_write_s (FILE *fp,
     INT i, j;
     
     fprintf(fp,"%d  %d  %d\n",m,n,A->nnz);
-    for ( i = 0; i < m; ++i ) {
-        for (j = A->IA[N2C(i)]; j < A->IA[N2C(i+1)]; j++)
-            fprintf(fp,"%d  %d  %le\n",i,A->JA[j],A->val[j]);
-    }
+    for ( i = 0; i < m+1; ++i ) fprintf(fp,"%d\n", A->IA[i]);
+
+	for ( i = 0; i < A->nnz; ++i ) fprintf(fp,"%d\n", A->JA[i]);
+
+    for ( i = 0; i < A->nnz; ++i ) fprintf(fp,"%le\n", A->val[i]);
 }
 
 static void fasp_dcsr_write_b (FILE *fp,

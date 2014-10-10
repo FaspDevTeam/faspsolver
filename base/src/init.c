@@ -141,12 +141,21 @@ void fasp_ilu_data_alloc (INT iwk,
  */
 void fasp_schwarz_data_free (Schwarz_data *schwarz)
 {
+    INT i;
 	fasp_dcsr_free(&schwarz->A);
 	
+	for (i=0; i<schwarz->nblk; ++i) fasp_dcsr_free (&((schwarz->blk_data)[i]));
+
+#if WITH_MUMPS
+	//for (i=0; i<schwarz->nblk; ++i) fasp_mumps_free (&((schwarz->mumps)[i]));
+#endif
+
 	schwarz->nblk = 0;
 	fasp_mem_free (schwarz->iblock);
 	fasp_mem_free (schwarz->jblock);
 	fasp_mem_free (schwarz->rhsloc);
+	fasp_dvec_free (&schwarz->rhsloc1);
+	fasp_dvec_free (&schwarz->xloc1);
 	fasp_mem_free (schwarz->au);
 	fasp_mem_free (schwarz->al);
 	
@@ -197,7 +206,8 @@ void fasp_amg_data_free (AMG_data *mgl,
 
 #if WITH_MUMPS   /* Destroy MUMPS direct solver on the coarsest level */
 		case SOLVER_MUMPS: {
-			fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, 3);
+            mgl[max_levels-1].mumps.job = 3;
+			fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, &mgl[max_levels-1].mumps);
 			break;
 		}
 #endif

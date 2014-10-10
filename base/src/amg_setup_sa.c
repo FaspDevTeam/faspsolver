@@ -278,7 +278,8 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
             // Setup MUMPS direct solver on the coarsest level
-            fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, 1);
+            mgl[lvl].mumps.job = 1;
+            fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, &mgl[lvl].mumps);
             break;
         }
 #endif
@@ -492,7 +493,8 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
             // Setup MUMPS direct solver on the coarsest level
-            fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, 1);
+            mgl[lvl].mumps.job = 1;
+            fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, &mgl[lvl].mumps);
             break;
         }
 #endif
@@ -740,8 +742,9 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
             // Setup MUMPS direct solver on the coarsest level
+            mgl[lvl].mumps.job = 1;
             mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
-            fasp_solver_mumps_steps(&mgl[lvl].Ac, &mgl[lvl].b, &mgl[lvl].x, 1);
+            fasp_solver_mumps_steps(&mgl[lvl].Ac, &mgl[lvl].b, &mgl[lvl].x, &mgl[lvl].mumps);
             break;
         }
 #endif
