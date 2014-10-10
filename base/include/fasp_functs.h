@@ -1244,6 +1244,10 @@ void fasp_aux_dQuickSortIndex (REAL *a,
                                INT right, 
                                INT *index);
 
+void fasp_dcsr_CMK_order(const dCSRmat *A, INT *order, INT *oindex);
+
+void fasp_dcsr_RCMK_order(const dCSRmat *A, INT *order, INT *oindex, INT *rorder);
+
 
 /*-------- In file: parameters.c --------*/
 
@@ -1830,7 +1834,6 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
                                           Schwarz_param *param,
                                           dvector *x,
                                           dvector *b);
-
 
 /*-------- In file: smat.c --------*/
 
