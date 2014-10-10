@@ -59,7 +59,7 @@
 # If you want to specify the path to SparseSuite, uncomment the next 
 # line and give the correct path to SparseSuite here. For example:
 #
-#suitesparse_dir="/home/stone/Tests/SuiteSparse"
+# suitesparse_dir="/dir/to/MUMPS"
 #
 #-------------------------------------------------------------------------
 # If you want to use SuperLU, uncomment the next line:
@@ -74,12 +74,12 @@
 #-------------------------------------------------------------------------
 # If you want to use MUMPS, uncomment the next line:
 #
-mumps=yes
+# mumps=yes
 #
 # If you want to specify the path to MUMPS, uncomment the next line
 # and give the correct path to MUMPS here. For example:
 #
-mumps_dir="/home/stone/Tests/MUMPS_4.10.0"
+# mumps_dir="/dir/to/MUMPS"
 #
 ####################  User Defined Compiler Flags  #####################
 ifeq ($(debug),yes)
