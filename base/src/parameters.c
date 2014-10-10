@@ -490,13 +490,16 @@ void fasp_param_ilu_init (ILU_param *iluparam)
  *
  * \author Xiaozhe Hu
  * \date   05/22/2012
+ *
+ * Modified by Chensong Zhang on 10/10/2014: Add block solver type
  */
 void fasp_param_schwarz_init (Schwarz_param *schparam)
 {
-    schparam->print_level    = 0;
-    schparam->schwarz_type   = 3;
-    schparam->schwarz_maxlvl = 2;
-    schparam->schwarz_mmsize = 200;
+    schparam->print_level       = 0;
+    schparam->schwarz_type      = 3;
+    schparam->schwarz_maxlvl    = 2;
+    schparam->schwarz_mmsize    = 200;
+    schparam->schwarz_blksolver = 0;
 }
 
 /**
@@ -609,10 +612,11 @@ void fasp_param_ilu_set (ILU_param *iluparam,
 void fasp_param_schwarz_set (Schwarz_param *schparam,
                              input_param *iniparam)
 {
-    schparam->print_level    = iniparam->print_level;
-    schparam->schwarz_type   = iniparam->Schwarz_type;
-    schparam->schwarz_maxlvl = iniparam->Schwarz_maxlvl;
-    schparam->schwarz_mmsize = iniparam->Schwarz_mmsize;
+    schparam->print_level       = iniparam->print_level;
+    schparam->schwarz_type      = iniparam->Schwarz_type;
+    schparam->schwarz_maxlvl    = iniparam->Schwarz_maxlvl;
+    schparam->schwarz_mmsize    = iniparam->Schwarz_mmsize;
+    schparam->schwarz_blksolver = iniparam->Schwarz_blksolver;
 }
 
 /**
@@ -927,6 +931,7 @@ void fasp_param_schwarz_print (Schwarz_param *param)
         printf("Schwarz type:                      %d\n",   param->schwarz_type);
         printf("Schwarz level of forming blokcs:   %d\n",   param->schwarz_maxlvl);
         printf("Schwarz maximal block size:        %d\n",   param->schwarz_mmsize);
+        printf("Schwarz block solver type:         %d\n",   param->schwarz_blksolver);
         printf("-----------------------------------------------\n\n");
         
     }
@@ -934,7 +939,6 @@ void fasp_param_schwarz_print (Schwarz_param *param)
         printf("### WARNING: param has not been set!\n");
     }
 }
-
 
 /**
  * \fn void fasp_param_solver_print (itsolver_param *param)

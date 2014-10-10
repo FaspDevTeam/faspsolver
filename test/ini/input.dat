@@ -47,6 +47,7 @@ ILU_relax                = 0.9    % add dropped entries to diagonal with relaxat
 Schwarz_mmsize           = 200    % max block size
 Schwarz_maxlvl           = 2      % level used to form blocks
 Schwarz_type             = 1      % 1 forward | 2 backward | 3 symmetric
+Schwarz_blksolver        = 0      % block solver: 31 SuperLU | 32 UMFPack | 33 MUMPS
 
 %----------------------------------------------%
 % parameters for multilevel iteration          %

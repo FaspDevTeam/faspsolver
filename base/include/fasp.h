@@ -450,7 +450,10 @@ typedef struct {
     
     //! maxiaml size of blocks
     INT schwarz_mmsize;
-	
+
+    //! type of schwarz block solver
+    INT schwarz_blksolver;
+
 } Schwarz_param; /**< Parameters for ILU */	
 
 

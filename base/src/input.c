@@ -42,6 +42,7 @@ SHORT fasp_param_check (input_param *inparam)
         || inparam->Schwarz_mmsize<0
         || inparam->Schwarz_maxlvl<0
         || inparam->Schwarz_type<0
+        || inparam->Schwarz_blksolver<0
         || inparam->AMG_type<=0
         || inparam->AMG_type>3
         || inparam->AMG_cycle_type<=0
@@ -741,6 +742,18 @@ void fasp_param_input (const char *filenm,
 			inparam->Schwarz_type = ibuff;
 			fgets(buffer,500,fp); // skip rest of line
 		}
+
+        else if (strcmp(buffer,"Schwarz_blksolver")==0)
+        {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%d",&ibuff);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+            inparam->Schwarz_blksolver = ibuff;
+            fgets(buffer,500,fp); // skip rest of line
+        }
 
         else {
             status = ERROR_INPUT_PAR;
