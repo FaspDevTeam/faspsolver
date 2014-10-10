@@ -29,7 +29,7 @@ program test
   ! Step 0: user defined variables
   prt_lvl = 3
   maxit = 100
-  tol = 1.0d-8
+  tol = 1.0d-6
   iufile = 1
 
   ! Step 1: read A and b 
