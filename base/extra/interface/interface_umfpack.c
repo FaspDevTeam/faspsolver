@@ -84,7 +84,6 @@ INT fasp_solver_umfpack (dCSRmat *ptrA,
 }
 
 #if WITH_UMFPACK
-
 /**
  * \fn void* fasp_umfpack_factorize (dCSRmat *ptrA, dvector *b, dvector *u,
  *                                 const INT print_level)

@@ -982,9 +982,6 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
 
 /*-------- In file: itsolver_bsr.c --------*/
 
-void fasp_set_GS_threads (INT mythreads,
-                          INT its);
-
 INT fasp_solver_dbsr_itsolver (dBSRmat *A, 
                                dvector *b, 
                                dvector *x, 
@@ -1474,14 +1471,14 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
 
 /*-------- In file: pgmres_mf.c --------*/
 
-INT fasp_solver_pgmres (mxv_matfree *mf, 
-                        dvector *b, 
-                        dvector *x, 
-                        precond *pc, 
+INT fasp_solver_pgmres (mxv_matfree *mf,
+                        dvector *b,
+                        dvector *x,
+                        precond *pc,
                         const REAL tol,
-                        const INT MaxIt, 
+                        const INT MaxIt,
                         const SHORT restart,
-                        const SHORT stop_type, 
+                        const SHORT stop_type,
                         const SHORT print_level);
 
 
@@ -1684,24 +1681,24 @@ void fasp_precond_dstr_blockgs (REAL *r,
 
 /*-------- In file: pvfgmres.c --------*/
 
-INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, 
-                               dvector *b, 
-                               dvector *x, 
-                               precond *pc, 
+INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
+                               dvector *b,
+                               dvector *x,
+                               precond *pc,
                                const REAL tol,
-                               const INT MaxIt, 
+                               const INT MaxIt,
                                const SHORT restart,
-                               const SHORT stop_type, 
+                               const SHORT stop_type,
                                const SHORT print_level);
 
-INT fasp_solver_dbsr_pvfgmres (dBSRmat *A, 
-                               dvector *b, 
-                               dvector *x, 
-                               precond *pc, 
+INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
+                               dvector *b,
+                               dvector *x,
+                               precond *pc,
                                const REAL tol,
-                               const INT MaxIt, 
+                               const INT MaxIt,
                                const SHORT restart,
-                               const SHORT stop_type, 
+                               const SHORT stop_type,
                                const SHORT print_level);
 
 INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
@@ -1717,14 +1714,14 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
 
 /*-------- In file: pvfgmres_mf.c --------*/
 
-INT fasp_solver_pvfgmres (mxv_matfree *mf, 
-                          dvector *b, 
-                          dvector *x, 
-                          precond *pc, 
+INT fasp_solver_pvfgmres (mxv_matfree *mf,
+                          dvector *b,
+                          dvector *x,
+                          precond *pc,
                           const REAL tol,
-                          const INT MaxIt, 
+                          const INT MaxIt,
                           const SHORT restart,
-                          const SHORT stop_type, 
+                          const SHORT stop_type,
                           const SHORT print_level);
 
 
@@ -1814,6 +1811,19 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
 
 
 /*-------- In file: schwarz_setup.c --------*/
+
+void levelsc(int inroot, dCSRmat *A, int *mask, int *nlvl, int *iblock, int *jblock, int maxlev);
+
+void fasp_schwarz_get_block_matrix(Schwarz_data *schwarz, int nblk, int *iblock, int *jblock, int *mask);
+
+INT fasp_schwarz_setup (Schwarz_data *schwarz, 
+                        INT mmsize,
+                        INT maxlev,
+                        INT schwarz_type);
+
+void fasp_dcsr_schwarz_smoother(Schwarz_data *schwarz, dvector *x, dvector *b);
+
+void fasp_dcsr_schwarz_backward_smoother(Schwarz_data *schwarz, dvector *x, dvector *b);
 
 INT fasp_schwarz_setup (Schwarz_data *schwarz, 
                         INT mmsize,
@@ -2700,6 +2710,9 @@ void FASP_GET_START_END (INT procid,
                          INT *start,
                          INT *end);
 
+void fasp_set_GS_threads (INT mythreads,
+                          INT its);
+
 
 /*-------- In file: timing.c --------*/
 
@@ -2805,7 +2818,18 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
 int fasp_solver_mumps_steps ( dCSRmat *ptrA,
                               dvector *b,
                               dvector *u,
-                              const int job);
+                              Mumps_data *mumps) ;
+
+Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
+                                 dvector *b,
+                                 dvector *u,
+								 const INT print_level);
+
+void fasp_mumps_solve ( dCSRmat *ptrA,
+                        dvector *b,
+                        dvector *u,
+                        Mumps_data mumps,
+						const INT print_level);
 
 
 /*-------- In file: interface_samg.c --------*/

@@ -19,6 +19,10 @@
 
 #include "fasp_const.h"
 
+#if WITH_MUMPS
+#include "dmumps_c.h"
+#endif
+
 #ifndef __FASP_HEADER__       /*-- allow multiple inclusions --*/
 #define __FASP_HEADER__       /**< indicate fasp.h has been included before */
 
@@ -94,7 +98,8 @@
 
 extern unsigned INT total_alloc_mem;   /**< total allocated memory */
 extern unsigned INT total_alloc_count; /**< total allocation times */
-
+extern double pre_time;
+extern double post_time;
 /*---------------------------*/ 
 /*---  Matrix and vector  ---*/
 /*---------------------------*/ 
@@ -449,6 +454,23 @@ typedef struct {
 } Schwarz_param; /**< Parameters for ILU */	
 
 
+/**
+ * \struct Mumps_data
+ * \brief Parameters for MUMPS interface
+ *
+ * Added on 10/10/2014
+ */
+typedef struct {
+	
+#if WITH_MUMPS
+	//! solver instance for MUMPS
+    DMUMPS_STRUC_C id;
+#endif
+
+    //! work for MUMPS  
+	INT job;
+
+} Mumps_data; /**< Parameters for MUMPS */	
 /** 
  * \struct Schwarz_data
  * \brief Data for Schwarz methods
@@ -474,9 +496,14 @@ typedef struct {
     //! column index of blocks
 	INT *jblock;
 	
+    REAL *rhsloc;
+
     //! local right hand side
-	REAL *rhsloc;
+	dvector rhsloc1;
 	
+    //! local solution
+	dvector xloc1;
+
     //! LU decomposition: the U block
 	REAL *au;
 	
@@ -486,6 +513,9 @@ typedef struct {
 	//! Schwarz method type
 	INT schwarz_type;
 	
+	//! Schwarz block solver
+	INT blk_solver;
+
 	//! working space size
 	INT memt;
     
@@ -494,6 +524,22 @@ typedef struct {
     
     //! maxa
 	INT *maxa;
+
+	//! matrix for each partition 
+	dCSRmat *blk_data;
+
+#if WITH_UMFPACK
+	//! symbol factorize for UMPACK
+	void **numeric;
+#endif
+
+#if WITH_MUMPS
+    //! instance for MUMPS
+	DMUMPS_STRUC_C *id;
+#endif
+
+    //! param for MUMPS
+	Mumps_data *mumps;
 	
 } Schwarz_data;
 
@@ -627,6 +673,9 @@ typedef struct {
 	
     //! type of schwarz method
 	INT schwarz_type;
+
+    //! type of schwarz block solver
+	INT schwarz_blksolver;
 	
 } AMG_param; /**< Parameters for AMG */
 
@@ -690,6 +739,9 @@ typedef struct {
 	
 	//! Temporary work space
 	dvector w;
+
+	//! data for MUMPS
+	Mumps_data mumps;
 	
 } AMG_data; /**< Data for AMG */
 
@@ -959,6 +1011,7 @@ typedef struct {
 	INT Schwarz_mmsize;  /**< maximal block size */
 	INT Schwarz_maxlvl;  /**< maximal levels */
 	INT Schwarz_type;    /**< type of schwarz method */
+	INT Schwarz_blksolver; /**< type of schwarz block solver */
 	
 	// parameters for AMG
 	SHORT AMG_type;                /**< Type of AMG */

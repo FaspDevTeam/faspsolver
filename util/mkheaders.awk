@@ -48,7 +48,7 @@ BEGIN {
   next;
 }
 
-!/^INT|^SHORT|^LONG|^REAL|^FILE|^OFF_T|^size_t|^off_t|^pid_t|^unsigned|^mode_t|^DIR|^user|^int|^short|^long|^char|^uint|^struct|^BOOL|^void|^double|^time|^dCSRmat|^dCOOmat|^dvector|^iCSRmat|^ivector|^AMG_data|^ILU_data|^dSTRmat|^dBSRmat|^dCSRLmat|^precond|^cudvector|^cuivector|^cudCSRmat/ {
+!/^INT|^SHORT|^LONG|^REAL|^FILE|^OFF_T|^size_t|^off_t|^pid_t|^unsigned|^mode_t|^DIR|^user|^int|^short|^long|^char|^uint|^struct|^BOOL|^void|^double|^time|^dCSRmat|^dCOOmat|^dvector|^iCSRmat|^ivector|^AMG_data|^ILU_data|^dSTRmat|^dBSRmat|^dCSRLmat|^precond|^cudvector|^cuivector|^Mumps_data|^cudCSRmat/ {
   next;
 }
 

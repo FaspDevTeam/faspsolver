@@ -158,7 +158,7 @@ int main (int argc, const char * argv[])
             amgparam.tol         = 1e-10;
             amgparam.print_level = print_level;
             fasp_solver_amg(&A, &b, &x, &amgparam);
-            
+
             check_solu(&x, &sol, tolerance);
         }
 

@@ -929,7 +929,7 @@ ivector fasp_sparse_MIS(dCSRmat *A)
 	
 	//! work space
 	//INT *work = (INT *)fasp_mem_calloc (n, sizeof(INT));
-        INT *work = (INT*)fasp_mem_calloc(n,sizeof(INT));
+    INT *work = (INT*)fasp_mem_calloc(n,sizeof(INT));
 	
 	//! return
 	ivector MIS;
@@ -939,8 +939,11 @@ ivector fasp_sparse_MIS(dCSRmat *A)
         if (flag[i] == 0) {
             flag[i] = 1;
             row_begin = IA[i] - 1; row_end = IA[i+1] - 1;
+            //row_begin = IA[i]; row_end = IA[i+1];
             for (j = row_begin; j<row_end; j++) {
                 if (flag[JA[j]-1] > 0) {
+                //if (flag[JA[j]] > 0) {
+                //if (flag[JA[j]-1] >= 0) {
                     flag[i] = -1;
                     break;
                 }
@@ -949,6 +952,7 @@ ivector fasp_sparse_MIS(dCSRmat *A)
                 work[count] = i; count++;
                 for (j = row_begin; j<row_end; j++) {
                     flag[JA[j]-1] = -1;
+                    //flag[JA[j]] = -1;
                 }
             }
         } // end if
