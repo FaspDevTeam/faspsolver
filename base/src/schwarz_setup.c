@@ -212,9 +212,7 @@ void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
  * Modified by Zheng Li on 10/09/2014
  */
 INT fasp_schwarz_setup (Schwarz_data *schwarz,
-                        INT mmsize,
-                        INT maxlev,
-                        INT schwarz_type)
+                        Schwarz_param *param)
 {
     // information about A
     dCSRmat A = schwarz->A;
@@ -222,7 +220,9 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     INT *ia = A.IA;
     INT *ja = A.JA;
     REAL *a = A.val;
-    INT  block_solver = schwarz->blk_solver;
+
+    INT  block_solver = param->schwarz_blksolver;
+    INT  maxlev = param->schwarz_maxlvl;
     
     // local variables
     INT n1 = n,i;
@@ -362,11 +362,11 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     /*-------------------------------------------*/
     //  return
     /*-------------------------------------------*/
-    schwarz->nblk = nblk;
+    schwarz->nblk   = nblk;
     schwarz->iblock = iblock;
     schwarz->jblock = jblock;
-    schwarz->schwarz_type = schwarz_type;
-    schwarz->mask = mask;
+    schwarz->mask   = mask;
+    schwarz->schwarz_type = param->schwarz_type;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
@@ -387,9 +387,10 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_schwarz_smoother (Schwarz_data *schwarz,
-                                 dvector *x,
-                                 dvector *b)
+void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz,
+                                         Schwarz_param *param,
+                                         dvector       *x,
+                                         dvector       *b)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     
@@ -399,7 +400,7 @@ void fasp_dcsr_schwarz_smoother (Schwarz_data *schwarz,
     INT  *iblock = schwarz->iblock;
     INT  *jblock = schwarz->jblock;
     INT  *mask   = schwarz->mask;
-    INT  block_solver = schwarz->blk_solver;
+    INT  block_solver = param->schwarz_blksolver;
     
     // Schwarz data
     dCSRmat A = schwarz->A;
@@ -494,6 +495,7 @@ void fasp_dcsr_schwarz_smoother (Schwarz_data *schwarz,
  * \date   2014/10/5
  */
 void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
+                                          Schwarz_param *param,
                                           dvector *x,
                                           dvector *b)
 {
@@ -505,7 +507,7 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
     INT  *iblock = schwarz->iblock;
     INT  *jblock = schwarz->jblock;
     INT  *mask   = schwarz->mask;
-    INT  block_solver = schwarz->blk_solver;
+    INT  block_solver = param->schwarz_blksolver;
     
     // Schwarz data
     dCSRmat A = schwarz->A;

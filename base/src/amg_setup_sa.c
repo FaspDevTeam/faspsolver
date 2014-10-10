@@ -129,6 +129,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
+	Schwarz_param swzparam; 
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -169,6 +170,15 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
         iluparam.ILU_type    = param->ILU_type;
     }
     
+    // Initialize Schwarz parameters
+	mgl->schwarz_levels = param->schwarz_levels;
+    if ( param->schwarz_levels > 0 ) {
+        swzparam.schwarz_mmsize = param->schwarz_mmsize;
+        swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
+        swzparam.schwarz_type   = param->schwarz_type;
+        swzparam.schwarz_blksolver = param->schwarz_blksolver;
+    }
+     
     // Initialize AMLI coefficients
     if ( cycle_type == AMLI_CYCLE ) {
         const INT amlideg = param->amli_degree;
@@ -209,14 +219,9 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
         
         /* -- setup Schwarz smoother if necessary */
 		if ( lvl < param->schwarz_levels ) {
-            const INT smmsize = param->schwarz_mmsize;
-            const INT smaxlvl = param->schwarz_maxlvl;
-            const INT schtype = param->schwarz_type;
-            
-            mgl->schwarz_levels  = param->schwarz_levels;
             mgl[lvl].schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
-            fasp_schwarz_setup(&mgl[lvl].schwarz, smmsize, smaxlvl, schtype);
+            fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
 		}
         
         /*-- Aggregation --*/
@@ -364,6 +369,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
+	Schwarz_param swzparam; 
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -404,6 +410,15 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
         iluparam.ILU_type    = param->ILU_type;
     }
     
+    // Initialize Schwarz parameters
+	mgl->schwarz_levels = param->schwarz_levels;
+    if ( param->schwarz_levels > 0 ) {
+        swzparam.schwarz_mmsize = param->schwarz_mmsize;
+        swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
+        swzparam.schwarz_type   = param->schwarz_type;
+        swzparam.schwarz_blksolver = param->schwarz_blksolver;
+    }
+    
     // Initialize AMLI coefficients
     if ( cycle_type == AMLI_CYCLE ) {
         const INT amlideg = param->amli_degree;
@@ -429,14 +444,9 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
         
         /* -- setup Schwarz smoother if necessary */
 		if ( lvl < param->schwarz_levels ) {
-            const INT smmsize = param->schwarz_mmsize;
-            const INT smaxlvl = param->schwarz_maxlvl;
-            const INT schtype = param->schwarz_type;
-            
-            mgl->schwarz_levels  = param->schwarz_levels;
             mgl[lvl].schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
-            fasp_schwarz_setup(&mgl[lvl].schwarz, smmsize, smaxlvl, schtype);
+            fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
 		}
         
         /*-- Aggregation --*/

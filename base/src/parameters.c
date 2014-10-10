@@ -435,7 +435,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     // Schwarz smoother parameters
     amgparam->schwarz_levels       = 0;
     amgparam->schwarz_mmsize       = 200;
-    amgparam->schwarz_maxlvl       = 2;
+    amgparam->schwarz_maxlvl       = 3;
     amgparam->schwarz_type         = 1;
     amgparam->schwarz_blksolver    = SOLVER_DEFAULT;
 }

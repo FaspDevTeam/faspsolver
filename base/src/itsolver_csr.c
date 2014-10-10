@@ -255,10 +255,13 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
                                      itsolver_param *itparam,
                                      Schwarz_param *schparam)
 {
+    Schwarz_param swzparam;
+    swzparam.schwarz_mmsize    = schparam->schwarz_mmsize;
+    swzparam.schwarz_maxlvl    = schparam->schwarz_maxlvl;
+    swzparam.schwarz_type      = schparam->schwarz_type;
+    swzparam.schwarz_blksolver = schparam->schwarz_blksolver;
+        
     const INT print_level    = itparam->print_level;
-    const INT schwarz_mmsize = schparam->schwarz_mmsize;
-    const INT schwarz_maxlvl = schparam->schwarz_maxlvl;
-    const INT schwarz_type   = schparam->schwarz_type;
 	
     REAL setup_start, setup_end, setup_duration, solver_start, solver_end, solver_duration;
     INT status = FASP_SUCCESS;
@@ -279,7 +282,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	
 	// construct schwarz precondtioner
 	fasp_dcsr_shift (&schwarz_data.A, 1);
-	fasp_schwarz_setup(&schwarz_data, schwarz_mmsize, schwarz_maxlvl, schwarz_type);
+	fasp_schwarz_setup(&schwarz_data, &swzparam);
 	
 	fasp_gettime(&setup_end);
 	setup_duration = setup_end - setup_start;
