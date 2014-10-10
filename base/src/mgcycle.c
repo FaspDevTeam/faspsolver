@@ -53,6 +53,13 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     const REAL   tol = param->tol * 1e-4;
     const SHORT  ndeg = param->polynomial_degree;
     
+
+	// Schwarz parameters
+	Schwarz_param swzparam;
+	if ( param->schwarz_levels > 0 ) {
+	     swzparam.schwarz_blksolver = param->schwarz_blksolver;
+	}
+
     // local variables
     REAL alpha = 1.0;
     INT  num_lvl[MAX_AMG_LVL] = {0}, l = 0;
@@ -130,7 +137,7 @@ ForwardSweep:
                              mgl[l].schwarz.rhsloc,
                              &(mgl[l].schwarz.memt));
 #else
-					fasp_dcsr_schwarz_smoother(&mgl[l].schwarz, &mgl[l].x, &mgl[l].b);
+					fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
 #endif
 
 					break;
@@ -293,7 +300,7 @@ ForwardSweep:
                              mgl[l].schwarz.rhsloc,
                              &(mgl[l].schwarz.memt));
 #else
-					fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &mgl[l].x, &mgl[l].b);
+					fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
 #endif
 
 					break;

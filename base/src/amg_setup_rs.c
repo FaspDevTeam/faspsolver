@@ -54,11 +54,12 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     const INT   m          = mgl[0].A.row;
     
     // local variables
-    SHORT      status = FASP_SUCCESS;
-    INT        lvl = 0, max_lvls = param->max_levels;
-    REAL       setup_start, setup_end;
-    ILU_param  iluparam;
-    iCSRmat    Scouple; // strong n-couplings
+    SHORT         status = FASP_SUCCESS;
+    INT           lvl = 0, max_lvls = param->max_levels;
+    REAL          setup_start, setup_end;
+    ILU_param     iluparam;
+	Schwarz_param swzparam; 
+    iCSRmat       Scouple; // strong n-couplings
     
     // level info (fine: 0; coarse: 1)
     ivector    vertices = fasp_ivec_create(m);
@@ -97,6 +98,15 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         iluparam.ILU_type    = param->ILU_type;
     }
     
+    // Initialize Schwarz parameters
+	mgl->schwarz_levels = param->schwarz_levels;
+    if ( param->schwarz_levels > 0 ) {
+        swzparam.schwarz_mmsize = param->schwarz_mmsize;
+        swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
+        swzparam.schwarz_type   = param->schwarz_type;
+        swzparam.schwarz_blksolver = param->schwarz_blksolver;
+    }
+
 #if DIAGONAL_PREF
     // Reorder each row to keep the diagonal entries appear first !!!
     fasp_dcsr_diagpref(&mgl[0].A);
@@ -123,17 +133,10 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         }
         
         /*-- Setup Schwarz smoother if needed --*/
-        if ( lvl < param->schwarz_levels ) {
-            const INT smmsize = param->schwarz_mmsize;
-            const INT smaxlvl = param->schwarz_maxlvl;
-            const INT schtype = param->schwarz_type;
-            const INT blk_solver = param->schwarz_blksolver;
-            
-            mgl->schwarz_levels  = param->schwarz_levels;
+        if ( lvl < param->schwarz_levels ) { 
             mgl[lvl].schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
-			mgl[lvl].schwarz.blk_solver = blk_solver;
             fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
-            fasp_schwarz_setup(&mgl[lvl].schwarz, smmsize, smaxlvl, schtype);
+            fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
         }
         
         /*-- Coarseing and form the structure of interpolation --*/

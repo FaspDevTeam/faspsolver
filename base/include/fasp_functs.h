@@ -1819,22 +1819,17 @@ void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
                                     INT *mask);
 
 INT fasp_schwarz_setup (Schwarz_data *schwarz,
-                        INT mmsize,
-                        INT maxlev,
-                        INT schwarz_type);
+                        Schwarz_param *param);
 
-void fasp_dcsr_schwarz_smoother (Schwarz_data *schwarz,
-                                 dvector *x,
-                                 dvector *b);
+void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz,
+                                         Schwarz_param *param,
+                                         dvector       *x,
+                                         dvector       *b);
 
 void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
+                                          Schwarz_param *param,
                                           dvector *x,
                                           dvector *b);
-
-INT fasp_schwarz_setup (Schwarz_data *schwarz,
-                        INT mmsize,
-                        INT maxlev,
-                        INT schwarz_type);
 
 
 /*-------- In file: smat.c --------*/
