@@ -127,6 +127,7 @@ Test and Debug
 
 [ 0.4.1 ] start to build the debug environment
 [ 0.6.0 ] build upon regression.c to make a regression test suite
+[ 1.6.1 ] compare regression results automatically
 [       ] finish the debug environment construction (Chensong)
 [       ] add a new unit test tool for FASP, e.g. CHECK (Chensong)
 

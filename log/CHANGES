@@ -4,6 +4,7 @@ File Name: CHANGES
 - Fix MUMPS link problem due to system directory and pthread in Ubuntu.
 - Add Schwarz smoothers: C version.
 - Add input parameter for Schwarz block solver type.
+- Add a new shell for compare regression results.
 
 10/06/2014 FASP 1.6.0:
 - Update website and documentation.
