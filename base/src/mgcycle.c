@@ -64,7 +64,6 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     REAL alpha = 1.0;
     INT  num_lvl[MAX_AMG_LVL] = {0}, l = 0;
     
-	double begin, end;
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
@@ -165,8 +164,6 @@ ForwardSweep:
         fasp_array_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
         fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
 
-
-        
         // restriction r1 = R*r0
         switch (amg_type) {
             case UA_AMG:
