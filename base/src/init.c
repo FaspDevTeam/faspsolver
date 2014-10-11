@@ -146,10 +146,6 @@ void fasp_schwarz_data_free (Schwarz_data *schwarz)
 	
 	for (i=0; i<schwarz->nblk; ++i) fasp_dcsr_free (&((schwarz->blk_data)[i]));
 
-#if WITH_MUMPS
-	//for (i=0; i<schwarz->nblk; ++i) fasp_mumps_free (&((schwarz->mumps)[i]));
-#endif
-
 	schwarz->nblk = 0;
 	fasp_mem_free (schwarz->iblock);
 	fasp_mem_free (schwarz->jblock);
@@ -162,6 +158,13 @@ void fasp_schwarz_data_free (Schwarz_data *schwarz)
 	schwarz->memt = 0;
 	fasp_mem_free (schwarz->mask);
 	fasp_mem_free (schwarz->maxa);
+
+
+#if WITH_MUMPS
+	if (schwarz->mumps == NULL) return;
+	else 
+	for (i=0; i<schwarz->nblk; ++i) fasp_mumps_free (&((schwarz->mumps)[i]));
+#endif
 }
 
 /**
