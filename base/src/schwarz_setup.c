@@ -12,100 +12,14 @@
 
 #include "mg_util.inl"
 
-/*---------------------------------*/
-/*--      Private Functions      --*/
-/*---------------------------------*/
-
-/**
- * \fn levels (INT inroot, dCSRmat *A, INT *mask, INT *nlvl, INT *iblock,
- *             INT *jblock, INT maxlev)
- *
- * \brief Form the level hierarchy of input root node
- *
- * \param inroot  Root node
- * \param A       Pointer to CSR matrix
- * \param mask    Pointer to flag array
- * \param nlvl    The number of levels to expand from root node
- * \param iblock  Pointer to vertices number of each level
- * \param jblock  Pointer to vertices of each level
- * \param maxlev  The maximal number of levels to expand from root node
- *
- * \author Zheng Li, Chensong Zhang
- * \date   2014/09/29
- */
-static void levelsc (INT inroot,
-                     dCSRmat *A,
-                     INT *mask,
-                     INT *nlvl,
-                     INT *iblock,
-                     INT *jblock,
-                     INT maxlev)
-{
-    INT *ia = A->IA;
-    INT *ja = A->JA;
-    INT nnz = A->nnz;
-    INT i, j, lvl, lbegin, lvlend, nsize, node;
-    INT jstrt, jstop, nbr, lvsize;
-    
-    // This is diagonal
-    if (ia[inroot+1]-ia[inroot] <= 1) {
-        lvl = 0;
-        iblock[lvl] = 0;
-        jblock[iblock[lvl]] = inroot;
-        lvl ++;
-        iblock[lvl] = 1;
-    }
-    else {
-        // input node as root node (level 0)
-        lvl = 0;
-        jblock[0] = inroot;
-        lvlend = 0;
-        nsize  = 1;
-        // mark root node
-        mask[inroot] = 1;
-        
-        lvsize = nnz;
-        
-        // start to form the level hierarchy for root node(root, level0, level 1,...)
-        while (lvsize > 0 && lvl < maxlev) {
-            lbegin = lvlend;
-            lvlend = nsize;
-            iblock[lvl] = lbegin;
-            lvl ++;
-            for(i=lbegin; i<lvlend; ++i) {
-                node = jblock[i];
-                jstrt = ia[node]-1;
-                jstop = ia[node+1]-1;
-                for (j = jstrt; j<jstop; ++j) {
-                    nbr = ja[j]-1;
-                    if (mask[nbr] == 0) {
-                        jblock[nsize] = nbr;
-                        mask[nbr] = lvl;
-                        nsize ++;
-                    }
-                }
-            }
-            lvsize = nsize - lvlend;
-        }
-        
-        iblock[lvl] = nsize;
-        
-        // reset mask array
-        for (i = 0; i< nsize; ++i) {
-            node = jblock[i];
-            mask[node] = 0;
-        }
-    }
-    
-    *nlvl = lvl;
-}
+static void schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn fasp_schwarz_get_block_matrix (Schwarz_data *schwarz, INT nblk, INT *iblock, 
+ * \fn fasp_schwarz_get_block_matrix (Schwarz_data *schwarz, INT nblk, INT *iblock,
  *                                    INT *jblock, INT *mask)
  *
  * \brief Form schwarz partition data
@@ -220,7 +134,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     INT *ia = A.IA;
     INT *ja = A.JA;
     REAL *a = A.val;
-
+    
     INT  block_solver = param->schwarz_blksolver;
     INT  maxlev = param->schwarz_maxlvl;
     
@@ -266,7 +180,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     // first pass: do a maxlev level sets out for each node
     for ( i = 0; i < MIS.row; i++ ) {
         inroot = MIS.val[i];
-        levelsc(inroot,&A,mask,&nlvl,maxa,jblock,maxlev);
+        schwarz_levels(inroot,&A,mask,&nlvl,maxa,jblock,maxlev);
         nsizei=maxa[nlvl];
         nsizeall+=nsizei;
     }
@@ -285,7 +199,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     jb=jblock;
     for (i=0;i<MIS.row;i++) {
         inroot = MIS.val[i];
-        levelsc(inroot,&A,mask,&nlvl,maxa,jb,maxlev);
+        schwarz_levels(inroot,&A,mask,&nlvl,maxa,jb,maxlev);
         nsizei=maxa[nlvl];
         iblock[i+1]=iblock[i]+nsizei;
         nsizeall+=nsizei;
@@ -348,7 +262,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
             break;
         }
 #endif
-
+            
         default: {
             /* need to do nothing for iterative methods */
         }
@@ -592,7 +506,95 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
     }
 }
 
-#if 0
+/*---------------------------------*/
+/*--      Private Functions      --*/
+/*---------------------------------*/
+
+/**
+ * \fn static void schwarz_levels (INT inroot, dCSRmat *A, INT *mask, INT *nlvl,
+ *                                 INT *iblock, INT *jblock, INT maxlev)
+ *
+ * \brief Form the level hierarchy of input root node
+ *
+ * \param inroot  Root node
+ * \param A       Pointer to CSR matrix
+ * \param mask    Pointer to flag array
+ * \param nlvl    The number of levels to expand from root node
+ * \param iblock  Pointer to vertices number of each level
+ * \param jblock  Pointer to vertices of each level
+ * \param maxlev  The maximal number of levels to expand from root node
+ *
+ * \author Zheng Li
+ * \date   2014/09/29
+ */
+static void schwarz_levels (INT inroot,
+                            dCSRmat *A,
+                            INT *mask,
+                            INT *nlvl,
+                            INT *iblock,
+                            INT *jblock,
+                            INT maxlev)
+{
+    INT *ia = A->IA;
+    INT *ja = A->JA;
+    INT nnz = A->nnz;
+    INT i, j, lvl, lbegin, lvlend, nsize, node;
+    INT jstrt, jstop, nbr, lvsize;
+    
+    // This is diagonal
+    if (ia[inroot+1]-ia[inroot] <= 1) {
+        lvl = 0;
+        iblock[lvl] = 0;
+        jblock[iblock[lvl]] = inroot;
+        lvl ++;
+        iblock[lvl] = 1;
+    }
+    else {
+        // input node as root node (level 0)
+        lvl = 0;
+        jblock[0] = inroot;
+        lvlend = 0;
+        nsize  = 1;
+        // mark root node
+        mask[inroot] = 1;
+        
+        lvsize = nnz;
+        
+        // start to form the level hierarchy for root node(root, level0, level 1,...)
+        while (lvsize > 0 && lvl < maxlev) {
+            lbegin = lvlend;
+            lvlend = nsize;
+            iblock[lvl] = lbegin;
+            lvl ++;
+            for(i=lbegin; i<lvlend; ++i) {
+                node = jblock[i];
+                jstrt = ia[node]-1;
+                jstop = ia[node+1]-1;
+                for (j = jstrt; j<jstop; ++j) {
+                    nbr = ja[j]-1;
+                    if (mask[nbr] == 0) {
+                        jblock[nsize] = nbr;
+                        mask[nbr] = lvl;
+                        nsize ++;
+                    }
+                }
+            }
+            lvsize = nsize - lvlend;
+        }
+        
+        iblock[lvl] = nsize;
+        
+        // reset mask array
+        for (i = 0; i< nsize; ++i) {
+            node = jblock[i];
+            mask[node] = 0;
+        }
+    }
+    
+    *nlvl = lvl;
+}
+
+#if 0 // TODO: Need to remove this! --Chensong
 /**
  * \fn INT fasp_schwarz_setup (Schwarz_data *schwarz, INT mmsize,
  *                             INT maxlev, INT schwarz_type)
@@ -611,10 +613,10 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/28/2012
  */
-INT fasp_schwarz_setup (Schwarz_data *schwarz,
-                        INT mmsize,
-                        INT maxlev,
-                        INT schwarz_type)
+static INT fasp_schwarz_setup (Schwarz_data *schwarz,
+                               INT mmsize,
+                               INT maxlev,
+                               INT schwarz_type)
 {
     // information about A
     dCSRmat A = schwarz->A;
@@ -730,7 +732,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
             n, nblk, maxbs);
 #endif
     
-    /*-------------------------------------------*/  
+    /*-------------------------------------------*/
     //  return
     /*-------------------------------------------*/
     schwarz->nblk = nblk;
@@ -749,7 +751,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
-    return flag;	
+    return flag;
 }
 
 #endif

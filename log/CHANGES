@@ -5,6 +5,7 @@ File Name: CHANGES
 - Add Schwarz smoothers: C version.
 - Add input parameter for Schwarz block solver type.
 - Add a new shell for compare regression results.
+- Add CMK and Reversed CMK ordering. 
 
 10/06/2014 FASP 1.6.0:
 - Update website and documentation.
