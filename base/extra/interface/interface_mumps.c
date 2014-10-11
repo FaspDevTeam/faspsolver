@@ -100,6 +100,7 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
     /* Initialize a MUMPS instance. */
     id.job=-1; id.par=1; id.sym=0; id.comm_fortran=0;
     dmumps_c(&id);
+
     /* Define the problem on the host */
     id.n = n; id.nz =nz; id.irn=irn; id.jcn=jcn;
     id.a = a; id.rhs = rhs;
@@ -177,8 +178,8 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
 
 	int *irn;
     int *jcn;
-    double*a;
-    int *rhs;
+    double *a;
+    double *rhs;
     
 #if DEBUG_MODE
 	printf("### DEBUG: %s job_stat = %d\n", __FUNCTION__, job_stat);
@@ -198,10 +199,10 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             int *JA = ptrA->JA;
             double *AA =  ptrA->val;
 
-            irn = id.irn;
-            jcn = id.jcn;
-            a   = id.a;
-            rhs = id.rhs;
+            irn = id.irn = (int *)malloc( sizeof(int)*nz );
+            jcn = id.jcn = (int *)malloc( sizeof(int)*nz );
+            a   = id.a   = (double *)malloc( sizeof(double)*nz );
+            rhs = id.rhs = (double *)malloc( sizeof(double)*n );
 
             // First check the matrix format
             if ( IA[0] != 0 && IA[0] != 1 ) {
@@ -210,18 +211,13 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             }
             
             // Define A and rhs
-            irn = (int *)malloc( sizeof(int)*nz );
-            jcn = (int *)malloc( sizeof(int)*nz );
-            a   = (double *)malloc( sizeof(double)*nz );
-            rhs = (double *)malloc( sizeof(double)*n );
-            
             if ( IA[0] == 0 ) { // C-convention
                 for (i=0; i<n; i++) {
                     begin_row = IA[i]; end_row = IA[i+1];
                     for (j=begin_row; j< end_row; j++)     {
                         irn[j] = i + 1;
                         jcn[j] = JA[j]+1;
-                        a[j] =   AA[j];
+                        a[j]   = AA[j];
                     }
                 }
             }
@@ -231,7 +227,7 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
                     for (j=begin_row; j< end_row; j++)     {
                         irn[j] = i + 1;
                         jcn[j] = JA[j];
-                        a[j] =   AA[j];
+                        a[j]   = AA[j];
                     }
                 }
             }
@@ -335,17 +331,17 @@ Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
     DMUMPS_STRUC_C id;
 
     int i,j;	
-    const  int m =  ptrA->row;
-    const  int n =  ptrA->col;
-    const  int nz = ptrA->nnz;
+    const int m =  ptrA->row;
+    const int n =  ptrA->col;
+    const int nz = ptrA->nnz;
     int *IA = ptrA->IA;
     int *JA = ptrA->JA;
     double *AA =  ptrA->val;
 
-    int *irn = id.irn;
-    int *jcn = id.jcn;
-    double *a = id.a;
-    double *rhs = id.rhs;
+    int    *irn = id.irn = (int *)malloc( sizeof(int)*nz );
+    int    *jcn = id.jcn = (int *)malloc( sizeof(int)*nz );
+    double *a   = id.a   = (double *)malloc( sizeof(double)*nz );
+    double *rhs = id.rhs = (double *)malloc( sizeof(double)*n );
     
     int begin_row, end_row;
 
@@ -356,12 +352,6 @@ Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
 
     clock_t start_time = clock();
 
-    // Define A and rhs
-    irn = (int *)malloc( sizeof(int)*nz );
-    jcn = (int *)malloc( sizeof(int)*nz );
-    a   = (double *)malloc( sizeof(double)*nz );
-    rhs = (double *)malloc( sizeof(double)*n );
-            
     if ( IA[0] == 0 ) { // C-convention
         for (i=0; i<n; i++) {
             begin_row = IA[i]; end_row = IA[i+1];

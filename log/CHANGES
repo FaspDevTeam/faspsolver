@@ -6,6 +6,9 @@ File Name: CHANGES
 - Add input parameter for Schwarz block solver type.
 - Add a new shell for compare regression results.
 - Add CMK and Reversed CMK ordering. 
+- Remove unused variables in Schwarz method.
+- Fix wrong data type in MUMPS interface. 
+- Fix VS10 problems for the new version.
 
 10/06/2014 FASP 1.6.0:
 - Update website and documentation.
