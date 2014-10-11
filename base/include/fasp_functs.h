@@ -1208,45 +1208,50 @@ void fasp_solver_mgrecur (AMG_data *mgl,
 
 /*-------- In file: ordering.c --------*/
 
-INT fasp_BinarySearch (INT *list, 
-		               INT value, 
-					   INT list_length);
+INT fasp_BinarySearch (INT *list,
+                       INT value,
+                       INT list_length);
 
-INT fasp_aux_unique (INT numbers[], 
+INT fasp_aux_unique (INT numbers[],
                      INT size);
 
-void fasp_aux_merge (INT numbers[], 
-                     INT work[], 
-                     INT left, 
-                     INT mid, 
+void fasp_aux_merge (INT numbers[],
+                     INT work[],
+                     INT left,
+                     INT mid,
                      INT right);
 
-void fasp_aux_msort (INT numbers[], 
-                     INT work[], 
-                     INT left, 
+void fasp_aux_msort (INT numbers[],
+                     INT work[],
+                     INT left,
                      INT right);
 
-void fasp_aux_iQuickSort (INT *a, 
-                          INT left, 
+void fasp_aux_iQuickSort (INT *a,
+                          INT left,
                           INT right);
 
-void fasp_aux_dQuickSort (REAL *a, 
-                          INT left, 
+void fasp_aux_dQuickSort (REAL *a,
+                          INT left,
                           INT right);
 
-void fasp_aux_iQuickSortIndex (INT *a, 
-                               INT left, 
-                               INT right, 
+void fasp_aux_iQuickSortIndex (INT *a,
+                               INT left,
+                               INT right,
                                INT *index);
 
-void fasp_aux_dQuickSortIndex (REAL *a, 
-                               INT left, 
-                               INT right, 
+void fasp_aux_dQuickSortIndex (REAL *a,
+                               INT left,
+                               INT right,
                                INT *index);
 
-void fasp_dcsr_CMK_order(const dCSRmat *A, INT *order, INT *oindex);
+void fasp_dcsr_CMK_order (const dCSRmat *A,
+                          INT *order,
+                          INT *oindex);
 
-void fasp_dcsr_RCMK_order(const dCSRmat *A, INT *order, INT *oindex, INT *rorder);
+void fasp_dcsr_RCMK_order (const dCSRmat *A,
+                           INT *order,
+                           INT *oindex,
+                           INT *rorder);
 
 
 /*-------- In file: parameters.c --------*/
@@ -1834,6 +1839,7 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
                                           Schwarz_param *param,
                                           dvector *x,
                                           dvector *b);
+
 
 /*-------- In file: smat.c --------*/
 
