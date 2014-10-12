@@ -39,7 +39,7 @@ void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
                                     INT *jblock,
                                     INT *mask)
 {
-    INT i, j, iblk, ki, kj, kij, kil, is, ibl0, ibl1, nloc, iaa, iab;
+    INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     INT maxbs = 0, count, nnz;
     
     dCSRmat A = schwarz->A;
@@ -57,6 +57,8 @@ void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
         maxbs = MAX(maxbs, nloc);
     }
     
+	schwarz->maxbs = maxbs;
+
     // allocate memory for each sub_block's right hand
     schwarz->xloc1   = fasp_dvec_create(maxbs);
     schwarz->rhsloc1 = fasp_dvec_create(maxbs);
@@ -131,25 +133,19 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     // information about A
     dCSRmat A = schwarz->A;
     INT n   = A.row;
-    INT *ia = A.IA;
-    INT *ja = A.JA;
-    REAL *a = A.val;
     
     INT  block_solver = param->schwarz_blksolver;
     INT  maxlev = param->schwarz_maxlvl;
     
     // local variables
-    INT n1 = n,i;
+    INT i;
     INT inroot = -10, nsizei = -10, nsizeall = -10, nlvl = 0;
-    INT maxbs=0;
     INT *jb=NULL;
     ivector MIS;
     
     // data for schwarz method
     INT nblk;
     INT *iblock = NULL, *jblock = NULL, *mask = NULL, *maxa = NULL;
-    REAL *au = NULL, *al = NULL, *rhsloc = NULL;
-    INT memt = 0;
     
     // return
     INT flag = 0;
@@ -159,15 +155,15 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 #endif
     
     // allocate memory
-    maxa    = (INT *)fasp_mem_calloc(n1,sizeof(INT));
-    mask    = (INT *)fasp_mem_calloc(n1,sizeof(INT));
-    iblock  = (INT *)fasp_mem_calloc(n1,sizeof(INT));
-    jblock  = (INT *)fasp_mem_calloc(n1,sizeof(INT));
+    maxa    = (INT *)fasp_mem_calloc(n,sizeof(INT));
+    mask    = (INT *)fasp_mem_calloc(n,sizeof(INT));
+    iblock  = (INT *)fasp_mem_calloc(n,sizeof(INT));
+    jblock  = (INT *)fasp_mem_calloc(n,sizeof(INT));
     
     nsizeall=0;
-    memset(mask,   0, sizeof(INT)*n1);
-    memset(iblock, 0, sizeof(INT)*n1);
-    memset(maxa,   0, sizeof(INT)*n1);
+    memset(mask,   0, sizeof(INT)*n);
+    memset(iblock, 0, sizeof(INT)*n);
+    memset(maxa,   0, sizeof(INT)*n);
     
     maxa[0]=0;
     
@@ -209,26 +205,17 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     
 #if DEBUG_MODE
     fprintf(stdout,"### DEBUG: nsizall is: %d %d\n",nsizeall,iblock[nblk]);
-    fprintf(stdout,"### DEBUG: nnz is: %d\n",ia[n]);
 #endif
     
     /*-------------------------------------------*/
     //  LU decomposition of blocks
     /*-------------------------------------------*/
-    n1 = (nblk + iblock[nblk]);
     
     memset(mask, 0, sizeof(INT)*n);
     
     schwarz->blk_data = (dCSRmat*)fasp_mem_calloc(nblk, sizeof(dCSRmat));
     
     fasp_schwarz_get_block_matrix(schwarz, nblk, iblock, jblock, mask);
-    
-#if DEBUG_MODE
-    fprintf(stdout,"### DEBUG: Number of nonzeroes for LU=%d maxbs=%d\n",
-            memt, maxbs);
-#endif
-    
-    dCSRmat *blk = schwarz->blk_data;
     
     // Setup for each block solver
     switch (block_solver) {
@@ -270,7 +257,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     
 #if DEBUG_MODE
     fprintf(stdout,"### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
-            n, nblk, maxbs);
+            n, nblk, schwarz->maxbs);
 #endif
     
     /*-------------------------------------------*/

@@ -17,7 +17,7 @@
 # In order to get debug output during run-time, you can uncomment the 
 # following line (to include "-DDEBUG_MODE -Wall -g"): 
 # 
-# debug=all
+ debug=all
 #
 # The default setting for vebosity level for FASP is verbose=no. If you
 # want to increase verbosity level, uncomment the next line:
