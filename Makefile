@@ -100,9 +100,6 @@ endif
 ####################  User Changes UP TO HERE   ########################
 
 # Let cmake do the configuration. Set up a build dir
-#cpu0=$(shell uname -m | sed -e 's/[[:space:]][[:space:]]*/_/g')
-#sys0=$(shell uname -s)
-#build_dir=BUILD_$(cpu0)-$(sys0)
 build_dir=BUILD_FASP
 
 CONFIG_FLAGS=-DCMAKE_RULE_MESSAGES=ON
