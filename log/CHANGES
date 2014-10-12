@@ -10,6 +10,7 @@ File Name: CHANGES
 - Fix possible problems (uninitialized and unused variables).
 - Fix wrong data type in MUMPS interface. 
 - Fix VS10 problems for the new version.
+- Update webpage and documentation.
 
 10/06/2014 FASP 1.6.0:
 - Update website and documentation.
