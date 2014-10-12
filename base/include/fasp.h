@@ -524,6 +524,9 @@ typedef struct {
     
     //! mask
 	INT *mask;
+
+	//! maximal block size
+	INT maxbs;
     
     //! maxa
 	INT *maxa;

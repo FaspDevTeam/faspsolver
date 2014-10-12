@@ -358,7 +358,6 @@ void fasp_dcsr_CMK_order (const dCSRmat *A,
                           INT *oindex)
 {
     const INT *ia = A->IA;
-    const INT *ja = A->JA;
     const INT row= A->row;
     
     INT i, loc, s, vt, mindg, innz;
