@@ -173,6 +173,7 @@ static void form_pairwise (const dCSRmat * A,
     REAL mu, min_mu, aii, ajj, aij;
     REAL temp1, temp2, temp3, temp4;
 
+	index = 0;
     /*---------------------------------------------------------*/
     /* Step 1. select extremely strong diagonal dominate rows  */ 
 	/*        and store in G0.                                 */
