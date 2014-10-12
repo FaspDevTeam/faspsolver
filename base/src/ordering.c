@@ -363,6 +363,7 @@ void fasp_dcsr_CMK_order (const dCSRmat *A,
     INT i, loc, s, vt, mindg, innz;
     
     s = 0;
+    vt = 0;
     mindg = row+1;
     
     // sclect node with minimul degree
