@@ -22,6 +22,19 @@
 #define __FASP_MESSAGES__
 
 /**
+ * \brief Some global constants
+ */
+#define BIGREAL          1e+20 /**< A large real number */
+#define SMALLREAL        1e-20 /**< A small real number */
+#define MAX_REFINE_LVL   20    /**< Maximal refinement level */
+#define MAX_AMG_LVL      20    /**< Maximal AMG coarsening level */
+#define MIN_CDOF         20    /**< Minimal number of coarsest variables */
+#define STAG_RATIO       1e-4  /**< Staganation tolerance = tol*STAGRATIO */
+#define MAX_STAG         20    /**< Maximal number of staganation times */
+#define MAX_RESTART      20    /**< Maximal number of restarting for BiCGStab */
+#define OPENMP_HOLDS     2000  /**< Switch to sequence version when size is small */
+
+/**
  * \brief Definition of return status and error messages
  */
 #define FASP_SUCCESS            0  /**< return from funtion successfully */

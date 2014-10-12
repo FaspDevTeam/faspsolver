@@ -26,7 +26,7 @@
  * \author Xiaozhe Hu
  * \date   09/29/2009
  *
- * \note Modified by Xiaozhe Hu on 05/25/2014
+ * Modified by Xiaozhe Hu on 05/25/2014
  */
 static void form_tentative_p (ivector *vertices, 
                               dCSRmat *tentp, 
@@ -91,7 +91,7 @@ static void form_tentative_p (ivector *vertices,
  * \author Xiaozhe Hu
  * \date   09/29/2009
  *
- * \note Modified by Xiaozhe Hu on 05/25/2014
+ * Modified by Xiaozhe Hu on 05/25/2014
  */
 static void form_boolean_p (ivector *vertices,
                               dCSRmat *tentp,
@@ -166,20 +166,19 @@ static void form_pairwise (const dCSRmat * A,
     INT  *AJA  = A->JA;
     REAL *Aval = A->val;
 
-    INT i, j, row_start, row_end;
-    REAL sum;
+    INT   i, j, row_start, row_end;
+    REAL  sum;
 
-    INT  col, index;
-    REAL mu, min_mu, aii, ajj, aij;
-    REAL temp1, temp2, temp3, temp4;
-
-	index = 0;
+    INT   col, index = 0;
+    REAL  mu, min_mu, aii, ajj, aij;
+    REAL  temp1, temp2, temp3, temp4;
+    
     /*---------------------------------------------------------*/
     /* Step 1. select extremely strong diagonal dominate rows  */ 
-	/*        and store in G0.                                 */
+    /*         and store in G0.                                */
+    /*         G0        : vertices->val[i]=G0PT               */
+    /*         Remaining : vertices->val[i]=UNPT               */
     /*---------------------------------------------------------*/
-
-    /* G0 : vertices->val[i]=G0PT, Remain: vertices->val[i]=UNPT */
 
     fasp_ivec_alloc(row, vertices);
     	
@@ -206,6 +205,7 @@ static void form_pairwise (const dCSRmat * A,
     /*---------------------------------------------------------*/
     /* Step 2. compute row sum (off-diagonal) for each vertex  */
     /*---------------------------------------------------------*/
+    
     REAL *s = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
 
     for ( i = 0; i < row; i++ ) {
@@ -217,9 +217,10 @@ static void form_pairwise (const dCSRmat * A,
         for ( j = row_start + 1; j < row_end; j++ ) s[i] -= Aval[j];
     }
 
-    /*-----------------------------------------*/
-    /* Step 3. start the pairwise aggregation  */
-    /*-----------------------------------------*/
+    /*---------------------------------------------------------*/
+    /* Step 3. start the pairwise aggregation                  */
+    /*---------------------------------------------------------*/
+
     *num_aggregations = 0;
     
     for ( i = 0; i < row; i++ ) {
@@ -227,7 +228,7 @@ static void form_pairwise (const dCSRmat * A,
         if ( vertices->val[i] != UNPT ) continue;
         
         aij = 0.0;
-        min_mu = 1000.0;
+        min_mu = BIGREAL;
         
         row_start = AIA[i]; row_end = AIA[i+1];
         
@@ -256,15 +257,11 @@ static void form_pairwise (const dCSRmat * A,
             }
         }
 
+        vertices->val[i] = *num_aggregations;
+
+        if ( min_mu <= k_tg ) vertices->val[index] = *num_aggregations;
+
         *num_aggregations += 1;
-        
-        if ( min_mu <= k_tg ) { // TODO: Something wrong! index could be empty!
-            vertices->val[i]     = *num_aggregations - 1;
-            vertices->val[index] = *num_aggregations - 1;
-        }
-		else {
-            vertices->val[i] = *num_aggregations - 1;
-        }
     }
 
     fasp_mem_free(s);
