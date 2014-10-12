@@ -100,10 +100,11 @@ INT fasp_solver_pcg (mxv_matfree *mf,
     
     // local variables
     INT          iter = 0, stag, more_step, restart_step;
-    REAL         absres0, absres, relres, reldiff, factor;
-    REAL         normr0 = BIGREAL, normu, infnormu;
-    REAL         alpha, beta, temp1, temp2; 
-    
+    REAL         absres0 = BIGREAL, absres = BIGREAL;
+    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, infnormu;
+    REAL         alpha, beta, temp1, temp2;
+
     // allocate temp memory (need 4*m REAL numbers)
     REAL *work=(REAL *)fasp_mem_calloc(4*m,sizeof(REAL));    
     REAL *p=work, *z=work+m, *r=z+m, *t=r+m;

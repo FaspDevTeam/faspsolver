@@ -2788,9 +2788,10 @@ static void fasp_dcsr_write_s (FILE *fp,
                                dCSRmat *A)
 {
     const INT m=A->row, n=A->col;
-    INT i, j;
+    INT i;
     
     fprintf(fp,"%d  %d  %d\n",m,n,A->nnz);
+    
     for ( i = 0; i < m+1; ++i ) fprintf(fp,"%d\n", A->IA[i]);
 
 	for ( i = 0; i < A->nnz; ++i ) fprintf(fp,"%d\n", A->JA[i]);

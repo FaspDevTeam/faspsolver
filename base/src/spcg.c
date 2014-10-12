@@ -102,8 +102,9 @@ INT fasp_solver_dcsr_spcg (dCSRmat *A,
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
-    REAL         absres0, absres, relres, reldiff, factor;
-    REAL         normr0 = BIGREAL, normu, infnormu;
+    REAL         absres0 = BIGREAL, absres = BIGREAL;
+    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, infnormu;
     REAL         alpha, beta, temp1, temp2;
     
     INT          iter_best = 0; // initial best known iteration
@@ -427,8 +428,9 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
-    REAL         absres0, absres, relres, reldiff, factor;
-    REAL         normr0 = BIGREAL, normu, infnormu;
+    REAL         absres0 = BIGREAL, absres = BIGREAL;
+    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, infnormu;
     REAL         alpha, beta, temp1, temp2;
     
     INT          iter_best = 0; // initial best known iteration
@@ -751,8 +753,9 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
-    REAL         absres0, absres, relres, reldiff, factor;
-    REAL         normr0 = BIGREAL, normu, infnormu;
+    REAL         absres0 = BIGREAL, absres = BIGREAL;
+    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, infnormu;
     REAL         alpha, beta, temp1, temp2;
     
     INT          iter_best = 0; // initial best known iteration

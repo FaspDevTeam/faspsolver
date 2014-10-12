@@ -104,10 +104,12 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
     const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
     
     // local variables
-    INT          iter = 0, stag, more_step, restart_step;    
-    REAL         alpha, beta, omega, temp1, temp2;
-    REAL         relres, normr0, reldiff;
-    REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
+    INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
+    REAL         absres0 = BIGREAL, absres = BIGREAL, relres = BIGREAL;
+    REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, infnormu;
+    REAL         alpha, beta, omega, temp1, temp2, tempr;
+    
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)

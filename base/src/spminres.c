@@ -109,9 +109,10 @@ INT fasp_solver_dcsr_spminres (dCSRmat *A,
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
-    REAL         absres0, absres, relres, factor;
+    REAL         absres0 = BIGREAL, absres = BIGREAL;
+    REAL         normr0  = BIGREAL, relres  = BIGREAL;
+    REAL         normu2, normuu, normp, infnormu, factor;
     REAL         alpha, alpha0, alpha1, temp2;
-    REAL         normr0, normu2, normuu, normp, infnormu;
     
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -556,9 +557,10 @@ INT fasp_solver_bdcsr_spminres (block_dCSRmat *A,
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
-    REAL         absres0, absres, relres, factor;
+    REAL         absres0 = BIGREAL, absres = BIGREAL;
+    REAL         normr0  = BIGREAL, relres  = BIGREAL;
+    REAL         normu2, normuu, normp, infnormu, factor;
     REAL         alpha, alpha0, alpha1, temp2;
-    REAL         normr0, normu2, normuu, normp, infnormu;
     
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -1003,9 +1005,10 @@ INT fasp_solver_dstr_spminres (dSTRmat *A,
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
-    REAL         absres0, absres, relres, factor;
+    REAL         absres0 = BIGREAL, absres = BIGREAL;
+    REAL         normr0  = BIGREAL, relres  = BIGREAL;
+    REAL         normu2, normuu, normp, infnormu, factor;
     REAL         alpha, alpha0, alpha1, temp2;
-    REAL         normr0, normu2, normuu, normp, infnormu;
     
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual

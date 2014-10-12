@@ -623,16 +623,17 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
 	INT     nb  = A->nb;
 	INT    *IA  = A->IA;
 	INT    *JA  = A->JA;
-	REAL *val = A->val;
+	REAL   *val = A->val;
     
 	/* local variables */
 	INT     size = ROW*nb;
 	INT     jump = nb*nb;
 	INT     i,j,k, iend;
 	REAL    temp = 0.0;
-	REAL    *pA, *px0 = NULL, *py0 = NULL, *py = NULL;
+    REAL   *pA;
+    REAL   *px0 = NULL, *py0 = NULL, *py = NULL;
     
-	INT nthreads = 1, use_openmp = FALSE;
+	INT     nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
 	if ( ROW > OPENMP_HOLDS ) {
@@ -798,7 +799,8 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
             }
         }
 			break;
-		case 7:
+		
+        case 7:
         {
             if (use_openmp) {
                 INT myid, mybegin, myend;
@@ -898,9 +900,8 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
 	//   y = alpha*y
 	//------------------------------------------
     
-	if (alpha != 1.0){
-		fasp_blas_array_ax(size, alpha, y);
-	}
+	if ( alpha != 1.0 ) fasp_blas_array_ax(size, alpha, y);
+    
 	return;
 }
 
@@ -916,10 +917,9 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
  * \author Zhiyang Zhou
  * \date   10/25/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012
- *
  * \note Works for general nb (Xiaozhe)
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 void fasp_blas_dbsr_mxv (dBSRmat *A,
 		                 REAL *x,

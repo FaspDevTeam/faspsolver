@@ -68,7 +68,8 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
-    REAL     absres0, absres, relres, normu;
+    REAL     absres0 = BIGREAL, absres = BIGREAL;
+    REAL     relres  = BIGREAL, normu  = BIGREAL;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
@@ -361,7 +362,8 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
-    REAL     absres0, absres, relres, normu;
+    REAL     absres0 = BIGREAL, absres = BIGREAL;
+    REAL     relres  = BIGREAL, normu  = BIGREAL;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
@@ -654,7 +656,8 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
-    REAL     absres0, absres, relres, normu;
+    REAL     absres0 = BIGREAL, absres = BIGREAL;
+    REAL     relres  = BIGREAL, normu  = BIGREAL;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;
@@ -947,7 +950,8 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
-    REAL     absres0, absres, relres, normu;
+    REAL     absres0 = BIGREAL, absres = BIGREAL;
+    REAL     relres  = BIGREAL, normu  = BIGREAL;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *s = NULL, *rs = NULL;

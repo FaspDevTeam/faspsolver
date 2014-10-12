@@ -54,8 +54,9 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
                       const SHORT print_level)
 {
     INT    iter=0, m=b->row, i;
-    REAL   absres0=BIGREAL, absres, relres=BIGREAL, factor;
-    REAL   alpha, normb=BIGREAL, gama_1, gama_2;
+    REAL   absres0 = BIGREAL, absres = BIGREAL;
+    REAL   relres  = BIGREAL, normb  = BIGREAL;
+    REAL   alpha, factor, gama_1, gama_2;
     
     // allocate temp memory 
     REAL *work = (REAL *)fasp_mem_calloc(3*m+MaxIt+MaxIt*m,sizeof(REAL));    
