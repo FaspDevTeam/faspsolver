@@ -46,7 +46,7 @@ void fasp_smoother_dcsr_gscr (INT pt,
                               INT *CF)
 { 
     INT i,j,k,l;
-    REAL t, d;
+    REAL t, d=0;
     
     for (l=0;l<L;++l) {
         for (i=0;i<n;++i) {

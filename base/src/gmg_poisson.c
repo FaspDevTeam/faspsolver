@@ -43,7 +43,7 @@ INT fasp_poisson_gmg_1D (REAL *u,
     
     REAL      *u0, *r0, *b0;
     REAL       norm_r, norm_r0, norm_r1, error, factor;
-    INT        i, *level, count;
+    INT        i, *level, count = 0;
     REAL       AMG_start, AMG_end;
     
 #if DEBUG_MODE
@@ -90,7 +90,6 @@ INT fasp_poisson_gmg_1D (REAL *u,
 	}
 
     // GMG solver of V-cycle
-    count = 0;
     while (count < max_itr_num) {
         count++;
         multigriditeration1d(u0, b0, level, 0, maxlevel);
@@ -104,6 +103,7 @@ INT fasp_poisson_gmg_1D (REAL *u,
 		}
         if (error < rtol || norm_r < atol) break;
     }
+    
 	if ( prtlvl > PRINT_NONE ){
 		if (count >= max_itr_num) {
 			printf("### WARNING: V-cycle failed to converge.\n");
@@ -112,6 +112,7 @@ INT fasp_poisson_gmg_1D (REAL *u,
 			printf("Num of V-cycle's: %d, Relative Residual = %e.\n", count, error);
 		}
 	}
+    
     // Update u
 	fasp_array_cp(level[1], u0, u);
 
@@ -164,7 +165,7 @@ INT fasp_poisson_gmg_2D (REAL *u,
 
     REAL *u0,*r0,*b0;
     REAL norm_r,norm_r0,norm_r1, error, factor;
-    INT i, k, count, *nxk, *nyk, *level;
+    INT i, k, count = 0, *nxk, *nyk, *level;
     REAL AMG_start, AMG_end;
     
 #if DEBUG_MODE
@@ -215,8 +216,8 @@ INT fasp_poisson_gmg_2D (REAL *u,
 		printf("It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor\n");
 		printf("-----------------------------------------------------------\n");
 	}
+    
     // GMG solver of V-cycle
-    count = 0;
     while (count < max_itr_num) {
         count++;
         multigriditeration2d(u0, b0, level, 0, maxlevel, nxk, nyk);
@@ -296,7 +297,7 @@ INT fasp_poisson_gmg_3D (REAL *u,
 
     REAL *u0,*r0,*b0;
     REAL norm_r,norm_r0,norm_r1, error, factor;
-    INT i, k, count, *nxk, *nyk, *nzk, *level;
+    INT i, k, count = 0, *nxk, *nyk, *nzk, *level;
 	REAL AMG_start, AMG_end;
     
 #if DEBUG_MODE
@@ -352,7 +353,6 @@ INT fasp_poisson_gmg_3D (REAL *u,
 	}
 
     // GMG solver of V-cycle
-    count = 0;
     while (count < max_itr_num) {
         count++;
         multigriditeration3d(u0, b0, level, 0, maxlevel, nxk, nyk, nzk);
@@ -421,11 +421,11 @@ void fasp_poisson_fgmg_1D (REAL *u,
                            REAL rtol,
 						   const SHORT prtlvl)
 {
-    const REAL atol = 1.0E-15;
-    REAL *u0,*r0,*b0;
-    REAL norm_r0, norm_r;
-    int i, *level;
-	REAL       AMG_start, AMG_end;
+    const REAL  atol = 1.0E-15;
+    REAL       *u0,*r0,*b0;
+    REAL        norm_r0, norm_r;
+    int         i, *level;
+	REAL        AMG_start, AMG_end;
 
 #if DEBUG_MODE
     printf("### DEBUG: fasp_poisson_fgmg_1D ...... [Start]\n");
@@ -484,7 +484,8 @@ FINISHED:
 
 #if DEBUG_MODE
     printf("### DEBUG: fasp_poisson_fgmg_1D ...... [Finish]\n");
-#endif    
+#endif
+    
     return;
 }
 
@@ -622,11 +623,11 @@ void fasp_poisson_fgmg_3D (REAL *u,
                            REAL rtol,
 						   const SHORT prtlvl)
 {
-    const REAL atol = 1.0E-15;
-    REAL *u0,*r0,*b0;
-    REAL norm_r0, norm_r;
-    int i, k, *nxk, *nyk, *nzk, *level;
-	REAL       AMG_start, AMG_end;
+    const REAL  atol = 1.0E-15;
+    REAL       *u0,*r0,*b0;
+    REAL        norm_r0, norm_r;
+    int         i, k, *nxk, *nyk, *nzk, *level;
+	REAL        AMG_start, AMG_end;
    
 #if DEBUG_MODE
     printf("### DEBUG: fasp_poisson_fgmg_3D ...... [Start]\n");
@@ -730,9 +731,9 @@ INT fasp_poisson_pcg_gmg_1D (REAL *u,
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
 
-    REAL *u0,*r0,*b0;
-    REAL norm_r0;
-    int i, *level, iter;
+    REAL      *u0,*r0,*b0;
+    REAL       norm_r0;
+    int        i, *level, iter = 0;
 	REAL       AMG_start, AMG_end;
     
 #if DEBUG_MODE
@@ -788,7 +789,8 @@ FINISHED:
 
 #if DEBUG_MODE
     printf("### DEBUG: fasp_poisson_pcg_gmg_1D ...... [Finish]\n");
-#endif   
+#endif
+    
     return iter;
 }    
 
@@ -821,9 +823,9 @@ INT fasp_poisson_pcg_gmg_2D (REAL *u,
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
 
-    REAL *u0,*r0,*b0;
-    REAL norm_r0;
-    int i, k, *nxk, *nyk, *level, iter;
+    REAL      *u0,*r0,*b0;
+    REAL       norm_r0;
+    int        i, k, *nxk, *nyk, *level, iter = 0;
 	REAL       AMG_start, AMG_end;
     
 #if DEBUG_MODE
@@ -892,7 +894,8 @@ FINISHED:
 
 #if DEBUG_MODE
     printf("### DEBUG: fasp_poisson_pcg_gmg_1D ...... [Finish]\n");
-#endif   
+#endif
+    
     return iter;
 }
 
@@ -927,9 +930,9 @@ INT fasp_poisson_pcg_gmg_3D (REAL *u,
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
 
-    REAL *u0,*r0,*b0;
-    REAL norm_r0;
-    int i, k, *nxk, *nyk, *nzk, *level, iter;
+    REAL      *u0,*r0,*b0;
+    REAL       norm_r0;
+    int        i, k, *nxk, *nyk, *nzk, *level, iter = 0;
 	REAL       AMG_start, AMG_end;
 
 #if DEBUG_MODE
@@ -1002,7 +1005,8 @@ FINISHED:
 
 #if DEBUG_MODE
     printf("### DEBUG: fasp_poisson_pcg_gmg_3D ...... [Finish]\n");
-#endif   
+#endif
+    
     return iter;
 }
 

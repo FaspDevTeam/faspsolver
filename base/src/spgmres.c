@@ -64,7 +64,8 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
-    REAL     absres0, absres, relres, normu;
+    REAL     absres0 = BIGREAL, absres = BIGREAL;
+    REAL     relres  = BIGREAL, normu  = BIGREAL;
     
     INT      iter_best = 0; // initial best known iteration
     REAL     absres_best = BIGREAL; // initial best known residual
@@ -402,7 +403,8 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
-    REAL     absres0, absres, relres, normu;
+    REAL     absres0 = BIGREAL, absres = BIGREAL;
+    REAL     relres  = BIGREAL, normu  = BIGREAL;
     
     INT      iter_best = 0; // initial best known iteration
     REAL     absres_best = BIGREAL; // initial best known residual
@@ -740,7 +742,8 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
-    REAL     absres0, absres, relres, normu;
+    REAL     absres0 = BIGREAL, absres = BIGREAL;
+    REAL     relres  = BIGREAL, normu  = BIGREAL;
     
     INT      iter_best = 0; // initial best known iteration
     REAL     absres_best = BIGREAL; // initial best known residual
@@ -1078,7 +1081,8 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
-    REAL     absres0, absres, relres, normu;
+    REAL     absres0 = BIGREAL, absres = BIGREAL;
+    REAL     relres  = BIGREAL, normu  = BIGREAL;
     
     INT      iter_best = 0; // initial best known iteration
     REAL     absres_best = BIGREAL; // initial best known residual

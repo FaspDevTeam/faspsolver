@@ -53,8 +53,9 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
                            const SHORT print_level)
 {
     INT    iter=0, m=A->row, i;
-    REAL   absres0=BIGREAL, absres, relres=BIGREAL, factor;
-    REAL   alpha, normb=BIGREAL;
+    REAL   absres0 = BIGREAL, absres = BIGREAL;
+    REAL   relres  = BIGREAL, normb  = BIGREAL;
+    REAL   alpha, factor;
     
     // allocate temp memory 
     REAL *work = (REAL *)fasp_mem_calloc(2*m+MaxIt+MaxIt*m,sizeof(REAL));    

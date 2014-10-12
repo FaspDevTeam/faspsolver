@@ -102,9 +102,11 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
-    REAL         alpha, beta, omega, temp1, temp2;
-    REAL         relres, normr0, reldiff;
-    REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
+    REAL         absres0 = BIGREAL, absres = BIGREAL, relres = BIGREAL;
+    REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, infnormu;
+    REAL         alpha, beta, omega, temp1, temp2, tempr;
+
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)
@@ -441,9 +443,11 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
-    REAL         alpha, beta, omega, temp1, temp2;
-    REAL         relres, normr0, reldiff;
-    REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
+    REAL         absres0 = BIGREAL, absres = BIGREAL, relres = BIGREAL;
+    REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, infnormu;
+    REAL         alpha, beta, omega, temp1, temp2, tempr;
+    
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)
@@ -780,9 +784,11 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
-    REAL         alpha, beta, omega, temp1, temp2;
-    REAL         relres, normr0, reldiff;
-    REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
+    REAL         absres0 = BIGREAL, absres = BIGREAL, relres = BIGREAL;
+    REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, infnormu;
+    REAL         alpha, beta, omega, temp1, temp2, tempr;
+    
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)
@@ -1119,9 +1125,11 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
-    REAL         alpha, beta, omega, temp1, temp2;
-    REAL         relres, normr0, reldiff;
-    REAL         factor, absres, absres0, normd, normu, tempr, infnormu;
+    REAL         absres0 = BIGREAL, absres = BIGREAL, relres = BIGREAL;
+    REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, infnormu;
+    REAL         alpha, beta, omega, temp1, temp2, tempr;
+    
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)

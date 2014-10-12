@@ -17,7 +17,7 @@
 # In order to get debug output during run-time, you can uncomment the 
 # following line (to include "-DDEBUG_MODE -Wall -g"): 
 # 
- debug=all
+# debug=all
 #
 # The default setting for vebosity level for FASP is verbose=no. If you
 # want to increase verbosity level, uncomment the next line:
@@ -75,7 +75,6 @@
 # If you want to use MUMPS, uncomment the next line:
 #
 # mumps=yes
-# mumps_dir="/Users/zhangcs/Packages/MUMPS_4.10.0"
 #
 # If you want to specify the path to MUMPS, uncomment the next line
 # and give the correct path to MUMPS here. For example:

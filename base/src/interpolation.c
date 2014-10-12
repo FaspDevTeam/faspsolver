@@ -301,7 +301,7 @@ static void interp_DIR (dCSRmat *A,
     
     // a_minus and a_plus for Neighbors and Prolongation support
     REAL       amN, amP, apN, apP;
-    REAL       alpha, beta, aii;
+    REAL       alpha, beta, aii = 0;
 
     // indices of C-nodes
     INT      * cindex = (INT *)fasp_mem_calloc(row, sizeof(INT));

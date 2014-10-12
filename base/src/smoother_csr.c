@@ -638,7 +638,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
     
     // local variables
     INT   i,j,k,begin_row,end_row;
-    REAL  t,d;
+    REAL  t,d=0;
     
 #ifdef _OPENMP
     // variables for OpenMP
@@ -757,7 +757,7 @@ void fasp_smoother_dcsr_sor (dvector *u,
     
     // local variables
     INT    i,j,k,begin_row,end_row;
-    REAL   t, d;
+    REAL   t, d=0;
     
 #ifdef _OPENMP
     // variables for OpenMP
@@ -1988,7 +1988,7 @@ static void swep2df (INT *ia,
 {
     INT j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
-    REAL t,d;
+    REAL t,d=0;
     
 #ifdef _OPENMP
 #pragma omp parallel for private(j,j0,i,i0,t,begin_row,end_row,ii,jj,d)
@@ -2053,11 +2053,10 @@ static void swep3df (INT *ia,
                      INT ny,
                      INT nz)
 {
-    INT nxy,k,k0,j,j0,i,i0;
+    INT nxy=nx*ny,k,k0,j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
-    REAL t,d;
-    nxy=nx*ny;
-    
+    REAL t,d=0;
+        
 #ifdef _OPENMP
 #pragma omp parallel for private(k,k0,j,j0,i,i0,t,begin_row,end_row,ii,jj,d)
 #endif

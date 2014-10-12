@@ -186,11 +186,13 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     REAL solver_start, solver_end, solver_duration;
     
     const INT max_levels = amgparam->max_levels;
-    INT m, n, nnz;
+    INT m, n, nnz, i;
     
     AMG_data **mgl = NULL;
+    
+#if WITH_UMFPACK
     void **LU_diag = (void **)fasp_mem_calloc(3, sizeof(void *));
-    INT i;
+#endif
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -319,12 +321,11 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     /* diagonal blocks are solved exactly */
     if ( precond_type > 20 && precond_type < 30 ) {
 #if WITH_UMFPACK
-    for (i=0; i<3; i++) fasp_umfpack_free_numeric(LU_diag[i]);
+        for (i=0; i<3; i++) fasp_umfpack_free_numeric(LU_diag[i]);
 #endif
     }
     /* diagonal blocks are solved by AMG */
     else if ( precond_type > 30 && precond_type < 40 ) {
-        
         for (i=0; i<3; i++) fasp_amg_data_free(mgl[i], amgparam);
         if (mgl) fasp_mem_free(mgl);
     }
@@ -372,9 +373,11 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     REAL setup_start, setup_end, setup_duration;
     REAL solver_start, solver_end, solver_duration;
 
+#if WITH_UMFPACK
     void **LU_diag = (void **)fasp_mem_calloc(4, sizeof(void *));
     INT i;
-    
+#endif
+
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif

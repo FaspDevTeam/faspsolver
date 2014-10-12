@@ -75,7 +75,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
-    REAL   absres0, absres, relres, normu;
+    REAL   absres0 = BIGREAL, absres = BIGREAL;
+    REAL   relres  = BIGREAL, normu  = BIGREAL;
     
     REAL   cr           = 1.0;     // convergence rate
     REAL   r_norm_old   = 0.0;     // save the residual norm of the previous restart cycle
@@ -408,7 +409,8 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
-    REAL   absres0, absres, relres, normu;
+    REAL   absres0 = BIGREAL, absres = BIGREAL;
+    REAL   relres  = BIGREAL, normu  = BIGREAL;
     
     REAL   cr           = 1.0;     // convergence rate
     REAL   r_norm_old   = 0.0;     // save the residual norm of the previous restart cycle
@@ -744,7 +746,8 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
-    REAL   absres0, absres, relres, normu;
+    REAL   absres0 = BIGREAL, absres = BIGREAL;
+    REAL   relres  = BIGREAL, normu  = BIGREAL;
     
     REAL   cr           = 1.0;     // convergence rate
     REAL   r_norm_old   = 0.0;     // save the residual norm of the previous restart cycle
@@ -1080,7 +1083,8 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
-    REAL   absres0, absres, relres, normu;
+    REAL   absres0 = BIGREAL, absres = BIGREAL;
+    REAL   relres  = BIGREAL, normu  = BIGREAL;
     
     REAL   cr           = 1.0;     // convergence rate
     REAL   r_norm_old   = 0.0;     // save the residual norm of the previous restart cycle

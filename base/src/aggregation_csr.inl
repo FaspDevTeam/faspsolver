@@ -169,6 +169,10 @@ static void form_pairwise (const dCSRmat * A,
     INT i, j, row_start, row_end;
     REAL sum;
 
+    INT  col, index;
+    REAL mu, min_mu, aii, ajj, aij;
+    REAL temp1, temp2, temp3, temp4;
+
     /*---------------------------------------------------------*/
     /* Step 1. select extremely strong diagonal dominate rows  */ 
 	/*        and store in G0.                                 */
@@ -215,14 +219,8 @@ static void form_pairwise (const dCSRmat * A,
     /*-----------------------------------------*/
     /* Step 3. start the pairwise aggregation  */
     /*-----------------------------------------*/
-    INT  col,index;
-    REAL mu, min_mu, aii, ajj, aij;
-    REAL temp1, temp2, temp3, temp4;
-    
     *num_aggregations = 0;
     
-    //fasp_ivec_write("out/vertices", vertices);
-
     for ( i = 0; i < row; i++ ) {
 
         if ( vertices->val[i] != UNPT ) continue;
@@ -246,7 +244,7 @@ static void form_pairwise (const dCSRmat * A,
             temp2 = 1.0/temp1+1.0/temp2;
  
 			temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero		
-			temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);	// avoid temp4 to be zero
+			temp4 = MAX(ABS(ajj-s[col]), SMALLREAL); // avoid temp4 to be zero
             temp4 = -aij+1./(1.0/temp3+1.0/temp4); 
             
             mu    = (-aij+1.0/temp2) / temp4;
@@ -259,7 +257,7 @@ static void form_pairwise (const dCSRmat * A,
 
         *num_aggregations += 1;
         
-        if ( min_mu <= k_tg ) {
+        if ( min_mu <= k_tg ) { // TODO: Something wrong! index could be empty!
             vertices->val[i]     = *num_aggregations - 1;
             vertices->val[index] = *num_aggregations - 1;
         }
@@ -463,7 +461,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
     const INT  pair_number = param->pair_number;
     dCSRmat  * ptrA = &mgl[level].A;
     
-    INT        i, j, k, num_agg, aggindex;
+    INT        i, j, k, num_agg = 0, aggindex;
     INT        lvl = level;
     REAL       isorate;
 
@@ -520,9 +518,9 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
 		}
 	}
     
-    /*-- clean memory --*/
     *num_aggregations = num_agg;
 
+    /*-- clean memory --*/
     for ( i = 1; i < dopass; ++i ) {
         fasp_dcsr_free(&mgl[level+i].A);
         fasp_ivec_free(&vertice[level+i]);
@@ -573,7 +571,7 @@ static SHORT aggregation_vmb (dCSRmat *A,
     // local variables
 	INT    num_left = row;
     INT    subset, count;
-    INT  * num_each_aggregation;
+    INT  * num_each_agg;
     
     REAL   strongly_coupled, strongly_coupled2; 
     INT    i, j, index, row_start, row_end;
@@ -675,26 +673,29 @@ static SHORT aggregation_vmb (dCSRmat *A,
     /*   Step 2.   */
     /*-------------*/
     INT *temp_C = (INT*)fasp_mem_calloc(row,sizeof(INT));
-
-    if (*num_aggregations < MIN_CDOF) {
+ 
+    if ( *num_aggregations < MIN_CDOF ) {
         status = ERROR_AMG_COARSEING; goto END;
     }
     
-    num_each_aggregation = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
-   
+    num_each_agg = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
+    
+    //for ( i = 0; i < *num_aggregations; i++ ) num_each_agg[i] = 0; // initialize
+    
     for ( i = row; i--; ) {
         temp_C[i] = vertices->val[i];  
-        if ( vertices->val[i] >= 0 ) num_each_aggregation[vertices->val[i]] ++;
+        if ( vertices->val[i] >= 0 ) num_each_agg[vertices->val[i]] ++;
     }
     
     for ( i = 0; i < row; ++i ) {
         if ( vertices->val[i] < UNPT ) {
             row_start = NIA[i]; row_end = NIA[i+1];
             for ( j = row_start; j < row_end; ++j ) {
-                if (temp_C[NJA[j]] > UNPT && num_each_aggregation[temp_C[NJA[j]]] < max_aggregation ) {
+                if ( temp_C[NJA[j]] > UNPT
+                     && num_each_agg[temp_C[NJA[j]]] < max_aggregation ) {
                     vertices->val[i] = temp_C[NJA[j]];
                     num_left--;
-                    num_each_aggregation[temp_C[NJA[j]]] ++ ;
+                    num_each_agg[temp_C[NJA[j]]] ++ ;
                     break;
                 }
             }
@@ -724,9 +725,10 @@ static SHORT aggregation_vmb (dCSRmat *A,
         }
     }
 
-END:;
+    fasp_mem_free(num_each_agg);
+
+END:
     fasp_mem_free(temp_C);
-    fasp_mem_free(num_each_aggregation);
 
     return status;
 }

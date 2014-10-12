@@ -102,11 +102,12 @@ INT fasp_solver_pminres (mxv_matfree *mf,
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
 
     // local variables
-    INT          iter=0, stag, more_step, restart_step;
-    REAL         absres0, absres, relres, factor;
-    REAL         alpha, alpha0, alpha1, temp2; 
-    REAL         normr0, normu2, normuu, normp, infnormu;
-    
+    INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
+    REAL         absres0 = BIGREAL, absres = BIGREAL;
+    REAL         normr0  = BIGREAL, relres  = BIGREAL;
+    REAL         normu2, normuu, normp, infnormu, factor;
+    REAL         alpha, alpha0, alpha1, temp2;
+
     // allocate temp memory (need 11*m REAL)
     REAL *work=(REAL *)fasp_mem_calloc(11*m,sizeof(REAL));    
     REAL *p0=work, *p1=work+m, *p2=p1+m, *z0=p2+m, *z1=z0+m;

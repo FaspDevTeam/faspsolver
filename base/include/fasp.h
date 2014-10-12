@@ -456,7 +456,6 @@ typedef struct {
 
 } Schwarz_param; /**< Parameters for ILU */	
 
-
 /**
  * \struct Mumps_data
  * \brief Parameters for MUMPS interface
@@ -473,7 +472,8 @@ typedef struct {
     //! work for MUMPS  
 	INT job;
 
-} Mumps_data; /**< Parameters for MUMPS */	
+} Mumps_data; /**< Parameters for MUMPS */
+
 /** 
  * \struct Schwarz_data
  * \brief Data for Schwarz methods
