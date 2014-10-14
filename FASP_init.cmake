@@ -11,9 +11,13 @@ set(OPENMP 0 BOOL "Openmp use")
 
 # Search for C compilers in the specified order. That will determine
 # the rest.
+if(DEFINED ENV{CC}) 
 	find_program(THE_C NAMES CC gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
+else(DEFINED ENV{CC}) 
+	find_program(THE_C NAMES gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
+endif(DEFINED ENV{CC}) 
 #
-	if( ${THE_C} MATCHES "gcc.*" )
+	if(${THE_C} MATCHES "gcc.*" )
 		string(REPLACE "gcc" "g++" C_XX ${THE_C} )
 		string(REPLACE "gcc" "gfortran" F_C ${THE_C} )
 
@@ -44,6 +48,6 @@ set(OPENMP 0 BOOL "Openmp use")
 	     	 set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C   compiler" FORCE) 
 	    	 set(CMAKE_CXX_COMPILER ${THE_CXX} CACHE INTERNAL   "the C++ compiler" FORCE)
              set(CMAKE_Fortran_COMPILER ${THE_F} CACHE INTERNAL    "the F compiler" FORCE)
-	     endif( THE_F AND THE_CXX ) 
+	     endif( THE_F AND THE_CXX )
 	endif( THE_C AND C_XX AND F_C )
 # END COMPILERS SET UP................ 
