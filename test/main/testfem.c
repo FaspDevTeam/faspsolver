@@ -100,10 +100,18 @@ int main (int argc, const char * argv[])
         // Read input parameters from a disk file
         fasp_param_input_init(&inparam);
         fasp_param_init(&inparam,&itparam,&amgparam,&iluparam,&swzparam);
+	
+	inparam.solver_type = SOLVER_AMG;
+
+	//inparam.precond_type	= PREC_AMG;
+	amgparam.coarsening_type= COARSE_MIS;
+	amgparam.interpolation_type = INTERP_DIR;
+	amgparam.maxit = 20;
         
         const int print_level   = inparam.print_level;
         const int solver_type   = inparam.solver_type;
         const int precond_type  = inparam.precond_type;
+
 
         // Set initial guess
         fasp_dvec_alloc(A.row, &x);
