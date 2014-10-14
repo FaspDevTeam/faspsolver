@@ -1,8 +1,8 @@
      560 ./base/include/dlmalloc.h
      172 ./base/include/doxygen.h
-    1190 ./base/include/fasp.h
+    1177 ./base/include/fasp.h
      681 ./base/include/fasp_block.h
-     233 ./base/include/fasp_const.h
+     247 ./base/include/fasp_const.h
     2884 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
@@ -29,7 +29,7 @@
      320 ./base/src/blas_vec.c
      335 ./base/src/checkmat.c
      417 ./base/src/coarsening_cr.c
-    1946 ./base/src/coarsening_rs.c
+    2057 ./base/src/coarsening_rs.c
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
      106 ./base/src/famg.c
@@ -56,7 +56,7 @@
      289 ./base/src/message.c
      595 ./base/src/mgcycle.c
      143 ./base/src/mgrecur.c
-     555 ./base/src/ordering.c
+     556 ./base/src/ordering.c
      982 ./base/src/parameters.c
     1428 ./base/src/pbcgs.c
      410 ./base/src/pbcgs_mf.c
@@ -102,9 +102,9 @@
      464 ./base/src/vec.c
      300 ./base/src/wrapper.c
      394 ./base/src/aggregation_bsr.inl
-     738 ./base/src/aggregation_csr.inl
+     736 ./base/src/aggregation_csr.inl
     2302 ./base/src/gmg_util.inl
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      239 ./base/src/mg_util.inl
-   89907 total
+   90018 total

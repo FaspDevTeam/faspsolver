@@ -1,7 +1,8 @@
 File Name: CHANGES
 
-10/12/2014 FASP 1.6.2:
+10/14/2014 FASP 1.6.2:
 - Modify CMAKE compiler preference: use CC environment first.
+- Add aggressive coarsening based on MIS.
 
 10/12/2014 FASP 1.6.1:
 - Fix MUMPS link problem due to system directory and pthread in Ubuntu.
