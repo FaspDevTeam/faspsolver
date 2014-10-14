@@ -18,10 +18,12 @@
 static INT  cfsplitting_cls    (dCSRmat *, iCSRmat *, ivector *);
 static INT  cfsplitting_clsp   (dCSRmat *, iCSRmat *, ivector *);
 static INT  cfsplitting_agg    (dCSRmat *, iCSRmat *, ivector *, INT);
+static INT  cfsplitting_mis    (iCSRmat *, ivector *, ivector *);
 static INT  clean_ff_couplings (iCSRmat *, ivector *, INT, INT);
 static void strong_couplings   (dCSRmat *, iCSRmat *, AMG_param *);
 static void form_P_pattern_dir (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 static void form_P_pattern_std (dCSRmat *, iCSRmat *, ivector *, INT, INT);
+static void ordering1  (iCSRmat *, ivector *);
 
 #include "linklist.inl"
 
@@ -66,6 +68,8 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
     // local variables
     SHORT       interp_type = param->interpolation_type;
     INT         col         = 0;
+
+    ivector	order;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -96,6 +100,13 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
             
         case COARSE_CR: // Compatible relaxation (Need to be modified --Chensong)
             col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param); break;
+
+	case COARSE_MIS:
+	    order = fasp_ivec_create(row);
+	    ordering1(S, &order);
+	    col = cfsplitting_mis(S, vertices, &order);
+	    fasp_ivec_free(&order); 
+	    break;
             
         default:
             fasp_chkerr(ERROR_AMG_COARSE_TYPE, __FUNCTION__);
@@ -1605,6 +1616,7 @@ static INT cfsplitting_cls (dCSRmat *A,
             
             return col;
         }
+
         
         /**
          * \fn static INT clean_ff_couplings (iCSRmat *S, ivector *vertices,
@@ -1941,6 +1953,105 @@ static INT cfsplitting_cls (dCSRmat *A,
             
         }
         
+        /**
+         * \fn static INT cfsplitting_mis (iCSRmat *S, ivector *vertices, ivector *order)
+         *
+         * \brief Find coarse level variables (C/F splitting): MIS
+         *
+         * \param S                Strong connection matrix
+         * \param vertices         Indicator vector for the C/F splitting of the variables
+         * \param order 	   order of vertices 
+         *
+         * \return Number of cols of P
+         *
+         * \author Hongxuan Zhang
+         * \date   10/12/2014
+         *
+         */
+
+	static INT cfsplitting_mis (iCSRmat *S,
+			   	    ivector *vertices,
+				    ivector *order)
+	{
+	    const INT n = S->row;
+
+	    INT  col = 0;
+	    INT *ord = order->val;
+	    INT *vec = vertices->val;
+	    INT *IS = S->IA;
+	    INT *JS = S->JA;
+
+	    INT i, j, ind;
+	    INT row_begin, row_end;
+	    
+	    fasp_ivec_set (UNPT, vertices);
+
+	    for (i=0; i<n ; i++)
+	    {
+		ind = ord[i];
+		if (vec[ind] == UNPT) {
+		    vec[ind] = CGPT;
+		    row_begin = IS[ind]; row_end = IS[ind+1];
+		    for (j = row_begin; j<row_end; j++) 
+		    {
+			if (vec[JS[j]] == CGPT ) {
+			    vec[ind] = FGPT;
+			    break;
+			}
+		    }
+		    if (vec[ind] == CGPT) {
+			col++;
+			for (j = row_begin; j<row_end; j++)
+			{
+			    vec[JS[j]] = FGPT;
+			}
+		    }
+		}
+	    }
+	    return col;
+	}
+
+        /**
+         * \fn static void ordering1 (iCSRmat *S, ivector *order)
+         *
+         * \brief reorder the vertices of A base on their degrees. The vertex with 
+	 * highest degree will appear first. Other vertices will use nature order.
+         *
+         * \param S                Strong connection matrix
+         * \param order 	   order of vertices (output)
+         *
+         * \author Hongxuan Zhang
+         * \date   10/12/2014
+         *
+         */
+	static void ordering1(iCSRmat *S, ivector *order)
+	{
+	    const INT n = order->row;
+	    INT * IS = S->IA;
+	    INT * ord = order->val;
+	    INT maxind, maxdeg, degree;
+	    
+	    INT i;
+	    for (i = 0; i < n; i++)
+	    {
+		ord[i] = i;
+	    }
+	    maxdeg=0;
+	    for (i = 0; i < n; i++)
+	    {
+		degree = IS[i+1] - IS[i];
+		if (degree > maxdeg)
+		{
+		    maxind = i;
+		    maxdeg = degree;
+		}
+	    }
+	    ord[0] = maxind;
+	    ord[maxind] = 0;
+	    return;
+	}
+
+
         /*---------------------------------*/
         /*--        End of File          --*/
         /*---------------------------------*/

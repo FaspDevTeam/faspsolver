@@ -207,6 +207,7 @@
 #define COARSE_RS               1  /**< Classical coarsening */
 #define COARSE_CR               3  /**< Compatible relaxation */
 #define COARSE_AC               4  /**< Aggressive coarsening */
+#define COARSE_MIS		5  /**< Aggressive coarsening based on MIS */
 
 /**
  * \brief Definition of interpolation types
