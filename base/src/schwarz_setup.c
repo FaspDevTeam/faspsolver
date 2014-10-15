@@ -146,6 +146,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     // data for schwarz method
     INT nblk;
     INT *iblock = NULL, *jblock = NULL, *mask = NULL, *maxa = NULL;
+    dCSRmat *blk = NULL;
     
     // return
     INT flag = 0;
@@ -217,6 +218,8 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     
     fasp_schwarz_get_block_matrix(schwarz, nblk, iblock, jblock, mask);
     
+	blk = schwarz->blk_data;
+
     // Setup for each block solver
     switch (block_solver) {
             
