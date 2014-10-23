@@ -103,6 +103,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 
 	case COARSE_MIS:
 	    order = fasp_ivec_create(row);
+	    compress_S(S);
 	    ordering1(S, &order);
 	    col = cfsplitting_mis(S, vertices, &order);
 	    fasp_ivec_free(&order); 
