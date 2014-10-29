@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-10/14/2014 FASP 1.6.2:
+10/28/2014 FASP 1.6.2:
 - Modify CMAKE compiler preference: use CC environment first.
 - Add aggressive coarsening based on MIS.
 

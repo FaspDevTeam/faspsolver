@@ -64,8 +64,8 @@ AMG
 [       ] seperate diagonal-entries from rest of CSR matrics
 
 [ 0.8.5 ] non-overlapping/overlapping Schwarz smoother
-[       ] maximal independent set based on a strength matrix (Ludmil)
-[       ] replace Schwarz smoother by a C version (Xiaozhe, Zheng)
+[ 1.6.1 ] replace Schwarz smoother by a C version
+[ 1.6.2 ] maximal independent set based on a strength matrix
 [       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
 [       ] Tarjan algorithm and other orderings (Xiaozhe and Ludmil)
 [       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
