@@ -29,7 +29,7 @@
      320 ./base/src/blas_vec.c
      335 ./base/src/checkmat.c
      417 ./base/src/coarsening_cr.c
-    2057 ./base/src/coarsening_rs.c
+    2059 ./base/src/coarsening_rs.c
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
      106 ./base/src/famg.c
@@ -78,7 +78,7 @@
      339 ./base/src/pvgmres_mf.c
      874 ./base/src/quadrature.c
      116 ./base/src/rap.c
-     748 ./base/src/schwarz_setup.c
+     751 ./base/src/schwarz_setup.c
      698 ./base/src/smat.c
     1608 ./base/src/smoother_bsr.c
     2315 ./base/src/smoother_csr.c
@@ -107,4 +107,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      239 ./base/src/mg_util.inl
-   90018 total
+   90023 total
