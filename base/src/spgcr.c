@@ -12,8 +12,8 @@
 /**
  *	\fn int fasp_solver_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *u, \
  *	                               precond *pc, const REAL tol, const INT MaxIt, \
- *	                               const INT restart, const INT print_level, \
- *	                               const INT stop_type)
+ *	                               const INT restart, const INT stop_type, \
+ *	                               const INT print_level)
  *
  *	\brief A preconditioned GCR method for solving Au=b 
  *
@@ -38,8 +38,8 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
                            const REAL tol,
                            const INT MaxIt, 
                            const INT restart,
-                           const INT print_level, 
-                           const INT stop_type) 
+                           const INT stop_type, 
+                           const INT print_level) 
 {
 	INT i, j, j1, index;
     INT iter = 0;
