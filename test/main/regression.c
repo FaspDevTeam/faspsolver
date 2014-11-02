@@ -552,6 +552,22 @@ int main (int argc, const char * argv[])
             
             check_solu(&x, &sol, tolerance);
         }
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using classical AMG as preconditioner for GCG */
+            printf("------------------------------------------------------------------\n");
+            printf("AMG preconditioned GCR solver ...\n");	
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.itsolver_type = SOLVER_GCR;
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-10;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
         
 #if FASP_USE_ILU
         if ( indp==1 || indp==2 || indp==3 ) {

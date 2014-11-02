@@ -704,6 +704,212 @@ static void interp_STD (dCSRmat *A,
 }
 
 /**
+ * \fn static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, 
+ *                             iCSRmat *S, AMG_param *param)
+ *
+ * \brief Standard interpolation
+ *
+ * \param A          Pointer to dCSRmat: the coefficient matrix (index starts from 0)
+ * \param vertices   Indicator vector for the C/F splitting of the variables
+ * \param P          Interpolation matrix (input: nnz pattern, output: prolongation)
+ * \param S          Strong connection matrix
+ * \param param      Pointer to AMG_param: AMG parameters
+ *
+ * \author Kai Yang, Xiaozhe Hu
+ * \date   05/21/2012
+ *
+ * Modified by Chunsheng Feng, Zheng Li on 10/17/2012: add OMP support
+ * Modified by Chensong Zhang on 05/15/2013: reconstruct the code
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: cfsplitting of RS coarsening check C1 Criterion
+ */
+static void interp_EXT (dCSRmat *A,
+                        ivector *vertices,
+                        dCSRmat *P,
+                        iCSRmat *S,
+                        AMG_param *param)
+{
+    const INT   row    = A->row;
+    INT        *vec    = vertices->val;
+    
+    // local variables
+    INT    i, j, k, l, m, index;
+    REAL   alpha, factor, alN, alP;
+    REAL   akk, akl, aik, aki;
+    
+    // indices for coarse neighbor node for every node
+    INT  * cindex = (INT *)fasp_mem_calloc(row, sizeof(INT));
+    
+    // indices from column number to index in nonzeros in i-th row
+    INT  * rindi  = (INT *)fasp_mem_calloc(2*row, sizeof(INT));
+    
+    // indices from column number to index in nonzeros in k-th row
+    INT  * rindk  = (INT *)fasp_mem_calloc(2*row, sizeof(INT));
+    
+    // sums of strongly connected C neighbors
+    REAL * csum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+
+#if RS_C1
+    // sums of all neighbors except ISPT
+    REAL * psum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+#endif    
+    // sums of all neighbors
+    REAL * nsum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+    
+    // diagonal entries
+    REAL * diag   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+    
+    // coefficents hat a_ij for relevant CGPT of the i-th node
+    REAL * Ahat   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
+    
+    // Step 0. Prepare diagonal, Cs-sum, and N-sum
+    fasp_iarray_set(row, cindex, -1);
+    fasp_array_set(row, csum, 0.0);
+    fasp_array_set(row, nsum, 0.0);
+    
+    for ( i = 0; i < row; i++ ) {
+        
+        // set flags for strong-connected C nodes
+        for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
+            k = S->JA[j];
+            if ( vec[k] == CGPT ) cindex[k] = i;
+        }
+        
+        for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
+            k = A->JA[j];
+            
+            if ( cindex[k] == i ) csum[i] += A->val[j]; // strong C-couplings
+            
+            if ( k == i ) diag[i]  = A->val[j];
+#if RS_C1
+            else {
+                nsum[i] += A->val[j];
+                if ( vec[k] != ISPT ) {
+                    psum[i] += A->val[j];
+                }
+            }
+#else
+            else          nsum[i] += A->val[j];
+#endif
+        }
+        
+    }
+    
+    // Step 1. Fill in values for interpolation operator P
+    for ( i = 0; i < row; i++ ) {
+        
+        if ( vec[i] == FGPT ) {
+#if RS_C1            
+            alN = psum[i];
+#else
+            alN = nsum[i];
+#endif
+            alP = csum[i];
+            
+            // form the reverse indices for i-th row
+            for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) rindi[A->JA[j]] = j;
+            
+            // clean up Ahat for relevent nodes only
+            for ( j = P->IA[i]; j < P->IA[i+1]; j++ ) Ahat[P->JA[j]] = 0.0;
+            
+            // set values of Ahat
+            Ahat[i] = diag[i];
+            
+            for ( j = S->IA[i]; j < S->IA[i+1]; j++ ) {
+                
+                k = S->JA[j]; aik = A->val[rindi[k]];
+                
+                if ( vec[k] == CGPT ) Ahat[k] += aik;
+                
+                else if ( vec[k] == FGPT ) {
+                    
+                    akk = diag[k];
+                    
+                    // form the reverse indices for k-th row
+                    for ( m = A->IA[k]; m < A->IA[k+1]; m++ ) rindk[A->JA[m]] = m;
+                    
+                    factor = aik / akk;
+                    
+                    // visit the strong-connected C neighbors of k, compute
+                    // Ahat in the i-th row, set aki if found
+                    aki = 0.0;
+#if 0               // modified by Xiaoqiang Yue 12/25/2013
+                    for ( m = S->IA[k]; m < S->IA[k+1]; m++ ) {
+                        l   = S->JA[m];
+                        akl = A->val[rindk[l]];
+                        if ( vec[l] == CGPT ) Ahat[l] -= factor * akl;
+                        else if ( l == i ) {
+                            aki = akl; Ahat[l] -= factor * aki;
+                        }
+                    } // end for m
+#else
+                    for ( m = A->IA[k]; m < A->IA[k+1]; m++ ) {
+                        if ( A->JA[m] == i ) {
+                            aki = A->val[m];
+                            Ahat[i] -= factor * aki;
+                        }
+                    } // end for m
+#endif
+                    for ( m = S->IA[k]; m < S->IA[k+1]; m++ ) {
+                        l   = S->JA[m];
+                        akl = A->val[rindk[l]];
+                        if ( vec[l] == CGPT ) Ahat[l] -= factor * akl;
+                    } // end for m
+                    
+                    // compute Cs-sum and N-sum for Ahat
+                    alN -= factor * (nsum[k]-aki+akk);
+                    alP -= factor *  csum[k];
+                    
+                } // end if vec[k]
+                
+            } // end for j
+            
+            // How about positive entries? --Chensong
+            alpha = alN/alP;
+            for ( j = P->IA[i]; j < P->IA[i+1]; j++ ) {
+                k = P->JA[j];
+                P->val[j] = -alpha*Ahat[k]/Ahat[i];
+            }
+            
+        }
+        
+        else if ( vec[i] == CGPT ) {
+            P->val[P->IA[i]] = 1.0;
+        }
+        
+    } // end for i
+    
+    // Step 2. Generate coarse level indices and set values of P.JA
+    for ( index = i = 0; i < row; ++i ) {
+        if ( vec[i] == CGPT ) cindex[i] = index++;
+    }
+    P->col = index;
+    
+#ifdef _OPENMP
+#pragma omp parallel for private(i,j) if(P->IA[P->row]>OPENMP_HOLDS)
+#endif
+    for ( i = 0; i < P->IA[P->row]; ++i ) {
+        j = P->JA[i];
+        P->JA[i] = cindex[j];
+    }
+    
+    // clean up
+    fasp_mem_free(cindex);
+    fasp_mem_free(rindi);
+    fasp_mem_free(rindk);
+    fasp_mem_free(nsum);
+
+#if RS_C1
+    fasp_mem_free(psum);
+#endif
+
+    fasp_mem_free(csum);
+    fasp_mem_free(diag);
+    fasp_mem_free(Ahat);
+    
+    // Step 3. Truncate the prolongation operator to reduce cost
+    fasp_amg_interp_trunc(P, param);
+}
+/**
  * \fn static void get_nwidth (dCSRmat *A, INT *nbl_ptr, INT *nbr_ptr)
  *
  * \brief Get the bandwidth of the matrix

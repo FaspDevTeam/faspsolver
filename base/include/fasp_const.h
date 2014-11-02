@@ -120,6 +120,7 @@
 #define SOLVER_VGMRES           5  /**< Variable Restarting GMRES */
 #define SOLVER_VFGMRES          6  /**< Variable Restarting Flexible GMRES */
 #define SOLVER_GCG              7  /**< Generalized Conjugate Gradient */
+#define SOLVER_GCR              8  /**< Generalized Conjugate Residual */
 //---------------------------------------------------------------------------------
 #define SOLVER_SCG             11  /**< Conjugate Gradient with safe net */
 #define SOLVER_SBiCGstab       12  /**< BiCGstab with safe net */

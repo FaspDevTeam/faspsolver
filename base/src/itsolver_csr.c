@@ -99,6 +99,11 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
             if (print_level>PRINT_NONE) printf("\nCalling PGCG solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
             break;
+
+        case SOLVER_GCR:
+            if (print_level>PRINT_NONE) printf("\nCalling PGCR solver (CSR) ...\n");
+            iter = fasp_solver_dcsr_pgcr(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            break;
             
         default:
             printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);

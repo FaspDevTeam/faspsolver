@@ -2592,6 +2592,19 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
                            const SHORT print_level);
 
 
+/*-------- In file: pgcr.c --------*/
+
+INT fasp_solver_dcsr_pgcr (dCSRmat *A, 
+                           dvector *b, 
+                           dvector *u, 
+                           precond *pc, 
+                           const REAL tol,
+                           const INT MaxIt, 
+                           const INT restart,
+                           const INT print_level, 
+                           const INT stop_type) ;
+
+
 /*-------- In file: spgmres.c --------*/
 
 INT fasp_solver_dcsr_spgmres (dCSRmat *A,
