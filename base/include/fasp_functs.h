@@ -2601,8 +2601,8 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
                            const REAL tol,
                            const INT MaxIt, 
                            const INT restart,
-                           const INT print_level, 
-                           const INT stop_type) ;
+                           const INT stop_type, 
+                           const INT print_level) ;
 
 
 /*-------- In file: spgmres.c --------*/
