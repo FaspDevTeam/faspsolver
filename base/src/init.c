@@ -149,16 +149,15 @@ void fasp_schwarz_data_free (Schwarz_data *schwarz)
 	schwarz->nblk = 0;
 	fasp_mem_free (schwarz->iblock);
 	fasp_mem_free (schwarz->jblock);
-	fasp_mem_free (schwarz->rhsloc);
+	//fasp_mem_free (schwarz->rhsloc);
 	fasp_dvec_free (&schwarz->rhsloc1);
 	fasp_dvec_free (&schwarz->xloc1);
-	fasp_mem_free (schwarz->au);
-	fasp_mem_free (schwarz->al);
+	//fasp_mem_free (schwarz->au);
+	//fasp_mem_free (schwarz->al);
 	
 	schwarz->memt = 0;
 	fasp_mem_free (schwarz->mask);
 	fasp_mem_free (schwarz->maxa);
-
 
 #if WITH_MUMPS
 	if (schwarz->mumps == NULL) return;

@@ -353,6 +353,8 @@ void fasp_precond_ilu_backward (REAL *r,
  *
  * \author Xiaozhe Hu
  * \date 03/22/2010
+ *
+ * \change schwarz interface by Zheng Li on 11/18/2014
  */
 void fasp_precond_schwarz(REAL *r, 
                           REAL *z, 
@@ -364,6 +366,7 @@ void fasp_precond_schwarz(REAL *r,
 	INT *ia = schwarz_data->A.IA;
 	INT *ja = schwarz_data->A.JA;
 	REAL *a = schwarz_data->A.val;
+    Schwarz_param *swzparam = schwarz_data->swzparam;
 	
 	INT nblk = schwarz_data->nblk;
 	INT *iblock = schwarz_data->iblock;
@@ -378,21 +381,33 @@ void fasp_precond_schwarz(REAL *r,
 	INT *mask = schwarz_data->mask;
 	INT *maxa = schwarz_data->maxa;
 	
-	fasp_array_set(n, z, 0.0);
-	
+    dvector x, b;
+
+    fasp_dvec_alloc(n, &x);
+    fasp_dvec_alloc(n, &b);
+    fasp_array_cp(n, r, b.val);
+
+    fasp_dvec_set(n, &x, 0);
+
 	switch (schwarz_type)
 	{
 		case 2:
-			bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
+			//bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
+			fasp_dcsr_schwarz_backward_smoother(schwarz_data, swzparam, &x, &b);
 			break;
 		case 3:
-			fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
-			bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
+			//fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
+			//bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
+			fasp_dcsr_schwarz_forward_smoother(schwarz_data, swzparam, &x, &b);
+			fasp_dcsr_schwarz_backward_smoother(schwarz_data, swzparam, &x, &b);
 			break;
 		default:
-			fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
+			//fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
+			fasp_dcsr_schwarz_forward_smoother(schwarz_data, swzparam, &x, &b);
 			break;
 	}
+
+    fasp_array_cp(n, x.val, z);
     
 }
 

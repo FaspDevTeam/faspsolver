@@ -136,6 +136,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     
     INT  block_solver = param->schwarz_blksolver;
     INT  maxlev = param->schwarz_maxlvl;
+    schwarz->swzparam = param;
     
     // local variables
     INT i;
@@ -270,6 +271,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     schwarz->iblock = iblock;
     schwarz->jblock = jblock;
     schwarz->mask   = mask;
+    schwarz->maxa   = maxa;
     schwarz->schwarz_type = param->schwarz_type;
     
 #if DEBUG_MODE
