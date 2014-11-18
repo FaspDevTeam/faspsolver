@@ -533,6 +533,9 @@ typedef struct {
 
     //! param for MUMPS
 	Mumps_data *mumps;
+
+    //! param for schwarz
+    Schwarz_param *swzparam;
 	
 } Schwarz_data;
 
