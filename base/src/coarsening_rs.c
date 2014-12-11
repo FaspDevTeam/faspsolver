@@ -102,6 +102,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
         case COARSE_CR: // Compatible relaxation (Need to be modified --Chensong)
             col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param); break;
 
+#if 0
 	case COARSE_MIS:
 	    order = fasp_ivec_create(row);
 	    compress_S(S);
@@ -109,6 +110,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 	    col = cfsplitting_mis(S, vertices, &order);
 	    fasp_ivec_free(&order); 
 	    break;
+#endif
             
         default:
             fasp_chkerr(ERROR_AMG_COARSE_TYPE, __FUNCTION__);
