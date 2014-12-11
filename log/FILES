@@ -1,9 +1,9 @@
      560 ./base/include/dlmalloc.h
      172 ./base/include/doxygen.h
-    1177 ./base/include/fasp.h
+    1180 ./base/include/fasp.h
      681 ./base/include/fasp_block.h
-     247 ./base/include/fasp_const.h
-    2884 ./base/include/fasp_functs.h
+     248 ./base/include/fasp_const.h
+    2897 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
     5818 ./base/include/malloc.c.h
@@ -29,7 +29,7 @@
      320 ./base/src/blas_vec.c
      335 ./base/src/checkmat.c
      417 ./base/src/coarsening_cr.c
-    2059 ./base/src/coarsening_rs.c
+    2061 ./base/src/coarsening_rs.c
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
      106 ./base/src/famg.c
@@ -41,14 +41,14 @@
      422 ./base/src/ilu_setup_bsr.c
      182 ./base/src/ilu_setup_csr.c
     1258 ./base/src/ilu_setup_str.c
-     331 ./base/src/init.c
+     330 ./base/src/init.c
      779 ./base/src/input.c
-    1387 ./base/src/interpolation.c
+    1593 ./base/src/interpolation.c
      842 ./base/src/interpolation_em.c
     3227 ./base/src/io.c
      578 ./base/src/itsolver_bcsr.c
      786 ./base/src/itsolver_bsr.c
-     705 ./base/src/itsolver_csr.c
+     710 ./base/src/itsolver_csr.c
      363 ./base/src/itsolver_mf.c
      395 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
@@ -70,7 +70,7 @@
      459 ./base/src/pminres_mf.c
      663 ./base/src/precond_bcsr.c
      725 ./base/src/precond_bsr.c
-     676 ./base/src/precond_csr.c
+     691 ./base/src/precond_csr.c
     1732 ./base/src/precond_str.c
      973 ./base/src/pvfgmres.c
      338 ./base/src/pvfgmres_mf.c
@@ -78,7 +78,7 @@
      339 ./base/src/pvgmres_mf.c
      874 ./base/src/quadrature.c
      116 ./base/src/rap.c
-     751 ./base/src/schwarz_setup.c
+     753 ./base/src/schwarz_setup.c
      698 ./base/src/smat.c
     1608 ./base/src/smoother_bsr.c
     2315 ./base/src/smoother_csr.c
@@ -94,6 +94,7 @@
      976 ./base/src/sparse_util.c
     1628 ./base/src/spbcgs.c
     1046 ./base/src/spcg.c
+     226 ./base/src/spgcr.c
     1382 ./base/src/spgmres.c
     1421 ./base/src/spminres.c
     1535 ./base/src/spvgmres.c
@@ -107,4 +108,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      239 ./base/src/mg_util.inl
-   90023 total
+   90495 total

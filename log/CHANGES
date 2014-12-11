@@ -1,8 +1,12 @@
 File Name: CHANGES
 
-10/28/2014 FASP 1.6.2:
+12/11/2014 FASP 1.6.2:
 - Modify CMAKE compiler preference: use CC environment first.
 - Add aggressive coarsening based on MIS.
+- Add GCR for CSR sparse matrices.
+- Fix additive Schwarz preconditioner.
+- Fix a bug found in regression tests.
+- Update log.
 
 10/12/2014 FASP 1.6.1:
 - Fix MUMPS link problem due to system directory and pthread in Ubuntu.
