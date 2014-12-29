@@ -153,6 +153,10 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     }
     
     epsilon = tol*den_norm;
+
+	double time, beg, end;
+
+	time = 0.0;
     
     /* outer iteration cycle */
     while (iter < MaxIt) {
@@ -209,12 +213,16 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
             
             i ++;  iter ++;
             
+		    fasp_gettime(&beg);
             /* apply the preconditioner */
             if (pc == NULL)
                 fasp_array_cp(n, p[i-1], z[i-1]);
             else
                 pc->fct(p[i-1], z[i-1], pc->data);
             
+		    fasp_gettime(&end);
+
+			time += end -beg;
             fasp_blas_dcsr_mxv(A, z[i-1], p[i]);
             
             /* modified Gram_Schmidt */
@@ -329,6 +337,9 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     fasp_mem_free(norms);
     fasp_mem_free(z);
     
+	printf("precondition time=%2le\n", time);
+
+
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif

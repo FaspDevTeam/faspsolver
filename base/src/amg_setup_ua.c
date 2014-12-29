@@ -45,7 +45,7 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
 #endif
     
     SHORT status = amg_setup_unsmoothP_unsmoothR(mgl, param);
-    
+
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
@@ -112,6 +112,12 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     const SHORT csolver    = param->coarse_solver;
     const SHORT min_cdof   = MAX(param->coarse_dof,50);
     const INT   m          = mgl[0].A.row;
+
+    // empiric value
+    const REAL  cplxmax    = 3.0;
+    const REAL  xsi        = 0.6;
+    INT   icum = 1.0;	
+    REAL  eta, fracratio;
     
     // local variables
     SHORT         max_levels = param->max_levels, lvl = 0, status = FASP_SUCCESS;
@@ -257,7 +263,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         if ( mgl[lvl].P.col < MIN_CDOF ) break;
         
         // Check 3: Does this coarsening step too aggressive?
-        if ( mgl[lvl].P.row > mgl[lvl].P.col * 10.0 ) {
+        if ( mgl[lvl].P.row > mgl[lvl].P.col * 100.0 ) {
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Coarsening might be too aggressive!\n");
                 printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
@@ -304,6 +310,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
             fasp_dcsr_sort(&Ac_tran);
             fasp_dcsr_cp(&Ac_tran, &mgl[lvl].A);
             fasp_dcsr_free(&Ac_tran);
+            mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].A, 0);
             break;
         }
 #endif
@@ -328,7 +335,27 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         else
             mgl[lvl].w = fasp_dvec_create(2*mm);
     }
-    
+
+    // setup for cycle type of unsmoothed aggregation
+    eta = xsi/((1-xsi)*(cplxmax-1));
+    mgl[0].cycle_type = 1;
+    mgl[max_levels-1].cycle_type = 0;
+#if 0
+    for (lvl = 1; lvl < max_levels-1; ++lvl) {
+        fracratio = (REAL)mgl[lvl].A.row/mgl[0].A.row;
+        mgl[lvl].cycle_type = MIN(2, (INT)(pow((REAL)xsi,(REAL)lvl)/(eta*fracratio*icum)));
+        icum = icum * mgl[lvl].cycle_type;
+    }
+#else
+    for (lvl = 1; lvl < max_levels-1; ++lvl) {
+        fracratio = (REAL)mgl[lvl].A.nnz/mgl[0].A.nnz;
+        mgl[lvl].cycle_type = MIN(2, (INT)(pow((REAL)xsi,(REAL)lvl)/(eta*fracratio*icum)));
+        icum = icum * mgl[lvl].cycle_type;
+    }
+#endif
+
+	//for (lvl=0; lvl<max_levels-1; ++lvl) printf("level%d=%d\n", lvl, mgl[lvl].cycle_type);
+
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         print_amgcomplexity(mgl,prtlvl);
@@ -552,7 +579,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
             fasp_dcsr_sort(&Ac_tran);
             fasp_dcsr_cp(&Ac_tran, &mgl[lvl].Ac);
             fasp_dcsr_free(&Ac_tran);
-            mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].Ac, 5);
+            mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].Ac, 0);
             break;
         }
 #endif

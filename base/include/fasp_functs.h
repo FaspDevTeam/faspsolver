@@ -1422,6 +1422,11 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
                            const SHORT stop_type,
                            const SHORT print_level);
 
+INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A, 
+                                 dvector *b, 
+                                 dvector *u, 
+                                 precond *pc) ;
+
 
 /*-------- In file: pgcg_mf.c --------*/
 
@@ -2594,15 +2599,32 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
 
 /*-------- In file: pgcr.c --------*/
 
-INT fasp_solver_dcsr_pgcr (dCSRmat *A, 
+INT fasp_solver_dcsr_pgcr1 (dCSRmat *A, 
                            dvector *b, 
-                           dvector *u, 
+                           dvector *x, 
                            precond *pc, 
                            const REAL tol,
                            const INT MaxIt, 
                            const INT restart,
                            const INT stop_type, 
                            const INT print_level) ;
+
+void fasp_blas_dense_aAxpby(INT n, INT m, REAL *A, REAL alpha, REAL *x, REAL beta, REAL *y);
+
+INT fasp_solver_dcsr_pgcr (dCSRmat *A,
+                           dvector *b,
+                           dvector *x,
+                           precond *pc,
+                           const REAL tol,
+                           const INT MaxIt,
+                           const SHORT restart,
+                           const SHORT stop_type,
+                           const SHORT print_level);
+
+void fasp_krylov_cycle_dcsr_pgcr  (dCSRmat *A, 
+                                  dvector *b, 
+                                  dvector *u, 
+                                  precond *pc) ;
 
 
 /*-------- In file: spgmres.c --------*/

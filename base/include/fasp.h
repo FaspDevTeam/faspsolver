@@ -43,7 +43,7 @@
 #define RS_C1            ON  /**< CF splitting of RS: check C1 Criterion */
                              // When this flag is OFF, do not force C1 criterion for
                              // the classical AMG method
-#define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
+#define DIAGONAL_PREF    ON /**< order each row such that diagonal appears first */
                              // When this flag is ON, the matrix rows need to be
                              // reordered as diagonal entries first
 
@@ -85,8 +85,6 @@
 
 extern unsigned INT total_alloc_mem;   /**< total allocated memory */
 extern unsigned INT total_alloc_count; /**< total allocation times */
-extern double pre_time;
-extern double post_time;
 /*---------------------------*/ 
 /*---  Matrix and vector  ---*/
 /*---------------------------*/ 
@@ -536,7 +534,7 @@ typedef struct {
 
     //! param for schwarz
     Schwarz_param *swzparam;
-	
+
 } Schwarz_data;
 
 /** 
@@ -710,6 +708,9 @@ typedef struct {
 	
 	/* Extra information */
 	
+    //! pointer to the numerical dactorization from UMFPACK
+    void *Numeric;
+
 	//! pointer to the CF marker at level level_num
 	ivector cfmark; 	
 	
@@ -738,6 +739,9 @@ typedef struct {
 
 	//! data for MUMPS
 	Mumps_data mumps;
+
+    //! cycle type
+    INT cycle_type;
 	
 } AMG_data; /**< Data for AMG */
 
@@ -831,6 +835,8 @@ typedef struct {
     
     //! temporary work space for other usage
 	REAL *w;
+
+	INT flag;
 	
 } precond_data; /**< Data for general preconditioner */
 
@@ -1156,6 +1162,7 @@ extern INT *IMAP;    /**< Red Black Gs Smoother imap */
 extern INT  MAXIMAP; /**< Red Black Gs Smoother max dofs of reservoir */
 #endif
 
+extern INT  count;
 #ifdef _OPENMP 
 
 #include "omp.h"

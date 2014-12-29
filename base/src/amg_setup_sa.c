@@ -297,6 +297,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
             fasp_dcsr_sort(&Ac_tran);
             fasp_dcsr_cp(&Ac_tran, &mgl[lvl].A);
             fasp_dcsr_free(&Ac_tran);
+            mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].A, 0);
             break;
         }
 #endif
@@ -517,6 +518,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
             fasp_dcsr_sort(&Ac_tran);
             fasp_dcsr_cp(&Ac_tran, &mgl[lvl].A);
             fasp_dcsr_free(&Ac_tran);
+            mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].A, 5);
             break;
         }
 #endif
@@ -768,7 +770,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
             fasp_dcsr_sort(&Ac_tran);
             fasp_dcsr_cp(&Ac_tran, &mgl[lvl].Ac);
             fasp_dcsr_free(&Ac_tran);
-            mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].Ac, 5);
+            mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].Ac, 0);
             break;
         }
 #endif
@@ -797,6 +799,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         fasp_dcsr_sort(&temp1);
         fasp_dcsr_cp(&temp1, mgl[0].A_nk);
         fasp_dcsr_free(&temp1);
+        mgl[0].Numeric = fasp_umfpack_factorize(mgl[0].A_nk, 0);
 #endif
         
     }
@@ -816,6 +819,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
             fasp_dcsr_sort(&temp1);
             fasp_dcsr_cp(&temp1, mgl[lvl].A_nk);
             fasp_dcsr_free(&temp1);
+            mgl[lvl].Numeric = fasp_umfpack_factorize(mgl[lvl].A_nk, 0);
 #endif
             
         }

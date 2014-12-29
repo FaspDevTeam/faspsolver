@@ -65,6 +65,7 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
         mgl[i].num_levels = 0;
         mgl[i].near_kernel_dim = 0;
         mgl[i].near_kernel_basis = NULL;
+        mgl[i].cycle_type = 0;
     }
     
     return(mgl);

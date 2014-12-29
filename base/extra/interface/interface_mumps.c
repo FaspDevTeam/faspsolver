@@ -166,7 +166,6 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
                               dvector *u,
                               Mumps_data *mumps) 
 {
-    
 #if WITH_MUMPS
 
     DMUMPS_STRUC_C id;

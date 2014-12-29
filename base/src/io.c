@@ -1341,7 +1341,8 @@ void fasp_ivec_write (const char *filename,
     
     fprintf(fp,"%d\n",m);
     
-    for ( i = 0; i < m; ++i ) fprintf(fp,"%d %d\n",i,vec->val[i]);
+    //for ( i = 0; i < m; ++i ) fprintf(fp,"%d %d\n",i,vec->val[i]+1);
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%d\n",vec->val[i]+1);
     
     fclose(fp);
 }
