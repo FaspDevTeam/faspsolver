@@ -29,6 +29,7 @@
  *
  * Modified by Chensong Zhang on 06/01/2012: fix a bug when there is only one level.
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
+ * Modified by Zheng Li on 11/10/2014: update direct solvers.
  *
  */
 void fasp_solver_fmgcycle (AMG_data *mgl,
@@ -87,14 +88,15 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 #if WITH_UMFPACK
                 /* use UMFPACK direct solver on the coarsest level */
             case SOLVER_UMFPACK:
-                fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+                fasp_umfpack_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
                 break;
 #endif
                 
 #if WITH_MUMPS
                 /* use MUMPS direct solver on the coarsest level */
             case SOLVER_MUMPS:
-                fasp_solver_mumps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+                mgl[nl-1].mumps.job = 2;
+                fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
                 break;
 #endif
                 
@@ -123,14 +125,16 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 #if WITH_UMFPACK
                 /* use UMFPACK direct solver on the coarsest level */
             case SOLVER_UMFPACK:
-                fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+                //fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+                fasp_umfpack_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
                 break;
 #endif
                 
 #if WITH_MUMPS
                 /* use MUMPS direct solver on the coarsest level */
             case SOLVER_MUMPS:
-                fasp_solver_mumps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+                mgl[nl-1].mumps.job = 2;
+                fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
                 break;
 #endif
                 
@@ -242,14 +246,16 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
 #if WITH_UMFPACK
                     /* use UMFPACK direct solver on the coarsest level */
                 case SOLVER_UMFPACK:
-                    fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+                    //fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+                    fasp_umfpack_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
                     break;
 #endif
                     
 #if WITH_MUMPS
                     /* use MUMPS direct solver on the coarsest level */
-                case SOLVER_MUMPS:
-                    fasp_solver_mumps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+                case SOLVER_MUMPS: 
+                    mgl[nl-1].mumps.job = 2;
+                    fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
                     break;
 #endif
                     

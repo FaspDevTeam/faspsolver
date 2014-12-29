@@ -9,6 +9,7 @@
 
 #include "mg_util.inl"
 
+double amgtime=0;
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -542,12 +543,11 @@ void fasp_precond_nl_amli (REAL *r,
     AMG_data *mgl = pcdata->mgl_data;
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
-    
+
     for (i=0;i<maxit;++i) fasp_solver_nl_amli(mgl,&amgparam,0, num_levels); 
-    
     fasp_array_cp(m,mgl->x.val,z);    
 }
-
+    
 /**
  * \fn void fasp_precond_amg_nk (REAL *r, REAL *z, void *data)
  *

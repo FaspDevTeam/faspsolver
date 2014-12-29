@@ -114,14 +114,16 @@ void fasp_solver_mgrecur (AMG_data *mgl,
 #if WITH_UMFPACK
             /* use UMFPACK direct solver on the coarsest level */
             case SOLVER_UMFPACK:
-                fasp_solver_umfpack(A0, b0, e0, 0);
+                //fasp_solver_umfpack(A0, b0, e0, 0);
+                fasp_umfpack_solve(A0, b0, e0, mgl[level].Numeric, 0);
                 break;
 #endif
                 
 #if WITH_MUMPS
             /* use MUMPS direct solver on the coarsest level */
             case SOLVER_MUMPS:
-                fasp_solver_mumps(A0, b0, e0, 0);
+                mgl[level].mumps.job = 2;
+                fasp_solver_mumps_steps(A0, b0, e0, &mgl[level].mumps);
                 break;
 #endif
                 

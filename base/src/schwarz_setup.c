@@ -218,6 +218,8 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     schwarz->blk_data = (dCSRmat*)fasp_mem_calloc(nblk, sizeof(dCSRmat));
     
     fasp_schwarz_get_block_matrix(schwarz, nblk, iblock, jblock, mask);
+
+	//dCSRmat *blk = schwarz->blk_data;
     
 	blk = schwarz->blk_data;
 
@@ -366,6 +368,7 @@ void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz,
 #if WITH_UMFPACK
             case SOLVER_UMFPACK: {
                 /* use UMFPACK direct solver on each block */
+                printf("umfpack\n");
                 fasp_umfpack_solve(&blk[is], &rhs, &u, numeric[is], 0);
                 break;
             }

@@ -31,6 +31,7 @@
  * \date   01/23/2011
  *
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
+ * Modified by Zheng Li on 11/10/2014: update direct solvers.
  */
 void fasp_solver_amli (AMG_data *mgl,
                        AMG_param *param,
@@ -266,14 +267,15 @@ void fasp_solver_amli (AMG_data *mgl,
 #if WITH_UMFPACK
                 /* use UMFPACK direct solver on the coarsest level */
             case SOLVER_UMFPACK:
-                fasp_solver_umfpack(A0, b0, e0, 0);
+                fasp_umfpack_solve(A0, b0, e0, mgl[level].Numeric, 0);
                 break;
 #endif
                 
 #if WITH_MUMPS
                 /* use MUMPS direct solver on the coarsest level */
             case SOLVER_MUMPS:
-                fasp_solver_mumps(A0, b0, e0, 0);
+				mgl[level].mumps.job = 2;
+				fasp_solver_mumps_steps(A0, b0, e0, &mgl[level].mumps);
                 break;
 #endif
                 
@@ -305,6 +307,7 @@ void fasp_solver_amli (AMG_data *mgl,
  * \date   04/06/2010
  *
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
+ * Modified by Zheng Li on 11/10/2014: update direct solvers.
  */
 void fasp_solver_nl_amli (AMG_data *mgl,
                           AMG_param *param,
@@ -319,7 +322,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
     const REAL   relax = param->relaxation;
     const REAL   tol = param->tol*1e-4;
     const SHORT  ndeg = param->polynomial_degree;
-    
+
     dvector *b0 = &mgl[level].b,   *e0 = &mgl[level].x;   // fine level b and x
     dvector *b1 = &mgl[level+1].b, *e1 = &mgl[level+1].x; // coarse level b and x
     
@@ -327,7 +330,9 @@ void fasp_solver_nl_amli (AMG_data *mgl,
     dCSRmat *A1 = &mgl[level+1].A; // coarse level matrix
     
     const INT m0 = A0->row, m1 = A1->row;
-    
+	
+    double beg, end;
+
     INT      *ordering = mgl[level].cfmark.val; // smoother ordering
     ILU_data *LU_level = &mgl[level].LU;        // fine level ILU decomposition
     REAL     *r        = mgl[level].w.val;      // work array for residual
@@ -412,6 +417,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         // form residual r = b - A x
         fasp_array_cp(m0,b0->val,r);
         fasp_blas_dcsr_aAxpy(-1.0,A0,e0->val,r);
+
         
         // restriction r1 = R*r0
         switch (amg_type) {
@@ -427,9 +433,8 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         {
             fasp_dvec_set(m1,e1,0.0);
             
-            // The coarsest problem is solved exactly.
-            // No need to call krylov method on second coarest level
-            if (level == num_levels-2) {
+			// V-cycle will be enforced when needed.
+            if (mgl[level+1].cycle_type <= 1) { 
                 fasp_solver_nl_amli(&mgl[level+1], param, 0, num_levels-1);
             }
             else {  // recursively call preconditioned Krylov method on coarse grid
@@ -444,23 +449,18 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                 pc.data = &pcdata;
                 pc.fct = fasp_precond_nl_amli;
                 
-                fasp_array_cp (m1, b1->val, bH.val);
                 fasp_array_cp (m1, e1->val, uH.val);
                 
-                const INT maxit = param->amli_degree+1;
-                
                 switch (param->nl_amli_krylov_type) {
+
                     case SOLVER_GCG: // Use GCG
-                        fasp_solver_dcsr_pgcg(A1,&bH,&uH,&pc,param->tol,
-                                              maxit,1,PRINT_NONE);
+						fasp_krylov_cycle_dcsr_pgcg(A1,b1,&uH,&pc);
                         break;
-                    default: // Use FGMRES
-                        fasp_solver_dcsr_pvfgmres(A1,&bH,&uH,&pc,param->tol,
-                                                  maxit,30,1,PRINT_NONE);
+
+                    default: // Use GCR 
+						fasp_krylov_cycle_dcsr_pgcr(A1,b1,&uH,&pc);
                         break;
                 }
-                
-                fasp_array_cp (m1, bH.val, b1->val);
                 fasp_array_cp (m1, uH.val, e1->val);
             }
             
@@ -555,14 +555,16 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 #if WITH_UMFPACK
                 /* use UMFPACK direct solver on the coarsest level */
             case SOLVER_UMFPACK:
-                fasp_solver_umfpack(A0, b0, e0, 0);
+                fasp_umfpack_solve(A0, b0, e0, mgl[level].Numeric, 0);
                 break;
 #endif
                 
 #if WITH_MUMPS
                 /* use MUMPS direct solver on the coarsest level */
             case SOLVER_MUMPS:
-                fasp_solver_mumps(A0, b0, e0, 0);
+				mgl[level].mumps.job = 2;
+				fasp_solver_mumps_steps(A0, b0, e0, &mgl[level].mumps);
+
                 break;
 #endif
                 
@@ -750,14 +752,15 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
 #if WITH_UMFPACK
                 /* use UMFPACK direct solver on the coarsest level */
             case SOLVER_UMFPACK:
-                fasp_solver_umfpack(&mgl[level].Ac, b0, e0, 0);
+				fasp_umfpack_solve(&mgl[level].Ac, b0, e0, mgl[level].Numeric, 0);
                 break;
 #endif
                 
 #if WITH_MUMPS
                 /* use MUMPS direct solver on the coarsest level */
             case SOLVER_MUMPS:
-                fasp_solver_mumps(&mgl[level].Ac, b0, e0, 0);
+				mgl[level].mumps.job = 2;
+				fasp_solver_mumps_steps(&mgl[level].Ac, b0, e0, &mgl[level].mumps);
                 break;
 #endif
                 

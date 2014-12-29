@@ -38,6 +38,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
     }
 } 
 
+
 /**
  * \fn static void fasp_dcsr_presmoothing (const SHORT smoother, dCSRmat *A, 
  *                                         dvector *b, dvector *x,
@@ -181,8 +182,9 @@ static void fasp_dcsr_postsmoothing (const SHORT smoother,
     switch (smoother) {
         
         case SMOOTHER_GS:
-            if (order == NO_ORDER || ordering == NULL)
+            if (order == NO_ORDER || ordering == NULL) {
                 fasp_smoother_dcsr_gs(x, iend, istart, istep, A, b, nsweeps);
+			}
             else if (order == CF_ORDER)
                 fasp_smoother_dcsr_gs_cf(x, A, b, nsweeps, ordering, -1);
             break;

@@ -56,6 +56,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
     REAL   absres0 = BIGREAL, absres = BIGREAL;
     REAL   relres  = BIGREAL, normb  = BIGREAL;
     REAL   alpha, factor;
+
     
     // allocate temp memory 
     REAL *work = (REAL *)fasp_mem_calloc(2*m+MaxIt+MaxIt*m,sizeof(REAL));    
@@ -76,7 +77,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
     // r = b-A*u
     fasp_array_cp(m,b->val,r);
     fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
-    
+
     // Br 
     if (pc != NULL)
         pc->fct(r,p,pc->data); /* Preconditioning */
@@ -151,7 +152,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
         absres0 = absres;
         
     } // end of main GCG loop.
-    
+
     // finish the iterative method
     if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
     
@@ -168,6 +169,105 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
         return iter;
 }
 
+/**
+ *	\fn int fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,  dvector *b, dvector *u, precond *pc)
+ *
+ *	\brief A preconditioned GCR method for solving Au=b 
+ *
+ *	\param *A	 Pointer to the coefficient matrix
+ *	\param *b	 Pointer to the dvector of right hand side
+ *	\param *u	 Pointer to the dvector of dofs
+ *	\param *pre  Pointer to the structure of precondition (precond) 
+ *
+ * \author zheng Li, Chensong Zhang 
+ * \date   11/09/2014
+ *
+ * \Note: Specified for unsmoothed aggreagtion cycle.
+ */
+INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A, 
+                                 dvector *b, 
+                                 dvector *u, 
+                                 precond *pc) 
+{
+    REAL   absres, relres, normb;
+    REAL   alpha1, alpha2, gamma1, gamma2, rho1, rho2, beta1, beta2, beta3, beta4; 
+    REAL   *work, *r, *x1, *v1, *v2;
+
+    INT    m=A->row;
+	REAL   *x = u->val;
+    
+    // allocate temp memory 
+    work = (REAL *)fasp_mem_calloc(4*m,sizeof(REAL));    
+    r = work; x1 = r + m; v1 = r + 2*m; v2 = r + 3*m;
+
+    normb = fasp_blas_array_norm2(m, b->val);
+
+	fasp_array_cp(m, b->val, r);
+
+    // Preconditioning 
+    if (pc != NULL)
+        pc->fct(r, x, pc->data); 
+    else
+        fasp_array_cp(m, r, x);
+    
+	//v1 = A*p
+	fasp_blas_dcsr_mxv(A, x, v1);
+
+	// rho1 = (p,v1)
+	rho1 = fasp_blas_array_dotprod (m, x, v1);
+
+    // alpha1 = (p, r)
+	alpha1 = fasp_blas_array_dotprod (m, x, r);
+
+	beta1 = alpha1/rho1;
+
+    // r = r - beta1 *v1
+    fasp_blas_array_axpy(m, -beta1, v1, r);
+
+    // norm(r)
+    absres = fasp_blas_array_norm2(m, r);
+
+    // compute relative residual 
+    relres = absres/normb;    
+
+    // if relres reachs tol(0.2), pgcr will stop,
+    // otherwise, another one pgcr iteration will do.
+    if(relres < 0.2) {
+        fasp_blas_array_ax(m, beta1, x);
+		return 0;
+	}
+
+    // Preconditioning 
+    if (pc != NULL)
+        pc->fct(r, x1, pc->data);
+    else
+        fasp_array_cp(m, r, x1);
+
+	//v2 = A*p
+	fasp_blas_dcsr_mxv(A, x1, v2);
+
+	//gamma0 = (x1,v1)
+	gamma1 = fasp_blas_array_dotprod (m, x1, v1);
+
+	//alpha2 = (x1,r)
+	alpha2  = fasp_blas_array_dotprod(m, x1, r); 
+
+	//rho2 = (x1,v2)
+	rho2 = fasp_blas_array_dotprod(m, x1, v2);
+
+	gamma2 = gamma1;
+
+	beta2 = rho2 - gamma1*gamma2/rho1;
+	beta3 = (alpha1 - gamma2*alpha2/beta2)/rho1;
+    beta4 = alpha2/beta2;
+
+    fasp_blas_array_ax(m, beta3, x);
+    
+	fasp_blas_array_axpy(m, beta4, x1, x);
+
+    // free 
+    fasp_mem_free(work);
+}
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

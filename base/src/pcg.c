@@ -95,7 +95,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     const INT    m = b->row;
     const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
-    
+
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
@@ -120,7 +120,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
         pc->fct(r,z,pc->data); /* Apply preconditioner */
     else
         fasp_array_cp(m,r,z); /* No preconditioner */
-    
+
     // compute initial residuals
     switch ( stop_type ) {
         case STOP_REL_RES:
@@ -313,7 +313,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             else
                 fasp_array_cp(m,r,z); /* No preconditioner, B=I */
         }
-        
+
         // compute beta_k = (z_k, r_k)/(z_{k-1}, r_{k-1})
         temp2 = fasp_blas_array_dotprod(m,z,r);
         beta  = temp2/temp1;
