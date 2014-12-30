@@ -1146,18 +1146,18 @@ SHORT fasp_smat_lu_solve (REAL *A,
 
 /*-------- In file: memory.c --------*/
 
-void * fasp_mem_calloc (LONGLONG size, 
+void * fasp_mem_calloc (LONGLONG size,
                         INT type);
 
-void * fasp_mem_realloc (void * oldmem, 
-                         LONG tsize);
+void * fasp_mem_realloc (void * oldmem,
+                         LONGLONG tsize);
 
 void fasp_mem_free (void * mem);
 
 void fasp_mem_usage ();
 
-SHORT fasp_mem_check (void *ptr, 
-                      const char *message, 
+SHORT fasp_mem_check (void *ptr,
+                      const char *message,
                       INT ERR);
 
 SHORT fasp_mem_iludata_check (ILU_data *iludata);
