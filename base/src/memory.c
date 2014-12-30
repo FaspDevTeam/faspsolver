@@ -13,13 +13,13 @@
 
 #include "nedmalloc.h"
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 extern "C" {
 #endif
     void * nedcalloc(size_t no, size_t size);
     void * nedrealloc(void *mem, size_t size);
     void   nedfree(void *mem);
-#ifdef __cplusplus 
+#ifdef __cplusplus
 }
 #endif
 
@@ -31,6 +31,7 @@ extern "C" {
 
 unsigned INT total_alloc_mem   = 0; // Total allocated memory amount
 unsigned INT total_alloc_count = 0; // Total number of allocations
+const    INT Million     = 1048576; // 1M = 1024*1024
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -47,41 +48,41 @@ unsigned INT total_alloc_count = 0; // Total number of allocations
  * \return        Void pointer to the allocated memory
  *
  * \author Chensong Zhang
- * \date   2010/08/12 
+ * \date   2010/08/12
  *
  * Modified by Chunsheng Feng on 12/20/2013
  * Modified by Chunsheng Feng on 07/23/2013
  * Modified by Chunsheng Feng on 07/30/2013
  * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
-void * fasp_mem_calloc (LONGLONG size, 
+void * fasp_mem_calloc (LONGLONG size,
                         INT type)
 {
-    const LONGLONG tsize =  size*type;    
-	
+    const LONGLONG tsize = size*type;
+    
     void * mem = NULL;
     
 #if DEBUG_MODE
-    printf("### DEBUG: Trying to allocate %.3lfKB RAM!\n", (REAL)tsize/1024.0);
+    printf("### DEBUG: Trying to allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
 #endif
     
     if ( tsize > 0 ) {
-    
+        
 #if DLMALLOC
-        mem = dlcalloc(size,type);    
+        mem = dlcalloc(size,type);
 #elif NEDMALLOC
         mem = nedcalloc(size,type);
 #else
         mem = calloc(size,type);
 #endif
-    
-#if CHMEM_MODE    
+        
+#if CHMEM_MODE
         total_alloc_mem += tsize;
 #endif
     }
     
     if ( mem == NULL ) {
-        printf("### ERROR: Cannot allocate %.3lfKB RAM!\n", (REAL)tsize/1024.0);
+        printf("### WARNING: Cannot allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
     }
     
 #if CHMEM_MODE
@@ -92,7 +93,7 @@ void * fasp_mem_calloc (LONGLONG size,
 }
 
 /**
- * \fn void * fasp_mem_realloc (void * oldmem, LONG type)
+ * \fn void * fasp_mem_realloc (void * oldmem, LONGLONG type)
  *
  * \brief Reallocate, initiate, and check memory
  *
@@ -102,13 +103,13 @@ void * fasp_mem_calloc (LONGLONG size,
  * \return        Void pointer to the reallocated memory
  *
  * \author Chensong Zhang
- * \date   2010/08/12 
+ * \date   2010/08/12
  *
  * Modified by Chunsheng Feng on 07/23/2013
  * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
-void * fasp_mem_realloc (void * oldmem, 
-                         LONG tsize)
+void * fasp_mem_realloc (void * oldmem,
+                         LONGLONG tsize)
 {
 #if DLMALLOC
     void * mem = dlrealloc(oldmem,tsize);
@@ -119,13 +120,13 @@ void * fasp_mem_realloc (void * oldmem,
 #endif
     
     if ( mem == NULL ) {
-        printf("### ERROR: Cannot allocate %.3fKB RAM!\n", tsize/1024.0);
+        printf("### WARNING: Cannot allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
     }
-
-#if CHMEM_MODE    
+    
+#if CHMEM_MODE
     total_alloc_mem += tsize;
 #endif
-
+    
     return mem;
 }
 
@@ -139,7 +140,7 @@ void * fasp_mem_realloc (void * oldmem,
  * \return      NULL pointer
  *
  * \author Chensong Zhang
- * \date   2010/12/24 
+ * \date   2010/12/24
  */
 void fasp_mem_free (void * mem)
 {
@@ -150,9 +151,9 @@ void fasp_mem_free (void * mem)
         nedfree(mem);
 #else
         free(mem);
-#endif    
-    
-#if CHMEM_MODE    
+#endif
+        
+#if CHMEM_MODE
         total_alloc_count--;
 #endif
     }
@@ -164,20 +165,20 @@ void fasp_mem_free (void * mem)
  * \brief Show total allocated memory currently
  *
  * \author Chensong Zhang
- * \date   2010/08/12 
+ * \date   2010/08/12
  */
 void fasp_mem_usage ()
-{    
+{
 #if CHMEM_MODE
     printf("### DEBUG: Total number of alloc = %d, allocated memory %.3fMB.\n",
-           total_alloc_count,total_alloc_mem/1e+6);
+           total_alloc_count, total_alloc_mem/Million);
 #endif
-}    
+}
 
 /**
  * \fn SHORT fasp_mem_check (void * ptr, const char *message, const INT ERR)
  *
- * \brief Check wether a point is null or not. 
+ * \brief Check wether a point is null or not.
  *
  * \param ptr       Void pointer to be checked
  * \param message   Error message to print
@@ -188,17 +189,17 @@ void fasp_mem_usage ()
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-SHORT fasp_mem_check (void *ptr, 
-                      const char *message, 
+SHORT fasp_mem_check (void *ptr,
+                      const char *message,
                       INT ERR)
-{    
+{
     if ( ptr == NULL ) {
         printf("### ERROR: %s", message);
         return ERR;
     }
     
     return FASP_SUCCESS;
-} 
+}
 
 /**
  * \fn SHORT fasp_mem_iludata_check (ILU_data *iludata)
@@ -207,20 +208,20 @@ SHORT fasp_mem_check (void *ptr,
  *
  * \param iludata    Pointer to be cheked
  *
- * \return           FASP_SUCCESS if success, else ERROR (negative value) 
+ * \return           FASP_SUCCESS if success, else ERROR (negative value)
  *
  * \author Xiaozhe Hu, Chensong Zhang
  * \date   11/27/09
  */
 SHORT fasp_mem_iludata_check (ILU_data *iludata)
-{    
+{
     const INT memneed = 2*iludata->row; // estimated memory usage
     
     if ( iludata->nwork >= memneed ) {
         return FASP_SUCCESS;
     }
     else {
-        printf("### ERROR: ILU needs %d memory, only %d available!\n", 
+        printf("### ERROR: ILU needs %d memory, only %d available!\n",
                memneed, iludata->nwork);
         return ERROR_ALLOC_MEM;
     }
@@ -229,11 +230,11 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
 /**
  * \fn SHORT fasp_mem_dcsr_check (dCSRmat *A)
  *
- * \brief Check wether a dCSRmat A has sucessfully allocated memory 
+ * \brief Check wether a dCSRmat A has sucessfully allocated memory
  *
  * \param A   Pointer to be cheked
  *
- * \return    FASP_SUCCESS if success, else ERROR message (negative value) 
+ * \return    FASP_SUCCESS if success, else ERROR message (negative value)
  *
  * \author Xiaozhe Hu
  * \date   11/27/09
