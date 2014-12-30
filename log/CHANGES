@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+12/31/2014 FASP 1.6.4:
+- Fix GCR file name conflicition, spgcr.c -> pgcr.c.
+- Update VS2010 solution, changing from CPP to C, use C99 option.
+
 12/30/2014 FASP 1.6.3:
 - Add new pairwise aggregation code.
 - Add new GCR iterative solver.

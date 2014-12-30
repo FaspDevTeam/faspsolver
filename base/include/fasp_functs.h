@@ -1440,6 +1440,34 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
                       const SHORT print_level);
 
 
+/*-------- In file: pgcr.c --------*/
+
+INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
+                            dvector *b,
+                            dvector *x,
+                            precond *pc,
+                            const REAL tol,
+                            const INT MaxIt,
+                            const INT restart,
+                            const INT stop_type,
+                            const INT print_level);
+
+INT fasp_solver_dcsr_pgcr (dCSRmat *A,
+                           dvector *b,
+                           dvector *x,
+                           precond *pc,
+                           const REAL tol,
+                           const INT MaxIt,
+                           const SHORT restart,
+                           const SHORT stop_type,
+                           const SHORT print_level);
+
+void fasp_krylov_cycle_dcsr_pgcr  (dCSRmat *A,
+                                   dvector *b,
+                                   dvector *u,
+                                   precond *pc);
+
+
 /*-------- In file: pgmres.c --------*/
 
 INT fasp_solver_dcsr_pgmres (dCSRmat *A,
@@ -1858,7 +1886,7 @@ void fasp_blas_smat_inv_nc5 (REAL *a);
 
 void fasp_blas_smat_inv_nc7 (REAL *a);
 
-INT fasp_blas_smat_inv (REAL *a, 
+INT fasp_blas_smat_inv (REAL *a,
                         const INT n);
 
 void fasp_iden_free (idenmat *A);
@@ -1871,8 +1899,8 @@ void fasp_smat_identity_nc5 (REAL *a);
 
 void fasp_smat_identity_nc7 (REAL *a);
 
-void fasp_smat_identity (REAL *a, 
-                         INT n, 
+void fasp_smat_identity (REAL *a,
+                         INT n,
                          INT n2);
 
 REAL fasp_blas_smat_Linfinity(REAL *A,
@@ -2595,36 +2623,6 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
                            const INT MaxIt,
                            const SHORT stop_type,
                            const SHORT print_level);
-
-
-/*-------- In file: pgcr.c --------*/
-
-INT fasp_solver_dcsr_pgcr1 (dCSRmat *A, 
-                           dvector *b, 
-                           dvector *x, 
-                           precond *pc, 
-                           const REAL tol,
-                           const INT MaxIt, 
-                           const INT restart,
-                           const INT stop_type, 
-                           const INT print_level) ;
-
-void fasp_blas_dense_aAxpby(INT n, INT m, REAL *A, REAL alpha, REAL *x, REAL beta, REAL *y);
-
-INT fasp_solver_dcsr_pgcr (dCSRmat *A,
-                           dvector *b,
-                           dvector *x,
-                           precond *pc,
-                           const REAL tol,
-                           const INT MaxIt,
-                           const SHORT restart,
-                           const SHORT stop_type,
-                           const SHORT print_level);
-
-void fasp_krylov_cycle_dcsr_pgcr  (dCSRmat *A, 
-                                  dvector *b, 
-                                  dvector *u, 
-                                  precond *pc) ;
 
 
 /*-------- In file: spgmres.c --------*/
