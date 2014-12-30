@@ -9,7 +9,6 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 #include "forts_ns.h"
-
 #include "mg_util.inl"
 
 #if FASP_GSRB
@@ -19,7 +18,6 @@ INT  nz_rb=1 ;  /**< Red Black Gs Smoother Nz */
 INT *IMAP=NULL; /**< Red Black Gs Smoother imap */
 INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
 #endif
-
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -38,6 +36,7 @@ INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
  *
  * Modified by Chensong Zhang on 12/13/2011
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
+ * Modified by Chensong Zhang on 12/30/2014: update Schwarz smoothers.
  */
 void fasp_solver_mgcycle (AMG_data *mgl,
                           AMG_param *param)
@@ -53,13 +52,12 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     const REAL   tol = param->tol * 1e-4;
     const SHORT  ndeg = param->polynomial_degree;
     
-
-	// Schwarz parameters
-	Schwarz_param swzparam;
-	if ( param->schwarz_levels > 0 ) {
-	     swzparam.schwarz_blksolver = param->schwarz_blksolver;
-	}
-
+    // Schwarz parameters
+    Schwarz_param swzparam;
+    if ( param->schwarz_levels > 0 ) {
+        swzparam.schwarz_blksolver = param->schwarz_blksolver;
+    }
+    
     // local variables
     REAL alpha = 1.0;
     INT  num_lvl[MAX_AMG_LVL] = {0}, l = 0;
@@ -75,82 +73,36 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     
 ForwardSweep:
     while ( l < nl-1 ) {
+        
         num_lvl[l]++;
         
-        // pre smoothing
+        // pre-smoothing with ILU method
         if ( l < param->ILU_levels ) {
             fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
-        else if ( l < mgl->schwarz_levels ) {
-			switch (mgl[l].schwarz.schwarz_type) {
-				case 3:
-#if 0
-					fbgs2ns_(&(mgl[l].schwarz.A.row),
-                             mgl[l].schwarz.A.IA,
-                             mgl[l].schwarz.A.JA,
-                             mgl[l].schwarz.A.val,
-                             mgl[l].x.val,
-                             mgl[l].b.val,
-                             &(mgl[l].schwarz.nblk),
-                             mgl[l].schwarz.iblock,
-                             mgl[l].schwarz.jblock,
-                             mgl[l].schwarz.mask,
-                             mgl[l].schwarz.maxa,
-                             mgl[l].schwarz.au,mgl[l].schwarz.al,
-                             mgl[l].schwarz.rhsloc,
-                             &(mgl[l].schwarz.memt));
-					bbgs2ns_(&(mgl[l].schwarz.A.row),
-                             mgl[l].schwarz.A.IA,
-                             mgl[l].schwarz.A.JA,
-                             mgl[l].schwarz.A.val,
-                             mgl[l].x.val,
-                             mgl[l].b.val,
-                             &(mgl[l].schwarz.nblk),
-                             mgl[l].schwarz.iblock,
-                             mgl[l].schwarz.jblock,
-                             mgl[l].schwarz.mask,
-                             mgl[l].schwarz.maxa,
-                             mgl[l].schwarz.au,
-                             mgl[l].schwarz.al,
-                             mgl[l].schwarz.rhsloc,
-                             &(mgl[l].schwarz.memt));
-					break;
-#endif
-//					fasp_dcsr_schwarz_smoother(&mgl[l].schwarz, &mgl[l].x, &mgl[l].b);
-					break;
-				default:
-#if 0
-					fbgs2ns_(&(mgl[l].schwarz.A.row),
-                             mgl[l].schwarz.A.IA,
-                             mgl[l].schwarz.A.JA,
-                             mgl[l].schwarz.A.val,
-                             mgl[l].x.val,
-                             mgl[l].b.val,
-                             &(mgl[l].schwarz.nblk),
-                             mgl[l].schwarz.iblock,
-                             mgl[l].schwarz.jblock,
-                             mgl[l].schwarz.mask,
-                             mgl[l].schwarz.maxa,
-                             mgl[l].schwarz.au,
-                             mgl[l].schwarz.al,
-                             mgl[l].schwarz.rhsloc,
-                             &(mgl[l].schwarz.memt));
-#else
-					fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
-#endif
-
-					break;
-			}
-		}
         
+        // or pre-smoothing with Schwarz method
+        else if ( l < mgl->schwarz_levels ) {
+            switch (mgl[l].schwarz.schwarz_type) {
+                case 3:
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    break;
+                default:
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    break;
+            }
+        }
+        
+        // or pre-smoothing with standard smoothers
         else {
 #if FASP_GSRB
-	        if (( l==0 )&&(nx_rb>1))
-				fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
+            if (( l==0 )&&(nx_rb>1))
+                fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
                                            param->presmooth_iter, 1, IMAP, MAXIMAP,
                                            nx_rb, ny_rb, nz_rb);
-			else
-				fasp_dcsr_presmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
+            else
+                fasp_dcsr_presmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
                                        param->presmooth_iter, 0, mgl[l].A.row-1, 1,
                                        relax, ndeg, smooth_order, mgl[l].cfmark.val);
 #else
@@ -163,7 +115,7 @@ ForwardSweep:
         // form residual r = b - A x
         fasp_array_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
         fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
-
+        
         // restriction r1 = R*r0
         switch (amg_type) {
             case UA_AMG:
@@ -184,8 +136,8 @@ ForwardSweep:
     switch (coarse_solver) {
             
 #if WITH_MUMPS
-        /* use MUMPS direct solver on the coarsest level */
         case SOLVER_MUMPS: {
+            // use MUMPS direct solver on the coarsest level
             mgl[nl-1].mumps.job = 2;
             fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
             break;
@@ -193,23 +145,23 @@ ForwardSweep:
 #endif
             
 #if WITH_SuperLU
-        /* use SuperLU direct solver on the coarsest level */
         case SOLVER_SUPERLU: {
+            // use SuperLU direct solver on the coarsest level
             fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
             break;
         }
 #endif
             
 #if WITH_UMFPACK
-        /* use UMFPACK direct solver on the coarsest level */
         case SOLVER_UMFPACK: {
-			fasp_umfpack_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
+            // use UMFPACK direct solver on the coarsest level
+            fasp_umfpack_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
             break;
         }
 #endif
             
-        /* use iterative solver on the coarest level */
         default:
+            // use iterative solver on the coarest level
             fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
             
     }
@@ -222,7 +174,7 @@ ForwardSweep:
         // find the optimal scaling factor alpha
         if ( param->coarse_scaling == ON ) {
             alpha = fasp_blas_array_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
-                  / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
+            / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
             alpha = MIN(alpha, 1.0); // Add this for safty! --Chensong on 10/04/2014
         }
         
@@ -236,83 +188,34 @@ ForwardSweep:
                 break;
         }
         
-        // post-smoothing
+        // post-smoothing with ILU method
         if ( l < param->ILU_levels ) {
             fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
-        else if ( l < mgl->schwarz_levels ) {
-			switch (mgl[l].schwarz.schwarz_type) {
-                case 3:
-#if 0
-                    bbgs2ns_(&(mgl[l].schwarz.A.row),
-                             mgl[l].schwarz.A.IA,
-                             mgl[l].schwarz.A.JA,
-                             mgl[l].schwarz.A.val,
-                             mgl[l].x.val,
-                             mgl[l].b.val,
-                             &(mgl[l].schwarz.nblk),
-                             mgl[l].schwarz.iblock,
-                             mgl[l].schwarz.jblock,
-                             mgl[l].schwarz.mask,
-                             mgl[l].schwarz.maxa,
-                             mgl[l].schwarz.au,
-                             mgl[l].schwarz.al,
-                             mgl[l].schwarz.rhsloc,
-                             &(mgl[l].schwarz.memt));
-                    fbgs2ns_(&(mgl[l].schwarz.A.row),
-                             mgl[l].schwarz.A.IA,
-                             mgl[l].schwarz.A.JA,
-                             mgl[l].schwarz.A.val,
-                             mgl[l].x.val,
-                             mgl[l].b.val,
-                             &(mgl[l].schwarz.nblk),
-                             mgl[l].schwarz.iblock,
-                             mgl[l].schwarz.jblock,
-                             mgl[l].schwarz.mask,
-                             mgl[l].schwarz.maxa,
-                             mgl[l].schwarz.au,
-                             mgl[l].schwarz.al,
-                             mgl[l].schwarz.rhsloc,
-                             &(mgl[l].schwarz.memt));
-                    break;
-#endif
-//					fasp_dcsr_schwarz_smoother(&mgl[l].schwarz, &mgl[l].x, &mgl[l].b);
-					break;
-                default:
-
-#if 0
-                    bbgs2ns_(&(mgl[l].schwarz.A.row),
-                             mgl[l].schwarz.A.IA,
-                             mgl[l].schwarz.A.JA,
-                             mgl[l].schwarz.A.val,
-                             mgl[l].x.val,
-                             mgl[l].b.val,
-                             &(mgl[l].schwarz.nblk),
-                             mgl[l].schwarz.iblock,
-                             mgl[l].schwarz.jblock,
-                             mgl[l].schwarz.mask,
-                             mgl[l].schwarz.maxa,
-                             mgl[l].schwarz.au,
-                             mgl[l].schwarz.al,
-                             mgl[l].schwarz.rhsloc,
-                             &(mgl[l].schwarz.memt));
-#else
-					fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
-#endif
-
-					break;
-			}
-		}
         
+        // post-smoothing with Schwarz method
+        else if ( l < mgl->schwarz_levels ) {
+            switch (mgl[l].schwarz.schwarz_type) {
+                case 3:
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    break;
+                default:
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    break;
+            }
+        }
+        
+        // post-smoothing with standard methods
         else {
             
 #if FASP_GSRB
-	        if (( l==0 )&&(nx_rb>1))
-				fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
+            if (( l==0 )&&(nx_rb>1))
+                fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
                                            param->presmooth_iter, -1, IMAP, MAXIMAP,
                                            nx_rb, ny_rb, nz_rb);
-			else
-            	fasp_dcsr_postsmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
+            else
+                fasp_dcsr_postsmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
                                         param->postsmooth_iter, 0, mgl[l].A.row-1, -1,
                                         relax, ndeg, smooth_order,mgl[l].cfmark.val);
 #else
@@ -389,7 +292,7 @@ ForwardSweep:
                 switch (smoother) {
                     case SMOOTHER_JACOBI:
                         for (i=0; i<steps; i++)
-                            fasp_smoother_dbsr_jacobi1(&mgl[l].A,&mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_jacobi1(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
                         break;
                     case SMOOTHER_GS:
                         for (i=0; i<steps; i++)
@@ -432,14 +335,13 @@ ForwardSweep:
             // z_nk = A_nk^{-1}*r_nk
 #if WITH_UMFPACK // use UMFPACK directly
             fasp_solver_umfpack(mgl[l].A_nk, &r_nk, &z_nk, 0);
-			
+            
 #else
             fasp_coarse_itsolver(mgl[l].A_nk, &r_nk, &z_nk, 1e-12, 0);
 #endif
             
             // z = z + P_nk*z_nk;
             fasp_blas_dcsr_aAxpy(1.0, mgl[l].P_nk, z_nk.val, mgl[l].x.val);
-            //--------------------------------------------
         }
         
         // form residual r = b - A x
@@ -539,7 +441,6 @@ ForwardSweep:
             
             // z = z + P_nk*z_nk;
             fasp_blas_dcsr_aAxpy(1.0, mgl[l].P_nk, z_nk.val, mgl[l].x.val);
-            //--------------------------------------------
         }
         
         // post-smoothing
@@ -553,7 +454,7 @@ ForwardSweep:
                 switch (smoother) {
                     case SMOOTHER_JACOBI:
                         for (i=0; i<steps; i++)
-                            fasp_smoother_dbsr_jacobi1(&mgl[l].A,&mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_jacobi1(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
                         break;
                     case SMOOTHER_GS:
                         for (i=0; i<steps; i++)

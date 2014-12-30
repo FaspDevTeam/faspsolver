@@ -25,9 +25,9 @@ static void fasp_coarse_itsolver (dCSRmat *A,
 {
     const INT csize  = A->row;
     const INT cmaxit = MAX(250,MIN(csize*csize, 1000)); // Should NOT be less!
-        
+
     INT status = fasp_solver_dcsr_spcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);
-    
+
     // If PCG fails to converge, use PGMRES as another safe net
     if ( status < 0 ) {
         status = fasp_solver_dcsr_spvgmres (A, b, x, NULL, ctol, cmaxit, 20, 1, PRINT_NONE);
@@ -36,15 +36,14 @@ static void fasp_coarse_itsolver (dCSRmat *A,
     if ( status < 0 && prt_lvl >= PRINT_MORE ) {
         printf("### WARNING: Coarse level solver failed to converge!\n");
     }
-} 
-
+}
 
 /**
- * \fn static void fasp_dcsr_presmoothing (const SHORT smoother, dCSRmat *A, 
+ * \fn static void fasp_dcsr_presmoothing (const SHORT smoother, dCSRmat *A,
  *                                         dvector *b, dvector *x,
  *                                         const INT nsweeps, const INT istart,
- *                                         const INT iend, const INT istep, 
- *                                         const REAL relax, const SHORT ndeg, 
+ *                                         const INT iend, const INT istep,
+ *                                         const REAL relax, const SHORT ndeg,
  *                                         const SHORT order, INT *ordering)
  *
  * \brief Multigrid presmoothing
@@ -80,68 +79,68 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
                                     const SHORT ndeg,
                                     const SHORT order,
                                     INT *ordering)
-{    
+{
     switch (smoother) {
 
         case SMOOTHER_GS:
-            if (order == NO_ORDER || ordering == NULL) 
+            if (order == NO_ORDER || ordering == NULL)
                 fasp_smoother_dcsr_gs(x, istart, iend, istep, A, b, nsweeps);
-            else if (order == CF_ORDER) 
+            else if (order == CF_ORDER)
                 fasp_smoother_dcsr_gs_cf(x, A, b, nsweeps, ordering, 1);
             break;
-            
+
         case SMOOTHER_SGS:
             fasp_smoother_dcsr_sgs(x, A, b, nsweeps);
             break;
-        
-        case SMOOTHER_JACOBI: 
+
+        case SMOOTHER_JACOBI:
             fasp_smoother_dcsr_jacobi(x, istart, iend, istep, A, b, nsweeps);
             break;
-        
-        case SMOOTHER_L1DIAG: 
+
+        case SMOOTHER_L1DIAG:
             fasp_smoother_dcsr_L1diag(x, istart, iend, istep, A, b, nsweeps);
             break;
-            
+
         case SMOOTHER_POLY:
-            fasp_smoother_dcsr_poly(A, b, x, iend+1, ndeg, nsweeps); 
+            fasp_smoother_dcsr_poly(A, b, x, iend+1, ndeg, nsweeps);
             break;
-            
+
         case SMOOTHER_SOR:
             fasp_smoother_dcsr_sor(x, istart, iend, istep, A, b, nsweeps, relax);
             break;
-        
+
         case SMOOTHER_SSOR:
             fasp_smoother_dcsr_sor(x, istart, iend, istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_sor(x, iend, istart,-istep, A, b, nsweeps, relax);
             break;
-        
+
         case SMOOTHER_GSOR:
             fasp_smoother_dcsr_gs (x, istart, iend, istep, A, b, nsweeps);
             fasp_smoother_dcsr_sor(x, iend, istart,-istep, A, b, nsweeps, relax);
             break;
-        
+
         case SMOOTHER_SGSOR:
             fasp_smoother_dcsr_gs (x, istart, iend, istep, A, b, nsweeps);
             fasp_smoother_dcsr_gs (x, iend, istart,-istep, A, b, nsweeps);
             fasp_smoother_dcsr_sor(x, istart, iend, istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_sor(x, iend, istart,-istep, A, b, nsweeps, relax);
             break;
-        
+
         case SMOOTHER_CG:
             fasp_solver_dcsr_pcg(A, b, x, NULL, 1e-3, nsweeps, 1, PRINT_NONE);
             break;
-        
+
         default:
-            printf("### ERROR: Wrong smoother type %d!\n", smoother); 
+            printf("### ERROR: Wrong smoother type %d!\n", smoother);
             fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
     }
 }
 
 /**
- * \fn static void fasp_dcsr_postsmoothing (const SHORT smoother, dCSRmat *A, 
+ * \fn static void fasp_dcsr_postsmoothing (const SHORT smoother, dCSRmat *A,
  *                                          dvector *b, dvector *x,
  *                                          const INT nsweeps, const INT istart,
- *                                          const INT iend, const INT istep, 
+ *                                          const INT iend, const INT istep,
  *                                          const REAL relax, const SHORT ndeg,
  *                                          const SHORT order, INT *ordering)
  *
@@ -156,7 +155,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
  * \param  iend      ending index
  * \param  istep     step size
  * \param  relax     relaxation parameter for SOR-type smoothers
- * \param  ndeg      degree of the polynomial smoother 
+ * \param  ndeg      degree of the polynomial smoother
  * \param  order     order for smoothing sweeps
  * \param  ordering  user defined ordering
  *
@@ -180,58 +179,58 @@ static void fasp_dcsr_postsmoothing (const SHORT smoother,
                                      INT *ordering)
 {
     switch (smoother) {
-        
+
         case SMOOTHER_GS:
             if (order == NO_ORDER || ordering == NULL) {
                 fasp_smoother_dcsr_gs(x, iend, istart, istep, A, b, nsweeps);
-			}
+            }
             else if (order == CF_ORDER)
                 fasp_smoother_dcsr_gs_cf(x, A, b, nsweeps, ordering, -1);
             break;
-        
+
         case SMOOTHER_SGS:
             fasp_smoother_dcsr_sgs(x, A, b, nsweeps);
             break;
-            
+
         case SMOOTHER_JACOBI:
             fasp_smoother_dcsr_jacobi(x, iend, istart, istep, A, b, nsweeps);
             break;
-            
+
         case SMOOTHER_L1DIAG:
             fasp_smoother_dcsr_L1diag(x, iend, istart, istep, A, b, nsweeps);
-            break;            
-       
-        case SMOOTHER_POLY:
-            fasp_smoother_dcsr_poly(A, b, x, iend+1, ndeg, nsweeps); 
             break;
-            
+
+        case SMOOTHER_POLY:
+            fasp_smoother_dcsr_poly(A, b, x, iend+1, ndeg, nsweeps);
+            break;
+
         case SMOOTHER_SOR:
             fasp_smoother_dcsr_sor(x, iend, istart, istep, A, b, nsweeps, relax);
             break;
-        
+
         case SMOOTHER_SSOR:
             fasp_smoother_dcsr_sor(x, istart, iend, -istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_sor(x, iend, istart,  istep, A, b, nsweeps, relax);
             break;
-        
+
         case SMOOTHER_GSOR:
             fasp_smoother_dcsr_sor(x, istart, iend, -istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_gs (x, iend, istart,  istep, A, b, nsweeps);
             break;
-        
+
         case SMOOTHER_SGSOR:
             fasp_smoother_dcsr_sor(x, istart, iend, -istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_sor(x, iend, istart,  istep, A, b, nsweeps, relax);
             fasp_smoother_dcsr_gs (x, istart, iend, -istep, A, b, nsweeps);
             fasp_smoother_dcsr_gs (x, iend, istart,  istep, A, b, nsweeps);
             break;
-        
+
         case SMOOTHER_CG:
             fasp_solver_dcsr_pcg(A, b, x, NULL, 1e-3, nsweeps, 1, PRINT_NONE);
             break;
-        
+
         default:
-            printf("### ERROR: Wrong smoother type %d!\n", smoother); 
+            printf("### ERROR: Wrong smoother type %d!\n", smoother);
             fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
     }
 }

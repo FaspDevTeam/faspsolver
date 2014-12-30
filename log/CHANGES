@@ -1,5 +1,15 @@
 File Name: CHANGES
 
+12/30/2014 FASP 1.6.3:
+- Add new pairwise aggregation code.
+- Add new GCR iterative solver.
+- Update nonlinear AMLI cycle.
+- Find a bug in DIAG_PREF option.
+- Stop using old Schwarz smoother.
+- Format C code a little.
+- Update regression test and its results.
+- Update log.
+
 12/26/2014 FASP 1.6.2:
 - Modify CMAKE compiler preference: use CC environment first.
 - Add aggressive coarsening based on MIS.
