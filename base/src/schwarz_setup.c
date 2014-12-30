@@ -9,7 +9,6 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 #include "forts_ns.h"
-
 #include "mg_util.inl"
 
 static void schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
@@ -57,8 +56,8 @@ void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
         maxbs = MAX(maxbs, nloc);
     }
     
-	schwarz->maxbs = maxbs;
-
+    schwarz->maxbs = maxbs;
+    
     // allocate memory for each sub_block's right hand
     schwarz->xloc1   = fasp_dvec_create(maxbs);
     schwarz->rhsloc1 = fasp_dvec_create(maxbs);
@@ -218,11 +217,9 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     schwarz->blk_data = (dCSRmat*)fasp_mem_calloc(nblk, sizeof(dCSRmat));
     
     fasp_schwarz_get_block_matrix(schwarz, nblk, iblock, jblock, mask);
-
-	//dCSRmat *blk = schwarz->blk_data;
     
-	blk = schwarz->blk_data;
-
+    blk = schwarz->blk_data;
+    
     // Setup for each block solver
     switch (block_solver) {
             
@@ -368,13 +365,12 @@ void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz,
 #if WITH_UMFPACK
             case SOLVER_UMFPACK: {
                 /* use UMFPACK direct solver on each block */
-                printf("umfpack\n");
                 fasp_umfpack_solve(&blk[is], &rhs, &u, numeric[is], 0);
                 break;
             }
 #endif
-                /* use iterative solver on each block */
             default:
+                /* use iterative solver on each block */
                 u.row = blk[is].row;
                 rhs.row = blk[is].row;
                 fasp_dvec_set(u.row, &u, 0);
@@ -451,13 +447,10 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
             iblk = ibl0 + i;
             ki = jblock[iblk];
             rhs.val[i] = b->val[ki];
-            //iaa = ia[ki];
-            //iab = ia[ki+1];
             iaa = ia[ki]-1;
             iab = ia[ki+1]-1;
             for (kij = iaa; kij<iab; ++kij) {
                 kj = ja[kij]-1;
-                //kj = ja[kij];
                 j  = mask[kj];
                 if(j == 0) {
                     rhs.val[i] -= val[kij]*x->val[kj];

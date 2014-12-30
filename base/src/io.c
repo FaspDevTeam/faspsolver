@@ -1339,10 +1339,11 @@ void fasp_ivec_write (const char *filename,
     
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
+    // write number of nonzeros
     fprintf(fp,"%d\n",m);
     
-    //for ( i = 0; i < m; ++i ) fprintf(fp,"%d %d\n",i,vec->val[i]+1);
-    for ( i = 0; i < m; ++i ) fprintf(fp,"%d\n",vec->val[i]+1);
+    // write index and value each line
+    for ( i = 0; i < m; ++i ) fprintf(fp,"%d %d\n",i,vec->val[i]+1);
     
     fclose(fp);
 }

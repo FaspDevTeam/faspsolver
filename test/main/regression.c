@@ -126,7 +126,7 @@ int main (int argc, const char * argv[])
                 // Generate an exact solution randomly
                 sol = fasp_dvec_create(A.row);
                 fasp_dvec_rand(A.row, &sol);
-                
+
                 // Form the right-hand-side b = A*sol
                 b = fasp_dvec_create(A.row);
                 fasp_blas_dcsr_mxv(&A, sol.val, b.val);
