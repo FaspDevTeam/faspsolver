@@ -2,56 +2,56 @@
  *
  *  \brief Krylov subspace methods -- Preconditioned BiCGstab (matrix free)
  *
- *  Abstract algorithm of Krylov method    
+ *  Abstract algorithm of Krylov method
  *
- *  Krylov method to solve A*x=b is to generate {x_k} to approximate x, 
- *  where x_k is the optimal solution in Krylov space 
+ *  Krylov method to solve A*x=b is to generate {x_k} to approximate x,
+ *  where x_k is the optimal solution in Krylov space
  *
- *     V_k=span{r_0,A*r_0,A^2*r_0,...,A^{k-1}*r_0}, 
+ *     V_k=span{r_0,A*r_0,A^2*r_0,...,A^{k-1}*r_0},
  *
- *  under some inner product. 
+ *  under some inner product.
  *
- *  For the implementation, we generate a series of {p_k} such that V_k=span{p_1,...,p_k}. Details: 
+ *  For the implementation, we generate a series of {p_k} such that V_k=span{p_1,...,p_k}. Details:
  *
- *  Step 0. Given A, b, x_0, M  
- *  
- *  Step 1. Compute residual r_0 = b-A*x_0 and convergence check;  
- *  
- *  Step 2. Initialization z_0 = M^{-1}*r_0, p_0=z_0;  
- *  
+ *  Step 0. Given A, b, x_0, M
+ *
+ *  Step 1. Compute residual r_0 = b-A*x_0 and convergence check;
+ *
+ *  Step 2. Initialization z_0 = M^{-1}*r_0, p_0=z_0;
+ *
  *  Step 3. Main loop ...
  *
- *  FOR k = 0:MaxIt      
- *      - get step size alpha = f(r_k,z_k,p_k);      
- *      - update solution: x_{k+1} = x_k + alpha*p_k;      
- *      - perform stagnation check;      
- *      - update residual: r_{k+1} = r_k - alpha*(A*p_k);        
- *      - perform residual check;      
- *      - obtain p_{k+1} using {p_0, p_1, ... , p_k};      
- *      - prepare for next iteration;      
- *      - print the result of k-th iteration; 
+ *  FOR k = 0:MaxIt
+ *      - get step size alpha = f(r_k,z_k,p_k);
+ *      - update solution: x_{k+1} = x_k + alpha*p_k;
+ *      - perform stagnation check;
+ *      - update residual: r_{k+1} = r_k - alpha*(A*p_k);
+ *      - perform residual check;
+ *      - obtain p_{k+1} using {p_0, p_1, ... , p_k};
+ *      - prepare for next iteration;
+ *      - print the result of k-th iteration;
  *  END FOR
- * 
- *  Convergence check is: norm(r)/norm(b) < tol  
- *  
- *  Stagnation check is like following:    
- *      - IF norm(alpha*p_k)/norm(x_{k+1}) < tol_stag 
- *          -# compute r=b-A*x_{k+1}; 
- *          -# convergence check; 
+ *
+ *  Convergence check is: norm(r)/norm(b) < tol
+ *
+ *  Stagnation check is like following:
+ *      - IF norm(alpha*p_k)/norm(x_{k+1}) < tol_stag
+ *          -# compute r=b-A*x_{k+1};
+ *          -# convergence check;
  *          -# IF ( not converged & restart_number < Max_Stag_Check ) restart;
- *      - END IF  
- *  
- *  Residual check is like following:     
- *      - IF norm(r_{k+1})/norm(b) < tol             
- *          -# compute the real residual r = b-A*x_{k+1}; 
- *          -# convergence check; 
+ *      - END IF
+ *
+ *  Residual check is like following:
+ *      - IF norm(r_{k+1})/norm(b) < tol
+ *          -# compute the real residual r = b-A*x_{k+1};
+ *          -# convergence check;
  *          -# IF ( not converged & restart_number < Max_Res_Check ) restart;
- *      - END IF 
+ *      - END IF
  *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
- */  
+ */
 
 #include <math.h>
 
@@ -64,11 +64,11 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_pbcgs (mxv_matfree *mf, dvector *b, dvector *u, precond *pc, 
- *                            const REAL tol, const INT MaxIt, 
+ * \fn INT fasp_solver_pbcgs (mxv_matfree *mf, dvector *b, dvector *u, precond *pc,
+ *                            const REAL tol, const INT MaxIt,
  *                            const SHORT stop_type, const SHORT print_level)
  *
- * \brief Preconditioned BiCGstab method for solving Au=b 
+ * \brief Preconditioned BiCGstab method for solving Au=b
  *
  * \param mf           Pointer to mxv_matfree: the spmv operation
  * \param b            Pointer to dvector: the right hand side
@@ -85,15 +85,15 @@
  * \date   09/09/2009
  *
  * Rewritten by Chensong Zhang on 04/30/2012
- * Modified by Feiteng Huang on 06/01/2012: fix restart param-init 
+ * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Feiteng Huang on 09/26/2012, (mmatrix free)
  */
-INT fasp_solver_pbcgs (mxv_matfree *mf, 
-                       dvector *b, 
-                       dvector *u, 
-                       precond *pc, 
+INT fasp_solver_pbcgs (mxv_matfree *mf,
+                       dvector *b,
+                       dvector *u,
+                       precond *pc,
                        const REAL tol,
-                       const INT MaxIt, 
+                       const INT MaxIt,
                        const SHORT stop_type,
                        const SHORT print_level)
 {
@@ -113,7 +113,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)
-    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(REAL));    
+    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(REAL));
     REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
     REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
     
@@ -131,34 +131,34 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
     
     // pp=precond(p)
     fasp_array_cp(m,r,p);
-    if (pc != NULL) 
+    if (pc != NULL)
         pc->fct(p,pp,pc->data); /* Apply preconditioner */
-    else 
+    else
         fasp_array_cp(m,p,pp); /* No preconditioner */
     
-    // compute initial relative residual 
+    // compute initial relative residual
     switch (stop_type) {
         case STOP_REL_PRECRES:
             absres0=sqrt(ABS(fasp_blas_array_dotprod(m,r,pp)));
             normr0=MAX(SMALLREAL,absres0);
-            relres=absres0/normr0; 
+            relres=absres0/normr0;
             break;
         case STOP_MOD_REL_RES:
             absres0=fasp_blas_array_norm2(m,r);
             normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,uval));
-            relres=absres0/normu; 
+            relres=absres0/normu;
             break;
         default:
             absres0=fasp_blas_array_norm2(m,r);
             normr0=MAX(SMALLREAL,absres0);
-            relres=absres0/normr0; 
+            relres=absres0/normr0;
             break;
     }
     
     if (relres<tol) goto FINISHED;
     
     // rho = r* := r
-    fasp_array_cp(m,r,rho);    
+    fasp_array_cp(m,r,rho);
     temp1=fasp_blas_array_dotprod(m,r,rho);
     
     while ( iter++ < MaxIt ) {
@@ -167,13 +167,13 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         mf->fct(mf->data, pp, z);
         
         // alpha = (r,rho)/(A*p,rho)
-        temp2=fasp_blas_array_dotprod(m,z,rho);    
+        temp2=fasp_blas_array_dotprod(m,z,rho);
         if (ABS(temp2)>SMALLREAL) {
             alpha=temp1/temp2;
         }
         else {
             ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;            
+            return ERROR_SOLVER_MISC;
         }
         
         // s = r - alpha z
@@ -181,9 +181,9 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         fasp_blas_array_axpy(m,-alpha,z,s);
         
         // sp = precond(s)
-        if (pc != NULL) 
+        if (pc != NULL)
             pc->fct(s,sp,pc->data); /* Apply preconditioner */
-        else 
+        else
             fasp_array_cp(m,s,sp); /* No preconditioner */
         
         // t = A*sp;
@@ -219,7 +219,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         }
         else {
             ITS_DIVZERO;
-            return ERROR_SOLVER_MISC;            
+            return ERROR_SOLVER_MISC;
         }
         
         // p = p - omega z
@@ -229,9 +229,9 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         fasp_blas_array_axpby(m,1.0,r,beta,p);
         
         // pp = precond(p)
-        if (pc != NULL) 
+        if (pc != NULL)
             pc->fct(p,pp,pc->data); /* Apply preconditioner */
-        else 
+        else
             fasp_array_cp(m,p,pp); /* No preconditioner */
         
         // compute reducation factor of residual ||r||
@@ -241,7 +241,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         // relative difference
         normd = fasp_blas_array_norm2(m,sp);
         normu = fasp_blas_array_norm2(m,uval);
-        reldiff = normd/normu;    
+        reldiff = normd/normu;
         
         if ( normd<TOL_s ) {
             ITS_SMALLSP; goto FINISHED;
@@ -253,21 +253,21 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
                 if (pc == NULL) fasp_array_cp(m,r,z);
                 else pc->fct(r,z,pc->data);
                 tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-                relres=tempr/normr0; 
+                relres=tempr/normr0;
                 break;
             case STOP_MOD_REL_RES:
-                relres=absres/normu; 
+                relres=absres/normu;
                 break;
             default:
-                relres=absres/normr0; 
+                relres=absres/normr0;
                 break;
         }
         
-        // output iteration information if needed    
+        // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
         // solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
-        infnormu = fasp_blas_array_norminf(m, uval); 
+        infnormu = fasp_blas_array_norminf(m, uval);
         if (infnormu <= sol_inf_tol) {
             if (print_level>PRINT_MIN) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
@@ -288,12 +288,12 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
             
             // pp=precond(p)
             fasp_array_cp(m,r,p);
-            if (pc != NULL) 
+            if (pc != NULL)
                 pc->fct(p,pp,pc->data); /* Apply preconditioner */
-            else 
+            else
                 fasp_array_cp(m,p,pp); /* No preconditioner */
             // rho = r* := r
-            fasp_array_cp(m,r,rho);    
+            fasp_array_cp(m,r,rho);
             temp1=fasp_blas_array_dotprod(m,r,rho);
             absres=fasp_blas_array_norm2(m,r);
             
@@ -305,13 +305,13 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
                     else
                         fasp_array_cp(m,r,z);
                     tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-                    relres=tempr/normr0; 
+                    relres=tempr/normr0;
                     break;
                 case STOP_MOD_REL_RES:
-                    relres=absres/normu; 
+                    relres=absres/normu;
                     break;
                 default:
-                    relres=absres/normr0; 
+                    relres=absres/normr0;
                     break;
             }
             
@@ -341,30 +341,30 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
             
             // pp=precond(p)
             fasp_array_cp(m,r,p);
-            if (pc != NULL) 
+            if (pc != NULL)
                 pc->fct(p,pp,pc->data); /* Apply preconditioner */
-            else 
+            else
                 fasp_array_cp(m,p,pp); /* No preconditioner */
             // rho = r* := r
-            fasp_array_cp(m,r,rho);    
+            fasp_array_cp(m,r,rho);
             temp1=fasp_blas_array_dotprod(m,r,rho);
             absres=fasp_blas_array_norm2(m,r);
             
             // relative residual
             switch (stop_type) {
                 case STOP_REL_PRECRES:
-                    if (pc != NULL) 
+                    if (pc != NULL)
                         pc->fct(r,z,pc->data);
-                    else 
+                    else
                         fasp_array_cp(m,r,z);
                     tempr=sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-                    relres=tempr/normr0; 
+                    relres=tempr/normr0;
                     break;
                 case STOP_MOD_REL_RES:
-                    relres=absres/normu; 
+                    relres=absres/normu;
                     break;
                 default:
-                    relres=absres/normr0; 
+                    relres=absres/normr0;
                     break;
             }
             
@@ -386,7 +386,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
             ++restart_step;
         } // end if safe guard
         
-        absres0=absres;    
+        absres0=absres;
     }
     
 FINISHED:  // finish the iterative method
@@ -399,9 +399,9 @@ FINISHED:  // finish the iterative method
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
-    if (iter>MaxIt) 
+    if (iter>MaxIt)
         return ERROR_SOLVER_MAXIT;
-    else 
+    else
         return iter;
 }
 

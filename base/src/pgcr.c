@@ -11,15 +11,15 @@ static void dense_aAxpby (INT, INT, REAL *, REAL, REAL *, REAL, REAL *);
 
 /**
  * \fn int fasp_solver_dcsr_pgcr1 (dCSRmat *A,  dvector *b, dvector *u, \
- *	                                precond *pc, const REAL tol, const INT MaxIt, \
- *	                                const INT restart, const INT stop_type, \
- *	                                const INT print_level)
+ *                                  precond *pc, const REAL tol, const INT MaxIt, \
+ *                                  const INT restart, const INT stop_type, \
+ *                                  const INT print_level)
  *
  * \brief A preconditioned GCR method for solving Au=b
  *
- * \param *A	 Pointer to the coefficient matrix
- * \param *b	 Pointer to the dvector of right hand side
- * \param *u	 Pointer to the dvector of dofs
+ * \param *A     Pointer to the coefficient matrix
+ * \param *b     Pointer to the dvector of right hand side
+ * \param *u     Pointer to the dvector of dofs
  * \param MaxIt Maximal number of iterations
  * \param tol   Tolerance for stopage
  * \param *pre  Pointer to the structure of precondition (precond)
@@ -223,14 +223,14 @@ FINISHED:
 /**
  * \fn int fasp_solver_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *x, \
  *                                precond *pc, const REAL tol, const INT MaxIt, \
- *	                              const INT restart, const INT stop_type, \
- *	                              const INT print_level)
+ *                                const INT restart, const INT stop_type, \
+ *                                const INT print_level)
  *
  * \brief A preconditioned GCR method for solving Au=b
  *
- * \param *A	 Pointer to the coefficient matrix
- * \param *b	 Pointer to the dvector of right hand side
- * \param *u	 Pointer to the dvector of dofs
+ * \param *A     Pointer to the coefficient matrix
+ * \param *b     Pointer to the dvector of right hand side
+ * \param *u     Pointer to the dvector of dofs
  * \param MaxIt  Maximal number of iterations
  * \param tol    Tolerance for stopage
  * \param *pre   Pointer to the structure of precondition (precond)
@@ -398,14 +398,14 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
 }
 
 /**
- *	\fn void fasp_krylov_cycle_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *u, precond *pc)
+ *  \fn void fasp_krylov_cycle_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *u, precond *pc)
  *
- *	\brief A preconditioned GCR method for solving Au=b
+ *  \brief A preconditioned GCR method for solving Au=b
  *
- *	\param *A	 Pointer to the coefficient matrix
- *	\param *b	 Pointer to the dvector of right hand side
- *	\param *u	 Pointer to the dvector of dofs
- *	\param *pre  Pointer to the structure of precondition (precond)
+ *  \param *A    Pointer to the coefficient matrix
+ *  \param *b    Pointer to the dvector of right hand side
+ *  \param *u    Pointer to the dvector of dofs
+ *  \param *pre  Pointer to the structure of precondition (precond)
  *
  * \author zheng Li, Chensong Zhang
  * \date   11/09/2014
@@ -505,10 +505,10 @@ void fasp_krylov_cycle_dcsr_pgcr  (dCSRmat *A,
  *
  * \param n     Pointer to row
  * \param m     Pointer to col
- * \param A	    Pointer to CSR matrix
+ * \param A     Pointer to CSR matrix
  * \param alpha Real factor alpha
- * \param x	    Pointer to the dvector of right hand side
- * \param beta	Real factor beta
+ * \param x     Pointer to the dvector of right hand side
+ * \param beta  Real factor beta
  * \param y     Maximal number of iterations
  *
  * \author zheng Li, Chensong Zhang

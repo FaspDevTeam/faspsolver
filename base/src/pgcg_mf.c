@@ -3,10 +3,10 @@
  *  \brief Krylov subspace methods -- Preconditioned Generalized CG (matrix free)
  *
  *  \note Refer to Concus, P. and Golub, G.H. and O'Leary, D.P.
- *        A Generalized Conjugate Gradient Method for the Numerical: 
+ *        A Generalized Conjugate Gradient Method for the Numerical:
  *        Solution of Elliptic Partial Differential Equations,
  *        Computer Science Department, Stanford University, 1976
- */  
+ */
 
 #include <math.h>
 
@@ -19,11 +19,11 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_pgcg (mxv_matfree *mf, dvector *b, dvector *u, precond *pc, 
- *                           const REAL tol, const INT MaxIt, 
+ * \fn INT fasp_solver_pgcg (mxv_matfree *mf, dvector *b, dvector *u, precond *pc,
+ *                           const REAL tol, const INT MaxIt,
  *                           const SHORT stop_type, const SHORT print_level)
  *
- * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b 
+ * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b
  *
  * \param mf           Pointer to mxv_matfree: the spmv operation
  * \param b            Pointer to dvector: the right hand side
@@ -44,12 +44,12 @@
  * Modified by Chensong Zhang on 05/01/2012
  * Modified by Feiteng Huang on 09/26/2012: matrix free
  */
-INT fasp_solver_pgcg (mxv_matfree *mf, 
-                      dvector *b, 
-                      dvector *u, 
-                      precond *pc, 
+INT fasp_solver_pgcg (mxv_matfree *mf,
+                      dvector *b,
+                      dvector *u,
+                      precond *pc,
                       const REAL tol,
-                      const INT MaxIt, 
+                      const INT MaxIt,
                       const SHORT stop_type,
                       const SHORT print_level)
 {
@@ -58,17 +58,17 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     REAL   relres  = BIGREAL, normb  = BIGREAL;
     REAL   alpha, factor, gama_1, gama_2;
     
-    // allocate temp memory 
-    REAL *work = (REAL *)fasp_mem_calloc(3*m+MaxIt+MaxIt*m,sizeof(REAL));    
+    // allocate temp memory
+    REAL *work = (REAL *)fasp_mem_calloc(3*m+MaxIt+MaxIt*m,sizeof(REAL));
     
     REAL *r, *Br, *beta, *p, *q;
     q = work; r = q + m; Br = r + m; beta = Br + m; p = beta + MaxIt;
-        
+    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
-
+    
     normb=fasp_blas_array_norm2(m,b->val);
     
     // -------------------------------------
@@ -78,7 +78,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     mf->fct(mf->data, u->val, r);
     fasp_blas_array_axpby(m, 1.0, b->val, -1.0, r);
     
-    // Br 
+    // Br
     if (pc != NULL)
         pc->fct(r,p,pc->data); /* Preconditioning */
     else
@@ -98,63 +98,63 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     // norm(r), factor
     absres = fasp_blas_array_norm2(m,r); factor = absres/absres0;
     
-    // compute relative residual 
-    relres = absres/normb;    
+    // compute relative residual
+    relres = absres/normb;
     
-    // output iteration information if needed    
+    // output iteration information if needed
     print_itinfo(print_level,stop_type,iter+1,relres,absres,factor);
     
     // update relative residual here
     absres0 = absres;
     
     for ( iter = 1; iter < MaxIt ; iter++) {
-    
+        
         // Br
         if (pc != NULL)
-            pc->fct(r, Br ,pc->data); // Preconditioning 
+            pc->fct(r, Br ,pc->data); // Preconditioning
         else
-            fasp_array_cp(m,r, Br); // No preconditioner, B=I 
+            fasp_array_cp(m,r, Br); // No preconditioner, B=I
         
         // form p
         fasp_array_cp(m, Br, p+iter*m);
-    
+        
         for (i=0; i<iter; i++) {
             mf->fct(mf->data, Br, q);
             gama_1 = fasp_blas_array_dotprod(m, p+i*m, q);
             mf->fct(mf->data, p+i*m, q);
             gama_2 = fasp_blas_array_dotprod(m, p+i*m, q);
             beta[i] = (-1.0) * ( gama_1 / gama_2 );
-    
+            
             fasp_blas_array_axpy(m, beta[i], p+i*m, p+iter*m);
         }
-    
+        
         // -------------------------------------
         // next iteration
         // -------------------------------------
-
+        
         // alpha = (p'r)/(p'Ap)
         mf->fct(mf->data, p+iter*m, q);
         alpha = fasp_blas_array_dotprod(m,r,p+iter*m)
-            / fasp_blas_array_dotprod (m, q, p+iter*m);
-    
+        / fasp_blas_array_dotprod (m, q, p+iter*m);
+        
         // u = u + alpha *p
         fasp_blas_array_axpy(m, alpha , p+iter*m, u->val);
-    
+        
         // r = r - alpha *Ap
         mf->fct(mf->data, p+iter*m, q);
         fasp_blas_array_axpby(m, (-1.0*alpha), q, 1.0, r);
-    
+        
         // norm(r), factor
         absres = fasp_blas_array_norm2(m,r); factor = absres/absres0;
-    
-        // compute relative residual 
-        relres = absres/normb;    
-    
-        // output iteration information if needed    
+        
+        // compute relative residual
+        relres = absres/normb;
+        
+        // output iteration information if needed
         print_itinfo(print_level,stop_type,iter+1,relres,absres,factor);
-    
+        
         if (relres < tol) break;
-    
+        
         // update relative residual here
         absres0 = absres;
         
@@ -170,9 +170,9 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
-    if (iter>MaxIt) 
+    if (iter>MaxIt)
         return ERROR_SOLVER_MAXIT;
-    else 
+    else
         return iter;
 }
 

@@ -77,9 +77,9 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    INT      Restart = MIN(restart, MaxIt);
-    INT      Restartplus1 = Restart + 1;
-    LONG     worksize = (Restart+4)*(Restart+n)+1-n;
+    unsigned INT   Restart  = MIN(restart, MaxIt);
+    unsigned INT   Restart1 = Restart + 1;
+    unsigned LONG  worksize = (Restart+4)*(Restart+n)+1-n;
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
@@ -92,30 +92,30 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
-        Restartplus1 = Restart + 1;
+        Restart1 = Restart + 1;
         worksize = (Restart+4)*(Restart+n)+1-n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     }
-
+    
     if ( work == NULL ) {
         printf("### ERROR: No enough memory for GMRES %s : %s : %d!\n",
                __FILE__, __FUNCTION__, __LINE__ );
         exit(ERROR_ALLOC_MEM);
     }
-
+    
     if ( print_level > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
-    p     = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    p     = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c  = rs + Restartplus1; s  = c + Restart;
+    r = work; w = r + n; rs = w + n; c  = rs + Restart1; s  = c + Restart;
     
-    for ( i = 0; i < Restartplus1; i++ ) p[i]  = s + Restart + i*n;
+    for ( i = 0; i < Restart1; i++ ) p[i]  = s + Restart + i*n;
     
-    for ( i = 0; i < Restartplus1; i++ ) hh[i] = p[Restart] + n + i*Restart;
+    for ( i = 0; i < Restart1; i++ ) hh[i] = p[Restart] + n + i*Restart;
     
     // compute initial residual: r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -188,7 +188,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
                 t = 1.0/t;
                 fasp_blas_array_ax(n, t, p[i]);
             }
-
+            
             for ( j = 1; j < i; ++j ) {
                 t = hh[j-1][i-1];
                 hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
@@ -371,9 +371,9 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    INT      Restart = MIN(restart, MaxIt);
-    INT      Restartplus1 = Restart + 1;
-    LONG     worksize = (Restart+4)*(Restart+n)+1-n;
+    unsigned INT   Restart  = MIN(restart, MaxIt);
+    unsigned INT   Restart1 = Restart + 1;
+    unsigned LONG  worksize = (Restart+4)*(Restart+n)+1-n;
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
@@ -386,7 +386,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
-        Restartplus1 = Restart + 1;
+        Restart1 = Restart + 1;
         worksize = (Restart+4)*(Restart+n)+1-n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     }
@@ -401,15 +401,15 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
-    p     = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    p     = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c  = rs + Restartplus1; s  = c + Restart;
+    r = work; w = r + n; rs = w + n; c  = rs + Restart1; s  = c + Restart;
     
-    for ( i = 0; i < Restartplus1; i++ ) p[i]  = s + Restart + i*n;
+    for ( i = 0; i < Restart1; i++ ) p[i]  = s + Restart + i*n;
     
-    for ( i = 0; i < Restartplus1; i++ ) hh[i] = p[Restart] + n + i*Restart;
+    for ( i = 0; i < Restart1; i++ ) hh[i] = p[Restart] + n + i*Restart;
     
     // compute initial residual: r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -665,9 +665,9 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    INT      Restart = MIN(restart, MaxIt);
-    INT      Restartplus1 = Restart + 1;
-    LONG     worksize = (Restart+4)*(Restart+n)+1-n;
+    unsigned INT   Restart  = MIN(restart, MaxIt);
+    unsigned INT   Restart1 = Restart + 1;
+    unsigned LONG  worksize = (Restart+4)*(Restart+n)+1-n;
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
@@ -680,7 +680,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
-        Restartplus1 = Restart + 1;
+        Restart1 = Restart + 1;
         worksize = (Restart+4)*(Restart+n)+1-n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     }
@@ -695,15 +695,15 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
-    p     = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    p     = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c  = rs + Restartplus1; s  = c + Restart;
+    r = work; w = r + n; rs = w + n; c  = rs + Restart1; s  = c + Restart;
     
-    for ( i = 0; i < Restartplus1; i++ ) p[i]  = s + Restart + i*n;
+    for ( i = 0; i < Restart1; i++ ) p[i]  = s + Restart + i*n;
     
-    for ( i = 0; i < Restartplus1; i++ ) hh[i] = p[Restart] + n + i*Restart;
+    for ( i = 0; i < Restart1; i++ ) hh[i] = p[Restart] + n + i*Restart;
     
     // compute initial residual: r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -959,9 +959,9 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    INT      Restart = MIN(restart, MaxIt);
-    INT      Restartplus1 = Restart + 1;
-    LONG     worksize = (Restart+4)*(Restart+n)+1-n;
+    unsigned INT   Restart  = MIN(restart, MaxIt);
+    unsigned INT   Restart1 = Restart + 1;
+    unsigned LONG  worksize = (Restart+4)*(Restart+n)+1-n;
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
@@ -974,7 +974,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
-        Restartplus1 = Restart + 1;
+        Restart1 = Restart + 1;
         worksize = (Restart+4)*(Restart+n)+1-n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     }
@@ -989,15 +989,15 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
-    p     = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    p     = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c  = rs + Restartplus1; s  = c + Restart;
+    r = work; w = r + n; rs = w + n; c  = rs + Restart1; s  = c + Restart;
     
-    for ( i = 0; i < Restartplus1; i++ ) p[i]  = s + Restart + i*n;
+    for ( i = 0; i < Restart1; i++ ) p[i]  = s + Restart + i*n;
     
-    for ( i = 0; i < Restartplus1; i++ ) hh[i] = p[Restart] + n + i*Restart;
+    for ( i = 0; i < Restart1; i++ ) hh[i] = p[Restart] + n + i*Restart;
     
     // compute initial residual: r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -1206,9 +1206,9 @@ static double estimate_spectral_radius (const double **A, int n, size_t k = 20)
 {
     double *x = (double *)malloc(n* sizeof(double));
     double *y = (double *)malloc(n* sizeof(double));
-	double *z = (double *)malloc(n* sizeof(double));
+    double *z = (double *)malloc(n* sizeof(double));
     double t;
-	int i1,j1;
+    int i1,j1;
     
     // initialize x to random values in [0,1)
     //    cusp::copy(cusp::detail::random_reals<ValueType>(N), x);
@@ -1217,34 +1217,34 @@ static double estimate_spectral_radius (const double **A, int n, size_t k = 20)
     px.val = x;
     
     fasp_dvec_rand(n, &px);
-	
+    
     for(size_t i = 0; i < k; i++)
     {
         //cusp::blas::scal(x, ValueType(1.0) / cusp::blas::nrmmax(x));
-		t= 1.0/ fasp_blas_array_norminf(n, px);
-		for(i1= 0; i1 <n; i1++) x[i1] *= t;
-		
+        t= 1.0/ fasp_blas_array_norminf(n, px);
+        for(i1= 0; i1 <n; i1++) x[i1] *= t;
+        
         //cusp::multiply(A, x, y);
-		
-		for(i1= 0; i1 <n; i1++) {
+        
+        for(i1= 0; i1 <n; i1++) {
             t= 0.0
             for(j1= 0; j1 <n; j1++)  t +=  A[i1][j1] * x[j1];
             y[i1] = t;   }
-        //		   x.swap(y);
-		for(i1= 0; i1 <n; i1++) z[i1] = x[i1];
-		for(i1= 0; i1 <n; i1++) x[i1] = y[i1];
+        //         x.swap(y);
+        for(i1= 0; i1 <n; i1++) z[i1] = x[i1];
+        for(i1= 0; i1 <n; i1++) x[i1] = y[i1];
         for(i1= 0; i1 <n; i1++) y[i1] = z[i1];
     }
     
     free(x);
-	free(y);
-	free(z);
-	
+    free(y);
+    free(z);
+    
     if (k == 0)
         return 0;
     else
         //return cusp::blas::nrm2(x) / cusp::blas::nrm2(y);
-		return fasp_blas_array_norm2(n,x) / fasp_blas_array_norm2(n,y) ;
+        return fasp_blas_array_norm2(n,x) / fasp_blas_array_norm2(n,y) ;
 }
 
 static double fasp_spectral_radius (dCSRmat *A,
@@ -1255,7 +1255,7 @@ static double fasp_spectral_radius (dCSRmat *A,
     
     // local variables
     INT      iter = 0;
-    INT      restartplus1 = restart + 1;
+    INT      Restart1 = restart + 1;
     INT      i, j, k;
     
     REAL     r_norm, den_norm;
@@ -1273,15 +1273,15 @@ static double fasp_spectral_radius (dCSRmat *A,
     
     /* allocate memory */
     work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));
-    p    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh   = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    p    = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
+    hh   = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     
-	norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
+    norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-	r = work; w = r + n; rs = w + n; c  = rs + restartplus1; s  = c + restart;
+    r = work; w = r + n; rs = w + n; c  = rs + Restart1; s  = c + restart;
     
-    for (i = 0; i < restartplus1; i ++) p[i] = s + restart + i*n;
-    for (i = 0; i < restartplus1; i ++) hh[i] = p[restart] + n + i*restart;
+    for (i = 0; i < Restart1; i ++) p[i] = s + restart + i*n;
+    for (i = 0; i < Restart1; i ++) hh[i] = p[restart] + n + i*restart;
     
     /* initialization */
     dvector p0;
@@ -1290,42 +1290,42 @@ static double fasp_spectral_radius (dCSRmat *A,
     fasp_dvec_rand(n, &p0);
     // for (i=0;i<n ;i++) p[0][i] = random()
     
-	r_norm = fasp_blas_array_norm2(n, p[0]);
+    r_norm = fasp_blas_array_norm2(n, p[0]);
     t = 1.0 / r_norm;
     for (j = 0; j < n; j ++) p[0][j] *= t;
     
-	int  maxiter = std::min(n, restart) ;
-	for(j = 0; j < maxiter; j++)
-	{
-        //		cusp::multiply(A, V[j], V[j + 1]);
+    int  maxiter = std::min(n, restart) ;
+    for(j = 0; j < maxiter; j++)
+    {
+        //      cusp::multiply(A, V[j], V[j + 1]);
         fasp_blas_bdbsr_mxv(A, p[j], p[j+1]);
-		
-		for( i = 0; i <= j; i++)
-		{
-            //	H_(i,j) = cusp::blas::dot(V[i], V[j + 1]);
-            hh[i][j] = fasp_blas_array_dotprod(n, p[i], p[j+1]);
-			fasp_blas_array_axpy(n, -hh[i][j], p[i], p[ j+1 ]);
-            //	cusp::blas::axpy(V[i], V[j + 1], -H_(i,j));
-		}
         
-		//H_(j+1,j) = cusp::blas::nrm2(V[j + 1]);
+        for( i = 0; i <= j; i++)
+        {
+            //  H_(i,j) = cusp::blas::dot(V[i], V[j + 1]);
+            hh[i][j] = fasp_blas_array_dotprod(n, p[i], p[j+1]);
+            fasp_blas_array_axpy(n, -hh[i][j], p[i], p[ j+1 ]);
+            //  cusp::blas::axpy(V[i], V[j + 1], -H_(i,j));
+        }
+        
+        //H_(j+1,j) = cusp::blas::nrm2(V[j + 1]);
         hh[j+1][j] =  fasp_blas_array_norm2 (n, p[j+1]);
-		if ( hh[j+1][j] < 1e-10) break;
-		//cusp::blas::scal(V[j + 1], ValueType(1) / H_(j+1,j));
-		t = 1.0/hh[j+1][j];
+        if ( hh[j+1][j] < 1e-10) break;
+        //cusp::blas::scal(V[j + 1], ValueType(1) / H_(j+1,j));
+        t = 1.0/hh[j+1][j];
         for (int  k = 0; k < n; k ++) p[j+1][k] *= t;
-	}
+    }
     
-    //	H.resize(j,j);
+    //  H.resize(j,j);
     H   = (REAL **)fasp_mem_calloc(j, sizeof(REAL *));
-	H[0]   = (REAL *)fasp_mem_calloc(j*j, sizeof(REAL));
-	for (i = 1; i < j; i ++) H[i] = H[i-1] + j;
-	
-	
-	for( size_t row = 0; row < j; row++ )
-		for( size_t col = 0; col < j; col++ )
-			H[row][col] = hh[row][col];
-	
+    H[0]   = (REAL *)fasp_mem_calloc(j*j, sizeof(REAL));
+    for (i = 1; i < j; i ++) H[i] = H[i-1] + j;
+    
+    
+    for( size_t row = 0; row < j; row++ )
+        for( size_t col = 0; col < j; col++ )
+            H[row][col] = hh[row][col];
+    
     double spectral_radius = estimate_spectral_radius( H, j, 20);
     
     
@@ -1337,8 +1337,8 @@ static double fasp_spectral_radius (dCSRmat *A,
     fasp_mem_free(hh);
     
     fasp_mem_free(norms);
-	fasp_mem_free(H[0]);
-	fasp_mem_free(H);
+    fasp_mem_free(H[0]);
+    fasp_mem_free(H);
     
     
     return spectral_radius;

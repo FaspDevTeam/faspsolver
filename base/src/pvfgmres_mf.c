@@ -90,10 +90,11 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
     REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
     INT    d           = 3;       // reduction for the restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
-    INT    Restart = restart;     // the real restart in some fixed restarted cycle
-    INT    Restartplus1 = Restart + 1;
-    LONG   worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
+    INT    restart_min = 3;       // lower bound for restart in each restart cycle
+    
+    unsigned INT  Restart  = restart; // the real restart in some fixed restarted cycle
+    unsigned INT  Restart1 = Restart + 1;
+    unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -108,7 +109,7 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
         Restart = Restart - 5;
         worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
-        Restartplus1 = Restart + 1;
+        Restart1 = Restart + 1;
     }
     
     if ( work == NULL ) {
@@ -121,15 +122,15 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
         printf("### WARNING: vFGMRES restart number set to %d!\n", Restart);
     }
     
-    p  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    hh = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    z  = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    p  = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
+    hh = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
+    z  = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; rs = r + n; c = rs + Restartplus1; s = c + Restart;
-    for (i = 0; i < Restartplus1; i ++) p[i] = s + Restart + i*n;
-    for (i = 0; i < Restartplus1; i ++) hh[i] = p[Restart] + n + i*Restart;
-    for (i = 0; i < Restartplus1; i ++) z[i] = hh[Restart] + Restart + i*n;
+    r = work; rs = r + n; c = rs + Restart1; s = c + Restart;
+    for (i = 0; i < Restart1; i ++) p[i] = s + Restart + i*n;
+    for (i = 0; i < Restart1; i ++) hh[i] = p[Restart] + n + i*Restart;
+    for (i = 0; i < Restart1; i ++) z[i] = hh[Restart] + Restart + i*n;
     
     /* initialization */
     mf->fct(mf->data, x->val, p[0]);

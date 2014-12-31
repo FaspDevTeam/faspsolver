@@ -110,7 +110,7 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, normd, tempr, infnormu;
-
+    
     REAL         *uval = u->val, *bval = b->val;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -154,7 +154,7 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
     
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
-        
+    
     // rho = r* := r
     fasp_array_cp(m,r,rho);
     temp1 = fasp_blas_array_dotprod(m,r,rho);
@@ -275,7 +275,7 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
             iter_best   = iter;
             fasp_array_cp(m,uval,u_best);
         }
-
+        
         // compute reducation factor of residual ||r||
         factor = absres/absres0;
         
