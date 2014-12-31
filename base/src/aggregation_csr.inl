@@ -176,7 +176,7 @@ static void pairwise_aggregation_initial2(const dCSRmat *A,
  */
 static void pairwise_aggregation_initial3(const dCSRmat *A, 
                                           ivector *map, 
-										  ivector *vertice, 
+                                          ivector *vertice, 
                                           REAL *s1, 
                                           REAL *s)
 {
@@ -186,8 +186,7 @@ static void pairwise_aggregation_initial3(const dCSRmat *A,
     REAL *val = A->val;
 
     REAL si;
-
-	INT num_agg = map->row/2;
+    INT num_agg = map->row/2;
 
     for (i=0; i<num_agg; ++i) {
         j = map->val[2*i];
@@ -197,18 +196,18 @@ static void pairwise_aggregation_initial3(const dCSRmat *A,
             col = ja[k];
             nc = vertice->val[col];
             if ((nc==i) && (col != j)) si += val[k];
-		}
+        }
         j = map->val[2*i+1];
         if (j < 0) {
-			s[i] = si; 
-			continue;
-		}
+            s[i] = si; 
+            continue;
+        }
         si = si + s1[j];
         for (k=ia[j]; k<ia[j+1]; ++k) {
             col = ja[k];
             nc = vertice->val[col];
             if ((nc==i) && (col != j)) si += val[k];
-		}
+        }
         s[i] = si;
     }
 }
@@ -267,7 +266,7 @@ static INT cholecsky_factorization_check(REAL **W,
         W[0][2] = W[0][2] - T * W[2][7];
         W[0][1] = W[0][1] - T * W[1][7];
         W[0][0] = W[0][0] - T * W[0][7];
-	}
+    }
     if (agg_size >= 7) {
         if (W[6][6] <= 0.0) return status;
         W[5][5] = W[5][5] - (W[5][6]/W[6][6]) * W[5][6];
@@ -296,7 +295,7 @@ static INT cholecsky_factorization_check(REAL **W,
         W[0][2] = W[0][2] - T * W[2][6];
         W[0][1] = W[0][1] - T * W[1][6];
         W[0][0] = W[0][0] - T * W[0][6];
-	}
+    }
     if (agg_size >= 6) {
         if (W[5][5] <= 0.0) return status;
         W[4][4] = W[4][4] - (W[4][5]/W[5][5]) * W[4][5];
@@ -318,7 +317,7 @@ static INT cholecsky_factorization_check(REAL **W,
         W[0][2] = W[0][2] - T * W[2][5];
         W[0][1] = W[0][1] - T * W[1][5];
         W[0][0] = W[0][0] - T * W[0][5];
-	}
+    }
     if (agg_size >= 5) {
         if (W[4][4] <= 0.0) return status;
         W[3][3] = W[3][3] - (W[3][4]/W[4][4]) * W[3][4];
@@ -334,7 +333,7 @@ static INT cholecsky_factorization_check(REAL **W,
         W[0][2] = W[0][2] - T * W[3][5];
         W[0][1] = W[0][1] - T * W[1][4];
         W[0][0] = W[0][0] - T * W[0][4];
-	}
+    }
     if (agg_size >= 4) {
         if (W[3][3] <= 0.0) return status;
         W[2][2] = W[2][2] - (W[2][3]/W[3][3]) * W[2][3];
@@ -345,34 +344,33 @@ static INT cholecsky_factorization_check(REAL **W,
         W[0][2] = W[0][2] - T * W[2][3];
         W[0][1] = W[0][1] - T * W[1][3];
         W[0][0] = W[0][0] - T * W[0][3];
-	}
+    }
     if (agg_size >= 3) {
         if (W[2][2] <= 0.0) return status;
         W[1][1] = W[1][1] - (W[1][2]/W[2][2]) * W[1][2];
         T = W[0][2]/W[2][2];
         W[0][1] = W[0][1] - T * W[1][2];
         W[0][0] = W[0][0] - T * W[0][2];
-	}
+    }
     if (agg_size >= 2) {
         if (W[1][1] <= 0.0) return status;
         W[0][0] = W[0][0] - (W[0][1]/W[1][1]) * W[0][1];
-	}
+    }
     if (agg_size >= 1) {
         if (W[0][0] <= 0.0) return status;
-	}
+    }
 
     status = 1;
-
-	return status;
+    return status;
 }
 
 /**
  * \fn static INT aggregation_quality_check(dCSRmat *A, 
  *                                          ivector *tentmap, 
- *									        REAL *s, 
- *									        INT root, 
- *									        INT pair, 
- *									        INT dopass)
+ *                                          REAL *s, 
+ *                                          INT root, 
+ *                                          INT pair, 
+ *                                          INT dopass)
  *
  * \brief From local matrix corresponding to each aggregate 
  *
@@ -387,26 +385,26 @@ static INT cholecsky_factorization_check(REAL **W,
  * \date   12/23/2014
  */
 static INT aggregation_quality_check(dCSRmat *A, 
-                                     ivector *tentmap, 
-									 REAL *s, 
-									 INT root, 
-									 INT pair, 
-									 INT dopass)
+                                     ivector *tentmap,
+                                     REAL *s, 
+                                     INT root, 
+                                     INT pair,
+                                     INT dopass)
 {
     INT row = A->row;
     INT *IA = A->IA;
     INT *JA = A->JA;
     REAL *val = A->val;
-    REAL bnd1=2*1.0/10.0;
-	REAL bnd2=1.0-bnd1;
-
-	REAL **W = NULL, *v, *sig, *AG;
-	INT *fnode;
-
-	REAL alpha, beta, tmp;
-	INT i, j, l, k, m, status, w, l1, l2, flag, jj, agg_size;
-
     INT *map = tentmap->val;
+
+    REAL bnd1=2*1.0/10.0;
+    REAL bnd2=1.0-bnd1;
+
+    REAL **W = NULL, *v, *sig, *AG;
+    INT *fnode;
+
+    REAL alpha, beta, tmp;
+    INT i, j, l, k, m, status, w, l1, l2, flag, jj, agg_size, dim;
 
     fnode = (INT *)fasp_mem_calloc(dopass*dopass, sizeof(INT));
 
@@ -422,45 +420,38 @@ static INT aggregation_quality_check(dCSRmat *A,
                 fnode[1] = map[2*pair];
                 fnode[2] = map[2*pair+1];
                 agg_size = 3;
-		    }
-	    }
-	    else {
+            }
+        }
+        else {
             if (map[2*pair+1] < -1) {
                 fnode[0] = map[2*root];
                 fnode[1] = map[2*root+1];
                 fnode[2] = map[2*pair];
                 agg_size = 3;
-		    }
-		    else {
+             }
+             else {
                 fnode[0] = map[2*root];
                 fnode[1] = map[2*root+1];
                 fnode[2] = map[2*pair];
                 fnode[3] = map[2*pair+1];
                 agg_size = 4;
-		    }
-	    }
+            }
 	}
-	else {
-
+    }
+    else {
         l1 = dopass;
-
         if (map[2*root+dopass-1] < 0) l1 = -map[2*root+dopass-1];
-
-	    for (i=0; i<l1; ++i) fnode[i] = map[2*root+i];
-
+        for (i=0; i<l1; ++i) fnode[i] = map[2*root+i];
         l2 = dopass;
-
         if (map[2*pair+dopass] < 0) l2 = -map[2*pair+dopass];
-
-	    for (i=0; i<l2; ++i) fnode[l1+i] = map[2*pair+i];
-
+        for (i=0; i<l2; ++i) fnode[l1+i] = map[2*pair+i];
         agg_size = l1 + l2;
-	}
+    }
+
+    dim = agg_size;
 
     W = (REAL **)fasp_mem_calloc(agg_size, sizeof(REAL*));
-	for (i=0; i<agg_size; ++i) 
-	W[i] = (REAL *)fasp_mem_calloc(agg_size, sizeof(REAL));
-
+    for (i=0; i<agg_size; ++i) W[i] = (REAL *)fasp_mem_calloc(agg_size, sizeof(REAL));
     v   = (REAL *)fasp_mem_calloc(agg_size, sizeof(REAL));
     sig = (REAL *)fasp_mem_calloc(agg_size, sizeof(REAL));
     AG  = (REAL *)fasp_mem_calloc(agg_size, sizeof(REAL));
@@ -470,12 +461,12 @@ static INT aggregation_quality_check(dCSRmat *A,
     while (flag) { 
         flag = 0;
         for(i=1; i<agg_size; ++i) { 
-            if(fnode[i] < fnode[i-1]) {
+            if (fnode[i] < fnode[i-1]) {
                 jj = fnode[i];
                 fnode[i] = fnode[i-1];
                 fnode[i-1] = jj;
                 flag = 1;
-		    }
+            }
         }
     }
 
@@ -487,23 +478,23 @@ static INT aggregation_quality_check(dCSRmat *A,
         for (l=j+1; l<agg_size; ++l) {
             W[j][l]=0.0;
             W[l][j]=0.0;
-	    }
+        }
        
-       for (k=IA[jj]; k<IA[jj+1]; ++k) {
-		   if (JA[k]>jj) 
-           for (l=j+1; l<agg_size; ++l) {
-               m = fnode[l];
-               if (JA[k]==m) {
-                   alpha=val[k]/2;
-                   W[j][l]=alpha;
-                   W[l][j]=alpha;
-                   break;
-               }
-		   }
-       }
+        for (k=IA[jj]; k<IA[jj+1]; ++k) {
+            if (JA[k]>jj) 
+            for (l=j+1; l<agg_size; ++l) {
+                m = fnode[l];
+                if (JA[k]==m) {
+                    alpha=val[k]/2;
+                    W[j][l]=alpha;
+                    W[l][j]=alpha;
+                    break;
+                 }
+             }
+        }
 
        for (k=IA[jj]; k<IA[jj+1]; ++k) {
-		   if (JA[k] < jj)
+           if (JA[k] < jj)
            for (l=0; l<j; ++l) {
                m = fnode[l];
                if (JA[k] == m) {
@@ -518,25 +509,21 @@ static INT aggregation_quality_check(dCSRmat *A,
 
    for (j=0; j<agg_size; ++j) {
         for (k=0; k<agg_size; ++k) {
-		    if (j != k) sig[j] += W[j][k];
-	    }
-
+            if (j != k) sig[j] += W[j][k];
+        }
         if (sig[j] < 0.0)  AG[j] = AG[j] + 2*sig[j];
- 
-		v[j] = W[j][j];
-
+        v[j] = W[j][j];
         W[j][j] = bnd2*W[j][j]-ABS(sig[j]);
  
         if (j == 0) {
             beta = v[j];
             alpha = ABS(AG[j]);
-	    }
+        }
         else {
             beta = beta + v[j];
             alpha = MAX(alpha,ABS(AG[j]));
-	    }
-	}
-
+        }
+    }
     beta = bnd1/beta;
 
     for (j=0; j<agg_size; ++j) { 
@@ -546,12 +533,18 @@ static INT aggregation_quality_check(dCSRmat *A,
     }
 
     if (alpha < 1.5e-8*beta) {
-		agg_size --;
-	}
+        agg_size --;
+    }
 
     status = cholecsky_factorization_check(W, agg_size);
 
-	return status;
+    fasp_mem_free(v);
+    fasp_mem_free(sig);
+    fasp_mem_free(AG);
+    fasp_mem_free(fnode);
+    for (i=0; i<dim; ++i) fasp_mem_free(W[i]);
+
+    return status;
 }
 
 /**
@@ -575,7 +568,7 @@ static INT aggregation_quality_check(dCSRmat *A,
  * \date   12/23/2014
  */
 static void first_pairwise_symm (const dCSRmat * A,
-							     INT    *order,
+                                 INT    *order,
                                  ivector *vertices,
                                  ivector *map,
                                  REAL    *s,
@@ -1372,7 +1365,7 @@ static void second_pairwise_unsymm(dCSRmat *A,
             Semipd = aggregation_quality_check(A, map1, s1, i, ipair, dopass);
             if (!Semipd) {
                 ipair = -1;
-                l = 0, m = 0;
+                l = 0, m = 0, ijtent = 0;
                 while (l < Tsize) {
                     if (Tnode[m] >= 0) {
                         tmp = Tval[m];
@@ -2018,8 +2011,8 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
         if (i==1) {
             first_pairwise_unsymm(ptrA, order, &vertice[lvl], &map1, s, &num_agg);
             //first_pairwise_symm(ptrA, order, &vertice[lvl], &map1, s, &num_agg);
-		}
-		else {
+        }
+        else {
             second_pairwise_unsymm(&mgl[level].A, ptrA, i, order, &map1, &vertice[lvl-1], &vertice[lvl], &map2, s, &num_agg);
             //second_pairwise_symm(ptrA, order, &vertice[lvl], &map1, s, &num_agg);
         }
@@ -2049,26 +2042,23 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
             /*-- Form coarse level stiffness matrix --*/
             fasp_blas_dcsr_rap_agg(&mgl[lvl].R, ptrA, &mgl[lvl].P, &mgl[lvl+1].A);
 
-		    ptrA = &mgl[lvl+1].A;
+            ptrA = &mgl[lvl+1].A;
 
-		    fasp_dcsr_free(&mgl[lvl].P);
-		    fasp_dcsr_free(&mgl[lvl].R);
-		}
-
+            fasp_dcsr_free(&mgl[lvl].P);
+            fasp_dcsr_free(&mgl[lvl].R);
+        }
         lvl ++; dopass ++;
-
-	}
+    }
 
     // Form global aggregation indices 
-	if ( dopass > 1 ) {
-		for ( i = 0; i < mgl[level].A.row; ++i ) {
-			aggindex = vertice[level].val[i];
-			if ( aggindex < 0 ) continue;
-			for ( j = 1; j < dopass; ++j ) aggindex = vertice[level+j].val[aggindex];
-			vertice[level].val[i] = aggindex;
-		}
-	}
-
+    if ( dopass > 1 ) {
+        for ( i = 0; i < mgl[level].A.row; ++i ) {
+            aggindex = vertice[level].val[i];
+            if ( aggindex < 0 ) continue;
+            for ( j = 1; j < dopass; ++j ) aggindex = vertice[level+j].val[aggindex];
+            vertice[level].val[i] = aggindex;
+        }
+    }
     *num_aggregations = num_agg;
 
     /*-- clean memory --*/
@@ -2078,13 +2068,13 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
     }
 
 #if 0
-	fasp_ivec_free(&map1);
-	//fasp_ivec_free(&map2);
-	fasp_mem_free(s);
+    fasp_ivec_free(&map1);
+    fasp_ivec_free(&map2);
+    fasp_mem_free(s);
 #endif
 
 END:
-	return status;    
+    return status;    
 }
 
 /**
