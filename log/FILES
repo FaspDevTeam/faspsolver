@@ -73,9 +73,9 @@
      725 ./base/src/precond_bsr.c
      691 ./base/src/precond_csr.c
     1732 ./base/src/precond_str.c
-     974 ./base/src/pvfgmres.c
-     338 ./base/src/pvfgmres_mf.c
-    1373 ./base/src/pvgmres.c
+     977 ./base/src/pvfgmres.c
+     339 ./base/src/pvfgmres_mf.c
+    1377 ./base/src/pvgmres.c
      339 ./base/src/pvgmres_mf.c
      874 ./base/src/quadrature.c
      116 ./base/src/rap.c
@@ -103,9 +103,9 @@
      464 ./base/src/vec.c
      300 ./base/src/wrapper.c
      394 ./base/src/aggregation_bsr.inl
-    2295 ./base/src/aggregation_csr.inl
+    2285 ./base/src/aggregation_csr.inl
     2302 ./base/src/gmg_util.inl
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   92445 total
+   92443 total
