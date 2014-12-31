@@ -93,7 +93,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
-    const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
+    const REAL   maxdiff = tol*STAG_RATIO; // stagnation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     
     // local variables
@@ -139,7 +139,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -189,13 +189,13 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
                 break;
         }
         
-        // compute reducation factor of residual ||r||
+        // compute reduction factor of residual ||r||
         factor = absres/absres0;
         
         // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
-        // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
+        // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
         if ( infnormu <= sol_inf_tol ) {
             if (print_level>PRINT_MIN) ITS_ZEROSOL;
@@ -203,7 +203,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             break;
         }
         
-        // Check II: if staggenated, try to restart
+        // Check II: if stagnated, try to restart
         normu   = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
@@ -253,7 +253,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
                 ++stag;
                 ++restart_step;
             }
-        } // end of staggnation check!
+        } // end of stagnation check!
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
@@ -373,7 +373,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
-    const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
+    const REAL   maxdiff = tol*STAG_RATIO; // stagnation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     
     // local variables
@@ -419,7 +419,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -469,13 +469,13 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
                 break;
         }
         
-        // compute reducation factor of residual ||r||
+        // compute reduction factor of residual ||r||
         factor = absres/absres0;
         
         // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
-        // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
+        // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
         if ( infnormu <= sol_inf_tol ) {
             if (print_level>PRINT_MIN) ITS_ZEROSOL;
@@ -483,7 +483,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
             break;
         }
         
-        // Check II: if staggenated, try to restart
+        // Check II: if stagnated, try to restart
         normu   = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
@@ -533,7 +533,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
                 ++stag;
                 ++restart_step;
             }
-        } // end of staggnation check!
+        } // end of stagnation check!
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
@@ -655,7 +655,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
-    const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
+    const REAL   maxdiff = tol*STAG_RATIO; // stagnation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     
     // local variables
@@ -701,7 +701,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -751,13 +751,13 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
                 break;
         }
         
-        // compute reducation factor of residual ||r||
+        // compute reduction factor of residual ||r||
         factor = absres/absres0;
         
         // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
-        // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
+        // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
         if ( infnormu <= sol_inf_tol ) {
             if (print_level>PRINT_MIN) ITS_ZEROSOL;
@@ -765,7 +765,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
             break;
         }
         
-        // Check II: if staggenated, try to restart
+        // Check II: if stagnated, try to restart
         normu   = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
@@ -815,7 +815,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
                 ++stag;
                 ++restart_step;
             }
-        } // end of staggnation check!
+        } // end of stagnation check!
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
@@ -937,7 +937,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
-    const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
+    const REAL   maxdiff = tol*STAG_RATIO; // stagnation tolerance
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     
     // local variables
@@ -983,7 +983,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1033,13 +1033,13 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
                 break;
         }
         
-        // compute reducation factor of residual ||r||
+        // compute reduction factor of residual ||r||
         factor = absres/absres0;
         
         // output iteration information if needed
         print_itinfo(print_level,stop_type,iter,relres,absres,factor);
         
-        // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
+        // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
         if ( infnormu <= sol_inf_tol ) {
             if (print_level>PRINT_MIN) ITS_ZEROSOL;
@@ -1047,7 +1047,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             break;
         }
         
-        // Check II: if staggenated, try to restart
+        // Check II: if stagnated, try to restart
         normu   = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
@@ -1097,7 +1097,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
                 ++stag;
                 ++restart_step;
             }
-        } // end of staggnation check!
+        } // end of stagnation check!
         
         // Check III: prevent false convergence
         if ( relres < tol ) {

@@ -49,7 +49,7 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
     double *AA =  ptrA->val;
     double *b1 = b->val;
     double *x  = u->val;
-	
+    
     int *irn;
     int *jcn;
     double *a;
@@ -58,8 +58,8 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
     int begin_row, end_row;
 
 #if DEBUG_MODE
-	printf("### DEBUG: fasp_solver_mumps ...... [Start]\n");
-	printf("### DEBUG: nr=%d,  nnz=%d\n",  n, nz);
+    printf("### DEBUG: fasp_solver_mumps ...... [Start]\n");
+    printf("### DEBUG: nr=%d,  nnz=%d\n",  n, nz);
 #endif
     
     // First check the matrix format
@@ -68,7 +68,7 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
         return ERROR_SOLVER_EXIT;
     }
 
-	clock_t start_time = clock();
+    clock_t start_time = clock();
     
     /* Define A and rhs */
     irn = (int *)malloc( sizeof(int)*nz );
@@ -123,20 +123,20 @@ int fasp_solver_mumps ( dCSRmat *ptrA,
     free(jcn);
     free(a);
     free(rhs);
-	
-	if ( print_level > PRINT_MIN ) {
-		clock_t end_time = clock();
-		double solve_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-		printf("MUMPS costs %f seconds.\n", solve_duration);
-	}  
+    
+    if ( print_level > PRINT_MIN ) {
+        clock_t end_time = clock();
+        double solve_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
+        printf("MUMPS costs %f seconds.\n", solve_duration);
+    }  
 
 #if DEBUG_MODE
-	printf("### DEBUG: fasp_solver_mumps ...... [Finish]\n");
-#endif	
+    printf("### DEBUG: fasp_solver_mumps ...... [Finish]\n");
+#endif  
     return FASP_SUCCESS;
 #else
     
-	printf("### ERROR: MUMPS is not available!\n");
+    printf("### ERROR: MUMPS is not available!\n");
     return ERROR_SOLVER_EXIT;
     
 #endif
@@ -170,18 +170,18 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
 
     DMUMPS_STRUC_C id;
 
-	int job = mumps->job;
+    int job = mumps->job;
 
-	static int job_stat = 0;
+    static int job_stat = 0;
     int i,j;
 
-	int *irn;
+    int *irn;
     int *jcn;
     double *a;
     double *rhs;
     
 #if DEBUG_MODE
-	printf("### DEBUG: %s job_stat = %d\n", __FUNCTION__, job_stat);
+    printf("### DEBUG: %s job_stat = %d\n", __FUNCTION__, job_stat);
 #endif
 
     switch ( job ) {
@@ -245,10 +245,10 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             id.job=4; dmumps_c(&id);
             job_stat = 1;
 
-			mumps->id = id;
+            mumps->id = id;
 
 #if DEBUG_MODE
-			printf("### DEBUG: %s, Step 1 ...... [Finish]\n", __FUNCTION__);   
+            printf("### DEBUG: %s, Step 1 ...... [Finish]\n", __FUNCTION__);   
 #endif
         }
             break;
@@ -256,9 +256,9 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
         case 2:
         {
 #if DEBUG_MODE
-			printf("### DEBUG: %s, Step 2 ...... [Start]\n", __FUNCTION__);   
+            printf("### DEBUG: %s, Step 2 ...... [Start]\n", __FUNCTION__);   
 #endif
-			id = mumps->id;
+            id = mumps->id;
 
             if ( job_stat != 1 )
                 printf("### ERROR: fasp_solver_mumps_steps has not finish Setup...... [2]\n");
@@ -270,14 +270,14 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
                     
             for(i=0; i<id.n; i++) u->val[i] = id.rhs[i];
 #if DEBUG_MODE
-			printf("### DEBUG: %s, Step 2 ...... [Finish]\n", __FUNCTION__);   
+            printf("### DEBUG: %s, Step 2 ...... [Finish]\n", __FUNCTION__);   
 #endif
         }
             break;
             
         case 3:
         {
-			id = mumps->id;
+            id = mumps->id;
 
             if ( job_stat !=1 )
                 printf("### ERROR: %s has not been setted up!\n", __FUNCTION__);
@@ -311,12 +311,13 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
 #if WITH_MUMPS
 /**
  ** \fn DMUMPS_STRUC_C fasp_mumps_factorize (dCSRmat *ptrA, dvector *b, dvector *u,
- **                                   const INT print_level)
+ **                                          const INT print_level)
  ** \brief factorize A by MUMPS
  **
- ** \param ptrA      pointer to stiffness matrix of levelNum levels
- ** \param b         pointer to the dvector of right hand side term
- ** \param u         pointer to the dvector of dofs
+ ** \param ptrA         pointer to stiffness matrix of levelNum levels
+ ** \param b            pointer to the dvector of right hand side term
+ ** \param u            pointer to the dvector of dofs
+ ** \param print_level  output level
  **
  ** \author Zheng Li
  ** \date   10/09/2014
@@ -324,12 +325,12 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
 Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
                                  dvector *b,
                                  dvector *u,
-								 const INT print_level)
+                                 const INT print_level)
 {
-	Mumps_data mumps;
+    Mumps_data mumps;
     DMUMPS_STRUC_C id;
 
-    int i,j;	
+    int i,j;    
     const int m =  ptrA->row;
     const int n =  ptrA->col;
     const int nz = ptrA->nnz;
@@ -406,7 +407,7 @@ Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
 
 #if WITH_MUMPS
 /**
- ** \fn void fasp_mumps_solve( dCSRmat *ptrA, dvector *b, dvector *u, DMUMPS_STRUC_C id)
+ ** \fn void fasp_mumps_solve (dCSRmat *ptrA, dvector *b, dvector *u, DMUMPS_STRUC_C id)
  **                            const INT print_level)
  ** \brief solve A by MUMPS
  **
@@ -422,11 +423,11 @@ void fasp_mumps_solve ( dCSRmat *ptrA,
                         dvector *b,
                         dvector *u,
                         Mumps_data mumps,
-						const INT print_level)
+                        const INT print_level )
 {
     int i,j;
 
-	DMUMPS_STRUC_C id = mumps.id;
+    DMUMPS_STRUC_C id = mumps.id;
   
     const  int m =  ptrA->row;
     const  int n =  ptrA->row;
@@ -441,11 +442,11 @@ void fasp_mumps_solve ( dCSRmat *ptrA,
     double *rhs = id.rhs;
     
 #if DEBUG_MODE
-	printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nz);
 #endif
 
-	clock_t start_time = clock();
+    clock_t start_time = clock();
 
     double *b1 = b->val;
     double *x  = u->val;
@@ -464,7 +465,7 @@ void fasp_mumps_solve ( dCSRmat *ptrA,
     }
 
 #if DEBUG_MODE
-	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);   
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);   
 #endif
     
 }
@@ -492,6 +493,7 @@ void fasp_mumps_free ( Mumps_data *mumps )
 }
 
 #endif 
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

@@ -28,7 +28,7 @@
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       FASP_SUCCESS if successed, otherwise, error information.
+ * \return       FASP_SUCCESS if succeed, otherwise, error information.
  *
  * \author Chensong Zhang
  * \date   05/09/2010
@@ -58,7 +58,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     INT           lvl = 0, max_lvls = param->max_levels;
     REAL          setup_start, setup_end;
     ILU_param     iluparam;
-	Schwarz_param swzparam; 
+    Schwarz_param swzparam; 
     iCSRmat       Scouple; // strong n-couplings
     
     // level info (fine: 0; coarse: 1)
@@ -75,7 +75,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     param->tentative_smooth = 1.0;
     
     // If user want to use aggressive coarsening but did not specify number of
-    // levels use aggressive coarsening, make sure apply aggresive coarsening
+    // levels use aggressive coarsening, make sure apply aggressive coarsening
     // on the finest level only !!!
     if ( param->coarsening_type == COARSE_AC ) {
         param->aggressive_level = MAX(param->aggressive_level, 1);
@@ -99,7 +99,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     }
     
     // Initialize Schwarz parameters
-	mgl->schwarz_levels = param->schwarz_levels;
+    mgl->schwarz_levels = param->schwarz_levels;
     if ( param->schwarz_levels > 0 ) {
         swzparam.schwarz_mmsize = param->schwarz_mmsize;
         swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
@@ -140,9 +140,10 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         }
         
         /*-- Coarseing and form the structure of interpolation --*/
-        status = fasp_amg_coarsening_rs(&mgl[lvl].A, &vertices, &mgl[lvl].P, &Scouple, param);
+        status = fasp_amg_coarsening_rs(&mgl[lvl].A, &vertices, &mgl[lvl].P, 
+		                                &Scouple, param);
         
-        // Check 1: Did coarsening step successed?
+        // Check 1: Did coarsening step succeeded?
         if ( status < 0 ) {
             // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
@@ -215,7 +216,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
             // Setup MUMPS direct solver on the coarsest level
-			mgl[lvl].mumps.job = 1;
+            mgl[lvl].mumps.job = 1;
             fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, &mgl[lvl].mumps);
 
             break;
@@ -238,7 +239,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
             // Do nothing!
             break;
     }
-	
+    
     // setup total level number and current level
     mgl[0].num_levels = max_lvls = lvl+1;
     mgl[0].w          = fasp_dvec_create(m);
@@ -249,7 +250,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         mgl[lvl].b          = fasp_dvec_create(mm);
         mgl[lvl].x          = fasp_dvec_create(mm);
         
-        // allocate work arraies for the solve phase
+        // allocate work arrays for the solve phase
         if ( cycle_type == NL_AMLI_CYCLE )
             mgl[lvl].w = fasp_dvec_create(3*mm);
         else

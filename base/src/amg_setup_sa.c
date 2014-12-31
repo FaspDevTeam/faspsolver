@@ -18,8 +18,7 @@
 
 static SHORT amg_setup_smoothP_smoothR (AMG_data *, AMG_param *);
 static SHORT amg_setup_smoothP_unsmoothR (AMG_data *, AMG_param *);
-static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
-                                            AMG_param *param);
+static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl, AMG_param *param);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -129,7 +128,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
-	Schwarz_param swzparam; 
+    Schwarz_param swzparam; 
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -143,13 +142,13 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     // each elvel stores the information of the number of aggregations
     INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
     
-    // each level stores the information of the strongly coupled neighborhoods
+    // each level stores the information of the strongly coupled neighbourhood
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     
     // each level stores the information of the tentative prolongations
     dCSRmat *tentp = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     
-    // Initialzie level information
+    // Initialize level information
     for ( i = 0; i < max_levels; ++i ) num_aggregations[i] = 0;
     
     mgl[0].near_kernel_dim   = 1;
@@ -171,7 +170,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     }
     
     // Initialize Schwarz parameters
-	mgl->schwarz_levels = param->schwarz_levels;
+    mgl->schwarz_levels = param->schwarz_levels;
     if ( param->schwarz_levels > 0 ) {
         swzparam.schwarz_mmsize = param->schwarz_mmsize;
         swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
@@ -218,11 +217,11 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
         }
         
         /* -- setup Schwarz smoother if necessary */
-		if ( lvl < param->schwarz_levels ) {
+        if ( lvl < param->schwarz_levels ) {
             mgl[lvl].schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
-		}
+        }
         
         /*-- Aggregation --*/
         status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param, lvl+1,
@@ -370,7 +369,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
-	Schwarz_param swzparam; 
+    Schwarz_param swzparam; 
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -381,10 +380,10 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     // level info (fine: 0; coarse: 1)
     ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
     
-    // each elvel stores the information of the number of aggregations
+    // each level stores the information of the number of aggregations
     INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
     
-    // each level stores the information of the strongly coupled neighborhoods
+    // each level stores the information of the strongly coupled neighbourhood
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     
     // each level stores the information of the tentative prolongations
@@ -412,7 +411,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     }
     
     // Initialize Schwarz parameters
-	mgl->schwarz_levels = param->schwarz_levels;
+    mgl->schwarz_levels = param->schwarz_levels;
     if ( param->schwarz_levels > 0 ) {
         swzparam.schwarz_mmsize = param->schwarz_mmsize;
         swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
@@ -444,17 +443,17 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
         }
         
         /* -- setup Schwarz smoother if necessary */
-		if ( lvl < param->schwarz_levels ) {
+        if ( lvl < param->schwarz_levels ) {
             mgl[lvl].schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
-		}
+        }
         
         /*-- Aggregation --*/
         status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param, lvl+1,
                                  &Neighbor[lvl], &num_aggregations[lvl]);
 
-        // Check 1: Did coarsening step successed?
+        // Check 1: Did coarsening step succeeded?
         if ( status < 0 ) {
             // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
@@ -484,7 +483,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
             break;
         }
         
-        /*-- Form resitriction --*/
+        /*-- Form restriction --*/
         fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
         fasp_dcsr_trans(&tentp[lvl], &tentr[lvl]);
         
@@ -614,7 +613,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     //each elvel stores the information of the number of aggregations
     INT *num_aggs = (INT *)fasp_mem_calloc(max_levels, sizeof(INT));
     
-    // each level stores the information of the strongly coupled neighborhoods
+    // each level stores the information of the strongly coupled neighbourhood
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels, sizeof(dCSRmat));
     
     // each level stores the information of the tentative prolongations
@@ -627,7 +626,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     /*-----------------------*/
     
     // null space for whole Jacobian
-	//mgl[0].near_kernel_dim   = 1;
+    //mgl[0].near_kernel_dim   = 1;
     //mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim, sizeof(REAL*));
     
     //for ( i=0; i < mgl->near_kernel_dim; ++i ) mgl[0].near_kernel_basis[i] = NULL;
@@ -650,7 +649,8 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     /*--- checking aggregation ---*/
     /*----------------------------*/
 
-    if (param->aggregation_type == PAIRWISE) param->pair_number = MIN(param->pair_number, max_levels);
+    if (param->aggregation_type == PAIRWISE) 
+		param->pair_number = MIN(param->pair_number, max_levels);
     
     // Main AMG setup loop
     while ( (mgl[lvl].A.ROW > min_cdof) && (lvl < max_levels-1) ) {
@@ -679,12 +679,14 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         switch ( param->aggregation_type ) {
                 
             case VMB: // VMB aggregation
+			    // Same as default
+			
             default: // only one aggregation is tested!!! --Chensong
                 
                 status = aggregation_vmb(&mgl[lvl].PP, &vertices[lvl], param, lvl+1,
-                            &Neighbor[lvl], &num_aggs[lvl]);
+                                         &Neighbor[lvl], &num_aggs[lvl]);
                 
-                /*-- Choose strenth threshold adaptively --*/
+                /*-- Choose strength threshold adaptively --*/
                 if ( num_aggs[lvl]*4 > mgl[lvl].PP.row )
                     param->strong_coupled /= 4;
                 else if ( num_aggs[lvl]*1.25 < mgl[lvl].PP.row )
@@ -704,7 +706,9 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         /* -- Form Tentative prolongation --*/
         printf("before form tentative P\n");
         if (lvl == 0 && mgl[0].near_kernel_dim >0 ){
-            form_tentative_p_bsr1(&vertices[lvl], &tentp[lvl], &mgl[0], lvl+1, num_aggs[lvl], mgl[0].near_kernel_dim, mgl[0].near_kernel_basis);
+            form_tentative_p_bsr1(&vertices[lvl], &tentp[lvl], &mgl[0], lvl+1, 
+			                      num_aggs[lvl], mgl[0].near_kernel_dim, 
+								  mgl[0].near_kernel_basis);
         }
         else{
             form_boolean_p_bsr(&vertices[lvl], &tentp[lvl], &mgl[0], lvl+1, num_aggs[lvl]);
@@ -712,10 +716,10 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         
         /* -- Smoothing -- */
         printf("Smoothing P\n");
-        smooth_agg_bsr(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param,
-                   lvl+1, &Neighbor[lvl]);
+        smooth_agg_bsr(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1, 
+                       &Neighbor[lvl]);
         
-        /*-- Form resitriction --*/
+        /*-- Form restriction --*/
         printf("Form Restriction\n");
         fasp_dbsr_trans(&mgl[lvl].P, &mgl[lvl].R);
         
@@ -723,7 +727,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         printf("RAP\n");
         fasp_blas_dbsr_rap(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
         
-        /* -- Form extra near kernal space if needed --*/
+        /* -- Form extra near kernel space if needed --*/
         if (mgl[lvl].A_nk != NULL){
             
             mgl[lvl+1].A_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
