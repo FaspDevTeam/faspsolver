@@ -110,7 +110,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
     REAL         normr0  = BIGREAL, relres  = BIGREAL;
     REAL         normu2, normuu, normp, infnormu, factor;
     REAL         alpha, alpha0, alpha1, temp2;
-
+    
     // allocate temp memory (need 11*m REAL)
     REAL *work=(REAL *)fasp_mem_calloc(11*m,sizeof(REAL));
     REAL *p0=work, *p1=work+m, *p2=p1+m, *z0=p2+m, *z1=z0+m;
@@ -898,7 +898,7 @@ FINISHED:  // finish the iterative method
  * \return             Number of iterations if converged, error message otherwise
  *
  * \author Chensong Zhang
- * \date   04/09/2013 
+ * \date   04/09/2013
  */
 INT fasp_solver_dstr_pminres (dSTRmat *A,
                               dvector *b,

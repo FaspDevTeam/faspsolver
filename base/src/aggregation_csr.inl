@@ -39,20 +39,20 @@ static void pairwise_aggregation_initial(const dCSRmat *A,
     INT *ia = A->IA;
     INT *ja = A->JA;
     REAL *val = A->val;
-	REAL kaptg, strong_hold, aij, aii, rowsum, absrowsum, max;
+    REAL kaptg, strong_hold, aij, aii, rowsum, absrowsum, max;
 
     REAL *colsum = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
     REAL *colmax = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
     REAL *abscolsum = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
 
-	INT SPD = 0;
+    INT SPD = 0;
 
     if (SPD) {
         kaptg = 8.0;
         strong_hold = (kaptg + 1.0)/(kaptg - 1.0);
     }
     else {
-	    kaptg = 10.0;
+        kaptg = 10.0;
         strong_hold = kaptg/(kaptg - 2.0);
     }
 
@@ -82,7 +82,7 @@ static void pairwise_aggregation_initial(const dCSRmat *A,
             max = MAX(colmax[i], max);
             if (checkdd) absrowsum = 0.5*(abscolsum[i] + absrowsum);
         }
-		
+        
         s[i] = -rowsum;
 
         if (aii > strong_hold*absrowsum) {
@@ -94,9 +94,9 @@ static void pairwise_aggregation_initial(const dCSRmat *A,
         }
     }
 
-	fasp_mem_free(colsum);
-	fasp_mem_free(colmax);
-	fasp_mem_free(abscolsum);
+    fasp_mem_free(colsum);
+    fasp_mem_free(colmax);
+    fasp_mem_free(abscolsum);
 }
 
 /**
@@ -123,11 +123,11 @@ static void pairwise_aggregation_initial2(const dCSRmat *A,
     INT *ia = A->IA;
     INT *ja = A->JA;
     REAL *val = A->val;
-	REAL kaptg, strong_hold, aij, aii, rowsum, absrowsum, max;
+    REAL kaptg, strong_hold, aij, aii, rowsum, absrowsum, max;
 
     REAL *colsum = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
 
-	INT SPD = 0;
+    INT SPD = 0;
 
     if (!SPD) {
         for (i=0; i<row; ++i) {
@@ -148,12 +148,12 @@ static void pairwise_aggregation_initial2(const dCSRmat *A,
         if (!SPD) {
             rowsum = 0.5*(colsum[i] + rowsum);
         }
-	
+    
         s[i] = -rowsum;
-	
+    
         vertices->val[i] = UNPT;
     }
-	fasp_mem_free(colsum);
+    fasp_mem_free(colsum);
 }
 
 /**
@@ -436,7 +436,7 @@ static INT aggregation_quality_check(dCSRmat *A,
                 fnode[3] = map[2*pair+1];
                 agg_size = 4;
             }
-	}
+    }
     }
     else {
         l1 = dopass;
@@ -586,13 +586,13 @@ static void first_pairwise_symm (const dCSRmat * A,
 
     /*---------------------------------------------------------*/
     /* Step 1. select extremely strong diagonal dominate rows  */ 
-	/*        and store in G0.                                 */
+    /*        and store in G0.                                 */
     /*---------------------------------------------------------*/
 
     /* G0 : vertices->val[i]=G0PT, Remain: vertices->val[i]=UNPT */
     fasp_ivec_alloc(row, vertices);
     fasp_ivec_alloc(2*row, map);
-    	
+        
 
     // initial vertices
     for ( i = 0; i < row; i++ ) {
@@ -636,7 +636,7 @@ static void first_pairwise_symm (const dCSRmat * A,
 
         if ( vertices->val[i] != UNPT ) continue;
 
-		map->val[2*nc] = i;
+        map->val[2*nc] = i;
         
         min_mu = 1000.0;
         
@@ -656,8 +656,8 @@ static void first_pairwise_symm (const dCSRmat * A,
             temp2 = ajj+s[col]+2*aij;
             temp2 = 1.0/temp1+1.0/temp2;
  
-			temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero		
-			temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);	// avoid temp4 to be zero
+            temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero        
+            temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);    // avoid temp4 to be zero
             temp4 = -aij+1./(1.0/temp3+1.0/temp4); 
             
             mu    = (-aij+1.0/temp2) / temp4;
@@ -666,7 +666,7 @@ static void first_pairwise_symm (const dCSRmat * A,
 #else            
             aij = -Aval[j];
             ajj = Aval[AIA[col]];
-	    
+        
             rsi = -s[i] + aii;
             rsj = -s[col] + ajj;
 
@@ -722,28 +722,28 @@ static void first_pairwise_symm (const dCSRmat * A,
                 index  = col;
             }
         }
-		
+        
         vertices->val[i] = nc;
 
         if ( min_mu <= k_tg ) {
             vertices->val[index] = nc;
-		    map->val[2*nc+1] = index;
+            map->val[2*nc+1] = index;
         }
-		else {
-		    map->val[2*nc+1] = -1;
+        else {
+            map->val[2*nc+1] = -1;
         }
 
         nc++;
     }
 
-	map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
-	map->row = 2*nc;
+    map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
+    map->row = 2*nc;
     *num_agg = nc;
 }
 
 /**
 * \fn void second_pairwise_symm (const dCSRmat * A,
-*							      INT    *order,
+*                                 INT    *order,
 *                                 ivector *vertices,
 *                                 ivector *map,
 *                                 REAL    *s,
@@ -762,7 +762,7 @@ static void first_pairwise_symm (const dCSRmat * A,
 * \date   12/23/2014
 */
 static void second_pairwise_symm (const dCSRmat * A,
-							      INT    *order,
+                                  INT    *order,
                                   ivector *vertices,
                                   ivector *map,
                                   REAL    *s,
@@ -780,7 +780,7 @@ static void second_pairwise_symm (const dCSRmat * A,
 
     /*--------------------------------------------------------------*/
     /* Step 1. Initial vertices and will not handle strong diagonal */ 
-	/* nodes anymore                                                */
+    /* nodes anymore                                                */
     /*--------------------------------------------------------------*/
     fasp_ivec_alloc(row, vertices);
     fasp_ivec_alloc(2*row, map);
@@ -812,7 +812,7 @@ static void second_pairwise_symm (const dCSRmat * A,
 
         if ( vertices->val[i] != UNPT ) continue;
 
-		map->val[2*nc] = i;
+        map->val[2*nc] = i;
         
         min_mu = 1000.0;
         
@@ -831,15 +831,15 @@ static void second_pairwise_symm (const dCSRmat * A,
             temp2 = ajj+s[col]+2*aij;
             temp2 = 1.0/temp1+1.0/temp2;
  
-			temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero		
-			temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);	// avoid temp4 to be zero
+            temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero        
+            temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);    // avoid temp4 to be zero
             temp4 = -aij+1./(1.0/temp3+1.0/temp4); 
             
             mu    = (-aij+1.0/temp2) / temp4;
 #else            
             aij = -Aval[j];
             ajj = Aval[AIA[col]];
-	    
+        
             rsi = -s[i] + aii;
             rsj = -s[col] + ajj;
 
@@ -899,19 +899,19 @@ static void second_pairwise_symm (const dCSRmat * A,
         if ( min_mu <= k_tg ) {
             vertices->val[i]     = nc;
             vertices->val[index] = nc;
-		    map->val[2*nc+1] = index;
+            map->val[2*nc+1] = index;
 
         }
-		else {
+        else {
             vertices->val[i] = nc;
-		    map->val[2*nc+1] = -1;
+            map->val[2*nc+1] = -1;
         }
 
         nc++;
     }
 
-	map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
-	map->row = 2*nc;
+    map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
+    map->row = 2*nc;
 
     *num_agg = nc;
 }
@@ -953,11 +953,11 @@ static void first_pairwise_unsymm (const dCSRmat * A,
     INT i, j, row_start, row_end, nc;
     REAL sum;
 
-	INT checkdd = 1;
+    INT checkdd = 1;
 
     /*---------------------------------------------------------*/
     /* Step 1. select extremely strong diagonal dominate rows  */ 
-	/*        and store in G0.                                 */
+    /*        and store in G0.                                 */
     /*---------------------------------------------------------*/
 
     /* G0 : vertices->val[i]=G0PT, Remain: vertices->val[i]=UNPT */
@@ -966,7 +966,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
     fasp_ivec_alloc(2*row, map);
 
     INT *iperm = (INT *)fasp_mem_calloc(row, sizeof(INT));
-    	
+        
     /*---------------------------------------------------------*/
     /* Step 2. compute row sum (off-diagonal) for each vertex  */
     /*---------------------------------------------------------*/
@@ -983,36 +983,36 @@ static void first_pairwise_unsymm (const dCSRmat * A,
       
     nc = 0;
     index = 0;
-	i = 0;
-	node = 0;
+    i = 0;
+    node = 0;
 
     INT count0, count1, count2, count3, count4;
-	count0 = count1 = count2 = count3 = count4 = 0;
+    count0 = count1 = count2 = count3 = count4 = 0;
 
-	while (node < row) {
+    while (node < row) {
         // deal with G0 type node
         if ( vertices->val[i] == G0PT ) {
-			node ++;
-			i ++;
-			continue;
-		}
+            node ++;
+            i ++;
+            continue;
+        }
         // check nodes wether are aggregated
         if ( vertices->val[i] != UNPT ) { i ++ ; continue;}
 
         vertices->val[i] = nc;
         map->val[2*nc] = i;
-		node ++;
+        node ++;
         // check whether node has large off-diagonal positive node or not
         if ( iperm[i] == -1 ) {
-		    map->val[2*nc+1] = -1;
+            map->val[2*nc+1] = -1;
             nc ++;
-			i ++;
-			continue;
-		}
+            i ++;
+            continue;
+        }
         
         min_mu = 1000.0;
 
-		ipair = -1;
+        ipair = -1;
         
         row_start = AIA[i]; row_end = AIA[i+1];
         
@@ -1033,7 +1033,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
                 }
             }
 
-			vals = -0.5*(aij+aji);
+            vals = -0.5*(aij+aji);
 
             rsi = -s[i] + aii;
             rsj = -s[col] + ajj;
@@ -1041,17 +1041,17 @@ static void first_pairwise_unsymm (const dCSRmat * A,
 #if 0
             temp2 = 1.0/aii+1.0/ajj;
  
-			temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero		
-			temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);	// avoid temp4 to be zero
+            temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero        
+            temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);    // avoid temp4 to be zero
 
-			if (temp3 + temp4 < 0) continue;
+            if (temp3 + temp4 < 0) continue;
 
             temp4 = vals+1./(1.0/temp3+1.0/temp4); 
             
             mu    = (2.0/temp2) / temp4;            
 #else            
-			eta1 = 2*aii;
-			eta2 = 2*ajj;
+            eta1 = 2*aii;
+            eta2 = 2*ajj;
 
             sig1 = s[i]-vals;
             sig2 = s[col]-vals;
@@ -1103,16 +1103,16 @@ static void first_pairwise_unsymm (const dCSRmat * A,
 
             if (mu > k_tg) continue;
 
-			tent = mu;
+            tent = mu;
 
             if (ipair == -1) {
-				ipair = col;
+                ipair = col;
                 val = tent;
-			}
+            }
             else if((tent-val) < -0.06){
-				ipair = col;
+                ipair = col;
                 val = tent;
-			}
+            }
 #endif
         }
  
@@ -1120,30 +1120,30 @@ static void first_pairwise_unsymm (const dCSRmat * A,
         if ( min_mu <= k_tg ) {
             vertices->val[i]     = nc;
             vertices->val[index] = nc;
-		    map->val[2*nc+1] = index;
+            map->val[2*nc+1] = index;
 
         }
-		else {
+        else {
             vertices->val[i] = nc;
-		    map->val[2*nc+1] = -1;
+            map->val[2*nc+1] = -1;
         }
 #else
         if ( ipair == -1) {
-		    map->val[2*nc+1] = -2;
+            map->val[2*nc+1] = -2;
         }
-		else {
+        else {
             vertices->val[ipair] = nc;
-		    map->val[2*nc+1] = ipair;
-			node ++;
+            map->val[2*nc+1] = ipair;
+            node ++;
         }
 #endif
 
         nc++;
-		i ++;
+        i ++;
     }
 
-	map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
-	map->row = 2*nc;
+    map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
+    map->row = 2*nc;
 
     *num_agg = nc;
 
@@ -1153,15 +1153,15 @@ static void first_pairwise_unsymm (const dCSRmat * A,
 
 /**
 * \fn void second_pairwise_unsymm(dCSRmat *A, 
-*		                          dCSRmat *tmpA, 
-*								  INT dopass, 
-*								  INT *order, 
-*								  ivector *map1, 
-*								  ivector *vertices1, 
-*								  ivector *vertices, 
-*								  ivector *map, 
-*								  REAL *s1, 
-*								  INT *num_agg)
+*                                 dCSRmat *tmpA, 
+*                                 INT dopass, 
+*                                 INT *order, 
+*                                 ivector *map1, 
+*                                 ivector *vertices1, 
+*                                 ivector *vertices, 
+*                                 ivector *map, 
+*                                 REAL *s1, 
+*                                 INT *num_agg)
 *
 * \brief Form second pass aggregation for unsymmtric problem 
 *
@@ -1182,15 +1182,15 @@ static void first_pairwise_unsymm (const dCSRmat * A,
  * \date   12/23/2014
  */
 static void second_pairwise_unsymm(dCSRmat *A, 
-		                           dCSRmat *tmpA, 
-								   INT dopass, 
-								   INT *order, 
-								   ivector *map1, 
-								   ivector *vertices1, 
-								   ivector *vertices, 
-								   ivector *map, 
-								   REAL *s1, 
-								   INT *num_agg)
+                                   dCSRmat *tmpA, 
+                                   INT dopass, 
+                                   INT *order, 
+                                   ivector *map1, 
+                                   ivector *vertices1, 
+                                   ivector *vertices, 
+                                   ivector *map, 
+                                   REAL *s1, 
+                                   INT *num_agg)
 {
     INT i, j, k, l, m, ijtent;
     INT row = tmpA->row;
@@ -1198,57 +1198,57 @@ static void second_pairwise_unsymm(dCSRmat *A,
     INT *AJA = tmpA->JA;
     REAL *Aval = tmpA->val;
 
-	const REAL k_tg = 10.0 ;
+    const REAL k_tg = 10.0 ;
 
-	REAL *tents, *Tval;
+    REAL *tents, *Tval;
 
-	INT *Tnode;
+    INT *Tnode;
 
     int count = 0;
 
     INT  col,ipair,Tsize, row_start, row_end, Semipd, flag;
-	REAL mu, min_mu, aii, ajj, aij, tmp, val,var, aji, vals;
+    REAL mu, min_mu, aii, ajj, aij, tmp, val,var, aji, vals;
     REAL temp1, temp2, temp3, temp4;
 
     REAL del1, del2, eta1, eta2, sig1, sig2, rsi, rsj, epsr,del12;
 
-	Tval  = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
-	Tnode = (INT*)fasp_mem_calloc(row, sizeof(INT));
+    Tval  = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
+    Tnode = (INT*)fasp_mem_calloc(row, sizeof(INT));
 
-	fasp_ivec_alloc(2*row, map);
-	fasp_ivec_alloc(row, vertices);
+    fasp_ivec_alloc(2*row, map);
+    fasp_ivec_alloc(row, vertices);
 
-	INT nc = 0;
+    INT nc = 0;
 
-	INT node = 0;
+    INT node = 0;
         
     REAL *s = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
 
     //pairwise_aggregation_initial2(tmpA, vertices, s);
     pairwise_aggregation_initial3(A, map1, vertices1, s1, s);
 
-	fasp_ivec_set(UNPT, vertices);
+    fasp_ivec_set(UNPT, vertices);
 
-	i = 0;
+    i = 0;
 
     while (node < row) {
         // check nodes wether are aggregated
         if ( vertices->val[i] != UNPT ) { 
-			i++; 
-			continue;
-		}
+            i++; 
+            continue;
+        }
 
-		vertices->val[i] = nc;
-		map->val[2*nc] = i;
+        vertices->val[i] = nc;
+        map->val[2*nc] = i;
 
-		node ++;
+        node ++;
         // if node isolated in first pass will be isolated in second pass 
         if (map1->val[2*i+1] == -1) {
             map->val[2*nc+1] = -1;
             nc ++;
-			i ++;
-			continue;
-		}
+            i ++;
+            continue;
+        }
 
         ipair = -1;
         Tsize = 0;
@@ -1269,19 +1269,19 @@ static void second_pairwise_unsymm(dCSRmat *A,
 
             for (k = AIA[col]; k < AIA[col+1]; ++k) {
                 if (AJA[k]==i) {
-					aji = Aval[k];
-					break;
-				}
-			}
+                    aji = Aval[k];
+                    break;
+                }
+            }
 
-			vals = -0.5*(aij+aji);
-#if 0	
+            vals = -0.5*(aij+aji);
+#if 0   
             temp2 = 1.0/aii+1.0/ajj;
  
-			temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero		
-			temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);	// avoid temp4 to be zero
+            temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero        
+            temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);    // avoid temp4 to be zero
 
-			if (temp3 + temp4 < 0) continue;
+            if (temp3 + temp4 < 0) continue;
 
             temp4 = vals+1./(1.0/temp3+1.0/temp4); 
             
@@ -1289,8 +1289,8 @@ static void second_pairwise_unsymm(dCSRmat *A,
 #else
             rsi = -s[i] + aii;
             rsj = -s[col] + ajj;
-			eta1 = 2*aii;
-			eta2 = 2*ajj;
+            eta1 = 2*aii;
+            eta2 = 2*ajj;
             
             sig1 = s[i]-vals;
             sig2 = s[col]-vals;
@@ -1340,24 +1340,24 @@ static void second_pairwise_unsymm(dCSRmat *A,
                 val = tmp;            
             }
             else if ( 16*(tmp-val) < -1 ) {
-				Tnode[Tsize] = ipair;
+                Tnode[Tsize] = ipair;
                 Tval[Tsize] = val;
-				ipair = col;
-				var = tmp;
-				Tsize ++;
+                ipair = col;
+                var = tmp;
+                Tsize ++;
 
-			}
-			else {
+            }
+            else {
                 Tnode[Tsize] = col;
                 Tval[Tsize]  = tmp;
                 Tsize ++;
-			}
-		}
-				
+            }
+        }
+                
         if (ipair == -1) {
             map->val[2*nc+1] = -2;
             nc ++;
-			i ++;
+            i ++;
             continue;
         }
 
@@ -1381,15 +1381,15 @@ static void second_pairwise_unsymm(dCSRmat *A,
                         }
                         l++;
                     }
-					m++;
-				}
-				Tsize--;
-				Tnode[ijtent]=-1;
-			}
-			else {
-			    break;
-			}
-		}
+                    m++;
+                }
+                Tsize--;
+                Tnode[ijtent]=-1;
+            }
+            else {
+                break;
+            }
+        }
 
         if (ipair == -1) {
             map->val[2*nc+1] = -2;
@@ -1397,23 +1397,23 @@ static void second_pairwise_unsymm(dCSRmat *A,
         else {
             vertices->val[ipair] = nc; 
             map->val[2*nc+1] = ipair;      
-			node ++;
+            node ++;
         }
 
-	    i ++;
-		nc ++;
+        i ++;
+        nc ++;
     }
 
-	for (i=0; i<row; ++i) s1[i] = s[i];
+    for (i=0; i<row; ++i) s1[i] = s[i];
 
     map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
-	map->row = 2*nc;
+    map->row = 2*nc;
 
-	*num_agg = nc;
+    *num_agg = nc;
 
-	fasp_mem_free(s);
-	fasp_mem_free(Tnode);
-	fasp_mem_free(Tval);
+    fasp_mem_free(s);
+    fasp_mem_free(Tnode);
+    fasp_mem_free(Tval);
 
 }
 /**
@@ -1586,7 +1586,7 @@ static void form_pairwise (const dCSRmat * A,
     /*---------------------------------------------------------*/
 
     fasp_ivec_alloc(row, vertices);
-    	
+        
     if ( pair == 1 ) {
         for ( i = 0; i < row; i++ ) {
             sum = 0.0;
@@ -1602,10 +1602,10 @@ static void form_pairwise (const dCSRmat * A,
                 vertices->val[i] = UNPT;
             }
         }
-	}
-	else {
-		fasp_iarray_set(row, vertices->val, UNPT);
-	}
+    }
+    else {
+        fasp_iarray_set(row, vertices->val, UNPT);
+    }
     
     /*---------------------------------------------------------*/
     /* Step 2. compute row sum (off-diagonal) for each vertex  */
@@ -1650,8 +1650,8 @@ static void form_pairwise (const dCSRmat * A,
             temp2 = ajj+s[col]+2*aij;
             temp2 = 1.0/temp1+1.0/temp2;
  
-			temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero		
-			temp4 = MAX(ABS(ajj-s[col]), SMALLREAL); // avoid temp4 to be zero
+            temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero        
+            temp4 = MAX(ABS(ajj-s[col]), SMALLREAL); // avoid temp4 to be zero
             temp4 = -aij+1./(1.0/temp3+1.0/temp4); 
             
             mu    = (-aij+1.0/temp2) / temp4;
@@ -1708,7 +1708,7 @@ static void form_pairwise_unsymm (const dCSRmat * A,
 
     /*---------------------------------------------------------*/
     /* Step 1. select extremely strong diagonal dominate rows  */ 
-	/*        and store in G0.                                 */
+    /*        and store in G0.                                 */
     /*---------------------------------------------------------*/
 
     /* G0 : vertices->val[i]=G0PT, Remain: vertices->val[i]=UNPT */
@@ -1717,7 +1717,7 @@ static void form_pairwise_unsymm (const dCSRmat * A,
     REAL *s = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
     INT *iperm = (INT *)fasp_mem_calloc(row, sizeof(INT));
 
-	if (pair == 1) { 
+    if (pair == 1) { 
         pairwise_aggregation_initial(A, checkdd, iperm, vertices, s);
     }
     else {
@@ -1758,7 +1758,7 @@ static void form_pairwise_unsymm (const dCSRmat * A,
 
             if (iperm[col]==1) continue;
             
-			aji = 0.0;
+            aji = 0.0;
             aij = Aval[j];
             ajj = Aval[AIA[col]];
             
@@ -1773,8 +1773,8 @@ static void form_pairwise_unsymm (const dCSRmat * A,
 
             temp2 = 1.0/aii+1.0/ajj;
  
-            temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero		
-            temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);	// avoid temp4 to be zero
+            temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero        
+            temp4 = MAX(ABS(ajj-s[col]), SMALLREAL);    // avoid temp4 to be zero
             temp4 = vals+1./(1.0/temp3+1.0/temp4); 
             
             mu    = (2*1.0/temp2) / temp4;
@@ -2116,7 +2116,7 @@ static SHORT aggregation_vmb (dCSRmat *A,
     SHORT  status = FASP_SUCCESS;
 
     // local variables
-	INT    num_left = row;
+    INT    num_left = row;
     INT    subset, count;
     INT  * num_each_agg;
     

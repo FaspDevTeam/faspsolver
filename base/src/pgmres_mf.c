@@ -75,9 +75,9 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
     REAL    *work = NULL;
     REAL    **p = NULL, **hh = NULL;
     
-    INT      Restart = restart;
-    INT      Restartplus1 = Restart + 1;
-    LONG     worksize = (Restart+4)*(Restart+n)+1-n;
+    unsigned INT  Restart  = restart;
+    unsigned INT  Restart1 = Restart + 1;
+    unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -92,7 +92,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
         Restart = Restart - 5;
         worksize = (Restart+4)*(Restart+n)+1-n;
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
-        Restartplus1 = Restart + 1;
+        Restart1 = Restart + 1;
     }
     
     if ( work == NULL ) {
@@ -105,15 +105,15 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
-    p     = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(Restartplus1, sizeof(REAL *));
+    p     = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c  = rs + Restartplus1; s  = c + Restart;
+    r = work; w = r + n; rs = w + n; c  = rs + Restart1; s  = c + Restart;
     
-    for (i = 0; i < Restartplus1; i ++) p[i] = s + Restart + i*n;
+    for (i = 0; i < Restart1; i ++) p[i] = s + Restart + i*n;
     
-    for (i = 0; i < Restartplus1; i ++) hh[i] = p[Restart] + n + i*Restart;
+    for (i = 0; i < Restart1; i ++) hh[i] = p[Restart] + n + i*Restart;
     
     /* initialization */
     mf->fct(mf->data, x->val, p[0]);
@@ -292,7 +292,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
     
     if (iter>=MaxIt)
         return ERROR_SOLVER_MAXIT;
-    else 
+    else
         return iter;
 }
 

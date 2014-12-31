@@ -6,49 +6,49 @@
  *
  *  PBICGStab method to solve A*x=b is to generate {x_k} to approximate x
  *
- *  Note: We generate a series of {p_k} such that V_k=span{p_1,...,p_k}. 
+ *  Note: We generate a series of {p_k} such that V_k=span{p_1,...,p_k}.
  *
- *  Step 0. Given A, b, x_0, M  
- *  
- *  Step 1. Compute residual r_0 = b-A*x_0 and convergence check;  
- *  
- *  Step 2. Initialization z_0 = M^{-1}*r_0, p_0=z_0;  
- *  
+ *  Step 0. Given A, b, x_0, M
+ *
+ *  Step 1. Compute residual r_0 = b-A*x_0 and convergence check;
+ *
+ *  Step 2. Initialization z_0 = M^{-1}*r_0, p_0=z_0;
+ *
  *  Step 3. Main loop ...
  *
- *  FOR k = 0:MaxIt      
+ *  FOR k = 0:MaxIt
  *      - get step size alpha = f(r_k,z_k,p_k);
- *      - update solution: x_{k+1} = x_k + alpha*p_k;      
- *      - perform stagnation check;      
- *      - update residual: r_{k+1} = r_k - alpha*(A*p_k);        
- *      - perform residual check;      
- *      - obtain p_{k+1} using {p_0, p_1, ... , p_k};      
- *      - prepare for next iteration;      
- *      - print the result of k-th iteration; 
+ *      - update solution: x_{k+1} = x_k + alpha*p_k;
+ *      - perform stagnation check;
+ *      - update residual: r_{k+1} = r_k - alpha*(A*p_k);
+ *      - perform residual check;
+ *      - obtain p_{k+1} using {p_0, p_1, ... , p_k};
+ *      - prepare for next iteration;
+ *      - print the result of k-th iteration;
  *  END FOR
- * 
- *  Convergence check: norm(r)/norm(b) < tol  
- *  
- *  Stagnation check:    
- *      - IF norm(alpha*p_k)/norm(x_{k+1}) < tol_stag 
- *          -# compute r=b-A*x_{k+1}; 
- *          -# convergence check; 
+ *
+ *  Convergence check: norm(r)/norm(b) < tol
+ *
+ *  Stagnation check:
+ *      - IF norm(alpha*p_k)/norm(x_{k+1}) < tol_stag
+ *          -# compute r=b-A*x_{k+1};
+ *          -# convergence check;
  *          -# IF ( not converged & restart_number < Max_Stag_Check ) restart;
- *      - END IF  
- *  
- *  Residual check:     
- *      - IF norm(r_{k+1})/norm(b) < tol             
- *          -# compute the real residual r = b-A*x_{k+1}; 
- *          -# convergence check; 
+ *      - END IF
+ *
+ *  Residual check:
+ *      - IF norm(r_{k+1})/norm(b) < tol
+ *          -# compute the real residual r = b-A*x_{k+1};
+ *          -# convergence check;
  *          -# IF ( not converged & restart_number < Max_Res_Check ) restart;
- *      - END IF 
+ *      - END IF
  *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
  *  \note See spbcgs.c for a safer version
  *
- */  
+ */
 
 #include <math.h>
 
@@ -61,11 +61,11 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_dcsr_pbcgs (dCSRmat *A, dvector *b, dvector *u, precond *pc, 
- *                                 const REAL tol, const INT MaxIt, 
+ * \fn INT fasp_solver_dcsr_pbcgs (dCSRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                 const REAL tol, const INT MaxIt,
  *                                 const SHORT stop_type, const SHORT print_level)
  *
- * \brief Preconditioned BiCGstab method for solving Au=b 
+ * \brief Preconditioned BiCGstab method for solving Au=b
  *
  * \param A            Pointer to the coefficient matrix
  * \param b            Pointer to the dvector of right hand side
@@ -82,15 +82,15 @@
  * \date   09/09/2009
  *
  * Rewritten by Chensong Zhang on 04/30/2012
- * Modified by Feiteng Huang on 06/01/2012: fix restart param-init 
+ * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
  */
-INT fasp_solver_dcsr_pbcgs (dCSRmat *A, 
-                            dvector *b, 
-                            dvector *u, 
-                            precond *pc, 
+INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
+                            dvector *b,
+                            dvector *u,
+                            precond *pc,
                             const REAL tol,
-                            const INT MaxIt, 
+                            const INT MaxIt,
                             const SHORT stop_type,
                             const SHORT print_level)
 {
@@ -106,11 +106,11 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
     REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
     REAL         alpha, beta, omega, temp1, temp2, tempr;
-
+    
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)
-    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(REAL));    
+    REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(REAL));
     REAL *p=work, *z=work+m, *r=z+m, *t=r+m;
     REAL *rho=t+m, *pp=rho+m, *s=pp+m, *sp=s+m;
     
@@ -118,12 +118,12 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
-
+    
     // r = b-A*u
     fasp_array_cp(m,bval,r);
     fasp_blas_dcsr_aAxpy(-1.0,A,uval,r);
     absres0 = fasp_blas_array_norm2(m,r);
-
+    
     // compute initial relative residual
     switch (stop_type) {
         case STOP_REL_RES:
@@ -148,11 +148,11 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
     
     // output iteration information if needed
     print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
-
+    
     // shadow residual rho = r* := r
-    fasp_array_cp(m,r,rho);    
+    fasp_array_cp(m,r,rho);
     temp1 = fasp_blas_array_dotprod(m,r,rho);
-
+    
     // p = r
     fasp_array_cp(m,r,p);
     
@@ -182,9 +182,9 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         fasp_blas_array_axpy(m,-alpha,z,s);
         
         // sp = precond(s)
-        if ( pc != NULL ) 
+        if ( pc != NULL )
             pc->fct(s,sp,pc->data); /* Apply preconditioner */
-        else 
+        else
             fasp_array_cp(m,s,sp); /* No preconditioner */
         
         // t = A*sp;
@@ -226,7 +226,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         if ( normd < TOL_s ) { // Possible breakdown?
             ITS_SMALLSP; goto FINISHED;
         }
-
+        
         normu   = fasp_blas_array_norm2(m,uval);
         reldiff = normd/normu;
         
@@ -278,13 +278,13 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             
             // pp = precond(p)
             fasp_array_cp(m,r,p);
-            if ( pc != NULL ) 
+            if ( pc != NULL )
                 pc->fct(p,pp,pc->data); /* Apply preconditioner */
-            else 
+            else
                 fasp_array_cp(m,p,pp); /* No preconditioner */
             
             // rho = r* := r
-            fasp_array_cp(m,r,rho);    
+            fasp_array_cp(m,r,rho);
             temp1 = fasp_blas_array_dotprod(m,r,rho);
             
             // compute residuals
@@ -299,7 +299,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
                     else
                         fasp_array_cp(m,r,z);
                     absres = sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
-                    relres = absres/normr0; 
+                    relres = absres/normr0;
                     break;
                 case STOP_MOD_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
@@ -333,13 +333,13 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             
             // pp = precond(p)
             fasp_array_cp(m,r,p);
-            if ( pc != NULL ) 
+            if ( pc != NULL )
                 pc->fct(p,pp,pc->data); /* Apply preconditioner */
-            else 
+            else
                 fasp_array_cp(m,p,pp); /* No preconditioner */
             
             // rho = r* := r
-            fasp_array_cp(m,r,rho);    
+            fasp_array_cp(m,r,rho);
             temp1 = fasp_blas_array_dotprod(m,r,rho);
             
             // compute residuals
@@ -347,11 +347,11 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
                 case STOP_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
                     relres = absres/normr0;
-                    break;                    
+                    break;
                 case STOP_REL_PRECRES:
-                    if ( pc != NULL ) 
+                    if ( pc != NULL )
                         pc->fct(r,z,pc->data);
-                    else 
+                    else
                         fasp_array_cp(m,r,z);
                     absres = sqrt(ABS(fasp_blas_array_dotprod(m,r,z)));
                     relres = tempr/normr0;
@@ -360,7 +360,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
                     absres = fasp_blas_array_norm2(m,r);
                     relres = absres/normu;
                     break;
-             }
+            }
             
             if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
             
@@ -394,18 +394,18 @@ FINISHED:  // finish the iterative method
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
-    if ( iter > MaxIt ) 
+    if ( iter > MaxIt )
         return ERROR_SOLVER_MAXIT;
-    else 
+    else
         return iter;
 }
 
 /**
- * \fn INT fasp_solver_dbsr_pbcgs (dBSRmat *A, dvector *b, dvector *u, precond *pc, 
- *                                 const REAL tol, const INT MaxIt, 
- *                                 const SHORT stop_type, const SHORT print_level) 
+ * \fn INT fasp_solver_dbsr_pbcgs (dBSRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                 const REAL tol, const INT MaxIt,
+ *                                 const SHORT stop_type, const SHORT print_level)
  *
- * \brief Preconditioned BiCGstab method for solving Au=b 
+ * \brief Preconditioned BiCGstab method for solving Au=b
  *
  * \param A            Pointer to the coefficient matrix
  * \param b            Pointer to the dvector of right hand side
@@ -422,7 +422,7 @@ FINISHED:  // finish the iterative method
  * \date   09/09/2009
  *
  * Rewritten by Chensong Zhang on 04/30/2012
- * Modified by Feiteng Huang on 06/01/2012: fix restart param-init 
+ * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
  *
  */
@@ -433,7 +433,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
                             const REAL tol,
                             const INT MaxIt,
                             const SHORT stop_type,
-                            const SHORT print_level) 
+                            const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -742,11 +742,11 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, dvector *b, dvector *u, precond *pc, 
- *                                  const REAL tol, const INT MaxIt, 
+ * \fn INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                  const REAL tol, const INT MaxIt,
  *                                  const SHORT stop_type, const SHORT print_level)
  *
- * \brief A preconditioned BiCGstab method for solving Au=b 
+ * \brief A preconditioned BiCGstab method for solving Au=b
  *
  * \param A            Pointer to the coefficient matrix
  * \param b            Pointer to the dvector of right hand side
@@ -763,18 +763,18 @@ FINISHED:  // finish the iterative method
  * \date   05/24/2010
  *
  * Rewritten by Chensong Zhang on 04/30/2012
- * Modified by Feiteng Huang on 06/01/2012: fix restart param-init 
+ * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
  *
  */
-INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, 
-                             dvector *b, 
-                             dvector *u, 
-                             precond *pc, 
+INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
+                             dvector *b,
+                             dvector *u,
+                             precond *pc,
                              const REAL tol,
-                             const INT MaxIt, 
+                             const INT MaxIt,
                              const SHORT stop_type,
-                             const SHORT print_level) 
+                             const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -1083,11 +1083,11 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn INT fasp_solver_dstr_pbcgs (dSTRmat *A, dvector *b, dvector *u, precond *pc, 
- *                                 const REAL tol, const INT MaxIt, 
+ * \fn INT fasp_solver_dstr_pbcgs (dSTRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                 const REAL tol, const INT MaxIt,
  *                                 const SHORT stop_type, const SHORT print_level)
- * 
- * \brief Preconditioned BiCGstab method for solving Au=b 
+ *
+ * \brief Preconditioned BiCGstab method for solving Au=b
  *
  * \param A            Pointer to the coefficient matrix
  * \param b            Pointer to the dvector of right hand side
@@ -1104,18 +1104,18 @@ FINISHED:  // finish the iterative method
  * \date   04/25/2010
  *
  * Rewritten by Chensong Zhang on 04/30/2012
- * Modified by Feiteng Huang on 06/01/2012: fix restart param-init 
+ * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
  *
  */
-INT fasp_solver_dstr_pbcgs (dSTRmat *A, 
-                            dvector *b, 
-                            dvector *u, 
-                            precond *pc, 
+INT fasp_solver_dstr_pbcgs (dSTRmat *A,
+                            dvector *b,
+                            dvector *u,
+                            precond *pc,
                             const REAL tol,
-                            const INT MaxIt, 
+                            const INT MaxIt,
                             const SHORT stop_type,
-                            const SHORT print_level) 
+                            const SHORT print_level)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;

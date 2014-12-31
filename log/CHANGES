@@ -3,7 +3,9 @@ File Name: CHANGES
 12/31/2014 FASP 1.6.4:
 - Fix GCR file name conflicition, spgcr.c -> pgcr.c.
 - Update VS2010 solution, changing from CPP to C, use C99 option.
-- Try to fix warning messages for memory allocation.
+- Change workspace length from LONG to unsigned LONG for GMRES methods.
+- Fix warning messages for memory allocation.
+- Fix memory leakage for pairwise aggregation when matrix is nonsymmetric. 
 
 12/30/2014 FASP 1.6.3:
 - Add new pairwise aggregation code.

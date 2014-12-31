@@ -60,7 +60,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
     
     // local variables
     INT      iter = 0;
-    INT      restartplus1 = restart + 1;
+    INT      restart1 = restart + 1;
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
@@ -89,7 +89,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
         printf("### WARNING: GMRES restart number set to %d!\n", restart );
-        restartplus1 = restart + 1;
+        restart1 = restart + 1;
     }
     
     if ( work == NULL ) {
@@ -98,16 +98,16 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    p     = (REAL **)fasp_mem_calloc(restart1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(restart1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c = rs + restartplus1;
+    r = work; w = r + n; rs = w + n; c = rs + restart1;
     x_best = c + restart; s = x_best + n;
     
-    for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
+    for ( i = 0; i < restart1; i++ ) p[i] = s + restart + i*n;
     
-    for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
+    for ( i = 0; i < restart1; i++ ) hh[i] = p[restart] + n + i*restart;
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -399,7 +399,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
     
     // local variables
     INT      iter = 0;
-    INT      restartplus1 = restart + 1;
+    INT      restart1 = restart + 1;
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
@@ -428,7 +428,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
         printf("### WARNING: GMRES restart number set to %d!\n", restart );
-        restartplus1 = restart + 1;
+        restart1 = restart + 1;
     }
     
     if ( work == NULL ) {
@@ -437,16 +437,16 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    p     = (REAL **)fasp_mem_calloc(restart1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(restart1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c = rs + restartplus1;
+    r = work; w = r + n; rs = w + n; c = rs + restart1;
     x_best = c + restart; s = x_best + n;
     
-    for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
+    for ( i = 0; i < restart1; i++ ) p[i] = s + restart + i*n;
     
-    for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
+    for ( i = 0; i < restart1; i++ ) hh[i] = p[restart] + n + i*restart;
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -738,7 +738,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
     
     // local variables
     INT      iter = 0;
-    INT      restartplus1 = restart + 1;
+    INT      restart1 = restart + 1;
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
@@ -767,7 +767,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
         printf("### WARNING: GMRES restart number set to %d!\n", restart );
-        restartplus1 = restart + 1;
+        restart1 = restart + 1;
     }
     
     if ( work == NULL ) {
@@ -776,16 +776,16 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    p     = (REAL **)fasp_mem_calloc(restart1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(restart1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c = rs + restartplus1;
+    r = work; w = r + n; rs = w + n; c = rs + restart1;
     x_best = c + restart; s = x_best + n;
     
-    for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
+    for ( i = 0; i < restart1; i++ ) p[i] = s + restart + i*n;
     
-    for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
+    for ( i = 0; i < restart1; i++ ) hh[i] = p[restart] + n + i*restart;
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -1077,7 +1077,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
     
     // local variables
     INT      iter = 0;
-    INT      restartplus1 = restart + 1;
+    INT      restart1 = restart + 1;
     INT      i, j, k;
     
     REAL     r_norm, r_normb, gamma, t;
@@ -1106,7 +1106,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
         printf("### WARNING: GMRES restart number set to %d!\n", restart );
-        restartplus1 = restart + 1;
+        restart1 = restart + 1;
     }
     
     if ( work == NULL ) {
@@ -1115,16 +1115,16 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    p     = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
-    hh    = (REAL **)fasp_mem_calloc(restartplus1, sizeof(REAL *));
+    p     = (REAL **)fasp_mem_calloc(restart1, sizeof(REAL *));
+    hh    = (REAL **)fasp_mem_calloc(restart1, sizeof(REAL *));
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
-    r = work; w = r + n; rs = w + n; c = rs + restartplus1;
+    r = work; w = r + n; rs = w + n; c = rs + restart1;
     x_best = c + restart; s = x_best + n;
     
-    for ( i = 0; i < restartplus1; i++ ) p[i] = s + restart + i*n;
+    for ( i = 0; i < restart1; i++ ) p[i] = s + restart + i*n;
     
-    for ( i = 0; i < restartplus1; i++ ) hh[i] = p[restart] + n + i*restart;
+    for ( i = 0; i < restart1; i++ ) hh[i] = p[restart] + n + i*restart;
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
@@ -1247,7 +1247,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
         fasp_blas_array_ax(n, rs[i-1], w);
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
-                
+        
         /* apply the preconditioner */
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
