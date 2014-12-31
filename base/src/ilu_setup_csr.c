@@ -9,7 +9,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-/* ilu.for */
+/* decorations for ilu.for */
 #ifdef __cplusplus 
 extern "C" {void iluk_(const INT *n,REAL *a,INT *ja,INT *ia,INT *lfil,REAL *alu,
                        INT *jlu,INT *iwk,INT *ierr,INT *nzlu);}
@@ -36,7 +36,7 @@ extern void ilutp_(const INT *n,REAL *a,INT *ja,INT *ia,INT *lfil,const REAL *dr
 /**
  * \fn SHORT fasp_ilu_dcsr_setup (dCSRmat *A, ILU_data *iludata, ILU_param *iluparam)
  *
- * \brief Get ILU decoposition of a CSR matrix A
+ * \brief Get ILU decomposition of a CSR matrix A
  *
  * \param A         Pointer to dCSRmat matrix
  * \param iludata   Pointer to ILU_data
@@ -60,8 +60,8 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     INT    ierr, iwk, nzlu, nwork, *ijlu;
     REAL  *luval;
     
-    REAL  setup_start, setup_end, setup_duration;
-    SHORT    status = FASP_SUCCESS;
+    REAL   setup_start, setup_end, setup_duration;
+    SHORT  status = FASP_SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: fasp_ilu_dcsr_setup ...... [Start]\n");

@@ -85,11 +85,14 @@ ForwardSweep:
         else if ( l < mgl->schwarz_levels ) {
             switch (mgl[l].schwarz.schwarz_type) {
                 case 3:
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, 
+                                                       &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, 
+                                                        &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, 
+                                                       &mgl[l].x, &mgl[l].b);
                     break;
             }
         }
@@ -174,7 +177,7 @@ ForwardSweep:
         // find the optimal scaling factor alpha
         if ( param->coarse_scaling == ON ) {
             alpha = fasp_blas_array_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
-            / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
+                  / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
             alpha = MIN(alpha, 1.0); // Add this for safty! --Chensong on 10/04/2014
         }
         
@@ -197,11 +200,14 @@ ForwardSweep:
         else if ( l < mgl->schwarz_levels ) {
             switch (mgl[l].schwarz.schwarz_type) {
                 case 3:
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, 
+                                                        &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, 
+                                                       &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, 
+                                                        &mgl[l].x, &mgl[l].b);
                     break;
             }
         }
@@ -292,26 +298,34 @@ ForwardSweep:
                 switch (smoother) {
                     case SMOOTHER_JACOBI:
                         for (i=0; i<steps; i++)
-                            fasp_smoother_dbsr_jacobi1(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_jacobi1(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                        mgl[l].diaginv.val);
                         break;
                     case SMOOTHER_GS:
                         for (i=0; i<steps; i++)
-                            fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                          mgl[l].diaginv.val);
                         break;
                     case SMOOTHER_SGS:
                         for (i=0; i<steps; i++){
-                            fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
-                            fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x,
+                                                          mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                           mgl[l].diaginv.val);
                         }
                         break;
                     case SMOOTHER_SOR:
                         for (i=0; i<steps; i++)
-                            fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                            fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                           mgl[l].diaginv.val, relax);
                         break;
                     case SMOOTHER_SSOR:
-                        for (i=0; i<steps; i++)
-                            fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
-                        fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                        for (i=0; i<steps; i++) {
+                            fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                           mgl[l].diaginv.val, relax);
+                        }
+                        fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                        mgl[l].diaginv.val, relax);
                         break;
                     default:
                         printf("### ERROR: Wrong smoother type %d!\n", smoother);
@@ -335,7 +349,6 @@ ForwardSweep:
             // z_nk = A_nk^{-1}*r_nk
 #if WITH_UMFPACK // use UMFPACK directly
             fasp_solver_umfpack(mgl[l].A_nk, &r_nk, &z_nk, 0);
-            
 #else
             fasp_coarse_itsolver(mgl[l].A_nk, &r_nk, &z_nk, 1e-12, 0);
 #endif
@@ -361,30 +374,29 @@ ForwardSweep:
     switch (coarse_solver) {
             
 #if WITH_MUMPS
-            /* use MUMPS direct solver on the coarsest level */
         case SOLVER_MUMPS:
+            /* use MUMPS direct solver on the coarsest level */
             mgl[nl-1].mumps.job = 2;
             fasp_solver_mumps_steps(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
-            //fasp_solver_mumps(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
             break;
 #endif
             
 #if WITH_UMFPACK
-            /* use UMFPACK direct solver on the coarsest level */
         case SOLVER_UMFPACK:
+            /* use UMFPACK direct solver on the coarsest level */
             fasp_umfpack_solve(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
             break;
 #endif
             
 #if WITH_SuperLU
-            /* use SuperLU direct solver on the coarsest level */
         case SOLVER_SUPERLU:
+            /* use SuperLU direct solver on the coarsest level */
             fasp_solver_superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
             break;
 #endif
             
-            /* use iterative solver on the coarest level */
         default: {
+            /* use iterative solver on the coarsest level */
             const INT  csize = mgl[nl-1].A.ROW*mgl[nl-1].A.nb;
             const INT  cmaxit = MIN(csize*csize, 200); // coarse level iteration number
             const REAL ctol = param->tol; // coarse level tolerance
@@ -413,7 +425,7 @@ ForwardSweep:
             
             alpha = (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, mgl[l].w.val))
                   / (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, Aeh.val));
-            alpha = MIN(alpha, 1.0); // Add this for safty! --Chensong on 10/04/2014
+            alpha = MIN(alpha, 1.0); // Add this for safety! --Chensong on 10/04/2014
             fasp_blas_array_axpy (mgl[l].b.row, alpha, PeH.val, mgl[l].x.val);
         }
         else {
@@ -427,7 +439,7 @@ ForwardSweep:
             //--------------------------------------------
             // form residual r = b - A x
             fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
-            fasp_blas_dbsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
+            fasp_blas_dbsr_aAxpy(-1.0, &mgl[l].A, mgl[l].x.val, mgl[l].w.val);
             
             // r_nk = R_nk*r
             fasp_blas_dcsr_mxv(mgl[l].R_nk, mgl[l].w.val, r_nk.val);
@@ -447,33 +459,41 @@ ForwardSweep:
         if ( l < param->ILU_levels ) {
             fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
             for ( i=0; i<steps; i++ )
-                fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                               mgl[l].diaginv.val);
         }
         else {
             if ( steps > 0 ) {
                 switch (smoother) {
                     case SMOOTHER_JACOBI:
                         for (i=0; i<steps; i++)
-                            fasp_smoother_dbsr_jacobi1(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_jacobi1(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                        mgl[l].diaginv.val);
                         break;
                     case SMOOTHER_GS:
                         for (i=0; i<steps; i++)
-                            fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                           mgl[l].diaginv.val);
                         break;
                     case SMOOTHER_SGS:
                         for (i=0; i<steps; i++){
-                            fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
-                            fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                          mgl[l].diaginv.val);
+                            fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                           mgl[l].diaginv.val);
                         }
                         break;
                     case SMOOTHER_SOR:
                         for (i=0; i<steps; i++)
-                            fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                            fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                            mgl[l].diaginv.val, relax);
                         break;
                     case SMOOTHER_SSOR:
                         for (i=0; i<steps; i++)
-                            fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
-                        fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val, relax);
+                            fasp_smoother_dbsr_sor_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                           mgl[l].diaginv.val, relax);
+                        fasp_smoother_dbsr_sor_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
+                                                        mgl[l].diaginv.val, relax);
                         break;
                     default:
                         printf("### ERROR: Wrong smoother type %d!\n", smoother);

@@ -38,7 +38,7 @@
  * \param beta   REAL factor beta
  * \param C      Pointer to dCSRmat matrix
  *
- * \return       FASP_SUCCESS if succees, ERROR if not
+ * \return       FASP_SUCCESS if succeed, ERROR if not
  *
  * \author Xiaozhe Hu
  * \date   11/07/2009
@@ -579,7 +579,7 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
 /**
  * \fn void fasp_blas_dcsr_aAxpy_agg (const REAL alpha, dCSRmat *A, REAL *x, REAL *y)
  *
- * \brief Matrix-vector multiplication y = alpha*A*x + y, where the entries of A are all ones
+ * \brief Matrix-vector multiplication y = alpha*A*x + y (the entries of A are all ones)
  *
  * \param alpha  REAL factor alpha
  * \param A      Pointer to dCSRmat matrix A
@@ -766,18 +766,12 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
     INT *JD = (INT *)fasp_mem_calloc(B->col,sizeof(INT));
     
     C->row=A->row;
-    
     C->col=B->col;
-
     C->val = NULL;
     C->JA  = NULL;
-    
-    
     C->IA  = (INT*)fasp_mem_calloc(C->row+1,sizeof(INT));
     
-    
     for (i=0;i<B->col;++i) JD[i]=-1;
-    
     
     // step 1: Find first the structure IA of C
     for(i=0;i<C->row;++i) {
@@ -801,15 +795,12 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
         }
     }
     
-    
     for (i=0;i<C->row;++i) C->IA[i+1]+=C->IA[i];
-    
     
     // step 2: Find the structure JA of C
     INT countJD;
     
     C->JA=(INT*)fasp_mem_calloc(C->IA[C->row],sizeof(INT));
-    
     
     for (i=0;i<C->row;++i) {
         countJD=0;
@@ -833,12 +824,10 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
         fasp_iarray_set(countJD, JD, -1);
     }
     
-    
     fasp_mem_free(JD);
     
     // step 3: Find the structure A of C
     C->val=(REAL*)fasp_mem_calloc(C->IA[C->row],sizeof(REAL));
-    
     
     for (i=0;i<C->row;++i) {
         for (j=C->IA[i];j<C->IA[i+1];++j) {
@@ -939,7 +928,8 @@ void fasp_blas_dcsr_rap (dCSRmat  *R,
     INT * part_end = RAP_temp + coarse_add_nthreads;
     
     if (n_coarse > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
+#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, \
+                                 jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
@@ -1021,7 +1011,7 @@ void fasp_blas_dcsr_rap (dCSRmat  *R,
     }
 #endif
     
-    //    printf("A_H NNZ = %d\n", RAP_size);
+    // printf("A_H NNZ = %d\n", RAP_size);
     RAP_j = (INT *)fasp_mem_calloc(RAP_size, sizeof(INT));
     RAP_data = (REAL *)fasp_mem_calloc(RAP_size, sizeof(REAL));
     
@@ -1029,8 +1019,9 @@ void fasp_blas_dcsr_rap (dCSRmat  *R,
     
 #ifdef _OPENMP
     if (n_coarse > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, P_marker, A_marker, jj_counter, ic, jj_row_begining, \
-jj1, r_entry, i1, jj2, r_a_product, i2, jj3, r_a_p_product, i3)
+#pragma omp parallel for private(myid, mybegin, myend, P_marker, A_marker, jj_counter,   \
+                                 ic, jj_row_begining, jj1, r_entry, i1, jj2, r_a_product,\
+                                 i2, jj3, r_a_p_product, i3)
         for (myid = 0; myid < nthreads; myid ++) {
             FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
@@ -1164,7 +1155,6 @@ void fasp_blas_dcsr_rap_agg (dCSRmat  *R,
     INT n_coarse = R->row;
     INT *R_i = R->IA;
     INT *R_j = R->JA;
-    //REAL *R_data = R->val;
     
     INT n_fine = A->row;
     INT *A_i = A->IA;
@@ -1173,7 +1163,6 @@ void fasp_blas_dcsr_rap_agg (dCSRmat  *R,
     
     INT *P_i = P->IA;
     INT *P_j = P->JA;
-    //REAL *P_data = P->val;
     
     INT RAP_size;
     INT *RAP_i = NULL;
@@ -1219,7 +1208,8 @@ void fasp_blas_dcsr_rap_agg (dCSRmat  *R,
     INT * part_end = RAP_temp + coarse_add_nthreads;
     
     if (n_coarse > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
+#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, \
+                                 jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
@@ -1301,7 +1291,6 @@ void fasp_blas_dcsr_rap_agg (dCSRmat  *R,
     }
 #endif
     
-    //    printf("A_H NNZ = %d\n", RAP_size);
     RAP_j = (INT *)fasp_mem_calloc(RAP_size, sizeof(INT));
     RAP_data = (REAL *)fasp_mem_calloc(RAP_size, sizeof(REAL));
     
@@ -1309,8 +1298,8 @@ void fasp_blas_dcsr_rap_agg (dCSRmat  *R,
     
 #ifdef _OPENMP
     if (n_coarse > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, P_marker, A_marker, jj_counter, ic, jj_row_begining, \
-jj1, i1, jj2, i2, jj3, i3)
+#pragma omp parallel for private(myid, mybegin, myend, P_marker, A_marker, jj_counter, \
+                                 ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid ++) {
             FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
@@ -1410,7 +1399,7 @@ jj1, i1, jj2, i2, jj3, i3)
 /**
  * \fn void fasp_blas_dcsr_rap_agg1 (dCSRmat *R, dCSRmat *A, dCSRmat *P, dCSRmat *B)
  *
- * \brief Triple sparse matrix multiplication B=R*A*P, where the entries of R and P are all ones.
+ * \brief Triple sparse matrix multiplication B=R*A*P (nonzero entries of R and P are ones)
  *
  * \param R   Pointer to the dCSRmat matrix R
  * \param A   Pointer to the dCSRmat matrix A
@@ -1534,7 +1523,7 @@ void fasp_blas_dcsr_rap_agg1 (dCSRmat *R,
             BTindex[N2C(jac[N2C(j)])]=j;
         }
         
-        // reset istart and length at the begining of each loop
+        // reset istart and length at the beginning of each loop
         istart = -1; length = 0;
         
         // go across the rows in R
@@ -1554,7 +1543,7 @@ void fasp_blas_dcsr_rap_agg1 (dCSRmat *R,
             }
         }
         
-        // book-keeping [reseting length and setting iistart]
+        // book-keeping [resetting length and setting iistart]
         // use each column that would have resulted from R*A
         for (j=0; j<length; ++j) {
             jj = N2C(istart);
@@ -1619,14 +1608,17 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
 #pragma omp parallel for if(n>OPENMP_HOLDS)
 #endif
     for (i=0;i<=n;++i)   { A->IA[i]++; P->IA[i]++; }
+    
 #ifdef _OPENMP
 #pragma omp parallel for if(nnzA>OPENMP_HOLDS)
 #endif
     for (i=0;i<nnzA;++i) { A->JA[i]++; }
+
 #ifdef _OPENMP
 #pragma omp parallel for if(nc>OPENMP_HOLDS)
 #endif
     for (i=0;i<=nc;++i)  { Pt->IA[i]++; }
+
 #ifdef _OPENMP
 #pragma omp parallel for if(nnzP>OPENMP_HOLDS)
 #endif
@@ -1703,7 +1695,7 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
  * \date   08/02/2011
  *
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
- *          Advances in Computational Mathematics, 1 (1993), pp. 127-137.
+ *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
 void fasp_blas_dcsr_rap4 (dCSRmat *R,
                           dCSRmat *A,
@@ -1739,6 +1731,7 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
         INT minus_one_length = minus_one_length_A + minus_one_length_P;
         
         INT *iindexs = (INT *)fasp_mem_calloc(minus_one_length+minus_one_length_P, sizeof(INT));
+        
 #if CHMEM_MODE
         total_alloc_mem += minus_one_length*sizeof(INT);
 #endif
@@ -1746,20 +1739,28 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
         INT *BTindexs = indexs + minus_one_length_A;
         
         INT *iac=(INT*)fasp_mem_calloc(row+1,sizeof(INT));
+        
 #if CHMEM_MODE
         total_alloc_mem += (row+1)*sizeof(INT);
 #endif
+        
         INT *part_end=(INT*)fasp_mem_calloc(2*nthreads+row,sizeof(INT));
+        
 #if CHMEM_MODE
         total_alloc_mem += (2*nthreads+row)*sizeof(INT);
 #endif
+        
         INT *iac_temp=part_end + nthreads;
         INT **iindex_array = (INT **)fasp_mem_calloc(nthreads, sizeof(INT *));
         INT **index_array = (INT **)fasp_mem_calloc(nthreads, sizeof(INT *));
         
         fasp_iarray_set(minus_one_length, iindexs, -2);
+        
 #ifdef _OPENMP
-#pragma omp parallel for private(myid, FiveMyid, mybegin, myend, min_A, min_P, index, iindex, A_pos, P_pos, ic, FiveIc, jj_counter, jj_row_begining, end_rowR, jj1, i1, end_rowA, jj2, i2, end_row, jj3, i3)
+#pragma omp parallel for private(myid, FiveMyid, mybegin, myend, min_A, min_P, index, \
+                                 iindex, A_pos, P_pos, ic, FiveIc, jj_counter,        \
+                                 jj_row_begining, end_rowR, jj1, i1, end_rowA, jj2, i2,\
+                                 end_row, jj3, i3)
 #endif
         for (myid = 0; myid < nthreads; myid ++) {
             FiveMyid = myid * 5;
@@ -1826,7 +1827,8 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
 #endif
         fasp_iarray_set(minus_one_length, iindexs, -2);
 #ifdef _OPENMP
-#pragma omp parallel for private(myid, index, iindex, FiveMyid, mybegin, myend, i, istart, length, i1, end_rowR, jj, j, end_rowA, k, iistart, end_row)
+#pragma omp parallel for private(myid, index, iindex, FiveMyid, mybegin, myend, i, istart,\
+                                 length, i1, end_rowR, jj, j, end_rowA, k, iistart, end_row)
 #endif
         for (myid = 0; myid < nthreads; myid ++) {
             iindex = iindex_array[myid];
@@ -1857,7 +1859,7 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
                         }
                     }
                 }
-                // book-keeping [reseting length and setting iistart]
+                // book-keeping [resetting length and setting iistart]
                 //count = length;
                 iistart = -1;
                 //length = 0;
@@ -1901,7 +1903,9 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
 #endif
         
 #ifdef _OPENMP
-#pragma omp parallel for private(myid, index, FiveMyid, mybegin, myend, min_A, min_P, A_pos, P_pos, ic, FiveIc, BTindex, temp, i, i1, end_row, j, istart, length, end_rowR, jj, end_rowA, k)
+#pragma omp parallel for private(myid, index, FiveMyid, mybegin, myend, min_A, min_P, \
+                                 A_pos, P_pos, ic, FiveIc, BTindex, temp, i, i1, end_row,\
+                                 j, istart, length, end_rowR, jj, end_rowA, k)
 #endif
         for (myid = 0; myid < nthreads; myid ++) {
             index = index_array[myid];
@@ -1931,7 +1935,7 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
                 for (j = iac[i]; j < end_row; ++ j) {
                     BTindex[N2C(jac[N2C(j)])] = j;
                 }
-                // reset istart and length at the begining of each loop
+                // reset istart and length at the beginning of each loop
                 istart = -1;
                 length = 0;
                 // go across the rows in R
@@ -1949,7 +1953,7 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
                         temp[N2C(ja[N2C(k)])] += rj[N2C(jj)]*aj[N2C(k)];
                     }
                 }
-                // book-keeping [reseting length and setting iistart]
+                // book-keeping [resetting length and setting iistart]
                 // use each column that would have resulted from R*A
                 for (j = 0; j < length; ++ j) {
                     jj = N2C(istart);

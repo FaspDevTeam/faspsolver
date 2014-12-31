@@ -26,8 +26,8 @@
  *                                   const REAL tol, const INT MaxIt, const SHORT restart,
  *                                   const SHORT stop_type, const SHORT print_level)
  *
- * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
- *        parameter can be adaptively modified during the iteration.
+ * \brief Right preconditioned GMRES method in which the restart parameter
+ *        can be adaptively modified during the iteration.
  *
  * \param A            Pointer to dCSRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
@@ -157,7 +157,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -366,8 +366,8 @@ FINISHED:
  *                                    const REAL tol, const INT MaxIt, const SHORT restart,
  *                                    const SHORT stop_type, const SHORT print_level)
  *
- * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
- *        parameter can be adaptively modified during the iteration.
+ * \brief Right preconditioned GMRES method in which the restart parameter
+ *        can be adaptively modified during the iteration.
  *
  * \param A            Pointer to dCSRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
@@ -492,7 +492,7 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -701,8 +701,8 @@ FINISHED:
  *                                   const REAL tol, const INT MaxIt, const SHORT restart,
  *                                   const SHORT stop_type, const SHORT print_level)
  *
- * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
- *        parameter can be adaptively modified during the iteration.
+ * \brief Right preconditioned GMRES method in which the restart parameter
+ *        can be adaptively modified during the iteration.
  *
  * \param A            Pointer to dCSRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
@@ -830,7 +830,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1039,8 +1039,8 @@ FINISHED:
  *                                   const REAL tol, const INT MaxIt, const SHORT restart,
  *                                   const SHORT stop_type, const SHORT print_level)
  *
- * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
- *        parameter can be adaptively modified during the iteration.
+ * \brief Right preconditioned GMRES method in which the restart parameter
+ *        can be adaptively modified during the iteration.
  *
  * \param A            Pointer to dCSRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
@@ -1168,7 +1168,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     

@@ -12,8 +12,8 @@
     1216 ./base/src/schwarz.f
      145 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
-     276 ./base/src/amg_setup_rs.c
-     848 ./base/src/amg_setup_sa.c
+     277 ./base/src/amg_setup_rs.c
+     852 ./base/src/amg_setup_sa.c
      655 ./base/src/amg_setup_ua.c
      319 ./base/src/amg_solve.c
      854 ./base/src/amlirecur.c
@@ -22,7 +22,7 @@
      427 ./base/src/blas_array.c
      353 ./base/src/blas_bcsr.c
     5682 ./base/src/blas_bsr.c
-    1988 ./base/src/blas_csr.c
+    1992 ./base/src/blas_csr.c
      125 ./base/src/blas_csrl.c
     1541 ./base/src/blas_smat.c
     1925 ./base/src/blas_str.c
@@ -54,7 +54,7 @@
      171 ./base/src/lu.c
      255 ./base/src/memory.c
      289 ./base/src/message.c
-     499 ./base/src/mgcycle.c
+     519 ./base/src/mgcycle.c
      145 ./base/src/mgrecur.c
      556 ./base/src/ordering.c
      982 ./base/src/parameters.c
@@ -89,7 +89,7 @@
      349 ./base/src/sparse_block.c
     1877 ./base/src/sparse_bsr.c
      156 ./base/src/sparse_coo.c
-    1344 ./base/src/sparse_csr.c
+    1339 ./base/src/sparse_csr.c
       72 ./base/src/sparse_csrl.c
      202 ./base/src/sparse_str.c
      976 ./base/src/sparse_util.c
@@ -108,4 +108,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   92443 total
+   92467 total
