@@ -39,7 +39,7 @@ if (AMD_FOUND)
   set(UMFPACK_LIBRARIES ${UMFPACK_LIBRARY} ${AMD_LIBRARIES})
 endif()
 if (BLAS_FOUND)
-  set(UMFPACK_LIBRARIES ${UMFPACK_LIBRARIES} ${BLAS_LIBRARIES})
+  set(UMFPACK_LIBRARIES ${UMFPACK_LIBRARIES} ${BLAS_LIBRARIES} -lgfortrn)
 endif()
 if (SUITESPARSE_CONFIG_FOUND)
   set(UMFPACK_INCLUDE_DIRS ${UMFPACK_INCLUDE_DIRS} ${SUITESPARSE_CONFIG_INCLUDE_DIRS})
@@ -92,7 +92,9 @@ endif()
 
 
 # Standard package handling
-include(FindPackageHandleStandardArgs)
+#include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(UMFPACK
   "UMFPACK could not be found. Be sure to set UMFPACK_DIR."
 UMFPACK_LIBRARY UMFPACK_INCLUDE_DIRS UMFPACK_TEST_RUNS)
+
+#endif 

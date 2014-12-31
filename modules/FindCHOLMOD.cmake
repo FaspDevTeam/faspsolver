@@ -16,8 +16,8 @@ find_package(AMD)
 find_package(COLAMD)
 find_package(CAMD)
 find_package(CCOLAMD)
-find_package(RT)
-find_package(METIS)
+#find_package(RT)
+#find_package(METIS)
 
 message(STATUS "Checking for package 'CHOLMOD'")
 
