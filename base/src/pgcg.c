@@ -179,10 +179,12 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
  *  \param *u    Pointer to the dvector of dofs
  *  \param *pre  Pointer to the structure of precondition (precond)
  *
- * \author zheng Li, Chensong Zhang
+ * \author Zheng Li, Chensong Zhang
  * \date   11/09/2014
  *
- * \Note: Specified for unsmoothed aggreagtion cycle.
+ * \note   Specified for unsmoothed aggregation cycle
+ *         It is only used in aggregation. Should move it to aggregation...
+ *         and make it static. --Chensong
  */
 INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
                                  dvector *b,
@@ -232,9 +234,10 @@ INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
     
     // if relres reachs tol(0.2), pgcr will stop,
     // otherwise, another one pgcr iteration will do.
-    if(relres < 0.2) {
+    if (relres < 0.2) {
         fasp_blas_array_ax(m, beta1, x);
-        return 0;
+		// TODO: Did not free memory!!! --Chensong
+        return FASP_SUCCESS;
     }
     
     // Preconditioning
@@ -267,7 +270,10 @@ INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
     
     // free 
     fasp_mem_free(work);
+
+	return FASP_SUCCESS;
 }
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
