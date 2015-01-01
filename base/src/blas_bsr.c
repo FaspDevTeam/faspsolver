@@ -26,7 +26,6 @@
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014
- *
  */
 void fasp_blas_dbsr_axm (dBSRmat *A,
                          const REAL alpha)
@@ -319,7 +318,6 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
     }
 }
 
-
 /*!
  * \fn void fasp_blas_dbsr_aAxpy ( const REAL alpha, dBSRmat *A, REAL *x, REAL *y )
  *
@@ -338,63 +336,62 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
  *
  * \note Works for general nb (Xiaozhe)
  */
-
 void fasp_blas_dbsr_aAxpy (const REAL alpha,
                            dBSRmat *A,
                            REAL *x,
                            REAL *y)
 {
-	/* members of A */
-	INT     ROW = A->ROW;
-	INT     nb  = A->nb;
-	INT    *IA  = A->IA;
-	INT    *JA  = A->JA;
-	REAL   *val = A->val;
+    /* members of A */
+    INT     ROW = A->ROW;
+    INT     nb  = A->nb;
+    INT    *IA  = A->IA;
+    INT    *JA  = A->JA;
+    REAL   *val = A->val;
     
-	/* local variables */
-	INT     size = ROW*nb;
-	INT     jump = nb*nb;
-	INT     i,j,k, iend;
-	REAL  temp = 0.0;
-	REAL *pA   = NULL;
-	REAL *px0  = NULL;
-	REAL *py0  = NULL;
-	REAL *py   = NULL;
+    /* local variables */
+    INT     size = ROW*nb;
+    INT     jump = nb*nb;
+    INT     i,j,k, iend;
+    REAL  temp = 0.0;
+    REAL *pA   = NULL;
+    REAL *px0  = NULL;
+    REAL *py0  = NULL;
+    REAL *py   = NULL;
     
-	INT nthreads = 1, use_openmp = FALSE;
+    INT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
-	if ( ROW > OPENMP_HOLDS ) {
+    if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
-	//----------------------------------------------
-	//   Treat (alpha == 0.0) computation
-	//----------------------------------------------
+    //----------------------------------------------
+    //   Treat (alpha == 0.0) computation
+    //----------------------------------------------
     
-	if (alpha == 0.0){
-		return; // Nothting to compute
-	}
+    if (alpha == 0.0){
+        return; // Nothing to compute
+    }
     
-	//-------------------------------------------------
-	//   y = (1.0/alpha)*y
-	//-------------------------------------------------
+    //-------------------------------------------------
+    //   y = (1.0/alpha)*y
+    //-------------------------------------------------
     
-	if (alpha != 1.0){
-		temp = 1.0 / alpha;
-		fasp_blas_array_ax(size, temp, y);
-	}
+    if (alpha != 1.0){
+        temp = 1.0 / alpha;
+        fasp_blas_array_ax(size, temp, y);
+    }
     
-	//-----------------------------------------------------------------
-	//   y += A*x (Core Computation)
-	//   each non-zero block elements are stored in row-major order
-	//-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    //   y += A*x (Core Computation)
+    //   each non-zero block elements are stored in row-major order
+    //-----------------------------------------------------------------
     
-	switch (nb)
-	{
-		case 2:
+    switch (nb)
+    {
+        case 2:
         {
             if (use_openmp) {
                 INT myid, mybegin, myend;
@@ -430,9 +427,9 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
                 }
             }
         }
-			break;
+            break;
             
-		case 3:
+        case 3:
         {
             if (use_openmp) {
                 INT myid, mybegin, myend;
@@ -468,9 +465,9 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
                 }
             }
         }
-			break;
+            break;
             
-		case 5:
+        case 5:
         {
             if (use_openmp) {
                 INT myid, mybegin, myend;
@@ -506,8 +503,8 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
                 }
             }
         }
-			break;
-		case 7:
+            break;
+        case 7:
         {
             if (use_openmp) {
                 INT myid, mybegin, myend;
@@ -544,9 +541,9 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
                 }
             }
         }
-			break;
+            break;
             
-		default:
+        default:
         {
             if (use_openmp) {
                 INT myid, mybegin, myend;
@@ -584,23 +581,23 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
                 }
             }
         }
-			break;
-	}
+            break;
+    }
     
-	//------------------------------------------
-	//   y = alpha*y
-	//------------------------------------------
+    //------------------------------------------
+    //   y = alpha*y
+    //------------------------------------------
     
-	if (alpha != 1.0){
-		fasp_blas_array_ax(size, alpha, y);
-	}
-	return;
+    if (alpha != 1.0){
+        fasp_blas_array_ax(size, alpha, y);
+    }
+    return;
 }
 
 /*!
  * \fn void fasp_blas_dbsr_aAxpy_agg ( const REAL alpha, dBSRmat *A, REAL *x, REAL *y )
  *
- * \brief Compute y := alpha*A*x + y where each samll block matrix is an identity matrix
+ * \brief Compute y := alpha*A*x + y where each small block matrix is an identity matrix
  *
  * \param alpha  REAL factor alpha
  * \param A      Pointer to the dBSRmat matrix
@@ -612,61 +609,60 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
  *
  * \note Works for general nb (Xiaozhe)
  */
-
 void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
                                dBSRmat *A,
                                REAL *x,
                                REAL *y)
 {
-	/* members of A */
-	INT     ROW = A->ROW;
-	INT     nb  = A->nb;
-	INT    *IA  = A->IA;
-	INT    *JA  = A->JA;
-	REAL   *val = A->val;
+    /* members of A */
+    INT     ROW = A->ROW;
+    INT     nb  = A->nb;
+    INT    *IA  = A->IA;
+    INT    *JA  = A->JA;
+    REAL   *val = A->val;
     
-	/* local variables */
-	INT     size = ROW*nb;
-	INT     jump = nb*nb;
-	INT     i,j,k, iend;
-	REAL    temp = 0.0;
+    /* local variables */
+    INT     size = ROW*nb;
+    INT     jump = nb*nb;
+    INT     i,j,k, iend;
+    REAL    temp = 0.0;
     REAL   *pA;
     REAL   *px0 = NULL, *py0 = NULL, *py = NULL;
     
-	INT     nthreads = 1, use_openmp = FALSE;
+    INT     nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
-	if ( ROW > OPENMP_HOLDS ) {
+    if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
-	//----------------------------------------------
-	//   Treat (alpha == 0.0) computation
-	//----------------------------------------------
+    //----------------------------------------------
+    //   Treat (alpha == 0.0) computation
+    //----------------------------------------------
     
-	if (alpha == 0.0){
-		return; // Nothting to compute
-	}
+    if (alpha == 0.0){
+        return; // Nothing to compute
+    }
     
-	//-------------------------------------------------
-	//   y = (1.0/alpha)*y
-	//-------------------------------------------------
+    //-------------------------------------------------
+    //   y = (1.0/alpha)*y
+    //-------------------------------------------------
     
-	if (alpha != 1.0){
-		temp = 1.0 / alpha;
-		fasp_blas_array_ax(size, temp, y);
-	}
+    if (alpha != 1.0){
+        temp = 1.0 / alpha;
+        fasp_blas_array_ax(size, temp, y);
+    }
     
-	//-----------------------------------------------------------------
-	//   y += A*x (Core Computation)
-	//   each non-zero block elements are stored in row-major order
-	//-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    //   y += A*x (Core Computation)
+    //   each non-zero block elements are stored in row-major order
+    //-----------------------------------------------------------------
     
-	switch (nb)
-	{
-		case 2:
+    switch (nb)
+    {
+        case 2:
         {
             if (use_openmp) {
                 INT myid, mybegin, myend;
@@ -706,9 +702,9 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
                 }
             }
         }
-			break;
+            break;
             
-		case 3:
+        case 3:
         {
             if (use_openmp) {
                 INT myid, mybegin, myend;
@@ -750,9 +746,9 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
                 }
             }
         }
-			break;
+            break;
             
-		case 5:
+        case 5:
         {
             if (use_openmp) {
                 INT myid, mybegin, myend;
@@ -798,8 +794,8 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
                 }
             }
         }
-			break;
-		
+            break;
+        
         case 7:
         {
             if (use_openmp) {
@@ -851,9 +847,9 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
                 }
             }
         }
-			break;
+            break;
             
-		default:
+        default:
         {
             if (use_openmp) {
                 INT myid, mybegin, myend;
@@ -893,16 +889,16 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
                 }
             }
         }
-			break;
-	}
+            break;
+    }
     
-	//------------------------------------------
-	//   y = alpha*y
-	//------------------------------------------
+    //------------------------------------------
+    //   y = alpha*y
+    //------------------------------------------
     
-	if ( alpha != 1.0 ) fasp_blas_array_ax(size, alpha, y);
+    if ( alpha != 1.0 ) fasp_blas_array_ax(size, alpha, y);
     
-	return;
+    return;
 }
 
 /*!
@@ -922,48 +918,48 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 void fasp_blas_dbsr_mxv (dBSRmat *A,
-		                 REAL *x,
-		                 REAL *y)
+                         REAL *x,
+                         REAL *y)
 {
-	/* members of A */
-	INT     ROW = A->ROW;
-	INT     nb  = A->nb;
-	INT    *IA  = A->IA;
-	INT    *JA  = A->JA;
-	REAL *val = A->val;
+    /* members of A */
+    INT     ROW = A->ROW;
+    INT     nb  = A->nb;
+    INT    *IA  = A->IA;
+    INT    *JA  = A->JA;
+    REAL *val = A->val;
     
-	/* local variables */
-	INT     size = ROW*nb;
-	INT     jump = nb*nb;
-	INT     i,j,k, num_nnz_row;
-	REAL *pA  = NULL;
-	REAL *px0 = NULL;
-	REAL *py0 = NULL;
-	REAL *py  = NULL;
+    /* local variables */
+    INT     size = ROW*nb;
+    INT     jump = nb*nb;
+    INT     i,j,k, num_nnz_row;
+    REAL *pA  = NULL;
+    REAL *px0 = NULL;
+    REAL *py0 = NULL;
+    REAL *py  = NULL;
     
-	INT use_openmp = FALSE;
+    INT use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
-	if ( ROW > OPENMP_HOLDS ) {
+    if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
-	//-----------------------------------------------------------------
-	//  zero out 'y'
-	//-----------------------------------------------------------------
-	fasp_array_set(size, y, 0.0);
+    //-----------------------------------------------------------------
+    //  zero out 'y'
+    //-----------------------------------------------------------------
+    fasp_array_set(size, y, 0.0);
     
-	//-----------------------------------------------------------------
-	//   y = A*x (Core Computation)
-	//   each non-zero block elements are stored in row-major order
-	//-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    //   y = A*x (Core Computation)
+    //   each non-zero block elements are stored in row-major order
+    //-----------------------------------------------------------------
     
-	switch (nb)
-	{
-		case 3:
+    switch (nb)
+    {
+        case 3:
         {
             if (use_openmp) {
 #ifdef _OPENMP
@@ -1383,9 +1379,9 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                 }
             }
         }
-			break;
+            break;
             
-		case 5:
+        case 5:
         {
             if (use_openmp) {
 #ifdef _OPENMP
@@ -1805,9 +1801,9 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                 }
             }
         }
-			break;
+            break;
             
-		case 7:
+        case 7:
         {
             if (use_openmp) {
 #ifdef _OPENMP
@@ -2227,9 +2223,9 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                 }
             }
         }
-			break;
+            break;
             
-		default:
+        default:
         {
             if (use_openmp) {
 #ifdef _OPENMP
@@ -2649,8 +2645,8 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                 }
             }
         }
-			break;
-	}
+            break;
+    }
 }
 
 /*!
@@ -2671,42 +2667,42 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
                              REAL *x,
                              REAL *y)
 {
-	/* members of A */
-	INT     ROW = A->ROW;
-	INT     nb  = A->nb;
-	INT    *IA  = A->IA;
-	INT    *JA  = A->JA;
-	REAL   *val = A->val;
+    /* members of A */
+    INT     ROW = A->ROW;
+    INT     nb  = A->nb;
+    INT    *IA  = A->IA;
+    INT    *JA  = A->JA;
+    REAL   *val = A->val;
     
-	/* local variables */
-	INT     size = ROW*nb;
-	INT     jump = nb*nb;
-	INT     i,j,k, num_nnz_row;
-	REAL    *pA, *px0 = NULL, *py0 = NULL, *py = NULL;
+    /* local variables */
+    INT     size = ROW*nb;
+    INT     jump = nb*nb;
+    INT     i,j,k, num_nnz_row;
+    REAL    *pA, *px0 = NULL, *py0 = NULL, *py = NULL;
     
-	INT     use_openmp = FALSE;
+    INT     use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
-	if ( ROW > OPENMP_HOLDS ) {
+    if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
-	}
+    }
 #endif
     
-	//-----------------------------------------------------------------
-	//  zero out 'y'
-	//-----------------------------------------------------------------
-	fasp_array_set(size, y, 0.0);
+    //-----------------------------------------------------------------
+    //  zero out 'y'
+    //-----------------------------------------------------------------
+    fasp_array_set(size, y, 0.0);
     
-	//-----------------------------------------------------------------
-	//   y = A*x (Core Computation)
-	//   each non-zero block elements are stored in row-major order
-	//-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    //   y = A*x (Core Computation)
+    //   each non-zero block elements are stored in row-major order
+    //-----------------------------------------------------------------
     
-	switch (nb)
-	{
-		case 3:
+    switch (nb)
+    {
+        case 3:
         {
             if (use_openmp) {
 #ifdef _OPENMP
@@ -3204,9 +3200,9 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
                 }
             }
         }
-			break;
+            break;
             
-		case 5:
+        case 5:
         {
             if (use_openmp) {
 #ifdef _OPENMP
@@ -3756,9 +3752,9 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
                 }
             }
         }
-			break;
+            break;
             
-		case 7:
+        case 7:
         {
             if (use_openmp) {
 #ifdef _OPENMP
@@ -4360,9 +4356,9 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
                 }
             }
         }
-			break;
+            break;
             
-		default:
+        default:
         {
             if (use_openmp) {
 #ifdef _OPENMP
@@ -4834,8 +4830,8 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
                 }
             }
         }
-			break;
-	}
+            break;
+    }
 }
 
 
@@ -4957,7 +4953,6 @@ void fasp_blas_dbsr_mxm (dBSRmat *A,
     
 }
 
-
 /**
  * \fn void fasp_blas_dbsr_rap1 (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
  *
@@ -5007,9 +5002,9 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
     
     iac[0] = 0;
     
-    // First loop: form sparsity partern of R*A*P
+    // First loop: form sparsity pattern of R*A*P
     for (i=0; i < row; ++i) {
-        // reset istart and length at the begining of each loop
+        // reset istart and length at the beginning of each loop
         istart = -1; length = 0; i1 = i+1;
         
         // go across the rows in R
@@ -5027,7 +5022,7 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
             }
         }    
         
-        // book-keeping [reseting length and setting iistart]
+        // book-keeping [resetting length and setting iistart]
         count = length; iistart = -1; length = 0;
         
         // use each column that would have resulted from R*A
@@ -5082,7 +5077,7 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
         for (j=begin_row; j<end_row; ++j) {
             BTindex[N2C(jac[N2C(j)])]=j;
         }
-        // reset istart and length at the begining of each loop
+        // reset istart and length at the beginning of each loop
         istart = -1; length = 0;
         
         // go across the rows in R
@@ -5106,7 +5101,7 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
             }
         } 
         
-        // book-keeping [reseting length and setting iistart]
+        // book-keeping [resetting length and setting iistart]
         // use each column that would have resulted from R*A
         for (j=0; j<length; ++j) {
             jj = N2C(istart);
@@ -5214,7 +5209,8 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
     INT * part_end = RAP_temp + coarse_add_nthreads;
     
     if (n_coarse > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
+#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, \
+                                 counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
@@ -5299,7 +5295,9 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
      *------------------------------------------------------*/
 #ifdef _OPENMP
     if (n_coarse > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3, smat_tmp)
+#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, \
+                                 counter, i, jj_row_begining, jj1, i1, jj2, i2,   \
+                                 jj3, i3, smat_tmp)
         for (myid = 0; myid < nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
@@ -5330,7 +5328,8 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
                                     counter ++;
                                 }
                                 else {
-                                    fasp_blas_array_axpy (nb2, 1.0, smat_tmp+nb2, &acj[P_marker[i3]*nb2]);
+                                    fasp_blas_array_axpy(nb2, 1.0, smat_tmp+nb2, 
+                                                        &acj[P_marker[i3]*nb2]);
                                 }
                             }
                         }
@@ -5338,7 +5337,8 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
                             for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
                                 i3 = jp[jj3];
                                 fasp_blas_smat_mul(smat_tmp, &pj[jj3*nb2], smat_tmp+nb2, nb);
-                                fasp_blas_array_axpy (nb2, 1.0, smat_tmp+nb2, &acj[P_marker[i3]*nb2]);
+                                fasp_blas_array_axpy(nb2, 1.0, smat_tmp+nb2, 
+                                                    &acj[P_marker[i3]*nb2]);
                             }
                         }
                     }
@@ -5373,7 +5373,8 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
                                 counter ++;
                             }
                             else {
-                                fasp_blas_array_axpy (nb2, 1.0, tmp+nb2, &acj[Ps_marker[i3]*nb2]);
+                                fasp_blas_array_axpy(nb2, 1.0, tmp+nb2, 
+                                                    &acj[Ps_marker[i3]*nb2]);
                             }
                         }
                     }
@@ -5381,7 +5382,7 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
                         for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
                             i3 = jp[jj3];
                             fasp_blas_smat_mul(tmp, &pj[jj3*nb2], tmp+nb2, nb);
-                            fasp_blas_array_axpy (nb2, 1.0, tmp+nb2, &acj[Ps_marker[i3]*nb2]);
+                            fasp_blas_array_axpy(nb2, 1.0, tmp+nb2, &acj[Ps_marker[i3]*nb2]);
                         }
                     }
                 }
@@ -5403,7 +5404,8 @@ void fasp_blas_dbsr_rap (dBSRmat *R,
 /**
  * \fn void fasp_blas_dbsr_rap_agg (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
  *
- * \brief dBSRmat sparse matrix multiplication B=R*A*P, where small block matrices in P and R are identity matrices!!
+ * \brief dBSRmat sparse matrix multiplication B=R*A*P, where small block matrices in 
+ *        P and R are identity matrices!
  *
  * \param R   Pointer to the dBSRmat matrix
  * \param A   Pointer to the dBSRmat matrix
@@ -5472,7 +5474,8 @@ void fasp_blas_dbsr_rap_agg (dBSRmat *R,
     INT * part_end = RAP_temp + coarse_add_nthreads;
     
     if (n_coarse > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
+#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, \
+                                 counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
@@ -5557,7 +5560,9 @@ void fasp_blas_dbsr_rap_agg (dBSRmat *R,
      *------------------------------------------------------*/
 #ifdef _OPENMP
     if (n_coarse > OPENMP_HOLDS) {
-#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3, smat_tmp)
+#pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, \
+                                 counter, i, jj_row_begining, jj1, i1, jj2, i2,   \
+                                 jj3, i3, smat_tmp)
         for (myid = 0; myid < nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
@@ -5574,39 +5579,30 @@ void fasp_blas_dbsr_rap_agg (dBSRmat *R,
                 for (jj1 = ir[i]; jj1 < ir[i+1]; ++jj1) {
                     i1 = jr[jj1];
                     for (jj2 = ia[i1]; jj2 < ia[i1+1]; ++jj2) {
-                        
-                        //fasp_blas_smat_mul(&rj[jj1*nb2],&aj[jj2*nb2], smat_tmp, nb);
-                        
+                                                
                         i2 = ja[jj2];
                         if (A_marker[i2] != i) {
                             A_marker[i2] = i;
                             for (jj3 = ip[i2]; jj3 < ip[i2+1]; ++jj3) {
                                 i3 = jp[jj3];
-                                
-                                //fasp_blas_smat_mul(smat_tmp, &pj[jj3*nb2], smat_tmp+nb2, nb);
-                                
+                                                                
                                 if (P_marker[i3] < jj_row_begining) {
                                     P_marker[i3] = counter;
-                                    
-                                    //fasp_array_cp(nb2, smat_tmp+nb2, &acj[counter*nb2]);
                                     fasp_array_cp(nb2, &aj[jj2*nb2], &acj[counter*nb2]);
-                                    
                                     jac[counter] = i3;
                                     counter ++;
                                 }
                                 else {
-                                    //fasp_blas_array_axpy (nb2, 1.0, smat_tmp+nb2, &acj[P_marker[i3]*nb2]);
-                                    fasp_blas_array_axpy (nb2, 1.0, &aj[jj2*nb2], &acj[P_marker[i3]*nb2]);
+                                    fasp_blas_array_axpy(nb2, 1.0, &aj[jj2*nb2], 
+                                                        &acj[P_marker[i3]*nb2]);
                                 }
                             }
                         }
                         else {
                             for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
                                 i3 = jp[jj3];
-                                //fasp_blas_smat_mul(smat_tmp, &pj[jj3*nb2], smat_tmp+nb2, nb);
-                                //fasp_blas_array_axpy (nb2, 1.0, smat_tmp+nb2, &acj[P_marker[i3]*nb2]);
-                                
-                                fasp_blas_array_axpy (nb2, 1.0, &aj[jj2*nb2], &acj[P_marker[i3]*nb2]);
+                                fasp_blas_array_axpy(nb2, 1.0, &aj[jj2*nb2], 
+                                                    &acj[P_marker[i3]*nb2]);
                             }
                         }
                     }
@@ -5627,38 +5623,29 @@ void fasp_blas_dbsr_rap_agg (dBSRmat *R,
             for (jj1 = ir[i]; jj1 < ir[i+1]; ++jj1) {
                 i1 = jr[jj1];
                 for (jj2 = ia[i1]; jj2 < ia[i1+1]; ++jj2) {
-                    
-                    //fasp_blas_smat_mul(&rj[jj1*nb2],&aj[jj2*nb2], tmp, nb);
-                    
+
                     i2 = ja[jj2];
                     if (As_marker[i2] != i) {
                         As_marker[i2] = i;
                         for (jj3 = ip[i2]; jj3 < ip[i2+1]; ++jj3) {
                             i3 = jp[jj3];
-                            
-                            //fasp_blas_smat_mul(tmp, &pj[jj3*nb2], tmp+nb2, nb);
-                            
                             if (Ps_marker[i3] < jj_row_begining) {
                                 Ps_marker[i3] = counter;
-                                
-                                //fasp_array_cp(nb2, tmp+nb2, &acj[counter*nb2]);
                                 fasp_array_cp(nb2, &aj[jj2*nb2], &acj[counter*nb2]);
-                                
                                 jac[counter] = i3;
                                 counter ++;
                             }
                             else {
-                                //fasp_blas_array_axpy (nb2, 1.0, tmp+nb2, &acj[Ps_marker[i3]*nb2]);
-                                fasp_blas_array_axpy (nb2, 1.0, &aj[jj2*nb2], &acj[Ps_marker[i3]*nb2]);
+                                fasp_blas_array_axpy(nb2, 1.0, &aj[jj2*nb2], 
+                                                    &acj[Ps_marker[i3]*nb2]);
                             }
                         }
                     }
                     else {
                         for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
                             i3 = jp[jj3];
-                            //fasp_blas_smat_mul(tmp, &pj[jj3*nb2], tmp+nb2, nb);
-                            //fasp_blas_array_axpy (nb2, 1.0, tmp+nb2, &acj[Ps_marker[i3]*nb2]);
-                            fasp_blas_array_axpy (nb2, 1.0, &aj[jj2*nb2], &acj[Ps_marker[i3]*nb2]);
+                            fasp_blas_array_axpy(nb2, 1.0, &aj[jj2*nb2], 
+                                                &acj[Ps_marker[i3]*nb2]);
                         }
                     }
                 }
@@ -5667,6 +5654,7 @@ void fasp_blas_dbsr_rap_agg (dBSRmat *R,
 #ifdef _OPENMP
     }
 #endif
+
     // setup coarse matrix B
     B->ROW=row; B->COL=col;
     B->IA=iac; B->JA=jac; B->val=acj;
