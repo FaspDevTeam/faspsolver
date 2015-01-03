@@ -246,8 +246,8 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
                                REAL *y);
 
 void fasp_blas_dbsr_mxv (dBSRmat *A,
-		                 REAL *x,
-		                 REAL *y);
+                         REAL *x,
+                         REAL *y);
 
 void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
                              REAL *x,
@@ -1311,12 +1311,12 @@ void fasp_param_solver_print (itsolver_param *param);
 
 /*-------- In file: pbcgs.c --------*/
 
-INT fasp_solver_dcsr_pbcgs (dCSRmat *A, 
-                            dvector *b, 
-                            dvector *u, 
-                            precond *pc, 
+INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
+                            dvector *b,
+                            dvector *u,
+                            precond *pc,
                             const REAL tol,
-                            const INT MaxIt, 
+                            const INT MaxIt,
                             const SHORT stop_type,
                             const SHORT print_level);
 
@@ -1327,35 +1327,35 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
                             const REAL tol,
                             const INT MaxIt,
                             const SHORT stop_type,
-                            const SHORT print_level) ;
+                            const SHORT print_level);
 
-INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, 
-                             dvector *b, 
-                             dvector *u, 
-                             precond *pc, 
+INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
+                             dvector *b,
+                             dvector *u,
+                             precond *pc,
                              const REAL tol,
-                             const INT MaxIt, 
+                             const INT MaxIt,
                              const SHORT stop_type,
-                             const SHORT print_level) ;
+                             const SHORT print_level);
 
-INT fasp_solver_dstr_pbcgs (dSTRmat *A, 
-                            dvector *b, 
-                            dvector *u, 
-                            precond *pc, 
+INT fasp_solver_dstr_pbcgs (dSTRmat *A,
+                            dvector *b,
+                            dvector *u,
+                            precond *pc,
                             const REAL tol,
-                            const INT MaxIt, 
+                            const INT MaxIt,
                             const SHORT stop_type,
-                            const SHORT print_level) ;
+                            const SHORT print_level);
 
 
 /*-------- In file: pbcgs_mf.c --------*/
 
-INT fasp_solver_pbcgs (mxv_matfree *mf, 
-                       dvector *b, 
-                       dvector *u, 
-                       precond *pc, 
+INT fasp_solver_pbcgs (mxv_matfree *mf,
+                       dvector *b,
+                       dvector *u,
+                       precond *pc,
                        const REAL tol,
-                       const INT MaxIt, 
+                       const INT MaxIt,
                        const SHORT stop_type,
                        const SHORT print_level);
 
@@ -1401,41 +1401,36 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
 
 /*-------- In file: pcg_mf.c --------*/
 
-INT fasp_solver_pcg (mxv_matfree *mf, 
-                     dvector *b, 
-                     dvector *u, 
-                     precond *pc, 
+INT fasp_solver_pcg (mxv_matfree *mf,
+                     dvector *b,
+                     dvector *u,
+                     precond *pc,
                      const REAL tol,
-                     const INT MaxIt, 
+                     const INT MaxIt,
                      const SHORT stop_type,
                      const SHORT print_level);
 
 
 /*-------- In file: pgcg.c --------*/
 
-INT fasp_solver_dcsr_pgcg (dCSRmat *A, 
-                           dvector *b, 
-                           dvector *u, 
-                           precond *pc, 
+INT fasp_solver_dcsr_pgcg (dCSRmat *A,
+                           dvector *b,
+                           dvector *u,
+                           precond *pc,
                            const REAL tol,
-                           const INT MaxIt, 
+                           const INT MaxIt,
                            const SHORT stop_type,
                            const SHORT print_level);
-
-INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A, 
-                                 dvector *b, 
-                                 dvector *u, 
-                                 precond *pc) ;
 
 
 /*-------- In file: pgcg_mf.c --------*/
 
-INT fasp_solver_pgcg (mxv_matfree *mf, 
-                      dvector *b, 
-                      dvector *u, 
-                      precond *pc, 
+INT fasp_solver_pgcg (mxv_matfree *mf,
+                      dvector *b,
+                      dvector *u,
+                      precond *pc,
                       const REAL tol,
-                      const INT MaxIt, 
+                      const INT MaxIt,
                       const SHORT stop_type,
                       const SHORT print_level);
 
@@ -1461,11 +1456,6 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
                            const SHORT restart,
                            const SHORT stop_type,
                            const SHORT print_level);
-
-void fasp_krylov_cycle_dcsr_pgcr  (dCSRmat *A,
-                                   dvector *b,
-                                   dvector *u,
-                                   precond *pc);
 
 
 /*-------- In file: pgmres.c --------*/
@@ -1556,14 +1546,14 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
 
 /*-------- In file: pminres_mf.c --------*/
 
-INT fasp_solver_pminres (mxv_matfree *mf, 
-                         dvector *b, 
-                         dvector *u, 
-                         precond *pc, 
+INT fasp_solver_pminres (mxv_matfree *mf,
+                         dvector *b,
+                         dvector *u,
+                         precond *pc,
                          const REAL tol,
-                         const INT MaxIt, 
+                         const INT MaxIt,
                          const SHORT stop_type,
-                         const SHORT print_level) ;
+                         const SHORT print_level);
 
 
 /*-------- In file: precond_bcsr.c --------*/
@@ -2866,13 +2856,13 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
 Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
                                  dvector *b,
                                  dvector *u,
-								 const INT print_level);
+                                 const INT print_level);
 
 void fasp_mumps_solve ( dCSRmat *ptrA,
                         dvector *b,
                         dvector *u,
                         Mumps_data mumps,
-						const INT print_level);
+                        const INT print_level );
 
 void fasp_mumps_free ( Mumps_data *mumps );
 
