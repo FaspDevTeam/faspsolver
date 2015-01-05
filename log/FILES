@@ -3,7 +3,7 @@
     1187 ./base/include/fasp.h
      681 ./base/include/fasp_block.h
      248 ./base/include/fasp_const.h
-    2917 ./base/include/fasp_functs.h
+    2907 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
     5818 ./base/include/malloc.c.h
@@ -16,12 +16,12 @@
      852 ./base/src/amg_setup_sa.c
      655 ./base/src/amg_setup_ua.c
      319 ./base/src/amg_solve.c
-     854 ./base/src/amlirecur.c
+    1053 ./base/src/amlirecur.c
      271 ./base/src/array.c
      258 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
      353 ./base/src/blas_bcsr.c
-    5682 ./base/src/blas_bsr.c
+    5670 ./base/src/blas_bsr.c
     1992 ./base/src/blas_csr.c
      125 ./base/src/blas_csrl.c
     1541 ./base/src/blas_smat.c
@@ -62,9 +62,9 @@
      410 ./base/src/pbcgs_mf.c
     1189 ./base/src/pcg.c
      338 ./base/src/pcg_mf.c
-     273 ./base/src/pgcg.c
+     173 ./base/src/pgcg.c
      181 ./base/src/pgcg_mf.c
-     540 ./base/src/pgcr.c
+     444 ./base/src/pgcr.c
     1350 ./base/src/pgmres.c
      301 ./base/src/pgmres_mf.c
     1287 ./base/src/pminres.c
@@ -103,9 +103,9 @@
      464 ./base/src/vec.c
      300 ./base/src/wrapper.c
      394 ./base/src/aggregation_bsr.inl
-    2285 ./base/src/aggregation_csr.inl
+    2388 ./base/src/aggregation_csr.inl
     2302 ./base/src/gmg_util.inl
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   92467 total
+   92551 total

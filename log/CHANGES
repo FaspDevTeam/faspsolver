@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+01/05/2015 FASP 1.6.5:
+- Rearrange multilevel cycles in nonlinear AMLI.
+- Update Doxygen and webpage.
+- Update Readme file.
+
 01/01/2015 FASP 1.6.4:
 - Fix GCR file name conflicition, spgcr.c -> pgcr.c.
 - Update VS2010 solution, changing from CPP to C, use C99 option.
