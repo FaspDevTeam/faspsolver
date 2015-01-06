@@ -216,11 +216,11 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         }
         
         /*-- Setup Schwarz smoother if necessary */
-		if ( lvl < param->schwarz_levels ) {
+        if ( lvl < param->schwarz_levels ) {
             mgl[lvl].schwarz.A=fasp_dcsr_sympat(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
-		}
+         }
         
         /*-- Aggregation --*/
         switch ( param->aggregation_type ) {
@@ -296,7 +296,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
             // Setup MUMPS direct solver on the coarsest level
-			mgl[lvl].mumps.job = 1;
+            mgl[lvl].mumps.job = 1;
             fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, &mgl[lvl].mumps);
             break;
         }
@@ -340,21 +340,12 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     eta = xsi/((1-xsi)*(cplxmax-1));
     mgl[0].cycle_type = 1;
     mgl[max_levels-1].cycle_type = 0;
-#if 0
-    for (lvl = 1; lvl < max_levels-1; ++lvl) {
-        fracratio = (REAL)mgl[lvl].A.row/mgl[0].A.row;
-        mgl[lvl].cycle_type = MIN(2, (INT)(pow((REAL)xsi,(REAL)lvl)/(eta*fracratio*icum)));
-        icum = icum * mgl[lvl].cycle_type;
-    }
-#else
+
     for (lvl = 1; lvl < max_levels-1; ++lvl) {
         fracratio = (REAL)mgl[lvl].A.nnz/mgl[0].A.nnz;
         mgl[lvl].cycle_type = MIN(2, (INT)(pow((REAL)xsi,(REAL)lvl)/(eta*fracratio*icum)));
         icum = icum * mgl[lvl].cycle_type;
     }
-#endif
-
-	//for (lvl=0; lvl<max_levels-1; ++lvl) printf("level%d=%d\n", lvl, mgl[lvl].cycle_type);
 
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);

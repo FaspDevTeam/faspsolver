@@ -92,8 +92,6 @@ INT fasp_amg_solve (AMG_data *mgl,
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
         print_cputime("AMG solve",solve_end - solve_start);
-        //print_cputime("AMG solve",solve_end - solve_start);
-        //print_cputime("AMG solve",solve_end - solve_start);
     }
     
 #if DEBUG_MODE
