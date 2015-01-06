@@ -183,7 +183,7 @@ void fasp_schwarz_data_free (Schwarz_data *schwarz)
 void fasp_amg_data_free (AMG_data *mgl,
                          AMG_param *param)
 {
-    const INT max_levels = MAX(1,mgl[0].max_levels);
+    const INT max_levels = MAX(1,mgl[0].num_levels);
     
     INT i;
     
@@ -204,20 +204,20 @@ void fasp_amg_data_free (AMG_data *mgl,
         mgl->near_kernel_basis[i]=NULL;
     }
     
-	// Clean direct solver data in necessary
-	switch (param->coarse_solver) {
+    // Clean direct solver data in necessary
+    switch (param->coarse_solver) {
 
-#if WITH_MUMPS   /* Destroy MUMPS direct solver on the coarsest level */
-		case SOLVER_MUMPS: {
+#if WITH_MUMPS   
+        /* Destroy MUMPS direct solver on the coarsest level */
+        case SOLVER_MUMPS: {
             mgl[max_levels-1].mumps.job = 3;
-			fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, &mgl[max_levels-1].mumps);
-			break;
-		}
+            fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b, &mgl[max_levels-1].x, &mgl[max_levels-1].mumps);
+            break;
+        }
 #endif
-
-		default: // Do nothing!
-			break;
-	}
+        default: // Do nothing!
+            break;
+    }
     
     fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
     
