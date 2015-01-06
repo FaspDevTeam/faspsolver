@@ -761,8 +761,8 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 #if WITH_MUMPS
                 /* use MUMPS direct solver on the coarsest level */
             case SOLVER_MUMPS:
-				mgl[level].mumps.job = 2;
-				fasp_solver_mumps_steps(A0, b0, e0, &mgl[level].mumps);
+                 mgl[level].mumps.job = 2;
+                 fasp_solver_mumps_steps(A0, b0, e0, &mgl[level].mumps);
 
                 break;
 #endif

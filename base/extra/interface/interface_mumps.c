@@ -269,6 +269,8 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             id.job=3; dmumps_c(&id);
                     
             for(i=0; i<id.n; i++) u->val[i] = id.rhs[i];
+
+            mumps->id = id;
 #if DEBUG_MODE
             printf("### DEBUG: %s, Step 2 ...... [Finish]\n", __FUNCTION__);   
 #endif
@@ -286,8 +288,8 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
             free(id.jcn);
             free(id.a);
             free(id.rhs);
-            //id.job = -2;
-            //dmumps_c(&id); /* Terminate instance */
+            id.job = -2;
+            dmumps_c(&id); /* Terminate instance */
         }
             break;
             
