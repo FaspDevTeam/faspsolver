@@ -270,7 +270,6 @@ int fasp_solver_mumps_steps ( dCSRmat *ptrA,
                     
             for(i=0; i<id.n; i++) u->val[i] = id.rhs[i];
 
-            mumps->id = id;
 #if DEBUG_MODE
             printf("### DEBUG: %s, Step 2 ...... [Finish]\n", __FUNCTION__);   
 #endif

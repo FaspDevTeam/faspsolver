@@ -71,8 +71,8 @@ static INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
     // compute relative residual
     relres = absres/normb;
     
-    // if relres reachs tol(0.2), pgcr will stop,
-    // otherwise, another one pgcr iteration will do.
+    // if relres reachs tol(0.2), pgcg will stop,
+    // otherwise, another one pgcg iteration will do.
     if (relres < 0.2) {
         fasp_blas_array_ax(m, beta1, x);
         fasp_mem_free(work);
@@ -98,6 +98,7 @@ static INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
     rho2 = fasp_blas_array_dotprod(m, x1, v2);
     
     gamma2 = gamma1;
+    //gamma2 = fasp_blas_array_dotprod(m, x, v2);
     
     beta2 = rho2 - gamma1*gamma2/rho1;
     beta3 = (alpha1 - gamma2*alpha2/beta2)/rho1;
@@ -316,7 +317,7 @@ static void pairwise_aggregation_initial3(const dCSRmat *A,
 }
 
 /**
- * \fn static INT cholecsky_factorization_check(REAL **W,
+ * \fn static INT cholecsky_factorization_check(REAL W[8][8],
  *                                              INT agg_size)
  *
  * \brief cholecsky factorization 
@@ -327,7 +328,7 @@ static void pairwise_aggregation_initial3(const dCSRmat *A,
  * \author Zheng Li, Chensong Zhang
  * \date   12/23/2014
  */
-static INT cholecsky_factorization_check(REAL **W, 
+static INT cholecsky_factorization_check(REAL W[8][8], 
                                          INT agg_size)
 {
     REAL T; 
@@ -345,7 +346,7 @@ static INT cholecsky_factorization_check(REAL **W,
         W[4][4] = W[4][4] - T * W[4][7];
         T = W[3][7]/W[7][7];
         W[3][6] = W[3][6] - T * W[6][7];
-        W[3][5] = W[3][5] - T * W[6][8];
+        W[3][5] = W[3][5] - T * W[5][7];
         W[3][4] = W[3][4] - T * W[4][7];
         W[3][3] = W[3][3] - T * W[3][7];
         T = W[2][7]/W[7][7];
@@ -503,13 +504,11 @@ static INT aggregation_quality_check(dCSRmat *A,
     REAL bnd1=2*1.0/10.0;
     REAL bnd2=1.0-bnd1;
 
-    REAL **W = NULL, *v, *sig, *AG;
-    INT *fnode;
+    REAL W[8][8], v[4], sig[4], AG[4];
+    INT fnode[4];
 
     REAL alpha, beta, tmp;
-    INT i, j, l, k, m, status, w, l1, l2, flag, jj, agg_size, dim;
-
-    fnode = (INT *)fasp_mem_calloc(dopass*dopass, sizeof(INT));
+    INT i, j, l, k, m, status, w, l1, l2, flag, jj, agg_size;
 
     if (dopass == 2) {
         if (map[2*root+1] < -1) {
@@ -539,25 +538,8 @@ static INT aggregation_quality_check(dCSRmat *A,
                 fnode[3] = map[2*pair+1];
                 agg_size = 4;
             }
+        }
     }
-    }
-    else {
-        l1 = dopass;
-        if (map[2*root+dopass-1] < 0) l1 = -map[2*root+dopass-1];
-        for (i=0; i<l1; ++i) fnode[i] = map[2*root+i];
-        l2 = dopass;
-        if (map[2*pair+dopass] < 0) l2 = -map[2*pair+dopass];
-        for (i=0; i<l2; ++i) fnode[l1+i] = map[2*pair+i];
-        agg_size = l1 + l2;
-    }
-
-    dim = agg_size;
-
-    W = (REAL **)fasp_mem_calloc(agg_size, sizeof(REAL*));
-    for (i=0; i<agg_size; ++i) W[i] = (REAL *)fasp_mem_calloc(agg_size, sizeof(REAL));
-    v   = (REAL *)fasp_mem_calloc(agg_size, sizeof(REAL));
-    sig = (REAL *)fasp_mem_calloc(agg_size, sizeof(REAL));
-    AG  = (REAL *)fasp_mem_calloc(agg_size, sizeof(REAL));
 
     flag = 1;
 
@@ -640,12 +622,6 @@ static INT aggregation_quality_check(dCSRmat *A,
     }
 
     status = cholecsky_factorization_check(W, agg_size);
-
-    fasp_mem_free(v);
-    fasp_mem_free(sig);
-    fasp_mem_free(AG);
-    fasp_mem_free(fnode);
-    for (i=0; i<dim; ++i) fasp_mem_free(W[i]);
 
     return status;
 }
@@ -1245,8 +1221,8 @@ static void first_pairwise_unsymm (const dCSRmat * A,
         i ++;
     }
 
-    map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
     map->row = 2*nc;
+    map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*map->row);
 
     *num_agg = nc;
 
@@ -1517,7 +1493,6 @@ static void second_pairwise_unsymm(dCSRmat *A,
     fasp_mem_free(s);
     fasp_mem_free(Tnode);
     fasp_mem_free(Tval);
-
 }
 /**
  * \fn static void form_tentative_p (ivector *vertices, dCSRmat *tentp, 
@@ -2098,14 +2073,14 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
     SHORT      dopass = 0, domin = 0;
     SHORT      status = FASP_SUCCESS;
 
-#if 0
+#if 1
     ivector  map1, map2;
     INT  *order;
     REAL *s = (REAL*)fasp_mem_calloc(ptrA->row, sizeof(REAL));
 #endif
     for ( i = 1; i <= pair_number; ++i ) {
 
-#if 1
+#if 0
         /*-- generate aggregations by pairwise matching --*/
         form_pairwise(ptrA, i, &vertice[lvl], &num_agg);
 
@@ -2170,7 +2145,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
         fasp_ivec_free(&vertice[level+i]);
     }
 
-#if 0
+#if 1
     fasp_ivec_free(&map1);
     fasp_ivec_free(&map2);
     fasp_mem_free(s);
