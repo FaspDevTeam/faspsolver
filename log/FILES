@@ -14,8 +14,8 @@
      124 ./base/src/amg_setup_cr.c
      277 ./base/src/amg_setup_rs.c
      852 ./base/src/amg_setup_sa.c
-     655 ./base/src/amg_setup_ua.c
-     319 ./base/src/amg_solve.c
+     646 ./base/src/amg_setup_ua.c
+     317 ./base/src/amg_solve.c
     1053 ./base/src/amlirecur.c
      271 ./base/src/array.c
      258 ./base/src/auxiliary.c
@@ -108,4 +108,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   92551 total
+   92540 total

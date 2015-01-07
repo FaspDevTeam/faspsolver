@@ -178,6 +178,7 @@ distclean:
 	@-find . -name '*~' -exec rm {} \;
 
 help:
+	@clear
 	@cat INSTALL
 
 backup:
