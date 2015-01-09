@@ -55,12 +55,12 @@ Schwarz_type             = 1      % 1 forward | 2 backward | 3 symmetric
 AMG_type                 = UA     % C classic AMG
                                   % SA smoothed aggregation
                                   % UA unsmoothed aggregation
-AMG_cycle_type           = A      % V V-cycle | W W-cycle
+AMG_cycle_type           = NA     % V V-cycle | W W-cycle
                                   % A AMLI-cycle | NA Nonlinear AMLI-cycleA
 AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 10     % max number of levels
-AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
+AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
 AMG_coarse_scaling       = ON     % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
 AMG_nl_amli_krylov_type  = 7	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG

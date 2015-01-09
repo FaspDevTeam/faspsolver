@@ -1649,9 +1649,9 @@ void fasp_precond_ilu_backward (REAL *r,
                                 REAL *z, 
                                 void *data);
 
-void fasp_precond_schwarz(REAL *r, 
-                          REAL *z, 
-                          void *data);
+void fasp_precond_schwarz (REAL *r,
+                           REAL *z,
+                           void *data);
 
 void fasp_precond_amg (REAL *r, 
                        REAL *z, 

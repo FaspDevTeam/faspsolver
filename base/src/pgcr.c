@@ -40,13 +40,13 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
                             const INT stop_type,
                             const INT print_level)
 {
-    INT i, j, j1, index;
+    INT i, j;
     INT iter = 0;
     INT m = restart;
-    REAL alpha, beta, gamma, tempr, tempe, tempb, tempu,temp2;
+    REAL alpha, beta, gamma, tempe, tempb, tempu,temp2;
     REAL absres0 = BIGREAL, absres, relres1, infnormu, factor;
     
-    const INT nrow = b->row, nrow_1 = nrow-1;
+    const INT nrow = b->row;
     const REAL sol_inf_tol = 1e-16;
     
     // default restart number
@@ -238,7 +238,7 @@ FINISHED:
  *
  * \return the number of iterations
  *
- * \author zheng Li, Chensong Zhang
+ * \author Zheng Li
  * \date   12/23/2014
  */
 INT fasp_solver_dcsr_pgcr (dCSRmat *A,
@@ -252,15 +252,14 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
                            const SHORT print_level)
 {
     const INT   n         = b->row;
-    const INT   MIN_ITER  = 0;
     
     // local variables
     INT      iter = 0, rst = -1;
     INT      i, j, k;
     
-    REAL     r_norm, gamma, alpha, beta, checktol;
+    REAL     gamma, alpha, beta, checktol;
     REAL     absres0 = BIGREAL, absres = BIGREAL;
-    REAL     relres  = BIGREAL, normu  = BIGREAL;
+    REAL     relres  = BIGREAL;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
     REAL    *c = NULL, *z = NULL, *alp = NULL, *tmpx = NULL;
@@ -320,6 +319,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
     checktol = MAX(tol*tol*absres0, absres*1.0e-4);
     
     while ( iter < MaxIt && sqrt(relres) > tol ) {
+        
         i = -1; rst ++;
         
         while ( i < Restart-1 && iter < MaxIt ) {
@@ -368,7 +368,8 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
             
             norms[iter] = relres;
             
-            print_itinfo(print_level, stop_type, iter, sqrt(relres), sqrt(absres), sqrt(norms[iter]/norms[iter-1]));
+            print_itinfo(print_level, stop_type, iter, sqrt(relres), sqrt(absres),
+                         sqrt(norms[iter]/norms[iter-1]));
             
             if (sqrt(relres) < tol)  break;
         }
@@ -382,11 +383,12 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
         
         if (rst==0) dense_aAxpby(n, i+1, z, 1.0, tmpx, 0.0, x->val);
         else dense_aAxpby(n, i+1, z, 1.0, tmpx, 1.0, x->val);
+        
     }
     
-    printf("Number of iterations = %d with relative residual %e.\n", iter, sqrt(relres));
+    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,sqrt(relres));
     
-    //free
+    // clean up memory
     for (i = 0; i < Restart; i++) fasp_mem_free(h[i]);
     fasp_mem_free(work);
     fasp_mem_free(norms);

@@ -58,7 +58,7 @@
      145 ./base/src/mgrecur.c
      556 ./base/src/ordering.c
      982 ./base/src/parameters.c
-    1428 ./base/src/pbcgs.c
+    1429 ./base/src/pbcgs.c
      410 ./base/src/pbcgs_mf.c
     1189 ./base/src/pcg.c
      338 ./base/src/pcg_mf.c
@@ -71,9 +71,9 @@
      459 ./base/src/pminres_mf.c
      663 ./base/src/precond_bcsr.c
      725 ./base/src/precond_bsr.c
-     691 ./base/src/precond_csr.c
+     690 ./base/src/precond_csr.c
     1732 ./base/src/precond_str.c
-     977 ./base/src/pvfgmres.c
+     965 ./base/src/pvfgmres.c
      339 ./base/src/pvfgmres_mf.c
     1377 ./base/src/pvgmres.c
      339 ./base/src/pvgmres_mf.c
@@ -103,9 +103,9 @@
      464 ./base/src/vec.c
      300 ./base/src/wrapper.c
      394 ./base/src/aggregation_bsr.inl
-    2388 ./base/src/aggregation_csr.inl
+    2365 ./base/src/aggregation_csr.inl
     2302 ./base/src/gmg_util.inl
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   92540 total
+   92505 total

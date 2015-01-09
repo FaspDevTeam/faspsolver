@@ -1,11 +1,13 @@
 /*! \file  aggregation_csr.inl
  *
- *  \brief Utilies for multigrid cycles for CSR matrices
+ *  \brief Utilities for multigrid cycles for CSR matrices
  */
 
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+
+#define SYMMETRIC_PAIRWISE 1 // use symmetric pairwise aggregation
 
 /*---------------------------------*/
 /*--      Private Functions      --*/
@@ -2073,20 +2075,19 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
     SHORT      dopass = 0, domin = 0;
     SHORT      status = FASP_SUCCESS;
 
-#if 1
+#if SYMMETRIC_PAIRWISE == 0
     ivector  map1, map2;
     INT  *order;
     REAL *s = (REAL*)fasp_mem_calloc(ptrA->row, sizeof(REAL));
 #endif
+
     for ( i = 1; i <= pair_number; ++i ) {
 
-#if 0
+#if SYMMETRIC_PAIRWISE == 1
         /*-- generate aggregations by pairwise matching --*/
         form_pairwise(ptrA, i, &vertice[lvl], &num_agg);
-
-# else
-
-        if (i==1) {
+#else
+        if ( i == 1 ) {
             first_pairwise_unsymm(ptrA, order, &vertice[lvl], &map1, s, &num_agg);
             //first_pairwise_symm(ptrA, order, &vertice[lvl], &map1, s, &num_agg);
         }
@@ -2095,6 +2096,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
             //second_pairwise_symm(ptrA, order, &vertice[lvl], &map1, s, &num_agg);
         }
 #endif
+
         /*-- check number of aggregates in the first pass --*/
         if ( i == 1 && num_agg < MIN_CDOF ) {
             for ( domin=k=0; k<ptrA->row; k++ ) {
@@ -2114,7 +2116,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
             /*-- Perform aggressive coarsening only up to the specified level --*/
             if ( mgl[lvl].P.col < MIN_CDOF ) break;
         
-            /*-- Form resitriction --*/
+            /*-- Form restriction --*/
             fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
         
             /*-- Form coarse level stiffness matrix --*/
@@ -2145,7 +2147,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
         fasp_ivec_free(&vertice[level+i]);
     }
 
-#if 1
+#if SYMMETRIC_PAIRWISE == 0
     fasp_ivec_free(&map1);
     fasp_ivec_free(&map2);
     fasp_mem_free(s);

@@ -357,30 +357,14 @@ void fasp_precond_ilu_backward (REAL *r,
  *
  * \change schwarz interface by Zheng Li on 11/18/2014
  */
-void fasp_precond_schwarz(REAL *r, 
-                          REAL *z, 
-                          void *data)
+void fasp_precond_schwarz (REAL *r,
+                           REAL *z,
+                           void *data)
 {
-	Schwarz_data *schwarz_data=(Schwarz_data *)data;
-	
-	INT n = schwarz_data->A.row;
-	INT *ia = schwarz_data->A.IA;
-	INT *ja = schwarz_data->A.JA;
-	REAL *a = schwarz_data->A.val;
-    Schwarz_param *swzparam = schwarz_data->swzparam;
-	
-	INT nblk = schwarz_data->nblk;
-	INT *iblock = schwarz_data->iblock;
-	INT *jblock = schwarz_data->jblock;
-	REAL *rhsloc = schwarz_data->rhsloc;
-	REAL *au = schwarz_data->au;
-	REAL *al = schwarz_data->al;
-	
-	INT schwarz_type = schwarz_data->schwarz_type;
-	
-	INT memt = schwarz_data->memt;
-	INT *mask = schwarz_data->mask;
-	INT *maxa = schwarz_data->maxa;
+	Schwarz_data  * swzdata  = (Schwarz_data *)data;
+    Schwarz_param * swzparam = swzdata->swzparam;
+	const INT       swztype  = swzdata->schwarz_type;
+    const INT       n        = swzdata->A.row;
 	
     dvector x, b;
 
@@ -390,26 +374,20 @@ void fasp_precond_schwarz(REAL *r,
 
     fasp_dvec_set(n, &x, 0);
 
-	switch (schwarz_type)
-	{
+	switch (swztype) {
 		case 2:
-			//bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
-			fasp_dcsr_schwarz_backward_smoother(schwarz_data, swzparam, &x, &b);
+			fasp_dcsr_schwarz_backward_smoother(swzdata, swzparam, &x, &b);
 			break;
 		case 3:
-			//fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
-			//bbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
-			fasp_dcsr_schwarz_forward_smoother(schwarz_data, swzparam, &x, &b);
-			fasp_dcsr_schwarz_backward_smoother(schwarz_data, swzparam, &x, &b);
+			fasp_dcsr_schwarz_forward_smoother(swzdata, swzparam, &x, &b);
+			fasp_dcsr_schwarz_backward_smoother(swzdata, swzparam, &x, &b);
 			break;
 		default:
-			//fbgs2ns_(&n,ia,ja,a,z,r,&nblk,iblock,jblock,mask,maxa,au,al,rhsloc,&memt);
-			fasp_dcsr_schwarz_forward_smoother(schwarz_data, swzparam, &x, &b);
+			fasp_dcsr_schwarz_forward_smoother(swzdata, swzparam, &x, &b);
 			break;
 	}
 
     fasp_array_cp(n, x.val, z);
-    
 }
 
 /**
@@ -530,7 +508,6 @@ void fasp_precond_nl_amli (REAL *r,
                            REAL *z, 
                            void *data)
 {
-    
     precond_data *pcdata=(precond_data *)data;
     const INT m=pcdata->mgl_data[0].A.row;
     const INT maxit=pcdata->maxit;
@@ -544,7 +521,7 @@ void fasp_precond_nl_amli (REAL *r,
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 
-    for (i=0;i<maxit;++i) fasp_solver_nl_amli(mgl,&amgparam,0, num_levels); 
+    for (i=0;i<maxit;++i) fasp_solver_nl_amli(mgl, &amgparam, 0, num_levels); 
     fasp_array_cp(m,mgl->x.val,z);    
 }
     

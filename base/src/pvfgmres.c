@@ -201,7 +201,6 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
         }
         
         t = 1.0 / r_norm;
-        //for (j = 0; j < n; j ++) p[0][j] *= t;
         fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
@@ -227,8 +226,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
             t = fasp_blas_array_norm2(n, p[i]);
             hh[i][i-1] = t;
             if (t != 0.0) {
-                t = 1.0/t;
-                //for (j = 0; j < n; j ++) p[i][j] *= t;
+                t = 1.0 / t;
                 fasp_blas_array_ax(n, t, p[i]);
             }
             
@@ -276,7 +274,6 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
         }
         
         fasp_array_cp(n, z[i-1], r);
-        //for (j = 0; j < n; j ++) r[j] *= rs[i-1];
         fasp_blas_array_ax(n, rs[i-1], r);
         
         for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], z[j], r);
@@ -296,7 +293,6 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
         } /* end of convergence check */
-        
         
         /* compute residual vector and continue loop */
         for (j = i; j > 0; j--) {
@@ -517,7 +513,6 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
         }
         
         t = 1.0 / r_norm;
-        //for (j = 0; j < n; j ++) p[0][j] *= t;
         fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
@@ -542,8 +537,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
             t = fasp_blas_array_norm2(n, p[i]);
             hh[i][i-1] = t;
             if (t != 0.0) {
-                t = 1.0/t;
-                //for (j = 0; j < n; j ++) p[i][j] *= t;
+                t = 1.0 / t;
                 fasp_blas_array_ax(n, t, p[i]);
             }
             
@@ -591,7 +585,6 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
         }
         
         fasp_array_cp(n, z[i-1], r);
-        //for (j = 0; j < n; j ++) r[j] *= rs[i-1];
         fasp_blas_array_ax(n, rs[i-1], r);
         
         for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], z[j], r);
@@ -611,8 +604,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
         } /* end of convergence check */
-        
-        
+         
         /* compute residual vector and continue loop */
         for (j = i; j > 0; j--) {
             rs[j-1] = -s[j-1]*rs[j];
@@ -833,7 +825,6 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
         }
         
         t = 1.0 / r_norm;
-        //for (j = 0; j < n; j ++) p[0][j] *= t;
         fasp_blas_array_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
@@ -858,8 +849,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
             t = fasp_blas_array_norm2(n, p[i]);
             hh[i][i-1] = t;
             if (t != 0.0) {
-                t = 1.0/t;
-                //for (j = 0; j < n; j ++) p[i][j] *= t;
+                t = 1.0 / t;
                 fasp_blas_array_ax(n, t, p[i]);
             }
             
@@ -907,7 +897,6 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
         }
         
         fasp_array_cp(n, z[i-1], r);
-        //for (j = 0; j < n; j ++) r[j] *= rs[i-1];
         fasp_blas_array_ax(n, rs[i-1], r);
         
         for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], z[j], r);
@@ -927,7 +916,6 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
         } /* end of convergence check */
-        
         
         /* compute residual vector and continue loop */
         for (j = i; j > 0; j--) {
