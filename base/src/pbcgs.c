@@ -325,8 +325,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
-            if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
-            
+
             // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_dcsr_aAxpy(-1.0,A,uval,r);
@@ -362,10 +361,12 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
                     break;
             }
             
-            if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
-            
             // check convergence
             if ( relres < tol ) break;
+            
+            if ( print_level >= PRINT_MORE ) {
+                ITS_COMPRES(relres); ITS_REALRES(relres);
+            }
             
             if ( more_step >= MaxRestartStep ) {
                 if ( print_level > PRINT_MIN ) ITS_ZEROTOL;
@@ -424,7 +425,6 @@ FINISHED:  // finish the iterative method
  * Rewritten by Chensong Zhang on 04/30/2012
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
- *
  */
 INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
                             dvector *b,
@@ -666,8 +666,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
-            if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
-            
+       
             // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_dbsr_aAxpy(-1.0,A,uval,r);
@@ -702,11 +701,13 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
                     relres = absres/normu;
                     break;
             }
-            
-            if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
-            
+
             // check convergence
             if ( relres < tol ) break;
+            
+            if ( print_level >= PRINT_MORE ) {
+                ITS_COMPRES(relres); ITS_REALRES(relres);
+            }
             
             if ( more_step >= MaxRestartStep ) {
                 if ( print_level > PRINT_MIN ) ITS_ZEROTOL;
@@ -765,7 +766,6 @@ FINISHED:  // finish the iterative method
  * Rewritten by Chensong Zhang on 04/30/2012
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
- *
  */
 INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
                              dvector *b,
@@ -1007,7 +1007,6 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
-            if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
             
             // compute current residual
             fasp_array_cp(m,bval,r);
@@ -1043,11 +1042,13 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
                     relres = absres/normu;
                     break;
             }
-            
-            if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
-            
+                        
             // check convergence
             if ( relres < tol ) break;
+            
+            if ( print_level >= PRINT_MORE ) {
+                ITS_COMPRES(relres); ITS_REALRES(relres);
+            }
             
             if ( more_step >= MaxRestartStep ) {
                 if ( print_level > PRINT_MIN ) ITS_ZEROTOL;
@@ -1106,7 +1107,6 @@ FINISHED:  // finish the iterative method
  * Rewritten by Chensong Zhang on 04/30/2012
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
- *
  */
 INT fasp_solver_dstr_pbcgs (dSTRmat *A,
                             dvector *b,
@@ -1348,8 +1348,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
-            if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
-            
+
             // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_dstr_aAxpy(-1.0,A,uval,r);
@@ -1385,10 +1384,12 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
                     break;
             }
             
-            if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
-            
             // check convergence
             if ( relres < tol ) break;
+            
+            if ( print_level >= PRINT_MORE ) {
+                ITS_COMPRES(relres); ITS_REALRES(relres);
+            }
             
             if ( more_step >= MaxRestartStep ) {
                 if ( print_level > PRINT_MIN ) ITS_ZEROTOL;

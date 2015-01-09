@@ -146,10 +146,9 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     // data for schwarz method
     INT nblk;
     INT *iblock = NULL, *jblock = NULL, *mask = NULL, *maxa = NULL;
-    dCSRmat *blk = NULL;
     
     // return
-    INT flag = 0;
+    INT flag = FASP_SUCCESS;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -218,14 +217,13 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     
     fasp_schwarz_get_block_matrix(schwarz, nblk, iblock, jblock, mask);
     
-    blk = schwarz->blk_data;
-    
     // Setup for each block solver
     switch (block_solver) {
             
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
             /* use MUMPS direct solver on each block */
+            dCSRmat *blk = schwarz->blk_data;
             Mumps_data *mumps = (Mumps_data*)fasp_mem_calloc(nblk, sizeof(Mumps_data));
             for (i=0; i<nblk; ++i)
                 mumps[i] = fasp_mumps_factorize(&blk[i], NULL, NULL, PRINT_NONE);
@@ -238,6 +236,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 #if WITH_UMFPACK
         case SOLVER_UMFPACK: {
             /* use UMFPACK direct solver on each block */
+            dCSRmat *blk = schwarz->blk_data;
             void **numeric	= (void**)fasp_mem_calloc(nblk, sizeof(void*));
             dCSRmat Ac_tran;
             for (i=0; i<nblk; ++i) {
@@ -254,7 +253,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 #endif
             
         default: {
-            /* need to do nothing for iterative methods */
+            /* do nothing for iterative methods */
         }
     }
     
