@@ -4,7 +4,7 @@ File Name: CHANGES
 - Rearrange multilevel cycles in nonlinear AMLI.
 - Fix memory leakage in MUMPS interface.
 - Modify INSTALL and README messages.
-- Slightly change Makefile, especially the screen messages.
+- Slightly change Makefile, especially the screen messages and optimal options.
 - Reduce number of memory allocations in pairwise aggregation.
 - Fix some false WARNINGs in iterative methods; more need to be changed.
 - Update regression results for new pairwise aggregation.
