@@ -9,8 +9,13 @@
 ####################   User Defined Options   ##########################
 #
 # The default setting for build type for FASP is RELEASE. The RELEASE 
-# build type by default has the "-O3". If you want to work with build 
-# type DEBUG, then uncomment the next line (to include "-Wall -g")
+# build type by default has the "-O3". You may adjust the optimization
+# compilation options according to your hardware and software setting.
+# For example, on a macbook pro with Intel i7, best options could be
+# "-Ofast -march=corei7 -mtune=corei7".
+#
+# If you want to work with build type DEBUG, then uncomment the next
+# line (to include "-Wall -g")
 #
 # debug=yes
 #
