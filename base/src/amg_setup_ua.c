@@ -264,9 +264,17 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         if ( mgl[lvl].P.col < MIN_CDOF ) break;
         
         // Check 3: Does this coarsening step too aggressive?
-        if ( mgl[lvl].P.row > mgl[lvl].P.col * 20 || (REAL)mgl[lvl].P.col/mgl[lvl].P.row > 0.8) {
+        if ( mgl[lvl].P.row > mgl[lvl].P.col * 20 ) {
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Coarsening might be too aggressive!\n");
+                printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
+                       mgl[lvl].P.row, mgl[lvl].P.col);
+            }
+            break;
+        }
+        else if ( (REAL)mgl[lvl].P.col/mgl[lvl].P.row > 0.9 ) {
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Coarsening rate is too small!\n");
                 printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
                        mgl[lvl].P.row, mgl[lvl].P.col);
             }
