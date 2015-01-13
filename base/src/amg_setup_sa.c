@@ -128,7 +128,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
-    Schwarz_param swzparam; 
+    Schwarz_param swzparam;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -177,7 +177,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
         swzparam.schwarz_type   = param->schwarz_type;
         swzparam.schwarz_blksolver = param->schwarz_blksolver;
     }
-     
+    
     // Initialize AMLI coefficients
     if ( cycle_type == AMLI_CYCLE ) {
         const INT amlideg = param->amli_degree;
@@ -192,7 +192,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     
     /*----------------------------*/
     /*--- checking aggregation ---*/
-    /*----------------------------*/    
+    /*----------------------------*/
     if ( param->aggregation_type == PAIRWISE )
         param->pair_number = MIN(param->pair_number, max_levels);
     
@@ -248,7 +248,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
         if ( mgl[lvl].P.col < MIN_CDOF ) break;
         
         // Check 3: Does this coarsening step too aggressive?
-        if ( mgl[lvl].P.row > mgl[lvl].P.col * 20.0 ) {
+        if ( mgl[lvl].P.row > mgl[lvl].P.col * MAX_CRATE ) {
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Coarsening might be too aggressive!\n");
                 printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
@@ -256,7 +256,17 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
             }
             break;
         }
-
+        
+        // Check 4: Is this coarsening ratio too small?
+        if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Coarsening rate is too small!\n");
+                printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
+                       mgl[lvl].P.row, mgl[lvl].P.col);
+            }
+            break;
+        }
+        
         /*-- Form restriction --*/
         fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
         
@@ -332,7 +342,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     fasp_mem_free(num_aggregations);
     fasp_mem_free(Neighbor);
     fasp_mem_free(tentp);
-   
+    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
@@ -369,7 +379,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     INT         i, j;
     REAL        setup_start, setup_end;
     ILU_param   iluparam;
-    Schwarz_param swzparam; 
+    Schwarz_param swzparam;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -452,7 +462,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
         /*-- Aggregation --*/
         status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param, lvl+1,
                                  &Neighbor[lvl], &num_aggregations[lvl]);
-
+        
         // Check 1: Did coarsening step succeeded?
         if ( status < 0 ) {
             // When error happens, stop at the current multigrid level!
@@ -461,7 +471,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
             }
             status = FASP_SUCCESS; break;
         }
-
+        
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[lvl], &tentp[lvl], mgl[0].near_kernel_basis,
                          lvl+1, num_aggregations[lvl]);
@@ -474,9 +484,19 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
         if ( mgl[lvl].P.col < MIN_CDOF ) break;
         
         // Check 3: Does this coarsening step too aggressive?
-        if ( mgl[lvl].P.row > mgl[lvl].P.col * 20.0 ) {
+        if ( mgl[lvl].P.row > mgl[lvl].P.col * MAX_CRATE ) {
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Coarsening might be too aggressive!\n");
+                printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
+                       mgl[lvl].P.row, mgl[lvl].P.col);
+            }
+            break;
+        }
+        
+        // Check 4: Is this coarsening ratio too small?
+        if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Coarsening rate is too small!\n");
                 printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
                        mgl[lvl].P.row, mgl[lvl].P.col);
             }
@@ -648,9 +668,9 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     /*----------------------------*/
     /*--- checking aggregation ---*/
     /*----------------------------*/
-
-    if (param->aggregation_type == PAIRWISE) 
-		param->pair_number = MIN(param->pair_number, max_levels);
+    
+    if (param->aggregation_type == PAIRWISE)
+        param->pair_number = MIN(param->pair_number, max_levels);
     
     // Main AMG setup loop
     while ( (mgl[lvl].A.ROW > min_cdof) && (lvl < max_levels-1) ) {
@@ -679,8 +699,8 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         switch ( param->aggregation_type ) {
                 
             case VMB: // VMB aggregation
-			    // Same as default
-			
+                // Same as default
+                
             default: // only one aggregation is tested!!! --Chensong
                 
                 status = aggregation_vmb(&mgl[lvl].PP, &vertices[lvl], param, lvl+1,
@@ -694,7 +714,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
                 
                 break;
         }
-
+        
         if ( status < 0 ) {
             // When error happens, force solver to use the current multigrid levels!
             if ( prtlvl > PRINT_MIN ) {
@@ -706,9 +726,9 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         /* -- Form Tentative prolongation --*/
         printf("before form tentative P\n");
         if (lvl == 0 && mgl[0].near_kernel_dim >0 ){
-            form_tentative_p_bsr1(&vertices[lvl], &tentp[lvl], &mgl[0], lvl+1, 
-			                      num_aggs[lvl], mgl[0].near_kernel_dim, 
-								  mgl[0].near_kernel_basis);
+            form_tentative_p_bsr1(&vertices[lvl], &tentp[lvl], &mgl[0], lvl+1,
+                                  num_aggs[lvl], mgl[0].near_kernel_dim,
+                                  mgl[0].near_kernel_basis);
         }
         else{
             form_boolean_p_bsr(&vertices[lvl], &tentp[lvl], &mgl[0], lvl+1, num_aggs[lvl]);
@@ -716,7 +736,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         
         /* -- Smoothing -- */
         printf("Smoothing P\n");
-        smooth_agg_bsr(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1, 
+        smooth_agg_bsr(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1,
                        &Neighbor[lvl]);
         
         /*-- Form restriction --*/
@@ -790,7 +810,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
             // Do nothing!
             break;
     }
-
+    
     // setup total level number and current level
     mgl[0].num_levels = max_levels = lvl+1;
     mgl[0].w = fasp_dvec_create(3*m*nb);
@@ -816,7 +836,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         mgl[lvl].w = fasp_dvec_create(3*mm);
         
         if (mgl[lvl].A_nk != NULL){
-         
+            
 #if WITH_UMFPACK
             // Need to sort the matrix A_nk for UMFPACK
             fasp_dcsr_trans(mgl[lvl].A_nk, &temp1);

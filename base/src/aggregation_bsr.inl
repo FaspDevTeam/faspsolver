@@ -1,5 +1,6 @@
 /*! \file  aggregation_bsr.inl
- *  \brief Utilies for multigrid cycles in BSR format
+ *
+ *  \brief Utilities for aggregation methods for BSR matrices
  */
 
 /*---------------------------------*/
@@ -7,7 +8,7 @@
 /*---------------------------------*/
 
 /**
- * \fn static void form_tentative_p_bsr (ivector *vertices, dBSRmat *tentp, 
+ * \fn static void form_tentative_p_bsr (ivector *vertices, dBSRmat *tentp,
  *                                       AMG_data_bsr *mgl, INT levelNum,
  *                                       INT num_agg)
  *
@@ -37,7 +38,7 @@ static void form_tentative_p_bsr (ivector *vertices,
     INT nb2    = tentp->nb * tentp->nb;
     
     tentp->IA  = (INT*)fasp_mem_calloc(tentp->ROW+1, sizeof(INT));
-
+    
     // local variables
     INT *IA = tentp->IA;
     INT *JA;
@@ -90,10 +91,10 @@ static void form_tentative_p_bsr (ivector *vertices,
  * \date   05/27/2014
  */
 static void form_boolean_p_bsr (ivector *vertices,
-                                  dBSRmat *tentp,
-                                  AMG_data_bsr *mgl,
-                                  INT levelNum,
-                                  INT num_agg)
+                                dBSRmat *tentp,
+                                AMG_data_bsr *mgl,
+                                INT levelNum,
+                                INT num_agg)
 {
     INT i, j;
     
@@ -160,10 +161,10 @@ static void form_boolean_p_bsr (ivector *vertices,
  * \date   05/27/2014
  */
 static void form_tentative_p_bsr1 (ivector *vertices,
-                                  dBSRmat *tentp,
-                                  AMG_data_bsr *mgl,
-                                  INT levelNum,
-                                  INT num_agg,
+                                   dBSRmat *tentp,
+                                   AMG_data_bsr *mgl,
+                                   INT levelNum,
+                                   INT num_agg,
                                    const INT dim,
                                    REAL **basis)
 {
@@ -213,9 +214,9 @@ static void form_tentative_p_bsr1 (ivector *vertices,
         if (vval[i] > -1) {
             
             for (k=0; k<nnz_row; k++){
-            
+                
                 JA[j] = vval[i]*nnz_row + k;
-            
+                
                 for (p=0; p<nb; p++){
                     
                     for (q=0; q<nb; q++){
@@ -226,9 +227,9 @@ static void form_tentative_p_bsr1 (ivector *vertices,
                     
                 }
                 //fasp_smat_identity (&(val[j*nb2]), tentp->nb, nb2);
-            
+                
                 j++;
-            
+                
             }
         }
     }
@@ -251,11 +252,11 @@ static void form_tentative_p_bsr1 (ivector *vertices,
  * \date   05/26/2014
  */
 static void smooth_agg_bsr (dBSRmat *A,
-                        dBSRmat *tentp,
-                        dBSRmat *P,
-                        AMG_param *param,
-                        INT levelNum,
-                        dCSRmat *N)
+                            dBSRmat *tentp,
+                            dBSRmat *P,
+                            AMG_param *param,
+                            INT levelNum,
+                            dCSRmat *N)
 {
     const SHORT filter = param->smooth_filter;
     const INT   row = A->ROW, col= A->COL, nnz = A->NNZ;
@@ -291,7 +292,7 @@ static void smooth_agg_bsr (dBSRmat *A,
         for (i=0; i<row; ++i) {
             
             for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
-            
+                
                 if (S.JA[j] == i) {
                     
                     fasp_blas_smat_mul(diaginv.val+(i*nb2), A->val+(j*nb2), temp, nb);
@@ -339,12 +340,12 @@ static void smooth_agg_bsr (dBSRmat *A,
  * \date   05/26/2014
  */
 static void smooth_agg_bsr1 (dBSRmat *A,
-                            dBSRmat *tentp,
-                            dBSRmat *P,
-                            AMG_param *param,
-                            INT levelNum,
-                            dCSRmat *N)
-{    
+                             dBSRmat *tentp,
+                             dBSRmat *P,
+                             AMG_param *param,
+                             INT levelNum,
+                             dCSRmat *N)
+{
     const INT   row = A->ROW;
     const INT   nb = A->nb;
     const INT   nb2 = nb*nb;
