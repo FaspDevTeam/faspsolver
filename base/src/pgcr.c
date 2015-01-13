@@ -11,19 +11,19 @@ static void dense_aAxpby (INT, INT, REAL *, REAL, REAL *, REAL, REAL *);
 
 /**
  * \fn int fasp_solver_dcsr_pgcr1 (dCSRmat *A,  dvector *b, dvector *u, \
- *                                  precond *pc, const REAL tol, const INT MaxIt, \
- *                                  const INT restart, const INT stop_type, \
- *                                  const INT print_level)
+ *                                 precond *pc, const REAL tol, const INT MaxIt, \
+ *                                 const INT restart, const INT stop_type, \
+ *                                 const INT prtlvl)
  *
  * \brief A preconditioned GCR method for solving Au=b
  *
  * \param *A     Pointer to the coefficient matrix
  * \param *b     Pointer to the dvector of right hand side
  * \param *u     Pointer to the dvector of dofs
- * \param MaxIt Maximal number of iterations
- * \param tol   Tolerance for stopage
- * \param *pre  Pointer to the structure of precondition (precond)
- * \param print_level How much information to print out
+ * \param MaxIt  Maximal number of iterations
+ * \param tol    Tolerance for stopage
+ * \param *pc    Pointer to the structure of precondition (precond)
+ * \param prtlvl How much information to print out
  *
  * \return the number of iterations
  *
@@ -38,7 +38,7 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
                             const INT MaxIt,
                             const INT restart,
                             const INT stop_type,
-                            const INT print_level)
+                            const INT prtlvl)
 {
     INT i, j;
     INT iter = 0;
@@ -86,7 +86,7 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
             break;
             
         default:
-            printf("Error: Unknown stopping criteria!\n");
+            printf("### ERROR: Unknown stopping criteria!\n");
             iter = ERROR_INPUT_PAR;
             goto FINISHED;
     }
@@ -182,7 +182,7 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
             factor = absres/absres0;
             
             // output iteration information if needed
-            print_itinfo(print_level, stop_type, (iter-1)*m+j+1, relres1, absres, factor);
+            print_itinfo(prtlvl, stop_type, (iter-1)*m+j+1, relres1, absres, factor);
             
             absres0 = absres;
             
@@ -191,7 +191,7 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
             
             if (infnormu <= sol_inf_tol)
             {
-                print_message(print_level, "GMRes stops: infinity norm of the solution is too small!\n");
+                print_message(prtlvl, "Inf_norm of the solution is too small!\n");
                 iter = ERROR_SOLVER_SOLSTAG;
                 goto FINISHED;
             }
@@ -202,7 +202,7 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
     
 FINISHED:
     
-    if (print_level > 0) {
+    if (prtlvl > 0) {
         if (iter > MaxIt){
             printf("Maximal iteration %d exceeded with relative residual %e.\n", MaxIt, relres1);
             iter = ERROR_SOLVER_MAXIT;
@@ -221,10 +221,10 @@ FINISHED:
 }
 
 /**
- * \fn int fasp_solver_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *x, \
+ * \fn INT fasp_solver_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *x, \
  *                                precond *pc, const REAL tol, const INT MaxIt, \
  *                                const INT restart, const INT stop_type, \
- *                                const INT print_level)
+ *                                const INT prtlvl)
  *
  * \brief A preconditioned GCR method for solving Au=b
  *
@@ -233,8 +233,8 @@ FINISHED:
  * \param *u     Pointer to the dvector of dofs
  * \param MaxIt  Maximal number of iterations
  * \param tol    Tolerance for stopage
- * \param *pre   Pointer to the structure of precondition (precond)
- * \param print_level How much information to print out
+ * \param *pc    Pointer to the structure of precondition (precond)
+ * \param prtlvl How much information to print out
  *
  * \return the number of iterations
  *
@@ -249,7 +249,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
                            const INT MaxIt,
                            const SHORT restart,
                            const SHORT stop_type,
-                           const SHORT print_level)
+                           const SHORT prtlvl)
 {
     const INT   n         = b->row;
     
@@ -289,7 +289,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN && Restart < restart ) {
+    if ( prtlvl > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
@@ -311,7 +311,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
     relres  = absres/absres0;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,sqrt(absres0),0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,sqrt(absres0),0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -368,7 +368,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
             
             norms[iter] = relres;
             
-            print_itinfo(print_level, stop_type, iter, sqrt(relres), sqrt(absres),
+            print_itinfo(prtlvl, stop_type, iter, sqrt(relres), sqrt(absres),
                          sqrt(norms[iter]/norms[iter-1]));
             
             if (sqrt(relres) < tol)  break;
@@ -386,7 +386,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
         
     }
     
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,sqrt(relres));
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,sqrt(relres));
     
     // clean up memory
     for (i = 0; i < Restart; i++) fasp_mem_free(h[i]);

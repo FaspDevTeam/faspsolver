@@ -29,9 +29,9 @@ extern "C" {
 /*--      Global Variables       --*/
 /*---------------------------------*/
 
-unsigned INT total_alloc_mem   = 0; // Total allocated memory amount
-unsigned INT total_alloc_count = 0; // Total number of allocations
-const    INT Million     = 1048576; // 1M = 1024*1024
+unsigned INT total_alloc_mem   = 0; //! Total allocated memory amount
+unsigned INT total_alloc_count = 0; //! Total number of allocations
+const    INT Million     = 1048576; //! 1M = 1024*1024
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

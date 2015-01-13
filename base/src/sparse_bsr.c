@@ -24,7 +24,7 @@
  * \param ROW             Number of rows of block
  * \param COL             Number of columns of block
  * \param NNZ             Number of nonzero blocks
- * \param nb              Dimension of exch block
+ * \param nb              Dimension of each block
  * \param storage_manner  Storage manner for each sub-block 
  *
  * \return A              The new dBSRmat matrix
@@ -76,7 +76,7 @@ dBSRmat fasp_dbsr_create (INT ROW,
  * \param ROW             Number of rows of block
  * \param COL             Number of columns of block
  * \param NNZ             Number of nonzero blocks
- * \param nb              Dimension of exch block
+ * \param nb              Dimension of each block
  * \param storage_manner  Storage manner for each sub-block 
  * \param A               Pointer to new dBSRmat matrix 
  *
@@ -98,15 +98,15 @@ void fasp_dbsr_alloc (INT ROW,
     }
     
     if ( NNZ > 0 ) {
-        A->JA = (INT*)fasp_mem_calloc(NNZ ,sizeof(INT));
+        A->JA = (INT*)fasp_mem_calloc(NNZ, sizeof(INT));
     }
     else {
         A->JA = NULL;
     }    
     
     if ( nb > 0 ) {
-        //A->val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
-		A->val = (REAL*)malloc(NNZ*nb*nb*sizeof(REAL));
+        A->val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
+		// A->val = (REAL*)malloc(NNZ*nb*nb*sizeof(REAL));
     }
     else {
         A->val = NULL;
@@ -122,7 +122,7 @@ void fasp_dbsr_alloc (INT ROW,
 /**
  * \fn void fasp_dbsr_free (dBSRmat *A)
  *
- * \brief Free memeory space for BSR format sparse matrix
+ * \brief Free memory space for BSR format sparse matrix
  *
  * \param A   Pointer to the dBSRmat matrix
  *
@@ -200,7 +200,7 @@ void fasp_dbsr_cp (dBSRmat *A,
  * \param AT  Pointer to the transpose of dBSRmat matrix A
  *
  * \author Chunsheng FENG 
- * \date 2011/06/08
+ * \date   2011/06/08
  *
  * Modified by Xiaozhe Hu (08/06/2011)
  */
@@ -231,7 +231,6 @@ INT fasp_dbsr_trans (dBSRmat *A,
     
     // first pass: find the number of nonzeros in the first m-1 columns of A 
     // Note: these numbers are stored in the array AT.IA from 1 to m-1
-    //r (i=0;i<m;++i) AT->IA[i] = 0;
     fasp_iarray_set(m+1, AT->IA, 0);
 
     for (j=0;j<nnz;++j) {
@@ -251,7 +250,7 @@ INT fasp_dbsr_trans (dBSRmat *A,
                 AT->JA[N2C(k)]=C2N(i);
                 for (inb=0;inb<nb;inb++)
                     for (jnb=0;jnb<nb;jnb++)
-                        AT->val[ nb2*N2C(k) + inb*nb + jnb ] =A->val[nb2*N2C(p) + jnb*nb + inb ];
+                        AT->val[nb2*k + inb*nb + jnb] = A->val[nb2*p + jnb*nb + inb];
                 AT->IA[j]=k+1;
             } // end for p
         } // end for i
@@ -310,9 +309,7 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
 
     /* the matrix should be square */
     if (num_rowsA != num_colsA) return ERROR_INPUT_PAR;
-    
-    //REAL *tempd = (REAL*)fasp_mem_calloc(nb2, sizeof(REAL));
-   
+       
 #ifdef _OPENMP
     if (num_rowsA > OPENMP_HOLDS) {
         REAL *tempd = (REAL*)fasp_mem_calloc(nb2*nthreads, sizeof(REAL));
@@ -330,10 +327,8 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
                              A_j[ibegin] = A_j[j];
                              A_j[j] = tempi;
                              // swap block
-                             //memcpy(tempd,     A_data+ibegin*nb2,  (nb2)*sizeof(REAL));
                              memcpy(tempd+myid*nb2,     A_data+ibegin*nb2,  (nb2)*sizeof(REAL));
                              memcpy(A_data+ibegin*nb2,  A_data+j*nb2,       (nb2)*sizeof(REAL));
-                             //memcpy(A_data+j*nb2,     tempd,     (nb2)*sizeof(REAL));
                              memcpy(A_data+j*nb2,       tempd+myid*nb2,     (nb2)*sizeof(REAL));
                          }
                          break;
@@ -342,7 +337,6 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
                     if (j == iend-1) {
                         status = -2;
                         break;
-			//return -2;
                     }
                 }
             }
@@ -378,9 +372,6 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
 #ifdef _OPENMP
     }
 #endif
-
-    // free tempd
-    //fasp_mem_free(tempd);
     
     if (status < 0) return status;
     else            return FASP_SUCCESS;
@@ -571,6 +562,7 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
             }
         }
     }
+	
     // compute the inverses of all the diagonal sub-blocks  
     if (use_openmp) {
 #ifdef _OPENMP
@@ -644,6 +636,7 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
             }
         }
     }
+	
     fasp_mem_free(diaginv);
     
     return (B);
@@ -695,6 +688,7 @@ dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
+
     // Create a dBSRmat 'B'
     B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
     IAb  = B.IA;
@@ -1096,7 +1090,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     j = JA[k];
                     if (j != i) fasp_blas_smat_mul(diaginv+i*nb2, val+m, valb+m, nb);
                 }
-            }// end of main loop
+            } // end of main loop
         }
     
         break;
@@ -1117,7 +1111,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
  *
  * \note Works for general nb (Xiaozhe)
  *
- * \note A is preordered that the first block of each row is the diagonal block!
+ * \note A is pre-ordered that the first block of each row is the diagonal block!
  *
  * \author Xiaozhe Hu
  * \date 03/12/2011
@@ -1183,8 +1177,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                     fasp_smat_identity_nc2(valb+m);
     
                     // compute the inverses of the diagonal sub-blocks 
-                    //fasp_blas_smat_inv_nc2(diaginv+i*9);
-                    fasp_blas_smat_inv_nc2(diaginv+i*4); // Modified by Zheng Li
+                    fasp_blas_smat_inv_nc2(diaginv+i*4); // fixed by Zheng Li
 
                     // compute D^{-1}*A
                     for (k = ibegin+1; k < iend; ++k) {
@@ -1203,15 +1196,14 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                 fasp_smat_identity_nc2(valb+m);
     
                 // compute the inverses of the diagonal sub-blocks 
-                //fasp_blas_smat_inv_nc2(diaginv+i*9);
-                fasp_blas_smat_inv_nc2(diaginv+i*4); // Modified by Zheng Li
+                fasp_blas_smat_inv_nc2(diaginv+i*4); // fixed by Zheng Li
 
                 // compute D^{-1}*A
                 for (k = ibegin+1; k < iend; ++k) {
                     m = k*4;
                     fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
                 }
-            }// end of main loop
+            } // end of main loop
         }
     
         break;    
@@ -1438,7 +1430,6 @@ void fasp_dbsr_getdiag (INT n,
     }
 }
 
-
 /**
  * \fn dBSRmat fasp_dbsr_diagLU(dBSRmat *A, REAL *DL, REAL *DU)
  *
@@ -1488,7 +1479,6 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
     
     // work array
     REAL *temp = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
-    //REAL s;
     
     // get DL and DU
     switch (nb) {
@@ -1505,9 +1495,6 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
                         temp[1] = val[j*nb2+1];
                         temp[2] = val[j*nb2+2];
                         temp[3] = val[j*nb2+3];
-                        
-                        // compute s
-                        //s = temp[3] - (temp[1]*temp[2])/temp[0];
                         
                         // form DL
                         DL[i*nb2]   = 1.0;
@@ -1595,7 +1582,7 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
     } // end of switch
     
     // compute B = DL*A*DU
-    switch (nb){
+    switch (nb) {
             
         case 2:
             
@@ -1670,7 +1657,6 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
     return B;
     
 }
-
 
 /**
  * \fn dBSRmat fasp_dbsr_diagLU(dBSRmat *A, REAL *DL, REAL *DU)
@@ -1777,7 +1763,7 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
 						sqt4 = sqrt(ABS(temp4));
 						sqt8 = sqrt(ABS(temp8));
 
-                        // some auxiliry variables
+                        // some auxiliary variables
                         REAL s22 = temp4 - ((temp1*temp3)/temp0);
                         REAL s23 = temp5 - ((temp2*temp3)/temp0);
                         REAL s32 = temp7 - ((temp1*temp6)/temp0);
@@ -1819,7 +1805,7 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
     } // end of switch
     
     // compute B = DL*A*DU
-    switch (nb){
+    switch (nb) {
             
         case 2:
             for (i=0; i<ROW; i++){

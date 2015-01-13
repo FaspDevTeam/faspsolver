@@ -9,7 +9,6 @@
 
 #include "mg_util.inl"
 
-double amgtime=0;
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -346,16 +345,18 @@ void fasp_precond_ilu_backward (REAL *r,
 }
 
 /**
- * \fn void fasp_precond_schwarz(REAL *r, REAL *z, void *data)
+ * \fn void fasp_precond_schwarz (REAL *r, REAL *z, void *data)
+ *
  * \brief get z from r by schwarz
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
  *
  * \author Xiaozhe Hu
- * \date 03/22/2010
+ * \date   03/22/2010
  *
- * \change schwarz interface by Zheng Li on 11/18/2014
+ * \note Change Schwarz interface by Zheng Li on 11/18/2014
  */
 void fasp_precond_schwarz (REAL *r,
                            REAL *z,
@@ -420,7 +421,7 @@ void fasp_precond_amg (REAL *r,
     
     for ( i = 0; i < maxit; ++i ) fasp_solver_mgcycle(mgl,&amgparam);
     
-    // We can use a recurcive version of MG:
+    // We can also use a recurcive version of MG:
     // for ( i = 0; i < maxit; ++i ) fasp_solver_mgrecur(mgl,&amgparam,0);
     
     fasp_array_cp(m,mgl->x.val,z);    

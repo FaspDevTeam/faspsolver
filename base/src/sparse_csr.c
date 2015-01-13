@@ -28,13 +28,13 @@
  *
  * \return A   the new dCSRmat matrix
  *
- * \author Chensong Zhang 
+ * \author Chensong Zhang
  * \date   2010/04/06
  */
-dCSRmat fasp_dcsr_create (const INT m, 
-                          const INT n, 
+dCSRmat fasp_dcsr_create (const INT m,
+                          const INT n,
                           const INT nnz)
-{    
+{
     dCSRmat A;
     
     if ( m > 0 ) {
@@ -49,7 +49,7 @@ dCSRmat fasp_dcsr_create (const INT m,
     }
     else {
         A.JA = NULL;
-    }    
+    }
     
     if ( nnz > 0 ) {
         A.val = (REAL *)fasp_mem_calloc(nnz, sizeof(REAL));
@@ -119,14 +119,14 @@ iCSRmat fasp_icsr_create (const INT m,
  * \param nnz    Number of nonzeros
  * \param A      Pointer to the dCSRmat matrix
  *
- * \author Chensong Zhang 
+ * \author Chensong Zhang
  * \date   2010/04/06
  */
-void fasp_dcsr_alloc (const INT m, 
-                      const INT n, 
-                      const INT nnz, 
+void fasp_dcsr_alloc (const INT m,
+                      const INT n,
+                      const INT nnz,
                       dCSRmat *A)
-{    
+{
     if ( m > 0 ) {
         A->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
     }
@@ -139,7 +139,7 @@ void fasp_dcsr_alloc (const INT m,
     }
     else {
         A->JA = NULL;
-    }    
+    }
     
     if ( nnz > 0 ) {
         A->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
@@ -150,7 +150,7 @@ void fasp_dcsr_alloc (const INT m,
     
     A->row=m; A->col=n; A->nnz=nnz;
     
-    return;    
+    return;
 }
 
 /**
@@ -161,10 +161,10 @@ void fasp_dcsr_alloc (const INT m,
  * \param A   Pointer to the dCSRmat matrix
  *
  * \author Chensong Zhang
- * \date   2010/04/06 
+ * \date   2010/04/06
  */
 void fasp_dcsr_free (dCSRmat *A)
-{    
+{
     if ( A == NULL ) return;
     
     fasp_mem_free(A->IA);  A->IA  = NULL;
@@ -180,10 +180,10 @@ void fasp_dcsr_free (dCSRmat *A)
  * \param A   Pointer to the iCSRmat matrix
  *
  * \author Chensong Zhang
- * \date   2010/04/06 
+ * \date   2010/04/06
  */
 void fasp_icsr_free (iCSRmat *A)
-{    
+{
     if ( A == NULL ) return;
     
     fasp_mem_free(A->IA);  A->IA  = NULL;
@@ -195,14 +195,14 @@ void fasp_icsr_free (iCSRmat *A)
  * \fn void fasp_dcsr_null (dCSRmat *A)
  *
  * \brief Initialize CSR sparse matrix
- * 
+ *
  * \param A   Pointer to the dCSRmat matrix
  *
  * \author Chensong Zhang
- * \date   2010/04/03  
+ * \date   2010/04/03
  */
 void fasp_dcsr_null (dCSRmat *A)
-{    
+{
     A->row = A->col = A->nnz = 0;
     A->IA  = A->JA  = NULL;
     A->val = NULL;
@@ -242,7 +242,7 @@ void fasp_icsr_null (iCSRmat *A)
  *
  * Modified by Chunsheng Feng, Zheng Li on 07/12/2012
  */
-dCSRmat fasp_dcsr_perm (dCSRmat *A, 
+dCSRmat fasp_dcsr_perm (dCSRmat *A,
                         INT *P)
 {
     const INT n=A->row,nnz=A->nnz;
@@ -250,22 +250,22 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     const REAL *Aval=A->val;
     INT i,j,k,jaj,i1,i2,start;
     INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP  
+    
+#ifdef _OPENMP
     if ( MIN(n, nnz) > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     dCSRmat Aperm = fasp_dcsr_create(n,n,nnz);
     
-    // form the tranpose of P
+    // form the transpose of P
     INT *Pt = (INT*)fasp_mem_calloc(n,sizeof(INT));
     
     if (use_openmp) {
         INT myid, mybegin, myend;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
         for (myid=0; myid<nthreads; ++myid) {
@@ -273,7 +273,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
             for (i=mybegin; i<myend; ++i) Pt[P[i]] = i;
         }
     }
-    else {  
+    else {
         for (i=0; i<n; ++i) Pt[P[i]] = i;
     }
     
@@ -287,13 +287,13 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     // perform actual P*A
     if (use_openmp) {
         INT myid, mybegin, myend;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i1, i2, k, start, j, jaj)
 #endif
         for (myid=0; myid<nthreads; ++myid) {
             FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
-                i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1; 
+                i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1;
                 k = P[i];
                 start = ia[k];
                 for (j=i1; j<=i2; ++j) {
@@ -304,23 +304,23 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
             }
         }
     }
-    else {      
+    else {
         for (i=0; i<n; ++i) {
-            i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1; 
+            i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1;
             k = P[i];
             start = ia[k];
             for (j=i1; j<=i2; ++j) {
                 jaj = start+j-i1;
                 Aperm.JA[j] = ja[jaj];
                 Aperm.val[j] = Aval[jaj];
-        }    
+            }
         }
     }
     
     // perform P*A*P' (column permutation)
     if (use_openmp) {
         INT myid, mybegin, myend;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, k, j)
 #endif
         for (myid=0; myid<nthreads; ++myid) {
@@ -340,7 +340,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     
     fasp_mem_free(Pt);
     
-    return(Aperm);    
+    return(Aperm);
 }
 
 /**
@@ -359,12 +359,12 @@ void fasp_dcsr_sort (dCSRmat *A)
     INT i,j,start,row_length;
     
     // temp memory for sorting rows of A
-    INT *index, *ja; 
+    INT *index, *ja;
     REAL *a;
     
-    index = (INT*)fasp_mem_calloc(n,sizeof(INT));     
-    ja    = (INT*)fasp_mem_calloc(n,sizeof(INT));     
-    a     = (REAL*)fasp_mem_calloc(n,sizeof(REAL));     
+    index = (INT*)fasp_mem_calloc(n,sizeof(INT));
+    ja    = (INT*)fasp_mem_calloc(n,sizeof(INT));
+    a     = (REAL*)fasp_mem_calloc(n,sizeof(REAL));
     
     for (i=0;i<n;++i) {
         start=A->IA[i];
@@ -396,38 +396,38 @@ void fasp_dcsr_sort (dCSRmat *A)
  *
  * \brief Get first n diagonal entries of a CSR matrix A
  *
- * \param n     Number of diag entries to get (if n=0, then get all diagonal entries)
+ * \param n     Number of diagonal entries to get (if n=0, then get all diagonal entries)
  * \param A     Pointer to dCSRmat CSR matrix
  * \param diag  Pointer to the diagonal as a dvector
  *
  * \author Chensong Zhang
  * \date   05/20/2009
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_dcsr_getdiag (INT n, 
-                        dCSRmat *A, 
-                        dvector *diag) 
+void fasp_dcsr_getdiag (INT n,
+                        dCSRmat *A,
+                        dvector *diag)
 {
-    INT i,k,j,ibegin,iend;    
+    INT i,k,j,ibegin,iend;
     
     if (n==0) n=MIN(A->row,A->col);
     
     INT nthreads = 1, use_openmp = FALSE;
     
-#ifdef _OPENMP  
+#ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     fasp_dvec_alloc(n, diag);
     
     if (use_openmp) {
         INT mybegin,myend,myid;
-#ifdef _OPENMP 
-#pragma omp parallel for private(myid, mybegin, myend, i, ibegin, iend, k, j) 
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, ibegin, iend, k, j)
 #endif
         for (myid = 0; myid < nthreads; myid++ ) {
             FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
@@ -460,7 +460,7 @@ void fasp_dcsr_getdiag (INT n,
  *
  * \brief Get the n-th column of a CSR matrix A
  *
- * \param n    Index of a column of A (0 <= n <= A.col-1) 
+ * \param n    Index of a column of A (0 <= n <= A.col-1)
  * \param A    Pointer to dCSRmat CSR matrix
  * \param col  Pointer to the column
  *
@@ -469,23 +469,23 @@ void fasp_dcsr_getdiag (INT n,
  *
  * Modified by Chunsheng Feng, Zheng Li on 07/08/2012
  */
-void fasp_dcsr_getcol (const INT n, 
-                       dCSRmat *A, 
-                       REAL *col) 
+void fasp_dcsr_getcol (const INT n,
+                       dCSRmat *A,
+                       REAL *col)
 {
     INT i,j, row_begin, row_end;
     INT nrow = A->row, ncol = A->col;
     INT status = FASP_SUCCESS;
-
+    
     INT nthreads=1, use_openmp=FALSE;
     
-#ifdef _OPENMP  
+#ifdef _OPENMP
     if ( nrow > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-        
+    
     // check the column index n
     if ( n < 0 || n >= ncol ) {
         printf("### ERROR: Column index %d is illegal!\n", n);
@@ -496,22 +496,22 @@ void fasp_dcsr_getcol (const INT n,
     // get the column
     if(use_openmp) {
         INT mybegin, myend, myid;
-
-#ifdef _OPENMP 
-#pragma omp parallel for private(myid, mybegin, myend, i, j, row_begin, row_end) 
+        
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, j, row_begin, row_end)
 #endif
         for (myid = 0; myid < nthreads; myid++ ) {
-        FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
-        for(i=mybegin; i<myend; i++) {
+            FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+            for(i=mybegin; i<myend; i++) {
                 col[i] = 0.0;
-        row_begin = A->IA[i]; row_end = A->IA[i+1];
-        for (j=row_begin; j<row_end; ++j) {
-            if (A->JA[j] == n) {
-                    col[i] = A->val[j];
+                row_begin = A->IA[i]; row_end = A->IA[i+1];
+                for (j=row_begin; j<row_end; ++j) {
+                    if (A->JA[j] == n) {
+                        col[i] = A->val[j];
                     }
                 } // end for j
-        }// end for i
-     }
+            }// end for i
+        }
     }
     else {
         for (i=0; i<nrow; ++i) {
@@ -533,7 +533,7 @@ FINISHED:
 /*!
  * \fn void fasp_dcsr_diagpref ( dCSRmat *A )
  *
- * \brief Re-order the column and data arrays of a CSR matrix, 
+ * \brief Re-order the column and data arrays of a CSR matrix,
  *        so that the first entry in each row is the diagonal
  *
  * \param A   Pointer to the matrix to be re-ordered
@@ -544,13 +544,13 @@ FINISHED:
  * \author Chunsheng Feng, Zheng Li
  * \date   09/02/2012
  *
- * \note Reordering is done in place. 
+ * \note Reordering is done in place.
  *
  * Modified by Chensong Zhang on Dec/21/2012
  */
 void fasp_dcsr_diagpref (dCSRmat *A)
 {
-    const INT   num_rowsA = A -> row; 
+    const INT   num_rowsA = A -> row;
     REAL      * A_data    = A -> val;
     INT       * A_i       = A -> IA;
     INT       * A_j       = A -> JA;
@@ -559,40 +559,39 @@ void fasp_dcsr_diagpref (dCSRmat *A)
     INT    i, j;
     INT    tempi, row_size;
     REAL   tempd;
-
+    
 #ifdef _OPENMP
     // variables for OpenMP
     INT    myid, mybegin, myend, ibegin, iend;
     INT    nthreads = FASP_GET_NUM_THREADS();
 #endif
-
+    
 #if DEBUG_MODE
     printf("### DEBUG: fasp_dcsr_diagpref ...... [Start]\n");
 #endif
-   
-
-#ifdef _OPENMP    
-    if (num_rowsA > OPENMP_HOLDS) {     
+    
+#ifdef _OPENMP
+    if (num_rowsA > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid,i,j,ibegin,iend,tempi,tempd, mybegin, myend)
-    for (myid = 0; myid < nthreads; myid++) {
+        for (myid = 0; myid < nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, num_rowsA, &mybegin, &myend);
             for (i = mybegin; i < myend; i ++) {
                 ibegin = A_i[i]; iend = A_i[i+1];
-                // check whether the first entry is already diagonal        
-                if (A_j[ibegin] != i) { 
+                // check whether the first entry is already diagonal
+                if (A_j[ibegin] != i) {
                     for (j = ibegin+1 ; j < iend; j ++) {
                         if (A_j[j] == i) {
 #if DEBUG_MODE
-                             printf("### DEBUG: Switch entry_%d with entry_0\n", j);
+                            printf("### DEBUG: Switch entry_%d with entry_0\n", j);
 #endif
-                             tempi  = A_j[ibegin];
-                             A_j[ibegin] = A_j[j];
-                             A_j[j] = tempi;
-                    
-                             tempd     = A_data[ibegin];
-                             A_data[ibegin] = A_data[j];
-                             A_data[j] = tempd;
-                             break;
+                            tempi  = A_j[ibegin];
+                            A_j[ibegin] = A_j[j];
+                            A_j[j] = tempi;
+                            
+                            tempd     = A_data[ibegin];
+                            A_data[ibegin] = A_data[j];
+                            A_data[j] = tempd;
+                            break;
                         }
                     }
                     if (j == iend) {
@@ -607,22 +606,22 @@ void fasp_dcsr_diagpref (dCSRmat *A)
 #endif
         for (i = 0; i < num_rowsA; i ++) {
             row_size = A_i[i+1] - A_i[i];
-            // check whether the first entry is already diagonal        
-            if (A_j[0] != i) { 
+            // check whether the first entry is already diagonal
+            if (A_j[0] != i) {
                 for (j = 1; j < row_size; j ++) {
                     if (A_j[j] == i) {
 #if DEBUG_MODE
-                         printf("### DEBUG: Switch entry_%d with entry_0\n", j);
+                        printf("### DEBUG: Switch entry_%d with entry_0\n", j);
 #endif
-                         tempi  = A_j[0];
-                         A_j[0] = A_j[j];
-                         A_j[j] = tempi;
-                    
-                         tempd     = A_data[0];
-                         A_data[0] = A_data[j];
-                         A_data[j] = tempd;
-                    
-                         break;
+                        tempi  = A_j[0];
+                        A_j[0] = A_j[j];
+                        A_j[j] = tempi;
+                        
+                        tempd     = A_data[0];
+                        A_data[0] = A_data[j];
+                        A_data[j] = tempd;
+                        
+                        break;
                     }
                 }
                 if (j == row_size) {
@@ -636,7 +635,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
 #ifdef _OPENMP
     }
 #endif
-
+    
 #if DEBUG_MODE
     printf("### DEBUG: fasp_dcsr_diagpref ...... [Finish]\n");
 #endif
@@ -649,13 +648,13 @@ void fasp_dcsr_diagpref (dCSRmat *A)
  *
  * \param A      Pointer to the dCSRmat matrix
  * \param value  Set a value on diag(A) which is too close to zero to "value"
- * 
+ *
  * \return       FASP_SUCCESS if no diagonal entry is close to zero, else ERROR
  *
  * \author Shiquan Zhang
  * \date   11/07/2009
  */
-SHORT fasp_dcsr_regdiag (dCSRmat *A, 
+SHORT fasp_dcsr_regdiag (dCSRmat *A,
                          REAL value)
 {
     const INT    m = A->row;
@@ -667,19 +666,19 @@ SHORT fasp_dcsr_regdiag (dCSRmat *A,
     SHORT status=ERROR_UNKNOWN;
     
     for (i=0;i<m;++i) {
-    begin_row=ia[i],end_row=ia[i+1];
+        begin_row=ia[i],end_row=ia[i+1];
         for (k=begin_row;k<end_row;++k) {
             j=ja[k];
             if (i==j) {
                 if (aj[k] < 0.0) goto FINISHED;
-                else if (aj[k] < SMALLREAL) aj[k]=value;    
+                else if (aj[k] < SMALLREAL) aj[k]=value;
             }
         } // end for k
     } // end for i
-
+    
     status = FASP_SUCCESS;
     
-FINISHED:    
+FINISHED:
     return status;
 }
 
@@ -715,12 +714,12 @@ void fasp_icsr_cp (iCSRmat *A,
  * \param B   Pointer to the dCSRmat matrix
  *
  * \author Chensong Zhang
- * \date   04/06/2010  
+ * \date   04/06/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_dcsr_cp (dCSRmat *A, 
-                   dCSRmat *B) 
+void fasp_dcsr_cp (dCSRmat *A,
+                   dCSRmat *B)
 {
     B->row=A->row;
     B->col=A->col;
@@ -742,11 +741,11 @@ void fasp_dcsr_cp (dCSRmat *A,
  * \return    The transpose of iCSRmat matrix A
  *
  * \author Chensong Zhang
- * \date   04/06/2010  
+ * \date   04/06/2010
  *
- *  Modified by Chunsheng Feng, Zheng Li on 06/20/2012   
+ *  Modified by Chunsheng Feng, Zheng Li on 06/20/2012
  */
-void fasp_icsr_trans (iCSRmat *A, 
+void fasp_icsr_trans (iCSRmat *A,
                       iCSRmat *AT)
 {
     const INT n=A->row, m=A->col, nnz=A->nnz, m1=m-1;
@@ -765,14 +764,14 @@ void fasp_icsr_trans (iCSRmat *A,
     
     AT->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
     
-    if (A->val) { 
-        AT->val=(INT*)fasp_mem_calloc(nnz,sizeof(INT)); 
+    if (A->val) {
+        AT->val=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
     }
-    else { 
-        AT->val=NULL; 
-    }    
+    else {
+        AT->val=NULL;
+    }
     
-    // first pass: find the Number of nonzeros in the first m-1 columns of A 
+    // first pass: find the Number of nonzeros in the first m-1 columns of A
     // Note: these Numbers are stored in the array AT.IA from 1 to m-1
     fasp_iarray_set(m+1, AT->IA, 0);
     
@@ -786,7 +785,7 @@ void fasp_icsr_trans (iCSRmat *A,
     // second pass: form A'
     if (A->val != NULL) {
         for (i=0;i<n;++i) {
-            ibegin=A->IA[i], iend=A->IA[i+1];    
+            ibegin=A->IA[i], iend=A->IA[i+1];
             for (p=ibegin;p<iend;p++) {
                 j=A->JA[N2C(p)]+1;
                 k=AT->IA[N2C(j)];
@@ -798,16 +797,16 @@ void fasp_icsr_trans (iCSRmat *A,
     }
     else {
         for (i=0;i<n;++i) {
-            ibegin=A->IA[i], iend=A->IA[i+1];    
+            ibegin=A->IA[i], iend=A->IA[i+1];
             for (p=ibegin;p<iend;p++) {
                 j=A->JA[N2C(p)]+1;
                 k=AT->IA[N2C(j)];
                 AT->JA[N2C(k)]=C2N(i);
                 AT->IA[j]=k+1;
             } // end for p
-        } // end for i    
+        } // end for i
     } // end if
-}    
+}
 
 /**
  * \fn void fasp_dcsr_trans (dCSRmat *A, dCSRmat *AT)
@@ -818,18 +817,18 @@ void fasp_icsr_trans (iCSRmat *A,
  * \param AT  Pointer to the transpose of dCSRmat matrix A (output)
  *
  * \author Chensong Zhang
- * \date   04/06/2010   
+ * \date   04/06/2010
  *
- *  Modified by Chunsheng Feng, Zheng Li on 06/20/2012   
+ *  Modified by Chunsheng Feng, Zheng Li on 06/20/2012
  */
-INT fasp_dcsr_trans (dCSRmat *A, 
+INT fasp_dcsr_trans (dCSRmat *A,
                      dCSRmat *AT)
 {
-    const INT n=A->row, m=A->col, nnz=A->nnz;    
+    const INT n=A->row, m=A->col, nnz=A->nnz;
     
     // Local variables
     INT i,j,k,p;
-
+    
     AT->row=m;
     AT->col=n;
     AT->nnz=nnz;
@@ -838,13 +837,13 @@ INT fasp_dcsr_trans (dCSRmat *A,
     
     AT->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
     
-    if (A->val) { 
-        AT->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL)); 
+    if (A->val) {
+        AT->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
         
     }
     else { AT->val=NULL; }
     
-    // first pass: find the Number of nonzeros in the first m-1 columns of A 
+    // first pass: find the Number of nonzeros in the first m-1 columns of A
     // Note: these Numbers are stored in the array AT.IA from 1 to m-1
     
     // fasp_iarray_set(m+1, AT->IA, 0);
@@ -854,38 +853,38 @@ INT fasp_dcsr_trans (dCSRmat *A,
         i=N2C(A->JA[j]); // column Number of A = row Number of A'
         if (i<m-1) AT->IA[i+2]++;
     }
-
+    
     for (i=2;i<=m;++i) AT->IA[i]+=AT->IA[i-1];
     
     // second pass: form A'
-    if (A->val) { 
-             for (i=0;i<n;++i) {
-                INT ibegin=A->IA[i], iend=A->IA[i+1];
-                for (p=ibegin;p<iend;p++) {
-                    j=A->JA[N2C(p)]+1;
-                    k=AT->IA[N2C(j)];
-                    AT->JA[N2C(k)]=C2N(i);
-                    AT->val[N2C(k)]=A->val[N2C(p)];
-                    AT->IA[j]=k+1;
-                } // end for p
-            } // end for i
+    if (A->val) {
+        for (i=0;i<n;++i) {
+            INT ibegin=A->IA[i], iend=A->IA[i+1];
+            for (p=ibegin;p<iend;p++) {
+                j=A->JA[N2C(p)]+1;
+                k=AT->IA[N2C(j)];
+                AT->JA[N2C(k)]=C2N(i);
+                AT->val[N2C(k)]=A->val[N2C(p)];
+                AT->IA[j]=k+1;
+            } // end for p
+        } // end for i
     }
     else {
-            for (i=0;i<n;++i) {
-                INT ibegin=A->IA[i], iend1=A->IA[i+1];
-                for (p=ibegin;p<iend1;p++) {
-                    j=A->JA[N2C(p)]+1;
-                    k=AT->IA[N2C(j)];
-                    AT->JA[N2C(k)]=C2N(i);
-                    AT->IA[j]=k+1;
-                } // end for p
-            } // end of i
-    } // end if 
+        for (i=0;i<n;++i) {
+            INT ibegin=A->IA[i], iend1=A->IA[i+1];
+            for (p=ibegin;p<iend1;p++) {
+                j=A->JA[N2C(p)]+1;
+                k=AT->IA[N2C(j)];
+                AT->JA[N2C(k)]=C2N(i);
+                AT->IA[j]=k+1;
+            } // end for p
+        } // end of i
+    } // end if
     
     return FASP_SUCCESS;
-}    
+}
 
-/* 
+/*
  * \fn void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2],
  *                               INT *nn, INT *tniz)
  *
@@ -898,25 +897,25 @@ INT fasp_dcsr_trans (dCSRmat *A,
  * \param tniz       Number of the nonzeros in the matrices A and A'
  *
  * \author Shuo Zhang
- * \date   07/06/2009   
+ * \date   07/06/2009
  *
  * \note   This subroutine transpose in CSR format IN ORDER
  */
-void fasp_dcsr_transpose (INT *row[2], 
-                          INT *col[2], 
-                          REAL *val[2], 
-                          INT *nn, 
+void fasp_dcsr_transpose (INT *row[2],
+                          INT *col[2],
+                          REAL *val[2],
+                          INT *nn,
                           INT *tniz)
 {
     const INT nca=nn[1]; // Number of columns
     
-    INT *izc    = (INT *)fasp_mem_calloc(nn[1],sizeof(INT));    
+    INT *izc    = (INT *)fasp_mem_calloc(nn[1],sizeof(INT));
     INT *izcaux = (INT *)fasp_mem_calloc(nn[1],sizeof(INT));
     
     // Local variables
     INT i,m,itmp;
     
-    // first pass: to set order right    
+    // first pass: to set order right
     for (i=0;i<tniz[0];++i) izc[N2C(col[0][i])]++;
     
     izcaux[0]=0;
@@ -926,7 +925,7 @@ void fasp_dcsr_transpose (INT *row[2],
     memset(izc,0,nca*sizeof(INT));
     
     for (i=0;i<tniz[0];++i) {
-        m=col[0][i]; 
+        m=col[0][i];
         itmp=izcaux[m]+izc[m];
         row[1][itmp]=m;
         col[1][itmp]=row[0][i];
@@ -946,29 +945,29 @@ void fasp_dcsr_transpose (INT *row[2],
  *
  * \param A     Pointer to dCSRmat CSR matrix
  * \param B     Pointer to dCSRmat CSR matrix
- * \param dtol  Drop tolerance 
+ * \param dtol  Drop tolerance
  *
  * \author Shiquan Zhang
  * \date   03/10/2010
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
-void fasp_dcsr_compress (dCSRmat *A, 
-                         dCSRmat *B, 
+void fasp_dcsr_compress (dCSRmat *A,
+                         dCSRmat *B,
                          REAL dtol)
 {
     INT i, j, k;
-    INT ibegin,iend1;    
+    INT ibegin,iend1;
     
     INT nthreads = 1, use_openmp = FALSE;
-
+    
 #ifdef _OPENMP
     if ( B->nnz > OPENMP_HOLDS) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     INT *index=(INT*)fasp_mem_calloc(A->nnz,sizeof(INT));
     
     B->row=A->row; B->col=A->col;
@@ -980,7 +979,7 @@ void fasp_dcsr_compress (dCSRmat *A,
     // first pass: determine the size of B
     k=0;
     for (i=0;i<A->row;++i) {
-        ibegin=A->IA[i]; iend1=A->IA[i+1];    
+        ibegin=A->IA[i]; iend1=A->IA[i+1];
         for (j=ibegin;j<iend1;++j)
             if (ABS(A->val[N2C(j)])>dtol) {
                 index[k]=N2C(j);
@@ -990,7 +989,7 @@ void fasp_dcsr_compress (dCSRmat *A,
     } /* end of i */
     B->nnz=k;
     
-    B->JA=(INT*)fasp_mem_calloc(B->nnz,sizeof(INT));    
+    B->JA=(INT*)fasp_mem_calloc(B->nnz,sizeof(INT));
     B->val=(REAL*)fasp_mem_calloc(B->nnz,sizeof(REAL));
     
     // second pass: generate the index and element to B
@@ -999,20 +998,20 @@ void fasp_dcsr_compress (dCSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, i, mybegin, myend)
 #endif
-    for (myid=0; myid<nthreads; myid++) {
+        for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, B->nnz, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
                 B->JA[i]=A->JA[index[i]];
-                B->val[i]=A->val[index[i]]; 
+                B->val[i]=A->val[index[i]];
             }
         }
-    }   
+    }
     else {
         for (i=0;i<B->nnz;++i) {
             B->JA[i]=A->JA[index[i]];
-            B->val[i]=A->val[index[i]]; 
+            B->val[i]=A->val[index[i]];
         }
-    }   
+    }
     
     fasp_mem_free(index);
 }
@@ -1029,18 +1028,18 @@ void fasp_dcsr_compress (dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   12/25/2010
  *
- * Modified by Chensong on 02/21/2013
+ * Modified by Chensong Zhang on 02/21/2013
  *
  * \note This routine can be modified for filtering.
  */
-SHORT fasp_dcsr_compress_inplace (dCSRmat *A, 
+SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
                                   REAL dtol)
 {
     const INT row=A->row;
     const INT nnz=A->nnz;
     
     INT i, j, k;
-    INT ibegin, iend = A->IA[0];    
+    INT ibegin, iend = A->IA[0];
     SHORT status = FASP_SUCCESS;
     
     k = 0;
@@ -1071,25 +1070,25 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
 /**
  * \fn void fasp_dcsr_shift (dCSRmat *A, INT offset)
  *
- * \brief Reindex a REAL matrix in CSR format to make the index starting from 0 or 1
+ * \brief Re-index a REAL matrix in CSR format to make the index starting from 0 or 1
  *
  * \param A         Pointer to CSR matrix
  * \param  offset   Size of offset (1 or -1)
  *
  * \author Chensong Zhang
- * \date   04/06/2010  
+ * \date   04/06/2010
  *
- * Modified by chunsheng Feng, Zheng Li on 07/11/2012
+ * Modified by Chunsheng Feng, Zheng Li on 07/11/2012
  */
-void fasp_dcsr_shift (dCSRmat *A, 
+void fasp_dcsr_shift (dCSRmat *A,
                       INT offset)
 {
     const INT nnz=A->nnz;
     const INT n=A->row+1;
     INT i, *ai=A->IA, *aj=A->JA;
     INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP  
+    
+#ifdef _OPENMP
     if ( MIN(n, nnz) > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -1100,7 +1099,7 @@ void fasp_dcsr_shift (dCSRmat *A,
     
     if(use_openmp) {
         INT myid, mybegin, myend;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
         for(myid=0; myid<nthreads; myid++) {
@@ -1113,12 +1112,12 @@ void fasp_dcsr_shift (dCSRmat *A,
     else {
         for (i=0; i<n; ++i) ai[i]+=offset;
     }
-
+    
     if(use_openmp) {
         INT myid, mybegin, myend;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i)
-#endif  
+#endif
         for(myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);
             for(i=mybegin; i<myend; i++) {
@@ -1144,7 +1143,7 @@ void fasp_dcsr_shift (dCSRmat *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 07/11/2012
  */
-void fasp_dcsr_symdiagscale (dCSRmat *A, 
+void fasp_dcsr_symdiagscale (dCSRmat *A,
                              dvector *diag)
 {
     // information about matrix A
@@ -1154,8 +1153,8 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     REAL *val = A->val;
     
     INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP  
+    
+#ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -1175,11 +1174,11 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     
     if(use_openmp) {
         INT myid, mybegin, myend;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
         for(myid=0; myid<nthreads; myid++) {
-        FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
             for(i=mybegin; i<myend; i++) work[i] = sqrt(diag->val[i]);
         }
     }
@@ -1190,14 +1189,14 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     
     if(use_openmp) {
         INT myid, mybegin, myend;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, row_start, row_end, i, j, k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
-        FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
-        for(i=mybegin; i<myend; i++) {
-            row_start = IA[i]; row_end = IA[i+1];
-            for(j=row_start; j<row_end; j++) {
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            for(i=mybegin; i<myend; i++) {
+                row_start = IA[i]; row_end = IA[i+1];
+                for(j=row_start; j<row_end; j++) {
                     k = JA[j];
                     val[j] = val[j]/(work[i]*work[k]);
                 }
@@ -1244,12 +1243,11 @@ dCSRmat fasp_dcsr_sympat (dCSRmat *A)
     // get symmetrized A
     fasp_blas_dcsr_add (A, 1.0, &AT, 0.0, &SA);
     
-    // clean 
+    // clean
     fasp_dcsr_free(&AT);
     
-    // return 
+    // return
     return SA;
-    
 }
 
 /**
@@ -1268,7 +1266,7 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
                               INT *flags,
                               INT *groups)
 {
-#ifdef MULTI_COLOR_ORDER 
+#ifdef MULTI_COLOR_ORDER
     INT k,i,j,pre,group;
     INT iend;
     INT icount;
@@ -1278,58 +1276,58 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
     INT *JA = A -> JA;
     INT *cq = (INT *)malloc(sizeof(INT)*(n+1));
     INT *newr = (INT *)malloc(sizeof(INT)*(n+1));
-  
+    
 #ifdef _OPENMP
 #pragma omp parallel for private(k)
 #endif
-    for(k=0;k<n;k++) cq[k]= k; 
-
+    for (k=0;k<n;k++) cq[k]= k;
+    
     group = 0;
-    for(k=0;k<n;k++) {
-       if ((IA[k+1]-IA[k]) > group ) 
-          group = IA[k+1]-IA[k];
-     }
-
+    for (k=0;k<n;k++) {
+        if ((IA[k+1]-IA[k]) > group )
+            group = IA[k+1]-IA[k];
+    }
+    
     A->IC = (INT *)malloc(sizeof(INT)*(group+2));
     A->ICMAP = (INT *)malloc(sizeof(INT)*(n));
     
     front = n-1;     rear = n-1;
-
+    
     memset(newr, -1, sizeof(INT)*(n+1));
     memset(A->ICMAP, 0, sizeof(INT)*n);
-
+    
     group = 0;  icount = 0;
     A->IC[ 0 ] = 0;   pre=0;
-  
-    do{
-        front ++;  if (front == n ) front =0; 
+    
+    do {
+        front ++;  if (front == n) front =0;
         i = cq[front];
-        if(i <= pre)  {  
-        A->IC[group] = icount;  A->ICMAP[icount] = i;
-        group++;            icount++;
-        iend = IA[i+1];
-            for(j= IA[i]; j< iend; j++)  newr[ JA[j] ] = group;
+        if(i <= pre)  {
+            A->IC[group] = icount; A->ICMAP[icount] = i;
+            group++; icount++;
+            iend = IA[i+1];
+            for (j= IA[i]; j< iend; j++) newr[ JA[j] ] = group;
         }
-        else if (newr[i] == group  ) { 
+        else if (newr[i] == group) {
             rear ++;  if (rear == n) rear = 0;
             cq[rear] = i;
         }
-        else {  
-        A->ICMAP[icount] = i;
-        icount++;
-        iend = IA[i+1];
-            for(j = IA[i]; j< iend; j++)  newr[ JA[j] ] =  group;
+        else {
+            A->ICMAP[icount] = i;
+            icount++;
+            iend = IA[i+1];
+            for (j = IA[i]; j< iend; j++) newr[ JA[j] ] = group;
         }
         pre=i;
         
-    }while(rear != front);
-
-    A->IC[group] = icount;  
+    } while (rear != front);
+    
+    A->IC[group] = icount;
     A->color = group;
     free(cq);
     free(newr);
     *groups = group;
-#else 
+#else
     printf("### ERROR: MULTI_COLOR_ORDER has not been defined!\n");
 #endif
 }
