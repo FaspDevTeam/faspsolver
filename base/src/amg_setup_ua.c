@@ -45,7 +45,7 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
 #endif
     
     SHORT status = amg_setup_unsmoothP_unsmoothR(mgl, param);
-
+    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
@@ -113,11 +113,11 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     const SHORT csolver    = param->coarse_solver;
     const SHORT min_cdof   = MAX(param->coarse_dof,50);
     const INT   m          = mgl[0].A.row;
-
+    
     // empiric value
     const REAL  cplxmax    = 3.0;
     const REAL  xsi        = 0.6;
-    INT   icum = 1.0;	
+    INT   icum = 1.0;
     REAL  eta, fracratio;
     
     // local variables
@@ -125,14 +125,14 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     INT           i;
     REAL          setup_start, setup_end;
     ILU_param     iluparam;
-    Schwarz_param swzparam; 
-        
+    Schwarz_param swzparam;
+    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
-
+    
     fasp_gettime(&setup_start);
     
     // level info (fine: 0; coarse: 1)
@@ -166,7 +166,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     }
     
     // Initialize Schwarz parameters
-	mgl->schwarz_levels = param->schwarz_levels;
+    mgl->schwarz_levels = param->schwarz_levels;
     if ( param->schwarz_levels > 0 ) {
         swzparam.schwarz_mmsize = param->schwarz_mmsize;
         swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
@@ -185,7 +185,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
 #if DIAGONAL_PREF
     fasp_dcsr_diagpref(&mgl[0].A); // reorder each row to make diagonal appear first
 #endif
-   
+    
     /*----------------------------*/
     /*--- checking aggregation ---*/
     /*----------------------------*/
@@ -221,7 +221,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
             mgl[lvl].schwarz.A=fasp_dcsr_sympat(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
             fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
-         }
+        }
         
         /*-- Aggregation --*/
         switch ( param->aggregation_type ) {
@@ -246,7 +246,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                 
                 break;
         }
-		
+        
         // Check 1: Did coarsening step successed?
         if ( status < 0 ) {
             // When error happens, stop at the current multigrid level!
@@ -264,7 +264,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         if ( mgl[lvl].P.col < MIN_CDOF ) break;
         
         // Check 3: Does this coarsening step too aggressive?
-        if ( mgl[lvl].P.row > mgl[lvl].P.col * 20 ) {
+        if ( mgl[lvl].P.row > mgl[lvl].P.col * MAX_CRATE ) {
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Coarsening might be too aggressive!\n");
                 printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
@@ -272,7 +272,9 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
             }
             break;
         }
-        else if ( (REAL)mgl[lvl].P.col/mgl[lvl].P.row > 0.9 ) {
+        
+        // Check 4: Is this coarsening ratio too small?
+        if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Coarsening rate is too small!\n");
                 printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
@@ -287,7 +289,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         /*-- Form coarse level stiffness matrix --*/
         fasp_blas_dcsr_rap_agg(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P,
                                &mgl[lvl+1].A);
-
+        
         fasp_dcsr_free(&Neighbor[lvl]);
         fasp_ivec_free(&vertices[lvl]);
         
@@ -298,7 +300,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
 #endif
         
     }
-        
+    
     // Setup coarse level systems for direct solvers
     switch (csolver) {
             
@@ -344,18 +346,18 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         else
             mgl[lvl].w = fasp_dvec_create(2*mm);
     }
-
+    
     // setup for cycle type of unsmoothed aggregation
     eta = xsi/((1-xsi)*(cplxmax-1));
     mgl[0].cycle_type = 1;
     mgl[max_levels-1].cycle_type = 0;
-
+    
     for (lvl = 1; lvl < max_levels-1; ++lvl) {
         fracratio = (REAL)mgl[lvl].A.nnz/mgl[0].A.nnz;
         mgl[lvl].cycle_type = MIN(2, (INT)(pow((REAL)xsi,(REAL)lvl)/(eta*fracratio*icum)));
         icum = icum * mgl[lvl].cycle_type;
     }
-
+    
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         print_amgcomplexity(mgl,prtlvl);
@@ -369,15 +371,15 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
-
+    
     return status;
 }
 
 /**
- * \fn static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl, 
+ * \fn static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
  *                                                     AMG_param *param)
  *
- * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A 
+ * \brief Set up phase of plain aggregation AMG, using unsmoothed P and unsmoothed A
  *        in BSR format
  *
  * \param mgl    Pointer to AMG data: AMG_data_bsr
@@ -405,7 +407,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     REAL      setup_start, setup_end;
     
     dCSRmat temp1, temp2;
-
+    
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -436,12 +438,12 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     
     // null space for whole Jacobian
     /*
-	mgl[0].near_kernel_dim   = 1;
-    mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim, sizeof(REAL*));
-    
-    for ( i=0; i < mgl->near_kernel_dim; ++i ) mgl[0].near_kernel_basis[i] = NULL;
-    */
+     mgl[0].near_kernel_dim   = 1;
+     mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim, sizeof(REAL*));
      
+     for ( i=0; i < mgl->near_kernel_dim; ++i ) mgl[0].near_kernel_basis[i] = NULL;
+     */
+    
     /*-----------------------*/
     /*-- setup ILU param   --*/
     /*-----------------------*/
@@ -480,7 +482,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         
         /*-- get the diagonal inverse --*/
         mgl[lvl].diaginv = fasp_dbsr_getdiaginv(&mgl[lvl].A);
-
+        
         /*-- Aggregation --*/
         //mgl[lvl].PP =  fasp_dbsr_getblk_dcsr(&mgl[lvl].A);
         mgl[lvl].PP = fasp_dbsr_Linfinity_dcsr(&mgl[lvl].A);
@@ -514,7 +516,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
             }
             status = FASP_SUCCESS; break;
         }
-
+        
         /* -- Form Prolongation --*/
         //form_tentative_p_bsr(&vertices[lvl], &mgl[lvl].P, &mgl[0], lvl+1, num_aggs[lvl]);
         
@@ -550,7 +552,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
             fasp_dcsr_free(&temp2);
             
         }
-                
+        
         fasp_dcsr_free(&Neighbor[lvl]);
         fasp_ivec_free(&vertices[lvl]);
         

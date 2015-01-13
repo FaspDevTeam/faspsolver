@@ -29,6 +29,8 @@
 #define MAX_REFINE_LVL   20    /**< Maximal refinement level */
 #define MAX_AMG_LVL      20    /**< Maximal AMG coarsening level */
 #define MIN_CDOF         20    /**< Minimal number of coarsest variables */
+#define MIN_CRATE        0.9   /**< Minimal coarsening ratio */
+#define MAX_CRATE        20.0  /**< Maximal coarsening ratio */
 #define STAG_RATIO       1e-4  /**< Staganation tolerance = tol*STAGRATIO */
 #define MAX_STAG         20    /**< Maximal number of staganation times */
 #define MAX_RESTART      20    /**< Maximal number of restarting for BiCGStab */
