@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+01/13/2015 FASP 1.6.6:
+- Clean up the code and prepare for releasing the package.
+- Check Doxygen errors and messages.
+
 01/13/2015 FASP 1.6.5:
 - Rearrange multilevel cycles in nonlinear AMLI.
 - Fix memory leakage in MUMPS interface.

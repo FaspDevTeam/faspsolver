@@ -28,13 +28,13 @@
  *
  * \return A   The new dCOOmat matrix
  *
- * \author Chensong Zhang 
+ * \author Chensong Zhang
  * \date   2010/04/06
  */
-dCOOmat fasp_dcoo_create (INT m, 
-                          INT n, 
+dCOOmat fasp_dcoo_create (INT m,
+                          INT n,
                           INT nnz)
-{    
+{
     dCOOmat A;
     
     A.rowind = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
@@ -81,19 +81,18 @@ void fasp_dcoo_alloc (const INT m,
     return;
 }
 
-
 /**
  * \fn void fasp_dcoo_free (dCOOmat *A)
  *
- * \brief Free IJ sparse matrix data memeory space
+ * \brief Free IJ sparse matrix data memory space
  *
  * \param A   Pointer to the dCOOmat matrix
  *
  * \author Chensong Zhang
- * \date   2010/04/03  
+ * \date   2010/04/03
  */
 void fasp_dcoo_free (dCOOmat *A)
-{    
+{
     if (A==NULL) return;
     
     fasp_mem_free(A->rowind); A->rowind= NULL;
@@ -104,12 +103,12 @@ void fasp_dcoo_free (dCOOmat *A)
 /**
  * \fn void fasp_dcoo_shift (dCOOmat *A, INT offset)
  *
- * \brief Reindex a REAL matrix in IJ format to make the index starting from 0 or 1.
+ * \brief Re-index a REAL matrix in IJ format to make the index starting from 0 or 1.
  *
  * \param A       Pointer to IJ matrix
  * \param offset  Size of offset (1 or -1)
  *
- * \author Chensong Zhang 
+ * \author Chensong Zhang
  * \date   2010/04/06
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
@@ -120,17 +119,17 @@ void fasp_dcoo_shift (dCOOmat *A,
     const INT nnz = A->nnz;
     INT       i, *ai = A->rowind, *aj = A->colind;
     
-    // Variables for Openmp
+    // Variables for OpenMP
     INT nthreads = 1, use_openmp = FALSE;
     INT myid, mybegin, myend;
-
+    
 #ifdef _OPENMP
     if (nnz > OPENMP_HOLDS) {
         use_openmp = TRUE;
-	nthreads = FASP_GET_NUM_THREADS();
+        nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     if (offset == 0) offset = ISTART;
     
     if (use_openmp) {
@@ -138,14 +137,14 @@ void fasp_dcoo_shift (dCOOmat *A,
 #pragma omp parallel for private(myid, i, mybegin, myend)
 #endif
         for (myid=0; myid<nthreads; myid++) {
-	    FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);	
-            for (i=mybegin; i<myend; ++i) {    
+            FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i) {
                 ai[i]+=offset; aj[i]+=offset;
             }
         }
     }
     else {
-        for (i=0;i<nnz;++i) {    
+        for (i=0;i<nnz;++i) {
             ai[i]+=offset; aj[i]+=offset;
         }
     }

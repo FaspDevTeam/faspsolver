@@ -663,7 +663,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
  * \param *x           pointer to the solution vector
  * \param MaxIt        maximal iteration number allowed
  * \param tol          tolerance
- * \param *pre         pointer to preconditioner data
+ * \param *pc          pointer to preconditioner data
  * \param print_level  how much of the SOLVE-INFORMATION be printed
  * \param stop_type    default stopping criterion,i.e.||r_k||/||r_0||<tol, is used.
  * \param restart      number of restart for GMRES

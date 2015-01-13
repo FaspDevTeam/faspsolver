@@ -109,8 +109,7 @@ void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
 }
 
 /**
- * \fn INT fasp_schwarz_setup (Schwarz_data *schwarz, INT mmsize,
- *                             INT maxlev, INT schwarz_type)
+ * \fn INT fasp_schwarz_setup (Schwarz_data *schwarz, Schwarz_param *param)
  *
  * \brief Setup phase for the Schwarz methods
  *
@@ -280,11 +279,14 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 }
 
 /**
- * \fn void fasp_dcsr_schwarz_smoother (Schwarz_data *schwarz, dvector *x, dvector *b)
+ * \fn void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz, 
+ *                                              Schwarz_param *param,
+ *                                              dvector *x, dvector *b)
  *
- * \brief Schwarz smoother
+ * \brief Schwarz smoother: forward sweep
  *
- * \param schwarz Pointer to the shcwarz data
+ * \param schwarz Pointer to the Shcwarz data
+ * \param param   Pointer to the Schwarz parameter
  * \param x       Pointer to solution vector
  * \param b       Pointer to right hand
  *
@@ -387,11 +389,14 @@ void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz,
 }
 
 /**
- * \fn void fasp_dcsr_schwarz_smoother (Schwarz_data *schwarz, dvector *x, dvector *b)
+ * \fn void fasp_dcsr_schwarz_backward_smoother (Schwarz_data  *schwarz, 
+ *                                               Schwarz_param *param,
+ *                                               dvector *x, dvector *b)
  *
- * \brief Schwarz smoother
+ * \brief Schwarz smoother: backward sweep
  *
- * \param schwarz Pointer to the shcwarz data
+ * \param schwarz Pointer to the Shcwarz data
+ * \param param   Pointer to the Schwarz parameter
  * \param x       Pointer to solution vector
  * \param b       Pointer to right hand
  *

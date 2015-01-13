@@ -463,8 +463,7 @@ typedef struct {
  * \struct Schwarz_data
  * \brief Data for Schwarz methods
  *
- * This is needed for the schwarz solver, preconditioner/smoother.
- *
+ * This is needed for the Schwarz solver/preconditioner/smoother.
  */
 typedef struct {
 
@@ -484,6 +483,7 @@ typedef struct {
     //! column index of blocks
     INT *jblock;
 
+    //! temp work space???
     REAL *rhsloc;
 
     //! local right hand side
@@ -570,7 +570,7 @@ typedef struct {
     SHORT smoother;
 
     //! smoother order
-    SHORT smooth_order;  // 1: nature order 2: C/F order (both are symmetric)
+    SHORT smooth_order; // 1: nature order 2: C/F order (both are symmetric)
 
     //! number of presmoothers
     SHORT presmooth_iter;
@@ -836,6 +836,7 @@ typedef struct {
     //! temporary work space for other usage
     REAL *w;
 
+    //! What is this flag for???
     INT flag;
 
 } precond_data; /**< Data for general preconditioner */
