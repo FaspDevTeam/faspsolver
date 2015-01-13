@@ -103,6 +103,7 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
  * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
+ * Modified by Zheng Li on 01/13/2015: adjust coarsening stop criterion.
  */
 static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                                             AMG_param *param)
@@ -263,7 +264,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         if ( mgl[lvl].P.col < MIN_CDOF ) break;
         
         // Check 3: Does this coarsening step too aggressive?
-        if ( mgl[lvl].P.row > mgl[lvl].P.col * 100.0 ) {
+        if ( mgl[lvl].P.row > mgl[lvl].P.col * 20 || (REAL)mgl[lvl].P.col/mgl[lvl].P.row > 0.8) {
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Coarsening might be too aggressive!\n");
                 printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
