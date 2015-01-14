@@ -325,7 +325,9 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
-
+            
+            REAL computed_relres = relres;
+            
             // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_dcsr_aAxpy(-1.0,A,uval,r);
@@ -365,7 +367,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
             if ( relres < tol ) break;
             
             if ( print_level >= PRINT_MORE ) {
-                ITS_COMPRES(relres); ITS_REALRES(relres);
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
@@ -666,7 +668,9 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
-       
+            
+            REAL computed_relres = relres;
+            
             // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_dbsr_aAxpy(-1.0,A,uval,r);
@@ -701,12 +705,12 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
                     relres = absres/normu;
                     break;
             }
-
+            
             // check convergence
             if ( relres < tol ) break;
             
             if ( print_level >= PRINT_MORE ) {
-                ITS_COMPRES(relres); ITS_REALRES(relres);
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
@@ -1008,6 +1012,8 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
+            REAL computed_relres = relres;
+            
             // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_bdcsr_aAxpy(-1.0,A,uval,r);
@@ -1042,12 +1048,12 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
                     relres = absres/normu;
                     break;
             }
-                        
+            
             // check convergence
             if ( relres < tol ) break;
             
             if ( print_level >= PRINT_MORE ) {
-                ITS_COMPRES(relres); ITS_REALRES(relres);
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
@@ -1348,7 +1354,9 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
-
+            
+            REAL computed_relres = relres;
+            
             // compute current residual
             fasp_array_cp(m,bval,r);
             fasp_blas_dstr_aAxpy(-1.0,A,uval,r);
@@ -1388,7 +1396,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
             if ( relres < tol ) break;
             
             if ( print_level >= PRINT_MORE ) {
-                ITS_COMPRES(relres); ITS_REALRES(relres);
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
