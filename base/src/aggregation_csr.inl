@@ -220,7 +220,7 @@ static void pairwise_aggregation_initial2 (const dCSRmat *A,
     INT *ja = A->JA;
     REAL *val = A->val;
     REAL aij, rowsum;
-
+    
     REAL *colsum = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
     
     for (i=0; i<row; ++i) {
@@ -1397,97 +1397,97 @@ static void smooth_agg (dCSRmat *A,
             FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
 #else
-                for (i=0; i<row; ++i) {
+            for (i=0; i<row; ++i) {
 #endif
-                    for (row_sum_A = 0.0, j=A->IA[i]; j<A->IA[i+1]; ++j) {
-                        if (A->JA[j] != i) row_sum_A += A->val[j];
-                    }
-                    
-                    for (row_sum_N = 0.0, j=N->IA[i]; j<N->IA[i+1]; ++j) {
-                        if (N->JA[j] != i) row_sum_N += N->val[j];
-                    }
-                    
-                    for (j=N->IA[i]; j<N->IA[i+1]; ++j) {
-                        if (N->JA[j] == i) {
-                            // The original paper has a wrong sign!!! --Chensong
-                            N->val[j] += row_sum_A - row_sum_N;
-                        }
+                for (row_sum_A = 0.0, j=A->IA[i]; j<A->IA[i+1]; ++j) {
+                    if (A->JA[j] != i) row_sum_A += A->val[j];
+                }
+                
+                for (row_sum_N = 0.0, j=N->IA[i]; j<N->IA[i+1]; ++j) {
+                    if (N->JA[j] != i) row_sum_N += N->val[j];
+                }
+                
+                for (j=N->IA[i]; j<N->IA[i+1]; ++j) {
+                    if (N->JA[j] == i) {
+                        // The original paper has a wrong sign!!! --Chensong
+                        N->val[j] += row_sum_A - row_sum_N;
                     }
                 }
-#ifdef _OPENMP
             }
+#ifdef _OPENMP
+        }
 #endif
-            // copy structure from N (filtered A)
-            S = fasp_dcsr_create(row, col, N->IA[row]);
-            
+        // copy structure from N (filtered A)
+        S = fasp_dcsr_create(row, col, N->IA[row]);
+        
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
-            for (i=0; i<=row; ++i) S.IA[i] = N->IA[i];
-            
-            for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
-            
-            fasp_dcsr_getdiag(0, N, &diag);  // get the diaganol entries of N (filtered A)
-            
-            // check the diaganol entries.
-            // if it is too small, use Richardson smoother for the corresponding row
+        for (i=0; i<=row; ++i) S.IA[i] = N->IA[i];
+        
+        for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
+        
+        fasp_dcsr_getdiag(0, N, &diag);  // get the diaganol entries of N (filtered A)
+        
+        // check the diaganol entries.
+        // if it is too small, use Richardson smoother for the corresponding row
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
-            for (i=0;i<row;++i) {
-                if (ABS(diag.val[i]) < 1e-6) diag.val[i] = 1.0;
-            }
-            
+        for (i=0;i<row;++i) {
+            if (ABS(diag.val[i]) < 1e-6) diag.val[i] = 1.0;
+        }
+        
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS) private(i,j)
 #endif
-            for (i=0;i<row;++i) {
-                for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
-                    if (S.JA[j] == i) {
-                        S.val[j] = 1 - smooth_factor * N->val[j] / diag.val[i];
-                    }
-                    else {
-                        S.val[j] = - smooth_factor * N->val[j] / diag.val[i];
-                    }
+        for (i=0;i<row;++i) {
+            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
+                if (S.JA[j] == i) {
+                    S.val[j] = 1 - smooth_factor * N->val[j] / diag.val[i];
+                }
+                else {
+                    S.val[j] = - smooth_factor * N->val[j] / diag.val[i];
                 }
             }
-            
         }
-        
-        fasp_dvec_free(&diag);
-        
-        /* Step 2. Smooth the tentative prolongation P = S*tenp */
-        fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this.
-        P->nnz = P->IA[P->row];
-        fasp_dcsr_free(&S);
         
     }
     
+    fasp_dvec_free(&diag);
+    
+    /* Step 2. Smooth the tentative prolongation P = S*tenp */
+    fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this.
+    P->nnz = P->IA[P->row];
+    fasp_dcsr_free(&S);
+    
+}
+
 /**
-* \fn static void aggregation_pairwise (dCSRmat *A,
-*                                       AMG_param *param,
-*                                       const INT level,
-*                                       ivector *vertice,
-*                                       INT *num_aggregations)
-*
-* \brief AMG coarsening based on pairwise matching aggregation
-*
-* \param A                 Pointer to dCSRmat
-* \param param             Pointer to AMG parameters
-* \param level             Level number
-* \param vertices          Pointer to the aggregation of vertics
-* \param num_aggregations  Pointer to number of aggregations
-*
-* \author Xiaoping Li, Zheng Li, Chensong Zhang
-* \date   04/21/2014
-*
-* \note Setup A, P, PT and levels using the pairwise aggregation;
-*       Refer to A. Napov and Y. Notay
-*       "An algebraic multigrid method with guaranteed convergence rate", 2012
-*
-* Modified by Xiaozhe Hu on 05/25/2014
-* Modified by Chensong Zhang, Zheng Li on 07/29/2014
-*/
+ * \fn static void aggregation_pairwise (dCSRmat *A,
+ *                                       AMG_param *param,
+ *                                       const INT level,
+ *                                       ivector *vertice,
+ *                                       INT *num_aggregations)
+ *
+ * \brief AMG coarsening based on pairwise matching aggregation
+ *
+ * \param A                 Pointer to dCSRmat
+ * \param param             Pointer to AMG parameters
+ * \param level             Level number
+ * \param vertices          Pointer to the aggregation of vertics
+ * \param num_aggregations  Pointer to number of aggregations
+ *
+ * \author Xiaoping Li, Zheng Li, Chensong Zhang
+ * \date   04/21/2014
+ *
+ * \note Setup A, P, PT and levels using the pairwise aggregation;
+ *       Refer to A. Napov and Y. Notay
+ *       "An algebraic multigrid method with guaranteed convergence rate", 2012
+ *
+ * Modified by Xiaozhe Hu on 05/25/2014
+ * Modified by Chensong Zhang, Zheng Li on 07/29/2014
+ */
 static SHORT aggregation_pairwise (AMG_data *mgl,
                                    AMG_param *param,
                                    const INT level,
@@ -1496,296 +1496,295 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
 {
     const INT  pair_number = param->pair_number;
     dCSRmat  * ptrA = &mgl[level].A;
-        
+    
     INT        i, j, k, num_agg = 0, aggindex;
     INT        lvl = level;
     REAL       isorate;
-        
+    
     SHORT      dopass = 0, domin = 0;
     SHORT      status = FASP_SUCCESS;
-        
+    
 #if SYMMETRIC_PAIRWISE == 0
-        ivector  map1, map2;
-        INT  *order;
-        REAL *s = (REAL*)fasp_mem_calloc(ptrA->row, sizeof(REAL));
+    ivector  map1, map2;
+    INT  *order;
+    REAL *s = (REAL*)fasp_mem_calloc(ptrA->row, sizeof(REAL));
 #endif
+    
+    for ( i = 1; i <= pair_number; ++i ) {
         
-        for ( i = 1; i <= pair_number; ++i ) {
-            
 #if SYMMETRIC_PAIRWISE == 1
-            /*-- generate aggregations by pairwise matching --*/
-            form_pairwise(ptrA, i, &vertice[lvl], &num_agg);
+        /*-- generate aggregations by pairwise matching --*/
+        form_pairwise(ptrA, i, &vertice[lvl], &num_agg);
 #else
-            if ( i == 1 ) {
-                first_pairwise_unsymm(ptrA, order, &vertice[lvl], &map1, s, &num_agg);
-            }
-            else {
-                second_pairwise_unsymm(&mgl[level].A, ptrA, i, order, &map1, &vertice[lvl-1], &vertice[lvl], &map2, s, &num_agg);
-            }
+        if ( i == 1 ) {
+            first_pairwise_unsymm(ptrA, order, &vertice[lvl], &map1, s, &num_agg);
+        }
+        else {
+            second_pairwise_unsymm(&mgl[level].A, ptrA, i, order, &map1, &vertice[lvl-1], &vertice[lvl], &map2, s, &num_agg);
+        }
 #endif
-            /*-- check number of aggregates in the first pass --*/
-            if ( i == 1 && num_agg < MIN_CDOF ) {
-                for ( domin=k=0; k<ptrA->row; k++ ) {
-                    if ( vertice[lvl].val[k] == G0PT ) domin ++;
-                }
-                isorate = (REAL)num_agg/domin;
-                if ( isorate < 0.1 ) {
-                    status = ERROR_AMG_COARSEING; goto END;
-                }
+        /*-- check number of aggregates in the first pass --*/
+        if ( i == 1 && num_agg < MIN_CDOF ) {
+            for ( domin=k=0; k<ptrA->row; k++ ) {
+                if ( vertice[lvl].val[k] == G0PT ) domin ++;
             }
+            isorate = (REAL)num_agg/domin;
+            if ( isorate < 0.1 ) {
+                status = ERROR_AMG_COARSEING; goto END;
+            }
+        }
+        
+        if ( i < pair_number ) {
             
-            if ( i < pair_number ) {
-                
-                /*-- Form Prolongation --*/
-                form_boolean_p(&vertice[lvl], &mgl[lvl].P, lvl+1, num_agg);
-                
-                /*-- Perform aggressive coarsening only up to the specified level --*/
-                if ( mgl[lvl].P.col < MIN_CDOF ) break;
-                
-                /*-- Form restriction --*/
-                fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
-                
-                /*-- Form coarse level stiffness matrix --*/
-                fasp_blas_dcsr_rap_agg(&mgl[lvl].R, ptrA, &mgl[lvl].P, &mgl[lvl+1].A);
-                
-                ptrA = &mgl[lvl+1].A;
-                
-                fasp_dcsr_free(&mgl[lvl].P);
-                fasp_dcsr_free(&mgl[lvl].R);
-            }
-            lvl ++; dopass ++;
+            /*-- Form Prolongation --*/
+            form_boolean_p(&vertice[lvl], &mgl[lvl].P, lvl+1, num_agg);
+            
+            /*-- Perform aggressive coarsening only up to the specified level --*/
+            if ( mgl[lvl].P.col < MIN_CDOF ) break;
+            
+            /*-- Form restriction --*/
+            fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
+            
+            /*-- Form coarse level stiffness matrix --*/
+            fasp_blas_dcsr_rap_agg(&mgl[lvl].R, ptrA, &mgl[lvl].P, &mgl[lvl+1].A);
+            
+            ptrA = &mgl[lvl+1].A;
+            
+            fasp_dcsr_free(&mgl[lvl].P);
+            fasp_dcsr_free(&mgl[lvl].R);
         }
-        
-        // Form global aggregation indices
-        if ( dopass > 1 ) {
-            for ( i = 0; i < mgl[level].A.row; ++i ) {
-                aggindex = vertice[level].val[i];
-                if ( aggindex < 0 ) continue;
-                for ( j = 1; j < dopass; ++j ) aggindex = vertice[level+j].val[aggindex];
-                vertice[level].val[i] = aggindex;
-            }
+        lvl ++; dopass ++;
+    }
+    
+    // Form global aggregation indices
+    if ( dopass > 1 ) {
+        for ( i = 0; i < mgl[level].A.row; ++i ) {
+            aggindex = vertice[level].val[i];
+            if ( aggindex < 0 ) continue;
+            for ( j = 1; j < dopass; ++j ) aggindex = vertice[level+j].val[aggindex];
+            vertice[level].val[i] = aggindex;
         }
-        *num_aggregations = num_agg;
-        
-        /*-- clean memory --*/
-        for ( i = 1; i < dopass; ++i ) {
-            fasp_dcsr_free(&mgl[level+i].A);
-            fasp_ivec_free(&vertice[level+i]);
-        }
-        
+    }
+    *num_aggregations = num_agg;
+    
+    /*-- clean memory --*/
+    for ( i = 1; i < dopass; ++i ) {
+        fasp_dcsr_free(&mgl[level+i].A);
+        fasp_ivec_free(&vertice[level+i]);
+    }
+    
 #if SYMMETRIC_PAIRWISE == 0
-        fasp_ivec_free(&map1);
-        fasp_ivec_free(&map2);
-        fasp_mem_free(s);
+    fasp_ivec_free(&map1);
+    fasp_ivec_free(&map2);
+    fasp_mem_free(s);
 #endif
-        
+    
 END:
     return status;
 }
+
+/**
+ * \fn static SHORT aggregation_vmb (dCSRmat *A, ivector *vertices, AMG_param *param,
+ *                                   INT levelNum, dCSRmat *Neigh, INT *num_aggregations)
+ *
+ * \brief Form aggregation based on strong coupled neighborhoods
+ *
+ * \param A                 Pointer to the coefficient matrices
+ * \param vertices          Pointer to the aggregation of vertics
+ * \param param             Pointer to AMG parameters
+ * \param levelNum          Level number
+ * \param Neigh             Pointer to strongly coupled neighborhoods
+ * \param num_aggregations  Pointer to number of aggregations
+ *
+ * \author Xiaozhe Hu
+ * \date   09/29/2009
+ *
+ * \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
+ *       Refer to P. Vanek, J. Madel and M. Brezina
+ *       "Algebraic Multigrid on Unstructured Meshes", 1994
+ *
+ * Modified by Chunsheng Feng, Zheng Li on 09/03/2012
+ * Modified by Zheng Li, Chensong Zhang on 07/29/2014
+ */
+static SHORT aggregation_vmb (dCSRmat *A,
+                              ivector *vertices,
+                              AMG_param *param,
+                              INT levelNum,
+                              dCSRmat *Neigh,
+                              INT *num_aggregations)
+{
+    const INT    row = A->row, col = A->col, nnz = A->IA[row]-A->IA[0];
+    const INT  * AIA = A->IA, * AJA = A->JA;
+    const REAL * Aval = A->val;
+    const INT    max_aggregation = param->max_aggregation;
     
-    /**
-     * \fn static SHORT aggregation_vmb (dCSRmat *A, ivector *vertices, AMG_param *param,
-     *                                   INT levelNum, dCSRmat *Neigh, INT *num_aggregations)
-     *
-     * \brief Form aggregation based on strong coupled neighborhoods
-     *
-     * \param A                 Pointer to the coefficient matrices
-     * \param vertices          Pointer to the aggregation of vertics
-     * \param param             Pointer to AMG parameters
-     * \param levelNum          Level number
-     * \param Neigh             Pointer to strongly coupled neighborhoods
-     * \param num_aggregations  Pointer to number of aggregations
-     *
-     * \author Xiaozhe Hu
-     * \date   09/29/2009
-     *
-     * \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
-     *       Refer to P. Vanek, J. Madel and M. Brezina
-     *       "Algebraic Multigrid on Unstructured Meshes", 1994
-     *
-     * Modified by Chunsheng Feng, Zheng Li on 09/03/2012
-     * Modified by Zheng Li, Chensong Zhang on 07/29/2014
-     */
-    static SHORT aggregation_vmb (dCSRmat *A,
-                                  ivector *vertices,
-                                  AMG_param *param,
-                                  INT levelNum,
-                                  dCSRmat *Neigh,
-                                  INT *num_aggregations)
-    {
-        const INT    row = A->row, col = A->col, nnz = A->IA[row]-A->IA[0];
-        const INT  * AIA = A->IA, * AJA = A->JA;
-        const REAL * Aval = A->val;
-        const INT    max_aggregation = param->max_aggregation;
-        
-        // return status
-        SHORT  status = FASP_SUCCESS;
-        
-        // local variables
-        INT    num_left = row;
-        INT    subset, count;
-        INT  * num_each_agg;
-        
-        REAL   strongly_coupled, strongly_coupled2;
-        INT    i, j, index, row_start, row_end;
-        INT  * NIA = NULL, * NJA = NULL;
-        REAL * Nval = NULL;
-        
-        dvector diag;
-        fasp_dcsr_getdiag(0, A, &diag);  // get the diagonal entries
-        
-        if ( GE(param->tentative_smooth, SMALLREAL) ) {
-            strongly_coupled = param->strong_coupled * pow(0.5, levelNum-1);
-        }
-        else {
-            strongly_coupled = param->strong_coupled;
-        }
-        strongly_coupled2 = pow(strongly_coupled,2);
-        
-        /*------------------------------------------*/
-        /*    Form strongly coupled neighborhood    */
-        /*------------------------------------------*/
-        fasp_dcsr_alloc(row, col, nnz, Neigh);
-        
-        NIA  = Neigh->IA;
-        NJA  = Neigh->JA;
-        Nval = Neigh->val;
-        
+    // return status
+    SHORT  status = FASP_SUCCESS;
+    
+    // local variables
+    INT    num_left = row;
+    INT    subset, count;
+    INT  * num_each_agg;
+    
+    REAL   strongly_coupled, strongly_coupled2;
+    INT    i, j, index, row_start, row_end;
+    INT  * NIA = NULL, * NJA = NULL;
+    REAL * Nval = NULL;
+    
+    dvector diag;
+    fasp_dcsr_getdiag(0, A, &diag);  // get the diagonal entries
+    
+    if ( GE(param->tentative_smooth, SMALLREAL) ) {
+        strongly_coupled = param->strong_coupled * pow(0.5, levelNum-1);
+    }
+    else {
+        strongly_coupled = param->strong_coupled;
+    }
+    strongly_coupled2 = pow(strongly_coupled,2);
+    
+    /*------------------------------------------*/
+    /*    Form strongly coupled neighborhood    */
+    /*------------------------------------------*/
+    fasp_dcsr_alloc(row, col, nnz, Neigh);
+    
+    NIA  = Neigh->IA;
+    NJA  = Neigh->JA;
+    Nval = Neigh->val;
+    
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
 #endif
-        for ( i = row; i >= 0; i-- ) NIA[i] = AIA[i];
-        
-        for ( index = i = 0; i < row; ++i ) {
-            NIA[i] = index;
-            row_start = AIA[i]; row_end = AIA[i+1];
+    for ( i = row; i >= 0; i-- ) NIA[i] = AIA[i];
+    
+    for ( index = i = 0; i < row; ++i ) {
+        NIA[i] = index;
+        row_start = AIA[i]; row_end = AIA[i+1];
+        for ( j = row_start; j < row_end; ++j ) {
+            if ( (AJA[j] == i) || (pow(Aval[j],2) >= strongly_coupled2*fabs(diag.val[i]*diag.val[AJA[j]]))) {
+                NJA[index] = AJA[j];
+                Nval[index] = Aval[j];
+                index++;
+            }
+        }
+    }
+    NIA[row] = index;
+    
+    Neigh->nnz = index;
+    Neigh->JA  = (INT*) fasp_mem_realloc(Neigh->JA,  (Neigh->IA[row])*sizeof(INT));
+    Neigh->val = (REAL*)fasp_mem_realloc(Neigh->val, (Neigh->IA[row])*sizeof(REAL));
+    
+    NIA  = Neigh->IA;
+    NJA  = Neigh->JA;
+    Nval = Neigh->val;
+    
+    fasp_dvec_free(&diag);
+    
+    /*------------------------------------------*/
+    /*             Initialization               */
+    /*------------------------------------------*/
+    fasp_ivec_alloc(row, vertices);
+    fasp_iarray_set(row, vertices->val, -2);
+    *num_aggregations = 0;
+    
+    /*-------------*/
+    /*   Step 1.   */
+    /*-------------*/
+    for ( i = 0; i < row; ++i ) {
+        if ( (AIA[i+1] - AIA[i]) == 1 ) {
+            vertices->val[i] = UNPT;
+            num_left--;
+        }
+        else {
+            subset = TRUE;
+            row_start = NIA[i]; row_end = NIA[i+1];
             for ( j = row_start; j < row_end; ++j ) {
-                if ( (AJA[j] == i) || (pow(Aval[j],2)
-                                       >= strongly_coupled2 * fabs(diag.val[i]*diag.val[AJA[j]])) ) {
-                    NJA[index] = AJA[j];
-                    Nval[index] = Aval[j];
-                    index++;
+                if ( vertices->val[NJA[j]] >= UNPT ) {
+                    subset = FALSE;
+                    break;
                 }
             }
-        }
-        NIA[row] = index;
-        
-        Neigh->nnz = index;
-        Neigh->JA  = (INT*) fasp_mem_realloc(Neigh->JA,  (Neigh->IA[row])*sizeof(INT));
-        Neigh->val = (REAL*)fasp_mem_realloc(Neigh->val, (Neigh->IA[row])*sizeof(REAL));
-        
-        NIA  = Neigh->IA;
-        NJA  = Neigh->JA;
-        Nval = Neigh->val;
-        
-        fasp_dvec_free(&diag);
-        
-        /*------------------------------------------*/
-        /*             Initialization               */
-        /*------------------------------------------*/
-        fasp_ivec_alloc(row, vertices);
-        fasp_iarray_set(row, vertices->val, -2);
-        *num_aggregations = 0;
-        
-        /*-------------*/
-        /*   Step 1.   */
-        /*-------------*/
-        for ( i = 0; i < row; ++i ) {
-            if ( (AIA[i+1] - AIA[i]) == 1 ) {
-                vertices->val[i] = UNPT;
+            if ( subset ) {
+                count = 0;
+                vertices->val[i] = *num_aggregations;
                 num_left--;
-            }
-            else {
-                subset = TRUE;
+                count++;
                 row_start = NIA[i]; row_end = NIA[i+1];
                 for ( j = row_start; j < row_end; ++j ) {
-                    if ( vertices->val[NJA[j]] >= UNPT ) {
-                        subset = FALSE;
-                        break;
-                    }
-                }
-                if ( subset ) {
-                    count = 0;
-                    vertices->val[i] = *num_aggregations;
-                    num_left--;
-                    count++;
-                    row_start = NIA[i]; row_end = NIA[i+1];
-                    for ( j = row_start; j < row_end; ++j ) {
-                        if ( (NJA[j]!=i) && (count < max_aggregation) ) {
-                            vertices->val[NJA[j]] = *num_aggregations;
-                            num_left--;
-                            count ++;
-                        }
-                    }
-                    (*num_aggregations)++;
-                }
-            }
-        }
-        
-        /*-------------*/
-        /*   Step 2.   */
-        /*-------------*/
-        INT *temp_C = (INT*)fasp_mem_calloc(row,sizeof(INT));
-        
-        if ( *num_aggregations < MIN_CDOF ) {
-            status = ERROR_AMG_COARSEING; goto END;
-        }
-        
-        num_each_agg = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
-        
-        //for ( i = 0; i < *num_aggregations; i++ ) num_each_agg[i] = 0; // initialize
-        
-        for ( i = row; i--; ) {
-            temp_C[i] = vertices->val[i];
-            if ( vertices->val[i] >= 0 ) num_each_agg[vertices->val[i]] ++;
-        }
-        
-        for ( i = 0; i < row; ++i ) {
-            if ( vertices->val[i] < UNPT ) {
-                row_start = NIA[i]; row_end = NIA[i+1];
-                for ( j = row_start; j < row_end; ++j ) {
-                    if ( temp_C[NJA[j]] > UNPT
-                        && num_each_agg[temp_C[NJA[j]]] < max_aggregation ) {
-                        vertices->val[i] = temp_C[NJA[j]];
+                    if ( (NJA[j]!=i) && (count < max_aggregation) ) {
+                        vertices->val[NJA[j]] = *num_aggregations;
                         num_left--;
-                        num_each_agg[temp_C[NJA[j]]] ++ ;
-                        break;
+                        count ++;
                     }
                 }
+                (*num_aggregations)++;
             }
         }
-        
-        /*-------------*/
-        /*   Step 3.   */
-        /*-------------*/
-        while ( num_left > 0 ) {
-            for ( i = 0; i < row; ++i ) {
-                if ( vertices->val[i] < UNPT ) {
-                    count = 0;
-                    vertices->val[i] = *num_aggregations;
-                    num_left--;
-                    count++;
-                    row_start = NIA[i]; row_end = NIA[i+1];
-                    for ( j = row_start; j < row_end; ++j ) {
-                        if ( (NJA[j]!=i) && (vertices->val[NJA[j]] < UNPT) && (count<max_aggregation) ) {
-                            vertices->val[NJA[j]] = *num_aggregations;
-                            num_left--;
-                            count++;
-                        }
-                    }
-                    (*num_aggregations)++;
-                }
-            }
-        }
-        
-        fasp_mem_free(num_each_agg);
-        
-    END:
-        fasp_mem_free(temp_C);
-        
-        return status;
     }
     
-    /*---------------------------------*/
-    /*--        End of File          --*/
-    /*---------------------------------*/
+    /*-------------*/
+    /*   Step 2.   */
+    /*-------------*/
+    INT *temp_C = (INT*)fasp_mem_calloc(row,sizeof(INT));
+    
+    if ( *num_aggregations < MIN_CDOF ) {
+        status = ERROR_AMG_COARSEING; goto END;
+    }
+    
+    num_each_agg = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
+    
+    //for ( i = 0; i < *num_aggregations; i++ ) num_each_agg[i] = 0; // initialize
+    
+    for ( i = row; i--; ) {
+        temp_C[i] = vertices->val[i];
+        if ( vertices->val[i] >= 0 ) num_each_agg[vertices->val[i]] ++;
+    }
+    
+    for ( i = 0; i < row; ++i ) {
+        if ( vertices->val[i] < UNPT ) {
+            row_start = NIA[i]; row_end = NIA[i+1];
+            for ( j = row_start; j < row_end; ++j ) {
+                if ( temp_C[NJA[j]] > UNPT
+                    && num_each_agg[temp_C[NJA[j]]] < max_aggregation ) {
+                    vertices->val[i] = temp_C[NJA[j]];
+                    num_left--;
+                    num_each_agg[temp_C[NJA[j]]] ++ ;
+                    break;
+                }
+            }
+        }
+    }
+    
+    /*-------------*/
+    /*   Step 3.   */
+    /*-------------*/
+    while ( num_left > 0 ) {
+        for ( i = 0; i < row; ++i ) {
+            if ( vertices->val[i] < UNPT ) {
+                count = 0;
+                vertices->val[i] = *num_aggregations;
+                num_left--;
+                count++;
+                row_start = NIA[i]; row_end = NIA[i+1];
+                for ( j = row_start; j < row_end; ++j ) {
+                    if ( (NJA[j]!=i) && (vertices->val[NJA[j]] < UNPT) && (count<max_aggregation) ) {
+                        vertices->val[NJA[j]] = *num_aggregations;
+                        num_left--;
+                        count++;
+                    }
+                }
+                (*num_aggregations)++;
+            }
+        }
+    }
+    
+    fasp_mem_free(num_each_agg);
+    
+END:
+    fasp_mem_free(temp_C);
+    
+    return status;
+}
+
+/*---------------------------------*/
+/*--        End of File          --*/
+/*---------------------------------*/
