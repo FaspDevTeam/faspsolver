@@ -258,6 +258,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
+            REAL computed_relres = relres;
+            
             // compute residual r = b - Ax again
             fasp_array_cp(m,b->val,r);
             fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
@@ -287,7 +289,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             if ( relres < tol ) break;
             
             if ( print_level >= PRINT_MORE ) {
-                ITS_COMPRES(relres); ITS_REALRES(relres);
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
@@ -538,6 +540,8 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
+            REAL computed_relres = relres;
+
             // compute residual r = b - Ax again
             fasp_array_cp(m,b->val,r);
             fasp_blas_dbsr_aAxpy(-1.0,A,u->val,r);
@@ -567,7 +571,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
             if ( relres < tol ) break;
 
             if ( print_level >= PRINT_MORE ) {
-                ITS_COMPRES(relres); ITS_REALRES(relres);
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
@@ -820,6 +824,8 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
         // Check III: prevent false convergence
         if ( relres < tol ) {
 
+            REAL computed_relres = relres;
+
             // compute residual r = b - Ax again
             fasp_array_cp(m,b->val,r);
             fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
@@ -849,7 +855,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
             if ( relres < tol ) break;
 
             if ( print_level >= PRINT_MORE ) {
-                ITS_COMPRES(relres); ITS_REALRES(relres);
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
@@ -1102,6 +1108,8 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
+            REAL computed_relres = relres;
+
             // compute residual r = b - Ax again
             fasp_array_cp(m,b->val,r);
             fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
@@ -1131,7 +1139,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             if ( relres < tol ) break;
             
             if ( print_level >= PRINT_MORE ) {
-                ITS_COMPRES(relres); ITS_REALRES(relres);
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {

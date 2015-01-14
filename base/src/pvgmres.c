@@ -250,7 +250,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
                          norms[iter]/norms[iter-1]);
             
             // should we exit the restart cycle
-            if ( relres <= tol && iter >= MIN_ITER ) break;
+            if ( relres < tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
         
@@ -279,8 +279,11 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
         // Check: prevent false convergence
-        if ( relres <= tol && iter >= MIN_ITER ) {
+        if ( relres < tol && iter >= MIN_ITER ) {
             
+            REAL computed_relres = relres;
+
+            // compute current residual
             fasp_array_cp(n, b->val, r);
             fasp_blas_dcsr_aAxpy(-1.0, A, x->val, r);
             
@@ -308,12 +311,16 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
             
             norms[iter] = relres;
             
-            if ( relres <= tol ) {
+            if ( relres < tol ) {
                 break;
             }
             else {
                 // Need to restart
                 fasp_array_cp(n, r, p[0]); i = 0;
+            }
+            
+            if ( print_level >= PRINT_MORE ) {
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
         } /* end of convergence check */
@@ -585,7 +592,7 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
                          norms[iter]/norms[iter-1]);
             
             // should we exit the restart cycle
-            if ( relres <= tol && iter >= MIN_ITER ) break;
+            if ( relres < tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
         
@@ -614,8 +621,11 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
         // Check: prevent false convergence
-        if ( relres <= tol && iter >= MIN_ITER ) {
+        if ( relres < tol && iter >= MIN_ITER ) {
             
+            REAL computed_relres = relres;
+            
+            // compute current residual
             fasp_array_cp(n, b->val, r);
             fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, r);
             
@@ -643,12 +653,16 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
             
             norms[iter] = relres;
             
-            if ( relres <= tol ) {
+            if ( relres < tol ) {
                 break;
             }
             else {
                 // Need to restart
                 fasp_array_cp(n, r, p[0]); i = 0;
+            }
+            
+            if ( print_level >= PRINT_MORE ) {
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
         } /* end of convergence check */
@@ -923,7 +937,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
                          norms[iter]/norms[iter-1]);
             
             // should we exit the restart cycle
-            if ( relres <= tol && iter >= MIN_ITER ) break;
+            if ( relres < tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
         
@@ -952,8 +966,11 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
         // Check: prevent false convergence
-        if ( relres <= tol && iter >= MIN_ITER ) {
+        if ( relres < tol && iter >= MIN_ITER ) {
             
+            REAL computed_relres = relres;
+            
+            // compute current residual
             fasp_array_cp(n, b->val, r);
             fasp_blas_dbsr_aAxpy(-1.0, A, x->val, r);
             
@@ -981,12 +998,16 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
             
             norms[iter] = relres;
             
-            if ( relres <= tol ) {
+            if ( relres < tol ) {
                 break;
             }
             else {
                 // Need to restart
                 fasp_array_cp(n, r, p[0]); i = 0;
+            }
+            
+            if ( print_level >= PRINT_MORE ) {
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
         } /* end of convergence check */
@@ -1261,7 +1282,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
                          norms[iter]/norms[iter-1]);
             
             // should we exit the restart cycle
-            if ( relres <= tol && iter >= MIN_ITER ) break;
+            if ( relres < tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
         
@@ -1290,8 +1311,11 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
         // Check: prevent false convergence
-        if ( relres <= tol && iter >= MIN_ITER ) {
+        if ( relres < tol && iter >= MIN_ITER ) {
             
+            REAL computed_relres = relres;
+            
+            // compute current residual
             fasp_array_cp(n, b->val, r);
             fasp_blas_dstr_aAxpy(-1.0, A, x->val, r);
             
@@ -1319,12 +1343,16 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
             
             norms[iter] = relres;
             
-            if ( relres <= tol ) {
+            if ( relres < tol ) {
                 break;
             }
             else {
                 // Need to restart
                 fasp_array_cp(n, r, p[0]); i = 0;
+            }
+            
+            if ( print_level >= PRINT_MORE ) {
+                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
         } /* end of convergence check */

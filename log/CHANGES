@@ -1,7 +1,9 @@
 File Name: CHANGES
 
-01/13/2015 FASP 1.6.6:
+01/14/2015 FASP 1.6.6:
 - Clean up the code and prepare for releasing the package.
+- Clean up aggregation.
+- Fix wrong warning messages in iterative methods.
 - Check Doxygen errors and messages.
 
 01/13/2015 FASP 1.6.5:
