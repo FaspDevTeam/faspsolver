@@ -704,10 +704,10 @@ static void interp_STD (dCSRmat *A,
 }
 
 /**
- * \fn static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, 
+ * \fn static void interp_EXT (dCSRmat *A, ivector *vertices, dCSRmat *P, 
  *                             iCSRmat *S, AMG_param *param)
  *
- * \brief Standard interpolation
+ * \brief Extended interpolation
  *
  * \param A          Pointer to dCSRmat: the coefficient matrix (index starts from 0)
  * \param vertices   Indicator vector for the C/F splitting of the variables
@@ -715,12 +715,10 @@ static void interp_STD (dCSRmat *A,
  * \param S          Strong connection matrix
  * \param param      Pointer to AMG_param: AMG parameters
  *
- * \author Kai Yang, Xiaozhe Hu
- * \date   05/21/2012
+ * \author Zheng Li, Chensong Zhang
+ * \date   11/21/2014
  *
- * Modified by Chunsheng Feng, Zheng Li on 10/17/2012: add OMP support
- * Modified by Chensong Zhang on 05/15/2013: reconstruct the code
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: cfsplitting of RS coarsening check C1 Criterion
+ * \node  need to be fixed.
  */
 static void interp_EXT (dCSRmat *A,
                         ivector *vertices,
