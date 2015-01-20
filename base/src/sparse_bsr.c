@@ -1659,7 +1659,7 @@ dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_diagLU(dBSRmat *A, REAL *DL, REAL *DU)
+ * \fn dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A, REAL *DL, REAL *DU)
  *
  * \brief Compute B := DL*A*DU. We decompose each diagonal block of A into LDU form 
  *        and DL = diag(L^{-1}) and DU = diag(U^{-1}).
@@ -1858,6 +1858,7 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
     return B;
     
 }
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

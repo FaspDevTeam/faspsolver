@@ -390,7 +390,7 @@ void fasp_dcsr_CMK_order (const dCSRmat *A,
 }
 
 /**
- * \fn void fasp_dcsr_RCMK_order (const dCSRmat *A, INT *order, INT *oindex)
+ * \fn void fasp_dcsr_RCMK_order (const dCSRmat *A, INT *order, INT *oindex, INT *rorder)
  *
  * \brief  Resverse CMK ordering
  *

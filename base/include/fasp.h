@@ -1163,7 +1163,8 @@ extern INT *IMAP;    /**< Red Black Gs Smoother imap */
 extern INT  MAXIMAP; /**< Red Black Gs Smoother max dofs of reservoir */
 #endif
 
-extern INT  count;
+extern INT  count;   /**< Counter for multiple calls */
+
 #ifdef _OPENMP
 
 #include "omp.h"

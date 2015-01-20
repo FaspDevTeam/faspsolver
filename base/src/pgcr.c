@@ -10,20 +10,22 @@
 static void dense_aAxpby (INT, INT, REAL *, REAL, REAL *, REAL, REAL *);
 
 /**
- * \fn int fasp_solver_dcsr_pgcr1 (dCSRmat *A,  dvector *b, dvector *u, \
+ * \fn int fasp_solver_dcsr_pgcr1 (dCSRmat *A,  dvector *b, dvector *x, \
  *                                 precond *pc, const REAL tol, const INT MaxIt, \
- *                                 const INT restart, const INT stop_type, \
- *                                 const INT prtlvl)
+ *                                 const SHORT restart, const SHORT stop_type, \
+ *                                 const SHORT prtlvl)
  *
  * \brief A preconditioned GCR method for solving Au=b
  *
- * \param *A     Pointer to the coefficient matrix
- * \param *b     Pointer to the dvector of right hand side
- * \param *u     Pointer to the dvector of dofs
- * \param MaxIt  Maximal number of iterations
- * \param tol    Tolerance for stopage
- * \param *pc    Pointer to the structure of precondition (precond)
- * \param prtlvl How much information to print out
+ * \param A         Pointer to the coefficient matrix
+ * \param b         Pointer to the dvector of right hand side
+ * \param x         Pointer to the dvector of dofs
+ * \param pc        Pointer to the structure of precondition (precond)
+ * \param tol       Tolerance for stopage
+ * \param MaxIt     Maximal number of iterations
+ * \param restart   Restart number for GCR
+ * \param stop_type Stopping type
+ * \param prtlvl    How much information to print out
  *
  * \return the number of iterations
  *
@@ -36,9 +38,9 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
                             precond *pc,
                             const REAL tol,
                             const INT MaxIt,
-                            const INT restart,
-                            const INT stop_type,
-                            const INT prtlvl)
+                            const SHORT restart,
+                            const SHORT stop_type,
+                            const SHORT prtlvl)
 {
     INT i, j;
     INT iter = 0;
@@ -223,18 +225,20 @@ FINISHED:
 /**
  * \fn INT fasp_solver_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *x, \
  *                                precond *pc, const REAL tol, const INT MaxIt, \
- *                                const INT restart, const INT stop_type, \
- *                                const INT prtlvl)
+ *                                const SHORT restart, const SHORT stop_type, \
+ *                                const SHORT prtlvl)
  *
  * \brief A preconditioned GCR method for solving Au=b
  *
- * \param *A     Pointer to the coefficient matrix
- * \param *b     Pointer to the dvector of right hand side
- * \param *u     Pointer to the dvector of dofs
- * \param MaxIt  Maximal number of iterations
- * \param tol    Tolerance for stopage
- * \param *pc    Pointer to the structure of precondition (precond)
- * \param prtlvl How much information to print out
+ * \param A         Pointer to the coefficient matrix
+ * \param b         Pointer to the dvector of right hand side
+ * \param x         Pointer to the dvector of dofs
+ * \param pc        Pointer to the structure of precondition (precond)
+ * \param tol       Tolerance for stopage
+ * \param MaxIt     Maximal number of iterations
+ * \param restart   Restart number for GCR
+ * \param stop_type Stopping type
+ * \param prtlvl    How much information to print out
  *
  * \return the number of iterations
  *

@@ -1,6 +1,10 @@
 /*! \file smoother_csr_poly.c
  *
- *  \brief Smoothers for dCSRmat matrices using poly. approx. to A^{-1}. Refer to Johannes K. Kraus, Panayot S. Vassilevski, Ludmil T. Zikatanov, "Polynomial of best uniform approximation to $x^{-1}$ and smoothing in two-leve methods", 2013.
+ *  \brief Smoothers for dCSRmat matrices using poly. approx. to A^{-1}. 
+ *
+ *  Refer to Johannes K. Kraus, Panayot S. Vassilevski, Ludmil T. Zikatanov
+ *           "Polynomial of best uniform approximation to $x^{-1}$ and smoothing 
+ *            in two-leve methods", 2013.
  */
 
 #include <math.h>
@@ -15,13 +19,11 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res);
-static void Diaginv(dCSRmat *Amat, REAL *Dinv);
-static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv);
-static void Diagx(REAL *Dinv, INT n, REAL *x, REAL *b);
-static void Rr(dCSRmat *Amat, REAL *Dinv, REAL *r, REAL *rbar, REAL *v0, REAL *v1,
-               REAL *vnew, REAL *k, INT m);
-
+static void bminax(REAL *,INT *,INT *, REAL *, REAL *,INT *, REAL *);
+static void Diaginv(dCSRmat *, REAL *);
+static REAL DinvAnorminf(dCSRmat *, REAL *);
+static void Diagx(REAL *, INT, REAL *, REAL *);
+static void Rr(dCSRmat *, REAL *, REAL *, REAL *, REAL *, REAL *, REAL *, REAL *, INT);
 
 /*---------------------------------*/
 /*--      Public Function        --*/
@@ -64,7 +66,7 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     v0    = (REAL *) fasp_mem_calloc(n,sizeof(REAL)); 
     v1    = (REAL *) fasp_mem_calloc(n,sizeof(REAL)); 
     error = (REAL *) fasp_mem_calloc(n,sizeof(REAL));
-    k     = (REAL *) fasp_mem_calloc(6,sizeof(REAL));// coefficients for calculation
+    k     = (REAL *) fasp_mem_calloc(6,sizeof(REAL)); // coefficients for calculation
     
     
     // get the inverse of the diagonal of A
@@ -73,24 +75,25 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     // set up parameter
     mu0 = DinvAnorminf(Amat, Dinv); // get the inf norm of Dinv*A;
     
-    mu0 = 1.0/mu0;
-    mu1 = 4.0*mu0;// default set 8;
+    mu0 = 1.0/mu0; mu1 = 4.0*mu0; // default set 8;
     smu0 =  sqrt(mu0); smu1 = sqrt(mu1);
     
     k[1] = (mu0+mu1)/2.0; 
     k[2] = (smu0 + smu1)*(smu0 + smu1)/2.0;
     k[3] = mu0 * mu1;
-    k[4] = 2.0*k[3]/k[2];// 4.0*mu0*mu1/(sqrt(mu0)+sqrt(mu1))/(sqrt(mu0)+sqrt(mu1));
-    k[5] = (mu1-2.0*smu0*smu1+mu0)/(mu1+2.0*smu0*smu1+mu0);// square of (sqrt(kappa)-1)/(sqrt(kappa)+1);
-    
+
+    // 4.0*mu0*mu1/(sqrt(mu0)+sqrt(mu1))/(sqrt(mu0)+sqrt(mu1));
+    k[4] = 2.0*k[3]/k[2];
+
+    // square of (sqrt(kappa)-1)/(sqrt(kappa)+1);
+    k[5] = (mu1-2.0*smu0*smu1+mu0)/(mu1+2.0*smu0*smu1+mu0);
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
     // Update 
-    for(i=0; i<L;i++ )
-    {
+    for ( i=0; i<L; i++ ) {
         // get residual
         fasp_blas_dcsr_mxv(Amat, u, r);// r= Amat*u;
         fasp_blas_array_axpyz(n, -1, r, b, r);// r= -r+b;

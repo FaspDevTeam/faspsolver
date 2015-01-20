@@ -1443,9 +1443,9 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
                             precond *pc,
                             const REAL tol,
                             const INT MaxIt,
-                            const INT restart,
-                            const INT stop_type,
-                            const INT print_level);
+                            const SHORT restart,
+                            const SHORT stop_type,
+                            const SHORT prtlvl);
 
 INT fasp_solver_dcsr_pgcr (dCSRmat *A,
                            dvector *b,
@@ -1455,7 +1455,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
                            const INT MaxIt,
                            const SHORT restart,
                            const SHORT stop_type,
-                           const SHORT print_level);
+                           const SHORT prtlvl);
 
 
 /*-------- In file: pgmres.c --------*/
@@ -2212,7 +2212,7 @@ void fasp_smoother_dstr_schwarz (dSTRmat *A,
 
 /*-------- In file: sparse_block.c --------*/
 
-void fasp_bdcsr_free(block_dCSRmat *A);
+void fasp_bdcsr_free (block_dCSRmat *A);
 
 SHORT fasp_dcsr_getblk (dCSRmat *A,
                         INT *Is,
@@ -2221,16 +2221,16 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
                         INT n,
                         dCSRmat *B);
 
-SHORT fasp_dbsr_getblk (dBSRmat *A, 
-                        INT *Is, 
-                        INT *Js, 
-                        INT m, 
-                        INT n, 
-                        dBSRmat *B) ;
+SHORT fasp_dbsr_getblk (dBSRmat *A,
+                        INT *Is,
+                        INT *Js,
+                        INT m,
+                        INT n,
+                        dBSRmat *B);
 
-dCSRmat fasp_dbsr_getblk_dcsr(dBSRmat *A);
+dCSRmat fasp_dbsr_getblk_dcsr (dBSRmat *A);
 
-dCSRmat fasp_dbsr_Linfinity_dcsr(dBSRmat *A);
+dCSRmat fasp_dbsr_Linfinity_dcsr (dBSRmat *A);
 
 
 /*-------- In file: sparse_bsr.c --------*/
@@ -2288,8 +2288,8 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
 
 /*-------- In file: sparse_coo.c --------*/
 
-dCOOmat fasp_dcoo_create (INT m, 
-                          INT n, 
+dCOOmat fasp_dcoo_create (INT m,
+                          INT n,
                           INT nnz);
 
 void fasp_dcoo_alloc (const INT m,
@@ -2305,17 +2305,17 @@ void fasp_dcoo_shift (dCOOmat *A,
 
 /*-------- In file: sparse_csr.c --------*/
 
-dCSRmat fasp_dcsr_create (const INT m, 
-                          const INT n, 
+dCSRmat fasp_dcsr_create (const INT m,
+                          const INT n,
                           const INT nnz);
 
 iCSRmat fasp_icsr_create (const INT m,
                           const INT n,
                           const INT nnz);
 
-void fasp_dcsr_alloc (const INT m, 
-                      const INT n, 
-                      const INT nnz, 
+void fasp_dcsr_alloc (const INT m,
+                      const INT n,
+                      const INT nnz,
                       dCSRmat *A);
 
 void fasp_dcsr_free (dCSRmat *A);
@@ -2326,53 +2326,53 @@ void fasp_dcsr_null (dCSRmat *A);
 
 void fasp_icsr_null (iCSRmat *A);
 
-dCSRmat fasp_dcsr_perm (dCSRmat *A, 
+dCSRmat fasp_dcsr_perm (dCSRmat *A,
                         INT *P);
 
 void fasp_dcsr_sort (dCSRmat *A);
 
-void fasp_dcsr_getdiag (INT n, 
-                        dCSRmat *A, 
-                        dvector *diag) ;
+void fasp_dcsr_getdiag (INT n,
+                        dCSRmat *A,
+                        dvector *diag);
 
-void fasp_dcsr_getcol (const INT n, 
-                       dCSRmat *A, 
-                       REAL *col) ;
+void fasp_dcsr_getcol (const INT n,
+                       dCSRmat *A,
+                       REAL *col);
 
 void fasp_dcsr_diagpref (dCSRmat *A);
 
-SHORT fasp_dcsr_regdiag (dCSRmat *A, 
+SHORT fasp_dcsr_regdiag (dCSRmat *A,
                          REAL value);
 
 void fasp_icsr_cp (iCSRmat *A,
                    iCSRmat *B);
 
-void fasp_dcsr_cp (dCSRmat *A, 
-                   dCSRmat *B) ;
+void fasp_dcsr_cp (dCSRmat *A,
+                   dCSRmat *B);
 
-void fasp_icsr_trans (iCSRmat *A, 
+void fasp_icsr_trans (iCSRmat *A,
                       iCSRmat *AT);
 
-INT fasp_dcsr_trans (dCSRmat *A, 
+INT fasp_dcsr_trans (dCSRmat *A,
                      dCSRmat *AT);
 
-void fasp_dcsr_transpose (INT *row[2], 
-                          INT *col[2], 
-                          REAL *val[2], 
-                          INT *nn, 
+void fasp_dcsr_transpose (INT *row[2],
+                          INT *col[2],
+                          REAL *val[2],
+                          INT *nn,
                           INT *tniz);
 
-void fasp_dcsr_compress (dCSRmat *A, 
-                         dCSRmat *B, 
+void fasp_dcsr_compress (dCSRmat *A,
+                         dCSRmat *B,
                          REAL dtol);
 
-SHORT fasp_dcsr_compress_inplace (dCSRmat *A, 
+SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
                                   REAL dtol);
 
-void fasp_dcsr_shift (dCSRmat *A, 
+void fasp_dcsr_shift (dCSRmat *A,
                       INT offset);
 
-void fasp_dcsr_symdiagscale (dCSRmat *A, 
+void fasp_dcsr_symdiagscale (dCSRmat *A,
                              dvector *diag);
 
 dCSRmat fasp_dcsr_sympat (dCSRmat *A);
@@ -2844,14 +2844,14 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n,
 /*-------- In file: interface_mumps.c --------*/
 
 int fasp_solver_mumps ( dCSRmat *ptrA,
-                        dvector *b,
-                        dvector *u,
-                        const int print_level);
+                       dvector *b,
+                       dvector *u,
+                       const int print_level);
 
-int fasp_solver_mumps_steps ( dCSRmat *ptrA,
-                              dvector *b,
-                              dvector *u,
-                              Mumps_data *mumps) ;
+int fasp_solver_mumps_steps (dCSRmat *ptrA,
+                             dvector *b,
+                             dvector *u,
+                             Mumps_data *mumps);
 
 Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
                                  dvector *b,
@@ -2859,10 +2859,10 @@ Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
                                  const INT print_level);
 
 void fasp_mumps_solve ( dCSRmat *ptrA,
-                        dvector *b,
-                        dvector *u,
-                        Mumps_data mumps,
-                        const INT print_level );
+                       dvector *b,
+                       dvector *u,
+                       Mumps_data mumps,
+                       const INT print_level );
 
 void fasp_mumps_free ( Mumps_data *mumps );
 

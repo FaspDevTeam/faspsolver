@@ -1,6 +1,8 @@
 /*! \file  aggregation_csr.inl
  *
  *  \brief Utilities for aggregation methods for CSR matrices
+ *
+ *  ATTENTION: Do NOT use auto-indentation in this file!!!
  */
 
 #ifdef _OPENMP

@@ -19,7 +19,7 @@
  * Modified by Chensong Zhang on 06/21/2012
  * Modified by Chensong Zhang on 10/15/2012: revise along with testfem.c
  * Modified by Chensong Zhang on 12/29/2013: clean up non-test problems
- * Modified by Xiaozhe Hu on 05/02/2014: revise the umfpack solver, seperate factorization and solve 
+ * Modified by Xiaozhe Hu on 05/02/2014: umfpack--seperate factorization and solve
  */
 int main (int argc, const char * argv[]) 
 {
@@ -103,34 +103,6 @@ int main (int argc, const char * argv[])
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
     }
     
-    //
-    else if (problem_num == 20) {
-        
-        // read in matrix
-        datafile1="/pnp-data/set-2/A.dat";
-        strcat(filename1,datafile1);
-        
-        fasp_dcoo_read(filename1, &A);
-        
-        // read in b
-        datafile2="/pnp-data/set-2/b.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 30) {
-
-        datafile1="spe10/SPE1020.amg.dat";
-        strcat(filename1,datafile1);
-    
-        datafile2="spe10/SPE1020.rhs.dat";
-        strcat(filename2,datafile2);
-    
-        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
-    }
-    
-
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
@@ -223,9 +195,7 @@ int main (int argc, const char * argv[])
         Numeric = fasp_umfpack_factorize(&A, print_level);
         status = fasp_umfpack_solve(&A, &b, &x, Numeric, print_level);
         fasp_umfpack_free_numeric(Numeric);
-        
-        //status = fasp_solver_umfpack(&A, &b, &x, print_level);
-        
+            
 	}
 #endif
     

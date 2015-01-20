@@ -435,7 +435,6 @@ FINISH: if (fp != NULL) fclose(fp);
     return ret;
 }
 
-
 /**
  * \fn void fasp_dbsr_plot (const dBSRmat *A, const char *filename)
  *
@@ -597,7 +596,7 @@ FINISH: if (fp != NULL) fclose(fp);
 }
 
 /**
- * \fn INT fasp_dcsr_plot (const dBSRmat *A, const char *fname)
+ * \fn INT fasp_dcsr_plot (const dCSRmat *A, const char *fname)
  *
  * \brief Write dCSR sparse matrix pattern in BMP file format
  *
