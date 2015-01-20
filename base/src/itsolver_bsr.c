@@ -630,7 +630,7 @@ MEMORY_ERROR:
  *                                      itsolver_param *itparam, AMG_param *amgparam,
  *                                      const INT nk_dim, dvector *nk)
  *
- * \brief Solve Ax=b by AMG preconditioned Krylov methods
+ * \brief Solve Ax=b by AMG preconditioned Krylov methods with extra kernal space
  *
  * \param A         Pointer to the coeff matrix in dBSRmat format
  * \param b         Pointer to the right hand side in dvector format

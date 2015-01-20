@@ -298,7 +298,7 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
  * \param z     Pointer to preconditioned vector
  * \param data  Pointer to precondition data
  *
- * \author Shiquan Zhang
+ * \author Shiquan Zhang, Xiaozhe Hu
  * \date   11/09/2010
  *
  * \note Works for general nb (Xiaozhe)

@@ -114,6 +114,11 @@ INT fasp_amg_solve (AMG_data *mgl,
  * \author Xiaozhe Hu
  * \date   01/23/2011
  *
+ * \note AMLI polynomila computed by the best approximation of 1/x. Refer to Johannes K. Kraus, Panayot S. Vassilevski,
+ *          Ludmil T. Zikatanov, "Polynomial of best uniform approximation to $x^{-1}$ and smoothing in two-leve
+ *          methods", 2013.
+ *
+ *
  * Modified by Chensong 04/21/2013: Fix an output typo
  */
 INT fasp_amg_solve_amli (AMG_data *mgl,
@@ -194,6 +199,10 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
  * \date   04/30/2011
  *
  * Modified by Chensong 04/21/2013: Fix an output typo
+ *
+ * \note Nonlinar AMLI-cycle.  Refer to Xiazhe Hu, Panayot S. Vassilevski, Jinchao Xu
+ *          "Comparative Convergence Analysis of Nonlinear AMLI-cycle Multigrid", 2013.
+ *
  */
 INT fasp_amg_solve_nl_amli (AMG_data *mgl,
                             AMG_param *param)

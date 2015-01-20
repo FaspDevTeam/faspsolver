@@ -15,7 +15,8 @@
 
 /**
  * \fn void fasp_precond_block_diag_3 (double *r, double *z, void *data)
- * \brief block diagonal preconditioning
+ * \brief block diagonal preconditioning (3x3 block matrix, each diagonal block is solved exactly)
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -94,7 +95,8 @@ void fasp_precond_block_diag_3 (double *r,
 
 /**
  * \fn void fasp_precond_block_diag_3_amg (double *r, double *z, void *data)
- * \brief block diagonal preconditioning reservoir-reservoir block: AMG for pressure-pressure block, Jacobi for saturation-saturation block
+ * \brief  block diagonal preconditioning (3x3 block matrix, each diagonal block is solved by AMG)
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -158,7 +160,8 @@ void fasp_precond_block_diag_3_amg (double *r,
 
 /**
  * \fn void fasp_precond_block_diag_4 (double *r, double *z, void *data)
- * \brief block diagonal preconditioning
+ * \brief block diagonal preconditioning (4x4 block matrix, each diagonal block is solved exactly)
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -248,7 +251,8 @@ void fasp_precond_block_diag_4 (double *r,
 
 /**
  * \fn void fasp_precond_block_lower_3 (double *r, double *z, void *data)
- * \brief block lower triangular preconditioning
+ * \brief block lower triangular preconditioning (3x3 block matrix, each diagonal block is solved exactly)
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -334,7 +338,8 @@ void fasp_precond_block_lower_3 (double *r,
 
 /**
  * \fn void fasp_precond_block_lower_3 (double *r, double *z, void *data)
- * \brief block diagonal preconditioning reservoir-reservoir block: AMG for pressure-pressure block, Jacobi for saturation-saturation block
+ * \brief block lower triangular preconditioning (3x3 block matrix, each diagonal block is solved by AMG)
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -406,7 +411,8 @@ void fasp_precond_block_lower_3_amg (double *r,
 
 /**
  * \fn void fasp_precond_block_lower_4 (double *r, double *z, void *data)
- * \brief block lower triangular preconditioning
+ * \brief block lower triangular preconditioning (4x4 block matrix, each diagonal block is solved exactly)
+ *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data
@@ -510,6 +516,7 @@ void fasp_precond_block_lower_4 (double *r,
 /**
  * \fn void fasp_precond_sweeping (double *r, double *z, void *data)
  * \brief sweeping preconditioner for Maxwell equations
+ * 
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
  * \param *data pointer to precondition data

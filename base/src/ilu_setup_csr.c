@@ -42,7 +42,7 @@ extern void ilutp_(const INT *n,REAL *a,INT *ja,INT *ia,INT *lfil,const REAL *dr
  * \param iludata   Pointer to ILU_data
  * \param iluparam  Pointer to ILU_param
  *
- * \author Shiquan Zhang
+ * \author Shiquan Zhang Xiaozhe Hu
  * \date   12/27/2009
  */
 SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
