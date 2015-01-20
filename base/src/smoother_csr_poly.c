@@ -1,6 +1,6 @@
 /*! \file smoother_csr_poly.c
  *
- *  \brief Smoothers for dCSRmat matrices using poly. approx. to A^{-1}
+ *  \brief Smoothers for dCSRmat matrices using poly. approx. to A^{-1}. Refer to Johannes K. Kraus, Panayot S. Vassilevski, Ludmil T. Zikatanov, "Polynomial of best uniform approximation to $x^{-1}$ and smoothing in two-leve methods", 2013.
  */
 
 #include <math.h>

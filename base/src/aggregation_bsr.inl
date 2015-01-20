@@ -12,7 +12,7 @@
  *                                       AMG_data_bsr *mgl, INT levelNum,
  *                                       INT num_agg)
  *
- * \brief Form aggregation based on strong coupled neighborhoods
+ * \brief Form tentative prolonagiton for bsr format matrix
  *
  * \param vertices    Pointer to the aggregation of vertices
  * \param tentp       Pointer to the prolongation operators
@@ -79,7 +79,7 @@ static void form_tentative_p_bsr (ivector *vertices,
  * \fn static void form_boolean_p_bsr (ivector *vertices, dBSRmat *tentp, AMG_data_bsr *mgl,
  *                                       INT levelNum, INT num_agg)
  *
- * \brief Form boolean prolongations in dBSRmat
+ * \brief Form boolean prolongations in dBSRmat (only assume constant vector is in the null space)
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
@@ -147,7 +147,7 @@ static void form_boolean_p_bsr (ivector *vertices,
  *                                        AMG_data_bsr *mgl, INT levelNum,
  *                                        INT num_agg, const INT dim, REAL **basis)
  *
- * \brief Form aggregation based on strong coupled neighborhoods
+ * \brief Form tentative prolongation for bsr format matrix (use general basis for null space)
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
@@ -327,7 +327,7 @@ static void smooth_agg_bsr (dBSRmat *A,
  * \fn static void smooth_agg_bsr1 (dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
  *                                  AMG_param *param, INT levelNum, dCSRmat *N)
  *
- * \brief Smooth the tentative prolongation
+ * \brief Smooth the tentative prolongation (without filter)
  *
  * \param A         Pointer to the coefficient matrices (dBSRmat)
  * \param tentp     Pointer to the tentative prolongation operators (dBSRmat)
