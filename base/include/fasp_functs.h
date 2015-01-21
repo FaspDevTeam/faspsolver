@@ -258,13 +258,13 @@ void fasp_blas_dbsr_mxm (dBSRmat *A,
                          dBSRmat *C);
 
 void fasp_blas_dbsr_rap1 (dBSRmat *R,
-                          dBSRmat *A, 
-                          dBSRmat *P, 
+                          dBSRmat *A,
+                          dBSRmat *P,
                           dBSRmat *B);
 
 void fasp_blas_dbsr_rap (dBSRmat *R,
-                         dBSRmat *A, 
-                         dBSRmat *P, 
+                         dBSRmat *A,
+                         dBSRmat *P,
                          dBSRmat *B);
 
 void fasp_blas_dbsr_rap_agg (dBSRmat *R,
@@ -1563,8 +1563,8 @@ void fasp_precond_block_diag_3 (double *r,
                                 void *data);
 
 void fasp_precond_block_diag_3_amg (double *r,
-                            double *z, 
-                            void *data);
+                                    double *z,
+                                    void *data);
 
 void fasp_precond_block_diag_4 (double *r,
                                 double *z,
@@ -1575,16 +1575,16 @@ void fasp_precond_block_lower_3 (double *r,
                                  void *data);
 
 void fasp_precond_block_lower_3_amg (double *r,
-                            double *z, 
-                            void *data);
+                                     double *z,
+                                     void *data);
 
 void fasp_precond_block_lower_4 (double *r,
-                                double *z,
-                                void *data);
+                                 double *z,
+                                 void *data);
 
 void fasp_precond_sweeping (double *r,
-                              double *z,
-                              void *data);
+                            double *z,
+                            void *data);
 
 
 /*-------- In file: precond_bsr.c --------*/

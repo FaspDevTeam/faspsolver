@@ -651,11 +651,10 @@ static void first_pairwise_unsymm (const dCSRmat * A,
     const REAL k_tg = 10.0;
     
     INT i, j, row_start, row_end, nc, col, k, ipair, node, checkdd;
-    REAL mu, aii, ajj, aij, aji, tent, vals, val, index;
+    REAL mu, aii, ajj, aij, aji, tent, vals, val;
     REAL del1, del2, eta1, eta2, sig1, sig2, rsi, rsj, epsr,del12;
     
     nc = 0;
-    index = 0;
     i = 0;
     node = 0;
     checkdd = 1;

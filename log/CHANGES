@@ -4,6 +4,7 @@ File Name: CHANGES
 - Clean up the code and prepare for releasing the package.
 - Clean up aggregation code.
 - Fix wrong warning messages in iterative methods.
+- Remove unused variables. 
 - Check Doxygen errors and messages.
 
 01/13/2015 FASP 1.6.5:
