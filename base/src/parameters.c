@@ -452,7 +452,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
  */
 void fasp_param_solver_init (itsolver_param *itsparam)
 {
-    itsparam->print_level   = 0;
+    itsparam->print_level   = 3;
     itsparam->itsolver_type = SOLVER_CG;
     itsparam->precond_type  = PREC_AMG;
     itsparam->stop_type     = STOP_REL_RES;
