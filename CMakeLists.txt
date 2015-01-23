@@ -23,7 +23,7 @@
 	       "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")
           set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
        else(OPENMP_FOUND)
-          message(WARNING "OpenMP was requested but not supported!")
+          message("   WARNING: OpenMP was requested but not supported!")
        endif(OPENMP_FOUND)
     endif(USE_OPENMP)
 
@@ -96,7 +96,7 @@ if (USE_UMFPACK)
       add_definitions("-DWITH_UMFPACK=1")
       include_directories(${UMFPACK_INCLUDE_DIRS})
    else(UMFPACK_FOUND)
-      message(WARNING "UMFPACK was requested but not supported!")
+      message("   WARNING: UMFPACK was requested but not supported!")
    endif(UMFPACK_FOUND)
 endif(USE_UMFPACK)
 
@@ -117,7 +117,7 @@ if (USE_SUPERLU)
       add_definitions("-DWITH_SuperLU=1")
       include_directories(${SUPERLU_INCLUDE_DIRS})
    else(SUPERLU_FOUND)
-      message(WARNING "SuperLU was requested but not supported!")
+      message("   WARNING: SuperLU was requested but not supported!")
    endif(SUPERLU_FOUND)
 
 endif(USE_SUPERLU)
@@ -139,7 +139,7 @@ if (USE_MUMPS)
       add_definitions("-DWITH_MUMPS=1")
       include_directories(${MUMPS_INCLUDE_DIRS})
    else(MUMPS_FOUND)
-      message(WARNING "MUMPS was requested but not supported!")
+      message("   WARNING: MUMPS was requested but not supported!")
    endif(MUMPS_FOUND)
 
 endif(USE_MUMPS)
@@ -150,20 +150,21 @@ endif(USE_MUMPS)
 # target generating the FASP documentation with doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
+    if(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
     configure_file(
 		${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in
-	      	${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf @ONLY
+	    ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf @ONLY
 		)
     set(DOXY_EXEC "${DOXYGEN_EXECUTABLE}")
     if(DOXYWIZARD)
         find_program(WIZARD doxywizard)
         if(APPLE AND (NOT WIZARD) )
            find_program(WIZARD 
-	     /Applications/Doxygen.app/Contents/MacOS/Doxywizard)
+	       /Applications/Doxygen.app/Contents/MacOS/Doxywizard)
         endif()
         if(WIZARD)
-	    set(DOXY_EXEC "${WIZARD}")
-	endif()
+	       set(DOXY_EXEC "${WIZARD}")
+	    endif()
     endif(DOXYWIZARD)
     add_custom_target(docs ${DOXY_EXEC}
  	       ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf
@@ -172,8 +173,11 @@ if(DOXYGEN_FOUND)
 	       COMMENT 
 	       "Generating FASP documentation (Doxygen)" 
 	       VERBATIM)
+    else(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
+        message("   WARNING: Doxygen configuration file cannot be found!")
+    endif(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
 else(DOXYGEN_FOUND)
-message(" WARNING: Doxygen was requested but is not found ")
+    message("   WARNING: Doxygen was requested but is not found!")
 endif(DOXYGEN_FOUND)
 ###############end documentation with doxygen
 

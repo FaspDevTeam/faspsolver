@@ -2114,7 +2114,7 @@ void fasp_hb_read (char *input_file,
     if ( !input )
     {
         printf ( "\n" );
-        printf ( "### Error: Fail to open the file.\n" );
+        printf ( "### ERROR: Fail to open the file.\n" );
         return;
     }
     

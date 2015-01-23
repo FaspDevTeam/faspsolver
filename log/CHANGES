@@ -1,11 +1,15 @@
 File Name: CHANGES
 
-01/14/2015 FASP 1.6.6:
+01/23/2015 FASP 1.6.6:
 - Clean up the code and prepare for releasing the package.
 - Clean up aggregation code.
+- Clean up some error, warning, debug messages.
 - Fix wrong warning messages in iterative methods.
 - Remove unused variables. 
 - Check Doxygen errors and messages.
+- If cmake does not find Doxygen file, do not quit; just give warning.
+- Do not archive VS08 any more; remove support to VS08 and earlier versions.
+- Update Doxygen, documentation, and webpage.
 
 01/13/2015 FASP 1.6.5:
 - Rearrange multilevel cycles in nonlinear AMLI.
