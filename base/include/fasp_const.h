@@ -11,7 +11,7 @@
  *  Modified by Chensong Zhang on 04/22/2012.
  *  Modified by Ludmil Zikatanov on 02/15/2013: CG -> SMOOTHER_CG.
  *  Modified by Chensong Zhang on 02/16/2013: GS -> SMOOTHER_GS, etc.
- *  Modified by Chensong Zhang on 04/09/2013: Add safe krylov methods.
+ *  Modified by Chensong Zhang on 04/09/2013: Add safe Krylov methods.
  *  Modified by Chensong Zhang on 09/22/2013: Clean up Doxygen.
  *  Modified by Chensong Zhang on 09/17/2013: Filename changed from message.h.
  *---------------------------------------------------------------------------------
@@ -31,15 +31,15 @@
 #define MIN_CDOF         20    /**< Minimal number of coarsest variables */
 #define MIN_CRATE        0.9   /**< Minimal coarsening ratio */
 #define MAX_CRATE        20.0  /**< Maximal coarsening ratio */
-#define STAG_RATIO       1e-4  /**< Staganation tolerance = tol*STAGRATIO */
-#define MAX_STAG         20    /**< Maximal number of staganation times */
+#define STAG_RATIO       1e-4  /**< Stagnation tolerance = tol*STAGRATIO */
+#define MAX_STAG         20    /**< Maximal number of stagnation times */
 #define MAX_RESTART      20    /**< Maximal number of restarting for BiCGStab */
 #define OPENMP_HOLDS     2000  /**< Switch to sequence version when size is small */
 
 /**
  * \brief Definition of return status and error messages
  */
-#define FASP_SUCCESS            0  /**< return from funtion successfully */
+#define FASP_SUCCESS            0  /**< return from function successfully */
 //---------------------------------------------------------------------------------
 #define ERROR_OPEN_FILE       -10  /**< fail to open a file */
 #define ERROR_WRONG_FILE      -11  /**< input contains wrong format */
@@ -60,7 +60,7 @@
 #define ERROR_AMG_COARSEING   -33  /**< coarsening step failed to complete */
 //---------------------------------------------------------------------------------
 #define ERROR_SOLVER_TYPE     -40  /**< unknown solver type */
-#define ERROR_SOLVER_PRECTYPE -41  /**< unknow precond type */
+#define ERROR_SOLVER_PRECTYPE -41  /**< unknown precond type */
 #define ERROR_SOLVER_STAG     -42  /**< solver stagnates */
 #define ERROR_SOLVER_SOLSTAG  -43  /**< solver's solution is too small */
 #define ERROR_SOLVER_TOLSMALL -44  /**< solver's tolerance is too small */
@@ -91,7 +91,7 @@
 /** 
  * \brief Print level for all subroutines -- not including DEBUG output
  */
-#define PRINT_NONE              0  /**< slient: no printout at all */
+#define PRINT_NONE              0  /**< silent: no printout at all */
 #define PRINT_MIN               1  /**< quiet: min info, error, important warnings */
 #define PRINT_SOME              2  /**< some: more info, less important warnings */
 #define PRINT_MORE              4  /**< more: print some useful debug information */
@@ -103,10 +103,10 @@
  **/
 #define MAT_FREE                0  /**< matrix-free format: only mxv action */
 #define MAT_CSR                 1  /**< compressed sparse row */
-#define MAT_BSR                 2  /**< blockwise compressed sparse row */
+#define MAT_BSR                 2  /**< block-wise compressed sparse row */
 #define MAT_STR                 3  /**< structured sparse matrix */
 #define MAT_bCSR                4  /**< block matrix of CSR */
-#define MAT_bBSR                5  /**< block matrix of BSR for borded systems */
+#define MAT_bBSR                5  /**< block matrix of BSR for bordered systems */
 #define MAT_CSRL                6  /**< modified CSR to reduce cache missing */
 #define MAT_SymCSR              7  /**< symmetric CSR format */
 
@@ -116,7 +116,7 @@
 #define SOLVER_DEFAULT          0  /**< Use default solver in FASP */
 //---------------------------------------------------------------------------------
 #define SOLVER_CG               1  /**< Conjugate Gradient */
-#define SOLVER_BiCGstab         2  /**< Biconjugate Gradient Stabilized */
+#define SOLVER_BiCGstab         2  /**< Bi-Conjugate Gradient Stabilized */
 #define SOLVER_MinRes           3  /**< Minimal Residual */
 #define SOLVER_GMRES            4  /**< Generalized Minimal Residual */
 #define SOLVER_VGMRES           5  /**< Variable Restarting GMRES */
@@ -189,7 +189,7 @@
  */
 #define SMOOTHER_JACOBI         1  /**< Jacobi smoother */
 #define SMOOTHER_GS             2  /**< Gauss-Seidel smoother */
-#define SMOOTHER_SGS            3  /**< symm Gauss-Seidel smoother */
+#define SMOOTHER_SGS            3  /**< Symmetric Gauss-Seidel smoother */
 #define SMOOTHER_CG             4  /**< CG as a smoother */
 #define SMOOTHER_SOR            5  /**< SOR smoother */
 #define SMOOTHER_SSOR           6  /**< SSOR smoother */
@@ -217,10 +217,10 @@
  */
 #define INTERP_DIR              1  /**< Direct interpolation */
 #define INTERP_STD              2  /**< Standard interpolation */
-#define INTERP_ENG              3  /**< energy minimization interp in C */
+#define INTERP_ENG              3  /**< energy minimization interpolation */
 
 /** 
- * \brief Type of vertices (dofs) for coarsening
+ * \brief Type of vertices (DOFs) for coarsening
  */
 #define G0PT                   -5  /**< Cannot fit in aggregates */
 #define UNPT                   -1  /**< Undetermined points */
@@ -237,11 +237,11 @@
 /** 
  * \brief Type of ordering for smoothers
  */
-#define USERDEFINED             0  /**< USERDEFINED order */
+#define USERDEFINED             0  /**< User defined order */
 #define CPFIRST                 1  /**< C-points first order */
 #define FPFIRST                -1  /**< F-points first order */
-#define ASCEND                 12  /**< Asscending order */
-#define DESCEND                21  /**< Dsscending order */
+#define ASCEND                 12  /**< Ascending order */
+#define DESCEND                21  /**< Descending order */
 
 #endif                             /* end if for __FASP_MESSAGES__ */
 

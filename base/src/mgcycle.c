@@ -54,8 +54,8 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     
     // Schwarz parameters
     Schwarz_param swzparam;
-    if ( param->schwarz_levels > 0 ) {
-        swzparam.schwarz_blksolver = param->schwarz_blksolver;
+    if ( param->Schwarz_levels > 0 ) {
+        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
     }
     
     // local variables
@@ -82,16 +82,16 @@ ForwardSweep:
         }
         
         // or pre-smoothing with Schwarz method
-        else if ( l < mgl->schwarz_levels ) {
-            switch (mgl[l].schwarz.schwarz_type) {
+        else if ( l < mgl->Schwarz_levels ) {
+            switch (mgl[l].Schwarz.Schwarz_type) {
                 case 3:
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, 
+                    fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam, 
                                                        &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, 
+                    fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam, 
                                                         &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, 
+                    fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam, 
                                                        &mgl[l].x, &mgl[l].b);
                     break;
             }
@@ -164,7 +164,7 @@ ForwardSweep:
 #endif
             
         default:
-            // use iterative solver on the coarest level
+            // use iterative solver on the coarsest level
             fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
             
     }
@@ -178,7 +178,7 @@ ForwardSweep:
         if ( param->coarse_scaling == ON ) {
             alpha = fasp_blas_array_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
                   / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
-            alpha = MIN(alpha, 1.0); // Add this for safty! --Chensong on 10/04/2014
+            alpha = MIN(alpha, 1.0); // Add this for safety! --Chensong on 10/04/2014
         }
         
         // prolongation u = u + alpha*P*e1
@@ -197,16 +197,16 @@ ForwardSweep:
         }
         
         // post-smoothing with Schwarz method
-        else if ( l < mgl->schwarz_levels ) {
-            switch (mgl[l].schwarz.schwarz_type) {
+        else if ( l < mgl->Schwarz_levels ) {
+            switch (mgl[l].Schwarz.Schwarz_type) {
                 case 3:
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, 
+                    fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam, 
                                                         &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].schwarz, &swzparam, 
+                    fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam, 
                                                        &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].schwarz, &swzparam, 
+                    fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam, 
                                                         &mgl[l].x, &mgl[l].b);
                     break;
             }

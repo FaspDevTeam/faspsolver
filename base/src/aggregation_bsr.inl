@@ -12,11 +12,11 @@
  *                                       AMG_data_bsr *mgl, INT levelNum,
  *                                       INT num_agg)
  *
- * \brief Form tentative prolonagiton for bsr format matrix
+ * \brief Form tentative prolongation for BSR format matrix
  *
  * \param vertices    Pointer to the aggregation of vertices
  * \param tentp       Pointer to the prolongation operators
- * \param mgl         Pointer to AMG levele data
+ * \param mgl         Pointer to AMG levels
  * \param levelNum    Level number
  * \param num_agg     Number of aggregations
  *
@@ -77,15 +77,15 @@ static void form_tentative_p_bsr (ivector *vertices,
 
 /**
  * \fn static void form_boolean_p_bsr (ivector *vertices, dBSRmat *tentp, AMG_data_bsr *mgl,
- *                                       INT levelNum, INT num_agg)
+ *                                     INT levelNum, INT num_agg)
  *
  * \brief Form boolean prolongations in dBSRmat (only assume constant vector is in the null space)
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
- * \param mgl                Pointer to AMG levele data
+ * \param mgl                Pointer to AMG levels
  * \param levelNum           Level number
- * \param num_agg   Number of aggregations
+ * \param num_agg            Number of aggregations
  *
  * \author Xiaozhe Hu
  * \date   05/27/2014
@@ -147,13 +147,13 @@ static void form_boolean_p_bsr (ivector *vertices,
  *                                        AMG_data_bsr *mgl, INT levelNum,
  *                                        INT num_agg, const INT dim, REAL **basis)
  *
- * \brief Form tentative prolongation for bsr format matrix (use general basis for null space)
+ * \brief Form tentative prolongation for BSR format matrix (use general basis for null space)
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
- * \param mgl                Pointer to AMG levele data
+ * \param mgl                Pointer to AMG levels
  * \param levelNum           Level number
- * \param num_agg   Number of aggregations
+ * \param num_agg            Number of aggregations
  * \param dim                Dimension of the near kernel space
  * \param basis              Pointer to the basis of the near kernel space
  *
@@ -226,7 +226,6 @@ static void form_tentative_p_bsr1 (ivector *vertices,
                     }
                     
                 }
-                //fasp_smat_identity (&(val[j*nb2]), tentp->nb, nb2);
                 
                 j++;
                 
@@ -246,7 +245,7 @@ static void form_tentative_p_bsr1 (ivector *vertices,
  * \param P         Pointer to the prolongation operators (dBSRmat)
  * \param param     Pointer to AMG parameters
  * \param levelNum  Current level number
- * \param N         Pointer to strongly coupled neighborhoods
+ * \param N         Pointer to strongly coupled neighbors
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014
@@ -266,7 +265,7 @@ static void smooth_agg_bsr (dBSRmat *A,
     
     // local variables
     dBSRmat S;
-    dvector diaginv;  // diaganoal block inv
+    dvector diaginv;  // diagonal block inv
     
     INT i,j;
     
@@ -334,7 +333,7 @@ static void smooth_agg_bsr (dBSRmat *A,
  * \param P         Pointer to the prolongation operators (dBSRmat)
  * \param param     Pointer to AMG parameters
  * \param levelNum  Current level number
- * \param N         Pointer to strongly coupled neighborhoods
+ * \param N         Pointer to strongly coupled neighbors
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014

@@ -200,15 +200,10 @@ void fasp_precond_ilu (REAL *r,
         INT i, j, jj, begin_row, end_row, mm2=m-2;
         INT *ijlu=iludata->ijlu;
         REAL *lu=iludata->luval;
-//	REAL tmp;
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
         zz[0]=zr[0];
-/*
- * #ifdef _OPENMP	
- * #pragma omp parallel for private(i,j,jj,begin_row,end_row) ordered //reduction(+:tmp) 
- * #endif
-*/	
+
         for (i=1;i<=mm1;++i) {
             begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
             for (j=begin_row;j<=end_row;++j) {
@@ -242,7 +237,7 @@ void fasp_precond_ilu (REAL *r,
 /**
  * \fn void fasp_precond_ilu_forward (REAL *r, REAL *z, void *data)
  *
- * \brief ILU preconditioner: only forwear sweep
+ * \brief ILU preconditioner: only forward sweep
  *
  * \param r     Pointer to the vector needs preconditioning
  * \param z     Pointer to preconditioned vector
@@ -310,12 +305,11 @@ void fasp_precond_ilu_backward (REAL *r,
 {
     ILU_data *iludata=(ILU_data *)data;
     const INT m=iludata->row, mm1=m-1, memneed=2*m;
-    REAL *zz;//, *zr;
+    REAL *zz;
     
     if (iludata->nwork<memneed) goto MEMERR; 
     
     zz = iludata->work; 
-    //zr = iludata->work+m;
     fasp_array_cp(m, r, zz);     
     
     {
@@ -345,9 +339,9 @@ void fasp_precond_ilu_backward (REAL *r,
 }
 
 /**
- * \fn void fasp_precond_schwarz (REAL *r, REAL *z, void *data)
+ * \fn void fasp_precond_Schwarz (REAL *r, REAL *z, void *data)
  *
- * \brief get z from r by schwarz
+ * \brief get z from r by Schwarz
  *
  * \param *r pointer to residual
  * \param *z pointer to preconditioned residual
@@ -358,13 +352,13 @@ void fasp_precond_ilu_backward (REAL *r,
  *
  * \note Change Schwarz interface by Zheng Li on 11/18/2014
  */
-void fasp_precond_schwarz (REAL *r,
+void fasp_precond_Schwarz (REAL *r,
                            REAL *z,
                            void *data)
 {
 	Schwarz_data  * swzdata  = (Schwarz_data *)data;
     Schwarz_param * swzparam = swzdata->swzparam;
-	const INT       swztype  = swzdata->schwarz_type;
+	const INT       swztype  = swzdata->Schwarz_type;
     const INT       n        = swzdata->A.row;
 	
     dvector x, b;
@@ -377,14 +371,14 @@ void fasp_precond_schwarz (REAL *r,
 
 	switch (swztype) {
 		case 2:
-			fasp_dcsr_schwarz_backward_smoother(swzdata, swzparam, &x, &b);
+			fasp_dcsr_Schwarz_backward_smoother(swzdata, swzparam, &x, &b);
 			break;
 		case 3:
-			fasp_dcsr_schwarz_forward_smoother(swzdata, swzparam, &x, &b);
-			fasp_dcsr_schwarz_backward_smoother(swzdata, swzparam, &x, &b);
+			fasp_dcsr_Schwarz_forward_smoother(swzdata, swzparam, &x, &b);
+			fasp_dcsr_Schwarz_backward_smoother(swzdata, swzparam, &x, &b);
 			break;
 		default:
-			fasp_dcsr_schwarz_forward_smoother(swzdata, swzparam, &x, &b);
+			fasp_dcsr_Schwarz_forward_smoother(swzdata, swzparam, &x, &b);
 			break;
 	}
 
@@ -421,7 +415,7 @@ void fasp_precond_amg (REAL *r,
     
     for ( i = 0; i < maxit; ++i ) fasp_solver_mgcycle(mgl,&amgparam);
     
-    // We can also use a recurcive version of MG:
+    // We can also use a recursive version of MG:
     // for ( i = 0; i < maxit; ++i ) fasp_solver_mgrecur(mgl,&amgparam,0);
     
     fasp_array_cp(m,mgl->x.val,z);    
@@ -430,7 +424,7 @@ void fasp_precond_amg (REAL *r,
 /**
  * \fn void fasp_precond_famg (REAL *r, REAL *z, void *data)
  *
- * \brief Full AMG perconditioner
+ * \brief Full AMG preconditioner
  *
  * \param r     Pointer to the vector needs preconditioning
  * \param z     Pointer to preconditioned vector
@@ -496,7 +490,7 @@ void fasp_precond_amli (REAL *r,
 /**
  * \fn void fasp_precond_nl_amli(REAL *r, REAL *z, void *data)
  *
- * \brief Nonliear AMLI AMG preconditioner
+ * \brief Nonlinear AMLI AMG preconditioner
  *
  * \param r     Pointer to the vector needs preconditioning
  * \param z     Pointer to preconditioned vector

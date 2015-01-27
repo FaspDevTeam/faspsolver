@@ -136,8 +136,8 @@ int main (int argc, const char * argv[])
             
             // Using Schwarz as preconditioner for Krylov iterative methods
             else if ( precond_type == PREC_SCHWARZ ){
-                if ( print_level > PRINT_NONE ) fasp_param_schwarz_print(&swzparam);
-                status = fasp_solver_dcsr_krylov_schwarz(&A, &b, &x, &itparam, &swzparam);
+                if ( print_level > PRINT_NONE ) fasp_param_Schwarz_print(&swzparam);
+                status = fasp_solver_dcsr_krylov_Schwarz(&A, &b, &x, &itparam, &swzparam);
             }
             
             else {

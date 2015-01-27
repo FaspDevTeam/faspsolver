@@ -22,7 +22,7 @@
  *
  *  \param *A    Pointer to the coefficient matrix
  *  \param *b    Pointer to the dvector of right hand side
- *  \param *u    Pointer to the dvector of dofs
+ *  \param *u    Pointer to the dvector of DOFs
  *  \param *pre  Pointer to the structure of precondition (precond)
  *
  * \author Zheng Li, Chensong Zhang
@@ -77,7 +77,7 @@ static INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
     // compute relative residual
     relres = absres/normb;
     
-    // if relres reachs tol(0.2), pgcg will stop,
+    // if relres reaches tol(0.2), pgcg will stop,
     // otherwise, another one pgcg iteration will do.
     if (relres < 0.2) {
         fasp_blas_array_ax(m, beta1, x);
@@ -132,7 +132,7 @@ static INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
  * \param A         Pointer to the coefficient matrices
  * \param checkdd   Pointer to diagonal dominant checking
  * \param iperm     Pointer to large positive off-diagonal rows.
- * \param vertices  Pointer to the aggregation of vertics
+ * \param vertices  Pointer to the aggregation of vertices
  * \param s         Pointer to off-diagonal row sum
  *
  * \author Zheng Li, Chensong Zhang
@@ -206,7 +206,7 @@ static void pairwise_aggregation_initial (const dCSRmat *A,
  *        matrix
  *
  * \param A         Pointer to the coefficient matrices
- * \param vertices  Pointer to the aggregation of vertics
+ * \param vertices  Pointer to the aggregation of vertices
  * \param s         Pointer to off-diagonal row sum
  *
  * \author Zheng Li, Chensong Zhang
@@ -258,7 +258,7 @@ static void pairwise_aggregation_initial2 (const dCSRmat *A,
  *
  * \param A         Pointer to the coefficient matrices
  * \param map       Pointer to mapping form fine nodes to coarse nodes
- * \param vertices  Pointer to the aggregation of vertics
+ * \param vertices  Pointer to the aggregation of vertices
  * \param s1        Pointer to off-diagonal row sum of initial matrix
  * \param s         Pointer to off-diagonal row sum of temporary coarse matrix
  *
@@ -304,10 +304,10 @@ static void pairwise_aggregation_initial3 (const dCSRmat *A,
 }
 
 /**
- * \fn static INT cholecsky_factorization_check (REAL W[8][8],
+ * \fn static INT cholesky_factorization_check (REAL W[8][8],
  *                                              INT agg_size)
  *
- * \brief cholecsky factorization
+ * \brief Cholesky factorization
  *
  * \param W        Pointer to the coefficient matrices
  * \param agg_size Size of aggregate
@@ -315,7 +315,7 @@ static void pairwise_aggregation_initial3 (const dCSRmat *A,
  * \author Zheng Li, Chensong Zhang
  * \date   12/23/2014
  */
-static INT cholecsky_factorization_check(REAL W[8][8],
+static INT cholesky_factorization_check (REAL W[8][8],
                                          INT agg_size)
 {
     REAL T;
@@ -475,7 +475,7 @@ static INT cholecsky_factorization_check(REAL W[8][8],
  * \author Zheng Li, Chensong Zhang
  * \date   12/23/2014
  *
- * \note Refer to Yvan Notay's AGMG package, version 3.2.0.
+ * Use a similar method as in AGMG; refer to Yvan Notay's AGMG-3.2.0.
  */
 static INT aggregation_quality_check(dCSRmat *A,
                                      ivector *tentmap,
@@ -609,7 +609,7 @@ static INT aggregation_quality_check(dCSRmat *A,
         agg_size --;
     }
     
-    status = cholecsky_factorization_check(W, agg_size);
+    status = cholesky_factorization_check(W, agg_size);
     
     return status;
 }
@@ -622,11 +622,11 @@ static INT aggregation_quality_check(dCSRmat *A,
  *                                 REAL    *s,
  *                                 INT *num_agg)
  *
- * \brief Form initial pass aggregation for unsymmtric problem
+ * \brief Form initial pass aggregation for non-symmetric problem
  *
  * \param A          Pointer to the coefficient matrices
  * \param order      Pointer to the order of nodes
- * \param vertices   Pointer to the aggregation of vertics
+ * \param vertices   Pointer to the aggregation of vertices
  * \param map        Pointer to the map index of fine nodes to coarse nodes
  * \param s          Pointer to off-diagonal row sum
  * \param num_agg    Pointer to number of aggregations
@@ -638,11 +638,11 @@ static INT aggregation_quality_check(dCSRmat *A,
  *        for convection-diffusion equations" 2011.
  */
 static void first_pairwise_unsymm (const dCSRmat * A,
-                                   INT    *order,
-                                   ivector *vertices,
-                                   ivector *map,
-                                   REAL    *s,
-                                   INT *num_agg)
+                                   INT           * order,
+                                   ivector       * vertices,
+                                   ivector       * map,
+                                   REAL          * s,
+                                   INT           * num_agg)
 {
     const INT row  = A->row;
     INT  *AIA  = A->IA;
@@ -680,18 +680,20 @@ static void first_pairwise_unsymm (const dCSRmat * A,
     /* Step 3. start the pairwise aggregation  */
     /*-----------------------------------------*/
     while (node < row) {
+        
         // deal with G0 type node
         if ( vertices->val[i] == G0PT ) {
             node ++;
             i ++;
             continue;
         }
-        // check nodes wether are aggregated
+        // check nodes whether are aggregated
         if ( vertices->val[i] != UNPT ) { i ++ ; continue;}
         
         vertices->val[i] = nc;
         map->val[2*nc] = i;
         node ++;
+        
         // check whether node has large off-diagonal positive node or not
         if ( iperm[i] == -1 ) {
             map->val[2*nc+1] = -1;
@@ -815,7 +817,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
  *                                 REAL *s1,
  *                                 INT *num_agg)
  *
- * \brief Form second pass aggregation for unsymmtric problem
+ * \brief Form second pass aggregation for non-symmetric problem
  *
  * \param A          Pointer to the coefficient matrices
  * \param tmpA       Pointer to the first pass aggregation coarse matrix
@@ -823,8 +825,8 @@ static void first_pairwise_unsymm (const dCSRmat * A,
  * \param order      Pointer to the order of nodes
  * \param map1       Pointer to the map index of fine nodes to coarse nodes in
  *                   initial pass
- * \param vertices1  Pointer to the aggregation of vertics in initial pass
- * \param vertices   Pointer to the aggregation of vertics in the second pass
+ * \param vertices1  Pointer to the aggregation of vertices in initial pass
+ * \param vertices   Pointer to the aggregation of vertices in the second pass
  * \param map        Pointer to the map index of fine nodes to coarse nodes in
  *                   the second pass
  * \param s1         Pointer to off-diagonal row sum of matrix
@@ -880,7 +882,8 @@ static void second_pairwise_unsymm (dCSRmat *A,
     i = 0;
     
     while (node < row) {
-        // check nodes wether are aggregated
+
+        // check nodes whether are aggregated
         if ( vertices->val[i] != UNPT ) {
             i++;
             continue;
@@ -1054,7 +1057,7 @@ static void second_pairwise_unsymm (dCSRmat *A,
  * \fn static void form_tentative_p (ivector *vertices, dCSRmat *tentp,
  *                                   REAL **basis, INT levelNum, INT num_aggregations)
  *
- * \brief Form aggregation based on strong coupled neighborhoods
+ * \brief Form aggregation based on strong coupled neighbors
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
@@ -1074,7 +1077,6 @@ static void form_tentative_p (ivector *vertices,
                               INT num_aggregations)
 {
     INT i, j;
-    //REAL **basis = mgl->near_kernel_basis;
     
     /* Form tentative prolongation */
     tentp->row = vertices->row;
@@ -1118,7 +1120,7 @@ static void form_tentative_p (ivector *vertices,
  * \fn static void form_boolean_p (ivector *vertices, dCSRmat *tentp, INT levelNum,
  *                                 INT num_aggregations)
  *
- * \brief Form aggregation based on strong coupled neighborhoods
+ * \brief Form aggregation based on strong coupled neighbors
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
@@ -1185,13 +1187,13 @@ static void form_boolean_p (ivector *vertices,
  *
  * \param A                 Pointer to the coefficient matrices
  * \param pair              Number of pairs in matching
- * \param vertices          Pointer to the aggregation of vertics
+ * \param vertices          Pointer to the aggregation of vertices
  * \param num_aggregations  Pointer to number of aggregations
  *
  * \author Xiaoping Li, Zheng Li, Chensong Zhang
  * \date   04/21/2014
  *
- * \note Refer to Artem Napov∗ and Yvan Notay "An algebraic multigrid
+ * \note Refer to Artem Napov and Yvan Notay "An algebraic multigrid
  *       method with guaranteed convergence rate" 2011.
  */
 static void form_pairwise (const dCSRmat * A,
@@ -1318,7 +1320,7 @@ static void form_pairwise (const dCSRmat * A,
  * \param P         Pointer to the prolongation operators
  * \param param     Pointer to AMG parameters
  * \param levelNum  Current level number
- * \param N         Pointer to strongly coupled neighborhoods
+ * \param N         Pointer to strongly coupled neighbors
  *
  * \author Xiaozhe Hu
  * \date   09/29/2009
@@ -1338,7 +1340,7 @@ static void smooth_agg (dCSRmat *A,
     const REAL  smooth_factor = param->tentative_smooth;
     
     dCSRmat S;
-    dvector diag;  // diaganoal entries
+    dvector diag;  // diagonal entries
     
     REAL row_sum_A, row_sum_N;
     INT i,j;
@@ -1363,9 +1365,9 @@ static void smooth_agg (dCSRmat *A,
         for ( i=0; i<=row; ++i ) S.IA[i] = A->IA[i];
         for ( i=0; i<S.IA[S.row]; ++i ) S.JA[i] = A->JA[i];
         
-        fasp_dcsr_getdiag(0, A, &diag);  // get the diaganol entries of A
+        fasp_dcsr_getdiag(0, A, &diag);  // get the diagonal entries of A
         
-        // check the diaganol entries.
+        // check the diagonal entries.
         // if it is too small, use Richardson smoother for the corresponding row
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
@@ -1428,9 +1430,9 @@ static void smooth_agg (dCSRmat *A,
         
         for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
         
-        fasp_dcsr_getdiag(0, N, &diag);  // get the diaganol entries of N (filtered A)
+        fasp_dcsr_getdiag(0, N, &diag);  // get the diagonal entries of N (filtered A)
         
-        // check the diaganol entries.
+        // check the diagonal entries.
         // if it is too small, use Richardson smoother for the corresponding row
 #ifdef _OPENMP
 #pragma omp parallel for if(row>OPENMP_HOLDS)
@@ -1461,7 +1463,6 @@ static void smooth_agg (dCSRmat *A,
     fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this.
     P->nnz = P->IA[P->row];
     fasp_dcsr_free(&S);
-    
 }
 
 /**
@@ -1476,7 +1477,7 @@ static void smooth_agg (dCSRmat *A,
  * \param A                 Pointer to dCSRmat
  * \param param             Pointer to AMG parameters
  * \param level             Level number
- * \param vertices          Pointer to the aggregation of vertics
+ * \param vertices          Pointer to the aggregation of vertices
  * \param num_aggregations  Pointer to number of aggregations
  *
  * \author Xiaoping Li, Zheng Li, Chensong Zhang
@@ -1521,7 +1522,8 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
             first_pairwise_unsymm(ptrA, order, &vertice[lvl], &map1, s, &num_agg);
         }
         else {
-            second_pairwise_unsymm(&mgl[level].A, ptrA, i, order, &map1, &vertice[lvl-1], &vertice[lvl], &map2, s, &num_agg);
+            second_pairwise_unsymm(&mgl[level].A, ptrA, i, order, &map1, &vertice[lvl-1], 
+			                       &vertice[lvl], &map2, s, &num_agg);
         }
 #endif
         /*-- check number of aggregates in the first pass --*/
@@ -1588,13 +1590,13 @@ END:
  * \fn static SHORT aggregation_vmb (dCSRmat *A, ivector *vertices, AMG_param *param,
  *                                   INT levelNum, dCSRmat *Neigh, INT *num_aggregations)
  *
- * \brief Form aggregation based on strong coupled neighborhoods
+ * \brief Form aggregation based on strong coupled neighbors
  *
  * \param A                 Pointer to the coefficient matrices
- * \param vertices          Pointer to the aggregation of vertics
+ * \param vertices          Pointer to the aggregation of vertices
  * \param param             Pointer to AMG parameters
  * \param levelNum          Level number
- * \param Neigh             Pointer to strongly coupled neighborhoods
+ * \param Neigh             Pointer to strongly coupled neighbors
  * \param num_aggregations  Pointer to number of aggregations
  *
  * \author Xiaozhe Hu
@@ -1661,7 +1663,8 @@ static SHORT aggregation_vmb (dCSRmat *A,
         NIA[i] = index;
         row_start = AIA[i]; row_end = AIA[i+1];
         for ( j = row_start; j < row_end; ++j ) {
-            if ( (AJA[j] == i) || (pow(Aval[j],2) >= strongly_coupled2*fabs(diag.val[i]*diag.val[AJA[j]]))) {
+            if ( (AJA[j] == i) 
+			  || (pow(Aval[j],2) >= strongly_coupled2*ABS(diag.val[i]*diag.val[AJA[j]]))) {
                 NJA[index] = AJA[j];
                 Nval[index] = Aval[j];
                 index++;
@@ -1767,7 +1770,8 @@ static SHORT aggregation_vmb (dCSRmat *A,
                 count++;
                 row_start = NIA[i]; row_end = NIA[i+1];
                 for ( j = row_start; j < row_end; ++j ) {
-                    if ( (NJA[j]!=i) && (vertices->val[NJA[j]] < UNPT) && (count<max_aggregation) ) {
+                    if ( (NJA[j]!=i) && (vertices->val[NJA[j]] < UNPT) 
+						             && (count<max_aggregation) ) {
                         vertices->val[NJA[j]] = *num_aggregations;
                         num_left--;
                         count++;

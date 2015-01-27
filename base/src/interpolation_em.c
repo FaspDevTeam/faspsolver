@@ -3,7 +3,7 @@
  *  \brief Interpolation operators for AMG based on energy-min
  *
  *  \note Ref J. Xu and L. Zikatanov
- *            "On An Energy Minimazing Basis in Algebraic Multigrid Methods"
+ *            "On An Energy Minimizing Basis in Algebraic Multigrid Methods"
  *            Computing and visualization in sciences, 2003
  */
 
@@ -146,7 +146,8 @@ static SHORT invden (INT nn,
 }
 
 /**
- * \fn static SHORT get_block (dCSRmat *A, INT m, INT n, INT *rows, INT *cols, REAL *Aloc, INT *mask)
+ * \fn static SHORT get_block (dCSRmat *A, INT m, INT n, INT *rows, INT *cols, 
+ *                             REAL *Aloc, INT *mask)
  *
  * \brief Get a local block from a CSR sparse matrix
  *
@@ -228,12 +229,12 @@ static SHORT get_block (dCSRmat *A,
 /**
  * \fn static SHORT gentisquare_nomass (dCSRmat *A, INT mm, INT *Ii, REAL *ima, INT *mask)
  *
- * \brief given the row indices and col indices, to find a block submatrix and get its inverse
+ * \brief Given the row indices and col indices, find a block sub-matrix and get its inverse
  *
  * \param A     Pointer to dCSRmat matrix: the coefficient matrix
- * \param mm    Size of the submatrix
+ * \param mm    Size of the sub-matrix
  * \param Ii    Integer array, to store the indices of row (also col)
- * \param ima   Pointer to the inverse of the full submatrix, the storage is row by row
+ * \param ima   Pointer to the inverse of the full sub-matrix, the storage is row by row
  * \param mask  Working array
  *
  * \return      FASP_SUCCESS or error message
@@ -261,14 +262,14 @@ static SHORT gentisquare_nomass (dCSRmat *A,
 /**
  * \fn static SHORT getinonefull (INT **mat, REAL **matval, INT *lengths, INT mm, INT *Ii, REAL *ima)
  *
- * \brief Add a small submatrix to a big matrix with respect to its row and cols in the big matrix
+ * \brief Add a small sub-matrix to a big matrix with respect to its row and cols in the big matrix
  *
  * \param mat      Pointer pointing to the structure of the matrix
  * \param matval   Pointer pointing to the values according to the structure
  * \param lengths  2d array, the second entry is the lengths of matval
  * \param mm       Number of the rows (also the columns)
  * \param Ii       Pointer to the array to store the relative position of the rows and cols
- * \param ima      Pointer to the full submatrix, the sequence is row by row
+ * \param ima      Pointer to the full sub-matrix, the sequence is row by row
  *
  * \return         FASP_SUCCESS or error message
  *
@@ -386,7 +387,7 @@ static SHORT orderone (INT **mat,
     tnizs[1]=tnizs[0];
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
-    // all the nozeros with same col and row are gathering togheter
+    // all the nonzeros with same col and row are gathering together
     
 #ifdef _OPENMP
 #pragma omp parallel for if(tniz>OPENMP_HOLDS)
@@ -538,10 +539,8 @@ static SHORT genintval (dCSRmat *A,
     izt=(INT *)fasp_mem_calloc(nf,sizeof(INT));
     izts=(INT *)fasp_mem_calloc(nf,sizeof(INT));
     
-    //    for (i=0;i<nf;++i) mask[i]=-1;
     fasp_iarray_set(nf, mask, -1);
     
-    //for (i=0;i<nc;++i) iz[i]=0;
     memset(iz, 0, sizeof(INT)*nc);
     
 #ifdef _OPENMP
@@ -612,7 +611,6 @@ static SHORT genintval (dCSRmat *A,
     sol.row=nf;
     sol.val=(REAL*)fasp_mem_calloc(nf,sizeof(REAL));
     
-    //for (i=0;i<nf;++i) izt[i]=0;
     memset(izt, 0, sizeof(INT)*nf);
     
 #ifdef _OPENMP
@@ -709,8 +707,8 @@ static SHORT genintval (dCSRmat *A,
 /**
  * \fn static SHORT getiteval (dCSRmat *A, dCSRmat *it)
  *
- * \brief Given a coarsening (in the form of an interpolation operator), inherit the structure,
- *        get new evaluation
+ * \brief Given a coarsening (in the form of an interpolation operator), inherit the 
+ *        structure, get new evaluation
  *
  * \param A    Pointer to dCSRmat matrix: the coefficient matrix
  * \param it   Pointer to dCSRmat matrix: the interpolation matrix

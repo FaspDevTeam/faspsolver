@@ -1,4 +1,4 @@
-/*! \file schwarz_setup.c
+/*! \file Schwarz_setup.c
  *
  *  \brief Setup phase for the Schwarz methods
  */
@@ -11,19 +11,19 @@
 #include "forts_ns.h"
 #include "mg_util.inl"
 
-static void schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
+static void Schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn fasp_schwarz_get_block_matrix (Schwarz_data *schwarz, INT nblk, INT *iblock,
+ * \fn fasp_Schwarz_get_block_matrix (Schwarz_data *Schwarz, INT nblk, INT *iblock,
  *                                    INT *jblock, INT *mask)
  *
- * \brief Form schwarz partition data
+ * \brief Form Schwarz partition data
  *
- * \param schwarz Pointer to the shcwarz data
+ * \param Schwarz Pointer to the Schwarz data
  * \param nblk    Number of partitions
  * \param iblock  Pointer to number of vertices on each level
  * \param jblock  Pointer to vertices of each level
@@ -32,7 +32,7 @@ static void schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
  * \author Zheng Li, Chensong Zhang
  * \date   2014/09/29
  */
-void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
+void fasp_Schwarz_get_block_matrix (Schwarz_data *Schwarz,
                                     INT nblk,
                                     INT *iblock,
                                     INT *jblock,
@@ -41,8 +41,8 @@ void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     INT maxbs = 0, count, nnz;
     
-    dCSRmat A = schwarz->A;
-    dCSRmat *blk = schwarz->blk_data;
+    dCSRmat A = Schwarz->A;
+    dCSRmat *blk = Schwarz->blk_data;
     
     INT  *ia  = A.IA;
     INT  *ja  = A.JA;
@@ -56,11 +56,11 @@ void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
         maxbs = MAX(maxbs, nloc);
     }
     
-    schwarz->maxbs = maxbs;
+    Schwarz->maxbs = maxbs;
     
     // allocate memory for each sub_block's right hand
-    schwarz->xloc1   = fasp_dvec_create(maxbs);
-    schwarz->rhsloc1 = fasp_dvec_create(maxbs);
+    Schwarz->xloc1   = fasp_dvec_create(maxbs);
+    Schwarz->rhsloc1 = fasp_dvec_create(maxbs);
     
     for (is=0; is<nblk; ++is) {
         ibl0 = iblock[is];
@@ -109,32 +109,30 @@ void fasp_schwarz_get_block_matrix (Schwarz_data *schwarz,
 }
 
 /**
- * \fn INT fasp_schwarz_setup (Schwarz_data *schwarz, Schwarz_param *param)
+ * \fn INT fasp_Schwarz_setup (Schwarz_data *Schwarz, Schwarz_param *param)
  *
  * \brief Setup phase for the Schwarz methods
  *
- * \param schwarz        Pointer to the shcwarz data
- * \param mmsize         Max block size
- * \param maxlev         Max number of levels
- * \param schwarz_type   Type of the Schwarz method
+ * \param Schwarz    Pointer to the Schwarz data
+ * \param param      Type of the Schwarz method
  *
- * \return               FASP_SUCCESS if succeed
+ * \return           FASP_SUCCESS if succeed
  *
  * \author Ludmil, Xiaozhe Hu
  * \date   03/22/2011
  *
  * Modified by Zheng Li on 10/09/2014
  */
-INT fasp_schwarz_setup (Schwarz_data *schwarz,
+INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
                         Schwarz_param *param)
 {
     // information about A
-    dCSRmat A = schwarz->A;
+    dCSRmat A = Schwarz->A;
     INT n   = A.row;
     
-    INT  block_solver = param->schwarz_blksolver;
-    INT  maxlev = param->schwarz_maxlvl;
-    schwarz->swzparam = param;
+    INT  block_solver = param->Schwarz_blksolver;
+    INT  maxlev = param->Schwarz_maxlvl;
+    Schwarz->swzparam = param;
     
     // local variables
     INT i;
@@ -142,7 +140,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     INT *jb=NULL;
     ivector MIS;
     
-    // data for schwarz method
+    // data for Schwarz method
     INT nblk;
     INT *iblock = NULL, *jblock = NULL, *mask = NULL, *maxa = NULL;
     
@@ -175,7 +173,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     // first pass: do a maxlev level sets out for each node
     for ( i = 0; i < MIS.row; i++ ) {
         inroot = MIS.val[i];
-        schwarz_levels(inroot,&A,mask,&nlvl,maxa,jblock,maxlev);
+        Schwarz_levels(inroot,&A,mask,&nlvl,maxa,jblock,maxlev);
         nsizei=maxa[nlvl];
         nsizeall+=nsizei;
     }
@@ -194,7 +192,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     jb=jblock;
     for (i=0;i<MIS.row;i++) {
         inroot = MIS.val[i];
-        schwarz_levels(inroot,&A,mask,&nlvl,maxa,jb,maxlev);
+        Schwarz_levels(inroot,&A,mask,&nlvl,maxa,jb,maxlev);
         nsizei=maxa[nlvl];
         iblock[i+1]=iblock[i]+nsizei;
         nsizeall+=nsizei;
@@ -212,9 +210,9 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     
     memset(mask, 0, sizeof(INT)*n);
     
-    schwarz->blk_data = (dCSRmat*)fasp_mem_calloc(nblk, sizeof(dCSRmat));
+    Schwarz->blk_data = (dCSRmat*)fasp_mem_calloc(nblk, sizeof(dCSRmat));
     
-    fasp_schwarz_get_block_matrix(schwarz, nblk, iblock, jblock, mask);
+    fasp_Schwarz_get_block_matrix(Schwarz, nblk, iblock, jblock, mask);
     
     // Setup for each block solver
     switch (block_solver) {
@@ -222,11 +220,11 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
             /* use MUMPS direct solver on each block */
-            dCSRmat *blk = schwarz->blk_data;
+            dCSRmat *blk = Schwarz->blk_data;
             Mumps_data *mumps = (Mumps_data*)fasp_mem_calloc(nblk, sizeof(Mumps_data));
             for (i=0; i<nblk; ++i)
                 mumps[i] = fasp_mumps_factorize(&blk[i], NULL, NULL, PRINT_NONE);
-            schwarz->mumps = mumps;
+            Schwarz->mumps = mumps;
             
             break;
         }
@@ -235,7 +233,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 #if WITH_UMFPACK
         case SOLVER_UMFPACK: {
             /* use UMFPACK direct solver on each block */
-            dCSRmat *blk = schwarz->blk_data;
+            dCSRmat *blk = Schwarz->blk_data;
             void **numeric	= (void**)fasp_mem_calloc(nblk, sizeof(void*));
             dCSRmat Ac_tran;
             for (i=0; i<nblk; ++i) {
@@ -244,7 +242,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
                 fasp_dcsr_cp(&Ac_tran, &blk[i]);
                 numeric[i] = fasp_umfpack_factorize(&blk[i], 0);
             }
-            schwarz->numeric = numeric;
+            Schwarz->numeric = numeric;
             fasp_dcsr_free(&Ac_tran);
             
             break;
@@ -258,18 +256,18 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
     
 #if DEBUG_MODE
     fprintf(stdout,"### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
-            n, nblk, schwarz->maxbs);
+            n, nblk, Schwarz->maxbs);
 #endif
     
     /*-------------------------------------------*/
     //  return
     /*-------------------------------------------*/
-    schwarz->nblk   = nblk;
-    schwarz->iblock = iblock;
-    schwarz->jblock = jblock;
-    schwarz->mask   = mask;
-    schwarz->maxa   = maxa;
-    schwarz->schwarz_type = param->schwarz_type;
+    Schwarz->nblk   = nblk;
+    Schwarz->iblock = iblock;
+    Schwarz->jblock = jblock;
+    Schwarz->mask   = mask;
+    Schwarz->maxa   = maxa;
+    Schwarz->Schwarz_type = param->Schwarz_type;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
@@ -279,13 +277,13 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
 }
 
 /**
- * \fn void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz, 
+ * \fn void fasp_dcsr_Schwarz_forward_smoother (Schwarz_data  *Schwarz, 
  *                                              Schwarz_param *param,
  *                                              dvector *x, dvector *b)
  *
  * \brief Schwarz smoother: forward sweep
  *
- * \param schwarz Pointer to the Shcwarz data
+ * \param Schwarz Pointer to the Schwarz data
  * \param param   Pointer to the Schwarz parameter
  * \param x       Pointer to solution vector
  * \param b       Pointer to right hand
@@ -293,7 +291,7 @@ INT fasp_schwarz_setup (Schwarz_data *schwarz,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz,
+void fasp_dcsr_Schwarz_forward_smoother (Schwarz_data  *Schwarz,
                                          Schwarz_param *param,
                                          dvector       *x,
                                          dvector       *b)
@@ -301,29 +299,29 @@ void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz,
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     
     // Schwarz partition
-    INT  nblk = schwarz->nblk;
-    dCSRmat *blk = schwarz->blk_data;
-    INT  *iblock = schwarz->iblock;
-    INT  *jblock = schwarz->jblock;
-    INT  *mask   = schwarz->mask;
-    INT  block_solver = param->schwarz_blksolver;
+    INT  nblk = Schwarz->nblk;
+    dCSRmat *blk = Schwarz->blk_data;
+    INT  *iblock = Schwarz->iblock;
+    INT  *jblock = Schwarz->jblock;
+    INT  *mask   = Schwarz->mask;
+    INT  block_solver = param->Schwarz_blksolver;
     
     // Schwarz data
-    dCSRmat A = schwarz->A;
+    dCSRmat A = Schwarz->A;
     INT *ia = A.IA;
     INT *ja = A.JA;
     REAL *val = A.val;
     
     // Local solution and right hand vectors
-    dvector rhs = schwarz->rhsloc1;
-    dvector u   = schwarz->xloc1;
+    dvector rhs = Schwarz->rhsloc1;
+    dvector u   = Schwarz->xloc1;
     
 #if WITH_UMFPACK
-    void **numeric = schwarz->numeric;
+    void **numeric = Schwarz->numeric;
 #endif
     
 #if WITH_MUMPS
-    Mumps_data *mumps = schwarz->mumps;
+    Mumps_data *mumps = Schwarz->mumps;
 #endif
     
     for (is=0; is<nblk; ++is) {
@@ -389,13 +387,13 @@ void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz,
 }
 
 /**
- * \fn void fasp_dcsr_schwarz_backward_smoother (Schwarz_data  *schwarz, 
+ * \fn void fasp_dcsr_Schwarz_backward_smoother (Schwarz_data  *Schwarz, 
  *                                               Schwarz_param *param,
  *                                               dvector *x, dvector *b)
  *
  * \brief Schwarz smoother: backward sweep
  *
- * \param schwarz Pointer to the Shcwarz data
+ * \param Schwarz Pointer to the Schwarz data
  * \param param   Pointer to the Schwarz parameter
  * \param x       Pointer to solution vector
  * \param b       Pointer to right hand
@@ -403,7 +401,7 @@ void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *schwarz,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
+void fasp_dcsr_Schwarz_backward_smoother (Schwarz_data *Schwarz,
                                           Schwarz_param *param,
                                           dvector *x,
                                           dvector *b)
@@ -411,29 +409,29 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     
     // Schwarz partition
-    INT  nblk = schwarz->nblk;
-    dCSRmat *blk = schwarz->blk_data;
-    INT  *iblock = schwarz->iblock;
-    INT  *jblock = schwarz->jblock;
-    INT  *mask   = schwarz->mask;
-    INT  block_solver = param->schwarz_blksolver;
+    INT  nblk = Schwarz->nblk;
+    dCSRmat *blk = Schwarz->blk_data;
+    INT  *iblock = Schwarz->iblock;
+    INT  *jblock = Schwarz->jblock;
+    INT  *mask   = Schwarz->mask;
+    INT  block_solver = param->Schwarz_blksolver;
     
     // Schwarz data
-    dCSRmat A = schwarz->A;
+    dCSRmat A = Schwarz->A;
     INT *ia = A.IA;
     INT *ja = A.JA;
     REAL *val = A.val;
     
     // Local solution and right hand vectors
-    dvector rhs = schwarz->rhsloc1;
-    dvector u   = schwarz->xloc1;
+    dvector rhs = Schwarz->rhsloc1;
+    dvector u   = Schwarz->xloc1;
     
 #if WITH_UMFPACK
-    void **numeric = schwarz->numeric;
+    void **numeric = Schwarz->numeric;
 #endif
     
 #if WITH_MUMPS
-    Mumps_data *mumps = schwarz->mumps;
+    Mumps_data *mumps = Schwarz->mumps;
 #endif
     
     for (is=nblk-1; is>=0; --is) {
@@ -503,7 +501,7 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
 /*---------------------------------*/
 
 /**
- * \fn static void schwarz_levels (INT inroot, dCSRmat *A, INT *mask, INT *nlvl,
+ * \fn static void Schwarz_levels (INT inroot, dCSRmat *A, INT *mask, INT *nlvl,
  *                                 INT *iblock, INT *jblock, INT maxlev)
  *
  * \brief Form the level hierarchy of input root node
@@ -519,7 +517,7 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data *schwarz,
  * \author Zheng Li
  * \date   2014/09/29
  */
-static void schwarz_levels (INT inroot,
+static void Schwarz_levels (INT inroot,
                             dCSRmat *A,
                             INT *mask,
                             INT *nlvl,
@@ -588,15 +586,15 @@ static void schwarz_levels (INT inroot,
 
 #if 0 // TODO: Need to remove this! --Chensong
 /**
- * \fn INT fasp_schwarz_setup (Schwarz_data *schwarz, INT mmsize,
- *                             INT maxlev, INT schwarz_type)
+ * \fn INT fasp_Schwarz_setup (Schwarz_data *Schwarz, INT mmsize,
+ *                             INT maxlev, INT Schwarz_type)
  *
  * \brief Setup phase for the Schwarz methods
  *
- * \param schwarz        Pointer to the shcwarz data
+ * \param Schwarz        Pointer to the Schwarz data
  * \param mmsize         Max block size
  * \param maxlev         Max number of levels
- * \param schwarz_type   Type of the Schwarz method
+ * \param Schwarz_type   Type of the Schwarz method
  *
  * \return               FASP_SUCCESS if succeed
  *
@@ -605,13 +603,13 @@ static void schwarz_levels (INT inroot,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/28/2012
  */
-static INT fasp_schwarz_setup (Schwarz_data *schwarz,
+static INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
                                INT mmsize,
                                INT maxlev,
-                               INT schwarz_type)
+                               INT Schwarz_type)
 {
     // information about A
-    dCSRmat A = schwarz->A;
+    dCSRmat A = Schwarz->A;
     INT n   = A.row;
     INT *ia = A.IA;
     INT *ja = A.JA;
@@ -624,7 +622,7 @@ static INT fasp_schwarz_setup (Schwarz_data *schwarz,
     INT *jb=NULL;
     ivector MIS;
     
-    // data for schwarz method
+    // data for Schwarz method
     INT nblk;
     INT *iblock=NULL, *jblock=NULL, *mask=NULL, *maxa=NULL;
     REAL *au=NULL, *al=NULL, *rhsloc=NULL;
@@ -727,17 +725,17 @@ static INT fasp_schwarz_setup (Schwarz_data *schwarz,
     /*-------------------------------------------*/
     //  return
     /*-------------------------------------------*/
-    schwarz->nblk = nblk;
-    schwarz->iblock = iblock;
-    schwarz->jblock = jblock;
-    schwarz->rhsloc = rhsloc;
-    schwarz->au = au;
-    schwarz->al = al;
+    Schwarz->nblk = nblk;
+    Schwarz->iblock = iblock;
+    Schwarz->jblock = jblock;
+    Schwarz->rhsloc = rhsloc;
+    Schwarz->au = au;
+    Schwarz->al = al;
     
-    schwarz->schwarz_type = schwarz_type;
-    schwarz->memt = memt;
-    schwarz->mask = mask;
-    schwarz->maxa = maxa;
+    Schwarz->Schwarz_type = Schwarz_type;
+    Schwarz->memt = memt;
+    Schwarz->mask = mask;
+    Schwarz->maxa = maxa;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);

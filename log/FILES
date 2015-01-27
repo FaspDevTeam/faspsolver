@@ -1,6 +1,6 @@
      560 ./base/include/dlmalloc.h
      172 ./base/include/doxygen.h
-    1189 ./base/include/fasp.h
+    1197 ./base/include/fasp.h
      681 ./base/include/fasp_block.h
      250 ./base/include/fasp_const.h
     2907 ./base/include/fasp_functs.h
@@ -15,8 +15,8 @@
      277 ./base/src/amg_setup_rs.c
      878 ./base/src/amg_setup_sa.c
      657 ./base/src/amg_setup_ua.c
-     326 ./base/src/amg_solve.c
-    1056 ./base/src/amlirecur.c
+     328 ./base/src/amg_solve.c
+    1059 ./base/src/amlirecur.c
      271 ./base/src/array.c
      258 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
@@ -35,7 +35,7 @@
      106 ./base/src/famg.c
      339 ./base/src/fmgcycle.c
     1145 ./base/src/formats.c
-      80 ./base/src/givens.c
+      79 ./base/src/givens.c
     1015 ./base/src/gmg_poisson.c
      747 ./base/src/graphics.c
      422 ./base/src/ilu_setup_bsr.c
@@ -43,8 +43,8 @@
     1258 ./base/src/ilu_setup_str.c
      331 ./base/src/init.c
      779 ./base/src/input.c
-    1591 ./base/src/interpolation.c
-     842 ./base/src/interpolation_em.c
+    1597 ./base/src/interpolation.c
+     840 ./base/src/interpolation_em.c
     3229 ./base/src/io.c
      578 ./base/src/itsolver_bcsr.c
      786 ./base/src/itsolver_bsr.c
@@ -70,8 +70,8 @@
     1287 ./base/src/pminres.c
      459 ./base/src/pminres_mf.c
      641 ./base/src/precond_bcsr.c
-     725 ./base/src/precond_bsr.c
-     669 ./base/src/precond_csr.c
+     727 ./base/src/precond_bsr.c
+     663 ./base/src/precond_csr.c
     1732 ./base/src/precond_str.c
      965 ./base/src/pvfgmres.c
      339 ./base/src/pvfgmres_mf.c
@@ -79,7 +79,7 @@
      339 ./base/src/pvgmres_mf.c
      874 ./base/src/quadrature.c
      116 ./base/src/rap.c
-     753 ./base/src/schwarz_setup.c
+     751 ./base/src/schwarz_setup.c
      698 ./base/src/smat.c
     1608 ./base/src/smoother_bsr.c
     2315 ./base/src/smoother_csr.c
@@ -102,10 +102,10 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      300 ./base/src/wrapper.c
-     395 ./base/src/aggregation_bsr.inl
-    1791 ./base/src/aggregation_csr.inl
+     394 ./base/src/aggregation_bsr.inl
+    1795 ./base/src/aggregation_csr.inl
     2302 ./base/src/gmg_util.inl
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   91748 total
+   91761 total

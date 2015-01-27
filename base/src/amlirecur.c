@@ -2,7 +2,7 @@
  *
  *  \brief Abstract AMLI multilevel iteration -- recursive version
  *
- *  \note  AMLI and nonlinear AMLI cycles
+ *  \note  AMLI and non-linear AMLI cycles
  */
 
 #include <math.h>
@@ -24,7 +24,7 @@
  *
  *  \param *A    Pointer to the coefficient matrix
  *  \param *b    Pointer to the dvector of right hand side
- *  \param *u    Pointer to the dvector of dofs
+ *  \param *u    Pointer to the dvector of DOFs
  *  \param *pre  Pointer to the structure of precondition (precond)
  *
  * \author Zheng Li, Chensong Zhang
@@ -58,7 +58,7 @@ static int fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
     else
         fasp_array_cp(m, r, x);
     
-    //v1 = A*p
+    // v1 = A*p
     fasp_blas_dcsr_mxv(A, x, v1);
     
     // rho1 = (p,v1)
@@ -78,7 +78,7 @@ static int fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
     // compute relative residual
     relres = absres/normb;
     
-    // if relres reachs tol(0.2), pgcg will stop,
+    // if relres reaches tol(0.2), pgcg will stop,
     // otherwise, another one pgcg iteration will do.
     if (relres < 0.2) {
         fasp_blas_array_ax(m, beta1, x);
@@ -120,19 +120,19 @@ static int fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
 }
 
 /**
- *  \fn void fasp_krylov_cycle_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *u, precond *pc)
+ *  \fn void fasp_krylov_cycle_dcsr_pgcr (dCSRmat *A, dvector *b, dvector *u, precond *pc)
  *
  *  \brief A preconditioned GCR method for solving Au=b
  *
  *  \param *A    Pointer to the coefficient matrix
  *  \param *b    Pointer to the dvector of right hand side
- *  \param *u    Pointer to the dvector of dofs
+ *  \param *u    Pointer to the dvector of DOFs
  *  \param *pre  Pointer to the structure of precondition (precond)
  *
  * \author zheng Li, Chensong Zhang
  * \date   11/09/2014
  *
- * \Note: Specified for unsmoothed aggreagtion cycle.
+ * \note   Specified for unsmoothed aggregation cycle.
  */
 static int fasp_krylov_cycle_dcsr_pgcr  (dCSRmat *A,
                                          dvector *b,
@@ -160,7 +160,7 @@ static int fasp_krylov_cycle_dcsr_pgcr  (dCSRmat *A,
     else
         fasp_array_cp(m, r, x);
     
-    //v1 = A*x
+    // v1 = A*x
     fasp_blas_dcsr_mxv(A, x, v1);
     // rho1 = (v1,v1)
     rho1 = fasp_blas_array_dotprod (m, v1, v1);
@@ -178,7 +178,7 @@ static int fasp_krylov_cycle_dcsr_pgcr  (dCSRmat *A,
     // compute relative residual
     relres = absres/normb;
     
-    // if relres reachs tol(0.2), pgcr will stop,
+    // if relres reaches tol(0.2), pgcr will stop,
     // otherwise, another one pgcr iteration will do.
     if (relres < 0.2) {
         fasp_blas_array_ax(m, alpha, x);
@@ -229,9 +229,10 @@ static int fasp_krylov_cycle_dcsr_pgcr  (dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   01/23/2011
  *
- * \note AMLI polynomila computed by the best approximation of 1/x. Refer to Johannes K. Kraus, Panayot S. Vassilevski,
- *          Ludmil T. Zikatanov, "Polynomial of best uniform approximation to $x^{-1}$ and smoothing in two-leve
- *          methods", 2013.
+ * \note AMLI polynomial computed by the best approximation of 1/x. 
+ *       Refer to Johannes K. Kraus, Panayot S. Vassilevski, Ludmil T. Zikatanov, 
+ *       "Polynomial of best uniform approximation to $x^{-1}$ and smoothing in two-level
+ *        methods", 2013.
  *
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  * Modified by Zheng Li on 11/10/2014: update direct solvers.
@@ -281,56 +282,56 @@ void fasp_solver_amli (AMG_data *mgl,
         if (level<param->ILU_levels) {
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
         }
-        else if (level<mgl->schwarz_levels) {
-            switch (mgl[level].schwarz.schwarz_type) {
+        else if (level<mgl->Schwarz_levels) {
+            switch (mgl[level].Schwarz.Schwarz_type) {
                 case 3: // TODO: Need to give a name instead of 3 --Chensong
-                    fbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                    fbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
-                    bbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
+                    bbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
                     break;
                 default:
-                    fbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                    fbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
                     break;
             }
         }
@@ -395,56 +396,56 @@ void fasp_solver_amli (AMG_data *mgl,
         if (level < param->ILU_levels) {
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
         }
-        else if (level<mgl->schwarz_levels) {
-            switch (mgl[level].schwarz.schwarz_type) {
+        else if (level<mgl->Schwarz_levels) {
+            switch (mgl[level].Schwarz.Schwarz_type) {
                 case 3:
-                    bbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                    bbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
-                    fbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
+                    fbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
                     break;
                 default:
-                    bbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                    bbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
                     break;
             }
         }
@@ -483,7 +484,7 @@ void fasp_solver_amli (AMG_data *mgl,
 #endif
                 
             default:
-                /* use iterative solver on the coarest level */
+                /* use iterative solver on the coarsest level */
                 fasp_coarse_itsolver(A0, b0, e0, tol, prtlvl);
                 
         }
@@ -499,18 +500,19 @@ void fasp_solver_amli (AMG_data *mgl,
  * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param,
  *                               INT level, INT num_levels)
  *
- * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
+ * \brief Solve Ax=b with recursive non-linear AMLI-cycle
  *
  * \param mgl         Pointer to AMG_data data
  * \param param       Pointer to AMG parameters
  * \param level       Current level
- * \param num_levels  Total numebr of levels
+ * \param num_levels  Total number of levels
  *
  * \author Xiaozhe Hu
  * \date   04/06/2010
  *
- * \note Nonlinar AMLI-cycle.  Refer to Xiazhe Hu, Panayot S. Vassilevski, Jinchao Xu
- *          "Comparative Convergence Analysis of Nonlinear AMLI-cycle Multigrid", 2013.
+ * \note Nonlinear AMLI-cycle.  
+ *       Refer to Xiazhe Hu, Panayot S. Vassilevski, Jinchao Xu
+ *       "Comparative Convergence Analysis of Nonlinear AMLI-cycle Multigrid", 2013.
  *
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  * Modified by Zheng Li on 11/10/2014: update direct solvers.
@@ -558,56 +560,56 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         if (level<param->ILU_levels) {
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
         }
-        else if (level<mgl->schwarz_levels){
-            switch (mgl[level].schwarz.schwarz_type){
+        else if (level<mgl->Schwarz_levels){
+            switch (mgl[level].Schwarz.Schwarz_type){
                 case 3:
-                    fbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                    fbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
-                    bbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
+                    bbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
                     break;
                 default:
-                    fbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                    fbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
                     break;
             }
         }
@@ -683,56 +685,56 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         if (level < param->ILU_levels) {
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
         }
-        else if (level<mgl->schwarz_levels){
-            switch (mgl[level].schwarz.schwarz_type){
+        else if (level<mgl->Schwarz_levels){
+            switch (mgl[level].Schwarz.Schwarz_type){
                 case 3:
-                    bbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                    bbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
-                    fbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
+                    fbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
                     break;
                 default:
-                    bbgs2ns_(&(mgl[level].schwarz.A.row),
-                             mgl[level].schwarz.A.IA,
-                             mgl[level].schwarz.A.JA,
-                             mgl[level].schwarz.A.val,
+                    bbgs2ns_(&(mgl[level].Schwarz.A.row),
+                             mgl[level].Schwarz.A.IA,
+                             mgl[level].Schwarz.A.JA,
+                             mgl[level].Schwarz.A.val,
                              mgl[level].x.val,
                              mgl[level].b.val,
-                             &(mgl[level].schwarz.nblk),
-                             mgl[level].schwarz.iblock,
-                             mgl[level].schwarz.jblock,
-                             mgl[level].schwarz.mask,
-                             mgl[level].schwarz.maxa,
-                             mgl[level].schwarz.au,
-                             mgl[level].schwarz.al,
-                             mgl[level].schwarz.rhsloc,
-                             &(mgl[level].schwarz.memt));
+                             &(mgl[level].Schwarz.nblk),
+                             mgl[level].Schwarz.iblock,
+                             mgl[level].Schwarz.jblock,
+                             mgl[level].Schwarz.mask,
+                             mgl[level].Schwarz.maxa,
+                             mgl[level].Schwarz.au,
+                             mgl[level].Schwarz.al,
+                             mgl[level].Schwarz.rhsloc,
+                             &(mgl[level].Schwarz.memt));
                     break;
             }
         }
@@ -772,7 +774,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
 #endif
                 
             default:
-                /* use iterative solver on the coarest level */
+                /* use iterative solver on the coarsest level */
                 fasp_coarse_itsolver(A0, b0, e0, tol, prtlvl);
                 
         }
@@ -793,13 +795,14 @@ void fasp_solver_nl_amli (AMG_data *mgl,
  * \param mgl         Pointer to AMG data: AMG_data
  * \param param       Pointer to AMG parameters: AMG_param
  * \param level       Current level
- * \param num_levels  Total numebr of levels
+ * \param num_levels  Total number of levels
  *
  * \author Xiaozhe Hu
  * \date   04/06/2010
  *
- * \note Nonlinar AMLI-cycle.  Refer to Xiazhe Hu, Panayot S. Vassilevski, Jinchao Xu
- *          "Comparative Convergence Analysis of Nonlinear AMLI-cycle Multigrid", 2013.
+ * \note Nonlinear AMLI-cycle.  
+ *       Refer to Xiazhe Hu, Panayot S. Vassilevski, Jinchao Xu
+ *       "Comparative Convergence Analysis of Nonlinear AMLI-cycle Multigrid", 2013.
  *
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
@@ -878,7 +881,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
             fasp_dvec_set(m1,e1,0.0);
             
             // The coarsest problem is solved exactly.
-            // No need to call krylov method on second coarest level
+            // No need to call Krylov method on second coarsest level
             if (level == num_levels-2) {
                 fasp_solver_nl_amli_bsr(&mgl[level+1], param, 0, num_levels-1);
             }
@@ -966,7 +969,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
                 break;
 #endif
                 
-                /* use iterative solver on the coarest level */
+                /* use iterative solver on the coarsest level */
             default:
                 fasp_coarse_itsolver(&mgl[level].Ac, b0, e0, tol, prtlvl);
                 

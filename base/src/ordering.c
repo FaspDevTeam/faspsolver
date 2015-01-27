@@ -22,7 +22,7 @@ static void CMK_ordering (const dCSRmat *, INT, INT, INT, INT, INT *, INT *);
  * \param value       The target
  * \param list_length Length of the array list
  *
- * \return  The location of value in array list if successed, otherwise, return -1.
+ * \return  The location of value in array list if succeeded, otherwise, return -1.
  *
  * \author Chunsheng Feng
  * \date   03/01/2011
@@ -70,7 +70,7 @@ INT fasp_BinarySearch (INT *list,
  * \author Chensong Zhang
  * \date   11/21/2010
  *
- * \note Operation is in place. Does not use any extra or temprary storage.
+ * \note Operation is in place. Does not use any extra or temporary storage.
  */
 INT fasp_aux_unique (INT numbers[],
                      INT size)
@@ -92,7 +92,7 @@ INT fasp_aux_unique (INT numbers[],
 /*!
  * \fn void fasp_aux_merge (INT numbers[], INT work[], INT left, INT mid, INT right)
  *
- * \brief Merge two sorted arraies
+ * \brief Merge two sorted arrays
  *
  * \param numbers   Pointer to the array needed to be sorted
  * \param work      Pointer to the work array with same size as numbers
@@ -103,7 +103,7 @@ INT fasp_aux_unique (INT numbers[],
  * \author Chensong Zhang
  * \date   11/21/2010
  *
- * \note Both arraies are stored in numbers! Arraies should be pre-sorted!
+ * \note Both arrays are stored in numbers! Arrays should be pre-sorted!
  */
 void fasp_aux_merge (INT numbers[],
                      INT work[],
@@ -155,7 +155,7 @@ void fasp_aux_merge (INT numbers[],
 /*!
  * \fn void fasp_aux_msort (INT numbers[], INT work[], INT left, INT right)
  *
- * \brief Sort the INT array ascendingly with the merge sort algorithm
+ * \brief Sort the INT array in ascending order with the merge sort algorithm
  *
  * \param numbers   Pointer to the array needed to be sorted
  * \param work      Pointer to the work array with same size as numbers
@@ -186,7 +186,7 @@ void fasp_aux_msort (INT numbers[],
 /*!
  * \fn void fasp_aux_iQuickSort (INT *a, INT left, INT right)
  *
- * \brief Sort the array (INT type) ascendingly with the quick sorting algorithm
+ * \brief Sort the array (INT type) in ascending order  with the quick sorting algorithm
  *
  * \param a      Pointer to the array needed to be sorted
  * \param left   Starting index
@@ -224,7 +224,7 @@ void fasp_aux_iQuickSort (INT *a,
 /*!
  * \fn void fasp_aux_dQuickSort (REAL *a, INT left, INT right)
  *
- * \brief Sort the array (REAL type) ascendingly with the quick sorting algorithm
+ * \brief Sort the array (REAL type) in ascending order  with the quick sorting algorithm
  *
  * \param a      Pointer to the array needed to be sorted
  * \param left   Starting index
@@ -348,7 +348,7 @@ void fasp_aux_dQuickSortIndex (REAL *a,
  *
  * \param A       Pointer to matrix
  * \param oindex  Pointer to index of vertices in order
- * \param order   Pointer to vertices with increasment degree
+ * \param order   Pointer to vertices with increasing degree
  *
  * \author Zheng Li, Chensong Zhang
  * \date   05/28/2014
@@ -366,7 +366,7 @@ void fasp_dcsr_CMK_order (const dCSRmat *A,
     vt = 0;
     mindg = row+1;
     
-    // sclect node with minimul degree
+    // select node with minimal degree
     for (i=0; i<row; ++i) {
         innz = ia[i+1] - ia[i];
         if (innz > 1) {
@@ -395,7 +395,7 @@ void fasp_dcsr_CMK_order (const dCSRmat *A,
  * \brief  Resverse CMK ordering
  *
  * \param A       Pointer to matrix
- * \param order   Pointer to vertices with increasment degree
+ * \param order   Pointer to vertices with increasing degree
  * \param oindex  Pointer to index of vertices in order
  * \param rorder  Pointer to reverse order
  *
@@ -467,7 +467,7 @@ static void dSwapping (REAL *w,
  * \fn static void CMK_ordering (const dCSRmat *A, INT loc, INT s, INT jj,
  *                               INT mindg, INT *oindex, INT *order)
  *
- * \brief CMK ordering by increasment degree of vertices.
+ * \brief CMK ordering by increasing degree of vertices.
  *
  * \param A       Pointer to matrix
  * \param loc     Main order loop variable
@@ -475,7 +475,7 @@ static void dSwapping (REAL *w,
  * \param jj      Vertices with minimal degree
  * \param mindg   Minimal degree
  * \param oindex  Pointer to index of vertices in order
- * \param order   Pointer to vertices with increasment degree
+ * \param order   Pointer to vertices with increasing degree
  *
  * \author Zheng Li, Chensong Zhang
  * \date   05/28/2014
@@ -510,7 +510,7 @@ static void CMK_ordering (const dCSRmat *A,
                 order[s] = k;
             }
         }
-        // ordering neighbor nodes by increasment degree
+        // ordering neighbor nodes by increasing degree
         if (s > sp1) {
             while (flag) {
                 flag = 0;

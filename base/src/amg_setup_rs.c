@@ -99,12 +99,12 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     }
     
     // Initialize Schwarz parameters
-    mgl->schwarz_levels = param->schwarz_levels;
-    if ( param->schwarz_levels > 0 ) {
-        swzparam.schwarz_mmsize = param->schwarz_mmsize;
-        swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
-        swzparam.schwarz_type   = param->schwarz_type;
-        swzparam.schwarz_blksolver = param->schwarz_blksolver;
+    mgl->Schwarz_levels = param->Schwarz_levels;
+    if ( param->Schwarz_levels > 0 ) {
+        swzparam.Schwarz_mmsize = param->Schwarz_mmsize;
+        swzparam.Schwarz_maxlvl = param->Schwarz_maxlvl;
+        swzparam.Schwarz_type   = param->Schwarz_type;
+        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
     }
 
 #if DIAGONAL_PREF
@@ -133,13 +133,13 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         }
         
         /*-- Setup Schwarz smoother if needed --*/
-        if ( lvl < param->schwarz_levels ) { 
-            mgl[lvl].schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
-            fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
-            fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
+        if ( lvl < param->Schwarz_levels ) { 
+            mgl[lvl].Schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
+            fasp_dcsr_shift(&(mgl[lvl].Schwarz.A), 1);
+            fasp_Schwarz_setup(&mgl[lvl].Schwarz, &swzparam);
         }
         
-        /*-- Coarseing and form the structure of interpolation --*/
+        /*-- Coarsening and form the structure of interpolation --*/
         status = fasp_amg_coarsening_rs(&mgl[lvl].A, &vertices, &mgl[lvl].P, 
 		                                &Scouple, param);
         
