@@ -16,7 +16,7 @@
  * \fn void fasp_solver_amg (dCSRmat *A, dvector *b, dvector *x,
  *                           AMG_param *param)
  *
- * \brief Solve Ax = b by algebaric multigrid methods
+ * \brief Solve Ax = b by algebraic multigrid methods
  *
  * \param A      Pointer to dCSRmat: the coefficient matrix
  * \param b      Pointer to dvector: the right hand side

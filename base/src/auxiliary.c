@@ -8,12 +8,12 @@
  *
  */
 
-// Todo: add doxygen for each function! remove unwanted functions. --Chensong
+// Todo: add Doxygen for each function! remove unwanted functions. --Chensong
 
 /*! \file auxiliary.c
  *
- *  \brief Read write and outher auxiliary routines. Also routine to convert
- *         ij value format to crs.
+ *  \brief Read write and other auxiliary routines. Also routine to convert
+ *         IJ value format to CRS.
  */
 
 #include <math.h>
@@ -49,8 +49,8 @@ void fasp_aux_ijvcrs (INT *nnzi,
     /*  IJV=(IROW,ICOL,AVAL) to CRS=(IA,JA,A).*/
     /**/
     /*  Input:*/
-    /*    nnzi number of nonzeroes in the input A */
-    /*    IROW, JCOL - the row and column indicies, each o fsize nnzi */
+    /*    nnzi number of nonzeros in the input A */
+    /*    IROW, JCOL - the row and column indices, each o fsize nnzi */
     /*    AVAL(k)=A(I,J), I=IROW(K), J=JCOL(K); k=1:nnzi*/
     /**/
     /*  Output: */

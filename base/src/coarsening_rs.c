@@ -166,7 +166,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 * \author Xuehai Huang, Chensong Zhang
 * \date   09/06/2010
 *
-* \note   For flexibiltiy, we do NOT compress S here!!! It is due to the C/F
+* \note   For flexibility, we do NOT compress S here!!! It is due to the C/F
 *         splitting routines to decide when to compress S.
 *
 * Modified by Chensong Zhang on 05/11/2013: restructure the code
@@ -594,7 +594,7 @@ static INT cfsplitting_cls (dCSRmat *A,
 			// Update lambda and linked list after j->F
 			for ( l = S->IA[j]; l < S->IA[j+1]; l++ ) {
 				k = S->JA[l];
-				if ( vec[k] == UNPT ) { // k is unkown
+				if ( vec[k] == UNPT ) { // k is unknown
 					remove_node(&LoL_head, &LoL_tail, lambda[k], k, lists, where);
 					newmeas = ++(lambda[k]);
 					enter_list(&LoL_head, &LoL_tail, newmeas, k, lists, where);
@@ -624,7 +624,7 @@ static INT cfsplitting_cls (dCSRmat *A,
 				// Update lambda and linked list after j->F
 				for ( l = S->IA[j]; l < S->IA[j+1]; l++ ) {
 					k = S->JA[l];
-					if ( vec[k] == UNPT ) { // k is unkown
+					if ( vec[k] == UNPT ) { // k is unknown
 						remove_node(&LoL_head, &LoL_tail, lambda[k], k, lists, where);
 						newmeas = ++(lambda[k]);
 						enter_list(&LoL_head, &LoL_tail, newmeas, k, lists, where);
@@ -898,7 +898,7 @@ static INT cfsplitting_clsp (dCSRmat *A,
 			// Update lambda and linked list after j->F
 			for ( l = S->IA[j]; l < S->IA[j+1]; l++ ) {
 				k = S->JA[l];
-				if ( vec[k] == UNPT ) { // k is unkown
+				if ( vec[k] == UNPT ) { // k is unknown
 					remove_node(&LoL_head, &LoL_tail, lambda[k], k, lists, where);
 					newmeas = ++(lambda[k]);
 					enter_list(&LoL_head, &LoL_tail, newmeas, k, lists, where);
@@ -1347,14 +1347,14 @@ static void strong_couplings_agg2 (dCSRmat *A,
 }
         
 /**
-* \fn static INT cfsplitting_agg (dCSRmat *A, iCSRmat *S, ivector *vertices,
-*                                 INT aggressive_path)
-*
-* \brief Find coarse level variables (C/F splitting): aggressive
-*
-* \param A                Coefficient matrix, the index starts from zero
-* \param S                Strong connection matrix
-* \param vertices         Indicator vector for the C/F splitting of the variables
+ * \fn static INT cfsplitting_agg (dCSRmat *A, iCSRmat *S, ivector *vertices,
+ *                                 INT aggressive_path)
+ *
+ * \brief Find coarse level variables (C/F splitting): aggressive
+ *
+ * \param A                Coefficient matrix, the index starts from zero
+ * \param S                Strong connection matrix
+ * \param vertices         Indicator vector for the C/F splitting of the variables
  * \param row              Number of rows of P
  * \param aggressive_path  Aggressive path
  *
@@ -1365,7 +1365,7 @@ static void strong_couplings_agg2 (dCSRmat *A,
  *
  * Modified by Chensong Zhang on 07/05/2012: Fix a data type bug
  * Modified by Chunsheng Feng, Zheng Li on 10/13/2012
- * Modified by Xiaozhe Hu on 04/24/2013: modify aggresive coarsening
+ * Modified by Xiaozhe Hu on 04/24/2013: modify aggressive coarsening
  * Modified by Chensong Zhang on 05/13/2013: restructure the code
  */
 static INT cfsplitting_agg (dCSRmat *A,
@@ -1976,8 +1976,8 @@ INT col)
  * \date   10/12/2014
  */
 static INT cfsplitting_mis (iCSRmat *S,
-                ivector *vertices,
-                ivector *order)
+                            ivector *vertices,
+                            ivector *order)
 {
 	const INT n = S->row;
 
@@ -2022,7 +2022,7 @@ static INT cfsplitting_mis (iCSRmat *S,
  *
  * \brief reorder the vertices of A base on their degrees. 
  *
- * \param S                Strong connection matrix
+ * \param S            Strong connection matrix
  * \param order        order of vertices (output)
  *
  * \note The vertex with highest degree will appear first. Other vertices will use 

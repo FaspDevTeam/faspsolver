@@ -1,5 +1,5 @@
 /*! \file linklist.inl
- *  \brief Utilies for link list data structure
+ *  \brief Utilities for link list data structure
  *
  *  \note These linked-list operations are adapted from hypre 2.0
  */

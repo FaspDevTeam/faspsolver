@@ -176,12 +176,12 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     }
     
     // Initialize Schwarz parameters
-    mgl->schwarz_levels = param->schwarz_levels;
-    if ( param->schwarz_levels > 0 ) {
-        swzparam.schwarz_mmsize = param->schwarz_mmsize;
-        swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
-        swzparam.schwarz_type   = param->schwarz_type;
-        swzparam.schwarz_blksolver = param->schwarz_blksolver;
+    mgl->Schwarz_levels = param->Schwarz_levels;
+    if ( param->Schwarz_levels > 0 ) {
+        swzparam.Schwarz_mmsize = param->Schwarz_mmsize;
+        swzparam.Schwarz_maxlvl = param->Schwarz_maxlvl;
+        swzparam.Schwarz_type   = param->Schwarz_type;
+        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
     }
     
     // Initialize AMLI coefficients
@@ -223,17 +223,17 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
         }
         
         /* -- setup Schwarz smoother if necessary */
-        if ( lvl < param->schwarz_levels ) {
-            mgl[lvl].schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
-            fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
-            fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
+        if ( lvl < param->Schwarz_levels ) {
+            mgl[lvl].Schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
+            fasp_dcsr_shift(&(mgl[lvl].Schwarz.A), 1);
+            fasp_Schwarz_setup(&mgl[lvl].Schwarz, &swzparam);
         }
         
         /*-- Aggregation --*/
         status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param, lvl+1,
                                  &Neighbor[lvl], &num_aggregations[lvl]);
         
-        // Check 1: Did coarsening step successed?
+        // Check 1: Did coarsening step succeed?
         if ( status < 0 ) {
             // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
@@ -427,12 +427,12 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     }
     
     // Initialize Schwarz parameters
-    mgl->schwarz_levels = param->schwarz_levels;
-    if ( param->schwarz_levels > 0 ) {
-        swzparam.schwarz_mmsize = param->schwarz_mmsize;
-        swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
-        swzparam.schwarz_type   = param->schwarz_type;
-        swzparam.schwarz_blksolver = param->schwarz_blksolver;
+    mgl->Schwarz_levels = param->Schwarz_levels;
+    if ( param->Schwarz_levels > 0 ) {
+        swzparam.Schwarz_mmsize = param->Schwarz_mmsize;
+        swzparam.Schwarz_maxlvl = param->Schwarz_maxlvl;
+        swzparam.Schwarz_type   = param->Schwarz_type;
+        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
     }
     
     // Initialize AMLI coefficients
@@ -459,10 +459,10 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
         }
         
         /* -- setup Schwarz smoother if necessary */
-        if ( lvl < param->schwarz_levels ) {
-            mgl[lvl].schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
-            fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
-            fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
+        if ( lvl < param->Schwarz_levels ) {
+            mgl[lvl].Schwarz.A = fasp_dcsr_sympat(&mgl[lvl].A);
+            fasp_dcsr_shift(&(mgl[lvl].Schwarz.A), 1);
+            fasp_Schwarz_setup(&mgl[lvl].Schwarz, &swzparam);
         }
         
         /*-- Aggregation --*/
@@ -636,7 +636,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     // level info (fine: 0; coarse: 1)
     ivector *vertices = (ivector *)fasp_mem_calloc(max_levels, sizeof(ivector));
     
-    //each elvel stores the information of the number of aggregations
+    // each level stores the information of the number of aggregations
     INT *num_aggs = (INT *)fasp_mem_calloc(max_levels, sizeof(INT));
     
     // each level stores the information of the strongly coupled neighbourhood
@@ -753,7 +753,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         printf("RAP\n");
         fasp_blas_dbsr_rap(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
         
-        /* -- Form extra near kernel space if needed --*/
+        /*-- Form extra near kernel space if needed --*/
         if (mgl[lvl].A_nk != NULL){
             
             mgl[lvl+1].A_nk = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));

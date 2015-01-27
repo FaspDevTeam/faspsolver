@@ -144,7 +144,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     // each level stores the information of the strongly coupled neighborhoods
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     
-    // Initialzie level information
+    // Initialize level information
     for ( i = 0; i < max_levels; ++i ) num_aggs[i] = 0;
     
     mgl[0].near_kernel_dim   = 1;
@@ -166,12 +166,12 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     }
     
     // Initialize Schwarz parameters
-    mgl->schwarz_levels = param->schwarz_levels;
-    if ( param->schwarz_levels > 0 ) {
-        swzparam.schwarz_mmsize = param->schwarz_mmsize;
-        swzparam.schwarz_maxlvl = param->schwarz_maxlvl;
-        swzparam.schwarz_type   = param->schwarz_type;
-        swzparam.schwarz_blksolver = param->schwarz_blksolver;
+    mgl->Schwarz_levels = param->Schwarz_levels;
+    if ( param->Schwarz_levels > 0 ) {
+        swzparam.Schwarz_mmsize = param->Schwarz_mmsize;
+        swzparam.Schwarz_maxlvl = param->Schwarz_maxlvl;
+        swzparam.Schwarz_type   = param->Schwarz_type;
+        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
     }
     
     // Initialize AMLI coefficients
@@ -217,10 +217,10 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         }
         
         /*-- Setup Schwarz smoother if necessary */
-        if ( lvl < param->schwarz_levels ) {
-            mgl[lvl].schwarz.A=fasp_dcsr_sympat(&mgl[lvl].A);
-            fasp_dcsr_shift(&(mgl[lvl].schwarz.A), 1);
-            fasp_schwarz_setup(&mgl[lvl].schwarz, &swzparam);
+        if ( lvl < param->Schwarz_levels ) {
+            mgl[lvl].Schwarz.A=fasp_dcsr_sympat(&mgl[lvl].A);
+            fasp_dcsr_shift(&(mgl[lvl].Schwarz.A), 1);
+            fasp_Schwarz_setup(&mgl[lvl].Schwarz, &swzparam);
         }
         
         /*-- Aggregation --*/
@@ -231,7 +231,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                 status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param,
                                          lvl+1, &Neighbor[lvl], &num_aggs[lvl]);
                 
-                /*-- Choose strenth threshold adaptively --*/
+                /*-- Choose strength threshold adaptively --*/
                 if ( num_aggs[lvl]*4 > mgl[lvl].A.row )
                     param->strong_coupled /= 2;
                 else if ( num_aggs[lvl]*1.25 < mgl[lvl].A.row )
@@ -247,7 +247,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                 break;
         }
         
-        // Check 1: Did coarsening step successed?
+        // Check 1: Did coarsening step succeed?
         if ( status < 0 ) {
             // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
@@ -283,7 +283,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
             break;
         }
         
-        /*-- Form resitriction --*/
+        /*-- Form restriction --*/
         fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
         
         /*-- Form coarse level stiffness matrix --*/
@@ -494,7 +494,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
                 status = aggregation_vmb(&mgl[lvl].PP, &vertices[lvl], param,
                                          lvl+1, &Neighbor[lvl], &num_aggs[lvl]);
                 
-                /*-- Choose strenth threshold adaptively --*/
+                /*-- Choose strength threshold adaptively --*/
                 if ( num_aggs[lvl]*4 > mgl[lvl].PP.row )
                     param->strong_coupled /= 4;
                 else if ( num_aggs[lvl]*1.25 < mgl[lvl].PP.row )

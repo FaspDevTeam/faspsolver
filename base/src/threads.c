@@ -1,6 +1,6 @@
 /*! \file threads.c
  *
- *  \brief Get and set number of threads and assigne work load for each thread.
+ *  \brief Get and set number of threads and assign work load for each thread.
  */
 
 #include <stdio.h>
@@ -104,17 +104,17 @@ void FASP_GET_START_END (INT procid,
     *end = end_loc;
 }
 
-INT THDs_AMG_GS=0;  /**< cpr amg gs smoothing threads      */
-INT THDs_CPR_lGS=0; /**< reservoir gs smoothing threads     */
-INT THDs_CPR_gGS=0; /**< global matrix gs smoothing threads */
+INT THDs_AMG_GS=0;  /**< AMG GS smoothing threads      */
+INT THDs_CPR_lGS=0; /**< reservoir GS smoothing threads     */
+INT THDs_CPR_gGS=0; /**< global matrix GS smoothing threads */
 
 /**
  * \fn void fasp_set_GS_threads (INT threads,INT its)
  *
- * \brief  Set threads for CPR. Please add it at the begin of Krylov openmp method function
- *         and after iter++.
+ * \brief  Set threads for CPR. Please add it at the begin of Krylov OpenMP method 
+ *         function and after iter++.
  *
- * \param threads  Total threads of sovler
+ * \param threads  Total threads of solver
  * \param its      Current its of the Krylov methods
  *
  * \author Feng Chunsheng, Yue Xiaoqiang

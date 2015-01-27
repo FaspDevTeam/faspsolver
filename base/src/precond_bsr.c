@@ -586,7 +586,8 @@ void fasp_precond_dbsr_amg (REAL *r,
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
-    for (i=0;i<maxit;++i) fasp_solver_mgcycle_bsr(mgl,&amgparam); //fasp_solver_mgrecurmgl,&amgparam,0); //
+    for (i=0;i<maxit;++i) fasp_solver_mgcycle_bsr(mgl,&amgparam); 
+	//fasp_solver_mgrecurmgl,&amgparam,0); //
     
     fasp_array_cp(m,mgl->x.val,z);    
 }
@@ -594,7 +595,7 @@ void fasp_precond_dbsr_amg (REAL *r,
 /**
  * \fn void fasp_precond_dbsr_nl_amli (REAL *r, REAL *z, void *data)
  *
- * \brief Nonliear AMLI-cycle AMG preconditioner
+ * \brief Nonlinear AMLI-cycle AMG preconditioner
  *
  * \param r     Pointer to the vector needs preconditioning
  * \param z     Pointer to preconditioned vector
@@ -696,7 +697,8 @@ void fasp_precond_dbsr_amg_nk (REAL *r,
     mgl->x.row=m; //fasp_dvec_set(m,&mgl->x,0.0);
     fasp_array_cp(m, z, mgl->x.val);
     
-    for (i=0;i<maxit;++i) fasp_solver_mgcycle_bsr(mgl,&amgparam); //fasp_solver_mgrecurmgl,&amgparam,0); //
+    for (i=0;i<maxit;++i) fasp_solver_mgcycle_bsr(mgl,&amgparam); 
+	//fasp_solver_mgrecurmgl,&amgparam,0); //
     
     fasp_array_cp(m,mgl->x.val,z);
     

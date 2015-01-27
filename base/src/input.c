@@ -240,7 +240,7 @@ void fasp_param_input (const char *filenm,
             fgets(buffer,500,fp); // skip rest of line
         }
         
-        else if (strcmp(buffer,"AMG_schwarz_levels")==0)
+        else if (strcmp(buffer,"AMG_Schwarz_levels")==0)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
@@ -248,7 +248,7 @@ void fasp_param_input (const char *filenm,
 			}
 			val = fscanf(fp,"%d",&ibuff);
 			if (val!=1) { status = FASP_SUCCESS; break; }
-			inparam->AMG_schwarz_levels = ibuff;
+			inparam->AMG_Schwarz_levels = ibuff;
 			fgets(buffer,500,fp); // skip rest of line
 		}
     

@@ -73,7 +73,7 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
     
     fasp_sparse_iit_(ipt,jpt,&nc,&n,ip,jp);
     
-    /* tripple matrix product: R * A * transpose(P^T)=R*A*P.*/
+    /* triple matrix product: R * A * transpose(P^T)=R*A*P.*/
     /* A is square n by n*/
     /* Note: to compute R*A* P the input are R, A and P^T */ 
     /* we need to transpose now the structure of P, because the input is P^T */
@@ -84,7 +84,7 @@ dCSRmat fasp_blas_dcsr_rap2 (INT *ir,
     
     /*
        First call is with jc=null so that we find the number of
-       nonzeroes in the result 
+       nonzeros in the result 
     */
     ac.JA=NULL;
     fasp_sparse_rapms_(ir,jr,ia,ja,ip,jp,&n,&nc,ac.IA,ac.JA,&maxrp);

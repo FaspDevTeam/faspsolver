@@ -35,7 +35,6 @@ void fasp_aux_givens (const REAL beta,
     REAL       h0,h1,r,c,s,tempi,tempip1,sum;
     
     tmp[0]=beta;
-    //for (i=1;i<Hsize;++i) tmp[i]=0.0; 
     memset(&tmp[1], 0x0, sizeof(REAL)*(Hsize-1));
 
     for (i=0;i<Hsize-1;++i) {

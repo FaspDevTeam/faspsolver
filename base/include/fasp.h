@@ -73,7 +73,14 @@
 #define ISNAN(a) (((a)!=(a))?(TRUE):(FALSE)) /**< is a == NAN? */
 
 /**
+ * \brief Definition of print command in DEBUG mode
+ */
+#define PRT_INT(A)  printf("### DEBUG: %s = %d\n", #A, (A)) /**< print an integer */
+#define PRT_REAL(A) printf("### DEBUG: %s = %e\n", #A, (A)) /**< print a real num */
+
+/**
  * \brief Index starting point: C convention or Fortran convention
+ * TODO: Not used any more. Should be removed! --Chensong
  */
 #define ISTART 0                /**< 0 if in Natural index, 1 if data is in C index */
 #define N2C(ind) ((ind)-ISTART) /**< map from Natural index 1,2,... to C index 0,1,... */
@@ -85,6 +92,7 @@
 
 extern unsigned INT total_alloc_mem;   /**< total allocated memory */
 extern unsigned INT total_alloc_count; /**< total allocation times */
+
 /*---------------------------*/
 /*---  Matrix and vector  ---*/
 /*---------------------------*/
@@ -317,7 +325,7 @@ typedef struct dSTRmat{
     //! number of off-diag bands
     INT nband;
 
-    //! offsets of the off-diagals (length is nband)
+    //! offsets of the off-diagonals (length is nband)
     INT *offsets;
 
     //! off-diagonal entries (dimension is nband * [(ngrid-|offsets|) * nc^2])
@@ -363,7 +371,7 @@ typedef struct ivector{
  */
 typedef struct {
 
-    //! print leve
+    //! print level
     SHORT print_level;
 
     //! ILU type for decomposition
@@ -372,10 +380,10 @@ typedef struct {
     //! level of fill-in for ILUk
     INT ILU_lfil;
 
-    //! drop tolerence for ILUt
+    //! drop tolerance for ILUt
     REAL ILU_droptol;
 
-    //! add the sum of dropped elements to diagnal element in proportion relax
+    //! add the sum of dropped elements to diagonal element in proportion relax
     REAL ILU_relax;
 
     //! permuted if permtol*|a(i,j)| > |a(i,i)|
@@ -428,16 +436,16 @@ typedef struct {
     SHORT print_level;
 
     //! type for Schwarz method
-    SHORT schwarz_type;
+    SHORT Schwarz_type;
 
     //! maximal level for constructing the blocks
-    INT schwarz_maxlvl;
+    INT Schwarz_maxlvl;
 
-    //! maxiaml size of blocks
-    INT schwarz_mmsize;
+    //! maximal size of blocks
+    INT Schwarz_mmsize;
 
-    //! type of schwarz block solver
-    INT schwarz_blksolver;
+    //! type of Schwarz block solver
+    INT Schwarz_blksolver;
 
 } Schwarz_param; /**< Parameters for ILU */
 
@@ -499,7 +507,7 @@ typedef struct {
     REAL *al;
 
     //! Schwarz method type
-    INT schwarz_type;
+    INT Schwarz_type;
 
     //! Schwarz block solver
     INT blk_solver;
@@ -532,7 +540,7 @@ typedef struct {
     //! param for MUMPS
     Mumps_data *mumps;
 
-    //! param for schwarz
+    //! param for Schwarz
     Schwarz_param *swzparam;
 
 } Schwarz_data;
@@ -560,7 +568,7 @@ typedef struct {
     //! max number of levels of AMG
     SHORT max_levels;
 
-    //! max coarsest level dof
+    //! max number of coarsest level DOF
     INT coarse_dof;
 
     //! type of AMG cycle
@@ -596,7 +604,7 @@ typedef struct {
     //! coefficients of the polynomial used by AMLI cycle
     REAL *amli_coef;
 
-    //! type of krylov method used by Nonlinear AMLI cycle
+    //! type of Krylov method used by Nonlinear AMLI cycle
     SHORT nl_amli_krylov_type;
 
     //! coarsening type
@@ -620,10 +628,10 @@ typedef struct {
     //! number of levels use aggressive coarsening
     INT aggressive_level;
 
-    //! numebr of paths use to determin stongly coupled C points
+    //! number of paths use to determine strongly coupled C points
     INT aggressive_path;
 
-    //! numebr of pairwise matchings
+    //! number of pairwise matchings
     INT pair_number;
 
     //! strong coupled threshold for aggregate
@@ -647,29 +655,29 @@ typedef struct {
     //! level of fill-in for ILUs and ILUk
     INT ILU_lfil;
 
-    //! drop tolerence for ILUt
+    //! drop tolerance for ILUt
     REAL ILU_droptol;
 
-    //! relaxiation for ILUs
+    //! relaxation for ILUs
     REAL ILU_relax;
 
     //! permuted if permtol*|a(i,j)| > |a(i,i)|
     REAL ILU_permtol;
 
-    //! number of levels use schwarz smoother
-    INT schwarz_levels;
+    //! number of levels use Schwarz smoother
+    INT Schwarz_levels;
 
     //! maximal block size
-    INT schwarz_mmsize;
+    INT Schwarz_mmsize;
 
     //! maximal levels
-    INT schwarz_maxlvl;
+    INT Schwarz_maxlvl;
 
-    //! type of schwarz method
-    INT schwarz_type;
+    //! type of Schwarz method
+    INT Schwarz_type;
 
-    //! type of schwarz block solver
-    INT schwarz_blksolver;
+    //! type of Schwarz block solver
+    INT Schwarz_blksolver;
 
 } AMG_param; /**< Parameters for AMG */
 
@@ -708,7 +716,7 @@ typedef struct {
 
     /* Extra information */
 
-    //! pointer to the numerical dactorization from UMFPACK
+    //! pointer to the numerical factorization from UMFPACK
     void *Numeric;
 
     //! pointer to the CF marker at level level_num
@@ -728,11 +736,11 @@ typedef struct {
 
     // Smoother order information
 
-    //! number of levels use schwarz smoother
-    INT schwarz_levels;
+    //! number of levels use Schwarz smoother
+    INT Schwarz_levels;
 
     //! data of Schwarz smoother
-    Schwarz_data schwarz;
+    Schwarz_data Schwarz;
 
     //! Temporary work space
     dvector w;
@@ -799,7 +807,7 @@ typedef struct {
     //! degree of the polynomial used by AMLI cycle
     SHORT amli_degree;
 
-    //! type of krylov method used by Nonlinear AMLI cycle
+    //! type of Krylov method used by Nonlinear AMLI cycle
     SHORT nl_amli_krylov_type;
 
     //! smooth factor for smoothing the tentative prolongation
@@ -817,15 +825,15 @@ typedef struct {
     //! Matrix data
     dCSRmat *A;
 
-    // extra near kernal space
+    // extra near kernel space
 
-    //! Matrix data for near kernal
+    //! Matrix data for near kernel
     dCSRmat *A_nk;
 
-    //! Prolongation for near kernal
+    //! Prolongation for near kernel
     dCSRmat *P_nk;
 
-    //! Resriction for near kernal
+    //! Restriction for near kernel
     dCSRmat *R_nk;
 
     // temporary work space
@@ -889,13 +897,13 @@ typedef struct {
     //! ILU preconditioner data (needed for CPR type preconditioner)
     ILU_data *LU;
 
-    //! whether the matrx are scaled or not
+    //! whether the matrix are scaled or not
     SHORT scaled;
 
-    //! the orginal CSR matrix
+    //! the original CSR matrix
     dCSRmat *A;
 
-    //! stor the whole reservoir block in STR format
+    //! store the whole reservoir block in STR format
     dSTRmat *A_str;
 
     //! store Saturation block in STR format
@@ -918,7 +926,7 @@ typedef struct {
     //! order for smoothing
     ivector *order;
 
-    //! arrary to store neighbor information
+    //! array to store neighbor information
     ivector *neigh;
 
     // temporary work space
@@ -934,16 +942,16 @@ typedef struct {
 
 /**
  * \struct precond_diagstr
- * \brief Data passed to diagnal preconditioner for dSTRmat matrices
+ * \brief Data passed to diagonal preconditioner for dSTRmat matrices
  *
- * \note This is needed for the diagnal preconditioner.
+ * \note This is needed for the diagonal preconditioner.
  */
 typedef struct {
 
     //! number of components
     INT nc;
 
-    //! diagnal elements
+    //! diagonal elements
     dvector diag;
 
 } precond_diagstr; /**< Data for diagonal preconditioner of STR matrices */
@@ -1003,18 +1011,18 @@ typedef struct {
     INT itsolver_maxit;  /**< maximal number of iterations for iterative solvers */
     INT restart;         /**< restart number used in GMRES */
 
-    //pamameters for ILU
+    // parameters for ILU
     SHORT ILU_type;      /**< ILU type for decomposition*/
     INT ILU_lfil;        /**< level of fill-in */
     REAL ILU_droptol;    /**< drop tolerance */
-    REAL ILU_relax;      /**< scaling factor: add the sum of dropped entries to diagnal */
+    REAL ILU_relax;      /**< scaling factor: add the sum of dropped entries to diagonal */
     REAL ILU_permtol;    /**< permutation tolerance */
 
     // parameter for Schwarz
     INT Schwarz_mmsize;  /**< maximal block size */
     INT Schwarz_maxlvl;  /**< maximal levels */
-    INT Schwarz_type;    /**< type of schwarz method */
-    INT Schwarz_blksolver; /**< type of schwarz block solver */
+    INT Schwarz_type;    /**< type of Schwarz method */
+    INT Schwarz_blksolver; /**< type of Schwarz block solver */
 
     // parameters for AMG
     SHORT AMG_type;                /**< Type of AMG */
@@ -1026,15 +1034,15 @@ typedef struct {
     SHORT AMG_polynomial_degree;   /**< degree of the polynomial smoother */
     SHORT AMG_presmooth_iter;      /**< number of presmoothing */
     SHORT AMG_postsmooth_iter;     /**< number of postsmoothing */
-    INT AMG_coarse_dof;            /**< minimal coarsest level dof */
+    INT AMG_coarse_dof;            /**< max number of coarsest level DOF */
     REAL AMG_tol;                  /**< tolerance for AMG if used as preconditioner */
     INT AMG_maxit;                 /**< number of iterations for AMG used as preconditioner */
     SHORT AMG_ILU_levels;          /**< how many levels use ILU smoother */
     SHORT AMG_coarse_solver;       /**< coarse solver type */
     SHORT AMG_coarse_scaling;      /**< switch of scaling of the coarse grid correction */
     SHORT AMG_amli_degree;         /**< degree of the polynomial used by AMLI cycle */
-    SHORT AMG_nl_amli_krylov_type; /**< type of krylov method used by nonlinear AMLI cycle */
-    INT AMG_schwarz_levels;        /**< number of levels use schwarz smoother */
+    SHORT AMG_nl_amli_krylov_type; /**< type of Krylov method used by nonlinear AMLI cycle */
+    INT AMG_Schwarz_levels;        /**< number of levels use Schwarz smoother */
 
     // parameters for classical AMG
     SHORT AMG_coarsening_type;     /**< coarsening type */
@@ -1051,7 +1059,7 @@ typedef struct {
     REAL AMG_strong_coupled;       /**< strong coupled threshold for aggregate */
     INT AMG_max_aggregation;       /**< max size of each aggregate */
     REAL AMG_tentative_smooth;     /**< relaxation factor for smoothing the tentative prolongation */
-    SHORT AMG_smooth_filter;       /**< use filterfor smoothing the tentative prolongation or not */
+    SHORT AMG_smooth_filter;       /**< use filter for smoothing the tentative prolongation or not */
 
 } input_param; /**< Input parameters */
 
@@ -1151,7 +1159,7 @@ typedef struct linked_list
 typedef ListElement *LinkList; /**< linked list */
 
 /*
- * OpenMP definitions and decrorations
+ * OpenMP definitions and decorations
  */
 #define FASP_GSRB 1  /**< MG level 0 use RedBlack Gauss Seidel Smoothing */
 
@@ -1160,7 +1168,7 @@ extern INT  nx_rb ;  /**< Red Black Gs Smoother Nx */
 extern INT  ny_rb ;  /**< Red Black Gs Smoother Ny */
 extern INT  nz_rb ;  /**< Red Black Gs Smoother Nz */
 extern INT *IMAP;    /**< Red Black Gs Smoother imap */
-extern INT  MAXIMAP; /**< Red Black Gs Smoother max dofs of reservoir */
+extern INT  MAXIMAP; /**< Red Black Gs Smoother max DOFs of reservoir */
 #endif
 
 extern INT  count;   /**< Counter for multiple calls */
@@ -1177,7 +1185,7 @@ extern REAL total_linear_time; /**< Total used time of linear solvers */
 extern REAL total_start_time;  /**< Total used time */
 extern REAL total_setup_time;  /**< Total setup time */
 extern INT  total_iter;        /**< Total number of iterations */
-extern INT  fasp_called_times; /**< Tatal FASP calls */
+extern INT  fasp_called_times; /**< Total FASP calls */
 #endif
 
 #endif /* end if for FASP_USE_OPENMP */

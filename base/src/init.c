@@ -132,38 +132,38 @@ void fasp_ilu_data_alloc (INT iwk,
 }
 
 /**
- * \fn void fasp_schwarz_data_free (Schwarz_data *schwarz)
+ * \fn void fasp_Schwarz_data_free (Schwarz_data *Schwarz)
  * \brief Free Schwarz_data data memeory space
  *
- * \param *schwarz  pointer to the AMG_data data
+ * \param *Schwarz  pointer to the AMG_data data
  *
  * \author Xiaozhe Hu
  * \date 2010/04/06
  */
-void fasp_schwarz_data_free (Schwarz_data *schwarz)
+void fasp_Schwarz_data_free (Schwarz_data *Schwarz)
 {
     INT i;
-	fasp_dcsr_free(&schwarz->A);
+	fasp_dcsr_free(&Schwarz->A);
 	
-	for (i=0; i<schwarz->nblk; ++i) fasp_dcsr_free (&((schwarz->blk_data)[i]));
+	for (i=0; i<Schwarz->nblk; ++i) fasp_dcsr_free (&((Schwarz->blk_data)[i]));
 
-	schwarz->nblk = 0;
-	fasp_mem_free (schwarz->iblock);
-	fasp_mem_free (schwarz->jblock);
-	//fasp_mem_free (schwarz->rhsloc);
-	fasp_dvec_free (&schwarz->rhsloc1);
-	fasp_dvec_free (&schwarz->xloc1);
-	//fasp_mem_free (schwarz->au);
-	//fasp_mem_free (schwarz->al);
+	Schwarz->nblk = 0;
+	fasp_mem_free (Schwarz->iblock);
+	fasp_mem_free (Schwarz->jblock);
+	//fasp_mem_free (Schwarz->rhsloc);
+	fasp_dvec_free (&Schwarz->rhsloc1);
+	fasp_dvec_free (&Schwarz->xloc1);
+	//fasp_mem_free (Schwarz->au);
+	//fasp_mem_free (Schwarz->al);
 	
-	schwarz->memt = 0;
-	fasp_mem_free (schwarz->mask);
-	fasp_mem_free (schwarz->maxa);
+	Schwarz->memt = 0;
+	fasp_mem_free (Schwarz->mask);
+	fasp_mem_free (Schwarz->maxa);
 
 #if WITH_MUMPS
-	if (schwarz->mumps == NULL) return;
+	if (Schwarz->mumps == NULL) return;
 	else 
-	for (i=0; i<schwarz->nblk; ++i) fasp_mumps_free (&((schwarz->mumps)[i]));
+	for (i=0; i<Schwarz->nblk; ++i) fasp_mumps_free (&((Schwarz->mumps)[i]));
 #endif
 }
 
@@ -196,7 +196,7 @@ void fasp_amg_data_free (AMG_data *mgl,
         if (&mgl[i].w) { fasp_dvec_free(&mgl[i].w); }
         if (&mgl[i].cfmark) { fasp_ivec_free(&mgl[i].cfmark); }
         if (&mgl[i].LU) { fasp_ilu_data_free(&mgl[i].LU); }
-        if (&mgl[i].schwarz) {fasp_schwarz_data_free (&mgl[i].schwarz);}
+        if (&mgl[i].Schwarz) {fasp_Schwarz_data_free (&mgl[i].Schwarz);}
     }
     
     for (i=0; i<mgl->near_kernel_dim; ++i) {
@@ -260,7 +260,7 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
         if (&mgl[i].w) { fasp_dvec_free(&mgl[i].w); }
         if (&mgl[i].cfmark) { fasp_ivec_free(&mgl[i].cfmark); }
         if (&mgl[i].LU) { fasp_ilu_data_free(&mgl[i].LU); }
-        //if (&mgl[i].schwarz) {fasp_schwarz_data_free (&mgl[i].schwarz);}
+        //if (&mgl[i].Schwarz) {fasp_Schwarz_data_free (&mgl[i].Schwarz);}
     }
     
     for (i=0; i<mgl->near_kernel_dim; ++i) {

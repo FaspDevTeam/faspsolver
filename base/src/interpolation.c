@@ -58,7 +58,7 @@ void fasp_amg_interp (dCSRmat *A,
     printf("### DEBUG: fasp_amg_interp ...... [Start]\n");
 #endif
     
-    // make sure standard interpolaiton is used for aggressive coarsening
+    // make sure standard interpolation is used for aggressive coarsening
     if ( coarsening_type == COARSE_AC ) interp_type = INTERP_STD;
     
     switch ( interp_type ) {
@@ -116,7 +116,7 @@ void fasp_amg_interp1 (dCSRmat *A,
     printf("### DEBUG: fasp_amg_interp1 ...... [Start]\n");
 #endif
     
-    // make sure standard interpolaiton is used for aggressive coarsening
+    // make sure standard interpolation is used for aggressive coarsening
     if ( coarsening_type == COARSE_AC ) interp_type = INTERP_STD;
     
     switch ( interp_type ) {
@@ -144,7 +144,7 @@ void fasp_amg_interp1 (dCSRmat *A,
 /**
  * \fn void fasp_amg_interp_trunc (dCSRmat *P, AMG_param *param)
  *
- * \brief Trunction step for prolongation operators
+ * \brief Truncation step for prolongation operators
  *
  * \param P        Prolongation (input: full, output: truncated)
  * \param param    Pointer to AMG_param: AMG parameters
@@ -321,7 +321,9 @@ static void interp_DIR (dCSRmat *A,
     if (use_openmp) {
 #ifdef _OPENMP
         stride_i = row/nthreads;
-#pragma omp parallel private(myid,mybegin,myend,i,begin_row,end_row,idiag,aii,amN,amP,apN,apP,num_pcouple,j,k,alpha,beta,l) num_threads(nthreads)
+#pragma omp parallel private(myid,mybegin,myend,i,begin_row,end_row,idiag,aii, \
+                             amN,amP,apN,apP,num_pcouple,j,k,alpha,beta,l)     \
+							 num_threads(nthreads)
         {
             myid = omp_get_thread_num();
             mybegin = myid*stride_i;
@@ -551,7 +553,7 @@ static void interp_STD (dCSRmat *A,
     // diagonal entries
     REAL * diag   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
     
-    // coefficents hat a_ij for relevant CGPT of the i-th node
+    // coefficients hat a_ij for relevant CGPT of the i-th node
     REAL * Ahat   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
     
     // Step 0. Prepare diagonal, Cs-sum, and N-sum
@@ -601,7 +603,7 @@ static void interp_STD (dCSRmat *A,
             // form the reverse indices for i-th row
             for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) rindi[A->JA[j]] = j;
             
-            // clean up Ahat for relevent nodes only
+            // clean up Ahat for relevant nodes only
             for ( j = P->IA[i]; j < P->IA[i+1]; j++ ) Ahat[P->JA[j]] = 0.0;
             
             // set values of Ahat
@@ -756,7 +758,7 @@ static void interp_EXT (dCSRmat *A,
     // diagonal entries
     REAL * diag   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
     
-    // coefficents hat a_ij for relevant CGPT of the i-th node
+    // coefficients hat a_ij for relevant CGPT of the i-th node
     REAL * Ahat   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
     
     // Step 0. Prepare diagonal, Cs-sum, and N-sum
@@ -806,7 +808,7 @@ static void interp_EXT (dCSRmat *A,
             // form the reverse indices for i-th row
             for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) rindi[A->JA[j]] = j;
             
-            // clean up Ahat for relevent nodes only
+            // clean up Ahat for relevant nodes only
             for ( j = P->IA[i]; j < P->IA[i+1]; j++ ) Ahat[P->JA[j]] = 0.0;
             
             // set values of Ahat
@@ -1010,8 +1012,8 @@ static void mod_cindex (INT nrows,
  * \param nrows      Length of cindex
  * \param ncols      Length of cindex
  * \param cindex     Indices of nodes in coarse grid
- * \param nbl_ysk    Left  bandwith
- * \param nbr_ysk    Right bandwith
+ * \param nbl_ysk    Left  bandwidth
+ * \param nbr_ysk    Right bandwidth
  * \param CF_marker  C/F marker of the nodes, 1: coarse nodes, 0: fine nodes.
  * \param icor_ysk   Indices of coarse nodes in fine grid
  *
@@ -1033,7 +1035,9 @@ static void get_cindex (INT nrows,
     
     nthreads = FASP_GET_NUM_THREADS();
     
-#pragma omp parallel for private(myid,FiveMyid,mybegin,myend,min_A,max_A,i,first_f_node,min_P,max_P,myend_minus_one) reduction(+: lengthAA,lengthPP)
+#pragma omp parallel for private(myid,FiveMyid,mybegin,myend,min_A,max_A,i, \
+                                 first_f_node,min_P,max_P,myend_minus_one)  \
+								 reduction(+: lengthAA,lengthPP)
     for (myid = 0; myid < nthreads; myid ++)
     {
         FiveMyid = myid * 5;
@@ -1129,7 +1133,8 @@ static void get_cindex (INT nrows,
 }
 
 /**
- * \fn static void interp_DIR1 (dCSRmat *A, ivector *vertices, dCSRmat *Ptr, AMG_param *param)
+ * \fn static void interp_DIR1 (dCSRmat *A, ivector *vertices, 
+ *                              dCSRmat *Ptr, AMG_param *param)
  *
  * \brief Direct interpolation
  *
@@ -1188,7 +1193,8 @@ static void interp_DIR1 (dCSRmat *A,
     /* step 3: Fill the data of P */
     if (use_openmp) {
 #ifdef _OPENMP
-#pragma omp parallel for private(myid,mybegin,myend,i,begin_row,end_row,idiag,aii,amN,amP,apN,apP,num_pcouple,j,k,alpha,beta,l)
+#pragma omp parallel for private(myid,mybegin,myend,i,begin_row,end_row,idiag,aii, \
+                                 amN,amP,apN,apP,num_pcouple,j,k,alpha,beta,l)
 #endif
         for (myid = 0; myid < nthreads; myid++ )
         {

@@ -235,11 +235,11 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
 }
 
 /**
- * \fn INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, dvector *b, dvector *x,
+ * \fn INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A, dvector *b, dvector *x,
  *                                          itsolver_param *itparam,
  *                                          Schwarz_param *schparam)
  *
- * \brief Solve Ax=b by overlapping schwarz Krylov methods
+ * \brief Solve Ax=b by overlapping Schwarz Krylov methods
  *
  * \param A        Pointer to the coeff matrix in dCSRmat format
  * \param b        Pointer to the right hand side in dvector format
@@ -254,17 +254,17 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
  *
  * Modified by Chensong on 07/02/2012: change interface
  */
-INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
+INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
                                      dvector *b,
                                      dvector *x,
                                      itsolver_param *itparam,
                                      Schwarz_param *schparam)
 {
     Schwarz_param swzparam;
-    swzparam.schwarz_mmsize    = schparam->schwarz_mmsize;
-    swzparam.schwarz_maxlvl    = schparam->schwarz_maxlvl;
-    swzparam.schwarz_type      = schparam->schwarz_type;
-    swzparam.schwarz_blksolver = schparam->schwarz_blksolver;
+    swzparam.Schwarz_mmsize    = schparam->Schwarz_mmsize;
+    swzparam.Schwarz_maxlvl    = schparam->Schwarz_maxlvl;
+    swzparam.Schwarz_type      = schparam->Schwarz_type;
+    swzparam.Schwarz_blksolver = schparam->Schwarz_blksolver;
         
     const INT print_level    = itparam->print_level;
 	
@@ -280,22 +280,22 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	fasp_gettime(&setup_start);
     
 	// setup preconditioner
-	Schwarz_data schwarz_data;
+	Schwarz_data Schwarz_data;
 	
 	// symmetrize the matrix (for now, we have to do this. We will get rid of this later)
-	schwarz_data.A=fasp_dcsr_sympat(A);
+	Schwarz_data.A=fasp_dcsr_sympat(A);
 	
-	// construct schwarz precondtioner
-	fasp_dcsr_shift (&schwarz_data.A, 1);
-	fasp_schwarz_setup(&schwarz_data, &swzparam);
+	// construct Schwarz precondtioner
+	fasp_dcsr_shift (&Schwarz_data.A, 1);
+	fasp_Schwarz_setup(&Schwarz_data, &swzparam);
 	
 	fasp_gettime(&setup_end);
 	setup_duration = setup_end - setup_start;
     printf("Schwarz_Krylov method setup costs %f seconds.\n", setup_duration);
 	
 	precond prec;
-	prec.data = &schwarz_data;
-	prec.fct = fasp_precond_schwarz;
+	prec.data = &Schwarz_data;
+	prec.fct = fasp_precond_Schwarz;
 	
 	fasp_gettime(&solver_start);
 	
@@ -312,7 +312,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A,
 	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
-	fasp_schwarz_data_free(&schwarz_data);
+	fasp_Schwarz_data_free(&Schwarz_data);
 	
 	return status;
 }

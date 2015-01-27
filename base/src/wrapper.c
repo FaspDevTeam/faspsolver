@@ -28,7 +28,7 @@
  * \param b      RHS vector
  * \param u      Solution vector
  * \param tol    Tolerance for iterative solvers
- * \param maxit  Max num of iterations
+ * \param maxit  Max number of iterations
  * \param ptrlvl Print level for iterative solvers
  *
  * \author Chensong Zhang
@@ -78,7 +78,7 @@ void fasp_fwrapper_amg_ (INT *n,
  * \param b       RHS vector
  * \param u       Solution vector
  * \param tol     Tolerance for iterative solvers
- * \param maxit   Max num of iterations
+ * \param maxit   Max number of iterations
  * \param ptrlvl  Print level for iterative solvers
  *
  * \author Chensong Zhang
@@ -135,7 +135,7 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
  * \param b       RHS vector
  * \param u       Solution vector
  * \param tol     Tolerance for iterative solvers
- * \param maxit   Max num of iterations
+ * \param maxit   Max number of iterations
  * \param ptrlvl  Print level for iterative solvers
  *
  * \author Xiaozhe Hu
@@ -219,7 +219,7 @@ INT fasp_wrapper_dbsr_krylov_amg (INT n,
  * \param b       RHS vector
  * \param u       Solution vector
  * \param tol     Tolerance for iterative solvers
- * \param maxit   Max num of iterations
+ * \param maxit   Max number of iterations
  * \param ptrlvl  Print level for iterative solvers
  *
  * \author Xiaozhe Hu

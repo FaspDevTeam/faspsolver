@@ -127,7 +127,7 @@ void fasp_solver_mgrecur (AMG_data *mgl,
                 break;
 #endif
                 
-            /* use iterative solver on the coarest level */
+            /* use iterative solver on the coarsest level */
             default:
                 fasp_coarse_itsolver(A0, b0, e0, tol, prtlvl);
                 

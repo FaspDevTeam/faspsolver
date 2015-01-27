@@ -284,13 +284,13 @@ void fasp_param_init (input_param *iniparam,
     
     if (iluparam) fasp_param_ilu_init(iluparam);
     
-    if (schparam) fasp_param_schwarz_init(schparam);
+    if (schparam) fasp_param_Schwarz_init(schparam);
     
     if (iniparam) {
         if (itsparam) fasp_param_solver_set(itsparam,iniparam);
         if (amgparam) fasp_param_amg_set(amgparam,iniparam);
         if (iluparam) fasp_param_ilu_set(iluparam,iniparam);
-        if (schparam) fasp_param_schwarz_set(schparam,iniparam);
+        if (schparam) fasp_param_Schwarz_set(schparam,iniparam);
     }
     else {
         printf("### WARNING: No input specified. Use default values instead!\n");
@@ -353,7 +353,7 @@ void fasp_param_input_init (input_param *iniparam)
     iniparam->AMG_tol                  = 1e-6;
     iniparam->AMG_maxit                = 1;
     iniparam->AMG_ILU_levels           = 0;
-    iniparam->AMG_schwarz_levels       = 0;
+    iniparam->AMG_Schwarz_levels       = 0;
     iniparam->AMG_coarse_scaling       = OFF; // Require investigation --Chensong
     iniparam->AMG_amli_degree          = 1;
     iniparam->AMG_nl_amli_krylov_type  = 2;
@@ -433,11 +433,11 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->ILU_relax            = 0;
     
     // Schwarz smoother parameters
-    amgparam->schwarz_levels       = 0;
-    amgparam->schwarz_mmsize       = 200;
-    amgparam->schwarz_maxlvl       = 3;
-    amgparam->schwarz_type         = 1;
-    amgparam->schwarz_blksolver    = SOLVER_DEFAULT;
+    amgparam->Schwarz_levels       = 0;
+    amgparam->Schwarz_mmsize       = 200;
+    amgparam->Schwarz_maxlvl       = 3;
+    amgparam->Schwarz_type         = 1;
+    amgparam->Schwarz_blksolver    = SOLVER_DEFAULT;
 }
 
 /**
@@ -482,7 +482,7 @@ void fasp_param_ilu_init (ILU_param *iluparam)
 }
 
 /**
- * \fn void fasp_param_schwarz_init (Schwarz_param *schparam)
+ * \fn void fasp_param_Schwarz_init (Schwarz_param *schparam)
  *
  * \brief Initialize Schwarz parameters
  *
@@ -493,13 +493,13 @@ void fasp_param_ilu_init (ILU_param *iluparam)
  *
  * Modified by Chensong Zhang on 10/10/2014: Add block solver type
  */
-void fasp_param_schwarz_init (Schwarz_param *schparam)
+void fasp_param_Schwarz_init (Schwarz_param *schparam)
 {
     schparam->print_level       = 0;
-    schparam->schwarz_type      = 3;
-    schparam->schwarz_maxlvl    = 2;
-    schparam->schwarz_mmsize    = 200;
-    schparam->schwarz_blksolver = 0;
+    schparam->Schwarz_type      = 3;
+    schparam->Schwarz_maxlvl    = 2;
+    schparam->Schwarz_mmsize    = 200;
+    schparam->Schwarz_blksolver = 0;
 }
 
 /**
@@ -570,10 +570,10 @@ void fasp_param_amg_set (AMG_param *param,
     param->ILU_relax            = iniparam->ILU_relax;
     param->ILU_permtol          = iniparam->ILU_permtol;
     
-    param->schwarz_levels       = iniparam->AMG_schwarz_levels;
-	param->schwarz_mmsize       = iniparam->Schwarz_mmsize;
-	param->schwarz_maxlvl       = iniparam->Schwarz_maxlvl;
-	param->schwarz_type         = iniparam->Schwarz_type;
+    param->Schwarz_levels       = iniparam->AMG_Schwarz_levels;
+	param->Schwarz_mmsize       = iniparam->Schwarz_mmsize;
+	param->Schwarz_maxlvl       = iniparam->Schwarz_maxlvl;
+	param->Schwarz_type         = iniparam->Schwarz_type;
 }
 
 /**
@@ -599,7 +599,7 @@ void fasp_param_ilu_set (ILU_param *iluparam,
 }
 
 /**
- * \fn void fasp_param_schwarz_set (Schwarz_param *schparam, input_param *iniparam)
+ * \fn void fasp_param_Schwarz_set (Schwarz_param *schparam, input_param *iniparam)
  *
  * \brief Set Schwarz_param with INPUT
  *
@@ -609,14 +609,14 @@ void fasp_param_ilu_set (ILU_param *iluparam,
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_schwarz_set (Schwarz_param *schparam,
+void fasp_param_Schwarz_set (Schwarz_param *schparam,
                              input_param *iniparam)
 {
     schparam->print_level       = iniparam->print_level;
-    schparam->schwarz_type      = iniparam->Schwarz_type;
-    schparam->schwarz_maxlvl    = iniparam->Schwarz_maxlvl;
-    schparam->schwarz_mmsize    = iniparam->Schwarz_mmsize;
-    schparam->schwarz_blksolver = iniparam->Schwarz_blksolver;
+    schparam->Schwarz_type      = iniparam->Schwarz_type;
+    schparam->Schwarz_maxlvl    = iniparam->Schwarz_maxlvl;
+    schparam->Schwarz_mmsize    = iniparam->Schwarz_mmsize;
+    schparam->Schwarz_blksolver = iniparam->Schwarz_blksolver;
 }
 
 /**
@@ -865,11 +865,11 @@ void fasp_param_amg_print (AMG_param *param)
             printf("AMG ILU relaxation:                %f\n", param->ILU_relax);
         }
         
-        if (param->schwarz_levels>0){
-            printf("AMG Schwarz type:                  %d\n", param->schwarz_type);
-            printf("AMG Schwarz level:                 %d\n", param->schwarz_levels);
-            printf("AMG Schwarz level of forming block:%d\n", param->schwarz_maxlvl);
-            printf("AMG Schwarz maximal block size:    %d\n", param->schwarz_mmsize);
+        if (param->Schwarz_levels>0){
+            printf("AMG Schwarz type:                  %d\n", param->Schwarz_type);
+            printf("AMG Schwarz level:                 %d\n", param->Schwarz_levels);
+            printf("AMG Schwarz level of forming block:%d\n", param->Schwarz_maxlvl);
+            printf("AMG Schwarz maximal block size:    %d\n", param->Schwarz_mmsize);
         }
         
         printf("-----------------------------------------------\n\n");
@@ -912,7 +912,7 @@ void fasp_param_ilu_print (ILU_param *param)
 }
 
 /**
- * \fn void fasp_param_schwarz_print (Schwarz_param *param)
+ * \fn void fasp_param_Schwarz_print (Schwarz_param *param)
  *
  * \brief Print out Schwarz parameters
  *
@@ -921,17 +921,17 @@ void fasp_param_ilu_print (ILU_param *param)
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_schwarz_print (Schwarz_param *param)
+void fasp_param_Schwarz_print (Schwarz_param *param)
 {
     if ( param ) {
         
         printf("\n       Parameters in Schwarz_param\n");
         printf("-----------------------------------------------\n");
         printf("Schwarz print level:               %d\n",   param->print_level);
-        printf("Schwarz type:                      %d\n",   param->schwarz_type);
-        printf("Schwarz level of forming blokcs:   %d\n",   param->schwarz_maxlvl);
-        printf("Schwarz maximal block size:        %d\n",   param->schwarz_mmsize);
-        printf("Schwarz block solver type:         %d\n",   param->schwarz_blksolver);
+        printf("Schwarz type:                      %d\n",   param->Schwarz_type);
+        printf("Schwarz level of forming blokcs:   %d\n",   param->Schwarz_maxlvl);
+        printf("Schwarz maximal block size:        %d\n",   param->Schwarz_mmsize);
+        printf("Schwarz block solver type:         %d\n",   param->Schwarz_blksolver);
         printf("-----------------------------------------------\n\n");
         
     }
