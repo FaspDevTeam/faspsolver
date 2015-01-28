@@ -129,9 +129,7 @@ void fasp_dcoo_shift (dCOOmat *A,
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-    
-    if (offset == 0) offset = ISTART;
-    
+        
     if (use_openmp) {
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, i, mybegin, myend)

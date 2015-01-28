@@ -5,12 +5,13 @@
  *
  *  \note Only define macros and data structures, no function decorations.
  *
- *------------------------------------------------------
- *  Created by Chensong Zhang on 08/12/2010.
+ *-----------------------------------------------------------------------------------
+ *  Created  by Chensong Zhang on 08/12/2010.
  *  Modified by Chensong Zhang on 12/13/2011.
  *  Modified by Chensong Zhang on 12/25/2011.
- *------------------------------------------------------
- *
+ *  Modified by Chensong Zhang on 01/25/2015: clean up code
+ *  Modified by Chensong Zhang on 01/27/2015: remove N2C, C2N, ISTART
+ *-----------------------------------------------------------------------------------
  */
 
 #include <stdio.h>
@@ -59,32 +60,24 @@
 /**
  * \brief Definition of max, min, abs
  */
-#define MAX(a,b) (((a)>(b))?(a):(b)) /**< bigger one in a and b */
-#define MIN(a,b) (((a)<(b))?(a):(b)) /**< smaller one in a and b */
-#define ABS(a) (((a)>=0.0)?(a):-(a)) /**< absolute value of a */
+#define MAX(a,b) (((a)>(b))?(a):(b))   /**< bigger one in a and b */
+#define MIN(a,b) (((a)<(b))?(a):(b))   /**< smaller one in a and b */
+#define ABS(a)   (((a)>=0.0)?(a):-(a)) /**< absolute value of a */
 
 /**
  * \brief Definition of >, >=, <, <=, and isnan
  */
-#define GT(a,b) (((a)>(b))?(TRUE):(FALSE))   /**< is a > b? */
-#define GE(a,b) (((a)>=(b))?(TRUE):(FALSE))  /**< is a >= b? */
-#define LS(a,b) (((a)<(b))?(TRUE):(FALSE))   /**< is a < b? */
-#define LE(a,b) (((a)<=(b))?(TRUE):(FALSE))  /**< is a <= b? */
-#define ISNAN(a) (((a)!=(a))?(TRUE):(FALSE)) /**< is a == NAN? */
+#define GT(a,b)  (((a)>(b))?(TRUE):(FALSE))   /**< is a > b? */
+#define GE(a,b)  (((a)>=(b))?(TRUE):(FALSE))  /**< is a >= b? */
+#define LS(a,b)  (((a)<(b))?(TRUE):(FALSE))   /**< is a < b? */
+#define LE(a,b)  (((a)<=(b))?(TRUE):(FALSE))  /**< is a <= b? */
+#define ISNAN(a) (((a)!=(a))?(TRUE):(FALSE))  /**< is a == NAN? */
 
 /**
  * \brief Definition of print command in DEBUG mode
  */
 #define PRT_INT(A)  printf("### DEBUG: %s = %d\n", #A, (A)) /**< print an integer */
 #define PRT_REAL(A) printf("### DEBUG: %s = %e\n", #A, (A)) /**< print a real num */
-
-/**
- * \brief Index starting point: C convention or Fortran convention
- * TODO: Not used any more. Should be removed! --Chensong
- */
-#define ISTART 0                /**< 0 if in Natural index, 1 if data is in C index */
-#define N2C(ind) ((ind)-ISTART) /**< map from Natural index 1,2,... to C index 0,1,... */
-#define C2N(ind) ((ind)+ISTART) /**< map from C index 0,1,... to Natural index 1,2,... */
 
 /*---------------------------*/
 /*---  Global variables   ---*/

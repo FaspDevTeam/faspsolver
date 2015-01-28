@@ -1,6 +1,6 @@
      560 ./base/include/dlmalloc.h
      172 ./base/include/doxygen.h
-    1197 ./base/include/fasp.h
+    1190 ./base/include/fasp.h
      681 ./base/include/fasp_block.h
      250 ./base/include/fasp_const.h
     2907 ./base/include/fasp_functs.h
@@ -88,8 +88,8 @@
     1874 ./base/src/smoother_str.c
      347 ./base/src/sparse_block.c
     1864 ./base/src/sparse_bsr.c
-     155 ./base/src/sparse_coo.c
-    1337 ./base/src/sparse_csr.c
+     153 ./base/src/sparse_coo.c
+    1335 ./base/src/sparse_csr.c
       72 ./base/src/sparse_csrl.c
      202 ./base/src/sparse_str.c
      976 ./base/src/sparse_util.c
@@ -108,4 +108,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   91761 total
+   91750 total

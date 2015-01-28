@@ -1116,7 +1116,7 @@ void fasp_dcoo_write (const char *filename,
     
     fprintf(fp,"%d  %d  %d\n",m,n,A->nnz);
     for ( i = 0; i < m; ++i ) {
-        for ( j = A->IA[N2C(i)]; j < A->IA[N2C(i+1)]; j++ )
+        for ( j = A->IA[i]; j < A->IA[i+1]; j++ )
             fprintf(fp,"%d  %d  %0.15e\n",i,A->JA[j],A->val[j]);
     }
     
@@ -1365,7 +1365,7 @@ void fasp_dvec_print (INT n,
     unsigned INT i;
     
     if ( n <= 0 ) n=u->row;
-    for ( i = 0; i < n; ++i ) printf("vec_%d = %+.10E\n",i,u->val[N2C(i)]);
+    for ( i = 0; i < n; ++i ) printf("vec_%d = %+.10E\n",i,u->val[i]);
 }
 
 /**
@@ -1385,7 +1385,7 @@ void fasp_ivec_print (INT n,
     unsigned INT i;
     
     if ( n <= 0 ) n = u->row;
-    for ( i = 0; i < n; ++i ) printf("vec_%d = %d\n",i,u->val[N2C(i)]);
+    for ( i = 0; i < n; ++i ) printf("vec_%d = %d\n",i,u->val[i]);
 }
 
 /**
@@ -1405,7 +1405,7 @@ void fasp_dcsr_print (dCSRmat *A)
     
     printf("nrow = %d, ncol = %d, nnz = %d\n",m,n,A->nnz);
     for ( i = 0; i < m; ++i ) {
-        for (j=A->IA[N2C(i)]; j<A->IA[N2C(i+1)]; j++)
+        for (j=A->IA[i]; j<A->IA[i+1]; j++)
             printf("A_(%d,%d) = %+.10E\n",i,A->JA[j],A->val[j]);
     }
 }
@@ -2813,7 +2813,7 @@ static void fasp_dcsr_write_b (FILE *fp,
     fwrite(&n, sizeof(INT), 1, fp);
     fwrite(&nnz, sizeof(INT), 1, fp);
     for ( i = 0; i < m; i++ ) {
-        for (j = A->IA[N2C(i)]; j < A->IA[N2C(i+1)]; j++) {
+        for (j = A->IA[i]; j < A->IA[i+1]; j++) {
             fwrite(&i, sizeof(INT), 1, fp);
             index = A->JA[j];
             value = A->val[j];

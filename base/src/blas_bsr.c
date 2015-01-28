@@ -4752,13 +4752,13 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
         // go across the rows in R
         begin_rowR=ir[i]; end_rowR=ir[i1];
         for (jj=begin_rowR; jj<end_rowR; ++jj) {
-            j = jr[N2C(jj)];
+            j = jr[jj];
             // for each column in A
             begin_rowA=ia[j]; end_rowA=ia[j+1];
             for (k=begin_rowA; k<end_rowA; ++k) {
-                if (index[N2C(ja[N2C(k)])] == -2) {
-                    index[N2C(ja[N2C(k)])] = istart;
-                    istart = ja[N2C(k)];
+                if (index[ja[k]] == -2) {
+                    index[ja[k]] = istart;
+                    istart = ja[k];
                     ++length;
                 }
             }
@@ -4771,15 +4771,15 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
         for (j=0; j < count; ++j) {
             jj = istart;
             istart = index[istart];
-            index[N2C(jj)] = -2;
+            index[jj] = -2;
             
             // go across the row of P
             begin_row=ip[jj]; end_row=ip[jj+1];
             for (k=begin_row; k<end_row; ++k) {
                 // pull out the appropriate columns of P
-                if (iindex[N2C(jp[N2C(k)])] == -2){
-                    iindex[N2C(jp[N2C(k)])] = iistart;
-                    iistart = jp[N2C(k)];
+                if (iindex[jp[k]] == -2){
+                    iindex[jp[k]] = iistart;
+                    iistart = jp[k];
                     ++length;
                 }
             } // end for k
@@ -4797,11 +4797,11 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
         begin_row=iac[i]; end_row=iac[i1];
         for (j=begin_row; j<end_row; ++j) {
             // put the value in B->JA
-            jac[N2C(j)] = iistart;
+            jac[j] = iistart;
             // set istart to the next value
-            iistart = iindex[N2C(iistart)];
+            iistart = iindex[iistart];
             // set the iindex spot to 0
-            iindex[N2C(jac[j])] = -2;
+            iindex[jac[j]] = -2;
         } // end j
     } // end i: First loop
     
@@ -4817,7 +4817,7 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
         // each col of B
         begin_row=iac[i]; end_row=iac[i1];
         for (j=begin_row; j<end_row; ++j) {
-            BTindex[N2C(jac[N2C(j)])]=j;
+            BTindex[jac[j]]=j;
         }
         // reset istart and length at the beginning of each loop
         istart = -1; length = 0;
@@ -4825,20 +4825,20 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
         // go across the rows in R
         begin_rowR=ir[i]; end_rowR=ir[i1];
         for ( jj=begin_rowR; jj<end_rowR; ++jj ) {
-            j = jr[N2C(jj)];
+            j = jr[jj];
             // for each column in A
             begin_rowA=ia[j]; end_rowA=ia[j+1];
             for (k=begin_rowA; k<end_rowA; ++k) {
-                if (index[N2C(ja[N2C(k)])] == -2) {
-                    index[N2C(ja[N2C(k)])] = istart;
-                    istart = ja[N2C(k)];
+                if (index[ja[k]] == -2) {
+                    index[ja[k]] = istart;
+                    istart = ja[k];
                     ++length;
                 }
-                fasp_blas_smat_mul(&rj[N2C(jj)*nb2],&aj[N2C(k)*nb2],smat_tmp,nb);
-                //fasp_array_xpy(nb2,&temp[N2C(ja[N2C(k)])*nb2], smat_tmp );
-                fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &temp[N2C(ja[N2C(k)])*nb2]);
+                fasp_blas_smat_mul(&rj[jj*nb2],&aj[k*nb2],smat_tmp,nb);
+                //fasp_array_xpy(nb2,&temp[ja[k]*nb2], smat_tmp );
+                fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &temp[ja[k]*nb2]);
                 
-                //temp[N2C(ja[N2C(k)])]+=rj[N2C(jj)]*aj[N2C(k)];
+                //temp[ja[k]]+=rj[jj]*aj[k];
                 // change to   X = X+Y*Z
             }
         }
@@ -4846,18 +4846,18 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
         // book-keeping [resetting length and setting iistart]
         // use each column that would have resulted from R*A
         for (j=0; j<length; ++j) {
-            jj = N2C(istart);
-            istart = index[N2C(istart)];
-            index[N2C(jj)] = -2;
+            jj = istart;
+            istart = index[istart];
+            index[jj] = -2;
             
             // go across the row of P
             begin_row=ip[jj]; end_row=ip[jj+1];
             for (k=begin_row; k<end_row; ++k) {
                 // pull out the appropriate columns of P
-                //acj[BTindex[N2C(jp[N2C(k)])]]+=temp[jj]*pj[k];
+                //acj[BTindex[jp[k]]]+=temp[jj]*pj[k];
                 fasp_blas_smat_mul(&temp[jj*nb2],&pj[k*nb2],smat_tmp,nb);
-                //fasp_array_xpy(nb2,&acj[BTindex[N2C(jp[N2C(k)])]*nb2], smat_tmp );
-                fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &acj[BTindex[N2C(jp[N2C(k)])]*nb2]);
+                //fasp_array_xpy(nb2,&acj[BTindex[jp[k]]*nb2], smat_tmp );
+                fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &acj[BTindex[jp[k]]*nb2]);
                 
                 // change to   X = X+Y*Z
             }

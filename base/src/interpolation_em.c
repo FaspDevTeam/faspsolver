@@ -195,7 +195,7 @@ static SHORT get_block (dCSRmat *A,
 #pragma omp parallel for if(n>OPENMP_HOLDS)
 #endif
     for ( j=0; j<n; ++j ) {
-        mask[N2C(cols[j])] = j; // initialize mask, mask stores C indices 0,1,...
+        mask[cols[j]] = j; // initialize mask, mask stores C indices 0,1,...
     }
     
 #ifdef _OPENMP
@@ -206,9 +206,9 @@ static SHORT get_block (dCSRmat *A,
 #else
             for ( i=0; i<m; ++i ) {
 #endif
-                iloc=N2C(rows[i]);
+                iloc=rows[i];
                 for ( k=A->IA[iloc]; k<A->IA[iloc+1]; ++k ) {
-                    j = N2C(A->JA[N2C(k)]);
+                    j = A->JA[k];
                     if (mask[j]>=0) Aloc[i*n+mask[j]]=A->val[k];
                 } /* end for k */
 #ifdef _OPENMP
@@ -221,7 +221,7 @@ static SHORT get_block (dCSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for if(n>OPENMP_HOLDS)
 #endif
-    for ( j=0; j<n; ++j ) mask[N2C(cols[j])] = -1; // re-initialize mask
+    for ( j=0; j<n; ++j ) mask[cols[j]] = -1; // re-initialize mask
     
     return FASP_SUCCESS;
 }
