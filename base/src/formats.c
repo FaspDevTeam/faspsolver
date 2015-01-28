@@ -93,7 +93,7 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
 #pragma omp parallel for if(m>OPENMP_HOLDS) private(i, j)
 #endif
     for (i=0;i<m;++i) {
-        for (j=A->IA[i];j<A->IA[i+1];++j) B->rowind[N2C(j)]=C2N(i);
+        for (j=A->IA[i];j<A->IA[i+1];++j) B->rowind[j]=i;
     }
     
     memcpy(B->colind, A->JA, nnz*sizeof(INT));

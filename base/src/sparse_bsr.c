@@ -234,7 +234,7 @@ INT fasp_dbsr_trans (dBSRmat *A,
     fasp_iarray_set(m+1, AT->IA, 0);
 
     for (j=0;j<nnz;++j) {
-        i=N2C(A->JA[j]); // column number of A = row number of A'
+        i=A->JA[j]; // column number of A = row number of A'
         if (i<m-1) AT->IA[i+2]++;
     }
     
@@ -245,9 +245,9 @@ INT fasp_dbsr_trans (dBSRmat *A,
         for (i=0;i<n;++i) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
             for (p=ibegin;p<iend1;p++) {
-                j=A->JA[N2C(p)]+1;
-                k=AT->IA[N2C(j)];
-                AT->JA[N2C(k)]=C2N(i);
+                j=A->JA[p]+1;
+                k=AT->IA[j];
+                AT->JA[k]=i;
                 for (inb=0;inb<nb;inb++)
                     for (jnb=0;jnb<nb;jnb++)
                         AT->val[nb2*k + inb*nb + jnb] = A->val[nb2*p + jnb*nb + inb];
@@ -260,9 +260,9 @@ INT fasp_dbsr_trans (dBSRmat *A,
         for (i=0;i<n;++i) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
             for (p=ibegin;p<iend1;p++) {
-                j=A->JA[N2C(p)]+1;
-                k=AT->IA[N2C(j)];
-                AT->JA[N2C(k)]=C2N(i);
+                j=A->JA[p]+1;
+                k=AT->IA[j];
+                AT->JA[k]=i;
                 AT->IA[j]=k+1;
             } // end for p
         } // end of i

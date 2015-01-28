@@ -103,23 +103,23 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
             if (myid < nthreads-1)  myend = mybegin+stride_i;
             else myend = n;
             for (i=mybegin; i < myend; ++i) {
-                col_flag[N2C(Js[i])]=i+1;
+                col_flag[Js[i]]=i+1;
             }
         }
 #endif
     }
     else {
-        for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
+        for (i=0;i<n;++i) col_flag[Js[i]]=i+1;
     }
     
     // Count nonzeros for sub matrix and fill in
     B->IA[0]=0;
     for (i=0;i<m;++i) {
-        for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
-            j=A->JA[N2C(k)];
-            if (col_flag[N2C(j)]>0) {
+        for (k=A->IA[Is[i]];k<A->IA[Is[i]+1];++k) {
+            j=A->JA[k];
+            if (col_flag[j]>0) {
                 B->JA[nnz]=col_flag[j]-1;
-                B->val[nnz]=A->val[N2C(k)];
+                B->val[nnz]=A->val[k];
                 nnz++;
             }
         } /* end for k */
@@ -195,21 +195,21 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
             if (myid < nthreads-1)  myend = mybegin+stride_i;
             else myend = n;
             for (i=mybegin; i < myend; ++i) {
-                col_flag[N2C(Js[i])]=i+1;
+                col_flag[Js[i]]=i+1;
             }
         }
 #endif
     }
     else {
-        for (i=0;i<n;++i) col_flag[N2C(Js[i])]=i+1;
+        for (i=0;i<n;++i) col_flag[Js[i]]=i+1;
     }
     
     // first pass: count nonzeros for sub matrix
     B->IA[0]=0;
     for (i=0;i<m;++i) {
-        for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
-            j=A->JA[N2C(k)];
-            if (col_flag[N2C(j)]>0) nnz++;
+        for (k=A->IA[Is[i]];k<A->IA[Is[i]+1];++k) {
+            j=A->JA[k];
+            if (col_flag[j]>0) nnz++;
         } /* end for k */
         B->IA[i+1]=nnz;
     } /* end for i */
@@ -224,11 +224,11 @@ SHORT fasp_dbsr_getblk (dBSRmat *A,
     // TODO: No need to do the following loop, need to be modified!!  --Xiaozhe
     nnz = 0;
     for (i=0;i<m;++i) {
-        for (k=A->IA[N2C(Is[i])];k<A->IA[N2C(Is[i])+1];++k) {
-            j=A->JA[N2C(k)];
-            if (col_flag[N2C(j)]>0) {
+        for (k=A->IA[Is[i]];k<A->IA[Is[i]+1];++k) {
+            j=A->JA[k];
+            if (col_flag[j]>0) {
                 B->JA[nnz]=col_flag[j]-1;
-                memcpy(B->val+nnz*nb2, A->val+N2C(k)*nb2, nb2*sizeof(REAL));
+                memcpy(B->val+nnz*nb2, A->val+k*nb2, nb2*sizeof(REAL));
                 nnz++;
             }
         } /* end for k */

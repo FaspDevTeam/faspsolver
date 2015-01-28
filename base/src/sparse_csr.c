@@ -434,9 +434,9 @@ void fasp_dcsr_getdiag (INT n,
             for (i=mybegin; i<myend; i++) {
                 ibegin=A->IA[i]; iend=A->IA[i+1];
                 for (k=ibegin;k<iend;++k) {
-                    j=N2C(A->JA[N2C(k)]);
+                    j=A->JA[k];
                     if ((j-i)==0) {
-                        diag->val[i] = A->val[N2C(k)]; break;
+                        diag->val[i] = A->val[k]; break;
                     } // end if
                 } // end for k
             } // end for i
@@ -446,9 +446,9 @@ void fasp_dcsr_getdiag (INT n,
         for (i=0;i<n;++i) {
             ibegin=A->IA[i]; iend=A->IA[i+1];
             for (k=ibegin;k<iend;++k) {
-                j=N2C(A->JA[N2C(k)]);
+                j=A->JA[k];
                 if ((j-i)==0) {
-                    diag->val[i] = A->val[N2C(k)]; break;
+                    diag->val[i] = A->val[k]; break;
                 } // end if
             } // end for k
         } // end for i
@@ -776,7 +776,7 @@ void fasp_icsr_trans (iCSRmat *A,
     fasp_iarray_set(m+1, AT->IA, 0);
     
     for (j=0;j<nnz;++j) {
-        i=N2C(A->JA[j]); // column Number of A = row Number of A'
+        i=A->JA[j]; // column Number of A = row Number of A'
         if (i<m1) AT->IA[i+2]++;
     }
     
@@ -787,10 +787,10 @@ void fasp_icsr_trans (iCSRmat *A,
         for (i=0;i<n;++i) {
             ibegin=A->IA[i], iend=A->IA[i+1];
             for (p=ibegin;p<iend;p++) {
-                j=A->JA[N2C(p)]+1;
-                k=AT->IA[N2C(j)];
-                AT->JA[N2C(k)]=C2N(i);
-                AT->val[N2C(k)]=A->val[N2C(p)];
+                j=A->JA[p]+1;
+                k=AT->IA[j];
+                AT->JA[k]=i;
+                AT->val[k]=A->val[p];
                 AT->IA[j]=k+1;
             } // end for p
         } // end for i
@@ -799,9 +799,9 @@ void fasp_icsr_trans (iCSRmat *A,
         for (i=0;i<n;++i) {
             ibegin=A->IA[i], iend=A->IA[i+1];
             for (p=ibegin;p<iend;p++) {
-                j=A->JA[N2C(p)]+1;
-                k=AT->IA[N2C(j)];
-                AT->JA[N2C(k)]=C2N(i);
+                j=A->JA[p]+1;
+                k=AT->IA[j];
+                AT->JA[k]=i;
                 AT->IA[j]=k+1;
             } // end for p
         } // end for i
@@ -850,7 +850,7 @@ INT fasp_dcsr_trans (dCSRmat *A,
     memset(AT->IA, 0, sizeof(INT)*(m+1));
     
     for (j=0;j<nnz;++j) {
-        i=N2C(A->JA[j]); // column Number of A = row Number of A'
+        i=A->JA[j]; // column Number of A = row Number of A'
         if (i<m-1) AT->IA[i+2]++;
     }
     
@@ -861,10 +861,10 @@ INT fasp_dcsr_trans (dCSRmat *A,
         for (i=0;i<n;++i) {
             INT ibegin=A->IA[i], iend=A->IA[i+1];
             for (p=ibegin;p<iend;p++) {
-                j=A->JA[N2C(p)]+1;
-                k=AT->IA[N2C(j)];
-                AT->JA[N2C(k)]=C2N(i);
-                AT->val[N2C(k)]=A->val[N2C(p)];
+                j=A->JA[p]+1;
+                k=AT->IA[j];
+                AT->JA[k]=i;
+                AT->val[k]=A->val[p];
                 AT->IA[j]=k+1;
             } // end for p
         } // end for i
@@ -873,9 +873,9 @@ INT fasp_dcsr_trans (dCSRmat *A,
         for (i=0;i<n;++i) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
             for (p=ibegin;p<iend1;p++) {
-                j=A->JA[N2C(p)]+1;
-                k=AT->IA[N2C(j)];
-                AT->JA[N2C(k)]=C2N(i);
+                j=A->JA[p]+1;
+                k=AT->IA[j];
+                AT->JA[k]=i;
                 AT->IA[j]=k+1;
             } // end for p
         } // end of i
@@ -916,7 +916,7 @@ void fasp_dcsr_transpose (INT *row[2],
     INT i,m,itmp;
     
     // first pass: to set order right
-    for (i=0;i<tniz[0];++i) izc[N2C(col[0][i])]++;
+    for (i=0;i<tniz[0];++i) izc[col[0][i]]++;
     
     izcaux[0]=0;
     for (i=1;i<nca;++i) izcaux[i]=izcaux[i-1]+izc[i-1];
@@ -981,11 +981,11 @@ void fasp_dcsr_compress (dCSRmat *A,
     for (i=0;i<A->row;++i) {
         ibegin=A->IA[i]; iend1=A->IA[i+1];
         for (j=ibegin;j<iend1;++j)
-            if (ABS(A->val[N2C(j)])>dtol) {
-                index[k]=N2C(j);
+            if (ABS(A->val[j])>dtol) {
+                index[k]=j;
                 ++k;
             } /* end of j */
-        B->IA[i+1]=C2N(k);
+        B->IA[i+1]=k;
     } /* end of i */
     B->nnz=k;
     
@@ -1046,12 +1046,12 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
     for ( i=0; i<row; ++i ) {
         ibegin = iend; iend = A->IA[i+1];
         for ( j=ibegin; j<iend; ++j )
-            if ( ABS(A->val[N2C(j)]) > dtol ) {
-                A->JA[N2C(k)]  = A->JA[N2C(j)];
-                A->val[N2C(k)] = A->val[N2C(j)];
+            if ( ABS(A->val[j]) > dtol ) {
+                A->JA[k]  = A->JA[j];
+                A->val[k] = A->val[j];
                 ++k;
             } /* end of j */
-        A->IA[i+1] = C2N(k);
+        A->IA[i+1] = k;
     } /* end of i */
     
     if ( k <= nnz ) {
@@ -1094,9 +1094,7 @@ void fasp_dcsr_shift (dCSRmat *A,
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-    
-    if (offset == 0) offset = ISTART;
-    
+        
     if(use_openmp) {
         INT myid, mybegin, myend;
 #ifdef _OPENMP

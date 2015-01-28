@@ -173,7 +173,7 @@ INT fasp_check_symm (dCSRmat *A)
     rowp=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
     
     for (i=0;i<nn;++i) {
-        for (j=A->IA[i];j<A->IA[i+1];++j) rowp[N2C(j)]=C2N(i);
+        for (j=A->IA[i];j<A->IA[i+1];++j) rowp[j]=i;
     }
     
     rows[0]=(INT *)fasp_mem_calloc(nnz,sizeof(INT));
@@ -276,18 +276,18 @@ SHORT fasp_check_dCSRmat (dCSRmat *A)
 {    
     INT i;    
     
-    if (A->row != A->col) {
+    if ( A->row != A->col ) {
         printf("### ERROR: Non-square CSR matrix!\n");
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
-    if ((A->nnz==0)|(A->row==0)|(A->col==0)) {
+    if ( (A->nnz==0) || (A->row==0) || (A->col==0) ) {
         printf("### ERROR: Empty CSR matrix!\n");
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
     for (i=0;i<A->nnz;++i) {
-        if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
+        if ( (A->JA[i]<0) || (A->JA[i]-A->col>=0) ) {
             printf("### ERROR: Wrong CSR matrix format!\n");
             fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
         }
@@ -315,13 +315,13 @@ SHORT fasp_check_iCSRmat (iCSRmat *A)
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
-    if ((A->nnz==0)|(A->row==0)|(A->col==0)) {
+    if ( (A->nnz==0) || (A->row==0) || (A->col==0) ) {
         printf("### ERROR: Empty CSR matrix!\n");
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
     for (i=0;i<A->nnz;++i) {
-        if ((N2C(A->JA[i])<0)|(N2C(A->JA[i])-A->col>=0)) {
+        if ( (A->JA[i]<0) || (A->JA[i]-A->col>=0) ) {
             printf("### ERROR: Wrong CSR matrix!\n");
             fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
         }
