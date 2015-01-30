@@ -155,7 +155,8 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
             break;
     }
     
-    if (relres<tol) goto FINISHED;
+    // if initial residual is small, no need to iterate!
+    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // rho = r* := r
     fasp_array_cp(m,r,rho);

@@ -153,7 +153,8 @@ INT fasp_solver_pminres (mxv_matfree *mf,
             break;
     }
     
-    if (relres<tol) goto FINISHED;
+    // if initial residual is small, no need to iterate!
+    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // tp=A*p1
     mf->fct(mf->data, p1, tp);
