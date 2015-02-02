@@ -354,7 +354,9 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     
     for (lvl = 1; lvl < max_levels-1; ++lvl) {
         fracratio = (REAL)mgl[lvl].A.nnz/mgl[0].A.nnz;
-        mgl[lvl].cycle_type = MIN(2, (INT)(pow((REAL)xsi,(REAL)lvl)/(eta*fracratio*icum)));
+        mgl[lvl].cycle_type = (INT)(pow((REAL)xsi,(REAL)lvl)/(eta*fracratio*icum));
+        // safe-guard step: make cycle type >= 1 and <= 2
+        mgl[lvl].cycle_type = MAX(1, MIN(2, mgl[lvl].cycle_type));
         icum = icum * mgl[lvl].cycle_type;
     }
     

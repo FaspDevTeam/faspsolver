@@ -1,8 +1,9 @@
 File Name: CHANGES
 
-01/30/2015 FASP 1.6.7:
+02/02/2015 FASP 1.6.7:
 - Remove ISTART, N2C, and C2N.
 - Fix initial residual check for Krylov methods: check absolute and relative residuals.
+- Add a safe-guard step in UA setup in order to avoid Divided-by-Zero.
 
 01/27/2015 FASP 1.6.6:
 - Clean up the code and prepare for releasing the package.
