@@ -18,7 +18,7 @@ BEGIN {
   print "/* This header file is automatically generated with \"make headers\" */" 
   print "/*******************************************************************/\n"
   print "/*! \\file " name
-  print " *  \\brief Function decroration for the FASP package"
+  print " *  \\brief Function decoration for the FASP package"
   print " */ \n"
   print "#include \"fasp.h\" "
   print "#include \"fasp_block.h\" "

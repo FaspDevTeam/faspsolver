@@ -340,7 +340,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         mgl[lvl].num_levels = max_levels;
         mgl[lvl].b          = fasp_dvec_create(mm);
         mgl[lvl].x          = fasp_dvec_create(mm);
-        
+        mgl[lvl].cycle_type = cycle_type; // Must initialize cycle type!!!
+
         if ( cycle_type == NL_AMLI_CYCLE )
             mgl[lvl].w = fasp_dvec_create(3*mm);
         else

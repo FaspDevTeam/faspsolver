@@ -837,8 +837,8 @@ typedef struct {
     //! temporary work space for other usage
     REAL *w;
 
-    //! What is this flag for???
-    INT flag;
+    //! What is this flag for??? Not used!!! --Chensong 
+    // INT flag;
 
 } precond_data; /**< Data for general preconditioner */
 

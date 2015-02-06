@@ -229,7 +229,7 @@ void fasp_precond_ilu (REAL *r,
     
     return;
     
- MEMERR:
+MEMERR:
     printf("### ERROR: Need %d memory, only %d available!\n", memneed, iludata->nwork);
     exit(ERROR_ALLOC_MEM);
 }
@@ -282,7 +282,7 @@ void fasp_precond_ilu_forward (REAL *r,
     
     return;
     
- MEMERR:
+MEMERR:
     printf("### ERROR: Need %d memory, only %d available!", memneed, iludata->nwork);
     exit(ERROR_ALLOC_MEM);
 }
@@ -333,7 +333,7 @@ void fasp_precond_ilu_backward (REAL *r,
     
     return;
     
- MEMERR:
+MEMERR:
     printf("### ERROR: Need %d memory, only %d available!", memneed, iludata->nwork);
     exit(ERROR_ALLOC_MEM);
 }
@@ -413,10 +413,10 @@ void fasp_precond_amg (REAL *r,
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
-    for ( i = 0; i < maxit; ++i ) fasp_solver_mgcycle(mgl,&amgparam);
+    for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam);
     
     // We can also use a recursive version of MG:
-    // for ( i = 0; i < maxit; ++i ) fasp_solver_mgrecur(mgl,&amgparam,0);
+    // for (i=0;i<maxit;++i) fasp_solver_mgrecur(mgl,&amgparam,0);
     
     fasp_array_cp(m,mgl->x.val,z);    
 }
@@ -533,8 +533,8 @@ void fasp_precond_nl_amli (REAL *r,
  * \date   05/26/2014
  */
 void fasp_precond_amg_nk (REAL *r,
-                       REAL *z,
-                       void *data)
+                          REAL *z,
+                          void *data)
 {
     precond_data *pcdata=(precond_data *)data;
     const INT m=pcdata->mgl_data[0].A.row;
@@ -601,7 +601,6 @@ void fasp_precond_amg_nk (REAL *r,
     
     // z = z + P_nk*z_nk;
     fasp_blas_dcsr_aAxpy(1.0, P_nk, z_nk.val, z);
-    
 }
 
 /**

@@ -331,6 +331,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
         mgl[lvl].num_levels = max_levels;
         mgl[lvl].b          = fasp_dvec_create(mm);
         mgl[lvl].x          = fasp_dvec_create(mm);
+        mgl[lvl].cycle_type = cycle_type; // Must initialize cycle type!!!
         
         if ( cycle_type == NL_AMLI_CYCLE )
             mgl[lvl].w = fasp_dvec_create(3*mm);
@@ -562,6 +563,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
         mgl[lvl].num_levels = max_levels;
         mgl[lvl].b          = fasp_dvec_create(mm);
         mgl[lvl].x          = fasp_dvec_create(mm);
+        mgl[lvl].cycle_type = cycle_type; // Must initialize cycle type!!!
         
         if ( cycle_type == NL_AMLI_CYCLE )
             mgl[lvl].w = fasp_dvec_create(3*mm);
@@ -608,11 +610,11 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
 static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
                                             AMG_param *param)
 {
-    const SHORT prtlvl   = param->print_level;
-    const SHORT csolver  = param->coarse_solver;
-    const SHORT min_cdof = MAX(param->coarse_dof,50);
-    const INT   m        = mgl[0].A.ROW;
-    const INT   nb       = mgl[0].A.nb;
+    const SHORT prtlvl     = param->print_level;
+    const SHORT csolver    = param->coarse_solver;
+    const SHORT min_cdof   = MAX(param->coarse_dof,50);
+    const INT   m          = mgl[0].A.ROW;
+    const INT   nb         = mgl[0].A.nb;
     
     ILU_param iluparam;
     SHORT     max_levels=param->max_levels;
@@ -837,9 +839,9 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     for ( lvl = 1; lvl < max_levels; lvl++ ) {
         INT mm = mgl[lvl].A.ROW*nb;
         mgl[lvl].num_levels = max_levels;
-        mgl[lvl].b = fasp_dvec_create(mm);
-        mgl[lvl].x = fasp_dvec_create(mm);
-        mgl[lvl].w = fasp_dvec_create(3*mm);
+        mgl[lvl].b          = fasp_dvec_create(mm);
+        mgl[lvl].x          = fasp_dvec_create(mm);
+        mgl[lvl].w          = fasp_dvec_create(3*mm);
         
         if (mgl[lvl].A_nk != NULL){
             

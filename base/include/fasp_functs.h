@@ -4,7 +4,7 @@
 /*******************************************************************/
 
 /*! \file fasp_functs.h
- *  \brief Function decroration for the FASP package
+ *  \brief Function decoration for the FASP package
  */ 
 
 #include "fasp.h" 
