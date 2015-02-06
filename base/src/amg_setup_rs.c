@@ -62,7 +62,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     iCSRmat       Scouple; // strong n-couplings
     
     // level info (fine: 0; coarse: 1)
-    ivector    vertices = fasp_ivec_create(m);
+    ivector       vertices = fasp_ivec_create(m);
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -249,6 +249,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         mgl[lvl].num_levels = max_lvls;
         mgl[lvl].b          = fasp_dvec_create(mm);
         mgl[lvl].x          = fasp_dvec_create(mm);
+        mgl[lvl].cycle_type = cycle_type; // Must initialize cycle type!!!
         
         // allocate work arrays for the solve phase
         if ( cycle_type == NL_AMLI_CYCLE )
