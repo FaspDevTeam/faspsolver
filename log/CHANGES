@@ -7,6 +7,8 @@ File Name: CHANGES
 - Fix a typo in automatic header generation.
 - Clean up format a little bit.
 - Initialize cycle_type in mgl[lvl], fix the bug in NA.
+- Initialize ILU_levels in mgl[lvl], fix the bug when calling ILU in NA.
+- Initialize Schwarz_levels in mgl[lvl].
 - Update regression results, better convergence for NA now.
 
 01/27/2015 FASP 1.6.6:

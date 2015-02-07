@@ -340,7 +340,10 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         mgl[lvl].num_levels = max_levels;
         mgl[lvl].b          = fasp_dvec_create(mm);
         mgl[lvl].x          = fasp_dvec_create(mm);
-        mgl[lvl].cycle_type = cycle_type; // Must initialize cycle type!!!
+
+        mgl[lvl].cycle_type     = cycle_type; // initialize cycle type!
+        mgl[lvl].ILU_levels     = param->ILU_levels - lvl; // initialize ILU levels!
+        mgl[lvl].Schwarz_levels = param->Schwarz_levels -lvl; // initialize Schwarz!
 
         if ( cycle_type == NL_AMLI_CYCLE )
             mgl[lvl].w = fasp_dvec_create(3*mm);
@@ -618,12 +621,13 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     }
     
     for ( lvl = 1; lvl < max_levels; lvl++ ) {
-        INT mm = mgl[lvl].A.ROW*nb;
+        const INT mm = mgl[lvl].A.ROW*nb;
         mgl[lvl].num_levels = max_levels;
-        mgl[lvl].b = fasp_dvec_create(mm);
-        mgl[lvl].x = fasp_dvec_create(mm);
-        mgl[lvl].w = fasp_dvec_create(3*mm);
-        
+        mgl[lvl].b          = fasp_dvec_create(mm);
+        mgl[lvl].x          = fasp_dvec_create(mm);
+        mgl[lvl].w          = fasp_dvec_create(3*mm);
+        mgl[lvl].ILU_levels = param->ILU_levels - lvl; // initialize ILU levels!
+
         if (mgl[lvl].A_nk != NULL){
             
 #if WITH_UMFPACK

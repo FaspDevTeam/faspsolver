@@ -249,7 +249,10 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         mgl[lvl].num_levels = max_lvls;
         mgl[lvl].b          = fasp_dvec_create(mm);
         mgl[lvl].x          = fasp_dvec_create(mm);
-        mgl[lvl].cycle_type = cycle_type; // Must initialize cycle type!!!
+        
+        mgl[lvl].cycle_type     = cycle_type; // initialize cycle type!
+        mgl[lvl].ILU_levels     = param->ILU_levels - lvl; // initialize ILU levels!
+        mgl[lvl].Schwarz_levels = param->Schwarz_levels -lvl; // initialize Schwarz!
         
         // allocate work arrays for the solve phase
         if ( cycle_type == NL_AMLI_CYCLE )
