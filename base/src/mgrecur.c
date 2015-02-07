@@ -65,7 +65,7 @@ void fasp_solver_mgrecur (AMG_data *mgl,
     if ( level < mgl[level].num_levels-1 ) {
         
         // pre smoothing
-        if (level<param->ILU_levels) {
+        if ( level < mgl[level].ILU_levels ) {
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
         }
         else {
@@ -90,7 +90,7 @@ void fasp_solver_mgrecur (AMG_data *mgl,
         fasp_blas_dcsr_aAxpy(1.0, &mgl[level].P, e1->val, e0->val);
         
         // post smoothing
-        if (level < param->ILU_levels) {
+        if ( level < mgl[level].ILU_levels ) {
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
         }
         else {

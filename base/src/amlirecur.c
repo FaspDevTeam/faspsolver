@@ -83,10 +83,14 @@ void fasp_solver_amli (AMG_data *mgl,
     if ( level < mgl[level].num_levels-1 ) {
         
         // pre smoothing
-        if (level<param->ILU_levels) {
+        if ( level < mgl[level].ILU_levels ) {
+            
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
+            
         }
-        else if (level<mgl->Schwarz_levels) {
+        
+        else if ( level < mgl->Schwarz_levels ) {
+            
             switch (mgl[level].Schwarz.Schwarz_type) {
                 case 3: // TODO: Need to give a name instead of 3 --Chensong
                     fbgs2ns_(&(mgl[level].Schwarz.A.row),
@@ -197,10 +201,14 @@ void fasp_solver_amli (AMG_data *mgl,
         }
         
         // post smoothing
-        if (level < param->ILU_levels) {
+        if ( level < mgl[level].ILU_levels ) {
+            
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
+            
         }
+        
         else if (level<mgl->Schwarz_levels) {
+        
             switch (mgl[level].Schwarz.Schwarz_type) {
                 case 3:
                     bbgs2ns_(&(mgl[level].Schwarz.A.row),
@@ -360,10 +368,14 @@ void fasp_solver_nl_amli (AMG_data *mgl,
     if ( level < num_levels-1 ) {
         
         // pre smoothing
-        if (level<param->ILU_levels) {
+        if ( level < mgl[level].ILU_levels ) {
+
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
+            
         }
-        else if (level<mgl->Schwarz_levels) {
+        
+        else if ( level < mgl->Schwarz_levels ) {
+            
             switch (mgl[level].Schwarz.Schwarz_type) {
                 case 3:
                     fbgs2ns_(&(mgl[level].Schwarz.A.row),
@@ -418,8 +430,10 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         }
         
         else {
+            
             fasp_dcsr_presmoothing(smoother,A0,b0,e0,param->presmooth_iter,
                                    0,m0-1,1,relax,ndeg,smooth_order,ordering);
+            
         }
         
         // form residual r = b - A x
@@ -489,10 +503,13 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         }
         
         // post smoothing
-        if (level < param->ILU_levels) {
+        if ( level < mgl[level].ILU_levels ) {
+        
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
+        
         }
-        else if (level<mgl->Schwarz_levels) {
+        else if ( level < mgl->Schwarz_levels ) {
+        
             switch (mgl[level].Schwarz.Schwarz_type) {
                 case 3:
                     bbgs2ns_(&(mgl[level].Schwarz.A.row),
@@ -544,6 +561,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
                              &(mgl[level].Schwarz.memt));
                     break;
             }
+        
         }
         
         else {
