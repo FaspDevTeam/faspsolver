@@ -68,7 +68,7 @@ void fasp_solver_mgcycle (AMG_data *mgl,
 #endif
     
 #if DEBUG_MODE
-    printf("### DEBUG: AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
+    printf("### DEBUG: AMG_level = %d, ILU_level = %d\n", nl, mgl->ILU_levels);
 #endif
     
 ForwardSweep:
@@ -77,7 +77,7 @@ ForwardSweep:
         num_lvl[l]++;
         
         // pre-smoothing with ILU method
-        if ( l < param->ILU_levels ) {
+        if ( l < mgl->ILU_levels ) {
             fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
         
@@ -100,7 +100,7 @@ ForwardSweep:
         // or pre-smoothing with standard smoothers
         else {
 #if FASP_GSRB
-            if (( l==0 )&&(nx_rb>1))
+            if ( (l==0) && (nx_rb>1) )
                 fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
                                            param->presmooth_iter, 1, IMAP, MAXIMAP,
                                            nx_rb, ny_rb, nz_rb);
@@ -120,7 +120,7 @@ ForwardSweep:
         fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
         
         // restriction r1 = R*r0
-        switch (amg_type) {
+        switch ( amg_type ) {
             case UA_AMG:
                 fasp_blas_dcsr_mxv_agg(&mgl[l].R, mgl[l].w.val, mgl[l+1].b.val);
                 break;
@@ -136,7 +136,7 @@ ForwardSweep:
     
     // If AMG only has one level or we have arrived at the coarsest level,
     // call the coarse space solver:
-    switch (coarse_solver) {
+    switch ( coarse_solver ) {
             
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
@@ -182,7 +182,7 @@ ForwardSweep:
         }
         
         // prolongation u = u + alpha*P*e1
-        switch (amg_type) {
+        switch ( amg_type ) {
             case UA_AMG:
                 fasp_blas_dcsr_aAxpy_agg(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
                 break;
@@ -192,7 +192,7 @@ ForwardSweep:
         }
         
         // post-smoothing with ILU method
-        if ( l < param->ILU_levels ) {
+        if ( l < mgl->ILU_levels ) {
             fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
         }
         
@@ -216,7 +216,7 @@ ForwardSweep:
         else {
             
 #if FASP_GSRB
-            if (( l==0 )&&(nx_rb>1))
+            if ( (l==0) && (nx_rb>1) )
                 fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
                                            param->presmooth_iter, -1, IMAP, MAXIMAP,
                                            nx_rb, ny_rb, nz_rb);
@@ -282,20 +282,20 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
 #endif
     
     if (prtlvl >= PRINT_MOST)
-        printf("AMG_level = %d, ILU_level = %d\n", nl, param->ILU_levels);
+        printf("AMG_level = %d, ILU_level = %d\n", nl, mgl->ILU_levels);
     
 ForwardSweep:
     while ( l < nl-1 ) {
         nu_l[l]++;
         // pre smoothing
-        if (l<param->ILU_levels) {
+        if ( l < mgl->ILU_levels ) {
             fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
-            for (i=0; i<steps; i++)
+            for ( i=0; i<steps; i++ )
                 fasp_smoother_dbsr_gs_ascend(&mgl[l].A, &mgl[l].b, &mgl[l].x, mgl[l].diaginv.val);
         }
         else {
-            if (steps > 0) {
-                switch (smoother) {
+            if ( steps > 0 ) {
+                switch ( smoother ) {
                     case SMOOTHER_JACOBI:
                         for (i=0; i<steps; i++)
                             fasp_smoother_dbsr_jacobi1(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
@@ -371,7 +371,7 @@ ForwardSweep:
     
     // If AMG only has one level or we have arrived at the coarsest level,
     // call the coarse space solver:
-    switch (coarse_solver) {
+    switch ( coarse_solver ) {
             
 #if WITH_MUMPS
         case SOLVER_MUMPS:
@@ -433,7 +433,7 @@ ForwardSweep:
         }
         
         // extra kernel solve
-        if (mgl[l].A_nk != NULL) {
+        if ( mgl[l].A_nk != NULL ) {
             //--------------------------------------------
             // extra kernel solve
             //--------------------------------------------
@@ -456,7 +456,7 @@ ForwardSweep:
         }
         
         // post-smoothing
-        if ( l < param->ILU_levels ) {
+        if ( l < mgl->ILU_levels ) {
             fasp_smoother_dbsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
             for ( i=0; i<steps; i++ )
                 fasp_smoother_dbsr_gs_descend(&mgl[l].A, &mgl[l].b, &mgl[l].x, 
@@ -464,7 +464,7 @@ ForwardSweep:
         }
         else {
             if ( steps > 0 ) {
-                switch (smoother) {
+                switch ( smoother ) {
                     case SMOOTHER_JACOBI:
                         for (i=0; i<steps; i++)
                             fasp_smoother_dbsr_jacobi1(&mgl[l].A, &mgl[l].b, &mgl[l].x, 

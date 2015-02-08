@@ -1,6 +1,6 @@
 /*! \file smat.c
  *
- *  \brief Simple operations for *small* full matrices in row-major format
+ *  \brief Simple operations for *small* dense matrices in row-major format
  */
 
 #include "fasp.h"

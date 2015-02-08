@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+02/08/2015 FASP 1.6.8:
+- Further clean up Doxygen.
+- Update documentation and webpage.
+
 02/06/2015 FASP 1.6.7:
 - Remove ISTART, N2C, and C2N.
 - Fix initial residual check for Krylov methods: check absolute and relative residuals.
