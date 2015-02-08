@@ -155,7 +155,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
 /**
  * \fn INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A, dvector *b, dvector *x,
  *                                           itsolver_param *itparam,
- *                                           AMG_param *amgparam)
+ *                                           AMG_param *amgparam, dCSRmat *A_diag)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -164,6 +164,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  * \param amgparam  Pointer to parameters for AMG solvers
+ * \param A_diag    Digonal blocks of A
  *
  * \return          Number of iterations if succeed
  *
@@ -343,7 +344,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
 /**
  * \fn INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A, dvector *b, dvector *x,
  *                                           itsolver_param *itparam,
- *                                           AMG_param *amgparam)
+ *                                           AMG_param *amgparam, dCSRmat *A_diag)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -352,6 +353,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  * \param amgparam  Pointer to parameters for AMG solvers
+ * \param A_diag    Digonal blocks of A
  *
  * \return          Number of iterations if succeed
  *

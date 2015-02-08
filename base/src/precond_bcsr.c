@@ -319,7 +319,7 @@ void fasp_precond_block_lower_3 (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_lower_3 (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_lower_3_amg (double *r, double *z, void *data)
  * \brief block lower triangular preconditioning (3x3 block matrix, each diagonal
  *        block is solved by AMG)
  *
