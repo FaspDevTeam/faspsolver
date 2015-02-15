@@ -1,5 +1,5 @@
      560 ./base/include/dlmalloc.h
-     172 ./base/include/doxygen.h
+     170 ./base/include/doxygen.h
     1190 ./base/include/fasp.h
      681 ./base/include/fasp_block.h
      250 ./base/include/fasp_const.h
@@ -12,11 +12,11 @@
     1216 ./base/src/schwarz.f
      145 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
-     277 ./base/src/amg_setup_rs.c
-     878 ./base/src/amg_setup_sa.c
-     657 ./base/src/amg_setup_ua.c
+     281 ./base/src/amg_setup_rs.c
+     887 ./base/src/amg_setup_sa.c
+     664 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
-    1059 ./base/src/amlirecur.c
+    1089 ./base/src/amlirecur.c
      271 ./base/src/array.c
      258 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
@@ -46,7 +46,7 @@
     1597 ./base/src/interpolation.c
      840 ./base/src/interpolation_em.c
     3229 ./base/src/io.c
-     578 ./base/src/itsolver_bcsr.c
+     580 ./base/src/itsolver_bcsr.c
      786 ./base/src/itsolver_bsr.c
      710 ./base/src/itsolver_csr.c
      363 ./base/src/itsolver_mf.c
@@ -71,7 +71,7 @@
      460 ./base/src/pminres_mf.c
      641 ./base/src/precond_bcsr.c
      727 ./base/src/precond_bsr.c
-     663 ./base/src/precond_csr.c
+     662 ./base/src/precond_csr.c
     1732 ./base/src/precond_str.c
      965 ./base/src/pvfgmres.c
      339 ./base/src/pvfgmres_mf.c
@@ -108,4 +108,4 @@
       88 ./base/src/itsolver_util.inl
      233 ./base/src/linklist.inl
      240 ./base/src/mg_util.inl
-   91765 total
+   91814 total

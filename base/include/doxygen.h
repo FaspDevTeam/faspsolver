@@ -94,21 +94,19 @@
 /**
  * \page developers Developers
  *
- * Project Leader: 
+ * Project leader:
  *
  * - Xu, Jinchao (Penn State University, USA)
  *
- * Active Developers (in alphabetic order):
+ * Current active developers (in alphabetic order):
  *
  * - Feng, Chunsheng (Xiangtan University, China)
  *
- * - Hu, Xiaozhe (Penn State University, USA)
+ * - Hu, Xiaozhe (Tufts University, USA)
  * 
  * - Li, Zheng (Kunming University of Science and Technology, China)
  *
  * - Wang, Lu (Penn State University, USA)
- *
- * - Yue, Xiaoqiang (Xiangtan University, China)
  *
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
@@ -119,8 +117,6 @@
  * With contributions from (in alphabetic order):
  *
  * - Brannick, James (Penn State University, USA)
- * 
- * - Cao, Fei (Penn State University, USA)
  *
  * - Chen, Long (University of California, Irvine, USA)
  *
@@ -136,6 +132,8 @@
  *
  * - Yang, Kai (Penn State University, USA)
  *
+ * - Yue, Xiaoqiang (Xiangtan University, China)
+ *
  * - Wang, Ziteng (University of Alabama, USA)
  *
  * - Zhang, Shiquan (Sichuan University, China)
@@ -146,7 +144,7 @@
  *
  * - Zhou, Zhiyang (Xiangtan University, China)
  *
- * Project Coordinator:
+ * Project coordinator:
  * 
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
