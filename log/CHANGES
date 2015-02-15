@@ -1,7 +1,8 @@
 File Name: CHANGES
 
-02/08/2015 FASP 1.6.8:
+02/14/2015 FASP 1.6.8:
 - Further clean up Doxygen.
+- Update developer information in Doxygen.
 - Update documentation and webpage.
 
 02/06/2015 FASP 1.6.7:
