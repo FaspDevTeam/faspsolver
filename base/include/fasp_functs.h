@@ -1582,6 +1582,22 @@ void fasp_precond_block_lower_4 (double *r,
                                  double *z,
                                  void *data);
 
+void fasp_precond_block_upper_3 (double *r,
+                                 double *z,
+                                 void *data);
+
+void fasp_precond_block_upper_3_amg (double *r,
+                                 double *z,
+                                 void *data);
+
+void fasp_precond_block_SGS_3 (double *r,
+                                 double *z,
+                                 void *data);
+
+void fasp_precond_block_SGS_3_amg (double *r,
+                               double *z,
+                               void *data);
+
 void fasp_precond_sweeping (double *r,
                             double *z,
                             void *data);
@@ -1670,8 +1686,8 @@ void fasp_precond_nl_amli (REAL *r,
                            void *data);
 
 void fasp_precond_amg_nk (REAL *r,
-                       REAL *z,
-                       void *data);
+                          REAL *z,
+                          void *data);
 
 void fasp_precond_free (SHORT precond_type, precond *pc);
 

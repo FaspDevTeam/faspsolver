@@ -103,6 +103,55 @@ int main (int argc, const char * argv[])
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
     }
     
+    //
+    else if (problem_num == 21){
+        
+        datafile1="interface/mat_interface.dat"; // This file is NOT in ../data!
+		strcat(filename1,datafile1);
+		
+        datafile2="interface/rhs_interface.dat";
+		strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 22){
+        
+        datafile1="interface/mat_interface3D.dat"; // This file is NOT in ../data!
+		strcat(filename1,datafile1);
+		
+        datafile2="interface/rhs_interface3D.dat";
+		strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 23){
+        
+        datafile1="interface/mat_interface3D_jump.dat"; // This file is NOT in ../data!
+		strcat(filename1,datafile1);
+		
+        datafile2="interface/rhs_interface3D_jump.dat";
+		strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 24){
+        
+        datafile1="interface/mat_interface3D_jump_large.dat"; // This file is NOT in ../data!
+		strcat(filename1,datafile1);
+		
+        datafile2="interface/rhs_interface3D_jump_large.dat";
+		strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
     else {
 		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
 		return ERROR_INPUT_PAR;
@@ -209,6 +258,8 @@ int main (int argc, const char * argv[])
 	}
     
     if (output_type) fclose (stdout);
+    
+    fasp_dvec_write("./solution3D.dat", &x);
     
     
     // Clean up memory
