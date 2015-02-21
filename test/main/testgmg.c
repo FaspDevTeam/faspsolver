@@ -14,9 +14,9 @@ const REAL pi = 3.14159265;
  * \fn static REAL f1d (INT i, INT nx)
  *
  * \brief Setting f in Poisson equation, where
- *        f = sin(pi x) 				in 1D
+ *        f = sin(pi x)                 in 1D
  *
- * \param i		 i-th position in x direction
+ * \param i      i-th position in x direction
  * \param nx     Number of grids in x direction
  *
  * \author Ziteng Wang
@@ -32,10 +32,10 @@ static REAL f1d (INT i,
  * \fn static REAL f2d (INT i, INT j, INT nx, INT ny)
  *
  * \brief Setting f in Poisson equation, where
- *        f = sin(pi x)*sin(pi y) 		in 2D
+ *        f = sin(pi x)*sin(pi y)       in 2D
  *
- * \param i		 i-th position in x direction
- * \param j		 j-th position in y direction
+ * \param i      i-th position in x direction
+ * \param j      j-th position in y direction
  * \param nx     Number of grids in x direction
  * \param ny     Number of grids in y direction
  *
@@ -56,9 +56,9 @@ static REAL f2d (INT i,
  * \brief Setting f in Poisson equation, where
  *        f = sin(pi x*sin(pi y)*sin(pi z) in 3D
  *
- * \param i		 i-th position in x direction
- * \param j		 j-th position in y direction
- * \param k		 k-th position in y direction
+ * \param i      i-th position in x direction
+ * \param j      j-th position in y direction
+ * \param k      k-th position in y direction
  * \param nx     Number of grids in x direction
  * \param ny     Number of grids in y direction
  * \param nz     Number of grids in z direction
@@ -101,7 +101,7 @@ static REAL L2NormError1d (REAL *u,
     INT i;
     for ( i = 1; i < nx; i++ ) {
         uexact  = sin(pi*i*h)/(pi*pi);
-		//uexact  = ((REAL) i)*h*(1-((REAL) i)*h)/2;
+        //uexact  = ((REAL) i)*h*(1-((REAL) i)*h)/2;
         l2norm += pow((u[i] - uexact), 2);
     }
     l2norm = sqrt(l2norm*h);
@@ -170,7 +170,7 @@ static REAL L2NormError3d (REAL *u,
         for ( j = 1; j < ny; j++ ) {
             for ( k = 1; k < nx; k++ ) {
                 uexact  = sin(pi*i*h)*sin(pi*j*h)*sin(pi*k*h)/(pi*pi*3.0);
-				l2norm += pow((u[i*(nx+1)*(ny+1)+j*(nx+1)+k] - uexact), 2);
+                l2norm += pow((u[i*(nx+1)*(ny+1)+j*(nx+1)+k] - uexact), 2);
             }
         }
     }
@@ -199,7 +199,7 @@ int main (int argc, const char *argv[])
     INT        i, j, k, nx, ny, nz;
     REAL      *u, *b, h, error0;
     
-    printf("Enter spatial dimenstion (1, 2 or 3):   ");
+    printf("Enter spatial dimension (1, 2 or 3):   ");
     scanf("%d", &dim);
     
     if ( dim > 3 || dim < 1) {
@@ -225,7 +225,7 @@ int main (int argc, const char *argv[])
     
     switch (dim) {
             
-        case 1: // 1 dimesion
+        case 1: // 1 dimension
             
             u = (REAL *)malloc((nx+1)*sizeof(REAL));
             fasp_array_set(nx+1, u, 0.0);
@@ -315,23 +315,23 @@ int main (int argc, const char *argv[])
             
     }
     
-	if ( prtlvl >= PRINT_SOME){
-		switch (dim) {
-			    
-			case 1: // 1 dimesion
-				error0 = L2NormError1d(u, nx); break;
+    if ( prtlvl >= PRINT_SOME){
+        switch (dim) {
                 
-			case 2: // 2 dimension
-				error0 = L2NormError2d(u, nx, ny); break;
+            case 1: // 1 dimension
+                error0 = L2NormError1d(u, nx); break;
                 
-	        case 3: // 3 dimension
-		        error0 = L2NormError3d(u, nx, ny, nz); break;
+            case 2: // 2 dimension
+                error0 = L2NormError2d(u, nx, ny); break;
                 
-		}
-		printf("||u-u'|| = %e\n",error0);
-	}
+            case 3: // 3 dimension
+                error0 = L2NormError3d(u, nx, ny, nz); break;
+                
+        }
+        printf("||u-u'|| = %e\n",error0);
+    }
     
-	free(u);
+    free(u);
     free(b);
     
     return FASP_SUCCESS;

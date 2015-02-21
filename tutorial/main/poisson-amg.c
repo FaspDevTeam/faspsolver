@@ -4,7 +4,7 @@
  *         the discrete Poisson equation from P1 finite element.
  *         C version.
  *
- *	\note  AMG example for FASP: C version
+ *  \note  AMG example for FASP: C version
  *
  *  Solving the Poisson equation (P1 FEM) with AMG
  */
@@ -45,7 +45,7 @@ int main (int argc, const char * argv[])
     dvector b, x;
     char filename1[512], *datafile1;
     char filename2[512], *datafile2;
-	
+    
     // Read the stiffness matrix from matFE.dat
     strncpy(filename1,inparam.workdir,128);    
     datafile1="csrmat_FE.dat"; strcat(filename1,datafile1);

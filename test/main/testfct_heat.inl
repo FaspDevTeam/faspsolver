@@ -28,7 +28,7 @@
  */
 double f (double *p)
 {
-	return 2*pi*pi*sin(pi*p[0])*sin(pi*p[1])*p[2] + sin(pi*p[0])*sin(pi*p[1]);
+    return 2*pi*pi*sin(pi*p[0])*sin(pi*p[1])*p[2] + sin(pi*p[0])*sin(pi*p[1]);
 }
 
 /**
@@ -44,7 +44,7 @@ double f (double *p)
  */
 double u (double *p)
 {
-	return sin(pi*p[0])*sin(pi*p[1])*p[2];
+    return sin(pi*p[0])*sin(pi*p[1])*p[2];
 }
 
 /**
@@ -60,7 +60,7 @@ double u (double *p)
  */
 double u_x (double *p)
 {
-	return pi*cos(pi*p[0])*sin(pi*p[1])*p[2];
+    return pi*cos(pi*p[0])*sin(pi*p[1])*p[2];
 }
 
 /**
@@ -76,13 +76,13 @@ double u_x (double *p)
  */
 double u_y (double *p)
 {
-	return pi*sin(pi*p[0])*cos(pi*p[1])*p[2];
+    return pi*sin(pi*p[0])*cos(pi*p[1])*p[2];
 }
 
 /**
  * \fn int bd_flag (double *p)
  *
- * \brief boundar flag for node
+ * \brief boundary flag for node
  *
  * \param *p  the x-y-t-axis value of the point
  * \return    function value 
@@ -92,11 +92,11 @@ double u_y (double *p)
  */
 int bd_flag (double *p)
 {
-	// set all boundary to dirichlet boundary
-	if (p[0] < 1e-15 || 1-p[0] < 1e-15 || p[1] < 1e-15 || 1-p[1] < 1e-15) 
-		return DIRICHLET;
-	else
-		return INTERIORI;
+    // set all boundary to Dirichlet boundary
+    if (p[0] < 1e-15 || 1-p[0] < 1e-15 || p[1] < 1e-15 || 1-p[1] < 1e-15) 
+        return DIRICHLET;
+    else
+        return INTERIORI;
 }
 
 /*---------------------------------*/

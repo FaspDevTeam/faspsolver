@@ -69,11 +69,11 @@ int main (int argc, const char * argv[])
     }
     
     // Setp 3. Setup preconditioner
-    // Preconditioiner type is determined by pc_type
+    // Preconditioner type is determined by pc_type
     precond *pc = fasp_precond_setup(pc_type, &amgparam, &iluparam, &A);
 
     // Step 4. Solve the system with PCG as an iterative solver
-    // Set the initial guess to be zero and then solve it using pcg solver
+    // Set the initial guess to be zero and then solve it using PCG solver
     // Note that we call PCG interface directly. There is another way which
     // calls the abstract iterative method interface; see possion-its.c for
     // more details. 

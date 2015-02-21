@@ -20,47 +20,47 @@
 int main (int argc, const char * argv[]) 
 {
     dBSRmat Absr;
-	dvector b, uh;
+    dvector b, uh;
 
-	int status=FASP_SUCCESS;
-	
-	// Step 0. Set parameters
-	input_param     inpar;  // parameters from input files
-	itsolver_param  itpar;  // parameters for itsolver
-	AMG_param       amgpar; // parameters for AMG
-	ILU_param       ilupar; // parameters for ILU
+    int status=FASP_SUCCESS;
+    
+    // Step 0. Set parameters
+    input_param     inpar;  // parameters from input files
+    itsolver_param  itpar;  // parameters for itsolver
+    AMG_param       amgpar; // parameters for AMG
+    ILU_param       ilupar; // parameters for ILU
     
     // Set solver parameters: Should use ./ini/bsr.dat
     fasp_param_set(argc, argv, &inpar);
     fasp_param_init(&inpar, &itpar, &amgpar, &ilupar, NULL);
         
     // Set local parameters
-	const int print_level   = inpar.print_level;
-	const int problem_num   = inpar.problem_num;
-	const int itsolver_type = inpar.solver_type;
-	const int precond_type  = inpar.precond_type;
-	const int output_type   = inpar.output_type;
+    const int print_level   = inpar.print_level;
+    const int problem_num   = inpar.problem_num;
+    const int itsolver_type = inpar.solver_type;
+    const int precond_type  = inpar.precond_type;
+    const int output_type   = inpar.output_type;
     
     // Set output devices
     if (output_type) {
-		char *outputfile = "out/test.out";
-		printf("Redirecting outputs to file: %s ...\n", outputfile);
-		freopen(outputfile,"w",stdout); // open a file for stdout
-	}
+        char *outputfile = "out/test.out";
+        printf("Redirecting outputs to file: %s ...\n", outputfile);
+        freopen(outputfile,"w",stdout); // open a file for stdout
+    }
     
     printf("Test Problem %d\n", problem_num);
     
-	// Step 1. Input stiffness matrix and right-hand side
-	char filename1[512], *datafile1;
-	char filename2[512], *datafile2;
+    // Step 1. Input stiffness matrix and right-hand side
+    char filename1[512], *datafile1;
+    char filename2[512], *datafile2;
     char filename3[512], *datafile3;
-	
-	strncpy(filename1,inpar.workdir,128);
-	strncpy(filename2,inpar.workdir,128);
+    
+    strncpy(filename1,inpar.workdir,128);
+    strncpy(filename2,inpar.workdir,128);
     strncpy(filename3,inpar.workdir,128);
     
     // Default test problem from black-oil benchmark: SPE01
-	if (problem_num == 10) {				
+    if (problem_num == 10) {                
         // Read the stiffness matrix from bsrmat_SPE01.dat
         strncpy(filename1,inpar.workdir,128);    
         datafile1="bsrmat_SPE01.dat"; strcat(filename1,datafile1);
@@ -73,17 +73,17 @@ int main (int argc, const char * argv[])
     }
     
     else {
-		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
-		return ERROR_INPUT_PAR;
-	}
+        printf("### ERROR: Unrecognised problem number %d\n", problem_num);
+        return ERROR_INPUT_PAR;
+    }
     
     // Print problem size
-	if (print_level>PRINT_NONE) {
+    if (print_level>PRINT_NONE) {
         printf("A: m = %d, n = %d, nnz = %d\n", Absr.ROW, Absr.COL, Absr.NNZ);
         printf("b: n = %d\n", b.row);
-	}
+    }
     
-	// Step 2. Solve the system
+    // Step 2. Solve the system
     
     // Print out solver parameters
     if (print_level>PRINT_NONE) fasp_param_solver_print(&itpar);
@@ -95,54 +95,54 @@ int main (int argc, const char * argv[])
     // Preconditioned Krylov methods
     if ( itsolver_type > 0 && itsolver_type < 20 ) {
         
-		// Using no preconditioner for Krylov iterative methods
-		if (precond_type == PREC_NULL) {
+        // Using no preconditioner for Krylov iterative methods
+        if (precond_type == PREC_NULL) {
             status = fasp_solver_dbsr_krylov(&Absr, &b, &uh, &itpar);
-		}	
+        }   
         
-		// Using diag(A) as preconditioner for Krylov iterative methods
-		else if (precond_type == PREC_DIAG) {
+        // Using diag(A) as preconditioner for Krylov iterative methods
+        else if (precond_type == PREC_DIAG) {
             status = fasp_solver_dbsr_krylov_diag(&Absr, &b, &uh, &itpar);
-		}
+        }
         
-		// Using AMG as preconditioner for Krylov iterative methods
-		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
+        // Using AMG as preconditioner for Krylov iterative methods
+        else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
             if (print_level>PRINT_NONE) fasp_param_amg_print(&amgpar);
             status = fasp_solver_dbsr_krylov_amg(&Absr, &b, &uh, &itpar, &amgpar);
-		}
+        }
         
-		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
-		else if (precond_type == PREC_ILU) {
+        // Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
+        else if (precond_type == PREC_ILU) {
             if (print_level>PRINT_NONE) fasp_param_ilu_print(&ilupar);
             status = fasp_solver_dbsr_krylov_ilu(&Absr, &b, &uh, &itpar, &ilupar);
-		}
+        }
         
-		else {
-			printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);		
-			exit(ERROR_SOLVER_PRECTYPE);
-		}
+        else {
+            printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);       
+            exit(ERROR_SOLVER_PRECTYPE);
+        }
         
-	}
+    }
     
-	else {
-		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);		
-		status = ERROR_SOLVER_TYPE;
+    else {
+        printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);      
+        status = ERROR_SOLVER_TYPE;
         goto FINISHED;
-	}
-    	
-	if (status<0) {
-		printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
-	}
+    }
+        
+    if (status<0) {
+        printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
+    }
     
     if (output_type) fclose (stdout);
     
  FINISHED:
     // Clean up memory
     fasp_dbsr_free(&Absr);
-	fasp_dvec_free(&b);
-	fasp_dvec_free(&uh);
+    fasp_dvec_free(&b);
+    fasp_dvec_free(&uh);
     
-	return status;
+    return status;
 }
 
 /*---------------------------------*/

@@ -36,100 +36,100 @@ int main (int argc, const char * argv[])
 {
     // Set default values
     int status = FASP_SUCCESS;
-	int print_usage;
-	
-    FEM_param pt; // parameter for testfem
-	FEM_param_init(&pt);
-	print_usage = FEM_param_set(argc, argv, &pt);
-	double dt = pt.T/pt.nt; // time step size
+    int print_usage;
     
-	if (print_usage) {
-		printf("\nUsage: %s [<options>]\n", argv[0]);
-		printf("  -output <val>    : mesh output option [default: 0]\n");
-		printf("  -meshin <val>    : input mesh [default: ../data/mesh.dat]\n");
-		printf("  -meshout <val>   : output mesh [default: ../data/mesh_?.dat]\n");
-		printf("  -refine <val>    : refine level [default: 8]\n");
-		printf("  -assemble <val>  : assemble option [default: ab]\n");	
+    FEM_param pt; // parameter for testfem
+    FEM_param_init(&pt);
+    print_usage = FEM_param_set(argc, argv, &pt);
+    double dt = pt.T/pt.nt; // time step size
+    
+    if (print_usage) {
+        printf("\nUsage: %s [<options>]\n", argv[0]);
+        printf("  -output <val>    : mesh output option [default: 0]\n");
+        printf("  -meshin <val>    : input mesh [default: ../data/mesh.dat]\n");
+        printf("  -meshout <val>   : output mesh [default: ../data/mesh_?.dat]\n");
+        printf("  -refine <val>    : refine level [default: 8]\n");
+        printf("  -assemble <val>  : assemble option [default: ab]\n"); 
         printf("                     ab  |  assemble the stiff matrix & mass matrix & rhs;\n");
-		printf("                      a  |  assemble the stiff matrix & mass matrix;\n");
-		printf("                      b  |  assemble the rhs;\n");
-		printf("  -nt     <val>    : time steps [default: 0]\n");
-		printf("  -T      <val>    : T_end [default: 1.0]\n");
-		printf("  -quad_rhs <val>  : quad points for rhs [default: 3]\n");
-		printf("  -quad_mat <val>  : quad points for mat [default: 1]\n");
-		printf("  -help            : print this help message\n\n");
-		exit(status);
-	}
+        printf("                      a  |  assemble the stiff matrix & mass matrix;\n");
+        printf("                      b  |  assemble the rhs;\n");
+        printf("  -nt     <val>    : time steps [default: 0]\n");
+        printf("  -T      <val>    : T_end [default: 1.0]\n");
+        printf("  -quad_rhs <val>  : quad points for rhs [default: 3]\n");
+        printf("  -quad_mat <val>  : quad points for mat [default: 1]\n");
+        printf("  -help            : print this help message\n\n");
+        exit(status);
+    }
     
     // variables
-	Mesh mesh;
-	Mesh_aux mesh_aux;
-	Bd_apply_info bdinfo;
+    Mesh mesh;
+    Mesh_aux mesh_aux;
+    Bd_apply_info bdinfo;
     
-	dCSRmat A_heat, Mass, A; // A_heat = matrix of heat transfer
+    dCSRmat A_heat, Mass, A; // A_heat = matrix of heat transfer
                              // Mass   = mass matrix 
                              // A      = matrix after boundary condition applied
     
-	dvector b_heat, b, bh;   // b_heat = right hand side for all timesteps of heat transfer 
+    dvector b_heat, b, bh;   // b_heat = right hand side for all timesteps of heat transfer 
                              // b      = final rhs
                              // bh     = b_heat in 1-step
     
-	dvector uh_heat, u0, uh; // uh_heat = boundary value for all timesteps of heat transfer
+    dvector uh_heat, u0, uh; // uh_heat = boundary value for all timesteps of heat transfer
                              // u0      = last time-step 
                              // uh      = uh_heat in 1-step
     
-	int i, it;
-	double *l2error, *rhs_pro; //rhs_pro = back Euler's right hand side
+    int i, it;
+    double *l2error, *rhs_pro; //rhs_pro = back Euler's right hand side
     dvector x; //solution of the system
     
-	// Step 1: reading mesh info
-	mesh_init (&mesh, "../data/mesh.dat");
+    // Step 1: reading mesh info
+    mesh_init (&mesh, "../data/mesh.dat");
 
     // If there is already mesh_aux data available, you can use the following fct to init it:    
-    //	  mesh_aux_init (&mesh, &mesh_aux, "mesh.aux");
+    //    mesh_aux_init (&mesh, &mesh_aux, "mesh.aux");
     // otherwise, just build the auxiliary information for the mesh
-	mesh_aux_build(&mesh, &mesh_aux);
+    mesh_aux_build(&mesh, &mesh_aux);
     
-	// Step 2: refinement
-	clock_t mesh_refine_s = clock();
-	for (i=0;i<pt.refine_lvl;++i) mesh_refine(&mesh, &mesh_aux);
-	clock_t mesh_refine_e = clock();
-	double mesh_refine_time = (double)(mesh_refine_e - mesh_refine_s)/(double)(CLOCKS_PER_SEC);
-	printf("Mesh refinement costs... %8.4f seconds\n", mesh_refine_time);
+    // Step 2: refinement
+    clock_t mesh_refine_s = clock();
+    for (i=0;i<pt.refine_lvl;++i) mesh_refine(&mesh, &mesh_aux);
+    clock_t mesh_refine_e = clock();
+    double mesh_refine_time = (double)(mesh_refine_e - mesh_refine_s)/(double)(CLOCKS_PER_SEC);
+    printf("Mesh refinement costs... %8.4f seconds\n", mesh_refine_time);
     
-	// Step 3: assemble for linear system
+    // Step 3: assemble for linear system
     clock_t assemble_s = clock();
     setup_heat(&A_heat, &Mass, &b_heat, &mesh, &mesh_aux, &pt, &uh_heat, &bdinfo, dt);
     clock_t assemble_e = clock();
     double assemble_time = (double)(assemble_e - assemble_s)/(double)(CLOCKS_PER_SEC);
     printf("Assembling costs........ %8.4f seconds\n", assemble_time);
     
-	// Step 3.5: clean auxiliary mesh info
-	mesh_aux_free(&mesh_aux);
-	
-	// init
-	uh = fasp_dvec_create(mesh.node.row);
-	bh = fasp_dvec_create(mesh.node.row);
-	u0 = fasp_dvec_create(mesh.node.row);
-	rhs_pro = (double *)fasp_mem_calloc(mesh.node.row, sizeof(double));
-	l2error = (double *)fasp_mem_calloc(pt.nt, sizeof(double));
-	double p[DIM+1];
-	p[DIM] = 0;
-	for (i = 0;i < u0.row;++i) {
-		for (it = 0;it < DIM;++it) p[it] = mesh.node.val[i][it];
-		u0.val[i] = u(p)/dt;
-	}
+    // Step 3.5: clean auxiliary mesh info
+    mesh_aux_free(&mesh_aux);
     
-	// Step 4: loop over it: apply boundary condition, solve system and get L2 error
-	for (it = 0; it < pt.nt; ++it) {
+    // init
+    uh = fasp_dvec_create(mesh.node.row);
+    bh = fasp_dvec_create(mesh.node.row);
+    u0 = fasp_dvec_create(mesh.node.row);
+    rhs_pro = (double *)fasp_mem_calloc(mesh.node.row, sizeof(double));
+    l2error = (double *)fasp_mem_calloc(pt.nt, sizeof(double));
+    double p[DIM+1];
+    p[DIM] = 0;
+    for (i = 0;i < u0.row;++i) {
+        for (it = 0;it < DIM;++it) p[it] = mesh.node.val[i][it];
+        u0.val[i] = u(p)/dt;
+    }
+    
+    // Step 4: loop over it: apply boundary condition, solve system and get L2 error
+    for (it = 0; it < pt.nt; ++it) {
 
-		for (i = 0;i < uh.row;++i) {
-			uh.val[i] = uh_heat.val[i+it*mesh.node.row];
-			bh.val[i] = b_heat.val[i+it*mesh.node.row];
-		}
-		fasp_blas_dcsr_mxv(&Mass, u0.val, rhs_pro);//get backward Euler's rhs
-		for (i = 0;i < u0.row;++i) bh.val[i] += rhs_pro[i];
-		extractNondirichletMatrix(&A_heat, &bh, &A, &b, &(mesh.node_bd), 
+        for (i = 0;i < uh.row;++i) {
+            uh.val[i] = uh_heat.val[i+it*mesh.node.row];
+            bh.val[i] = b_heat.val[i+it*mesh.node.row];
+        }
+        fasp_blas_dcsr_mxv(&Mass, u0.val, rhs_pro);//get backward Euler's rhs
+        for (i = 0;i < u0.row;++i) bh.val[i] += rhs_pro[i];
+        extractNondirichletMatrix(&A_heat, &bh, &A, &b, &(mesh.node_bd), 
                                   &(bdinfo.bd), &(bdinfo.dof), &(bdinfo.idx), &uh);
         
         // Print problem size
@@ -151,42 +151,42 @@ int main (int argc, const char * argv[])
             
         }
         
-		for ( i=0; i<bdinfo.dof.row; ++i)
-			uh.val[bdinfo.dof.val[i]] = x.val[i];
-		
-        for ( i=0; i<u0.row; ++i)
-			u0.val[i] = uh.val[i]/dt;
+        for ( i=0; i<bdinfo.dof.row; ++i)
+            uh.val[bdinfo.dof.val[i]] = x.val[i];
         
-		l2error[it] = get_l2_error_heat(&(mesh.node), &(mesh.elem), &uh, pt.num_qp_rhs, dt*(it+1));
-		
-		fasp_dcsr_free(&A);
-		fasp_dvec_free(&b);
-	}
+        for ( i=0; i<u0.row; ++i)
+            u0.val[i] = uh.val[i]/dt;
+        
+        l2error[it] = get_l2_error_heat(&(mesh.node), &(mesh.elem), &uh, pt.num_qp_rhs, dt*(it+1));
+        
+        fasp_dcsr_free(&A);
+        fasp_dvec_free(&b);
+    }
     
-	printf("\n==============================================================\n");
-	for (it = 0;it < pt.nt; ++it)
+    printf("\n==============================================================\n");
+    for (it = 0;it < pt.nt; ++it)
         {
             printf("L2 error of FEM at t=%1.5fs is %g\n", dt*(it+1), l2error[it]);
         }
-	printf("==============================================================\n");
+    printf("==============================================================\n");
     
     // Clean up memory
-	mesh_free(&mesh);
+    mesh_free(&mesh);
     fasp_ivec_free(&(bdinfo.dof));
     fasp_ivec_free(&(bdinfo.bd));
     fasp_ivec_free(&(bdinfo.idx));
-	fasp_dcsr_free(&A_heat);
-	fasp_dcsr_free(&Mass);
-	fasp_dvec_free(&b_heat);
-	fasp_dvec_free(&bh);
-	fasp_dvec_free(&uh);
-	fasp_dvec_free(&uh_heat);
-	fasp_dvec_free(&u0);
+    fasp_dcsr_free(&A_heat);
+    fasp_dcsr_free(&Mass);
+    fasp_dvec_free(&b_heat);
+    fasp_dvec_free(&bh);
+    fasp_dvec_free(&uh);
+    fasp_dvec_free(&uh_heat);
+    fasp_dvec_free(&u0);
     fasp_dvec_free(&x);
-	fasp_mem_free(rhs_pro);
-	fasp_mem_free(l2error);
+    fasp_mem_free(rhs_pro);
+    fasp_mem_free(l2error);
     
-	return FASP_SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

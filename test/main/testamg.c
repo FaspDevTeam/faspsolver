@@ -1,9 +1,9 @@
 /**
- *		Test FASP AMG solvers
+ *      Test FASP AMG solvers
  *
  *------------------------------------------------------
  *
- *		Created by Chensong Zhang on 01/24/2012.
+ *      Created by Chensong Zhang on 01/24/2012.
  *
  *------------------------------------------------------
  *
@@ -29,45 +29,45 @@
 int main (int argc, const char * argv[]) 
 {
     dBSRmat Absr;
-	dvector b, uh;
+    dvector b, uh;
     
-	int status=FASP_SUCCESS;
-	
-	// Step 0. Set parameters
-	input_param     inpar;  // parameters from input files
-	itsolver_param  itpar;  // parameters for itsolver
-	AMG_param       amgpar; // parameters for AMG
-	ILU_param       ilupar; // parameters for ILU
+    int status=FASP_SUCCESS;
+    
+    // Step 0. Set parameters
+    input_param     inpar;  // parameters from input files
+    itsolver_param  itpar;  // parameters for itsolver
+    AMG_param       amgpar; // parameters for AMG
+    ILU_param       ilupar; // parameters for ILU
     
     // Set solver parameters: use ./ini/bamg.dat
     fasp_param_set(argc, argv, &inpar);
     fasp_param_init(&inpar, &itpar, &amgpar, &ilupar, NULL);
 
     // Set local parameters
-	const int print_level   = inpar.print_level;
-	const int problem_num   = inpar.problem_num;
-	const int itsolver_type = inpar.solver_type;
-	const int precond_type  = inpar.precond_type;
-	const int output_type   = inpar.output_type;
+    const int print_level   = inpar.print_level;
+    const int problem_num   = inpar.problem_num;
+    const int itsolver_type = inpar.solver_type;
+    const int precond_type  = inpar.precond_type;
+    const int output_type   = inpar.output_type;
     
     // Set output device
     if (output_type) {
-		char *outputfile = "out/test.out";
-		printf("Redirecting outputs to file: %s ...\n", outputfile);
-		freopen(outputfile,"w",stdout); // open a file for stdout
-	}
+        char *outputfile = "out/test.out";
+        printf("Redirecting outputs to file: %s ...\n", outputfile);
+        freopen(outputfile,"w",stdout); // open a file for stdout
+    }
     
     printf("Test Problem %d\n", problem_num);
     
-	// Step 1. Input stiffness matrix and right-hand side
-	char filename1[512], *datafile1;
-	char filename2[512], *datafile2;
-	
-	strncpy(filename1,inpar.workdir,128);
-	strncpy(filename2,inpar.workdir,128);
+    // Step 1. Input stiffness matrix and right-hand side
+    char filename1[512], *datafile1;
+    char filename2[512], *datafile2;
+    
+    strncpy(filename1,inpar.workdir,128);
+    strncpy(filename2,inpar.workdir,128);
     
     // Default test problem from black-oil benchmark: SPE01
-	if (problem_num == 10) {				
+    if (problem_num == 10) {                
         // Read the stiffness matrix from bsrmat_SPE01.dat
         strncpy(filename1,inpar.workdir,128);    
         datafile1="bsrmat_SPE01.dat"; strcat(filename1,datafile1);
@@ -79,34 +79,34 @@ int main (int argc, const char * argv[])
         fasp_dvec_read(filename2, &b);
     }
     
-	// Test problem 1
-	else if (problem_num == 11) {				
+    // Test problem 1
+    else if (problem_num == 11) {               
         dCSRmat A;
 
-		datafile1="PNNL/test1/A.dat";
-		strcat(filename1,datafile1);
-		datafile2="PNNL/test1/b.dat";
-		strcat(filename2,datafile2);
+        datafile1="PNNL/test1/A.dat";
+        strcat(filename1,datafile1);
+        datafile2="PNNL/test1/b.dat";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         
         Absr = fasp_format_dcsr_dbsr(&A, 6);        
 
         fasp_dcsr_free(&A);
-    }	
+    }   
     
-	// Test problem 2
+    // Test problem 2
     else if (problem_num == 12) {
         dCSRmat A;
         
-		datafile1="PNNL/test2/A.dat";
-		strcat(filename1,datafile1);
-		datafile2="PNNL/test3/b.dat";
-		strcat(filename2,datafile2);
+        datafile1="PNNL/test2/A.dat";
+        strcat(filename1,datafile1);
+        datafile2="PNNL/test3/b.dat";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 6);        
         
 #if 0
@@ -122,33 +122,33 @@ int main (int argc, const char * argv[])
         fasp_dcsr_free(&A); // free up temp matrix
     }
     
-	// Test problem 3
-    else if (problem_num == 13) {				
+    // Test problem 3
+    else if (problem_num == 13) {               
         dCSRmat A;
 
-		datafile1="PNNL/test3/A.dat";
-		strcat(filename1,datafile1);
-		datafile2="PNNL/test3/b.dat";
-		strcat(filename2,datafile2);
+        datafile1="PNNL/test3/A.dat";
+        strcat(filename1,datafile1);
+        datafile2="PNNL/test3/b.dat";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 6);
         
         fasp_dcsr_free(&A); // free up temp matrix
-    }	
+    }   
     
     // Erhan problem 
     else if (problem_num == 20) {
         dCSRmat A;
         
-		datafile1="Erhan/erhan_A1.dat";
-		strcat(filename1,datafile1);
-		datafile2="Erhan/erhan_b1.dat";
-		strcat(filename2,datafile2);
+        datafile1="Erhan/erhan_A1.dat";
+        strcat(filename1,datafile1);
+        datafile2="Erhan/erhan_b1.dat";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 4);
         
         fasp_dcsr_free(&A); // free up temp matrix
@@ -157,13 +157,13 @@ int main (int argc, const char * argv[])
     else if (problem_num == 21) {
         dCSRmat A;
         
-		datafile1="Erhan/erhan_A2.dat";
-		strcat(filename1,datafile1);
-		datafile2="Erhan/erhan_b2.dat";
-		strcat(filename2,datafile2);
+        datafile1="Erhan/erhan_A2.dat";
+        strcat(filename1,datafile1);
+        datafile2="Erhan/erhan_b2.dat";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 4);
         
         fasp_dcsr_free(&A); // free up temp matrix
@@ -172,13 +172,13 @@ int main (int argc, const char * argv[])
     else if (problem_num == 22) {
         dCSRmat A;
         
-		datafile1="Erhan/erhan_A3.dat";
-		strcat(filename1,datafile1);
-		datafile2="Erhan/erhan_b3.dat";
-		strcat(filename2,datafile2);
+        datafile1="Erhan/erhan_A3.dat";
+        strcat(filename1,datafile1);
+        datafile2="Erhan/erhan_b3.dat";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 4);
         
         fasp_dcsr_free(&A); // free up temp matrix
@@ -187,13 +187,13 @@ int main (int argc, const char * argv[])
     else if (problem_num == 23) {
         dCSRmat A;
         
-		datafile1="Erhan/new/1/erhan1.dat";
-		strcat(filename1,datafile1);
-		datafile2="Erhan/new/1/LB.txt";
-		strcat(filename2,datafile2);
+        datafile1="Erhan/new/1/erhan1.dat";
+        strcat(filename1,datafile1);
+        datafile2="Erhan/new/1/LB.txt";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 4);
         
         fasp_dcsr_free(&A); // free up temp matrix
@@ -202,13 +202,13 @@ int main (int argc, const char * argv[])
     else if (problem_num == 24) {
         dCSRmat A;
         
-		datafile1="Erhan/new/2/erhan2.dat";
-		strcat(filename1,datafile1);
-		datafile2="Erhan/new/2/LB.txt";
-		strcat(filename2,datafile2);
+        datafile1="Erhan/new/2/erhan2.dat";
+        strcat(filename1,datafile1);
+        datafile2="Erhan/new/2/LB.txt";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 4);
         
         fasp_dcsr_free(&A); // free up temp matrix
@@ -217,13 +217,13 @@ int main (int argc, const char * argv[])
     else if (problem_num == 25) {
         dCSRmat A;
         
-		datafile1="Erhan/new/3/erhan3.dat";
-		strcat(filename1,datafile1);
-		datafile2="Erhan/new/3/LB.txt";
-		strcat(filename2,datafile2);
+        datafile1="Erhan/new/3/erhan3.dat";
+        strcat(filename1,datafile1);
+        datafile2="Erhan/new/3/LB.txt";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 4);
         
         fasp_dcsr_free(&A); // free up temp matrix
@@ -232,13 +232,13 @@ int main (int argc, const char * argv[])
     else if (problem_num == 26) {
         dCSRmat A;
         
-		datafile1="Erhan/new/4/erhan4.dat";
-		strcat(filename1,datafile1);
-		datafile2="Erhan/new/4/LB.txt";
-		strcat(filename2,datafile2);
+        datafile1="Erhan/new/4/erhan4.dat";
+        strcat(filename1,datafile1);
+        datafile2="Erhan/new/4/LB.txt";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 4);
         
         fasp_dcsr_free(&A); // free up temp matrix
@@ -247,13 +247,13 @@ int main (int argc, const char * argv[])
     else if (problem_num == 27) {
         dCSRmat A;
         
-		datafile1="Erhan/new/5/erhan5.dat";
-		strcat(filename1,datafile1);
-		datafile2="Erhan/new/5/LB.txt";
-		strcat(filename2,datafile2);
+        datafile1="Erhan/new/5/erhan5.dat";
+        strcat(filename1,datafile1);
+        datafile2="Erhan/new/5/LB.txt";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 4);
         
         fasp_dcsr_free(&A); // free up temp matrix
@@ -262,13 +262,13 @@ int main (int argc, const char * argv[])
     else if (problem_num == 28) {
         dCSRmat A;
         
-		datafile1="Erhan/new/6/erhan6.dat";
-		strcat(filename1,datafile1);
-		datafile2="Erhan/new/6/LB.txt";
-		strcat(filename2,datafile2);
+        datafile1="Erhan/new/6/erhan6.dat";
+        strcat(filename1,datafile1);
+        datafile2="Erhan/new/6/LB.txt";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 4);
         
         fasp_dcsr_free(&A); // free up temp matrix
@@ -277,13 +277,13 @@ int main (int argc, const char * argv[])
     else if (problem_num == 29) {
         dCSRmat A;
         
-		datafile1="Erhan/new/7/erhan7.dat";
-		strcat(filename1,datafile1);
-		datafile2="Erhan/new/7/LB.txt";
-		strcat(filename2,datafile2);
+        datafile1="Erhan/new/7/erhan7.dat";
+        strcat(filename1,datafile1);
+        datafile2="Erhan/new/7/LB.txt";
+        strcat(filename2,datafile2);
         
-		fasp_dcoo_read(filename1, &A);
-		fasp_dvec_read(filename2, &b);
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
         Absr = fasp_format_dcsr_dbsr(&A, 4);
         
         fasp_dcsr_free(&A); // free up temp matrix
@@ -291,17 +291,17 @@ int main (int argc, const char * argv[])
     
     
     else {
-		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
-		return ERROR_INPUT_PAR;
-	}
+        printf("### ERROR: Unrecognised problem number %d\n", problem_num);
+        return ERROR_INPUT_PAR;
+    }
     
     // Print problem size
-	if (print_level>PRINT_NONE) {
+    if (print_level>PRINT_NONE) {
         printf("A: m = %d, n = %d, nnz = %d\n", Absr.ROW, Absr.COL, Absr.NNZ);
         printf("b: n = %d\n", b.row);
-	}
+    }
     
-	// Step 2. Solve the system
+    // Step 2. Solve the system
     
     // Print out solver parameters
     if (print_level>PRINT_NONE) fasp_param_solver_print(&itpar);
@@ -313,54 +313,54 @@ int main (int argc, const char * argv[])
     // Preconditioned Krylov methods
     if ( itsolver_type > 0 && itsolver_type < 20 ) {
         
-		// Using no preconditioner for Krylov iterative methods
-		if (precond_type == PREC_NULL) {
+        // Using no preconditioner for Krylov iterative methods
+        if (precond_type == PREC_NULL) {
             status = fasp_solver_dbsr_krylov(&Absr, &b, &uh, &itpar);
-		}	
+        }   
         
-		// Using diag(A) as preconditioner for Krylov iterative methods
-		else if (precond_type == PREC_DIAG) {
+        // Using diag(A) as preconditioner for Krylov iterative methods
+        else if (precond_type == PREC_DIAG) {
             status = fasp_solver_dbsr_krylov_diag(&Absr, &b, &uh, &itpar);
-		}
+        }
         
-		// Using AMG as preconditioner for Krylov iterative methods
-		else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
+        // Using AMG as preconditioner for Krylov iterative methods
+        else if (precond_type == PREC_AMG || precond_type == PREC_FMG) {
             if (print_level>PRINT_NONE) fasp_param_amg_print(&amgpar);
             status = fasp_solver_dbsr_krylov_amg(&Absr, &b, &uh, &itpar, &amgpar); 
-		}
+        }
         
-		// Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
-		else if (precond_type == PREC_ILU) {
+        // Using ILU as preconditioner for Krylov iterative methods Q: Need to change!
+        else if (precond_type == PREC_ILU) {
             if (print_level>PRINT_NONE) fasp_param_ilu_print(&ilupar);
             status = fasp_solver_dbsr_krylov_ilu(&Absr, &b, &uh, &itpar, &ilupar);
-		}
+        }
         
-		else {
-			printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);		
-			exit(ERROR_SOLVER_PRECTYPE);
-		}
+        else {
+            printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);       
+            exit(ERROR_SOLVER_PRECTYPE);
+        }
         
-	}
+    }
     
-	else {
-		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);		
-		status = ERROR_SOLVER_TYPE;
+    else {
+        printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);      
+        status = ERROR_SOLVER_TYPE;
         goto FINISHED;
-	}
-	
-	if (status<0) {
-		printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
-	}
+    }
+    
+    if (status<0) {
+        printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
+    }
     
     if (output_type) fclose (stdout);
     
  FINISHED:
     // Clean up memory
     fasp_dbsr_free(&Absr);
-	fasp_dvec_free(&b);
-	fasp_dvec_free(&uh);
+    fasp_dvec_free(&b);
+    fasp_dvec_free(&uh);
     
-	return status;
+    return status;
 }
 
 /*---------------------------------*/

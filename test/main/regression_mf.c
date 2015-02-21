@@ -1,9 +1,9 @@
 /**
- *		Regression test for FASP: matrix-free
+ *      Regression test for FASP: matrix-free
  *
  *------------------------------------------------------
  *
- *		Created  by Feiteng Huang on 09/19/2010
+ *      Created  by Feiteng Huang on 09/19/2010
  *
  *------------------------------------------------------
  *
@@ -515,14 +515,14 @@ int main (int argc, const char * argv[])
         
     } // end of for indp
     
-	/* all done */
-	lt = time(NULL);
-	printf("---------------------- All test finished at ----------------------\n");
+    /* all done */
+    lt = time(NULL);
+    printf("---------------------- All test finished at ----------------------\n");
     printf("%d tests finished: %d failed, %d succeeded!\n", ntest, nfail, ntest-nfail);
-	printf("%s",asctime(localtime(&lt))); // output ending local time
-	printf("------------------------------------------------------------------\n");
-	
-	return FASP_SUCCESS;
+    printf("%s",asctime(localtime(&lt))); // output ending local time
+    printf("------------------------------------------------------------------\n");
+    
+    return FASP_SUCCESS;
 }
 
 /*---------------------------------*/

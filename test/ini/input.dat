@@ -10,10 +10,10 @@ workdir = ../data/  % work directory, no more than 128 characters
 % problem, solver, and output type             %
 %----------------------------------------------%
 
-problem_num              = 23     % test problem number 
+problem_num              = 10     % test problem number 
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to screen | 1 to file
-solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
+solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
                                   % 5 vGMRes | 6 vFGMRes | 7 GCG |
                                   %--------------------------------------
                                   % 21 AMG Solver | 22 FMG Solver |
@@ -25,10 +25,10 @@ solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 %----------------------------------------------%
 
 precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
-itsolver_tol             = 1e-10   % solver tolerance 
+itsolver_tol             = 1e-6   % solver tolerance 
 itsolver_maxit           = 200    % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
-itsolver_restart         = 30     % restart number for GMRES
+itsolver_restart         = 20     % restart number for GMRES
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
@@ -61,7 +61,7 @@ AMG_cycle_type           = V      % V V-cycle | W W-cycle
 AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
-AMG_coarse_dof           = 100    % max number of coarse degrees of freedom
+AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
 AMG_coarse_solver        = 0      % coarse level solver: 31 SuperLU | 32 UMFPack | 33 MUMPS
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
@@ -74,7 +74,7 @@ AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
 AMG_smoother             = GS     % GS | JACOBI | SGS SOR | SSOR | 
                                   % GSOR | SGSOR | POLY | L1DIAG | CG
 AMG_smooth_order         = CF     % NO: natural order | CF: CF order
-AMG_ILU_levels           = 1      % number of levels using ILU smoother
+AMG_ILU_levels           = 0      % number of levels using ILU smoother
 AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.0    % relaxation parameter for SOR smoother 
 AMG_polynomial_degree	 = 3      % degree of the polynomial smoother
@@ -85,15 +85,13 @@ AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
 % parameters for classical AMG SETUP           %
 %----------------------------------------------%
 
-AMG_coarsening_type      = 4      % 1 Modified RS
+AMG_coarsening_type      = 1      % 1 Modified RS
                                   % 3 Compatible Relaxation
                                   % 4 Aggressive 
-AMG_interpolation_type   = 2      % 1 Direct | 2 Standard | 3 Energy-min
-AMG_strong_threshold     = 0.5    % Strong threshold
+AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
+AMG_strong_threshold     = 0.3    % Strong threshold
 AMG_truncation_threshold = 0.1    % Truncation threshold
 AMG_max_row_sum          = 0.9    % Max row sum
-AMG_aggressive_level	 = 0		
-AMG_aggressive_path	 = 2
 
 %----------------------------------------------%
 % parameters for aggregation-type AMG SETUP    %

@@ -1,9 +1,9 @@
 /**
- *		Regression test for FASP: Matrix-Market
+ *      Regression test for FASP: Matrix-Market
  *
  *------------------------------------------------------
  *
- *		Created  by Feiteng Huang on 06/12/2012
+ *      Created  by Feiteng Huang on 06/12/2012
  *      Modified by Chensong Zhang on 09/28/2013
  *      Modified by Chensong Zhang on 10/03/2013
  *
@@ -74,8 +74,8 @@ int main (int argc, const char * argv[])
     
     /* Local Variables */
     itsolver_param itparam;      // input parameters for iterative solvers
-    ILU_param      iluparam; 	 // input parameters for AMG
-    AMG_param      amgparam; 	 // input parameters for AMG
+    ILU_param      iluparam;     // input parameters for AMG
+    AMG_param      amgparam;     // input parameters for AMG
     dCSRmat        A;            // coefficient matrix
     dvector        b, x, sol;    // rhs, numerical sol, exact sol
     INT            indp;         // index for test problems

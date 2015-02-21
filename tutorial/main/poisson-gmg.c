@@ -20,7 +20,7 @@ const REAL pi = 3.14159265;
  * \fn static REAL f2d (INT i, INT j, INT nx, INT ny)
  *
  * \brief The right-hand side function f in the Poisson equation, where
- *        f = sin(pi x)*sin(pi y)		   
+ *        f = sin(pi x)*sin(pi y)          
  *  
  * \param i      Index in x direction
  * \param j      Index in y direction
@@ -44,7 +44,7 @@ static REAL f2d(INT i,
  * \brief Computing Discretization Error, where exact solution
  *        u = sin(pi x)*sin(pi y)/(2*pi*pi)
  *
- * \param u		 Vector of DOFs
+ * \param u      Vector of DOFs
  * \param nx     Number of grids in x direction
  * \param ny     Number of grids in y direction
  *
@@ -93,41 +93,41 @@ int main (int argc, const char *argv[])
     REAL       GMG_start, GMG_end;
    
     printf("=================================================\n");
-	printf("            FASP GMG V-cycle in 2D \n");
+    printf("            FASP GMG V-cycle in 2D \n");
     printf("=================================================\n");
-	printf("  Level  Iter    CPU time      L2 Error\n");
-	
-	// Testing different Number of DOFs nx = ny = 2^2 to 2^10
+    printf("  Level  Iter    CPU time      L2 Error\n");
+    
+    // Testing different Number of DOFs nx = ny = 2^2 to 2^10
     for ( maxlevel = 2; maxlevel <= 10; maxlevel++ ) {
-	
-		// Step 1: Set size of the grid
-		nx = ny = pow(2.0, maxlevel); h = 1.0/((REAL) nx);
+    
+        // Step 1: Set size of the grid
+        nx = ny = pow(2.0, maxlevel); h = 1.0/((REAL) nx);
 
-		// Step 2: Solving Poisson equation with GMG solver
-		// Set initial guess 0, right hand side as given f	                
-		u = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
-		fasp_array_set((nx+1)*(ny+1), u, 0.0);
+        // Step 2: Solving Poisson equation with GMG solver
+        // Set initial guess 0, right hand side as given f                  
+        u = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
+        fasp_array_set((nx+1)*(ny+1), u, 0.0);
         
-		b = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
-		for ( i = 0; i <= nx; i++ ) {
-			for ( j = 0; j <= ny; j++ ) {
-				b[j*(nx+1)+i] = h*h*f2d(i, j, nx, ny);
-			}
-		}
+        b = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
+        for ( i = 0; i <= nx; i++ ) {
+            for ( j = 0; j <= ny; j++ ) {
+                b[j*(nx+1)+i] = h*h*f2d(i, j, nx, ny);
+            }
+        }
         
-		// Step 3: Solve equation with V-cycle
-		fasp_gettime(&GMG_start);
-		iter = fasp_poisson_gmg_2D(u, b, nx, ny, maxlevel, rtol, print_level);
-		fasp_gettime(&GMG_end);
+        // Step 3: Solve equation with V-cycle
+        fasp_gettime(&GMG_start);
+        iter = fasp_poisson_gmg_2D(u, b, nx, ny, maxlevel, rtol, print_level);
+        fasp_gettime(&GMG_end);
 
         error0 = L2NormError2d(u, nx, ny);
-	
-		printf("%5d  %5d %12.6f %16.5e\n", maxlevel, iter, GMG_end-GMG_start, error0);
+    
+        printf("%5d  %5d %12.6f %16.5e\n", maxlevel, iter, GMG_end-GMG_start, error0);
       
-		// Clean up memory	
-		free(u);
-		free(b);
-	}
+        // Clean up memory  
+        free(u);
+        free(b);
+    }
     
     return FASP_SUCCESS;
 }

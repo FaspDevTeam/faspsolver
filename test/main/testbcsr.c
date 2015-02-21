@@ -17,7 +17,7 @@
 int main (int argc, const char * argv[]) 
 {
     block_dCSRmat Abcsr;
-	dvector b, uh;
+    dvector b, uh;
     
     dCSRmat A;
     dCSRmat *A_diag;
@@ -35,60 +35,60 @@ int main (int argc, const char * argv[])
     dCSRmat *local_A;
     ivector *local_index;
     
-	int status=FASP_SUCCESS;
-	
-	// Step 0. Set parameters
-	input_param     inpar;  // parameters from input files
-	itsolver_param  itpar;  // parameters for itsolver
-	AMG_param       amgpar; // parameters for AMG
-	ILU_param       ilupar; // parameters for ILU
+    int status=FASP_SUCCESS;
+    
+    // Step 0. Set parameters
+    input_param     inpar;  // parameters from input files
+    itsolver_param  itpar;  // parameters for itsolver
+    AMG_param       amgpar; // parameters for AMG
+    ILU_param       ilupar; // parameters for ILU
     
     // Set solver parameters: use ./ini/bsr.dat
     fasp_param_set(argc, argv, &inpar);
     fasp_param_init(&inpar, &itpar, &amgpar, &ilupar, NULL);
     
     // Set local parameters
-	const int print_level   = inpar.print_level;
-	const int problem_num   = inpar.problem_num;
-	const int itsolver_type = inpar.solver_type;
-	const int precond_type  = inpar.precond_type;
-	const int output_type   = inpar.output_type;
+    const int print_level   = inpar.print_level;
+    const int problem_num   = inpar.problem_num;
+    const int itsolver_type = inpar.solver_type;
+    const int precond_type  = inpar.precond_type;
+    const int output_type   = inpar.output_type;
     
     // Set output devices
     if (output_type) {
-		char *outputfile = "out/test.out";
-		printf("Redirecting outputs to file: %s ...\n", outputfile);
-		freopen(outputfile,"w",stdout); // open a file for stdout
-	}
+        char *outputfile = "out/test.out";
+        printf("Redirecting outputs to file: %s ...\n", outputfile);
+        freopen(outputfile,"w",stdout); // open a file for stdout
+    }
     
     printf("Test Problem %d\n", problem_num);
     
-	// Step 1. Input stiffness matrix and right-hand side
-	char filename1[512], *datafile1;
-	char filename2[512], *datafile2;
+    // Step 1. Input stiffness matrix and right-hand side
+    char filename1[512], *datafile1;
+    char filename2[512], *datafile2;
     char filename3[512], *datafile3;
-	char filename4[512], *datafile4;
+    char filename4[512], *datafile4;
     char filename5[512], *datafile5;
-	char filename6[512], *datafile6;
+    char filename6[512], *datafile6;
     char filename7[512], *datafile7;
-	char filename8[512], *datafile8;
+    char filename8[512], *datafile8;
     char filename9[512], *datafile9;
-	char filename10[512], *datafile10;
-	
-	strncpy(filename1,inpar.workdir,128);
-	strncpy(filename2,inpar.workdir,128);
+    char filename10[512], *datafile10;
+    
+    strncpy(filename1,inpar.workdir,128);
+    strncpy(filename2,inpar.workdir,128);
     strncpy(filename3,inpar.workdir,128);
-	strncpy(filename4,inpar.workdir,128);
+    strncpy(filename4,inpar.workdir,128);
     strncpy(filename5,inpar.workdir,128);
-	strncpy(filename6,inpar.workdir,128);
+    strncpy(filename6,inpar.workdir,128);
     strncpy(filename7,inpar.workdir,128);
-	strncpy(filename8,inpar.workdir,128);
+    strncpy(filename8,inpar.workdir,128);
     strncpy(filename9,inpar.workdir,128);
-	strncpy(filename10,inpar.workdir,128);
+    strncpy(filename10,inpar.workdir,128);
     
     
     // Default test problem from black-oil benchmark: SPE01
-	if (problem_num == 10) {
+    if (problem_num == 10) {
         
         strncpy(filename1,inpar.workdir,128);
         datafile1="/pnp-data/set-1/A.dat";
@@ -111,13 +111,13 @@ int main (int argc, const char * argv[])
         }
 
         // Assemble the matrix in block dCSR format
-		Abcsr.brow = 3; Abcsr.bcol = 3;
-		Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
+        Abcsr.brow = 3; Abcsr.bcol = 3;
+        Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
         for (i=0; i<9 ;i++) {
             Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
-		      
-		// A11
+              
+        // A11
         fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, row, row, Abcsr.blocks[0]);
         // A12
         fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, row, row, Abcsr.blocks[1]);
@@ -218,13 +218,13 @@ int main (int argc, const char * argv[])
         fasp_dvec_read(filename5, &b_temp);
         
         // Assemble the matrix in block dCSR format
-		Abcsr.brow = 3; Abcsr.bcol = 3;
-		Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
+        Abcsr.brow = 3; Abcsr.bcol = 3;
+        Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
         for (i=0; i<9 ;i++) {
             Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
-		// A11
+        // A11
         fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, phi_idx.row, phi_idx.row, Abcsr.blocks[0]);
         // A12
         fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, phi_idx.row, n_idx.row, Abcsr.blocks[1]);
@@ -318,13 +318,13 @@ int main (int argc, const char * argv[])
         fasp_dvec_read(filename5, &b_temp);
         
         // Assemble the matrix in block dCSR format
-		Abcsr.brow = 3; Abcsr.bcol = 3;
-		Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
+        Abcsr.brow = 3; Abcsr.bcol = 3;
+        Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
         for (i=0; i<9 ;i++) {
             Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
-		// A11
+        // A11
         fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, phi_idx.row, phi_idx.row, Abcsr.blocks[0]);
         // A12
         fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, phi_idx.row, n_idx.row, Abcsr.blocks[1]);
@@ -497,7 +497,7 @@ int main (int argc, const char * argv[])
         printf("-------------------------\n");
         
         Abcsr.brow = NumLayers; Abcsr.bcol = NumLayers;
-		Abcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Abcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
             Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
@@ -550,7 +550,7 @@ int main (int argc, const char * argv[])
         printf("-------------------------\n");
         
         Aibcsr.brow = NumLayers; Aibcsr.bcol = NumLayers;
-		Aibcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Aibcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
             Aibcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
@@ -832,7 +832,7 @@ int main (int argc, const char * argv[])
         printf("-------------------------\n");
         
         Abcsr.brow = NumLayers; Abcsr.bcol = NumLayers;
-		Abcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Abcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
             Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
@@ -885,7 +885,7 @@ int main (int argc, const char * argv[])
         printf("-------------------------\n");
         
         Aibcsr.brow = NumLayers; Aibcsr.bcol = NumLayers;
-		Aibcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Aibcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
             Aibcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
@@ -1149,7 +1149,7 @@ int main (int argc, const char * argv[])
         printf("-------------------------\n");
         
         Abcsr.brow = NumLayers; Abcsr.bcol = NumLayers;
-		Abcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Abcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
             Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
@@ -1202,7 +1202,7 @@ int main (int argc, const char * argv[])
         printf("-------------------------\n");
         
         Aibcsr.brow = NumLayers; Aibcsr.bcol = NumLayers;
-		Aibcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Aibcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
             Aibcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
@@ -1409,7 +1409,7 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename6, &(A_diag[3]));
         
         // form block CSR matrix
-		ivector U_idx;
+        ivector U_idx;
         ivector P_idx;
         ivector E_idx;
         ivector B_idx;
@@ -1436,13 +1436,13 @@ int main (int argc, const char * argv[])
         }
         
         // Assemble the matrix in block dCSR format
-		Abcsr.brow = 4; Abcsr.bcol = 4;
-		Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
+        Abcsr.brow = 4; Abcsr.bcol = 4;
+        Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
         for (i=0; i<16 ;i++) {
             Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
-		// A11
+        // A11
         fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Abcsr.blocks[0]);
         // A12
         fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Abcsr.blocks[1]);
@@ -1537,7 +1537,7 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename6, &(A_diag[3]));
         
         // form block CSR matrix
-		ivector U_idx;
+        ivector U_idx;
         ivector P_idx;
         ivector E_idx;
         ivector B_idx;
@@ -1564,13 +1564,13 @@ int main (int argc, const char * argv[])
         }
         
         // Assemble the matrix in block dCSR format
-		Abcsr.brow = 4; Abcsr.bcol = 4;
-		Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
+        Abcsr.brow = 4; Abcsr.bcol = 4;
+        Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
         for (i=0; i<16 ;i++) {
             Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
-		// A11
+        // A11
         fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Abcsr.blocks[0]);
         // A12
         fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Abcsr.blocks[1]);
@@ -1665,7 +1665,7 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename6, &(A_diag[3]));
         
         // form block CSR matrix
-		ivector U_idx;
+        ivector U_idx;
         ivector P_idx;
         ivector E_idx;
         ivector B_idx;
@@ -1692,13 +1692,13 @@ int main (int argc, const char * argv[])
         }
         
         // Assemble the matrix in block dCSR format
-		Abcsr.brow = 4; Abcsr.bcol = 4;
-		Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
+        Abcsr.brow = 4; Abcsr.bcol = 4;
+        Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
         for (i=0; i<16 ;i++) {
             Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
-		// A11
+        // A11
         fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Abcsr.blocks[0]);
         // A12
         fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Abcsr.blocks[1]);
@@ -1737,11 +1737,11 @@ int main (int argc, const char * argv[])
     }
     
     else {
-		printf("### ERROR: Unrecognized problem number %d\n", problem_num);
-		return ERROR_INPUT_PAR;
-	}
+        printf("### ERROR: Unrecognized problem number %d\n", problem_num);
+        return ERROR_INPUT_PAR;
+    }
     
-	// Step 2. Solve the system
+    // Step 2. Solve the system
     
     // Print out solver parameters
     if (print_level>PRINT_NONE) fasp_param_solver_print(&itpar);
@@ -1753,13 +1753,13 @@ int main (int argc, const char * argv[])
     // Preconditioned Krylov methods
     if ( itsolver_type > 0 && itsolver_type < 20 ) {
         
-		// Using no preconditioner for Krylov iterative methods
-		if (precond_type == PREC_NULL) {
+        // Using no preconditioner for Krylov iterative methods
+        if (precond_type == PREC_NULL) {
             status = fasp_solver_bdcsr_krylov(&Abcsr, &b, &uh, &itpar);
-		}	
+        }   
         
-		// Using diag(A) as preconditioner for Krylov iterative methods
-		else if (precond_type >= 20 &&  precond_type < 40) {
+        // Using diag(A) as preconditioner for Krylov iterative methods
+        else if (precond_type >= 20 &&  precond_type < 40) {
             
             if (Abcsr.brow == 3) {
                 status = fasp_solver_bdcsr_krylov_block_3(&Abcsr, &b, &uh, &itpar, &amgpar, A_diag);
@@ -1770,29 +1770,29 @@ int main (int argc, const char * argv[])
             else {
                 //status = fasp_solver_bdcsr_krylov_block(&Abcsr, &b, &uh, &itpar, &amgpar);
             }
-		}
+        }
         
         // sweeping preconditioners
         else if (precond_type >= 50 && precond_type < 60) {
             status = fasp_solver_bdcsr_krylov_sweeping(&Abcsr, &b, &uh, &itpar, NumLayers, &Aibcsr, local_A, local_index);
         }
         
-		else {
-			printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);		
-			exit(ERROR_SOLVER_PRECTYPE);
-		}
+        else {
+            printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);       
+            exit(ERROR_SOLVER_PRECTYPE);
+        }
         
-	}
+    }
     
-	else {
-		printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);		
-		status = ERROR_SOLVER_TYPE;
+    else {
+        printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);      
+        status = ERROR_SOLVER_TYPE;
         goto FINISHED;
-	}
-    	
-	if (status<0) {
-		printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
-	}
+    }
+        
+    if (status<0) {
+        printf("\n### ERROR: Solver failed! Exit status = %d.\n\n", status);
+    }
     
     if (output_type) fclose (stdout);
     
@@ -1800,10 +1800,10 @@ int main (int argc, const char * argv[])
     // Clean up memory
     fasp_bdcsr_free(&Abcsr);
     //fasp_dbsr_free(&Absr);
-	fasp_dvec_free(&b);
-	fasp_dvec_free(&uh);
+    fasp_dvec_free(&b);
+    fasp_dvec_free(&uh);
     
-	return status;
+    return status;
 }
 
 /*---------------------------------*/

@@ -1,9 +1,9 @@
 /**
- *		Regression test for FASP: CSR
+ *      Regression test for FASP: CSR
  *
  *------------------------------------------------------
  *
- *		Created  by Chensong Zhang on 03/20/2010
+ *      Created  by Chensong Zhang on 03/20/2010
  *      Modified by Chensong Zhang on 09/02/2011
  *      Modified by Chenosng Zhang on 12/03/2011
  *      Modified by Chensong Zhang on 03/20/2012
@@ -40,7 +40,7 @@ static void check_solu(dvector *x, dvector *sol, double tol)
     else {
         nfail++;
         printf("### WARNING: Max diff %.4e BIGGER than tolerance..... [ATTENTION!!!]\n", diff_u);
-    }	
+    }   
 }
 
 /**
@@ -63,7 +63,7 @@ int main (int argc, const char * argv[])
     
     /* Local Variables */
     itsolver_param itparam;      // input parameters for iterative solvers
-    AMG_param      amgparam; 	 // input parameters for AMG
+    AMG_param      amgparam;     // input parameters for AMG
     dCSRmat        A;            // coefficient matrix
     dvector        b, x, sol;    // rhs, numerical sol, exact sol 
     INT            indp;         // index for test problems
@@ -83,13 +83,13 @@ int main (int argc, const char * argv[])
     for ( indp = 1; indp <= num_prob; indp++ ) {
         
         printf("\n=====================================================\n");        
-        printf("Test Problem Number %d ...\n", indp);	
+        printf("Test Problem Number %d ...\n", indp);   
         
         switch (indp) {
                 
             case 1: //     - Problem 1. 10X10 5pt FD for Poisson
                 
-                printf("10X10 5-point finite difference for Poisson");	
+                printf("10X10 5-point finite difference for Poisson");  
                 printf("\n=====================================================\n");        
                 
                 // Read A and b from two files in IJ format. 
@@ -102,7 +102,7 @@ int main (int argc, const char * argv[])
                 
             case 2: //     - Problem 2. P1 FE for Poisson.
                 
-                printf("P1 finite element for Poisson");	
+                printf("P1 finite element for Poisson");    
                 printf("\n=====================================================\n");        
                 
                 // Read A and b from two files in IJ format. 
@@ -117,7 +117,7 @@ int main (int argc, const char * argv[])
                 // Finite difference approximation to diffusion equation with varying
                 // diffusivity in a 3D unit cube with Dirichlet boundary conditions.
                 
-                printf("MatrixMarket finite element analysis NOS7");	
+                printf("MatrixMarket finite element analysis NOS7");    
                 printf("\n=====================================================\n");        
                 
                 // Read A in MatrixMarket SYM COO format. 
@@ -147,9 +147,9 @@ int main (int argc, const char * argv[])
         fasp_dvec_alloc(b.row, &x);  // allocate mem for numerical solution
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* AMG V-cycle (Direct interpolation) with GS smoother as a solver */			
+            /* AMG V-cycle (Direct interpolation) with GS smoother as a solver */           
             printf("------------------------------------------------------------------\n");
-            printf("Classical AMG (direct interp) V-cycle as iterative solver ...\n");	
+            printf("Classical AMG (direct interp) V-cycle as iterative solver ...\n");  
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -164,9 +164,9 @@ int main (int argc, const char * argv[])
 
 
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* AMG V-cycle (Standard interpolation) with GS smoother as a solver */			
+            /* AMG V-cycle (Standard interpolation) with GS smoother as a solver */         
             printf("------------------------------------------------------------------\n");
-            printf("Classical AMG (standard interp) V-cycle as iterative solver ...\n");	
+            printf("Classical AMG (standard interp) V-cycle as iterative solver ...\n");    
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -181,9 +181,9 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* AMG V-cycle (EM interpolation) with GS smoother as a solver */			
+            /* AMG V-cycle (EM interpolation) with GS smoother as a solver */           
             printf("------------------------------------------------------------------\n");
-            printf("Classical AMG (energy-min interp) V-cycle as iterative solver ...\n");	
+            printf("Classical AMG (energy-min interp) V-cycle as iterative solver ...\n");  
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -198,9 +198,9 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* FMG V-cycle (Direct interpolation) with GS smoother as a solver */			
+            /* FMG V-cycle (Direct interpolation) with GS smoother as a solver */           
             printf("------------------------------------------------------------------\n");
-            printf("FAMG (direct interp) V-cycle as iterative solver ...\n");	
+            printf("FAMG (direct interp) V-cycle as iterative solver ...\n");   
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -214,9 +214,9 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* AMG W-cycle with GS smoother as a solver */			
+            /* AMG W-cycle with GS smoother as a solver */          
             printf("------------------------------------------------------------------\n");
-            printf("Classical AMG W-cycle as iterative solver ...\n");	
+            printf("Classical AMG W-cycle as iterative solver ...\n");  
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_amg_init(&amgparam);
@@ -230,9 +230,9 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* AMG AMLI-cycle with GS smoother as a solver */			
+            /* AMG AMLI-cycle with GS smoother as a solver */           
             printf("------------------------------------------------------------------\n");
-            printf("Classical AMG AMLI-cycle as iterative solver ...\n");	
+            printf("Classical AMG AMLI-cycle as iterative solver ...\n");   
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_amg_init(&amgparam);
@@ -247,9 +247,9 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* AMG Nonlinear AMLI-cycle with GS smoother as a solver */			
+            /* AMG Nonlinear AMLI-cycle with GS smoother as a solver */         
             printf("------------------------------------------------------------------\n");
-            printf("Classical AMG Nonlinear AMLI-cycle as iterative solver ...\n");	
+            printf("Classical AMG Nonlinear AMLI-cycle as iterative solver ...\n"); 
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_amg_init(&amgparam);
@@ -264,9 +264,9 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* AMG V-cycle with SGS smoother as a solver */			
+            /* AMG V-cycle with SGS smoother as a solver */         
             printf("------------------------------------------------------------------\n");
-            printf("Classical AMG V-cycle with SGS smoother as iterative solver ...\n");	
+            printf("Classical AMG V-cycle with SGS smoother as iterative solver ...\n");    
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_amg_init(&amgparam);
@@ -280,9 +280,9 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* AMG V-cycle with L1_DIAG smoother as a solver */			
+            /* AMG V-cycle with L1_DIAG smoother as a solver */         
             printf("------------------------------------------------------------------\n");
-            printf("Classical AMG V-cycle with L1_DIAG smoother as iterative solver ...\n");	
+            printf("Classical AMG V-cycle with L1_DIAG smoother as iterative solver ...\n");    
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_amg_init(&amgparam);
             amgparam.maxit       = 500;
@@ -295,9 +295,9 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* AMG V-cycle with SOR smoother as a solver */			
+            /* AMG V-cycle with SOR smoother as a solver */         
             printf("------------------------------------------------------------------\n");
-            printf("Classical AMG V-cycle with SOR smoother as iterative solver ...\n");	
+            printf("Classical AMG V-cycle with SOR smoother as iterative solver ...\n");    
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_amg_init(&amgparam);
@@ -311,9 +311,9 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* SA AMG V-cycle with GS smoother as a solver */			
+            /* SA AMG V-cycle with GS smoother as a solver */           
             printf("------------------------------------------------------------------\n");
-            printf("SA AMG V-cycle with GS smoother as iterative solver ...\n");	
+            printf("SA AMG V-cycle with GS smoother as iterative solver ...\n");    
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_amg_init(&amgparam);
@@ -329,9 +329,9 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* UA AMG V-cycle with GS smoother as a solver */			
+            /* UA AMG V-cycle with GS smoother as a solver */           
             printf("------------------------------------------------------------------\n");
-            printf("UA AMG V-cycle with GS smoother as iterative solver ...\n");	
+            printf("UA AMG V-cycle with GS smoother as iterative solver ...\n");    
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_amg_init(&amgparam);
@@ -348,11 +348,11 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 ) {
             /* CG */
             printf("------------------------------------------------------------------\n");
-            printf("CG solver ...\n");	
+            printf("CG solver ...\n");  
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
-            itparam.precond_type  = PREC_NULL;	
+            itparam.precond_type  = PREC_NULL;  
             itparam.maxit         = 5000;
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
@@ -381,11 +381,11 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 ) {
             /* BiCGstab */
             printf("------------------------------------------------------------------\n");
-            printf("BiCGstab solver ...\n");	
+            printf("BiCGstab solver ...\n");    
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
-            itparam.precond_type  = PREC_NULL;	
+            itparam.precond_type  = PREC_NULL;  
             itparam.itsolver_type = SOLVER_BiCGstab;
             itparam.maxit         = 5000;
             itparam.tol           = 1e-12;
@@ -400,11 +400,11 @@ int main (int argc, const char * argv[])
             dBSRmat A_bsr = fasp_format_dcsr_dbsr (&A, 1);
             
             printf("------------------------------------------------------------------\n");
-            printf("BiCGstab solver in BSR format ...\n");	
+            printf("BiCGstab solver in BSR format ...\n");  
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
-            itparam.precond_type  = PREC_NULL;	
+            itparam.precond_type  = PREC_NULL;  
             itparam.itsolver_type = SOLVER_BiCGstab;
             itparam.maxit         = 500;
             itparam.tol           = 1e-12;
@@ -418,7 +418,7 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using diag(A) as preconditioner for CG */
             printf("------------------------------------------------------------------\n");
-            printf("Diagonal preconditioned CG solver ...\n");	
+            printf("Diagonal preconditioned CG solver ...\n");  
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -434,7 +434,7 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using classical AMG as preconditioner for CG */
             printf("------------------------------------------------------------------\n");
-            printf("AMG preconditioned CG solver ...\n");	
+            printf("AMG preconditioned CG solver ...\n");   
             fasp_dvec_set(b.row,&x,0.0);
             fasp_param_solver_init(&itparam);
             fasp_param_amg_init(&amgparam);
@@ -449,7 +449,7 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using classical AMG as preconditioner for BiCGstab */
             printf("------------------------------------------------------------------\n");
-            printf("AMG preconditioned BiCGstab solver ...\n");	
+            printf("AMG preconditioned BiCGstab solver ...\n"); 
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -466,7 +466,7 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using classical AMG as preconditioner for MinRes */
             printf("------------------------------------------------------------------\n");
-            printf("AMG preconditioned MinRes solver ...\n");	
+            printf("AMG preconditioned MinRes solver ...\n");   
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -489,7 +489,7 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using classical AMG as preconditioner for GMRes */
             printf("------------------------------------------------------------------\n");
-            printf("AMG preconditioned GMRes solver ...\n");	
+            printf("AMG preconditioned GMRes solver ...\n");    
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -506,7 +506,7 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using classical AMG as preconditioner for vGMRes */
             printf("------------------------------------------------------------------\n");
-            printf("AMG preconditioned vGMRes solver ...\n");	
+            printf("AMG preconditioned vGMRes solver ...\n");   
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -523,7 +523,7 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using classical AMG as preconditioner for vFGMRes */
             printf("------------------------------------------------------------------\n");
-            printf("AMG preconditioned vFGMRes solver ...\n");	
+            printf("AMG preconditioned vFGMRes solver ...\n");  
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -540,7 +540,7 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using classical AMG as preconditioner for GCG */
             printf("------------------------------------------------------------------\n");
-            printf("AMG preconditioned GCG solver ...\n");	
+            printf("AMG preconditioned GCG solver ...\n");  
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -556,7 +556,7 @@ int main (int argc, const char * argv[])
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using classical AMG as preconditioner for GCG */
             printf("------------------------------------------------------------------\n");
-            printf("AMG preconditioned GCR solver ...\n");	
+            printf("AMG preconditioned GCR solver ...\n");  
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -575,7 +575,7 @@ int main (int argc, const char * argv[])
             /* Using ILUk as preconditioner for CG */
             ILU_param      iluparam;
             printf("------------------------------------------------------------------\n");
-            printf("ILUk preconditioned CG solver ...\n");	
+            printf("ILUk preconditioned CG solver ...\n");  
             
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_param_solver_init(&itparam);
@@ -597,14 +597,14 @@ int main (int argc, const char * argv[])
 
     } // end of for indp
     
-	/* all done */
-	lt = time(NULL);    
-	printf("---------------------- All test finished at ----------------------\n");
+    /* all done */
+    lt = time(NULL);    
+    printf("---------------------- All test finished at ----------------------\n");
     printf("%d tests finished: %d failed, %d succeeded!\n", ntest, nfail, ntest-nfail);
-	printf("%s",asctime(localtime(&lt))); // output ending local time
-	printf("------------------------------------------------------------------\n");
-	
-	return 0;
+    printf("%s",asctime(localtime(&lt))); // output ending local time
+    printf("------------------------------------------------------------------\n");
+    
+    return 0;
 }
 
 /*---------------------------------*/
