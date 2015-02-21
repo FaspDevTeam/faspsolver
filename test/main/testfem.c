@@ -30,19 +30,19 @@ int main (int argc, const char * argv[])
 {
     // Set default values
     int status = FASP_SUCCESS;
-	int print_usage;
-	
-    FEM_param fempar;// parameter for testfem
-	FEM_param_init(&fempar);
-	print_usage = FEM_param_set(argc, argv, &fempar);
+    int print_usage;
     
-	if ( print_usage ) {
+    FEM_param fempar;// parameter for testfem
+    FEM_param_init(&fempar);
+    print_usage = FEM_param_set(argc, argv, &fempar);
+    
+    if ( print_usage ) {
         printf("\nUsage: %s [<ofemparions>]\n", argv[0]);
         printf("  -output <val>    : mesh output switch [default: 0]\n");
         printf("  -meshin <val>    : input mesh  [default: ../data/mesh.dat]\n");
         printf("  -meshout <val>   : output mesh [default: ../data/mesh_?.dat]\n");
         printf("  -refine <val>    : refine level [default: 8]\n");
-        printf("  -assemble <val>  : assemble ofemparion [default: ab]\n");	
+        printf("  -assemble <val>  : assemble ofemparion [default: ab]\n"); 
         printf("                     ab  |  assemble the mat & rhs;\n");
         printf("                      a  |  assemble the mat;\n");
         printf("                      b  |  assemble the rhs;\n");
@@ -53,41 +53,41 @@ int main (int argc, const char * argv[])
     }
     
     // Local variables
-	Mesh       mesh;       // Mesh info
-	Mesh_aux   mesh_aux;   // Auxiliary mesh info
+    Mesh       mesh;       // Mesh info
+    Mesh_aux   mesh_aux;   // Auxiliary mesh info
     dCSRmat    A;          // Stiffness matrix
-	dvector    b;          // Right-hand side
-	dvector    uh;         // Solution including boundary
-	ivector    dof;        // Degree of freedom
-	int        i;          // Loop index
+    dvector    b;          // Right-hand side
+    dvector    uh;         // Solution including boundary
+    ivector    dof;        // Degree of freedom
+    int        i;          // Loop index
     
-	// Step 1: read initial mesh info
-	mesh_init (&mesh, "../data/mesh.dat");
+    // Step 1: read initial mesh info
+    mesh_init (&mesh, "../data/mesh.dat");
 
-	// Step 1.5: read or build auxiliary mesh info
+    // Step 1.5: read or build auxiliary mesh info
     // If there is already mesh_aux data available, you can use the following fct to init it:    
-    //	   mesh_aux_init (&mesh, &mesh_aux, "mesh.aux");
+    //     mesh_aux_init (&mesh, &mesh_aux, "mesh.aux");
     // otherwise, just build the auxiliary information for the mesh
-	mesh_aux_build(&mesh, &mesh_aux);
+    mesh_aux_build(&mesh, &mesh_aux);
     
-	// Step 2: refine mesh
-	clock_t mesh_refine_s = clock();
-	for ( i=0; i < fempar.refine_lvl; ++i ) mesh_refine(&mesh, &mesh_aux);
-	clock_t mesh_refine_e = clock();
+    // Step 2: refine mesh
+    clock_t mesh_refine_s = clock();
+    for ( i=0; i < fempar.refine_lvl; ++i ) mesh_refine(&mesh, &mesh_aux);
+    clock_t mesh_refine_e = clock();
     double mesh_refine_time = (double)(mesh_refine_e - mesh_refine_s)/(double)(CLOCKS_PER_SEC);
     printf("Mesh refinement costs... %8.4f seconds\n", mesh_refine_time);
     
-	// Step 3: assemble the linear system and right-hand side
+    // Step 3: assemble the linear system and right-hand side
     clock_t assemble_s = clock();
     setup_poisson(&A, &b, &mesh, &mesh_aux, &fempar, &uh, &dof);
     clock_t assemble_e = clock();
     double assemble_time = (double)(assemble_e - assemble_s)/(double)(CLOCKS_PER_SEC);
     printf("Assembling costs........ %8.4f seconds\n", assemble_time);
     
-	// Step 3.5: clean up auxiliary mesh info
-	mesh_aux_free(&mesh_aux);
-	
-	// Step 4: solve the linear system with AMG
+    // Step 3.5: clean up auxiliary mesh info
+    mesh_aux_free(&mesh_aux);
+    
+    // Step 4: solve the linear system with AMG
     {
         dvector x; // just on DOF, not including boundary
 
@@ -95,7 +95,7 @@ int main (int argc, const char * argv[])
         itsolver_param  itparam;  // parameters for itsolver
         AMG_param       amgparam; // parameters for AMG
         ILU_param       iluparam; // parameters for ILU
-        Schwarz_param   swzparam; // parameters for Shcwarz method
+        Schwarz_param   swzparam; // parameters for Schwarz method
         
         // Read input parameters from a disk file
         fasp_param_input_init(&inparam);
@@ -168,22 +168,22 @@ int main (int argc, const char * argv[])
         
         fasp_dvec_free(&x);
     }
-	
-	// Step 5: estimate L2 error
-	double l2error = get_l2_error_poisson(&(mesh.node), &(mesh.elem), &uh, fempar.num_qp_rhs);
+    
+    // Step 5: estimate L2 error
+    double l2error = get_l2_error_poisson(&(mesh.node), &(mesh.elem), &uh, fempar.num_qp_rhs);
 
     printf("\n==============================================================\n");
-	printf("L2 error of FEM is %g\n", l2error);
+    printf("L2 error of FEM is %g\n", l2error);
     printf("==============================================================\n\n");
 
-	// clean up memory
-	mesh_free(&mesh);
-	fasp_dcsr_free(&A);
-	fasp_dvec_free(&b);
-	fasp_dvec_free(&uh);
+    // clean up memory
+    mesh_free(&mesh);
+    fasp_dcsr_free(&A);
+    fasp_dvec_free(&b);
+    fasp_dvec_free(&uh);
     fasp_ivec_free(&dof);
     
-	return FASP_SUCCESS;
+    return FASP_SUCCESS;
 }
 
 /*---------------------------------*/
