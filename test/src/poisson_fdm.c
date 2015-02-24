@@ -5,10 +5,10 @@
 #include "poisson_fdm.h"
 
 /*!
- * @brief Generate the coefficient matrix, right hand side vector and
+ * \brief Generate the coefficient matrix, right hand side vector and
  *        true solution vector for the following Poisson Problem
  
- *     Consider a two-dimensional Poisson equation
+ * Consider a two-dimensional Poisson equation
  * \f[
  *    \frac{du}{dt}-u_{xx}-u_{yy} = f(x,y)\ \ in\ \Omega = (0,1)\times(0,1)
  * \f]
@@ -51,15 +51,15 @@
  *           |      |      |      |      |      |      |      |
  *     (0,0) |______|______|______|______|______|______|______|_______x
  *
- * @param nt number of nodes in t-direction, if nt == 0, it turn to be the normal poisson system
- * @param nx number of nodes in x-direction (excluding the boundary nodes)
- * @param ny number of nodes in y-direction (excluding the boundary nodes)
- * @param A_ptr pointer to pointer to the coefficient matrix
- * @param f_ptr pointer to pointer to the right hand side vector
- * @param u_ptr pointer to pointer to the true solution vector
- * @author peghoty
- * @date 2010/07/14
+ * \param nt number of nodes in t-direction, if nt == 0, it turn to be the Poisson system
+ * \param nx number of nodes in x-direction (excluding the boundary nodes)
+ * \param ny number of nodes in y-direction (excluding the boundary nodes)
+ * \param A_ptr pointer to pointer to the coefficient matrix
+ * \param f_ptr pointer to pointer to the right hand side vector
+ * \param u_ptr pointer to pointer to the true solution vector
  *
+ * \author peghoty
+ * \date   2010/07/14
  */
 void
 fsls_BuildLinearSystem_5pt2d (int               nt,
@@ -119,7 +119,6 @@ fsls_BuildLinearSystem_5pt2d (int               nt,
     offset[7] =  nxplus1;
     
     /* Generate matrix without BC processing */
-    
     if (nt == 0) {
         ngridxt = ngrid;
         nt = 1;
@@ -167,7 +166,7 @@ fsls_BuildLinearSystem_5pt2d (int               nt,
     
     for (i = 2*nx-1; i < ngridminus1; i += nx) {
         offdiag[1][i] = 0.0;
-    }/* the four lines */
+    } /* the four lines */
     
     // generate the rhs and sol vector
     f = fsls_XVectorCreate(ngridxt);
@@ -261,7 +260,6 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
     offset[7] = -n_red + n_black_even;
     
     /* Generate matrix without BC processing */
-    
     if (nt == 0) {
         ngridxt = ngrid;
         nt = 1;
@@ -284,7 +282,7 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
         offdiag[2][i] = -factory;
         offdiag[3][i] = -factory;
     }
-
+    
     for (i = n_red; i < n_red+n_black; i++) {
         diag[i] = dd;
         offdiag[4][i] = -factorx;
@@ -306,7 +304,7 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
     for (i = 1; i < n_red_odd-1; i ++) {
         offdiag[2][i] = 0.0;
     }
-
+    
     for (i = n_red; i < n_red+n_black_odd; i ++) {
         offdiag[6][i] = 0.0;
     }
@@ -314,7 +312,7 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
     for (i = n_red-n_red_odd+1; i < n_red-1; i ++) {
         offdiag[3][i] = 0.0;
     }
-
+    
     for (i = n_red+n_black-n_black_odd; i < n_red+n_black; i ++) {
         offdiag[7][i] = 0.0;
     }
@@ -322,7 +320,7 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
     for (i = n_red_even+n_red_odd; i < n_red-n_red_odd; i += n_red_even+n_red_odd) {
         offdiag[0][i] = 0.0;
     }
-
+    
     for (i = n_red+n_black_odd; i < n_red+n_black-n_black_odd-n_black_even+1; i += n_black_even+n_black_odd) {
         offdiag[4][i] = 0.0;
     }
@@ -330,10 +328,11 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
     for (i = 2*n_red_odd+n_red_even-1; i < n_red-1; i += n_red_even+n_red_odd) {
         offdiag[1][i] = 0.0;
     }
-
-    for (i = n_red+n_black_odd+n_black_even-1; i < n_red+n_black-n_black_odd+1; i += n_black_even+n_black_odd) {
+    
+    for (i = n_red+n_black_odd+n_black_even-1; i < n_red+n_black-n_black_odd+1; \
+         i += n_black_even+n_black_odd) {
         offdiag[5][i] = 0.0;
-    }/* the four lines */
+    } /* the four lines */
     
     // generate the rhs and sol vector
     f = fsls_XVectorCreate(ngridxt);
@@ -386,10 +385,10 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
 }
 
 /*!
- * @brief Generate the coefficient matrix, right hand side vector and
+ * \brief Generate the coefficient matrix, right hand side vector and
  *        true solution vector for the following Poisson Problem
  
- *     Consider a three-dimensional Poisson equation
+ * Consider a three-dimensional Poisson equation
  *
  * \f[
  *   \frac{du}{dt}-u_{xx}-u_{yy}-u_{zz} = f(x,y,t)\ \ in\ \Omega = (0,1)\times(0,1)\times(0,1)
@@ -406,15 +405,16 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
  *
  *             \f$u(x,y,z,t) = sin(\pi*x)*sin(\pi*y)*sin(\pi*z)\f$
  *
- * @param nt number of nodes in t-direction, if nt == 0, it turn to be the normal poisson system
- * @param nx number of nodes in x-direction (excluding the boundary nodes)
- * @param ny number of nodes in y-direction (excluding the boundary nodes)
- * @param nz number of nodes in z-direction (excluding the boundary nodes)
- * @param A_ptr pointer to pointer to the coefficient matrix
- * @param f_ptr pointer to pointer to the right hand side vector
- * @param u_ptr pointer to pointer to the true solution vector
- * @author peghoty
- * @date 2010/08/05
+ * \param nt number of nodes in t-direction, if nt == 0, it turn to be the Poisson system
+ * \param nx number of nodes in x-direction (excluding the boundary nodes)
+ * \param ny number of nodes in y-direction (excluding the boundary nodes)
+ * \param nz number of nodes in z-direction (excluding the boundary nodes)
+ * \param A_ptr pointer to pointer to the coefficient matrix
+ * \param f_ptr pointer to pointer to the right hand side vector
+ * \param u_ptr pointer to pointer to the true solution vector
+ *
+ * \author peghoty
+ * \date   2010/08/05
  */
 void
 fsls_BuildLinearSystem_7pt3d (int               nt,
@@ -706,7 +706,7 @@ fsls_BuildLinearSystem_7pt3d (int               nt,
 }
 
 int
-fsls_Band2CSRMatrix (fsls_BandMatrix *B, 
+fsls_Band2CSRMatrix (fsls_BandMatrix *B,
                      fsls_CSRMatrix **A_ptr)
 {
     int      n       = fsls_BandMatrixN(B);
@@ -793,7 +793,7 @@ fsls_Band2CSRMatrix (fsls_BandMatrix *B,
 }
 
 int
-fsls_CSRMatrixPrint (fsls_CSRMatrix *matrix, 
+fsls_CSRMatrixPrint (fsls_CSRMatrix *matrix,
                      char *file_name )
 {
     FILE    *fp;
@@ -905,7 +905,7 @@ fsls_CSRMatrixCreate (int num_rows,
 }
 
 fsls_CSRMatrix *
-fsls_CSRMatrixDeleteZeros (fsls_CSRMatrix *A, 
+fsls_CSRMatrixDeleteZeros (fsls_CSRMatrix *A,
                            double tol)
 {
     double     *A_data   = fsls_CSRMatrixData(A);
@@ -940,7 +940,7 @@ fsls_CSRMatrixDeleteZeros (fsls_CSRMatrix *A,
         B_i[0] = 0;
         nzB = 0;
         for (i=0; i < nrows_A; i++) {
-            for (j = A_i[i]; j < A_i[i+1]; j++) {  
+            for (j = A_i[i]; j < A_i[i+1]; j++) {
                 /* modified by peghoty 2009/12/06 */
                 if (fabs(A_data[j]) > tol) {
                     B_data[nzB] = A_data[j];
@@ -988,7 +988,7 @@ fsls_CAlloc ( size_t count, size_t elt_size )
 int
 fsls_OutOfMemory ( size_t size )
 {
-    printf("Out of memory trying to allocate %d bytes\n", (int) size);
+    printf("### ERROR: Out of memory trying to allocate %d bytes\n", (int) size);
     fflush(stdout);
     return 0;
 }
@@ -1042,7 +1042,7 @@ fsls_BandMatrixInitialize ( fsls_BandMatrix *matrix )
 }
 
 int
-fsls_XVectorPrint (fsls_XVector *vector, 
+fsls_XVectorPrint (fsls_XVector *vector,
                    char *file_name)
 {
     /* information of vector */
@@ -1129,8 +1129,8 @@ fsls_BandMatrixDestroy (fsls_BandMatrix *matrix)
 }
 
 int
-fsls_WriteSAMGData (fsls_CSRMatrix *A, 
-                    fsls_XVector *b, 
+fsls_WriteSAMGData (fsls_CSRMatrix *A,
+                    fsls_XVector *b,
                     fsls_XVector *u)
 {
     FILE    *fp = NULL;
@@ -1184,7 +1184,7 @@ fsls_WriteSAMGData (fsls_CSRMatrix *A,
         }
     }
     else {
-        fprintf(fp, "Warning: No matrix data!\n");
+        fprintf(fp, "### WARNING: No matrix data!\n");
     }
     fclose(fp);
     
@@ -1205,8 +1205,8 @@ fsls_WriteSAMGData (fsls_CSRMatrix *A,
     return ierr;
 }
 
-int 
-fsls_CSR2FullMatrix (fsls_CSRMatrix *A, 
+int
+fsls_CSR2FullMatrix (fsls_CSRMatrix *A,
                      double **full_ptr)
 {
     int ierr = 0, row = 0, col = 0, i;
@@ -1229,17 +1229,17 @@ fsls_CSR2FullMatrix (fsls_CSRMatrix *A,
     return ierr;
 }
 
-int 
-fsls_dtMatrix (double dt, 
-               int n_rows, 
-               int n_cols, 
+int
+fsls_dtMatrix (double dt,
+               int n_rows,
+               int n_cols,
                double *A_full)
 {
     int ierr = 0;
     int i,j;
-
+    
     if(n_rows != n_cols) printf("...\n");
-
+    
     for( i = 0; i < n_rows; ++i ) {
         for( j = 0; j < n_cols; ++j ) {
             A_full[i+n_cols*j] *= dt;
@@ -1251,8 +1251,8 @@ fsls_dtMatrix (double dt,
     return ierr;
 }
 
-int 
-fsls_COOMatrixPrint (fsls_CSRMatrix *matrix, 
+int
+fsls_COOMatrixPrint (fsls_CSRMatrix *matrix,
                      char *file_name )
 {
     int ierr = 0;
@@ -1296,8 +1296,8 @@ fsls_COOMatrixPrint (fsls_CSRMatrix *matrix,
     return ierr;
 }
 
-int 
-fsls_MatrixSPGnuplot (fsls_CSRMatrix *matrix, 
+int
+fsls_MatrixSPGnuplot (fsls_CSRMatrix *matrix,
                       char *file_name )
 {
     int ierr = 0;
@@ -1328,3 +1328,7 @@ fsls_MatrixSPGnuplot (fsls_CSRMatrix *matrix,
     
     return ierr;
 }
+
+/*---------------------------------*/
+/*--        End of File          --*/
+/*---------------------------------*/

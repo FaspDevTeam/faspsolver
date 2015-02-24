@@ -704,7 +704,7 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
 }
 
 /*!
- * \fn dBSRmat fasp_format_dcsr_dbsr ( dCSRmat *A, INT nb )
+ * \fn dBSRmat fasp_format_dcsr_dbsr ( dCSRmat *A, const INT nb )
  *
  * \brief Transfer a dCSRmat type matrix into a dBSRmat.
  *
@@ -719,7 +719,8 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  * \note modified by Xiaozhe Hu to avoid potential memory leakage problem
  *
  */
-dBSRmat fasp_format_dcsr_dbsr(dCSRmat *A, INT nb)
+dBSRmat fasp_format_dcsr_dbsr (dCSRmat *A,
+                               const INT nb)
 {
 	// Safe-guard check
     if ((A->row)%nb!=0) {

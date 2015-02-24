@@ -1479,7 +1479,8 @@ void fasp_dbsr_print (dBSRmat *A)
  *
  * Modified by Chensong Zhang on 06/14/2014: Fix index problem.
  */
-void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A)
+void fasp_dbsr_write_coo (const char *filename,
+                          const dBSRmat *A)
 {
     
     INT i, j, k, l;
@@ -2104,10 +2105,10 @@ void fasp_hb_read (char *input_file,
     double *values = NULL;
     
     printf ( "\n" );
-    printf ( "  HB_FILE_READ reads all the data in an HB file.\n" );
+    printf ( "HB_FILE_READ reads all the data in an HB file.\n" );
     
     printf ( "\n" );
-    printf ( "  Reading the file '%s'\n", input_file );
+    printf ( "Reading the file '%s'\n", input_file );
     
     input = fopen ( input_file, "rt" );
     

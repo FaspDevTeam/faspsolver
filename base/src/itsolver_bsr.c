@@ -18,7 +18,7 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_dbsr_itsolver (dBSRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dbsr_itsolver (dBSRmat *A, dvector *b, dvector *x,
  *                                    precond *pc, itsolver_param *itparam)
  *
  * \brief Solve Ax=b by preconditioned Krylov methods for BSR matrices
@@ -34,67 +34,67 @@
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   10/26/2010
  */
-INT fasp_solver_dbsr_itsolver (dBSRmat *A, 
-                               dvector *b, 
-                               dvector *x, 
-                               precond *pc, 
+INT fasp_solver_dbsr_itsolver (dBSRmat *A,
+                               dvector *b,
+                               dvector *x,
+                               precond *pc,
                                itsolver_param *itparam)
 {
-    const SHORT print_level = itparam->print_level;    
+    const SHORT prtlvl = itparam->print_level;
     const SHORT itsolver_type = itparam->itsolver_type;
     const SHORT stop_type = itparam->stop_type;
     const SHORT restart = itparam->restart;
     const INT   MaxIt = itparam->maxit;
-    const REAL  tol = itparam->tol; 
+    const REAL  tol = itparam->tol;
     
     // Local variables
     INT iter;
     REAL solver_start, solver_end, solver_duration;
-
+    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
-
+    
     fasp_gettime(&solver_start);
-
+    
     /* Safe-guard checks on parameters */
     ITS_CHECK ( MaxIt, tol );
-
+    
     switch (itsolver_type) {
-        
+            
         case SOLVER_CG:
-            if ( print_level>PRINT_NONE ) printf("\nCalling PCG solver (BSR) ...\n");
-            iter = fasp_solver_dbsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PCG solver (BSR) ...\n");
+            iter = fasp_solver_dbsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
-    
+            
         case SOLVER_BiCGstab:
-            if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (BSR) ...\n");
-            iter = fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (BSR) ...\n");
+            iter = fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
-    
+            
         case SOLVER_GMRES:
-            if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (BSR) ...\n");
-            iter = fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRES solver (BSR) ...\n");
+            iter = fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
-    
+            
         case SOLVER_VGMRES:
-            if ( print_level>PRINT_NONE ) printf("\nCalling vGMRES solver (BSR) ...\n");
-            iter = fasp_solver_dbsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling vGMRES solver (BSR) ...\n");
+            iter = fasp_solver_dbsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VFGMRES:
-            if ( print_level>PRINT_NONE ) printf("\nCalling vFGMRes solver (BSR) ...\n");
-            iter = fasp_solver_dbsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling vFGMRes solver (BSR) ...\n");
+            iter = fasp_solver_dbsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         default:
             printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
             iter = ERROR_SOLVER_TYPE;
-    
+            
     }
     
-    if ( (print_level>PRINT_MIN) && (iter >= 0) ) {
+    if ( (prtlvl > PRINT_MIN) && (iter >= 0) ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("Iterative method", solver_duration);
@@ -103,12 +103,12 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
-
+    
     return iter;
 }
 
 /**
- * \fn INT fasp_solver_dbsr_krylov (dBSRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dbsr_krylov (dBSRmat *A, dvector *b, dvector *x,
  *                                  itsolver_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods for BSR matrices
@@ -123,27 +123,27 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   10/26/2010
  */
-INT fasp_solver_dbsr_krylov (dBSRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
+INT fasp_solver_dbsr_krylov (dBSRmat *A,
+                             dvector *b,
+                             dvector *x,
                              itsolver_param *itparam)
 {
-    const SHORT print_level = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     INT status = FASP_SUCCESS;
     REAL solver_start, solver_end;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
-
+    
     // solver part
     fasp_gettime(&solver_start);
-
+    
     status=fasp_solver_dbsr_itsolver(A,b,x,NULL,itparam);
-
+    
     fasp_gettime(&solver_end);
     
-    if ( print_level>PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         REAL solver_duration = solver_end - solver_start;
         print_cputime("Krylov method totally", solver_duration);
     }
@@ -151,15 +151,15 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
-
+    
     return status;
 }
 
 /**
- * \fn INT fasp_solver_dbsr_krylov_diag (dBSRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dbsr_krylov_diag (dBSRmat *A, dvector *b, dvector *x,
  *                                       itsolver_param *itparam)
  *
- * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
+ * \brief Solve Ax=b by diagonal preconditioned Krylov methods
  *
  * \param A         Pointer to the coeff matrix in dBSRmat format
  * \param b         Pointer to the right hand side in dvector format
@@ -175,18 +175,18 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
  * \date   10/15/2012
  */
 
-INT fasp_solver_dbsr_krylov_diag (dBSRmat *A, 
-                                  dvector *b, 
-                                  dvector *x, 
+INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
+                                  dvector *b,
+                                  dvector *x,
                                   itsolver_param *itparam)
 {
-    const SHORT print_level = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     INT status = FASP_SUCCESS;
     REAL solver_start, solver_end;
     
     INT nb=A->nb,i,k;
     INT nb2=nb*nb;
-    INT ROW=A->ROW; 
+    INT ROW=A->ROW;
     
 #ifdef _OPENMP
     // variables for OpenMP
@@ -200,7 +200,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
-
+    
     // get all the diagonal sub-blocks
 #ifdef _OPENMP
     if (ROW > OPENMP_HOLDS) {
@@ -210,7 +210,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
             for (i = mybegin; i < myend; ++i) {
                 for (k = A->IA[i]; k < A->IA[i+1]; ++k) {
                     if (A->JA[k] == i)
-                    memcpy(diag.diag.val+i*nb2, A->val+k*nb2, nb2*sizeof(REAL));
+                        memcpy(diag.diag.val+i*nb2, A->val+k*nb2, nb2*sizeof(REAL));
                 }
             }
         }
@@ -220,7 +220,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
         for (i = 0; i < ROW; ++i) {
             for (k = A->IA[i]; k < A->IA[i+1]; ++k) {
                 if (A->JA[k] == i)
-                memcpy(diag.diag.val+i*nb2, A->val+k*nb2, nb2*sizeof(REAL));
+                    memcpy(diag.diag.val+i*nb2, A->val+k*nb2, nb2*sizeof(REAL));
             }
         }
 #ifdef _OPENMP
@@ -236,34 +236,34 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
         fasp_blas_smat_inv(&(diag.diag.val[i*nb2]), nb);
     }
     
-    precond *pc = (precond *)fasp_mem_calloc(1,sizeof(precond));    
+    precond *pc = (precond *)fasp_mem_calloc(1,sizeof(precond));
     pc->data = &diag;
     pc->fct  = fasp_precond_dbsr_diag;
     
     // solver part
     fasp_gettime(&solver_start);
-
+    
     status=fasp_solver_dbsr_itsolver(A,b,x,pc,itparam);
-
+    
     fasp_gettime(&solver_end);
     
-    if ( print_level>PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         REAL solver_duration = solver_end - solver_start;
         print_cputime("Diag_Krylov method totally", solver_duration);
-    }    
+    }
     
     // clean up
     fasp_dvec_free(&(diag.diag));
-
+    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
-
+    
     return status;
 }
 
 /**
- * \fn INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A, dvector *b, dvector *x,
  *                                      itsolver_param *itparam, ILU_param *iluparam)
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods
@@ -279,23 +279,23 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
  * \author Shiquang Zhang, Xiaozhe Hu
  * \date   10/26/2010
  */
-INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A, 
-                                 dvector *b, 
-                                 dvector *x, 
-                                 itsolver_param *itparam, 
+INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
+                                 dvector *b,
+                                 dvector *x,
+                                 itsolver_param *itparam,
                                  ILU_param *iluparam)
 {
-    const SHORT print_level = itparam->print_level;    
+    const SHORT prtlvl = itparam->print_level;
     REAL solver_start, solver_end;
     INT status = FASP_SUCCESS;
     
-    ILU_data LU; 
-    precond pc; 
+    ILU_data LU;
+    precond pc;
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->ROW, A->COL, A->NNZ);
-    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);    
+    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
     // ILU setup for whole matrix
@@ -304,7 +304,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
     // check iludata
     if ( (status = fasp_mem_iludata_check(&LU))<0 ) goto FINISHED;
     
-    // set preconditioner 
+    // set preconditioner
     pc.data = &LU; pc.fct = fasp_precond_dbsr_ilu;
     
     // solve
@@ -314,26 +314,26 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
     
     fasp_gettime(&solver_end);
     
-    if ( print_level>PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         REAL solver_duration = solver_end - solver_start;
         print_cputime("ILUk_Krylov method totally", solver_duration);
     }
     
- FINISHED: 
+FINISHED:
     fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
-        
-    return status;    
+    
+    return status;
 }
 
 /**
- * \fn INT fasp_solver_dbsr_krylov_amg (dBSRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dbsr_krylov_amg (dBSRmat *A, dvector *b, dvector *x,
  *                                      itsolver_param *itparam, AMG_param *amgparam)
  *
- * \brief Solve Ax=b by AMG preconditioned Krylov methods 
+ * \brief Solve Ax=b by AMG preconditioned Krylov methods
  *
  * \param A         Pointer to the coeff matrix in dBSRmat format
  * \param b         Pointer to the right hand side in dvector format
@@ -346,23 +346,23 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
  * \author Xiaozhe Hu
  * \date   03/16/2012
  */
-INT fasp_solver_dbsr_krylov_amg (dBSRmat *A, 
-                                 dvector *b, 
-                                 dvector *x, 
-                                 itsolver_param *itparam, 
+INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
+                                 dvector *b,
+                                 dvector *x,
+                                 itsolver_param *itparam,
                                  AMG_param *amgparam)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
     // --------------------------------------------------------------
     //! parameters of iterative method
-    const SHORT print_level = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     const SHORT max_levels = amgparam->max_levels;
     
     // return variable
     INT status = FASP_SUCCESS;
     
-    // data of AMG 
+    // data of AMG
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
     
     // timing
@@ -371,7 +371,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
-
+    
     //--------------------------------------------------------------
     //Part 2: set up the preconditioner
     //--------------------------------------------------------------
@@ -388,7 +388,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
             
         case SA_AMG: // Smoothed Aggregation AMG
             status = fasp_amg_setup_sa_bsr(mgl, amgparam); break;
-    
+            
         default:
             status = fasp_amg_setup_ua_bsr(mgl, amgparam); break;
             
@@ -420,8 +420,8 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     
     if (status < 0) goto FINISHED;
     
-    precond prec; 
-    prec.data = &precdata; 
+    precond prec;
+    prec.data = &precdata;
     switch (amgparam->cycle_type) {
         case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
             prec.fct = fasp_precond_dbsr_nl_amli;
@@ -431,38 +431,38 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
             break;
     }
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         print_cputime("BSR AMG setup", setup_duration);
     }
-
+    
     //--------------------------------------------------------------
     // Part 3: solver
     //--------------------------------------------------------------
     fasp_gettime(&solver_start);
-
+    
     status=fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
-   
+    
     fasp_gettime(&solver_end);
     
     solver_duration = solver_end - solver_start;
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         print_cputime("BSR AMG Krylov method totally", setup_duration+solver_duration);
     }
     
- FINISHED:
-    fasp_amg_data_bsr_free(mgl);    
+FINISHED:
+    fasp_amg_data_bsr_free(mgl);
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
-
+    
     if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
     return status;
     
- MEMORY_ERROR:
+MEMORY_ERROR:
     printf("### ERROR: %s cannot allocate memory!\n", __FUNCTION__);
-    exit(status);    
+    exit(status);
 }
 
 /**
@@ -487,19 +487,19 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
  * \date   05/26/2012
  */
 INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
-                                 dvector *b,
-                                 dvector *x,
-                                 itsolver_param *itparam,
-                                 AMG_param *amgparam,
-                                 dCSRmat *A_nk,
-                                 dCSRmat *P_nk,
-                                 dCSRmat *R_nk)
+                                    dvector *b,
+                                    dvector *x,
+                                    itsolver_param *itparam,
+                                    AMG_param *amgparam,
+                                    dCSRmat *A_nk,
+                                    dCSRmat *P_nk,
+                                    dCSRmat *R_nk)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
     // --------------------------------------------------------------
     //! parameters of iterative method
-    const SHORT print_level = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     const SHORT max_levels = amgparam->max_levels;
     
     // return variable
@@ -588,7 +588,7 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
     
     prec.fct = fasp_precond_dbsr_amg_nk;
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         print_cputime("BSR AMG setup", setup_duration);
     }
     
@@ -603,7 +603,7 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
     
     solver_duration = solver_end - solver_start;
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         print_cputime("BSR AMG NK Krylov method totally", setup_duration+solver_duration);
     }
     
@@ -613,7 +613,7 @@ FINISHED:
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
-
+    
 #if WITH_UMFPACK // use UMFPACK directly
     fasp_dcsr_free(&A_tran);
 #endif
@@ -646,18 +646,18 @@ MEMORY_ERROR:
  * \date   05/27/2012
  */
 INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
-                                 dvector *b,
-                                 dvector *x,
-                                 itsolver_param *itparam,
-                                 AMG_param *amgparam,
-                                 const INT nk_dim,
-                                 dvector *nk)
+                                    dvector *b,
+                                    dvector *x,
+                                    itsolver_param *itparam,
+                                    AMG_param *amgparam,
+                                    const INT nk_dim,
+                                    dvector *nk)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
     // --------------------------------------------------------------
     //! parameters of iterative method
-    const SHORT print_level = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     const SHORT max_levels = amgparam->max_levels;
     
     // local variable
@@ -675,7 +675,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
-
+    
     //--------------------------------------------------------------
     //Part 2: set up the preconditioner
     //--------------------------------------------------------------
@@ -697,7 +697,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
     // null space for whole Jacobian
     mgl[0].near_kernel_dim   = nk_dim;
     mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim, sizeof(REAL*));
-     
+    
     for ( i=0; i < mgl->near_kernel_dim; ++i ) mgl[0].near_kernel_basis[i] = nk[i].val;
     
     switch (amgparam->AMG_type) {
@@ -747,7 +747,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
             break;
     }
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         print_cputime("BSR AMG setup", setup_duration);
     }
     
@@ -762,7 +762,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
     
     solver_duration = solver_end - solver_start;
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         print_cputime("BSR AMG Krylov method totally", setup_duration+solver_duration);
     }
     
@@ -772,7 +772,7 @@ FINISHED:
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
-
+    
     if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
     return status;
     

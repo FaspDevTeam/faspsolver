@@ -48,7 +48,8 @@ static INT pcg_1d(REAL *u,
                   INT nx,
                   REAL rtol,
 		          INT maxiteration,
-		          const SHORT print_level);
+		          const SHORT prtlvl);
+
 static INT pcg_2d(REAL *u,
                   REAL *b,
                   INT *level,
@@ -57,7 +58,8 @@ static INT pcg_2d(REAL *u,
                   INT *nyk,
                   REAL rtol,
 		          INT maxiteration,
-		          const SHORT print_level);
+		          const SHORT prtlvl);
+
 static INT pcg_3d(REAL *u,
                   REAL *b,
                   INT *level,
@@ -67,7 +69,8 @@ static INT pcg_3d(REAL *u,
                   INT *nzk, 
                   REAL rtol,
 		          INT maxiteration,
-		          const SHORT print_level);
+		          const SHORT prtlvl);
+
 static void gsiteration_2color_2d(REAL *u,
 		     				      REAL *b,
 						          INT *level,
@@ -75,6 +78,7 @@ static void gsiteration_2color_2d(REAL *u,
                                   INT maxlevel,
                                   INT *nxk, 
                                   INT *nyk);
+
 static void gsiteration_2color_3d(REAL *u,
                                   REAL *b,
                                   INT *level,
@@ -83,12 +87,14 @@ static void gsiteration_2color_3d(REAL *u,
                                   INT *nxk, 
                                   INT *nyk, 
                                   INT *nzk);
+
 static void coarsergrid7pointrestriction2d(REAL *b, 
 										   REAL *r, 
 									       INT *level, 
 									       INT k, 
 									       INT *nxk, 
 									       INT *nyk);
+
 static void coarsergrid7pointrestriction3d(REAL *b, 
 										   REAL *r, 
 										   INT *level, 
@@ -96,17 +102,20 @@ static void coarsergrid7pointrestriction3d(REAL *b,
 										   INT *nxk, 
 										   INT *nyk,
 										   INT *nzk);
+
 static void finergridinterpolation2d(REAL *u,
 					                 INT *level, 
 							         INT k, 
 							         INT *nxk, 
 							         INT *nyk);
+
 static void finergridinterpolation3d(REAL *u, 
 							         INT *level, 
 								     INT k, 
 									 INT *nxk, 
 									 INT *nyk, 
 									 INT *nzk);
+
 static void gsiteration3dpro(REAL *u,
 			   			     REAL *b,
 							 INT *level,
@@ -115,6 +124,7 @@ static void gsiteration3dpro(REAL *u,
 							 INT *nxk, 
 							 INT *nyk, 
 							 INT *nzk);
+
 static void gsiteration3dpre(REAL *u,
 			   			     REAL *b,
 							 INT *level,
@@ -123,11 +133,13 @@ static void gsiteration3dpre(REAL *u,
 							 INT *nxk, 
 							 INT *nyk, 
 							 INT *nzk);
+
 static void compute_r_1d(REAL *u,
 						 REAL *b,
 						 REAL *r,
 						 INT   k,
 						 INT *level);
+
 static void compute_r_2d(REAL *u,
 						 REAL *b,
 						 REAL *r,
@@ -135,6 +147,7 @@ static void compute_r_2d(REAL *u,
 						 INT *level,
 						 INT *nxk,
 						 INT *nyk);
+
 static void compute_r_3d(REAL *u,
 						 REAL *b,
 						 REAL *r,
@@ -143,29 +156,35 @@ static void compute_r_3d(REAL *u,
 						 INT *nxk,
 						 INT *nyk,
 						 INT *nzk);
+
 static REAL computenorm(REAL *r,
 						INT *level,
 						INT k);
+
 static void xequaly(REAL *x,
 					REAL *y,
 					INT *level,
 					INT k);
+
 static void xequalypcz(REAL *x,
 					   REAL *y,
 					   REAL c,
 					   REAL *z,
 					   INT *level,
 					   INT k);
+
 static void xequalay_1d(REAL *x,
 						REAL *y,
 						INT *level,
 						INT k);
+
 static void xequalay_2d(REAL *x,
 						REAL *y,
 						INT *level,
 						INT k,
 						INT *nxk,
 						INT *nyk);
+
 static void xequalay_3d(REAL *x,
 						REAL *y,
 						INT *level,
@@ -173,15 +192,19 @@ static void xequalay_3d(REAL *x,
 						INT *nxk,
 						INT *nyk,
 						INT *nzk);
-static REAL innerproductxy(REAL *x, 
+
+static REAL innerproductxy(REAL *x,
 						   REAL *y, 
 						   INT *level, 
 						   INT k);
+
 static REAL energynormu1d(REAL *u,
                           INT nx);
+
 static REAL energynormu2d(REAL *u,
                           INT nx,
                           INT ny);
+
 static REAL energynormu3d(REAL *u,
                           INT nx,
                           INT ny,
@@ -683,18 +706,18 @@ static void fullmultigrid_3d (REAL *u,
 
 /**
  * \fn static INT pcg_1d (REAL *u, REAL *b, INT *level, INT maxlevel,
- *                        INT nx, INT rtol, INT maxiteration, const SHORT print_level)
+ *                        INT nx, INT rtol, INT maxiteration, const SHORT prtlvl)
  *
  * \brief Preconditioned CG method of 1D poisson equation
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
  * \param level        Pointer to the start position of each level 
- * \param maxlevel     maxlevel of multigrids
- * \param nx           Number of grids in x direction 
+ * \param maxlevel     Max level of multigrids
+ * \param nx           Number of grids in x direction
  * \param rtol         Relative Tolerance judging convergence
  * \param maxiteration Number of maximum iteration number of CG method
- * \param print_level  Print level of iterative method
+ * \param prtlvl       Print level of iterative method
  *
  * \author Ziteng Wang
  * \date 06/07/2013
@@ -706,7 +729,7 @@ static INT pcg_1d (REAL *u,
                    INT nx,
                    REAL rtol,
 		           INT maxiteration,
-				   const SHORT print_level)
+				   const SHORT prtlvl)
 {
     INT k;
     REAL *p, *r, *z, *q;
@@ -731,7 +754,7 @@ static INT pcg_1d (REAL *u,
 	if (normb==0.0) normb=1.0;
 	if ((resid = normr / normb) <= rtol) goto FINISHED; 
 
-	if ( print_level > PRINT_SOME ){
+	if ( prtlvl > PRINT_SOME ){
 		printf("-----------------------------------------------------------\n");
 		printf("It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor\n");
 		printf("-----------------------------------------------------------\n");
@@ -756,7 +779,7 @@ static INT pcg_1d (REAL *u,
 		normr = computenorm(r, level, 0);
 		resid = normr / normb;
 		factor = normr / normr1;
-		if ( print_level > PRINT_SOME ){
+		if ( prtlvl > PRINT_SOME ){
 			printf("%6d | %13.6e   | %13.6e  | %10.4f\n",k+1,resid,normr,factor);
 		}
 		normr1 = normr;
@@ -775,7 +798,7 @@ static INT pcg_1d (REAL *u,
 		k++;
 	}
 
-	if ( print_level > PRINT_NONE ){
+	if ( prtlvl > PRINT_NONE ){
 		if (k >= maxiteration) {
 			printf("### WARNING: V-cycle failed to converge.\n");
 		}
@@ -790,26 +813,26 @@ FINISHED:
     free(p);
 	free(z);
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_poisson_pmg_gmg_2D ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	return k+1;
 }
 
 /**
  * \fn static INT pcg_2d (REAL *u, REAL *b, INT *level, INT maxlevel, INT *nxk, 
- *                        INT *nyk, INT rtol, INT maxiteration, const SHORT print_level)
+ *                        INT *nyk, INT rtol, INT maxiteration, const SHORT prtlvl)
  *
  * \brief Preconditioned CG method of 2D poisson equation
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
  * \param level        Pointer to the start position of each level 
- * \param maxlevel     maxlevel of multigrids
- * \param nxk          Number of grids in x direction 
+ * \param maxlevel     Max level of multigrids
+ * \param nxk          Number of grids in x direction
  * \param nyk          Number of grids in y direction
  * \param rtol         Relative Tolerance judging convergence
  * \param maxiteration Number of maximum iteration number of CG method
- * \param print_level  Print level of iterative method
+ * \param prtlvl       Print level of iterative method
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -822,7 +845,7 @@ static INT pcg_2d(REAL *u,
                   INT *nyk,
                   REAL rtol,
 		          INT maxiteration,
-		          const SHORT print_level)
+		          const SHORT prtlvl)
 {
     INT k = 0;
     REAL *p, *r, *z, *q;
@@ -846,7 +869,7 @@ static INT pcg_2d(REAL *u,
 	if (normb==0.0) normb=1.0;
 	if ((resid = normr / normb) <= rtol) goto FINISHED;
 
-	if ( print_level > PRINT_SOME ){
+	if ( prtlvl > PRINT_SOME ){
 		printf("-----------------------------------------------------------\n");
 		printf("It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor\n");
 		printf("-----------------------------------------------------------\n");
@@ -871,7 +894,7 @@ static INT pcg_2d(REAL *u,
 		normr = computenorm(r, level, 0);
 		resid = normr / normb;
 		factor = normr / normr1;
-		if ( print_level > PRINT_SOME ){
+		if ( prtlvl > PRINT_SOME ){
 			printf("%6d | %13.6e   | %13.6e  | %10.4f\n",k+1,resid,normr,factor);
 		}
 		normr1 = normr;
@@ -890,7 +913,7 @@ static INT pcg_2d(REAL *u,
 		k++;
 	}
 
-	if ( print_level > PRINT_NONE ){
+	if ( prtlvl > PRINT_NONE ){
 		if (k >= maxiteration) {
 			printf("### WARNING: V-cycle failed to converge.\n");
 		}
@@ -905,7 +928,7 @@ FINISHED:
     free(p);
 	free(z);
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_poisson_pmg_gmg_2D ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	return k+1;
 }
@@ -913,20 +936,20 @@ FINISHED:
 /**
  * \fn static INT pcg_3d (REAL *u, REAL *b, INT *level, INT maxlevel, INT *nxk,
  *                        INT *nyk, INT *nzk, INT rtol, INT maxiteration, 
- *                        const SHORT print_level)
+ *                        const SHORT prtlvl)
  *
  * \brief Preconditioned CG method of 2D poisson equation
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
  * \param level        Pointer to the start position of each level 
- * \param maxlevel     maxlevel of multigrids
+ * \param maxlevel     Max level of multigrids
  * \param nxk          Number of grids in x direction 
  * \param nyk          Number of grids in y direction
  * \param nzk          Number of grids in z direction
  * \param rtol         Relative Tolerance judging convergence
  * \param maxiteration Number of maximum iteration number of CG method
- * \param print_level  Print level of iterative method
+ * \param prtlvl       Print level of iterative method
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -940,7 +963,7 @@ static INT pcg_3d (REAL *u,
                    INT *nzk, 
                    REAL rtol,
 		           INT maxiteration,
-				   const SHORT print_level)
+				   const SHORT prtlvl)
 {
     INT i, k = 0, done = 0;
     REAL *p, *r, *z, *q;
@@ -965,7 +988,7 @@ static INT pcg_3d (REAL *u,
 	if (normb==0.0) normb=1.0;
 	if ((resid = normr / normb) <= rtol) goto FINISHED;
 
-	if ( print_level > PRINT_SOME ){
+	if ( prtlvl > PRINT_SOME ){
 		printf("-----------------------------------------------------------\n");
 		printf("It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor\n");
 		printf("-----------------------------------------------------------\n");
@@ -990,7 +1013,7 @@ static INT pcg_3d (REAL *u,
 		normr = computenorm(r, level, 0);
 		resid = normr / normb;
 		factor = normr / normr1;
-		if ( print_level > PRINT_SOME ){
+		if ( prtlvl > PRINT_SOME ){
 			printf("%6d | %13.6e   | %13.6e  | %10.4f\n",k+1,resid,normr,factor);
 		}
 		normr1 = normr;
@@ -1009,7 +1032,7 @@ static INT pcg_3d (REAL *u,
 		k++;
 	}
 
-	if ( print_level > PRINT_NONE ){
+	if ( prtlvl > PRINT_NONE ){
 		if (k >= maxiteration) {
 			printf("### WARNING: V-cycle failed to converge.\n");
 		}
@@ -1024,7 +1047,7 @@ FINISHED:
     free(p);
 	free(z);
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_poisson_pmg_gmg_3D ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	return k+1;
 }

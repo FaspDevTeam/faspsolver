@@ -689,8 +689,6 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     // Main AMG setup loop
     while ( (mgl[lvl].A.ROW > min_cdof) && (lvl < max_levels-1) ) {
         
-        printf("level = %d\n", lvl);
-        
         /*-- setup ILU decomposition if necessary */
         if ( lvl < param->ILU_levels ) {
             status = fasp_ilu_dbsr_setup(&mgl[lvl].A, &mgl[lvl].LU, &iluparam);
@@ -738,7 +736,6 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         }
         
         /* -- Form Tentative prolongation --*/
-        printf("before form tentative P\n");
         if (lvl == 0 && mgl[0].near_kernel_dim >0 ){
             form_tentative_p_bsr1(&vertices[lvl], &tentp[lvl], &mgl[0], lvl+1,
                                   num_aggs[lvl], mgl[0].near_kernel_dim,
@@ -749,16 +746,13 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         }
         
         /* -- Smoothing -- */
-        printf("Smoothing P\n");
         smooth_agg_bsr(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1,
                        &Neighbor[lvl]);
         
         /*-- Form restriction --*/
-        printf("Form Restriction\n");
         fasp_dbsr_trans(&mgl[lvl].P, &mgl[lvl].R);
         
         /*-- Form coarse level stiffness matrix --*/
-        printf("RAP\n");
         fasp_blas_dbsr_rap(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
         
         /*-- Form extra near kernel space if needed --*/
@@ -778,7 +772,6 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
             
         }
         
-        printf("clean\n");
         fasp_dcsr_free(&Neighbor[lvl]);
         fasp_ivec_free(&vertices[lvl]);
         fasp_dbsr_free(&tentp[lvl]);

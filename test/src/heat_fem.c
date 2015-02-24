@@ -17,7 +17,7 @@
  *
  * \brief Form local right-hand side b from triangle node
  *
- * \param (*node)[2]   the vertice of the triangule
+ * \param (*node)[2]   vertices of the triangle
  * \param *b           local right-hand side
  * \param num_qp       number of quad point 
  * \param nt           number of time steps
@@ -42,7 +42,7 @@ static void localb (double (*node)[2],
     for (i=0;i<3*nt;++i)
         b[i] = 0;
     
-    fasp_gauss2d(num_qp, 2, gauss); // gauss intergation initial    
+    fasp_gauss2d(num_qp, 2, gauss); // Gauss integration initial    
     
     for (i=0;i<num_qp;++i) {
         g = 1-gauss[i][0]-gauss[i][1];
@@ -77,7 +77,7 @@ static void localb (double (*node)[2],
  * \author Feiteng Huang
  * \date   02/23/2012
  *
- * Modified by Feiteng Huang on 04/06/2012: restructrue assmebling
+ * Modified by Feiteng Huang on 04/06/2012: restructure assembling
  */
 static void assemble_stiffmat (dCSRmat *A, 
                                dCSRmat *M, 
@@ -108,7 +108,7 @@ static void assemble_stiffmat (dCSRmat *A,
     double *btmp = (double*)fasp_mem_calloc(3*pt->nt, sizeof(double));
     int tmp, edge_c;
     
-    fasp_gauss2d(pt->num_qp_mat, 2, gauss); // Gauss intergation initial
+    fasp_gauss2d(pt->num_qp_mat, 2, gauss); // Gauss integration initial
     
     // alloc mem for A & b
     A->row = A->col = num_node;
@@ -127,8 +127,10 @@ static void assemble_stiffmat (dCSRmat *A,
     total_alloc_mem += 2*nnz*sizeof(double);
     total_alloc_mem += b->row*sizeof(double);
     int *count = (int*)fasp_mem_calloc(num_node, sizeof(int));
+    
+    //edge to global idx of A->val
     int *edge2idx_g1 = (int*)fasp_mem_calloc(num_edge, sizeof(int));
-    int *edge2idx_g2 = (int*)fasp_mem_calloc(num_edge, sizeof(int));//edge to global idx of A->val
+    int *edge2idx_g2 = (int*)fasp_mem_calloc(num_edge, sizeof(int));
     
     // get IA
     for (i=0;i<num_edge;++i) {
@@ -280,7 +282,7 @@ static void assemble_stiffmat (dCSRmat *A,
         } // end for k
     }
     else {
-    printf(" ###You are not supposed to see this message ...\n");
+        printf("### ERROR: Wrong input value! %s : %d\n", __FILE__, __LINE__);
     }
 
     fasp_mem_free(edge2idx_g1);
@@ -321,7 +323,7 @@ static void assemble_stiffmat (dCSRmat *A,
  * \date   08/10/2010
  * 
  * Modified by Feiteng Huang on 04/01/2012, output node, elem, uh, and dof for l2 error
- * Modified by Feiteng Huang on 04/09/2012, restruntrue the code
+ * Modified by Feiteng Huang on 04/09/2012, restructure the code
  */
 int setup_heat (dCSRmat *A_heat,
                 dCSRmat *Mass,
@@ -427,7 +429,7 @@ double get_l2_error_heat (ddenmat *node,
     
     int i,j,k;
     
-    fasp_gauss2d(num_qp, 2, gauss); // Gauss intergation initial
+    fasp_gauss2d(num_qp, 2, gauss); // Gauss integration initial
     
     for (k=0;k<elem->row;++k) { 
 

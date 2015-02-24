@@ -68,7 +68,7 @@
 /**
  * \fn INT fasp_solver_dcsr_pminres (dCSRmat *A, dvector *b, dvector *u, precond *pc,
  *                                   const REAL tol, const INT MaxIt,
- *                                   const SHORT stop_type, const SHORT print_level)
+ *                                   const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
@@ -79,7 +79,7 @@
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
@@ -97,7 +97,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
                               const REAL tol,
                               const INT MaxIt,
                               const SHORT stop_type,
-                              const SHORT print_level)
+                              const SHORT prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -160,7 +160,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
     // tp = A*p1
     fasp_blas_dcsr_mxv(A,p1,tp);
@@ -270,12 +270,12 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
         if (infnormu <= sol_inf_tol) {
-            if (print_level>PRINT_MIN) ITS_ZEROSOL;
+            if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             break;
         }
@@ -287,7 +287,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
         if ( normuu < maxdiff ) {
             
             if ( stag < MaxStag ) {
-                if ( print_level >= PRINT_MORE ) {
+                if ( prtlvl >= PRINT_MORE ) {
                     ITS_DIFFRES(normuu,relres);
                     ITS_RESTART;
                 }
@@ -319,13 +319,13 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
                     break;
             }
             
-            if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
             
             if ( relres < tol )
                 break;
             else {
                 if ( stag >= MaxStag ) {
-                    if ( print_level > PRINT_MIN ) ITS_STAGGED;
+                    if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
                     iter = ERROR_SOLVER_STAG;
                     break;
                 }
@@ -371,7 +371,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
-            if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_COMPRES(relres);
             
             // compute residual r = b - Ax again
             fasp_array_cp(m,b->val,r);
@@ -400,13 +400,13 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
                     break;
             }
             
-            if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
             
             // check convergence
             if ( relres < tol ) break;
             
             if ( more_step >= MaxRestartStep ) {
-                if ( print_level > PRINT_MIN ) ITS_ZEROTOL;
+                if ( prtlvl > PRINT_MIN ) ITS_ZEROTOL;
                 iter = ERROR_SOLVER_TOLSMALL;
                 break;
             }
@@ -457,7 +457,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat *A,
     } // end of the main loop
     
 FINISHED:  // finish the iterative method
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
     fasp_mem_free(work);
@@ -475,7 +475,7 @@ FINISHED:  // finish the iterative method
 /**
  * \fn INT fasp_solver_bdcsr_pminres (block_dCSRmat *A, dvector *b, dvector *u, precond *pc,
  *                                    const REAL tol, const INT MaxIt,
- *                                    const SHORT stop_type, const SHORT print_level)
+ *                                    const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
@@ -486,7 +486,7 @@ FINISHED:  // finish the iterative method
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
@@ -504,7 +504,7 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
                                const REAL tol,
                                const INT MaxIt,
                                const SHORT stop_type,
-                               const SHORT print_level)
+                               const SHORT prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -567,7 +567,7 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
     // tp = A*p1
     fasp_blas_bdcsr_mxv(A,p1,tp);
@@ -677,12 +677,12 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
         if (infnormu <= sol_inf_tol) {
-            if (print_level>PRINT_MIN) ITS_ZEROSOL;
+            if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             break;
         }
@@ -694,7 +694,7 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
         if ( normuu < maxdiff ) {
             
             if ( stag < MaxStag ) {
-                if ( print_level >= PRINT_MORE ) {
+                if ( prtlvl >= PRINT_MORE ) {
                     ITS_DIFFRES(normuu,relres);
                     ITS_RESTART;
                 }
@@ -726,13 +726,13 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
                     break;
             }
             
-            if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
             
             if ( relres < tol )
                 break;
             else {
                 if ( stag >= MaxStag ) {
-                    if ( print_level > PRINT_MIN ) ITS_STAGGED;
+                    if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
                     iter = ERROR_SOLVER_STAG;
                     break;
                 }
@@ -778,7 +778,7 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
-            if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_COMPRES(relres);
             
             // compute residual r = b - Ax again
             fasp_array_cp(m,b->val,r);
@@ -807,13 +807,13 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
                     break;
             }
             
-            if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
             
             // check convergence
             if ( relres < tol ) break;
             
             if ( more_step >= MaxRestartStep ) {
-                if ( print_level > PRINT_MIN ) ITS_ZEROTOL;
+                if ( prtlvl > PRINT_MIN ) ITS_ZEROTOL;
                 iter = ERROR_SOLVER_TOLSMALL;
                 break;
             }
@@ -864,7 +864,7 @@ INT fasp_solver_bdcsr_pminres (block_dCSRmat *A,
     } // end of the main loop
     
 FINISHED:  // finish the iterative method
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
     fasp_mem_free(work);
@@ -882,7 +882,7 @@ FINISHED:  // finish the iterative method
 /**
  * \fn INT fasp_solver_dstr_pminres (dSTRmat *A, dvector *b, dvector *u, precond *pc,
  *                                   const REAL tol, const INT MaxIt,
- *                                   const SHORT stop_type, const SHORT print_level)
+ *                                   const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
@@ -893,7 +893,7 @@ FINISHED:  // finish the iterative method
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
@@ -907,7 +907,7 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
                               const REAL tol,
                               const INT MaxIt,
                               const SHORT stop_type,
-                              const SHORT print_level)
+                              const SHORT prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -970,7 +970,7 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,iter,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
     // tp = A*p1
     fasp_blas_dstr_mxv(A,p1,tp);
@@ -1080,12 +1080,12 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_array_norminf(m, u->val);
         if (infnormu <= sol_inf_tol) {
-            if (print_level>PRINT_MIN) ITS_ZEROSOL;
+            if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             break;
         }
@@ -1097,7 +1097,7 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
         if ( normuu < maxdiff ) {
             
             if ( stag < MaxStag ) {
-                if ( print_level >= PRINT_MORE ) {
+                if ( prtlvl >= PRINT_MORE ) {
                     ITS_DIFFRES(normuu,relres);
                     ITS_RESTART;
                 }
@@ -1129,13 +1129,13 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
                     break;
             }
             
-            if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
             
             if ( relres < tol )
                 break;
             else {
                 if ( stag >= MaxStag ) {
-                    if ( print_level > PRINT_MIN ) ITS_STAGGED;
+                    if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
                     iter = ERROR_SOLVER_STAG;
                     break;
                 }
@@ -1181,7 +1181,7 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
-            if ( print_level >= PRINT_MORE ) ITS_COMPRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_COMPRES(relres);
             
             // compute residual r = b - Ax again
             fasp_array_cp(m,b->val,r);
@@ -1210,13 +1210,13 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
                     break;
             }
             
-            if ( print_level >= PRINT_MORE ) ITS_REALRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
             
             // check convergence
             if ( relres < tol ) break;
             
             if ( more_step >= MaxRestartStep ) {
-                if ( print_level > PRINT_MIN ) ITS_ZEROTOL;
+                if ( prtlvl > PRINT_MIN ) ITS_ZEROTOL;
                 iter = ERROR_SOLVER_TOLSMALL;
                 break;
             }
@@ -1267,7 +1267,7 @@ INT fasp_solver_dstr_pminres (dSTRmat *A,
     } // end of the main loop
     
 FINISHED:  // finish the iterative method
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
     fasp_mem_free(work);

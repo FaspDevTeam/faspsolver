@@ -63,7 +63,7 @@
 /**
  * \fn INT fasp_solver_pcg (mxv_matfree *mf, dvector *b, dvector *u, precond *pc,
  *                          const REAL tol, const INT MaxIt,
- *                          const SHORT stop_type, const SHORT print_level)
+ *                          const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned conjugate gradient (CG) method for solving Au=b
  *
@@ -74,7 +74,7 @@
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
@@ -91,7 +91,7 @@ INT fasp_solver_pcg (mxv_matfree *mf,
                      const REAL tol,
                      const INT MaxIt,
                      const SHORT stop_type,
-                     const SHORT print_level)
+                     const SHORT prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;
@@ -190,12 +190,12 @@ INT fasp_solver_pcg (mxv_matfree *mf,
         }
         
         // output iteration information if needed
-        print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
         infnormu = fasp_blas_array_norminf(m, u->val);
-        if (infnormu <= sol_inf_tol) {
-            if (print_level>PRINT_MIN) ITS_ZEROSOL;
+        if ( infnormu <= sol_inf_tol ) {
+            if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             break;
         }
@@ -205,9 +205,9 @@ INT fasp_solver_pcg (mxv_matfree *mf,
         reldiff=ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
         
         // stagnation check
-        if ((stag<=MaxStag) & (reldiff<maxdiff)) {
+        if ( (stag<=MaxStag) & (reldiff<maxdiff) ) {
             
-            if (print_level>=PRINT_MORE) {
+            if ( prtlvl >= PRINT_MORE ) {
                 ITS_DIFFRES(reldiff,relres);
                 ITS_RESTART;
             }
@@ -235,13 +235,13 @@ INT fasp_solver_pcg (mxv_matfree *mf,
                     break;
             }
             
-            if (print_level>=PRINT_MORE) ITS_REALRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
             
-            if (relres<tol)
+            if ( relres < tol )
                 break;
             else {
-                if (stag>=MaxStag) {
-                    if (print_level>PRINT_MIN) ITS_STAGGED;
+                if ( stag >= MaxStag ) {
+                    if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
                     iter = ERROR_SOLVER_STAG;
                     break;
                 }
@@ -252,8 +252,8 @@ INT fasp_solver_pcg (mxv_matfree *mf,
         } // end of staggnation check!
         
         // safe-guard check
-        if (relres<tol) {
-            if (print_level>=PRINT_MORE) ITS_COMPRES(relres);
+        if ( relres < tol ) {
+            if ( prtlvl >= PRINT_MORE ) ITS_COMPRES(relres);
             
             mf->fct(mf->data, u->val, r);
             fasp_blas_array_axpby(m, 1.0, b->val, -1.0, r);
@@ -279,13 +279,13 @@ INT fasp_solver_pcg (mxv_matfree *mf,
                     break;
             }
             
-            if (print_level>=PRINT_MORE) ITS_REALRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
             
             // check convergence
-            if (relres<tol) break;
+            if ( relres < tol ) break;
             
-            if (more_step>=MaxRestartStep) {
-                if (print_level>PRINT_MIN) ITS_ZEROTOL;
+            if ( more_step >= MaxRestartStep ) {
+                if ( prtlvl > PRINT_MIN) ITS_ZEROTOL;
                 iter = ERROR_SOLVER_TOLSMALL;
                 break;
             }
@@ -301,8 +301,8 @@ INT fasp_solver_pcg (mxv_matfree *mf,
         absres0 = absres;
         
         // compute z_k = B(r_k)
-        if (stop_type!=STOP_REL_PRECRES) {
-            if (pc != NULL)
+        if ( stop_type != STOP_REL_PRECRES ) {
+            if ( pc != NULL )
                 pc->fct(r,z,pc->data); /* Apply preconditioner */
             else
                 fasp_array_cp(m,r,z); /* No preconditioner, B=I */
@@ -319,7 +319,7 @@ INT fasp_solver_pcg (mxv_matfree *mf,
     } // end of main PCG loop.
     
 FINISHED:  // finish the iterative method
-    if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
     fasp_mem_free(work);

@@ -32,7 +32,7 @@
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
  *
  */
-int fasp_solver_mumps ( dCSRmat *ptrA,
+int fasp_solver_mumps (dCSRmat *ptrA,
                        dvector *b,
                        dvector *u,
                        const int print_level)
@@ -419,7 +419,7 @@ Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
  ** \author Zheng Li
  ** \date   10/09/2014
  **/
-void fasp_mumps_solve ( dCSRmat *ptrA,
+void fasp_mumps_solve (dCSRmat *ptrA,
                        dvector *b,
                        dvector *u,
                        Mumps_data mumps,
@@ -482,7 +482,7 @@ void fasp_mumps_solve ( dCSRmat *ptrA,
  ** \author Zheng Li
  ** \date   10/09/2014
  **/
-void fasp_mumps_free ( Mumps_data *mumps )
+void fasp_mumps_free (Mumps_data *mumps)
 {
     DMUMPS_STRUC_C id = mumps->id;
     

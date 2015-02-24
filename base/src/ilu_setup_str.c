@@ -78,7 +78,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat *A,
         LUoffsets[3]=nline; LUoffsets[4]=-nplane; LUoffsets[5]=nplane;
     } 
     else {
-        printf("fasp_ilu_dstr_setup0: number of bands for structured ILU is illegal!\n");
+        printf("%s: number of bands for structured ILU is illegal!\n", __FUNCTION__);
         return;
     }
     
@@ -487,7 +487,6 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
         memcpy(LU->offdiag[5],A->offdiag[3],9*sizeof(REAL));
     
         for(i=1;i<ngrid;++i) {
-            //printf("i = %d\n",i);
             i1=i-1;ix=i-nline;ixy=i-nplane;ix1=ix+1;ixyx=ixy+nline;ixy1=ixy+1;
             ic=i*nc2;i1c=i1*nc2;ixc=ix*nc2;ix1c=ix1*nc2;ixyc=ixy*nc2;ixy1c=ixy1*nc2;ixyxc=ixyx*nc2;
     
@@ -616,7 +615,6 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
             }
     
             //comput beta4[i]
-            //if (i==199) printf("i = %d, nline = %d, nplane = %d, ngrid = %d\n",i, nline, nplane, ngrid);
             if (i+nplane-nline<ngrid) {
     
                 if (ix1>=0) {
@@ -682,7 +680,6 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
         memcpy(LU->offdiag[5],A->offdiag[3], 25*sizeof(REAL));
     
         for(i=1;i<ngrid;++i) {
-            //printf("i = %d\n",i);
             i1=i-1;ix=i-nline;ixy=i-nplane;ix1=ix+1;ixyx=ixy+nline;ixy1=ixy+1;
             ic=i*nc2;i1c=i1*nc2;ixc=ix*nc2;ix1c=ix1*nc2;ixyc=ixy*nc2;ixy1c=ixy1*nc2;ixyxc=ixyx*nc2;
     
@@ -877,7 +874,6 @@ void fasp_ilu_dstr_setup1 (dSTRmat *A,
         memcpy(LU->offdiag[5],A->offdiag[3], 49*sizeof(REAL));
     
         for(i=1;i<ngrid;++i) {   
-            //printf("i = %d\n",i);
             i1=i-1;ix=i-nline;ixy=i-nplane;ix1=ix+1;ixyx=ixy+nline;ixy1=ixy+1;
             ic=i*nc2;i1c=i1*nc2;ixc=ix*nc2;ix1c=ix1*nc2;ixyc=ixy*nc2;ixy1c=ixy1*nc2;ixyxc=ixyx*nc2;
     
