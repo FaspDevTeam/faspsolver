@@ -21,7 +21,7 @@
 /**
  * \fn INT fasp_solver_pgcg (mxv_matfree *mf, dvector *b, dvector *u, precond *pc,
  *                           const REAL tol, const INT MaxIt,
- *                           const SHORT stop_type, const SHORT print_level)
+ *                           const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b
  *
@@ -32,7 +32,7 @@
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type -- Not implemented
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
@@ -51,7 +51,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
                       const REAL tol,
                       const INT MaxIt,
                       const SHORT stop_type,
-                      const SHORT print_level)
+                      const SHORT prtlvl)
 {
     INT    iter=0, m=b->row, i;
     REAL   absres0 = BIGREAL, absres = BIGREAL;
@@ -102,7 +102,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     relres = absres/normb;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,iter+1,relres,absres,factor);
+    print_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
     
     // update relative residual here
     absres0 = absres;
@@ -151,7 +151,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
         relres = absres/normb;
         
         // output iteration information if needed
-        print_itinfo(print_level,stop_type,iter+1,relres,absres,factor);
+        print_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
         
         if (relres < tol) break;
         
@@ -161,7 +161,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     } // end of main GCG loop.
     
     // finish the iterative method
-    if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
     fasp_mem_free(work);

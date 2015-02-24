@@ -64,14 +64,8 @@ void fasp_aux_ijvcrs (INT *nnzi,
     for(k = 0; k < nnzo; k++){
         if(irow[k]>ni) ni =irow[k];
         if(jcol[k]>nj) nj=jcol[k];
-        //    fprintf(stdout,"%d %d %d %d\n",ni,irow[k],nj,jcol[k]);
     }
-    /* no need of such warning */
-    /*    if (ni != nj) 
-          fprintf(stderr,    \
-          "**Warning: num of rows and columns do not match:%i .neq. %i\n",    \
-          ni, nj);
-    */
+
     n1=ni+1;
     for (k = 0; k< n1; k++) {
         ia[k] = 0;
@@ -93,31 +87,21 @@ void fasp_aux_ijvcrs (INT *nnzi,
     for (k = nzk; k< n1; k++) {
         ia[k] = ia[k-1] + ia[k];
     }
-    //  fprintf(stdout,"========\n");
     for (k = 0; k < ni; k++) {
         ica = ia[k]-1;
         icb = ia[k+1]-1;
-        //    fprintf(stdout,"row: from %d  to %d inclusive\n",ica,icb-1);
         if (icb > ica) ja[icb-1] = ica;
         /*      ja(icb-1) = ia(k) */
     }
-    //  fprintf(stdout,"========\n");
-    //  for (k = 0; k<=ni;k++){
-    //    fprintf(stdout,"ia[%d]=%d\n",k+1,ia[k]);
-    //  }
-    //  fprintf(stdout,"========\n");
-    //  fprintf(stdout,"---------------\n");
     for (k = 0; k< nnzo;k++){
         irk     = irow[k]-1;
         iend   = ia[irk+1]-2;
         jp     = ja[iend];
         ja[jp] = jcol[k];
         a[jp]  = aval[k];
-        //    fprintf(stdout,"%d  %d\n",irk,iend);
-        if (iend != jp)  
+        if (iend != jp)
             ja[iend] = ja[iend] + 1;
     }
-    //  fprintf(stdout,"----------------\n");
     *nnz=nnzo;
     *n=ni;
     return;
@@ -213,13 +197,10 @@ void fasp_aux_norm1_ (INT *ia,
     n=*nn;
     s = 0e+00;
     for (i=0; i < n ; i++) {
-        //fprintf(stdout,"\nia[%d] = %d",i,ia[i]);
         iaa = ia[i];
         iab = ia[i+1];
         sum = 0e+00;
         for (jk = iaa; jk < iab; jk++) {
-            //   fprintf(stdout,"\nja[%d] = %d",jk,ja[jk]);
-            //   fprintf(stdout,"a[%d] = %e",jk,a[jk]);
             sum += fabs(a[jk]);
         }
         if ( sum > s) s = sum; 

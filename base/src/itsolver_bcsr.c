@@ -38,7 +38,7 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
                                 precond *pc,
                                 itsolver_param *itparam)
 {
-    const SHORT  print_level = itparam->print_level;
+    const SHORT  prtlvl = itparam->print_level;
     const SHORT  itsolver_type = itparam->itsolver_type;
     const SHORT  stop_type = itparam->stop_type;
     const SHORT  restart = itparam->restart;
@@ -61,28 +61,28 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
     switch (itsolver_type) {
             
         case SOLVER_BiCGstab:
-            if ( print_level>PRINT_NONE ) printf("\nCalling BiCGstab solver (Block CSR) ...\n");
-            iter=fasp_solver_bdcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (Block CSR) ...\n");
+            iter=fasp_solver_bdcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_MinRes:
-            if ( print_level>PRINT_NONE ) printf("\nCalling MinRes solver (Block CSR) ...\n");
-            iter=fasp_solver_bdcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (Block CSR) ...\n");
+            iter=fasp_solver_bdcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_GMRES:
-            if ( print_level>PRINT_NONE ) printf("\nCalling GMRES solver (Block CSR) ...\n");
-            iter=fasp_solver_bdcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRES solver (Block CSR) ...\n");
+            iter=fasp_solver_bdcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VGMRES:
-            if (print_level>0) printf("Calling vGMRES solver (Block CSR format) ...\n");
-            iter=fasp_solver_bdcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("Calling vGMRES solver (Block CSR format) ...\n");
+            iter=fasp_solver_bdcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VFGMRES:
-            if (print_level>0) printf("Calling FGMRES solver (Block CSR format) ...\n");
-            iter=fasp_solver_bdcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("Calling FGMRES solver (Block CSR format) ...\n");
+            iter=fasp_solver_bdcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         default:
@@ -91,7 +91,7 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
             
     }
     
-    if ( (print_level>=PRINT_MIN) && (iter >= 0) ) {
+    if ( (prtlvl >= PRINT_MIN) && (iter >= 0) ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("Iterative method", solver_duration);
@@ -125,7 +125,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
                               dvector *x,
                               itsolver_param *itparam)
 {
-    const INT print_level = itparam->print_level;
+    const INT prtlvl = itparam->print_level;
     INT status=FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
     
@@ -142,7 +142,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
     
     solver_duration = solver_end - solver_start;
     
-    if ( print_level >= PRINT_MIN )
+    if ( prtlvl >= PRINT_MIN )
         print_cputime("Krylov method totally", solver_duration);
     
 #if DEBUG_MODE
@@ -180,7 +180,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
                                       AMG_param *amgparam,
                                       dCSRmat *A_diag)
 {
-    const INT print_level = itparam->print_level;
+    const INT prtlvl = itparam->print_level;
     const INT precond_type = itparam->precond_type;
     INT status=FASP_SUCCESS;
     REAL setup_start, setup_end, setup_duration;
@@ -216,7 +216,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
             fasp_dcsr_cp(&A_tran,&A_diag[i]);
             
             printf("Factorization for %d-th diagnol: \n", i);
-            LU_diag[i] = fasp_umfpack_factorize(&A_diag[i], print_level);
+            LU_diag[i] = fasp_umfpack_factorize(&A_diag[i], prtlvl);
             
         }
         
@@ -315,7 +315,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
             break;
     }
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
         print_cputime("Setup totally", setup_duration);
@@ -331,7 +331,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     
     solver_duration = solver_end - solver_start;
     
-    if ( print_level >= PRINT_MIN )
+    if ( prtlvl >= PRINT_MIN )
         print_cputime("Krylov method totally", solver_duration);
     
     // clean
@@ -385,7 +385,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
                                       AMG_param *amgparam,
                                       dCSRmat *A_diag)
 {
-    const INT print_level = itparam->print_level;
+    const INT prtlvl = itparam->print_level;
     const INT precond_type = itparam->precond_type;
     INT status=FASP_SUCCESS;
     REAL setup_start, setup_end, setup_duration;
@@ -417,7 +417,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
         fasp_dcsr_cp(&A_tran,&A_diag[i]);
         
         printf("Factorization for %d-th diagnol: \n", i);
-        LU_diag[i] = fasp_umfpack_factorize(&A_diag[i], print_level);
+        LU_diag[i] = fasp_umfpack_factorize(&A_diag[i], prtlvl);
         
     }
     
@@ -451,7 +451,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
             break;
     }
     
-    if ( print_level >= PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
         print_cputime("Setup totally", setup_duration);
@@ -466,7 +466,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     
     solver_duration = solver_end - solver_start;
     
-    if ( print_level >= PRINT_MIN )
+    if ( prtlvl >= PRINT_MIN )
         print_cputime("Krylov method totally", solver_duration);
     
     // clean
@@ -513,7 +513,7 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
                                        dCSRmat *local_A,
                                        ivector *local_index)
 {
-    const INT print_level = itparam->print_level;
+    const INT prtlvl = itparam->print_level;
     INT status = FASP_SUCCESS;
     REAL setup_start, setup_end, setup_duration;
     REAL solve_start, solve_end, solve_duration;
@@ -540,7 +540,7 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
         fasp_dcsr_cp(&A_tran,&local_A[l]);
         
         printf("Factorization for layer %d: \n", l);
-        local_LU[l] = fasp_umfpack_factorize(&local_A[l], print_level);
+        local_LU[l] = fasp_umfpack_factorize(&local_A[l], prtlvl);
         
     }
     
@@ -560,7 +560,7 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     precond prec; prec.data = &precdata;
     prec.fct = fasp_precond_sweeping;
     
-    if ( print_level >= PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
         print_cputime("Setup totally", setup_duration);
@@ -575,7 +575,7 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     
     solve_duration = solve_end - solve_start;
     
-    if ( print_level >= PRINT_MIN )
+    if ( prtlvl >= PRINT_MIN )
         print_cputime("Krylov method totally", setup_duration+solve_duration);
     
     // clean

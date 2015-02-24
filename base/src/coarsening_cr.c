@@ -44,7 +44,7 @@ INT fasp_amg_coarsening_cr (INT i_0,
                             ivector *vertices, 
                             AMG_param *param)
 {    
-    const INT print_level = param->print_level;
+    const INT prtlvl = param->print_level;
     
     // local variables
     INT   cand=0,cpt=-1,fpt=1;        // internal labeling
@@ -142,9 +142,9 @@ INT fasp_amg_coarsening_cr (INT i_0,
         temp0 = 0.0e0; 
         temp1 = 0.0e0;
         
-        if (print_level>PRINT_MIN) printf("rho=%2.13lf\n",rho);
+        if ( prtlvl > PRINT_MIN ) printf("rho=%2.13lf\n",rho);
     
-        if (rho > tg) {
+        if ( rho > tg ) {
             /* FORM CAND. SET & COMPUTE IND SET */ 
             temp0 = 0.0e0;
 
@@ -186,9 +186,9 @@ INT fasp_amg_coarsening_cr (INT i_0,
                 // printf("cf[%i] = %i\n",i,cf[i]);
             }  
             vertices->row=i_n;
-            if (print_level>=PRINT_MORE) printf("vertices = %i\n",vertices->row);
+            if ( prtlvl >= PRINT_MORE ) printf("vertices = %i\n",vertices->row);
             vertices->val= cf;
-            if (print_level>=PRINT_MORE) printf("nc=%i\n",nc);
+            if ( prtlvl >= PRINT_MORE ) printf("nc=%i\n",nc);
             break;
         }
     }

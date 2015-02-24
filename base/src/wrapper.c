@@ -1,7 +1,7 @@
 /*! \file wrapper.c
  *
  *  \brief Wrappers for accessing functions by advanced users
- *  
+ *
  *  TODO: Input variables should not need fasp.h!!! --Chensong
  */
 
@@ -14,8 +14,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, 
- *                                   REAL *b, REAL *u, REAL *tol, INT *maxit, 
+ * \fn void void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
+ *                                   REAL *b, REAL *u, REAL *tol, INT *maxit,
  *                                   INT *ptrlvl)
  *
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG
@@ -34,15 +34,15 @@
  * \author Chensong Zhang
  * \date   09/16/2010
  */
-void fasp_fwrapper_amg_ (INT *n, 
-                         INT *nnz, 
-                         INT *ia, 
-                         INT *ja, 
-                         REAL *a, 
-                         REAL *b, 
-                         REAL *u, 
-                         REAL *tol, 
-                         INT *maxit, 
+void fasp_fwrapper_amg_ (INT *n,
+                         INT *nnz,
+                         INT *ia,
+                         INT *ja,
+                         REAL *a,
+                         REAL *b,
+                         REAL *u,
+                         REAL *tol,
+                         INT *maxit,
                          INT *ptrlvl)
 {
     dCSRmat    mat;      // coefficient matrix
@@ -64,8 +64,8 @@ void fasp_fwrapper_amg_ (INT *n,
 }
 
 /**
- * \fn void fasp_fwrapper_krylov_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a, 
- *                                     REAL *b, REAL *u, REAL *tol, INT *maxit, 
+ * \fn void fasp_fwrapper_krylov_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
+ *                                     REAL *b, REAL *u, REAL *tol, INT *maxit,
  *                                     INT *ptrlvl)
  *
  * \brief Solve Ax=b by Krylov method preconditioned by classic AMG
@@ -84,15 +84,15 @@ void fasp_fwrapper_amg_ (INT *n,
  * \author Chensong Zhang
  * \date   09/16/2010
  */
-void fasp_fwrapper_krylov_amg_ (INT *n, 
-                                INT *nnz, 
-                                INT *ia, 
-                                INT *ja, 
-                                REAL *a, 
-                                REAL *b, 
-                                REAL *u, 
-                                REAL *tol, 
-                                INT *maxit, 
+void fasp_fwrapper_krylov_amg_ (INT *n,
+                                INT *nnz,
+                                INT *ia,
+                                INT *ja,
+                                REAL *a,
+                                REAL *b,
+                                REAL *u,
+                                REAL *tol,
+                                INT *maxit,
                                 INT *ptrlvl)
 {
     dCSRmat         mat;      // coefficient matrix
@@ -100,7 +100,7 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
     AMG_param       amgparam; // parameters for AMG
     itsolver_param  itparam;  // parameters for itsolver
     
-    fasp_param_amg_init(&amgparam);    
+    fasp_param_amg_init(&amgparam);
     fasp_param_solver_init(&itparam);
     
     itparam.tol         = *tol;
@@ -120,8 +120,8 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
 
 
 /**
- * \fn INT fasp_wrapper_dbsr_krylov_amg (INT n, INT nnz, INT nb, INT *ia, INT *ja, 
- *                                       REAL *a, REAL *b, REAL *u, REAL tol, 
+ * \fn INT fasp_wrapper_dbsr_krylov_amg (INT n, INT nnz, INT nb, INT *ia, INT *ja,
+ *                                       REAL *a, REAL *b, REAL *u, REAL tol,
  *                                       INT maxit, INT ptrlvl)
  *
  * \brief Solve Ax=b by Krylov method preconditioned by AMG (dcsr - > dbsr)
@@ -204,7 +204,7 @@ INT fasp_wrapper_dbsr_krylov_amg (INT n,
 }
 
 /**
- * \fn INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n, INT nnz, INT nb, INT *ia, 
+ * \fn INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n, INT nnz, INT nb, INT *ia,
  *                                            INT *ja, REAL *a, REAL *b, REAL *u,
  *                                            REAL tol, INT maxit, INT ptrlvl)
  *
@@ -226,16 +226,16 @@ INT fasp_wrapper_dbsr_krylov_amg (INT n,
  * \date   03/06/2013
  */
 INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n,
-                                  INT nnz,
-                                  INT nb,
-                                  INT *ia,
-                                  INT *ja,
-                                  REAL *a,
-                                  REAL *b,
-                                  REAL *u,
-                                  REAL tol,
-                                  INT maxit,
-                                  INT ptrlvl)
+                                       INT nnz,
+                                       INT nb,
+                                       INT *ia,
+                                       INT *ja,
+                                       REAL *a,
+                                       REAL *b,
+                                       REAL *u,
+                                       REAL tol,
+                                       INT maxit,
+                                       INT ptrlvl)
 {
     dCOOmat         coomat;   // coefficient matrix in COO format
     dCSRmat         csrmat;   // coefficient matrix in CSR format

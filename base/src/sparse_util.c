@@ -71,10 +71,8 @@ void fasp_sparse_abybms_ (INT *ia,
     icpp = 1;
     icp=(INT *) calloc(mb,sizeof(INT));
     for (i = 0; i < mb; ++i) icp[i] = 0;
-    // fprintf(stdout,"\n");
     for (i = 0; i < na; ++i) {
         ic[i] = icpp;
-        // fprintf(stdout,"ic[%d]=%d\n",i+1,ic[i]);
         iastrt = ia[i]-1;
         iaend = ia[i+1]-1;
         if (iaend > iastrt) {
@@ -540,7 +538,6 @@ void fasp_sparse_rapms_ (INT *ir,
     }
     iac[0] = 1;
     iacp = iac[0]-1;
-    // fprintf(stdout,"\n");
     for (ic = 0;ic<nc;ic++) {
         ira=ir[ic]-1;
         icp1=ic+1;
@@ -549,7 +546,6 @@ void fasp_sparse_rapms_ (INT *ir,
             if1 = jr[jk]-1;
             iaa = ia[if1]-1;
             iab = ia[if1+1]-1;
-            // fprintf(stdout,"%d %d %d %d\n",ic,if1,iaa,iab);
             for (jak = iaa;jak < iab;jak++) {
                 jf1 = ja[jak]-1;
                 ipa = ip[jf1]-1;
@@ -568,7 +564,6 @@ void fasp_sparse_rapms_ (INT *ir,
     }
     *maxrout=maxr;
     if (ix) free(ix);
-    // fprintf(stderr,"\n********Nodec1=%i %i %i\n",ic,iac[nc],iacp);
     return;
 }
 
@@ -816,7 +811,7 @@ void fasp_sparse_rapcmp_ (INT *ir,
     icp = (INT *) calloc(n,sizeof(INT));
     jv  = (INT *) calloc(n,sizeof(INT));
     if (!(icp && v && jv)) {
-        fprintf(stderr,"\nCould not allocate local mem in rap\n");
+        fprintf(stderr,"### ERROR: Could not allocate local mem in rap\n");
         exit(19);
     }
     for (i=0;i<n;++i) {
@@ -826,7 +821,6 @@ void fasp_sparse_rapcmp_ (INT *ir,
     }
     for (ic = 0;ic<nc;ic++) {
         nw = ir[ic+1]-ir[ic];
-        //    fprintf(stdout,"\n %i ***** VVVVVVVVVVV %i\n",ic,nw);
         if (nw<=0) continue;
         is = ir[ic]-1;
         jris=jr+is;
@@ -913,37 +907,37 @@ void fasp_sparse_rapcmp_ (INT *ir,
 ivector fasp_sparse_MIS(dCSRmat *A)
 {
     
-	//! information of A
-	INT n = A->row;
-	INT *IA = A->IA;
-	INT *JA = A->JA;
-	
-	// local variables
-	INT i,j;
-	INT row_begin, row_end;
-	INT count=0;
-	INT *flag;
-	flag = (INT *)fasp_mem_calloc(n, sizeof(INT));
-	//for (i=0;i<n;i++) flag[i]=0;
-	memset(flag, 0, sizeof(INT)*n);
-	
-	//! work space
-	//INT *work = (INT *)fasp_mem_calloc (n, sizeof(INT));
+    //! information of A
+    INT n = A->row;
+    INT *IA = A->IA;
+    INT *JA = A->JA;
+    
+    // local variables
+    INT i,j;
+    INT row_begin, row_end;
+    INT count=0;
+    INT *flag;
+    flag = (INT *)fasp_mem_calloc(n, sizeof(INT));
+    //for (i=0;i<n;i++) flag[i]=0;
+    memset(flag, 0, sizeof(INT)*n);
+    
+    //! work space
+    //INT *work = (INT *)fasp_mem_calloc (n, sizeof(INT));
     INT *work = (INT*)fasp_mem_calloc(n,sizeof(INT));
-	
-	//! return
-	ivector MIS;
-	
-	//main loop
-	for (i=0;i<n;i++) {
+    
+    //! return
+    ivector MIS;
+    
+    //main loop
+    for (i=0;i<n;i++) {
         if (flag[i] == 0) {
             flag[i] = 1;
             row_begin = IA[i] - 1; row_end = IA[i+1] - 1;
             //row_begin = IA[i]; row_end = IA[i+1];
             for (j = row_begin; j<row_end; j++) {
                 if (flag[JA[j]-1] > 0) {
-                //if (flag[JA[j]] > 0) {
-                //if (flag[JA[j]-1] >= 0) {
+                    //if (flag[JA[j]] > 0) {
+                    //if (flag[JA[j]-1] >= 0) {
                     flag[i] = -1;
                     break;
                 }
@@ -956,18 +950,18 @@ ivector fasp_sparse_MIS(dCSRmat *A)
                 }
             }
         } // end if
-	}// end for
+    }// end for
     
-	// form MIS
-	MIS.row = count;
-	work = (INT *)fasp_mem_realloc(work, count*sizeof(INT));
-	MIS.val = work;
-	
-	// clean
-	fasp_mem_free (flag);
-	
-	//return
-	return MIS;
+    // form MIS
+    MIS.row = count;
+    work = (INT *)fasp_mem_realloc(work, count*sizeof(INT));
+    MIS.val = work;
+    
+    // clean
+    fasp_mem_free (flag);
+    
+    //return
+    return MIS;
 }
 
 

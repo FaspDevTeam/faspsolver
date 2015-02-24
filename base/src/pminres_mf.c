@@ -66,7 +66,7 @@
 /**
  * \fn INT fasp_solver_pminres (mxv_matfree *mf, dvector *b, dvector *u, precond *pc,
  *                              const REAL tol, const INT MaxIt,
- *                              const SHORT stop_type, const SHORT print_level)
+ *                              const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
@@ -77,7 +77,7 @@
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
@@ -94,7 +94,7 @@ INT fasp_solver_pminres (mxv_matfree *mf,
                          const REAL tol,
                          const INT MaxIt,
                          const SHORT stop_type,
-                         const SHORT print_level)
+                         const SHORT prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;
@@ -261,12 +261,12 @@ INT fasp_solver_pminres (mxv_matfree *mf,
         factor=absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(print_level,stop_type,iter,relres,absres,factor);
+        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
         infnormu = fasp_blas_array_norminf(m, u->val);
-        if (infnormu <= sol_inf_tol) {
-            if (print_level>PRINT_MIN) ITS_ZEROSOL;
+        if ( infnormu <= sol_inf_tol ) {
+            if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             break;
         }
@@ -276,8 +276,8 @@ INT fasp_solver_pminres (mxv_matfree *mf,
         
         // check convergence
         if (normuu<maxdiff) {
-            if (stag<MaxStag) {
-                if (print_level>=PRINT_MORE) {
+            if ( stag < MaxStag ) {
+                if ( prtlvl >= PRINT_MORE ) {
                     ITS_DIFFRES(normuu,relres);
                     ITS_RESTART;
                 }
@@ -305,13 +305,13 @@ INT fasp_solver_pminres (mxv_matfree *mf,
                     break;
             }
             
-            if (print_level>=PRINT_MORE) ITS_REALRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
             
-            if (relres<tol)
+            if ( relres < tol )
                 break;
             else {
-                if (stag>=MaxStag) {
-                    if (print_level>PRINT_MIN) ITS_STAGGED;
+                if ( stag >= MaxStag ) {
+                    if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
                     iter = ERROR_SOLVER_STAG;
                     break;
                 }
@@ -356,8 +356,8 @@ INT fasp_solver_pminres (mxv_matfree *mf,
         }
         
         // safe guard
-        if (relres<tol) {
-            if (print_level>=PRINT_MORE) ITS_COMPRES(relres);
+        if ( relres < tol ) {
+            if ( prtlvl >= PRINT_MORE ) ITS_COMPRES(relres);
             
             mf->fct(mf->data, u->val, r);
             fasp_blas_array_axpby(m, 1.0, b->val, -1.0, r);
@@ -381,19 +381,19 @@ INT fasp_solver_pminres (mxv_matfree *mf,
                     break;
             }
             
-            if (print_level>=PRINT_MORE) ITS_REALRES(relres);
+            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
             
             // check convergence
-            if (relres<tol) break;
+            if ( relres < tol ) break;
             
-            if (more_step>=MaxRestartStep) {
-                if (print_level>PRINT_MIN) ITS_ZEROTOL;
+            if ( more_step >= MaxRestartStep ) {
+                if ( prtlvl > PRINT_MIN ) ITS_ZEROTOL;
                 iter = ERROR_SOLVER_TOLSMALL;
                 break;
             }
             
-            if (more_step<MaxRestartStep) {
-                if (print_level>PRINT_NONE) ITS_RESTART;
+            if ( more_step < MaxRestartStep ) {
+                if ( prtlvl > PRINT_NONE ) ITS_RESTART;
             }
             
             ++more_step;
@@ -440,7 +440,7 @@ INT fasp_solver_pminres (mxv_matfree *mf,
     }
     
 FINISHED:  // finish the iterative method
-    if (print_level>PRINT_NONE) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
     fasp_mem_free(work);

@@ -459,7 +459,8 @@ FINISH: if (fp != NULL) fclose(fp);
  *  Red      negative element
  *  Brown    nearly zero element
  */
-INT fasp_dbsr_plot(const dBSRmat *A, const char *fname)
+INT fasp_dbsr_plot (const dBSRmat *A,
+                    const char *fname)
 {
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;
@@ -619,7 +620,8 @@ FINISH: if (fp != NULL) fclose(fp);
  *  Red      negative element
  *  Brown    nearly zero element
  */
-INT fasp_dcsr_plot (const dCSRmat *A, const char *fname)
+INT fasp_dcsr_plot (const dCSRmat *A,
+                    const char *fname)
 {
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;

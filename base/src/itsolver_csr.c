@@ -42,7 +42,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
                                precond *pc,
                                itsolver_param *itparam)
 {
-    const SHORT  print_level   = itparam->print_level;
+    const SHORT  prtlvl        = itparam->print_level;
     const SHORT  itsolver_type = itparam->itsolver_type;
     const SHORT  stop_type     = itparam->stop_type;
     const SHORT  restart       = itparam->restart;
@@ -66,43 +66,43 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
         case SOLVER_CG:
-            if (print_level>PRINT_NONE) printf("\nCalling PCG solver (CSR) ...\n");
-            iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PCG solver (CSR) ...\n");
+            iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_BiCGstab:
-            if (print_level>PRINT_NONE) printf("\nCalling PBiCGstab solver (CSR) ...\n");
-            iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PBiCGstab solver (CSR) ...\n");
+            iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_MinRes:
-            if (print_level>PRINT_NONE) printf("\nCalling PMinRes solver (CSR) ...\n");
-            iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PMinRes solver (CSR) ...\n");
+            iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_GMRES:
-            if (print_level>PRINT_NONE) printf("\nCalling PGMRes solver (CSR) ...\n");
-            iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PGMRes solver (CSR) ...\n");
+            iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VGMRES:
-            if (print_level>PRINT_NONE) printf("\nCalling PVGMRes solver (CSR) ...\n");
-            iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PVGMRes solver (CSR) ...\n");
+            iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VFGMRES:
-            if (print_level>PRINT_NONE) printf("\nCalling PVFGMRes solver (CSR) ...\n");
-            iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PVFGMRes solver (CSR) ...\n");
+            iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_GCG:
-            if (print_level>PRINT_NONE) printf("\nCalling PGCG solver (CSR) ...\n");
-            iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PGCG solver (CSR) ...\n");
+            iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
 
         case SOLVER_GCR:
-            if (print_level>PRINT_NONE) printf("\nCalling PGCR solver (CSR) ...\n");
-            iter = fasp_solver_dcsr_pgcr(A, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PGCR solver (CSR) ...\n");
+            iter = fasp_solver_dcsr_pgcr(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         default:
@@ -111,7 +111,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
             
     }
     
-    if ( (print_level >= PRINT_SOME) && (iter >= 0) ) {
+    if ( (prtlvl >= PRINT_SOME) && (iter >= 0) ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("Iterative method", solver_duration);
@@ -145,7 +145,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
                              dvector *x,
                              itsolver_param *itparam)
 {
-    const SHORT print_level = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     
     /* Local Variables */
     INT      status = FASP_SUCCESS;
@@ -161,7 +161,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
     
     status = fasp_solver_dcsr_itsolver(A,b,x,NULL,itparam);
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("Krylov method totally", solver_duration);
@@ -195,7 +195,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
                                   dvector *x,
                                   itsolver_param *itparam)
 {
-    const INT print_level = itparam->print_level;
+    const INT prtlvl = itparam->print_level;
     
     /* Local Variables */
     INT       status = FASP_SUCCESS;
@@ -219,7 +219,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
     // call iterative solver
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("Diag_Krylov method totally", solver_duration);
@@ -266,7 +266,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
     swzparam.Schwarz_type      = schparam->Schwarz_type;
     swzparam.Schwarz_blksolver = schparam->Schwarz_blksolver;
         
-    const INT print_level    = itparam->print_level;
+    const INT prtlvl = itparam->print_level;
 	
     REAL setup_start, setup_end, setup_duration, solver_start, solver_end, solver_duration;
     INT status = FASP_SUCCESS;
@@ -302,7 +302,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
 	// solver part
 	status=fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
 	
-	if (print_level>PRINT_NONE) {
+	if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         printf("Schwarz_Krylov method totally costs %f seconds.\n", solver_duration);
@@ -340,7 +340,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
                                  itsolver_param *itparam,
                                  AMG_param *amgparam)
 {
-    const INT print_level = itparam->print_level;
+    const INT prtlvl = itparam->print_level;
     const INT max_levels = amgparam->max_levels;
     const INT nnz=A->nnz, m=A->row, n=A->col;
     
@@ -406,7 +406,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
     // call iterative solver
     status = fasp_solver_dcsr_itsolver(A, b, x, &pc, itparam);
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("AMG_Krylov method totally", solver_duration);
@@ -445,7 +445,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
                                  itsolver_param *itparam,
                                  ILU_param *iluparam)
 {
-    const INT print_level = itparam->print_level;
+    const INT prtlvl = itparam->print_level;
     
     /* Local Variables */
     INT      status = FASP_SUCCESS;
@@ -474,7 +474,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
     // call iterative solver
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
-    if (print_level>=PRINT_MIN) {
+    if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         
@@ -533,7 +533,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
                                    ILU_param *iluparam,
                                    dCSRmat *M)
 {
-    const INT print_level = itparam->print_level;
+    const INT prtlvl = itparam->print_level;
     
     /* Local Variables */
     REAL solver_start, solver_end, solver_duration;
@@ -562,7 +562,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
     // call iterative solver
     status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
     
-    if (print_level>=PRINT_MIN) {
+    if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         
@@ -619,7 +619,7 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
                                     dCSRmat *P_nk,
                                     dCSRmat *R_nk)
 {
-    const INT print_level = itparam->print_level;
+    const INT prtlvl = itparam->print_level;
     const INT max_levels = amgparam->max_levels;
     const INT nnz=A->nnz, m=A->row, n=A->col;
     
@@ -685,7 +685,7 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
     // call iterative solver
     status = fasp_solver_dcsr_itsolver(A, b, x, &pc, itparam);
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("AMG_NK_Krylov method totally", solver_duration);

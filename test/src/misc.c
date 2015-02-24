@@ -4,7 +4,7 @@
 
 #include "misc.h"
 
-/** 
+/**
  * \fn int FEM_param_set (int argc, const char *argv, FEM_param *pt)
  *
  * \brief read input from arguments
@@ -21,9 +21,9 @@ int FEM_param_set(int argc, const char *argv [], FEM_param * pt)
     int arg_index = 1;
     int print_usage = 0;
     int input_flag = 1;
-
+    
     while (arg_index < argc) {
-
+        
         if (argc%2 == 0) {
             print_usage = 1;
             break;
@@ -103,14 +103,14 @@ int FEM_param_set(int argc, const char *argv [], FEM_param * pt)
         }
         input_flag = 1;
     }
-
+    
     return print_usage;
 }
 
-/** 
+/**
  * \fn void FEM_param_init (FEM_param *pt)
  *
- * \brief Init input arguments
+ * \brief Initialize input arguments
  *
  * \param pt     Parameters to be set
  *
@@ -122,7 +122,7 @@ void FEM_param_init (FEM_param *pt)
     strcpy(pt->meshIn, "./data/testmesh.dat");
     strcpy(pt->meshOut, "./out/mesh_out.dat");
     strcpy(pt->option, "ab");
-
+    
     pt->refine_lvl  = 8;    // default value
     pt->nt          = 1;    // time steps
     pt->T           = 1.0;  // final time

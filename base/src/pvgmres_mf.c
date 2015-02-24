@@ -26,7 +26,7 @@
 /*!
  * \fn INT fasp_solver_pvgmres (mxv_matfree *mf, dvector *b, dvector *x, precond *pc,
  *                              const REAL tol, const INT MaxIt, SHORT restart,
- *                              const SHORT stop_type, const SHORT print_level)
+ *                              const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
@@ -39,7 +39,7 @@
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param stop_type    Stopping criteria type -- DOES not support this parameter
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Number of iterations if converged, error message otherwise
  *
@@ -59,7 +59,7 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
                          const INT MaxIt,
                          SHORT restart,
                          const SHORT stop_type,
-                         const SHORT print_level)
+                         const SHORT prtlvl)
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;
@@ -116,7 +116,7 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN && Restart < restart ) {
+    if ( prtlvl > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: vGMRES restart number set to %d!\n", Restart);
     }
     
@@ -136,7 +136,7 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
     r_norm = fasp_blas_array_norm2(n, p[0]);
     norms[0] = r_norm;
     
-    if ( print_level >= PRINT_SOME) {
+    if ( prtlvl >= PRINT_SOME) {
         ITS_PUTNORM("right-hand side", b_norm);
         ITS_PUTNORM("residual", r_norm);
     }
@@ -186,7 +186,7 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
                 break;
             }
             else {
-                if (print_level >= PRINT_SOME) ITS_FACONV;
+                if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
             }
         }
         
@@ -241,11 +241,11 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
             norms[iter] = r_norm;
             
             if (b_norm > 0 ) {
-                print_itinfo(print_level,stop_type,iter,norms[iter]/b_norm,
+                print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
                              norms[iter],norms[iter]/norms[iter-1]);
             }
             else {
-                print_itinfo(print_level,stop_type,iter,norms[iter],norms[iter],
+                print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
                              norms[iter]/norms[iter-1]);
             }
             
@@ -286,7 +286,7 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
                 break;
             }
             else {
-                if (print_level >= PRINT_SOME) ITS_FACONV;
+                if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
         } /* end of convergence check */
@@ -314,7 +314,7 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
         
     } /* end of iteration while loop */
     
-    if (print_level > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);
+    if (prtlvl > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);
     
     /*-------------------------------------------
      * Free some stuff

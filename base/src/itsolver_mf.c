@@ -53,7 +53,7 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
                           precond *pc, 
                           itsolver_param *itparam)
 {
-    const SHORT  print_level   = itparam->print_level;    
+    const SHORT  prtlvl        = itparam->print_level;
     const SHORT  itsolver_type = itparam->itsolver_type;
     const SHORT  stop_type     = itparam->stop_type;
     const SHORT  restart       = itparam->restart;
@@ -77,38 +77,38 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
         case SOLVER_CG:
-            if (print_level>PRINT_NONE) printf("\nCalling PCG solver (matrix-free) ...\n");
-            iter = fasp_solver_pcg(mf, b, x, pc, tol, MaxIt, stop_type, print_level); 
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PCG solver (matrix-free) ...\n");
+            iter = fasp_solver_pcg(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
         case SOLVER_BiCGstab:
-            if (print_level>PRINT_NONE) printf("\nCalling BiCGstab solver (matrix-free) ...\n");
-            iter = fasp_solver_pbcgs(mf, b, x, pc, tol, MaxIt, stop_type, print_level); 
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (matrix-free) ...\n");
+            iter = fasp_solver_pbcgs(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
         case SOLVER_MinRes:
-            if (print_level>PRINT_NONE) printf("\nCalling MinRes solver (matrix-free) ...\n");
-            iter = fasp_solver_pminres(mf, b, x, pc, tol, MaxIt, stop_type, print_level); 
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (matrix-free) ...\n");
+            iter = fasp_solver_pminres(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
         case SOLVER_GMRES:
-            if (print_level>PRINT_NONE) printf("\nCalling GMRes solver (matrix-free) ...\n");
-            iter = fasp_solver_pgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRes solver (matrix-free) ...\n");
+            iter = fasp_solver_pgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VGMRES: 
-            if (print_level>PRINT_NONE) printf("\nCalling vGMRes solver (matrix-free) ...\n");
-            iter = fasp_solver_pvgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, print_level);    
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling vGMRes solver (matrix-free) ...\n");
+            iter = fasp_solver_pvgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);    
             break;
             
         case SOLVER_VFGMRES: 
-            if (print_level>PRINT_NONE) printf("\nCalling vFGMRes solver (matrix-free) ...\n");
-            iter = fasp_solver_pvfgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, print_level);
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling vFGMRes solver (matrix-free) ...\n");
+            iter = fasp_solver_pvfgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_GCG:
-            if (print_level>PRINT_NONE) printf("\nCalling GCG solver (matrix-free) ...\n");
-            iter = fasp_solver_pgcg(mf, b, x, pc, tol, MaxIt, stop_type, print_level); 
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling GCG solver (matrix-free) ...\n");
+            iter = fasp_solver_pgcg(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
         default:
@@ -117,7 +117,7 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
             
     } 
     
-    if ( (print_level>=PRINT_SOME) && (iter >= 0) ) {
+    if ( (prtlvl >= PRINT_SOME) && (iter >= 0) ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("Iterative method", solver_duration);
@@ -153,7 +153,7 @@ INT fasp_solver_krylov (mxv_matfree *mf,
                         dvector *x, 
                         itsolver_param *itparam)
 {
-    const SHORT print_level = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     
     /* Local Variables */
     INT      status = FASP_SUCCESS;
@@ -168,7 +168,7 @@ INT fasp_solver_krylov (mxv_matfree *mf,
     
     status = fasp_solver_itsolver(mf,b,x,NULL,itparam);
     
-    if ( print_level>=PRINT_MIN ) {
+    if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         print_cputime("Krylov method totally", solver_duration);

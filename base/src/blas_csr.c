@@ -1011,7 +1011,6 @@ void fasp_blas_dcsr_rap (dCSRmat  *R,
     }
 #endif
     
-    // printf("A_H NNZ = %d\n", RAP_size);
     RAP_j = (INT *)fasp_mem_calloc(RAP_size, sizeof(INT));
     RAP_data = (REAL *)fasp_mem_calloc(RAP_size, sizeof(REAL));
     

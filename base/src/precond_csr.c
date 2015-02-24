@@ -616,7 +616,8 @@ void fasp_precond_amg_nk (REAL *r,
  * \author Feiteng Huang
  * \date   12/24/2012
  */
-void fasp_precond_free (SHORT precond_type, precond *pc)
+void fasp_precond_free (SHORT precond_type,
+                        precond *pc)
 {
     switch (precond_type) {
             
