@@ -14,28 +14,28 @@ static void CMK_ordering (const dCSRmat *, INT, INT, INT, INT, INT *, INT *);
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_BinarySearch (INT *list, INT value, INT list_length)
+ * \fn INT fasp_BinarySearch (INT *list, INT value, INT nlist)
  *
  * \brief Binary Search
  *
- * \param list        Pointer to a set of values
- * \param value       The target
- * \param list_length Length of the array list
+ * \param list     Pointer to a set of values
+ * \param value    The target
+ * \param nlist    Length of the array list
  *
- * \return  The location of value in array list if succeeded, otherwise, return -1.
+ * \return  The location of value in array list if succeeded; otherwise, return -1.
  *
  * \author Chunsheng Feng
  * \date   03/01/2011
  */
 INT fasp_BinarySearch (INT *list,
                        INT value,
-                       INT list_length)
+                       INT nlist)
 {
     INT not_found = 1;
     INT low, high, m;
     
     low = 0;
-    high = list_length - 1;
+    high = nlist - 1;
     while (not_found && low <= high)
     {
         m = (low + high) / 2;

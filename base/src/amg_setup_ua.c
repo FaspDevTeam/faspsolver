@@ -30,7 +30,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr(AMG_data_bsr *, AMG_param *);
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       FASP_SUCCESS if succeed, error otherwise
+ * \return       FASP_SUCCESS if successed; otherwise, error information.
  *
  * \author Xiaozhe Hu
  * \date   12/28/2011
@@ -61,7 +61,7 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
  * \param mgl    Pointer to AMG data: AMG_data_bsr
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       FASP_SUCCESS if succeed, error otherwise
+ * \return       FASP_SUCCESS if successed; otherwise, error information.
  *
  * \author Xiaozhe Hu
  * \date   03/16/2012

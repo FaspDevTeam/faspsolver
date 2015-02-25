@@ -28,6 +28,8 @@
  * \param rtol      Relative tolerance to judge convergence
  * \param prtlvl    Print level for output
  *
+ * \return          Iteration number if converges; ERROR otherwise.
+ *
  * \author Ziteng Wang
  * \date   06/07/2013
  */
@@ -148,6 +150,8 @@ FINISHED:
  * \param maxlevel  Maximum levels of the multigrid
  * \param rtol      Relative tolerance to judge convergence
  * \param prtlvl    Print level for output
+ *
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -279,6 +283,8 @@ FINISHED:
  * \param maxlevel  Maximum levels of the multigrid
  * \param rtol      Relative tolerance to judge convergence
  * \param prtlvl    Print level for output
+ *
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -718,6 +724,8 @@ FINISHED:
  * \param rtol      Relative tolerance to judge convergence
  * \param prtlvl    Print level for output
  *
+ * \return          Iteration number if converges; ERROR otherwise.
+ *
  * \author Ziteng Wang
  * \date   06/07/2013
  */
@@ -808,6 +816,8 @@ FINISHED:
  * \param maxlevel  Maximum levels of the multigrid 
  * \param rtol      Relative tolerance to judge convergence
  * \param prtlvl    Print level for output
+ *
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Ziteng Wang
  * \date   06/07/2013
@@ -914,6 +924,8 @@ FINISHED:
  * \param maxlevel  Maximum levels of the multigrid 
  * \param rtol      Relative tolerance to judge convergence
  * \param prtlvl    Print level for output
+ *
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Ziteng Wang
  * \date   06/07/2013

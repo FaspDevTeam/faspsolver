@@ -29,7 +29,7 @@
  * \param pc       Pointer to the preconditioning action
  * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return         Number of iterations if succeed
+ * \return         Iteration number if converges; ERROR otherwise.
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   10/26/2010
@@ -118,7 +118,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   10/26/2010
@@ -166,7 +166,7 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  *
- * \return the number of iterations
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   10/26/2010
@@ -274,7 +274,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
  * \param itparam   Pointer to parameters for iterative solvers
  * \param iluparam  Pointer to parameters of ILU
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Shiquang Zhang, Xiaozhe Hu
  * \date   10/26/2010
@@ -341,7 +341,7 @@ FINISHED:
  * \param itparam   Pointer to parameters for iterative solvers
  * \param amgparam  Pointer to parameters of AMG
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   03/16/2012
@@ -481,7 +481,7 @@ MEMORY_ERROR:
  * \param P_nk      Pointer to the prolongation for near kernel space in dBSRmat format
  * \param R_nk      Pointer to the restriction for near kernel space in dBSRmat format
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   05/26/2012
@@ -640,7 +640,7 @@ MEMORY_ERROR:
  * \param nk_dim    Dimension of the near kernel spaces
  * \param nk        Pointer to the near kernal spaces
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   05/27/2012

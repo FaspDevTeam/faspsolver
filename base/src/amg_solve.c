@@ -26,7 +26,7 @@
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       Iteration number if succeed, ERROR otherwise
+ * \return       Iteration number if converges; ERROR otherwise.
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   04/02/2010
@@ -109,7 +109,7 @@ INT fasp_amg_solve (AMG_data *mgl,
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       Iteration number if succeed, ERROR otherwise
+ * \return       Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   01/23/2011
@@ -194,7 +194,7 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       Iteration number if succeed, ERROR otherwise
+ * \return       Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   04/30/2011

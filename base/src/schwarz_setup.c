@@ -18,8 +18,8 @@ static void Schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
 /*---------------------------------*/
 
 /**
- * \fn fasp_Schwarz_get_block_matrix (Schwarz_data *Schwarz, INT nblk, INT *iblock,
- *                                    INT *jblock, INT *mask)
+ * \fn void fasp_Schwarz_get_block_matrix (Schwarz_data *Schwarz, INT nblk,
+ *                                         INT *iblock, INT *jblock, INT *mask)
  *
  * \brief Form Schwarz partition data
  *

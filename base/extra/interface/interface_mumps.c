@@ -17,14 +17,14 @@
 
 /**
  * \fn int fasp_solver_mumps (dCSRmat *ptrA, dvector *b, dvector *u,
- *                            const int print_level)
+ *                            const SHORT prtlvl)
  *
  * \brief Solve Ax=b by MUMPS directly
  *
- * \param ptrA         Pointer to a dCSRmat matrix
- * \param b            Pointer to the dvector of right-hand side term
- * \param u            Pointer to the dvector of solution
- * \param print_level  Output level
+ * \param ptrA      Pointer to a dCSRmat matrix
+ * \param b         Pointer to the dvector of right-hand side term
+ * \param u         Pointer to the dvector of solution
+ * \param prtlvl    Output level
  *
  * \author Chunsheng Feng
  * \date   02/27/2013
@@ -35,7 +35,7 @@
 int fasp_solver_mumps (dCSRmat *ptrA,
                        dvector *b,
                        dvector *u,
-                       const int print_level)
+                       const SHORT prtlvl)
 {
     
 #if WITH_MUMPS
@@ -124,7 +124,7 @@ int fasp_solver_mumps (dCSRmat *ptrA,
     free(a);
     free(rhs);
     
-    if ( print_level > PRINT_MIN ) {
+    if ( prtlvl > PRINT_MIN ) {
         clock_t end_time = clock();
         double solve_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
         printf("MUMPS costs %f seconds.\n", solve_duration);
@@ -311,13 +311,13 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
 #if WITH_MUMPS
 /**
  ** \fn DMUMPS_STRUC_C fasp_mumps_factorize (dCSRmat *ptrA, dvector *b, dvector *u,
- **                                          const INT print_level)
+ **                                          const SHORT prtlvl)
  ** \brief factorize A by MUMPS
  **
- ** \param ptrA         pointer to stiffness matrix of levelNum levels
- ** \param b            pointer to the dvector of right hand side term
- ** \param u            pointer to the dvector of dofs
- ** \param print_level  output level
+ ** \param ptrA     pointer to stiffness matrix of levelNum levels
+ ** \param b        pointer to the dvector of right hand side term
+ ** \param u        pointer to the dvector of dofs
+ ** \param prtlvl   output level
  **
  ** \author Zheng Li
  ** \date   10/09/2014
@@ -325,7 +325,7 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
 Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
                                  dvector *b,
                                  dvector *u,
-                                 const INT print_level)
+                                 const SHORT prtlvl)
 {
     Mumps_data mumps;
     DMUMPS_STRUC_C id;
@@ -386,7 +386,7 @@ Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
     
     id.job=4; dmumps_c(&id);
     
-    if ( print_level > PRINT_MIN ) {
+    if ( prtlvl > PRINT_MIN ) {
         clock_t end_time = clock();
         double fac_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
         printf("UMFPACK factorize costs %f seconds.\n", fac_duration);
@@ -403,18 +403,17 @@ Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
 
 #endif
 
-
-
 #if WITH_MUMPS
 /**
- ** \fn void fasp_mumps_solve (dCSRmat *ptrA, dvector *b, dvector *u, DMUMPS_STRUC_C id)
- **                            const INT print_level)
+ ** \fn void fasp_mumps_solve (dCSRmat *ptrA, dvector *b, dvector *u, Mumps_data mumps,
+ **                            const SHORT prtlvl)
  ** \brief solve A by MUMPS
  **
  ** \param ptrA      pointer to stiffness matrix of levelNum levels
  ** \param b         pointer to the dvector of right hand side term
  ** \param u         pointer to the dvector of dofs
- ** \param id        pointer to the numerical factorization
+ ** \param mumps     pointer to mumps data
+ ** \param prtlvl    Output level
  **
  ** \author Zheng Li
  ** \date   10/09/2014
@@ -423,7 +422,7 @@ void fasp_mumps_solve (dCSRmat *ptrA,
                        dvector *b,
                        dvector *u,
                        Mumps_data mumps,
-                       const INT print_level )
+                       const SHORT prtlvl)
 {
     int i,j;
     
@@ -458,7 +457,7 @@ void fasp_mumps_solve (dCSRmat *ptrA,
     
     for(i=0; i<id.n; i++) x[i] = id.rhs[i];
     
-    if (print_level>0) {
+    if ( prtlvl > PRINT_NONE ) {
         clock_t end_time = clock();
         double solve_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
         printf("UMFPACK costs %f seconds.\n", solve_duration);
@@ -477,7 +476,7 @@ void fasp_mumps_solve (dCSRmat *ptrA,
  **
  ** \brief free memory
  **
- ** \param mumps Pointer to mumps data
+ ** \param mumps   Pointer to mumps data
  **
  ** \author Zheng Li
  ** \date   10/09/2014

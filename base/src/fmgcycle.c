@@ -61,14 +61,17 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
     
     // restriction r1 = R*r0
     switch (amg_type) {
+            
         case UA_AMG:
             for (l=0;l<nl-1;l++)
                 fasp_blas_dcsr_mxv_agg(&mgl[l].R, mgl[l].b.val, mgl[l+1].b.val);
             break;
+            
         default:
             for (l=0;l<nl-1;l++)
                 fasp_blas_dcsr_mxv(&mgl[l].R, mgl[l].b.val, mgl[l+1].b.val);
             break;
+            
     }
     
     fasp_dvec_set(mgl[l].A.row, &mgl[l].x, 0.0); // initial guess
@@ -79,29 +82,29 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
         switch (coarse_solver) {
                 
 #if WITH_SuperLU
-                /* use SuperLU direct solver on the coarsest level */
             case SOLVER_SUPERLU:
+                /* use SuperLU direct solver on the coarsest level */
                 fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
                 break;
 #endif
                 
 #if WITH_UMFPACK
-                /* use UMFPACK direct solver on the coarsest level */
             case SOLVER_UMFPACK:
+                /* use UMFPACK direct solver on the coarsest level */
                 fasp_umfpack_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
                 break;
 #endif
                 
 #if WITH_MUMPS
-                /* use MUMPS direct solver on the coarsest level */
             case SOLVER_MUMPS:
+                /* use MUMPS direct solver on the coarsest level */
                 mgl[nl-1].mumps.job = 2;
                 fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
                 break;
 #endif
                 
-                /* use iterative solver on the coarest level */
             default:
+                /* use iterative solver on the coarest level */
                 fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
                 
         }
@@ -116,30 +119,29 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
         switch (coarse_solver) {
                 
 #if WITH_SuperLU
-                /* use SuperLU direct solver on the coarsest level */
             case SOLVER_SUPERLU:
+                /* use SuperLU direct solver on the coarsest level */
                 fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
                 break;
 #endif
                 
 #if WITH_UMFPACK
-                /* use UMFPACK direct solver on the coarsest level */
             case SOLVER_UMFPACK:
-                //fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+                /* use UMFPACK direct solver on the coarsest level */
                 fasp_umfpack_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
                 break;
 #endif
                 
 #if WITH_MUMPS
-                /* use MUMPS direct solver on the coarsest level */
             case SOLVER_MUMPS:
+                /* use MUMPS direct solver on the coarsest level */
                 mgl[nl-1].mumps.job = 2;
                 fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
                 break;
 #endif
                 
-                /* use iterative solver on the coarest level */
             default:
+                /* use iterative solver on the coarest level */
                 fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
                 
         }
@@ -237,30 +239,29 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
             switch (coarse_solver) {
                     
 #if WITH_SuperLU
-                    /* use SuperLU direct solver on the coarsest level */
                 case SOLVER_SUPERLU:
+                    /* use SuperLU direct solver on the coarsest level */
                     fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
                     break;
 #endif
                     
 #if WITH_UMFPACK
-                    /* use UMFPACK direct solver on the coarsest level */
                 case SOLVER_UMFPACK:
-                    //fasp_solver_umfpack(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+                    /* use UMFPACK direct solver on the coarsest level */
                     fasp_umfpack_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, mgl[nl-1].Numeric, 0);
                     break;
 #endif
                     
 #if WITH_MUMPS
+                case SOLVER_MUMPS:
                     /* use MUMPS direct solver on the coarsest level */
-                case SOLVER_MUMPS: 
                     mgl[nl-1].mumps.job = 2;
                     fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
                     break;
 #endif
                     
-                    /* use iterative solver on the coarest level */
                 default:
+                    /* use iterative solver on the coarest level */
                     fasp_coarse_itsolver(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, tol, prtlvl);
                     
             }

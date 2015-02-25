@@ -43,7 +43,7 @@ void fasp_solver_famg (dCSRmat *A,
     REAL          FMG_start, FMG_end;
     
 #if DEBUG_MODE
-    printf("###DEBUG: fasp_solver_famg ...... [Start]\n");
+    printf("###DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("###DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
@@ -62,19 +62,19 @@ void fasp_solver_famg (dCSRmat *A,
     // Step 1: AMG setup phase
     switch (amg_type) {
             
-            // Smoothed Aggregation AMG setup phase
         case SA_AMG:
-            if ( print_level > PRINT_NONE ) printf("\nCalling SA AMG (F-cycle) ...\n");
+            // Smoothed Aggregation AMG setup phase
+            if ( print_level > PRINT_NONE ) printf("\nCalling SA FAMG ...\n");
             fasp_amg_setup_sa(mgl, param); break;
             
-            // Unsmoothed Aggregation AMG setup phase
         case UA_AMG:
-            if ( print_level > PRINT_NONE ) printf("\nCalling UA AMG (F-cycle) ...\n");
+            // Unsmoothed Aggregation AMG setup phase
+            if ( print_level > PRINT_NONE ) printf("\nCalling UA FAMG ...\n");
             fasp_amg_setup_ua(mgl, param); break;
             
-            // Classical AMG setup phase
         default:
-            if ( print_level > PRINT_NONE ) printf("\nCalling classical AMG (F-cycle) ...\n");
+            // Classical AMG setup phase
+            if ( print_level > PRINT_NONE ) printf("\nCalling FAMG ...\n");
             fasp_amg_setup_rs(mgl, param);
             
     }
@@ -89,13 +89,13 @@ void fasp_solver_famg (dCSRmat *A,
     fasp_amg_data_free(mgl, param);
     
     // print out CPU time if needed
-    if (print_level>PRINT_NONE) {
+    if ( print_level > PRINT_NONE ) {
         fasp_gettime(&FMG_end);
         print_cputime("FAMG totally", FMG_end - FMG_start);
     }
 
 #if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_famg ...... [Finish]\n");
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return;

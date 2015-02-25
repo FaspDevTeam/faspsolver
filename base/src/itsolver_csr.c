@@ -29,7 +29,7 @@
  * \param pc       Pointer to the preconditioning action
  * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return         Number of iterations if succeed
+ * \return         Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   09/25/2009
@@ -135,7 +135,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
  * \param x        Pointer to the approx solution in dvector format
  * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return         Number of iterations if succeed
+ * \return         Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang, Shiquan Zhang
  * \date   09/25/2009
@@ -185,7 +185,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
  * \param x        Pointer to the approx solution in dvector format
  * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return         Number of iterations if succeed
+ * \return         Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang, Shiquan Zhang
  * \date   09/25/2009
@@ -247,7 +247,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
  * \param itparam  Pointer to parameters for iterative solvers
  * \param schparam Pointer to parameters for Schwarz methods
  *
- * \return         Number of iterations
+ * \return         Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   03/21/2011
@@ -329,7 +329,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
  * \param itparam   Pointer to parameters for iterative solvers
  * \param amgparam  Pointer to parameters for AMG methods
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   09/25/2009
@@ -434,7 +434,7 @@ FINISHED:
  * \param itparam   Pointer to parameters for iterative solvers
  * \param iluparam  Pointer to parameters for ILU
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang, Shiquan Zhang
  * \date   09/25/2009
@@ -518,7 +518,7 @@ FINISHED:
  * \param iluparam  Pointer to parameters for ILU
  * \param M         Pointer to the preconditioning matrix in dCSRmat format
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date 09/25/2009
@@ -605,7 +605,7 @@ FINISHED:
  * \param P_nk      Pointer to the prolongation of near kernel space in dCSRmat format
  * \param R_nk      Pointer to the restriction of near kernel space in dCSRmat format
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014

@@ -39,7 +39,7 @@
  * \param stop_type    Stopping criteria type
  * \param print_level  How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Zhiyang Zhou
  * \date   2010/12/14
@@ -386,7 +386,7 @@ FINISHED:
  * \param stop_type    Stopping criteria type
  * \param print_level  How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   04/05/2013
@@ -728,7 +728,7 @@ FINISHED:
  * \param stop_type    Stopping criteria type
  * \param print_level  How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Zhiyang Zhou
  * \date   12/21/2011
@@ -1073,7 +1073,7 @@ FINISHED:
  * \param stop_type    Stopping criteria type
  * \param print_level  How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Zhiyang Zhou
  * \date   2010/12/14

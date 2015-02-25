@@ -26,7 +26,7 @@
  * \param pc       Pointer to the preconditioning action
  * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return         Number of iterations if succeed
+ * \return         Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   09/25/2009 
@@ -110,7 +110,7 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Zhiyang Zhou
  * \date   04/25/2010
@@ -158,7 +158,7 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Zhiyang Zhou
  * \date   4/23/2010
@@ -225,7 +225,7 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
  * \param itparam   Pointer to parameters for iterative solvers
  * \param iluparam  Pointer to parameters for ILU
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   05/01/2010
@@ -316,7 +316,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
  * \param neigh     Pointer to neighbor vector
  * \param order     Pointer to solver ordering
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   10/10/2010

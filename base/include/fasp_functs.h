@@ -1214,7 +1214,7 @@ void fasp_solver_mgrecur (AMG_data *mgl,
 
 INT fasp_BinarySearch (INT *list,
                        INT value,
-                       INT list_length);
+                       INT nlist);
 
 INT fasp_aux_unique (INT numbers[],
                      INT size);
@@ -2867,7 +2867,7 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n,
 int fasp_solver_mumps (dCSRmat *ptrA,
                        dvector *b,
                        dvector *u,
-                       const int print_level);
+                       const SHORT prtlvl);
 
 int fasp_solver_mumps_steps (dCSRmat *ptrA,
                              dvector *b,
@@ -2877,13 +2877,13 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
 Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
                                  dvector *b,
                                  dvector *u,
-                                 const INT print_level);
+                                 const SHORT prtlvl);
 
 void fasp_mumps_solve (dCSRmat *ptrA,
                        dvector *b,
                        dvector *u,
                        Mumps_data mumps,
-                       const INT print_level );
+                       const SHORT prtlvl);
 
 void fasp_mumps_free (Mumps_data *mumps);
 
@@ -2903,7 +2903,7 @@ INT dCSRmat2SAMGInput (dCSRmat *A,
 int fasp_solver_superlu (dCSRmat *ptrA,
                          dvector *b,
                          dvector *u,
-                         const int print_level);
+                         const SHORT prtlvl);
 
 
 /*-------- In file: interface_umfpack.c --------*/
@@ -2911,16 +2911,16 @@ int fasp_solver_superlu (dCSRmat *ptrA,
 INT fasp_solver_umfpack (dCSRmat *ptrA,
                          dvector *b,
                          dvector *u,
-                         const INT print_level);
+                         const SHORT prtlvl);
 
 void* fasp_umfpack_factorize (dCSRmat *ptrA,
-                              const INT print_level);
+                              const SHORT prtlvl);
 
 INT fasp_umfpack_solve (dCSRmat *ptrA,
                         dvector *b,
                         dvector *u,
                         void *Numeric,
-                        const INT print_level);
+                        const SHORT prtlvl);
 
 INT fasp_umfpack_free_numeric (void *Numeric);
 

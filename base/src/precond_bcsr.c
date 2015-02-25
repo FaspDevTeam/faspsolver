@@ -15,9 +15,9 @@
  * \brief block diagonal preconditioning (3x3 block matrix, each diagonal block
  *        is solved exactly)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   07/10/2014
@@ -90,9 +90,9 @@ void fasp_precond_block_diag_3 (double *r,
  * \brief block diagonal preconditioning (3x3 block matrix, each diagonal block
  *        is solved by AMG)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   07/10/2014
@@ -155,9 +155,9 @@ void fasp_precond_block_diag_3_amg (double *r,
  * \brief block diagonal preconditioning (4x4 block matrix, each diagonal block
  *        is solved exactly)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   07/10/2014
@@ -241,9 +241,9 @@ void fasp_precond_block_diag_4 (double *r,
  * \brief block lower triangular preconditioning (3x3 block matrix, each diagonal
  *        block is solved exactly)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   07/10/2014
@@ -323,9 +323,9 @@ void fasp_precond_block_lower_3 (double *r,
  * \brief block lower triangular preconditioning (3x3 block matrix, each diagonal
  *        block is solved by AMG)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   07/10/2014
@@ -397,9 +397,9 @@ void fasp_precond_block_lower_3_amg (double *r,
  * \brief block lower triangular preconditioning (4x4 block matrix, each diagonal
  *        block is solved exactly)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   07/10/2014
@@ -495,9 +495,9 @@ void fasp_precond_block_lower_4 (double *r,
  * \brief block upper triangular preconditioning (3x3 block matrix, each diagonal
  *        block is solved exactly)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   02/18/2015
@@ -577,9 +577,9 @@ void fasp_precond_block_upper_3 (double *r,
  * \brief block upper triangular preconditioning (3x3 block matrix, each diagonal
  *        block is solved AMG)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   02/19/2015
@@ -658,9 +658,9 @@ void fasp_precond_block_upper_3_amg (double *r,
  * \brief block symmetric GS preconditioning (3x3 block matrix, each diagonal
  *        block is solved exactly)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   02/19/2015
@@ -777,9 +777,9 @@ void fasp_precond_block_SGS_3 (double *r,
  * \brief block symmetric GS preconditioning (3x3 block matrix, each diagonal
  *        block is solved exactly)
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   02/19/2015
@@ -883,14 +883,13 @@ void fasp_precond_block_SGS_3_amg (double *r,
     
 }
 
-
 /**
  * \fn void fasp_precond_sweeping (double *r, double *z, void *data)
  * \brief sweeping preconditioner for Maxwell equations
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   05/01/2014

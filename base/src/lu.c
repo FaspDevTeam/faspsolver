@@ -21,7 +21,7 @@
  * \param pivot   Pivoting positions
  * \param n       Size of matrix A
  *
- * \return        FASP_SUCCESS if succeed, ERROR_UNKNOWN if fail
+ * \return        FASP_SUCCESS if successed; otherwise, error information.
  *
  * \note
  * Use Doolittle's method to decompose the n x n matrix A into a unit 
@@ -102,7 +102,7 @@ SHORT fasp_smat_lu_decomp (REAL *A,
  * \param x      Pointer to the solution array 
  * \param n      Size of matrix A
  *
- * \return       FASP_SUCCESS if succeed, ERROR_UNKNOWN if failed
+ * \return       FASP_SUCCESS if successed; otherwise, error information.
  *
  * \note
  * This routine uses Doolittle's method to solve the linear equation Ax = b.

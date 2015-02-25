@@ -83,7 +83,7 @@
  * \param stop_type    Stopping criteria type
  * \param prtlvl       How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   03/31/2013
@@ -472,7 +472,7 @@ FINISHED: // finish the iterative method
  * \param stop_type    Stopping criteria type
  * \param prtlvl       How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   03/31/2013
@@ -861,7 +861,7 @@ FINISHED: // finish the iterative method
  * \param stop_type    Stopping criteria type
  * \param prtlvl       How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   03/31/2013
@@ -1250,7 +1250,7 @@ FINISHED: // finish the iterative method
  * \param stop_type    Stopping criteria type
  * \param prtlvl       How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   03/31/2013

@@ -2,11 +2,13 @@ File Name: CHANGES
 
 02/25/2015 FASP 1.6.8:
 - Further clean up Doxygen.
-- Update developer information in Doxygen.
-- Update documentation and webpage.
-- Update block preconditioners.
-- TABs are changed to SPACEs: done!
 - Unify output messages, fix several print problems.
+- Fix multiple Doxgen problems.
+- Fix a few warning in DEBUG compiler setting.
+- TABs are changed to SPACEs: done!
+- Clean up code for better style.
+- Update developer information in Doxygen.
+- Update block preconditioners.
 - Update documentation and webpage.
 
 02/06/2015 FASP 1.6.7:

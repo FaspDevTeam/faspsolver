@@ -20,7 +20,7 @@
  * \param A   Pointer to dCOOmat matrix
  * \param B   Pointer to dCSRmat matrix
  *
- * \return    FASP_SUCCESS if succeed
+ * \return    FASP_SUCCESS if successed; otherwise, error information.
  *
  * \author Xuehai Huang
  * \date   08/10/2009
@@ -70,7 +70,7 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
  * \param A   Pointer to dCSRmat matrix
  * \param B   Pointer to dCOOmat matrix
  *
- * \return    FASP_SUCCESS if succeed
+ * \return    FASP_SUCCESS if successed; otherwise, error information.
  *
  * \author Xuehai Huang
  * \date   08/10/2009
@@ -110,7 +110,7 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
  * \param A   Pointer to dSTRmat matrix
  * \param B   Pointer to dCSRmat matrix
  *
- * \return    FASP_SUCCESS if succeed
+ * \return    FASP_SUCCESS if successed; otherwise, error information.
  *
  * \author Zhiyang Zhou
  * \date   2010/04/29
@@ -711,7 +711,7 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  * \param A   Pointer to the dCSRmat type matrix
  * \param nb  size of each block
  *
- * \return  dBSRmat matrix
+ * \return    dBSRmat matrix
  *
  * \author  Zheng Li
  * \date    03/27/2014

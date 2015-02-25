@@ -27,7 +27,7 @@ static void dense_aAxpby (INT, INT, REAL *, REAL, REAL *, REAL, REAL *);
  * \param stop_type Stopping type
  * \param prtlvl    How much information to print out
  *
- * \return the number of iterations
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Lu Wang
  * \date   11/02/2014
@@ -240,7 +240,7 @@ FINISHED:
  * \param stop_type Stopping type
  * \param prtlvl    How much information to print out
  *
- * \return the number of iterations
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Zheng Li
  * \date   12/23/2014

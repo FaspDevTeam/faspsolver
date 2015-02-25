@@ -43,7 +43,7 @@
  * \param stop_type    Stopping criteria type -- DOES not support this parameter
  * \param prtlvl       How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   01/04/2012
@@ -356,7 +356,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
  * \param stop_type    Stopping criteria type -- DOES not support this parameter
  * \param prtlvl       How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   02/05/2012
@@ -668,7 +668,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
  * \param stop_type    default stopping criterion,i.e.||r_k||/||r_0||<tol, is used.
  * \param restart      number of restart for GMRES
  *
- * \return             number of iteration if succeed
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   01/04/2012

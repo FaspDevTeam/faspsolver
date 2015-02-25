@@ -13,7 +13,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_aux_givens(const REAL beta, dCSRmat *H, dvector *y, REAL *tmp)
+ * \fn void fasp_aux_givens (const REAL beta, dCSRmat *H, dvector *y, REAL *tmp)
  *
  * \brief Perform Givens rotations to compute y |beta*e_1- H*y|
  *

@@ -31,12 +31,13 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
  * \param A         Pointer to dCSRmat: the coefficient matrix (index starts from 0)
  * \param vertices  Pointer to CF, 0: fpt (current level) or 1: cpt
  * \param param     Pointer to AMG_param: AMG parameters
+ *
+ * \return          Number of coarse level points
  * 
  * \author James Brannick
  * \date 04/21/2010
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date 10/14/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */
 INT fasp_amg_coarsening_cr (INT i_0, 
                             INT i_n, 

@@ -46,7 +46,7 @@ static void ordering1  (iCSRmat *, ivector *);
 * \param S          Strong connection matrix
 * \param param      Pointer to AMG_param: AMG parameters
 *
-* \return           FASP_SUCCESS or error message
+* \return           FASP_SUCCESS if successed; otherwise, error information.
 *
 * \author Xuehai Huang, Chensong Zhang, Xiaozhe Hu, Ludmil Zikatanov
 * \date   09/06/2010
@@ -71,8 +71,6 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 	// local variables
 	SHORT       interp_type = param->interpolation_type;
 	INT         col         = 0;
-
-	ivector order;
 	
 #if DEBUG_MODE
 	printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -94,28 +92,30 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 	
 	switch ( coarse_type ) {
 		
-	case COARSE_RS: // Classical coarsening
-		col = cfsplitting_cls(A, S, vertices); break;
-		//col = cfsplitting_clsp(A, S, vertices); break;
+        case COARSE_RS: // Classical coarsening
+            col = cfsplitting_cls(A, S, vertices); break;
+            
+        case COARSE_RSP: // Classical coarsening with positive connections
+            col = cfsplitting_clsp(A, S, vertices); break;
 		
-	case COARSE_AC: // Aggressive coarsening
-		col = cfsplitting_agg(A, S, vertices, agg_path); break;
+        case COARSE_AC: // Aggressive coarsening
+            col = cfsplitting_agg(A, S, vertices, agg_path); break;
 		
-	case COARSE_CR: // Compatible relaxation (Need to be modified --Chensong)
-		col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param); break;
+        case COARSE_CR: // Compatible relaxation (Need to be fixed --Chensong)
+            col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param); break;
 
 #if 0
-	case COARSE_MIS:
-		order = fasp_ivec_create(row);
-		compress_S(S);
-		ordering1(S, &order);
-		col = cfsplitting_mis(S, vertices, &order);
-		fasp_ivec_free(&order); 
-		break;
+        case COARSE_MIS:
+            ivector order = fasp_ivec_create(row);
+            compress_S(S);
+            ordering1(S, &order);
+            col = cfsplitting_mis(S, vertices, &order);
+            fasp_ivec_free(&order);
+            break;
 #endif
 		
-	default:
-		fasp_chkerr(ERROR_AMG_COARSE_TYPE, __FUNCTION__);
+        default:
+            fasp_chkerr(ERROR_AMG_COARSE_TYPE, __FUNCTION__);
 		
 	}
 	
@@ -127,18 +127,17 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 	
 	switch ( interp_type ) {
 		
-	case INTERP_DIR: // Direct interpolation or ...
-	case INTERP_ENG: // Energy-min interpolation
-		col = clean_ff_couplings(S, vertices, row, col);
-		form_P_pattern_dir(P, S, vertices, row, col);
-		break;
+        case INTERP_DIR: // Direct interpolation or ...
+        case INTERP_ENG: // Energy-min interpolation
+            col = clean_ff_couplings(S, vertices, row, col);
+            form_P_pattern_dir(P, S, vertices, row, col);
+            break;
 		
-	case INTERP_STD: // Standard interpolation
-		form_P_pattern_std(P, S, vertices, row, col);
-		break;
+        case INTERP_STD: // Standard interpolation
+            form_P_pattern_std(P, S, vertices, row, col); break;
 		
-	default:
-		fasp_chkerr(ERROR_AMG_INTERP_TYPE, __FUNCTION__);
+        default:
+            fasp_chkerr(ERROR_AMG_INTERP_TYPE, __FUNCTION__);
 		
 	}
 	
