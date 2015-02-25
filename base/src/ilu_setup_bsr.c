@@ -33,6 +33,8 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
  * \param A         Pointer to dBSRmat matrix
  * \param iludata   Pointer to ILU_data
  * \param iluparam  Pointer to ILU_param
+ * 
+ * \return          FASP_SUCCESS if successed; otherwise, error information.
  *
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   11/08/2010

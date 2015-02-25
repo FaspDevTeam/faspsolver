@@ -15,7 +15,9 @@
  *
  * \brief Simple check on input parameters
  *
- * \param inparam     Input parameters
+ * \param inparam   Input parameters
+ *
+ * \return          FASP_SUCCESS if successed; otherwise, error information.
  *
  * \author Chensong Zhang
  * \date   09/29/2013

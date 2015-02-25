@@ -28,7 +28,7 @@
  * \param mgl    Pointer to AMG data: AMG_data
  * \param param  Pointer to AMG parameters: AMG_param
  *
- * \return       FASP_SUCCESS if succeed, otherwise, error information.
+ * \return       FASP_SUCCESS if successed; otherwise, error information.
  *
  * \author Chensong Zhang
  * \date   05/09/2010

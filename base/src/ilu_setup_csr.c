@@ -42,6 +42,8 @@ extern void ilutp_(const INT *n,REAL *a,INT *ja,INT *ia,INT *lfil,const REAL *dr
  * \param iludata   Pointer to ILU_data
  * \param iluparam  Pointer to ILU_param
  *
+ * \return          FASP_SUCCESS if successed; otherwise, error information.
+ *
  * \author Shiquan Zhang Xiaozhe Hu
  * \date   12/27/2009
  */

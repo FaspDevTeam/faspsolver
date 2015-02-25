@@ -18,7 +18,7 @@
  *
  */
 
-#ifndef __FASP_MESSAGES__		   /*-- allow multiple inclusions --*/
+#ifndef __FASP_MESSAGES__          /*-- allow multiple inclusions --*/
 #define __FASP_MESSAGES__
 
 /**
@@ -179,7 +179,7 @@
 /**
  * \brief Definition of cycle types
  */
-#define V_CYCLE	                1  /**< V-cycle */
+#define V_CYCLE                 1  /**< V-cycle */
 #define W_CYCLE                 2  /**< W-cycle */
 #define AMLI_CYCLE              3  /**< AMLI-cycle */
 #define NL_AMLI_CYCLE           4  /**< Nonlinear AMLI-cycle */
@@ -208,9 +208,10 @@
  * \brief Definition of coarsening types
  */
 #define COARSE_RS               1  /**< Classical coarsening */
+#define COARSE_RSP              2  /**< Classical coarsening with positive offdiags*/
 #define COARSE_CR               3  /**< Compatible relaxation */
 #define COARSE_AC               4  /**< Aggressive coarsening */
-#define COARSE_MIS		5  /**< Aggressive coarsening based on MIS */
+#define COARSE_MIS              5  /**< Aggressive coarsening based on MIS */
 
 /**
  * \brief Definition of interpolation types

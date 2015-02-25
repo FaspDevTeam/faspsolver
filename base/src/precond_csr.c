@@ -20,9 +20,9 @@
  * \brief Setup preconditioner interface for iterative methods
  *
  * \param precond_type   Preconditioner type
- * \param *amgparam      AMG parameters
- * \param *iluparam      ILU parameters
- * \param *A             Pointer to coefficient matrix
+ * \param amgparam       Pointer to AMG parameters
+ * \param iluparam       Pointer to ILU parameters
+ * \param A              Pointer to the coefficient matrix
  *
  * \return               Pointer to preconditioner
  *

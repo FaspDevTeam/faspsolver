@@ -25,7 +25,7 @@
  * \date 10/21/2008
  * 
  * \note quad[*][0] -- quad point x in ref coor
- *     quad[*][1] -- quad point y in ref coor
+ *       quad[*][1] -- quad point y in ref coor
  *       quad[*][2] -- quad weight
  */
 void fasp_quad2d (INT num_qp, 

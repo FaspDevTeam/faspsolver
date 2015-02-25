@@ -38,7 +38,7 @@ static void fasp_blas_mxv_csrl (void *A, REAL *x, REAL *y);
  * \param pc       Pointer to the preconditioning action
  * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return         Number of iterations if succeed
+ * \return         Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   09/25/2009 

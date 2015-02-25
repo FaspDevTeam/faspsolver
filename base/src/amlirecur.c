@@ -35,8 +35,8 @@ static SHORT fasp_krylov_cycle_dcsr_pgcr(dCSRmat *, dvector *, dvector *, precon
  *
  * \note AMLI polynomial computed by the best approximation of 1/x.
  *       Refer to Johannes K. Kraus, Panayot S. Vassilevski, Ludmil T. Zikatanov,
- *       "Polynomial of best uniform approximation to $x^{-1}$ and smoothing in two-level
- *        methods", 2013.
+ *       "Polynomial of best uniform approximation to $x^{-1}$ and smoothing in
+ *        two-level methods", 2013.
  *
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  * Modified by Zheng Li on 11/10/2014: update direct solvers.

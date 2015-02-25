@@ -27,7 +27,8 @@
  * \param pc       Pointer to the preconditioning action
  * \param itparam  Pointer to parameters for iterative solvers
  *
- * \return         Number of iterations if succeed
+ * \return         Iteration number if converges; ERROR otherwise.
+ *
  *
  * \author Chensong Zhang
  * \date   11/25/2010
@@ -115,7 +116,7 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   07/18/2010
@@ -166,7 +167,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
  * \param amgparam  Pointer to parameters for AMG solvers
  * \param A_diag    Digonal blocks of A
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   07/10/2014
@@ -371,7 +372,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
  * \param amgparam  Pointer to parameters for AMG solvers
  * \param A_diag    Digonal blocks of A
  *
- * \return          Number of iterations if succeed
+ * \return          Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   07/06/2014
@@ -499,7 +500,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
  * \param local_A       Pointer to the local coeff matrices in the dCSRmat format
  * \param local_index   Pointer to the local index in ivector format
  *
- * \return              Number of iterations if succeed
+ * \return              Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   05/01/2014

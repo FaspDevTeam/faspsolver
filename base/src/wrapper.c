@@ -14,9 +14,9 @@
 /*---------------------------------*/
 
 /**
- * \fn void void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
- *                                   REAL *b, REAL *u, REAL *tol, INT *maxit,
- *                                   INT *ptrlvl)
+ * \fn void fasp_fwrapper_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
+ *                              REAL *b, REAL *u, REAL *tol, INT *maxit,
+ *                              INT *ptrlvl)
  *
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG
  *
@@ -138,6 +138,8 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
  * \param maxit   Max number of iterations
  * \param ptrlvl  Print level for iterative solvers
  *
+ * \return        Iteration number if converges; ERROR otherwise.
+ *
  * \author Xiaozhe Hu
  * \date   03/05/2013
  */
@@ -221,6 +223,8 @@ INT fasp_wrapper_dbsr_krylov_amg (INT n,
  * \param tol     Tolerance for iterative solvers
  * \param maxit   Max number of iterations
  * \param ptrlvl  Print level for iterative solvers
+ *
+ * \return        Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   03/06/2013

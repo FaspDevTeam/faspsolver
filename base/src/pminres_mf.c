@@ -79,7 +79,7 @@
  * \param stop_type    Stopping criteria type
  * \param prtlvl       How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Shiquan Zhang
  * \date   10/24/2010

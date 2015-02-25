@@ -44,7 +44,7 @@
  * \param stop_type    Stopping criteria type -- DOES not support this parameter
  * \param print_level  How much information to print out
  *
- * \return             Number of iterations if converged, error message otherwise
+ * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Xiaozhe Hu
  * \date   01/04/2012
