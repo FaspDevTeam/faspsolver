@@ -52,7 +52,6 @@
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
  *  \note See pcg.c for a version without safe net
- *
  */
 
 #include <math.h>

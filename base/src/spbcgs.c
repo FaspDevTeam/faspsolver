@@ -54,7 +54,6 @@
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
  *  \note See spbcgs.c for a safer version
- *
  */
 
 #include <math.h>

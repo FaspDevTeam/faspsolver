@@ -2,7 +2,6 @@
  *  \brief Initialize important data structures
  *
  *  \note Every structures should be initialized before usage.
- *
  */
 
 #include "fasp.h"

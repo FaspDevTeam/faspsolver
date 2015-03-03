@@ -34,7 +34,7 @@ void fasp_solver_famg (dCSRmat *A,
                        AMG_param *param)
 {
     const SHORT   max_levels  = param->max_levels;
-    const SHORT   print_level = param->print_level;
+    const SHORT   prtlvl      = param->print_level;
     const SHORT   amg_type    = param->AMG_type;
     const INT     nnz = A->nnz, m = A->row, n = A->col;
     
@@ -47,7 +47,7 @@ void fasp_solver_famg (dCSRmat *A,
     printf("###DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
-    if ( print_level > PRINT_NONE ) fasp_gettime(&FMG_start);
+    if ( prtlvl > PRINT_NONE ) fasp_gettime(&FMG_start);
     
     // Step 0: initialize mgl[0] with A, b and x
     mgl[0].A = fasp_dcsr_create(m,n,nnz);
@@ -64,17 +64,17 @@ void fasp_solver_famg (dCSRmat *A,
             
         case SA_AMG:
             // Smoothed Aggregation AMG setup phase
-            if ( print_level > PRINT_NONE ) printf("\nCalling SA FAMG ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling SA FAMG ...\n");
             fasp_amg_setup_sa(mgl, param); break;
             
         case UA_AMG:
             // Unsmoothed Aggregation AMG setup phase
-            if ( print_level > PRINT_NONE ) printf("\nCalling UA FAMG ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling UA FAMG ...\n");
             fasp_amg_setup_ua(mgl, param); break;
             
         default:
             // Classical AMG setup phase
-            if ( print_level > PRINT_NONE ) printf("\nCalling FAMG ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling FAMG ...\n");
             fasp_amg_setup_rs(mgl, param);
             
     }
@@ -89,7 +89,7 @@ void fasp_solver_famg (dCSRmat *A,
     fasp_amg_data_free(mgl, param);
     
     // print out CPU time if needed
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&FMG_end);
         print_cputime("FAMG totally", FMG_end - FMG_start);
     }

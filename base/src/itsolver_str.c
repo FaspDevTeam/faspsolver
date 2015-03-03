@@ -37,15 +37,15 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
                                precond *pc, 
                                itsolver_param *itparam)
 {
-    const SHORT  prtlvl = itparam->print_level;
-    const SHORT  itsolver_type = itparam->itsolver_type;
-    const SHORT  stop_type = itparam->stop_type;
-    const SHORT  restart = itparam->restart;
-    const INT    MaxIt = itparam->maxit;
-    const REAL   tol = itparam->tol; 
+    const SHORT prtlvl = itparam->print_level;
+    const SHORT itsolver_type = itparam->itsolver_type;
+    const SHORT stop_type = itparam->stop_type;
+    const SHORT restart = itparam->restart;
+    const INT   MaxIt = itparam->maxit;
+    const REAL  tol = itparam->tol;
 
     // local variables
-    INT iter;    
+    INT iter = ERROR_SOLVER_TYPE;
     REAL solver_start, solver_end, solver_duration;
 
 #if DEBUG_MODE
@@ -82,8 +82,7 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
     
     default:
         printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
-        iter=ERROR_SOLVER_TYPE;
-    
+
     }
     
     if ( (prtlvl > PRINT_MIN) && (iter >= 0) ) {
@@ -120,7 +119,7 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
                              dvector *x, 
                              itsolver_param *itparam)
 {
-    const INT prtlvl = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     INT status = FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
     
@@ -168,19 +167,19 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
                                   dvector *x, 
                                   itsolver_param *itparam)
 {
-    const INT prtlvl = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
+    const INT ngrid = A->ngrid;
+
     INT status = FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
-    INT nc=A->nc,i;
-    INT nc2=nc*nc;
-    INT ngrid=A->ngrid;
+    INT nc = A->nc, nc2 = nc*nc, i;
     
     // setup preconditioner
     precond_diagstr diag;
     fasp_dvec_alloc(ngrid*nc2, &(diag.diag));
     fasp_array_cp(ngrid*nc2, A->diag, diag.diag.val);
     
-    diag.nc=nc;
+    diag.nc = nc;
     
     for (i=0;i<ngrid;++i) fasp_blas_smat_inv(&(diag.diag.val[i*nc2]),nc);
     
@@ -193,7 +192,6 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 
-    
     // solver part
     fasp_gettime(&solver_start);
 
@@ -236,10 +234,12 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
                                  itsolver_param *itparam, 
                                  ILU_param *iluparam)
 {
-    const INT prtlvl = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     const INT ILU_lfil = iluparam->ILU_lfil;
+
     INT status = FASP_SUCCESS;
-    REAL setup_start, setup_end, solver_start, solver_end, solver_duration, setup_duration;
+    REAL setup_start, setup_end, setup_duration;
+    REAL solver_start, solver_end, solver_duration;
     
     //set up
     dSTRmat LU;
@@ -329,16 +329,17 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
                                      ivector *order)
 {
     // Parameter for iterative method
-    const INT prtlvl = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     
     // Information about matrices
-    INT ngrid=A->ngrid;
+    INT ngrid = A->ngrid;
     
     // return parameter
     INT status = FASP_SUCCESS;
     
     // local parameter
-    REAL solver_start, solver_end, setup_start, setup_end, solver_duration, setup_duration;
+    REAL setup_start, setup_end, setup_duration;
+    REAL solver_start, solver_end, solver_duration;
     
     dvector *diaginv;
     ivector *pivot;

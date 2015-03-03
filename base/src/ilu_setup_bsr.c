@@ -46,8 +46,8 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
                            ILU_param *iluparam)
 {
     
-    const SHORT  print_level=iluparam->print_level;
-    const INT    n=A->COL, nnz=A->NNZ, nb=A->nb, nb2=nb*nb;
+    const SHORT  prtlvl = iluparam->print_level;
+    const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
     
     // local variables
     INT lfil=iluparam->ILU_lfil;
@@ -64,14 +64,14 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     fasp_gettime(&setup_start);
 
     // Expected amount of memory for ILU needed and allocate memory 
-    iwk=(lfil+2)*nnz;
+    iwk = (lfil+2)*nnz;
     
     // setup preconditioner
-    iludata->row=iludata->col=n;    
-    iludata->nb=nb;
+    iludata->row = iludata->col=n;
+    iludata->nb  = nb;
     
-    ijlu=(INT*)fasp_mem_calloc(iwk,sizeof(INT));
-    uptr=(INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
+    ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
+    uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
         
 #if DEBUG_MODE
     printf("### DEBUG: symbolic factorization ... \n ");
@@ -81,7 +81,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     // (1) symbolic factoration
     symbfactor_(&A->ROW,A->JA,A->IA,&lfil,&iwk,&nzlu,ijlu,uptr,&ierr);
     
-    iludata->luval=(REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
+    iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
     
 #if DEBUG_MODE
     printf("### DEBUG: numerical factorization ... \n ");
@@ -90,32 +90,33 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     // (2) numerical factoration 
     numfac_bsr(A, iludata->luval, ijlu, uptr);
         
-    nwork=6*nzlu*nb;
-    iludata->nzlu=nzlu;
-    iludata->nwork=nwork;
-    iludata->ijlu=(INT*)fasp_mem_calloc(nzlu,sizeof(INT));
+    nwork = 6*nzlu*nb;
+    iludata->nzlu  = nzlu;
+    iludata->nwork = nwork;
+    iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
     
     memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
-    iludata->work=(REAL*)fasp_mem_calloc(nwork, sizeof(REAL));  // Xiaozhe: Is the work space too large?
+    iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
+    // Check: Is the work space too large? --Xiaozhe
 
 #if DEBUG_MODE
     printf("### DEBUG: fill-in=%d, nwork=%d\n", lfil, nwork);
     printf("### DEBUG: iwk=%d, nzlu=%d\n",iwk,nzlu);
 #endif
     
-    if (ierr!=0) {
+    if ( ierr != 0 ) {
         printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
     
-    if (iwk<nzlu) {
+    if ( iwk < nzlu ) {
         printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
     
-    if (print_level>PRINT_NONE) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;    
         printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);    

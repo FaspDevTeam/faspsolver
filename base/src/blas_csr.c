@@ -10,8 +10,8 @@
  *    - allocate space (memory) for jc and form this one;
  *    - if you only care about a "boolean" result of the addition, you stop here;
  *    - you call another routine, which uses ic and jc to perform the addition.
- *
  */
+
 #include <math.h>
 #include <time.h>
 

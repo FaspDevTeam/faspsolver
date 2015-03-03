@@ -1,7 +1,6 @@
 /*! \file formats.c
  *
  *  \brief Matrix format conversion routines
- *
  */
 
 #include "fasp.h"

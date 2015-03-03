@@ -53,16 +53,16 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
                           precond *pc, 
                           itsolver_param *itparam)
 {
-    const SHORT  prtlvl        = itparam->print_level;
-    const SHORT  itsolver_type = itparam->itsolver_type;
-    const SHORT  stop_type     = itparam->stop_type;
-    const SHORT  restart       = itparam->restart;
-    const INT    MaxIt         = itparam->maxit;
-    const REAL   tol           = itparam->tol; 
+    const SHORT prtlvl        = itparam->print_level;
+    const SHORT itsolver_type = itparam->itsolver_type;
+    const SHORT stop_type     = itparam->stop_type;
+    const SHORT restart       = itparam->restart;
+    const INT   MaxIt         = itparam->maxit;
+    const REAL  tol           = itparam->tol;
     
     /* Local Variables */
     REAL solver_start, solver_end, solver_duration;
-    INT iter;
+    INT iter = ERROR_SOLVER_TYPE;
     
     fasp_gettime(&solver_start);
     
@@ -113,7 +113,6 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
             
         default:
             printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
-            return ERROR_SOLVER_TYPE;
             
     } 
     

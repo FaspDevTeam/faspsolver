@@ -50,7 +50,6 @@
  *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
- *
  */
 
 #include <math.h>

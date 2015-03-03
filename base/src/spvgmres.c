@@ -9,7 +9,6 @@
  *        pp. 751-761. UCRL-JRNL-235266.
  *
  *  \note See pvgmres.c a version without safe net
- *
  */
 
 #include <math.h>
@@ -25,7 +24,7 @@
 /*!
  * \fn INT fasp_solver_dcsr_spvgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc,
  *                                    const REAL tol, const INT MaxIt, SHORT restart,
- *                                    const SHORT stop_type, const SHORT print_level)
+ *                                    const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
@@ -38,7 +37,7 @@
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -54,7 +53,7 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
                                const INT MaxIt,
                                SHORT restart,
                                const SHORT stop_type,
-                               const SHORT print_level)
+                               const SHORT prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;
@@ -161,7 +160,7 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -242,7 +241,7 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(print_level, stop_type, iter, relres, absres,
+            print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
             // should we exit the restart cycle
@@ -374,13 +373,13 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
             fasp_array_cp(n,x_best,x->val);
         }
     }
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Free some stuff
@@ -403,7 +402,7 @@ FINISHED:
 /**
  * \fn INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A, dvector *b, dvector *x, precond *pc,
  *                                     const REAL tol, const INT MaxIt, SHORT restart,
- *                                     const SHORT stop_type, const SHORT print_level)
+ *                                     const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
@@ -415,7 +414,7 @@ FINISHED:
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -430,7 +429,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
                                 const INT MaxIt,
                                 SHORT restart,
                                 const SHORT stop_type,
-                                const SHORT print_level)
+                                const SHORT prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;
@@ -537,7 +536,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -618,7 +617,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(print_level, stop_type, iter, relres, absres,
+            print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
             // should we exit the restart cycle
@@ -750,13 +749,13 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
             fasp_array_cp(n,x_best,x->val);
         }
     }
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Free some stuff
@@ -779,7 +778,7 @@ FINISHED:
 /*!
  * \fn INT fasp_solver_dbsr_spvgmres (dBSRmat *A, dvector *b, dvector *x, precond *pc,
  *                                    const REAL tol, const INT MaxIt, SHORT restart,
- *                                    const SHORT stop_type, const SHORT print_level)
+ *                                    const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
@@ -792,7 +791,7 @@ FINISHED:
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -807,7 +806,7 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
                                const INT MaxIt,
                                SHORT restart,
                                const SHORT stop_type,
-                               const SHORT print_level)
+                               const SHORT prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;
@@ -914,7 +913,7 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -995,7 +994,7 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(print_level, stop_type, iter, relres, absres,
+            print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
             // should we exit the restart cycle
@@ -1127,13 +1126,13 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
             fasp_array_cp(n,x_best,x->val);
         }
     }
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Free some stuff
@@ -1156,7 +1155,7 @@ FINISHED:
 /*!
  * \fn INT fasp_solver_dstr_spvgmres (dSTRmat *A, dvector *b, dvector *x, precond *pc,
  *                                    const REAL tol, const INT MaxIt, SHORT restart,
- *                                    const SHORT stop_type, const SHORT print_level)
+ *                                    const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Solve "Ax=b" using PGMRES(right preconditioned) iterative method in which the restart
  *        parameter can be adaptively modified during the iteration.
@@ -1169,7 +1168,7 @@ FINISHED:
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -1184,7 +1183,7 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
                                const INT MaxIt,
                                SHORT restart,
                                const SHORT stop_type,
-                               const SHORT print_level)
+                               const SHORT prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;
@@ -1291,7 +1290,7 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -1372,7 +1371,7 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(print_level, stop_type, iter, relres, absres,
+            print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
             // should we exit the restart cycle
@@ -1504,13 +1503,13 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( print_level > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
             fasp_array_cp(n,x_best,x->val);
         }
     }
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Free some stuff

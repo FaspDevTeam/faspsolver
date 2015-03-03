@@ -1,4 +1,5 @@
 /*! \file precond_bcsr.c
+ *
  *  \brief Preconditioners for block CSR matrices
  */
 

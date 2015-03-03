@@ -94,7 +94,7 @@ void fasp_dcsrvec1_read (const char *filename,
     FILE *fp = fopen(filename, "r");
     
     if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -186,7 +186,7 @@ void fasp_dcsrvec2_read (const char *filemat,
     FILE *fp = fopen(filemat,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n",filemat);
+        printf("### ERROR: Cannot open %s!\n",filemat);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -223,7 +223,7 @@ void fasp_dcsrvec2_read (const char *filemat,
     fp = fopen(filerhs,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n",filerhs);
+        printf("### ERROR: Cannot open %s!\n",filerhs);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -264,7 +264,7 @@ void fasp_dcsr_read (const char *filename,
     FILE *fp = fopen(filename, "r");
     
     if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -324,7 +324,7 @@ void fasp_dcoo_read (const char *filename,
     FILE *fp = fopen(filename,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -375,7 +375,7 @@ void fasp_dcoo1_read (const char *filename,
     FILE *fp = fopen(filename,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -426,7 +426,7 @@ void fasp_dcoo_shift_read (const char *filename,
     FILE *fp = fopen(filename,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -479,7 +479,7 @@ void fasp_dmtx_read (const char *filename,
     FILE *fp = fopen(filename,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -541,7 +541,7 @@ void fasp_dmtxsym_read (const char *filename,
     FILE *fp = fopen(filename,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -618,7 +618,7 @@ void fasp_dstr_read (const char *filename,
     FILE *fp = fopen(filename,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s failed!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -698,7 +698,7 @@ void fasp_dbsr_read (const char *filename,
     
     FILE *fp = fopen(filename,"r");
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s failed!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -766,7 +766,7 @@ void fasp_dvecind_read (const char *filename,
     FILE *fp = fopen(filename,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s failed!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -816,7 +816,7 @@ void fasp_dvec_read (const char *filename,
     
     FILE *fp = fopen(filename,"r");
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -867,7 +867,7 @@ void fasp_ivecind_read (const char *filename,
     FILE *fp = fopen(filename,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -907,7 +907,7 @@ void fasp_ivec_read (const char *filename,
     FILE *fp = fopen(filename,"r");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
         
     }
@@ -961,7 +961,7 @@ void fasp_dcsrvec1_write (const char *filename,
     
     /* write the matrix to file */
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -982,7 +982,7 @@ void fasp_dcsrvec1_write (const char *filename,
     
     /* write the rhs to file */
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1040,7 +1040,7 @@ void fasp_dcsrvec2_write (const char *filemat,
     
     /* write the matrix to file */
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filemat);
+        printf("### ERROR: Cannot open %s!\n", filemat);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1065,7 +1065,7 @@ void fasp_dcsrvec2_write (const char *filemat,
     
     /* write the rhs to file */
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filerhs);
+        printf("### ERROR: Cannot open %s!\n", filerhs);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1108,7 +1108,7 @@ void fasp_dcoo_write (const char *filename,
     FILE *fp = fopen(filename, "w");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1151,7 +1151,7 @@ void fasp_dstr_write (const char *filename,
     
     FILE *fp = fopen(filename,"w");
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
         
     }
@@ -1213,7 +1213,7 @@ void fasp_dbsr_write (const char *filename,
     
     FILE *fp = fopen(filename,"w");
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1262,7 +1262,7 @@ void fasp_dvec_write (const char *filename,
     FILE *fp = fopen(filename,"w");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1297,7 +1297,7 @@ void fasp_dvecind_write (const char *filename,
     
     FILE *fp = fopen(filename,"w");
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1333,7 +1333,7 @@ void fasp_ivec_write (const char *filename,
     FILE *fp = fopen(filename,"w");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1490,7 +1490,7 @@ void fasp_dbsr_write_coo (const char *filename,
 
     FILE *fp = fopen(filename,"w");
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1539,7 +1539,7 @@ void fasp_dcsr_write_coo (const char *filename,
     
     FILE *fp = fopen(filename,"w");
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1612,7 +1612,7 @@ void fasp_matrix_read (const char *filename,
     FILE *fp = fopen(filename,"rb");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1715,7 +1715,7 @@ void fasp_matrix_read_bin (const char *filename,
 	FILE *fp = fopen(filename, "rb");
     
 	if ( fp == NULL ) {
-		printf("### ERROR: Opening file %s ...\n", filename);
+		printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
 	}
 	
@@ -1798,7 +1798,7 @@ void fasp_matrix_write (const char *filename,
         
         fp = fopen(filename,"w");
         if ( fp == NULL ) {
-            printf("### ERROR: Opening file %s ...\n", filename);
+            printf("### ERROR: Cannot open %s!\n", filename);
             fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
         }
         
@@ -1827,7 +1827,7 @@ void fasp_matrix_write (const char *filename,
     fp = fopen(filename,"wb");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1884,7 +1884,7 @@ void fasp_vector_read (const char *filerhs,
     FILE *fp = fopen(filerhs,"rb");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filerhs);
+        printf("### ERROR: Cannot open %s!\n", filerhs);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -1988,7 +1988,7 @@ void fasp_vector_write (const char *filerhs,
         fp = fopen(filerhs,"w");
         
         if ( fp == NULL ) {
-            printf("### ERROR: Opening file %s ...\n", filerhs);
+            printf("### ERROR: Cannot open %s!\n", filerhs);
             fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
         }
         
@@ -2020,7 +2020,7 @@ void fasp_vector_write (const char *filerhs,
     fp = fopen(filerhs,"wb");
     
     if ( fp == NULL ) {
-        printf("### ERROR: Opening file %s ...\n", filerhs);
+        printf("### ERROR: Cannot open %s!\n", filerhs);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
@@ -2047,7 +2047,7 @@ void fasp_vector_write (const char *filerhs,
 }
 
 /**
- * \fn fasp_hb_read (char *input_file, dCSRmat *A, dvector *b)
+ * \fn fasp_hb_read (const char *input_file, dCSRmat *A, dvector *b)
  *
  * \brief Read matrix and right-hans side from a HB format file
  *
@@ -2060,7 +2060,7 @@ void fasp_vector_write (const char *filerhs,
  * \author Xiaoehe Hu
  * \date   05/30/2014
  */
-void fasp_hb_read (char *input_file,
+void fasp_hb_read (const char *input_file,
                    dCSRmat *A,
                    dvector *b)
 {

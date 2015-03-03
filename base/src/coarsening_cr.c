@@ -45,7 +45,7 @@ INT fasp_amg_coarsening_cr (INT i_0,
                             ivector *vertices, 
                             AMG_param *param)
 {    
-    const INT prtlvl = param->print_level;
+    const SHORT prtlvl = param->print_level;
     
     // local variables
     INT   cand=0,cpt=-1,fpt=1;        // internal labeling

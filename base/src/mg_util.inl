@@ -1,6 +1,11 @@
 /*! \file mg_util.inl
+ *
  *  \brief Routines for algebraic multigrid cycles
  */
+
+/*---------------------------------*/
+/*--      Private Functions      --*/
+/*---------------------------------*/
 
 /**
  * \fn static void fasp_coarse_itsolver (dCSRmat *A, dvector *b, dvector *x,

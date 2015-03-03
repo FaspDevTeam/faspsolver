@@ -2,12 +2,9 @@
  *
  *  \brief Smoothed aggregation AMG: SETUP phase
  *
- *
  *  \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
  *        Refer to P. Vanek, J. Madel and M. Brezina
  *        "Algebraic Multigrid on Unstructured Meshes", 1994
- *
- *
  */
 
 #include <math.h>

@@ -52,7 +52,6 @@
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
  *  \note See spminres.c for a safer version
- *
  */
 
 #include <math.h>

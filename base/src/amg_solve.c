@@ -39,10 +39,10 @@ INT fasp_amg_solve (AMG_data *mgl,
     dCSRmat      *ptrA = &mgl[0].A;
     dvector      *b = &mgl[0].b, *x = &mgl[0].x, *r = &mgl[0].w;
     
-    const SHORT   print_level = param->print_level;
-    const INT     MaxIt       = param->maxit;
-    const REAL    tol         = param->tol;
-    const REAL    sumb        = fasp_blas_dvec_norm2(b); // L2norm(b)
+    const SHORT   prtlvl = param->print_level;
+    const INT     MaxIt  = param->maxit;
+    const REAL    tol    = param->tol;
+    const REAL    sumb   = fasp_blas_dvec_norm2(b); // L2norm(b)
     
     // local variables
     REAL  solve_start, solve_end;
@@ -58,7 +58,7 @@ INT fasp_amg_solve (AMG_data *mgl,
     fasp_gettime(&solve_start);
     
     // Print iteration information if needed
-    print_itinfo(print_level, STOP_REL_RES, iter, 1.0, sumb, 0.0);
+    print_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
     
     // MG solver here
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) {
@@ -82,13 +82,13 @@ INT fasp_amg_solve (AMG_data *mgl,
         absres0 = absres;                  // prepare for next iteration
         
         // Print iteration information if needed
-        print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
+        print_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
         
         // Check convergence
         if ( relres1 < tol ) break;
     }
     
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
         print_cputime("AMG solve",solve_end - solve_start);
@@ -128,10 +128,10 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
     dCSRmat     *ptrA = &mgl[0].A;
     dvector     *b = &mgl[0].b, *x = &mgl[0].x, *r = &mgl[0].w;
     
-    const INT    MaxIt       = param->maxit;
-    const SHORT  print_level = param->print_level;
-    const REAL   tol         = param->tol;
-    const REAL   sumb        = fasp_blas_dvec_norm2(b); // L2norm(b)
+    const INT    MaxIt  = param->maxit;
+    const SHORT  prtlvl = param->print_level;
+    const REAL   tol    = param->tol;
+    const REAL   sumb   = fasp_blas_dvec_norm2(b); // L2norm(b)
     
     // local variables
     REAL         solve_start, solve_end, solve_time;
@@ -147,7 +147,7 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
     fasp_gettime(&solve_start);
 
     // Print iteration information if needed
-    print_itinfo(print_level, STOP_REL_RES, iter, 1.0, sumb, 0.0);
+    print_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
     
     // MG solver here
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) {
@@ -166,13 +166,13 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
         absres0 = absres;                  // prepare for next iteration
         
         // Print iteration information if needed
-        print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
+        print_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
         
         // Check convergence
         if ( relres1 < tol ) break;
     }
     
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
         solve_time = solve_end - solve_start;
@@ -212,10 +212,10 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
     dCSRmat      *ptrA = &mgl[0].A;
     dvector      *b = &mgl[0].b, *x = &mgl[0].x, *r = &mgl[0].w;
     
-    const INT     MaxIt       = param->maxit;
-    const SHORT   print_level = param->print_level;
-    const REAL    tol         = param->tol;
-    const REAL    sumb        = fasp_blas_dvec_norm2(b); // L2norm(b)
+    const INT     MaxIt  = param->maxit;
+    const SHORT   prtlvl = param->print_level;
+    const REAL    tol    = param->tol;
+    const REAL    sumb   = fasp_blas_dvec_norm2(b); // L2norm(b)
     
     // local variables
     REAL          solve_start, solve_end;
@@ -231,7 +231,7 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
     fasp_gettime(&solve_start);
     
     // Print iteration information if needed
-    print_itinfo(print_level, STOP_REL_RES, iter, 1.0, sumb, 0.0);
+    print_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
     
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) // MG solver here
     {
@@ -247,14 +247,14 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
         factor  = absres/absres0;    // contraction factor
         
         // output iteration information if needed
-        print_itinfo(print_level, STOP_REL_RES, iter, relres1, absres, factor);
+        print_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
         
         if ( relres1 < tol ) break; // early exit condition
         
         absres0 = absres;
     }
     
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
         print_cputime("Nonlinear AMLI solve", solve_end - solve_start);
@@ -284,8 +284,8 @@ void fasp_famg_solve (AMG_data *mgl,
     dCSRmat     *ptrA = &mgl[0].A;
     dvector     *b = &mgl[0].b, *x = &mgl[0].x, *r = &mgl[0].w;
     
-    const SHORT  print_level = param->print_level;
-    const REAL   sumb        = fasp_blas_dvec_norm2(b); // L2norm(b)
+    const SHORT  prtlvl = param->print_level;
+    const REAL   sumb   = fasp_blas_dvec_norm2(b); // L2norm(b)
     
     // local variables
     REAL         solve_start, solve_end;
@@ -310,7 +310,7 @@ void fasp_famg_solve (AMG_data *mgl,
     absres  = fasp_blas_dvec_norm2(r); // residual ||r||
     relres1 = absres/sumb;             // relative residual ||r||/||b||
     
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         printf("FMG finishes with relative residual %e.\n", relres1);
         fasp_gettime(&solve_end);
         print_cputime("FMG solve",solve_end - solve_start);

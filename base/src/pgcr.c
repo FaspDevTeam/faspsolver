@@ -1,6 +1,8 @@
 /*! \file pgcr.c
+ *
  *  \brief Krylov subspace methods -- Preconditioned GCR.
  */
+
 #include <math.h>
 
 #include "fasp.h"

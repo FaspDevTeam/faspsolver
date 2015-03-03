@@ -27,7 +27,7 @@ int mesh_init (Mesh *mesh, const char *filename)
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
-        printf("### ERROR: Opening file %s fails!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
     
@@ -100,7 +100,7 @@ int mesh_init_pro (Mesh *mesh, const char *filename)
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
-        printf("### ERROR: Opening file %s fails!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
     
@@ -172,7 +172,7 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
-        printf("### ERROR: Opening file %s fails!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
     
@@ -257,7 +257,7 @@ int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
-        printf("### ERROR: Opening file %s fails!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
     
@@ -382,7 +382,7 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
                     edge_aux[edge_c] *= -1;
                 }
                 else {
-                    printf("### ERROR during the mesh auxiliary building ... \n");
+                    printf("### ERROR: Cannot build mesh auxiliary data!\n");
                     exit(ERROR_MISC);
                 }
             }// end of loop j
@@ -439,7 +439,7 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
                     break;
                 }
                 if (k == adj_count[n1]) {
-                    printf("### ERROR during the mesh auxiliary building ... (case 2) \n");
+                    printf("### ERROR: Cannot build mesh auxiliary data!\n");
                     exit(ERROR_MISC);
                 }
             }
@@ -493,7 +493,7 @@ int mesh_write (Mesh *mesh, const char *filename)
     
     FILE *outputFile=fopen(filename, "w");
     if (outputFile==NULL) {
-        printf("### ERROR: Opening file %s fails!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
     
@@ -543,7 +543,7 @@ int mesh_write_pro (Mesh *mesh, const char *filename)
     
     FILE *outputFile=fopen(filename, "w");
     if (outputFile==NULL) {
-        printf("### ERROR: Opening file %s fails!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
     
@@ -598,7 +598,7 @@ int mesh_aux_write (Mesh_aux *mesh_aux, const char *filename)
     
     FILE *outputFile=fopen(filename, "w");
     if (outputFile==NULL) {
-        printf("### ERROR: Opening file %s fails!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
     
@@ -649,7 +649,7 @@ int mesh_aux_write_pro (Mesh_aux *mesh_aux, const char *filename)
     
     FILE *outputFile=fopen(filename, "w");
     if (outputFile==NULL) {
-        printf("### ERROR: Opening file %s fails!\n", filename);
+        printf("### ERROR: Cannot open %s!\n", filename);
         exit(ERROR_OPEN_FILE);
     }
     
