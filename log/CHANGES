@@ -2,6 +2,7 @@ File Name: CHANGES
 
 03/03/2015 FASP 1.6.9:
 - Clean up some redundant code.
+- Update regression test results.
 
 02/25/2015 FASP 1.6.8:
 - Further clean up Doxygen.
