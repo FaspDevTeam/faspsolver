@@ -942,7 +942,7 @@ void fasp_vector_write (const char *filerhs,
                         void *b,
                         INT  flag);
 
-void fasp_hb_read (char *input_file,
+void fasp_hb_read (const char *input_file,
                    dCSRmat *A,
                    dvector *b);
 
@@ -1322,7 +1322,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
                             const REAL tol,
                             const INT MaxIt,
                             const SHORT stop_type,
-                            const SHORT print_level);
+                            const SHORT prtlvl);
 
 INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
                             dvector *b,
@@ -1331,7 +1331,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
                             const REAL tol,
                             const INT MaxIt,
                             const SHORT stop_type,
-                            const SHORT print_level);
+                            const SHORT prtlvl);
 
 INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
                              dvector *b,
@@ -1340,7 +1340,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
                              const REAL tol,
                              const INT MaxIt,
                              const SHORT stop_type,
-                             const SHORT print_level);
+                             const SHORT prtlvl);
 
 INT fasp_solver_dstr_pbcgs (dSTRmat *A,
                             dvector *b,
@@ -1349,7 +1349,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
                             const REAL tol,
                             const INT MaxIt,
                             const SHORT stop_type,
-                            const SHORT print_level);
+                            const SHORT prtlvl);
 
 
 /*-------- In file: pbcgs_mf.c --------*/
@@ -1472,7 +1472,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
                              const INT MaxIt,
                              const SHORT restart,
                              const SHORT stop_type,
-                             const SHORT print_level);
+                             const SHORT prtlvl);
 
 INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
                               dvector *b,
@@ -1482,7 +1482,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
                               const INT MaxIt,
                               const SHORT restart,
                               const SHORT stop_type,
-                              const SHORT print_level);
+                              const SHORT prtlvl);
 
 INT fasp_solver_dbsr_pgmres (dBSRmat *A,
                              dvector *b,
@@ -1492,7 +1492,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
                              const INT MaxIt,
                              const SHORT restart,
                              const SHORT stop_type,
-                             const SHORT print_level);
+                             const SHORT prtlvl);
 
 INT fasp_solver_dstr_pgmres (dSTRmat *A,
                              dvector *b,
@@ -1502,7 +1502,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
                              const INT MaxIt,
                              const SHORT restart,
                              const SHORT stop_type,
-                             const SHORT print_level);
+                             const SHORT prtlvl);
 
 
 /*-------- In file: pgmres_mf.c --------*/
@@ -1515,7 +1515,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
                         const INT MaxIt,
                         const SHORT restart,
                         const SHORT stop_type,
-                        const SHORT print_level);
+                        const SHORT prtlvl);
 
 
 /*-------- In file: pminres.c --------*/
@@ -1775,7 +1775,7 @@ INT fasp_solver_pvfgmres (mxv_matfree *mf,
                           const INT MaxIt,
                           const SHORT restart,
                           const SHORT stop_type,
-                          const SHORT print_level);
+                          const SHORT prtlvl);
 
 
 /*-------- In file: pvgmres.c --------*/
@@ -1788,7 +1788,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
                               const INT MaxIt,
                               const SHORT restart,
                               const SHORT stop_type,
-                              const SHORT print_level);
+                              const SHORT prtlvl);
 
 INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
                                dvector *b,
@@ -1798,7 +1798,7 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
                                const INT MaxIt,
                                const SHORT restart,
                                const SHORT stop_type,
-                               const SHORT print_level);
+                               const SHORT prtlvl);
 
 INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
                               dvector *b,
@@ -1808,7 +1808,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
                               const INT MaxIt,
                               const SHORT restart,
                               const SHORT stop_type,
-                              const SHORT print_level);
+                              const SHORT prtlvl);
 
 INT fasp_solver_dstr_pvgmres (dSTRmat *A,
                               dvector *b,
@@ -1818,7 +1818,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat *A,
                               const INT MaxIt,
                               const SHORT restart,
                               const SHORT stop_type,
-                              const SHORT print_level);
+                              const SHORT prtlvl);
 
 
 /*-------- In file: pvgmres_mf.c --------*/
@@ -2646,7 +2646,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
                               const INT MaxIt,
                               SHORT restart,
                               const SHORT stop_type,
-                              const SHORT print_level);
+                              const SHORT prtlvl);
 
 INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
                                dvector *b,
@@ -2656,7 +2656,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
                                const INT MaxIt,
                                SHORT restart,
                                const SHORT stop_type,
-                               const SHORT print_level);
+                               const SHORT prtlvl);
 
 INT fasp_solver_dbsr_spgmres (dBSRmat *A,
                               dvector *b,
@@ -2666,7 +2666,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
                               const INT MaxIt,
                               SHORT restart,
                               const SHORT stop_type,
-                              const SHORT print_level);
+                              const SHORT prtlvl);
 
 INT fasp_solver_dstr_spgmres (dSTRmat *A,
                               dvector *b,
@@ -2676,7 +2676,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
                               const INT MaxIt,
                               SHORT restart,
                               const SHORT stop_type,
-                              const SHORT print_level);
+                              const SHORT prtlvl);
 
 
 /*-------- In file: spminres.c --------*/
@@ -2719,7 +2719,7 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
                                const INT MaxIt,
                                SHORT restart,
                                const SHORT stop_type,
-                               const SHORT print_level);
+                               const SHORT prtlvl);
 
 INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
                                 dvector *b,
@@ -2729,7 +2729,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
                                 const INT MaxIt,
                                 SHORT restart,
                                 const SHORT stop_type,
-                                const SHORT print_level);
+                                const SHORT prtlvl);
 
 INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
                                dvector *b,
@@ -2739,7 +2739,7 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
                                const INT MaxIt,
                                SHORT restart,
                                const SHORT stop_type,
-                               const SHORT print_level);
+                               const SHORT prtlvl);
 
 INT fasp_solver_dstr_spvgmres (dSTRmat *A,
                                dvector *b,
@@ -2749,7 +2749,7 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
                                const INT MaxIt,
                                SHORT restart,
                                const SHORT stop_type,
-                               const SHORT print_level);
+                               const SHORT prtlvl);
 
 
 /*-------- In file: threads.c --------*/

@@ -11,7 +11,6 @@
  *        pp. 751-761. UCRL-JRNL-235266.
  *
  *  \note This file is modifed from pvgmres.c
- *
  */
 
 #include <math.h>

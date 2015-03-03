@@ -282,7 +282,7 @@ static void assemble_stiffmat (dCSRmat *A,
         } // end for k
     }
     else {
-        printf("### ERROR: Wrong input value! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: Wrong input value! %s\n", __FUNCTION__);
     }
 
     fasp_mem_free(edge2idx_g1);

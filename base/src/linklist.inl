@@ -1,4 +1,5 @@
 /*! \file linklist.inl
+ *
  *  \brief Utilities for link list data structure
  *
  *  \note These linked-list operations are adapted from hypre 2.0
@@ -6,6 +7,10 @@
 
 #define LIST_HEAD -1 /**< head of the linked list */
 #define LIST_TAIL -2 /**< tail of the linked list */
+
+/*---------------------------------*/
+/*--      Private Functions      --*/
+/*---------------------------------*/
 
 /**
  * \fn static void dispose_node( LinkList node_ptr )

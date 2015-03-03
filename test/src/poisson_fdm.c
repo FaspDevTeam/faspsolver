@@ -836,7 +836,7 @@ fsls_CSRMatrixPrint (fsls_CSRMatrix *matrix,
         }
     }
     else {
-        fprintf(fp, "Warning: No matrix data!\n");
+        fprintf(fp, "### WARNING: No matrix data!\n");
     }
     
     fclose(fp);

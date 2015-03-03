@@ -1,20 +1,15 @@
-/*
- *  auxiliary.c
- *  
- *------------------------------------------------------
- * C-version: by Ludmil Zikatanov 2010-04-08
- *                         tested 2010-04-08
- *------------------------------------------------------
- *
- */
-
-// Todo: add Doxygen for each function! remove unwanted functions. --Chensong
-
 /*! \file auxiliary.c
  *
  *  \brief Read write and other auxiliary routines. Also routine to convert
  *         IJ value format to CRS.
+ *
+ *------------------------------------------------------
+ * C-version: by Ludmil Zikatanov 2010-04-08
+ *                         tested 2010-04-08
+ *------------------------------------------------------
  */
+
+// Todo: add Doxygen for each function! remove unwanted functions. --Chensong
 
 #include <math.h>
 #include <time.h>

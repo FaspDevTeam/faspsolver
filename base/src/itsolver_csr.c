@@ -42,12 +42,12 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
                                precond *pc,
                                itsolver_param *itparam)
 {
-    const SHORT  prtlvl        = itparam->print_level;
-    const SHORT  itsolver_type = itparam->itsolver_type;
-    const SHORT  stop_type     = itparam->stop_type;
-    const SHORT  restart       = itparam->restart;
-    const INT    MaxIt         = itparam->maxit;
-    const REAL   tol           = itparam->tol;
+    const SHORT prtlvl        = itparam->print_level;
+    const SHORT itsolver_type = itparam->itsolver_type;
+    const SHORT stop_type     = itparam->stop_type;
+    const SHORT restart       = itparam->restart;
+    const INT   MaxIt         = itparam->maxit;
+    const REAL  tol           = itparam->tol;
     
     /* Local Variables */
     REAL solver_start, solver_end, solver_duration;
@@ -195,7 +195,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
                                   dvector *x,
                                   itsolver_param *itparam)
 {
-    const INT prtlvl = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     
     /* Local Variables */
     INT       status = FASP_SUCCESS;
@@ -266,7 +266,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
     swzparam.Schwarz_type      = schparam->Schwarz_type;
     swzparam.Schwarz_blksolver = schparam->Schwarz_blksolver;
         
-    const INT prtlvl = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
 	
     REAL setup_start, setup_end, setup_duration, solver_start, solver_end, solver_duration;
     INT status = FASP_SUCCESS;
@@ -340,9 +340,9 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
                                  itsolver_param *itparam,
                                  AMG_param *amgparam)
 {
-    const INT prtlvl = itparam->print_level;
-    const INT max_levels = amgparam->max_levels;
-    const INT nnz=A->nnz, m=A->row, n=A->col;
+    const SHORT prtlvl = itparam->print_level;
+    const SHORT max_levels = amgparam->max_levels;
+    const INT nnz = A->nnz, m = A->row, n = A->col;
     
     /* Local Variables */
     INT      status = FASP_SUCCESS;
@@ -445,7 +445,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
                                  itsolver_param *itparam,
                                  ILU_param *iluparam)
 {
-    const INT prtlvl = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     
     /* Local Variables */
     INT      status = FASP_SUCCESS;
@@ -533,7 +533,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
                                    ILU_param *iluparam,
                                    dCSRmat *M)
 {
-    const INT prtlvl = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
     
     /* Local Variables */
     REAL solver_start, solver_end, solver_duration;
@@ -619,9 +619,9 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
                                     dCSRmat *P_nk,
                                     dCSRmat *R_nk)
 {
-    const INT prtlvl = itparam->print_level;
-    const INT max_levels = amgparam->max_levels;
-    const INT nnz=A->nnz, m=A->row, n=A->col;
+    const SHORT prtlvl = itparam->print_level;
+    const SHORT max_levels = amgparam->max_levels;
+    const INT nnz = A->nnz, m = A->row, n = A->col;
     
     /* Local Variables */
     INT      status = FASP_SUCCESS;

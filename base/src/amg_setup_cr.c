@@ -45,11 +45,11 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
     // local variables
     INT     i_0 = 0, i_n;
     SHORT   level = 0, status = FASP_SUCCESS;
-    SHORT   max_levels=param->max_levels;
+    SHORT   max_levels = param->max_levels;
     REAL    setup_start, setup_end;
     
     // The variable vertices stores level info (fine: 0; coarse: 1)
-    ivector vertices=fasp_ivec_create(m); 
+    ivector vertices = fasp_ivec_create(m); 
     
     fasp_gettime(&setup_start);
 

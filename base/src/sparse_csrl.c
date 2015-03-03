@@ -5,7 +5,6 @@
  *  \note For details of CSRL format, refer to 
  *        Optimizing sparse matrix vector product computations using unroll and jam
  *        by John Mellor-Crummey and John Garvin, Tech Report Rice Univ, Aug 2002.
- *
  */
 
 #include "fasp.h"

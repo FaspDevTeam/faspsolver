@@ -39,15 +39,15 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
                                 precond *pc,
                                 itsolver_param *itparam)
 {
-    const SHORT  prtlvl = itparam->print_level;
-    const SHORT  itsolver_type = itparam->itsolver_type;
-    const SHORT  stop_type = itparam->stop_type;
-    const SHORT  restart = itparam->restart;
-    const INT    MaxIt = itparam->maxit;
-    const REAL   tol = itparam->tol;
+    const SHORT prtlvl = itparam->print_level;
+    const SHORT itsolver_type = itparam->itsolver_type;
+    const SHORT stop_type = itparam->stop_type;
+    const SHORT restart = itparam->restart;
+    const INT   MaxIt = itparam->maxit;
+    const REAL  tol = itparam->tol;
     
     REAL  solver_start, solver_end, solver_duration;
-    INT   iter;
+    INT   iter = ERROR_SOLVER_TYPE;
     
     fasp_gettime(&solver_start);
 
@@ -77,18 +77,17 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
             break;
             
         case SOLVER_VGMRES:
-            if ( prtlvl > PRINT_NONE ) printf("Calling vGMRES solver (Block CSR format) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("Calling vGMRES solver (Block CSR) ...\n");
             iter=fasp_solver_bdcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VFGMRES:
-            if ( prtlvl > PRINT_NONE ) printf("Calling FGMRES solver (Block CSR format) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("Calling FGMRES solver (Block CSR) ...\n");
             iter=fasp_solver_bdcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         default:
             printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
-            iter = ERROR_SOLVER_TYPE;
             
     }
     
@@ -126,8 +125,9 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
                               dvector *x,
                               itsolver_param *itparam)
 {
-    const INT prtlvl = itparam->print_level;
-    INT status=FASP_SUCCESS;
+    const SHORT prtlvl = itparam->print_level;
+    
+    INT status = FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE
@@ -181,13 +181,14 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
                                       AMG_param *amgparam,
                                       dCSRmat *A_diag)
 {
-    const INT prtlvl = itparam->print_level;
-    const INT precond_type = itparam->precond_type;
-    INT status=FASP_SUCCESS;
+    const SHORT prtlvl = itparam->print_level;
+    const SHORT precond_type = itparam->precond_type;
+    
+    INT status = FASP_SUCCESS;
     REAL setup_start, setup_end, setup_duration;
     REAL solver_start, solver_end, solver_duration;
     
-    const INT max_levels = amgparam->max_levels;
+    const SHORT max_levels = amgparam->max_levels;
     INT m, n, nnz, i;
     
     AMG_data **mgl = NULL;
@@ -386,9 +387,10 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
                                       AMG_param *amgparam,
                                       dCSRmat *A_diag)
 {
-    const INT prtlvl = itparam->print_level;
-    const INT precond_type = itparam->precond_type;
-    INT status=FASP_SUCCESS;
+    const SHORT prtlvl = itparam->print_level;
+    const SHORT precond_type = itparam->precond_type;
+    
+    INT status = FASP_SUCCESS;
     REAL setup_start, setup_end, setup_duration;
     REAL solver_start, solver_end, solver_duration;
 
@@ -514,7 +516,8 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
                                        dCSRmat *local_A,
                                        ivector *local_index)
 {
-    const INT prtlvl = itparam->print_level;
+    const SHORT prtlvl = itparam->print_level;
+    
     INT status = FASP_SUCCESS;
     REAL setup_start, setup_end, setup_duration;
     REAL solve_start, solve_end, solve_duration;

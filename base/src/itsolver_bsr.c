@@ -48,7 +48,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     const REAL  tol = itparam->tol;
     
     // Local variables
-    INT iter;
+    INT iter = ERROR_SOLVER_TYPE;
     REAL solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE
@@ -90,7 +90,6 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
             
         default:
             printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
-            iter = ERROR_SOLVER_TYPE;
             
     }
     

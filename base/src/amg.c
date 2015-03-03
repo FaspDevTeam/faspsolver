@@ -40,7 +40,7 @@ void fasp_solver_amg (dCSRmat *A,
                       AMG_param *param)
 {
     const SHORT   max_levels  = param->max_levels;
-    const SHORT   print_level = param->print_level;
+    const SHORT   prtlvl      = param->print_level;
     const SHORT   amg_type    = param->AMG_type;
     const SHORT   cycle_type  = param->cycle_type;
     const INT     nnz = A->nnz, m = A->row, n = A->col;
@@ -54,7 +54,7 @@ void fasp_solver_amg (dCSRmat *A,
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
-    if ( print_level > PRINT_NONE ) fasp_gettime(&AMG_start);
+    if ( prtlvl > PRINT_NONE ) fasp_gettime(&AMG_start);
     
     // check matrix data
     if ( m != n ) {
@@ -81,15 +81,15 @@ void fasp_solver_amg (dCSRmat *A,
     switch (amg_type) {
             
         case SA_AMG: // Smoothed Aggregation AMG setup
-            if ( print_level > PRINT_NONE ) printf("\nCalling SA AMG ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling SA AMG ...\n");
             status = fasp_amg_setup_sa(mgl, param); break;
             
         case UA_AMG: // Unsmoothed Aggregation AMG setup
-            if ( print_level > PRINT_NONE ) printf("\nCalling UA AMG ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling UA AMG ...\n");
             status = fasp_amg_setup_ua(mgl, param); break;
             
         default: // Classical AMG setup
-            if ( print_level > PRINT_NONE ) printf("\nCalling classical AMG ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling classical AMG ...\n");
             status = fasp_amg_setup_rs(mgl, param);
             
     }
@@ -113,14 +113,15 @@ void fasp_solver_amg (dCSRmat *A,
         fasp_dvec_cp(&mgl[0].x, x);
         
     }
+    
     else { // call a backup solver
         
-        if ( print_level > PRINT_MIN ) {
+        if ( prtlvl > PRINT_MIN ) {
             printf("### WARNING: AMG setup failed!\n");
             printf("### WARNING: Use a backup solver instead.\n");
         }
         fasp_solver_dcsr_spgmres (A, b, x, NULL, param->tol, param->maxit,
-                                  20, 1, print_level);
+                                  20, 1, prtlvl);
         
     }
 
@@ -128,7 +129,7 @@ void fasp_solver_amg (dCSRmat *A,
     fasp_amg_data_free(mgl, param);
 
     // print out CPU time if needed
-    if ( print_level > PRINT_NONE ) {
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("AMG totally", AMG_end - AMG_start);
     }

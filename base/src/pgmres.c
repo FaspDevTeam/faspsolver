@@ -25,7 +25,7 @@
 /*!
  * \fn INT fasp_solver_dcsr_pgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc,
  *                                  const REAL tol, const INT MaxIt, const SHORT restart,
- *                                  const SHORT stop_type, const SHORT print_level)
+ *                                  const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Right preconditioned GMRES method for solving Au=b
  *
@@ -37,7 +37,7 @@
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -58,7 +58,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
                              const INT MaxIt,
                              const SHORT restart,
                              const SHORT stop_type,
-                             const SHORT print_level)
+                             const SHORT prtlvl)
 {
     const INT   n         = b->row;
     const INT   MIN_ITER  = 0;
@@ -103,7 +103,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN && Restart < restart ) {
+    if ( prtlvl > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
@@ -151,7 +151,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
 
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -214,7 +214,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(print_level, stop_type, iter, relres, absres,
+            print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
             // exit the restart cycle if reaches tolerance
@@ -284,7 +284,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
             
-            if ( print_level >= PRINT_MORE ) {
+            if ( prtlvl >= PRINT_MORE ) {
                 ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
@@ -308,7 +308,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     } /* end of main while loop */
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Clean up workspace
@@ -331,7 +331,7 @@ FINISHED:
 /**
  * \fn INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A, dvector *b, dvector *x, precond *pc,
  *                                   const REAL tol, const INT MaxIt, const SHORT restart,
- *                                   const SHORT stop_type, const SHORT print_level)
+ *                                   const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
@@ -343,7 +343,7 @@ FINISHED:
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -361,7 +361,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
                               const INT MaxIt,
                               const SHORT restart,
                               const SHORT stop_type,
-                              const SHORT print_level)
+                              const SHORT prtlvl)
 {
     const INT   n         = b->row;
     const INT   MIN_ITER  = 0;
@@ -406,7 +406,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN && Restart < restart ) {
+    if ( prtlvl > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
@@ -454,7 +454,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
 
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -517,7 +517,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(print_level, stop_type, iter, relres, absres,
+            print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
             // exit the restart cycle if reaches tolerance
@@ -587,7 +587,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
             
-            if ( print_level >= PRINT_MORE ) {
+            if ( prtlvl >= PRINT_MORE ) {
                 ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
@@ -611,7 +611,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     } /* end of main while loop */
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Clean up workspace
@@ -634,7 +634,7 @@ FINISHED:
 /*!
  * \fn INT fasp_solver_dbsr_pgmres (dBSRmat *A, dvector *b, dvector *x, precond *pc,
  *                                  const REAL tol, const INT MaxIt, const SHORT restart,
- *                                  const SHORT stop_type, const SHORT print_level)
+ *                                  const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
@@ -646,7 +646,7 @@ FINISHED:
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -664,7 +664,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
                              const INT MaxIt,
                              const SHORT restart,
                              const SHORT stop_type,
-                             const SHORT print_level)
+                             const SHORT prtlvl)
 {
     const INT   n         = b->row;
     const INT   MIN_ITER  = 0;
@@ -709,7 +709,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN && Restart < restart ) {
+    if ( prtlvl > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
@@ -757,7 +757,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
 
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -820,7 +820,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(print_level, stop_type, iter, relres, absres,
+            print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
             // exit the restart cycle if reaches tolerance
@@ -890,7 +890,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
             
-            if ( print_level >= PRINT_MORE ) {
+            if ( prtlvl >= PRINT_MORE ) {
                 ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
@@ -915,7 +915,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     } /* end of main while loop */
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Clean up workspace
@@ -938,7 +938,7 @@ FINISHED:
 /*!
  * \fn INT fasp_solver_dstr_pgmres (dSTRmat *A, dvector *b, dvector *x, precond *pc,
  *                                  const REAL tol, const INT MaxIt, const SHORT restart,
- *                                  const SHORT stop_type, const SHORT print_level)
+ *                                  const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
@@ -950,7 +950,7 @@ FINISHED:
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param stop_type    Stopping criteria type
- * \param print_level  How much information to print out
+ * \param prtlvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -968,7 +968,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
                              const INT MaxIt,
                              const SHORT restart,
                              const SHORT stop_type,
-                             const SHORT print_level)
+                             const SHORT prtlvl)
 {
     const INT   n         = b->row;
     const INT   MIN_ITER  = 0;
@@ -1013,7 +1013,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( print_level > PRINT_MIN && Restart < restart ) {
+    if ( prtlvl > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
@@ -1061,7 +1061,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
 
     // output iteration information if needed
-    print_itinfo(print_level,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -1124,7 +1124,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(print_level, stop_type, iter, relres, absres,
+            print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
             // exit the restart cycle if reaches tolerance
@@ -1194,7 +1194,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
             
-            if ( print_level >= PRINT_MORE ) {
+            if ( prtlvl >= PRINT_MORE ) {
                 ITS_COMPRES(computed_relres); ITS_REALRES(relres);
             }
             
@@ -1218,7 +1218,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     } /* end of main while loop */
     
 FINISHED:
-    if ( print_level > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     /*-------------------------------------------
      * Clean up workspace

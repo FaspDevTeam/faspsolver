@@ -1,6 +1,6 @@
 /*! \file rap.c
  *
- *  \brief R*A*P driver
+ *  \brief Tripple-matrix multiplication R*A*P
  *
  *------------------------------------------------------
  * C-version by Ludmil Zikatanov 2010-04-08

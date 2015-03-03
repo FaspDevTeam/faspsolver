@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+03/03/2015 FASP 1.6.9:
+- Clean up some redundant code.
+
 02/25/2015 FASP 1.6.8:
 - Further clean up Doxygen.
 - Unify output messages, fix several print problems.
