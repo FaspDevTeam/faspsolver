@@ -48,7 +48,7 @@ INT fasp_poisson_gmg_1D (REAL *u,
     INT        i, *level, count = 0;
     REAL       AMG_start, AMG_end;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nx=%d, maxlevel=%d\n", nx, maxlevel);
 #endif
@@ -124,7 +124,7 @@ INT fasp_poisson_gmg_1D (REAL *u,
         print_cputime("GMG totally", AMG_end - AMG_start);
     }
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
@@ -172,7 +172,7 @@ INT fasp_poisson_gmg_2D (REAL *u,
     INT i, k, count = 0, *nxk, *nyk, *level;
     REAL AMG_start, AMG_end;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nx=%d, ny=%d, maxlevel=%d\n", nx, ny, maxlevel);
 #endif
@@ -254,7 +254,7 @@ INT fasp_poisson_gmg_2D (REAL *u,
         print_cputime("GMG totally", AMG_end - AMG_start);
     }
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
@@ -306,7 +306,7 @@ INT fasp_poisson_gmg_3D (REAL *u,
     INT i, k, count = 0, *nxk, *nyk, *nzk, *level;
 	REAL AMG_start, AMG_end;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nx=%d, ny=%d, nz=%d, maxlevel=%d\n", 
 			nx, ny, nz, maxlevel);
@@ -400,6 +400,10 @@ FINISHED:
     free(u0);
     free(b0);
     
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     return count;
 }
 
@@ -433,7 +437,7 @@ void fasp_poisson_fgmg_1D (REAL *u,
     int         i, *level;
 	REAL        AMG_start, AMG_end;
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nx=%d, maxlevel=%d\n", nx, maxlevel);
 #endif
@@ -488,7 +492,7 @@ FINISHED:
     free(u0);
     free(b0);
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -527,7 +531,7 @@ void fasp_poisson_fgmg_2D (REAL *u,
     INT i, k, *nxk, *nyk, *level;
 	REAL       AMG_start, AMG_end;
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nx=%d, ny=%d, maxlevel=%d\n", nx, ny, maxlevel);
 #endif
@@ -594,7 +598,7 @@ FINISHED:
     free(u0);
     free(b0);
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif    
     
@@ -635,7 +639,7 @@ void fasp_poisson_fgmg_3D (REAL *u,
     int         i, k, *nxk, *nyk, *nzk, *level;
 	REAL        AMG_start, AMG_end;
    
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nx=%d, ny=%d, nz=%d, maxlevel=%d\n", 
 			nx, ny, nz, maxlevel);
@@ -703,7 +707,7 @@ FINISHED:
     free(u0);
     free(b0);
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif    
 
@@ -744,7 +748,7 @@ INT fasp_poisson_pcg_gmg_1D (REAL *u,
     int        i, *level, iter = 0;
 	REAL       AMG_start, AMG_end;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nx=%d, maxlevel=%d\n", nx, maxlevel);
 #endif
@@ -795,7 +799,7 @@ FINISHED:
     free(u0);
     free(b0);
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -838,7 +842,7 @@ INT fasp_poisson_pcg_gmg_2D (REAL *u,
     int        i, k, *nxk, *nyk, *level, iter = 0;
 	REAL       AMG_start, AMG_end;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nx=%d, ny=%d, maxlevel=%d\n", nx, ny, maxlevel);
 #endif
@@ -902,7 +906,7 @@ FINISHED:
     free(u0);
     free(b0);
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -947,7 +951,7 @@ INT fasp_poisson_pcg_gmg_3D (REAL *u,
     int        i, k, *nxk, *nyk, *nzk, *level, iter = 0;
 	REAL       AMG_start, AMG_end;
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nx=%d, ny=%d, nz=%d, maxlevel=%d\n", 
 			nx, ny, nz, maxlevel);
@@ -1015,7 +1019,7 @@ FINISHED:
     free(u0);
     free(b0);
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

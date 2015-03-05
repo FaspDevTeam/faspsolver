@@ -72,11 +72,11 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 	SHORT       interp_type = param->interpolation_type;
 	INT         col         = 0;
 	
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
 	printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 	
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
 	printf("### DEBUG: Step 1. Find strong connections ......\n");
 #endif
 	
@@ -86,7 +86,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 	// find strong couplings and return them in S
 	strong_couplings(A, S, param);
 	
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
 	printf("### DEBUG: Step 2. C/F splitting ......\n");
 #endif
 	
@@ -121,7 +121,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 	
 	if ( col <= 0 ) return ERROR_UNKNOWN;
 	
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
 	printf("### DEBUG: Step 3. Find support of C points ......\n");
 #endif
 	
@@ -141,7 +141,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 		
 	}
 	
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
 	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
@@ -448,8 +448,8 @@ static INT cfsplitting_cls (dCSRmat *A,
     
     INT nthreads = 1, use_openmp = FALSE;
     
-#if DEBUG_MODE
-    printf("### DEBUG: cfsplitting_cls ...... [Start]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
 #ifdef _OPENMP
@@ -706,8 +706,8 @@ static INT cfsplitting_cls (dCSRmat *A,
 FINISHED:
 	fasp_mem_free(work);
 
-#if DEBUG_MODE
-	printf("### DEBUG: cfsplitting_cls ...... [Finish]\n");
+#if DEBUG_MODE > 0
+	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
 	return col;
@@ -753,8 +753,8 @@ static INT cfsplitting_clsp (dCSRmat *A,
 	
 	INT nthreads = 1, use_openmp = FALSE;
 	
-#if DEBUG_MODE
-	printf("### DEBUG: cfsplitting_clsp ...... [Start]\n");
+#if DEBUG_MODE > 0
+	printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 	
 #ifdef _OPENMP
@@ -967,8 +967,8 @@ static INT cfsplitting_clsp (dCSRmat *A,
 FINISHED:
 	fasp_mem_free(work);
 	
-#if DEBUG_MODE
-	printf("### DEBUG: cfsplitting_clsp ...... [Finish]\n");
+#if DEBUG_MODE > 0
+	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
 	return col;
@@ -1393,8 +1393,8 @@ static INT cfsplitting_agg (dCSRmat *A,
     // Snew is for combining the information from S and Sh
     iCSRmat ST, Sh, ShT;
     
-#if DEBUG_MODE
-    printf("### DEBUG: cfsplitting_agg ...... [Start]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
 #ifdef _OPENMP
@@ -1619,8 +1619,8 @@ static INT cfsplitting_agg (dCSRmat *A,
     fasp_icsr_free(&ShT);
     fasp_mem_free(work);
     
-#if DEBUG_MODE
-    printf("### DEBUG: cfsplitting_agg ...... [Finish]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return col;

@@ -92,7 +92,7 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
     REAL  *work = NULL, *x_best = NULL;
     REAL  **p = NULL, **hh = NULL;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -389,7 +389,7 @@ FINISHED:
     fasp_mem_free(hh);
     fasp_mem_free(norms);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -468,7 +468,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
     REAL  *work = NULL, *x_best = NULL;
     REAL  **p = NULL, **hh = NULL;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -765,7 +765,7 @@ FINISHED:
     fasp_mem_free(hh);
     fasp_mem_free(norms);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -845,7 +845,7 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
     REAL  *work = NULL, *x_best = NULL;
     REAL  **p = NULL, **hh = NULL;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -1142,7 +1142,7 @@ FINISHED:
     fasp_mem_free(hh);
     fasp_mem_free(norms);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -1222,7 +1222,7 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
     REAL  *work = NULL, *x_best = NULL;
     REAL  **p = NULL, **hh = NULL;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -1519,7 +1519,7 @@ FINISHED:
     fasp_mem_free(hh);
     fasp_mem_free(norms);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

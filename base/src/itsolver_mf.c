@@ -66,7 +66,7 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
     
     fasp_gettime(&solver_start);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -122,7 +122,7 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
         print_cputime("Iterative method", solver_duration);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -158,7 +158,7 @@ INT fasp_solver_krylov (mxv_matfree *mf,
     INT      status = FASP_SUCCESS;
     REAL     solver_start, solver_end, solver_duration;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -173,7 +173,7 @@ INT fasp_solver_krylov (mxv_matfree *mf,
         print_cputime("Krylov method totally", solver_duration);
     }    
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

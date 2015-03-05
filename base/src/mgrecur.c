@@ -54,7 +54,7 @@ void fasp_solver_mgrecur (AMG_data *mgl,
     REAL *r = mgl[level].w.val; // for residual
     INT *ordering = mgl[level].cfmark.val; // for smoother ordering
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
@@ -135,7 +135,7 @@ void fasp_solver_mgrecur (AMG_data *mgl,
         
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 }

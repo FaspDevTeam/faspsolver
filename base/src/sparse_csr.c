@@ -566,8 +566,8 @@ void fasp_dcsr_diagpref (dCSRmat *A)
     INT    nthreads = FASP_GET_NUM_THREADS();
 #endif
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_dcsr_diagpref ...... [Start]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
 #ifdef _OPENMP
@@ -581,7 +581,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
                 if (A_j[ibegin] != i) {
                     for (j = ibegin+1 ; j < iend; j ++) {
                         if (A_j[j] == i) {
-#if DEBUG_MODE
+#if DEBUG_MODE > 2
                             printf("### DEBUG: Switch entry_%d with entry_0\n", j);
 #endif
                             tempi  = A_j[ibegin];
@@ -610,7 +610,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
             if (A_j[0] != i) {
                 for (j = 1; j < row_size; j ++) {
                     if (A_j[j] == i) {
-#if DEBUG_MODE
+#if DEBUG_MODE > 2
                         printf("### DEBUG: Switch entry_%d with entry_0\n", j);
 #endif
                         tempi  = A_j[0];
@@ -636,8 +636,8 @@ void fasp_dcsr_diagpref (dCSRmat *A)
     }
 #endif
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_dcsr_diagpref ...... [Finish]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 }
 
@@ -754,7 +754,7 @@ void fasp_icsr_trans (iCSRmat *A,
     INT i,j,k,p;
     INT ibegin, iend;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     printf("### DEBUG: m=%d, n=%d, nnz=%d\n",m,n,nnz);
 #endif
     

@@ -65,8 +65,8 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     REAL   setup_start, setup_end, setup_duration;
     SHORT  status = FASP_SUCCESS;
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_ilu_dcsr_setup ...... [Start]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->row,n,nnz);
 #endif
     
@@ -90,8 +90,8 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     
     nwork  = 4*n;
     
-#if DEBUG_MODE
-    printf("### DEBUG: fill-in=%d, iwk=%d, nwork=%d\n", lfil, iwk, nwork);
+#if DEBUG_MODE > 1
+    printf("### DEBUG: fill-in = %d, iwk = %d, nwork = %d\n", lfil, iwk, nwork);
 #endif
     
     // setup ILU preconditioner
@@ -99,7 +99,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     fasp_ilu_data_alloc(iwk, nwork, iludata);
     
 #if CHMEM_MODE
-    printf("### DEBUG: memory usage after fasp_ilu_data_alloc: \n");
+    printf("### DEBUG: memory usage after %s: \n", __FUNCTION__);
     fasp_mem_usage();
 #endif
     
@@ -130,8 +130,8 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     iludata->nzlu=nzlu;
     iludata->nwork=nwork;
     
-#if DEBUG_MODE
-    printf("### DEBUG: iwk=%d, nzlu=%d\n",iwk,nzlu);
+#if DEBUG_MODE > 1
+    printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);
 #endif    
     
     if (ierr!=0) {
@@ -165,8 +165,8 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     
 FINISHED:     
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_ilu_dcsr_setup ...... [Finish]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return status;

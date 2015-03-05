@@ -78,7 +78,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
     unsigned INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -285,7 +285,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
     fasp_mem_free(hh);
     fasp_mem_free(norms);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

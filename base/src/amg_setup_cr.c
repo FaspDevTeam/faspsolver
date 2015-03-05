@@ -53,8 +53,8 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
     
     fasp_gettime(&setup_start);
 
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_setup_cr ...... [Start]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
@@ -112,8 +112,8 @@ SHORT fasp_amg_setup_cr (AMG_data *mgl,
     
     fasp_ivec_free(&vertices); 
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_setup_cr ...... [Finish]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return status;

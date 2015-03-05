@@ -88,7 +88,7 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     // square of (sqrt(kappa)-1)/(sqrt(kappa)+1);
     k[5] = (mu1-2.0*smu0*smu1+mu0)/(mu1+2.0*smu0*smu1+mu0);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -106,7 +106,7 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
         
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     printf("### DEBUG: Degree of polysmoothing is: %d\n",ndeg);
 #endif   
     
@@ -119,7 +119,7 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     fasp_mem_free(error);
     fasp_mem_free(k);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -166,7 +166,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -201,7 +201,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
     sm=0.5e+00*(smu0+smu1);
     sm01=smu0*smu1;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     printf("### DEBUG: Degree of polysmoothing is: %d\n",ndeg);
 #endif
     
@@ -285,7 +285,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
     fasp_mem_free(r);
     fasp_mem_free(vsave);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

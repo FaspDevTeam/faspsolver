@@ -54,8 +54,8 @@ void fasp_amg_interp (dCSRmat *A,
 	const INT coarsening_type = param->coarsening_type;
     INT       interp_type     = param->interpolation_type;
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_interp ...... [Start]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
     // make sure standard interpolation is used for aggressive coarsening
@@ -77,8 +77,8 @@ void fasp_amg_interp (dCSRmat *A,
     
     }
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_interp ...... [Finish]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 }
 
@@ -112,8 +112,8 @@ void fasp_amg_interp1 (dCSRmat *A,
 	const INT coarsening_type = param->coarsening_type;
     INT       interp_type     = param->interpolation_type;
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_interp1 ...... [Start]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
     // make sure standard interpolation is used for aggressive coarsening
@@ -136,8 +136,8 @@ void fasp_amg_interp1 (dCSRmat *A,
             
     }
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_interp1 ...... [Finish]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 }
 
@@ -174,8 +174,8 @@ void fasp_amg_interp_trunc (dCSRmat *P,
     INT  index1 = 0, index2 = 0, begin, end;
     INT  i, j;
 
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_interp_trunc ...... [Start]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 
     for ( i = 0; i < row; ++i ) {
@@ -253,12 +253,12 @@ void fasp_amg_interp_trunc (dCSRmat *P,
     P->val = (REAL *)fasp_mem_realloc(P->val, num_nonzero*sizeof(REAL));
     
     if ( prtlvl >= PRINT_MOST ) {
-        printf("Truncate prolongation, #nz befor: %10d, after: %10d\n",
+        printf("Truncate prolongation, nnz before: %10d, after: %10d\n",
                nnzold, num_nonzero);
     }
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_amg_interp_trunc ...... [Finish]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
 }

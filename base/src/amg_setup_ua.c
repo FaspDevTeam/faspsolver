@@ -38,7 +38,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr(AMG_data_bsr *, AMG_param *);
 SHORT fasp_amg_setup_ua (AMG_data *mgl,
                          AMG_param *param)
 {
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
@@ -46,7 +46,7 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
     
     SHORT status = amg_setup_unsmoothP_unsmoothR(mgl, param);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -69,13 +69,13 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
 SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
                              AMG_param *param)
 {
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
     SHORT status = amg_setup_unsmoothP_unsmoothR_bsr(mgl, param);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -127,7 +127,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     ILU_param     iluparam;
     Schwarz_param swzparam;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
@@ -199,7 +199,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     // Main AMG setup loop
     while ( (mgl[lvl].A.row > min_cdof) && (lvl < max_levels-1) ) {
         
-#if DEBUG_MODE
+#if DEBUG_MODE > 2
         printf("### DEBUG: level = %d, row = %d, nnz = %d\n",
                lvl, mgl[lvl].A.row, mgl[lvl].A.nnz);
 #endif
@@ -374,7 +374,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
     fasp_mem_free(vertices);
     fasp_mem_free(num_aggs);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -414,8 +414,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     
     dCSRmat temp1, temp2;
     
-    
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
            mgl[0].A.ROW, mgl[0].A.COL, mgl[0].A.NNZ);
@@ -652,7 +651,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     fasp_mem_free(num_aggs);
     fasp_mem_free(Neighbor);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

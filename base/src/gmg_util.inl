@@ -1776,10 +1776,15 @@ static INT pcg_1d (REAL *u,
     REAL *p, *r, *z, *q;
     REAL rh0, rh1, rh2, alfa, beta, normb, normr, resid, normr1, factor;
 
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
+
     p = (REAL *)malloc(level[1]*sizeof(REAL));
     r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
 	z = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
 	q = (REAL *)malloc(level[1]*sizeof(REAL));
+
     k = 0;
 
     // initial residue and other vector
@@ -1853,9 +1858,11 @@ FINISHED:
     free(q);
     free(p);
 	free(z);
-#if DEBUG_MODE
+    
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
+    
 	return k+1;
 }
 
@@ -1891,6 +1898,10 @@ static INT pcg_2d(REAL *u,
     INT k = 0;
     REAL *p, *r, *z, *q;
     REAL rh0, rh1, rh2, alfa, beta, normb, normr, resid, normr1, factor;
+
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
 
     p = (REAL *)malloc(level[1]*sizeof(REAL));
     r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
@@ -1968,9 +1979,11 @@ FINISHED:
     free(q);
     free(p);
 	free(z);
-#if DEBUG_MODE
+
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
+
 	return k+1;
 }
 
@@ -2011,6 +2024,10 @@ static INT pcg_3d (REAL *u,
     REAL rh0, rh1, rh2, alfa, beta, normb, normr, resid, normr1, factor;
 	const INT level1 = level[1];
 	const INT levelmax = level[maxlevel];
+
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+#endif
 
     p = (REAL *)malloc(level1*sizeof(REAL));
     r = (REAL *)malloc(levelmax*sizeof(REAL));
@@ -2088,9 +2105,10 @@ FINISHED:
     free(p);
 	free(z);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
+
 	return k+1;
 }
 

@@ -147,7 +147,7 @@ INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
     // return
     INT flag = FASP_SUCCESS;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -178,8 +178,8 @@ INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
         nsizeall+=nsizei;
     }
     
-#if DEBUG_MODE
-    fprintf(stdout,"### DEBUG: nsizeall is: %d\n",nsizeall);
+#if DEBUG_MODE > 1
+    fprintf(stdout,"### DEBUG: nsizeall = %d\n",nsizeall);
 #endif
     
     /* We only calculated the size of this up to here. So we can reallocate jblock */
@@ -200,8 +200,8 @@ INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
     }
     nblk = MIS.row;
     
-#if DEBUG_MODE
-    fprintf(stdout,"### DEBUG: nsizall is: %d %d\n",nsizeall,iblock[nblk]);
+#if DEBUG_MODE > 1
+    fprintf(stdout,"### DEBUG: nsizeall = %d, %d\n",nsizeall,iblock[nblk]);
 #endif
     
     /*-------------------------------------------*/
@@ -254,7 +254,7 @@ INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
         }
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     fprintf(stdout,"### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
             n, nblk, Schwarz->maxbs);
 #endif
@@ -269,7 +269,7 @@ INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
     Schwarz->maxa   = maxa;
     Schwarz->Schwarz_type = param->Schwarz_type;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -631,7 +631,7 @@ static INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
     // return
     INT flag = 0;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -662,7 +662,7 @@ static INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
         nsizeall+=nsizei;
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     fprintf(stdout,"### DEBUG: nsizeall is: %d\n",nsizeall);
 #endif
     
@@ -686,9 +686,9 @@ static INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
     
     nblk = MIS.row;
     
-#if DEBUG_MODE
-    fprintf(stdout,"### DEBUG: nsizall is: %d %d\n",nsizeall,iblock[nblk]-1);
-    fprintf(stdout,"### DEBUG: nnz is: %d\n",ia[n]-1);
+#if DEBUG_MODE > 1
+    fprintf(stdout,"### DEBUG: nsizeall = %d, %d\n",nsizeall,iblock[nblk]-1);
+    fprintf(stdout,"### DEBUG: nnz = %d\n",ia[n]-1);
 #endif
     
     /*-------------------------------------------*/
@@ -704,8 +704,8 @@ static INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
     // first estimate the memroy we need.
     mxfrm2_(&n,ia,ja,&nblk,iblock,jblock,mask,maxa,&memt,&maxbs);
     
-#if DEBUG_MODE
-    fprintf(stdout,"### DEBUG: Number of nonzeroes for LU=%d maxbs=%d\n",
+#if DEBUG_MODE > 1
+    fprintf(stdout,"### DEBUG: Number of nonzeros for LU = %d maxbs = %d\n",
             memt, maxbs);
 #endif
     
@@ -717,7 +717,7 @@ static INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
     //  LU decomposition
     sky2ns_(&n,ia,ja,a,&nblk,iblock,jblock,mask,maxa,au,al);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     fprintf(stdout,"### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
             n, nblk, maxbs);
 #endif
@@ -737,7 +737,7 @@ static INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
     Schwarz->mask = mask;
     Schwarz->maxa = maxa;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

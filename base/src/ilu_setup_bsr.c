@@ -56,8 +56,8 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     REAL    setup_start, setup_end, setup_duration;
     SHORT   status = FASP_SUCCESS;
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_ilu_dbsr_setup ...... [Start]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->ROW,n,nnz);
 #endif
     
@@ -73,7 +73,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
     uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
         
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     printf("### DEBUG: symbolic factorization ... \n ");
 #endif
     
@@ -83,7 +83,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     
     iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     printf("### DEBUG: numerical factorization ... \n ");
 #endif
     
@@ -99,9 +99,9 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
     // Check: Is the work space too large? --Xiaozhe
 
-#if DEBUG_MODE
-    printf("### DEBUG: fill-in=%d, nwork=%d\n", lfil, nwork);
-    printf("### DEBUG: iwk=%d, nzlu=%d\n",iwk,nzlu);
+#if DEBUG_MODE > 1
+    printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
+    printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);
 #endif
     
     if ( ierr != 0 ) {
@@ -126,8 +126,8 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     fasp_mem_free(ijlu);
     fasp_mem_free(uptr);
     
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_ilu_dbsr_setup ...... [Finish]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
     return status;

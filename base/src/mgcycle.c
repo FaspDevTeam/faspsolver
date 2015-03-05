@@ -62,12 +62,12 @@ void fasp_solver_mgcycle (AMG_data *mgl,
     REAL alpha = 1.0;
     INT  num_lvl[MAX_AMG_LVL] = {0}, l = 0;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     printf("### DEBUG: AMG_level = %d, ILU_level = %d\n", nl, mgl->ILU_levels);
 #endif
     
@@ -237,7 +237,7 @@ ForwardSweep:
     
     if ( l > 0 ) goto ForwardSweep;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -277,13 +277,14 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
         fasp_dvec_alloc(mgl[0].A_nk->row, &z_nk);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
-    if (prtlvl >= PRINT_MOST)
-        printf("AMG_level = %d, ILU_level = %d\n", nl, mgl->ILU_levels);
-    
+#if DEBUG_MODE > 1
+    printf("### DEBUG: AMG_level = %d, ILU_level = %d\n", nl, mgl->ILU_levels);
+#endif
+
 ForwardSweep:
     while ( l < nl-1 ) {
         nu_l[l]++;
@@ -508,7 +509,7 @@ ForwardSweep:
     
     if ( l > 0 ) goto ForwardSweep;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

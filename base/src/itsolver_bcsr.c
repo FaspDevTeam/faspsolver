@@ -51,7 +51,7 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
     
     fasp_gettime(&solver_start);
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -97,7 +97,7 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
         print_cputime("Iterative method", solver_duration);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
@@ -130,7 +130,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
     INT status = FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 
@@ -146,7 +146,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
     if ( prtlvl >= PRINT_MIN )
         print_cputime("Krylov method totally", solver_duration);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
@@ -197,7 +197,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     void **LU_diag = (void **)fasp_mem_calloc(3, sizeof(void *));
 #endif
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 
@@ -352,7 +352,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
         fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
@@ -399,7 +399,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     INT i;
 #endif
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 
@@ -477,7 +477,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     for (i=0; i<4; i++) fasp_umfpack_free_numeric(LU_diag[i]);
 #endif
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
@@ -527,7 +527,7 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     
     void **local_LU = NULL;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -587,13 +587,12 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     for (l=0; l<NumLayers; l++) fasp_umfpack_free_numeric(local_LU[l]);
 #endif
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
     return status;
 }
-
 
 /*---------------------------------*/
 /*--        End of File          --*/

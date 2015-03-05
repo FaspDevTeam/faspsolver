@@ -768,7 +768,7 @@ void fasp_param_input (const char *filenm,
     // sanity checks
     status = fasp_param_check(inparam);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     printf("### DEBUG: Reading input status = %d\n", status);
 #endif
     

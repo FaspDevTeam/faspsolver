@@ -50,7 +50,7 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
 {
     SHORT status  = FASP_SUCCESS;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
@@ -62,7 +62,7 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
     status = amg_setup_smoothP_unsmoothR(mgl, param);
 #endif
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -85,13 +85,13 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
 SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr *mgl,
                              AMG_param *param)
 {
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
     SHORT status = amg_setup_smoothP_smoothR_bsr(mgl, param);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -133,7 +133,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     ILU_param   iluparam;
     Schwarz_param swzparam;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -202,7 +202,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     // Main AMG setup loop
     while ( (mgl[lvl].A.row > min_cdof) && (lvl < max_levels-1) ) {
         
-#if DEBUG_MODE
+#if DEBUG_MODE > 2
         printf("### DEBUG: level = %d, row = %d, nnz = %d\n",
                lvl, mgl[lvl].A.row, mgl[lvl].A.nnz);
 #endif
@@ -350,7 +350,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
     fasp_mem_free(Neighbor);
     fasp_mem_free(tentp);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -388,7 +388,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     ILU_param   iluparam;
     Schwarz_param swzparam;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -586,7 +586,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
     fasp_mem_free(tentp);
     fasp_mem_free(tentr);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -626,7 +626,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     
     dCSRmat temp1, temp2;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",
            mgl[0].A.ROW, mgl[0].A.COL, mgl[0].A.NNZ);
@@ -865,7 +865,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     fasp_mem_free(num_aggs);
     fasp_mem_free(Neighbor);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

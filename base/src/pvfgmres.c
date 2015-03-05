@@ -93,7 +93,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     unsigned INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -326,7 +326,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     fasp_mem_free(norms);
     fasp_mem_free(z);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -405,7 +405,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
     unsigned INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -637,7 +637,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
     fasp_mem_free(norms);
     fasp_mem_free(z);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -717,7 +717,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
     unsigned INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -949,7 +949,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
     fasp_mem_free(norms);
     fasp_mem_free(z);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
