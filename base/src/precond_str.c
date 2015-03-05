@@ -70,8 +70,8 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     INT nxy=ILU_data->nxy;
     INT size=m*nc;
     
-#if DEBUG_MODE
-    printf("### DEBUG: precond_ILU0_str ...... [Start]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif    
     
     if (nx == 1) {
@@ -315,8 +315,8 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     fasp_mem_free(zz);
     fasp_mem_free(tc);
     
-#if DEBUG_MODE
-    printf("### DEBUG: precond_ILU0_str ...... [Finish]\n");
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif    
     
     return;

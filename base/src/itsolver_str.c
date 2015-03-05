@@ -48,7 +48,7 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
     INT iter = ERROR_SOLVER_TYPE;
     REAL solver_start, solver_end, solver_duration;
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -91,7 +91,7 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
         print_cputime("Iterative method", solver_duration);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
@@ -123,7 +123,7 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
     INT status = FASP_SUCCESS;
     REAL solver_start, solver_end, solver_duration;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 
@@ -139,7 +139,7 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
         print_cputime("Krylov method totally", solver_duration);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
@@ -188,7 +188,7 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
     pc->data = &diag;
     pc->fct  = fasp_precond_dstr_diag;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 
@@ -204,7 +204,7 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
     if ( prtlvl >= PRINT_MIN )
         print_cputime("Diag_Krylov method totally", solver_duration);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
@@ -244,7 +244,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
     //set up
     dSTRmat LU;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
 
@@ -295,7 +295,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
     
     fasp_dstr_free(&LU);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 
@@ -344,7 +344,7 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
     dvector *diaginv;
     ivector *pivot;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -384,7 +384,7 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
         print_cputime("BlockGS_Krylov method totally", setup_duration+solver_duration);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 

@@ -62,7 +62,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
     REAL *r, *Br, *beta, *p;
     r = work; Br = r + m; beta = Br + m; p = beta + MaxIt;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -157,7 +157,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat *A,
     // clean up temp memory
     fasp_mem_free(work);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

@@ -72,7 +72,7 @@ void fasp_solver_amli (AMG_data *mgl,
     REAL     *r        = mgl[level].w.val;      // work array for residual
     REAL     *r1       = mgl[level+1].w.val+m1; // work array for residual
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
@@ -303,7 +303,7 @@ void fasp_solver_amli (AMG_data *mgl,
         
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 }
@@ -357,7 +357,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
     dvector uH;  // for coarse level correction
     uH.row = m1; uH.val = mgl[level+1].w.val + m1;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
@@ -605,7 +605,7 @@ void fasp_solver_nl_amli (AMG_data *mgl,
         
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 }
@@ -656,7 +656,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
     uH.row = m1; uH.val = mgl[level+1].w.val + m1;
     bH.row = m1; bH.val = mgl[level+1].w.val + 2*m1;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.ROW, mgl[0].A.NNZ);
 #endif
@@ -801,7 +801,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
         
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 }

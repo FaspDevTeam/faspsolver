@@ -49,7 +49,7 @@ INT fasp_amg_solve (AMG_data *mgl,
     REAL  relres1 = BIGREAL, absres0 = sumb, absres, factor;
     INT   iter = 0;
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
@@ -94,7 +94,7 @@ INT fasp_amg_solve (AMG_data *mgl,
         print_cputime("AMG solve",solve_end - solve_start);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -138,7 +138,7 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
     REAL         relres1 = BIGREAL, absres0 = sumb, absres, factor;
     INT          iter = 0;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
@@ -179,7 +179,7 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
         print_cputime("AMLI solve", solve_time);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -222,7 +222,7 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
     REAL          relres1 = BIGREAL, absres0 = BIGREAL, absres, factor;
     INT           iter = 0;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
@@ -260,7 +260,7 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
         print_cputime("Nonlinear AMLI solve", solve_end - solve_start);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -291,7 +291,7 @@ void fasp_famg_solve (AMG_data *mgl,
     REAL         solve_start, solve_end;
     REAL         relres1 = BIGREAL, absres;
         
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
@@ -316,7 +316,7 @@ void fasp_famg_solve (AMG_data *mgl,
         print_cputime("FMG solve",solve_end - solve_start);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

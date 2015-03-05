@@ -51,7 +51,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
     INT l, i, lvl, num_cycle;
     REAL alpha = 1.0, relerr;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
@@ -328,7 +328,7 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
         
     } // end for
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

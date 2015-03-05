@@ -275,7 +275,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
     INT      Restart = MIN(restart, MaxIt);
     LONG     worksize = n+2*Restart*n+Restart+Restart;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -399,6 +399,10 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
     fasp_mem_free(work);
     fasp_mem_free(norms);
     
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+
     if ( iter >= MaxIt )
         return ERROR_SOLVER_MAXIT;
     else

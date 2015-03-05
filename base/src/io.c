@@ -1494,7 +1494,7 @@ void fasp_dbsr_write_coo (const char *filename,
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     printf("nrow = %d, ncol = %d, nnz = %d, nb = %d, storage_manner = %d\n",
            A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
 #endif
@@ -2131,7 +2131,7 @@ void fasp_hb_read (const char *input_file,
     //-------------------------
     // Printing if needed
     //-------------------------
-#if DEBUG_MODE
+#if DEBUG_MODE > 1
     /*
      Print out the header information.
      */

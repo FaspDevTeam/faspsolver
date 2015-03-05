@@ -84,7 +84,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat *A,
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -318,7 +318,7 @@ FINISHED:
     fasp_mem_free(hh);
     fasp_mem_free(norms);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -387,7 +387,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -621,7 +621,7 @@ FINISHED:
     fasp_mem_free(hh);
     fasp_mem_free(norms);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -690,7 +690,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat *A,
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -925,7 +925,7 @@ FINISHED:
     fasp_mem_free(hh);
     fasp_mem_free(norms);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -994,7 +994,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat *A,
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
@@ -1228,7 +1228,7 @@ FINISHED:
     fasp_mem_free(hh);
     fasp_mem_free(norms);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -1302,11 +1302,6 @@ static double fasp_spectral_radius (dCSRmat *A,
     REAL    *norms = NULL, *r = NULL, *w = NULL;
     REAL   **p = NULL, **hh = NULL;
     REAL    *work = NULL;
-    
-#if DEBUG_MODE
-    printf("### DEBUG: fasp_solver_dstr_pgmres ...... [Start]\n");
-    printf("### DEBUG: maxit = %d, tol = %.4le, stop type = %d\n", MaxIt, tol, stop_type);
-#endif
     
     /* allocate memory */
     work = (REAL *)fasp_mem_calloc((restart+4)*(restart+n)+1-n, sizeof(REAL));

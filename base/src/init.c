@@ -117,10 +117,6 @@ void fasp_ilu_data_alloc (INT iwk,
                           INT nwork,
                           ILU_data *iludata)
 {
-#if DEBUG_MODE
-    printf("### DEBUG: iwk=%d, nwork=%d\n", iwk, nwork);
-#endif
-    
     iludata->ijlu=(INT*)fasp_mem_calloc(iwk, sizeof(INT));
     
     iludata->luval=(REAL*)fasp_mem_calloc(iwk, sizeof(REAL));

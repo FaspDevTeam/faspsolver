@@ -51,7 +51,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
     INT iter = ERROR_SOLVER_TYPE;
     REAL solver_start, solver_end, solver_duration;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -99,7 +99,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
         print_cputime("Iterative method", solver_duration);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -131,7 +131,7 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
     INT status = FASP_SUCCESS;
     REAL solver_start, solver_end;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -147,7 +147,7 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
         print_cputime("Krylov method totally", solver_duration);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -196,7 +196,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
     precond_diagbsr diag;
     fasp_dvec_alloc(ROW*nb2, &(diag.diag));
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -254,7 +254,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
     // clean up
     fasp_dvec_free(&(diag.diag));
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -291,7 +291,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
     ILU_data LU;
     precond pc;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->ROW, A->COL, A->NNZ);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
@@ -321,7 +321,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
 FINISHED:
     fasp_ilu_data_free(&LU);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -365,9 +365,10 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
     
     // timing
-    REAL setup_start, setup_end, solver_start, solver_end, solver_duration, setup_duration;
+    REAL setup_start, setup_end, setup_duration;
+    REAL solver_start, solver_end, solver_duration;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -452,7 +453,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
 FINISHED:
     fasp_amg_data_bsr_free(mgl);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -508,9 +509,10 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
     
     // timing
-    REAL setup_start, setup_end, solver_start, solver_end, solver_duration, setup_duration;
+    REAL setup_start, setup_end, setup_duration;
+    REAL solver_start, solver_end, solver_duration;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -609,7 +611,7 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
 FINISHED:
     fasp_amg_data_bsr_free(mgl);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     
@@ -626,8 +628,8 @@ MEMORY_ERROR:
 
 /**
  * \fn INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A, dvector *b, dvector *x,
- *                                      itsolver_param *itparam, AMG_param *amgparam,
- *                                      const INT nk_dim, dvector *nk)
+ *                                         itsolver_param *itparam, AMG_param *amgparam,
+ *                                         const INT nk_dim, dvector *nk)
  *
  * \brief Solve Ax=b by AMG preconditioned Krylov methods with extra kernal space
  *
@@ -669,9 +671,10 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
     
     // timing
-    REAL setup_start, setup_end, solver_start, solver_end, solver_duration, setup_duration;
+    REAL setup_start, setup_end, setup_duration;
+    REAL solver_start, solver_end, solver_duration;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
@@ -768,7 +771,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
 FINISHED:
     fasp_amg_data_bsr_free(mgl);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

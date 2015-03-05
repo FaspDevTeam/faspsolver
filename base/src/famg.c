@@ -42,7 +42,7 @@ void fasp_solver_famg (dCSRmat *A,
     AMG_data *    mgl = fasp_amg_data_create(max_levels);
     REAL          FMG_start, FMG_end;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("###DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("###DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
@@ -94,7 +94,7 @@ void fasp_solver_famg (dCSRmat *A,
         print_cputime("FAMG totally", FMG_end - FMG_start);
     }
 
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

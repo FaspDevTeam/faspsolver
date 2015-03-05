@@ -62,7 +62,7 @@ void * fasp_mem_calloc (LONGLONG size,
     
     void * mem = NULL;
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 2
     printf("### DEBUG: Trying to allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
 #endif
     

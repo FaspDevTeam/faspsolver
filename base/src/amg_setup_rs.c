@@ -64,7 +64,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     // level info (fine: 0; coarse: 1)
     ivector       vertices = fasp_ivec_create(m);
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n = %d, nnz = %d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
@@ -115,7 +115,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
     // Main AMG setup loop
     while ( (mgl[lvl].A.row > min_cdof) && (lvl < max_lvls-1) ) {
         
-#if DEBUG_MODE
+#if DEBUG_MODE > 2
         printf("### DEBUG: level = %d, row = %d, nnz = %d\n",
                lvl, mgl[lvl].A.row, mgl[lvl].A.nnz);
 #endif
@@ -269,7 +269,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         print_cputime("Classical AMG setup", setup_end - setup_start);
     }
     
-#if DEBUG_MODE
+#if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
     

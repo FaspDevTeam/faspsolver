@@ -20,7 +20,7 @@
 # debug=yes
 #
 # In order to get debug output during run-time, you can uncomment the 
-# following line (to include "-DDEBUG_MODE -Wall -g"): 
+# following line (to include "-Wall -g -DDEBUG_MODE=3"):
 # 
 # debug=all
 #
@@ -87,20 +87,26 @@
 # mumps_dir="/dir/to/MUMPS"
 #
 ####################  User Defined Compiler Flags  #####################
+cflags="-funroll-loops"
+cxxflags="-funroll-loops"
+fflags="-funroll-loops"
+#
 ifeq ($(debug),yes)
 	cflags="-Wall -g"
 	cxxflags="-Wall -g"
 	fflags="-Wall -g"
-else
-	ifeq ($(debug),all)
-		cflags="-Wall -g -DDEBUG_MODE"
-		cxxflags="-Wall -g -DDEBUG_MODE"
-		fflags="-Wall -g -DDEBUG_MODE"
-	else
-		cflags="-funroll-loops"
-		cxxflags="-funroll-loops"
-		fflags="-funroll-loops"
-	endif
+endif
+#
+ifeq ($(debug),some)
+	cflags="-Wall -g -DDEBUG_MODE=1"
+	cxxflags="-Wall -g -DDEBUG_MODE=1"
+	fflags="-Wall -g -DDEBUG_MODE=1"
+endif
+#
+ifeq ($(debug),all)
+		cflags="-Wall -g -DDEBUG_MODE=3"
+		cxxflags="-Wall -g -DDEBUG_MODE=3"
+		fflags="-Wall -g -DDEBUG_MODE=3"
 endif
 ####################  User Changes UP TO HERE   ########################
 
