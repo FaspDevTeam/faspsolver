@@ -315,7 +315,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
         
     } /* end of iteration while loop */
     
-    if (prtlvl > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);
+    if (prtlvl > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm/den_norm);
     
     /*-------------------------------------------
      * Free some stuff
@@ -626,7 +626,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
         
     } /* end of iteration while loop */
     
-    if (prtlvl > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);
+    if (prtlvl > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm/den_norm);
     
     /*-------------------------------------------
      * Free some stuff
@@ -938,7 +938,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
         
     } /* end of iteration while loop */
     
-    if (prtlvl > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm);
+    if (prtlvl > PRINT_NONE) ITS_FINAL(iter,MaxIt,r_norm/den_norm);
     
     /*-------------------------------------------
      * Free some stuff

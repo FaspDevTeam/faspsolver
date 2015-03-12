@@ -14,7 +14,7 @@
      124 ./base/src/amg_setup_cr.c
      281 ./base/src/amg_setup_rs.c
      877 ./base/src/amg_setup_sa.c
-     664 ./base/src/amg_setup_ua.c
+     663 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
     1089 ./base/src/amlirecur.c
      268 ./base/src/array.c
@@ -36,25 +36,25 @@
      340 ./base/src/fmgcycle.c
     1145 ./base/src/formats.c
       79 ./base/src/givens.c
-    1027 ./base/src/gmg_poisson.c
+    1031 ./base/src/gmg_poisson.c
      749 ./base/src/graphics.c
      425 ./base/src/ilu_setup_bsr.c
      184 ./base/src/ilu_setup_csr.c
     1254 ./base/src/ilu_setup_str.c
-     330 ./base/src/init.c
+     326 ./base/src/init.c
      781 ./base/src/input.c
     1597 ./base/src/interpolation.c
      840 ./base/src/interpolation_em.c
     3230 ./base/src/io.c
-     600 ./base/src/itsolver_bcsr.c
-     785 ./base/src/itsolver_bsr.c
-     710 ./base/src/itsolver_csr.c
+     599 ./base/src/itsolver_bcsr.c
+     788 ./base/src/itsolver_bsr.c
+     711 ./base/src/itsolver_csr.c
      362 ./base/src/itsolver_mf.c
      396 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
      255 ./base/src/memory.c
      289 ./base/src/message.c
-     519 ./base/src/mgcycle.c
+     520 ./base/src/mgcycle.c
      145 ./base/src/mgrecur.c
      556 ./base/src/ordering.c
      982 ./base/src/parameters.c
@@ -64,8 +64,8 @@
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
      181 ./base/src/pgcg_mf.c
-     452 ./base/src/pgcr.c
-    1387 ./base/src/pgmres.c
+     456 ./base/src/pgcr.c
+    1382 ./base/src/pgmres.c
      300 ./base/src/pgmres_mf.c
     1286 ./base/src/pminres.c
      459 ./base/src/pminres_mf.c
@@ -104,8 +104,8 @@
      304 ./base/src/wrapper.c
      394 ./base/src/aggregation_bsr.inl
     1795 ./base/src/aggregation_csr.inl
-    2099 ./base/src/gmg_util.inl
+    2117 ./base/src/gmg_util.inl
       89 ./base/src/itsolver_util.inl
      238 ./base/src/linklist.inl
      245 ./base/src/mg_util.inl
-   92024 total
+   92044 total
