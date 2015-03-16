@@ -1,10 +1,11 @@
 File Name: CHANGES
 
-03/11/2015 FASP 1.6.9:
+03/16/2015 FASP 1.6.9:
 - Clean up some redundant code.
 - Update regression test results.
 - Fix problems in DEBUG MODE; add DEBUG output level.
 - Fix relative residual print out bug in vFGMRES.
+- Add a script for clean up executables.
 
 02/25/2015 FASP 1.6.8:
 - Further clean up Doxygen.
