@@ -1,7 +1,7 @@
 /*! \file fasp.h
  *  \brief Main header file for FASP
  *
- *  This header file contains general constants and data structures used in FASP.
+ *  This header file contains general constants and data structures for FASP.
  *
  *  \note Only define macros and data structures, no function decorations.
  *
@@ -415,7 +415,6 @@ typedef struct {
     REAL *work;
 
 } ILU_data; /**< Data for ILU */
-
 
 /**
  * \struct Schwarz_param
@@ -931,7 +930,6 @@ typedef struct {
     REAL *w;
 
 } precond_data_str; /**< Data for preconditioner of STR matrices */
-
 
 /**
  * \struct precond_diagstr
