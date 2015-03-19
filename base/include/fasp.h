@@ -37,7 +37,6 @@
 #define FASP_USE_ILU     ON  /**< enable ILU or not */
 #define DLMALLOC         OFF /**< use dlmalloc instead of standard malloc */
 #define NEDMALLOC        OFF /**< use nedmalloc instead of standard malloc */
-#define EXPLICT_SAT      OFF /**< enable diagonal inverse or not */
 
 /**
  * \brief Flags for internal uses (change with caution!!!)
