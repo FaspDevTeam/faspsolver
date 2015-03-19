@@ -599,6 +599,9 @@ typedef struct {
     
     //! coarsening type
     SHORT coarsening_type;
+
+    //! coarset dof
+    INT coarse_dof;
     
     //! coarse level solver type
     SHORT coarse_solver;
