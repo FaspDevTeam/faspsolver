@@ -6,6 +6,7 @@ File Name: CHANGES
 - Fix problems in DEBUG MODE; add DEBUG output level.
 - Fix relative residual print out bug in vFGMRES.
 - Add a script for clean up executables.
+- Clean up comments in iterative methods.
 
 02/25/2015 FASP 1.6.8:
 - Further clean up Doxygen.

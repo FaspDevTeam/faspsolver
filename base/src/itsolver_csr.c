@@ -283,8 +283,8 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
 	// setup preconditioner
 	Schwarz_data Schwarz_data;
 	
-	// symmetrize the matrix (for now, we have to do this. We will get rid of this later)
-	Schwarz_data.A=fasp_dcsr_sympat(A);
+	// symmetrize the matrix (get rid of this later)
+	Schwarz_data.A = fasp_dcsr_sympat(A);
 	
 	// construct Schwarz precondtioner
 	fasp_dcsr_shift (&Schwarz_data.A, 1);
@@ -462,10 +462,10 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
     
     // ILU setup for whole matrix
     ILU_data LU;
-    if ( (status = fasp_ilu_dcsr_setup(A,&LU,iluparam))<0 ) goto FINISHED;
+    if ( (status = fasp_ilu_dcsr_setup(A,&LU,iluparam)) < 0 ) goto FINISHED;
     
     // check iludata
-    if ( (status = fasp_mem_iludata_check(&LU))<0 ) goto FINISHED;
+    if ( (status = fasp_mem_iludata_check(&LU)) < 0 ) goto FINISHED;
     
     // set preconditioner
     precond pc;
@@ -480,17 +480,14 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
         solver_duration = solver_end - solver_start;
         
         switch (iluparam->ILU_type) {
-            case ILUk:
-                print_cputime("ILUk_Krylov method totally", solver_duration);
-                break;
             case ILUt:
                 print_cputime("ILUt_Krylov method totally", solver_duration);
                 break;
             case ILUtp:
                 print_cputime("ILUtp_Krylov method totally", solver_duration);
                 break;
-            default:
-                print_cputime("ILUs_Krylov method totally", solver_duration);
+            default: // ILUk
+                print_cputime("ILUk_Krylov method totally", solver_duration);
                 break;
         }
     }
@@ -574,7 +571,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
             case ILUtp:
                 print_cputime("ILUtp_Krylov method totally", solver_duration);
                 break;
-            default:
+            default: // ILUk
                 print_cputime("ILUk_Krylov method totally", solver_duration);
                 break;
         }
