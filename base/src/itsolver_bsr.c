@@ -170,8 +170,7 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   10/26/2010
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/15/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/15/2012
  */
 
 INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
@@ -298,10 +297,10 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
 #endif
     
     // ILU setup for whole matrix
-    if ( (status = fasp_ilu_dbsr_setup(A,&LU,iluparam))<0 ) goto FINISHED;
+    if ( (status = fasp_ilu_dbsr_setup(A,&LU,iluparam)) < 0 ) goto FINISHED;
     
     // check iludata
-    if ( (status = fasp_mem_iludata_check(&LU))<0 ) goto FINISHED;
+    if ( (status = fasp_mem_iludata_check(&LU)) < 0 ) goto FINISHED;
     
     // set preconditioner
     pc.data = &LU; pc.fct = fasp_precond_dbsr_ilu;
@@ -498,7 +497,7 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
     //--------------------------------------------------------------
     // Part 1: prepare
     // --------------------------------------------------------------
-    //! parameters of iterative method
+    // parameters of iterative method
     const SHORT prtlvl = itparam->print_level;
     const SHORT max_levels = amgparam->max_levels;
     
@@ -523,15 +522,11 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
     
     // initialize A, b, x for mgl[0]
     mgl[0].A = fasp_dbsr_create(A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
-    fasp_dbsr_cp(A,  &(mgl[0].A));
-    //mgl[0].A.ROW = A->ROW; mgl[0].A.COL = A->COL; mgl[0].A.NNZ = A->NNZ;
-    //mgl[0].A.nb = A->nb; mgl[0].A.storage_manner = A->storage_manner;
-    //mgl[0].A.IA = A->IA; mgl[0].A.JA = A->JA; mgl[0].A.val = A->val;
+    fasp_dbsr_cp(A, &(mgl[0].A));
     mgl[0].b = fasp_dvec_create(mgl[0].A.ROW*mgl[0].A.nb);
     mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb);
     
     // near kernel space
-    //mgl[0].A_nk = A_nk;
     mgl[0].A_nk = NULL;
     mgl[0].P_nk = P_nk;
     mgl[0].R_nk = R_nk;
@@ -685,10 +680,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
     
     // initialize A, b, x for mgl[0]
     mgl[0].A = fasp_dbsr_create(A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
-    fasp_dbsr_cp(A,  &(mgl[0].A));
-    //mgl[0].A.ROW = A->ROW; mgl[0].A.COL = A->COL; mgl[0].A.NNZ = A->NNZ;
-    //mgl[0].A.nb = A->nb; mgl[0].A.storage_manner = A->storage_manner;
-    //mgl[0].A.IA = A->IA; mgl[0].A.JA = A->JA; mgl[0].A.val = A->val;
+    fasp_dbsr_cp(A, &(mgl[0].A));
     mgl[0].b = fasp_dvec_create(mgl[0].A.ROW*mgl[0].A.nb);
     mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb);
     

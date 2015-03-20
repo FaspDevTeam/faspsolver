@@ -484,7 +484,6 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     return status;
 }
 
-
 /**
  * \fn INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b,
  *                                            dvector *x, itsolver_param *itparam,
