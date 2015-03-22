@@ -638,6 +638,7 @@ static INT aggregation_quality_check(dCSRmat *A,
  *        for convection-diffusion equations" 2011.
  */
 static void first_pairwise_unsymm (const dCSRmat * A,
+                                   const REAL    k_tg,
                                    INT           * order,
                                    ivector       * vertices,
                                    ivector       * map,
@@ -648,7 +649,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
     INT  *AIA  = A->IA;
     INT  *AJA  = A->JA;
     REAL *Aval = A->val;
-    const REAL k_tg = 10.0;
+    //const REAL k_tg = 10.0;
     
     INT i, j, row_start, row_end, nc, col, k, ipair, node, checkdd;
     REAL mu, aii, ajj, aij, aji, tent, vals, val;
@@ -840,6 +841,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
  */
 static void second_pairwise_unsymm (dCSRmat *A,
                                     dCSRmat *tmpA,
+                                    const REAL k_tg,
                                     INT dopass,
                                     INT *order,
                                     ivector *map1,
@@ -855,7 +857,7 @@ static void second_pairwise_unsymm (dCSRmat *A,
     INT *AJA = tmpA->JA;
     REAL *Aval = tmpA->val;
     
-    const REAL k_tg = 10.0 ;
+    //const REAL k_tg = 10.0 ;
     
     REAL *Tval;
     INT *Tnode;
@@ -1198,11 +1200,12 @@ static void form_boolean_p (ivector *vertices,
  */
 static void form_pairwise (const dCSRmat * A,
                            const INT pair,
+                           const REAL k_tg,
                            ivector *vertices,
                            INT *num_aggregations)
 {
     const INT row  = A->row;
-    const REAL k_tg = 7.65;
+    //const REAL k_tg = 8.0;//7.65;
     
     INT  *AIA  = A->IA;
     INT  *AJA  = A->JA;
@@ -1498,6 +1501,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
 {
     const INT  pair_number = param->pair_number;
     dCSRmat  * ptrA = &mgl[level].A;
+    REAL       quality_bound = param->quality_bound;
     
     INT        i, j, k, num_agg = 0, aggindex;
     INT        lvl = level;
@@ -1516,13 +1520,13 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
         
 #if SYMMETRIC_PAIRWISE == 1
         /*-- generate aggregations by pairwise matching --*/
-        form_pairwise(ptrA, i, &vertice[lvl], &num_agg);
+        form_pairwise(ptrA, i, quality_bound, &vertice[lvl], &num_agg);
 #else
         if ( i == 1 ) {
-            first_pairwise_unsymm(ptrA, order, &vertice[lvl], &map1, s, &num_agg);
+            first_pairwise_unsymm(ptrA, quality_bound, order, &vertice[lvl], &map1, s, &num_agg);
         }
         else {
-            second_pairwise_unsymm(&mgl[level].A, ptrA, i, order, &map1, &vertice[lvl-1], 
+            second_pairwise_unsymm(&mgl[level].A, ptrA, quality_bound, i, order, &map1, &vertice[lvl-1], 
 			                       &vertice[lvl], &map2, s, &num_agg);
         }
 #endif

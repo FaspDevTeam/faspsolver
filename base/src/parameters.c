@@ -419,6 +419,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     
     // Aggregation AMG specific
     amgparam->aggregation_type     = PAIRWISE;
+    amgparam->quality_bound        = 8.0;
     amgparam->pair_number          = 2;
     amgparam->strong_coupled       = 0.25;
     amgparam->max_aggregation      = 9;
@@ -557,6 +558,7 @@ void fasp_param_amg_set (AMG_param *param,
     
     param->aggregation_type     = iniparam->AMG_aggregation_type;
     param->pair_number          = iniparam->AMG_pair_number;
+    param->quality_bound        = iniparam->AMG_quality_bound;
     param->strong_coupled       = iniparam->AMG_strong_coupled;
     param->max_aggregation      = iniparam->AMG_max_aggregation;
     param->tentative_smooth     = iniparam->AMG_tentative_smooth;

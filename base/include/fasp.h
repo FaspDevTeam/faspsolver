@@ -566,6 +566,9 @@ typedef struct {
     //! type of AMG cycle
     SHORT cycle_type;
 
+    //! quality threshold for pairwise aggregation
+    REAL quality_bound;
+
     //! smoother type
     SHORT smoother;
 
@@ -1045,6 +1048,7 @@ typedef struct {
     INT AMG_aggressive_level;      /**< number of levels use aggressive coarsening */
     INT AMG_aggressive_path;       /**< number of paths used to determine strongly coupled C-set */
     INT AMG_pair_number;           /**< number of pairs in matching algorithm */
+    REAL AMG_quality_bound;        /**< threshold for pair wise aggregation */
 
     //  parameters for smoothed aggregation AMG
     REAL AMG_strong_coupled;       /**< strong coupled threshold for aggregate */

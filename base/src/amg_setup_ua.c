@@ -104,6 +104,7 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
  * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
  * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  * Modified by Zheng Li on 01/13/2015: adjust coarsening stop criterion.
+ * Modified by Zheng Li on 03/22/2015: adjust coarsening ratio.
  */
 static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
                                             AMG_param *param)
@@ -274,6 +275,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         }
         
         // Check 4: Is this coarsening ratio too small?
+#if 0
         if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Coarsening rate is too small!\n");
@@ -282,6 +284,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
             }
             break;
         }
+#endif
+        if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) param->quality_bound *= 2.0; 
         
         /*-- Form restriction --*/
         fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
