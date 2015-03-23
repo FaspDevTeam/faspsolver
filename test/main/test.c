@@ -101,7 +101,6 @@ int main (int argc, const char * argv[])
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
     }
     
-    //
     else if (problem_num == 21){
         
         datafile1="interface/mat_interface.dat"; // This file is NOT in ../data!

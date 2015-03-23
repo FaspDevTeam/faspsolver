@@ -76,7 +76,7 @@ SHORT fasp_check_diagzero (dCSRmat *A)
             j = ja[k];
             if ( i == j ) {
                 if ( ABS(aj[k]) < SMALLREAL ) {
-                    printf("### ERROR: Diagonal_%d=%e, close to zero!\n", i, aj[k]);
+                    printf("### ERROR: diag[%d] = %e, close to zero!\n", i, aj[k]);
                     status = ERROR_DATA_ZERODIAG;
                     goto FINISHED;
                 }
