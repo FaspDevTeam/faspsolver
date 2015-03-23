@@ -28,14 +28,14 @@ static void fasp_coarse_itsolver (dCSRmat *A,
                                   const REAL ctol,
                                   const SHORT prt_lvl)
 {
-    const INT csize  = A->row;
-    const INT cmaxit = MAX(250,MIN(csize*csize, 1000)); // Should NOT be less!
+    const INT n = A->row;
+    const INT maxit = MAX(250,MIN(n*n, 1000)); // Should NOT be less!
 
-    INT status = fasp_solver_dcsr_spcg (A, b, x, NULL, ctol, cmaxit, 1, PRINT_NONE);
+    INT status = fasp_solver_dcsr_spcg(A, b, x, NULL, ctol, maxit, 1, 0);
 
-    // If PCG fails to converge, use PGMRES as another safe net
+    // If CG fails to converge, use GMRES as another safe net
     if ( status < 0 ) {
-        status = fasp_solver_dcsr_spvgmres (A, b, x, NULL, ctol, cmaxit, 20, 1, PRINT_NONE);
+        status = fasp_solver_dcsr_spvgmres(A, b, x, NULL, ctol, maxit, 20, 1, 0);
     }
 
     if ( status < 0 && prt_lvl >= PRINT_MORE ) {

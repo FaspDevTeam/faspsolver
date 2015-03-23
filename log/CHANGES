@@ -5,6 +5,7 @@ File Name: CHANGES
 - Fix a bug in input.c: skip unknown keywords.
 - Fix a bug in printing parameters.
 - Fix a bug in initializing AMG parameters.
+- Slightly change the print out.
 - Update ini data files: add AMG_quality_bound.
 - Update regression test results.
 

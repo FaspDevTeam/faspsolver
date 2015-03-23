@@ -1357,7 +1357,7 @@ void fasp_ivec_write (const char *filename,
  * \param u   Pointer to a dvector
  *
  * \author Chensong Zhang
- * \date 03/29/2009
+ * \date   03/29/2009
  */
 void fasp_dvec_print (INT n,
                       dvector *u)
@@ -1365,7 +1365,7 @@ void fasp_dvec_print (INT n,
     unsigned INT i;
     
     if ( n <= 0 ) n=u->row;
-    for ( i = 0; i < n; ++i ) printf("vec_%d = %+.10E\n",i,u->val[i]);
+    for ( i = 0; i < n; ++i ) printf("vec_%d = %15.10E\n",i,u->val[i]);
 }
 
 /**
@@ -1377,7 +1377,7 @@ void fasp_dvec_print (INT n,
  * \param u   Pointer to an ivector
  *
  * \author Chensong Zhang
- * \date 03/29/2009
+ * \date   03/29/2009
  */
 void fasp_ivec_print (INT n,
                       ivector *u)
@@ -1439,8 +1439,7 @@ void fasp_dcoo_print (dCOOmat *A)
  * \author Ziteng Wang
  * \date   12/24/2012
  *
- * Modified by Chunsheng Feng
- * \date    11/16/2013
+ * Modified by Chunsheng Feng on 11/16/2013
  */
 void fasp_dbsr_print (dBSRmat *A)
 {
