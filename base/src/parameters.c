@@ -369,6 +369,7 @@ void fasp_param_input_init (input_param *iniparam)
     
     // Aggregation AMG specific
     iniparam->AMG_aggregation_type     = PAIRWISE;
+    iniparam->AMG_quality_bound        = 8.0;
     iniparam->AMG_pair_number          = 2;
     iniparam->AMG_strong_coupled       = 0.25;
     iniparam->AMG_max_aggregation      = 9;
@@ -849,6 +850,7 @@ void fasp_param_amg_print (AMG_param *param)
                 printf("Aggregation type:                  %d\n", param->aggregation_type);
                 if ( param->aggregation_type == PAIRWISE ) {
                     printf("Aggregation number of pairs:       %d\n", param->pair_number);
+                    printf("Aggregation quality bound:         %.2f\n", param->quality_bound);
                 }
                 if ( param->aggregation_type == VMB ) {
                     printf("Aggregation AMG strong coupling:   %.4f\n", param->strong_coupled);

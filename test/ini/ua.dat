@@ -73,7 +73,7 @@ AMG_smoother             = GS     % GS | JACOBI | SGS SOR | SSOR |
                                   % GSOR | SGSOR | POLY | L1DIAG | CG
 AMG_smooth_order         = NO     % NO: natural order | CF: CF order
 AMG_ILU_levels           = 0      % number of levels using ILU smoother
-AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
+AMG_Schwarz_levels       = 0	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.1    % relaxation parameter for SOR smoother 
 AMG_polynomial_degree	 = 2      % degree of the polynomial smoother
 AMG_presmooth_iter       = 1      % number of presmoothing sweeps
@@ -95,10 +95,10 @@ AMG_max_row_sum          = 0.9    % Max row sum
 % parameters for aggregation-type AMG SETUP    %
 %----------------------------------------------%
 
-AMG_aggregation_type     = 2      % 1 Matching | 2 VMB 
+AMG_aggregation_type     = 1      % 1 Matching | 2 VMB 
 AMG_pair_number          = 2      % Number of pairs in matching
 AMG_strong_coupled       = 0.08   % Strong coupled threshold
 AMG_max_aggregation      = 100    % Max size of aggregations
 AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
 AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing
-
+AMG_quality_bound        = 8.0    % quality threshold for aggregation:8.0(sysmm) 10.0(unsymm)
