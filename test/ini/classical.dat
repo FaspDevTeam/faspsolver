@@ -97,7 +97,10 @@ AMG_max_row_sum          = 0.9    % Max row sum
 % parameters for aggregation-type AMG SETUP    %
 %----------------------------------------------%
 
+AMG_aggregation_type     = 2      % 1 Matching | 2 VMB 
+AMG_pair_number          = 2      % Number of pairs in matching
 AMG_strong_coupled       = 0.08   % Strong coupled threshold
 AMG_max_aggregation      = 20     % Max size of aggregations
 AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
 AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing
+AMG_quality_bound        = 8.0    % quality threshold for aggregation:8.0(sysmm) 10.0(unsymm)

@@ -97,6 +97,7 @@ SHORT fasp_param_check (input_param *inparam)
  * Modified by Chensong Zhang on 01/10/2012
  * Modified by Ludmil Zikatanov on 02/15/2013
  * Modified by Chensong Zhang on 05/10/2013: add a new input.
+ * Modified by Chensong Zhang on 03/23/2015: skip unknown keyword.
  */
 void fasp_param_input (const char *filenm,
                        input_param *inparam)
@@ -242,14 +243,13 @@ void fasp_param_input (const char *filenm,
             fgets(buffer,500,fp); // skip rest of line
         }
         
-        else if (strcmp(buffer,"AMG_Schwarz_levels")==0)
-		{
+        else if (strcmp(buffer,"AMG_Schwarz_levels")==0) {
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
 				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
-			if (val!=1) { status = FASP_SUCCESS; break; }
+			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			inparam->AMG_Schwarz_levels = ibuff;
 			fgets(buffer,500,fp); // skip rest of line
 		}
@@ -533,6 +533,17 @@ void fasp_param_input (const char *filenm,
             fgets(buffer,500,fp); // skip rest of line
         }
 
+        else if (strcmp(buffer,"AMG_quality_bound")==0) {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%lf",&dbuff);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+            inparam->AMG_quality_bound = dbuff;
+            fgets(buffer,500,fp); // skip rest of line
+        }
+
         else if (strcmp(buffer,"AMG_aggressive_level")==0) {
             val = fscanf(fp,"%s",buffer);
             if (val!=1 || strcmp(buffer,"=")!=0) {
@@ -758,9 +769,9 @@ void fasp_param_input (const char *filenm,
         }
 
         else {
-            status = ERROR_INPUT_PAR;
-            break;
-        }    
+            printf("### WARNING: Unknown input keyword %s!\n", buffer);
+            fgets(buffer,500,fp); // skip rest of line
+        }
     }
     
     fclose(fp);
