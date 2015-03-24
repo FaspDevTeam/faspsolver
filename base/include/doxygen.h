@@ -106,8 +106,6 @@
  * 
  * - Li, Zheng (Kunming University of Science and Technology, China)
  *
- * - Wang, Lu (Penn State University, USA)
- *
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
  * - Zhang, Hongxuan (Penn State Univeristy, USA)
@@ -133,6 +131,8 @@
  * - Yang, Kai (Penn State University, USA)
  *
  * - Yue, Xiaoqiang (Xiangtan University, China)
+ *
+ * - Wang, Lu (LLNL, USA)
  *
  * - Wang, Ziteng (University of Alabama, USA)
  *

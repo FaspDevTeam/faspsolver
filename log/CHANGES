@@ -1,13 +1,15 @@
 File Name: CHANGES
 
-03/22/2015 FASP 1.7.0:
+03/24/2015 FASP 1.7.0:
 - Add a parameter for aggregation quality bound.
+- Add an adaptive strategy to choose quality bound.
 - Fix a bug in input.c: skip unknown keywords.
 - Fix a bug in printing parameters.
 - Fix a bug in initializing AMG parameters.
 - Slightly change the print out.
 - Update ini data files: add AMG_quality_bound.
 - Update regression test results.
+- Update documentation and website.
 
 03/19/2015 FASP 1.6.9:
 - Clean up some redundant code.
