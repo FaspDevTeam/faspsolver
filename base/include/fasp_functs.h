@@ -336,6 +336,9 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
                           dCSRmat *B,
                           INT *icor_ysk);
 
+void fasp_blas_dcsr_bandwith(dCSRmat *A,
+                             INT     *bndwith);
+
 
 /*-------- In file: blas_csrl.c --------*/
 

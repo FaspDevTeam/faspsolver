@@ -140,6 +140,7 @@ static INT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
  */
 static void pairwise_aggregation_initial (const dCSRmat *A,
                                           INT checkdd,
+                                          REAL kaptg,
                                           INT *iperm,
                                           ivector *vertices,
                                           REAL *s)
@@ -149,13 +150,12 @@ static void pairwise_aggregation_initial (const dCSRmat *A,
     INT *ia = A->IA;
     INT *ja = A->JA;
     REAL *val = A->val;
-    REAL kaptg, strong_hold, aij, aii, rowsum, absrowsum, max;
+    REAL strong_hold, aij, aii, rowsum, absrowsum, max;
     
     REAL *colsum = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
     REAL *colmax = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
     REAL *abscolsum = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
     
-    kaptg = 10.0;
     strong_hold = kaptg/(kaptg - 2.0);
     
     for (i=0; i<row; ++i) {
@@ -482,14 +482,15 @@ static INT aggregation_quality_check(dCSRmat *A,
                                      REAL *s,
                                      INT root,
                                      INT pair,
-                                     INT dopass)
+                                     INT dopass,
+                                     REAL quality_bound)
 {
     INT *IA = A->IA;
     INT *JA = A->JA;
     REAL *val = A->val;
     INT *map = tentmap->val;
     
-    REAL bnd1=2*1.0/10.0;
+    REAL bnd1=2*1.0/quality_bound;
     REAL bnd2=1.0-bnd1;
     
     REAL W[8][8], v[4], sig[4], AG[4];
@@ -675,7 +676,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
     /*---------------------------------------------------------*/
     /* Step 2. compute row sum (off-diagonal) for each vertex  */
     /*---------------------------------------------------------*/
-    pairwise_aggregation_initial(A, checkdd, iperm, vertices, s);
+    pairwise_aggregation_initial(A, checkdd, k_tg, iperm, vertices, s);
     
     /*-----------------------------------------*/
     /* Step 3. start the pairwise aggregation  */
@@ -1001,7 +1002,7 @@ static void second_pairwise_unsymm (dCSRmat *A,
         }
         
         while (Tsize >= 0) {
-            Semipd = aggregation_quality_check(A, map1, s1, i, ipair, dopass);
+            Semipd = aggregation_quality_check(A, map1, s1, i, ipair, dopass, k_tg);
             if (!Semipd) {
                 ipair = -1;
                 l = 0, m = 0, ijtent = 0;
@@ -1503,7 +1504,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
     dCSRmat  * ptrA = &mgl[level].A;
     REAL       quality_bound = param->quality_bound;
     
-    INT        i, j, k, num_agg = 0, aggindex;
+    INT        i, j, k, num_agg = 0, aggindex, bndwith;
     INT        lvl = level;
     REAL       isorate;
     
@@ -1516,6 +1517,11 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
     REAL *s = (REAL*)fasp_mem_calloc(ptrA->row, sizeof(REAL));
 #endif
     
+#if SYMMETRIC_PAIRWISE == 1
+    fasp_blas_dcsr_bandwith(&mgl[level].A, &bndwith);
+    param->quality_bound = quality_bound = 1.0*bndwith;
+#endif
+
     for ( i = 1; i <= pair_number; ++i ) {
         
 #if SYMMETRIC_PAIRWISE == 1

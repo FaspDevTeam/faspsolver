@@ -1986,6 +1986,31 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
     }
 }
 
+/**
+ * \fn fasp_blas_dcsr_bandwith(dCSRmat *A, INT *bndwith)
+ *
+ * \brief Get bandwith of matrix
+ *
+ * \param A       pointer to the dCSRmat matrix
+ * \param bndwith pointer to the bandwith
+ *
+ * \author Zheng Li
+ * \date   03/22/2015
+ */
+void fasp_blas_dcsr_bandwith(dCSRmat *A,
+                             INT     *bndwith)
+{
+    INT row = A->row;
+    INT *ia = A->IA;
+
+    INT i, max;
+    max = 0;
+
+    for (i=0; i<row; ++i) max = MAX(max, ia[i+1]-ia[i]);
+
+    *bndwith = max;
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
