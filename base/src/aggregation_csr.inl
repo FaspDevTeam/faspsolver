@@ -1519,6 +1519,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
     
 #if SYMMETRIC_PAIRWISE == 1
     fasp_blas_dcsr_bandwith(&mgl[level].A, &bndwith);
+    if (bndwith > 5.0) 
     param->quality_bound = quality_bound = 1.0*bndwith;
 #endif
 

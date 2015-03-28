@@ -352,7 +352,7 @@ void fasp_dcoo_read (const char *filename,
 /**
  * \fn void fasp_dcoo1_read (const char *filename, dCOOmat *A)
  *
- * \brief Read A from matrix disk file in IJ format -- indices starting from 0
+ * \brief Read A from matrix disk file in IJ format -- indices starting from 1
  *
  * \param filename  File name for matrix
  * \param A         Pointer to the COO matrix
@@ -387,7 +387,7 @@ void fasp_dcoo1_read (const char *filename,
     
     for ( k = 0; k < nnz; k++ ) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            A->rowind[k]=i; A->colind[k]=j; A->val[k] = value;
+            A->rowind[k]=i-1; A->colind[k]=j-1; A->val[k] = value;
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo1_read");
