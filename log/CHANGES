@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+03/28/2015 FASP 1.7.1:
+- Fix a bug: Add a lower bound for quality_bound.
+- Update regression test results.
+
 03/24/2015 FASP 1.7.0:
 - Add a parameter for aggregation quality bound.
 - Add an adaptive strategy to choose quality bound.

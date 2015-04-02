@@ -1,9 +1,9 @@
      560 ./base/include/dlmalloc.h
      170 ./base/include/doxygen.h
-    1188 ./base/include/fasp.h
+    1192 ./base/include/fasp.h
      684 ./base/include/fasp_block.h
      251 ./base/include/fasp_const.h
-    2928 ./base/include/fasp_functs.h
+    2931 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
     5818 ./base/include/malloc.c.h
@@ -14,7 +14,7 @@
      124 ./base/src/amg_setup_cr.c
      281 ./base/src/amg_setup_rs.c
      877 ./base/src/amg_setup_sa.c
-     663 ./base/src/amg_setup_ua.c
+     667 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
     1089 ./base/src/amlirecur.c
      268 ./base/src/array.c
@@ -22,7 +22,7 @@
      427 ./base/src/blas_array.c
      353 ./base/src/blas_bcsr.c
     5412 ./base/src/blas_bsr.c
-    1991 ./base/src/blas_csr.c
+    2016 ./base/src/blas_csr.c
      125 ./base/src/blas_csrl.c
     1541 ./base/src/blas_smat.c
     1925 ./base/src/blas_str.c
@@ -42,13 +42,13 @@
      184 ./base/src/ilu_setup_csr.c
     1254 ./base/src/ilu_setup_str.c
      326 ./base/src/init.c
-     781 ./base/src/input.c
+     792 ./base/src/input.c
     1597 ./base/src/interpolation.c
      840 ./base/src/interpolation_em.c
-    3230 ./base/src/io.c
-     599 ./base/src/itsolver_bcsr.c
-     788 ./base/src/itsolver_bsr.c
-     711 ./base/src/itsolver_csr.c
+    3229 ./base/src/io.c
+     598 ./base/src/itsolver_bcsr.c
+     780 ./base/src/itsolver_bsr.c
+     708 ./base/src/itsolver_csr.c
      362 ./base/src/itsolver_mf.c
      396 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
@@ -57,7 +57,7 @@
      520 ./base/src/mgcycle.c
      145 ./base/src/mgrecur.c
      556 ./base/src/ordering.c
-     982 ./base/src/parameters.c
+     986 ./base/src/parameters.c
     1437 ./base/src/pbcgs.c
      411 ./base/src/pbcgs_mf.c
     1196 ./base/src/pcg.c
@@ -103,9 +103,9 @@
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
      394 ./base/src/aggregation_bsr.inl
-    1795 ./base/src/aggregation_csr.inl
+    1806 ./base/src/aggregation_csr.inl
     2117 ./base/src/gmg_util.inl
       89 ./base/src/itsolver_util.inl
      238 ./base/src/linklist.inl
      245 ./base/src/mg_util.inl
-   92045 total
+   92094 total
