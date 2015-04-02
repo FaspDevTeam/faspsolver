@@ -5,7 +5,7 @@ Milestones
 ========================
 
 * Release an alpha version by the end of 2012!
-* Release a stable beta version by the end of 2014!
+* Release a stable beta version by the end of 2015!
 
 ========================
 Documentation
@@ -19,7 +19,7 @@ Documentation
 [ 0.9.8 ] make the FASP webpage ready
 [ 1.1.5 ] add details for building and installation using SCons and VS
 [ 1.2.4 ] add details for building and installation using cmake and VS
-[       ] add aggregation AMG methods
+[       ] add pairwise aggregation AMG methods
 [       ] add details for the OMP version
 [       ] add details for the GPU version
 
@@ -41,7 +41,7 @@ Structure
 [ 1.6.2 ] allow users to set compilers, e.g. using CC, CXX
 [       ] add subrouties for general purpose tests on matrices and vectors
 [       ] enforce ANSI C standard: do not allow C99
-[       ] fix problem with UMFPACK when it is installed alone without CHOLMOD
+[       ] fix problem with UMFPACK when it is installed without CHOLMOD
 
 ========================
 GMG 	
@@ -103,12 +103,10 @@ Iterative Methods
 [       ] add some useful methods: BiCGStab(l), GMRES augemented restart, GCRO
 [       ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
 [       ] test SpBLAS implementations in standard libraries (Chunsheng)
-[       ] implement right preconditioning (Chensong)
+[       ] implement right preconditioning for some Krylov methods (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
 [ 0.6.7 ] remove non-GPL ILU routines
-[       ] add block preconditioners for Stokes and NS (Xiaozhe)
-[       ] add preconditioners for Maxwell (Xiaozhe, Ludmil, and Yicong)
 [       ] replace the ILU smoothers from SPARSEKIT ver2.0
 
 ========================
@@ -128,7 +126,7 @@ Test and Debug
 [ 0.4.1 ] start to build the debug environment
 [ 0.6.0 ] build upon regression.c to make a regression test suite
 [ 1.6.1 ] compare regression results automatically
-[       ] finish the debug environment construction (Chensong)
+[ 1.6.9 ] finish the debug environment construction
 [       ] add a new unit test tool for FASP, e.g. CHECK (Chensong)
 
 ========================
@@ -166,14 +164,6 @@ OpenMP Support
 [       ] reconstruct OMP version: some parts could be simplified
 
 ========================
-GPU Support
-========================
-
-[ 0.3.4 ] add AMG based on aggregation on GPU
-[       ] add matrix-free Poisson GMG solver on GPU -- n = 2^L (Chunsheng)
-[       ] sparse basic linear algebra subroutines on GPU (Xiaozhe)
-
-========================
 Bug Fixes
 ========================
 	
@@ -192,6 +182,6 @@ Bug Fixes
 [ 1.5.2 ] divide by zero in BiCGstab, see regression.c
 [ 1.6.0 ] problems with BSR test function: see testbsr.c
 [ 1.6.0 ] memory allocation problem in testbsr.c: during ILU setup
-[       ] AMG setup: number of DOF could drop dramatically
+[ 1.6.6 ] AMG setup: number of DOF could drop dramatically
 [       ] check convergence for problems from MM: see regression_mm.c
 [       ] check problems with DIAG_PERF: see regression.c

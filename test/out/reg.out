@@ -1,7 +1,7 @@
 
 
 ------------------------- Test starts at -------------------------
-Mon Mar 23 09:19:53 2015
+Sun Mar 29 10:20:00 2015
 ------------------------------------------------------------------
 
 =====================================================
@@ -21,7 +21,7 @@ Calling classical AMG ...
 Classical AMG setup costs 0.0000 seconds.
 Number of iterations = 1 with relative residual 5.673887e-15.
 AMG solve costs 0.0000 seconds.
-AMG totally costs 0.0000 seconds.
+AMG totally costs 0.0001 seconds.
 Max diff 8.8818e-16 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG (standard interp) V-cycle as iterative solver ...
@@ -38,8 +38,8 @@ Classical AMG (energy-min interp) V-cycle as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0000 seconds.
 Number of iterations = 1 with relative residual 2.022332e-15.
-AMG solve costs 0.0028 seconds.
-AMG totally costs 0.0028 seconds.
+AMG solve costs 0.0029 seconds.
+AMG totally costs 0.0029 seconds.
 Max diff 2.7756e-16 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 FAMG (direct interp) V-cycle as iterative solver ...
@@ -246,35 +246,35 @@ Classical AMG (standard interp) V-cycle as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0048 seconds.
 Number of iterations = 7 with relative residual 2.245137e-11.
-AMG solve costs 0.0050 seconds.
-AMG totally costs 0.0099 seconds.
+AMG solve costs 0.0031 seconds.
+AMG totally costs 0.0080 seconds.
 Max diff 9.9930e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG (energy-min interp) V-cycle as iterative solver ...
 
 Calling classical AMG ...
-Classical AMG setup costs 0.0163 seconds.
+Classical AMG setup costs 0.0154 seconds.
 Number of iterations = 21 with relative residual 4.017265e-12.
-AMG solve costs 0.0108 seconds.
-AMG totally costs 0.0272 seconds.
+AMG solve costs 0.0110 seconds.
+AMG totally costs 0.0265 seconds.
 Max diff 9.9929e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 FAMG (direct interp) V-cycle as iterative solver ...
 
 Calling FAMG ...
-Classical AMG setup costs 0.0039 seconds.
+Classical AMG setup costs 0.0038 seconds.
 FMG finishes with relative residual 8.189559e-07.
-FMG solve costs 0.0108 seconds.
-FAMG totally costs 0.0147 seconds.
+FMG solve costs 0.0110 seconds.
+FAMG totally costs 0.0148 seconds.
 Max diff 4.1610e-06 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG W-cycle as iterative solver ...
 
 Calling classical AMG ...
-Classical AMG setup costs 0.0039 seconds.
+Classical AMG setup costs 0.0038 seconds.
 Number of iterations = 3 with relative residual 6.692599e-11.
-AMG solve costs 0.0029 seconds.
-AMG totally costs 0.0069 seconds.
+AMG solve costs 0.0028 seconds.
+AMG totally costs 0.0066 seconds.
 Max diff 9.9932e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG AMLI-cycle as iterative solver ...
@@ -282,8 +282,8 @@ Classical AMG AMLI-cycle as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0038 seconds.
 Number of iterations = 6 with relative residual 9.951086e-12.
-AMLI solve costs 0.0453 seconds.
-AMG totally costs 0.0491 seconds.
+AMLI solve costs 0.0454 seconds.
+AMG totally costs 0.0493 seconds.
 Max diff 9.9932e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG Nonlinear AMLI-cycle as iterative solver ...
@@ -298,10 +298,10 @@ Max diff 9.9937e-08 smaller than tolerance................. [PASS]
 Classical AMG V-cycle with SGS smoother as iterative solver ...
 
 Calling classical AMG ...
-Classical AMG setup costs 0.0038 seconds.
+Classical AMG setup costs 0.0039 seconds.
 Number of iterations = 12 with relative residual 1.973155e-11.
 AMG solve costs 0.0066 seconds.
-AMG totally costs 0.0104 seconds.
+AMG totally costs 0.0105 seconds.
 Max diff 9.9939e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG V-cycle with L1_DIAG smoother as iterative solver ...
@@ -310,7 +310,7 @@ Calling classical AMG ...
 Classical AMG setup costs 0.0038 seconds.
 Number of iterations = 19 with relative residual 8.612004e-11.
 AMG solve costs 0.0108 seconds.
-AMG totally costs 0.0146 seconds.
+AMG totally costs 0.0147 seconds.
 Max diff 9.9927e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG V-cycle with SOR smoother as iterative solver ...
@@ -327,52 +327,52 @@ SA AMG V-cycle with GS smoother as iterative solver ...
 Calling SA AMG ...
 Smoothed aggregation setup costs 0.0029 seconds.
 Number of iterations = 211 with relative residual 9.973828e-11.
-AMG solve costs 0.0596 seconds.
-AMG totally costs 0.0625 seconds.
+AMG solve costs 0.0591 seconds.
+AMG totally costs 0.0620 seconds.
 Max diff 9.9927e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 UA AMG V-cycle with GS smoother as iterative solver ...
 
 Calling UA AMG ...
 Unsmoothed aggregation setup costs 0.0014 seconds.
-Number of iterations = 108 with relative residual 9.667004e-11.
-AMG solve costs 0.0691 seconds.
-AMG totally costs 0.0706 seconds.
-Max diff 9.9947e-08 smaller than tolerance................. [PASS]
+Number of iterations = 113 with relative residual 8.447915e-11.
+AMG solve costs 0.0689 seconds.
+AMG totally costs 0.0703 seconds.
+Max diff 9.9939e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 CG solver ...
 
 Calling PCG solver (CSR) ...
 Number of iterations = 244 with relative residual 9.975280e-13.
-Krylov method totally costs 0.0138 seconds.
+Krylov method totally costs 0.0137 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 GMRES solver ...
 
 Calling PGMRes solver (CSR) ...
 Number of iterations = 937 with relative residual 9.895899e-13.
-Krylov method totally costs 0.1006 seconds.
+Krylov method totally costs 0.1011 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 BiCGstab solver ...
 
 Calling PBiCGstab solver (CSR) ...
 Number of iterations = 175 with relative residual 6.582515e-13.
-Krylov method totally costs 0.0174 seconds.
+Krylov method totally costs 0.0175 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 BiCGstab solver in BSR format ...
 
 Calling BiCGstab solver (BSR) ...
 Number of iterations = 175 with relative residual 6.582545e-13.
-Krylov method totally costs 0.0499 seconds.
+Krylov method totally costs 0.0497 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Diagonal preconditioned CG solver ...
 
 Calling PCG solver (CSR) ...
 Number of iterations = 222 with relative residual 8.591763e-11.
-Diag_Krylov method totally costs 0.0145 seconds.
+Diag_Krylov method totally costs 0.0143 seconds.
 Max diff 9.9916e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 AMG preconditioned CG solver ...
@@ -400,7 +400,7 @@ AMG preconditioned GMRes solver ...
 
 Calling PGMRes solver (CSR) ...
 Number of iterations = 6 with relative residual 7.600916e-12.
-AMG_Krylov method totally costs 0.0069 seconds.
+AMG_Krylov method totally costs 0.0070 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 AMG preconditioned vGMRes solver ...
@@ -414,14 +414,14 @@ AMG preconditioned vFGMRes solver ...
 
 Calling PVFGMRes solver (CSR) ...
 Number of iterations = 6 with relative residual 7.598603e-12.
-AMG_Krylov method totally costs 0.0066 seconds.
+AMG_Krylov method totally costs 0.0067 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 AMG preconditioned GCG solver ...
 
 Calling PGCG solver (CSR) ...
 Number of iterations = 5 with relative residual 9.165926e-12.
-AMG_Krylov method totally costs 0.0076 seconds.
+AMG_Krylov method totally costs 0.0077 seconds.
 Max diff 9.9929e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 AMG preconditioned GCR solver ...
@@ -452,8 +452,8 @@ Classical AMG (direct interp) V-cycle as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0004 seconds.
 Number of iterations = 2 with relative residual 1.387379e-13.
-AMG solve costs 0.0329 seconds.
-AMG totally costs 0.0333 seconds.
+AMG solve costs 0.0330 seconds.
+AMG totally costs 0.0334 seconds.
 Max diff 1.1441e-09 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG (standard interp) V-cycle as iterative solver ...
@@ -461,17 +461,17 @@ Classical AMG (standard interp) V-cycle as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0004 seconds.
 Number of iterations = 2 with relative residual 1.387379e-13.
-AMG solve costs 0.0333 seconds.
-AMG totally costs 0.0337 seconds.
+AMG solve costs 0.0360 seconds.
+AMG totally costs 0.0364 seconds.
 Max diff 1.1441e-09 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG (energy-min interp) V-cycle as iterative solver ...
 
 Calling classical AMG ...
-Classical AMG setup costs 0.0016 seconds.
+Classical AMG setup costs 0.0029 seconds.
 Number of iterations = 4 with relative residual 1.158007e-12.
-AMG solve costs 0.0660 seconds.
-AMG totally costs 0.0676 seconds.
+AMG solve costs 0.0677 seconds.
+AMG totally costs 0.0707 seconds.
 Max diff 2.6951e-05 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 FAMG (direct interp) V-cycle as iterative solver ...
@@ -479,8 +479,8 @@ FAMG (direct interp) V-cycle as iterative solver ...
 Calling FAMG ...
 Classical AMG setup costs 0.0004 seconds.
 FMG finishes with relative residual 1.884645e-16.
-FMG solve costs 0.0664 seconds.
-FAMG totally costs 0.0668 seconds.
+FMG solve costs 0.0663 seconds.
+FAMG totally costs 0.0667 seconds.
 Max diff 7.3274e-10 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG W-cycle as iterative solver ...
@@ -497,8 +497,8 @@ Classical AMG AMLI-cycle as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0004 seconds.
 Number of iterations = 5 with relative residual 2.094138e-11.
-AMLI solve costs 0.3317 seconds.
-AMG totally costs 0.3320 seconds.
+AMLI solve costs 0.3366 seconds.
+AMG totally costs 0.3370 seconds.
 Max diff 2.6487e-09 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG Nonlinear AMLI-cycle as iterative solver ...
@@ -506,8 +506,8 @@ Classical AMG Nonlinear AMLI-cycle as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0004 seconds.
 Number of iterations = 2 with relative residual 1.387620e-13.
-Nonlinear AMLI solve costs 0.0212 seconds.
-AMG totally costs 0.0216 seconds.
+Nonlinear AMLI solve costs 0.0211 seconds.
+AMG totally costs 0.0215 seconds.
 Max diff 1.7380e-09 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG V-cycle with SGS smoother as iterative solver ...
@@ -515,8 +515,8 @@ Classical AMG V-cycle with SGS smoother as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0004 seconds.
 Number of iterations = 9 with relative residual 1.780726e-11.
-AMG solve costs 0.1495 seconds.
-AMG totally costs 0.1499 seconds.
+AMG solve costs 0.1487 seconds.
+AMG totally costs 0.1492 seconds.
 Max diff 2.5475e-10 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG V-cycle with L1_DIAG smoother as iterative solver ...
@@ -524,8 +524,8 @@ Classical AMG V-cycle with L1_DIAG smoother as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0004 seconds.
 Number of iterations = 16 with relative residual 3.090702e-11.
-AMG solve costs 0.2647 seconds.
-AMG totally costs 0.2651 seconds.
+AMG solve costs 0.2644 seconds.
+AMG totally costs 0.2648 seconds.
 Max diff 8.5515e-10 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Classical AMG V-cycle with SOR smoother as iterative solver ...
@@ -533,8 +533,8 @@ Classical AMG V-cycle with SOR smoother as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0004 seconds.
 Number of iterations = 16 with relative residual 3.359874e-11.
-AMG solve costs 0.2651 seconds.
-AMG totally costs 0.2655 seconds.
+AMG solve costs 0.2636 seconds.
+AMG totally costs 0.2640 seconds.
 Max diff 1.0125e-10 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 SA AMG V-cycle with GS smoother as iterative solver ...
@@ -542,18 +542,18 @@ SA AMG V-cycle with GS smoother as iterative solver ...
 Calling SA AMG ...
 Smoothed aggregation setup costs 0.0008 seconds.
 Number of iterations = 19 with relative residual 6.962572e-11.
-AMG solve costs 0.2855 seconds.
-AMG totally costs 0.2863 seconds.
+AMG solve costs 0.2854 seconds.
+AMG totally costs 0.2862 seconds.
 Max diff 9.0483e-07 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 UA AMG V-cycle with GS smoother as iterative solver ...
 
 Calling UA AMG ...
 Unsmoothed aggregation setup costs 0.0002 seconds.
-Number of iterations = 19 with relative residual 9.549497e-11.
-AMG solve costs 0.1379 seconds.
-AMG totally costs 0.1382 seconds.
-Max diff 2.7900e-09 smaller than tolerance................. [PASS]
+Number of iterations = 19 with relative residual 9.548669e-11.
+AMG solve costs 0.1371 seconds.
+AMG totally costs 0.1373 seconds.
+Max diff 3.0808e-09 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Diagonal preconditioned CG solver ...
 
@@ -580,35 +580,35 @@ AMG preconditioned MinRes solver ...
 
 Calling PMinRes solver (CSR) ...
 Number of iterations = 2 with relative residual 2.896050e-12.
-AMG_Krylov method totally costs 0.0441 seconds.
+AMG_Krylov method totally costs 0.0440 seconds.
 Max diff 1.0746e-07 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 AMG preconditioned GMRes solver ...
 
 Calling PGMRes solver (CSR) ...
 Number of iterations = 2 with relative residual 5.320041e-12.
-AMG_Krylov method totally costs 0.0268 seconds.
+AMG_Krylov method totally costs 0.0262 seconds.
 Max diff 1.3694e-07 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 AMG preconditioned vGMRes solver ...
 
 Calling PVGMRes solver (CSR) ...
 Number of iterations = 2 with relative residual 5.320041e-12.
-AMG_Krylov method totally costs 0.0267 seconds.
+AMG_Krylov method totally costs 0.0264 seconds.
 Max diff 1.3694e-07 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 AMG preconditioned vFGMRes solver ...
 
 Calling PVFGMRes solver (CSR) ...
 Number of iterations = 2 with relative residual 6.692830e-14.
-AMG_Krylov method totally costs 0.0218 seconds.
+AMG_Krylov method totally costs 0.0216 seconds.
 Max diff 1.1784e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 AMG preconditioned GCG solver ...
 
 Calling PGCG solver (CSR) ...
 Number of iterations = 1 with relative residual 7.030343e-14.
-AMG_Krylov method totally costs 0.0218 seconds.
+AMG_Krylov method totally costs 0.0229 seconds.
 Max diff 1.3511e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 AMG preconditioned GCR solver ...
@@ -622,9 +622,9 @@ ILUk preconditioned CG solver ...
 
 Calling PCG solver (CSR) ...
 Number of iterations = 15 with relative residual 1.204882e-09.
-ILUk_Krylov method totally costs 0.0009 seconds.
+ILUk_Krylov method totally costs 0.0010 seconds.
 Max diff 2.7391e-07 smaller than tolerance................. [PASS]
 ---------------------- All test finished at ----------------------
 74 tests finished: 0 failed, 74 succeeded!
-Mon Mar 23 09:19:55 2015
+Sun Mar 29 10:20:03 2015
 ------------------------------------------------------------------
