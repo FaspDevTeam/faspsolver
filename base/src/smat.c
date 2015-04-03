@@ -388,7 +388,7 @@ void fasp_blas_smat_inv_nc5 (REAL *a)
  */
 void fasp_blas_smat_inv_nc7 (REAL *a)
 {
-    fasp_blas_smat_inv_nc(a,7);
+    fasp_blas_smat_invp_nc(a,7);
 }
 
 /**
@@ -467,7 +467,7 @@ void fasp_blas_smat_inv_nc (REAL *a,
  * \author Chensong Zhang
  * \date   04/03/2015
  *
- * \note   This code is adapted from "Numerical Recipies in C"!
+ * \note   This routine is based on gaussj() from "Numerical Recipies in C"!
  */
 void fasp_blas_smat_invp_nc (REAL *a,
                              const INT n)
@@ -496,9 +496,9 @@ void fasp_blas_smat_invp_nc (REAL *a,
                             big = ABS(a[u]); irow = j; icol = k;
                         }
                     }
-                }
+                } // end for k
             }
-        }
+        } // end for j
         
         ++(ipiv[icol]);
         

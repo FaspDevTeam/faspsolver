@@ -1929,100 +1929,100 @@ REAL fasp_blas_smat_Linfinity(REAL *A,
 
 /*-------- In file: smoother_bsr.c --------*/
 
-void fasp_smoother_dbsr_jacobi (dBSRmat *A, 
-                                dvector *b, 
+void fasp_smoother_dbsr_jacobi (dBSRmat *A,
+                                dvector *b,
                                 dvector *u);
 
-void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A, 
-                                      dvector *b, 
+void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
+                                      dvector *b,
                                       dvector *u,
                                       REAL *diaginv);
 
-void fasp_smoother_dbsr_jacobi1 (dBSRmat *A, 
-                                 dvector *b, 
-                                 dvector *u, 
-                                 REAL *diaginv)    ;
+void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
+                                 dvector *b,
+                                 dvector *u,
+                                 REAL *diaginv);
 
-void fasp_smoother_dbsr_gs (dBSRmat *A, 
-                            dvector *b, 
-                            dvector *u, 
-                            INT order, 
+void fasp_smoother_dbsr_gs (dBSRmat *A,
+                            dvector *b,
+                            dvector *u,
+                            INT order,
                             INT *mark );
 
-void fasp_smoother_dbsr_gs1 (dBSRmat *A, 
-                             dvector *b, 
-                             dvector *u, 
-                             INT order, 
-                             INT *mark, 
-                             REAL *diaginv )    ;
+void fasp_smoother_dbsr_gs1 (dBSRmat *A,
+                             dvector *b,
+                             dvector *u,
+                             INT order,
+                             INT *mark,
+                             REAL *diaginv);
 
-void fasp_smoother_dbsr_gs_ascend (dBSRmat *A, 
-                                   dvector *b, 
-                                   dvector *u, 
-                                   REAL *diaginv );
+void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
+                                   dvector *b,
+                                   dvector *u,
+                                   REAL *diaginv);
 
 void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
-                                   dvector *b,
-                                   dvector *u );
-
-void fasp_smoother_dbsr_gs_descend (dBSRmat *A, 
-                                    dvector *b, 
-                                    dvector *u, 
-                                    REAL *diaginv );
-
-void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
                                     dvector *b,
                                     dvector *u);
 
-void fasp_smoother_dbsr_gs_order1 (dBSRmat *A, 
-                                   dvector *b, 
-                                   dvector *u, 
-                                   REAL *diaginv, 
-                                   INT *mark );
+void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
+                                    dvector *b,
+                                    dvector *u,
+                                    REAL *diaginv );
 
-void fasp_smoother_dbsr_gs_order2 (dBSRmat *A, 
-                                   dvector *b, 
-                                   dvector *u, 
-                                   INT *mark, 
+void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
+                                     dvector *b,
+                                     dvector *u);
+
+void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
+                                   dvector *b,
+                                   dvector *u,
+                                   REAL *diaginv,
+                                   INT *mark);
+
+void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
+                                   dvector *b,
+                                   dvector *u,
+                                   INT *mark,
                                    REAL *work);
 
-void fasp_smoother_dbsr_sor (dBSRmat *A, 
-                             dvector *b, 
-                             dvector *u, 
-                             INT order, 
-                             INT *mark, 
+void fasp_smoother_dbsr_sor (dBSRmat *A,
+                             dvector *b,
+                             dvector *u,
+                             INT order,
+                             INT *mark,
                              REAL weight);
 
-void fasp_smoother_dbsr_sor1 (dBSRmat *A, 
-                              dvector *b, 
-                              dvector *u, 
-                              INT order, 
-                              INT *mark, 
-                              REAL *diaginv, 
-                              REAL weight)    ;
+void fasp_smoother_dbsr_sor1 (dBSRmat *A,
+                              dvector *b,
+                              dvector *u,
+                              INT order,
+                              INT *mark,
+                              REAL *diaginv,
+                              REAL weight);
 
-void fasp_smoother_dbsr_sor_ascend (dBSRmat *A, 
-                                    dvector *b, 
-                                    dvector *u, 
-                                    REAL *diaginv, 
-                                    REAL weight );
+void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
+                                    dvector *b,
+                                    dvector *u,
+                                    REAL *diaginv,
+                                    REAL weight);
 
-void fasp_smoother_dbsr_sor_descend (dBSRmat *A, 
-                                     dvector *b, 
-                                     dvector *u, 
-                                     REAL *diaginv, 
+void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
+                                     dvector *b,
+                                     dvector *u,
+                                     REAL *diaginv,
                                      REAL weight);
 
-void fasp_smoother_dbsr_sor_order (dBSRmat *A, 
-                                   dvector *b, 
-                                   dvector *u, 
-                                   REAL *diaginv, 
-                                   INT *mark, 
-                                   REAL weight );
+void fasp_smoother_dbsr_sor_order (dBSRmat *A,
+                                   dvector *b,
+                                   dvector *u,
+                                   REAL *diaginv,
+                                   INT *mark,
+                                   REAL weight);
 
-void fasp_smoother_dbsr_ilu (dBSRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
+void fasp_smoother_dbsr_ilu (dBSRmat *A,
+                             dvector *b,
+                             dvector *x,
                              void *data);
 
 
