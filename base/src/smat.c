@@ -6,6 +6,8 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
+#define SWAP(a,b) {temp=(a);(a)=(b);(b)=temp;}  /**< swap two numbers */
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -28,7 +30,7 @@ void fasp_blas_smat_inv_nc2 (REAL *a)
     const REAL det = a0*a3 - a1*a2;
     REAL det_inv;
     
-    if ( ABS(det) < 1e-22 ) {
+    if ( ABS(det) < SMALLREAL ) {
         printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
         /*
          printf("##----------------------------------------------\n");
@@ -68,7 +70,7 @@ void fasp_blas_smat_inv_nc3 (REAL *a)
     const REAL det = a0*M0+a3*M3+a6*M6;
     REAL det_inv;
     
-    if ( ABS(det) < 1e-22 ) {
+    if ( ABS(det) < SMALLREAL ) {
         printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
         /*
          printf("##----------------------------------------------\n");
@@ -137,7 +139,7 @@ void fasp_blas_smat_inv_nc4 (REAL *a)
     const REAL det = a11*M11 + a12*M21 + a13*M31 + a14*M41;
     REAL det_inv;
     
-    if ( ABS(det) < 1e-22 ) {
+    if ( ABS(det) < SMALLREAL ) {
         printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
         /*
          printf("##----------------------------------------------\n");
@@ -205,7 +207,7 @@ void fasp_blas_smat_inv_nc5 (REAL *a)
     
     det = det0*a0 + det1*a5+ det2*a10 + det3*a15 + det4*a20;
     
-    if ( ABS(det) < 1e-22 ) {
+    if ( ABS(det) < SMALLREAL ) {
         printf("### WARNING: Matrix is nearly singular! det = %e\n", det);
         /*
          printf("##----------------------------------------------\n");
@@ -386,7 +388,158 @@ void fasp_blas_smat_inv_nc5 (REAL *a)
  */
 void fasp_blas_smat_inv_nc7 (REAL *a)
 {
-    fasp_blas_smat_inv(a,7);
+    fasp_blas_smat_inv_nc(a,7);
+}
+
+/**
+ * \fn void fasp_blas_smat_inv_nc (REAL *a, const INT n)
+ *
+ * \brief Compute the inverse of a matrix using Gauss Elimination
+ *
+ * \param a   Pointer to the REAL array which stands a n*n matrix
+ * \param n   Dimension of the matrix
+ *
+ * \author Xiaozhe Hu, Shiquan Zhang
+ * \date   05/01/2010
+ */
+void fasp_blas_smat_inv_nc (REAL *a,
+                            const INT n)
+{
+    INT i,j,k,l,u,kn,in;
+    REAL alinv;
+    
+    for (k=0; k<n; ++k) {
+        
+        kn = k*n;
+        l  = kn+k;
+        
+        if (ABS(a[l]) < SMALLREAL) {
+            printf("### ERROR: Diagonal entry is close to zero! ");
+            printf("diag_%d = %.2e\n", k, a[l]);
+            exit(ERROR_SOLVER_EXIT);
+        }
+        alinv = 1.0/a[l];
+        a[l] = alinv;
+        
+        for (j=0; j<k; ++j) {
+            u = kn+j; a[u] *= alinv;
+        }
+        
+        for (j=k+1; j<n; ++j) {
+            u = kn+j; a[u] *= alinv;
+        }
+        
+        for (i=0; i<k; ++i) {
+            in = i*n;
+            for (j=0; j<n; ++j)
+                if (j!=k) {
+                    u = in+j; a[u] -= a[in+k]*a[kn+j];
+                } // end if (j!=k)
+        }
+        
+        for (i=k+1; i<n; ++i) {
+            in = i*n;
+            for (j=0; j<n; ++j)
+                if (j!=k) {
+                    u = in+j; a[u] -= a[in+k]*a[kn+j];
+                } // end if (j!=k)
+        }
+        
+        for (i=0; i<k; ++i) {
+            u=i*n+k; a[u] *= -alinv;
+        }
+        
+        for (i=k+1; i<n; ++i) {
+            u=i*n+k; a[u] *= -alinv;
+        }
+        
+    } // end for (k=0; k<n; ++k)
+}
+
+/**
+ * \fn void fasp_blas_smat_invp_nc (REAL *a, const INT n)
+ *
+ * \brief Compute the inverse of a matrix using Gauss Elimination with Pivoting
+ *
+ * \param a   Pointer to the REAL array which stands a n*n matrix
+ * \param n   Dimension of the matrix
+ *
+ * \author Chensong Zhang
+ * \date   04/03/2015
+ *
+ * \note   This code is adapted from "Numerical Recipies in C"!
+ */
+void fasp_blas_smat_invp_nc (REAL *a,
+                             const INT n)
+{
+    INT i,icol,irow,j,k,l,ll,u;
+    REAL big,dum,pivinv,temp;
+    
+    INT *work = (INT *)fasp_mem_calloc(3*n,sizeof(INT));
+    INT *indxc = work, *indxr = work+n, *ipiv = work+2*n;
+    
+    // The integer arrays ipiv, indxr, and indxc are used for book keeping
+    // on the pivoting.
+    for ( j=0; j<n; j++ ) ipiv[j] = 0;
+    
+    // This is the main loop over the columns to be reduced.
+    for ( i=0; i<n; i++ ) {
+        
+        // This is the outer loop of the search for a pivot element.
+        big = 0.0;
+        for ( j=0; j<n; j++ ) {
+            if ( ipiv[j] != 1 ) {
+                for ( k=0; k<n; k++ ) {
+                    if ( ipiv[k] == 0 ) {
+                        u = j*n+k;
+                        if (ABS(a[u]) >= big) {
+                            big = ABS(a[u]); irow = j; icol = k;
+                        }
+                    }
+                }
+            }
+        }
+        
+        ++(ipiv[icol]);
+        
+        // We now have the pivot element, so we interchange rows, if needed, to
+        // put the pivot element on the diagonal. The columns are not physically
+        // interchanged, only relabeled: indxc[i], the column of the ith pivot
+        // element, is the ith column that is reduced, while indxr[i] is the row
+        // in which that pivot element was originally located. If indxr[i] ̸= indxc[i]
+        // there is an implied column interchange. With this form of bookkeeping,
+        // the solution b’s will end up in the correct order, and the inverse
+        // matrix will be scrambled by columns.
+        if ( irow != icol ) {
+            for ( l=0; l<n; l++ ) SWAP(a[irow*n+l],a[icol*n+l]);
+        }
+        
+        indxr[i] = irow; indxc[i] = icol;
+        u = icol*n+icol;
+        if ( ABS(a[u]) < SMALLREAL ) {
+            printf("### WARNING: The matrix is nearly singular!\n");
+        }
+        pivinv = 1.0/a[u]; a[u]=1.0;
+        for ( l=0; l<n; l++ ) a[icol*n+l] *= pivinv;
+        
+        for ( ll=0; ll<n; ll++ ) {
+            if ( ll != icol ) {
+                u = ll*n+icol;
+                dum = a[u]; a[u] = 0.0;
+                for ( l=0; l<n; l++ ) a[ll*n+l] -= a[icol*n+l]*dum;
+            }
+        }
+    }
+    // This is the end of the main loop over columns of the reduction.
+    
+    // It only remains to unscram- ble the solution in view of the column
+    // interchanges.
+    for ( l=n-1; l>=0; l-- ) {
+        if ( indxr[l] != indxc[l] )
+            for ( k=0; k<n; k++ ) SWAP(a[k*n+indxr[l]],a[k*n+indxc[l]]);
+    } // And we are done.
+    
+    fasp_mem_free(work);
 }
 
 /**
@@ -422,58 +575,9 @@ INT fasp_blas_smat_inv (REAL *a,
             fasp_blas_smat_inv_nc5(a);
             break;
             
-        default: {
-            INT i,j,k,l,u,kn,in;
-            REAL alinv;
-            
-            for (k=0; k<n; ++k) {
-                
-                kn = k*n;
-                l  = kn+k;
-                
-                if (ABS(a[l]) < SMALLREAL) {
-                    printf("### WARNING: Diagonal entry is close to zero!");
-                    printf("### WARNING: diag_%d=%e\n", k, a[l]);
-                    a[l] = SMALLREAL;
-                }
-                alinv = 1.0/a[l];
-                a[l] = alinv;
-                
-                for (j=0; j<k; ++j) {
-                    u = kn+j; a[u] *= alinv;
-                }
-                
-                for (j=k+1; j<n; ++j) {
-                    u = kn+j; a[u] *= alinv;
-                }
-                
-                for (i=0; i<k; ++i) {
-                    in = i*n;
-                    for (j=0; j<n; ++j)
-                        if (j!=k) {
-                            u = in+j; a[u] -= a[in+k]*a[kn+j];
-                        } // end if (j!=k)
-                }
-                
-                for (i=k+1; i<n; ++i) {
-                    in = i*n;
-                    for (j=0; j<n; ++j)
-                        if (j!=k) {
-                            u = in+j; a[u] -= a[in+k]*a[kn+j];
-                        } // end if (j!=k)
-                }
-                
-                for (i=0; i<k; ++i) {
-                    u=i*n+k; a[u] *= -alinv;
-                }
-                
-                for (i=k+1; i<n; ++i) {
-                    u=i*n+k; a[u] *= -alinv;
-                }
-                
-            } // end for (k=0; k<n; ++k)
+        default:
+            fasp_blas_smat_invp_nc(a,n);
             break;
-        }
             
     }
     

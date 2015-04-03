@@ -1,9 +1,9 @@
      560 ./base/include/dlmalloc.h
      170 ./base/include/doxygen.h
-    1192 ./base/include/fasp.h
+    1191 ./base/include/fasp.h
      684 ./base/include/fasp_block.h
      251 ./base/include/fasp_const.h
-    2931 ./base/include/fasp_functs.h
+    2937 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
     5818 ./base/include/malloc.c.h
@@ -80,7 +80,7 @@
      874 ./base/src/quadrature.c
      116 ./base/src/rap.c
      751 ./base/src/schwarz_setup.c
-     698 ./base/src/smat.c
+     802 ./base/src/smat.c
     1608 ./base/src/smoother_bsr.c
     2315 ./base/src/smoother_csr.c
       83 ./base/src/smoother_csr_cr.c
@@ -108,4 +108,4 @@
       89 ./base/src/itsolver_util.inl
      238 ./base/src/linklist.inl
      245 ./base/src/mg_util.inl
-   92094 total
+   92203 total
