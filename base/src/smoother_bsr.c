@@ -15,7 +15,7 @@
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
-    
+
 ////////////////////////////////////////  JACOBI  //////////////////////////////////////////
 
 /**
@@ -32,39 +32,39 @@
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/02/2012
  */
-void fasp_smoother_dbsr_jacobi (dBSRmat *A, 
-                                dvector *b, 
+void fasp_smoother_dbsr_jacobi (dBSRmat *A,
+                                dvector *b,
                                 dvector *u)
 {
-    // members of A 
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    size = ROW*nb2;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     const REAL   *val = A->val;
-        
+    
     // local variables
     INT i,k;
     REAL *diaginv = NULL;
-
+    
     INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-   
-    // allocate memory   
+    
+    // allocate memory
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks
     if(use_openmp) {
         INT mybegin,myend,myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
@@ -76,7 +76,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
             }
         }
     }
-    else {   
+    else {
         for (i = 0; i < ROW; ++i) {
             for (k = IA[i]; k < IA[i+1]; ++k) {
                 if (JA[k] == i)
@@ -85,11 +85,11 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
         }
     }
     
-    // compute the inverses of all the diagonal sub-blocks   
+    // compute the inverses of all the diagonal sub-blocks
     if (nb > 1) {
         if(use_openmp) {
             INT mybegin,myend,myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -108,7 +108,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     else {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -119,7 +119,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
             }
         }
         else {
-            for (i = 0; i < ROW; ++i) {  
+            for (i = 0; i < ROW; ++i) {
                 // zero-diagonal should be tested previously
                 diaginv[i] = 1.0 / diaginv[i];
             }
@@ -127,14 +127,14 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     }
     
     fasp_smoother_dbsr_jacobi1(A, b, u, diaginv);
-    fasp_mem_free(diaginv);    
+    fasp_mem_free(diaginv);
 }
 
 /**
- * \fn void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A, dvector *b, dvector *u, 
+ * \fn void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A, dvector *b, dvector *u,
  *                                           REAL *diaginv)
  *
- * \brief Setup for jacobi relaxation, fetch the diagonal sub-block matrixes and 
+ * \brief Setup for jacobi relaxation, fetch the diagonal sub-block matrixes and
  *        make them inverse first
  *
  * \param A       Pointer to dBSRmat: the coefficient matrix
@@ -147,26 +147,26 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/02/2012
  */
-void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A, 
-                                      dvector *b, 
+void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
+                                      dvector *b,
                                       dvector *u,
                                       REAL *diaginv)
 {
-    // members of A 
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
-//    const INT    size = ROW*nb2;
+    //    const INT    size = ROW*nb2;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     const REAL   *val = A->val;
     
     // local variables
     INT i,k;
-
+    
     INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
@@ -176,7 +176,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     // get all the diagonal sub-blocks
     if(use_openmp) {
         INT mybegin,myend,myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
@@ -188,7 +188,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
             }
         }
     }
-    else {   
+    else {
         for (i = 0; i < ROW; ++i) {
             for (k = IA[i]; k < IA[i+1]; ++k) {
                 if (JA[k] == i)
@@ -197,11 +197,11 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
         }
     }
     
-    // compute the inverses of all the diagonal sub-blocks   
+    // compute the inverses of all the diagonal sub-blocks
     if (nb > 1) {
         if(use_openmp) {
             INT mybegin,myend,myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -220,7 +220,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     else {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -231,7 +231,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
             }
         }
         else {
-            for (i = 0; i < ROW; ++i) {  
+            for (i = 0; i < ROW; ++i) {
                 // zero-diagonal should be tested previously
                 diaginv[i] = 1.0 / diaginv[i];
             }
@@ -241,7 +241,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_jacobi1 (dBSRmat *A, dvector *b, dvector *u, 
+ * \fn void fasp_smoother_dbsr_jacobi1 (dBSRmat *A, dvector *b, dvector *u,
  *                                      REAL *diaginv)
  *
  * \brief Jacobi relaxation
@@ -253,32 +253,32 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
  *
  * \author Zhiyang Zhou
  * \date   2010/10/25
- * 
+ *
  * Modified by Chunsheng Feng, Zheng Li on 08/03/2012
  */
-void fasp_smoother_dbsr_jacobi1 (dBSRmat *A, 
-                                 dvector *b, 
-                                 dvector *u, 
-                                 REAL *diaginv)    
-{    
-    // members of A 
+void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
+                                 dvector *b,
+                                 dvector *u,
+                                 REAL *diaginv)
+{
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    size = ROW*nb;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     REAL         *val = A->val;
     
     INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
+    
     // values of dvector b and u
     REAL *b_val = b->val;
     REAL *u_val = u->val;
@@ -298,20 +298,20 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     if (nb == 1) {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,j,k)
 #endif
             for (myid=0; myid<nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) {
-                    for (k = IA[i]; k < IA[i+1]; ++k) { 
+                    for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
                         if (j != i)
                             b_tmp[i] -= val[k]*u_val[j];
                     }
                 }
             }
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -320,40 +320,40 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
                     u_val[i] = b_tmp[i]*diaginv[i];
                 }
             }
-        } 
+        }
         else {
             for (i = 0; i < ROW; ++i) {
-                for (k = IA[i]; k < IA[i+1]; ++k) { 
+                for (k = IA[i]; k < IA[i+1]; ++k) {
                     j = JA[k];
                     if (j != i)
                         b_tmp[i] -= val[k]*u_val[j];
                 }
-            }   
-            for (i = 0; i < ROW; ++i) {
-                u_val[i] = b_tmp[i]*diaginv[i]; 
             }
-        }      
-
-        fasp_mem_free(b_tmp);   
+            for (i = 0; i < ROW; ++i) {
+                u_val[i] = b_tmp[i]*diaginv[i];
+            }
+        }
+        
+        fasp_mem_free(b_tmp);
     }
     else if (nb > 1) {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,pb,k,j)
 #endif
             for(myid=0; myid<nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) {
                     pb = i*nb;
-                    for (k = IA[i]; k < IA[i+1]; ++k) { 
+                    for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
                         if (j != i)
                             fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+pb, nb);
                     }
                 }
             }
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,pb)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -367,20 +367,20 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
         else {
             for (i = 0; i < ROW; ++i) {
                 pb = i*nb;
-                for (k = IA[i]; k < IA[i+1]; ++k) { 
+                for (k = IA[i]; k < IA[i+1]; ++k) {
                     j = JA[k];
                     if (j != i)
                         fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+pb, nb);
                 }
             }
-    
+            
             for (i = 0; i < ROW; ++i) {
                 pb = i*nb;
                 fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp+pb, u_val+pb, nb);
             }
-       
+            
         }
-        fasp_mem_free(b_tmp);   
+        fasp_mem_free(b_tmp);
     }
     else {
         printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
@@ -392,7 +392,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
 ////////////////////////////////////  Gauss-Seidel  ////////////////////////////////////////////
 
 /**
- * \fn void fasp_smoother_dbsr_gs (dBSRmat *A, dvector *b, dvector *u, INT order, 
+ * \fn void fasp_smoother_dbsr_gs (dBSRmat *A, dvector *b, dvector *u, INT order,
  *                                 INT *mark)
  *
  * \brief Gauss-Seidel relaxation
@@ -401,52 +401,52 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
  * \param b      Pointer to dvector: the right hand side
  * \param u      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
  * \param order  Flag to indicate the order for smoothing
- *               If mark = NULL       
+ *               If mark = NULL
  *                    ASCEND       12: in ascending order
  *                    DESCEND      21: in descending order
  *               If mark != NULL:  in the user-defined order
  * \param mark   Pointer to NULL or to the user-defined ordering
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/03/2012
  */
-void fasp_smoother_dbsr_gs (dBSRmat *A, 
-                            dvector *b, 
-                            dvector *u, 
-                            INT order, 
+void fasp_smoother_dbsr_gs (dBSRmat *A,
+                            dvector *b,
+                            dvector *u,
+                            INT order,
                             INT *mark )
 {
-   // members of A 
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    size = ROW*nb2;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     const REAL   *val = A->val;
-        
+    
     // local variables
     INT i,k;
     REAL *diaginv = NULL;
-
+    
     INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-
-    // allocate memory   
+    
+    // allocate memory
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks
     if(use_openmp) {
         INT mybegin,myend,myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
@@ -458,7 +458,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
             }
         }
     }
-    else {   
+    else {
         for (i = 0; i < ROW; ++i) {
             for (k = IA[i]; k < IA[i+1]; ++k) {
                 if (JA[k] == i)
@@ -467,11 +467,11 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
         }
     }
     
-    // compute the inverses of all the diagonal sub-blocks   
+    // compute the inverses of all the diagonal sub-blocks
     if (nb > 1) {
         if(use_openmp) {
             INT mybegin,myend,myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -490,7 +490,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     else {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -501,7 +501,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
             }
         }
         else {
-            for (i = 0; i < ROW; ++i) {  
+            for (i = 0; i < ROW; ++i) {
                 // zero-diagonal should be tested previously
                 diaginv[i] = 1.0 / diaginv[i];
             }
@@ -513,7 +513,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_gs1 (dBSRmat *A, dvector *b, dvector *u, INT order, 
+ * \fn void fasp_smoother_dbsr_gs1 (dBSRmat *A, dvector *b, dvector *u, INT order,
  *                                  INT *mark, REAL *diaginv)
  *
  * \brief Gauss-Seidel relaxation
@@ -522,7 +522,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
  * \param b        Pointer to dvector: the right hand side
  * \param u        Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
  * \param order    Flag to indicate the order for smoothing
- *                 If mark = NULL       
+ *                 If mark = NULL
  *                    ASCEND       12: in ascending order
  *                    DESCEND      21: in descending order
  *                 If mark != NULL:  in the user-defined order
@@ -530,24 +530,24 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
  * \param diaginv  Inverses for all the diagonal blocks of A
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
  */
-void fasp_smoother_dbsr_gs1 (dBSRmat *A, 
-                             dvector *b, 
-                             dvector *u, 
-                             INT order, 
-                             INT *mark, 
-                             REAL *diaginv )    
-{    
+void fasp_smoother_dbsr_gs1 (dBSRmat *A,
+                             dvector *b,
+                             dvector *u,
+                             INT order,
+                             INT *mark,
+                             REAL *diaginv)
+{
     if (!mark) {
         if (order == ASCEND) // smooth ascendingly
-            {
-                fasp_smoother_dbsr_gs_ascend(A, b, u, diaginv);
-            }
+        {
+            fasp_smoother_dbsr_gs_ascend(A, b, u, diaginv);
+        }
         else if (order == DESCEND) // smooth descendingly
-            {
-                fasp_smoother_dbsr_gs_descend(A, b, u, diaginv);
-            }
+        {
+            fasp_smoother_dbsr_gs_descend(A, b, u, diaginv);
+        }
     }
     // smooth according to the order 'mark' defined by user
     else {
@@ -556,7 +556,7 @@ void fasp_smoother_dbsr_gs1 (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_gs_ascend (dBSRmat *A, dvector *b, dvector *u, 
+ * \fn void fasp_smoother_dbsr_gs_ascend (dBSRmat *A, dvector *b, dvector *u,
  *                                        REAL *diaginv)
  *
  * \brief Gauss-Seidel relaxation in the ascending order
@@ -567,19 +567,19 @@ void fasp_smoother_dbsr_gs1 (dBSRmat *A,
  * \param diaginv  Inverses for all the diagonal blocks of A
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
  */
-void fasp_smoother_dbsr_gs_ascend (dBSRmat *A, 
-                                   dvector *b, 
-                                   dvector *u, 
-                                   REAL *diaginv )
+void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
+                                   dvector *b,
+                                   dvector *u,
+                                   REAL *diaginv)
 {
-    // members of A 
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     REAL         *val = A->val;
     
     // values of dvector b and u
@@ -594,35 +594,35 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
     if (nb == 1) {
         for (i = 0; i < ROW; ++i) {
             rhs = b_val[i];
-            for (k = IA[i]; k < IA[i+1]; ++k) {  
+            for (k = IA[i]; k < IA[i+1]; ++k) {
                 j = JA[k];
                 if (j != i)
                     rhs -= val[k]*u_val[j];
             }
             u_val[i] = rhs*diaginv[i];
-        }  
+        }
     }
     else if (nb > 1) {
         REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
-
+        
         for (i = 0; i < ROW; ++i) {
             pb = i*nb;
             memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-            for (k = IA[i]; k < IA[i+1]; ++k) { 
+            for (k = IA[i]; k < IA[i+1]; ++k) {
                 j = JA[k];
                 if (j != i)
                     fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
             }
             fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
         }
-
+        
         fasp_mem_free(b_tmp);
     }
     else {
         printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
         fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
-
+    
 }
 
 /**
@@ -643,8 +643,8 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
  *       been such scaled that all the diagonal blocks become identity matrices.
  */
 void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
-                                   dvector *b,
-                                   dvector *u )
+                                    dvector *b,
+                                    dvector *u)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -700,7 +700,7 @@ void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_gs_descend (dBSRmat *A, dvector *b, dvector *u, 
+ * \fn void fasp_smoother_dbsr_gs_descend (dBSRmat *A, dvector *b, dvector *u,
  *                                         REAL *diaginv)
  *
  * \brief Gauss-Seidel relaxation in the descending order
@@ -708,22 +708,22 @@ void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
  * \param A  Pointer to dBSRmat: the coefficient matrix
  * \param b  Pointer to dvector: the right hand side
  * \param u  Pointer to dvector: the unknowns (IN: initial guess, OUT: approximation)
- * \param diaginv  Inverses for all the diagonal blocks of A 
+ * \param diaginv  Inverses for all the diagonal blocks of A
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
  */
-void fasp_smoother_dbsr_gs_descend (dBSRmat *A, 
-                                    dvector *b, 
-                                    dvector *u, 
+void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
+                                    dvector *b,
+                                    dvector *u,
                                     REAL *diaginv )
 {
-    // members of A 
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     REAL         *val = A->val;
     
     // values of dvector b and u
@@ -738,28 +738,28 @@ void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
     if (nb == 1) {
         for (i = ROW-1; i >= 0; i--) {
             rhs = b_val[i];
-            for (k = IA[i]; k < IA[i+1]; ++k) {  
+            for (k = IA[i]; k < IA[i+1]; ++k) {
                 j = JA[k];
                 if (j != i)
                     rhs -= val[k]*u_val[j];
             }
             u_val[i] = rhs*diaginv[i];
-        }  
+        }
     }
     else if (nb > 1) {
         REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
-
+        
         for (i = ROW-1; i >= 0; i--) {
             pb = i*nb;
             memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-            for (k = IA[i]; k < IA[i+1]; ++k) { 
+            for (k = IA[i]; k < IA[i+1]; ++k) {
                 j = JA[k];
                 if (j != i)
                     fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
             }
             fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
         }
-
+        
         fasp_mem_free(b_tmp);
     }
     else {
@@ -788,8 +788,8 @@ void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
  *
  */
 void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
-                                    dvector *b,
-                                    dvector *u)
+                                     dvector *b,
+                                     dvector *u)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -845,7 +845,7 @@ void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_gs_order1 (dBSRmat *A, dvector *b, dvector *u, 
+ * \fn void fasp_smoother_dbsr_gs_order1 (dBSRmat *A, dvector *b, dvector *u,
  *                                        REAL *diaginv, INT *mark)
  *
  * \brief Gauss-Seidel relaxation in the user-defined order
@@ -854,23 +854,23 @@ void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
  * \param b  Pointer to dvector: the right hand side
  * \param u  Pointer to dvector: the unknowns (IN: initial guess, OUT: approximation)
  * \param diaginv  Inverses for all the diagonal blocks of A
- * \param mark     Pointer to the user-defined ordering  
+ * \param mark     Pointer to the user-defined ordering
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
  */
-void fasp_smoother_dbsr_gs_order1 (dBSRmat *A, 
-                                   dvector *b, 
-                                   dvector *u, 
-                                   REAL *diaginv, 
-                                   INT *mark )
+void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
+                                   dvector *b,
+                                   dvector *u,
+                                   REAL *diaginv,
+                                   INT *mark)
 {
-    // members of A 
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     REAL         *val = A->val;
     
     // values of dvector b and u
@@ -892,23 +892,23 @@ void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
                     rhs -= val[k]*u_val[j];
             }
             u_val[i] = rhs*diaginv[i];
-        }  
+        }
     }
     else if (nb > 1) {
         REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
-
+        
         for (I = 0; I < ROW; ++I) {
             i = mark[I];
             pb = i*nb;
             memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-            for (k = IA[i]; k < IA[i+1]; ++k) { 
+            for (k = IA[i]; k < IA[i+1]; ++k) {
                 j = JA[k];
                 if (j != i)
                     fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
             }
             fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
         }
-
+        
         fasp_mem_free(b_tmp);
     }
     else {
@@ -918,7 +918,7 @@ void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_gs_order2 (dBSRmat *A, dvector *b, dvector *u, 
+ * \fn void fasp_smoother_dbsr_gs_order2 (dBSRmat *A, dvector *b, dvector *u,
  *                                        INT *mark, REAL *work)
  *
  * \brief Gauss-Seidel relaxation in the user-defined order
@@ -930,25 +930,25 @@ void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
  * \param work   Work temp array
  *
  * \author Zhiyang Zhou
- * \date   2010/11/08 
+ * \date   2010/11/08
  *
- * \note The only difference between the functions 'fasp_smoother_dbsr_gs_order2' 
- *       and 'fasp_smoother_dbsr_gs_order1' lies in that we don't have to multiply 
- *       by the inverses of the diagonal blocks in each ROW since matrix A has  
+ * \note The only difference between the functions 'fasp_smoother_dbsr_gs_order2'
+ *       and 'fasp_smoother_dbsr_gs_order1' lies in that we don't have to multiply
+ *       by the inverses of the diagonal blocks in each ROW since matrix A has
  *       been such scaled that all the diagonal blocks become identity matrices.
  */
-void fasp_smoother_dbsr_gs_order2 (dBSRmat *A, 
-                                   dvector *b, 
-                                   dvector *u, 
-                                   INT *mark, 
+void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
+                                   dvector *b,
+                                   dvector *u,
+                                   INT *mark,
                                    REAL *work)
 {
-    // members of A 
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     REAL         *val = A->val;
     
     // values of dvector b and u
@@ -966,20 +966,20 @@ void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
         for (I = 0; I < ROW; ++I) {
             i = mark[I];
             rhs = b_val[i];
-            for (k = IA[i]; k < IA[i+1]; ++k) {  
+            for (k = IA[i]; k < IA[i+1]; ++k) {
                 j = JA[k];
                 if (j != i)
                     rhs -= val[k]*u_val[j];
             }
             u_val[i] = rhs;
-        }  
+        }
     }
     else if (nb > 1) {
         for (I = 0; I < ROW; ++I) {
             i = mark[I];
             pb = i*nb;
             memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-            for (k = IA[i]; k < IA[i+1]; ++k) { 
+            for (k = IA[i]; k < IA[i+1]; ++k) {
                 j = JA[k];
                 if (j != i)
                     fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
@@ -995,7 +995,7 @@ void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
 ////////////////////////////////////////  SOR  //////////////////////////////////////////
 
 /**
- * \fn void fasp_smoother_dbsr_sor (dBSRmat *A, dvector *b, dvector *u, INT order, 
+ * \fn void fasp_smoother_dbsr_sor (dBSRmat *A, dvector *b, dvector *u, INT order,
  *                                  INT *mark, REAL weight)
  *
  * \brief SOR relaxation
@@ -1004,54 +1004,54 @@ void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
  * \param b  Pointer to dvector: the right hand side
  * \param u  Pointer to dvector: the unknowns (IN: initial guess, OUT: approximation)
  * \param order  Flag to indicate the order for smoothing
- *               If mark = NULL       
+ *               If mark = NULL
  *                    ASCEND       12: in ascending order
  *                    DESCEND      21: in descending order
  *               If mark != NULL:  in the user-defined order
  * \param mark   Pointer to NULL or to the user-defined ordering
- * \param weight Over-relaxation weight 
+ * \param weight Over-relaxation weight
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/03/2012
  */
-void fasp_smoother_dbsr_sor (dBSRmat *A, 
-                             dvector *b, 
-                             dvector *u, 
-                             INT order, 
-                             INT *mark, 
+void fasp_smoother_dbsr_sor (dBSRmat *A,
+                             dvector *b,
+                             dvector *u,
+                             INT order,
+                             INT *mark,
                              REAL weight)
 {
-    // members of A 
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    size = ROW*nb2;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     const REAL   *val = A->val;
-        
+    
     // local variables
     INT i,k;
     REAL *diaginv = NULL;
-
+    
     INT nthreads = 1, use_openmp = FALSE;
-
-#ifdef _OPENMP 
+    
+#ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-   
-    // allocate memory   
+    
+    // allocate memory
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks
     if(use_openmp) {
         INT mybegin,myend,myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
@@ -1063,7 +1063,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
             }
         }
     }
-    else {   
+    else {
         for (i = 0; i < ROW; ++i) {
             for (k = IA[i]; k < IA[i+1]; ++k) {
                 if (JA[k] == i)
@@ -1072,11 +1072,11 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
         }
     }
     
-    // compute the inverses of all the diagonal sub-blocks   
+    // compute the inverses of all the diagonal sub-blocks
     if (nb > 1) {
         if(use_openmp) {
             INT mybegin,myend,myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -1095,7 +1095,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     else {
         if(use_openmp) {
             INT mybegin, myend, myid;
-#ifdef _OPENMP 
+#ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
@@ -1106,7 +1106,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
             }
         }
         else {
-            for (i = 0; i < ROW; ++i) {  
+            for (i = 0; i < ROW; ++i) {
                 // zero-diagonal should be tested previously
                 diaginv[i] = 1.0 / diaginv[i];
             }
@@ -1118,7 +1118,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_sor1 (dBSRmat *A, dvector *b, dvector *u, INT order, 
+ * \fn void fasp_smoother_dbsr_sor1 (dBSRmat *A, dvector *b, dvector *u, INT order,
  *                                   INT *mark, REAL *diaginv, REAL weight)
  *
  * \brief SOR relaxation
@@ -1127,25 +1127,25 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
  * \param b  Pointer to dvector: the right hand side
  * \param u  Pointer to dvector: the unknowns (IN: initial guess, OUT: approximation)
  * \param order   Flag to indicate the order for smoothing
- *                If mark = NULL       
+ *                If mark = NULL
  *                    ASCEND       12: in ascending order
  *                    DESCEND      21: in descending order
  *                If mark != NULL:  in the user-defined order
  * \param mark    Pointer to NULL or to the user-defined ordering
  * \param diaginv Inverses for all the diagonal blocks of A
- * \param weight  Over-relaxation weight 
+ * \param weight  Over-relaxation weight
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
  */
-void fasp_smoother_dbsr_sor1 (dBSRmat *A, 
-                              dvector *b, 
-                              dvector *u, 
-                              INT order, 
-                              INT *mark, 
-                              REAL *diaginv, 
-                              REAL weight)    
-{    
+void fasp_smoother_dbsr_sor1 (dBSRmat *A,
+                              dvector *b,
+                              dvector *u,
+                              INT order,
+                              INT *mark,
+                              REAL *diaginv,
+                              REAL weight)
+{
     if (!mark) {
         if (order == ASCEND)       // smooth ascendingly
         {
@@ -1163,7 +1163,7 @@ void fasp_smoother_dbsr_sor1 (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_sor_ascend (dBSRmat *A, dvector *b, dvector *u, 
+ * \fn void fasp_smoother_dbsr_sor_ascend (dBSRmat *A, dvector *b, dvector *u,
  *                                         REAL *diaginv, REAL weight)
  *
  * \brief SOR relaxation in the ascending order
@@ -1171,25 +1171,25 @@ void fasp_smoother_dbsr_sor1 (dBSRmat *A,
  * \param A  Pointer to dBSRmat: the coefficient matrix
  * \param b  Pointer to dvector: the right hand side
  * \param u  Pointer to dvector: the unknowns (IN: initial guess, OUT: approximation)
- * \param diaginv  Inverses for all the diagonal blocks of A 
- * \param weight   Over-relaxation weight   
+ * \param diaginv  Inverses for all the diagonal blocks of A
+ * \param weight   Over-relaxation weight
  *
  * \author Zhiyang Zhou
  * \date   2010/10/25
  *
- * Modified by Chunsheng Feng, Zheng Li on 2012/09/04 
+ * Modified by Chunsheng Feng, Zheng Li on 2012/09/04
  */
-void fasp_smoother_dbsr_sor_ascend (dBSRmat *A, 
-                                    dvector *b, 
-                                    dvector *u, 
-                                    REAL *diaginv, 
-                                    REAL weight )
+void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
+                                    dvector *b,
+                                    dvector *u,
+                                    REAL *diaginv,
+                                    REAL weight)
 {
-    // members of A 
+    // members of A
     INT     ROW = A->ROW;
     INT     nb  = A->nb;
     INT    *IA  = A->IA;
-    INT    *JA  = A->JA;   
+    INT    *JA  = A->JA;
     REAL *val = A->val;
     
     // values of dvector b and u
@@ -1202,14 +1202,14 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
     INT pb;
     REAL rhs = 0.0;
     REAL one_minus_weight = 1.0 - weight;
-
-
-#ifdef _OPENMP  
+    
+    
+#ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
     INT nthreads = FASP_GET_NUM_THREADS();
-#endif 
-   
+#endif
+    
     if (nb == 1) {
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
@@ -1218,7 +1218,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
                 for (i = mybegin; i < myend; i++) {
                     rhs = b_val[i];
-                    for (k = IA[i]; k < IA[i+1]; ++k) {  
+                    for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
                         if (j != i)
                             rhs -= val[k]*u_val[j];
@@ -1226,20 +1226,20 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
                     u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);
                 }
             }
-        } 
+        }
         else {
-#endif           
+#endif
             for (i = 0; i < ROW; ++i) {
                 rhs = b_val[i];
-                for (k = IA[i]; k < IA[i+1]; ++k) {  
+                for (k = IA[i]; k < IA[i+1]; ++k) {
                     j = JA[k];
                     if (j != i)
                         rhs -= val[k]*u_val[j];
                 }
-                u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
+                u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);
             }
 #ifdef _OPENMP
-        }  
+        }
 #endif
     }
     else if (nb > 1) {
@@ -1247,7 +1247,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
             REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
-//#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
+            //#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
 #pragma omp parallel for private(myid, mybegin, myend, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
@@ -1255,7 +1255,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
                     pb = i*nb;
                     //memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
                     memcpy(b_tmp+myid*nb, b_val+pb, nb*sizeof(REAL));
-                    for (k = IA[i]; k < IA[i+1]; ++k) { 
+                    for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
                         if (j != i)
                             //fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+myid*nb, nb);
@@ -1273,12 +1273,12 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
             for (i = 0; i < ROW; ++i) {
                 pb = i*nb;
                 memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-                for (k = IA[i]; k < IA[i+1]; ++k) { 
+                for (k = IA[i]; k < IA[i+1]; ++k) {
                     j = JA[k];
                     if (j != i)
                         fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
                 }
-                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
             }
             fasp_mem_free(b_tmp);
 #ifdef _OPENMP
@@ -1292,7 +1292,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_sor_descend (dBSRmat *A, dvector *b, dvector *u, 
+ * \fn void fasp_smoother_dbsr_sor_descend (dBSRmat *A, dvector *b, dvector *u,
  *                                          REAL *diaginv, REAL weight)
  *
  * \brief SOR relaxation in the descending order
@@ -1301,28 +1301,28 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
  * \param b  Pointer to dvector: the right hand side
  * \param u  Pointer to dvector: the unknowns (IN: initial guess, OUT: approximation)
  * \param diaginv  Inverses for all the diagonal blocks of A
- * \param weight   Over-relaxation weight   
+ * \param weight   Over-relaxation weight
  *
  * \author Zhiyang Zhou
  * \date   2010/10/25
- * 
+ *
  * Modified by Chunsheng Feng, Zheng Li on 2012/09/04
  */
-void fasp_smoother_dbsr_sor_descend (dBSRmat *A, 
-                                     dvector *b, 
-                                     dvector *u, 
-                                     REAL *diaginv, 
+void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
+                                     dvector *b,
+                                     dvector *u,
+                                     REAL *diaginv,
                                      REAL weight)
 {
-    // members of A 
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     REAL         *val = A->val;
     const REAL    one_minus_weight = 1.0 - weight;
-
+    
     // values of dvector b and u
     REAL *b_val = b->val;
     REAL *u_val = u->val;
@@ -1331,13 +1331,13 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
     INT i,j,k;
     INT pb;
     REAL rhs = 0.0;
-
-#ifdef _OPENMP  
+    
+#ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
-
+    
     if (nb == 1) {
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
@@ -1347,36 +1347,36 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
                 mybegin = ROW-1-mybegin; myend = ROW-1-myend;
                 for (i = mybegin; i > myend; i--) {
                     rhs = b_val[i];
-                    for (k = IA[i]; k < IA[i+1]; ++k) {  
+                    for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
                         if (j != i)
                             rhs -= val[k]*u_val[j];
                     }
                     u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);
                 }
-            }            
-        } 
+            }
+        }
         else {
-#endif        
+#endif
             for (i = ROW-1; i >= 0; i--) {
                 rhs = b_val[i];
-                for (k = IA[i]; k < IA[i+1]; ++k) {  
+                for (k = IA[i]; k < IA[i+1]; ++k) {
                     j = JA[k];
                     if (j != i)
                         rhs -= val[k]*u_val[j];
                 }
                 u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);
-            } 
+            }
 #ifdef _OPENMP
-        }       
-#endif      
+        }
+#endif
     }
     else if (nb > 1) {
         //REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
-        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
-//#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
+            REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
+            //#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
 #pragma omp parallel for private(myid, mybegin, myend, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
@@ -1385,7 +1385,7 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
                     pb = i*nb;
                     //memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
                     memcpy(b_tmp+myid*nb, b_val+pb, nb*sizeof(REAL));
-                    for (k = IA[i]; k < IA[i+1]; ++k) { 
+                    for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
                         if (j != i)
                             //fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
@@ -1395,20 +1395,20 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
                     fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
                 }
             }
-            fasp_mem_free(b_tmp);         
+            fasp_mem_free(b_tmp);
         }
         else {
-#endif   
+#endif
             REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
             for (i = ROW-1; i >= 0; i--) {
                 pb = i*nb;
                 memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-                for (k = IA[i]; k < IA[i+1]; ++k) { 
+                for (k = IA[i]; k < IA[i+1]; ++k) {
                     j = JA[k];
                     if (j != i)
                         fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
                 }
-                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
+                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
             }
             fasp_mem_free(b_tmp);
 #ifdef _OPENMP
@@ -1422,7 +1422,7 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_sor_order (dBSRmat *A, dvector *b, dvector *u,  
+ * \fn void fasp_smoother_dbsr_sor_order (dBSRmat *A, dvector *b, dvector *u,
  *                                        REAL *diaginv, INT *mark, REAL weight)
  *
  * \brief SOR relaxation in the user-defined order
@@ -1431,27 +1431,27 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
  * \param b        Pointer to dvector: the right hand side
  * \param u        Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
  * \param diaginv  Inverses for all the diagonal blocks of A
- * \param mark     Pointer to the user-defined ordering   
- * \param weight   Over-relaxation weight   
+ * \param mark     Pointer to the user-defined ordering
+ * \param weight   Over-relaxation weight
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
- *  
+ * \date   2010/10/25
+ *
  * Modified by Chunsheng Feng, Zheng Li on 2012/09/04
  */
-void fasp_smoother_dbsr_sor_order (dBSRmat *A, 
-                                   dvector *b, 
-                                   dvector *u, 
-                                   REAL *diaginv, 
-                                   INT *mark, 
-                                   REAL weight )
+void fasp_smoother_dbsr_sor_order (dBSRmat *A,
+                                   dvector *b,
+                                   dvector *u,
+                                   REAL *diaginv,
+                                   INT *mark,
+                                   REAL weight)
 {
-    // members of A 
+    // members of A
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
     const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;   
+    const INT    *JA  = A->JA;
     REAL         *val = A->val;
     const REAL    one_minus_weight = 1.0 - weight;
     
@@ -1463,7 +1463,7 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
     INT i,j,k;
     INT I,pb;
     REAL rhs = 0.0;
-
+    
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
@@ -1474,42 +1474,42 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, I, i, rhs, k, j)
-             for (myid = 0; myid < nthreads; myid++) {
-                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
-                 for (I = mybegin; I < myend; ++I) {
-                     i = mark[I];
-                     rhs = b_val[i];
-                     for (k = IA[i]; k < IA[i+1]; ++k) {  
-                         j = JA[k];
-                         if (j != i)
-                             rhs -= val[k]*u_val[j];
-                     }
-                     u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
-                 }
-             }
+            for (myid = 0; myid < nthreads; myid++) {
+                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                for (I = mybegin; I < myend; ++I) {
+                    i = mark[I];
+                    rhs = b_val[i];
+                    for (k = IA[i]; k < IA[i+1]; ++k) {
+                        j = JA[k];
+                        if (j != i)
+                            rhs -= val[k]*u_val[j];
+                    }
+                    u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);
+                }
+            }
         }
         else {
 #endif
             for (I = 0; I < ROW; ++I) {
                 i = mark[I];
                 rhs = b_val[i];
-                for (k = IA[i]; k < IA[i+1]; ++k) {  
+                for (k = IA[i]; k < IA[i+1]; ++k) {
                     j = JA[k];
                     if (j != i)
                         rhs -= val[k]*u_val[j];
                 }
-                u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);         
-            } 
+                u_val[i] = one_minus_weight*u_val[i] + weight*(rhs*diaginv[i]);
+            }
 #ifdef _OPENMP
-        } 
+        }
 #endif
     }
     else if (nb > 1) {
         //REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
-        REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
-//#pragma omp parallel for private(myid, mybegin, myend, I, i, pb, b_tmp, k, j)
+            REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
+            //#pragma omp parallel for private(myid, mybegin, myend, I, i, pb, b_tmp, k, j)
 #pragma omp parallel for private(myid, mybegin, myend, I, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
                 FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
@@ -1518,14 +1518,14 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
                     pb = i*nb;
                     //memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
                     memcpy(b_tmp+myid*nb, b_val+pb, nb*sizeof(REAL));
-                    for (k = IA[i]; k < IA[i+1]; ++k) { 
+                    for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
                         if (j != i)
                             //fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
                             fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+myid*nb, nb);
                     }
-                    //fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
-                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);         
+                    //fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
+                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
                 }
             }
             fasp_mem_free(b_tmp);
@@ -1537,13 +1537,13 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
                 i = mark[I];
                 pb = i*nb;
                 memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
-                for (k = IA[i]; k < IA[i+1]; ++k) { 
+                for (k = IA[i]; k < IA[i+1]; ++k) {
                     j = JA[k];
                     if (j != i)
-                         fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
+                        fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
                 }
-                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);         
-            }        
+                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
+            }
             fasp_mem_free(b_tmp);
 #ifdef _OPENMP
         }
@@ -1568,23 +1568,23 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
  * \param data  Pointer to user defined data
  *
  * \author Zhiyang Zhou
- * \date   2010/10/25 
+ * \date   2010/10/25
  */
-void fasp_smoother_dbsr_ilu (dBSRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
+void fasp_smoother_dbsr_ilu (dBSRmat *A,
+                             dvector *b,
+                             dvector *x,
                              void *data)
 {
     ILU_data   *iludata=(ILU_data *)data;
     const INT   nb=iludata->nb,m=A->ROW*nb, memneed=6*m;
     
-    REAL *xval = x->val, *bval = b->val;    
+    REAL *xval = x->val, *bval = b->val;
     REAL *zz = iludata->work + 3*m;
     REAL *zr = zz + m;
     REAL *z  = zr + m;
     
-    if (iludata->nwork<memneed) goto MEMERR; 
-
+    if (iludata->nwork<memneed) goto MEMERR;
+    
     /** form residual zr = b - A x */
     fasp_array_cp(m,bval,zr); fasp_blas_dbsr_aAxpy(-1.0,A,xval,zr);
     
@@ -1592,15 +1592,15 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_precond_dbsr_ilu(zr,z,iludata);
     
     /** x=x+z */
-    fasp_blas_array_axpy(m,1,z,xval);    
+    fasp_blas_array_axpy(m,1,z,xval);
     
     return;
     
- MEMERR:
+MEMERR:
     printf("### ERROR: ILU needs %d memory, only %d available! %s : %d\n",
            memneed, iludata->nwork, __FILE__, __LINE__);
     fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
-
+    
 }
 
 /*---------------------------------*/
