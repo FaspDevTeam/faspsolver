@@ -1900,6 +1900,12 @@ void fasp_blas_smat_inv_nc5 (REAL *a);
 
 void fasp_blas_smat_inv_nc7 (REAL *a);
 
+void fasp_blas_smat_inv_nc (REAL *a,
+                            const INT n);
+
+void fasp_blas_smat_invp_nc (REAL *a,
+                             const INT n);
+
 INT fasp_blas_smat_inv (REAL *a,
                         const INT n);
 
