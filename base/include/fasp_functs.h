@@ -1909,6 +1909,9 @@ void fasp_blas_smat_invp_nc (REAL *a,
 INT fasp_blas_smat_inv (REAL *a,
                         const INT n);
 
+REAL fasp_blas_smat_Linfinity(REAL *A,
+                              const INT n);
+
 void fasp_iden_free (idenmat *A);
 
 void fasp_smat_identity_nc2 (REAL *a);
@@ -1920,11 +1923,8 @@ void fasp_smat_identity_nc5 (REAL *a);
 void fasp_smat_identity_nc7 (REAL *a);
 
 void fasp_smat_identity (REAL *a,
-                         INT n,
-                         INT n2);
-
-REAL fasp_blas_smat_Linfinity(REAL *A,
-                              const INT n);
+                         const INT n,
+                         const INT n2);
 
 
 /*-------- In file: smoother_bsr.c --------*/

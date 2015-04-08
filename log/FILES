@@ -8,6 +8,12 @@
       76 ./base/include/hb_io.h
     5818 ./base/include/malloc.c.h
      291 ./base/include/nedmalloc.h
+     394 ./base/src/aggregation_bsr.inl
+    1806 ./base/src/aggregation_csr.inl
+    2117 ./base/src/gmg_util.inl
+      89 ./base/src/itsolver_util.inl
+     238 ./base/src/linklist.inl
+     245 ./base/src/mg_util.inl
      274 ./base/src/factor.f
     1216 ./base/src/schwarz.f
      146 ./base/src/amg.c
@@ -80,7 +86,7 @@
      874 ./base/src/quadrature.c
      116 ./base/src/rap.c
      751 ./base/src/schwarz_setup.c
-     802 ./base/src/smat.c
+     798 ./base/src/smat.c
     1608 ./base/src/smoother_bsr.c
     2315 ./base/src/smoother_csr.c
       83 ./base/src/smoother_csr_cr.c
@@ -102,10 +108,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
-     394 ./base/src/aggregation_bsr.inl
-    1806 ./base/src/aggregation_csr.inl
-    2117 ./base/src/gmg_util.inl
-      89 ./base/src/itsolver_util.inl
-     238 ./base/src/linklist.inl
-     245 ./base/src/mg_util.inl
-   92203 total
+   92199 total

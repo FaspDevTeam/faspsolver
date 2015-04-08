@@ -472,28 +472,28 @@ void fasp_blas_smat_inv_nc (REAL *a,
 void fasp_blas_smat_invp_nc (REAL *a,
                              const INT n)
 {
-    INT i,icol,irow,j,k,l,ll,u;
-    REAL big,dum,pivinv,temp;
+    INT   i, j, k, l, ll, u;
+    INT   icol, irow;
+    REAL  vmax, dum, pivinv, temp;
     
-    INT *work = (INT *)fasp_mem_calloc(3*n,sizeof(INT));
+    INT *work  = (INT *)fasp_mem_calloc(3*n,sizeof(INT));
     INT *indxc = work, *indxr = work+n, *ipiv = work+2*n;
     
-    // The integer arrays ipiv, indxr, and indxc are used for book keeping
-    // on the pivoting.
+    // ipiv, indxr, and indxc are used for book-keeping on the pivoting.
     for ( j=0; j<n; j++ ) ipiv[j] = 0;
     
     // This is the main loop over the columns to be reduced.
     for ( i=0; i<n; i++ ) {
         
         // This is the outer loop of the search for a pivot element.
-        big = 0.0;
+        vmax = 0.0;
         for ( j=0; j<n; j++ ) {
             if ( ipiv[j] != 1 ) {
                 for ( k=0; k<n; k++ ) {
                     if ( ipiv[k] == 0 ) {
                         u = j*n+k;
-                        if (ABS(a[u]) >= big) {
-                            big = ABS(a[u]); irow = j; icol = k;
+                        if ( ABS(a[u]) >= vmax ) {
+                            vmax = ABS(a[u]); irow = j; icol = k;
                         }
                     }
                 } // end for k
@@ -502,14 +502,13 @@ void fasp_blas_smat_invp_nc (REAL *a,
         
         ++(ipiv[icol]);
         
-        // We now have the pivot element, so we interchange rows, if needed, to
-        // put the pivot element on the diagonal. The columns are not physically
+        // We now have the pivot element, so we interchange rows, if needed, to put
+        // the pivot element on the diagonal. The columns are not physically
         // interchanged, only relabeled: indxc[i], the column of the ith pivot
-        // element, is the ith column that is reduced, while indxr[i] is the row
-        // in which that pivot element was originally located. If indxr[i] ̸= indxc[i]
+        // element, is the ith column that is reduced, while indxr[i] is the row in
+        // which that pivot element was originally located. If indxr[i] ̸= indxc[i]
         // there is an implied column interchange. With this form of bookkeeping,
-        // the solution b’s will end up in the correct order, and the inverse
-        // matrix will be scrambled by columns.
+        // the inverse matrix will be scrambled by columns.
         if ( irow != icol ) {
             for ( l=0; l<n; l++ ) SWAP(a[irow*n+l],a[icol*n+l]);
         }
@@ -532,8 +531,7 @@ void fasp_blas_smat_invp_nc (REAL *a,
     }
     // This is the end of the main loop over columns of the reduction.
     
-    // It only remains to unscram- ble the solution in view of the column
-    // interchanges.
+    // It only remains to unscramble the matrix in view of the column interchanges.
     for ( l=n-1; l>=0; l-- ) {
         if ( indxr[l] != indxc[l] )
             for ( k=0; k<n; k++ ) SWAP(a[k*n+indxr[l]],a[k*n+indxc[l]]);
@@ -556,7 +554,6 @@ void fasp_blas_smat_invp_nc (REAL *a,
 INT fasp_blas_smat_inv (REAL *a,
                         const INT n)
 {
-    
     switch (n) {
             
         case 2:
@@ -582,6 +579,40 @@ INT fasp_blas_smat_inv (REAL *a,
     }
     
     return FASP_SUCCESS;
+}
+
+/**
+ * \fn REAL fasp_blas_smat_Linfinity(REAL *A, const INT n )
+ *
+ * \brief Compute the L infinity norm of A
+ *
+ * \param A   Pointer to the n*n dense matrix
+ * \param n   the dimension of the dense matrix
+ *
+ * \author Xiaozhe Hu
+ * \date   05/26/2014
+ */
+REAL fasp_blas_smat_Linfinity(REAL *A,
+                              const INT n)
+{
+    
+    REAL norm = 0.0;
+    REAL value = 0.0;
+    
+    INT i,j;
+    
+    for (i=0; i<n; i++){
+        
+        value = 0.0;
+        
+        for (j=0; j<n; j++){
+            value = value + ABS(A[i*n+j]);
+        }
+        
+        norm = MAX(norm, value);
+    }
+    
+    return norm;
 }
 
 /**
@@ -695,8 +726,8 @@ void fasp_smat_identity_nc7 (REAL *a)
  * \date   2010/12/25
  */
 void fasp_smat_identity (REAL *a,
-                         INT n,
-                         INT n2)
+                         const INT n,
+                         const INT n2)
 {
     memset(a, 0X0, n2*sizeof(REAL));
     
@@ -760,41 +791,6 @@ void fasp_smat_identity (REAL *a,
             break;
     }
     
-}
-
-/**
- * \fn REAL fasp_blas_smat_Linfinity(REAL *A, const INT n )
- *
- * \brief Compute the L infinity norm of A
- *
- * \param A   Pointer to the n*n dense matrix
- * \param n   the dimension of the dense matrix
- *
- * \author Xiaozhe Hu
- * \date   05/26/2014
- *
- */
-REAL fasp_blas_smat_Linfinity(REAL *A,
-                              const INT n)
-{
-    
-    REAL norm = 0.0;
-    REAL value = 0.0;
-    
-    INT i,j;
-    
-    for (i=0; i<n; i++){
-        
-        value = 0.0;
-        
-        for (j=0; j<n; j++){
-            value = value + ABS(A[i*n+j]);
-        }
-        
-        norm = MAX(norm, value);
-    }
-    
-    return norm;
 }
 
 /*---------------------------------*/
