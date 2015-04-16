@@ -1,8 +1,8 @@
 c     
 c     ilu.f
 c     
-c     WARNING: The subroutines contained in this file are adapted from 
-c     SPARSEKIT Ver 2 and they are NOT part of the FASP package.
+c     WARNING: The subroutines contained in this file are modified from 
+c     SPARSEKIT 2.0 and they are NOT part of the FASP package.
 c
 c     SPARSKIT is a package of FORTRAN subroutines for working with
 c     sparse matrices. It includes general sparse matrix manipulation
@@ -56,7 +56,7 @@ c     alu(1:n) ) is inverted. Each i-th row of the alu,jlu matrix
 c     contains the i-th row of L (excluding the diagonal entry=1)
 c     followed by the i-th row of U.
 c     
-c     ju      = integer array of length n containing the pointers to
+c     jlu     = integer array of length n containing the pointers to
 c     the beginning of each row of U in the matrix alu,jlu.
 c     
 c     levs    = integer (work) array of size iwk -- which contains the 
@@ -1482,7 +1482,8 @@ c ijlu   = Integer array of length nzlu containing pointers to
 c           delimit rows and specify column number for stored 
 c           elements of the approximate factors of a.  the l 
 c           and u factors are stored as one matrix.
-c uptr   = Integer array of length n containing the pointers to        
+c uptr   = Integer array of length n containing the pointers to upper trig
+c           matrix       
 c
 c ierr is an error flag:
 c        ierr  = -i --> near zero pivot in step i
@@ -1503,7 +1504,6 @@ c              level of fill of previous rows of U in remaining part.
 c rowll      = integer array of length n containing pointers to implement a
 c              linked list for the fill-in elements.
 c
-c
 c external functions:
 c====================
 c ifix, float, min0, srtr
@@ -1516,13 +1516,13 @@ c========================================================================
       integer  ierr,   mneed
       integer icolindj,ijlum,i,j,k,m,ibegin,iend,Ujbeg,Ujend
       integer head,prev,lm,actlev,lowct,k1,k2,levp1,lmk,nzi,rowct
-       logical cinindex
+      logical cinindex
 
 c======================================================================== 
 c       Beginning of Executable Statements
 c======================================================================== 
 
-       cinindex = ( rwptr(1) .eq. 0 )
+      cinindex = ( rwptr(1) .eq. 0 )
 
       if (cinindex) then 
          do i=1,n+1
@@ -1563,7 +1563,6 @@ c     -------------------------------------------------------------
 c     -------------------
 c     Proceed row by row:
 c     -------------------
-
       do 100 i = 1,n
 
 c       ----------------------------------------------------------

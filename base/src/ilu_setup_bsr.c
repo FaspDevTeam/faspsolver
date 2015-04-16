@@ -9,7 +9,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-/* The following functions are defined in ilu.for */
+/* The following functions are defined in ilu.f */
 #ifdef __cplusplus 
 extern "C" {void symbfactor_(const INT *n,INT *colind,INT *rwptr,
                              const INT *levfill,const INT *nzmax,
