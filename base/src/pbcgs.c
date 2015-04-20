@@ -170,7 +170,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         
         // alpha = (r,rho)/(A*p,rho)
         temp2 = fasp_blas_array_dotprod(m,z,rho);
-        if ( ABS(temp2) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
         }
         else { // Possible breakdown
@@ -208,7 +208,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
         temp2 = temp1;
         temp1 = fasp_blas_array_dotprod(m,r,rho);
         
-        if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL2 || ABS(omega) > SMALLREAL2 ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
         else { // Possible breakdown
@@ -513,7 +513,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         
         // alpha = (r,rho)/(A*p,rho)
         temp2 = fasp_blas_array_dotprod(m,z,rho);
-        if ( ABS(temp2) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
         }
         else { // Possible breakdown
@@ -551,7 +551,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
         temp2 = temp1;
         temp1 = fasp_blas_array_dotprod(m,r,rho);
         
-        if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL2 || ABS(omega) > SMALLREAL2 ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
         else { // Possible breakdown
@@ -856,7 +856,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         
         // alpha = (r,rho)/(A*p,rho)
         temp2 = fasp_blas_array_dotprod(m,z,rho);
-        if ( ABS(temp2) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
         }
         else { // Possible breakdown
@@ -894,7 +894,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
         temp2 = temp1;
         temp1 = fasp_blas_array_dotprod(m,r,rho);
         
-        if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL2 || ABS(omega) > SMALLREAL2 ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
         else { // Possible breakdown
@@ -1199,7 +1199,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         
         // alpha = (r,rho)/(A*p,rho)
         temp2 = fasp_blas_array_dotprod(m,z,rho);
-        if ( ABS(temp2) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
         }
         else { // Possible breakdown
@@ -1237,7 +1237,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat *A,
         temp2 = temp1;
         temp1 = fasp_blas_array_dotprod(m,r,rho);
         
-        if ( ABS(temp2) > SMALLREAL || ABS(omega) > SMALLREAL ) {
+        if ( ABS(temp2) > SMALLREAL2 || ABS(omega) > SMALLREAL2 ) {
             beta = (temp1*alpha)/(temp2*omega);
         }
         else { // Possible breakdown

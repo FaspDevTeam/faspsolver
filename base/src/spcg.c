@@ -166,7 +166,12 @@ INT fasp_solver_dcsr_spcg (dCSRmat *A,
         
         // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
-        alpha = temp1/temp2;
+        if ( ABS(temp2) > SMALLREAL2 ) {
+            alpha = temp1/temp2;
+        }
+        else { // Possible breakdown
+            goto RESTORE_BESTSOL;
+        }
         
         // u_k=u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
@@ -201,13 +206,13 @@ INT fasp_solver_dcsr_spcg (dCSRmat *A,
         // output iteration information if needed
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
-        // safe net check: save the best-so-far solution
+        // If the solution is NAN, restrore the best solution
         if ( fasp_dvec_isnan(u) ) {
-            // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
         }
         
+        // safe net check: save the best-so-far solution
         if ( absres < absres_best - maxdiff) {
             absres_best = absres;
             iter_best   = iter;
@@ -493,7 +498,12 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
         
         // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
-        alpha = temp1/temp2;
+        if ( ABS(temp2) > SMALLREAL2 ) {
+            alpha = temp1/temp2;
+        }
+        else { // Possible breakdown
+            goto RESTORE_BESTSOL;
+        }
         
         // u_k=u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
@@ -528,13 +538,13 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
         // output iteration information if needed
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
-        // safe net check: save the best-so-far solution
+        // If the solution is NAN, restrore the best solution
         if ( fasp_dvec_isnan(u) ) {
-            // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
         }
         
+        // safe net check: save the best-so-far solution
         if ( absres < absres_best - maxdiff) {
             absres_best = absres;
             iter_best   = iter;
@@ -819,7 +829,12 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
         
         // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
-        alpha = temp1/temp2;
+        if ( ABS(temp2) > SMALLREAL2 ) {
+            alpha = temp1/temp2;
+        }
+        else { // Possible breakdown
+            goto RESTORE_BESTSOL;
+        }
         
         // u_k=u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
@@ -854,13 +869,13 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
         // output iteration information if needed
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
-        // safe net check: save the best-so-far solution
+        // If the solution is NAN, restrore the best solution
         if ( fasp_dvec_isnan(u) ) {
-            // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
         }
         
+        // safe net check: save the best-so-far solution
         if ( absres < absres_best - maxdiff) {
             absres_best = absres;
             iter_best   = iter;

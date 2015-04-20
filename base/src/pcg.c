@@ -159,7 +159,12 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
         
         // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
-        alpha = temp1/temp2;
+        if ( ABS(temp2) > SMALLREAL2 ) {
+            alpha = temp1/temp2;
+        }
+        else { // Possible breakdown
+            ITS_DIVZERO; goto FINISHED;
+        }
         
         // u_k=u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
@@ -441,7 +446,12 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
         
         // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
-        alpha = temp1/temp2;
+        if ( ABS(temp2) > SMALLREAL2 ) {
+            alpha = temp1/temp2;
+        }
+        else { // Possible breakdown
+            ITS_DIVZERO; goto FINISHED;
+        }
         
         // u_k=u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
@@ -725,7 +735,12 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
         
         // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
-        alpha = temp1/temp2;
+        if ( ABS(temp2) > SMALLREAL2 ) {
+            alpha = temp1/temp2;
+        }
+        else { // Possible breakdown
+            ITS_DIVZERO; goto FINISHED;
+        }
         
         // u_k=u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
@@ -1009,7 +1024,12 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
         
         // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
-        alpha = temp1/temp2;
+        if ( ABS(temp2) > SMALLREAL2 ) {
+            alpha = temp1/temp2;
+        }
+        else { // Possible breakdown
+            ITS_DIVZERO; goto FINISHED;
+        }
         
         // u_k=u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
