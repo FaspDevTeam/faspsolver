@@ -368,8 +368,9 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter_best);
             fasp_array_cp(m,u_best,u->val);
+            relres = absres_best / normr0;
         }
     }
     
@@ -694,8 +695,9 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter_best);
             fasp_array_cp(m,u_best,u->val);
+            relres = absres_best / normr0;
         }
     }
     
@@ -1019,8 +1021,9 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter_best);
             fasp_array_cp(m,u_best,u->val);
+            relres = absres_best / normr0;
         }
     }
     

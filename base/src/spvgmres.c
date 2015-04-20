@@ -73,8 +73,8 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
-    REAL   absres0 = BIGREAL, absres = BIGREAL;
-    REAL   relres  = BIGREAL, normu  = BIGREAL;
+    REAL   normr0 = BIGREAL, absres = BIGREAL;
+    REAL   relres = BIGREAL, normu  = BIGREAL;
     
     REAL   cr          = 1.0;     // convergence rate
     REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
@@ -134,8 +134,8 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
     // compute initial residuals
     switch (stop_type) {
         case STOP_REL_RES:
-            absres0 = MAX(SMALLREAL,r_norm);
-            relres  = r_norm/absres0;
+            normr0  = MAX(SMALLREAL,r_norm);
+            relres  = r_norm/normr0;
             break;
         case STOP_REL_PRECRES:
             if ( pc == NULL )
@@ -143,13 +143,13 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
             else
                 pc->fct(p[0], r, pc->data);
             r_normb = sqrt(fasp_blas_array_dotprod(n,p[0],r));
-            absres0 = MAX(SMALLREAL,r_normb);
-            relres  = r_normb/absres0;
+            normr0  = MAX(SMALLREAL,r_normb);
+            relres  = r_normb/normr0;
             break;
         case STOP_MOD_REL_RES:
             normu   = MAX(SMALLREAL,fasp_blas_array_norm2(n,x->val));
-            absres0 = r_norm;
-            relres  = absres0/normu;
+            normr0  = r_norm;
+            relres  = normr0/normu;
             break;
         default:
             printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
@@ -160,7 +160,7 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,normr0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -236,7 +236,7 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
             
             absres = r_norm = fabs(rs[i]);
             
-            relres = absres/absres0;
+            relres = absres/normr0;
             
             norms[iter] = relres;
             
@@ -297,7 +297,7 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = r_norm;
-                    relres = absres/absres0;
+                    relres = absres/normr0;
                     break;
                 case STOP_REL_PRECRES:
                     if ( pc == NULL )
@@ -305,7 +305,7 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
                     else
                         pc->fct(r, w, pc->data);
                     absres = sqrt(fasp_blas_array_dotprod(n,w,r));
-                    relres = absres/absres0;
+                    relres = absres/normr0;
                     break;
                 case STOP_MOD_REL_RES:
                     absres = r_norm;
@@ -373,8 +373,9 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter_best);
             fasp_array_cp(n,x_best,x->val);
+            relres = absres_best / normr0;
         }
     }
     
@@ -449,8 +450,8 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
-    REAL   absres0 = BIGREAL, absres = BIGREAL;
-    REAL   relres  = BIGREAL, normu  = BIGREAL;
+    REAL   normr0 = BIGREAL, absres = BIGREAL;
+    REAL   relres = BIGREAL, normu  = BIGREAL;
     
     REAL   cr          = 1.0;     // convergence rate
     REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
@@ -510,8 +511,8 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
     // compute initial residuals
     switch (stop_type) {
         case STOP_REL_RES:
-            absres0 = MAX(SMALLREAL,r_norm);
-            relres  = r_norm/absres0;
+            normr0  = MAX(SMALLREAL,r_norm);
+            relres  = r_norm/normr0;
             break;
         case STOP_REL_PRECRES:
             if ( pc == NULL )
@@ -519,13 +520,13 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
             else
                 pc->fct(p[0], r, pc->data);
             r_normb = sqrt(fasp_blas_array_dotprod(n,p[0],r));
-            absres0 = MAX(SMALLREAL,r_normb);
-            relres  = r_normb/absres0;
+            normr0  = MAX(SMALLREAL,r_normb);
+            relres  = r_normb/normr0;
             break;
         case STOP_MOD_REL_RES:
             normu   = MAX(SMALLREAL,fasp_blas_array_norm2(n,x->val));
-            absres0 = r_norm;
-            relres  = absres0/normu;
+            normr0  = r_norm;
+            relres  = normr0/normu;
             break;
         default:
             printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
@@ -536,7 +537,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,normr0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -612,7 +613,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
             
             absres = r_norm = fabs(rs[i]);
             
-            relres = absres/absres0;
+            relres = absres/normr0;
             
             norms[iter] = relres;
             
@@ -673,7 +674,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = r_norm;
-                    relres = absres/absres0;
+                    relres = absres/normr0;
                     break;
                 case STOP_REL_PRECRES:
                     if ( pc == NULL )
@@ -681,7 +682,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
                     else
                         pc->fct(r, w, pc->data);
                     absres = sqrt(fasp_blas_array_dotprod(n,w,r));
-                    relres = absres/absres0;
+                    relres = absres/normr0;
                     break;
                 case STOP_MOD_REL_RES:
                     absres = r_norm;
@@ -749,8 +750,9 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter_best);
             fasp_array_cp(n,x_best,x->val);
+            relres = absres_best / normr0;
         }
     }
     
@@ -826,8 +828,8 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
-    REAL   absres0 = BIGREAL, absres = BIGREAL;
-    REAL   relres  = BIGREAL, normu  = BIGREAL;
+    REAL   normr0 = BIGREAL, absres = BIGREAL;
+    REAL   relres = BIGREAL, normu  = BIGREAL;
     
     REAL   cr          = 1.0;     // convergence rate
     REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
@@ -887,8 +889,8 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
     // compute initial residuals
     switch (stop_type) {
         case STOP_REL_RES:
-            absres0 = MAX(SMALLREAL,r_norm);
-            relres  = r_norm/absres0;
+            normr0  = MAX(SMALLREAL,r_norm);
+            relres  = r_norm/normr0;
             break;
         case STOP_REL_PRECRES:
             if ( pc == NULL )
@@ -896,13 +898,13 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
             else
                 pc->fct(p[0], r, pc->data);
             r_normb = sqrt(fasp_blas_array_dotprod(n,p[0],r));
-            absres0 = MAX(SMALLREAL,r_normb);
-            relres  = r_normb/absres0;
+            normr0  = MAX(SMALLREAL,r_normb);
+            relres  = r_normb/normr0;
             break;
         case STOP_MOD_REL_RES:
             normu   = MAX(SMALLREAL,fasp_blas_array_norm2(n,x->val));
-            absres0 = r_norm;
-            relres  = absres0/normu;
+            normr0  = r_norm;
+            relres  = normr0/normu;
             break;
         default:
             printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
@@ -913,7 +915,7 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,normr0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -989,7 +991,7 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
             
             absres = r_norm = fabs(rs[i]);
             
-            relres = absres/absres0;
+            relres = absres/normr0;
             
             norms[iter] = relres;
             
@@ -1050,7 +1052,7 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = r_norm;
-                    relres = absres/absres0;
+                    relres = absres/normr0;
                     break;
                 case STOP_REL_PRECRES:
                     if ( pc == NULL )
@@ -1058,7 +1060,7 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
                     else
                         pc->fct(r, w, pc->data);
                     absres = sqrt(fasp_blas_array_dotprod(n,w,r));
-                    relres = absres/absres0;
+                    relres = absres/normr0;
                     break;
                 case STOP_MOD_REL_RES:
                     absres = r_norm;
@@ -1126,8 +1128,9 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter_best);
             fasp_array_cp(n,x_best,x->val);
+            relres = absres_best / normr0;
         }
     }
     
@@ -1203,8 +1206,8 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
     INT    i, j, k;
     
     REAL   r_norm, r_normb, gamma, t;
-    REAL   absres0 = BIGREAL, absres = BIGREAL;
-    REAL   relres  = BIGREAL, normu  = BIGREAL;
+    REAL   normr0 = BIGREAL, absres = BIGREAL;
+    REAL   relres = BIGREAL, normu  = BIGREAL;
     
     REAL   cr          = 1.0;     // convergence rate
     REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
@@ -1264,8 +1267,8 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
     // compute initial residuals
     switch (stop_type) {
         case STOP_REL_RES:
-            absres0 = MAX(SMALLREAL,r_norm);
-            relres  = r_norm/absres0;
+            normr0  = MAX(SMALLREAL,r_norm);
+            relres  = r_norm/normr0;
             break;
         case STOP_REL_PRECRES:
             if ( pc == NULL )
@@ -1273,13 +1276,13 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
             else
                 pc->fct(p[0], r, pc->data);
             r_normb = sqrt(fasp_blas_array_dotprod(n,p[0],r));
-            absres0 = MAX(SMALLREAL,r_normb);
-            relres  = r_normb/absres0;
+            normr0  = MAX(SMALLREAL,r_normb);
+            relres  = r_normb/normr0;
             break;
         case STOP_MOD_REL_RES:
             normu   = MAX(SMALLREAL,fasp_blas_array_norm2(n,x->val));
-            absres0 = r_norm;
-            relres  = absres0/normu;
+            normr0  = r_norm;
+            relres  = normr0/normu;
             break;
         default:
             printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
@@ -1290,7 +1293,7 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
+    print_itinfo(prtlvl,stop_type,0,relres,normr0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -1366,7 +1369,7 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
             
             absres = r_norm = fabs(rs[i]);
             
-            relres = absres/absres0;
+            relres = absres/normr0;
             
             norms[iter] = relres;
             
@@ -1427,7 +1430,7 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = r_norm;
-                    relres = absres/absres0;
+                    relres = absres/normr0;
                     break;
                 case STOP_REL_PRECRES:
                     if ( pc == NULL )
@@ -1435,7 +1438,7 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
                     else
                         pc->fct(r, w, pc->data);
                     absres = sqrt(fasp_blas_array_dotprod(n,w,r));
-                    relres = absres/absres0;
+                    relres = absres/normr0;
                     break;
                 case STOP_MOD_REL_RES:
                     absres = r_norm;
@@ -1503,8 +1506,9 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
         
         if ( absres > absres_best + maxdiff ) {
-            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter);
+            if ( prtlvl > PRINT_NONE ) ITS_RESTORE(iter_best);
             fasp_array_cp(n,x_best,x->val);
+            relres = absres_best / normr0;
         }
     }
     
