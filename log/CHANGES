@@ -2,6 +2,7 @@ File Name: CHANGES
 
 04/20/2015 FASP 1.7.2:
 - Fix a bug in the output of Krylov methods with saft-net.
+- Move the NAN checking so that Fortran NaN runtime exception does not appear.
 - Remove some unwanted test code.
 
 04/13/2015 FASP 1.7.1:

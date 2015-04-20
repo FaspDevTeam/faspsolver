@@ -2,7 +2,7 @@
      170 ./base/include/doxygen.h
     1191 ./base/include/fasp.h
      684 ./base/include/fasp_block.h
-     251 ./base/include/fasp_const.h
+     252 ./base/include/fasp_const.h
     2937 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
@@ -66,7 +66,7 @@
      986 ./base/src/parameters.c
     1437 ./base/src/pbcgs.c
      411 ./base/src/pbcgs_mf.c
-    1196 ./base/src/pcg.c
+    1216 ./base/src/pcg.c
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
      181 ./base/src/pgcg_mf.c
@@ -99,13 +99,13 @@
       71 ./base/src/sparse_csrl.c
      202 ./base/src/sparse_str.c
      970 ./base/src/sparse_util.c
-    1627 ./base/src/spbcgs.c
-    1045 ./base/src/spcg.c
-    1382 ./base/src/spgmres.c
-    1420 ./base/src/spminres.c
-    1534 ./base/src/spvgmres.c
+    1631 ./base/src/spbcgs.c
+    1063 ./base/src/spcg.c
+    1386 ./base/src/spgmres.c
+    1423 ./base/src/spminres.c
+    1538 ./base/src/spvgmres.c
      171 ./base/src/threads.c
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
-   92199 total
+   92253 total
