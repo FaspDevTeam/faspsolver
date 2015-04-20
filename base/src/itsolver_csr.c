@@ -301,7 +301,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
 	fasp_gettime(&solver_start);
 	
 	// solver part
-	status=fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
+	status = fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
 	
 	if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&solver_end);
