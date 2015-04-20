@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+04/20/2015 FASP 1.7.2:
+- Fix a bug in the output of Krylov methods with saft-net. 
+
 04/13/2015 FASP 1.7.1:
 - Fix a bug: Add a lower bound for quality_bound.
 - Fix a bug: Invert small dense matrices with zero diagonal entries.
