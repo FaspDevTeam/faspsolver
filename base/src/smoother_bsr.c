@@ -1569,6 +1569,7 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
  *
  * \author Zhiyang Zhou
  * \date   2010/10/25
+ * Adjust the work space of ilu smoother by Zheng Li 04/26/2015. 
  */
 void fasp_smoother_dbsr_ilu (dBSRmat *A,
                              dvector *b,
@@ -1576,11 +1577,10 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
                              void *data)
 {
     ILU_data   *iludata=(ILU_data *)data;
-    const INT   nb=iludata->nb,m=A->ROW*nb, memneed=6*m;
+    const INT   nb=iludata->nb,m=A->ROW*nb, memneed=5*m;
     
     REAL *xval = x->val, *bval = b->val;
-    REAL *zz = iludata->work + 3*m;
-    REAL *zr = zz + m;
+    REAL *zr = iludata->work + 3*m;
     REAL *z  = zr + m;
     
     if (iludata->nwork<memneed) goto MEMERR;
