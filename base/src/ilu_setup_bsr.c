@@ -40,6 +40,7 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
  * \date   11/08/2010
  *
  * \note Works for general nb (Xiaozhe)
+ * Change the size of work space by Zheng Li 04/26/2015.
  */
 SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
                            ILU_data *iludata, 
@@ -90,7 +91,8 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     // (2) numerical factoration 
     numfac_bsr(A, iludata->luval, ijlu, uptr);
         
-    nwork = 6*nzlu*nb;
+    //nwork = 6*nzlu*nb;
+    nwork = 5*A->ROW*A->nb; 
     iludata->nzlu  = nzlu;
     iludata->nwork = nwork;
     iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
