@@ -40,7 +40,7 @@
 #  >> setenv OMP_NUM_THREADS 4 (for tcsh)
 # If you want to compile with OpenMP support, uncomment the next line:
 #
-# openmp=yes
+ openmp=yes
 #
 # These user options can also be applied as make command line options.
 # For example, to enforce the debug compiling options:
@@ -79,12 +79,12 @@
 #-------------------------------------------------------------------------
 # If you want to use MUMPS, uncomment the next line:
 #
-# mumps=yes
+ mumps=yes
 #
 # If you want to specify the path to MUMPS, uncomment the next line
 # and give the correct path to MUMPS here. For example:
 #
-# mumps_dir="/dir/to/MUMPS"
+ mumps_dir="/opt/MUMPS_4.10.0.ifort"
 #
 ####################  User Defined Compiler Flags  #####################
 cflags="-funroll-loops"
@@ -104,9 +104,9 @@ ifeq ($(debug),some)
 endif
 #
 ifeq ($(debug),all)
-		cflags="-Wall -g -DDEBUG_MODE=3"
-		cxxflags="-Wall -g -DDEBUG_MODE=3"
-		fflags="-Wall -g -DDEBUG_MODE=3"
+		cflags="-Wall -g -DDEBUG_MODE=3 -DCHMEM_MODE=1"
+		cxxflags="-Wall -g -DDEBUG_MODE=3 -DCHMEM_MODE=1"
+		fflags="-Wall -g -DDEBUG_MODE=3 -DCHMEM_MODE=1"
 endif
 ####################  User Changes UP TO HERE   ########################
 

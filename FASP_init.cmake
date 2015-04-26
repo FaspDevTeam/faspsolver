@@ -5,6 +5,7 @@ include(CheckIncludeFile)
 set(CMAKE_VERBOSE_MAKEFILE 1) 
 set(GDB 1 CACHE BOOL "debugging or not")
 set(OPENMP 0 BOOL "Openmp use")
+set(USE_MUMPS 1 BOOL "MUMPS use")
 
 # For which compilers we shall search (if none found then the 
 # default cmake compiler detection will be invoked. 
@@ -12,9 +13,9 @@ set(OPENMP 0 BOOL "Openmp use")
 # Search for C compilers in the specified order. That will determine
 # the rest.
 if(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES CC gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
+	find_program(THE_C NAMES CC icc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
 else(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
+	find_program(THE_C NAMES icc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
 endif(DEFINED ENV{CC}) 
 #
 	if(${THE_C} MATCHES "gcc.*" )

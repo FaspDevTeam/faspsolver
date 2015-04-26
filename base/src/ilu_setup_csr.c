@@ -109,13 +109,22 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     
     switch (type) {
         case ILUt:
+#if DEBUG_MODE > 0
+    printf("### DEBUG: ILUt %s ...... %d [Start]\n", __FUNCTION__,__LINE__);
+#endif
             ilut_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,luval,ijlu,&iwk,&ierr,&nzlu);
             break;
         case ILUtp:
+#if DEBUG_MODE > 0
+    printf("### DEBUG: ILUp %s ...... %d [Start]\n", __FUNCTION__,__LINE__);
+#endif
             ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol,
                    &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
             break;
         default: // ILUk
+#if DEBUG_MODE > 0
+    printf("### DEBUG: ILUk %s ...... %d [Start]\n", __FUNCTION__,__LINE__);
+#endif
             iluk_(&n,A->val,A->JA,A->IA,&lfil,luval,ijlu,&iwk,&ierr,&nzlu);
             break;
     } 

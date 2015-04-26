@@ -17,6 +17,7 @@ c-----------------------------------------------------------------------
 c     Created  by Shiquan Zhang  on 12/27/2009.
 c     Modified by Chensong Zhang on 05/25/2010.
 c     Modified by Chensong Zhang on 04/21/2012.
+c     Modified by Chunsheng Feng on 04/26/2015.
 c-----------------------------------------------------------------------
 
 !> \file ilu.f
@@ -29,8 +30,10 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       implicit none 
       integer n,nzlu,lfil,iwk,ierr
-      real*8 a(*),alu(*),w(n)
-      integer ja(*),ia(n+1),jlu(*),ju(n),levs(iwk),jw(3*n)
+      real*8 a(1),alu(1)
+c     !,w(n)
+      integer ja(1),ia(1),jlu(1)
+c     !,ju(n),levs(iwk),jw(3*n)
 c----------------------------------------------------------------------
 c     SPARSKIT ROUTINE ILUK -- ILU WITH LEVEL OF FILL-IN OF K (ILU(k)) 
 c----------------------------------------------------------------------
@@ -92,9 +95,15 @@ c     locals
      *     jlev, min 
       real*8 t, s, fact
       logical cinindex
+      real*8, allocatable:: w(:) 
+      integer,allocatable:: ju(:),jw(:),levs(:)
 
       if (lfil .lt. 0) goto 998
-
+      
+      allocate(w(n))
+      allocate(ju(n))
+      allocate(jw(3*n))
+      allocate(levs(iwk))
 c-----------------------------------------------------------------------
 c     shift index for C routines
 c-----------------------------------------------------------------------
@@ -319,32 +328,57 @@ c-----------------------------------------------------------------------
          end do
       end if 
 
+      deallocate(w)
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(levs)
+
       ierr = 0
       return
 c     
 c     incomprehensible error. Matrix must be wrong.
 c     
  995  ierr = -1
+      deallocate(w)
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(levs)
       return
 c     
 c     insufficient storage in L.
 c     
  996  ierr = -2
+      deallocate(w)
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(levs)
       return
 c     
 c     insufficient storage in U.
 c     
  997  ierr = -3
+      deallocate(w)
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(levs)
       return
 c     
 c     illegal lfil entered.
 c     
  998  ierr = -4
+      deallocate(w)
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(levs)
       return
 c     
 c     zero row encountered in A or U. 
 c     
  999  ierr = -5
+      deallocate(w)
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(levs)
       return
 c----------------end-of-iluk--------------------------------------------
 c-----------------------------------------------------------------------
@@ -356,8 +390,10 @@ c-----------------------------------------------------------------------
 !$      use omp_lib
       implicit none 
       integer n 
-      real*8 a(1),alu(1),w(n+1),droptol
-      integer ja(1),ia(1),jlu(1),ju(n),jw(2*n),lfil,iwk,ierr,nz
+      real*8 a(1),alu(1),droptol
+c     !,w(n+1)
+      integer ja(1),ia(1),jlu(1),lfil,iwk,ierr,nz
+c      !,ju(n),jw(2*n)
 c----------------------------------------------------------------------*
 c     *** ILUT preconditioner ***                                      *
 c     incomplete LU factorization with dual truncation mechanism       *
@@ -439,10 +475,18 @@ c     (however, fill-in is then unpredictible).                        *
 c----------------------------------------------------------------------*
 c     locals
       integer ju0,k,j1,j2,j,ii,i,lenl,lenu,jj,jrow,jpos,NE,len
-      real*8 tnorm(n), t, abs, s, fact, tmp 
+      real*8 t, abs, s, fact, tmp 
+c      !tnorm(n)
       logical cinindex
+      real*8, allocatable:: w(:),tnorm(:) 
+      integer,allocatable:: ju(:),jw(:)
 
       if (lfil .lt. 0) goto 998
+
+      allocate(ju(n))
+      allocate(jw(2*n))
+      allocate(w(n+1))
+      allocate(tnorm(n))
 
       cinindex = ia(1) .eq. 0
 
@@ -714,36 +758,61 @@ c-----------------------------------------------------------------------
 !$OMP END PARALLEL DO               
       end if
 
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(w)
+      deallocate(tnorm)
+
       ierr = 0
       return
 c     
 c     incomprehensible error. Matrix must be wrong.
 c     
  995  ierr = -1
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(w)
+      deallocate(tnorm)
       write(*,*) 'input matrix may be wrong'
       return
 c     
 c     insufficient storage in L.
 c     
  996  ierr = -2
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(w)
+      deallocate(tnorm)
       write(*,*),'insufficient storage in L'
       return
 c     
 c     insufficient storage in U.
 c     
  997  ierr = -3
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(w)
+      deallocate(tnorm)
       write(*,*),'insufficient storage in U'
       return
 c     
 c     illegal lfil entered.
 c     
  998  ierr = -4
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(w)
+      deallocate(tnorm)
       write(*,*),'illegal lfil entered'
       return
 c     
 c     zero row encountered
 c     
  999  ierr = -5
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(w)
+      deallocate(tnorm)
       write(*,*),'zero row encountered'
       return
 c----------------end-of-ilut--------------------------------------------
@@ -755,9 +824,10 @@ c----------------------------------------------------------------------
      *     jlu,iwk,ierr,nz)
 c-----------------------------------------------------------------------
 c     implicit none
-      integer n,ja(1),ia(1),lfil,jlu(1),ju(n),jw(2*n),iwk,
-     *     iperm(2*n),ierr
-      real*8 a(1), alu(1), w(n+1), droptol
+      integer n,ja(1),ia(1),lfil,jlu(1),iwk,ierr
+c     !ju(n),jw(2*n),iperm(2*n) 
+      real*8 a(1), alu(1), droptol
+c      !w(n+1)
 c----------------------------------------------------------------------*
 c     *** ILUTP preconditioner -- ILUT with pivoting  ***              *
 c     incomplete LU factorization with dual truncation mechanism       *
@@ -849,8 +919,15 @@ c
      *     icut
       real*8 s, tmp, tnorm,xmax,xmax0, fact, abs, t, permtol
       logical cinindex
+      real*8, allocatable:: w(:) 
+      integer,allocatable:: ju(:),jw(:),iperm(:)
       
       if (lfil .lt. 0) goto 998
+      
+      allocate(ju(n))
+      allocate(jw(2*n))
+      allocate(iperm(2*n))
+      allocate(w(n+1))
 
 c-----------------------------------------------------------------------
 c     shift index for C routines
@@ -1145,31 +1222,55 @@ c
       end if
 
       ierr = 0
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(iperm)
+      deallocate(w)
       return
 c     
 c     incomprehensible error. Matrix must be wrong.
 c     
  995  ierr = -1
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(iperm)
+      deallocate(w)
       return
 c     
 c     insufficient storage in L.
 c     
  996  ierr = -2
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(iperm)
+      deallocate(w)
       return
 c     
 c     insufficient storage in U.
 c     
  997  ierr = -3
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(iperm)
+      deallocate(w)
       return
 c     
 c     illegal lfil entered.
 c     
  998  ierr = -4
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(iperm)
+      deallocate(w)
       return
 c     
 c     zero row encountered
 c     
  999  ierr = -5
+      deallocate(ju)
+      deallocate(jw)
+      deallocate(iperm)
+      deallocate(w)
       return
 c----------------end-of-ilutp-------------------------------------------
       end
