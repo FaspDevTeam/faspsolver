@@ -1,9 +1,13 @@
 File Name: CHANGES
 
-04/20/2015 FASP 1.7.2:
-- Fix a bug in the output of Krylov methods with saft-net.
+04/26/2015 FASP 1.7.2:
+- Fix a bug: Output of Krylov methods with saft-net.
 - Move the NAN checking so that Fortran NaN runtime exception does not appear.
 - Remove some unwanted test code.
+- Fix a bug: ILU setup memory allocation size is not right.
+- Fix a bug: Change ILU static memory to dynamic allocation.
+- Change MUMPS search directory.
+- Change back default setting: Not using MUMPS.
 
 04/13/2015 FASP 1.7.1:
 - Fix a bug: Add a lower bound for quality_bound.
