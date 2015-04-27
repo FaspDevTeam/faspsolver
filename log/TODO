@@ -44,6 +44,8 @@ Structure
 [       ] add Intel PARDISO as direct solver
 [       ] enforce ANSI C standard: do not allow C99
 [       ] fix problem with UMFPACK when it is installed without CHOLMOD
+[       ] format output messages: error, warning, message
+[       ] format debug messages: debug, chmem
 
 ========================
 GMG 	

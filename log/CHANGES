@@ -8,6 +8,7 @@ File Name: CHANGES
 - Fix a bug: Change ILU static memory to dynamic allocation.
 - Change MUMPS search directory.
 - Change back default setting: Not using MUMPS.
+- Update documentation and website. 
 
 04/13/2015 FASP 1.7.1:
 - Fix a bug: Add a lower bound for quality_bound.
