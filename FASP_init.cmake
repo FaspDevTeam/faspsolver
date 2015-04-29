@@ -13,7 +13,7 @@ set(USE_MUMPS 0 CACHE BOOL "MUMPS use")
 # Search for C compilers in the specified order. That will determine
 # the rest.
 if(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES CC gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
+	find_program(THE_C NAMES $ENV{CC} gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
 else(DEFINED ENV{CC}) 
 	find_program(THE_C NAMES gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
 endif(DEFINED ENV{CC}) 
