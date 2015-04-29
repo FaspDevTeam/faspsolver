@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+04/29/2015 FASP 1.7.3:
+- Fix a bug: cmake does not recognize CC env variable sometimes.
+
 04/26/2015 FASP 1.7.2:
 - Fix a bug: Output of Krylov methods with saft-net.
 - Move the NAN checking so that Fortran NaN runtime exception does not appear.
