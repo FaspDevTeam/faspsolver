@@ -18,7 +18,8 @@ c     Created  by Shiquan Zhang  on 12/27/2009.
 c     Modified by Chensong Zhang on 05/25/2010.
 c     Modified by Chensong Zhang on 04/21/2012.
 c     Modified by Chunsheng Feng on 04/26/2015.
-c     Modified by Zheng Li on 05/1/2015.
+c     Modified by Zheng Li on 05/01/2015.
+c     Modified by Chensong Zhang on 05/01/2015.
 c-----------------------------------------------------------------------
 
 !> \file ilu.f
@@ -31,10 +32,8 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       implicit none 
       integer n,nzlu,lfil,iwk,ierr
-      real*8 a(1),alu(1)
-c     !,w(n)
       integer ja(1),ia(1),jlu(1)
-c     !,ju(n),levs(iwk),jw(3*n)
+      real*8  a(1),alu(1)
 c----------------------------------------------------------------------
 c     SPARSKIT ROUTINE ILUK -- ILU WITH LEVEL OF FILL-IN OF K (ILU(k)) 
 c----------------------------------------------------------------------
@@ -388,13 +387,11 @@ c
 c-----------------------------------------------------------------------
       subroutine ilut(n,a,ja,ia,lfil,droptol,alu,jlu,iwk,ierr,nz)
 c-----------------------------------------------------------------------
-!$      use omp_lib
+!$    use omp_lib
       implicit none 
       integer n 
-      real*8 a(1),alu(1),droptol
-c     !,w(n+1)
       integer ja(1),ia(1),jlu(1),lfil,iwk,ierr,nz
-c      !,ju(n),jw(2*n)
+      real*8  a(1),alu(1),droptol
 c----------------------------------------------------------------------*
 c     *** ILUT preconditioner ***                                      *
 c     incomplete LU factorization with dual truncation mechanism       *
@@ -477,7 +474,6 @@ c----------------------------------------------------------------------*
 c     locals
       integer ju0,k,j1,j2,j,ii,i,lenl,lenu,jj,jrow,jpos,NE,len
       real*8 t, abs, s, fact, tmp 
-c      !tnorm(n)
       logical cinindex
       real*8, allocatable:: w(:),tnorm(:) 
       integer,allocatable:: ju(:),jw(:)
@@ -824,11 +820,9 @@ c----------------------------------------------------------------------
       subroutine ilutp(n,a,ja,ia,lfil,droptol,permtol,mbloc,alu,
      *     jlu,iwk,ierr,nz)
 c-----------------------------------------------------------------------
-c     implicit none
-      integer n,ja(1),ia(1),lfil,jlu(1),iwk,ierr
-c     !ju(n),jw(2*n),iperm(2*n) 
-      real*8 a(1), alu(1), droptol
-c      !w(n+1)
+      implicit none
+      integer n,ja(1),ia(1),lfil,jlu(1),iwk,ierr,nz
+      real*8  a(1), alu(1), droptol
 c----------------------------------------------------------------------*
 c     *** ILUTP preconditioner -- ILUT with pivoting  ***              *
 c     incomplete LU factorization with dual truncation mechanism       *
@@ -1421,150 +1415,150 @@ c========================================================================
 
 c======================================================================== 
 c======================================================================== 
-c                                                                      	*
-c  Symbolic factorization of a matrix in compressed sparse row format, 	*
-c    with resulting factors stored in a single MSR data structure.     	*
-c                                                                      	*
-c  This routine uses the CSR data structure of A in two integer vectors	*
-c    colind, rwptr to set up the data structure for the ILU(levfill) 	*
-c    factorization of A in the integer vectors ijlu and uptr.  Both L	*
-c    and U are stored in the same structure, and uptr(i) is the pointer	*
-c    to the beginning of the i-th row of U in ijlu.			*
-c                                                                      	*
+c                                                                       *
+c  Symbolic factorization of a matrix in compressed sparse row format,  *
+c    with resulting factors stored in a single MSR data structure.      *
+c                                                                       *
+c  This routine uses the CSR data structure of A in two integer vectors *
+c    colind, rwptr to set up the data structure for the ILU(levfill)    *
+c    factorization of A in the integer vectors ijlu and uptr.  Both L   *
+c    and U are stored in the same structure, and uptr(i) is the pointer *
+c    to the beginning of the i-th row of U in ijlu.         *
+c                                                                       *
 c======================================================================== 
-c                                                                      	*
-c    Method Used                                                       	*
-c    ===========                                                      	*
-c                                                                      	*
-c  The implementation assumes that the diagonal entries are		*
-c  nonzero, and remain nonzero throughout the elimination		*
-c  process.  The algorithm proceeds row by row.  When computing		*
-c  the sparsity pattern of the i-th row, the effect of row		*
-c  operations from previous rows is considered.  Only those		*
-c  preceding rows j for which (i,j) is nonzero need be considered,	*
-c  since otherwise we would not have formed a linear combination	*
-c  of rows i and j.							*
-c                                                                      	*
-c  The method used has some variations possible.  The definition	*
-c  of ILU(s) is not well specified enough to get a factorization	*
-c  that is uniquely defined, even in the sparsity pattern that		*
-c  results.  For s = 0 or 1, there is not much variation, but for	*
-c  higher levels of fill the problem is as follows:  Suppose		*
-c  during the decomposition while computing the nonzero pattern		*
-c  for row i the following principal submatrix is obtained:		*
-c       _______________________						*
-c       |          |           |					*
-c       |          |           |					*
-c       |  j,j     |    j,k    |					*
-c       |          |           |					*
-c       |__________|___________|					*
-c       |          |           |					*
-c       |          |           |					*
-c       |  i,j     |    i,k    |					*
-c       |          |           |					*
-c       |__________|___________|					*
-c  									*
-c  Furthermore, suppose that entry (i,j) resulted from an earlier	*
-c  fill-in and has level s1, and (j,k) resulted from an earlier		*
-c  fill-in and has level s2:						*
-c       _______________________						*
-c       |          |           |					*
-c       |          |           |					*
-c       | level 0  | level s2  |					*
-c       |          |           |					*
-c       |__________|___________|					*
-c       |          |           |					*
-c       |          |           |					*
-c       | level s1 |           |					*
-c       |          |           |					*
-c       |__________|___________|					*
-c  									*
-c  When using A(j,j) to annihilate A(i,j), fill-in will be incurred	*
-c  in A(i,k).  How should its level be defined?  It would not be	*
-c  operated on if A(i,j) or A(j,m) had not been filled in.  The 	*
-c  version used here is to define its level as s1 + s2 + 1.  However,	*
-c  other reasonable choices would have been min(s1,s2) or max(s1,s2).	*
-c  Using the sum gives a more conservative strategy in terms of the	*
-c  growth of the number of nonzeros as s increases.			*
-c  									*
-c  levels(n+2:nzlu    ) stores the levels from previous rows,		*
-c  that is, the s2's above.  levels(1:n) stores the fill-levels		*
-c  of the current row (row i), which are the s1's above.		*
-c  levels(n+1) is not used, so levels is conformant with MSR format.	*
-c  									*
-c  Vectors used:							*
-c  =============							*
-c  									*
-c  lastcol(n):								*
-c  	The integer lastcol(k) is the row index of the last row		*
-c  	to have a nonzero in column k, including the current		*
-c  	row, and fill-in up to this point.  So for the matrix		*
-c  									*
-c             |--------------------------|				*
-c             | 11   12           15     |				*
-c             | 21   22                26|				*
-c             |      32  33   34         |				*
-c             | 41       43   44         |				*
-c             |      52       54  55   56|				*
-c             |      62                66|				*
-c             ---------------------------				*
-c  									*
-c             after step 1, lastcol() = [1  0  0  0  1  0]		*
-c             after step 2, lastcol() = [2  2  0  0  2  2]		*
-c             after step 3, lastcol() = [2  3  3  3  2  3]		*
-c             after step 4, lastcol() = [4  3  4  4  4  3]		*
-c             after step 5, lastcol() = [4  5  4  5  5  5]		*
-c             after step 6, lastcol() = [4  6  4  5  5  6]		*
-c									*  
-c          Note that on step 2, lastcol(5) = 2 because there is a	*
-c          fillin position (2,5) in the matrix.  lastcol() is used	*
-c   	to determine if a nonzero occurs in column j because		*
-c   	it is a nonzero in the original matrix, or was a fill.		*
-c									*  
-c  rowll(n):								*
-c  	The integer vector rowll is used to keep a linked list of	*
-c  	the nonzeros in the current row, allowing fill-in to be		*
-c   	introduced sensibly.  rowll is initialized with the		*
-c  	original nonzeros of the current row, and then sorted		*
-c  	using a shell sort.  A pointer called head         		*
-c  	(what ingenuity) is  initialized.  Note that at any		*
-c  	point rowll may contain garbage left over from previous		*
-c  	rows, which the linked list structure skips over.		*
-c  	For row 4 of the matrix above, first rowll is set to		*
-c   	rowll() = [3  1  2  5  -  -], where - indicates any integer.	*
-c   	Then the vector is sorted, which yields				*
-c   	rowll() = [1  2  3  5  -  -].  The vector is then expanded	*
-c  	to linked list form by setting head = 1  and         		*
-c   	rowll() = [2  3  5  -  7  -], where 7 indicates termination.	*
-c									*  
-c  ijlu(nzlu):								*
-c  	The returned nonzero structure for the LU factors.		*
-c  	This is built up row by row in MSR format, with both L		*
-c  	and U stored in the data structure.  Another vector, uptr(n),	*
-c  	is used to give pointers to the beginning of the upper		*
-c  	triangular part of the LU factors in ijlu.			*
-c									*  
-c  levels(n+2:nzlu):							*
-c  	This vector stores the fill level for each entry from		*
-c  	all the previous rows, used to compute if the current entry	*
-c  	will exceed the allowed levels of fill.  The value in		*
-c  	levels(m) is added to the level of fill for the element in	*
-c   	the current row that is being reduced, to figure if 		*
-c  	a column entry is to be accepted as fill, or rejected.		*
-c  	See the method explanation above.				*
-c									*  
-c  levels(1:n):								*
-c  	This vector stores the fill level number for the current	*
-c  	row's entries.  If they were created as fill elements		*
-c  	themselves, this number is added to the corresponding		*
-c  	entry in levels(n+2:nzlu) to see if a particular column		*
-c       entry will							*
-c  	be created as new fill or not.  NOTE: in practice, the		*
-c  	value in levels(1:n) is one larger than the "fill" level of	*
-c  	the corresponding row entry, except for the diagonal		*
-c  	entry.  That is why the accept/reject test in the code		*
-c  	is "if (levels(j) + levels(m) .le. levfill + 1)".		*
-c									*  
+c                                                                       *
+c    Method Used                                                        *
+c    ===========                                                        *
+c                                                                       *
+c  The implementation assumes that the diagonal entries are     *
+c  nonzero, and remain nonzero throughout the elimination       *
+c  process.  The algorithm proceeds row by row.  When computing     *
+c  the sparsity pattern of the i-th row, the effect of row      *
+c  operations from previous rows is considered.  Only those     *
+c  preceding rows j for which (i,j) is nonzero need be considered,  *
+c  since otherwise we would not have formed a linear combination    *
+c  of rows i and j.                         *
+c                                                                       *
+c  The method used has some variations possible.  The definition    *
+c  of ILU(s) is not well specified enough to get a factorization    *
+c  that is uniquely defined, even in the sparsity pattern that      *
+c  results.  For s = 0 or 1, there is not much variation, but for   *
+c  higher levels of fill the problem is as follows:  Suppose        *
+c  during the decomposition while computing the nonzero pattern     *
+c  for row i the following principal submatrix is obtained:     *
+c       _______________________                     *
+c       |          |           |                    *
+c       |          |           |                    *
+c       |  j,j     |    j,k    |                    *
+c       |          |           |                    *
+c       |__________|___________|                    *
+c       |          |           |                    *
+c       |          |           |                    *
+c       |  i,j     |    i,k    |                    *
+c       |          |           |                    *
+c       |__________|___________|                    *
+c                                   *
+c  Furthermore, suppose that entry (i,j) resulted from an earlier   *
+c  fill-in and has level s1, and (j,k) resulted from an earlier     *
+c  fill-in and has level s2:                        *
+c       _______________________                     *
+c       |          |           |                    *
+c       |          |           |                    *
+c       | level 0  | level s2  |                    *
+c       |          |           |                    *
+c       |__________|___________|                    *
+c       |          |           |                    *
+c       |          |           |                    *
+c       | level s1 |           |                    *
+c       |          |           |                    *
+c       |__________|___________|                    *
+c                                   *
+c  When using A(j,j) to annihilate A(i,j), fill-in will be incurred *
+c  in A(i,k).  How should its level be defined?  It would not be    *
+c  operated on if A(i,j) or A(j,m) had not been filled in.  The     *
+c  version used here is to define its level as s1 + s2 + 1.  However,   *
+c  other reasonable choices would have been min(s1,s2) or max(s1,s2).   *
+c  Using the sum gives a more conservative strategy in terms of the *
+c  growth of the number of nonzeros as s increases.         *
+c                                   *
+c  levels(n+2:nzlu    ) stores the levels from previous rows,       *
+c  that is, the s2's above.  levels(1:n) stores the fill-levels     *
+c  of the current row (row i), which are the s1's above.        *
+c  levels(n+1) is not used, so levels is conformant with MSR format.    *
+c                                   *
+c  Vectors used:                            *
+c  =============                            *
+c                                   *
+c  lastcol(n):                              *
+c   The integer lastcol(k) is the row index of the last row     *
+c   to have a nonzero in column k, including the current        *
+c   row, and fill-in up to this point.  So for the matrix       *
+c                                   *
+c             |--------------------------|              *
+c             | 11   12           15     |              *
+c             | 21   22                26|              *
+c             |      32  33   34         |              *
+c             | 41       43   44         |              *
+c             |      52       54  55   56|              *
+c             |      62                66|              *
+c             ---------------------------               *
+c                                   *
+c             after step 1, lastcol() = [1  0  0  0  1  0]      *
+c             after step 2, lastcol() = [2  2  0  0  2  2]      *
+c             after step 3, lastcol() = [2  3  3  3  2  3]      *
+c             after step 4, lastcol() = [4  3  4  4  4  3]      *
+c             after step 5, lastcol() = [4  5  4  5  5  5]      *
+c             after step 6, lastcol() = [4  6  4  5  5  6]      *
+c                                   *  
+c          Note that on step 2, lastcol(5) = 2 because there is a   *
+c          fillin position (2,5) in the matrix.  lastcol() is used  *
+c       to determine if a nonzero occurs in column j because        *
+c       it is a nonzero in the original matrix, or was a fill.      *
+c                                   *  
+c  rowll(n):                                *
+c   The integer vector rowll is used to keep a linked list of   *
+c   the nonzeros in the current row, allowing fill-in to be     *
+c       introduced sensibly.  rowll is initialized with the     *
+c   original nonzeros of the current row, and then sorted       *
+c   using a shell sort.  A pointer called head              *
+c   (what ingenuity) is  initialized.  Note that at any     *
+c   point rowll may contain garbage left over from previous     *
+c   rows, which the linked list structure skips over.       *
+c   For row 4 of the matrix above, first rowll is set to        *
+c       rowll() = [3  1  2  5  -  -], where - indicates any integer.    *
+c       Then the vector is sorted, which yields             *
+c       rowll() = [1  2  3  5  -  -].  The vector is then expanded  *
+c   to linked list form by setting head = 1  and                *
+c       rowll() = [2  3  5  -  7  -], where 7 indicates termination.    *
+c                                   *  
+c  ijlu(nzlu):                              *
+c   The returned nonzero structure for the LU factors.      *
+c   This is built up row by row in MSR format, with both L      *
+c   and U stored in the data structure.  Another vector, uptr(n),   *
+c   is used to give pointers to the beginning of the upper      *
+c   triangular part of the LU factors in ijlu.          *
+c                                   *  
+c  levels(n+2:nzlu):                            *
+c   This vector stores the fill level for each entry from       *
+c   all the previous rows, used to compute if the current entry *
+c   will exceed the allowed levels of fill.  The value in       *
+c   levels(m) is added to the level of fill for the element in  *
+c       the current row that is being reduced, to figure if         *
+c   a column entry is to be accepted as fill, or rejected.      *
+c   See the method explanation above.               *
+c                                   *  
+c  levels(1:n):                             *
+c   This vector stores the fill level number for the current    *
+c   row's entries.  If they were created as fill elements       *
+c   themselves, this number is added to the corresponding       *
+c   entry in levels(n+2:nzlu) to see if a particular column     *
+c       entry will                          *
+c   be created as new fill or not.  NOTE: in practice, the      *
+c   value in levels(1:n) is one larger than the "fill" level of *
+c   the corresponding row entry, except for the diagonal        *
+c   entry.  That is why the accept/reject test in the code      *
+c   is "if (levels(j) + levels(m) .le. levfill + 1)".       *
+c                                   *  
 c======================================================================== 
 c
 c on entry:
@@ -1594,7 +1588,7 @@ c        ierr  = 1  --> not enough storage; check mneed.
 c        ierr  = 2  --> illegal parameter
 c
 c mneed   = contains the actual number of elements in ldu, or the amount
-c		of additional storage needed for ldu
+c       of additional storage needed for ldu
 c
 c work arrays:
 c=============
@@ -1615,7 +1609,7 @@ c========================================================================
 
       integer n,colind(*),rwptr(*),ijlu(*),uptr(*),
      1        levfill,nzmax,nzlu
-      integer  ierr,   mneed
+      integer ierr, mneed
       integer icolindj,ijlum,i,j,k,m,ibegin,iend,Ujbeg,Ujend
       integer head,prev,lm,actlev,lowct,k1,k2,levp1,lmk,nzi,rowct
       logical cinindex
@@ -1625,6 +1619,7 @@ c========================================================================
       ALLOCATE( rowll(n) )
       ALLOCATE( lastcol(n) )
       ALLOCATE( levels(nzmax))
+	  
 c======================================================================== 
 c       Beginning of Executable Statements
 c======================================================================== 
@@ -1664,7 +1659,7 @@ c     Initially, for all columns there were no nonzeros in the rows
 c     above, because there are no rows above the first one.
 c     -------------------------------------------------------------
       do i = 1,n
-      	lastcol(i) = 0
+        lastcol(i) = 0
       end do
 
 c     -------------------
@@ -1676,24 +1671,24 @@ c       ----------------------------------------------------------
 c       Because the matrix diagonal entry is nonzero, the level of
 c       fill for that diagonal entry is zero:
 c       ----------------------------------------------------------
-      	levels(i) = 0
+        levels(i) = 0
 
 c       ----------------------------------------------------------
 c       ibegin and iend are the beginning of rows i and i+1, resp.
 c       ----------------------------------------------------------
-      	ibegin    =  rwptr(i)
-      	iend    =  rwptr(i+1)
+        ibegin    =  rwptr(i)
+        iend    =  rwptr(i+1)
 
 c       -------------------------------------------------------------
 c       Number of offdiagonal nonzeros in the original matrix's row i
 c       -------------------------------------------------------------
-      	nzi   =  iend - ibegin
+        nzi   =  iend - ibegin
 
 c       --------------------------------------------------------
 c       If only the diagonal entry in row i is nonzero, skip the
 c       fancy stuff; nothing need be done:
 c       --------------------------------------------------------
-      	if (nzi .gt. 1) then
+        if (nzi .gt. 1) then
 
 c           ----------------------------------------------------------
 c           Decrement iend, so that it can be used as the ending index
@@ -1978,7 +1973,7 @@ c        And you thought we would never get through....
 c        ----------------------------------------------
 
  100  continue
-c      write(*,*) 'nzlu ==',nzlu
+c
       if (cinindex) then
          do i=1,nzlu
             ijlu(i)=ijlu(i)-1
@@ -1989,7 +1984,7 @@ c      write(*,*) 'nzlu ==',nzlu
          do i = 1,rwptr(n+1)-1
             colind(i)=colind(i)-1
          end do
-        do i=1,n+1
+         do i=1,n+1
             rwptr(i)=rwptr(i)-1
          end do
       end if 
@@ -1999,6 +1994,7 @@ c      write(*,*) 'nzlu ==',nzlu
       DEALLOCATE(rowll)
       DEALLOCATE(lastcol)
       DEALLOCATE(levels)
+	  
       return
 
 c======================== End of symbfac ==============================
