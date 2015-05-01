@@ -18,6 +18,7 @@ c     Created  by Shiquan Zhang  on 12/27/2009.
 c     Modified by Chensong Zhang on 05/25/2010.
 c     Modified by Chensong Zhang on 04/21/2012.
 c     Modified by Chunsheng Feng on 04/26/2015.
+c     Modified by Zheng Li on 05/1/2015.
 c-----------------------------------------------------------------------
 
 !> \file ilu.f
@@ -1612,13 +1613,18 @@ c
 c======================================================================== 
 
 
-      integer n,colind(*),rwptr(*),ijlu(*),uptr(*),rowll(n), lastcol(n),
-     1        levfill,nzmax,nzlu, levels(nzmax)
+      integer n,colind(*),rwptr(*),ijlu(*),uptr(*),
+     1        levfill,nzmax,nzlu
       integer  ierr,   mneed
       integer icolindj,ijlum,i,j,k,m,ibegin,iend,Ujbeg,Ujend
       integer head,prev,lm,actlev,lowct,k1,k2,levp1,lmk,nzi,rowct
       logical cinindex
 
+      INTEGER, ALLOCATABLE :: rowll(:),lastcol(:),levels(:)
+
+      ALLOCATE( rowll(n) )
+      ALLOCATE( lastcol(n) )
+      ALLOCATE( levels(nzmax))
 c======================================================================== 
 c       Beginning of Executable Statements
 c======================================================================== 
@@ -1925,6 +1931,9 @@ c           ---------------------------------------------------------
             if (nzlu .gt. nzmax) then
                mneed = ifix((float(n-i)/float(2*i))*3*nzlu)
                ierr  = 1
+               DEALLOCATE(rowll)
+               DEALLOCATE(lastcol)
+               DEALLOCATE(levels)
                return
             endif
 
@@ -1986,6 +1995,10 @@ c      write(*,*) 'nzlu ==',nzlu
       end if 
 
       ierr = 0
+
+      DEALLOCATE(rowll)
+      DEALLOCATE(lastcol)
+      DEALLOCATE(levels)
       return
 
 c======================== End of symbfac ==============================
