@@ -528,7 +528,6 @@ c-----------------------------------------------------------------------
          do k=j1,j2
             tmp = tmp+abs(a(k))
          enddo
-!         if (tnorm(ii) .eq. 0.0) goto 999
          tmp = tmp/real(j2-j1+1)
          tnorm(ii) = tmp*droptol;
       enddo
@@ -537,13 +536,6 @@ c-----------------------------------------------------------------------
       do 500 ii = 1, n
          j1 = ia(ii)
          j2 = ia(ii+1) - 1
-!         tnorm = 0.0d0
-!         do 501 k=j1,j2
-!            tnorm = tnorm+abs(a(k))
-! 501     continue
-!         if (tnorm(ii) .eq. 0.0) goto 999
-!         if (tnorm .eq. 0.0) goto 999
-!         tnorm = tnorm/real(j2-j1+1)
 c     
 c     unpack L-part and U-part of row of A in arrays w 
 c     
@@ -732,7 +724,7 @@ c
 c     
 c     store inverse of diagonal element of u
 c     
-c         if (w(ii) .eq. 0.0) w(ii) = (0.0001 + droptol)*tnorm
+c        if (w(ii) .eq. 0.0) w(ii) = (0.0001 + droptol)*tnorm
          if (w(ii) .eq. 0.0) w(ii) = tnorm(ii)
 c     
          alu(ii) = 1.0d0 / w(ii) 
@@ -1350,7 +1342,8 @@ c----------------end-of-srtr-------------------------------------------
       end
 c
       subroutine qsplit(a,ind,n,ncut)
-      real*8 a(n)
+      implicit none
+      real*8  a(n)
       integer ind(n), n, ncut
 c-----------------------------------------------------------------------
 c     does a quick-sort split of a real array.
@@ -1362,8 +1355,8 @@ c     abs(a(i)) .le. abs(a(ncut)) for i .gt. ncut
 c     
 c     ind(1:n) is an integer array which permuted in the same way as a(*).
 c-----------------------------------------------------------------------
-      real*8 tmp, abskey
-      integer itmp, first, last
+      real*8  tmp, abskey
+      integer itmp, first, last, mid, j
 c-----
       first = 1
       last = n
