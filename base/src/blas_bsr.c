@@ -2645,21 +2645,22 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
                              REAL *y)
 {
     /* members of A */
-    INT     ROW = A->ROW;
-    INT     nb  = A->nb;
+    const INT  ROW  = A->ROW;
+    const INT  nb   = A->nb;
+    const INT  size = ROW*nb;
+
     INT    *IA  = A->IA;
     INT    *JA  = A->JA;
-    REAL   *val = A->val;
     
     /* local variables */
-    INT     size = ROW*nb;
-    INT     jump = nb*nb;
     INT     i,j,k, num_nnz_row;
     REAL   *px0 = NULL, *py0 = NULL, *py = NULL;
+    // INT     jump = nb*nb; Not used any more. --Chensong
     
     INT     use_openmp = FALSE;
     
 #ifdef _OPENMP
+    REAL   *val = A->val;
     REAL   *pA;
     INT myid, mybegin, myend, nthreads;
     if ( ROW > OPENMP_HOLDS ) {
