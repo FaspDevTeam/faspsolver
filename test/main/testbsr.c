@@ -53,11 +53,9 @@ int main (int argc, const char * argv[])
     // Step 1. Input stiffness matrix and right-hand side
     char filename1[512], *datafile1;
     char filename2[512], *datafile2;
-    char filename3[512], *datafile3;
     
     strncpy(filename1,inpar.workdir,128);
     strncpy(filename2,inpar.workdir,128);
-    strncpy(filename3,inpar.workdir,128);
     
     // Default test problem from black-oil benchmark: SPE01
     if (problem_num == 10) {                

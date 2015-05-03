@@ -23,8 +23,6 @@ int main (int argc, const char * argv[])
     dCSRmat *A_diag;
     dvector b_temp;
     
-    dBSRmat Absr;
-    
     ivector phi_idx;
     ivector n_idx;
     ivector p_idx;
@@ -71,9 +69,6 @@ int main (int argc, const char * argv[])
     char filename5[512], *datafile5;
     char filename6[512], *datafile6;
     char filename7[512], *datafile7;
-    char filename8[512], *datafile8;
-    char filename9[512], *datafile9;
-    char filename10[512], *datafile10;
     
     strncpy(filename1,inpar.workdir,128);
     strncpy(filename2,inpar.workdir,128);
@@ -82,9 +77,6 @@ int main (int argc, const char * argv[])
     strncpy(filename5,inpar.workdir,128);
     strncpy(filename6,inpar.workdir,128);
     strncpy(filename7,inpar.workdir,128);
-    strncpy(filename8,inpar.workdir,128);
-    strncpy(filename9,inpar.workdir,128);
-    strncpy(filename10,inpar.workdir,128);
     
     
     // Default test problem from black-oil benchmark: SPE01
@@ -1385,7 +1377,6 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename3, &(A_diag[0]));
         
         // read in M_P
-        dCSRmat M_P;
         strncpy(filename4,inpar.workdir,128);
         datafile4="/MHD/t0.05_h0.5/L2L2.dat";
         strcat(filename4,datafile4);
@@ -1393,7 +1384,6 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename4, &(A_diag[1]));
         
         // read in A_E
-        dCSRmat A_E;
         strncpy(filename5,inpar.workdir,128);
         datafile5="/MHD/t0.05_h0.5/Hcurl.dat";
         strcat(filename5,datafile5);
@@ -1401,7 +1391,6 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename5, &(A_diag[2]));
         
         // read in M_B
-        dCSRmat M_B;
         strncpy(filename6,inpar.workdir,128);
         datafile6="/MHD/t0.05_h0.5/Hdiv.dat";
         strcat(filename6,datafile6);
@@ -1513,7 +1502,6 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename3, &(A_diag[0]));
         
         // read in M_P
-        dCSRmat M_P;
         strncpy(filename4,inpar.workdir,128);
         datafile4="/MHD/t0.05_h0.25/L2L2.dat";
         strcat(filename4,datafile4);
@@ -1521,7 +1509,6 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename4, &(A_diag[1]));
         
         // read in A_E
-        dCSRmat A_E;
         strncpy(filename5,inpar.workdir,128);
         datafile5="/MHD/t0.05_h0.25/Hcurl.dat";
         strcat(filename5,datafile5);
@@ -1529,7 +1516,6 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename5, &(A_diag[2]));
         
         // read in M_B
-        dCSRmat M_B;
         strncpy(filename6,inpar.workdir,128);
         datafile6="/MHD/t0.05_h0.25/Hdiv.dat";
         strcat(filename6,datafile6);
@@ -1641,7 +1627,6 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename3, &(A_diag[0]));
         
         // read in M_P
-        dCSRmat M_P;
         strncpy(filename4,inpar.workdir,128);
         datafile4="/MHD/t0.05_h0.18/L2L2.dat";
         strcat(filename4,datafile4);
@@ -1649,7 +1634,6 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename4, &(A_diag[1]));
         
         // read in A_E
-        dCSRmat A_E;
         strncpy(filename5,inpar.workdir,128);
         datafile5="/MHD/t0.05_h0.18/Hcurl.dat";
         strcat(filename5,datafile5);
@@ -1657,7 +1641,6 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename5, &(A_diag[2]));
         
         // read in M_B
-        dCSRmat M_B;
         strncpy(filename6,inpar.workdir,128);
         datafile6="/MHD/t0.05_h0.18/Hdiv.dat";
         strcat(filename6,datafile6);

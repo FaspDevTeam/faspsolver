@@ -27,7 +27,7 @@
      234 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
      353 ./base/src/blas_bcsr.c
-    5412 ./base/src/blas_bsr.c
+    5413 ./base/src/blas_bsr.c
     2016 ./base/src/blas_csr.c
      125 ./base/src/blas_csrl.c
     1541 ./base/src/blas_smat.c
@@ -108,4 +108,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
-   92271 total
+   92272 total
