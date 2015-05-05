@@ -1477,7 +1477,6 @@ static INT cfsplitting_agg (dCSRmat *A,
         
     } // end for ci
     
-    
     // 3. Main loop
     while ( num_left > 0 ) {
         
@@ -1614,6 +1613,8 @@ static INT cfsplitting_agg (dCSRmat *A,
         fasp_mem_free(list_ptr);
     }
     
+    fasp_ivec_free(&CGPT_index);
+    fasp_ivec_free(&CGPT_rindex);
     fasp_icsr_free(&Sh);
     fasp_icsr_free(&ST);
     fasp_icsr_free(&ShT);

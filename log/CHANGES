@@ -1,10 +1,12 @@
 File Name: CHANGES
 
-05/03/2015 FASP 1.7.3:
+05/05/2015 FASP 1.7.3:
 - Fix a bug: cmake does not recognize CC env variable sometimes.
 - Fix a bug: ILU static memory allocation causes seg fault for large problems.
 - Fix a bug: ILU "implicit none" missing.
-- Fix warnings: except unused functions and unused labels. 
+- Fix warnings: except unused functions and unused labels.
+- Fix a bug: array out of bound in GMG 2D case.
+- Fix memory leakage in base/src/coarsening_rs.c.
 
 04/26/2015 FASP 1.7.2:
 - Fix a bug: Output of Krylov methods with saft-net.

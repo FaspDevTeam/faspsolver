@@ -89,7 +89,7 @@ int main (int argc, const char *argv[])
 
     INT        maxlevel, iter = 0, nx, ny;
     INT        i, j;
-    REAL       h, error0, *u, *b;
+    REAL       h, errL2, *u, *b;
     REAL       GMG_start, GMG_end;
    
     printf("=================================================\n");
@@ -120,9 +120,9 @@ int main (int argc, const char *argv[])
         iter = fasp_poisson_gmg_2D(u, b, nx, ny, maxlevel, rtol, print_level);
         fasp_gettime(&GMG_end);
 
-        error0 = L2NormError2d(u, nx, ny);
+        errL2 = L2NormError2d(u, nx, ny);
     
-        printf("%5d  %5d %12.6f %16.5e\n", maxlevel, iter, GMG_end-GMG_start, error0);
+        printf("%5d %6d %12.6f %16.5e\n", maxlevel, iter, GMG_end-GMG_start, errL2);
       
         // Clean up memory  
         free(u);
