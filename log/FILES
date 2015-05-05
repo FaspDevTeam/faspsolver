@@ -10,7 +10,7 @@
      291 ./base/include/nedmalloc.h
      394 ./base/src/aggregation_bsr.inl
     1806 ./base/src/aggregation_csr.inl
-    2117 ./base/src/gmg_util.inl
+    2119 ./base/src/gmg_util.inl
       89 ./base/src/itsolver_util.inl
      238 ./base/src/linklist.inl
      245 ./base/src/mg_util.inl
@@ -35,14 +35,14 @@
      320 ./base/src/blas_vec.c
      335 ./base/src/checkmat.c
      418 ./base/src/coarsening_cr.c
-    2063 ./base/src/coarsening_rs.c
+    2064 ./base/src/coarsening_rs.c
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
      106 ./base/src/famg.c
      340 ./base/src/fmgcycle.c
     1145 ./base/src/formats.c
       79 ./base/src/givens.c
-    1031 ./base/src/gmg_poisson.c
+    1035 ./base/src/gmg_poisson.c
      749 ./base/src/graphics.c
      427 ./base/src/ilu_setup_bsr.c
      193 ./base/src/ilu_setup_csr.c
@@ -108,4 +108,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
-   92272 total
+   92279 total

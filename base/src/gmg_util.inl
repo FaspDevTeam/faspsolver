@@ -457,7 +457,7 @@ static REAL energynormu3d(REAL *u,
 }
 
 /**
- * \fn void coarsergrid7pointrestriction2d(REAL *b, REAL *r, INT *level, INT k,
+ * \fn void coarsergrid7pointrestriction2d(REAL *b, REAL *r, INT *level, const INT k,
  *                                         INT *nxk, INT *nyk)
  * \brief Restriction function in multigrid of 2D
  *
@@ -469,12 +469,14 @@ static REAL energynormu3d(REAL *u,
  * \param nyk          Number of grids in y direction in level k
  *
  * \author Ziteng Wang
- * \date   06/07/201
+ * \date   06/07/2013
+ *
+ * Modified by Chensong on 05/05/2015: Fix array out-of-bound bug.
  */
 static void coarsergrid7pointrestriction2d(REAL *b,
                                            REAL *r,
                                            INT *level,
-                                           INT k,
+                                           const INT k,
                                            INT *nxk,
                                            INT *nyk)
 {
@@ -494,14 +496,14 @@ static void coarsergrid7pointrestriction2d(REAL *b,
             k2 = k1+2*j;
             b[k11+j] = (r[k2]*2+r[k2+1]+r[k2-1]+r[k2+nxkk]+r[k2-nxkk]+r[k2+nxkk+1]+r[k2-nxkk-1])/2;
         }
-        b[levelk1+(i+1)*nxkk-1] = (r[levelk+(2*i+1)*nxkk-2]+r[levelk+2*i*nxkk-2])/2;
+        b[levelk1+(i+1)*nxkk1-1] = (r[levelk+(2*i+1)*nxkk-2]+r[levelk+2*i*nxkk-2])/2;
     }
     k11 = levelk1+(nykk1-1)*nxkk1;
     k1 = levelk+(nykk-1)*nxkk-1;
     for (j = 1; j < nxk[k+1]-1; j++) {
         b[k11+j] = (r[k1+2*j]+r[k1+2*j-nxkk])/2;
     }
-    b[level[k+1]+nxk[k+1]*nyk[k+1]-1] = r[level[k]+(nyk[k]-1)*nxk[k]-2]/2;
+    b[levelk1+nxkk1*nykk1-1] = r[levelk+(nykk-1)*nxkk-2]/2;
 }
 
 /**

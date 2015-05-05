@@ -16,8 +16,8 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_poisson_gmg_1D (REAL *u, REAL *b, INT nx, INT maxlevel,
- *                              REAL rtol, const SHORT prtlvl)
+ * \fn INT fasp_poisson_gmg_1D (REAL *u, REAL *b, const INT nx, const INT maxlevel,
+ *                              const REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 1D equation by Geometric Multigrid Method
  *
@@ -35,9 +35,9 @@
  */
 INT fasp_poisson_gmg_1D (REAL *u,
                          REAL *b,
-                         INT nx,
-                         INT maxlevel,
-                         REAL rtol,
+                         const INT nx,
+                         const INT maxlevel,
+                         const REAL rtol,
 					     const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
@@ -138,8 +138,9 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_poisson_gmg_2D (REAL *u, REAL *b, INT nx, INT ny,
- *                              INT maxlevel, REAL rtol, const SHORT prtlvl)
+ * \fn INT fasp_poisson_gmg_2D (REAL *u, REAL *b, const INT nx, const INT ny,
+ *                              const INT maxlevel, const REAL rtol,
+ *                              const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 2D equation by Geometric Multigrid Method
  *
@@ -158,17 +159,17 @@ FINISHED:
  */
 INT fasp_poisson_gmg_2D (REAL *u,
                          REAL *b,
-                         INT nx,
-                         INT ny,
-                         INT maxlevel,
-                         REAL rtol,
+                         const INT nx,
+                         const INT ny,
+                         const INT maxlevel,
+                         const REAL rtol,
                          const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
 
-    REAL *u0,*r0,*b0;
-    REAL norm_r,norm_r0,norm_r1, error, factor;
+    REAL *u0, *b0, *r0;
+    REAL norm_r, norm_r0, norm_r1, error, factor;
     INT i, k, count = 0, *nxk, *nyk, *level;
     REAL AMG_start, AMG_end;
     
@@ -186,13 +187,13 @@ INT fasp_poisson_gmg_2D (REAL *u,
     nxk = (INT *)malloc(maxlevel*sizeof(INT));
 	nyk = (INT *)malloc(maxlevel*sizeof(INT));
 	nxk[0] = nx+1; nyk[0] = ny+1;
-    for(k=1;k<maxlevel;k++){
+    for (k=1;k<maxlevel;k++) {
 		nxk[k] = (int) (nxk[k-1]+1)/2;
 		nyk[k] = (int) (nyk[k-1]+1)/2;
 	}
     
     // set level
-    level = (INT *)malloc((maxlevel+1)*sizeof(REAL));
+    level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
     level[0] = 0; level[1] = (nx+1)*(ny+1);
     for (i = 1; i < maxlevel; i++) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1);
@@ -200,12 +201,14 @@ INT fasp_poisson_gmg_2D (REAL *u,
 	level[maxlevel+1] = level[maxlevel]+1;
     
     // set u0, b0
-    u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-    b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-	r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
+    u0 = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
+    b0 = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
+	r0 = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
+    
     fasp_array_set(level[maxlevel], u0, 0.0);
     fasp_array_set(level[maxlevel], b0, 0.0);
 	fasp_array_set(level[maxlevel], r0, 0.0);
+    
     fasp_array_cp(level[1], u, u0);
     fasp_array_cp(level[1], b, b0);
     
@@ -222,7 +225,7 @@ INT fasp_poisson_gmg_2D (REAL *u,
 	}
     
     // GMG solver of V-cycle
-    while (count < max_itr_num) {
+    while ( count < max_itr_num ) {
         count++;
         multigriditeration2d(u0, b0, level, 0, maxlevel, nxk, nyk);
         compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
@@ -233,7 +236,7 @@ INT fasp_poisson_gmg_2D (REAL *u,
 		if ( prtlvl > PRINT_SOME ){
 			printf("%6d | %13.6e   | %13.6e  | %10.4f\n",count,error,norm_r,factor);
 		}
-        if (error < rtol || norm_r < atol) break;
+        if ( error < rtol || norm_r < atol ) break;
     }
     
 	if ( prtlvl > PRINT_NONE ){
@@ -262,16 +265,17 @@ FINISHED:
     free(level);
     free(nxk);
     free(nyk);
-    free(r0);
     free(u0);
     free(b0);
+    free(r0);
     
     return count;
 }
 
 /**
- * \fn INT fasp_poisson_gmg_3D (REAL *u, REAL *b, INT nx, INT ny, INT nz,
- *                              INT maxlevel, REAL rtol, const SHORT prtlvl)
+ * \fn INT fasp_poisson_gmg_3D (REAL *u, REAL *b, const INT nx, const INT ny, 
+ *                              const INT nz, const INT maxlevel,
+ *                              const REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 3D equation by Geometric Multigrid Method
  *
@@ -291,11 +295,11 @@ FINISHED:
  */
 INT fasp_poisson_gmg_3D (REAL *u,
                          REAL *b,
-                         INT nx,
-                         INT ny,
-                         INT nz,
-                         INT maxlevel,
-                         REAL rtol,
+                         const INT nx,
+                         const INT ny,
+                         const INT nz,
+                         const INT maxlevel,
+                         const REAL rtol,
 					     const SHORT prtlvl)
 {
     const REAL atol = 1.0E-15;
