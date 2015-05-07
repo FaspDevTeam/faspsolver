@@ -70,7 +70,7 @@
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
      181 ./base/src/pgcg_mf.c
-     456 ./base/src/pgcr.c
+     458 ./base/src/pgcr.c
     1382 ./base/src/pgmres.c
      300 ./base/src/pgmres_mf.c
     1286 ./base/src/pminres.c
@@ -108,4 +108,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
-   92279 total
+   92281 total
