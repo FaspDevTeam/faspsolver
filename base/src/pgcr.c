@@ -396,6 +396,8 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
     
     // clean up memory
     for (i = 0; i < Restart; i++) fasp_mem_free(h[i]);
+    fasp_mem_free(h);
+    
     fasp_mem_free(work);
     fasp_mem_free(norms);
     
