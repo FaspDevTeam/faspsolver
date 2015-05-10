@@ -78,6 +78,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;
     REAL   epsilon, gamma, t;
+    REAL   relres, normu, r_normb;
     
     REAL   *c = NULL, *s = NULL, *rs = NULL, *norms = NULL, *r = NULL;
     REAL   **p = NULL, **hh = NULL, **z=NULL;
@@ -136,16 +137,6 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     r_norm = fasp_blas_array_norm2(n, p[0]);
     norms[0] = r_norm;
     
-    // compute stopping criteria
-    switch (stop_type) {
-        case STOP_REL_RES:
-            r_norm = MAX(SMALLREAL,r_norm);
-            break;
-        default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
-            goto FINISHED;
-    }
-
     if ( prtlvl >= PRINT_SOME) {
         ITS_PUTNORM("right-hand side", b_norm);
         ITS_PUTNORM("residual", r_norm);
@@ -154,14 +145,17 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
     if ( b_norm > 0.0 ) den_norm = b_norm;
     else                den_norm = r_norm;
     
+    epsilon = tol*den_norm;
+    
+    // if initial residual is small, no need to iterate!
+    if ( r_norm < epsilon || r_norm < 1e-3*tol ) goto FINISHED;
+
     if ( b_norm > 0.0 ) {
         print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
     }
     else {
         print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],0);
     }
-    
-    epsilon = tol*den_norm;
     
     /* outer iteration cycle */
     while ( iter < MaxIt ) {
@@ -196,24 +190,13 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
             }
         }
         
-        if ( r_norm <= epsilon && iter >= min_iter ) {
-            fasp_array_cp(n, b->val, r);
-            fasp_blas_dcsr_aAxpy(-1.0, A, x->val, r);
-            r_norm = fasp_blas_array_norm2(n, r);
-            
-            if ( r_norm <= epsilon ) {
-                break;
-            }
-            else {
-                if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
-            }
-        }
-        
+        // Always entry the cycle at the first iteration
+        // For at least one iteration step
         t = 1.0 / r_norm;
         fasp_blas_array_ax(n, t, p[0]);
-        
-        /* RESTART CYCLE (right-preconditioning) */
         i = 0;
+
+        // RESTART CYCLE (right-preconditioning)
         while ( i < Restart && iter < MaxIt ) {
             
             i ++;  iter ++;
@@ -288,18 +271,40 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        if ( r_norm  <= epsilon && iter >= min_iter ) {
+        if ( r_norm <= epsilon && iter >= min_iter ) {
             fasp_array_cp(n, b->val, r);
             fasp_blas_dcsr_aAxpy(-1.0, A, x->val, r);
             r_norm = fasp_blas_array_norm2(n, r);
             
-            if ( r_norm <= epsilon ) {
+            switch (stop_type) {
+                case STOP_REL_RES:
+                    relres  = r_norm/den_norm;
+                    break;
+                case STOP_REL_PRECRES:
+                    if ( pc == NULL )
+                        fasp_array_cp(n, r, p[0]);
+                    else
+                        pc->fct(r, p[0], pc->data);
+                    r_normb = sqrt(fasp_blas_array_dotprod(n,p[0],r));
+                    relres  = r_normb/den_norm;
+                    break;
+                case STOP_MOD_REL_RES:
+                    normu   = MAX(SMALLREAL,fasp_blas_array_norm2(n,x->val));
+                    relres  = r_norm/normu;
+                    break;
+                default:
+                    printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+                    goto FINISHED;
+            }
+            
+            if ( relres <= tol ) {
                 break;
             }
             else {
                 if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
+        
         } /* end of convergence check */
         
         /* compute residual vector and continue loop */
@@ -401,6 +406,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
     REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;
     REAL   epsilon, gamma, t;
+    REAL   relres, normu, r_normb;
     
     REAL   *c = NULL, *s = NULL, *rs = NULL, *norms = NULL, *r = NULL;
     REAL   **p = NULL, **hh = NULL, **z=NULL;
@@ -459,16 +465,6 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
     r_norm = fasp_blas_array_norm2(n, p[0]);
     norms[0] = r_norm;
     
-    // compute stopping criteria
-    switch (stop_type) {
-        case STOP_REL_RES:
-            r_norm = MAX(SMALLREAL,r_norm);
-            break;
-        default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
-            goto FINISHED;
-    }
-    
     if ( prtlvl >= PRINT_SOME) {
         ITS_PUTNORM("right-hand side", b_norm);
         ITS_PUTNORM("residual", r_norm);
@@ -477,14 +473,17 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
     if ( b_norm > 0.0 ) den_norm = b_norm;
     else                den_norm = r_norm;
     
+    epsilon = tol*den_norm;
+    
+    // if initial residual is small, no need to iterate!
+    if ( r_norm < epsilon || r_norm < 1e-3*tol ) goto FINISHED;
+    
     if ( b_norm > 0.0 ) {
         print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
     }
     else {
         print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],0);
     }
-    
-    epsilon = tol*den_norm;
     
     /* outer iteration cycle */
     while ( iter < MaxIt ) {
@@ -519,24 +518,13 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
             }
         }
         
-        if ( r_norm <= epsilon && iter >= min_iter ) {
-            fasp_array_cp(n, b->val, r);
-            fasp_blas_dbsr_aAxpy(-1.0, A, x->val, r);
-            r_norm = fasp_blas_array_norm2(n, r);
-            
-            if ( r_norm <= epsilon ) {
-                break;
-            }
-            else {
-                if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
-            }
-        }
-        
+        // Always entry the cycle at the first iteration
+        // For at least one iteration step
         t = 1.0 / r_norm;
         fasp_blas_array_ax(n, t, p[0]);
-        
-        /* RESTART CYCLE (right-preconditioning) */
         i = 0;
+        
+        // RESTART CYCLE (right-preconditioning)
         while ( i < Restart && iter < MaxIt ) {
             
             i ++;  iter ++;
@@ -611,18 +599,40 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        if ( r_norm  <= epsilon && iter >= min_iter ) {
+        if ( r_norm <= epsilon && iter >= min_iter ) {
             fasp_array_cp(n, b->val, r);
             fasp_blas_dbsr_aAxpy(-1.0, A, x->val, r);
             r_norm = fasp_blas_array_norm2(n, r);
             
-            if ( r_norm <= epsilon ) {
+            switch (stop_type) {
+                case STOP_REL_RES:
+                    relres  = r_norm/den_norm;
+                    break;
+                case STOP_REL_PRECRES:
+                    if ( pc == NULL )
+                        fasp_array_cp(n, r, p[0]);
+                    else
+                        pc->fct(r, p[0], pc->data);
+                    r_normb = sqrt(fasp_blas_array_dotprod(n,p[0],r));
+                    relres  = r_normb/den_norm;
+                    break;
+                case STOP_MOD_REL_RES:
+                    normu   = MAX(SMALLREAL,fasp_blas_array_norm2(n,x->val));
+                    relres  = r_norm/normu;
+                    break;
+                default:
+                    printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+                    goto FINISHED;
+            }
+            
+            if ( relres <= tol ) {
                 break;
             }
             else {
                 if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
+            
         } /* end of convergence check */
         
         /* compute residual vector and continue loop */
@@ -726,6 +736,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
     REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;
     REAL   epsilon, gamma, t;
+    REAL   relres, normu, r_normb;
     
     REAL   *c = NULL, *s = NULL, *rs = NULL, *norms = NULL, *r = NULL;
     REAL   **p = NULL, **hh = NULL, **z=NULL;
@@ -784,16 +795,6 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
     r_norm = fasp_blas_array_norm2(n, p[0]);
     norms[0] = r_norm;
     
-    // compute stopping criteria
-    switch (stop_type) {
-        case STOP_REL_RES:
-            r_norm = MAX(SMALLREAL,r_norm);
-            break;
-        default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
-            goto FINISHED;
-    }
-    
     if ( prtlvl >= PRINT_SOME) {
         ITS_PUTNORM("right-hand side", b_norm);
         ITS_PUTNORM("residual", r_norm);
@@ -802,14 +803,17 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
     if ( b_norm > 0.0 ) den_norm = b_norm;
     else                den_norm = r_norm;
     
+    epsilon = tol*den_norm;
+    
+    // if initial residual is small, no need to iterate!
+    if ( r_norm < epsilon || r_norm < 1e-3*tol ) goto FINISHED;
+    
     if ( b_norm > 0.0 ) {
         print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
     }
     else {
         print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],0);
     }
-    
-    epsilon = tol*den_norm;
     
     /* outer iteration cycle */
     while ( iter < MaxIt ) {
@@ -844,24 +848,13 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
             }
         }
         
-        if ( r_norm <= epsilon && iter >= min_iter ) {
-            fasp_array_cp(n, b->val, r);
-            fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, r);
-            r_norm = fasp_blas_array_norm2(n, r);
-            
-            if ( r_norm <= epsilon ) {
-                break;
-            }
-            else {
-                if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
-            }
-        }
-        
+        // Always entry the cycle at the first iteration
+        // For at least one iteration step
         t = 1.0 / r_norm;
         fasp_blas_array_ax(n, t, p[0]);
-        
-        /* RESTART CYCLE (right-preconditioning) */
         i = 0;
+        
+        // RESTART CYCLE (right-preconditioning)
         while ( i < Restart && iter < MaxIt ) {
             
             i ++;  iter ++;
@@ -936,18 +929,40 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        if ( r_norm  <= epsilon && iter >= min_iter ) {
+        if ( r_norm <= epsilon && iter >= min_iter ) {
             fasp_array_cp(n, b->val, r);
             fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, r);
             r_norm = fasp_blas_array_norm2(n, r);
             
-            if ( r_norm <= epsilon ) {
+            switch (stop_type) {
+                case STOP_REL_RES:
+                    relres  = r_norm/den_norm;
+                    break;
+                case STOP_REL_PRECRES:
+                    if ( pc == NULL )
+                        fasp_array_cp(n, r, p[0]);
+                    else
+                        pc->fct(r, p[0], pc->data);
+                    r_normb = sqrt(fasp_blas_array_dotprod(n,p[0],r));
+                    relres  = r_normb/den_norm;
+                    break;
+                case STOP_MOD_REL_RES:
+                    normu   = MAX(SMALLREAL,fasp_blas_array_norm2(n,x->val));
+                    relres  = r_norm/normu;
+                    break;
+                default:
+                    printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+                    goto FINISHED;
+            }
+            
+            if ( relres <= tol ) {
                 break;
             }
             else {
                 if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
+            
         } /* end of convergence check */
         
         /* compute residual vector and continue loop */

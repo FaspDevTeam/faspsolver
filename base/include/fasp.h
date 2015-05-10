@@ -75,8 +75,8 @@
 /**
  * \brief Definition of print command in DEBUG mode
  */
-#define PRT_INT(A)  printf("### DEBUG: %s = %d\n", #A, (A)) /**< print an integer */
-#define PRT_REAL(A) printf("### DEBUG: %s = %e\n", #A, (A)) /**< print a real num */
+#define PUT_INT(A)  printf("### DEBUG: %s = %d\n", #A, (A)) /**< print an integer */
+#define PUT_REAL(A) printf("### DEBUG: %s = %e\n", #A, (A)) /**< print a real num */
 
 /*---------------------------*/
 /*---  Global variables   ---*/
