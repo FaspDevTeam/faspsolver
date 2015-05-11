@@ -55,14 +55,14 @@ This package has been tested with:
 
 --Linux
 
-    C/C++: gcc-4.2.x, gcc-4.4.x, gcc-4.5.x, gcc-4.6.x, gcc-4.8.x; 
-    Fortran: gfortran-4.4.x, gfortran-4.5.x, gfortran-4.6.x, gfortran-4.8.x, 
+    C/C++: gcc-4.4.x, gcc-4.5.x, gcc-4.6.x, gcc-4.8.x, gcc-4.9.x, icc-11.x;
+    Fortran: gfortran-4.4.x, gfortran-4.6.x, gfortran-4.8.x, gfortran-4.9.x
              g95-0.92, g95-0.93, ifort-11.x.
 
 --Mac OS X
 
-    C/C++: gcc-4.4.x, gcc-4.5.x, gcc-4.6.x, gcc-4.8.x, icc-11.x; 
-    Fortran: gfortran-4.4.x, gfortran-4.5.x, gfortran-4.6.x, gfortran-4.8.x, 
+    C/C++: gcc-4.4.x, gcc-4.5.x, gcc-4.6.x, gcc-4.8.x, gcc-4.9.x, icc-11.x; 
+    Fortran: gfortran-4.4.x, gfortran-4.6.x, gfortran-4.8.x, gfortran-4.9.x, 
              g95-0.92, g95-0.93.
     
 --Windows XP and Windows 7
