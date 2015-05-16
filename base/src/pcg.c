@@ -96,7 +96,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     
     // local variables
-    INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
+    INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
@@ -222,7 +222,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             fasp_array_cp(m,b->val,r);
             fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
             
-            // compute residuals
+            // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
@@ -255,20 +255,19 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
                 }
                 fasp_array_set(m,p,0.0);
                 ++stag;
-                ++restart_step;
             }
         } // end of stagnation check!
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
-            REAL computed_relres = relres;
+            REAL updated_relres = relres;
             
-            // compute residual r = b - Ax again
+            // compute true residual r = b - Ax and replace residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
             
-            // compute residuals
+            // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
@@ -293,7 +292,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             if ( relres < tol ) break;
             
             if ( prtlvl >= PRINT_MORE ) {
-                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
+                ITS_COMPRES(updated_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
@@ -305,7 +304,6 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             // prepare for restarting the method
             fasp_array_set(m,p,0.0);
             ++more_step;
-            ++restart_step;
             
         } // end of safe-guard check!
         
@@ -383,7 +381,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     
     // local variables
-    INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
+    INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
@@ -509,7 +507,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
             fasp_array_cp(m,b->val,r);
             fasp_blas_dbsr_aAxpy(-1.0,A,u->val,r);
             
-            // compute residuals
+            // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
@@ -542,20 +540,19 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
                 }
                 fasp_array_set(m,p,0.0);
                 ++stag;
-                ++restart_step;
             }
         } // end of stagnation check!
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
-            REAL computed_relres = relres;
+            REAL updated_relres = relres;
 
-            // compute residual r = b - Ax again
+            // compute true residual r = b - Ax and replace residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_dbsr_aAxpy(-1.0,A,u->val,r);
             
-            // compute residuals
+            // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
@@ -580,7 +577,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
             if ( relres < tol ) break;
 
             if ( prtlvl >= PRINT_MORE ) {
-                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
+                ITS_COMPRES(updated_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
@@ -592,7 +589,6 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
             // prepare for restarting the method
             fasp_array_set(m,p,0.0);
             ++more_step;
-            ++restart_step;
             
         } // end of safe-guard check!
         
@@ -672,7 +668,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     
     // local variables
-    INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
+    INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
@@ -798,7 +794,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
             fasp_array_cp(m,b->val,r);
             fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
             
-            // compute residuals
+            // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
@@ -831,20 +827,19 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
                 }
                 fasp_array_set(m,p,0.0);
                 ++stag;
-                ++restart_step;
             }
         } // end of stagnation check!
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
 
-            REAL computed_relres = relres;
+            REAL updated_relres = relres;
 
-            // compute residual r = b - Ax again
+            // compute true residual r = b - Ax and replace residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
             
-            // compute residuals
+            // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
@@ -869,7 +864,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
             if ( relres < tol ) break;
 
             if ( prtlvl >= PRINT_MORE ) {
-                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
+                ITS_COMPRES(updated_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
@@ -881,7 +876,6 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
             // prepare for restarting the method
             fasp_array_set(m,p,0.0);
             ++more_step;
-            ++restart_step;
             
         } // end of safe-guard check!
         
@@ -961,7 +955,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
     const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
     
     // local variables
-    INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
+    INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
@@ -1087,7 +1081,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             fasp_array_cp(m,b->val,r);
             fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
             
-            // compute residuals
+            // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
@@ -1120,20 +1114,19 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
                 }
                 fasp_array_set(m,p,0.0);
                 ++stag;
-                ++restart_step;
             }
         } // end of stagnation check!
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
-            REAL computed_relres = relres;
+            REAL updated_relres = relres;
 
-            // compute residual r = b - Ax again
+            // compute true residual r = b - Ax and replace residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
             
-            // compute residuals
+            // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
@@ -1158,7 +1151,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             if ( relres < tol ) break;
             
             if ( prtlvl >= PRINT_MORE ) {
-                ITS_COMPRES(computed_relres); ITS_REALRES(relres);
+                ITS_COMPRES(updated_relres); ITS_REALRES(relres);
             }
             
             if ( more_step >= MaxRestartStep ) {
@@ -1170,7 +1163,6 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             // prepare for restarting the method
             fasp_array_set(m,p,0.0);
             ++more_step;
-            ++restart_step;
             
         } // end of safe-guard check!
         

@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+05/15/2015 FASP 1.7.4:
+- Test very small tolerance: machine eps. 
+
 05/10/2015 FASP 1.7.3:
 - Fix a bug: cmake does not recognize CC env variable sometimes.
 - Fix a bug: ILU static memory allocation causes seg fault for large problems.
