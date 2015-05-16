@@ -108,6 +108,7 @@ Iterative Methods
 [       ] test SpBLAS implementations in standard libraries (Chunsheng)
 [       ] implement right preconditioning for some Krylov methods (Chensong)
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
+[       ] fix stagnation in GCG
 
 [ 0.6.7 ] remove non-GPL ILU routines
 [       ] replace the ILU smoothers from SPARSEKIT ver2.0
