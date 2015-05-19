@@ -66,7 +66,7 @@
      986 ./base/src/parameters.c
     1437 ./base/src/pbcgs.c
      411 ./base/src/pbcgs_mf.c
-    1216 ./base/src/pcg.c
+    1208 ./base/src/pcg.c
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
      181 ./base/src/pgcg_mf.c
@@ -79,7 +79,7 @@
      727 ./base/src/precond_bsr.c
      663 ./base/src/precond_csr.c
     1732 ./base/src/precond_str.c
-     964 ./base/src/pvfgmres.c
+    1014 ./base/src/pvfgmres.c
      338 ./base/src/pvfgmres_mf.c
     1404 ./base/src/pvgmres.c
      339 ./base/src/pvgmres_mf.c
@@ -108,4 +108,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
-   92281 total
+   92323 total
