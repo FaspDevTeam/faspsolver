@@ -176,8 +176,6 @@ if(DOXYGEN_FOUND)
     else(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
         message("   WARNING: Doxygen configuration file cannot be found!")
     endif(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
-else(DOXYGEN_FOUND)
-    message("   WARNING: Doxygen was requested but is not found!")
 endif(DOXYGEN_FOUND)
 ###############end documentation with doxygen
 
