@@ -1,6 +1,6 @@
 Fast Auxiliary Space Preconditioning (FASP) Solver Library: README
 
-Last modified on 01/05/2015
+Last modified on 06/10/2015
 
 ================================================================================
 
@@ -22,53 +22,50 @@ of Auxiliary Space Preconditioning, for several complicated applications.
 Current examples include the fluid dynamics, underground water simulation, 
 the black oil model in reservoir simulation, and so on. 
 
-To compile, you need a C99 compiler and a F77 compiler. By default, we use 
-gfortan and gcc, respectively; see INSTALL for more details. Configuring and 
-building the FASP library and test suite requires CMake 2.6 or higher, which 
-can be found at http://www.cmake.org/ .
+To compile, you need a C99 compiler and a F90 compiler. By default, we use GNU
+gcc/gfortan, respectively; see INSTALL for more details.
+
+Configuring and building the FASP library and test suite requires CMake 2.6 or
+higher, which can be found at http://www.cmake.org/.
 
 There is a top level Makefile which calls cmake for configuration and building 
-of the FASP shared library and the test programs suite. The command to configure
-is:
+of the FASP shared library and the test programs suite.
+
+The command to configure is:
 
     $ make config 
 
 or
 
-    $ make config openmp=yes // in order to enable OpenMP
+    $ make config CC=clang   // to choose a C compiler
+    $ make config openmp=yes // to enable OpenMP
+    $ make config debug=yes  // to enable DEBUG mode
 
-or
+After successfully configing the environment, just type:
 
-    $ make config debug=yes // in order to enable DEBUG mode
-
-After configuring, to compile the shared library, just type 
-
-    $ make 
-
-To install FASP library and executables for testing and tutorial:
+    $ make                   // to compile the shared library and examples
+    
+To install the FASP library and executables, type:
 
     $ make install
 
 Note: The default prefix is the FASP source directory.
 
-This package has been tested with: 
+================================================================================
+
+This package has been tested with on the following platforms: 
 
 --Linux
-
-    C/C++: gcc-4.4.x, gcc-4.5.x, gcc-4.6.x, gcc-4.8.x, gcc-4.9.x, icc-11.x;
-    Fortran: gfortran-4.4.x, gfortran-4.6.x, gfortran-4.8.x, gfortran-4.9.x
-             g95-0.92, g95-0.93, ifort-11.x.
+    GNU gcc/gfortran:   4.4.x, 4.5.x, 4.6.x, 4.8.x, 4.9.x
+    Intel icc/ifort:    11.x
 
 --Mac OS X
-
-    C/C++: gcc-4.4.x, gcc-4.5.x, gcc-4.6.x, gcc-4.8.x, gcc-4.9.x, icc-11.x; 
-    Fortran: gfortran-4.4.x, gfortran-4.6.x, gfortran-4.8.x, gfortran-4.9.x, 
-             g95-0.92, g95-0.93.
+    GNU gcc/gfortran:   4.4.x, 4.5.x, 4.6.x, 4.8.x, 4.9.x
+    Intel icc/ifort:    11.x
     
 --Windows XP and Windows 7
-
-    C/C++: VC++9.0, icc-11.1.x, icc-12.0.x; icc-13.0.x; icc-14.0.x;
-    Fortran: ifort-11.1.x, ifort-12.0.x; ifort-13.0.x; ifort-14.0.x.
+    Intel icc/ifort:    11.1, 12.x, 13.x, 14.x
+    MS VC++:            9.0
 
 ================================================================================
     
