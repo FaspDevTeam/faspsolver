@@ -496,7 +496,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgparam);
             itparam.itsolver_type = SOLVER_GMRES;
             itparam.maxit         = 500;
-            itparam.tol           = 1e-10;
+            itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
             
@@ -513,7 +513,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgparam);
             itparam.itsolver_type = SOLVER_VGMRES;
             itparam.maxit         = 500;
-            itparam.tol           = 1e-10;
+            itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
             

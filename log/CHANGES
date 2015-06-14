@@ -1,8 +1,10 @@
 File Name: CHANGES
 
-06/10/2015 FASP 1.7.4:
+06/14/2015 FASP 1.7.4:
 - Test very small tolerance: machine eps.
 - Test on OS X 10.10.3 with GCC 4.9.2: works fine.
+- Fix convergence problem in regression test when using DIAG_PERF.
+- Update the regression test results. 
 - Modify cmake Doxygen output: If not present, does not print warning.
 - Update README. 
 - Update the web, documentation, etc.
