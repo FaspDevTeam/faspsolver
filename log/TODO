@@ -4,9 +4,9 @@ File Name: TODO
 Milestones
 ========================
 
-* Release an alpha version by the end of 2012!
-* Release a beta version by the end of 2015!
-* Release a stable version by the end of 2016!
+[ 1.1.6 ] Release an alpha version by the end of 2012!
+[       ] Release a beta version by July 2015!
+[       ] Release a stable version by the end of 2016!
 
 ========================
 Documentation
@@ -20,9 +20,9 @@ Documentation
 [ 0.9.8 ] make the FASP webpage ready
 [ 1.1.5 ] add details for building and installation using SCons and VS
 [ 1.2.4 ] add details for building and installation using cmake and VS
-[       ] update all the examples with the new code
-[       ] add pairwise aggregation AMG methods
-[       ] add details for the OMP version
+[   *   ] update all the sample codes with the new version
+[   *   ] add pairwise aggregation AMG methods as a tutorial example
+[   *   ] add details for the OMP version
 
 ========================
 Structure
@@ -34,26 +34,28 @@ Structure
 [ 0.7.0 ] separate external packages
 [ 0.8.0 ] define repeated constants in header
 [ 0.8.0 ] auto format for plain text, replace TAB by 4 SPACE
+[ 1.1.1 ] support diagonal-preference CSR matrices
 [ 1.1.3 ] add support for shared lib using SCons
 [ 1.1.6 ] add uniform I/O routines: Binary and ASCII
 [ 1.4.2 ] add command line options
 [ 1.4.3 ] set DEBUG_MODE in Makefile instead of the header file
 [ 1.6.1 ] fix problem with MUMPS: cannot find package
 [ 1.6.2 ] allow users to set compilers, e.g. using CC, CXX
-[       ] add subrouties for general purpose tests on matrices and vectors
-[       ] add Intel PARDISO as direct solver
-[       ] enforce ANSI C standard: do not allow C99
-[       ] fix problem with UMFPACK when it is installed without CHOLMOD
+[   *   ] fix problem with UMFPACK when it is installed without CHOLMOD
+[       ] add Intel MKL PARDISO as a direct solver
 [       ] format output messages: error, warning, message
 [       ] format debug messages: debug, chmem
+[       ] add subrouties for general purpose tests on matrices and vectors
+[   *   ] add the new sparse matrix data structure: TCSR
+[       ] add support for symmetric TCSR format
 
 ========================
 GMG 	
 ========================
 
 [ 1.3.3 ] add matrix-free Poisson GMG solver -- n = 2^L
-[       ] add semi-structured grid GMG for Poisson
-[       ] add support for general n
+[       ] add semi-structured grid GMG for Poisson (Lu)
+[       ] add support for general n (Lu)
 [       ] tabulate convergence rate of V-cycle (Ludmil)
 [       ] add GMG for linear elasticity 
 
@@ -62,20 +64,15 @@ AMG
 ========================
 
 [ 0.3.9 ] separate SA and UA code
-[ 0.5.0 ] profile and optimize a few core functions: RS, EM
-[       ] profile and optimize a few core functions: SA, UA (Xiaozhe)
-[       ] support diagonal-preference CSR matrices
-[       ] seperate diagonal-entries from rest of CSR matrics
-
 [ 0.8.5 ] non-overlapping/overlapping Schwarz smoother
 [ 1.6.1 ] replace Schwarz smoother by a C version
 [ 1.6.2 ] maximal independent set based on a strength matrix
 [       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
 [       ] Tarjan algorithm and other orderings (Xiaozhe and Ludmil)
 [       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
-[       ] AMG based on mesh information
+[   *   ] AMG based on mesh information (Hongxuan)
 
-[ 0.9.0 ] aggressive coarsening strategies (Xiaozhe)
+[ 0.9.0 ] aggressive coarsening strategies
 [ 1.5.0 ] Notay's aggregation scheme
 [       ] aggregation based on MIS (Xiaozhe)
 [       ] cleanup the compatible coarsening (Xiaozhe)
@@ -85,7 +82,7 @@ AMG
 [       ] polynomial interpolation -- vector preserve (Xiaozhe)
 [       ] multi-pass interpolation
 [       ] long-distance interpolation
-[       ] bootstrap interpolation
+[       ] fix bootstrap interpolation
 
 [       ] estimation of extreme eigenvalues (Xiaozhe)
 [       ] smoothing interpolation by polynomial smoothers (Xiaozhe)
@@ -101,13 +98,11 @@ Iterative Methods
 [ 1.3.5 ] add safer Krylov iterative methods and improve efficiency
 [       ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
 [       ] test SpBLAS implementations in standard libraries (Chunsheng)
-[       ] add new sparse matrix data structure
-[       ] add support for SymCSR format
-[       ] unify KSMs for different data formats
-[       ] update KSM with safe-guard
+[   *   ] unify KSMs for different data formats
+[   *   ] update KSMs with safe-guard
 
 [ 1.1.2 ] add matrix-free iterative methods
-[       ] fix stagnation in GCG and check other methods as well
+[   *   ] fix stagnation in GCG and check other methods as well
 [       ] add some useful methods: BiCGStab(l), GMRES augemented restart, GCRO
 [       ] add group update and residual replacement
 [       ] add deflation for restarting
@@ -118,14 +113,31 @@ Iterative Methods
 [       ] replace the ILU smoothers from SPARSEKIT ver2.0
 
 ========================
-Performance Test
+Performance
 ========================
+
+[ 0.5.0 ] profile and optimize a few core functions: RS, EM
+[   *   ] profile and optimize a few core functions: SA, UA (Zheng)
 
 [ 1.4.6 ] compare performance with hypre
 [ 1.4.6 ] compare performance with SAMG
 [ 1.4.6 ] compare performance with AGMG
 [       ] compare performance with various of compilers on different systems (Zheng)
 [       ] compare performance for different compiler options (Zheng)
+
+========================
+OpenMP Support
+========================
+
+[ 0.4.1 ] OMP functions should be separated from the sequential ones
+[ 0.9.6 ] OMP and serial functions use same interface -- preprocessing
+[ 0.9.5 ] make a uniform OpenMP version
+[ 0.9.5 ] profile and optimize OMP code
+[ 1.1.4 ] Finish OpenMP vesion for some subroutines, such as fasp_blas_dcsr_rap_agg
+[ 1.1.4 ] add black-red smoothing to OMP version
+[       ] add black-red smoothing based on greedy multicolor algorithms (Chunsheng)
+[       ] add OpenMP for aggregation-type AMG methods
+[       ] reconstruct OMP version: some parts could be simplified
 
 ========================
 Test and Debug
@@ -138,7 +150,7 @@ Test and Debug
 [       ] add a new unit test tool for FASP, e.g. CHECK (Chensong)
 
 ========================
-Test Examples
+Examples
 ========================
 
 [ 0.6.0 ] add 5pt and 7pt FDM codes for Poisson 
@@ -156,20 +168,6 @@ Test Examples
 [       ] add FEM for Stokes from Adler and Ludmil (Ludmil)
 [       ] add linear elasticity
 [       ] make a GUI for test problems (Ludmil)
-
-========================
-OpenMP Support
-========================
-
-[ 0.4.1 ] OMP functions should be separated from the sequential ones
-[ 0.9.6 ] OMP and serial functions use same interface -- preprocessing
-[ 0.9.5 ] make a uniform OpenMP version
-[ 0.9.5 ] profile and optimize OMP code
-[ 1.1.4 ] Finish OpenMP vesion for some subroutines, such as fasp_blas_dcsr_rap_agg
-[ 1.1.4 ] add black-red smoothing to OMP version
-[       ] add black-red smoothing based on greedy multicolor algorithms (Chunsheng)
-[       ] add OpenMP for aggregation-type AMG methods
-[       ] reconstruct OMP version: some parts could be simplified
 
 ========================
 Bug Fixes
@@ -191,5 +189,6 @@ Bug Fixes
 [ 1.6.0 ] problems with BSR test function: see testbsr.c
 [ 1.6.0 ] memory allocation problem in testbsr.c: during ILU setup
 [ 1.6.6 ] AMG setup: number of DOF could drop dramatically
+[ 1.7.4 ] check problems with DIAG_PERF: see regression.c
 [       ] check convergence for problems from MM: see regression_mm.c
-[       ] check problems with DIAG_PERF: see regression.c
+
