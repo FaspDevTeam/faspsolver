@@ -46,7 +46,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
                            ILU_data *iludata, 
                            ILU_param *iluparam)
 {
-    
+        
     const SHORT  prtlvl = iluparam->print_level;
     const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
     
@@ -73,7 +73,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     
     ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
     uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
-        
+    
 #if DEBUG_MODE > 1
     printf("### DEBUG: symbolic factorization ... \n ");
 #endif
@@ -90,7 +90,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     
     // (2) numerical factoration 
     numfac_bsr(A, iludata->luval, ijlu, uptr);
-        
+    
     //nwork = 6*nzlu*nb;
     nwork = 5*A->ROW*A->nb; 
     iludata->nzlu  = nzlu;
@@ -100,7 +100,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
     iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
     // Check: Is the work space too large? --Xiaozhe
-
+    
 #if DEBUG_MODE > 1
     printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
     printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);

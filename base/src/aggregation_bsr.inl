@@ -125,8 +125,11 @@ static void form_boolean_p_bsr (ivector *vertices,
     
     // allocate
     tentp->NNZ = j;
+    
     tentp->JA = (INT*)fasp_mem_calloc(tentp->NNZ, sizeof(INT));
+    
     tentp->val = (REAL*)fasp_mem_calloc(tentp->NNZ*nb2, sizeof(REAL));
+    
     
     JA = tentp->JA;
     val = tentp->val;
