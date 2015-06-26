@@ -204,7 +204,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
         printf("### DEBUG: level = %d, row = %d, nnz = %d\n",
                lvl, mgl[lvl].A.row, mgl[lvl].A.nnz);
 #endif
-        
+                
         /*-- Setup ILU decomposition if necessary */
         if ( lvl < param->ILU_levels ) {
             status = fasp_ilu_dcsr_setup(&mgl[lvl].A, &mgl[lvl].LU, &iluparam);
@@ -411,10 +411,11 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     const INT   m        = mgl[0].A.ROW;
     const INT   nb       = mgl[0].A.nb;
     
-    ILU_param iluparam;
     SHORT     max_levels=param->max_levels;
     SHORT     i, lvl=0, status=FASP_SUCCESS;
     REAL      setup_start, setup_end;
+    
+    AMG_data *mgl_csr=fasp_amg_data_create(max_levels);
     
     dCSRmat temp1, temp2;
     
@@ -459,6 +460,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     
     // initialize ILU parameters
     mgl->ILU_levels = param->ILU_levels;
+    ILU_param iluparam;
+    
     if ( param->ILU_levels > 0 ) {
         iluparam.print_level = param->print_level;
         iluparam.ILU_lfil    = param->ILU_lfil;
@@ -494,7 +497,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         
         /*-- Aggregation --*/
         //mgl[lvl].PP =  fasp_dbsr_getblk_dcsr(&mgl[lvl].A);
-        mgl[lvl].PP = fasp_dbsr_Linfinity_dcsr(&mgl[lvl].A);
+        mgl[lvl].PP = fasp_dbsr_Linfinity_dcsr(&mgl[lvl].A);  // TODO: Try different way to form the scalar block!!  -- Xiaozhe
         
         switch ( param->aggregation_type ) {
                 
@@ -513,9 +516,15 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
                 
             default: // pairwise matching aggregation
                 
-                // TODO: Need to add this part!!! --Chensong
+                //mgl_csr[lvl].A=fasp_dcsr_create(mgl[lvl].PP.row,mgl[lvl].PP.col,mgl[lvl].PP.nnz);
+                //fasp_dcsr_cp(&mgl[lvl].PP, &mgl_csr[lvl].A);
+                mgl_csr[lvl].A = mgl[lvl].PP;
                 
-                break;
+                status = aggregation_pairwise(mgl_csr, param, lvl, vertices, &num_aggs[lvl]);
+                
+                // TODO: Need to design better algorithm for this part -- Xiaozhe
+                
+               break;
         }
         
         if ( status < 0 ) {
@@ -535,6 +544,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
                                   mgl[0].near_kernel_basis);
         }
         else {
+            
             form_boolean_p_bsr(&vertices[lvl], &mgl[lvl].P, &mgl[0], lvl+1,
                                num_aggs[lvl]);
         }

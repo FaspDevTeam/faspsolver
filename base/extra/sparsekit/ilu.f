@@ -1718,7 +1718,7 @@ c           Sort the entries in rowll, so that the row has its column
 c           entries in increasing order.
 c           ---------------------------------------------------------
             call srtr(nzi-1,rowll)
-
+            
 c           ---------------------------------------------------------
 c           Now set up rowll as a linked list containing the original
 c           nonzero column numbers, as described in the methods section:
@@ -1730,7 +1730,7 @@ c           ---------------------------------------------------------
                rowll(k2) =  k1
                k1        = k2
             end do
-
+            
 c           ------------------------------------------------------------
 c           Increment count of nonzeros in the LU factors by the number
 c           of nonzeros in the original matrix's row i.  Further
@@ -1751,7 +1751,7 @@ c           for setting uptr pointers to indicate where in ijlu the upperc
 c           triangular part starts. 
 c           ------------------------------------------------------------
             lowct =  0
-
+          
 c           ------------------------------------------------------------
 c           Fill-in could only have resulted from rows preceding row i,
 c           so we only need check those rows with index j < i.
@@ -1760,7 +1760,6 @@ c           there is no need to check the preceding rows; there clearly
 c           could not be any fill-in from those rows to this entry.
 c           ------------------------------------------------------------
             do 80 while (j .lt. i)
-
 c              ------------------------------------------------------------
 c              Increment lower triangular part count, since in this case
 c              (j<i) we got another entry in L:
@@ -1866,7 +1865,7 @@ c                          -------------------------------------------
                               prev = lm
                               lm   = rowll(lm)
  50                        continue
-
+                           
 c                          -------------------------------------------
 c                          Insert new entry into the linked list for
 c                          row i, and increase the nonzero count for LU
@@ -1896,7 +1895,7 @@ c                  Now go and pick up the next column entry from row
 c                  j of U:
 c                  -------------------------------------------------
  60                continue
-
+                    
 c              -------------------------------------------
 c              End if clause for levfill not equal to zero
 c              -------------------------------------------
@@ -1910,7 +1909,7 @@ c              ------------------------------------------------------
                j = rowll(j)
 
  80         continue
-
+          
 c           ---------------------------------------------------------
 c           Check to see if we have exceeded the allowed memory
 c           storage before storing the results of computing row i's
@@ -1966,7 +1965,7 @@ c        And you thought we would never get through....
 c        ----------------------------------------------
 
  100  continue
-c
+c     
       if (cinindex) then
          do i=1,nzlu
             ijlu(i)=ijlu(i)-1

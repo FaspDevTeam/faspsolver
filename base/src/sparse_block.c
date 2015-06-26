@@ -329,10 +329,27 @@ dCSRmat fasp_dbsr_Linfinity_dcsr (dBSRmat *A)
     memcpy(Acsr.JA, JA, NNZ*sizeof(INT));
     memcpy(Acsr.IA, IA, (ROW+1)*sizeof(INT));
     
-    INT i, j;
+    INT i, j, k;
+    INT row_start, row_end;
     
-    for (i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2) {
-        Aval[i] = fasp_blas_smat_Linfinity(val+j, nc);
+    for (i=0; i<=ROW; i++){
+        
+        row_start = A->IA[i]; row_end = A->IA[i+1];
+        
+        for (k = row_start; k<row_end; k++) {
+            
+            j = A->JA[k];
+            
+            if ( i == j ) {
+                Aval[k] = fasp_blas_smat_Linfinity(val+k*nc2, nc);
+            }
+            else
+            {
+                Aval[k] = (-1)*fasp_blas_smat_Linfinity(val+k*nc2, nc);
+            }
+            
+        }
+        
     }
     
     // compress CSR format

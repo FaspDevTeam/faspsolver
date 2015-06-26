@@ -33,7 +33,7 @@ int main (int argc, const char * argv[])
     // Set solver parameters: Should use ./ini/bsr.dat
     fasp_param_set(argc, argv, &inpar);
     fasp_param_init(&inpar, &itpar, &amgpar, &ilupar, NULL);
-        
+    
     // Set local parameters
     const int print_level   = inpar.print_level;
     const int problem_num   = inpar.problem_num;
@@ -68,6 +68,76 @@ int main (int argc, const char * argv[])
         strncpy(filename2,inpar.workdir,128);
         datafile2="rhs_SPE01.dat"; strcat(filename2,datafile2);
         fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 20) {
+        
+        // Read the stiffness matrix from bsrmat_SPE01.dat
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="A_fasp_bsr.dat"; strcat(filename1,datafile1);
+        fasp_dbsr_read(filename1, &Absr);
+        
+        // Read the RHS from rhs_SPE01.dat
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="b_fasp.dat"; strcat(filename2,datafile2);
+        fasp_dvec_read(filename2, &b);
+        
+    }
+    
+    else if (problem_num == 21) {
+        
+        // Read the stiffness matrix from bsrmat_SPE01.dat
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="A_fasp_bsr_1.dat"; strcat(filename1,datafile1);
+        fasp_dbsr_read(filename1, &Absr);
+        
+        // Read the RHS from rhs_SPE01.dat
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="b_fasp_1.dat"; strcat(filename2,datafile2);
+        fasp_dvec_read(filename2, &b);
+        
+    }
+    
+    else if (problem_num == 31) {
+        
+        // Read the stiffness matrix from bsrmat_SPE01.dat
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="A_bsr004.dat"; strcat(filename1,datafile1);
+        fasp_dbsr_read(filename1, &Absr);
+        
+        // Read the RHS from rhs_SPE01.dat
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="b004.dat"; strcat(filename2,datafile2);
+        fasp_dvec_read(filename2, &b);
+        
+    }
+    
+    else if (problem_num == 32) {
+        
+        // Read the stiffness matrix from bsrmat_SPE01.dat
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="A_bsr_zy.dat"; strcat(filename1,datafile1);
+        fasp_dbsr_read(filename1, &Absr);
+        
+        // Read the RHS from rhs_SPE01.dat
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="b_bsr_zy.dat"; strcat(filename2,datafile2);
+        fasp_dvec_read(filename2, &b);
+        
+    }
+
+    else if (problem_num == 33) {
+        
+        // Read the stiffness matrix from bsrmat_SPE01.dat
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="A_bsr_spe9.dat"; strcat(filename1,datafile1);
+        fasp_dbsr_read(filename1, &Absr);
+        
+        // Read the RHS from rhs_SPE01.dat
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="b_bsr_spe9.dat"; strcat(filename2,datafile2);
+        fasp_dvec_read(filename2, &b);
+        
     }
     
     else {

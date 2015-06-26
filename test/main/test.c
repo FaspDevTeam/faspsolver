@@ -149,6 +149,102 @@ int main (int argc, const char * argv[])
         fasp_dvec_read(filename2, &b);
     }
     
+    else if (problem_num == 31){
+        
+        datafile1="Stokes_NewPrec/N8/ML.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Stokes_NewPrec/N8/Lb.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 32){
+        
+        datafile1="Stokes_NewPrec/N8/S.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Stokes_NewPrec/N8/Sb.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 33){
+        
+        datafile1="Stokes_NewPrec/N16/ML.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Stokes_NewPrec/N16/Lb.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 34){
+        
+        datafile1="Stokes_NewPrec/N16/S.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Stokes_NewPrec/N16/Sb.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 35){
+        
+        datafile1="Stokes_NewPrec/N16dt1e5/ML.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Stokes_NewPrec/N16dt1e5/Lb.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 36){
+        
+        datafile1="Stokes_NewPrec/N16dt1e5/S.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Stokes_NewPrec/N16dt1e5/Sb.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 37){
+        
+        datafile1="Stokes_NewPrec/N32/ML.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Stokes_NewPrec/N32/Lb.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 38){
+        
+        datafile1="Stokes_NewPrec/N32/S.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Stokes_NewPrec/N32/Sb.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
     else {
         printf("### ERROR: Unrecognised problem number %d\n", problem_num);
         return ERROR_INPUT_PAR;

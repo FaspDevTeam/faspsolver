@@ -1468,6 +1468,7 @@ static void smooth_agg (dCSRmat *A,
     P->nnz = P->IA[P->row];
     fasp_dcsr_free(&S);
 }
+    
 
 /**
  * \fn static void aggregation_pairwise (dCSRmat *A,
@@ -1537,6 +1538,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
 			                       &vertice[lvl], &map2, s, &num_agg);
         }
 #endif
+        
         /*-- check number of aggregates in the first pass --*/
         if ( i == 1 && num_agg < MIN_CDOF ) {
             for ( domin=k=0; k<ptrA->row; k++ ) {
@@ -1580,7 +1582,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
         }
     }
     *num_aggregations = num_agg;
-    
+        
     /*-- clean memory --*/
     for ( i = 1; i < dopass; ++i ) {
         fasp_dcsr_free(&mgl[level+i].A);
