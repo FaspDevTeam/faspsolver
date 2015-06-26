@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+06/26/2015 FASP 1.7.5:
+- Fix a bug: a memory problem in AMG for BSR format.
+- Update regression test results using GCC 4.9.2.
+
 06/14/2015 FASP 1.7.4:
 - Test very small tolerance: machine eps.
 - Test on OS X 10.10.3 with GCC 4.9.2: works fine.
