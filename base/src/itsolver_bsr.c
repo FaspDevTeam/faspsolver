@@ -466,7 +466,7 @@ MEMORY_ERROR:
 
 /**
  * \fn INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A, dvector *b, dvector *x,
- *                                         itsolver_param *itparam, AMG_param *amgparam
+ *                                         itsolver_param *itparam, AMG_param *amgparam,
  *                                         dCSRmat *A_nk, dCSRmat *P_nk, dCSRmat *R_nk)
  *
  * \brief Solve Ax=b by AMG with extra near kernel solve preconditioned Krylov methods
