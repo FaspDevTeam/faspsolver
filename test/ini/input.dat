@@ -10,10 +10,10 @@ workdir = ../data/  % work directory, no more than 128 characters
 % problem, solver, and output type             %
 %----------------------------------------------%
 
-problem_num              = 38     % test problem number 
+problem_num              = 10     % test problem number 
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to screen | 1 to file
-solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
+solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
                                   % 5 vGMRes | 6 vFGMRes | 7 GCG |
                                   %--------------------------------------
                                   % 21 AMG Solver | 22 FMG Solver |
@@ -24,18 +24,18 @@ solver_type              = 6      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
 % parameters for iterative solvers             %
 %----------------------------------------------%
 
-precond_type             = 4      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
+precond_type             = 2      % 0 None | 1 Diag | 2 AMG | 3 FMG | 4 ILU | 5 Schwarz
 itsolver_tol             = 1e-6   % solver tolerance 
-itsolver_maxit           = 100    % maximal iteration number 
+itsolver_maxit           = 200    % maximal iteration number 
 stop_type                = 1      % 1 ||r||/||b|| | 2 ||r||_B/||b||_B | 3 ||r||/||x||  
-itsolver_restart         = 30     % restart number for GMRES
+itsolver_restart         = 20     % restart number for GMRES
 
 %----------------------------------------------%
 % parameters for ILU preconditioners           %
 %----------------------------------------------%
 
 ILU_type                 = 1      % 1 ILUk | 2 ILUt | 3 ILUtp 
-ILU_lfil                 = 3      % level of fill-in for ILUk
+ILU_lfil                 = 0      % level of fill-in for ILUk
 ILU_droptol              = 0.01   % ILU drop tolerance
 ILU_permtol              = 0.001  % permutation toleration for ILUtp
 ILU_relax                = 0.9    % add dropped entries to diagonal with relaxation
@@ -53,7 +53,7 @@ Schwarz_blksolver        = 0      % block solver: 31 SuperLU | 32 UMFPack | 33 M
 % parameters for multilevel iteration          %
 %----------------------------------------------%
 
-AMG_type                 = UA      % C classic AMG
+AMG_type                 = C      % C classic AMG
                                   % SA smoothed aggregation
                                   % UA unsmoothed aggregation
 AMG_cycle_type           = V      % V V-cycle | W W-cycle
@@ -61,7 +61,7 @@ AMG_cycle_type           = V      % V V-cycle | W W-cycle
 AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
-AMG_coarse_dof           = 10    % max number of coarse degrees of freedom
+AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
 AMG_coarse_solver        = 0      % coarse level solver: 31 SuperLU | 32 UMFPack | 33 MUMPS
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
@@ -97,7 +97,7 @@ AMG_max_row_sum          = 0.9    % Max row sum
 % parameters for aggregation-type AMG SETUP    %
 %----------------------------------------------%
 
-AMG_aggregation_type     = 1      % 1 Matching | 2 VMB 
+AMG_aggregation_type     = 2      % 1 Matching | 2 VMB 
 AMG_pair_number          = 2      % Number of pairs in matching
 AMG_strong_coupled       = 0.08   % Strong coupled threshold
 AMG_max_aggregation      = 20     % Max size of aggregations

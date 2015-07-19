@@ -14,7 +14,7 @@
  *
  *  Step 3. Main loop ...
  *
- *  FOR k = 0:MaxIt
+ *    FOR k = 0:MaxIt
  *      - get step size alpha = f(r_k,z_k,p_k);
  *      - update solution: x_{k+1} = x_k + alpha*p_k;
  *      - perform stagnation check;
@@ -23,7 +23,7 @@
  *      - obtain p_{k+1} using {p_0, p_1, ... , p_k};
  *      - prepare for next iteration;
  *      - print the result of k-th iteration;
- *  END FOR
+ *    END FOR
  *
  *  Convergence check: norm(r)/norm(b) < tol
  *
@@ -154,10 +154,10 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     // main PCG loop
     while ( iter++ < MaxIt ) {
         
-        // t=A*p
+        // t = A*p
         fasp_blas_dcsr_mxv(A,p,t);
         
-        // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
+        // alpha_k = (z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
         if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
@@ -166,13 +166,13 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             ITS_DIVZERO; goto FINISHED;
         }
         
-        // u_k=u_{k-1} + alpha_k*p_{k-1}
+        // u_k = u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
         
-        // r_k=r_{k-1} - alpha_k*A*p_{k-1}
+        // r_k = r_{k-1} - alpha_k*A*p_{k-1}
         fasp_blas_array_axpy(m,-alpha,t,r);
         
-        // compute residuals
+        // compute norm of residual
         switch ( stop_type ) {
             case STOP_REL_RES:
                 absres = fasp_blas_array_norm2(m,r);
@@ -208,7 +208,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
         }
         
         // Check II: if stagnated, try to restart
-        normu   = fasp_blas_dvec_norm2(u);
+        normu = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
         reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
@@ -263,7 +263,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             
             REAL updated_relres = relres;
             
-            // compute true residual r = b - Ax and replace residual
+            // compute true residual r = b - Ax and update residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
             
@@ -439,10 +439,10 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
     // main PCG loop
     while ( iter++ < MaxIt ) {
         
-        // t=A*p
+        // t = A*p
         fasp_blas_dbsr_mxv(A,p,t);
         
-        // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
+        // alpha_k = (z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
         if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
@@ -451,13 +451,13 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
             ITS_DIVZERO; goto FINISHED;
         }
         
-        // u_k=u_{k-1} + alpha_k*p_{k-1}
+        // u_k = u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
         
-        // r_k=r_{k-1} - alpha_k*A*p_{k-1}
+        // r_k = r_{k-1} - alpha_k*A*p_{k-1}
         fasp_blas_array_axpy(m,-alpha,t,r);
         
-        // compute residuals
+        // compute norm of residual
         switch ( stop_type ) {
             case STOP_REL_RES:
                 absres = fasp_blas_array_norm2(m,r);
@@ -493,7 +493,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
         }
         
         // Check II: if stagnated, try to restart
-        normu   = fasp_blas_dvec_norm2(u);
+        normu = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
         reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
@@ -548,7 +548,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
             
             REAL updated_relres = relres;
 
-            // compute true residual r = b - Ax and replace residual
+            // compute true residual r = b - Ax and update residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_dbsr_aAxpy(-1.0,A,u->val,r);
             
@@ -726,10 +726,10 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
     // main PCG loop
     while ( iter++ < MaxIt ) {
         
-        // t=A*p
+        // t = A*p
         fasp_blas_bdcsr_mxv(A,p,t);
         
-        // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
+        // alpha_k = (z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
         if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
@@ -738,13 +738,13 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
             ITS_DIVZERO; goto FINISHED;
         }
         
-        // u_k=u_{k-1} + alpha_k*p_{k-1}
+        // u_k = u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
         
-        // r_k=r_{k-1} - alpha_k*A*p_{k-1}
+        // r_k = r_{k-1} - alpha_k*A*p_{k-1}
         fasp_blas_array_axpy(m,-alpha,t,r);
         
-        // compute residuals
+        // compute norm of residual
         switch ( stop_type ) {
             case STOP_REL_RES:
                 absres = fasp_blas_array_norm2(m,r);
@@ -780,7 +780,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
         }
         
         // Check II: if stagnated, try to restart
-        normu   = fasp_blas_dvec_norm2(u);
+        normu = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
         reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
@@ -835,7 +835,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
 
             REAL updated_relres = relres;
 
-            // compute true residual r = b - Ax and replace residual
+            // compute true residual r = b - Ax and update residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
             
@@ -1013,10 +1013,10 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
     // main PCG loop
     while ( iter++ < MaxIt ) {
         
-        // t=A*p
+        // t = A*p
         fasp_blas_dstr_mxv(A,p,t);
         
-        // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
+        // alpha_k = (z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
         if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
@@ -1025,13 +1025,13 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             ITS_DIVZERO; goto FINISHED;
         }
         
-        // u_k=u_{k-1} + alpha_k*p_{k-1}
+        // u_k = u_{k-1} + alpha_k*p_{k-1}
         fasp_blas_array_axpy(m,alpha,p,u->val);
         
-        // r_k=r_{k-1} - alpha_k*A*p_{k-1}
+        // r_k = r_{k-1} - alpha_k*A*p_{k-1}
         fasp_blas_array_axpy(m,-alpha,t,r);
         
-        // compute residuals
+        // compute norm of residual
         switch ( stop_type ) {
             case STOP_REL_RES:
                 absres = fasp_blas_array_norm2(m,r);
@@ -1067,7 +1067,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
         }
         
         // Check II: if stagnated, try to restart
-        normu   = fasp_blas_dvec_norm2(u);
+        normu = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
         reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
@@ -1122,7 +1122,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             
             REAL updated_relres = relres;
 
-            // compute true residual r = b - Ax and replace residual
+            // compute true residual r = b - Ax and update residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
             

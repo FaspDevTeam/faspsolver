@@ -87,9 +87,9 @@
 # mumps_dir="/dir/to/MUMPS"
 #
 ####################  User Defined Compiler Flags  #####################
-cflags="-funroll-loops"
-cxxflags="-funroll-loops"
-fflags="-funroll-loops"
+cflags="-funroll-loops -funswitch-loops"
+cxxflags="-funroll-loops -funswitch-loops"
+fflags="-funroll-loops -funswitch-loops"
 #
 ifeq ($(debug),yes)
 	cflags="-Wall -g"

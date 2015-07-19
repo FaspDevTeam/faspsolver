@@ -1,7 +1,12 @@
 File Name: CHANGES
 
-06/26/2015 FASP 1.7.5:
+07/19/2015 FASP 1.7.5:
 - Fix a bug: a memory problem in AMG for BSR format.
+- Fix a few typos in pcg.
+- Fix undefined Doxygen function.
+- Update release version compiler options in Makefile.
+- Revert test/ini/input.dat.
+- Update website and documentation.
 - Update regression test results using GCC 4.9.2.
 
 06/14/2015 FASP 1.7.4:
