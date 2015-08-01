@@ -164,6 +164,7 @@ INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
     
     maxa[0]=0;
     
+    // select root nodes.
     MIS = fasp_sparse_MIS(&A);
     
     /*-------------------------------------------*/
@@ -550,7 +551,7 @@ static void Schwarz_levels (INT inroot,
         
         lvsize = nnz;
         
-        // start to form the level hierarchy for root node(root, level0, level 1,...)
+        // start to form the level hierarchy for root node(level1, level2, ... maxlev)
         while (lvsize > 0 && lvl < maxlev) {
             lbegin = lvlend;
             lvlend = nsize;
