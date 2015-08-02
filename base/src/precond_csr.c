@@ -134,7 +134,7 @@ precond *fasp_precond_setup (SHORT precond_type,
         pc->fct  = fasp_precond_diag;
             
         break;
-            
+
     default: // No preconditioner
             
         break;
