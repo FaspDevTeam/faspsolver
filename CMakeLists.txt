@@ -1,12 +1,46 @@
-	cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8)
 
-# INIT_CONFIG load...
-	include ( FASP_init.cmake OPTIONAL )
+#      INIT_CONFIG load...
+
+# Search for C compilers in the specified order. That will determine the rest.
+if(DEFINED ENV{CC}) 
+	find_program(THE_C NAMES $ENV{CC} gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
+else(DEFINED ENV{CC}) 
+	find_program(THE_C NAMES gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
+endif(DEFINED ENV{CC}) 
+
+if(${THE_C} )
+	    set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C   compiler" FORCE)
+endif(${THE_C})
+
+# name the project at this moment and this will set the compiler id:
+project(FASP C )
+message("C compiler ID and Version: ${CMAKE_C_COMPILER_ID} and ${CMAKE_C_COMPILER_VERSION}" )
+set(REAL_C "${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}")
+############################
+if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*") 
+     		string(REPLACE "gcc" "g++" C_XX ${THE_C} )
+		string(REPLACE "gcc" "gfortran" F_C ${THE_C} )
+       elseif( ${REAL_C} MATCHES "Intel.*" AND ${THE_C} MATCHES "icc" )
+		set(C_XX "icpc")
+		set(F_C "ifort")
+
+    elseif( ${REAL_C} MATCHES "Clang.*" AND  ${THE_C} MATCHES "gcc.*")  ${THE_C} MATCHES "clang" )
+		set(C_XX "clang++")
+		set(F_C "dragonegg-3.4-gfortran-mp-4.6")
+	else()       
+ 		set(THE_C "0")	      
+    endif( ${THE_C} MATCHES "gcc.*" ) 
 #
-	project(FASP C CXX Fortran )
+##################################
 
-##       message(" CHECK:  ${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}}") 
-##       message(" CHECK1:  ${CMAKE_C_FLAGS}") 
+
+
+	enable_language(CXX ) 
+	message("CXXID: ${CMAKE_CXX_COMPILER_ID} and ${CMAKE_CXX_COMPILER_VERSION}" ) 
+	enable_language(Fortran ) 
+	message("FID: ${CMAKE_Fortran_COMPILER_ID} and ${CMAKE_Fortran_COMPILER_VERSION}" ) 
+
 
 #
 # OpenMP : defined on command line in the top Makefile
