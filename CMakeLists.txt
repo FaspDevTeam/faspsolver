@@ -48,13 +48,11 @@ if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*")
 		# CMAKEs. As compiler gfortran works with clang in may
 		# cases, so we basically take the standard behavior
 		# here.
-		if(APPLE AND (DEFINED ENV{FC} ))
-		  find_program(THE_FC NAMES $ENV{FC} dragonegg-3.4-gfortran-mp-4.6  gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
-		elseif(DEFINED ENV{FC})
-        	  find_program(THE_FC NAMES $ENV{FC} gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
-		else()
+		if(APPLE)
+		  find_program(THE_FC NAMES dragonegg-3.4-gfortran-mp-4.6  gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
+		else(APPLE)
 		  find_program(THE_FC NAMES gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
-		endif(APPLE AND (DEFINED ENV{FC}) )
+		endif(APPLE)
 		message("USE Clang: ${THE_CXX} ${THE_FC}" )
 	else()       
 	   message("WARNING: ${THE_C} did not match any of the preset C compilers" )
