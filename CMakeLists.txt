@@ -49,7 +49,7 @@ if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*")
 		# cases, so we basically take the standard behavior
 		# here.
 		if(APPLE)
-		    message("On an Apple, searching first for a dragonegg install");
+		    message("On an Apple, searching first for a dragonegg install")
 		  find_program(THE_FC NAMES dragonegg-3.4-gfortran-mp-4.6  gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
 		else(APPLE)
 		  find_program(THE_FC NAMES gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
