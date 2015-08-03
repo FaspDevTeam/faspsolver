@@ -1,6 +1,14 @@
 cmake_minimum_required (VERSION 2.8)
 
 #      INIT_CONFIG load...
+# Helper modules.
+include(CheckFunctionExists)
+include(CheckIncludeFile)
+
+set(CMAKE_VERBOSE_MAKEFILE 1) 
+set(GDB 1 CACHE BOOL "debugging or not")
+set(OPENMP 0 CACHE BOOL "Openmp use")
+set(USE_MUMPS 0 CACHE BOOL "MUMPS use")
 
 # Search for C compilers in the specified order. That will determine the rest.
 if(DEFINED ENV{CC}) 
@@ -9,8 +17,8 @@ else(DEFINED ENV{CC})
 	find_program(THE_C NAMES gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
 endif(DEFINED ENV{CC}) 
 
-if(${THE_C} )
-	    set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C   compiler" FORCE)
+if(${THE_C})
+    set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C compiler" FORCE)
 endif(${THE_C})
 
 # name the project at this moment and this will set the compiler id:
@@ -21,26 +29,34 @@ set(REAL_C "${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}")
 if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*") 
      		string(REPLACE "gcc" "g++" C_XX ${THE_C} )
 		string(REPLACE "gcc" "gfortran" F_C ${THE_C} )
-       elseif( ${REAL_C} MATCHES "Intel.*" AND ${THE_C} MATCHES "icc" )
-		set(C_XX "icpc")
-		set(F_C "ifort")
-
-    elseif( ${REAL_C} MATCHES "Clang.*" AND  ${THE_C} MATCHES "gcc.*")  ${THE_C} MATCHES "clang" )
-		set(C_XX "clang++")
-		set(F_C "dragonegg-3.4-gfortran-mp-4.6")
+		message("GNU Compilers: ${THE_C} ${C_XX} ${F_C}" )
+       elseif( ${REAL_C} MATCHES "Intel.*" AND ${THE_C} MATCHES "icc.*" )
+		find_program(THE_CXX NAMES icpc)
+		find_program(THE_FC NAMES ifort)
+		message("USE Intel: ${THE_CXX} ${THE_FC}" )
+       elseif( ${REAL_C} MATCHES "Clang.*")
+              set(CMAKE_C_COMPILER clang CACHE INTERNAL "the C compiler" FORCE)
+		find_program(THE_CXX NAMES clang++ clang)
+		find_program(THE_FC NAMES dragonegg-3.4-gfortran-mp-4.6  gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
+		message("USE Clang: ${THE_CXX} ${THE_FC}" )
 	else()       
- 		set(THE_C "0")	      
-    endif( ${THE_C} MATCHES "gcc.*" ) 
+	   message("WARNING: ${THE_C} does not match any of the default C compilers:" )
+   	   set(THE_C "0")
+   	   set(THE_CXX "0")	      
+   	   set(THE_FC "0")	      
+    endif(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*") 
 #
+	if( THE_C AND THE_CXX AND THE_FC )
+	     	 set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C   compiler" FORCE) 
+	    	 set(CMAKE_CXX_COMPILER ${THE_CXX} CACHE INTERNAL   "the C++ compiler" FORCE)
+             set(CMAKE_Fortran_COMPILER ${THE_FC} CACHE INTERNAL    "the F compiler" FORCE)
+	endif( THE_C AND C_XX AND F_C )
+# END COMPILERS SET UP................ 
 ##################################
-
-
-
-	enable_language(CXX ) 
+	enable_language(CXX) 
 	message("CXXID: ${CMAKE_CXX_COMPILER_ID} and ${CMAKE_CXX_COMPILER_VERSION}" ) 
-	enable_language(Fortran ) 
+	enable_language(Fortran) 
 	message("FID: ${CMAKE_Fortran_COMPILER_ID} and ${CMAKE_Fortran_COMPILER_VERSION}" ) 
-
 
 #
 # OpenMP : defined on command line in the top Makefile
