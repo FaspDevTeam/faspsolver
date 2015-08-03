@@ -14,16 +14,19 @@ set(USE_MUMPS 0 CACHE BOOL "MUMPS use")
 if(DEFINED ENV{CC}) 
 	find_program(THE_C NAMES $ENV{CC} gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
 else(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES agcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
+	find_program(THE_C NAMES gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
 endif(DEFINED ENV{CC}) 
 
 if( THE_C )
     set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C compiler" FORCE)
+else( THE_C )
+    message("Warning: the requested CC is not found: ${THE_C}; continuing with the system's one" )
 endif( THE_C )
 
 # name the project at this moment and this will set the compiler id:
 project(FASP C )
 message("C compiler ID and Version: ${CMAKE_C_COMPILER_ID} and ${CMAKE_C_COMPILER_VERSION}" )
+message("The system is ${CMAKE_HOST_SYSTEM}; apple=${APPLE}; unix=${UNIX}")
 set(REAL_C "${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}")
 ############################
 if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*") 
