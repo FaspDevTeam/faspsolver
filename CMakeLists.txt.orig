@@ -1,79 +1,12 @@
-cmake_minimum_required (VERSION 2.8)
+	cmake_minimum_required (VERSION 2.6)
 
-#      INIT_CONFIG load...
-# Helper modules.
-include(CheckFunctionExists)
-include(CheckIncludeFile)
-
-set(CMAKE_VERBOSE_MAKEFILE 1) 
-set(GDB 1 CACHE BOOL "debugging or not")
-set(OPENMP 0 CACHE BOOL "Openmp use")
-set(USE_MUMPS 0 CACHE BOOL "MUMPS use")
-
-# Search for C compilers in the specified order. That will determine the rest.
-if(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES $ENV{CC} gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
-else(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
-endif(DEFINED ENV{CC}) 
-
-if( THE_C )
-    set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C compiler" FORCE)
-else( THE_C )
-    message("Warning: the requested CC is not found: ${THE_C}; continuing with the system's one" )
-endif( THE_C )
-
-# name the project at this moment and this will set the compiler id:
-project(FASP C )
-message("C compiler ID and Version: ${CMAKE_C_COMPILER_ID} and ${CMAKE_C_COMPILER_VERSION}" )
-#message("The system is ${CMAKE_HOST_SYSTEM}; apple=${APPLE}; unix=${UNIX}")
-set(REAL_C "${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}")
-############################
-if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*") 
-     		string(REPLACE "gcc" "g++" C_XX ${THE_C} )
-		string(REPLACE "gcc" "gfortran" F_C ${THE_C} )
-		find_program(THE_CXX NAMES ${C_XX})
-		find_program(THE_FC NAMES ${F_C})
-#		message("GNU: ${THE_C} ${THE_CXX} ${THE_FC}" )
-       elseif( ${REAL_C} MATCHES "Intel.*" AND ${THE_C} MATCHES "icc.*" )
-		find_program(THE_CXX NAMES icpc)
-		find_program(THE_FC NAMES ifort)
-#		message("Intel: ${THE_CXX} ${THE_FC}" )
-       elseif( ${REAL_C} MATCHES "Clang.*")
-	 find_program(THE_C NAMES clang)
-	find_program(THE_CXX NAMES clang++ clang)
-		# clang is supposed to work with gnu compilers if
-		# dragonegg plugin is installed; it is not clear how
-		# to include thi dragonegg plugin on Linux in the
-		# CMAKEs. As compiler gfortran works with clang in may
-		# cases, so we basically take the standard behavior
-		# here.
-		if(APPLE)
-		    message("On an Apple, searching first for a dragonegg install")
-		  find_program(THE_FC NAMES dragonegg-3.4-gfortran-mp-4.6  gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
-		else(APPLE)
-		  find_program(THE_FC NAMES gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
-		endif(APPLE)
-		message("Clang: ${THE_CXX} ${THE_FC}" )
-	else()       
-	   message("WARNING: ${THE_C} did not match any of the preset C compilers" )
-	   message("Continuing with the default compiler: ${CMAKE_C_COMPILER}" )
-   	   set(THE_C "0")
-   	   set(THE_CXX "0")	      
-   	   set(THE_FC "0")
-    endif(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*") 
+# INIT_CONFIG load...
+	include ( FASP_init.cmake OPTIONAL )
 #
-	if( THE_C AND THE_CXX AND THE_FC )
-	     	 set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C   compiler" FORCE) 
-	    	 set(CMAKE_CXX_COMPILER ${THE_CXX} CACHE INTERNAL   "the C++ compiler" FORCE)
-             set(CMAKE_Fortran_COMPILER ${THE_FC} CACHE INTERNAL    "the F compiler" FORCE)
-	endif( THE_C AND THE_CXX AND THE_FC )
-# END COMPILERS SET UP................ 
-##################################
-	enable_language(CXX) 
-	message("CXXID: ${CMAKE_CXX_COMPILER_ID} and ${CMAKE_CXX_COMPILER_VERSION}" ) 
-	enable_language(Fortran) 
-	message("FID: ${CMAKE_Fortran_COMPILER_ID} and ${CMAKE_Fortran_COMPILER_VERSION}" ) 
+	project(FASP C CXX Fortran )
+
+##       message(" CHECK:  ${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}}") 
+##       message(" CHECK1:  ${CMAKE_C_FLAGS}") 
 
 #
 # OpenMP : defined on command line in the top Makefile
