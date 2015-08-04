@@ -2,7 +2,7 @@
 #set -x
 
 echo " Do not run this if you are not Chensong Zhang "
-exit 127
+#exit 127
 
 GMPDIR="gmp-6.0"
 FENICS_PREFIX="/Applications/FEniCS.app/Contents/Resources"
