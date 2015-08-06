@@ -56,21 +56,26 @@
 # doxywizard=yes
 #
 #-------------------------------------------------------------------------
-# If you want to use UMFPACK (part of SparseSuite), uncomment the next 
-# line (and read the instructons below it):
+# If you want to use UMFPACK (part of SuiteSparse package), uncomment the next 
+# line (and read carefully the instructons below it):
 # 
 umfpack=yes
 #
-# If you want to specify the path to SparseSuite, uncomment the next
-# line and give the path to the SuiteSparse library and include files.
-# These are expected to be found in $(suitesparse_dir)/lib and
-# $(suitesparse_dir)/include 
-#
+# If you have installed SuiteSparse from source or for some other
+# reason you want to specify the path to SuiteSparse libraries and
+# header files, uncomment and edit the definition of "suitesparse_dir"
+# below (and continue reading...)  
 # For example:
- suitesparse_dir="/Users/ltz1"
+# suitesparse_dir="/home/janedoe/packages"
 #
-# As a minimum, $(suitesparse_dir)/lib and $(suitesparse_dir)/include
-# must contain the library and header files for AMD,UMFPACK and
+ suitesparse_dir="/Users/ltz1/packages"
+#
+# IMPORTANT: This defines the path to the SuiteSparse library and
+# include files.  These are expected to be found in
+# $(suitesparse_dir)/lib and $(suitesparse_dir)/include or in the
+# system standard paths for libraries and header files.  As a bare
+# minimum, $(suitesparse_dir)/lib and $(suitesparse_dir)/include must
+# contain the library and header files for AMD,UMFPACK and
 # SUITESPARSECONFIG packages. For more information on how to install
 # these, check the the home page of SuiteSparse.
 # -------------------------------------------------------------------------
