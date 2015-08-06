@@ -12,9 +12,9 @@ set(USE_MUMPS 0 CACHE BOOL "MUMPS use")
 
 # Search for C compilers in the specified order. That will determine the rest.
 if(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES $ENV{CC} gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
+	find_program(THE_C NAMES $ENV{CC} gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 gcc icc clang)
 else(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES gcc gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 icc clang)
+	find_program(THE_C NAMES gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 gcc icc clang)
 endif(DEFINED ENV{CC}) 
 
 if( THE_C )
@@ -149,14 +149,9 @@ if (USE_UMFPACK)
    set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
 
    # set some path to the UMFPACK pacakge
-   set(SUITESPARSE_CONFIG_DIR "${SUITESPARSE_DIR}")
-   set(AMD_DIR "${SUITESPARSE_DIR}")
-   set(CHOLMOD_DIR "${SUITESPARSE_DIR}")
-   set(COLAMD_DIR "${SUITESPARSE_DIR}")
-   set(CAMD_DIR "${SUITESPARSE_DIR}")
+# metis is not part of suitesparse, so theremay be also some other metis dir. 
    set(METIS_DIR "${SUITESPARSE_DIR}")
-   set(CCOLAMD_DIR "${SUITESPARSE_DIR}")
-   set(UMFPACK_DIR "${SUITESPARSE_DIR}")   
+
 
    find_package(UMFPACK)     
    if (UMFPACK_FOUND)

@@ -14,13 +14,14 @@ message(STATUS "Checking for dependent packages of 'UMFPACK'")
 find_package(BLAS)
 find_package(SUITESPARSECONFIG)
 find_package(AMD)
-find_package(CHOLMOD)
+### next one not needed if we only want UMFPACK.
+#### find_package(CHOLMOD) 
 
 message(STATUS "Checking for package 'UMFPACK'")
 
 # Check for header file
 find_path(UMFPACK_INCLUDE_DIRS umfpack.h
- HINTS ${UMFPACK_DIR}/include ${UMFPACK_DIR}/UMFPACK/include $ENV{UMFPACK_DIR}/include $ENV{UMFPACK_DIR}/UMFPACK/include
+ HINTS ${SUITESPARSE_DIR}/include ${SUITESPARSE_DIR}/UMFPACK/include $ENV{SUITESPARSE_DIR}/include $ENV{SUITESPARSE_DIR}/UMFPACK/include
  PATH_SUFFIXES suitesparse ufsparse
  DOC "Directory where the UMFPACK header is located"
  )
@@ -28,7 +29,7 @@ mark_as_advanced(UMFPACK_INCLUDE_DIRS)
 
 # Check for UMFPACK library
 find_library(UMFPACK_LIBRARY umfpack
-  HINTS ${UMFPACK_DIR}/lib ${UMFPACK_DIR}/UMFPACK/lib $ENV{UMFPACK_DIR}/lib $ENV{UMFPACK_DIR}/UMFPACK/lib
+  HINTS ${SUITESPARSE_DIR}/lib ${SUITESPARSE_DIR}/UMFPACK/lib $ENV{SUITESPARSE_DIR}/lib $ENV{SUITESPARSE_DIR}/UMFPACK/lib
   DOC "The UMFPACK library"
   )
 mark_as_advanced(UMFPACK_LIBRARY)
@@ -94,5 +95,5 @@ endif()
 # Standard package handling
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(UMFPACK
-  "UMFPACK could not be found. Be sure to set UMFPACK_DIR."
+  "UMFPACK could not be found. Be sure to set SUITESPARSE_DIR correctly."
 UMFPACK_LIBRARY UMFPACK_INCLUDE_DIRS UMFPACK_TEST_RUNS)

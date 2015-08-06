@@ -57,16 +57,23 @@
 #
 #-------------------------------------------------------------------------
 # If you want to use UMFPACK (part of SparseSuite), uncomment the next 
-# line:
+# line (and read the instructons below it):
 # 
- umfpack=yes
+umfpack=yes
 #
-# If you want to specify the path to SparseSuite, uncomment the next 
-# line and give the correct path to SparseSuite here. For example:
+# If you want to specify the path to SparseSuite, uncomment the next
+# line and give the path to the SuiteSparse library and include files.
+# These are expected to be found in $(suitesparse_dir)/lib and
+# $(suitesparse_dir)/include 
 #
- suitesparse_dir="/Users/zhengli/Downloads/SuiteSparse"
+# For example:
+ suitesparse_dir="/Users/ltz1"
 #
-#-------------------------------------------------------------------------
+# As a minimum, $(suitesparse_dir)/lib and $(suitesparse_dir)/include
+# must contain the library and header files for AMD,UMFPACK and
+# SUITESPARSECONFIG packages. For more information on how to install
+# these, check the the home page of SuiteSparse.
+# -------------------------------------------------------------------------
 # If you want to use SuperLU, uncomment the next line:
 #
 # superlu=yes
