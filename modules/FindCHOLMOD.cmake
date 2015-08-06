@@ -16,14 +16,16 @@ find_package(AMD)
 find_package(COLAMD)
 find_package(CAMD)
 find_package(CCOLAMD)
-find_package(RT)
+if(NOT APPLE) 
+ find_package(RT)
+endif(NOT APPLE)
 find_package(METIS)
 
 message(STATUS "Checking for package 'CHOLMOD'")
 
 # Check for header file
 find_path(CHOLMOD_INCLUDE_DIRS cholmod.h
- HINTS ${CHOLMOD_DIR}/include ${CHOLMOD_DIR}/CHOLMOD/include $ENV{CHOLMOD_DIR}/include $ENV{CHOLMOD_DIR}/CHOLMOD/include
+ HINTS ${SUITESPARSE_DIR}/include ${SUITESPARSE_DIR}/CHOLMOD/include $ENV{SUITESPARSE_DIR}/include $ENV{SUITESPARSE_DIR}/CHOLMOD/include
  PATH_SUFFIXES suitesparse ufsparse
  DOC "Directory where the CHOLMOD header is located"
  )
@@ -31,7 +33,7 @@ mark_as_advanced(CHOLMOD_INCLUDE_DIRS)
 
 # Check for CHOLMOD library
 find_library(CHOLMOD_LIBRARY cholmod
-  HINTS ${CHOLMOD_DIR}/lib ${CHOLMOD_DIR}/CHOLMOD/lib $ENV{CHOLMOD_DIR}/lib $ENV{CHOLMOD_DIR}/CHOLMOD/lib
+  HINTS ${SUITESPARSE_DIR}/lib ${SUITESPARSE_DIR}/CHOLMOD/lib $ENV{SUITESPARSE_DIR}/lib $ENV{SUITESPARSE_DIR}/CHOLMOD/lib 
   DOC "The CHOLMOD library"
   )
 mark_as_advanced(CHOLMOD_LIBRARY)
@@ -63,7 +65,7 @@ if (CCOLAMD_FOUND)
   set(CHOLMOD_INCLUDE_DIRS ${CHOLMOD_INCLUDE_DIRS} ${CCOLAMD_INCLUDE_DIRS})
   set(CHOLMOD_LIBRARIES ${CHOLMOD_LIBRARIES} ${CCOLAMD_LIBRARIES})
 endif()
-if (RT_FOUND)
+if (RT_FOUND AND (NOT APPLE))
   set(CHOLMOD_INCLUDE_DIRS ${CHOLMOD_INCLUDE_DIRS} ${RT_INCLUDE_DIRS})
   set(CHOLMOD_LIBRARIES ${CHOLMOD_LIBRARIES} ${RT_LIBRARIES})
 endif()
@@ -133,5 +135,5 @@ endif()
 # Standard package handling
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CHOLMOD
-  "CHOLMOD could not be found. Be sure to set CHOLMOD_DIR."
+  "CHOLMOD could not be found. Be sure to set SUITESPARSE_DIR correctly."
  CHOLMOD_LIBRARY CHOLMOD_INCLUDE_DIRS CHOLMOD_TEST_RUNS)
