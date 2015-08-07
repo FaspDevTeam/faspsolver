@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+08/07/2015 FASP 1.7.6:
+- Update CMAKE.
+- Fix UMFPACK and MUMPS link problems.
+- Add util/fix_fenics.sh script and fix FEniCS conf problems.
+
 07/19/2015 FASP 1.7.5:
 - Fix a bug: a memory problem in AMG for BSR format.
 - Fix a few typos in pcg.

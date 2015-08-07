@@ -1,0 +1,50 @@
+========================
+Questions and Answers
+========================
+
+1. How to install FASP with minimal UMFPACK installation?
+
+When compiling the only UMFPACK (not the complete SuiteSparse), do the following in the
+directory where the sources of SuiteSparse are, so cd there and stay there:
+
+a. In file SuiteSparse_config/SuiteSparse_config.mk: remove "-lrt" from "LIB = -lm -lrt". 
+In addition, put somewhere after the definition of “CF” the following: "CF += -DNTIMER".
+Finally, check that you have "UMFPACK_CONFIG = -DNCHOLMOD” (to forget about cholmod). 
+
+b. In the same file you can also set INSTALL_LIB and INSTALL_INCLUDE directories.
+
+c. "cd AMD; make install"
+
+d. "cd SuiteSparse_coonfig; make install"
+
+e. "cd UMFPACK; make install"
+
+In the Makefile of the faspsolver, just put
+ 
+    suitesparsedir=the_name_of_THE_DIR_where_SUITE_SPARSE_SOURCES_IS
+
+=============
+
+2. How to install FASP when FEniCS-1.5.0 conf is sourced?
+
+When FEniCS (at least 1.5.0 version is installed) and fenics.conf file is sourced, some 
+people has trouble using some versions of gfortran to compile FASP. The cause of the problems 
+is that FEniCS does not have the latest libgmp** in their directory and the fenics.conf file 
+makes this the first item in the DYLD_LIBRARY_PATH to be searched by compiler/linker.
+
+There is an executable script "util/fix_fenics.sh". To run it, you need to be careful and it 
+is better to BACK UP "/Applications/FEniCS/Contents/Resources/lib". In addition, if you want 
+to run it, you need to comment in this script the 3rd line “exit 127".
+
+The script does the following:
+
+a. Download the source of the latest release for the GNU Multiple Precision Arithmetic Library
+(a.k.a. GMP) and install it. It uses the apple native compilers to compile the latest source
+code.
+
+b. Use macports to install a gfortran compatible with “clang”. This is done by installing
+"dragonegg-3.4" port.
+
+After executing it (whether FEniCS is sourced or not) our fasp will configure with no problem.
+
+=============
