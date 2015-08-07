@@ -59,25 +59,22 @@
 # If you want to use UMFPACK (part of SuiteSparse package), uncomment the next 
 # line (and read carefully the instructons below it):
 # 
-umfpack=yes
+# umfpack=yes
 #
 # If you have installed SuiteSparse from source or for some other
 # reason you want to specify the path to SuiteSparse libraries and
 # header files, uncomment and edit the definition of "suitesparse_dir"
 # below (and continue reading...)  
-# For example:
-# suitesparse_dir="/home/janedoe/packages"
 #
- suitesparse_dir="/Users/ltz1/packages"
+# suitesparse_dir="/dir/to/SuiteSparse"
 #
-# IMPORTANT: This defines the path to the SuiteSparse library and
-# include files.  These are expected to be found in
-# $(suitesparse_dir)/lib and $(suitesparse_dir)/include or in the
-# system standard paths for libraries and header files.  As a bare
-# minimum, $(suitesparse_dir)/lib and $(suitesparse_dir)/include must
-# contain the library and header files for AMD,UMFPACK and
-# SUITESPARSECONFIG packages. For more information on how to install
-# these, check the the home page of SuiteSparse.
+# IMPORTANT:
+# This defines the path to the SuiteSparse library and include files.
+# These are expected to be found in $(suitesparse_dir)/lib and
+# $(suitesparse_dir)/include or in the system standard paths for libraries
+# and header files. As a bare minimum, $(suitesparse_dir)/lib and
+# $(suitesparse_dir)/include must contain the library and header files for
+# AMD,UMFPACK, and SUITESPARSECONFIG. 
 # -------------------------------------------------------------------------
 # If you want to use SuperLU, uncomment the next line:
 #
