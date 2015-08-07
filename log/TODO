@@ -23,6 +23,7 @@ Documentation
 [   *   ] update all the sample codes with the new version
 [   *   ] add pairwise aggregation AMG methods as a tutorial example
 [   *   ] add details for the OMP version
+[       ] generate a sequence of FASP courses
 
 ========================
 Structure
@@ -41,7 +42,7 @@ Structure
 [ 1.4.3 ] set DEBUG_MODE in Makefile instead of the header file
 [ 1.6.1 ] fix problem with MUMPS: cannot find package
 [ 1.6.2 ] allow users to set compilers, e.g. using CC, CXX
-[   *   ] fix problem with UMFPACK when it is installed without CHOLMOD
+[ 1.7.6 ] fix problem with UMFPACK when it is installed without CHOLMOD
 [       ] add Intel MKL PARDISO as a direct solver
 [       ] format output messages: error, warning, message
 [       ] format debug messages: debug, chmem
