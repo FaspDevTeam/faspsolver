@@ -70,7 +70,6 @@
 # below (and continue reading...)  
 #
 # suitesparse_dir="/dir/to/SuiteSparse"
- suitesparse_dir="/Users/ltz1/packages"
 #
 # IMPORTANT:
 # This defines the path to the SuiteSparse library and include files.
