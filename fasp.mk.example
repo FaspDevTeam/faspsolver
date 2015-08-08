@@ -2,6 +2,7 @@
 # Fast Auxiliary Space Preconditioners (FASP) 
 #
 ################# User Defined Configuration Options #################
+#
 # 1. Copy this file to a file named "fasp.mk".
 # 2. Edit "fasp.mk" to adjust options/settings for your system
 #    following the directions below.
