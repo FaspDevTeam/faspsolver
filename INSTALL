@@ -2,7 +2,8 @@
 ||   Fast Auxiliary Space Preconditioners (FASP)    ||
 ======================================================
 
-Simplest way to compile FASP is "make config; make install". More options:
+To build FASP copy "make.inc.example" to "make.inc" and type "make
+config; make install". More options:
 ===============================================================================
 $ make config           # Config the building environment
 $ make config CC=gcc    # Config with a specific C compiler
@@ -19,4 +20,4 @@ $ make distclean        # Clean and completely removes the build directory
 $ make version          # Show version information
 $ make help             # Show this screen
 ===============================================================================
-
+User defined options can be changed in "make.inc"
