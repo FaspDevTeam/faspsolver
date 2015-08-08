@@ -1,18 +1,19 @@
 #######################################################################
 # Fast Auxiliary Space Preconditioners (FASP) 
 #
-# TOP LEVEL Makefile: Calls cmake to configure and build
+########################################################################
+# TOP LEVEL FASP Makefile: Calls cmake to configure and build
 # the library and the test suite. 
 # 
-#   IMPORTANT: It is very likely that you DO NOT need to edit this
-#   Makefile. ALL USER DEFINED OPTIONS GO IN "make.inc" which is
-#   included by this Makefile. Copy "make.inc.example file to
-#   "make.inc", edit it to adjust settings for your system and then
-#   type "make help" to see how to configure/build FASP.
+#   Probably you will *NOT NEED TO CHANGE* this  top level Makefile.
+#
+#   USER DEFINED OPTIONS GO IN "fasp.mk" which is included by this
+#   Makefile. Copy "fasp.mk.example file to "fasp.mk", edit it to
+#   adjust the settings to your liking, and then type "make help" to
+#   see how to configure/build FASP.
 # 
 ########################################################################
-
-include make.inc
+sinclude fasp.mk
 
 ifeq ($(debug),yes)
 	cflags="-Wall -g"
@@ -92,8 +93,15 @@ all clean install docs headers:
 	fi
 
 config: distclean
-	mkdir -p $(build_dir)
-	cd $(build_dir) && cmake $(CURDIR) $(CONFIG_FLAGS)
+	@if [ ! -f ./fasp.mk ] ; then \
+		echo "***ERROR: fasp.mk is missing...." ; \
+		echo "   1. Copy \"fasp.mk.example\" to \"fasp.mk\"." ; \
+		echo "   2. Adjust \"fasp.mk\" for your system or leave it with the default settings" ; \
+		echo "   3. Run \"make config\" again." ; \
+	else \
+		mkdir -p $(build_dir) ; \
+		cd $(build_dir) && cmake $(CURDIR) $(CONFIG_FLAGS) ; \
+	fi
 
 uninstall:
 	@if [ ! -f $(build_dir)/install_manifest.txt ]; then \
@@ -126,4 +134,5 @@ version:
 	@-hg -q id >> VERSION
 	@-cat VERSION
 
-.PHONY: all backup config clean distclean install uninstall docs headers help version
+.PHONY:	all backup config clean distclean install uninstall docs headers help version
+
