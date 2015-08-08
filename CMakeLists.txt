@@ -42,12 +42,14 @@ if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*")
        elseif( ${REAL_C} MATCHES "Clang.*")
 	 find_program(THE_C NAMES clang)
 	find_program(THE_CXX NAMES clang++ clang)
-		# clang is supposed to work with gnu compilers if
+		# clang is seems to work with gnu compilers if
 		# dragonegg plugin is installed; it is not clear how
-		# to include thi dragonegg plugin on Linux in the
-		# CMAKEs. As compiler gfortran works with clang in may
-		# cases, so we basically take the standard behavior
-		# here.
+		# to include this dragonegg plugin on Linux in the
+		# CMAKEs, so we will issue a warning at the end if the 
+		#C compiler and fortran compilers are different. 
+		#As compiler gfortran works with clang in many
+		# cases, so we assume this standard behavior
+		# here as well
 		if(APPLE)
 		    message("On an Apple, searching first for a dragonegg install")
 #		  find_program(THE_FC NAMES dragonegg-3.4-gfortran-mp-4.6  gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
@@ -55,7 +57,7 @@ if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*")
 		else(APPLE)
 		  find_program(THE_FC NAMES gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
 		endif(APPLE)
-		message("Clang: ${THE_CXX} ${THE_FC}" )
+#		message("Clang: ${THE_CXX} ${THE_FC}" )
 	else()       
 	   message("WARNING: ${THE_C} did not match any of the preset C compilers" )
 	   message("Continuing with the default compiler: ${CMAKE_C_COMPILER}" )
@@ -67,14 +69,12 @@ if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*")
 	if( THE_C AND THE_CXX AND THE_FC )
 	     	 set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C   compiler" FORCE) 
 	    	 set(CMAKE_CXX_COMPILER ${THE_CXX} CACHE INTERNAL   "the C++ compiler" FORCE)
-             set(CMAKE_Fortran_COMPILER ${THE_FC} CACHE INTERNAL    "the F compiler" FORCE)
+                 set(CMAKE_Fortran_COMPILER ${THE_FC} CACHE INTERNAL    "the F compiler" FORCE)
 	endif( THE_C AND THE_CXX AND THE_FC )
 # END COMPILERS SET UP................ 
 ##################################
 	enable_language(CXX) 
-	message("CXXID: ${CMAKE_CXX_COMPILER_ID} and ${CMAKE_CXX_COMPILER_VERSION}" ) 
 	enable_language(Fortran) 
-	message("FID: ${CMAKE_Fortran_COMPILER_ID} and ${CMAKE_Fortran_COMPILER_VERSION}" ) 
 
 #
 # OpenMP : defined on command line in the top Makefile
@@ -91,7 +91,7 @@ if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*")
 	       "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")
           set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
        else(OPENMP_FOUND)
-          message("   WARNING: OpenMP was requested but not supported!")
+          message(" WARNING: OpenMP was requested but not supported!")
        endif(OPENMP_FOUND)
     endif(USE_OPENMP)
 
@@ -260,3 +260,13 @@ endif(DOXYGEN_FOUND)
 ##                   WORKING_DIRECTORY "${FASP_SOURCE_DIR}/util"
 ##                   COMMENT "Autogenerating header files first..."
 ##                   VERBATIM)
+
+
+#LAST CHECK:
+if(NOT CMAKE_Fortran_COMPILER_ID EQUAL CMAKE_C_COMPILER_ID)
+  message("
+** WARNING: CC and FC mismatch. C compiler=\"${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}\" ; Fortran compiler=\"${CMAKE_Fortran_COMPILER_ID}${CMAKE_Fortran_COMPILER_VERSION}\"
+"
+) 
+endif(NOT CMAKE_Fortran_COMPILER_ID EQUAL CMAKE_C_COMPILER_ID)
+
