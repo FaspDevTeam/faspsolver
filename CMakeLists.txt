@@ -1,6 +1,8 @@
+############################################################
+# CMakeLists for FASP 
+# Modified   2015-08-08   --ltz
+############################################################
 cmake_minimum_required (VERSION 2.8)
-
-#      INIT_CONFIG load...
 # Helper modules.
 include(CheckFunctionExists)
 include(CheckIncludeFile)

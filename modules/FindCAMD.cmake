@@ -7,6 +7,7 @@
 #
 #  Xiaozhe Hu 
 #  02/27/2013
+#  Modified   2015-08-08   --ltz
 
 message(STATUS "Checking for package 'CAMD'")
 

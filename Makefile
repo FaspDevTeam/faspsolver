@@ -2,6 +2,7 @@
 # Fast Auxiliary Space Preconditioners (FASP) 
 #
 ########################################################################
+#
 # TOP LEVEL FASP Makefile: Calls cmake to configure and build
 # the library and the test suite. 
 # 
@@ -12,6 +13,7 @@
 #   adjust the settings to your liking, and then type "make help" to
 #   see how to configure/build FASP.
 # 
+#  Modified   2015-08-08   --ltz
 ########################################################################
 sinclude fasp.mk
 
