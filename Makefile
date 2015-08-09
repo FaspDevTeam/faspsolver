@@ -96,15 +96,13 @@ all clean install docs headers:
 
 config: distclean
 	@if [ ! -f ./fasp.mk ] ; then \
-		echo "***ERROR: fasp.mk is missing...." ; \
-		echo "   1. Copy \"fasp.mk.example\" to \"fasp.mk\"." ; \
-		echo "   2. Adjust \"fasp.mk\" for your system or leave it with the default settings" ; \
-		echo "   3. Run \"make config\" again." ; \
-	else \
-		mkdir -p $(build_dir) ; \
-		cd $(build_dir) && cmake $(CURDIR) $(CONFIG_FLAGS) ; \
+		echo "***********************************" ; \
+		echo "* WARNING: fasp.mk is missing.....*" ; \
+		echo "* Using the DEFAULT configuration.*" ; \
+		echo "***********************************" ; \
 	fi
-
+	@mkdir -p $(build_dir) ; 
+	@cd $(build_dir) && cmake $(CURDIR) $(CONFIG_FLAGS) 
 uninstall:
 	@if [ ! -f $(build_dir)/install_manifest.txt ]; then \
 		echo "Installation manifest not found! Nothing to uninstall."; \
