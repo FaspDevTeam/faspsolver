@@ -21,13 +21,11 @@ endif(DEFINED ENV{CC})
 
 if( THE_C )
     set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C compiler" FORCE)
-else( THE_C )
-    message("Warning: the requested CC is not found: ${THE_C}; continuing with the system's one" )
 endif( THE_C )
 
 # name the project at this moment and this will set the compiler id:
 project(FASP C )
-message("C compiler ID and Version: ${CMAKE_C_COMPILER_ID} and ${CMAKE_C_COMPILER_VERSION}" )
+##message("C compiler ID and Version: ${CMAKE_C_COMPILER_ID} and ${CMAKE_C_COMPILER_VERSION}" )
 #message("The system is ${CMAKE_HOST_SYSTEM}; apple=${APPLE}; unix=${UNIX}")
 set(REAL_C "${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}")
 ############################
@@ -53,7 +51,7 @@ if(${REAL_C} MATCHES "GNU.*" AND  ${THE_C} MATCHES "gcc.*")
 		# cases, so we assume this standard behavior
 		# here as well
 		if(APPLE)
-		    message("On an Apple, searching first for a dragonegg install")
+#		    message(SATATUS "MAC OS X and Clang. Looking for dragonegg install")
 #		  find_program(THE_FC NAMES dragonegg-3.4-gfortran-mp-4.6  gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
 		  find_program(THE_FC NAMES gfortran gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
 		else(APPLE)
