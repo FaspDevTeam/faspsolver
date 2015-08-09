@@ -97,8 +97,7 @@ Iterative Methods
 [ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
 [ 1.3.5 ] add safer Krylov iterative methods and improve efficiency
-[       ] options to replace the standard BLAS and SpBLAS functions (Chunsheng)
-[       ] test SpBLAS implementations in standard libraries (Chunsheng)
+[       ] options to replace the standard BLAS (Ludmil)
 [   *   ] unify KSMs for different data formats
 [   *   ] update KSMs with safe-guard
 
