@@ -2,7 +2,9 @@
 Questions and Answers
 ========================
 
-I. FASP and SuiteSparse.
+================================
+I. FASP and SuiteSparse
+================================
 
 I.1. How to install FASP with minimal UMFPACK installation?
 
@@ -28,6 +30,7 @@ I.1.d "cd AMD ; make ;  make install"
 I.I.e "cd SuiteSparse_config ; make ;  make install"
 
 I.I.f "cd UMFPACK ; make ; make install"
+
 --------------------------------
 
 I.2. Changes to the FASP (faspsolver) Makefile:
@@ -48,7 +51,9 @@ I.2.b If you have installed the libraries and the header files in a
       header and library files so that the faspsolver configuration
       script can locate them.
 
-II. FASP and FEniCS.
+================================
+II. FASP and FEniCS
+================================
 
 II.1. How to install FASP when FEniCS-1.5.0 configuration file is loaded?
 
@@ -70,5 +75,10 @@ II.1.c Solution: Back up the libgmp library that ships with FEniCS (on
        Precision Arithmetic Library (a.k.a. GMP) and install it in
        place of the FEniCS ones. After this the gfortran compilers
        work properly and FASP will configure with no problem.
+
+II.1.d There is another way to fix this problem. You can edit the 
+       FEniCS conf file by replacing "DYLD_LIBRARY_PATH" with 
+       "DYLD_FALLBACK_LIBRARY_PATH". The conf file is located at
+       "FEniCS.app/Contents/Resources/share/fenics/fenics.conf".
 
 =============
