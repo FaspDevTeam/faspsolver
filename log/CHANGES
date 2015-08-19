@@ -1,13 +1,14 @@
 File Name: CHANGES
 
-08/12/2015 FASP 1.7.6:
+08/19/2015 FASP 1.7.6:
 - Update CMAKE and its modules.
 - Fix UMFPACK and MUMPS link problems.
 - Add util/fix_fenics.sh script and fix FEniCS conf problems.
 - Add fasp.mk for user-specific make options.
+- Add a warning when CC and FC version does not match.
+- Add and update Q&A for install problems. 
 - Reformat Makefile output.
-- Add warnings when CC and FC version does not match.
-- Update QA for the FEniCS conf problem. 
+- Update FASP webpage and Doxygen.
 
 07/19/2015 FASP 1.7.5:
 - Fix a bug: a memory problem in AMG for BSR format.

@@ -5,7 +5,7 @@ Milestones
 ========================
 
 [ 1.1.6 ] Release an alpha version by the end of 2012!
-[       ] Release a beta version by July 2015!
+[       ] Release a beta version by Sep 2015!
 [       ] Release a stable version by the end of 2016!
 
 ========================
@@ -23,7 +23,7 @@ Documentation
 [   *   ] update all the sample codes with the new version
 [   *   ] add pairwise aggregation AMG methods as a tutorial example
 [   *   ] add details for the OMP version
-[       ] generate a sequence of FASP courses
+[   *   ] generate a sequence of FASP courses
 
 ========================
 Structure
@@ -43,12 +43,12 @@ Structure
 [ 1.6.1 ] fix problem with MUMPS: cannot find package
 [ 1.6.2 ] allow users to set compilers, e.g. using CC, CXX
 [ 1.7.6 ] fix problem with UMFPACK when it is installed without CHOLMOD
-[       ] add Intel MKL PARDISO as a direct solver
-[       ] format output messages: error, warning, message
-[       ] format debug messages: debug, chmem
-[       ] add subrouties for general purpose tests on matrices and vectors
+[   *   ] add Intel MKL PARDISO as a direct solver
 [   *   ] add the new sparse matrix data structure: TCSR
 [       ] add support for symmetric TCSR format
+[       ] add subrouties for general purpose tests on matrices and vectors
+[       ] format output messages: error, warning, message
+[       ] format debug messages: debug, chmem
 
 ========================
 GMG 	
