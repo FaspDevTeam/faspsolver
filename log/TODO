@@ -66,8 +66,8 @@ AMG
 
 [ 0.3.9 ] separate SA and UA code
 [ 0.8.5 ] non-overlapping/overlapping Schwarz smoother
-[ 1.6.1 ] replace Schwarz smoother by a C version
 [ 1.6.2 ] maximal independent set based on a strength matrix
+[ 1.7.6 ] replace Schwarz smoother by a C version
 [       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
 [       ] Tarjan algorithm and other orderings (Xiaozhe and Ludmil)
 [       ] strength matrix based on (polynomial) smoothers (Xiaozhe)

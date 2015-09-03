@@ -2,27 +2,26 @@
      170 ./base/include/doxygen.h
     1191 ./base/include/fasp.h
      684 ./base/include/fasp_block.h
-     252 ./base/include/fasp_const.h
+     259 ./base/include/fasp_const.h
     2937 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
     5818 ./base/include/malloc.c.h
      291 ./base/include/nedmalloc.h
-     394 ./base/src/aggregation_bsr.inl
-    1806 ./base/src/aggregation_csr.inl
+     397 ./base/src/aggregation_bsr.inl
+    1808 ./base/src/aggregation_csr.inl
     2119 ./base/src/gmg_util.inl
       89 ./base/src/itsolver_util.inl
      238 ./base/src/linklist.inl
      245 ./base/src/mg_util.inl
      274 ./base/src/factor.f
-    1216 ./base/src/schwarz.f
      146 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
      281 ./base/src/amg_setup_rs.c
      877 ./base/src/amg_setup_sa.c
-     667 ./base/src/amg_setup_ua.c
+     677 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
-    1089 ./base/src/amlirecur.c
+     945 ./base/src/amlirecur.c
      268 ./base/src/array.c
      234 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
@@ -39,7 +38,7 @@
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
      106 ./base/src/famg.c
-     340 ./base/src/fmgcycle.c
+     328 ./base/src/fmgcycle.c
     1145 ./base/src/formats.c
       79 ./base/src/givens.c
     1035 ./base/src/gmg_poisson.c
@@ -47,7 +46,7 @@
      427 ./base/src/ilu_setup_bsr.c
      193 ./base/src/ilu_setup_csr.c
     1254 ./base/src/ilu_setup_str.c
-     333 ./base/src/init.c
+     334 ./base/src/init.c
      792 ./base/src/input.c
     1597 ./base/src/interpolation.c
      840 ./base/src/interpolation_em.c
@@ -85,14 +84,14 @@
      339 ./base/src/pvgmres_mf.c
      874 ./base/src/quadrature.c
      116 ./base/src/rap.c
-     751 ./base/src/schwarz_setup.c
+     752 ./base/src/schwarz_setup.c
      798 ./base/src/smat.c
     1608 ./base/src/smoother_bsr.c
     2315 ./base/src/smoother_csr.c
       83 ./base/src/smoother_csr_cr.c
      586 ./base/src/smoother_csr_poly.c
     1874 ./base/src/smoother_str.c
-     347 ./base/src/sparse_block.c
+     364 ./base/src/sparse_block.c
     1864 ./base/src/sparse_bsr.c
      153 ./base/src/sparse_coo.c
     1335 ./base/src/sparse_csr.c
@@ -108,4 +107,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
-   92323 total
+   90992 total

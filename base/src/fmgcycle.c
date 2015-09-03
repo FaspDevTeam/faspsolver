@@ -51,6 +51,12 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
     INT l, i, lvl, num_cycle;
     REAL alpha = 1.0, relerr;
     
+    // Schwarz parameters
+    Schwarz_param swzparam;
+    if ( param->Schwarz_levels > 0 ) {
+        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
+    }
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
@@ -187,24 +193,15 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
                 }
                 else if (l<mgl->Schwarz_levels) {
                     switch (mgl[l].Schwarz.Schwarz_type) {
-                        case 3:
-                            fbgs2ns_(&(mgl[l].Schwarz.A.row), mgl[l].Schwarz.A.IA, mgl[l].Schwarz.A.JA,
-                                     mgl[l].Schwarz.A.val, mgl[l].x.val, mgl[l].b.val, &(mgl[l].Schwarz.nblk),
-                                     mgl[l].Schwarz.iblock, mgl[l].Schwarz.jblock, mgl[l].Schwarz.mask,
-                                     mgl[l].Schwarz.maxa, mgl[l].Schwarz.au, mgl[l].Schwarz.al,
-                                     mgl[l].Schwarz.rhsloc, &(mgl[l].Schwarz.memt));
-                            bbgs2ns_(&(mgl[l].Schwarz.A.row), mgl[l].Schwarz.A.IA, mgl[l].Schwarz.A.JA,
-                                     mgl[l].Schwarz.A.val, mgl[l].x.val, mgl[l].b.val, &(mgl[l].Schwarz.nblk),
-                                     mgl[l].Schwarz.iblock, mgl[l].Schwarz.jblock, mgl[l].Schwarz.mask,
-                                     mgl[l].Schwarz.maxa, mgl[l].Schwarz.au, mgl[l].Schwarz.al,
-                                     mgl[l].Schwarz.rhsloc, &(mgl[l].Schwarz.memt));
+                        case SCHWARZ_SYMMETRIC:
+                            fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                               &mgl[l].x, &mgl[l].b);
+                            fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                                &mgl[l].x, &mgl[l].b);
                             break;
                         default:
-                            fbgs2ns_(&(mgl[l].Schwarz.A.row), mgl[l].Schwarz.A.IA, mgl[l].Schwarz.A.JA,
-                                     mgl[l].Schwarz.A.val, mgl[l].x.val, mgl[l].b.val, &(mgl[l].Schwarz.nblk),
-                                     mgl[l].Schwarz.iblock, mgl[l].Schwarz.jblock, mgl[l].Schwarz.mask,
-                                     mgl[l].Schwarz.maxa, mgl[l].Schwarz.au, mgl[l].Schwarz.al,
-                                     mgl[l].Schwarz.rhsloc, &(mgl[l].Schwarz.memt));
+                            fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                               &mgl[l].x, &mgl[l].b);
                             break;
                     }
                 }
@@ -295,24 +292,15 @@ void fasp_solver_fmgcycle (AMG_data *mgl,
                 }
                 else if (l<mgl->Schwarz_levels) {
                     switch (mgl[l].Schwarz.Schwarz_type) {
-                        case 3:
-                            bbgs2ns_(&(mgl[l].Schwarz.A.row), mgl[l].Schwarz.A.IA, mgl[l].Schwarz.A.JA,
-                                     mgl[l].Schwarz.A.val, mgl[l].x.val, mgl[l].b.val, &(mgl[l].Schwarz.nblk),
-                                     mgl[l].Schwarz.iblock, mgl[l].Schwarz.jblock, mgl[l].Schwarz.mask,
-                                     mgl[l].Schwarz.maxa, mgl[l].Schwarz.au, mgl[l].Schwarz.al,
-                                     mgl[l].Schwarz.rhsloc,&(mgl[l].Schwarz.memt));
-                            fbgs2ns_(&(mgl[l].Schwarz.A.row), mgl[l].Schwarz.A.IA, mgl[l].Schwarz.A.JA,
-                                     mgl[l].Schwarz.A.val, mgl[l].x.val, mgl[l].b.val, &(mgl[l].Schwarz.nblk),
-                                     mgl[l].Schwarz.iblock, mgl[l].Schwarz.jblock, mgl[l].Schwarz.mask,
-                                     mgl[l].Schwarz.maxa,mgl[l].Schwarz.au,mgl[l].Schwarz.al,
-                                     mgl[l].Schwarz.rhsloc,&(mgl[l].Schwarz.memt));
+                        case SCHWARZ_SYMMETRIC:
+                            fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                                &mgl[l].x, &mgl[l].b);
+                            fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                               &mgl[l].x, &mgl[l].b);
                             break;
                         default:
-                            bbgs2ns_(&(mgl[l].Schwarz.A.row), mgl[l].Schwarz.A.IA, mgl[l].Schwarz.A.JA,
-                                     mgl[l].Schwarz.A.val, mgl[l].x.val, mgl[l].b.val, &(mgl[l].Schwarz.nblk),
-                                     mgl[l].Schwarz.iblock, mgl[l].Schwarz.jblock, mgl[l].Schwarz.mask,
-                                     mgl[l].Schwarz.maxa, mgl[l].Schwarz.au, mgl[l].Schwarz.al,
-                                     mgl[l].Schwarz.rhsloc,&(mgl[l].Schwarz.memt));
+                            fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                                &mgl[l].x, &mgl[l].b);
                             break;
                     }
                 }

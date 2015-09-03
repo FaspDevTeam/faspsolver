@@ -165,6 +165,13 @@
 #define ILUtp                   3  /**< ILUtp */
 
 /**
+ * \brief Type of Schwarz smoother
+ */
+#define SCHWARZ_FORWARD         1  /**< Forward ordering */
+#define SCHWARZ_BACKWARD        2  /**< Backward ordering */
+#define SCHWARZ_SYMMETRIC       3  /**< Symmetric smoother */
+
+/**
  * \brief Definition of AMG types
  */
 #define CLASSIC_AMG             1  /**< classic AMG */
