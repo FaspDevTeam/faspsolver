@@ -1,7 +1,7 @@
 /*! \file auxiliary.c
  *
- *  \brief Read write and other auxiliary routines. Also routine to convert
- *         IJ value format to CRS.
+ *  \brief Read, write and other auxiliary routines. Also routine to convert
+ *         matrix formats.
  *
  *------------------------------------------------------
  * C-version: by Ludmil Zikatanov 2010-04-08
