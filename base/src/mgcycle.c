@@ -84,7 +84,7 @@ ForwardSweep:
         // or pre-smoothing with Schwarz method
         else if ( l < mgl->Schwarz_levels ) {
             switch (mgl[l].Schwarz.Schwarz_type) {
-                case 3:
+                case SCHWARZ_SYMMETRIC:
                     fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam, 
                                                        &mgl[l].x, &mgl[l].b);
                     fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam, 
@@ -199,7 +199,7 @@ ForwardSweep:
         // post-smoothing with Schwarz method
         else if ( l < mgl->Schwarz_levels ) {
             switch (mgl[l].Schwarz.Schwarz_type) {
-                case 3:
+                case SCHWARZ_SYMMETRIC:
                     fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam, 
                                                         &mgl[l].x, &mgl[l].b);
                     fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam, 
