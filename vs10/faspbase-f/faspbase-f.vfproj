@@ -65,6 +65,5 @@
 		<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
 		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
 		<File RelativePath="..\..\base\src\factor.f"/>
-		<File RelativePath="..\..\base\extra\sparsekit\ilu.f"/>
-		<File RelativePath="..\..\base\src\schwarz.f"/></Filter></Files>
+		<File RelativePath="..\..\base\extra\sparsekit\ilu.f"/></Filter></Files>
 	<Globals/></VisualStudioProject>
