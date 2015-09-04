@@ -4,6 +4,7 @@ File Name: CHANGES
 - Replace the Fortran version of Schwarz smoother by the C version.
 - Test V, AMLI, Nonlinear AMLI, F cycles with the Schwarz smoother.
 - Update Doxygen and FASP webpage.
+- Remove VS08; stop supporting Visual Studio before 2010.
 
 08/19/2015 FASP 1.7.6:
 - Update CMAKE and its modules.
