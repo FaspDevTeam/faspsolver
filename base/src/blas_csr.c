@@ -476,7 +476,6 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
  */
-
 void fasp_blas_dcsr_aAxpy (const REAL alpha,
                            dCSRmat *A,
                            REAL *x,
@@ -1987,7 +1986,7 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
 }
 
 /**
- * \fn fasp_blas_dcsr_bandwith(dCSRmat *A, INT *bndwith)
+ * \fn fasp_blas_dcsr_bandwith (dCSRmat *A, INT *bndwith)
  *
  * \brief Get bandwith of matrix
  *
@@ -1997,8 +1996,8 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
  * \author Zheng Li
  * \date   03/22/2015
  */
-void fasp_blas_dcsr_bandwith(dCSRmat *A,
-                             INT     *bndwith)
+void fasp_blas_dcsr_bandwith (dCSRmat *A,
+                              INT     *bndwith)
 {
     INT row = A->row;
     INT *ia = A->IA;
