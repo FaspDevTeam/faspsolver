@@ -364,7 +364,6 @@ FINISHED:  // finish the iterative method
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014
- *
  */
 INT fasp_solver_dbsr_pcg (dBSRmat *A,
                           dvector *b,

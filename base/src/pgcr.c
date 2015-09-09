@@ -12,9 +12,9 @@
 static void dense_aAxpby (INT, INT, REAL *, REAL, REAL *, REAL, REAL *);
 
 /**
- * \fn int fasp_solver_dcsr_pgcr1 (dCSRmat *A,  dvector *b, dvector *x, \
- *                                 precond *pc, const REAL tol, const INT MaxIt, \
- *                                 const SHORT restart, const SHORT stop_type, \
+ * \fn INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,  dvector *b, dvector *x,
+ *                                 precond *pc, const REAL tol, const INT MaxIt,
+ *                                 const SHORT restart, const SHORT stop_type,
  *                                 const SHORT prtlvl)
  *
  * \brief A preconditioned GCR method for solving Au=b
@@ -225,9 +225,9 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_solver_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *x, \
- *                                precond *pc, const REAL tol, const INT MaxIt, \
- *                                const SHORT restart, const SHORT stop_type, \
+ * \fn INT fasp_solver_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *x,
+ *                                precond *pc, const REAL tol, const INT MaxIt,
+ *                                const SHORT restart, const SHORT stop_type,
  *                                const SHORT prtlvl)
  *
  * \brief A preconditioned GCR method for solving Au=b
