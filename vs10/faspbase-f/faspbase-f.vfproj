@@ -4,7 +4,7 @@
 		<Platform Name="Win32"/>
 		<Platform Name="x64"/></Platforms>
 	<Configurations>
-		<Configuration Name="Debug|Win32" OutputDirectory="..\..\lib\ia32" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)" TargetName="$(ProjectName)d-vs10" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Debug|Win32" OutputDirectory="..\..\lib\ia32\" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)" TargetName="$(ProjectName)d-vs10" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" WarnInterfaces="true" ExternalNameInterpretation="extNameLowerCase" CallingConvention="callConventionCRef" ExternalNameUnderscore="true" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
 				<Tool Name="VFLibrarianTool" OutputFile="$(OutDir)/$(ProjectName)d-vs10.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -15,7 +15,7 @@
 				<Tool Name="VFPostBuildEventTool"/></Configuration>
 		<Configuration Name="Release|Win32" OutputDirectory="..\..\lib\ia32" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)" TargetName="$(ProjectName)-vs10" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Optimization="optimizeFull" PrefetchInsertionOpt="prefetchAggressive" BufferedIO="true" InterproceduralOptimizations="ipoSingleFile" MatrixLibrary="mlNo" ExternalNameInterpretation="extNameLowerCase" CallingConvention="callConventionCRef" ExternalNameUnderscore="true"/>
-				<Tool Name="VFLibrarianTool" OutputFile="..\..\lib\ia32\$(ProjectName)-vs10.lib"/>
+				<Tool Name="VFLibrarianTool" OutputFile="$(OutDir)/$(ProjectName)-vs10.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFCustomBuildTool"/>
@@ -43,7 +43,7 @@
 		<Configuration Name="Release_OMP|Win32" OutputDirectory="..\..\lib\ia32" IntermediateDirectory="$(Platform)\$(Configuration)\" TargetName="$(ProjectName)-omp-vs10" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Optimization="optimizeFull" PrefetchInsertionOpt="prefetchAggressive" BufferedIO="true" InterproceduralOptimizations="ipoSingleFile" MatrixLibrary="mlNo" OpenMP="OpenMPParallelCode" ExternalNameInterpretation="extNameLowerCase" CallingConvention="callConventionCRef" ExternalNameUnderscore="true"/>
 				<Tool Name="VFLinkerTool" SuppressStartupBanner="true"/>
-				<Tool Name="VFLibrarianTool" OutputFile="..\..\lib\ia32\$(ProjectName)-omp-vs10.lib"/>
+				<Tool Name="VFLibrarianTool" OutputFile="$(OutDir)/$(ProjectName)-omp-vs10.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFCustomBuildTool"/>
