@@ -49,6 +49,7 @@ Structure
 [       ] add subrouties for general purpose tests on matrices and vectors
 [       ] format output messages: error, warning, message
 [       ] format debug messages: debug, chmem
+[       ] change the way for allocating memory in I/O functions (Ludmil)
 
 ========================
 GMG 	
