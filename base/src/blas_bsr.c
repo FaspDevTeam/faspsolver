@@ -38,8 +38,8 @@ void fasp_blas_dbsr_axm (dBSRmat *A,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_aAxpby ( const REAL alpha, dBSRmat *A,
- *                                  REAL *x, const REAL beta, REAL *y )
+ * \fn void fasp_blas_dbsr_aAxpby (const REAL alpha, dBSRmat *A,
+ *                                 REAL *x, const REAL beta, REAL *y)
  *
  * \brief Compute y := alpha*A*x + beta*y
  *
@@ -52,8 +52,7 @@ void fasp_blas_dbsr_axm (dBSRmat *A,
  * \author Zhiyang Zhou
  * \date   10/25/2010
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   06/29/2012
+ * Modified by Chunsheng Feng, Zheng Li on 06/29/2012
  *
  * \note Works for general nb (Xiaozhe)
  */
@@ -319,7 +318,7 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_aAxpy ( const REAL alpha, dBSRmat *A, REAL *x, REAL *y )
+ * \fn void fasp_blas_dbsr_aAxpy (const REAL alpha, dBSRmat *A, REAL *x, REAL *y)
  *
  * \brief Compute y := alpha*A*x + y
  *
@@ -331,8 +330,7 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
  * \author Zhiyang Zhou
  * \date   10/25/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  *
  * \note Works for general nb (Xiaozhe)
  */
@@ -595,7 +593,7 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_aAxpy_agg ( const REAL alpha, dBSRmat *A, REAL *x, REAL *y )
+ * \fn void fasp_blas_dbsr_aAxpy_agg (const REAL alpha, dBSRmat *A, REAL *x, REAL *y)
  *
  * \brief Compute y := alpha*A*x + y where each small block matrix is an identity matrix
  *
@@ -879,7 +877,7 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_mxv ( dBSRmat *A, REAL *x, REAL *y )
+ * \fn void fasp_blas_dbsr_mxv (dBSRmat *A, REAL *x, REAL *y)
  *
  * \brief Compute y := A*x
  *
@@ -2627,7 +2625,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_mxv_agg ( dBSRmat *A, REAL *x, REAL *y )
+ * \fn void fasp_blas_dbsr_mxv_agg (dBSRmat *A, REAL *x, REAL *y)
  *
  * \brief Compute y := A*x, where each small block matrices of A is an identity matrix
  *
@@ -2655,8 +2653,6 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
     /* local variables */
     INT     i,j,k, num_nnz_row;
     REAL   *px0 = NULL, *py0 = NULL, *py = NULL;
-    // INT     jump = nb*nb; Not used any more. --Chensong
-    
     INT     use_openmp = FALSE;
     
 #ifdef _OPENMP
