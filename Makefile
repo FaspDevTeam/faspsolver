@@ -103,6 +103,7 @@ config: distclean
 	fi
 	@mkdir -p $(build_dir) ; 
 	@cd $(build_dir) && cmake $(CURDIR) $(CONFIG_FLAGS) 
+
 uninstall:
 	@if [ ! -f $(build_dir)/install_manifest.txt ]; then \
 		echo "Installation manifest not found! Nothing to uninstall."; \

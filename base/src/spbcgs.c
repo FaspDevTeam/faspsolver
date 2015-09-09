@@ -86,7 +86,6 @@
  *
  * \author Chensong Zhang
  * \date   03/31/2013
- *
  */
 INT fasp_solver_dcsr_spbcgs (dCSRmat *A,
                              dvector *b,
@@ -476,7 +475,6 @@ FINISHED: // finish the iterative method
  *
  * \author Chensong Zhang
  * \date   03/31/2013
- *
  */
 INT fasp_solver_dbsr_spbcgs(dBSRmat *A,
                             dvector *b,
@@ -866,7 +864,6 @@ FINISHED: // finish the iterative method
  *
  * \author Chensong Zhang
  * \date   03/31/2013
- *
  */
 INT fasp_solver_bdcsr_spbcgs (block_dCSRmat *A,
                               dvector *b,
@@ -1256,7 +1253,6 @@ FINISHED: // finish the iterative method
  *
  * \author Chensong Zhang
  * \date   03/31/2013
- *
  */
 INT fasp_solver_dstr_spbcgs (dSTRmat *A,
                              dvector *b,

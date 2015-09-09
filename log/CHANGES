@@ -3,6 +3,7 @@ File Name: CHANGES
 09/09/2015 FASP 1.7.8:
 - Remove factor.f from the repo.
 - Update VS10 to fix a directory problem in WIN32 configuration.
+- Clean up Doxygen for a few functions.
 
 09/04/2015 FASP 1.7.7:
 - Replace the Fortran version of Schwarz smoother by the C version.

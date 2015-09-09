@@ -39,7 +39,6 @@ void fasp_precond_dstr_diag (REAL *r,
     }    
 }
 
-
 /**
  * \fn void fasp_precond_dstr_ilu0 (REAL *r, REAL *z, void *data)
  *

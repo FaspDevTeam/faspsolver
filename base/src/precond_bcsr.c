@@ -12,7 +12,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_precond_block_diag_3 (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_diag_3 (REAL *r, REAL *z, void *data)
  * \brief block diagonal preconditioning (3x3 block matrix, each diagonal block
  *        is solved exactly)
  *
@@ -23,8 +23,8 @@
  * \author Xiaozhe Hu
  * \date   07/10/2014
  */
-void fasp_precond_block_diag_3 (double *r,
-                                double *z,
+void fasp_precond_block_diag_3 (REAL *r,
+                                REAL *z,
                                 void *data)
 {
     
@@ -35,10 +35,10 @@ void fasp_precond_block_diag_3 (double *r,
     
     dvector *tempr = &(precdata->r);
     
-    const int N0 = A_diag[0].row;
-    const int N1 = A_diag[1].row;
-    const int N2 = A_diag[2].row;
-    const int N = N0 + N1 + N2;
+    const INT N0 = A_diag[0].row;
+    const INT N1 = A_diag[1].row;
+    const INT N2 = A_diag[2].row;
+    const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
     fasp_array_cp(N, r, tempr->val);
@@ -87,7 +87,7 @@ void fasp_precond_block_diag_3 (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_diag_3_amg (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_diag_3_amg (REAL *r, REAL *z, void *data)
  * \brief block diagonal preconditioning (3x3 block matrix, each diagonal block
  *        is solved by AMG)
  *
@@ -98,8 +98,8 @@ void fasp_precond_block_diag_3 (double *r,
  * \author Xiaozhe Hu
  * \date   07/10/2014
  */
-void fasp_precond_block_diag_3_amg (double *r,
-                                    double *z,
+void fasp_precond_block_diag_3_amg (REAL *r,
+                                    REAL *z,
                                     void *data)
 {
     
@@ -110,10 +110,10 @@ void fasp_precond_block_diag_3_amg (double *r,
     AMG_param *amgparam = precdata->amgparam;
     AMG_data **mgl = precdata->mgl;
     
-    const int N0 = A->blocks[0]->row;
-    const int N1 = A->blocks[4]->row;
-    const int N2 = A->blocks[8]->row;
-    const int N = N0 + N1 + N2;
+    const INT N0 = A->blocks[0]->row;
+    const INT N1 = A->blocks[4]->row;
+    const INT N2 = A->blocks[8]->row;
+    const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
     fasp_array_cp(N, r, tempr->val);
@@ -152,7 +152,7 @@ void fasp_precond_block_diag_3_amg (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_diag_4 (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_diag_4 (REAL *r, REAL *z, void *data)
  * \brief block diagonal preconditioning (4x4 block matrix, each diagonal block
  *        is solved exactly)
  *
@@ -163,8 +163,8 @@ void fasp_precond_block_diag_3_amg (double *r,
  * \author Xiaozhe Hu
  * \date   07/10/2014
  */
-void fasp_precond_block_diag_4 (double *r,
-                                double *z,
+void fasp_precond_block_diag_4 (REAL *r,
+                                REAL *z,
                                 void *data)
 {
     
@@ -175,11 +175,11 @@ void fasp_precond_block_diag_4 (double *r,
     
     dvector *tempr = &(precdata->r);
     
-    const int N0 = A_diag[0].row;
-    const int N1 = A_diag[1].row;
-    const int N2 = A_diag[2].row;
-    const int N3 = A_diag[3].row;
-    const int N = N0 + N1 + N2 + N3;
+    const INT N0 = A_diag[0].row;
+    const INT N1 = A_diag[1].row;
+    const INT N2 = A_diag[2].row;
+    const INT N3 = A_diag[3].row;
+    const INT N = N0 + N1 + N2 + N3;
     
     // back up r, setup z;
     fasp_array_cp(N, r, tempr->val);
@@ -238,7 +238,7 @@ void fasp_precond_block_diag_4 (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_lower_3 (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_lower_3 (REAL *r, REAL *z, void *data)
  * \brief block lower triangular preconditioning (3x3 block matrix, each diagonal
  *        block is solved exactly)
  *
@@ -249,8 +249,8 @@ void fasp_precond_block_diag_4 (double *r,
  * \author Xiaozhe Hu
  * \date   07/10/2014
  */
-void fasp_precond_block_lower_3 (double *r,
-                                 double *z,
+void fasp_precond_block_lower_3 (REAL *r,
+                                 REAL *z,
                                  void *data)
 {
     
@@ -261,10 +261,10 @@ void fasp_precond_block_lower_3 (double *r,
     
     dvector *tempr = &(precdata->r);
     
-    const int N0 = A_diag[0].row;
-    const int N1 = A_diag[1].row;
-    const int N2 = A_diag[2].row;
-    const int N = N0 + N1 + N2;
+    const INT N0 = A_diag[0].row;
+    const INT N1 = A_diag[1].row;
+    const INT N2 = A_diag[2].row;
+    const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
     fasp_array_cp(N, r, tempr->val);
@@ -320,7 +320,7 @@ void fasp_precond_block_lower_3 (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_lower_3_amg (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_lower_3_amg (REAL *r, REAL *z, void *data)
  * \brief block lower triangular preconditioning (3x3 block matrix, each diagonal
  *        block is solved by AMG)
  *
@@ -331,8 +331,8 @@ void fasp_precond_block_lower_3 (double *r,
  * \author Xiaozhe Hu
  * \date   07/10/2014
  */
-void fasp_precond_block_lower_3_amg (double *r,
-                                     double *z,
+void fasp_precond_block_lower_3_amg (REAL *r,
+                                     REAL *z,
                                      void *data)
 {
     
@@ -343,10 +343,10 @@ void fasp_precond_block_lower_3_amg (double *r,
     AMG_param *amgparam = precdata->amgparam;
     AMG_data **mgl = precdata->mgl;
     
-    const int N0 = A->blocks[0]->row;
-    const int N1 = A->blocks[4]->row;
-    const int N2 = A->blocks[8]->row;
-    const int N = N0 + N1 + N2;
+    const INT N0 = A->blocks[0]->row;
+    const INT N1 = A->blocks[4]->row;
+    const INT N2 = A->blocks[8]->row;
+    const INT N = N0 + N1 + N2;
     
     INT i;
     
@@ -394,7 +394,7 @@ void fasp_precond_block_lower_3_amg (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_lower_4 (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_lower_4 (REAL *r, REAL *z, void *data)
  * \brief block lower triangular preconditioning (4x4 block matrix, each diagonal
  *        block is solved exactly)
  *
@@ -405,8 +405,8 @@ void fasp_precond_block_lower_3_amg (double *r,
  * \author Xiaozhe Hu
  * \date   07/10/2014
  */
-void fasp_precond_block_lower_4 (double *r,
-                                 double *z,
+void fasp_precond_block_lower_4 (REAL *r,
+                                 REAL *z,
                                  void *data)
 {
     
@@ -417,11 +417,11 @@ void fasp_precond_block_lower_4 (double *r,
     
     dvector *tempr = &(precdata->r);
     
-    const int N0 = A_diag[0].row;
-    const int N1 = A_diag[1].row;
-    const int N2 = A_diag[2].row;
-    const int N3 = A_diag[3].row;
-    const int N = N0 + N1 + N2 + N3;
+    const INT N0 = A_diag[0].row;
+    const INT N1 = A_diag[1].row;
+    const INT N2 = A_diag[2].row;
+    const INT N3 = A_diag[3].row;
+    const INT N = N0 + N1 + N2 + N3;
     
     // back up r, setup z;
     fasp_array_cp(N, r, tempr->val);
@@ -492,7 +492,7 @@ void fasp_precond_block_lower_4 (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_upper_3 (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_upper_3 (REAL *r, REAL *z, void *data)
  * \brief block upper triangular preconditioning (3x3 block matrix, each diagonal
  *        block is solved exactly)
  *
@@ -503,8 +503,8 @@ void fasp_precond_block_lower_4 (double *r,
  * \author Xiaozhe Hu
  * \date   02/18/2015
  */
-void fasp_precond_block_upper_3 (double *r,
-                                 double *z,
+void fasp_precond_block_upper_3 (REAL *r,
+                                 REAL *z,
                                  void *data)
 {
     
@@ -515,10 +515,10 @@ void fasp_precond_block_upper_3 (double *r,
     
     dvector *tempr = &(precdata->r);
     
-    const int N0 = A_diag[0].row;
-    const int N1 = A_diag[1].row;
-    const int N2 = A_diag[2].row;
-    const int N = N0 + N1 + N2;
+    const INT N0 = A_diag[0].row;
+    const INT N1 = A_diag[1].row;
+    const INT N2 = A_diag[2].row;
+    const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
     fasp_array_cp(N, r, tempr->val);
@@ -574,7 +574,7 @@ void fasp_precond_block_upper_3 (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_upper_3_amg (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_upper_3_amg (REAL *r, REAL *z, void *data)
  * \brief block upper triangular preconditioning (3x3 block matrix, each diagonal
  *        block is solved AMG)
  *
@@ -585,8 +585,8 @@ void fasp_precond_block_upper_3 (double *r,
  * \author Xiaozhe Hu
  * \date   02/19/2015
  */
-void fasp_precond_block_upper_3_amg (double *r,
-                                 double *z,
+void fasp_precond_block_upper_3_amg (REAL *r,
+                                 REAL *z,
                                  void *data)
 {
     
@@ -600,10 +600,10 @@ void fasp_precond_block_upper_3_amg (double *r,
     
     dvector *tempr = &(precdata->r);
     
-    const int N0 = A_diag[0].row;
-    const int N1 = A_diag[1].row;
-    const int N2 = A_diag[2].row;
-    const int N = N0 + N1 + N2;
+    const INT N0 = A_diag[0].row;
+    const INT N1 = A_diag[1].row;
+    const INT N2 = A_diag[2].row;
+    const INT N = N0 + N1 + N2;
     
     INT i;
 
@@ -655,7 +655,7 @@ void fasp_precond_block_upper_3_amg (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_SGS_3 (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_SGS_3 (REAL *r, REAL *z, void *data)
  * \brief block symmetric GS preconditioning (3x3 block matrix, each diagonal
  *        block is solved exactly)
  *
@@ -666,8 +666,8 @@ void fasp_precond_block_upper_3_amg (double *r,
  * \author Xiaozhe Hu
  * \date   02/19/2015
  */
-void fasp_precond_block_SGS_3 (double *r,
-                                 double *z,
+void fasp_precond_block_SGS_3 (REAL *r,
+                                 REAL *z,
                                  void *data)
 {
     
@@ -678,10 +678,10 @@ void fasp_precond_block_SGS_3 (double *r,
     
     dvector *tempr = &(precdata->r);
     
-    const int N0 = A_diag[0].row;
-    const int N1 = A_diag[1].row;
-    const int N2 = A_diag[2].row;
-    const int N = N0 + N1 + N2;
+    const INT N0 = A_diag[0].row;
+    const INT N1 = A_diag[1].row;
+    const INT N2 = A_diag[2].row;
+    const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
     fasp_array_cp(N, r, tempr->val);
@@ -774,7 +774,7 @@ void fasp_precond_block_SGS_3 (double *r,
 }
 
 /**
- * \fn void fasp_precond_block_SGS_3_amg (double *r, double *z, void *data)
+ * \fn void fasp_precond_block_SGS_3_amg (REAL *r, REAL *z, void *data)
  * \brief block symmetric GS preconditioning (3x3 block matrix, each diagonal
  *        block is solved exactly)
  *
@@ -785,8 +785,8 @@ void fasp_precond_block_SGS_3 (double *r,
  * \author Xiaozhe Hu
  * \date   02/19/2015
  */
-void fasp_precond_block_SGS_3_amg (double *r,
-                               double *z,
+void fasp_precond_block_SGS_3_amg (REAL *r,
+                               REAL *z,
                                void *data)
 {
     
@@ -802,10 +802,10 @@ void fasp_precond_block_SGS_3_amg (double *r,
     
     dvector *tempr = &(precdata->r);
     
-    const int N0 = A_diag[0].row;
-    const int N1 = A_diag[1].row;
-    const int N2 = A_diag[2].row;
-    const int N = N0 + N1 + N2;
+    const INT N0 = A_diag[0].row;
+    const INT N1 = A_diag[1].row;
+    const INT N2 = A_diag[2].row;
+    const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
     fasp_array_cp(N, r, tempr->val);
@@ -885,7 +885,7 @@ void fasp_precond_block_SGS_3_amg (double *r,
 }
 
 /**
- * \fn void fasp_precond_sweeping (double *r, double *z, void *data)
+ * \fn void fasp_precond_sweeping (REAL *r, REAL *z, void *data)
  * \brief sweeping preconditioner for Maxwell equations
  *
  * \param r     Pointer to the vector needs preconditioning
@@ -895,8 +895,8 @@ void fasp_precond_block_SGS_3_amg (double *r,
  * \author Xiaozhe Hu
  * \date   05/01/2014
  */
-void fasp_precond_sweeping (double *r,
-                            double *z,
+void fasp_precond_sweeping (REAL *r,
+                            REAL *z,
                             void *data)
 {
     

@@ -13,7 +13,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_solver_famg(dCSRmat *A, dvector *b, dvector *x, AMG_param *param)
+ * \fn void fasp_solver_famg (dCSRmat *A, dvector *b, dvector *x, AMG_param *param)
  *
  * \brief Solve Ax=b by full AMG.
  *
