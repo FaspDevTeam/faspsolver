@@ -1469,7 +1469,6 @@ static void smooth_agg (dCSRmat *A,
     fasp_dcsr_free(&S);
 }
     
-
 /**
  * \fn static void aggregation_pairwise (dCSRmat *A,
  *                                       AMG_param *param,
