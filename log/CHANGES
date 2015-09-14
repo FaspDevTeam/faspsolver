@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+09/14/2015 FASP 1.7.9:
+- Add new version of transpose, permutation, and sort for dCSRmat.
+- Update paramters for SA AMG.
+- Update regression results after changing SA parameters.
+
 09/09/2015 FASP 1.7.8:
 - Remove factor.f from the repo.
 - Update VS10 to fix a directory problem in WIN32 configuration.

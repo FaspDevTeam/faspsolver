@@ -336,8 +336,8 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
                           dCSRmat *B,
                           INT *icor_ysk);
 
-void fasp_blas_dcsr_bandwith(dCSRmat *A,
-                             INT     *bndwith);
+void fasp_blas_dcsr_bandwith (dCSRmat *A,
+                              INT     *bndwith);
 
 
 /*-------- In file: blas_csrl.c --------*/
@@ -1565,48 +1565,48 @@ INT fasp_solver_pminres (mxv_matfree *mf,
 
 /*-------- In file: precond_bcsr.c --------*/
 
-void fasp_precond_block_diag_3 (double *r,
-                                double *z,
+void fasp_precond_block_diag_3 (REAL *r,
+                                REAL *z,
                                 void *data);
 
-void fasp_precond_block_diag_3_amg (double *r,
-                                    double *z,
+void fasp_precond_block_diag_3_amg (REAL *r,
+                                    REAL *z,
                                     void *data);
 
-void fasp_precond_block_diag_4 (double *r,
-                                double *z,
+void fasp_precond_block_diag_4 (REAL *r,
+                                REAL *z,
                                 void *data);
 
-void fasp_precond_block_lower_3 (double *r,
-                                 double *z,
+void fasp_precond_block_lower_3 (REAL *r,
+                                 REAL *z,
                                  void *data);
 
-void fasp_precond_block_lower_3_amg (double *r,
-                                     double *z,
+void fasp_precond_block_lower_3_amg (REAL *r,
+                                     REAL *z,
                                      void *data);
 
-void fasp_precond_block_lower_4 (double *r,
-                                 double *z,
+void fasp_precond_block_lower_4 (REAL *r,
+                                 REAL *z,
                                  void *data);
 
-void fasp_precond_block_upper_3 (double *r,
-                                 double *z,
+void fasp_precond_block_upper_3 (REAL *r,
+                                 REAL *z,
                                  void *data);
 
-void fasp_precond_block_upper_3_amg (double *r,
-                                 double *z,
+void fasp_precond_block_upper_3_amg (REAL *r,
+                                 REAL *z,
                                  void *data);
 
-void fasp_precond_block_SGS_3 (double *r,
-                                 double *z,
+void fasp_precond_block_SGS_3 (REAL *r,
+                                 REAL *z,
                                  void *data);
 
-void fasp_precond_block_SGS_3_amg (double *r,
-                               double *z,
+void fasp_precond_block_SGS_3_amg (REAL *r,
+                               REAL *z,
                                void *data);
 
-void fasp_precond_sweeping (double *r,
-                            double *z,
+void fasp_precond_sweeping (REAL *r,
+                            REAL *z,
                             void *data);
 
 
@@ -2410,6 +2410,16 @@ dCSRmat fasp_dcsr_sympat (dCSRmat *A);
 void fasp_dcsr_multicoloring (dCSRmat *A,
                               INT *flags,
                               INT *groups);
+
+void fasp_dcsr_transz (dCSRmat A,
+                       INT *p,
+                       dCSRmat *AT);
+
+dCSRmat fasp_dcsr_permz (dCSRmat *A,
+                         INT *p);
+
+void fasp_dcsr_sortz (dCSRmat *A,
+                      const SHORT isym);
 
 
 /*-------- In file: sparse_csrl.c --------*/
