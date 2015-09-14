@@ -182,11 +182,9 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
 
         /*-- Form coarse level matrix: two RAP routines available! --*/
         fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
-        fasp_blas_dcsr_rap (&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
-        
-        // TODO: Make a new ptap using (A,P) only. R is not needed as an input! --Chensong
-        // fasp_blas_dcsr_ptap(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
 
+        fasp_blas_dcsr_rap(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
+        
         /*-- Clean up Scouple generated in coarsening --*/
         fasp_mem_free(Scouple.IA);
         fasp_mem_free(Scouple.JA);
