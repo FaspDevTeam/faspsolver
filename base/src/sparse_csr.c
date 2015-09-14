@@ -1484,7 +1484,7 @@ void fasp_dcsr_transz (dCSRmat A,
 dCSRmat fasp_dcsr_permz (dCSRmat *A,
                          INT *p)
 {
-    const INT n=A->row,nnz=A->nnz;
+    const INT n = A->row, nnz = A->nnz;
     dCSRmat Aperm1, Aperm;
     
     Aperm1 = fasp_dcsr_create(n,n,nnz);
@@ -1516,7 +1516,7 @@ dCSRmat fasp_dcsr_permz (dCSRmat *A,
 void fasp_dcsr_sortz (dCSRmat *A,
                       const SHORT isym)
 {
-    const INT n=A->row,m=A->col,nnz=A->nnz;
+    const INT n = A->row, m = A->col, nnz = A->nnz;
     dCSRmat AT = fasp_dcsr_create(m,n,nnz);
     
     /* watch carefully who is a pointer and who is not in fasp_dcsr_transz() */
