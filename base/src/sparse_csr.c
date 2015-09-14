@@ -494,7 +494,7 @@ void fasp_dcsr_getcol (const INT n,
     }
     
     // get the column
-    if(use_openmp) {
+    if (use_openmp) {
         INT mybegin, myend, myid;
         
 #ifdef _OPENMP
@@ -502,7 +502,7 @@ void fasp_dcsr_getcol (const INT n,
 #endif
         for (myid = 0; myid < nthreads; myid++ ) {
             FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
-            for(i=mybegin; i<myend; i++) {
+            for (i=mybegin; i<myend; i++) {
                 col[i] = 0.0;
                 row_begin = A->IA[i]; row_end = A->IA[i+1];
                 for (j=row_begin; j<row_end; ++j) {
@@ -510,7 +510,7 @@ void fasp_dcsr_getcol (const INT n,
                         col[i] = A->val[j];
                     }
                 } // end for j
-            }// end for i
+            } // end for i
         }
     }
     else {
@@ -527,7 +527,7 @@ void fasp_dcsr_getcol (const INT n,
     }
     
 FINISHED:
-    fasp_chkerr(status,"fasp_dcsr_getcol");
+    fasp_chkerr(status,__FUNCTION__);
 }
 
 /*!
@@ -1094,15 +1094,15 @@ void fasp_dcsr_shift (dCSRmat *A,
         nthreads = FASP_GET_NUM_THREADS();
     }
 #endif
-        
-    if(use_openmp) {
+    
+    if (use_openmp) {
         INT myid, mybegin, myend;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
-        for(myid=0; myid<nthreads; myid++) {
+        for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
-            for(i=mybegin; i<myend; i++) {
+            for (i=mybegin; i<myend; i++) {
                 ai[i] += offset;
             }
         }
@@ -1111,14 +1111,14 @@ void fasp_dcsr_shift (dCSRmat *A,
         for (i=0; i<n; ++i) ai[i]+=offset;
     }
     
-    if(use_openmp) {
+    if (use_openmp) {
         INT myid, mybegin, myend;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
-        for(myid=0; myid<nthreads; myid++) {
+        for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);
-            for(i=mybegin; i<myend; i++) {
+            for (i=mybegin; i<myend; i++) {
                 aj[i] += offset;
             }
         }
@@ -1170,14 +1170,14 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
     // work space
     REAL *work = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
     
-    if(use_openmp) {
+    if (use_openmp) {
         INT myid, mybegin, myend;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
-        for(myid=0; myid<nthreads; myid++) {
+        for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
-            for(i=mybegin; i<myend; i++) work[i] = sqrt(diag->val[i]);
+            for (i=mybegin; i<myend; i++) work[i] = sqrt(diag->val[i]);
         }
     }
     else {
@@ -1185,16 +1185,16 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
         for (i=0; i<n; i++) work[i] = sqrt(diag->val[i]);
     }
     
-    if(use_openmp) {
+    if (use_openmp) {
         INT myid, mybegin, myend;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, row_start, row_end, i, j, k)
 #endif
-        for(myid=0; myid<nthreads; myid++) {
+        for (myid=0; myid<nthreads; myid++) {
             FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
-            for(i=mybegin; i<myend; i++) {
+            for (i=mybegin; i<myend; i++) {
                 row_start = IA[i]; row_end = IA[i+1];
-                for(j=row_start; j<row_end; j++) {
+                for (j=row_start; j<row_end; j++) {
                     k = JA[j];
                     val[j] = val[j]/(work[i]*work[k]);
                 }
@@ -1300,7 +1300,7 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
     do {
         front ++;  if (front == n) front =0;
         i = cq[front];
-        if(i <= pre)  {
+        if (i <= pre)  {
             A->IC[group] = icount; A->ICMAP[icount] = i;
             group++; icount++;
             iend = IA[i+1];
@@ -1331,197 +1331,207 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
 }
 
 /**
- * \fn void fasp_dcsr_transz(dCSRmat *A,  INT *p, dCSRmat *AT)
+ * \fn void fasp_dcsr_transz (dCSRmat *A,  INT *p, dCSRmat *AT)
  *
- * \brief Generalized Transpose of A: (n x m) matrix given in dCSRmat
- * format
+ * \brief Generalized transpose of A: (n x m) matrix given in dCSRmat format
  *
- * \param INPUT: A input matrix in dCSRmat, p is a permutation
+ * \param A     Pointer to matrix in dCSRmat for transpose, INPUT
+ * \param p     Permutation, INPUT
+ * \param AT    Pointer to matrix AT = transpose(A)  if p = NULL, OR
+ *                                AT = transpose(A)p if p is not NULL
  *
- * \param OUTPUT: Pointer to a dCSRmat AT = transpose(A) if p=NULL OR
- * AT=transpose(A)p if p is not NULL.
- *
- * \note The storage for all pointers in AT should already be
- * allocated, i.e. AT->IA, AT->JA and AT->val should be allocated before
- * calling this function. If A.val=NULL, then AT->val[] is not changed.
+ * \note The storage for all pointers in AT should already be allocated,
+ *       i.e. AT->IA, AT->JA and AT->val should be allocated before calling
+ *       this function. If A.val=NULL, then AT->val[] is not changed.
  *
  * \note performs AT=transpose(A)p, where p is a permutation. If
- * p=NULL then p=I is assumed. Applying twice this procedure one
- * gets At=transpose(transpose(A)p)p = transpose(p)Ap, which is the
- * same A with rows and columns permutted according to p. 
- * 
- *\note If A=NULL, then only transposes/permutes the structure of A.
+ *       p=NULL then p=I is assumed. Applying twice this procedure one
+ *       gets At=transpose(transpose(A)p)p = transpose(p)Ap, which is the
+ *       same A with rows and columns permutted according to p.
  *
- *\note For p=NULL, applying this two times A-->AT-->A orders all the
- *row indices in A in increasing order.
+ * \note If A=NULL, then only transposes/permutes the structure of A.
  *
- * \note Algorithm: Fred G. Gustavson. Two fast algorithms for sparse
- * matrices: multiplication and permuted transposition.
- * ACM Trans. Math. Software,4(3):250–269, 1978.
+ * \note For p=NULL, applying this two times A-->AT-->A orders all the
+ *       row indices in A in increasing order.
  *
- * \author Ludmil Zikatanov 
- * \date 19951219 (Fortran) ; 20150912 (C) 
- *
- */ 
-void fasp_dcsr_transz(dCSRmat A,  INT *p,  dCSRmat *AT)
-{
-  /* tested for permutation and transposition */
-  /* transpose or permute ; if A.val is null===> transpose the
-     structure only */
-  const INT n=A.row,m=A.col,nnz=A.nnz;
-  const INT *ia=A.IA, *ja=A.JA;
-  const REAL *a=A.val;
-  INT m1=m+1;
-  /*introducing few extra pointers hould not hurt too much the speed */
-  INT *iat=NULL,*jat=NULL;
-  REAL *at=NULL;
-  /* loop variables */
-  INT i,j,jp,pi,iabeg,iaend,k;
-  /* begin */
-  AT->row=m;  AT->col=n;  AT->nnz=nnz;
-  /* all these should be allocated or change this to allocate them here */
-  iat=AT->IA; jat=AT->JA; at=AT->val;
-  for (i = 0; i < m1; ++i) iat[i] = 0;
-  iaend=ia[n];
-  for (i = 0; i < iaend; ++i) {
-    j = ja[i] + 2;
-    if (j < m1) iat[j]++;
-  }
-  iat[0] = 0;
-  iat[1] = 0;
-  if (m != 1) {
-    for (i= 2; i < m1; ++i) {
-      iat[i] += iat[i-1];
-    }
-  }
-  if(p && a) {
-    /* so we permute and also use matrix entries */
-    for (i = 0; i < n; ++i) {
-      pi=p[i];
-      iabeg = ia[pi];
-      iaend = ia[pi+1];
-      if(iaend > iabeg){
-	for (jp = iabeg; jp < iaend; ++jp) {
-	  j = ja[jp]+1;
-	  k = iat[j];
-	  jat[k] = i;
-	  at[k] = a[jp];
-	  iat[j] = k+1;
-	}
-      }
-    }
-  } else if(a && !p) {
-    /* transpose values, no permutation */
-    for (i = 0; i < n; ++i) {
-      iabeg = ia[i];
-      iaend = ia[i+1];
-      if(iaend > iabeg){
-	for (jp = iabeg; jp < iaend; ++jp) {
-	  j = ja[jp]+1;
-	  k = iat[j];
-	  jat[k] = i;
-	  at[k] = a[jp];
-	  iat[j] = k+1;
-	}
-      }
-    } 
-  } else if(!a && p) {
-    /* Only integers and permutation (only a is null) */
-    for (i = 0; i < n; ++i) {
-      pi=p[i];
-      iabeg = ia[pi];
-      iaend = ia[pi+1];
-      if(iaend > iabeg){
-	for (jp = iabeg; jp < iaend; ++jp) {
-	  j = ja[jp]+1;
-	  k = iat[j];
-	  jat[k] = i;
-	  iat[j] = k+1;
-	}
-      }
-    }
-  } else {
-    /* Only integers and no permutation (both a and p are null */
-    for (i = 0; i < n; ++i) {
-      iabeg = ia[i];
-      iaend = ia[i+1];
-      if(iaend > iabeg){
-	for (jp = iabeg; jp < iaend; ++jp) {
-	  j = ja[jp]+1;
-	  k = iat[j];
-	  jat[k] = i;
-	  iat[j] = k+1;
-	}
-      }
-    }
-  }
-  return;
-}
-/**
- * \fn dCSRmat fasp_dcsr_permz(dCSRmat *A, INT *p)
- *
- * \brief Permute rows and cols of A, i.e. A=PAP' by the ordering 
- * in p
- *
- * \param A  Pointer to the original dCSRmat matrix
- * \param p  Pointer to ordering
- *
- * \note This is just applying twice fasp_dcsr_transz(p). 
- *
- * \return   The new ordered dCSRmat matrix if succeed, NULL if fail
- *
- * \author Ludmil Zikatanov
- * \date   19951219 (Fortran) ; 20150912 (C)
- *
- * \note   In matlab notation: Aperm=A(p,p);
- *
- */
-dCSRmat fasp_dcsr_permz(dCSRmat *A, INT *p)
-{
-    const INT n=A->row,nnz=A->nnz;
-    dCSRmat Aperm1, Aperm;
-
-    Aperm1 = fasp_dcsr_create(n,n,nnz);
-    Aperm = fasp_dcsr_create(n,n,nnz);
-
-    fasp_dcsr_transz((*A),p,&Aperm1);
-    fasp_dcsr_transz(Aperm1,p,&Aperm);
-
-    fasp_dcsr_free(&Aperm1);
-    return(Aperm);
-}
-
-/**
- * \fn void fasp_dcsr_sortz(dCSRmat *A, const SHORT isym)
- *
- * \brief Sort each row of A in ascending order w.r.t. column indices.
- *
- * \param A   Pointer to the dCSRmat matrix
- *
- * \param isym=[0/nonzero]=[general/symmetric] matrix
- * 
- * \note Applying twice fasp_dcsr_transz(), if A is symmetric, then
- * the transpose is applied only once and then AT copied on A.
+ * Reference: Fred G. Gustavson. Two fast algorithms for sparse
+ *            matrices: multiplication and permuted transposition.
+ *            ACM Trans. Math. Software, 4(3):250–269, 1978.
  *
  * \author Ludmil Zikatanov
  * \date   19951219 (Fortran), 20150912 (C)
  */
-void fasp_dcsr_sortz(dCSRmat *A, const SHORT isym)
+void fasp_dcsr_transz (dCSRmat A,
+                       INT *p,
+                       dCSRmat *AT)
 {
-  const INT n=A->row,m=A->col,nnz=A->nnz;
-  dCSRmat AT = fasp_dcsr_create(m,n,nnz);
-  /* watch carefully who is a pointer and who is not in   fasp_dcsr_transz()*/
-  fasp_dcsr_transz((*A), NULL , &AT);
-  if((m==n) && (isym))
+    /* tested for permutation and transposition */
+    /* transpose or permute; if A.val is null ===> transpose the
+       structure only */
+    const INT   n=A.row, m=A.col, nnz=A.nnz;
+    const INT *ia=A.IA, *ja=A.JA;
+    const REAL *a=A.val;
+    INT m1=m+1;
+    
+    /* introducing few extra pointers hould not hurt too much the speed */
+    INT *iat=NULL, *jat=NULL;
+    REAL *at=NULL;
+    
+    /* loop variables */
+    INT i,j,jp,pi,iabeg,iaend,k;
+    
+    /* initialize */
+    AT->row=m; AT->col=n; AT->nnz=nnz;
+    
+    /* all these should be allocated or change this to allocate them here */
+    iat=AT->IA; jat=AT->JA; at=AT->val;
+    for (i = 0; i < m1; ++i) iat[i] = 0;
+    iaend=ia[n];
+    for (i = 0; i < iaend; ++i) {
+        j = ja[i] + 2;
+        if (j < m1) iat[j]++;
+    }
+    iat[0] = 0;
+    iat[1] = 0;
+    if (m != 1) {
+        for (i= 2; i < m1; ++i) {
+            iat[i] += iat[i-1];
+        }
+    }
+    
+    if (p && a) {
+        /* so we permute and also use matrix entries */
+        for (i = 0; i < n; ++i) {
+            pi=p[i];
+            iabeg = ia[pi];
+            iaend = ia[pi+1];
+            if (iaend > iabeg){
+                for (jp = iabeg; jp < iaend; ++jp) {
+                    j = ja[jp]+1;
+                    k = iat[j];
+                    jat[k] = i;
+                    at[k] = a[jp];
+                    iat[j] = k+1;
+                }
+            }
+        }
+    } else if (a && !p) {
+        /* transpose values, no permutation */
+        for (i = 0; i < n; ++i) {
+            iabeg = ia[i];
+            iaend = ia[i+1];
+            if (iaend > iabeg){
+                for (jp = iabeg; jp < iaend; ++jp) {
+                    j = ja[jp]+1;
+                    k = iat[j];
+                    jat[k] = i;
+                    at[k] = a[jp];
+                    iat[j] = k+1;
+                }
+            }
+        }
+    } else if (!a && p) {
+        /* Only integers and permutation (only a is null) */
+        for (i = 0; i < n; ++i) {
+            pi=p[i];
+            iabeg = ia[pi];
+            iaend = ia[pi+1];
+            if (iaend > iabeg){
+                for (jp = iabeg; jp < iaend; ++jp) {
+                    j = ja[jp]+1;
+                    k = iat[j];
+                    jat[k] = i;
+                    iat[j] = k+1;
+                }
+            }
+        }
+    } else {
+        /* Only integers and no permutation (both a and p are null */
+        for (i = 0; i < n; ++i) {
+            iabeg = ia[i];
+            iaend = ia[i+1];
+            if (iaend > iabeg){
+                for (jp = iabeg; jp < iaend; ++jp) {
+                    j = ja[jp]+1;
+                    k = iat[j];
+                    jat[k] = i;
+                    iat[j] = k+1;
+                }
+            }
+        }
+    }
+    
+    return;
+}
+
+/**
+ * \fn dCSRmat fasp_dcsr_permz (dCSRmat *A, INT *p)
+ *
+ * \brief Permute rows and cols of A, i.e. A=PAP' by the ordering in p
+ *
+ * \param A  Pointer to the original dCSRmat matrix
+ * \param p  Pointer to ordering
+ *
+ * \note This is just applying twice fasp_dcsr_transz(A,p,At).
+ *
+ * \note In matlab notation: Aperm=A(p,p);
+ *
+ * \return The new ordered dCSRmat matrix if succeed, NULL if fail
+ *
+ * \author Ludmil Zikatanov
+ * \date   19951219 (Fortran), 20150912 (C)
+ */
+dCSRmat fasp_dcsr_permz (dCSRmat *A,
+                         INT *p)
+{
+    const INT n=A->row,nnz=A->nnz;
+    dCSRmat Aperm1, Aperm;
+    
+    Aperm1 = fasp_dcsr_create(n,n,nnz);
+    Aperm = fasp_dcsr_create(n,n,nnz);
+    
+    fasp_dcsr_transz((*A),p,&Aperm1);
+    fasp_dcsr_transz(Aperm1,p,&Aperm);
+    
+    // clean up
+    fasp_dcsr_free(&Aperm1);
+    
+    return(Aperm);
+}
+
+/**
+ * \fn void fasp_dcsr_sortz (dCSRmat *A, const SHORT isym)
+ *
+ * \brief Sort each row of A in ascending order w.r.t. column indices.
+ *
+ * \param A     Pointer to the dCSRmat matrix
+ * \param isym  Flag for symmetry, =[0/nonzero]=[general/symmetric] matrix
+ *
+ * \note Applying twice fasp_dcsr_transz(), if A is symmetric, then
+ *       the transpose is applied only once and then AT copied on A.
+ *
+ * \author Ludmil Zikatanov
+ * \date   19951219 (Fortran), 20150912 (C)
+ */
+void fasp_dcsr_sortz (dCSRmat *A,
+                      const SHORT isym)
+{
+    const INT n=A->row,m=A->col,nnz=A->nnz;
+    dCSRmat AT = fasp_dcsr_create(m,n,nnz);
+    
+    /* watch carefully who is a pointer and who is not in fasp_dcsr_transz() */
+    fasp_dcsr_transz((*A), NULL , &AT);
+    
     /* if the matrix is symmetric, then only one transpose is needed
        and now we just copy */
-    fasp_dcsr_cp(&AT, A);
-  else
-    fasp_dcsr_transz(AT, NULL , A);
-
-  // clean up
-  fasp_dcsr_free(&AT);
- }
+    if ((m==n) && (isym))
+        fasp_dcsr_cp(&AT, A);
+    else
+        fasp_dcsr_transz(AT, NULL , A);
+    
+    // clean up
+    fasp_dcsr_free(&AT);
+}
 
 /*---------------------------------*/
 /*--        End of File          --*/
