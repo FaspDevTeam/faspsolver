@@ -2,8 +2,11 @@
 ||   Fast Auxiliary Space Preconditioners (FASP)    ||
 ======================================================
 
-Quick start: To build FASP, copy "fasp.mk.example" to "fasp.mk" and 
-type "make config; make install". More options:
+Quick start:
+To build FASP, copy "fasp.mk.example" to "fasp.mk" and put user-defined setting
+there and then type "make config; make install".
+
+More options:
 ===============================================================================
 $ make config           # Configure the building environment
 $ make config CC=gcc    # Configure with a specific C compiler
@@ -20,4 +23,4 @@ $ make distclean        # Clean and completely removes the build directory
 $ make version          # Show version information
 $ make help             # Show this screen
 ===============================================================================
-*** additional user defined config options can be changed in "fasp.mk"***
+

@@ -86,8 +86,10 @@ CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags)
 
 all clean install docs headers:
 	@if [ ! -f $(build_dir)/Makefile ] ; then \
-		echo "Configuration not found! Please perform configuration first."; \
-		echo "See the following help screen for usage ..."; \
+		echo "*=================================================================*"; \
+		echo "* WARNING: Configuration not found! Please perform 'make config'. *"; \
+		echo "* See the following help screen for usage ...                     *"; \
+		echo "*=================================================================*"; \
 		echo " "; \
 		cat INSTALL; \
 	else \
@@ -96,18 +98,20 @@ all clean install docs headers:
 
 config: distclean
 	@if [ ! -f ./fasp.mk ] ; then \
-		echo "***********************************" ; \
-		echo "* WARNING: fasp.mk is missing.....*" ; \
-		echo "* Using the DEFAULT configuration.*" ; \
-		echo "***********************************" ; \
+		echo "*=================================================================*"; \
+		echo "* WARNING: fasp.mk is missing from the current directory!         *"; \
+		echo "* Using the DEFAULT configuration instead ...                     *"; \
+		echo "*=================================================================*"; \
 	fi
 	@mkdir -p $(build_dir) ; 
 	@cd $(build_dir) && cmake $(CURDIR) $(CONFIG_FLAGS) 
 
 uninstall:
 	@if [ ! -f $(build_dir)/install_manifest.txt ]; then \
-		echo "Installation manifest not found! Nothing to uninstall."; \
-		echo "See the following help screen for usage ..."; \
+		echo "*=================================================================*"; \
+		echo "* WARNING: Installation manifest not found! Nothing to uninstall. *"; \
+		echo "* See the following help screen for usage ...                     *"; \
+		echo "*=================================================================*"; \
 		echo " "; \
 		cat INSTALL; \
 	else \
