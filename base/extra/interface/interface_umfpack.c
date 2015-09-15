@@ -1,5 +1,8 @@
 /*! \file interface_umfpack.c
  *  \brief Interface to UMFPACK direct solvers
+ *
+ *  Reference for SuiteSparse:
+ *  http://faculty.cse.tamu.edu/davis/suitesparse.html
  */
 
 #include <time.h>
@@ -64,8 +67,8 @@ INT fasp_solver_umfpack (dCSRmat *ptrA,
     
     if ( prtlvl > PRINT_MIN ) {
         clock_t end_time = clock();
-        double solve_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("UMFPACK costs %f seconds.\n", solve_duration);
+        double solve_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
+        printf("UMFPACK costs %f seconds.\n", solve_time);
     }
     
 #if DEBUG_MODE
@@ -88,8 +91,8 @@ INT fasp_solver_umfpack (dCSRmat *ptrA,
  * \fn void* fasp_umfpack_factorize (dCSRmat *ptrA, const SHORT prtlvl)
  * \brief factorize A by UMFpack
  *
- * \param ptrA      pointer to stiffness matrix of levelNum levels
- * \param Numeric   pointer to the numerical factorization
+ * \param ptrA      Pointer to stiffness matrix of levelNum levels
+ * \param Numeric   Pointer to the numerical factorization
  *
  * \author Xiaozhe Hu
  * \date   10/20/2010
@@ -123,8 +126,8 @@ void* fasp_umfpack_factorize (dCSRmat *ptrA,
     
     if ( prtlvl > PRINT_MIN ) {
         clock_t end_time = clock();
-        double fac_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("UMFPACK factorize costs %f seconds.\n", fac_duration);
+        double fac_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
+        printf("UMFPACK factorize costs %f seconds.\n", fac_time);
     }
     
 #if DEBUG_MODE
@@ -139,10 +142,10 @@ void* fasp_umfpack_factorize (dCSRmat *ptrA,
  *                             void *Numeric, const SHORT prtlvl)
  * \brief Solve Au=b by UMFpack, numerical factorization is given
  *
- * \param ptrA      pointer to stiffness matrix of levelNum levels
- * \param b         pointer to the dvector of right hand side term
- * \param u         pointer to the dvector of dofs
- * \param Numeric   pointer to the numerical factorization
+ * \param ptrA      Pointer to stiffness matrix of levelNum levels
+ * \param b         Pointer to the dvector of right hand side term
+ * \param u         Pointer to the dvector of dofs
+ * \param Numeric   Pointer to the numerical factorization
  * \param prtlvl    Output level
  *
  * \author Xiaozhe Hu
@@ -176,8 +179,8 @@ INT fasp_umfpack_solve (dCSRmat *ptrA,
     
     if ( prtlvl > PRINT_NONE ) {
         clock_t end_time = clock();
-        double solve_duration = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("UMFPACK costs %f seconds.\n", solve_duration);
+        double solve_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
+        printf("UMFPACK costs %f seconds.\n", solve_time);
     }
     
 #if DEBUG_MODE
@@ -191,7 +194,7 @@ INT fasp_umfpack_solve (dCSRmat *ptrA,
  * \fn INT fasp_umfpack_free_numeric (void *Numeric)
  * \brief Solve Au=b by UMFpack
  *
- * \param Numeric   pointer to the numerical factorization
+ * \param Numeric   Pointer to the numerical factorization
  *
  * \author Xiaozhe Hu
  * \date   10/20/2010

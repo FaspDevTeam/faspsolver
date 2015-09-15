@@ -1,6 +1,8 @@
 /*! \file interface_superlu.c
  *  \brief Interface to SuperLU direct solvers
  *
+ *  Reference for SuperLU:
+ *  http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
  */
 
 #include <stdio.h>
@@ -34,7 +36,6 @@
  *
  * Modified by Chensong Zhang on 11/01/2012 for new FASP function names.
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
- *
  */
 int fasp_solver_superlu (dCSRmat *ptrA,
                          dvector *b,
@@ -71,12 +72,12 @@ int fasp_solver_superlu (dCSRmat *ptrA,
     /* Set the default input options. */
     superlu_options_t options;
     set_default_options(&options);
-    //options.PrintStat = NO;
     options.ColPerm = COLAMD; //MMD_AT_PLUS_A; MMD_ATA; NATURAL;
     
     /* Initialize the statistics variables. */
     SuperLUStat_t stat;
     StatInit(&stat);
+
     /* SuperLU */
     dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
     
@@ -86,8 +87,8 @@ int fasp_solver_superlu (dCSRmat *ptrA,
     
     if ( prtlvl > PRINT_MIN ) {
         clock_t LU_end=clock();
-        double LUduration = (double)(LU_end - LU_start)/(double)(CLOCKS_PER_SEC);
-        printf("SuperLU totally costs %f seconds.\n", LUduration);
+        double LU_time = (double)(LU_end - LU_start)/(double)(CLOCKS_PER_SEC);
+        printf("SuperLU totally costs %f seconds.\n", LU_time);
     }
     
     /* De-allocate storage */
