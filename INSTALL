@@ -3,7 +3,7 @@
 ======================================================
 
 Quick start:
-To build FASP, copy "fasp.mk.example" to "fasp.mk" and put user-defined setting
+To build FASP, copy "FASP.mk.example" to "FASP.mk" and put user-defined setting
 there and then type "make config; make install".
 
 More options:

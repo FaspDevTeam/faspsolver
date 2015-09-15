@@ -8,14 +8,14 @@
 # 
 #   Probably you will *NOT NEED TO CHANGE* this  top level Makefile.
 #
-#   USER DEFINED OPTIONS GO IN "fasp.mk" which is included by this
-#   Makefile. Copy "fasp.mk.example file to "fasp.mk", edit it to
+#   USER DEFINED OPTIONS GO IN "FASP.mk" which is included by this
+#   Makefile. Copy "FASP.mk.example file to "FASP.mk", edit it to
 #   adjust the settings to your liking, and then type "make help" to
 #   see how to configure/build FASP.
 # 
 #  Modified   2015-08-08   --ltz
 ########################################################################
-sinclude fasp.mk
+sinclude FASP.mk
 
 ifeq ($(debug),yes)
 	cflags="-Wall -g"
@@ -97,9 +97,9 @@ all clean install docs headers:
 	fi
 
 config: distclean
-	@if [ ! -f ./fasp.mk ] ; then \
+	@if [ ! -f ./FASP.mk ] ; then \
 		echo "*=================================================================*"; \
-		echo "* WARNING: fasp.mk is missing from the current directory!         *"; \
+		echo "* WARNING: FASP.mk is missing from the current directory!         *"; \
 		echo "* Using the DEFAULT configuration instead ...                     *"; \
 		echo "*=================================================================*"; \
 	fi
@@ -132,7 +132,7 @@ backup:
 	@-rm -f faspsolver.zip
 	@-zip -r faspsolver.zip README INSTALL License Makefile VERSION     \
 	                        base data test tutorial *.txt *.cmake *.tcl \
-                                doc/*.pdf doc/*.in doc/QA fasp.mk.example vs10
+                                doc/*.pdf doc/*.in doc/QA FASP.mk.example vs10
 
 version:
 	@-hg log -r "." --template 'FASP {latesttag}.{latesttagdistance}:' > VERSION
