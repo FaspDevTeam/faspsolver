@@ -61,6 +61,7 @@ AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 8      % max number of levels
 AMG_coarse_dof           = 1000   % max number of coarse degrees of freedom
+AMG_coarse_solver        = 0      % coarse level solver: 31 SuperLU | 32 UMFPack | 33 MUMPS
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
 AMG_nl_amli_krylov_type  = 7	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
@@ -73,7 +74,7 @@ AMG_smoother             = GS     % GS | JACOBI | SGS SOR | SSOR |
                                   % GSOR | SGSOR | POLY | L1DIAG | CG
 AMG_smooth_order         = NO     % NO: natural order | CF: CF order
 AMG_ILU_levels           = 0      % number of levels using ILU smoother
-AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
+AMG_Schwarz_levels       = 0	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.1    % relaxation parameter for SOR smoother 
 AMG_polynomial_degree	 = 3      % degree of the polynomial smoother
 AMG_presmooth_iter       = 1      % number of presmoothing sweeps
