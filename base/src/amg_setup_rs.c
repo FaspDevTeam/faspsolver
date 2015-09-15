@@ -216,7 +216,6 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
             // Setup MUMPS direct solver on the coarsest level
             mgl[lvl].mumps.job = 1;
             fasp_solver_mumps_steps(&mgl[lvl].A, &mgl[lvl].b, &mgl[lvl].x, &mgl[lvl].mumps);
-
             break;
         }
 #endif
@@ -225,8 +224,11 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
         case SOLVER_UMFPACK: {
             // Need to sort the matrix A for UMFPACK to work
             dCSRmat Ac_tran;
-            fasp_dcsr_trans(&mgl[lvl].A, &Ac_tran);
-            fasp_dcsr_sort(&Ac_tran);
+            Ac_tran = fasp_dcsr_create(mgl[lvl].A.row, mgl[lvl].A.col, mgl[lvl].A.nnz);
+            fasp_dcsr_transz(mgl[lvl].A, NULL, &Ac_tran);
+            // It is equivalent to do transpose and then sort
+            //     fasp_dcsr_trans(&mgl[lvl].A, &Ac_tran);
+            //     fasp_dcsr_sort(&Ac_tran);
             fasp_dcsr_cp(&Ac_tran, &mgl[lvl].A);
             fasp_dcsr_free(&Ac_tran);
             break;
