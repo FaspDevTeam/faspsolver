@@ -862,17 +862,17 @@ void fasp_param_amg_print (AMG_param *param)
         }
         
         if (param->ILU_levels>0) {
+            printf("AMG ILU smoother level:            %d\n", param->ILU_levels);
             printf("AMG ILU type:                      %d\n", param->ILU_type);
-            printf("AMG ILU level:                     %d\n", param->ILU_levels);
             printf("AMG ILU level of fill-in:          %d\n", param->ILU_lfil);
             printf("AMG ILU drop tol:                  %e\n", param->ILU_droptol);
             printf("AMG ILU relaxation:                %f\n", param->ILU_relax);
         }
         
         if (param->Schwarz_levels>0){
+            printf("AMG Schwarz smoother level:        %d\n", param->Schwarz_levels);
             printf("AMG Schwarz type:                  %d\n", param->Schwarz_type);
-            printf("AMG Schwarz level:                 %d\n", param->Schwarz_levels);
-            printf("AMG Schwarz level of forming block:%d\n", param->Schwarz_maxlvl);
+            printf("AMG Schwarz forming block level:   %d\n", param->Schwarz_maxlvl);
             printf("AMG Schwarz maximal block size:    %d\n", param->Schwarz_mmsize);
         }
         
@@ -933,7 +933,7 @@ void fasp_param_Schwarz_print (Schwarz_param *param)
         printf("-----------------------------------------------\n");
         printf("Schwarz print level:               %d\n",   param->print_level);
         printf("Schwarz type:                      %d\n",   param->Schwarz_type);
-        printf("Schwarz level of forming blokcs:   %d\n",   param->Schwarz_maxlvl);
+        printf("Schwarz forming block level:       %d\n",   param->Schwarz_maxlvl);
         printf("Schwarz maximal block size:        %d\n",   param->Schwarz_mmsize);
         printf("Schwarz block solver type:         %d\n",   param->Schwarz_blksolver);
         printf("-----------------------------------------------\n\n");
