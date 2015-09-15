@@ -93,7 +93,7 @@ for clang. This is the reason why config complains. You can either:
 
 II.2.a Ignore the warning and continue with building and installing.
 
-II.2.b Add CC=/dir/to/gcc in your fasp.mk to tell the config where is
+II.2.b Add CC=/dir/to/gcc in your FASP.mk to tell the config where is
        your GNU C compiler installed. 
 
 II.2.c Use "make config CC=/dir/to/gcc" to tell the config where is
