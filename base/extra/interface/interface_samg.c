@@ -1,7 +1,8 @@
 /*! \file interface_samg.c
  *  \brief Interface to SAMG
  *
- *  Add reference for SAMG by K. Stuben here!
+ *  Reference for SAMG:
+ *  http://www.scai.fraunhofer.de/geschaeftsfelder/nuso/produkte/samg.html
  */
 
 #include <math.h>
@@ -15,11 +16,11 @@
 /*---------------------------------*/
 
 /**
- * \fn void dvector2SAMGInput(dvector *vec, char *filename)
+ * \fn void dvector2SAMGInput (dvector *vec, char *filename)
  * \brief Write a dvector to disk file in SAMG format (coordinate format)
  *
- * \param vec        pointer to the dvector
- * \param filename   char for vector file name
+ * \param vec        Pointer to the dvector
+ * \param filename   File name for input
  *
  * \author Zhiyang Zhou
  * \date   08/25/2010
@@ -35,7 +36,7 @@ void dvector2SAMGInput (dvector *vec,
         exit(ERROR_OPEN_FILE);
     }
     
-    printf("dvector2SAMGInput: writing vector to `%s'...\n",filename);
+    printf("%s: writing vector to `%s'...\n", __FUNCTION__, filename);
     
     for (i=0;i<m;++i) fprintf(fp,"%0.15le\n",vec->val[i]);
     
@@ -43,12 +44,12 @@ void dvector2SAMGInput (dvector *vec,
 }
 
 /**
- * \fn INT dCSRmat2SAMGInput(dCSRmat *A, char *filefrm, char *fileamg)
+ * \fn INT dCSRmat2SAMGInput (dCSRmat *A, char *filefrm, char *fileamg)
  * \brief Write SAMG Input data from a sparse matrix of CSR format.
  *
- * \param A         pointer to the dCSRmat matrix
- * \param filefrm   pointer to the name of the .frm file
- * \param fileamg   pointer to the name of the .amg file
+ * \param A         Pointer to the dCSRmat matrix
+ * \param filefrm   Name of the .frm file
+ * \param fileamg   Name of the .amg file
  *
  * \author Zhiyang Zhou
  * \date 2010/08/25
