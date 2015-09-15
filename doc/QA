@@ -33,7 +33,8 @@ I.I.f "cd UMFPACK ; make ; make install"
 
 --------------------------------
 
-I.2. Changes to the FASP (faspsolver) Makefile:
+I.2. How to change the FASP (faspsolver) Makefile to use a system-wise
+     UMFPACK installation?
 
 I.2.a If you have installed the UMFPACK libraries in a "standard"
       location, such as "/usr/local/include" and "/usr/local/lib" or
@@ -80,5 +81,22 @@ II.1.d There is another way to fix this problem. You can edit the
        FEniCS conf file by replacing "DYLD_LIBRARY_PATH" with 
        "DYLD_FALLBACK_LIBRARY_PATH". The conf file is located at
        "FEniCS.app/Contents/Resources/share/fenics/fenics.conf".
+
+--------------------------------
+
+II.2. I use GCC on my Mac OS X. Why "make config" gives warnings like
+      "** WARNING: CC and FC mismatch. ..."?
+
+This is due to FEniCS conf sets CC to /usr/bin/gcc. By default, this
+is an Apple clang compiler. There is no corresponding Fortran compiler
+for clang. This is the reason why config complains. You can either:
+
+II.2.a Ignore the warning and continue with building and installing.
+
+II.2.b Add CC=/dir/to/gcc in your fasp.mk to tell the config where is
+       your GNU C compiler installed. 
+
+II.2.c Use "make config CC=/dir/to/gcc" to tell the config where is
+       your GNU C compiler installed. 
 
 =============
