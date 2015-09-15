@@ -240,6 +240,8 @@ void fasp_icsr_null (iCSRmat *A)
  *
  * \note   P[i] = k means k-th row and column become i-th row and column!
  *
+ * \note   Deprecated! Will be replaced by fasp_dcsr_permz later. --Chensong
+ *
  * Modified by Chunsheng Feng, Zheng Li on 07/12/2012
  */
 dCSRmat fasp_dcsr_perm (dCSRmat *A,

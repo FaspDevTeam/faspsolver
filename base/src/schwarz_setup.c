@@ -238,8 +238,8 @@ INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
             void **numeric	= (void**)fasp_mem_calloc(nblk, sizeof(void*));
             dCSRmat Ac_tran;
             for (i=0; i<nblk; ++i) {
-                fasp_dcsr_trans(&blk[i], &Ac_tran);
-                fasp_dcsr_sort(&Ac_tran);
+                Ac_tran = fasp_dcsr_create(blk[i].row, blk[i].col, blk[i].nnz);
+                fasp_dcsr_transz(blk[i], NULL, &Ac_tran);
                 fasp_dcsr_cp(&Ac_tran, &blk[i]);
                 numeric[i] = fasp_umfpack_factorize(&blk[i], 0);
             }
@@ -256,7 +256,7 @@ INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
     }
     
 #if DEBUG_MODE > 1
-    fprintf(stdout,"### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
+    fprintf(stdout, "### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
             n, nblk, Schwarz->maxbs);
 #endif
     

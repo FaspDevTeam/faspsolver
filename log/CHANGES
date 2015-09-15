@@ -5,6 +5,7 @@ File Name: CHANGES
 - Update paramters for SA AMG.
 - Update regression results after changing SA parameters.
 - Replace trans and sort by transz in UMFPACK and test.
+- Slightly modify printing format for the AMG parameters.
 - Fix and update some parameters in ini.
 
 09/09/2015 FASP 1.7.8:

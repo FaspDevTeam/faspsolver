@@ -3,13 +3,13 @@
     1191 ./base/include/fasp.h
      684 ./base/include/fasp_block.h
      259 ./base/include/fasp_const.h
-    2937 ./base/include/fasp_functs.h
+    2947 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
     5818 ./base/include/malloc.c.h
      291 ./base/include/nedmalloc.h
      397 ./base/src/aggregation_bsr.inl
-    1808 ./base/src/aggregation_csr.inl
+    1807 ./base/src/aggregation_csr.inl
     2119 ./base/src/gmg_util.inl
       89 ./base/src/itsolver_util.inl
      238 ./base/src/linklist.inl
@@ -17,16 +17,16 @@
      146 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
      281 ./base/src/amg_setup_rs.c
-     877 ./base/src/amg_setup_sa.c
-     677 ./base/src/amg_setup_ua.c
+     883 ./base/src/amg_setup_sa.c
+     680 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
      945 ./base/src/amlirecur.c
      268 ./base/src/array.c
      234 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
      353 ./base/src/blas_bcsr.c
-    5413 ./base/src/blas_bsr.c
-    2016 ./base/src/blas_csr.c
+    5409 ./base/src/blas_bsr.c
+    2015 ./base/src/blas_csr.c
      125 ./base/src/blas_csrl.c
     1541 ./base/src/blas_smat.c
     1925 ./base/src/blas_str.c
@@ -51,8 +51,8 @@
      840 ./base/src/interpolation_em.c
     3229 ./base/src/io.c
      598 ./base/src/itsolver_bcsr.c
-     780 ./base/src/itsolver_bsr.c
-     708 ./base/src/itsolver_csr.c
+     783 ./base/src/itsolver_bsr.c
+     711 ./base/src/itsolver_csr.c
      362 ./base/src/itsolver_mf.c
      396 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
@@ -64,7 +64,7 @@
      986 ./base/src/parameters.c
     1437 ./base/src/pbcgs.c
      411 ./base/src/pbcgs_mf.c
-    1208 ./base/src/pcg.c
+    1207 ./base/src/pcg.c
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
      181 ./base/src/pgcg_mf.c
@@ -76,7 +76,7 @@
     1035 ./base/src/precond_bcsr.c
      727 ./base/src/precond_bsr.c
      663 ./base/src/precond_csr.c
-    1732 ./base/src/precond_str.c
+    1731 ./base/src/precond_str.c
     1014 ./base/src/pvfgmres.c
      338 ./base/src/pvfgmres_mf.c
     1404 ./base/src/pvgmres.c
@@ -86,18 +86,18 @@
      752 ./base/src/schwarz_setup.c
      798 ./base/src/smat.c
     1608 ./base/src/smoother_bsr.c
-    2315 ./base/src/smoother_csr.c
+    2314 ./base/src/smoother_csr.c
       83 ./base/src/smoother_csr_cr.c
      586 ./base/src/smoother_csr_poly.c
     1874 ./base/src/smoother_str.c
      364 ./base/src/sparse_block.c
     1864 ./base/src/sparse_bsr.c
      153 ./base/src/sparse_coo.c
-    1335 ./base/src/sparse_csr.c
+    1540 ./base/src/sparse_csr.c
       71 ./base/src/sparse_csrl.c
      202 ./base/src/sparse_str.c
      970 ./base/src/sparse_util.c
-    1631 ./base/src/spbcgs.c
+    1627 ./base/src/spbcgs.c
     1063 ./base/src/spcg.c
     1386 ./base/src/spgmres.c
     1423 ./base/src/spminres.c
@@ -106,4 +106,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
-   90718 total
+   90935 total

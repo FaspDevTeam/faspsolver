@@ -213,9 +213,9 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
         
         for (i=0; i<3; i++){
             
-            fasp_dcsr_trans(&A_diag[i], &A_tran);
-            fasp_dcsr_sort(&A_tran);
-            fasp_dcsr_cp(&A_tran,&A_diag[i]);
+            A_tran = fasp_dcsr_create(A_diag[i].row, A_diag[i].col, A_diag[i].nnz);
+            fasp_dcsr_transz(A_diag[i], NULL, &A_tran);
+            fasp_dcsr_cp(&A_tran, &A_diag[i]);
             
             printf("Factorization for %d-th diagnol: \n", i);
             LU_diag[i] = fasp_umfpack_factorize(&A_diag[i], prtlvl);
@@ -415,9 +415,9 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     
     for (i=0; i<4; i++){
         
-        fasp_dcsr_trans(&A_diag[i], &A_tran);
-        fasp_dcsr_sort(&A_tran);
-        fasp_dcsr_cp(&A_tran,&A_diag[i]);
+        A_tran = fasp_dcsr_create(A_diag[i].row, A_diag[i].col, A_diag[i].nnz);
+        fasp_dcsr_transz(A_diag[i], NULL, &A_tran);
+        fasp_dcsr_cp(&A_tran, &A_diag[i]);
         
         printf("Factorization for %d-th diagnol: \n", i);
         LU_diag[i] = fasp_umfpack_factorize(&A_diag[i], prtlvl);
@@ -538,9 +538,9 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     
     for ( l=0; l<NumLayers; l++ ) {
         
-        fasp_dcsr_trans(&local_A[l], &A_tran);
-        fasp_dcsr_sort(&A_tran);
-        fasp_dcsr_cp(&A_tran,&local_A[l]);
+        A_tran = fasp_dcsr_create(local_A[l].row, local_A[l].col, local_A[l].nnz);
+        fasp_dcsr_transz(local_A[l], NULL, &A_tran);
+        fasp_dcsr_cp(&A_tran, &local_A[l]);
         
         printf("Factorization for layer %d: \n", l);
         local_LU[l] = fasp_umfpack_factorize(&local_A[l], prtlvl);
