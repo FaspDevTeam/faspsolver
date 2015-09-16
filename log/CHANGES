@@ -11,7 +11,9 @@ File Name: CHANGES
 - Confirm FEniCS conf problem: It sets CC=/usr/bin/gcc.
 - Change filename: from fasp.mk to FASP.mk.
 - Clean up interfaces to direct solvers and add reference.
+- Clean up header files
 - Update util/stat.h.
+- Update Doxygen and webpage.
 
 09/09/2015 FASP 1.7.8:
 - Remove factor.f from the repo.

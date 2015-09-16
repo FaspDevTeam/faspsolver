@@ -42,10 +42,11 @@
  * \brief Flags for internal uses (change with caution!!!)
  */
 
-// When this flag is OFF, do not force C1 criterion for the classical AMG method
 #define RS_C1            ON  /**< CF splitting of RS: check C1 Criterion */
-// When this flag is ON, the matrix rows will be reordered as diagonal entries first
+// When this flag is OFF, do not force C1 criterion for the classical AMG method
+
 #define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
+// When this flag is ON, the matrix rows will be reordered as diagonal entries first
 
 /**
  * \brief FASP integer and floating point numbers
@@ -1182,7 +1183,7 @@ extern INT  total_iter;        /**< Total number of iterations */
 extern INT  fasp_called_times; /**< Total FASP calls */
 #endif
 
-#endif /* end if for FASP_USE_OPENMP */
+#endif /* end if for _OPENMP */
 
 #endif /* end if for __FASP_HEADER__ */
 

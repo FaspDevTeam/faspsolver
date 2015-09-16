@@ -20,6 +20,12 @@
 #ifndef __FASPBLOCK_HEADER__        /*-- allow multiple inclusions --*/
 #define __FASPBLOCK_HEADER__
 
+/**
+ * \brief Definition of specialized smoother types
+ */
+#define SMOOTHER_BLKOIL        11  /**< Used in monolithic AMG for black-oil */
+#define SMOOTHER_SPETEN        19  /**< Used in monolithic AMG for black-oil */
+
 /*---------------------------*/
 /*---   Data structures   ---*/
 /*---------------------------*/
@@ -34,7 +40,7 @@
  * \note Some of the following entries are capitalized to stress that they are
  *       for blocks!
  */
-typedef struct dBSRmat{
+typedef struct dBSRmat {
     
     //! number of rows of sub-blocks in matrix A, M
     INT ROW;
@@ -74,7 +80,7 @@ typedef struct dBSRmat{
  *
  * \note The starting index of A is 0.
  */
-typedef struct block_dCSRmat{
+typedef struct block_dCSRmat {
     
     //! row number of blocks in A, m
     INT brow;
@@ -93,7 +99,7 @@ typedef struct block_dCSRmat{
  *
  * \note The starting index of A is 0.
  */
-typedef struct block_iCSRmat{
+typedef struct block_iCSRmat {
     
     //! row number of blocks in A, m
     INT brow;
@@ -110,7 +116,7 @@ typedef struct block_iCSRmat{
  * \struct block_dvector
  * \brief Block REAL vector structure
  */
-typedef struct block_dvector{
+typedef struct block_dvector {
     
     //! row number of blocks in A, m
     INT brow;
@@ -126,7 +132,7 @@ typedef struct block_dvector{
  *
  * \note The starting index of A is 0.
  */
-typedef struct block_ivector{
+typedef struct block_ivector {
     
     //! row number of blocks in A, m
     INT brow;
@@ -141,7 +147,7 @@ typedef struct block_ivector{
  * \brief Block REAL matrix format for reservoir simulation
  *
  */
-typedef struct block_Reservoir{
+typedef struct block_Reservoir {
     
     //! reservoir-reservoir block
     dSTRmat ResRes;
@@ -162,7 +168,7 @@ typedef struct block_Reservoir{
  * \brief Block REAL matrix format for reservoir simulation
  *
  */
-typedef struct block_BSR{
+typedef struct block_BSR {
     
     //! reservoir-reservoir block
     dBSRmat ResRes;
@@ -387,7 +393,7 @@ typedef struct {
 
 /**
  * \struct precond_block_reservoir_data
- * \brief Data passed to the preconditioner for preconditioning reservoir simulation problems
+ * \brief Data passed to the preconditioner for reservoir simulation problems
  *
  * \note This is only needed for the Black Oil model with wells
  */
@@ -456,7 +462,7 @@ typedef struct precond_block_reservoir_data {
     //! tolerance for convergence
     REAL tol;
     
-    //! inverse of the schur complement (-I - Awr*Arr^{-1}*Arw)^{-1}, Arr may be replaced by LU
+    //! inverse of the Schur complement (-I - Awr*Arr^{-1}*Arw)^{-1}, Arr may be replaced by LU
     REAL *invS;
     
     //! Diag(PS) * inv(Diag(SS))
@@ -496,45 +502,21 @@ typedef struct {
     /*-------------------------------------*/
     block_dCSRmat *Abcsr; /**< problem data, the blocks */
     
-    dCSRmat *A_diag;  /**< data for each diagonal block which need to solve in the block preconditioners */
+    dCSRmat *A_diag;      /**< data for each diagonal block*/
     
-    dvector r; /**< temp work space */
+    dvector r;            /**< temp work space */
     
     /*------------------------------*/
     /* Data for the diagonal blocks */
     /*------------------------------*/
     /*--- solve by direct solver ---*/
-    void **LU_diag;   /**< LU decomposition for the diagonal blocks -- (only for UMFpack -- Xiaozhe Hu) */
+    void **LU_diag;       /**< LU decomposition for the diagonal blocks (for UMFpack) */
     
     /*---  solve by AMG ---*/
-    AMG_data **mgl;   /**< AMG data for the diagonal blocks */
-    AMG_param *amgparam; /**< parameters for AMG */
-    
+    AMG_data **mgl;       /**< AMG data for the diagonal blocks */
+    AMG_param *amgparam;  /**< parameters for AMG */
     
 } precond_block_data; /**< Precond data for block matrices */
-
-
-
-/**
- * \struct precond_block_data
- * \brief Data passed to the preconditioner for block diagonal preconditioning.
- *
- * \note This is needed for the diagnoal block preconditioner.
- */
-//typedef struct {
-    
-//  dCSRmat  *A; /**< problem data, the sparse matrix */
-//  dvector  *r; /**< problem data, the right-hand side vector */
-    
-//  dCSRmat **Ablock;  /**< problem data, the blocks */
-//  ivector **row_idx; /**< problem data, row indices */
-//  ivector **col_idx; /**< problem data, col indices */
-    
-//  AMG_param *amgparam; /**< parameters for AMG */
-//  dCSRmat  **Aarray;   /**< data generated in the setup phase */
-    
-//} precond_block_data; /**< Precond data for block matrices */
-
 
 /**
  * \struct precond_FASP_blkoil_data
@@ -667,13 +649,13 @@ typedef struct {
     block_dCSRmat *Ai;  /**< preconditioner data, the sparse matrix */
     
     dCSRmat *local_A;   /**< local stiffness matrix for each layer */
-    void **local_LU;     /**< lcoal LU decomposition -- (only for UMFpack -- Xiaozhe Hu) */
+    void **local_LU;    /**< lcoal LU decomposition (for UMFpack) */
     
     ivector *local_index;  /**< local index for each layer */
     
     // temprary work spaces
     dvector r; /**< temporary dvector used to store and restore the residual */
-    REAL *w; /**<  temporary work space for other usage */
+    REAL *w;   /**< temporary work space for other usage */
     
 } precond_sweeping_data; /**< Precond data for block matrices */
 
