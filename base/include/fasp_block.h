@@ -17,8 +17,8 @@
 
 #include "fasp.h"
 
-#ifndef __FASPBLOCK_HEADER__        /*-- allow multiple inclusions --*/
-#define __FASPBLOCK_HEADER__
+#ifndef __FASPBLOCK_HEADER__       /*-- allow multiple inclusions --*/
+#define __FASPBLOCK_HEADER__       /**< indicate fasp_block.h has been included before */
 
 /**
  * \brief Definition of specialized smoother types
