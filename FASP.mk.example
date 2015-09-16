@@ -3,8 +3,8 @@
 #
 ################# User Defined Configuration Options #################
 #
-# 1. Copy this file to a file named "fasp.mk".
-# 2. Edit "fasp.mk" to adjust options/settings for your system
+# 1. Copy this file to a file named "FASP.mk".
+# 2. Edit "FASP.mk" to adjust options/settings for your system
 #    following the directions below.
 # 3. Type "make help" to see all build and configuration options.
 ########################################################################
