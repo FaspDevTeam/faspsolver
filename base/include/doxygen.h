@@ -98,6 +98,10 @@
  *
  * - Xu, Jinchao (Penn State University, USA)
  *
+ * Project coordinator:
+ *
+ * - Zhang, Chensong (Chinese Academy of Sciences, China)
+ *
  * Current active developers (in alphabetic order):
  *
  * - Feng, Chunsheng (Xiangtan University, China)
@@ -143,10 +147,6 @@
  * - Zhang, Weifeng (Kunming University of Science and Technology, China)
  *
  * - Zhou, Zhiyang (Xiangtan University, China)
- *
- * Project coordinator:
- * 
- * - Zhang, Chensong (Chinese Academy of Sciences, China)
  *
  */
    

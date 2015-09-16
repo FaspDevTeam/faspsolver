@@ -14,6 +14,8 @@
 #include "dmumps_c.h"
 #endif
 
+#define ICNTL(I) icntl[(I)-1] /**< macro s.t. indices match documentation */
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -107,7 +109,6 @@ int fasp_solver_mumps (dCSRmat *ptrA,
     id.n = n; id.nz =nz; id.irn=irn; id.jcn=jcn;
     id.a = a; id.rhs = rhs;
     
-#define ICNTL(I) icntl[(I)-1] /* macro s.t. indices match documentation */
     /* No outputs */
     id.ICNTL(1) = -1;
     id.ICNTL(2) = -1;
@@ -242,7 +243,6 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
             id.n = n; id.nz = nz; id.irn = irn; id.jcn = jcn;
             id.a = a; id.rhs = rhs;
             
-#define ICNTL(I) icntl[(I)-1] /*< macro s.t. indices match documentation */
             /* No outputs */
             id.ICNTL(1) = -1;
             id.ICNTL(2) = -1;
@@ -388,7 +388,6 @@ Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
     id.n = n; id.nz = nz; id.irn = irn; id.jcn = jcn;
     id.a = a; id.rhs = rhs;
     
-#define ICNTL(I) icntl[(I)-1] /* macro s.t. indices match documentation */
     /* No outputs */
     id.ICNTL(1) = -1;
     id.ICNTL(2) = -1;
