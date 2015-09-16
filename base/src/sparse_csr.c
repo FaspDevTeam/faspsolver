@@ -1333,7 +1333,7 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
 }
 
 /**
- * \fn void fasp_dcsr_transz (dCSRmat *A,  INT *p, dCSRmat *AT)
+ * \fn void fasp_dcsr_transz (dCSRmat A,  INT *p, dCSRmat *AT)
  *
  * \brief Generalized transpose of A: (n x m) matrix given in dCSRmat format
  *
