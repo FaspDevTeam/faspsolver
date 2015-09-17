@@ -281,7 +281,7 @@ int main (int argc, const char *argv[])
             
             break;
             
-        case 3: // 3 dimension
+        default: // 3 dimension
             
             u = (REAL *)malloc((nx+1)*(ny+1)*(nz+1)*sizeof(REAL));
             fasp_array_set((nx+1)*(ny+1)*(nz+1), u, 0.0);
@@ -324,7 +324,7 @@ int main (int argc, const char *argv[])
             case 2: // 2 dimension
                 error0 = L2NormError2d(u, nx, ny); break;
                 
-            case 3: // 3 dimension
+            default: // 3 dimension
                 error0 = L2NormError3d(u, nx, ny, nz); break;
                 
         }

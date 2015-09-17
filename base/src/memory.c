@@ -171,7 +171,7 @@ void fasp_mem_usage ()
 {
 #if CHMEM_MODE
     printf("### DEBUG: Total number of alloc = %d, allocated memory %.3fMB.\n",
-           total_alloc_count, total_alloc_mem/Million);
+           total_alloc_count, (REAL)total_alloc_mem/Million);
 #endif
 }
 
