@@ -48,7 +48,7 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
     INT iter = 0;
     INT m = restart;
     REAL alpha, beta, gamma, tempe, tempb=.0, tempu, temp2;
-    REAL absres0 = BIGREAL, absres, relres1, infnormu, factor;
+    REAL absres0 = BIGREAL, absres, relres1 = BIGREAL, infnormu, factor;
     
     const INT nrow = b->row;
     const REAL sol_inf_tol = 1e-16;
@@ -118,7 +118,7 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
             relres1 = temp2/tempb;
             break;
             
-        case STOP_MOD_REL_RES:
+        default: // case STOP_MOD_REL_RES
             relres1 = tempe/tempu;
             break;
     }
@@ -153,7 +153,6 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
             
             gamma = fasp_blas_array_dotprod(nrow, v[j].val, r);
             fasp_blas_array_axpy(nrow, gamma, s[j].val, x->val);
-            //fasp_blas_array_axpy(nrow, -gamma, v[j].val, r);
             
             // r = b-A*u
             fasp_array_cp(nrow, b->val, r);
@@ -177,7 +176,7 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
                     relres1 = temp2/tempb;
                     break;
                     
-                case STOP_MOD_REL_RES:
+                default: // case STOP_MOD_REL_RES
                     relres1 = absres/tempu;
                     break;
             }
@@ -212,7 +211,7 @@ FINISHED:
             iter = ERROR_SOLVER_MAXIT;
         }
         else
-            printf("Number of iterations = %d with relative residual %e.\n", (iter-1)*m+j+1, relres1);
+            printf("Number of iterations = %d with relative residual %e.\n", iter, relres1);
     }
     
     fasp_mem_free(r);
