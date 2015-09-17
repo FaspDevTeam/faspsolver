@@ -47,7 +47,7 @@ INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
     INT i, j;
     INT iter = 0;
     INT m = restart;
-    REAL alpha, beta, gamma, tempe, tempb, tempu,temp2;
+    REAL alpha, beta, gamma, tempe, tempb=.0, tempu, temp2;
     REAL absres0 = BIGREAL, absres, relres1, infnormu, factor;
     
     const INT nrow = b->row;
