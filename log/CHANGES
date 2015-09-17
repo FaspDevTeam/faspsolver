@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+09/16/2015 FASP 1.8.0:
+- Fix Clang warnings when comparing an address with NULL.
+
 09/15/2015 FASP 1.7.9:
 - Add new version of transpose, permutation, and sort for dCSRmat.
 - Update paramters for SA AMG.
