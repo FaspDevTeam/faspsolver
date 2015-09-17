@@ -794,16 +794,6 @@ c
       deallocate(tnorm)
       write(*,*),'illegal lfil entered'
       return
-c     
-c     zero row encountered
-c     
- 999  ierr = -5
-      deallocate(ju)
-      deallocate(jw)
-      deallocate(w)
-      deallocate(tnorm)
-      write(*,*),'zero row encountered'
-      return
 c----------------end-of-ilut--------------------------------------------
 c-----------------------------------------------------------------------
       end
@@ -1612,7 +1602,7 @@ c========================================================================
       ALLOCATE( rowll(n) )
       ALLOCATE( lastcol(n) )
       ALLOCATE( levels(nzmax))
-	  
+
 c======================================================================== 
 c       Beginning of Executable Statements
 c======================================================================== 
@@ -1986,7 +1976,7 @@ c
       DEALLOCATE(rowll)
       DEALLOCATE(lastcol)
       DEALLOCATE(levels)
-	  
+
       return
 
 c======================== End of symbfac ==============================
