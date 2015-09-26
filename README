@@ -62,7 +62,7 @@ This package has been tested with on the following platforms:
 --Mac OS X
     GNU gcc/gfortran:   4.4.x, 4.5.x, 4.6.x, 4.8.x, 4.9.x
     Intel icc/ifort:    11.x
-    Apple clang:        6.x
+    Apple clang:        6.x, 7.x
     
 --Windows XP and Windows 7
     Intel icc/ifort:    11.1, 12.x, 13.x, 14.x
