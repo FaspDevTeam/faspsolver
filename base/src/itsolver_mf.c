@@ -1,6 +1,6 @@
 /*! \file itsolver_mf.c
  *
- *  \brief Iterative solvers with matrix-free spmv
+ *  \brief Iterative solvers using matrix-free spmv operations
  */
 
 #include <time.h>

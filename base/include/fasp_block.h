@@ -1,5 +1,5 @@
 /*! \file fasp_block.h
- *  \brief Main header file for FASP (block matrices)
+ *  \brief Header file for FASP block matrices
  *
  *  \note This header file contains definitions of block matrices, including
  *        grid-major type and variable-major type. In this header, we only 

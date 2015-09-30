@@ -24,8 +24,8 @@
 #include "dmumps_c.h"
 #endif
 
-#ifndef __FASP_HEADER__       /*-- allow multiple inclusions --*/
-#define __FASP_HEADER__       /**< indicate fasp.h has been included before */
+#ifndef __FASP_HEADER__      /*-- allow multiple inclusions --*/
+#define __FASP_HEADER__      /**< indicate fasp.h has been included before */
 
 /*---------------------------*/
 /*---  Macros definition  ---*/
@@ -34,19 +34,20 @@
 /**
  * \brief For external software package support
  */
+#define FASP_VERSION     1.8 /**< faspsolver version */
 #define FASP_USE_ILU     ON  /**< enable ILU or not */
 #define DLMALLOC         OFF /**< use dlmalloc instead of standard malloc */
 #define NEDMALLOC        OFF /**< use nedmalloc instead of standard malloc */
 
 /**
- * \brief Flags for internal uses (change with caution!!!)
+ * \brief Flags for internal uses
+ *
+ * \warning Change the following marcos with caution!
  */
-
-#define RS_C1            ON  /**< CF splitting of RS: check C1 Criterion */
 // When this flag is OFF, do not force C1 criterion for the classical AMG method
-
-#define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
+#define RS_C1            ON  /**< CF splitting of RS: check C1 Criterion */
 // When this flag is ON, the matrix rows will be reordered as diagonal entries first
+#define DIAGONAL_PREF    OFF /**< order each row such that diagonal appears first */
 
 /**
  * \brief FASP integer and floating point numbers

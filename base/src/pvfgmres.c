@@ -1,6 +1,6 @@
 /*! \file pvfgmres.c
  *
- *  \brief Preconditioned variable-restarting flexible GMRes
+ *  \brief Krylov subspace methods – Preconditioned variable-restarting flexible GMRes
  *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM

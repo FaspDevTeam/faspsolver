@@ -1,8 +1,10 @@
 /*! \file interface_samg.c
- *  \brief Interface to SAMG
+ *  \brief Interface to SAMG solvers
  *
  *  Reference for SAMG:
  *  http://www.scai.fraunhofer.de/geschaeftsfelder/nuso/produkte/samg.html
+ *
+ *  \warning This interface has *only* been tested for SAMG24a1 (2010 version)!
  */
 
 #include <math.h>
