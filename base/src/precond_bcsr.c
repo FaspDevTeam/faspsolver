@@ -1,6 +1,6 @@
 /*! \file precond_bcsr.c
  *
- *  \brief Preconditioners for block CSR matrices
+ *  \brief Preconditioners for block_dCSRmat matrices
  */
 
 #include "fasp.h"

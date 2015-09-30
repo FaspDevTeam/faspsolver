@@ -1,6 +1,8 @@
 /*! \file blas_smat.c
  *
- *  \brief BLAS operations for *small* dense matrix
+ *  \brief BLAS operations for *small* dense matrices
+ *
+ *  \warning The rountines are designed for full matrices only!
  */
 
 #include "fasp.h"

@@ -1,8 +1,8 @@
      560 ./base/include/dlmalloc.h
      170 ./base/include/doxygen.h
-    1191 ./base/include/fasp.h
-     684 ./base/include/fasp_block.h
-     259 ./base/include/fasp_const.h
+    1193 ./base/include/fasp.h
+     666 ./base/include/fasp_block.h
+     253 ./base/include/fasp_const.h
     2947 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
       76 ./base/include/hb_io.h
@@ -28,7 +28,7 @@
     5409 ./base/src/blas_bsr.c
     2015 ./base/src/blas_csr.c
      125 ./base/src/blas_csrl.c
-    1541 ./base/src/blas_smat.c
+    1543 ./base/src/blas_smat.c
     1925 ./base/src/blas_str.c
      320 ./base/src/blas_vec.c
      335 ./base/src/checkmat.c
@@ -45,7 +45,7 @@
      427 ./base/src/ilu_setup_bsr.c
      193 ./base/src/ilu_setup_csr.c
     1254 ./base/src/ilu_setup_str.c
-     334 ./base/src/init.c
+     330 ./base/src/init.c
      792 ./base/src/input.c
     1597 ./base/src/interpolation.c
      840 ./base/src/interpolation_em.c
@@ -68,7 +68,7 @@
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
      181 ./base/src/pgcg_mf.c
-     458 ./base/src/pgcr.c
+     457 ./base/src/pgcr.c
     1382 ./base/src/pgmres.c
      300 ./base/src/pgmres_mf.c
     1286 ./base/src/pminres.c
@@ -106,4 +106,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
-   90935 total
+   90910 total
