@@ -13,7 +13,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_quad2d (INT num_qp, INT ncoor, REAL (*quad)[3])
+ * \fn void fasp_quad2d (const INT num_qp, const INT ncoor, REAL (*quad)[3])
  *
  * \brief Initialize Lagrange quadrature points and weights
  *
@@ -28,8 +28,8 @@
  *       quad[*][1] -- quad point y in ref coor
  *       quad[*][2] -- quad weight
  */
-void fasp_quad2d (INT num_qp, 
-                  INT ncoor, 
+void fasp_quad2d (const INT num_qp,
+                  const INT ncoor,
                   REAL (*quad)[3])
 {
     if (num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, __FUNCTION__);
@@ -192,7 +192,7 @@ void fasp_quad2d (INT num_qp,
 }
 
 /**
- * \fn void fasp_gauss2d (INT num_qp, INT ncoor,  REAL (*gauss)[3])
+ * \fn void fasp_gauss2d (const INT num_qp, const INT ncoor, REAL (*gauss)[3])
  *
  * \brief Initialize Gauss quadrature points and weights
  *
@@ -207,8 +207,8 @@ void fasp_quad2d (INT num_qp,
  *       gauss[*][1] -- quad point y in ref coor
  *       gauss[*][2] -- quad weight
  */
-void fasp_gauss2d (INT num_qp, 
-                   INT ncoor, 
+void fasp_gauss2d (const INT num_qp,
+                   const INT ncoor,
                    REAL (*gauss)[3])
 {
     if(num_qp<=0) fasp_chkerr(ERROR_QUAD_TYPE, __FUNCTION__);

@@ -863,10 +863,10 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap (dCSRmat  *R,
-                         dCSRmat  *A,
-                         dCSRmat  *P,
-                         dCSRmat  *RAP)
+void fasp_blas_dcsr_rap (dCSRmat *R,
+                         dCSRmat *A,
+                         dCSRmat *P,
+                         dCSRmat *RAP)
 {
     INT n_coarse = R->row;
     INT *R_i = R->IA;
@@ -1145,10 +1145,10 @@ void fasp_blas_dcsr_rap (dCSRmat  *R,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap_agg (dCSRmat  *R,
-                             dCSRmat  *A,
-                             dCSRmat  *P,
-                             dCSRmat  *RAP)
+void fasp_blas_dcsr_rap_agg (dCSRmat *R,
+                             dCSRmat *A,
+                             dCSRmat *P,
+                             dCSRmat *RAP)
 {
     INT n_coarse = R->row;
     INT *R_i = R->IA;

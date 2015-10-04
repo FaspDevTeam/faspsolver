@@ -483,7 +483,7 @@ void fasp_blas_smat_mul (REAL *a,
 }
 
 /**
- * \fn void fasp_blas_array_axpyz_nc2 (REAL a, REAL *x, REAL *y, REAL *z)
+ * \fn void fasp_blas_array_axpyz_nc2 (const REAL a, REAL *x, REAL *y, REAL *z)
  *
  * \brief z = a*x + y
  *
@@ -497,7 +497,7 @@ void fasp_blas_smat_mul (REAL *a,
  *
  * \note z is the third array and the length of x, y and z is 2
  */
-void fasp_blas_array_axpyz_nc2 (REAL a, 
+void fasp_blas_array_axpyz_nc2 (const REAL a,
                                 REAL *x, 
                                 REAL *y, 
                                 REAL *z) 
@@ -1192,7 +1192,7 @@ void fasp_blas_smat_ymAx_nc7 (REAL *A,
 }
 
 /**
- * \fn void fasp_blas_smat_ymAx (REAL *A, REAL *x, REAL *y, INT n)
+ * \fn void fasp_blas_smat_ymAx (REAL *A, REAL *x, REAL *y, const INT n)
  *
  * \brief Compute y := y - Ax, where 'A' is a n*n dense matrix 
  *
@@ -1207,7 +1207,7 @@ void fasp_blas_smat_ymAx_nc7 (REAL *A,
 void fasp_blas_smat_ymAx (REAL *A, 
                           REAL *x, 
                           REAL *y,
-                          INT n)
+                          const INT n)
 {    
     switch (n) {
     case 2:
@@ -1310,7 +1310,7 @@ void fasp_blas_smat_aAxpby (const REAL alpha,
                             REAL *x, 
                             const REAL beta, 
                             REAL *y, 
-                            const INT n )
+                            const INT n)
 {
     INT    i,j,k;
     REAL tmp = 0.0;

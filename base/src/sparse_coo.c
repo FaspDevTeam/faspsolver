@@ -18,7 +18,7 @@
 /*---------------------------------*/
 
 /**
- * \fn dCOOmat fasp_dcoo_create (INT m, INT n, INT nnz)
+ * \fn dCOOmat fasp_dcoo_create (const INT m, const INT n, const INT nnz)
  *
  * \brief Create IJ sparse matrix data memory space
  *
@@ -31,9 +31,9 @@
  * \author Chensong Zhang
  * \date   2010/04/06
  */
-dCOOmat fasp_dcoo_create (INT m,
-                          INT n,
-                          INT nnz)
+dCOOmat fasp_dcoo_create (const INT m,
+                          const INT n,
+                          const INT nnz)
 {
     dCOOmat A;
     
@@ -101,7 +101,7 @@ void fasp_dcoo_free (dCOOmat *A)
 }
 
 /**
- * \fn void fasp_dcoo_shift (dCOOmat *A, INT offset)
+ * \fn void fasp_dcoo_shift (dCOOmat *A, const INT offset)
  *
  * \brief Re-index a REAL matrix in IJ format to make the index starting from 0 or 1.
  *
@@ -114,7 +114,7 @@ void fasp_dcoo_free (dCOOmat *A)
  * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
 void fasp_dcoo_shift (dCOOmat *A,
-                      INT offset)
+                      const INT offset)
 {
     const INT nnz = A->nnz;
     INT       i, *ai = A->rowind, *aj = A->colind;

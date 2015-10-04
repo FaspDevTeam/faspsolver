@@ -30,6 +30,7 @@ void fasp_array_null (REAL *x)
 {
     x = NULL;
 }
+
 /**
  * \fn void fasp_array_set (const INT n, REAL *x, const REAL val)
  *
@@ -42,10 +43,8 @@ void fasp_array_null (REAL *x)
  * \author Chensong Zhang 
  * \date   04/03/2010  
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012  
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-
 void fasp_array_set (const INT n, 
                      REAL *x, 
                      const REAL val)
@@ -91,7 +90,6 @@ void fasp_array_set (const INT n,
     }
 }
 
-
 /**
  * \fn void fasp_iarray_set (const INT n, INT *x, const INT val)
  *
@@ -104,12 +102,10 @@ void fasp_array_set (const INT n,
  * \author Chensong Zhang 
  * \date   04/03/2010  
  * 
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/25/2012
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/25/2012
  */
-
 void fasp_iarray_set (const INT n,
-                            INT *x,
+                      INT *x,
                       const INT val)
 {
     INT i;

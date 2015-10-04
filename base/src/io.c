@@ -1456,7 +1456,7 @@ void fasp_dbsr_print (dBSRmat *A)
             for ( k = 0; k < A->nb; k++ ) {
                 for ( l = 0; l < A->nb; l++ ) {
                     printf("A_(%d,%d) = %+.10E\n",
-						   i*nb + k + 1, A->JA[j]*nb + l + 1,  A->val[ A->JA[j]*nb2 + k*nb + l]);
+						   i*nb+k+1, A->JA[j]*nb+l+1,  A->val[ A->JA[j]*nb2+k*nb+l]);
                 }
             }
         }
@@ -1509,7 +1509,7 @@ void fasp_dbsr_write_coo (const char *filename,
             for ( k = 0; k < A->nb; k++ ) {
                 for ( l = 0; l < A->nb; l++ ) {
                     fprintf(fp, "%d %d %+.10E\n",
-                            i*nb + k + 1, A->JA[j]*nb + l + 1, A->val[ j*nb2 + k*nb + l]);
+                            i*nb+k+1, A->JA[j]*nb+l+1, A->val[ j*nb2+k*nb+l]);
                 }
             }
         }
@@ -1556,7 +1556,6 @@ void fasp_dcsr_write_coo (const char *filename,
     
     fclose(fp);
 }
-
 
 /**
  * \fn void fasp_dstr_print (dSTRmat *A)

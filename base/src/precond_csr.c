@@ -14,7 +14,7 @@
 /*---------------------------------*/
 
 /**
- * \fn precond *fasp_precond_setup (SHORT precond_type, AMG_param *amgparam, 
+ * \fn precond *fasp_precond_setup (const SHORT precond_type, AMG_param *amgparam,
  *                                  ILU_param *iluparam, dCSRmat *A)
  *
  * \brief Setup preconditioner interface for iterative methods
@@ -29,7 +29,7 @@
  * \author Feiteng Huang
  * \date   05/18/2009
  */
-precond *fasp_precond_setup (SHORT precond_type, 
+precond *fasp_precond_setup (const SHORT precond_type,
                              AMG_param *amgparam, 
                              ILU_param *iluparam, 
                              dCSRmat *A)
@@ -604,7 +604,7 @@ void fasp_precond_amg_nk (REAL *r,
 }
 
 /**
- * \fn void fasp_precond_free (SHORT precond_type, precond *pc) 
+ * \fn void fasp_precond_free (const SHORT precond_type, precond *pc)
  *
  * \brief free preconditioner
  *
@@ -616,7 +616,7 @@ void fasp_precond_amg_nk (REAL *r,
  * \author Feiteng Huang
  * \date   12/24/2012
  */
-void fasp_precond_free (SHORT precond_type,
+void fasp_precond_free (const SHORT precond_type,
                         precond *pc)
 {
     switch (precond_type) {

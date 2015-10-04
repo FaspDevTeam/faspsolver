@@ -5,8 +5,8 @@
 
 #include "fasp.h"
 
-static void dSwapping(REAL *w, INT i, INT j);
-static void iSwapping(INT *w, INT i, INT j);
+static void dSwapping(REAL *w, const INT i, const INT j);
+static void iSwapping(INT *w, const INT i, const INT j);
 static void CMK_ordering (const dCSRmat *, INT, INT, INT, INT, INT *, INT *);
 
 /*---------------------------------*/
@@ -14,7 +14,7 @@ static void CMK_ordering (const dCSRmat *, INT, INT, INT, INT, INT *, INT *);
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_BinarySearch (INT *list, INT value, INT nlist)
+ * \fn INT fasp_BinarySearch (INT *list, const INT value, const INT nlist)
  *
  * \brief Binary Search
  *
@@ -28,8 +28,8 @@ static void CMK_ordering (const dCSRmat *, INT, INT, INT, INT, INT *, INT *);
  * \date   03/01/2011
  */
 INT fasp_BinarySearch (INT *list,
-                       INT value,
-                       INT nlist)
+                       const INT value,
+                       const INT nlist)
 {
     INT not_found = 1;
     INT low, high, m;
@@ -58,7 +58,7 @@ INT fasp_BinarySearch (INT *list,
 }
 
 /*!
- * \fn INT fasp_aux_unique (INT numbers[], INT size)
+ * \fn INT fasp_aux_unique (INT numbers[], const INT size)
  *
  * \brief Remove duplicates in an sorted (ascending order) array
  *
@@ -73,7 +73,7 @@ INT fasp_BinarySearch (INT *list,
  * \note Operation is in place. Does not use any extra or temporary storage.
  */
 INT fasp_aux_unique (INT numbers[],
-                     INT size)
+                     const INT size)
 {
     INT i, newsize;
     
@@ -422,7 +422,7 @@ void fasp_dcsr_RCMK_order (const dCSRmat *A,
 /*---------------------------------*/
 
 /**
- * \fn static void iSwapping (INT *w, INT i, INT j)
+ * \fn static void iSwapping (INT *w, const INT i, const INT j)
  *
  * \brief swap the i-th and j-th element in the array 'w' (INT type)
  *
@@ -434,8 +434,8 @@ void fasp_dcsr_RCMK_order (const dCSRmat *A,
  * \date   2009/11/28
  */
 static void iSwapping (INT *w,
-                       INT i,
-                       INT j)
+                       const INT i,
+                       const INT j)
 {
     INT temp = w[i];
     w[i] = w[j];
@@ -443,7 +443,7 @@ static void iSwapping (INT *w,
 }
 
 /**
- * \fn static void dSwapping (REAL *w, INT i, INT j)
+ * \fn static void dSwapping (REAL *w, const INT i, const INT j)
  *
  * \brief swap the i-th and j-th element in the array 'w' (REAL type)
  *
@@ -455,8 +455,8 @@ static void iSwapping (INT *w,
  * \date   2009/11/28
  */
 static void dSwapping (REAL *w,
-                       INT i,
-                       INT j)
+                       const INT i,
+                       const INT j)
 {
     REAL temp = w[i];
     w[i] = w[j];

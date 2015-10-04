@@ -15,7 +15,8 @@
 /*---------------------------------*/
 
 /**
- * \fn dCSRLmat * fasp_dcsrl_create (INT num_rows, INT num_cols, INT num_nonzeros) 
+ * \fn dCSRLmat * fasp_dcsrl_create (const INT num_rows, const INT num_cols, 
+ *                                   const INT num_nonzeros)
  *
  * \brief Create a dCSRLmat object
  *
@@ -26,9 +27,9 @@
  * \author Zhiyang Zhou
  * \date   01/07/2001
  */
-dCSRLmat * fasp_dcsrl_create (INT num_rows, 
-                              INT num_cols, 
-                              INT num_nonzeros)
+dCSRLmat * fasp_dcsrl_create (const INT num_rows,
+                              const INT num_cols,
+                              const INT num_nonzeros)
 {
     dCSRLmat *A   = (dCSRLmat *)fasp_mem_calloc(1, sizeof(dCSRLmat));
     

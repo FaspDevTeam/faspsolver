@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+10/04/2015 FASP 1.8.1:
+- Add `const' to declaring constant variables.
+- Check regression results.
+
 09/30/2015 FASP 1.8.0:
 - Fix Clang warnings when comparing an address with NULL.
 - Fix more warnings with debug=ALL except unused symbols.

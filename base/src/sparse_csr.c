@@ -413,7 +413,7 @@ void fasp_dcsr_getdiag (INT n,
 {
     INT i,k,j,ibegin,iend;
     
-    if (n==0) n=MIN(A->row,A->col);
+    if ( n==0 || n>A->row || n>A->col ) n = MIN(A->row,A->col);
     
     INT nthreads = 1, use_openmp = FALSE;
     
