@@ -32,7 +32,7 @@ static inline void spaaxpy_str_general(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
 /*---------------------------------*/
 
 /**
- * \fn void fasp_blas_dstr_aAxpy (REAL alpha, dSTRmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dstr_aAxpy (const REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
@@ -44,7 +44,7 @@ static inline void spaaxpy_str_general(REAL alpha, dSTRmat *A, REAL *x, REAL *y)
  * \author Zhiyang Zhou, Xiaozhe Hu, Shiquan Zhang
  * \date   2010/10/15
  */
-void fasp_blas_dstr_aAxpy (REAL alpha,
+void fasp_blas_dstr_aAxpy (const REAL alpha,
                            dSTRmat *A,
                            REAL *x,
                            REAL *y)

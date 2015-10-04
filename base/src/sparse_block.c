@@ -44,7 +44,8 @@ void fasp_bdcsr_free (block_dCSRmat *A)
 }
 
 /**
- * \fn SHORT fasp_dcsr_getblk (dCSRmat *A, INT *Is, INT *Js, INT m, INT n, dCSRmat *B)
+ * \fn SHORT fasp_dcsr_getblk (dCSRmat *A, INT *Is, INT *Js, const INT m, 
+ *                             const INT n, dCSRmat *B)
  *
  * \brief Get a sub CSR matrix of A with specified rows and columns
  *
@@ -65,8 +66,8 @@ void fasp_bdcsr_free (block_dCSRmat *A)
 SHORT fasp_dcsr_getblk (dCSRmat *A,
                         INT *Is,
                         INT *Js,
-                        INT m,
-                        INT n,
+                        const INT m,
+                        const INT n,
                         dCSRmat *B)
 {
     INT status = FASP_SUCCESS;
@@ -137,7 +138,8 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
 }
 
 /**
- * \fn SHORT fasp_dbsr_getblk (dBSRmat *A, INT *Is, INT *Js, INT m, INT n, dBSRmat *B)
+ * \fn SHORT fasp_dbsr_getblk (dBSRmat *A, INT *Is, INT *Js, const INT m, 
+ *                             const INT n, dBSRmat *B)
  *
  * \brief Get a sub BSR matrix of A with specified rows and columns.
  *
@@ -158,8 +160,8 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
 SHORT fasp_dbsr_getblk (dBSRmat *A,
                         INT *Is,
                         INT *Js,
-                        INT m,
-                        INT n,
+                        const INT m,
+                        const INT n,
                         dBSRmat *B)
 {
     INT status = FASP_SUCCESS;

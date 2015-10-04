@@ -21,7 +21,7 @@
      680 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
      945 ./base/src/amlirecur.c
-     268 ./base/src/array.c
+     264 ./base/src/array.c
      234 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
      353 ./base/src/blas_bcsr.c
@@ -40,16 +40,16 @@
      328 ./base/src/fmgcycle.c
     1145 ./base/src/formats.c
       79 ./base/src/givens.c
-    1035 ./base/src/gmg_poisson.c
-     749 ./base/src/graphics.c
+    1038 ./base/src/gmg_poisson.c
+     756 ./base/src/graphics.c
      427 ./base/src/ilu_setup_bsr.c
      193 ./base/src/ilu_setup_csr.c
     1254 ./base/src/ilu_setup_str.c
-     330 ./base/src/init.c
+     331 ./base/src/init.c
      792 ./base/src/input.c
     1597 ./base/src/interpolation.c
      840 ./base/src/interpolation_em.c
-    3229 ./base/src/io.c
+    3228 ./base/src/io.c
      598 ./base/src/itsolver_bcsr.c
      783 ./base/src/itsolver_bsr.c
      711 ./base/src/itsolver_csr.c
@@ -89,13 +89,13 @@
     2314 ./base/src/smoother_csr.c
       83 ./base/src/smoother_csr_cr.c
      586 ./base/src/smoother_csr_poly.c
-    1874 ./base/src/smoother_str.c
-     364 ./base/src/sparse_block.c
-    1864 ./base/src/sparse_bsr.c
+    1878 ./base/src/smoother_str.c
+     366 ./base/src/sparse_block.c
+    1865 ./base/src/sparse_bsr.c
      153 ./base/src/sparse_coo.c
     1540 ./base/src/sparse_csr.c
-      71 ./base/src/sparse_csrl.c
-     202 ./base/src/sparse_str.c
+      72 ./base/src/sparse_csrl.c
+     204 ./base/src/sparse_str.c
      970 ./base/src/sparse_util.c
     1627 ./base/src/spbcgs.c
     1063 ./base/src/spcg.c
@@ -106,4 +106,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      304 ./base/src/wrapper.c
-   90910 total
+   90926 total

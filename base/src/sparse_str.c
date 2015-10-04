@@ -37,7 +37,8 @@ void fasp_dstr_null (dSTRmat *A)
 }
 
 /**
- * \fn dSTRmat fasp_dstr_create (INT nx, INT ny, INT nz, INT nc, INT nband, INT *offsets)
+ * \fn dSTRmat fasp_dstr_create (const INT nx, const INT ny, const INT nz, 
+ *                               const INT nc, const INT nband, INT *offsets)
  *
  * \brief Create STR sparse matrix data memory space
  *
@@ -53,11 +54,11 @@ void fasp_dstr_null (dSTRmat *A)
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   05/17/2010 
  */
-dSTRmat fasp_dstr_create (INT nx, 
-                          INT ny, 
-                          INT nz, 
-                          INT nc, 
-                          INT nband, 
+dSTRmat fasp_dstr_create (const INT nx,
+                          const INT ny,
+                          const INT nz,
+                          const INT nc,
+                          const INT nband,
                           INT *offsets)
 {    
     dSTRmat A;
@@ -86,8 +87,9 @@ dSTRmat fasp_dstr_create (INT nx,
 }
 
 /**
- * \fn void fasp_dstr_alloc (INT nx, INT ny, INT nz, INT nxy, INT ngrid, INT nband, 
- *                           INT nc, INT *offsets, dSTRmat *A)
+ * \fn void fasp_dstr_alloc (const INT nx, const INT ny, const INT nz, const INT nxy, 
+ *                           const INT ngrid, const INT nband, const INT nc, 
+ *                           INT *offsets, dSTRmat *A)
  *
  * \brief Allocate STR sparse matrix memory space
  *
@@ -104,13 +106,13 @@ dSTRmat fasp_dstr_create (INT nx,
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   05/17/2010  
  */
-void fasp_dstr_alloc (INT nx, 
-                      INT ny, 
-                      INT nz, 
-                      INT nxy, 
-                      INT ngrid, 
-                      INT nband, 
-                      INT nc,
+void fasp_dstr_alloc (const INT nx,
+                      const INT ny,
+                      const INT nz,
+                      const INT nxy,
+                      const INT ngrid,
+                      const INT nband,
+                      const INT nc,
                       INT *offsets, 
                       dSTRmat *A)
 {    

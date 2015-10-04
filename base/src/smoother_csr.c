@@ -1402,9 +1402,9 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_gs_rb3d (dvector *u, dCSRmat *A, dvector *b,
- *                                      INT L, INT order, INT *mark, INT maximap,
- *                                      INT nx, INT ny, INT nz)
+ * \fn void fasp_smoother_dcsr_gs_rb3d (dvector *u, dCSRmat *A, dvector *b, INT L, 
+ *                                      const INT order, INT *mark, const INT maximap,
+ *                                      const INT nx, const INT ny, const INT nz)
  *
  * \brief       Colored Gauss-Seidel smoother for Au=b
  *
@@ -1426,12 +1426,12 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
                                  dCSRmat *A,
                                  dvector *b,
                                  INT L,
-                                 INT order,
+                                 const INT order,
                                  INT *mark,
-                                 INT maximap,
-                                 INT nx,
-                                 INT ny,
-                                 INT nz)
+                                 const INT maximap,
+                                 const INT nx,
+                                 const INT ny,
+                                 const INT nz)
 {
     const INT   nrow = b->row; // number of rows
     INT        *ia=A->IA,*ja=A->JA;

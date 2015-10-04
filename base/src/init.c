@@ -84,10 +84,11 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
  */
 AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
 {
-    SHORT i;
-    
+    max_levels = MAX(1, max_levels); // at least allocate one level
+
     AMG_data_bsr *mgl = (AMG_data_bsr *)fasp_mem_calloc(max_levels,sizeof(AMG_data_bsr));
     
+    INT i;
     for (i=0; i<max_levels; ++i) {
         mgl[i].max_levels = max_levels;
         mgl[i].num_levels = 0;
@@ -102,7 +103,7 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
 }
 
 /**
- * \fn void fasp_ilu_data_alloc (INT iwk, INT nwork, ILU_data *iludata)
+ * \fn void fasp_ilu_data_alloc (const INT iwk, const INT nwork, ILU_data *iludata)
  *
  * \brief Allocate workspace for ILU factorization
  *
@@ -113,8 +114,8 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
  * \author Chensong Zhang
  * \date   2010/04/06
  */
-void fasp_ilu_data_alloc (INT iwk,
-                          INT nwork,
+void fasp_ilu_data_alloc (const INT iwk,
+                          const INT nwork,
                           ILU_data *iludata)
 {
 #if DEBUG_MODE > 0

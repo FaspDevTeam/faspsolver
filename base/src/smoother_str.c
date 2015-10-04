@@ -178,7 +178,8 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_gs (dSTRmat *A, dvector *b, dvector *u, INT order, INT *mark)
+ * \fn void fasp_smoother_dstr_gs (dSTRmat *A, dvector *b, dvector *u, const INT order, 
+ *                                 INT *mark)
  *
  * \brief Gauss-Seidel method as the smoother
  *
@@ -202,7 +203,7 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
 void fasp_smoother_dstr_gs (dSTRmat *A, 
                             dvector *b, 
                             dvector *u,
-                            INT order, 
+                            const INT order,
                             INT *mark)
 {
     INT   nc    = A->nc;    // size of each block (number of components)
@@ -235,7 +236,8 @@ void fasp_smoother_dstr_gs (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_gs1(dSTRmat *A, dvector *b, dvector *u, INT order, INT *mark, REAL *diaginv)
+ * \fn void fasp_smoother_dstr_gs1 (dSTRmat *A, dvector *b, dvector *u, const INT order,
+ *                                  INT *mark, REAL *diaginv)
  *
  * \brief Gauss-Seidel method as the smoother with diag_inv given
  *
@@ -261,7 +263,7 @@ void fasp_smoother_dstr_gs (dSTRmat *A,
 void fasp_smoother_dstr_gs1 (dSTRmat *A, 
                              dvector *b, 
                              dvector *u, 
-                             INT order, 
+                             const INT order,
                              INT *mark, 
                              REAL *diaginv)
 {    
@@ -640,7 +642,8 @@ void fasp_smoother_dstr_gs_order (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_gs_cf (dSTRmat *A, dvector *b, dvector *u, REAL *diaginv, INT *mark, INT order)
+ * \fn void fasp_smoother_dstr_gs_cf (dSTRmat *A, dvector *b, dvector *u, REAL *diaginv, 
+ *                                    INT *mark, const INT order)
  *
  * \brief Gauss method as the smoother in the C-F manner
  *
@@ -662,7 +665,7 @@ void fasp_smoother_dstr_gs_cf (dSTRmat *A,
                                dvector *u, 
                                REAL *diaginv, 
                                INT *mark, 
-                               INT order)
+                               const INT order)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids
@@ -826,7 +829,8 @@ void fasp_smoother_dstr_gs_cf (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_sor (dSTRmat *A, dvector *b, dvector *u, INT order, INT *mark, REAL weight)
+ * \fn void fasp_smoother_dstr_sor (dSTRmat *A, dvector *b, dvector *u, const INT order, 
+ *                                  INT *mark, const REAL weight)
  *
  * \brief SOR method as the smoother
  *
@@ -851,13 +855,13 @@ void fasp_smoother_dstr_gs_cf (dSTRmat *A,
 void fasp_smoother_dstr_sor (dSTRmat *A, 
                              dvector *b, 
                              dvector *u, 
-                             INT order, 
+                             const INT order,
                              INT *mark, 
-                             REAL weight)
+                             const REAL weight)
 {
     INT     nc    = A->nc;    // size of each block (number of components)
     INT     ngrid = A->ngrid; // number of grids
-    REAL *diag  = A->diag;  // Diagonal entries    
+    REAL   *diag  = A->diag;  // Diagonal entries
     REAL *diaginv = NULL;   // Diagonal inverse(when nc>1),same size and storage scheme as A->diag
     
     INT nc2   = nc*nc;
@@ -885,8 +889,8 @@ void fasp_smoother_dstr_sor (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_sor1 (dSTRmat *A, dvector *b, dvector *u, INT order, 
- *                                   INT *mark, REAL *diaginv, REAL weight)
+ * \fn void fasp_smoother_dstr_sor1 (dSTRmat *A, dvector *b, dvector *u, const INT order,
+ *                                   INT *mark, REAL *diaginv, const REAL weight)
  *
  * \brief SOR method as the smoother
  *
@@ -912,10 +916,10 @@ void fasp_smoother_dstr_sor (dSTRmat *A,
 void fasp_smoother_dstr_sor1 (dSTRmat *A,
                               dvector *b,
                               dvector *u,
-                              INT order,
+                              const INT order,
                               INT *mark,
                               REAL *diaginv,
-                              REAL weight)
+                              const REAL weight)
 {    
     if (!mark) {
         if (order == ASCEND)       // smooth ascendingly
@@ -1308,8 +1312,8 @@ void fasp_smoother_dstr_sor_order (dSTRmat *A,
 
 /**
  * \fn void fasp_smoother_dstr_sor_cf (dSTRmat *A, dvector *b, dvector *u, 
- *                                     REAL *diaginv, INT *mark, INT order, 
- *                                     REAL weight)
+ *                                     REAL *diaginv, INT *mark, const INT order,
+ *                                     const REAL weight)
  *
  * \brief SOR method as the smoother in the C-F manner
  *
@@ -1332,8 +1336,8 @@ void fasp_smoother_dstr_sor_cf (dSTRmat *A,
                                 dvector *u, 
                                 REAL *diaginv,
                                 INT *mark, 
-                                INT order, 
-                                REAL weight)
+                                const INT order,
+                                const REAL weight)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids

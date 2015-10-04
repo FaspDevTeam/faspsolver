@@ -95,7 +95,7 @@ void fasp_array_set (const INT n,
                      const REAL val);
 
 void fasp_iarray_set (const INT n,
-                            INT *x,
+                      INT *x,
                       const INT val);
 
 void fasp_array_cp (const INT n, 
@@ -194,13 +194,13 @@ REAL fasp_blas_array_dotprod (const INT n,
                               const REAL * y);
 
 REAL fasp_blas_array_norm1 (const INT n,
-                            const REAL * x);
+                            const REAL *x);
 
 REAL fasp_blas_array_norm2 (const INT n,
-                            const REAL * x);
+                            const REAL *x);
 
 REAL fasp_blas_array_norminf (const INT n,
-                              const REAL * x);
+                              const REAL *x);
 
 
 /*-------- In file: blas_bcsr.c --------*/
@@ -310,15 +310,15 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
                          dCSRmat *B,
                          dCSRmat *C);
 
-void fasp_blas_dcsr_rap (dCSRmat  *R,
-                         dCSRmat  *A,
-                         dCSRmat  *P,
-                         dCSRmat  *RAP);
+void fasp_blas_dcsr_rap (dCSRmat *R,
+                         dCSRmat *A,
+                         dCSRmat *P,
+                         dCSRmat *RAP);
 
-void fasp_blas_dcsr_rap_agg (dCSRmat  *R,
-                             dCSRmat  *A,
-                             dCSRmat  *P,
-                             dCSRmat  *RAP);
+void fasp_blas_dcsr_rap_agg (dCSRmat *R,
+                             dCSRmat *A,
+                             dCSRmat *P,
+                             dCSRmat *RAP);
 
 void fasp_blas_dcsr_rap_agg1 (dCSRmat *R,
                               dCSRmat *A,
@@ -402,7 +402,7 @@ void fasp_blas_smat_mul (REAL *a,
                          REAL *c, 
                          const INT n);
 
-void fasp_blas_array_axpyz_nc2 (REAL a, 
+void fasp_blas_array_axpyz_nc2 (const REAL a,
                                 REAL *x, 
                                 REAL *y, 
                                 REAL *z) ;
@@ -478,14 +478,14 @@ void fasp_blas_smat_ymAx_nc7 (REAL *A,
 void fasp_blas_smat_ymAx (REAL *A, 
                           REAL *x, 
                           REAL *y,
-                          INT n);
+                          const INT n);
 
 void fasp_blas_smat_aAxpby (const REAL alpha, 
                             REAL *A, 
                             REAL *x, 
                             const REAL beta, 
                             REAL *y, 
-                            const INT n );
+                            const INT n);
 
 void fasp_blas_smat_ymAx_ns2 (REAL *A,
                               REAL *x, 
@@ -511,7 +511,7 @@ void fasp_blas_smat_ymAx_ns (REAL *A,
 
 /*-------- In file: blas_str.c --------*/
 
-void fasp_blas_dstr_aAxpy (REAL alpha,
+void fasp_blas_dstr_aAxpy (const REAL alpha,
                            dSTRmat *A,
                            REAL *x,
                            REAL *y);
@@ -565,8 +565,8 @@ SHORT fasp_check_iCSRmat (iCSRmat *A);
 
 /*-------- In file: coarsening_cr.c --------*/
 
-INT fasp_amg_coarsening_cr (INT i_0, 
-                            INT i_n, 
+INT fasp_amg_coarsening_cr (const INT i_0,
+                            const INT i_n,
                             dCSRmat *A, 
                             ivector *vertices, 
                             AMG_param *param);
@@ -594,8 +594,8 @@ INT endian_convert_int (const INT inum,
                         const INT endianflag);
 
 REAL endian_convert_real (const REAL rnum,
-                          INT vlength,
-                          INT endianflag);
+                          const INT vlength,
+                          const INT endianflag);
 
 
 /*-------- In file: eigen.c --------*/
@@ -683,50 +683,50 @@ INT fasp_poisson_gmg_3D (REAL *u,
 
 void fasp_poisson_fgmg_1D (REAL *u,
                            REAL *b,
-                           INT nx,
-                           INT maxlevel,
-                           REAL rtol,
+                           const INT nx,
+                           const INT maxlevel,
+                           const REAL rtol,
 						   const SHORT prtlvl);
 
 void fasp_poisson_fgmg_2D (REAL *u,
                            REAL *b,
-                           INT nx,
-                           INT ny,
-                           INT maxlevel,
-                           REAL rtol,
+                           const INT nx,
+                           const INT ny,
+                           const INT maxlevel,
+                           const REAL rtol,
 						   const SHORT prtlvl);
 
 void fasp_poisson_fgmg_3D (REAL *u,
                            REAL *b,
-                           INT nx,
-                           INT ny,
-                           INT nz,
-                           INT maxlevel,
-                           REAL rtol,
+                           const INT nx,
+                           const INT ny,
+                           const INT nz,
+                           const INT maxlevel,
+                           const REAL rtol,
 						   const SHORT prtlvl);
 
 INT fasp_poisson_pcg_gmg_1D (REAL *u,
                              REAL *b,
-                             INT nx,
-                             INT maxlevel,
-                             REAL rtol,
+                             const INT nx,
+                             const INT maxlevel,
+                             const REAL rtol,
 							 const SHORT prtlvl);
 
 INT fasp_poisson_pcg_gmg_2D (REAL *u,
                              REAL *b,
-                             INT nx,
-                             INT ny,
-                             INT maxlevel,
-                             REAL rtol,
+                             const INT nx,
+                             const INT ny,
+                             const INT maxlevel,
+                             const REAL rtol,
 							 const SHORT prtlvl);
 
 INT fasp_poisson_pcg_gmg_3D (REAL *u,
                              REAL *b,
-                             INT nx,
-                             INT ny,
-                             INT nz,
-                             INT maxlevel,
-                             REAL rtol,
+                             const INT nx,
+                             const INT ny,
+                             const INT nz,
+                             const INT maxlevel,
+                             const REAL rtol,
 							 const SHORT prtlvl);
 
 
@@ -781,8 +781,8 @@ AMG_data * fasp_amg_data_create (SHORT max_levels);
 
 AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels);
 
-void fasp_ilu_data_alloc (INT iwk,
-                          INT nwork,
+void fasp_ilu_data_alloc (const INT iwk,
+                          const INT nwork,
                           ILU_data *iludata);
 
 void fasp_Schwarz_data_free (Schwarz_data *Schwarz);
@@ -1140,15 +1140,15 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A,
 
 /*-------- In file: lu.c --------*/
 
-SHORT fasp_smat_lu_decomp (REAL *A, 
-                           INT pivot[], 
-                           INT n) ;
+SHORT fasp_smat_lu_decomp (REAL *A,
+                           INT pivot[],
+                           const INT n);
 
-SHORT fasp_smat_lu_solve (REAL *A, 
-                          REAL b[], 
-                          INT pivot[], 
-                          REAL x[], 
-                          INT n);
+SHORT fasp_smat_lu_solve (REAL *A,
+                          REAL b[],
+                          INT pivot[],
+                          REAL x[],
+                          const INT n);
 
 
 /*-------- In file: memory.c --------*/
@@ -1216,11 +1216,11 @@ void fasp_solver_mgrecur (AMG_data *mgl,
 /*-------- In file: ordering.c --------*/
 
 INT fasp_BinarySearch (INT *list,
-                       INT value,
-                       INT nlist);
+                       const INT value,
+                       const INT nlist);
 
 INT fasp_aux_unique (INT numbers[],
-                     INT size);
+                     const INT size);
 
 void fasp_aux_merge (INT numbers[],
                      INT work[],
@@ -1651,7 +1651,7 @@ void fasp_precond_dbsr_amg_nk (REAL *r,
 
 /*-------- In file: precond_csr.c --------*/
 
-precond *fasp_precond_setup (SHORT precond_type, 
+precond *fasp_precond_setup (const SHORT precond_type,
                              AMG_param *amgparam, 
                              ILU_param *iluparam, 
                              dCSRmat *A);
@@ -1696,7 +1696,7 @@ void fasp_precond_amg_nk (REAL *r,
                           REAL *z,
                           void *data);
 
-void fasp_precond_free (SHORT precond_type,
+void fasp_precond_free (const SHORT precond_type,
                         precond *pc);
 
 
@@ -1839,12 +1839,12 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
 
 /*-------- In file: quadrature.c --------*/
 
-void fasp_quad2d (INT num_qp, 
-                  INT ncoor, 
+void fasp_quad2d (const INT num_qp,
+                  const INT ncoor,
                   REAL (*quad)[3]);
 
-void fasp_gauss2d (INT num_qp, 
-                   INT ncoor, 
+void fasp_gauss2d (const INT num_qp,
+                   const INT ncoor,
                    REAL (*gauss)[3]);
 
 
@@ -2099,12 +2099,12 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
                                  dCSRmat *A,
                                  dvector *b,
                                  INT L,
-                                 INT order,
+                                 const INT order,
                                  INT *mark,
-                                 INT maximap,
-                                 INT nx,
-                                 INT ny,
-                                 INT nz);
+                                 const INT maximap,
+                                 const INT nx,
+                                 const INT ny,
+                                 const INT nz);
 
 
 /*-------- In file: smoother_csr_cr.c --------*/
@@ -2151,13 +2151,13 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
 void fasp_smoother_dstr_gs (dSTRmat *A, 
                             dvector *b, 
                             dvector *u,
-                            INT order, 
+                            const INT order,
                             INT *mark);
 
 void fasp_smoother_dstr_gs1 (dSTRmat *A, 
                              dvector *b, 
                              dvector *u, 
-                             INT order, 
+                             const INT order,
                              INT *mark, 
                              REAL *diaginv);
 
@@ -2182,22 +2182,22 @@ void fasp_smoother_dstr_gs_cf (dSTRmat *A,
                                dvector *u, 
                                REAL *diaginv, 
                                INT *mark, 
-                               INT order);
+                               const INT order);
 
 void fasp_smoother_dstr_sor (dSTRmat *A, 
                              dvector *b, 
                              dvector *u, 
-                             INT order, 
+                             const INT order,
                              INT *mark, 
-                             REAL weight);
+                             const REAL weight);
 
 void fasp_smoother_dstr_sor1 (dSTRmat *A,
                               dvector *b,
                               dvector *u,
-                              INT order,
+                              const INT order,
                               INT *mark,
                               REAL *diaginv,
-                              REAL weight);
+                              const REAL weight);
 
 void fasp_smoother_dstr_sor_ascend (dSTRmat *A,
                                     dvector *b,
@@ -2223,8 +2223,8 @@ void fasp_smoother_dstr_sor_cf (dSTRmat *A,
                                 dvector *u, 
                                 REAL *diaginv,
                                 INT *mark, 
-                                INT order, 
-                                REAL weight);
+                                const INT order,
+                                const REAL weight);
 
 void fasp_generate_diaginv_block (dSTRmat *A, 
                                   ivector *neigh, 
@@ -2247,15 +2247,15 @@ void fasp_bdcsr_free (block_dCSRmat *A);
 SHORT fasp_dcsr_getblk (dCSRmat *A,
                         INT *Is,
                         INT *Js,
-                        INT m,
-                        INT n,
+                        const INT m,
+                        const INT n,
                         dCSRmat *B);
 
 SHORT fasp_dbsr_getblk (dBSRmat *A,
                         INT *Is,
                         INT *Js,
-                        INT m,
-                        INT n,
+                        const INT m,
+                        const INT n,
                         dBSRmat *B);
 
 dCSRmat fasp_dbsr_getblk_dcsr (dBSRmat *A);
@@ -2265,27 +2265,27 @@ dCSRmat fasp_dbsr_Linfinity_dcsr (dBSRmat *A);
 
 /*-------- In file: sparse_bsr.c --------*/
 
-dBSRmat fasp_dbsr_create (INT ROW, 
-                          INT COL, 
-                          INT NNZ, 
-                          INT nb, 
-                          INT storage_manner);
+dBSRmat fasp_dbsr_create (const INT ROW,
+                          const INT COL,
+                          const INT NNZ,
+                          const INT nb,
+                          const INT storage_manner);
 
-void fasp_dbsr_alloc (INT ROW, 
-                      INT COL, 
-                      INT NNZ, 
-                      INT nb, 
-                      INT storage_manner, 
+void fasp_dbsr_alloc (const INT ROW,
+                      const INT COL,
+                      const INT NNZ,
+                      const INT nb,
+                      const INT storage_manner,
                       dBSRmat *A);
 
 void fasp_dbsr_free (dBSRmat *A);
 
 void fasp_dbsr_null (dBSRmat *A);
 
-void fasp_dbsr_cp (dBSRmat *A, 
+void fasp_dbsr_cp (dBSRmat *A,
                    dBSRmat *B);
 
-INT fasp_dbsr_trans (dBSRmat *A, 
+INT fasp_dbsr_trans (dBSRmat *A,
                      dBSRmat *AT);
 
 SHORT fasp_dbsr_diagpref (dBSRmat *A);
@@ -2294,22 +2294,22 @@ dvector fasp_dbsr_getdiaginv (dBSRmat *A);
 
 dBSRmat fasp_dbsr_diaginv (dBSRmat *A);
 
-dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A, 
+dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
                             REAL *diaginv);
 
-dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A, 
-                            REAL *diaginv) ;
-
-dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A, 
+dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                             REAL *diaginv);
 
-void fasp_dbsr_getdiag (INT n, 
-                        dBSRmat *A, 
+dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
+                            REAL *diaginv);
+
+void fasp_dbsr_getdiag (INT n,
+                        dBSRmat *A,
                         REAL *diag );
 
-dBSRmat fasp_dbsr_diagLU(dBSRmat *A,
-                         REAL *DL,
-                         REAL *DU);
+dBSRmat fasp_dbsr_diagLU (dBSRmat *A,
+                          REAL *DL,
+                          REAL *DU);
 
 dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
                            REAL *DL,
@@ -2318,9 +2318,9 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
 
 /*-------- In file: sparse_coo.c --------*/
 
-dCOOmat fasp_dcoo_create (INT m,
-                          INT n,
-                          INT nnz);
+dCOOmat fasp_dcoo_create (const INT m,
+                          const INT n,
+                          const INT nnz);
 
 void fasp_dcoo_alloc (const INT m,
                       const INT n,
@@ -2330,7 +2330,7 @@ void fasp_dcoo_alloc (const INT m,
 void fasp_dcoo_free (dCOOmat *A);
 
 void fasp_dcoo_shift (dCOOmat *A,
-                      INT offset);
+                      const INT offset);
 
 
 /*-------- In file: sparse_csr.c --------*/
@@ -2424,9 +2424,9 @@ void fasp_dcsr_sortz (dCSRmat *A,
 
 /*-------- In file: sparse_csrl.c --------*/
 
-dCSRLmat * fasp_dcsrl_create (INT num_rows, 
-                              INT num_cols, 
-                              INT num_nonzeros);
+dCSRLmat * fasp_dcsrl_create (const INT num_rows,
+                              const INT num_cols,
+                              const INT num_nonzeros);
 
 void fasp_dcsrl_free (dCSRLmat *A);
 
@@ -2435,20 +2435,20 @@ void fasp_dcsrl_free (dCSRLmat *A);
 
 void fasp_dstr_null (dSTRmat *A);
 
-dSTRmat fasp_dstr_create (INT nx, 
-                          INT ny, 
-                          INT nz, 
-                          INT nc, 
-                          INT nband, 
+dSTRmat fasp_dstr_create (const INT nx,
+                          const INT ny,
+                          const INT nz,
+                          const INT nc,
+                          const INT nband,
                           INT *offsets);
 
-void fasp_dstr_alloc (INT nx, 
-                      INT ny, 
-                      INT nz, 
-                      INT nxy, 
-                      INT ngrid, 
-                      INT nband, 
-                      INT nc,
+void fasp_dstr_alloc (const INT nx,
+                      const INT ny,
+                      const INT nz,
+                      const INT nxy,
+                      const INT ngrid,
+                      const INT nband,
+                      const INT nc,
                       INT *offsets, 
                       dSTRmat *A);
 

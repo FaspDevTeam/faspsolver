@@ -88,7 +88,7 @@ double fasp_aux_bbyteToldouble (unsigned char bytes[])
 }
 
 /**
- * \fn INT endian_convert_int (const INT inum, INT ilength, INT endianflag)
+ * \fn INT endian_convert_int (const INT inum, const INT ilength, const INT endianflag)
  *
  * \brief Swap order of an INT number
  *
@@ -120,7 +120,7 @@ INT endian_convert_int (const INT inum,
 }
 
 /**
- * \fn REAL endian_convert_real (const REAL rnum, INT ilength, INT endianflag)
+ * \fn REAL endian_convert_real (const REAL rnum, const INT ilength, const INT endianflag)
  *
  * \brief Swap order of a REAL number
  *
@@ -135,8 +135,8 @@ INT endian_convert_int (const INT inum,
  * \date   2012-12-24
  */
 REAL endian_convert_real (const REAL rnum,
-                          INT vlength,
-                          INT endianflag)
+                          const INT vlength,
+                          const INT endianflag)
 {
     REAL dretVal;
     char *realToConvert = (char *) & rnum;

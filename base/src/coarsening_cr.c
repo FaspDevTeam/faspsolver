@@ -21,7 +21,7 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_amg_coarsening_cr (INT i_0, INT i_n, dCSRmat *A, 
+ * \fn INT fasp_amg_coarsening_cr (const INT i_0, const INT i_n, dCSRmat *A,
  *                                 ivector *vertices, AMG_param *param)
  *
  * \brief CR coarsening
@@ -39,8 +39,8 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */
-INT fasp_amg_coarsening_cr (INT i_0, 
-                            INT i_n, 
+INT fasp_amg_coarsening_cr (const INT i_0,
+                            const INT i_n,
                             dCSRmat *A, 
                             ivector *vertices, 
                             AMG_param *param)
