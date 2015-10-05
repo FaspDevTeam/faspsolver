@@ -1,6 +1,6 @@
 /*! \file blas_smat.c
  *
- *  \brief BLAS operations for *small* dense matrices
+ *  \brief BLAS2 operations for *small* dense matrices
  *
  *  \warning The rountines are designed for full matrices only!
  */

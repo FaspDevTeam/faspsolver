@@ -3,7 +3,7 @@
  *  \brief Interpolation operators for AMG
  *
  *  \note Ref U. Trottenberg, C. W. Oosterlee, and A. Schuller
- *            Multigrid (Appendix A: An Intro to Algebraic Multigrid)
+ *            "Multigrid (Appendix A: An Intro to Algebraic Multigrid)"
  *            Academic Press Inc., San Diego, CA, 2001
  *            With contributions by A. Brandt, P. Oswald and K. Stuben.
  */

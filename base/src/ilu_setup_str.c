@@ -1,6 +1,6 @@
 /*! \file ilu_setup_str.c
  *
- *  \brief Setup of ILU decomposition for dSTRmat matrices
+ *  \brief Setup incomplete LU decomposition for dSTRmat matrices
  */
 
 #include <math.h>

@@ -1,6 +1,6 @@
 /*! \file formats.c
  *
- *  \brief Matrix format conversion routines
+ *  \brief Subroutines for matrix format conversion
  */
 
 #include "fasp.h"
@@ -824,7 +824,6 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat *A,
     return B;
 }
 
-
 /*!
  * \fn dBSRmat fasp_format_dstr_dbsr ( dSTRmat *B )
  *
@@ -1003,143 +1002,3 @@ dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
-
-#if TRUE
-
-/*!
- * \fn dBSRmat fasp_format_dcsr_dbsr0 ( dCSRmat *B, INT nb )
- *
- * \brief Transfer a dCSRmat type matrix into a dBSRmat.
- *
- * \param B   Pointer to the dCSRmat type matrix
- * \param nb  size of each block
- *
- * \return    dBSRmat matrix
- *
- * \author Changhe Qiao
- * \date   03/12/2012
- *
- * Modified by Xiaozhe Hu on 03/13/2012
- * Modified by Chunsheng Feng, Zheng Li on 10/13/2012
- *
- * TODO: Remove later! --Chensong
- */
-dBSRmat fasp_format_dcsr_dbsr0 (dCSRmat *B,
-                                const INT nb)
-{
-    INT *Is, *Js;
-    INT i,j,num, k;
-    INT nRow, nCol;
-    
-    dCSRmat tmpMat;
-    dBSRmat A;
-    
-    // Safe-guard check --Chensong 05/27/2012
-    if ((B->row)%nb!=0) {
-        printf("### ERROR: B.row=%d is not a multiplication of nb=%d!\n", B->row, nb);
-        exit(0);
-    }
-    
-    if ((B->col)%nb!=0) {
-        printf("### ERROR: B.col=%d is not a multiplication of nb=%d!\n", B->col, nb);
-        exit(0);
-    }
-    
-    nRow=B->row/nb; //we must ensure this is a integer
-    nCol=B->col/nb;
-    
-    Is=(INT *)fasp_mem_calloc(nRow, sizeof(INT));
-    Js=(INT *)fasp_mem_calloc(nCol, sizeof(INT));
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(nRow>OPENMP_HOLDS) private(i)
-#endif
-    for(i=0;i<nRow;i++) {
-        Is[i]=i*nb;
-    }
-#ifdef _OPENMP
-#pragma omp parallel for if(nCol>OPENMP_HOLDS) private(i)
-#endif
-    for(i=0;i<nCol;i++) {
-        Js[i]=i*nb;
-    }
-    
-    fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
-    
-    //here we have tmpmat as the submatrix
-    A.ROW=nRow;
-    A.COL=nCol;
-    A.NNZ=tmpMat.nnz;
-    A.nb=nb;
-    A.storage_manner=0;//row majored
-    A.IA=(INT*)fasp_mem_calloc(A.ROW+1, sizeof(INT));
-    A.JA=(INT*)fasp_mem_calloc(A.NNZ, sizeof(INT));
-    A.val=(REAL*)fasp_mem_calloc(A.NNZ*nb*nb, sizeof(REAL));
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tmpMat.row>OPENMP_HOLDS) private(i)
-#endif
-    for(i=0;i<tmpMat.row+1;i++) {
-        A.IA[i]=tmpMat.IA[i];
-    }
-    
-#if 0
-    for(i=0;i<tmpMat.nnz;i++) {
-        A.JA[i]=tmpMat.JA[i];
-    }
-    for(i=0;i<tmpMat.nnz;i++) {
-        A.val[i*nb*nb]=tmpMat.val[i];
-    }
-#endif
-    
-#ifdef _OPENMP
-#pragma omp parallel for if(tmpMat.nnz>OPENMP_HOLDS) private(i)
-#endif
-    for(i=0;i<tmpMat.nnz;i++) {
-        A.JA[i]=tmpMat.JA[i];
-        A.val[i*nb*nb]=tmpMat.val[i];
-    }
-    
-    fasp_mem_free(tmpMat.IA);
-    fasp_mem_free(tmpMat.JA);
-    fasp_mem_free(tmpMat.val);
-    
-    for(i=0;i<nb;i++) {
-        for(j=0;j<nb;j++) {
-            num=i*nb+j;
-            if (i==0 && j==0) {
-            }
-            else {
-#ifdef _OPENMP
-#pragma omp parallel for if(nRow>OPENMP_HOLDS) private(k)
-#endif
-                for(k=0;k<nRow;k++) {
-                    Is[k]=k*nb+i;
-                }
-#ifdef _OPENMP
-#pragma omp parallel for if(nCol>OPENMP_HOLDS) private(k)
-#endif
-                for(k=0;k<nCol;k++) {
-                    Js[k]=k*nb+j;
-                }
-                fasp_dcsr_getblk(B,Is,Js,nRow,nCol,&tmpMat);
-#ifdef _OPENMP
-#pragma omp parallel for if(tmpMat.nnz>OPENMP_HOLDS) private(k)
-#endif
-                for(k=0;k<tmpMat.nnz;k++) {
-                    A.val[k*nb*nb+num]=tmpMat.val[k];
-                }
-                fasp_mem_free(tmpMat.IA);
-                fasp_mem_free(tmpMat.JA);
-                fasp_mem_free(tmpMat.val);
-            }
-        }
-    }
-    
-    if(Is) fasp_mem_free(Is);
-    if(Js) fasp_mem_free(Js);
-    
-    return A;
-}
-
-#endif

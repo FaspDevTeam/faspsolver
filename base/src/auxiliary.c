@@ -7,9 +7,10 @@
  * C-version: by Ludmil Zikatanov 2010-04-08
  *                         tested 2010-04-08
  *------------------------------------------------------
+ *
+ *  \todo Remove unwanted functions from this file. --Chensong
+ *
  */
-
-// Todo: add Doxygen for each function! remove unwanted functions. --Chensong
 
 #include <math.h>
 #include <time.h>

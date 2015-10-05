@@ -1,6 +1,6 @@
 /*! \file ilu_setup_bsr.c
  *
- *  \brief Setup Incomplete LU decomposition for dBSRmat matrices
+ *  \brief Setup incomplete LU decomposition for dBSRmat matrices
  */
 
 #include <math.h>

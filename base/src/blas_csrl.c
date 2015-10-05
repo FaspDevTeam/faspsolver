@@ -1,6 +1,6 @@
 /*! \file blas_csrl.c
  *
- *  \brief BLAS operations for dCSRLmat matrices
+ *  \brief BLAS2 operations for dCSRLmat matrices
  *
  *  \note For details of CSRL format, refer to 
  *        "Optimizaing sparse matrix vector product computations using unroll and jam"

@@ -16,8 +16,6 @@
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
-////////////////////////////////////////  JACOBI  //////////////////////////////////////////
-
 /**
  * \fn void fasp_smoother_dbsr_jacobi (dBSRmat *A, dvector *b, dvector *u)
  *
@@ -388,8 +386,6 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     }
     
 }
-
-////////////////////////////////////  Gauss-Seidel  ////////////////////////////////////////////
 
 /**
  * \fn void fasp_smoother_dbsr_gs (dBSRmat *A, dvector *b, dvector *u, INT order,
@@ -992,8 +988,6 @@ void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
     }
 }
 
-////////////////////////////////////////  SOR  //////////////////////////////////////////
-
 /**
  * \fn void fasp_smoother_dbsr_sor (dBSRmat *A, dvector *b, dvector *u, INT order,
  *                                  INT *mark, REAL weight)
@@ -1554,8 +1548,6 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
     }
     
 }
-
-////////////////////////////////////////  ILU  //////////////////////////////////////////
 
 /**
  * \fn void fasp_smoother_dbsr_ilu (dBSRmat *A, dvector *b, dvector *x, void *data)

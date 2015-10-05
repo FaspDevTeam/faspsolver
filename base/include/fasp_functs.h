@@ -643,9 +643,6 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B);
 
 dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B);
 
-dBSRmat fasp_format_dcsr_dbsr0 (dCSRmat *B,
-                                const INT nb);
-
 
 /*-------- In file: givens.c --------*/
 

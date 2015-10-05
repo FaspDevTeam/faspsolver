@@ -1,6 +1,6 @@
 /*! \file mgcycle.c
  *
- *  \brief Abstract non-recursive multigrid cycle
+ *  \brief Abstract multigrid cycle -- non-recursive version
  */
 
 #include <math.h>
