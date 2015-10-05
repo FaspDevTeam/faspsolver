@@ -7,7 +7,7 @@
  *        Refer to J. Brannick and R. Falgout
  *        "Compatible relaxation and coarsening in AMG"
  *
- *  TODO: Not working. Yet need to be fixed. --Chensong
+ *  \warning Not working. Yet need to be fixed. --Chensong
  */
 
 #include <math.h>

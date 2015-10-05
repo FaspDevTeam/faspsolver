@@ -1,8 +1,8 @@
 /*! \file vec.c
  *
- *  \brief Simple operations for vectors.
+ *  \brief Simple operations for vectors
  *
- *  \note Every structures should be initialized before usage.
+ *  \note All structures should be initialized before usage.
  */
 
 #include <math.h>

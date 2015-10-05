@@ -1,6 +1,6 @@
 /*! \file blas_csr.c
  *
- *  \brief BLAS operations for dCSRmat matrices
+ *  \brief BLAS2 operations for dCSRmat matrices
  *
  *  \note Sparse functions usually contain three runs. The three runs are all the
  *        same but thy serve different purpose.

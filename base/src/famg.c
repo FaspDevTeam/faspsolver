@@ -1,6 +1,6 @@
 /*! \file famg.c
  *
- *  \brief full AMG method as an iterative solver (main file)
+ *  \brief Full AMG method as an iterative solver (main file)
  */
 
 #include <time.h>

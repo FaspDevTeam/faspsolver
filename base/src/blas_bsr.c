@@ -1,6 +1,6 @@
 /*! \file blas_bsr.c
  *
- *  \brief BLAS operations for dBSRmat matrices
+ *  \brief BLAS2 operations for dBSRmat matrices
  */
 
 #include <math.h>

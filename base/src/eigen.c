@@ -1,6 +1,6 @@
 /*! \file eigen.c
  *
- *  \brief Simple subroutines for compute the extreme eigenvalues
+ *  \brief Subroutines for computing the extreme eigenvalues
  */
 
 #include <math.h> 

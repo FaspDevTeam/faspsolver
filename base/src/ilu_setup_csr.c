@@ -1,6 +1,6 @@
 /*! \file ilu_setup_csr.c
  *
- *  \brief Setup of ILU decomposition for dCSRmat matrices
+ *  \brief Setup incomplete LU decomposition for dCSRmat matrices
  */
 
 #include <math.h>

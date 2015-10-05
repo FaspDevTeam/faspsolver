@@ -1,6 +1,6 @@
 /*! \file lu.c
  *
- *  \brief LU decomposition and direct solve for small dense matrices
+ *  \brief LU decomposition and direct solver for small dense matrices
  */
 
 #include <math.h>

@@ -1,6 +1,6 @@
 /*! \file pgcr.c
  *
- *  \brief Krylov subspace methods -- Preconditioned GCR.
+ *  \brief Krylov subspace methods -- Preconditioned GCR
  */
 
 #include <math.h>

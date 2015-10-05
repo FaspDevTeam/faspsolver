@@ -1,8 +1,6 @@
 /*! \file wrapper.c
  *
  *  \brief Wrappers for accessing functions by advanced users
- *
- *  TODO: Input variables should not need fasp.h!!! --Chensong
  */
 
 #include "fasp.h"

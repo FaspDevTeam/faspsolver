@@ -1,6 +1,6 @@
 /*! \file ordering.c
  *
- *  \brief A collection of ordering, merging, removing duplicated integers functions
+ *  \brief Subroutines for ordering, merging, removing duplicated integers
  */
 
 #include "fasp.h"

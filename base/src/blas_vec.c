@@ -1,6 +1,6 @@
 /*! \file blas_vec.c
  *
- *  \brief BLAS operations for vectors
+ *  \brief BLAS1 operations for vectors
  */
 
 #include <math.h>

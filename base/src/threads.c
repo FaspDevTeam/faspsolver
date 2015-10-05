@@ -1,6 +1,6 @@
 /*! \file threads.c
  *
- *  \brief Get and set number of threads and assign work load for each thread.
+ *  \brief Get and set number of threads and assign work load for each thread
  */
 
 #include <stdio.h>

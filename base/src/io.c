@@ -1,6 +1,6 @@
 /*! \file io.c
  *
- *  \brief Matrix-vector input/output subroutines
+ *  \brief Matrix/vector input/output subroutines
  *
  *  \note Read, write or print a matrix or a vector in various formats.
  */

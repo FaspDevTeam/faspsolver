@@ -1,6 +1,6 @@
 /*! \file graphics.c
  *
- *  \brief Functions for graphical output
+ *  \brief Subroutines for graphical output
  */
 
 #include <math.h>

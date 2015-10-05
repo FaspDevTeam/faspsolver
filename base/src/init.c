@@ -1,4 +1,5 @@
 /*! \file init.c
+ *
  *  \brief Initialize important data structures
  *
  *  \note Every structures should be initialized before usage.

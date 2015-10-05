@@ -1,6 +1,6 @@
 /*! \file blas_bcsr.c
  *
- *  \brief BLAS operations for block_dCSRmat matrices
+ *  \brief BLAS2 operations for block_dCSRmat matrices
  */
 
 #include <time.h>

@@ -14,6 +14,8 @@
  *                         tested 2010-04-08
  *          : Modifed Xiaozhe Hu  2010-10-18
  *------------------------------------------------------
+ *
+ *  \todo Remove unwanted functions from this file. --Chensong
  */
 
 #include <math.h>
