@@ -374,14 +374,14 @@ static INT write_bmp16 (const char *fname,
     INT offset, bmsize, i, j, b, ret = 1;
     
     if (!(1 <= m && m <= 32767))
-        printf("### ERROR: write_bmp16 invalid height %d\n", m);
+        printf("### ERROR: %s invalid height %d\n", __FUNCTION__, m);
     
     if (!(1 <= n && n <= 32767))
-        printf("### ERROR: write_bmp16 invalid width %d\n", n);
+        printf("### ERROR: %s invalid width %d\n", __FUNCTION__, n);
     
     fp = fopen(fname, "wb");
     if (fp == NULL) {
-        printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
+        printf("### ERROR: %s unable to create `%s'\n", __FUNCTION__, fname);
         ret = 0;
         goto FINISH;
     }
@@ -435,7 +435,7 @@ static INT write_bmp16 (const char *fname,
     fflush(fp);
     
     if (ferror(fp)) {
-        printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
+        printf("### ERROR: %s write error on `%s'\n", __FUNCTION__, fname);
         ret = 0;
     }
 FINISH: if (fp != NULL) fclose(fp);
@@ -490,14 +490,14 @@ INT fasp_dbsr_plot (const dBSRmat *A,
     memset(map, 0x0F, size);
     
     if (!(1 <= m && m <= 32767))
-        printf("### ERROR: write_bmp16 invalid height %d\n", m);
+        printf("### ERROR: %s invalid height %d\n", __FUNCTION__, m);
     
     if (!(1 <= n && n <= 32767))
-        printf("### ERROR: write_bmp16 invalid width %d\n", n);
+        printf("### ERROR: %s invalid width %d\n", __FUNCTION__, n);
     
     fp = fopen(fname, "wb");
     if (fp == NULL) {
-        printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
+        printf("### ERROR: %s unable to create `%s'\n", __FUNCTION__, fname);
         ret = 0;
         goto FINISH;
     }
@@ -589,11 +589,9 @@ INT fasp_dbsr_plot (const dBSRmat *A,
         }
     }
     
-    
-    
     fflush(fp);
     if (ferror(fp)) {
-        printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
+        printf("### ERROR: %s write error on `%s'\n", __FUNCTION__, fname);
         ret = 0;
     }
 FINISH: if (fp != NULL) fclose(fp);
@@ -650,14 +648,14 @@ INT fasp_dcsr_plot (const dCSRmat *A,
     memset(map, 0x0F, size);
     
     if (!(1 <= m && m <= 32767))
-        printf("### ERROR: write_bmp16 invalid height %d\n", m);
+        printf("### ERROR: %s invalid height %d\n", __FUNCTION__, m);
     
     if (!(1 <= n && n <= 32767))
-        printf("### ERROR: write_bmp16 invalid width %d\n", n);
+        printf("### ERROR: %s invalid width %d\n", __FUNCTION__, n);
     
     fp = fopen(fname, "wb");
     if (fp == NULL) {
-        printf("### ERROR: write_bmp16 unable to create `%s'\n", fname);
+        printf("### ERROR: %s unable to create `%s'\n", __FUNCTION__, fname);
         ret = 0;
         goto FINISH;
     }
@@ -741,7 +739,7 @@ INT fasp_dcsr_plot (const dCSRmat *A,
     
     fflush(fp);
     if (ferror(fp)) {  
-        printf("### ERROR: write_bmp16 write error on `%s'\n",fname);
+        printf("### ERROR: %s write error on `%s'\n", __FUNCTION__, fname);
         ret = 0;
     }
 FINISH: if (fp != NULL) fclose(fp);

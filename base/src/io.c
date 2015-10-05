@@ -2795,7 +2795,7 @@ static void fasp_dcsr_write_s (FILE *fp,
     
     for ( i = 0; i < m+1; ++i ) fprintf(fp,"%d\n", A->IA[i]);
 
-	for ( i = 0; i < A->nnz; ++i ) fprintf(fp,"%d\n", A->JA[i]);
+    for ( i = 0; i < A->nnz; ++i ) fprintf(fp,"%d\n", A->JA[i]);
 
     for ( i = 0; i < A->nnz; ++i ) fprintf(fp,"%le\n", A->val[i]);
 }

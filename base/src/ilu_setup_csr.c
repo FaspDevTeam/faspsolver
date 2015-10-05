@@ -67,7 +67,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->row,n,nnz);
+    printf("### DEBUG: m=%d, n=%d, nnz=%d\n", A->row, n, nnz);
 #endif
     
     fasp_gettime(&setup_start);
@@ -110,20 +110,20 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     switch (type) {
         case ILUt:
 #if DEBUG_MODE > 0
-    printf("### DEBUG: ILUt %s ...... %d [Start]\n", __FUNCTION__,__LINE__);
+    printf("### DEBUG: %s (ILUt) ...... [Start]\n", __FUNCTION__);
 #endif
             ilut_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,luval,ijlu,&iwk,&ierr,&nzlu);
             break;
         case ILUtp:
 #if DEBUG_MODE > 0
-    printf("### DEBUG: ILUp %s ...... %d [Start]\n", __FUNCTION__,__LINE__);
+    printf("### DEBUG: %s (ILUp) ...... [Start]\n", __FUNCTION__);
 #endif
             ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol,
                    &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
             break;
         default: // ILUk
 #if DEBUG_MODE > 0
-    printf("### DEBUG: ILUk %s ...... %d [Start]\n", __FUNCTION__,__LINE__);
+    printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
 #endif
             iluk_(&n,A->val,A->JA,A->IA,&lfil,luval,ijlu,&iwk,&ierr,&nzlu);
             break;
