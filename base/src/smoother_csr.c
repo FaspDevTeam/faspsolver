@@ -2067,7 +2067,7 @@ static void swep3df (INT *ia,
             {
                 i0 = i   +  j0    + k0;
                 i0 = mark[i0]-1; //Fortran to C
-                //    printf("%d %d %d %d\n",i,j0,k0,i0);
+
                 if (i0>=0 ) {
                     t = f[i0];
                     begin_row = ia[i0], end_row = ia[i0+1];

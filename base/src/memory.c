@@ -16,9 +16,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
     void * nedcalloc(size_t no, size_t size);
     void * nedrealloc(void *mem, size_t size);
     void   nedfree(void *mem);
+
 #ifdef __cplusplus
 }
 #endif
@@ -29,9 +31,9 @@ extern "C" {
 /*--      Global Variables       --*/
 /*---------------------------------*/
 
-unsigned INT total_alloc_mem   = 0; //! Total allocated memory amount
-unsigned INT total_alloc_count = 0; //! Total number of allocations
-const    INT Million     = 1048576; //! 1M = 1024*1024
+unsigned INT total_alloc_mem   = 0;        //! Total allocated memory amount
+unsigned INT total_alloc_count = 0;        //! Total number of allocations
+const    INT Million           = 1048576;  //! 1M = 1024*1024
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -170,7 +172,7 @@ void fasp_mem_free (void * mem)
 void fasp_mem_usage ()
 {
 #if CHMEM_MODE
-    printf("### DEBUG: Total number of alloc = %d, allocated memory %.3fMB.\n",
+    printf("### DEBUG: Number of alloc = %d, allocating memory = %.3fMB.\n",
            total_alloc_count, (REAL)total_alloc_mem/Million);
 #endif
 }
@@ -242,7 +244,7 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
 SHORT fasp_mem_dcsr_check (dCSRmat *A)
 {
     if ( (A->IA == NULL) || (A->JA == NULL) || (A->val == NULL) ) {
-        printf("### ERROR: Something is wrong with matrix data! %s\n", __FUNCTION__);
+        printf("### ERROR: Something is wrong with matrix! %s\n", __FUNCTION__);
         return ERROR_ALLOC_MEM;
     }
     else {

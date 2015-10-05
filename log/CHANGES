@@ -4,6 +4,7 @@ File Name: CHANGES
 - Add `const' to declaring constant variables.
 - Check regression results.
 - Check and remove a few deprecated functions.
+- Clean up print out messages.
 - Update Doxygen.
 
 09/30/2015 FASP 1.8.0:
