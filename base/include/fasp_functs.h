@@ -1441,16 +1441,6 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
 
 /*-------- In file: pgcr.c --------*/
 
-INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
-                            dvector *b,
-                            dvector *x,
-                            precond *pc,
-                            const REAL tol,
-                            const INT MaxIt,
-                            const SHORT restart,
-                            const SHORT stop_type,
-                            const SHORT prtlvl);
-
 INT fasp_solver_dcsr_pgcr (dCSRmat *A,
                            dvector *b,
                            dvector *x,
@@ -1460,6 +1450,16 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
                            const SHORT restart,
                            const SHORT stop_type,
                            const SHORT prtlvl);
+
+INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
+                            dvector *b,
+                            dvector *x,
+                            precond *pc,
+                            const REAL tol,
+                            const INT MaxIt,
+                            const SHORT restart,
+                            const SHORT stop_type,
+                            const SHORT prtlvl);
 
 
 /*-------- In file: pgmres.c --------*/

@@ -5,8 +5,9 @@ Milestones
 ========================
 
 [ 1.1.6 ] Release an alpha version by the end of 2012!
-[       ] Release a beta version by Sep 2015!
-[       ] Release a stable version by the end of 2016!
+[       ] Release a beta 1 version by Oct 2015!
+[       ] Release a beta 2 version by Dec 2015!
+[       ] Release a stable version by Dec 2016!
 
 ========================
 Documentation
@@ -69,10 +70,10 @@ AMG
 [ 0.8.5 ] non-overlapping/overlapping Schwarz smoother
 [ 1.6.2 ] maximal independent set based on a strength matrix
 [ 1.7.6 ] replace Schwarz smoother by a C version
+[   *   ] AMG based on mesh information (Hongxuan)
 [       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
 [       ] Tarjan algorithm and other orderings (Xiaozhe and Ludmil)
 [       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
-[   *   ] AMG based on mesh information (Hongxuan)
 
 [ 0.9.0 ] aggressive coarsening strategies
 [ 1.5.0 ] Notay's aggregation scheme
@@ -148,7 +149,7 @@ Test and Debug
 [ 0.6.0 ] build upon regression.c to make a regression test suite
 [ 1.6.1 ] compare regression results automatically
 [ 1.6.9 ] finish the debug environment construction
-[       ] add a new unit test tool for FASP, e.g. CHECK (Chensong)
+[   *   ] add a new unit test tool for FASP, e.g. CHECK (Chensong)
 
 ========================
 Examples
