@@ -1,10 +1,12 @@
 File Name: CHANGES
 
-10/05/2015 FASP 1.8.1:
+10/06/2015 FASP 1.8.1:
 - Add `const' to declaring constant variables.
 - Check regression results.
 - Check and remove a few deprecated functions.
 - Clean up print out messages.
+- Test DIAG_PREF option with the new version.
+- Test and modify regression_mm.c; log results in test/out/reg_mm.out.
 - Update Doxygen.
 
 09/30/2015 FASP 1.8.0:

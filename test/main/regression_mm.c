@@ -6,6 +6,7 @@
  *      Created  by Feiteng Huang on 06/12/2012
  *      Modified by Chensong Zhang on 09/28/2013
  *      Modified by Chensong Zhang on 10/03/2013
+ *      Modified by Chensong Zhang on 10/06/2015
  *
  *------------------------------------------------------
  *
@@ -20,15 +21,17 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-#define num_prob      11                /**< how many problems to be used */
-#define num_solvers    7                /**< how many methods  to be used */
+#define num_prob      10                /**< how many problems to be used */
+#define num_solvers    8                /**< how many methods  to be used */
 
 unsigned INT  ntest[num_solvers];       /**< number of tests all together without preconditioner */
 unsigned INT  nfail[num_solvers];       /**< number of failed tests without preconditioner */
 unsigned INT  ntest_diag[num_solvers];  /**< number of tests all together for diag preconditioner */
 unsigned INT  nfail_diag[num_solvers];  /**< number of failed tests for diag preconditioner */
-unsigned INT  ntest_ilu[num_solvers];   /**< number of tests all together for ILU preconditioner */
-unsigned INT  nfail_ilu[num_solvers];   /**< number of failed tests for ILU preconditioner */
+unsigned INT  ntest_iluk[num_solvers];  /**< number of tests all together for ILUk preconditioner */
+unsigned INT  nfail_iluk[num_solvers];  /**< number of failed tests for ILUk preconditioner */
+unsigned INT  ntest_ilut[num_solvers];  /**< number of tests all together for ILUt preconditioner */
+unsigned INT  nfail_ilut[num_solvers];  /**< number of failed tests for ILUt preconditioner */
 unsigned INT  ntest_amg[num_solvers];   /**< number of tests all together for amg preconditioner */
 unsigned INT  nfail_amg[num_solvers];   /**< number of failed tests for amg preconditioner */
 unsigned INT  ntest_amg_solver;         /**< number of tests all together for amg solver */
@@ -70,7 +73,7 @@ int main (int argc, const char * argv[])
     const INT      print_level = 1;    // how much information to print out
     const REAL     tolerance   = 1e-4; // tolerance for accepting the solution
     const char     solvers[num_solvers][128] = {"CG", "BiCGstab", "MinRes", "GMRES",
-        "VGMRES", "VFGMRES", "GCG"};
+        "VGMRES", "VFGMRES", "GCG", "GCR"};
     
     /* Local Variables */
     itsolver_param itparam;      // input parameters for iterative solvers
@@ -90,8 +93,8 @@ int main (int argc, const char * argv[])
     
     memset(ntest_diag, 0x0, num_solvers*sizeof(int));
     memset(nfail_diag, 0x0, num_solvers*sizeof(int));
-    memset(ntest_ilu,  0x0, num_solvers*sizeof(int));
-    memset(nfail_ilu,  0x0, num_solvers*sizeof(int));
+    memset(ntest_iluk, 0x0, num_solvers*sizeof(int));
+    memset(nfail_ilut, 0x0, num_solvers*sizeof(int));
     memset(ntest_amg,  0x0, num_solvers*sizeof(int));
     memset(nfail_amg,  0x0, num_solvers*sizeof(int));
     ntest_amg_solver = 0;
@@ -292,29 +295,7 @@ int main (int argc, const char * argv[])
                 break;
                 
             case 9:
-                // - Problem 9. MatrixMarket Fluid flow modeling.
-                
-                // Read A in MatrixMarket COO format.
-                fasp_dmtx_read("../data/lns__131.mtx", &A);
-                
-                printf("MatrixMarket Fluid flow modeling\n");
-                printf("||  Condition Number:    1.15e+15   ||\n");
-                printf("||          Unsymmetric             ||\n");
-                printf("|| row:%5d, col:%5d, nnz:%6d ||\n", A.row, A.col, A.nnz);
-                printf("==================================================================\n");
-                
-                // Generate an exact solution randomly
-                sol = fasp_dvec_create(A.row);
-                fasp_dvec_rand(A.row, &sol);
-                
-                // Form the right-hand-side b = A*sol
-                b = fasp_dvec_create(A.row);
-                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-                
-                break;
-                
-            case 10:
-                // - Problem 10. MatrixMarket Oil reservoir simulation challenge matrics.
+                // - Problem 9. MatrixMarket Oil reservoir simulation challenge matrics.
                 // Black oil simulation, shale barriers(NX = NY = NZ = 10, NC = 1)
                 
                 // Read A in MatrixMarket COO format.
@@ -336,8 +317,8 @@ int main (int argc, const char * argv[])
                 
                 break;
                 
-            case 11:
-                // - Problem 11. MatrixMarket Petroleum engineering.
+            case 10:
+                // - Problem 10. MatrixMarket Petroleum engineering.
                 
                 // Read A in MatrixMarket COO format.
                 fasp_dmtx_read("../data/watt__1.mtx", &A);
@@ -373,87 +354,98 @@ int main (int argc, const char * argv[])
         
         if (1) {
             /* Using no preconditioner for Krylov methods */
-            printf("------------------------------------------------------------------\n");
+            printf("\n------------------------------------------------------------------\n");
             printf("Krylov solver ...\n");
             
             fasp_param_solver_init(&itparam);
             itparam.maxit         = 100;
-            itparam.tol           = 1e-10;
+            itparam.tol           = 1e-15;
             itparam.print_level   = print_level;
             for (indm = 0; indm<num_solvers; indm++) {
                 fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
                 itparam.itsolver_type = indm+1;
                 fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
-                
                 check_solu(&x, &sol, tolerance, &(ntest[indm]), &(nfail[indm]));
-                printf("\n");
             }
         }
 
         if (1) {
             /* Using diagonal preconditioner for Krylov methods */
-            printf("------------------------------------------------------------------\n");
+            printf("\n------------------------------------------------------------------\n");
             printf("Diagonal preconditioned Krylov solver ...\n");
             
             fasp_param_solver_init(&itparam);
             itparam.maxit         = 100;
-            itparam.tol           = 1e-10;
+            itparam.tol           = 1e-15;
             itparam.print_level   = print_level;
             for (indm = 0; indm<num_solvers; indm++) {
                 fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
                 itparam.itsolver_type = indm+1;
                 fasp_solver_dcsr_krylov_diag(&A, &b, &x, &itparam);
-                
                 check_solu(&x, &sol, tolerance, &(ntest_diag[indm]), &(nfail_diag[indm]));
-                printf("\n");
             }
         }
         
         if (1) {
             /* Using ILUk as preconditioner for Krylov methods */
-            printf("------------------------------------------------------------------\n");
+            printf("\n------------------------------------------------------------------\n");
             printf("ILUk preconditioned Krylov solver ...\n");
             
             fasp_param_solver_init(&itparam);
             fasp_param_ilu_init(&iluparam);
             itparam.maxit         = 100;
-            itparam.tol           = 1e-10;
+            itparam.tol           = 1e-15;
             itparam.print_level   = print_level;
             iluparam.ILU_type     = ILUk;
             for (indm = 0; indm<num_solvers; indm++) {
                 fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
                 itparam.itsolver_type = indm+1;
                 fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
-                
-                check_solu(&x, &sol, tolerance, &(ntest_ilu[indm]), &(nfail_ilu[indm]));
-                printf("\n");
+                check_solu(&x, &sol, tolerance, &(ntest_iluk[indm]), &(nfail_iluk[indm]));
             }
         }
         
         if (1) {
+            /* Using ILUt as preconditioner for Krylov methods */
+            printf("\n------------------------------------------------------------------\n");
+            printf("ILUt preconditioned Krylov solver ...\n");
+            
+            fasp_param_solver_init(&itparam);
+            fasp_param_ilu_init(&iluparam);
+            itparam.maxit         = 100;
+            itparam.tol           = 1e-15;
+            itparam.print_level   = print_level;
+            iluparam.ILU_type     = ILUt;
+            for (indm = 0; indm<num_solvers; indm++) {
+                fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+                itparam.itsolver_type = indm+1;
+                fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
+                check_solu(&x, &sol, tolerance, &(ntest_ilut[indm]), &(nfail_ilut[indm]));
+            }
+        }
+
+        if (1) {
             /* Using classical AMG as preconditioner for Krylov methods */
-            printf("------------------------------------------------------------------\n");
+            printf("\n------------------------------------------------------------------\n");
             printf("AMG preconditioned Krylov solver ...\n");
             
             fasp_param_solver_init(&itparam);
             fasp_param_amg_init(&amgparam);
             itparam.maxit         = 100;
-            itparam.tol           = 1e-10;
+            itparam.tol           = 1e-15;
             itparam.print_level   = print_level;
             for (indm = 0; indm<num_solvers; indm++) {
                 fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
                 itparam.itsolver_type = indm+1;
                 fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
-                
                 check_solu(&x, &sol, tolerance, &(ntest_amg[indm]), &(nfail_amg[indm]));
-                printf("\n");
             }
         }
         
         if (1) {
             /* Using classical AMG as a solver */
             /* Using classical AMG as preconditioner for Krylov methods */
-            printf("------------------------------------------------------------------\n");
+            printf("\n------------------------------------------------------------------\n");
             printf("AMG as iterative solver ...\n");
             
             amgparam.maxit        = 20;
@@ -461,9 +453,7 @@ int main (int argc, const char * argv[])
             amgparam.print_level  = print_level;
             fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
             fasp_solver_amg(&A, &b, &x,&amgparam);
-            
             check_solu(&x, &sol, tolerance, &ntest_amg_solver, &nfail_amg_solver);
-            printf("\n");
         }
         
         /* clean up memory */
@@ -490,10 +480,15 @@ int main (int argc, const char * argv[])
         printf("Solver %10s:  %d tests finished: %d failed, %d succeeded!\n",
                solvers[indm], ntest_diag[indm], nfail_diag[indm], ntest_diag[indm]-nfail_diag[indm]);
     }
-    printf("=========================ILU preconditioner======================\n");
+    printf("========================ILUk preconditioner======================\n");
     for (indm=0; indm<num_solvers; indm++) {
         printf("Solver %10s:  %d tests finished: %d failed, %d succeeded!\n",
-               solvers[indm], ntest_ilu[indm], nfail_ilu[indm], ntest_ilu[indm]-nfail_ilu[indm]);
+               solvers[indm], ntest_iluk[indm], nfail_iluk[indm], ntest_iluk[indm]-nfail_iluk[indm]);
+    }
+    printf("========================ILUt preconditioner======================\n");
+    for (indm=0; indm<num_solvers; indm++) {
+        printf("Solver %10s:  %d tests finished: %d failed, %d succeeded!\n",
+               solvers[indm], ntest_ilut[indm], nfail_ilut[indm], ntest_ilut[indm]-nfail_ilut[indm]);
     }
     printf("=========================AMG preconditioner======================\n");
     for (indm=0; indm<num_solvers; indm++) {

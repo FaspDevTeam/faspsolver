@@ -1,6 +1,6 @@
 /*! \file memory.c
  *
- *  \brief Memory allocation and deallocation
+ *  \brief Memory allocation and deallocation subroutines
  */
 
 #include "fasp.h"
@@ -16,11 +16,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+    
     void * nedcalloc(size_t no, size_t size);
     void * nedrealloc(void *mem, size_t size);
     void   nedfree(void *mem);
-
+    
 #ifdef __cplusplus
 }
 #endif
@@ -80,16 +80,13 @@ void * fasp_mem_calloc (LONGLONG size,
         
 #if CHMEM_MODE
         total_alloc_mem += tsize;
+        total_alloc_count++;
 #endif
     }
     
     if ( mem == NULL ) {
         printf("### WARNING: Cannot allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
     }
-    
-#if CHMEM_MODE
-    total_alloc_count++;
-#endif
     
     return mem;
 }
@@ -113,21 +110,27 @@ void * fasp_mem_calloc (LONGLONG size,
 void * fasp_mem_realloc (void * oldmem,
                          LONGLONG tsize)
 {
-#if DLMALLOC
-    void * mem = dlrealloc(oldmem,tsize);
-#elif NEDMALLOC
-    void * mem = nedrealloc(oldmem, tsize);
-#else
-    void * mem = realloc(oldmem,tsize);
+    void * mem = NULL;
+
+#if DEBUG_MODE > 2
+    printf("### DEBUG: Trying to allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
 #endif
+    
+    if ( tsize > 0 ) {
+        
+#if DLMALLOC
+        mem = dlrealloc(oldmem,tsize);
+#elif NEDMALLOC
+        mem = nedrealloc(oldmem,tsize);
+#else
+        mem = realloc(oldmem,tsize);
+#endif
+        
+    }
     
     if ( mem == NULL ) {
         printf("### WARNING: Cannot allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
     }
-    
-#if CHMEM_MODE
-    total_alloc_mem += tsize;
-#endif
     
     return mem;
 }
@@ -199,8 +202,9 @@ SHORT fasp_mem_check (void *ptr,
         printf("### ERROR: %s", message);
         return ERR;
     }
-    
-    return FASP_SUCCESS;
+    else {
+        return FASP_SUCCESS;
+    }
 }
 
 /**
@@ -223,7 +227,7 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
         return FASP_SUCCESS;
     }
     else {
-        printf("### ERROR: ILU needs %d memory, only %d available!\n",
+        printf("### ERROR: ILU needs %d RAM, only %d allocated!\n",
                memneed, iludata->nwork);
         return ERROR_ALLOC_MEM;
     }
@@ -244,7 +248,7 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
 SHORT fasp_mem_dcsr_check (dCSRmat *A)
 {
     if ( (A->IA == NULL) || (A->JA == NULL) || (A->val == NULL) ) {
-        printf("### ERROR: Something is wrong with matrix! %s\n", __FUNCTION__);
+        printf("### ERROR: Something is wrong with the matrix!\n");
         return ERROR_ALLOC_MEM;
     }
     else {

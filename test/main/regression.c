@@ -87,7 +87,7 @@ int main (int argc, const char * argv[])
         
         switch (indp) {
                 
-            case 1: //     - Problem 1. 10X10 5pt FD for Poisson
+            case 1: // - Problem 1. 10X10 5pt FD for Poisson
                 
                 printf("10X10 5-point finite difference for Poisson");  
                 printf("\n=====================================================\n");        
@@ -100,7 +100,7 @@ int main (int argc, const char * argv[])
 
                 break;
                 
-            case 2: //     - Problem 2. P1 FE for Poisson.
+            case 2: // - Problem 2. P1 FE for Poisson.
                 
                 printf("P1 finite element for Poisson");    
                 printf("\n=====================================================\n");        
@@ -113,7 +113,7 @@ int main (int argc, const char * argv[])
                 
                 break;
                 
-            case 3: //     - Problem 3. MatrixMarket finite element analysis NOS7.
+            case 3: // - Problem 3. MatrixMarket finite element analysis NOS7.
                 // Finite difference approximation to diffusion equation with varying
                 // diffusivity in a 3D unit cube with Dirichlet boundary conditions.
                 
