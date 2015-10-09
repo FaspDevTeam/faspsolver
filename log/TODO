@@ -21,7 +21,7 @@ Documentation
 [ 0.9.8 ] make the FASP webpage ready
 [ 1.1.5 ] add details for building and installation using SCons and VS
 [ 1.2.4 ] add details for building and installation using cmake and VS
-[   *   ] update all the sample codes with the new version
+[ 1.8.1 ] update all the sample codes with the new version
 [   *   ] add pairwise aggregation AMG methods as a tutorial example
 [   *   ] add details for the OMP version
 [   *   ] generate a sequence of FASP courses
@@ -99,16 +99,16 @@ Iterative Methods
 [ 0.7.8 ] unify different data format: CSR, CSRL, BSR, block CSR, STR, etc
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
 [ 1.3.5 ] add safer Krylov iterative methods and improve efficiency
-[       ] options to replace the standard BLAS (Ludmil)
-[   *   ] unify KSMs for different data formats
 [   *   ] update KSMs with safe-guard
+[       ] unify KSMs for different data formats
+[       ] options to replace the standard BLAS (Ludmil)
 
 [ 1.1.2 ] add matrix-free iterative methods
 [   *   ] fix stagnation in GCG and check other methods as well
 [       ] add some useful methods: BiCGStab(l), GMRES augemented restart, GCRO
 [       ] add group update and residual replacement
 [       ] add deflation for restarting
-[       ] implement right preconditioning for some Krylov methods (Chensong)
+[       ] implement right preconditioning for some Krylov methods
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
 [ 0.6.7 ] remove non-GPL ILU routines
@@ -169,7 +169,6 @@ Examples
 [       ] add MAC for Stokes (Xiaozhe)
 [       ] add FEM for Stokes from Adler and Ludmil (Ludmil)
 [       ] add linear elasticity
-[       ] make a GUI for test problems (Ludmil)
 
 ========================
 Bug Fixes
@@ -192,5 +191,5 @@ Bug Fixes
 [ 1.6.0 ] memory allocation problem in testbsr.c: during ILU setup
 [ 1.6.6 ] AMG setup: number of DOF could drop dramatically
 [ 1.7.4 ] check problems with DIAG_PERF: see regression.c
-[       ] check convergence for problems from MM: see regression_mm.c
+[ 1.8.1 ] check convergence for problems from MM: see regression_mm.c
 

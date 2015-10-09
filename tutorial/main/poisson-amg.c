@@ -69,7 +69,6 @@ int main (int argc, const char * argv[])
     fasp_dvec_alloc(A.row, &x);
     fasp_dvec_set(A.row, &x, 0.0);
     
-    amgparam.maxit = 20; // max number of iteration
     fasp_solver_amg(&A, &b, &x, &amgparam);
     
     // Step 4. Clean up memory
