@@ -22,22 +22,6 @@
 #define __FASP_MESSAGES__
 
 /**
- * \brief Some global constants
- */
-#define BIGREAL          1e+20 /**< A large real number */
-#define SMALLREAL        1e-20 /**< A small real number */
-#define SMALLREAL2       1e-40 /**< An extremely small real number */
-#define MAX_REFINE_LVL   20    /**< Maximal refinement level */
-#define MAX_AMG_LVL      20    /**< Maximal AMG coarsening level */
-#define MIN_CDOF         20    /**< Minimal number of coarsest variables */
-#define MIN_CRATE        0.9   /**< Minimal coarsening ratio */
-#define MAX_CRATE        20.0  /**< Maximal coarsening ratio */
-#define STAG_RATIO       1e-4  /**< Stagnation tolerance = tol*STAGRATIO */
-#define MAX_STAG         20    /**< Maximal number of stagnation times */
-#define MAX_RESTART      20    /**< Maximal number of restarting for BiCGStab */
-#define OPENMP_HOLDS     2000  /**< Switch to sequence version when size is small */
-
-/**
  * \brief Definition of return status and error messages
  */
 #define FASP_SUCCESS            0  /**< return from function successfully */
@@ -93,11 +77,11 @@
  * \brief Print level for all subroutines -- not including DEBUG output
  */
 #define PRINT_NONE              0  /**< silent: no printout at all */
-#define PRINT_MIN               1  /**< quiet: min info, error, important warnings */
-#define PRINT_SOME              2  /**< some: more info, less important warnings */
-#define PRINT_MORE              4  /**< more: print some useful debug information */
-#define PRINT_MOST              8  /**< most: maximal printouts, no files */
-#define PRINT_ALL              10  /**< everything: all printouts, including files */
+#define PRINT_MIN               1  /**< quiet:  print error, important warnings */
+#define PRINT_SOME              2  /**< some:   print less important warnings */
+#define PRINT_MORE              4  /**< more:   print some useful debug info */
+#define PRINT_MOST              8  /**< most:   maximal printouts, no files */
+#define PRINT_ALL              10  /**< all:    all printouts, including files */
 
 /**
  * \brief Definition of matrix format
@@ -209,8 +193,8 @@
 /**
  * \brief Definition of coarsening types
  */
-#define COARSE_RS               1  /**< Classical coarsening */
-#define COARSE_RSP              2  /**< Classical coarsening with positive offdiags*/
+#define COARSE_RS               1  /**< Classical */
+#define COARSE_RSP              2  /**< Classical, with positive offdiags */
 #define COARSE_CR               3  /**< Compatible relaxation */
 #define COARSE_AC               4  /**< Aggressive coarsening */
 #define COARSE_MIS              5  /**< Aggressive coarsening based on MIS */
@@ -245,6 +229,22 @@
 #define FPFIRST                -1  /**< F-points first order */
 #define ASCEND                 12  /**< Ascending order */
 #define DESCEND                21  /**< Descending order */
+
+/**
+ * \brief Some global constants
+ */
+#define BIGREAL             1e+20  /**< A large real number */
+#define SMALLREAL           1e-20  /**< A small real number */
+#define SMALLREAL2          1e-40  /**< An extremely small real number */
+#define MAX_REFINE_LVL         20  /**< Maximal refinement level */
+#define MAX_AMG_LVL            20  /**< Maximal AMG coarsening level */
+#define MIN_CDOF               20  /**< Minimal number of coarsest variables */
+#define MIN_CRATE             0.9  /**< Minimal coarsening ratio */
+#define MAX_CRATE            20.0  /**< Maximal coarsening ratio */
+#define MAX_RESTART            20  /**< Maximal restarting number */
+#define MAX_STAG               20  /**< Maximal number of stagnation times */
+#define STAG_RATIO           1e-4  /**< Stagnation tolerance = tol*STAGRATIO */
+#define OPENMP_HOLDS         2000  /**< Smallest size for OpenMP version */
 
 #endif                             /* end if for __FASP_MESSAGES__ */
 

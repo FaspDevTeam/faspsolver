@@ -50,7 +50,7 @@ AMG_nl_amli_krylov_type  = 6	  % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
 AMG_smoother             = GS     % GS | JACOBI | SGS 
                                   % SOR | SSOR | GSOR | SGSOR | POLY
 AMG_ILU_levels           = 0      % number of levels using ILU smoother
-AMG_schwarz_levels       = 0	  % number of levels using Schwarz smoother
+AMG_Schwarz_levels       = 0	  % number of levels using Schwarz smoother
 AMG_relaxation	         = 1.1    % relaxation parameter for SOR smoother 
 AMG_polynomial_degree	 = 3      % degree of the polynomial smoother
 AMG_presmooth_iter       = 2      % number of presmoothing sweeps
