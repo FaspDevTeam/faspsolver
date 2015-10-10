@@ -8,8 +8,10 @@ File Name: CHANGES
 - Test DIAG_PREF option with the new version.
 - Test and modify regression_mm.c; log results in test/out/reg_mm.out.
 - Update Doxygen.
+- Update the ini files according to changes in FASP.
 - Reformat a few functions such that it can print well in user guide.
 - Rewrite user's guide and now it updates from source code.
+- Complete the to-be-added parts in user's guide.
 
 09/30/2015 FASP 1.8.0:
 - Fix Clang warnings when comparing an address with NULL.
