@@ -1,7 +1,7 @@
 
 
 ------------------------- Test starts at -------------------------
-Fri May 10 16:14:17 2013
+Sat Oct 10 14:30:42 2015
 ------------------------------------------------------------------
 
 =====================================================
@@ -82,7 +82,7 @@ GMRES solver ...
 
 Calling PGMRes solver (CSR) ...
 Number of iterations = 1 with relative residual 6.485860e-15.
-Krylov method totally costs 0.0001 seconds.
+Krylov method totally costs 0.0000 seconds.
 Max diff 7.7716e-16 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free GMRES solver ...
@@ -123,7 +123,7 @@ Max diff 7.7716e-16 smaller than tolerance................. [PASS]
 VFGMRES solver ...
 
 Calling PVFGMRes solver (CSR) ...
-Number of iterations = 1 with relative residual 7.041416e-13.
+Number of iterations = 1 with relative residual 6.485860e-15.
 Krylov method totally costs 0.0000 seconds.
 Max diff 7.7716e-16 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
@@ -152,14 +152,14 @@ Matrix-free GCG solver ...
 
 Calling GCG solver (matrix-free) ...
 Number of iterations = 1 with relative residual 2.031886e-15.
-Krylov method totally costs 0.0020 seconds.
+Krylov method totally costs 0.0018 seconds.
 Max diff 6.6613e-16 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free GCG solver for BSR ...
 
 Calling GCG solver (matrix-free) ...
 Number of iterations = 1 with relative residual 2.031886e-15.
-Krylov method totally costs 0.0004 seconds.
+Krylov method totally costs 0.0002 seconds.
 Max diff 6.6613e-16 smaller than tolerance................. [PASS]
 
 =====================================================
@@ -177,150 +177,149 @@ CG solver ...
 
 Calling PCG solver (CSR) ...
 Number of iterations = 244 with relative residual 9.975280e-13.
-Krylov method totally costs 0.0142 seconds.
+Krylov method totally costs 0.0124 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free CG solver ...
 
 Calling PCG solver (matrix-free) ...
 Number of iterations = 244 with relative residual 9.975280e-13.
-Krylov method totally costs 0.0138 seconds.
+Krylov method totally costs 0.0128 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free CG solver for BSR ...
 
 Calling PCG solver (matrix-free) ...
 Number of iterations = 244 with relative residual 9.975280e-13.
-Krylov method totally costs 0.0386 seconds.
+Krylov method totally costs 0.0330 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 BiCGstab solver ...
 
 Calling PBiCGstab solver (CSR) ...
-### WARNING: Divided by zero!
-Number of iterations = 163 with relative residual 5.607231e-11.
-Krylov method totally costs 0.0165 seconds.
-Max diff 9.9930e-08 smaller than tolerance................. [PASS]
+Number of iterations = 175 with relative residual 6.582515e-13.
+Krylov method totally costs 0.0158 seconds.
+Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free BiCGstab solver ...
 
 Calling BiCGstab solver (matrix-free) ...
-### WARNING: Divided by zero!
-Krylov method totally costs 0.0164 seconds.
+### WARNING: Divided by zero! fasp_solver_pbcgs : 176
+Krylov method totally costs 0.0145 seconds.
 Max diff 9.9930e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free BiCGstab solver for BSR ...
 
 Calling BiCGstab solver (matrix-free) ...
-### WARNING: Divided by zero!
-Krylov method totally costs 0.0493 seconds.
+### WARNING: Divided by zero! fasp_solver_pbcgs : 176
+Krylov method totally costs 0.0391 seconds.
 Max diff 9.9930e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 MinRes solver ...
 
 Calling PMinRes solver (CSR) ...
 Number of iterations = 241 with relative residual 8.342976e-13.
-Krylov method totally costs 0.0343 seconds.
+Krylov method totally costs 0.0298 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free MinRes solver ...
 
 Calling MinRes solver (matrix-free) ...
 Number of iterations = 241 with relative residual 8.342976e-13.
-Krylov method totally costs 0.0343 seconds.
+Krylov method totally costs 0.0298 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free MinRes solver for BSR ...
 
 Calling MinRes solver (matrix-free) ...
 Number of iterations = 241 with relative residual 8.342976e-13.
-Krylov method totally costs 0.1072 seconds.
+Krylov method totally costs 0.0841 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 GMRES solver ...
 
 Calling PGMRes solver (CSR) ...
 Number of iterations = 937 with relative residual 9.895899e-13.
-Krylov method totally costs 0.1063 seconds.
+Krylov method totally costs 0.0909 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free GMRES solver ...
 
 Calling GMRes solver (matrix-free) ...
 Number of iterations = 937 with relative residual 7.436133e-12.
-Krylov method totally costs 0.1057 seconds.
+Krylov method totally costs 0.0906 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free GMRES solver for BSR ...
 
 Calling GMRes solver (matrix-free) ...
 Number of iterations = 937 with relative residual 7.436133e-12.
-Krylov method totally costs 0.1993 seconds.
+Krylov method totally costs 0.1624 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 VGMRES solver ...
 
 Calling PVGMRes solver (CSR) ...
 Number of iterations = 493 with relative residual 7.667271e-13.
-Krylov method totally costs 0.0482 seconds.
+Krylov method totally costs 0.0448 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free VGMRES solver ...
 
 Calling vGMRes solver (matrix-free) ...
 Number of iterations = 493 with relative residual 5.761462e-12.
-Krylov method totally costs 0.0485 seconds.
+Krylov method totally costs 0.0413 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free VGMRES solver for BSR ...
 
 Calling vGMRes solver (matrix-free) ...
 Number of iterations = 493 with relative residual 5.761462e-12.
-Krylov method totally costs 0.0981 seconds.
+Krylov method totally costs 0.0825 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 VFGMRES solver ...
 
 Calling PVFGMRes solver (CSR) ...
-Number of iterations = 493 with relative residual 5.761462e-12.
-Krylov method totally costs 0.0488 seconds.
+Number of iterations = 493 with relative residual 7.667271e-13.
+Krylov method totally costs 0.0469 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free VFGMRES solver ...
 
 Calling vFGMRes solver (matrix-free) ...
 Number of iterations = 493 with relative residual 5.761462e-12.
-Krylov method totally costs 0.0488 seconds.
+Krylov method totally costs 0.0421 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free VFGMRES solver for BSR ...
 
 Calling vFGMRes solver (matrix-free) ...
 Number of iterations = 493 with relative residual 5.761462e-12.
-Krylov method totally costs 0.0980 seconds.
+Krylov method totally costs 0.0786 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 GCG solver ...
 
 Calling PGCG solver (CSR) ...
 Number of iterations = 243 with relative residual 9.984319e-13.
-Krylov method totally costs 1.6608 seconds.
+Krylov method totally costs 1.4555 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free GCG solver ...
 
 Calling GCG solver (matrix-free) ...
 Number of iterations = 243 with relative residual 9.984319e-13.
-Krylov method totally costs 1.8860 seconds.
+Krylov method totally costs 1.5510 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ------------------------------------------------------------------
 Matrix-free GCG solver for BSR ...
 
 Calling GCG solver (matrix-free) ...
 Number of iterations = 243 with relative residual 9.984319e-13.
-Krylov method totally costs 7.8471 seconds.
+Krylov method totally costs 6.0904 seconds.
 Max diff 9.9928e-08 smaller than tolerance................. [PASS]
 ---------------------- All test finished at ----------------------
 42 tests finished: 0 failed, 42 succeeded!
-Fri May 10 16:14:30 2013
+Sat Oct 10 14:30:53 2015
 ------------------------------------------------------------------

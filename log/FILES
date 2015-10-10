@@ -41,7 +41,7 @@
     1004 ./base/src/formats.c
       79 ./base/src/givens.c
     1038 ./base/src/gmg_poisson.c
-     756 ./base/src/graphics.c
+     754 ./base/src/graphics.c
      427 ./base/src/ilu_setup_bsr.c
      193 ./base/src/ilu_setup_csr.c
     1254 ./base/src/ilu_setup_str.c
@@ -56,7 +56,7 @@
      362 ./base/src/itsolver_mf.c
      396 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
-     255 ./base/src/memory.c
+     261 ./base/src/memory.c
      289 ./base/src/message.c
      520 ./base/src/mgcycle.c
      145 ./base/src/mgrecur.c
@@ -68,7 +68,7 @@
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
      181 ./base/src/pgcg_mf.c
-     457 ./base/src/pgcr.c
+     461 ./base/src/pgcr.c
     1382 ./base/src/pgmres.c
      300 ./base/src/pgmres_mf.c
     1286 ./base/src/pminres.c
@@ -106,4 +106,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      302 ./base/src/wrapper.c
-   90614 total
+   90622 total
