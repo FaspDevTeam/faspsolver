@@ -63,6 +63,7 @@
 \newtheorem{remark}[theorem]{Remark}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\linespread{1.2}
 
 \title{\Huge FASP User Guide}
 
@@ -157,7 +158,7 @@ We intend to design solution algorithms and their implementation for all these p
 \section{How to use this guide}\label{sec:how}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this user's guide, we mainly describe how to use the existing solvers in FASP via a couple of simple tutorial problems. This user's guide is self-contained but does \emph{not} provide details of the algorithms nor the implementation. Along this guide, we provide a reference manual\footnote{Available online at \url{http://fasp.sourceforge.net}. It is also available in ``faspsolver/doc/doc.zip''.} for technical details of the implementation. For the algorithms implemented, we will provide the references and we recommend the users to read them for better understanding of the code. Furthermore, since FASP is under heavy development, please use this guide with caution because the code might have been changed before this document is updated.
+In this user's guide, we mainly describe how to use the existing solvers in FASP via a couple of simple tutorial problems. This user's guide is self-contained but does \emph{not} provide details of the algorithms nor the implementation. Along this guide, we provide a reference manual\footnote{Available online at \url{http://fasp.sourceforge.net}. It is also available in ``\url{faspsolver/doc/doc.zip}''.} for technical details of the implementation. For the algorithms implemented, we will provide the references and we recommend the users to read them for better understanding of the code. Furthermore, since FASP is under heavy development, please use this guide with caution because the code might have been changed before this document is updated.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -188,7 +189,7 @@ $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver
 If you have any problems when clone this repository, please send us an email to \url{faspdev@gmail.com}.
 \end{snugshade}
 
-After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 400MB in total. Depending on the speed of your network, it could take 15 minutes to one hour.}, you should have obtained ``faspsolver'' in your current directory successfully. If you have already cloned the repository before, you can just pull a new version and update your local version with it: Go to your local ``faspsolver'' directory and then
+After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 400MB in total. Depending on the speed of your network, it could take 15 minutes to one hour.}, you should have obtained ``\emph{faspsolver}'' in your current directory successfully. If you have already cloned the repository before, you can just pull a new version and update your local version with it: Go to your local ``\emph{faspsolver}'' directory and then
 %
 \begin{lstlisting}[numbers=none]
 "Pull a new version from BitBucket"
@@ -213,7 +214,7 @@ FASP has been tested on Linux (Cent OS, Debian, Fedora, RedHat, Ubuntu), OS X (L
 
 \subsection{Linux or OS X}
 
-Now we give a simple instruction on how to compile FASP on Linux or OS X: To build the FASP library,  go to the ``faspsolver'' directory. First you need to modify the ``FASP.mk.example'' file according to your own need and save it as ``{\color{red}FASP.mk}''. Then you can just type:
+Now we give a simple instruction on how to compile FASP on Linux or OS X: To build the FASP library,  go to the ``faspsolver'' directory. First you need to modify the ``\emph{FASP.mk.example}'' file according to your own need and save it as ``{\color{red}FASP.mk}''. Then you can just type:
 %
 \begin{lstlisting}[numbers=none]
 $ make config
@@ -222,7 +223,7 @@ $ make install
 %
 Note that, if you do not have ``FASP.mk'' present in the current directory, default settings will be used for building and installation FASP. 
 
-In order to make sure everything is OK, you can go to the ``faspsolver/test'' directory and try to run the test problem:
+In order to make sure everything is OK, you can go to the ``\url{faspsolver/test}'' directory and try to run the test problem:
 %
 \begin{lstlisting}[numbers=none]
 $ ./test.ex
@@ -244,19 +245,16 @@ $ make uninstall
 $ make distclean
 \end{lstlisting}
 %
-To enable OpenMP support, you need to uncomment one line in ``FASP.mk'' and set ``openmp'' to be ``yes''.
-\lstinputlisting[language=sh,firstnumber=37,firstline=37,lastline=45]{../FASP.mk}
 
 \subsection{Windows 7}
 
-We provide a Visual Studio 2008 (VS08) solution and a VS10 solution of FASP for Windows users. For example, you can just open ``faspsolver/vs08/faspsolver-vs08.sln'' if you are using VS08 as your default developing environment. Then a single-click at the ``Build Solution'' on the menu or ``F7'' key  will give you all the FASP libraries and the test programs in ``faspsolver/test/''. The way for building in VS10 is similar.
+We provide a Visual Studio 2008 (VS08) solution and a VS10 solution of FASP for Windows users. For example, you can just open ``\url{faspsolver/vs08/faspsolver-vs08.sln}'' if you are using VS08 as your default developing environment. Then a single-click at the ``Build Solution'' on the menu or ``F7'' key  will give you all the FASP libraries and the test programs in ``\url{faspsolver/test/}''. The way for building in VS10 is similar.
 \begin{figure}[htbp] %  figure placement: here, top, bottom, or page
    \centering
-   \includegraphics[width=0.9\linewidth]{fig/build-fasp-win7.pdf} 
+   \includegraphics[width=\linewidth]{fig/build-fasp-win7.pdf} 
    \caption{Build FASP using Visual Studio 2008.}
    \label{fig:build}
 \end{figure}
-
 
 \begin{snugshade}\noindent
 You need a C/C++ complier and a Fortran compiler together with Visual Studio to build FASP. You can use either Microsoft Visual C++ or Intel C compiler, together with Intel Fortran compiler.
@@ -293,11 +291,18 @@ You can also try to build FASP using the simple TCL graphical user interface. Fo
 $ wish FASP_install.tcl
 \end{lstlisting}
 %
-A graphical interface will pop up and the rest of the building process is straightforward. 
+\begin{figure}[h!!] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[width=\linewidth]{fig/install-fasp-gui.png} 
+   \caption{Install FASP using the TCL GUI on Mac OS X El Capitan.}
+   \label{fig:gui}
+\end{figure}
+%
+A simple graphical interface will pop up; see Figure~\ref{fig:gui}. The rest of the building process is straightforward: After choosing appropriate parameters, just click ``Config'' first and then followed by ``Install''. 
 
 \begin{comment}
 \subsection{Using Scons}
-In Linux, Mac OS X, or Windows, you can use the Scons tool to build and install different versions (Release, Shared, Debug) of the FASP library. You just need to type inside ``faspsolve/bas'' directory:
+In Linux, Mac OS X, or Windows, you can use the Scons tool to build and install different versions (Release, Shared, Debug) of the FASP library. You just need to type inside ``\url{faspsolve/base}'' directory:
 %
 \begin{lstlisting}[numbers=none]
 $ scons -Q install
@@ -323,7 +328,7 @@ There are a few \emph{optional} external libraries that you might want to use, i
 \chapter{A Tutorial}\label{ch:tutor}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we use a couple simple examples to demonstrate how to use the FASP package for solving existing linear systems which have been saved as disk files. All the examples can be found in ``faspsolver/tutorial/''. Here we only discuss the C version of these examples; interested users can read the F90 version of some of the examples. After you successfully build FASP (see \S\ref{sec:build}), just go to the ``faspsolver/tutorial/" directory and the compiled tutorial examples should be ready to be tried.
+In this chapter, we use a couple simple examples to demonstrate how to use the FASP package for solving existing linear systems which have been saved as disk files. All the examples can be found in ``\url{faspsolver/tutorial/}''. Here we only discuss the C version of these examples; interested users can read the F90 version of some of the examples. After you successfully build FASP (see \S\ref{sec:build}), just go to the ``\url{faspsolver/tutorial/}" directory and the compiled tutorial examples should be ready to be tried.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The first example}\label{sec:ex1}
@@ -342,7 +347,7 @@ Since this is the first example, we will explain it in some detail:
 %
 \item Line 12--13 includes the main FASP header file ``fasp.h'' and FASP function decoration header ``fasp\_functs.h''. These two headers shall be included in all files that requires FASP subroutines. Please also be noted that the function decorations in ``fasp\_functs.h'' is automatically generated from the source files and should NOT be modified by an enduser. 
 %
-\item Line 35 sets solver parameters; see more discussions in \S\ref{sec:parameters}. In the  ``tutorial/ini/amg.dat'' file, we can set the location of the data files, type of solvers, maximal number of iteration numbers, convergence tolerance, and many other parameters for iterative solvers.
+\item Line 35 sets solver parameters using the default parameters or from the command line options; see more discussions in \S\ref{sec:parameters}. In the  ``tutorial/ini/amg.dat'' file, we can set the location of the data files, type of solvers, maximal number of iteration numbers, convergence tolerance, and many other parameters for iterative solvers.
 %
 \item Line 44 defines a sparse matrix $A$ in the compressed sparse row (CSR) format. Line 45 defines two vectors: the right-hand side $b$ and the numerical solution $x$. We refer to~\S\ref{sec:blas} for definitions of vectors and general sparse matrices.
 %
@@ -364,8 +369,13 @@ $ ./poisson-amg-c.ex
 \end{lstlisting}
 %
 A sample output is given as follows (note that the actual output depends on the solver parameters and might be different than what you see here):
+%
 \lstinputlisting[numbers=none,firstline=2]{../tutorial/out/poisson-amg-c.out}
 
+We also provide a Fortran 90 example, which does the same thing as this C code except it gives less output, in ``\url{tutorial/main/poisson-amg.f90}''. Users who would like to call FASP from Fortran can learn from this simple example. 
+%
+\lstinputlisting[language=Fortran]{../tutorial/main/poisson-amg.f90}
+%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The second example}\label{sec:ex2}
@@ -428,9 +438,9 @@ A sample output is given as follows (note that the actual output depends on the 
 \section{Set parameters}\label{sec:parameters}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In the previous examples, we have seen how to set solver parameters using default setting. Now we give an example on reading input parameters from a disk file like ``tutorial/ini/amg.dat''. 
+In the previous examples, we have seen how to set solver parameters using default setting. Now we give an example on reading input parameters from a disk file like ``\url{tutorial/ini/amg.dat}''. 
 %
-\begin{lstlisting}[numbers=none]
+\begin{lstlisting}[numbers=none,language=sh]
 $ ./poisson-amg-c.ex -ini ini/amg.dat
 \end{lstlisting}
 %
@@ -473,6 +483,41 @@ You can compare this with the sample results in \S\ref{sec:ex1}.
 The input parameters allowed in FASP are not limited to the ones listed in this example. A list of possible iterative methods and preconditioners can be found in ``base/include/fasp\_const.h''; see \S\ref{sec:const}. For more parameters and their ranges, we refer to the FASP Reference Manual.
 \end{snugshade}
 
+Using ``-ini [FILE]'' is just one example of allowed command line option. To find out more what command line options are acceptable, you can type in a terminal window:
+%
+\begin{lstlisting}[numbers=none,language=sh]
+$ ./poisson-amg-c.ex -help
+\end{lstlisting}
+%
+which will give you something like
+%
+\begin{lstlisting}[numbers=none,language=sh]
+========================================
+||   FASP: AMG example -- C version   ||
+========================================
+
+FASP command line options:
+================================================================
+  -ini              [CharValue] : Ini file name
+  -print            [IntValue]  : Print level
+  -output           [IntValue]  : Output to screen or a log file
+  -solver           [IntValue]  : Solver type
+  -precond          [IntValue]  : Preconditioner type
+  -maxit            [IntValue]  : Max number of iterations
+  -tol              [RealValue] : Tolerance for iterative solvers
+  -amgmaxit         [IntValue]  : Max number of AMG iterations
+  -amgtol           [RealValue] : Tolerance for AMG methods
+  -amgtype          [IntValue]  : AMG type
+  -amgcycle         [IntValue]  : AMG cycle type
+  -amgcoarsening    [IntValue]  : AMG coarsening type
+  -amginterpolation [IntValue]  : AMG interpolation type
+  -amgsmoother      [IntValue]  : AMG smoother type
+  -amgsthreshold    [RealValue] : AMG strong threshold
+  -amgscoupled      [RealValue] : AMG strong coupled threshold
+  -help                         : Brief help messages
+ \end{lstlisting}
+%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Basic Usage}\label{ch:basic}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -483,7 +528,7 @@ In this chapter, we discuss the basic data structures and important building blo
 \section{Vectors and sparse matrices}\label{sec:blas}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The most important data structures for iterative methods are probably vectors and sparse matrices. In this section, we first discuss the data structures for vectors and matrices in FASP; and then we discuss BLAS for sparse matrices. The definitions can be found in ``base/include/fasp.h''. 
+The most important data structures for iterative methods are probably vectors and sparse matrices. In this section, we first discuss the data structures for vectors and matrices in FASP; and then we discuss BLAS for sparse matrices. The definitions can be found in ``\url{base/include/fasp.h}''. 
 
 \subsection{Vectors}
 
@@ -648,7 +693,7 @@ For PDE applications, we often need to solve systems of partial differential equ
 Depending on different applications and different solving algorithms, we can use two types of block matrices: dBSRmat (or BSR Block Compressed Sparse Row) and block\_dCSRmat (CSR Block or Block of CSR matrices). 
 
 \begin{snugshade}\noindent
-For more details as well as other specialized block matrices, readers are referred to the header file ``base/include/fasp\_block.h''.
+For more details as well as other specialized block matrices, readers are referred to the header file ``\url{base/include/fasp\_block.h}''.
 \end{snugshade}
 
 As an example, we consider the following matrix, which have been used in \S\ref{sec:blas} for the CSR format. We add structure to this matrix and divide it as a $2 \times 2$ block matrix:
@@ -704,7 +749,13 @@ This format is simple and is derived from the dCSRmat data structure. The follow
 
 \section{I/O subroutines for sparse matrices}
 
-To be added.
+In FASP, we provided several functions for reading, writing, and printing different formats of sparse matrices in plain text or binary formats. These functions can be found in ``\url{base/src/io.c}'' and we list the available functions as follows:
+%
+\lstinputlisting[language=C,firstnumber=834,firstline=834,lastline=948]{../base/include/fasp_functs.h}
+%
+\begin{snugshade}\noindent
+NOTE: The above function decorations are taken from ``\url{base/include/fasp\_functs.h}''. This header file is automatically generated based on the source codes. Users are NOT supposed to change it by hand. 
+\end{snugshade}
 
 
 \section{Sparse BLAS}
@@ -753,7 +804,7 @@ This is only a simple example for sparse matrix-vector multiplication (SpMV) ker
 
 In FASP, there are a couple of standard preconditioned iterative methods~\cite{Saad.Saad.2003fv} implemented, including preconditioned CG, BiCGstab, GMRES, Variable Restarting GMRES, Flexible GMRES, etc. In this section, we use the CSR matrix format as example to introduce how to call these iterative methods. To learn more details, we refer to the Reference Manual.
 
-We first notice the abstract interface for the iterative methods. The following code segment is taken from ``base/src/itsolver\_csr.c'':
+We first notice the abstract interface for the iterative methods. The following code segment is taken from ``\url{base/src/itsolver\_csr.c}'':
 %
 \lstinputlisting[firstnumber=20,firstline=20,lastline=43]{../base/src/itsolver_csr.c}
 %
@@ -783,7 +834,40 @@ Possible ``itsolver\_type'' includes:
 \section{Geometric multigrid}\label{sec:gmg}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To be added.
+The geometric multigrid method (GMG) is one of the most efficient solving techniques for discrete algebraic systems arising from many types of partial differential equations~\cite{Bramble.Bramble.1993fk,Trottenberg.TrottenbergOosterlee.2001fu}. GMG utilizes a hierarchy of grids or discretizations and reduces the error at a number of frequencies simultaneously. Because of its plausible linear complexity---i.e., the low computational cost of solving a linear system with $N$ unknowns is $O(N)$---the GMG method is one of the most popular Poisson solvers. Although the GMG's applicability is limited as it requires explicit information on the hierarchy of the discrete system, when it can be applied, GMG is far more efficient than its algebraic version, the algebraic multigrid (AMG) method.
+
+We now give a simple example on calling the geometric multigrid for solving the Poisson's equation in 2D (discretized by the standard five-point finite difference stencil). Consider the Poisson equation
+\begin{equation*}
+\left\{
+\begin{array}{rcl}
+    - \Delta u &=&  f  \qquad \mbox{in }~\Omega \\
+      u &=& 0  \qquad \mbox{on }\partial\Omega, \\
+\end{array}
+\right.
+\end{equation*}
+where $\Omega = (0,1)^2 \subset \mathbb{R}^2$.
+%
+The main reason why we choose this simplest possible setting is to emphasize that, even for a simple problem, the new heterogeneous architectures present challenges for numerical implementation. Another reason is to allow us to use explicit stencils and to avoid the bottleneck of sparse matrix-vector production. 
+%
+The standard central finite difference method is applied to discretize the Poisson's equation. In other words, the Laplace operator is discretized by the classical second-order central difference scheme. After discretization, we end up with a system of linear equations:
+%
+     \begin{equation*}
+        \mathbf{A}\vec{u} = \vec{f}.
+    \end{equation*}
+%    
+We use the five-point central difference scheme in 2D. Consider a uniform square mesh of $\Omega = [0, 1]^2$
+with size $h = \frac{1}{n}$ and in which $x_i = ih, \, y_j = jh \, (i, j = 0,
+1,\ldots, n)$. Let $u_{i,j}$ be the numerical approximation of $u(x_i , y_j )$. The five-point central
+difference scheme for solving the Poisson's equation in 2D can be written as follows:
+$$
+{-u_{i-1,j}-u_{i,j-1}+4u_{i,j}-u_{i+1,j}-u_{i,j+1}}={h^2}f(x_i,y_j)
+\qquad i, j=1,2,\ldots,n-1.
+$$
+
+The sample code for this solver can be found in ``\url{test/main/testgmg.c}'' and a piece of the source code is listed as follows:
+%
+\lstinputlisting[language=C,firstnumber=254,firstline=254,lastline=283]{../test/main/testgmg.c}
+%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Algebraic multigrid}\label{sec:amg}
@@ -791,7 +875,7 @@ To be added.
 
 The classical algebraic multigrid method~\cite{Ruge.RugeStuben.1987bs} is an important component in many of our auxiliary space preconditioners. Because of its user-friendly and scalability, AMG becomes increasingly popular in scientific and engineering computing, especially when GMG is difficult or not possible to be applied. Various of new AMG techniques~\cite{Vanek.VanekMandel.1996kl,Wan.WanChan.2000qa,Brezina.BrezinaCleary.2000ly,Henson.HensonVassilevski.2001cr,Chartier.ChartierFalgout.2003ve,Livne.Livne.2004kl,Falgout.FalgoutVassilevski.2004bh,Xu.XuZikatanov.2004pi,Brannick.BrannickZikatanov.2007zr,Muresan.MuresanNotay.2008tg, Hu.X;Vassilevski.P;Xu.J.2013a} have emerged in recent years.
 
-The following code segment is part of ``base/src/amg.c'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, Nonlinear AMLI-cycle, etc).
+The following code segment is part of ``\url{base/src/amg.c}'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, Nonlinear AMLI-cycle, etc).
 %
 \lstinputlisting[language=C,firstnumber=42,firstline=42,lastline=126]{../base/src/amg.c}
 %
@@ -806,7 +890,7 @@ The code above is very simple and we only wish to point out that:
 
 \subsection{Parameters for AMG}
 
-There are a couple of controlling parameters for algebraic multigrid methods in FASP. Basically, there are four types of parameters for AMG---They control multilevel iterations, smoothing, classical AMG setup, and aggregation AMG setup. The following is a sample from ``test/ini/input.dat'' and a brief explanation of each parameter is given.
+There are a couple of controlling parameters for algebraic multigrid methods in FASP. Basically, there are four types of parameters for AMG---They control multilevel iterations, smoothing, classical AMG setup, and aggregation AMG setup. The following is a sample from ``\url{test/ini/input.dat}'' and a brief explanation of each parameter is given.
 %
 \lstinputlisting[language=C,firstnumber=55,firstline=55]{../test/ini/input.dat}
 %
@@ -828,26 +912,22 @@ In this chapter, we discuss a few more advanced features of FASP. We will discus
 OpenMP\footnote{Official website: \url{http://openmp.org/}} (Open Multiprocessing) is an API that supports multi-platform shared memory multiprocessing programming in C, C++, and Fortran, on most processor architectures and operating systems. It consists of a set of compiler directives, library routines, and environment variables that influence run-time behavior. Some preliminary OpenMP support has been included since the very beginning of FASP. We consistently improves and expands OpenMP support as multiprocessor architectures become the dominant desktop computing environment.
 
 \begin{snugshade}\noindent
-NOTE: By default, OpenMP is disabled in FASP. In order to turn it on, you need to modify Makefile a little bit; see \S\ref{sec:build}.
+NOTE: By default, OpenMP is disabled in FASP. In order to turn it on, you need to modify FASP.mk slightly as follows.
 \end{snugshade}
+
+To enable OpenMP support, you need to uncomment one line in ``FASP.mk'' and set ``openmp'' to be ``yes''.
+\lstinputlisting[language=sh,firstnumber=37,firstline=37,lastline=45]{../FASP.mk}
 
 After you build FASP with ``openmp=yes'', OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash}, you need to set:
 \begin{lstlisting}[numbers=none]
 $ export OMP_NUM_THREADS=8
 \end{lstlisting}
-Then you use 8 threads for computation.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A CUDA example}\label{sec:cuda}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-To be added.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Predefined constants}\label{sec:const}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-It is important to notice that there are several predefined constants in FASP. Using these macros makes the program more uniform. These constants are defined in ``base/include/fasp\_const.h'':
+It is important to notice that there are several predefined constants in FASP. Using these macros makes the program more uniform. These constants are defined in ``\url{base/include/fasp\_const.h}'':
 %
 \lstinputlisting[language=sh]{../base/include/fasp_const.h}
 
@@ -855,7 +935,22 @@ It is important to notice that there are several predefined constants in FASP. U
 \section{The debug environment}\label{sec:debug}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To be added.
+\begin{snugshade}\noindent
+NOTE: By default, a RELEASE version of FASP is compiled and no warnings are displaced during building in FASP.
+\end{snugshade}
+%
+There is a built-in debug feature which is intended to help developers to locate malfunctions in FASP. In order to turn this on, you need to add an option during the config stage by
+%
+\begin{lstlisting}[numbers=none]
+$ make config debug=all
+\end{lstlisting}
+%
+When this debug feature is turned on, there will be a lot more information printed when you call FASP. If you just need to compile a DEBUG version instead of RELEASE, you can do use
+%
+\begin{lstlisting}[numbers=none]
+$ make config debug=yes
+\end{lstlisting}
+%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\chapter{FASP for Stokes and Navier-Stokes}\label{ch:ns}
