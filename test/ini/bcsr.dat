@@ -4,7 +4,7 @@
 % must have spaces around the equal sign "="   %
 %----------------------------------------------%
 
-workdir = ../data  % work directory, no more than 128 characters
+workdir = ../data/  % work directory, no more than 128 characters
  
 %----------------------------------------------%
 % problem, solver, and output type             %
