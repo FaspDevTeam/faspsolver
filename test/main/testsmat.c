@@ -1,16 +1,5 @@
-/**
- *      Test smat matrix operations
- *
- *------------------------------------------------------
- *
- *      Created by Chensong Zhang on 04/03/2015.
- *
- *------------------------------------------------------
- *
- */
-
-/*! \file test_smat.c
- *  \brief Test smat matrix operations
+/*! \file testsmat.c
+ *  \brief Test smat (dense) matrix operations
  */
 
 #include "fasp.h"

@@ -1,16 +1,5 @@
-/**
- *      Test FASP AMG solvers
- *
- *------------------------------------------------------
- *
- *      Created by Chensong Zhang on 01/24/2012.
- *
- *------------------------------------------------------
- *
- */
-
-/*! \file testamg.c
- *  \brief The main test function for FASP AMG solvers
+/*! \file testbamg.c
+ *  \brief The main test function for FASP Block AMG solvers
  */
 
 #include "fasp.h"
@@ -25,6 +14,7 @@
  * \date   01/01/2013
  * 
  * Modified by Chensong Zhang on 01/24/2013
+ * Modified by Chensong Zhang on 10/10/2015: reformat a little bit
  */
 int main (int argc, const char * argv[]) 
 {
@@ -288,7 +278,6 @@ int main (int argc, const char * argv[])
         
         fasp_dcsr_free(&A); // free up temp matrix
     }
-    
     
     else {
         printf("### ERROR: Unrecognised problem number %d\n", problem_num);
