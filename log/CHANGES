@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-10/09/2015 FASP 1.8.1:
+10/11/2015 FASP 1.8.1:
 - Add `const' to declaring constant variables.
 - Check regression results again.
 - Check and remove a few deprecated functions.
@@ -14,6 +14,7 @@ File Name: CHANGES
 - Complete the to-be-added parts in user's guide.
 - Change regression result filenames to reg_mf.out and reg_mm.out.
 - Update all regression results.
+- Remove testomp.c and test_rsamg_omp.c from test/main.
 
 09/30/2015 FASP 1.8.0:
 - Fix Clang warnings when comparing an address with NULL.
