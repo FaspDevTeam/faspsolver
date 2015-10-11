@@ -53,7 +53,9 @@
 
 % Define the frame environment
 \usepackage{frame}
-\definecolor{shadecolor}{rgb}{1,0.9,0.1}
+%\definecolor{shadecolor}{rgb}{1,0.9,0.1}
+%definecolor{shadecolor}{RGB}{200,240,255}
+\definecolor{shadecolor}{RGB}{255,240,200}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newtheorem{theorem}{Theorem}[section]
@@ -84,88 +86,151 @@
 \chapter{Introduction}\label{ch:intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{What is FASP}\label{sec:goal}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{What is FASP}\label{sec:goal}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Over the last few decades, researchers have expended significant effort on developing efficient iterative methods for solving discretized partial differential equations (PDEs). Though these efforts have yielded many mathematically optimal solvers such as the multigrid method, the unfortunate reality is that multigrid methods have not been much used in practical applications. This marked gap between theory and practice is mainly due to the fragility of traditional multigrid (MG) methodology and the complexity of its implementation. We aim to develop techniques and the corresponding software that will narrow this gap, specifically by developing mathematically optimal solvers that are robust and easy to use in practice.
+% Over the last few decades, researchers have expended significant
+% effort on developing efficient iterative methods for solving
+% discretized partial differential equations (PDEs). Though these
+% efforts have yielded many mathematically optimal solvers such as the
+% multigrid method, the unfortunate reality is that multigrid methods
+% have not been much used in practical applications. This marked gap
+% between theory and practice is mainly due to the fragility of
+% traditional multigrid (MG) methodology and the complexity of its
+% implementation. We aim to develop techniques and the corresponding
+% software that will narrow this gap, specifically by developing
+% mathematically optimal solvers that are robust and easy to use in
+% practice.
 
-We believe that there is no one-size-for-all solution method for discrete linear systems from different applications. And, efficient iterative solvers can be constructed by taking the properties of partial differential equations (PDEs) and discretizations into account. In this project, we plan to construct a pool of discrete problems arising from systems of PDEs and efficient linear solvers for these problems. We mainly utilize the methodology of Auxiliary Space Preconditioning (ASP)~\cite{Xu.Xu.2010ff} to construct efficient linear solvers. Due to this reason, this software package is called ``Fast Auxiliary Space Preconditioning'' or FASP for short.
+% We believe that there is no one-size-for-all solution method for
+% discrete linear systems from different applications. And, efficient
+% iterative solvers can be constructed by taking the properties of
+% partial differential equations (PDEs) and discretizations into
+% account. In this project, we plan to construct a pool of discrete
+% problems arising from systems of PDEs and efficient linear solvers for
+% these problems. We mainly utilize the methodology of Auxiliary Space
+% Preconditioning (ASP) ~\cite{Xu.Xu.2010ff} to construct efficient
+% linear solvers. Due to this reason, this software package is called
+% ``Fast Auxiliary Space Preconditioning'' or FASP for short. 
 
-\subsection{Our goal}
+\section{General description}
+The Fast Auxiliary Space Preconditioning (FASP) package provides
+source files (in {\color{red}ANSI C???}) to build a library of
+iterative solvers and preconditioners for the solution of large scale
+linear systems of equations.  The components of the base FASP library
+include several ready-to-use, modern, and efficient iterative solvers
+used in applications ranging from simple examples of discretized
+scalar partial differential equations (PDEs) to numerical simulations
+of complex, multicomponent physical systems via the Auxiliary Space
+Preconditioning framework~\cite{Xu.Xu.2010ff}.
 
-The FASP project is not a traditional software project; instead, it is designed to support our effort to identify efficient algorithms and to build fast solvers for a set of PDE problems---FASP is designed for developing and testing new efficient solvers and preconditioners for discrete partial differential equations (PDEs) or systems of PDEs. The main components of the package are basic linear iterative methods, standard Krylov methods, geometric and algebraic multigrid methods, and incomplete factorization methods. Based on these standard techniques, we build efficient solvers, based on the framework of Auxiliary Space Preconditioning, for several complicated applications. For the moment, we have a few examples include the fluid dynamics, underground water simulation, the black oil model in reservoir simulation, and so on.
-
-FASP contains the kernel part and several applications (ranging from fluid dynamics to reservoir simulation). The kernel part is open-source and licensed under GNU Lesser General Public License or LGPL. We tried and will continue to try to keep as many parts of the FASP project open to public as possible. However, some of the applications contain contributions from and owned partially by other parties. We only discuss the kernel functions (open to public) in this user's guide.
-
-\begin{snugshade}\noindent
-LICENSE: This software is free software distributed under the Lesser General Public
-License or LGPL, version~3.0 or any later versions. This software distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License \url{http://www.gnu.org/licenses/} for more details.
-\end{snugshade}
-
-\subsection{Our strategy}
-
-We organize the development of FASP package in a \emph{``Multilevel''} or \emph{``Capitalism''} way:
-
-\begin{itemize}
-
-\item Stage 1. Fine level stage (or free market stage)
-
-\begin{enumerate}
-\item[(1)] Collect problems and solvers. Allow similarities or even duplications, for example same solution algorithm, but different implementation. Keep all the record: problem description, solver code, test results, etc.
-%
-\item[(2)] Try to find a minimal set of standard or rules. And then we let the market to evolve freely. The idea is to allow the market to be FREE.
-\end{enumerate}
-
-\item Stage 2. Coarse level stage (or state capitalism stage)
-
-\begin{enumerate}
-\item[(1)] As FASP evolves, we might see, at certain time, that the market is out-of-control. This basically means the ``fine level solver'' or the ``free market'' is very successful and we should start to give more strict standard or regulation.
-%
-\item[(2)] Write a professional-level software package for a set of chosen algorithms for particular problems.
-\end{enumerate}
+The main components of the FASP basic library are:
+\begin{itemize}\setlength{\itemsep}{-1mm}
+\item Basic linear iterative methods;
+\item Standard Krylov subspace methods;
+\item Geometric and Algebraic Multigrid (G/AMG) methods;
+\item Incomplete factorization methods.
 \end{itemize}
+The FASP distribution also includes several examples for solving
+simple benchmark problems.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{What solvers you are going to get}\label{sec:idea}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Roadmap: from basics to complex applications} 
+A distinct feature of the FASP software project is that it is an open
+ended project. It contains a basic kernel of sources and is maintained
+by a team of developers with the expertise to build efficient solvers
+for a wide range of complex numerical models.
 
-We are currently interested in the theory and numerical solution of many PDE problems. Currently, we are mainly working on solving the following PDEs and PDE systems (this is not a complete list and it is still expanding):
-\begin{itemize}
-\item Poisson equation
-\item Reaction-diffusion equation
-\item Linear elasticity
-\item Brinkman equation
-\item Biharmonic equation
-\item Stokes and Navier-Stokes equations
-\item Fluid-structure interaction
-\item Oldryod-B and Johnson-Seglman equations
-\item Darcy's flow
-\item Black oil model and its generalizations
-\item H(curl)/H(div) systems
-\item Maxwell equation
-\item MHD equation
-\end{itemize}
+As typical for an open-source software, the further development of
+FASP project will be largely based on the involvement of the community. We
+count on the users' input in providing requests for, as well as, contributions
+to, the expansion of FASP in different application areas. Our
+developers are ready to help in designing efficient solvers based
+on the FASP kernel for a large variety of numerical models. 
+
+The FASP software has been successfully used to build efficient
+solvers for several discretized PDEs and systems of PDEs: 
+general scalar elliptic equations; linear elasticity;
+Brinkman equation; bi-harmonic equation; Stokes and Navier-Stokes
+equations; $H(\operatorname{curl})/H(\operatorname{div})$ systems;
+Maxwell's system. The resulting solvers have been applied in simulations from 
+fluid dynamics, underground water simulation, fluid-structure
+interactions; Oldryod-B and Johnson-Seglman models; black-oil model
+in reservoir simulation; magnetohydrodynamics (MHD).
+
+Several of these benchmark problems are included as examples in the
+this open-source distribution, others are under development or have
+more restrictive licensing.
+
 %
-\begin{snugshade}\noindent
-We intend to design solution algorithms and their implementation for all these problems with different discretizations. We have done a bunch of them but not all of them are publicly available in the current version!
-\end{snugshade}
+
+% \begin{snugshade}\noindent
+% We intend to design solution algorithms and their implementation for all these problems with different discretizations. We have done a bunch of them but not all of them are publicly available in the current version!
+% \end{snugshade}
 
 
+% FASP contains a kernel part and several example applications (ranging from
+% fluid dynamics to reservoir simulation). The kernel part is
+% open-source and licensed under GNU Lesser General Public License or
+% LGPL. We tried and will continue to try to keep as many parts of the
+% FASP project open to public as possible. However, some of the
+% applications contain contributions from and owned partially by other
+% parties. We only discuss the kernel functions (open to public) in this
+% user's guide.
+
+
+% \subsection{Our strategy}
+
+% We organize the development of FASP package in a \emph{``Multilevel''} or \emph{``Capitalism''} way:
+
+% \begin{itemize}
+
+% \item Stage 1. Fine level stage (or free market stage)
+
+% \begin{enumerate}
+% \item[(1)] Collect problems and solvers. Allow similarities or even duplications, for example same solution algorithm, but different implementation. Keep all the record: problem description, solver code, test results, etc.
+% %
+% \item[(2)] Try to find a minimal set of standard or rules. And then we let the market to evolve freely. The idea is to allow the market to be FREE.
+% \end{enumerate}
+
+% \item Stage 2. Coarse level stage (or state capitalism stage)
+
+% \begin{enumerate}
+% \item[(1)] As FASP evolves, we might see, at certain time, that the market is out-of-control. This basically means the ``fine level solver'' or the ``free market'' is very successful and we should start to give more strict standard or regulation.
+% %
+% \item[(2)] Write a professional-level software package for a set of chosen algorithms for particular problems.
+% \end{enumerate}
+% \end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{How to use this guide}\label{sec:how}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this user's guide, we mainly describe how to use the existing solvers in FASP via a couple of simple tutorial problems. This user's guide is self-contained but does \emph{not} provide details of the algorithms nor the implementation. Along this guide, we provide a reference manual\footnote{Available online at \url{http://fasp.sourceforge.net}. It is also available in ``\url{faspsolver/doc/doc.zip}''.} for technical details of the implementation. For the algorithms implemented, we will provide the references and we recommend the users to read them for better understanding of the code. Furthermore, since FASP is under heavy development, please use this guide with caution because the code might have been changed before this document is updated.
+This user's guide describes how to use the existing solvers in FASP
+via a couple of simple tutorial problems. The user's guide is a
+self-contained document but does \emph{not} provide any details about
+the algorithms or their implementation. Along with this guide, we provide a
+reference manual\footnote{Available online at
+  \url{http://fasp.sourceforge.net}. It is also available in
+  ``\url{faspsolver/doc/doc.zip}''.} for technical details on the
+implementation which includes references. We recommend that the users
+read these references to better
+understanding of the code. Furthermore, since FASP is under heavy
+development, please use this guide with caution because the code might
+have been changed before this document is updated.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{How to obtain FASP}\label{sec:install}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-All the FASP packages are hosted on \emph{BitBucket.org}\footnote{Official website: \url{https://bitbucket.org/}} using Mercurial (Hg)\footnote{Official website: \url{http://mercurial.selenic.com/}}. A Hg client for GNU Linux, Mac OS X, or Windows can be downloaded from
+{\color{red} Chensong, can you change this below to just reflect the
+  source-forge sources?}
+
+All the FASP packages are hosted on
+\emph{BitBucket.org}\footnote{Official website:
+  \url{https://bitbucket.org/}} using Mercurial (Hg)\footnote{Official
+  website: \url{http://mercurial.selenic.com/}}. A Hg client for GNU
+Linux, Mac OS X, or Windows can be downloaded from
 % section section name (end)
 \begin{center}
   \url{http://mercurial.selenic.com/downloads/}
@@ -173,11 +238,22 @@ All the FASP packages are hosted on \emph{BitBucket.org}\footnote{Official websi
 %
 There are also many other third-party clients which provides Hg services, for example: EasyMercurial\footnote{Official website: \url{http://easyhg.org}} (cross platform) and SourceTree\footnote{Official website: \url{http://www.sourcetreeapp.com}} (for Mac OS X only).
 
-As a DVCS (Distributed Version Control System) source-control software, Hg is relatively new. But compared with other tools like Git, Hg is considered \emph{friendlier} with a lower learning curve. This is despite the fact that Hg uses two distinct sets of commands and two distinct vocabularies for operations depending upon whether the repository is local or remote.
-Documentation for Hg is substantially better, including a book\footnote{The hgbook, \url{http://hgbook.red-bean.com/}}. They've also had the advantage of trying the documentation on a fairly savvy group of developers (Mozilla) who gave them lots of feedback that helped polish the rough edges.
+As a DVCS (Distributed Version Control System) source-control
+software, Hg is relatively new. But compared with other tools like
+Git, Hg is considered \emph{friendlier} with a lower learning
+curve. This is despite the fact that Hg uses two distinct sets of
+commands and two distinct vocabularies for operations depending upon
+whether the repository is local or remote.  Documentation for Hg is
+substantially better, including a book\footnote{The hgbook,
+  \url{http://hgbook.red-bean.com/}}. They've also had the advantage
+of trying the documentation on a fairly savvy group of developers
+(Mozilla) who gave them lots of feedback that helped polish the rough
+edges.
 
-\subsection{Linux or OS X}
-First, you need to obtain a free copy of FASP kernel functions from our public Hg repository. If you are downloading FASP for the first time, you can clone the repository to your local machine:
+\subsection{Linux or Mac OS X}
+First, you need to obtain a free copy of FASP kernel functions from
+our public Hg repository. If you are downloading FASP for the first
+time, you can clone the repository to your local machine:
 %
 \begin{lstlisting}[numbers=none]
 "Download FASP kernel subroutines via HTTPS"
@@ -189,7 +265,14 @@ $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver
 If you have any problems when clone this repository, please send us an email to \url{faspdev@gmail.com}.
 \end{snugshade}
 
-After a long pause\footnote{In fact, a very long pause. This is because the initial clone with copy all the history data which is about 400MB in total. Depending on the speed of your network, it could take 15 minutes to one hour.}, you should have obtained ``\emph{faspsolver}'' in your current directory successfully. If you have already cloned the repository before, you can just pull a new version and update your local version with it: Go to your local ``\emph{faspsolver}'' directory and then
+After a long pause\footnote{In fact, a very long pause. This is
+  because the initial clone with copy all the history data which is
+  about 400MB in total. Depending on the speed of your network, it
+  could take 15 minutes to one hour.}, you should have obtained
+``\emph{faspsolver}'' in your current directory successfully. If you
+have already cloned the repository before, you can just pull a new
+version and update your local version with it: Go to your local
+``\emph{faspsolver}'' directory and then
 %
 \begin{lstlisting}[numbers=none]
 "Pull a new version from BitBucket"
@@ -200,17 +283,43 @@ $ hg update
 \end{lstlisting}
 %
 
-\subsection{Windows}
-If you are using Windows, you may want to install TortoiseHg\footnote{Official website: \url{http://tortoisehg.bitbucket.org/}}. After installing it, the TortoiseHg menu has been merged into the right-click menu of Windows Explore. You could download FASP copy from BitBucket.org. Choose ``TortoiseHg''\verb| --> |``Clone'' in the pop-up menu, the source address is
+\subsection{Windows OS}
+If you are using Windows, you may want to install
+TortoiseHg\footnote{Official website:
+  \url{http://tortoisehg.bitbucket.org/}}. After installing it, the
+TortoiseHg menu has been merged into the right-click menu of Windows
+Explore. You could download FASP copy from BitBucket.org. Choose
+``TortoiseHg''\verb| --> |``Clone'' in the pop-up menu, the source
+address is
 \begin{lstlisting}[numbers=none]
 https://faspusers@bitbucket.org/fasp/faspsovler
 \end{lstlisting}
 Then press ``Clone'' and you will obtain ``faspsolver'' in the directory you set.
 
 
-\section{How to build FASP}\label{sec:build}
+\section{Licensing} This basic (kernel) FASP distribution is
+open-source and is licensed under GNU Lesser General Public License or
+LGPL. Other distributions may have different licensing (contact the
+developer team for details on this).
 
-FASP has been tested on Linux (Cent OS, Debian, Fedora, RedHat, Ubuntu), OS X (Leopard, Snow Leopard, Lion, Mavericks, El Capitan), and Windows (XP, Win 7) with a couple of compliers including GCC, G++, Clang, ICC, VC++, GFORTRAN, G95, IFORT.
+\begin{snugshade}\noindent
+  LICENSING: This software is free software distributed under the Lesser
+  General Public License or LGPL, version~3.0 or any later
+  versions. This software distributed in the hope that it will be
+  useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  Lesser General Public License \url{http://www.gnu.org/licenses/} for
+  more details.
+\end{snugshade}
+
+
+
+\section{Building and installing the FASP library and examples}\label{sec:build}
+
+FASP has been tested on Linux (Cent OS, Debian, Fedora, RedHat,
+Ubuntu), OS X (Leopard, Snow Leopard, Lion, Mavericks, El Capitan),
+and Windows (XP, Win 7) with a couple of compliers including \verb|GCC|, G++,
+Clang, ICC, VC++, GFORTRAN, G95, IFORT.
 
 \subsection{Linux or OS X}
 
@@ -284,7 +393,7 @@ C:\FASP> lib /ltcg /out:FASP.lib faspbase-c-vs08.lib faspbase-f-vs08.lib
 \end{lstlisting}
 %
 
-\subsection{Using GUI based on TCL}
+\subsection{Using TCL based GUI}
 You can also try to build FASP using the simple TCL graphical user interface. For example, in Linux or Mac OS X, you may 
 %
 \begin{lstlisting}[numbers=none]
@@ -302,7 +411,10 @@ A simple graphical interface will pop up; see Figure~\ref{fig:gui}. The rest of 
 
 \begin{comment}
 \subsection{Using Scons}
-In Linux, Mac OS X, or Windows, you can use the Scons tool to build and install different versions (Release, Shared, Debug) of the FASP library. You just need to type inside ``\url{faspsolve/base}'' directory:
+In Linux, Mac OS X, or Windows, you can use the Scons tool to build
+and install different versions (Release, Shared, Debug) of the FASP
+library. You just need to type inside ``\url{faspsolve/base}''
+directory:
 %
 \begin{lstlisting}[numbers=none]
 $ scons -Q install
@@ -314,14 +426,20 @@ C:\> scons -Q install FC=ifort CC=cl
 \end{lstlisting}
 
 \begin{snugshade}\noindent
-Usually, the directories for compilers are not added to the PATH environment variable automatically. Hence, you may need to modify your PATH variable to make the above line to work. 
+Usually, the directories for compilers are not added to the PATH
+environment variable automatically. Hence, you may need to modify your
+PATH variable to make the command above to work. 
 \end{snugshade}
 \end{comment}
 
 
 \subsection{External libraries}\label{ssec:lib}
 
-There are a few \emph{optional} external libraries that you might want to use, including memory allocation routines, direct solvers, ILU methods, discretization packages, etc. FASP has interfaces to a couple of them which we often use, for example, UMFPack, SuperLU, MUMPS, SparseKit, dlmalloc.
+There are a few \emph{optional} external libraries that you might want
+to use, including memory allocation routines, direct solvers, ILU
+methods, discretization packages, etc. FASP has interfaces to a couple
+of them which we often use, for example, UMFPack, SuperLU, MUMPS,
+SparseKit, dlmalloc.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -754,7 +872,10 @@ In FASP, we provided several functions for reading, writing, and printing differ
 \lstinputlisting[language=C,firstnumber=834,firstline=834,lastline=948]{../base/include/fasp_functs.h}
 %
 \begin{snugshade}\noindent
-NOTE: The above function decorations are taken from ``\url{base/include/fasp\_functs.h}''. This header file is automatically generated based on the source codes. Users are NOT supposed to change it by hand. 
+  NOTE: The above function decorations are taken from
+  ``\url{base/include/fasp\_functs.h}''. This header file is
+  automatically generated based on the source codes. Users are discouraged
+  from changing it by hand; their changes may be lost. 
 \end{snugshade}
 
 
