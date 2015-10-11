@@ -15,6 +15,8 @@ File Name: CHANGES
 - Change regression result filenames to reg_mf.out and reg_mm.out.
 - Update all regression results.
 - Remove testomp.c and test_rsamg_omp.c from test/main.
+- Rename: testamg.c --> testbamg.c and update test/ini/bamg.c.
+- Rename: test_smat.c --> testsmat.c.
 
 09/30/2015 FASP 1.8.0:
 - Fix Clang warnings when comparing an address with NULL.
