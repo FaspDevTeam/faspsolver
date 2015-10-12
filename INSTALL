@@ -16,7 +16,7 @@ $ make config debug=all # Configure with FASP internal debug options ON
 $ make                  # Compile the library (after "make config")
 $ make install          # install FASP libraries and related files
 $ make uninstall        # Remove installed files by "make install"
-$ make headers          # Generate function decorations automatically
+$ make headers          # Generate function declarations automatically
 $ make docs             # Generate the FASP documentation with Doxygen
 $ make clean            # Remove obj files but retain configuration options
 $ make distclean        # Clean and completely removes the build directory
