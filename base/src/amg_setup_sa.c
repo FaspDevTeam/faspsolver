@@ -267,7 +267,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
                 printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
                        mgl[lvl].P.row, mgl[lvl].P.col);
             }
-            //break;
+            break;
         }
         
         /*-- Form restriction --*/

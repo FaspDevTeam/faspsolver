@@ -394,7 +394,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->print_level          = PRINT_NONE;
     amgparam->maxit                = 1;
     amgparam->tol                  = 1e-6;
-    amgparam->max_levels           = 8;
+    amgparam->max_levels           = 20;
     amgparam->coarse_dof           = 500;
     amgparam->cycle_type           = V_CYCLE;
     amgparam->smoother             = SMOOTHER_GS;
