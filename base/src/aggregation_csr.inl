@@ -1342,7 +1342,6 @@ static void smooth_agg (dCSRmat *A,
     const SHORT filter = param->smooth_filter;
     const INT   row = A->row, col= A->col;
     const REAL  smooth_factor = param->tentative_smooth;
-printf("smooth_factor =%f\n", smooth_factor);
     
     dCSRmat S;
     dvector diag;  // diagonal entries
