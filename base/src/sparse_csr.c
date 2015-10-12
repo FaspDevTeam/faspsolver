@@ -1333,7 +1333,7 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
 }
 
 /**
- * \fn void fasp_dcsr_transz (dCSRmat A,  INT *p, dCSRmat *AT)
+ * \fn void fasp_dcsr_transz (dCSRmat *A,  INT *p, dCSRmat *AT)
  *
  * \brief Generalized transpose of A: (n x m) matrix given in dCSRmat format
  *
@@ -1363,16 +1363,16 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
  * \author Ludmil Zikatanov
  * \date   19951219 (Fortran), 20150912 (C)
  */
-void fasp_dcsr_transz (dCSRmat A,
+void fasp_dcsr_transz (dCSRmat *A,
                        INT *p,
                        dCSRmat *AT)
 {
     /* tested for permutation and transposition */
     /* transpose or permute; if A.val is null ===> transpose the
        structure only */
-    const INT   n=A.row, m=A.col, nnz=A.nnz;
-    const INT *ia=A.IA, *ja=A.JA;
-    const REAL *a=A.val;
+    const INT   n=A->row, m=A->col, nnz=A->nnz;
+    const INT *ia=A->IA, *ja=A->JA;
+    const REAL *a=A->val;
     INT m1=m+1;
     
     /* introducing few extra pointers hould not hurt too much the speed */
@@ -1474,7 +1474,7 @@ void fasp_dcsr_transz (dCSRmat A,
  * \param A  Pointer to the original dCSRmat matrix
  * \param p  Pointer to ordering
  *
- * \note This is just applying twice fasp_dcsr_transz(A,p,At).
+ * \note This is just applying twice fasp_dcsr_transz(&A,p,At).
  *
  * \note In matlab notation: Aperm=A(p,p);
  *
@@ -1492,8 +1492,8 @@ dCSRmat fasp_dcsr_permz (dCSRmat *A,
     Aperm1 = fasp_dcsr_create(n,n,nnz);
     Aperm = fasp_dcsr_create(n,n,nnz);
     
-    fasp_dcsr_transz((*A),p,&Aperm1);
-    fasp_dcsr_transz(Aperm1,p,&Aperm);
+    fasp_dcsr_transz(A,p,&Aperm1);
+    fasp_dcsr_transz(&Aperm1,p,&Aperm);
     
     // clean up
     fasp_dcsr_free(&Aperm1);
@@ -1522,14 +1522,14 @@ void fasp_dcsr_sortz (dCSRmat *A,
     dCSRmat AT = fasp_dcsr_create(m,n,nnz);
     
     /* watch carefully who is a pointer and who is not in fasp_dcsr_transz() */
-    fasp_dcsr_transz((*A), NULL , &AT);
+    fasp_dcsr_transz(A, NULL , &AT);
     
     /* if the matrix is symmetric, then only one transpose is needed
        and now we just copy */
     if ((m==n) && (isym))
-        fasp_dcsr_cp(&AT, A);
+      fasp_dcsr_cp(&AT, A);
     else
-        fasp_dcsr_transz(AT, NULL , A);
+      fasp_dcsr_transz(&AT, NULL , A);
     
     // clean up
     fasp_dcsr_free(&AT);
