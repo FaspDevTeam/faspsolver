@@ -2408,7 +2408,7 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
                               INT *flags,
                               INT *groups);
 
-void fasp_dcsr_transz (dCSRmat A,
+void fasp_dcsr_transz (dCSRmat *A,
                        INT *p,
                        dCSRmat *AT);
 

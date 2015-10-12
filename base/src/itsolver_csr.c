@@ -668,7 +668,7 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
 #if WITH_UMFPACK // use UMFPACK directly
     dCSRmat A_tran;
     A_tran = fasp_dcsr_create(A_nk->row, A_nk->col, A_nk->nnz);
-    fasp_dcsr_transz(*A_nk, NULL, &A_tran);
+    fasp_dcsr_transz(A_nk, NULL, &A_tran);
     // It is equivalent to do transpose and then sort
     //     fasp_dcsr_trans(A_nk, &A_tran);
     //     fasp_dcsr_sort(&A_tran);

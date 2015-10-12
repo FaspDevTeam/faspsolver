@@ -239,7 +239,7 @@ INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
             dCSRmat Ac_tran;
             for (i=0; i<nblk; ++i) {
                 Ac_tran = fasp_dcsr_create(blk[i].row, blk[i].col, blk[i].nnz);
-                fasp_dcsr_transz(blk[i], NULL, &Ac_tran);
+                fasp_dcsr_transz(&blk[i], NULL, &Ac_tran);
                 fasp_dcsr_cp(&Ac_tran, &blk[i]);
                 numeric[i] = fasp_umfpack_factorize(&blk[i], 0);
             }
