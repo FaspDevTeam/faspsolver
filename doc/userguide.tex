@@ -33,7 +33,7 @@
 	language=C,
         basicstyle=\scriptsize,
         upquote=true,
-        aboveskip={1.1\baselineskip},
+        aboveskip={1.0\baselineskip},
         columns=fixed,
         showstringspaces=false,
         extendedchars=true,
@@ -225,6 +225,23 @@ have been changed before this document is updated.
 \section{How to obtain FASP}\label{sec:install}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+The basic (kernel) FASP distribution is
+open-source and is licensed under GNU Lesser General Public License or
+LGPL. Other distributions may have different licensing (contact the
+developer team for details on this).
+
+\begin{snugshade}\noindent
+  LICENSING: This software is free software distributed under the Lesser
+  General Public License or LGPL, version~3.0 or any later
+  versions. This software distributed in the hope that it will be
+  useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  Lesser General Public License \url{http://www.gnu.org/licenses/} for
+  more details.
+\end{snugshade}
+
+
+
 \subsection{Downloading from SourceForge}
 
 The most updated version of FASP can be downloaded directly from
@@ -301,27 +318,10 @@ TortoiseHg menu has been merged into the right-click menu of Windows
 Explore. You could download FASP copy from BitBucket.org. Choose
 ``TortoiseHg''\verb| --> |``Clone'' in the pop-up menu, the source
 address is
-\begin{lstlisting}[numbers=none]
-https://faspusers@bitbucket.org/fasp/faspsovler
-\end{lstlisting}
+\begin{center}
+\url{https://faspusers@bitbucket.org/fasp/faspsovler}
+\end{center}
 Then press ``Clone'' and you will obtain ``faspsolver'' in the directory you set.
-
-
-\section{Licensing} This basic (kernel) FASP distribution is
-open-source and is licensed under GNU Lesser General Public License or
-LGPL. Other distributions may have different licensing (contact the
-developer team for details on this).
-
-\begin{snugshade}\noindent
-  LICENSING: This software is free software distributed under the Lesser
-  General Public License or LGPL, version~3.0 or any later
-  versions. This software distributed in the hope that it will be
-  useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  Lesser General Public License \url{http://www.gnu.org/licenses/} for
-  more details.
-\end{snugshade}
-
 
 
 \section{Building and installing the FASP library and examples}\label{sec:build}
@@ -357,7 +357,7 @@ In order to be sure that everything went all right, you can go to the
 $ ./test.ex
 \end{lstlisting}
 %
-If you need help with the options available, type 
+If you need help with the available options, type 
 %
 \begin{lstlisting}[numbers=none]
 $ make help
@@ -441,8 +441,8 @@ C:\FASP> lib /ltcg /out:FASP.lib faspbase-c-vs08.lib faspbase-f-vs08.lib
 \subsection{Using a TCL based GUI for installation}
 For users who like more a GUI based installation, we provide a simple
 TCL Graphical User
-Interface (GUI) for building the FASP library. On a macine running
-Linux or Mac OS X with \verb|Tcl/Tk| installed , you may invoke the GUI
+Interface (GUI) for building the FASP library. On a machine running
+Linux or Mac OS X with \verb|Tcl/Tk| installed, you may invoke the GUI
 by typing
 %
 \begin{lstlisting}[numbers=none]
@@ -477,7 +477,7 @@ By default, Scons will search for default compilers installed on your
 system. If you wish to use a specific compiler, you may change the
 default values of the CC (for C) and FC (for Fortran) flags. For
 in a Windows environment in order to use the Intel Fortran and VC++
-compilers for FASP, the Scons commmand is:
+compilers for FASP, the Scons command is:
 \begin{lstlisting}[numbers=none]
 C:\> scons -Q install FC=ifort CC=cl
 \end{lstlisting}
@@ -501,22 +501,22 @@ of them, for example, FASP can be linked to use \verb|UMFPack|, \verb|SuperLU|, 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{B brief tutorial}\label{ch:tutor}
+\chapter{A brief tutorial}\label{ch:tutor}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this chapter, we discuss several simple examples included with this
 FASP distribution and demonstrating how to
 use the FASP package for solving linear systems. We read the matrices
-from disk files (the files are also included in the fasp
+from disk files (the files are also included in the FASP
 distribution). 
-All the examples are found in ``\url{faspsolver/tutorial/}''. 
-
-Here we only discuss the C version of these examples, but the FASP
-distribution also includes F90 versions of some of the examples. 
+All the examples can be found inside ``\url{faspsolver/tutorial/}''. 
 
 After you successfully build FASP (see \S\ref{sec:build}), just go to the
 ``\url{faspsolver/tutorial/}" directory and the tutorial
 examples should be ready to run.
+
+In this section we mainly discuss the C version of these examples; the FASP
+distribution also includes F90 versions of some of the examples. 
 
 \begin{snugshade}\noindent 
   In the description below, we display a typical output from runs of
@@ -529,7 +529,7 @@ examples should be ready to run.
 \setcounter{ex}{1}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Example \arabic{ex}:An AMG solver for the Poisson equation}\label{sec:ex1}
+\section{Example \arabic{ex}: An AMG solver for the Poisson equation}\label{sec:ex1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \addtocounter{ex}{1}
 
@@ -553,14 +553,14 @@ Since this is the first example, we will explain it in some detail:
   purpose of this file (function).
 %
 \item Line 12--13 includes the main FASP header file ``fasp.h'' and
-  FASP function declarations header file ``fasp\_functs.h''. These two
-  header filess shall be included in all files that call FASP
-  functions. The function declarations in ``fasp\_functs.h'' are
-  automatically generated from the source files by an \verb|awk|
-  script and we do not recommend modifying this file, since your
-  changes may be lost.
+  FASP function declarations header ``fasp\_functs.h''. These two
+  headers shall be included in all files that requires FASP
+  subroutines. Please also be noted that the function declarations in
+  ``fasp\_functs.h'' are automatically generated from the source files
+  by an \verb|awk| script and we do not recommend modifying this file,
+  since your changes may be lost. 
 %
-\item Line 35 sets solver parameters using the default parameters or
+\item Line 35--36 sets solver parameters using the default parameters or
   from the command line options; see more discussions in
   \S\ref{sec:parameters}. In the ``tutorial/ini/amg.dat'' file, we can
   set the location of the data files, type of solvers, maximal number
@@ -627,15 +627,15 @@ This example is very similar to the first example and we briefly explain the dif
 %
 To run this example, we can simply type:
 %
-\begin{lstlisting}[numbers=none]
+\begin{lstlisting}[numbers=none,language=sh]
 $ ./poisson-its-c.ex
 \end{lstlisting}
 %
 A sample output is as follows:
-\lstinputlisting[numbers=none,firstline=2,lastline=80]{../tutorial/out/poisson-its-c.out}
+\lstinputlisting[numbers=none,firstline=2,lastline=76]{../tutorial/out/poisson-its-c.out}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Example \arabic{ex}: Conjugate gradient with preconditioner}\label{sec:ex3}
+\section{Example \arabic{ex}: Conjugate gradient with preconditioning}\label{sec:ex3}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \addtocounter{ex}{1}
 
@@ -649,7 +649,7 @@ This example is very similar to the first example, and the details are
 as follows. 
 \begin{itemize}
 %
-\item Line 36 sets default parameters. In this example, we need parameters for iterative methods, AMG preconditioner, and ILU preconditioner. 
+\item Line 36--37 sets default parameters. In this example, we need parameters for iterative methods, AMG preconditioner, and ILU preconditioner. 
 %
 \item Line 73 sets up the desired preconditioner and prepare it for the preconditioned iterative methods.
 %
@@ -670,13 +670,12 @@ A sample output is given as follows (note that the actual output depends on the 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{How to change default parameters in FASP
-  solver/preconditioner}\label{sec:parameters}
+\section{How to change parameters in
+  solvers/preconditioners}\label{sec:parameters}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In the previous examples, we have seen how to set solver parameters
-using the default settings. Here we discuss changing such parameters
-by reading them from a disk file. An example of such file is found in the FASP
+In the previous examples, we have seen how to use the default parameters in FASP. In this section we discuss changing such parameters
+by reading them from a disk file or from the command line. An example of parameter initialization file is found in the FASP
 tutorial directory and is named ``\url{tutorial/ini/amg.dat}''.
 %
 \begin{lstlisting}[numbers=none,language=sh]
@@ -706,7 +705,7 @@ This example is very similar to the first example and we now briefly explain it:
 \end{itemize}
 %
 
-You can do a very simple experiment and change the AMG type from the classical AMG to smoothed aggregation AMG by revise Line 14 to
+You can do a very simple experiment---Simply change the AMG type from the classical AMG to smoothed aggregation AMG by revise Line 14 to
 %
 \begin{lstlisting}[numbers=none]
 AMG_type                 = SA
@@ -757,6 +756,14 @@ FASP command line options:
  \end{lstlisting}
 %
 
+For example, in order to the change the AMG type to the smoothed aggregation (SA) used by the preconditioner for PCG, you can also use the command line options:
+%
+\begin{lstlisting}[numbers=none,language=sh]
+./poisson-amg-c.ex -amgtype 2 -amgmaxit 100
+\end{lstlisting}
+%
+Here we only changed two parameters from the default setting without changing anything else. So it might not give the same output as in the previous example. 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Data structures and basic usage}\label{ch:basic}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -774,7 +781,7 @@ sparse matrices, iterative methods, and multigrid methods.
 The data structures most often used for implementing iterative methods are
 sparse matrices and vectors. In this section, we first discuss the
 data structures for vectors and matrices in FASP; and then we discuss
-BLAS for sparse matrices. The definitions can be found in
+BLAS operations for sparse matrices. The definitions can be found in
 ``\url{base/include/fasp.h}''.
 
 \subsection{Vectors}
@@ -1169,7 +1176,13 @@ OpenMP\footnote{Official website: \url{http://openmp.org/}} (Open Multiprocessin
 NOTE: By default, OpenMP is disabled in FASP. In order to turn it on, you need to modify FASP.mk slightly as follows.
 \end{snugshade}
 
-To enable OpenMP support, you need to uncomment one line in ``FASP.mk'' and set ``openmp'' to be ``yes''.
+To enable OpenMP support in FASP, you can simply use the config option
+%
+\begin{lstlisting}[numbers=none]
+$ make config openmp=yes
+\end{lstlisting}
+%
+If you use OpenMP very often and do not want type in this extra command-line option, you need to uncomment one line in ``FASP.mk'' and set ``openmp'' to be ``yes''.
 \lstinputlisting[language=sh,firstnumber=37,firstline=37,lastline=45]{../FASP.mk}
 
 After you build FASP with ``openmp=yes'', OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash}, you need to set:
@@ -1181,7 +1194,7 @@ $ export OMP_NUM_THREADS=8
 \section{Predefined constants}\label{sec:const}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-FASP ahs many predefined constants used in the source files. 
+FASP has many predefined constants used in the source files. 
 Using these macros makes the source codes more readable. 
 These constants are defined in ``\url{base/include/fasp\_const.h}''
 and a printout of this file is below:
@@ -1193,7 +1206,7 @@ and a printout of this file is below:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{snugshade}\noindent
-  NOTE: The default FSP build is a REALEASE version and such version
+  NOTE: The default FSP build is a RELEASE version and such version
   is compiled with optimization and no warnings are displayed during
   the build. How to build the FASP library with debugging enabled is
   described below.

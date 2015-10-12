@@ -454,7 +454,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
  */
 void fasp_param_solver_init (itsolver_param *itsparam)
 {
-    itsparam->print_level   = 0;
+    itsparam->print_level   = PRINT_NONE;
     itsparam->itsolver_type = SOLVER_CG;
     itsparam->precond_type  = PREC_AMG;
     itsparam->stop_type     = STOP_REL_RES;
@@ -475,7 +475,7 @@ void fasp_param_solver_init (itsolver_param *itsparam)
  */
 void fasp_param_ilu_init (ILU_param *iluparam)
 {
-    iluparam->print_level  = 0;
+    iluparam->print_level  = PRINT_NONE;
     iluparam->ILU_type     = ILUk;
     iluparam->ILU_lfil     = 2;
     iluparam->ILU_droptol  = 0.001;
@@ -497,7 +497,7 @@ void fasp_param_ilu_init (ILU_param *iluparam)
  */
 void fasp_param_Schwarz_init (Schwarz_param *schparam)
 {
-    schparam->print_level       = 0;
+    schparam->print_level       = PRINT_NONE;
     schparam->Schwarz_type      = 3;
     schparam->Schwarz_maxlvl    = 2;
     schparam->Schwarz_mmsize    = 200;

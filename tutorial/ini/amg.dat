@@ -11,7 +11,7 @@ print_level = 3       % How much information to print out
 % parameters for multilevel iteration          %
 %----------------------------------------------%
 
-AMG_type                 = SA      % C classic AMG
+AMG_type                 = C      % C classic AMG
                                   % SA smoothed aggregation
                                   % UA unsmoothed aggregation
 AMG_cycle_type           = V      % V V-cycle | W W-cycle

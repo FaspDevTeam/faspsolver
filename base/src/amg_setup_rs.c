@@ -231,6 +231,7 @@ SHORT fasp_amg_setup_rs (AMG_data *mgl,
             //     fasp_dcsr_sort(&Ac_tran);
             fasp_dcsr_cp(&Ac_tran, &mgl[lvl].A);
             fasp_dcsr_free(&Ac_tran);
+            mgl[lvl].Numeric = fasp_umfpack_factorize(&mgl[lvl].A, 0);
             break;
         }
 #endif
