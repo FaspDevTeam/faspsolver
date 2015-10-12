@@ -142,11 +142,13 @@ by a team of developers with the expertise to build efficient solvers
 for a wide range of complex numerical models.
 
 As typical for an open-source software, the further development of
-FASP project will be largely based on the involvement of the community. We
-count on the users' input in providing requests for, as well as, contributions
-to, the expansion of FASP in different application areas. Our
-developers are ready to help in designing efficient solvers based
-on the FASP kernel for a large variety of numerical models. 
+FASP project will also be based on the involvement of the community.
+While we have our own plans for expanding FASP's capabilities, we also
+count on the users' input in providing requests for, as well as,
+contributions to, the expansion of FASP in different application
+areas. Our team is ready to provide (or help with) the design and the
+implementation of efficient solvers based on the FASP kernel to best
+meet the goals and the requirements of our users.
 
 The FASP software has been successfully used to build efficient
 solvers for several discretized PDEs and systems of PDEs: 
@@ -158,8 +160,8 @@ fluid dynamics, underground water simulation, fluid-structure
 interactions; Oldryod-B and Johnson-Seglman models; black-oil model
 in reservoir simulation; magnetohydrodynamics (MHD).
 
-Several of these benchmark problems are included as examples in the
-this open-source distribution, others are under development or have
+Several of these benchmark problems are included as examples in
+the open-source distribution, others are under development or have
 more restrictive licensing.
 
 %
@@ -324,29 +326,38 @@ developer team for details on this).
 
 \section{Building and installing the FASP library and examples}\label{sec:build}
 
-FASP has been tested on Linux (Cent OS, Debian, Fedora, RedHat,
-Ubuntu), OS X (Leopard, Snow Leopard, Lion, Mavericks, El Capitan),
-and Windows (XP, Win 7) with a couple of compliers including \verb|GCC|, G++,
-Clang, ICC, VC++, GFORTRAN, G95, IFORT.
+FASP has been tested using the compilers and built-in libraries of
+several Linux distributions (\verb|Cent OS|, \verb|Debian|,
+\verb|Fedora|, \verb|RedHat|, \verb|Ubuntu|) Mac OS X 10.6 and later
+(Leopard, Snow Leopard, Lion, Mavericks, Yosemite, El Capitan), and
+Windows (XP, Win 7) with several compliers, including \verb|gcc|,
+\verb|g++|, \verb|clang|, \verb|icc|, \verb|VC++|. FASP also easily
+links to applications written in Fortran and this has been tested with
+\verb|gfortran|, \verb|g95|,\verb|ifort| Fortran compilers.
 
-\subsection{Linux or OS X}
-
-Now we give a simple instruction on how to compile FASP on Linux or OS X: To build the FASP library,  go to the ``faspsolver'' directory. First you need to modify the ``\emph{FASP.mk.example}'' file according to your own need and save it as ``{\color{red}FASP.mk}''. Then you can just type:
+\subsection{FASP on Linux or Mac OS X}
+To build the FASP library for these operating systems: 
+(1) go to the ``faspsolver'' directory; (2) modify the ``\emph{FASP.mk.example}''
+file to math your system and save it as
+``{\color{red}FASP.mk}''; (3) then execute:
 %
 \begin{lstlisting}[numbers=none]
 $ make config
 $ make install
 \end{lstlisting}
 %
-Note that, if you do not have ``FASP.mk'' present in the current directory, default settings will be used for building and installation FASP. 
+Note that, if you do not have ``FASP.mk'' present in the current
+directory, default settings will be used for building and installation
+FASP.
 
-In order to make sure everything is OK, you can go to the ``\url{faspsolver/test}'' directory and try to run the test problem:
+In order to be sure that everything went all right, you can go to the
+``\url{faspsolver/test}'' directory and try to run a test problem as follows:
 %
 \begin{lstlisting}[numbers=none]
 $ ./test.ex
 \end{lstlisting}
 %
-If you need more help, you can use
+If you need help with the options available, type 
 %
 \begin{lstlisting}[numbers=none]
 $ make help
@@ -355,7 +366,7 @@ $ make help
 and you will get the following screen
 \lstinputlisting[numbers=none,language=sh]{../INSTALL}
 
-To uninstall FASP and clean up the working directory, you can simply run
+To uninstall FASP and clean up the working directory, you can run
 %
 \begin{lstlisting}[numbers=none]
 $ make uninstall
@@ -365,7 +376,13 @@ $ make distclean
 
 \subsection{Windows 7}
 
-We provide a Visual Studio 2008 (VS08) solution and a VS10 solution of FASP for Windows users. For example, you can just open ``\url{faspsolver/vs08/faspsolver-vs08.sln}'' if you are using VS08 as your default developing environment. Then a single-click at the ``Build Solution'' on the menu or ``F7'' key  will give you all the FASP libraries and the test programs in ``\url{faspsolver/test/}''. The way for building in VS10 is similar.
+We provide a Visual Studio 2008 (VS08) distribution and a VS10
+distribution of FASP for Windows users. For example, you can just open
+``\url{faspsolver/vs08/faspsolver-vs08.sln}'' if you are using VS08 as
+your default developing environment. Then a single-click at the
+``Build Solution'' on the menu or ``F7'' key will give you all the
+FASP libraries and the test programs in
+``\url{faspsolver/test/}''. The way for building in VS10 is similar.
 \begin{figure}[htbp] %  figure placement: here, top, bottom, or page
    \centering
    \includegraphics[width=\linewidth]{fig/build-fasp-win7.pdf} 
@@ -374,35 +391,59 @@ We provide a Visual Studio 2008 (VS08) solution and a VS10 solution of FASP for 
 \end{figure}
 
 \begin{snugshade}\noindent
-You need a C/C++ complier and a Fortran compiler together with Visual Studio to build FASP. You can use either Microsoft Visual C++ or Intel C compiler, together with Intel Fortran compiler.
+  You need a C/C++ complier and the Visual Studio to build FASP. For
+  example, the build can be accomplished using either Microsoft Visual
+  C++ or Intel C compiler. %together with Intel Fortran compiler.
 \end{snugshade}
 
 \begin{snugshade}\noindent
-If you are using other versions of Visual Studio (like VS05 or VS12), do NOT convert the "VS08" solution file to your VS version because the FASP files might be cleaned up (removed) by Visual Studio automatically. You'd better create another solution to build all the libraries and test programs by yourselves.
+  If you are using other versions of Visual Studio (like VS05 or
+  VS12), we advise NOT to convert the "VS08" files to your VS version
+  because the FASP source files might be {\color{red}removed} by the
+  Visual Studio automatically. In such case, we recommend that you
+  create your own version to build all the libraries and test
+  programs.
 \end{snugshade}
 
-If you need to build a VS solution by yourselves, you should create 5 projects:
+If you need to build a VS FASP yourself, you need to create 5 projects:
 \begin{enumerate}
-\item ``faspbase-c'' contains all the ``.c'' and ``.inl'' files in the directory ``./base/src/''. You should add ``./base/include'' in Additional Directories. This project contains the core subroutines of faspsolver. 
-\item ``faspbase-f'' contains all the ``.f'' files in ``./base/extra/sparsekit''. 
-\item ``testlib'' contains all the ``.c'' files in ``./test/src/''. You should add ``./test/include'' in Additional Directories.
-\item ``test'' is an executing program for test purpose in FASP. The source file is ``./test/main/test.c''.
-\item ``regression'' is another executing program, which contains several methods to test the problems. The source file is ``./test/main/regression.c''.
+\item ``faspbase-c'' contains all the ``.c'' and ``.inl'' files in the
+  directory ``./base/src/''. You should add ``./base/include'' in
+  Additional Directories. This project contains the core subroutines
+  of faspsolver.
+\item ``faspbase-f'' contains all the ``.f'' files in
+  ``./base/extra/sparsekit''.
+\item ``testlib'' contains all the ``.c'' files in
+  ``./test/src/''. You should add ``./test/include'' in Additional
+  Directories.
+\item ``test'' is an executing program for test purpose in FASP. The
+  source file is ``./test/main/test.c''.
+\item ``regression'' is another executing program, which contains
+  several methods to test the problems. The source file is
+  ``./test/main/regression.c''.
 \end{enumerate}
 
 \begin{snugshade}\noindent
-NOTE: If you are using Visual C++, all the C files should be compiled as C++ code (by using the /TP compiling option).
+  NOTE: If you are using Visual C++, all the C files should be
+  compiled as C++ code (by using the /TP compiling option).
 \end{snugshade}
 
-After you successfully build the solution, you will get two static libraries named ``faspbase-c-vs08.lib'' and ``faspbase-f-vs08.lib''. You can use the ``lib'' command to wrap together as one single file (e.g. FASP.lib) for better portability. For example:
+After a successful build on VS, you will have two static libraries
+named ``faspbase-c-vs08.lib'' and ``faspbase-f-vs08.lib''. You can use
+the ``lib'' command to wrap them together as one single file
+(e.g. FASP.lib) for better portability. For example:
 %
 \begin{lstlisting}[numbers=none]
 C:\FASP> lib /ltcg /out:FASP.lib faspbase-c-vs08.lib faspbase-f-vs08.lib
 \end{lstlisting}
 %
 
-\subsection{Using TCL based GUI}
-You can also try to build FASP using the simple TCL graphical user interface. For example, in Linux or Mac OS X, you may 
+\subsection{Using a TCL based GUI for installation}
+For users who like more a GUI based installation, we provide a simple
+TCL Graphical User
+Interface (GUI) for building the FASP library. On a macine running
+Linux or Mac OS X with \verb|Tcl/Tk| installed , you may invoke the GUI
+by typing
 %
 \begin{lstlisting}[numbers=none]
 $ wish FASP_install.tcl
@@ -415,28 +456,37 @@ $ wish FASP_install.tcl
    \label{fig:gui}
 \end{figure}
 %
-A simple graphical interface will pop up; see Figure~\ref{fig:gui}. The rest of the building process is straightforward: After choosing appropriate parameters, just click ``Config'' first and then followed by ``Install''. 
+If all is OK, you should see on your screen the FASP window as shown
+in Figure~\ref{fig:gui}. The rest of the building process is more or
+less straightforward: After choosing appropriate parameters, click
+``Config'' first, followed by clicking ``Install''.
 
 \begin{comment}
 \subsection{Using Scons}
-In Linux, Mac OS X, or Windows, you can use the Scons tool to build
+Another possibility for building FASP is to use the \verb|python|
+based Scons interface for Linux, Mac OS X, or Windows, 
 and install different versions (Release, Shared, Debug) of the FASP
-library. You just need to type inside ``\url{faspsolve/base}''
-directory:
+library. To use Scons, change the working directory to
+``\url{faspsolver/base}'' and type:
 %
 \begin{lstlisting}[numbers=none]
 $ scons -Q install
 \end{lstlisting}
 
-By default, Scons will search for its preferred compilers in your system. If you wish to use your special compilers, you may use FC and CC flags to achieve this goal. For example, if a Windows user want to use Intel Fortran and VC++ compilers for FASP, he/she can use:
+By default, Scons will search for default compilers installed on your
+system. If you wish to use a specific compiler, you may change the
+default values of the CC (for C) and FC (for Fortran) flags. For
+in a Windows environment in order to use the Intel Fortran and VC++
+compilers for FASP, the Scons commmand is:
 \begin{lstlisting}[numbers=none]
 C:\> scons -Q install FC=ifort CC=cl
 \end{lstlisting}
 
 \begin{snugshade}\noindent
-Usually, the directories for compilers are not added to the PATH
-environment variable automatically. Hence, you may need to modify your
-PATH variable to make the command above to work. 
+  In many cases the directories where additional compilers reside are
+  not automatically added to the PATH environment variable
+  automatically. Hence, you may need to modify your PATH variable to
+  make the command above to work.
 \end{snugshade}
 \end{comment}
 
@@ -445,69 +495,124 @@ PATH variable to make the command above to work.
 
 There are a few \emph{optional} external libraries that you might want
 to use, including memory allocation routines, direct solvers, ILU
-methods, discretization packages, etc. FASP has interfaces to a couple
-of them which we often use, for example, UMFPack, SuperLU, MUMPS,
-SparseKit, dlmalloc.
+methods, discretization packages, etc. FASP has interfaces to several
+of them, for example, FASP can be linked to use \verb|UMFPack|, \verb|SuperLU|, \verb|MUMPS|,
+\verb|SparseKit|, \verb|dlmalloc|.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{A Tutorial}\label{ch:tutor}
+\chapter{B brief tutorial}\label{ch:tutor}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we use a couple simple examples to demonstrate how to use the FASP package for solving existing linear systems which have been saved as disk files. All the examples can be found in ``\url{faspsolver/tutorial/}''. Here we only discuss the C version of these examples; interested users can read the F90 version of some of the examples. After you successfully build FASP (see \S\ref{sec:build}), just go to the ``\url{faspsolver/tutorial/}" directory and the compiled tutorial examples should be ready to be tried.
+In this chapter, we discuss several simple examples included with this
+FASP distribution and demonstrating how to
+use the FASP package for solving linear systems. We read the matrices
+from disk files (the files are also included in the fasp
+distribution). 
+All the examples are found in ``\url{faspsolver/tutorial/}''. 
+
+Here we only discuss the C version of these examples, but the FASP
+distribution also includes F90 versions of some of the examples. 
+
+After you successfully build FASP (see \S\ref{sec:build}), just go to the
+``\url{faspsolver/tutorial/}" directory and the tutorial
+examples should be ready to run.
+
+\begin{snugshade}\noindent 
+  In the description below, we display a typical output from runs of
+  each of the examples.  Note that the actual output depends on the
+  solver parameters, and, on your computer it may be be different than
+  what you see here.
+\end{snugshade}
+
+\newcounter{ex}
+\setcounter{ex}{1}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{The first example}\label{sec:ex1}
+\section{Example \arabic{ex}:An AMG solver for the Poisson equation}\label{sec:ex1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{ex}{1}
 
-The first example is the simplest one that we can imagine: We read the stiffness matrix $A$ and right-hand side $b$ from disk files; then we solve $Ax=b$ using the classical AMG method~\cite{Brandt.BrandtMcCormick.1982uq,Ruge.RugeStuben.1985ij,Ruge.RugeStuben.1987bs}; see \S\ref{sec:amg}. The stiffness matrix $A$ is symmetric positive definite (SPD), arising from the continuous piecewise linear finite element discretization of the Poisson equation 
-$$-\Delta u = f$$ 
-(with the Dirichlet boundary condition) on a simple quasi-uniform triangulation of the bounded domain $\Omega$.
+The first example is a standard one: We read from disk a symmetric
+positive definite matrix $A$ and right-hand side $b$ then we solve
+$Ax=b$ using the classical AMG
+method~\cite{Brandt.BrandtMcCormick.1982uq,Ruge.RugeStuben.1985ij,Ruge.RugeStuben.1987bs};
+see \S\ref{sec:amg}. In this example the matrix $A$ included with the
+FASP distribution corresponds to a discretization with continuous
+piecewise linear finite elements of the Poisson equation
+$$-\Delta u = f$$ (with the Dirichlet boundary conditions) on a
+triangulation of a bounded domain $\Omega$.
 %
 \lstinputlisting[language=C]{../tutorial/main/poisson-amg.c}
 %
 Since this is the first example, we will explain it in some detail:
 \begin{itemize}
 %
-\item Line 1 tells the Doxygen documentation system that the filename is ``poisson-amg.c''. Line 3--5 tells the Doxygen what is the purpose of this file (function). 
+\item Line 1 tells the Doxygen documentation system that the filename
+  is ``poisson-amg.c''. Line 3--5 tells the Doxygen what is the
+  purpose of this file (function).
 %
-\item Line 12--13 includes the main FASP header file ``fasp.h'' and FASP function decoration header ``fasp\_functs.h''. These two headers shall be included in all files that requires FASP subroutines. Please also be noted that the function decorations in ``fasp\_functs.h'' is automatically generated from the source files and should NOT be modified by an enduser. 
+\item Line 12--13 includes the main FASP header file ``fasp.h'' and
+  FASP function decoration header ``fasp\_functs.h''. These two
+  headers shall be included in all files that requires FASP
+  subroutines. Please also be noted that the function declarations in
+  ``fasp\_functs.h'' are automatically generated from the source files
+  by an \verb|awk| script and we do not recommend modifying this file,
+  since your changes may be lost. 
 %
-\item Line 35 sets solver parameters using the default parameters or from the command line options; see more discussions in \S\ref{sec:parameters}. In the  ``tutorial/ini/amg.dat'' file, we can set the location of the data files, type of solvers, maximal number of iteration numbers, convergence tolerance, and many other parameters for iterative solvers.
+\item Line 35 sets solver parameters using the default parameters or
+  from the command line options; see more discussions in
+  \S\ref{sec:parameters}. In the ``tutorial/ini/amg.dat'' file, we can
+  set the location of the data files, type of solvers, maximal number
+  of iteration numbers, convergence tolerance, and many other
+  parameters for iterative solvers.
 %
-\item Line 44 defines a sparse matrix $A$ in the compressed sparse row (CSR) format. Line 45 defines two vectors: the right-hand side $b$ and the numerical solution $x$. We refer to~\S\ref{sec:blas} for definitions of vectors and general sparse matrices.
+\item Line 44 defines a sparse matrix $A$ in the compressed sparse row
+  (CSR) format. Line 45 defines two vectors: the right-hand side $b$
+  and the numerical solution $x$. We refer to~\S\ref{sec:blas} for
+  definitions of vectors and general sparse matrices.
 %
-\item Line 57 reads the matrix and the right-hand side from two disk files. Line 49--58 defines the filenames of them.
+\item Line 57 reads the matrix and the right-hand side from two disk
+  files. Line 49--58 defines the filenames of them.
 %
-\item Line 60--64 prints basic information of coefficient matrix, right-hand side, and solver parameters.
+\item Line 60--64 prints basic information of coefficient matrix,
+  right-hand side, and solver parameters.
 %
-\item Line 69--70 allocates memory for the solution vector $x$ and set its initial value to be all zero.
+\item Line 69--70 allocates memory for the solution vector $x$ and set
+  its initial value to be all zero.
 %
-\item Line 72 solves $Ax=b$ using the AMG method. Type of the AMG method and other parameters have been given in ``amgparam'' at Line 36; see \S\ref{sec:amg}.
+\item Line 72 solves $Ax=b$ using the AMG method. Type of the AMG
+  method and other parameters have been given in ``amgparam'' at Line
+  36; see \S\ref{sec:amg}.
 %
 \item Line 75--77 frees up memory allocated for $A$, $b$, and $x$.
 \end{itemize}
 %
-To run this example, we can simply type:
+To run this example, type:
 %
 \begin{lstlisting}[numbers=none]
 $ ./poisson-amg-c.ex
 \end{lstlisting}
 %
-A sample output is given as follows (note that the actual output depends on the solver parameters and might be different than what you see here):
+A sample output is as follows:
 %
 \lstinputlisting[numbers=none,firstline=2]{../tutorial/out/poisson-amg-c.out}
 
-We also provide a Fortran 90 example, which does the same thing as this C code except it gives less output, in ``\url{tutorial/main/poisson-amg.f90}''. Users who would like to call FASP from Fortran can learn from this simple example. 
+We also provide a Fortran 90 example, which does the same thing as
+this C code except it gives less output, in
+``\url{tutorial/main/poisson-amg.f90}''. Users who would like to call
+FASP solver from a Fortran based application can see how to do this example.
 %
 \lstinputlisting[language=Fortran]{../tutorial/main/poisson-amg.f90}
 %
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{The second example}\label{sec:ex2}
+\section{Example \arabic{ex}: Conjugate gradient without preconditioning}\label{sec:ex2}
+\addtocounter{ex}{1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-In the second example, we modify the previous example slightly and solve the Poisson equation using iterative methods (here by default we use the Conjugate Gradient method without preconditioning).
+In the second example, we modify the previous example slightly and
+solve the Poisson equation using iterative methods (here by default we
+use the Conjugate Gradient method without preconditioning).
 %
 \lstinputlisting[language=C]{../tutorial/main/poisson-its.c}
 %
@@ -526,18 +631,22 @@ To run this example, we can simply type:
 $ ./poisson-its-c.ex
 \end{lstlisting}
 %
-A sample output is given as follows (note that the actual output depends on the solver parameters and might be different than what you see here):
+A sample output is as follows:
 \lstinputlisting[numbers=none,firstline=2,lastline=80]{../tutorial/out/poisson-its-c.out}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{The third example}\label{sec:ex3}
+\section{Example \arabic{ex}: Conjugate gradient with preconditioner}\label{sec:ex3}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{ex}{1}
 
-This example is slightly longer and is a modification of the previous one. In this example,  we wish to demonstrate how to setup a simple preconditioner for the preconditioned conjugate gradient (PCG) method.
+This example is a bit more involved and is a modification of the
+previous one. In this example, we wish to demonstrate how to use a the
+FASP library and run a preconditioned conjugate conjugate gradient (PCG) method.
 %
 \lstinputlisting{../tutorial/main/poisson-pcg.c}
 %
-This example is very similar to the first example and we now briefly explain it:
+This example is very similar to the first example, and the details are
+as follows. 
 \begin{itemize}
 %
 \item Line 36 sets default parameters. In this example, we need parameters for iterative methods, AMG preconditioner, and ILU preconditioner. 
@@ -561,10 +670,14 @@ A sample output is given as follows (note that the actual output depends on the 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Set parameters}\label{sec:parameters}
+\section{How to change default parameters in FASP
+  solver/preconditioner}\label{sec:parameters}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In the previous examples, we have seen how to set solver parameters using default setting. Now we give an example on reading input parameters from a disk file like ``\url{tutorial/ini/amg.dat}''. 
+In the previous examples, we have seen how to set solver parameters
+using the default settings. Here we discuss changing such parameters
+by reading them from a disk file. An example of such file is found in the FASP
+tutorial directory and is named ``\url{tutorial/ini/amg.dat}''.
 %
 \begin{lstlisting}[numbers=none,language=sh]
 $ ./poisson-amg-c.ex -ini ini/amg.dat
@@ -605,7 +718,7 @@ Then you run ``poisson-amg-c.ex'' one more time and will get
 %
 You can compare this with the sample results in \S\ref{sec:ex1}.
 
-\begin{snugshade}\noindent
+\begin{snugshade}\noindent  
 The input parameters allowed in FASP are not limited to the ones listed in this example. A list of possible iterative methods and preconditioners can be found in ``base/include/fasp\_const.h''; see \S\ref{sec:const}. For more parameters and their ranges, we refer to the FASP Reference Manual.
 \end{snugshade}
 
@@ -645,16 +758,24 @@ FASP command line options:
 %
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Basic Usage}\label{ch:basic}
+\chapter{Data structures and basic usage}\label{ch:basic}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we discuss the basic data structures and important building blocks which will be useful later for constructing auxiliary space preconditioners for systems of PDEs in Chapter~\ref{ch:advanced}. In particular, we will discuss vectors, sparse matrices, iterative methods, and multigrid methods.
+In this chapter, we discuss the basic data structures and the
+important building blocks which are useful for constructing auxiliary
+space preconditioners for systems of PDEs in
+Chapter~\ref{ch:advanced}. In particular, we will discuss vectors,
+sparse matrices, iterative methods, and multigrid methods.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Vectors and sparse matrices}\label{sec:blas}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The most important data structures for iterative methods are probably vectors and sparse matrices. In this section, we first discuss the data structures for vectors and matrices in FASP; and then we discuss BLAS for sparse matrices. The definitions can be found in ``\url{base/include/fasp.h}''. 
+The data structures most often used for implementing iterative methods are
+sparse matrices and vectors. In this section, we first discuss the
+data structures for vectors and matrices in FASP; and then we discuss
+BLAS for sparse matrices. The definitions can be found in
+``\url{base/include/fasp.h}''.
 
 \subsection{Vectors}
 
@@ -1029,10 +1150,14 @@ NOTE: Here we can not discuss the details of these parameters as a full discussi
 \end{snugshade}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{More Advanced Usage}\label{ch:advanced}
+\chapter{More  advanced features}\label{ch:advanced}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter, we discuss a few more advanced features of FASP. We will discuss parallel versions of FASP and its build-in features for debugging purposes. These features will be helpful for people who would like to develop on the top of FASP. For users who only wish to call a few standard solvers, they can skip this chapter.
+In this chapter, we discuss a few more advanced features of FASP. We
+will discuss parallel versions of FASP and its build-in features for
+debugging purposes. These features will be helpful for people who
+would like to develop on the top of FASP. For users who only wish to
+call a few standard solvers, they can skip this chapter.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{An OpenMP example}\label{sec:mop}
@@ -1056,25 +1181,37 @@ $ export OMP_NUM_THREADS=8
 \section{Predefined constants}\label{sec:const}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-It is important to notice that there are several predefined constants in FASP. Using these macros makes the program more uniform. These constants are defined in ``\url{base/include/fasp\_const.h}'':
+FASP ahs many predefined constants used in the source files. 
+Using these macros makes the source codes more readable. 
+These constants are defined in ``\url{base/include/fasp\_const.h}''
+and a printout of this file is below:
 %
 \lstinputlisting[language=sh]{../base/include/fasp_const.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{The debug environment}\label{sec:debug}
+\section{Debugging and how to enable it}\label{sec:debug}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{snugshade}\noindent
-NOTE: By default, a RELEASE version of FASP is compiled and no warnings are displaced during building in FASP.
+  NOTE: The default FSP build is a REALEASE version and such version
+  is compiled with optimization and no warnings are displayed during
+  the build. How to build the FASP library with debugging enabled is
+  described below.
 \end{snugshade}
 %
-There is a built-in debug feature which is intended to help developers to locate malfunctions in FASP. In order to turn this on, you need to add an option during the config stage by
+There is a built-in debug feature which is intended to help developers
+and users to locate malfunctions and bugs in FASP (and hopefully fix
+them). In order to turn this feature on, you need to add the
+\verb|debug| option during the config stage by
 %
 \begin{lstlisting}[numbers=none]
 $ make config debug=all
 \end{lstlisting}
 %
-When this debug feature is turned on, there will be a lot more information printed when you call FASP. If you just need to compile a DEBUG version instead of RELEASE, you can do use
+When this debug feature is turned on, there will be a lot more
+information printed when you run FASP.  If you just want to enable the
+debugging and warnings during the compile stage, you can do so by
+using
 %
 \begin{lstlisting}[numbers=none]
 $ make config debug=yes
