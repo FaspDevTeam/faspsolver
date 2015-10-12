@@ -1,6 +1,6 @@
 /*! \file spcg.c
  *
- *  \brief Krylov subspace methods -- Preconditioned conjugate gradient with safe net
+ *  \brief Krylov subspace methods -- Preconditioned conjugate gradient with safety net
  *
  *  Abstract algorithm
  *
@@ -43,7 +43,7 @@
  *          -# IF ( not converged & restart_number < Max_Res_Check ) restart;
  *      - END IF
  *
- *  Safe net check:
+ *  safety net check:
  *      - IF r_{k+1} > r_{best}
  *          -# x_{k+1} = x_{best}
  *      - END IF
@@ -51,7 +51,7 @@
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
- *  \note See pcg.c for a version without safe net
+ *  \note See pcg.c for a version without safety net
  */
 
 #include <math.h>
@@ -69,7 +69,7 @@
  *                                const REAL tol, const INT MaxIt,
  *                                const SHORT stop_type, const SHORT prtlvl)
  *
- * \brief Preconditioned conjugate gradient method for solving Au=b with safe net
+ * \brief Preconditioned conjugate gradient method for solving Au=b with safety net
  *
  * \param A            Pointer to dCSRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
@@ -212,7 +212,7 @@ INT fasp_solver_dcsr_spcg (dCSRmat *A,
             goto RESTORE_BESTSOL;
         }
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( absres < absres_best - maxdiff) {
             absres_best = absres;
             iter_best   = iter;
@@ -401,7 +401,7 @@ FINISHED:  // finish the iterative method
  *                                 const REAL tol, const INT MaxIt,
  *                                 const SHORT stop_type, const SHORT prtlvl)
  *
- * \brief Preconditioned conjugate gradient method for solving Au=b with safe net
+ * \brief Preconditioned conjugate gradient method for solving Au=b with safety net
  *
  * \param A            Pointer to block_dCSRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
@@ -544,7 +544,7 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
             goto RESTORE_BESTSOL;
         }
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( absres < absres_best - maxdiff) {
             absres_best = absres;
             iter_best   = iter;
@@ -732,7 +732,7 @@ FINISHED:  // finish the iterative method
  *                                const REAL tol, const INT MaxIt,
  *                                const SHORT stop_type, const SHORT prtlvl)
  *
- * \brief Preconditioned conjugate gradient method for solving Au=b with safe net
+ * \brief Preconditioned conjugate gradient method for solving Au=b with safety net
  *
  * \param A            Pointer to dSTRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
@@ -875,7 +875,7 @@ INT fasp_solver_dstr_spcg (dSTRmat *A,
             goto RESTORE_BESTSOL;
         }
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( absres < absres_best - maxdiff) {
             absres_best = absres;
             iter_best   = iter;

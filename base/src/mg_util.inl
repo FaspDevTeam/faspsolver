@@ -33,7 +33,7 @@ static void fasp_coarse_itsolver (dCSRmat *A,
 
     INT status = fasp_solver_dcsr_spcg(A, b, x, NULL, ctol, maxit, 1, 0);
 
-    // If CG fails to converge, use GMRES as another safe net
+    // If CG fails to converge, use GMRES as a safety net
     if ( status < 0 ) {
         status = fasp_solver_dcsr_spvgmres(A, b, x, NULL, ctol, maxit, 20, 1, 0);
     }

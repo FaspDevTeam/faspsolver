@@ -1,14 +1,14 @@
 /*! \file spvgmres.c
  *
  *  \brief Krylov subspace methods -- Preconditioned variable-restart GMRes with
- *         safe net
+ *         safety net
  *
  *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
  *        A Simple Strategy for Varying the Restart Parameter in GMRES(m)
  *        Journal of Computational and Applied Mathematics, 230 (2009)
  *        pp. 751-761. UCRL-JRNL-235266.
  *
- *  \note See pvgmres.c a version without safe net
+ *  \note See pvgmres.c a version without safety net
  */
 
 #include <math.h>
@@ -273,7 +273,7 @@ INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
@@ -650,7 +650,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
@@ -1028,7 +1028,7 @@ INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
@@ -1406,7 +1406,7 @@ INT fasp_solver_dstr_spvgmres (dSTRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;

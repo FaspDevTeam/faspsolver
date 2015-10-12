@@ -109,13 +109,13 @@
 #define SOLVER_GCG              7  /**< Generalized Conjugate Gradient */
 #define SOLVER_GCR              8  /**< Generalized Conjugate Residual */
 //---------------------------------------------------------------------------------
-#define SOLVER_SCG             11  /**< Conjugate Gradient with safe net */
-#define SOLVER_SBiCGstab       12  /**< BiCGstab with safe net */
-#define SOLVER_SMinRes         13  /**< MinRes with safe net */
-#define SOLVER_SGMRES          14  /**< GMRes with safe net */
-#define SOLVER_SVGMRES         15  /**< Variable-restart GMRES with safe net */
-#define SOLVER_SVFGMRES        16  /**< Variable-restart FGMRES with safe net */
-#define SOLVER_SGCG            17  /**< GCG with safe net */
+#define SOLVER_SCG             11  /**< Conjugate Gradient with safety net */
+#define SOLVER_SBiCGstab       12  /**< BiCGstab with safety net */
+#define SOLVER_SMinRes         13  /**< MinRes with safety net */
+#define SOLVER_SGMRES          14  /**< GMRes with safety net */
+#define SOLVER_SVGMRES         15  /**< Variable-restart GMRES with safety net */
+#define SOLVER_SVFGMRES        16  /**< Variable-restart FGMRES with safety net */
+#define SOLVER_SGCG            17  /**< GCG with safety net */
 //---------------------------------------------------------------------------------
 #define SOLVER_AMG             21  /**< AMG as an iterative solver */
 #define SOLVER_FMG             22  /**< Full AMG as an solver */
