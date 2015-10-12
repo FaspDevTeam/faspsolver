@@ -437,7 +437,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     // Schwarz smoother parameters
     amgparam->Schwarz_levels       = 0; // how many levels will use Schwarz smoother
     amgparam->Schwarz_mmsize       = 200;
-    amgparam->Schwarz_maxlvl       = 3;// block size -- all vertices at distance .le. this
+    amgparam->Schwarz_maxlvl       = 3; // blocksize -- vertices with smaller distance 
     amgparam->Schwarz_type         = 1;
     amgparam->Schwarz_blksolver    = SOLVER_DEFAULT;
 }
