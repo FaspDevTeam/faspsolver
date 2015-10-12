@@ -9,7 +9,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-/* decorations for ilu.for */
+/* declarations for ilu.for */
 #ifdef __cplusplus 
 extern "C" {void iluk_(const INT *n,REAL *a,INT *ja,INT *ia,INT *lfil,REAL *alu,
                        INT *jlu,INT *iwk,INT *ierr,INT *nzlu);}

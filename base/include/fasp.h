@@ -3,7 +3,7 @@
  *
  *  This header file contains general constants and data structures for FASP.
  *
- *  \note Only define macros and data structures, no function decorations.
+ *  \note Only define macros and data structures, no function declarations.
  *
  *-----------------------------------------------------------------------------------
  *  Created  by Chensong Zhang on 08/12/2010.
@@ -11,6 +11,7 @@
  *  Modified by Chensong Zhang on 12/25/2011.
  *  Modified by Chensong Zhang on 01/25/2015: clean up code
  *  Modified by Chensong Zhang on 01/27/2015: remove N2C, C2N, ISTART
+ *  Modified by Ludmil Zikatanov on 20151011: cosmetics.
  *-----------------------------------------------------------------------------------
  */
 
@@ -1155,7 +1156,7 @@ typedef struct linked_list
 typedef ListElement *LinkList; /**< linked list */
 
 /*
- * OpenMP definitions and decorations
+ * OpenMP definitions and declarations
  */
 #define FASP_GSRB 1  /**< MG level 0 use RedBlack Gauss Seidel Smoothing */
 

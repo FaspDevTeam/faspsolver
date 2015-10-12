@@ -553,12 +553,12 @@ Since this is the first example, we will explain it in some detail:
   purpose of this file (function).
 %
 \item Line 12--13 includes the main FASP header file ``fasp.h'' and
-  FASP function decoration header ``fasp\_functs.h''. These two
-  headers shall be included in all files that requires FASP
-  subroutines. Please also be noted that the function declarations in
-  ``fasp\_functs.h'' are automatically generated from the source files
-  by an \verb|awk| script and we do not recommend modifying this file,
-  since your changes may be lost. 
+  FASP function declarations header file ``fasp\_functs.h''. These two
+  header filess shall be included in all files that call FASP
+  functions. The function declarations in ``fasp\_functs.h'' are
+  automatically generated from the source files by an \verb|awk|
+  script and we do not recommend modifying this file, since your
+  changes may be lost.
 %
 \item Line 35 sets solver parameters using the default parameters or
   from the command line options; see more discussions in
@@ -1001,7 +1001,7 @@ In FASP, we provided several functions for reading, writing, and printing differ
 \lstinputlisting[language=C,firstnumber=834,firstline=834,lastline=948]{../base/include/fasp_functs.h}
 %
 \begin{snugshade}\noindent
-  NOTE: The above function decorations are taken from
+  NOTE: The above function declarations are taken from
   ``\url{base/include/fasp\_functs.h}''. This header file is
   automatically generated based on the source codes. Users are discouraged
   from changing it by hand; their changes may be lost. 
