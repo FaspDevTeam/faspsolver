@@ -65,7 +65,7 @@ AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
 AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
-AMG_coarse_solver        = 0      % coarsest solver: 0 iterative |
+AMG_coarse_solver        = 32      % coarsest solver: 0 iterative |
                                   % 31 SuperLU | 32 UMFPack | 33 MUMPS
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
