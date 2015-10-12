@@ -1,13 +1,13 @@
 /*! \file spgmres.c
  *
- *  \brief Krylov subspace methods -- Preconditioned GMRes with safe net
+ *  \brief Krylov subspace methods -- Preconditioned GMRes with safety net
  *
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
  *  \note See also pgmres.c for a variable restarting version.
  *
- *  \note See pgmres.c for a version without safe net
+ *  \note See pgmres.c for a version without safety net
  */
 
 #include <math.h>
@@ -239,7 +239,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
@@ -579,7 +579,7 @@ INT fasp_solver_bdcsr_spgmres (block_dCSRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
@@ -919,7 +919,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
@@ -1259,7 +1259,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat *A,
         
         fasp_blas_array_axpy(n, 1.0, r, x->val);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;

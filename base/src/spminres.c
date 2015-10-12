@@ -1,6 +1,6 @@
 /*! \file spminres.c
  *
- *  \brief Krylov subspace methods -- Preconditioned minimal residual with safe net
+ *  \brief Krylov subspace methods -- Preconditioned minimal residual with safety net
  *
  *  Abstract algorithm
  *
@@ -50,7 +50,7 @@
  *          -# IF ( not converged & restart_number < Max_Res_Check ) restart;
  *      - END IF
  *
- *  Safe net check:
+ *  safety net check:
  *      - IF r_{k+1} > r_{best}
  *          -# x_{k+1} = x_{best}
  *      - END IF
@@ -58,7 +58,7 @@
  *  \note Refer to Y. Saad 2003
  *        Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
- *  \note See pminres.c for a version without safe net
+ *  \note See pminres.c for a version without safety net
  */
 
 #include <math.h>
@@ -76,7 +76,7 @@
  *                                    const REAL tol, const INT MaxIt,
  *                                    const SHORT stop_type, const SHORT prtlvl)
  *
- * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safe net
+ * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safety net
  *
  * \param A            Pointer to dCSRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
@@ -277,7 +277,7 @@ INT fasp_solver_dcsr_spminres (dCSRmat *A,
         // output iteration information if needed
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(u) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
@@ -525,7 +525,7 @@ FINISHED:  // finish the iterative method
  *                                     const REAL tol, const INT MaxIt,
  *                                     const SHORT stop_type, const SHORT prtlvl)
  *
- * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safe net
+ * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safety net
  *
  * \param A            Pointer to block_dCSRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
@@ -726,7 +726,7 @@ INT fasp_solver_bdcsr_spminres (block_dCSRmat *A,
         // output iteration information if needed
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(u) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
@@ -974,7 +974,7 @@ FINISHED:  // finish the iterative method
  *                                    const REAL tol, const INT MaxIt,
  *                                    const SHORT stop_type, const SHORT prtlvl)
  *
- * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safe net
+ * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safety net
  *
  * \param A            Pointer to dSTRmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
@@ -1175,7 +1175,7 @@ INT fasp_solver_dstr_spminres (dSTRmat *A,
         // output iteration information if needed
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
-        // safe net check: save the best-so-far solution
+        // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(u) ) {
             // If the solution is NAN, restrore the best solution
             absres = BIGREAL;
