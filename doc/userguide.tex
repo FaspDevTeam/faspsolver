@@ -2,7 +2,7 @@
 
 % 1st version for FASP 0.8.0 by Chensong Zhang
 % 2nd version for FASP 1.3.7 by Chensong Zhang
-% 3rd version for FASP 1.8.1 by Chensong Zhang
+% 3rd version for FASP 1.8.1 by Chensong Zhang and Ludmil Zikatanov
 
 \usepackage[top=1in, bottom=1.5in, left=1in, right=1in]{geometry}
 %\usepackage[notcite,notref,color]{showkeys}
@@ -116,7 +116,7 @@
 
 \section{General description}
 The Fast Auxiliary Space Preconditioning (FASP) package provides
-source files (in {\color{red}ANSI C???}) to build a library of
+C source files\footnote{The C code is in the C99 standard.} to build a library of
 iterative solvers and preconditioners for the solution of large scale
 linear systems of equations.  The components of the base FASP library
 include several ready-to-use, modern, and efficient iterative solvers
@@ -223,10 +223,18 @@ have been changed before this document is updated.
 \section{How to obtain FASP}\label{sec:install}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-{\color{red} Chensong, can you change this below to just reflect the
-  source-forge sources?}
+\subsection{Downloading from SourceForge}
 
-All the FASP packages are hosted on
+The most updated version of FASP can be downloaded directly from
+%
+\begin{center}
+\url{http://fasp.sf.net/download/faspsolver.zip}
+\end{center}
+%
+
+\subsection{Downloading from BitBucket}
+
+FASP is also hosted on
 \emph{BitBucket.org}\footnote{Official website:
   \url{https://bitbucket.org/}} using Mercurial (Hg)\footnote{Official
   website: \url{http://mercurial.selenic.com/}}. A Hg client for GNU
