@@ -394,7 +394,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->print_level          = PRINT_NONE;
     amgparam->maxit                = 1;
     amgparam->tol                  = 1e-6;
-    amgparam->max_levels           = 20;
+    amgparam->max_levels           = 8;
     amgparam->coarse_dof           = 500;
     amgparam->cycle_type           = V_CYCLE;
     amgparam->smoother             = SMOOTHER_GS;
@@ -424,7 +424,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->pair_number          = 2;
     amgparam->strong_coupled       = 0.25;
     amgparam->max_aggregation      = 20;
-    amgparam->tentative_smooth     = 0.67; // important for SA
+    amgparam->tentative_smooth     = 0.67;
     amgparam->smooth_filter        = ON;
     
     // ILU smoother parameters
@@ -437,7 +437,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
     // Schwarz smoother parameters
     amgparam->Schwarz_levels       = 0; // how many levels will use Schwarz smoother
     amgparam->Schwarz_mmsize       = 200;
-    amgparam->Schwarz_maxlvl       = 3; // block size -- all vertices at distance .le. this
+    amgparam->Schwarz_maxlvl       = 3;// block size -- all vertices at distance .le. this
     amgparam->Schwarz_type         = 1;
     amgparam->Schwarz_blksolver    = SOLVER_DEFAULT;
 }

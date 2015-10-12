@@ -217,6 +217,12 @@ void fasp_amg_data_free (AMG_data *mgl,
             break;
         }
 #endif
+#if WITH_UMFPACK
+        case SOLVER_UMFPACK: {
+             fasp_mem_free(mgl[max_levels-1].Numeric);
+            break;
+        }
+#endif
         default: // Do nothing!
             break;
     }
