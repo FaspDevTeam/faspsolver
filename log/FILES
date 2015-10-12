@@ -1,7 +1,7 @@
      560 ./base/include/dlmalloc.h
      170 ./base/include/doxygen.h
-    1193 ./base/include/fasp.h
-     666 ./base/include/fasp_block.h
+    1194 ./base/include/fasp.h
+     667 ./base/include/fasp_block.h
      253 ./base/include/fasp_const.h
     2944 ./base/include/fasp_functs.h
       47 ./base/include/forts_ns.h
@@ -16,7 +16,7 @@
      245 ./base/src/mg_util.inl
      146 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
-     281 ./base/src/amg_setup_rs.c
+     282 ./base/src/amg_setup_rs.c
      883 ./base/src/amg_setup_sa.c
      680 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
@@ -106,4 +106,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      302 ./base/src/wrapper.c
-   90622 total
+   90625 total

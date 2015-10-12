@@ -522,7 +522,7 @@ typedef struct {
     dCSRmat *blk_data;
 
 #if WITH_UMFPACK
-    //! symbol factorize for UMPACK
+    //! symbol factorize for UMFPACK
     void **numeric;
 #endif
 
