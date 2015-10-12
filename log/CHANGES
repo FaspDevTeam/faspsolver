@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-10/11/2015 FASP 1.8.1:
+10/12/2015 FASP 1.8.1:
 - Add `const' to declaring constant variables.
 - Check regression results again.
 - Check and remove a few deprecated functions.
@@ -18,8 +18,9 @@ File Name: CHANGES
 - Rename: testamg.c --> testbamg.c and update test/ini/bamg.c.
 - Rename: test_smat.c --> testsmat.c.
 - Remove testbsr.c from test/main, testbamg.c does the same thing.
-- Fix a bug in initializaing UMFPACK in amg_setup_rs.c.
 - Change function parameters for transz().
+- Fix a bug in initializaing UMFPACK in amg_setup_rs.c.
+- Fix memory leakage in numerical factorization interface to UMFPACK.
 
 09/30/2015 FASP 1.8.0:
 - Fix Clang warnings when comparing an address with NULL.
