@@ -1371,10 +1371,10 @@ void fasp_dcsr_transz (dCSRmat *A,
     /* transpose or permute; if A.val is null ===> transpose the
        structure only */
     const INT   n=A->row, m=A->col, nnz=A->nnz;
-    const INT *ia=A->IA, *ja=A->JA;
-    const REAL *a=A->val;
+    const INT *ia=NULL,*ja=NULL;
+    const REAL *a=NULL;
     INT m1=m+1;
-    
+    ia=A->IA; ja=A->JA; a=A->val;
     /* introducing few extra pointers hould not hurt too much the speed */
     INT *iat=NULL, *jat=NULL;
     REAL *at=NULL;
