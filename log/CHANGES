@@ -16,6 +16,7 @@ File Name: CHANGES
 - Update all regression results.
 - Remove testomp.c and test_rsamg_omp.c from test/main.
 - Rename: testamg.c --> testbamg.c and update test/ini/bamg.c.
+- Update VS10 and remove testamg project.
 - Rename: test_smat.c --> testsmat.c.
 - Remove testbsr.c from test/main, testbamg.c does the same thing.
 - Change function parameters for transz().
