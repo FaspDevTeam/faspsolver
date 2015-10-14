@@ -47,8 +47,8 @@ static REAL f2d (INT i,
                  INT nx,
                  INT ny)
 {
-    return sin(pi *(((REAL) j)/((REAL) nx)))
-    *sin(pi *(((REAL) i)/((REAL) nx)));
+    return sin(pi *(((REAL) i)/((REAL) nx)))
+          *sin(pi *(((REAL) j)/((REAL) ny)));
 }
 
 /**
@@ -74,8 +74,8 @@ static REAL f3d (INT i,
                  INT nz)
 {
     return sin(pi *(((REAL) i)/((REAL) nx)))
-    *sin(pi *(((REAL) k)/((REAL) nx)))
-    *sin(pi *(((REAL) j)/((REAL) nz)));
+          *sin(pi *(((REAL) j)/((REAL) ny)))
+          *sin(pi *(((REAL) k)/((REAL) nz)));
 }
 
 /**
@@ -108,6 +108,7 @@ static REAL L2NormError1d (REAL *u,
     
     return l2norm;
 }
+
 /**
  * \fn static REAL L2NormError2d(REAL *u, INT nx, INT ny)
  *
@@ -141,6 +142,7 @@ static REAL L2NormError2d (REAL *u,
     
     return l2norm;
 }
+
 /**
  * \fn static REAL L2NormError3d (REAL *u, INT nx, INT ny, INT nz)
  *

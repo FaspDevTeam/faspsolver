@@ -22,6 +22,7 @@ File Name: CHANGES
 - Change function parameters for transz().
 - Fix a bug in initializaing UMFPACK in amg_setup_rs.c.
 - Fix memory leakage in numerical factorization interface to UMFPACK.
+- Fix a bug in testgmg and revise tutorial example for GMG.
 
 09/30/2015 FASP 1.8.0:
 - Fix Clang warnings when comparing an address with NULL.

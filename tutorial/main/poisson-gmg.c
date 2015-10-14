@@ -1,11 +1,12 @@
-/*! \file  poisson-gmg.c
+/*! \file poisson-gmg.c
  *
- *  \brief A test example for FASP: Using GMG method to solve the discrete 
- *         Poisson equation (five-point stencil) in 2D.
- *  
- *  \note  GMG test example for FASP: C version
+ *  \brief The fourth test example for FASP: using GMG to solve
+ *         the discrete Poisson equation from five-point finite
+ *         difference stencil. C version.
  *
- *  Solving the Poisson Equation with GMG method.
+ *  \note  GMG example for FASP: C version
+ *
+ *  Solving the Poisson equation (FDM) with GMG
  */
 
 #include <time.h>
@@ -17,29 +18,30 @@
 const REAL pi = 3.14159265;
 
 /**
- * \fn static REAL f2d (INT i, INT j, INT nx, INT ny)
+ * \fn static REAL f2d(INT i, INT j, INT nx, INT ny)
  *
- * \brief The right-hand side function f in the Poisson equation, where
- *        f = sin(pi x)*sin(pi y)          
- *  
- * \param i      Index in x direction
- * \param j      Index in y direction
+ * \brief Setting f in Poisson equation, where
+ *        f = sin(pi x)*sin(pi y)
+ *
+ * \param i      i-th position in x direction
+ * \param j      j-th position in y direction
  * \param nx     Number of grids in x direction
  * \param ny     Number of grids in y direction
  *
  * \author Ziteng Wang
- * \date   07/01/2013
+ * \date   06/07/2013
  */
-static REAL f2d(INT i,
-                INT j,
-                INT nx,
-                INT ny)
+static REAL f2d (INT i,
+                 INT j,
+                 INT nx,
+                 INT ny)
 {
-    return sin(pi *(((REAL) j)/((REAL) nx)))*sin(pi *(((REAL) i)/((REAL) nx)));
+    return sin(pi *(((REAL) j)/((REAL) ny)))
+          *sin(pi *(((REAL) i)/((REAL) nx)));
 }
 
 /**
- * \fn static REAL L2NormError2d (REAL *u, INT nx, INT ny)
+ * \fn static REAL L2NormError2d(REAL *u, INT nx, INT ny)
  *
  * \brief Computing Discretization Error, where exact solution
  *        u = sin(pi x)*sin(pi y)/(2*pi*pi)
@@ -49,7 +51,7 @@ static REAL f2d(INT i,
  * \param ny     Number of grids in y direction
  *
  * \author Ziteng Wang
- * \date   07/01/2013
+ * \date   06/07/2013
  */
 static REAL L2NormError2d (REAL *u,
                            INT nx,
@@ -65,69 +67,55 @@ static REAL L2NormError2d (REAL *u,
             l2norm += pow((u[i*(nx+1)+j] - uexact), 2);
         }
     }
-    l2norm = sqrt(l2norm*h*h);
     
-    return l2norm;
+    return sqrt(l2norm*h*h);
 }
 
 /**
- * \fn int main (int argc, const char * argv[])
+ * \brief An example of GMG method using Full Multigrid cycle
  *
- * \brief  An example of GMG V-cycle for the Poisson equation.
+ * \author Chensong Zhang
+ * \date   10/12/2015
  *
- * \author Ziteng Wang
- * \date   07/02/2013
- *
- * \note   Number of grids of nx, ny should be all equal to 2^maxlevel.
- * 
- * Modified by Chensong Zhang on 07/02/2013: Format the output.
+ * \note   Number of grids of nx = ny should be equal to 2^maxlevel.
  */
 int main (int argc, const char *argv[])
 {
-    const REAL rtol = 1.0e-8;
-    const INT  print_level = 0;
-
-    INT        maxlevel, iter = 0, nx, ny;
-    INT        i, j;
-    REAL       h, errL2, *u, *b;
-    REAL       GMG_start, GMG_end;
-   
-    printf("=================================================\n");
-    printf("            FASP GMG V-cycle in 2D \n");
-    printf("=================================================\n");
-    printf("  Level  Iter    CPU time      L2 Error\n");
+    const REAL rtol   = 1.0e-6;
+    const INT  prtlvl = PRINT_MORE;
     
-    // Testing different Number of DOFs nx = ny = 2^2 to 2^10
-    for ( maxlevel = 2; maxlevel <= 10; maxlevel++ ) {
+    INT        i, j, k, nx, maxlevel;
+    REAL      *u, *b, h, error0;
     
-        // Step 1: Set size of the grid
-        nx = ny = pow(2.0, maxlevel); h = 1.0/((REAL) nx);
-
-        // Step 2: Solving Poisson equation with GMG solver
-        // Set initial guess 0, right hand side as given f                  
-        u = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
-        fasp_array_set((nx+1)*(ny+1), u, 0.0);
-        
-        b = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
-        for ( i = 0; i <= nx; i++ ) {
-            for ( j = 0; j <= ny; j++ ) {
-                b[j*(nx+1)+i] = h*h*f2d(i, j, nx, ny);
-            }
+    // Step 0. Set number of levels for GMG
+    printf("Enter the desired number of levels:   ");
+    scanf("%d", &maxlevel);
+    
+    // Step 1. Compute right-hand side b and set approximate solution u
+    nx = (int) pow(2.0, maxlevel);
+    h = 1.0/((REAL) nx);
+    
+    u = (REAL *)malloc((nx+1)*(nx+1)*sizeof(REAL));
+    fasp_array_set((nx+1)*(nx+1), u, 0.0);
+    
+    b = (REAL *)malloc((nx+1)*(nx+1)*sizeof(REAL));
+    for (i = 0; i <= nx; i++) {
+        for (j = 0; j <= nx; j++) {
+            b[j*(nx+1)+i] = h*h*f2d(i, j, nx, nx);
         }
-        
-        // Step 3: Solve equation with V-cycle
-        fasp_gettime(&GMG_start);
-        iter = fasp_poisson_gmg_2D(u, b, nx, ny, maxlevel, rtol, print_level);
-        fasp_gettime(&GMG_end);
-
-        errL2 = L2NormError2d(u, nx, ny);
-    
-        printf("%5d %6d %12.6f %16.5e\n", maxlevel, iter, GMG_end-GMG_start, errL2);
-      
-        // Clean up memory  
-        free(u);
-        free(b);
     }
+    
+    // Step 2. Solve the Poisson system in 2D with full Multigrid cycle
+    fasp_poisson_fgmg_2D(u, b, nx, nx, maxlevel, rtol, prtlvl);
+    
+    // Step 3. Compute error in L2 norm
+    error0 = L2NormError2d(u, nx, nx);
+    
+    printf("L2 error ||u-u'|| = %e\n",error0);
+    
+    // Step 4. Clean up memory
+    free(u);
+    free(b);
     
     return FASP_SUCCESS;
 }
