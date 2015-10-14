@@ -45,7 +45,7 @@
      427 ./base/src/ilu_setup_bsr.c
      193 ./base/src/ilu_setup_csr.c
     1254 ./base/src/ilu_setup_str.c
-     332 ./base/src/init.c
+     338 ./base/src/init.c
      792 ./base/src/input.c
     1597 ./base/src/interpolation.c
      840 ./base/src/interpolation_em.c
@@ -106,4 +106,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      302 ./base/src/wrapper.c
-   90625 total
+   90631 total
