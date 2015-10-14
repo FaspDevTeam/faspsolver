@@ -18,16 +18,16 @@
  *
  * \brief Solve Ax=b by Ruge and Stuben's classic AMG
  *
- * \param n      Number of cols of A
- * \param nnz    Number of nonzeros of A
- * \param ia     IA of A in CSR format
- * \param ja     JA of A in CSR format
- * \param a      VAL of A in CSR format
- * \param b      RHS vector
- * \param u      Solution vector
- * \param tol    Tolerance for iterative solvers
- * \param maxit  Max number of iterations
- * \param ptrlvl Print level for iterative solvers
+ * \param n       Number of cols of A
+ * \param nnz     Number of nonzeros of A
+ * \param ia      IA of A in CSR format
+ * \param ja      JA of A in CSR format
+ * \param a       VAL of A in CSR format
+ * \param b       RHS vector
+ * \param u       Solution vector
+ * \param tol     Tolerance for iterative solvers
+ * \param maxit   Max number of iterations
+ * \param ptrlvl  Print level for iterative solvers
  *
  * \author Chensong Zhang
  * \date   09/16/2010
@@ -115,7 +115,6 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
     
     fasp_solver_dcsr_krylov_amg(&mat, &rhs, &sol, &itparam, &amgparam);
 }
-
 
 /**
  * \fn INT fasp_wrapper_dbsr_krylov_amg (INT n, INT nnz, INT nb, INT *ia, INT *ja,
