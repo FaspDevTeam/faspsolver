@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+10/15/2015 FASP 1.8.2:
+- Update tutorial examples in user's guide.
+- Update faspsolver webpage and documentation.
+
 10/12/2015 FASP 1.8.1:
 - Add `const' to declaring constant variables.
 - Check regression results again.

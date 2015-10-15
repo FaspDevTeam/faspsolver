@@ -1,8 +1,8 @@
 \documentclass[11pt]{memoir}
 
-% 1st version for FASP 0.8.0 by Chensong Zhang
-% 2nd version for FASP 1.3.7 by Chensong Zhang
-% 3rd version for FASP 1.8.1 by Chensong Zhang and Ludmil Zikatanov
+% 1st version for FASP 0.9.1 by Chensong Zhang
+% 2nd version for FASP 1.3.5 by Chensong Zhang
+% 3rd version for FASP 1.8.2 by Chensong Zhang and Ludmil Zikatanov
 
 \usepackage[top=1in, bottom=1.5in, left=1in, right=1in]{geometry}
 %\usepackage[notcite,notref,color]{showkeys}
@@ -71,7 +71,7 @@
 
 \author{FASP Developer Team}
 
-\date{\vfill Version 1.8.1} % Activate to display a given date or no date
+\date{\vfill Version 1.8.2} % Activate to display a given date or no date
 
 \begin{document}
 
@@ -116,9 +116,9 @@
 
 \section{General description}
 The Fast Auxiliary Space Preconditioning (FASP) package provides
-C source files\footnote{The C code is in the C99 standard.} to build a library of
-iterative solvers and preconditioners for the solution of large scale
-linear systems of equations.  The components of the base FASP library
+C source files\footnote{The code is in the C99 (ISO/IEC 9899:1999) compatible.} to build a library of
+iterative solvers and preconditioners for the solution of large-scale
+linear systems of equations.  The components of the FASP basic library
 include several ready-to-use, modern, and efficient iterative solvers
 used in applications ranging from simple examples of discretized
 scalar partial differential equations (PDEs) to numerical simulations
@@ -134,6 +134,21 @@ The main components of the FASP basic library are:
 \end{itemize}
 The FASP distribution also includes several examples for solving
 simple benchmark problems.
+%
+The basic (kernel) FASP distribution is
+open-source and is licensed under GNU Lesser General Public License or
+LGPL. Other distributions may have different licensing (contact the
+developer team for details on this).
+%
+\begin{snugshade}\noindent
+  LICENSING: This software is free software distributed under the Lesser
+  General Public License or LGPL, version~3.0 or any later
+  versions. This software distributed in the hope that it will be
+  useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  Lesser General Public License \url{http://www.gnu.org/licenses/} for
+  more details.
+\end{snugshade}
 
 \section{Roadmap: from basics to complex applications} 
 A distinct feature of the FASP software project is that it is an open
@@ -157,8 +172,7 @@ Brinkman equation; bi-harmonic equation; Stokes and Navier-Stokes
 equations; $H(\operatorname{curl})/H(\operatorname{div})$ systems;
 Maxwell's system. The resulting solvers have been applied in simulations from 
 fluid dynamics, underground water simulation, fluid-structure
-interactions; Oldryod-B and Johnson-Seglman models; black-oil model
-in reservoir simulation; magnetohydrodynamics (MHD).
+interactions, Oldryod-B and Johnson-Seglman models, black-oil model, and magnetohydrodynamics (MHD).
 
 Several of these benchmark problems are included as examples in
 the open-source distribution, others are under development or have
@@ -225,22 +239,7 @@ have been changed before this document is updated.
 \section{How to obtain FASP}\label{sec:install}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The basic (kernel) FASP distribution is
-open-source and is licensed under GNU Lesser General Public License or
-LGPL. Other distributions may have different licensing (contact the
-developer team for details on this).
-
-\begin{snugshade}\noindent
-  LICENSING: This software is free software distributed under the Lesser
-  General Public License or LGPL, version~3.0 or any later
-  versions. This software distributed in the hope that it will be
-  useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  Lesser General Public License \url{http://www.gnu.org/licenses/} for
-  more details.
-\end{snugshade}
-
-
+There are several ways to download the FASP source files. We recommend users download the most updated version from the FASP page on SourceForge. 
 
 \subsection{Downloading from SourceForge}
 
@@ -333,7 +332,7 @@ several Linux distributions (\verb|Cent OS|, \verb|Debian|,
 Windows (XP, Win 7) with several compliers, including \verb|gcc|,
 \verb|g++|, \verb|clang|, \verb|icc|, \verb|VC++|. FASP also easily
 links to applications written in Fortran and this has been tested with
-\verb|gfortran|, \verb|g95|,\verb|ifort| Fortran compilers.
+\verb|gfortran|, \verb|g95|, \verb|ifort| Fortran compilers.
 
 \subsection{FASP on Linux or Mac OS X}
 To build the FASP library for these operating systems: 
@@ -509,7 +508,7 @@ FASP distribution and demonstrating how to
 use the FASP package for solving linear systems. We read the matrices
 from disk files (the files are also included in the FASP
 distribution). 
-All the examples can be found inside ``\url{faspsolver/tutorial/}''. 
+All the examples in this section can be found inside ``\url{faspsolver/tutorial/}''. 
 
 After you successfully build FASP (see \S\ref{sec:build}), just go to the
 ``\url{faspsolver/tutorial/}" directory and the tutorial
@@ -533,8 +532,8 @@ distribution also includes F90 versions of some of the examples.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \addtocounter{ex}{1}
 
-The first example is a standard one: We read from disk a symmetric
-positive definite matrix $A$ and right-hand side $b$ then we solve
+The first example is a standard one: We read a symmetric
+positive definite matrix $A$ and right-hand side $b$ from harddisk and then we solve
 $Ax=b$ using the classical AMG
 method~\cite{Brandt.BrandtMcCormick.1982uq,Ruge.RugeStuben.1985ij,Ruge.RugeStuben.1987bs};
 see \S\ref{sec:amg}. In this example the matrix $A$ included with the
@@ -548,7 +547,7 @@ triangulation of a bounded domain $\Omega$.
 Since this is the first example, we will explain it in some detail:
 \begin{itemize}
 %
-\item Line 1 tells the Doxygen documentation system that the filename
+\item Line 1 tells the Doxygen documentation system\footnote{Doxygen \url{http://www.doxygen.org} is a useful tool for generating documentation from annotated sources. We use it in FASP development.} that the filename
   is ``poisson-amg.c''. Line 3--5 tells the Doxygen what is the
   purpose of this file (function).
 %
@@ -573,7 +572,7 @@ Since this is the first example, we will explain it in some detail:
   definitions of vectors and general sparse matrices.
 %
 \item Line 57 reads the matrix and the right-hand side from two disk
-  files. Line 49--58 defines the filenames of them.
+  files. Line 46--55 defines the filenames of them.
 %
 \item Line 60--64 prints basic information of coefficient matrix,
   right-hand side, and solver parameters.
@@ -594,7 +593,7 @@ To run this example, type:
 $ ./poisson-amg-c.ex
 \end{lstlisting}
 %
-A sample output is as follows:
+A sample output is listed as follows:
 %
 \lstinputlisting[numbers=none,firstline=2]{../tutorial/out/poisson-amg-c.out}
 
@@ -668,9 +667,56 @@ $ ./poisson-pcg-c.ex
 A sample output is given as follows (note that the actual output depends on the solver parameters and might be different than what you see here):
 \lstinputlisting[numbers=none,firstline=2]{../tutorial/out/poisson-pcg-c.out}
 
+We also provide a Fortran 90 example, which does the same thing as
+this C code except it gives less output, in
+``\url{tutorial/main/poisson-pcg.f90}''. Users who would like to call
+FASP solver from a Fortran based application can see how to do this example.
+%
+\lstinputlisting[language=Fortran]{../tutorial/main/poisson-pcg.f90}
+%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{How to change parameters in
+\section{Example \arabic{ex}: An GMG solver for the Poisson equation}\label{sec:ex4}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{ex}{1}
+
+The geometric multigrid method (GMG) is one of the most efficient solving techniques for discrete algebraic systems arising from many types of partial differential equations~\cite{Bramble.Bramble.1993fk,Trottenberg.TrottenbergOosterlee.2001fu}. GMG utilizes a hierarchy of grids or discretizations and reduces the error at a number of frequencies simultaneously. Because of its plausible linear complexity---i.e., the low computational cost of solving a linear system with $N$ unknowns is $O(N)$---the GMG method is one of the most popular Poisson solvers. Although the GMG's applicability is limited as it requires explicit information on the hierarchy of the discrete system, when it can be applied, GMG is far more efficient than its algebraic version, the algebraic multigrid (AMG) method.
+
+We now give a simple example on calling the geometric multigrid for solving the Poisson's equation in 2D (discretized by the standard five-point finite difference stencil). Consider the Poisson equation
+\begin{equation*}
+\left\{
+\begin{array}{rcl}
+    - \Delta u &=&  f  \qquad \mbox{in }~\Omega \\
+      u &=& 0  \qquad \mbox{on }\partial\Omega, \\
+\end{array}
+\right.
+\end{equation*}
+where $\Omega = (0,1)^2 \subset \mathbb{R}^2$.
+%
+The main reason why we choose this simplest possible setting is to emphasize that, even for a simple problem, the new heterogeneous architectures present challenges for numerical implementation. Another reason is to allow us to use explicit stencils and to avoid the bottleneck of sparse matrix-vector production. 
+%
+The standard central finite difference method is applied to discretize the Poisson's equation. In other words, the Laplace operator is discretized by the classical second-order central difference scheme. After discretization, we end up with a system of linear equations:
+%
+     \begin{equation*}
+        \mathbf{A}\vec{u} = \vec{f}.
+    \end{equation*}
+%    
+We use the five-point central difference scheme in 2D. Consider a uniform square mesh of $\Omega = [0, 1]^2$
+with size $h = \frac{1}{n}$ and in which $x_i = ih, \, y_j = jh \, (i, j = 0,
+1,\ldots, n)$. Let $u_{i,j}$ be the numerical approximation of $u(x_i , y_j )$. The five-point central
+difference scheme for solving the Poisson's equation in 2D can be written as follows:
+$$
+{-u_{i-1,j}-u_{i,j-1}+4u_{i,j}-u_{i+1,j}-u_{i,j+1}}={h^2}f(x_i,y_j)
+\qquad i, j=1,2,\ldots,n-1.
+$$
+
+The sample code for this solver can be found in ``\url{tutorial/main/poisson-gmg.c}'' and a piece of the source code is listed as follows:
+%
+\lstinputlisting[language=C]{../tutorial/main/poisson-gmg.c}
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{How to change parameters for
   solvers/preconditioners}\label{sec:parameters}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -705,7 +751,7 @@ This example is very similar to the first example and we now briefly explain it:
 \end{itemize}
 %
 
-You can do a very simple experiment---Simply change the AMG type from the classical AMG to smoothed aggregation AMG by revise Line 14 to
+You can do a very simple experiment---Simply change the AMG type from the classical AMG to smoothed aggregation AMG by revise Line 14 to:
 %
 \begin{lstlisting}[numbers=none]
 AMG_type                 = SA
@@ -1015,7 +1061,7 @@ In FASP, we provided several functions for reading, writing, and printing differ
 \end{snugshade}
 
 
-\section{Sparse BLAS}
+\section{Sparse matrix-vector multiplication}
 
 The matrix-vector multiplication: $y=Ax$ can be performed in the
 following simple way:
@@ -1078,52 +1124,13 @@ Now we explain this code segment a little bit:
 \item Line 476 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``itparam''.
 \end{itemize}
 
-Apparently, we now left with no choice but introducing ``itparam''.
+Apparently, we should now explain the data structure ``itparam''.
 %
-\lstinputlisting[language=C,numbers=none,firstline=1062,lastline=1076]{../base/include/fasp.h}
+\lstinputlisting[language=C,numbers=none,firstline=1063,lastline=1077]{../base/include/fasp.h}
 %
 Possible ``itsolver\_type'' includes:
 %
 \lstinputlisting[language=C,numbers=none,firstline=98,lastline=121]{../base/include/fasp_const.h}
-%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Geometric multigrid}\label{sec:gmg}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-The geometric multigrid method (GMG) is one of the most efficient solving techniques for discrete algebraic systems arising from many types of partial differential equations~\cite{Bramble.Bramble.1993fk,Trottenberg.TrottenbergOosterlee.2001fu}. GMG utilizes a hierarchy of grids or discretizations and reduces the error at a number of frequencies simultaneously. Because of its plausible linear complexity---i.e., the low computational cost of solving a linear system with $N$ unknowns is $O(N)$---the GMG method is one of the most popular Poisson solvers. Although the GMG's applicability is limited as it requires explicit information on the hierarchy of the discrete system, when it can be applied, GMG is far more efficient than its algebraic version, the algebraic multigrid (AMG) method.
-
-We now give a simple example on calling the geometric multigrid for solving the Poisson's equation in 2D (discretized by the standard five-point finite difference stencil). Consider the Poisson equation
-\begin{equation*}
-\left\{
-\begin{array}{rcl}
-    - \Delta u &=&  f  \qquad \mbox{in }~\Omega \\
-      u &=& 0  \qquad \mbox{on }\partial\Omega, \\
-\end{array}
-\right.
-\end{equation*}
-where $\Omega = (0,1)^2 \subset \mathbb{R}^2$.
-%
-The main reason why we choose this simplest possible setting is to emphasize that, even for a simple problem, the new heterogeneous architectures present challenges for numerical implementation. Another reason is to allow us to use explicit stencils and to avoid the bottleneck of sparse matrix-vector production. 
-%
-The standard central finite difference method is applied to discretize the Poisson's equation. In other words, the Laplace operator is discretized by the classical second-order central difference scheme. After discretization, we end up with a system of linear equations:
-%
-     \begin{equation*}
-        \mathbf{A}\vec{u} = \vec{f}.
-    \end{equation*}
-%    
-We use the five-point central difference scheme in 2D. Consider a uniform square mesh of $\Omega = [0, 1]^2$
-with size $h = \frac{1}{n}$ and in which $x_i = ih, \, y_j = jh \, (i, j = 0,
-1,\ldots, n)$. Let $u_{i,j}$ be the numerical approximation of $u(x_i , y_j )$. The five-point central
-difference scheme for solving the Poisson's equation in 2D can be written as follows:
-$$
-{-u_{i-1,j}-u_{i,j-1}+4u_{i,j}-u_{i+1,j}-u_{i,j+1}}={h^2}f(x_i,y_j)
-\qquad i, j=1,2,\ldots,n-1.
-$$
-
-The sample code for this solver can be found in ``\url{test/main/testgmg.c}'' and a piece of the source code is listed as follows:
-%
-\lstinputlisting[language=C,firstnumber=254,firstline=254,lastline=283]{../test/main/testgmg.c}
 %
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1206,7 +1213,8 @@ and a printout of this file is below:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{snugshade}\noindent
-  NOTE: The default FSP build is a RELEASE version and such version
+  NOTE: The default FSP build is a RELEASE version (/O3 or equivalent 
+  compiler options are enabled) and such version
   is compiled with optimization and no warnings are displayed during
   the build. How to build the FASP library with debugging enabled is
   described below.
