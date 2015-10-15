@@ -1,11 +1,12 @@
 /*! \file spe01-its.c
- *  \brief The fourth test example for FASP: using ITS_BSR to solve 
+ *  \brief The fifth test example for FASP: using ITS_BSR to solve
  *         the Jacobian equation from reservoir simulation benchmark
  *         problem SPE01.
  *
  *  \note  ITS_BSR example for FASP: C version
  *
- *  Solving the SPE01 benchmark with iterative methods
+ *  Solving the Society of Petroleum Engineers SPE01 benchmark problem
+ *  with Block ILU preconditioned Krylov methods
  */
 
 #include "fasp.h"

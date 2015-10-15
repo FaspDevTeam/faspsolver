@@ -716,6 +716,20 @@ The sample code for this solver can be found in ``\url{tutorial/main/poisson-gmg
 %
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Example \arabic{ex}: Block ILU preconditioner}\label{sec:ex5}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{ex}{1}
+
+We now show a simple example for calling iterative solvers in BSR format. The test example is from a test problem given by the Society of Petroleum Engineers (SPE01 Benchmark) using a fully implicit black-oil simulator at certain time step. The test matrix is the Jacobian matrix from the Newton linearization and is stored as a BSR matrix (see~\S\ref{sec:bsr} for details). 
+
+The sample code for this solver can be found in ``\url{tutorial/main/spe01-its.c}'' and a piece of the source code is listed as follows:
+%
+\lstinputlisting[language=C]{../tutorial/main/spe01-its.c}
+%
+A sample output is given as follows (note that the actual output depends on the solver parameters and might be different than what you see here):
+\lstinputlisting[numbers=none,firstline=2]{../tutorial/out/spe01-its-c.out}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{How to change parameters for
   solvers/preconditioners}\label{sec:parameters}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -986,7 +1000,7 @@ CSRL matrix format~\cite{Mellor-crummey2004} groups rows with same number of non
 \lstinputlisting[language=C,firstnumber=253,firstline=253,lastline=286]{../base/include/fasp.h}
 %
 
-\section{Block sparse matrices}
+\section{Block sparse matrices}\label{sec:bsr}
 
 For PDE applications, we often need to solve systems of partial differential equations. Many iterative methods and preconditioners could take advantages of the structure of PDE systems and improve efficiency. So we often need to use semi-structured (block) sparse data structures to store the coefficient matrix arising from PDE systems. 
 
