@@ -12,11 +12,11 @@
 #include "mg_util.inl"
 
 #if FASP_GSRB
-INT  nx_rb=1 ;  /**< Red Black Gs Smoother Nx */
-INT  ny_rb=1 ;  /**< Red Black Gs Smoother Ny */
-INT  nz_rb=1 ;  /**< Red Black Gs Smoother Nz */
-INT *IMAP=NULL; /**< Red Black Gs Smoother imap */
-INT  MAXIMAP=1; /**< Red Black Gs Smoother max dofs of reservoir */
+INT  nx_rb   = 1 ;   /**< Red Black GS Smoother Nx */
+INT  ny_rb   = 1 ;   /**< Red Black GS Smoother Ny */
+INT  nz_rb   = 1 ;   /**< Red Black GS Smoother Nz */
+INT  MAXIMAP = 1;    /**< Red Black GS Smoother max dofs of reservoir */
+INT *IMAP    = NULL; /**< Red Black GS Smoother imap */
 #endif
 
 /*---------------------------------*/
