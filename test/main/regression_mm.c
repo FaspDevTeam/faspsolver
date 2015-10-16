@@ -73,7 +73,7 @@ int main (int argc, const char * argv[])
     const INT      print_level = 1;    // how much information to print out
     const REAL     tolerance   = 1e-4; // tolerance for accepting the solution
     const char     solvers[num_solvers][128] = {"CG", "BiCGstab", "MinRes", "GMRES",
-        "VGMRES", "VFGMRES", "GCG", "GCR"};
+                                                "VGMRES", "VFGMRES", "GCG", "GCR"};
     
     /* Local Variables */
     itsolver_param itparam;      // input parameters for iterative solvers

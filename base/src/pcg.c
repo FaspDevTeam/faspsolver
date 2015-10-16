@@ -98,8 +98,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
     // local variables
     INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
-    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, infnormu;
+    REAL         relres  = BIGREAL, unorm2 = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, unorminf;
     REAL         alpha, beta, temp1, temp2;
     
     // allocate temp memory (need 4*m REAL numbers)
@@ -134,8 +134,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
             break;
         case STOP_MOD_REL_RES:
             absres0 = fasp_blas_array_norm2(m,r);
-            normu   = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
-            relres  = absres0/normu;
+            unorm2  = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
+            relres  = absres0/unorm2;
             break;
         default:
             printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
@@ -189,7 +189,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
                 break;
             case STOP_MOD_REL_RES:
                 absres = fasp_blas_array_norm2(m,r);
-                relres = absres/normu;
+                relres = absres/unorm2;
                 break;
         }
         
@@ -199,64 +199,69 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
         // output iteration information if needed
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
-        // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_array_norminf(m, u->val);
-        if ( infnormu <= sol_inf_tol ) {
-            if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
-            iter = ERROR_SOLVER_SOLSTAG;
-            break;
-        }
-        
-        // Check II: if stagnated, try to restart
-        normu = fasp_blas_dvec_norm2(u);
-        
-        // compute relative difference
-        reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
-        if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
+        if ( factor > 0.9 ) {
             
-            if ( prtlvl >= PRINT_MORE ) {
-                ITS_DIFFRES(reldiff,relres);
-                ITS_RESTART;
-            }
-            
-            fasp_array_cp(m,b->val,r);
-            fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
-            
-            // compute residual norms
-            switch ( stop_type ) {
-                case STOP_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normr0;
-                    break;
-                case STOP_REL_PRECRES:
-                    // z = B(r)
-                    if ( pc != NULL )
-                        pc->fct(r,z,pc->data); /* Apply preconditioner */
-                    else
-                        fasp_array_cp(m,r,z); /* No preconditioner */
-                    absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
-                    relres = absres/normr0;
-                    break;
-                case STOP_MOD_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normu;
-                    break;
-            }
-            
-            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
-            
-            if ( relres < tol )
+            // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
+            unorminf = fasp_blas_array_norminf(m, u->val);
+            if ( unorminf <= sol_inf_tol ) {
+                if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
+                iter = ERROR_SOLVER_SOLSTAG;
                 break;
-            else {
-                if ( stag >= MaxStag ) {
-                    if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
-                    iter = ERROR_SOLVER_STAG;
-                    break;
-                }
-                fasp_array_set(m,p,0.0);
-                ++stag;
             }
-        } // end of stagnation check!
+            
+            // Check II: if stagnated, try to restart
+            unorm2 = fasp_blas_dvec_norm2(u);
+            
+            // compute relative difference
+            reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
+            if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
+                
+                if ( prtlvl >= PRINT_MORE ) {
+                    ITS_DIFFRES(reldiff,relres);
+                    ITS_RESTART;
+                }
+                
+                fasp_array_cp(m,b->val,r);
+                fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
+                
+                // compute residual norms
+                switch ( stop_type ) {
+                    case STOP_REL_RES:
+                        absres = fasp_blas_array_norm2(m,r);
+                        relres = absres/normr0;
+                        break;
+                    case STOP_REL_PRECRES:
+                        // z = B(r)
+                        if ( pc != NULL )
+                            pc->fct(r,z,pc->data); /* Apply preconditioner */
+                        else
+                            fasp_array_cp(m,r,z); /* No preconditioner */
+                        absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                        relres = absres/normr0;
+                        break;
+                    case STOP_MOD_REL_RES:
+                        absres = fasp_blas_array_norm2(m,r);
+                        relres = absres/unorm2;
+                        break;
+                }
+                
+                if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
+                
+                if ( relres < tol )
+                    break;
+                else {
+                    if ( stag >= MaxStag ) {
+                        if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
+                        iter = ERROR_SOLVER_STAG;
+                        break;
+                    }
+                    fasp_array_set(m,p,0.0);
+                    ++stag;
+                }
+                
+            } // end of stagnation check!
+            
+        } // end of check I and II
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
@@ -284,7 +289,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat *A,
                     break;
                 case STOP_MOD_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normu;
+                    relres = absres/unorm2;
                     break;
             }
             
@@ -382,8 +387,8 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
     // local variables
     INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
-    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, infnormu;
+    REAL         relres  = BIGREAL, unorm2 = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, unorminf;
     REAL         alpha, beta, temp1, temp2;
     
     // allocate temp memory (need 4*m REAL numbers)
@@ -418,8 +423,8 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
             break;
         case STOP_MOD_REL_RES:
             absres0 = fasp_blas_array_norm2(m,r);
-            normu   = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
-            relres  = absres0/normu;
+            unorm2  = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
+            relres  = absres0/unorm2;
             break;
         default:
             printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
@@ -473,7 +478,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
                 break;
             case STOP_MOD_REL_RES:
                 absres = fasp_blas_array_norm2(m,r);
-                relres = absres/normu;
+                relres = absres/unorm2;
                 break;
         }
         
@@ -483,70 +488,75 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
         // output iteration information if needed
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
-        // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_array_norminf(m, u->val);
-        if ( infnormu <= sol_inf_tol ) {
-            if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
-            iter = ERROR_SOLVER_SOLSTAG;
-            break;
-        }
-        
-        // Check II: if stagnated, try to restart
-        normu = fasp_blas_dvec_norm2(u);
-        
-        // compute relative difference
-        reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
-        if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
+        if ( factor > 0.9 ) {
             
-            if ( prtlvl >= PRINT_MORE ) {
-                ITS_DIFFRES(reldiff,relres);
-                ITS_RESTART;
-            }
-            
-            fasp_array_cp(m,b->val,r);
-            fasp_blas_dbsr_aAxpy(-1.0,A,u->val,r);
-            
-            // compute residual norms
-            switch ( stop_type ) {
-                case STOP_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normr0;
-                    break;
-                case STOP_REL_PRECRES:
-                    // z = B(r)
-                    if ( pc != NULL )
-                        pc->fct(r,z,pc->data); /* Apply preconditioner */
-                    else
-                        fasp_array_cp(m,r,z); /* No preconditioner */
-                    absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
-                    relres = absres/normr0;
-                    break;
-                case STOP_MOD_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normu;
-                    break;
-            }
-            
-            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
-            
-            if ( relres < tol )
+            // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
+            unorminf = fasp_blas_array_norminf(m, u->val);
+            if ( unorminf <= sol_inf_tol ) {
+                if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
+                iter = ERROR_SOLVER_SOLSTAG;
                 break;
-            else {
-                if ( stag >= MaxStag ) {
-                    if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
-                    iter = ERROR_SOLVER_STAG;
-                    break;
-                }
-                fasp_array_set(m,p,0.0);
-                ++stag;
             }
-        } // end of stagnation check!
+            
+            // Check II: if stagnated, try to restart
+            unorm2 = fasp_blas_dvec_norm2(u);
+            
+            // compute relative difference
+            reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
+            if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
+                
+                if ( prtlvl >= PRINT_MORE ) {
+                    ITS_DIFFRES(reldiff,relres);
+                    ITS_RESTART;
+                }
+                
+                fasp_array_cp(m,b->val,r);
+                fasp_blas_dbsr_aAxpy(-1.0,A,u->val,r);
+                
+                // compute residual norms
+                switch ( stop_type ) {
+                    case STOP_REL_RES:
+                        absres = fasp_blas_array_norm2(m,r);
+                        relres = absres/normr0;
+                        break;
+                    case STOP_REL_PRECRES:
+                        // z = B(r)
+                        if ( pc != NULL )
+                            pc->fct(r,z,pc->data); /* Apply preconditioner */
+                        else
+                            fasp_array_cp(m,r,z); /* No preconditioner */
+                        absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                        relres = absres/normr0;
+                        break;
+                    case STOP_MOD_REL_RES:
+                        absres = fasp_blas_array_norm2(m,r);
+                        relres = absres/unorm2;
+                        break;
+                }
+                
+                if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
+                
+                if ( relres < tol )
+                    break;
+                else {
+                    if ( stag >= MaxStag ) {
+                        if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
+                        iter = ERROR_SOLVER_STAG;
+                        break;
+                    }
+                    fasp_array_set(m,p,0.0);
+                    ++stag;
+                }
+                
+            } // end of stagnation check!
+            
+        } // end of check I and II
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
             REAL updated_relres = relres;
-
+            
             // compute true residual r = b - Ax and update residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_dbsr_aAxpy(-1.0,A,u->val,r);
@@ -568,13 +578,13 @@ INT fasp_solver_dbsr_pcg (dBSRmat *A,
                     break;
                 case STOP_MOD_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normu;
+                    relres = absres/unorm2;
                     break;
             }
-                        
+            
             // check convergence
             if ( relres < tol ) break;
-
+            
             if ( prtlvl >= PRINT_MORE ) {
                 ITS_COMPRES(updated_relres); ITS_REALRES(relres);
             }
@@ -669,8 +679,8 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
     // local variables
     INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
-    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, infnormu;
+    REAL         relres  = BIGREAL, unorm2 = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, unorminf;
     REAL         alpha, beta, temp1, temp2;
     
     // allocate temp memory (need 4*m REAL numbers)
@@ -705,8 +715,8 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
             break;
         case STOP_MOD_REL_RES:
             absres0 = fasp_blas_array_norm2(m,r);
-            normu   = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
-            relres  = absres0/normu;
+            unorm2  = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
+            relres  = absres0/unorm2;
             break;
         default:
             printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
@@ -760,7 +770,7 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
                 break;
             case STOP_MOD_REL_RES:
                 absres = fasp_blas_array_norm2(m,r);
-                relres = absres/normu;
+                relres = absres/unorm2;
                 break;
         }
         
@@ -770,70 +780,75 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
         // output iteration information if needed
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
-        // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_array_norminf(m, u->val);
-        if ( infnormu <= sol_inf_tol ) {
-            if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
-            iter = ERROR_SOLVER_SOLSTAG;
-            break;
-        }
-        
-        // Check II: if stagnated, try to restart
-        normu = fasp_blas_dvec_norm2(u);
-        
-        // compute relative difference
-        reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
-        if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
+        if ( factor > 0.9 ) {
             
-            if ( prtlvl >= PRINT_MORE ) {
-                ITS_DIFFRES(reldiff,relres);
-                ITS_RESTART;
-            }
-            
-            fasp_array_cp(m,b->val,r);
-            fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
-            
-            // compute residual norms
-            switch ( stop_type ) {
-                case STOP_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normr0;
-                    break;
-                case STOP_REL_PRECRES:
-                    // z = B(r)
-                    if ( pc != NULL )
-                        pc->fct(r,z,pc->data); /* Apply preconditioner */
-                    else
-                        fasp_array_cp(m,r,z); /* No preconditioner */
-                    absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
-                    relres = absres/normr0;
-                    break;
-                case STOP_MOD_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normu;
-                    break;
-            }
-            
-            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
-            
-            if ( relres < tol )
+            // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
+            unorminf = fasp_blas_array_norminf(m, u->val);
+            if ( unorminf <= sol_inf_tol ) {
+                if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
+                iter = ERROR_SOLVER_SOLSTAG;
                 break;
-            else {
-                if ( stag >= MaxStag ) {
-                    if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
-                    iter = ERROR_SOLVER_STAG;
-                    break;
-                }
-                fasp_array_set(m,p,0.0);
-                ++stag;
             }
-        } // end of stagnation check!
+            
+            // Check II: if stagnated, try to restart
+            unorm2 = fasp_blas_dvec_norm2(u);
+            
+            // compute relative difference
+            reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
+            if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
+                
+                if ( prtlvl >= PRINT_MORE ) {
+                    ITS_DIFFRES(reldiff,relres);
+                    ITS_RESTART;
+                }
+                
+                fasp_array_cp(m,b->val,r);
+                fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
+                
+                // compute residual norms
+                switch ( stop_type ) {
+                    case STOP_REL_RES:
+                        absres = fasp_blas_array_norm2(m,r);
+                        relres = absres/normr0;
+                        break;
+                    case STOP_REL_PRECRES:
+                        // z = B(r)
+                        if ( pc != NULL )
+                            pc->fct(r,z,pc->data); /* Apply preconditioner */
+                        else
+                            fasp_array_cp(m,r,z); /* No preconditioner */
+                        absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                        relres = absres/normr0;
+                        break;
+                    case STOP_MOD_REL_RES:
+                        absres = fasp_blas_array_norm2(m,r);
+                        relres = absres/unorm2;
+                        break;
+                }
+                
+                if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
+                
+                if ( relres < tol )
+                    break;
+                else {
+                    if ( stag >= MaxStag ) {
+                        if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
+                        iter = ERROR_SOLVER_STAG;
+                        break;
+                    }
+                    fasp_array_set(m,p,0.0);
+                    ++stag;
+                }
+                
+            } // end of stagnation check!
+            
+        } // end of check I and II
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
-
+            
             REAL updated_relres = relres;
-
+            
             // compute true residual r = b - Ax and update residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
@@ -855,13 +870,13 @@ INT fasp_solver_bdcsr_pcg (block_dCSRmat *A,
                     break;
                 case STOP_MOD_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normu;
+                    relres = absres/unorm2;
                     break;
             }
-
+            
             // check convergence
             if ( relres < tol ) break;
-
+            
             if ( prtlvl >= PRINT_MORE ) {
                 ITS_COMPRES(updated_relres); ITS_REALRES(relres);
             }
@@ -956,8 +971,8 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
     // local variables
     INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
-    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, infnormu;
+    REAL         relres  = BIGREAL, unorm2 = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, unorminf;
     REAL         alpha, beta, temp1, temp2;
     
     // allocate temp memory (need 4*m REAL numbers)
@@ -992,8 +1007,8 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
             break;
         case STOP_MOD_REL_RES:
             absres0 = fasp_blas_array_norm2(m,r);
-            normu   = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
-            relres  = absres0/normu;
+            unorm2  = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
+            relres  = absres0/unorm2;
             break;
         default:
             printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
@@ -1047,7 +1062,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
                 break;
             case STOP_MOD_REL_RES:
                 absres = fasp_blas_array_norm2(m,r);
-                relres = absres/normu;
+                relres = absres/unorm2;
                 break;
         }
         
@@ -1057,70 +1072,75 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
         // output iteration information if needed
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
-        // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_array_norminf(m, u->val);
-        if ( infnormu <= sol_inf_tol ) {
-            if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
-            iter = ERROR_SOLVER_SOLSTAG;
-            break;
-        }
-        
-        // Check II: if stagnated, try to restart
-        normu = fasp_blas_dvec_norm2(u);
-        
-        // compute relative difference
-        reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
-        if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
+        if ( factor > 0.9 ) {
             
-            if ( prtlvl >= PRINT_MORE ) {
-                ITS_DIFFRES(reldiff,relres);
-                ITS_RESTART;
-            }
-            
-            fasp_array_cp(m,b->val,r);
-            fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
-            
-            // compute residual norms
-            switch ( stop_type ) {
-                case STOP_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normr0;
-                    break;
-                case STOP_REL_PRECRES:
-                    // z = B(r)
-                    if ( pc != NULL )
-                        pc->fct(r,z,pc->data); /* Apply preconditioner */
-                    else
-                        fasp_array_cp(m,r,z); /* No preconditioner */
-                    absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
-                    relres = absres/normr0;
-                    break;
-                case STOP_MOD_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normu;
-                    break;
-            }
-            
-            if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
-            
-            if ( relres < tol )
+            // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
+            unorminf = fasp_blas_array_norminf(m, u->val);
+            if ( unorminf <= sol_inf_tol ) {
+                if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
+                iter = ERROR_SOLVER_SOLSTAG;
                 break;
-            else {
-                if ( stag >= MaxStag ) {
-                    if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
-                    iter = ERROR_SOLVER_STAG;
-                    break;
-                }
-                fasp_array_set(m,p,0.0);
-                ++stag;
             }
-        } // end of stagnation check!
+            
+            // Check II: if stagnated, try to restart
+            unorm2 = fasp_blas_dvec_norm2(u);
+            
+            // compute relative difference
+            reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
+            if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
+                
+                if ( prtlvl >= PRINT_MORE ) {
+                    ITS_DIFFRES(reldiff,relres);
+                    ITS_RESTART;
+                }
+                
+                fasp_array_cp(m,b->val,r);
+                fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
+                
+                // compute residual norms
+                switch ( stop_type ) {
+                    case STOP_REL_RES:
+                        absres = fasp_blas_array_norm2(m,r);
+                        relres = absres/normr0;
+                        break;
+                    case STOP_REL_PRECRES:
+                        // z = B(r)
+                        if ( pc != NULL )
+                            pc->fct(r,z,pc->data); /* Apply preconditioner */
+                        else
+                            fasp_array_cp(m,r,z); /* No preconditioner */
+                        absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                        relres = absres/normr0;
+                        break;
+                    case STOP_MOD_REL_RES:
+                        absres = fasp_blas_array_norm2(m,r);
+                        relres = absres/unorm2;
+                        break;
+                }
+                
+                if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
+                
+                if ( relres < tol )
+                    break;
+                else {
+                    if ( stag >= MaxStag ) {
+                        if ( prtlvl > PRINT_MIN ) ITS_STAGGED;
+                        iter = ERROR_SOLVER_STAG;
+                        break;
+                    }
+                    fasp_array_set(m,p,0.0);
+                    ++stag;
+                }
+
+            } // end of stagnation check!
+            
+        } // end of check I and II
         
         // Check III: prevent false convergence
         if ( relres < tol ) {
             
             REAL updated_relres = relres;
-
+            
             // compute true residual r = b - Ax and update residual
             fasp_array_cp(m,b->val,r);
             fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
@@ -1142,7 +1162,7 @@ INT fasp_solver_dstr_pcg (dSTRmat *A,
                     break;
                 case STOP_MOD_REL_RES:
                     absres = fasp_blas_array_norm2(m,r);
-                    relres = absres/normu;
+                    relres = absres/unorm2;
                     break;
             }
             

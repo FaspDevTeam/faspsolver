@@ -64,7 +64,7 @@
      986 ./base/src/parameters.c
     1437 ./base/src/pbcgs.c
      411 ./base/src/pbcgs_mf.c
-    1207 ./base/src/pcg.c
+    1227 ./base/src/pcg.c
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
      181 ./base/src/pgcg_mf.c
@@ -106,4 +106,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      301 ./base/src/wrapper.c
-   90630 total
+   90650 total

@@ -1,9 +1,12 @@
 File Name: CHANGES
 
-10/15/2015 FASP 1.8.2:
+10/16/2015 FASP 1.8.2:
 - Update tutorial examples in user's guide.
 - Update faspsolver webpage and documentation.
-- Add a tutorial example for BSR matrices. 
+- Add a tutorial example for BSR matrices.
+- Fix a few small format problems.
+- Skip some checking steps in PCG if convergence rate is OK.
+- Update test/ini/ua.dat.
 
 10/12/2015 FASP 1.8.1:
 - Add `const' to declaring constant variables.
