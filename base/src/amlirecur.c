@@ -10,7 +10,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-#include "forts_ns.h"
+//       #include "forts_ns.h"
 
 #include "mg_util.inl"
 

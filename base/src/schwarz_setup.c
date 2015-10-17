@@ -8,7 +8,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-#include "forts_ns.h"
+///#include "forts_ns.h"
 #include "mg_util.inl"
 
 static void Schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
