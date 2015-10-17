@@ -166,13 +166,14 @@ implementation of efficient solvers based on the FASP kernel to best
 meet the goals and the requirements of our users.
 
 The FASP software has been successfully used to build efficient
-solvers for several discretized PDEs and systems of PDEs: 
-general scalar elliptic equations; linear elasticity;
-Brinkman equation; bi-harmonic equation; Stokes and Navier-Stokes
-equations; $H(\operatorname{curl})/H(\operatorname{div})$ systems;
-Maxwell's system. The resulting solvers have been applied in simulations from 
+solvers for several discretized PDEs and systems of PDEs: general
+scalar elliptic equations; linear elasticity; Brinkman equation;
+bi-harmonic equation; Stokes and Navier-Stokes equations;
+$H(\operatorname{curl})/H(\operatorname{div})$ systems; Maxwell's
+system. The resulting solvers have been applied in simulations from
 fluid dynamics, underground water simulation, fluid-structure
-interactions, Oldryod-B and Johnson-Seglman models, black-oil model, and magnetohydrodynamics (MHD).
+interactions, Oldryod-B and Johnson-Segalman models, black-oil model,
+and magnetohydrodynamics (MHD).
 
 Several of these benchmark problems are included as examples in
 the open-source distribution, others are under development or have
@@ -377,26 +378,25 @@ $ make help
 and you will get the following screen
 \lstinputlisting[numbers=none,language=sh]{../INSTALL}
 
-Many options can be changed in "FASP.mk", as well
-  as from the command line. For example
+Many options can be changed in "FASP.mk", as well as from the command
+line. For example,
 \begin{lstlisting}[numbers=none]
 $ make config CC=gcc49 prefix=/usr/local
 $ sudo make install
 \end{lstlisting}
-  will install in \verb|/usr/local/lib| and the include files in
-  \verb|/usr/local/include| so that they may be accessed by multiple
-  users.
+will install in the FASP library in \verb|/usr/local/lib| and the
+include files in \verb|/usr/local/include| so that they may be
+accessed by multiple users.
 
-%
-\begin{snugshade}
+\begin{snugshade}\noindent
   The example given above in most cases will require administrative
   privileges from the user, i.e. using \verb|sudo| or other equivalent
   mechanism, to install in a system directory (such as
   \verb|/usr/local| in our example). We do not recommend such way of
   installing FASP, although it will work in most cases if the user has
-  administrative privileges.  Rather, we rather recommend installation
-  of FASP locally and then, if needed, copying them to a different
-  location.
+  administrative privileges.  We recommend installation of FASP
+  library/headers locally and then, if needed, copying them to a
+  different location.
 \end{snugshade}
 
 To uninstall FASP and clean up the working directory, you can run

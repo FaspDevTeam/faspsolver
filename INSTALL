@@ -12,7 +12,8 @@ $ make config              # Configure the building environment
 $ make config CC=gcc       # Configure with a specific C compiler 
 $ make config debug=yes    # Configure with compiler debug options ON
 $ make config debug=all    # Configure with FASP internal debug options ON
-$ make config prefix=/a/b  # Library and header files in /a/b/lib /a/b/include
+$ make config prefix=/dir  # Configure instalation of library and header 
+                             files in "/dir/lib" and "/dir/include"
 ===============================================================================
 $ make                  # Compile the library (after "make config")
 $ make install          # install FASP library and header files
