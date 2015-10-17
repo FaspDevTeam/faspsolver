@@ -1,5 +1,14 @@
 File Name: CHANGES
 
+10/17/2015 FASP 1.8.2:
+- Update Makefile(s) in tutorial and test subdirectories. 
+- Added "write_config.cmake" to $(faspsolver)/modules which writes 
+  CC, FC, CXX, and FASP_INSTALL_PREFIX variables so that they can 
+  be included from Makefiles in test tutorial or user defined ones.
+- Updated userguide.tex saying that the tests in $(faspsolver)/test 
+  and the examples in $(faspsolver)/tutorial can be build with both
+  "cmake" as well as custom created Makefile(s).
+
 10/16/2015 FASP 1.8.2:
 - Update building strategy: build library and examples separately.
 - Update the documentation (user guide) accordingly. 

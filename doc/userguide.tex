@@ -1238,7 +1238,7 @@ $ make config openmp=yes
 \end{lstlisting}
 %
 If you use OpenMP very often and do not want type in this extra command-line option, you need to uncomment one line in ``FASP.mk'' and set ``openmp'' to be ``yes''.
-\lstinputlisting[language=sh,firstnumber=37,firstline=37,lastline=45]{../FASP.mk}
+\lstinputlisting[language=sh,firstnumber=37,firstline=37,lastline=45]{../FASP.mk.example}
 
 After you build FASP with ``openmp=yes'', OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash}, you need to set:
 \begin{lstlisting}[numbers=none]
