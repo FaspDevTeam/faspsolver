@@ -1,97 +1,80 @@
 #######################################################################
 # Fast Auxiliary Space Preconditioners (FASP)
+#
 ########################################################################
+# Set base variables for building the test executables. If the
+# file ../Config.mk exists it will take the values of these variables
+# from there.
+
+
+fasp_prefix = not-set
+CC = not-set
+FC = not-set
+CXX = not-set
+
+sinclude ../Config.mk
+
+ifeq ($(fasp_prefix),not-set)
+    fasp_prefix = ..
+endif
+
+ifeq ($(CC),not-set) 
+   CC=gcc 
+endif
+
+ifeq ($(FC),not-set)
+   FC=gfortran
+endif
+
+ifeq ($(CXX),not-set)
+   CXX=g++
+endif
+
+CFLAGS = -I$(fasp_prefix)/include/ -I./include 
+CFLAGS+=-O3
+
+#no fflags here
+#FFLAGS= -I$(fasp_prefix)/include/ #-I./include
+#FFLAGS+=-O3
+
+#LCFLAGS=$(LINK_OPT) -L$(fasp_prefix)/lib -lgfortran -lfasp 
+LINKER = $(FC)
+LFLAGS = $(LINK_OPT) -L$(fasp_prefix)/lib -lfasp 
 
 DSRC=$(shell find ./src -name '*.c')
 DOBJ=$(DSRC:.c=.o)
 
-PSRC=$(shell find ./main -name '*.c')
-POBJ=$(PSRC:.c=.o)
+.PHONY: all clean distclean
 
-FASP_DIR=..
+all:	regression.ex regression_mf.ex regression_mm.ex \
+	test.ex testbamg.ex testbcsr.ex testbsr.ex testgmg.ex \
+	testlab.ex testmat.ex testsmat.ex \
+	testrap.ex testfem.ex testheat.ex
 
-LINKER=gfortran
+testrap.ex: main/testrap.o $(DOBJ)
+	@$(LINKER) main/testrap.o $(DOBJ) -o $@ $(LFLAGS) 
+	@echo 'Building executable file $@' ... Done
 
-CFLAGS=-I./include -I$(FASP_DIR)/include/
-CFLAGS+=-O3
+testfem.ex: main/testfem.o $(DOBJ)
+	@$(LINKER) main/testfem.o $(DOBJ) -o $@ $(LFLAGS) 
+	@echo 'Building executable file $@' ... Done
 
-LFLAGS=$(LINK_OPT) -L$(FASP_DIR)/lib -lfasp
-LFLAGS+=-O3
-
-.PHONY: all objs clean distclean help
-
-all: objs test testbamg testbcsr testbsr testgmg \
-     testrap testlab testmat testrap testsmat    \
-     regression regression_mf regression_mm      \
-     testfem testheat
-
-regression: main/regression.o
-	@$(LINKER) main/regression.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-regression_mf: main/regression_mf.o
-	@$(LINKER) main/regression_mf.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-regression_mm: main/regression_mm.o
-	@$(LINKER) main/regression_mm.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-test: main/test.o
-	@$(LINKER) main/test.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-testbamg: main/testbamg.o
-	@$(LINKER) main/testbamg.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-testbcsr: main/testbcsr.o
-	@$(LINKER) main/testbcsr.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-testbsr: main/testbsr.o
-	@$(LINKER) main/testbsr.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-testgmg: main/testgmg.o
-	@$(LINKER) main/testgmg.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-testlab: main/testlab.o
-	@$(LINKER) main/testlab.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-testmat: main/testmat.o
-	@$(LINKER) main/testmat.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-testsmat: main/testsmat.o
-	@$(LINKER) main/testsmat.o -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-testrap: main/testrap.o $(DOBJ)
-	@$(LINKER) main/testrap.o $(DOBJ) -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-testfem: main/testfem.o $(DOBJ)
-	@$(LINKER) main/testfem.o $(DOBJ) -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-testheat: main/testheat.o $(DOBJ)
-	@$(LINKER) main/testheat.o $(DOBJ) -o $@.ex $(LFLAGS) 
-	@echo 'Building executable file $@.ex' ... Done
-
-objs: $(DOBJ) $(POBJ)
+testheat.ex: main/testheat.o $(DOBJ)
+	@$(LINKER) main/testheat.o $(DOBJ) -o $@ $(LFLAGS) 
+	@echo 'Building executable file $@' ... Done
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -c -o $@ $^ 
-	@echo 'Building C object file $@' ... Done
+	@$(CC) $(CFLAGS) -c -o $@ $<
+#	@echo 'Compiling source file $<' ... Done
+
+%.ex: main/%.c
+	@$(CC) -c $(CFLAGS) -o $@.o $< 
+#	@echo 'Compiling source file $<' ... Done
+	@$(LINKER) $@.o -o $@ $(LFLAGS) 
+	@echo 'Building executable file $@' ... Done
 
 clean:
-	@find . -name '*.o' -exec rm {} \;
+		+find . -name '*.o' -exec rm {} \;
 
-distclean:
-	@find . -name '*.o' -exec rm {} \;
-	@rm -f *.ex *~
-
-.PHONY: clean distclean
+distclean:	clean
+		+rm -f *.ex *~
