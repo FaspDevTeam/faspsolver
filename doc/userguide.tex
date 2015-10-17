@@ -335,22 +335,34 @@ links to applications written in Fortran and this has been tested with
 \verb|gfortran|, \verb|g95|, \verb|ifort| Fortran compilers.
 
 \subsection{FASP on Linux or Mac OS X}
-To build the FASP library for these operating systems: 
-(1) go to the ``faspsolver'' directory; (2) modify the ``\emph{FASP.mk.example}''
-file to math your system and save it as
-``{\color{red}FASP.mk}''; (3) then execute:
+To build the FASP library for these operating systems. Open a terminal
+window, wehre you can issue commands from the command line and do the following: 
+(1) go to the main FASP directory (we will refer to it as
+\verb|$(faspsolver)| from now on); (2) modify the ``\emph{FASP.mk.example}''
+file to math your system and save it as ``{\color{red}FASP.mk}''; (3) then execute:
 %
 \begin{lstlisting}[numbers=none]
-$ make config
+$ make config 
 $ make install
 \end{lstlisting}
 %
-Note that, if you do not have ``FASP.mk'' present in the current
-directory, default settings will be used for building and installation
-FASP.
+These two commands build the FASP library/header files. It installs
+the library in \verb|$(faspsolver)/lib|
+and the header files in \verb|$(faspsolver)/include|.
 
-In order to be sure that everything went all right, you can go to the
-``\url{faspsolver/test}'' directory and try to run a test problem as follows:
+If you do not have ``FASP.mk'' present in the current directory,
+default settings will be used for building and installation FASP. 
+
+Next, if you would like to try some of the examples that come with
+FASP, you can build the "test" and "tutorial" targets as follows:
+%
+\begin{lstlisting}[numbers=none]
+$ make test
+$ make tutorial
+\end{lstlisting}
+%
+If everything went all right, you can go to the
+``\url{faspsolver/test}'' directory and try to run a test problem:
 %
 \begin{lstlisting}[numbers=none]
 $ ./test.ex
@@ -364,6 +376,28 @@ $ make help
 %
 and you will get the following screen
 \lstinputlisting[numbers=none,language=sh]{../INSTALL}
+
+Many options can be changed in "FASP.mk", as well
+  as from the command line. For example
+\begin{lstlisting}[numbers=none]
+$ make config CC=gcc49 prefix=/usr/local
+$ sudo make install
+\end{lstlisting}
+  will install in \verb|/usr/local/lib| and the include files in
+  \verb|/usr/local/include| so that they may be accessed by multiple
+  users.
+
+%
+\begin{snugshade}
+  The example given above in most cases will require administrative
+  privileges from the user, i.e. using \verb|sudo| or other equivalent
+  mechanism, to install in a system directory (such as
+  \verb|/usr/local| in our example). We do not recommend such way of
+  installing FASP, although it will work in most cases if the user has
+  administrative privileges.  Rather, we rather recommend installation
+  of FASP locally and then, if needed, copying them to a different
+  location.
+\end{snugshade}
 
 To uninstall FASP and clean up the working directory, you can run
 %
