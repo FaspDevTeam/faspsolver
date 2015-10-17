@@ -212,6 +212,9 @@ if(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
 ) 
 endif(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
 
+# write the configuration    
+    include(write_config)
+
 # Recursively look for CMakeLists.txt in the library subdir.
     add_subdirectory("base")
 

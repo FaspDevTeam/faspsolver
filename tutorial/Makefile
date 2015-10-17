@@ -1,65 +1,71 @@
 #######################################################################
 # Fast Auxiliary Space Preconditioners (FASP)
+# 
 ########################################################################
+# Set base variables for building the tutorial executables. If the
+# file ../Config.mk exists it will take the values of these variables
+# from there.
 
-CSRC=$(shell find ./main -name '*.c')
-COBJ=$(CSRC:.c=.o)
+fasp_prefix = not-set
+CC = not-set
+FC = not-set
+CXX = not-set
 
-FASP_DIR=..
+sinclude ../Config.mk
 
-CC=gcc
-FC=gfortran
-LINKER=gfortran
+ifeq ($(fasp_prefix),not-set)
+    fasp_prefix = ..
+endif
 
-CFLAGS=-I./include -I$(FASP_DIR)/include/
+ifeq ($(CC),not-set) 
+   CC=gcc 
+endif
+
+ifeq ($(FC),not-set)
+   FC=gfortran
+endif
+
+ifeq ($(CXX),not-set)
+   CXX=g++
+endif
+
+CFLAGS = -I$(fasp_prefix)/include/ #-I./include 
 CFLAGS+=-O3
 
-FFLAGS=-I./include -I$(FASP_DIR)/include/
+FFLAGS= -I$(fasp_prefix)/include/ #-I./include
 FFLAGS+=-O3
 
-LFLAGS=$(LINK_OPT) -L$(FASP_DIR)/lib -lfasp
-LFLAGS+=-O3
+#LCFLAGS=$(LINK_OPT) -L$(fasp_prefix)/lib -lgfortran -lfasp 
+LINKER = $(FC)
+LFLAGS = $(LINK_OPT) -L$(fasp_prefix)/lib -lfasp 
 
-.PHONY: all objs clean distclean help
 
-all: objs poisson-amg-c poisson-its-c poisson-pcg-c \
-     poisson-gmg-c spe01-its-c
+examples = poisson-amg-c.ex poisson-its-c.ex poisson-pcg-c.ex \
+           poisson-gmg-c.ex spe01-its-c.ex \
+           poisson-amg-f.ex poisson-pcg-f.ex
 
-objs: $(COBJ)
+examples_f = $(filter %-f.ex,$(examples))
+examples_c = $(filter-out %-f.ex,$(examples))
 
-poisson-amg-c: main/poisson-amg.o
-	@$(LINKER) main/poisson-amg.o -o $@.ex $(LFLAGS)
-	@echo 'Building executable file $@.ex' ... Done
+.PHONY:	all clean
 
-poisson-its-c: main/poisson-its.o
-	@$(LINKER) main/poisson-its.o -o $@.ex $(LFLAGS)
-	@echo 'Building executable file $@.ex' ... Done
+all:	$(examples_c) $(examples_f)
 
-poisson-pcg-c: main/poisson-pcg.o
-	@$(LINKER) main/poisson-pcg.o -o $@.ex $(LFLAGS)
-	@echo 'Building executable file $@.ex' ... Done
+%-c.ex:	main/%.c
+	@$(CC) -c $(CFLAGS) -o $@.o $<
+#	@echo 'Compiling source file $<' ... Done
+	@$(LINKER) -o $@ $@.o $(LFLAGS)
+	@echo 'Building executable file $@' ... Done
 
-poisson-gmg-c: main/poisson-gmg.o
-	@$(LINKER) main/poisson-gmg.o -o $@.ex $(LFLAGS)
-	@echo 'Building executable file $@.ex' ... Done
+%-f.ex:	main/%.f90	
+	@$(FC) $(FFLAGS) $(LFLAGS) -o $@ $< 
 
-spe01-its-c: main/spe01-its.o
-	@$(LINKER) main/spe01-its.o -o $@.ex $(LFLAGS)
-	@echo 'Building executable file $@.ex' ... Done
-
-%.o: %.c
-	@$(CC) $(CFLAGS) -c -o $@ $^ 
-	@echo 'Building C object file $@' ... Done
-
-%.o: %.f90
-	$(FC) $(FFLAGS) -c -o $@ $^ 
-	@echo 'Building F object file $@' ... Done
 
 clean:
-	@find . -name '*.o' -exec rm {} \;
+		+rm -f *.o main/*.o  *~
 
-distclean:
-	@find . -name '*.o' -exec rm {} \;
-	@rm -f *.ex *~
+distclean:	clean
+		+rm -f poisson-amg-c.ex poisson-its-c.ex poisson-pcg-c.ex \
+		poisson-gmg-c.ex spe01-its-c.ex \
+		poisson-amg-f.ex spe01-pcg-f.ex 
 
-.PHONY: clean distclean
