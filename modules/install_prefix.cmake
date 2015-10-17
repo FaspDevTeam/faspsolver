@@ -14,7 +14,6 @@ endif(DEFINED FASP_INSTALL_PREFIX)
 ####
 if(DEFINED FASP_INSTALL_PREFIX)
 if((EXISTS ${FASP_INSTALL_PREFIX}) AND (IS_DIRECTORY ${FASP_INSTALL_PREFIX}))
-   message( "Info: Library installation dir is set to \"${FASP_INSTALL_PREFIX}\"")
   else((EXISTS ${FASP_INSTALL_PREFIX}) AND (IS_DIRECTORY ${FASP_INSTALL_PREFIX}))
   message("
 ** WARNING: Installation dir=\"${FASP_INSTALL_PREFIX}\" does not exist or is not a directory ; 
@@ -24,11 +23,12 @@ if((EXISTS ${FASP_INSTALL_PREFIX}) AND (IS_DIRECTORY ${FASP_INSTALL_PREFIX}))
  set(FASP_INSTALL_PREFIX ${FASP_SOURCE_DIR})
  endif((EXISTS ${FASP_INSTALL_PREFIX})  AND  (IS_DIRECTORY ${FASP_INSTALL_PREFIX}))
 else(DEFINED FASP_INSTALL_PREFIX)
-  message("
-** WARNING: Installation prefix \"${FASP_INSTALL_PREFIX}\"
-   does not seem to be a valid name; 
-**          Configured install in the default location \"${FASP_SOURCE_DIR}\"
-"
+#  message("
+#** WARNING: Installation prefix \"${FASP_INSTALL_PREFIX}\"
+#   does not seem to be a valid name; 
+#**          Configured install in the default location \"${FASP_SOURCE_DIR}\"
+#"
+#) 
    set(FASP_INSTALL_PREFIX ${FASP_SOURCE_DIR})
-) 
 endif(DEFINED FASP_INSTALL_PREFIX)
+   message( "Info: FASP library/headers installation dir =\"${FASP_INSTALL_PREFIX}\"")
