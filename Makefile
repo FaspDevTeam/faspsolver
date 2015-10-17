@@ -136,8 +136,7 @@ config:	distclean
 	@cd $(build_dir) && cmake $(CURDIR) $(CONFIG_FLAGS) 
 
 uninstall:
-	@set -x ; rm -f test/*.ex ; rm -f tutorial/*.ex ; set +x ; \
-	if [ ! -f $(build_dir)/install_manifest.txt ]; then \
+	@if [ ! -f $(build_dir)/install_manifest.txt ]; then \
 		echo "*=================================================================*"; \
 		echo "* WARNING: Installation manifest not found! Nothing to uninstall. *"; \
 		echo "* See the following help screen for usage ...                     *"; \
@@ -149,9 +148,13 @@ uninstall:
 		rm -rf $(build_dir)/install_manifest.txt \
 		       doc/htdocs; \
 	fi
+	make -C test distclean 
+	make -C tutorial distclean
 
 distclean:
-	@-rm -rf $(build_dir)   
+	make -C test distclean 
+	make -C tutorial distclean
+	rm -rf $(build_dir)   
 	@-find . -name '*~' -exec rm {} \;
 
 help:
