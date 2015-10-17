@@ -96,6 +96,11 @@
 #
 # mumps_dir="/dir/to/MUMPS"
 #
+#-------------------------------------------------------------------------
+# If you want to install the fasp library in another location, put the
+# path below. It will install FASP library in $(prefix)/lib and the
+# header files in $(prefix)/include
+# prefix = /dir/to/install
 ####################  User Defined Compiler Flags  #####################
 #cflags="-funroll-loops -funswitch-loops"
 #cxxflags="-funroll-loops -funswitch-loops"

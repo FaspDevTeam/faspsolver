@@ -3,7 +3,11 @@
 set(FASP_TLIB_DIR ${FASP_SOURCE_DIR}/test)
 set(FASP_TINC_DIR ${FASP_SOURCE_DIR}/test/include)
 
-include_directories(${FASP_TINC_DIR})
+set(RUNTIME_OUTPUT_DIRECTORY ${FASP_SOURCE_DIR}/test)
+
+include_directories(${FASP_TINC_DIR}
+		    ${FASP_INSTALL_PREFIX}/include )
+
 file(GLOB FASP_TLIB_SRC src/*.c src/*.f )
 
 # Build libfasptest as STATIC and do not install it. If we want
@@ -12,18 +16,27 @@ file(GLOB FASP_TLIB_SRC src/*.c src/*.f )
 
 add_library(fasptest STATIC ${FASP_TLIB_SRC}) 
 
-#    LIBRARY DESTINATION ${FASP_TLIB_DIR}
-#    RUNTIME DESTINATION ${FASP_TLIB_DIR}
-#    ARCHIVE DESTINATION ${FASP_TLIB_DIR})
-
-file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" main/*.c main/*.f main/*.f90 main/*.cpp)
+file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
+      	   	     	      main/*.c main/*.f main/*.f90 main/*.cpp)
 
 foreach( srcfile ${FASP_TSRC} )
-    string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile} )
+	 string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile} )
 #
-    add_executable( ${execfile} main/${srcfile} )
+	 add_executable( ${execfile} main/${srcfile} )
 # 
-    target_link_libraries( ${execfile} fasptest fasp ${UMFPACK_LIBRARIES} ${SUPERLU_LIBRARIES} ${MUMPS_LIBRARIES} ${ADD_STDLIBS} ) 
+        target_link_libraries( ${execfile} 
+	 			fasptest 
+	 			fasp
+				${UMFPACK_LIBRARIES} 
+				${SUPERLU_LIBRARIES} 
+				${MUMPS_LIBRARIES} 
+				${ADD_STDLIBS} ) 
 #
-    install(TARGETS ${execfile} DESTINATION ${FASP_SOURCE_DIR}/test)
+     install(TARGETS ${execfile} 
+             DESTINATION ${FASP_SOURCE_DIR}/test)
 endforeach( srcfile ${FASP_TSRC} )
+
+#ADD_LIBRARY(fasp IMPORTED)
+#SET_TARGET_PROPERTIES(fasp PROPERTIES
+#    IMPORTED_LOCATION ${FASP_INSTALL_PREFIX}/lib)
+#TARGET_LINK_LIBRARIES(${execfile} fasp ...)

@@ -1,8 +1,11 @@
 ## build tutorial programs
 
-file( GLOB FASP_TUTSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" main/*.c main/*.f main/*.f90 )
+set(RUNTIME_OUTPUT_DIRECTORY ${FASP_SOURCE_DIR}/tutorial)
 
-#message("FASP_TUTSRC=${FASP_TUTSRC} ")
+file( GLOB FASP_TUTSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
+      main/*.c main/*.f main/*.f90 )
+
+include_directories(${FASP_INSTALL_PREFIX}/include)
 
 foreach( srcfile ${FASP_TUTSRC} )
  	string( REGEX MATCH "\\.c$|\\.f90$|\\.cpp$" X ${srcfile} )
@@ -15,7 +18,12 @@ foreach( srcfile ${FASP_TUTSRC} )
     endif()
     if(execfile)
       add_executable( ${execfile} main/${srcfile} )
-      target_link_libraries( ${execfile} fasp ${UMFPACK_LIBRARIES} ${SUPERLU_LIBRARIES} ${MUMPS_LIBRARIES} ${ADD_STDLIBS} ) 
+      target_link_libraries( ${execfile} 
+      			       fasp 
+			       ${UMFPACK_LIBRARIES} 
+			       ${SUPERLU_LIBRARIES} 
+			       ${MUMPS_LIBRARIES} 
+			       ${ADD_STDLIBS} )      
       install(TARGETS ${execfile} DESTINATION ${FASP_SOURCE_DIR}/tutorial)
     endif(execfile)
 endforeach( srcfile ${FASP_TUTSRC} )

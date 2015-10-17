@@ -11,7 +11,8 @@ file(GLOB FASP_EXTRA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 				      ${FASP_EXTRA_SRC_DIR}/hb_io/hb_io.c)
 #
 file(GLOB FASP_BASE_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} 
-	  		    	     ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+	  		    	     ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
+	  		     	      ${FASP_EXTRA_SRC_DIR}/include/*.h)
 
 file(GLOB FASP_BASE_INL     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} 
 	  		    	     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.inl)
@@ -24,12 +25,33 @@ file(GLOB FASP_BASE_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 ##
 # Build libfasp
 # depends also on the source, header and inl files 
-add_library(fasp ${FASP_LIBRARY_TYPE} ${FASP_BASE_SOURCES} ${FASP_BASE_INL} 
-	  		    	     ${FASP_BASE_HEADERS}) 
+add_library(fasp ${FASP_LIBRARY_TYPE} ${FASP_BASE_SOURCES} 
+                                      ${FASP_BASE_INL} )
+#add_library(fasp ${FASP_LIBRARY_TYPE} ${FASP_BASE_SOURCES} ${FASP_BASE_INL} 
+#	  		    	     ${FASP_BASE_HEADERS}) 
 
-# install libfasp
+# Add include directories.
+##    target_include_directories(fasp ${FASPLIB_BASE_PATH}/include)
+##
+ 
+target_include_directories(fasp 
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extra/include)
+
+# install libfasp  and header files. 
     install(TARGETS fasp
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION lib
-    ARCHIVE DESTINATION lib)
+    LIBRARY DESTINATION ${FASP_INSTALL_PREFIX}/lib
+    	    PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
+    RUNTIME DESTINATION ${FASP_INSTALL_PREFIX}/lib
+    	    PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
+    ARCHIVE DESTINATION ${FASP_INSTALL_PREFIX}/lib
+    	    PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
+    )
+    file(GLOB FASP_INC  ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+##    message(" XXXInclude=${FASP_INC} ${FASP_BINARY_DIR}")
+    install(FILES ${FASP_INC}
+    DESTINATION ${FASP_INSTALL_PREFIX}/include
+    PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
+    )
+
 
