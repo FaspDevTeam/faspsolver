@@ -12,12 +12,12 @@ $ make config              # Configure the building environment
 $ make config CC=gcc       # Configure with a specific C compiler 
 $ make config debug=yes    # Configure with compiler debug options ON
 $ make config debug=all    # Configure with FASP internal debug options ON
-$ make config prefix=/dir  # Configure instalation of library and header 
+$ make config prefix=/dir  # Configure instalation of FASP library and header 
                              files in "/dir/lib" and "/dir/include"
 ===============================================================================
 $ make                  # Compile the library (after "make config")
-$ make install          # install FASP library and header files
-$ make test/tutorial    # install FASP test/tutorial examples
+$ make install          # Install FASP library and header files
+$ make test | tutorial  # Install FASP test or tutorial examples
 $ make uninstall        # Remove installed files by "make install"
 $ make headers          # Generate function declarations automatically
 $ make docs             # Generate the FASP documentation with Doxygen
