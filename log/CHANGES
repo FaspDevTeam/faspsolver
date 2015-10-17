@@ -1,6 +1,15 @@
 File Name: CHANGES
 
 10/16/2015 FASP 1.8.2:
+- Updated building strategy: build library and test/tutorial 
+  examples separately.
+- Updated the documentation (user guide) accordingly. 
+- Removed forts_ns.h which was a header included by several source files
+  but never used by them. 
+- Separated include to two parts base/include for FASP headers and 
+  base/extra/include for external headers.
+
+10/16/2015 FASP 1.8.2:
 - Update tutorial examples in user's guide.
 - Update faspsolver webpage and documentation.
 - Add a tutorial example for BSR matrices.
