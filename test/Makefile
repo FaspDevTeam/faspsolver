@@ -2,31 +2,30 @@
 # Fast Auxiliary Space Preconditioners (FASP)
 #
 ########################################################################
-# Set base variables for building the test executables. If the
-# file ../Config.mk exists it will take the values of these variables
-# from there.
+# Makefile for building the test suite. If the file ../Config.mk
+# exists it will take the values of configuration variables from
+# there. Otherwise, they have to be user supplied below.
 
-
-fasp_prefix = not-set
-CC = not-set
-FC = not-set
-CXX = not-set
+fasp_prefix = not-defined-yet
+CC = not-defined-yet
+FC = not-defined-yet
+CXX = not-defined-yet
 
 sinclude ../Config.mk
 
-ifeq ($(fasp_prefix),not-set)
+ifeq ($(fasp_prefix),not-defined-yet)
     fasp_prefix = ..
 endif
 
-ifeq ($(CC),not-set) 
+ifeq ($(CC),not-defined-yet) 
    CC=gcc 
 endif
 
-ifeq ($(FC),not-set)
+ifeq ($(FC),not-defined-yet)
    FC=gfortran
 endif
 
-ifeq ($(CXX),not-set)
+ifeq ($(CXX),not-defined-yet)
    CXX=g++
 endif
 

@@ -349,7 +349,10 @@ $ make install
 %
 These two commands build the FASP library/header files. It installs
 the library in \verb|$(faspsolver)/lib|
-and the header files in \verb|$(faspsolver)/include|.
+and the header files in \verb|$(faspsolver)/include|. It also creates a
+file \verb|$(faspsolver)/Config.mk| which contains few of the configuration
+variables and can be loaded by external project Makefiles (see
+\S\ref{sec:buildown} for details on \verb|$(faspsolver)Config.mk|).
 
 If you do not have ``FASP.mk'' present in the current directory,
 default settings will be used for building and installation FASP. 
@@ -362,6 +365,24 @@ $ make test
 $ make tutorial
 \end{lstlisting}
 %
+Equivalently, you may also build the test suite and the tutorial examples by using
+the ``local'' Makefile(s) in \verb|$(faspsolver)/test|
+and \verb|$(faspsolver)/tutorial|.
+\begin{lstlisting}[numbers=none]
+$ make -C test
+$ make -C tutorial
+\end{lstlisting}
+\begin{snugshade}
+  While these two approaches to building the FASP test suite and the
+  FASP examples
+  produce equivalent result in most cases, we note an important
+  difference. The former approach uses a
+  \verb|CMake| installation process. The latter works without invoking
+  \verb|Cmake| and represents an example of how one may link
+  an external project with the FASP library. We refer to
+  \S\ref{sec:buildown} below for more details. 
+\end{snugshade}
+
 If everything went all right, you can go to the
 ``\url{faspsolver/test}'' directory and try to run a test problem:
 %
@@ -532,6 +553,39 @@ methods, discretization packages, etc. FASP has interfaces to several
 of them, for example, FASP can be linked to use \verb|UMFPack|, \verb|SuperLU|, \verb|MUMPS|,
 \verb|SparseKit|, \verb|dlmalloc|.
 
+
+\section{Linking your own project with FASP}\label{sec:buildown}
+The FASP distribution comes with two ``local'' Makefile(s) in the
+sub-directories
+\verb|$(faspsolver)/test/Makefile| and 
+\verb|$(faspsolver)/tutorial/makefile|.   
+These two makefiles can be used to build the FASP tests and tutorial
+examples. They use minimal information about the library build stored
+in  \verb|$(faspsolver)/Config.mk|. A typical contents of such file is
+given below:
+\begin{lstlisting}[language=sh,numbers=none]
+########################### Automatically generated ###################
+# Fast Auxiliary Space Preconditioners (FASP) 
+#
+#######################################################################
+# This file is rewritten when "make config" is run.
+# It is (s)included by test/Makefile and tutorial/Makefile
+#
+#######################################################################
+fasp_prefix=/users/janedoe/faspsolver
+CC=gcc
+CXX=g++
+FC=gfortran
+#######################################################################
+\end{lstlisting}
+The variables defined in this file can also be set directly in
+\verb|$(faspsolver)/test/Makefile|
+and
+\verb|$(faspsolver)/tutorial/Makefile| or in your own Makefile. An external project can be
+compiled and linked with FASP support, just by following the rules 
+set in \verb|$(faspsolver)/tutorial/makefile|, which is included 
+below:
+\lstinputlisting[language=sh]{../tutorial/Makefile}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{A brief tutorial}\label{ch:tutor}
@@ -1237,7 +1291,10 @@ To enable OpenMP support in FASP, you can simply use the config option
 $ make config openmp=yes
 \end{lstlisting}
 %
-If you use OpenMP very often and do not want type in this extra command-line option, you need to uncomment one line in ``FASP.mk'' and set ``openmp'' to be ``yes''.
+If you use OpenMP very often and do not want type in this extra
+command-line option, you need to uncomment one line in ``FASP.mk''.
+If you do not have ``FASP.mk'' file, just copy ``FASP.mk.example'' to
+``FASP.mk''. Then set ``openmp'' to ``yes'' on line 44 ``FASP.mk'':
 \lstinputlisting[language=sh,firstnumber=37,firstline=37,lastline=45]{../FASP.mk.example}
 
 After you build FASP with ``openmp=yes'', OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash}, you need to set:

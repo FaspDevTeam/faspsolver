@@ -8,6 +8,7 @@ File Name: CHANGES
 - Updated userguide.tex saying that the tests in $(faspsolver)/test 
   and the examples in $(faspsolver)/tutorial can be build with both
   "cmake" as well as custom created Makefile(s).
+- Updated userguide including listing of Config.mk
 
 10/16/2015 FASP 1.8.2:
 - Update building strategy: build library and examples separately.
