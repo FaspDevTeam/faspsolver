@@ -151,6 +151,7 @@ uninstall:
 		xargs rm < $(build_dir)/install_manifest.txt; \
 		rm -rf $(build_dir)/install_manifest.txt \
 		       doc/htdocs; \
+		echo "FASP library and header files have been successfully removed."; \
 	fi
 
 distclean:
