@@ -45,5 +45,5 @@ clean:
 distclean:	clean
 		+rm -f poisson-amg-c.ex poisson-its-c.ex poisson-pcg-c.ex \
 		poisson-gmg-c.ex spe01-its-c.ex \
-		poisson-amg-f.ex spe01-pcg-f.ex 
+		poisson-amg-f.ex poisson-pcg-f.ex 
 
