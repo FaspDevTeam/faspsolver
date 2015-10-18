@@ -90,6 +90,18 @@ CONFIG_FLAGS+=-DADD_CFLAGS=$(cflags)
 CONFIG_FLAGS+=-DADD_CXXFLAGS=$(cxxflags)
 CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags)
 
+fasp: 
+	@if [ ! -f $(build_dir)/Makefile ] ; then \
+		echo "*=================================================================*"; \
+		echo "* WARNING: Configuration not found! Please perform 'make config'. *"; \
+		echo "* See the following help screen for usage ...                     *"; \
+		echo "*=================================================================*"; \
+		echo " "; \
+		cat INSTALL; \
+	else \
+		make -C $(build_dir) $@ ; \
+	fi
+
 install: 
 	@if [ ! -f $(build_dir)/Makefile ] ; then \
 		echo "*=================================================================*"; \
@@ -176,4 +188,4 @@ version:
 	@-hg -q id >> VERSION
 	@-cat VERSION
 
-.PHONY:	backup config install tutorial test fasp clean distclean uninstall docs headers help version 
+.PHONY:	backup config fasp install tutorial test clean distclean uninstall docs headers help version 
