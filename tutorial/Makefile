@@ -9,7 +9,7 @@ fasp_prefix = not-defined-yet
 CC = not-defined-yet
 FC = not-defined-yet
 CXX = not-defined-yet
-# include the configuration written by CMake at config time if found
+#  include the configuration written by CMake at config time if found
 sinclude ../Config.mk
 ifeq ($(fasp_prefix),not-defined-yet)
     fasp_prefix = ..
@@ -23,8 +23,10 @@ endif
 ifeq ($(CXX),not-defined-yet)
    CXX=g++
 endif
-CompilerFLAGS=-I$(fasp_prefix)/include 
-CompilerFLAGS+=-O3
+CFLAGS=-I$(fasp_prefix)/include 
+CFLAGS+=-O3
+FFLAGS=-I$(fasp_prefix)/include 
+FFLAGS+=-O3 -fno-second-underscore
 LINKER = $(FC) # because of linking with Fortran files
 LFLAGS = -L$(fasp_prefix)/lib -lfasp 
 examples = poisson-amg-c.ex poisson-its-c.ex poisson-pcg-c.ex \
@@ -35,11 +37,11 @@ examples_c = $(filter-out %-f.ex,$(examples))
 .PHONY:	all clean
 all:	$(examples_c) $(examples_f)
 %-c.ex:	main/%.c
-	@$(CC) -c $(CompilerFLAGS) -o $@.o $<
+	@$(CC) -c $(CFLAGS) -o $@.o $<
 	@$(LINKER) -o $@ $@.o $(LFLAGS)
 	@echo 'Building executable file $@' ... Done
 %-f.ex:	main/%.f90	
-	@$(FC) $(CompilerFLAGS) $(LFLAGS) -o $@ $< 
+	$(FC) $(FFLAGS) $(LFLAGS) -o $@ $< 
 clean:
 		+rm -f *.o main/*.o  *~
 distclean:	clean
