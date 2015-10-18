@@ -26,7 +26,7 @@ endif
 CFLAGS=-I$(fasp_prefix)/include 
 CFLAGS+=-O3
 FFLAGS=-I$(fasp_prefix)/include 
-FFLAGS+=-O3 -fno-second-underscore
+FFLAGS+=-O3 
 LINKER = $(FC) # because of linking with Fortran files
 LFLAGS = -L$(fasp_prefix)/lib -lfasp 
 examples = poisson-amg-c.ex poisson-its-c.ex poisson-pcg-c.ex \
