@@ -558,13 +558,14 @@ of them, for example, FASP can be linked to use \verb|UMFPack|, \verb|SuperLU|, 
 
 \section{Linking your own project with FASP}\label{sec:buildown}
 The FASP distribution comes with two ``local'' Makefile(s) in the
-sub-directories for ``test'' and ``tutorial'', namely, 
-\verb|$(faspsolver)/test/Makefile| and 
-\verb|$(faspsolver)/tutorial/Makefile|.   
+sub-directories for ``test'' and ``tutorial'', namely,
+\verb|$(faspsolver)/test/Makefile| and
+\verb|$(faspsolver)/tutorial/Makefile|.
 These two makefiles can be used to build the FASP tests and tutorial
-examples. They use minimal information about the library build stored
-in  \verb|$(faspsolver)/Config.mk|. A typical contents of such file is
-given below:
+examples. They use minimal information about the library built. For
+convenience, at configuration time, such information is stored in
+\verb|$(faspsolver)/Config.mk| file for later use. A typical contents
+of such file is given below:
 \begin{lstlisting}[language=sh,numbers=none]
 ########################### Automatically generated ###################
 # Fast Auxiliary Space Preconditioners (FASP) 
@@ -582,12 +583,10 @@ FC=gfortran
 #######################################################################
 \end{lstlisting}
 The variables defined in this file can also be set directly in
-\verb|$(faspsolver)/test/Makefile|
-and
-\verb|$(faspsolver)/tutorial/Makefile| or in your own Makefile. An external project can be
-compiled and linked with FASP by following the rules 
-set in \verb|$(faspsolver)/tutorial/Makefile|, which is included 
-below:
+\verb|$(faspsolver)/test/Makefile|,
+\verb|$(faspsolver)/tutorial/Makefile|, or, in your own Makefile. An
+external project can be compiled and linked with FASP by following the
+rules set in \verb|$(faspsolver)/tutorial/Makefile| (included below):
 \lstinputlisting[language=sh]{../tutorial/Makefile}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
