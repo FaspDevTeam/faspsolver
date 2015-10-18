@@ -1,6 +1,7 @@
 File Name: CHANGES
 
-10/17/2015 FASP 1.8.2:
+10/18/2015 FASP 1.8.2:
+- Update VS10 solution according to structure changes.
 - Update Makefile(s) in tutorial and test subdirectories. 
 - Added "write_config.cmake" to $(faspsolver)/modules which writes 
   CC, FC, CXX, and FASP_INSTALL_PREFIX variables so that they can 
@@ -8,9 +9,7 @@ File Name: CHANGES
 - Updated userguide.tex saying that the tests in $(faspsolver)/test 
   and the examples in $(faspsolver)/tutorial can be build with both
   "cmake" as well as custom created Makefile(s).
-- Updated userguide including listing of Config.mk
-
-10/16/2015 FASP 1.8.2:
+- Updated userguide including listing of Config.mk.
 - Update building strategy: build library and examples separately.
 - Update the documentation (user guide) accordingly. 
 - Remove forts_ns.h which was a header included by several source files
@@ -18,8 +17,6 @@ File Name: CHANGES
 - Separate include to two parts base/include for FASP headers and 
   base/extra/include for external headers.
 - Add Makefiles for test and tutorial.
-
-10/16/2015 FASP 1.8.2:
 - Update tutorial examples in user's guide.
 - Update faspsolver webpage and documentation.
 - Add a tutorial example for BSR matrices.

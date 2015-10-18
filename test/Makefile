@@ -5,6 +5,7 @@
 # Makefile for building the test suite. If the file ../Config.mk
 # exists it will take the values of configuration variables from
 # there. Otherwise, they have to be user supplied below.
+########################################################################
 
 fasp_prefix = not-defined-yet
 CC = not-defined-yet
@@ -31,12 +32,6 @@ endif
 
 CFLAGS = -I$(fasp_prefix)/include/ -I./include 
 CFLAGS+=-O3
-
-#no fflags here
-#FFLAGS= -I$(fasp_prefix)/include/ #-I./include
-#FFLAGS+=-O3
-
-#LCFLAGS=$(LINK_OPT) -L$(fasp_prefix)/lib -lgfortran -lfasp 
 LINKER = $(FC)
 LFLAGS = $(LINK_OPT) -L$(fasp_prefix)/lib -lfasp 
 
@@ -52,28 +47,23 @@ all:	regression.ex regression_mf.ex regression_mm.ex \
 
 testrap.ex: main/testrap.o $(DOBJ)
 	@$(LINKER) main/testrap.o $(DOBJ) -o $@ $(LFLAGS) 
-	@echo 'Building executable file $@' ... Done
 
 testfem.ex: main/testfem.o $(DOBJ)
 	@$(LINKER) main/testfem.o $(DOBJ) -o $@ $(LFLAGS) 
-	@echo 'Building executable file $@' ... Done
 
 testheat.ex: main/testheat.o $(DOBJ)
 	@$(LINKER) main/testheat.o $(DOBJ) -o $@ $(LFLAGS) 
+
+%.ex: main/%.c
+	@$(CC) -c $(CFLAGS) -o main/$@.o $< 
+	@$(LINKER) main/$@.o -o $@ $(LFLAGS) 
 	@echo 'Building executable file $@' ... Done
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
-#	@echo 'Compiling source file $<' ... Done
-
-%.ex: main/%.c
-	@$(CC) -c $(CFLAGS) -o main/$@.o $< 
-#	@echo 'Compiling source file $<' ... Done
-	@$(LINKER) main/$@.o -o $@ $(LFLAGS) 
-	@echo 'Building executable file $@' ... Done
 
 clean:
-		+find . -name '*.o' -exec rm {} \;
+	@+find . -name '*.o' -exec rm {} \;
 
-distclean:	clean
-		+rm -f *.ex *~
+distclean: clean
+	@+rm -f *.ex *~

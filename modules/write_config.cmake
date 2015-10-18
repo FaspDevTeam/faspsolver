@@ -18,6 +18,6 @@ file(WRITE  ${CONFIGMK}
 fasp_prefix=${FASP_INSTALL_PREFIX}
 CC=${CMAKE_C_COMPILER}
 CXX=${CMAKE_CXX_COMPILER}
-FC = ${CMAKE_Fortran_COMPILER}
+FC=${CMAKE_Fortran_COMPILER}
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 ")
