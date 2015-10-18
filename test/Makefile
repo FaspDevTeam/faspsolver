@@ -55,20 +55,24 @@ all:	regression.ex regression_mf.ex regression_mm.ex \
 
 testrap.ex: main/testrap.o $(DOBJ) $(fasp_lib_file)
 	@$(LINKER) main/testrap.o $(DOBJ) -o $@ $(LFLAGS) 
+	@echo 'Building executable file $@'
 
 testfem.ex: main/testfem.o $(DOBJ) $(fasp_lib_file)
 	@$(LINKER) main/testfem.o $(DOBJ) -o $@ $(LFLAGS) 
+	@echo 'Building executable file $@'
 
 testheat.ex: main/testheat.o $(DOBJ) $(fasp_lib_file)
 	@$(LINKER) main/testheat.o $(DOBJ) -o $@ $(LFLAGS) 
+	@echo 'Building executable file $@'
 
 %.ex: main/%.c $(fasp_lib_file)
 	@$(CC) -c $(CFLAGS) -o main/$@.o $< 
 	@$(LINKER) main/$@.o -o $@ $(LFLAGS) 
-	@echo 'Building executable file $@' ... Done
+	@echo 'Building executable file $@'
 
 %.o: %.c $(fasp_lib_file)
 	@$(CC) $(CFLAGS) -c -o $@ $<
+	@echo 'Building C object $@'
 
 $(fasp_lib_file):	
 	$(error The FASP library $@ is not found)

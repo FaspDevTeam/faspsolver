@@ -53,10 +53,12 @@ all:	$(examples_c) $(examples_f)
 %-c.ex:	main/%.c $(fasp_lib_file)
 	@$(CC) -c $(CFLAGS) -o main/$@.o $<
 	@$(LINKER) -o $@ main/$@.o $(LFLAGS)
+	@echo 'Building executable file $@'
 
 %-f.ex:	main/%.f90 $(fasp_lib_file)
 	@$(FC) -c $(FFLAGS) -o main/$@.o $< 
 	@$(FC) -o $@ main/$@.o $(LFLAGS)
+	@echo 'Building executable file $@'
 
 $(fasp_lib_file):	
 	$(error The FASP library $@ is not found)

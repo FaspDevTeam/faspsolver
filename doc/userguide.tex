@@ -358,7 +358,7 @@ If you do not have ``FASP.mk'' present in the current directory,
 default settings will be used for building and installation FASP. 
 
 Next, if you would like to try some of the examples that come with
-FASP, you can build the "test" and "tutorial" targets as follows:
+FASP, you can build the ``test'' and ``tutorial'' targets as follows:
 %
 \begin{lstlisting}[numbers=none]
 $ make test
@@ -372,8 +372,10 @@ and \verb|$(faspsolver)/tutorial|.
 $ make -C test
 $ make -C tutorial
 \end{lstlisting}
+
 \begin{snugshade}
-  While these two approaches to building the FASP test suite and the
+  \noindent
+  Note: While these two approaches to build the FASP test suite and the
   FASP examples
   produce equivalent result in most cases, we note an important
   difference. The former approach uses a
@@ -556,9 +558,9 @@ of them, for example, FASP can be linked to use \verb|UMFPack|, \verb|SuperLU|, 
 
 \section{Linking your own project with FASP}\label{sec:buildown}
 The FASP distribution comes with two ``local'' Makefile(s) in the
-sub-directories
+sub-directories for ``test'' and ``tutorial'', namely, 
 \verb|$(faspsolver)/test/Makefile| and 
-\verb|$(faspsolver)/tutorial/makefile|.   
+\verb|$(faspsolver)/tutorial/Makefile|.   
 These two makefiles can be used to build the FASP tests and tutorial
 examples. They use minimal information about the library build stored
 in  \verb|$(faspsolver)/Config.mk|. A typical contents of such file is
@@ -572,7 +574,7 @@ given below:
 # It is (s)included by test/Makefile and tutorial/Makefile
 #
 #######################################################################
-fasp_prefix=/users/janedoe/faspsolver
+fasp_prefix=/dir/to/faspsolver
 CC=gcc
 CXX=g++
 FC=gfortran
@@ -582,7 +584,7 @@ The variables defined in this file can also be set directly in
 \verb|$(faspsolver)/test/Makefile|
 and
 \verb|$(faspsolver)/tutorial/Makefile| or in your own Makefile. An external project can be
-compiled and linked with FASP support, just by following the rules 
+compiled and linked with FASP by following the rules 
 set in \verb|$(faspsolver)/tutorial/makefile|, which is included 
 below:
 \lstinputlisting[language=sh]{../tutorial/Makefile}
