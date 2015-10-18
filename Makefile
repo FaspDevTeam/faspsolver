@@ -90,7 +90,7 @@ CONFIG_FLAGS+=-DADD_CFLAGS=$(cflags)
 CONFIG_FLAGS+=-DADD_CXXFLAGS=$(cxxflags)
 CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags)
 
-fasp: 
+fasp headers docs clean: 
 	@if [ ! -f $(build_dir)/Makefile ] ; then \
 		echo "*=================================================================*"; \
 		echo "* WARNING: Configuration not found! Please perform 'make config'. *"; \
@@ -112,7 +112,7 @@ install:
 		cat INSTALL; \
 	else \
 		umaskz=`umask`;  umask 0022; \
-		make -C $(build_dir) install ; umask $$umaskz ; \
+		make -C $(build_dir) $@ ; umask $$umaskz ; \
 	fi
 
 test tutorial:
@@ -129,18 +129,6 @@ test tutorial:
 #	  	make -C $(build_dir)/$@ ;  \
 #	  	make -C $(build_dir) install ; \
 
-clean docs headers:
-	@if [ ! -f $(build_dir)/Makefile ] ; then \
-		echo "*=================================================================*"; \
-		echo "* WARNING: Configuration not found! Please perform 'make config'. *"; \
-		echo "* See the following help screen for usage ...                     *"; \
-		echo "*=================================================================*"; \
-		echo " "; \
-		cat INSTALL; \
-	else \
-	  	make -C $(build_dir) $@ ; \
-	fi
-
 config:	distclean
 	@if [ ! -f ./FASP.mk ] ; then \
 		echo "*=================================================================*"; \
@@ -155,16 +143,16 @@ uninstall:
 	@if [ ! -f $(build_dir)/install_manifest.txt ]; then \
 		echo "*=================================================================*"; \
 		echo "* WARNING: Installation manifest not found! Nothing to uninstall. *"; \
-		echo "* See the following help screen for usage ...                     *"; \
+		echo "* Type \"make help\" for help on usage ...                          *"; \
 		echo "*=================================================================*"; \
 		echo " "; \
-		cat INSTALL; \
 	else \
 		xargs rm < $(build_dir)/install_manifest.txt; \
 		rm -rf $(build_dir)/install_manifest.txt \
 		       doc/htdocs; \
-		echo "FASP library and header files have been successfully removed."; \
+		echo "FASP library and header files have been successfully uninstalled."; \
 	fi
+#		cat INSTALL; keeping it simpler without cat-ting this
 
 distclean:
 	make -C test distclean 
