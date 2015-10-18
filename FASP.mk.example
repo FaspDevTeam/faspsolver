@@ -102,6 +102,7 @@
 # header files in $(prefix)/include
 # prefix = /dir/to/install
 ####################  User Defined Compiler Flags  #####################
+#export CC=gcc
 #cflags="-funroll-loops -funswitch-loops"
 #cxxflags="-funroll-loops -funswitch-loops"
 #fflags="-funroll-loops -funswitch-loops"

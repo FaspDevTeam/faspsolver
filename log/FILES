@@ -1,13 +1,7 @@
-     560 ./base/include/dlmalloc.h
-     170 ./base/include/doxygen.h
     1194 ./base/include/fasp.h
      667 ./base/include/fasp_block.h
      253 ./base/include/fasp_const.h
     2944 ./base/include/fasp_functs.h
-      47 ./base/include/forts_ns.h
-      76 ./base/include/hb_io.h
-    5818 ./base/include/malloc.c.h
-     291 ./base/include/nedmalloc.h
      397 ./base/src/aggregation_bsr.inl
     1807 ./base/src/aggregation_csr.inl
     2119 ./base/src/gmg_util.inl
@@ -106,4 +100,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      301 ./base/src/wrapper.c
-   90650 total
+   83688 total

@@ -13,7 +13,7 @@
 #   adjust the settings to your liking, and then type "make help" to
 #   see how to configure/build FASP.
 # 
-#  Modified   2015-08-08   --ltz
+#  Modified   2015-10-18   --ltz
 ########################################################################
 prefix = no-prefix
 
@@ -89,6 +89,7 @@ endif
 CONFIG_FLAGS+=-DADD_CFLAGS=$(cflags)
 CONFIG_FLAGS+=-DADD_CXXFLAGS=$(cxxflags)
 CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags)
+
 install: 
 	@if [ ! -f $(build_dir)/Makefile ] ; then \
 		echo "*=================================================================*"; \
@@ -101,6 +102,7 @@ install:
 		umaskz=`umask`;  umask 0022; \
 		make -C $(build_dir) install ; umask $$umaskz ; \
 	fi
+
 test tutorial:
 	@if [ ! -f $(build_dir)/$@/Makefile ] ; then \
 		echo "*=================================================================*"; \
@@ -154,12 +156,12 @@ uninstall:
 distclean:
 	make -C test distclean 
 	make -C tutorial distclean
-	rm -rf $(build_dir)   
+	@-rm -rf $(build_dir)   
 	@-find . -name '*~' -exec rm {} \;
 
 help:
-	@clear
-	@cat INSTALL
+	@-clear
+	@-cat INSTALL
 
 backup:
 	@-rm -f faspsolver.zip
@@ -173,4 +175,3 @@ version:
 	@-cat VERSION
 
 .PHONY:	backup config install tutorial test fasp clean distclean uninstall docs headers help version 
-
