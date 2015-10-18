@@ -77,7 +77,9 @@ set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
         else(SHARED)
 	   set(FASP_LIBRARY_TYPE STATIC)
 	endif(SHARED)	   
+if(APPLE)
 cmake_policy(SET "CMP0042" NEW)
+endif(APPLE)
 # NOT SURE IF WE NEED THIS: 
 ## FOR MAC OS X to find shared libs in install location
         set(CMAKE_INSTALL_NAME_DIR 
