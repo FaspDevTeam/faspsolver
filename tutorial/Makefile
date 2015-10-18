@@ -37,11 +37,13 @@ examples_c = $(filter-out %-f.ex,$(examples))
 .PHONY:	all clean
 all:	$(examples_c) $(examples_f)
 %-c.ex:	main/%.c
-	@$(CC) -c $(CFLAGS) -o $@.o $<
-	@$(LINKER) -o $@ $@.o $(LFLAGS)
+	@$(CC) -c $(CFLAGS) -o main/$@.o $<
+	@$(LINKER) -o $@ main/$@.o $(LFLAGS)
 	@echo 'Building executable file $@' ... Done
 %-f.ex:	main/%.f90	
-	$(FC) $(FFLAGS) $(LFLAGS) -o $@ $< 
+	@$(FC) -c $(FFLAGS) -o main/$@.o $< 
+	@$(FC) -o $@ main/$@.o $(LFLAGS)
+	@echo 'Building executable file $@' ... Done
 clean:
 		+rm -f *.o main/*.o  *~
 distclean:	clean
