@@ -67,9 +67,9 @@ testheat.ex: main/testheat.o $(DOBJ)
 #	@echo 'Compiling source file $<' ... Done
 
 %.ex: main/%.c
-	@$(CC) -c $(CFLAGS) -o $@.o $< 
+	@$(CC) -c $(CFLAGS) -o main/$@.o $< 
 #	@echo 'Compiling source file $<' ... Done
-	@$(LINKER) $@.o -o $@ $(LFLAGS) 
+	@$(LINKER) main/$@.o -o $@ $(LFLAGS) 
 	@echo 'Building executable file $@' ... Done
 
 clean:
