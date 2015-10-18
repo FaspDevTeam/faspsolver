@@ -33,7 +33,6 @@ set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
  include(get_cxx_fc_compilers)
 ### check the prefix for installation
  include(install_prefix)
-##########################################
 #
 # OpenMP : defined on command line in the top Makefile
 #
@@ -78,12 +77,14 @@ set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
         else(SHARED)
 	   set(FASP_LIBRARY_TYPE STATIC)
 	endif(SHARED)	   
-# FOR MAC OS X to find shared libs in install location
+cmake_policy(SET "CMP0042" NEW)
+# NOT SURE IF WE NEED THIS: 
+## FOR MAC OS X to find shared libs in install location
         set(CMAKE_INSTALL_NAME_DIR 
 		${CMAKE_INSTALL_PREFIX}/lib CACHE PATH "path for apple")
 # FOR LINUX to find shared libs in install location
         set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
-
+### NOT SURE IF WE NEED THIS (POLICY CMP 00042)
 file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR} 
 	  		    ${FASP_SOURCE_DIR}/base/src/*.c 
 	  		    ${FASP_SOURCE_DIR}/base/src/*.inl )
@@ -212,12 +213,16 @@ if(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
 ) 
 endif(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
 
-# write the configuration    
-    include(write_config)
 
+########################################
+##set FASP library name for the library
+         set(FASP_LIBRARY_NAME fasp)
+##########################################
 # Recursively look for CMakeLists.txt in the library subdir.
     add_subdirectory("base")
-
+# write the configuration
+    include(write_config)
+##########################################
 # only the library will be installed with "make" The rest of the
 #  targets must be installed separately, so we do EXCLUDE_FROM_ALL
 
