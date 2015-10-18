@@ -112,7 +112,9 @@ test tutorial:
 		echo " "; \
 		cat INSTALL; \
 	else \
-	  	make -C $(build_dir)/$@ ;  make -C $(build_dir)/$@ install ; \
+	  	make -C $(build_dir) install ; \
+	  	make -C $(build_dir)/$@ ;  \
+		make -C $(build_dir)/$@ install ; \
 	fi
 
 clean docs headers:
@@ -150,12 +152,11 @@ uninstall:
 		rm -rf $(build_dir)/install_manifest.txt \
 		       doc/htdocs; \
 	fi
-	make -C test distclean 
-	make -C tutorial distclean
 
 distclean:
 	make -C test distclean 
 	make -C tutorial distclean
+	@-rm -rf Config.mk
 	@-rm -rf $(build_dir)   
 	@-find . -name '*~' -exec rm {} \;
 

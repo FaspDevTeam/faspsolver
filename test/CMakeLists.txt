@@ -23,6 +23,7 @@ foreach( srcfile ${FASP_TSRC} )
 	 string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile} )
 #
 	 add_executable( ${execfile} main/${srcfile} )
+	 add_dependencies(${execfile} ${FASP_LIBRARY_NAME})
 # 
         target_link_libraries( ${execfile} 
 	 			fasptest 
@@ -36,7 +37,3 @@ foreach( srcfile ${FASP_TSRC} )
              DESTINATION ${FASP_SOURCE_DIR}/test)
 endforeach( srcfile ${FASP_TSRC} )
 
-#ADD_LIBRARY(fasp IMPORTED)
-#SET_TARGET_PROPERTIES(fasp PROPERTIES
-#    IMPORTED_LOCATION ${FASP_INSTALL_PREFIX}/lib)
-#TARGET_LINK_LIBRARIES(${execfile} fasp ...)
