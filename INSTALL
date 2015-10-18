@@ -8,22 +8,21 @@ there and then type "make config; make install".
 
 More options:
 ===============================================================================
-$ make config              # Configure the building environment
-$ make config CC=gcc       # Configure with a specific C compiler 
-$ make config debug=yes    # Configure with compiler debug options ON
-$ make config debug=all    # Configure with FASP internal debug options ON
-$ make config prefix=/dir  # Configure instalation of FASP library and header 
-                             files in "/dir/lib" and "/dir/include"
+$ make config             # Configure the building environment
+$ make config CC=gcc      # Configure with a specific C compiler 
+$ make config debug=yes   # Configure with compiler debug options ON
+$ make config debug=all   # Configure with FASP internal debug options ON
+$ make config prefix=/dir # Configure installation of FASP library and header 
+                            files in "/dir/lib" and "/dir/include"
 ===============================================================================
-$ make                  # Compile the library (after "make config")
-$ make install          # Install FASP library and header files
-$ make test | tutorial  # Install FASP test or tutorial examples
-$ make uninstall        # Remove installed files by "make install"
-$ make headers          # Generate function declarations automatically
-$ make docs             # Generate the FASP documentation with Doxygen
-$ make clean            # Remove obj files but retain configuration options
-$ make distclean        # Clean and completely removes the build directory
-$ make version          # Show version information
-$ make help             # Show this screen
+$ make                 # Compile the library (after "make config")
+$ make install         # Install FASP library and header files
+$ make test | tutorial # Install FASP test or tutorial examples
+$ make uninstall       # Remove the files installed by "make install"
+$ make headers         # Generate function declarations automatically
+$ make docs            # Generate the FASP documentation with Doxygen
+$ make clean           # Remove obj files but retain configuration options
+$ make distclean       # Removes the build directory and cleans test and tutorial 
+$ make version         # Show version information
+$ make help            # Show this screen
 ===============================================================================
-
