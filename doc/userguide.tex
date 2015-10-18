@@ -574,7 +574,8 @@ given below:
 # It is (s)included by test/Makefile and tutorial/Makefile
 #
 #######################################################################
-fasp_prefix=/dir/to/faspsolver
+fasp_prefix=/path/to/faspsolver
+fasp_library=libfasp.a
 CC=gcc
 CXX=g++
 FC=gfortran
@@ -585,7 +586,7 @@ The variables defined in this file can also be set directly in
 and
 \verb|$(faspsolver)/tutorial/Makefile| or in your own Makefile. An external project can be
 compiled and linked with FASP by following the rules 
-set in \verb|$(faspsolver)/tutorial/makefile|, which is included 
+set in \verb|$(faspsolver)/tutorial/Makefile|, which is included 
 below:
 \lstinputlisting[language=sh]{../tutorial/Makefile}
 

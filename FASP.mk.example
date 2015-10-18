@@ -67,7 +67,7 @@
 # header files, uncomment and edit the definition of "suitesparse_dir"
 # below (and continue reading...)  
 #
-# suitesparse_dir="/dir/to/SuiteSparse"
+# suitesparse_dir="/path/to/SuiteSparse"
 #
 # IMPORTANT:
 # This defines the path to the SuiteSparse library and include files.
@@ -84,7 +84,7 @@
 # If you want to specify the path to SuperLU, uncomment the next line
 # and give the correct path to SuperLU here. For example:
 #
-# superlu_dir="/dir/to/SuperLU"
+# superlu_dir="/path/to/SuperLU"
 #
 #-------------------------------------------------------------------------
 # If you want to use MUMPS, uncomment the next line:
@@ -94,13 +94,13 @@
 # If you want to specify the path to MUMPS, uncomment the next line
 # and give the correct path to MUMPS here. For example:
 #
-# mumps_dir="/dir/to/MUMPS"
+# mumps_dir="/path/to/MUMPS"
 #
 #-------------------------------------------------------------------------
 # If you want to install the fasp library in another location, put the
 # path below. It will install FASP library in $(prefix)/lib and the
 # header files in $(prefix)/include
-# prefix = /dir/to/install
+# prefix = /path/to/install
 ####################  User Defined Compiler Flags  #####################
 #export CC=gcc
 #cflags="-funroll-loops -funswitch-loops"
