@@ -112,10 +112,10 @@ test tutorial:
 		echo " "; \
 		cat INSTALL; \
 	else \
-	  	make -C $(build_dir) install ; \
-	  	make -C $(build_dir)/$@ ;  \
 		make -C $(build_dir)/$@ install ; \
 	fi
+#	  	make -C $(build_dir)/$@ ;  \
+#	  	make -C $(build_dir) install ; \
 
 clean docs headers:
 	@if [ ! -f $(build_dir)/Makefile ] ; then \
