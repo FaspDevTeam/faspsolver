@@ -40,9 +40,6 @@
 /**
  * \page download How to obtain FASP
  *
- * > For the moment, FASP is still under alpha testing. You need a password to download
- * > the package. Sorry about it!
- *
  * The most updated version of FASP can be downloaded from
  *
  * > http://fasp.sourceforge.net/download/faspsolver.zip
