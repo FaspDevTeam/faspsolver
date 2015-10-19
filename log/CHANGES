@@ -1,6 +1,7 @@
 File Name: CHANGES
 
 10/18/2015 FASP 1.8.2:
+- Updated the webpage and documentation.
 - Added more output for Makefiles and INSTALL.
 - Update VS10 solution according to structure changes.
 - Update Makefile(s) in tutorial and test subdirectories. 
