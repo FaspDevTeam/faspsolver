@@ -454,9 +454,9 @@ FASP libraries and the test programs in
 
 \begin{snugshade}\noindent
   If you are using other versions of Visual Studio (like VS05 or
-  VS12), we advise NOT to convert the "VS08" files to your VS version
-  because the FASP source files might be {\color{red}removed} by the
-  Visual Studio automatically. In such case, we recommend that you
+  VS12), we advise NOT to convert the ``VS08'' files to your newer VS version
+  automatically because the FASP source files might be {\color{red}removed} by the
+  Visual Studio. In such a case, we recommend that you
   create your own version to build all the libraries and test
   programs.
 \end{snugshade}
@@ -638,20 +638,20 @@ Since this is the first example, we will explain it in some detail:
 \begin{itemize}
 %
 \item Line 1 tells the Doxygen documentation system\footnote{Doxygen \url{http://www.doxygen.org} is a useful tool for generating documentation from annotated sources. We use it in FASP development.} that the filename
-  is ``poisson-amg.c''. Line 3--5 tells the Doxygen what is the
+  is ``\verb|poisson-amg.c|''. Line 3--5 tells the Doxygen what is the
   purpose of this file (function).
 %
-\item Line 12--13 includes the main FASP header file ``fasp.h'' and
-  FASP function declarations header ``fasp\_functs.h''. These two
+\item Line 12--13 includes the main FASP header file ``\verb|fasp.h|'' and
+  FASP function declarations header ``\verb|fasp_functs.h|''. These two
   headers shall be included in all files that requires FASP
   subroutines. Please also be noted that the function declarations in
-  ``fasp\_functs.h'' are automatically generated from the source files
+  ``\verb|fasp_functs.h|'' are automatically generated from the source files
   by an \verb|awk| script and we do not recommend modifying this file,
   since your changes may be lost. 
 %
 \item Line 35--36 sets solver parameters using the default parameters or
   from the command line options; see more discussions in
-  \S\ref{sec:parameters}. In the ``tutorial/ini/amg.dat'' file, we can
+  \S\ref{sec:parameters}. In the ``\verb|tutorial/ini/amg.dat|'' file, we can
   set the location of the data files, type of solvers, maximal number
   of iteration numbers, convergence tolerance, and many other
   parameters for iterative solvers.
@@ -671,7 +671,7 @@ Since this is the first example, we will explain it in some detail:
   its initial value to be all zero.
 %
 \item Line 72 solves $Ax=b$ using the AMG method. Type of the AMG
-  method and other parameters have been given in ``amgparam'' at Line
+  method and other parameters have been given in ``\verb|amgparam|'' at Line
   36; see \S\ref{sec:amg}.
 %
 \item Line 75--77 frees up memory allocated for $A$, $b$, and $x$.
@@ -710,7 +710,7 @@ This example is very similar to the first example and we briefly explain the dif
 %
 \item Line 67--68 allocates memory for the solution vector $x$ and set its initial value to be all zero.
 %
-\item Line 70 solves $Ax=b$ using the general interface for Krylov subspace methods. Type the iterative method and other parameters have been specified in ``itparam''; see \S\ref{sec:iter} for details.
+\item Line 70 solves $Ax=b$ using the general interface for Krylov subspace methods. Type the iterative method and other parameters have been specified in ``\verb|itparam|''; see \S\ref{sec:iter} for details.
 %
 \end{itemize}
 %
@@ -832,7 +832,7 @@ tutorial directory and is named ``\url{tutorial/ini/amg.dat}''.
 $ ./poisson-amg-c.ex -ini ini/amg.dat
 \end{lstlisting}
 %
-We take ``tutorial/ini/amg.dat'' as an example:
+We take ``\verb|tutorial/ini/amg.dat|'' as an example:
 \lstinputlisting{../tutorial/ini/amg.dat}
 
 We now briefly discuss the parameters above:
@@ -868,7 +868,7 @@ Then you run ``poisson-amg-c.ex'' one more time and will get
 You can compare this with the sample results in \S\ref{sec:ex1}.
 
 \begin{snugshade}\noindent  
-The input parameters allowed in FASP are not limited to the ones listed in this example. A list of possible iterative methods and preconditioners can be found in ``base/include/fasp\_const.h''; see \S\ref{sec:const}. For more parameters and their ranges, we refer to the FASP Reference Manual.
+The input parameters allowed in FASP are not limited to the ones listed in this example. A list of possible iterative methods and preconditioners can be found in ``\verb|base/include/fasp_const.h|''; see \S\ref{sec:const}. For more parameters and their ranges, we refer to the FASP Reference Manual.
 \end{snugshade}
 
 Using ``-ini [FILE]'' is just one example of allowed command line option. To find out more what command line options are acceptable, you can type in a terminal window:
@@ -1223,16 +1223,16 @@ We briefly discuss how to call this function; and, once you understand PCG, you 
 %
 Now we explain this code segment a little bit:
 \begin{itemize}
-\item Line 463--465 performs the setup phase for ILU method. The particular type of ILU method is determined by ``iluparam''; see \S\ref{sec:parameters}. Line 7 performs a simple memory check for ILU.
-\item Line 471--473 defines the preconditioner data structure ``pc'', which contains two parts: one is the actual preconditioning action ``pc.fct'', the other is the auxiliary data which is needed to perform the preconditioning action ``pc.data''.
-\item Line 476 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``itparam''.
+\item Line 463--465 performs the setup phase for ILU method. The particular type of ILU method is determined by ``\verb|iluparam|''; see \S\ref{sec:parameters}. Line 7 performs a simple memory check for ILU.
+\item Line 471--473 defines the preconditioner data structure ``\verb|pc|'', which contains two parts: one is the actual preconditioning action ``\verb|pc.fct|'', the other is the auxiliary data which is needed to perform the preconditioning action ``\verb|pc.data|''.
+\item Line 476 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``\verb|itparam|''.
 \end{itemize}
 
-Apparently, we should now explain the data structure ``itparam''.
+Apparently, we should now explain the data structure ``\verb|itparam|''.
 %
 \lstinputlisting[language=C,numbers=none,firstline=1063,lastline=1077]{../base/include/fasp.h}
 %
-Possible ``itsolver\_type'' includes:
+Possible ``\verb|itsolver_type|'' includes:
 %
 \lstinputlisting[language=C,numbers=none,firstline=98,lastline=121]{../base/include/fasp_const.h}
 %
@@ -1250,10 +1250,10 @@ The following code segment is part of ``\url{base/src/amg.c}'' and it is a good 
 The code above is very simple and we only wish to point out that:
 %
 \begin{itemize}
-\item Line 42--45 reads some of the parameters from ``AMG\_param'', which can be defined from a input file; see \S\ref{sec:parameters}.
-\item Line 50--78 initializes the ``AMG\_data'' with a copy of the coefficient matrix, the right-hand side, and the initial solution (it will store the final solution eventually).
-\item Line 81--95 calls three different AMG setup methods, determined by ``amg\_type''.
-\item Line 98--115 calls three different multilevel iterative methods, determined by ``cycle\_type''.
+\item Line 42--45 reads some of the parameters from ``\verb|AMG_param|'', which can be defined from a input file; see \S\ref{sec:parameters}.
+\item Line 50--78 initializes the ``\verb|AMG_data|'' with a copy of the coefficient matrix, the right-hand side, and the initial solution (it will store the final solution eventually).
+\item Line 81--95 calls three different AMG setup methods, determined by ``\verb|amg_type|''.
+\item Line 98--115 calls three different multilevel iterative methods, determined by ``\verb|cycle_type|''.
 \end{itemize}
 
 \subsection{Parameters for AMG}
@@ -1320,7 +1320,7 @@ and a printout of this file is below:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{snugshade}\noindent
-  NOTE: The default FSP build is a RELEASE version (/O3 or equivalent 
+  NOTE: The default FSP build is a RELEASE version (\verb|/O3| or equivalent 
   compiler options are enabled) and such version
   is compiled with optimization and no warnings are displayed during
   the build. How to build the FASP library with debugging enabled is
