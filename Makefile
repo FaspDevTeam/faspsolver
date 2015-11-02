@@ -167,9 +167,9 @@ help:
 
 backup:
 	@-rm -f faspsolver.zip
-	@-zip -r faspsolver.zip README INSTALL License Makefile VERSION     \
-	                        base data test tutorial *.txt *.cmake *.tcl \
-                                doc/*.pdf doc/*.in doc/QA FASP.mk.example vs10
+	@-zip -r faspsolver.zip README INSTALL License Makefile VERSION FASP* \
+	                        base data test tutorial modules log util vs10 \
+                                *.txt *.tcl doc/*.pdf doc/*.in doc/FAQ 
 
 version:
 	@-hg log -r "." --template 'FASP {latesttag}.{latesttagdistance}:' > VERSION

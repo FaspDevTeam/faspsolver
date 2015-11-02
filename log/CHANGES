@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+11/02/2015 FASP 1.8.3:
+- Fix the broken FASP package on fasp.sf.net.
+
 10/18/2015 FASP 1.8.2:
 - Removed password protect from fasp.sf.net.
 - Updated the webpage and documentation.
