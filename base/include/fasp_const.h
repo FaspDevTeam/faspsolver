@@ -1,5 +1,5 @@
 /*! \file fasp_const.h
- *  \brief Definition of all kinds of messages, including error messages, 
+ *  \brief Definition of all kinds of messages, including error messages,
  *         solver types, etc.
  *
  *  \note  This is internal use only. Do NOT change.
@@ -62,18 +62,18 @@
 #define ERROR_UNKNOWN         -99  /**< an unknown error type */
 
 /**
- * \brief Definition of logic type  
+ * \brief Definition of logic type
  */
 #define TRUE                    1  /**< logic TRUE */
 #define FALSE                   0  /**< logic FALSE */
 
-/** 
- * \brief Definition of switch  
+/**
+ * \brief Definition of switch
  */
 #define ON                      1  /**< turn on certain parameter */
 #define OFF                     0  /**< turn off certain parameter */
 
-/** 
+/**
  * \brief Print level for all subroutines -- not including DEBUG output
  */
 #define PRINT_NONE              0  /**< silent: no printout at all */
@@ -123,15 +123,16 @@
 #define SOLVER_SUPERLU         31  /**< SuperLU Direct Solver */
 #define SOLVER_UMFPACK         32  /**< UMFPack Direct Solver */
 #define SOLVER_MUMPS           33  /**< MUMPS   Direct Solver */
+#define SOLVER_PARDISO         34  /**< Intel MKL PARDISO Direct Solver */
 
-/** 
+/**
  * \brief Definition of iterative solver stopping criteria types
  */
 #define STOP_REL_RES            1  /**< relative residual ||r||/||b|| */
 #define STOP_REL_PRECRES        2  /**< relative B-residual ||r||_B/||b||_B */
 #define STOP_MOD_REL_RES        3  /**< modified relative residual ||r||/||x|| */
 
-/** 
+/**
  * \brief Definition of preconditioner type for iterative methods
  */
 #define PREC_NULL               0  /**< with no precond */
@@ -176,7 +177,7 @@
 #define AMLI_CYCLE              3  /**< AMLI-cycle */
 #define NL_AMLI_CYCLE           4  /**< Nonlinear AMLI-cycle */
 
-/** 
+/**
  * \brief Definition of standard smoother types
  */
 #define SMOOTHER_JACOBI         1  /**< Jacobi smoother */
@@ -206,7 +207,7 @@
 #define INTERP_STD              2  /**< Standard interpolation */
 #define INTERP_ENG              3  /**< energy minimization interpolation */
 
-/** 
+/**
  * \brief Type of vertices (DOFs) for coarsening
  */
 #define G0PT                   -5  /**< Cannot fit in aggregates */
@@ -215,13 +216,13 @@
 #define CGPT                    1  /**< Coarse grid points */
 #define ISPT                    2  /**< Isolated points */
 
-/** 
+/**
  * \brief Definition of smoothing order
  */
 #define NO_ORDER                0  /**< Natural order smoothing */
 #define CF_ORDER                1  /**< C/F order smoothing */
 
-/** 
+/**
  * \brief Type of ordering for smoothers
  */
 #define USERDEFINED             0  /**< User defined order */

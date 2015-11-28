@@ -86,6 +86,11 @@ ifeq ($(mumps), yes)
     CONFIG_FLAGS+=-DMUMPS_DIR=$(mumps_dir)
 endif
 
+ifeq ($(pardiso), yes)
+    CONFIG_FLAGS+=-DUSE_PARDISO=$(pardiso)
+    CONFIG_FLAGS+=-DMKL_DIR=$(mkl_dir)
+endif
+
 CONFIG_FLAGS+=-DADD_CFLAGS=$(cflags)
 CONFIG_FLAGS+=-DADD_CXXFLAGS=$(cxxflags)
 CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags)

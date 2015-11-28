@@ -2904,6 +2904,25 @@ void fasp_mumps_solve (dCSRmat *ptrA,
 void fasp_mumps_free (Mumps_data *mumps);
 
 
+/*-------- In file: interface_pardiso.c --------*/
+
+INT fasp_solver_pardiso (dCSRmat * ptrA,
+                         dvector *b,
+                         dvector *u,
+                         const SHORT prtlvl);
+
+INT fasp_pardiso_factorize (dCSRmat *ptrA, Pardiso_data *pdata,
+                              const SHORT prtlvl);
+
+INT fasp_pardiso_solve (dCSRmat *ptrA,
+                        dvector *b,
+                        dvector *u,
+                        Pardiso_data *pdata,
+                        const SHORT prtlvl);
+
+INT fasp_pardiso_free_internal_mem (Pardiso_data *pdata);
+
+
 /*-------- In file: interface_samg.c --------*/
 
 void dvector2SAMGInput (dvector *vec,

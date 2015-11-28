@@ -12,6 +12,7 @@
  *  Modified by Chensong Zhang on 01/25/2015: clean up code
  *  Modified by Chensong Zhang on 01/27/2015: remove N2C, C2N, ISTART
  *  Modified by Ludmil Zikatanov on 20151011: cosmetics.
+ *  Modified by Hongxuan Zhang on 11/28/2015: add Intel MKL PARDISO support.
  *-----------------------------------------------------------------------------------
  */
 
@@ -23,6 +24,12 @@
 
 #if WITH_MUMPS
 #include "dmumps_c.h"
+#endif
+
+#if WITH_PARDISO
+#include "mkl_pardiso.h"
+#include "mkl_types.h"
+#include "mkl_spblas.h"
 #endif
 
 #ifndef __FASP_HEADER__      /*-- allow multiple inclusions --*/
@@ -462,6 +469,34 @@ typedef struct {
 } Mumps_data; /**< Parameters for MUMPS */
 
 /**
+ * \struct Pardiso_data
+ * \brief Parameters for Intel MKL PARDISO interface
+ *
+ * Added on 11/28/2015
+ */
+typedef struct {
+
+    // Internal solver memory pointer
+    void *pt[64];
+
+#if WITH_PARDISO
+    // Pardiso control parameters
+    MKL_INT iparm[64];
+
+    // Type of the matrix
+    MKL_INT mtype;
+
+    // Maximum number of numerical factorizations
+    MKL_INT maxfct;
+
+    // Indicate the actual matrix for the solution phase, 1 <= mnum <= maxfct
+    MKL_INT mnum;
+
+#endif
+
+} Pardiso_data; /**< Parameters for PARDISO */
+
+/**
  * \struct Schwarz_data
  * \brief Data for Schwarz methods
  *
@@ -841,7 +876,7 @@ typedef struct {
     //! temporary work space for other usage
     REAL *w;
 
-    //! What is this flag for??? Not used!!! --Chensong 
+    //! What is this flag for??? Not used!!! --Chensong
     // INT flag;
 
 } precond_data; /**< Data for general preconditioner */
