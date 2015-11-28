@@ -8,6 +8,7 @@ file(GLOB FASP_EXTRA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 				      ${FASP_EXTRA_SRC_DIR}/interface/interface_umfpack.c
 				      ${FASP_EXTRA_SRC_DIR}/interface/interface_superlu.c
 				      ${FASP_EXTRA_SRC_DIR}/interface/interface_mumps.c
+                      ${FASP_EXTRA_SRC_DIR}/interface/interface_pardiso.c
 				      ${FASP_EXTRA_SRC_DIR}/hb_io/hb_io.c)
 #
 file(GLOB FASP_BASE_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} 
