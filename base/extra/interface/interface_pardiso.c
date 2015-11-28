@@ -138,7 +138,8 @@ INT fasp_solver_pardiso (dCSRmat * ptrA,
 
 #if WITH_PARDISO
 /**
- * \fn Pardiso_data fasp_pardiso_factorize (dCSRmat *ptrA, const SHORT prtlvl)
+ * \fn INT fasp_pardiso_factorize (dCSRmat *ptrA, Pardiso_data *pdata,
+ *                                 const SHORT prtlvl)
  * \brief factorize A by PARDISO
  *
  * \param ptrA      Pointer to matrix A

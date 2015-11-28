@@ -170,7 +170,7 @@ if (USE_PARDISO)
    # set the path to find specific modules
    set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
 
-   set(MKL_DIR "${MUMPS_DIR}")
+   set(MKL_DIR "${MKL_DIR}")
 
    # try to find MKL
    find_package(MKL)
