@@ -101,8 +101,8 @@
 #
 # pardiso=yes
 #
-# If you want to specify the path to MUMPS, uncomment the next line
-# and give the correct path to MUMPS here. For example:
+# If you want to specify the path to MKL, uncomment the next line
+# and give the correct path to MKL here. For example:
 #
 # mkl_dir="/path/to/MKL"
 #
