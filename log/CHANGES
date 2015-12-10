@@ -1,7 +1,8 @@
 File Name: CHANGES
 
-11/28/2015 FASP 1.8.4:
+12/09/2015 FASP 1.8.4:
 - Added an interface to Intel MKL PARDISO.
+- Removed some warnings.
 
 11/02/2015 FASP 1.8.3:
 - Fixed the broken FASP package on fasp.sf.net.

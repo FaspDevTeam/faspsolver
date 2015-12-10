@@ -29,10 +29,7 @@ void fasp_precond_block_diag_3 (REAL *r,
 {
     
     precond_block_data *precdata=(precond_block_data *)data;
-    block_dCSRmat *A = precdata->Abcsr;
     dCSRmat *A_diag = precdata->A_diag;
-    void **LU_diag = precdata->LU_diag;
-    
     dvector *tempr = &(precdata->r);
     
     const INT N0 = A_diag[0].row;
@@ -45,6 +42,8 @@ void fasp_precond_block_diag_3 (REAL *r,
     fasp_array_set(N, z, 0.0);
     
     // prepare
+#if  WITH_UMFPACK
+    void **LU_diag = precdata->LU_diag;
     dvector r0, r1, r2, z0, z1, z2;
     
     r0.row = N0; z0.row = N0;
@@ -53,6 +52,16 @@ void fasp_precond_block_diag_3 (REAL *r,
     
     r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]);
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
+#elif WITH_SuperLU
+    dvector r0, r1, r2, z0, z1, z2;
+    
+    r0.row = N0; z0.row = N0;
+    r1.row = N1; z1.row = N1;
+    r2.row = N2; z2.row = N2;
+    
+    r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]);
+    z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
+#endif
     
     // Preconditioning A00 block
 #if  WITH_UMFPACK
@@ -169,10 +178,7 @@ void fasp_precond_block_diag_4 (REAL *r,
 {
     
     precond_block_data *precdata=(precond_block_data *)data;
-    block_dCSRmat *A = precdata->Abcsr;
     dCSRmat *A_diag = precdata->A_diag;
-    void **LU_diag = precdata->LU_diag;
-    
     dvector *tempr = &(precdata->r);
     
     const INT N0 = A_diag[0].row;
@@ -186,6 +192,8 @@ void fasp_precond_block_diag_4 (REAL *r,
     fasp_array_set(N, z, 0.0);
     
     // prepare
+#if  WITH_UMFPACK
+    void **LU_diag = precdata->LU_diag;
     dvector r0, r1, r2, r3, z0, z1, z2, z3;
     
     r0.row = N0; z0.row = N0;
@@ -195,6 +203,17 @@ void fasp_precond_block_diag_4 (REAL *r,
     
     r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]); r3.val = &(r[N0+N1+N2]);
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]); z3.val = &(z[N0+N1+N2]);
+#elif WITH_SuperLU
+    dvector r0, r1, r2, r3, z0, z1, z2, z3;
+    
+    r0.row = N0; z0.row = N0;
+    r1.row = N1; z1.row = N1;
+    r2.row = N2; z2.row = N2;
+    r3.row = N3; z3.row = N3;
+    
+    r0.val = r; r1.val = &(r[N0]); r2.val = &(r[N0+N1]); r3.val = &(r[N0+N1+N2]);
+    z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]); z3.val = &(z[N0+N1+N2]);
+#endif
     
     // Preconditioning A00 block
 #if  WITH_UMFPACK
@@ -766,7 +785,6 @@ void fasp_precond_block_SGS_3 (REAL *r,
     /* use SuperLU direct solver on the coarsest level */
     fasp_solver_superlu(&A_diag[0], &r0, &z0, 0);
 #endif
-    
     
     // restore r
     fasp_array_cp(N, tempr->val, r);
