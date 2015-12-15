@@ -56,9 +56,9 @@ void fasp_precond_data_null (precond_data *pcdata)
 AMG_data * fasp_amg_data_create (SHORT max_levels)
 {
     max_levels = MAX(1, max_levels); // at least allocate one level
-    
+
     AMG_data *mgl = (AMG_data *)fasp_mem_calloc(max_levels,sizeof(AMG_data));
-    
+
     INT i;
     for ( i=0; i<max_levels; ++i ) {
         mgl[i].max_levels = max_levels;
@@ -67,7 +67,7 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
         mgl[i].near_kernel_basis = NULL;
         mgl[i].cycle_type = 0;
     }
-    
+
     return(mgl);
 }
 
@@ -88,7 +88,7 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
     max_levels = MAX(1, max_levels); // at least allocate one level
 
     AMG_data_bsr *mgl = (AMG_data_bsr *)fasp_mem_calloc(max_levels,sizeof(AMG_data_bsr));
-    
+
     INT i;
     for (i=0; i<max_levels; ++i) {
         mgl[i].max_levels = max_levels;
@@ -99,7 +99,7 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
         mgl[i].P_nk = NULL;
         mgl[i].R_nk = NULL;
     }
-    
+
     return(mgl);
 }
 
@@ -124,14 +124,14 @@ void fasp_ilu_data_alloc (const INT iwk,
     printf("### DEBUG: iwk=%d, nwork=%d \n",iwk,nwork);
 #endif
     iludata->ijlu=(INT*)fasp_mem_calloc(iwk, sizeof(INT));
-    
+
     iludata->luval=(REAL*)fasp_mem_calloc(iwk, sizeof(REAL));
-    
+
     iludata->work=(REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... %d [End]\n", __FUNCTION__,__LINE__);
 #endif
-    
+
     return;
 }
 
@@ -148,22 +148,22 @@ void fasp_Schwarz_data_free (Schwarz_data *Schwarz)
 {
     INT i;
     fasp_dcsr_free(&Schwarz->A);
-    
+
     for (i=0; i<Schwarz->nblk; ++i) fasp_dcsr_free (&((Schwarz->blk_data)[i]));
-    
+
     Schwarz->nblk = 0;
     fasp_mem_free (Schwarz->iblock);
     fasp_mem_free (Schwarz->jblock);
     fasp_dvec_free (&Schwarz->rhsloc1);
     fasp_dvec_free (&Schwarz->xloc1);
-    
+
     Schwarz->memt = 0;
     fasp_mem_free (Schwarz->mask);
     fasp_mem_free (Schwarz->maxa);
-    
+
 #if WITH_MUMPS
     if (Schwarz->mumps == NULL) return;
-    
+
     for (i=0; i<Schwarz->nblk; ++i) fasp_mumps_free (&((Schwarz->mumps)[i]));
 #endif
 }
@@ -180,14 +180,15 @@ void fasp_Schwarz_data_free (Schwarz_data *Schwarz)
  * \date   2010/04/06
  *
  * Modified by Chensong Zhang on 05/05/2013: Clean up param as well!
+ * Modified by Hongxuan Zhang on 12/15/2015: free internal memory for Intel MKL PARDISO.
  */
 void fasp_amg_data_free (AMG_data *mgl,
                          AMG_param *param)
 {
     const INT max_levels = MAX(1,mgl[0].num_levels);
-    
+
     INT i;
-    
+
     for (i=0; i<max_levels; ++i) {
         fasp_dcsr_free(&mgl[i].A);
         fasp_dcsr_free(&mgl[i].P);
@@ -199,15 +200,15 @@ void fasp_amg_data_free (AMG_data *mgl,
         fasp_ilu_data_free(&mgl[i].LU);
         fasp_Schwarz_data_free(&mgl[i].Schwarz);
     }
-    
+
     for (i=0; i<mgl->near_kernel_dim; ++i) {
         if (mgl->near_kernel_basis[i]) fasp_mem_free(mgl->near_kernel_basis[i]);
         mgl->near_kernel_basis[i] = NULL;
     }
-    
+
     // Clean direct solver data in necessary
     switch (param->coarse_solver) {
-            
+
 #if WITH_MUMPS
             /* Destroy MUMPS direct solver on the coarsest level */
         case SOLVER_MUMPS: {
@@ -223,14 +224,20 @@ void fasp_amg_data_free (AMG_data *mgl,
             break;
         }
 #endif
+
+#if WITH_PARDISO
+        case SOLVER_PARDISO: {
+              fasp_pardiso_free_internal_mem(&mgl[max_levels-1].pdata);
+         }
+#endif
         default: // Do nothing!
             break;
     }
-    
+
     fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
-    
+
     fasp_mem_free(mgl); mgl = NULL;
-    
+
     if (param != NULL) {
         if ( param->cycle_type == AMLI_CYCLE ) fasp_mem_free(param->amli_coef);
     }
@@ -250,7 +257,7 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
 {
     const INT max_levels = mgl[0].max_levels;
     INT i;
-    
+
     for (i=0; i<max_levels; ++i) {
         fasp_dbsr_free(&mgl[i].A);
         fasp_dbsr_free(&mgl[i].P);
@@ -270,12 +277,12 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
         fasp_ivec_free(&mgl[i].cfmark);
         fasp_ilu_data_free(&mgl[i].LU);
     }
-    
+
     for (i=0; i<mgl->near_kernel_dim; ++i) {
         if (mgl->near_kernel_basis[i]) fasp_mem_free(mgl->near_kernel_basis[i]);
         mgl->near_kernel_basis[i] = NULL;
     }
-    
+
     fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
     fasp_mem_free(mgl); mgl = NULL;
 }
@@ -293,11 +300,11 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
 void fasp_ilu_data_free (ILU_data *ILUdata)
 {
     if (ILUdata==NULL) return;
-    
+
     fasp_mem_free(ILUdata->ijlu);  ILUdata->ijlu  = NULL;
     fasp_mem_free(ILUdata->luval); ILUdata->luval = NULL;
     fasp_mem_free(ILUdata->work);  ILUdata->work  = NULL;
-    
+
     ILUdata->row = ILUdata->col = ILUdata->nzlu = ILUdata ->nwork = ILUdata->nb = 0;
 }
 

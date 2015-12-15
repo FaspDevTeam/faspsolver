@@ -23,7 +23,8 @@
  * \fn int fasp_solver_pardiso (dCSRmat *ptrA, dvector *b, dvector *u,
  *                            const SHORT prtlvl)
  *
- * \brief Solve Ax=b by PARDISO directly
+ * \brief Solve Ax=b by PARDISO directly. Each row of A should be
+ *        in ascending order w.r.t. column indices.
  *
  * \param ptrA      Pointer to a dCSRmat matrix
  * \param b         Pointer to the dvector of right-hand side term
@@ -140,7 +141,8 @@ INT fasp_solver_pardiso (dCSRmat * ptrA,
 /**
  * \fn INT fasp_pardiso_factorize (dCSRmat *ptrA, Pardiso_data *pdata,
  *                                 const SHORT prtlvl)
- * \brief factorize A by PARDISO
+ * \brief factorize A by PARDISO. Each row of A should be
+ *        in ascending order w.r.t. column indices.
  *
  * \param ptrA      Pointer to matrix A
  * \param pdata     Pointer to numerical factorization data
@@ -218,7 +220,8 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA, Pardiso_data *pdata,
 /**
  * \fn INT fasp_pardiso_solve (dCSRmat *ptrA, dvector *b, dvector *u,
  *                             Pardiso_data *pdata, const SHORT prtlvl)
- * \brief Solve Au=b by Intel MKL PARDISO, numerical factorization is given
+ * \brief Solve Au=b by Intel MKL PARDISO, numerical factorization is given.
+ *        Each row of A should be in ascending order w.r.t. column indices.
  *
  * \param ptrA      Pointer to stiffness matrix of levelNum levels
  * \param b         Pointer to the dvector of right hand side term
