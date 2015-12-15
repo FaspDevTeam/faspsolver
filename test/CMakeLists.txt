@@ -31,6 +31,7 @@ foreach( srcfile ${FASP_TSRC} )
 				${UMFPACK_LIBRARIES} 
 				${SUPERLU_LIBRARIES} 
 				${MUMPS_LIBRARIES} 
+                ${MKL_LIBRARIES}
 				${ADD_STDLIBS} ) 
 #
      install(TARGETS ${execfile} 

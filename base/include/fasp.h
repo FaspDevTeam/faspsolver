@@ -751,6 +751,9 @@ typedef struct {
     //! pointer to the numerical factorization from UMFPACK
     void *Numeric;
 
+    //! data for Intel MKL PARDISO
+    Pardiso_data pdata;
+
     //! pointer to the CF marker at level level_num
     ivector cfmark;
 
