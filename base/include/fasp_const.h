@@ -120,10 +120,10 @@
 #define SOLVER_AMG             21  /**< AMG as an iterative solver */
 #define SOLVER_FMG             22  /**< Full AMG as an solver */
 //---------------------------------------------------------------------------------
-#define SOLVER_SUPERLU         31  /**< SuperLU Direct Solver */
-#define SOLVER_UMFPACK         32  /**< UMFPack Direct Solver */
-#define SOLVER_MUMPS           33  /**< MUMPS   Direct Solver */
-#define SOLVER_PARDISO         34  /**< Intel MKL PARDISO Direct Solver */
+#define SOLVER_SUPERLU         31  /**< Direct Solver: SuperLU */
+#define SOLVER_UMFPACK         32  /**< Direct Solver: UMFPack */
+#define SOLVER_MUMPS           33  /**< Direct Solver: MUMPS */
+#define SOLVER_PARDISO         34  /**< Direct Solver: PARDISO */
 
 /**
  * \brief Definition of iterative solver stopping criteria types

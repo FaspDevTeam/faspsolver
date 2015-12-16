@@ -168,7 +168,7 @@ ForwardSweep:
              // user Intel MKL PARDISO direct solver on the coarsest level
              fasp_pardiso_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
              break;
-            }
+        }
 #endif
 
         default:

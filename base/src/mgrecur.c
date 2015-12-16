@@ -127,7 +127,15 @@ void fasp_solver_mgrecur (AMG_data *mgl,
                 break;
 #endif
                 
-            /* use iterative solver on the coarsest level */
+#if WITH_PARDISO
+            case SOLVER_PARDISO: {
+                // user Intel MKL PARDISO direct solver on the coarsest level
+                fasp_pardiso_solve(A0, b0, e0, &mgl[level].pdata, 0);
+                break;
+            }
+#endif
+
+                /* use iterative solver on the coarsest level */
             default:
                 fasp_coarse_itsolver(A0, b0, e0, tol, prtlvl);
                 
