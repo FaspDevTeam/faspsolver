@@ -1,7 +1,7 @@
-    1194 ./base/include/fasp.h
-     667 ./base/include/fasp_block.h
-     253 ./base/include/fasp_const.h
-    2944 ./base/include/fasp_functs.h
+    1232 ./base/include/fasp.h
+     670 ./base/include/fasp_block.h
+     254 ./base/include/fasp_const.h
+    2963 ./base/include/fasp_functs.h
      397 ./base/src/aggregation_bsr.inl
     1807 ./base/src/aggregation_csr.inl
     2119 ./base/src/gmg_util.inl
@@ -10,11 +10,11 @@
      245 ./base/src/mg_util.inl
      146 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
-     282 ./base/src/amg_setup_rs.c
-     883 ./base/src/amg_setup_sa.c
-     680 ./base/src/amg_setup_ua.c
+     290 ./base/src/amg_setup_rs.c
+     908 ./base/src/amg_setup_sa.c
+     697 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
-     945 ./base/src/amlirecur.c
+     972 ./base/src/amlirecur.c
      264 ./base/src/array.c
      235 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
@@ -31,7 +31,7 @@
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
      106 ./base/src/famg.c
-     328 ./base/src/fmgcycle.c
+     353 ./base/src/fmgcycle.c
     1004 ./base/src/formats.c
       79 ./base/src/givens.c
     1038 ./base/src/gmg_poisson.c
@@ -39,7 +39,7 @@
      427 ./base/src/ilu_setup_bsr.c
      193 ./base/src/ilu_setup_csr.c
     1254 ./base/src/ilu_setup_str.c
-     338 ./base/src/init.c
+     345 ./base/src/init.c
      792 ./base/src/input.c
     1597 ./base/src/interpolation.c
      840 ./base/src/interpolation_em.c
@@ -52,8 +52,8 @@
      171 ./base/src/lu.c
      261 ./base/src/memory.c
      289 ./base/src/message.c
-     520 ./base/src/mgcycle.c
-     145 ./base/src/mgrecur.c
+     536 ./base/src/mgcycle.c
+     153 ./base/src/mgrecur.c
      556 ./base/src/ordering.c
      986 ./base/src/parameters.c
     1437 ./base/src/pbcgs.c
@@ -67,7 +67,7 @@
      300 ./base/src/pgmres_mf.c
     1286 ./base/src/pminres.c
      459 ./base/src/pminres_mf.c
-    1035 ./base/src/precond_bcsr.c
+    1053 ./base/src/precond_bcsr.c
      727 ./base/src/precond_bsr.c
      663 ./base/src/precond_csr.c
     1731 ./base/src/precond_str.c
@@ -100,4 +100,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      301 ./base/src/wrapper.c
-   83688 total
+   83900 total
