@@ -4,6 +4,7 @@ File Name: CHANGES
 - Added an interface to Intel MKL PARDISO.
 - Added PARDISO option for coarse solver of AMG.
 - Removed some warnings.
+- Tested GCC 5.3.
 
 11/02/2015 FASP 1.8.3:
 - Fixed the broken FASP package on fasp.sf.net.
