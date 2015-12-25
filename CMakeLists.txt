@@ -16,9 +16,11 @@ set(USE_MUMPS 0 CACHE BOOL "MUMPS use")
 #### include compiler and project name settings###################################. 
 # Search for C compilers in the specified order. That will determine the rest.
 if(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES $ENV{CC} gcc-mp-5 gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 gcc icc clang)
+	find_program(THE_C NAMES $ENV{CC} gcc-mp-5 gcc-mp-4.9 gcc-mp-4.8
+	             gcc-mp-4.6 gcc46 gcc45 gcc44 gcc icc clang)
 else(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES gcc-mp-5 gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6 gcc46 gcc45 gcc44 gcc icc clang)
+	find_program(THE_C NAMES gcc-mp-5 gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6
+	             gcc46 gcc45 gcc44 gcc icc clang)
 endif(DEFINED ENV{CC}) 
 
 if( THE_C )
@@ -54,29 +56,30 @@ set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
 
 ########## Additional compiler flags (not defined by the build
 
-	if(ADD_CFLAGS)
+       if(ADD_CFLAGS)
           set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
 	  	  "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CFLAGS}")	 
-	endif(ADD_CFLAGS)
-	if(ADD_CXXFLAGS)
+       endif(ADD_CFLAGS)
+       if(ADD_CXXFLAGS)
           set (CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
 	  	  "${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CXXFLAGS}")	 
-	endif(ADD_CXXFLAGS)
-	if(ADD_FFLAGS)
+       endif(ADD_CXXFLAGS)
+       if(ADD_FFLAGS)
           set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
 	  	  "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_FFLAGS}")	 
-	endif(ADD_FFLAGS)
+       endif(ADD_FFLAGS)
 
 #
     set(CMAKE_INSTALL_PREFIX "${FASP_SOURCE_DIR}" )
     set(FASPLIB_BASE_PATH "base" CACHE PATH "base path to FASPLIB")
     set(FASP_INSTALL TRUE)
 #
-	if(SHARED) 
+       if(SHARED) 
 	   set(FASP_LIBRARY_TYPE SHARED)
-        else(SHARED)
+       else(SHARED)
 	   set(FASP_LIBRARY_TYPE STATIC)
-	endif(SHARED)	   
+       endif(SHARED)	   
+#
 if(APPLE)
 cmake_policy(SET "CMP0042" NEW)
 endif(APPLE)
@@ -92,8 +95,8 @@ file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR}
 	  		    ${FASP_SOURCE_DIR}/base/src/*.inl )
 
 ## keep here for auto generating headers if needed
- add_custom_target(headers ./fhead.sh "${FASP_SOURCE_DIR}/base"
-		   DEPENDS ${FASP_C_SOURCES}
+add_custom_target(headers ./fhead.sh "${FASP_SOURCE_DIR}/base"
+         	   DEPENDS ${FASP_C_SOURCES}
                    WORKING_DIRECTORY "${FASP_SOURCE_DIR}/util"
                    COMMENT 
 		   "FASP: Autogenerating header file with C functions..."
@@ -103,10 +106,10 @@ file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR}
 # For UMFPACK
 ##################################################################
 if (USE_UMFPACK)
-  # set some path to the UMFPACK pacakge
-# metis is not part of suitesparse, so theremay be also some other metis dir. 
-   set(METIS_DIR "${SUITESPARSE_DIR}")
 
+   # set some path to the UMFPACK pacakge
+   # metis is not part of suitesparse, so theremay be also some other metis dir. 
+   set(METIS_DIR "${SUITESPARSE_DIR}")
 
    find_package(UMFPACK)     
    if (UMFPACK_FOUND)
@@ -115,6 +118,7 @@ if (USE_UMFPACK)
    else(UMFPACK_FOUND)
       message("   WARNING: UMFPACK was requested but not supported!")
    endif(UMFPACK_FOUND)
+
 endif(USE_UMFPACK)
 
 ##################################################################
@@ -189,6 +193,7 @@ endif(USE_PARDISO)
 ##################################################################
 # target generating the FASP documentation with doxygen
 find_package(Doxygen)
+
 if(DOXYGEN_FOUND)
     if(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
     configure_file(
@@ -228,7 +233,6 @@ endif(DOXYGEN_FOUND)
 ##                   WORKING_DIRECTORY "${FASP_SOURCE_DIR}/util"
 ##                   COMMENT "Autogenerating header files first..."
 ##                   VERBATIM)
-
 
 #MISMATCH CHECK:
 if(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
