@@ -111,8 +111,6 @@
  *
  * - Zhang, Hongxuan (Penn State Univeristy, USA)
  *
- * - Zikatanov, Ludmil (Penn State Univeristy, USA)
- *
  * With contributions from (in alphabetic order):
  *
  * - Brannick, James (Penn State University, USA)
@@ -144,6 +142,8 @@
  * - Zhang, Weifeng (Kunming University of Science and Technology, China)
  *
  * - Zhou, Zhiyang (Xiangtan University, China)
+ *
+ * - Zikatanov, Ludmil (Penn State Univeristy, USA)
  *
  */
    
