@@ -143,8 +143,6 @@
  *
  * - Zhou, Zhiyang (Xiangtan University, China)
  *
- * - Zikatanov, Ludmil (Penn State Univeristy, USA)
- *
  */
    
 /**
