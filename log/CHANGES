@@ -1,11 +1,13 @@
 File Name: CHANGES
 
-12/25/2015 FASP 1.8.4:
+02/15/2015 FASP 1.8.4:
 - Added an interface to Intel MKL PARDISO.
 - Added PARDISO option for coarse solver of AMG.
 - Removed some warnings.
 - Tested GCC 5.3.
 - Reformat CMakeFile.
+- Update developer list.
+- Update website and documentation.
 
 11/02/2015 FASP 1.8.3:
 - Fixed the broken FASP package on fasp.sf.net.
