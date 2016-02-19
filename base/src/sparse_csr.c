@@ -59,7 +59,7 @@ dCSRmat fasp_dcsr_create (const INT m,
     }
     
     A.row = m; A.col = n; A.nnz = nnz;
-    
+        
     return A;
 }
 

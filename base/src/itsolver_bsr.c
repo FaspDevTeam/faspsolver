@@ -353,6 +353,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     //--------------------------------------------------------------
     // Part 1: prepare
     // --------------------------------------------------------------
+    
     //! parameters of iterative method
     const SHORT prtlvl = itparam->print_level;
     const SHORT max_levels = amgparam->max_levels;
@@ -362,7 +363,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     
     // data of AMG
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
-    
+        
     // timing
     REAL setup_start, setup_end, setup_duration;
     REAL solver_start, solver_end, solver_duration;

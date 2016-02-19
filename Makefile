@@ -17,7 +17,8 @@
 ########################################################################
 prefix = no-prefix
 
-sinclude FASP.mk
+include FASP.mk
+
 
 ifeq ($(debug),yes)
 	cflags="-Wall -g"

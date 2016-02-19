@@ -140,6 +140,20 @@ int main (int argc, const char * argv[])
         
     }
     
+    else if (problem_num == 40) {
+        
+        // Read the stiffness matrix from bsrmat_SPE01.dat
+        strncpy(filename1,inpar.workdir,128);
+        datafile1="A_fasp_bsr.dat"; strcat(filename1,datafile1);
+        fasp_dbsr_read(filename1, &Absr);
+        
+        // Read the RHS from rhs_SPE01.dat
+        strncpy(filename2,inpar.workdir,128);
+        datafile2="b_fasp.dat"; strcat(filename2,datafile2);
+        fasp_dvec_read(filename2, &b);
+        
+    }
+    
     else {
         printf("### ERROR: Unrecognised problem number %d\n", problem_num);
         return ERROR_INPUT_PAR;

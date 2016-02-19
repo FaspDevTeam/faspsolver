@@ -416,6 +416,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
 static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
                                                 AMG_param *param)
 {
+    
     const SHORT prtlvl   = param->print_level;
     const SHORT csolver  = param->coarse_solver;
     const SHORT min_cdof = MAX(param->coarse_dof,50);
@@ -425,9 +426,9 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     SHORT     max_levels=param->max_levels;
     SHORT     i, lvl=0, status=FASP_SUCCESS;
     REAL      setup_start, setup_end;
-
+    
     AMG_data *mgl_csr=fasp_amg_data_create(max_levels);
-
+    
     dCSRmat temp1, temp2;
 
 #if DEBUG_MODE > 0
@@ -468,7 +469,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
     /*-----------------------*/
     /*-- setup ILU param   --*/
     /*-----------------------*/
-
+    
     // initialize ILU parameters
     mgl->ILU_levels = param->ILU_levels;
     ILU_param iluparam;
@@ -480,16 +481,15 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         iluparam.ILU_relax   = param->ILU_relax;
         iluparam.ILU_type    = param->ILU_type;
     }
-
+    
     /*----------------------------*/
     /*--- checking aggregation ---*/
     /*----------------------------*/
     if (param->aggregation_type == PAIRWISE)
         param->pair_number = MIN(param->pair_number, max_levels);
-
+    
     // Main AMG setup loop
     while ( (mgl[lvl].A.ROW > min_cdof) && (lvl < max_levels-1) ) {
-
 
         /*-- setup ILU decomposition if necessary */
         if ( lvl < param->ILU_levels ) {
@@ -502,14 +502,14 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
                 param->ILU_levels = lvl;
             }
         }
-
+        
         /*-- get the diagonal inverse --*/
         mgl[lvl].diaginv = fasp_dbsr_getdiaginv(&mgl[lvl].A);
-
+        
         /*-- Aggregation --*/
         //mgl[lvl].PP =  fasp_dbsr_getblk_dcsr(&mgl[lvl].A);
         mgl[lvl].PP = fasp_dbsr_Linfinity_dcsr(&mgl[lvl].A);  // TODO: Try different way to form the scalar block!!  -- Xiaozhe
-
+        
         switch ( param->aggregation_type ) {
 
             case VMB: // VMB aggregation
@@ -545,7 +545,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
             }
             status = FASP_SUCCESS; break;
         }
-
+        
         /* -- Form Prolongation --*/
         //form_tentative_p_bsr(&vertices[lvl], &mgl[lvl].P, &mgl[0], lvl+1, num_aggs[lvl]);
 
@@ -559,13 +559,13 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
             form_boolean_p_bsr(&vertices[lvl], &mgl[lvl].P, &mgl[0], lvl+1,
                                num_aggs[lvl]);
         }
-
+        
         /*-- Form resitriction --*/
         fasp_dbsr_trans(&mgl[lvl].P, &mgl[lvl].R);
 
         /*-- Form coarse level stiffness matrix --*/
         fasp_blas_dbsr_rap(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
-
+        
         /* -- Form extra near kernal space if needed --*/
         if (mgl[lvl].A_nk != NULL){
 
@@ -582,13 +582,13 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
             fasp_dcsr_free(&temp2);
 
         }
-
+        
         fasp_dcsr_free(&Neighbor[lvl]);
         fasp_ivec_free(&vertices[lvl]);
 
         ++lvl;
     }
-
+    
     // Setup coarse level systems for direct solvers (BSR version)
     switch (csolver) {
 
@@ -636,6 +636,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
             // Do nothing!
             break;
     }
+    
 
     // setup total level number and current level
     mgl[0].num_levels = max_levels = lvl+1;
@@ -674,12 +675,14 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         }
 
     }
+    
 
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         print_amgcomplexity_bsr(mgl,prtlvl);
         print_cputime("Unsmoothed aggregation (BSR) setup", setup_end - setup_start);
     }
+    
 
     fasp_mem_free(vertices);
     fasp_mem_free(num_aggs);

@@ -40,6 +40,7 @@ CFLAGS = -I$(fasp_prefix)/include/ -I./include
 CFLAGS+=-O3
 LINKER = $(FC)
 LFLAGS = $(LINK_OPT) -L$(fasp_prefix)/lib -lfasp 
+#LFLAGS+=/usr/local/lib/libumfpack.a /usr/local/lib/libamd.a -framework Accelerate /usr/local/lib/libsuitesparseconfig.a /usr/local/lib/libcholmod.a /usr/local/lib/libcolamd.a /usr/local/lib/libcamd.a /usr/local/lib/libccolamd.a /opt/local/lib/libmetis.dylib -lgfortran -lgfortran -lquadmath -lm 
 
 fasp_lib_file=$(fasp_prefix)/lib/$(fasp_library) 
 

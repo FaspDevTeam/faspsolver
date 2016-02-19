@@ -245,6 +245,150 @@ int main (int argc, const char * argv[])
         fasp_dvec_read(filename2, &b);
     }
     
+    else if (problem_num == 41){
+        
+        datafile1="Blanca/mat_J320_P1.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Blanca/rhs_J320_P1.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 42){
+        
+        datafile1="Blanca/mat_J320_P2.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Blanca/rhs_J320_P2.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 43){
+        
+        datafile1="Blanca/mat_J12800_P1.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Blanca/rhs_J12800_P1.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 44){
+        
+        datafile1="Blanca/mat_J12800_P2.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        
+        datafile2="Blanca/rhs_J12800_P2.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 51){
+        
+        datafile1="XiangdongLiang/mat_A.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="XiangdongLiang/rhs_A.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 52){
+        
+        datafile1="XiangdongLiang/mat_B.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="XiangdongLiang/rhs_B.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 53){
+        
+        datafile1="XiangdongLiang/mat_C.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="XiangdongLiang/rhs_C.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 54){
+        
+        datafile1="XiangdongLiang/mat_D.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="XiangdongLiang/rhs_D.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 55){
+        
+        datafile1="XiangdongLiang/mat_E.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="XiangdongLiang/rhs_E.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 56){
+        
+        datafile1="XiangdongLiang/mat_F.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="XiangdongLiang/rhs_F.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 61){
+        
+        datafile1="SGDG/mat_SGDG_4.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="SGDG/rhs_SGDG_4.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 62){
+        
+        datafile1="SGDG/mat_SGDG_5.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="SGDG/rhs_SGDG_5.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
     else {
         printf("### ERROR: Unrecognised problem number %d\n", problem_num);
         return ERROR_INPUT_PAR;

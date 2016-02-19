@@ -318,7 +318,7 @@ dCSRmat fasp_dbsr_Linfinity_dcsr (dBSRmat *A)
     const SHORT nc = A->nb;
     const INT nc2 = nc*nc;
 	const REAL TOL = 1e-8;
-
+    
     REAL *val = A->val;
     INT *IA = A->IA;
     INT *JA = A->JA;
@@ -334,7 +334,7 @@ dCSRmat fasp_dbsr_Linfinity_dcsr (dBSRmat *A)
     INT i, j, k;
     INT row_start, row_end;
     
-    for (i=0; i<=ROW; i++){
+    for (i=0; i<ROW; i++){
         
         row_start = A->IA[i]; row_end = A->IA[i+1];
         
@@ -356,7 +356,7 @@ dCSRmat fasp_dbsr_Linfinity_dcsr (dBSRmat *A)
     
     // compress CSR format
     fasp_dcsr_compress_inplace(&Acsr,TOL);
-    
+        
     // return CSR matrix
     return Acsr;
 }
