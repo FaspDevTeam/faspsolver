@@ -16,12 +16,13 @@ find_package(BLAS)
 find_package(SUITESPARSECONFIG)
 find_package(AMD)
 ### next one not needed if we only want UMFPACK.
-#### find_package(CHOLMOD) 
+find_package(CHOLMOD) 
 
 message(STATUS "Checking for package 'UMFPACK'")
 
 # Check for header file
 find_path(UMFPACK_INCLUDE_DIRS umfpack.h
+# HINTS ${UMFPACK_DIR}/include ${UMFPACK_DIR}/UMFPACK/include $ENV{UMFPACK_DIR}/include $ENV{UMFPACK_DIR}/UMFPACK/include
  HINTS ${SUITESPARSE_DIR}/include ${SUITESPARSE_DIR}/UMFPACK/include $ENV{SUITESPARSE_DIR}/include $ENV{SUITESPARSE_DIR}/UMFPACK/include
  PATH_SUFFIXES suitesparse ufsparse
  DOC "Directory where the UMFPACK header is located"

@@ -103,8 +103,10 @@ int main (int argc, const char * argv[])
         }
 
         // Assemble the matrix in block dCSR format
+        
         Abcsr.brow = 3; Abcsr.bcol = 3;
         Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
+        
         for (i=0; i<9 ;i++) {
             Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
