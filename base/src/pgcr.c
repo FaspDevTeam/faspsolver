@@ -30,7 +30,7 @@ static void dense_aAtxpby (INT, INT, REAL *, REAL, REAL *, REAL, REAL *);
  * \param prtlvl    How much information to print out
  *
  * \return          Iteration number if converges; ERROR otherwise.
- *
+ * \note            Refer to YVAN NOTAY "AN AGGREGATION-BASED ALGEBRAIC MULTIGRID METHOD"
  * \author Zheng Li
  * \date   12/23/2014
  */
