@@ -572,6 +572,11 @@ INT fasp_solver_dcsr_pvbcgs (dCSRmat *A,
      normr = fasp_blas_array_norm2(m,s);  //       normr = norm(s);
      normr_act = normr;
 
+    // compute reduction factor of residual ||r||
+    absres = normr_act;
+    factor = absres/absres0;
+    print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+
 //   check for convergence
     if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
     {
@@ -655,11 +660,6 @@ INT fasp_solver_dcsr_pvbcgs (dCSRmat *A,
     normr = fasp_blas_array_norm2(m,r);           //normr = norm(r);
     normr_act = normr;
     
-        // compute reduction factor of residual ||r||
-    absres = normr_act;
-    factor = absres/absres0;
-        // output iteration information if needed
-     print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
    
    // % check for convergence        
    if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -1252,6 +1252,11 @@ INT fasp_solver_dbsr_pvbcgs (dBSRmat *A,
      fasp_blas_array_axpyz(m, -alpha, v, r, s);
      normr = fasp_blas_array_norm2(m,s);  //       normr = norm(s);
      normr_act = normr;
+    
+    // compute reduction factor of residual ||r||
+    absres = normr_act;
+    factor = absres/absres0;
+    print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
 
 //   check for convergence
     if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -1335,12 +1340,6 @@ INT fasp_solver_dbsr_pvbcgs (dBSRmat *A,
     fasp_blas_array_axpyz(m, -omega, t, s, r);    //  r = s - omega * t;
     normr = fasp_blas_array_norm2(m,r);           //normr = norm(r);
     normr_act = normr;
-    
-        // compute reduction factor of residual ||r||
-    absres = normr_act;
-    factor = absres/absres0;
-        // output iteration information if needed
-     print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
    
    // % check for convergence        
    if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -1933,6 +1932,11 @@ INT fasp_solver_bdcsr_pvbcgs (block_dCSRmat *A,
      fasp_blas_array_axpyz(m, -alpha, v, r, s);
      normr = fasp_blas_array_norm2(m,s);  //       normr = norm(s);
      normr_act = normr;
+    
+    // compute reduction factor of residual ||r||
+    absres = normr_act;
+    factor = absres/absres0;
+    print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
 
 //   check for convergence
     if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -2016,14 +2020,8 @@ INT fasp_solver_bdcsr_pvbcgs (block_dCSRmat *A,
     fasp_blas_array_axpyz(m, -omega, t, s, r);    //  r = s - omega * t;
     normr = fasp_blas_array_norm2(m,r);           //normr = norm(r);
     normr_act = normr;
-    
-        // compute reduction factor of residual ||r||
-    absres = normr_act;
-    factor = absres/absres0;
-        // output iteration information if needed
-     print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
    
-   // % check for convergence        
+   //  check for convergence        
    if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps)
    {
       // normr_act = norm(r);
@@ -2614,6 +2612,11 @@ INT fasp_solver_dstr_pvbcgs (dSTRmat *A,
      fasp_blas_array_axpyz(m, -alpha, v, r, s);
      normr = fasp_blas_array_norm2(m,s);  //       normr = norm(s);
      normr_act = normr;
+    
+    // compute reduction factor of residual ||r||
+    absres = normr_act;
+    factor = absres/absres0;
+    print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
 
 //   check for convergence
     if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -2697,12 +2700,6 @@ INT fasp_solver_dstr_pvbcgs (dSTRmat *A,
     fasp_blas_array_axpyz(m, -omega, t, s, r);    //  r = s - omega * t;
     normr = fasp_blas_array_norm2(m,r);           //normr = norm(r);
     normr_act = normr;
-    
-        // compute reduction factor of residual ||r||
-    absres = normr_act;
-    factor = absres/absres0;
-        // output iteration information if needed
-     print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
    
    // % check for convergence        
    if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps)
