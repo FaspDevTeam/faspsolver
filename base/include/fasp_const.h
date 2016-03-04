@@ -102,6 +102,7 @@
 //---------------------------------------------------------------------------------
 #define SOLVER_CG               1  /**< Conjugate Gradient */
 #define SOLVER_BiCGstab         2  /**< Bi-Conjugate Gradient Stabilized */
+#define SOLVER_VBiCGstab         9  /**< VBi-Conjugate Gradient Stabilized */
 #define SOLVER_MinRes           3  /**< Minimal Residual */
 #define SOLVER_GMRES            4  /**< Generalized Minimal Residual */
 #define SOLVER_VGMRES           5  /**< Variable Restarting GMRES */

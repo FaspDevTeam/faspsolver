@@ -32,6 +32,7 @@
  *
  * \author Chensong Zhang
  * \date   11/25/2010
+ * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
 INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
                                 dvector *b,
@@ -64,6 +65,11 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
         case SOLVER_BiCGstab:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (Block CSR) ...\n");
             iter=fasp_solver_bdcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            break;
+            
+        case SOLVER_VBiCGstab:
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling VBiCGstab solver (Block CSR) ...\n");
+            iter=fasp_solver_bdcsr_pvbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_MinRes:
