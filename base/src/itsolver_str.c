@@ -30,6 +30,7 @@
  *
  * \author Chensong Zhang
  * \date   09/25/2009 
+ * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
 INT fasp_solver_dstr_itsolver (dSTRmat *A, 
                                dvector *b, 
@@ -68,6 +69,11 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
     case SOLVER_BiCGstab:
         if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (STR) ...\n");
         iter=fasp_solver_dstr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
+        break;
+    
+    case SOLVER_VBiCGstab:
+        if ( prtlvl > PRINT_NONE ) printf("\nCalling VBiCGstab solver (STR) ...\n");
+        iter=fasp_solver_dstr_pvbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
         break;
     
     case SOLVER_GMRES:

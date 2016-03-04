@@ -86,6 +86,13 @@ int main (int argc, const char * argv[])
 
     // Step 3.5: clean up auxiliary mesh info
     mesh_aux_free(&mesh_aux);
+// test by chunsheng
+     char matfile[80];
+     sprintf(matfile, "out/fem_mat_%03d.dat",fempar.refine_lvl); 
+     fasp_dcsr_write_coo(matfile, &A);
+     sprintf(matfile, "out/fem_rhs_%03d.dat",fempar.refine_lvl); 
+     fasp_dvec_write (matfile,&b);
+// test by chunsheng
 
     // Step 4: solve the linear system with AMG
     {
@@ -101,20 +108,32 @@ int main (int argc, const char * argv[])
         fasp_param_input_init(&inparam);
         fasp_param_init(&inparam,&itparam,&amgparam,&iluparam,&swzparam);
 
-        const int print_level   = inparam.print_level;
+// test by chunsheng
+	itparam.itsolver_type= SOLVER_BiCGstab;
+	itparam.itsolver_type= SOLVER_VBiCGstab;
+        //itparam.precond_type =  PREC_NULL;
+	itparam.precond_type =  PREC_AMG;
+	inparam.print_level = 9;
+	inparam.solver_type = SOLVER_BiCGstab;
+	inparam.precond_type = PREC_AMG;
+//	inparam.precond_type = PREC_NULL;
+        itparam.maxit = 1000;
+// test by chunsheng
+	const int print_level   = inparam.print_level;
         const int solver_type   = inparam.solver_type;
         const int precond_type  = inparam.precond_type;
 
         // Set initial guess
         fasp_dvec_alloc(A.row, &x);
         fasp_dvec_set(A.row,&x,0.0);
-
+          
         // Preconditioned Krylov methods
         if ( solver_type >= 1 && solver_type <= 20) {
 
             // Using no preconditioner for Krylov iterative methods
             if ( precond_type == PREC_NULL ) {
                 status = fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
+            //iter = fasp_solver_dcsr_pvbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             }
 
             // Using diag(A) as preconditioner for Krylov iterative methods

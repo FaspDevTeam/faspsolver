@@ -35,6 +35,7 @@
  * \date   09/25/2009
  *
  * \note This is an abstract interface for iterative methods.
+ * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
 INT fasp_solver_dcsr_itsolver (dCSRmat *A,
                                dvector *b,
@@ -73,6 +74,11 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
         case SOLVER_BiCGstab:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling PBiCGstab solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            break;
+            
+        case SOLVER_VBiCGstab:
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling PVBiCGstab solver (CSR) ...\n");
+            iter = fasp_solver_dcsr_pvbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_MinRes:

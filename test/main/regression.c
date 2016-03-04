@@ -54,6 +54,7 @@ static void check_solu(dvector *x, dvector *sol, double tol)
  * Modified by Chensong Zhang on 09/02/2011 
  * Modified by Chensong Zhang on 12/03/2011
  * Modified by Chensong Zhang on 03/20/2012
+ * Modified by Chunsheng Feng on 03/04/2016
  */
 int main (int argc, const char * argv[]) 
 {
@@ -394,6 +395,23 @@ int main (int argc, const char * argv[])
             
             check_solu(&x, &sol, tolerance);
         }
+        
+        if ( indp==1 || indp==2 ) {
+            /* VBiCGstab */
+            printf("------------------------------------------------------------------\n");
+            printf("VBiCGstab solver ...\n");    
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.precond_type  = PREC_NULL;  
+            itparam.itsolver_type = SOLVER_VBiCGstab;
+            itparam.maxit         = 5000;
+            itparam.tol           = 1e-12;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
 
         if ( indp==1 || indp==2 ) {
             /* BiCGstab in BSR */
@@ -406,6 +424,27 @@ int main (int argc, const char * argv[])
             fasp_param_solver_init(&itparam);
             itparam.precond_type  = PREC_NULL;  
             itparam.itsolver_type = SOLVER_BiCGstab;
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-12;
+            itparam.print_level   = print_level;
+            fasp_solver_dbsr_krylov(&A_bsr, &b, &x, &itparam);
+            fasp_dbsr_free(&A_bsr);
+
+            check_solu(&x, &sol, tolerance);            
+        }
+        
+
+        if ( indp==1 || indp==2 ) {
+            /* VBiCGstab in BSR */
+            dBSRmat A_bsr = fasp_format_dcsr_dbsr (&A, 1);
+            
+            printf("------------------------------------------------------------------\n");
+            printf("VBiCGstab solver in BSR format ...\n");  
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.precond_type  = PREC_NULL;  
+            itparam.itsolver_type = SOLVER_VBiCGstab;
             itparam.maxit         = 500;
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
@@ -455,6 +494,23 @@ int main (int argc, const char * argv[])
             fasp_param_solver_init(&itparam);
             fasp_param_amg_init(&amgparam);
             itparam.itsolver_type = SOLVER_BiCGstab;
+            itparam.maxit         = 500;
+            itparam.tol           = 1e-10;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+            
+            check_solu(&x, &sol, tolerance);
+        }
+        
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* Using classical AMG as preconditioner for VBiCGstab */
+            printf("------------------------------------------------------------------\n");
+            printf("AMG preconditioned VBiCGstab solver ...\n"); 
+            
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.itsolver_type = SOLVER_VBiCGstab;
             itparam.maxit         = 500;
             itparam.tol           = 1e-10;
             itparam.print_level   = print_level;
