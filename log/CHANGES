@@ -1,10 +1,16 @@
 File Name: CHANGES
 
+03/05/2015 FASP 1.8.5:
+- Fix a bug in BSR AMG.
+- Add some comments and reference for GCR.
+- Add a new version of BiCGstab implementation.
+- Update regeression results.
+
 02/15/2015 FASP 1.8.4:
-- Added an interface to Intel MKL PARDISO.
-- Added PARDISO option for coarse solver of AMG.
-- Removed some warnings.
-- Tested GCC 5.3.
+- Add an interface to Intel MKL PARDISO.
+- Add PARDISO option for coarse solver of AMG.
+- Remove some warnings.
+- Test GCC 5.3.
 - Reformat CMakeFile.
 - Update developer list.
 - Update website and documentation.

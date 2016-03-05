@@ -1,6 +1,6 @@
     1232 ./base/include/fasp.h
      670 ./base/include/fasp_block.h
-     254 ./base/include/fasp_const.h
+     255 ./base/include/fasp_const.h
     2963 ./base/include/fasp_functs.h
      397 ./base/src/aggregation_bsr.inl
     1807 ./base/src/aggregation_csr.inl
@@ -12,7 +12,7 @@
      124 ./base/src/amg_setup_cr.c
      290 ./base/src/amg_setup_rs.c
      908 ./base/src/amg_setup_sa.c
-     697 ./base/src/amg_setup_ua.c
+     700 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
      972 ./base/src/amlirecur.c
      264 ./base/src/array.c
@@ -44,11 +44,11 @@
     1597 ./base/src/interpolation.c
      840 ./base/src/interpolation_em.c
     3228 ./base/src/io.c
-     598 ./base/src/itsolver_bcsr.c
-     783 ./base/src/itsolver_bsr.c
-     711 ./base/src/itsolver_csr.c
+     604 ./base/src/itsolver_bcsr.c
+     790 ./base/src/itsolver_bsr.c
+     717 ./base/src/itsolver_csr.c
      362 ./base/src/itsolver_mf.c
-     396 ./base/src/itsolver_str.c
+     402 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
      261 ./base/src/memory.c
      289 ./base/src/message.c
@@ -56,8 +56,8 @@
      153 ./base/src/mgrecur.c
      556 ./base/src/ordering.c
      986 ./base/src/parameters.c
-    1437 ./base/src/pbcgs.c
-     411 ./base/src/pbcgs_mf.c
+    2788 ./base/src/pbcgs.c
+     755 ./base/src/pbcgs_mf.c
     1227 ./base/src/pcg.c
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
@@ -100,4 +100,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      301 ./base/src/wrapper.c
-   83900 total
+   85624 total
