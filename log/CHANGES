@@ -1,10 +1,11 @@
 File Name: CHANGES
 
-03/05/2015 FASP 1.8.5:
+03/06/2015 FASP 1.8.5:
 - Fix a bug in BSR AMG.
 - Add some comments and reference for GCR.
 - Add a new version of BiCGstab implementation.
 - Update regeression results.
+- Refresh function decroration in fasp_functs.h.
 
 02/15/2015 FASP 1.8.4:
 - Add an interface to Intel MKL PARDISO.
