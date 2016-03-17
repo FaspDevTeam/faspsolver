@@ -154,7 +154,7 @@
  * 
  * http://www.doxygen.org
  *
- * For an oridinary user, Doxygen is completely trivial to use. We only need to use 
+ * For an ordinary user, Doxygen is completely trivial to use. We only need to use 
  * some special marker in the usual comment as we put in c-files. 
  *
  */
