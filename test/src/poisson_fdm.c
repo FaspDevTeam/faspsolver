@@ -970,7 +970,7 @@ char *
 fsls_CAlloc ( size_t count, size_t elt_size )
 {
     char *ptr;
-    int   size = count*elt_size;
+    long long   size = count*elt_size;
     
     if (size > 0) {
         ptr = (char*)calloc(count, elt_size);
