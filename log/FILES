@@ -1,7 +1,7 @@
     1232 ./base/include/fasp.h
      670 ./base/include/fasp_block.h
      255 ./base/include/fasp_const.h
-    2963 ./base/include/fasp_functs.h
+    3009 ./base/include/fasp_functs.h
      397 ./base/src/aggregation_bsr.inl
     1807 ./base/src/aggregation_csr.inl
     2119 ./base/src/gmg_util.inl
@@ -56,8 +56,8 @@
      153 ./base/src/mgrecur.c
      556 ./base/src/ordering.c
      986 ./base/src/parameters.c
-    2788 ./base/src/pbcgs.c
-     755 ./base/src/pbcgs_mf.c
+    2792 ./base/src/pbcgs.c
+     756 ./base/src/pbcgs_mf.c
     1227 ./base/src/pcg.c
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
@@ -100,4 +100,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      301 ./base/src/wrapper.c
-   85624 total
+   85675 total

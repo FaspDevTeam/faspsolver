@@ -5,8 +5,7 @@ Milestones
 ========================
 
 [ 1.1.6 ] Release an alpha version by the end of 2012!
-[       ] Release a beta 1 version by Oct 2015!
-[       ] Release a beta 2 version by Dec 2015!
+[ 1.8.2 ] Release a beta version by Oct 2015!
 [       ] Release a stable version by Dec 2016!
 
 ========================
@@ -44,7 +43,7 @@ Structure
 [ 1.6.1 ] fix problem with MUMPS: cannot find package
 [ 1.6.2 ] allow users to set compilers, e.g. using CC, CXX
 [ 1.7.6 ] fix problem with UMFPACK when it is installed without CHOLMOD
-[   *   ] add Intel MKL PARDISO as a direct solver
+[ 1.8.4 ] add Intel MKL PARDISO as a direct solver
 [   *   ] add the new sparse matrix data structure: TCSR
 [       ] add support for symmetric TCSR format
 [       ] add subrouties for general purpose tests on matrices and vectors
