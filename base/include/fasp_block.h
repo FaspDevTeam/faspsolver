@@ -522,6 +522,7 @@ typedef struct {
 
 } precond_block_data; /**< Precond data for block matrices */
 
+
 /**
  * \struct precond_FASP_blkoil_data
  * \brief Data passed to the preconditioner for preconditioning reservoir simulation problems
@@ -551,10 +552,16 @@ typedef struct {
     dBSRmat *SS;        /**< saturation block */
     dvector *diaginv_S; /**< inverse of the diagonal blocks of saturation block */
     ivector *pivot_S;   /**< pivoting for the GS smoothers for saturation block */
+    
+    // data of ILU for saturation block
+    ILU_data *LU_S;
 
     // data of AMG for pressure block
     dCSRmat *PP;        /**< pressure block */
     AMG_data *mgl_data; /**< AMG data for presure-presure block */
+    
+    // data of ILU for pressure block
+    ILU_data *LU_P;
 
     //! print level in AMG preconditioner
     SHORT print_level;
