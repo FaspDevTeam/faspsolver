@@ -238,6 +238,7 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n,
                                        INT maxit,
                                        INT ptrlvl)
 {
+    
     dCOOmat         coomat;   // coefficient matrix in COO format
     dCSRmat         csrmat;   // coefficient matrix in CSR format
     dBSRmat         bsrmat;   // coefficient matrix in BSR format

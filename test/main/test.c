@@ -389,6 +389,55 @@ int main (int argc, const char * argv[])
         fasp_dvec_read(filename2, &b);
     }
     
+    else if (problem_num == 71){
+        
+        datafile1="ice/A_40.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="ice/b_40.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 72){
+        
+        datafile1="ice/A_10.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="ice/b_10.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 81){
+        
+        datafile1="pipe_flow_pressure/Ap.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="pipe_flow_pressure/rp.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_blas_dcsr_axm(&A, -1.0);
+        fasp_dvec_read(filename2, &b);
+    }
+    
+    else if (problem_num == 91){
+        
+        datafile1="bio/mat_N_1.dat";
+        strcat(filename1,datafile1);
+        
+        datafile2="bio/rhs_b_1.dat";
+        strcat(filename2,datafile2);
+        
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+    }
+    
     else {
         printf("### ERROR: Unrecognised problem number %d\n", problem_num);
         return ERROR_INPUT_PAR;
