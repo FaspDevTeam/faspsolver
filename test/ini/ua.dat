@@ -60,7 +60,7 @@ AMG_cycle_type           = NA     % V V-cycle | W W-cycle
 AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 10     % max number of levels
-AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
+AMG_coarse_dof           = 200    % max number of coarse degrees of freedom
 AMG_coarse_solver        = 0      % coarse level solver: 31 SuperLU | 32 UMFPack | 33 MUMPS
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
@@ -85,6 +85,7 @@ AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
 %----------------------------------------------%
 
 AMG_coarsening_type      = 1      % 1 Modified RS
+                                  % 2 Mofified RS for positive off-diags
                                   % 3 Compatible Relaxation
                                   % 4 Aggressive 
 AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min
