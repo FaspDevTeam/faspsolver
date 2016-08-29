@@ -90,6 +90,7 @@ AMG_postsmooth_iter      = 1      % number of postsmoothing sweeps
 %----------------------------------------------%
 
 AMG_coarsening_type      = 1      % 1 Modified RS
+                                  % 2 Mofified RS for positive off-diags
                                   % 3 Compatible Relaxation
                                   % 4 Aggressive 
 AMG_interpolation_type   = 1      % 1 Direct | 2 Standard | 3 Energy-min

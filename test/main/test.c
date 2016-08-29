@@ -63,8 +63,9 @@ int main (int argc, const char * argv[])
     strncpy(filename1,inipar.workdir,128);
     strncpy(filename2,inipar.workdir,128);
     
-    // Read A and b -- P1 FE discretization for Poisson.
-    if (problem_num == 10) {                
+    if (problem_num == 10) {
+        
+        // Read A and b -- P1 FE discretization for Poisson.
         datafile1="csrmat_FE.dat";
         strcat(filename1,datafile1);
         
@@ -72,10 +73,12 @@ int main (int argc, const char * argv[])
         strcat(filename2,datafile2);        
         
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
-    }   
     
-    // Read A and b -- P1 FE discretization for Poisson, 1M DoF    
+    }
+    
     else if (problem_num == 11) {
+
+        // Read A and b -- P1 FE discretization for Poisson, 1M DoF
         datafile1="coomat_1046529.dat"; // This file is NOT in ../data!
         strcat(filename1,datafile1);
         fasp_dcoo_read(filename1, &A);
@@ -88,10 +91,12 @@ int main (int argc, const char * argv[])
         b = fasp_dvec_create(A.row);
         fasp_blas_dcsr_mxv(&A, sol.val, b.val);
         fasp_dvec_free(&sol);
+        
     }   
     
-    // Read A and b -- FD discretization for Poisson, 1M DoF    
     else if (problem_num == 12) {
+
+        // Read A and b -- FD discretization for Poisson, 1M DoF
         datafile1="csrmat_1023X1023.dat"; // This file is NOT in ../data!
         strcat(filename1,datafile1);
         
@@ -99,345 +104,9 @@ int main (int argc, const char * argv[])
         strcat(filename2,datafile2);
         
         fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        
     }
-    
-    else if (problem_num == 21){
-        
-        datafile1="interface/mat_interface.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="interface/rhs_interface.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 22){
-        
-        datafile1="interface/mat_interface3D.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="interface/rhs_interface3D.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 23){
-        
-        datafile1="interface/mat_interface3D_jump.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="interface/rhs_interface3D_jump.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 24){
-        
-        datafile1="interface/mat_interface3D_jump_large.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="interface/rhs_interface3D_jump_large.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 31){
-        
-        datafile1="Stokes_NewPrec/N8/ML.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Stokes_NewPrec/N8/Lb.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 32){
-        
-        datafile1="Stokes_NewPrec/N8/S.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Stokes_NewPrec/N8/Sb.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 33){
-        
-        datafile1="Stokes_NewPrec/N16/ML.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Stokes_NewPrec/N16/Lb.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 34){
-        
-        datafile1="Stokes_NewPrec/N16/S.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Stokes_NewPrec/N16/Sb.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 35){
-        
-        datafile1="Stokes_NewPrec/N16dt1e5/ML.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Stokes_NewPrec/N16dt1e5/Lb.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 36){
-        
-        datafile1="Stokes_NewPrec/N16dt1e5/S.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Stokes_NewPrec/N16dt1e5/Sb.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 37){
-        
-        datafile1="Stokes_NewPrec/N32/ML.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Stokes_NewPrec/N32/Lb.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 38){
-        
-        datafile1="Stokes_NewPrec/N32/S.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Stokes_NewPrec/N32/Sb.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 41){
-        
-        datafile1="Blanca/mat_J320_P1.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Blanca/rhs_J320_P1.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 42){
-        
-        datafile1="Blanca/mat_J320_P2.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Blanca/rhs_J320_P2.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 43){
-        
-        datafile1="Blanca/mat_J12800_P1.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Blanca/rhs_J12800_P1.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 44){
-        
-        datafile1="Blanca/mat_J12800_P2.dat"; // This file is NOT in ../data!
-        strcat(filename1,datafile1);
-        
-        datafile2="Blanca/rhs_J12800_P2.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 51){
-        
-        datafile1="XiangdongLiang/mat_A.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="XiangdongLiang/rhs_A.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 52){
-        
-        datafile1="XiangdongLiang/mat_B.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="XiangdongLiang/rhs_B.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 53){
-        
-        datafile1="XiangdongLiang/mat_C.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="XiangdongLiang/rhs_C.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 54){
-        
-        datafile1="XiangdongLiang/mat_D.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="XiangdongLiang/rhs_D.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 55){
-        
-        datafile1="XiangdongLiang/mat_E.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="XiangdongLiang/rhs_E.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 56){
-        
-        datafile1="XiangdongLiang/mat_F.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="XiangdongLiang/rhs_F.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 61){
-        
-        datafile1="SGDG/mat_SGDG_4.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="SGDG/rhs_SGDG_4.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 62){
-        
-        datafile1="SGDG/mat_SGDG_5.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="SGDG/rhs_SGDG_5.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 71){
-        
-        datafile1="ice/A_40.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="ice/b_40.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 72){
-        
-        datafile1="ice/A_10.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="ice/b_10.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 81){
-        
-        datafile1="pipe_flow_pressure/Ap.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="pipe_flow_pressure/rp.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_blas_dcsr_axm(&A, -1.0);
-        fasp_dvec_read(filename2, &b);
-    }
-    
-    else if (problem_num == 91){
-        
-        datafile1="bio/mat_N_1.dat";
-        strcat(filename1,datafile1);
-        
-        datafile2="bio/rhs_b_1.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcoo_read(filename1, &A);
-        fasp_dvec_read(filename2, &b);
-    }
-    
+
     else {
         printf("### ERROR: Unrecognised problem number %d\n", problem_num);
         return ERROR_INPUT_PAR;
