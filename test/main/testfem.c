@@ -108,6 +108,9 @@ int main (int argc, const char * argv[])
         // Read input parameters from a disk file
         fasp_param_input_init(&inparam);
         fasp_param_init(&inparam,&itparam,&amgparam,&iluparam,&swzparam);
+
+		amgparam.ILU_type             = ILUtp;
+		amgparam.ILU_levels           = 2;
 #if 0
 // test by chunsheng
 	itparam.itsolver_type= SOLVER_BiCGstab;
