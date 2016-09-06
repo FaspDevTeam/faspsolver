@@ -8,7 +8,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-
+#define ILU_FORTRAN 0
 /* declarations for ilu.for */
 #ifdef __cplusplus 
 extern "C" {void iluk_(const INT *n,REAL *a,INT *ja,INT *ia,INT *lfil,REAL *alu,
@@ -112,20 +112,35 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUt) ...... [Start]\n", __FUNCTION__);
 #endif
+
+#if	ILU_FORTRAN
             ilut_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,luval,ijlu,&iwk,&ierr,&nzlu);
+#else
+            fasp_ilut(n,A->val,A->JA,A->IA,lfilt,ILU_droptol,luval,ijlu,iwk,&ierr,&nzlu);
+#endif			
             break;
         case ILUtp:
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUp) ...... [Start]\n", __FUNCTION__);
 #endif
-            ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol,
+#if	ILU_FORTRAN
+       ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol,
                    &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
+#else            
+	   fasp_ilutp(n,A->val,A->JA,A->IA, lfilt, ILU_droptol, permtol,
+                   mbloc,luval,ijlu,iwk,&ierr,&nzlu);
+#endif		
+	 
             break;
         default: // ILUk
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
 #endif
+#if	ILU_FORTRAN
             iluk_(&n,A->val,A->JA,A->IA,&lfil,luval,ijlu,&iwk,&ierr,&nzlu);
+#else			
+            fasp_iluk(n,A->val,A->JA,A->IA,lfil,luval,ijlu,iwk,&ierr,&nzlu);
+#endif			
             break;
     } 
     
