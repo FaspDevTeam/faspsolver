@@ -1,13 +1,19 @@
 File Name: CHANGES
 
-03/06/2015 FASP 1.8.5:
+09/07/2016 FASP 1.8.6:
+- Make changes for new preconditioners in FASP4BLKOIL.
+- Translate ILU from Fortran to C.
+- Add a new flag for using C version ILU.
+- Modify VS for ILU accordingly. 
+
+03/06/2016 FASP 1.8.5:
 - Fix a bug in BSR AMG.
 - Add some comments and reference for GCR.
 - Add a new version of BiCGstab implementation.
 - Update regeression results.
 - Refresh function decroration in fasp_functs.h.
 
-02/15/2015 FASP 1.8.4:
+02/15/2016 FASP 1.8.4:
 - Add an interface to Intel MKL PARDISO.
 - Add PARDISO option for coarse solver of AMG.
 - Remove some warnings.

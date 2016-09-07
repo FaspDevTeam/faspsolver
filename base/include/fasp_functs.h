@@ -747,6 +747,51 @@ INT fasp_dcsr_plot (const dCSRmat *A,
                     const char *fname);
 
 
+/*-------- In file: ilu.c --------*/
+
+void fasp_qsplit (REAL *a,
+                  INT *ind,
+                  INT n,
+                  INT ncut);
+
+void fasp_iluk (INT n,
+                REAL *a,
+                INT *ja,
+                INT *ia,
+                INT lfil,
+                REAL *alu,
+                INT *jlu,
+                INT iwk,
+                INT *ierr,
+                INT *nzlu);
+
+void fasp_ilut (INT n,
+                REAL *a,
+                INT  *ja,
+                INT  *ia,
+                INT lfil,
+                REAL droptol,
+                REAL *alu,
+                INT *jlu,
+                INT iwk,
+                INT *ierr,
+                INT *nz);
+
+void fasp_ilutp (INT n,
+                 REAL *a,
+                 INT  *ja,
+                 INT  *ia,
+                 INT  lfil,
+                 REAL droptol,
+                 REAL permtol,
+                 INT  mbloc,
+                 REAL *alu,
+                 INT  *jlu,
+                 INT  iwk,
+                 INT  *ierr,
+                 INT  *nz);
+
+
 /*-------- In file: ilu_setup_bsr.c --------*/
 
 SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
