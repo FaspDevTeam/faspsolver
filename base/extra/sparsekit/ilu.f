@@ -1309,11 +1309,13 @@ c
       else
          icn   =  5
       end if
+	  
       do 40 ii = 1, icn
          ih = iinc(icn + 1 - ii)
          do 30  j = ih+1, num
             i = j-ih
             key = q(j)
+ 
             do 10 jj = 1, j-ih, ih
                if (key .ge. q(i)) then
                   go to 20
@@ -1322,6 +1324,7 @@ c
                   i = i - ih
                end if
  10         continue
+ 
  20         continue
             q(i + ih) = key
  30      continue

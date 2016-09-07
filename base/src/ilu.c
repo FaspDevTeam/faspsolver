@@ -1415,6 +1415,738 @@ F999:
     //----------------end-of-ilutp-------------------------------------------
 }
 
+/**
+ * \fn void fasp_srtr(INT num,INT *q)
+ *
+ * \brief Implement shell sort, with hardwired increments.  
+ *
+ * \param num  size of q
+ * \param q  integer array.
+ *
+ *
+ * \author Chunsheng Feng
+ * \date   09/06/2016
+ */
+void fasp_srtr(INT num,
+               INT *q)
+{
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
+#endif	
+    /**
+    ========================================================================
+         
+         Implement shell sort, with hardwired increments.  The algorithm for
+         sorting entries in A(0:n-1) is as follows:
+    ----------------------------------------------------------------
+         inc = initialinc(n)
+         while inc >= 1
+         for i = inc to n-1
+         j = i
+         x = A(i)
+         while j >= inc and A(j-inc) > x
+         A(j) = A(j-inc)
+         j    = j-inc
+         end while 
+         A(j) = x
+         end for
+         inc = nextinc(inc,n)
+         end while
+    ----------------------------------------------------------------
+         
+         The increments here are 1, 4, 13, 40, 121, ..., (3**i - 1)/2, ...
+         In this case, nextinc(inc,n) = (inc-1)/3.  Usually shellsort
+         would have the largest increment the largest integer of the form
+         (3**i - 1)/2 that is less than n, but here it is fixed at 121
+         because most sparse matrices have 121 or fewer nonzero entries
+         per row.  If this routine is expanded for a complete sparse
+         factorization routine, or if a large number of levels of fill is
+         allowed, then possibly it should be replaced with more efficient
+         sorting.
+         
+         Any set of increments with 1 as the first one will result in a
+         true sorting algorithm.
+         
+    ========================================================================*/
+  
+	INT key, icn, ih, ii, i, j, jj;
+	INT iinc[6] = {0,1, 4, 13, 40, 121};
+    //data iinc/1, 4, 13, 40, 121/;
+    
+	--q;    
+    if (num  ==  0) 
+        icn = 0;
+    else if (num  <  14)
+        icn = 1;
+    else if (num  <  41)
+        icn = 2;
+    else if (num  <  122)
+        icn = 3;
+    else if (num  <  365) 
+        icn = 4; 
+	else 
+        icn = 5;
+
+    for(ii = 1; ii <= icn; ++ii) { // 40
+        ih = iinc[icn + 1 - ii];
+        for(j = ih + 1; j <= num; ++j) { // 30
+            i = j - ih;
+            key = q[j];
+            for(jj = 1; jj <= j - ih; jj += ih) { // 10
+                if (key  >=  q[i]) {
+                    goto F20;
+                } else {
+                    q[i + ih] = q[i];
+                    i = i - ih;
+                }
+            }  // 10
+F20:
+            q[i + ih] = key;
+        }  // 30
+    } // 40
+	
+    ++q;
+	
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif	
+    return;
+    //----------------end-of-srtr-------------------------------------------
+}
+
+
+
+/**
+ * \fn void fasp_symbfactor(INT n, INT *colind,INT *rwptr,INT levfill,INT nzmax,
+					        INT *nzlu, INT *ijlu, INT *uptr, INT *ierr)
+ *
+ * \brief Symbolic factorization of a CSR matrix A in compressed sparse row format,  
+ *		    with resulting factors stored in a single MSR data structure. 
+ *
+ * \param n   row number of A
+ * \param colind  integer array of column for A
+ * \param rwptr  integer array of row pointers for A
+ * \param levfill  integer. Level of fill-in allowed
+ * \param nzmax  integer. The maximum number of nonzero entries in the
+ *		           approximate factorization of a.  This is the amount of storage
+ *		           allocated for ijlu.
+ * \param nzlu  integer pointer. Return number of nonzero entries for alu and jlu
+ * \param ijlu  integer array of length nzlu containing pointers to delimit rows
+ *              and specify column number for stored elements of the approximate
+ *              factors of A.  the L and U factors are stored as one matrix.
+ * \param uptr  integer array of length n containing the pointers to upper trig matrix 
+ * \param ierr  integer pointer. Return error message with the following meaning.
+ *                0  --> successful return.
+ *                1  --> not enough storage; check mneed.
+ *
+ *
+ *
+ * \author Chunsheng Feng
+ * \date   09/06/2016
+ */
+void fasp_symbfactor(INT n, 
+                     INT *colind,
+                     INT *rwptr,
+					 INT levfill,
+					 INT nzmax,
+					 INT *nzlu,
+					 INT *ijlu,
+					 INT *uptr,
+					 INT *ierr)
+{
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
+#endif
+
+	/**
+		======================================================================== 
+		                                                                       *
+		  Symbolic factorization of a matrix in compressed sparse row format,  *
+		    with resulting factors stored in a single MSR data structure.      *
+		                                                                       *
+		  This routine uses the CSR data structure of A in two integer vectors *
+		    colind, rwptr to set up the data structure for the ILU(levfill)    *
+		    factorization of A in the integer vectors ijlu and uptr.  Both L   *
+		    and U are stored in the same structure, and uptr(i) is the pointer *
+		    to the beginning of the i-th row of U in ijlu.         *
+		                                                                       *
+		======================================================================== 
+		                                                                       *
+		    Method Used                                                        *
+		    ===========                                                        *
+		                                                                       *
+		  The implementation assumes that the diagonal entries are     *
+		  nonzero, and remain nonzero throughout the elimination       *
+		  process.  The algorithm proceeds row by row.  When computing     *
+		  the sparsity pattern of the i-th row, the effect of row      *
+		  operations from previous rows is considered.  Only those     *
+		  preceding rows j for which (i,j) is nonzero need be considered,  *
+		  since otherwise we would not have formed a linear combination    *
+		  of rows i and j.                         *
+		                                                                       *
+		  The method used has some variations possible.  The definition    *
+		  of ILU(s) is not well specified enough to get a factorization    *
+		  that is uniquely defined, even in the sparsity pattern that      *
+		  results.  For s = 0 or 1, there is not much variation, but for   *
+		  higher levels of fill the problem is as follows:  Suppose        *
+		  during the decomposition while computing the nonzero pattern     *
+		  for row i the following principal submatrix is obtained:     *
+		       _______________________                     *
+		       |          |           |                    *
+		       |          |           |                    *
+		       |  j,j     |    j,k    |                    *
+		       |          |           |                    *
+		       |__________|___________|                    *
+		       |          |           |                    *
+		       |          |           |                    *
+		       |  i,j     |    i,k    |                    *
+		       |          |           |                    *
+		       |__________|___________|                    *
+		                                   *
+		  Furthermore, suppose that entry (i,j) resulted from an earlier   *
+		  fill-in and has level s1, and (j,k) resulted from an earlier     *
+		  fill-in and has level s2:                        *
+		       _______________________                     *
+		       |          |           |                    *
+		       |          |           |                    *
+		       | level 0  | level s2  |                    *
+		       |          |           |                    *
+		       |__________|___________|                    *
+		       |          |           |                    *
+		       |          |           |                    *
+		       | level s1 |           |                    *
+		       |          |           |                    *
+		       |__________|___________|                    *
+		                                   *
+		  When using A(j,j) to annihilate A(i,j), fill-in will be incurred *
+		  in A(i,k).  How should its level be defined?  It would not be    *
+		  operated on if A(i,j) or A(j,m) had not been filled in.  The     *
+		  version used here is to define its level as s1 + s2 + 1.  However,   *
+		  other reasonable choices would have been min(s1,s2) or max(s1,s2).   *
+		  Using the sum gives a more conservative strategy in terms of the *
+		  growth of the number of nonzeros as s increases.         *
+		                                   *
+		  levels(n+2:nzlu    ) stores the levels from previous rows,       *
+		  that is, the s2's above.  levels(1:n) stores the fill-levels     *
+		  of the current row (row i), which are the s1's above.        *
+		  levels(n+1) is not used, so levels is conformant with MSR format.    *
+		                                   *
+		  Vectors used:                            *
+		  =============                            *
+		                                   *
+		  lastcol(n):                              *
+		   The integer lastcol(k) is the row index of the last row     *
+		   to have a nonzero in column k, including the current        *
+		   row, and fill-in up to this point.  So for the matrix       *
+		                                   *
+		             |--------------------------|              *
+		             | 11   12           15     |              *
+		             | 21   22                26|              *
+		             |      32  33   34         |              *
+		             | 41       43   44         |              *
+		             |      52       54  55   56|              *
+		             |      62                66|              *
+		             ---------------------------               *
+		                                   *
+		             after step 1, lastcol() = [1  0  0  0  1  0]      *
+		             after step 2, lastcol() = [2  2  0  0  2  2]      *
+		             after step 3, lastcol() = [2  3  3  3  2  3]      *
+		             after step 4, lastcol() = [4  3  4  4  4  3]      *
+		             after step 5, lastcol() = [4  5  4  5  5  5]      *
+		             after step 6, lastcol() = [4  6  4  5  5  6]      *
+		                                   *  
+		          Note that on step 2, lastcol(5) = 2 because there is a   *
+		          fillin position (2,5) in the matrix.  lastcol() is used  *
+		       to determine if a nonzero occurs in column j because        *
+		       it is a nonzero in the original matrix, or was a fill.      *
+		                                   *  
+		  rowll(n):                                *
+		   The integer vector rowll is used to keep a linked list of   *
+		   the nonzeros in the current row, allowing fill-in to be     *
+		       introduced sensibly.  rowll is initialized with the     *
+		   original nonzeros of the current row, and then sorted       *
+		   using a shell sort.  A pointer called head              *
+		   (what ingenuity) is  initialized.  Note that at any     *
+		   point rowll may contain garbage left over from previous     *
+		   rows, which the linked list structure skips over.       *
+		   For row 4 of the matrix above, first rowll is set to        *
+		       rowll() = [3  1  2  5  -  -], where - indicates any integer.    *
+		       Then the vector is sorted, which yields             *
+		       rowll() = [1  2  3  5  -  -].  The vector is then expanded  *
+		   to linked list form by setting head = 1  and                *
+		       rowll() = [2  3  5  -  7  -], where 7 indicates termination.    *
+		                                   *  
+		  ijlu(nzlu):                              *
+		   The returned nonzero structure for the LU factors.      *
+		   This is built up row by row in MSR format, with both L      *
+		   and U stored in the data structure.  Another vector, uptr(n),   *
+		   is used to give pointers to the beginning of the upper      *
+		   triangular part of the LU factors in ijlu.          *
+		                                   *  
+		  levels(n+2:nzlu):                            *
+		   This vector stores the fill level for each entry from       *
+		   all the previous rows, used to compute if the current entry *
+		   will exceed the allowed levels of fill.  The value in       *
+		   levels(m) is added to the level of fill for the element in  *
+		       the current row that is being reduced, to figure if         *
+		   a column entry is to be accepted as fill, or rejected.      *
+		   See the method explanation above.               *
+		                                   *  
+		  levels(1:n):                             *
+		   This vector stores the fill level number for the current    *
+		   row's entries.  If they were created as fill elements       *
+		   themselves, this number is added to the corresponding       *
+		   entry in levels(n+2:nzlu) to see if a particular column     *
+		       entry will                          *
+		   be created as new fill or not.  NOTE: in practice, the      *
+		   value in levels(1:n) is one larger than the "fill" level of *
+		   the corresponding row entry, except for the diagonal        *
+		   entry.  That is why the accept/reject test in the code      *
+		   is "if (levels(j) + levels(m) .le. levfill + 1)".       *
+		                                   *  
+		======================================================================== 
+		
+		 on entry:
+		========== 
+		  n       = The order of the matrix A.
+		  ija     = Integer array. Matrix A stored in modified sparse row format.
+		  levfill = Integer. Level of fill-in allowed.
+		  nzmax   = Integer. The maximum number of nonzero entries in the
+		           approximate factorization of a.  This is the amount of storage
+		           allocated for ijlu.
+		
+		 on return:
+		=========== 
+		
+		 nzlu   = The actual number of entries in the approximate factors, plus one.
+		 ijlu   = Integer array of length nzlu containing pointers to 
+		           delimit rows and specify column number for stored 
+		           elements of the approximate factors of a.  the l 
+		           and u factors are stored as one matrix.
+		 uptr   = Integer array of length n containing the pointers to upper trig
+		           matrix       
+		
+		 ierr is an error flag:
+		        ierr  = -i --> near zero pivot in step i
+		        ierr  = 0  --> all's OK
+		        ierr  = 1  --> not enough storage; check mneed.
+		        ierr  = 2  --> illegal parameter
+		
+		 mneed   = contains the actual number of elements in ldu, or the amount
+		       of additional storage needed for ldu
+		
+		 work arrays:
+		=============
+		 lastcol    = integer array of length n containing last update of the
+		              corresponding column.
+		 levels     = integer array of length n containing the level of
+		              fill-in in current row in its first n entries, and
+		              level of fill of previous rows of U in remaining part.
+		 rowll      = integer array of length n containing pointers to implement a
+		              linked list for the fill-in elements.
+		
+		 external functions:
+		====================
+		 ifix, float, min0, srtr
+		
+		======================================================================== */
+		
+	//INT mneed;
+	INT icolindj, ijlum, i, j, k, m, ibegin, iend, Ujbeg, Ujend,NE;
+	INT head, prev, lm, actlev, lowct, k1, k2, levp1, lmk, nzi, rowct;
+	SHORT cinindex=0;
+	INT *rowll, *lastcol, *levels;
+	
+    rowll = (INT *)fasp_mem_calloc(n, sizeof(INT));
+    lastcol = (INT *)fasp_mem_calloc(n, sizeof(INT));
+    levels = (INT *)fasp_mem_calloc(nzmax, sizeof(INT));	
+
+	//======================================================================== 
+	//       Beginning of Executable Statements
+	//======================================================================== 
+	
+	
+    /*-----------------------------------------------------------------------
+     shift index for C routines
+     -----------------------------------------------------------------------*/
+	--rowll;
+	--lastcol;
+    --levels;	
+	--colind;
+	--rwptr;
+	--ijlu;
+	--uptr;
+	 
+    if (rwptr[1]  ==  0) cinindex=1 ;
+    if (cinindex) {
+        NE = n + 1; 
+        for (i=1; i<=NE; ++i)  ++rwptr[i];
+        NE = rwptr[n+1] - 1;
+        for (i=1; i<=NE; ++i)  ++colind[i];
+    }
+
+	// --------------------------------------------------------------
+	// Because the first row of the factor contains no strictly lower
+	// triangular parts (parts of L), uptr(1) = ijlu(1) = n+2:
+	// --------------------------------------------------------------
+	ijlu[1] = n + 2;
+	uptr[1] = n + 2;
+
+	// --------------------------------------------------------
+	// The storage for the nonzeros of LU must be at least n+1, 
+	// for a diagonal matrix:
+	// --------------------------------------------------------
+	*nzlu = n + 1;
+
+	//  --------------------------------------------------------------------
+	//  Number of allowed levels plus 1; used for the test of accept/reject.
+	//  See the notes about the methodology above.
+	//  --------------------------------------------------------------------
+	levp1 = levfill + 1;
+
+	//  -------------------------------------------------------------
+	//  Initially, for all columns there were no nonzeros in the rows
+	//  above, because there are no rows above the first one.
+	//  -------------------------------------------------------------
+	for(i = 1; i<=n; ++i) lastcol[i] = 0;
+
+	//  -------------------
+	//  Proceed row by row:
+	//  -------------------
+	for(i = 1; i <= n; ++i)	{ // 100
+
+		// ----------------------------------------------------------
+		// Because the matrix diagonal entry is nonzero, the level of
+		// fill for that diagonal entry is zero:
+		// ----------------------------------------------------------
+		levels[i] = 0;
+
+		// ----------------------------------------------------------
+		// ibegin and iend are the beginning of rows i and i+1, resp.
+		// ----------------------------------------------------------
+		ibegin = rwptr[i];
+		iend = rwptr[i + 1];
+
+		//  -------------------------------------------------------------
+		//  Number of offdiagonal nonzeros in the original matrix's row i
+		//  -------------------------------------------------------------
+		nzi = iend - ibegin;
+
+		//  --------------------------------------------------------
+		//  If only the diagonal entry in row i is nonzero, skip the
+		//  fancy stuff; nothing need be done:
+		//  --------------------------------------------------------
+		if (nzi  >  1) {
+		//  ----------------------------------------------------------
+		//  Decrement iend, so that it can be used as the ending index
+		//  in icolind of row i:
+		//  ----------------------------------------------------------
+		iend = iend - 1;
+
+		//  ---------------------------------------------------------
+		//  rowct keeps count of the number of nondiagonal entries in
+		//  the current row:
+		//  ---------------------------------------------------------
+		rowct = 0;
+
+		//  ------------------------------------------------------------
+		//  For nonzeros in the current row from the original matrix A,
+		//  set lastcol to be the current row number, and the levels of
+		//  the entry to be 1.  Note that this is really the true level
+		//  of the element, plus 1.  At the same time, load up the work
+		//  array rowll with the column numbers for the original entries
+		//  from row i:
+		//  ------------------------------------------------------------
+		for( j = ibegin; j <= iend; ++j) {
+			icolindj = colind[j];
+			lastcol[icolindj] = i;
+			if (icolindj  !=  i) {
+				levels[icolindj] = 1;
+				rowct = rowct + 1;
+				rowll[rowct] = icolindj;
+			}
+		}
+
+		//  ---------------------------------------------------------
+		//  Sort the entries in rowll, so that the row has its column
+		//  entries in increasing order.
+		//  ---------------------------------------------------------
+		fasp_srtr(nzi - 1, &rowll[1]);
+		 
+		//  ---------------------------------------------------------
+		//  Now set up rowll as a linked list containing the original
+		//  nonzero column numbers, as described in the methods section:
+		//  ---------------------------------------------------------
+		head = rowll[1];
+		k1 = n + 1;
+		for (j = nzi - 1; j >= 1;  --j) {
+			k2 = rowll[j];
+			rowll[k2] = k1;
+			k1 = k2;
+		}
+
+		//  ------------------------------------------------------------
+		//  Increment count of nonzeros in the LU factors by the number
+		//  of nonzeros in the original matrix's row i.  Further
+		//  incrementing will be necessary if any fill-in actually occurs
+		//  ------------------------------------------------------------
+		*nzlu = *nzlu + nzi - 1;
+
+		//   ------------------------------------------------------------
+		//   The integer j will be used as a pointer to track through the
+		//   linked list rowll:
+		//   ------------------------------------------------------------
+		j = head;
+
+		//   ------------------------------------------------------------
+		//   The integer lowct is used to keep count of the number of
+		//   nonzeros in the current row's strictly lower triangular part,
+		//   for setting uptr pointers to indicate where in ijlu the upperc
+		//   triangular part starts. 
+		//   ------------------------------------------------------------
+		lowct = 0;
+
+		//   ------------------------------------------------------------
+		//   Fill-in could only have resulted from rows preceding row i,
+		//   so we only need check those rows with index j < i.
+		//   Furthermore, if the current row has a zero in column j,
+		//   there is no need to check the preceding rows; there clearly
+		//   could not be any fill-in from those rows to this entry.
+		//   ------------------------------------------------------------
+		while(j  <  i) {  //80
+			//  ------------------------------------------------------------
+			//  Increment lower triangular part count, since in this case
+			//  (j<i) we got another entry in L:	
+			//  ------------------------------------------------------------
+			lowct = lowct + 1;
+
+			//   ---------------------------------------------------------
+			//   If the fill level is zero, there is no way to get fill in
+			//   occuring.  
+			//   ---------------------------------------------------------
+			if (levfill  !=  0) {
+
+				//   -----------------------------------------------------
+				//   Ujbeg is beginning index of strictly upper triangular
+				//   part of U's j-th row, and Ujend is the ending index
+				//   of it, in ijlu().
+				//   -----------------------------------------------------
+				Ujbeg = uptr[j];
+				Ujend = ijlu[j + 1] - 1;
+
+				//   -----------------------------------------------------
+				//   Need to set pointer to previous entry before working
+				//   segment of rowll, because if fill occurs that will be
+				//   a moving segment.
+				//   -----------------------------------------------------
+				prev = j;
+
+				//  -----------------------------------------------------
+				//  lm is the next nonzero pointer in linked list rowll:
+				//  -----------------------------------------------------
+				lm = rowll[j];
+
+				//  -------------------------------------------------------
+				//  lmk is the fill level in this row, caused by
+				//  eliminating column entry j.  That is, level s1 from the
+				//  methodology explanation above.
+				//  -------------------------------------------------------
+				lmk = levels[j];
+
+				//  -------------------------------------------------------
+				//  Now proceed through the j-th row of U, because in the
+				//  elimination we add a multiple of it to row i to zero
+				//  out entry (i,j).  If a column entry in row j of U is
+				//  zero, there is no need to worry about fill, because it
+				//  cannot cause a fill in the corresponding entry of row i
+				//  -------------------------------------------------------
+				for(m = Ujbeg; m <= Ujend; ++m) { //60
+					//  ----------------------------------------------------
+					//  ijlum is the column number of the current nonzero in
+					//  row j of U:
+					//  ----------------------------------------------------
+					ijlum = ijlu[m];
+				
+					//  ---------------------------------------------------
+					//  actlev is the actual level (plus 1) of column entry
+					//  j in row i, from summing the level contributions
+					//  s1 and s2 as explained in the methods section.
+					//  Note that the next line could reasonably be
+					//  replaced by, e.g., actlev = max(lmk, levels(m)),
+					//  but this would cause greater fill-in:
+					//  ---------------------------------------------------
+					actlev = lmk + levels[m];
+					
+					//  ---------------------------------------------------
+					//  If lastcol of the current column entry in U is not
+					//  equal to the current row number i, then the current
+					//  row has a zero in column j, and the earlier row j
+					//  in U has a nonzero, so possible fill can occur.
+					//  ---------------------------------------------------
+					if (lastcol[ijlum]  !=  i) {
+						
+						//  --------------------------------------------------
+						//  If actlev < levfill + 1, then the new entry has an
+						//  acceptable fill level and needs to be added to the
+						//  data structure.
+						//  --------------------------------------------------
+						if (actlev  <=  levp1) {
+							
+							//  -------------------------------------------
+							//  Since the column entry ijlum in the current
+							//  row i is to be filled, we need to update
+							//  lastcol for that column number.  Also, the
+							//  level number of the current entry needs to be
+							//  set to actlev.  Note that when we finish 
+							//  processing this row, the n-vector levels(1:n)
+							//  will be copied over to the corresponding 
+							//  trailing part of levels, so that it can be
+							//  used in subsequent rows:
+							//  -------------------------------------------
+							
+							lastcol[ijlum] = i;
+							levels[ijlum] = actlev;
+							
+							//  -------------------------------------------
+							//  Now find location in the linked list rowll
+							//  where the fillin entry should be placed.
+							//  Chase through the linked list until the next
+							//  nonzero column is to the right of the fill
+							//  column number.
+							//  -------------------------------------------
+							while(lm  <=  ijlum) { //50
+								prev = lm;
+								lm = rowll[lm];
+							}  //50
+
+							//  -------------------------------------------
+							//  Insert new entry into the linked list for
+							//  row i, and increase the nonzero count for LU
+							//  -------------------------------------------
+							rowll[prev] = ijlum;
+							rowll[ijlum] = lm;
+							prev = ijlum;
+							*nzlu = *nzlu + 1;
+						}
+						
+						//  -------------------------------------------------
+						//  Else clause is for when lastcol(ijlum) = i.  In
+						//  this case, the current column has a nonzero, but
+						//  it resulted from an earlier fill-in or from an
+						//  original matrix entry.  In this case, need to
+						//  update the level number for this column to be the
+						//  smaller of the two possible fill contributors,
+						//  the current fill number or the computed one from
+						//  updating this entry from a previous row.
+						//  -------------------------------------------------
+					} else 	{
+						levels[ijlum] = MIN(levels[ijlum], actlev);
+					}
+					
+					//  -------------------------------------------------
+					//  Now go and pick up the next column entry from row
+					//  j of U:
+					//  -------------------------------------------------
+					
+				} //60
+			// -------------------------------------------
+			// End if clause for levfill not equal to zero
+			// -------------------------------------------
+			}
+
+			// ------------------------------------------------------
+			// Pick up next nonzero column index from the linked
+			// list, and continue processing the i-th row's nonzeros.
+			// This ends the first while loop (j < i).
+			// ------------------------------------------------------
+			j = rowll[j];
+		}  //80
+
+		//  ---------------------------------------------------------
+		//  Check to see if we have exceeded the allowed memory
+		//  storage before storing the results of computing row i's
+		//  sparsity pattern into the ijlu and uptr data structures.
+		//  ---------------------------------------------------------
+		if (*nzlu  >  nzmax) {
+			//mneed = ifix((float(n - i)/float(2*i))*3*nzlu);
+			printf("### ERROR: not enough storage; check mneed.\n");
+			*ierr = 1;
+			goto F100;
+		}
+
+		// ---------------------------------------------------------
+		// Storage is adequate, so update ijlu data structure.
+		// Row i ends at nzlu + 1:
+		// ---------------------------------------------------------
+		ijlu[i + 1] = *nzlu + 1;
+
+		//  ---------------------------------------------------------
+		//  ... and the upper triangular part of LU begins at
+		//  lowct entries to right of where row i begins.
+		//  ---------------------------------------------------------
+		uptr[i] = ijlu[i] + lowct;
+
+		//  -----------------------------------------------------
+		//  Now chase through linked list for row i, recording
+		//  information into ijlu.  At same time, put level data
+		//  into the levels array for use on later rows:
+		//  -----------------------------------------------------
+		j = head;
+		k1 = ijlu[i];
+		for (k = k1; k <= *nzlu; ++k) {
+			ijlu[k] = j;
+			levels[k] = levels[j];
+			j = rowll[j];
+		}
+
+
+
+		} else 	{
+
+			// ---------------------------------------------------------
+			// This else clause ends the (nzi > 1) if.  If nzi = 1, then
+			// the update of ijlu and uptr is trivial:
+			// ---------------------------------------------------------
+			ijlu[i + 1] = *nzlu + 1;
+			uptr[i] = ijlu[i];
+		}
+
+		// ----------------------------------------------
+		// And you thought we would never get through....
+		// ----------------------------------------------
+	}  //100
+	
+	if (cinindex) {
+      for ( i = 1; i <= *nzlu; ++i )	 --ijlu[i];
+	  for ( i = 1; i <= n; ++i )     --uptr[i];
+      NE = rwptr[n + 1] - 1;
+	  for ( i = 1; i <= NE; ++i )    --colind[i];
+      NE = n + 1;
+	  for ( i = 1; i <= NE; ++i )    --rwptr[i];
+	}
+
+	*ierr = 0;
+	
+F100:
+	++rowll;
+	++lastcol;
+    ++levels;	
+	++colind;
+	++rwptr;
+	++ijlu;
+	++uptr;
+    fasp_mem_free(rowll);
+    fasp_mem_free(lastcol);
+    fasp_mem_free(levels);
+    
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+	return;
+	//======================== End of symbfac ==============================
+}
+
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
