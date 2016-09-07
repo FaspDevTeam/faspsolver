@@ -43,7 +43,7 @@
  * \brief For external software package support
  */
 #define FASP_VERSION     1.8 /**< faspsolver version */
-#define FASP_USE_ILU     ON  /**< enable ILU or not */
+#define FASP_USE_ILU     OFF /**< enable ILU from SPARSEKIT or not */
 #define DLMALLOC         OFF /**< use dlmalloc instead of standard malloc */
 #define NEDMALLOC        OFF /**< use nedmalloc instead of standard malloc */
 

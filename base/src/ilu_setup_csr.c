@@ -8,7 +8,9 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-#define ILU_FORTRAN 0
+
+#define ILU_C_VERSION TRUE /**< Use the C version of ILU functions */
+
 /* declarations for ilu.for */
 #ifdef __cplusplus 
 extern "C" {void iluk_(const INT *n,REAL *a,INT *ja,INT *ia,INT *lfil,REAL *alu,
@@ -51,7 +53,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
                            ILU_data *iludata, 
                            ILU_param *iluparam)
 {
-#if FASP_USE_ILU
+#if FASP_USE_ILU || ILU_C_VERSION
     const INT   type=iluparam->ILU_type, print_level=iluparam->print_level;
     const INT   n=A->col, nnz=A->nnz, mbloc=n;
     const REAL  ILU_droptol=iluparam->ILU_droptol;
@@ -113,34 +115,38 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     printf("### DEBUG: %s (ILUt) ...... [Start]\n", __FUNCTION__);
 #endif
 
-#if	ILU_FORTRAN
-            ilut_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,luval,ijlu,&iwk,&ierr,&nzlu);
-#else
+#if	ILU_C_VERSION
             fasp_ilut(n,A->val,A->JA,A->IA,lfilt,ILU_droptol,luval,ijlu,iwk,&ierr,&nzlu);
-#endif			
+#else // Fortran version
+            ilut_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,luval,ijlu,&iwk,&ierr,&nzlu);
+#endif
             break;
+            
         case ILUtp:
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUp) ...... [Start]\n", __FUNCTION__);
 #endif
-#if	ILU_FORTRAN
-       ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol,
+            
+#if	ILU_C_VERSION
+            fasp_ilutp(n,A->val,A->JA,A->IA, lfilt, ILU_droptol, permtol,
+                       mbloc,luval,ijlu,iwk,&ierr,&nzlu);
+#else // Fortran version
+            ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol,
                    &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
-#else            
-	   fasp_ilutp(n,A->val,A->JA,A->IA, lfilt, ILU_droptol, permtol,
-                   mbloc,luval,ijlu,iwk,&ierr,&nzlu);
-#endif		
+#endif
 	 
             break;
+            
         default: // ILUk
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
 #endif
-#if	ILU_FORTRAN
-            iluk_(&n,A->val,A->JA,A->IA,&lfil,luval,ijlu,&iwk,&ierr,&nzlu);
-#else			
+            
+#if	ILU_C_VERSION
             fasp_iluk(n,A->val,A->JA,A->IA,lfil,luval,ijlu,iwk,&ierr,&nzlu);
-#endif			
+#else // Fortran version
+            iluk_(&n,A->val,A->JA,A->IA,&lfil,luval,ijlu,&iwk,&ierr,&nzlu);
+#endif
             break;
     } 
     

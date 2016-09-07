@@ -111,7 +111,7 @@ Iterative Methods
 [       ] solve several problems simultaneously Ax=b --> AX=B (Chensong)
 
 [ 0.6.7 ] remove non-GPL ILU routines
-[       ] replace the ILU smoothers from SPARSEKIT ver2.0
+[ 1.8.6 ] replace the ILU smoothers from SPARSEKIT ver2.0
 
 ========================
 Performance
