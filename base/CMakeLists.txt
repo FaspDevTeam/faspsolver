@@ -5,6 +5,7 @@ set(FASP_EXTRA_SRC_DIR "extra")
 #
 file(GLOB FASP_EXTRA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}  
 	  		     	      ${FASP_EXTRA_SRC_DIR}/sparsekit/ilu.f 
+	  		     	      ${FASP_EXTRA_SRC_DIR}/sparsekit/ilu_c.c 
 				      ${FASP_EXTRA_SRC_DIR}/interface/interface_umfpack.c
 				      ${FASP_EXTRA_SRC_DIR}/interface/interface_superlu.c
 				      ${FASP_EXTRA_SRC_DIR}/interface/interface_mumps.c
