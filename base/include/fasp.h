@@ -44,6 +44,7 @@
  */
 #define FASP_VERSION     1.8 /**< faspsolver version */
 #define FASP_USE_ILU     OFF /**< enable ILU from SPARSEKIT or not */
+#define ILU_C_VERSION    TRUE /**< Use the C version of ILU functions */
 #define DLMALLOC         OFF /**< use dlmalloc instead of standard malloc */
 #define NEDMALLOC        OFF /**< use nedmalloc instead of standard malloc */
 

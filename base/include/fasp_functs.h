@@ -791,6 +791,19 @@ void fasp_ilutp (INT n,
                  INT  *ierr,
                  INT  *nz);
 
+void fasp_srtr(INT num,
+               INT *q);
+
+void fasp_symbfactor(INT n, 
+                     INT *colind,
+                     INT *rwptr,
+					 INT levfill,
+					 INT nzmax,
+					 INT *nzlu,
+					 INT *ijlu,
+					 INT *uptr,
+					 INT *ierr);
+
 
 /*-------- In file: ilu_setup_bsr.c --------*/
 

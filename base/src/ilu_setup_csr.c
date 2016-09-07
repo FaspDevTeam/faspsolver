@@ -9,7 +9,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-#define ILU_C_VERSION TRUE /**< Use the C version of ILU functions */
+//#define ILU_C_VERSION TRUE /**< Use the C version of ILU functions */
 
 /* declarations for ilu.for */
 #ifdef __cplusplus 
