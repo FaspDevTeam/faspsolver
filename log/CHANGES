@@ -1,10 +1,11 @@
 File Name: CHANGES
 
-09/07/2016 FASP 1.8.6:
+09/08/2016 FASP 1.8.6:
 - Make changes for new preconditioners in FASP4BLKOIL.
 - Translate ILU from Fortran to C.
 - Add a new flag for using C version ILU.
-- Modify VS for ILU accordingly. 
+- Modify VS10 for new ILU routines accordingly.
+- Add symbfactro in C.
 
 03/06/2016 FASP 1.8.5:
 - Fix a bug in BSR AMG.

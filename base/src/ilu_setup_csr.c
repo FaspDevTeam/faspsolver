@@ -9,8 +9,6 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-//#define ILU_C_VERSION TRUE /**< Use the C version of ILU functions */
-
 /* declarations for ilu.for */
 #ifdef __cplusplus 
 extern "C" {void iluk_(const INT *n,REAL *a,INT *ja,INT *ia,INT *lfil,REAL *alu,
@@ -53,7 +51,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
                            ILU_data *iludata, 
                            ILU_param *iluparam)
 {
-#if FASP_USE_ILU || ILU_C_VERSION
+#if FASP_USE_ILU
     const INT   type=iluparam->ILU_type, print_level=iluparam->print_level;
     const INT   n=A->col, nnz=A->nnz, mbloc=n;
     const REAL  ILU_droptol=iluparam->ILU_droptol;
