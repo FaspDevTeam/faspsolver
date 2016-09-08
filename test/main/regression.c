@@ -626,6 +626,7 @@ int main (int argc, const char * argv[])
             check_solu(&x, &sol, tolerance);
         }
         
+#if FASP_USE_ILU
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using ILUk as preconditioner for CG */
             ILU_param      iluparam;
@@ -642,6 +643,7 @@ int main (int argc, const char * argv[])
             
             check_solu(&x, &sol, tolerance);
         }
+#endif // end of FASP_USE_ILU
 
         /* clean up memory */
         fasp_dcsr_free(&A);

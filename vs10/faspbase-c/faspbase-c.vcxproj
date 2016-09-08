@@ -325,6 +325,7 @@
     <ClCompile Include="..\..\base\src\givens.c" />
     <ClCompile Include="..\..\base\src\gmg_poisson.c" />
     <ClCompile Include="..\..\base\src\graphics.c" />
+    <ClCompile Include="..\..\base\src\ilu.c" />
     <ClCompile Include="..\..\base\src\ilu_setup_bsr.c" />
     <ClCompile Include="..\..\base\src\ilu_setup_csr.c" />
     <ClCompile Include="..\..\base\src\ilu_setup_str.c" />
