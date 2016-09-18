@@ -93,16 +93,24 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 	switch ( coarse_type ) {
 		
         case COARSE_RS: // Classical coarsening
-            col = cfsplitting_cls(A, S, vertices); break;
+            col = cfsplitting_cls(A, S, vertices);
+            //printf("### DEBUG: col = %d\n", col);
+            break;
             
         case COARSE_RSP: // Classical coarsening with positive connections
-            col = cfsplitting_clsp(A, S, vertices); break;
+            col = cfsplitting_clsp(A, S, vertices);
+            //printf("### DEBUG: col = %d\n", col);
+            break;
 		
         case COARSE_AC: // Aggressive coarsening
-            col = cfsplitting_agg(A, S, vertices, agg_path); break;
+            col = cfsplitting_agg(A, S, vertices, agg_path);
+            //printf("### DEBUG: col = %d\n", col);
+            break;
 		
         case COARSE_CR: // Compatible relaxation (Need to be fixed --Chensong)
-            col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param); break;
+            col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param);
+            //printf("### DEBUG: col = %d\n", col);
+            break;
 
 #if 0
         case COARSE_MIS:
@@ -174,6 +182,7 @@ static void strong_couplings (dCSRmat *A,
                               iCSRmat *S,
                               AMG_param *param )
 {
+    const SHORT coarse_type = param->coarsening_type;
 	const REAL  max_row_sum = param->max_row_sum;
 	const REAL  epsilon_str = param->strong_threshold;
 	const INT   row = A->row, col = A->col, row1 = row+1;
@@ -206,7 +215,9 @@ static void strong_couplings (dCSRmat *A,
 	fasp_iarray_cp(nnz,  ja, S->JA);
 	
 	if ( use_openmp ) {
-		
+        
+        // This part is still old! Need to be updated. --Chensong 09/18/2016
+        
 		INT mybegin, myend, myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin,myend,i,row_scl,row_sum,begin_row,end_row,j)
@@ -281,13 +292,28 @@ static void strong_couplings (dCSRmat *A,
 			// if ( ABS(row_sum) > max_row_sum * ABS(diag.val[i]) ) {
 			// Now changed to --Chensong 05/17/2013
 			if ( row_sum < (2 - max_row_sum) * ABS(diag.val[i]) ) {
+                
 				for ( j = begin_row; j < end_row; j++ ) S->JA[j] = -1;
-			}
+			
+            }
 			else {
-				for ( j = begin_row; j < end_row; j++ ) {
-					if ( -A->val[j] <= row_scl ) S->JA[j] = -1; // only n-couplings
-				}
-			}
+
+                switch ( coarse_type ) {
+                
+                    case COARSE_RSP: // consider positive off-diag as well
+                        for ( j = begin_row; j < end_row; j++ ) {
+                            if ( ABS(A->val[j]) <= row_scl ) S->JA[j] = -1;
+                        }
+                        break;
+
+                    default: // only consider n-couplings
+                        for ( j = begin_row; j < end_row; j++ ) {
+                            if ( -A->val[j] <= row_scl ) S->JA[j] = -1;
+				        }
+                        break;
+			
+                }
+            }
 		} // end for i
 		
 	} // end if openmp
@@ -764,13 +790,13 @@ static INT cfsplitting_clsp (dCSRmat *A,
 	}
 #endif
 	
-	// 0. Compress S and form S_transpose
+	// 0. Compress S and form S_transpose (not complete, just IA and JA)
 	iCSRmat Stemp;
 	Stemp.row = S->row; Stemp.col = S->col; Stemp.nnz = S->nnz;
 	Stemp.IA = (INT *)fasp_mem_calloc(S->row+1, sizeof(INT));
-	Stemp.JA = (INT *)fasp_mem_calloc(S->nnz,   sizeof(INT));
-	fasp_iarray_cp (S->row+1, S->IA, Stemp.IA);
-	fasp_iarray_cp (S->nnz,   S->JA, Stemp.JA);
+    fasp_iarray_cp (S->row+1, S->IA, Stemp.IA);
+	Stemp.JA = (INT *)fasp_mem_calloc(S->nnz, sizeof(INT));
+	fasp_iarray_cp (S->nnz, S->JA, Stemp.JA);
 	
 	if ( compress_S(S) < 0 ) goto FINISHED; // compression failed!!!
 	
@@ -827,7 +853,7 @@ static INT cfsplitting_clsp (dCSRmat *A,
 		
 	}
 	
-	// 3. Form linked list for lambda (max to min)
+    // 3. Form linked list for lambda (max to min)
 	for ( i = 0; i < row; ++i ) {
 		
 		if ( vec[i] == ISPT ) continue; // skip isolated variables
@@ -868,7 +894,7 @@ static INT cfsplitting_clsp (dCSRmat *A,
 		} // end if measure
 		
 	} // end for i
-	
+    
 	// 4. Main loop
 	while ( num_left > 0 ) {
 		
@@ -882,7 +908,7 @@ static INT cfsplitting_clsp (dCSRmat *A,
 		--num_left;
 		remove_node(&LoL_head, &LoL_tail, maxmeas, maxnode, lists, where);
 		col++;
-		
+        
 		// for all $j\in S_i^T\cap U: F:=F\cup\{j\}, U:=U\backslash\{j\}$
 		for ( i = ST.IA[maxnode]; i < ST.IA[maxnode+1]; ++i ) {
 			
