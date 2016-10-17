@@ -96,7 +96,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     numfac_bsr(A, iludata->luval, ijlu, uptr);
     
     //nwork = 6*nzlu*nb;
-    nwork = 5*A->ROW*A->nb; 
+    nwork = 20*A->ROW*A->nb;
     iludata->nzlu  = nzlu;
     iludata->nwork = nwork;
     iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
@@ -274,6 +274,7 @@ static INT numfac_bsr (dBSRmat *A,
     
             colptrs[k] =  0;
     
+            //printf("k=%d\n",k);
             fasp_blas_smat_inv_nc3(&(luval[k*nb2]));
     
         }
