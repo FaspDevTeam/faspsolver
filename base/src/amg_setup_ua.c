@@ -507,8 +507,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
         mgl[lvl].diaginv = fasp_dbsr_getdiaginv(&mgl[lvl].A);
         
         /*-- Aggregation --*/
-        mgl[lvl].PP =  fasp_dbsr_getblk_dcsr(&mgl[lvl].A);
-        //mgl[lvl].PP = fasp_dbsr_Linfinity_dcsr(&mgl[lvl].A);  // TODO: Try different way to form the scalar block!!  -- Xiaozhe
+        //mgl[lvl].PP =  fasp_dbsr_getblk_dcsr(&mgl[lvl].A);
+        mgl[lvl].PP = fasp_dbsr_Linfinity_dcsr(&mgl[lvl].A);  // TODO: Try different way to form the scalar block!!  -- Xiaozhe
         
         switch ( param->aggregation_type ) {
 
