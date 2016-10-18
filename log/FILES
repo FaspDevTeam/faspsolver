@@ -27,7 +27,7 @@
      320 ./base/src/blas_vec.c
      335 ./base/src/checkmat.c
      418 ./base/src/coarsening_cr.c
-    2064 ./base/src/coarsening_rs.c
+    2090 ./base/src/coarsening_rs.c
      157 ./base/src/convert.c
       72 ./base/src/eigen.c
      106 ./base/src/famg.c
@@ -37,7 +37,7 @@
     1038 ./base/src/gmg_poisson.c
      754 ./base/src/graphics.c
     2146 ./base/src/ilu.c
-     431 ./base/src/ilu_setup_bsr.c
+     432 ./base/src/ilu_setup_bsr.c
      212 ./base/src/ilu_setup_csr.c
     1254 ./base/src/ilu_setup_str.c
      346 ./base/src/init.c
@@ -100,5 +100,5 @@
      171 ./base/src/threads.c
       41 ./base/src/timing.c
      464 ./base/src/vec.c
-     302 ./base/src/wrapper.c
-   87916 total
+     311 ./base/src/wrapper.c
+   87952 total
