@@ -99,13 +99,22 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
     itsolver_param  itparam;  // parameters for itsolver
     
     fasp_param_amg_init(&amgparam);
+    amgparam.AMG_type             = UA_AMG;
+    amgparam.print_level          = *ptrlvl;
+    amgparam.aggregation_type     = VMB;
+
+    amgparam.coarse_dof           = 100;
+    amgparam.presmooth_iter       = 1;
+    amgparam.postsmooth_iter      = 1;
+    
+    amgparam.strong_coupled       = 0.00;
+    amgparam.max_aggregation      = 100;
+    
     fasp_param_solver_init(&itparam);
+    itparam.tol                   = *tol;
+    itparam.print_level           = *ptrlvl;
+    itparam.maxit                 = *maxit;
     
-    itparam.tol         = *tol;
-    itparam.print_level = *ptrlvl;
-    itparam.maxit       = *maxit;
-    
-    amgparam.print_level = *ptrlvl;
     
     mat.row = *n; mat.col = *n; mat.nnz = *nnz;
     mat.IA = ia;  mat.JA  = ja; mat.val = a;
