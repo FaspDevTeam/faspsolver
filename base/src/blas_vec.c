@@ -97,7 +97,7 @@ void fasp_blas_dvec_axpyz(const REAL a,
     
     z->row = m;
 
-    memcpy(ypt, zpt, m*sizeof(dvector));
+    memcpy(zpt, ypt, m*sizeof(dvector));
     fasp_blas_array_axpy(m, a, xpt, zpt);
 }
 
