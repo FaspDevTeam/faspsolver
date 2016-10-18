@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+10/18/2016 FASP 1.8.7:
+- Fix a bug in dvec_axpyz.
+- Fix Makefile when FASP.mk is missing.
+
 09/22/2016 FASP 1.8.6:
 - Make changes for new preconditioners in FASP4BLKOIL.
 - Translate ILU from Fortran to C.
