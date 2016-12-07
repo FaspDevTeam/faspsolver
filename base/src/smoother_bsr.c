@@ -12,6 +12,8 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
+REAL ilu_solve_omp = 0.0;
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -1559,9 +1561,10 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
  * \param x     Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
  * \param data  Pointer to user defined data
  *
- * \author Zhiyang Zhou
+ * \author Zhiyang Zhou, Zheng Li
  * \date   2010/10/25
- * Adjust the work space of ilu smoother by Zheng Li 04/26/2015. 
+ *
+ * NOTE: Add multi-threads parallel ILU block by Zheng Li 12/04/2016. 
  */
 void fasp_smoother_dbsr_ilu (dBSRmat *A,
                              dvector *b,
@@ -1574,15 +1577,45 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     REAL *xval = x->val, *bval = b->val;
     REAL *zr = iludata->work + 3*m;
     REAL *z  = zr + m;
+
+    double start, end;
     
     if (iludata->nwork<memneed) goto MEMERR;
     
     /** form residual zr = b - A x */
     fasp_array_cp(m,bval,zr); fasp_blas_dbsr_aAxpy(-1.0,A,xval,zr);
-    
     /** solve LU z=zr */
-    fasp_precond_dbsr_ilu(zr,z,iludata);
+
+#ifdef _OPENMP
+#if ILU_MC_OMP
+    REAL *tz = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
+    REAL *tzr = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
+    fasp_array_permut_nb(A->ROW, A->nb, zr, iludata->jlevL, tzr);
     
+    fasp_gettime(&start);
+    fasp_precond_dbsr_ilu_mc_omp(tzr,tz,iludata);
+    fasp_gettime(&end);
+     
+    ilu_solve_omp += end-start;
+
+    fasp_array_invpermut_nb(A->ROW, A->nb, tz, iludata->jlevL, z);
+    fasp_mem_free(tzr);
+    fasp_mem_free(tz);
+#else
+    fasp_gettime(&start);
+    fasp_precond_dbsr_ilu_levsch_omp(zr,z,iludata);
+    fasp_gettime(&end);
+
+    ilu_solve_omp += end-start;
+#endif
+
+#else
+    fasp_gettime(&start);
+    fasp_precond_dbsr_ilu(zr,z,iludata);
+    fasp_gettime(&end);
+    ilu_solve_omp += end-start;
+#endif
+
     /** x=x+z */
     fasp_blas_array_axpy(m,1,z,xval);
     
@@ -1591,8 +1624,7 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
 MEMERR:
     printf("### ERROR: ILU needs %d memory, only %d available! %s : %d\n",
            memneed, iludata->nwork, __FILE__, __LINE__);
-    fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
-    
+    fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);    
 }
 
 /*---------------------------------*/

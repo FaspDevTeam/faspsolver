@@ -115,6 +115,10 @@ void fasp_array_cp_nc5 (REAL *x,
 void fasp_array_cp_nc7 (REAL *x, 
                         REAL *y) ;
 
+void fasp_array_permut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y);
+
+void fasp_array_invpermut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y);
+
 
 /*-------- In file: auxiliary.c --------*/
 
@@ -811,6 +815,19 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
                            ILU_data *iludata, 
                            ILU_param *iluparam);
 
+SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat *A, 
+                                      ILU_data *iludata, 
+                                      ILU_param *iluparam);
+
+SHORT fasp_ilu_dbsr_setup_omp (dBSRmat *A, 
+                               ILU_data *iludata, 
+                               ILU_param *iluparam);
+
+SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat *A,
+                                  dCSRmat *Ap,
+                                  ILU_data *iludata,
+                                  ILU_param *iluparam);
+
 
 /*-------- In file: ilu_setup_csr.c --------*/
 
@@ -1315,6 +1332,10 @@ void fasp_dcsr_RCMK_order (const dCSRmat *A,
                            INT *oindex,
                            INT *rorder);
 
+void fasp_topological_sorting_ilu(ILU_data *iludata) ;
+
+void fasp_multicolors_independent_set(AMG_data *mgl, INT gslvl);
+
 
 /*-------- In file: parameters.c --------*/
 
@@ -1735,6 +1756,14 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
 void fasp_precond_dbsr_ilu (REAL *r, 
                             REAL *z, 
                             void *data);
+
+void fasp_precond_dbsr_ilu_mc_omp (REAL *r, 
+                                   REAL *z, 
+                                   void *data);
+
+void fasp_precond_dbsr_ilu_levsch_omp (REAL *r, 
+                                       REAL *z, 
+                                       void *data);
 
 void fasp_precond_dbsr_amg (REAL *r, 
                             REAL *z, 
@@ -2414,6 +2443,9 @@ dBSRmat fasp_dbsr_diagLU (dBSRmat *A,
 dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
                            REAL *DL,
                            REAL *DU);
+
+dBSRmat fasp_dbsr_perm (dBSRmat *A,
+                        INT *P);
 
 
 /*-------- In file: sparse_coo.c --------*/
