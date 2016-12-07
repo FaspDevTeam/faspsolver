@@ -548,6 +548,413 @@ void fasp_precond_dbsr_ilu (REAL *r,
     return;
 }
 
+
+/**
+ * \fn void fasp_precond_dbsr_ilu_mc_omp (REAL *r, REAL *z, void *data)
+ *
+ * \brief Multi-threads Parallel ILU preconditioner based on graph coloring
+ *
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
+ *
+ * \author ZhengLi 
+ * \date   12/04/2016
+ *
+ * \note Only works for nb 1, 2, and 3 (Zheng)
+ */
+void fasp_precond_dbsr_ilu_mc_omp (REAL *r, 
+                                   REAL *z, 
+                                   void *data)
+{
+#ifdef _OPENMP
+    const ILU_data  *iludata=(ILU_data *)data;
+    const INT        m=iludata->row, mm1=m-1, mm2=m-2, memneed=2*m;
+    const INT        nb=iludata->nb, nb2=nb*nb, size=m*nb;
+   
+    INT        *ijlu=iludata->ijlu;
+    REAL       *lu=iludata->luval;
+    INT        ncolors = iludata->nlevL;
+    INT        *ic = iludata->ilevL;
+    
+    INT         ib, ibstart,ibstart1;
+    INT         i, ii, j, jj, k, begin_row, end_row;
+    REAL        *zz, *zr, *mult;       
+    
+    if (iludata->nwork<memneed) {
+        printf("### ERROR: Need %d memory, only %d available!\n", memneed, iludata->nwork);
+        exit(ERROR_ALLOC_MEM);
+    }
+    
+    zz   = iludata->work; 
+    zr   = zz + size;
+    
+    memcpy(zr, r, size*sizeof(REAL));
+    
+    switch (nb) {
+    
+    case 1:
+        // forward sweep: solve unit lower matrix equation L*zz=zr
+        for (k=0; k<ncolors; ++k) {
+#pragma omp parallel for private(i,begin_row,end_row,j,jj)
+        for (i=ic[k];i<ic[k+1];++i) {
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            for (j=begin_row;j<=end_row;++j) {
+                jj=ijlu[j];
+                if (jj<i) zr[i]-=lu[j]*zz[jj];
+                else break;
+            }
+            zz[i]=zr[i];
+        }
+        }
+        // backward sweep: solve upper matrix equation U*z=zz
+        for (k=ncolors-1; k>=0; k--) {
+#pragma omp parallel for private(i,begin_row,end_row,j,jj)  
+        for (i=ic[k+1]-1;i>=ic[k];i--) {
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            for (j=end_row;j>=begin_row;j--) {
+                jj=ijlu[j];
+                if (jj>i) zz[i]-=lu[j]*z[jj];
+                else break;
+            } 
+            z[i]=zz[i]*lu[i];
+        }
+        }
+    
+        break; //end (if nb==1) 
+    
+    case 2:
+    
+        for (k=0; k<ncolors; ++k) {
+#pragma omp parallel private(i,begin_row,end_row,ibstart,j,jj,ib,mult)
+{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
+#pragma omp for
+        for (i=ic[k];i<ic[k+1];++i) {
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            ibstart=i*nb;
+            for (j=begin_row;j<=end_row;++j) {
+                jj=ijlu[j];
+                if (jj<i)
+                    {
+                        fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(zz[jj*nb]),mult);
+                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                    }
+                else break;
+            }
+    
+            zz[ibstart]   = zr[ibstart];
+            zz[ibstart+1] = zr[ibstart+1];
+        }
+
+        fasp_mem_free(mult);
+}
+        }
+    
+        for (k=ncolors-1; k>=0; k--) {
+#pragma omp parallel private(i,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
+{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
+#pragma omp for
+        for (i=ic[k+1]-1;i>=ic[k];i--) {
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            ibstart=i*nb2;
+            ibstart1=i*nb;
+            for (j=end_row;j>=begin_row;j--) {
+                jj=ijlu[j];
+                if (jj>i) {
+                    fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                }
+    
+                else break;
+            } 
+    
+            fasp_blas_smat_mxv_nc2(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
+    
+        }
+        fasp_mem_free(mult);
+}
+        }
+    
+        break; // end (if nb=2) 
+    case 3:
+    
+        for (k=0; k<ncolors; ++k) {
+#pragma omp parallel private(i,begin_row,end_row,ibstart,j,jj,ib,mult)
+{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
+#pragma omp for
+        for (i=ic[k];i<ic[k+1];++i) {
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            ibstart=i*nb;
+            for (j=begin_row;j<=end_row;++j) {
+                jj=ijlu[j];
+                if (jj<i)
+                    {
+                        fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(zz[jj*nb]),mult);
+                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                    }
+                else break;
+            }
+    
+            zz[ibstart]   = zr[ibstart];
+            zz[ibstart+1] = zr[ibstart+1];
+            zz[ibstart+2] = zr[ibstart+2];
+        }
+
+        fasp_mem_free(mult);
+}
+        }
+
+        for (k=ncolors-1; k>=0; k--) {
+#pragma omp parallel private(i,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
+{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
+#pragma omp for
+        for (i=ic[k+1]-1;i>=ic[k];i--) {
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            ibstart=i*nb2;
+            ibstart1=i*nb;
+            for (j=end_row;j>=begin_row;j--) {
+                jj=ijlu[j];
+                if (jj>i) {
+                    fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                }
+    
+                else break;
+            } 
+    
+            fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
+    
+        }
+        fasp_mem_free(mult);
+}
+        }
+    
+        break; // end (if nb=3) 
+    
+        default: 
+        {
+           if (nb > 3) {
+              printf(" Multi-threads Parallel ILU preconditioner for %d components has \
+                       not yet been implemented!!!", nb);
+              exit(0);
+           }
+           break;
+        }
+    }
+    
+    return;
+#endif
+}
+
+
+/**
+ * \fn void fasp_precond_dbsr_ilu_levsch_omp (REAL *r, REAL *z, void *data)
+ *
+ * \brief Multi-threads Parallel ILU preconditioner based on level schedule strategy
+ *
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
+ *
+ * \author ZhengLi 
+ * \date   12/04/2016
+ *
+ * \note Only works for nb 1, 2, and 3 (Zheng)
+ */
+void fasp_precond_dbsr_ilu_levsch_omp (REAL *r, 
+                                       REAL *z, 
+                                       void *data)
+{
+#ifdef _OPENMP
+    const ILU_data  *iludata=(ILU_data *)data;
+    const INT        m=iludata->row, mm1=m-1, mm2=m-2, memneed=2*m;
+    const INT        nb=iludata->nb, nb2=nb*nb, size=m*nb;
+   
+    INT        *ijlu=iludata->ijlu;
+    REAL       *lu=iludata->luval;
+    INT        nlevL = iludata->nlevL;
+    INT        *ilevL = iludata->ilevL;
+    INT        *jlevL = iludata->jlevL;
+    INT        nlevU = iludata->nlevU;
+    INT        *ilevU = iludata->ilevU;
+    INT        *jlevU = iludata->jlevU;
+    
+    INT         ib, ibstart,ibstart1;
+    INT         i, ii, j, jj, k, begin_row, end_row;
+    REAL       *zz, *zr, *mult;       
+    
+    if (iludata->nwork<memneed) {
+        printf("### ERROR: Need %d memory, only %d available!\n", memneed, iludata->nwork);
+        exit(ERROR_ALLOC_MEM);
+    }
+    
+    zz   = iludata->work; 
+    zr   = zz + size;
+    //mult = zr + size;
+    
+    memcpy(zr, r, size*sizeof(REAL));
+    
+    switch (nb) {
+    
+    case 1:
+        // forward sweep: solve unit lower matrix equation L*zz=zr
+        for (k=0; k<nlevL; ++k) {
+#pragma omp parallel for private(i,ii,begin_row,end_row,j,jj)
+        for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
+            i = jlevL[ii];
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            for (j=begin_row;j<=end_row;++j) {
+                jj=ijlu[j];
+                if (jj<i) zr[i]-=lu[j]*zz[jj];
+                else break;
+            }
+            zz[i]=zr[i];
+        }
+        }
+        // backward sweep: solve upper matrix equation U*z=zz
+        for (k=0; k<nlevU; k++) {
+#pragma omp parallel for private(i,ii,begin_row,end_row,j,jj)  
+        for (ii=ilevU[k+1]-1;ii>=ilevU[k];ii--) {
+            i = jlevU[ii];
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            for (j=end_row;j>=begin_row;j--) {
+                jj=ijlu[j];
+                if (jj>i) zz[i]-=lu[j]*z[jj];
+                else break;
+            } 
+            z[i]=zz[i]*lu[i];
+        }
+        }
+    
+        break; //end (if nb==1) 
+    
+    case 2:
+    
+        for (k=0; k<nlevL; ++k) {
+#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,j,jj,ib,mult)
+{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
+#pragma omp for
+        for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
+            i = jlevL[ii];
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            ibstart=i*nb;
+            for (j=begin_row;j<=end_row;++j) {
+                jj=ijlu[j];
+                if (jj<i)
+                    {
+                        fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(zz[jj*nb]),mult);
+                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                    }
+                else break;
+            }
+    
+            zz[ibstart]   = zr[ibstart];
+            zz[ibstart+1] = zr[ibstart+1];
+        }
+
+        fasp_mem_free(mult);
+}
+        }
+    
+        for (k=0; k<nlevU; k++) {
+#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
+{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
+#pragma omp for
+        for (ii=ilevU[k+1]-1;ii>=ilevU[k];ii--) {
+            i = jlevU[ii];
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            ibstart=i*nb2;
+            ibstart1=i*nb;
+            for (j=end_row;j>=begin_row;j--) {
+                jj=ijlu[j];
+                if (jj>i) {
+                    fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                }
+    
+                else break;
+            } 
+    
+            fasp_blas_smat_mxv_nc2(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
+    
+        }
+        fasp_mem_free(mult);
+}
+        }
+    
+        break; // end (if nb=2) 
+    case 3:
+    
+        for (k=0; k<nlevL; ++k) {
+#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,j,jj,ib,mult)
+{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
+#pragma omp for
+        for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
+            i = jlevL[ii];
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            ibstart=i*nb;
+            for (j=begin_row;j<=end_row;++j) {
+                jj=ijlu[j];
+                if (jj<i)
+                    {
+                        fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(zz[jj*nb]),mult);
+                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                    }
+                else break;
+            }
+    
+            zz[ibstart]   = zr[ibstart];
+            zz[ibstart+1] = zr[ibstart+1];
+            zz[ibstart+2] = zr[ibstart+2];
+        }
+
+        fasp_mem_free(mult);
+}
+        }
+
+        for (k=0; k<nlevU; k++) {
+#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
+{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
+#pragma omp for
+        for (ii=ilevU[k+1]-1;ii>=ilevU[k];ii--) {
+            i = jlevU[ii];
+            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+            ibstart=i*nb2;
+            ibstart1=i*nb;
+            for (j=end_row;j>=begin_row;j--) {
+                jj=ijlu[j];
+                if (jj>i) {
+                    fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                }
+    
+                else break;
+            } 
+    
+            fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
+    
+        }
+        fasp_mem_free(mult);
+}
+        }
+    
+        break; // end (if nb=3) 
+       
+        default: 
+        {
+          if (nb > 3) {
+          	printf(" Multi-threads Parallel ILU preconditioner for %d components \
+                has not yet been implemented!!!", nb);
+          	exit(0);
+          }
+          break;
+       }
+    }
+    
+    return;
+#endif
+}
+
 /**
  * \fn void fasp_precond_dbsr_amg (REAL *r, REAL *z, void *data)
  *

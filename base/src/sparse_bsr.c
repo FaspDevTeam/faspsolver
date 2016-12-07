@@ -1860,6 +1860,126 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
     
 }
 
+/**
+ * \fn dBSRmat fasp_dcsr_perm (dBSRmat *A, INT *P)
+ *
+ * \brief Apply permutation of A, i.e. Aperm=PAP' by the orders given in P
+ *
+ * \param A  Pointer to the original dCSRmat matrix
+ * \param P  Pointer to orders
+ *
+ * \return   The new ordered dCSRmat matrix if succeed, NULL if fail
+ *
+ * \author Zheng Li
+ * \date   24/9/2015
+ *
+ * \note   P[i] = k means k-th row and column become i-th row and column!
+ *
+ */
+dBSRmat fasp_dbsr_perm (dBSRmat *A,
+                        INT *P)
+{
+    const INT n=A->ROW,nnz=A->NNZ;
+    const INT *ia=A->IA, *ja=A->JA;
+    const REAL *Aval=A->val;
+    const INT nb=A->nb;
+    const INT manner = A->storage_manner; 
+    INT i,j,k,jaj,i1,i2,start,jj;
+    INT nthreads = 1, use_openmp = FALSE;
+    const INT nb2 = nb*nb;
+
+#ifdef _OPENMP
+    if ( MIN(n, nnz) > OPENMP_HOLDS ) {
+        use_openmp = 0;//TRUE;
+        nthreads = FASP_GET_NUM_THREADS();
+    }
+#endif
+    
+    dBSRmat Aperm = fasp_dbsr_create(n,n,nnz,nb,manner);
+    
+    // form the transpose of P
+    INT *Pt = (INT*)fasp_mem_calloc(n,sizeof(INT));
+    
+    if (use_openmp) {
+        INT myid, mybegin, myend;
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i)
+#endif
+        for (myid=0; myid<nthreads; ++myid) {
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i) Pt[P[i]] = i;
+        }
+    }
+    else {
+        for (i=0; i<n; ++i) Pt[P[i]] = i;
+    }
+    
+    // compute IA of P*A (row permutation)
+    Aperm.IA[0] = 0;
+    for (i=0; i<n; ++i) {
+        k = P[i];
+        Aperm.IA[i+1] = Aperm.IA[i]+(ia[k+1]-ia[k]);
+    }
+    
+    // perform actual P*A
+    if (use_openmp) {
+        INT myid, mybegin, myend;
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, i1, i2, k, start, j, jaj, jj)
+#endif
+        for (myid=0; myid<nthreads; ++myid) {
+            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            for (i=mybegin; i<myend; ++i) {
+                i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1;
+                k = P[i];
+                start = ia[k];
+                for (j=i1; j<=i2; ++j) {
+                    jaj = start+j-i1;
+                    Aperm.JA[j] = ja[jaj];
+                    for (jj=0; jj<nb2;++jj) Aperm.val[j*nb2+jj] = Aval[jaj*nb2+jj];
+                }
+            }
+        }
+    }
+    else {
+        for (i=0; i<n; ++i) {
+            i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1;
+            k = P[i];
+            start = ia[k];
+            for (j=i1; j<=i2; ++j) {
+                jaj = start+j-i1;
+                Aperm.JA[j] = ja[jaj];
+                for (jj=0; jj<nb2;++jj) Aperm.val[j*nb2+jj] = Aval[jaj*nb2+jj];
+                //Aperm.val[j] = Aval[jaj];
+            }
+        }
+    }
+    
+    // perform P*A*P' (column permutation)
+    if (use_openmp) {
+        INT myid, mybegin, myend;
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, k, j)
+#endif
+        for (myid=0; myid<nthreads; ++myid) {
+            FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);
+            for (k=mybegin; k<myend; ++k) {
+                j = Aperm.JA[k];
+                Aperm.JA[k] = Pt[j];
+            }
+        }
+    }
+    else {
+        for (k=0; k<nnz; ++k) {
+            j = Aperm.JA[k];
+            Aperm.JA[k] = Pt[j];
+        }
+    }
+    
+    fasp_mem_free(Pt);
+    
+    return(Aperm);
+}
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

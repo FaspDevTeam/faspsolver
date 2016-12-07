@@ -772,7 +772,7 @@ c
       deallocate(jw)
       deallocate(w)
       deallocate(tnorm)
-      write(*,*),'insufficient storage in L'
+      write(*,*) 'insufficient storage in L'
       return
 c     
 c     insufficient storage in U.
@@ -782,7 +782,7 @@ c
       deallocate(jw)
       deallocate(w)
       deallocate(tnorm)
-      write(*,*),'insufficient storage in U'
+      write(*,*) 'insufficient storage in U'
       return
 c     
 c     illegal lfil entered.
@@ -792,7 +792,7 @@ c
       deallocate(jw)
       deallocate(w)
       deallocate(tnorm)
-      write(*,*),'illegal lfil entered'
+      write(*,*) 'illegal lfil entered'
       return
 c----------------end-of-ilut--------------------------------------------
 c-----------------------------------------------------------------------

@@ -222,6 +222,7 @@
  */
 #define NO_ORDER                0  /**< Natural order smoothing */
 #define CF_ORDER                1  /**< C/F order smoothing */
+#define ILU_MC_OMP              1  /**< Multi-colors Parallel smoothing */
 
 /**
  * \brief Type of ordering for smoothers

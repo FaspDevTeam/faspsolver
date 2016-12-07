@@ -318,7 +318,7 @@ void fasp_ivec_set (const INT m,
 	if (use_openmp) {
 		INT mybegin, myend, myid;
 #ifdef _OPENMP 
-#pragma omp parallel for private(myid, mybegin, myend) 
+#pragma omp parallel for private(myid, mybegin, myend, i) 
 #endif
         for (myid = 0; myid < nthreads; myid++ ) {
             FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);

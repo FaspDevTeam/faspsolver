@@ -258,6 +258,69 @@ void fasp_array_cp_nc7 (REAL *x,
     y[6] = x[6];
 }
 
+/**
+ * \fn void fasp_array_permut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y) 
+ *
+ * \brief Array mapping 
+ *
+ * \param n    Size of array
+ * \param nb   Step size  
+ * \param x    Pointer to the original vector 
+ * \param p    Pointer to index mapping 
+ * \param y    Pointer to the destination vector
+ * 
+ * \author Zheng Li
+ * \date   12/04/2016
+ *
+ */
+void fasp_array_permut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y)
+{
+   INT i, j, indx, indy;
+   INT nb2 = nb*nb;
+
+#ifdef _OPENMP
+#pragma omp parallel for private(i, j, indx, indy)
+#endif
+   for (i=0; i<n; ++i) {
+       indx = p[i]*nb;
+       indy = i*nb;
+       for (j=0; j<nb; ++j) {
+           y[indy+j] = x[indx+j];
+       }
+   }
+}
+
+/**
+ * \fn void fasp_array_invpermut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y)
+ *
+ * \brief Array mapping
+ *
+ * \param n    Size of array
+ * \param nb   Step size
+ * \param x    Pointer to the original vector
+ * \param p    Pointer to index mapping
+ * \param y    Pointer to the destination vector
+ *
+ * \author Zheng Li
+ * \date   12/04/2016
+ *
+ */
+void fasp_array_invpermut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y)
+{
+   INT i, j, indx, indy;
+   INT nb2 = nb*nb;
+
+#ifdef _OPENMP
+#pragma omp parallel for private(i, j, indx, indy)
+#endif
+   for (i=0; i<n; ++i) {
+       indx = i*nb;
+       indy = p[i]*nb;
+       for (j=0; j<nb; ++j) {
+           y[indy+j] = x[indx+j];
+       }
+   }
+}
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

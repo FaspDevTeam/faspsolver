@@ -428,6 +428,19 @@ typedef struct {
     //! work space
     REAL *work;
 
+    //! for multi-threads
+    INT ncolors;
+    INT *ic;
+    INT *icmap;
+    INT *uptr;
+
+    INT nlevL;
+    INT nlevU;
+    INT *ilevL;
+    INT *ilevU;
+    INT *jlevL;
+    INT *jlevU;
+
 } ILU_data; /**< Data for ILU */
 
 /**
@@ -791,6 +804,14 @@ typedef struct {
     //! cycle type
     INT cycle_type;
 
+    //! multi-colors smoother
+    INT *ic;
+
+    INT *icmap;
+
+    INT colors;
+
+    REAL weight;
 } AMG_data; /**< Data for AMG */
 
 /**
