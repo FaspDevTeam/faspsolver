@@ -892,9 +892,9 @@ void fasp_multicolors_independent_set(AMG_data *mgl, INT gslvl)
     
     INT maxlvl = MIN(gslvl, mgl->num_levels-1);
     
-//#ifdef _OPENMP
-//#pragma omp parallel for private(level,rowmax,Colors) schedule(static, 1)
-//#endif
+#ifdef _OPENMP
+#pragma omp parallel for private(level,rowmax,Colors) schedule(static, 1)
+#endif
     for (level=0; level<maxlvl; level++) {
       
        multicoloring(&mgl[level], theta, &rowmax, &Colors);

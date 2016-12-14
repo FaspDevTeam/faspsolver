@@ -511,6 +511,7 @@ static INT numfac_bsr_mc_omp (dBSRmat *A,
             colptrs[k] =  0;
             luval[k] = 1.0/luval[k];
         } 
+        fasp_mem_free(colptrs);
         }
  }
 
@@ -708,6 +709,7 @@ static INT numfac_bsr_levsch_omp (dBSRmat *A,
             colptrs[k] =  0;
             luval[k] = 1.0/luval[k];
         } 
+        fasp_mem_free(colptrs);
         }
  }
 
@@ -1114,6 +1116,7 @@ SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat *A,
     status = fasp_ilu_dbsr_setup_omp(&A_LU,iludata,iluparam);
 
     fasp_dcsr_free(&mgl[0].A);
+    fasp_dbsr_free(&A_LU);
 
     return status;
 }

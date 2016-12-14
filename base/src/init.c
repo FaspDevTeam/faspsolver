@@ -305,8 +305,12 @@ void fasp_ilu_data_free (ILU_data *ILUdata)
     fasp_mem_free(ILUdata->ijlu);  ILUdata->ijlu  = NULL;
     fasp_mem_free(ILUdata->luval); ILUdata->luval = NULL;
     fasp_mem_free(ILUdata->work);  ILUdata->work  = NULL;
+    fasp_mem_free(ILUdata->ilevL);  ILUdata->ilevL  = NULL;
+    fasp_mem_free(ILUdata->jlevL);  ILUdata->jlevL  = NULL;
+    fasp_mem_free(ILUdata->ilevU);  ILUdata->ilevU  = NULL;
+    fasp_mem_free(ILUdata->jlevU);  ILUdata->jlevU  = NULL;
 
-    ILUdata->row = ILUdata->col = ILUdata->nzlu = ILUdata ->nwork = ILUdata->nb = 0;
+    ILUdata->row = ILUdata->col = ILUdata->nzlu = ILUdata ->nwork = ILUdata->nb = ILUdata->nlevL = ILUdata->nlevU = 0;
 }
 
 /**
