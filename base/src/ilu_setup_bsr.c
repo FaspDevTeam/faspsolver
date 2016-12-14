@@ -882,7 +882,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat *A,
     
     // ILU decomposition    
     // (1) symbolic factoration
-    symbfactor_(&A->ROW,A->JA,A->IA,&lfil,&iwk,&nzlu,ijlu,uptr,&ierr);
+    fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
     
     fasp_gettime(&symbolic_end);
 
@@ -1002,7 +1002,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat *A,
     
     // ILU decomposition    
     // (1) symbolic factoration
-    symbfactor_(&A->ROW,A->JA,A->IA,&lfil,&iwk,&nzlu,ijlu,uptr,&ierr);
+    fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
     
     nwork = 5*A->ROW*A->nb; 
     iludata->nzlu  = nzlu;
