@@ -96,6 +96,9 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
     
     // setup ILU preconditioner
     iludata->row=iludata->col=n;    
+    iludata->ilevL=iludata->jlevL=NULL;    
+    iludata->ilevU=iludata->jlevU=NULL;    
+    
     fasp_ilu_data_alloc(iwk, nwork, iludata);
     
 #if CHMEM_MODE

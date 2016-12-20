@@ -70,6 +70,8 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
     // setup preconditioner
     iludata->row = iludata->col=n;
     iludata->nb  = nb;
+    iludata->ilevL = iludata->jlevL=NULL;
+    iludata->ilevU = iludata->jlevU=NULL;
     
     ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
     uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
