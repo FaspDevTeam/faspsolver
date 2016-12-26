@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+12/20/2016 FASP 1.8.8:
+- Update ILU with OpenMP support.
+
 10/18/2016 FASP 1.8.7:
 - Fix a bug in dvec_axpyz.
 - Fix Makefile when FASP.mk is missing.

@@ -1,7 +1,7 @@
-    1237 ./base/include/fasp.h
+    1258 ./base/include/fasp.h
      677 ./base/include/fasp_block.h
-     255 ./base/include/fasp_const.h
-    3067 ./base/include/fasp_functs.h
+     256 ./base/include/fasp_const.h
+    3099 ./base/include/fasp_functs.h
      397 ./base/src/aggregation_bsr.inl
     1807 ./base/src/aggregation_csr.inl
     2119 ./base/src/gmg_util.inl
@@ -15,7 +15,7 @@
      700 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
      972 ./base/src/amlirecur.c
-     264 ./base/src/array.c
+     327 ./base/src/array.c
      235 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
      353 ./base/src/blas_bcsr.c
@@ -37,10 +37,10 @@
     1038 ./base/src/gmg_poisson.c
      754 ./base/src/graphics.c
     2146 ./base/src/ilu.c
-     432 ./base/src/ilu_setup_bsr.c
-     212 ./base/src/ilu_setup_csr.c
+    1128 ./base/src/ilu_setup_bsr.c
+     215 ./base/src/ilu_setup_csr.c
     1254 ./base/src/ilu_setup_str.c
-     346 ./base/src/init.c
+     350 ./base/src/init.c
      792 ./base/src/input.c
     1597 ./base/src/interpolation.c
      840 ./base/src/interpolation_em.c
@@ -55,7 +55,7 @@
      289 ./base/src/message.c
      536 ./base/src/mgcycle.c
      153 ./base/src/mgrecur.c
-     556 ./base/src/ordering.c
+     913 ./base/src/ordering.c
      986 ./base/src/parameters.c
     2792 ./base/src/pbcgs.c
      756 ./base/src/pbcgs_mf.c
@@ -69,7 +69,7 @@
     1286 ./base/src/pminres.c
      459 ./base/src/pminres_mf.c
     1053 ./base/src/precond_bcsr.c
-     727 ./base/src/precond_bsr.c
+    1134 ./base/src/precond_bsr.c
      663 ./base/src/precond_csr.c
     1731 ./base/src/precond_str.c
     1014 ./base/src/pvfgmres.c
@@ -80,13 +80,13 @@
      116 ./base/src/rap.c
      590 ./base/src/schwarz_setup.c
      798 ./base/src/smat.c
-    1600 ./base/src/smoother_bsr.c
+    1632 ./base/src/smoother_bsr.c
     2314 ./base/src/smoother_csr.c
       83 ./base/src/smoother_csr_cr.c
      586 ./base/src/smoother_csr_poly.c
     1878 ./base/src/smoother_str.c
      366 ./base/src/sparse_block.c
-    1865 ./base/src/sparse_bsr.c
+    1985 ./base/src/sparse_bsr.c
      153 ./base/src/sparse_coo.c
     1540 ./base/src/sparse_csr.c
       72 ./base/src/sparse_csrl.c
@@ -101,4 +101,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      311 ./base/src/wrapper.c
-   87952 total
+   89688 total
