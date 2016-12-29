@@ -31,9 +31,9 @@
  * \author Chensong Zhang
  * \date   2010/04/06
  */
-dCSRmat fasp_dcsr_create (const INT m,
-                          const INT n,
-                          const INT nnz)
+dCSRmat fasp_dcsr_create (const INT  m,
+                          const INT  n,
+                          const INT  nnz)
 {
     dCSRmat A;
     
@@ -77,9 +77,9 @@ dCSRmat fasp_dcsr_create (const INT m,
  * \author Chensong Zhang
  * \date   2010/04/06
  */
-iCSRmat fasp_icsr_create (const INT m,
-                          const INT n,
-                          const INT nnz)
+iCSRmat fasp_icsr_create (const INT  m,
+                          const INT  n,
+                          const INT  nnz)
 {
     iCSRmat A;
     
@@ -122,10 +122,10 @@ iCSRmat fasp_icsr_create (const INT m,
  * \author Chensong Zhang
  * \date   2010/04/06
  */
-void fasp_dcsr_alloc (const INT m,
-                      const INT n,
-                      const INT nnz,
-                      dCSRmat *A)
+void fasp_dcsr_alloc (const INT  m,
+                      const INT  n,
+                      const INT  nnz,
+                      dCSRmat   *A)
 {
     if ( m > 0 ) {
         A->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
@@ -245,7 +245,7 @@ void fasp_icsr_null (iCSRmat *A)
  * Modified by Chunsheng Feng, Zheng Li on 07/12/2012
  */
 dCSRmat fasp_dcsr_perm (dCSRmat *A,
-                        INT *P)
+                        INT     *P)
 {
     const INT n=A->row,nnz=A->nnz;
     const INT *ia=A->IA, *ja=A->JA;
@@ -407,7 +407,7 @@ void fasp_dcsr_sort (dCSRmat *A)
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_dcsr_getdiag (INT n,
+void fasp_dcsr_getdiag (INT      n,
                         dCSRmat *A,
                         dvector *diag)
 {
@@ -471,9 +471,9 @@ void fasp_dcsr_getdiag (INT n,
  *
  * Modified by Chunsheng Feng, Zheng Li on 07/08/2012
  */
-void fasp_dcsr_getcol (const INT n,
-                       dCSRmat *A,
-                       REAL *col)
+void fasp_dcsr_getcol (const INT  n,
+                       dCSRmat   *A,
+                       REAL      *col)
 {
     INT i,j, row_begin, row_end;
     INT nrow = A->row, ncol = A->col;
@@ -533,7 +533,7 @@ FINISHED:
 }
 
 /*!
- * \fn void fasp_dcsr_diagpref ( dCSRmat *A )
+ * \fn void fasp_dcsr_diagpref (dCSRmat *A)
  *
  * \brief Re-order the column and data arrays of a CSR matrix,
  *        so that the first entry in each row is the diagonal
@@ -657,7 +657,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
  * \date   11/07/2009
  */
 SHORT fasp_dcsr_regdiag (dCSRmat *A,
-                         REAL value)
+                         REAL     value)
 {
     const INT    m = A->row;
     const INT * ia = A->IA, * ja = A->JA;
@@ -903,11 +903,11 @@ INT fasp_dcsr_trans (dCSRmat *A,
  *
  * \note   This subroutine transpose in CSR format IN ORDER
  */
-void fasp_dcsr_transpose (INT *row[2],
-                          INT *col[2],
-                          REAL *val[2],
-                          INT *nn,
-                          INT *tniz)
+void fasp_dcsr_transpose (INT   *row[2],
+                          INT   *col[2],
+                          REAL  *val[2],
+                          INT   *nn,
+                          INT   *tniz)
 {
     const INT nca=nn[1]; // Number of columns
     
@@ -956,7 +956,7 @@ void fasp_dcsr_transpose (INT *row[2],
  */
 void fasp_dcsr_compress (dCSRmat *A,
                          dCSRmat *B,
-                         REAL dtol)
+                         REAL     dtol)
 {
     INT i, j, k;
     INT ibegin,iend1;
@@ -1035,7 +1035,7 @@ void fasp_dcsr_compress (dCSRmat *A,
  * \note This routine can be modified for filtering.
  */
 SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
-                                  REAL dtol)
+                                  REAL     dtol)
 {
     const INT row=A->row;
     const INT nnz=A->nnz;
@@ -1083,7 +1083,7 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
  * Modified by Chunsheng Feng, Zheng Li on 07/11/2012
  */
 void fasp_dcsr_shift (dCSRmat *A,
-                      INT offset)
+                      INT      offset)
 {
     const INT nnz=A->nnz;
     const INT n=A->row+1;
@@ -1263,8 +1263,8 @@ dCSRmat fasp_dcsr_sympat (dCSRmat *A)
  * \date   09/15/2012
  */
 void fasp_dcsr_multicoloring (dCSRmat *A,
-                              INT *flags,
-                              INT *groups)
+                              INT     *flags,
+                              INT     *groups)
 {
 #ifdef MULTI_COLOR_ORDER
     INT k,i,j,pre,group;
@@ -1364,7 +1364,7 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
  * \date   19951219 (Fortran), 20150912 (C)
  */
 void fasp_dcsr_transz (dCSRmat *A,
-                       INT *p,
+                       INT     *p,
                        dCSRmat *AT)
 {
     /* tested for permutation and transposition */
@@ -1484,7 +1484,7 @@ void fasp_dcsr_transz (dCSRmat *A,
  * \date   19951219 (Fortran), 20150912 (C)
  */
 dCSRmat fasp_dcsr_permz (dCSRmat *A,
-                         INT *p)
+                         INT     *p)
 {
     const INT n = A->row, nnz = A->nnz;
     dCSRmat Aperm1, Aperm;
@@ -1515,8 +1515,8 @@ dCSRmat fasp_dcsr_permz (dCSRmat *A,
  * \author Ludmil Zikatanov
  * \date   19951219 (Fortran), 20150912 (C)
  */
-void fasp_dcsr_sortz (dCSRmat *A,
-                      const SHORT isym)
+void fasp_dcsr_sortz (dCSRmat      *A,
+                      const SHORT   isym)
 {
     const INT n = A->row, m = A->col, nnz = A->nnz;
     dCSRmat AT = fasp_dcsr_create(m,n,nnz);

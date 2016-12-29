@@ -50,15 +50,15 @@
  * Modified by Chensong Zhang on 07/30/2014: Make memory allocation size long int
  * Modified by Chensong Zhang on 09/21/2014: Add comments and reorganize code
  */
-INT fasp_solver_dcsr_pgmres (dCSRmat *A,
-                             dvector *b,
-                             dvector *x,
-                             precond *pc,
-                             const REAL tol,
-                             const INT MaxIt,
-                             const SHORT restart,
-                             const SHORT stop_type,
-                             const SHORT prtlvl)
+INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
+                             dvector     *b,
+                             dvector     *x,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  restart,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl)
 {
     const INT   n         = b->row;
     const INT   MIN_ITER  = 0;
@@ -329,13 +329,13 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                   const REAL tol, const INT MaxIt, const SHORT restart,
- *                                   const SHORT stop_type, const SHORT prtlvl)
+ * \fn INT fasp_solver_dblc_pgmres (dBLCmat *A, dvector *b, dvector *x, precond *pc,
+ *                                  const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                  const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
- * \param A            Pointer to block_dCSRmat: the coefficient matrix
+ * \param A            Pointer to dBLCmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
  * \param x            Pointer to dvector: the unknowns
  * \param pc           Pointer to precond: the structure of precondition
@@ -353,15 +353,15 @@ FINISHED:
  * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/05/2013: add stop_type and safe check
  */
-INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
-                              dvector *b,
-                              dvector *x,
-                              precond *pc,
-                              const REAL tol,
-                              const INT MaxIt,
-                              const SHORT restart,
-                              const SHORT stop_type,
-                              const SHORT prtlvl)
+INT fasp_solver_dblc_pgmres (dBLCmat     *A,
+                             dvector     *b,
+                             dvector     *x,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  restart,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl)
 {
     const INT   n         = b->row;
     const INT   MIN_ITER  = 0;
@@ -422,7 +422,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
     
     // compute initial residual: r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
-    fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, p[0]);
+    fasp_blas_dblc_aAxpy(-1.0, A, x->val, p[0]);
     r_norm  = fasp_blas_array_norm2(n,p[0]);
     
     // compute stopping criteria
@@ -480,7 +480,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
             else
                 pc->fct(p[i-1], r, pc->data);
             
-            fasp_blas_bdcsr_mxv(A, r, p[i]);
+            fasp_blas_dblc_mxv(A, r, p[i]);
             
             /* Modified Gram_Schmidt orthogonalization */
             for ( j = 0; j < i; j++ ) {
@@ -555,7 +555,7 @@ INT fasp_solver_bdcsr_pgmres (block_dCSRmat *A,
             
             // compute residual
             fasp_array_cp(n, b->val, r);
-            fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, r);
+            fasp_blas_dblc_aAxpy(-1.0, A, x->val, r);
             r_norm = fasp_blas_array_norm2(n, r);
             
             switch ( stop_type ) {
@@ -656,15 +656,15 @@ FINISHED:
  * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/05/2013: add stop_type and safe check
  */
-INT fasp_solver_dbsr_pgmres (dBSRmat *A,
-                             dvector *b,
-                             dvector *x,
-                             precond *pc,
-                             const REAL tol,
-                             const INT MaxIt,
-                             const SHORT restart,
-                             const SHORT stop_type,
-                             const SHORT prtlvl)
+INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
+                             dvector     *b,
+                             dvector     *x,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  restart,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl)
 {
     const INT   n         = b->row;
     const INT   MIN_ITER  = 0;
@@ -960,15 +960,15 @@ FINISHED:
  * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/05/2013: add stop_type and safe check
  */
-INT fasp_solver_dstr_pgmres (dSTRmat *A,
-                             dvector *b,
-                             dvector *x,
-                             precond *pc,
-                             const REAL tol,
-                             const INT MaxIt,
-                             const SHORT restart,
-                             const SHORT stop_type,
-                             const SHORT prtlvl)
+INT fasp_solver_dstr_pgmres (dSTRmat     *A,
+                             dvector     *b,
+                             dvector     *x,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  restart,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl)
 {
     const INT   n         = b->row;
     const INT   MIN_ITER  = 0;

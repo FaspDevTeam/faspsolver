@@ -8,8 +8,6 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-///#include "forts_ns.h"
-
 #include "mg_util.inl"
 
 /*---------------------------------*/
@@ -33,8 +31,8 @@
  * Modified by Hongxuan Zhang on 12/15/2015: update direct solvers.
  *
  */
-void fasp_solver_fmgcycle (AMG_data *mgl,
-                           AMG_param *param)
+void fasp_solver_fmgcycle (AMG_data   *mgl,
+                           AMG_param  *param)
 {
     const SHORT  maxit = 3; // Max allowed V-cycles in each level
     const SHORT  amg_type = param->AMG_type;

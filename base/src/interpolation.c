@@ -45,11 +45,11 @@ static void interp_STD (dCSRmat *, ivector *, dCSRmat *, iCSRmat *, AMG_param *)
  * Modified by Chensong Zhang on 09/12/2012: clean up and debug interp_RS
  * Modified by Chensong Zhang on 05/14/2013: reconstruct the code
  */
-void fasp_amg_interp (dCSRmat *A,
-                      ivector *vertices,
-                      dCSRmat *P,
-                      iCSRmat *S,
-                      AMG_param *param)
+void fasp_amg_interp (dCSRmat    *A,
+                      ivector    *vertices,
+                      dCSRmat    *P,
+                      iCSRmat    *S,
+                      AMG_param  *param)
 {
 	const INT coarsening_type = param->coarsening_type;
     INT       interp_type     = param->interpolation_type;
@@ -83,8 +83,8 @@ void fasp_amg_interp (dCSRmat *A,
 }
 
 /**
- * \fn void fasp_amg_interp1 (dCSRmat *A, ivector *vertices, dCSRmat *P, AMG_param *param,
- *                            iCSRmat *S, INT *icor_ysk)
+ * \fn void fasp_amg_interp1 (dCSRmat *A, ivector *vertices, dCSRmat *P,
+ *                            AMG_param *param, iCSRmat *S, INT *icor_ysk)
  *
  * \brief Generate interpolation operator P
  *
@@ -102,12 +102,12 @@ void fasp_amg_interp (dCSRmat *A,
  *
  * Modified by Chensong Zhang on 05/14/2013: reconstruct the code
  */
-void fasp_amg_interp1 (dCSRmat *A,
-                       ivector *vertices,
-                       dCSRmat *P,
-                       AMG_param *param,
-                       iCSRmat *S,
-                       INT *icor_ysk)
+void fasp_amg_interp1 (dCSRmat    *A,
+                       ivector    *vertices,
+                       dCSRmat    *P,
+                       AMG_param  *param,
+                       iCSRmat    *S,
+                       INT        *icor_ysk)
 {
 	const INT coarsening_type = param->coarsening_type;
     INT       interp_type     = param->interpolation_type;
@@ -156,8 +156,8 @@ void fasp_amg_interp1 (dCSRmat *A,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012: add OMP support
  * Modified by Chensong Zhang on 05/14/2013: rewritten
  */
-void fasp_amg_interp_trunc (dCSRmat *P,
-                            AMG_param *param)
+void fasp_amg_interp_trunc (dCSRmat     *P,
+                            AMG_param   *param)
 {
     const INT   row    = P->row;
     const INT   nnzold = P->nnz;
@@ -285,10 +285,10 @@ void fasp_amg_interp_trunc (dCSRmat *P,
  * Modified by Chensong Zhang on 09/12/2012: compare with the old version
  * Modified by Chensong Zhang on 05/14/2013: reconstruct the code
  */
-static void interp_DIR (dCSRmat *A,
-                        ivector *vertices,
-                        dCSRmat *P,
-                        AMG_param *param )
+static void interp_DIR (dCSRmat    *A,
+                        ivector    *vertices,
+                        dCSRmat    *P,
+                        AMG_param  *param )
 {
     INT  row   = A->row;
     INT       *vec   = vertices->val;
@@ -517,11 +517,11 @@ static void interp_DIR (dCSRmat *A,
  * Modified by Chensong Zhang on 05/15/2013: reconstruct the code
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: cfsplitting of RS coarsening check C1 Criterion
  */
-static void interp_STD (dCSRmat *A,
-                        ivector *vertices,
-                        dCSRmat *P,
-                        iCSRmat *S,
-                        AMG_param *param)
+static void interp_STD (dCSRmat    *A,
+                        ivector    *vertices,
+                        dCSRmat    *P,
+                        iCSRmat    *S,
+                        AMG_param  *param)
 {
     const INT   row    = A->row;
     INT        *vec    = vertices->val;
@@ -722,11 +722,11 @@ static void interp_STD (dCSRmat *A,
  *
  * \node  need to be fixed.
  */
-static void interp_EXT (dCSRmat *A,
-                        ivector *vertices,
-                        dCSRmat *P,
-                        iCSRmat *S,
-                        AMG_param *param)
+static void interp_EXT (dCSRmat    *A,
+                        ivector    *vertices,
+                        dCSRmat    *P,
+                        iCSRmat    *S,
+                        AMG_param  *param)
 {
     const INT   row    = A->row;
     INT        *vec    = vertices->val;
@@ -909,6 +909,7 @@ static void interp_EXT (dCSRmat *A,
     // Step 3. Truncate the prolongation operator to reduce cost
     fasp_amg_interp_trunc(P, param);
 }
+
 /**
  * \fn static void get_nwidth (dCSRmat *A, INT *nbl_ptr, INT *nbr_ptr)
  *
@@ -921,9 +922,9 @@ static void interp_EXT (dCSRmat *A,
  * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   03/01/2011
  */
-static void get_nwidth (dCSRmat *A,
-                        INT *nbl_ptr,
-                        INT *nbr_ptr )
+static void get_nwidth (dCSRmat  *A,
+                        INT      *nbl_ptr,
+                        INT      *nbr_ptr )
 {
 #ifdef _OPENMP
     INT *IA = A->IA;
@@ -975,8 +976,8 @@ static void get_nwidth (dCSRmat *A,
  * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   03/01/2011
  */
-static void mod_cindex (INT nrows,
-                        INT *cindex)
+static void mod_cindex (INT   nrows,
+                        INT  *cindex)
 {
 #ifdef _OPENMP
     INT myid, mybegin, myend, i, nthreads;
@@ -1020,13 +1021,13 @@ static void mod_cindex (INT nrows,
  * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   03/01/2011
  */
-static void get_cindex (INT nrows,
-                        INT ncols,
-                        INT *cindex,
-                        INT nbl_ysk,
-                        INT nbr_ysk,
-                        INT *CF_marker,
-                        INT *icor_ysk)
+static void get_cindex (INT   nrows,
+                        INT   ncols,
+                        INT  *cindex,
+                        INT   nbl_ysk,
+                        INT   nbr_ysk,
+                        INT  *CF_marker,
+                        INT  *icor_ysk)
 {
 #ifdef _OPENMP
     INT myid, FiveMyid, mybegin, myend, min_A, max_A, i, first_f_node, min_P, max_P, myend_minus_one;
@@ -1150,11 +1151,11 @@ static void get_cindex (INT nrows,
  * 
  * TODO: Need to be cleaned up! --Chensong
  */
-static void interp_DIR1 (dCSRmat *A,
-                         ivector *vertices,
-                         dCSRmat *Ptr,
-                         AMG_param *param,
-                         INT *icor_ysk)
+static void interp_DIR1 (dCSRmat    *A,
+                         ivector    *vertices,
+                         dCSRmat    *Ptr,
+                         AMG_param  *param,
+                         INT        *icor_ysk)
 {
     REAL eps_tr = param->truncation_threshold;
     REAL amN, amP, apN, apP;

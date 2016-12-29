@@ -83,11 +83,11 @@ SHORT fasp_param_check (input_param *inparam)
 }
 
 /**
- * \fn void fasp_param_input (const char *filenm, input_param *inparam)
+ * \fn void fasp_param_input (const char *fname, input_param *inparam)
  *
  * \brief Read input parameters from disk file
  *
- * \param filenm    File name for input file
+ * \param fname     File name for input file
  * \param inparam   Input parameters
  *
  * \author Chensong Zhang
@@ -99,8 +99,8 @@ SHORT fasp_param_check (input_param *inparam)
  * Modified by Chensong Zhang on 05/10/2013: add a new input.
  * Modified by Chensong Zhang on 03/23/2015: skip unknown keyword.
  */
-void fasp_param_input (const char *filenm,
-                       input_param *inparam)
+void fasp_param_input (const char   *fname,
+                       input_param  *inparam)
 {
     char     buffer[500]; // Note: max number of char for each line!
     int      val;
@@ -110,13 +110,12 @@ void fasp_param_input (const char *filenm,
     fasp_param_input_init(inparam);
 
     // if input file is not specified, use the default values
-    if (filenm==NULL) return;
+    if (fname==NULL) return;
     
-    FILE *fp = fopen(filenm,"r");
+    FILE *fp = fopen(fname,"r");
     if (fp==NULL) {
-        printf("### ERROR: Could not open file %s...\n", filenm);
+        printf("### ERROR: Could not open file %s...\n", fname);
         fasp_chkerr(ERROR_OPEN_FILE, "fasp_param_input");
-
     }
     
     while ( status == FASP_SUCCESS ) {

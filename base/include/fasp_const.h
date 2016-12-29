@@ -87,13 +87,19 @@
  * \brief Definition of matrix format
  **/
 #define MAT_FREE                0  /**< matrix-free format: only mxv action */
+//---------------------------------------------------------------------------------
 #define MAT_CSR                 1  /**< compressed sparse row */
 #define MAT_BSR                 2  /**< block-wise compressed sparse row */
 #define MAT_STR                 3  /**< structured sparse matrix */
-#define MAT_bCSR                4  /**< block matrix of CSR */
-#define MAT_bBSR                5  /**< block matrix of BSR for bordered systems */
 #define MAT_CSRL                6  /**< modified CSR to reduce cache missing */
 #define MAT_SymCSR              7  /**< symmetric CSR format */
+#define MAT_BLC                 8  /**< block CSR matrix */
+//---------------------------------------------------------------------------------
+//    For bordered systems in reservoir simulation
+//---------------------------------------------------------------------------------
+#define MAT_bCSR               11  /**< block CSR/CSR matrix == 2*2 BLC matrix */
+#define MAT_bBSR               12  /**< block BSR/CSR matrix */
+#define MAT_bSTR               13  /**< block STR/CSR matrix */
 
 /**
  * \brief Definition of solver types for iterative methods
@@ -102,7 +108,7 @@
 //---------------------------------------------------------------------------------
 #define SOLVER_CG               1  /**< Conjugate Gradient */
 #define SOLVER_BiCGstab         2  /**< Bi-Conjugate Gradient Stabilized */
-#define SOLVER_VBiCGstab         9  /**< VBi-Conjugate Gradient Stabilized */
+#define SOLVER_VBiCGstab        9  /**< VBi-Conjugate Gradient Stabilized */
 #define SOLVER_MinRes           3  /**< Minimal Residual */
 #define SOLVER_GMRES            4  /**< Generalized Minimal Residual */
 #define SOLVER_VGMRES           5  /**< Variable Restarting GMRES */

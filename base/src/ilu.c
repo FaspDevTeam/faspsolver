@@ -28,10 +28,10 @@
  * \author Chunsheng Feng
  * \date   09/06/2016
  */
-void fasp_qsplit (REAL *a,
-                  INT *ind,
-                  INT n,
-                  INT ncut)
+void fasp_qsplit (REAL   *a,
+                  INT    *ind,
+                  INT     n,
+                  INT     ncut)
 {
     /*-----------------------------------------------------------------------
      does a quick-sort split of a real array.
@@ -50,9 +50,9 @@ void fasp_qsplit (REAL *a,
     
     first = 1;
     last = n;
-    if ((ncut  <  first) || (ncut  >  last)) return;
+    if ((ncut < first) || (ncut > last)) return;
     
-    //    outer loop -- while mid .ne. ncut do
+    // outer loop -- while mid .ne. ncut do
 F161:
     mid = first;
     abskey = ABS(a[mid]);
@@ -69,7 +69,7 @@ F161:
         }
     }
     
-    //     interchange
+    // interchange
     tmp = a[mid];
     a[mid] = a[first];
     a[first] = tmp;
@@ -78,7 +78,7 @@ F161:
     ind[mid] = ind[first];
     ind[first] = itmp;
     
-    //    test for while loop
+    // test for while loop
     if (mid  ==  ncut) {
         ++ind;
         ++a;
@@ -108,8 +108,6 @@ F161:
  * \param lfil  integer. The fill-in parameter. Each row of L and each row
  *              of U will have a maximum of lfil elements (excluding the diagonal
  *              element). lfil must be .ge. 0.
- * \param droptol  real*8. Sets the threshold for dropping small terms in the
- *                 factorization. See below for details on dropping strategy.
  * \param alu,jlu  matrix stored in Modified Sparse Row (MSR) format containing
  *                 the L and U factors together. The diagonal (stored in
  *                 alu(1:n) ) is inverted. Each i-th row of the alu,jlu matrix
@@ -135,16 +133,16 @@ F161:
  * \author Chunsheng Feng
  * \date   09/06/2016
  */
-void fasp_iluk (INT n,
-                REAL *a,
-                INT *ja,
-                INT *ia,
-                INT lfil,
-                REAL *alu,
-                INT *jlu,
-                INT iwk,
-                INT *ierr,
-                INT *nzlu)
+void fasp_iluk (INT    n,
+                REAL  *a,
+                INT   *ja,
+                INT   *ia,
+                INT    lfil,
+                REAL  *alu,
+                INT   *jlu,
+                INT    iwk,
+                INT   *ierr,
+                INT   *nzlu)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
@@ -203,10 +201,9 @@ void fasp_iluk (INT n,
      Notes:
      ------
      All the diagonal elements of the input matrix must be nonzero.
-     
      ---------------------------------------------------------------------- */
     
-    //     locals
+    // locals
     INT ju0, k, j1, j2, j, ii, i, lenl, lenu, jj, jrow, jpos, n2, jlev, NE;
     REAL t, s, fact;
     SHORT cinindex=0;
@@ -245,7 +242,7 @@ void fasp_iluk (INT n,
     /*-----------------------------------------------------------------------
      initialize ju0 (points to next element to be added to alu,jlu)
      and pointer array.
-     -----------------------------------------------------------------------  */
+     ------------------------------------------------------------------------*/
     n2 = n + n;
     ju0 = n + 2;
     jlu[1] = ju0;
@@ -255,7 +252,7 @@ void fasp_iluk (INT n,
     
     /*-----------------------------------------------------------------------
      beginning of main loop.
-     ----------------------------------------------------------------------- */
+     ------------------------------------------------------------------------*/
     for(ii = 1; ii <= n; ++ii) 	{  //500
         j1 = ia[ii];
         j2 = ia[ii + 1] - 1;
@@ -299,7 +296,7 @@ void fasp_iluk (INT n,
         ++jj;
         if (jj  >  lenl) goto F160;
         
-        /*-----------------------------------------------------------------------
+        /*----------------------------------------------------------------------
          in order to do the elimination in the correct order we must select
          the smallest column index among jw(k), k=jj+1, ..., lenl.
          -----------------------------------------------------------------------*/
@@ -420,7 +417,7 @@ void fasp_iluk (INT n,
         
         //	 update pointer to beginning of next row of U.
         jlu[ii + 1] = ju0;
-        /*-----------------------------------------------------------------------
+        /*----------------------------------------------------------------------
          end main loop
          -----------------------------------------------------------------------*/
     } //500
@@ -455,7 +452,7 @@ F100:
     
     return;
     
-    //	 incomprehensible error. Matrix must be wrong.
+    // incomprehensible error. Matrix must be wrong.
 F995:
     printf("### ERROR: incomprehensible error. Matrix must be wrong.\n");
     *ierr = -1;
@@ -473,7 +470,7 @@ F997:
     *ierr = -3;
     goto F100;
     
-    //  illegal lfil entered.
+    // illegal lfil entered.
 F998:
     printf("### ERROR: illegal lfil entered\n");
     *ierr = -4;
@@ -528,17 +525,17 @@ F999:
  * \author Chunsheng Feng
  * \date   09/06/2016
  */
-void fasp_ilut (INT n,
-                REAL *a,
-                INT  *ja,
-                INT  *ia,
-                INT lfil,
-                REAL droptol,
-                REAL *alu,
-                INT *jlu,
-                INT iwk,
-                INT *ierr,
-                INT *nz)
+void fasp_ilut (INT    n,
+                REAL  *a,
+                INT   *ja,
+                INT   *ia,
+                INT    lfil,
+                REAL   droptol,
+                REAL  *alu,
+                INT   *jlu,
+                INT    iwk,
+                INT   *ierr,
+                INT   *nz)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUt) ...... [Start]\n", __FUNCTION__);
@@ -623,7 +620,7 @@ void fasp_ilut (INT n,
      (however, fill-in is then unpredictible).                        *
      ---------------------------------------------------------------------- */
     
-    //     locals
+    // locals
     INT ju0, k, j1, j2, j, ii, i, lenl, lenu, jj, jrow, jpos, NE, len;
     REAL t, s, fact, tmp;
     SHORT cinindex=0;
@@ -666,7 +663,6 @@ void fasp_ilut (INT n,
     
     // initialize nonzero indicator array.
     for (j = 1; j<=n; ++j)  jw[n + j] = 0;
-    
     
     /*-----------------------------------------------------------------------
      beginning of main loop.
@@ -748,15 +744,15 @@ void fasp_ilut (INT n,
             w[k] = s;
         }
         
-        //     zero out element in row by setting jw(n+jrow) to zero.
+        // zero out element in row by setting jw(n+jrow) to zero.
         jw[n + jrow] = 0;
         
-        //    get the multiplier for row to be eliminated (jrow).
+        // get the multiplier for row to be eliminated (jrow).
         fact = w[jj]*alu[jrow];
         
         if (ABS(fact)  <=  droptol) goto F150;
         
-        //     combine current row and row jrow
+        // combine current row and row jrow
         for ( k = ju[jrow]; k <= jlu[jrow + 1] - 1; ++k) {   //203
             s = fact*alu[k];
             j = jlu[k];
@@ -802,17 +798,17 @@ void fasp_ilut (INT n,
         goto F150;
         
     F160:
-        //     reset double-pointer to zero (U-part)
+        // reset double-pointer to zero (U-part)
         for (k = 1; k <= lenu; ++k ) jw[n + jw[ii + k - 1]] = 0;  //308
         
-        //     update L-matrix
+        // update L-matrix
         lenl = len;
         len = MIN(lenl, lfil);
         
-        //     sort by quick-split
+        // sort by quick-split
         fasp_qsplit(&w[1], &jw[1], lenl, len);
         
-        //     store L-part
+        // store L-part
         for (k = 1; k <= len; ++k ) 	{   //204
             if (ju0  >  iwk) goto F996;
             alu[ju0] = w[k];
@@ -820,10 +816,10 @@ void fasp_ilut (INT n,
             ++ju0;
         }
         
-        //     save pointer to beginning of row ii of U
+        // save pointer to beginning of row ii of U
         ju[ii] = ju0;
         
-        //     update U-matrix -- first apply dropping strategy
+        // update U-matrix -- first apply dropping strategy
         len = 0;
         for (k = 1; k <= lenu - 1; ++k) {
             //		if ( ABS(w[ii + k])  >  droptol*tnorm )
@@ -839,7 +835,7 @@ void fasp_ilut (INT n,
         
         fasp_qsplit(&w[ii + 1], &jw[ii + 1], lenu - 1, len);
         
-        //     copy
+        // copy
         t = ABS(w[ii]);
         if (len + ju0  >  iwk) goto F997;
         for (k = ii + 1; k<=ii + len - 1; ++k)  {  //302
@@ -849,13 +845,13 @@ void fasp_ilut (INT n,
             ++ju0;
         }
         
-        //     store inverse of diagonal element of u
-        //     if (w(ii) .eq. 0.0) w(ii) = (0.0001 + droptol)*tnorm
+        // store inverse of diagonal element of u
+        // if (w(ii) .eq. 0.0) w(ii) = (0.0001 + droptol)*tnorm
         if (w[ii]  ==  0.0) w[ii] = tnorm[ii];
         
         alu[ii] = 1.0/w[ii];
         
-        //     update pointer to beginning of next row of U.
+        // update pointer to beginning of next row of U.
         jlu[ii + 1] = ju0;
         /*-----------------------------------------------------------------------
          end main loop
@@ -892,33 +888,28 @@ F100:
     
     return;
     
-    //     incomprehensible error. Matrix must be wrong.
-F995:
+F995:    // incomprehensible error. Matrix must be wrong.
     printf("### ERROR: input matrix may be wrong \n");
     *ierr = -1;
     goto F100;
     
-    //     insufficient storage in L.
-F996:
+F996:    // insufficient storage in L.
     printf("### ERROR: insufficient storage in L\n");
     *ierr = -2;
     goto F100;
     
-    //     insufficient storage in U.
-F997:
+F997:    // insufficient storage in U.
     printf("### ERROR: insufficient storage in U\n");
     *ierr = -3;
     goto F100;
     
-    //     illegal lfil entered.
-F998:
+F998:    // illegal lfil entered.
     *ierr = -4;
     printf("### ERROR: illegal lfil entered\n");
     return;
     /*----------------end-of-ilut--------------------------------------------
      -----------------------------------------------------------------------*/
 }
-
 
 /**
  * \fn void fasp_ilutp (INT n, REAL *a, INT *ja, INT *ia, INT lfil, REAL droptol,
@@ -969,19 +960,19 @@ F998:
  * \author Chunsheng Feng
  * \date   09/06/2016
  */
-void fasp_ilutp (INT n,
-                 REAL *a,
-                 INT  *ja,
-                 INT  *ia,
-                 INT  lfil,
-                 REAL droptol,
-                 REAL permtol,
-                 INT  mbloc,
-                 REAL *alu,
-                 INT  *jlu,
-                 INT  iwk,
-                 INT  *ierr,
-                 INT  *nz)
+void fasp_ilutp (INT    n,
+                 REAL  *a,
+                 INT   *ja,
+                 INT   *ia,
+                 INT    lfil,
+                 REAL   droptol,
+                 REAL   permtol,
+                 INT    mbloc,
+                 REAL  *alu,
+                 INT   *jlu,
+                 INT    iwk,
+                 INT   *ierr,
+                 INT   *nz)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUtp) ...... [Start]\n", __FUNCTION__);
@@ -1072,7 +1063,7 @@ void fasp_ilutp (INT n,
      
      -----------------------------------------------------------------------*/
     
-    //     local variables
+    // local variables
     INT k, i, j, jrow, ju0, ii, j1, j2, jpos, len, imax, lenu, lenl, jj, icut,NE;
     REAL s, tmp, tnorm, xmax, xmax0, fact, t;
     SHORT cinindex=0;
@@ -1137,7 +1128,7 @@ void fasp_ilutp (INT n,
         if (tnorm  ==  0.0) goto F999;
         tnorm = tnorm/(REAL)(j2 - j1 + 1);
         
-        //	 unpack L-part and U-part of row of A in arrays  w  --
+        // unpack L-part and U-part of row of A in arrays  w  --
         lenu = 1;
         lenl = 0;
         jw[ii] = ii;
@@ -1167,7 +1158,7 @@ void fasp_ilutp (INT n,
         len = 0;
         
         
-        //	 eliminate previous rows
+        // eliminate previous rows
     F150:
         ++jj;
         if (jj  >  lenl) goto F160;
@@ -1179,7 +1170,7 @@ void fasp_ilutp (INT n,
         jrow = jw[jj];
         k = jj;
         
-        //	 determine smallest column index
+        // determine smallest column index
         for (j = jj + 1; j <= lenl; ++j) {  //151
             if (jw[j]  <  jrow) {
                 jrow = jw[j];
@@ -1188,29 +1179,29 @@ void fasp_ilutp (INT n,
         }
         
         if (k  !=  jj) 	{
-            //     exchange in jw
+            // exchange in jw
             j = jw[jj];
             jw[jj] = jw[k];
             jw[k] = j;
-            //     exchange in jr
+            // exchange in jr
             jw[n + jrow] = jj;
             jw[n + j] = k;
-            //     exchange in w
+            // exchange in w
             s = w[jj];
             w[jj] = w[k];
             w[k] = s;
         }
         
-        //	 zero out element in row by resetting jw(n+jrow) to zero.
+        // zero out element in row by resetting jw(n+jrow) to zero.
         jw[n + jrow] = 0;
         
-        //	 get the multiplier for row to be eliminated: jrow
+        // get the multiplier for row to be eliminated: jrow
         fact = w[jj]*alu[jrow];
         
-        //	 drop term if small
+        // drop term if small
         if (ABS(fact)  <=  droptol) goto F150;
         
-        //	 combine current row and row jrow
+        // combine current row and row jrow
         
         for ( k = ju[jrow]; k <= jlu[jrow + 1] - 1; ++k ) {  //203
             s = fact*alu[k];
@@ -1218,7 +1209,7 @@ void fasp_ilutp (INT n,
             j = iperm[n + jlu[k]];
             jpos = jw[n + j];
             if (j  >=  ii) {
-                //	 dealing with upper part.
+                // dealing with upper part.
                 if (jpos  ==  0) {
                     //	 this is a fill-in element
                     ++lenu;
@@ -1233,7 +1224,7 @@ void fasp_ilutp (INT n,
                 }
                 
             } else {
-                //	 dealing with lower part.
+                // dealing with lower part.
                 if (jpos  ==  0) {
                     //	 this is a fill-in element
                     ++lenl;
@@ -1259,17 +1250,17 @@ void fasp_ilutp (INT n,
         goto F150;
         
     F160:
-        //	 reset double-pointer to zero (U-part)
+        // reset double-pointer to zero (U-part)
         for ( k = 1; k <= lenu; ++k ) jw[n + jw[ii + k - 1]] = 0;  //308
         
-        //	 update L-matrix
+        // update L-matrix
         lenl = len;
         len = MIN(lenl, lfil);
         
-        //	 sort by quick-split
+        // sort by quick-split
         fasp_qsplit(&w[1], &jw[1], lenl, len);
         
-        //	 store L-part -- in original coordinates ..
+        // store L-part -- in original coordinates ..
         for ( k = 1; k <= len; ++k ) {  // 204
             if (ju0  >  iwk) goto F996;
             alu[ju0] = w[k];
@@ -1277,10 +1268,10 @@ void fasp_ilutp (INT n,
             ++ju0;
         }  //204
         
-        //	 save pointer to beginning of row ii of U
+        // save pointer to beginning of row ii of U
         ju[ii] = ju0;
         
-        //	 update U-matrix -- first apply dropping strategy
+        // update U-matrix -- first apply dropping strategy
         len = 0;
         for(k = 1; k <= lenu - 1; ++k ) {
             if ( ABS(w[ii + k])  >  droptol*tnorm) {
@@ -1294,7 +1285,7 @@ void fasp_ilutp (INT n,
         len = MIN(lenu, lfil);
         fasp_qsplit(&w[ii + 1], &jw[ii + 1], lenu-1, len);
         
-        //	 determine next pivot --
+        // determine next pivot --
         imax = ii;
         xmax = ABS(w[imax]);
         xmax0 = xmax;
@@ -1308,18 +1299,18 @@ void fasp_ilutp (INT n,
             }
         }
         
-        //	 exchange w's
+        // exchange w's
         tmp = w[ii];
         w[ii] = w[imax];
         w[imax] = tmp;
         
-        //	 update iperm and reverse iperm
+        // update iperm and reverse iperm
         j = jw[imax];
         i = iperm[ii];
         iperm[ii] = iperm[j];
         iperm[j] = i;
         
-        //	 reverse iperm
+        // reverse iperm
         iperm[n + iperm[ii]] = ii;
         iperm[n + iperm[j]] = j;
         
@@ -1327,18 +1318,18 @@ void fasp_ilutp (INT n,
         if (len + ju0  >  iwk) goto F997;
         
         
-        //	 copy U-part in original coordinates
+        // copy U-part in original coordinates
         for ( k = ii + 1; k <= ii + len - 1; ++k ) { //302
             jlu[ju0] = iperm[jw[k]];
             alu[ju0] = w[k];
             ++ju0;
         }
         
-        //	 store inverse of diagonal element of u
+        // store inverse of diagonal element of u
         if (w[ii]  ==  0.0) w[ii] = (1.0e-4 + droptol)*tnorm;
         alu[ii] = 1.0/w[ii];
         
-        //	 update pointer to beginning of next row of U.
+        // update pointer to beginning of next row of U.
         jlu[ii + 1] = ju0;
         
         /*-----------------------------------------------------------------------
@@ -1346,10 +1337,10 @@ void fasp_ilutp (INT n,
          -----------------------------------------------------------------------*/
     }  //500
     
-    //	 permute all column indices of LU ...
+    // permute all column indices of LU ...
     for ( k = jlu[1]; k <= jlu[n + 1] - 1; ++k ) 	jlu[k] = iperm[n + jlu[k]];
     
-    //	 ...and of A
+    // ...and of A
     for ( k = ia[1]; k <= ia[n + 1] - 1; ++k )	ja[k] = iperm[n + ja[k]];
     
     *nz = ju[n]- 1;
@@ -1382,33 +1373,27 @@ F100:
     
     return;
     
-    //	 incomprehensible error. Matrix must be wrong.
-F995:
+F995:    // incomprehensible error. Matrix must be wrong.
     printf("### ERROR: input matrix may be wrong \n");
     *ierr = -1;
     goto F100;
     
-    //	 insufficient storage in L.
-F996:
+F996:    // insufficient storage in L.
     printf("### ERROR: insufficient storage in L\n");
     *ierr = -2;
     goto F100;
     
-    //	 insufficient storage in U.
-F997:
+F997:    // insufficient storage in U.
     printf("### ERROR: insufficient storage in U\n");
     *ierr = -3;
     goto F100;
     
-    //	 illegal lfil entered.
-F998:
+F998:    // illegal lfil entered.
     printf("### ERROR: illegal lfil entered\n");
     *ierr = -4;
     return;
     
-    
-    //	 zero row encountered
-F999:
+F999:    // zero row encountered
     printf("### ERROR: zero row encountered\n");
     *ierr = -5;
     goto F100;
@@ -1416,9 +1401,9 @@ F999:
 }
 
 /**
- * \fn void fasp_srtr(INT num,INT *q)
+ * \fn void fasp_srtr (INT num,INT *q)
  *
- * \brief Implement shell sort, with hardwired increments.
+ * \brief Shell sort with hardwired increments.
  *
  * \param num  size of q
  * \param q  integer array.
@@ -1427,8 +1412,8 @@ F999:
  * \author Chunsheng Feng
  * \date   09/06/2016
  */
-void fasp_srtr(INT num,
-               INT *q)
+void fasp_srtr (INT   num,
+                INT  *q)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
@@ -1515,8 +1500,8 @@ void fasp_srtr(INT num,
 }
 
 /**
- * \fn void fasp_symbfactor (INT n, INT *colind, INT *rwptr, INT levfill, INT nzmax,
- INT *nzlu, INT *ijlu, INT *uptr, INT *ierr)
+ * \fn void fasp_symbfactor (INT n, INT *colind, INT *rwptr, INT levfill, 
+ *                           INT nzmax, INT *nzlu, INT *ijlu, INT *uptr, INT *ierr)
  *
  * \brief Symbolic factorization of a CSR matrix A in compressed sparse row format,
  *		    with resulting factors stored in a single MSR data structure.
@@ -1540,15 +1525,15 @@ void fasp_srtr(INT num,
  * \author Chunsheng Feng
  * \date   09/06/2016
  */
-void fasp_symbfactor (INT n,
-                      INT *colind,
-                      INT *rwptr,
-                      INT levfill,
-                      INT nzmax,
-                      INT *nzlu,
-                      INT *ijlu,
-                      INT *uptr,
-                      INT *ierr)
+void fasp_symbfactor (INT   n,
+                      INT  *colind,
+                      INT  *rwptr,
+                      INT   levfill,
+                      INT   nzmax,
+                      INT  *nzlu,
+                      INT  *ijlu,
+                      INT  *uptr,
+                      INT  *ierr)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
@@ -1747,7 +1732,6 @@ void fasp_symbfactor (INT n,
      
      ======================================================================== */
     
-    //INT mneed;
     INT icolindj, ijlum, i, j, k, m, ibegin, iend, Ujbeg, Ujend,NE;
     INT head, prev, lm, actlev, lowct, k1, k2, levp1, lmk, nzi, rowct;
     SHORT cinindex=0;
@@ -1760,7 +1744,6 @@ void fasp_symbfactor (INT n,
     //========================================================================
     //       Beginning of Executable Statements
     //========================================================================
-    
     
     /*-----------------------------------------------------------------------
      shift index for C routines
@@ -1999,7 +1982,6 @@ void fasp_symbfactor (INT n,
                                 //  trailing part of levels, so that it can be
                                 //  used in subsequent rows:
                                 //  -------------------------------------------
-                                
                                 lastcol[ijlum] = i;
                                 levels[ijlum] = actlev;
                                 
@@ -2064,8 +2046,7 @@ void fasp_symbfactor (INT n,
             //  sparsity pattern into the ijlu and uptr data structures.
             //  ---------------------------------------------------------
             if (*nzlu  >  nzmax) {
-                //mneed = ifix((float(n - i)/float(2*i))*3*nzlu);
-                printf("### ERROR: not enough storage; check mneed.\n");
+                printf("### ERROR: More storage needed!\n");
                 *ierr = 1;
                 goto F100;
             }
@@ -2111,7 +2092,7 @@ void fasp_symbfactor (INT n,
     }  //100
     
     if (cinindex) {
-        for ( i = 1; i <= *nzlu; ++i )	 --ijlu[i];
+        for ( i = 1; i <= *nzlu; ++i ) --ijlu[i];
         for ( i = 1; i <= n; ++i )     --uptr[i];
         NE = rwptr[n + 1] - 1;
         for ( i = 1; i <= NE; ++i )    --colind[i];
@@ -2139,7 +2120,6 @@ F100:
     return;
     //======================== End of symbfac ==============================
 }
-
 
 /*---------------------------------*/
 /*--        End of File          --*/

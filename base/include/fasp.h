@@ -428,17 +428,34 @@ typedef struct {
     //! work space
     REAL *work;
 
-    //! for multi-threads
+    //! number of colors for multi-threading
     INT ncolors;
+    
+    //! indices for different colors
     INT *ic;
+    
+    //! mapping from vertex to color
     INT *icmap;
+    
+    //! temporary work space
     INT *uptr;
 
+    //! number of colors for lower triangle
     INT nlevL;
+
+    //! number of colors for upper triangle
     INT nlevU;
+    
+    //! number of vertices in each color for lower triangle
     INT *ilevL;
+
+    //! number of vertices in each color for upper triangle
     INT *ilevU;
+    
+    //! mapping from row to color for lower triangle
     INT *jlevL;
+
+    //! mapping from row to color for upper triangle
     INT *jlevU;
 
 } ILU_data; /**< Data for ILU */
@@ -494,20 +511,20 @@ typedef struct {
  */
 typedef struct {
 
-    // Internal solver memory pointer
+    //! Internal solver memory pointer
     void *pt[64];
 
 #if WITH_PARDISO
-    // Pardiso control parameters
+    //! Pardiso control parameters
     MKL_INT iparm[64];
 
-    // Type of the matrix
+    //! Type of the matrix
     MKL_INT mtype;
 
-    // Maximum number of numerical factorizations
+    //! Maximum number of numerical factorizations
     MKL_INT maxfct;
 
-    // Indicate the actual matrix for the solution phase, 1 <= mnum <= maxfct
+    //! Indicate the actual matrix for the solution phase, 1 <= mnum <= maxfct
     MKL_INT mnum;
 
 #endif
@@ -795,7 +812,7 @@ typedef struct {
     //! data of Schwarz smoother
     Schwarz_data Schwarz;
 
-    //! Temporary work space
+    //! temporary work space
     dvector w;
 
     //! data for MUMPS
@@ -804,14 +821,18 @@ typedef struct {
     //! cycle type
     INT cycle_type;
 
-    //! multi-colors smoother
+    //! indices for different colors
     INT *ic;
 
+    //! mapping from vertex to color
     INT *icmap;
 
+    //! number of colors
     INT colors;
 
+    //! weight for smoother
     REAL weight;
+    
 } AMG_data; /**< Data for AMG */
 
 /**

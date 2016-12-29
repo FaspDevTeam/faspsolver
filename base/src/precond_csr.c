@@ -5,8 +5,6 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-///#include "forts_ns.h"
-
 #include "mg_util.inl"
 
 /*---------------------------------*/
@@ -29,13 +27,12 @@
  * \author Feiteng Huang
  * \date   05/18/2009
  */
-precond *fasp_precond_setup (const SHORT precond_type,
-                             AMG_param *amgparam, 
-                             ILU_param *iluparam, 
-                             dCSRmat *A)
+precond *fasp_precond_setup (const SHORT   precond_type,
+                             AMG_param    *amgparam,
+                             ILU_param    *iluparam,
+                             dCSRmat      *A)
 {
     precond           *pc = NULL;
-    
     AMG_data         *mgl = NULL;
     precond_data  *pcdata = NULL;
     ILU_data         *ILU = NULL;
@@ -616,8 +613,8 @@ void fasp_precond_amg_nk (REAL *r,
  * \author Feiteng Huang
  * \date   12/24/2012
  */
-void fasp_precond_free (const SHORT precond_type,
-                        precond *pc)
+void fasp_precond_free (const SHORT   precond_type,
+                        precond      *pc)
 {
     switch (precond_type) {
             

@@ -45,9 +45,9 @@ void fasp_array_null (REAL *x)
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_array_set (const INT n, 
-                     REAL *x, 
-                     const REAL val)
+void fasp_array_set (const INT    n,
+                     REAL        *x,
+                     const REAL   val)
 {
     INT i;
     INT nthreads = 1, use_openmp = FALSE; 
@@ -104,9 +104,9 @@ void fasp_array_set (const INT n,
  * 
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/25/2012
  */
-void fasp_iarray_set (const INT n,
-                      INT *x,
-                      const INT val)
+void fasp_iarray_set (const INT   n,
+                      INT        *x,
+                      const INT   val)
 {
     INT i;
     INT nthreads = 1, use_openmp = FALSE;
@@ -162,9 +162,9 @@ void fasp_iarray_set (const INT n,
  * \author Chensong Zhang
  * \date   2010/04/03  
  */
-void fasp_array_cp (const INT n, 
-                    REAL *x, 
-                    REAL *y)
+void fasp_array_cp (const INT   n,
+                    REAL       *x,
+                    REAL       *y)
 {
     memcpy(y, x, n*sizeof(REAL));
 }
@@ -182,9 +182,9 @@ void fasp_array_cp (const INT n,
  * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   05/23/2012  
  */
-void fasp_iarray_cp (const INT n, 
-                     INT *x, 
-                     INT *y)
+void fasp_iarray_cp (const INT   n,
+                     INT        *x,
+                     INT        *y)
 {
     memcpy(y, x, n*sizeof(INT));
 }
@@ -202,8 +202,8 @@ void fasp_iarray_cp (const INT n,
  *
  * \note Special unrolled routine designed for a specific application
  */
-void fasp_array_cp_nc3 (REAL *x, 
-                        REAL *y) 
+void fasp_array_cp_nc3 (REAL  *x,
+                        REAL  *y)
 {
     y[0] = x[0];
     y[1] = x[1];
@@ -223,8 +223,8 @@ void fasp_array_cp_nc3 (REAL *x,
  *
  * \note Special unrolled routine designed for a specific application
  */
-void fasp_array_cp_nc5 (REAL *x, 
-                        REAL *y) 
+void fasp_array_cp_nc5 (REAL  *x,
+                        REAL  *y)
 {
     y[0] = x[0];
     y[1] = x[1];
@@ -246,8 +246,8 @@ void fasp_array_cp_nc5 (REAL *x,
  *
  * \note Special unrolled routine designed for a specific application
  */
-void fasp_array_cp_nc7 (REAL *x, 
-                        REAL *y) 
+void fasp_array_cp_nc7 (REAL  *x,
+                        REAL  *y)
 {
     y[0] = x[0];
     y[1] = x[1];
@@ -259,7 +259,7 @@ void fasp_array_cp_nc7 (REAL *x,
 }
 
 /**
- * \fn void fasp_array_permut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y) 
+ * \fn void fasp_array_permut_nb (INT n, INT nb, REAL*x, INT *p, REAL*y)
  *
  * \brief Array mapping 
  *
@@ -273,7 +273,11 @@ void fasp_array_cp_nc7 (REAL *x,
  * \date   12/04/2016
  *
  */
-void fasp_array_permut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y)
+void fasp_array_permut_nb (INT    n,
+                           INT    nb,
+                           REAL  *x,
+                           INT   *p,
+                           REAL  *y)
 {
    INT i, j, indx, indy;
    INT nb2 = nb*nb;
@@ -291,7 +295,7 @@ void fasp_array_permut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y)
 }
 
 /**
- * \fn void fasp_array_invpermut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y)
+ * \fn void fasp_array_invpermut_nb (INT n, INT nb, REAL*x, INT *p, REAL*y)
  *
  * \brief Array mapping
  *
@@ -305,7 +309,11 @@ void fasp_array_permut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y)
  * \date   12/04/2016
  *
  */
-void fasp_array_invpermut_nb(INT n, INT nb, REAL*x, INT *p, REAL*y)
+void fasp_array_invpermut_nb (INT    n,
+                              INT    nb,
+                              REAL  *x,
+                              INT   *p,
+                              REAL  *y)
 {
    INT i, j, indx, indy;
    INT nb2 = nb*nb;

@@ -35,8 +35,8 @@
  *
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
-SHORT fasp_amg_setup_cr (AMG_data *mgl, 
-                         AMG_param *param)
+SHORT fasp_amg_setup_cr (AMG_data   *mgl,
+                         AMG_param  *param)
 {
     const SHORT  prtlvl   = param->print_level;
     const SHORT  min_cdof = MAX(param->coarse_dof,50);

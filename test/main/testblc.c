@@ -1,5 +1,5 @@
-/*! \file testbcsr.c
- *  \brief The main test function for FASP solvers -- BCSR format
+/*! \file testblc.c
+ *  \brief The main test function for FASP solvers -- BLC format
  */
 
 #include "fasp.h"
@@ -16,7 +16,7 @@
  */
 int main (int argc, const char * argv[]) 
 {
-    block_dCSRmat Abcsr;
+    dBLCmat Ablc;
     dvector b, uh;
     
     dCSRmat A;
@@ -28,7 +28,7 @@ int main (int argc, const char * argv[])
     ivector p_idx;
     
     INT i,j;
-    block_dCSRmat Aibcsr;
+    dBLCmat Aiblc;
     INT NumLayers;
     dCSRmat *local_A;
     ivector *local_index;
@@ -104,31 +104,31 @@ int main (int argc, const char * argv[])
 
         // Assemble the matrix in block dCSR format
         
-        Abcsr.brow = 3; Abcsr.bcol = 3;
-        Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
+        Ablc.brow = 3; Ablc.bcol = 3;
+        Ablc.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
         
         for (i=0; i<9 ;i++) {
-            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Ablc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
               
         // A11
-        fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, row, row, Abcsr.blocks[0]);
+        fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, row, row, Ablc.blocks[0]);
         // A12
-        fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, row, row, Abcsr.blocks[1]);
+        fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, row, row, Ablc.blocks[1]);
         // A13
-        fasp_dcsr_getblk(&A, phi_idx.val, p_idx.val, row, row, Abcsr.blocks[2]);
+        fasp_dcsr_getblk(&A, phi_idx.val, p_idx.val, row, row, Ablc.blocks[2]);
         // A21
-        fasp_dcsr_getblk(&A, n_idx.val, phi_idx.val, row, row, Abcsr.blocks[3]);
+        fasp_dcsr_getblk(&A, n_idx.val, phi_idx.val, row, row, Ablc.blocks[3]);
         // A22
-        fasp_dcsr_getblk(&A, n_idx.val, n_idx.val, row, row, Abcsr.blocks[4]);
+        fasp_dcsr_getblk(&A, n_idx.val, n_idx.val, row, row, Ablc.blocks[4]);
         // A23
-        fasp_dcsr_getblk(&A, n_idx.val, p_idx.val, row, row, Abcsr.blocks[5]);
+        fasp_dcsr_getblk(&A, n_idx.val, p_idx.val, row, row, Ablc.blocks[5]);
         // A31
-        fasp_dcsr_getblk(&A, p_idx.val, phi_idx.val, row, row, Abcsr.blocks[6]);
+        fasp_dcsr_getblk(&A, p_idx.val, phi_idx.val, row, row, Ablc.blocks[6]);
         // A32
-        fasp_dcsr_getblk(&A, p_idx.val, n_idx.val, row, row, Abcsr.blocks[7]);
+        fasp_dcsr_getblk(&A, p_idx.val, n_idx.val, row, row, Ablc.blocks[7]);
         // A33
-        fasp_dcsr_getblk(&A, p_idx.val, p_idx.val, row, row, Abcsr.blocks[8]);
+        fasp_dcsr_getblk(&A, p_idx.val, p_idx.val, row, row, Ablc.blocks[8]);
         
         // form right hand side
         strncpy(filename2,inpar.workdir,128);
@@ -149,28 +149,28 @@ int main (int argc, const char * argv[])
         A_diag = (dCSRmat *)fasp_mem_calloc(3, sizeof(dCSRmat));
 
         // first diagonal block
-        A_diag[0].row = Abcsr.blocks[0]->row;
-        A_diag[0].col = Abcsr.blocks[0]->col;
-        A_diag[0].nnz = Abcsr.blocks[0]->nnz;
-        A_diag[0].IA  = Abcsr.blocks[0]->IA;
-        A_diag[0].JA  = Abcsr.blocks[0]->JA;
-        A_diag[0].val = Abcsr.blocks[0]->val;
+        A_diag[0].row = Ablc.blocks[0]->row;
+        A_diag[0].col = Ablc.blocks[0]->col;
+        A_diag[0].nnz = Ablc.blocks[0]->nnz;
+        A_diag[0].IA  = Ablc.blocks[0]->IA;
+        A_diag[0].JA  = Ablc.blocks[0]->JA;
+        A_diag[0].val = Ablc.blocks[0]->val;
         
         // second diagonal block
-        A_diag[1].row = Abcsr.blocks[4]->row;
-        A_diag[1].col = Abcsr.blocks[4]->col;
-        A_diag[1].nnz = Abcsr.blocks[4]->nnz;
-        A_diag[1].IA  = Abcsr.blocks[4]->IA;
-        A_diag[1].JA  = Abcsr.blocks[4]->JA;
-        A_diag[1].val = Abcsr.blocks[4]->val;
+        A_diag[1].row = Ablc.blocks[4]->row;
+        A_diag[1].col = Ablc.blocks[4]->col;
+        A_diag[1].nnz = Ablc.blocks[4]->nnz;
+        A_diag[1].IA  = Ablc.blocks[4]->IA;
+        A_diag[1].JA  = Ablc.blocks[4]->JA;
+        A_diag[1].val = Ablc.blocks[4]->val;
         
         // third diagonal block
-        A_diag[2].row = Abcsr.blocks[8]->row;
-        A_diag[2].col = Abcsr.blocks[8]->col;
-        A_diag[2].nnz = Abcsr.blocks[8]->nnz;
-        A_diag[2].IA  = Abcsr.blocks[8]->IA;
-        A_diag[2].JA  = Abcsr.blocks[8]->JA;
-        A_diag[2].val = Abcsr.blocks[8]->val;
+        A_diag[2].row = Ablc.blocks[8]->row;
+        A_diag[2].col = Ablc.blocks[8]->col;
+        A_diag[2].nnz = Ablc.blocks[8]->nnz;
+        A_diag[2].IA  = Ablc.blocks[8]->IA;
+        A_diag[2].JA  = Ablc.blocks[8]->JA;
+        A_diag[2].val = Ablc.blocks[8]->val;
         
     }
     
@@ -212,30 +212,30 @@ int main (int argc, const char * argv[])
         fasp_dvec_read(filename5, &b_temp);
         
         // Assemble the matrix in block dCSR format
-        Abcsr.brow = 3; Abcsr.bcol = 3;
-        Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
+        Ablc.brow = 3; Ablc.bcol = 3;
+        Ablc.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
         for (i=0; i<9 ;i++) {
-            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Ablc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         // A11
-        fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, phi_idx.row, phi_idx.row, Abcsr.blocks[0]);
+        fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, phi_idx.row, phi_idx.row, Ablc.blocks[0]);
         // A12
-        fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, phi_idx.row, n_idx.row, Abcsr.blocks[1]);
+        fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, phi_idx.row, n_idx.row, Ablc.blocks[1]);
         // A13
-        fasp_dcsr_getblk(&A, phi_idx.val, p_idx.val, phi_idx.row, p_idx.row, Abcsr.blocks[2]);
+        fasp_dcsr_getblk(&A, phi_idx.val, p_idx.val, phi_idx.row, p_idx.row, Ablc.blocks[2]);
         // A21
-        fasp_dcsr_getblk(&A, n_idx.val, phi_idx.val, n_idx.row, phi_idx.row, Abcsr.blocks[3]);
+        fasp_dcsr_getblk(&A, n_idx.val, phi_idx.val, n_idx.row, phi_idx.row, Ablc.blocks[3]);
         // A22
-        fasp_dcsr_getblk(&A, n_idx.val, n_idx.val, n_idx.row, n_idx.row, Abcsr.blocks[4]);
+        fasp_dcsr_getblk(&A, n_idx.val, n_idx.val, n_idx.row, n_idx.row, Ablc.blocks[4]);
         // A23
-        fasp_dcsr_getblk(&A, n_idx.val, p_idx.val, n_idx.row, p_idx.row, Abcsr.blocks[5]);
+        fasp_dcsr_getblk(&A, n_idx.val, p_idx.val, n_idx.row, p_idx.row, Ablc.blocks[5]);
         // A31
-        fasp_dcsr_getblk(&A, p_idx.val, phi_idx.val, p_idx.row, phi_idx.row, Abcsr.blocks[6]);
+        fasp_dcsr_getblk(&A, p_idx.val, phi_idx.val, p_idx.row, phi_idx.row, Ablc.blocks[6]);
         // A32
-        fasp_dcsr_getblk(&A, p_idx.val, n_idx.val, p_idx.row, n_idx.row, Abcsr.blocks[7]);
+        fasp_dcsr_getblk(&A, p_idx.val, n_idx.val, p_idx.row, n_idx.row, Ablc.blocks[7]);
         // A33
-        fasp_dcsr_getblk(&A, p_idx.val, p_idx.val, p_idx.row, p_idx.row, Abcsr.blocks[8]);
+        fasp_dcsr_getblk(&A, p_idx.val, p_idx.val, p_idx.row, p_idx.row, Ablc.blocks[8]);
         
         // form right hand side b
         fasp_dvec_alloc(b_temp.row, &b);
@@ -248,28 +248,28 @@ int main (int argc, const char * argv[])
         A_diag = (dCSRmat *)fasp_mem_calloc(3, sizeof(dCSRmat));
         
         // first diagonal block
-        A_diag[0].row = Abcsr.blocks[0]->row;
-        A_diag[0].col = Abcsr.blocks[0]->col;
-        A_diag[0].nnz = Abcsr.blocks[0]->nnz;
-        A_diag[0].IA  = Abcsr.blocks[0]->IA;
-        A_diag[0].JA  = Abcsr.blocks[0]->JA;
-        A_diag[0].val = Abcsr.blocks[0]->val;
+        A_diag[0].row = Ablc.blocks[0]->row;
+        A_diag[0].col = Ablc.blocks[0]->col;
+        A_diag[0].nnz = Ablc.blocks[0]->nnz;
+        A_diag[0].IA  = Ablc.blocks[0]->IA;
+        A_diag[0].JA  = Ablc.blocks[0]->JA;
+        A_diag[0].val = Ablc.blocks[0]->val;
         
         // second diagonal block
-        A_diag[1].row = Abcsr.blocks[4]->row;
-        A_diag[1].col = Abcsr.blocks[4]->col;
-        A_diag[1].nnz = Abcsr.blocks[4]->nnz;
-        A_diag[1].IA  = Abcsr.blocks[4]->IA;
-        A_diag[1].JA  = Abcsr.blocks[4]->JA;
-        A_diag[1].val = Abcsr.blocks[4]->val;
+        A_diag[1].row = Ablc.blocks[4]->row;
+        A_diag[1].col = Ablc.blocks[4]->col;
+        A_diag[1].nnz = Ablc.blocks[4]->nnz;
+        A_diag[1].IA  = Ablc.blocks[4]->IA;
+        A_diag[1].JA  = Ablc.blocks[4]->JA;
+        A_diag[1].val = Ablc.blocks[4]->val;
         
         // third diagonal block
-        A_diag[2].row = Abcsr.blocks[8]->row;
-        A_diag[2].col = Abcsr.blocks[8]->col;
-        A_diag[2].nnz = Abcsr.blocks[8]->nnz;
-        A_diag[2].IA  = Abcsr.blocks[8]->IA;
-        A_diag[2].JA  = Abcsr.blocks[8]->JA;
-        A_diag[2].val = Abcsr.blocks[8]->val;
+        A_diag[2].row = Ablc.blocks[8]->row;
+        A_diag[2].col = Ablc.blocks[8]->col;
+        A_diag[2].nnz = Ablc.blocks[8]->nnz;
+        A_diag[2].IA  = Ablc.blocks[8]->IA;
+        A_diag[2].JA  = Ablc.blocks[8]->JA;
+        A_diag[2].val = Ablc.blocks[8]->val;
         
         
     }
@@ -312,30 +312,30 @@ int main (int argc, const char * argv[])
         fasp_dvec_read(filename5, &b_temp);
         
         // Assemble the matrix in block dCSR format
-        Abcsr.brow = 3; Abcsr.bcol = 3;
-        Abcsr.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
+        Ablc.brow = 3; Ablc.bcol = 3;
+        Ablc.blocks = (dCSRmat **)calloc(9, sizeof(dCSRmat *));
         for (i=0; i<9 ;i++) {
-            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Ablc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         // A11
-        fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, phi_idx.row, phi_idx.row, Abcsr.blocks[0]);
+        fasp_dcsr_getblk(&A, phi_idx.val, phi_idx.val, phi_idx.row, phi_idx.row, Ablc.blocks[0]);
         // A12
-        fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, phi_idx.row, n_idx.row, Abcsr.blocks[1]);
+        fasp_dcsr_getblk(&A, phi_idx.val, n_idx.val, phi_idx.row, n_idx.row, Ablc.blocks[1]);
         // A13
-        fasp_dcsr_getblk(&A, phi_idx.val, p_idx.val, phi_idx.row, p_idx.row, Abcsr.blocks[2]);
+        fasp_dcsr_getblk(&A, phi_idx.val, p_idx.val, phi_idx.row, p_idx.row, Ablc.blocks[2]);
         // A21
-        fasp_dcsr_getblk(&A, n_idx.val, phi_idx.val, n_idx.row, phi_idx.row, Abcsr.blocks[3]);
+        fasp_dcsr_getblk(&A, n_idx.val, phi_idx.val, n_idx.row, phi_idx.row, Ablc.blocks[3]);
         // A22
-        fasp_dcsr_getblk(&A, n_idx.val, n_idx.val, n_idx.row, n_idx.row, Abcsr.blocks[4]);
+        fasp_dcsr_getblk(&A, n_idx.val, n_idx.val, n_idx.row, n_idx.row, Ablc.blocks[4]);
         // A23
-        fasp_dcsr_getblk(&A, n_idx.val, p_idx.val, n_idx.row, p_idx.row, Abcsr.blocks[5]);
+        fasp_dcsr_getblk(&A, n_idx.val, p_idx.val, n_idx.row, p_idx.row, Ablc.blocks[5]);
         // A31
-        fasp_dcsr_getblk(&A, p_idx.val, phi_idx.val, p_idx.row, phi_idx.row, Abcsr.blocks[6]);
+        fasp_dcsr_getblk(&A, p_idx.val, phi_idx.val, p_idx.row, phi_idx.row, Ablc.blocks[6]);
         // A32
-        fasp_dcsr_getblk(&A, p_idx.val, n_idx.val, p_idx.row, n_idx.row, Abcsr.blocks[7]);
+        fasp_dcsr_getblk(&A, p_idx.val, n_idx.val, p_idx.row, n_idx.row, Ablc.blocks[7]);
         // A33
-        fasp_dcsr_getblk(&A, p_idx.val, p_idx.val, p_idx.row, p_idx.row, Abcsr.blocks[8]);
+        fasp_dcsr_getblk(&A, p_idx.val, p_idx.val, p_idx.row, p_idx.row, Ablc.blocks[8]);
         
         // form right hand side b
         fasp_dvec_alloc(b_temp.row, &b);
@@ -348,28 +348,28 @@ int main (int argc, const char * argv[])
         A_diag = (dCSRmat *)fasp_mem_calloc(3, sizeof(dCSRmat));
         
         // first diagonal block
-        A_diag[0].row = Abcsr.blocks[0]->row;
-        A_diag[0].col = Abcsr.blocks[0]->col;
-        A_diag[0].nnz = Abcsr.blocks[0]->nnz;
-        A_diag[0].IA  = Abcsr.blocks[0]->IA;
-        A_diag[0].JA  = Abcsr.blocks[0]->JA;
-        A_diag[0].val = Abcsr.blocks[0]->val;
+        A_diag[0].row = Ablc.blocks[0]->row;
+        A_diag[0].col = Ablc.blocks[0]->col;
+        A_diag[0].nnz = Ablc.blocks[0]->nnz;
+        A_diag[0].IA  = Ablc.blocks[0]->IA;
+        A_diag[0].JA  = Ablc.blocks[0]->JA;
+        A_diag[0].val = Ablc.blocks[0]->val;
         
         // second diagonal block
-        A_diag[1].row = Abcsr.blocks[4]->row;
-        A_diag[1].col = Abcsr.blocks[4]->col;
-        A_diag[1].nnz = Abcsr.blocks[4]->nnz;
-        A_diag[1].IA  = Abcsr.blocks[4]->IA;
-        A_diag[1].JA  = Abcsr.blocks[4]->JA;
-        A_diag[1].val = Abcsr.blocks[4]->val;
+        A_diag[1].row = Ablc.blocks[4]->row;
+        A_diag[1].col = Ablc.blocks[4]->col;
+        A_diag[1].nnz = Ablc.blocks[4]->nnz;
+        A_diag[1].IA  = Ablc.blocks[4]->IA;
+        A_diag[1].JA  = Ablc.blocks[4]->JA;
+        A_diag[1].val = Ablc.blocks[4]->val;
         
         // third diagonal block
-        A_diag[2].row = Abcsr.blocks[8]->row;
-        A_diag[2].col = Abcsr.blocks[8]->col;
-        A_diag[2].nnz = Abcsr.blocks[8]->nnz;
-        A_diag[2].IA  = Abcsr.blocks[8]->IA;
-        A_diag[2].JA  = Abcsr.blocks[8]->JA;
-        A_diag[2].val = Abcsr.blocks[8]->val;
+        A_diag[2].row = Ablc.blocks[8]->row;
+        A_diag[2].col = Ablc.blocks[8]->col;
+        A_diag[2].nnz = Ablc.blocks[8]->nnz;
+        A_diag[2].IA  = Ablc.blocks[8]->IA;
+        A_diag[2].JA  = Ablc.blocks[8]->JA;
+        A_diag[2].val = Ablc.blocks[8]->val;
 
         
     }
@@ -490,10 +490,10 @@ int main (int argc, const char * argv[])
         printf("Tridiagonalize A\n");
         printf("-------------------------\n");
         
-        Abcsr.brow = NumLayers; Abcsr.bcol = NumLayers;
-        Abcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Ablc.brow = NumLayers; Ablc.bcol = NumLayers;
+        Ablc.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
-            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Ablc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         for (i=0; i<NumLayers; i++){
@@ -501,16 +501,16 @@ int main (int argc, const char * argv[])
             for (j=0; j<NumLayers; j++){
                 
                 if (j==i) {
-                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Ablc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i-1)) {
-                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Ablc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i+1)) {
-                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Ablc.blocks[i*NumLayers+j]);
                 }
                 else {
-                    Abcsr.blocks[i*NumLayers+j] = NULL;
+                    Ablc.blocks[i*NumLayers+j] = NULL;
                 }
                     
             }
@@ -543,10 +543,10 @@ int main (int argc, const char * argv[])
         printf("Tridiagonalize Ai\n");
         printf("-------------------------\n");
         
-        Aibcsr.brow = NumLayers; Aibcsr.bcol = NumLayers;
-        Aibcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Aiblc.brow = NumLayers; Aiblc.bcol = NumLayers;
+        Aiblc.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
-            Aibcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Aiblc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         for (i=0; i<NumLayers; i++){
@@ -554,16 +554,16 @@ int main (int argc, const char * argv[])
             for (j=0; j<NumLayers; j++){
                 
                 if (j==i) {
-                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aiblc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i-1)) {
-                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aiblc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i+1)) {
-                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aiblc.blocks[i*NumLayers+j]);
                 }
                 else {
-                    Aibcsr.blocks[i*NumLayers+j] = NULL;
+                    Aiblc.blocks[i*NumLayers+j] = NULL;
                 }
                 
             }
@@ -579,8 +579,8 @@ int main (int argc, const char * argv[])
         local_A = (dCSRmat *)fasp_mem_calloc(NumLayers, sizeof(dCSRmat));
 
         // first level is just A11 block
-        local_A[0] = fasp_dcsr_create (Aibcsr.blocks[0]->row, Aibcsr.blocks[0]->col, Aibcsr.blocks[0]->nnz);
-        fasp_dcsr_cp(Aibcsr.blocks[0], &(local_A[0]));
+        local_A[0] = fasp_dcsr_create (Aiblc.blocks[0]->row, Aiblc.blocks[0]->col, Aiblc.blocks[0]->nnz);
+        fasp_dcsr_cp(Aiblc.blocks[0], &(local_A[0]));
         
         // other levels
         {
@@ -667,9 +667,9 @@ int main (int argc, const char * argv[])
             INT local_A_size;
             
             // layer 0
-            local_index[0] = fasp_ivec_create(Aibcsr.blocks[0]->row);
+            local_index[0] = fasp_ivec_create(Aiblc.blocks[0]->row);
             
-            for (i=0; i<Aibcsr.blocks[0]->row; i++) local_index[0].val[i] = i;
+            for (i=0; i<Aiblc.blocks[0]->row; i++) local_index[0].val[i] = i;
             
             // other layers
             for (l=1; l<NumLayers; l++){
@@ -710,7 +710,7 @@ int main (int argc, const char * argv[])
         //------------------------------------
         // check
         //------------------------------------
-        //fasp_dcsr_write_coo("A54.dat", Aibcsr.blocks[23]);
+        //fasp_dcsr_write_coo("A54.dat", Aiblc.blocks[23]);
         //fasp_ivec_write("local_index_4.dat", &local_index[4]);
         
         
@@ -825,10 +825,10 @@ int main (int argc, const char * argv[])
         printf("Tridiagonalize A\n");
         printf("-------------------------\n");
         
-        Abcsr.brow = NumLayers; Abcsr.bcol = NumLayers;
-        Abcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Ablc.brow = NumLayers; Ablc.bcol = NumLayers;
+        Ablc.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
-            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Ablc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         for (i=0; i<NumLayers; i++){
@@ -836,16 +836,16 @@ int main (int argc, const char * argv[])
             for (j=0; j<NumLayers; j++){
                 
                 if (j==i) {
-                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Ablc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i-1)) {
-                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Ablc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i+1)) {
-                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Ablc.blocks[i*NumLayers+j]);
                 }
                 else {
-                    Abcsr.blocks[i*NumLayers+j] = NULL;
+                    Ablc.blocks[i*NumLayers+j] = NULL;
                 }
                 
             }
@@ -878,10 +878,10 @@ int main (int argc, const char * argv[])
         printf("Tridiagonalize Ai\n");
         printf("-------------------------\n");
         
-        Aibcsr.brow = NumLayers; Aibcsr.bcol = NumLayers;
-        Aibcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Aiblc.brow = NumLayers; Aiblc.bcol = NumLayers;
+        Aiblc.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
-            Aibcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Aiblc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         for (i=0; i<NumLayers; i++){
@@ -889,16 +889,16 @@ int main (int argc, const char * argv[])
             for (j=0; j<NumLayers; j++){
                 
                 if (j==i) {
-                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aiblc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i-1)) {
-                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aiblc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i+1)) {
-                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aiblc.blocks[i*NumLayers+j]);
                 }
                 else {
-                    Aibcsr.blocks[i*NumLayers+j] = NULL;
+                    Aiblc.blocks[i*NumLayers+j] = NULL;
                 }
                 
             }
@@ -914,8 +914,8 @@ int main (int argc, const char * argv[])
         local_A = (dCSRmat *)fasp_mem_calloc(NumLayers, sizeof(dCSRmat));
         
         // first level is just A11 block
-        local_A[0] = fasp_dcsr_create (Aibcsr.blocks[0]->row, Aibcsr.blocks[0]->col, Aibcsr.blocks[0]->nnz);
-        fasp_dcsr_cp(Aibcsr.blocks[0], &(local_A[0]));
+        local_A[0] = fasp_dcsr_create (Aiblc.blocks[0]->row, Aiblc.blocks[0]->col, Aiblc.blocks[0]->nnz);
+        fasp_dcsr_cp(Aiblc.blocks[0], &(local_A[0]));
         
         // other levels
         {
@@ -990,9 +990,9 @@ int main (int argc, const char * argv[])
             INT local_A_size;
             
             // layer 0
-            local_index[0] = fasp_ivec_create(Aibcsr.blocks[0]->row);
+            local_index[0] = fasp_ivec_create(Aiblc.blocks[0]->row);
             
-            for (i=0; i<Aibcsr.blocks[0]->row; i++) local_index[0].val[i] = i;
+            for (i=0; i<Aiblc.blocks[0]->row; i++) local_index[0].val[i] = i;
             
             // other layers
             for (l=1; l<NumLayers; l++){
@@ -1033,7 +1033,7 @@ int main (int argc, const char * argv[])
         //------------------------------------
         // check
         //------------------------------------
-        //fasp_dcsr_write_coo("A54.dat", Aibcsr.blocks[23]);
+        //fasp_dcsr_write_coo("A54.dat", Aiblc.blocks[23]);
         //fasp_ivec_write("local_index_4.dat", &local_index[4]);
         
         
@@ -1142,10 +1142,10 @@ int main (int argc, const char * argv[])
         printf("Tridiagonalize A\n");
         printf("-------------------------\n");
         
-        Abcsr.brow = NumLayers; Abcsr.bcol = NumLayers;
-        Abcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Ablc.brow = NumLayers; Ablc.bcol = NumLayers;
+        Ablc.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
-            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Ablc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         for (i=0; i<NumLayers; i++){
@@ -1153,16 +1153,16 @@ int main (int argc, const char * argv[])
             for (j=0; j<NumLayers; j++){
                 
                 if (j==i) {
-                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Ablc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i-1)) {
-                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Ablc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i+1)) {
-                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Abcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&A, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Ablc.blocks[i*NumLayers+j]);
                 }
                 else {
-                    Abcsr.blocks[i*NumLayers+j] = NULL;
+                    Ablc.blocks[i*NumLayers+j] = NULL;
                 }
                 
             }
@@ -1195,10 +1195,10 @@ int main (int argc, const char * argv[])
         printf("Tridiagonalize Ai\n");
         printf("-------------------------\n");
         
-        Aibcsr.brow = NumLayers; Aibcsr.bcol = NumLayers;
-        Aibcsr.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
+        Aiblc.brow = NumLayers; Aiblc.bcol = NumLayers;
+        Aiblc.blocks = (dCSRmat **)calloc(NumLayers*NumLayers, sizeof(dCSRmat *));
         for (i=0; i<NumLayers*NumLayers; i++) {
-            Aibcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Aiblc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         for (i=0; i<NumLayers; i++){
@@ -1206,16 +1206,16 @@ int main (int argc, const char * argv[])
             for (j=0; j<NumLayers; j++){
                 
                 if (j==i) {
-                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aiblc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i-1)) {
-                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aiblc.blocks[i*NumLayers+j]);
                 }
                 else if (j == (i+1)) {
-                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aibcsr.blocks[i*NumLayers+j]);
+                    fasp_dcsr_getblk(&Ai, global_index[i].val, global_index[j].val, global_index[i].row, global_index[j].row, Aiblc.blocks[i*NumLayers+j]);
                 }
                 else {
-                    Aibcsr.blocks[i*NumLayers+j] = NULL;
+                    Aiblc.blocks[i*NumLayers+j] = NULL;
                 }
                 
             }
@@ -1231,8 +1231,8 @@ int main (int argc, const char * argv[])
         local_A = (dCSRmat *)fasp_mem_calloc(NumLayers, sizeof(dCSRmat));
         
         // first level is just A11 block
-        local_A[0] = fasp_dcsr_create (Aibcsr.blocks[0]->row, Aibcsr.blocks[0]->col, Aibcsr.blocks[0]->nnz);
-        fasp_dcsr_cp(Aibcsr.blocks[0], &(local_A[0]));
+        local_A[0] = fasp_dcsr_create (Aiblc.blocks[0]->row, Aiblc.blocks[0]->col, Aiblc.blocks[0]->nnz);
+        fasp_dcsr_cp(Aiblc.blocks[0], &(local_A[0]));
         
         // other levels
         {
@@ -1296,9 +1296,9 @@ int main (int argc, const char * argv[])
             INT local_A_size;
             
             // layer 0
-            local_index[0] = fasp_ivec_create(Aibcsr.blocks[0]->row);
+            local_index[0] = fasp_ivec_create(Aiblc.blocks[0]->row);
             
-            for (i=0; i<Aibcsr.blocks[0]->row; i++) local_index[0].val[i] = i;
+            for (i=0; i<Aiblc.blocks[0]->row; i++) local_index[0].val[i] = i;
             
             // other layers
             for (l=1; l<NumLayers; l++){
@@ -1339,7 +1339,7 @@ int main (int argc, const char * argv[])
         //------------------------------------
         // check
         //------------------------------------
-        //fasp_dcsr_write_coo("A54.dat", Aibcsr.blocks[23]);
+        //fasp_dcsr_write_coo("A54.dat", Aiblc.blocks[23]);
         //fasp_ivec_write("local_index_4.dat", &local_index[4]);
         
         
@@ -1427,47 +1427,47 @@ int main (int argc, const char * argv[])
         }
         
         // Assemble the matrix in block dCSR format
-        Abcsr.brow = 4; Abcsr.bcol = 4;
-        Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
+        Ablc.brow = 4; Ablc.bcol = 4;
+        Ablc.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
         for (i=0; i<16 ;i++) {
-            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Ablc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         // A11
-        fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Abcsr.blocks[0]);
+        fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Ablc.blocks[0]);
         // A12
-        fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Abcsr.blocks[1]);
+        fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Ablc.blocks[1]);
         // A13
-        fasp_dcsr_getblk(&A, U_idx.val, E_idx.val, U_idx.row, E_idx.row, Abcsr.blocks[2]);
+        fasp_dcsr_getblk(&A, U_idx.val, E_idx.val, U_idx.row, E_idx.row, Ablc.blocks[2]);
         // A14
-        fasp_dcsr_getblk(&A, U_idx.val, B_idx.val, U_idx.row, B_idx.row, Abcsr.blocks[3]);
+        fasp_dcsr_getblk(&A, U_idx.val, B_idx.val, U_idx.row, B_idx.row, Ablc.blocks[3]);
         // A21
-        fasp_dcsr_getblk(&A, P_idx.val, U_idx.val, P_idx.row, U_idx.row, Abcsr.blocks[4]);
+        fasp_dcsr_getblk(&A, P_idx.val, U_idx.val, P_idx.row, U_idx.row, Ablc.blocks[4]);
         // A22
-        fasp_dcsr_getblk(&A, P_idx.val, P_idx.val, P_idx.row, P_idx.row, Abcsr.blocks[5]);
+        fasp_dcsr_getblk(&A, P_idx.val, P_idx.val, P_idx.row, P_idx.row, Ablc.blocks[5]);
         // A23
-        fasp_dcsr_getblk(&A, P_idx.val, E_idx.val, P_idx.row, E_idx.row, Abcsr.blocks[6]);
+        fasp_dcsr_getblk(&A, P_idx.val, E_idx.val, P_idx.row, E_idx.row, Ablc.blocks[6]);
         // A24
-        fasp_dcsr_getblk(&A, P_idx.val, B_idx.val, P_idx.row, B_idx.row, Abcsr.blocks[7]);
+        fasp_dcsr_getblk(&A, P_idx.val, B_idx.val, P_idx.row, B_idx.row, Ablc.blocks[7]);
         // A31
-        fasp_dcsr_getblk(&A, E_idx.val, U_idx.val, E_idx.row, U_idx.row, Abcsr.blocks[8]);
+        fasp_dcsr_getblk(&A, E_idx.val, U_idx.val, E_idx.row, U_idx.row, Ablc.blocks[8]);
         // A32
-        fasp_dcsr_getblk(&A, E_idx.val, P_idx.val, E_idx.row, P_idx.row, Abcsr.blocks[9]);
+        fasp_dcsr_getblk(&A, E_idx.val, P_idx.val, E_idx.row, P_idx.row, Ablc.blocks[9]);
         // A33
-        fasp_dcsr_getblk(&A, E_idx.val, E_idx.val, E_idx.row, E_idx.row, Abcsr.blocks[10]);
+        fasp_dcsr_getblk(&A, E_idx.val, E_idx.val, E_idx.row, E_idx.row, Ablc.blocks[10]);
         // A34
-        fasp_dcsr_getblk(&A, E_idx.val, B_idx.val, E_idx.row, B_idx.row, Abcsr.blocks[11]);
+        fasp_dcsr_getblk(&A, E_idx.val, B_idx.val, E_idx.row, B_idx.row, Ablc.blocks[11]);
         // A41
-        fasp_dcsr_getblk(&A, B_idx.val, U_idx.val, B_idx.row, U_idx.row, Abcsr.blocks[12]);
+        fasp_dcsr_getblk(&A, B_idx.val, U_idx.val, B_idx.row, U_idx.row, Ablc.blocks[12]);
         // A42
-        fasp_dcsr_getblk(&A, B_idx.val, P_idx.val, B_idx.row, P_idx.row, Abcsr.blocks[13]);
+        fasp_dcsr_getblk(&A, B_idx.val, P_idx.val, B_idx.row, P_idx.row, Ablc.blocks[13]);
         // A43
-        fasp_dcsr_getblk(&A, B_idx.val, E_idx.val, B_idx.row, E_idx.row, Abcsr.blocks[14]);
+        fasp_dcsr_getblk(&A, B_idx.val, E_idx.val, B_idx.row, E_idx.row, Ablc.blocks[14]);
         // A44
-        fasp_dcsr_getblk(&A, B_idx.val, B_idx.val, B_idx.row, B_idx.row, Abcsr.blocks[15]);
+        fasp_dcsr_getblk(&A, B_idx.val, B_idx.val, B_idx.row, B_idx.row, Ablc.blocks[15]);
         
         // use A0 block in the preconditioner
-        fasp_dcsr_cp(Abcsr.blocks[0], &(A_diag[0]));
+        fasp_dcsr_cp(Ablc.blocks[0], &(A_diag[0]));
         
     }
     
@@ -1552,47 +1552,47 @@ int main (int argc, const char * argv[])
         }
         
         // Assemble the matrix in block dCSR format
-        Abcsr.brow = 4; Abcsr.bcol = 4;
-        Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
+        Ablc.brow = 4; Ablc.bcol = 4;
+        Ablc.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
         for (i=0; i<16 ;i++) {
-            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Ablc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         // A11
-        fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Abcsr.blocks[0]);
+        fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Ablc.blocks[0]);
         // A12
-        fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Abcsr.blocks[1]);
+        fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Ablc.blocks[1]);
         // A13
-        fasp_dcsr_getblk(&A, U_idx.val, E_idx.val, U_idx.row, E_idx.row, Abcsr.blocks[2]);
+        fasp_dcsr_getblk(&A, U_idx.val, E_idx.val, U_idx.row, E_idx.row, Ablc.blocks[2]);
         // A14
-        fasp_dcsr_getblk(&A, U_idx.val, B_idx.val, U_idx.row, B_idx.row, Abcsr.blocks[3]);
+        fasp_dcsr_getblk(&A, U_idx.val, B_idx.val, U_idx.row, B_idx.row, Ablc.blocks[3]);
         // A21
-        fasp_dcsr_getblk(&A, P_idx.val, U_idx.val, P_idx.row, U_idx.row, Abcsr.blocks[4]);
+        fasp_dcsr_getblk(&A, P_idx.val, U_idx.val, P_idx.row, U_idx.row, Ablc.blocks[4]);
         // A22
-        fasp_dcsr_getblk(&A, P_idx.val, P_idx.val, P_idx.row, P_idx.row, Abcsr.blocks[5]);
+        fasp_dcsr_getblk(&A, P_idx.val, P_idx.val, P_idx.row, P_idx.row, Ablc.blocks[5]);
         // A23
-        fasp_dcsr_getblk(&A, P_idx.val, E_idx.val, P_idx.row, E_idx.row, Abcsr.blocks[6]);
+        fasp_dcsr_getblk(&A, P_idx.val, E_idx.val, P_idx.row, E_idx.row, Ablc.blocks[6]);
         // A24
-        fasp_dcsr_getblk(&A, P_idx.val, B_idx.val, P_idx.row, B_idx.row, Abcsr.blocks[7]);
+        fasp_dcsr_getblk(&A, P_idx.val, B_idx.val, P_idx.row, B_idx.row, Ablc.blocks[7]);
         // A31
-        fasp_dcsr_getblk(&A, E_idx.val, U_idx.val, E_idx.row, U_idx.row, Abcsr.blocks[8]);
+        fasp_dcsr_getblk(&A, E_idx.val, U_idx.val, E_idx.row, U_idx.row, Ablc.blocks[8]);
         // A32
-        fasp_dcsr_getblk(&A, E_idx.val, P_idx.val, E_idx.row, P_idx.row, Abcsr.blocks[9]);
+        fasp_dcsr_getblk(&A, E_idx.val, P_idx.val, E_idx.row, P_idx.row, Ablc.blocks[9]);
         // A33
-        fasp_dcsr_getblk(&A, E_idx.val, E_idx.val, E_idx.row, E_idx.row, Abcsr.blocks[10]);
+        fasp_dcsr_getblk(&A, E_idx.val, E_idx.val, E_idx.row, E_idx.row, Ablc.blocks[10]);
         // A34
-        fasp_dcsr_getblk(&A, E_idx.val, B_idx.val, E_idx.row, B_idx.row, Abcsr.blocks[11]);
+        fasp_dcsr_getblk(&A, E_idx.val, B_idx.val, E_idx.row, B_idx.row, Ablc.blocks[11]);
         // A41
-        fasp_dcsr_getblk(&A, B_idx.val, U_idx.val, B_idx.row, U_idx.row, Abcsr.blocks[12]);
+        fasp_dcsr_getblk(&A, B_idx.val, U_idx.val, B_idx.row, U_idx.row, Ablc.blocks[12]);
         // A42
-        fasp_dcsr_getblk(&A, B_idx.val, P_idx.val, B_idx.row, P_idx.row, Abcsr.blocks[13]);
+        fasp_dcsr_getblk(&A, B_idx.val, P_idx.val, B_idx.row, P_idx.row, Ablc.blocks[13]);
         // A43
-        fasp_dcsr_getblk(&A, B_idx.val, E_idx.val, B_idx.row, E_idx.row, Abcsr.blocks[14]);
+        fasp_dcsr_getblk(&A, B_idx.val, E_idx.val, B_idx.row, E_idx.row, Ablc.blocks[14]);
         // A44
-        fasp_dcsr_getblk(&A, B_idx.val, B_idx.val, B_idx.row, B_idx.row, Abcsr.blocks[15]);
+        fasp_dcsr_getblk(&A, B_idx.val, B_idx.val, B_idx.row, B_idx.row, Ablc.blocks[15]);
         
         // use A0 block in the preconditioner
-        fasp_dcsr_cp(Abcsr.blocks[0], &(A_diag[0]));
+        fasp_dcsr_cp(Ablc.blocks[0], &(A_diag[0]));
         
     }
     
@@ -1677,47 +1677,47 @@ int main (int argc, const char * argv[])
         }
         
         // Assemble the matrix in block dCSR format
-        Abcsr.brow = 4; Abcsr.bcol = 4;
-        Abcsr.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
+        Ablc.brow = 4; Ablc.bcol = 4;
+        Ablc.blocks = (dCSRmat **)calloc(16, sizeof(dCSRmat *));
         for (i=0; i<16 ;i++) {
-            Abcsr.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
+            Ablc.blocks[i] = (dCSRmat *)fasp_mem_calloc(1, sizeof(dCSRmat));
         }
         
         // A11
-        fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Abcsr.blocks[0]);
+        fasp_dcsr_getblk(&A, U_idx.val, U_idx.val, U_idx.row, U_idx.row, Ablc.blocks[0]);
         // A12
-        fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Abcsr.blocks[1]);
+        fasp_dcsr_getblk(&A, U_idx.val, P_idx.val, U_idx.row, P_idx.row, Ablc.blocks[1]);
         // A13
-        fasp_dcsr_getblk(&A, U_idx.val, E_idx.val, U_idx.row, E_idx.row, Abcsr.blocks[2]);
+        fasp_dcsr_getblk(&A, U_idx.val, E_idx.val, U_idx.row, E_idx.row, Ablc.blocks[2]);
         // A14
-        fasp_dcsr_getblk(&A, U_idx.val, B_idx.val, U_idx.row, B_idx.row, Abcsr.blocks[3]);
+        fasp_dcsr_getblk(&A, U_idx.val, B_idx.val, U_idx.row, B_idx.row, Ablc.blocks[3]);
         // A21
-        fasp_dcsr_getblk(&A, P_idx.val, U_idx.val, P_idx.row, U_idx.row, Abcsr.blocks[4]);
+        fasp_dcsr_getblk(&A, P_idx.val, U_idx.val, P_idx.row, U_idx.row, Ablc.blocks[4]);
         // A22
-        fasp_dcsr_getblk(&A, P_idx.val, P_idx.val, P_idx.row, P_idx.row, Abcsr.blocks[5]);
+        fasp_dcsr_getblk(&A, P_idx.val, P_idx.val, P_idx.row, P_idx.row, Ablc.blocks[5]);
         // A23
-        fasp_dcsr_getblk(&A, P_idx.val, E_idx.val, P_idx.row, E_idx.row, Abcsr.blocks[6]);
+        fasp_dcsr_getblk(&A, P_idx.val, E_idx.val, P_idx.row, E_idx.row, Ablc.blocks[6]);
         // A24
-        fasp_dcsr_getblk(&A, P_idx.val, B_idx.val, P_idx.row, B_idx.row, Abcsr.blocks[7]);
+        fasp_dcsr_getblk(&A, P_idx.val, B_idx.val, P_idx.row, B_idx.row, Ablc.blocks[7]);
         // A31
-        fasp_dcsr_getblk(&A, E_idx.val, U_idx.val, E_idx.row, U_idx.row, Abcsr.blocks[8]);
+        fasp_dcsr_getblk(&A, E_idx.val, U_idx.val, E_idx.row, U_idx.row, Ablc.blocks[8]);
         // A32
-        fasp_dcsr_getblk(&A, E_idx.val, P_idx.val, E_idx.row, P_idx.row, Abcsr.blocks[9]);
+        fasp_dcsr_getblk(&A, E_idx.val, P_idx.val, E_idx.row, P_idx.row, Ablc.blocks[9]);
         // A33
-        fasp_dcsr_getblk(&A, E_idx.val, E_idx.val, E_idx.row, E_idx.row, Abcsr.blocks[10]);
+        fasp_dcsr_getblk(&A, E_idx.val, E_idx.val, E_idx.row, E_idx.row, Ablc.blocks[10]);
         // A34
-        fasp_dcsr_getblk(&A, E_idx.val, B_idx.val, E_idx.row, B_idx.row, Abcsr.blocks[11]);
+        fasp_dcsr_getblk(&A, E_idx.val, B_idx.val, E_idx.row, B_idx.row, Ablc.blocks[11]);
         // A41
-        fasp_dcsr_getblk(&A, B_idx.val, U_idx.val, B_idx.row, U_idx.row, Abcsr.blocks[12]);
+        fasp_dcsr_getblk(&A, B_idx.val, U_idx.val, B_idx.row, U_idx.row, Ablc.blocks[12]);
         // A42
-        fasp_dcsr_getblk(&A, B_idx.val, P_idx.val, B_idx.row, P_idx.row, Abcsr.blocks[13]);
+        fasp_dcsr_getblk(&A, B_idx.val, P_idx.val, B_idx.row, P_idx.row, Ablc.blocks[13]);
         // A43
-        fasp_dcsr_getblk(&A, B_idx.val, E_idx.val, B_idx.row, E_idx.row, Abcsr.blocks[14]);
+        fasp_dcsr_getblk(&A, B_idx.val, E_idx.val, B_idx.row, E_idx.row, Ablc.blocks[14]);
         // A44
-        fasp_dcsr_getblk(&A, B_idx.val, B_idx.val, B_idx.row, B_idx.row, Abcsr.blocks[15]);
+        fasp_dcsr_getblk(&A, B_idx.val, B_idx.val, B_idx.row, B_idx.row, Ablc.blocks[15]);
         
         // use A0 block in the preconditioner
-        fasp_dcsr_cp(Abcsr.blocks[0], &(A_diag[0]));
+        fasp_dcsr_cp(Ablc.blocks[0], &(A_diag[0]));
         
     }
     
@@ -1740,26 +1740,26 @@ int main (int argc, const char * argv[])
         
         // Using no preconditioner for Krylov iterative methods
         if (precond_type == PREC_NULL) {
-            status = fasp_solver_bdcsr_krylov(&Abcsr, &b, &uh, &itpar);
+            status = fasp_solver_dblc_krylov(&Ablc, &b, &uh, &itpar);
         }   
         
         // Using diag(A) as preconditioner for Krylov iterative methods
         else if (precond_type >= 20 &&  precond_type < 40) {
             
-            if (Abcsr.brow == 3) {
-                status = fasp_solver_bdcsr_krylov_block_3(&Abcsr, &b, &uh, &itpar, &amgpar, A_diag);
+            if (Ablc.brow == 3) {
+                status = fasp_solver_dblc_krylov_block_3(&Ablc, &b, &uh, &itpar, &amgpar, A_diag);
             }
-            else if (Abcsr.brow == 4) {
-                status = fasp_solver_bdcsr_krylov_block_4(&Abcsr, &b, &uh, &itpar, &amgpar, A_diag);
+            else if (Ablc.brow == 4) {
+                status = fasp_solver_dblc_krylov_block_4(&Ablc, &b, &uh, &itpar, &amgpar, A_diag);
             }
             else {
-                //status = fasp_solver_bdcsr_krylov_block(&Abcsr, &b, &uh, &itpar, &amgpar);
+                //status = fasp_solver_dblc_krylov_block(&Ablc, &b, &uh, &itpar, &amgpar);
             }
         }
         
         // sweeping preconditioners
         else if (precond_type >= 50 && precond_type < 60) {
-            status = fasp_solver_bdcsr_krylov_sweeping(&Abcsr, &b, &uh, &itpar, NumLayers, &Aibcsr, local_A, local_index);
+            status = fasp_solver_dblc_krylov_sweeping(&Ablc, &b, &uh, &itpar, NumLayers, &Aiblc, local_A, local_index);
         }
         
         else {
@@ -1783,7 +1783,7 @@ int main (int argc, const char * argv[])
     
  FINISHED:
     // Clean up memory
-    fasp_bdcsr_free(&Abcsr);
+    fasp_dblc_free(&Ablc);
     //fasp_dbsr_free(&Absr);
     fasp_dvec_free(&b);
     fasp_dvec_free(&uh);

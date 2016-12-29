@@ -12,7 +12,7 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-REAL ilu_solve_omp = 0.0;
+REAL ilu_solve_omp = 0.0; /**< ILU time for the SOLVE phase */
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -150,7 +150,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
 void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
                                       dvector *b,
                                       dvector *u,
-                                      REAL *diaginv)
+                                      REAL    *diaginv)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -259,7 +259,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
                                  dvector *b,
                                  dvector *u,
-                                 REAL *diaginv)
+                                 REAL    *diaginv)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -413,8 +413,8 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
 void fasp_smoother_dbsr_gs (dBSRmat *A,
                             dvector *b,
                             dvector *u,
-                            INT order,
-                            INT *mark )
+                            INT      order,
+                            INT     *mark )
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -533,9 +533,9 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
 void fasp_smoother_dbsr_gs1 (dBSRmat *A,
                              dvector *b,
                              dvector *u,
-                             INT order,
-                             INT *mark,
-                             REAL *diaginv)
+                             INT      order,
+                             INT     *mark,
+                             REAL    *diaginv)
 {
     if (!mark) {
         if (order == ASCEND) // smooth ascendingly
@@ -570,7 +570,7 @@ void fasp_smoother_dbsr_gs1 (dBSRmat *A,
 void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
                                    dvector *b,
                                    dvector *u,
-                                   REAL *diaginv)
+                                   REAL    *diaginv)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -714,7 +714,7 @@ void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
 void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
                                     dvector *b,
                                     dvector *u,
-                                    REAL *diaginv )
+                                    REAL    *diaginv )
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -860,8 +860,8 @@ void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
 void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
                                    dvector *b,
                                    dvector *u,
-                                   REAL *diaginv,
-                                   INT *mark)
+                                   REAL    *diaginv,
+                                   INT     *mark)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -938,8 +938,8 @@ void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
 void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
                                    dvector *b,
                                    dvector *u,
-                                   INT *mark,
-                                   REAL *work)
+                                   INT     *mark,
+                                   REAL    *work)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -1015,9 +1015,9 @@ void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
 void fasp_smoother_dbsr_sor (dBSRmat *A,
                              dvector *b,
                              dvector *u,
-                             INT order,
-                             INT *mark,
-                             REAL weight)
+                             INT      order,
+                             INT     *mark,
+                             REAL     weight)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -1137,10 +1137,10 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
 void fasp_smoother_dbsr_sor1 (dBSRmat *A,
                               dvector *b,
                               dvector *u,
-                              INT order,
-                              INT *mark,
-                              REAL *diaginv,
-                              REAL weight)
+                              INT      order,
+                              INT     *mark,
+                              REAL    *diaginv,
+                              REAL     weight)
 {
     if (!mark) {
         if (order == ASCEND)       // smooth ascendingly
@@ -1178,15 +1178,15 @@ void fasp_smoother_dbsr_sor1 (dBSRmat *A,
 void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
                                     dvector *b,
                                     dvector *u,
-                                    REAL *diaginv,
-                                    REAL weight)
+                                    REAL    *diaginv,
+                                    REAL     weight)
 {
     // members of A
     INT     ROW = A->ROW;
     INT     nb  = A->nb;
     INT    *IA  = A->IA;
     INT    *JA  = A->JA;
-    REAL *val = A->val;
+    REAL   *val = A->val;
     
     // values of dvector b and u
     REAL *b_val = b->val;
@@ -1307,8 +1307,8 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
 void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
                                      dvector *b,
                                      dvector *u,
-                                     REAL *diaginv,
-                                     REAL weight)
+                                     REAL    *diaginv,
+                                     REAL     weight)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -1438,9 +1438,9 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
 void fasp_smoother_dbsr_sor_order (dBSRmat *A,
                                    dvector *b,
                                    dvector *u,
-                                   REAL *diaginv,
-                                   INT *mark,
-                                   REAL weight)
+                                   REAL    *diaginv,
+                                   INT     *mark,
+                                   REAL     weight)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -1569,7 +1569,7 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
 void fasp_smoother_dbsr_ilu (dBSRmat *A,
                              dvector *b,
                              dvector *x,
-                             void *data)
+                             void    *data)
 {
     ILU_data   *iludata=(ILU_data *)data;
     const INT   nb=iludata->nb,m=A->ROW*nb, memneed=5*m;

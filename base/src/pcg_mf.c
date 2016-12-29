@@ -84,13 +84,13 @@
  * Modified by Feiteng Huang on 09/19/2012: matrix free
  */
 INT fasp_solver_pcg (mxv_matfree *mf,
-                     dvector *b,
-                     dvector *u,
-                     precond *pc,
-                     const REAL tol,
-                     const INT MaxIt,
-                     const SHORT stop_type,
-                     const SHORT prtlvl)
+                     dvector     *b,
+                     dvector     *u,
+                     precond     *pc,
+                     const REAL   tol,
+                     const INT    MaxIt,
+                     const SHORT  stop_type,
+                     const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;

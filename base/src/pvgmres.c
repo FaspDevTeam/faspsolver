@@ -48,15 +48,15 @@
  * Modified by Chensong Zhang on 04/06/2013: Add stop type support
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
-INT fasp_solver_dcsr_pvgmres (dCSRmat *A,
-                              dvector *b,
-                              dvector *x,
-                              precond *pc,
-                              const REAL tol,
-                              const INT MaxIt,
-                              const SHORT restart,
-                              const SHORT stop_type,
-                              const SHORT prtlvl)
+INT fasp_solver_dcsr_pvgmres (dCSRmat      *A,
+                              dvector      *b,
+                              dvector      *x,
+                              precond      *pc,
+                              const REAL    tol,
+                              const INT     MaxIt,
+                              const SHORT   restart,
+                              const SHORT   stop_type,
+                              const SHORT   prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;
@@ -368,9 +368,9 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                    const REAL tol, const INT MaxIt, const SHORT restart,
- *                                    const SHORT stop_type, const SHORT prtlvl)
+ * \fn INT fasp_solver_dblc_pvgmres (dBLCmat *A, dvector *b, dvector *x, precond *pc,
+ *                                   const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                   const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Right preconditioned GMRES method in which the restart parameter
  *        can be adaptively modified during the iteration.
@@ -390,15 +390,15 @@ FINISHED:
  * \author Chensong Zhang
  * \date   04/05/2013
  */
-INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
-                               dvector *b,
-                               dvector *x,
-                               precond *pc,
-                               const REAL tol,
-                               const INT MaxIt,
-                               const SHORT restart,
-                               const SHORT stop_type,
-                               const SHORT prtlvl)
+INT fasp_solver_dblc_pvgmres (dBLCmat     *A,
+                              dvector     *b,
+                              dvector     *x,
+                              precond     *pc,
+                              const REAL   tol,
+                              const INT    MaxIt,
+                              const SHORT  restart,
+                              const SHORT  stop_type,
+                              const SHORT  prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;
@@ -473,7 +473,7 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
-    fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, p[0]);
+    fasp_blas_dblc_aAxpy(-1.0, A, x->val, p[0]);
     
     r_norm = fasp_blas_array_norm2(n, p[0]);
     
@@ -550,7 +550,7 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
             else
                 pc->fct(p[i-1], r, pc->data);
             
-            fasp_blas_bdcsr_mxv(A, r, p[i]);
+            fasp_blas_dblc_mxv(A, r, p[i]);
             
             /* modified Gram_Schmidt */
             for (j = 0; j < i; j ++) {
@@ -626,7 +626,7 @@ INT fasp_solver_bdcsr_pvgmres (block_dCSRmat *A,
             
             // compute current residual
             fasp_array_cp(n, b->val, r);
-            fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, r);
+            fasp_blas_dblc_aAxpy(-1.0, A, x->val, r);
             
             r_norm = fasp_blas_array_norm2(n, r);
             
@@ -735,15 +735,15 @@ FINISHED:
  * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/06/2013: Add stop type support
  */
-INT fasp_solver_dbsr_pvgmres (dBSRmat *A,
-                              dvector *b,
-                              dvector *x,
-                              precond *pc,
-                              const REAL tol,
-                              const INT MaxIt,
-                              const SHORT restart,
-                              const SHORT stop_type,
-                              const SHORT prtlvl)
+INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
+                              dvector      *b,
+                              dvector      *x,
+                              precond      *pc,
+                              const REAL    tol,
+                              const INT     MaxIt,
+                              const SHORT   restart,
+                              const SHORT   stop_type,
+                              const SHORT   prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;
@@ -1080,15 +1080,15 @@ FINISHED:
  * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/06/2013: Add stop type support
  */
-INT fasp_solver_dstr_pvgmres (dSTRmat *A,
-                              dvector *b,
-                              dvector *x,
-                              precond *pc,
-                              const REAL tol,
-                              const INT MaxIt,
-                              const SHORT restart,
-                              const SHORT stop_type,
-                              const SHORT prtlvl)
+INT fasp_solver_dstr_pvgmres (dSTRmat      *A,
+                              dvector      *b,
+                              dvector      *x,
+                              precond      *pc,
+                              const REAL    tol,
+                              const INT     MaxIt,
+                              const SHORT   restart,
+                              const SHORT   stop_type,
+                              const SHORT   prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;

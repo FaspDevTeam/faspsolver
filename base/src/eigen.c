@@ -26,9 +26,9 @@
  * \author Xiaozhe Hu
  * \date   01/25/2011 
  */
-REAL fasp_dcsr_eig (dCSRmat *A, 
-                    const REAL tol, 
-                    const INT maxit)
+REAL fasp_dcsr_eig (dCSRmat     *A,
+                    const REAL   tol,
+                    const INT    maxit)
 {
     REAL eigenvalue=0.0, temp=1.0;
     

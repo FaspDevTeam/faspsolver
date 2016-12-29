@@ -35,10 +35,10 @@
  * \date   10/26/2010
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
-INT fasp_solver_dbsr_itsolver (dBSRmat *A,
-                               dvector *b,
-                               dvector *x,
-                               precond *pc,
+INT fasp_solver_dbsr_itsolver (dBSRmat        *A,
+                               dvector        *b,
+                               dvector        *x,
+                               precond        *pc,
                                itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
@@ -128,9 +128,9 @@ INT fasp_solver_dbsr_itsolver (dBSRmat *A,
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   10/26/2010
  */
-INT fasp_solver_dbsr_krylov (dBSRmat *A,
-                             dvector *b,
-                             dvector *x,
+INT fasp_solver_dbsr_krylov (dBSRmat        *A,
+                             dvector        *b,
+                             dvector        *x,
                              itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
@@ -179,9 +179,9 @@ INT fasp_solver_dbsr_krylov (dBSRmat *A,
  * Modified by Chunsheng Feng, Zheng Li on 10/15/2012
  */
 
-INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
-                                  dvector *b,
-                                  dvector *x,
+INT fasp_solver_dbsr_krylov_diag (dBSRmat        *A,
+                                  dvector        *b,
+                                  dvector        *x,
                                   itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
@@ -283,11 +283,11 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat *A,
  * \author Shiquang Zhang, Xiaozhe Hu
  * \date   10/26/2010
  */
-INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A,
-                                 dvector *b,
-                                 dvector *x,
+INT fasp_solver_dbsr_krylov_ilu (dBSRmat        *A,
+                                 dvector        *b,
+                                 dvector        *x,
                                  itsolver_param *itparam,
-                                 ILU_param *iluparam)
+                                 ILU_param      *iluparam)
 {
     const SHORT prtlvl = itparam->print_level;
     REAL solver_start, solver_end;
@@ -350,11 +350,11 @@ FINISHED:
  * \author Xiaozhe Hu
  * \date   03/16/2012
  */
-INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
-                                 dvector *b,
-                                 dvector *x,
+INT fasp_solver_dbsr_krylov_amg (dBSRmat        *A,
+                                 dvector        *b,
+                                 dvector        *x,
                                  itsolver_param *itparam,
-                                 AMG_param *amgparam)
+                                 AMG_param      *amgparam)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
@@ -453,7 +453,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat *A,
     solver_duration = solver_end - solver_start;
     
     if ( prtlvl >= PRINT_MIN ) {
-        print_cputime("BSR AMG Krylov method totally", setup_duration+solver_duration);
+        print_cputime("BSR Krylov method", setup_duration+solver_duration);
     }
     
 FINISHED:
@@ -492,14 +492,14 @@ MEMORY_ERROR:
  * \author Xiaozhe Hu
  * \date   05/26/2012
  */
-INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
-                                    dvector *b,
-                                    dvector *x,
+INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat        *A,
+                                    dvector        *b,
+                                    dvector        *x,
                                     itsolver_param *itparam,
-                                    AMG_param *amgparam,
-                                    dCSRmat *A_nk,
-                                    dCSRmat *P_nk,
-                                    dCSRmat *R_nk)
+                                    AMG_param      *amgparam,
+                                    dCSRmat        *A_nk,
+                                    dCSRmat        *P_nk,
+                                    dCSRmat        *R_nk)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
@@ -610,7 +610,7 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A,
     solver_duration = solver_end - solver_start;
     
     if ( prtlvl >= PRINT_MIN ) {
-        print_cputime("BSR AMG NK Krylov method totally", setup_duration+solver_duration);
+        print_cputime("BSR Krylov method", setup_duration+solver_duration);
     }
     
 FINISHED:
@@ -651,13 +651,13 @@ MEMORY_ERROR:
  * \author Xiaozhe Hu
  * \date   05/27/2012
  */
-INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
-                                    dvector *b,
-                                    dvector *x,
+INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat        *A,
+                                    dvector        *b,
+                                    dvector        *x,
                                     itsolver_param *itparam,
-                                    AMG_param *amgparam,
-                                    const INT nk_dim,
-                                    dvector *nk)
+                                    AMG_param      *amgparam,
+                                    const INT       nk_dim,
+                                    dvector        *nk)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
@@ -767,7 +767,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A,
     solver_duration = solver_end - solver_start;
     
     if ( prtlvl >= PRINT_MIN ) {
-        print_cputime("BSR AMG Krylov method totally", setup_duration+solver_duration);
+        print_cputime("BSR Krylov method", setup_duration+solver_duration);
     }
     
 FINISHED:

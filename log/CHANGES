@@ -1,7 +1,12 @@
 File Name: CHANGES
 
-12/20/2016 FASP 1.8.8:
-- Update ILU with OpenMP support.
+12/30/2016 FASP 1.8.8:
+- Update docomentation and webpage. 
+- Add ILU subroutines with OpenMP support.
+- Change block_dCSRmat to dBLCmat and corresponding functions.
+- Change _bdcsr_ to _dblc_.
+- Modify VS10 for new function names.
+- Major changes which makes previous versions not compatible.
 
 10/18/2016 FASP 1.8.7:
 - Fix a bug in dvec_axpyz.

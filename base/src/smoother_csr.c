@@ -56,13 +56,13 @@ static void rb0f3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
-void fasp_smoother_dcsr_jacobi (dvector *u,
-                                const INT i_1,
-                                const INT i_n,
-                                const INT s,
-                                dCSRmat *A,
-                                dvector *b,
-                                INT L)
+void fasp_smoother_dcsr_jacobi (dvector    *u,
+                                const INT   i_1,
+                                const INT   i_n,
+                                const INT   s,
+                                dCSRmat    *A,
+                                dvector    *b,
+                                INT         L)
 {
     const INT    N = ABS(i_n - i_1)+1;
     const INT   *ia=A->IA, *ja=A->JA;
@@ -192,13 +192,13 @@ void fasp_smoother_dcsr_jacobi (dvector *u,
  *
  * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
-void fasp_smoother_dcsr_gs (dvector *u,
-                            const INT i_1,
-                            const INT i_n,
-                            const INT s,
-                            dCSRmat *A,
-                            dvector *b,
-                            INT L)
+void fasp_smoother_dcsr_gs (dvector    *u,
+                            const INT   i_1,
+                            const INT   i_n,
+                            const INT   s,
+                            dCSRmat    *A,
+                            dvector    *b,
+                            INT         L)
 {
     const INT   *ia=A->IA,*ja=A->JA;
     const REAL  *aj=A->val,*bval=b->val;
@@ -361,12 +361,12 @@ void fasp_smoother_dcsr_gs (dvector *u,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012
  */
-void fasp_smoother_dcsr_gs_cf (dvector *u,
-                               dCSRmat *A,
-                               dvector *b,
-                               INT L,
-                               INT *mark,
-                               const INT order)
+void fasp_smoother_dcsr_gs_cf (dvector   *u,
+                               dCSRmat   *A,
+                               dvector   *b,
+                               INT        L,
+                               INT       *mark,
+                               const INT  order)
 {
     const INT    nrow = b->row; // number of rows
     const INT   *ia = A->IA, *ja = A->JA;
@@ -629,7 +629,7 @@ void fasp_smoother_dcsr_gs_cf (dvector *u,
 void fasp_smoother_dcsr_sgs (dvector *u,
                              dCSRmat *A,
                              dvector *b,
-                             INT L)
+                             INT      L)
 {
     const INT    nm1=b->row-1;
     const INT   *ia=A->IA,*ja=A->JA;
@@ -742,14 +742,14 @@ void fasp_smoother_dcsr_sgs (dvector *u,
  *
  * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
-void fasp_smoother_dcsr_sor (dvector *u,
-                             const INT i_1,
-                             const INT i_n,
-                             const INT s,
-                             dCSRmat *A,
-                             dvector *b,
-                             INT L,
-                             const REAL w)
+void fasp_smoother_dcsr_sor (dvector    *u,
+                             const INT   i_1,
+                             const INT   i_n,
+                             const INT   s,
+                             dCSRmat    *A,
+                             dvector    *b,
+                             INT         L,
+                             const REAL  w)
 {
     const INT   *ia=A->IA,*ja=A->JA;
     const REAL  *aj=A->val,*bval=b->val;
@@ -870,13 +870,13 @@ void fasp_smoother_dcsr_sor (dvector *u,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
-void fasp_smoother_dcsr_sor_cf (dvector *u,
-                                dCSRmat *A,
-                                dvector *b,
-                                INT L,
-                                const REAL w,
-                                INT *mark,
-                                const INT order )
+void fasp_smoother_dcsr_sor_cf (dvector    *u,
+                                dCSRmat    *A,
+                                dvector    *b,
+                                INT         L,
+                                const REAL  w,
+                                INT        *mark,
+                                const INT   order )
 {
     const INT    nrow = b->row; // number of rows
     const INT   *ia = A->IA, *ja=A->JA;
@@ -1067,7 +1067,7 @@ void fasp_smoother_dcsr_sor_cf (dvector *u,
 void fasp_smoother_dcsr_ilu (dCSRmat *A,
                              dvector *b,
                              dvector *x,
-                             void *data)
+                             void    *data)
 {
     const INT m=A->row, m2=2*m, memneed=3*m;
     const ILU_data *iludata=(ILU_data *)data;
@@ -1142,14 +1142,14 @@ MEMERR:
  *
  * Modified by Chunsheng Feng, Zheng Li on 2012/09/01
  */
-void fasp_smoother_dcsr_kaczmarz (dvector *u,
-                                  const INT i_1,
-                                  const INT i_n,
-                                  const INT s,
-                                  dCSRmat *A,
-                                  dvector *b,
-                                  INT L,
-                                  const REAL w)
+void fasp_smoother_dcsr_kaczmarz (dvector    *u,
+                                  const INT   i_1,
+                                  const INT   i_n,
+                                  const INT   s,
+                                  dCSRmat    *A,
+                                  dvector    *b,
+                                  INT         L,
+                                  const REAL  w)
 {
     const INT   *ia=A->IA,*ja=A->JA;
     const REAL  *aj=A->val,*bval=b->val;
@@ -1283,13 +1283,13 @@ void fasp_smoother_dcsr_kaczmarz (dvector *u,
  *
  * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
-void fasp_smoother_dcsr_L1diag (dvector *u,
-                                const INT i_1,
-                                const INT i_n,
-                                const INT s,
-                                dCSRmat *A,
-                                dvector *b,
-                                INT L)
+void fasp_smoother_dcsr_L1diag (dvector    *u,
+                                const INT   i_1,
+                                const INT   i_n,
+                                const INT   s,
+                                dCSRmat    *A,
+                                dvector    *b,
+                                INT         L)
 {
     const INT    N = ABS(i_n - i_1)+1;
     const INT   *ia=A->IA, *ja=A->JA;
@@ -1422,16 +1422,16 @@ void fasp_smoother_dcsr_L1diag (dvector *u,
  * \author Chunsheng Feng
  * \date   02/08/2012
  */
-void fasp_smoother_dcsr_gs_rb3d (dvector *u,
-                                 dCSRmat *A,
-                                 dvector *b,
-                                 INT L,
-                                 const INT order,
-                                 INT *mark,
-                                 const INT maximap,
-                                 const INT nx,
-                                 const INT ny,
-                                 const INT nz)
+void fasp_smoother_dcsr_gs_rb3d (dvector    *u,
+                                 dCSRmat    *A,
+                                 dvector    *b,
+                                 INT         L,
+                                 const INT   order,
+                                 INT        *mark,
+                                 const INT   maximap,
+                                 const INT   nx,
+                                 const INT   ny,
+                                 const INT   nz)
 {
     const INT   nrow = b->row; // number of rows
     INT        *ia=A->IA,*ja=A->JA;
@@ -1510,16 +1510,16 @@ void fasp_smoother_dcsr_gs_rb3d (dvector *u,
  * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-static void swep2db (INT *ia,
-                     INT *ja,
-                     REAL *aa,
-                     REAL *u,
-                     REAL *f,
-                     INT nbegx,
-                     INT nbegy,
-                     INT *mark,
-                     INT nx,
-                     INT ny)
+static void swep2db (INT   *ia,
+                     INT   *ja,
+                     REAL  *aa,
+                     REAL  *u,
+                     REAL  *f,
+                     INT    nbegx,
+                     INT    nbegy,
+                     INT   *mark,
+                     INT    nx,
+                     INT    ny)
 {
     INT j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
@@ -1576,18 +1576,18 @@ static void swep2db (INT *ia,
  * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-static void swep3db (INT *ia,
-                     INT *ja,
-                     REAL *aa,
-                     REAL *u,
-                     REAL *f,
-                     INT nbegx,
-                     INT nbegy,
-                     INT nbegz,
-                     INT *mark,
-                     INT nx,
-                     INT ny,
-                     INT nz)
+static void swep3db (INT   *ia,
+                     INT   *ja,
+                     REAL  *aa,
+                     REAL  *u,
+                     REAL  *f,
+                     INT    nbegx,
+                     INT    nbegy,
+                     INT    nbegz,
+                     INT   *mark,
+                     INT    nx,
+                     INT    ny,
+                     INT    nz)
 {
     INT nxy, k, k0, j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
@@ -1646,15 +1646,15 @@ static void swep3db (INT *ia,
  * \note This subroutine is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-static void rb0b2d (INT *ia,
-                    INT *ja,
-                    REAL *aa,
-                    REAL *u,
-                    REAL *f,
-                    INT *mark,
-                    INT nx,
-                    INT ny,
-                    INT nsweeps)
+static void rb0b2d (INT   *ia,
+                    INT   *ja,
+                    REAL  *aa,
+                    REAL  *u,
+                    REAL  *f,
+                    INT   *mark,
+                    INT    nx,
+                    INT    ny,
+                    INT    nsweeps)
 {
 #if 1
     INT n0e,n0o,isweep;
@@ -1745,16 +1745,16 @@ static void rb0b2d (INT *ia,
  * \note This subroutine is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-static void rb0b3d (INT *ia,
-                    INT *ja,
-                    REAL *aa,
-                    REAL *u,
-                    REAL *f,
-                    INT *mark,
-                    INT nx,
-                    INT ny,
-                    INT nz,
-                    INT nsweeps)
+static void rb0b3d (INT   *ia,
+                    INT   *ja,
+                    REAL  *aa,
+                    REAL  *u,
+                    REAL  *f,
+                    INT   *mark,
+                    INT    nx,
+                    INT    ny,
+                    INT    nz,
+                    INT    nsweeps)
 {
 #if 1
     INT n0e,n0o,isweep;
@@ -1974,16 +1974,16 @@ static void rb0b3d (INT *ia,
  * \note The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-static void swep2df (INT *ia,
-                     INT *ja,
-                     REAL *aa,
-                     REAL *u,
-                     REAL *f,
-                     INT nbegx,
-                     INT nbegy,
-                     INT *mark,
-                     INT nx,
-                     INT ny )
+static void swep2df (INT   *ia,
+                     INT   *ja,
+                     REAL  *aa,
+                     REAL  *u,
+                     REAL  *f,
+                     INT    nbegx,
+                     INT    nbegy,
+                     INT   *mark,
+                     INT    nx,
+                     INT    ny)
 {
     INT j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
@@ -2039,18 +2039,18 @@ static void swep2df (INT *ia,
  * Note: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-static void swep3df (INT *ia,
-                     INT *ja,
-                     REAL *aa,
-                     REAL *u,
-                     REAL *f,
-                     INT nbegx,
-                     INT nbegy,
-                     INT nbegz,
-                     INT *mark,
-                     INT nx,
-                     INT ny,
-                     INT nz)
+static void swep3df (INT   *ia,
+                     INT   *ja,
+                     REAL  *aa,
+                     REAL  *u,
+                     REAL  *f,
+                     INT    nbegx,
+                     INT    nbegy,
+                     INT    nbegz,
+                     INT   *mark,
+                     INT    nx,
+                     INT    ny,
+                     INT    nz)
 {
     INT nxy=nx*ny,k,k0,j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
@@ -2107,15 +2107,15 @@ static void swep3df (INT *ia,
  * NOTE: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-static void rb0f2d (INT *ia,
-                    INT *ja,
-                    REAL *aa,
-                    REAL *u,
-                    REAL *f,
-                    INT *mark,
-                    INT nx,
-                    INT ny,
-                    INT nsweeps)
+static void rb0f2d (INT   *ia,
+                    INT   *ja,
+                    REAL  *aa,
+                    REAL  *u,
+                    REAL  *f,
+                    INT   *mark,
+                    INT    nx,
+                    INT    ny,
+                    INT    nsweeps)
 {
     INT n0e,n0o,isweep;
     
@@ -2157,16 +2157,16 @@ static void rb0f2d (INT *ia,
  * NOTE: The following code is based on SiPSMG (Simple Poisson Solver based on MultiGrid)
  * (c) 2008 Johannes Kraus, Jinchao Xu, Yunrong Zhu, Ludmil Zikatanov
  */
-static void rb0f3d (INT *ia,
-                    INT *ja,
-                    REAL *aa,
-                    REAL *u,
-                    REAL *f,
-                    INT *mark,
-                    INT nx,
-                    INT ny,
-                    INT nz,
-                    INT nsweeps )
+static void rb0f3d (INT   *ia,
+                    INT   *ja,
+                    REAL  *aa,
+                    REAL  *u,
+                    REAL  *f,
+                    INT   *mark,
+                    INT    nx,
+                    INT    ny,
+                    INT    nz,
+                    INT    nsweeps)
 {
     INT n0e,n0o,isweep;
     
@@ -2217,12 +2217,12 @@ static void rb0f3d (INT *ia,
  *
  * \note This is NOT an O(N) algorithm, need to be modified!!!!
  */
-static dCSRmat form_contractor (dCSRmat *A,
-                                const INT smoother,
-                                const INT steps,
-                                const INT ndeg,
-                                const REAL relax,
-                                const REAL dtol)
+static dCSRmat form_contractor (dCSRmat    *A,
+                                const INT   smoother,
+                                const INT   steps,
+                                const INT   ndeg,
+                                const REAL  relax,
+                                const REAL  dtol)
 {
     const INT   n=A->row;
     INT         i;

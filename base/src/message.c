@@ -33,12 +33,12 @@
  * Modified by Chensong Zhang on 03/28/2013: Output initial guess
  * Modified by Chensong Zhang on 04/05/2013: Fix a typo
  */
-void print_itinfo (const INT ptrlvl,
-                   const INT stop_type,
-                   const INT iter,
-                   const REAL relres,
-                   const REAL absres,
-                   const REAL factor)
+void print_itinfo (const INT   ptrlvl,
+                   const INT   stop_type,
+                   const INT   iter,
+                   const REAL  relres,
+                   const REAL  absres,
+                   const REAL  factor)
 {
     if ( ptrlvl >= PRINT_SOME ) {
         
@@ -76,8 +76,8 @@ void print_itinfo (const INT ptrlvl,
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-void print_amgcomplexity (AMG_data *mgl,
-                          const SHORT prtlvl)
+void print_amgcomplexity (AMG_data    *mgl,
+                          const SHORT  prtlvl)
 {
     const SHORT   max_levels=mgl->num_levels;
     SHORT         level;
@@ -119,8 +119,8 @@ void print_amgcomplexity (AMG_data *mgl,
  * \author Chensong Zhang
  * \date   05/10/2013
  */
-void print_amgcomplexity_bsr (AMG_data_bsr *mgl,
-                              const SHORT prtlvl)
+void print_amgcomplexity_bsr (AMG_data_bsr  *mgl,
+                              const SHORT    prtlvl)
 {
     const SHORT  max_levels = mgl->num_levels;
     SHORT        level;
@@ -162,8 +162,8 @@ void print_amgcomplexity_bsr (AMG_data_bsr *mgl,
  * \author Chensong Zhang
  * \date   04/10/2012
  */
-void print_cputime (const char *message,
-                    const REAL cputime)
+void print_cputime (const char  *message,
+                    const REAL   cputime)
 {
     printf("%s costs %.4f seconds.\n", message, cputime);
 }
@@ -179,8 +179,8 @@ void print_cputime (const char *message,
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-void print_message (const INT ptrlvl,
-                    const char *message)
+void print_message (const INT    ptrlvl,
+                    const char  *message)
 {
     if ( ptrlvl > PRINT_NONE ) printf("%s", message);
 }
@@ -196,8 +196,8 @@ void print_message (const INT ptrlvl,
  * \author Chensong Zhang
  * \date   01/10/2012
  */
-void fasp_chkerr (const SHORT status,
-                  const char *fctname)
+void fasp_chkerr (const SHORT  status,
+                  const char  *fctname)
 {
     if ( status >= 0 ) return; // No error at all
     

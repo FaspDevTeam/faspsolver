@@ -85,14 +85,14 @@
  * \author Chensong Zhang
  * \date   03/28/2013
  */
-INT fasp_solver_dcsr_spcg (dCSRmat *A,
-                           dvector *b,
-                           dvector *u,
-                           precond *pc,
-                           const REAL tol,
-                           const INT MaxIt,
-                           const SHORT stop_type,
-                           const SHORT prtlvl)
+INT fasp_solver_dcsr_spcg (dCSRmat      *A,
+                           dvector      *b,
+                           dvector      *u,
+                           precond      *pc,
+                           const REAL    tol,
+                           const INT     MaxIt,
+                           const SHORT   stop_type,
+                           const SHORT   prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -395,15 +395,14 @@ FINISHED:  // finish the iterative method
         return iter;
 }
 
-
 /**
- * \fn INT fasp_solver_bdcsr_spcg (block_dCSRmat *A, dvector *b, dvector *u, precond *pc,
- *                                 const REAL tol, const INT MaxIt,
- *                                 const SHORT stop_type, const SHORT prtlvl)
+ * \fn INT fasp_solver_dblc_spcg (dBLCmat *A, dvector *b, dvector *u, precond *pc,
+ *                                const REAL tol, const INT MaxIt,
+ *                                const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned conjugate gradient method for solving Au=b with safety net
  *
- * \param A            Pointer to block_dCSRmat: the coefficient matrix
+ * \param A            Pointer to dBLCmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
  * \param u            Pointer to dvector: the unknowns
  * \param pc           Pointer to the structure of precondition (precond)
@@ -417,14 +416,14 @@ FINISHED:  // finish the iterative method
  * \author Chensong Zhang
  * \date   03/28/2013
  */
-INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
-                            dvector *b,
-                            dvector *u,
-                            precond *pc,
-                            const REAL tol,
-                            const INT MaxIt,
-                            const SHORT stop_type,
-                            const SHORT prtlvl)
+INT fasp_solver_dblc_spcg (dBLCmat     *A,
+                           dvector     *b,
+                           dvector     *u,
+                           precond     *pc,
+                           const REAL   tol,
+                           const INT    MaxIt,
+                           const SHORT  stop_type,
+                           const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -452,7 +451,7 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
     
     // r = b-A*u
     fasp_array_cp(m,b->val,r);
-    fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
+    fasp_blas_dblc_aAxpy(-1.0,A,u->val,r);
     
     if (pc != NULL)
         pc->fct(r,z,pc->data); /* Apply preconditioner */
@@ -494,7 +493,7 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
     while ( iter++ < MaxIt ) {
         
         // t=A*p
-        fasp_blas_bdcsr_mxv(A,p,t);
+        fasp_blas_dblc_mxv(A,p,t);
         
         // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
         temp2 = fasp_blas_array_dotprod(m,t,p);
@@ -572,7 +571,7 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
             }
             
             fasp_array_cp(m,b->val,r);
-            fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
+            fasp_blas_dblc_aAxpy(-1.0,A,u->val,r);
             
             // compute residuals
             switch ( stop_type ) {
@@ -618,7 +617,7 @@ INT fasp_solver_bdcsr_spcg (block_dCSRmat *A,
             
             // compute residual r = b - Ax again
             fasp_array_cp(m,b->val,r);
-            fasp_blas_bdcsr_aAxpy(-1.0,A,u->val,r);
+            fasp_blas_dblc_aAxpy(-1.0,A,u->val,r);
             
             // compute residuals
             switch ( stop_type ) {
@@ -685,7 +684,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         
         // compute best residual
         fasp_array_cp(m,b->val,r);
-        fasp_blas_bdcsr_aAxpy(-1.0,A,u_best,r);
+        fasp_blas_dblc_aAxpy(-1.0,A,u_best,r);
         
         switch ( stop_type ) {
             case STOP_REL_RES:
@@ -748,14 +747,14 @@ FINISHED:  // finish the iterative method
  * \author Chensong Zhang
  * \date   03/28/2013
  */
-INT fasp_solver_dstr_spcg (dSTRmat *A,
-                           dvector *b,
-                           dvector *u,
-                           precond *pc,
-                           const REAL tol,
-                           const INT MaxIt,
-                           const SHORT stop_type,
-                           const SHORT prtlvl)
+INT fasp_solver_dstr_spcg (dSTRmat      *A,
+                           dvector      *b,
+                           dvector      *u,
+                           precond      *pc,
+                           const REAL    tol,
+                           const INT     MaxIt,
+                           const SHORT   stop_type,
+                           const SHORT   prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;

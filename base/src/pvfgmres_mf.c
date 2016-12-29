@@ -52,15 +52,15 @@
  * Modified by Feiteng Huang on 09/26/2012: matrix free
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
-INT fasp_solver_pvfgmres (mxv_matfree *mf,
-                          dvector *b,
-                          dvector *x,
-                          precond *pc,
-                          const REAL tol,
-                          const INT MaxIt,
-                          const SHORT restart,
-                          const SHORT stop_type,
-                          const SHORT prtlvl)
+INT fasp_solver_pvfgmres (mxv_matfree  *mf,
+                          dvector      *b,
+                          dvector      *x,
+                          precond      *pc,
+                          const REAL    tol,
+                          const INT     MaxIt,
+                          const SHORT   restart,
+                          const SHORT   stop_type,
+                          const SHORT   prtlvl)
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;

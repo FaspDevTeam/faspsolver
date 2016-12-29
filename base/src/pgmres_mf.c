@@ -47,15 +47,15 @@
  * Modified by Feiteng Huang on 09/26/2012: matrix free
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
-INT fasp_solver_pgmres (mxv_matfree *mf,
-                        dvector *b,
-                        dvector *x,
-                        precond *pc,
-                        const REAL tol,
-                        const INT MaxIt,
-                        const SHORT restart,
-                        const SHORT stop_type,
-                        const SHORT prtlvl)
+INT fasp_solver_pgmres (mxv_matfree  *mf,
+                        dvector      *b,
+                        dvector      *x,
+                        precond      *pc,
+                        const REAL    tol,
+                        const INT     MaxIt,
+                        const SHORT   restart,
+                        const SHORT   stop_type,
+                        const SHORT   prtlvl)
 {
     const INT n         = b->row;
     const INT min_iter  = 0;
@@ -227,7 +227,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
         rs[i-1] = rs[i-1] / hh[i-1][i-1];
         for (k = i-2; k >= 0; k --) {
             t = 0.0;
-            for (j = k+1; j < i; j ++)  t -= hh[k][j]*rs[j];
+            for (j = k+1; j < i; j ++) t -= hh[k][j]*rs[j];
             
             t += rs[k];
             rs[k] = t / hh[k][k];
@@ -235,7 +235,7 @@ INT fasp_solver_pgmres (mxv_matfree *mf,
         fasp_array_cp(n, p[i-1], w);
         //for (j = 0; j < n; j ++) w[j] *= rs[i-1];
         fasp_blas_array_ax(n, rs[i-1], w);
-        for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], p[j], w);
+        for (j = i-2; j >= 0; j --) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
         /* apply the preconditioner */
         if (pc == NULL)

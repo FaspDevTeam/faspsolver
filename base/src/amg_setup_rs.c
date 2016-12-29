@@ -44,8 +44,8 @@
  * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
  * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  */
-SHORT fasp_amg_setup_rs (AMG_data *mgl,
-                         AMG_param *param)
+SHORT fasp_amg_setup_rs (AMG_data   *mgl,
+                         AMG_param  *param)
 {
     const SHORT prtlvl     = param->print_level;
     const SHORT cycle_type = param->cycle_type;

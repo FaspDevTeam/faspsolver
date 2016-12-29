@@ -26,7 +26,7 @@ static INT  compress_S         (iCSRmat *);
 static void strong_couplings   (dCSRmat *, iCSRmat *, AMG_param *);
 static void form_P_pattern_dir (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 static void form_P_pattern_std (dCSRmat *, iCSRmat *, ivector *, INT, INT);
-static void ordering1  (iCSRmat *, ivector *);
+static void ordering1          (iCSRmat *, ivector *);
 
 #include "linklist.inl"
 
@@ -58,10 +58,10 @@ static void ordering1  (iCSRmat *, ivector *);
 * Modified by Chensong Zhang on 04/28/2013: remove linked list
 * Modified by Chensong Zhang on 05/11/2013: restructure the code
 */
-SHORT fasp_amg_coarsening_rs (dCSRmat *A,
-                              ivector *vertices,
-                              dCSRmat *P,
-                              iCSRmat *S,
+SHORT fasp_amg_coarsening_rs (dCSRmat   *A,
+                              ivector   *vertices,
+                              dCSRmat   *P,
+                              iCSRmat   *S,
                               AMG_param *param)
 {
 	const SHORT coarse_type = param->coarsening_type;
@@ -178,8 +178,8 @@ SHORT fasp_amg_coarsening_rs (dCSRmat *A,
 *
 * Modified by Chensong Zhang on 05/11/2013: restructure the code
 */
-static void strong_couplings (dCSRmat *A,
-                              iCSRmat *S,
+static void strong_couplings (dCSRmat   *A,
+                              iCSRmat   *S,
                               AMG_param *param )
 {
     const SHORT coarse_type = param->coarsening_type;
@@ -379,9 +379,9 @@ static INT compress_S (iCSRmat *S)
 * \author Chensong Zhang
 * \date   06/07/2013
 */
-static void rem_positive_ff (dCSRmat *A,
-                             iCSRmat *Stemp,
-                             ivector *vertices)
+static void rem_positive_ff (dCSRmat   *A,
+                             iCSRmat   *Stemp,
+                             ivector   *vertices)
 {
 	const INT   row = A->row;
 	INT        *ia  = A->IA, *vec = vertices->val;
@@ -445,9 +445,9 @@ static void rem_positive_ff (dCSRmat *A,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: C/F splitting of RS coarsening 
  *                                                          check C1 Criterion
  */
-static INT cfsplitting_cls (dCSRmat *A,
-                            iCSRmat *S,
-                            ivector *vertices)
+static INT cfsplitting_cls (dCSRmat   *A,
+                            iCSRmat   *S,
+                            ivector   *vertices)
 {
     const INT   row = A->row;
     
@@ -758,9 +758,9 @@ FINISHED:
 *
 * Modified by Chensong Zhang on 06/07/2013: restructure the code
 */
-static INT cfsplitting_clsp (dCSRmat *A,
-                             iCSRmat *S,
-                             ivector *vertices)
+static INT cfsplitting_clsp (dCSRmat   *A,
+                             iCSRmat   *S,
+                             ivector   *vertices)
 {
 	const INT   row = A->row;
 	
@@ -1020,12 +1020,12 @@ FINISHED:
 *
 * Modified by Chensong Zhang on 05/13/2013: restructure the code
 */
-static void strong_couplings_agg1 (dCSRmat *A,
-                                   iCSRmat *S,
-                                   iCSRmat *Sh,
-                                   ivector *vertices,
-                                   ivector *CGPT_index,
-                                   ivector *CGPT_rindex)
+static void strong_couplings_agg1 (dCSRmat   *A,
+                                   iCSRmat   *S,
+                                   iCSRmat   *Sh,
+                                   ivector   *vertices,
+                                   ivector   *CGPT_index,
+                                   ivector   *CGPT_rindex)
 {
 	const INT row = A->row;
 	
@@ -1198,12 +1198,12 @@ static void strong_couplings_agg1 (dCSRmat *A,
 *
 * Modified by Chensong Zhang on 05/13/2013: restructure the code
 */
-static void strong_couplings_agg2 (dCSRmat *A,
-                                   iCSRmat *S,
-                                   iCSRmat *Sh,
-                                   ivector *vertices,
-                                   ivector *CGPT_index,
-                                   ivector *CGPT_rindex)
+static void strong_couplings_agg2 (dCSRmat   *A,
+                                   iCSRmat   *S,
+                                   iCSRmat   *Sh,
+                                   ivector   *vertices,
+                                   ivector   *CGPT_index,
+                                   ivector   *CGPT_rindex)
 {
 	const INT row = A->row;
 	
@@ -1393,10 +1393,10 @@ static void strong_couplings_agg2 (dCSRmat *A,
  * Modified by Xiaozhe Hu on 04/24/2013: modify aggressive coarsening
  * Modified by Chensong Zhang on 05/13/2013: restructure the code
  */
-static INT cfsplitting_agg (dCSRmat *A,
-                            iCSRmat *S,
-                            ivector *vertices,
-                            INT aggressive_path)
+static INT cfsplitting_agg (dCSRmat   *A,
+                            iCSRmat   *S,
+                            ivector   *vertices,
+                            INT        aggressive_path)
 {
     const INT   row = A->row;
     INT         col = 0; // initialize col(P): returning output
@@ -1676,10 +1676,10 @@ static INT cfsplitting_agg (dCSRmat *A,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012: add OMP support
  * Modified by Chensong Zhang on 05/12/2013: restructure the code
  */
-static INT clean_ff_couplings (iCSRmat *S,
-                               ivector *vertices,
-                               INT row,
-                               INT col)
+static INT clean_ff_couplings (iCSRmat   *S,
+                               ivector   *vertices,
+                               INT        row,
+                               INT        col)
 {
     // local variables
     INT  *vec        = vertices->val;
@@ -1765,11 +1765,11 @@ static INT clean_ff_couplings (iCSRmat *S,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012: add OMP support
  * Modified by Chensong Zhang on 05/13/2013: restructure the code
  */
-static void form_P_pattern_dir (dCSRmat *P,
-                                iCSRmat *S,
-                                ivector *vertices,
-                                INT row,
-                                INT col )
+static void form_P_pattern_dir (dCSRmat   *P,
+                                iCSRmat   *S,
+                                ivector   *vertices,
+                                INT        row,
+                                INT        col)
 {
     // local variables
     INT i, j, k, index;
@@ -1878,11 +1878,11 @@ static void form_P_pattern_dir (dCSRmat *P,
 * Modified by Chunsheng Feng, Zheng Li on 10/13/2012: add OMP support
 * Modified by Chensong Zhang on 05/13/2013: restructure the code
 */
-static void form_P_pattern_std (dCSRmat *P,
-iCSRmat *S,
-ivector *vertices,
-INT row,
-INT col)
+static void form_P_pattern_std (dCSRmat   *P,
+                                iCSRmat   *S,
+                                ivector   *vertices,
+                                INT        row,
+                                INT        col)
 {
 	// local variables
 	INT i, j, k, l, h, index;
@@ -2001,9 +2001,9 @@ INT col)
  * \author Hongxuan Zhang, Xiaozhe Hu
  * \date   10/12/2014
  */
-static INT cfsplitting_mis (iCSRmat *S,
-                            ivector *vertices,
-                            ivector *order)
+static INT cfsplitting_mis (iCSRmat   *S,
+                            ivector   *vertices,
+                            ivector   *order)
 {
 	const INT n = S->row;
 
@@ -2057,8 +2057,8 @@ static INT cfsplitting_mis (iCSRmat *S,
  * \author Hongxuan Zhang
  * \date   10/12/2014
  */
-static void ordering1 (iCSRmat *S, 
-                       ivector *order)
+static void ordering1 (iCSRmat   *S,
+                       ivector   *order)
 {
 	const INT n = order->row;
 	INT * IS = S->IA;

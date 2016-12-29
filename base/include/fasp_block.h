@@ -76,12 +76,12 @@ typedef struct dBSRmat {
 } dBSRmat; /**< Matrix of REAL type in BSR format */
 
 /**
- * \struct block_dCSRmat
+ * \struct dBLCmat
  * \brief Block REAL CSR matrix format
  *
  * \note The starting index of A is 0.
  */
-typedef struct block_dCSRmat {
+typedef struct dBLCmat {
 
     //! row number of blocks in A, m
     INT brow;
@@ -92,7 +92,7 @@ typedef struct block_dCSRmat {
     //! blocks of dCSRmat, point to blocks[brow][bcol]
     dCSRmat **blocks;
 
-} block_dCSRmat; /**< Matrix of REAL type in Block CSR format */
+} dBLCmat; /**< Matrix of REAL type in Block CSR format */
 
 /**
  * \struct block_iCSRmat
@@ -144,11 +144,11 @@ typedef struct block_ivector {
 } block_ivector; /**< Vector of INT type in Block format */
 
 /**
- * \struct block_Reservoir
+ * \struct block_STR
  * \brief Block REAL matrix format for reservoir simulation
  *
  */
-typedef struct block_Reservoir {
+typedef struct block_STR {
 
     //! reservoir-reservoir block
     dSTRmat ResRes;
@@ -162,7 +162,7 @@ typedef struct block_Reservoir {
     //! well-well block
     dCSRmat WelWel;
 
-} block_Reservoir; /**< Special block matrix for Reservoir Simulation */
+} block_STR; /**< Special block matrix for Reservoir Simulation */
 
 /**
  * \struct block_BSR
@@ -403,11 +403,11 @@ typedef struct {
  */
 typedef struct precond_block_reservoir_data {
 
-    //! problem data in block_Reservoir format
-    block_Reservoir *A;
+    //! problem data in block_STR format
+    block_STR *A;
 
-    //! problem data in block_dCSRmat format
-    block_dCSRmat *Abcsr;
+    //! problem data in dBLCmat format
+    dBLCmat *Ablc;
 
     //! problem data in CSR format
     dCSRmat *Acsr;
@@ -495,7 +495,7 @@ typedef struct precond_block_reservoir_data {
 } precond_block_reservoir_data; /**< Precond data for Reservoir Simulation */
 
 /**
- * \brief Data passed to the preconditioner for block preconditioning for block_dCSRmat format
+ * \brief Data passed to the preconditioner for block preconditioning for dBLCmat format
  *
  * This is needed for the block preconditioner.
  */
@@ -504,7 +504,7 @@ typedef struct {
     /*-------------------------------------*/
     /* Basic data for block preconditioner */
     /*-------------------------------------*/
-    block_dCSRmat *Abcsr; /**< problem data, the blocks */
+    dBLCmat *Ablc;        /**< problem data, the blocks */
 
     dCSRmat *A_diag;      /**< data for each diagonal block*/
 
@@ -554,14 +554,14 @@ typedef struct {
     ivector *pivot_S;   /**< pivoting for the GS smoothers for saturation block */
     
     // data of ILU for saturation block
-    ILU_data *LU_S;
+    ILU_data *LU_S;     /**< ILU setup data for saturation block */
 
     // data of AMG for pressure block
     dCSRmat *PP;        /**< pressure block */
     AMG_data *mgl_data; /**< AMG data for presure-presure block */
     
     // data of ILU for pressure block
-    ILU_data *LU_P;
+    ILU_data *LU_P;     /**< ILU setup data for pressure block */
 
     //! print level in AMG preconditioner
     SHORT print_level;
@@ -656,8 +656,8 @@ typedef struct {
 
     INT NumLayers;      /**< number of layers */
 
-    block_dCSRmat *A;   /**< problem data, the sparse matrix */
-    block_dCSRmat *Ai;  /**< preconditioner data, the sparse matrix */
+    dBLCmat *A;   /**< problem data, the sparse matrix */
+    dBLCmat *Ai;  /**< preconditioner data, the sparse matrix */
 
     dCSRmat *local_A;   /**< local stiffness matrix for each layer */
     void **local_LU;    /**< lcoal LU decomposition (for UMFpack) */

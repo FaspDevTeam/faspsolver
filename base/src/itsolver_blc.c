@@ -1,6 +1,6 @@
-/*! \file itsolver_bcsr.c
+/*! \file itsolver_blc.c
  *
- *  \brief Iterative solvers for block_dCSRmat matrices
+ *  \brief Iterative solvers for dBLCmat matrices
  */
 
 #include <math.h>
@@ -16,12 +16,12 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A, dvector *b, dvector *x,
- *                                     precond *pc, itsolver_param *itparam)
+ * \fn INT fasp_solver_dblc_itsolver (dBLCmat *A, dvector *b, dvector *x,
+ *                                    precond *pc, itsolver_param *itparam)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
- * \param A        Pointer to the coeff matrix in block_dCSRmat format
+ * \param A        Pointer to the coeff matrix in dBLCmat format
  * \param b        Pointer to the right hand side in dvector format
  * \param x        Pointer to the approx solution in dvector format
  * \param pc       Pointer to the preconditioning action
@@ -32,13 +32,14 @@
  *
  * \author Chensong Zhang
  * \date   11/25/2010
+ *
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
-INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
-                                dvector *b,
-                                dvector *x,
-                                precond *pc,
-                                itsolver_param *itparam)
+INT fasp_solver_dblc_itsolver (dBLCmat        *A,
+                               dvector        *b,
+                               dvector        *x,
+                               precond        *pc,
+                               itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT itsolver_type = itparam->itsolver_type;
@@ -64,32 +65,32 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
             
         case SOLVER_BiCGstab:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (Block CSR) ...\n");
-            iter=fasp_solver_bdcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            iter=fasp_solver_dblc_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_VBiCGstab:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling VBiCGstab solver (Block CSR) ...\n");
-            iter=fasp_solver_bdcsr_pvbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            iter=fasp_solver_dblc_pvbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_MinRes:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (Block CSR) ...\n");
-            iter=fasp_solver_bdcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            iter=fasp_solver_dblc_pminres(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_GMRES:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRES solver (Block CSR) ...\n");
-            iter=fasp_solver_bdcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
+            iter=fasp_solver_dblc_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VGMRES:
             if ( prtlvl > PRINT_NONE ) printf("Calling vGMRES solver (Block CSR) ...\n");
-            iter=fasp_solver_bdcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
+            iter=fasp_solver_dblc_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VFGMRES:
             if ( prtlvl > PRINT_NONE ) printf("Calling FGMRES solver (Block CSR) ...\n");
-            iter=fasp_solver_bdcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
+            iter=fasp_solver_dblc_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         default:
@@ -111,12 +112,12 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov (block_dCSRmat *A, dvector *b, dvector *x,
- *                                   itsolver_param *itparam)
+ * \fn INT fasp_solver_dblc_krylov (dBLCmat *A, dvector *b, dvector *x,
+ *                                  itsolver_param *itparam)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
- * \param A         Pointer to the coeff matrix in block_dCSRmat format
+ * \param A         Pointer to the coeff matrix in dBLCmat format
  * \param b         Pointer to the right hand side in dvector format
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
@@ -126,10 +127,10 @@ INT fasp_solver_bdcsr_itsolver (block_dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   07/18/2010
  */
-INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
-                              dvector *b,
-                              dvector *x,
-                              itsolver_param *itparam)
+INT fasp_solver_dblc_krylov (dBLCmat        *A,
+                             dvector        *b,
+                             dvector        *x,
+                             itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     
@@ -143,7 +144,7 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
     // solver part
     fasp_gettime(&solver_start);
     
-    status = fasp_solver_bdcsr_itsolver(A,b,x,NULL,itparam);
+    status = fasp_solver_dblc_itsolver(A,b,x,NULL,itparam);
     
     fasp_gettime(&solver_end);
     
@@ -160,13 +161,13 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A, dvector *b, dvector *x,
- *                                           itsolver_param *itparam,
- *                                           AMG_param *amgparam, dCSRmat *A_diag)
+ * \fn INT fasp_solver_dblc_krylov_block_3 (dBLCmat *A, dvector *b, dvector *x,
+ *                                          itsolver_param *itparam,
+ *                                          AMG_param *amgparam, dCSRmat *A_diag)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
- * \param A         Pointer to the coeff matrix in block_dCSRmat format
+ * \param A         Pointer to the coeff matrix in dBLCmat format
  * \param b         Pointer to the right hand side in dvector format
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
@@ -180,12 +181,12 @@ INT fasp_solver_bdcsr_krylov (block_dCSRmat *A,
  *
  * \note only works for 3by3 block dCSRmat problems!! -- Xiaozhe Hu
  */
-INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
-                                      dvector *b,
-                                      dvector *x,
-                                      itsolver_param *itparam,
-                                      AMG_param *amgparam,
-                                      dCSRmat *A_diag)
+INT fasp_solver_dblc_krylov_block_3 (dBLCmat        *A,
+                                     dvector        *b,
+                                     dvector        *x,
+                                     itsolver_param *itparam,
+                                     AMG_param      *amgparam,
+                                     dCSRmat        *A_diag)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT precond_type = itparam->precond_type;
@@ -263,7 +264,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     }
     
     precond_block_data precdata;
-    precdata.Abcsr = A;
+    precdata.Ablc = A;
     precdata.A_diag = A_diag;
     precdata.r = fasp_dvec_create(b->row);
     
@@ -333,7 +334,7 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
     // solver part
     fasp_gettime(&solver_start);
     
-    status=fasp_solver_bdcsr_itsolver(A,b,x, &prec,itparam);
+    status=fasp_solver_dblc_itsolver(A,b,x, &prec,itparam);
     
     fasp_gettime(&solver_end);
     
@@ -366,13 +367,13 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A, dvector *b, dvector *x,
- *                                           itsolver_param *itparam,
- *                                           AMG_param *amgparam, dCSRmat *A_diag)
+ * \fn INT fasp_solver_dblc_krylov_block_4 (dBLCmat *A, dvector *b, dvector *x,
+ *                                          itsolver_param *itparam,
+ *                                          AMG_param *amgparam, dCSRmat *A_diag)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
- * \param A         Pointer to the coeff matrix in block_dCSRmat format
+ * \param A         Pointer to the coeff matrix in dBLCmat format
  * \param b         Pointer to the right hand side in dvector format
  * \param x         Pointer to the approx solution in dvector format
  * \param itparam   Pointer to parameters for iterative solvers
@@ -386,12 +387,12 @@ INT fasp_solver_bdcsr_krylov_block_3 (block_dCSRmat *A,
  *
  * \note only works for 4 by 4 block dCSRmat problems!! -- Xiaozhe Hu
  */
-INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
-                                      dvector *b,
-                                      dvector *x,
-                                      itsolver_param *itparam,
-                                      AMG_param *amgparam,
-                                      dCSRmat *A_diag)
+INT fasp_solver_dblc_krylov_block_4 (dBLCmat        *A,
+                                     dvector        *b,
+                                     dvector        *x,
+                                     itsolver_param *itparam,
+                                     AMG_param      *amgparam,
+                                     dCSRmat        *A_diag)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT precond_type = itparam->precond_type;
@@ -440,7 +441,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     
     precond_block_data precdata;
     
-    precdata.Abcsr = A;
+    precdata.Ablc = A;
     precdata.A_diag = A_diag;
 #if WITH_UMFPACK
     precdata.LU_diag = LU_diag;
@@ -469,7 +470,7 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
     // solver part
     fasp_gettime(&solver_start);
     
-    status=fasp_solver_bdcsr_itsolver(A,b,x, &prec,itparam);
+    status=fasp_solver_dblc_itsolver(A,b,x, &prec,itparam);
     
     fasp_gettime(&solver_end);
     
@@ -491,19 +492,19 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A, dvector *b,
- *                                            dvector *x, itsolver_param *itparam,
- *                                            INT NumLayers, block_dCSRmat *Ai,
- *                                            dCSRmat *local_A, ivector *local_index)
+ * \fn INT fasp_solver_dblc_krylov_sweeping (dBLCmat *A, dvector *b,
+ *                                           dvector *x, itsolver_param *itparam,
+ *                                           INT NumLayers, dBLCmat *Ai,
+ *                                           dCSRmat *local_A, ivector *local_index)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
- * \param A             Pointer to the coeff matrix in block_dCSRmat format
+ * \param A             Pointer to the coeff matrix in dBLCmat format
  * \param b             Pointer to the right hand side in dvector format
  * \param x             Pointer to the approx solution in dvector format
  * \param itparam       Pointer to parameters for iterative solvers
  * \param NumLayers     Number of layers used for sweeping preconditioner
- * \param Ai            Pointer to the coeff matrix for the preconditioner in block_dCSRmat format
+ * \param Ai            Pointer to the coeff matrix for the preconditioner in dBLCmat format
  * \param local_A       Pointer to the local coeff matrices in the dCSRmat format
  * \param local_index   Pointer to the local index in ivector format
  *
@@ -512,14 +513,14 @@ INT fasp_solver_bdcsr_krylov_block_4 (block_dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   05/01/2014
  */
-INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
-                                       dvector *b,
-                                       dvector *x,
-                                       itsolver_param *itparam,
-                                       INT NumLayers,
-                                       block_dCSRmat *Ai,
-                                       dCSRmat *local_A,
-                                       ivector *local_index)
+INT fasp_solver_dblc_krylov_sweeping (dBLCmat        *A,
+                                      dvector        *b,
+                                      dvector        *x,
+                                      itsolver_param *itparam,
+                                      INT             NumLayers,
+                                      dBLCmat        *Ai,
+                                      dCSRmat        *local_A,
+                                      ivector        *local_index)
 {
     const SHORT prtlvl = itparam->print_level;
     
@@ -578,7 +579,7 @@ INT fasp_solver_bdcsr_krylov_sweeping (block_dCSRmat *A,
     /* solver part */
     fasp_gettime(&solve_start);
     
-    status = fasp_solver_bdcsr_itsolver(A,b,x, &prec,itparam);
+    status = fasp_solver_dblc_itsolver(A,b,x, &prec,itparam);
     
     fasp_gettime(&solve_end);
     

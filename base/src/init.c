@@ -115,9 +115,9 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
  * \author Chensong Zhang
  * \date   2010/04/06
  */
-void fasp_ilu_data_alloc (const INT iwk,
-                          const INT nwork,
-                          ILU_data *iludata)
+void fasp_ilu_data_alloc (const INT   iwk,
+                          const INT   nwork,
+                          ILU_data   *iludata)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -182,8 +182,8 @@ void fasp_Schwarz_data_free (Schwarz_data *Schwarz)
  * Modified by Chensong Zhang on 05/05/2013: Clean up param as well!
  * Modified by Hongxuan Zhang on 12/15/2015: free internal memory for Intel MKL PARDISO.
  */
-void fasp_amg_data_free (AMG_data *mgl,
-                         AMG_param *param)
+void fasp_amg_data_free (AMG_data   *mgl,
+                         AMG_param  *param)
 {
     const INT max_levels = MAX(1,mgl[0].num_levels);
 

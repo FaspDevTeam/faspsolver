@@ -34,17 +34,17 @@ static void dense_aAtxpby (INT, INT, REAL *, REAL, REAL *, REAL, REAL *);
  * \author Zheng Li
  * \date   12/23/2014
  */
-INT fasp_solver_dcsr_pgcr (dCSRmat *A,
-                           dvector *b,
-                           dvector *x,
-                           precond *pc,
-                           const REAL tol,
-                           const INT MaxIt,
-                           const SHORT restart,
-                           const SHORT stop_type,
-                           const SHORT prtlvl)
+INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
+                           dvector     *b,
+                           dvector     *x,
+                           precond     *pc,
+                           const REAL   tol,
+                           const INT    MaxIt,
+                           const SHORT  restart,
+                           const SHORT  stop_type,
+                           const SHORT  prtlvl)
 {
-    const INT   n         = b->row;
+    const INT   n = b->row;
     
     // local variables
     INT      iter = 0, rst = -1;
@@ -223,15 +223,15 @@ INT fasp_solver_dcsr_pgcr (dCSRmat *A,
  *
  * \warning Deprecated function. Remove it later!!! --Chensong
  */
-INT fasp_solver_dcsr_pgcr1 (dCSRmat *A,
-                            dvector *b,
-                            dvector *x,
-                            precond *pc,
-                            const REAL tol,
-                            const INT MaxIt,
-                            const SHORT restart,
-                            const SHORT stop_type,
-                            const SHORT prtlvl)
+INT fasp_solver_dcsr_pgcr1 (dCSRmat     *A,
+                            dvector     *b,
+                            dvector     *x,
+                            precond     *pc,
+                            const REAL   tol,
+                            const INT    MaxIt,
+                            const SHORT  restart,
+                            const SHORT  stop_type,
+                            const SHORT  prtlvl)
 {
     INT i, j;
     INT iter = 0;
@@ -435,12 +435,12 @@ FINISHED:
  *
  * \warning This is a special function. Move it to blas_smat.c if needed else where. 
  */
-static void dense_aAtxpby (INT n,
-                           INT m,
+static void dense_aAtxpby (INT   n,
+                           INT   m,
                            REAL *A,
-                           REAL alpha,
+                           REAL  alpha,
                            REAL *x,
-                           REAL beta,
+                           REAL  beta,
                            REAL *y)
 {
     INT i, j;

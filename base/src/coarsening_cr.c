@@ -39,11 +39,11 @@ static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, 
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */
-INT fasp_amg_coarsening_cr (const INT i_0,
-                            const INT i_n,
-                            dCSRmat *A, 
-                            ivector *vertices, 
-                            AMG_param *param)
+INT fasp_amg_coarsening_cr (const INT   i_0,
+                            const INT   i_n,
+                            dCSRmat    *A,
+                            ivector    *vertices,
+                            AMG_param  *param)
 {    
     const SHORT prtlvl = param->print_level;
     
@@ -206,7 +206,7 @@ INT fasp_amg_coarsening_cr (const INT i_0,
 /*---------------------------------*/
 
 /**
- * \fn static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack)
+ * \fn static INT GraphAdd (Link *list, INT *head, INT *tail, INT index, INT istack)
  * \brief graphadd
  * 
  * \param list
@@ -216,7 +216,11 @@ INT fasp_amg_coarsening_cr (const INT i_0,
  * \param istack
  *
  */
-static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack)
+static INT GraphAdd (Link  *list,
+                     INT   *head,
+                     INT   *tail,
+                     INT    index,
+                     INT    istack)
 {
     INT prev = tail[-istack];
     
@@ -232,7 +236,7 @@ static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack)
 }
 
 /**
- * \fn static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
+ * \fn static INT GraphRemove (Link *list, INT *head, INT *tail, INT index)
  * \brief GraphRemove
  * 
  * \param list
@@ -241,7 +245,10 @@ static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack)
  * \param index
  *
  */
-static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
+static INT GraphRemove (Link   *list,
+                        INT    *head,
+                        INT    *tail,
+                        INT     index)
 {
     INT prev = list[index].prev;
     INT next = list[index].next;
@@ -259,7 +266,8 @@ static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
 }
 
 /**
- * \fn static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, REAL *ma)
+ * \fn static INT indset (INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, 
+ *                        INT *cf, REAL *ma)
  * \brief finds independent set of the graph  
  *
  * \brief graphadd
@@ -277,7 +285,14 @@ static INT GraphRemove(Link *list, INT *head, INT *tail, INT index)
  * \date 10/14/2012
  *
  */
-static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, REAL *ma)
+static INT indset (INT   cand,
+                   INT   cpt,
+                   INT   fpt,
+                   INT  *ia,
+                   INT  *ja,
+                   INT   n,
+                   INT  *cf,
+                   REAL *ma)
 {
     /* ma: candidates >= 1, cpts = -1, otherwise = 0
      * Note: graph contains candidates only */

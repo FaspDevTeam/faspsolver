@@ -402,8 +402,8 @@ void fasp_blas_smat_inv_nc7 (REAL *a)
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_inv_nc (REAL *a,
-                            const INT n)
+void fasp_blas_smat_inv_nc (REAL      *a,
+                            const INT  n)
 {
     INT i,j,k,l,u,kn,in;
     REAL alinv;
@@ -469,8 +469,8 @@ void fasp_blas_smat_inv_nc (REAL *a,
  *
  * \note   This routine is based on gaussj() from "Numerical Recipies in C"!
  */
-void fasp_blas_smat_invp_nc (REAL *a,
-                             const INT n)
+void fasp_blas_smat_invp_nc (REAL      *a,
+                             const INT  n)
 {
     INT   i, j, k, l, ll, u;
     INT   icol, irow;
@@ -551,8 +551,8 @@ void fasp_blas_smat_invp_nc (REAL *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   04/21/2010
  */
-INT fasp_blas_smat_inv (REAL *a,
-                        const INT n)
+INT fasp_blas_smat_inv (REAL      *a,
+                        const INT  n)
 {
     switch (n) {
             
@@ -582,7 +582,7 @@ INT fasp_blas_smat_inv (REAL *a,
 }
 
 /**
- * \fn REAL fasp_blas_smat_Linfinity(REAL *A, const INT n )
+ * \fn REAL fasp_blas_smat_Linfinity (REAL *A, const INT n )
  *
  * \brief Compute the L infinity norm of A
  *
@@ -592,8 +592,8 @@ INT fasp_blas_smat_inv (REAL *a,
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-REAL fasp_blas_smat_Linfinity(REAL *A,
-                              const INT n)
+REAL fasp_blas_smat_Linfinity (REAL      *A,
+                               const INT  n)
 {
     
     REAL norm = 0.0;
@@ -725,9 +725,9 @@ void fasp_smat_identity_nc7 (REAL *a)
  * \author Xiaozhe Hu
  * \date   2010/12/25
  */
-void fasp_smat_identity (REAL *a,
-                         const INT n,
-                         const INT n2)
+void fasp_smat_identity (REAL      *a,
+                         const INT  n,
+                         const INT  n2)
 {
     memset(a, 0X0, n2*sizeof(REAL));
     

@@ -18,16 +18,16 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_bdcsr_free (block_dCSRmat *A)
+ * \fn void fasp_dblc_free (dBLCmat *A)
  *
  * \brief Free block CSR sparse matrix data memory space
  *
- * \param A   Pointer to the block_dCSRmat matrix
+ * \param A   Pointer to the dBLCmat matrix
  *
  * \author Xiaozhe Hu
  * \date   04/18/2014
  */
-void fasp_bdcsr_free (block_dCSRmat *A)
+void fasp_dblc_free (dBLCmat *A)
 {
     if (A == NULL) return; // Nothing need to be freed!
     
@@ -63,12 +63,12 @@ void fasp_bdcsr_free (block_dCSRmat *A)
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-SHORT fasp_dcsr_getblk (dCSRmat *A,
-                        INT *Is,
-                        INT *Js,
-                        const INT m,
-                        const INT n,
-                        dCSRmat *B)
+SHORT fasp_dcsr_getblk (dCSRmat    *A,
+                        INT        *Is,
+                        INT        *Js,
+                        const INT   m,
+                        const INT   n,
+                        dCSRmat    *B)
 {
     INT status = FASP_SUCCESS;
     
@@ -157,12 +157,12 @@ SHORT fasp_dcsr_getblk (dCSRmat *A,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-SHORT fasp_dbsr_getblk (dBSRmat *A,
-                        INT *Is,
-                        INT *Js,
-                        const INT m,
-                        const INT n,
-                        dBSRmat *B)
+SHORT fasp_dbsr_getblk (dBSRmat    *A,
+                        INT        *Is,
+                        INT        *Js,
+                        const INT   m,
+                        const INT   n,
+                        dBSRmat    *B)
 {
     INT status = FASP_SUCCESS;
     INT i,j,k,nnz=0;

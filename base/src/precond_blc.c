@@ -1,6 +1,8 @@
-/*! \file precond_bcsr.c
+/*! \file precond_blc.c
  *
- *  \brief Preconditioners for block_dCSRmat matrices
+ *  \brief Preconditioners for dBLCmat matrices
+ * 
+ *  \note  Need to be cleaned up. --Chensong
  */
 
 #include "fasp.h"
@@ -113,7 +115,7 @@ void fasp_precond_block_diag_3_amg (REAL *r,
 {
     
     precond_block_data *precdata=(precond_block_data *)data;
-    block_dCSRmat *A = precdata->Abcsr;
+    dBLCmat *A = precdata->Ablc;
     dvector *tempr = &(precdata->r);
     
     AMG_param *amgparam = precdata->amgparam;
@@ -274,7 +276,7 @@ void fasp_precond_block_lower_3 (REAL *r,
 {
     
     precond_block_data *precdata=(precond_block_data *)data;
-    block_dCSRmat *A = precdata->Abcsr;
+    dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
     void **LU_diag = precdata->LU_diag;
     
@@ -356,7 +358,7 @@ void fasp_precond_block_lower_3_amg (REAL *r,
 {
     
     precond_block_data *precdata=(precond_block_data *)data;
-    block_dCSRmat *A = precdata->Abcsr;
+    dBLCmat *A = precdata->Ablc;
     dvector *tempr = &(precdata->r);
     
     AMG_param *amgparam = precdata->amgparam;
@@ -430,7 +432,7 @@ void fasp_precond_block_lower_4 (REAL *r,
 {
     
     precond_block_data *precdata=(precond_block_data *)data;
-    block_dCSRmat *A = precdata->Abcsr;
+    dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
     void **LU_diag = precdata->LU_diag;
     
@@ -528,7 +530,7 @@ void fasp_precond_block_upper_3 (REAL *r,
 {
     
     precond_block_data *precdata=(precond_block_data *)data;
-    block_dCSRmat *A = precdata->Abcsr;
+    dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
     void **LU_diag = precdata->LU_diag;
     
@@ -605,12 +607,12 @@ void fasp_precond_block_upper_3 (REAL *r,
  * \date   02/19/2015
  */
 void fasp_precond_block_upper_3_amg (REAL *r,
-                                 REAL *z,
-                                 void *data)
+                                     REAL *z,
+                                     void *data)
 {
     
     precond_block_data *precdata=(precond_block_data *)data;
-    block_dCSRmat *A = precdata->Abcsr;
+    dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
     //void **LU_diag = precdata->LU_diag;
     
@@ -625,7 +627,7 @@ void fasp_precond_block_upper_3_amg (REAL *r,
     const INT N = N0 + N1 + N2;
     
     INT i;
-
+    
     // back up r, setup z;
     fasp_array_cp(N, r, tempr->val);
     fasp_array_set(N, z, 0.0);
@@ -686,12 +688,12 @@ void fasp_precond_block_upper_3_amg (REAL *r,
  * \date   02/19/2015
  */
 void fasp_precond_block_SGS_3 (REAL *r,
-                                 REAL *z,
-                                 void *data)
+                               REAL *z,
+                               void *data)
 {
     
     precond_block_data *precdata=(precond_block_data *)data;
-    block_dCSRmat *A = precdata->Abcsr;
+    dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
     void **LU_diag = precdata->LU_diag;
     
@@ -750,16 +752,14 @@ void fasp_precond_block_SGS_3 (REAL *r,
     fasp_solver_superlu(&A_diag[2], &r2, &z2, 0);
 #endif
     
-    
     // Preconditioning A22 block
-//#if  WITH_UMFPACK
-//    /* use UMFPACK direct solver */
-//    fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
-//#elif WITH_SuperLU
-//    /* use SuperLU direct solver on the coarsest level */
-//    fasp_solver_superlu(&A_diag[2], &r2, &z2, 0);
-//#endif
-
+    //#if  WITH_UMFPACK
+    //    /* use UMFPACK direct solver */
+    //    fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
+    //#elif WITH_SuperLU
+    //    /* use SuperLU direct solver on the coarsest level */
+    //    fasp_solver_superlu(&A_diag[2], &r2, &z2, 0);
+    //#endif
     
     // r1 = r1 - A5*z2
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[5], z2.val, r1.val);
@@ -804,12 +804,12 @@ void fasp_precond_block_SGS_3 (REAL *r,
  * \date   02/19/2015
  */
 void fasp_precond_block_SGS_3_amg (REAL *r,
-                               REAL *z,
-                               void *data)
+                                   REAL *z,
+                                   void *data)
 {
     
     precond_block_data *precdata=(precond_block_data *)data;
-    block_dCSRmat *A = precdata->Abcsr;
+    dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
     //void **LU_diag = precdata->LU_diag;
     
@@ -869,12 +869,12 @@ void fasp_precond_block_SGS_3_amg (REAL *r,
     
     // Preconditioning A22 block
     /*
-    mgl[2]->b.row=N2; fasp_array_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
-    mgl[2]->x.row=N2; fasp_dvec_set(N2, &mgl[2]->x,0.0);
-    
-    for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[2], amgparam);
-    fasp_array_cp(N2, mgl[2]->x.val, z2.val);
-    */
+     mgl[2]->b.row=N2; fasp_array_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
+     mgl[2]->x.row=N2; fasp_dvec_set(N2, &mgl[2]->x,0.0);
+     
+     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[2], amgparam);
+     fasp_array_cp(N2, mgl[2]->x.val, z2.val);
+     */
     
     // r1 = r1 - A5*z2
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[5], z2.val, r1.val);
@@ -921,8 +921,8 @@ void fasp_precond_sweeping (REAL *r,
     precond_sweeping_data *precdata=(precond_sweeping_data *)data;
     
     INT NumLayers = precdata->NumLayers;
-    block_dCSRmat *A = precdata->A;
-    block_dCSRmat *Ai = precdata->Ai;
+    dBLCmat *A = precdata->A;
+    dBLCmat *Ai = precdata->Ai;
     dCSRmat *local_A = precdata->local_A;
     ivector *local_index = precdata->local_index;
     void **local_LU = precdata->local_LU;

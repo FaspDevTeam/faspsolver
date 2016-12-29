@@ -45,8 +45,8 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl, AMG_param *param)
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle.
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
-SHORT fasp_amg_setup_sa (AMG_data *mgl,
-                         AMG_param *param)
+SHORT fasp_amg_setup_sa (AMG_data   *mgl,
+                         AMG_param  *param)
 {
     SHORT status  = FASP_SUCCESS;
 
@@ -82,8 +82,8 @@ SHORT fasp_amg_setup_sa (AMG_data *mgl,
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr *mgl,
-                             AMG_param *param)
+SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr   *mgl,
+                             AMG_param      *param)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -117,8 +117,8 @@ SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr *mgl,
  * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
  * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  */
-static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
-                                        AMG_param *param)
+static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
+                                        AMG_param  *param)
 {
     const SHORT prtlvl     = param->print_level;
     const SHORT cycle_type = param->cycle_type;
@@ -383,8 +383,8 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl,
  * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
  * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  */
-static SHORT amg_setup_smoothP_unsmoothR (AMG_data *mgl,
-                                          AMG_param *param)
+static SHORT amg_setup_smoothP_unsmoothR (AMG_data   *mgl,
+                                          AMG_param  *param)
 {
     const SHORT prtlvl     = param->print_level;
     const SHORT cycle_type = param->cycle_type;

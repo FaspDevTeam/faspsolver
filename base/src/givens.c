@@ -25,10 +25,10 @@
  * \author Xuehai Huang
  * \date   10/19/2008
  */
-void fasp_aux_givens (const REAL beta, 
-                      dCSRmat *H, 
-                      dvector *y, 
-                      REAL *tmp)
+void fasp_aux_givens (const REAL   beta,
+                      dCSRmat     *H,
+                      dvector     *y,
+                      REAL        *tmp)
 {
     const INT  Hsize=H->row;
     INT        i, j, istart, idiag, ip1start;

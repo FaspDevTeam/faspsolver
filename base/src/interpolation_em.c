@@ -46,10 +46,10 @@ static SHORT genintval(dCSRmat *, INT **, REAL **, INT, INT *, INT, INT, INT);
  * Modified by Chunsheng Feng, Zheng Li on 10/17/2012: add OMP support
  * Modified by Chensong Zhang on 05/14/2013: reconstruct the code
  */
-void fasp_amg_interp_em (dCSRmat *A,
-                         ivector *vertices,
-                         dCSRmat *P,
-                         AMG_param *param)
+void fasp_amg_interp_em (dCSRmat    *A,
+                         ivector    *vertices,
+                         dCSRmat    *P,
+                         AMG_param  *param)
 {
     INT    *vec = vertices->val;
     INT    *CoarseIndex = (INT *)fasp_mem_calloc(vertices->row, sizeof(INT));
@@ -100,9 +100,9 @@ void fasp_amg_interp_em (dCSRmat *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */
-static SHORT invden (INT nn,
-                     REAL *mat,
-                     REAL *invmat)
+static SHORT invden (INT    nn,
+                     REAL  *mat,
+                     REAL  *invmat)
 {
     INT    i,j;
     SHORT  status = FASP_SUCCESS;
@@ -166,13 +166,13 @@ static SHORT invden (INT nn,
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/17/2012
  */
-static SHORT get_block (dCSRmat *A,
-                        INT m,
-                        INT n,
-                        INT *rows,
-                        INT *cols,
-                        REAL *Aloc,
-                        INT *mask)
+static SHORT get_block (dCSRmat  *A,
+                        INT       m,
+                        INT       n,
+                        INT      *rows,
+                        INT      *cols,
+                        REAL     *Aloc,
+                        INT      *mask)
 {
     INT i, j, k, iloc;
     
@@ -182,13 +182,6 @@ static SHORT get_block (dCSRmat *A,
     INT nthreads = FASP_GET_NUM_THREADS();
 #endif
     
-#if 0
-    for ( i=0; i<m; ++i ) {
-        for ( j=0; j<n; ++j ) {
-            Aloc[i*n+j] = 0.0; // initialize Aloc
-        }
-    }
-#endif
     memset(Aloc, 0x0, sizeof(REAL)*m*n);
     
 #ifdef _OPENMP
@@ -242,11 +235,11 @@ static SHORT get_block (dCSRmat *A,
  * \author Xuehai Huang
  * \date   04/04/2010
  */
-static SHORT gentisquare_nomass (dCSRmat *A,
-                                 INT mm,
-                                 INT *Ii,
-                                 REAL *ima,
-                                 INT *mask)
+static SHORT gentisquare_nomass (dCSRmat  *A,
+                                 INT       mm,
+                                 INT      *Ii,
+                                 REAL     *ima,
+                                 INT      *mask)
 {
     SHORT status = FASP_SUCCESS;
     
@@ -278,12 +271,12 @@ static SHORT gentisquare_nomass (dCSRmat *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */
-static SHORT getinonefull (INT **mat,
-                           REAL **matval,
-                           INT *lengths,
-                           INT mm,
-                           INT *Ii,
-                           REAL *ima)
+static SHORT getinonefull (INT   **mat,
+                           REAL  **matval,
+                           INT    *lengths,
+                           INT     mm,
+                           INT    *Ii,
+                           REAL   *ima)
 {
     INT tniz,i,j;
     
@@ -335,9 +328,9 @@ static SHORT getinonefull (INT **mat,
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/17/2012
  */
-static SHORT orderone (INT **mat,
-                       REAL **matval,
-                       INT *lengths)
+static SHORT orderone (INT   **mat,
+                       REAL  **matval,
+                       INT    *lengths)
 //    lengths[0] for the number of rows
 //    lengths[1] for the number of cols
 //    lengths[2] for the number of nonzeros
@@ -388,7 +381,6 @@ static SHORT orderone (INT **mat,
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
     // all the nonzeros with same col and row are gathering together
-    
 #ifdef _OPENMP
 #pragma omp parallel for if(tniz>OPENMP_HOLDS)
 #endif
@@ -471,7 +463,6 @@ static SHORT orderone (INT **mat,
     return(status);
 }
 
-
 /**
  * \fn static SHORT genintval (dCSRmat *A, INT **itmat, REAL **itmatval, INT ittniz, INT *isol,
  *                             INT numiso, INT nf, INT nc)
@@ -503,16 +494,16 @@ static SHORT orderone (INT **mat,
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/17/2012
  */
-static SHORT genintval (dCSRmat *A,
-                        INT **itmat,
-                        REAL **itmatval,
-                        INT ittniz,
-                        INT *isol,
-                        INT numiso,
-                        INT nf,
-                        INT nc)
+static SHORT genintval (dCSRmat  *A,
+                        INT     **itmat,
+                        REAL    **itmatval,
+                        INT       ittniz,
+                        INT      *isol,
+                        INT       numiso,
+                        INT       nf,
+                        INT       nc)
 {
-    INT *Ii=NULL, *mask=NULL;
+    INT  *Ii=NULL, *mask=NULL;
     REAL *ima=NULL, *pex=NULL, **imas=NULL;
     INT **mat=NULL;
     REAL **matval;
@@ -718,8 +709,8 @@ static SHORT genintval (dCSRmat *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/17/2012
  */
-static SHORT getiteval (dCSRmat *A,
-                        dCSRmat *it)
+static SHORT getiteval (dCSRmat  *A,
+                        dCSRmat  *it)
 {
     INT nf,nc,ittniz;
     INT *itmat[2];
@@ -755,10 +746,6 @@ static SHORT getiteval (dCSRmat *A,
     for (i=0;i<nf;++i) {
         for (j=it->IA[i];j<it->IA[i+1];++j) itmat[0][j]=i;
     }
-#if 0
-    for (j=0;j<ittniz;++j) itmat[1][j]=it->JA[j];
-    for (j=0;j<ittniz;++j) itmatval[0][j]=it->val[j];
-#endif
     
 #ifdef _OPENMP
 #pragma omp parallel for if(ittniz>OPENMP_HOLDS)
