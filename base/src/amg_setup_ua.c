@@ -35,8 +35,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr(AMG_data_bsr *, AMG_param *);
  * \author Xiaozhe Hu
  * \date   12/28/2011
  */
-SHORT fasp_amg_setup_ua (AMG_data *mgl,
-                         AMG_param *param)
+SHORT fasp_amg_setup_ua (AMG_data   *mgl,
+                         AMG_param  *param)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -66,8 +66,8 @@ SHORT fasp_amg_setup_ua (AMG_data *mgl,
  * \author Xiaozhe Hu
  * \date   03/16/2012
  */
-SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
-                             AMG_param *param)
+SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr   *mgl,
+                             AMG_param      *param)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -106,8 +106,8 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr *mgl,
  * Modified by Zheng Li on 01/13/2015: adjust coarsening stop criterion.
  * Modified by Zheng Li on 03/22/2015: adjust coarsening ratio.
  */
-static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
-                                            AMG_param *param)
+static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
+                                            AMG_param  *param)
 {
     const SHORT prtlvl     = param->print_level;
     const SHORT cycle_type = param->cycle_type;
@@ -413,8 +413,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *mgl,
  *
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */
-static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *mgl,
-                                                AMG_param *param)
+static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
+                                                AMG_param      *param)
 {
     
     const SHORT prtlvl   = param->print_level;

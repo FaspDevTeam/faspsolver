@@ -1,6 +1,6 @@
-/*! \file blas_bcsr.c
+/*! \file blas_blc.c
  *
- *  \brief BLAS2 operations for block_dCSRmat matrices
+ *  \brief BLAS2 operations for dBLCmat matrices
  */
 
 #include <time.h>
@@ -14,23 +14,23 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_blas_bdcsr_aAxpy (const REAL alpha, block_dCSRmat *A,
- *                                 REAL *x, REAL *y)
+ * \fn void fasp_blas_dblc_aAxpy (const REAL alpha, dBLCmat *A,
+ *                                REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
  * \param alpha  REAL factor a
- * \param A      Pointer to block_dCSRmat matrix A
+ * \param A      Pointer to dBLCmat matrix A
  * \param x      Pointer to array x
  * \param y      Pointer to array y
  *
  * \author Xiaozhe Hu
  * \date   06/04/2010
  */
-void fasp_blas_bdcsr_aAxpy (const REAL alpha,
-                            block_dCSRmat *A,
-                            REAL *x,
-                            REAL *y)
+void fasp_blas_dblc_aAxpy (const REAL   alpha,
+                           dBLCmat     *A,
+                           REAL        *x,
+                           REAL        *y)
 {
     // information of A
     INT brow = A->brow;
@@ -141,20 +141,20 @@ void fasp_blas_bdcsr_aAxpy (const REAL alpha,
 }
 
 /**
- * \fn void fasp_blas_bdcsr_mxv (block_dCSRmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dblc_mxv (dBLCmat *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
- * \param A      Pointer to block_dCSRmat matrix A
+ * \param A      Pointer to dBLCmat matrix A
  * \param x      Pointer to array x
  * \param y      Pointer to array y
  *
  * \author Chensong Zhang
  * \date   04/27/2013
  */
-void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
-                          REAL *x,
-                          REAL *y)
+void fasp_blas_dblc_mxv (dBLCmat  *A,
+                         REAL     *x,
+                         REAL     *y)
 {
     // information of A
     INT brow = A->brow;
@@ -285,10 +285,10 @@ void fasp_blas_bdcsr_mxv (block_dCSRmat *A,
  * \author Xiaozhe Hu
  * \date   11/11/2010
  */
-void fasp_blas_bdbsr_aAxpy (const REAL alpha,
-                            block_BSR *A,
-                            REAL *x,
-                            REAL *y)
+void fasp_blas_bdbsr_aAxpy (const REAL  alpha,
+                            block_BSR  *A,
+                            REAL       *x,
+                            REAL       *y)
 {
     register dBSRmat *Arr = &(A->ResRes);
     register dCSRmat *Arw = &(A->ResWel);
@@ -323,9 +323,9 @@ void fasp_blas_bdbsr_aAxpy (const REAL alpha,
  * \author Xiaozhe Hu
  * \date   11/11/2010
  */
-void fasp_blas_bdbsr_mxv (block_BSR *A,
-                          REAL *x,
-                          REAL *y)
+void fasp_blas_bdbsr_mxv (block_BSR  *A,
+                          REAL       *x,
+                          REAL       *y)
 {
     register dBSRmat *Arr = &(A->ResRes);
     register dCSRmat *Arw = &(A->ResWel);

@@ -1048,8 +1048,8 @@ void fasp_precond_dbsr_nl_amli (REAL *r,
  * \date   05/26/2014
  */
 void fasp_precond_dbsr_amg_nk (REAL *r,
-                            REAL *z,
-                            void *data)
+                               REAL *z,
+                               void *data)
 {
     precond_data_bsr *predata=(precond_data_bsr *)data;
     const INT row=predata->mgl_data[0].A.ROW;

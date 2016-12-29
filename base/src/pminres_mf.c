@@ -86,14 +86,14 @@
  * Rewritten by Chensong Zhang on 05/01/2012
  * Modified by Feiteng Huang on 09/26/2012: matrix free
  */
-INT fasp_solver_pminres (mxv_matfree *mf,
-                         dvector *b,
-                         dvector *u,
-                         precond *pc,
-                         const REAL tol,
-                         const INT MaxIt,
-                         const SHORT stop_type,
-                         const SHORT prtlvl)
+INT fasp_solver_pminres (mxv_matfree  *mf,
+                         dvector      *b,
+                         dvector      *u,
+                         precond      *pc,
+                         const REAL    tol,
+                         const INT     MaxIt,
+                         const SHORT   stop_type,
+                         const SHORT   prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;

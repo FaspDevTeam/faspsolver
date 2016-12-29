@@ -25,9 +25,9 @@
  *
  * \date   2011/01/07
  */
-void fasp_blas_dcsrl_mxv (dCSRLmat *A, 
-                          REAL *x, 
-                          REAL *y)
+void fasp_blas_dcsrl_mxv (dCSRLmat   *A,
+                          REAL       *x,
+                          REAL       *y)
 {
     INT     dif      = A -> dif;
     INT    *nz_diff  = A -> nz_diff;

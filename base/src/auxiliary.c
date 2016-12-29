@@ -18,8 +18,8 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-void fasp_aux_sh00 (dCSRmat *X, 
-                    const INT ish)
+void fasp_aux_sh00 (dCSRmat    *X,
+                    const INT   ish)
 {
     const INT n=X->row, nnzX=X->nnz;
     INT i;
@@ -29,15 +29,15 @@ void fasp_aux_sh00 (dCSRmat *X,
     return;
 }    
 
-void fasp_aux_ijvcrs (INT *nnzi, 
-                      INT *ia, 
-                      INT *ja, 
-                      REAL *a, 
-                      INT *n,
-                      INT *nnz,
-                      INT *irow, 
-                      INT *jcol, 
-                      REAL *aval)
+void fasp_aux_ijvcrs (INT   *nnzi,
+                      INT   *ia,
+                      INT   *ja,
+                      REAL  *a,
+                      INT   *n,
+                      INT   *nnz,
+                      INT   *irow,
+                      INT   *jcol,
+                      REAL  *aval)
 {
     INT nnzo=0,ni=0,nj=0,k=0,nzk,n1,irk=0,ica=0,icb=0,iend=0,jp=0;
     /*   ---------------------------------------------------------------*/
@@ -117,9 +117,9 @@ void fasp_aux_uuplv0_ (REAL *u,
     return; 
 }
 
-void fasp_aux_rveci (FILE *inp, 
-                     INT *vec, 
-                     INT *nn)
+void fasp_aux_rveci (FILE  *inp,
+                     INT   *vec,
+                     INT   *nn)
 /* reads a vector of integers of size *nn from a file inp*/
 /* the file "inp" should be open for reading */
 {
@@ -133,9 +133,9 @@ void fasp_aux_rveci (FILE *inp,
     return;
 }
 
-void fasp_aux_rvecd (FILE *inp,
-                     REAL *vec, 
-                     INT *nn)
+void fasp_aux_rvecd (FILE  *inp,
+                     REAL  *vec,
+                     INT   *nn)
 /* reads a vector of REALS of size nn from a file inp*/
 {
     INT n;
@@ -147,9 +147,9 @@ void fasp_aux_rvecd (FILE *inp,
     return;
 }
 
-void fasp_aux_wveci (FILE *inp, 
-                     INT *vec, 
-                     INT *nn)
+void fasp_aux_wveci (FILE  *inp,
+                     INT   *vec,
+                     INT   *nn)
 /* writes a vector of integers of size nn from a file inp*/
 {
     
@@ -164,9 +164,9 @@ void fasp_aux_wveci (FILE *inp,
     return;
 }
 
-void fasp_aux_wvecd (FILE *inp,
-                     REAL *vec, 
-                     INT *nn)
+void fasp_aux_wvecd (FILE  *inp,
+                     REAL  *vec,
+                     INT   *nn)
 /* writes a vector of REALS of size nn from a file inp*/
 {
     INT n;
@@ -180,11 +180,11 @@ void fasp_aux_wvecd (FILE *inp,
     return;
 }
 
-void fasp_aux_norm1_ (INT *ia,
-                      INT *ja, 
-                      REAL *a, 
-                      INT *nn, 
-                      REAL *a1norm)
+void fasp_aux_norm1_ (INT   *ia,
+                      INT   *ja,
+                      REAL  *a,
+                      INT   *nn,
+                      REAL  *a1norm)
 {
     INT n,i,jk,iaa,iab;
     REAL sum,s;
@@ -204,13 +204,13 @@ void fasp_aux_norm1_ (INT *ia,
     *a1norm=s;
 }
 
-void fasp_aux_auv_ (INT *ia,
-                    INT *ja, 
-                    REAL *a, 
-                    REAL *u, 
-                    REAL *v,
-                    INT *nn, 
-                    REAL *aauv)
+void fasp_aux_auv_ (INT   *ia,
+                    INT   *ja,
+                    REAL  *a,
+                    REAL  *u,
+                    REAL  *v,
+                    INT   *nn,
+                    REAL  *aauv)
 {
     /* Calculation a(u,v)=(Au,v) */
     INT n,i,j,ij,iaa,iab;

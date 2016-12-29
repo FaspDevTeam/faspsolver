@@ -51,15 +51,15 @@
  * Modified by Chunsheng Feng on 07/22/2013: Add adaptive memory allocate
  * Modified by Chensong Zhang on 05/09/2015: Clean up for stopping types
  */
-INT fasp_solver_dcsr_pvfgmres (dCSRmat *A,
-                               dvector *b,
-                               dvector *x,
-                               precond *pc,
-                               const REAL tol,
-                               const INT MaxIt,
-                               const SHORT restart,
-                               const SHORT stop_type,
-                               const SHORT prtlvl)
+INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
+                               dvector      *b,
+                               dvector      *x,
+                               precond      *pc,
+                               const REAL    tol,
+                               const INT     MaxIt,
+                               const SHORT   restart,
+                               const SHORT   stop_type,
+                               const SHORT   prtlvl)
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;
@@ -379,15 +379,15 @@ FINISHED:
  * Modified by Chunsheng Feng on 07/22/2013: Add adaptive memory allocate
  * Modified by Chensong Zhang on 05/09/2015: Clean up for stopping types
  */
-INT fasp_solver_dbsr_pvfgmres (dBSRmat *A,
-                               dvector *b,
-                               dvector *x,
-                               precond *pc,
-                               const REAL tol,
-                               const INT MaxIt,
-                               const SHORT restart,
-                               const SHORT stop_type,
-                               const SHORT prtlvl)
+INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
+                               dvector      *b,
+                               dvector      *x,
+                               precond      *pc,
+                               const REAL    tol,
+                               const INT     MaxIt,
+                               const SHORT   restart,
+                               const SHORT   stop_type,
+                               const SHORT   prtlvl)
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;
@@ -680,10 +680,10 @@ FINISHED:
 }
 
 /*!
- * \fn INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A, dvector *b, dvector *x,
- *                                     precond *pc, const REAL tol, const INT MaxIt,
- *                                     const SHORT restart, const SHORT stop_type,
- *                                     const SHORT prtlvl)
+ * \fn INT fasp_solver_dblc_pvfgmres (dBLCmat *A, dvector *b, dvector *x,
+ *                                    precond *pc, const REAL tol, const INT MaxIt,
+ *                                    const SHORT restart, const SHORT stop_type,
+ *                                    const SHORT prtlvl)
  *
  * \brief Solve "Ax=b" using PFGMRES (right preconditioned) iterative method in which
  *        the restart parameter can be adaptively modified during the iteration and
@@ -709,15 +709,15 @@ FINISHED:
  * Modified by Chunsheng Feng on 07/22/2013: Add adaptive memory allocate
  * Modified by Chensong Zhang on 05/09/2015: Clean up for stopping types
  */
-INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
-                                dvector *b,
-                                dvector *x,
-                                precond *pc,
-                                const REAL tol,
-                                const INT MaxIt,
-                                const SHORT restart,
-                                const SHORT stop_type,
-                                const SHORT prtlvl)
+INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
+                               dvector     *b,
+                               dvector     *x,
+                               precond     *pc,
+                               const REAL   tol,
+                               const INT    MaxIt,
+                               const SHORT  restart,
+                               const SHORT  stop_type,
+                               const SHORT  prtlvl)
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;
@@ -789,7 +789,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
     
     /* initialization */
     fasp_array_cp(n, b->val, p[0]);
-    fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, p[0]);
+    fasp_blas_dblc_aAxpy(-1.0, A, x->val, p[0]);
     
     b_norm = fasp_blas_array_norm2(n, b->val);
     r_norm = fasp_blas_array_norm2(n, p[0]);
@@ -865,7 +865,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
             else
                 pc->fct(p[i-1], z[i-1], pc->data);
             
-            fasp_blas_bdcsr_mxv(A, z[i-1], p[i]);
+            fasp_blas_dblc_mxv(A, z[i-1], p[i]);
             
             /* modified Gram_Schmidt */
             for ( j = 0; j < i; j++ ) {
@@ -931,7 +931,7 @@ INT fasp_solver_bdcsr_pvfgmres (block_dCSRmat *A,
         
         if ( r_norm <= epsilon && iter >= min_iter ) {
             fasp_array_cp(n, b->val, r);
-            fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, r);
+            fasp_blas_dblc_aAxpy(-1.0, A, x->val, r);
             r_norm = fasp_blas_array_norm2(n, r);
             
             switch (stop_type) {

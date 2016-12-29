@@ -45,11 +45,11 @@
  *
  * Modified by Chunsheng Feng, Zheng Li on 06/29/2012
  */
-INT fasp_blas_dcsr_add (dCSRmat *A,
-                        const REAL alpha,
-                        dCSRmat *B,
-                        const REAL beta,
-                        dCSRmat *C)
+INT fasp_blas_dcsr_add (dCSRmat     *A,
+                        const REAL   alpha,
+                        dCSRmat     *B,
+                        const REAL   beta,
+                        dCSRmat     *C)
 {
     INT i,j,k,l;
     INT count=0, added, countrow;
@@ -198,8 +198,8 @@ FINISHED:
  *
  * Modified by Chunsheng Feng, Zheng Li on 06/29/2012
  */
-void fasp_blas_dcsr_axm (dCSRmat *A,
-                         const REAL alpha)
+void fasp_blas_dcsr_axm (dCSRmat     *A,
+                         const REAL   alpha)
 {
     const INT nnz=A->nnz;
     
@@ -222,9 +222,9 @@ void fasp_blas_dcsr_axm (dCSRmat *A,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
  *
  */
-void fasp_blas_dcsr_mxv (dCSRmat *A,
-                         REAL *x,
-                         REAL *y)
+void fasp_blas_dcsr_mxv (dCSRmat  *A,
+                         REAL     *x,
+                         REAL     *y)
 {
     const INT m=A->row;
     const INT *ia=A->IA, *ja=A->JA;
@@ -420,9 +420,9 @@ void fasp_blas_dcsr_mxv (dCSRmat *A,
  * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
 
-void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
-                             REAL *x,
-                             REAL *y)
+void fasp_blas_dcsr_mxv_agg (dCSRmat  *A,
+                             REAL     *x,
+                             REAL     *y)
 {
     const INT  m  = A->row;
     const INT *ia = A->IA, *ja = A->JA;
@@ -476,10 +476,10 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat *A,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
  */
-void fasp_blas_dcsr_aAxpy (const REAL alpha,
-                           dCSRmat *A,
-                           REAL *x,
-                           REAL *y)
+void fasp_blas_dcsr_aAxpy (const REAL   alpha,
+                           dCSRmat     *A,
+                           REAL        *x,
+                           REAL        *y)
 {
     const INT  m  = A->row;
     const INT *ia = A->IA, *ja = A->JA;
@@ -590,10 +590,10 @@ void fasp_blas_dcsr_aAxpy (const REAL alpha,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
-void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
-                               dCSRmat *A,
-                               REAL *x,
-                               REAL *y)
+void fasp_blas_dcsr_aAxpy_agg (const REAL   alpha,
+                               dCSRmat     *A,
+                               REAL        *x,
+                               REAL        *y)
 {
     const INT  m  = A->row;
     const INT *ia = A->IA, *ja = A->JA;
@@ -701,9 +701,9 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL alpha,
  * \author Chensong Zhang
  * \date   07/01/2009
  */
-REAL fasp_blas_dcsr_vmv (dCSRmat *A,
-                         REAL *x,
-                         REAL *y)
+REAL fasp_blas_dcsr_vmv (dCSRmat   *A,
+                         REAL      *x,
+                         REAL      *y)
 {
     register REAL value=0.0;
     const INT m=A->row;
@@ -756,9 +756,9 @@ REAL fasp_blas_dcsr_vmv (dCSRmat *A,
  *
  * \note This fct will be replaced! --Chensong
  */
-void fasp_blas_dcsr_mxm (dCSRmat *A,
-                         dCSRmat *B,
-                         dCSRmat *C)
+void fasp_blas_dcsr_mxm (dCSRmat   *A,
+                         dCSRmat   *B,
+                         dCSRmat   *C)
 {
     INT i,j,k,l,count;
     
@@ -863,10 +863,10 @@ void fasp_blas_dcsr_mxm (dCSRmat *A,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap (dCSRmat *R,
-                         dCSRmat *A,
-                         dCSRmat *P,
-                         dCSRmat *RAP)
+void fasp_blas_dcsr_rap (dCSRmat   *R,
+                         dCSRmat   *A,
+                         dCSRmat   *P,
+                         dCSRmat   *RAP)
 {
     INT n_coarse = R->row;
     INT *R_i = R->IA;
@@ -1145,10 +1145,10 @@ void fasp_blas_dcsr_rap (dCSRmat *R,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap_agg (dCSRmat *R,
-                             dCSRmat *A,
-                             dCSRmat *P,
-                             dCSRmat *RAP)
+void fasp_blas_dcsr_rap_agg (dCSRmat   *R,
+                             dCSRmat   *A,
+                             dCSRmat   *P,
+                             dCSRmat   *RAP)
 {
     INT n_coarse = R->row;
     INT *R_i = R->IA;
@@ -1410,10 +1410,10 @@ void fasp_blas_dcsr_rap_agg (dCSRmat *R,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap_agg1 (dCSRmat *R,
-                              dCSRmat *A,
-                              dCSRmat *P,
-                              dCSRmat *B)
+void fasp_blas_dcsr_rap_agg1 (dCSRmat   *R,
+                              dCSRmat   *A,
+                              dCSRmat   *P,
+                              dCSRmat   *B)
 {
     const INT row=R->row, col=P->col;
     INT nB=A->nnz;
@@ -1593,10 +1593,10 @@ void fasp_blas_dcsr_rap_agg1 (dCSRmat *R,
  *           ja_ltz[k] = ja_usual[k]+1,
  *            a_ltz[k] =  a_usual[k].
  */
-void fasp_blas_dcsr_ptap (dCSRmat *Pt,
-                          dCSRmat *A,
-                          dCSRmat *P,
-                          dCSRmat *Ac)
+void fasp_blas_dcsr_ptap (dCSRmat   *Pt,
+                          dCSRmat   *A,
+                          dCSRmat   *P,
+                          dCSRmat   *Ac)
 {
     const INT nc=Pt->row, n=Pt->col, nnzP=P->nnz, nnzA=A->nnz;
     INT i, maxrpout;
@@ -1695,11 +1695,11 @@ void fasp_blas_dcsr_ptap (dCSRmat *Pt,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap4 (dCSRmat *R,
-                          dCSRmat *A,
-                          dCSRmat *P,
-                          dCSRmat *B,
-                          INT *icor_ysk)
+void fasp_blas_dcsr_rap4 (dCSRmat   *R,
+                          dCSRmat   *A,
+                          dCSRmat   *P,
+                          dCSRmat   *B,
+                          INT       *icor_ysk)
 {
     INT nthreads = 1, use_openmp = FALSE;
     
@@ -1996,8 +1996,8 @@ void fasp_blas_dcsr_rap4 (dCSRmat *R,
  * \author Zheng Li
  * \date   03/22/2015
  */
-void fasp_blas_dcsr_bandwith (dCSRmat *A,
-                              INT     *bndwith)
+void fasp_blas_dcsr_bandwith (dCSRmat  *A,
+                              INT      *bndwith)
 {
     INT row = A->row;
     INT *ia = A->IA;

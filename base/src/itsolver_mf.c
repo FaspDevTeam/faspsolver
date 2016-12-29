@@ -16,7 +16,7 @@
 static void fasp_blas_mxv_csr (void *A, REAL *x, REAL *y);
 static void fasp_blas_mxv_bsr (void *A, REAL *x, REAL *y);
 static void fasp_blas_mxv_str (void *A, REAL *x, REAL *y);
-static void fasp_blas_mxv_bcsr (void *A, REAL *x, REAL *y);
+static void fasp_blas_mxv_blc (void *A, REAL *x, REAL *y);
 static void fasp_blas_mxv_bbsr (void *A, REAL *x, REAL *y);
 static void fasp_blas_mxv_csrl (void *A, REAL *x, REAL *y);
 
@@ -47,10 +47,10 @@ static void fasp_blas_mxv_csrl (void *A, REAL *x, REAL *y);
  *
  * Modified by Feiteng Huang on 09/19/2012: matrix free
  */
-INT fasp_solver_itsolver (mxv_matfree *mf, 
-                          dvector *b, 
-                          dvector *x, 
-                          precond *pc, 
+INT fasp_solver_itsolver (mxv_matfree    *mf,
+                          dvector        *b,
+                          dvector        *x,
+                          precond        *pc,
                           itsolver_param *itparam)
 {
     const SHORT prtlvl        = itparam->print_level;
@@ -147,9 +147,9 @@ INT fasp_solver_itsolver (mxv_matfree *mf,
  *
  * Modified by Feiteng Huang on 09/20/2012: matrix free
  */
-INT fasp_solver_krylov (mxv_matfree *mf, 
-                        dvector *b, 
-                        dvector *x, 
+INT fasp_solver_krylov (mxv_matfree    *mf,
+                        dvector        *b,
+                        dvector        *x,
                         itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
@@ -194,9 +194,9 @@ INT fasp_solver_krylov (mxv_matfree *mf,
  *
  * Modified by Chensong Zhang on 05/10/2013: Change interface of mat-free mv
  */
-void fasp_solver_itsolver_init (INT matrix_format,
+void fasp_solver_itsolver_init (INT          matrix_format,
                                 mxv_matfree *mf,
-                                void *A)
+                                void        *A)
 {
     switch ( matrix_format ) {
             
@@ -212,8 +212,8 @@ void fasp_solver_itsolver_init (INT matrix_format,
             mf->fct = fasp_blas_mxv_str;
             break;
             
-        case MAT_bCSR:
-            mf->fct = fasp_blas_mxv_bcsr;
+        case MAT_BLC:
+            mf->fct = fasp_blas_mxv_blc;
             break;
             
         case MAT_bBSR:
@@ -298,23 +298,23 @@ static void fasp_blas_mxv_str (void *A,
 }
 
 /**
- * \fn static void fasp_blas_mxv_bcsr (void *A, REAL *x, REAL *y)
+ * \fn static void fasp_blas_mxv_blc (void *A, REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
- * \param A               Pointer to bCSR matrix A
+ * \param A               Pointer to BLC matrix A
  * \param x               Pointer to array x
  * \param y               Pointer to array y
  *
  * \author Feiteng Huang
  * \date   09/19/2012
  */
-static void fasp_blas_mxv_bcsr (void *A,
-                                REAL *x,
-                                REAL *y)
+static void fasp_blas_mxv_blc (void *A,
+                               REAL *x,
+                               REAL *y)
 {
-    block_dCSRmat *a = (block_dCSRmat *)A;
-    fasp_blas_bdcsr_mxv(a, x, y);
+    dBLCmat *a = (dBLCmat *)A;
+    fasp_blas_dblc_mxv(a, x, y);
 }
 
 /**

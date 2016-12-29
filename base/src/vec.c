@@ -96,8 +96,8 @@ ivector fasp_ivec_create (const INT m)
  * \author Chensong Zhang 
  * \date   2010/04/06
  */
-void fasp_dvec_alloc (const INT m, 
-                      dvector *u)
+void fasp_dvec_alloc (const INT  m,
+                      dvector   *u)
 {    
     u->row = m;
     u->val = (REAL*)fasp_mem_calloc(m,sizeof(REAL)); 
@@ -116,8 +116,8 @@ void fasp_dvec_alloc (const INT m,
  * \author Chensong Zhang 
  * \date   2010/04/06
  */
-void fasp_ivec_alloc (const INT m, 
-                      ivector *u)
+void fasp_ivec_alloc (const INT  m,
+                      ivector   *u)
 {    
     
     u->row = m;
@@ -200,8 +200,8 @@ void fasp_dvec_null (dvector *x)
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-void fasp_dvec_rand (const INT n, 
-                     dvector *x)
+void fasp_dvec_rand (const INT  n,
+                     dvector   *x)
 {
     const INT va=(REAL) 0;
     const INT vb=(REAL) n;
@@ -232,9 +232,9 @@ void fasp_dvec_rand (const INT n,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
-void fasp_dvec_set (INT n, 
+void fasp_dvec_set (INT      n,
                     dvector *x, 
-                    REAL val) 
+                    REAL     val)
 {
     INT i;
     REAL *xpt=x->val;
@@ -301,8 +301,8 @@ void fasp_dvec_set (INT n,
  * Modified by Chunsheng Feng, Xiaoqiang Yue  
  * \date   05/23/2012    
  */
-void fasp_ivec_set (const INT m, 
-                    ivector *u)
+void fasp_ivec_set (const INT  m,
+                    ivector   *u)
 {    
         INT i;
         INT n = u->row;

@@ -35,15 +35,15 @@
  *
  * \note Gauss Seidel CR smoother (Smoother_Type = 99)
  */
-void fasp_smoother_dcsr_gscr (INT pt, 
-                              INT n,
+void fasp_smoother_dcsr_gscr (INT   pt,
+                              INT   n,
                               REAL *u,
-                              INT *ia,
-                              INT *ja, 
-                              REAL *a, 
+                              INT  *ia,
+                              INT  *ja,
+                              REAL *a,
                               REAL *b, 
-                              INT L, 
-                              INT *CF)
+                              INT   L,
+                              INT  *CF)
 { 
     INT i,j,k,l;
     REAL t, d=0;

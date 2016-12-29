@@ -30,26 +30,25 @@
  *  
  * \note It uses dCSRmat only. The functions called from here are in sparse_util.c
  */
-dCSRmat fasp_blas_dcsr_rap2 (INT *ir, 
-                             INT *jr, 
-                             REAL *r,
-                             INT *ia, 
-                             INT *ja, 
-                             REAL *a,        
-                             INT *ipt, 
-                             INT *jpt, 
-                             REAL *pt,    
-                             INT n, 
-                             INT nc,
-                             INT *maxrpout,
-                             INT *ipin, 
-                             INT *jpin) 
+dCSRmat fasp_blas_dcsr_rap2 (INT    *ir,
+                             INT    *jr,
+                             REAL   *r,
+                             INT    *ia,
+                             INT    *ja,
+                             REAL   *a,
+                             INT    *ipt,
+                             INT    *jpt,
+                             REAL   *pt,
+                             INT     n,
+                             INT     nc,
+                             INT    *maxrpout,
+                             INT    *ipin,
+                             INT    *jpin)
 {
     dCSRmat ac;
     INT n1,nc1,nnzp,maxrp;
     INT *ip=NULL,*jp=NULL;
     
-    /*=========================================================*/
     /* 
        if ipin is null, this
        means that we need to do the transpose of p here; otherwise,

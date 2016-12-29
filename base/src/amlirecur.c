@@ -42,9 +42,9 @@ static SHORT fasp_krylov_cycle_dcsr_pgcr(dCSRmat *, dvector *, dvector *, precon
  * Modified by Zheng Li on 11/10/2014: update direct solvers.
  * Modified by Hongxuan Zhang on 12/15/2015: update direct solvers.
  */
-void fasp_solver_amli (AMG_data *mgl,
-                       AMG_param *param,
-                       INT level)
+void fasp_solver_amli (AMG_data   *mgl,
+                       AMG_param  *param,
+                       INT         level)
 {
     const SHORT  amg_type=param->AMG_type;
     const SHORT  prtlvl = param->print_level;
@@ -266,10 +266,10 @@ void fasp_solver_amli (AMG_data *mgl,
  * Modified by Zheng Li on 11/10/2014: update direct solvers.
  * Modified by Hongxuan Zhang on 12/15/2015: update direct solvers.
  */
-void fasp_solver_nl_amli (AMG_data *mgl,
-                          AMG_param *param,
-                          INT level,
-                          INT num_levels)
+void fasp_solver_nl_amli (AMG_data   *mgl,
+                          AMG_param  *param,
+                          INT         level,
+                          INT         num_levels)
 {
     const SHORT  amg_type=param->AMG_type;
     const SHORT  prtlvl = param->print_level;
@@ -505,10 +505,10 @@ void fasp_solver_nl_amli (AMG_data *mgl,
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  * Modified by Hongxuan Zhang on 12/15/2015: update direct solvers.
  */
-void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
-                              AMG_param *param,
-                              INT level,
-                              INT num_levels)
+void fasp_solver_nl_amli_bsr (AMG_data_bsr   *mgl,
+                              AMG_param      *param,
+                              INT             level,
+                              INT             num_levels)
 {
     const SHORT  prtlvl = param->print_level;
     const SHORT  smoother = param->smoother;
@@ -703,10 +703,10 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl,
  * \author Xiaozhe Hu
  * \date   01/23/2011
  */
-void fasp_amg_amli_coef (const REAL lambda_max,
-                         const REAL lambda_min,
-                         const INT degree,
-                         REAL *coef)
+void fasp_amg_amli_coef (const REAL  lambda_max,
+                         const REAL  lambda_min,
+                         const INT   degree,
+                         REAL       *coef)
 {
     const REAL mu0 = 1.0/lambda_max, mu1 = 1.0/lambda_min;
     const REAL c = (sqrt(mu0)+sqrt(mu1))*(sqrt(mu0)+sqrt(mu1));
@@ -781,10 +781,10 @@ void fasp_amg_amli_coef (const REAL lambda_max,
  *
  * \note   Specified for unsmoothed aggregation cycle
  */
-static SHORT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
-                                          dvector *b,
-                                          dvector *u,
-                                          precond *pc)
+static SHORT fasp_krylov_cycle_dcsr_pgcg (dCSRmat   *A,
+                                          dvector   *b,
+                                          dvector   *u,
+                                          precond   *pc)
 {
     REAL   absres, relres, normb;
     REAL   alpha1, alpha2, gamma1, gamma2, rho1, rho2, beta1, beta2, beta3, beta4;
@@ -884,10 +884,10 @@ static SHORT fasp_krylov_cycle_dcsr_pgcg (dCSRmat *A,
  *
  * \note   Specified for unsmoothed aggregation cycle.
  */
-static SHORT fasp_krylov_cycle_dcsr_pgcr (dCSRmat *A,
-                                          dvector *b,
-                                          dvector *u,
-                                          precond *pc)
+static SHORT fasp_krylov_cycle_dcsr_pgcr (dCSRmat   *A,
+                                          dvector   *b,
+                                          dvector   *u,
+                                          precond   *pc)
 {
     REAL   absres = BIGREAL;
     REAL   relres  = BIGREAL, normb  = BIGREAL;

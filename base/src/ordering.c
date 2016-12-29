@@ -9,6 +9,7 @@
 static void dSwapping(REAL *w, const INT i, const INT j);
 static void iSwapping(INT *w, const INT i, const INT j);
 static void CMK_ordering (const dCSRmat *, INT, INT, INT, INT, INT *, INT *);
+static void multicoloring (AMG_data *, REAL, INT *, INT *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -28,9 +29,9 @@ static void CMK_ordering (const dCSRmat *, INT, INT, INT, INT, INT *, INT *);
  * \author Chunsheng Feng
  * \date   03/01/2011
  */
-INT fasp_BinarySearch (INT *list,
-                       const INT value,
-                       const INT nlist)
+INT fasp_BinarySearch (INT       *list,
+                       const INT  value,
+                       const INT  nlist)
 {
     INT not_found = 1;
     INT low, high, m;
@@ -73,8 +74,8 @@ INT fasp_BinarySearch (INT *list,
  *
  * \note Operation is in place. Does not use any extra or temporary storage.
  */
-INT fasp_aux_unique (INT numbers[],
-                     const INT size)
+INT fasp_aux_unique (INT        numbers[],
+                     const INT  size)
 {
     INT i, newsize;
     
@@ -200,8 +201,8 @@ void fasp_aux_msort (INT numbers[],
  *        where n is the length of 'a'.
  */
 void fasp_aux_iQuickSort (INT *a,
-                          INT left,
-                          INT right)
+                          INT  left,
+                          INT  right)
 {
     INT i, last;
     
@@ -238,8 +239,8 @@ void fasp_aux_iQuickSort (INT *a,
  *        where n is the length of 'a'.
  */
 void fasp_aux_dQuickSort (REAL *a,
-                          INT left,
-                          INT right)
+                          INT  left,
+                          INT  right)
 {
     INT i, last;
     
@@ -278,8 +279,8 @@ void fasp_aux_dQuickSort (REAL *a,
  *       same length as 'a'.
  */
 void fasp_aux_iQuickSortIndex (INT *a,
-                               INT left,
-                               INT right,
+                               INT  left,
+                               INT  right,
                                INT *index)
 {
     INT i, last;
@@ -319,9 +320,9 @@ void fasp_aux_iQuickSortIndex (INT *a,
  *       same length as 'a'.
  */
 void fasp_aux_dQuickSortIndex (REAL *a,
-                               INT left,
-                               INT right,
-                               INT *index)
+                               INT   left,
+                               INT   right,
+                               INT  *index)
 {
     INT i, last;
     
@@ -355,8 +356,8 @@ void fasp_aux_dQuickSortIndex (REAL *a,
  * \date   05/28/2014
  */
 void fasp_dcsr_CMK_order (const dCSRmat *A,
-                          INT *order,
-                          INT *oindex)
+                          INT           *order,
+                          INT           *oindex)
 {
     const INT *ia = A->IA;
     const INT row= A->row;
@@ -404,9 +405,9 @@ void fasp_dcsr_CMK_order (const dCSRmat *A,
  * \date   10/10/2014
  */
 void fasp_dcsr_RCMK_order (const dCSRmat *A,
-                           INT *order,
-                           INT *oindex,
-                           INT *rorder)
+                           INT           *order,
+                           INT           *oindex,
+                           INT           *rorder)
 {
     INT i;
     INT row = A->row;
@@ -416,6 +417,123 @@ void fasp_dcsr_RCMK_order (const dCSRmat *A,
     
     // Reverse CMK order
     for (i=0; i<row; ++i) rorder[i] = order[row-1-i];
+}
+
+/**
+ * \fn void fasp_topological_sorting_ilu(ILU_data *iludata)
+ *
+ * \brief Reordering vertices according to level schedule strategy
+ *
+ * \param iludata  Pointer to iludata
+ *
+ * \author Zheng Li, Chensong Zhang
+ * \date   12/04/2016
+ */
+void fasp_topological_sorting_ilu (ILU_data *iludata)
+{
+    int i, j, k, l;
+    int nlevL, nlevU;
+    
+    int n = iludata->row;
+    int *ijlu = iludata->ijlu;
+    
+    int *level = (int*)fasp_mem_calloc(n, sizeof(int));
+    int *jlevL = (int*)fasp_mem_calloc(n, sizeof(int));
+    int *ilevL = (int*)fasp_mem_calloc(n+1, sizeof(int));
+    
+    nlevL = 0;
+    ilevL[0] = 0;
+    
+    // form level for each row of lower trianguler matrix.
+    for (i=0; i<n; i++) {
+        l = 0;
+        for(j=ijlu[i]; j<ijlu[i+1]; j++) if (ijlu[j]<=i) l = MAX(l, level[ijlu[j]]);
+        level[i] = l+1;
+        ilevL[l+1] ++;
+        nlevL = MAX(nlevL, l+1);
+    }
+    
+    for (i=1; i<=nlevL; i++) ilevL[i] += ilevL[i-1];
+    
+    for (i=0; i<n; i++) {
+        k = ilevL[level[i]-1];
+        jlevL[k] = i;
+        ilevL[level[i]-1]++;
+    }
+    
+    for (i=nlevL-1; i>0; i--) ilevL[i] = ilevL[i-1];
+    
+    // form level for each row of upper trianguler matrix.
+    nlevU = 0;
+    ilevL[0] = 0;
+    
+    int *jlevU = (int*)fasp_mem_calloc(n, sizeof(int));
+    int *ilevU = (int*)fasp_mem_calloc(n+1, sizeof(int));
+    
+    for (i=0; i<n; i++) level[i] = 0;
+    
+    ilevU[0] = 0;
+    
+    for (i=n-1; i>=0; i--) {
+        l = 0;
+        for (j=ijlu[i]; j<ijlu[i+1]; j++) if (ijlu[j]>=i) l = MAX(l, level[ijlu[j]]);
+        level[i] = l+1;
+        ilevU[l+1] ++;
+        nlevU = MAX(nlevU, l+1);
+    }
+    
+    for (i=1; i<=nlevU; i++) ilevU[i] += ilevU[i-1];
+    
+    for (i=n-1; i>=0; i--) {
+        k = ilevU[level[i]-1];
+        jlevU[k] = i;
+        ilevU[level[i]-1]++;
+    }
+    
+    for (i=nlevU-1; i>0; i--) ilevU[i] = ilevU[i-1];
+    
+    ilevU[0] = 0;
+    
+    iludata->nlevL = nlevL+1; iludata->ilevL = ilevL;iludata->jlevL = jlevL;
+    iludata->nlevU = nlevU+1; iludata->ilevU = ilevU;iludata->jlevU = jlevU;
+    
+    fasp_mem_free(level);
+}
+
+/**
+ * \fn void fasp_multicolors_independent_set (AMG_data *mgl, INT gslvl)
+ *
+ * \brief Coloring vertices of adjacency graph of A
+ *
+ * \param mgl      Pointer to input matrix
+ * \param gslvl    Used to specify levels of AMG using multicolor smoothing
+ *
+ * \author Zheng Li, Chunsheng Feng
+ * \date   12/04/2016
+ */
+void fasp_multicolors_independent_set (AMG_data *mgl,
+                                       INT       gslvl)
+{
+    
+    INT i, Colors, rowmax, level, prtlvl = 0;
+    
+    REAL theta = 0.00;
+    
+    INT maxlvl = MIN(gslvl, mgl->num_levels-1);
+    
+#ifdef _OPENMP
+#pragma omp parallel for private(level,rowmax,Colors) schedule(static, 1)
+#endif
+    for (level=0; level<maxlvl; level++) {
+        
+        multicoloring(&mgl[level], theta, &rowmax, &Colors);
+        
+        // print
+        if (prtlvl > 1)
+            printf("mgl[%3d].A.row = %12d rowmax = %5d rowavg = %7.2lf colors = %5d Theta = %le\n",
+                   level, mgl[level].A.row, rowmax, (double)mgl[level].A.nnz/mgl[level].A.row,
+                   mgl[level].colors, theta);
+    }
 }
 
 /*---------------------------------*/
@@ -434,9 +552,9 @@ void fasp_dcsr_RCMK_order (const dCSRmat *A,
  * \author Zhiyang Zhou
  * \date   2009/11/28
  */
-static void iSwapping (INT *w,
-                       const INT i,
-                       const INT j)
+static void iSwapping (INT       *w,
+                       const INT  i,
+                       const INT  j)
 {
     INT temp = w[i];
     w[i] = w[j];
@@ -455,9 +573,9 @@ static void iSwapping (INT *w,
  * \author Zhiyang Zhou
  * \date   2009/11/28
  */
-static void dSwapping (REAL *w,
-                       const INT i,
-                       const INT j)
+static void dSwapping (REAL      *w,
+                       const INT  i,
+                       const INT  j)
 {
     REAL temp = w[i];
     w[i] = w[j];
@@ -482,12 +600,12 @@ static void dSwapping (REAL *w,
  * \date   05/28/2014
  */
 static void CMK_ordering (const dCSRmat *A,
-                          INT loc,
-                          INT s,
-                          INT jj,
-                          INT mindg,
-                          INT *oindex,
-                          INT *order)
+                          INT            loc,
+                          INT            s,
+                          INT            jj,
+                          INT            mindg,
+                          INT           *oindex,
+                          INT           *order)
 {
     const INT *ia = A->IA;
     const INT *ja = A->JA;
@@ -553,104 +671,20 @@ static void CMK_ordering (const dCSRmat *A,
 }
 
 /**
- * \fn void fasp_topological_sorting_ilu(ILU_data *iludata) 
- *                          
- * \brief Reordering vertices according to level schedule strategy
- *
- * \param iludata  Pointer to iludata
- *
- * \author Zheng Li, Chensong Zhang
- * \date   12/04/2016
- */
-void fasp_topological_sorting_ilu(ILU_data *iludata) 
-{
-  int i, j, k, l;
-  int nlevL, nlevU;
-
-  int n = iludata->row;
-  int *ijlu = iludata->ijlu;
-
-  int *level = (int*)fasp_mem_calloc(n, sizeof(int));
-  int *jlevL = (int*)fasp_mem_calloc(n, sizeof(int));
-  int *ilevL = (int*)fasp_mem_calloc(n+1, sizeof(int));
-
-  nlevL = 0;
-  ilevL[0] = 0;
-
-  // form level for each row of lower trianguler matrix.
-  for (i=0; i<n; i++) {
-    l = 0;
-    for(j=ijlu[i]; j<ijlu[i+1]; j++) if (ijlu[j]<=i) l = MAX(l, level[ijlu[j]]);
-    level[i] = l+1;
-    ilevL[l+1] ++;
-    nlevL = MAX(nlevL, l+1);
-  }
-
-  for (i=1; i<=nlevL; i++) ilevL[i] += ilevL[i-1];
-
-  for (i=0; i<n; i++) {
-    k = ilevL[level[i]-1];
-    jlevL[k] = i;
-    ilevL[level[i]-1]++;
-  }
-
-  for (i=nlevL-1; i>0; i--) ilevL[i] = ilevL[i-1];
-
-  // form level for each row of upper trianguler matrix.
-  nlevU = 0;
-  ilevL[0] = 0;
-
-  int *jlevU = (int*)fasp_mem_calloc(n, sizeof(int));
-  int *ilevU = (int*)fasp_mem_calloc(n+1, sizeof(int));
-
-  for (i=0; i<n; i++) level[i] = 0;
-  
-  ilevU[0] = 0;
-
-  for (i=n-1; i>=0; i--) {
-    l = 0;
-    for (j=ijlu[i]; j<ijlu[i+1]; j++) if (ijlu[j]>=i) l = MAX(l, level[ijlu[j]]);
-    level[i] = l+1;
-    ilevU[l+1] ++;
-    nlevU = MAX(nlevU, l+1);
-  }
-
-  for (i=1; i<=nlevU; i++) ilevU[i] += ilevU[i-1];
-
-  for (i=n-1; i>=0; i--) {
-    k = ilevU[level[i]-1];
-    jlevU[k] = i;
-    ilevU[level[i]-1]++;
-  }
-
-  for (i=nlevU-1; i>0; i--) ilevU[i] = ilevU[i-1];
-
-  ilevU[0] = 0;
-
-  iludata->nlevL = nlevL+1; iludata->ilevL = ilevL;iludata->jlevL = jlevL;
-  iludata->nlevU = nlevU+1; iludata->ilevU = ilevU;iludata->jlevU = jlevU;
-
-  fasp_mem_free(level);
-}
-
-#include "fasp.h"
-#include "fasp_functs.h"
-
-/**
  * \fn void generate_S_theta (dCSRmat *A, iCSRmat *S, REAL theta)
  *
  * \brief Generate strong sparsity pattern of A
  *
  * \param A      Pointer to input matrix
- * \param S      Pointer to strong sparsity pattern matrix 
+ * \param S      Pointer to strong sparsity pattern matrix
  * \param theta  Threshold
  *
  * \author Zheng Li, Chunsheng Feng
  * \date   12/04/2016
  */
-static void generate_S_theta (dCSRmat *A, 
-                              iCSRmat *S, 
-                              REAL theta)
+static void generate_S_theta (dCSRmat *A,
+                              iCSRmat *S,
+                              REAL     theta)
 {
     const INT row=A->row, col=A->col;
     const INT row_plus_one = row+1;
@@ -659,13 +693,13 @@ static void generate_S_theta (dCSRmat *A,
     INT index, i, j, begin_row, end_row;
     INT *ia=A->IA, *ja=A->JA;
     REAL *aj=A->val;
-
+    
     // get the diagnal entry of A
     //dvector diag; fasp_dcsr_getdiag(0, A, &diag);
     
     /* generate S */
-    REAL row_abs_sum;     
-
+    REAL row_abs_sum;
+    
     // copy the structure of A to S
     S->row=row; S->col=col; S->nnz=nnz; S->val=NULL;
     
@@ -679,21 +713,21 @@ static void generate_S_theta (dCSRmat *A,
     for (i=0;i<row;++i) {
         /* compute scaling factor and row sum */
         row_abs_sum=0;
-            
+        
         begin_row=ia[i]; end_row=ia[i+1];
-
+        
         for (j=begin_row;j<end_row;j++) row_abs_sum+=ABS(aj[j]);
-            
-	    row_abs_sum = row_abs_sum*theta;
-
+        
+        row_abs_sum = row_abs_sum*theta;
+        
         /* deal with the diagonal element of S */
         //  for (j=begin_row;j<end_row;j++) {
         //     if (ja[j]==i) {S->JA[j]=-1; break;}
         //  }
-            
+        
         /* deal with  the element of S */
         for (j=begin_row;j<end_row;j++){
-        /* if $\sum_{j=1}^n |a_{ij}|*theta>= |a_{ij}|$ */   
+            /* if $\sum_{j=1}^n |a_{ij}|*theta>= |a_{ij}|$ */
             if ( (row_abs_sum >= ABS(aj[j])) && (ja[j] !=i) ) S->JA[j]=-1;
         }
     } // end for i
@@ -722,24 +756,23 @@ static void generate_S_theta (dCSRmat *A,
     }
 }
 
-
 /**
- * \fn void multicoloring(AMG_data *mgl, REAL theta, INT *rowmax, INT *groups)
+ * \fn void multicoloring (AMG_data *mgl, REAL theta, INT *rowmax, INT *groups)
  *
  * \brief Coloring vertices of adjacency graph of A
  *
  * \param mgl      Pointer to input matrix
  * \param theta    Threshold
- * \param rowmax   Pointer to number of each color  
+ * \param rowmax   Pointer to number of each color
  * \param groups   Pointer to index array
  *
  * \author Zheng Li, Chunsheng Feng
  * \date   12/04/2016
  */
-static void multicoloring(AMG_data *mgl,
-                          REAL     theta,
-                          INT      *rowmax,
-                          INT      *groups)
+static void multicoloring (AMG_data *mgl,
+                           REAL      theta,
+                           INT      *rowmax,
+                           INT      *groups)
 {
     INT k,i,j,pre,group;
     INT igold,iend,iavg;
@@ -748,38 +781,37 @@ static void multicoloring(AMG_data *mgl,
     dCSRmat A = mgl->A;
     INT n = A.row;
     iCSRmat S;
-
+    
     INT *IA,*JA;
-
+    
     if (theta > 0 && theta < 1.0) {
-       generate_S_theta(&A, &S, theta);
-       IA = S.IA;
-       JA = S.JA;
+        generate_S_theta(&A, &S, theta);
+        IA = S.IA;
+        JA = S.JA;
     } else if (theta == 1.0 ) {
-
-     mgl->ic = (INT*)malloc(sizeof(INT)*2);
-     mgl->icmap = (INT *)malloc(sizeof(INT)*(n+1));
-     mgl->ic[0] = 0;
-     mgl->ic[1] = n;
-     for(k=0; k<n; k++)  mgl->icmap[k]= k;
-
-     mgl->colors = 1;
-     *groups = 1;
-     *rowmax = 1;
-
-     printf( "Theta = %lf \n",theta );
-
-     return;
-
-     } else{
+        
+        mgl->ic = (INT*)malloc(sizeof(INT)*2);
+        mgl->icmap = (INT *)malloc(sizeof(INT)*(n+1));
+        mgl->ic[0] = 0;
+        mgl->ic[1] = n;
+        for(k=0; k<n; k++)  mgl->icmap[k]= k;
+        
+        mgl->colors = 1;
+        *groups = 1;
+        *rowmax = 1;
+        
+        printf("### WARNING: Theta = %lf \n", theta);
+        
+        return;
+        
+    } else{
         IA = A.IA;
         JA = A.JA;
-     }
-
+    }
+    
     INT *cq = (INT *)malloc(sizeof(INT)*(n+1));
     INT *newr = (INT *)malloc(sizeof(INT)*(n+1));
-
-  
+    
 #ifdef _OPENMP
 #pragma omp parallel for private(k)
 #endif
@@ -791,50 +823,50 @@ static void multicoloring(AMG_data *mgl,
         if ((A.IA[k+1] - A.IA[k]) > group ) group = A.IA[k+1] - A.IA[k];
     }
     *rowmax = group;
-
+    
 #if 0
-    iavg = IA[n]/n ;	
+    iavg = IA[n]/n ;
     igold = (INT)MAX(iavg,group*0.618) +1;
     igold = group ;
-#endif	
-
+#endif
+    
     mgl->ic = (INT *)malloc(sizeof(INT)*(group+2));
     mgl->icmap = (INT *)malloc(sizeof(INT)*(n+1));
-	
-    front = n-1;     
+    
+    front = n-1;
     rear = n-1;
-
+    
     memset(newr, -1, sizeof(INT)*(n+1));
     memset(mgl->icmap, 0, sizeof(INT)*n);
-
+    
     group=0;
     icount = 0;
-    mgl->ic[0] = 0; 
+    mgl->ic[0] = 0;
     pre=0;
-   
-    do{
+    
+    do {
         //front = (front+1)%n;
         front ++;
-        if (front == n ) front =0; // front = front < n ? front : 0 ; 
+        if (front == n ) front =0; // front = front < n ? front : 0 ;
         i = cq[front];
-
+        
         if(i <= pre) {
-            mgl->ic[group] = icount; 
+            mgl->ic[group] = icount;
             mgl->icmap[icount] = i;
-            group++; 
+            group++;
             icount++;
 #if 0
-            if ((IA[i+1]-IA[i]) > igold) 
+            if ((IA[i+1]-IA[i]) > igold)
                 iend = MIN(IA[i+1], (IA[i] + igold));
-	        else
+            else
 #endif
-            iend = IA[i+1];
+                iend = IA[i+1];
             
             for(j= IA[i]; j< iend; j++)  newr[JA[j]] = group;
         }
-        else if (newr[i] == group) { 
+        else if (newr[i] == group) {
             //rear = (rear +1)%n;
-            rear ++;  
+            rear ++;
             if (rear == n) rear = 0;
             cq[rear] = i;
         }
@@ -844,69 +876,28 @@ static void multicoloring(AMG_data *mgl,
 #if  0
             if ((IA[i+1] - IA[i]) > igold)  iend =MIN(IA[i+1], (IA[i] + igold));
             else
-#endif 
-            iend = IA[i+1];
+#endif
+                iend = IA[i+1];
             for(j = IA[i]; j< iend; j++)  newr[JA[j]] =  group;
         }
         pre=i;
-		
+        
     } while(rear != front);
-
-    mgl->ic[group] = icount;  
+    
+    mgl->ic[group] = icount;
     mgl->colors = group;
     *groups = group;
-
-    // print coloring infos
-    //for(i=0; i < group; i++ ){
-    //    printf( "A.color = %d A.row= %d %d\n", group, A.row, mgl->ic[i+1] - mgl->ic[i]);
-    //}
-
+    
     free(cq);
     free(newr);
-
+    
     if (theta >0 ){
-       fasp_mem_free(S.IA);
-       fasp_mem_free(S.JA);
+        fasp_mem_free(S.IA);
+        fasp_mem_free(S.JA);
     }
-
+    
     return;
 }
-
-/**
- * \fn void multicolors_independent_set(AMG_data *mgl, INT gslvl)
- *
- * \brief Coloring vertices of adjacency graph of A
- *
- * \param mgl      Pointer to input matrix
- * \param gslvl    Used to specify levels of AMG using multicolor smoothing
- *
- * \author Zheng Li, Chunsheng Feng
- * \date   12/04/2016
- */
-void fasp_multicolors_independent_set(AMG_data *mgl, INT gslvl)
-{
-
-    INT i, Colors, rowmax, level, prtlvl = 0;
-    
-    REAL theta = 0.00;
-    
-    INT maxlvl = MIN(gslvl, mgl->num_levels-1);
-    
-#ifdef _OPENMP
-#pragma omp parallel for private(level,rowmax,Colors) schedule(static, 1)
-#endif
-    for (level=0; level<maxlvl; level++) {
-      
-       multicoloring(&mgl[level], theta, &rowmax, &Colors);
-       
-       // print 
-       if (prtlvl > 1)
-           printf("mgl[%3d].A.row = %12d rowmax = %5d rowavg = %7.2lf colors = %5d Theta = %le\n",
-           level, mgl[level].A.row, rowmax, (double)mgl[level].A.nnz/mgl[level].A.row,
-           mgl[level].colors, theta);
-    }
-}
-
 
 /*---------------------------------*/
 /*--        End of File          --*/

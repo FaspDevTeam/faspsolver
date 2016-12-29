@@ -307,7 +307,7 @@
     <ClCompile Include="..\..\base\src\array.c" />
     <ClCompile Include="..\..\base\src\auxiliary.c" />
     <ClCompile Include="..\..\base\src\blas_array.c" />
-    <ClCompile Include="..\..\base\src\blas_bcsr.c" />
+    <ClCompile Include="..\..\base\src\blas_blc.c" />
     <ClCompile Include="..\..\base\src\blas_bsr.c" />
     <ClCompile Include="..\..\base\src\blas_csr.c" />
     <ClCompile Include="..\..\base\src\blas_csrl.c" />
@@ -337,7 +337,7 @@
     <ClCompile Include="..\..\base\src\interpolation.c" />
     <ClCompile Include="..\..\base\src\interpolation_em.c" />
     <ClCompile Include="..\..\base\src\io.c" />
-    <ClCompile Include="..\..\base\src\itsolver_bcsr.c" />
+    <ClCompile Include="..\..\base\src\itsolver_blc.c" />
     <ClCompile Include="..\..\base\src\itsolver_bsr.c" />
     <ClCompile Include="..\..\base\src\itsolver_csr.c" />
     <ClCompile Include="..\..\base\src\itsolver_mf.c" />
@@ -360,7 +360,7 @@
     <ClCompile Include="..\..\base\src\pgmres_mf.c" />
     <ClCompile Include="..\..\base\src\pminres.c" />
     <ClCompile Include="..\..\base\src\pminres_mf.c" />
-    <ClCompile Include="..\..\base\src\precond_bcsr.c" />
+    <ClCompile Include="..\..\base\src\precond_blc.c" />
     <ClCompile Include="..\..\base\src\precond_bsr.c" />
     <ClCompile Include="..\..\base\src\precond_csr.c" />
     <ClCompile Include="..\..\base\src\precond_str.c" />

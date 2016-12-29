@@ -1,4 +1,4 @@
-/*! \file Schwarz_setup.c
+/*! \file schwarz_setup.c
  *
  *  \brief Setup phase for the Schwarz methods
  */
@@ -8,7 +8,6 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-///#include "forts_ns.h"
 #include "mg_util.inl"
 
 static void Schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
@@ -33,10 +32,10 @@ static void Schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
  * \date   2014/09/29
  */
 void fasp_Schwarz_get_block_matrix (Schwarz_data *Schwarz,
-                                    INT nblk,
-                                    INT *iblock,
-                                    INT *jblock,
-                                    INT *mask)
+                                    INT           nblk,
+                                    INT          *iblock,
+                                    INT          *jblock,
+                                    INT          *mask)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     INT maxbs = 0, count, nnz;
@@ -123,8 +122,8 @@ void fasp_Schwarz_get_block_matrix (Schwarz_data *Schwarz,
  *
  * Modified by Zheng Li on 10/09/2014
  */
-INT fasp_Schwarz_setup (Schwarz_data *Schwarz,
-                        Schwarz_param *param)
+INT fasp_Schwarz_setup (Schwarz_data   *Schwarz,
+                        Schwarz_param  *param)
 {
     // information about A
     dCSRmat A = Schwarz->A;
@@ -402,10 +401,10 @@ void fasp_dcsr_Schwarz_forward_smoother (Schwarz_data  *Schwarz,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_Schwarz_backward_smoother (Schwarz_data *Schwarz,
-                                          Schwarz_param *param,
-                                          dvector *x,
-                                          dvector *b)
+void fasp_dcsr_Schwarz_backward_smoother (Schwarz_data   *Schwarz,
+                                          Schwarz_param  *param,
+                                          dvector        *x,
+                                          dvector        *b)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     
@@ -518,13 +517,13 @@ void fasp_dcsr_Schwarz_backward_smoother (Schwarz_data *Schwarz,
  * \author Zheng Li
  * \date   2014/09/29
  */
-static void Schwarz_levels (INT inroot,
-                            dCSRmat *A,
-                            INT *mask,
-                            INT *nlvl,
-                            INT *iblock,
-                            INT *jblock,
-                            INT maxlev)
+static void Schwarz_levels (INT       inroot,
+                            dCSRmat  *A,
+                            INT      *mask,
+                            INT      *nlvl,
+                            INT      *iblock,
+                            INT      *jblock,
+                            INT       maxlev)
 {
     INT *ia = A->IA;
     INT *ja = A->JA;

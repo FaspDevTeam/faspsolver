@@ -86,14 +86,14 @@
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
  */
-INT fasp_solver_dcsr_pbcgs (dCSRmat *A,
-                            dvector *b,
-                            dvector *u,
-                            precond *pc,
-                            const REAL tol,
-                            const INT MaxIt,
-                            const SHORT stop_type,
-                            const SHORT prtlvl)
+INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
+                            dvector     *b,
+                            dvector     *u,
+                            precond     *pc,
+                            const REAL   tol,
+                            const INT    MaxIt,
+                            const SHORT  stop_type,
+                            const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -427,14 +427,14 @@ FINISHED:  // finish the iterative method
  * \date   03/04/2016
  *
  */
-INT fasp_solver_dcsr_pvbcgs (dCSRmat *A,
-                             dvector *b,
-                             dvector *u,
-                             precond *pc,
-                             const REAL tol,
-                             const INT MaxIt,
-                             const SHORT stop_type,
-                             const SHORT prtlvl)
+INT fasp_solver_dcsr_pvbcgs (dCSRmat     *A,
+                             dvector     *b,
+                             dvector     *u,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -768,14 +768,14 @@ FINISHED:  // finish the iterative method
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
  */
-INT fasp_solver_dbsr_pbcgs (dBSRmat *A,
-                            dvector *b,
-                            dvector *u,
-                            precond *pc,
-                            const REAL tol,
-                            const INT MaxIt,
-                            const SHORT stop_type,
-                            const SHORT prtlvl)
+INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
+                            dvector     *b,
+                            dvector     *u,
+                            precond     *pc,
+                            const REAL   tol,
+                            const INT    MaxIt,
+                            const SHORT  stop_type,
+                            const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -1108,14 +1108,14 @@ FINISHED:  // finish the iterative method
  * \date   03/04/2016
  *
  */
-INT fasp_solver_dbsr_pvbcgs (dBSRmat *A,
-                             dvector *b,
-                             dvector *u,
-                             precond *pc,
-                             const REAL tol,
-                             const INT MaxIt,
-                             const SHORT stop_type,
-                             const SHORT prtlvl)
+INT fasp_solver_dbsr_pvbcgs (dBSRmat     *A,
+                             dvector     *b,
+                             dvector     *u,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -1425,9 +1425,9 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A, dvector *b, dvector *u, precond *pc,
- *                                  const REAL tol, const INT MaxIt,
- *                                  const SHORT stop_type, const SHORT prtlvl)
+ * \fn INT fasp_solver_dblc_pbcgs (dBLCmat *A, dvector *b, dvector *u, precond *pc,
+ *                                 const REAL tol, const INT MaxIt,
+ *                                 const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief A preconditioned BiCGstab method for solving Au=b
  *
@@ -1449,14 +1449,14 @@ FINISHED:  // finish the iterative method
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
  */
-INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
-                             dvector *b,
-                             dvector *u,
-                             precond *pc,
-                             const REAL tol,
-                             const INT MaxIt,
-                             const SHORT stop_type,
-                             const SHORT prtlvl)
+INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
+                            dvector     *b,
+                            dvector     *u,
+                            precond     *pc,
+                            const REAL   tol,
+                            const INT    MaxIt,
+                            const SHORT  stop_type,
+                            const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -1485,7 +1485,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
     
     // r = b-A*u
     fasp_array_cp(m,bval,r);
-    fasp_blas_bdcsr_aAxpy(-1.0,A,uval,r);
+    fasp_blas_dblc_aAxpy(-1.0,A,uval,r);
     absres0 = fasp_blas_array_norm2(m,r);
     
     // compute initial relative residual
@@ -1530,7 +1530,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             fasp_array_cp(m,p,pp); /* No preconditioner */
         
         // z = A*pp
-        fasp_blas_bdcsr_mxv(A,pp,z);
+        fasp_blas_dblc_mxv(A,pp,z);
         
         // alpha = (r,rho)/(A*p,rho)
         temp2 = fasp_blas_array_dotprod(m,z,rho);
@@ -1552,7 +1552,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             fasp_array_cp(m,s,sp); /* No preconditioner */
         
         // t = A*sp;
-        fasp_blas_bdcsr_mxv(A,sp,t);
+        fasp_blas_dblc_mxv(A,sp,t);
         
         // omega = (t,s)/(t,t)
         tempr = fasp_blas_array_dotprod(m,t,t);
@@ -1638,7 +1638,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             
             // re-init iteration param
             fasp_array_cp(m,bval,r);
-            fasp_blas_bdcsr_aAxpy(-1.0,A,uval,r);
+            fasp_blas_dblc_aAxpy(-1.0,A,uval,r);
             
             // pp = precond(p)
             fasp_array_cp(m,r,p);
@@ -1694,7 +1694,7 @@ INT fasp_solver_bdcsr_pbcgs (block_dCSRmat *A,
             
             // compute current residual
             fasp_array_cp(m,bval,r);
-            fasp_blas_bdcsr_aAxpy(-1.0,A,uval,r);
+            fasp_blas_dblc_aAxpy(-1.0,A,uval,r);
             
             // pp = precond(p)
             fasp_array_cp(m,r,p);
@@ -1768,9 +1768,9 @@ FINISHED:  // finish the iterative method
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_pvbcgs (block_dCSRmat *A, dvector *b, dvector *u, precond *pc,
- *                                 const REAL tol, const INT MaxIt,
- *                                 const SHORT stop_type, const SHORT prtlvl)
+ * \fn INT fasp_solver_dblc_pvbcgs (dBLCmat *A, dvector *b, dvector *u, precond *pc,
+ *                                  const REAL tol, const INT MaxIt,
+ *                                  const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b, Rewritten from Matlab 2011a
  *
@@ -1789,14 +1789,14 @@ FINISHED:  // finish the iterative method
  * \date   03/04/2016
  *
  */
-INT fasp_solver_bdcsr_pvbcgs (block_dCSRmat *A,
-                              dvector *b,
-                              dvector *u,
-                              precond *pc,
-                              const REAL tol,
-                              const INT MaxIt,
-                              const SHORT stop_type,
-                              const SHORT prtlvl)
+INT fasp_solver_dblc_pvbcgs (dBLCmat     *A,
+                             dvector     *b,
+                             dvector     *u,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -1840,7 +1840,7 @@ INT fasp_solver_bdcsr_pvbcgs (block_dCSRmat *A,
     
     tolb = n2b*tol;
     
-    fasp_blas_bdcsr_aAxpy(-1.0, A, x, r);
+    fasp_blas_dblc_aAxpy(-1.0, A, x, r);
     normr = fasp_blas_array_norm2(m,r);
     normr_act = normr;
     
@@ -1904,7 +1904,7 @@ INT fasp_solver_bdcsr_pvbcgs (block_dCSRmat *A,
             fasp_array_cp(m,p,ph); /* No preconditioner */
         
         // v = A*ph
-        fasp_blas_bdcsr_mxv(A,ph,v);
+        fasp_blas_dblc_mxv(A,ph,v);
         rtv = fasp_blas_array_dotprod(m,rt,v);
         
         if (( rtv==0.0 )||( ABS(rtv) > DBL_MAX )){
@@ -1943,7 +1943,7 @@ INT fasp_solver_bdcsr_pvbcgs (block_dCSRmat *A,
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {
             fasp_array_cp(m,bval,s);
-            fasp_blas_bdcsr_aAxpy(-1.0,A,xhalf,s);
+            fasp_blas_dblc_aAxpy(-1.0,A,xhalf,s);
             normr_act = fasp_blas_array_norm2(m,s);
             
             if (normr_act <= tolb){
@@ -1995,7 +1995,7 @@ INT fasp_solver_bdcsr_pvbcgs (block_dCSRmat *A,
             fasp_array_cp(m,s,sh); /* No preconditioner */
         
         // t = A*sh;
-        fasp_blas_bdcsr_mxv(A,sh,t);
+        fasp_blas_dblc_mxv(A,sh,t);
         //tt = t' * t;
         tt = fasp_blas_array_dotprod(m,t,t);
         if ((tt == 0) ||( tt >= DBL_MAX )){
@@ -2029,7 +2029,7 @@ INT fasp_solver_bdcsr_pvbcgs (block_dCSRmat *A,
         {
             // normr_act = norm(r);
             fasp_array_cp(m,bval,r);
-            fasp_blas_bdcsr_aAxpy(-1.0,A,x,r);
+            fasp_blas_dblc_aAxpy(-1.0,A,x,r);
             normr_act = fasp_blas_array_norm2(m,r);
             if (normr_act <= tolb)
             {
@@ -2073,7 +2073,7 @@ FINISHED:  // finish the iterative method
         relres = normr_act / n2b;
     else {
         fasp_array_cp(m, bval,r);
-        fasp_blas_bdcsr_aAxpy(-1.0,A,xmin,r);
+        fasp_blas_dblc_aAxpy(-1.0,A,xmin,r);
         normr = fasp_blas_array_norm2(m,r);
         
         if ( normr <= normr_act)  {
@@ -2130,14 +2130,14 @@ FINISHED:  // finish the iterative method
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
  */
-INT fasp_solver_dstr_pbcgs (dSTRmat *A,
-                            dvector *b,
-                            dvector *u,
-                            precond *pc,
-                            const REAL tol,
-                            const INT MaxIt,
-                            const SHORT stop_type,
-                            const SHORT prtlvl)
+INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
+                            dvector     *b,
+                            dvector     *u,
+                            precond     *pc,
+                            const REAL   tol,
+                            const INT    MaxIt,
+                            const SHORT  stop_type,
+                            const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -2450,8 +2450,8 @@ FINISHED:  // finish the iterative method
 
 /**
  * \fn INT fasp_solver_dstr_pvbcgs (dSTRmat *A, dvector *b, dvector *u, precond *pc,
- *                                 const REAL tol, const INT MaxIt,
- *                                 const SHORT stop_type, const SHORT prtlvl)
+ *                                  const REAL tol, const INT MaxIt,
+ *                                  const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b, Rewritten from Matlab 2011a
  *
@@ -2470,14 +2470,14 @@ FINISHED:  // finish the iterative method
  * \date   03/04/2016
  *
  */
-INT fasp_solver_dstr_pvbcgs (dSTRmat *A,
-                             dvector *b,
-                             dvector *u,
-                             precond *pc,
-                             const REAL tol,
-                             const INT MaxIt,
-                             const SHORT stop_type,
-                             const SHORT prtlvl)
+INT fasp_solver_dstr_pvbcgs (dSTRmat     *A,
+                             dvector     *b,
+                             dvector     *u,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;

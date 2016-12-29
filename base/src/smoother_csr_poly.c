@@ -48,9 +48,9 @@ static void Rr(dCSRmat *, REAL *, REAL *, REAL *, REAL *, REAL *, REAL *, REAL *
 void fasp_smoother_dcsr_poly (dCSRmat *Amat, 
                               dvector *brhs, 
                               dvector *usol, 
-                              INT n, 
-                              INT ndeg, 
-                              INT L)
+                              INT      n,
+                              INT      ndeg,
+                              INT      L)
 {
     // local variables
     INT i;
@@ -148,9 +148,9 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
 void fasp_smoother_dcsr_poly_old (dCSRmat *Amat, 
                                   dvector *brhs, 
                                   dvector *usol, 
-                                  INT n, 
-                                  INT ndeg, 
-                                  INT L)
+                                  INT      n,
+                                  INT      ndeg,
+                                  INT      L)
 {
     INT  *ia=Amat->IA,*ja=Amat->JA;
     INT   i,j,k,it,jk,iaa,iab,ndeg0;  // id and ij for scaling of A
@@ -314,7 +314,13 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
  * Modified by Chunsheng Feng, Zheng Li
  * \date 10/18/2012
  */
-static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
+static void bminax (REAL *b,
+                    INT  *ia,
+                    INT  *ja,
+                    REAL *a,
+                    REAL *x,
+                    INT  *nn,
+                    REAL *res)
 {
     /* Computes b-A*x */
     
@@ -367,7 +373,8 @@ static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
  * Modified by Chunsheng Feng, Zheng Li
  * \date   10/18/2012
  */
-static void Diaginv (dCSRmat *Amat, REAL *Dinv)
+static void Diaginv (dCSRmat *Amat,
+                     REAL    *Dinv)
 {
     const INT   n  = Amat->row;
     const INT  *ia = Amat->IA, *ja = Amat->JA;
@@ -388,7 +395,7 @@ static void Diaginv (dCSRmat *Amat, REAL *Dinv)
 }
 
 /**
- * \fn    static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
+ * \fn    static REAL DinvAnorminf (dCSRmat *Amat, REAL *Dinv)
  *
  * \brief Get the inf norm of Dinv*A
  * 
@@ -403,7 +410,8 @@ static void Diaginv (dCSRmat *Amat, REAL *Dinv)
  * Modified by Chunsheng Feng, Zheng Li
  * \date   10/18/2012
  */
-static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
+static REAL DinvAnorminf (dCSRmat *Amat,
+                          REAL    *Dinv)
 {
     //local variable
     const INT   n  = Amat->row;
@@ -450,7 +458,7 @@ static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
 }
 
 /**
- * \fn    static void Diagx(REAL *Dinv, INT n, REAL *x, REAL *b)
+ * \fn    static void Diagx (REAL *Dinv, INT n, REAL *x, REAL *b)
  *
  * \brief Compute b = Dinv * x;
  * 
@@ -465,7 +473,10 @@ static REAL DinvAnorminf(dCSRmat *Amat, REAL *Dinv)
  * Modified by Chunsheng Feng, Zheng Li
  * \date 08/27/2012
  */
-static void Diagx(REAL *Dinv, INT n, REAL *x, REAL *b)
+static void Diagx (REAL *Dinv,
+                   INT   n,
+                   REAL *x,
+                   REAL *b)
 {
     unsigned INT i;
     
@@ -522,14 +533,14 @@ static void Diagx(REAL *Dinv, INT n, REAL *x, REAL *b)
  * \date 10/18/2012
  */
 static void Rr (dCSRmat *Amat, 
-                REAL *Dinv, 
-                REAL *r, 
-                REAL *rbar, 
-                REAL *v0, 
-                REAL *v1, 
-                REAL *vnew, 
-                REAL *k, 
-                INT m)
+                REAL    *Dinv,
+                REAL    *r,
+                REAL    *rbar,
+                REAL    *v0,
+                REAL    *v1,
+                REAL    *vnew,
+                REAL    *k,
+                INT      m)
 {
     // local variables
     const INT   n  = Amat->row;

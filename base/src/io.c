@@ -83,9 +83,9 @@ static void fasp_ivecind_write_b(FILE *fp, ivector *A);
  *
  * Modified by Chensong Zhang on 03/14/2012
  */
-void fasp_dcsrvec1_read (const char *filename,
-                         dCSRmat *A,
-                         dvector *b)
+void fasp_dcsrvec1_read (const char  *filename,
+                         dCSRmat     *A,
+                         dvector     *b)
 {
     int  i,m,n,idata;
     REAL ddata;
@@ -175,10 +175,10 @@ void fasp_dcsrvec1_read (const char *filename,
  * Modified by Chensong Zhang on 2011/03/01
  * Modified by Chensong Zhang on 2012/01/05
  */
-void fasp_dcsrvec2_read (const char *filemat,
-                         const char *filerhs,
-                         dCSRmat *A,
-                         dvector *b )
+void fasp_dcsrvec2_read (const char  *filemat,
+                         const char  *filerhs,
+                         dCSRmat     *A,
+                         dvector     *b)
 {
     int i, n, tempi;
     
@@ -254,8 +254,8 @@ void fasp_dcsrvec2_read (const char *filemat,
  * \author Ziteng Wang
  * \date   12/25/2012
  */
-void fasp_dcsr_read (const char *filename,
-                     dCSRmat *A)
+void fasp_dcsr_read (const char  *filename,
+                     dCSRmat     *A)
 {
     int  i,m,idata;
     REAL ddata;
@@ -315,8 +315,8 @@ void fasp_dcsr_read (const char *filename,
  * \author Xuehai Huang, Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_dcoo_read (const char *filename,
-                     dCSRmat *A)
+void fasp_dcoo_read (const char  *filename,
+                     dCSRmat     *A)
 {
     int  i,j,k,m,n,nnz;
     REAL value;
@@ -366,8 +366,8 @@ void fasp_dcoo_read (const char *filename,
  * \author Xiaozhe Hu
  * \date   03/24/2013
  */
-void fasp_dcoo1_read (const char *filename,
-                      dCOOmat *A)
+void fasp_dcoo1_read (const char  *filename,
+                      dCOOmat     *A)
 {
     int  i,j,k,m,n,nnz;
     REAL value;
@@ -395,7 +395,6 @@ void fasp_dcoo1_read (const char *filename,
     }
     
     fclose(fp);
-    
 }
 
 /**
@@ -417,8 +416,8 @@ void fasp_dcoo1_read (const char *filename,
  * \author Xiaozhe Hu
  * \date   04/01/2014
  */
-void fasp_dcoo_shift_read (const char *filename,
-                           dCSRmat *A)
+void fasp_dcoo_shift_read (const char  *filename,
+                           dCSRmat     *A)
 {
     int  i,j,k,m,n,nnz;
     REAL value;
@@ -469,8 +468,8 @@ void fasp_dcoo_shift_read (const char *filename,
  * \author Chensong Zhang
  * \date   09/05/2011
  */
-void fasp_dmtx_read (const char *filename,
-                     dCSRmat *A)
+void fasp_dmtx_read (const char  *filename,
+                     dCSRmat     *A)
 {
     int  i,j,m,n,nnz;
     INT  innz; // index of nonzeros
@@ -531,8 +530,8 @@ void fasp_dmtx_read (const char *filename,
  * \author Chensong Zhang
  * \date   09/02/2011
  */
-void fasp_dmtxsym_read (const char *filename,
-                        dCSRmat *A)
+void fasp_dmtxsym_read (const char  *filename,
+                        dCSRmat     *A)
 {
     int  i,j,m,n,nnz;
     int  innz; // index of nonzeros
@@ -608,8 +607,8 @@ void fasp_dmtxsym_read (const char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_dstr_read (const char *filename,
-                     dSTRmat *A)
+void fasp_dstr_read (const char  *filename,
+                     dSTRmat     *A)
 {
     int  nx, ny, nz, nxy, ngrid, nband, nc, offset;
     int  i, k, n;
@@ -688,8 +687,8 @@ void fasp_dstr_read (const char *filename,
  * \author Xiaozhe Hu
  * \date   10/29/2010
  */
-void fasp_dbsr_read (const char *filename,
-                     dBSRmat *A)
+void fasp_dbsr_read (const char  *filename,
+                     dBSRmat     *A)
 {
     int  ROW, COL, NNZ, nb, storage_manner;
     int  i, n;
@@ -757,8 +756,8 @@ void fasp_dbsr_read (const char *filename,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_dvecind_read (const char *filename,
-                        dvector *b)
+void fasp_dvecind_read (const char  *filename,
+                        dvector     *b)
 {
     INT  i, n;
     INT  index;
@@ -807,10 +806,9 @@ void fasp_dvecind_read (const char *filename,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_dvec_read (const char *filename,
-                     dvector *b)
+void fasp_dvec_read (const char  *filename,
+                     dvector     *b)
 {
-    
     int  i, n;
     REAL value;
     
@@ -838,7 +836,6 @@ void fasp_dvec_read (const char *filename,
             exit(ERROR_INPUT_PAR);
         }
         
-        
     }
     
     fclose(fp);
@@ -859,8 +856,8 @@ void fasp_dvec_read (const char *filename,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_ivecind_read (const char *filename,
-                        ivector *b)
+void fasp_ivecind_read (const char  *filename,
+                        ivector     *b)
 {
     int i, n, index, value;
     
@@ -899,8 +896,8 @@ void fasp_ivecind_read (const char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_ivec_read (const char *filename,
-                     ivector *b)
+void fasp_ivec_read (const char  *filename,
+                     ivector     *b)
 {
     int i, n, value;
     
@@ -909,7 +906,6 @@ void fasp_ivec_read (const char *filename,
     if ( fp == NULL ) {
         printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-        
     }
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
@@ -950,9 +946,9 @@ void fasp_ivec_read (const char *filename,
  *
  * Modified by Chensong on 12/26/2012
  */
-void fasp_dcsrvec1_write (const char *filename,
-                          dCSRmat *A,
-                          dvector *b)
+void fasp_dcsrvec1_write (const char  *filename,
+                          dCSRmat     *A,
+                          dvector     *b)
 {
     INT m = A->row, n = A->col, nnz = A->nnz;
     INT i;
@@ -1028,10 +1024,10 @@ void fasp_dcsrvec1_write (const char *filename,
  * \date   05/19/2012
  *
  */
-void fasp_dcsrvec2_write (const char *filemat,
-                          const char *filerhs,
-                          dCSRmat *A,
-                          dvector *b )
+void fasp_dcsrvec2_write (const char  *filemat,
+                          const char  *filerhs,
+                          dCSRmat     *A,
+                          dvector     *b)
 {
     INT m=A->row, nnz=A->nnz;
     INT i;
@@ -1099,8 +1095,8 @@ void fasp_dcsrvec2_write (const char *filemat,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_dcoo_write (const char *filename,
-                      dCSRmat *A)
+void fasp_dcoo_write (const char  *filename,
+                      dCSRmat     *A)
 {
     const INT m = A->row, n = A->col;
     INT i, j;
@@ -1139,8 +1135,8 @@ void fasp_dcoo_write (const char *filename,
  * \author Shiquan Zhang
  * \date   03/29/2010
  */
-void fasp_dstr_write (const char *filename,
-                      dSTRmat *A)
+void fasp_dstr_write (const char  *filename,
+                      dSTRmat     *A)
 {
     const INT nx = A->nx, ny = A->ny, nz = A->nz;
     const INT ngrid = A->ngrid, nband = A->nband, nc = A->nc;
@@ -1153,7 +1149,6 @@ void fasp_dstr_write (const char *filename,
     if ( fp == NULL ) {
         printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-        
     }
     
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
@@ -1254,8 +1249,8 @@ void fasp_dbsr_write (const char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_dvec_write (const char *filename,
-                      dvector *vec)
+void fasp_dvec_write (const char  *filename,
+                      dvector     *vec)
 {
     INT m = vec->row, i;
     
@@ -1290,8 +1285,8 @@ void fasp_dvec_write (const char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_dvecind_write (const char *filename,
-                         dvector *vec)
+void fasp_dvecind_write (const char  *filename,
+                         dvector     *vec)
 {
     INT m = vec->row, i;
     
@@ -1325,8 +1320,8 @@ void fasp_dvecind_write (const char *filename,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_ivec_write (const char *filename,
-                      ivector *vec)
+void fasp_ivec_write (const char  *filename,
+                      ivector     *vec)
 {
     INT m = vec->row, i;
     
@@ -1359,8 +1354,8 @@ void fasp_ivec_write (const char *filename,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_dvec_print (INT n,
-                      dvector *u)
+void fasp_dvec_print (INT       n,
+                      dvector  *u)
 {
     unsigned INT i;
     
@@ -1379,8 +1374,8 @@ void fasp_dvec_print (INT n,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_ivec_print (INT n,
-                      ivector *u)
+void fasp_ivec_print (INT       n,
+                      ivector  *u)
 {
     unsigned INT i;
     
@@ -1464,7 +1459,6 @@ void fasp_dbsr_print (dBSRmat *A)
     
 }
 
-
 /**
  * \fn void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A)
  *
@@ -1478,7 +1472,7 @@ void fasp_dbsr_print (dBSRmat *A)
  *
  * Modified by Chensong Zhang on 06/14/2014: Fix index problem.
  */
-void fasp_dbsr_write_coo (const char *filename,
+void fasp_dbsr_write_coo (const char    *filename,
                           const dBSRmat *A)
 {
     
@@ -1528,7 +1522,7 @@ void fasp_dbsr_write_coo (const char *filename,
  * \author Chunsheng Feng
  * \date   11/14/2013
  */
-void fasp_dcsr_write_coo (const char *filename,
+void fasp_dcsr_write_coo (const char    *filename,
                           const dCSRmat *A)
 {
     
@@ -1601,8 +1595,8 @@ void fasp_dstr_print (dSTRmat *A)
  *
  * Modified by Chensong Zhang on 05/01/2013
  */
-void fasp_matrix_read (const char *filename,
-                       void *A)
+void fasp_matrix_read (const char  *filename,
+                       void        *A)
 {
     
     INT index,flag;
@@ -1689,6 +1683,7 @@ void fasp_matrix_read (const char *filename,
         default:
             printf("### ERROR: Unknown file flag %d", flag);
     }
+    
     fclose(fp);
     
 }
@@ -1707,7 +1702,7 @@ void fasp_matrix_read (const char *filename,
  * Modified by Chensong Zhang on 05/01/2013: Use it to read binary files!!!
  */
 void fasp_matrix_read_bin (const char *filename,
-                           void *A)
+                           void       *A)
 {
 	INT index, flag;
 	FILE *fp = fopen(filename, "rb");
@@ -1781,8 +1776,8 @@ void fasp_matrix_read_bin (const char *filename,
  * \date   12/24/2012
  */
 void fasp_matrix_write (const char *filename,
-					    void *A,
-                        INT  flag)
+					    void       *A,
+                        INT         flag)
 {
     
     INT fileflag, matrixflag;
@@ -1845,6 +1840,7 @@ void fasp_matrix_write (const char *filename,
             fasp_dstr_write_b(fp, (dSTRmat *)A);
             break;
     }
+    
     fclose(fp);
 }
 
@@ -1874,7 +1870,7 @@ void fasp_matrix_write (const char *filename,
  * \date   12/24/2012
  */
 void fasp_vector_read (const char *filerhs,
-                       void *b)
+                       void       *b)
 {
     
     INT index,flag;
@@ -1938,6 +1934,7 @@ void fasp_vector_read (const char *filerhs,
             fasp_ivecind_read_b(fp, (ivector *)b, endianflag);
             break;
     }
+    
     fclose(fp);
 }
 
@@ -1971,8 +1968,8 @@ void fasp_vector_read (const char *filerhs,
  * Modified by Chensong Zhang on 05/02/2013: fix a bug when writing in binary format
  */
 void fasp_vector_write (const char *filerhs,
-                        void *b,
-                        INT  flag)
+                        void       *b,
+                        INT         flag)
 {
     
     INT fileflag, vectorflag;
@@ -2041,6 +2038,7 @@ void fasp_vector_write (const char *filerhs,
             fasp_ivecind_write_b(fp, (ivector *)b);
             break;
     }
+    
     fclose(fp);
 }
 
@@ -2059,8 +2057,8 @@ void fasp_vector_write (const char *filerhs,
  * \date   05/30/2014
  */
 void fasp_hb_read (const char *input_file,
-                   dCSRmat *A,
-                   dvector *b)
+                   dCSRmat    *A,
+                   dvector    *b)
 {
     //-------------------------
     // Setup local variables
@@ -2257,7 +2255,6 @@ void fasp_hb_read (const char *input_file,
         fasp_array_cp(nrow, rhsval, b->val);
     }
     
-    
     //-------------------------
     // Cleanning
     //-------------------------
@@ -2300,16 +2297,14 @@ FINISHED:
     }
     
     return;
-    
-    
 }
 
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
 
-static void fasp_dcsr_read_s (FILE *fp,
-							  dCSRmat *A)
+static void fasp_dcsr_read_s (FILE     *fp,
+							  dCSRmat  *A)
 {
     INT  i,m,nnz,idata;
     REAL ddata;
@@ -2340,9 +2335,9 @@ static void fasp_dcsr_read_s (FILE *fp,
     }
 }
 
-static void fasp_dcsr_read_b (FILE *fp,
-                              dCSRmat *A,
-                              INT endianflag)
+static void fasp_dcsr_read_b (FILE     *fp,
+                              dCSRmat  *A,
+                              INT       endianflag)
 {
     INT  i,m,nnz,idata;
     REAL ddata;
@@ -2374,8 +2369,8 @@ static void fasp_dcsr_read_b (FILE *fp,
     }
 }
 
-static void fasp_dcoo_read_s (FILE *fp,
-                              dCSRmat *A)
+static void fasp_dcoo_read_s (FILE     *fp,
+                              dCSRmat  *A)
 {
     INT  i,j,k,m,n,nnz;
     REAL value;
@@ -2398,9 +2393,9 @@ static void fasp_dcoo_read_s (FILE *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dcoo_read_b (FILE *fp,
-                              dCSRmat *A,
-                              INT endianflag)
+static void fasp_dcoo_read_b (FILE     *fp,
+                              dCSRmat  *A,
+                              INT       endianflag)
 {
     INT  k,m,n,nnz,index;
     REAL value;
@@ -2431,7 +2426,7 @@ static void fasp_dcoo_read_b (FILE *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dbsr_read_s (FILE *fp,
+static void fasp_dbsr_read_s (FILE    *fp,
                               dBSRmat *A)
 {
     INT  ROW, COL, NNZ, nb, storage_manner;
@@ -2474,9 +2469,9 @@ static void fasp_dbsr_read_s (FILE *fp,
     
 }
 
-static void fasp_dbsr_read_b (FILE *fp,
+static void fasp_dbsr_read_b (FILE    *fp,
                               dBSRmat *A,
-                              INT endianflag)
+                              INT      endianflag)
 {
     INT    ROW, COL, NNZ, nb, storage_manner;
     INT    i, n, index;
@@ -2521,7 +2516,7 @@ static void fasp_dbsr_read_b (FILE *fp,
     }
 }
 
-static void fasp_dstr_read_s (FILE *fp,
+static void fasp_dstr_read_s (FILE    *fp,
                               dSTRmat *A)
 {
     INT  nx, ny, nz, nxy, ngrid, nband, nc, offset;
@@ -2566,9 +2561,9 @@ static void fasp_dstr_read_s (FILE *fp,
     
 }
 
-static void fasp_dstr_read_b (FILE *fp,
+static void fasp_dstr_read_b (FILE    *fp,
                               dSTRmat *A,
-                              INT endianflag)
+                              INT      endianflag)
 {
     INT  nx, ny, nz, nxy, ngrid, nband, nc, offset;
     INT  i, k, n;
@@ -2621,7 +2616,7 @@ static void fasp_dstr_read_b (FILE *fp,
     }
 }
 
-static void fasp_dmtx_read_s (FILE *fp,
+static void fasp_dmtx_read_s (FILE    *fp,
                               dCSRmat *A)
 {
     INT  i,j,m,n,nnz;
@@ -2644,7 +2639,7 @@ static void fasp_dmtx_read_s (FILE *fp,
             
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtx_read_s");
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
     
@@ -2652,9 +2647,9 @@ static void fasp_dmtx_read_s (FILE *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dmtx_read_b (FILE *fp,
+static void fasp_dmtx_read_b (FILE    *fp,
                               dCSRmat *A,
-                              INT endianflag)
+                              INT      endianflag)
 {
     INT   m,n,k,nnz;
     INT   index;
@@ -2669,7 +2664,6 @@ static void fasp_dmtx_read_b (FILE *fp,
     
     dCOOmat Atmp=fasp_dcoo_create(m,n,nnz);
     
-    
     for (k = 0; k < nnz; k++) {
         if ( fread(&index, ilength, 1, fp) !=EOF ) {
             Atmp.rowind[k] = endian_convert_int(index, ilength, endianflag)-1;
@@ -2679,7 +2673,7 @@ static void fasp_dmtx_read_b (FILE *fp,
             Atmp.val[k] = endian_convert_real(value, sizeof(REAL), endianflag);
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtx_read_b");
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
     
@@ -2687,7 +2681,7 @@ static void fasp_dmtx_read_b (FILE *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dmtxsym_read_s (FILE *fp,
+static void fasp_dmtxsym_read_s (FILE    *fp,
                                  dCSRmat *A)
 {
     INT  i,j,m,n,nnz;
@@ -2720,7 +2714,7 @@ static void fasp_dmtxsym_read_s (FILE *fp,
             
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtxsym_read_s");
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
     
@@ -2728,9 +2722,9 @@ static void fasp_dmtxsym_read_s (FILE *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dmtxsym_read_b (FILE *fp,
+static void fasp_dmtxsym_read_b (FILE    *fp,
                                  dCSRmat *A,
-                                 INT endianflag)
+                                 INT      endianflag)
 {
     INT  m,n,nnz;
     INT  innz;
@@ -2777,7 +2771,7 @@ static void fasp_dmtxsym_read_b (FILE *fp,
             
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtxsym_read_b");
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
     
@@ -2785,8 +2779,8 @@ static void fasp_dmtxsym_read_b (FILE *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dcsr_write_s (FILE *fp,
-                               dCSRmat *A)
+static void fasp_dcsr_write_s (FILE     *fp,
+                               dCSRmat  *A)
 {
     const INT m=A->row, n=A->col;
     INT i;
@@ -2800,8 +2794,8 @@ static void fasp_dcsr_write_s (FILE *fp,
     for ( i = 0; i < A->nnz; ++i ) fprintf(fp,"%le\n", A->val[i]);
 }
 
-static void fasp_dcsr_write_b (FILE *fp,
-                               dCSRmat *A)
+static void fasp_dcsr_write_b (FILE     *fp,
+                               dCSRmat  *A)
 {
     const INT m=A->row, n=A->col;
     INT i, j, nnz, index;
@@ -2824,8 +2818,8 @@ static void fasp_dcsr_write_b (FILE *fp,
     fclose(fp);
 }
 
-static void fasp_dbsr_write_s (FILE *fp,
-                               dBSRmat *A)
+static void fasp_dbsr_write_s (FILE     *fp,
+                               dBSRmat  *A)
 {
     const INT ROW = A->ROW, COL = A->COL, NNZ = A->NNZ;
     const INT nb = A->nb, storage_manner = A->storage_manner;
@@ -2856,11 +2850,10 @@ static void fasp_dbsr_write_s (FILE *fp,
     n = NNZ*nb*nb; // length of A->val
     fprintf(fp, "%d\n", n); // length of A->val
     for ( i = 0; i < n; ++i ) fprintf(fp, "%le\n", val[i]);
-    
 }
 
-static void fasp_dbsr_write_b (FILE *fp,
-                               dBSRmat *A)
+static void fasp_dbsr_write_b (FILE     *fp,
+                               dBSRmat  *A)
 {
     const INT ROW = A->ROW, COL = A->COL, NNZ = A->NNZ;
     const INT nb = A->nb, storage_manner = A->storage_manner;
@@ -2906,8 +2899,8 @@ static void fasp_dbsr_write_b (FILE *fp,
 	}
 }
 
-static void fasp_dstr_write_s (FILE *fp,
-                               dSTRmat *A)
+static void fasp_dstr_write_s (FILE     *fp,
+                               dSTRmat  *A)
 {
     const INT nx=A->nx, ny=A->ny, nz=A->nz;
     const INT ngrid=A->ngrid, nband=A->nband, nc=A->nc;
@@ -2940,8 +2933,8 @@ static void fasp_dstr_write_s (FILE *fp,
     
 }
 
-static void fasp_dstr_write_b (FILE *fp,
-                               dSTRmat *A)
+static void fasp_dstr_write_b (FILE     *fp,
+                               dSTRmat  *A)
 {
     const INT nx=A->nx, ny=A->ny, nz=A->nz;
     const INT ngrid=A->ngrid, nband=A->nband, nc=A->nc;
@@ -2983,8 +2976,8 @@ static void fasp_dstr_write_b (FILE *fp,
     
 }
 
-static void fasp_dvec_read_s (FILE *fp,
-                              dvector *b)
+static void fasp_dvec_read_s (FILE     *fp,
+                              dvector  *b)
 {
     
     INT  i, n;
@@ -2999,9 +2992,9 @@ static void fasp_dvec_read_s (FILE *fp,
     }
 }
 
-static void fasp_dvec_read_b (FILE *fp,
-                              dvector *b,
-                              INT endianflag)
+static void fasp_dvec_read_b (FILE     *fp,
+                              dvector  *b,
+                              INT       endianflag)
 {
     
     INT  i, n;
@@ -3017,8 +3010,8 @@ static void fasp_dvec_read_b (FILE *fp,
     }
 }
 
-static void fasp_ivec_read_s (FILE *fp,
-                              ivector *b)
+static void fasp_ivec_read_s (FILE     *fp,
+                              ivector  *b)
 {
     INT i, n, value;
     
@@ -3031,9 +3024,9 @@ static void fasp_ivec_read_s (FILE *fp,
     }
 }
 
-static void fasp_ivec_read_b (FILE *fp,
-                              ivector *b,
-                              INT endianflag)
+static void fasp_ivec_read_b (FILE     *fp,
+                              ivector  *b,
+                              INT       endianflag)
 {
     INT i, n, value;
     
@@ -3049,8 +3042,8 @@ static void fasp_ivec_read_b (FILE *fp,
     fclose(fp);
 }
 
-static void fasp_dvecind_read_s (FILE *fp,
-                                 dvector *b)
+static void fasp_dvecind_read_s (FILE     *fp,
+                                 dvector  *b)
 {
     INT  i, n, index;
     REAL value;
@@ -3064,9 +3057,9 @@ static void fasp_dvecind_read_s (FILE *fp,
     }
 }
 
-static void fasp_dvecind_read_b (FILE *fp,
-                                 dvector *b,
-                                 INT endianflag)
+static void fasp_dvecind_read_b (FILE     *fp,
+                                 dvector  *b,
+                                 INT       endianflag)
 {
     INT  i, n, index;
     REAL value;
@@ -3084,8 +3077,8 @@ static void fasp_dvecind_read_b (FILE *fp,
     }
 }
 
-static void fasp_ivecind_read_s (FILE *fp,
-                                 ivector *b)
+static void fasp_ivecind_read_s (FILE     *fp,
+                                 ivector  *b)
 {
     INT i, n, index, value;
     
@@ -3098,9 +3091,9 @@ static void fasp_ivecind_read_s (FILE *fp,
     }
 }
 
-static void fasp_ivecind_read_b (FILE *fp,
-                                 ivector *b,
-                                 INT endianflag)
+static void fasp_ivecind_read_b (FILE     *fp,
+                                 ivector  *b,
+                                 INT       endianflag)
 {
     INT i, n, index, value;
     
@@ -3117,8 +3110,8 @@ static void fasp_ivecind_read_b (FILE *fp,
     }
 }
 
-static void fasp_dvec_write_s (FILE *fp,
-                               dvector *vec)
+static void fasp_dvec_write_s (FILE     *fp,
+                               dvector  *vec)
 {
     INT m = vec->row, i;
     
@@ -3128,8 +3121,8 @@ static void fasp_dvec_write_s (FILE *fp,
     
 }
 
-static void fasp_dvec_write_b (FILE *fp,
-                               dvector *vec)
+static void fasp_dvec_write_b (FILE     *fp,
+                               dvector  *vec)
 {
     INT m = vec->row, i;
     REAL value;
@@ -3142,8 +3135,8 @@ static void fasp_dvec_write_b (FILE *fp,
     }
 }
 
-static void fasp_ivec_write_s (FILE *fp,
-                               ivector *vec)
+static void fasp_ivec_write_s (FILE     *fp,
+                               ivector  *vec)
 {
     INT m = vec->row, i;
     
@@ -3153,8 +3146,8 @@ static void fasp_ivec_write_s (FILE *fp,
     
 }
 
-static void fasp_ivec_write_b (FILE *fp,
-                               ivector *vec)
+static void fasp_ivec_write_b (FILE     *fp,
+                               ivector  *vec)
 {
     INT m = vec->row, i, value;
     
@@ -3168,8 +3161,8 @@ static void fasp_ivec_write_b (FILE *fp,
     
 }
 
-static void fasp_dvecind_write_s (FILE *fp,
-                                  dvector *vec)
+static void fasp_dvecind_write_s (FILE     *fp,
+                                  dvector  *vec)
 {
     INT m = vec->row, i;
     
@@ -3179,8 +3172,8 @@ static void fasp_dvecind_write_s (FILE *fp,
     
 }
 
-static void fasp_dvecind_write_b (FILE *fp,
-                                  dvector *vec)
+static void fasp_dvecind_write_b (FILE     *fp,
+                                  dvector  *vec)
 {
     INT m = vec->row, i;
     REAL value;
@@ -3195,8 +3188,8 @@ static void fasp_dvecind_write_b (FILE *fp,
     
 }
 
-static void fasp_ivecind_write_b (FILE *fp,
-                                  ivector *vec)
+static void fasp_ivecind_write_b (FILE     *fp,
+                                  ivector  *vec)
 {
     INT m = vec->row, i;
     INT value;
@@ -3211,8 +3204,8 @@ static void fasp_ivecind_write_b (FILE *fp,
     
 }
 
-static void fasp_ivecind_write_s (FILE *fp,
-                                  ivector *vec)
+static void fasp_ivecind_write_s (FILE     *fp,
+                                  ivector  *vec)
 {
     INT m = vec->row, i;
     

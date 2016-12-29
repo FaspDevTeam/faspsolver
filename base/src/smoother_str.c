@@ -79,7 +79,7 @@ void fasp_smoother_dstr_jacobi (dSTRmat *A,
 void fasp_smoother_dstr_jacobi1 (dSTRmat *A, 
                                  dvector *b, 
                                  dvector *u, 
-                                 REAL *diaginv)
+                                 REAL    *diaginv)
 {    
     // information of A
     INT       ngrid = A->ngrid;    // number of grids
@@ -200,11 +200,11 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
  * \author Shiquan Zhang, Zhiyang Zhou
  * \date   10/10/2010
  */
-void fasp_smoother_dstr_gs (dSTRmat *A, 
-                            dvector *b, 
-                            dvector *u,
-                            const INT order,
-                            INT *mark)
+void fasp_smoother_dstr_gs (dSTRmat    *A,
+                            dvector    *b,
+                            dvector    *u,
+                            const INT   order,
+                            INT        *mark)
 {
     INT   nc    = A->nc;    // size of each block (number of components)
     INT   ngrid = A->ngrid; // number of grids
@@ -260,12 +260,12 @@ void fasp_smoother_dstr_gs (dSTRmat *A,
  * \author Shiquan Zhang, Zhiyang Zhou
  * \date   10/10/2010
  */
-void fasp_smoother_dstr_gs1 (dSTRmat *A, 
-                             dvector *b, 
-                             dvector *u, 
-                             const INT order,
-                             INT *mark, 
-                             REAL *diaginv)
+void fasp_smoother_dstr_gs1 (dSTRmat    *A,
+                             dvector    *b,
+                             dvector    *u,
+                             const INT   order,
+                             INT        *mark,
+                             REAL       *diaginv)
 {    
     
     if (!mark) {
@@ -308,7 +308,7 @@ void fasp_smoother_dstr_gs1 (dSTRmat *A,
 void fasp_smoother_dstr_gs_ascend (dSTRmat *A, 
                                    dvector *b,
                                    dvector *u, 
-                                   REAL *diaginv)
+                                   REAL    *diaginv)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids
@@ -423,7 +423,7 @@ void fasp_smoother_dstr_gs_ascend (dSTRmat *A,
 void fasp_smoother_dstr_gs_descend (dSTRmat *A, 
                                     dvector *b, 
                                     dvector *u, 
-                                    REAL *diaginv)
+                                    REAL    *diaginv)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids
@@ -540,8 +540,8 @@ void fasp_smoother_dstr_gs_descend (dSTRmat *A,
 void fasp_smoother_dstr_gs_order (dSTRmat *A, 
                                   dvector *b, 
                                   dvector *u,
-                                  REAL *diaginv, 
-                                  INT *mark)
+                                  REAL    *diaginv,
+                                  INT     *mark)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids
@@ -660,12 +660,12 @@ void fasp_smoother_dstr_gs_order (dSTRmat *A,
  * \author Shiquan Zhang, Zhiyang Zhou
  * \date   10/10/2010
  */
-void fasp_smoother_dstr_gs_cf (dSTRmat *A, 
-                               dvector *b, 
-                               dvector *u, 
-                               REAL *diaginv, 
-                               INT *mark, 
-                               const INT order)
+void fasp_smoother_dstr_gs_cf (dSTRmat    *A,
+                               dvector    *b,
+                               dvector    *u,
+                               REAL       *diaginv,
+                               INT        *mark,
+                               const INT   order)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids
@@ -852,12 +852,12 @@ void fasp_smoother_dstr_gs_cf (dSTRmat *A,
  * \author Shiquan Zhang, Zhiyang Zhou
  * \date   10/10/2010
  */
-void fasp_smoother_dstr_sor (dSTRmat *A, 
-                             dvector *b, 
-                             dvector *u, 
-                             const INT order,
-                             INT *mark, 
-                             const REAL weight)
+void fasp_smoother_dstr_sor (dSTRmat    *A,
+                             dvector    *b,
+                             dvector    *u,
+                             const INT   order,
+                             INT        *mark,
+                             const REAL  weight)
 {
     INT     nc    = A->nc;    // size of each block (number of components)
     INT     ngrid = A->ngrid; // number of grids
@@ -913,13 +913,13 @@ void fasp_smoother_dstr_sor (dSTRmat *A,
  * \author Shiquan Zhang, Zhiyang Zhou
  * \date   10/10/2010
  */
-void fasp_smoother_dstr_sor1 (dSTRmat *A,
-                              dvector *b,
-                              dvector *u,
-                              const INT order,
-                              INT *mark,
-                              REAL *diaginv,
-                              const REAL weight)
+void fasp_smoother_dstr_sor1 (dSTRmat    *A,
+                              dvector    *b,
+                              dvector    *u,
+                              const INT   order,
+                              INT        *mark,
+                              REAL       *diaginv,
+                              const REAL  weight)
 {    
     if (!mark) {
         if (order == ASCEND)       // smooth ascendingly
@@ -962,8 +962,8 @@ void fasp_smoother_dstr_sor1 (dSTRmat *A,
 void fasp_smoother_dstr_sor_ascend (dSTRmat *A,
                                     dvector *b,
                                     dvector *u,
-                                    REAL *diaginv,
-                                    REAL weight)
+                                    REAL    *diaginv,
+                                    REAL     weight)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids
@@ -1082,8 +1082,8 @@ void fasp_smoother_dstr_sor_ascend (dSTRmat *A,
 void fasp_smoother_dstr_sor_descend (dSTRmat *A, 
                                      dvector *b, 
                                      dvector *u, 
-                                     REAL *diaginv, 
-                                     REAL weight)
+                                     REAL    *diaginv,
+                                     REAL     weight)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids
@@ -1203,9 +1203,9 @@ void fasp_smoother_dstr_sor_descend (dSTRmat *A,
 void fasp_smoother_dstr_sor_order (dSTRmat *A, 
                                    dvector *b,
                                    dvector *u, 
-                                   REAL *diaginv, 
-                                   INT *mark, 
-                                   REAL weight)
+                                   REAL    *diaginv,
+                                   INT     *mark,
+                                   REAL     weight)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids
@@ -1331,13 +1331,13 @@ void fasp_smoother_dstr_sor_order (dSTRmat *A,
  * \author Shiquan Zhang, Zhiyang Zhou
  * \date   10/10/2010
  */
-void fasp_smoother_dstr_sor_cf (dSTRmat *A, 
-                                dvector *b, 
-                                dvector *u, 
-                                REAL *diaginv,
-                                INT *mark, 
-                                const INT order,
-                                const REAL weight)
+void fasp_smoother_dstr_sor_cf (dSTRmat    *A,
+                                dvector    *b,
+                                dvector    *u,
+                                REAL       *diaginv,
+                                INT        *mark,
+                                const INT   order,
+                                const REAL  weight)
 {
     // information of A
     INT ngrid = A->ngrid;  // number of grids
@@ -1808,8 +1808,13 @@ void fasp_smoother_dstr_schwarz (dSTRmat *A,
  * \author Xiaozhe Hu
  * \date   04/24/2010
  */
-static void blkcontr2_str (INT start_data, INT start_vecx, INT start_vecy, INT nc, 
-                           REAL *data, REAL *x, REAL *y)
+static void blkcontr2_str (INT   start_data,
+                           INT   start_vecx,
+                           INT   start_vecy,
+                           INT   nc,
+                           REAL *data,
+                           REAL *x,
+                           REAL *y)
 {
     INT i,j,k,m;
     if (start_vecy == 0) {
@@ -1846,7 +1851,12 @@ static void blkcontr2_str (INT start_data, INT start_vecx, INT start_vecy, INT n
  * \author Xiaozhe Hu
  * \date   04/27/2010
  */
-static void aAxpby (REAL alpha, REAL beta, INT size, REAL *A, REAL *x, REAL *y)
+static void aAxpby (REAL  alpha,
+                    REAL  beta,
+                    INT   size,
+                    REAL *A,
+                    REAL *x,
+                    REAL *y)
 {
     INT i,j;
     REAL tmp = 0.0;

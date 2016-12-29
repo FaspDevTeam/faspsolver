@@ -40,11 +40,11 @@ static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
  * \date   11/08/2010
  *
  * \note Works for general nb (Xiaozhe)
- * Change the size of work space by Zheng Li 04/26/2015.
+ * \note Change the size of work space by Zheng Li 04/26/2015.
  */
-SHORT fasp_ilu_dbsr_setup (dBSRmat *A, 
-                           ILU_data *iludata, 
-                           ILU_param *iluparam)
+SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
+                           ILU_data   *iludata,
+                           ILU_param  *iluparam)
 {
         
     const SHORT  prtlvl = iluparam->print_level;
@@ -159,10 +159,10 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat *A,
  *
  * \note Works for general nb (Xiaozhe)
  */
-static INT numfac_bsr (dBSRmat *A,
-                       REAL *luval,
-                       INT *jlu,
-                       INT *uptr)
+static INT numfac_bsr (dBSRmat   *A,
+                       REAL      *luval,
+                       INT       *jlu,
+                       INT       *uptr)
 {
     INT n=A->ROW,nb=A->nb, nb2=nb*nb, ib, ibstart,ibstart1;
     INT k, indj, inds, indja,jluj, jlus, ijaj;
@@ -276,9 +276,7 @@ static INT numfac_bsr (dBSRmat *A,
     
             colptrs[k] =  0;
     
-            //printf("k=%d\n",k);
             fasp_blas_smat_inv_nc3(&(luval[k*nb2]));
-    
         }
 
         break;
@@ -418,7 +416,6 @@ static INT numfac_bsr (dBSRmat *A,
             colptrs[k] =  0;
     
             fasp_blas_smat_inv(&(luval[k*nb2]),nb);
-    
         }
     }
     
@@ -431,8 +428,9 @@ static INT numfac_bsr (dBSRmat *A,
 
 
 /**
- * \fn static INT numfac_bsr_mc_omp (dBSRmat *A, REAL *luval, INT *jlu, INT *uptr, INT ncolors, INT *ic, INT *icmap)
- * \brief Multi-threads parallel numerical ILU decoposition of a BSR matrix A based on graph coloring
+ * \fn static INT numfac_bsr_mc_omp (dBSRmat *A, REAL *luval, INT *jlu, 
+ *                                   INT *uptr, INT ncolors, INT *ic, INT *icmap)
+ * \brief Multi-thread ILU decoposition of a BSR matrix A based on graph coloring
  *
  * \param A        Pointer to dBSRmat matrix
  * \param luval    Pointer to numerical value of ILU
@@ -447,20 +445,22 @@ static INT numfac_bsr (dBSRmat *A,
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
  */
-static INT numfac_bsr_mc_omp (dBSRmat *A,
-                              REAL *luval,
-                              INT *jlu,
-                              INT *uptr,
-                              INT ncolors,
-                              INT *ic,
-                              INT *icmap)
+static INT numfac_bsr_mc_omp (dBSRmat   *A,
+                              REAL      *luval,
+                              INT       *jlu,
+                              INT       *uptr,
+                              INT        ncolors,
+                              INT       *ic,
+                              INT       *icmap)
 {
+    INT status = FASP_SUCCESS;
+
 #ifdef _OPENMP
-    INT n=A->ROW,nb=A->nb, nb2=nb*nb, ib, ibstart,ibstart1;
+    INT n = A->ROW, nb = A->nb, nb2 = nb*nb;
+    INT ib, ibstart,ibstart1;
     INT k, i, indj, inds, indja,jluj, jlus, ijaj, tmp;
     REAL  *mult,*mult1;
     INT *colptrs;
-    INT status=FASP_SUCCESS;
     
     /**
      *     colptrs is used to hold the indices of entries in LU of row k.
@@ -518,6 +518,7 @@ static INT numfac_bsr_mc_omp (dBSRmat *A,
  }
 
         break;
+            
     case 2:
 
         for (i = 0; i < ncolors; ++i) {
@@ -616,21 +617,21 @@ static INT numfac_bsr_mc_omp (dBSRmat *A,
 
         default:
         {
-            if (nb > 3) printf("Multi-threads parallel ILU numerical decomposition for %d components \
-               has not yet been implemented!!!", nb);
-               exit(0);
-            break;
+            if (nb > 3) printf("Multi-thread ILU numerical decomposition for %d\
+                                components has not been implemented!!!", nb);
+            exit(0);
         }
     }
     
-    return status;    
 #endif
+
+    return status;
 }
 
-
 /**
- * \fn static INT numfac_bsr_levsch_omp (dBSRmat *A, REAL *luval, INT *jlu, INT *uptr, INT ncolors, INT *ic, INT *icmap)
- * \brief Multi-threads parallel numerical ILU decoposition of a BSR matrix A based on level schedule strategy
+ * \fn static INT numfac_bsr_levsch_omp (dBSRmat *A, REAL *luval, INT *jlu, 
+ *                                       INT *uptr, INT ncolors, INT *ic, INT *icmap)
+ * \brief Multi-thread ILU decoposition of a BSR matrix A based on level schedule strategy
  *
  * \param A        Pointer to dBSRmat matrix
  * \param luval    Pointer to numerical value of ILU
@@ -653,12 +654,14 @@ static INT numfac_bsr_levsch_omp (dBSRmat *A,
                                   INT *ic,
                                   INT *icmap)
 {
+    INT status = FASP_SUCCESS;
+
 #ifdef _OPENMP
-    INT n=A->ROW,nb=A->nb, nb2=nb*nb, ib, ibstart,ibstart1;
-    INT k, i, indj, inds, indja,jluj, jlus, ijaj, tmp, ii;
-    REAL  *mult,*mult1;
-    INT *colptrs;
-    INT status=FASP_SUCCESS;
+    INT n = A->ROW, nb = A->nb, nb2 = nb*nb;
+    INT ib, ibstart,ibstart1;
+    INT k, i, indj, inds, indja, jluj, jlus, ijaj, tmp, ii;
+    REAL *mult, *mult1;
+    INT  *colptrs;
     
     /**
      *     colptrs is used to hold the indices of entries in LU of row k.
@@ -816,15 +819,16 @@ static INT numfac_bsr_levsch_omp (dBSRmat *A,
 
         default:
         {
-            if (nb > 3) printf("Multi-threads parallel ILU numerical decomposition for %d components \
-                has not yet been implemented!!!", nb);
+            if (nb > 3) printf("Multi-thread ILU numerical decomposition for %d \
+                                components has not been implemented!!!", nb);
                 exit(0);
             break;
         }
     }
     
-    return status;    
 #endif
+
+    return status;
 }
 
 /**
@@ -842,11 +846,10 @@ static INT numfac_bsr_levsch_omp (dBSRmat *A,
  * \date   12/04/2016
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
- *
  */
-SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat *A, 
-                                      ILU_data *iludata, 
-                                      ILU_param *iluparam)
+SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
+                                      ILU_data   *iludata,
+                                      ILU_param  *iluparam)
 {
     const SHORT  prtlvl = iluparam->print_level;
     const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
@@ -909,6 +912,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat *A,
 #endif
     
     fasp_gettime(&numfac_start);
+    
     // (2) numerical factoration 
     numfac_bsr_levsch_omp(A, iludata->luval, ijlu, uptr, iludata->nlevL, iludata->ilevL, iludata->jlevL);
         
@@ -965,11 +969,10 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat *A,
  * \date   12/04/2016
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
- *
  */
-SHORT fasp_ilu_dbsr_setup_omp (dBSRmat *A, 
-                               ILU_data *iludata, 
-                               ILU_param *iluparam)
+SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
+                               ILU_data   *iludata,
+                               ILU_param  *iluparam)
 {
     
     const SHORT  prtlvl = iluparam->print_level;
@@ -1077,12 +1080,11 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat *A,
  * \date   12/04/2016
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
- *
  */
-SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat *A,
-                                  dCSRmat *Ap,
-                                  ILU_data *iludata,
-                                  ILU_param *iluparam)
+SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
+                                  dCSRmat    *Ap,
+                                  ILU_data   *iludata,
+                                  ILU_param  *iluparam)
 {
      INT status;
      AMG_data *mgl=fasp_amg_data_create(1);

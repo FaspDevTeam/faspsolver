@@ -24,8 +24,8 @@
  * \author Xuehai Huang
  * \date   08/10/2009
  */
-SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
-                             dCSRmat *B)
+SHORT fasp_format_dcoo_dcsr (dCOOmat   *A,
+                             dCSRmat   *B)
 {
     const INT m=A->row, n=A->col, nnz=A->nnz;
     
@@ -77,8 +77,8 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat *A,
  * Modified by Chunsheng Feng, Zheng Li
  * \date  10/12/2012
  */
-SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
-                             dCOOmat *B)
+SHORT fasp_format_dcsr_dcoo (dCSRmat   *A,
+                             dCOOmat   *B)
 {
     const INT m=A->row, nnz=A->nnz;
     INT i, j;
@@ -114,8 +114,8 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat *A,
  * \author Zhiyang Zhou
  * \date   2010/04/29
  */
-SHORT fasp_format_dstr_dcsr (dSTRmat *A,
-                             dCSRmat *B)
+SHORT fasp_format_dstr_dcsr (dSTRmat   *A,
+                             dCSRmat   *B)
 {
     // some members of A
     const INT nc    = A->nc;
@@ -278,18 +278,18 @@ SHORT fasp_format_dstr_dcsr (dSTRmat *A,
 }
 
 /**
- * \fn dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
+ * \fn dCSRmat fasp_format_dblc_dcsr (dBLCmat *Ab)
  *
  * \brief Form the whole dCSRmat A using blocks given in Ab
  *
- * \param Ab   Pointer to block_dCSRmat matrix
+ * \param Ab   Pointer to dBLCmat matrix
  *
  * \return     dCSRmat matrix if succeed, NULL if fail
  *
  * \author Shiquan Zhang
  * \date   08/10/2010
  */
-dCSRmat fasp_format_bdcsr_dcsr (block_dCSRmat *Ab)
+dCSRmat fasp_format_dblc_dcsr (dBLCmat *Ab)
 {
     INT m=0,n=0,nnz=0;
     const INT mb=Ab->brow, nb=Ab->bcol, nbl=mb*nb;
@@ -718,8 +718,8 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  * \note modified by Xiaozhe Hu to avoid potential memory leakage problem
  *
  */
-dBSRmat fasp_format_dcsr_dbsr (dCSRmat *A,
-                               const INT nb)
+dBSRmat fasp_format_dcsr_dbsr (dCSRmat    *A,
+                               const INT   nb)
 {
 	// Safe-guard check
     if ((A->row)%nb!=0) {

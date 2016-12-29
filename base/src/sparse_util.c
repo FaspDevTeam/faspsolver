@@ -121,17 +121,17 @@ void fasp_sparse_abybms_ (INT *ia,
  *
  * Modified by Chensong Zhang on 09/11/2012
  */
-void fasp_sparse_abyb_ (INT *ia,
-                        INT *ja,
+void fasp_sparse_abyb_ (INT  *ia,
+                        INT  *ja,
                         REAL *a,
-                        INT *ib,
-                        INT *jb,
+                        INT  *ib,
+                        INT  *jb,
                         REAL *b,
-                        INT *nap,
-                        INT *map,
-                        INT *mbp,
-                        INT *ic,
-                        INT *jc,
+                        INT  *nap,
+                        INT  *map,
+                        INT  *mbp,
+                        INT  *ic,
+                        INT  *jc,
                         REAL *c)
 {
     INT na,mb,iastrt,ibstrt,iaend,ibend,icstrt,icend,i,j,k,ji,jia,jib;
@@ -269,13 +269,13 @@ void fasp_sparse_iit_ (INT *ia,
  * \param jat  array of column indices
  * \param at   array of entries of the result
  */
-void fasp_sparse_aat_ (INT *ia,
-                       INT *ja,
+void fasp_sparse_aat_ (INT  *ia,
+                       INT  *ja,
                        REAL *a,
-                       INT *na,
-                       INT *ma,
-                       INT *iat,
-                       INT *jat,
+                       INT  *na,
+                       INT  *ma,
+                       INT  *iat,
+                       INT  *jat,
                        REAL *at)
 {
     /*C====================================================================*/
@@ -428,16 +428,16 @@ void fasp_sparse_aplbms_ (INT *ia,
  * \param jc   array of column indices in c=a+b
  * \param c    entries of the result: c=a+b
  */
-void fasp_sparse_aplusb_ (INT *ia,
-                          INT *ja,
+void fasp_sparse_aplusb_ (INT  *ia,
+                          INT  *ja,
                           REAL *a,
-                          INT *ib,
-                          INT *jb,
+                          INT  *ib,
+                          INT  *jb,
                           REAL *b,
-                          INT *nab,
-                          INT *mab,
-                          INT *ic,
-                          INT *jc,
+                          INT  *nab,
+                          INT  *mab,
+                          INT  *ic,
+                          INT  *jc,
                           REAL *c)
 {
     INT n,m,icpp,i1,i,j,iastrt,iaend,ibstrt,ibend,icstrt,icend;
@@ -645,16 +645,16 @@ void fasp_sparse_wtams_ (INT *jw,
  * \param v :O: the result v^t=w^t A
  * \param nvp :I: number of nonzeroes in v
  */
-void fasp_sparse_wta_ (INT *jw,
+void fasp_sparse_wta_ (INT  *jw,
                        REAL *w,
-                       INT *ia,
-                       INT *ja,
+                       INT  *ia,
+                       INT  *ja,
                        REAL *a,
-                       INT *nwp,
-                       INT *map,
-                       INT *jv,
+                       INT  *nwp,
+                       INT  *map,
+                       INT  *jv,
                        REAL *v,
-                       INT *nvp)
+                       INT  *nvp)
 {
     INT nw,nv,iastrt,iaend,j,k,ji,jiw,jia;
     REAL v0;
@@ -696,9 +696,9 @@ void fasp_sparse_wta_ (INT *jw,
  *              sparse.
  * \param s :O: s = y^t x.
  */
-void fasp_sparse_ytxbig_ (INT *jy,
+void fasp_sparse_ytxbig_ (INT  *jy,
                           REAL *y,
-                          INT *nyp,
+                          INT  *nyp,
                           REAL *x,
                           REAL *s)
 {
@@ -730,13 +730,13 @@ void fasp_sparse_ytxbig_ (INT *jy,
  * \param icp ???
  * \param s :O: s = y^t x.
  */
-void fasp_sparse_ytx_ (INT *jy,
+void fasp_sparse_ytx_ (INT  *jy,
                        REAL *y,
-                       INT *jx,
+                       INT  *jx,
                        REAL *x,
-                       INT *nyp,
-                       INT *nxp,
-                       INT *icp,
+                       INT  *nyp,
+                       INT  *nxp,
+                       INT  *icp,
                        REAL *s)
 {// not tested well
     INT i,j,i0,ii;
@@ -785,21 +785,21 @@ void fasp_sparse_ytx_ (INT *jy,
  * \note compute R*A*P for known nonzero structure of the result
  * the result is stored in iac,jac,ac!
  */
-void fasp_sparse_rapcmp_ (INT *ir,
-                          INT *jr,
+void fasp_sparse_rapcmp_ (INT  *ir,
+                          INT  *jr,
                           REAL *r,
-                          INT *ia,
-                          INT *ja,
+                          INT  *ia,
+                          INT  *ja,
                           REAL *a,
-                          INT *ipt,
-                          INT *jpt,
+                          INT  *ipt,
+                          INT  *jpt,
                           REAL *pt,
-                          INT *nin,
-                          INT *ncin,
-                          INT *iac,
-                          INT *jac,
+                          INT  *nin,
+                          INT  *ncin,
+                          INT  *iac,
+                          INT  *jac,
                           REAL *ac,
-                          INT *idummy)
+                          INT  *idummy)
 {
     INT i,j,k,n,nc,nv,nw,nptjc,iacst,iacen,ic,jc,    \
     is,js,jkc,iastrt,iaend,ji,jia;
@@ -898,7 +898,7 @@ void fasp_sparse_rapcmp_ (INT *ir,
 }
 
 /**
- * \fn ivector fasp_sparse_MIS(dCSRmat *A)
+ * \fn ivector fasp_sparse_MIS (dCSRmat *A)
  *
  * \brief get the maximal independet set of a CSR matrix
  *
@@ -906,10 +906,9 @@ void fasp_sparse_rapcmp_ (INT *ir,
  *
  * \note: only use the sparsity of A, index starts from 1 (fortran)!!
  */
-ivector fasp_sparse_MIS(dCSRmat *A)
+ivector fasp_sparse_MIS (dCSRmat *A)
 {
-    
-    //! information of A
+    // information of A
     INT n = A->row;
     INT *IA = A->IA;
     INT *JA = A->JA;
@@ -923,23 +922,19 @@ ivector fasp_sparse_MIS(dCSRmat *A)
     //for (i=0;i<n;i++) flag[i]=0;
     memset(flag, 0, sizeof(INT)*n);
     
-    //! work space
-    //INT *work = (INT *)fasp_mem_calloc (n, sizeof(INT));
+    // work space
     INT *work = (INT*)fasp_mem_calloc(n,sizeof(INT));
     
-    //! return
+    // return vector
     ivector MIS;
     
-    //main loop
+    // main loop
     for (i=0;i<n;i++) {
         if (flag[i] == 0) {
             flag[i] = 1;
             row_begin = IA[i] - 1; row_end = IA[i+1] - 1;
-            //row_begin = IA[i]; row_end = IA[i+1];
             for (j = row_begin; j<row_end; j++) {
                 if (flag[JA[j]-1] > 0) {
-                    //if (flag[JA[j]] > 0) {
-                    //if (flag[JA[j]-1] >= 0) {
                     flag[i] = -1;
                     break;
                 }
@@ -948,7 +943,6 @@ ivector fasp_sparse_MIS(dCSRmat *A)
                 work[count] = i; count++;
                 for (j = row_begin; j<row_end; j++) {
                     flag[JA[j]-1] = -1;
-                    //flag[JA[j]] = -1;
                 }
             }
         } // end if
@@ -965,7 +959,6 @@ ivector fasp_sparse_MIS(dCSRmat *A)
     //return
     return MIS;
 }
-
 
 /*---------------------------------*/
 /*--        End of File          --*/

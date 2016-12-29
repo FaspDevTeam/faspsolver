@@ -41,9 +41,9 @@ static INT  write_bmp16(const char *fname, INT m, INT n, const char map[]);
  *  Red      negative element
  *  Brown    nearly zero element
  */
-void fasp_dcsr_subplot (const dCSRmat *A,
-                        const char *filename,
-                        INT size)
+void fasp_dcsr_subplot (const dCSRmat  *A,
+                        const char     *filename,
+                        INT             size)
 {
     INT m = A->row;
     INT n = A->col;
@@ -102,9 +102,9 @@ void fasp_dcsr_subplot (const dCSRmat *A,
  *  Red      negative element
  *  Brown    nearly zero element
  */
-void fasp_dbsr_subplot (const dBSRmat *A,
-                        const char *filename,
-                        INT size)
+void fasp_dbsr_subplot (const dBSRmat  *A,
+                        const char     *filename,
+                        INT             size)
 {
 	INT m = A->ROW;
     INT n = A->COL;
@@ -169,8 +169,8 @@ void fasp_dbsr_subplot (const dBSRmat *A,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_grid2d_plot (pgrid2d pg,
-                       INT level)
+void fasp_grid2d_plot (pgrid2d   pg,
+                       INT       level)
 {
     FILE *datei;
     char buf[120];
@@ -259,8 +259,8 @@ void fasp_grid2d_plot (pgrid2d pg,
  * \param c  byte to write
  *
  */
-static void put_byte (FILE *fp,
-                      const INT c)
+static void put_byte (FILE       *fp,
+                      const INT   c)
 {
     fputc(c, fp);
     return;
@@ -275,8 +275,8 @@ static void put_byte (FILE *fp,
  * \param w  word to write
  *
  */
-static void put_word (FILE *fp,
-                      const INT w)
+static void put_word (FILE       *fp,
+                      const INT   w)
 { /* big endian */
     put_byte(fp, w);
     put_byte(fp, w >> 8);
@@ -292,8 +292,8 @@ static void put_word (FILE *fp,
  * \param d  REAL-word to write
  *
  */
-static void put_dword (FILE *fp,
-                       const INT d)
+static void put_dword (FILE       *fp,
+                       const INT   d)
 { /* big endian */
     put_word(fp, d);
     put_word(fp, d >> 16);
@@ -365,10 +365,10 @@ static void put_dword (FILE *fp,
  *  You should have received a copy of the GNU General Public License
  *  along with GLPK. If not, see <http://www.gnu.org/licenses/>.
  */
-static INT write_bmp16 (const char *fname,
-                        const INT m,
-                        const INT n,
-                        const char map[])
+static INT write_bmp16 (const char   *fname,
+                        const INT     m,
+                        const INT     n,
+                        const char    map[])
 {
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;
@@ -438,6 +438,7 @@ static INT write_bmp16 (const char *fname,
         printf("### ERROR: %s write error on `%s'\n", __FUNCTION__, fname);
         ret = 0;
     }
+    
 FINISH: if (fp != NULL) fclose(fp);
     return ret;
 }
@@ -466,8 +467,8 @@ FINISH: if (fp != NULL) fclose(fp);
  *  Red      negative element
  *  Brown    nearly zero element
  */
-INT fasp_dbsr_plot (const dBSRmat *A,
-                    const char *fname)
+INT fasp_dbsr_plot (const dBSRmat   *A,
+                    const char      *fname)
 {
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;
@@ -594,6 +595,7 @@ INT fasp_dbsr_plot (const dBSRmat *A,
         printf("### ERROR: %s write error on `%s'\n", __FUNCTION__, fname);
         ret = 0;
     }
+    
 FINISH: if (fp != NULL) fclose(fp);
     
 	fasp_mem_free(map);
@@ -625,8 +627,8 @@ FINISH: if (fp != NULL) fclose(fp);
  *  Red      negative element
  *  Brown    nearly zero element
  */
-INT fasp_dcsr_plot (const dCSRmat *A,
-                    const char *fname)
+INT fasp_dcsr_plot (const dCSRmat   *A,
+                    const char      *fname)
 {
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;

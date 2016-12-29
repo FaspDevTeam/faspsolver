@@ -47,9 +47,9 @@ extern void ilutp_(const INT *n,REAL *a,INT *ja,INT *ia,INT *lfil,const REAL *dr
  * \author Shiquan Zhang Xiaozhe Hu
  * \date   12/27/2009
  */
-SHORT fasp_ilu_dcsr_setup (dCSRmat *A, 
-                           ILU_data *iludata, 
-                           ILU_param *iluparam)
+SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
+                           ILU_data   *iludata,
+                           ILU_param  *iluparam)
 {
 #if FASP_USE_ILU
     const INT   type=iluparam->ILU_type, print_level=iluparam->print_level;
@@ -135,7 +135,6 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat *A,
             ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol,
                    &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
 #endif
-	 
             break;
             
         default: // ILUk

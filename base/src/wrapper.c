@@ -32,16 +32,16 @@
  * \author Chensong Zhang
  * \date   09/16/2010
  */
-void fasp_fwrapper_amg_ (INT *n,
-                         INT *nnz,
-                         INT *ia,
-                         INT *ja,
+void fasp_fwrapper_amg_ (INT  *n,
+                         INT  *nnz,
+                         INT  *ia,
+                         INT  *ja,
                          REAL *a,
                          REAL *b,
                          REAL *u,
                          REAL *tol,
-                         INT *maxit,
-                         INT *ptrlvl)
+                         INT  *maxit,
+                         INT  *ptrlvl)
 {
     dCSRmat    mat;      // coefficient matrix
     dvector    rhs, sol; // right-hand-side, solution
@@ -82,16 +82,16 @@ void fasp_fwrapper_amg_ (INT *n,
  * \author Chensong Zhang
  * \date   09/16/2010
  */
-void fasp_fwrapper_krylov_amg_ (INT *n,
-                                INT *nnz,
-                                INT *ia,
-                                INT *ja,
+void fasp_fwrapper_krylov_amg_ (INT  *n,
+                                INT  *nnz,
+                                INT  *ia,
+                                INT  *ja,
                                 REAL *a,
                                 REAL *b,
                                 REAL *u,
                                 REAL *tol,
-                                INT *maxit,
-                                INT *ptrlvl)
+                                INT  *maxit,
+                                INT  *ptrlvl)
 {
     dCSRmat         mat;      // coefficient matrix
     dvector         rhs, sol; // right-hand-side, solution
@@ -149,17 +149,17 @@ void fasp_fwrapper_krylov_amg_ (INT *n,
  * \author Xiaozhe Hu
  * \date   03/05/2013
  */
-INT fasp_wrapper_dbsr_krylov_amg (INT n,
-                                  INT nnz,
-                                  INT nb,
-                                  INT *ia,
-                                  INT *ja,
+INT fasp_wrapper_dbsr_krylov_amg (INT   n,
+                                  INT   nnz,
+                                  INT   nb,
+                                  INT  *ia,
+                                  INT  *ja,
                                   REAL *a,
                                   REAL *b,
                                   REAL *u,
-                                  REAL tol,
-                                  INT maxit,
-                                  INT ptrlvl)
+                                  REAL  tol,
+                                  INT   maxit,
+                                  INT   ptrlvl)
 {
     dCSRmat         mat;      // coefficient matrix in CSR format
     dBSRmat         bsrmat;   // coefficient matrix in BSR format
@@ -235,17 +235,17 @@ INT fasp_wrapper_dbsr_krylov_amg (INT n,
  * \author Xiaozhe Hu
  * \date   03/06/2013
  */
-INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT n,
-                                       INT nnz,
-                                       INT nb,
-                                       INT *ia,
-                                       INT *ja,
+INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT   n,
+                                       INT   nnz,
+                                       INT   nb,
+                                       INT  *ia,
+                                       INT  *ja,
                                        REAL *a,
                                        REAL *b,
                                        REAL *u,
-                                       REAL tol,
-                                       INT maxit,
-                                       INT ptrlvl)
+                                       REAL  tol,
+                                       INT   maxit,
+                                       INT   ptrlvl)
 {
     
     dCOOmat         coomat;   // coefficient matrix in COO format

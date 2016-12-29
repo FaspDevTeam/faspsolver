@@ -33,11 +33,11 @@
  * \author Xiaozhe Hu
  * \date   10/26/2010
  */
-dBSRmat fasp_dbsr_create (const INT ROW,
-                          const INT COL,
-                          const INT NNZ,
-                          const INT nb,
-                          const INT storage_manner)
+dBSRmat fasp_dbsr_create (const INT  ROW,
+                          const INT  COL,
+                          const INT  NNZ,
+                          const INT  nb,
+                          const INT  storage_manner)
 {
     dBSRmat A;
     
@@ -84,12 +84,12 @@ dBSRmat fasp_dbsr_create (const INT ROW,
  * \author Xiaozhe Hu
  * \date   10/26/2010
  */
-void fasp_dbsr_alloc (const INT ROW,
-                      const INT COL,
-                      const INT NNZ,
-                      const INT nb,
-                      const INT storage_manner,
-                      dBSRmat *A)
+void fasp_dbsr_alloc (const INT  ROW,
+                      const INT  COL,
+                      const INT  NNZ,
+                      const INT  nb,
+                      const INT  storage_manner,
+                      dBSRmat   *A)
 {
     if ( ROW > 0 ) {
         A->IA = (INT*)fasp_mem_calloc(ROW+1, sizeof(INT));
@@ -480,7 +480,7 @@ dvector fasp_dbsr_getdiaginv (dBSRmat *A)
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_diaginv ( dBSRmat *A )
+ * \fn dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
  *
@@ -643,7 +643,7 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_diaginv2 ( dBSRmat *A, REAL *diaginv )
+ * \fn dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A, REAL *diaginv)
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
  *
@@ -658,7 +658,7 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
  * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
 dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
-                            REAL *diaginv)
+                            REAL    *diaginv)
 {
     // members of A
     const INT ROW = A->ROW;
@@ -760,7 +760,7 @@ dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
  * Modified by Xiaozhe Hu on 05/26/2012
  */
 dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
-                            REAL *diaginv)
+                            REAL    *diaginv)
 {
     dBSRmat B;
     // members of A
@@ -1118,7 +1118,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
  * Modified by Chunsheng Feng, Zheng Li on 08/26/2012
  */
 dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
-                            REAL *diaginv)
+                            REAL    *diaginv)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -1393,7 +1393,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
 }
 
 /*!
- * \fn fasp_dbsr_getdiag ( INT n, dBSRmat *A, REAL *diag )
+ * \fn fasp_dbsr_getdiag (INT n, dBSRmat *A, REAL *diag)
  *
  * \brief Abstract the diagonal blocks of a BSR matrix.
  *
@@ -1408,9 +1408,9 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
-void fasp_dbsr_getdiag (INT n,
+void fasp_dbsr_getdiag (INT      n,
                         dBSRmat *A,
-                        REAL *diag )
+                        REAL    *diag )
 {
     const INT nb2 = A->nb*A->nb;
     
@@ -1447,8 +1447,8 @@ void fasp_dbsr_getdiag (INT n,
  * \date   04/02/2014
  */
 dBSRmat fasp_dbsr_diagLU (dBSRmat *A,
-                          REAL *DL,
-                          REAL *DU)
+                          REAL    *DL,
+                          REAL    *DU)
 {
     
     // members of A
@@ -1675,8 +1675,8 @@ dBSRmat fasp_dbsr_diagLU (dBSRmat *A,
  * \date   06/17/2014
  */
 dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
-                           REAL *DL,
-                           REAL *DU)
+                           REAL    *DL,
+                           REAL    *DU)
 {
     
     // members of A
@@ -1861,12 +1861,12 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
 }
 
 /**
- * \fn dBSRmat fasp_dcsr_perm (dBSRmat *A, INT *P)
+ * \fn dBSRmat fasp_dbsr_perm (dBSRmat *A, INT *P)
  *
  * \brief Apply permutation of A, i.e. Aperm=PAP' by the orders given in P
  *
  * \param A  Pointer to the original dCSRmat matrix
- * \param P  Pointer to orders
+ * \param P  Pointer to the given ordering
  *
  * \return   The new ordered dCSRmat matrix if succeed, NULL if fail
  *
@@ -1874,10 +1874,9 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
  * \date   24/9/2015
  *
  * \note   P[i] = k means k-th row and column become i-th row and column!
- *
  */
 dBSRmat fasp_dbsr_perm (dBSRmat *A,
-                        INT *P)
+                        INT     *P)
 {
     const INT n=A->ROW,nnz=A->NNZ;
     const INT *ia=A->IA, *ja=A->JA;
@@ -1980,6 +1979,7 @@ dBSRmat fasp_dbsr_perm (dBSRmat *A,
     
     return(Aperm);
 }
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

@@ -41,14 +41,14 @@
  *
  * Modified by Chensong Zhang on 05/01/2012
  */
-INT fasp_solver_dcsr_pgcg (dCSRmat *A,
-                           dvector *b,
-                           dvector *u,
-                           precond *pc,
-                           const REAL tol,
-                           const INT MaxIt,
-                           const SHORT stop_type,
-                           const SHORT prtlvl)
+INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
+                           dvector     *b,
+                           dvector     *u,
+                           precond     *pc,
+                           const REAL   tol,
+                           const INT    MaxIt,
+                           const SHORT  stop_type,
+                           const SHORT  prtlvl)
 {
     INT    iter=0, m=A->row, i;
     REAL   absres0 = BIGREAL, absres = BIGREAL;

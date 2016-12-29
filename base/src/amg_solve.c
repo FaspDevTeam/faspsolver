@@ -33,8 +33,8 @@
  *
  * Modified by Chensong 04/21/2013: Fix an output typo
  */
-INT fasp_amg_solve (AMG_data *mgl,
-                    AMG_param *param)
+INT fasp_amg_solve (AMG_data   *mgl,
+                    AMG_param  *param)
 {
     dCSRmat      *ptrA = &mgl[0].A;
     dvector      *b = &mgl[0].b, *x = &mgl[0].x, *r = &mgl[0].w;
@@ -122,8 +122,8 @@ INT fasp_amg_solve (AMG_data *mgl,
  *
  * Modified by Chensong 04/21/2013: Fix an output typo
  */
-INT fasp_amg_solve_amli (AMG_data *mgl,
-                         AMG_param *param)
+INT fasp_amg_solve_amli (AMG_data   *mgl,
+                         AMG_param  *param)
 {
     dCSRmat     *ptrA = &mgl[0].A;
     dvector     *b = &mgl[0].b, *x = &mgl[0].x, *r = &mgl[0].w;
@@ -206,8 +206,8 @@ INT fasp_amg_solve_amli (AMG_data *mgl,
  *       "Comparative Convergence Analysis of Nonlinear AMLI-cycle Multigrid", 2013.
  *
  */
-INT fasp_amg_solve_nl_amli (AMG_data *mgl,
-                            AMG_param *param)
+INT fasp_amg_solve_nl_amli (AMG_data   *mgl,
+                            AMG_param  *param)
 {
     dCSRmat      *ptrA = &mgl[0].A;
     dvector      *b = &mgl[0].b, *x = &mgl[0].x, *r = &mgl[0].w;
@@ -278,8 +278,8 @@ INT fasp_amg_solve_nl_amli (AMG_data *mgl,
  * \author Chensong Zhang
  * \date   01/10/2012
  */
-void fasp_famg_solve (AMG_data *mgl,
-                      AMG_param *param)
+void fasp_famg_solve (AMG_data   *mgl,
+                      AMG_param  *param)
 {
     dCSRmat     *ptrA = &mgl[0].A;
     dvector     *b = &mgl[0].b, *x = &mgl[0].x, *r = &mgl[0].w;

@@ -27,8 +27,8 @@
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-void fasp_blas_dbsr_axm (dBSRmat *A,
-                         const REAL alpha)
+void fasp_blas_dbsr_axm (dBSRmat     *A,
+                         const REAL   alpha)
 {
     const INT nnz = A->NNZ;
     const INT nb  = A->nb;
@@ -56,11 +56,11 @@ void fasp_blas_dbsr_axm (dBSRmat *A,
  *
  * \note Works for general nb (Xiaozhe)
  */
-void fasp_blas_dbsr_aAxpby (const REAL alpha,
-                            dBSRmat *A,
-                            REAL *x,
-                            const REAL beta,
-                            REAL *y )
+void fasp_blas_dbsr_aAxpby (const REAL   alpha,
+                            dBSRmat     *A,
+                            REAL        *x,
+                            const REAL   beta,
+                            REAL        *y )
 {
     /* members of A */
     INT  ROW  = A->ROW;
@@ -107,7 +107,7 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
             memset(y, 0X0, size*sizeof(REAL));
         }
         else {
-            //for (i = size; i--; ) y[i] *= temp;  // modified by Xiaozhe, 03/11/2011
+            //for (i = size; i--; ) y[i] *= temp; // modified by Xiaozhe, 03/11/2011
             fasp_blas_array_ax(size, temp, y);
         }
     }
@@ -156,6 +156,7 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
             }
         }
             break;
+            
         case 3:
         {
             if (use_openmp) {
@@ -231,6 +232,7 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
             }
         }
             break;
+            
         case 7:
         {
             if (use_openmp) {
@@ -334,10 +336,10 @@ void fasp_blas_dbsr_aAxpby (const REAL alpha,
  *
  * \note Works for general nb (Xiaozhe)
  */
-void fasp_blas_dbsr_aAxpy (const REAL alpha,
-                           dBSRmat *A,
-                           REAL *x,
-                           REAL *y)
+void fasp_blas_dbsr_aAxpy (const REAL   alpha,
+                           dBSRmat     *A,
+                           REAL        *x,
+                           REAL        *y)
 {
     /* members of A */
     INT     ROW = A->ROW;
@@ -502,6 +504,7 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
             }
         }
             break;
+            
         case 7:
         {
             if (use_openmp) {
@@ -607,10 +610,10 @@ void fasp_blas_dbsr_aAxpy (const REAL alpha,
  *
  * \note Works for general nb (Xiaozhe)
  */
-void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
-                               dBSRmat *A,
-                               REAL *x,
-                               REAL *y)
+void fasp_blas_dbsr_aAxpy_agg (const REAL   alpha,
+                               dBSRmat     *A,
+                               REAL        *x,
+                               REAL        *y)
 {
     /* members of A */
     INT     ROW = A->ROW;
@@ -892,9 +895,9 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL alpha,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_blas_dbsr_mxv (dBSRmat *A,
-                         REAL *x,
-                         REAL *y)
+void fasp_blas_dbsr_mxv (dBSRmat   *A,
+                         REAL      *x,
+                         REAL      *y)
 {
     /* members of A */
     INT     ROW = A->ROW;
@@ -971,6 +974,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc3( pA, px0, py );
                                 
                                 break;
+                                
                             case 4:
                                 k = IA[i];
                                 j = JA[k];
@@ -1001,6 +1005,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc3( pA, px0, py );
                                 
                                 break;
+                                
                             case 5:
                                 k = IA[i];
                                 j = JA[k];
@@ -1038,6 +1043,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc3( pA, px0, py );
                                 
                                 break;
+                                
                             case 6:
                                 k = IA[i];
                                 j = JA[k];
@@ -1082,6 +1088,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc3( pA, px0, py );
                                 
                                 break;
+                                
                             case 7:
                                 k = IA[i];
                                 j = JA[k];
@@ -1133,6 +1140,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc3( pA, px0, py );
                                 
                                 break;
+                                
                             default:
                                 for (k = IA[i]; k < IA[i+1]; ++k)
                                 {
@@ -1178,6 +1186,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc3( pA, px0, py );
                             
                             break;
+                            
                         case 4:
                             k = IA[i];
                             j = JA[k];
@@ -1208,6 +1217,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc3( pA, px0, py );
                             
                             break;
+                            
                         case 5:
                             k = IA[i];
                             j = JA[k];
@@ -1245,6 +1255,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc3( pA, px0, py );
                             
                             break;
+                            
                         case 6:
                             k = IA[i];
                             j = JA[k];
@@ -1289,6 +1300,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc3( pA, px0, py );
                             
                             break;
+                            
                         case 7:
                             k = IA[i];
                             j = JA[k];
@@ -1340,6 +1352,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc3( pA, px0, py );
                             
                             break;
+                            
                         default:
                             for (k = IA[i]; k < IA[i+1]; ++k)
                             {
@@ -1393,6 +1406,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc5( pA, px0, py );
                                 
                                 break;
+                                
                             case 4:
                                 k = IA[i];
                                 j = JA[k];
@@ -1423,6 +1437,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc5( pA, px0, py );
                                 
                                 break;
+                                
                             case 5:
                                 k = IA[i];
                                 j = JA[k];
@@ -1460,6 +1475,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc5( pA, px0, py );
                                 
                                 break;
+                                
                             case 6:
                                 k = IA[i];
                                 j = JA[k];
@@ -1504,6 +1520,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc5( pA, px0, py );
                                 
                                 break;
+                                
                             case 7:
                                 k = IA[i];
                                 j = JA[k];
@@ -1555,6 +1572,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc5( pA, px0, py );
                                 
                                 break;
+                                
                             default:
                                 for (k = IA[i]; k < IA[i+1]; ++k)
                                 {
@@ -1600,6 +1618,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc5( pA, px0, py );
                             
                             break;
+                            
                         case 4:
                             k = IA[i];
                             j = JA[k];
@@ -1630,6 +1649,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc5( pA, px0, py );
                             
                             break;
+                            
                         case 5:
                             k = IA[i];
                             j = JA[k];
@@ -1667,6 +1687,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc5( pA, px0, py );
                             
                             break;
+                            
                         case 6:
                             k = IA[i];
                             j = JA[k];
@@ -1711,6 +1732,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc5( pA, px0, py );
                             
                             break;
+                            
                         case 7:
                             k = IA[i];
                             j = JA[k];
@@ -1762,6 +1784,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc5( pA, px0, py );
                             
                             break;
+                            
                         default:
                             for (k = IA[i]; k < IA[i+1]; ++k)
                             {
@@ -1815,6 +1838,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc7( pA, px0, py );
                                 
                                 break;
+                                
                             case 4:
                                 k = IA[i];
                                 j = JA[k];
@@ -1845,6 +1869,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc7( pA, px0, py );
                                 
                                 break;
+                                
                             case 5:
                                 k = IA[i];
                                 j = JA[k];
@@ -1882,6 +1907,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc7( pA, px0, py );
                                 
                                 break;
+                                
                             case 6:
                                 k = IA[i];
                                 j = JA[k];
@@ -1926,6 +1952,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc7( pA, px0, py );
                                 
                                 break;
+                                
                             case 7:
                                 k = IA[i];
                                 j = JA[k];
@@ -1977,6 +2004,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx_nc7( pA, px0, py );
                                 
                                 break;
+                                
                             default:
                                 for (k = IA[i]; k < IA[i+1]; ++k)
                                 {
@@ -2022,6 +2050,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc7( pA, px0, py );
                             
                             break;
+                            
                         case 4:
                             k = IA[i];
                             j = JA[k];
@@ -2052,6 +2081,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc7( pA, px0, py );
                             
                             break;
+                            
                         case 5:
                             k = IA[i];
                             j = JA[k];
@@ -2089,6 +2119,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc7( pA, px0, py );
                             
                             break;
+                            
                         case 6:
                             k = IA[i];
                             j = JA[k];
@@ -2133,6 +2164,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc7( pA, px0, py );
                             
                             break;
+                            
                         case 7:
                             k = IA[i];
                             j = JA[k];
@@ -2184,6 +2216,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx_nc7( pA, px0, py );
                             
                             break;
+                            
                         default:
                             for (k = IA[i]; k < IA[i+1]; ++k)
                             {
@@ -2237,6 +2270,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx( pA, px0, py, nb );
                                 
                                 break;
+                                
                             case 4:
                                 k = IA[i];
                                 j = JA[k];
@@ -2267,6 +2301,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx( pA, px0, py, nb );
                                 
                                 break;
+                                
                             case 5:
                                 k = IA[i];
                                 j = JA[k];
@@ -2304,6 +2339,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx( pA, px0, py, nb );
                                 
                                 break;
+                                
                             case 6:
                                 k = IA[i];
                                 j = JA[k];
@@ -2348,6 +2384,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx( pA, px0, py, nb );
                                 
                                 break;
+                                
                             case 7:
                                 k = IA[i];
                                 j = JA[k];
@@ -2399,6 +2436,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                                 fasp_blas_smat_ypAx( pA, px0, py, nb );
                                 
                                 break;
+                                
                             default:
                                 for (k = IA[i]; k < IA[i+1]; ++k)
                                 {
@@ -2444,6 +2482,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx( pA, px0, py, nb );
                             
                             break;
+                            
                         case 4:
                             k = IA[i];
                             j = JA[k];
@@ -2474,6 +2513,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx( pA, px0, py, nb );
                             
                             break;
+                            
                         case 5:
                             k = IA[i];
                             j = JA[k];
@@ -2511,6 +2551,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx( pA, px0, py, nb );
                             
                             break;
+                            
                         case 6:
                             k = IA[i];
                             j = JA[k];
@@ -2555,6 +2596,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx( pA, px0, py, nb );
                             
                             break;
+                            
                         case 7:
                             k = IA[i];
                             j = JA[k];
@@ -2606,6 +2648,7 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
                             fasp_blas_smat_ypAx( pA, px0, py, nb );
                             
                             break;
+                            
                         default:
                             for (k = IA[i]; k < IA[i+1]; ++k)
                             {
@@ -2638,9 +2681,9 @@ void fasp_blas_dbsr_mxv (dBSRmat *A,
  *
  * \note Works for general nb (Xiaozhe)
  */
-void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
-                             REAL *x,
-                             REAL *y)
+void fasp_blas_dbsr_mxv_agg (dBSRmat   *A,
+                             REAL      *x,
+                             REAL      *y)
 {
     /* members of A */
     const INT  ROW  = A->ROW;
@@ -4588,9 +4631,9 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat *A,
  *
  * \note This fct will be replaced! -- Xiaozhe
  */
-void fasp_blas_dbsr_mxm (dBSRmat *A,
-                         dBSRmat *B,
-                         dBSRmat *C)
+void fasp_blas_dbsr_mxm (dBSRmat   *A,
+                         dBSRmat   *B,
+                         dBSRmat   *C)
 {
     
     INT i,j,k,l,count;
@@ -4708,10 +4751,10 @@ void fasp_blas_dbsr_mxm (dBSRmat *A,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dbsr_rap1 (dBSRmat *R,
-                          dBSRmat *A,
-                          dBSRmat *P,
-                          dBSRmat *B)
+void fasp_blas_dbsr_rap1 (dBSRmat   *R,
+                          dBSRmat   *A,
+                          dBSRmat   *P,
+                          dBSRmat   *B)
 {
     const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
     INT nB=A->NNZ;
@@ -4892,10 +4935,10 @@ void fasp_blas_dbsr_rap1 (dBSRmat *R,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dbsr_rap (dBSRmat *R,
-                         dBSRmat *A,
-                         dBSRmat *P,
-                         dBSRmat *B)
+void fasp_blas_dbsr_rap (dBSRmat   *R,
+                         dBSRmat   *A,
+                         dBSRmat   *P,
+                         dBSRmat   *B)
 {
     const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
     //INT nB=A->NNZ;
@@ -5157,10 +5200,10 @@ jj3, i3, smat_tmp)
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dbsr_rap_agg (dBSRmat *R,
-                             dBSRmat *A,
-                             dBSRmat *P,
-                             dBSRmat *B)
+void fasp_blas_dbsr_rap_agg (dBSRmat   *R,
+                             dBSRmat   *A,
+                             dBSRmat   *P,
+                             dBSRmat   *B)
 {
     const INT row=R->ROW, col=P->COL, nb2=A->nb*A->nb;
     //INT nB=A->NNZ;

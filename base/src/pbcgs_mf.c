@@ -89,14 +89,14 @@
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Feiteng Huang on 09/26/2012, (mmatrix free)
  */
-INT fasp_solver_pbcgs (mxv_matfree *mf,
-                       dvector *b,
-                       dvector *u,
-                       precond *pc,
-                       const REAL tol,
-                       const INT MaxIt,
-                       const SHORT stop_type,
-                       const SHORT prtlvl)
+INT fasp_solver_pbcgs (mxv_matfree  *mf,
+                       dvector      *b,
+                       dvector      *u,
+                       precond      *pc,
+                       const REAL    tol,
+                       const INT     MaxIt,
+                       const SHORT   stop_type,
+                       const SHORT   prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;
@@ -407,15 +407,14 @@ FINISHED:  // finish the iterative method
         return iter;
 }
 
-
 /**
  * \fn INT fasp_solver_pvbcgs (mxv_matfree *mf, dvector *b, dvector *u, precond *pc,
- *                                 const REAL tol, const INT MaxIt,
- *                                 const SHORT stop_type, const SHORT prtlvl)
+ *                             const REAL tol, const INT MaxIt,
+ *                             const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b, Rewritten from Matlab 2011a
  *
- * \param A            Pointer to the coefficient matrix
+ * \param mf           Pointer to mxv_matfree: the spmv operation
  * \param b            Pointer to the dvector of right hand side
  * \param u            Pointer to the dvector of DOFs
  * \param pc           Pointer to precond: the structure of precondition
@@ -428,16 +427,15 @@ FINISHED:  // finish the iterative method
  *
  * \author Chunsheng Feng
  * \date   03/04/2016
- *
  */
 INT fasp_solver_pvbcgs (mxv_matfree *mf,
-                        dvector *b,
-                        dvector *u,
-                        precond *pc,
-                        const REAL tol,
-                        const INT MaxIt,
-                        const SHORT stop_type,
-                        const SHORT prtlvl)
+                        dvector     *b,
+                        dvector     *u,
+                        precond     *pc,
+                        const REAL   tol,
+                        const INT    MaxIt,
+                        const SHORT  stop_type,
+                        const SHORT  prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;

@@ -54,12 +54,12 @@ void fasp_dstr_null (dSTRmat *A)
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   05/17/2010 
  */
-dSTRmat fasp_dstr_create (const INT nx,
-                          const INT ny,
-                          const INT nz,
-                          const INT nc,
-                          const INT nband,
-                          INT *offsets)
+dSTRmat fasp_dstr_create (const INT  nx,
+                          const INT  ny,
+                          const INT  nz,
+                          const INT  nc,
+                          const INT  nband,
+                          INT       *offsets)
 {    
     dSTRmat A;
     
@@ -106,15 +106,15 @@ dSTRmat fasp_dstr_create (const INT nx,
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   05/17/2010  
  */
-void fasp_dstr_alloc (const INT nx,
-                      const INT ny,
-                      const INT nz,
-                      const INT nxy,
-                      const INT ngrid,
-                      const INT nband,
-                      const INT nc,
-                      INT *offsets, 
-                      dSTRmat *A)
+void fasp_dstr_alloc (const INT  nx,
+                      const INT  ny,
+                      const INT  nz,
+                      const INT  nxy,
+                      const INT  ngrid,
+                      const INT  nband,
+                      const INT  nc,
+                      INT       *offsets,
+                      dSTRmat   *A)
 {    
     INT i;
     
@@ -168,34 +168,34 @@ void fasp_dstr_free (dSTRmat *A)
 }
 
 /**
- * \fn void fasp_dstr_cp (dSTRmat *A, dSTRmat *A1)
+ * \fn void fasp_dstr_cp (dSTRmat *A, dSTRmat *B)
  *
- * \brief Copy a dSTRmat to a new one A1=A
+ * \brief Copy a dSTRmat to a new one B=A
  *
  * \param A   Pointer to the dSTRmat matrix
- * \param A1  Pointer to the dSTRmat matrix
+ * \param B   Pointer to the dSTRmat matrix
  * 
  * \author Zhiyang Zhou
  * \date   04/21/2010  
  */
 void fasp_dstr_cp (dSTRmat *A, 
-                   dSTRmat *A1)
+                   dSTRmat *B)
 {    
     const INT nc2 = (A->nc)*(A->nc);
 
     INT i;
-    A1->nx=A->nx;
-    A1->ny=A->ny;
-    A1->nz=A->nz;
-    A1->nxy=A->nxy;
-    A1->ngrid=A->ngrid;
-    A1->nc=A->nc;
-    A1->nband=A->nband;
+    B->nx=A->nx;
+    B->ny=A->ny;
+    B->nz=A->nz;
+    B->nxy=A->nxy;
+    B->ngrid=A->ngrid;
+    B->nc=A->nc;
+    B->nband=A->nband;
     
-    memcpy(A1->offsets,A->offsets,(A->nband)*sizeof(INT));
-    memcpy(A1->diag,A->diag,(A->ngrid*nc2)*sizeof(REAL));
+    memcpy(B->offsets,A->offsets,(A->nband)*sizeof(INT));
+    memcpy(B->diag,A->diag,(A->ngrid*nc2)*sizeof(REAL));
     for (i=0;i<A->nband;++i)
-        memcpy(A1->offdiag[i],A->offdiag[i],((A->ngrid - ABS(A->offsets[i]))*nc2)*sizeof(REAL)); 
+        memcpy(B->offdiag[i],A->offdiag[i],((A->ngrid - ABS(A->offsets[i]))*nc2)*sizeof(REAL)); 
     
 }
 

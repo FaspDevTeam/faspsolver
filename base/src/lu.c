@@ -43,9 +43,9 @@
  * \author Xuehai Huang
  * \date   04/02/2009
  */
-SHORT fasp_smat_lu_decomp (REAL *A,
-                           INT pivot[],
-                           const INT n)
+SHORT fasp_smat_lu_decomp (REAL       *A,
+                           INT         pivot[],
+                           const INT   n)
 {
     INT i, j, k;
     REAL *p_k=NULL, *p_row=NULL, *p_col=NULL;
@@ -114,11 +114,11 @@ SHORT fasp_smat_lu_decomp (REAL *A,
  * \author Xuehai Huang
  * \date   04/02/2009
  */
-SHORT fasp_smat_lu_solve (REAL *A,
-                          REAL b[],
-                          INT pivot[],
-                          REAL x[],
-                          const INT n)
+SHORT fasp_smat_lu_solve (REAL      *A,
+                          REAL       b[],
+                          INT        pivot[],
+                          REAL       x[],
+                          const INT  n)
 {
     INT i, k;
     REAL *p_k;

@@ -45,13 +45,13 @@
  * Modified by Feiteng Huang on 09/26/2012: matrix free
  */
 INT fasp_solver_pgcg (mxv_matfree *mf,
-                      dvector *b,
-                      dvector *u,
-                      precond *pc,
-                      const REAL tol,
-                      const INT MaxIt,
-                      const SHORT stop_type,
-                      const SHORT prtlvl)
+                      dvector     *b,
+                      dvector     *u,
+                      precond     *pc,
+                      const REAL   tol,
+                      const INT    MaxIt,
+                      const SHORT  stop_type,
+                      const SHORT  prtlvl)
 {
     INT    iter=0, m=b->row, i;
     REAL   absres0 = BIGREAL, absres = BIGREAL;

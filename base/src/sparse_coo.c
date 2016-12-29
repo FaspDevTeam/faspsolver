@@ -31,9 +31,9 @@
  * \author Chensong Zhang
  * \date   2010/04/06
  */
-dCOOmat fasp_dcoo_create (const INT m,
-                          const INT n,
-                          const INT nnz)
+dCOOmat fasp_dcoo_create (const INT  m,
+                          const INT  n,
+                          const INT  nnz)
 {
     dCOOmat A;
     
@@ -59,10 +59,10 @@ dCOOmat fasp_dcoo_create (const INT m,
  * \author Xiaozhe Hu
  * \date   03/25/2013
  */
-void fasp_dcoo_alloc (const INT m,
-                      const INT n,
-                      const INT nnz,
-                      dCOOmat *A)
+void fasp_dcoo_alloc (const INT  m,
+                      const INT  n,
+                      const INT  nnz,
+                      dCOOmat   *A)
 {
     
     if ( nnz > 0 ) {
@@ -113,8 +113,8 @@ void fasp_dcoo_free (dCOOmat *A)
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
-void fasp_dcoo_shift (dCOOmat *A,
-                      const INT offset)
+void fasp_dcoo_shift (dCOOmat   *A,
+                      const INT  offset)
 {
     const INT nnz = A->nnz;
     INT       i, *ai = A->rowind, *aj = A->colind;

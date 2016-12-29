@@ -37,10 +37,10 @@
  * \note This is an abstract interface for iterative methods.
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
-INT fasp_solver_dcsr_itsolver (dCSRmat *A,
-                               dvector *b,
-                               dvector *x,
-                               precond *pc,
+INT fasp_solver_dcsr_itsolver (dCSRmat        *A,
+                               dvector        *b,
+                               dvector        *x,
+                               precond        *pc,
                                itsolver_param *itparam)
 {
     const SHORT prtlvl        = itparam->print_level;
@@ -146,9 +146,9 @@ INT fasp_solver_dcsr_itsolver (dCSRmat *A,
  * \author Chensong Zhang, Shiquan Zhang
  * \date   09/25/2009
  */
-INT fasp_solver_dcsr_krylov (dCSRmat *A,
-                             dvector *b,
-                             dvector *x,
+INT fasp_solver_dcsr_krylov (dCSRmat        *A,
+                             dvector        *b,
+                             dvector        *x,
                              itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
@@ -196,9 +196,9 @@ INT fasp_solver_dcsr_krylov (dCSRmat *A,
  * \author Chensong Zhang, Shiquan Zhang
  * \date   09/25/2009
  */
-INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
-                                  dvector *b,
-                                  dvector *x,
+INT fasp_solver_dcsr_krylov_diag (dCSRmat        *A,
+                                  dvector        *b,
+                                  dvector        *x,
                                   itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
@@ -260,11 +260,11 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat *A,
  *
  * Modified by Chensong on 07/02/2012: change interface
  */
-INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
-                                     dvector *b,
-                                     dvector *x,
+INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat        *A,
+                                     dvector        *b,
+                                     dvector        *x,
                                      itsolver_param *itparam,
-                                     Schwarz_param *schparam)
+                                     Schwarz_param  *schparam)
 {
     Schwarz_param swzparam;
     swzparam.Schwarz_mmsize    = schparam->Schwarz_mmsize;
@@ -298,7 +298,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
 	
 	fasp_gettime(&setup_end);
 	setup_duration = setup_end - setup_start;
-    printf("Schwarz_Krylov method setup costs %f seconds.\n", setup_duration);
+    printf("Schwarz_Krylov method setup %f seconds.\n", setup_duration);
 	
 	precond prec;
 	prec.data = &Schwarz_data;
@@ -312,7 +312,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
 	if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        printf("Schwarz_Krylov method totally costs %f seconds.\n", solver_duration);
+        printf("Schwarz_Krylov method totally %f seconds.\n", solver_duration);
 	}
 	
 #if DEBUG_MODE > 0
@@ -341,11 +341,11 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A,
  * \author Chensong Zhang
  * \date   09/25/2009
  */
-INT fasp_solver_dcsr_krylov_amg (dCSRmat *A,
-                                 dvector *b,
-                                 dvector *x,
+INT fasp_solver_dcsr_krylov_amg (dCSRmat        *A,
+                                 dvector        *b,
+                                 dvector        *x,
                                  itsolver_param *itparam,
-                                 AMG_param *amgparam)
+                                 AMG_param      *amgparam)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT max_levels = amgparam->max_levels;
@@ -446,11 +446,11 @@ FINISHED:
  * \author Chensong Zhang, Shiquan Zhang
  * \date   09/25/2009
  */
-INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A,
-                                 dvector *b,
-                                 dvector *x,
+INT fasp_solver_dcsr_krylov_ilu (dCSRmat        *A,
+                                 dvector        *b,
+                                 dvector        *x,
                                  itsolver_param *itparam,
-                                 ILU_param *iluparam)
+                                 ILU_param      *iluparam)
 {
     const SHORT prtlvl = itparam->print_level;
     
@@ -530,12 +530,12 @@ FINISHED:
  * \note This function is specially designed for reservoir simulation.
  *       Have not been tested in any other places.
  */
-INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
-                                   dvector *b,
-                                   dvector *x,
+INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat        *A,
+                                   dvector        *b,
+                                   dvector        *x,
                                    itsolver_param *itparam,
-                                   ILU_param *iluparam,
-                                   dCSRmat *M)
+                                   ILU_param      *iluparam,
+                                   dCSRmat        *M)
 {
     const SHORT prtlvl = itparam->print_level;
     
@@ -572,13 +572,13 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A,
         
         switch (iluparam->ILU_type) {
             case ILUt:
-                print_cputime("ILUt_Krylov method totally", solver_duration);
+                print_cputime("ILUt_Krylov method", solver_duration);
                 break;
             case ILUtp:
-                print_cputime("ILUtp_Krylov method totally", solver_duration);
+                print_cputime("ILUtp_Krylov method", solver_duration);
                 break;
             default: // ILUk
-                print_cputime("ILUk_Krylov method totally", solver_duration);
+                print_cputime("ILUk_Krylov method", solver_duration);
                 break;
         }
     }
@@ -614,14 +614,14 @@ FINISHED:
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
-                                    dvector *b,
-                                    dvector *x,
+INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat        *A,
+                                    dvector        *b,
+                                    dvector        *x,
                                     itsolver_param *itparam,
-                                    AMG_param *amgparam,
-                                    dCSRmat *A_nk,
-                                    dCSRmat *P_nk,
-                                    dCSRmat *R_nk)
+                                    AMG_param      *amgparam,
+                                    dCSRmat        *A_nk,
+                                    dCSRmat        *P_nk,
+                                    dCSRmat        *R_nk)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT max_levels = amgparam->max_levels;
@@ -695,7 +695,7 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A,
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        print_cputime("AMG_NK_Krylov method totally", solver_duration);
+        print_cputime("AMG_NK_Krylov method", solver_duration);
     }
     
 FINISHED:

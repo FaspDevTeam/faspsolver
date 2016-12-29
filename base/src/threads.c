@@ -80,9 +80,9 @@ INT Fasp_Set_Num_Threads (INT nthreads)
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \date   June/25/2012
  */
-void FASP_GET_START_END (INT procid,
-                         INT nprocs,
-                         INT n,
+void FASP_GET_START_END (INT  procid,
+                         INT  nprocs,
+                         INT  n,
                          INT *start,
                          INT *end)
 {

@@ -45,15 +45,15 @@
  * \date   04/06/2013
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
-INT fasp_solver_dcsr_spvgmres (dCSRmat *A,
-                               dvector *b,
-                               dvector *x,
-                               precond *pc,
-                               const REAL tol,
-                               const INT MaxIt,
-                               SHORT restart,
-                               const SHORT stop_type,
-                               const SHORT prtlvl)
+INT fasp_solver_dcsr_spvgmres (dCSRmat      *A,
+                               dvector      *b,
+                               dvector      *x,
+                               precond      *pc,
+                               const REAL    tol,
+                               const INT     MaxIt,
+                               SHORT         restart,
+                               const SHORT   stop_type,
+                               const SHORT   prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;
@@ -401,13 +401,13 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                     const REAL tol, const INT MaxIt, SHORT restart,
- *                                     const SHORT stop_type, const SHORT prtlvl)
+ * \fn INT fasp_solver_dblc_spvgmres (dBLCmat *A, dvector *b, dvector *x, precond *pc,
+ *                                    const REAL tol, const INT MaxIt, SHORT restart,
+ *                                    const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
- * \param A            Pointer to block_dCSRmat: the coefficient matrix
+ * \param A            Pointer to dBLCmat: the coefficient matrix
  * \param b            Pointer to dvector: the right hand side
  * \param x            Pointer to dvector: the unknowns
  * \param pc           Pointer to the structure of precondition (precond)
@@ -422,15 +422,15 @@ FINISHED:
  * \author Chensong Zhang
  * \date   04/06/2013
  */
-INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
-                                dvector *b,
-                                dvector *x,
-                                precond *pc,
-                                const REAL tol,
-                                const INT MaxIt,
-                                SHORT restart,
-                                const SHORT stop_type,
-                                const SHORT prtlvl)
+INT fasp_solver_dblc_spvgmres (dBLCmat     *A,
+                               dvector     *b,
+                               dvector     *x,
+                               precond     *pc,
+                               const REAL   tol,
+                               const INT    MaxIt,
+                               SHORT        restart,
+                               const SHORT  stop_type,
+                               const SHORT  prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;
@@ -504,7 +504,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
     
     // r = b-A*x
     fasp_array_cp(n, b->val, p[0]);
-    fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, p[0]);
+    fasp_blas_dblc_aAxpy(-1.0, A, x->val, p[0]);
     
     r_norm = fasp_blas_array_norm2(n, p[0]);
     
@@ -581,7 +581,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
             else
                 pc->fct(p[i-1], r, pc->data);
             
-            fasp_blas_bdcsr_mxv(A, r, p[i]);
+            fasp_blas_dblc_mxv(A, r, p[i]);
             
             /* modified Gram_Schmidt */
             for (j = 0; j < i; j ++) {
@@ -667,7 +667,7 @@ INT fasp_solver_bdcsr_spvgmres (block_dCSRmat *A,
         if ( relres <= tol && iter >= MIN_ITER ) {
             
             fasp_array_cp(n, b->val, r);
-            fasp_blas_bdcsr_aAxpy(-1.0, A, x->val, r);
+            fasp_blas_dblc_aAxpy(-1.0, A, x->val, r);
             
             r_norm = fasp_blas_array_norm2(n, r);
             
@@ -730,7 +730,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         
         // compute best residual
         fasp_array_cp(n,b->val,r);
-        fasp_blas_bdcsr_aAxpy(-1.0,A,x_best,r);
+        fasp_blas_dblc_aAxpy(-1.0,A,x_best,r);
         
         switch ( stop_type ) {
             case STOP_REL_RES:
@@ -800,15 +800,15 @@ FINISHED:
  * \author Chensong Zhang
  * \date   04/06/2013
  */
-INT fasp_solver_dbsr_spvgmres (dBSRmat *A,
-                               dvector *b,
-                               dvector *x,
-                               precond *pc,
-                               const REAL tol,
-                               const INT MaxIt,
-                               SHORT restart,
-                               const SHORT stop_type,
-                               const SHORT prtlvl)
+INT fasp_solver_dbsr_spvgmres (dBSRmat      *A,
+                               dvector      *b,
+                               dvector      *x,
+                               precond      *pc,
+                               const REAL    tol,
+                               const INT     MaxIt,
+                               SHORT         restart,
+                               const SHORT   stop_type,
+                               const SHORT   prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;
@@ -1178,15 +1178,15 @@ FINISHED:
  * \author Chensong Zhang
  * \date   04/06/2013
  */
-INT fasp_solver_dstr_spvgmres (dSTRmat *A,
-                               dvector *b,
-                               dvector *x,
-                               precond *pc,
-                               const REAL tol,
-                               const INT MaxIt,
-                               SHORT restart,
-                               const SHORT stop_type,
-                               const SHORT prtlvl)
+INT fasp_solver_dstr_spvgmres (dSTRmat      *A,
+                               dvector      *b,
+                               dvector      *x,
+                               precond      *pc,
+                               const REAL    tol,
+                               const INT     MaxIt,
+                               SHORT         restart,
+                               const SHORT   stop_type,
+                               const SHORT   prtlvl)
 {
     const INT   n          = b->row;
     const INT   MIN_ITER   = 0;

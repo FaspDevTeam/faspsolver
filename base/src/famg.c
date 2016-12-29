@@ -28,10 +28,10 @@
  * Modified by Chensong Zhang on 01/10/2012
  * Modified by Chensong Zhang on 05/05/2013: Remove error handling for AMG setup
  */
-void fasp_solver_famg (dCSRmat *A,
-                       dvector *b,
-                       dvector *x,
-                       AMG_param *param)
+void fasp_solver_famg (dCSRmat    *A,
+                       dvector    *b,
+                       dvector    *x,
+                       AMG_param  *param)
 {
     const SHORT   max_levels  = param->max_levels;
     const SHORT   prtlvl      = param->print_level;

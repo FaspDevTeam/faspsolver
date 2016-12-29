@@ -16,11 +16,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
     void * nedcalloc(size_t no, size_t size);
     void * nedrealloc(void *mem, size_t size);
     void   nedfree(void *mem);
-    
 #ifdef __cplusplus
 }
 #endif
@@ -57,8 +55,8 @@ const    INT Million           = 1048576;  //! 1M = 1024*1024
  * Modified by Chunsheng Feng on 07/30/2013
  * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
-void * fasp_mem_calloc (LONGLONG size,
-                        INT type)
+void * fasp_mem_calloc (LONGLONG  size,
+                        INT       type)
 {
     const LONGLONG tsize = size*type;
     
@@ -107,8 +105,8 @@ void * fasp_mem_calloc (LONGLONG size,
  * Modified by Chunsheng Feng on 07/23/2013
  * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
-void * fasp_mem_realloc (void * oldmem,
-                         LONGLONG tsize)
+void * fasp_mem_realloc (void     *oldmem,
+                         LONGLONG  tsize)
 {
     void * mem = NULL;
 
@@ -136,7 +134,7 @@ void * fasp_mem_realloc (void * oldmem,
 }
 
 /**
- * \fn void fasp_mem_free (void* mem)
+ * \fn void fasp_mem_free (void *mem)
  *
  * \brief Free up previous allocated memory body
  *
@@ -147,7 +145,7 @@ void * fasp_mem_realloc (void * oldmem,
  * \author Chensong Zhang
  * \date   2010/12/24
  */
-void fasp_mem_free (void * mem)
+void fasp_mem_free (void *mem)
 {
     if ( mem ) {
 #if DLMALLOC
@@ -194,9 +192,9 @@ void fasp_mem_usage ()
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-SHORT fasp_mem_check (void *ptr,
-                      const char *message,
-                      INT ERR)
+SHORT fasp_mem_check (void        *ptr,
+                      const char  *message,
+                      INT          ERR)
 {
     if ( ptr == NULL ) {
         printf("### ERROR: %s", message);

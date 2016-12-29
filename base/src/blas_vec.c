@@ -30,9 +30,9 @@
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_blas_dvec_axpy (const REAL a, 
-                          dvector *x, 
-                          dvector *y)
+void fasp_blas_dvec_axpy (const REAL   a,
+                          dvector     *x,
+                          dvector     *y)
 {
     INT i, m=x->row;
     INT use_openmp = FALSE;
@@ -82,10 +82,10 @@ void fasp_blas_dvec_axpy (const REAL a,
  * Modified by Chunsheng Feng, Xiaoqiang Yue
  * \date   05/23/2012    
  */
-void fasp_blas_dvec_axpyz(const REAL a, 
-                          dvector *x, 
-                          dvector *y, 
-                          dvector *z) 
+void fasp_blas_dvec_axpyz(const REAL   a,
+                          dvector     *x,
+                          dvector     *y,
+                          dvector     *z)
 {
     const INT m=x->row;
     REAL *xpt=x->val, *ypt=y->val, *zpt=z->val;
@@ -118,8 +118,8 @@ void fasp_blas_dvec_axpyz(const REAL a,
  * \date   05/23/2012    
  */
 
-REAL fasp_blas_dvec_dotprod (dvector *x, 
-                             dvector *y) 
+REAL fasp_blas_dvec_dotprod (dvector   *x,
+                             dvector   *y)
 {
     REAL value=0;
     INT i;
@@ -164,8 +164,8 @@ REAL fasp_blas_dvec_dotprod (dvector *x,
  * \date   05/23/2012    
  */
 
-REAL fasp_blas_dvec_relerr (dvector *x, 
-                            dvector *y)
+REAL fasp_blas_dvec_relerr (dvector   *x,
+                            dvector   *y)
 {
     REAL diff=0, temp=0;
     INT i;

@@ -23,9 +23,9 @@
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-void fasp_blas_smat_axm (REAL *a,
-                         const INT n,
-                         const REAL alpha)
+void fasp_blas_smat_axm (REAL       *a,
+                         const INT   n,
+                         const REAL  alpha)
 {
     INT i;
     
@@ -37,7 +37,8 @@ void fasp_blas_smat_axm (REAL *a,
 }
 
 /**
- * \fn void fasp_blas_smat_add (REAL *a, REAL *b, const INT n, const REAL alpha, const REAL beta, REAL *c)
+ * \fn void fasp_blas_smat_add (REAL *a, REAL *b, const INT n, const REAL alpha, 
+ *                              const REAL beta, REAL *c)
  *
  * \brief Compute c = alpha*a + beta*b
  *
@@ -51,12 +52,12 @@ void fasp_blas_smat_axm (REAL *a,
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-void fasp_blas_smat_add (REAL *a,
-                         REAL *b,
-                         const INT n,
-                         const REAL alpha,
-                         const REAL beta,
-                         REAL *c)
+void fasp_blas_smat_add (REAL       *a,
+                         REAL       *b,
+                         const INT   n,
+                         const REAL  alpha,
+                         const REAL  beta,
+                         REAL       *c)
 {
     INT i;
     
@@ -80,9 +81,9 @@ void fasp_blas_smat_add (REAL *a,
  * \author Xiaozhe Hu
  * \date   18/11/2010
  */
-void fasp_blas_smat_mxv_nc2 (REAL *a, 
-                             REAL *b, 
-                             REAL *c)
+void fasp_blas_smat_mxv_nc2 (REAL  *a,
+                             REAL  *b,
+                             REAL  *c)
 {    
     const REAL b0 = b[0], b1 = b[1];
 
@@ -102,9 +103,9 @@ void fasp_blas_smat_mxv_nc2 (REAL *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_mxv_nc3 (REAL *a, 
-                             REAL *b, 
-                             REAL *c)
+void fasp_blas_smat_mxv_nc3 (REAL  *a,
+                             REAL  *b,
+                             REAL  *c)
 {    
     const REAL b0 = b[0], b1 = b[1], b2 = b[2];
 
@@ -125,9 +126,9 @@ void fasp_blas_smat_mxv_nc3 (REAL *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_mxv_nc5 (REAL *a, 
-                             REAL *b, 
-                             REAL *c)
+void fasp_blas_smat_mxv_nc5 (REAL  *a,
+                             REAL  *b,
+                             REAL  *c)
 {    
     const REAL b0 = b[0], b1 = b[1], b2 = b[2];
     const REAL b3 = b[3], b4 = b[4];
@@ -151,9 +152,9 @@ void fasp_blas_smat_mxv_nc5 (REAL *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_mxv_nc7 (REAL *a, 
-                             REAL *b, 
-                             REAL *c)
+void fasp_blas_smat_mxv_nc7 (REAL  *a,
+                             REAL  *b,
+                             REAL  *c)
 {    
     const REAL b0 = b[0], b1 = b[1], b2 = b[2];
     const REAL b3 = b[3], b4 = b[4], b5 = b[5], b6 = b[6];
@@ -180,10 +181,10 @@ void fasp_blas_smat_mxv_nc7 (REAL *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   04/21/2010  
  */
-void fasp_blas_smat_mxv (REAL *a, 
-                         REAL *b, 
-                         REAL *c,
-                         const INT n)
+void fasp_blas_smat_mxv (REAL      *a,
+                         REAL      *b,
+                         REAL      *c,
+                         const INT  n)
 {    
     switch (n) {
     case 2:
@@ -230,9 +231,9 @@ void fasp_blas_smat_mxv (REAL *a,
  * \author Xiaozhe Hu
  * \date   18/11/2011
  */
-void fasp_blas_smat_mul_nc2 (REAL *a, 
-                             REAL *b, 
-                             REAL *c)
+void fasp_blas_smat_mul_nc2 (REAL  *a,
+                             REAL  *b,
+                             REAL  *c)
 { 
     const REAL a0 = a[0], a1 = a[1];
     const REAL a2 = a[2], a3 = a[3];
@@ -259,9 +260,9 @@ void fasp_blas_smat_mul_nc2 (REAL *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_mul_nc3 (REAL *a, 
-                             REAL *b, 
-                             REAL *c)
+void fasp_blas_smat_mul_nc3 (REAL  *a,
+                             REAL  *b,
+                             REAL  *c)
 { 
     const REAL a0 = a[0], a1 = a[1], a2 = a[2];
     const REAL a3 = a[3], a4 = a[4], a5 = a[5];
@@ -296,9 +297,9 @@ void fasp_blas_smat_mul_nc3 (REAL *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_mul_nc5 (REAL *a, 
-                             REAL *b, 
-                             REAL *c)
+void fasp_blas_smat_mul_nc5 (REAL  *a,
+                             REAL  *b,
+                             REAL  *c)
 { 
     const REAL a0  = a[0],  a1  = a[1],  a2  = a[2],  a3  = a[3],  a4  = a[4];
     const REAL a5  = a[5],  a6  = a[6],  a7  = a[7],  a8  = a[8],  a9  = a[9];
@@ -355,9 +356,9 @@ void fasp_blas_smat_mul_nc5 (REAL *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_mul_nc7 (REAL *a, 
-                             REAL *b, 
-                             REAL *c)
+void fasp_blas_smat_mul_nc7 (REAL  *a,
+                             REAL  *b,
+                             REAL  *c)
 { 
     const REAL a0  = a[0],  a1  = a[1],  a2  = a[2],  a3  = a[3],  a4  = a[4],  a5  = a[5],  a6  = a[6];
     const REAL a7  = a[7],  a8  = a[8],  a9  = a[9],  a10 = a[10], a11 = a[11], a12 = a[12], a13 = a[13];
@@ -445,10 +446,10 @@ void fasp_blas_smat_mul_nc7 (REAL *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   04/21/2010  
  */
-void fasp_blas_smat_mul (REAL *a, 
-                         REAL *b, 
-                         REAL *c, 
-                         const INT n)
+void fasp_blas_smat_mul (REAL      *a,
+                         REAL      *b,
+                         REAL      *c,
+                         const INT  n)
 { 
     
     switch (n) {
@@ -497,10 +498,10 @@ void fasp_blas_smat_mul (REAL *a,
  *
  * \note z is the third array and the length of x, y and z is 2
  */
-void fasp_blas_array_axpyz_nc2 (const REAL a,
-                                REAL *x, 
-                                REAL *y, 
-                                REAL *z) 
+void fasp_blas_array_axpyz_nc2 (const REAL   a,
+                                REAL        *x,
+                                REAL        *y,
+                                REAL        *z)
 {
     z[0] = a*x[0] + y[0];
     z[1] = a*x[1] + y[1];
@@ -524,10 +525,10 @@ void fasp_blas_array_axpyz_nc2 (const REAL a,
  *
  * \note z is the third array and the length of x, y and z is 3
  */
-void fasp_blas_array_axpyz_nc3 (const REAL a, 
-                                REAL *x, 
-                                REAL *y, 
-                                REAL *z) 
+void fasp_blas_array_axpyz_nc3 (const REAL   a,
+                                REAL        *x,
+                                REAL        *y,
+                                REAL        *z)
 {
     z[0] = a*x[0] + y[0];
     z[1] = a*x[1] + y[1];
@@ -557,10 +558,10 @@ void fasp_blas_array_axpyz_nc3 (const REAL a,
  *
  * \note z is the third array and the length of x, y and z is 5
  */
-void fasp_blas_array_axpyz_nc5 (const REAL a, 
-                                REAL *x, 
-                                REAL *y, 
-                                REAL *z) 
+void fasp_blas_array_axpyz_nc5 (const REAL   a,
+                                REAL        *x,
+                                REAL        *y,
+                                REAL        *z)
 {
     z[0] = a*x[0] + y[0];
     z[1] = a*x[1] + y[1];
@@ -608,10 +609,10 @@ void fasp_blas_array_axpyz_nc5 (const REAL a,
  *
  * \note z is the third array and the length of x, y and z is 7
  */
-void fasp_blas_array_axpyz_nc7 (const REAL a, 
-                                REAL *x, 
-                                REAL *y, 
-                                REAL *z) 
+void fasp_blas_array_axpyz_nc7 (const REAL   a,
+                                REAL        *x,
+                                REAL        *y,
+                                REAL        *z)
 {
     z[0] = a*x[0] + y[0];
     z[1] = a*x[1] + y[1];
@@ -682,9 +683,9 @@ void fasp_blas_array_axpyz_nc7 (const REAL a,
  * \author Xiaozhe Hu
  * \date   18/11/2011
  */
-void fasp_blas_array_axpy_nc2 (const REAL a, 
-                               REAL *x, 
-                               REAL *y) 
+void fasp_blas_array_axpy_nc2 (const REAL   a,
+                               REAL        *x,
+                               REAL        *y)
 {
     y[0] += a*x[0];
     y[1] += a*x[1];
@@ -705,9 +706,9 @@ void fasp_blas_array_axpy_nc2 (const REAL a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_array_axpy_nc3 (const REAL a, 
-                               REAL *x, 
-                               REAL *y) 
+void fasp_blas_array_axpy_nc3 (const REAL   a,
+                               REAL        *x,
+                               REAL        *y)
 {
     y[0] += a*x[0];
     y[1] += a*x[1];
@@ -734,9 +735,9 @@ void fasp_blas_array_axpy_nc3 (const REAL a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_array_axpy_nc5 (const REAL a, 
-                               REAL *x, 
-                               REAL *y) 
+void fasp_blas_array_axpy_nc5 (const REAL   a,
+                               REAL        *x,
+                               REAL        *y)
 {
     y[0] += a*x[0];
     y[1] += a*x[1];
@@ -781,9 +782,9 @@ void fasp_blas_array_axpy_nc5 (const REAL a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_array_axpy_nc7 (const REAL a, 
-                               REAL *x, 
-                               REAL *y) 
+void fasp_blas_array_axpy_nc7 (const REAL   a,
+                               REAL        *x,
+                               REAL        *y)
 {
     y[0] += a*x[0];
     y[1] += a*x[1];
@@ -854,9 +855,9 @@ void fasp_blas_array_axpy_nc7 (const REAL a,
  * \author Xiaozhe Hu
  * \date   2011/11/18
  */
-void fasp_blas_smat_ypAx_nc2 (REAL *A, 
-                              REAL *x, 
-                              REAL *y )
+void fasp_blas_smat_ypAx_nc2 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y )
 {
     REAL x0,x1;
     x0=x[0];
@@ -880,9 +881,9 @@ void fasp_blas_smat_ypAx_nc2 (REAL *A,
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   2010/10/25
  */
-void fasp_blas_smat_ypAx_nc3 (REAL *A, 
-                              REAL *x, 
-                              REAL *y )
+void fasp_blas_smat_ypAx_nc3 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y )
 {
     REAL x0,x1,x2;
     x0=x[0];
@@ -907,9 +908,9 @@ void fasp_blas_smat_ypAx_nc3 (REAL *A,
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   2010/10/25
  */
-void fasp_blas_smat_ypAx_nc5 (REAL *A, 
-                              REAL *x,
-                              REAL *y )
+void fasp_blas_smat_ypAx_nc5 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y )
 {
     REAL x0,x1,x2,x3,x4;
     x0=x[0];
@@ -938,9 +939,9 @@ void fasp_blas_smat_ypAx_nc5 (REAL *A,
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   2010/10/25
  */
-void fasp_blas_smat_ypAx_nc7 (REAL *A, 
-                              REAL *x, 
-                              REAL *y)
+void fasp_blas_smat_ypAx_nc7 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y)
 {    
     REAL x0,x1,x2,x3,x4,x5,x6;
     x0=x[0];
@@ -973,10 +974,10 @@ void fasp_blas_smat_ypAx_nc7 (REAL *A,
  * \author Zhiyang Zhou
  * \date   2010/10/25
  */
-void fasp_blas_smat_ypAx (REAL *A, 
-                          REAL *x, 
-                          REAL *y, 
-                          const INT n)
+void fasp_blas_smat_ypAx (REAL      *A,
+                          REAL      *x,
+                          REAL      *y,
+                          const INT  n)
 {    
     switch (n) {
     case 2:
@@ -1074,9 +1075,9 @@ void fasp_blas_smat_ypAx (REAL *A,
  *
  * \note Works for 2-component
  */
-void fasp_blas_smat_ymAx_nc2 (REAL *A, 
-                              REAL *x, 
-                              REAL *y)
+void fasp_blas_smat_ymAx_nc2 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y)
 { 
     REAL x0,x1;
     x0=x[0];
@@ -1102,9 +1103,9 @@ void fasp_blas_smat_ymAx_nc2 (REAL *A,
  *
  * \note Works for 3-component
  */
-void fasp_blas_smat_ymAx_nc3 (REAL *A, 
-                              REAL *x, 
-                              REAL *y)
+void fasp_blas_smat_ymAx_nc3 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y)
 {   
     REAL x0,x1,x2;
     x0=x[0];
@@ -1132,9 +1133,9 @@ void fasp_blas_smat_ymAx_nc3 (REAL *A,
  *
  * \note Works for 5-component
  */
-void fasp_blas_smat_ymAx_nc5 (REAL *A, 
-                              REAL *x, 
-                              REAL *y)
+void fasp_blas_smat_ymAx_nc5 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y)
 {    
     REAL x0,x1,x2,x3,x4;
     x0=x[0];
@@ -1166,9 +1167,9 @@ void fasp_blas_smat_ymAx_nc5 (REAL *A,
  *
  * \note Works for 7-component
  */
-void fasp_blas_smat_ymAx_nc7 (REAL *A, 
-                              REAL *x, 
-                              REAL *y)
+void fasp_blas_smat_ymAx_nc7 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y)
 {    
     REAL x0,x1,x2,x3,x4,x5,x6;
     
@@ -1204,10 +1205,10 @@ void fasp_blas_smat_ymAx_nc7 (REAL *A,
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   2010/10/25
  */
-void fasp_blas_smat_ymAx (REAL *A, 
-                          REAL *x, 
-                          REAL *y,
-                          const INT n)
+void fasp_blas_smat_ymAx (REAL       *A,
+                          REAL       *x,
+                          REAL       *y,
+                          const INT   n)
 {    
     switch (n) {
     case 2:
@@ -1305,12 +1306,12 @@ void fasp_blas_smat_ymAx (REAL *A,
  * \author Zhiyang Zhou
  * \date   2010/10/25
  */
-void fasp_blas_smat_aAxpby (const REAL alpha, 
-                            REAL *A, 
-                            REAL *x, 
-                            const REAL beta, 
-                            REAL *y, 
-                            const INT n)
+void fasp_blas_smat_aAxpby (const REAL   alpha,
+                            REAL        *A,
+                            REAL        *x,
+                            const REAL   beta,
+                            REAL        *y,
+                            const INT    n)
 {
     INT    i,j,k;
     REAL tmp = 0.0;
@@ -1355,9 +1356,9 @@ void fasp_blas_smat_aAxpby (const REAL alpha,
  * \note Works for 2-component (Xiaozhe)
  *       Only for block smoother for saturation block without explictly use saturation block!!
  */
-void fasp_blas_smat_ymAx_ns2 (REAL *A,
-                              REAL *x, 
-                              REAL *y)
+void fasp_blas_smat_ymAx_ns2 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y)
 {    
     y[0] -= A[3]*x[0];
     
@@ -1379,9 +1380,9 @@ void fasp_blas_smat_ymAx_ns2 (REAL *A,
  * \note Works for 3-component (Xiaozhe)
  *       Only for block smoother for saturation block without explictly use saturation block!!
  */
-void fasp_blas_smat_ymAx_ns3 (REAL *A,
-                              REAL *x, 
-                              REAL *y)
+void fasp_blas_smat_ymAx_ns3 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y)
 {    
     REAL x0,x1;
     x0=x[0];
@@ -1407,9 +1408,9 @@ void fasp_blas_smat_ymAx_ns3 (REAL *A,
  * \note Works for 5-component (Xiaozhe)
  *       Only for block smoother for saturation block without explictly use saturation block!!
  */
-void fasp_blas_smat_ymAx_ns5 (REAL *A, 
-                              REAL *x, 
-                              REAL *y)
+void fasp_blas_smat_ymAx_ns5 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y)
 {    
     REAL x0,x1,x2,x3;
     
@@ -1441,9 +1442,9 @@ void fasp_blas_smat_ymAx_ns5 (REAL *A,
  * \note Works for 7-component (Xiaozhe)
  *       Only for block smoother for saturation block without explictly use saturation block!!
  */
-void fasp_blas_smat_ymAx_ns7 (REAL *A, 
-                              REAL *x, 
-                              REAL *y)
+void fasp_blas_smat_ymAx_ns7 (REAL   *A,
+                              REAL   *x,
+                              REAL   *y)
 {
     REAL x0,x1,x2,x3,x4,x5;
 
@@ -1479,10 +1480,10 @@ void fasp_blas_smat_ymAx_ns7 (REAL *A,
  * 
  * \note Only for block smoother for saturation block without explictly use saturation block!!
  */
-void fasp_blas_smat_ymAx_ns (REAL *A, 
-                             REAL *x, 
-                             REAL *y, 
-                             const INT n)
+void fasp_blas_smat_ymAx_ns (REAL       *A,
+                             REAL       *x,
+                             REAL       *y,
+                             const INT   n)
 {    
     switch (n) {
     case 2:
@@ -1497,6 +1498,7 @@ void fasp_blas_smat_ymAx_ns (REAL *A,
             y[1] -= A[7]*x0 + A[8]*x1;
             break;
         }
+            
     case 5:
         {
             REAL x0,x1,x2,x3;
@@ -1507,6 +1509,7 @@ void fasp_blas_smat_ymAx_ns (REAL *A,
             y[3] -= A[21]*x0 + A[22]*x1 + A[23]*x2 + A[24]*x3;
             break;
         }
+            
     case 7:
         {
             REAL x0,x1,x2,x3,x4,x5;
@@ -1519,6 +1522,7 @@ void fasp_blas_smat_ymAx_ns (REAL *A,
             y[5] -= A[43]*x0 + A[44]*x1 + A[45]*x2 + A[46]*x3 + A[47]*x4 + A[48]*x5;
             break;
         }
+            
     default: {
         INT i,j,k;
     
@@ -1534,9 +1538,6 @@ void fasp_blas_smat_ymAx_ns (REAL *A,
     
     return;
 }
-
-
-
 
 /*---------------------------------*/
 /*--        End of File          --*/

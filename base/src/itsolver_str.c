@@ -32,10 +32,10 @@
  * \date   09/25/2009 
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
-INT fasp_solver_dstr_itsolver (dSTRmat *A, 
-                               dvector *b, 
-                               dvector *x, 
-                               precond *pc, 
+INT fasp_solver_dstr_itsolver (dSTRmat        *A,
+                               dvector        *b,
+                               dvector        *x,
+                               precond        *pc,
                                itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
@@ -120,9 +120,9 @@ INT fasp_solver_dstr_itsolver (dSTRmat *A,
  * \author Zhiyang Zhou
  * \date   04/25/2010
  */
-INT fasp_solver_dstr_krylov (dSTRmat *A, 
-                             dvector *b, 
-                             dvector *x, 
+INT fasp_solver_dstr_krylov (dSTRmat        *A,
+                             dvector        *b,
+                             dvector        *x,
                              itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
@@ -168,9 +168,9 @@ INT fasp_solver_dstr_krylov (dSTRmat *A,
  * \author Zhiyang Zhou
  * \date   4/23/2010
  */
-INT fasp_solver_dstr_krylov_diag (dSTRmat *A, 
-                                  dvector *b, 
-                                  dvector *x, 
+INT fasp_solver_dstr_krylov_diag (dSTRmat        *A,
+                                  dvector        *b,
+                                  dvector        *x,
                                   itsolver_param *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
@@ -234,11 +234,11 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat *A,
  * \author Xiaozhe Hu
  * \date   05/01/2010
  */
-INT fasp_solver_dstr_krylov_ilu (dSTRmat *A, 
-                                 dvector *b, 
-                                 dvector *x, 
+INT fasp_solver_dstr_krylov_ilu (dSTRmat        *A,
+                                 dvector        *b,
+                                 dvector        *x,
                                  itsolver_param *itparam, 
-                                 ILU_param *iluparam)
+                                 ILU_param      *iluparam)
 {
     const SHORT prtlvl = itparam->print_level;
     const INT ILU_lfil = iluparam->ILU_lfil;
@@ -327,12 +327,12 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat *A,
  * \author Xiaozhe Hu
  * \date   10/10/2010
  */
-INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A, 
-                                     dvector *b, 
-                                     dvector *x, 
+INT fasp_solver_dstr_krylov_blockgs (dSTRmat        *A,
+                                     dvector        *b,
+                                     dvector        *x,
                                      itsolver_param *itparam, 
-                                     ivector *neigh, 
-                                     ivector *order)
+                                     ivector        *neigh,
+                                     ivector        *order)
 {
     // Parameter for iterative method
     const SHORT prtlvl = itparam->print_level;

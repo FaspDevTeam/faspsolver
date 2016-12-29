@@ -51,15 +51,15 @@
  * Modified by Feiteng Huang on 09/26/2012: matrix free
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
-INT fasp_solver_pvgmres (mxv_matfree *mf,
-                         dvector *b,
-                         dvector *x,
-                         precond *pc,
-                         const REAL tol,
-                         const INT MaxIt,
-                         SHORT restart,
-                         const SHORT stop_type,
-                         const SHORT prtlvl)
+INT fasp_solver_pvgmres (mxv_matfree  *mf,
+                         dvector      *b,
+                         dvector      *x,
+                         precond      *pc,
+                         const REAL    tol,
+                         const INT     MaxIt,
+                         SHORT         restart,
+                         const SHORT   stop_type,
+                         const SHORT   prtlvl)
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;
@@ -290,7 +290,6 @@ INT fasp_solver_pvgmres (mxv_matfree *mf,
                 fasp_array_cp(n, r, p[0]); i = 0;
             }
         } /* end of convergence check */
-        
         
         /* compute residual vector and continue loop */
         for (j = i; j > 0; j--) {

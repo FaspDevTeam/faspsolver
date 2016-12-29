@@ -8,7 +8,6 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-/// #include "forts_ns.h"
 #include "mg_util.inl"
 
 #if FASP_GSRB
@@ -38,8 +37,8 @@ INT *IMAP    = NULL; /**< Red Black GS Smoother imap */
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  * Modified by Chensong Zhang on 12/30/2014: update Schwarz smoothers.
  */
-void fasp_solver_mgcycle (AMG_data *mgl,
-                          AMG_param *param)
+void fasp_solver_mgcycle (AMG_data   *mgl,
+                          AMG_param  *param)
 {
     const SHORT  prtlvl = param->print_level;
     const SHORT  amg_type = param->AMG_type;
@@ -262,8 +261,8 @@ ForwardSweep:
  * \author Xiaozhe Hu
  * \date   08/07/2011
  */
-void fasp_solver_mgcycle_bsr (AMG_data_bsr *mgl,
-                              AMG_param *param)
+void fasp_solver_mgcycle_bsr (AMG_data_bsr  *mgl,
+                              AMG_param     *param)
 {
     const SHORT prtlvl        = param->print_level;
     const SHORT nl            = mgl[0].num_levels;
