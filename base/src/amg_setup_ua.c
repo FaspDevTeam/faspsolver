@@ -254,7 +254,10 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Forming aggregates on level-%d failed!\n", lvl);
             }
-            status = FASP_SUCCESS; break;
+            status = FASP_SUCCESS; 
+            fasp_ivec_free(&vertices[lvl]);
+            fasp_dcsr_free(&Neighbor[lvl]);
+            break;
         }
 
         /*-- Form Prolongation --*/
@@ -262,7 +265,11 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
                          lvl+1, num_aggs[lvl]);
 
         // Check 2: Is coarse sparse too small?
-        if ( mgl[lvl].P.col < MIN_CDOF ) break;
+        if ( mgl[lvl].P.col < MIN_CDOF ) {
+            fasp_ivec_free(&vertices[lvl]);
+            fasp_dcsr_free(&Neighbor[lvl]);
+            break;
+        }
 
         // Check 3: Does this coarsening step too aggressive?
         if ( mgl[lvl].P.row > mgl[lvl].P.col * MAX_CRATE ) {
@@ -271,6 +278,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
                 printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
                        mgl[lvl].P.row, mgl[lvl].P.col);
             }
+            fasp_ivec_free(&vertices[lvl]);
+            fasp_dcsr_free(&Neighbor[lvl]);
             break;
         }
 
