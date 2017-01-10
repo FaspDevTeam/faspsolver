@@ -10,12 +10,12 @@
      245 ./base/src/mg_util.inl
      146 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
-     290 ./base/src/amg_setup_rs.c
-     908 ./base/src/amg_setup_sa.c
-     700 ./base/src/amg_setup_ua.c
+     305 ./base/src/amg_setup_rs.c
+     909 ./base/src/amg_setup_sa.c
+     692 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
      972 ./base/src/amlirecur.c
-     335 ./base/src/array.c
+     333 ./base/src/array.c
      235 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
      353 ./base/src/blas_blc.c
@@ -55,10 +55,10 @@
      289 ./base/src/message.c
      535 ./base/src/mgcycle.c
      153 ./base/src/mgrecur.c
-     904 ./base/src/ordering.c
+     897 ./base/src/ordering.c
      986 ./base/src/parameters.c
-    2792 ./base/src/pbcgs.c
-     754 ./base/src/pbcgs_mf.c
+    2768 ./base/src/pbcgs.c
+     748 ./base/src/pbcgs_mf.c
     1227 ./base/src/pcg.c
      338 ./base/src/pcg_mf.c
      171 ./base/src/pgcg.c
@@ -101,4 +101,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      311 ./base/src/wrapper.c
-   89705 total
+   89674 total

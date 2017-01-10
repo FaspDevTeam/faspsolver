@@ -280,7 +280,6 @@ void fasp_array_permut_nb (INT    n,
                            REAL  *y)
 {
    INT i, j, indx, indy;
-   INT nb2 = nb*nb;
 
 #ifdef _OPENMP
 #pragma omp parallel for private(i, j, indx, indy)
@@ -316,7 +315,6 @@ void fasp_array_invpermut_nb (INT    n,
                               REAL  *y)
 {
    INT i, j, indx, indy;
-   INT nb2 = nb*nb;
 
 #ifdef _OPENMP
 #pragma omp parallel for private(i, j, indx, indy)
@@ -329,7 +327,7 @@ void fasp_array_invpermut_nb (INT    n,
        }
    }
 }
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
-

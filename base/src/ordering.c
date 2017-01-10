@@ -515,7 +515,7 @@ void fasp_multicolors_independent_set (AMG_data *mgl,
                                        INT       gslvl)
 {
     
-    INT i, Colors, rowmax, level, prtlvl = 0;
+    INT Colors, rowmax, level, prtlvl = 0;
     
     REAL theta = 0.00;
     
@@ -524,13 +524,13 @@ void fasp_multicolors_independent_set (AMG_data *mgl,
 #ifdef _OPENMP
 #pragma omp parallel for private(level,rowmax,Colors) schedule(static, 1)
 #endif
-    for (level=0; level<maxlvl; level++) {
+    for ( level=0; level<maxlvl; level++ ) {
         
         multicoloring(&mgl[level], theta, &rowmax, &Colors);
         
         // print
-        if (prtlvl > 1)
-            printf("mgl[%3d].A.row = %12d rowmax = %5d rowavg = %7.2lf colors = %5d Theta = %le\n",
+        if ( prtlvl > PRINT_MIN )
+            printf("mgl[%3d].A.row = %12d rowmax = %5d rowavg = %7.2lf colors = %5d theta = %le\n",
                    level, mgl[level].A.row, rowmax, (double)mgl[level].A.nnz/mgl[level].A.row,
                    mgl[level].colors, theta);
     }
@@ -774,15 +774,14 @@ static void multicoloring (AMG_data *mgl,
                            INT      *rowmax,
                            INT      *groups)
 {
-    INT k,i,j,pre,group;
-    INT igold,iend,iavg;
+    INT k, i, j, pre, group, iend;
     INT icount;
-    INT front,rear;
-    dCSRmat A = mgl->A;
-    INT n = A.row;
-    iCSRmat S;
-    
+    INT front, rear;
     INT *IA,*JA;
+
+    const INT n = mgl->A.row;
+    dCSRmat   A = mgl->A;
+    iCSRmat   S;
     
     if (theta > 0 && theta < 1.0) {
         generate_S_theta(&A, &S, theta);
@@ -823,12 +822,6 @@ static void multicoloring (AMG_data *mgl,
         if ((A.IA[k+1] - A.IA[k]) > group ) group = A.IA[k+1] - A.IA[k];
     }
     *rowmax = group;
-    
-#if 0
-    iavg = IA[n]/n ;
-    igold = (INT)MAX(iavg,group*0.618) +1;
-    igold = group ;
-#endif
     
     mgl->ic = (INT *)malloc(sizeof(INT)*(group+2));
     mgl->icmap = (INT *)malloc(sizeof(INT)*(n+1));

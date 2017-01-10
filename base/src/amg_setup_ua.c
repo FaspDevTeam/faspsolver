@@ -274,19 +274,6 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
             break;
         }
 
-        // Check 4: Is this coarsening ratio too small?
-#if 0
-        if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
-            if ( prtlvl > PRINT_MIN ) {
-                printf("### WARNING: Coarsening rate is too small!\n");
-                printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
-                       mgl[lvl].P.row, mgl[lvl].P.col);
-            }
-            break;
-        }
-#endif
-        if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) param->quality_bound *= 2.0;
-
         /*-- Form restriction --*/
         fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
 
@@ -303,7 +290,12 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
         fasp_dcsr_diagpref(&mgl[lvl].A); // reorder each row to make diagonal appear first
 #endif
 
-    }
+        // Check 4: Is this coarsening ratio too small?
+        if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
+            param->quality_bound *= 2.0;
+        }
+        
+    } // end of the main while loop
 
     // Setup coarse level systems for direct solvers
     switch (csolver) {

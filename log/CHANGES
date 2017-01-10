@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+01/10/2017 FASP 1.8.9:
+- Fix some memory leaks in AMG setup routines while early termination.
+- Fix some warnings in PVBiCGstab.
+- Fix some warnings in ILU.
+
 12/30/2016 FASP 1.8.8:
 - Update docomentation and webpage. 
 - Add ILU subroutines with OpenMP support.

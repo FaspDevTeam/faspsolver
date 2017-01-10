@@ -145,6 +145,10 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
 
         // Check 1: Did coarsening step succeeded?
         if ( status < 0 ) {
+            /*-- Clean up Scouple generated in coarsening --*/
+            fasp_mem_free(Scouple.IA);
+            fasp_mem_free(Scouple.JA);
+
             // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Could not find any C-variables!\n");
@@ -154,7 +158,12 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
         }
 
         // Check 2: Is coarse sparse too small?
-        if ( mgl[lvl].P.col < MIN_CDOF ) break;
+        if ( mgl[lvl].P.col < MIN_CDOF ) {
+            /*-- Clean up Scouple generated in coarsening --*/
+            fasp_mem_free(Scouple.IA);
+            fasp_mem_free(Scouple.JA);
+            break;
+        }
 
         // Check 3: Does this coarsening step too aggressive?
         if ( mgl[lvl].P.row > mgl[lvl].P.col * 10.0 ) {
@@ -163,6 +172,10 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
                 printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
                        mgl[lvl].P.row, mgl[lvl].P.col);
             }
+
+            /*-- Clean up Scouple generated in coarsening --*/
+            fasp_mem_free(Scouple.IA);
+            fasp_mem_free(Scouple.JA);
             break;
         }
 
@@ -189,16 +202,6 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
         fasp_mem_free(Scouple.IA);
         fasp_mem_free(Scouple.JA);
 
-        // Check 4: Is the coarse matrix too dense?
-        if ( mgl[lvl].A.nnz / mgl[lvl].A.row > mgl[lvl].A.col * 0.2 ) {
-            if ( prtlvl > PRINT_MIN ) {
-                printf("### WARNING: Coarse matrix is too dense!\n");
-                printf("### WARNING: m = n = %d, nnz = %d!\n",
-                       mgl[lvl].A.col, mgl[lvl].A.nnz);
-            }
-            break;
-        }
-
         ++lvl;
 
 #if DIAGONAL_PREF
@@ -206,7 +209,18 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
         fasp_dcsr_diagpref(&mgl[lvl].A);
 #endif
 
-    }
+        // Check 4: Is the coarse matrix too dense?
+        if ( mgl[lvl].A.nnz / mgl[lvl].A.row > mgl[lvl].A.col * 0.2 ) {
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Coarse matrix is too dense!\n");
+                printf("### WARNING: m = n = %d, nnz = %d!\n",
+                       mgl[lvl].A.col, mgl[lvl].A.nnz);
+            }
+
+            break;
+        }
+        
+    } // end of the main while loop
 
     // Setup coarse level systems for direct solvers
     switch (csolver) {
@@ -288,3 +302,4 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
+

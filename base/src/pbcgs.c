@@ -436,22 +436,16 @@ INT fasp_solver_dcsr_pvbcgs (dCSRmat     *A,
                              const SHORT  stop_type,
                              const SHORT  prtlvl)
 {
-    const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
-    const REAL   maxdiff = tol*STAG_RATIO; // stagnation tolerance
-    const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
-    const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
     
     // local variables
     REAL     n2b,tolb;
-    INT      iter=0, stag = 1, moresteps = 1, maxmsteps=1,restart_step = 1;
-    INT      flag, maxstagsteps,half_step=0;
+    INT      iter=0, stag = 1, moresteps = 1, maxmsteps=1;
+    INT      flag, maxstagsteps, half_step=0;
     REAL     absres0 = BIGREAL, absres = BIGREAL, relres = BIGREAL;
-    REAL     normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL     reldiff, factor, infnormu;
     REAL     alpha,beta,omega,rho,rho1,rtv,tt;
     REAL     normr,normr_act,normph,normx,imin;
-    REAL     norm_sh,norm_xhalf,normrmin;
+    REAL     norm_sh,norm_xhalf,normrmin,factor;
     
     REAL     *x = u->val, *bval=b->val;
     
@@ -1117,22 +1111,16 @@ INT fasp_solver_dbsr_pvbcgs (dBSRmat     *A,
                              const SHORT  stop_type,
                              const SHORT  prtlvl)
 {
-    const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
-    const REAL   maxdiff = tol*STAG_RATIO; // stagnation tolerance
-    const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
-    const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
     
     // local variables
     REAL     n2b,tolb;
-    INT      iter=0, stag = 1, moresteps = 1, maxmsteps=1,restart_step = 1;
-    INT      flag, maxstagsteps,half_step=0;
+    INT      iter=0, stag = 1, moresteps = 1, maxmsteps=1;
+    INT      flag, maxstagsteps, half_step=0;
     REAL     absres0 = BIGREAL, absres = BIGREAL, relres = BIGREAL;
-    REAL     normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL     reldiff, factor, infnormu;
     REAL     alpha,beta,omega,rho,rho1,rtv,tt;
     REAL     normr,normr_act,normph,normx,imin;
-    REAL     norm_sh,norm_xhalf,normrmin;
+    REAL     norm_sh,norm_xhalf,normrmin,factor;
     
     REAL     *x = u->val, *bval=b->val;
     
@@ -1798,22 +1786,16 @@ INT fasp_solver_dblc_pvbcgs (dBLCmat     *A,
                              const SHORT  stop_type,
                              const SHORT  prtlvl)
 {
-    const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
-    const REAL   maxdiff = tol*STAG_RATIO; // stagnation tolerance
-    const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
-    const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
     
     // local variables
     REAL     n2b,tolb;
-    INT      iter=0, stag = 1, moresteps = 1, maxmsteps=1,restart_step = 1;
-    INT      flag, maxstagsteps,half_step=0;
+    INT      iter=0, stag = 1, moresteps = 1, maxmsteps=1;
+    INT      flag, maxstagsteps, half_step=0;
     REAL     absres0 = BIGREAL, absres = BIGREAL, relres = BIGREAL;
-    REAL     normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL     reldiff, factor, infnormu;
     REAL     alpha,beta,omega,rho,rho1,rtv,tt;
     REAL     normr,normr_act,normph,normx,imin;
-    REAL     norm_sh,norm_xhalf,normrmin;
+    REAL     norm_sh,norm_xhalf,normrmin,factor;
     
     REAL     *x = u->val, *bval=b->val;
     
@@ -2479,22 +2461,16 @@ INT fasp_solver_dstr_pvbcgs (dSTRmat     *A,
                              const SHORT  stop_type,
                              const SHORT  prtlvl)
 {
-    const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
-    const REAL   maxdiff = tol*STAG_RATIO; // stagnation tolerance
-    const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
-    const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
     
     // local variables
     REAL     n2b,tolb;
-    INT      iter=0, stag = 1, moresteps = 1, maxmsteps=1,restart_step = 1;
-    INT      flag, maxstagsteps,half_step=0;
+    INT      iter=0, stag = 1, moresteps = 1, maxmsteps=1;
+    INT      flag, maxstagsteps, half_step=0;
     REAL     absres0 = BIGREAL, absres = BIGREAL, relres = BIGREAL;
-    REAL     normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL     reldiff, factor, infnormu;
     REAL     alpha,beta,omega,rho,rho1,rtv,tt;
     REAL     normr,normr_act,normph,normx,imin;
-    REAL     norm_sh,norm_xhalf,normrmin;
+    REAL     norm_sh,norm_xhalf,normrmin,factor;
     
     REAL     *x = u->val, *bval=b->val;
     

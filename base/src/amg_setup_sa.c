@@ -260,16 +260,6 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
             break;
         }
 
-        // Check 4: Is this coarsening ratio too small?
-        if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
-            if ( prtlvl > PRINT_MIN ) {
-                printf("### WARNING: Coarsening rate is too small!\n");
-                printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
-                       mgl[lvl].P.row, mgl[lvl].P.col);
-            }
-            break;
-        }
-
         /*-- Form restriction --*/
         fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
 
@@ -287,7 +277,18 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
         fasp_dcsr_diagpref(&mgl[lvl].A);
 #endif
 
-    }
+        // Check 4: Is this coarsening ratio too small?
+        if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
+            if ( prtlvl > PRINT_MIN ) {
+                printf("### WARNING: Coarsening rate is too small!\n");
+                printf("### WARNING: Fine level = %d, coarse level = %d. Discard!\n",
+                       mgl[lvl].P.row, mgl[lvl].P.col);
+            }
+            
+            break;
+        }
+
+    } // end of the main while loop
 
     // Setup coarse level systems for direct solvers
     switch (csolver) {

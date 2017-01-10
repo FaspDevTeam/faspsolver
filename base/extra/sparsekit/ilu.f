@@ -1309,7 +1309,7 @@ c
       else
          icn   =  5
       end if
-	  
+c
       do 40 ii = 1, icn
          ih = iinc(icn + 1 - ii)
          do 30  j = ih+1, num
