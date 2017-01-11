@@ -6,14 +6,15 @@
 # TOP LEVEL FASP Makefile: Calls cmake to configure and build
 # the library and the test suite. 
 # 
-#   Probably you will *NOT NEED TO CHANGE* this  top level Makefile.
+#   Hopefully you will *NOT NEED TO CHANGE* this top level Makefile.
 #
-#   USER DEFINED OPTIONS GO IN "FASP.mk" which is included by this
-#   Makefile. Copy "FASP.mk.example file to "FASP.mk", edit it to
+#   FOR USER DEFINED OPTIONS, GO IN "FASP.mk" which is included by this
+#   Makefile. Copy "FASP.mk.example file to "FASP.mk" and edit it to
 #   adjust the settings to your liking, and then type "make help" to
 #   see how to configure/build FASP.
 # 
 #  Modified   2015-10-18   --ltz
+#  Modified   2017-01-10   --zcs
 ########################################################################
 prefix = no-prefix
 
@@ -99,10 +100,10 @@ CONFIG_FLAGS+=-DADD_FFLAGS=$(fflags)
 
 fasp headers docs clean: 
 	@if [ ! -f $(build_dir)/Makefile ] ; then \
-		echo "*=================================================================*"; \
-		echo "* WARNING: Configuration not found! Please perform 'make config'. *"; \
-		echo "* See the following help screen for usage ...                     *"; \
-		echo "*=================================================================*"; \
+		echo "*=======================================================================*"; \
+		echo "* WARNING: Configuration not found! Please perform 'make config' first. *"; \
+		echo "* See the following help screen for usage ...                           *"; \
+		echo "*=======================================================================*"; \
 		echo " "; \
 		cat INSTALL; \
 	else \
@@ -111,10 +112,10 @@ fasp headers docs clean:
 
 install: 
 	@if [ ! -f $(build_dir)/Makefile ] ; then \
-		echo "*=================================================================*"; \
-		echo "* WARNING: Configuration not found! Please perform 'make config'. *"; \
-		echo "* See the following help screen for usage ...                     *"; \
-		echo "*=================================================================*"; \
+		echo "*=======================================================================*"; \
+		echo "* WARNING: Configuration not found! Please perform 'make config' first. *"; \
+		echo "* See the following help screen for usage ...                           *"; \
+		echo "*=======================================================================*"; \
 		echo " "; \
 		cat INSTALL; \
 	else \
@@ -124,34 +125,32 @@ install:
 
 test tutorial:
 	@if [ ! -f $(build_dir)/$@/Makefile ] ; then \
-		echo "*=================================================================*"; \
-		echo "* WARNING: Configuration not found! Please perform 'make config'. *"; \
-		echo "* See the following help screen for usage ...                     *"; \
-		echo "*=================================================================*"; \
+		echo "*=======================================================================*"; \
+		echo "* WARNING: Configuration not found! Please perform 'make config' first. *"; \
+		echo "* See the following help screen for usage ...                           *"; \
+		echo "*=======================================================================*"; \
 		echo " "; \
 		cat INSTALL; \
 	else \
 		make -C $(build_dir)/$@ install ; \
 	fi
-#	  	make -C $(build_dir)/$@ ;  \
-#	  	make -C $(build_dir) install ; \
 
 config:	distclean
 	@if [ ! -f ./FASP.mk ] ; then \
-		echo "*=================================================================*"; \
-		echo "* WARNING: FASP.mk is missing from the current directory!         *"; \
-		echo "* Using the DEFAULT configuration instead ...                     *"; \
-		echo "*=================================================================*"; \
+		echo "*=======================================================================*"; \
+		echo "* WARNING: FASP.mk is missing from the current directory!               *"; \
+		echo "* Using the DEFAULT configuration instead ...                           *"; \
+		echo "*=======================================================================*"; \
 	fi
 	@mkdir -p $(build_dir) ; 
 	@cd $(build_dir) && cmake $(CURDIR) $(CONFIG_FLAGS) 
 
 uninstall:
 	@if [ ! -f $(build_dir)/install_manifest.txt ]; then \
-		echo "*=================================================================*"; \
-		echo "* WARNING: Installation manifest not found! Nothing to uninstall. *"; \
-		echo "* Type \"make help\" for help on usage ...                          *"; \
-		echo "*=================================================================*"; \
+		echo "*=======================================================================*"; \
+		echo "* WARNING: Installation manifest not found! Nothing to be uninstalled.  *"; \
+		echo "* Type \"make help\" for help on usage ...                              *"; \
+		echo "*=======================================================================*"; \
 		echo " "; \
 	else \
 		xargs rm < $(build_dir)/install_manifest.txt; \
@@ -159,7 +158,6 @@ uninstall:
 		       doc/htdocs; \
 		echo "FASP library and header files have been successfully uninstalled."; \
 	fi
-#		cat INSTALL; keeping it simpler without cat-ting this
 
 distclean:
 	make -C test distclean 

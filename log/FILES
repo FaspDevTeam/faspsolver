@@ -11,8 +11,8 @@
      146 ./base/src/amg.c
      124 ./base/src/amg_setup_cr.c
      305 ./base/src/amg_setup_rs.c
-     909 ./base/src/amg_setup_sa.c
-     692 ./base/src/amg_setup_ua.c
+     920 ./base/src/amg_setup_sa.c
+     701 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
      972 ./base/src/amlirecur.c
      333 ./base/src/array.c
@@ -101,4 +101,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      311 ./base/src/wrapper.c
-   89674 total
+   89694 total

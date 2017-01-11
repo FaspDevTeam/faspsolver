@@ -148,7 +148,8 @@ Test and Debug
 [ 0.6.0 ] build upon regression.c to make a regression test suite
 [ 1.6.1 ] compare regression results automatically
 [ 1.6.9 ] finish the debug environment construction
-[   *   ] add a new unit test tool for FASP, e.g. CHECK (Chensong)
+[       ] look for possible memory leaks and divide-by-zero (Chensong)
+[       ] add a unit test tool for FASP, e.g. CHECK (Chensong)
 
 ========================
 Examples
@@ -170,7 +171,7 @@ Examples
 [       ] add linear elasticity
 
 ========================
-Bug Fixes
+Important Bug Fixes
 ========================
 	
 [ 0.4.1 ] BiCGstab: 9X9 diagonal matrix (one DoF, eight bdy) gives NaN
@@ -191,4 +192,5 @@ Bug Fixes
 [ 1.6.6 ] AMG setup: number of DOF could drop dramatically
 [ 1.7.4 ] check problems with DIAG_PERF: see regression.c
 [ 1.8.1 ] check convergence for problems from MM: see regression_mm.c
+[ 1.8.9 ] fix memory leaks in AMG setup
 
