@@ -907,7 +907,7 @@ static void gsiteration_2color_3d(REAL *u,
 
 /**
  * \fn void gsiteration3dpre(REAL *u, REAL *b, INT *level, INT k,
- *                        INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
+ *                           INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
  * \brief colored G-S iteration of 3D problem, pre-smoothing
  *
  * \param u            Pointer to the vector of DOFs
@@ -1081,7 +1081,7 @@ static void gsiteration3dpre(REAL *u,
 }
 
 /**
- * \fn static void gsiteration3dpro (REAL *u, REAL *b, INT *level, INT k,
+ * \fn static void gsiteration3dpro(REAL *u, REAL *b, INT *level, INT k,
  *                                   INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
  *
  * \brief Colored G-S iteration of 3D problem, pro-smoothing
@@ -1098,14 +1098,14 @@ static void gsiteration3dpre(REAL *u,
  * \author Ziteng Wang
  * \date   06/07/201
  */
-static void gsiteration3dpro (REAL *u,
-                              REAL *b,
-                              INT *level,
-                              INT k,
-                              INT maxlevel,
-                              INT *nxk,
-                              INT *nyk,
-                              INT *nzk)
+static void gsiteration3dpro(REAL *u,
+                             REAL *b,
+                             INT *level,
+                             INT k,
+                             INT maxlevel,
+                             INT *nxk,
+                             INT *nyk,
+                             INT *nzk)
 {
     INT i,j,h;
     INT i0,j0,j1,j2,k0,k3,k4,k5,k6;
@@ -1491,14 +1491,14 @@ static void multigriditeration3d(REAL *u,
 	prosmoothtime[2] = 3;
 
 #ifdef _OPENMP
-		prosmoothtime[0] = 1;
+    prosmoothtime[0] = 1;
 #endif
+    
     // forward sweep
 	for	(i = 0; i < presmoothtime[0]; i++) {
 #ifdef _OPENMP
 		gsiteration_2color_3d(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
 #else
-		//gsiteration3dpre(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
 		gsiteration_2color_3d(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
 #endif
 	}
@@ -1519,7 +1519,6 @@ static void multigriditeration3d(REAL *u,
 #ifdef _OPENMP
 			gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
 #else
-			//gsiteration3dpre(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
 			gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
 #endif
 		}
@@ -1542,7 +1541,6 @@ static void multigriditeration3d(REAL *u,
 #ifdef _OPENMP
 			gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
 #else
-			//gsiteration3dpro(u, b, level, k, maxlevel, nxk, nyk, nzk);
 			gsiteration_2color_3d(u, b, level, k, maxlevel, nxk, nyk, nzk);
 #endif
 		}

@@ -1,10 +1,10 @@
     1279 ./base/include/fasp.h
-     408 ./base/include/fasp_block.h
+     409 ./base/include/fasp_block.h
      268 ./base/include/fasp_const.h
-    3099 ./base/include/fasp_functs.h
+    3092 ./base/include/fasp_functs.h
      397 ./base/src/aggregation_bsr.inl
-    1807 ./base/src/aggregation_csr.inl
-    2119 ./base/src/gmg_util.inl
+    1702 ./base/src/aggregation_csr.inl
+    2117 ./base/src/gmg_util.inl
       89 ./base/src/itsolver_util.inl
      238 ./base/src/linklist.inl
      245 ./base/src/mg_util.inl
@@ -14,7 +14,7 @@
      920 ./base/src/amg_setup_sa.c
      701 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
-     972 ./base/src/amlirecur.c
+     973 ./base/src/amlirecur.c
      333 ./base/src/array.c
      235 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
@@ -42,7 +42,7 @@
     1258 ./base/src/ilu_setup_str.c
      350 ./base/src/init.c
      791 ./base/src/input.c
-    1598 ./base/src/interpolation.c
+     860 ./base/src/interpolation.c
      827 ./base/src/interpolation_em.c
     3221 ./base/src/io.c
      605 ./base/src/itsolver_blc.c
@@ -101,4 +101,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      311 ./base/src/wrapper.c
-   89320 total
+   88470 total
