@@ -94,56 +94,6 @@ static void pairwise_aggregation_initial (const dCSRmat *A,
 
 /**
  * \fn static void pairwise_aggregation_initial2 (const dCSRmat *A,
- *                                                ivector *vertices,
- *                                                REAL *s)
- *
- * \brief Initial vertices for second pass aggregation based on temporary coarse
- *        matrix
- *
- * \param A         Pointer to the coefficient matrices
- * \param vertices  Pointer to the aggregation of vertices
- * \param s         Pointer to off-diagonal row sum
- *
- * \author Zheng Li, Chensong Zhang
- * \date   12/23/2014
- */
-static void pairwise_aggregation_initial2 (const dCSRmat *A,
-                                           ivector *vertices,
-                                           REAL *s)
-{
-    INT i, j, col;
-    INT row = A->row;
-    INT *ia = A->IA;
-    INT *ja = A->JA;
-    REAL *val = A->val;
-    REAL aij, rowsum;
-    
-    REAL *colsum = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
-    
-    for (i=0; i<row; ++i) {
-        for (j=ia[i]+1; j<ia[i+1]; ++j) {
-            col = ja[j];
-            aij = val[j];
-            colsum[col] += aij;
-        }
-    }
-    
-    for (i=0; i<row; ++i) {
-        rowsum = 0.0;
-        for (j=ia[i]+1; j<ia[i+1]; ++j) {
-            aij = val[j];
-            rowsum += aij;
-        }
-        rowsum = 0.5*(colsum[i] + rowsum);
-        s[i] = -rowsum;
-        vertices->val[i] = UNPT;
-    }
-    
-    fasp_mem_free(colsum);
-}
-
-/**
- * \fn static void pairwise_aggregation_initial3 (const dCSRmat *A,
  *                                                ivector *map,
  *                                                ivector *vertices,
  *                                                REAL *s1,
@@ -160,7 +110,7 @@ static void pairwise_aggregation_initial2 (const dCSRmat *A,
  * \author Zheng Li, Chensong Zhang
  * \date   12/23/2014
  */
-static void pairwise_aggregation_initial3 (const dCSRmat *A,
+static void pairwise_aggregation_initial2 (const dCSRmat *A,
                                            ivector *map,
                                            ivector *vertice,
                                            REAL *s1,
@@ -772,8 +722,7 @@ static void second_pairwise_unsymm (dCSRmat *A,
     
     REAL *s = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
     
-    //pairwise_aggregation_initial2(tmpA, vertices, s);
-    pairwise_aggregation_initial3(A, map1, vertices1, s1, s);
+    pairwise_aggregation_initial2(A, map1, vertices1, s1, s);
     
     fasp_ivec_set(UNPT, vertices);
     
