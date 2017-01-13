@@ -17,8 +17,7 @@ static void fasp_blas_mxv_csr (void *A, REAL *x, REAL *y);
 static void fasp_blas_mxv_bsr (void *A, REAL *x, REAL *y);
 static void fasp_blas_mxv_str (void *A, REAL *x, REAL *y);
 static void fasp_blas_mxv_blc (void *A, REAL *x, REAL *y);
-static void fasp_blas_mxv_bbsr (void *A, REAL *x, REAL *y);
-static void fasp_blas_mxv_csrl (void *A, REAL *x, REAL *y);
+static void fasp_blas_mxv_csrl(void *A, REAL *x, REAL *y);
 
 #include "itsolver_util.inl"
 
@@ -216,10 +215,6 @@ void fasp_solver_itsolver_init (INT          matrix_format,
             mf->fct = fasp_blas_mxv_blc;
             break;
             
-        case MAT_bBSR:
-            mf->fct = fasp_blas_mxv_bbsr;
-            break;
-            
         case MAT_CSRL:
             mf->fct = fasp_blas_mxv_csrl;
             break;
@@ -315,26 +310,6 @@ static void fasp_blas_mxv_blc (void *A,
 {
     dBLCmat *a = (dBLCmat *)A;
     fasp_blas_dblc_mxv(a, x, y);
-}
-
-/**
- * \fn static void fasp_blas_mxv_bbsr (void *A, REAL *x, REAL *y)
- *
- * \brief Matrix-vector multiplication y = A*x
- *
- * \param A               Pointer to bBSR matrix A
- * \param x               Pointer to array x
- * \param y               Pointer to array y
- *
- * \author Feiteng Huang
- * \date   09/19/2012
- */
-static void fasp_blas_mxv_bbsr (void *A,
-                                REAL *x,
-                                REAL *y)
-{
-    block_BSR *a = (block_BSR *)A;
-    fasp_blas_bdbsr_mxv(a, x, y);
 }
 
 /**

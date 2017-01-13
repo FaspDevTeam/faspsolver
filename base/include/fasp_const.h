@@ -199,6 +199,12 @@
 #define SMOOTHER_L1DIAG        10  /**< L1 norm diagonal scaling smoother */
 
 /**
+ * \brief Definition of specialized smoother types
+ */
+#define SMOOTHER_BLKOIL        11  /**< Used in monolithic AMG for black-oil */
+#define SMOOTHER_SPETEN        19  /**< Used in monolithic AMG for black-oil */
+
+/**
  * \brief Definition of coarsening types
  */
 #define COARSE_RS               1  /**< Classical */

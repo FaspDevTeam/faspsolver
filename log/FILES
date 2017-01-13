@@ -1,7 +1,7 @@
     1279 ./base/include/fasp.h
-     677 ./base/include/fasp_block.h
-     262 ./base/include/fasp_const.h
-    3108 ./base/include/fasp_functs.h
+     408 ./base/include/fasp_block.h
+     268 ./base/include/fasp_const.h
+    3099 ./base/include/fasp_functs.h
      397 ./base/src/aggregation_bsr.inl
     1807 ./base/src/aggregation_csr.inl
     2119 ./base/src/gmg_util.inl
@@ -18,7 +18,7 @@
      333 ./base/src/array.c
      235 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
-     353 ./base/src/blas_blc.c
+     276 ./base/src/blas_blc.c
     5452 ./base/src/blas_bsr.c
     2015 ./base/src/blas_csr.c
      125 ./base/src/blas_csrl.c
@@ -48,7 +48,7 @@
      605 ./base/src/itsolver_blc.c
      790 ./base/src/itsolver_bsr.c
      717 ./base/src/itsolver_csr.c
-     362 ./base/src/itsolver_mf.c
+     337 ./base/src/itsolver_mf.c
      402 ./base/src/itsolver_str.c
      171 ./base/src/lu.c
      259 ./base/src/memory.c
@@ -101,4 +101,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      311 ./base/src/wrapper.c
-   89694 total
+   89320 total

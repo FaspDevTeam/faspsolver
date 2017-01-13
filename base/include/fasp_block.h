@@ -11,7 +11,8 @@
  *  Modified by Xiaozhe Hu on 06/15/2010: modify precond_block_reservoir_data.
  *  Modified by Chensong Zhang on 10/11/2010: add BSR data.
  *  Modified by Chensong Zhang on 10/17/2012: modify comments.
- *  Modified by Ludmil Zikatanov on 20151011: cosmetics.
+ *  Modified by Ludmil Zikatanov on 10/11/2015: cosmetics.
+ *  Modified by Chensong Zhang on 01/13/2017: remove reservoir simulation part
  *-----------------------------------------------------------------------------
  *
  */
@@ -20,12 +21,6 @@
 
 #ifndef __FASPBLOCK_HEADER__       /*-- allow multiple inclusions --*/
 #define __FASPBLOCK_HEADER__       /**< indicate fasp_block.h has been included before */
-
-/**
- * \brief Definition of specialized smoother types
- */
-#define SMOOTHER_BLKOIL        11  /**< Used in monolithic AMG for black-oil */
-#define SMOOTHER_SPETEN        19  /**< Used in monolithic AMG for black-oil */
 
 /*---------------------------*/
 /*---   Data structures   ---*/
@@ -95,12 +90,12 @@ typedef struct dBLCmat {
 } dBLCmat; /**< Matrix of REAL type in Block CSR format */
 
 /**
- * \struct block_iCSRmat
+ * \struct iBLCmat
  * \brief Block INT CSR matrix format
  *
  * \note The starting index of A is 0.
  */
-typedef struct block_iCSRmat {
+typedef struct iBLCmat {
 
     //! row number of blocks in A, m
     INT brow;
@@ -111,7 +106,7 @@ typedef struct block_iCSRmat {
     //! blocks of iCSRmat, point to blocks[brow][bcol]
     iCSRmat **blocks;
 
-} block_iCSRmat; /**< Matrix of INT type in Block CSR format */
+} iBLCmat; /**< Matrix of INT type in Block CSR format */
 
 /**
  * \struct block_dvector
@@ -142,48 +137,6 @@ typedef struct block_ivector {
     ivector **blocks;
 
 } block_ivector; /**< Vector of INT type in Block format */
-
-/**
- * \struct block_STR
- * \brief Block REAL matrix format for reservoir simulation
- *
- */
-typedef struct block_STR {
-
-    //! reservoir-reservoir block
-    dSTRmat ResRes;
-
-    //! reservoir-well block
-    dCSRmat ResWel;
-
-    //! well-reservoir block
-    dCSRmat WelRes;
-
-    //! well-well block
-    dCSRmat WelWel;
-
-} block_STR; /**< Special block matrix for Reservoir Simulation */
-
-/**
- * \struct block_BSR
- * \brief Block REAL matrix format for reservoir simulation
- *
- */
-typedef struct block_BSR {
-
-    //! reservoir-reservoir block
-    dBSRmat ResRes;
-
-    //! reservoir-well block
-    dCSRmat ResWel;
-
-    //! well-reservoir block
-    dCSRmat WelRes;
-
-    //! well-well block
-    dCSRmat WelWel;
-
-} block_BSR; /**< Block of BSR matrices of REAL type */
 
 /*---------------------------*/
 /*--- Parameter structures --*/
@@ -300,7 +253,6 @@ typedef struct {
 
 } precond_diagbsr; /**< Data for diagonal preconditioner of BSR matrices */
 
-
 /**
  * \struct precond_data_bsr
  * \brief Data passed to the preconditioners.
@@ -396,105 +348,6 @@ typedef struct {
 } precond_data_bsr; /**< Preconditioner data for BSR matrices */
 
 /**
- * \struct precond_block_reservoir_data
- * \brief Data passed to the preconditioner for reservoir simulation problems
- *
- * \note This is only needed for the Black Oil model with wells
- */
-typedef struct precond_block_reservoir_data {
-
-    //! problem data in block_STR format
-    block_STR *A;
-
-    //! problem data in dBLCmat format
-    dBLCmat *Ablc;
-
-    //! problem data in CSR format
-    dCSRmat *Acsr;
-
-    //! level of fill-in for structured ILU(k)
-    INT ILU_lfil;
-
-    //! LU matrix for Reservoir-Reservoir block in STR format
-    dSTRmat *LU;
-
-    //! LU matrix for Reservoir-Reservoir block in CSR format
-    ILU_data *LUcsr;
-
-    //! AMG data for presure-presure block
-    AMG_data *mgl_data;
-
-    //! print level in AMG preconditioner
-    SHORT print_level;
-
-    //! max number of iterations of AMG preconditioner
-    INT maxit_AMG;
-
-    //! max number of AMG levels
-    SHORT max_levels;
-
-    //! tolerance for AMG preconditioner
-    REAL amg_tol;
-
-    //! AMG cycle type
-    SHORT cycle_type;
-
-    //! AMG smoother type
-    SHORT smoother;
-
-    //! number of presmoothing
-    SHORT presmooth_iter;
-
-    //! number of postsmoothing
-    SHORT postsmooth_iter;
-
-    //! coarsening type
-    SHORT coarsening_type;
-
-    //! relaxation parameter for SOR smoother
-    REAL relaxation;
-
-    //! switch of scaling of coarse grid correction
-    SHORT coarse_scaling;
-
-    //! max number of iterations
-    INT  maxit;
-
-    //! number of iterations for restart
-    INT restart;
-
-    //! tolerance for convergence
-    REAL tol;
-
-    //! inverse of the Schur complement (-I - Awr*Arr^{-1}*Arw)^{-1}, Arr may be replaced by LU
-    REAL *invS;
-
-    //! Diag(PS) * inv(Diag(SS))
-    dvector *DPSinvDSS;
-
-    // Data used for FASP solvers
-    SHORT    scaled;   /**< whether the matirx is scaled */
-    ivector *perf_idx; /**< variable index for perf */
-
-    dSTRmat *RR; /**< Diagonal scaled reservoir block */
-    dCSRmat *WW; /**< Argumented well block */
-    dCSRmat *PP; /**< pressure block after diagonal scaling */
-    dSTRmat *SS; /**< saturation block after diaogonal scaling */
-
-    precond_diagstr *diag; /**< the diagonal inverse for diagonal scaling */
-    dvector *diaginv;  /**< the inverse of the diagonals for GS/block GS smoother (whole reservoir matrix) */
-    ivector *pivot;    /**< the pivot for the GS/block GS smoother (whole reservoir matrix) */
-    dvector *diaginvS; /**< the inverse of the diagonals for GS/block GS smoother (saturation block) */
-    ivector *pivotS;   /**< the pivot for the GS/block GS smoother (saturation block) */
-    ivector *order;    /**< order for smoothing */
-
-    // temporary work space
-    dvector r; /**< temporary dvector used to store and restore the residual */
-    REAL   *w; /**< temporary work space for other usage */
-
-} precond_block_reservoir_data; /**< Precond data for Reservoir Simulation */
-
-/**
  * \brief Data passed to the preconditioner for block preconditioning for dBLCmat format
  *
  * This is needed for the block preconditioner.
@@ -521,127 +374,6 @@ typedef struct {
     AMG_param *amgparam;  /**< parameters for AMG */
 
 } precond_block_data; /**< Precond data for block matrices */
-
-
-/**
- * \struct precond_FASP_blkoil_data
- * \brief Data passed to the preconditioner for preconditioning reservoir simulation problems
- *
- * \note This is only needed for the Black Oil model with wells
- */
-typedef struct {
-
-    //-------------------------------------------------------------------------------
-    //! Part 1: Basic data
-    //-------------------------------------------------------------------------------
-    block_BSR *A; /**< whole jacobian system in block_BSRmat */
-
-    //-------------------------------------------------------------------------------
-    //! Part 2: Data for CPR-like preconditioner for reservoir block
-    //-------------------------------------------------------------------------------
-    // diagonal scaling for reservoir block
-    SHORT scaled; /**< scaled = 1 means the the following RR block is diagonal scaled */
-    dvector *diaginv_noscale; /**< inverse of diagonal blocks for diagonal scaling */
-    dBSRmat *RR;  /**< reservoir block */
-
-    // neighborhood and reordering of reservoir block
-    ivector *neigh; /**< neighbor information of the reservoir block */
-    ivector *order; /**< ordering of the reservoir block */
-
-    // data for GS/bGS smoother for saturation block
-    dBSRmat *SS;        /**< saturation block */
-    dvector *diaginv_S; /**< inverse of the diagonal blocks of saturation block */
-    ivector *pivot_S;   /**< pivoting for the GS smoothers for saturation block */
-    
-    // data of ILU for saturation block
-    ILU_data *LU_S;     /**< ILU setup data for saturation block */
-
-    // data of AMG for pressure block
-    dCSRmat *PP;        /**< pressure block */
-    AMG_data *mgl_data; /**< AMG data for presure-presure block */
-    
-    // data of ILU for pressure block
-    ILU_data *LU_P;     /**< ILU setup data for pressure block */
-
-    //! print level in AMG preconditioner
-    SHORT print_level;
-
-    //! max number of iterations of AMG preconditioner
-    INT maxit_AMG;
-
-    //! max number of AMG levels
-    SHORT max_levels;
-
-    //! tolerance for AMG preconditioner
-    REAL amg_tol;
-
-    //! AMG cycle type
-    SHORT cycle_type;
-
-    //! AMG smoother type
-    SHORT smoother;
-
-    //! AMG smoothing order
-    SHORT smooth_order;
-
-    //! number of presmoothing
-    SHORT presmooth_iter;
-
-    //! number of postsmoothing
-    SHORT postsmooth_iter;
-
-    //! coarsening type
-    SHORT coarsening_type;
-
-    //! coarset dof
-    INT coarse_dof;
-
-    //! coarse level solver type
-    SHORT coarse_solver;
-
-    //! relaxation parameter for SOR smoother
-    REAL relaxation;
-
-    //! switch of scaling of coarse grid correction
-    SHORT coarse_scaling;
-
-    //! degree of the polynomial used by AMLI cycle
-    SHORT amli_degree;
-
-    //! coefficients of the polynomial used by AMLI cycle
-    REAL *amli_coef;
-
-    //! relaxation parameter for smoothing the tentative prolongation
-    REAL tentative_smooth;
-
-    // data of GS/bGS smoother for reservoir block
-    dvector *diaginv; /**< inverse of the diagonal blocks of reservoir block */
-    ivector *pivot;   /**< pivot for the GS smoothers for the reservoir matrix */
-
-    //! data of ILU for reservoir block
-    ILU_data *LU;
-
-    // data for the argumented well block
-    ivector *perf_idx; /**< index of blocks which have perforation */
-    ivector *perf_neigh; /**< index of blocks which are neighbors of perforations (include perforations) */
-    dCSRmat *WW; /**< Argumented well block */
-
-    //! data for direct solver for argumented well block
-    void *Numeric;
-
-    //! inverse of the schur complement (-I - Awr*Arr^{-1}*Arw)^{-1}, Arr may be replaced by LU
-    REAL *invS;
-
-    // parameters for krylov method used for blocks
-    INT  maxit; /**< max number of iterations */
-    INT  restart; /**< number of iterations for restart */
-    REAL tol; /**< tolerance */
-
-    // temporary work space
-    dvector r; /**< temporary dvector used to store and restore the residual */
-    REAL *w; /**<  temporary work space for other usage */
-
-} precond_FASP_blkoil_data; /**< FASP precond data for Reservoir Simulation */
 
 /**
  * \struct precond_sweeping_data
