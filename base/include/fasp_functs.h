@@ -886,13 +886,6 @@ void fasp_amg_interp (dCSRmat    *A,
                       iCSRmat    *S,
                       AMG_param  *param);
 
-void fasp_amg_interp1 (dCSRmat    *A,
-                       ivector    *vertices,
-                       dCSRmat    *P,
-                       AMG_param  *param,
-                       iCSRmat    *S,
-                       INT        *icor_ysk);
-
 void fasp_amg_interp_trunc (dCSRmat     *P,
                             AMG_param   *param);
 
