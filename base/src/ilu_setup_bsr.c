@@ -82,12 +82,10 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     
     // ILU decomposition    
     // (1) symbolic factoration
-#if ILU_C_VERSION
+    // previous Fortran version
+    // symbfactor_(&A->ROW,A->JA,A->IA,&lfil,&iwk,&nzlu,ijlu,uptr,&ierr);
     fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
-#else // Fortran version	
-    symbfactor_(&A->ROW,A->JA,A->IA,&lfil,&iwk,&nzlu,ijlu,uptr,&ierr);
-#endif
-	    
+    
     iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
     
 #if DEBUG_MODE > 1
