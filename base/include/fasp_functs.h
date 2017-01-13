@@ -226,15 +226,6 @@ void fasp_blas_dblc_mxv (dBLCmat  *A,
                          REAL     *x,
                          REAL     *y);
 
-void fasp_blas_bdbsr_aAxpy (const REAL  alpha,
-                            block_BSR  *A,
-                            REAL       *x,
-                            REAL       *y);
-
-void fasp_blas_bdbsr_mxv (block_BSR  *A,
-                          REAL       *x,
-                          REAL       *y);
-
 
 /*-------- In file: blas_bsr.c --------*/
 

@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+01/13/2017 FASP 1.9.0:
+- Separate data structures and routines for reservoir simulation from base.
+- Change block_iCSRmat to iBLCmat and corresponding functions.
+
 01/10/2017 FASP 1.8.9:
 - Fix some memory leaks in AMG setup routines while early termination.
 - Fix some warnings in PVBiCGstab.
