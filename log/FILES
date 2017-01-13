@@ -1,9 +1,9 @@
-    1279 ./base/include/fasp.h
+    1277 ./base/include/fasp.h
      409 ./base/include/fasp_block.h
      268 ./base/include/fasp_const.h
-    3092 ./base/include/fasp_functs.h
+    3084 ./base/include/fasp_functs.h
      397 ./base/src/aggregation_bsr.inl
-    1702 ./base/src/aggregation_csr.inl
+    1651 ./base/src/aggregation_csr.inl
     2117 ./base/src/gmg_util.inl
       89 ./base/src/itsolver_util.inl
      238 ./base/src/linklist.inl
@@ -36,10 +36,10 @@
       79 ./base/src/givens.c
     1038 ./base/src/gmg_poisson.c
      756 ./base/src/graphics.c
-    2126 ./base/src/ilu.c
-    1130 ./base/src/ilu_setup_bsr.c
-     214 ./base/src/ilu_setup_csr.c
-    1258 ./base/src/ilu_setup_str.c
+    2137 ./base/src/ilu.c
+    1128 ./base/src/ilu_setup_bsr.c
+     184 ./base/src/ilu_setup_csr.c
+    1262 ./base/src/ilu_setup_str.c
      350 ./base/src/init.c
      791 ./base/src/input.c
      860 ./base/src/interpolation.c
@@ -101,4 +101,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      311 ./base/src/wrapper.c
-   88470 total
+   88392 total

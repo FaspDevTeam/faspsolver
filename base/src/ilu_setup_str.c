@@ -23,7 +23,8 @@
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   11/08/2010
  *
- * \note Only works for 5 bands 2D and 7 bands 3D matrix with default offsets (order can be arbitrary)!
+ * \note Only works for 5 bands 2D and 7 bands 3D matrix with default offsets 
+ *       (order can be arbitrary)!
  */
 void fasp_ilu_dstr_setup0 (dSTRmat   *A,
                            dSTRmat   *LU)
@@ -314,8 +315,9 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   11/08/2010
  *
- * \note put L and U in a STR matrix and it has the following structure:
- *           the diag is d, the offdiag of L are alpha1 to alpha6, the offdiag of U are beta1 to beta6   
+ * \note Put L and U in a STR matrix and it has the following structure:
+ *       the diag is d, the offdiag of L are alpha1 to alpha6, the offdiag 
+ *       of U are beta1 to beta6
  *
  * \note Only works for 5 bands 2D and 7 bands 3D matrix with default offsets
  */
@@ -357,7 +359,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
     tc=(REAL *)fasp_mem_calloc(nc2,sizeof(REAL));
     
-    INT LUoffsets[]={-1,1,1-nline,nline-1,-nline,nline,nline-nplane,nplane-nline,1-nplane,nplane-1,-nplane,nplane};
+    INT LUoffsets[]={-1,1,1-nline,nline-1,-nline,nline,nline-nplane,\
+                     nplane-nline,1-nplane,nplane-1,-nplane,nplane};
     
     fasp_dstr_alloc(nx,A->ny,A->nz,nxy,ngrid,LUnband,nc,LUoffsets,LU);
     
@@ -492,7 +495,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
         for (i=1;i<ngrid;++i) {
             i1=i-1;ix=i-nline;ixy=i-nplane;ix1=ix+1;ixyx=ixy+nline;ixy1=ixy+1;
-            ic=i*nc2;i1c=i1*nc2;ixc=ix*nc2;ix1c=ix1*nc2;ixyc=ixy*nc2;ixy1c=ixy1*nc2;ixyxc=ixyx*nc2;
+            ic=i*nc2;i1c=i1*nc2;ixc=ix*nc2;ix1c=ix1*nc2;ixyc=ixy*nc2;
+            ixy1c=ixy1*nc2;ixyxc=ixyx*nc2;
     
             // comput alpha6[i-nxy]
             if (ixy>=0) fasp_blas_smat_mul_nc3(&(A->offdiag[4][ixyc]),&(LU->diag[ixyc]),&(LU->offdiag[10][ixyc]));

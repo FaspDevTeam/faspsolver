@@ -5,6 +5,7 @@ File Name: CHANGES
 - Change block_iCSRmat to iBLCmat and corresponding functions.
 - Delete some deprecated functions.
 - Fix a bug in interpolation.c: reported by Liu Hui.
+- Remove ilu.f from SparseKit.
 
 01/10/2017 FASP 1.8.9:
 - Fix some memory leaks in AMG setup routines while early termination.

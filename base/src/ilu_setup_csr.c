@@ -51,7 +51,6 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
                            ILU_data   *iludata,
                            ILU_param  *iluparam)
 {
-#if FASP_USE_ILU
     const INT   type=iluparam->ILU_type, print_level=iluparam->print_level;
     const INT   n=A->col, nnz=A->nnz, mbloc=n;
     const REAL  ILU_droptol=iluparam->ILU_droptol;
@@ -111,43 +110,21 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
     luval=iludata->luval;
     
     switch (type) {
-        case ILUt:
-#if DEBUG_MODE > 0
-    printf("### DEBUG: %s (ILUt) ...... [Start]\n", __FUNCTION__);
-#endif
 
-#if	ILU_C_VERSION
-            fasp_ilut(n,A->val,A->JA,A->IA,lfilt,ILU_droptol,luval,ijlu,iwk,&ierr,&nzlu);
-#else // Fortran version
-            ilut_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,luval,ijlu,&iwk,&ierr,&nzlu);
-#endif
+        case ILUt:
+            fasp_ilut(n,A->val,A->JA,A->IA,lfilt,ILU_droptol,luval,ijlu,
+                      iwk,&ierr,&nzlu);
             break;
             
         case ILUtp:
-#if DEBUG_MODE > 0
-    printf("### DEBUG: %s (ILUp) ...... [Start]\n", __FUNCTION__);
-#endif
-            
-#if	ILU_C_VERSION
             fasp_ilutp(n,A->val,A->JA,A->IA, lfilt, ILU_droptol, permtol,
                        mbloc,luval,ijlu,iwk,&ierr,&nzlu);
-#else // Fortran version
-            ilutp_(&n,A->val,A->JA,A->IA,&lfilt,&ILU_droptol,&permtol,
-                   &mbloc,luval,ijlu,&iwk,&ierr,&nzlu);
-#endif
             break;
             
         default: // ILUk
-#if DEBUG_MODE > 0
-    printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
-#endif
-            
-#if	ILU_C_VERSION
             fasp_iluk(n,A->val,A->JA,A->IA,lfil,luval,ijlu,iwk,&ierr,&nzlu);
-#else // Fortran version
-            iluk_(&n,A->val,A->JA,A->IA,&lfil,luval,ijlu,&iwk,&ierr,&nzlu);
-#endif
             break;
+
     } 
     
     fasp_dcsr_shift(A, -1);
@@ -200,13 +177,6 @@ FINISHED:
 #endif
     
     return status;
-    
-#else // WITH_ILU
-    
-    printf("### ERROR: ILU is not enabled!\n");
-    fasp_chkerr(ERROR_MISC, __FUNCTION__);
-    
-#endif
 }
 
 /*---------------------------------*/

@@ -13,87 +13,12 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-/**
- * \fn void void fasp_qsplit (REAL *a, INT *ind, INT n, INT ncut)
- *
- * \brief Get  a quick-sort split of a real array
- *
- * \param a  a real array. on output a(1:n) is permuted such that
- *           its elements satisfy: abs(a(i)) .ge. abs(a(ncut)) for
- *           i .lt. ncut and abs(a(i)) .le. abs(a(ncut)) for i .gt. ncut.
- * \param ind  is an integer array which permuted in the same way as a(*).
- * \param n  size of array a.
- * \param ncut  integer.
- *
- * \author Chunsheng Feng
- * \date   09/06/2016
- */
-void fasp_qsplit (REAL   *a,
-                  INT    *ind,
-                  INT     n,
-                  INT     ncut)
-{
-    /*-----------------------------------------------------------------------
-     does a quick-sort split of a real array.
-     on input a(1:n). is a real array
-     on output a(1:n) is permuted such that its elements satisfy:
-     abs(a(i)) .ge. abs(a(ncut)) for i .lt. ncut and
-     abs(a(i)) .le. abs(a(ncut)) for i .gt. ncut
-     ind(1:n) is an integer array which permuted in the same way as a(*).
-     -----------------------------------------------------------------------*/
-    REAL tmp, abskey;
-    INT itmp, first, last, mid, j;
-    
-    /* Parameter adjustments */
-    --ind;
-    --a;
-    
-    first = 1;
-    last = n;
-    if ((ncut < first) || (ncut > last)) return;
-    
-    // outer loop -- while mid .ne. ncut do
-F161:
-    mid = first;
-    abskey = ABS(a[mid]);
-    for (j = first + 1; j <= last; ++j ) {
-        if (ABS(a[j])  >  abskey) {
-            ++mid;
-            //     interchange
-            tmp = a[mid];
-            itmp = ind[mid];
-            a[mid] = a[j];
-            ind[mid] = ind[j];
-            a[j] = tmp;
-            ind[j] = itmp;
-        }
-    }
-    
-    // interchange
-    tmp = a[mid];
-    a[mid] = a[first];
-    a[first] = tmp;
-    //
-    itmp = ind[mid];
-    ind[mid] = ind[first];
-    ind[first] = itmp;
-    
-    // test for while loop
-    if (mid  ==  ncut) {
-        ++ind;
-        ++a;
-        return;
-    }
-    
-    if (mid  >  ncut)  {
-        last = mid - 1;
-    } else   {
-        first = mid + 1;
-    }
-    
-    goto F161;
-    /*----------------end-of-qsplit------------------------------------------*/
-}
+static void fasp_qsplit (REAL *a, INT *ind, INT n, INT ncut);
+static void fasp_srtr (INT num,INT *q);
+
+/*---------------------------------*/
+/*--      Public Functions       --*/
+/*---------------------------------*/
 
 /**
  * \fn void fasp_iluk (INT n, REAL *a,INT *ja, INT *ia, INT lfil,
@@ -1401,105 +1326,6 @@ F999:    // zero row encountered
 }
 
 /**
- * \fn void fasp_srtr (INT num,INT *q)
- *
- * \brief Shell sort with hardwired increments.
- *
- * \param num  size of q
- * \param q  integer array.
- *
- *
- * \author Chunsheng Feng
- * \date   09/06/2016
- */
-void fasp_srtr (INT   num,
-                INT  *q)
-{
-#if DEBUG_MODE > 0
-    printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
-#endif
-    /**
-     ========================================================================
-     
-     Implement shell sort, with hardwired increments.  The algorithm for
-     sorting entries in A(0:n-1) is as follows:
-     ----------------------------------------------------------------
-     inc = initialinc(n)
-     while inc >= 1
-     for i = inc to n-1
-     j = i
-     x = A(i)
-     while j >= inc and A(j-inc) > x
-     A(j) = A(j-inc)
-     j    = j-inc
-     end while
-     A(j) = x
-     end for
-     inc = nextinc(inc,n)
-     end while
-     ----------------------------------------------------------------
-     
-     The increments here are 1, 4, 13, 40, 121, ..., (3**i - 1)/2, ...
-     In this case, nextinc(inc,n) = (inc-1)/3.  Usually shellsort
-     would have the largest increment the largest integer of the form
-     (3**i - 1)/2 that is less than n, but here it is fixed at 121
-     because most sparse matrices have 121 or fewer nonzero entries
-     per row.  If this routine is expanded for a complete sparse
-     factorization routine, or if a large number of levels of fill is
-     allowed, then possibly it should be replaced with more efficient
-     sorting.
-     
-     Any set of increments with 1 as the first one will result in a
-     true sorting algorithm.
-     
-     ========================================================================*/
-    
-    INT key, icn, ih, ii, i, j, jj;
-    INT iinc[6] = {0,1, 4, 13, 40, 121};
-    //data iinc/1, 4, 13, 40, 121/;
-    
-    --q;
-    if (num  ==  0)
-        icn = 0;
-    else if (num  <  14)
-        icn = 1;
-    else if (num  <  41)
-        icn = 2;
-    else if (num  <  122)
-        icn = 3;
-    else if (num  <  365)
-        icn = 4;
-    else
-        icn = 5;
-    
-    for(ii = 1; ii <= icn; ++ii) { // 40
-        ih = iinc[icn + 1 - ii];
-        for(j = ih + 1; j <= num; ++j) { // 30
-            i = j - ih;
-            key = q[j];
-            for(jj = 1; jj <= j - ih; jj += ih) { // 10
-                if (key  >=  q[i]) {
-                    goto F20;
-                } else {
-                    q[i + ih] = q[i];
-                    i = i - ih;
-                }
-            }  // 10
-        F20:
-            q[i + ih] = key;
-        }  // 30
-    } // 40
-    
-    ++q;
-    
-#if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
-#endif
-    return;
-    //----------------end-of-srtr-------------------------------------------
-}
-
-/**
  * \fn void fasp_symbfactor (INT n, INT *colind, INT *rwptr, INT levfill, 
  *                           INT nzmax, INT *nzlu, INT *ijlu, INT *uptr, INT *ierr)
  *
@@ -2119,6 +1945,191 @@ F100:
 #endif
     return;
     //======================== End of symbfac ==============================
+}
+
+/*---------------------------------*/
+/*--      Private Functions      --*/
+/*---------------------------------*/
+
+/**
+ * \fn static void fasp_qsplit (REAL *a, INT *ind, INT n, INT ncut)
+ *
+ * \brief Get  a quick-sort split of a real array
+ *
+ * \param a  a real array. on output a(1:n) is permuted such that
+ *           its elements satisfy: abs(a(i)) .ge. abs(a(ncut)) for
+ *           i .lt. ncut and abs(a(i)) .le. abs(a(ncut)) for i .gt. ncut.
+ * \param ind  is an integer array which permuted in the same way as a(*).
+ * \param n  size of array a.
+ * \param ncut  integer.
+ *
+ * \author Chunsheng Feng
+ * \date   09/06/2016
+ */
+static void fasp_qsplit (REAL   *a,
+                         INT    *ind,
+                         INT     n,
+                         INT     ncut)
+{
+    /*-----------------------------------------------------------------------
+     does a quick-sort split of a real array.
+     on input a(1:n). is a real array
+     on output a(1:n) is permuted such that its elements satisfy:
+     abs(a(i)) .ge. abs(a(ncut)) for i .lt. ncut and
+     abs(a(i)) .le. abs(a(ncut)) for i .gt. ncut
+     ind(1:n) is an integer array which permuted in the same way as a(*).
+     -----------------------------------------------------------------------*/
+    REAL tmp, abskey;
+    INT  itmp, first, last, mid, j;
+    
+    /* Parameter adjustments */
+    --ind;
+    --a;
+    
+    first = 1;
+    last = n;
+    if ((ncut < first) || (ncut > last)) return;
+    
+    // outer loop -- while mid .ne. ncut do
+F161:
+    mid = first;
+    abskey = ABS(a[mid]);
+    for (j = first + 1; j <= last; ++j ) {
+        if (ABS(a[j])  >  abskey) {
+            ++mid;
+            //     interchange
+            tmp = a[mid];
+            itmp = ind[mid];
+            a[mid] = a[j];
+            ind[mid] = ind[j];
+            a[j] = tmp;
+            ind[j] = itmp;
+        }
+    }
+    
+    // interchange
+    tmp = a[mid];
+    a[mid] = a[first];
+    a[first] = tmp;
+    //
+    itmp = ind[mid];
+    ind[mid] = ind[first];
+    ind[first] = itmp;
+    
+    // test for while loop
+    if (mid  ==  ncut) {
+        ++ind;
+        ++a;
+        return;
+    }
+    
+    if (mid  >  ncut)  {
+        last = mid - 1;
+    } else   {
+        first = mid + 1;
+    }
+    
+    goto F161;
+    /*----------------end-of-qsplit------------------------------------------*/
+}
+
+/**
+ * \fn static void fasp_srtr (INT num,INT *q)
+ *
+ * \brief Shell sort with hardwired increments.
+ *
+ * \param num  size of q
+ * \param q  integer array.
+ *
+ *
+ * \author Chunsheng Feng
+ * \date   09/06/2016
+ */
+static void fasp_srtr (INT   num,
+                       INT  *q)
+{
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
+#endif
+    /**
+     ========================================================================
+     
+     Implement shell sort, with hardwired increments.  The algorithm for
+     sorting entries in A(0:n-1) is as follows:
+     ----------------------------------------------------------------
+     inc = initialinc(n)
+     while inc >= 1
+     for i = inc to n-1
+     j = i
+     x = A(i)
+     while j >= inc and A(j-inc) > x
+     A(j) = A(j-inc)
+     j    = j-inc
+     end while
+     A(j) = x
+     end for
+     inc = nextinc(inc,n)
+     end while
+     ----------------------------------------------------------------
+     
+     The increments here are 1, 4, 13, 40, 121, ..., (3**i - 1)/2, ...
+     In this case, nextinc(inc,n) = (inc-1)/3.  Usually shellsort
+     would have the largest increment the largest integer of the form
+     (3**i - 1)/2 that is less than n, but here it is fixed at 121
+     because most sparse matrices have 121 or fewer nonzero entries
+     per row.  If this routine is expanded for a complete sparse
+     factorization routine, or if a large number of levels of fill is
+     allowed, then possibly it should be replaced with more efficient
+     sorting.
+     
+     Any set of increments with 1 as the first one will result in a
+     true sorting algorithm.
+     
+     ========================================================================*/
+    
+    INT key, icn, ih, ii, i, j, jj;
+    INT iinc[6] = {0,1, 4, 13, 40, 121};
+    //data iinc/1, 4, 13, 40, 121/;
+    
+    --q;
+    if (num  ==  0)
+        icn = 0;
+    else if (num  <  14)
+        icn = 1;
+    else if (num  <  41)
+        icn = 2;
+    else if (num  <  122)
+        icn = 3;
+    else if (num  <  365)
+        icn = 4;
+    else
+        icn = 5;
+    
+    for(ii = 1; ii <= icn; ++ii) { // 40
+        ih = iinc[icn + 1 - ii];
+        for(j = ih + 1; j <= num; ++j) { // 30
+            i = j - ih;
+            key = q[j];
+            for(jj = 1; jj <= j - ih; jj += ih) { // 10
+                if (key  >=  q[i]) {
+                    goto F20;
+                } else {
+                    q[i + ih] = q[i];
+                    i = i - ih;
+                }
+            }  // 10
+        F20:
+            q[i + ih] = key;
+        }  // 30
+    } // 40
+    
+    ++q;
+    
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+    return;
+    //----------------end-of-srtr-------------------------------------------
 }
 
 /*---------------------------------*/

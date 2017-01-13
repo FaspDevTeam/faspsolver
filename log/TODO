@@ -112,6 +112,7 @@ Iterative Methods
 
 [ 0.6.7 ] remove non-GPL ILU routines
 [ 1.8.6 ] replace the ILU smoothers from SPARSEKIT ver2.0
+[ 1.9.0 ] remove the ILU smoothers from SPARSEKIT ver2.0
 
 ========================
 Performance

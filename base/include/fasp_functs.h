@@ -752,11 +752,6 @@ INT fasp_dcsr_plot (const dCSRmat   *A,
 
 /*-------- In file: ilu.c --------*/
 
-void fasp_qsplit (REAL   *a,
-                  INT    *ind,
-                  INT     n,
-                  INT     ncut);
-
 void fasp_iluk (INT    n,
                 REAL  *a,
                 INT   *ja,
@@ -793,9 +788,6 @@ void fasp_ilutp (INT    n,
                  INT    iwk,
                  INT   *ierr,
                  INT   *nz);
-
-void fasp_srtr (INT   num,
-                INT  *q);
 
 void fasp_symbfactor (INT   n,
                       INT  *colind,
