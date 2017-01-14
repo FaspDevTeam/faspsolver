@@ -662,7 +662,7 @@ INT fasp_poisson_gmg_1D (REAL         *u,
                          const INT     nx,
                          const INT     maxlevel,
                          const REAL    rtol,
-					     const SHORT   prtlvl);
+                         const SHORT   prtlvl);
 
 INT fasp_poisson_gmg_2D (REAL         *u,
                          REAL         *b,
@@ -679,14 +679,14 @@ INT fasp_poisson_gmg_3D (REAL         *u,
                          const INT     nz,
                          const INT     maxlevel,
                          const REAL    rtol,
-					     const SHORT   prtlvl);
+                         const SHORT   prtlvl);
 
 void fasp_poisson_fgmg_1D (REAL         *u,
                            REAL         *b,
                            const INT     nx,
                            const INT     maxlevel,
                            const REAL    rtol,
-						   const SHORT   prtlvl);
+                           const SHORT   prtlvl);
 
 void fasp_poisson_fgmg_2D (REAL         *u,
                            REAL         *b,
@@ -694,7 +694,7 @@ void fasp_poisson_fgmg_2D (REAL         *u,
                            const INT     ny,
                            const INT     maxlevel,
                            const REAL    rtol,
-						   const SHORT   prtlvl);
+                           const SHORT   prtlvl);
 
 void fasp_poisson_fgmg_3D (REAL         *u,
                            REAL         *b,
@@ -703,14 +703,14 @@ void fasp_poisson_fgmg_3D (REAL         *u,
                            const INT     nz,
                            const INT     maxlevel,
                            const REAL    rtol,
-						   const SHORT   prtlvl);
+                           const SHORT   prtlvl);
 
 INT fasp_poisson_pcg_gmg_1D (REAL         *u,
                              REAL         *b,
                              const INT     nx,
                              const INT     maxlevel,
                              const REAL    rtol,
-							 const SHORT   prtlvl);
+                             const SHORT   prtlvl);
 
 INT fasp_poisson_pcg_gmg_2D (REAL         *u,
                              REAL         *b,
@@ -718,7 +718,7 @@ INT fasp_poisson_pcg_gmg_2D (REAL         *u,
                              const INT     ny,
                              const INT     maxlevel,
                              const REAL    rtol,
-							 const SHORT   prtlvl);
+                             const SHORT   prtlvl);
 
 INT fasp_poisson_pcg_gmg_3D (REAL         *u,
                              REAL         *b,
@@ -727,7 +727,7 @@ INT fasp_poisson_pcg_gmg_3D (REAL         *u,
                              const INT     nz,
                              const INT     maxlevel,
                              const REAL    rtol,
-							 const SHORT   prtlvl);
+                             const SHORT   prtlvl);
 
 
 /*-------- In file: graphics.c --------*/

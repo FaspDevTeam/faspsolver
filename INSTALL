@@ -12,6 +12,7 @@ $ make config             # Configure the building environment
 $ make config CC=gcc      # Configure with a specific C compiler 
 $ make config debug=yes   # Configure with compiler debug options ON
 $ make config debug=all   # Configure with FASP internal debug options ON
+$ make config openmp=yes  # Configure with OpenMP support
 $ make config prefix=/dir # Configure installation of FASP library and header 
                             files in "/dir/lib" and "/dir/include"
 ===============================================================================

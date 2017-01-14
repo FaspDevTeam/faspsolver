@@ -4,8 +4,9 @@
     3084 ./base/include/fasp_functs.h
      397 ./base/src/aggregation_bsr.inl
     1651 ./base/src/aggregation_csr.inl
-    2117 ./base/src/gmg_util.inl
+    2104 ./base/src/gmg_util.inl
       89 ./base/src/itsolver_util.inl
+     216 ./base/src/kcycle_util.inl
      238 ./base/src/linklist.inl
      245 ./base/src/mg_util.inl
      146 ./base/src/amg.c
@@ -14,7 +15,7 @@
      920 ./base/src/amg_setup_sa.c
      701 ./base/src/amg_setup_ua.c
      328 ./base/src/amg_solve.c
-     973 ./base/src/amlirecur.c
+     763 ./base/src/amlirecur.c
      333 ./base/src/array.c
      235 ./base/src/auxiliary.c
      427 ./base/src/blas_array.c
@@ -34,7 +35,7 @@
      351 ./base/src/fmgcycle.c
     1004 ./base/src/formats.c
       79 ./base/src/givens.c
-    1038 ./base/src/gmg_poisson.c
+    1053 ./base/src/gmg_poisson.c
      756 ./base/src/graphics.c
     2137 ./base/src/ilu.c
     1128 ./base/src/ilu_setup_bsr.c
@@ -101,4 +102,4 @@
       41 ./base/src/timing.c
      464 ./base/src/vec.c
      311 ./base/src/wrapper.c
-   88392 total
+   88400 total
