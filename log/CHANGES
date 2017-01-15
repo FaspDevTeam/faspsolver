@@ -2,6 +2,9 @@ File Name: CHANGES
 
 01/15/2017 FASP 1.9.1:
 - Prepare to change the structure of faspsolver.
+- Merge *_mf.c files with corresponding Krylov methods.
+- Move quadrature.c to test/src.
+- File name change: auxiliary.c ==> auxiliary.inl.
 
 01/15/2017 FASP 1.9.0:
 - Separate data structures and routines for reservoir simulation from base.

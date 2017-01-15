@@ -6,7 +6,7 @@
 #include <math.h>
 
 #include "fasp.h"
-#include "fasp_functs.h"
+//#include "fasp_functs.h"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

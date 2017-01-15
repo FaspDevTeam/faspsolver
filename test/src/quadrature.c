@@ -1,5 +1,4 @@
 /*! \file quadrature.c
- *
  *  \brief Quadrature rules
  */
 
