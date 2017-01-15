@@ -290,7 +290,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat        *A,
 	Schwarz_data Schwarz_data;
 	
 	// symmetrize the matrix (get rid of this later)
-	Schwarz_data.A = fasp_dcsr_sympat(A);
+	Schwarz_data.A = fasp_dcsr_sympart(A);
 	
 	// construct Schwarz precondtioner
 	fasp_dcsr_shift (&Schwarz_data.A, 1);

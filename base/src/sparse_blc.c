@@ -1,4 +1,4 @@
-/*! \file sparse_block.c
+/*! \file sparse_blc.c
  *
  *  \brief Sparse matrix block operations
  */

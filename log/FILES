@@ -86,7 +86,7 @@
       83 ./base/src/smoother_csr_cr.c
      597 ./base/src/smoother_csr_poly.c
     1888 ./base/src/smoother_str.c
-     366 ./base/src/sparse_block.c
+     366 ./base/src/sparse_blc.c
     1985 ./base/src/sparse_bsr.c
      153 ./base/src/sparse_coo.c
     1540 ./base/src/sparse_csr.c
