@@ -11,6 +11,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "auxiliary.inl"
 
 /*---------------------------------*/
 /*--   Decoration of Functions   --*/
@@ -1123,8 +1124,9 @@ MEMERR:
 }
 
 /**
- * \fn void fasp_smoother_dcsr_kaczmarz (dvector *u, const INT i_1, const INT i_n, const INT s,
- *                                       dCSRmat *A, dvector *b, INT L, const REAL w)
+ * \fn void fasp_smoother_dcsr_kaczmarz (dvector *u, const INT i_1, const INT i_n,
+ *                                       const INT s, dCSRmat *A, dvector *b,
+ *                                       INT L, const REAL w)
  *
  * \brief Kaczmarz method as a smoother
  *

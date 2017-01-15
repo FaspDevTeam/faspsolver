@@ -1,14 +1,14 @@
-/*! \file auxiliary.c
+/*! \file auxiliary.inl
  *
- *  \brief Read, write and other auxiliary routines. Also routine to convert
+ *  \brief Read, write, and other auxiliary routines. Also routines to convert
  *         matrix formats.
  *
  *------------------------------------------------------
  * C-version: by Ludmil Zikatanov 2010-04-08
- *                         tested 2010-04-08
  *------------------------------------------------------
  *
- *  \todo Remove unwanted functions from this file. --Chensong
+ *  \note This file contains Level-0 functions, which are used in
+ *            smoother_csr.c
  *
  */
 
@@ -18,8 +18,8 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-void fasp_aux_sh00 (dCSRmat    *X,
-                    const INT   ish)
+static void fasp_aux_sh00 (dCSRmat    *X,
+                           const INT   ish)
 {
     const INT n=X->row, nnzX=X->nnz;
     INT i;
@@ -27,17 +27,17 @@ void fasp_aux_sh00 (dCSRmat    *X,
     for (i=0;i<=n;i++)   { X->IA[i] += ish; }
     for (i=0;i<nnzX;i++) { X->JA[i] += ish; }
     return;
-}    
+}
 
-void fasp_aux_ijvcrs (INT   *nnzi,
-                      INT   *ia,
-                      INT   *ja,
-                      REAL  *a,
-                      INT   *n,
-                      INT   *nnz,
-                      INT   *irow,
-                      INT   *jcol,
-                      REAL  *aval)
+static void fasp_aux_ijvcrs (INT   *nnzi,
+                             INT   *ia,
+                             INT   *ja,
+                             REAL  *a,
+                             INT   *n,
+                             INT   *nnz,
+                             INT   *irow,
+                             INT   *jcol,
+                             REAL  *aval)
 {
     INT nnzo=0,ni=0,nj=0,k=0,nzk,n1,irk=0,ica=0,icb=0,iend=0,jp=0;
     /*   ---------------------------------------------------------------*/
@@ -61,7 +61,7 @@ void fasp_aux_ijvcrs (INT   *nnzi,
         if(irow[k]>ni) ni =irow[k];
         if(jcol[k]>nj) nj=jcol[k];
     }
-
+    
     n1=ni+1;
     for (k = 0; k< n1; k++) {
         ia[k] = 0;
@@ -78,7 +78,7 @@ void fasp_aux_ijvcrs (INT   *nnzi,
             break;
         }
     }
-    for (k = 0; k< nzk; k++) 
+    for (k = 0; k< nzk; k++)
         ia[k] = 1;
     for (k = nzk; k< n1; k++) {
         ia[k] = ia[k-1] + ia[k];
@@ -103,23 +103,23 @@ void fasp_aux_ijvcrs (INT   *nnzi,
     return;
 }
 
-void fasp_aux_uuplv0_ (REAL *u,
-                       REAL *v, 
-                       INT *n)
+static void fasp_aux_uuplv0_ (REAL *u,
+                              REAL *v,
+                              INT *n)
 {
-    /*  
-        This computes y = y + x.
-    */
+    /*
+     This computes y = y + x.
+     */
     INT i;
     for (i=0; i < *n ; i++) {
         u[i]=u[i]+v[i];
     }
-    return; 
+    return;
 }
 
-void fasp_aux_rveci (FILE  *inp,
-                     INT   *vec,
-                     INT   *nn)
+static void fasp_aux_rveci (FILE  *inp,
+                            INT   *vec,
+                            INT   *nn)
 /* reads a vector of integers of size *nn from a file inp*/
 /* the file "inp" should be open for reading */
 {
@@ -133,9 +133,9 @@ void fasp_aux_rveci (FILE  *inp,
     return;
 }
 
-void fasp_aux_rvecd (FILE  *inp,
-                     REAL  *vec,
-                     INT   *nn)
+static void fasp_aux_rvecd (FILE  *inp,
+                            REAL  *vec,
+                            INT   *nn)
 /* reads a vector of REALS of size nn from a file inp*/
 {
     INT n;
@@ -147,9 +147,9 @@ void fasp_aux_rvecd (FILE  *inp,
     return;
 }
 
-void fasp_aux_wveci (FILE  *inp,
-                     INT   *vec,
-                     INT   *nn)
+static void fasp_aux_wveci (FILE  *inp,
+                            INT   *vec,
+                            INT   *nn)
 /* writes a vector of integers of size nn from a file inp*/
 {
     
@@ -164,13 +164,13 @@ void fasp_aux_wveci (FILE  *inp,
     return;
 }
 
-void fasp_aux_wvecd (FILE  *inp,
-                     REAL  *vec,
-                     INT   *nn)
+static void fasp_aux_wvecd (FILE  *inp,
+                            REAL  *vec,
+                            INT   *nn)
 /* writes a vector of REALS of size nn from a file inp*/
 {
     INT n;
-    REAL *vec_end;  
+    REAL *vec_end;
     n=*nn;
     vec_end =  vec + n;
     for ( ; vec < vec_end; ++vec)
@@ -180,16 +180,16 @@ void fasp_aux_wvecd (FILE  *inp,
     return;
 }
 
-void fasp_aux_norm1_ (INT   *ia,
-                      INT   *ja,
-                      REAL  *a,
-                      INT   *nn,
-                      REAL  *a1norm)
+static void fasp_aux_norm1_ (INT   *ia,
+                             INT   *ja,
+                             REAL  *a,
+                             INT   *nn,
+                             REAL  *a1norm)
 {
     INT n,i,jk,iaa,iab;
     REAL sum,s;
     /* computes one norm of a matrix a and stores it in the variable
-       pointed to by *a1norm*/
+     pointed to by *a1norm*/
     n=*nn;
     s = 0e+00;
     for (i=0; i < n ; i++) {
@@ -199,18 +199,18 @@ void fasp_aux_norm1_ (INT   *ia,
         for (jk = iaa; jk < iab; jk++) {
             sum += fabs(a[jk]);
         }
-        if ( sum > s) s = sum; 
+        if ( sum > s) s = sum;
     }
     *a1norm=s;
 }
 
-void fasp_aux_auv_ (INT   *ia,
-                    INT   *ja,
-                    REAL  *a,
-                    REAL  *u,
-                    REAL  *v,
-                    INT   *nn,
-                    REAL  *aauv)
+static void fasp_aux_auv_ (INT   *ia,
+                           INT   *ja,
+                           REAL  *a,
+                           REAL  *u,
+                           REAL  *v,
+                           INT   *nn,
+                           REAL  *aauv)
 {
     /* Calculation a(u,v)=(Au,v) */
     INT n,i,j,ij,iaa,iab;

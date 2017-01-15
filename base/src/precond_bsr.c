@@ -9,7 +9,6 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-
 #include "mg_util.inl"
 
 /*---------------------------------*/
@@ -33,8 +32,7 @@
  *
  * \note Works for general nb (Xiaozhe)
  */
-
-void fasp_precond_dbsr_diag (REAL *r, 
+void fasp_precond_dbsr_diag (REAL *r,
                              REAL *z, 
                              void *data) 
 {
@@ -107,7 +105,6 @@ void fasp_precond_dbsr_diag (REAL *r,
  *
  * \note Works for 2-component (Xiaozhe)
  */
-
 void fasp_precond_dbsr_diag_nc2 (REAL *r,
                                  REAL *z,
                                  void *data) 
@@ -157,7 +154,6 @@ void fasp_precond_dbsr_diag_nc2 (REAL *r,
  *
  * \note Works for 3-component (Xiaozhe)
  */
-
 void fasp_precond_dbsr_diag_nc3 (REAL *r,
                                  REAL *z,
                                  void *data)
@@ -207,7 +203,6 @@ void fasp_precond_dbsr_diag_nc3 (REAL *r,
  *
  * \note Works for 5-component (Xiaozhe)
  */
-
 void fasp_precond_dbsr_diag_nc5 (REAL *r,
                                  REAL *z,
                                  void *data)
@@ -319,7 +314,8 @@ void fasp_precond_dbsr_ilu (REAL *r,
     REAL       *zz, *zr, *mult;       
     
     if (iludata->nwork<memneed) {
-        printf("### ERROR: Need %d memory, only %d available!\n", memneed, iludata->nwork);
+        printf("### ERROR: Need %d memory, only %d available!\n",
+               memneed, iludata->nwork);
         exit(ERROR_ALLOC_MEM);
     }
     
@@ -494,7 +490,6 @@ void fasp_precond_dbsr_ilu (REAL *r,
             } 
     
             fasp_blas_smat_mxv_nc7(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-    
         }
     
         break; //end (if nb==7)
@@ -539,7 +534,6 @@ void fasp_precond_dbsr_ilu (REAL *r,
             } 
     
             fasp_blas_smat_mxv(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]),nb);
-    
         }
     
         break; // end everything else 
@@ -548,11 +542,10 @@ void fasp_precond_dbsr_ilu (REAL *r,
     return;
 }
 
-
 /**
  * \fn void fasp_precond_dbsr_ilu_mc_omp (REAL *r, REAL *z, void *data)
  *
- * \brief Multi-threads Parallel ILU preconditioner based on graph coloring
+ * \brief Multi-thread Parallel ILU preconditioner based on graph coloring
  *
  * \param r     Pointer to the vector needs preconditioning
  * \param z     Pointer to preconditioned vector
@@ -582,7 +575,8 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
     REAL        *zz, *zr, *mult;       
     
     if (iludata->nwork<memneed) {
-        printf("### ERROR: Need %d memory, only %d available!\n", memneed, iludata->nwork);
+        printf("### ERROR: Need %d memory, only %d available!\n",
+               memneed, iludata->nwork);
         exit(ERROR_ALLOC_MEM);
     }
     
@@ -734,8 +728,8 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
         default: 
         {
            if (nb > 3) {
-              printf(" Multi-threads Parallel ILU preconditioner for %d components has \
-                       not yet been implemented!!!", nb);
+               printf("### ERROR: Multi-thread Parallel ILU for %d components \
+                      has not yet been implemented!!!", nb);
               exit(0);
            }
            break;
@@ -746,11 +740,10 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
 #endif
 }
 
-
 /**
- * \fn void fasp_precond_dbsr_ilu_levsch_omp (REAL *r, REAL *z, void *data)
+ * \fn void fasp_precond_dbsr_ilu_ls_omp (REAL *r, REAL *z, void *data)
  *
- * \brief Multi-threads Parallel ILU preconditioner based on level schedule strategy
+ * \brief Multi-thread Parallel ILU preconditioner based on level schedule strategy
  *
  * \param r     Pointer to the vector needs preconditioning
  * \param z     Pointer to preconditioned vector
@@ -761,9 +754,9 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
  *
  * \note Only works for nb 1, 2, and 3 (Zheng)
  */
-void fasp_precond_dbsr_ilu_levsch_omp (REAL *r, 
-                                       REAL *z, 
-                                       void *data)
+void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
+                                   REAL *z,
+                                   void *data)
 {
 #ifdef _OPENMP
     const ILU_data  *iludata=(ILU_data *)data;
@@ -784,7 +777,8 @@ void fasp_precond_dbsr_ilu_levsch_omp (REAL *r,
     REAL       *zz, *zr, *mult;       
     
     if (iludata->nwork<memneed) {
-        printf("### ERROR: Need %d memory, only %d available!\n", memneed, iludata->nwork);
+        printf("### ERROR: Need %d memory, only %d available!\n",
+               memneed, iludata->nwork);
         exit(ERROR_ALLOC_MEM);
     }
     
@@ -943,8 +937,8 @@ void fasp_precond_dbsr_ilu_levsch_omp (REAL *r,
         default: 
         {
           if (nb > 3) {
-          	printf(" Multi-threads Parallel ILU preconditioner for %d components \
-                has not yet been implemented!!!", nb);
+          	printf("### ERROR: Multi-thread Parallel ILU for %d components \
+                    has not yet been implemented!!!", nb);
           	exit(0);
           }
           break;
@@ -994,7 +988,6 @@ void fasp_precond_dbsr_amg (REAL *r,
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
     for (i=0;i<maxit;++i) fasp_solver_mgcycle_bsr(mgl,&amgparam); 
-	//fasp_solver_mgrecurmgl,&amgparam,0); //
     
     fasp_array_cp(m,mgl->x.val,z);    
 }
@@ -1105,7 +1098,6 @@ void fasp_precond_dbsr_amg_nk (REAL *r,
     fasp_array_cp(m, z, mgl->x.val);
     
     for (i=0;i<maxit;++i) fasp_solver_mgcycle_bsr(mgl,&amgparam); 
-	//fasp_solver_mgrecurmgl,&amgparam,0); //
     
     fasp_array_cp(m,mgl->x.val,z);
     

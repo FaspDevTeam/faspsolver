@@ -1584,9 +1584,10 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     
     /** form residual zr = b - A x */
     fasp_array_cp(m,bval,zr); fasp_blas_dbsr_aAxpy(-1.0,A,xval,zr);
-    /** solve LU z=zr */
 
+    /** solve LU z=zr */
 #ifdef _OPENMP
+    
 #if ILU_MC_OMP
     REAL *tz = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
     REAL *tzr = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
@@ -1595,8 +1596,6 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_gettime(&start);
     fasp_precond_dbsr_ilu_mc_omp(tzr,tz,iludata);
     fasp_gettime(&end);
-     
-    ilu_solve_omp += end-start;
 
     fasp_array_invpermut_nb(A->ROW, A->nb, tz, iludata->jlevL, z);
     fasp_mem_free(tzr);
@@ -1605,15 +1604,17 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_gettime(&start);
     fasp_precond_dbsr_ilu_levsch_omp(zr,z,iludata);
     fasp_gettime(&end);
-
-    ilu_solve_omp += end-start;
 #endif
 
+    ilu_solve_omp += end-start;
+
 #else
+    
     fasp_gettime(&start);
     fasp_precond_dbsr_ilu(zr,z,iludata);
     fasp_gettime(&end);
     ilu_solve_omp += end-start;
+
 #endif
 
     /** x=x+z */

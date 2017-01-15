@@ -8,7 +8,6 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
-
 #include "gmg_util.inl"
 
 /*---------------------------------*/

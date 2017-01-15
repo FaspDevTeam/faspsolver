@@ -128,56 +128,6 @@ void fasp_array_invpermut_nb (INT    n,
                               REAL  *y);
 
 
-/*-------- In file: auxiliary.c --------*/
-
-void fasp_aux_sh00 (dCSRmat    *X,
-                    const INT   ish);
-
-void fasp_aux_ijvcrs (INT   *nnzi,
-                      INT   *ia,
-                      INT   *ja,
-                      REAL  *a,
-                      INT   *n,
-                      INT   *nnz,
-                      INT   *irow,
-                      INT   *jcol,
-                      REAL  *aval);
-
-void fasp_aux_uuplv0_ (REAL *u,
-                       REAL *v, 
-                       INT *n);
-
-void fasp_aux_rveci (FILE  *inp,
-                     INT   *vec,
-                     INT   *nn);
-
-void fasp_aux_rvecd (FILE  *inp,
-                     REAL  *vec,
-                     INT   *nn);
-
-void fasp_aux_wveci (FILE  *inp,
-                     INT   *vec,
-                     INT   *nn);
-
-void fasp_aux_wvecd (FILE  *inp,
-                     REAL  *vec,
-                     INT   *nn);
-
-void fasp_aux_norm1_ (INT   *ia,
-                      INT   *ja,
-                      REAL  *a,
-                      INT   *nn,
-                      REAL  *a1norm);
-
-void fasp_aux_auv_ (INT   *ia,
-                    INT   *ja,
-                    REAL  *a,
-                    REAL  *u,
-                    REAL  *v,
-                    INT   *nn,
-                    REAL  *aauv);
-
-
 /*-------- In file: blas_array.c --------*/
 
 void fasp_blas_array_ax (const INT    n,
@@ -332,6 +282,21 @@ void fasp_blas_dcsr_ptap (dCSRmat   *Pt,
                           dCSRmat   *A,
                           dCSRmat   *P,
                           dCSRmat   *Ac);
+
+dCSRmat fasp_blas_dcsr_rap2 (INT    *ir,
+                             INT    *jr,
+                             REAL   *r,
+                             INT    *ia,
+                             INT    *ja,
+                             REAL   *a,
+                             INT    *ipt,
+                             INT    *jpt,
+                             REAL   *pt,
+                             INT     n,
+                             INT     nc,
+                             INT    *maxrpout,
+                             INT    *ipin,
+                             INT    *jpin);
 
 void fasp_blas_dcsr_rap4 (dCSRmat   *R,
                           dCSRmat   *A,
@@ -1388,15 +1353,6 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
                             const SHORT  stop_type,
                             const SHORT  prtlvl);
 
-INT fasp_solver_dcsr_pvbcgs (dCSRmat     *A,
-                             dvector     *b,
-                             dvector     *u,
-                             precond     *pc,
-                             const REAL   tol,
-                             const INT    MaxIt,
-                             const SHORT  stop_type,
-                             const SHORT  prtlvl);
-
 INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
                             dvector     *b,
                             dvector     *u,
@@ -1405,15 +1361,6 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
                             const INT    MaxIt,
                             const SHORT  stop_type,
                             const SHORT  prtlvl);
-
-INT fasp_solver_dbsr_pvbcgs (dBSRmat     *A,
-                             dvector     *b,
-                             dvector     *u,
-                             precond     *pc,
-                             const REAL   tol,
-                             const INT    MaxIt,
-                             const SHORT  stop_type,
-                             const SHORT  prtlvl);
 
 INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
                             dvector     *b,
@@ -1424,15 +1371,6 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
                             const SHORT  stop_type,
                             const SHORT  prtlvl);
 
-INT fasp_solver_dblc_pvbcgs (dBLCmat     *A,
-                             dvector     *b,
-                             dvector     *u,
-                             precond     *pc,
-                             const REAL   tol,
-                             const INT    MaxIt,
-                             const SHORT  stop_type,
-                             const SHORT  prtlvl);
-
 INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
                             dvector     *b,
                             dvector     *u,
@@ -1442,14 +1380,14 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
                             const SHORT  stop_type,
                             const SHORT  prtlvl);
 
-INT fasp_solver_dstr_pvbcgs (dSTRmat     *A,
-                             dvector     *b,
-                             dvector     *u,
-                             precond     *pc,
-                             const REAL   tol,
-                             const INT    MaxIt,
-                             const SHORT  stop_type,
-                             const SHORT  prtlvl);
+INT fasp_solver_pbcgs (mxv_matfree  *mf,
+                       dvector      *b,
+                       dvector      *u,
+                       precond      *pc,
+                       const REAL    tol,
+                       const INT     MaxIt,
+                       const SHORT   stop_type,
+                       const SHORT   prtlvl);
 
 
 /*-------- In file: pbcgs_mf.c --------*/
@@ -1511,9 +1449,6 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                           const SHORT  stop_type,
                           const SHORT  prtlvl);
 
-
-/*-------- In file: pcg_mf.c --------*/
-
 INT fasp_solver_pcg (mxv_matfree *mf,
                      dvector     *b,
                      dvector     *u,
@@ -1534,9 +1469,6 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
                            const INT    MaxIt,
                            const SHORT  stop_type,
                            const SHORT  prtlvl);
-
-
-/*-------- In file: pgcg_mf.c --------*/
 
 INT fasp_solver_pgcg (mxv_matfree *mf,
                       dvector     *b,
@@ -1613,9 +1545,6 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
                              const SHORT  stop_type,
                              const SHORT  prtlvl);
 
-
-/*-------- In file: pgmres_mf.c --------*/
-
 INT fasp_solver_pgmres (mxv_matfree  *mf,
                         dvector      *b,
                         dvector      *x,
@@ -1655,9 +1584,6 @@ INT fasp_solver_dstr_pminres (dSTRmat      *A,
                               const INT     MaxIt,
                               const SHORT   stop_type,
                               const SHORT   prtlvl);
-
-
-/*-------- In file: pminres_mf.c --------*/
 
 INT fasp_solver_pminres (mxv_matfree  *mf,
                          dvector      *b,
@@ -1718,7 +1644,7 @@ void fasp_precond_sweeping (REAL *r,
 
 /*-------- In file: precond_bsr.c --------*/
 
-void fasp_precond_dbsr_diag (REAL *r, 
+void fasp_precond_dbsr_diag (REAL *r,
                              REAL *z, 
                              void *data) ;
 
@@ -1746,9 +1672,9 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
                                    REAL *z, 
                                    void *data);
 
-void fasp_precond_dbsr_ilu_levsch_omp (REAL *r, 
-                                       REAL *z, 
-                                       void *data);
+void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
+                                   REAL *z,
+                                   void *data);
 
 void fasp_precond_dbsr_amg (REAL *r, 
                             REAL *z, 
@@ -1849,6 +1775,54 @@ void fasp_precond_dstr_blockgs (REAL *r,
                                 void *data);
 
 
+/*-------- In file: pvbcgs.c --------*/
+
+INT fasp_solver_dcsr_pvbcgs (dCSRmat     *A,
+                             dvector     *b,
+                             dvector     *u,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl);
+
+INT fasp_solver_dbsr_pvbcgs (dBSRmat     *A,
+                             dvector     *b,
+                             dvector     *u,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl);
+
+INT fasp_solver_dblc_pvbcgs (dBLCmat     *A,
+                             dvector     *b,
+                             dvector     *u,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl);
+
+INT fasp_solver_dstr_pvbcgs (dSTRmat     *A,
+                             dvector     *b,
+                             dvector     *u,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  stop_type,
+                             const SHORT  prtlvl);
+
+INT fasp_solver_pvbcgs (mxv_matfree *mf,
+                        dvector     *b,
+                        dvector     *u,
+                        precond     *pc,
+                        const REAL   tol,
+                        const INT    MaxIt,
+                        const SHORT  stop_type,
+                        const SHORT  prtlvl);
+
+
 /*-------- In file: pvfgmres.c --------*/
 
 INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
@@ -1880,9 +1854,6 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
                                const SHORT  restart,
                                const SHORT  stop_type,
                                const SHORT  prtlvl);
-
-
-/*-------- In file: pvfgmres_mf.c --------*/
 
 INT fasp_solver_pvfgmres (mxv_matfree  *mf,
                           dvector      *b,
@@ -1937,9 +1908,6 @@ INT fasp_solver_dstr_pvgmres (dSTRmat      *A,
                               const SHORT   stop_type,
                               const SHORT   prtlvl);
 
-
-/*-------- In file: pvgmres_mf.c --------*/
-
 INT fasp_solver_pvgmres (mxv_matfree  *mf,
                          dvector      *b,
                          dvector      *x,
@@ -1949,35 +1917,6 @@ INT fasp_solver_pvgmres (mxv_matfree  *mf,
                          SHORT         restart,
                          const SHORT   stop_type,
                          const SHORT   prtlvl);
-
-
-/*-------- In file: quadrature.c --------*/
-
-void fasp_quad2d (const INT   num_qp,
-                  const INT   ncoor,
-                  REAL      (*quad)[3]);
-
-void fasp_gauss2d (const INT   num_qp,
-                   const INT   ncoor,
-                   REAL      (*gauss)[3]);
-
-
-/*-------- In file: rap.c --------*/
-
-dCSRmat fasp_blas_dcsr_rap2 (INT    *ir,
-                             INT    *jr,
-                             REAL   *r,
-                             INT    *ia,
-                             INT    *ja,
-                             REAL   *a,
-                             INT    *ipt,
-                             INT    *jpt,
-                             REAL   *pt,
-                             INT     n,
-                             INT     nc,
-                             INT    *maxrpout,
-                             INT    *ipin,
-                             INT    *jpin);
 
 
 /*-------- In file: schwarz_setup.c --------*/

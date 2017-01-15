@@ -18,6 +18,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+#include "auxiliary.inl"
 
 static void bminax(REAL *,INT *,INT *, REAL *, REAL *,INT *, REAL *);
 static void Diaginv(dCSRmat *, REAL *);
