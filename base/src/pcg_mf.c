@@ -200,8 +200,8 @@ INT fasp_solver_pcg (mxv_matfree *mf,
         }
         
         // compute relative difference
-        normu=fasp_blas_dvec_norm2(u);
-        reldiff=ABS(alpha)*fasp_blas_array_norm2(m,p)/normu;
+        normu = fasp_blas_array_norm2(m, u->val);
+        reldiff = ABS(alpha)*fasp_blas_array_norm2(m, p)/normu;
         
         // stagnation check
         if ( (stag<=MaxStag) & (reldiff<maxdiff) ) {
@@ -213,7 +213,7 @@ INT fasp_solver_pcg (mxv_matfree *mf,
             
             mf->fct(mf->data, u->val, r);
             fasp_blas_array_axpby(m, 1.0, b->val, -1.0, r);
-            absres=fasp_blas_array_norm2(m,r);
+            absres = fasp_blas_array_norm2(m,r);
             
             // relative residual
             switch (stop_type) {

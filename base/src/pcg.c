@@ -210,7 +210,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_dvec_norm2(u);
+            unorm2 = fasp_blas_array_norm2(m, u->val);
             
             // compute relative difference
             reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
@@ -499,7 +499,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_dvec_norm2(u);
+            unorm2 = fasp_blas_array_norm2(m, u->val);
             
             // compute relative difference
             reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
@@ -791,7 +791,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_dvec_norm2(u);
+            unorm2 = fasp_blas_array_norm2(m, u->val);
             
             // compute relative difference
             reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
@@ -1083,7 +1083,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_dvec_norm2(u);
+            unorm2 = fasp_blas_array_norm2(m, u->val);
             
             // compute relative difference
             reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
