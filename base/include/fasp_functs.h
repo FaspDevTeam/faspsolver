@@ -2354,7 +2354,7 @@ void fasp_smoother_dstr_schwarz (dSTRmat *A,
                                  ivector *order);
 
 
-/*-------- In file: sparse_block.c --------*/
+/*-------- In file: sparse_blc.c --------*/
 
 void fasp_dblc_free (dBLCmat *A);
 
@@ -2522,7 +2522,7 @@ void fasp_dcsr_shift (dCSRmat *A,
 void fasp_dcsr_symdiagscale (dCSRmat *A,
                              dvector *diag);
 
-dCSRmat fasp_dcsr_sympat (dCSRmat *A);
+dCSRmat fasp_dcsr_sympart (dCSRmat *A);
 
 void fasp_dcsr_multicoloring (dCSRmat *A,
                               INT     *flags,

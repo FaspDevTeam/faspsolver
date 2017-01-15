@@ -1219,7 +1219,7 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
 }
 
 /**
- * \fn dCSRmat fasp_dcsr_sympat(dCSRmat *A)
+ * \fn dCSRmat fasp_dcsr_sympart(dCSRmat *A)
  * \brief Get symmetric part of a dCSRmat matrix
  *
  * \param *A      pointer to the dCSRmat matrix
@@ -1229,7 +1229,7 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
  * \author Xiaozhe Hu
  * \date 03/21/2011
  */
-dCSRmat fasp_dcsr_sympat (dCSRmat *A)
+dCSRmat fasp_dcsr_sympart (dCSRmat *A)
 {
     //local variable
     dCSRmat AT;

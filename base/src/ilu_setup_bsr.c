@@ -1090,13 +1090,13 @@ SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
      dBSRmat A_LU;
 
     if (iluparam->ILU_lfil==0) {
-        mgl[0].A = fasp_dcsr_sympat(Ap);  //for ILU0
+        mgl[0].A = fasp_dcsr_sympart(Ap);  //for ILU0
     }
     else if (iluparam->ILU_lfil==1) {  // for ILU1
         Ap1 = fasp_dcsr_create(Ap->row,Ap->col, Ap->nnz);
         fasp_dcsr_cp(Ap, &Ap1);
         fasp_blas_dcsr_mxm (Ap,&Ap1,&pp);
-        mgl[0].A = fasp_dcsr_sympat(&pp);
+        mgl[0].A = fasp_dcsr_sympart(&pp);
         fasp_dcsr_free(&Ap1);
         fasp_dcsr_free(&pp);
     }
