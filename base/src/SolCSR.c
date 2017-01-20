@@ -73,6 +73,9 @@ INT fasp_solver_dcsr_itsolver (dCSRmat        *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
+    /* check matrix data */
+    fasp_check_dCSRmat(A);
+
     /* Safe-guard checks on parameters */
     ITS_CHECK ( MaxIt, tol );
     

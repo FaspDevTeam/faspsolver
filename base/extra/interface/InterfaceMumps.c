@@ -1,4 +1,5 @@
-/*! \file interface_mumps.c
+/*! \file InterfaceMumps.c
+ *
  *  \brief Interface to MUMPS direct solvers
  *
  *  Reference for MUMPS:

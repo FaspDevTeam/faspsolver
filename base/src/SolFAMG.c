@@ -53,6 +53,9 @@ void fasp_solver_famg (dCSRmat    *A,
     
     if ( prtlvl > PRINT_NONE ) fasp_gettime(&FMG_start);
     
+    // check matrix data
+    fasp_check_dCSRmat(A);
+
     // Step 0: initialize mgl[0] with A, b and x
     mgl[0].A = fasp_dcsr_create(m,n,nnz);
     fasp_dcsr_cp(A,&mgl[0].A);

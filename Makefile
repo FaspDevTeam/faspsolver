@@ -149,7 +149,7 @@ uninstall:
 	@if [ ! -f $(build_dir)/install_manifest.txt ]; then \
 		echo "*=======================================================================*"; \
 		echo "* WARNING: Installation manifest not found! Nothing to be uninstalled.  *"; \
-		echo "* Type \"make help\" for help on usage ...                              *"; \
+		echo "* Type \"make help\" for help on usage ...                                *"; \
 		echo "*=======================================================================*"; \
 		echo " "; \
 	else \

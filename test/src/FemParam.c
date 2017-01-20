@@ -1,5 +1,6 @@
-/*! \file misc.c
- *  \brief Miscellaneous functions for test.
+/*! \file FemParam.c
+ *
+ *  \brief Miscellaneous functions for setting parameters of FEM
  */
 
 #include "misc.h"

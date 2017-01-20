@@ -29,7 +29,7 @@
  */
 INT fasp_check_diagpos (dCSRmat *A)
 {
-    const INT      m=A->row;
+    const INT      m = A->row;
     unsigned INT   i, num_neg;
     
 #if DEBUG_MODE > 1
@@ -66,9 +66,9 @@ INT fasp_check_diagpos (dCSRmat *A)
  */
 SHORT fasp_check_diagzero (dCSRmat *A)
 {
-    const INT    m = A->row;
-    const INT   *ia =A->IA, *ja = A->JA;
-    const REAL  *aj =A->val;
+    const INT    m  = A->row;
+    const INT   *ia = A->IA, *ja = A->JA;
+    const REAL  *aj = A->val;
 
     SHORT        status = FASP_SUCCESS;
     INT          i,j,k,begin_row,end_row;
@@ -112,16 +112,16 @@ INT fasp_check_diagdom (dCSRmat *A)
 {
     const INT   nn  = A->row;
     const INT   nnz = A->IA[nn]-A->IA[0];
-    INT         i,j,k=0;
+    INT         i, j, k;
     REAL        sum;
     
     INT *rowp = (INT *)fasp_mem_calloc(nnz,sizeof(INT));
     
-    for (i=0;i<nn;++i) {
+    for ( i=0; i<nn; ++i ) {
         for (j=A->IA[i];j<A->IA[i+1];++j) rowp[j]=i;
     }
     
-    for (i=0;i<nn;++i) {
+    for ( k=0, i=0; i<nn; ++i ) {
         sum=0.0;
         for (j=A->IA[i];j<A->IA[i+1];++j) {
             if (A->JA[j]==i) sum=sum+A->val[j];
@@ -155,18 +155,18 @@ INT fasp_check_diagdom (dCSRmat *A)
  */
 INT fasp_check_symm (dCSRmat *A)
 {
-    const REAL symmetry_tol=1.0e-12;
+    const REAL symmetry_tol = 1.0e-12;
     
-    INT i,j,mdi,mdj,nnz,nn;
-    INT *rowp,*rows[2],*cols[2];
-    INT nns[2],tnizs[2];
-    INT type=0;
+    INT  *rowp,*rows[2],*cols[2];
+    INT   i,j,mdi,mdj;
+    INT   nns[2],tnizs[2];
+    INT   type=0;
     
-    REAL maxdif,dif;
+    REAL  maxdif,dif;
     REAL *vals[2];
     
-    nn=A->row;
-    nnz=A->IA[nn]-A->IA[0];
+    const INT nn  = A->row;
+    const INT nnz = A->IA[nn]-A->IA[0];
     
     if (nnz!=A->nnz) {
         printf("### ERROR: nnz=%d, ia[n]-ia[0]=%d does NOT match!\n",A->nnz,nnz);
@@ -266,37 +266,35 @@ INT fasp_check_symm (dCSRmat *A)
 }
 
 /**
- * \fn SHORT fasp_check_dCSRmat (dCSRmat *A)
+ * \fn void fasp_check_dCSRmat (dCSRmat *A)
  *
- * \brief Check whether an dCSRmat matrix is valid or not
+ * \brief Check whether an dCSRmat matrix is supported or not
  *
  * \param A   Pointer to the matrix in dCSRmat format
  *
  * \author Shuo Zhang
  * \date   03/29/2009
  */
-SHORT fasp_check_dCSRmat (dCSRmat *A)
+void fasp_check_dCSRmat (dCSRmat *A)
 {    
     INT i;    
     
     if ( A->row != A->col ) {
         printf("### ERROR: Non-square CSR matrix!\n");
-        fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
+        fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
     }
     
-    if ( (A->nnz==0) || (A->row==0) || (A->col==0) ) {
+    if ( (A->nnz<=0) || (A->row==0) || (A->col==0) ) {
         printf("### ERROR: Empty CSR matrix!\n");
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
-    for (i=0;i<A->nnz;++i) {
+    for ( i=0;i<A->nnz;++i ) {
         if ( (A->JA[i]<0) || (A->JA[i]-A->col>=0) ) {
             printf("### ERROR: Wrong CSR matrix format!\n");
             fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
         }
     }
-    
-    return FASP_SUCCESS;
 }
 
 /**

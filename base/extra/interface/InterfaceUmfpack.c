@@ -1,4 +1,5 @@
-/*! \file interface_umfpack.c
+/*! \file InterfaceUmfpack.c
+ *
  *  \brief Interface to UMFPACK direct solvers
  *
  *  Reference for SuiteSparse:

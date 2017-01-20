@@ -1,6 +1,7 @@
-/*! \file basis.inl
-*   \brief Finite Element Basis Functions
-*/
+/*! \file FemBasis.inl
+ *
+ *   \brief Finite Element Basis Functions
+ */
 
 /** 
 * \fn static double basisP1 (int index, double lambda[2])

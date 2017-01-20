@@ -1,4 +1,5 @@
-/*! \file interface_superlu.c
+/*! \file InterfaceSuperlu.c
+ *
  *  \brief Interface to SuperLU direct solvers
  *
  *  Reference for SuperLU:

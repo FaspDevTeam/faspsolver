@@ -22,6 +22,14 @@
  * problems. We mainly utilize the methodology of Auxiliary Space Preconditioning (ASP)
  * to construct efficient linear solvers. Due to this reason, this software package
  * is called Fast Auxiliary Space Preconditioning or FASP for short.
+ * 
+ * The structure of FASP is designed as follows:
+ *      Level 0 (Aux*.c): Auxiliary functions (timing, memory, ...)
+ *      Level 1 (Bla*.c): Basic linear algebra subroutines (SpMV, RAP, ILU, ...)
+ *      Level 2 (Itr*.c): Iterative methods and smoothers (Jacobi, GS, SOR, ...)
+ *      Level 3 (Kry*.c): Krylov iterative methods (CG, GMRES, ...)
+ *      Level 4 (Pre*.c): Preconditioners (GMG, AMG, ...)
+ *      Level 5 (Sol*.c): User interface for FASP solvers (Solvers, wrappers, ...)
  *
  * FASP contains the kernel part and several applications (ranging from fluid dynamics  
  * to reservoir simulation). The kernel part is open-source and licensed under GNU 
