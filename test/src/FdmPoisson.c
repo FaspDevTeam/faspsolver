@@ -1,12 +1,13 @@
-/*! \file poisson_fdm.c
+/*! \file FdmPoisson.c
+ *
  *  \brief Setup FDM for the Poisson's equation
  */
 
 #include "poisson_fdm.h"
 
 /*!
- * \brief Generate the coefficient matrix, right hand side vector and
- *        true solution vector for the following Poisson Problem
+ * \brief Generate the coefficient matrix, right hand side vector and true
+ *        solution vector for the following Poisson Problem
  
  * Consider a two-dimensional Poisson equation
  * \f[
@@ -198,6 +199,20 @@ fsls_BuildLinearSystem_5pt2d (int               nt,
     *u_ptr = u;
 }
 
+/*!
+ * \brief Generate the coefficient matrix, right hand side vector and true
+ *        solution vector for the Poisson Problem with red-black ordering
+ *
+ * \param nt number of nodes in t-direction, if nt == 0, it turn to be the Poisson system
+ * \param nx number of nodes in x-direction (excluding the boundary nodes)
+ * \param ny number of nodes in y-direction (excluding the boundary nodes)
+ * \param A_ptr pointer to pointer to the coefficient matrix
+ * \param f_ptr pointer to pointer to the right hand side vector
+ * \param u_ptr pointer to pointer to the true solution vector
+ *
+ * \author peghoty
+ * \date   2010/07/14
+ */
 void
 fsls_BuildLinearSystem_5pt2d_rb (int               nt,
                                  int               nx,

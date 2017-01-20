@@ -1,5 +1,6 @@
-/*! \file mesh.c
- *  \brief mesh input, output, refine etc.
+/*! \file FemMesh.c
+ *
+ *  \brief FEM mesh input, output, refine, etc
  */
 
 #include "fasp.h"

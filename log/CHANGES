@@ -1,8 +1,11 @@
 File Name: CHANGES
 
-01/19/2017 FASP 1.9.2:
+01/20/2017 FASP 1.9.2:
 - Change filenames according to package structure.
+- Change filenames of interface to external packages.
+- Change filenames of FEM and FDM tests.
 - Add file dependency in each file.
+- Add description for the new structure in Doxygen.
 
 01/15/2017 FASP 1.9.1:
 - Prepare to change the structure of faspsolver.

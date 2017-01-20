@@ -1,5 +1,6 @@
-/*! \file assemble.c
- *  \brief Auxiliary functions for assembling
+/*! \file FemAssemble.c
+ *
+ *  \brief Auxiliary functions for FEM assembling
  */
 
 #include "assemble.h"

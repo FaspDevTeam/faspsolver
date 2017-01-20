@@ -1,4 +1,5 @@
-/*! \file heat_fem.c
+/*! \file FemHeatEqn.c
+ *
  *  \brief Setup P1 FEM & backward Euler for the heat transfer's equation
  */
 
@@ -6,7 +7,12 @@
 #define MAX_QUAD 49    // max num of quadrature points allowed
 
 #include "heat_fem.h"
-#include "basis.inl"
+
+/*---------------------------------*/
+/*--  Declare Private Functions  --*/
+/*---------------------------------*/
+
+#include "FemBasis.inl"
 
 /*---------------------------------*/
 /*--      Private Functions      --*/

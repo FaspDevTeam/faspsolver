@@ -1,4 +1,5 @@
-/*! \file interface_pardiso.c
+/*! \file InterfacePardiso.c
+ *
  *  \brief Interface to Intel MKL PARDISO direct solvers
  *
  *  Reference for Intel MKL PARDISO:

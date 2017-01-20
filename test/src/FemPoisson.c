@@ -1,11 +1,17 @@
-/*! \file poisson_fem.c
+/*! \file FemPoisson.c
+ *
  *  \brief Setup P1 FEM for the Poisson's equation
  */
 
 #include <math.h>
 
 #include "poisson_fem.h"
-#include "basis.inl"
+
+/*---------------------------------*/
+/*--  Declare Private Functions  --*/
+/*---------------------------------*/
+
+#include "FemBasis.inl"
 
 #define DIM 2          // dimension of space
 #define MAX_QUAD 49    // max number of quadrature points allowed

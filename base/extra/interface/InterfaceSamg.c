@@ -1,4 +1,5 @@
-/*! \file interface_samg.c
+/*! \file InterfaceSamg.c
+ *
  *  \brief Interface to SAMG solvers
  *
  *  Reference for SAMG:

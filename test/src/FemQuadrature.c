@@ -1,5 +1,6 @@
-/*! \file quadrature.c
- *  \brief Quadrature rules
+/*! \file FenQuadrature.c
+ *
+ *  \brief Quadrature rules for FEM assembling
  */
 
 #include <stdio.h>
