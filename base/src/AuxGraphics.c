@@ -9,6 +9,7 @@
 #include <math.h>
 
 #include "fasp.h"
+#include "fasp_grid.h"
 #include "fasp_functs.h"
 
 /*---------------------------------*/

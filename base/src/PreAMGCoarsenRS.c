@@ -26,13 +26,13 @@
 
 #include "PreAMGUtil.inl"
 
-// Private routines for RS coarsening
 static INT  cfsplitting_cls    (dCSRmat *, iCSRmat *, ivector *);
 static INT  cfsplitting_clsp   (dCSRmat *, iCSRmat *, ivector *);
 static INT  cfsplitting_agg    (dCSRmat *, iCSRmat *, ivector *, INT);
 static INT  cfsplitting_mis    (iCSRmat *, ivector *, ivector *);
 static INT  clean_ff_couplings (iCSRmat *, ivector *, INT, INT);
 static INT  compress_S         (iCSRmat *);
+
 static void strong_couplings   (dCSRmat *, iCSRmat *, AMG_param *);
 static void form_P_pattern_dir (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 static void form_P_pattern_std (dCSRmat *, iCSRmat *, ivector *, INT, INT);
