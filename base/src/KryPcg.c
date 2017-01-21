@@ -43,7 +43,7 @@
  *
  *
  *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaSpmvArray.c, BlaSpmvBLC.c, 
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c, 
  *        BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
  *  \note Refer to Y. Saad 2003

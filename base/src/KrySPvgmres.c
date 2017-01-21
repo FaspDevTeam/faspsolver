@@ -4,7 +4,7 @@
  *         safety net
  *
  *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaSpmvArray.c, 
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaArray.c, 
  *        BlaSpmvBLC.c, BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
  *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev

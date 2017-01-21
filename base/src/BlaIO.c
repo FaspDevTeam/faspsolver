@@ -17,6 +17,10 @@
 INT   ilength; /**< Length of INT in byte */
 INT   dlength; /**< Length of REAL in byte */
 
+/*---------------------------------*/
+/*--  Declare Private Functions  --*/
+/*---------------------------------*/
+
 // Decoration of private functions
 static void fasp_dcsr_read_s(FILE *fp, dCSRmat *A);
 static void fasp_dcsr_read_b(FILE *fp, dCSRmat *A, INT endianflag);

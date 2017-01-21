@@ -18,16 +18,6 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-/* The following functions are defined in ilu.f */
-#ifdef __cplusplus 
-extern "C" {void symbfactor_(const INT *n,INT *colind,INT *rwptr,
-                             const INT *levfill,const INT *nzmax,
-                             INT *nzlu,INT *ijlu,INT *uptr,INT *ierr);}
-#else
-extern void symbfactor_(const INT *n,INT *colind,INT *rwptr,const INT *levfill,
-                        const INT *nzmax,INT *nzlu,INT *ijlu,INT *uptr,INT *ierr);
-#endif
-
 static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
 
 /*---------------------------------*/
@@ -91,8 +81,6 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     
     // ILU decomposition    
     // (1) symbolic factoration
-    // previous Fortran version
-    // symbfactor_(&A->ROW,A->JA,A->IA,&lfil,&iwk,&nzlu,ijlu,uptr,&ierr);
     fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
     
     iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));

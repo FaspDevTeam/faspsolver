@@ -11,7 +11,7 @@
 /*---------------------------------*/
 
 /**
- * \fn static void compute_r_1d (REAL *u, REAL *b, REAL *r, INT k, INT *level)
+ * \fn static void compute_r1d (REAL *u, REAL *b, REAL *r, INT k, INT *level)
  * \brief compute residue vector r of 1D problem
  *
  * \param u            Pointer to the vector of DOFs
@@ -23,11 +23,11 @@
  * \author Ziteng Wang
  * \date   2013-06-07
  */
-static void compute_r_1d (REAL *u,
-                          REAL *b,
-                          REAL *r,
-                          INT   k,
-                          INT  *level)
+static void compute_r1d (REAL *u,
+                         REAL *b,
+                         REAL *r,
+                         INT   k,
+                         INT  *level)
 {
     const INT levelk = level[k];
     const INT n      = level[k+1]-levelk;
@@ -39,8 +39,8 @@ static void compute_r_1d (REAL *u,
 }
 
 /**
- * \fn static void compute_r_2d (REAL *u, REAL *b, REAL *r, INT k, INT *level
- *                               INT *nxk, INT *nyk)
+ * \fn static void compute_r2d (REAL *u, REAL *b, REAL *r, INT k, INT *level
+ *                              INT *nxk, INT *nyk)
  * \brief compute residue vector r of 2D problem
  *
  * \param u            Pointer to the vector of DOFs
@@ -54,13 +54,13 @@ static void compute_r_1d (REAL *u,
  * \author Ziteng Wang
  * \date   2013-06-07
  */
-static void compute_r_2d (REAL *u,
-                          REAL *b,
-                          REAL *r,
-                          INT   k,
-                          INT  *level,
-                          INT  *nxk,
-                          INT  *nyk)
+static void compute_r2d (REAL *u,
+                         REAL *b,
+                         REAL *r,
+                         INT   k,
+                         INT  *level,
+                         INT  *nxk,
+                         INT  *nyk)
 {
     const INT nykk   = nyk[k];
     const INT nxkk   = nxk[k];
@@ -76,8 +76,8 @@ static void compute_r_2d (REAL *u,
 }
 
 /**
- * \fn static void compute_r_3d (REAL *u, REAL *b, REAL *r, INT k, INT *level,
- *                               INT *nxk, INT *nyk, INT *nzk)
+ * \fn static void compute_r3d (REAL *u, REAL *b, REAL *r, INT k, INT *level,
+ *                              INT *nxk, INT *nyk, INT *nzk)
  * \brief compute residue vector r of 3D problem
  *
  * \param u            Pointer to the vector of DOFs
@@ -92,14 +92,14 @@ static void compute_r_2d (REAL *u,
  * \author Ziteng Wang
  * \date   2013-06-07
  */
-static void compute_r_3d (REAL *u,
-                          REAL *b,
-                          REAL *r,
-                          INT   k,
-                          INT  *level,
-                          INT  *nxk,
-                          INT  *nyk,
-                          INT  *nzk)
+static void compute_r3d (REAL *u,
+                         REAL *b,
+                         REAL *r,
+                         INT   k,
+                         INT  *level,
+                         INT  *nxk,
+                         INT  *nyk,
+                         INT  *nzk)
 {
     const INT levelk = level[k];
     const INT nxkk   = nxk[k];
@@ -217,7 +217,7 @@ static void ypcz (REAL *x,
 }
 
 /**
- * \fn void ay_1d (REAL *x, REAL *y, INT *level, INT k);
+ * \fn void ay1d (REAL *x, REAL *y, INT *level, INT k);
  * \brief x = Ay
  *
  * \param x     vector x
@@ -228,10 +228,10 @@ static void ypcz (REAL *x,
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static void ay_1d (REAL *x,
-                   REAL *y,
-                   INT  *level,
-                   INT   k)
+static void ay1d (REAL *x,
+                  REAL *y,
+                  INT  *level,
+                  INT   k)
 {
     INT   i,n;
     REAL *btemp = (REAL *)malloc(level[k+1]*sizeof(REAL));
@@ -241,7 +241,7 @@ static void ay_1d (REAL *x,
     }
     
     // compute (-x)
-    compute_r_1d(y, btemp, x, k, level);
+    compute_r1d(y, btemp, x, k, level);
     n = level[k+1]-level[k];
     for (i = 0; i < n; i++) {
         x[level[k]+i] = (-1)*x[level[k]+i];
@@ -251,8 +251,7 @@ static void ay_1d (REAL *x,
 }
 
 /**
- * \fn void ay_2d (REAL *x, REAL *y, INT *level, INT k,
- *                       INt *nxk, INT *nyk)
+ * \fn void ay2d (REAL *x, REAL *y, INT *level, INT k, INt *nxk, INT *nyk)
  * \brief x = Ay
  *
  * \param x     vector x
@@ -265,12 +264,12 @@ static void ay_1d (REAL *x,
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static void ay_2d (REAL *x,
-                   REAL *y,
-                   INT  *level,
-                   INT   k,
-                   INT  *nxk,
-                   INT  *nyk)
+static void ay2d (REAL *x,
+                  REAL *y,
+                  INT  *level,
+                  INT   k,
+                  INT  *nxk,
+                  INT  *nyk)
 {
     INT   i,n;
     REAL *btemp = (REAL *)malloc(level[k+1]*sizeof(REAL));
@@ -280,7 +279,7 @@ static void ay_2d (REAL *x,
     }
     
     // compute (-x)
-    compute_r_2d(y, btemp, x, k, level, nxk, nyk);
+    compute_r2d(y, btemp, x, k, level, nxk, nyk);
     n = level[k+1]-level[k];
     for (i = 0; i < n; i++) {
         x[level[k]+i] = (-1)*x[level[k]+i];
@@ -290,8 +289,7 @@ static void ay_2d (REAL *x,
 }
 
 /**
- * \fn void ay_3d (REAL *x, REAL *y, INT *level, INT k,
- *                       INt *nxk, INT *nyk)
+ * \fn void ay3d (REAL *x, REAL *y, INT *level, INT k, INt *nxk, INT *nyk)
  * \brief x = Ay 3D
  *
  * \param x     vector x
@@ -305,13 +303,13 @@ static void ay_2d (REAL *x,
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static void ay_3d (REAL *x,
-                   REAL *y,
-                   INT  *level,
-                   INT   k,
-                   INT  *nxk,
-                   INT  *nyk,
-                   INT  *nzk)
+static void ay3d (REAL *x,
+                  REAL *y,
+                  INT  *level,
+                  INT   k,
+                  INT  *nxk,
+                  INT  *nyk,
+                  INT  *nzk)
 {
     const INT levelk  = level[k];
     const INT levelk1 = level[k+1];
@@ -323,7 +321,7 @@ static void ay_3d (REAL *x,
         btemp[i] = 0.0;
     }
     // compute (-x)
-    compute_r_3d(y, btemp, x, k, level, nxk, nyk, nzk);
+    compute_r3d(y, btemp, x, k, level, nxk, nyk, nzk);
     n = level[k+1]-level[k];
     for (i = 0; i < n; i++) {
         x[levelk+i] = (-1)*x[levelk+i];
@@ -386,8 +384,8 @@ static REAL energynormu1d (REAL *u,
     REAL *utemp = (REAL *)malloc(level[1]*sizeof(REAL));
     level[0] = 0; level[1] = nx+1;
     fasp_array_set(level[1], utemp, 0.0);
-
-    ay_1d(utemp, u, level, 0);
+    
+    ay1d(utemp, u, level, 0);
     error = innerproductxy(utemp, u, level, 0);
     
     free(utemp);
@@ -417,7 +415,7 @@ static REAL energynormu2d (REAL *u,
     level[0] = 0; level[1] = (nx+1)*(ny+1);
     nxk[0] = nx+1; nyk[0] = ny+1;
     fasp_array_set(level[1], utemp, 0.0);
-    ay_2d(utemp, u, level, 0, nxk, nyk);
+    ay2d(utemp, u, level, 0, nxk, nyk);
     error = innerproductxy(utemp, u, level, 0);
     
     free(utemp);
@@ -449,7 +447,7 @@ static REAL energynormu3d (REAL *u,
     level[0] = 0; level[1] = (nx+1)*(ny+1)*(nz+1);
     nxk[0] = nx+1; nyk[0] = ny+1; nzk[0] = nz+1;
     fasp_array_set(level[1], utemp, 0.0);
-    ay_3d(utemp, u, level, 0, nxk, nyk, nzk);
+    ay3d(utemp, u, level, 0, nxk, nyk, nzk);
     error = innerproductxy(utemp, u, level, 0);
     
     free(utemp);
@@ -671,7 +669,7 @@ static void interpolation3d7pt (REAL *u,
 
 /**
  * \fn void gs2d_2color (REAL *u, REAL *b, INT *level, INT k,
- *                        INT maxlevel, INT *nxk, INT nyk)
+ *                       INT maxlevel, INT *nxk, INT nyk)
  * \brief 2 color G-S iteration of 2D problem
  *
  * \param u            Pointer to the vector of DOFs
@@ -734,7 +732,7 @@ static void gs2d_2color (REAL *u,
 
 /**
  * \fn void gs3d_2color (REAL *u, REAL *b, INT *level, INT k,
- *                        INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
+ *                       INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
  * \brief 2 color G-S iteration of 3D problem
  *
  * \param u            Pointer to the vector of DOFs
@@ -1317,7 +1315,7 @@ static void mg1d (REAL *u,
                 u[levelk+j] = (b[levelk+j]+u[levelk-1+j]+u[levelk+1+j])/2;
             }
         }
-        compute_r_1d(u, b, r, k, level);
+        compute_r1d(u, b, r, k, level);
         computenorm(r, level, k);
         
         // restriction on coarser grids
@@ -1409,7 +1407,7 @@ static void mg2d (REAL *u,
     for (i = 0; i < presm[k]; i++) {
         gs2d_2color(u, b, level, k, maxlevel, nxk, nyk);
     }
-    compute_r_2d(u, b, r, k, level, nxk, nyk);
+    compute_r2d(u, b, r, k, level, nxk, nyk);
     
     // restriction on coarser grids
     restriction2d5pt(b, r, level, k, nxk, nyk);
@@ -1427,7 +1425,7 @@ static void mg2d (REAL *u,
         for (i = 0; i < presm[k]; i++) {
             gs2d_2color(u, b, level, k, maxlevel, nxk, nyk);
         }
-        compute_r_2d(u, b, r, k, level, nxk, nyk);
+        compute_r2d(u, b, r, k, level, nxk, nyk);
         // restriction on coarser grids
         restriction2d5pt(b, r, level, k, nxk, nyk);
     }
@@ -1449,7 +1447,7 @@ static void mg2d (REAL *u,
             // Gauss-Seidel 2 colors
             gs2d_2color(u, b, level, k, maxlevel, nxk, nyk);
         }
-        compute_r_2d(u, b, r, k, level, nxk, nyk);
+        compute_r2d(u, b, r, k, level, nxk, nyk);
         k = k+1;
     }
     
@@ -1490,7 +1488,7 @@ static void mg3d (REAL *u,
     REAL *r             = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     
     INT i,k;
-
+    
     // set times of post and pre smoothing
     for (k = 0; k < maxlevel; k++) presmoothtime[k] = 3;
     presmoothtime[0] = 1;
@@ -1506,7 +1504,7 @@ static void mg3d (REAL *u,
     for	(i = 0; i < presmoothtime[0]; i++) {
         gs3d_2color(u, b, level, startlevel, maxlevel, nxk, nyk, nzk);
     }
-    compute_r_3d(u, b, r, startlevel, level, nxk, nyk, nzk);
+    compute_r3d(u, b, r, startlevel, level, nxk, nyk, nzk);
     
     // restriction on coarser grid
     restriction3d7pt(b, r, level, startlevel, nxk, nyk, nzk);
@@ -1523,7 +1521,7 @@ static void mg3d (REAL *u,
         for	(i = 0; i < presmoothtime[k]; i++) {
             gs3d_2color(u, b, level, k, maxlevel, nxk, nyk, nzk);
         }
-        compute_r_3d(u, b, r, k, level, nxk, nyk, nzk);
+        compute_r3d(u, b, r, k, level, nxk, nyk, nzk);
         
         // restriction on coarser grid
         restriction3d7pt(b, r, level, k, nxk, nyk, nzk);
@@ -1571,7 +1569,7 @@ static void fmg1d (REAL *u,
 {
     INT n,i,j,k,levelk;
     REAL *r = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
-
+    
     // initial
     n = level[1] - level[0];
     
@@ -1588,7 +1586,7 @@ static void fmg1d (REAL *u,
             }
         }
         
-        compute_r_1d(u, b, r, k, level);
+        compute_r1d(u, b, r, k, level);
         
         // restriction on coarser grids
         n = level[k+2]-level[k+1];
@@ -1644,11 +1642,11 @@ static void fmg2d (REAL *u,
 {
     INT i,k;
     REAL *r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-
+    
     // initial
     fasp_array_set(level[maxlevel],r,0.0);
-    compute_r_2d(u, b, r, 0, level, nxk, nyk);
-
+    compute_r2d(u, b, r, 0, level, nxk, nyk);
+    
     // restriction on coarser grids
     restriction2d5pt(b, r, level, 0, nxk, nyk);
     
@@ -1659,7 +1657,7 @@ static void fmg2d (REAL *u,
                 u[level[k]+i] = 0.0;
             }
         }
-        compute_r_2d(u, b, r, k, level, nxk, nyk);
+        compute_r2d(u, b, r, k, level, nxk, nyk);
         // restriction on coarser grids
         restriction2d5pt(b, r, level, k, nxk, nyk);
     }
@@ -1677,7 +1675,7 @@ static void fmg2d (REAL *u,
         k = k-1;
         for(i=0;i<3;i++) {
             mg2d(u, b, level, k, maxlevel, nxk, nyk);
-            compute_r_2d(u, b, r, k, level, nxk, nyk);
+            compute_r2d(u, b, r, k, level, nxk, nyk);
             computenorm(r, level, k);
         }
     }
@@ -1716,7 +1714,7 @@ static void fmg3d (REAL *u,
     fasp_array_set(level[maxlevel], r, 0.0);
     
     for (k = 0; k < maxlevel-1; k++) {
-        compute_r_3d(u, b, r, k, level, nxk, nyk, nzk);
+        compute_r3d(u, b, r, k, level, nxk, nyk, nzk);
         restriction3d7pt(b, r, level, k, nxk, nyk, nzk);
     }
     
@@ -1731,7 +1729,7 @@ static void fmg3d (REAL *u,
         interpolation3d7pt(u, level, k, nxk, nyk, nzk);
         for(i = 0;i<2;i++) {
             mg3d(u, b, level, k-1, maxlevel, nxk, nyk, nzk);
-            compute_r_3d(u, b, r, k-1, level, nxk, nyk, nzk);
+            compute_r3d(u, b, r, k-1, level, nxk, nyk, nzk);
         }
     }
     for (i=0;i<level[1]-level[0]+1;i++) u[i] = 0.0;
@@ -1787,7 +1785,7 @@ static INT pcg1d (REAL        *u,
     fasp_array_set(level[1], p, 0.0);
     fasp_array_set(level[1], q, 0.0);
     
-    compute_r_1d(u, b, r, 0, level);
+    compute_r1d(u, b, r, 0, level);
     normr = computenorm(r, level, 0);
     normb = computenorm(b, level, 0);
     normr1 = normr;
@@ -1809,7 +1807,7 @@ static INT pcg1d (REAL        *u,
         fasp_array_set(level[1], z, 0.0);
         
         // calculating alpha
-        ay_1d(q, p, level, 0);
+        ay1d(q, p, level, 0);
         rh2 = innerproductxy(q, p, level, 0);
         alfa = rh0/rh2;
         
@@ -1907,7 +1905,7 @@ static INT pcg2d (REAL        *u,
     fasp_array_set(level[1], p, 0.0);
     fasp_array_set(level[1], q, 0.0);
     
-    compute_r_2d(u, b, r, 0, level, nxk, nyk);
+    compute_r2d(u, b, r, 0, level, nxk, nyk);
     normr = computenorm(r, level, 0);
     normb = computenorm(b, level, 0);
     normr1 = normr;
@@ -1929,7 +1927,7 @@ static INT pcg2d (REAL        *u,
         fasp_array_set(level[1], z, 0.0);
         
         // calculating alpha
-        ay_2d(q, p, level, 0, nxk, nyk);
+        ay2d(q, p, level, 0, nxk, nyk);
         rh2 = innerproductxy(q, p, level, 0);
         alfa = rh0/rh2;
         
@@ -2029,7 +2027,7 @@ static INT pcg3d (REAL        *u,
     fasp_array_set(levelmax, r, 0.0);
     fasp_array_set(level[1], p, 0.0);
     fasp_array_set(level[1], q, 0.0);
-    compute_r_3d(u, b, r, 0, level, nxk, nyk, nzk);
+    compute_r3d(u, b, r, 0, level, nxk, nyk, nzk);
     normr = computenorm(r, level, 0);
     normb = computenorm(b, level, 0);
     normr1 = normr;
@@ -2051,7 +2049,7 @@ static INT pcg3d (REAL        *u,
         for (i = 0; i < level[1]; i++) z[i] = 0;
         
         // calculating alpha
-        ay_3d(q, p, level, 0, nxk, nyk, nzk);
+        ay3d(q, p, level, 0, nxk, nyk, nzk);
         rh2 = innerproductxy(q, p, level, 0);
         alfa = rh0/rh2;
         

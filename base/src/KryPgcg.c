@@ -3,7 +3,7 @@
  *  \brief Krylov subspace methods -- Preconditioned generalized CG
  *
  *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaSpmvArray.c, and BlaSpmvCSR.c
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, and BlaSpmvCSR.c
  *
  *  \note Refer to Concus, P. and Golub, G.H. and O'Leary, D.P.
  *        A Generalized Conjugate Gradient Method for the Numerical:

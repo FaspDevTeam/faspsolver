@@ -4,7 +4,7 @@
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
  *        AuxMemory.c, AuxSmallMat.c, BlaSmallMat.c, BlaSparseSTR.c,
- *        and BlaSpmvArray.c
+ *        and BlaArray.c
  */
 
 #include <math.h>

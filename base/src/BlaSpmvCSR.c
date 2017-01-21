@@ -4,7 +4,7 @@
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
  *        AuxArray.c, AuxMemory.c, BlaSparseCSR.c, BlaSparseUtil.c, 
- *        and BlaSpmvArray.c
+ *        and BlaArray.c
  *
  *  \note Sparse functions usually contain three runs. The three runs are all the
  *        same but thy serve different purpose.

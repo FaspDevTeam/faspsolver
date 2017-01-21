@@ -360,6 +360,43 @@ void fasp_dvec_symdiagscale (dvector *b,
                              dvector *diag);
 
 
+/*-------- In file: BlaArray.c --------*/
+
+void fasp_blas_array_ax (const INT    n,
+                         const REAL   a,
+                         REAL        *x);
+
+void fasp_blas_array_axpy (const INT   n,
+                           const REAL  a,
+                           REAL       *x,
+                           REAL       *y);
+
+void fasp_blas_array_axpyz (const INT   n,
+                            const REAL  a,
+                            REAL       *x,
+                            REAL       *y,
+                            REAL       *z);
+
+void fasp_blas_array_axpby (const INT   n,
+                            const REAL  a,
+                            REAL       *x,
+                            const REAL  b,
+                            REAL       *y);
+
+REAL fasp_blas_array_dotprod (const INT    n,
+                              const REAL  *x,
+                              const REAL  *y);
+
+REAL fasp_blas_array_norm1 (const INT    n,
+                            const REAL  *x);
+
+REAL fasp_blas_array_norm2 (const INT    n,
+                            const REAL  *x);
+
+REAL fasp_blas_array_norminf (const INT    n,
+                              const REAL  *x);
+
+
 /*-------- In file: BlaEigen.c --------*/
 
 REAL fasp_dcsr_eig (dCSRmat     *A,
@@ -367,7 +404,7 @@ REAL fasp_dcsr_eig (dCSRmat     *A,
                     const INT    maxit);
 
 
-/*-------- In file: BlaFormats.c --------*/
+/*-------- In file: BlaFormat.c --------*/
 
 SHORT fasp_format_dcoo_dcsr (dCOOmat   *A,
                              dCSRmat   *B);
@@ -1153,43 +1190,6 @@ void fasp_sparse_rapcmp_ (INT  *ir,
                           INT  *idummy);
 
 ivector fasp_sparse_MIS (dCSRmat *A);
-
-
-/*-------- In file: BlaSpmvArray.c --------*/
-
-void fasp_blas_array_ax (const INT    n,
-                         const REAL   a,
-                         REAL        *x);
-
-void fasp_blas_array_axpy (const INT   n,
-                           const REAL  a,
-                           REAL       *x,
-                           REAL       *y);
-
-void fasp_blas_array_axpyz (const INT   n,
-                            const REAL  a,
-                            REAL       *x,
-                            REAL       *y,
-                            REAL       *z);
-
-void fasp_blas_array_axpby (const INT   n,
-                            const REAL  a,
-                            REAL       *x,
-                            const REAL  b,
-                            REAL       *y);
-
-REAL fasp_blas_array_dotprod (const INT    n,
-                              const REAL  *x,
-                              const REAL  *y);
-
-REAL fasp_blas_array_norm1 (const INT    n,
-                            const REAL  *x);
-
-REAL fasp_blas_array_norm2 (const INT    n,
-                            const REAL  *x);
-
-REAL fasp_blas_array_norminf (const INT    n,
-                              const REAL  *x);
 
 
 /*-------- In file: BlaSpmvBLC.c --------*/
@@ -2744,77 +2744,77 @@ void fasp_solver_famg (dCSRmat    *A,
 
 /*-------- In file: SolGMGPoisson.c --------*/
 
-INT fasp_poisson_gmg_1D (REAL         *u,
-                         REAL         *b,
-                         const INT     nx,
-                         const INT     maxlevel,
-                         const REAL    rtol,
-                         const SHORT   prtlvl);
+INT fasp_poisson_gmg1d (REAL         *u,
+                        REAL         *b,
+                        const INT     nx,
+                        const INT     maxlevel,
+                        const REAL    rtol,
+                        const SHORT   prtlvl);
 
-INT fasp_poisson_gmg_2D (REAL         *u,
-                         REAL         *b,
-                         const INT     nx,
-                         const INT     ny,
-                         const INT     maxlevel,
-                         const REAL    rtol,
-                         const SHORT   prtlvl);
+INT fasp_poisson_gmg2d (REAL         *u,
+                        REAL         *b,
+                        const INT     nx,
+                        const INT     ny,
+                        const INT     maxlevel,
+                        const REAL    rtol,
+                        const SHORT   prtlvl);
 
-INT fasp_poisson_gmg_3D (REAL         *u,
-                         REAL         *b,
-                         const INT     nx,
-                         const INT     ny,
-                         const INT     nz,
-                         const INT     maxlevel,
-                         const REAL    rtol,
-                         const SHORT   prtlvl);
+INT fasp_poisson_gmg3d (REAL         *u,
+                        REAL         *b,
+                        const INT     nx,
+                        const INT     ny,
+                        const INT     nz,
+                        const INT     maxlevel,
+                        const REAL    rtol,
+                        const SHORT   prtlvl);
 
-void fasp_poisson_fgmg_1D (REAL         *u,
-                           REAL         *b,
-                           const INT     nx,
-                           const INT     maxlevel,
-                           const REAL    rtol,
-                           const SHORT   prtlvl);
+void fasp_poisson_fgmg1d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl);
 
-void fasp_poisson_fgmg_2D (REAL         *u,
-                           REAL         *b,
-                           const INT     nx,
-                           const INT     ny,
-                           const INT     maxlevel,
-                           const REAL    rtol,
-                           const SHORT   prtlvl);
+void fasp_poisson_fgmg2d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     ny,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl);
 
-void fasp_poisson_fgmg_3D (REAL         *u,
-                           REAL         *b,
-                           const INT     nx,
-                           const INT     ny,
-                           const INT     nz,
-                           const INT     maxlevel,
-                           const REAL    rtol,
-                           const SHORT   prtlvl);
+void fasp_poisson_fgmg3d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     ny,
+                          const INT     nz,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl);
 
-INT fasp_poisson_pcg_gmg_1D (REAL         *u,
-                             REAL         *b,
-                             const INT     nx,
-                             const INT     maxlevel,
-                             const REAL    rtol,
-                             const SHORT   prtlvl);
+INT fasp_poisson_gmgcg1d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl);
 
-INT fasp_poisson_pcg_gmg_2D (REAL         *u,
-                             REAL         *b,
-                             const INT     nx,
-                             const INT     ny,
-                             const INT     maxlevel,
-                             const REAL    rtol,
-                             const SHORT   prtlvl);
+INT fasp_poisson_gmgcg2d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     ny,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl);
 
-INT fasp_poisson_pcg_gmg_3D (REAL         *u,
-                             REAL         *b,
-                             const INT     nx,
-                             const INT     ny,
-                             const INT     nz,
-                             const INT     maxlevel,
-                             const REAL    rtol,
-                             const SHORT   prtlvl);
+INT fasp_poisson_gmgcg3d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     ny,
+                          const INT     nz,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl);
 
 
 /*-------- In file: SolMatFree.c --------*/
@@ -2830,9 +2830,9 @@ INT fasp_solver_krylov (mxv_matfree    *mf,
                         dvector        *x,
                         itsolver_param *itparam);
 
-void fasp_solver_itsolver_init (INT          matrix_format,
-                                mxv_matfree *mf,
-                                void        *A);
+void fasp_solver_itsolver_init (INT            matrix_format,
+                                mxv_matfree   *mf,
+                                void          *A);
 
 
 /*-------- In file: SolSTR.c --------*/

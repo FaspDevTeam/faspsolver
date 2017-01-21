@@ -1,10 +1,12 @@
-/*! \file ItrUtil.inl
+/*! \file PreUtil.inl
  *
  *  \brief Routines for multigrid cycles
  *
  *  \note This file contains Level-4 (Pre) functions, which are used in
- *        BlaSchwarzSetup.c, PreBSR.c, PreCSR.c, PreMGCycle.c,
- *        PreMGCycleFull.c, PreMGRecur.c, and PreMGRecurAMLI.c
+ *        PreBSR.c, PreCSR.c, PreMGCycle.c, PreMGCycleFull.c, PreMGRecur.c, 
+ *        and PreMGRecurAMLI.c
+ *
+ *  \warning This file is also used in FASP4BLKOIL!!!
  */
 
 /*---------------------------------*/

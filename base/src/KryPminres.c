@@ -3,7 +3,7 @@
  *  \brief Krylov subspace methods -- Preconditioned minimal residual
  *
  *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaSpmvArray.c, BlaSpmvBLC.c, 
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c, 
  *        BlaSpmvCSR.c, and BlaSpmvSTR.c.o
  *
  *  \note Refer to Y. Saad 2003

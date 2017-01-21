@@ -3,7 +3,7 @@
  *  \brief Krylov subspace methods -- Preconditioned GCR
  *
  *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaSpmvArray.c, BlaSpmvCSR.c, 
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvCSR.c, 
  *        and BlaVector.c
  */
 

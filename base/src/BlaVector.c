@@ -3,7 +3,7 @@
  *  \brief BLAS1 operations for vectors
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxMessage.c and BlaSpmvArray.c
+ *        AuxMessage.c and BlaArray.c
  */
 
 #include <math.h>

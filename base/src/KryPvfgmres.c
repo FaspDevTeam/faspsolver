@@ -3,7 +3,7 @@
  *  \brief Krylov subspace methods – Preconditioned variable-restarting FGMRes
  *
  *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaSpmvArray.c, BlaSpmvBLC.c, 
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c, 
  *        BlaSpmvBSR.c, and BlaSpmvCSR.c
  *
  *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
