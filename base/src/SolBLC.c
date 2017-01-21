@@ -75,32 +75,32 @@ INT fasp_solver_dblc_itsolver (dBLCmat        *A,
     switch (itsolver_type) {
             
         case SOLVER_BiCGstab:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (Block CSR) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (BLC) ...\n");
             iter=fasp_solver_dblc_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_VBiCGstab:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling VBiCGstab solver (Block CSR) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling VBiCGstab solver (BLC) ...\n");
             iter=fasp_solver_dblc_pvbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_MinRes:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (Block CSR) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (BLC) ...\n");
             iter=fasp_solver_dblc_pminres(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_GMRES:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRES solver (Block CSR) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRES solver (BLC) ...\n");
             iter=fasp_solver_dblc_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VGMRES:
-            if ( prtlvl > PRINT_NONE ) printf("Calling vGMRES solver (Block CSR) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("Calling vGMRES solver (BLC) ...\n");
             iter=fasp_solver_dblc_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VFGMRES:
-            if ( prtlvl > PRINT_NONE ) printf("Calling FGMRES solver (Block CSR) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("Calling FGMRES solver (BLC) ...\n");
             iter=fasp_solver_dblc_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
@@ -190,7 +190,7 @@ INT fasp_solver_dblc_krylov (dBLCmat        *A,
  * \author Xiaozhe Hu
  * \date   07/10/2014
  *
- * \note only works for 3by3 block dCSRmat problems!! -- Xiaozhe Hu
+ * \warning Only works for 3by3 block dCSRmat problems!! -- Xiaozhe Hu
  */
 INT fasp_solver_dblc_krylov_block_3 (dBLCmat        *A,
                                      dvector        *b,
@@ -299,40 +299,31 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat        *A,
     switch (precond_type)
     {
         case 21:
-            prec.fct = fasp_precond_block_diag_3;
-            break;
+            prec.fct = fasp_precond_block_diag_3; break;
             
         case 22:
-            prec.fct = fasp_precond_block_lower_3;
-            break;
+            prec.fct = fasp_precond_block_lower_3; break;
             
         case 23:
-            prec.fct = fasp_precond_block_upper_3;
-            break;
+            prec.fct = fasp_precond_block_upper_3; break;
             
         case 24:
-            prec.fct = fasp_precond_block_SGS_3;
-            break;
+            prec.fct = fasp_precond_block_SGS_3; break;
             
         case 31:
-            prec.fct = fasp_precond_block_diag_3_amg;
-            break;
+            prec.fct = fasp_precond_block_diag_3_amg; break;
             
         case 32:
-            prec.fct = fasp_precond_block_lower_3_amg;
-            break;
+            prec.fct = fasp_precond_block_lower_3_amg; break;
             
         case 33:
-            prec.fct = fasp_precond_block_upper_3_amg;
-            break;
+            prec.fct = fasp_precond_block_upper_3_amg; break;
         
         case 34:
-            prec.fct = fasp_precond_block_SGS_3_amg;
-            break;
+            prec.fct = fasp_precond_block_SGS_3_amg; break;
             
         default:
-            fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__);
-            break;
+            fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__); break;
     }
     
     if ( prtlvl >= PRINT_MIN ) {
@@ -396,7 +387,7 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat        *A,
  * \author Xiaozhe Hu
  * \date   07/06/2014
  *
- * \note only works for 4 by 4 block dCSRmat problems!! -- Xiaozhe Hu
+ * \warning Only works for 4 by 4 block dCSRmat problems!! -- Xiaozhe Hu
  */
 INT fasp_solver_dblc_krylov_block_4 (dBLCmat        *A,
                                      dvector        *b,

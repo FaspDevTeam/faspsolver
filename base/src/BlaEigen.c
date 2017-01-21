@@ -44,7 +44,7 @@ REAL fasp_dcsr_eig (dCSRmat     *A,
     REAL L2_norm_y;
     unsigned INT i;
     
-    for (i=0; i<maxit; i++) {
+    for ( i=maxit; i--; ) {
         // y = Ax;
         fasp_blas_dcsr_mxv(A, x.val, y.val);
     
@@ -56,9 +56,8 @@ REAL fasp_dcsr_eig (dCSRmat     *A,
         eigenvalue = fasp_blas_dcsr_vmv(A, y.val, y.val);
     
         // convergence test
-        if ((ABS(eigenvalue - temp)/ABS(temp))<tol) goto FINISHED;
+        if ((ABS(eigenvalue - temp)/ABS(temp))<tol) break;
     
-        // 
         fasp_dvec_cp(&y, &x);
         temp = eigenvalue;
     }

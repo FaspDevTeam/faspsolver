@@ -82,7 +82,7 @@ void fasp_solver_famg (dCSRmat    *A,
         default:
             // Classical AMG setup phase
             if ( prtlvl > PRINT_NONE ) printf("\nCalling FAMG ...\n");
-            fasp_amg_setup_rs(mgl, param);
+            fasp_amg_setup_rs(mgl, param); break;
             
     }
     

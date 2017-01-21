@@ -1740,7 +1740,7 @@ static void fmg3d (REAL *u,
 
 /**
  * \fn static INT pcg1d (REAL *u, REAL *b, INT *level, INT maxlevel,
- *                       INT nx, INT rtol, INT maxiteration, const SHORT prtlvl)
+ *                       INT nx, INT rtol, INT maxit, const SHORT prtlvl)
  *
  * \brief Preconditioned CG method of 1D poisson equation
  *
@@ -1750,7 +1750,7 @@ static void fmg3d (REAL *u,
  * \param maxlevel     Max level of multigrids
  * \param nx           Number of grids in x direction
  * \param rtol         Relative Tolerance judging convergence
- * \param maxiteration Number of maximum iteration number of CG method
+ * \param maxit        Number of maximum iteration number of CG method
  * \param prtlvl       Print level of iterative method
  *
  * \author Ziteng Wang
@@ -1762,7 +1762,7 @@ static INT pcg1d (REAL        *u,
                   INT          maxlevel,
                   INT          nx,
                   REAL         rtol,
-                  INT          maxiteration,
+                  INT          maxit,
                   const SHORT  prtlvl)
 {
     INT k;
@@ -1802,7 +1802,7 @@ static INT pcg1d (REAL        *u,
     rh0 = innerproductxy(r, z, level, 0);
     xequaly(p, z, level, 0);
     
-    while (k < maxiteration) {
+    while (k < maxit) {
         // init z
         fasp_array_set(level[1], z, 0.0);
         
@@ -1837,7 +1837,7 @@ static INT pcg1d (REAL        *u,
     }
     
     if ( prtlvl > PRINT_NONE ){
-        if (k >= maxiteration) {
+        if (k >= maxit) {
             printf("### WARNING: V-cycle failed to converge.\n");
         }
         else {
@@ -1860,7 +1860,7 @@ FINISHED:
 
 /**
  * \fn static INT pcg2d (REAL *u, REAL *b, INT *level, INT maxlevel, INT *nxk,
- *                       INT *nyk, INT rtol, INT maxiteration, const SHORT prtlvl)
+ *                       INT *nyk, INT rtol, INT maxit, const SHORT prtlvl)
  *
  * \brief Preconditioned CG method of 2D poisson equation
  *
@@ -1871,7 +1871,7 @@ FINISHED:
  * \param nxk          Number of grids in x direction
  * \param nyk          Number of grids in y direction
  * \param rtol         Relative Tolerance judging convergence
- * \param maxiteration Number of maximum iteration number of CG method
+ * \param maxit        Number of maximum iteration number of CG method
  * \param prtlvl       Print level of iterative method
  *
  * \author Ziteng Wang
@@ -1884,7 +1884,7 @@ static INT pcg2d (REAL        *u,
                   INT         *nxk,
                   INT         *nyk,
                   REAL         rtol,
-                  INT          maxiteration,
+                  INT          maxit,
                   const SHORT  prtlvl)
 {
     INT k = 0;
@@ -1922,7 +1922,7 @@ static INT pcg2d (REAL        *u,
     rh0 = innerproductxy(r, z, level, 0);
     xequaly(p, z, level, 0);
     
-    while (k < maxiteration) {
+    while (k < maxit) {
         // init z
         fasp_array_set(level[1], z, 0.0);
         
@@ -1956,7 +1956,7 @@ static INT pcg2d (REAL        *u,
     }
     
     if ( prtlvl > PRINT_NONE ){
-        if (k >= maxiteration) {
+        if (k >= maxit) {
             printf("### WARNING: V-cycle failed to converge.\n");
         }
         else {
@@ -1979,7 +1979,7 @@ FINISHED:
 
 /**
  * \fn static INT pcg3d (REAL *u, REAL *b, INT *level, INT maxlevel, INT *nxk,
- *                       INT *nyk, INT *nzk, INT rtol, INT maxiteration,
+ *                       INT *nyk, INT *nzk, INT rtol, INT maxit,
  *                       const SHORT prtlvl)
  * \brief Preconditioned CG method of 2D poisson equation
  *
@@ -1991,7 +1991,7 @@ FINISHED:
  * \param nyk          Number of grids in y direction
  * \param nzk          Number of grids in z direction
  * \param rtol         Relative Tolerance judging convergence
- * \param maxiteration Number of maximum iteration number of CG method
+ * \param maxit        Number of maximum iteration number of CG method
  * \param prtlvl       Print level of iterative method
  *
  * \author Ziteng Wang
@@ -2005,7 +2005,7 @@ static INT pcg3d (REAL        *u,
                   INT         *nyk,
                   INT         *nzk,
                   REAL         rtol,
-                  INT          maxiteration,
+                  INT          maxit,
                   const SHORT  prtlvl)
 {
     INT i, k = 0, done = 0;
@@ -2044,7 +2044,7 @@ static INT pcg3d (REAL        *u,
     rh0 = innerproductxy(r, z, level, 0);
     xequaly(p, z, level, 0);
     
-    while (!done && k < maxiteration) {
+    while (!done && k < maxit) {
         // init z
         for (i = 0; i < level[1]; i++) z[i] = 0;
         
@@ -2079,7 +2079,7 @@ static INT pcg3d (REAL        *u,
     }
     
     if ( prtlvl > PRINT_NONE ){
-        if (k >= maxiteration) {
+        if (k >= maxit) {
             printf("### WARNING: V-cycle failed to converge.\n");
         }
         else {
