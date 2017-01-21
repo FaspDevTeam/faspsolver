@@ -10,6 +10,7 @@
 # modified by Xiaozhe Hu for CUDA ( 09/20/2011 )
 # modified by Chensong Zhang to fix the CPP bug in VC++ ( 12/13/2011 )
 # modified by Chensong Zhang to fix CPP compatibility problem (06/08/2014 )
+# modified by Chensong Zhang to add fasp_grid.h ( 01/21/2017 )
 
 BEGIN {
   inheader=0;
@@ -22,10 +23,8 @@ BEGIN {
   print " */ \n"
   print "#include \"fasp.h\" "
   print "#include \"fasp_block.h\" "
+  print "#include \"fasp_grid.h\" "
   print " "
-#  print "#ifdef __cplusplus"
-#  print "extern \"C\" { "
-#  print "#endif" 
 }
 
 {
@@ -64,10 +63,6 @@ BEGIN {
 }
 
 END {
-#  print " "
-#  print "#ifdef __cplusplus"
-#  print "} "
-#  print "#endif"
   print " "
   print "/* End of " name " */"
 }

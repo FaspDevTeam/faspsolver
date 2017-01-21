@@ -9,6 +9,7 @@
 
 #include "fasp.h" 
 #include "fasp_block.h" 
+#include "fasp_grid.h" 
  
 
 /*-------- In file: AuxArray.c --------*/

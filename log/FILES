@@ -1,20 +1,21 @@
-    1277 ./base/include/fasp.h
+    1195 ./base/include/fasp.h
      409 ./base/include/fasp_block.h
      268 ./base/include/fasp_const.h
-    3002 ./base/include/fasp_functs.h
+    3003 ./base/include/fasp_functs.h
+      49 ./base/include/fasp_grid.h
      115 ./base/src/BlaSpmvMatFree.inl
      234 ./base/src/ItrAuxiliary.inl
       98 ./base/src/KryUtil.inl
      402 ./base/src/PreAMGAggregationBSR.inl
     1656 ./base/src/PreAMGAggregationCSR.inl
-     241 ./base/src/PreAMGUtil.inl
+     287 ./base/src/PreAMGUtil.inl
     2105 ./base/src/PreGMG.inl
      219 ./base/src/PreMGCycle.inl
      251 ./base/src/PreUtil.inl
      334 ./base/src/AuxArray.c
      159 ./base/src/AuxConvert.c
       80 ./base/src/AuxGivens.c
-     763 ./base/src/AuxGraphics.c
+     764 ./base/src/AuxGraphics.c
      794 ./base/src/AuxInput.c
      265 ./base/src/AuxMemory.c
      289 ./base/src/AuxMessage.c
@@ -68,7 +69,7 @@
     1395 ./base/src/KrySPgmres.c
     1379 ./base/src/KrySPminres.c
     1547 ./base/src/KrySPvgmres.c
-     440 ./base/src/PreAMGCoarsenCR.c
+     442 ./base/src/PreAMGCoarsenCR.c
     2098 ./base/src/PreAMGCoarsenRS.c
      867 ./base/src/PreAMGInterp.c
      834 ./base/src/PreAMGInterpEmin.c
@@ -95,4 +96,4 @@
      238 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      315 ./base/src/SolWrapper.c
-   87398 total
+   87415 total

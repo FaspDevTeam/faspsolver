@@ -19,9 +19,11 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static INT GraphAdd(Link *list, INT *head, INT *tail, INT index, INT istack);
-static INT GraphRemove(Link *list, INT *head, INT *tail, INT index);
-static INT indset(INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, INT *cf, REAL *ma);
+#include "PreAMGUtil.inl"
+
+static INT GraphAdd(Link *, INT *, INT *, INT, INT);
+static INT GraphRemove(Link *, INT *, INT *, INT );
+static INT indset(INT, INT, INT, INT *, INT *, INT, INT *, REAL *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

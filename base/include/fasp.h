@@ -88,8 +88,8 @@
 /**
  * \brief Definition of print command in DEBUG mode
  */
-#define PUT_INT(A)  printf("### DEBUG: %s = %d\n", #A, (A)) /**< print an integer */
-#define PUT_REAL(A) printf("### DEBUG: %s = %e\n", #A, (A)) /**< print a real num */
+#define PUT_INT(A)  printf("### DEBUG: %s = %d\n", #A, (A)) /**< print integer  */
+#define PUT_REAL(A) printf("### DEBUG: %s = %e\n", #A, (A)) /**< print real num */
 
 /*---------------------------*/
 /*---  Global variables   ---*/
@@ -924,9 +924,6 @@ typedef struct {
     //! temporary work space for other usage
     REAL *w;
 
-    //! What is this flag for??? Not used!!! --Chensong
-    // INT flag;
-
 } precond_data; /**< Data for general preconditioner */
 
 /**
@@ -1158,85 +1155,6 @@ typedef struct {
     SHORT print_level;   /**< print level: 0--10 */
 
 } itsolver_param; /**< Parameters for iterative solvers */
-
-/**
- * \struct grid2d
- * \brief Two dimensional grid data structure
- *
- * \note The grid2d structure is simply a list of triangles,
- *       edges and vertices.
- *       edge i has 2 vertices e[i],
- *       triangle i has 3 edges s[i], 3 vertices t[i]
- *       vertex i has two coordinates p[i]
- */
-typedef struct grid2d {
-
-    REAL (*p)[2];  /**< Coordinates of vertices */
-    INT (*e)[2];   /**< Vertices of edges */
-    INT (*t)[3];   /**< Vertices of triangles */
-    INT (*s)[3];   /**< Edges of triangles */
-    INT *pdiri;    /**< Boundary flags (0 <=> interior point) */
-    INT *ediri;    /**< Boundary flags (0 <=> interior edge) */
-
-    INT *pfather;  /**< Father point or edge */
-    INT *efather;  /**< Father edge or triangle */
-    INT *tfather;  /**< Father triangle */
-
-    INT vertices;  /**< Number of grid points */
-    INT edges;     /**< Number of edges */
-    INT triangles; /**< Number of triangles */
-
-} grid2d; /**< 2D grid type for plotting */
-
-typedef grid2d *pgrid2d; /**< Grid in 2d */
-
-typedef const grid2d *pcgrid2d; /**< Grid in 2d */
-
-/**
- * \struct Link
- * \brief Struct for Links
- */
-typedef struct
-{
-
-    //! previous node in the linklist
-    INT prev;
-
-    //! next node in the linklist
-    INT next;
-
-} Link; /**< General data structure for Links */
-
-/**
- * \struct linked_list
- * \brief A linked list node
- *
- * \note This definition is adapted from hypre 2.0.
- */
-typedef struct linked_list
-{
-
-    //! data
-    INT data;
-
-    //! starting of the list
-    INT head;
-
-    //! ending of the list
-    INT tail;
-
-    //! next node
-    struct linked_list *next_node;
-
-    //! previous node
-    struct linked_list *prev_node;
-
-} ListElement; /**< Linked element in list */
-
-/**
- * List of links
- */
-typedef ListElement *LinkList; /**< linked list */
 
 /*
  * OpenMP definitions and declarations

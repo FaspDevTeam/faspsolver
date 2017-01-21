@@ -10,6 +10,7 @@ File Name: CHANGES
 - Change structure for "matrix-free" solvers.
 - Remove calls to old ilu.f from FASP.
 - Fix warnings in Doxygen.
+- Move some of the definitions from fasp.h to fasp_grid.h and PreAMGUtil.inl.
 
 01/15/2017 FASP 1.9.1:
 - Prepare to change the structure of faspsolver.

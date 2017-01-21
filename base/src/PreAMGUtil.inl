@@ -11,6 +11,52 @@
 #define LIST_HEAD -1 /**< head of the linked list */
 #define LIST_TAIL -2 /**< tail of the linked list */
 
+/**
+ * \struct Link
+ * \brief Struct for Links
+ */
+typedef struct
+{
+    
+    //! previous node in the linklist
+    INT prev;
+    
+    //! next node in the linklist
+    INT next;
+    
+} Link; /**< General data structure for Links */
+
+/**
+ * \struct linked_list
+ * \brief A linked list node
+ *
+ * \note This definition is adapted from hypre 2.0.
+ */
+typedef struct linked_list
+{
+    
+    //! data
+    INT data;
+    
+    //! starting of the list
+    INT head;
+    
+    //! ending of the list
+    INT tail;
+    
+    //! next node
+    struct linked_list *next_node;
+    
+    //! previous node
+    struct linked_list *prev_node;
+    
+} ListElement; /**< Linked element in list */
+
+/**
+ * List of links
+ */
+typedef ListElement *LinkList; /**< linked list */
+
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
