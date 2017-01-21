@@ -1,4 +1,4 @@
-/*! \file BlaFormats.c
+/*! \file BlaFormat.c
  *
  *  \brief Subroutines for matrix format conversion
  *

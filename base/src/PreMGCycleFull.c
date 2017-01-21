@@ -4,7 +4,7 @@
  *
  *  \note This file contains Level-4 (Pre) functions. It requires
  *        AuxArray.c, AuxMessage.c, AuxVector.c, BlaSchwarzSetup.c, 
- *        BlaSpmvArray.c, BlaSpmvCSR.c, BlaVector.c, ItrSmootherCSR.c, 
+ *        BlaArray.c, BlaSpmvCSR.c, BlaVector.c, ItrSmootherCSR.c, 
  *        ItrSmootherCSRpoly.c, KryPcg.c, KrySPcg.c, and KrySPvgmres.c
  */
 
@@ -18,7 +18,7 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "ItrUtil.inl"
+#include "PreUtil.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

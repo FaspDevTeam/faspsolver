@@ -106,7 +106,7 @@ int main (int argc, const char *argv[])
     }
     
     // Step 2. Solve the Poisson system in 2D with full Multigrid cycle
-    fasp_poisson_fgmg_2D(u, b, nx, nx, maxlevel, rtol, prtlvl);
+    fasp_poisson_fgmg2d(u, b, nx, nx, maxlevel, rtol, prtlvl);
     
     // Step 3. Compute error in L2 norm
     error0 = L2NormError2d(u, nx, nx);

@@ -238,15 +238,15 @@ int main (int argc, const char *argv[])
             switch (method) {
                     
                 case 1: // V-cycle
-                    fasp_poisson_gmg_1D(u, b, nx, maxlevel, rtol, prtlvl);
+                    fasp_poisson_gmg1d(u, b, nx, maxlevel, rtol, prtlvl);
                     break;
                     
                 case 2: // FMG
-                    fasp_poisson_fgmg_1D(u, b, nx, maxlevel, rtol, prtlvl);
+                    fasp_poisson_fgmg1d(u, b, nx, maxlevel, rtol, prtlvl);
                     break;
                     
                 case 3: // PCG
-                    fasp_poisson_pcg_gmg_1D(u, b, nx, maxlevel, rtol, prtlvl);
+                    fasp_poisson_gmgcg1d(u, b, nx, maxlevel, rtol, prtlvl);
                     break;
                     
             }
@@ -268,15 +268,15 @@ int main (int argc, const char *argv[])
             switch (method) {
                     
                 case 1: // V-cycle
-                    fasp_poisson_gmg_2D(u, b, nx, ny, maxlevel, rtol, prtlvl);
+                    fasp_poisson_gmg2d(u, b, nx, ny, maxlevel, rtol, prtlvl);
                     break;
                     
                 case 2: // FMG
-                    fasp_poisson_fgmg_2D(u, b, nx, ny, maxlevel, rtol, prtlvl);
+                    fasp_poisson_fgmg2d(u, b, nx, ny, maxlevel, rtol, prtlvl);
                     break;
                     
                 case 3: // PCG
-                    fasp_poisson_pcg_gmg_2D(u, b, nx, ny, maxlevel, rtol, prtlvl);
+                    fasp_poisson_gmgcg2d(u, b, nx, ny, maxlevel, rtol, prtlvl);
                     break;
                     
             }
@@ -300,15 +300,15 @@ int main (int argc, const char *argv[])
             switch (method) {
                     
                 case 1: // V-cycle
-                    fasp_poisson_gmg_3D(u, b, nx, ny, nz, maxlevel, rtol, prtlvl);
+                    fasp_poisson_gmg3d(u, b, nx, ny, nz, maxlevel, rtol, prtlvl);
                     break;
                     
                 case 2: // FMG
-                    fasp_poisson_fgmg_3D(u, b, nx, ny, nz, maxlevel, rtol, prtlvl);
+                    fasp_poisson_fgmg3d(u, b, nx, ny, nz, maxlevel, rtol, prtlvl);
                     break;
                     
                 case 3: // PCG
-                    fasp_poisson_pcg_gmg_3D(u, b, nx, ny, nz, maxlevel, rtol, prtlvl);
+                    fasp_poisson_gmgcg3d(u, b, nx, ny, nz, maxlevel, rtol, prtlvl);
                     break;
                     
             }

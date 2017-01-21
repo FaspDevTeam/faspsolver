@@ -4,6 +4,8 @@
  *
  *  \note This file contains Level-4 (Pre) functions, which are used in
  *        PreAMGSetupSA.c and PreAMGSetupUA.c
+ * 
+ *  \warning This file is also used in FASP4BLKOIL!!!
  */
 
 /*---------------------------------*/

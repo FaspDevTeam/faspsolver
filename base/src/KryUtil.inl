@@ -8,6 +8,8 @@
  *        KrySPbcgs.c, KrySPcg.c, KrySPgmres.c, KrySPminres.c, 
  *        KrySPvgmres.c, PreMGSolve.c, SolBLC.c, SolBSR.c, SolCSR.c
  *        SolMatFree.c, and SolSTR.c
+ *
+ *  \warning This file is also used in FASP4BLKOIL!!!
  */
 
 /*---------------------------------*/

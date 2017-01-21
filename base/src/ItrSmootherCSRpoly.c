@@ -3,7 +3,7 @@
  *  \brief Smoothers for dCSRmat matrices using poly. approx. to A^{-1}. 
  *
  *  \note This file contains Level-2 (Itr) functions. It requires
- *        AuxArray.c, AuxMemory.c, BlaSpmvArray.c, and BlaSpmvCSR.c
+ *        AuxArray.c, AuxMemory.c, BlaArray.c, and BlaSpmvCSR.c
  *
  *  \note Refer to Johannes K. Kraus, Panayot S. Vassilevski, Ludmil T. Zikatanov
  *        Polynomial of best uniform approximation to $x^{-1}$ and smoothing in

@@ -4,7 +4,7 @@
  *
  *  \note This file contains Level-4 (Pre) functions. It requires
  *        AuxArray.c, AuxMessage.c, AuxVector.c, BlaSchwarzSetup.c, 
- *        BlaSpmvArray.c, BlaSpmvBSR.c, BlaSpmvCSR.c, ItrSmootherBSR.c, 
+ *        BlaArray.c, BlaSpmvBSR.c, BlaSpmvCSR.c, ItrSmootherBSR.c, 
  *        ItrSmootherCSR.c, ItrSmootherCSRpoly.c, KryPcg.c, KryPvgmres.c, 
  *        KrySPcg.c, and KrySPvgmres.c
  */
@@ -19,7 +19,7 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "ItrUtil.inl"
+#include "PreUtil.inl"
 
 #if FASP_GSRB
 INT  nx_rb   = 1 ;   /**< Red Black GS Smoother Nx */

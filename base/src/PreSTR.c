@@ -3,7 +3,7 @@
  *  \brief Preconditioners for dSTRmat matrices
  *
  *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMat.c, BlaSpmvArray.c, 
+ *        AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMat.c, BlaArray.c, 
  *        and ItrSmootherSTR.c
  */
 

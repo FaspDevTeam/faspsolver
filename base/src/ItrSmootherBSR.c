@@ -4,7 +4,7 @@
  *
  *  \note This file contains Level-2 (Itr) functions. It requires
  *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxSmallMat.c, AuxTiming.c, 
- *        BlaSmallMat.c, BlaSpmvArray.c, BlaSpmvBSR.c, and PreBSR.c
+ *        BlaSmallMat.c, BlaArray.c, BlaSpmvBSR.c, and PreBSR.c
  */
 
 #include <math.h>

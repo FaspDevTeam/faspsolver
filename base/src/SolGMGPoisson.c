@@ -23,8 +23,8 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_poisson_gmg_1D (REAL *u, REAL *b, const INT nx, const INT maxlevel,
- *                              const REAL rtol, const SHORT prtlvl)
+ * \fn INT fasp_poisson_gmg1d (REAL *u, REAL *b, const INT nx, const INT maxlevel,
+ *                             const REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 1D equation by Geometric Multigrid Method
  *
@@ -42,12 +42,12 @@
  *
  * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
-INT fasp_poisson_gmg_1D (REAL         *u,
-                         REAL         *b,
-                         const INT     nx,
-                         const INT     maxlevel,
-                         const REAL    rtol,
-                         const SHORT   prtlvl)
+INT fasp_poisson_gmg1d (REAL         *u,
+                        REAL         *b,
+                        const INT     nx,
+                        const INT     maxlevel,
+                        const REAL    rtol,
+                        const SHORT   prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -89,7 +89,7 @@ INT fasp_poisson_gmg_1D (REAL         *u,
     
     // compute initial l2 norm of residue
     fasp_array_set(level[1], r0, 0.0);
-    compute_r_1d(u0, b0, r0, 0, level);
+    compute_r1d(u0, b0, r0, 0, level);
     norm_r0 = computenorm(r0, level, 0);
     norm_r1 = norm_r0;
     if (norm_r0 < atol) goto FINISHED;
@@ -104,7 +104,7 @@ INT fasp_poisson_gmg_1D (REAL         *u,
     while (count < max_itr_num) {
         count++;
         mg1d(u0, b0, level, 0, maxlevel);
-        compute_r_1d(u0, b0, r0, 0, level);
+        compute_r1d(u0, b0, r0, 0, level);
         norm_r = computenorm(r0, level, 0);
         factor = norm_r/norm_r1;
         error = norm_r / norm_r0;
@@ -147,9 +147,9 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_poisson_gmg_2D (REAL *u, REAL *b, const INT nx, const INT ny,
- *                              const INT maxlevel, const REAL rtol,
- *                              const SHORT prtlvl)
+ * \fn INT fasp_poisson_gmg2d (REAL *u, REAL *b, const INT nx, const INT ny,
+ *                             const INT maxlevel, const REAL rtol,
+ *                             const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 2D equation by Geometric Multigrid Method
  *
@@ -168,13 +168,13 @@ FINISHED:
  *
  * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
-INT fasp_poisson_gmg_2D (REAL         *u,
-                         REAL         *b,
-                         const INT     nx,
-                         const INT     ny,
-                         const INT     maxlevel,
-                         const REAL    rtol,
-                         const SHORT   prtlvl)
+INT fasp_poisson_gmg2d (REAL         *u,
+                        REAL         *b,
+                        const INT     nx,
+                        const INT     ny,
+                        const INT     maxlevel,
+                        const REAL    rtol,
+                        const SHORT   prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -224,7 +224,7 @@ INT fasp_poisson_gmg_2D (REAL         *u,
     fasp_array_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
-    compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
+    compute_r2d(u0, b0, r0, 0, level, nxk, nyk);
     norm_r0 = computenorm(r0, level, 0);
     norm_r1 = norm_r0;
     if (norm_r0 < atol) goto FINISHED;
@@ -239,7 +239,7 @@ INT fasp_poisson_gmg_2D (REAL         *u,
     while ( count < max_itr_num ) {
         count++;
         mg2d(u0, b0, level, 0, maxlevel, nxk, nyk);
-        compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
+        compute_r2d(u0, b0, r0, 0, level, nxk, nyk);
         norm_r = computenorm(r0, level, 0);
         error = norm_r / norm_r0;
         factor = norm_r/norm_r1;
@@ -284,9 +284,9 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_poisson_gmg_3D (REAL *u, REAL *b, const INT nx, const INT ny,
- *                              const INT nz, const INT maxlevel,
- *                              const REAL rtol, const SHORT prtlvl)
+ * \fn INT fasp_poisson_gmg3d (REAL *u, REAL *b, const INT nx, const INT ny,
+ *                             const INT nz, const INT maxlevel,
+ *                             const REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 3D equation by Geometric Multigrid Method
  *
@@ -306,14 +306,14 @@ FINISHED:
  *
  * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
-INT fasp_poisson_gmg_3D (REAL         *u,
-                         REAL         *b,
-                         const INT     nx,
-                         const INT     ny,
-                         const INT     nz,
-                         const INT     maxlevel,
-                         const REAL    rtol,
-                         const SHORT   prtlvl)
+INT fasp_poisson_gmg3d (REAL         *u,
+                        REAL         *b,
+                        const INT     nx,
+                        const INT     ny,
+                        const INT     nz,
+                        const INT     maxlevel,
+                        const REAL    rtol,
+                        const SHORT   prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -364,7 +364,7 @@ INT fasp_poisson_gmg_3D (REAL         *u,
     fasp_array_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
-    compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
+    compute_r3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
     norm_r0 = computenorm(r0, level, 0);
     norm_r1 = norm_r0;
     if (norm_r0 < atol) goto FINISHED;
@@ -379,7 +379,7 @@ INT fasp_poisson_gmg_3D (REAL         *u,
     while (count < max_itr_num) {
         count++;
         mg3d(u0, b0, level, 0, maxlevel, nxk, nyk, nzk);
-        compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
+        compute_r3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
         norm_r = computenorm(r0, level, 0);
         factor = norm_r/norm_r1;
         error = norm_r / norm_r0;
@@ -425,8 +425,8 @@ FINISHED:
 }
 
 /**
- * \fn void fasp_poisson_fgmg_1D (REAL *u, REAL *b, const INT nx, const INT maxlevel,
- *                                const REAL rtol, const SHORT prtlvl)
+ * \fn void fasp_poisson_fgmg1d (REAL *u, REAL *b, const INT nx, const INT maxlevel,
+ *                               const REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 1D equation by Geometric Multigrid Method (FMG)
  *
@@ -442,12 +442,12 @@ FINISHED:
  *
  * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
-void fasp_poisson_fgmg_1D (REAL         *u,
-                           REAL         *b,
-                           const INT     nx,
-                           const INT     maxlevel,
-                           const REAL    rtol,
-                           const SHORT   prtlvl)
+void fasp_poisson_fgmg1d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl)
 {
     const REAL  atol = 1.0E-15;
     REAL       *u0,*r0,*b0;
@@ -485,7 +485,7 @@ void fasp_poisson_fgmg_1D (REAL         *u,
     
     // compute initial l2 norm of residue
     fasp_array_set(level[1], r0, 0.0);
-    compute_r_1d(u0, b0, r0, 0, level);
+    compute_r1d(u0, b0, r0, 0, level);
     norm_r0 = computenorm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
@@ -499,7 +499,7 @@ void fasp_poisson_fgmg_1D (REAL         *u,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("FGMG totally", AMG_end - AMG_start);
-        compute_r_1d(u0, b0, r0, 0, level);
+        compute_r1d(u0, b0, r0, 0, level);
         norm_r = computenorm(r0, level, 0);
         printf("Relative Residual = %e.\n", norm_r/norm_r0);
     }
@@ -518,8 +518,9 @@ FINISHED:
 }
 
 /**
- * \fn void fasp_poisson_fgmg_2D (REAL *u, REAL *b, const INT nx, const INT ny,
- *                                const INT maxlevel, const REAL rtol, const SHORT prtlvl)
+ * \fn void fasp_poisson_fgmg2d (REAL *u, REAL *b, const INT nx, const INT ny,
+ *                               const INT maxlevel, const REAL rtol, 
+ *                               const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 2D equation by Geometric Multigrid Method (FMG)
  *
@@ -536,13 +537,13 @@ FINISHED:
  *
  * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
-void fasp_poisson_fgmg_2D (REAL         *u,
-                           REAL         *b,
-                           const INT     nx,
-                           const INT     ny,
-                           const INT     maxlevel,
-                           const REAL    rtol,
-                           const SHORT   prtlvl)
+void fasp_poisson_fgmg2d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     ny,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl)
 {
     const REAL atol = 1.0E-15;
     REAL *u0,*r0,*b0;
@@ -590,7 +591,7 @@ void fasp_poisson_fgmg_2D (REAL         *u,
     
     // compute initial l2 norm of residue
     fasp_array_set(level[1], r0, 0.0);
-    compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
+    compute_r2d(u0, b0, r0, 0, level, nxk, nyk);
     norm_r0 = computenorm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
@@ -604,7 +605,7 @@ void fasp_poisson_fgmg_2D (REAL         *u,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("FGMG totally", AMG_end - AMG_start);
-        compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
+        compute_r2d(u0, b0, r0, 0, level, nxk, nyk);
         norm_r = computenorm(r0, level, 0);
         printf("Relative Residual = %e.\n", norm_r/norm_r0);
     }
@@ -625,9 +626,9 @@ FINISHED:
 }
 
 /**
- * \fn void fasp_poisson_fgmg_3D (REAL *u, REAL *b, const INT nx, const INT ny,
- *                                const INT nz, const INT maxlevel, const REAL rtol,
- *                                const SHORT prtlvl)
+ * \fn void fasp_poisson_fgmg3d (REAL *u, REAL *b, const INT nx, const INT ny,
+ *                               const INT nz, const INT maxlevel, const REAL rtol,
+ *                               const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 3D equation by Geometric Multigrid Method (FMG)
  *
@@ -645,14 +646,14 @@ FINISHED:
  *
  * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
-void fasp_poisson_fgmg_3D (REAL         *u,
-                           REAL         *b,
-                           const INT     nx,
-                           const INT     ny,
-                           const INT     nz,
-                           const INT     maxlevel,
-                           const REAL    rtol,
-                           const SHORT   prtlvl)
+void fasp_poisson_fgmg3d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     ny,
+                          const INT     nz,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl)
 {
     const REAL  atol = 1.0E-15;
     REAL       *u0,*r0,*b0;
@@ -701,7 +702,7 @@ void fasp_poisson_fgmg_3D (REAL         *u,
     fasp_array_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
-    compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
+    compute_r3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
     norm_r0 = computenorm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
@@ -714,7 +715,7 @@ void fasp_poisson_fgmg_3D (REAL         *u,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("FGMG totally", AMG_end - AMG_start);
-        compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
+        compute_r3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
         norm_r = computenorm(r0, level, 0);
         printf("Relative Residual = %e.\n", norm_r/norm_r0);
     }
@@ -736,8 +737,8 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_poisson_pcg_gmg_1D (REAL *u, REAL *b, const INT nx, const INT maxlevel,
- *                                  const REAL rtol, const SHORT prtlvl)
+ * \fn INT fasp_poisson_gmgcg1d (REAL *u, REAL *b, const INT nx, const INT maxlevel,
+ *                               const REAL rtol, const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 1D equation by Geometric Multigrid Method
  *        (GMG preconditioned Conjugate Gradient method)
@@ -756,12 +757,12 @@ FINISHED:
  *
  * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
-INT fasp_poisson_pcg_gmg_1D (REAL         *u,
-                             REAL         *b,
-                             const INT     nx,
-                             const INT     maxlevel,
-                             const REAL    rtol,
-                             const SHORT   prtlvl)
+INT fasp_poisson_gmgcg1d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -800,7 +801,7 @@ INT fasp_poisson_pcg_gmg_1D (REAL         *u,
     
     // compute initial l2 norm of residue
     fasp_array_set(level[1], r0, 0.0);
-    compute_r_1d(u, b, r0, 0, level);
+    compute_r1d(u, b, r0, 0, level);
     norm_r0 = computenorm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
@@ -830,9 +831,9 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_poisson_pcg_gmg_2D (REAL *u, REAL *b, const INT nx, const INT ny,
- *                                  const INT maxlevel, const REAL rtol,
- *                                  const SHORT prtlvl)
+ * \fn INT fasp_poisson_gmgcg2d (REAL *u, REAL *b, const INT nx, const INT ny,
+ *                               const INT maxlevel, const REAL rtol,
+ *                               const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 2D equation by Geometric Multigrid Method
  *        (GMG preconditioned Conjugate Gradient method)
@@ -852,13 +853,13 @@ FINISHED:
  *
  * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
-INT fasp_poisson_pcg_gmg_2D (REAL         *u,
-                             REAL         *b,
-                             const INT     nx,
-                             const INT     ny,
-                             const INT     maxlevel,
-                             const REAL    rtol,
-                             const SHORT   prtlvl)
+INT fasp_poisson_gmgcg2d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     ny,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -907,7 +908,7 @@ INT fasp_poisson_pcg_gmg_2D (REAL         *u,
     
     // compute initial l2 norm of residue
     fasp_array_set(level[1], r0, 0.0);
-    compute_r_2d(u0, b0, r0, 0, level, nxk, nyk);
+    compute_r2d(u0, b0, r0, 0, level, nxk, nyk);
     norm_r0 = computenorm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
@@ -940,9 +941,9 @@ FINISHED:
 }
 
 /**
- * \fn INT fasp_poisson_pcg_gmg_3D (REAL *u, REAL *b, const INT nx, const INT ny,
- *                                  const INT nz, const INT maxlevel, const REAL rtol,
- *                                  const SHORT prtlvl)
+ * \fn INT fasp_poisson_gmgcg3d (REAL *u, REAL *b, const INT nx, const INT ny,
+ *                               const INT nz, const INT maxlevel, const REAL rtol,
+ *                               const SHORT prtlvl)
  *
  * \brief Solve Ax=b of Poisson 3D equation by Geometric Multigrid Method
  *        (GMG preconditioned Conjugate Gradient method)
@@ -963,14 +964,14 @@ FINISHED:
  *
  * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
-INT fasp_poisson_pcg_gmg_3D (REAL         *u,
-                             REAL         *b,
-                             const INT     nx,
-                             const INT     ny,
-                             const INT     nz,
-                             const INT     maxlevel,
-                             const REAL    rtol,
-                             const SHORT   prtlvl)
+INT fasp_poisson_gmgcg3d (REAL         *u,
+                          REAL         *b,
+                          const INT     nx,
+                          const INT     ny,
+                          const INT     nz,
+                          const INT     maxlevel,
+                          const REAL    rtol,
+                          const SHORT   prtlvl)
 {
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
@@ -1022,7 +1023,7 @@ INT fasp_poisson_pcg_gmg_3D (REAL         *u,
     fasp_array_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
-    compute_r_3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
+    compute_r3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
     norm_r0 = computenorm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     

@@ -5,6 +5,10 @@
  *  \note This file contains Level-0 (Aux) functions
  */
 
+/*---------------------------------*/
+/*-- Declare External Functions  --*/
+/*---------------------------------*/
+
 #if DLMALLOC
 
 #include "dlmalloc.h"

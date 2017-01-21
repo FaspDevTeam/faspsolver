@@ -17,8 +17,6 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "ItrUtil.inl"
-
 static void Schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
 
 /*---------------------------------*/

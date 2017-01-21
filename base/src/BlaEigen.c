@@ -3,7 +3,7 @@
  *  \brief Subroutines for computing the extreme eigenvalues
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxVector.c, BlaSpmvArray.c, BlaSpmvCSR.c, and BlaVector.c
+ *        AuxVector.c, BlaArray.c, BlaSpmvCSR.c, and BlaVector.c
  */
 
 #include <math.h> 

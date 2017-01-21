@@ -1,4 +1,4 @@
-/*! \file BlaSpmvArray.c
+/*! \file BlaArray.c
  *
  *  \brief BLAS1 operations for arrays
  *
