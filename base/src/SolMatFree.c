@@ -1,6 +1,6 @@
 /*! \file SolMatFree.c
  *
- *  \brief Iterative solvers using matrix-free spmv operations
+ *  \brief Iterative solvers using MatFree spmv operations
  *
  *  \note This file contains Level-5 (Sol) functions. It requires
  *        AuxMessage.c, AuxTiming.c, BlaSpmvBLC.c, BlaSpmvBSR.c, BlaSpmvCSR.c, 
@@ -35,7 +35,7 @@
  *
  * \brief Solve Ax=b by preconditioned Krylov methods for CSR matrices
  *
- * \param mf       Pointer to mxv_matfree matrix-free spmv operation
+ * \param mf       Pointer to mxv_matfree MatFree spmv operation
  * \param b        Pointer to the right hand side in dvector format
  * \param x        Pointer to the approx solution in dvector format
  * \param pc       Pointer to the preconditioning action
@@ -80,37 +80,37 @@ INT fasp_solver_itsolver (mxv_matfree    *mf,
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
         case SOLVER_CG:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling PCG solver (matrix-free) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling CG solver (MatFree) ...\n");
             iter = fasp_solver_pcg(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
         case SOLVER_BiCGstab:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (matrix-free) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (MatFree) ...\n");
             iter = fasp_solver_pbcgs(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
         case SOLVER_MinRes:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (matrix-free) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (MatFree) ...\n");
             iter = fasp_solver_pminres(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
         case SOLVER_GMRES:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRes solver (matrix-free) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRes solver (MatFree) ...\n");
             iter = fasp_solver_pgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VGMRES: 
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling vGMRes solver (matrix-free) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling vGMRes solver (MatFree) ...\n");
             iter = fasp_solver_pvgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);    
             break;
             
         case SOLVER_VFGMRES: 
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling vFGMRes solver (matrix-free) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling vFGMRes solver (MatFree) ...\n");
             iter = fasp_solver_pvfgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_GCG:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling GCG solver (matrix-free) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling GCG solver (MatFree) ...\n");
             iter = fasp_solver_pgcg(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
@@ -138,7 +138,7 @@ INT fasp_solver_itsolver (mxv_matfree    *mf,
  *
  * \brief Solve Ax=b by standard Krylov methods -- without preconditioner 
  *
- * \param mf       Pointer to mxv_matfree matrix-free spmv operation
+ * \param mf       Pointer to mxv_matfree MatFree spmv operation
  * \param b        Pointer to the right hand side in dvector format
  * \param x        Pointer to the approx solution in dvector format
  * \param itparam  Pointer to parameters for iterative solvers
@@ -186,10 +186,10 @@ INT fasp_solver_krylov (mxv_matfree    *mf,
 /**
  * \fn void fasp_solver_itsolver_init (INT matrix_format, mxv_matfree *mf, void *A)
  *
- * \brief Initialize matrix-free (or non-specified format) itsovlers
+ * \brief Initialize MatFree (or non-specified format) itsovlers
  *
  * \param matrix_format    matrix format
- * \param mf               Pointer to mxv_matfree matrix-free spmv operation
+ * \param mf               Pointer to mxv_matfree MatFree spmv operation
  * \param A                void pointer to the coefficient matrix
  *
  * \author Feiteng Huang

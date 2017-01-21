@@ -421,10 +421,7 @@ void fasp_precond_amg (REAL *r,
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
-    for (i=0;i<maxit;++i) fasp_solver_mgcycle(mgl,&amgparam);
-    
-    // We can also use a recursive version of MG:
-    // for (i=0;i<maxit;++i) fasp_solver_mgrecur(mgl,&amgparam,0);
+    for ( i=maxit; i--; ) fasp_solver_mgcycle(mgl,&amgparam);
     
     fasp_array_cp(m,mgl->x.val,z);    
 }
@@ -457,7 +454,7 @@ void fasp_precond_famg (REAL *r,
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
-    for (i=0;i<maxit;++i) fasp_solver_fmgcycle(mgl,&amgparam);
+    for ( i=maxit; i--; ) fasp_solver_fmgcycle(mgl,&amgparam);
     
     fasp_array_cp(m,mgl->x.val,z);    
 }
@@ -490,7 +487,7 @@ void fasp_precond_amli (REAL *r,
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
-    for (i=0;i<maxit;++i) fasp_solver_amli(mgl,&amgparam,0); 
+    for ( i=maxit; i--; ) fasp_solver_amli(mgl,&amgparam,0);
     
     fasp_array_cp(m,mgl->x.val,z);    
 }
@@ -524,7 +521,7 @@ void fasp_precond_nl_amli (REAL *r,
     mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 
-    for (i=0;i<maxit;++i) fasp_solver_nl_amli(mgl, &amgparam, 0, num_levels); 
+    for ( i=maxit; i--; ) fasp_solver_nl_amli(mgl, &amgparam, 0, num_levels);
     fasp_array_cp(m,mgl->x.val,z);    
 }
     
@@ -587,7 +584,7 @@ void fasp_precond_amg_nk (REAL *r,
     mgl->x.row=m; //fasp_dvec_set(m,&mgl->x,0.0);
     fasp_array_cp(m, z, mgl->x.val);
     
-    for ( i = 0; i < maxit; ++i ) fasp_solver_mgcycle(mgl,&amgparam);
+    for ( i=maxit; i--; ) fasp_solver_mgcycle(mgl,&amgparam);
     
     fasp_array_cp(m,mgl->x.val,z);
 

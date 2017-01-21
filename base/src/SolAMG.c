@@ -87,8 +87,8 @@ void fasp_solver_amg (dCSRmat      *A,
             
         default: // Classical AMG setup
             if ( prtlvl > PRINT_NONE ) printf("\nCalling classical AMG ...\n");
-            status = fasp_amg_setup_rs(mgl, param);
-            
+            status = fasp_amg_setup_rs(mgl, param); break;
+
     }
     
     // Step 2: AMG solve phase
@@ -115,7 +115,7 @@ void fasp_solver_amg (dCSRmat      *A,
         
         if ( prtlvl > PRINT_MIN ) {
             printf("### WARNING: AMG setup failed!\n");
-            printf("### WARNING: Use a backup solver instead.\n");
+            printf("### WARNING: Use a backup solver instead!\n");
         }
         fasp_solver_dcsr_spgmres (A, b, x, NULL, param->tol, param->maxit,
                                   20, 1, prtlvl);

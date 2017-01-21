@@ -76,7 +76,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat        *A,
     switch (itsolver_type) {
             
         case SOLVER_CG:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling PCG solver (BSR) ...\n");
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling CG solver (BSR) ...\n");
             iter = fasp_solver_dbsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             

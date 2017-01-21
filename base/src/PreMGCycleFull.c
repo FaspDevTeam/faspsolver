@@ -39,7 +39,6 @@
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  * Modified by Zheng Li on 11/10/2014: update direct solvers.
  * Modified by Hongxuan Zhang on 12/15/2015: update direct solvers.
- *
  */
 void fasp_solver_fmgcycle (AMG_data   *mgl,
                            AMG_param  *param)
