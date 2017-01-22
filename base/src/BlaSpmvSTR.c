@@ -157,7 +157,7 @@ INT fasp_dstr_diagscale (dSTRmat   *A,
 #ifdef _OPENMP
     //variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     REAL *diag=(REAL *)fasp_mem_calloc(size,sizeof(REAL));
@@ -171,7 +171,7 @@ INT fasp_dstr_diagscale (dSTRmat   *A,
     if (ngrid > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, ic2, j)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, ngrid, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, ngrid, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 ic2=i*nc2;
                 for (j=0; j<nc2; j++) {
@@ -296,14 +296,14 @@ static inline void smat_amxv (REAL   alpha,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
 #ifdef _OPENMP
     if (n > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, in, j)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 in = i*n;
                 for (j=0; j<n; j++)
@@ -359,14 +359,14 @@ static inline void blkcontr_str (INT   start_data,
 #ifdef _OPENMP
     //variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
 #ifdef _OPENMP
     if (nc > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, k, m, j)
         for (myid = 0; myid < nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, nc, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, nc, &mybegin, &myend);
             for (i = mybegin; i < myend; i ++) {
                 k = start_data + i*nc;
                 m = start_vecy + i;
@@ -421,7 +421,7 @@ static inline void spaaxpy_str_2D_scalar (REAL     alpha,
 #ifdef _OPENMP
     //variables for OpenMP
     INT myid, mybegin, myend, idx;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     // information of A
@@ -468,7 +468,7 @@ static inline void spaaxpy_str_2D_scalar (REAL     alpha,
     if (nline-1 > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, idx1, idx)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, nline-1, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, nline-1, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 idx1 = i;
                 idx  = i+1;
@@ -492,7 +492,7 @@ static inline void spaaxpy_str_2D_scalar (REAL     alpha,
     if (end2-nline > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, i, mybegin, myend, idx1, idx2, idx)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, end2-nline, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, end2-nline, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
                 idx  = i+nline;
                 idx1 = idx-1; //idx1 = i-1+nline;
@@ -518,7 +518,7 @@ static inline void spaaxpy_str_2D_scalar (REAL     alpha,
     if (end1-end2 > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, i, mybegin, myend, idx1, idx2, idx)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, end1-end2, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, end1-end2, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
                 idx  = i+end2;
                 idx1 = idx-1;     //idx1 = i-1+end2;
@@ -638,7 +638,7 @@ static inline void spaaxpy_str_2D_nc3 (REAL     alpha,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend, up;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     REAL *diag = A->diag;
@@ -686,7 +686,7 @@ static inline void spaaxpy_str_2D_nc3 (REAL     alpha,
     if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, idx, matidx, idx1, matidx1)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, up, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 idx = (i+1)*nc;
                 matidx = idx*nc;
@@ -720,7 +720,7 @@ static inline void spaaxpy_str_2D_nc3 (REAL     alpha,
     if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, idx, idx1, idx2, matidx, matidx1, matidx2)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, up, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 idx = (i+nx)*nc;
                 idx1 = idx-nc;
@@ -760,7 +760,7 @@ static inline void spaaxpy_str_2D_nc3 (REAL     alpha,
     if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, idx, idx1, idx2, matidx, matidx1, matidx2)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, up, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 idx = (i+end2)*nc;
                 idx1 = idx-nc;
@@ -843,7 +843,7 @@ static inline void spaaxpy_str_2D_nc5 (REAL      alpha,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend, up;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     REAL *diag = A->diag;
@@ -890,7 +890,7 @@ static inline void spaaxpy_str_2D_nc5 (REAL      alpha,
     if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, idx, matidx, idx1, matidx1)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, up, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 idx = (i+1)*nc;
                 matidx = idx*nc;
@@ -924,7 +924,7 @@ static inline void spaaxpy_str_2D_nc5 (REAL      alpha,
     if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, idx, idx1, idx2, matidx, matidx1, matidx2)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, up, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 idx = (i+nx)*nc;
                 idx1 = idx-nc;
@@ -964,7 +964,7 @@ static inline void spaaxpy_str_2D_nc5 (REAL      alpha,
     if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, idx, idx1, idx2, matidx, matidx1, matidx2)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, up, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 idx = (i+end2)*nc;
                 idx1 = idx-nc;

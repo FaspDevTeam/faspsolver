@@ -1201,7 +1201,7 @@ static void smooth_agg (dCSRmat *A,
     // local variables
 #ifdef _OPENMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     /* Step 1. Form smoother */
@@ -1250,7 +1250,7 @@ static void smooth_agg (dCSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, j, row_sum_A, row_sum_N) if (row>OPENMP_HOLDS)
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, row, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
 #else
             for (i=0; i<row; ++i) {

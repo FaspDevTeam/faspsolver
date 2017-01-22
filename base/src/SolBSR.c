@@ -206,7 +206,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat        *A,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     // setup preconditioner
     precond_diagbsr diag;
@@ -221,7 +221,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat        *A,
     if (ROW > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, k)
         for (myid=0; myid<nthreads; ++myid) {
-            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
             for (i = mybegin; i < myend; ++i) {
                 for (k = A->IA[i]; k < A->IA[i+1]; ++k) {
                     if (A->JA[k] == i)

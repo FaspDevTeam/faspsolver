@@ -245,7 +245,7 @@ void fasp_dvec_set (INT      n,
 #ifdef _OPENMP 
     // variables for OpenMP 
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
    
     if (val == 0.0) {
@@ -254,7 +254,7 @@ void fasp_dvec_set (INT      n,
         if (n > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend) 
             for (myid = 0; myid < nthreads; myid++ ) {
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 memset(&xpt[mybegin],0x0, sizeof(REAL)*(myend-mybegin));
             }
         }
@@ -273,7 +273,7 @@ void fasp_dvec_set (INT      n,
         if (n > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend) 
             for (myid = 0; myid < nthreads; myid++ ) {
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) xpt[i]=val;
             }
         }
@@ -311,7 +311,7 @@ void fasp_ivec_set (const INT  m,
 #ifdef _OPENMP  
 	if ( n > OPENMP_HOLDS ) {
             use_openmp = TRUE;
-            nthreads = FASP_GET_NUM_THREADS();
+            nthreads = fasp_get_num_threads();
 	}
 #endif
     
@@ -321,7 +321,7 @@ void fasp_ivec_set (const INT  m,
 #pragma omp parallel for private(myid, mybegin, myend, i) 
 #endif
         for (myid = 0; myid < nthreads; myid++ ) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) u->val[i] = m;
         }        
 	}    
@@ -379,7 +379,7 @@ REAL fasp_dvec_maxdiff (dvector *x,
     INT myid, mybegin, myend, nthreads;
     if ( length > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -389,7 +389,7 @@ REAL fasp_dvec_maxdiff (dvector *x,
 #pragma omp parallel firstprivate(temp) private(myid, mybegin, myend, i, diffi) 
         {
             myid = omp_get_thread_num();
-            FASP_GET_START_END(myid, nthreads, length, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, length, &mybegin, &myend);
             for(i=mybegin; i<myend; i++) {
                 if ((diffi = ABS(xpt[i]-ypt[i])) > temp) temp = diffi;
             }
@@ -439,7 +439,7 @@ void fasp_dvec_symdiagscale (dvector *b,
     INT mybegin, myend, myid, nthreads;
     if ( n > OPENMP_HOLDS ){
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
 
@@ -447,7 +447,7 @@ void fasp_dvec_symdiagscale (dvector *b,
 #ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin,myend) 
         for (myid = 0; myid < nthreads; myid++ ) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) val[i] = val[i]/sqrt(diag->val[i]);
         }        
 #endif

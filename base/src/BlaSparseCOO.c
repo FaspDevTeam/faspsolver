@@ -129,7 +129,7 @@ void fasp_dcoo_shift (dCOOmat   *A,
 #ifdef _OPENMP
     if (nnz > OPENMP_HOLDS) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
         
@@ -138,7 +138,7 @@ void fasp_dcoo_shift (dCOOmat   *A,
 #pragma omp parallel for private(myid, i, mybegin, myend)
 #endif
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, nnz, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
                 ai[i]+=offset; aj[i]+=offset;
             }

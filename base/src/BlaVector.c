@@ -45,7 +45,7 @@ void fasp_blas_dvec_axpy (const REAL   a,
     INT myid, mybegin, myend, nthreads;
     if ( m > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -59,7 +59,7 @@ void fasp_blas_dvec_axpy (const REAL   a,
 #pragma omp parallel private(myid,mybegin,myend,i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
-            FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) ypt[i] += a*xpt[i];
         }
 #endif

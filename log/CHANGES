@@ -5,6 +5,7 @@ File Name: CHANGES
 - Function name change: *_Schwarz* ==> *_schwarz*.
 - Change function name of a few private functions in GMG.
 - Separate SA/UA AMG for CSR and BSR.
+- Function name change: Upper case ==> Lower case in AuxThreads.c.
 
 01/21/2017 FASP 1.9.2:
 - Change filenames according to package structure.

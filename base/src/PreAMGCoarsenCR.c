@@ -74,7 +74,7 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
     // variables for OpenMP
     INT myid, mybegin, myend;
     REAL sub_temp0 = 0.;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     ia = A->IA;
@@ -118,7 +118,7 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,j,sub_temp0) if(nu>OPENMP_HOLDS) 
         for (myid=0; myid<nthreads; ++myid) {
-            FASP_GET_START_END(myid, nthreads, nu-i_0+1, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, nu-i_0+1, &mybegin, &myend);
             mybegin += i_0; myend += i_0;
             for (i=mybegin; i<myend; ++i) {
 #else
@@ -318,7 +318,7 @@ static INT indset (INT   cand,
     // variables for OpenMP
     INT myid, mybegin, myend;
     INT sub_istack = 0;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     istack = 0;
@@ -326,7 +326,7 @@ static INT indset (INT   cand,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,ji,jj,sub_istack) if(n>OPENMP_HOLDS)
     for (myid=0; myid<nthreads; ++myid) {
-        FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+        fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
         for (i=mybegin; i<myend; ++i) {
 #else 
         for (i = 0; i < n; ++i) {

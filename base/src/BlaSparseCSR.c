@@ -260,7 +260,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
 #ifdef _OPENMP
     if ( MIN(n, nnz) > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -275,7 +275,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
         for (myid=0; myid<nthreads; ++myid) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) Pt[P[i]] = i;
         }
     }
@@ -297,7 +297,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin, myend, i1, i2, k, start, j, jaj)
 #endif
         for (myid=0; myid<nthreads; ++myid) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
                 i1 = Aperm.IA[i]; i2 = Aperm.IA[i+1]-1;
                 k = P[i];
@@ -330,7 +330,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin, myend, k, j)
 #endif
         for (myid=0; myid<nthreads; ++myid) {
-            FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, nnz, &mybegin, &myend);
             for (k=mybegin; k<myend; ++k) {
                 j = Aperm.JA[k];
                 Aperm.JA[k] = Pt[j];
@@ -424,7 +424,7 @@ void fasp_dcsr_getdiag (INT      n,
 #ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -436,7 +436,7 @@ void fasp_dcsr_getdiag (INT      n,
 #pragma omp parallel for private(myid, mybegin, myend, i, ibegin, iend, k, j)
 #endif
         for (myid = 0; myid < nthreads; myid++ ) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 ibegin=A->IA[i]; iend=A->IA[i+1];
                 for (k=ibegin;k<iend;++k) {
@@ -488,7 +488,7 @@ void fasp_dcsr_getcol (const INT  n,
 #ifdef _OPENMP
     if ( nrow > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -507,7 +507,7 @@ void fasp_dcsr_getcol (const INT  n,
 #pragma omp parallel for private(myid, mybegin, myend, i, j, row_begin, row_end)
 #endif
         for (myid = 0; myid < nthreads; myid++ ) {
-            FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, nrow, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 col[i] = 0.0;
                 row_begin = A->IA[i]; row_end = A->IA[i+1];
@@ -569,7 +569,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
 #ifdef _OPENMP
     // variables for OpenMP
     INT    myid, mybegin, myend, ibegin, iend;
-    INT    nthreads = FASP_GET_NUM_THREADS();
+    INT    nthreads = fasp_get_num_threads();
 #endif
     
 #if DEBUG_MODE > 0
@@ -580,7 +580,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
     if (num_rowsA > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid,i,j,ibegin,iend,tempi,tempd, mybegin, myend)
         for (myid = 0; myid < nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, num_rowsA, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, num_rowsA, &mybegin, &myend);
             for (i = mybegin; i < myend; i ++) {
                 ibegin = A_i[i]; iend = A_i[i+1];
                 // check whether the first entry is already diagonal
@@ -970,7 +970,7 @@ void fasp_dcsr_compress (dCSRmat *A,
 #ifdef _OPENMP
     if ( B->nnz > OPENMP_HOLDS) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -1005,7 +1005,7 @@ void fasp_dcsr_compress (dCSRmat *A,
 #pragma omp parallel for private(myid, i, mybegin, myend)
 #endif
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, B->nnz, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, B->nnz, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
                 B->JA[i]=A->JA[index[i]];
                 B->val[i]=A->val[index[i]];
@@ -1097,7 +1097,7 @@ void fasp_dcsr_shift (dCSRmat *A,
 #ifdef _OPENMP
     if ( MIN(n, nnz) > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -1107,7 +1107,7 @@ void fasp_dcsr_shift (dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 ai[i] += offset;
             }
@@ -1123,7 +1123,7 @@ void fasp_dcsr_shift (dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, nnz, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, nnz, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 aj[i] += offset;
             }
@@ -1161,7 +1161,7 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
 #ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -1182,7 +1182,7 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) work[i] = sqrt(diag->val[i]);
         }
     }
@@ -1197,7 +1197,7 @@ void fasp_dcsr_symdiagscale (dCSRmat *A,
 #pragma omp parallel for private(myid, mybegin, myend, row_start, row_end, i, j, k)
 #endif
         for (myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; i++) {
                 row_start = IA[i]; row_end = IA[i+1];
                 for (j=row_start; j<row_end; j++) {

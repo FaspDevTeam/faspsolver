@@ -208,7 +208,7 @@ static void strong_couplings (dCSRmat   *A,
 #ifdef _OPENMP
 	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
-		nthreads = FASP_GET_NUM_THREADS();
+		nthreads = fasp_get_num_threads();
 	}
 #endif
 	
@@ -231,7 +231,7 @@ static void strong_couplings (dCSRmat   *A,
 #pragma omp parallel for private(myid, mybegin,myend,i,row_scl,row_sum,begin_row,end_row,j)
 #endif
 		for ( myid = 0; myid < nthreads; myid++ ) {
-			FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+			fasp_get_start_end(myid, nthreads, row, &mybegin, &myend);
 			for ( i = mybegin; i < myend; i++) {
 				
 				// Compute most negative entry in each row and row sum
@@ -489,7 +489,7 @@ static INT cfsplitting_cls (dCSRmat   *A,
 #ifdef _OPENMP
     if ( row > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -505,7 +505,7 @@ static INT cfsplitting_cls (dCSRmat   *A,
 #pragma omp parallel for private(myid, mybegin,myend,i)
 #endif
         for ( myid = 0; myid < nthreads; myid++ ) {
-            FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, row, &mybegin, &myend);
             for ( i = mybegin; i < myend; i++ ) lambda[i] = ST.IA[i+1] - ST.IA[i];
         }
     }
@@ -521,7 +521,7 @@ static INT cfsplitting_cls (dCSRmat   *A,
 #pragma omp parallel for reduction(+:num_left) private(myid, mybegin, myend, i)
 #endif
         for ( myid = 0; myid < nthreads; myid++ ) {
-            FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, row, &mybegin, &myend);
             for ( i = mybegin; i < myend; i++ ) {
 #if RS_C1
                 if ( S->IA[i+1] == S->IA[i] ) {
@@ -794,7 +794,7 @@ static INT cfsplitting_clsp (dCSRmat   *A,
 #ifdef _OPENMP
 	if ( row > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
-		nthreads = FASP_GET_NUM_THREADS();
+		nthreads = fasp_get_num_threads();
 	}
 #endif
 	
@@ -816,7 +816,7 @@ static INT cfsplitting_clsp (dCSRmat   *A,
 #pragma omp parallel for private(myid, mybegin,myend,i)
 #endif
 		for ( myid = 0; myid < nthreads; myid++ ) {
-			FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+			fasp_get_start_end(myid, nthreads, row, &mybegin, &myend);
 			for ( i = mybegin; i < myend; i++ ) lambda[i] = ST.IA[i+1] - ST.IA[i];
 		}
 	}
@@ -832,7 +832,7 @@ static INT cfsplitting_clsp (dCSRmat   *A,
 #pragma omp parallel for reduction(+:num_left) private(myid, mybegin, myend, i)
 #endif
 		for ( myid = 0; myid < nthreads; myid++ ) {
-			FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+			fasp_get_start_end(myid, nthreads, row, &mybegin, &myend);
 			for ( i = mybegin; i < myend; i++ ) {
 				if ( (ia[i+1]-ia[i]) <= 1 ) {
 					vec[i] = ISPT; // set i as an ISOLATED fine node
@@ -1434,7 +1434,7 @@ static INT cfsplitting_agg (dCSRmat   *A,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     /************************************************************/
@@ -1788,7 +1788,7 @@ static void form_P_pattern_dir (dCSRmat   *P,
 #ifdef _OPENMP
     if ( row > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -1804,7 +1804,7 @@ static void form_P_pattern_dir (dCSRmat   *P,
 #pragma omp parallel for private(myid, mybegin,myend,i,j,k)
 #endif
         for ( myid = 0; myid < nthreads; myid++ ) {
-            FASP_GET_START_END(myid, nthreads, row, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, row, &mybegin, &myend);
             for ( i = mybegin; i < myend; ++i ) {
                 switch ( vec[i] ) {
                     case FGPT: // fine grid points
