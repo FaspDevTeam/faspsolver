@@ -287,13 +287,13 @@ void fasp_param_init (input_param    *iniparam,
 
     if (iluparam) fasp_param_ilu_init(iluparam);
 
-    if (schparam) fasp_param_Schwarz_init(schparam);
+    if (schparam) fasp_param_schwarz_init(schparam);
 
     if (iniparam) {
         if (itsparam) fasp_param_solver_set(itsparam,iniparam);
         if (amgparam) fasp_param_amg_set(amgparam,iniparam);
         if (iluparam) fasp_param_ilu_set(iluparam,iniparam);
-        if (schparam) fasp_param_Schwarz_set(schparam,iniparam);
+        if (schparam) fasp_param_schwarz_set(schparam,iniparam);
     }
     else {
         printf("### WARNING: No input specified. Use default values instead!\n");
@@ -487,7 +487,7 @@ void fasp_param_ilu_init (ILU_param *iluparam)
 }
 
 /**
- * \fn void fasp_param_Schwarz_init (Schwarz_param *schparam)
+ * \fn void fasp_param_schwarz_init (Schwarz_param *schparam)
  *
  * \brief Initialize Schwarz parameters
  *
@@ -498,7 +498,7 @@ void fasp_param_ilu_init (ILU_param *iluparam)
  *
  * Modified by Chensong Zhang on 10/10/2014: Add block solver type
  */
-void fasp_param_Schwarz_init (Schwarz_param *schparam)
+void fasp_param_schwarz_init (Schwarz_param *schparam)
 {
     schparam->print_level       = PRINT_NONE;
     schparam->Schwarz_type      = 3;
@@ -605,7 +605,7 @@ void fasp_param_ilu_set (ILU_param   *iluparam,
 }
 
 /**
- * \fn void fasp_param_Schwarz_set (Schwarz_param *schparam, input_param *iniparam)
+ * \fn void fasp_param_schwarz_set (Schwarz_param *schparam, input_param *iniparam)
  *
  * \brief Set Schwarz_param with INPUT
  *
@@ -615,7 +615,7 @@ void fasp_param_ilu_set (ILU_param   *iluparam,
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_Schwarz_set (Schwarz_param *schparam,
+void fasp_param_schwarz_set (Schwarz_param *schparam,
                              input_param   *iniparam)
 {
     schparam->print_level       = iniparam->print_level;
@@ -919,7 +919,7 @@ void fasp_param_ilu_print (ILU_param *param)
 }
 
 /**
- * \fn void fasp_param_Schwarz_print (Schwarz_param *param)
+ * \fn void fasp_param_schwarz_print (Schwarz_param *param)
  *
  * \brief Print out Schwarz parameters
  *
@@ -928,7 +928,7 @@ void fasp_param_ilu_print (ILU_param *param)
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_Schwarz_print (Schwarz_param *param)
+void fasp_param_schwarz_print (Schwarz_param *param)
 {
     if ( param ) {
 

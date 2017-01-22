@@ -347,7 +347,7 @@ MEMERR:
 }
 
 /**
- * \fn void fasp_precond_Schwarz (REAL *r, REAL *z, void *data)
+ * \fn void fasp_precond_schwarz (REAL *r, REAL *z, void *data)
  *
  * \brief get z from r by Schwarz
  *
@@ -360,7 +360,7 @@ MEMERR:
  *
  * \note Change Schwarz interface by Zheng Li on 11/18/2014
  */
-void fasp_precond_Schwarz (REAL *r,
+void fasp_precond_schwarz (REAL *r,
                            REAL *z,
                            void *data)
 {
@@ -378,15 +378,15 @@ void fasp_precond_Schwarz (REAL *r,
     fasp_dvec_set(n, &x, 0);
 
 	switch (swztype) {
-		case 2:
-			fasp_dcsr_Schwarz_backward_smoother(swzdata, swzparam, &x, &b);
+		case SCHWARZ_BACKWARD:
+			fasp_dcsr_schwarz_backward_smoother(swzdata, swzparam, &x, &b);
 			break;
-		case 3:
-			fasp_dcsr_Schwarz_forward_smoother(swzdata, swzparam, &x, &b);
-			fasp_dcsr_Schwarz_backward_smoother(swzdata, swzparam, &x, &b);
+		case SCHWARZ_SYMMETRIC:
+			fasp_dcsr_schwarz_forward_smoother(swzdata, swzparam, &x, &b);
+			fasp_dcsr_schwarz_backward_smoother(swzdata, swzparam, &x, &b);
 			break;
 		default:
-			fasp_dcsr_Schwarz_forward_smoother(swzdata, swzparam, &x, &b);
+			fasp_dcsr_schwarz_forward_smoother(swzdata, swzparam, &x, &b);
 			break;
 	}
 

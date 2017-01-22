@@ -89,8 +89,8 @@ INT fasp_poisson_gmg1d (REAL         *u,
     
     // compute initial l2 norm of residue
     fasp_array_set(level[1], r0, 0.0);
-    compute_r1d(u0, b0, r0, 0, level);
-    norm_r0 = computenorm(r0, level, 0);
+    residual1d(u0, b0, r0, 0, level);
+    norm_r0 = l2norm(r0, level, 0);
     norm_r1 = norm_r0;
     if (norm_r0 < atol) goto FINISHED;
     
@@ -104,8 +104,8 @@ INT fasp_poisson_gmg1d (REAL         *u,
     while (count < max_itr_num) {
         count++;
         mg1d(u0, b0, level, 0, maxlevel);
-        compute_r1d(u0, b0, r0, 0, level);
-        norm_r = computenorm(r0, level, 0);
+        residual1d(u0, b0, r0, 0, level);
+        norm_r = l2norm(r0, level, 0);
         factor = norm_r/norm_r1;
         error = norm_r / norm_r0;
         norm_r1 = norm_r;
@@ -224,8 +224,8 @@ INT fasp_poisson_gmg2d (REAL         *u,
     fasp_array_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
-    compute_r2d(u0, b0, r0, 0, level, nxk, nyk);
-    norm_r0 = computenorm(r0, level, 0);
+    residual2d(u0, b0, r0, 0, level, nxk, nyk);
+    norm_r0 = l2norm(r0, level, 0);
     norm_r1 = norm_r0;
     if (norm_r0 < atol) goto FINISHED;
     
@@ -239,8 +239,8 @@ INT fasp_poisson_gmg2d (REAL         *u,
     while ( count < max_itr_num ) {
         count++;
         mg2d(u0, b0, level, 0, maxlevel, nxk, nyk);
-        compute_r2d(u0, b0, r0, 0, level, nxk, nyk);
-        norm_r = computenorm(r0, level, 0);
+        residual2d(u0, b0, r0, 0, level, nxk, nyk);
+        norm_r = l2norm(r0, level, 0);
         error = norm_r / norm_r0;
         factor = norm_r/norm_r1;
         norm_r1 = norm_r;
@@ -364,8 +364,8 @@ INT fasp_poisson_gmg3d (REAL         *u,
     fasp_array_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
-    compute_r3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
-    norm_r0 = computenorm(r0, level, 0);
+    residual3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
+    norm_r0 = l2norm(r0, level, 0);
     norm_r1 = norm_r0;
     if (norm_r0 < atol) goto FINISHED;
     
@@ -379,8 +379,8 @@ INT fasp_poisson_gmg3d (REAL         *u,
     while (count < max_itr_num) {
         count++;
         mg3d(u0, b0, level, 0, maxlevel, nxk, nyk, nzk);
-        compute_r3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
-        norm_r = computenorm(r0, level, 0);
+        residual3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
+        norm_r = l2norm(r0, level, 0);
         factor = norm_r/norm_r1;
         error = norm_r / norm_r0;
         norm_r1 = norm_r;
@@ -485,8 +485,8 @@ void fasp_poisson_fgmg1d (REAL         *u,
     
     // compute initial l2 norm of residue
     fasp_array_set(level[1], r0, 0.0);
-    compute_r1d(u0, b0, r0, 0, level);
-    norm_r0 = computenorm(r0, level, 0);
+    residual1d(u0, b0, r0, 0, level);
+    norm_r0 = l2norm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
     //  Full GMG solver
@@ -499,8 +499,8 @@ void fasp_poisson_fgmg1d (REAL         *u,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("FGMG totally", AMG_end - AMG_start);
-        compute_r1d(u0, b0, r0, 0, level);
-        norm_r = computenorm(r0, level, 0);
+        residual1d(u0, b0, r0, 0, level);
+        norm_r = l2norm(r0, level, 0);
         printf("Relative Residual = %e.\n", norm_r/norm_r0);
     }
     
@@ -591,8 +591,8 @@ void fasp_poisson_fgmg2d (REAL         *u,
     
     // compute initial l2 norm of residue
     fasp_array_set(level[1], r0, 0.0);
-    compute_r2d(u0, b0, r0, 0, level, nxk, nyk);
-    norm_r0 = computenorm(r0, level, 0);
+    residual2d(u0, b0, r0, 0, level, nxk, nyk);
+    norm_r0 = l2norm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
     // FMG solver
@@ -605,8 +605,8 @@ void fasp_poisson_fgmg2d (REAL         *u,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("FGMG totally", AMG_end - AMG_start);
-        compute_r2d(u0, b0, r0, 0, level, nxk, nyk);
-        norm_r = computenorm(r0, level, 0);
+        residual2d(u0, b0, r0, 0, level, nxk, nyk);
+        norm_r = l2norm(r0, level, 0);
         printf("Relative Residual = %e.\n", norm_r/norm_r0);
     }
     
@@ -702,8 +702,8 @@ void fasp_poisson_fgmg3d (REAL         *u,
     fasp_array_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
-    compute_r3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
-    norm_r0 = computenorm(r0, level, 0);
+    residual3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
+    norm_r0 = l2norm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
     // FMG
@@ -715,8 +715,8 @@ void fasp_poisson_fgmg3d (REAL         *u,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
         print_cputime("FGMG totally", AMG_end - AMG_start);
-        compute_r3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
-        norm_r = computenorm(r0, level, 0);
+        residual3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
+        norm_r = l2norm(r0, level, 0);
         printf("Relative Residual = %e.\n", norm_r/norm_r0);
     }
     
@@ -801,8 +801,8 @@ INT fasp_poisson_gmgcg1d (REAL         *u,
     
     // compute initial l2 norm of residue
     fasp_array_set(level[1], r0, 0.0);
-    compute_r1d(u, b, r0, 0, level);
-    norm_r0 = computenorm(r0, level, 0);
+    residual1d(u, b, r0, 0, level);
+    norm_r0 = l2norm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
     // Preconditioned CG method
@@ -908,8 +908,8 @@ INT fasp_poisson_gmgcg2d (REAL         *u,
     
     // compute initial l2 norm of residue
     fasp_array_set(level[1], r0, 0.0);
-    compute_r2d(u0, b0, r0, 0, level, nxk, nyk);
-    norm_r0 = computenorm(r0, level, 0);
+    residual2d(u0, b0, r0, 0, level, nxk, nyk);
+    norm_r0 = l2norm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
     // Preconditioned CG method
@@ -1023,8 +1023,8 @@ INT fasp_poisson_gmgcg3d (REAL         *u,
     fasp_array_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
-    compute_r3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
-    norm_r0 = computenorm(r0, level, 0);
+    residual3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
+    norm_r0 = l2norm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
     
     // Preconditioned CG method

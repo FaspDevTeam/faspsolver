@@ -3,7 +3,7 @@
  *  \brief Setup phase for the Schwarz methods
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxMemory.c, AuxVector.c, BlaSparseCSR.c, BlaSparseUtil.c, 
+ *        AuxMemory.c, AuxVector.c, BlaSparseCSR.c, BlaSparseUtil.c,
  *        and KryPvgmres.c
  */
 
@@ -18,104 +18,14 @@
 /*---------------------------------*/
 
 static void Schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
+static void Schwarz_get_block (Schwarz_data *, INT, INT *, INT *, INT *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn void fasp_Schwarz_get_block_matrix (Schwarz_data *Schwarz, INT nblk,
- *                                         INT *iblock, INT *jblock, INT *mask)
- *
- * \brief Form Schwarz partition data
- *
- * \param Schwarz Pointer to the Schwarz data
- * \param nblk    Number of partitions
- * \param iblock  Pointer to number of vertices on each level
- * \param jblock  Pointer to vertices of each level
- * \param mask    Pointer to flag array
- *
- * \author Zheng Li, Chensong Zhang
- * \date   2014/09/29
- */
-void fasp_Schwarz_get_block_matrix (Schwarz_data *Schwarz,
-                                    INT           nblk,
-                                    INT          *iblock,
-                                    INT          *jblock,
-                                    INT          *mask)
-{
-    INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
-    INT maxbs = 0, count, nnz;
-    
-    dCSRmat A = Schwarz->A;
-    dCSRmat *blk = Schwarz->blk_data;
-    
-    INT  *ia  = A.IA;
-    INT  *ja  = A.JA;
-    REAL *val = A.val;
-    
-    // get maximal block size
-    for (is=0; is<nblk; ++is) {
-        ibl0 = iblock[is];
-        ibl1 = iblock[is+1];
-        nloc = ibl1-ibl0;
-        maxbs = MAX(maxbs, nloc);
-    }
-    
-    Schwarz->maxbs = maxbs;
-    
-    // allocate memory for each sub_block's right hand
-    Schwarz->xloc1   = fasp_dvec_create(maxbs);
-    Schwarz->rhsloc1 = fasp_dvec_create(maxbs);
-    
-    for (is=0; is<nblk; ++is) {
-        ibl0 = iblock[is];
-        ibl1 = iblock[is+1];
-        nloc = ibl1-ibl0;
-        count = 0;
-        for (i=0; i<nloc; ++i ) {
-            iblk = ibl0 + i;
-            ki   = jblock[iblk];
-            iaa  = ia[ki]-1;
-            iab  = ia[ki+1]-1;
-            count += iab - iaa;
-            mask[ki] = i+1;
-        }
-        
-        blk[is] = fasp_dcsr_create(nloc, nloc, count);
-        blk[is].IA[0] = 0;
-        nnz = 0;
-        
-        for (i=0; i<nloc; ++i) {
-            iblk = ibl0 + i;
-            ki = jblock[iblk];
-            iaa = ia[ki]-1;
-            iab = ia[ki+1]-1;
-            for (kij = iaa; kij<iab; ++kij) {
-                kj = ja[kij]-1;
-                j  = mask[kj];
-                if(j != 0) {
-                    blk[is].JA[nnz] = j-1;
-                    blk[is].val[nnz] = val[kij];
-                    nnz ++;
-                }
-            }
-            blk[is].IA[i+1] = nnz;
-        }
-        
-        blk[is].nnz = nnz;
-        
-        // zero the mask so that everyting is as it was
-        for (i=0; i<nloc; ++i) {
-            iblk = ibl0 + i;
-            ki   = jblock[iblk];
-            mask[ki] = 0;
-        }
-    }
-}
-
-/**
- * \fn INT fasp_Schwarz_setup (Schwarz_data *Schwarz, Schwarz_param *param)
+ * \fn INT fasp_schwarz_setup (Schwarz_data *Schwarz, Schwarz_param *param)
  *
  * \brief Setup phase for the Schwarz methods
  *
@@ -129,7 +39,7 @@ void fasp_Schwarz_get_block_matrix (Schwarz_data *Schwarz,
  *
  * Modified by Zheng Li on 10/09/2014
  */
-INT fasp_Schwarz_setup (Schwarz_data   *Schwarz,
+INT fasp_schwarz_setup (Schwarz_data   *Schwarz,
                         Schwarz_param  *param)
 {
     // information about A
@@ -219,7 +129,7 @@ INT fasp_Schwarz_setup (Schwarz_data   *Schwarz,
     
     Schwarz->blk_data = (dCSRmat*)fasp_mem_calloc(nblk, sizeof(dCSRmat));
     
-    fasp_Schwarz_get_block_matrix(Schwarz, nblk, iblock, jblock, mask);
+    Schwarz_get_block(Schwarz, nblk, iblock, jblock, mask);
     
     // Setup for each block solver
     switch (block_solver) {
@@ -284,7 +194,7 @@ INT fasp_Schwarz_setup (Schwarz_data   *Schwarz,
 }
 
 /**
- * \fn void fasp_dcsr_Schwarz_forward_smoother (Schwarz_data  *Schwarz, 
+ * \fn void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *Schwarz,
  *                                              Schwarz_param *param,
  *                                              dvector *x, dvector *b)
  *
@@ -298,7 +208,7 @@ INT fasp_Schwarz_setup (Schwarz_data   *Schwarz,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_Schwarz_forward_smoother (Schwarz_data  *Schwarz,
+void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *Schwarz,
                                          Schwarz_param *param,
                                          dvector       *x,
                                          dvector       *b)
@@ -394,7 +304,7 @@ void fasp_dcsr_Schwarz_forward_smoother (Schwarz_data  *Schwarz,
 }
 
 /**
- * \fn void fasp_dcsr_Schwarz_backward_smoother (Schwarz_data  *Schwarz, 
+ * \fn void fasp_dcsr_schwarz_backward_smoother (Schwarz_data  *Schwarz,
  *                                               Schwarz_param *param,
  *                                               dvector *x, dvector *b)
  *
@@ -408,7 +318,7 @@ void fasp_dcsr_Schwarz_forward_smoother (Schwarz_data  *Schwarz,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_Schwarz_backward_smoother (Schwarz_data   *Schwarz,
+void fasp_dcsr_schwarz_backward_smoother (Schwarz_data   *Schwarz,
                                           Schwarz_param  *param,
                                           dvector        *x,
                                           dvector        *b)
@@ -589,6 +499,97 @@ static void Schwarz_levels (INT       inroot,
     }
     
     *nlvl = lvl;
+}
+
+/**
+ * \fn static void Schwarz_get_block (Schwarz_data *Schwarz, INT nblk,
+ *                                    INT *iblock, INT *jblock, INT *mask)
+ *
+ * \brief Form Schwarz partition data
+ *
+ * \param Schwarz Pointer to the Schwarz data
+ * \param nblk    Number of partitions
+ * \param iblock  Pointer to number of vertices on each level
+ * \param jblock  Pointer to vertices of each level
+ * \param mask    Pointer to flag array
+ *
+ * \author Zheng Li, Chensong Zhang
+ * \date   2014/09/29
+ */
+static void Schwarz_get_block (Schwarz_data *Schwarz,
+                               INT           nblk,
+                               INT          *iblock,
+                               INT          *jblock,
+                               INT          *mask)
+{
+    INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
+    INT maxbs = 0, count, nnz;
+    
+    dCSRmat A = Schwarz->A;
+    dCSRmat *blk = Schwarz->blk_data;
+    
+    INT  *ia  = A.IA;
+    INT  *ja  = A.JA;
+    REAL *val = A.val;
+    
+    // get maximal block size
+    for (is=0; is<nblk; ++is) {
+        ibl0 = iblock[is];
+        ibl1 = iblock[is+1];
+        nloc = ibl1-ibl0;
+        maxbs = MAX(maxbs, nloc);
+    }
+    
+    Schwarz->maxbs = maxbs;
+    
+    // allocate memory for each sub_block's right hand
+    Schwarz->xloc1   = fasp_dvec_create(maxbs);
+    Schwarz->rhsloc1 = fasp_dvec_create(maxbs);
+    
+    for (is=0; is<nblk; ++is) {
+        ibl0 = iblock[is];
+        ibl1 = iblock[is+1];
+        nloc = ibl1-ibl0;
+        count = 0;
+        for (i=0; i<nloc; ++i ) {
+            iblk = ibl0 + i;
+            ki   = jblock[iblk];
+            iaa  = ia[ki]-1;
+            iab  = ia[ki+1]-1;
+            count += iab - iaa;
+            mask[ki] = i+1;
+        }
+        
+        blk[is] = fasp_dcsr_create(nloc, nloc, count);
+        blk[is].IA[0] = 0;
+        nnz = 0;
+        
+        for (i=0; i<nloc; ++i) {
+            iblk = ibl0 + i;
+            ki = jblock[iblk];
+            iaa = ia[ki]-1;
+            iab = ia[ki+1]-1;
+            for (kij = iaa; kij<iab; ++kij) {
+                kj = ja[kij]-1;
+                j  = mask[kj];
+                if(j != 0) {
+                    blk[is].JA[nnz] = j-1;
+                    blk[is].val[nnz] = val[kij];
+                    nnz ++;
+                }
+            }
+            blk[is].IA[i+1] = nnz;
+        }
+        
+        blk[is].nnz = nnz;
+        
+        // zero the mask so that everyting is as it was
+        for (i=0; i<nloc; ++i) {
+            iblk = ibl0 + i;
+            ki   = jblock[iblk];
+            mask[ki] = 0;
+        }
+    }
 }
 
 /*---------------------------------*/

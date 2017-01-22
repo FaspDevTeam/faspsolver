@@ -173,7 +173,7 @@ void fasp_param_solver_init (itsolver_param *itsparam);
 
 void fasp_param_ilu_init (ILU_param *iluparam);
 
-void fasp_param_Schwarz_init (Schwarz_param *schparam);
+void fasp_param_schwarz_init (Schwarz_param *schparam);
 
 void fasp_param_amg_set (AMG_param   *param,
                          input_param *iniparam);
@@ -181,7 +181,7 @@ void fasp_param_amg_set (AMG_param   *param,
 void fasp_param_ilu_set (ILU_param   *iluparam,
                          input_param *iniparam);
 
-void fasp_param_Schwarz_set (Schwarz_param *schparam,
+void fasp_param_schwarz_set (Schwarz_param *schparam,
                              input_param   *iniparam);
 
 void fasp_param_solver_set (itsolver_param *itsparam,
@@ -203,7 +203,7 @@ void fasp_param_amg_print (AMG_param *param);
 
 void fasp_param_ilu_print (ILU_param *param);
 
-void fasp_param_Schwarz_print (Schwarz_param *param);
+void fasp_param_schwarz_print (Schwarz_param *param);
 
 void fasp_param_solver_print (itsolver_param *param);
 
@@ -634,21 +634,15 @@ void fasp_hb_read (const char *input_file,
 
 /*-------- In file: BlaSchwarzSetup.c --------*/
 
-void fasp_Schwarz_get_block_matrix (Schwarz_data *Schwarz,
-                                    INT           nblk,
-                                    INT          *iblock,
-                                    INT          *jblock,
-                                    INT          *mask);
-
-INT fasp_Schwarz_setup (Schwarz_data   *Schwarz,
+INT fasp_schwarz_setup (Schwarz_data   *Schwarz,
                         Schwarz_param  *param);
 
-void fasp_dcsr_Schwarz_forward_smoother (Schwarz_data  *Schwarz,
+void fasp_dcsr_schwarz_forward_smoother (Schwarz_data  *Schwarz,
                                          Schwarz_param *param,
                                          dvector       *x,
                                          dvector       *b);
 
-void fasp_dcsr_Schwarz_backward_smoother (Schwarz_data   *Schwarz,
+void fasp_dcsr_schwarz_backward_smoother (Schwarz_data   *Schwarz,
                                           Schwarz_param  *param,
                                           dvector        *x,
                                           dvector        *b);
@@ -2311,6 +2305,9 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
 SHORT fasp_amg_setup_sa (AMG_data   *mgl,
                          AMG_param  *param);
 
+
+/*-------- In file: PreAMGSetupSABSR.c --------*/
+
 SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr   *mgl,
                              AMG_param      *param);
 
@@ -2319,6 +2316,9 @@ SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr   *mgl,
 
 SHORT fasp_amg_setup_ua (AMG_data   *mgl,
                          AMG_param  *param);
+
+
+/*-------- In file: PreAMGSetupUABSR.c --------*/
 
 SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr   *mgl,
                              AMG_param      *param);
@@ -2441,7 +2441,7 @@ void fasp_precond_ilu_backward (REAL *r,
                                 REAL *z, 
                                 void *data);
 
-void fasp_precond_Schwarz (REAL *r,
+void fasp_precond_schwarz (REAL *r,
                            REAL *z,
                            void *data);
 
@@ -2492,7 +2492,7 @@ void fasp_ilu_data_free (ILU_data *ILUdata);
 
 void fasp_ilu_data_null (ILU_data *ILUdata);
 
-void fasp_Schwarz_data_free (Schwarz_data *Schwarz);
+void fasp_schwarz_data_free (Schwarz_data *Schwarz);
 
 
 /*-------- In file: PreMGCycle.c --------*/
@@ -2700,7 +2700,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat        *A,
                                   dvector        *x,
                                   itsolver_param *itparam);
 
-INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat        *A,
+INT fasp_solver_dcsr_krylov_schwarz (dCSRmat        *A,
                                      dvector        *b,
                                      dvector        *x,
                                      itsolver_param *itparam,

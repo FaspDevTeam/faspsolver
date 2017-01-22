@@ -107,13 +107,13 @@ void fasp_solver_amli (AMG_data   *mgl,
             
             switch (mgl[level].Schwarz.Schwarz_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_Schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
                                                        &mgl[level].x, &mgl[level].b);
-                    fasp_dcsr_Schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
                                                         &mgl[level].x, &mgl[level].b);
                     break;
                 default:
-                    fasp_dcsr_Schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
                                                        &mgl[level].x, &mgl[level].b);
                     break;
             }
@@ -186,13 +186,13 @@ void fasp_solver_amli (AMG_data   *mgl,
             
             switch (mgl[level].Schwarz.Schwarz_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_Schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
                                                         &mgl[level].x, &mgl[level].b);
-                    fasp_dcsr_Schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
                                                        &mgl[level].x, &mgl[level].b);
                     break;
                 default:
-                    fasp_dcsr_Schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
                                                         &mgl[level].x, &mgl[level].b);
                     break;
             }
@@ -329,13 +329,13 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
             
             switch (mgl[level].Schwarz.Schwarz_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_Schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
                                                        &mgl[level].x, &mgl[level].b);
-                    fasp_dcsr_Schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
                                                         &mgl[level].x, &mgl[level].b);
                     break;
                 default:
-                    fasp_dcsr_Schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
                                                        &mgl[level].x, &mgl[level].b);
                     break;
             }
@@ -424,13 +424,13 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
             
             switch (mgl[level].Schwarz.Schwarz_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_Schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
                                                         &mgl[level].x, &mgl[level].b);
-                    fasp_dcsr_Schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
                                                        &mgl[level].x, &mgl[level].b);
                     break;
                 default:
-                    fasp_dcsr_Schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
                                                         &mgl[level].x, &mgl[level].b);
                     break;
             }
