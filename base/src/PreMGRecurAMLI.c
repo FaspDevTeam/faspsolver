@@ -21,8 +21,9 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "PreUtil.inl"
-#include "PreMGCycle.inl"
+#include "PreMGUtil.inl"
+#include "PreMGSmoother.inl"
+#include "PreMGRecurAMLI.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

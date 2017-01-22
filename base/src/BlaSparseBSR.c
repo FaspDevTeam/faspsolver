@@ -6,11 +6,11 @@
  *        AuxArray.c, AuxMemory.c, AuxSmallMat.c, and BlaSmallMat.c
  */
 
+#include <math.h>
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-
-#include <math.h>
 
 #include "fasp.h"
 #include "fasp_functs.h"

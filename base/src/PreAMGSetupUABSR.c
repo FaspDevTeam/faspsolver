@@ -23,8 +23,8 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "PreAMGAggregationCSR.inl"
 #include "PreAMGAggregationBSR.inl"
+#include "PreAMGAggregation.inl"
 
 static SHORT amg_setup_unsmoothP_unsmoothR_bsr(AMG_data_bsr *, AMG_param *);
 

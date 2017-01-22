@@ -29,7 +29,7 @@
  * \param ia   Row pointer
  * \param ja   Column index
  * \param a    Pointers to sparse matrix values in CSR format
- * \param b    Pointer to right hand side -- remove later also as MG relaxation on error eqn
+ * \param b    Pointer to right hand side
  * \param L    Number of iterations
  * \param CF   Marker for C, F points 
  *

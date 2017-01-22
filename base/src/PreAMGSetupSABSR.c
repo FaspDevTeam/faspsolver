@@ -27,8 +27,8 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "PreAMGAggregationCSR.inl"
 #include "PreAMGAggregationBSR.inl"
+#include "PreAMGAggregation.inl"
 
 static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl, AMG_param *param);
 

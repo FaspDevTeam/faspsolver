@@ -27,4 +27,7 @@ void extractNondirichletMatrix (dCSRmat *A,
                                 ivector *index, 
                                 dvector *uh);
 
+void fasp_quad2d  (const INT num_qp, const INT ncoor, REAL (*quad)[3]);
+void fasp_gauss2d (const INT num_qp, const INT ncoor, REAL (*gauss)[3]);
+
 #endif

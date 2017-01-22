@@ -18,8 +18,8 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static void fasp_qsplit (REAL *a, INT *ind, INT n, INT ncut);
-static void fasp_srtr (INT num,INT *q);
+static void fasp_qsplit  (REAL *a, INT *ind, INT n, INT ncut);
+static void fasp_sortrow (INT num,INT *q);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -1681,7 +1681,7 @@ void fasp_symbfactor (INT   n,
             //  Sort the entries in rowll, so that the row has its column
             //  entries in increasing order.
             //  ---------------------------------------------------------
-            fasp_srtr(nzi - 1, &rowll[1]);
+            fasp_sortrow(nzi - 1, &rowll[1]);
             
             //  ---------------------------------------------------------
             //  Now set up rowll as a linked list containing the original
@@ -2039,7 +2039,7 @@ F161:
 }
 
 /**
- * \fn static void fasp_srtr (INT num,INT *q)
+ * \fn static void fasp_sortrow (INT num,INT *q)
  *
  * \brief Shell sort with hardwired increments.
  *
@@ -2050,8 +2050,8 @@ F161:
  * \author Chunsheng Feng
  * \date   09/06/2016
  */
-static void fasp_srtr (INT   num,
-                       INT  *q)
+static void fasp_sortrow (INT   num,
+                          INT  *q)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);

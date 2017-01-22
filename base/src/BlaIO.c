@@ -1630,25 +1630,20 @@ void fasp_matrix_read (const char  *filename,
 		flag = (INT) flag/100;
         
         switch (flag) {
+            case 0:
+                fasp_dcsr_read_s(fp, (dCSRmat *)A); break;
             case 1:
-                //fasp_dcsr_read_s(fp, (dCSRmat *)A);
-                fasp_dcoo_read_s(fp, (dCSRmat *)A);
-                break;
+                fasp_dcoo_read_s(fp, (dCSRmat *)A); break;
             case 2:
-                fasp_dbsr_read_s(fp, (dBSRmat *)A);
-                break;
+                fasp_dbsr_read_s(fp, (dBSRmat *)A); break;
             case 3:
-                fasp_dstr_read_s(fp, (dSTRmat *)A);
-                break;
+                fasp_dstr_read_s(fp, (dSTRmat *)A); break;
             case 4:
-                fasp_dcoo_read_s(fp, (dCSRmat *)A);
-                break;
+                fasp_dcoo_read_s(fp, (dCSRmat *)A); break;
             case 5:
-                fasp_dmtx_read_s(fp, (dCSRmat *)A);
-                break;
+                fasp_dmtx_read_s(fp, (dCSRmat *)A); break;
 			case 6:
-                fasp_dmtxsym_read_s(fp, (dCSRmat *)A);
-                break;
+                fasp_dmtxsym_read_s(fp, (dCSRmat *)A); break;
             default:
                 printf("### ERROR: Unknown file flag %d", flag);
         }

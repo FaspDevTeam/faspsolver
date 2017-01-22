@@ -27,6 +27,7 @@
 /*---------------------------------*/
 
 #include "PreAMGAggregationCSR.inl"
+#include "PreAMGAggregation.inl"
 
 static SHORT amg_setup_smoothP_smoothR (AMG_data *, AMG_param *);
 static SHORT amg_setup_smoothP_unsmoothR (AMG_data *, AMG_param *);

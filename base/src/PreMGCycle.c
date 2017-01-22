@@ -19,7 +19,8 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "PreUtil.inl"
+#include "PreMGUtil.inl"
+#include "PreMGSmoother.inl"
 
 #if FASP_GSRB
 INT  nx_rb   = 1 ;   /**< Red Black GS Smoother Nx */

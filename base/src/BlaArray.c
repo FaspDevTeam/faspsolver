@@ -49,7 +49,7 @@ void fasp_blas_array_ax (const INT    n,
 #endif
     
     if (a == 1.0) {
-        
+        // do nothing
     }
     else {
         if (use_openmp) {

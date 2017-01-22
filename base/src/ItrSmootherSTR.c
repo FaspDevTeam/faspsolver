@@ -71,7 +71,8 @@ void fasp_smoother_dstr_jacobi (dSTRmat *A,
 
 
 /**
- * \fn void fasp_smoother_dstr_jacobi1(dSTRmat *A, dvector *b, dvector *u, REAL *diaginv)
+ * \fn void fasp_smoother_dstr_jacobi1 (dSTRmat *A, dvector *b, dvector *u,
+ *                                      REAL *diaginv)
  *
  * \brief Jacobi method as the smoother with diag_inv given
  *
@@ -186,8 +187,8 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_gs (dSTRmat *A, dvector *b, dvector *u, const INT order, 
- *                                 INT *mark)
+ * \fn void fasp_smoother_dstr_gs (dSTRmat *A, dvector *b, dvector *u, 
+ *                                 const INT order, INT *mark)
  *
  * \brief Gauss-Seidel method as the smoother
  *
@@ -244,8 +245,8 @@ void fasp_smoother_dstr_gs (dSTRmat    *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_gs1 (dSTRmat *A, dvector *b, dvector *u, const INT order,
- *                                  INT *mark, REAL *diaginv)
+ * \fn void fasp_smoother_dstr_gs1 (dSTRmat *A, dvector *b, dvector *u, 
+ *                                  const INT order, INT *mark, REAL *diaginv)
  *
  * \brief Gauss-Seidel method as the smoother with diag_inv given
  *
@@ -650,8 +651,8 @@ void fasp_smoother_dstr_gs_order (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_gs_cf (dSTRmat *A, dvector *b, dvector *u, REAL *diaginv, 
- *                                    INT *mark, const INT order)
+ * \fn void fasp_smoother_dstr_gs_cf (dSTRmat *A, dvector *b, dvector *u, 
+ *                                    REAL *diaginv, INT *mark, const INT order)
  *
  * \brief Gauss method as the smoother in the C-F manner
  *
@@ -837,8 +838,8 @@ void fasp_smoother_dstr_gs_cf (dSTRmat    *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_sor (dSTRmat *A, dvector *b, dvector *u, const INT order, 
- *                                  INT *mark, const REAL weight)
+ * \fn void fasp_smoother_dstr_sor (dSTRmat *A, dvector *b, dvector *u, 
+ *                                  const INT order, INT *mark, const REAL weight)
  *
  * \brief SOR method as the smoother
  *
@@ -897,8 +898,9 @@ void fasp_smoother_dstr_sor (dSTRmat    *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_sor1 (dSTRmat *A, dvector *b, dvector *u, const INT order,
- *                                   INT *mark, REAL *diaginv, const REAL weight)
+ * \fn void fasp_smoother_dstr_sor1 (dSTRmat *A, dvector *b, dvector *u, 
+ *                                   const INT order, INT *mark, REAL *diaginv, 
+ *                                   const REAL weight)
  *
  * \brief SOR method as the smoother
  *

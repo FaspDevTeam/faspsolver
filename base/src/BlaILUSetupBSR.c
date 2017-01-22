@@ -18,7 +18,7 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static INT numfac_bsr(dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
+static INT numfactor (dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -90,7 +90,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
 #endif
     
     // (2) numerical factoration 
-    numfac_bsr(A, iludata->luval, ijlu, uptr);
+    numfactor(A, iludata->luval, ijlu, uptr);
     
     //nwork = 6*nzlu*nb;
     nwork = 20*A->ROW*A->nb;
@@ -141,7 +141,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
 /*---------------------------------*/
 
 /**
- * \fn static INT numfac_bsr (dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
+ * \fn static INT numfactor (dBSRmat *A, REAL *luval, INT *jlu, INT *uptr)
  * \brief Get numerical ILU decoposition of a BSR matrix A
  *
  * \param A        Pointer to dBSRmat matrix
@@ -154,10 +154,10 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
  *
  * \note Works for general nb (Xiaozhe)
  */
-static INT numfac_bsr (dBSRmat   *A,
-                       REAL      *luval,
-                       INT       *jlu,
-                       INT       *uptr)
+static INT numfactor (dBSRmat   *A,
+                      REAL      *luval,
+                      INT       *jlu,
+                      INT       *uptr)
 {
     INT n=A->ROW,nb=A->nb, nb2=nb*nb, ib, ibstart,ibstart1;
     INT k, indj, inds, indja,jluj, jlus, ijaj;
@@ -423,8 +423,8 @@ static INT numfac_bsr (dBSRmat   *A,
 
 
 /**
- * \fn static INT numfac_bsr_mc_omp (dBSRmat *A, REAL *luval, INT *jlu, 
- *                                   INT *uptr, INT ncolors, INT *ic, INT *icmap)
+ * \fn static INT numfactor_mc_omp (dBSRmat *A, REAL *luval, INT *jlu, 
+ *                                  INT *uptr, INT ncolors, INT *ic, INT *icmap)
  * \brief Multi-thread ILU decoposition of a BSR matrix A based on graph coloring
  *
  * \param A        Pointer to dBSRmat matrix
@@ -440,13 +440,13 @@ static INT numfac_bsr (dBSRmat   *A,
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
  */
-static INT numfac_bsr_mc_omp (dBSRmat   *A,
-                              REAL      *luval,
-                              INT       *jlu,
-                              INT       *uptr,
-                              INT        ncolors,
-                              INT       *ic,
-                              INT       *icmap)
+static INT numfactor_mc_omp (dBSRmat   *A,
+                             REAL      *luval,
+                             INT       *jlu,
+                             INT       *uptr,
+                             INT        ncolors,
+                             INT       *ic,
+                             INT       *icmap)
 {
     INT status = FASP_SUCCESS;
 
@@ -624,8 +624,8 @@ static INT numfac_bsr_mc_omp (dBSRmat   *A,
 }
 
 /**
- * \fn static INT numfac_bsr_levsch_omp (dBSRmat *A, REAL *luval, INT *jlu, 
- *                                       INT *uptr, INT ncolors, INT *ic, INT *icmap)
+ * \fn static INT numfactor_levsch_omp (dBSRmat *A, REAL *luval, INT *jlu, 
+ *                                      INT *uptr, INT ncolors, INT *ic, INT *icmap)
  * \brief Multi-thread ILU decoposition of a BSR matrix A based on level schedule strategy
  *
  * \param A        Pointer to dBSRmat matrix
@@ -641,13 +641,13 @@ static INT numfac_bsr_mc_omp (dBSRmat   *A,
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
  */
-static INT numfac_bsr_levsch_omp (dBSRmat *A,
-                                  REAL *luval,
-                                  INT *jlu,
-                                  INT *uptr,
-                                  INT ncolors,
-                                  INT *ic,
-                                  INT *icmap)
+static INT numfactor_levsch_omp (dBSRmat *A,
+                                 REAL *luval,
+                                 INT *jlu,
+                                 INT *uptr,
+                                 INT ncolors,
+                                 INT *ic,
+                                 INT *icmap)
 {
     INT status = FASP_SUCCESS;
 
@@ -909,7 +909,8 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     fasp_gettime(&numfac_start);
     
     // (2) numerical factoration 
-    numfac_bsr_levsch_omp(A, iludata->luval, ijlu, uptr, iludata->nlevL, iludata->ilevL, iludata->jlevL);
+    numfactor_levsch_omp(A, iludata->luval, ijlu, uptr, iludata->nlevL,
+                         iludata->ilevL, iludata->jlevL);
         
     fasp_gettime(&numfac_end);
 
@@ -1021,7 +1022,8 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
 #endif
     
     // (2) numerical factoration 
-    numfac_bsr_mc_omp(A, iludata->luval, ijlu, uptr, iludata->nlevL, iludata->ilevL, iludata->jlevL);
+    numfactor_mc_omp(A, iludata->luval, ijlu, uptr, iludata->nlevL,
+                     iludata->ilevL, iludata->jlevL);
 
     //printf("numfac time =%f\n", numfac_end-numfac_start);
 
