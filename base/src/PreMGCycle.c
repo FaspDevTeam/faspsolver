@@ -95,13 +95,13 @@ ForwardSweep:
         else if ( l < mgl->Schwarz_levels ) {
             switch (mgl[l].Schwarz.Schwarz_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
                                                        &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
                                                         &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
                                                        &mgl[l].x, &mgl[l].b);
                     break;
             }
@@ -218,13 +218,13 @@ ForwardSweep:
         else if ( l < mgl->Schwarz_levels ) {
             switch (mgl[l].Schwarz.Schwarz_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
                                                         &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_Schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
                                                        &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_Schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
+                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
                                                         &mgl[l].x, &mgl[l].b);
                     break;
             }

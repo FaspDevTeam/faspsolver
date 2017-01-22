@@ -256,7 +256,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat        *A,
 }
 
 /**
- * \fn INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat *A, dvector *b, dvector *x,
+ * \fn INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, dvector *b, dvector *x,
  *                                          itsolver_param *itparam,
  *                                          Schwarz_param *schparam)
  *
@@ -275,7 +275,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat        *A,
  *
  * Modified by Chensong on 07/02/2012: change interface
  */
-INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat        *A,
+INT fasp_solver_dcsr_krylov_schwarz (dCSRmat        *A,
                                      dvector        *b,
                                      dvector        *x,
                                      itsolver_param *itparam,
@@ -309,7 +309,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat        *A,
 	
 	// construct Schwarz precondtioner
 	fasp_dcsr_shift (&Schwarz_data.A, 1);
-	fasp_Schwarz_setup(&Schwarz_data, &swzparam);
+	fasp_schwarz_setup(&Schwarz_data, &swzparam);
 	
 	fasp_gettime(&setup_end);
 	setup_duration = setup_end - setup_start;
@@ -317,7 +317,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat        *A,
 	
 	precond prec;
 	prec.data = &Schwarz_data;
-	prec.fct = fasp_precond_Schwarz;
+	prec.fct = fasp_precond_schwarz;
 	
 	fasp_gettime(&solver_start);
 	
@@ -334,7 +334,7 @@ INT fasp_solver_dcsr_krylov_Schwarz (dCSRmat        *A,
 	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
-	fasp_Schwarz_data_free(&Schwarz_data);
+	fasp_schwarz_data_free(&Schwarz_data);
 	
 	return status;
 }

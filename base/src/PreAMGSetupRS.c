@@ -141,7 +141,14 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
         if ( lvl < param->Schwarz_levels ) {
             mgl[lvl].Schwarz.A = fasp_dcsr_sympart(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].Schwarz.A), 1);
-            fasp_Schwarz_setup(&mgl[lvl].Schwarz, &swzparam);
+            status = fasp_schwarz_setup(&mgl[lvl].Schwarz, &swzparam);
+            if ( status < 0 ) {
+                if ( prtlvl > PRINT_MIN ) {
+                    printf("### WARNING: Schwarz on level-%d failed!\n", lvl);
+                    printf("### WARNING: Disable Schwarz for level >= %d.\n", lvl);
+                }
+                param->Schwarz_levels = lvl;
+            }
         }
 
         /*-- Coarsening and form the structure of interpolation --*/

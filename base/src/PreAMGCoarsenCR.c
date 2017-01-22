@@ -38,13 +38,15 @@ static INT indset(INT, INT, INT, INT *, INT *, INT, INT *, REAL *);
  * \param i_0       Starting index
  * \param i_n       Ending index
  * \param A         Pointer to dCSRmat: the coefficient matrix (index starts from 0)
- * \param vertices  Pointer to CF, 0: fpt (current level) or 1: cpt
+ * \param vertices  Pointer to CF, 0: Fpt (current level) or 1: Cpt
  * \param param     Pointer to AMG_param: AMG parameters
  *
  * \return          Number of coarse level points
  * 
  * \author James Brannick
  * \date 04/21/2010
+ *
+ * \note vertices = 0: fine; 1: coarse; 2: isolated or special
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */

@@ -120,7 +120,7 @@ void fasp_amg_data_free (AMG_data   *mgl,
         fasp_dvec_free(&mgl[i].w);
         fasp_ivec_free(&mgl[i].cfmark);
         fasp_ilu_data_free(&mgl[i].LU);
-        fasp_Schwarz_data_free(&mgl[i].Schwarz);
+        fasp_schwarz_data_free(&mgl[i].Schwarz);
     }
     
     for (i=0; i<mgl->near_kernel_dim; ++i) {
@@ -316,7 +316,7 @@ void fasp_ilu_data_null (ILU_data *ILUdata)
 }
 
 /**
- * \fn void fasp_Schwarz_data_free (Schwarz_data *Schwarz)
+ * \fn void fasp_schwarz_data_free (Schwarz_data *Schwarz)
  * \brief Free Schwarz_data data memeory space
  *
  * \param *Schwarz  pointer to the AMG_data data
@@ -324,7 +324,7 @@ void fasp_ilu_data_null (ILU_data *ILUdata)
  * \author Xiaozhe Hu
  * \date   2010/04/06
  */
-void fasp_Schwarz_data_free (Schwarz_data *Schwarz)
+void fasp_schwarz_data_free (Schwarz_data *Schwarz)
 {
     INT i;
     fasp_dcsr_free(&Schwarz->A);
