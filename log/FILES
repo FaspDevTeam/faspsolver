@@ -22,7 +22,7 @@
      989 ./base/src/AuxParam.c
      801 ./base/src/AuxSmallMat.c
      904 ./base/src/AuxSort.c
-     173 ./base/src/AuxThreads.c
+     171 ./base/src/AuxThreads.c
       43 ./base/src/AuxTiming.c
      464 ./base/src/AuxVector.c
      428 ./base/src/BlaArray.c
@@ -55,19 +55,19 @@
       86 ./base/src/ItrSmootherCSRcr.c
      606 ./base/src/ItrSmootherCSRpoly.c
     1896 ./base/src/ItrSmootherSTR.c
-    1748 ./base/src/KryPbcgs.c
+    1743 ./base/src/KryPbcgs.c
     1511 ./base/src/KryPcg.c
-     338 ./base/src/KryPgcg.c
-     470 ./base/src/KryPgcr.c
+     337 ./base/src/KryPgcg.c
+     256 ./base/src/KryPgcr.c
     1652 ./base/src/KryPgmres.c
     1641 ./base/src/KryPminres.c
-    1698 ./base/src/KryPvbcgs.c
+    1693 ./base/src/KryPvbcgs.c
     1329 ./base/src/KryPvfgmres.c
     1723 ./base/src/KryPvgmres.c
-    1588 ./base/src/KrySPbcgs.c
-    1025 ./base/src/KrySPcg.c
+    1584 ./base/src/KrySPbcgs.c
+    1022 ./base/src/KrySPcg.c
     1395 ./base/src/KrySPgmres.c
-    1379 ./base/src/KrySPminres.c
+    1376 ./base/src/KrySPminres.c
     1547 ./base/src/KrySPvgmres.c
      444 ./base/src/PreAMGCoarsenCR.c
     2098 ./base/src/PreAMGCoarsenRS.c
@@ -98,4 +98,4 @@
      238 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      315 ./base/src/SolWrapper.c
-   87498 total
+   87261 total

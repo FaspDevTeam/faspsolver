@@ -35,13 +35,13 @@
  *                                    const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which
- *        the restart parameter can be adaptively modified during the iteration and
+ *        the restart parameter can be adaptively modified during iteration and
  *        flexible preconditioner can be used.
  *
- * \param A            Pointer to dCSRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to dCSRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -90,12 +90,12 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
     REAL   **p = NULL, **hh = NULL, **z=NULL;
     
     REAL   cr          = 1.0;     // convergence rate
-    REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
-    INT    d           = 3;       // reduction for the restart parameter
+    REAL   r_norm_old  = 0.0;     // save residual norm of previous restart cycle
+    INT    d           = 3;       // reduction for restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;       // lower bound for restart in each restart cycle
     
-    unsigned INT  Restart  = restart; // the real restart in some fixed restarted cycle
+    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
     unsigned INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
 
@@ -196,7 +196,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             }
         }
         
-        // Always entry the cycle at the first iteration
+        // Always enter the cycle at the first iteration
         // For at least one iteration step
         t = 1.0 / r_norm;
         fasp_blas_array_ax(n, t, p[0]);
@@ -207,7 +207,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             
             i ++;  iter ++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], z[i-1]);
             else
@@ -254,7 +254,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
                              norms[iter]/norms[iter-1]);
             }
             
-            /* should we exit the restart cycle? */
+            /* should we exit restart cycle? */
             if (r_norm <= epsilon && iter >= min_iter) break;
             
         } /* end of restart cycle */
@@ -299,7 +299,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
                     relres  = r_norm/normu;
                     break;
                 default:
-                    printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+                    printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
                     goto FINISHED;
             }
             
@@ -362,14 +362,14 @@ FINISHED:
  *                                    const REAL tol, const INT MaxIt, const SHORT restart,
  *                                    const SHORT stop_type, const SHORT prtlvl)
  *
- * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which the restart
- *        parameter can be adaptively modified during the iteration and flexible preconditioner
- *        can be used.
+ * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which
+ *        the restart parameter can be adaptively modified during iteration and
+ *        flexible preconditioner can be used.
  *
- * \param A            Pointer to dCSRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to dCSRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -418,12 +418,12 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
     REAL   **p = NULL, **hh = NULL, **z=NULL;
     
     REAL   cr          = 1.0;     // convergence rate
-    REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
-    INT    d           = 3;       // reduction for the restart parameter
+    REAL   r_norm_old  = 0.0;     // save residual norm of previous restart cycle
+    INT    d           = 3;       // reduction for restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;       // lower bound for restart in each restart cycle
     
-    unsigned INT  Restart  = restart; // the real restart in some fixed restarted cycle
+    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
     unsigned INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
@@ -524,7 +524,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
             }
         }
         
-        // Always entry the cycle at the first iteration
+        // Always enter the cycle at the first iteration
         // For at least one iteration step
         t = 1.0 / r_norm;
         fasp_blas_array_ax(n, t, p[0]);
@@ -535,7 +535,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
             
             i ++;  iter ++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], z[i-1]);
             else
@@ -582,7 +582,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
                              norms[iter]/norms[iter-1]);
             }
             
-            /* should we exit the restart cycle? */
+            /* should we exit restart cycle? */
             if (r_norm <= epsilon && iter >= min_iter) break;
             
         } /* end of restart cycle */
@@ -627,7 +627,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
                     relres  = r_norm/normu;
                     break;
                 default:
-                    printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+                    printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
                     goto FINISHED;
             }
             
@@ -692,12 +692,12 @@ FINISHED:
  *                                    const SHORT prtlvl)
  *
  * \brief Solve "Ax=b" using PFGMRES (right preconditioned) iterative method in which
- *        the restart parameter can be adaptively modified during the iteration and
+ *        the restart parameter can be adaptively modified during iteration and
  *        flexible preconditioner can be used.
  *
- * \param *A           pointer to the coefficient matrix
- * \param *b           pointer to the right hand side vector
- * \param *x           pointer to the solution vector
+ * \param *A           pointer to coefficient matrix
+ * \param *b           pointer to right hand side vector
+ * \param *x           pointer to solution vector
  * \param MaxIt        maximal iteration number allowed
  * \param tol          tolerance
  * \param *pc          pointer to preconditioner data
@@ -748,12 +748,12 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
     REAL   **p = NULL, **hh = NULL, **z=NULL;
     
     REAL   cr          = 1.0;     // convergence rate
-    REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
-    INT    d           = 3;       // reduction for the restart parameter
+    REAL   r_norm_old  = 0.0;     // save residual norm of previous restart cycle
+    INT    d           = 3;       // reduction for restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;       // lower bound for restart in each restart cycle
     
-    unsigned INT  Restart  = restart; // the real restart in some fixed restarted cycle
+    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
     unsigned INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
@@ -854,7 +854,7 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
             }
         }
         
-        // Always entry the cycle at the first iteration
+        // Always enter the cycle at the first iteration
         // For at least one iteration step
         t = 1.0 / r_norm;
         fasp_blas_array_ax(n, t, p[0]);
@@ -865,7 +865,7 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
             
             i ++;  iter ++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], z[i-1]);
             else
@@ -912,7 +912,7 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
                              norms[iter]/norms[iter-1]);
             }
             
-            /* should we exit the restart cycle? */
+            /* should we exit restart cycle? */
             if (r_norm <= epsilon && iter >= min_iter) break;
             
         } /* end of restart cycle */
@@ -957,7 +957,7 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
                     relres  = r_norm/normu;
                     break;
                 default:
-                    printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+                    printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
                     goto FINISHED;
             }
             
@@ -1021,13 +1021,13 @@ FINISHED:
  *                               const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which
- *        the restart parameter can be adaptively modified during the iteration and
+ *        the restart parameter can be adaptively modified during iteration and
  *        flexible preconditioner can be used.
  *
- * \param mf           Pointer to mxv_matfree: the spmv operation
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param mf           Pointer to mxv_matfree: spmv operation
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -1077,12 +1077,12 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
     REAL  *work = NULL;
     
     REAL   cr          = 1.0;     // convergence rate
-    REAL   r_norm_old  = 0.0;     // save the residual norm of the previous restart cycle
-    INT    d           = 3;       // reduction for the restart parameter
+    REAL   r_norm_old  = 0.0;     // save residual norm of previous restart cycle
+    INT    d           = 3;       // reduction for restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;       // lower bound for restart in each restart cycle
     
-    unsigned INT  Restart  = restart; // the real restart in some fixed restarted cycle
+    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
     unsigned INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
@@ -1195,7 +1195,7 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
             
             i ++;  iter ++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if (pc == NULL)
                 fasp_array_cp(n, p[i-1], z[i-1]);
             else
@@ -1243,7 +1243,7 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
                              norms[iter]/norms[iter-1]);
             }
             
-            /* should we exit the restart cycle? */
+            /* should we exit restart cycle? */
             if (r_norm <= epsilon && iter >= min_iter) break;
             
         } /* end of restart cycle */

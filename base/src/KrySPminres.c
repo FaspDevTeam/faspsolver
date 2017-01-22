@@ -34,10 +34,10 @@
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safety net
  *
- * \param A            Pointer to dCSRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param u            Pointer to dvector: the unknowns
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to dCSRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param u            Pointer to dvector: unknowns
+ * \param pc           Pointer to structure of precondition (precond)
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -68,7 +68,6 @@ INT fasp_solver_dcsr_spminres (dCSRmat      *A,
     REAL         normr0  = BIGREAL, relres  = BIGREAL;
     REAL         normu2, normuu, normp, infnormu, factor;
     REAL         alpha, alpha0, alpha1, temp2;
-    
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
     
@@ -113,7 +112,7 @@ INT fasp_solver_dcsr_spminres (dCSRmat      *A,
             relres  = absres0/normu2;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -190,7 +189,7 @@ INT fasp_solver_dcsr_spminres (dCSRmat      *A,
         fasp_array_set(m,p2,0.0);
         fasp_blas_array_axpy(m,1/normp,t,p2);
         
-        // prepare for the next iteration
+        // prepare for next iteration
         fasp_array_cp(m,p1,p0);
         fasp_array_cp(m,p2,p1);
         fasp_array_cp(m,t1,t0);
@@ -235,7 +234,7 @@ INT fasp_solver_dcsr_spminres (dCSRmat      *A,
         
         // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(u) ) {
-            // If the solution is NAN, restrore the best solution
+            // If the solution is NAN, restore the best solution
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
         }
@@ -385,7 +384,7 @@ INT fasp_solver_dcsr_spminres (dCSRmat      *A,
                 break;
             }
             
-            // prepare for restarting the method
+            // prepare for restarting method
             fasp_array_set(m,p0,0.0);
             ++more_step;
             ++restart_step;
@@ -460,7 +459,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
     }
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -483,10 +482,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safety net
  *
- * \param A            Pointer to dBLCmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param u            Pointer to dvector: the unknowns
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to dBLCmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param u            Pointer to dvector: unknowns
+ * \param pc           Pointer to structure of precondition (precond)
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -517,7 +516,6 @@ INT fasp_solver_dblc_spminres (dBLCmat     *A,
     REAL         normr0  = BIGREAL, relres  = BIGREAL;
     REAL         normu2, normuu, normp, infnormu, factor;
     REAL         alpha, alpha0, alpha1, temp2;
-    
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
     
@@ -562,7 +560,7 @@ INT fasp_solver_dblc_spminres (dBLCmat     *A,
             relres  = absres0/normu2;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -639,7 +637,7 @@ INT fasp_solver_dblc_spminres (dBLCmat     *A,
         fasp_array_set(m,p2,0.0);
         fasp_blas_array_axpy(m,1/normp,t,p2);
         
-        // prepare for the next iteration
+        // prepare for next iteration
         fasp_array_cp(m,p1,p0);
         fasp_array_cp(m,p2,p1);
         fasp_array_cp(m,t1,t0);
@@ -684,7 +682,7 @@ INT fasp_solver_dblc_spminres (dBLCmat     *A,
         
         // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(u) ) {
-            // If the solution is NAN, restrore the best solution
+            // If the solution is NAN, restore the best solution
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
         }
@@ -834,7 +832,7 @@ INT fasp_solver_dblc_spminres (dBLCmat     *A,
                 break;
             }
             
-            // prepare for restarting the method
+            // prepare for restarting method
             fasp_array_set(m,p0,0.0);
             ++more_step;
             ++restart_step;
@@ -909,7 +907,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
     }
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -932,12 +930,12 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b with safety net
  *
- * \param A            Pointer to dSTRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param u            Pointer to dvector: the unknowns
+ * \param A            Pointer to dSTRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param u            Pointer to dvector: unknowns
  * \param MaxIt        Maximal number of iterations
  * \param tol          Tolerance for stopping
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param pc           Pointer to structure of precondition (precond)
  * \param stop_type    Stopping criteria type
  * \param prtlvl       How much information to print out
  *
@@ -966,7 +964,6 @@ INT fasp_solver_dstr_spminres (dSTRmat      *A,
     REAL         normr0  = BIGREAL, relres  = BIGREAL;
     REAL         normu2, normuu, normp, infnormu, factor;
     REAL         alpha, alpha0, alpha1, temp2;
-    
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
     
@@ -1011,7 +1008,7 @@ INT fasp_solver_dstr_spminres (dSTRmat      *A,
             relres  = absres0/normu2;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1088,7 +1085,7 @@ INT fasp_solver_dstr_spminres (dSTRmat      *A,
         fasp_array_set(m,p2,0.0);
         fasp_blas_array_axpy(m,1/normp,t,p2);
         
-        // prepare for the next iteration
+        // prepare for next iteration
         fasp_array_cp(m,p1,p0);
         fasp_array_cp(m,p2,p1);
         fasp_array_cp(m,t1,t0);
@@ -1133,7 +1130,7 @@ INT fasp_solver_dstr_spminres (dSTRmat      *A,
         
         // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(u) ) {
-            // If the solution is NAN, restrore the best solution
+            // If the solution is NAN, restore the best solution
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
         }
@@ -1283,7 +1280,7 @@ INT fasp_solver_dstr_spminres (dSTRmat      *A,
                 break;
             }
             
-            // prepare for restarting the method
+            // prepare for restarting method
             fasp_array_set(m,p0,0.0);
             ++more_step;
             ++restart_step;
@@ -1358,7 +1355,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
         }
     }
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory

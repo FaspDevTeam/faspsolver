@@ -33,10 +33,10 @@
  *
  * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b
  *
- * \param A            Pointer to dCSRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param u            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to dCSRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param u            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -62,7 +62,6 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
     REAL   absres0 = BIGREAL, absres = BIGREAL;
     REAL   relres  = BIGREAL, normb  = BIGREAL;
     REAL   alpha, factor;
-    
     
     // allocate temp memory
     REAL *work = (REAL *)fasp_mem_calloc(2*m+MaxIt+MaxIt*m,sizeof(REAL));
@@ -159,7 +158,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
         
     } // end of main GCG loop.
     
-    // finish the iterative method
+    // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -182,10 +181,10 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
  *
  * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b
  *
- * \param mf           Pointer to mxv_matfree: the spmv operation
- * \param b            Pointer to dvector: the right hand side
- * \param u            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param mf           Pointer to mxv_matfree: spmv operation
+ * \param b            Pointer to dvector: right hand side
+ * \param u            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type -- Not implemented
@@ -317,7 +316,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
         
     } // end of main GCG loop.
     
-    // finish the iterative method
+    // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory

@@ -36,10 +36,10 @@
  *
  * \brief Right preconditioned GMRES method for solving Au=b
  *
- * \param A            Pointer to dCSRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to dCSRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -150,7 +150,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -178,7 +178,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
             
             i++; iter++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
             else
@@ -224,7 +224,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
             print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // exit the restart cycle if reaches tolerance
+            // exit restart cycle if reaches tolerance
             if ( relres < tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -244,7 +244,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
-        /* apply the preconditioner */
+        /* apply preconditioner */
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -342,10 +342,10 @@ FINISHED:
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
- * \param A            Pointer to dBLCmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to dBLCmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -453,7 +453,7 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -481,7 +481,7 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
             
             i++; iter++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
             else
@@ -527,7 +527,7 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
             print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // exit the restart cycle if reaches tolerance
+            // exit restart cycle if reaches tolerance
             if ( relres < tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -547,7 +547,7 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
-        /* apply the preconditioner */
+        /* apply preconditioner */
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -645,10 +645,10 @@ FINISHED:
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
- * \param A            Pointer to dBSRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to dBSRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -756,7 +756,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -784,7 +784,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
             
             i++; iter++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
             else
@@ -830,7 +830,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
             print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // exit the restart cycle if reaches tolerance
+            // exit restart cycle if reaches tolerance
             if ( relres < tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -850,7 +850,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
-        /* apply the preconditioner */
+        /* apply preconditioner */
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -949,10 +949,10 @@ FINISHED:
  *
  * \brief Preconditioned GMRES method for solving Au=b
  *
- * \param A            Pointer to dSTRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to dSTRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -1060,7 +1060,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1088,7 +1088,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
             
             i++; iter++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
             else
@@ -1134,7 +1134,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
             print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // exit the restart cycle if reaches tolerance
+            // exit restart cycle if reaches tolerance
             if ( relres < tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -1154,7 +1154,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
-        /* apply the preconditioner */
+        /* apply preconditioner */
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -1252,10 +1252,10 @@ FINISHED:
  *
  * \brief Solve "Ax=b" using PGMRES (right preconditioned) iterative method
  *
- * \param mf           Pointer to mxv_matfree: the spmv operation
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param mf           Pointer to mxv_matfree: spmv operation
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -1393,7 +1393,7 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
             
             i ++;  iter ++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if (pc == NULL)
                 fasp_array_cp(n, p[i-1], r);
             else
@@ -1441,7 +1441,7 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
                              norms[iter]/norms[iter-1]);
             }
             
-            /* should we exit the restart cycle? */
+            /* should we exit restart cycle? */
             if (r_norm <= epsilon && iter >= min_iter) {
                 break;
             }
@@ -1461,7 +1461,7 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
         fasp_blas_array_ax(n, rs[i-1], w);
         for (j = i-2; j >= 0; j --) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
-        /* apply the preconditioner */
+        /* apply preconditioner */
         if (pc == NULL)
             fasp_array_cp(n, w, r);
         else

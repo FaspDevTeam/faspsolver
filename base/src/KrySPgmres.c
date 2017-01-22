@@ -36,10 +36,10 @@
  *
  * \brief Preconditioned GMRES method for solving Au=b with safe-guard
  *
- * \param A            Pointer to dCSRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to dCSRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to structure of precondition (precond)
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -145,7 +145,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat      *A,
             relres  = normr0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -173,7 +173,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat      *A,
             
             i++; iter++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
             else
@@ -219,7 +219,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat      *A,
             print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // should we exit the restart cycle
+            // should we exit restart cycle
             if ( relres <= tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -240,7 +240,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat      *A,
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
-        /* apply the preconditioner */
+        /* apply preconditioner */
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -250,7 +250,7 @@ INT fasp_solver_dcsr_spgmres (dCSRmat      *A,
         
         // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
-            // If the solution is NAN, restrore the best solution
+            // If the solution is NAN, restore the best solution
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
         }
@@ -377,10 +377,10 @@ FINISHED:
  *
  * \brief Preconditioned GMRES method for solving Au=b with safe-guard
  *
- * \param A            Pointer to dBLCmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to dBLCmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to structure of precondition (precond)
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -485,7 +485,7 @@ INT fasp_solver_dblc_spgmres (dBLCmat     *A,
             relres  = normr0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -513,7 +513,7 @@ INT fasp_solver_dblc_spgmres (dBLCmat     *A,
             
             i++; iter++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
             else
@@ -559,7 +559,7 @@ INT fasp_solver_dblc_spgmres (dBLCmat     *A,
             print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // should we exit the restart cycle
+            // should we exit restart cycle
             if ( relres <= tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -580,7 +580,7 @@ INT fasp_solver_dblc_spgmres (dBLCmat     *A,
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
-        /* apply the preconditioner */
+        /* apply preconditioner */
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -590,7 +590,7 @@ INT fasp_solver_dblc_spgmres (dBLCmat     *A,
         
         // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
-            // If the solution is NAN, restrore the best solution
+            // If the solution is NAN, restore the best solution
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
         }
@@ -717,10 +717,10 @@ FINISHED:
  *
  * \brief Preconditioned GMRES method for solving Au=b with safe-guard
  *
- * \param A            Pointer to dBSRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to dBSRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to structure of precondition (precond)
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -825,7 +825,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat      *A,
             relres  = normr0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -853,7 +853,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat      *A,
             
             i++; iter++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
             else
@@ -899,7 +899,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat      *A,
             print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // should we exit the restart cycle
+            // should we exit restart cycle
             if ( relres <= tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -920,7 +920,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat      *A,
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
-        /* apply the preconditioner */
+        /* apply preconditioner */
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -930,7 +930,7 @@ INT fasp_solver_dbsr_spgmres (dBSRmat      *A,
         
         // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
-            // If the solution is NAN, restrore the best solution
+            // If the solution is NAN, restore the best solution
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
         }
@@ -1057,10 +1057,10 @@ FINISHED:
  *
  * \brief Preconditioned GMRES method for solving Au=b with safe-guard
  *
- * \param A            Pointer to dSTRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param x            Pointer to dvector: the unknowns
- * \param pc           Pointer to the structure of precondition (precond)
+ * \param A            Pointer to dSTRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param x            Pointer to dvector: unknowns
+ * \param pc           Pointer to structure of precondition (precond)
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
@@ -1165,7 +1165,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat      *A,
             relres  = normr0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1193,7 +1193,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat      *A,
             
             i++; iter++;
             
-            /* apply the preconditioner */
+            /* apply preconditioner */
             if ( pc == NULL )
                 fasp_array_cp(n, p[i-1], r);
             else
@@ -1239,7 +1239,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat      *A,
             print_itinfo(prtlvl, stop_type, iter, relres, absres,
                          norms[iter]/norms[iter-1]);
             
-            // should we exit the restart cycle
+            // should we exit restart cycle
             if ( relres <= tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
@@ -1260,7 +1260,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat      *A,
         
         for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], w);
         
-        /* apply the preconditioner */
+        /* apply preconditioner */
         if ( pc == NULL )
             fasp_array_cp(n, w, r);
         else
@@ -1270,7 +1270,7 @@ INT fasp_solver_dstr_spgmres (dSTRmat      *A,
         
         // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(x) ) {
-            // If the solution is NAN, restrore the best solution
+            // If the solution is NAN, restore the best solution
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
         }

@@ -35,10 +35,10 @@
  *
  * \brief Preconditioned BiCGstab method for solving Au=b, Rewritten from Matlab 2011a
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to coefficient matrix
+ * \param b            Pointer to dvector of right hand side
+ * \param u            Pointer to dvector of DOFs
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -69,7 +69,6 @@ INT fasp_solver_dcsr_pvbcgs (dCSRmat     *A,
     REAL     alpha,beta,omega,rho,rho1,rtv,tt;
     REAL     normr,normr_act,normph,normx,imin;
     REAL     norm_sh,norm_xhalf,normrmin,factor;
-    
     REAL     *x = u->val, *bval=b->val;
     
     // allocate temp memory (need 10*m REAL)
@@ -258,7 +257,7 @@ INT fasp_solver_dcsr_pvbcgs (dCSRmat     *A,
             goto FINISHED;
         }
         
-        //  omega = (t' * s) / tt;
+        // omega = (t' * s) / tt;
         omega = fasp_blas_array_dotprod(m,s,t)/tt;
         if (ABS(omega) > DBL_MAX )
         {
@@ -279,7 +278,7 @@ INT fasp_solver_dcsr_pvbcgs (dCSRmat     *A,
         normr = fasp_blas_array_norm2(m,r);           //normr = norm(r);
         normr_act = normr;
         
-        // % check for convergence
+        // check for convergence
         if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {
             // normr_act = norm(r);
@@ -322,7 +321,7 @@ INT fasp_solver_dcsr_pvbcgs (dCSRmat     *A,
         absres0 = absres;
     }   // for iter = 1 : maxit
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     // returned solution is first with minimal residual
     if (flag == 0)
         relres = normr_act / n2b;
@@ -367,10 +366,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief Preconditioned BiCGstab method for solving Au=b, Rewritten from Matlab 2011a
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to coefficient matrix
+ * \param b            Pointer to dvector of right hand side
+ * \param u            Pointer to dvector of DOFs
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -401,7 +400,6 @@ INT fasp_solver_dbsr_pvbcgs (dBSRmat     *A,
     REAL     alpha,beta,omega,rho,rho1,rtv,tt;
     REAL     normr,normr_act,normph,normx,imin;
     REAL     norm_sh,norm_xhalf,normrmin,factor;
-    
     REAL     *x = u->val, *bval=b->val;
     
     // allocate temp memory (need 10*m REAL)
@@ -526,7 +524,7 @@ INT fasp_solver_dbsr_pvbcgs (dBSRmat     *A,
         factor = absres/absres0;
         print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
         
-        //   check for convergence
+        // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {
             fasp_array_cp(m,bval,s);
@@ -590,7 +588,7 @@ INT fasp_solver_dbsr_pvbcgs (dBSRmat     *A,
             goto FINISHED;
         }
         
-        //  omega = (t' * s) / tt;
+        // omega = (t' * s) / tt;
         omega = fasp_blas_array_dotprod(m,s,t)/tt;
         if (ABS(omega) > DBL_MAX )
         {
@@ -611,7 +609,7 @@ INT fasp_solver_dbsr_pvbcgs (dBSRmat     *A,
         normr = fasp_blas_array_norm2(m,r);           //normr = norm(r);
         normr_act = normr;
         
-        // % check for convergence
+        // check for convergence
         if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {
             // normr_act = norm(r);
@@ -654,7 +652,7 @@ INT fasp_solver_dbsr_pvbcgs (dBSRmat     *A,
         absres0 = absres;
     }   // for iter = 1 : maxit
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     // returned solution is first with minimal residual
     if (flag == 0)
         relres = normr_act / n2b;
@@ -699,10 +697,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief Preconditioned BiCGstab method for solving Au=b, Rewritten from Matlab 2011a
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to coefficient matrix
+ * \param b            Pointer to dvector of right hand side
+ * \param u            Pointer to dvector of DOFs
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -733,7 +731,6 @@ INT fasp_solver_dblc_pvbcgs (dBLCmat     *A,
     REAL     alpha,beta,omega,rho,rho1,rtv,tt;
     REAL     normr,normr_act,normph,normx,imin;
     REAL     norm_sh,norm_xhalf,normrmin,factor;
-    
     REAL     *x = u->val, *bval=b->val;
     
     // allocate temp memory (need 10*m REAL)
@@ -858,7 +855,7 @@ INT fasp_solver_dblc_pvbcgs (dBLCmat     *A,
         factor = absres/absres0;
         print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
         
-        //   check for convergence
+        // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {
             fasp_array_cp(m,bval,s);
@@ -915,14 +912,14 @@ INT fasp_solver_dblc_pvbcgs (dBLCmat     *A,
         
         // t = A*sh;
         fasp_blas_dblc_mxv(A,sh,t);
-        //tt = t' * t;
+        // tt = t' * t;
         tt = fasp_blas_array_dotprod(m,t,t);
         if ((tt == 0) ||( tt >= DBL_MAX )){
             flag = 4;
             goto FINISHED;
         }
         
-        //  omega = (t' * s) / tt;
+        // omega = (t' * s) / tt;
         omega = fasp_blas_array_dotprod(m,s,t)/tt;
         if (ABS(omega) > DBL_MAX )
         {
@@ -943,7 +940,7 @@ INT fasp_solver_dblc_pvbcgs (dBLCmat     *A,
         normr = fasp_blas_array_norm2(m,r);           //normr = norm(r);
         normr_act = normr;
         
-        //  check for convergence
+        // check for convergence
         if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {
             // normr_act = norm(r);
@@ -986,7 +983,7 @@ INT fasp_solver_dblc_pvbcgs (dBLCmat     *A,
         absres0 = absres;
     }   // for iter = 1 : maxit
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     // returned solution is first with minimal residual
     if (flag == 0)
         relres = normr_act / n2b;
@@ -1031,10 +1028,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief Preconditioned BiCGstab method for solving Au=b, Rewritten from Matlab 2011a
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to coefficient matrix
+ * \param b            Pointer to dvector of right hand side
+ * \param u            Pointer to dvector of DOFs
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -1065,7 +1062,6 @@ INT fasp_solver_dstr_pvbcgs (dSTRmat     *A,
     REAL     alpha,beta,omega,rho,rho1,rtv,tt;
     REAL     normr,normr_act,normph,normx,imin;
     REAL     norm_sh,norm_xhalf,normrmin,factor;
-    
     REAL     *x = u->val, *bval=b->val;
     
     // allocate temp memory (need 10*m REAL)
@@ -1190,7 +1186,7 @@ INT fasp_solver_dstr_pvbcgs (dSTRmat     *A,
         factor = absres/absres0;
         print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
         
-        //   check for convergence
+        // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {
             fasp_array_cp(m,bval,s);
@@ -1247,14 +1243,14 @@ INT fasp_solver_dstr_pvbcgs (dSTRmat     *A,
         
         // t = A*sh; 
         fasp_blas_dstr_mxv(A,sh,t);
-        //tt = t' * t;
+        // tt = t' * t;
         tt = fasp_blas_array_dotprod(m,t,t);  
         if ((tt == 0) ||( tt >= DBL_MAX )){
             flag = 4;
             goto FINISHED;
         }
         
-        //  omega = (t' * s) / tt;
+        // omega = (t' * s) / tt;
         omega = fasp_blas_array_dotprod(m,s,t)/tt;
         if (ABS(omega) > DBL_MAX ) 
         {
@@ -1275,7 +1271,7 @@ INT fasp_solver_dstr_pvbcgs (dSTRmat     *A,
         normr = fasp_blas_array_norm2(m,r);           //normr = norm(r);
         normr_act = normr;
         
-        // % check for convergence        
+        // check for convergence
         if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {
             // normr_act = norm(r);
@@ -1319,7 +1315,7 @@ INT fasp_solver_dstr_pvbcgs (dSTRmat     *A,
     }   // for iter = 1 : maxit
     
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     // returned solution is first with minimal residual
     if (flag == 0)
         relres = normr_act / n2b;
@@ -1364,10 +1360,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief Preconditioned BiCGstab method for solving Au=b, Rewritten from Matlab 2011a
  *
- * \param mf           Pointer to mxv_matfree: the spmv operation
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to precond: the structure of precondition
+ * \param mf           Pointer to mxv_matfree: spmv operation
+ * \param b            Pointer to dvector of right hand side
+ * \param u            Pointer to dvector of DOFs
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -1397,7 +1393,6 @@ INT fasp_solver_pvbcgs (mxv_matfree *mf,
     REAL     alpha,beta,omega,rho,rho1,rtv,tt;
     REAL     normr,normr_act,normph,normx,imin;
     REAL     norm_sh,norm_xhalf,normrmin,factor;
-    
     REAL     *x = u->val, *bval=b->val;
     
     // allocate temp memory (need 10*m REAL)
@@ -1524,7 +1519,7 @@ INT fasp_solver_pvbcgs (mxv_matfree *mf,
         factor = absres/absres0;
         print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
         
-        //   check for convergence
+        // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {
             // s = b-A*xhalf
@@ -1582,14 +1577,14 @@ INT fasp_solver_pvbcgs (mxv_matfree *mf,
         
         // t = A*sh;
         mf->fct(mf->data, sh, t);
-        //tt = t' * t;
+        // tt = t' * t;
         tt = fasp_blas_array_dotprod(m,t,t);
         if ((tt == 0) ||( tt >= DBL_MAX )){
             flag = 4;
             goto FINISHED;
         }
         
-        //  omega = (t' * s) / tt;
+        // omega = (t' * s) / tt;
         omega = fasp_blas_array_dotprod(m,s,t)/tt;
         if (ABS(omega) > DBL_MAX )
         {
@@ -1610,7 +1605,7 @@ INT fasp_solver_pvbcgs (mxv_matfree *mf,
         normr = fasp_blas_array_norm2(m,r);           //normr = norm(r);
         normr_act = normr;
         
-        // % check for convergence
+        // check for convergence
         if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {
             // normr_act = norm(r);
@@ -1654,7 +1649,7 @@ INT fasp_solver_pvbcgs (mxv_matfree *mf,
         absres0 = absres;
     }   // for iter = 1 : maxit
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     // returned solution is first with minimal residual
     if (flag == 0)
         relres = normr_act / n2b;
