@@ -11,6 +11,7 @@ File Name: CHANGES
 - Separate aggregation for CSR and BSR.
 - Function name change: Upper case ==> Lower case in AuxThreads.c.
 - Update reference manual and Doxygen.
+- Update regression tests and results again.
 
 01/21/2017 FASP 1.9.2:
 - Change filenames according to package structure.

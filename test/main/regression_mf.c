@@ -154,7 +154,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_CSR, &mf, &A);
+            fasp_solver_matfree_init(MAT_CSR, &mf, &A);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -172,7 +172,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_BSR, &mf, &A_bsr);
+            fasp_solver_matfree_init(MAT_BSR, &mf, &A_bsr);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -208,7 +208,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_CSR, &mf, &A);
+            fasp_solver_matfree_init(MAT_CSR, &mf, &A);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -227,12 +227,11 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_BSR, &mf, &A_bsr);
+            fasp_solver_matfree_init(MAT_BSR, &mf, &A_bsr);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
         }
-        
         
         if ( indp==1 || indp==2 || indp==3 ) {
             /* VBiCGstab */
@@ -264,7 +263,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_CSR, &mf, &A);
+            fasp_solver_matfree_init(MAT_CSR, &mf, &A);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -283,7 +282,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_BSR, &mf, &A_bsr);
+            fasp_solver_matfree_init(MAT_BSR, &mf, &A_bsr);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -319,7 +318,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_CSR, &mf, &A);
+            fasp_solver_matfree_init(MAT_CSR, &mf, &A);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -338,7 +337,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_BSR, &mf, &A_bsr);
+            fasp_solver_matfree_init(MAT_BSR, &mf, &A_bsr);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -374,7 +373,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_CSR, &mf, &A);
+            fasp_solver_matfree_init(MAT_CSR, &mf, &A);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -393,7 +392,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_BSR, &mf, &A_bsr);
+            fasp_solver_matfree_init(MAT_BSR, &mf, &A_bsr);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -429,7 +428,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_CSR, &mf, &A);
+            fasp_solver_matfree_init(MAT_CSR, &mf, &A);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -448,7 +447,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_BSR, &mf, &A_bsr);
+            fasp_solver_matfree_init(MAT_BSR, &mf, &A_bsr);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -484,7 +483,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_CSR, &mf, &A);
+            fasp_solver_matfree_init(MAT_CSR, &mf, &A);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -503,7 +502,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_BSR, &mf, &A_bsr);
+            fasp_solver_matfree_init(MAT_BSR, &mf, &A_bsr);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -539,7 +538,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_CSR, &mf, &A);
+            fasp_solver_matfree_init(MAT_CSR, &mf, &A);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);
@@ -558,7 +557,7 @@ int main (int argc, const char * argv[])
             itparam.tol           = 1e-12;
             itparam.print_level   = print_level;
             mxv_matfree mf;
-            fasp_solver_itsolver_init(MAT_BSR, &mf, &A_bsr);
+            fasp_solver_matfree_init(MAT_BSR, &mf, &A_bsr);
             fasp_solver_krylov(&mf, &b, &x, &itparam);
             
             check_solu(&x, &sol, tolerance);

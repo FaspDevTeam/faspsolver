@@ -89,6 +89,11 @@ INT fasp_solver_itsolver (mxv_matfree    *mf,
             iter = fasp_solver_pbcgs(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
+        case SOLVER_VBiCGstab:
+            if ( prtlvl > PRINT_NONE ) printf("\nCalling VBiCGstab solver (MatFree) ...\n");
+            iter = fasp_solver_pvbcgs(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            break;
+
         case SOLVER_MinRes:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (MatFree) ...\n");
             iter = fasp_solver_pminres(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
@@ -184,7 +189,7 @@ INT fasp_solver_krylov (mxv_matfree    *mf,
 }
 
 /**
- * \fn void fasp_solver_itsolver_init (INT matrix_format, mxv_matfree *mf, void *A)
+ * \fn void fasp_solver_matfree_init (INT matrix_format, mxv_matfree *mf, void *A)
  *
  * \brief Initialize MatFree (or non-specified format) itsovlers
  *
@@ -198,9 +203,9 @@ INT fasp_solver_krylov (mxv_matfree    *mf,
  * Modified by Chensong Zhang on 05/10/2013: Change interface of mat-free mv
  * Modified by Chensong Zhang on 01/20/2017
  */
-void fasp_solver_itsolver_init (INT            matrix_format,
-                                mxv_matfree   *mf,
-                                void          *A)
+void fasp_solver_matfree_init (INT            matrix_format,
+                               mxv_matfree   *mf,
+                               void          *A)
 {
     switch ( matrix_format ) {
             

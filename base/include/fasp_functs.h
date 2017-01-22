@@ -1818,16 +1818,6 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
                            const SHORT  stop_type,
                            const SHORT  prtlvl);
 
-INT fasp_solver_dcsr_pgcr1 (dCSRmat     *A,
-                            dvector     *b,
-                            dvector     *x,
-                            precond     *pc,
-                            const REAL   tol,
-                            const INT    MaxIt,
-                            const SHORT  restart,
-                            const SHORT  stop_type,
-                            const SHORT  prtlvl);
-
 
 /*-------- In file: KryPgmres.c --------*/
 
@@ -2831,9 +2821,9 @@ INT fasp_solver_krylov (mxv_matfree    *mf,
                         dvector        *x,
                         itsolver_param *itparam);
 
-void fasp_solver_itsolver_init (INT            matrix_format,
-                                mxv_matfree   *mf,
-                                void          *A);
+void fasp_solver_matfree_init (INT            matrix_format,
+                               mxv_matfree   *mf,
+                               void          *A);
 
 
 /*-------- In file: SolSTR.c --------*/
