@@ -56,7 +56,7 @@ void fasp_array_set (const INT    n,
 #ifdef _OPENMP 
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -67,7 +67,7 @@ void fasp_array_set (const INT    n,
 #pragma omp parallel for private(myid,mybegin,myend)
 #endif
             for (myid = 0; myid < nthreads; myid ++) {
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 memset(&x[mybegin], 0x0, sizeof(REAL)*(myend-mybegin));
             }
         }
@@ -81,7 +81,7 @@ void fasp_array_set (const INT    n,
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for (myid = 0; myid < nthreads; myid ++) {
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) x[i]=val;
             }
         }
@@ -115,7 +115,7 @@ void fasp_iarray_set (const INT   n,
 #ifdef _OPENMP 
 	if ( n > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
 	}
 #endif
     
@@ -126,7 +126,7 @@ void fasp_iarray_set (const INT   n,
 #pragma omp parallel for private(myid, mybegin, myend)
 #endif
             for (myid = 0; myid < nthreads; myid ++) {
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 memset(&x[mybegin], 0, sizeof(INT)*(myend-mybegin));
             }
         }
@@ -141,7 +141,7 @@ void fasp_iarray_set (const INT   n,
 #pragma omp parallel for private(myid, mybegin, myend,i)
 #endif
             for (myid = 0; myid < nthreads; myid ++) {
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) x[i]=val;
             }
         }

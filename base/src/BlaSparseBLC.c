@@ -84,7 +84,7 @@ SHORT fasp_dcsr_getblk (dCSRmat    *A,
     INT stride_i, mybegin, myend, myid, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -179,7 +179,7 @@ SHORT fasp_dbsr_getblk (dBSRmat    *A,
     INT myid, mybegin, stride_i, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     

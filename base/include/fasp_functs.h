@@ -302,11 +302,11 @@ void fasp_multicolors_independent_set (AMG_data *mgl,
 
 /*-------- In file: AuxThreads.c --------*/
 
-INT FASP_GET_NUM_THREADS ();
+INT fasp_get_num_threads ();
 
-INT Fasp_Set_Num_Threads (INT nthreads);
+INT fasp_set_num_threads (INT nthreads);
 
-void FASP_GET_START_END (INT  procid,
+void fasp_get_start_end (INT  procid,
                          INT  nprocs,
                          INT  n,
                          INT *start,

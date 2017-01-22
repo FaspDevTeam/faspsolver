@@ -261,7 +261,7 @@ static void interp_DIR (dCSRmat    *A,
     row = MIN(P->IA[P->row], row);
     if ( row > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     

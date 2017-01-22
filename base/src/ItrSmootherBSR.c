@@ -58,7 +58,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -72,7 +72,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
             for(i=mybegin; i<myend; i++) {
                 for(k=IA[i]; k<IA[i+1]; ++k)
                     if(JA[k] == i)
@@ -97,7 +97,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     fasp_blas_smat_inv(diaginv+i*nb2, nb);
                 }
@@ -116,7 +116,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     diaginv[i] = 1.0 / diaginv[i];
                 }
@@ -173,7 +173,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -184,7 +184,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
             for(i=mybegin; i<myend; i++) {
                 for(k=IA[i]; k<IA[i+1]; ++k)
                     if(JA[k] == i)
@@ -209,7 +209,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     fasp_blas_smat_inv(diaginv+i*nb2, nb);
                 }
@@ -228,7 +228,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     diaginv[i] = 1.0 / diaginv[i];
                 }
@@ -279,7 +279,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -306,7 +306,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i,j,k)
 #endif
             for (myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) {
                     for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
@@ -319,7 +319,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     u_val[i] = b_tmp[i]*diaginv[i];
                 }
@@ -347,7 +347,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i,pb,k,j)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) {
                     pb = i*nb;
                     for (k = IA[i]; k < IA[i+1]; ++k) {
@@ -361,7 +361,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i,pb)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) {
                     pb = i*nb;
                     fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp+pb, u_val+pb, nb);
@@ -438,7 +438,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -452,7 +452,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
             for(i=mybegin; i<myend; i++) {
                 for(k=IA[i]; k<IA[i+1]; ++k)
                     if(JA[k] == i)
@@ -477,7 +477,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     fasp_blas_smat_inv(diaginv+i*nb2, nb);
                 }
@@ -496,7 +496,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     diaginv[i] = 1.0 / diaginv[i];
                 }
@@ -1041,7 +1041,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -1055,7 +1055,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
         for(myid=0; myid<nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
             for(i=mybegin; i<myend; i++) {
                 for(k=IA[i]; k<IA[i+1]; ++k)
                     if(JA[k] == i)
@@ -1080,7 +1080,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     fasp_blas_smat_inv(diaginv+i*nb2, nb);
                 }
@@ -1099,7 +1099,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
             for(myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
                     diaginv[i] = 1.0 / diaginv[i];
                 }
@@ -1207,7 +1207,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     if (nb == 1) {
@@ -1215,7 +1215,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
         if (ROW > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, rhs, k, j)
             for (myid = 0; myid < nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (i = mybegin; i < myend; i++) {
                     rhs = b_val[i];
                     for (k = IA[i]; k < IA[i+1]; ++k) {
@@ -1250,7 +1250,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
             //#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
 #pragma omp parallel for private(myid, mybegin, myend, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (i = mybegin; i < myend; i++) {
                     pb = i*nb;
                     //memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
@@ -1335,7 +1335,7 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     if (nb == 1) {
@@ -1343,7 +1343,7 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
         if (ROW > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, rhs, k, j)
             for (myid = 0; myid < nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 mybegin = ROW-1-mybegin; myend = ROW-1-myend;
                 for (i = mybegin; i > myend; i--) {
                     rhs = b_val[i];
@@ -1379,7 +1379,7 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
             //#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
 #pragma omp parallel for private(myid, mybegin, myend, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 mybegin = ROW-1-mybegin; myend = ROW-1-myend;
                 for (i = mybegin; i > myend; i--) {
                     pb = i*nb;
@@ -1467,7 +1467,7 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     if (nb == 1) {
@@ -1475,7 +1475,7 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
         if (ROW > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, I, i, rhs, k, j)
             for (myid = 0; myid < nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (I = mybegin; I < myend; ++I) {
                     i = mark[I];
                     rhs = b_val[i];
@@ -1512,7 +1512,7 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
             //#pragma omp parallel for private(myid, mybegin, myend, I, i, pb, b_tmp, k, j)
 #pragma omp parallel for private(myid, mybegin, myend, I, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, ROW, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (I = mybegin; I < myend; ++I) {
                     i = mark[I];
                     pb = i*nb;

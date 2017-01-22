@@ -172,7 +172,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
 
 #if DEBUG_MODE > 0
@@ -226,7 +226,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,iaa,iab,ari,jk,j,ri) if(n>OPENMP_HOLDS) 
         for (myid=0; myid<nthreads; ++myid) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
 #else
             for (i=0; i < n ; ++i) {
@@ -254,7 +254,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,j,ravj,iaa,iab,jk,k,vj,snj) if(n>OPENMP_HOLDS) 
             for (myid=0; myid<nthreads; ++myid) {
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 for (j=mybegin; j<myend; ++j) {
 #else
                 for (j=0; j < n ; ++j) {
@@ -341,13 +341,13 @@ static void bminax (REAL *b,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
 
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,iaa,iab,u,jk,j) if(n>OPENMP_HOLDS)
     for (myid=0; myid<nthreads; ++myid) {
-        FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+        fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
         for (i=mybegin; i<myend; ++i) {
 #else
         for (i=0; i < n ; ++i) {
@@ -433,7 +433,7 @@ static REAL DinvAnorminf (dCSRmat *Amat,
     // variables for OpenMP
     INT myid, mybegin, myend;
     REAL sub_norm = 0.;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     // get the infinity norm of Dinv*A
@@ -441,7 +441,7 @@ static REAL DinvAnorminf (dCSRmat *Amat,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,temp,sub_norm) if(n>OPENMP_HOLDS)
     for (myid=0; myid<nthreads; ++myid) {
-        FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+        fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
         for (i=mybegin; i<myend; ++i) {
 #else
         for (i=0; i<n; i++) {
@@ -496,7 +496,7 @@ static void Diagx (REAL *Dinv,
 #ifdef _OPENMP
     if (n > OPENMP_HOLDS) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
 
@@ -505,7 +505,7 @@ static void Diagx (REAL *Dinv,
 #pragma omp parallel for private(myid, mybegin, myend, i)
 #endif
         for (myid = 0; myid < nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i = mybegin; i < myend; i++) {
                 b[i] = Dinv[i] * x[i];
 	    }
@@ -558,7 +558,7 @@ static void Rr (dCSRmat *Amat,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif    
 
     //1 set up rbar
@@ -584,7 +584,7 @@ static void Rr (dCSRmat *Amat,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i) if(n>OPENMP_HOLDS) 
         for (myid=0; myid<nthreads; ++myid) {
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) {
 #else
             for(i=0;i<n;i++) {

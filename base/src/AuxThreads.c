@@ -23,7 +23,7 @@
 INT thread_ini_flag = 0;
 
 /**
- * \fn     INT FASP_GET_NUM_THREADS ()
+ * \fn     INT fasp_get_num_threads ()
  *
  * \brief  Get the number of threads for thread related functions.
  *
@@ -32,7 +32,7 @@ INT thread_ini_flag = 0;
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \date   June/15/2012
  */
-INT FASP_GET_NUM_THREADS ()
+INT fasp_get_num_threads ()
 {
     static INT nthreads;
     
@@ -48,7 +48,7 @@ INT FASP_GET_NUM_THREADS ()
 }
 
 /**
- * \fn     INT Fasp_Set_Num_Threads (INT nthreads)
+ * \fn     INT fasp_set_num_threads (INT nthreads)
  *
  * \brief  Set the number of threads for thread related functions.
  *
@@ -59,7 +59,7 @@ INT FASP_GET_NUM_THREADS ()
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \date   June/15/2012
  */
-INT Fasp_Set_Num_Threads (INT nthreads)
+INT fasp_set_num_threads (INT nthreads)
 {
     omp_set_num_threads( nthreads );
     
@@ -69,7 +69,7 @@ INT Fasp_Set_Num_Threads (INT nthreads)
 #endif
 
 /**
- * \fn    void FASP_GET_START_END (INT procid, INT nprocs, INT n, INT *start, INT *end)
+ * \fn    void fasp_get_start_end (INT procid, INT nprocs, INT n, INT *start, INT *end)
  *
  * \brief Assign Load to each thread.
  *
@@ -82,7 +82,7 @@ INT Fasp_Set_Num_Threads (INT nthreads)
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \date   June/25/2012
  */
-void FASP_GET_START_END (INT  procid,
+void fasp_get_start_end (INT  procid,
                          INT  nprocs,
                          INT  n,
                          INT *start,
@@ -121,8 +121,6 @@ INT THDs_CPR_gGS=0; /**< global matrix GS smoothing threads */
  *
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date   03/20/2011
- *
- * TODO: Why put it here??? --Chensong
  */
 void fasp_set_GS_threads (INT mythreads,
                           INT its)

@@ -44,7 +44,7 @@ void fasp_blas_array_ax (const INT    n,
     INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -57,7 +57,7 @@ void fasp_blas_array_ax (const INT    n,
 #pragma omp parallel private(myid, mybegin, myend, i)
             {
                 myid = omp_get_thread_num();
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) x[i] *= a;
             }
 #endif
@@ -97,7 +97,7 @@ void fasp_blas_array_axpy (const INT   n,
     INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -107,7 +107,7 @@ void fasp_blas_array_axpy (const INT   n,
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) y[i] += x[i];
             }
 #endif
@@ -122,7 +122,7 @@ void fasp_blas_array_axpy (const INT   n,
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) y[i] -= x[i];
             }
 #endif
@@ -137,7 +137,7 @@ void fasp_blas_array_axpy (const INT   n,
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
-                FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) y[i] += a*x[i];
             }
 #endif
@@ -178,7 +178,7 @@ void fasp_blas_array_axpyz (const INT   n,
     INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -187,7 +187,7 @@ void fasp_blas_array_axpyz (const INT   n,
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) z[i] = a*x[i]+y[i];
         }
 #endif
@@ -229,7 +229,7 @@ void fasp_blas_array_axpby (const INT   n,
     INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     
@@ -238,7 +238,7 @@ void fasp_blas_array_axpby (const INT   n,
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) y[i] = a*x[i]+b*y[i];
         }
 #endif
@@ -397,7 +397,7 @@ REAL fasp_blas_array_norminf (const INT    n,
     INT myid, mybegin, myend, nthreads;
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
 	
@@ -407,7 +407,7 @@ REAL fasp_blas_array_norminf (const INT    n,
 #pragma omp parallel firstprivate(infnorm_loc) private(myid, mybegin, myend, i)
         {
             myid = omp_get_thread_num();
-            FASP_GET_START_END(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i=mybegin; i<myend; ++i) infnorm_loc = MAX(infnorm_loc, ABS(x[i]));
             if (infnorm_loc > infnorm) {
 #pragma omp critical

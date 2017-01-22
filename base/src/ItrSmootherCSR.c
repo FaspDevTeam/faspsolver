@@ -80,7 +80,7 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
     // OpenMP variables
 #ifdef _OPENMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     REAL *t = (REAL *)fasp_mem_calloc(N,sizeof(REAL));
@@ -92,7 +92,7 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, begin_row, end_row, i, k, j)
                 for (myid=0; myid<nthreads; ++myid) {
-                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, N, &mybegin, &myend);
                     mybegin += i_1; myend += i_1;
                     for (i=mybegin; i<myend; i+=s) {
                         t[i]=bval[i];
@@ -133,7 +133,7 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, begin_row, end_row, k, j)
                 for (myid=0; myid<nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, N, &mybegin, &myend);
                     mybegin = i_1-mybegin; myend = i_1-myend;
                     for (i=mybegin; i>myend; i+=s) {
                         t[i]=bval[i];
@@ -217,7 +217,7 @@ void fasp_smoother_dcsr_gs (dvector    *u,
     // variables for OpenMP
     const INT    N = ABS(i_n - i_1)+1;
     INT   myid, mybegin, myend;
-    INT   nthreads = FASP_GET_NUM_THREADS();
+    INT   nthreads = fasp_get_num_threads();
 #endif
     
     if (s > 0) {
@@ -226,7 +226,7 @@ void fasp_smoother_dcsr_gs (dvector    *u,
             if (N >OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, t, begin_row, end_row, d, k, j)
                 for (myid=0; myid<nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, N, &mybegin, &myend);
                     mybegin += i_1, myend += i_1;
                     for (i=mybegin; i<myend; i+=s) {
                         t = bval[i];
@@ -290,7 +290,7 @@ void fasp_smoother_dcsr_gs (dvector    *u,
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, begin_row, end_row, d, k, j, t)
                 for (myid=0; myid<nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, N, &mybegin, &myend);
                     mybegin = i_1 - mybegin; myend = i_1 - myend;
                     for (i=mybegin; i>myend; i+=s) {
                         t=bval[i];
@@ -383,7 +383,7 @@ void fasp_smoother_dcsr_gs_cf (dvector   *u,
     
 #ifdef _OPENMP
     INT myid,mybegin,myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     // F-point first, C-point second
@@ -395,7 +395,7 @@ void fasp_smoother_dcsr_gs_cf (dvector   *u,
             if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
-                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
                         if (mark[i] != 1) {
                             t = bval[i];
@@ -448,7 +448,7 @@ void fasp_smoother_dcsr_gs_cf (dvector   *u,
             if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid,mybegin,myend,i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
-                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
                         if (mark[i] == 1) {
                             t = bval[i];
@@ -508,7 +508,7 @@ void fasp_smoother_dcsr_gs_cf (dvector   *u,
             if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid,mybegin,myend,t,i,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
-                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
                         if (mark[i] == 1) {
                             t = bval[i];
@@ -561,7 +561,7 @@ void fasp_smoother_dcsr_gs_cf (dvector   *u,
             if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i,t,begin_row,end_row,k,j,d)
                 for (myid = 0; myid < nthreads; myid ++) {
-                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, nrow, &mybegin, &myend);
                     for (i=mybegin; i<myend; i++) {
                         if (mark[i] != 1) {
                             t = bval[i];
@@ -648,7 +648,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
 #ifdef _OPENMP
     // variables for OpenMP
     INT  myid, mybegin, myend, up;
-    INT  nthreads = FASP_GET_NUM_THREADS();
+    INT  nthreads = fasp_get_num_threads();
 #endif
     
     while (L--) {
@@ -658,7 +658,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
         if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, t, begin_row, end_row, j, k, d)
             for (myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, up, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) {
                     t=bval[i];
                     begin_row=ia[i], end_row=ia[i+1];
@@ -693,7 +693,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
         if (up > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
             for (myid=0; myid<nthreads; myid++) {
-                FASP_GET_START_END(myid, nthreads, up, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, up, &mybegin, &myend);
                 mybegin = nm1-1-mybegin; myend = nm1-1-myend;
                 for (i=mybegin; i>myend; i--) {
                     t=bval[i];
@@ -768,7 +768,7 @@ void fasp_smoother_dcsr_sor (dvector    *u,
     // variables for OpenMP
     const INT    N = ABS(i_n - i_1)+1;
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     while (L--) {
@@ -777,7 +777,7 @@ void fasp_smoother_dcsr_sor (dvector    *u,
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
                 for (myid=0; myid<nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, N, &mybegin, &myend);
                     mybegin += i_1, myend += i_1;
                     for (i=mybegin; i<myend; i+=s) {
                         t=bval[i];
@@ -817,7 +817,7 @@ void fasp_smoother_dcsr_sor (dvector    *u,
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
                 for (myid=0; myid<nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, N, &mybegin, &myend);
                     mybegin = i_1 - mybegin, myend = i_1 - myend;
                     for (i=mybegin; i>myend; i+=s) {
                         t=bval[i];
@@ -894,7 +894,7 @@ void fasp_smoother_dcsr_sor_cf (dvector    *u,
     
 #ifdef _OPENMP
     INT    myid, mybegin, myend;
-    INT    nthreads = FASP_GET_NUM_THREADS();
+    INT    nthreads = fasp_get_num_threads();
 #endif
     
     // F-point first
@@ -904,7 +904,7 @@ void fasp_smoother_dcsr_sor_cf (dvector    *u,
             if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private (myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
                 for (myid = 0; myid < nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, nrow, &mybegin, &myend);
                     for (i = mybegin; i < myend; i ++) {
                         if (mark[i] == 0 || mark[i] == 2) {
                             t = bval[i];
@@ -941,7 +941,7 @@ void fasp_smoother_dcsr_sor_cf (dvector    *u,
             if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, i, mybegin, myend, t, begin_row, end_row, k, j, d)
                 for (myid = 0; myid < nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, nrow, &mybegin, &myend);
                     for (i = mybegin; i < myend; i++) {
                         if (mark[i] == 1) {
                             t = bval[i];
@@ -981,7 +981,7 @@ void fasp_smoother_dcsr_sor_cf (dvector    *u,
             if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, t, k, j, d, begin_row, end_row)
                 for (myid = 0; myid < nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, nrow, &mybegin, &myend);
                     for (i = mybegin; i < myend; i++) {
                         if (mark[i] == 1) {
                             t = bval[i];
@@ -1018,7 +1018,7 @@ void fasp_smoother_dcsr_sor_cf (dvector    *u,
             if (nrow > OPENMP_HOLDS) {
 #pragma omp parallel for private (myid, mybegin, myend, i, t, begin_row, end_row, k, j, d)
                 for (myid = 0; myid < nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, nrow, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, nrow, &mybegin, &myend);
                     for (i = mybegin; i < myend; i++) {
                         if (mark[i] != 1) {
                             t = bval[i];
@@ -1169,7 +1169,7 @@ void fasp_smoother_dcsr_kaczmarz (dvector    *u,
     // variables for OpenMP
     const INT    N = ABS(i_n - i_1)+1;
     INT   myid, mybegin, myend;
-    INT   nthreads = FASP_GET_NUM_THREADS();
+    INT   nthreads = fasp_get_num_threads();
 #endif
     
     if (s > 0) {
@@ -1179,7 +1179,7 @@ void fasp_smoother_dcsr_kaczmarz (dvector    *u,
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, temp1, temp2, begin_row, end_row, k, alpha, j)
                 for (myid=0; myid<nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, N, &mybegin, &myend);
                     mybegin += i_1, myend += i_1;
                     for (i=mybegin; i<myend; i+=s) {
                         temp1 = 0; temp2 = 0;
@@ -1226,7 +1226,7 @@ void fasp_smoother_dcsr_kaczmarz (dvector    *u,
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, temp1, temp2, begin_row, end_row, k, alpha, j)
                 for (myid=0; myid<nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, N, &mybegin, &myend);
                     mybegin = i_1 - mybegin, myend = i_1 - myend;
                     for (i=mybegin; i>myend; i+=s) {
                         temp1 = 0; temp2 = 0;
@@ -1308,7 +1308,7 @@ void fasp_smoother_dcsr_L1diag (dvector    *u,
 #ifdef _OPENMP
     // variables for OpenMP
     INT   myid, mybegin, myend;
-    INT   nthreads = FASP_GET_NUM_THREADS();
+    INT   nthreads = fasp_get_num_threads();
 #endif
     
     // Checks should be outside of for; t,d can be allocated before calling!!! --Chensong
@@ -1321,7 +1321,7 @@ void fasp_smoother_dcsr_L1diag (dvector    *u,
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, begin_row, end_row, k, j)
                 for (myid=0; myid<nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, N, &mybegin, &myend);
                     mybegin += i_1, myend += i_1;
                     for (i=mybegin; i<myend; i+=s) {
                         t[i]=bval[i]; d[i]=0.0;
@@ -1362,7 +1362,7 @@ void fasp_smoother_dcsr_L1diag (dvector    *u,
             if (N > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, i, k, j, begin_row, end_row)
                 for (myid=0; myid<nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, N, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, N, &mybegin, &myend);
                     mybegin = i_1 - mybegin, myend = i_1 - myend;
                     for (i=mybegin; i>myend; i+=s) {
                         t[i]=bval[i]; d[i]=0.0;

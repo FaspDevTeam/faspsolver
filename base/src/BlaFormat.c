@@ -535,7 +535,7 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
     INT stride_i,mybegin,myend,myid,nthreads;
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
-        nthreads = FASP_GET_NUM_THREADS();
+        nthreads = fasp_get_num_threads();
     }
 #endif
     

@@ -118,7 +118,7 @@ static SHORT invden (INT    nn,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     INT  *pivot=(INT *)fasp_mem_calloc(nn,sizeof(INT));
@@ -130,7 +130,7 @@ static SHORT invden (INT    nn,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,j) if(nn>OPENMP_HOLDS)
     for (myid=0; myid<nthreads; ++myid) {
-        FASP_GET_START_END(myid, nthreads, nn, &mybegin, &myend);
+        fasp_get_start_end(myid, nthreads, nn, &mybegin, &myend);
         for (i=mybegin; i<myend; ++i) {
 #else
             for (i=0;i<nn;++i) {
@@ -187,7 +187,7 @@ static SHORT get_block (dCSRmat  *A,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     memset(Aloc, 0x0, sizeof(REAL)*m*n);
@@ -202,7 +202,7 @@ static SHORT get_block (dCSRmat  *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,j,k,iloc) if(m>OPENMP_HOLDS)
     for ( myid=0; myid<nthreads; ++myid ) {
-        FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+        fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
         for ( i=mybegin; i<myend; ++i ) {
 #else
             for ( i=0; i<m; ++i ) {
@@ -291,7 +291,7 @@ static SHORT getinonefull (INT   **mat,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    INT nthreads = FASP_GET_NUM_THREADS();
+    INT nthreads = fasp_get_num_threads();
 #endif
     
     tniz=lengths[1];
@@ -299,7 +299,7 @@ static SHORT getinonefull (INT   **mat,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,j) if(mm>OPENMP_HOLDS)
     for (myid=0; myid<nthreads; ++myid) {
-        FASP_GET_START_END(myid, nthreads, mm, &mybegin, &myend);
+        fasp_get_start_end(myid, nthreads, mm, &mybegin, &myend);
         for (i=mybegin; i<myend; ++i) {
 #else
             for (i=0;i<mm;++i) {

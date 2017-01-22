@@ -76,10 +76,10 @@ void fasp_precond_dbsr_diag (REAL *r,
 #ifdef _OPENMP 
             if (m > OPENMP_HOLDS) {
                 INT myid, mybegin, myend;
-                INT nthreads = FASP_GET_NUM_THREADS();
+                INT nthreads = fasp_get_num_threads();
 #pragma omp parallel for private(myid, mybegin, myend, i)
                 for (myid = 0; myid < nthreads; myid++) {
-                    FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+                    fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
                     for (i=mybegin; i<myend; ++i) {
                         fasp_blas_smat_mxv(&(diagptr[i*nb2]),&(r[i*nb]),&(z[i*nb]),nb);
                     }
@@ -128,10 +128,10 @@ void fasp_precond_dbsr_diag_nc2 (REAL *r,
 #ifdef _OPENMP 
     if (m > OPENMP_HOLDS) {
         INT myid, mybegin, myend;
-	INT nthreads = FASP_GET_NUM_THREADS();
+	INT nthreads = fasp_get_num_threads();
 #pragma omp parallel for private(myid, mybegin, myend, i)
         for (myid = 0; myid < nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
             for (i = mybegin; i < myend; ++i) {
                 fasp_blas_smat_mxv_nc2(&(diagptr[i*4]),&(r[i*2]),&(z[i*2]));
             }
@@ -177,10 +177,10 @@ void fasp_precond_dbsr_diag_nc3 (REAL *r,
 #ifdef _OPENMP 
     if (m > OPENMP_HOLDS) {
         INT myid, mybegin, myend;
-        INT nthreads = FASP_GET_NUM_THREADS();
+        INT nthreads = fasp_get_num_threads();
 #pragma omp parallel for private(myid, mybegin, myend, i)
         for (myid = 0; myid < nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
             for (i = mybegin; i < myend; ++i) {
                 fasp_blas_smat_mxv_nc3(&(diagptr[i*9]),&(r[i*3]),&(z[i*3]));
             }
@@ -226,10 +226,10 @@ void fasp_precond_dbsr_diag_nc5 (REAL *r,
 #ifdef _OPENMP 
     if (m > OPENMP_HOLDS) {
         INT myid, mybegin, myend;
-        INT nthreads = FASP_GET_NUM_THREADS();
+        INT nthreads = fasp_get_num_threads();
 #pragma omp parallel for private(myid, mybegin, myend, i)
         for (myid = 0; myid < nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
             for (i = mybegin; i < myend; ++i) {
                 fasp_blas_smat_mxv_nc5(&(diagptr[i*25]),&(r[i*5]),&(z[i*5]));
             }
@@ -275,10 +275,10 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
 #ifdef _OPENMP 
     if (m > OPENMP_HOLDS) {
         INT myid, mybegin, myend;
-        INT nthreads = FASP_GET_NUM_THREADS();    
+        INT nthreads = fasp_get_num_threads();    
 #pragma omp parallel for private(myid, mybegin, myend, i)
         for (myid = 0; myid < nthreads; myid++) {
-            FASP_GET_START_END(myid, nthreads, m, &mybegin, &myend);
+            fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
             for (i = mybegin; i < myend; ++i) {
                 fasp_blas_smat_mxv_nc7(&(diagptr[i*49]),&(r[i*7]),&(z[i*7]));
             }
