@@ -35,10 +35,10 @@
  *
  * \brief Preconditioned BiCGstab method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to coefficient matrix
+ * \param b            Pointer to dvector of right hand side
+ * \param u            Pointer to dvector of DOFs
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -74,7 +74,6 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
     REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
     REAL         alpha, beta, omega, temp1, temp2, tempr;
-    
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)
@@ -107,7 +106,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
             relres = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -355,7 +354,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
         
     } // end of main BiCGstab loop
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -378,10 +377,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief Preconditioned BiCGstab method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to coefficient matrix
+ * \param b            Pointer to dvector of right hand side
+ * \param u            Pointer to dvector of DOFs
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -417,7 +416,6 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
     REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
     REAL         alpha, beta, omega, temp1, temp2, tempr;
-    
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)
@@ -450,7 +448,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
             relres = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -698,7 +696,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
         
     } // end of main BiCGstab loop
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -721,10 +719,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned BiCGstab method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to coefficient matrix
+ * \param b            Pointer to dvector of right hand side
+ * \param u            Pointer to dvector of DOFs
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -760,7 +758,6 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
     REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
     REAL         alpha, beta, omega, temp1, temp2, tempr;
-    
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)
@@ -793,7 +790,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
             relres = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1041,7 +1038,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
         
     } // end of main BiCGstab loop
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -1064,10 +1061,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief Preconditioned BiCGstab method for solving Au=b
  *
- * \param A            Pointer to the coefficient matrix
- * \param b            Pointer to the dvector of right hand side
- * \param u            Pointer to the dvector of DOFs
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to coefficient matrix
+ * \param b            Pointer to dvector of right hand side
+ * \param u            Pointer to dvector of DOFs
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -1103,7 +1100,6 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
     REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
     REAL         alpha, beta, omega, temp1, temp2, tempr;
-    
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)
@@ -1136,7 +1132,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
             relres = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognised stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1384,7 +1380,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
         
     } // end of main BiCGstab loop
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -1407,10 +1403,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief Preconditioned BiCGstab method for solving Au=b
  *
- * \param mf           Pointer to mxv_matfree: the spmv operation
- * \param b            Pointer to dvector: the right hand side
- * \param u            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param mf           Pointer to mxv_matfree: spmv operation
+ * \param b            Pointer to dvector: right hand side
+ * \param u            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -1446,7 +1442,6 @@ INT fasp_solver_pbcgs (mxv_matfree  *mf,
     REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
     REAL         alpha, beta, omega, temp1, temp2, tempr;
-    
     REAL         *uval=u->val, *bval=b->val;
     
     // allocate temp memory (need 8*m REAL)
@@ -1727,7 +1722,7 @@ INT fasp_solver_pbcgs (mxv_matfree  *mf,
         absres0=absres;
     }
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory

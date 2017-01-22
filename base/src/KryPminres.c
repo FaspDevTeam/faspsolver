@@ -34,10 +34,10 @@
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
- * \param A            Pointer to dCSRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param u            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to dCSRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param u            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -114,7 +114,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat      *A,
             relres  = absres0/normu2;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -191,7 +191,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat      *A,
         fasp_array_set(m,p2,0.0);
         fasp_blas_array_axpy(m,1/normp,t,p2);
         
-        // prepare for the next iteration
+        // prepare for next iteration
         fasp_array_cp(m,p1,p0);
         fasp_array_cp(m,p2,p1);
         fasp_array_cp(m,t1,t0);
@@ -373,7 +373,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat      *A,
                 break;
             }
             
-            // prepare for restarting the method
+            // prepare for restarting method
             fasp_array_set(m,p0,0.0);
             ++more_step;
             ++restart_step;
@@ -418,7 +418,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat      *A,
         
     } // end of the main loop
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -441,10 +441,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
- * \param A            Pointer to dBLCmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param u            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to dBLCmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param u            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -521,7 +521,7 @@ INT fasp_solver_dblc_pminres (dBLCmat     *A,
             relres  = absres0/normu2;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -598,7 +598,7 @@ INT fasp_solver_dblc_pminres (dBLCmat     *A,
         fasp_array_set(m,p2,0.0);
         fasp_blas_array_axpy(m,1/normp,t,p2);
         
-        // prepare for the next iteration
+        // prepare for next iteration
         fasp_array_cp(m,p1,p0);
         fasp_array_cp(m,p2,p1);
         fasp_array_cp(m,t1,t0);
@@ -780,7 +780,7 @@ INT fasp_solver_dblc_pminres (dBLCmat     *A,
                 break;
             }
             
-            // prepare for restarting the method
+            // prepare for restarting method
             fasp_array_set(m,p0,0.0);
             ++more_step;
             ++restart_step;
@@ -825,7 +825,7 @@ INT fasp_solver_dblc_pminres (dBLCmat     *A,
         
     } // end of the main loop
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -848,10 +848,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
- * \param A            Pointer to dSTRmat: the coefficient matrix
- * \param b            Pointer to dvector: the right hand side
- * \param u            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param A            Pointer to dSTRmat: coefficient matrix
+ * \param b            Pointer to dvector: right hand side
+ * \param u            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -924,7 +924,7 @@ INT fasp_solver_dstr_pminres (dSTRmat      *A,
             relres  = absres0/normu2;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1001,7 +1001,7 @@ INT fasp_solver_dstr_pminres (dSTRmat      *A,
         fasp_array_set(m,p2,0.0);
         fasp_blas_array_axpy(m,1/normp,t,p2);
         
-        // prepare for the next iteration
+        // prepare for next iteration
         fasp_array_cp(m,p1,p0);
         fasp_array_cp(m,p2,p1);
         fasp_array_cp(m,t1,t0);
@@ -1183,7 +1183,7 @@ INT fasp_solver_dstr_pminres (dSTRmat      *A,
                 break;
             }
             
-            // prepare for restarting the method
+            // prepare for restarting method
             fasp_array_set(m,p0,0.0);
             ++more_step;
             ++restart_step;
@@ -1228,7 +1228,7 @@ INT fasp_solver_dstr_pminres (dSTRmat      *A,
         
     } // end of the main loop
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
@@ -1251,10 +1251,10 @@ FINISHED:  // finish the iterative method
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
- * \param mf           Pointer to mxv_matfree: the spmv operation
- * \param b            Pointer to dvector: the right hand side
- * \param u            Pointer to dvector: the unknowns
- * \param pc           Pointer to precond: the structure of precondition
+ * \param mf           Pointer to mxv_matfree: spmv operation
+ * \param b            Pointer to dvector: right hand side
+ * \param u            Pointer to dvector: unknowns
+ * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param stop_type    Stopping criteria type
@@ -1403,7 +1403,7 @@ INT fasp_solver_pminres (mxv_matfree  *mf,
         fasp_array_set(m,p2,0.0);
         fasp_blas_array_axpy(m,1/normp,t,p2);
         
-        // prepare for the next iteration
+        // prepare for next iteration
         fasp_array_cp(m,p1,p0);
         fasp_array_cp(m,p2,p1);
         fasp_array_cp(m,t1,t0);
@@ -1620,7 +1620,7 @@ INT fasp_solver_pminres (mxv_matfree  *mf,
         absres0 = absres;
     }
     
-FINISHED:  // finish the iterative method
+FINISHED:  // finish iterative method
     if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory

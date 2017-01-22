@@ -69,7 +69,6 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat      *A,
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, normd, tempr, infnormu;
-    
     REAL         *uval = u->val, *bval = b->val;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -104,7 +103,7 @@ INT fasp_solver_dcsr_spbcgs (dCSRmat      *A,
             relres = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -458,7 +457,6 @@ INT fasp_solver_dbsr_spbcgs (dBSRmat      *A,
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, normd, tempr, infnormu;
-    
     REAL         *uval = u->val, *bval = b->val;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -493,7 +491,7 @@ INT fasp_solver_dbsr_spbcgs (dBSRmat      *A,
             relres = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -847,7 +845,6 @@ INT fasp_solver_dblc_spbcgs (dBLCmat     *A,
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, normd, tempr, infnormu;
-    
     REAL         *uval = u->val, *bval = b->val;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -882,7 +879,7 @@ INT fasp_solver_dblc_spbcgs (dBLCmat     *A,
             relres = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1236,7 +1233,6 @@ INT fasp_solver_dstr_spbcgs (dSTRmat      *A,
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, normd, tempr, infnormu;
-    
     REAL         *uval = u->val, *bval = b->val;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -1271,7 +1267,7 @@ INT fasp_solver_dstr_spbcgs (dSTRmat      *A,
             relres = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unrecognized stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
             goto FINISHED;
     }
     
