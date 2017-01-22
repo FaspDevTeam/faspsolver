@@ -19,7 +19,7 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "PreUtil.inl"
+#include "PreMGUtil.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

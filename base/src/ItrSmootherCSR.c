@@ -19,7 +19,7 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "ItrAuxiliary.inl"
+//#include "ItrAuxiliary.inl"
 
 static void swep2db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
                      INT nbegy, INT *mark, INT nx, INT ny);

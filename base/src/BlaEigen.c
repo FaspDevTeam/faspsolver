@@ -62,7 +62,7 @@ REAL fasp_dcsr_eig (dCSRmat     *A,
         temp = eigenvalue;
     }
     
- FINISHED:
+    // clean up memory
     fasp_dvec_free(&x);
     fasp_dvec_free(&y);
     

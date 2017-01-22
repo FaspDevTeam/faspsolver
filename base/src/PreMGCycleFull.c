@@ -18,7 +18,8 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "PreUtil.inl"
+#include "PreMGUtil.inl"
+#include "PreMGSmoother.inl"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

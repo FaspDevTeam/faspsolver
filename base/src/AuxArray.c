@@ -51,9 +51,11 @@ void fasp_array_set (const INT    n,
                      const REAL   val)
 {
     INT i;
-    INT nthreads = 1, use_openmp = FALSE; 
+    const SHORT use_openmp = FALSE;
     
 #ifdef _OPENMP 
+    INT nthreads = 1;
+
     if ( n > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = fasp_get_num_threads();
@@ -62,28 +64,28 @@ void fasp_array_set (const INT    n,
     
     if (val == 0.0) {
         if (use_openmp) {
+#ifdef _OPENMP
             INT mybegin,myend,myid;
-#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend)
-#endif
             for (myid = 0; myid < nthreads; myid ++) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 memset(&x[mybegin], 0x0, sizeof(REAL)*(myend-mybegin));
             }
+#endif
         }
         else 
             memset(x, 0x0, sizeof(REAL)*n);
     }
     else {
         if (use_openmp) {
+#ifdef _OPENMP
             INT mybegin,myend,myid;
-#ifdef _OPENMP 
 #pragma omp parallel for private(myid,mybegin,myend,i)
-#endif
             for (myid = 0; myid < nthreads; myid ++) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) x[i]=val;
             }
+#endif
         }
         else {
             for (i=0; i<n; ++i) x[i] = val;
@@ -110,10 +112,12 @@ void fasp_iarray_set (const INT   n,
                       const INT   val)
 {
     INT i;
-    INT nthreads = 1, use_openmp = FALSE;
+    const SHORT use_openmp = FALSE;
     
 #ifdef _OPENMP 
-	if ( n > OPENMP_HOLDS ) {
+    INT nthreads = 1;
+
+    if ( n > OPENMP_HOLDS ) {
 		use_openmp = TRUE;
         nthreads = fasp_get_num_threads();
 	}
@@ -121,14 +125,14 @@ void fasp_iarray_set (const INT   n,
     
     if (val == 0) {
         if (use_openmp) {
+#ifdef _OPENMP
             INT mybegin,myend,myid;
-#ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin, myend)
-#endif
             for (myid = 0; myid < nthreads; myid ++) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 memset(&x[mybegin], 0, sizeof(INT)*(myend-mybegin));
             }
+#endif
         }
         else {
             memset(x, 0, sizeof(INT)*n);
@@ -136,14 +140,14 @@ void fasp_iarray_set (const INT   n,
     }
     else {
         if (use_openmp) {
+#ifdef _OPENMP
             INT mybegin,myend,myid;
-#ifdef _OPENMP 
 #pragma omp parallel for private(myid, mybegin, myend,i)
-#endif
             for (myid = 0; myid < nthreads; myid ++) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
                 for (i=mybegin; i<myend; ++i) x[i]=val;
             }
+#endif
         }
         else {
             for (i=0; i<n; ++i) x[i]=val;

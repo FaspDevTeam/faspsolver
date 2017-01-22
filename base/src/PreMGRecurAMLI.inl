@@ -1,4 +1,4 @@
-/*! \file PreMGCycle.inl
+/*! \file PreMGRecurAMLI.inl
  *
  *  \brief Routines for nonlinear AMLI cycles
  *

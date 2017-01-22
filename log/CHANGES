@@ -3,9 +3,12 @@ File Name: CHANGES
 01/22/2017 FASP 1.9.3:
 - Clean up Level 4 (Pre) functions.
 - Clean up Level 3 (Kry) functions.
+- Clean up Level 2 (Itr) functions.
+- Clean up Level 1 (Bla) functions.
 - Function name change: *_Schwarz* ==> *_schwarz*.
 - Change function name of a few private functions in GMG.
 - Separate SA/UA AMG for CSR and BSR.
+- Separate aggregation for CSR and BSR.
 - Function name change: Upper case ==> Lower case in AuxThreads.c.
 - Update reference manual and Doxygen.
 

@@ -3,7 +3,7 @@
  *  \brief Utilities for aggregation methods for BSR matrices
  *
  *  \note This file contains Level-4 (Pre) functions, which are used in
- *        PreAMGSetupSA.c and PreAMGSetupUA.c
+ *        PreAMGSetupSABSR.c and PreAMGSetupUABSR.c
  * 
  *  \warning This file is also used in FASP4BLKOIL!!!
  */
