@@ -5,6 +5,7 @@ File Name: CHANGES
 - Clean up Level 3 (Kry) functions.
 - Clean up Level 2 (Itr) functions.
 - Clean up Level 1 (Bla) functions.
+- Clean up Level x (Xtr) functions.
 - Function name change: *_Schwarz* ==> *_schwarz*.
 - Change function name of a few private functions in GMG.
 - Separate SA/UA AMG for CSR and BSR.
@@ -12,6 +13,7 @@ File Name: CHANGES
 - Function name change: Upper case ==> Lower case in AuxThreads.c.
 - Update reference manual and Doxygen.
 - Update regression tests and results again.
+- Update VS10 and test in Windows.
 
 01/21/2017 FASP 1.9.2:
 - Change filenames according to package structure.

@@ -84,7 +84,7 @@ int main (int argc, const char *argv[])
     const REAL rtol   = 1.0e-6;
     const INT  prtlvl = PRINT_MORE;
     
-    INT        i, j, k, nx, maxlevel;
+    INT        i, j, nx, maxlevel;
     REAL      *u, *b, h, error0;
     
     // Step 0. Set number of levels for GMG

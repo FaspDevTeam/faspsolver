@@ -1,4 +1,4 @@
-/*! \file InterfaceUmfpack.c
+/*! \file XtrUmfpack.c
  *
  *  \brief Interface to UMFPACK direct solvers
  *

@@ -289,21 +289,19 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\test\src\assemble.c" />
-    <ClCompile Include="..\..\test\src\heat_fem.c" />
-    <ClCompile Include="..\..\test\src\mesh.c" />
-    <ClCompile Include="..\..\test\src\misc.c" />
-    <ClCompile Include="..\..\test\src\poisson_fdm.c" />
-    <ClCompile Include="..\..\test\src\poisson_fem.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\faspbase-c\faspbase-c.vcxproj">
       <Project>{11e47edc-a0f2-4d7f-a6cd-1c2477df185b}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\test\src\FdmPoisson.c" />
+    <ClCompile Include="..\..\test\src\FemAssemble.c" />
+    <ClCompile Include="..\..\test\src\FemHeatEqn.c" />
+    <ClCompile Include="..\..\test\src\FemMesh.c" />
+    <ClCompile Include="..\..\test\src\FemParam.c" />
+    <ClCompile Include="..\..\test\src\FemPoisson.c" />
+    <ClCompile Include="..\..\test\src\FemQuadrature.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

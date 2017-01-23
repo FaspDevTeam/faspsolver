@@ -2907,7 +2907,7 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT   n,
                                        INT   ptrlvl);
 
 
-/*-------- In file: InterfaceMumps.c --------*/
+/*-------- In file: XtrMumps.c --------*/
 
 int fasp_solver_mumps (dCSRmat *ptrA,
                        dvector *b,
@@ -2933,7 +2933,7 @@ void fasp_mumps_solve (dCSRmat *ptrA,
 void fasp_mumps_free (Mumps_data *mumps);
 
 
-/*-------- In file: InterfacePardiso.c --------*/
+/*-------- In file: XtrPardiso.c --------*/
 
 INT fasp_solver_pardiso (dCSRmat * ptrA,
                          dvector *b,
@@ -2953,7 +2953,7 @@ INT fasp_pardiso_solve (dCSRmat *ptrA,
 INT fasp_pardiso_free_internal_mem (Pardiso_data *pdata);
 
 
-/*-------- In file: InterfaceSamg.c --------*/
+/*-------- In file: XtrSamg.c --------*/
 
 void dvector2SAMGInput (dvector *vec,
                         char *filename);
@@ -2963,7 +2963,7 @@ INT dCSRmat2SAMGInput (dCSRmat *A,
                        char *fileamg);
 
 
-/*-------- In file: InterfaceSuperlu.c --------*/
+/*-------- In file: XtrSuperlu.c --------*/
 
 int fasp_solver_superlu (dCSRmat *ptrA,
                          dvector *b,
@@ -2971,7 +2971,7 @@ int fasp_solver_superlu (dCSRmat *ptrA,
                          const SHORT prtlvl);
 
 
-/*-------- In file: InterfaceUmfpack.c --------*/
+/*-------- In file: XtrUmfpack.c --------*/
 
 INT fasp_solver_umfpack (dCSRmat *ptrA,
                          dvector *b,
