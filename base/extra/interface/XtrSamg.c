@@ -1,4 +1,4 @@
-/*! \file InterfaceSamg.c
+/*! \file XtrSamg.c
  *
  *  \brief Interface to SAMG solvers
  *

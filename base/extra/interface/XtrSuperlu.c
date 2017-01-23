@@ -1,4 +1,4 @@
-/*! \file InterfaceSuperlu.c
+/*! \file XtrSuperlu.c
  *
  *  \brief Interface to SuperLU direct solvers
  *

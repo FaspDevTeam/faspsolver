@@ -10,7 +10,7 @@
      402 ./base/src/PreAMGAggregationBSR.inl
     1129 ./base/src/PreAMGAggregationCSR.inl
      287 ./base/src/PreAMGUtil.inl
-    2105 ./base/src/PreGMG.inl
+    1654 ./base/src/PreGMG.inl
      219 ./base/src/PreMGRecurAMLI.inl
      214 ./base/src/PreMGSmoother.inl
       54 ./base/src/PreMGUtil.inl
@@ -100,4 +100,4 @@
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      315 ./base/src/SolWrapper.c
-   87303 total
+   86852 total
