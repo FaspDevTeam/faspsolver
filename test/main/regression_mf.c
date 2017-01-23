@@ -4,13 +4,14 @@
  *------------------------------------------------------
  *
  *      Created  by Feiteng Huang on 09/19/2010
+ *      Modified by Chensong Zhang on 01/23/2017
  *
  *------------------------------------------------------
  *
  */
 
 /*! \file regression_mf.c
- *  \brief Regression testing for matrix-free iterative solvers
+ *  \brief Regression tests for matrix-free iterative solvers
  */
 
 #include <time.h>

@@ -1,5 +1,5 @@
 /**
- *      Regression test for FASP: CSR
+ *      Regression test for FASP
  *
  *------------------------------------------------------
  *
@@ -7,13 +7,14 @@
  *      Modified by Chensong Zhang on 09/02/2011
  *      Modified by Chenosng Zhang on 12/03/2011
  *      Modified by Chensong Zhang on 03/20/2012
+ *      Modified by Chensong Zhang on 01/23/2017
  *
  *------------------------------------------------------
  *
  */
 
 /*! \file regression.c
- *  \brief Regression testing for CSR iterative solvers
+ *  \brief Regression tests for iterative solvers
  */
 
 #include <time.h>
