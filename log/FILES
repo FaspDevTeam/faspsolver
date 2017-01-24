@@ -1,7 +1,7 @@
     1195 ./base/include/fasp.h
      409 ./base/include/fasp_block.h
      268 ./base/include/fasp_const.h
-    2993 ./base/include/fasp_functs.h
+    2991 ./base/include/fasp_functs.h
       49 ./base/include/fasp_grid.h
      115 ./base/src/BlaSpmvMatFree.inl
      234 ./base/src/ItrAuxiliary.inl
@@ -19,7 +19,7 @@
       80 ./base/src/AuxGivens.c
      764 ./base/src/AuxGraphics.c
      794 ./base/src/AuxInput.c
-     265 ./base/src/AuxMemory.c
+     242 ./base/src/AuxMemory.c
      289 ./base/src/AuxMessage.c
      989 ./base/src/AuxParam.c
      801 ./base/src/AuxSmallMat.c
@@ -43,7 +43,7 @@
      156 ./base/src/BlaSparseCOO.c
     1544 ./base/src/BlaSparseCSR.c
       75 ./base/src/BlaSparseCSRL.c
-     336 ./base/src/BlaSparseCheck.c
+     341 ./base/src/BlaSparseCheck.c
      207 ./base/src/BlaSparseSTR.c
      969 ./base/src/BlaSparseUtil.c
      279 ./base/src/BlaSpmvBLC.c
@@ -74,7 +74,7 @@
      444 ./base/src/PreAMGCoarsenCR.c
     2098 ./base/src/PreAMGCoarsenRS.c
      867 ./base/src/PreAMGInterp.c
-     834 ./base/src/PreAMGInterpEmin.c
+     835 ./base/src/PreAMGInterpEmin.c
      127 ./base/src/PreAMGSetupCR.c
      317 ./base/src/PreAMGSetupRS.c
      626 ./base/src/PreAMGSetupSA.c
@@ -100,4 +100,4 @@
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      315 ./base/src/SolWrapper.c
-   86852 total
+   86833 total

@@ -237,29 +237,6 @@ SHORT fasp_mem_iludata_check (ILU_data *iludata)
     }
 }
 
-/**
- * \fn SHORT fasp_mem_dcsr_check (dCSRmat *A)
- *
- * \brief Check wether a dCSRmat A has sucessfully allocated memory
- *
- * \param A   Pointer to be cheked
- *
- * \return    FASP_SUCCESS if success, else ERROR message (negative value)
- *
- * \author Xiaozhe Hu
- * \date   11/27/09
- */
-SHORT fasp_mem_dcsr_check (dCSRmat *A)
-{
-    if ( (A->IA == NULL) || (A->JA == NULL) || (A->val == NULL) ) {
-        printf("### ERROR: Something is wrong with the matrix!\n");
-        return ERROR_ALLOC_MEM;
-    }
-    else {
-        return FASP_SUCCESS;
-    }
-}
-
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

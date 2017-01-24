@@ -14,7 +14,7 @@ problem_num              = 10     % test problem number
 print_level              = 3      % how much information to print out 
 output_type              = 0      % 0 to screen | 1 to file
 solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
-                                  % 5 vGMRes | 6 vFGMRes | 7 GCG |
+                                  % 5 vGMRes | 6 vFGMRes | 7 GCG | 8 GCR   |
                                   %--------------------------------------
                                   % 21 AMG Solver | 22 FMG Solver |
                                   %--------------------------------------

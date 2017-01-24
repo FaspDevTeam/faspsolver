@@ -566,6 +566,7 @@ int main (int argc, const char * argv[])
         
         /* clean up memory */
         fasp_dcsr_free(&A);
+        fasp_dbsr_free(&A_bsr);
         fasp_dvec_free(&b);
         fasp_dvec_free(&x);
         fasp_dvec_free(&sol);

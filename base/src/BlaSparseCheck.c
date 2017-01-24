@@ -272,25 +272,30 @@ INT fasp_check_symm (dCSRmat *A)
  *
  * \param A   Pointer to the matrix in dCSRmat format
  *
- * \author Shuo Zhang
+ * \author Chensong Zhang
  * \date   03/29/2009
  */
 void fasp_check_dCSRmat (dCSRmat *A)
 {    
     INT i;    
     
-    if ( A->row != A->col ) {
+    if ( (A->IA == NULL) || (A->JA == NULL) || (A->val == NULL) ) {
+        printf("### ERROR: Something is wrong with the matrix!\n");
+        fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
+    }
+
+        if ( A->row != A->col ) {
         printf("### ERROR: Non-square CSR matrix!\n");
         fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
     }
     
-    if ( (A->nnz<=0) || (A->row==0) || (A->col==0) ) {
+    if ( ( A->nnz <= 0 ) || ( A->row == 0 ) || ( A->col == 0 ) ) {
         printf("### ERROR: Empty CSR matrix!\n");
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
-    for ( i=0;i<A->nnz;++i ) {
-        if ( (A->JA[i]<0) || (A->JA[i]-A->col>=0) ) {
+    for ( i = 0; i < A->nnz; ++i ) {
+        if ( ( A->JA[i] < 0 ) || ( A->JA[i]-A->col >= 0 ) ) {
             printf("### ERROR: Wrong CSR matrix format!\n");
             fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
         }
