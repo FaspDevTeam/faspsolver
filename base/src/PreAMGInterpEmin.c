@@ -698,6 +698,7 @@ static SHORT genintval (dCSRmat  *A,
     fasp_dcsr_free(&T);
     fasp_dvec_free(&rhs);
     fasp_dvec_free(&sol);
+    fasp_dvec_free(&diag);
     
     return status;
 }

@@ -125,8 +125,6 @@ SHORT fasp_mem_check (void        *ptr,
 
 SHORT fasp_mem_iludata_check (ILU_data *iludata);
 
-SHORT fasp_mem_dcsr_check (dCSRmat *A);
-
 
 /*-------- In file: AuxMessage.c --------*/
 

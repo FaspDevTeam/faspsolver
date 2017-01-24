@@ -1431,10 +1431,10 @@ INT fasp_solver_pbcgs (mxv_matfree  *mf,
                        const SHORT   prtlvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
-    const INT    m=b->row;
+    const INT    m = b->row;
     const REAL   maxdiff = tol*STAG_RATIO; // staganation tolerance
-    const REAL   sol_inf_tol = SMALLREAL; // infinity norm tolerance
-    const REAL   TOL_s = tol*1e-2; // tolerance for norm(p)
+    const REAL   sol_inf_tol = SMALLREAL;  // infinity norm tolerance
+    const REAL   TOL_s = tol*1e-2;         // tolerance for norm(p)
     
     // local variables
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
@@ -1442,7 +1442,7 @@ INT fasp_solver_pbcgs (mxv_matfree  *mf,
     REAL         normd   = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
     REAL         reldiff, factor, infnormu;
     REAL         alpha, beta, omega, temp1, temp2, tempr;
-    REAL         *uval=u->val, *bval=b->val;
+    REAL         *uval = u->val, *bval = b->val;
     
     // allocate temp memory (need 8*m REAL)
     REAL *work=(REAL *)fasp_mem_calloc(8*m,sizeof(REAL));
