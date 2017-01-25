@@ -16,7 +16,7 @@
 /**
  * \fn SHORT fasp_smat_lu_decomp (REAL *A, INT pivot[], const INT n)
  *
- * \brief LU decomposition of A usind Doolittle's method
+ * \brief LU decomposition of A using Doolittle's method
  *
  * \param A       Pointer to the full matrix
  * \param pivot   Pivoting positions
@@ -93,12 +93,13 @@ SHORT fasp_smat_lu_decomp (REAL       *A,
 }
 
 /**
- * \fn SHORT fasp_smat_lu_solve (REAL *A, REAL b[], INT pivot[], REAL x[], const INT n)
+ * \fn SHORT fasp_smat_lu_solve (const REAL *A, REAL b[], const INT pivot[],
+ *                               REAL x[], const INT n)
  *
  * \brief Solving Ax=b using LU decomposition
  *
  * \param A      Pointer to the full matrix
- * \param b      Right hand side array
+ * \param b      Right hand side array (b is used as the working array!!!)
  * \param pivot  Pivoting positions
  * \param x      Pointer to the solution array
  * \param n      Size of matrix A
@@ -115,15 +116,15 @@ SHORT fasp_smat_lu_decomp (REAL       *A,
  * \author Xuehai Huang
  * \date   04/02/2009
  */
-SHORT fasp_smat_lu_solve (REAL      *A,
-                          REAL       b[],
-                          INT        pivot[],
-                          REAL       x[],
-                          const INT  n)
+SHORT fasp_smat_lu_solve (const REAL *A,
+                          REAL        b[],
+                          const INT   pivot[],
+                          REAL        x[],
+                          const INT   n)
 {
-    INT i, k;
-    REAL *p_k;
-    REAL dum;
+    INT         i, k;
+    REAL        dum;
+    const REAL *p_k;
     
     /* solve Ly = b    */
     for (k = 0, p_k = A; k < n; p_k += n, k++) {

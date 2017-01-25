@@ -16,7 +16,7 @@
 /*---------------------------------*/
 
 /**
- * \fn SHORT fasp_format_dcoo_dcsr (dCOOmat *A, dCSRmat *B)
+ * \fn SHORT fasp_format_dcoo_dcsr (const dCOOmat *A, dCSRmat *B)
  *
  * \brief Transform a REAL matrix from its IJ format to its CSR format.
  *
@@ -28,8 +28,8 @@
  * \author Xuehai Huang
  * \date   08/10/2009
  */
-SHORT fasp_format_dcoo_dcsr (dCOOmat   *A,
-                             dCSRmat   *B)
+SHORT fasp_format_dcoo_dcsr (const dCOOmat  *A,
+                             dCSRmat        *B)
 {
     const INT m=A->row, n=A->col, nnz=A->nnz;
     
@@ -37,11 +37,9 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat   *A,
     
     INT * ia = B->IA, i;
     INT   iind, jind;
-    
     INT * ind = (INT *) fasp_mem_calloc(m+1,sizeof(INT));
     
-    //for (i=0; i<=m; ++i) ind[i]=0; // initialize
-    memset(ind, 0, sizeof(INT)*(m+1));
+    memset(ind, 0, sizeof(INT)*(m+1)); // initialize ind
     
     for (i=0; i<nnz; ++i) ind[A->rowind[i]+1]++; // count nnz in each row
     
@@ -64,9 +62,8 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat   *A,
     return FASP_SUCCESS;
 }
 
-
 /**
- * \fn SHORT fasp_format_dcsr_dcoo (dCSRmat *A, dCOOmat *B)
+ * \fn SHORT fasp_format_dcsr_dcoo (const dCSRmat *A, dCOOmat *B)
  *
  * \brief Transform a REAL matrix from its CSR format to its IJ format.
  *
@@ -81,12 +78,11 @@ SHORT fasp_format_dcoo_dcsr (dCOOmat   *A,
  * Modified by Chunsheng Feng, Zheng Li
  * \date  10/12/2012
  */
-SHORT fasp_format_dcsr_dcoo (dCSRmat   *A,
-                             dCOOmat   *B)
+SHORT fasp_format_dcsr_dcoo (const dCSRmat  *A,
+                             dCOOmat        *B)
 {
     const INT m=A->row, nnz=A->nnz;
     INT i, j;
-    SHORT status = FASP_SUCCESS;
     
     B->rowind = (INT *)fasp_mem_calloc(nnz,sizeof(INT));
     B->colind = (INT *)fasp_mem_calloc(nnz,sizeof(INT));
@@ -102,11 +98,11 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat   *A,
     memcpy(B->colind, A->JA, nnz*sizeof(INT));
     memcpy(B->val, A->val, nnz*sizeof(REAL));
     
-    return status;
+    return FASP_SUCCESS;
 }
 
 /**
- * \fn SHORT fasp_format_dstr_dcsr(dSTRmat *A, dCSRmat *B)
+ * \fn SHORT fasp_format_dstr_dcsr (const dSTRmat *A, dCSRmat *B)
  *
  * \brief Transfer a 'dSTRmat' type matrix into a 'dCSRmat' type matrix.
  *
@@ -118,8 +114,8 @@ SHORT fasp_format_dcsr_dcoo (dCSRmat   *A,
  * \author Zhiyang Zhou
  * \date   2010/04/29
  */
-SHORT fasp_format_dstr_dcsr (dSTRmat   *A,
-                             dCSRmat   *B)
+SHORT fasp_format_dstr_dcsr (const dSTRmat  *A,
+                             dCSRmat        *B)
 {
     // some members of A
     const INT nc    = A->nc;
@@ -282,7 +278,7 @@ SHORT fasp_format_dstr_dcsr (dSTRmat   *A,
 }
 
 /**
- * \fn dCSRmat fasp_format_dblc_dcsr (dBLCmat *Ab)
+ * \fn dCSRmat fasp_format_dblc_dcsr (const dBLCmat *Ab)
  *
  * \brief Form the whole dCSRmat A using blocks given in Ab
  *
@@ -293,14 +289,14 @@ SHORT fasp_format_dstr_dcsr (dSTRmat   *A,
  * \author Shiquan Zhang
  * \date   08/10/2010
  */
-dCSRmat fasp_format_dblc_dcsr (dBLCmat *Ab)
+dCSRmat fasp_format_dblc_dcsr (const dBLCmat *Ab)
 {
-    INT m=0,n=0,nnz=0;
     const INT mb=Ab->brow, nb=Ab->bcol, nbl=mb*nb;
     dCSRmat **blockptr=Ab->blocks, *blockptrij, A;
     
     INT i,j,ij,ir,i1,length,ilength,start,irmrow,irmrow1;
     INT *row, *col;
+    INT m=0,n=0,nnz=0;
     
     row = (INT *)fasp_mem_calloc(mb+1,sizeof(INT));
     col = (INT *)fasp_mem_calloc(nb+1,sizeof(INT));
@@ -351,7 +347,7 @@ dCSRmat fasp_format_dblc_dcsr (dBLCmat *Ab)
 }
 
 /**
- * \fn dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
+ * \fn dCSRLmat * fasp_format_dcsrl_dcsr (const dCSRmat *A)
  *
  * \brief Convert a dCSRmat into a dCSRLmat
  *
@@ -362,7 +358,7 @@ dCSRmat fasp_format_dblc_dcsr (dBLCmat *Ab)
  * \author Zhiyang Zhou
  * \date   2011/01/07
  */
-dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
+dCSRLmat * fasp_format_dcsrl_dcsr (const dCSRmat *A)
 {
     REAL   *DATA         = A -> val;
     INT    *IA           = A -> IA;
@@ -481,7 +477,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
 }
 
 /*!
- * \fn dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
+ * \fn dCSRmat fasp_format_dbsr_dcsr (const dBSRmat *B)
  *
  * \brief Transfer a 'dBSRmat' type matrix into a dCSRmat.
  *
@@ -496,7 +492,7 @@ dCSRLmat * fasp_format_dcsrl_dcsr (dCSRmat *A)
  *
  * \note Works for general nb (Xiaozhe)
  */
-dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
+dCSRmat fasp_format_dbsr_dcsr (const dBSRmat *B)
 {
     dCSRmat A;
     
@@ -707,7 +703,7 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
 }
 
 /*!
- * \fn dBSRmat fasp_format_dcsr_dbsr ( dCSRmat *A, const INT nb )
+ * \fn dBSRmat fasp_format_dcsr_dbsr ( const dCSRmat *A, const INT nb )
  *
  * \brief Transfer a dCSRmat type matrix into a dBSRmat.
  *
@@ -722,8 +718,8 @@ dCSRmat fasp_format_dbsr_dcsr (dBSRmat *B)
  * \note modified by Xiaozhe Hu to avoid potential memory leakage problem
  *
  */
-dBSRmat fasp_format_dcsr_dbsr (dCSRmat    *A,
-                               const INT   nb)
+dBSRmat fasp_format_dcsr_dbsr (const dCSRmat  *A,
+                               const INT       nb)
 {
 	// Safe-guard check
     if ((A->row)%nb!=0) {
@@ -829,7 +825,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat    *A,
 }
 
 /*!
- * \fn dBSRmat fasp_format_dstr_dbsr ( dSTRmat *B )
+ * \fn dBSRmat fasp_format_dstr_dbsr ( const dSTRmat *B )
  *
  * \brief Transfer a 'dSTRmat' type matrix to a 'dBSRmat' type matrix.
  *
@@ -840,7 +836,7 @@ dBSRmat fasp_format_dcsr_dbsr (dCSRmat    *A,
  * \author Zhiyang Zhou
  * \date   2010/10/26
  */
-dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
+dBSRmat fasp_format_dstr_dbsr (const dSTRmat *B)
 {
     // members of 'B'
     INT      nc      = B->nc;
@@ -933,7 +929,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
 }
 
 /*!
- * \fn dCOOmat * fasp_format_dbsr_dcoo ( dBSRmat *B )
+ * \fn dCOOmat * fasp_format_dbsr_dcoo ( const dBSRmat *B )
  *
  * \brief Transfer a 'dBSRmat' type matrix to a 'dCOOmat' type matrix.
  *
@@ -944,7 +940,7 @@ dBSRmat fasp_format_dstr_dbsr (dSTRmat *B)
  * \author Zhiyang Zhou
  * \date   2010/10/26
  */
-dCOOmat * fasp_format_dbsr_dcoo (dBSRmat *B)
+dCOOmat * fasp_format_dbsr_dcoo (const dBSRmat *B)
 {
     /* members of B */
     INT     ROW = B->ROW;

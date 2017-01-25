@@ -26,9 +26,9 @@
      172 ./base/src/AuxThreads.c
       43 ./base/src/AuxTiming.c
      463 ./base/src/AuxVector.c
-     428 ./base/src/BlaArray.c
-      74 ./base/src/BlaEigen.c
-    1008 ./base/src/BlaFormat.c
+     431 ./base/src/BlaArray.c
+      72 ./base/src/BlaEigen.c
+    1004 ./base/src/BlaFormat.c
     2142 ./base/src/BlaILU.c
     1127 ./base/src/BlaILUSetupBSR.c
      167 ./base/src/BlaILUSetupCSR.c
@@ -37,7 +37,7 @@
      597 ./base/src/BlaSchwarzSetup.c
     1325 ./base/src/BlaSmallMat.c
      783 ./base/src/BlaSmallMatInv.c
-     172 ./base/src/BlaSmallMatLU.c
+     173 ./base/src/BlaSmallMatLU.c
      368 ./base/src/BlaSparseBLC.c
     1988 ./base/src/BlaSparseBSR.c
      156 ./base/src/BlaSparseCOO.c
@@ -51,7 +51,7 @@
     2113 ./base/src/BlaSpmvCSR.c
      126 ./base/src/BlaSpmvCSRL.c
     1888 ./base/src/BlaSpmvSTR.c
-     323 ./base/src/BlaVector.c
+     313 ./base/src/BlaVector.c
     1637 ./base/src/ItrSmootherBSR.c
     2320 ./base/src/ItrSmootherCSR.c
       86 ./base/src/ItrSmootherCSRcr.c
@@ -100,4 +100,4 @@
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      315 ./base/src/SolWrapper.c
-   86567 total
+   86555 total

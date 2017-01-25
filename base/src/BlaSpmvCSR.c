@@ -212,7 +212,7 @@ void fasp_blas_dcsr_axm (dCSRmat     *A,
 }
 
 /**
- * \fn void fasp_blas_dcsr_mxv (dCSRmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dcsr_mxv (const dCSRmat *A, const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
@@ -226,9 +226,9 @@ void fasp_blas_dcsr_axm (dCSRmat     *A,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
  *
  */
-void fasp_blas_dcsr_mxv (dCSRmat  *A,
-                         REAL     *x,
-                         REAL     *y)
+void fasp_blas_dcsr_mxv (const dCSRmat  *A,
+                         const REAL     *x,
+                         REAL           *y)
 {
     const INT m=A->row;
     const INT *ia=A->IA, *ja=A->JA;
@@ -694,7 +694,7 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL   alpha,
 }
 
 /**
- * \fn REAL fasp_blas_dcsr_vmv (dCSRmat *A, REAL *x, REAL *y)
+ * \fn REAL fasp_blas_dcsr_vmv (const dCSRmat *A, const REAL *x, const REAL *y)
  *
  * \brief vector-Matrix-vector multiplication alpha = y'*A*x
  *
@@ -705,9 +705,9 @@ void fasp_blas_dcsr_aAxpy_agg (const REAL   alpha,
  * \author Chensong Zhang
  * \date   07/01/2009
  */
-REAL fasp_blas_dcsr_vmv (dCSRmat   *A,
-                         REAL      *x,
-                         REAL      *y)
+REAL fasp_blas_dcsr_vmv (const dCSRmat  *A,
+                         const REAL     *x,
+                         const REAL     *y)
 {
     register REAL value=0.0;
     const INT m=A->row;
